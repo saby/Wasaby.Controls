@@ -10,8 +10,10 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
       'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemContentTemplate',
       'Core/core-instance',
       'Core/helpers/Function/callNext',
+      'Core/detection',
+      'Core/helpers/Hcontrol/getScrollWidth',
       'js!SBIS3.CONTROLS.Utils.ItemsSelection'
-   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, cInstance, callNext, ItemsSelection) {
+   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, cInstance, callNext, detection, getScrollWidth, ItemsSelection) {
 
       'use strict';
 
@@ -23,7 +25,8 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
 
       function buildTplArgsFL(cfg) {
          var
-            tplOptions = cfg._buildTplArgsSt.call(this, cfg);
+            tplOptions = cfg._buildTplArgsSt.call(this, cfg),
+            additionalItemClasses = '';
          tplOptions.itemsCount = cfg._itemsProjection.getCount();
          /* При отображении выбранных элементов в выпадающем списке надо их сортировать,
           чтобы визуально казалось, что последние выбранные будут вверху,
@@ -34,6 +37,17 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          /* Надо рисовать подсказку для поля связи, если используется дефолтный шаблон,
           в случае прикладного, там может быть вёрстка, и в подсказку её класть нельзя */
          tplOptions.needTitle = !cfg.itemContentTpl;
+         if (cfg.underlinedItems) {
+            additionalItemClasses += ' controls-FieldLink__item-caption__underlined';
+         }
+         if (cfg.boldItems) {
+            additionalItemClasses += ' controls-FieldLink__item-caption__bold';
+         }
+         if (cfg.bigItems) {
+            additionalItemClasses += ' controls-FieldLink__item-caption__big';
+         } else {
+            additionalItemClasses += ' controls-FieldLink__item-caption__normal';
+         }
          tplOptions.getItemTemplateData = function(templateCfg) {
             var
                orderStyle = '',
@@ -44,12 +58,19 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                orderStyle = 'order: ' + order + '; -ms-flex-order: ' + order + ';';
             }
             return {
+               additionalItemClasses: additionalItemClasses,
                orderStyle: orderStyle,
                drawCross: cfg.enabled,
                drawComma: (templateCfg.projItem.getOwner().getIndex(templateCfg.projItem) !== templateCfg.itemsCount - 1) && !cfg._isPickerVisible
             };
          };
          return tplOptions;
+      }
+      
+      function setPickerWidth(width) {
+         var pickerContainer = this.getPicker().getContainer();
+         pickerContainer[0].style.maxWidth = width + 'px';
+         pickerContainer[0].style.minWidth = width + 'px';
       }
 
       var FieldLinkItemsCollection =  CompoundControl.extend([DSMixin, PickerMixin], {
@@ -63,6 +84,14 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                _isPickerVisible: false
             },
             _parentFieldLink: undefined
+         },
+
+         _modifyOptions: function() {
+            var
+               cfg = FieldLinkItemsCollection.superclass._modifyOptions.apply(this, arguments),
+               items = cfg.items;
+            cfg.reverseOrder = !cfg.enabled && items && items.getCount && items.getCount() > 1;
+            return cfg;
          },
 
          $constructor: function() {
@@ -100,13 +129,23 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             return this._options._defaultItemTemplate;
          },
 
+         _updateOrderClass: function() {
+            var
+               items = this.getItems(),
+               reverseOrder = !this.isEnabled() && items && items.getCount && items.getCount() > 1;
+            this._container
+               .toggleClass('controls-FieldLink__itemsCollection-normalOrder', !reverseOrder)
+               .toggleClass('controls-FieldLink__itemsCollection-reverseOrder', reverseOrder);
+         },
+
          _setEnabled: function () {
-            var items = this.getItems();
+            var
+               items = this.getItems();
             /* Т.к. при изменении состояния поля связи, для всех элементов появляются/исчезают крестики удаления,
                то надо вызывать перерисовку элементов, чтобы правильно проставилась ширина */
             this._clearItems();
             FieldLinkItemsCollection.superclass._setEnabled.apply(this, arguments);
-
+            this._updateOrderClass();
             if (items && items.getCount()) {
                this.redraw();
             }
@@ -128,6 +167,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             } else {
                list = [];
             }
+            this._updateOrderClass();
             FieldLinkItemsCollection.superclass.setItems.call(this, list);
          },
 
@@ -148,6 +188,8 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          showPicker: function() {
+            var pickerContainer, pickerWidth;
+            
             /* Чтобы не было перемаргивания в задизейбленом состоянии,
                просто вешаем класс ws-invisible */
             if (this.isEnabled()) {
@@ -159,6 +201,18 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             this._options._isPickerVisible = true;
             this.redraw();
             this._picker.recalcPosition(true);
+            
+            pickerContainer = this._picker.getContainer();
+            pickerWidth = this._parentFieldLink.getContainer()[0].offsetWidth;
+   
+            setPickerWidth.call(this, pickerWidth);
+   
+            /* Из-за того, что ie располагает скроллбар не внутри контейнера, а за его пределами,
+             надо учитывать это при расчётах ширины пикера */
+            if ((detection.isIE10 || detection.isIE11) && pickerContainer[0].offsetHeight < pickerContainer[0].scrollHeight) {
+               pickerWidth -= getScrollWidth();
+               setPickerWidth.call(this, pickerWidth);
+            }
          },
 
          _setPickerContent: function () {
@@ -208,14 +262,6 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                         self.getContainer().removeClass('ws-invisible');
                      }
                      setTimeout(self.redraw.bind(self), 0);
-                  },
-
-                  onShow: function() {
-                     var pickerContainer = self._picker.getContainer(),
-                         pickerWidth = self._parentFieldLink.getContainer()[0].offsetWidth;
-
-                     pickerContainer[0].style.maxWidth = pickerWidth + 'px';
-                     pickerContainer[0].style.minWidth = pickerWidth + 'px';
                   }
                }
             };

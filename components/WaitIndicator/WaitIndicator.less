@@ -16,7 +16,7 @@ x{}
 //@wait-indicator-overlay-default: rgba(255, 255, 255, 0.05);
 //@wait-indicator-overlay-dark: rgba(0, 0, 0, 0.1);
 //@wait-indicator-gradient-white: rgb(255, 255, 255);
-@wait-indicator-gradient-gray: #EAEAEA;  //откомментил чтобы less собирались
+//@wait-indicator-gradient-gray: #EAEAEA;
 
 
 
@@ -140,7 +140,7 @@ x{}
     height: @wait-indicator-size + 2*@wait-indicator-gap;
     overflow: hidden;
     border-radius: @wait-indicator-gap;
-    background: @white-color url('/resources/SBIS3.CONTROLS/themes/@{themeName}/img/ajax-loader-indicator.gif') 50% 50% no-repeat;
+    background: @white-color url('../../themes/@{themeName}/img/ajax-loader-indicator.gif') 50% 50% no-repeat;
     cursor: default !important;
     pointer-events: auto;
     font-family: 'TensorFont Обычный', 'TensorFont Regular', 'TensorFont', sans-serif;
@@ -182,7 +182,7 @@ x{}
     height: @wait-indicator-small-size + 2*@wait-indicator-small-gap;
     border-radius: (@wait-indicator-small-size + 2*@wait-indicator-small-gap)/4;
     background-color: transparent;
-    background-image: url('/resources/SBIS3.CONTROLS/themes/@{themeName}/img/ajax-loader-16x16-wheel.gif');
+    background-image: url('../../themes/@{themeName}/img/ajax-loader-16x16-wheel.gif');
 }
 
 .ws-wait-indicator_small-left .ws-wait-indicator-in {

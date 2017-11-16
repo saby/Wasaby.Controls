@@ -66,13 +66,10 @@
 //MenuItem
 @menu-item-hover-bg:                      #F0F5FB;
 // Text box
-@text-box-border-color:                   #EAEAEA;
-@text-box-bg:                             @default-bg-color;
 @combo-box-picker-show-background-color : #ffffff;
 @combo-box-picker-show-border-color:	   #0055BB;
 @compo-box-picker-show-color:             #000;
 @text-box-focus-bg:                       #fff;
-@text-box-hover-border-color:             rgb(204, 204, 204);
 // Search form
 @search-form-icon-search-color:           @icon-color-primary;
 @search-form-icon-reset-color:            @icon-color-primary;
@@ -104,7 +101,7 @@
 
 //Data Range
 @date-range-dash-color:                   #cccccc;
-@date-range-dash-border-top:              .071rem solid @date-range-dash-color;
+@date-range-dash-border-top:              2px solid @date-range-dash-color;
 
 // Date Range Choose
 @date-range-choose-bg-active-color:       #e1ecf6;
@@ -208,7 +205,6 @@
 @Infobox-cross-color-hover:               #313E78;
 //sundry
 @date-range-big-choose-bg-hovered-color:  rgb(240, 245, 251);
-@date-range-big-choose-header-apply-button-icon-margin-left:-1rem;
 @DropdownList-picker-menu-item-color:     #fff;
 @DropdownList-picker-bg:                  #fff;
 @DropdownList-picker-menu-item-color:     #FFFFFF;
@@ -225,7 +221,7 @@
 @data-grid-row-hover-add-bg:              rgba(224, 236, 245, 0);
 @bottomStyle-items-toolbar-border-color:  #E0ECF5;
 @closeButtonImage:                              url('img/areaBigCloseButton.png') 0 0;
-@closeButtonImageHover:                         url('img/areaCloseButton.png') 0 -3rem;
+@closeButtonImageHover:                         url('img/areaCloseButton.png') 0 round(-84px * @multiplier);
 @DropdownList-linkStyleHoverColor:		      #313E78;
 @back-button-text-color:                     #313E78;
 @fieldLink-link-color-hover:        #313E78;
@@ -274,3 +270,6 @@
 // SUGGEST //
 @suggest-picker-color:                    #000000;
 @suggest-list-hover-color:                #F0F5FB;
+//engine-browser
+@browser-search-margin:                   0 round(8px * @multiplier) round(8px * @multiplier) round(8px * @multiplier);
+@browser-top-template-padding:            @browser-search-margin;

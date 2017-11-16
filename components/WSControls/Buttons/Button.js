@@ -56,7 +56,7 @@ define('js!WSControls/Buttons/Button', [
     * @css controls-Button__text Класс для изменения отображения текста на кнопке.
     *
     * @control
-    * @category Buttons
+    * @category Button
     * @public
     * @initial
     * <component data-component='WSControls/Buttons/Button'>
@@ -236,8 +236,9 @@ define('js!WSControls/Buttons/Button', [
       },
 
       destroy: function(){
+         this._contentContainer = null;
          this._unregisterDefaultButton();
-          Button.superclass.destroy.apply(this, arguments);
+         Button.superclass.destroy.apply(this, arguments);
       }
       /*TODO конец*/
    });

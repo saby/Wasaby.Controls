@@ -15,11 +15,11 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
     */
    var DialogMixin = /** @lends SBIS3.CONTROLS.Action.DialogMixin.prototype */{
        /**
-        * @event onAfterShow Происходит перед отображением диалога.
+        * @event onAfterShow Происходит после отображения диалога.
         * @see onBeforeShow
         */
        /**
-        * @event onBeforeShow Происходит после отображения диалога.
+        * @event onBeforeShow Происходит перед отображением диалога.
         * @see onAfterShow
         */
       $protected : {
@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
              */
             componentOptions: null,
             /**
-             * @cfg {Object} Объект с конфигурацией контрола, на основе которого создаётся диалог редактирования (см. {@link mode}).
+             * @cfg {Object} Объект с конфигурацией контрола, на основе которого создаётся диалог редактирования (см. {@link mode}). В числе опций также передают и {@link SBIS3.CORE.Control#linkedContext}.
              */
             dialogOptions: null
          },
@@ -106,11 +106,15 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
 
       _createComponent: function(config, meta) {
-         var componentName = (meta.mode == 'floatArea') ? 'js!SBIS3.CORE.FloatArea' : 'js!SBIS3.CORE.Dialog';
+         var componentName = (meta.mode == 'floatArea') ? 'js!SBIS3.CORE.FloatArea' : 'js!SBIS3.CORE.Dialog',
+             resetWidth;
+         
          if (this._isNeedToRedrawDialog()){
             this._resetComponentOptions();
+            //Если поменялся шаблон панели, то надо обновить размеры.
+            resetWidth = this._dialog._options.template !== config.template;
             cMerge(this._dialog._options, config);
-            this._dialog.reload(true);
+            this._dialog.reload(true, resetWidth);
          }
          else {
             this._isExecuting = true;
@@ -188,7 +192,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          cMerge(config, meta.dialogOptions);
          config.componentOptions = this._buildComponentConfig(meta);
          config.handlers = config.handlers || {};
-         cMerge(config.handlers, {
+         var handlers = {
             onAfterClose: function (e, result) {
                self._isExecuting = false;
                self._finishExecuteDeferred();
@@ -196,18 +200,30 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
                self._dialog = undefined;
             },
             onBeforeShow: function () {
-               self._notify('onBeforeShow');
+               self._notify('onBeforeShow', this);
             },
             onAfterShow: function () {
                self._isExecuting = false;
-               self._notify('onAfterShow');
+               self._notify('onAfterShow', this);
             }
-         });
+         };
+         for (var name in handlers) {
+            if (handlers.hasOwnProperty(name)) {
+               if (config.handlers.hasOwnProperty(name) && config.handlers[name] instanceof Array) {
+                  config.handlers[name].push(handlers[name]);
+               } else if(config.handlers.hasOwnProperty(name))  {
+                  config.handlers[name] = [config.handlers[name], handlers[name]]
+               } else {
+                  config.handlers[name] = handlers[name];
+               }
+            }
+         }
+
          return config;
       },
 
       _finishExecuteDeferred: function(error) {
-         if (!this._executeDeferred.isReady()) {
+         if (this._executeDeferred && !this._executeDeferred.isReady()) {
             if (!error) {
                //false - т.к. приходится нотифаить событие onExecuted самому, из-за того, что базовый action
                //не может обработать валидный результат false

@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     *
     * @public
     * @control
-    * @category Inputs
+    * @category Input
     * @initial
     * <component data-component='SBIS3.CONTROLS.ComboBox'>
     *     <options name="items" type="array">
@@ -233,7 +233,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._container.click(function (e) {
             var target = $(e.target),
                isArrow = target.hasClass('js-controls-ComboBox__arrowDown');
-            if (isArrow || ( target[0] === self._getAfterFieldWrapper()[0] ) || self.isEditable() === false) {
+            if (isArrow || ( target[0] === $('.controls-ComboBox__afterFieldWrapper', self.getContainer())[0] ) || self.isEditable() === false) {
                if (self.isEnabled() && self._getItemsProjection()) {//открывать, если нет данных, нет смысла
                   self.togglePicker();
                   // Что бы не открывалась клавиатура на айпаде при клике на стрелку
@@ -243,6 +243,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                }
             }
          });
+
+         //Если текст уже установлен, проверим, влезает ли он в инпут полностью, и если нет, то добавим затенение.
+         if (this.getText()) {
+            this._toggleShadow();
+         }
       },
 
       _modifyOptions: function(){
@@ -272,6 +277,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
          if (!cfg.selectedKey) { //todo: ьожет это ндао в условие уровнем повыше
             cfg.cssClassName += ' controls-ComboBox__emptyValue';
+         }
+
+         if (cfg.selectedKey && cfg._items) {
+            var selectedItem = cInstance.instanceOfModule(cfg._items, 'WS.Data/Type/Enum') ? cfg._items.get() : cfg._items.getRecordById(cfg.selectedKey);
+            if (selectedItem) {
+               cfg.text = cfg._propertyValueGetter(selectedItem, cfg.displayProperty) || '';
+            }
          }
          return cfg;
       },
@@ -418,11 +430,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          if (this._options.editable) {
             this._setKeyByText();
          }
+         this._toggleShadow();
+      },
+
+      _toggleShadow: function() {
          // Иногда $(...).width() возвращает не целое число (замечено в MSIE), из-за этого сравнение даёт неверный результат. Так что округляем:
          var width = $('.controls-TextBox__field', this.getContainer()).width(),
-             isTextOverflow = 0 < width && getTextWidth(this.getText()) > Math.round(width),
-             //Если у нас виден инпут, то показываем тень только когда он не в фокусе. иначе в момент ввода появится ненужное затемнение.
-             needShadow = isTextOverflow && (!this.isEditable() || !this._inputField.is(':focus'));
+            fieldNotEditableContainer = $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)),
+            isTextOverflow = 0 < width && getTextWidth(this.getText()) > Math.round(width),
+            //Если у нас виден инпут, то показываем тень только когда он не в фокусе. иначе в момент ввода появится ненужное затемнение.
+            needShadow = isTextOverflow && (!this.isEditable() || !this._inputField.is(':focus'));
          this.getContainer().toggleClass('controls-ComboBox__overflow', needShadow);
          if (needShadow) {
             fieldNotEditableContainer[0].setAttribute('title', fieldNotEditableContainer[0].textContent);
@@ -471,7 +488,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _drawSelectedItemText: function(key, item){
          if (item) {
-            var newText = this._propertyValueGetter(item, this._options.displayProperty);
+            var newText = this._getPropertyValue(item, this._options.displayProperty);
             if (newText != this._options.text) {
                ComboBox.superclass.setText.call(this, newText);
                this._drawNotEditablePlaceholder(newText);
@@ -679,7 +696,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             self = this;
          items.each(function (item) {
             hasItems = true;
-            if (self._propertyValueGetter(item, self._options.displayProperty) == self._options.text) {
+            if (self._getPropertyValue(item, self._options.displayProperty) == self._options.text) {
                hasFindedKey = true;
                //для рекордов и перечисляемого чуть разный механизм
                if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {

@@ -37,7 +37,7 @@ function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
     *
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     * @initial
     * <component data-component='SBIS3.CONTROLS.RadioGroup'>
     *    <option name="displayProperty">title</option>
@@ -98,7 +98,7 @@ function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
          if (this._getItemsProjection()) {
             projItem = this._getItemsProjection().at(this._options.selectedIndex);
             if (projItem) {
-               textValue = this._propertyValueGetter(projItem.getContents(), this._options.displayProperty);
+               textValue = this._getPropertyValue(projItem.getContents(), this._options.displayProperty);
             }
          }
 

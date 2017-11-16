@@ -10,9 +10,8 @@
    .controls-BackButton__caption.controls-Link {
       font-style: normal;
       color: @back-button-text-color;
-      padding-left: 3px;
       text-align: left;
-      max-width: calc(~"100% - 8px");
+      max-width: calc(~"100% - @{back-button-width-before}");
       line-height: normal;
       font-weight: @back-button-text-fontweight;
       font-size: @back-button-font-size;
@@ -23,9 +22,6 @@
          .controls-BackButton__arrow{
             display: inline-block;
             color: @icon-color-primary !important;
-            &:hover .controls-Button__icon{
-               color: @icon-color-hover !important;
-            }
          }
       }
       &.controls-BackButton__hover-arrow{
@@ -49,12 +45,13 @@
       }
    }
    &.controls-BackButton__empty {
-      .controls-BackButton__backArrow {
-         width: 0;
-         margin: 0;
-      }
       .controls-BackButton__caption {
          padding-left: 0;
+         &Arrow:before {
+            content: '';
+            width: 0;
+            margin: 0;
+         }
       }
    }
 
@@ -79,9 +76,9 @@
    }
 }
 
-.ws-is-desktop-platform{
-   .controls-BackButton__caption.controls-Link {
-      &:hover:not(.ws-disabled):not(.controls-Click__active):hover {
+.ws-is-desktop-platform {
+   .controls-BackButton:hover {
+      .controls-BackButton__caption.controls-Link:not(.ws-disabled):not(.controls-Click__active) {
          color: @back-button-caption-active-color;
          .controls-Button__text {
             text-decoration: none;
@@ -102,11 +99,11 @@
    .controls-BackButton {
       .controls-BackButton__caption {
          margin-left: -4px;
-      }
-      &:before {
-         display: inline-block;
-         vertical-align: top;
-         float: none;
+         &Arrow:before {
+            display: inline-block;
+            vertical-align: top;
+            float: none;
+         }
       }
    }
 }
@@ -118,12 +115,19 @@
       right: 16px;
    }
 }
-.controls-BackButton__backArrow {
-   width: @back-arrow-width;
-   height: @back-arrow-height;
-   .controls-BackButton__backArrowPath {
-      fill: @back-arrow-bg-orange;
+
+.controls-BackButton__captionArrow:before {
+   content: @default-arrow-img;
+   &:hover:before {
+      color: @back-button-arrow-hover-color;
    }
+   width: @back-button-width-before;
+   color: @primary-color;
+   font-weight: normal;
+   float: left;
+   margin: @back-button-margin-before;
+   padding: @back-button-padding-before;
+   line-height: @back-button-linheight-before;
 }
 
 // ALERT: Расположение этого кода в конце файла - важно! Сделано для того чтобы перебить селектор с такой же силой. Не нагородив при этом кучи каскада
@@ -132,13 +136,26 @@
    &.controls-BackButton__orange {
       .controls-BackButton__caption {
          color: @header-color;
-      }
-      .controls-BackButton__backArrowPath {
-         fill: @back-arrow-bg-blue;
+         &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover):hover {
+            color: @primary-color;
+         }
+         &Arrow:before {
+            content: @orange-arrow-img;
+            color: @blue-dark-color;
+         }
+         &.controls-Link.controls-Click__active {
+            .controls-Button__text {
+               color: @primary-color;
+            }
+         }
       }
       &:hover {
-         .controls-BackButton__caption {
+         //Роман Валера скоро перепишет стили для кнопки назад, пока без таких каскадов никак
+         .controls-BackButton__caption:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover) {
             color: @primary-color;
+            &Arrow:before {
+               color: @primary-color;
+            }
          }
       }
    }

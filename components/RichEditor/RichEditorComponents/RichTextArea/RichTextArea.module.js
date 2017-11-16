@@ -279,7 +279,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   self._notifyTextChanged = self._notifyTextChanged.debounce(500);
                }
             });
-            this._lastReview = this.isEnabled() ? undefined : this.getText();
             this._fillImages(false);
          },
 
@@ -422,7 +421,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   //вставка контента может быть инициирована любым контролом,
                   //необходимо нотифицировать о появлении клавиатуры в любом случае
                   if (cConstants.browser.isMobilePlatform) {
-                     EventBus.globalChannel().notify('MobileInputFocus');
+                     this._notifyMobileInputFocus();
                   }
                }.bind(this));
             }
@@ -484,13 +483,29 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            $(window).off('resize', resizeHandler);
                         }.bind(this);
                      $(window).on('resize', resizeHandler);
-                  } else if (cConstants.browser.isMobileIOS) {
+                  }
+                  else
+                  if (cConstants.browser.isMobileIOS) {
                      this._scrollTo(this._inputControl[0], 'top');
                   }
-
+                  if (cConstants.browser.isMobilePlatform) {
+                     this._notifyMobileInputFocus();
+                  }
                   RichTextArea.superclass.setActive.apply(this, args);
                }.bind(this));
-            } else {
+            }
+            else {
+               if (!active) {
+                  var editor = this._tinyEditor;
+                  var manager = editor.editorManager;
+                  // Если компонент должен стать неактивным - нужно сбросить фокусированный редактор (Аналогично обработчику 'focusout' в TinyMCE в строке 40891)
+                  if (manager && manager.focusedEditor === editor) {
+                     manager.focusedEditor = null;
+                  }
+               }
+               if (cConstants.browser.isMobilePlatform) {
+                  EventBus.globalChannel().notify('MobileInputFocusOut');
+               }
                RichTextArea.superclass.setActive.apply(this, args);
             }
          },
@@ -1749,7 +1764,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             });
             editor.on('focusin', function(e) {
                if (self._fromTouch){
-                  EventBus.globalChannel().notify('MobileInputFocus');
+                  self._notifyMobileInputFocus();
                }
             });
             editor.on('focusout', function(e) {
@@ -1761,6 +1776,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             editor.on('touchstart', function(e) {
                self._fromTouch = true;
             });
+         },
+
+         _notifyMobileInputFocus: function () {
+            EventBus.globalChannel().notify('MobileInputFocus');
          },
 
          _showImageOptionsPanel: function(target) {
@@ -2295,8 +2314,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          //Метод обновляющий значение редактора в задизабленом состоянии
          //В данном методе происходит оборачивание ссылок в <a> или их декорирование, если указана декоратор
          _updateDataReview: function(text) {
-            if (this._dataReview && !this.isEnabled() &&  this._lastReview != text) {
-               this._lastReview = text;
+            if (this._dataReview && !this.isEnabled() && (this._lastReview ==/*Не ===*/ null || this._lastReview !== text)) {
+               // _lastReview Можно устанавливать только здесь, когда он реально помещается в DOM, (а не в конструкторе, не в init и не в onInit)
+               // иначе проверку строкой выше не пройти. (И устанавливаем всегда строкой, даже если пришли null или undefined)
+               this._lastReview = text || '';
                this._dataReview.html(this._prepareReviewContent(text));
             }
          },

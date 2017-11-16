@@ -1,15 +1,10 @@
 <div class="controls-BackButton {{ !caption ? 'controls-BackButton__empty'}} {{ !visible ? 'ws-hidden' }}">
-   <svg class="controls-BackButton__backArrow" id="Слой_1" data-name="Слой 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 12">
-      <g>
-         <polygon class="controls-BackButton__backArrowPath" points="0.56 6 5.41 0 0 0 0 12 5.44 12 0.56 6"/>
-         <polygon class="controls-BackButton__backArrowPath" points="8.4 12 9 12 9 0 8.4 0 3.48 6 8.4 12"/>
-      </g>
-   </svg>
+   <a href="{{href}}" class="controls-BackButton__captionArrow"></a>
    <ws:SBIS3.CONTROLS.Link
       name="BackButton-caption"
       className="controls-BackButton__caption"
       caption="{{ caption }}"
-      tooltip="{{ caption }}"
+      tooltip="{{ tooltip || caption }}"
       icon="{{ icon }}"
       href="{{ href }}"
       escapeCaptionHtml="{{ escapeCaptionHtml }}"

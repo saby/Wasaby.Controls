@@ -8,8 +8,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
    'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.NumberTextBox/resources/FormatText',
    'tmpl!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows',
+   'js!SBIS3.CONTROLS.Utils.ConfigByClasses',
    'css!SBIS3.CONTROLS.NumberTextBox'
-], function ( constants, NumberTextBoxUtil, TextBox, FormatText, arrowTpl) {
+], function ( constants, NumberTextBoxUtil, TextBox, FormatText, arrowTpl, ConfigByClasses) {
 
 
    'use strict';
@@ -45,7 +46,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
     *
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     * @initial
     * <component data-component='SBIS3.CONTROLS.NumberTextBox'>
     *     <option name="text">0</option>
@@ -165,11 +166,19 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          _inputMirror: null
       },
 
-      _modifyOptions: function(options){
-         var value;
+      _addOptionsFromClass: function(opts, attrToMerge) {
+         var
+            classes = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || '',
+            params = [
+               { class: 'controls-NumberTextBox__text-align-right', optionName: 'textAlign', value: 'right', defaultValue: 'left' }
+            ];
+         ConfigByClasses(opts, params, classes);
+      },
 
-         options = NumberTextBox.superclass._modifyOptions.apply(this, arguments);
-         value = (options.numericValue != undefined) ? options.numericValue : options.text;
+      _modifyOptions: function(baseCfg, parsedOptions, attrToMerge){
+         var
+            options = NumberTextBox.superclass._modifyOptions.apply(this, arguments),
+            value = (options.numericValue != undefined) ? options.numericValue : options.text;
          if (typeof value !== 'undefined' && value !== null){
             options.text = FormatText.formatText(
                value,
@@ -188,22 +197,22 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          }
 
 	      options.cssClassName += ' controls-NumberTextBox';
-
+         options._paddingClass = options.enableArrows ? ' controls-TextBox_paddingLeft' : ' controls-TextBox_paddingBoth';
+         this._addOptionsFromClass(options, attrToMerge);
          return options;
       },
 
       $constructor: function () {
          var self = this;
          this._createMirrorInput();
-         $('.js-controls-NumberTextBox__arrowDown', this.getContainer().get(0)).click(function () {
+         this.getContainer().click(function(e) {
             if (self.isEnabled()) {
-               self._arrowDownClick();
-            }
-         });
-
-         $('.js-controls-NumberTextBox__arrowUp', this.getContainer().get(0)).click(function () {
-            if (self.isEnabled()) {
-               self._arrowUpClick();
+               if ($(e.target).hasClass('js-controls-NumberTextBox__arrowUp')) {
+                  self._arrowUpClick();
+               }
+               if ($(e.target).hasClass('js-controls-NumberTextBox__arrowDown')) {
+                  self._arrowDownClick();
+               }
             }
          });
 
@@ -221,7 +230,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          if(mirrorContainer.length){
             this._inputMirror = mirrorContainer;
          }else {
-            this._inputMirror = $('<span class="controls-NumberTextBox__mirror controls-TextBox__field"></span>');
+            this._inputMirror = $('<span class="controls-NumberTextBox__mirror"></span>');
             $('body').append(this._inputMirror);
          }
       },
@@ -607,6 +616,14 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          {
             obj.setSelectionRange(pos, pos2);
             obj.focus();
+         }
+      },
+
+      _setEnabled: function(enabled) {
+         NumberTextBox.superclass._setEnabled.apply(this, arguments);
+         //Если удалять стрелки из DOM, то ширина input будет меняться, https://jsfiddle.net/mrLjpqu6/
+         if (this._options.enableArrows) {
+            $('.controls-NumberTextBox__afterFieldWrapper', this.getContainer()).toggleClass('ws-invisible', !enabled);
          }
       }
 

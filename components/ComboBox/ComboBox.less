@@ -2,7 +2,7 @@
    cursor: pointer;
    &__fieldNotEditable {
       display: none;
-      line-height: @text-box-line-height;
+      line-height: @line-height_TextBox;
       &__placeholder {
          color: @default-placeholder-color;
       }
@@ -15,7 +15,7 @@
    .controls-TextBox__field {
       text-overflow: clip;
    }
-   .controls-TextBox__afterFieldWrapper {
+   .controls-ComboBox__afterFieldWrapper {
       .align-items(center);
       .icon-size(@combo-box-icon-size, @default-icon-font);
       .inline-flexbox();//тк icon-size
@@ -26,18 +26,18 @@
       text-decoration: none;
    }
    &.ws-has-focus{
-      .controls-TextBox__afterFieldWrapper {
+      .controls-ComboBox__afterFieldWrapper {
          color: @combo-box-arrowDown-color-focus;
       }
    }
    &:hover {
-      .controls-TextBox__afterFieldWrapper {
+      .controls-ComboBox__afterFieldWrapper {
          color: @combo-box-arrowDown-color-hover;
       }
    }
    &.ws-disabled {
       cursor: default;
-      .controls-TextBox__afterFieldWrapper {
+      .controls-ComboBox__afterFieldWrapper {
          visibility: hidden;
       }
    }
@@ -55,7 +55,7 @@
          position: absolute;
          display: @combo-box-shadow-display;
          top:0;
-         right: @combo-box-icon-size + @default-padding;
+         right: @combo-box-icon-size;
          bottom: 0;
          width: 24px;
          background: linear-gradient(to left, @combo-box-picker-item-bg, rgba(255, 255, 255, 0));
@@ -66,7 +66,7 @@
       color: @compo-box-picker-show-color;
       border: @default-border-width solid @combo-box-picker-show-border-color;
 
-      .controls-TextBox__afterFieldWrapper {
+      .controls-ComboBox__afterFieldWrapper {
          color: @combo-box-arrowDown-color-picker-show;
       }
    }

@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.SearchController',
        * @private
        */
       _reloadView: function(view, filter) {
-         view.reload(filter, view.getSorting(), 0);
+         view.reload(filter, view.getSorting(), 0, undefined, undefined, true);
       },
 
 
@@ -84,6 +84,12 @@ define('js!SBIS3.CONTROLS.SearchController',
          filter[searchParamName] = text;
          if(self._options.hierarchyViewMode) {
             view._options.hierarchyViewMode = true;
+            // При включении режима поиска - отключаем virtualScrolling (в настоящий момент мы не умеем совмещать
+            // отображение путей до найденных записей и virtualScrolling)
+            if (view._virtualScrollController) {
+               view._virtualScrollController.disableScrollHandler(true);
+               view._options.virtualScrolling = false;
+            }
          } else {
             view.setExpand(true);
          }
@@ -176,10 +182,24 @@ define('js!SBIS3.CONTROLS.SearchController',
       },
 
       _resetGroup: function() {
-         var
-            view = this._options.view,
-            filter = coreClone(view.getFilter()),
-            self = this;
+         var view = this._options.view,
+             filter = coreClone(view.getFilter()),
+             self = this,
+             resetProjectionRoot = function() {
+                view._getItemsProjection().setRoot(self._lastRoot ||  view.getRoot() || null);
+             },
+             resetRoot = function() {
+                view._options.currentRoot = self._lastRoot ||  view.getRoot() || null;
+                //Проекции ещё может не быть при сбросе поиска
+                if(view._getItemsProjection()) {
+                   resetProjectionRoot();
+                } else {
+                   view.once('onItemsReady', function() {
+                      resetProjectionRoot();
+                   });
+                }
+             };
+            
          
          if (this._lastDepth) {
             filter['Разворот'] = this._lastDepth;
@@ -197,12 +217,18 @@ define('js!SBIS3.CONTROLS.SearchController',
              т.к. появлялась ошибка при сценарии: ищем что-то, пока грузится сбрасываем поиск,
              и сразу опять что-то ищем. В фильтре списка оставался неправильный раздел. */
             //view.setCurrentRoot(self._lastRoot || null);
-            view._options.currentRoot = self._lastRoot ||  view.getRoot() || null;
-            view._getItemsProjection().setRoot(self._lastRoot ||  view.getRoot() || null);
+            resetRoot();
          });
          this._searchMode = false;
          if(this._options.hierarchyViewMode) {
             view._options.hierarchyViewMode = false;
+            // При включении режима поиска - отключаем virtualScrolling (в настоящий момент мы не умеем совмещать
+            // отображение путей до найденных записей и virtualScrolling)
+            if (view._virtualScrollController) {
+               view._options.virtualScrolling = true;
+               view._virtualScrollController.updateProjection(view._getItemsProjection());
+               view._virtualScrollController.reset();
+            }
          } else {
             view.setExpand(false);
             /* Закрываем ветки после сброса поиска через опцию,
@@ -220,10 +246,6 @@ define('js!SBIS3.CONTROLS.SearchController',
             //Нужно поменять фильтр и загрузить нужный корень.
             //TODO менять фильтр в контексте, когда появятся data-binding'и
             filter[view.getParentProperty()] = this._lastRoot;
-            //DataGridView._filter = filter;
-            //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
-            //Релоад сделает то же самое, так как он стреляет onSetRoot даже если корень на самом деле не понменялся
-            this._reloadView(view, filter);
             // TODO: Нужно оставить одно поле хранящее путь, сейчас в одно запоминается состояние хлебных крошек
             // перед тем как их сбросить, а в другом весь путь вместе с кнопкой назад
 
@@ -237,7 +259,12 @@ define('js!SBIS3.CONTROLS.SearchController',
                if (self._options.backButton) {
                   self._options.backButton.getContainer().css({'display': ''});
                }
-            })
+            });
+   
+            //DataGridView._filter = filter;
+            //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
+            //Релоад сделает то же самое, так как он стреляет onSetRoot даже если корень на самом деле не понменялся
+            this._reloadView(view, filter);
          } else {
             //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
             view.setFilter(filter, true);

@@ -16,17 +16,23 @@
         
 4. Слинковать директорию `/path/to/ws-data/WS.Data` в поддиректорию `WS.Data`:
 
-5. Установить [Node.js](http://nodejs.org/) и [NPM](http://npmjs.com).
+5. Клонировать репозиторий `sbis3-cdn` :
 
-6. Установить глобально интерфейс командной строки [Grunt.js](http://gruntjs.com):
+        git clone git@git.sbis.ru:root/sbis3-cdn.git /path/to/sbis3-cdn
+        
+6. Слинковать директорию `sbis3-cdn/var/www/cdn` в поддиректорию `cdn`.
+
+7. Установить [Node.js](http://nodejs.org/) и [NPM](http://npmjs.com).
+
+8. Установить глобально интерфейс командной строки [Grunt.js](http://gruntjs.com):
 
         npm install -g grunt-cli
 
-7. Из корневой директории репозитория установить пакеты, требуемые для разработки:
+9. Из корневой директории репозитория установить пакеты, требуемые для разработки:
 
         npm install
 
-8. Собрать проект:
+10. Собрать проект:
 
         grunt
 

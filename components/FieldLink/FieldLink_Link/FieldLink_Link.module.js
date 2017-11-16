@@ -1,8 +1,11 @@
 define('js!SBIS3.CONTROLS.FieldLink.Link', [
-      'js!SBIS3.CONTROLS.Link',
-      'Core/core-instance'
+      'js!SBIS3.CORE.CompoundControl',
+      'js!SBIS3.CONTROLS.Clickable',
+      'Core/core-instance',
+      'tmpl!SBIS3.CONTROLS.FieldLink.Link',
+      'css!SBIS3.CONTROLS.FieldLink.Link'
    ],
-   function(Link, instance) {
+   function(CompoundControl, Clickable, cInstance, dotTplFn) {
       
       'use strict';
       
@@ -21,29 +24,13 @@ define('js!SBIS3.CONTROLS.FieldLink.Link', [
        * @public
        */
       
-      var FieldLink_Link =  Link.extend([], {
+      var FieldLink_Link = CompoundControl.extend([ Clickable ], {
+         _dotTplFn: dotTplFn,
          $constructor: function() {
-            this.once('onInit', function() {
-               var parent = this.getParent();
-               
-               /* Если ссылка находится внутри поля связи (placeholder)
-                фокус принимать она не должна. */
-               if(instance.instanceOfModule(this.getParent(), 'SBIS3.CONTROLS.FieldLink')) {
-                  this._options.activableByClick = false;
-                  this.setTabindex(0);
-                  /* Зададим owner'a, чтобы команду обрабатывало поле связи,
-                   в котором лежит ссылка */
-                  this.setOwner(parent);
-               }
-            });
-         },
-         
-         _modifyOptions: function() {
-            var cfg = FieldLink_Link.superclass._modifyOptions.apply(this, arguments);
-            cfg.cssClassName += ' controls-FieldLink__Link controls-Link__disabledHover';
-            /* Зашиваем комманду для обработки полем связи */
-            cfg.command = 'showSelector';
-            return cfg;
+            this._options.command = 'showSelector';
+            // Если ссылка находится внутри поля связи (placeholder) фокус принимать она не должна.
+            this._options.activableByClick = false;
+            this.setTabindex(0);
          }
       });
       
