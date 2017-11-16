@@ -187,7 +187,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          if (groups && groups.length) {
             var expandedGroups = cfg.expandedGroups;
             var groupCollapsing = {};
-            var has = !!expandedGroups.length;
+            var has = !!(expandedGroups && expandedGroups.length);
             for (var i = 0; i < groups.length; i++) {
                var g = groups[i];
                groupCollapsing[g] = has ? expandedGroups.indexOf(g) === -1 : i !== 0;
