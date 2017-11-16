@@ -442,6 +442,12 @@ define('js!Controls/List/ListControl', [
 
          },
 
+         __onPagingArrowClick: function(e, arrow) {
+            if (this._scrollPagingCtr) {
+               this._scrollPagingCtr.scrollView(arrow);
+            }
+         },
+
          reload: function() {
             _private.reload.call(this, this._options);
          }

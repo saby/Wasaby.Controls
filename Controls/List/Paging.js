@@ -87,7 +87,7 @@ define('js!Controls/List/Paging', [
                   }
                   this.__changePage(targetPage);
                }
-               this._notify('on' + btnName + 'Click')
+               this._notify('onArrowClick', btnName);
             }
          }
       });

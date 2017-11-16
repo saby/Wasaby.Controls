@@ -10,6 +10,6 @@
          event:onListBottom="_scrollLoadMore('down')">
    </ws:Controls.List.ListControl.ListView>
    <ws:if data="{{_pagingCfg}}">
-      <ws:Controls.List.Paging className="ws-ListControl__paging" scope="{{_pagingCfg}}"></ws:Controls.List.Paging>
+      <ws:Controls.List.Paging className="ws-ListControl__paging" scope="{{_pagingCfg}}" event:onArrowClick="_onPagingArrowClick"></ws:Controls.List.Paging>
    </ws:if>
 </div>

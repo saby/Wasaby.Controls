@@ -75,6 +75,10 @@ define('js!Controls/List/Controllers/ScrollPaging',
             this._cacheHeights(this._options.scrollContainer);
          },
 
+         scrollView: function(btn) {
+
+         },
+
          _cacheHeights: function(viewportCnt) {
             this._viewHeight = viewportCnt.scrollHeight;
             this._viewportHeight = viewportCnt.offsetHeight;
