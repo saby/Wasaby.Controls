@@ -14,8 +14,15 @@
 @default-padding:              round(14px * @multiplier);
 @default-padding-small:        round(7px * @multiplier);
 //textbox
-@text-box-information-icon-size:                  round(28px * @multiplier);
-@text-box-font-size-l:                            @huge-text-size;
+@height_TextBox_m:                                round(84px * @multiplier);
+@height_TextBox_l:                                round(84px * @multiplier);
+@font-size_TextBox_m:                             round(32px * @multiplier);
+@font-size_TextBox_l:                             round(40px * @multiplier);
+@line-height_TextBox:                             round(80px * @multiplier);
+@padding_TextBox-container:                       0 round(14px * @multiplier);
+@padding_TextBox-container_left:                  0 0 0 round(14px * @multiplier);
+@border-width_TextBox:                            2px;
+@font-size_TextBox-InformationIcon:               round(28px * @multiplier);
 //textarea
 @text-area-line-height-l:                         round(52px * @multiplier);//52px;
 //number-text-box
@@ -36,6 +43,7 @@
 @fieldLink-showAll-shadow-width:                  round(28px * @multiplier);
 @fieldLink-linkItem-line-height:                  @default-base-line-height;
 @fieldLink-icon-size:                             round(80px * @multiplier); //todo: при переходе на cbuc-icons отказаться от этого щита
+@max-height_FieldLink-beforeFieldWrapper:         @default-base-line-height;
 //treeview
 @tree-view-folder-text-size:                      @default-text-size;
 //button
@@ -225,6 +233,7 @@
 @menu-big-header-height:                  round(32px * @multiplier);
 @menu-header-padding:                     round(4px * @multiplier) round(16px * @multiplier);;
 @popup-header-font-weight:                normal;
+@menu-item-expand-padding-right:          @menu-expand-width;
 //Menu item
 @menu-item-height:                        round(100px * @multiplier);
 @menu-item-font-size:                     @default-text-size;
