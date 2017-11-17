@@ -425,6 +425,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _setPlaceholder: function(text){
+         /* В placeholder могут передать шаблон */
          text = text ? text : text == 0 ? text : '';
          if (!this._useNativePlaceHolder(text)) {
             if (!this._compatPlaceholder) {
@@ -512,7 +513,11 @@ define('js!SBIS3.CONTROLS.TextBox', [
          /* Когда дизейблят поле ввода, ставлю placeholder в виде пробела, в старом webkit'e есть баг,
             из-за коготорого, если во flex контейнере лежит input без placeholder'a ломается базовая линия.
             placeholder с пустой строкой и так будет не виден, т.ч. проблем быть не должно */
-         this._setPlaceholder(enabled ? this._options.placeholder : ' ');
+         if(this._compatPlaceholder) {
+            this._compatPlaceholder.toggleClass("ws-hidden", !enabled);
+         } else {
+            this._setPlaceholder(enabled ? this._options.placeholder : ' ');
+         }
          // FIXME Шаблонизатор сейчас не позволяет навешивать одиночные атрибуты, у Зуева Димы в планах на сентябрь
          // сделать возможность вешать через префикс attr-
          this._inputField.prop('readonly', !enabled);
