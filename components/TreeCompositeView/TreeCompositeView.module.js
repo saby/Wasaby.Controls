@@ -268,6 +268,12 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          }
          return result;
       },
+      
+      _modifyOptions: function() {
+         var options = TreeCompositeView.superclass._modifyOptions.apply(this, arguments);
+         options.className = (options.className || '') + ' controls-TreeDataGridView';
+         return options;
+      },
 
       _getEditArrowPositionTile: function() {
          var
