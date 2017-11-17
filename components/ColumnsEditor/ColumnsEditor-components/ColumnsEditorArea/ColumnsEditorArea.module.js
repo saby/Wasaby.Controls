@@ -79,17 +79,32 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          },
 
          _commandApplyColumns: function () {
-            var
-               list = this._selectableView,
-               selectedColumns = [].concat(list.getSelectedKeys()),
-               items = list.getItems();
-            // Сортируем выделенные записи согласно их положению в рекордсете
-            selectedColumns.sort(function (el1, el2) {
-               return items.getIndex(items.getRecordById(el1)) - items.getIndex(items.getRecordById(el2));
-            });
-            //^^^this._options.selectedColumns = selectedColumns;
-            //^^^this._notifyOnPropertyChanged('selectedColumns');
-            this._notify('onComplete'/*^^^'onSelectedColumnsChange'*/, selectedColumns, _collectExpandedGroups(this));
+            var selectedColumns = [];
+            if (this._fixedView || this._selectableView) {
+               if (this._fixedView) {
+                  selectedColumns.push.apply(selectedColumns, this._options._optsFixed.markedKeys);
+               }
+               if (this._selectableView) {
+                  var view = this._selectableView;
+                  var list = [].concat(view.getSelectedKeys());
+                  if (list.length) {
+                     var items = view.getItems();
+                     // Сортируем выделенные записи согласно их положению в рекордсете
+                     list.sort(function (e1, e2) {
+                        return items.getIndex(items.getRecordById(e1)) - items.getIndex(items.getRecordById(e2));
+                     });
+                     selectedColumns.push.apply(selectedColumns, list);
+                  }
+               }
+            }
+            if (selectedColumns.length) {
+               //^^^this._options.selectedColumns = selectedColumns;
+               //^^^this._notifyOnPropertyChanged('selectedColumns');
+               this._notify('onComplete'/*^^^'onSelectedColumnsChange'*/, selectedColumns, _collectExpandedGroups(this));
+            }
+            else {
+               this._notify('onClose');
+            }
          },
 
          destroy: function () {
