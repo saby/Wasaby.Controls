@@ -42,7 +42,6 @@
 @default-disabled-color:                  @gray-ccc-color;
 @primary-color:                           #ff7033;
 @secondary-color:                         transparent;
-@default-border-width:                    1px;
 
 @icon-active-color:                       @blue-dark-color;
 
@@ -509,9 +508,7 @@
 // Text box //
 // -------- //
 //todo
-@text-box-focus-border-color:             #ccc;
-@text-box-focus-bg:                       @text-box-bg;
-@text-box-hover-border-color:             @text-box-focus-border-color;
+@text-box-focus-bg:                       @background-color_TextBox;
 // --------------- //
 // Money text box  //
 // --------------- //
@@ -674,8 +671,8 @@
 @date-range-slider-prev-next-buttons-font-size: 16px;
 @date-range-slider-lock-margin-right:           6px;
 @date-range-slider-error-border-width:          1px;
-@date-range-slider-error-border-color:          @text-box-border-color-error;
-@date-range-slider-error-bg:                    @text-box-bg-error;
+@date-range-slider-error-border-color:          @border-color_TextBox_error;
+@date-range-slider-error-bg:                    @background-color_TextBox_error;
 @date-range-slider-picker-shadow:                  0px 0px 12px 0px rgba(0,0,0,0.25);
 // ----------------- //
 // Date Range Choose //
@@ -1199,7 +1196,7 @@
 @controls-filterButton-picker-bg:                 #F4F4F4;
 @controls-filterButton-picker-border-width:       @default-border-width;
 @controls-filterButton-picker-border-color:       @float-area-border-color;
-@controls-filterButton-picker-close-top:          12px;
+@controls-filterButton-picker-close-top:          10px;
 @controls-Popup-closeButton-top:                  10px;
 @controls-filterButton-button-height:             24px;
 @controls-filterButton-button-width:              24px;
@@ -1219,7 +1216,7 @@
 @controls-filterButton-title-fontSize:            15px;
 @controls-filterButton-title-text-color:          @blue-dark-color;
 @controls-filterButton-area-content-margin:       0 12px 12px 34px;
-@controls-filterButton-line-height:               @link-line-height;
+@controls-filterButton-line-height:               20px;
 @controls-filterButton-margin-value:              8px;
 @controls-filterButton-filterLine-margin:         8px 8px 8px 0;
 @controls-filterButton-history-pin-top:           5px;

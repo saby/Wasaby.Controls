@@ -58,9 +58,9 @@
    cursor: grabbing !important;
 }
 
-.placeholder() {
+.placeholder(@color: @default-placeholder-color) {
   &::-webkit-input-placeholder {
-    color: @default-placeholder-color;
+    color: @color;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
@@ -68,19 +68,19 @@
   }
 
   &:-moz-placeholder {
-     color: darken(@default-placeholder-color, 17%);
+    color: @color;
     -moz-user-select: none;
     text-overflow:ellipsis;
   }
 
   &::-moz-placeholder {
-     color: darken(@default-placeholder-color, 17%);
+    color: @color;
     -moz-user-select: none;
     text-overflow:ellipsis;
   }
 
   &:-ms-input-placeholder {
-     color: @default-placeholder-color;
+     color: @color;
     //-ms-user-select: none; Убираю, т.к. из-за этого IE ставит курсор не в инпут, а куда то в рандомное место на странице
     text-overflow:ellipsis;
   }
@@ -153,7 +153,6 @@
   font-family: @default-font-name;
   font-size: @button-font-size;
   font-weight: normal;
-  text-align: @button-text-alignment;
   position: relative;
   .box-shadow(@button-default-shadow);
   border: none;
@@ -578,6 +577,12 @@
   -moz-hyphens: @hyphenation;
   -ms-hyphens: @hyphenation;
   hyphens: @hyphenation;
+}
+
+.reset-browser-input-styles() {
+  border: none;
+  outline: none;
+  background: transparent;
 }
 
 //---------------Имитация цикла for---------------//

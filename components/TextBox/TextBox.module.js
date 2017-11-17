@@ -293,12 +293,12 @@ define('js!SBIS3.CONTROLS.TextBox', [
          TextBox.superclass.init.apply(this, arguments);
 
          if(this._options.informationIconColor) {
-            this._informationIcon = this.getChildControlByName('informationIcon');
+            this._informationIcon = $('.controls-TextBox__informationIcon', this.getContainer());
 
-            this._informationIcon.getContainer().on('mouseenter', function() {
+            this._informationIcon.on('mouseenter', function() {
                self._notify('onInformationIconMouseEnter');
             });
-            this._informationIcon.subscribe('onActivated', function(){
+            this._informationIcon.on('click', function(){
                self._notify('onInformationIconActivated');
             });
          }
@@ -623,17 +623,11 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _getAfterFieldWrapper: function() {
-         if(!this._afterFieldWrapper) {
-            this._afterFieldWrapper = this.getContainer().find('.controls-TextBox__afterFieldWrapper');
-         }
-         return this._afterFieldWrapper;
+
       },
 
       _getBeforeFieldWrapper: function() {
-         if(!this._beforeFieldWrapper) {
-            this._beforeFieldWrapper = this.getContainer().find('.controls-TextBox__beforeFieldWrapper');
-         }
-         return this._beforeFieldWrapper;
+
       },
 
       destroy: function() {
