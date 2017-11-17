@@ -961,7 +961,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          else {
             if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
                groupId = items[0].getContents();
-               if (items.length > 1 && this._canApplyGrouping(items[1])) {
+               if (groupId !== false && items.length > 1 && this._canApplyGrouping(items[1])) {
                   this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
                }
                items.splice(0, 1);
