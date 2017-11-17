@@ -49,7 +49,7 @@ node('controls') {
     ws(workspace) {
         echo "Чистим рабочую директорию"
         deleteDir()
-        echo "Назначаем переменную"
+        echo "Назначаем переменные"
         def server_address=props["SERVER_ADDRESS"]
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
@@ -65,6 +65,8 @@ node('controls') {
             regr = true
             unit = true
         }
+		echo ======== Переменные: ver=${ver}  server_address=${server_address}  branch_atf=${branch_atf}  branch_engine=${branch_engine} ========
+		
         echo "Выкачиваем хранилища"
         stage("Checkout"){
             parallel (
