@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * @demo SBIS3.DOCS.SelectorButtonSingle Пример 2. Кнопка выбора в виде кнопки-ссылки, поле ввода отсутствует. Вызов справочника производится кликом по ссылке. Все выбранные значения будут отображаться в качестве текста кнопки.
     * В режиме множественного выбора удаление выбранных значений производится массово кликом по серому крестику. Для корректного отображения кнопки-ссылки используется CSS-модификатор "controls-SelectorButton__asLink".
     *
-    * @category Buttons
+    * @category Button
     * @control
     * @public
     */
@@ -135,6 +135,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
             selectMode: 'floatArea',
             /**
              * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS.Action.SelectorAction}
+             * @remark
+             * При включенной опции в <a href='https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/FieldLink/options/dictionaries/'>dictionaries</a> можно передать <a href='https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/FieldLink/typedefs/Dictionaries/'>dialogOptions</a>.
              */
             useSelectorAction: false,
             /**

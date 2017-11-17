@@ -15,32 +15,34 @@
 @default-padding-small:        2px;
 @default-input-padding:        @default-padding;
 //textbox
-@text-box-height-m:               @default-height;
-@text-box-height-l:               @default-height;
-@text-box-font-size-m:            @default-text-size;
-@text-box-font-size-l:            18px;
-@text-box-line-height:            @default-base-line-height;
-@text-box-input-padding:          0 @default-input-padding;
-@text-box-input-padding-l:        0;//на данный момент большое и малое поле ввода не различаются в теме online //todo @default-padding-small
-@text-box-information-icon-size:  13px;//по стандарту
-@text-box-border-radius:          0px;
+@height_TextBox_m:                24px;
+@height_TextBox_l:                24px;
+@font-size_TextBox_m:             14px;
+@font-size_TextBox_l:             18px;
+@line-height_TextBox:             22px;
+@padding_TextBox-container:       0 4px;
+@padding-bottom_TextBox-container_l:     0;//на данный момент большое и малое поле ввода не различаются в теме online //todo @default-padding-small
+@padding_TextBox-container_left:  0 0 0 4px;
+@border-radius_TextBox:           0px;
+@border-width_TextBox:            1px;
+@font-size_TextBox-InformationIcon: 16px;
 //textarea
 @text-area-line-height-l:         @default-line-height;
 //number-text-box
 @number-text-box-icon-size:       @default-icon-size;
 //combo-box
 @combo-box-icon-size:             @default-icon-size;
-@combo-box-arrow-padding:         0 @default-padding 0 0;
+@combo-box-arrow-padding:         0 0 0 @default-padding;
 @combo-box-shadow-display:        block;
 //suggest-text-box
 @suggest-text-box-icon-size:                @default-icon-size;
-@suggest-text-box-icon-cross-padding:       0 @default-padding;
+@suggest-text-box-icon-cross-padding:       0 0 0 @default-padding;
 //suggest-text-box
 @fieldLink-link-cross-size:       @default-icon-size;
 //search-form
 @search-border-radius:            10px;
-@search-field-padding:            0 0 0 12px;
-@search-button-wrapper-padding:   0 5px 0 0;
+@search-field-padding:            0 0 0 8px;
+@search-button-wrapper-padding:   0 1px 0 0;
 @search-loop-size:                @default-icon-size;
 @search-form-icon-padding:        0 2px;
 //fieldLink
@@ -48,6 +50,7 @@
 @fieldLink-picker-icon-size:      @default-icon-size;
 @fieldLink-showAll-shadow-width:  20px;
 @fieldLink-linkItem-line-height:  @default-line-height;
+@max-height_FieldLink-beforeFieldWrapper: @default-line-height;
 //time-header:
 @time-header-icon-size:           @default-icon-size;
 //treeview
@@ -56,10 +59,6 @@
 @button-large-height:             @default-height-big;
 @button-large-border-radius:      24px;
 @button-large-font-size:          18px;@search-border-radius:                                                                                                  10px;
-@search-field-padding:                                                                                                  0 0 0 12px;
-@search-button-wrapper-padding:                                                                                         0 5px 0 0;
-@search-loop-size:                                                                                                      @default-icon-size;
-@search-form-icon-padding:                                                                                              0 2px;
 //area-blocks
 @spacing-between-blocks:                                                                                                6px;
 //missspell
@@ -69,3 +68,6 @@
 @printDialog-activate-right:      40px;
 //operationsMark
 @controls-OperationsMark-separator-line-height: 30px;
+//engine-browser
+@browser-search-margin:           10px 0 10px 12px;
+@browser-top-template-padding:    8px;

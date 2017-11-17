@@ -1,45 +1,85 @@
 //default-sizes
-@default-height:               2.7857rem;
-@default-height-big:           2.7857rem;
+@default-height:               round(78px * @multiplier);
+@default-height-big:           round(78px * @multiplier);
 @default-border-width:         1px;
-@default-text-size:            1rem;
-@small-text-size:              .8571rem;
-@large-text-size:              1.1428rem;
-@huge-text-size:               1.4285rem;
-@default-icon-size:            1.1428rem;
-@default-icon-size-medium:     1.5rem;
-@default-icon-size-large:      2rem;
-@default-line-height:          1.5rem; //42px;
-@default-base-line-height:     2rem;//@default-height - 2 * @default-border-width
-@default-padding:              0.5rem;
-@default-padding-small:        0.25rem;
+@default-text-size:            round(28px * @multiplier);
+@small-text-size:              round(24px * @multiplier);
+@large-text-size:              round(32px * @multiplier);
+@huge-text-size:               round(40px * @multiplier);
+@default-icon-size:            round(32px * @multiplier);
+@default-icon-size-medium:     round(42px * @multiplier);
+@default-icon-size-large:      round(56px * @multiplier);
+@default-line-height:          round(42px * @multiplier); //42px;
+@default-base-line-height:     round(56px * @multiplier);//@default-height - 2 * @default-border-width
+@default-padding:              round(14px * @multiplier);
+@default-padding-small:        round(7px * @multiplier);
 //textbox
-@text-box-height-m:               2.0714rem;
-@text-box-height-l:               @default-height-big;
-@text-box-font-size-l:            1.4286rem;
-@text-box-input-padding-l:        0.25rem;
+@height_TextBox_m:                round(58px * @multiplier);
+@height_TextBox_l:                round(78px * @multiplier);
+@font-size_TextBox_m:             round(28px * @multiplier);
+@font-size_TextBox_l:             round(40px * @multiplier);
+@line-height_TextBox:             round(56px * @multiplier);
+@padding_TextBox-container:       0 round(14px * @multiplier);
+@padding-bottom_TextBox-container_l: round(7px * @multiplier);
+@padding_TextBox-container_left:  0 0 0 round(14px * @multiplier);
+@border-width_TextBox:            @default-border-width;
+@font-size_TextBox-InformationIcon: round(37px * @multiplier);
 //search-form
 @search-loop-size:             @default-icon-size;
 //button
 @button-large-height:          @default-height-big;
 //combobox
 @combo-box-icon-size:          @default-icon-size-medium;
-@combo-box-arrow-padding:      0 @default-padding-small 0 0;
+@combo-box-arrow-padding:      0 0 0 @default-padding-small;
 //suggest-text-box
 @suggest-text-box-icon-size:           @default-icon-size-medium;
-@suggest-text-box-icon-cross-padding:  0 @default-padding-small;
+@suggest-text-box-icon-cross-padding:  0 0 0 @default-padding-small;
+@suggest-list-footer-height:           round(77px * @multiplier);
 //treeView
 @tree-view-expand-icon-size:   @default-icon-size;
 @tree-view-expand-width:       @default-icon-size;
 //itemsToolbar
-@list-view-items-toolbar-icon-size:       1.32rem;
+@list-view-items-toolbar-icon-size:       round(37px * @multiplier);
 @list-view-items-toolbar-menu-icon-size:  @icon-large-size;
 //fieldlink
 @fieldLink-icon-size:          @default-icon-size-medium;
-@fieldLink-afterField-padding: 0 @default-padding-small 0 0;
+@fieldLink-afterField-button-margin: 0 @default-padding-small 0 0;
 //searchForm
 @search-form-icon-padding:     0 @default-padding 0 0;
 //commandsButton
 @commands-button-close-icon:   @default-icon-size-large;
 //operationPanel
 @controls-OperationsPanelButton-font-size:  @icon-large-size;
+//grid
+@controls-view-padding-DEFAULT:             round(16px * @multiplier);
+
+//information-popup
+@controls-InformationPopup-border-width:                        round(8px * @multiplier) 0 0 0;
+@controls-SubmitPopup-footer-padding:                           round(32px * @multiplier);
+@controls-SubmitPopup-button-margin:                            0 round(4px * @multiplier);
+@controls-SubmitPopup-size-standard-width:                      round(700px * @multiplier);
+@controls-SubmitPopup-size-big-width:                           round(800px * @multiplier);
+@controls-NotificationPopup-header-min-height:                  round(100px * @multiplier);
+@controls-NotificationPopup-header-padding:                     round(24px * @multiplier);
+@controls-InformationPopup-closeButton-top:                     round(24px * @multiplier);
+@controls-InformationPopup-closeButton-right:                   round(24px * @multiplier);
+@controls-NotificationPopup-header-padding-with-close-button:   round(24px * @multiplier) round(90px * @multiplier) round(24px * @multiplier) round(24px * @multiplier); //todo
+@controls-NotificationPopup-header-icon-right-margin:           round(16px * @multiplier);
+@controls-InformationPopup-closeButton-width:                   round(52px * @multiplier);
+@controls-InformationPopup-closeButton-height:                  round(52px * @multiplier);
+@controls-InformationPopup-closeButton-font-size:               round(52px * @multiplier);
+@controls-NotificationPopup-header-caption-font-size:           round(32px * @multiplier);
+@controls-NotificationPopup-max-width:                          round(800px * @multiplier);
+@controls-NotificationPopup-min-width:                          round(700px * @multiplier);
+@long-operations-popup-header-icon-size:                        round(52px * @multiplier);
+@long-operations-popup-header-icon-margin-right:                round(16px * @multiplier);
+@long-operations-popup-foot-height:                             round(75px * @multiplier);
+@long-operations-popup-collapsed-header-caption-f-size:         round(32px * @multiplier);
+@long-operations-popup-actions-container-margin-right:          round(24px * @multiplier);
+@long-operations-popup-foot-f-size:                             round(32x * @multiplier);
+@long-operations-popup-collapsed-width:                         round(700px * @multiplier);
+@long-operations-popup-collapsed-max-width:                     round(800px * @multiplier);
+@long-operations-popup-exp-width:                               round(700px * @multiplier);
+@long-operations-popup-exp-max-width:                           round(800px * @multiplier);
+@long-operations-popup-foot-but-gap-top:                        round(21px * @multiplier);
+@long-operations-popup-header-but-f-size:                       round(32px * @multiplier);

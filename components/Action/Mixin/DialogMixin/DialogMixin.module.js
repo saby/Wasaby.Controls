@@ -15,11 +15,11 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
     */
    var DialogMixin = /** @lends SBIS3.CONTROLS.Action.DialogMixin.prototype */{
        /**
-        * @event onAfterShow Происходит перед отображением диалога.
+        * @event onAfterShow Происходит после отображения диалога.
         * @see onBeforeShow
         */
        /**
-        * @event onBeforeShow Происходит после отображения диалога.
+        * @event onBeforeShow Происходит перед отображением диалога.
         * @see onAfterShow
         */
       $protected : {

@@ -1,0 +1,11 @@
+<div class="ws-ListControl">
+   <ws:Controls.List.ListControl.ListView
+         items="{{_items}}"
+         itemTemplate="{{_options.itemTemplate}}"
+         idProperty="{{_options.idProperty}}"
+         displayProperty="{{_options.displayProperty}}"
+         selectedKey="{{_options.selectedKey}}"
+         event:onListTop="_scrollLoadMore('up')"
+         event:onListBottom="_scrollLoadMore('down')">
+   </ws:Controls.List.ListControl.ListView>
+</div>

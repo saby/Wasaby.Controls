@@ -45,15 +45,22 @@
   font-family: @fontFamily !important;
 }
 
+.icon-size-without-important(@size: 16px, @fontFamily: @default-icon-font) {
+  font-size: @size;
+  width: @size;
+  height: @size;
+  font-family: @fontFamily;
+}
+
 .closedHandCursor() {
    cursor: -moz-grabbing !important;
    cursor: -webkit-grabbing !important;
    cursor: grabbing !important;
 }
 
-.placeholder() {
+.placeholder(@color: @default-placeholder-color) {
   &::-webkit-input-placeholder {
-    color: @default-placeholder-color;
+    color: @color;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
@@ -61,19 +68,19 @@
   }
 
   &:-moz-placeholder {
-     color: darken(@default-placeholder-color, 17%);
+    color: @color;
     -moz-user-select: none;
     text-overflow:ellipsis;
   }
 
   &::-moz-placeholder {
-     color: darken(@default-placeholder-color, 17%);
+    color: @color;
     -moz-user-select: none;
     text-overflow:ellipsis;
   }
 
   &:-ms-input-placeholder {
-     color: @default-placeholder-color;
+     color: @color;
     //-ms-user-select: none; Убираю, т.к. из-за этого IE ставит курсор не в инпут, а куда то в рандомное место на странице
     text-overflow:ellipsis;
   }
@@ -489,15 +496,16 @@
   height: @size;
 }
 
-.checkbox-border-size(@sizeContainer, @sizeContent, @borderWidth) {
+.checkbox-border-size() {
   &:before {
+    .box-sizing();
     content: '';
     position: absolute;
-    border-width: @borderWidth;
+    border-width: @default-border-width;
     border-style: solid;
-    width: calc(@sizeContent ~"-" 2 * @borderWidth);
-    height: calc(@sizeContent ~"-" 2 * @borderWidth);
-    margin: (@sizeContainer - @sizeContent) / 2;
+    width: @check-box-icon-box-size;
+    height: @check-box-icon-box-size;
+    margin: (@check-box-icon-size - @check-box-icon-box-size) / 2;
   }
 }
 
@@ -569,6 +577,12 @@
   -moz-hyphens: @hyphenation;
   -ms-hyphens: @hyphenation;
   hyphens: @hyphenation;
+}
+
+.reset-browser-input-styles() {
+  border: none;
+  outline: none;
+  background: transparent;
 }
 
 //---------------Имитация цикла for---------------//

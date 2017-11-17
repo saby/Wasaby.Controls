@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.FormattedTextBox',
     * @ignoreEvents onReady
     *
     * @public
-    * @category Inputs
+    * @category Input
     * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.FormattedTextBox' style="width:150px;">
