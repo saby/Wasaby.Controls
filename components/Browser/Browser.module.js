@@ -1,5 +1,6 @@
 define('js!SBIS3.CONTROLS.Browser', [
    'Core/CommandDispatcher',
+   'Core/Deferred',
    'js!SBIS3.CORE.CompoundControl',
    'tmpl!SBIS3.CONTROLS.Browser',
    'js!SBIS3.CONTROLS.ComponentBinder',
@@ -7,7 +8,7 @@ define('js!SBIS3.CONTROLS.Browser', [
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/core-instance',
    'Core/helpers/Object/find'
-], function(CommandDispatcher, CompoundControl, dotTplFn, ComponentBinder, ColumnsController, tplUtil, cInstance, cFind){
+], function(CommandDispatcher, Deferred, CompoundControl, dotTplFn, ComponentBinder, ColumnsController, tplUtil, cInstance, cFind){
    'use strict';
 
    /**
@@ -320,15 +321,16 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
 
       /**
-       * Показать редактор колонок
+       * Показать редактор колонок. Возвращает обещание, которое будет разрешено списком идентификаторов выбранных колонок
        * (Редактор колонок не сформирует событие onColumnsEditorShow при этом)
        * @public
-       * @param {object} options Параметры открыттия
+       * @param {object} columnsConfig Параметры открытия
+       * @return {Deferred<object>}
        * @command showColumnsEditor
        */
-      showColumnsEditor: function (options) {
+      showColumnsEditor: function (columnsConfig) {
          this._ensureColumnsEditor(false);
-         this._columnsEditor.show(options);
+         return this._columnsEditor ? this._columnsEditor.show(columnsConfig || this._options.columnsConfig) : Deferred.fail();
       },
 
       _onColumnsEditorShow: function (event) {
@@ -403,7 +405,7 @@ define('js!SBIS3.CONTROLS.Browser', [
          }
          this._getView().setColumns(this._columnsController.getColumns(this._options.columnsConfig.columns));
          this._getView().redraw();
-         this._ensureColumnsEditor(true);
+         this._ensureColumnsEditor();
       },
 
       _bindView: function() {
