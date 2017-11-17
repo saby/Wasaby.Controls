@@ -1,6 +1,6 @@
 .controls-CheckBox {
   display: inline-block;
-  line-height: @check-box-icon-size;
+  line-height: @height_CheckBox;//todo: при переписывании чекбоксов необходимо учесть что можно сделать на флексах и не задавать данное свойство
 }
 
 .controls-CheckBox__caption {
@@ -19,12 +19,12 @@
 
 .controls-CheckBox__caption_size {
   font-size: @check-box-font-size;
-  margin-left: @check-box-icon-size;
+  margin-left: @width_CheckBox;//todo: ???
   padding: @check-box-caption-padding;
 }
 
 .controls-CheckBox__icon_size {
-  .checkbox(@check-box-icon-size);
+  .checkbox();
 }
 
 .controls-CheckBox__iconBox:before {
@@ -39,13 +39,13 @@
 
 .controls-Checked__checked {
   &>.controls-CheckBox__icon {
-    .checkbox-checked-size(@check-box-icon-successful-size, @check-box-icon-successful-left, @check-box-icon-successful-top);
+    .checkbox-checked-size();
   }
 }
 
 .controls-ToggleButton__null {
   &>.controls-CheckBox__icon {
-    .checkbox-null-size(@check-box-icon-size, @check-box-icon-null-size);
+    .checkbox-null-size();
   }
 }
 
