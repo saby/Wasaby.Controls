@@ -1532,7 +1532,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
              this._setPartScrollShift(0);
           }
           checkColumns(this._options);
-          this._destroyEditInPlace();
+          if (this._hasEditInPlace()) {
+             // Если используется редактирование по месту, то необходимо:
+             // 1. Поменять набор колонок в контроллере
+             this._getEditInPlace().addCallback(function(editInPlace) {
+                editInPlace.setColumns(columns);
+             });
+             // 2. Уничтожить запущенное редактирование по месту, чтобы оно пересоздалось с актуальными колонками
+             this._destroyEditInPlace();
+          }
        },
 
       _oldRedraw: function() {
