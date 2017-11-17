@@ -65,7 +65,7 @@ node('controls') {
             regr = true
             unit = true
         }
-		echo ======== Переменные: ver=${ver}  server_address=${server_address}  branch_atf=${branch_atf}  branch_engine=${branch_engine} ========
+		echo Переменные: ver=${ver}  server_address=${server_address}  branch_atf=${branch_atf}  branch_engine=${branch_engine}
 		
         echo "Выкачиваем хранилища"
         stage("Checkout"){
