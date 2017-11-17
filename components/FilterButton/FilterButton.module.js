@@ -404,6 +404,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                    side: 'top'
                 },
                 closeButton: true,
+                locationStrategy: 'bodyBounds',
                 closeByExternalClick: true,
                 closeOnTargetMove: !detection.isMobilePlatform,
                 context: context,
