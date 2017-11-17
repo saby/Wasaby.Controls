@@ -273,7 +273,6 @@ define('js!SBIS3.CONTROLS.Browser', [
          Browser.superclass.init.apply(this, arguments);
 
          this._onItemActivateHandler = this._onItemActivate.bind(this);
-         this._onSelectedColumnsChangeHandler = this._onSelectedColumnsChange.bind(this);
          this._onColumnsEditorShowHandler = this._onColumnsEditorShow.bind(this);
          this._folderEditHandler = this._folderEdit.bind(this);
          this._onApplyFilterHandler = this._onApplyFilter.bind(this);
@@ -284,17 +283,6 @@ define('js!SBIS3.CONTROLS.Browser', [
          CommandDispatcher.declareCommand(this, 'showColumnsEditor', this.showColumnsEditor);
       },
 
-      _onSelectedColumnsChange: function(event, columns) {
-         var
-            onColumnsChange = this._notify('onColumnsChange', columns);
-         this._columnsController.setState(columns);
-         this._getView().setColumns(this._columnsController.getColumns(this._options.columnsConfig.columns));
-         if (onColumnsChange === ChangeColumnsResult.RELOAD) {
-            this._getView().reload();
-         } else {
-            this._getView().redraw();
-         }
-      },
       /**
        * Устанавливает параметры для Панели конфигурации колонок списка.
        * @param config {Object} Конфигурация
@@ -333,11 +321,29 @@ define('js!SBIS3.CONTROLS.Browser', [
          return this._columnsEditor ? this._columnsEditor.show(columnsConfig || this._options.columnsConfig) : Deferred.fail();
       },
 
-      _onColumnsEditorShow: function (event) {
+      _onColumnsEditorShow: function (event, promise) {
          event.setResult({
             columns: this._options.columnsConfig.columns,
             selectedColumns: this._columnsController.getState()
          });
+         promise.addCallback(function (columnsConfig) {
+            if (columnsConfig) {
+               this._changeColumns(columnsConfig.selectedColumns);
+            }
+         }.bind(this));
+      },
+
+      _changeColumns: function (columns) {
+         var result = this._notify('onColumnsChange', columns);
+         this._columnsController.setState(columns);
+         var view = this._getView();
+         view.setColumns(this._columnsController.getColumns(this._options.columnsConfig.columns));
+         if (result === ChangeColumnsResult.RELOAD) {
+            view.reload();
+         }
+         else {
+            view.redraw();
+         }
       },
 
       _modifyOptions: function() {
@@ -405,7 +411,7 @@ define('js!SBIS3.CONTROLS.Browser', [
          }
          this._getView().setColumns(this._columnsController.getColumns(this._options.columnsConfig.columns));
          this._getView().redraw();
-         this._ensureColumnsEditor();
+         this._ensureColumnsEditor(/*^^^true*/);
       },
 
       _bindView: function() {
@@ -553,12 +559,10 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
 
       _subscribeToColumnsEditor: function() {
-         this.subscribeTo(this._columnsEditor, 'onSelectedColumnsChange', this._onSelectedColumnsChangeHandler);
          this.subscribeTo(this._columnsEditor, 'onColumnsEditorShow', this._onColumnsEditorShowHandler);
       },
 
       _unsubscribeFromColumnsEditor: function () {
-         this.unsubscribeFrom(this._columnsEditor, 'onSelectedColumnsChange', this._onSelectedColumnsChangeHandler);
          this.unsubscribeFrom(this._columnsEditor, 'onColumnsEditorShow', this._onColumnsEditorShowHandler);
       },
 

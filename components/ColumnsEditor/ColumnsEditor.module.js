@@ -39,6 +39,18 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
        * @mixes SBIS3.CONTROLS.PickerMixin ^^^
        */
       var ColumnsEditor = CompoundControl.extend([/*PickerMixin*/], /** @lends SBIS3.CONTROLS.ColumnsEditor.prototype */{
+         /**
+          * @typedef {Object} ColumnsConfigObject
+          * @property {WS.Data/Collection/RecordSet} columns Набор записей, каждая из которых описывает элемент панели редактирования колонок. <br/>
+          * Поля записи:
+          * <ol>
+          *    <li><b>id (String)</b> - идентификатор элемента.</li>
+          *    <li><b>title (String)</b> - отображаемый текст элемента.</li>
+          *    <li><b>fixed (Boolean)</b> - признак "Фиксированный". На панели редактирования колонок элементы с таким признаком выбраны и недоступны для взаимодействия, а колонки элемента, описанные в опции **columnConfig**, всегда отображены в списке.</li>
+          *    <li><b>columnConfig (Array)</b> - массив с конфигурацией колонок (см. {@link SBIS3.CONTROLS.DataGridView#columns columns}).</li>
+          * </ol>
+          * @property {Array.<String|Number>} selectedColumns Массив идентификаторов элементов, которые будут отмечены на панели редактирования колонок. Параметр актуален для элементов с опцией *fixed=false*.
+          */
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
@@ -51,12 +63,13 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                groupTitleTpl: null,
                groupTitles: null
             },
-            _userConfigName: null
+            _userConfigName: null,
+            _result: null
          },
 
          $constructor: function () {
-            CommandDispatcher.declareCommand(this, 'showColumnsEditor', this._commandShowColumnsEditor);
-            this._publish('onColumnsEditorShow', 'onColumnsEditorComplete', 'onSelectedColumnsChange');
+            CommandDispatcher.declareCommand(this, 'openColumnsEditorArea', this._commandOpenColumnsEditorArea);
+            this._publish('onColumnsEditorShow');
          },
 
          init: function () {
@@ -64,11 +77,30 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             this._userConfigName = 'ColumnsEditor#' + this._options.targetRegistryName;
          },
 
-         _commandShowColumnsEditor: function () {
-            if (this._areaContainer) {
-               return;
+         _commandOpenColumnsEditorArea: function () {
+            if (!this._areaContainer) {
+               this._show(this._notify('onColumnsEditorShow', this._result = new Deferred()));
             }
-            this._columnsEditorConfig = this._notify('onColumnsEditorShow');
+         },
+
+         /**
+          * Показать редактор колонок. Возвращает обещание, которое будет разрешено списком идентификаторов выбранных колонок
+          * Событие onColumnsEditorShow при этом не сформируется
+          * @public
+          * @param {object} columnsConfig Параметры открыттия
+          * @return {Deferred<string[]>}
+          */
+         show: function (columnsConfig) {
+            this._show(columnsConfig);
+            return this._result = new Deferred();
+         },
+
+         /**
+          * @protected
+          * @param {object} columnsConfig Параметры открыттия
+          */
+         _show: function (columnsConfig) {
+            this._columnsConfig = columnsConfig;
             /*this.showPicker();*/
             this._areaContainer = new FloatArea(coreMerge({
                opener: this,
@@ -106,7 +138,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
 
          _getAreaOptions: function () {
             var opts = this._options;
-            var cfg = this._columnsEditorConfig;
+            var cfg = this._columnsConfig;
             return {
                //title: null,
                parent: this,
@@ -124,24 +156,35 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                   expandedGroups: cfg.expandedGroups,
                   moveColumns: opts.moveColumns,
                   handlers: {
-                     onComplete/*^^^onSelectedColumnsChange*/: function (evtName, selectedColumns, expandedGroups) {
-                        /*this._picker.hide();*/
-                        this._areaContainer.close();
-                        this._notify('onColumnsEditorComplete', selectedColumns);
-                        this._notify('onSelectedColumnsChange', selectedColumns);// TODO: Нужно это убрать, но провести через браузер
-                     }.bind(this)
+                     onComplete/*^^^onSelectedColumnsChange*/: this._onAreaComplete.bind(this)
                   }
                },
                handlers: {
-                  onClose: function () {
-                     if (this._areaContainer) {
-                        this._areaContainer.destroy();
-                        this._areaContainer = null;
-                     }
-                     this._notify('onColumnsEditorComplete', null);
-                  }.bind(this)
+                  onClose: this._onAreaClose.bind(this)
                }
             };
+         },
+
+         _onAreaComplete: function (evtName, selectedColumns, expandedGroups) {
+            /*this._picker.hide();*/
+            this._areaContainer.close();
+            this._sentResult({columns:this._columnsConfig.columns, selectedColumns:selectedColumns, expandedGroups:expandedGroups});
+         },
+
+         _onAreaClose: function () {
+            if (this._areaContainer) {
+               this._areaContainer.destroy();
+               this._areaContainer = null;
+            }
+            if (this._result) {
+               this._sentResult(null);
+            }
+         },
+
+         _sentResult: function (result) {
+            this._result.callback(result || this._columnsConfig);
+            this._columnsConfig = null;
+            this._result = null;
          }
       });
 
