@@ -1,4 +1,4 @@
-@import "../../themes/header";
+@import (reference) "../../themes/header";
 
 .controls-BackButton {
    cursor: pointer;
@@ -13,6 +13,8 @@
       font-style: normal;
       color: @back-button-text-color;
       text-align: left;
+      // 3px - @back-button-margin-before.
+      max-width: calc(~"100% - @{back-button-width-before} - 3px");
       line-height: normal;
       font-weight: @back-button-text-fontweight;
       font-size: @back-button-font-size;
@@ -87,6 +89,15 @@
       }
    }
 }
+
+.ws-is-mobile-safari, .ws-is-desktop-safari, .ws-is-mobile-chrome-ios{
+   .controls-BackButton {
+      .controls-BackButton__caption {
+         max-width: calc(~"100% - 7px");
+      }
+   }
+}
+
 
 .back-button-before-fix(){
    .controls-BackButton {
@@ -166,6 +177,9 @@
             .ws-backArrow_20();
             margin-right: @back-button-arrow-margin-right-1;
          }
+         &.controls-Link {
+            max-width: calc(~"100% - @{back-arrow-width-20} - @{back-button-arrow-margin-right-1}");
+         }
       }
    }
    &.controls-BackButton_blue-h2 {
@@ -181,6 +195,9 @@
             .ws-backArrow_orange();
             .ws-backArrow_20();
             margin-right: @back-button-arrow-margin-right-1;
+         }
+         &.controls-Link {
+            max-width: calc(~"100% - @{back-arrow-width-20} - @{back-button-arrow-margin-right-1}");
          }
       }
    }
@@ -198,6 +215,9 @@
             .ws-backArrow_18();
             margin-right: @back-button-arrow-margin-right-2;
          }
+         &.controls-Link {
+            max-width: calc(~"100% - @{back-arrow-width-18} - @{back-button-arrow-margin-right-2}");
+         }
       }
    }
    &.controls-BackButton_blue-h3 {
@@ -213,6 +233,9 @@
             .ws-backArrow_orange();
             .ws-backArrow_18();
             margin-right: @back-button-arrow-margin-right-2;
+         }
+         &.controls-Link {
+            max-width: calc(~"100% - @{back-arrow-width-18} - @{back-button-arrow-margin-right-2}");
          }
       }
    }
@@ -230,6 +253,9 @@
             .ws-backArrow_15();
             margin-right: @back-button-arrow-margin-right-2;
          }
+         &.controls-Link {
+            max-width: calc(~"100% - @{back-arrow-width-15} - @{back-button-arrow-margin-right-2}");
+         }
       }
    }
    &.controls-BackButton_blue-h6 {
@@ -245,6 +271,9 @@
             .ws-backArrow_orange();
             .ws-backArrow_15();
             margin-right: @back-button-arrow-margin-right-2;
+         }
+         &.controls-Link {
+            max-width: calc(~"100% - @{back-arrow-width-15} - @{back-button-arrow-margin-right-2}");
          }
       }
    }
