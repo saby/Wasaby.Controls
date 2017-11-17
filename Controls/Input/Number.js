@@ -76,8 +76,14 @@ define('js!Controls/Input/Number', [
          var
             splitValueInterface = new SplitValueModule(splitValue);
 
+         //Если валидация не прошла, то не даем ничего ввести
          if (!splitValueInterface.validate(_getRegexp(this._options))) {
             splitValueInterface.setInputValue('');
+         } else {
+            //Если в начале строки ввода точка, а до неё ничего нет, то предполагаем что хотят видеть '0.'
+            if (splitValueInterface.getInputValue()[0] === '.' && !splitValueInterface.getBeforeInputValue()) {
+               splitValueInterface.setBeforeInputValue('0');
+            }
          }
 
          //Тут нужно произвести какую-то обработку пришедшего значения (в сплит-формате) и вернуть итоговое значение и позицию
@@ -128,7 +134,7 @@ define('js!Controls/Input/Number', [
     * Склейка объекта splitValue в строку -- concat()
     * Получение "чистой" (без пробелов) склеенной строки -- getClear()
     * Получение текущей позиции курсора -- getCursorPosition()
-    * Установка нового inputValue -- setInputValue(value)
+    * Есть геттеры и сеттеры свойств
     * Валидация -- validate(regExp)
     * Получение целой части -- getIntegers()
     * Получение дробной части -- getDecimals()
@@ -154,9 +160,26 @@ define('js!Controls/Input/Number', [
                spacesCntDiff = afterNewDelimetersSpacesCnt - beforeNewDelimetersSpacesCnt;
             return _splitValueObj.beforeInputValue.length + _splitValueObj.inputValue.length + spacesCntDiff;
          },
+         setBeforeInputValue: function(value) {
+            _splitValueObj.beforeInputValue = value || '';
+            return this;
+         },
+         getBeforeInputValue: function() {
+            return _splitValueObj.beforeInputValue;
+         },
          setInputValue: function(value) {
             _splitValueObj.inputValue = value || '';
             return this;
+         },
+         getInputValue: function() {
+            return _splitValueObj.inputValue;
+         },
+         setAfterInputValue: function(value) {
+            _splitValueObj.afterInputValue = value || '';
+            return this;
+         },
+         getAfterInputValue: function() {
+            return _splitValueObj.afterInputValue;
          },
          validate: function(regExp) {
             return regExp.test(this.getClear());
