@@ -16,6 +16,22 @@ define('js!Controls/List/ListControl/ListView', [
    ) {
    'use strict';
 
+   var _private = {
+      createListModel: function(cfg) {
+         return new ListViewModel ({
+            items : cfg.items,
+            idProperty: cfg.idProperty,
+            displayProperty: cfg.displayProperty,
+            selectedKey: cfg.selectedKey
+         })
+      },
+
+      onListChange: function() {
+         this._forceUpdate();
+      }
+
+   };
+
    var ListView = BaseControl.extend(
       {
          _controlName: 'Controls/List/ListControl/ListView',
@@ -25,17 +41,12 @@ define('js!Controls/List/ListControl/ListView', [
 
          constructor: function (cfg) {
             ListView.superclass.constructor.apply(this, arguments);
-            this._onListChangeFnc = this._onListChange.bind(this);
+            this._onListChangeFnc = _private.onListChange.bind(this);
          },
 
          _beforeMount: function(newOptions) {
             if (newOptions.items) {
-               this._listModel = new ListViewModel ({
-                  items : newOptions.items,
-                  idProperty: newOptions.idProperty,
-                  displayProperty: newOptions.displayProperty,
-                  selectedKey: newOptions.selectedKey
-               });
+               this._listModel = _private.createListModel(newOptions);
                this._listModel.subscribe('onListChange', this._onListChangeFnc);
             }
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
@@ -43,27 +54,10 @@ define('js!Controls/List/ListControl/ListView', [
 
          _beforeUpdate: function(newOptions) {
             if (newOptions.items && (this._items != newOptions.items)) {
-               this._listModel = new ListViewModel ({
-                  items : newOptions.items,
-                  idProperty: newOptions.idProperty,
-                  displayProperty: newOptions.displayProperty,
-                  selectedKey: newOptions.selectedKey
-               });
+               this._listModel = _private.createListModel(newOptions);
                this._listModel.subscribe('onListChange', this._onListChangeFnc);
             }
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
-         },
-
-         _getStartEnumerationPosition: function() {
-            this._listModel.reset();
-         },
-
-         _getNextEnumerationPosition: function() {
-            this._listModel.goToNext();
-         },
-
-         _checkConditionForEnumeration: function() {
-            return this._listModel.isEnd();
          },
 
          _afterMount: function() {
@@ -120,12 +114,7 @@ define('js!Controls/List/ListControl/ListView', [
             item = dispItem.getContents();
             newKey = ItemsUtil.getPropertyValue(item, this._options.idProperty);
             this._listModel.setSelectedKey(newKey);
-         },
-
-         _onListChange: function() {
-            this._forceUpdate();
          }
-
       });
 
 

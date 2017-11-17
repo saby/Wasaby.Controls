@@ -9,9 +9,24 @@ define('js!Controls/List/ItemsView', [
 ], function (BaseControl,
              ItemsRenderTpl,
              Types,
-             ItemsViewModel
+             ItemsViewModel,
+             ForTpl
    ) {
    'use strict';
+   var _private = {
+      createListModel: function(cfg) {
+         return new ItemsViewModel ({
+            items : cfg.items,
+            idProperty: cfg.idProperty,
+            displayProperty: cfg.displayProperty
+         });
+      },
+
+      onListChange: function() {
+         this._forceUpdate();
+      }
+
+   };
 
    var ItemsRender = BaseControl.extend(
       {
@@ -20,45 +35,21 @@ define('js!Controls/List/ItemsView', [
 
          constructor: function (cfg) {
             ItemsRender.superclass.constructor.apply(this, arguments);
-            this._onListChangeFnc = this._onListChange.bind(this);
+            this._onListChangeFnc = _private.onListChange.bind(this);
          },
 
          _beforeMount: function(newOptions) {
             if (newOptions.items) {
-               this._listModel = new ItemsViewModel ({
-                  items : newOptions.items,
-                  idProperty: newOptions.idProperty,
-                  displayProperty: newOptions.displayProperty
-               });
+               this._listModel = _private.createListModel(newOptions);
                this._listModel.subscribe('onListChange', this._onListChangeFnc);
             }
          },
 
          _beforeUpdate: function(newOptions) {
             if (newOptions.items && (this._options.items != newOptions.items)) {
-               this._listModel = new ItemsViewModel ({
-                  items : newOptions.items,
-                  idProperty: newOptions.idProperty,
-                  displayProperty: newOptions.displayProperty
-               });
+               this._listModel = _private.createListModel(newOptions);
                this._listModel.subscribe('onListChange', this._onListChangeFnc);
             }
-         },
-
-         _getStartEnumerationPosition: function() {
-            this._listModel.reset();
-         },
-
-         _getNextEnumerationPosition: function() {
-            this._listModel.goToNext();
-         },
-
-         _checkConditionForEnumeration: function() {
-            return this._listModel.isEnd();
-         },
-
-         _onListChange: function() {
-            this._forceUpdate();
          },
 
          //<editor-fold desc='DataSourceMethods'>
