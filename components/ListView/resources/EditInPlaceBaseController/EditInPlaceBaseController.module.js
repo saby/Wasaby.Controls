@@ -146,6 +146,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this._options.editingTemplate;
             },
 
+            setColumns: function(columns) {
+               this._options.columns = columns;
+            },
+
             _getEditInPlaceConfig: function() {
                var
                   self = this,
