@@ -87,6 +87,11 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
 //            this.setChecked(true);
 //         }
       },
+       setChecked: function(checked) {
+           OperationsPanelButton.superclass.setChecked.apply(this, arguments);
+           this._container.removeClass('icon-MarkExpandBold icon-MarkCollapseBold')
+               .addClass(checked ? 'icon-MarkCollapseBold': 'icon-MarkExpandBold');
+       },
       /**
        * Метод установки или замены связанной панели массовых операций, установленной в опции {@link linkedPanel}.
        * @param linkedPanel
