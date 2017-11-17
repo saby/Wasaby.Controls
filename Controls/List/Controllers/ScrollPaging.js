@@ -76,7 +76,18 @@ define('js!Controls/List/Controllers/ScrollPaging',
          },
 
          scrollView: function(btn) {
+            switch (btn) {
+               case 'Begin': this._options.scrollContainer.scrollTop = 0; break;
+               case 'End': this._options.scrollContainer.scrollTop = this._viewHeight - this._viewportHeight; break;
+            }
+         },
 
+         scrollForward: function() {
+            this._options.scrollContainer.scrollTop += this._viewportHeight;
+         },
+
+         scrollBackward: function() {
+            this._options.scrollContainer.scrollTop -= this._viewportHeight;
          },
 
          _cacheHeights: function(viewportCnt) {

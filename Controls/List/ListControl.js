@@ -444,7 +444,11 @@ define('js!Controls/List/ListControl', [
 
          __onPagingArrowClick: function(e, arrow) {
             if (this._scrollPagingCtr) {
-               this._scrollPagingCtr.scrollView(arrow);
+               if (arrow == 'Next') {
+                  this._scrollPagingCtr.scrollForward();
+               } else if (arrow == 'Prev') {
+                  this._scrollPagingCtr.scrollBackward();
+               }
             }
          },
 
