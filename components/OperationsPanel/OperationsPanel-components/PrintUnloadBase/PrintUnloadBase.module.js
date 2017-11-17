@@ -69,40 +69,14 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
             allowChangeEnable: false,
 
             /**
-             * @cfg {boolean} Открывать редактор колонок при определении списка колонок
+             * @cfg {boolean} Использовать редактор колонок при определении списка колонок тогда, когда это возможно
              */
-            useColumnsEditor: false,
-
-            /**
-             * @cfg {object} Опции редактора колонок (согласно описанию опций в SBIS3.CONTROLS.ColumnsEditor)
-             */
-            columnsEditorOptions: {
-               showButton: false//,
-               //title: rk('Отображение колонок'),
-               //moveColumns: true,
-               //targetRegistryName: 'default',
-               //defaultPreset: null,
-               //newPresetTitle: rk('Новый шаблон'),
-               //autoSaveFirstPreset: true,
-               //useNumberedTitle: true,
-               //groupField: 'group',
-               //groupTitleTpl: null,
-               //groupTitles: null
-            }
+            useColumnsEditor: true
          },
-         _view: undefined,
-         /**
-          * Компонент редактора колонок (только при наличии опции useColumnsEditor === true)
-          * @type {SBIS3.CONTROLS.ColumnsEditor}
-          */
-         _columnsEditor: undefined
+         _view: undefined
       },
 
       $constructor: function() {
-         if (this._options.useColumnsEditor) {
-            // Если будет использоваться редактор колонок - подгрузить его сразу
-            require(['js!SBIS3.CONTROLS.ColumnsEditor'], function () {});
-         }
          this._publish('onApplyOperation', 'onPrepareData');
       },
       /**
@@ -165,8 +139,8 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
        * @private
        */
       _notifyOnApply : function(columns){
-
       },
+
       _applyMassOperation : function(ds){
          this._applyOperation(ds);
       },
@@ -208,76 +182,33 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       },
 
       /*
-       * Собрать данные о колонках (асинхронно)
+       * Собрать данные о колонках (асинхронно). Возвращает обещание, разрешаемое списком объектов со свойствами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView)
        * @protected
        * @param {object} data Дополнительные данные для вычисления колонок
-       * return {Core/Deferred<object[]>}
+       * return {Core/Deferred<object[]|WS.Data/Collection/RecordSet>}
        */
       _gatherColumnsInfo: function (data) {
-         var startColumns = this._getView().getColumns();
-         var columnsInfo = this._notifyOnApply(startColumns, data);
-         if (!(Array.isArray(columnsInfo) && columnsInfo.length)) {
-            columnsInfo = startColumns;
-         }
-         return this._options.useColumnsEditor ? this._openColumnsEditor(columnsInfo) : Deferred.success(columnsInfo);
-      },
-
-      /*
-       * Сформировать данные о колонках в форме пригодной для редактора колонок
-       * @protected
-       * @param {object[]} columnsInfo Список объектов со свойствами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView)
-       * return {object}
-       */
-      _makeColumnsConfig: function (columnsInfo) {
-         var colList = columnsInfo.map(function (v) {
-            return {
-               id: v.field,
-               title: v.title.replace(/^\s+|\s+$/gi, '') || v.field,
-               fixed: false,// TODO: Как понимать, что колонка обязательная ?
-               group: null// TODO: Как назначать группы ?
-            };
-         });
-         var selectedColumns = colList.map(function (v) { return v.id; });// TODO: Как назначать первично выделенные колонки ?
-         return {
-            columns: new RecordSet({
-               rawData: colList,
-               idProperty: 'id',
-               displayProperty: 'title'
-            }),
-            selectedColumns: selectedColumns,
-            expandedGroups: []// TODO: Как назначать первично распахнутые группы ?
-         };
-      },
-
-      /*
-       * Открыть редактор колонок
-       * @protected
-       * @param {object[]} columnsInfo Начальный список колонок
-       * return {Core/Deferred<object[]>}
-       */
-      _openColumnsEditor: function (columnsInfo) {
-         var promise = new Deferred();
-         require(['js!SBIS3.CONTROLS.ColumnsEditor'], function (ColumnsEditor) {
-            if (!this._columnsEditor) {
-               this._columnsEditor = new ColumnsEditor(this._options.columnsEditorOptions);
+         if (this._options.useColumnsEditor) {
+            var promise = this.sendCommand('showColumnsEditor');
+            if (promise && (!promise.isReady() || promise.isSuccessful())) {
+               return promise.addCallback(function (columnsConfig) {
+                  // Возвратить список объектов со свойствами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView)
+                  var columns = [];
+                  var selected = columnsConfig.selectedColumns;
+                  var notSelected = !(selected && selected.length);
+                  columnsConfig.columns.each(function (column) {
+                     if (notSelected || selected.indexOf(column.getId()) !== -1) {
+                        columns.push(column.get('columnConfig'));
+                     }
+                  });
+                  return columns;
+               }.bind(this));
             }
-            this.subscribeOnceTo(this._columnsEditor, 'onColumnsEditorShow', function (evt) {
-               var columnsConfig = this._makeColumnsConfig(columnsInfo);
-               evt.setResult({
-                  columns: columnsConfig.columns,
-                  selectedColumns: columnsConfig.selectedColumns,
-                  expandedGroups: columnsConfig.expandedGroups//,
-                  // Далее можно переопределить для этого вызова, если нужно, общие опции
-                  //groupTitleTpl: ...,
-                  //groupTitles: ...,
-               });
-            }.bind(this));
-            this.subscribeOnceTo(this._columnsEditor, 'onColumnsEditorComplete', function (evt, selectedColumns) {
-               promise.callback(selectedColumns && selectedColumns.length ? columnsInfo.filter(function (v) { return selectedColumns.indexOf(v.field) !== -1; }) : columnsInfo);
-            }.bind(this));
-            this._columnsEditor.sendCommand('showColumnsEditor');
-         }.bind(this));
-         return promise;
+         }
+         // Если не доступен редактор колонок
+         var startColumns = this._getView().getColumns();
+         var resultColumns = this._notifyOnApply(startColumns, data);
+         return Deferred.success(Array.isArray(resultColumns) && resultColumns.length ? resultColumns : startColumns);
       },
 
       /**
