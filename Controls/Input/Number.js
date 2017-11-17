@@ -162,7 +162,13 @@ define('js!Controls/Input/Number', [
             return regExp.test(this.getClear());
          },
          getValueWithDelimiters: function() {
-            return this.getClear().replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
+            var
+               clearValSplited = this.getClear().split('.');
+
+            //Разбиваем на триады только часть до точки
+            clearValSplited[0] = clearValSplited[0].replace(/(\d)(?=(\d{3})+$)/g, '$& ');
+
+            return clearValSplited.join('.');
          },
          getIntegers: function() {
             return this.getClear().split('.')[0];
