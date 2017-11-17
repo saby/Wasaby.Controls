@@ -1,4 +1,5 @@
 define('js!SBIS3.CONTROLS.Browser', [
+   'Core/CommandDispatcher',
    'js!SBIS3.CORE.CompoundControl',
    'tmpl!SBIS3.CONTROLS.Browser',
    'js!SBIS3.CONTROLS.ComponentBinder',
@@ -6,7 +7,7 @@ define('js!SBIS3.CONTROLS.Browser', [
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/core-instance',
    'Core/helpers/Object/find'
-], function(CompoundControl, dotTplFn, ComponentBinder, ColumnsController, tplUtil, cInstance, cFind){
+], function(CommandDispatcher, CompoundControl, dotTplFn, ComponentBinder, ColumnsController, tplUtil, cInstance, cFind){
    'use strict';
 
    /**
@@ -277,6 +278,9 @@ define('js!SBIS3.CONTROLS.Browser', [
          this._onApplyFilterHandler = this._onApplyFilter.bind(this);
          this._onInitBindingsHandler = this._onInitBindings.bind(this);
          this._bindView();
+
+         CommandDispatcher.declareCommand(this, 'setColumnsConfig', this.setColumnsConfig);
+         CommandDispatcher.declareCommand(this, 'showColumnsEditor', this.showColumnsEditor);
       },
 
       _onSelectedColumnsChange: function(event, columns) {
@@ -292,11 +296,12 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
       /**
        * Устанавливает параметры для Панели конфигурации колонок списка.
-       * @param config {Object} Конфигурация.
+       * @param config {Object} Конфигурация
+       * @command setColumnsConfig
        * @see columnsConfig
        * @see getColumnsConfig
        */
-      setColumnsConfig: function(config) {
+      setColumnsConfig: function (config) {
          this._options.columnsConfig = config;
          if (!this._columnsController) {
             this._initColumnsController();
@@ -314,7 +319,19 @@ define('js!SBIS3.CONTROLS.Browser', [
          return this._options.columnsConfig;
       },
 
-      _onColumnsEditorShow: function(event) {
+      /**
+       * Показать редактор колонок
+       * (Редактор колонок не сформирует событие onColumnsEditorShow при этом)
+       * @public
+       * @param {object} options Параметры открыттия
+       * @command showColumnsEditor
+       */
+      showColumnsEditor: function (options) {
+         this._ensureColumnsEditor(false);
+         this._columnsEditor.show(options);
+      },
+
+      _onColumnsEditorShow: function (event) {
          event.setResult({
             columns: this._options.columnsConfig.columns,
             selectedColumns: this._columnsController.getState()
@@ -386,10 +403,7 @@ define('js!SBIS3.CONTROLS.Browser', [
          }
          this._getView().setColumns(this._columnsController.getColumns(this._options.columnsConfig.columns));
          this._getView().redraw();
-         this._columnsEditor = this._getColumnsEditor();
-         if (this._columnsEditor) {
-            this._subscribeToColumnsEditor();
-         }
+         this._ensureColumnsEditor(true);
       },
 
       _bindView: function() {
@@ -512,16 +526,27 @@ define('js!SBIS3.CONTROLS.Browser', [
          this._options.historyId = id;
          this._bindFilterHistory();
       },
+
+      // TODO: Убрать метод ?
       _setColumnsEditor: function() {
-         var
-            newEditor;
-         if (this._columnsEditor) {
+         this._ensureColumnsEditor(true);
+      },
+
+      /**
+       * Удостовериться, что редактора колонок точно есть и правильно подготовлен
+       * @protected
+       * @param {true} renew Создать новый экзепляр если старый уже есть
+       */
+      _ensureColumnsEditor: function (renew) {
+         if (renew && this._columnsEditor) {
             this._columnsEditor.destroy();
+            this._columnsEditor = null;
          }
-         newEditor = this._getColumnsEditor();
-         if (newEditor) {
-            this._columnsEditor = newEditor;
-            this._subscribeToColumnsEditor();
+         if (!this._columnsEditor) {
+            this._columnsEditor = this._getColumnsEditor();
+            if (this._columnsEditor) {
+               this._subscribeToColumnsEditor();
+            }
          }
       },
 
