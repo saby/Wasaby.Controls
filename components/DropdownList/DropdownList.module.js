@@ -812,7 +812,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                return;
             }
             if (this._isEnumTypeData()){
-               this._drawSelectedValue(this.getItems().get(), [this.getItems().getAsValue()]);
+               this._drawSelectedValue(this.getItems().get(), [this.getItems().getAsValue(true)]);
             }
             else if(len) {
                this.getSelectedItems(true).addCallback(function(list) {
