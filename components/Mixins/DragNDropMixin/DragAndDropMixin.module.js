@@ -52,7 +52,8 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
                constants.$win.bind(i + '.dragNDrop', function(func, e){
                   func.call(this, e);
    
-                  /* Чтобы не скролилась страница при пететаскивании  (актуально для планшетов и при работе с телевизором) */
+                  /* Чтобы не скролилась страница при пететаскивании  (актуально для планшетов и при работе с телевизором).
+                     Блокируем всплытие только для touchmove, т.к. от touchstart и touchend зависят клики. */
                   if(e.originalEvent.touches && e.type === 'touchmove') {
                      e.preventDefault();
                   }
