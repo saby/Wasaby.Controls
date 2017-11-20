@@ -2,11 +2,13 @@
    .inline-flexbox();
    .align-items(center);
    .justify-content(center);
+   .box-shadow(@button-shadow);
    font-family: @icon-font;
    font-size: @controls-OperationsPanelButton-font-size;
    color: @controls-OperationsPanelButton-color;
    width: @controls-OperationsPanelButton-width;
    height: @controls-OperationsPanelButton-vert-height;
+   background-color: @controls-OperationsPanelButton-bg-color;
    font-style: normal;
    cursor: pointer;
    text-align: center;
@@ -15,6 +17,12 @@
    position: relative;
    &:hover, &.ws-has-focus {
       color: @controls-OperationsPanelButton-active-icon-color;
+      background-color: @controls-OperationsPanelButton-bg-color-hover;
+   }
+   &:active {
+      background: none;
+      box-shadow: none;
+      background-color: @controls-OperationsPanelButton-bg-color-active;
    }
 }
 .controls-OperationsPanelButton__showSeparator:after {
