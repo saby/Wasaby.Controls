@@ -20,7 +20,6 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          },
          _viewHeight: 0,
          _viewportHeight: 0,
-         _pagesCount: 0,
          _currentScrollPage: 1,
          _windowResizeTimeout: null,
          _zIndex: null
@@ -145,7 +144,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       },
 
       getPagesCount: function() {
-         return this._pagesCount
+         return this._options.paging.getPagesCount()
       },
 
       updatePaging: function() {
@@ -169,6 +168,9 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             Необходимо для того, чтобы в пэйджинге не моргала кнопка перехода к следующей странице, пока грузятся данные. */
          if (pagingVisibility) {
             this._options.paging.setPagesCount(pagesCount + (view._hasNextPage(view.getItems().getMetaData().more, view._scrollOffset.bottom) ? 1 : 0));
+         }
+         else {
+            this._options.paging.setPagesCount(1);
          }
          
          //Если есть страницы - покажем paging
