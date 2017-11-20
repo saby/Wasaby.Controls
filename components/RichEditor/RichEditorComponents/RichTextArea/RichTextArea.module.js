@@ -51,6 +51,20 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       EventBus
    ) {
       'use strict';
+
+      //Расширяет выделение так, чтобы оно захватывало всё слово
+      function snapSelectionToWord() {
+         var sel = window.getSelection();
+
+         var endNode = sel.focusNode, endOffset = sel.focusOffset;
+         sel.collapse(sel.anchorNode, sel.anchorOffset);
+
+         sel.modify('move', 'forward', 'character');
+         sel.modify('move', 'backward', 'word');
+         sel.extend(endNode, endOffset);
+         sel.modify('extend', 'backward', 'character');
+         sel.modify('extend', 'forward', 'word');
+      }
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
       var
          EDITOR_MODULES = ['css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/skin.min',
@@ -1511,7 +1525,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                content.innerHTML = html;
             }.bind(this));
 
-            if (this._options.editorConfig.browser_spellcheck && (cConstants.browser.chrome || cConstants.browser.safari)) {
+            if (this._options.editorConfig.browser_spellcheck) {
                // Если включена проверка правописания, нужно при исправлениях обновлять принудительно text
                var _onSelectionChange1 = function (evt) {
                   if (evt.target === document) {
@@ -1531,7 +1545,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }.bind(this);
 
                editor.on('contextmenu', function (evt) {
-                  if (evt.currentTarget === this._inputControl[0] && (evt.target === evt.currentTarget || $.contains(event.currentTarget, evt.target))) {
+                  if (evt.currentTarget === this._inputControl[0] && (evt.target === evt.currentTarget || $.contains(evt.currentTarget, evt.target))) {
                      editor.off('SelectionChange', _onSelectionChange2);
                      if (cConstants.browser.safari) {
                         // Для safari обязательно нужно отложить подписку на событие (потому что safari в тот момент, когда делается эта подписка
@@ -1539,6 +1553,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                         setTimeout(editor.on.bind(editor, 'SelectionChange', _onSelectionChange1), 1);
                      }
                      else {
+                        //Для IE и FF нужно сначала выделить слово, т.к. они не делают этого автоматически
+                        if (cConstants.browser.isIE || cConstants.browser.firefox) {
+                           snapSelectionToWord();
+                        }
                         editor.on('SelectionChange', _onSelectionChange1);
                      }
                   }
