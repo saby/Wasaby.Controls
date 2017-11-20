@@ -76,7 +76,18 @@ define('js!Controls/List/Controllers/VirtualScroll',
           * @private
           */
          _updateVirtualWindow: function(data) {
+            /*var newPage;
+
+            if(data.eventName === 'onScrollTop' && data.scrollTop - this._placeholderTop < 200){
+               newPage = this._currentPage - 1;
+            } else if (data.eventName === 'onScrollBottom') {
+               newPage = this._getPage(data.scrollTop);
+            } else {
+               return;
+            }*/
+
             var newPage = this._getPage(data.scrollTop);
+
             //TODO Возможно, тут стоит еще какую-то проверку добавить, чтобы не проверять страницу слишком часто. Например, что было смещение на больше чем 100px
             if (this._currentPage !== newPage) {
                this._currentPage = newPage;
@@ -93,12 +104,12 @@ define('js!Controls/List/Controllers/VirtualScroll',
             this._scrollTimeout = setTimeout(function () {
                var
                   scrollTop = e.target.scrollTop,
-                  eventName = this._oldHandledScrollTop > scrollTop ? 'onScrollTop' : 'onScrollButtom';
+                  eventName = this._oldHandledScrollTop > scrollTop ? 'onScrollTop' : 'onScrollBottom';
 
                this._oldHandledScrollTop = scrollTop;
                this._notify(eventName, scrollTop);
 
-               this._updateVirtualWindow({scrollTop: scrollTop});
+               this._updateVirtualWindow({scrollTop: scrollTop, eventName: eventName});
 
             }.bind(this), 25);
          },
@@ -132,6 +143,8 @@ define('js!Controls/List/Controllers/VirtualScroll',
                changeWrapperHeight = this._calcWrapperChange(newWindow, change);
 
             this._virtualWindow = newWindow;
+
+            this._placeholderTop = wrapperHeight.top;
 
             this._notify('onUpdateVisibleIndices',{
                topChange: change.topChange,

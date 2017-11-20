@@ -434,7 +434,7 @@ define('js!Controls/List/ListControl', [
             this._virtualScrollController = _private.initVirtualScroll(this._items, this._container);
 
             //this._virtualScrollController.subscribe('onScrollTop', this._onScrollTop.bind(this));
-            //this._virtualScrollController.subscribe('onScrollButtom', this._onScrollButtom.bind(this));
+            //this._virtualScrollController.subscribe('onScrollBottom', this._onScrollBottom.bind(this));
             this._virtualScrollController.subscribe('onUpdateVisibleIndices', this._onUpdateVisibleIndices.bind(this));
          },
 
@@ -451,11 +451,6 @@ define('js!Controls/List/ListControl', [
             }
 
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
-         },
-
-         _afterUpdate: function(newOptions) {
-            ListView.superclass._afterUpdate.apply(this, arguments);
-            this._virtualScrollController.initHeights(this._container);
          },
 
          //<editor-fold desc='DataSourceMethods'>
