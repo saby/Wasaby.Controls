@@ -179,6 +179,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
              надо учитывать это при расчётах ширины пикера */
             if ((detection.isIE10 || detection.isIE11) && pickerContainer[0].offsetHeight < pickerContainer[0].scrollHeight) {
                pickerWidth -= getScrollWidth();
+               this._picker.recalcPosition(true);
                setPickerWidth.call(this, pickerWidth);
             }
          },

@@ -294,8 +294,8 @@ node('controls') {
                             export test_server_port=10253
                             export test_url_port=10253
                             export WEBDRIVER_remote_enabled=1
-                            export WEBDRIVER_remote_host=10.76.163.98
-                            export WEBDRIVER_remote_port=4380
+                            export WEBDRIVER_remote_host=10.76.159.209
+                            export WEBDRIVER_remote_port=4444
                             export test_report=artifacts/test-browser-report.xml
                             sh ./bin/test-browser"""
                         }
@@ -444,17 +444,17 @@ node('controls') {
         stage("Запуск тестов интеграционных и верстки"){
             def site = "http://${NODE_NAME}:30001"
             site.trim()
-            dir("./controls/tests/int"){
-                tmp_smoke = sh returnStatus:true, script: """
-                    source /home/sbis/venv_for_test/bin/activate
-                    ${python_ver} smoke_test.py --SERVER_ADDRESS ${server_address}
-                    deactivate
-                """
-                if ( "${tmp_smoke}" != "0" ) {
-                    currentBuild.result = 'ABORTED'
-                    error('Стенд неработоспособен (не прошел smoke test).')
-                }
-            }
+            //dir("./controls/tests/int"){
+            //    tmp_smoke = sh returnStatus:true, script: """
+            //        source /home/sbis/venv_for_test/bin/activate
+            //        ${python_ver} smoke_test.py --SERVER_ADDRESS ${server_address}
+            //        deactivate
+            //    """
+            //    if ( "${tmp_smoke}" != "0" ) {
+            //        currentBuild.result = 'ABORTED'
+            //        error('Стенд неработоспособен (не прошел smoke test).')
+            //    }
+            //}
             parallel (
                 int_test: {
                     echo "Запускаем интеграционные тесты"
