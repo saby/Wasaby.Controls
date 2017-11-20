@@ -7,8 +7,9 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
    'Core/core-clone',
    'Core/core-instance',
    'WS.Data/Chain',
+   'Core/IoC',
    'js!SBIS3.CONTROLS.ArraySimpleValuesUtil'
-], function (Selection, Record, HierarchyRelation, RecordSet, cClone, cInstance, Chain, ArraySimpleValuesUtil) {
+], function (Selection, Record, HierarchyRelation, RecordSet, cClone, cInstance, Chain, IoC, ArraySimpleValuesUtil) {
    'use strict';
 
    var
@@ -202,10 +203,10 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
                   if (item) {
                      result = item.get(this._parentProperty);
                   } else {
-                     throw new Error('The "path" parameter must contain all nodes, from the current to the root');
+                     IoC.resolve('ILogger').info('HierarchySelection:', 'The "path" parameter must contain all nodes, from the current to the root');
                   }
                } else {
-                  throw new Error('The list method must return a parameter: "path"');
+                  IoC.resolve('ILogger').info('HierarchySelection:', 'The list method must return a parameter: path');
                }
             }
          }
@@ -246,13 +247,15 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
 
       _getMarked: function (allMarked) {
          var
+            record,
             status,
             parentId,
             parentStatus,
             result = [];
          if (this._options.selectedKeys.length) {
             breadthFirstSearch([this._options.root], function (id) {
-               status = this._markedTree.getRecordById(id).get(STATUS_FILED);
+               record = this._markedTree.getRecordById(id);
+               status = record ? record.get(STATUS_FILED) : STATUS.NOT_SELECTED;
                if (status === STATUS.SELECTED || status === STATUS.PARTIALLY_FULL) {
                   if (id !== this._options.root) {
                      parentId = this._markedTree.getRecordById(id).get(PARENT_FIELD);
