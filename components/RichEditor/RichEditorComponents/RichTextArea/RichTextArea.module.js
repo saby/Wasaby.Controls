@@ -52,19 +52,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    ) {
       'use strict';
 
-      //Расширяет выделение так, чтобы оно захватывало всё слово
-      function snapSelectionToWord() {
-         var sel = window.getSelection();
-
-         var endNode = sel.focusNode, endOffset = sel.focusOffset;
-         sel.collapse(sel.anchorNode, sel.anchorOffset);
-
-         sel.modify('move', 'forward', 'character');
-         sel.modify('move', 'backward', 'word');
-         sel.extend(endNode, endOffset);
-         sel.modify('extend', 'backward', 'character');
-         sel.modify('extend', 'forward', 'word');
-      }
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
       var
          EDITOR_MODULES = ['css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/skin.min',
@@ -1527,21 +1514,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             if (this._options.editorConfig.browser_spellcheck) {
                // Если включена проверка правописания, нужно при исправлениях обновлять принудительно text
-               var _onSelectionChange1 = function (evt) {
-                  if (evt.target === document) {
-                     editor.off('SelectionChange', _onSelectionChange1);
-                     if (editor.selection.getContent()) {
-                        editor.once('SelectionChange', _onSelectionChange2);
-                        // Хотя цепляемся на один раз, но всё же отцепим через пару минут, если ничего не случится за это время
-                        setTimeout(editor.off.bind(editor, 'SelectionChange', _onSelectionChange2), 120000);
-                     }
-                  }
+               var _onSelectionChange1 = function () {
+                  editor.once('SelectionChange', _onSelectionChange2);
+                  // Хотя цепляемся на один раз, но всё же отцепим через пару минут, если ничего не случится за это время
+                  setTimeout(editor.off.bind(editor, 'SelectionChange', _onSelectionChange2), 120000);
                }.bind(this);
 
-               var _onSelectionChange2 = function (evt) {
-                  if (evt.target === document) {
-                     this._updateTextByTiny();
-                  }
+               var _onSelectionChange2 = function () {
+                  this._updateTextByTiny();
                }.bind(this);
 
                editor.on('contextmenu', function (evt) {
@@ -1550,14 +1530,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      if (cConstants.browser.safari) {
                         // Для safari обязательно нужно отложить подписку на событие (потому что safari в тот момент, когда делается эта подписка
                         // меняет выделение, и потом меняет его в момент вставки. Чтобы первое не ловить - отложить)
-                        setTimeout(editor.on.bind(editor, 'SelectionChange', _onSelectionChange1), 1);
+                        setTimeout(editor.once('SelectionChange', _onSelectionChange1), 1);
                      }
                      else {
-                        //Для IE и FF нужно сначала выделить слово, т.к. они не делают этого автоматически
-                        if (cConstants.browser.isIE || cConstants.browser.firefox) {
-                           snapSelectionToWord();
-                        }
-                        editor.on('SelectionChange', _onSelectionChange1);
+                        editor.once('SelectionChange', _onSelectionChange1);
                      }
                   }
                }.bind(this));
