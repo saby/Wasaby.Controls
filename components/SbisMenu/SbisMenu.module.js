@@ -68,15 +68,28 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
     }
 
 
-    function _createItemFromArray (id, title, className, pinned){
-        return {
-            historyItem: true,
-            id: id,
-            title: title,
-            className: className,
-            pinned: pinned,
-            additional: false
-        };
+    function _prepareRecordSet (record, idPrefix, history){
+        _addProperty.call(this, record, 'visible', 'boolean', true);
+        _addProperty.call(this, record, 'pinned', 'boolean', false);
+        _addProperty.call(this, record, 'historyItem', 'boolean', history);
+        _addProperty.call(this, record, 'historyId', 'string', 'id');
+        _addProperty.call(this, record, 'lastHistoryItem', 'boolean', false);
+
+        record.forEach(function(item){
+            item.set('historyId', idPrefix + item.getId());
+        });
+
+        record.setIdProperty('historyId');
+    }
+
+    function _addProperty (record, name, type, defaultValue){
+        if(record.getFormat().getFieldIndex(name) === -1) {
+            record.addField({
+                name: name,
+                type: type,
+                defaultValue: defaultValue
+            });
+        }
     }
 
     function _getUnionList() {
@@ -108,6 +121,8 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
     function _filterFrequent () {
         var self = this,
             id;
+
+        // из популярных убираем запиненые
         return Chain(this._frequent).filter(function(item){
             id = _getOriginId(item.getId());
             return !self._pinned.getRecordById('pinned-' + id);
@@ -118,7 +133,8 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
         var self = this,
             id;
 
-        return Chain(this._frequent).filter(function(item){
+        // убираем из последних выбранных запиненые и популярные пункты
+        return Chain(this._recent).filter(function(item){
             id = _getOriginId(item.getId());
 
             return !(self._pinned.getRecordById('pinned-' + id) || self._frequent.getRecordById('frequent-' + id));
@@ -143,22 +159,6 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
         });
 
         historyItems.append(this._pinned);
-
-        /*this._pinned.forEach(function (item) {
-            // origin index
-            var index = self._oldItems.findIndex(function (element) {
-                return element.id === item[0];
-            });
-            // if in main menu hidden item
-            if (!self._subContainers[self._oldItems[index].id] && !self._oldItems[index].hasOwnProperty(self._options.parentProperty)) {
-                self._oldItems[index]['visible'] = false;
-            }
-            self._oldItems[index].pinned = true;
-            historyItems.push(
-                _createItemFromArray.call(self, 'pin-' + item[0], item[1], '', true)
-            );
-            self._count++;
-        });*/
     }
 
     function _fillRecent (filteredRecent) {
@@ -172,6 +172,7 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
             id = _getOriginId(item.getId());
             oldElement = this._oldItems.getRecordById(id);
 
+            // скрываем старый элемент только в том случае если он не находится в подменю и у него нет детей
             if(oldElement && !oldElement.get(self._options.parentProperty) && !self._subContainers[oldElement.getId()]) {
                 oldElement.set('visible', false);
             }
@@ -181,20 +182,9 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
             });
 
             items.push(newItem);
-            i++;
+
             this._count++;
-
-            /*var index = this._oldItems.findIndex(function (element) {
-                return element.id === item[0];
-            });
-
-            if (!self._subContainers[this._oldItems[index].id] && !this._oldItems[index].hasOwnProperty(self._options.parentProperty)) {
-                self._oldItems[index]['visible'] = false;
-            }
-            items.push(
-             _createItemFromArray.call(self, 'recent-' + item[0], item[1], 'controls-Menu-item-user-recent')
-            );
-            */
+            i++;
         }
         return items;
     }
@@ -221,12 +211,8 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
 
             items.push(newItem);
 
-            /*items.push(
-                _createItemFromArray.call(self, 'frequent-' + item[0], item[1], 'controls-Menu-item-user-frequent')
-            );*/
-
-            i++;
             this._count++;
+            i++;
         }
         return items;
     }
@@ -254,11 +240,14 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
     }
 
     function _prepareHistory () {
-        var self = this,
-            historyItems = new RecordSet({adapter: new SbisAdapter(), idProperty: 'historyId'}),
+        var historyItems = new RecordSet({adapter: new SbisAdapter(), idProperty: 'historyId'}),
             recentItems, frequentItems;
 
         this._count = 0;
+
+        this._oldItems.forEach(function(element){
+            element.set('visible', true);
+        });
 
         // запиненые отображаются всегда
         if(this._options.pinned) {
@@ -273,22 +262,7 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
         if(historyItems.getCount()) {
             historyItems.at(historyItems.getCount() - 1).set('lastHistoryItem', true);
         }
-        /* последнему элементу истории нужно указать границу
-        if(historyItems.length) {
-            historyItems[historyItems.length - 1].className += ' control-SbisMenu-item__history-last';
-        }
-        */
         historyItems.append(this._oldItems);
-
-        /*var length = 0;
-        newItems.forEach(function(item){
-            if(!item.hasOwnProperty(self._options.parentProperty)){
-                if(length > 10){
-                    item.additional = true;
-                }
-                length++;
-            }
-        });*/
         this.setItems(historyItems);
     }
 
@@ -303,9 +277,12 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
                 rawData: menuItem.getRawData(),
                 adapter: menuItem.getAdapter()
             });
-
+            if(this._options.parentProperty){
+                newItem.set(this._options.parentProperty, null);
+            }
             newItem.set('historyItem', true);
             newItem.set('historyId', 'pinned-' + origId);
+            newItem.set('lastHistoryItem', false);
             this._pinned.add(newItem);
             menuItem.set('visible', false);
             pinned = true;
@@ -323,10 +300,7 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
         }
 
         _prepareHistory.call(this);
-        id = _getOriginId(id);
-        if (!!parseInt(id, 10)) {
-            _setPin.call(this, parseInt(id, 10), pinned);
-        }
+        _setPin.call(this, _getOriginId(id));
     }
 
     var SbisMenu = ContextMenu.extend(/** @lends SBIS3.CONTROLS.ContextMenu.prototype */ {
@@ -394,10 +368,10 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
                         self._recent = rows.get('recent') && rows.get('recent') ? rows.get('recent') : new RecordSet({format: self._oldItems.getFormat(),  adapter: new SbisAdapter()});
                         self._frequent = self._options.frequent && rows.get('frequent') ? rows.get('frequent') : new RecordSet({format: self._oldItems.getFormat(),  adapter: new SbisAdapter()});
 
-                        self._prepareRecordSet(self._oldItems, '');
-                        self._prepareRecordSet(self._pinned, 'pinned-');
-                        self._prepareRecordSet(self._recent, 'recent-');
-                        self._prepareRecordSet(self._frequent, 'frequent-');
+                        _prepareRecordSet.call(self, self._oldItems, '', false);
+                        _prepareRecordSet.call(self, self._pinned, 'pinned-', true);
+                        _prepareRecordSet.call(self, self._recent, 'recent-', true);
+                        _prepareRecordSet.call(self, self._frequent, 'frequent-', true);
 
                         _prepareHistory.call(self);
                         SbisMenu.superclass.show.apply(self, arguments);
@@ -405,30 +379,6 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
                 });
             }else {
                 SbisMenu.superclass.show.apply(self, arguments);
-            }
-        },
-
-        _prepareRecordSet: function(record, idPrefix){
-            this._addProperty(record, 'visible', 'boolean', true);
-            this._addProperty(record, 'pinned', 'boolean', false);
-            this._addProperty(record, 'historyItem', 'boolean', true);
-            this._addProperty(record, 'historyId', 'string', 'id');
-            this._addProperty(record, 'lastHistoryItem', 'boolean', false);
-
-            record.forEach(function(item){
-                item.set('historyId', idPrefix + item.getId());
-            });
-
-            record.setIdProperty('historyId');
-        },
-
-        _addProperty: function(record, name, type, defaultValue){
-            if(record.getFormat().getFieldIndex(name) === -1) {
-                record.addField({
-                    name: name,
-                    type: type,
-                    defaultValue: defaultValue
-                });
             }
         },
 
@@ -443,33 +393,41 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
         _itemActivatedHandler: function (id, event) {
             var targetClassName = event.target.className,
                 item = this.getItems().getRecordById(id),
-                origId = parseInt(_getOriginId(item.getId()), 10),
+                origId = _getOriginId(id),
                 menuItem = this._items.getRecordById(id),
-                newItem;
+                newItem, records;
 
             if (targetClassName.indexOf('controls-Menu-item-pin') !== -1) { // кликнули по пину
                 _togglePinnedItem.call(this, item, id, origId);
                 return;
             }
-            newItem = new Model({
-                rawData: menuItem.getRawData(),
-                adapter: menuItem.getAdapter()
-            });
-
-            if(this._recent) {
-                this._recent = this._recent.filter(function (element) {
-                    return element.getId() !== id;
+            if(!this._subContainers[origId]) {
+                newItem = new Model({
+                    rawData: menuItem.getRawData(),
+                    adapter: menuItem.getAdapter()
                 });
-                this._recent.add(newItem);
 
-                _prepareHistory.call(this);
+                if (this._recent) {
+                    this._recent = this._recent.filter(function (element) {
+                        return _getOriginId(element.getId()) != id;
+                    });
+                    if (this._options.parentProperty) {
+                        newItem.set(this._options.parentProperty, null);
+                    }
+                    if (this._options.parentProperty) {
+                        newItem.set('historyItem', true);
+                    }
+                    records = new RecordSet({format: this._oldItems.getFormat(), adapter: new SbisAdapter()});
+                    records.add(newItem);
+                    this._recent.prepend(records);
+
+                    _prepareHistory.call(this);
+                }
             }
 
             // стрелять нужно старым id
-            id = _getOriginId(id);
-            if (!!parseInt(id, 10)) {
-                _addToHistory.call(this, parseInt(id, 10));
-            }
+            _addToHistory.call(this, _getOriginId(id));
+
             SbisMenu.superclass._itemActivatedHandler.call(this, id, event);
         }
     });
