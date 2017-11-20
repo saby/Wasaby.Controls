@@ -53,7 +53,8 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
                   func.call(this, e);
    
                   /* Чтобы не скролилась страница при пететаскивании  (актуально для планшетов и при работе с телевизором).
-                     Блокируем всплытие только для touchmove, т.к. от touchstart и touchend зависят клики. */
+                     Блокируем всплытие только для touchmove, т.к. от touchstart и touchend зависят клики
+                     и на скролл при петескивании они никак не влияют. */
                   if(e.originalEvent.touches && e.type === 'touchmove') {
                      e.preventDefault();
                   }
