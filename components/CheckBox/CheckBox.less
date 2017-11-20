@@ -1,8 +1,6 @@
 .controls-CheckBox {
   display: inline-block;
   line-height: @check-box-icon-size;
-  //TODO: удалить стиль и переменную, когда перейдем на carrynew и prestonew.
-  margin-right: @check-box-caption-margin-left;
 }
 
 .controls-CheckBox__caption {
@@ -36,7 +34,7 @@
 }
 
 .controls-CheckBox__iconBox_size {
-  .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+  .checkbox-border-size();
 }
 
 .controls-Checked__checked {

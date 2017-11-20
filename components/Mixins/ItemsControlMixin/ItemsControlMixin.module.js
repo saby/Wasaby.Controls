@@ -132,7 +132,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    canApplyGrouping = function(projItem, cfg) {
       // todo сильносвязанный код. Если пустой projItem, значит мы сюда попали из onCollectionAdd и единственная добавляемая запись - это сама группа
       // https://online.sbis.ru/opendoc.html?guid=c02d2545-1afa-4ada-8618-7a21eeadc375
-      return !isEmpty(cfg.groupBy) && (!projItem || !projItem.isNode || !projItem.isNode());
+      // Если сортировка не задана - то разрешена группировка всех записей - и листьев и узлов
+      return !isEmpty(cfg.groupBy) && (cfg._itemsProjection.getSort().length === 0 || !projItem || !projItem.isNode || !projItem.isNode());
    },
 
    groupItemProcessing = function(groupId, records, item, cfg) {
@@ -142,6 +143,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var
                tplOptions = {
                   columns : coreClone(cfg.columns || []),
+                  items: cfg._items,
                   multiselect : cfg.multiselect,
                   hierField: cfg.hierField + '@',
                   parentProperty: cfg.parentProperty,
@@ -1229,7 +1231,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
             if (items.length > 1) {
                groupId = items[0].getContents();
-               this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
+               //todo Переделать, чтобы группы скрывались функцией пользовательской фильтрации
+               if (groupId !== false) {
+                  this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
+               }
                items.splice(0, 1);
                itemsToAdd = itemsToAdd.concat(items);
             }
@@ -1310,10 +1315,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _getInsertMarkupConfigICM: function(newItemsIndex, newItems) {
          var
-             nextItem,
-             prevGroup,
-             nextGroup,
-             beforeFlag,
              inside = true,
              prepend = false,
              container = this._getItemsContainer(),
@@ -1326,11 +1327,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             lastItemsIndex = this._virtualScrollController._currentWindow[1] + 1;
          }
 
-         if (beforeFlag) {
-            container = this._getDomElementByItem(nextItem);
-            inside = false;
-            prepend = true;
-         } else if (newItemsIndex == 0 || newItemsIndex == lastItemsIndex) {
+         if (newItemsIndex == 0 || newItemsIndex == lastItemsIndex) {
             prepend = newItemsIndex == 0;
             // Если добавляется первый в списке элемент + это узел + включена группировка (для узлов группы не рисуются), то
             // предыдущим элементом будет группа, которая фактически не рисуется, а значит и DOM элемент будет не найден, а
@@ -2530,7 +2527,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _canApplyGrouping: function(projItem) {
-         return !isEmpty(this._options.groupBy) && (!projItem.isNode || !projItem.isNode());
+         // Если сортировка не задана - то разрешена группировка всех записей - и листьев и узлов
+         return !isEmpty(this._options.groupBy) && (this._options._itemsProjection.getSort().length === 0 || !projItem.isNode || !projItem.isNode());
       },
 
       _getGroupItems: function(groupId) {

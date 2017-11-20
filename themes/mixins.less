@@ -58,9 +58,9 @@
    cursor: grabbing !important;
 }
 
-.placeholder() {
+.placeholder(@color: @default-placeholder-color) {
   &::-webkit-input-placeholder {
-    color: @default-placeholder-color;
+    color: @color;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
@@ -68,19 +68,19 @@
   }
 
   &:-moz-placeholder {
-     color: darken(@default-placeholder-color, 17%);
+    color: @color;
     -moz-user-select: none;
     text-overflow:ellipsis;
   }
 
   &::-moz-placeholder {
-     color: darken(@default-placeholder-color, 17%);
+    color: @color;
     -moz-user-select: none;
     text-overflow:ellipsis;
   }
 
   &:-ms-input-placeholder {
-     color: @default-placeholder-color;
+     color: @color;
     //-ms-user-select: none; Убираю, т.к. из-за этого IE ставит курсор не в инпут, а куда то в рандомное место на странице
     text-overflow:ellipsis;
   }
@@ -153,7 +153,6 @@
   font-family: @default-font-name;
   font-size: @button-font-size;
   font-weight: normal;
-  text-align: @button-text-alignment;
   position: relative;
   .box-shadow(@button-default-shadow);
   border: none;
@@ -167,11 +166,11 @@
   .align-items(center);
 }
 
-.baseline-fix(@height: auto) {
+.baseline-fix() {
   &:before {
     content: '.';
     width: 0;
-    height: @height;
+    display: inline-block;
     visibility: hidden;
   }
 }
@@ -276,8 +275,8 @@
    margin-top: -(@height / 2 - @padding-top);
 }
 
-.marker(@position: left top, @image: 'img/rowSelect.png') {
-  background-image: url("@{themeName}/@{image}");
+.marker(@position: left top) {
+  background-image: url("@{themeName}/img/rowSelect.png");
   background-position: @position;
   background-repeat: repeat-y;
 }
@@ -497,15 +496,16 @@
   height: @size;
 }
 
-.checkbox-border-size(@sizeContainer, @sizeContent, @borderWidth) {
+.checkbox-border-size() {
   &:before {
+    .box-sizing();
     content: '';
     position: absolute;
-    border-width: @borderWidth;
+    border-width: @default-border-width;
     border-style: solid;
-    width: calc(@sizeContent ~"-" 2 * @borderWidth);
-    height: calc(@sizeContent ~"-" 2 * @borderWidth);
-    margin: (@sizeContainer - @sizeContent) / 2;
+    width: @check-box-icon-box-size;
+    height: @check-box-icon-box-size;
+    margin: (@check-box-icon-size - @check-box-icon-box-size) / 2;
   }
 }
 
@@ -577,6 +577,12 @@
   -moz-hyphens: @hyphenation;
   -ms-hyphens: @hyphenation;
   hyphens: @hyphenation;
+}
+
+.reset-browser-input-styles() {
+  border: none;
+  outline: none;
+  background: transparent;
 }
 
 //---------------Имитация цикла for---------------//

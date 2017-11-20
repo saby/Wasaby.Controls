@@ -1,19 +1,19 @@
 <div class="controls-LongOperationsFilter">
    <div class="controls-LongOperationsFilter__block">
       <ws:SBIS3.CONTROLS.DropdownList
+         name="StateFilter"
+         className="controls-LongOperationsFilter__stateDropdown controls-DropdownList__withoutArrow controls-DropdownList__linkStyle controls-DropdownList__withoutCross"
          mode="click"
          idProperty="key"
-         name="StateFilter"
-         multiselect="{{false}}"
-         parentProperty="parent"
          displayProperty="title"
+         parentProperty="parent"
+         multiselect="{{false}}"
          text="{{'StateTitle'|mutable}}"
-         className="controls-LongOperationsFilter__stateDropdown controls-DropdownList__withoutArrow controls-DropdownList__linkStyle controls-DropdownList__withoutCross"
-      >
+         >
          <ws:selectedKeys>
-            <ws:Array
-               0="{{'StateKey'|mutable}}"
-            />
+            <ws:Array>
+               <ws:Object><ws:String>{{'StateKey'|mutable}}</ws:String></ws:Object>
+            </ws:Array>
          </ws:selectedKeys>
          <ws:items>
             <ws:Array>
@@ -47,18 +47,18 @@
          </ws:items>
       </ws:SBIS3.CONTROLS.DropdownList>
       <ws:SBIS3.CONTROLS.DropdownList
+         name="PeriodFilter"
+         className="controls-DropdownList__withoutArrow controls-DropdownList__linkStyle controls-DropdownList__withoutCross"
          mode="click"
          idProperty="key"
-         name="PeriodFilter"
-         multiselect="{{false}}"
          displayProperty="title"
+         multiselect="{{false}}"
          text="{{'PeriodTitle'|mutable}}"
-         className="controls-DropdownList__withoutArrow controls-DropdownList__linkStyle controls-DropdownList__withoutCross"
-      >
+         >
          <ws:selectedKeys>
-            <ws:Array
-               0="{{'PeriodKey'|mutable}}"
-            />
+            <ws:Array>
+               <ws:Object><ws:String>{{'PeriodKey'|mutable}}</ws:String></ws:Object>
+            </ws:Array>
          </ws:selectedKeys>
          <ws:items>
             <ws:Array>
@@ -93,18 +93,18 @@
    <div class="controls-LongOperationsFilter__block">
       <div class="controls-LongOperationsFilter__durationTitle">{[Длительность операции]}</div>
       <ws:SBIS3.CONTROLS.DropdownList
+         name="DurationFilter"
+         className="controls-DropdownList__withoutArrow controls-DropdownList__linkStyle controls-DropdownList__withoutCross"
          mode="click"
          idProperty="key"
-         name="DurationFilter"
-         multiselect="{{false}}"
          displayProperty="title"
+         multiselect="{{false}}"
          text="{{'DurationTitle'|mutable}}"
-         className="controls-DropdownList__withoutArrow controls-DropdownList__linkStyle controls-DropdownList__withoutCross"
-      >
+         >
          <ws:selectedKeys>
-            <ws:Array
-               0="{{'DurationKey'|mutable}}"
-            />
+            <ws:Array>
+               <ws:Object><ws:String>{{'DurationKey'|mutable}}</ws:String></ws:Object>
+            </ws:Array>
          </ws:selectedKeys>
          <ws:items>
             <ws:Array>
@@ -140,14 +140,14 @@
          multiselect="{{false}}"
          entityType="Пользователь"
          name="FilterResponsibleFace"
-         caption="{{'UserName'|bind}}"
+         caption="{{'UserName'|mutable}}"
          placeholder="{[укажите ФИО]}"
          className="controls-LongOperationsFilter__responsibleChooser"
-      >
+         >
          <ws:selectedKeys>
-            <ws:Array
-               0="{{'UserId'|mutable}}"
-            />
+            <ws:Array>
+               <ws:Object><ws:String>{{'UserId'|mutable}}</ws:String></ws:Object>
+            </ws:Array>
          </ws:selectedKeys>
       </ws:partial>
    </div>

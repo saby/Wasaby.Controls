@@ -4,52 +4,52 @@ body {
     background: @basic-block-bg-color;
     color: @default-text-color;
     border: @infobox-border;
-    padding: 0.857rem 3rem 0.857rem 0.857rem;
+    padding: round(24px * @multiplier) round(84px * @multiplier) round(24px * @multiplier) round(24px * @multiplier);
     &.ws-infobox-type-error {
-      box-shadow: rgba(0, 0, 0, 0.5) 0 0 0.714rem;
+      box-shadow: rgba(0, 0, 0, 0.5) 0 0 round(20px * @multiplier);
     }
     //25,45584412271571 px
     //0,9091372900969896rem
     .ws-infobox-triangle {
-      width: .909137290096rem;
-      height: .909137290096rem;
+      width: round(25px * @multiplier);
+      height: round(25px * @multiplier);
       box-sizing: border-box;
       background: @basic-block-bg-color;
       transform:  scaleY(1.055555555555556) rotate(45deg);
       &.ws-infobox-triangle-bottom {
-        bottom: -.47rem;
+        bottom: round(-13px * @multiplier);
         border-right: @infobox-border;
         border-bottom: @infobox-border;
       }
       &.ws-infobox-triangle-top {
-        top: -.47rem;
+        top: round(-13px * @multiplier);
         border-left: @infobox-border;
         border-top: @infobox-border;
       }
       &.ws-infobox-triangle-vertical-right {
-        right: -.47rem;
+        right: round(-13px * @multiplier);
         border-right: @infobox-border;
         border-top: @infobox-border;
       }
       &.ws-infobox-triangle-vertical-left {
-        left: -.47rem;
+        left: round(-13px * @multiplier);
         border-left: @infobox-border;
         border-bottom: @infobox-border;
       }
     }
     .ws-infobox-close-button.icon-disabled{
-      font-size: 1.857rem!important;
-      width: 1.857rem!important;
-      height: 1.857rem!important;
-      right: .5714rem;
-      top: .5714rem;
+      font-size: round(52px * @multiplier)!important;
+      width: round(52px * @multiplier)!important;
+      height: round(52px * @multiplier)!important;
+      right: round(16px * @multiplier);
+      top: round(16px * @multiplier);
       color: @Infobox-cross-color!important;
       overflow: hidden;
       &:hover {
         color: @Infobox-cross-color-hover!important;
       }
       &:before {
-        line-height: 1.857rem!important;
+        line-height: round(52px * @multiplier)!important;
       }
     }
   }

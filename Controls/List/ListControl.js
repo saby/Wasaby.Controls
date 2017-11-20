@@ -1,24 +1,141 @@
 define('js!Controls/List/ListControl', [
-   'Core/core-extend',
    'Core/Control',
    'tmpl!Controls/List/ListControl',
    'js!Controls/List/resources/utils/DataSourceUtil',
-   'js!Controls/List/Controllers/PageNavigation',
-   'Core/helpers/functional-helpers',
    'WS.Data/Type/descriptor',
    'WS.Data/Source/ISource',
-   'Core/core-instance'
-], function (extend,
-             Control,
+   'Core/core-instance',
+   'js!Controls/List/Controllers/PageNavigation',
+   'Core/helpers/functional-helpers'
+], function (Control,
              ListControlTpl,
              DataSourceUtil,
-             PageNavigation,
-             fHelpers,
              Types,
              ISource,
-             cInstance
+             cInstance,
+             PageNavigation,
+             fHelpers
    ) {
    'use strict';
+
+   var _private = {
+      //проверка на то, нужно ли создавать новый инстанс рекордсета или же можно положить данные в старый
+      isEqualRecordset: function(oldList, newList) {
+         return oldList && cInstance.instanceOfModule(oldList, 'WS.Data/Collection/RecordSet')
+         && (newList.getModel() === oldList.getModel())
+         && (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor)
+         && (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor)
+      },
+
+      initNavigation: function(navOption, dataSource) {
+         var navController;
+         if (navOption && navOption.type == 'page') {
+            navController = new PageNavigation(navOption.config);
+            navController.prepareSource(dataSource);
+         }
+         return navController;
+      },
+
+      prepareQueryParams: function(direction) {
+
+         if (this._navigationController) {
+            var addParams = this._navigationController.prepareQueryParams(this._display, direction);
+            params.limit = addParams.limit;
+            params.offset = addParams.offset;
+
+         }
+         return params;
+      },
+
+      paramsWithNavigation: function(params, navigCtrl, display, direction) {
+         var navigParams = navigCtrl.prepareQueryParams(display, direction);
+         params.limit = navigParams.limit;
+         params.offset = navigParams.offset;
+         //TODO фильтр и сортировка не забыть приделать
+         return params;
+      },
+
+      paramsWithUserEvent: function(params, userParams) {
+         params.filter = userParams['filter'] || queryParams.filter;
+         params.sorting = userParams['sorting'] || queryParams.sorting;
+         params.offset = userParams['offset'] || queryParams.offset;
+         params.limit = userParams['limit'] || queryParams.limit;
+         return params;
+      },
+
+      reload: function() {
+         if (this._dataSource) {
+            var def, queryParams,
+               self = this;
+
+            queryParams = {
+               filter: this._filter,
+               sorting: this._sorting,
+               limit: undefined,
+               offset: undefined
+            };
+            //модифицируем параметры через навигацию
+            if (this._navigationController) {
+               queryParams = _private.paramsWithNavigation(queryParams, this._navigationController, this._display);
+            }
+
+            //позволяем модифицировать параметры юзеру
+            var userParams = this._notify('onBeforeDataLoad', queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit);
+            if (userParams) {
+               queryParams = _private.paramsWithNavigation(queryParams, this._navigationController, this._display);
+            }
+
+            def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
+               .addCallback(fHelpers.forAliveOnly(function (list) {
+                  self._notify('onDataLoad', list);
+                  if (_private.isEqualRecordset(self._items, list)) {
+                     self._items.setMetaData(list.getMetaData());
+                     self._items.assign(list);
+                  } else {
+                     self._items = list;
+                  }
+                  if (self._navigationController) {
+                     self._navigationController.calculateState(list)
+                  }
+                  return list;
+               }, self))
+               .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
+            this._loader = def;
+         }
+         else {
+            throw new Error('Option dataSource is undefined. Can\'t reload view');
+         }
+      },
+
+
+      loadPage: function(direction) {
+         var def, self = this;
+         if (this._dataSource) {
+            var queryParams = _private.prepareQueryParams.call(this, direction);
+            def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
+               .addCallback(fHelpers.forAliveOnly(function (list) {
+                  self._notify('onDataLoad', list, direction);
+
+                  if (direction == 'down') {
+                     self._items.append(list);
+                  } else if (direction == 'up') {
+                     self._items.prepend(list);
+                  }
+                  if (self._navigationController) {
+                     self._navigationController.calculateState(list, direction);
+                  }
+
+                  return list;
+               }, self))
+               .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
+            this._loader = def;
+         }
+         else {
+            throw new Error('Option dataSource is undefined. Can\'t load page');
+         }
+      }
+   };
+
 
    /*
     Опции
@@ -265,10 +382,16 @@ define('js!Controls/List/ListControl', [
             this._publish('onDataLoad');
          },
 
-         __initNavigation: function(options, dataSource) {
-            if (options.navigation && options.navigation.type == 'page') {
-               this._navigationController = new PageNavigation(options.navigation.config);
-               this._navigationController.prepareSource(dataSource);
+         /**
+          * Load more data after reaching end or start of the list.
+          *
+          * @param e
+          * @param direction 'up' | 'down'
+          * @private
+          */
+         _scrollLoadMore: function(e, direction) {
+            if (this._navigationController && this._navigationController.hasMoreData(direction)) {
+               _private.loadPage.call(this, direction);
             }
          },
 
@@ -277,9 +400,9 @@ define('js!Controls/List/ListControl', [
 
             if (newOptions.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
-               this.__initNavigation(newOptions, this._dataSource);
+               this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
                if (!this._items) {
-                  this._reload(newOptions);
+                  _private.reload.call(this, newOptions);
                }
             }
          },
@@ -291,130 +414,17 @@ define('js!Controls/List/ListControl', [
 
             if (newOptions.dataSource !== this._options.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
-               this.__initNavigation(newOptions, this._dataSource);
-               this._reload(newOptions);
+               this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
+               _private.reload.call(this, newOptions);
             }
 
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
          },
 
-         _prepareQueryParams: function(direction) {
-            var params = {
-               filter: this._filter,
-               sorting: this._sorting,
-               limit: undefined,
-               offset: undefined
-            };
-
-            if (this._navigationController) {
-               var addParams = this._navigationController.prepareQueryParams(this._display, direction);
-               params.limit = addParams.limit;
-               params.offset = addParams.offset;
-               //TODO фильтр и сортировка не забыть приделать
-            }
-            return params;
-         },
-
          //<editor-fold desc='DataSourceMethods'>
          reload: function() {
-            this._reload(this._options);
-         },
-
-         _reload: function(options) {
-            if (this._dataSource) {
-               var
-                  def,
-                  self = this;
-
-               this._cancelLoading();
-
-               var queryParams = this._prepareQueryParams();
-
-               var userParams = this._notify('onBeforeDataLoad', queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit);
-               if (userParams) {
-                  queryParams.filter = userParams['filter'] || queryParams.filter;
-                  queryParams.sorting = userParams['sorting'] || queryParams.sorting;
-                  queryParams.offset = userParams['offset'] || queryParams.offset;
-                  queryParams.limit = userParams['limit'] || queryParams.limit;
-               }
-               //TODO решить с параметрами
-               def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
-                  .addCallback(fHelpers.forAliveOnly(function (list) {
-                     self._notify('onDataLoad', list);
-                     this._onDSReload(list, options);
-                     return list;
-                  }, self))
-                  .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
-               this._loader = def;
-            }
-            else {
-               throw new Error('Option dataSource is undefined. Can\'t reload view');
-            }
-         },
-
-         __loadPage: function(direction) {
-            var def, self = this;
-            if (this._dataSource) {
-               var queryParams = this._prepareQueryParams(direction);
-               def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
-                  .addCallback(fHelpers.forAliveOnly(function (list) {
-                     self._notify('onDataLoad', list, direction);
-                     this.__onLoadPage(list, direction);
-                     return list;
-                  }, self))
-                  .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
-               this._loader = def;
-            }
-            else {
-               throw new Error('Option dataSource is undefined. Can\'t load page');
-            }
-         },
-
-         __onLoadPage: function(list, direction) {
-            if (direction == 'down') {
-               this._items.append(list);
-            } else if (direction == 'up') {
-               this._items.prepend(list);
-            }
-            if (this._navigationController) {
-               this._navigationController.calculateState(list, direction);
-            }
-         },
-
-         _isLoading: function(){
-            return this._loader && !this._loader.isReady();
-         },
-
-         _cancelLoading: function () {
-            if (this._isLoading()) {
-               this._loader.cancel();
-            }
-            this._loader = null;
-         },
-
-         _toggleIndicator: function () {
-            /*Must be implemented*/
-         },
-         _onDSReload: function(list, options) {
-            if (
-               this._items && cInstance.instanceOfModule(this._items, 'WS.Data/Collection/RecordSet')
-               && (list.getModel() === this._items.getModel())
-               && (Object.getPrototypeOf(list).constructor == Object.getPrototypeOf(list).constructor)
-               && (Object.getPrototypeOf(list.getAdapter()).constructor == Object.getPrototypeOf(this._items.getAdapter()).constructor)
-               ) {
-               this._items.setMetaData(list.getMetaData());
-               this._items.assign(list);
-            } else {
-               this._items = list;
-            }
-            if (this._navigationController) {
-               this._navigationController.calculateState(list)
-            }
-
-            this._toggleIndicator(false);
-            return list;
+            _private.reload.call(this, this._options);
          }
-
       });
 
    //TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757

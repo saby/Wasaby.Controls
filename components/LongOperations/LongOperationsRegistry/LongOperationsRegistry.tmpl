@@ -1,41 +1,4 @@
 <div class="controls-LongOperations controls-LongOperationsRegistry">
-   <ws:template name="browserFilterButtonTpl">
-      <ws:SBIS3.CONTROLS.FilterButton
-         name="browserFilterButton"
-         className="controls-Browser__filterButton"
-         tabindex="0"
-         filterStructure="{{ [
-                        {
-                           'internalValueField': 'PeriodKey',
-                           'internalCaptionField': 'PeriodTitle',
-                           'value': periodValue,
-                           'resetValue': null
-                        },
-                        {
-                           'internalValueField': 'StateKey',
-                           'internalCaptionField': 'StateTitle',
-                           'value': statusValue,
-                           'itemTemplate': null,
-                           'resetValue': null
-                        },
-                        {
-                           'internalValueField': 'DurationKey',
-                           'internalCaptionField': 'DurationTitle',
-                           'value': durationValue,
-                           'resetValue': null
-                        },
-                        userId ? undefined : {
-                           'internalValueField': 'UserId',
-                           'internalCaptionField': 'UserName',
-                           'value': userIdValue
-                        }
-                     ] }}"
-         >
-         <ws:template>
-            <ws:SBIS3.CONTROLS.LongOperationsFilter hideStaffFilter="{{hideStaffFilter}}"/>
-         </ws:template>
-      </ws:SBIS3.CONTROLS.FilterButton>
-   </ws:template>
    <ws:SBIS3.CONTROLS.Browser
       name="longOperationsBrowser"
       className="controls-Browser__view"
@@ -53,14 +16,46 @@
             </div>
             <div class="controls-Browser__tableRow">
                <div class="controls-Browser__tableCell-filterButton">
-                  <ws:partial
-                     template="browserFilterButtonTpl"
-                     userIdValue="{{'filter/UserId'|mutable}}"
-                     statusValue="{{'filter/status'|mutable}}"
-                     periodValue="{{'filter/period'|mutable}}"
-                     durationValue="{{'filter/duration'|mutable}}"
-                     scope="{{...}}"
-                  />
+                  <ws:SBIS3.CONTROLS.FilterButton
+                     name="browserFilterButton"
+                     className="controls-Browser__filterButton"
+                     tabindex="0"
+                     >
+                     <ws:filterStructure>
+                        <ws:Array>
+                           <ws:Object
+                              internalValueField="StateKey"
+                              internalCaptionField="StateTitle"
+                              value="{{'filter/status'|mutable}}"
+                              resetValue="{{undefined}}"
+                              itemTemplate=""
+                           />
+                           <ws:Object
+                              internalValueField="PeriodKey"
+                              internalCaptionField="PeriodTitle"
+                              value="{{'filter/period'|mutable}}"
+                              resetValue="{{undefined}}"
+                           />
+                           <ws:Object
+                              internalValueField="DurationKey"
+                              internalCaptionField="DurationTitle"
+                              value="{{'filter/duration'|mutable}}"
+                              resetValue="{{undefined}}"
+                           />
+                           <ws:Object
+                              internalValueField="UserId"
+                              internalCaptionField="UserName"
+                              value="{{'filter/UserId'|mutable}}"
+                              resetValue="{{!userId ? undefined : userId}}"
+                              visibilityValue="{{!userId}}"
+                              itemTemplate="{{!userId ? undefined : ''}}"
+                           />
+                        </ws:Array>
+                     </ws:filterStructure>
+                     <ws:template>
+                        <ws:SBIS3.CONTROLS.LongOperationsFilter hideStaffFilter="{{hideStaffFilter}}" />
+                     </ws:template>
+                  </ws:SBIS3.CONTROLS.FilterButton>
                </div>
                <div class="controls-Browser__tableCell-fastDataFilter">
                   <ws:SBIS3.CONTROLS.FastDataFilter
@@ -73,8 +68,8 @@
                            <ws:Object
                               idProperty="key"
                               displayProperty="title"
-                              multiselect="{{false}}"
                               parentProperty="parent"
+                              multiselect="{{false}}"
                               values="{{ [
                                  {
                                  'key': null,
@@ -123,7 +118,6 @@
                               internalValueField="key"
                               internalCaptionField="title"
                               value="{{'filter/status'|mutable}}"
-                              resetValue="{{ [null] }}"
                            />
                         </ws:Array>
                      </ws:filterStructure>

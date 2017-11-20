@@ -378,7 +378,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
          },
          _toggleState: function() {
             var container = this._getStateToggleContainer()[0];
-            container.className = container.className.replace(/(^|\s)controls-TextBox__state__\S+/gi, '');
+            container.className = container.className.replace(/(^|\s)controls-TextBox_state_\S+/gi, '');
             this._getStateToggleContainer().addClass(this._getToggleState());
          },
          _getToggleState: function() {
@@ -386,7 +386,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                active = this.isActive(),
                enabled = this.isEnabled(),
                marked = this.isMarked();
-            return 'controls-TextBox__state__' + (marked ? 'marked' : !enabled ? 'disabled' : active ? 'active' : 'default');
+            return 'controls-TextBox_state_' + (marked ? 'error' : !enabled ? 'disabled' : active ? 'active' : 'default');
          }
       });
 

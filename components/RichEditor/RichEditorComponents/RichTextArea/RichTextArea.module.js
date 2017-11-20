@@ -468,7 +468,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          setActive: function(active) {
             //если тини еще не готов а мы передадим setActive родителю то потом у тини буддет баг с потерей ренжа,
             //поэтому если isEnabled то нужно передавать setActive родителю только по готовности тини
-            var args = [].slice.call(arguments);
+            var
+               args = [].slice.call(arguments),
+               editor, manager;
             if (active && this._needFocusOnActivated() && this.isEnabled()) {
                this._performByReady(function() {
                   this._tinyEditor.focus();
@@ -493,7 +495,21 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                   RichTextArea.superclass.setActive.apply(this, args);
                }.bind(this));
-            } else {
+            }
+            else {
+               if (!active) {
+                  editor = this._tinyEditor;
+                  if (editor) {
+                     manager = editor.editorManager;
+                     // Если компонент должен стать неактивным - нужно сбросить фокусированный редактор (Аналогично обработчику 'focusout' в TinyMCE в строке 40891)
+                     if (manager && manager.focusedEditor === editor) {
+                        manager.focusedEditor = null;
+                     }
+                  }
+               }
+               if (cConstants.browser.isMobilePlatform) {
+                  EventBus.globalChannel().notify('MobileInputFocusOut');
+               }
                RichTextArea.superclass.setActive.apply(this, args);
             }
          },

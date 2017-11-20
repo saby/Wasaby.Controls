@@ -1,7 +1,7 @@
 .controls-Suggest__picker {
 
   .controls-DataGridView__columnValue {
-    line-height: 3rem;
+    line-height: @default-height;
   }
   & .ws-moneyDecorator .ws-moneyDecorator__integer__BasicRegistry {
     color: #273B4D;
@@ -14,4 +14,11 @@
 //Переход будет по этой задаче https://online.sbis.ru/opendoc.html?guid=d34f8007-1505-46a9-8717-d97fa66111af
 .controls-ComboBox, .controls-SearchForm {
   padding-right: 0 !important;
+}
+//Костыль, т.к. в престо иконки в ПМО большие, а на онлайне средние
+.controls-operationsPanel__actions .icon-24 {
+  font-size: @default-height !important;
+  height: @default-height !important;
+  width: @default-height !important;
+  line-height: @default-height !important;
 }
