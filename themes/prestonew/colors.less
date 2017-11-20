@@ -13,7 +13,7 @@
 //icons
 @icon-color-primary:                     #26B8FF;
 //text-box
-@text-box-bg:                            transparent;
+@background-color_TextBox:               transparent;
 //search-form
 @search-background:                      rgba(150, 159, 168, 0.15);
 @search-border-color-active:             rgba(150, 159, 168, 0.4);
@@ -45,8 +45,8 @@
 //button
 @button-primary-text-color:               @button-text-color;
 //Scrollbar
-@controls-Scrollbar-dark-hover-thumb-color:rgba(255, 255, 255, 0.10);
-@controls-Scrollbar-dark-active-thumb-color:rgba(255, 255, 255, 0.15);
+@controls-Scrollbar-dark-hover-thumb-color:rgba(131, 158, 188, 0.2);
+@controls-Scrollbar-dark-active-thumb-color:rgba(131, 158, 188, 0.25);
 @controls-Scrollbar-light-hover-thumb-color:rgba(0, 0, 0, 0.10);
 @controls-Scrollbar-light-active-thumb-color:rgba(0, 0, 0, 0.15);
 // BackButton
@@ -63,7 +63,7 @@
 @toggle-time-passive-hover-text-decoration:none;
 @toggle-time-passive-color:               @default-text-color;
 //infobox
-@Infobox-cross-color:                                 #E4E4E4;
+@Infobox-cross-color:                                 @default-text-color;
 @Infobox-cross-color-hover:                           #B9E9FF;
 //money
 @money-decorator-integer-accent-results-font-color:#FFCC99;
@@ -163,18 +163,15 @@
 @menu-item-bg:                            #f0f5fb;
 @menu-item-hover-bg:                      #E0ECF5;
 // Menu
-@menu-button-menu-border-color:           #23b8ff;
+@menu-button-menu-border-color:           #26B8FF;
 @menu-link-header-bg-color:               @menu-header-bg-color;
 //Text box
 @combo-box-picker-show-background-color:  #f0f5fb;
-@combo-box-picker-show-border-color:	   #23b8ff;
-@text-box-focus-border-color:             @text-box-border-color;
+@combo-box-picker-show-border-color:	  #23b8ff;
 @compo-box-picker-show-color:             #324352;
 @text-box-focus-bg:                       #324352;
-@text-box-hover-border-color:             rgba(96,170,221, .3 );
 // Search form
 @search-background:                       rgba(150, 159, 168, 0.15);
-@search-form-icon-search-color:           #e4e4e4;
 //  Combo box
 @combo-box-field-text-color:              @default-text-color;
 @combo-box-picker-item-bg:                #f0f5fb;
@@ -195,7 +192,7 @@
 @calendar-day-cell-active-hover-text-color:@calendar-day-cell-hover-text-color;
 @calendar-day-cell-active-hover-bg:       @calendar-day-cell-hover-bg;
 //fieldlink
-@fieldLink-border-color-focus-hover:      @text-box-border-color-bottom;
+@fieldLink-border-color-focus-hover:      @border-color_TextBox_active;
 @fieldLink-link-color:                    #26B8FF;
 @fieldLink-showSelector-color:            @default-text-color;
 @fieldLink-picker-show-field-color:       @default-text-color;
@@ -240,13 +237,11 @@
 @date-range-big-choose-bg-selected-color:                                #3f566d;
 @date-range-big-choose-months-color:                                     #26B8FF;
 @date-range-big-choose-date-range-picker-border-color:                   rgba(102, 170, 221, 0.7);
-@date-range-big-choose-date-range-picker-boundary-selected-color:        #e4e4e4;
 @date-range-big-choose-date-range-picker-bg-boundary-selected-color:     #26B8FF;
 @date-range-big-choose-date-range-picker-bg-selected-color:              @date-range-big-choose-bg-hovered-color;
 @date-range-big-choose-date-range-picker-bg-hovered-color:               @date-range-big-choose-bg-hovered-color;
-@date-range-big-choose-header-date-box-border-color:                     @text-box-border-color;
-@date-range-big-choose-header-date-box-border-selected-color:            @text-box-border-color-bottom;
-@date-range-big-choose-month-range-picker-color:                         #E4E4E4;
+@date-range-big-choose-header-date-box-border-color:                     @border-color_TextBox;
+@date-range-big-choose-header-date-box-border-selected-color:            @border-color_TextBox_active;
 @date-range-big-choose-month-range-picker-bg-selected:                   @date-range-big-choose-bg-selected-color;
 @date-range-big-choose-month-hovered-color:                              #B9E9FF;
 //Edit at place
@@ -323,7 +318,6 @@
 @scrollpager-bg:                          transparent;
 @date-range-big-header-bg:                #2c3e50;
 @date-range-big-choose-border-color:	   #3f566d;
-@date-range-big-choose-date-range-picker-color:							#e4e4e4;
 //sundry
 @dropdownlist-item-text-color:            #202835;
 @controls-editInPlace-editor-bg:			   #354B62 !important;

@@ -40,14 +40,25 @@
    .justify-content();
 }
 .controls-FieldLink__beforeFieldWrapper {
+   .inline-flexbox();
+   .flex-shrink(0);
    .flex-grow(1);
    .flex-direction(row-reverse);
+   max-height: @max-height_FieldLink-beforeFieldWrapper; //todo
    max-width: ~'calc(100% - '@fieldLink-linkItem-cross-width~')';
    overflow: hidden;
+   //Иначе в IE уезжает базовая линия
+   .baseline-fix();
 }
 .controls-FieldLink__afterFieldWrapper {
+   .inline-flexbox();
+   .flex-shrink(0);
+   height: 100%;
    .align-items(center);
    width: auto;
+}
+.controls-FieldLink__afterFieldWrapper-disabled {
+   display: none;
 }
 .controls-FieldLink__button {
    .icon-size-without-important(@fieldLink-icon-size);
@@ -73,7 +84,6 @@
 }
 .controls-FieldLink__showAllLinks {
    position: relative;
-   line-height: @text-box-line-height;
    padding-right: @default-padding;
    cursor: pointer;
    color: @link-text-color;
@@ -84,7 +94,7 @@
    }
 }
 .controls-FieldLink__showAllLinks-disabled {
-   top: -@text-box-line-height;
+   top: -@default-line-height;
    background: @default-bg-color;
    padding-right: 0;
    &:after {
@@ -175,15 +185,15 @@
    }
 }
 .ws-disabled.controls-FieldLink{
-   &__linksWrapper {
+   .controls-FieldLink__linksWrapper {
       max-width:100%;
    }
-   &__beforeFieldWrapper {
+   .controls-FieldLink__beforeFieldWrapper {
       .flex-wrap(wrap);
       .flex-direction();
       max-width: 100%;
    }
-   &__item-caption {
+   .controls-FieldLink__item-caption {
       max-width:100%;
    }
 }

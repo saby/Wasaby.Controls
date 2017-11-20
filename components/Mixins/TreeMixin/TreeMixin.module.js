@@ -799,11 +799,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var item;
          if (hash) {
             item = this._getItemsProjection().getByHash(hash);
-         }
-         else {
+         } else {
             item = this._getItemProjectionByItemId(id);
          }
          if (item) {
+            // Реакция на сворачивание может настать раньше чем долетит и будет обработано событие onChangeExpanded
+            // Следовательно, при сворачивании сразу синхронизируем список развернутых узлов.
+            delete this._options.openedPath[id];
             item.setExpanded(false);
             return Deferred.success();
          } else {
@@ -840,7 +842,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        */
       expandNode: function(id, hash) {
          //todo https://online.sbis.ru/opendoc.html?guid=561eb028-84bd-4395-a19f-898c0e2d2b5e&des=
-         var item;
+         var
+            item,
+            ignoreKeys = {};
          if (hash) {
             item = this._getItemsProjection().getByHash(hash);
          }
@@ -852,7 +856,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                return Deferred.success();
             } else {
                if (this._options.singleExpand) {
-                  this._collapseNodes(this.getOpenedPath(), id);
+                  ignoreKeys[id] = true;
+                  this._collapseNodes(this.getOpenedPath(), ignoreKeys);
                }
                this._options.openedPath[id] = true;
                return this._loadNode(id).addCallback(forAliveOnly(function() {
@@ -959,7 +964,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          else {
             if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
                groupId = items[0].getContents();
-               if (items.length > 1 && this._canApplyGrouping(items[1])) {
+               if (groupId !== false && items.length > 1 && this._canApplyGrouping(items[1])) {
                   this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
                }
                items.splice(0, 1);
@@ -992,14 +997,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          return filter;
       },
       /**
-       * Закрыть ветки, кроме переданной в параметре ignoreKey
-       * @param key
+       * Закрыть ветки, кроме переданных в параметре ignoreKeys
+       * @param openedPath
+       * @param ignoreKeys
        * @private
        */
-      _collapseNodes: function(openedPath, ignoreKey) {
+      _collapseNodes: function(openedPath, ignoreKeys) {
          for (var key in openedPath) {
             if (openedPath.hasOwnProperty(key)) {
-               if (!ignoreKey || key != ignoreKey) {
+               if (!ignoreKeys || !ignoreKeys[key]) {
                   this.collapseNode(key);
                }
             }
@@ -1033,12 +1039,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             projectionFilter;
          if (itemsProjection) { // Если имеется проекция - то применяем разворот к итемам, иначе он применится после создания проекции
             projectionFilter = resetFilterAndStopEventRaising(itemsProjection, true);
-            this._collapseNodes(this.getOpenedPath());
-            this._options.openedPath = openedPath;
+            this._collapseNodes(this.getOpenedPath(), openedPath);
+            this._options.openedPath = coreClone(openedPath);
             applyExpandToItemsProjection(itemsProjection, this._options);
             restoreFilterAndRunEventRaising(itemsProjection, projectionFilter, true);
          } else {
-            this._options.openedPath = openedPath;
+            this._options.openedPath = coreClone(openedPath);
          }
       },
       _removeFromLoadedRemoteNodes: function(remoteNodes) {

@@ -1,17 +1,11 @@
 <div class="ws-ListControl">
-   <div class="ws-ListControl__virtualScrollTopPlaceholder" style="height: {{ _virtualScroll.placeholderSize.top }}px;">
-      <div class="ws-ListControl__virtualScrollTopLoadTrigger" ></div>
-   </div>
    <ws:Controls.List.ListControl.ListView
          items="{{_items}}"
          itemTemplate="{{_options.itemTemplate}}"
          idProperty="{{_options.idProperty}}"
          displayProperty="{{_options.displayProperty}}"
          selectedKey="{{_options.selectedKey}}"
-         displayedStartIndex="{{_virtualScroll.displayedIndex.start}}"
-         displayedStopIndex="{{_virtualScroll.displayedIndex.stop}}">
+         event:onListTop="_scrollLoadMore('up')"
+         event:onListBottom="_scrollLoadMore('down')">
    </ws:Controls.List.ListControl.ListView>
-   <div class="ws-ListControl__virtualScrollBottomPlaceholder" style="height: {{ _virtualScroll.placeholderSize.bottom }}px;">
-      <div class="ws-ListControl__virtualScrollBottomLoadTrigger" ></div>
-   </div>
 </div>

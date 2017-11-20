@@ -14,8 +14,15 @@
 @default-padding:              round(14px * @multiplier);
 @default-padding-small:        round(7px * @multiplier);
 //textbox
-@text-box-information-icon-size:                  round(28px * @multiplier);
-@text-box-font-size-l:                            @huge-text-size;
+@height_TextBox_m:                                round(84px * @multiplier);
+@height_TextBox_l:                                round(84px * @multiplier);
+@font-size_TextBox_m:                             round(32px * @multiplier);
+@font-size_TextBox_l:                             round(40px * @multiplier);
+@line-height_TextBox:                             round(80px * @multiplier);
+@padding_TextBox-container:                       0 round(14px * @multiplier);
+@padding_TextBox-container_left:                  0 0 0 round(14px * @multiplier);
+@border-width_TextBox:                            2px;
+@font-size_TextBox-InformationIcon:               round(28px * @multiplier);
 //textarea
 @text-area-line-height-l:                         round(52px * @multiplier);//52px;
 //number-text-box
@@ -36,6 +43,7 @@
 @fieldLink-showAll-shadow-width:                  round(28px * @multiplier);
 @fieldLink-linkItem-line-height:                  @default-base-line-height;
 @fieldLink-icon-size:                             round(80px * @multiplier); //todo: при переходе на cbuc-icons отказаться от этого щита
+@max-height_FieldLink-beforeFieldWrapper:         @default-base-line-height;
 //treeview
 @tree-view-folder-text-size:                      @default-text-size;
 //button
@@ -43,8 +51,6 @@
 //back-button
 @back-button-margin-before:                       0 4px 0 0;//todo: romanov
 @back-button-padding-before:                      1px 0;//todo: romanov
-//operationa-panel
-@controls-OperationsPanelButton-icon-left:        2px;//todo: romanov
 //popup
 @menu-link-menu-revert-item-container-padding:    0px;//todo romanov
 //menuItem
@@ -89,7 +95,6 @@
 @DropdownList-picker-head-padding:                       0 round(16px * @multiplier);//todo: krasilnikov
 @DropdownList-picker-head-duplicate-type-top-padding:    0px;//todo: krasilnikov
 @DropdownList-picker-menu-item-padding:                  round(5px * @multiplier) round(16px * @multiplier);
-@check-box-caption-margin-left:                          4px;//todo: juravlev
 //MoveDialog
 @controls-movedialog-min-width:                 536px;
 @controls-movedialog-max-width:                 536px;
@@ -423,13 +428,11 @@
 @controls-OperationsPanel-actions-margin:                               0 round(8px * @multiplier);
 @controls-OperationsPanel-menu-icon-size:                               @icon-large-size;
 @controls-OperationsPanel-menu-padding-right:                           @controls-OperationsPanel-menu-icon-size;
-@controls-OperationsPanel-actions-align:                                baseline;
 @controls-OperationsPanel-separator-width:                              2px;
 @controls-OperationsPanel-separator-height:                             round(54px * @multiplier);
 @controls-OperationsMark-separator-line-height:                         round(70px * @multiplier);
 @controls-OperationsPanel-menu-close-button-right:                      0px;
 //OperationsPanelButton
-@controls-OperationsPanelButton-width:    round(24px * @multiplier);
 @controls-OperationsPanelButton-vert-height:round(100px * @multiplier);
 @controls-OperationsPanelButton-font-size: @icon-large-size;
 //EditInPlace
@@ -668,7 +671,7 @@
 @list-view-items-toolbar-bottom:          round(6px * @multiplier);
 @controls-view-eip-padding-DEFAULT:       round(8px * @multiplier);
 @controls-view-padding-DEFAULT:           round(24px * @multiplier);
-@tree-view-padding-left-DEFAULT:          0.2857rem;
+@tree-view-padding-left-DEFAULT:          round(8px * @multiplier);
 @controls-NotificationPopup-border:       none;
 @controls-NotificationPopup-border-top:   @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-right: @controls-NotificationPopup-border;

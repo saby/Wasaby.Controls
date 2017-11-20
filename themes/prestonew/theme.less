@@ -6,8 +6,8 @@
   font-size: round(56px * @multiplier);
   line-height: round(56px * @multiplier);
   font-family: 'cbuc-icons';
-  width: round(84px * @multiplier);
-  height: round(84px * @multiplier);
+  width: @default-height;
+  height: @default-height;
   background-color: #405A77;
   background-image: none !important;
   -webkit-box-shadow: @button-shadow !important;
@@ -333,7 +333,7 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
   &.controls-Picker__show {
     border-width: 0;
     border-style: solid;
-    border-color: @text-box-hover-border-color;
+    border-color: @border-color_TextBox_hover;
   }
 }
 
@@ -737,14 +737,14 @@ body .controls-image__button {
       color: #26B8FF !important;
    }
  }
-.controls-ComboBox.controls-TextBox.controls-TextBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
+.controls-ComboBox.controls-TextBox.controls-TextBox .controls-ComboBox__afterFieldWrapper .controls-ComboBox__arrowDown {
   font-size: round(84px * @multiplier) !important;
 }
 body .controls-Browser__filterButton .controls__filterButton__filterLine-text {
     height: round(40px * @multiplier)
 }
 body .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton {
-    top: round(8px * @multiplier);
+    top: round(11px * @multiplier);
 }
 .controls-PopupMixin__closeButton {
   position: absolute;
@@ -990,13 +990,7 @@ body {
   }
 }
 
-//Костыль, т.к. в престо иконки в ПМО большие, а на онлайне средние
-.controls-operationsPanel__actions .icon-24 {
-    font-size: @default-height !important;
-    height: @default-height !important;
-    width: @default-height !important;
-    line-height: @default-height !important;
-}
+
 
 // В темах престо и розницы все сверстано на внутренних скролируемых контенерах.
 // Делаем что бы флоат арии всегда были с 100% высотой и не надо устанавливать ws-float-area__block-layout.

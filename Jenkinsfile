@@ -1,6 +1,6 @@
 #!groovy
 echo "Задаем параметры сборки"
-def version = "3.17.210"
+def version = "3.17.300"
 if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
         currentBuild.result = 'ABORTED'
         error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
@@ -26,7 +26,7 @@ node('controls') {
                 description: '',
                 name: 'ws_data_revision'),
             string(
-                defaultValue: 'rc-3.17.210',
+                defaultValue: "rc-${version}",
                 description: '',
                 name: 'branch_engine'),
             string(
@@ -294,8 +294,8 @@ node('controls') {
                             export test_server_port=10253
                             export test_url_port=10253
                             export WEBDRIVER_remote_enabled=1
-                            export WEBDRIVER_remote_host=10.76.163.98
-                            export WEBDRIVER_remote_port=4380
+                            export WEBDRIVER_remote_host=10.76.159.209
+                            export WEBDRIVER_remote_port=4444
                             export test_report=artifacts/test-browser-report.xml
                             sh ./bin/test-browser"""
                         }
@@ -442,17 +442,28 @@ node('controls') {
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
         stage("Запуск тестов интеграционных и верстки"){
+            def site = "http://${NODE_NAME}:30001"
+            site.trim()
+            //dir("./controls/tests/int"){
+            //    tmp_smoke = sh returnStatus:true, script: """
+            //        source /home/sbis/venv_for_test/bin/activate
+            //        ${python_ver} smoke_test.py --SERVER_ADDRESS ${server_address}
+            //        deactivate
+            //    """
+            //    if ( "${tmp_smoke}" != "0" ) {
+            //        currentBuild.result = 'ABORTED'
+            //        error('Стенд неработоспособен (не прошел smoke test).')
+            //    }
+            //}
             parallel (
                 int_test: {
                     echo "Запускаем интеграционные тесты"
                     stage("Инт.тесты"){
                         if ( inte ){
-                            def site = "http://${NODE_NAME}:30001"
-                            site.trim()
                             dir("./controls/tests/int"){
                                  sh """
                                  source /home/sbis/venv_for_test/bin/activate
-                                 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS $server_address
+                                 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address}
                                  deactivate
                                  """
                             }

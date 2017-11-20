@@ -14,10 +14,16 @@
 @default-padding:              round(14px * @multiplier);
 @default-padding-small:        round(7px * @multiplier);
 //textbox
-@text-box-height-m:               round(58px * @multiplier);
-@text-box-height-l:               @default-height-big;
-@text-box-font-size-l:            round(40px * @multiplier);
-@text-box-input-padding-l:        round(7px * @multiplier);
+@height_TextBox_m:                round(58px * @multiplier);
+@height_TextBox_l:                round(78px * @multiplier);
+@font-size_TextBox_m:             round(28px * @multiplier);
+@font-size_TextBox_l:             round(40px * @multiplier);
+@line-height_TextBox:             round(56px * @multiplier);
+@padding_TextBox-container:       0 round(14px * @multiplier);
+@padding-bottom_TextBox-container_l: round(7px * @multiplier);
+@padding_TextBox-container_left:  0 0 0 round(14px * @multiplier);
+@border-width_TextBox:            @default-border-width;
+@font-size_TextBox-InformationIcon: round(37px * @multiplier);
 //search-form
 @search-loop-size:             @default-icon-size;
 //button
@@ -37,7 +43,8 @@
 @list-view-items-toolbar-menu-icon-size:  @icon-large-size;
 //fieldlink
 @fieldLink-icon-size:          @default-icon-size-medium;
-@fieldLink-afterField-button-margin: 0 @default-padding-small 0 0;
+@fieldLink-afterField-button-margin: 0 @default-padding 0 0;
+@fieldLink-linkItem-cross-width:     @default-icon-size-medium + @default-padding;
 //searchForm
 @search-form-icon-padding:     0 @default-padding 0 0;
 //commandsButton
@@ -77,3 +84,10 @@
 @long-operations-popup-exp-max-width:                           round(800px * @multiplier);
 @long-operations-popup-foot-but-gap-top:                        round(21px * @multiplier);
 @long-operations-popup-header-but-f-size:                       round(32px * @multiplier);
+//OperationsPanel
+@controls-OperationsPanel-height:                               round(58px * @multiplier);
+@controls-OperationsPanelButton-font-size:                      round(42px * @multiplier);
+@controls-OperationsPanelButton-vert-height:                    @default-height;
+@controls-OperationsPanelButton-width:                          @default-height;
+@controls-OperationsPanelButton-icon-left:                      0;
+@controls-OperationsPanelButton-vert-border-radius:             1px;

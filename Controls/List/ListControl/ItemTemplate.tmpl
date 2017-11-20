@@ -1,18 +1,10 @@
-<div
-        class="ws-ListView__item {{selected ? 'ws-ListView__item__selected'}}"
-        key="{{dispItem.getHash()}}"
-        data-hash="{{dispItem.getHash()}}"
-        event:onclick="_onItemClick(dispItem)">
+<div class="ws-ListView__item {{itemData.isSelected ? 'ws-ListView__item__selected'}}" event:onclick="_onItemClick(itemData.dispItem)">
    <ws:if data="{{contentTemplate}}">
       <ws:partial
             template="{{contentTemplate}}"
-            item="{{item}}"
-            dispItem="{{dispItem}}"
-            index="{{index}}"
-            itemData="{{itemData}}"
-            itemTplData="{{itemTplData}}"></ws:partial>
+            itemData="{{itemData}}"></ws:partial>
       </ws:if>
    <ws:else>
-      <div>{{itemTplData.getPropValue(item, itemTplData.listConfig.displayProperty)}}</div>
+      <div>{{itemData.getPropValue(itemData.item, itemData.displayProperty)}}</div>
    </ws:else>
 </div>

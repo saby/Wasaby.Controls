@@ -1,19 +1,16 @@
 /*group*/
-.controls-ListView__virtualScrollTopPlaceholder,
-.controls-ListView__virtualScrollBottomPlaceholder {
+.ws-ListView {
   position: relative;
 }
-.controls-ListView__virtualScrollTopLoadTrigger,
-.controls-ListView__virtualScrollBottomLoadTrigger {
-  height: 1px;
-  width: 100%;
+.ws-ListView__topLoadTrigger,
+.ws-ListView__bottomLoadTrigger {
   position: absolute;
 }
-.controls-ListView__virtualScrollTopLoadTrigger {
-  bottom: -300px;
+.ws-ListView__topLoadTrigger {
+  top: 100px;
 }
-.controls-ListView__virtualScrollBottomLoadTrigger {
-  top: -300px;
+.ws-ListView__bottomLoadTrigger {
+  bottom: 100px;
 }
 .ws-ListView__item:hover {
   background-color: lightblue;
