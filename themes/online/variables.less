@@ -538,8 +538,8 @@
 // ----------- //
 // Suggest //
 // ----------- //
-@suggest-loading-spritesheet:                   'img/ajax-loader-indicator.gif';
-@suggest-loading-bg:                            url(@suggest-loading-spritesheet) 0 0 no-repeat;
+@suggest-loading-spritesheet:                   url('img/ajax-loader-indicator.gif');
+@suggest-loading-bg:                            @suggest-loading-spritesheet 0 0 no-repeat;
 @suggest-loading-width:                         16px;
 @suggest-loading-right:                         3px;
 
@@ -889,11 +889,11 @@
 @list-view-actions-menu-text-margin:            6px 0 6px 30px;
 @list-view-context-menu-close-right:            6px;
 @list-view-context-menu-close-top:              7px;
-@list-view-scroll-spritesheet:                 'img/ajax-loader-indicator.gif';
-@list-view-scroll-bg:                           url(@list-view-scroll-spritesheet) 0 0 no-repeat;
+@list-view-scroll-spritesheet:                  url('img/ajax-loader-indicator.gif');
+@list-view-scroll-bg:                           @list-view-scroll-spritesheet 0 0 no-repeat;
 @list-view-scroll-height:                       32px;
-@list-view-loading-indicator-gradient-bg:       url(@list-view-scroll-spritesheet)  no-repeat center, linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
-@list-view-loading-indicator-gradient-bg-up:    url(@list-view-scroll-spritesheet)  no-repeat center, linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
+@list-view-loading-indicator-gradient-bg:       @list-view-scroll-spritesheet no-repeat center, linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
+@list-view-loading-indicator-gradient-bg-up:    @list-view-scroll-spritesheet no-repeat center, linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
 @listView-empty-data-color:                     @black-color;
 @listView-empty-data-font-size:                 15px;
 @listView-empty-data-padding-top:               46px;
