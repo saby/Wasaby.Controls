@@ -805,8 +805,8 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Это поведение считается нормальным в целях решения прикладных задач.
                 * Чтобы отображать только шаблон строки без прозрачного фона, нужно установить для него свойство background-color.
                 * Данная опция обладает большим приоритетом, чем установленный в колонках редактор (см. {@link SBIS3.CONTROLS.DataGridView#columns}).
-                * Данная опция может быть переопределена с помощью метода (@see setEditingTemplate).
-                * Переопределить опцию можно в любой момент до показа редакторов на строке, например: (@see onBeginEdit) или (@see onItemClick).
+                * Данная опция может быть переопределена с помощью метода (см. {@link setEditingTemplatesetEditingTemplate}).
+                * Переопределить опцию можно в любой момент до показа редакторов на строке, например {@link SBIS3.CONTROLS.DataGridView#onBeginEdit} или {@link SBIS3.CONTROLS.DataGridView#onItemClick}.
                 * @example
                 * Пример шаблона вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/#_4">Шаблон строки редактирования по месту</a>.
                 * @see editMode
