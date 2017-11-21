@@ -8,6 +8,7 @@
         event:onTagHover="_notifyHandler('onTagHover')"
         event:onTagClick="_notifyHandler('onTagClick')">
    <ws:content>
+      <!--TODO контейнер убрать-->
       <div>
          <textarea
                  spellcheck="false"
@@ -23,7 +24,7 @@
                <div
                        class="controls-TextArea__field controls-TextArea__fakeField controls-TextBox__field js-controls-TextBox__field"
                        style="{{_options.minLines ? ('min-height: ' + _options.minLines * 100 + '%;')}} {{_options.maxLines ? 'max-height: ' + _options.maxLines * 100 + '%'}}"
-               ><span>{{_value}}</span><br/>
+               ><span class="controls-TextArea__fakeField_value">{{_value}}</span><br/>
                </div>
             </div>
             <div style="clear:both;"></div>

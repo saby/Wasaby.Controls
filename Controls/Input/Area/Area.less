@@ -7,6 +7,10 @@
       word-wrap: break-word;
       line-height: @default-line-height;
       //padding-right: @default-padding;
+      //Убрать.
+      &:before {
+         display: none;
+      }
    }
 
    //Настоящая textArea
@@ -25,6 +29,8 @@
       visibility: hidden;
       overflow-y: auto;
    }
+
+
 
    /*&__empty {
       color: @default-placeholder-color;
@@ -50,9 +56,9 @@
       &__field {
          box-sizing: content-box;
       }
-      &__fake {
+      &__fakeField {
          padding: 0 7px;
-         width: calc(100% - 6px);
+         width: calc(~"100% - 6px");
       }
    }
 }

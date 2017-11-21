@@ -43,9 +43,8 @@ define('js!Controls/Input/Area', [
 
       setValue: function(value){
          this._value = value;
-         var fakeArea = this._container.children().find('.controls-TextArea__fakeField');
-         fakeArea[0].children[0].innerText = value;
-         _private.checkScroll.call(this);
+         //TODO: this._children.fakeArea.innerText = value;
+         this._container.children().find('.controls-TextArea__fakeField_value')[0].innerText = value;
       },
 
       checkScroll: function(){
@@ -99,10 +98,12 @@ define('js!Controls/Input/Area', [
 
       _beforeUpdate: function(newOptions) {
          _private.setValue.call(this, newOptions.value);
+         _private.checkScroll.call(this);
       },
 
       _changeValueHandler: function(e, value){
          _private.setValue.call(this, value);
+         _private.checkScroll.call(this);
          this._notify('valueChanged', value);
       },
 
