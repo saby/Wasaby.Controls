@@ -1,6 +1,7 @@
 {
     "ui-modules":
     [
-         "SBIS3.CONTROLS"
+         "SBIS3.CONTROLS",
+		 "Controls"
     ]
 }

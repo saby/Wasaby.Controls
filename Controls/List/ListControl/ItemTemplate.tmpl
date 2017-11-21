@@ -1,0 +1,10 @@
+<div class="ws-ListView__item {{itemData.isSelected ? 'ws-ListView__item__selected'}}" event:onclick="_onItemClick(itemData.dispItem)">
+   <ws:if data="{{contentTemplate}}">
+      <ws:partial
+            template="{{contentTemplate}}"
+            itemData="{{itemData}}"></ws:partial>
+      </ws:if>
+   <ws:else>
+      <div>{{itemData.getPropValue(itemData.item, itemData.displayProperty)}}</div>
+   </ws:else>
+</div>

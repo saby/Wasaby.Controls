@@ -107,8 +107,8 @@
             background: @items-toolbar-bottom-style-background no-repeat 0 -30px;
          }
       }
-      height: calc(@bottomStyle-items-toolbar-height~" - 1px");
-      border-bottom: 1px solid @bottomStyle-items-toolbar-border-color;
+      height: @bottomStyle-items-toolbar-height - @default-border-width;
+      border-bottom: @default-border-width solid @bottomStyle-items-toolbar-border-color;
       &:before {
          content: '';
          position: absolute;

@@ -1,7 +1,13 @@
 /**
  * Created by am.gerasimov on 06.03.2017.
  */
-define('js!SBIS3.CONTROLS.Utils.SourceUtil', ['Core/core-instance'], function(cInstance) {
+define('js!SBIS3.CONTROLS.Utils.SourceUtil', [
+   'Core/core-instance',
+   'require'
+], function (
+   cInstance,
+   requirejs
+) {
     /**
      * @class SBIS3.CONTROLS.Utils.SourceUtil
      * @public

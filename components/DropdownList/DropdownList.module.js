@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
        *
        * @control
        * @public
-       * @category Inputs
+       * @category Input
        */
 
       function getRecordsForRedrawDDL(projection, cfg){

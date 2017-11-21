@@ -29,10 +29,11 @@ define(['js!SBIS3.CONTROLS.DateBox', 'js!SBIS3.CONTROLS.ControlsValidators',], f
 
    describe('SBIS3.CONTROLS.DateBox', function () {
       beforeEach(function () {
-         clock = sinon.useFakeTimers(now.getTime());
+         clock = sinon.useFakeTimers(now.getTime(), 'Date');
       });
       afterEach(function () {
          clock.restore();
+         clock = undefined;
       });
 
       describe('._createAutocomplitedDate ', function () {

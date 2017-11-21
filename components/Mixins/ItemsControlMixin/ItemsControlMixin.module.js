@@ -143,6 +143,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var
                tplOptions = {
                   columns : coreClone(cfg.columns || []),
+                  items: cfg._items,
                   multiselect : cfg.multiselect,
                   hierField: cfg.hierField + '@',
                   parentProperty: cfg.parentProperty,

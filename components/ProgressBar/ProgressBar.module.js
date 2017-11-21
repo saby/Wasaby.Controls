@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.ProgressBar',
        * <component data-component='SBIS3.CONTROLS.ProgressBar'>
        * </component>
        * @public
-       * @category Buttons
+       * @category Button
        *
        * @cssModifier controls-ProgressBar_align-left отображение процентов слева.
        * @cssModifier controls-ProgressBar_align-right отображение процентов справа.
