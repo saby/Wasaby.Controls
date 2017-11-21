@@ -120,7 +120,8 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   var dontReload;
                   switch (evtName.name) {
                      case 'onlongoperationchanged':
-                        var model = self.lookupItem(evt.tabKey, evt.producer, evt.operationId);;
+                        var model = self.lookupItem(evt.tabKey, evt.producer, evt.operationId);
+                        dontReload = !model;
                         if (model) {
                            if (evt.changed === 'progress') {
                               model.set('progressCurrent', evt.progress.value);
@@ -140,16 +141,18 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                            }
                            self._checkItems();
                         }
-                        else {
-                           dontReload = true;
-                        }
                         break;
                      case 'onlongoperationended':
                         var model = self.lookupItem(evt.tabKey, evt.producer, evt.operationId);
+                        dontReload = !model;
                         if (model) {
                            self._animationAdd(model.getId(), !evt.error);
                            self._animationRun();
                         }
+                        break;
+                     case 'onlongoperationdeleted':
+                        var model = self.lookupItem(evt.tabKey, evt.producer, evt.operationId);
+                        dontReload = !model;
                         break;
                   }
                   if (evt) {
@@ -360,7 +363,13 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
             if (!(action === 'suspend' || action === 'resume' ? model.get('canSuspend') : (action === 'delete' ? model.get('canDelete') : null))) {
                return Deferred.fail('Action not allowed');
             }
-            return longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
+            var promise = longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
+            // Удаление в LRS может занимать много времени, поэтому перезапросить список нужно сразу - удаляемая операция в него уже не войдёт. Для
+            // остальных действий вызывать reload не нужно, это произойдёт по событию, пришедшему в результате выпонения действия
+            if (action === 'delete') {
+               promise.addCallback(this.reload.bind(this));
+            }
+            return promise;
          },
 
          /**
