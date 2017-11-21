@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
         * Сохраняет данные.
         * @remark
         * Выгрузка производится через сервис file-transfer.
-        * @param {Object} meta Метаданные для сохранения.
+        * @param {Object} meta Метаданные.
         * @param {Array} [meta.columns] Колонки, которые будут сохраняться.
         * @param {String} [meta.xsl] Имя файла с xsl преобразованием.
         * @param {String} [meta.endpoint] Имя объекта бизнес-логики, который осуществляет сохранение данных.
