@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.NumberTextBox/resources/FormatText', [
+define('js!SBIS3.CONTROLS.NumberTextBox/NumberTextBox/resources/FormatText', [
       'Core/defaultRenders',
       'js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil'
    ],
