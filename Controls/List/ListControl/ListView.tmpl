@@ -1,8 +1,14 @@
 
 <div class="ws-ListView" style="position: relative;">
-   <div class="ws-ListView__topLoadTrigger"></div>
+   <div class="ws-ListView__topListTrigger"></div>
+   <div class="ws-ListView__topPlaceholder">
+      <div class="ws-ListView__topLoadTrigger"></div>
+   </div>
    <div class="ws-ListView__items">
       <ws:partial template="tmpl!Controls/List/ListControl/For" listModel="{{_listModel}}" itemTemplate="{{_itemTemplate}}"></ws:partial>
    </div>
-   <div class="ws-ListView__bottomLoadTrigger"></div>
+   <div class="ws-ListView__bottomPlaceholder">
+      <div class="ws-ListView__bottomLoadTrigger"></div>
+   </div>
+   <div class="ws-ListView__bottomListTrigger"></div>
 </div>

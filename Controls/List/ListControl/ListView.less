@@ -2,16 +2,32 @@
   position: relative;
 }
 
+.ws-ListView__topPlaceholder, .ws-ListView__bottomPlaceholder{
+  position: relative;
+}
+
 .ws-ListView__topLoadTrigger, .ws-ListView__bottomLoadTrigger {
   position: absolute;
 }
 
 .ws-ListView__topLoadTrigger {
-  top: 100px;
+  bottom: -100px;
 }
 
 .ws-ListView__bottomLoadTrigger {
-  bottom: 100px;
+  top: -100px;
+}
+
+.ws-ListView__topListTrigger, .ws-ListView__bottomListTrigger {
+  position: absolute;
+}
+
+.ws-ListView__topListTrigger {
+  top: 10px;
+}
+
+.ws-ListView__bottomListTrigger {
+  bottom: 10px;
 }
 
 

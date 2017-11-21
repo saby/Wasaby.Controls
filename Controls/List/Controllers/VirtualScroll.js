@@ -91,7 +91,7 @@ define('js!Controls/List/Controllers/VirtualScroll',
             //TODO Возможно, тут стоит еще какую-то проверку добавить, чтобы не проверять страницу слишком часто. Например, что было смещение на больше чем 100px
             if (this._currentPage !== newPage) {
                this._currentPage = newPage;
-               console.log('Новая страница: ' + newPage);
+               //console.log('Новая страница: ' + newPage);
                this._onPageChange(newPage);
             }
          },
