@@ -1,0 +1,26 @@
+<div class="controls-TextBox">
+   <div class="controls-TextBox__wrapper">
+      <ws:partial if="{{_beforeFieldWrapper}}" template="{{_beforeFieldWrapper}}"/>
+
+      <div event:oninput="_inputHandler()"
+           event:onclick="_clickHandler()"
+           event:onselect="_selectionHandler()"
+           event:onkeyup="_keyUpHandler()"
+           event:onfocus="_focusHandler()"
+           event:onchange="_notifyHandler('onInputCompleted')"
+           attr:style="width: 100%">
+         <ws:partial template="{{_options.content}}"/>
+      </div>
+
+      <span if="{{_options.tagStyle}}" event:onmouseenter="_notifyHandler('onTagHover')">
+      <ws:SBIS3.CONTROLS.IconButton
+              icon="icon-size icon-Listbox"
+              allowChangeEnable="{{false}}"
+              className="controls-informationIcon icon-{{_options.tagStyle}}"
+              event:onActivated="_notifyHandler('onTagClick')"/>
+   </span>
+
+      <ws:partial if="{{_afterFieldWrapper}}" template="{{_afterFieldWrapper}}"/>
+   </div>
+</div>
+
