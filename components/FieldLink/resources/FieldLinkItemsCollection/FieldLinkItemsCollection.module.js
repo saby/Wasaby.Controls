@@ -200,7 +200,6 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             FieldLinkItemsCollection.superclass.showPicker.apply(this, arguments);
             this._options._isPickerVisible = true;
             this.redraw();
-            this._picker.recalcPosition(true);
             
             pickerContainer = this._picker.getContainer();
             pickerWidth = this._parentFieldLink.getContainer()[0].offsetWidth;
@@ -214,6 +213,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                this._picker.recalcPosition(true);
                setPickerWidth.call(this, pickerWidth);
             }
+            this._picker.recalcPosition(true);
          },
 
          _setPickerContent: function () {

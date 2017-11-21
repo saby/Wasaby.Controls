@@ -34,7 +34,7 @@
     </ws:if>
     <ws:if data="{{ infiniteScroll == 'demand'}}">
        <div class="controls-ListView__serviceFooter">
-         <ws:SBIS3.CONTROLS.Link name="loadMoreButton" class="controls-ListView__loadMoreButton" caption="Еще..." visible="false" />
+         <ws:SBIS3.CONTROLS.Link name="loadMoreButton" class="controls-ListView__loadMoreButton" caption="Еще..." visible="{{false}}" />
        </div>
     </ws:if>
     <div class="controls-ListView-scrollIndicator {{infiniteScroll === 'up' ? 'controls-ListView-scrollIndicator__up' : ''}}"></div>
