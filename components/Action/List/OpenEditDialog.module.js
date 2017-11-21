@@ -306,7 +306,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _showLoadingIndicator: function() {
          this._toggleOverlay(true);
-         cIndicator.setMessage('Загрузка...', true);
+         cIndicator.setMessage(rk('Загрузка'), true);
       },
 
       _hideLoadingIndicator: function() {
