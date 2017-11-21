@@ -462,8 +462,8 @@ define('js!Controls/List/ListControl', [
             this._scrollWatcher.subscribe('onLoadTriggertBottom', function() {
                self._scrollLoadMore('down');
             });
-            this._scrollWatcher.subscribe('onListTop', function() {});
-            this._scrollWatcher.subscribe('onListBottom', function() {});
+            this._scrollWatcher.subscribe('onListTop', function() { });
+            this._scrollWatcher.subscribe('onListBottom', function() { });
          },
 
          _beforeUpdate: function(newOptions) {
