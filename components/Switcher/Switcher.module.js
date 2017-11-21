@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.Switcher',
     *
     * @control
     * @public
-    * @category Buttons
+    * @category Button
     * @initial
     * <component data-component='SBIS3.CONTROLS.Switcher'>
     *     <option name='checked' type="boolean">true</option>

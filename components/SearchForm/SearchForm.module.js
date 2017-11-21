@@ -60,19 +60,18 @@ define('js!SBIS3.CONTROLS.SearchForm', [
       },
 
       $constructor:function () {
-         var self = this,
-             afterFieldWrapper = this._getAfterFieldWrapper();
+         var self = this;
 
          this.subscribe('onTextChange', function(e, text) {
-            $('.js-controls-SearchForm__reset', afterFieldWrapper).toggleClass('ws-invisible', text == '');
+            $('.js-controls-SearchForm__reset', self.getContainer()).toggleClass('ws-hidden', text === '');
          });
 
-         afterFieldWrapper.on('click', '.js-controls-SearchForm__reset', function() {
+         this.getContainer().on('click', '.js-controls-SearchForm__reset', function() {
             self.resetSearch();
             self._applyTooltip();
          });
 
-         afterFieldWrapper.on('click', '.js-controls-SearchForm__search', function() {
+         this.getContainer().on('click', '.js-controls-SearchForm__search', function() {
             if(self.isEnabled()) {
                self.hidePicker();
                self.applySearch(true);

@@ -1,9 +1,8 @@
 .controls-InformationPopup.controls-FloatArea {
-    border-top: @controls-InformationPopup-border-top;
-    border-right: @controls-InformationPopup-border-right;
-    border-bottom: @controls-InformationPopup-border-bottom;
-    border-left: @controls-InformationPopup-border-left;
-    .box-shadow(@controls-panel-shadow);
+   border-style: solid;
+   border-width: @controls-InformationPopup-border-width;
+   background: @controls-InformationPopup-bg;
+   .box-shadow(@controls-panel-shadow);
 
    /* Переопределим кнопку закрытия */
    .controls-PopupMixin__closeButton {
@@ -38,8 +37,4 @@
    &.controls-InformationPopup__status-error {
       border-color: @controls-InformationPopup-error-status-border-color;
    }
-}
-
-.controls-InformationPopup.controls-FloatArea {
-   background: @controls-InformationPopup-bg;
 }

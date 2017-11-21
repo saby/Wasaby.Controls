@@ -1,0 +1,14 @@
+<div class="ws-DialogTemplate">
+    <div class="ws-DialogTemplate__top-area">
+        <ws:if data="{{_options.caption}}">
+            <span class="ws-DialogTemplate__caption">{{_options.caption}}</span>
+        </ws:if>
+        <ws:if data="{{_options.topArea}}">
+            <ws:partial template="{{_options.topArea}}" scope="{{_options.componentOptions}}"></ws:partial>
+        </ws:if>
+        <span class="ws-DialogTemplate__close_button" event:onclick="closePopup()"/>
+    </div>
+    <div class="ws-DialogTemplate__content-area">
+        <ws:partial template="{{_options.contentArea}}" scope="{{_options.componentOptions}}"></ws:partial>
+    </div>
+</div>

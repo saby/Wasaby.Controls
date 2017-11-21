@@ -109,7 +109,7 @@
    &.ws-validation-error {
       outline: 1px solid @red-color;
       outline-offset: -1px;
-      background-color: @text-box-bg-error;
+      background-color: @background-color_TextBox_error;
    }
 
    &.controls-DropdownList__defaultItem{
@@ -434,7 +434,7 @@
 
       .controls-DropdownList__itemCheckBox {
          .checkbox(@check-box-icon-size);
-         .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+         .checkbox-border-size();
          &:after {
             color: @primary-color;
          }

@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
        * @demo SBIS3.CONTROLS.Demo.RichEditorDemo В следующем примере первый контрол - SBIS3.CONTROLS.RichEditor.
        * Ниже добавлен контрол SBIS3.CONTROLS.RichEditorToolbar, который связан с контролом SBIS3.CONTROLS.RichTextArea с помощью метода {@link SBIS3.CONTROLS.RichEditorToolbarBase#setLinkedEditor}.
        *
-       * @category Inputs
+       * @category Input
        */
       RichEditor = RichTextArea.extend(/** @lends SBIS3.CONTROLS.RichEditor.prototype */{
          _dotTplFn: dotTplFn,

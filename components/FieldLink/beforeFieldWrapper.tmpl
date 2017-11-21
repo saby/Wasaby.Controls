@@ -10,17 +10,10 @@
             itemContentTpl="{{ itemContentTpl }}"
             includedTemplates="{{ includedTemplates }}"
             items="{{ preRenderItems }}"
+            boldItems="{{ boldItems }}"
+            underlinedItems="{{ underlinedItems }}"
+            bigItems="{{ bigItems }}"
             itemsSortMethod="{{ itemsSortMethod }}">
         </ws:SBIS3.CONTROLS.FieldLinkItemsCollection>
     </div>
-    <ws:SBIS3.CONTROLS.Link
-       if="{{ multiselect }}"
-       name="showAllButton"
-       cssClassName="controls-FieldLink__showAllLinks"
-       caption="&#133;"
-       tabindex="0"
-       allowChangeEnable="{{ false }}"
-       activableByClick="{{ false }}"
-       visible="{{ true }}"
-    />
 </div>

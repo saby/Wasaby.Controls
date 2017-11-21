@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.CommandsButton', [
      *
      * @public
      * @control
-     * @category Inputs
+     * @category Input
      */
    var CommandsButton = MenuIcon.extend(/** @lends SBIS3.CONTROLS.CommandsButton.prototype */{
       _modifyOptions: function(opts) {
