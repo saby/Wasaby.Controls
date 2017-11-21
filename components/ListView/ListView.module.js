@@ -1103,9 +1103,23 @@ define('js!SBIS3.CONTROLS.ListView',
             ConfigByClasses(opts, params, classes);
 },
 
+         _prepareClassesByConfig: function(cfg) {
+            if (cfg.multiselect !== false) {
+               cfg.preparedClasses = ' controls-ListView__multiselect';
+            } else {
+               cfg.preparedClasses = ' controls-ListView__multiselect__off';
+            }
+            if (cfg._serverRender) {
+               cfg.preparedClasses = ' controls-ListView__dataLoaded';
+            } else {
+               cfg.preparedClasses = ' controls-ListView__dataNotLoaded';
+            }
+         },
+
          _modifyOptions : function(opts, parsedOptions, attrToMerge){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
             this._addOptionsFromClass(lvOpts, attrToMerge);
+            this._prepareClassesByConfig(lvOpts);
             //Если нам задали бесконечный скролл в виде Bool, то если true, то 'down' иначе null
             if (lvOpts.hasOwnProperty('infiniteScroll')){
                lvOpts.infiniteScroll = typeof lvOpts.infiniteScroll === 'boolean' ?
