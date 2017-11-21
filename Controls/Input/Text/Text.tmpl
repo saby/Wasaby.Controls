@@ -1,13 +1,20 @@
-<ws:Controls.Input.resources.TextRender.TextRender
-   type="text"
-   value="{{_value}}"
-   enabled="{{isEnabled()}}"
-   tagStyle="{{_options.tagStyle}}"
-   placeholder="{{_options.placeholder}}"
-   selectOnClick="{{_options.selectOnClick}}"
-   getInputData="{{_getInputData}}"
-   event:onChangeValue="_inputHandler()"
-   event:onTagHover="_notifyHandler('onTagHover')"
-   event:onTagClick="_notifyHandler('onTagClick')"
-   event:onInputFinish="_notifyHandler('onInputFinish')"
-/>
+<ws:Controls.Input.resources.BoxRender.BoxRender
+        value="{{_value}}"
+        selectOnClick="{{_options.selectOnClick}}"
+        prepareValue="{{_prepareValue}}"
+        tagStyle="{{_options.tagStyle}}"
+        event:onChangeValue="_changeValueHandler()"
+        event:onInputCompleted="_notifyHandler('onInputCompleted')"
+        event:onTagHover="_notifyHandler('onTagHover')"
+        event:onTagClick="_notifyHandler('onTagClick')">
+   <ws:content>
+      <input
+              autocomplete="off"
+              type="text"
+              value="{{_value}}"
+              class="controls-TextBox__field"
+              readonly="{{isEnabled() ? '' : 'readonly'}}"
+              placeholder="{{_options.enabled ? _options.placeholder}}"
+      />
+   </ws:content>
+</ws:Controls.Input.resources.BoxRender.BoxRender>

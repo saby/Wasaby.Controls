@@ -135,7 +135,7 @@ define('js!Controls/Input/Area', [
       };
    };
 
-   /*Area.getOptionTypes = function() {
+   Area.getOptionTypes = function() {
       return {
          value: types(String),
          trim: types(Boolean),
@@ -152,7 +152,7 @@ define('js!Controls/Input/Area', [
           'shiftEnter'
           ])
       };
-   };*/
+   };
 
    return Area;
 
