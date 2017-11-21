@@ -88,13 +88,12 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
 
          _setPickerContent: function () {
             var self = this;
-            this._picker._container.addClass('controls-EditAtPlaceGroup__editorOverlay');
             this._picker._container.bind('keydown', function (e) {
                self._keyPressHandler(e);
             });
 
             this._iterateChildEditAtPlaces(function(child){
-               child._setEditInGroup();;
+               child._setEditInGroup();
                child._setKeyPressHandler(self._keyPressHandler.bind(self));
             }, this._picker);
             this._addControlPanel(this._picker._container);

@@ -294,8 +294,8 @@ node('controls') {
                             export test_server_port=10253
                             export test_url_port=10253
                             export WEBDRIVER_remote_enabled=1
-                            export WEBDRIVER_remote_host=10.76.163.98
-                            export WEBDRIVER_remote_port=4380
+                            export WEBDRIVER_remote_host=10.76.159.209
+                            export WEBDRIVER_remote_port=4444
                             export test_report=artifacts/test-browser-report.xml
                             sh ./bin/test-browser"""
                         }
