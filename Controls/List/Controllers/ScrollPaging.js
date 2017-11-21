@@ -93,6 +93,11 @@ define('js!Controls/List/Controllers/ScrollPaging',
          _cacheHeights: function(viewportCnt) {
             this._viewHeight = viewportCnt.scrollHeight;
             this._viewportHeight = viewportCnt.offsetHeight;
+         },
+
+         destroy: function() {
+            this.stopObserve();
+            Paging.superclass.destroy.apply(this, arguments);
          }
 
       });

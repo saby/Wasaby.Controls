@@ -66,6 +66,10 @@ define('js!Controls/List/ListControl/ListViewModel',
             this._notify('onListChange');
          },
 
+         setItems: function(items) {
+            this._itemsModel.setItems(items)
+         },
+
          __calcSelectedItem: function(display, selKey, idProperty) {
 
             //TODO надо вычислить индекс

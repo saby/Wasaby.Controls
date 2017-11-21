@@ -6,6 +6,7 @@ define('js!Controls/List/ListControl', [
    'WS.Data/Source/ISource',
    'js!Controls/List/Controllers/PageNavigation',
    'Core/helpers/functional-helpers',
+   'Core/core-instance',
    'require',
    'css!Controls/List/ListControl/ListControl'
 ], function (Control,
@@ -15,11 +16,19 @@ define('js!Controls/List/ListControl', [
              ISource,
              PageNavigation,
              fHelpers,
+             cInstance,
              require
    ) {
    'use strict';
 
    var _private = {
+      isEqualItems: function(oldItems, newItems) {
+         return oldItems && cInstance.instanceOfModule(oldItems, 'WS.Data/Collection/RecordSet')
+            && (newItems.getModel() === oldItems.getModel())
+            && (Object.getPrototypeOf(newItems).constructor == Object.getPrototypeOf(oldItems).constructor)
+            && (Object.getPrototypeOf(newItems.getAdapter()).constructor == Object.getPrototypeOf(oldItems.getAdapter()).constructor)
+
+      },
       initNavigation: function(navOption, dataSource) {
          var navController;
          if (navOption && navOption.source == 'page') {
@@ -27,17 +36,6 @@ define('js!Controls/List/ListControl', [
             navController.prepareSource(dataSource);
          }
          return navController;
-      },
-
-      prepareQueryParams: function(direction) {
-
-         if (this._navigationController) {
-            var addParams = this._navigationController.prepareQueryParams(this._display, direction);
-            params.limit = addParams.limit;
-            params.offset = addParams.offset;
-
-         }
-         return params;
       },
 
       paramsWithNavigation: function(params, navigCtrl, display, direction) {
@@ -69,7 +67,7 @@ define('js!Controls/List/ListControl', [
             };
             //модифицируем параметры через навигацию
             if (this._navigationController) {
-               queryParams = _private.paramsWithNavigation(queryParams, this._navigationController, this._display);
+               queryParams = _private.paramsWithNavigation(queryParams, this._navigationController, this._display, direction);
             }
 
             //позволяем модифицировать параметры юзеру
@@ -87,14 +85,12 @@ define('js!Controls/List/ListControl', [
                   } else if (direction == 'up') {
                      self._items.prepend(list);
                   } else { //без направления - это перезагрузка
-                     //TODO обсудить. Стремная проверка на то - это первое создание списка или последующие перезагрузки.
-                     //если это первое создание, то можно просто засунуть в _items и тогда они прокинутся во view
-                     //если второе, то надо отдать items прямо в контрол
-                     if (self._children._ListView) {
-                        self._children._ListView.setItems(list);
+                     if (_private.isEqualItems(self._items, list)) {
+                        self._items.assign(list);
                      }
                      else {
                         self._items = list;
+                        self._forceUpdate();
                      }
 
                   }
@@ -117,9 +113,30 @@ define('js!Controls/List/ListControl', [
                }, self))
                .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
             this._loader = def;
+            return def;
          }
          else {
             throw new Error('Option dataSource is undefined. Can\'t reload view');
+         }
+      },
+
+      toBegin: function() {
+         var self = this;
+         if (this._navigationController) {
+            this._navigationController.setBeginState();
+            _private.load.call(this).addCallback(function(){
+               self._container.closest('.ws-scrolling-content').get(0).scrollTop = 0;
+            });
+         }
+      },
+
+      toEnd: function() {
+         var self = this;
+         if (this._navigationController) {
+            this._navigationController.setEndState();
+            _private.load.call(this).addCallback(function(){
+               self._container.closest('.ws-scrolling-content').get(0).scrollTop = 10000000;
+            });
          }
       }
    };
@@ -346,8 +363,7 @@ define('js!Controls/List/ListControl', [
     * @event Controls/List/ListControl#onDataLoad Происходит при загрузке данных
     */
 
-   var ListView = Control.extend(
-      {
+   var ListControl = Control.extend({
          _controlName: 'Controls/List/ListControl',
          _template: ListControlTpl,
          iWantVDOM: true,
@@ -366,7 +382,7 @@ define('js!Controls/List/ListControl', [
          _itemTemplate: null,
 
          constructor: function (cfg) {
-            ListView.superclass.constructor.apply(this, arguments);
+            ListControl.superclass.constructor.apply(this, arguments);
             this._items = cfg.items;
             this._publish('onDataLoad');
          },
@@ -379,6 +395,8 @@ define('js!Controls/List/ListControl', [
           * @private
           */
          _scrollLoadMore: function(e, direction) {
+            //TODO нужна компенсация при подгрузке вверх
+
             if (this._navigationController && this._navigationController.hasMoreData(direction)) {
                _private.load.call(this, direction);
             }
@@ -444,25 +462,33 @@ define('js!Controls/List/ListControl', [
 
          __onPagingArrowClick: function(e, arrow) {
             if (this._scrollPagingCtr) {
-               if (arrow == 'Next') {
-                  this._scrollPagingCtr.scrollForward();
-               } else if (arrow == 'Prev') {
-                  this._scrollPagingCtr.scrollBackward();
+               switch (arrow) {
+                  case 'Next': this._scrollPagingCtr.scrollForward(); break;
+                  case 'Prev': this._scrollPagingCtr.scrollBackward(); break;
+                  case 'Begin': _private.toBegin.call(this); break;
+                  case 'End': _private.toEnd.call(this); break;
                }
             }
          },
 
          reload: function() {
-            _private.reload.call(this, this._options);
+            _private.load.call(this);
+         },
+
+         destroy: function() {
+            if (this._scrollPagingCtr) {
+               this._scrollPagingCtr.destroy()
+            }
+            ListControl.superclass.destroy.apply(this, arguments);
          }
       });
 
    //TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757
-   /*ListView.getOptionTypes = function getOptionTypes(){
+   /*ListControl.getOptionTypes = function getOptionTypes(){
     return {
     dataSource: Types(ISource)
     }
     };*/
 
-   return ListView;
+   return ListControl;
 });

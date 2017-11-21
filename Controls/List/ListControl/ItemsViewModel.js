@@ -4,6 +4,7 @@
 define('js!Controls/List/ListControl/ItemsViewModel',
    ['Core/Abstract', 'js!Controls/List/resources/utils/ItemsUtil'],
    function(Abstract, ItemsUtil) {
+
       /**
        *
        * @author Крайнов Дмитрий
@@ -12,6 +13,7 @@ define('js!Controls/List/ListControl/ItemsViewModel',
       var ItemsViewModel = Abstract.extend({
 
          _display: null,
+         _items: null,
          _curIndex: 0,
 
          constructor: function(cfg) {
@@ -19,6 +21,7 @@ define('js!Controls/List/ListControl/ItemsViewModel',
             ItemsViewModel.superclass.constructor.apply(this, arguments);
             this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
             if (cfg.items) {
+               this._items = cfg.items;
                this._display = ItemsUtil.getDefaultDisplayFlat(cfg.items, cfg);
                this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
             }
@@ -53,6 +56,15 @@ define('js!Controls/List/ListControl/ItemsViewModel',
          },
 
          _onCollectionChange: function() {
+            this._notify('onListChange');
+         },
+
+         setItems: function(items) {
+            if (this._display) {
+               this._display.destroy();
+            }
+            this._display = ItemsUtil.getDefaultDisplayFlat(items, this._options);
+            this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
             this._notify('onListChange');
          }
       });

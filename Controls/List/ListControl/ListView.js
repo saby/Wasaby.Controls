@@ -53,9 +53,15 @@ define('js!Controls/List/ListControl/ListView', [
          },
 
          _beforeUpdate: function(newOptions) {
-            if (newOptions.items && (this._items != newOptions.items)) {
-               this._listModel = _private.createListModel(newOptions);
-               this._listModel.subscribe('onListChange', this._onListChangeFnc);
+            if (newOptions.items && (newOptions.items != this._options.items)) {
+               if (!this._listModel) {
+                  this._listModel = _private.createListModel(newOptions);
+                  this._listModel.subscribe('onListChange', this._onListChangeFnc);
+               }
+               else {
+                  this._listModel.setItems(newOptions.items);
+               }
+
             }
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
          },
@@ -114,6 +120,10 @@ define('js!Controls/List/ListControl/ListView', [
             item = dispItem.getContents();
             newKey = ItemsUtil.getPropertyValue(item, this._options.idProperty);
             this._listModel.setSelectedKey(newKey);
+         },
+
+         setItems: function(items) {
+            this._listModel.setItems(items);
          }
       });
 
