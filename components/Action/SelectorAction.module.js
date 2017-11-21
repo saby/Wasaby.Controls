@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
        * @author Герасимов Александр Максимович
        */
        var SelectorAction = Action.extend([DialogMixin], /** @lends SBIS3.CONTROLS.Action.SelectorAction.prototype */{
-          _moduleName: 'SBIS3.CONTROLS.Action.SelectorAction', //TODO чтобы работало постороение на сервере  надо убрать когда сделают задачу https://online.sbis.ru/opendoc.html?guid=095e2532-1fcd-4060-a5ea-b3b361bd97d5
+          _moduleName: 'SBIS3.CONTROLS.Action.SelectorAction', //TODO чтобы работало построение на сервере  надо убрать когда сделают задачу https://online.sbis.ru/opendoc.html?guid=095e2532-1fcd-4060-a5ea-b3b361bd97d5
           _buildComponentConfig: function(metaConfig) {
              /* Необходимо клонировать metaConfig, чтобы не испортить оригинальный объект */
              var cfg = cMerge({}, SelectorAction.superclass._buildComponentConfig.call(this, metaConfig), {clone: true});
