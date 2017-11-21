@@ -2,9 +2,10 @@ define('js!Controls/Input/Area', [
    'Core/Control',
    'Core/constants',
    'js!WS.Data/Type/descriptor',
+   'js!Controls/Input/resources/ValidateHelper',
    'tmpl!Controls/Input/Area/Area',
    'css!Controls/Input/Area/Area'
-], function(Control, constants, types, template) {
+], function(Control, constants, types, ValidateHelper, template) {
 
    /**
     *
@@ -59,18 +60,15 @@ define('js!Controls/Input/Area', [
          var calcValue = splitValue.inputValue;
 
          if (this._options.constraint) {
-            calcValue = '';
-            splitValue.inputValue.replace(new RegExp(this._options.constraint, 'g'), function(validSymbol) {
-               calcValue += validSymbol;
-            });
+            calcValue = ValidateHelper.constraint(calcValue, splitValue, this._options.constraint);
          }
 
          if (this._options.trim) {
-            calcValue = calcValue.trim();
+            calcValue = ValidateHelper.trim(calcValue);
          }
 
          if(this._options.maxLength){
-            calcValue = calcValue.substring(0, this._options.maxLength - splitValue.beforeInputValue.length - splitValue.afterInputValue.length);
+            calcValue = ValidateHelper.maxLength(calcValue, splitValue, this._options.maxLength);
          }
 
          return {
@@ -136,7 +134,7 @@ define('js!Controls/Input/Area', [
       };
    };
 
-   Area.getOptionTypes = function() {
+   /*Area.getOptionTypes = function() {
       return {
          value: types(String),
          trim: types(Boolean),
@@ -153,7 +151,7 @@ define('js!Controls/Input/Area', [
           'shiftEnter'
           ])
       };
-   };
+   };*/
 
    return Area;
 
