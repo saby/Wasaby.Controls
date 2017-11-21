@@ -1,6 +1,6 @@
 <span class="controls-BreadCrumbs__crumb js-controls-BreadCrumbs__crumb controls-ListView__item"
      data-hash="{{ projItem.getHash() }}"
      data-id="{{ item.getId() + ''}}"
-     title="{{ escapeUnicode(item.get(displayProperty) || '') }}">
+     title="{{ escapeUnicode(item.get(displayProperty) || '')|sanitize }}">
     <ws:partial template="{{itemContent}}" scope="{{...}}" attributes="{{ attributes }}"></ws:partial>
 </span>
