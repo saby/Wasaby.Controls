@@ -21,10 +21,98 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
        * @demo SBIS3.CONTROLS.Demo.DemoSelectorAction
        *
        * @public
-       * @author Герасимов Александр Максимович
+       * @author Герасимов А.М.
        */
        var SelectorAction = Action.extend([DialogMixin], /** @lends SBIS3.CONTROLS.Action.SelectorAction.prototype */{
-          _moduleName: 'SBIS3.CONTROLS.Action.SelectorAction', //TODO чтобы работало построение на сервере  надо убрать когда сделают задачу https://online.sbis.ru/opendoc.html?guid=095e2532-1fcd-4060-a5ea-b3b361bd97d5
+           /**
+            * @event onExecuted Происходит после выполнения действия.
+            * @param {Core/EventObject} eventObject Дескриптор события.
+            * @param {Object} meta Метаданные, с которыми было выполнено действие (см. {@link execute}).
+            * @param {Boolean} [meta.multiselect] Признак: множественный выбор записей из списка.
+            * @param {Array.<WS.Data/Entity/Record>} [meta.selectedItems] Записи, которые будут выбраны по умолчанию.
+            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический списком.
+            * Возможные значения:
+            * <ul>
+            *     <li>all - для выбора доступны любые типы записей;<li>
+            *     <li>allBySelectAction - для выбора доступны любые типы записей; выбор происходит при нажатии на кнопку "Выбрать".<li>
+            *     <li>node - для выбора доступны только записи типа "Узел" и "Скрытый узел";<li>
+            *     <li>leaf - для выбора доступны только записи типа "Лист".<li>
+            * </ul>
+            * Подробнее о каждом типе записей читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
+            * @param {Object} [meta.componentOptions] Объект с пользовательскими опциями, которые передаются в диалог в секцию _options.
+            * @param {Object} [meta.dialogOptions] Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link SBIS3.CORE.Control#linkedContext}.
+            * @param {Array.<WS.Data/Entity/Record>} result Массив, где каждый элемент - это выбранная на диалоге запись (см. {@Link WS.Data/Entity/Record}).
+            * @see execute
+            */
+           /**
+            * @event onError Происходит, когда выполнение действия было прервано в результате ошибки.
+            * @param {Core/EventObject} eventObject Дескриптор события.
+            * @param {Error} error Экземпляр класса Error.
+            * @param {Object} meta Метаданные, с которыми выполнялось действие (см. {@link execute}).
+            * @param {Boolean} [meta.multiselect] Признак: множественный выбор записей из списка.
+            * @param {Array.<WS.Data/Entity/Record>} [meta.selectedItems] Записи, которые будут выбраны по умолчанию.
+            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический списком.
+            * Возможные значения:
+            * <ul>
+            *     <li>all - для выбора доступны любые типы записей;<li>
+            *     <li>allBySelectAction - для выбора доступны любые типы записей; выбор происходит при нажатии на кнопку "Выбрать".<li>
+            *     <li>node - для выбора доступны только записи типа "Узел" и "Скрытый узел";<li>
+            *     <li>leaf - для выбора доступны только записи типа "Лист".<li>
+            * </ul>
+            * Подробнее о каждом типе записей читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
+            * @param {Object} [meta.componentOptions] Объект с пользовательскими опциями, которые передаются в диалог в секцию _options.
+            * @param {Object} [meta.dialogOptions] Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link SBIS3.CORE.Control#linkedContext}.
+            * @see execute
+            */
+           /**
+            * @event onExecute Происходит перед выполнением действия.
+            * @remark
+            * В обработчике события вы можете изменить метаданные, с которыми впоследствии будет выполнено действие, а также запретить его выполнение.
+            * Обрабатываемые результаты:
+            * <ul>
+            *     <li>Если из обработчика возвращается *false* или строка *custom*, то выполнение действия прерывается.</li>
+            *     <li>Если возвращается deferred, то действие выполнится в обработчике callback. Примечание: когда в результаты callback переданы *false* или строка *custom*, выполнение действия также прерывается.</li>
+            * </ul>
+            * @param {Core/EventObject} eventObject Дескриптор события.
+            * @param {Object} meta Метаданные, переданные при вызове метода (см. {@link execute}).
+            * @param {Boolean} [meta.multiselect] Признак: множественный выбор записей из списка.
+            * @param {Array.<WS.Data/Entity/Record>} [meta.selectedItems] Записи, которые будут выбраны по умолчанию.
+            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический списком.
+            * Возможные значения:
+            * <ul>
+            *     <li>all - для выбора доступны любые типы записей;<li>
+            *     <li>allBySelectAction - для выбора доступны любые типы записей; выбор происходит при нажатии на кнопку "Выбрать".<li>
+            *     <li>node - для выбора доступны только записи типа "Узел" и "Скрытый узел";<li>
+            *     <li>leaf - для выбора доступны только записи типа "Лист".<li>
+            * </ul>
+            * Подробнее о каждом типе записей читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
+            * @param {Object} [meta.componentOptions] Объект с пользовательскими опциями, которые передаются в диалог в секцию _options.
+            * @param {Object} [meta.dialogOptions] Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link SBIS3.CORE.Control#linkedContext}.
+            * @see execute
+            */
+           /**
+            * @name SBIS3.CONTROLS.Action.SelectorAction#execute
+            * @function
+            * @description
+            * Запускает выполнение действия.
+            * @remark
+            * Действие может быть выполнено, когда это не запрещено в опции {@link _canExecute}.
+            * Перед выполнением происходит событие {@link onExecute}, после выполнения - {@link onExecuted}, а в случае ошибки - {@link onError}.
+            * @param {Object} meta Метаданные. Дополняют сведения о контексте выполнения действия, а также о свойствах сущностей, с которыми происходит взаимодействие. Для каждого класса существует собственный набор метаданных.
+            * @param {Boolean} [meta.multiselect] Признак: множественный выбор записей из списка.
+            * @param {Array.<WS.Data/Entity/Record>} [meta.selectedItems] Записи, которые будут выбраны по умолчанию.
+            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический списком.
+            * Возможные значения:
+            * <ul>
+            *     <li>all - для выбора доступны любые типы записей;<li>
+            *     <li>allBySelectAction - для выбора доступны любые типы записей; выбор происходит при нажатии на кнопку "Выбрать".<li>
+            *     <li>node - для выбора доступны только записи типа "Узел" и "Скрытый узел";<li>
+            *     <li>leaf - для выбора доступны только записи типа "Лист".<li>
+            * </ul>
+            * Подробнее о каждом типе записей читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
+            * @param {Object} [meta.componentOptions] Объект с пользовательскими опциями, которые передаются в диалог в секцию _options.
+            * @param {Object} [meta.dialogOptions] Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link SBIS3.CORE.Control#linkedContext}.
+            */
           _buildComponentConfig: function(metaConfig) {
              /* Необходимо клонировать metaConfig, чтобы не испортить оригинальный объект */
              var cfg = cMerge({}, SelectorAction.superclass._buildComponentConfig.call(this, metaConfig), {clone: true});
