@@ -7,6 +7,8 @@ define('js!Controls/Input/Area', [
    'css!Controls/Input/Area/Area'
 ], function(Control, constants, types, ValidateHelper, template) {
 
+   'use strict';
+
    /**
     *
     * Многострочное поле ввода - это текстовое поле с автовысотой.
@@ -60,11 +62,11 @@ define('js!Controls/Input/Area', [
          var calcValue = splitValue.inputValue;
 
          if (this._options.constraint) {
-            calcValue = ValidateHelper.constraint(calcValue, splitValue, this._options.constraint);
+            calcValue = ValidateHelper.constraint(calcValue, this._options.constraint);
          }
 
          if (this._options.trim) {
-            calcValue = ValidateHelper.trim(calcValue);
+            calcValue = calcValue.trim();
          }
 
          if(this._options.maxLength){
@@ -77,8 +79,6 @@ define('js!Controls/Input/Area', [
          };
       }
    };
-
-   'use strict';
 
    var Area = Control.extend({
 

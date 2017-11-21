@@ -66,7 +66,7 @@ define('js!Controls/Input/resources/BoxRender/BoxRender',
          };
       };
 
-      BoxRender.getOptionTypes = function() {
+      /*BoxRender.getOptionTypes = function() {
          return {
             value: types(String),
             selectOnClick: types(Boolean),
@@ -79,7 +79,7 @@ define('js!Controls/Input/resources/BoxRender/BoxRender',
                'info'
             ])
          };
-      };
+      };*/
 
       return BoxRender;
    }

@@ -1,31 +1,19 @@
-define('js!Controls/Input/resources/ValidateHelper',
-   [
-      'Core/core-extend'
-   ],
-   function(coreExtend) {
+define('js!Controls/Input/resources/ValidateHelper', [],
+   function() {
 
       'use strict';
 
-      var ValidateHelper = coreExtend({
+      return {
 
-         trim: function(value){
-            return value.trim();
-         },
-
-         constraint: function(value, splitValue, constraint){
-            var newValue = '';
-            value.replace(new RegExp(constraint, 'g'), function(res) {
-               newValue += res;
-            });
-            return newValue;
+         constraint: function(value, constraint){
+            return (value.match(new RegExp(constraint, 'g')) || ['']).join('');
          },
 
          maxLength: function(value, splitValue, maxLength){
             return value.substring(0, maxLength - splitValue.beforeInputValue.length - splitValue.afterInputValue.length);
          }
 
-      });
+      };
 
-      return ValidateHelper;
    }
 );
