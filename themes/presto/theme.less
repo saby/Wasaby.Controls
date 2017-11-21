@@ -1,7 +1,7 @@
 body {
   @infobox-border: @default-border-width solid transparent;
   .ws-info-box {
-    background: @basic-block-bg-color;
+    background: @basic-block-bg-color !important;
     color: @default-text-color;
     border: @infobox-border;
     padding: round(24px * @multiplier) round(84px * @multiplier) round(24px * @multiplier) round(24px * @multiplier);
@@ -14,7 +14,7 @@ body {
       width: round(25px * @multiplier);
       height: round(25px * @multiplier);
       box-sizing: border-box;
-      background: @basic-block-bg-color;
+      background: @basic-block-bg-color !important;;
       transform:  scaleY(1.055555555555556) rotate(45deg);
       &.ws-infobox-triangle-bottom {
         bottom: round(-13px * @multiplier);
