@@ -103,6 +103,23 @@ define(
                assert.equal(inputResult.value, '0.');
                assert.equal(inputResult.position, 2);
             });
+
+            //Проверим что при вводе вместо точки запятой или буквы "б" или буквы "ю" - они будут заменены
+            it('Symbols ",", "б", "ю", "Б", "Ю" are replacing by dot', function () {
+               var
+                  inputResult,
+                  possibleInsertValuesArr = [',', 'б', 'ю', 'Б', 'Ю'];
+
+               possibleInsertValuesArr.forEach(function(item) {
+                  inputResult = numberTextBox._getInputData({
+                     beforeInputValue: '123',
+                     inputValue: item,
+                     afterInputValue: ''
+                  });
+                  assert.equal(inputResult.value, '123.');
+                  assert.equal(inputResult.position, 4);
+               });
+            });
          });
       });
    }

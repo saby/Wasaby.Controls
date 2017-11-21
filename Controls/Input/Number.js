@@ -2,14 +2,12 @@ define('js!Controls/Input/Number', [
    'Core/Control',
    'tmpl!Controls/Input/Number/Number',
    'js!WS.Data/Type/descriptor',
-   'js!WS.Data/Utils',
 
    'js!Controls/Input/resources/TextRender/TextRender'
 ], function (
    Control,
    template,
-   types,
-   Utils
+   types
 ) {
 
    'use strict';
@@ -76,6 +74,9 @@ define('js!Controls/Input/Number', [
          var
             splitValueInterface = new SplitValueModule(splitValue);
 
+         //Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
+         splitValueInterface.setInputValue(splitValueInterface.getInputValue().toLowerCase().replace(/,|б|ю/, '.'));
+
          //Если валидация не прошла, то не даем ничего ввести
          if (!splitValueInterface.validate(_getRegexp(this._options))) {
             splitValueInterface.setInputValue('');
@@ -141,7 +142,8 @@ define('js!Controls/Input/Number', [
     */
    function SplitValueModule(splitValueObj) {
       var
-         _splitValueObj = Utils.clone(splitValueObj);
+         _splitValueObj = Object.assign({}, splitValueObj);
+
       return {
          getSplitValue: function() {
             return _splitValueObj;
