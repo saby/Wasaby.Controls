@@ -10,8 +10,8 @@ define('js!WSControls/Buttons/MenuButton', [
 
    'use strict';
    
-   function _getContextMenu(callback) {
-      var ctxMenu = 'js!SBIS3.CONTROLS.ContextMenu';
+   function _getContextMenu(callback, history) {
+      var ctxMenu = history ? 'js!SBIS3.CONTROLS.SbisMenu' : 'js!SBIS3.CONTROLS.ContextMenu';
       if(requirejs.defined(ctxMenu)) {
          return callback(requirejs(ctxMenu));
       } else {
@@ -109,7 +109,32 @@ define('js!WSControls/Buttons/MenuButton', [
              * @see setMenuCaption
              * @see getMenuCaption
              */
-             menuCaption: ''
+             menuCaption: '',
+             /**
+              * @cfg {String} Идентификатор истории ввода
+              */
+             historyId: null,
+             /**
+              * @cfg {Boolean} Показывать ли припиненные
+              */
+             pinned: false,
+             /**
+              * @cfg {Boolean} Показывать ли наиболее частые
+              */
+             frequent: false,
+             /**
+              * @cfg {Object} Опции БЛ
+              */
+             blParams: {
+                 blEndpoint: {
+                     contract: null
+                 },
+                 binding: {
+                     query: null,
+                     read: null
+                 },
+                 displayField: null
+             }
          }
       },
 
@@ -193,7 +218,7 @@ define('js!WSControls/Buttons/MenuButton', [
          var self = this;
          _getContextMenu(function() {
             MenuButton.superclass.showPicker.call(self);
-         })
+         }, self._options.historyId);
       },
 
       _createPicker: function(targetElement){
@@ -227,6 +252,23 @@ define('js!WSControls/Buttons/MenuButton', [
             targetPart: true,
             footerTpl: this._options.footerTpl
          };
+         if(this._options.historyId){
+             menuconfig['historyId'] = this._options.historyId;
+             menuconfig['pinned'] = this._options.pinned;
+             menuconfig['frequent'] = this._options.frequent;
+             menuconfig['recent'] = this._options.recent;
+             menuconfig['blParams'] = {
+                 blEndpoint: {
+                     contract: this._options.blParams.blEndpoint.contract
+                 },
+                 binding: {
+                     query: this._options.blParams.binding.query,
+                     read: this._options.blParams.binding.read
+                 },
+                 displayField: this._options.blParams.displayField
+             };
+
+         }
          if (this._options.pickerConfig){
             for (var key in this._options.pickerConfig) {
                if(this._options.pickerConfig.hasOwnProperty(key)) {
@@ -241,7 +283,7 @@ define('js!WSControls/Buttons/MenuButton', [
          //_getContextMenu отработает синхронно, т.к. в _createPicker попадаем когда menu уже загружено
          return _getContextMenu(function (menu) {
             return new menu(menuconfig);
-         });
+         }, this._options.historyId);
       },
 
       _modifyPickerOptions: function(opts) {

@@ -2,52 +2,62 @@
  * Created by kraynovdo on 22.09.2017.
  */
 define('js!Controls/List/ListControl/ListView', [
-   'js!Controls/List/ItemsView',
+   'Core/Control',
    'tmpl!Controls/List/ListControl/ListView',
+   'js!Controls/List/ListControl/ListViewModel',
    'js!Controls/List/resources/utils/ItemsUtil',
    'tmpl!Controls/List/ListControl/ItemTemplate',
    'css!Controls/List/ListControl/ListView'
-], function (ItemsView,
+], function (BaseControl,
              ListViewTpl,
+             ListViewModel,
              ItemsUtil,
              defaultItemTemplate
    ) {
    'use strict';
 
    var _private = {
-      calcSelectedItem: function(display, selKey, idProperty) {
-         var selItem = null;
-         if (selKey !== undefined) {
-            selItem = ItemsUtil.getDisplayItemById(display, selKey, idProperty);
-         }
-         return selItem;
+      createListModel: function(cfg) {
+         return new ListViewModel ({
+            items : cfg.items,
+            idProperty: cfg.idProperty,
+            displayProperty: cfg.displayProperty,
+            selectedKey: cfg.selectedKey
+         })
+      },
 
-         //TODO надо вычислить индекс
-         /*if(!this._selectedItem) {
-          if (!this._selectedIndex) {
-          this._selectedIndex = 0;//переводим на первый элемент
-          }
-          else {
-          this._selectedIndex++;//условно ищем ближайший элемент, рядом с удаленным
-          }
-          this._selectedItem = this._display.at(this._selectedIndex);
-          }*/
+      onListChange: function() {
+         this._forceUpdate();
       }
+
    };
 
-   var ListView = ItemsView.extend(
+   var ListView = BaseControl.extend(
       {
          _controlName: 'Controls/List/ListControl/ListView',
 
          _template: ListViewTpl,
          _defaultItemTemplate: defaultItemTemplate,
-         _selectedItem: null,
-         _selectedIndex: -1,
+
+         constructor: function (cfg) {
+            ListView.superclass.constructor.apply(this, arguments);
+            this._onListChangeFnc = _private.onListChange.bind(this);
+         },
 
          _beforeMount: function(newOptions) {
-            ListView.superclass._beforeMount.apply(this, arguments);
+            if (newOptions.items) {
+               this._listModel = _private.createListModel(newOptions);
+               this._listModel.subscribe('onListChange', this._onListChangeFnc);
+            }
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
-            this._selectedItem = _private.calcSelectedItem(this._display, newOptions.selectedKey, newOptions.idProperty);
+         },
+
+         _beforeUpdate: function(newOptions) {
+            if (newOptions.items && (this._items != newOptions.items)) {
+               this._listModel = _private.createListModel(newOptions);
+               this._listModel.subscribe('onListChange', this._onListChangeFnc);
+            }
+            this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
          },
 
          _afterMount: function() {
@@ -99,25 +109,12 @@ define('js!Controls/List/ListControl/ListView', [
             observer.observe(bottomLoadTrigger);
          },
 
-         _beforeUpdate: function(newOptions) {
-            ListView.superclass._beforeUpdate.apply(this, arguments);
-            this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
-            this._selectedItem = _private.calcSelectedItem(this._display, newOptions.selectedKey, newOptions.idProperty);
-         },
-
          _onItemClick: function(e, dispItem) {
             var item, newKey;
             item = dispItem.getContents();
             newKey = ItemsUtil.getPropertyValue(item, this._options.idProperty);
-            this._selectedItem = ItemsUtil.getDisplayItemById(this._display, newKey, this._options.idProperty);
-         },
-
-         _onCollectionChange: function() {
-            //т.к. при действиях с рекордсетом рекорд может потерять владельца, надо обновить ссылку на актуальный рекорд из текущего набора
-            this._selectedItem = ItemsUtil.getDisplayItemById(this._display, this._options.selectedKey, this._options.idProperty);
-            ListView.superclass._onCollectionChange.apply(this, arguments);
+            this._listModel.setSelectedKey(newKey);
          }
-
       });
 
 

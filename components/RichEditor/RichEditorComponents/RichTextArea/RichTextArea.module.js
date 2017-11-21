@@ -51,6 +51,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       EventBus
    ) {
       'use strict';
+
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
       var
          EDITOR_MODULES = ['css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/skin.min',
@@ -468,7 +469,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          setActive: function(active) {
             //если тини еще не готов а мы передадим setActive родителю то потом у тини буддет баг с потерей ренжа,
             //поэтому если isEnabled то нужно передавать setActive родителю только по готовности тини
-            var args = [].slice.call(arguments);
+            var
+               args = [].slice.call(arguments),
+               editor, manager;
             if (active && this._needFocusOnActivated() && this.isEnabled()) {
                this._performByReady(function() {
                   this._tinyEditor.focus();
@@ -496,11 +499,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
             else {
                if (!active) {
-                  var editor = this._tinyEditor;
-                  var manager = editor.editorManager;
-                  // Если компонент должен стать неактивным - нужно сбросить фокусированный редактор (Аналогично обработчику 'focusout' в TinyMCE в строке 40891)
-                  if (manager && manager.focusedEditor === editor) {
-                     manager.focusedEditor = null;
+                  editor = this._tinyEditor;
+                  if (editor) {
+                     manager = editor.editorManager;
+                     // Если компонент должен стать неактивным - нужно сбросить фокусированный редактор (Аналогично обработчику 'focusout' в TinyMCE в строке 40891)
+                     if (manager && manager.focusedEditor === editor) {
+                        manager.focusedEditor = null;
+                     }
                   }
                }
                if (cConstants.browser.isMobilePlatform) {
@@ -1507,35 +1512,28 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                content.innerHTML = html;
             }.bind(this));
 
-            if (this._options.editorConfig.browser_spellcheck && (cConstants.browser.chrome || cConstants.browser.safari)) {
+            if (this._options.editorConfig.browser_spellcheck) {
                // Если включена проверка правописания, нужно при исправлениях обновлять принудительно text
-               var _onSelectionChange1 = function (evt) {
-                  if (evt.target === document) {
-                     editor.off('SelectionChange', _onSelectionChange1);
-                     if (editor.selection.getContent()) {
-                        editor.once('SelectionChange', _onSelectionChange2);
-                        // Хотя цепляемся на один раз, но всё же отцепим через пару минут, если ничего не случится за это время
-                        setTimeout(editor.off.bind(editor, 'SelectionChange', _onSelectionChange2), 120000);
-                     }
-                  }
+               var _onSelectionChange1 = function () {
+                  editor.once('SelectionChange', _onSelectionChange2);
+                  // Хотя цепляемся на один раз, но всё же отцепим через пару минут, если ничего не случится за это время
+                  setTimeout(editor.off.bind(editor, 'SelectionChange', _onSelectionChange2), 120000);
                }.bind(this);
 
-               var _onSelectionChange2 = function (evt) {
-                  if (evt.target === document) {
-                     this._updateTextByTiny();
-                  }
+               var _onSelectionChange2 = function () {
+                  this._updateTextByTiny();
                }.bind(this);
 
                editor.on('contextmenu', function (evt) {
-                  if (evt.currentTarget === this._inputControl[0] && (evt.target === evt.currentTarget || $.contains(event.currentTarget, evt.target))) {
+                  if (evt.currentTarget === this._inputControl[0] && (evt.target === evt.currentTarget || $.contains(evt.currentTarget, evt.target))) {
                      editor.off('SelectionChange', _onSelectionChange2);
                      if (cConstants.browser.safari) {
                         // Для safari обязательно нужно отложить подписку на событие (потому что safari в тот момент, когда делается эта подписка
                         // меняет выделение, и потом меняет его в момент вставки. Чтобы первое не ловить - отложить)
-                        setTimeout(editor.on.bind(editor, 'SelectionChange', _onSelectionChange1), 1);
+                        setTimeout(editor.once('SelectionChange', _onSelectionChange1), 1);
                      }
                      else {
-                        editor.on('SelectionChange', _onSelectionChange1);
+                        editor.once('SelectionChange', _onSelectionChange1);
                      }
                   }
                }.bind(this));

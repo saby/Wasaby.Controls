@@ -145,6 +145,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin',
             _setPickerConfig: function () {
                return {
                   corner: 'tl',
+                  className: 'controls-EditAtPlaceGroup__editorOverlay',
                   verticalAlign: {
                      side: 'top'
                   },
@@ -188,7 +189,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin',
                this._cntrlPanel.remove();
             }
          }
-      }
+      };
 
       return EditAtPlaceMixin;
    });
