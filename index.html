@@ -293,7 +293,7 @@
 
 </div>
 <script type="text/javascript">
-   $ws.core.withComponents('Source').addCallback(function () {
+   require(['Core/core-init'],function () {
       $(document).ready(function () {
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
