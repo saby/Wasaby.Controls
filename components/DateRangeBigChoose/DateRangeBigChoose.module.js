@@ -219,6 +219,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          var now = new Date(),
             newDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
          now.setDate(1);
+         this.cancelSelection();
+         this._dateRangePicker.cancelSelection();
          this._setCurrentYear(now.getFullYear(), true);
          this._monthRangePicker.setYear(now.getFullYear());
          this._dateRangePicker.setMonth(now);
