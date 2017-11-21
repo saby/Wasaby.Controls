@@ -7,14 +7,12 @@ define('js!Controls/List/ListControl/ListView', [
    'js!Controls/List/ListControl/ListViewModel',
    'js!Controls/List/resources/utils/ItemsUtil',
    'tmpl!Controls/List/ListControl/ItemTemplate',
-   'js!Controls/List/Controllers/ScrollWatcher',
    'css!Controls/List/ListControl/ListView'
 ], function (BaseControl,
              ListViewTpl,
              ListViewModel,
              ItemsUtil,
-             defaultItemTemplate,
-             ScrollWatcher
+             defaultItemTemplate
    ) {
    'use strict';
 
@@ -30,52 +28,7 @@ define('js!Controls/List/ListControl/ListView', [
 
       onListChange: function() {
          this._forceUpdate();
-      },
-
-      topPlaceholderClassName: 'ws-ListView__topPlaceholder',
-      bottomPlaceholderClassName: 'ws-ListView__bottomPlaceholder',
-      topLoadTriggerClass: 'ws-ListView__topLoadTrigger',
-      bottomLoadTriggerClass: 'ws-ListView__bottomLoadTrigger',
-      topListTriggerClass: 'ws-ListView__topListTrigger',
-      bottomListTriggerClass: 'ws-ListView__bottomListTrigger',
-      triggerLoadOffset: 10,
-      createScrollWatcher: function(container) {
-         var
-            children = container.children(),
-            elements = {
-               scrollContainer: container.closest('.scroll-container')
-            };
-
-         // TODO: когда будет возможность получить дом-элемент по имени - переписать этот код
-         for (var i = 0; i < children.length; i++) {
-            if (children[i].className === this.topPlaceholderClassName) {
-               for (var k = 0; k < children[i].children.length; k++) {
-                  if (children[i].children[k].className === this.topLoadTriggerClass) {
-                     elements.topLoadTrigger = children[i].children[k];
-                  }/* else if (children[i].children[k].className === this.topListTriggerClass) {
-                     elements.topListTrigger = children[i].children[k];
-                  }*/
-               }
-            } else if (children[i].className === this.bottomPlaceholderClassName) {
-               for (var k = 0; k < children[i].children.length; k++) {
-                  if (children[i].children[k].className === this.bottomLoadTriggerClass) {
-                     elements.bottomLoadTrigger = children[i].children[k];
-                  }/* else if (children[i].children[k].className === this.bottomListTriggerClass) {
-                     elements.bottomListTrigger = children[i].children[k];
-                  }*/
-               }
-            } else if (children[i].className === this.topListTriggerClass) {
-               elements.topListTrigger = children[i];
-            } else if (children[i].className === this.bottomListTriggerClass) {
-               elements.bottomListTrigger = children[i];
-            }
-         }
-
-         return new ScrollWatcher ({
-            elements : elements
-         })
       }
-
    };
 
    var ListView = BaseControl.extend(
@@ -104,17 +57,6 @@ define('js!Controls/List/ListControl/ListView', [
                this._listModel.subscribe('onListChange', this._onListChangeFnc);
             }
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
-         },
-
-         _afterMount: function() {
-            ListView.superclass._afterMount.apply(this, arguments);
-            this._scrollWatcher = _private.createScrollWatcher(this._container);
-
-            var self = this;
-            this._scrollWatcher.subscribe('onLoadTriggerTop', function(){console.log('SCROLL LOAD TOP'); self._notify('onListTop');});
-            this._scrollWatcher.subscribe('onLoadTriggertBottom', function(){console.log('SCROLL LOAD BOTTOM'); self._notify('onListBottom');});
-            this._scrollWatcher.subscribe('onListTop', function(){console.log('LIST TOP');});
-            this._scrollWatcher.subscribe('onListtBottom', function(){console.log('LIST BOTTOM');});
          },
 
          _onItemClick: function(e, dispItem) {

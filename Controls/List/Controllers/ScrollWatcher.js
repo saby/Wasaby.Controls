@@ -6,9 +6,10 @@ define('js!Controls/List/Controllers/ScrollWatcher',
        * @author Девятов Илья
        * @public
        */
-      var ScrollWatcher = Abstract.extend([], {
+      var ScrollWatcher = Abstract.extend({
          constructor: function(cfg) {
             ScrollWatcher.superclass.constructor.apply(this, arguments);
+            this._options = cfg;
 
             this._hasIntersectionObserver = !!(window && window.IntersectionObserver);
             this._initHandlers(cfg.elements);
@@ -45,7 +46,7 @@ define('js!Controls/List/Controllers/ScrollWatcher',
                               self._notify('onListTop');
                               break;
                            case elements.bottomListTrigger:
-                              self._notify('onListtBottom');
+                              self._notify('onListBottom');
                               break;
                         }
                      }

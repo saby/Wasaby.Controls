@@ -6,7 +6,7 @@ define('js!Controls/List/ListControl', [
    'WS.Data/Source/ISource',
    'Core/core-instance',
    'js!Controls/List/Controllers/PageNavigation',
-   'js!Controls/List/Controllers/VirtualScroll',
+   'js!Controls/List/Controllers/ScrollWatcher',
    'Core/helpers/functional-helpers'
 ], function (Control,
              ListControlTpl,
@@ -15,7 +15,7 @@ define('js!Controls/List/ListControl', [
              ISource,
              cInstance,
              PageNavigation,
-             VirtualScroll,
+             ScrollWatcher,
              fHelpers
    ) {
    'use strict';
@@ -137,6 +137,47 @@ define('js!Controls/List/ListControl', [
          else {
             throw new Error('Option dataSource is undefined. Can\'t load page');
          }
+      },
+
+      scrollWatcherConstants: {
+         topPlaceholderClassName: 'ws-ListControl__topPlaceholder',
+         bottomPlaceholderClassName: 'ws-ListControl__bottomPlaceholder',
+         topLoadTriggerClass: 'ws-ListControl__topLoadTrigger',
+         bottomLoadTriggerClass: 'ws-ListControl__bottomLoadTrigger',
+         topListTriggerClass: 'ws-ListControl__topListTrigger',
+         bottomListTriggerClass: 'ws-ListControl__bottomListTrigger'
+      },
+      createScrollWatcher: function(container) {
+         var
+            children = container.children(),
+            elements = {
+               scrollContainer: container.closest('.ws-scrolling-content')
+            };
+
+         // TODO: когда будет возможность получить дом-элемент по имени - переписать этот код
+         for (var i = 0; i < children.length; i++) {
+            if (children[i].className === this.scrollWatcherConstants.topPlaceholderClassName) {
+               for (var k = 0; k < children[i].children.length; k++) {
+                  if (children[i].children[k].className === this.scrollWatcherConstants.topLoadTriggerClass) {
+                     elements.topLoadTrigger = children[i].children[k];
+                  }
+               }
+            } else if (children[i].className === this.scrollWatcherConstants.bottomPlaceholderClassName) {
+               for (var k = 0; k < children[i].children.length; k++) {
+                  if (children[i].children[k].className === this.scrollWatcherConstants.bottomLoadTriggerClass) {
+                     elements.bottomLoadTrigger = children[i].children[k];
+                  }
+               }
+            } else if (children[i].className === this.scrollWatcherConstants.topListTriggerClass) {
+               elements.topListTrigger = children[i];
+            } else if (children[i].className === this.scrollWatcherConstants.bottomListTriggerClass) {
+               elements.bottomListTrigger = children[i];
+            }
+         }
+
+         return new ScrollWatcher ({
+            elements : elements
+         });
       }
    };
 
@@ -378,18 +419,6 @@ define('js!Controls/List/ListControl', [
          _filter: undefined,
          _sorting: undefined,
 
-         //для виртуального скролла
-         _virtualScroll: {
-            placeholderSize: {
-               top: 0,
-               bottom: 0
-            },
-            displayedIndex: {
-               start: 0,
-               stop: 100      //TODO убрать это, сделать рассчет. Где его делать??
-            }
-         },
-
          _itemTemplate: null,
 
          constructor: function (cfg) {
@@ -401,11 +430,10 @@ define('js!Controls/List/ListControl', [
          /**
           * Load more data after reaching end or start of the list.
           *
-          * @param e
           * @param direction 'up' | 'down'
           * @private
           */
-         _scrollLoadMore: function(e, direction) {
+         _scrollLoadMore: function(direction) {
             if (this._navigationController && this._navigationController.hasMoreData(direction)) {
                _private.loadPage.call(this, direction);
             }
@@ -423,6 +451,21 @@ define('js!Controls/List/ListControl', [
             }
          },
 
+         _afterMount: function() {
+            ListView.superclass._afterMount.apply(this, arguments);
+            this._scrollWatcher = _private.createScrollWatcher(this._container);
+
+            var self = this;
+            this._scrollWatcher.subscribe('onLoadTriggerTop', function() {
+               self._scrollLoadMore('up');
+            });
+            this._scrollWatcher.subscribe('onLoadTriggertBottom', function() {
+               self._scrollLoadMore('down');
+            });
+            this._scrollWatcher.subscribe('onListTop', function() {});
+            this._scrollWatcher.subscribe('onListBottom', function() {});
+         },
+
          _beforeUpdate: function(newOptions) {
             if (newOptions.filter != this._options.filter) {
                this._filter = newOptions.filter;
@@ -431,7 +474,6 @@ define('js!Controls/List/ListControl', [
             if (newOptions.dataSource !== this._options.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
-               this._virtualScrollController.changeData(newOptions);
                _private.reload.call(this, newOptions);
             }
 
