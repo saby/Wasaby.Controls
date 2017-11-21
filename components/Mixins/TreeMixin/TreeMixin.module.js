@@ -406,6 +406,26 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       return tplOptions;
    },
 
+   hasNodeWithChild = function(items, hierarchyRelation) {
+      var
+         hasNodeWithChild = false,
+         idx = 0,
+         itemsCount = items.getCount(),
+         child, item;
+      while (idx < itemsCount && !hasNodeWithChild) {
+         item = items.at(idx);
+         child = hierarchyRelation.getChildren(
+            item.getId(),
+            items
+         );
+         if (child.length) {
+            hasNodeWithChild = true;
+         }
+         idx++;
+      }
+      return hasNodeWithChild;
+   },
+
    getHierarchyRelation = function(cfg) {
       var
          items = cfg._items;
@@ -515,6 +535,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        */
       $protected: {
          _options: {
+            _hasNodeWithChild: hasNodeWithChild,
             _folderOffsets : {},
             _folderHasMore : {},
             _prepareGroupId: prepareGroupId,
@@ -530,6 +551,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             _getRecordsForRedrawTree: getRecordsForRedraw,
             _createDefaultProjection : createDefaultProjection,
             _curRoot: null,
+            /**
+             * @cfg {String} Устанавливает режим отображения иконки разворота узла
+             * @variant "always" Отображать иконку разворота узла всегда, не зависимо от наличия дочерних элементов
+             * @variant "withChild" Отображать иконку разворота узла в том случае, если имеется хотя бы один дочерний элемент
+             * @variant "never" Скрывать иконку разворота узла всегда
+             */
+            expanderDisplayMode: 'always',
             /**
              * @cfg {String, Number} Устанавливает идентификатор узла, относительно которого отображаются данные в текущий момент
              */
@@ -1065,6 +1093,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          }
       },
       around: {
+         _prepareClassesByConfig: function(parentFn, cfg) {
+            parentFn(cfg);
+            if (cfg.expanderDisplayMode === 'withChild') {
+               cfg.preparedClasses += ' controls-TreeView__hideExpanderEmptyNodes';
+               if (cfg._hasNodeWithChild(cfg._items, cfg._getHierarchyRelation(cfg))) {
+                  cfg.preparedClasses += ' controls-TreeView__hideExpands';
+               }
+            }
+         },
          /**
           * Позволяет перезагрузить данные как одной модели, так и всей иерархии из дочерних элементов этой записи.
           * @param {Number} id Идентификатор записи
@@ -1185,6 +1222,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             parentFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
             this._findAndRedrawChangedBranches(newItems, oldItems);
             this._removeFromLoadedRemoteNodes(oldItems);
+            this._updateExpanderDisplay();
+         },
+         _updateExpanderDisplay: function() {
+            if (this._options.expanderDisplayMode === 'withChild') {
+               this._container.toggleClass('controls-TreeView__hideExpands',
+                  !this._options._hasNodeWithChild(this._options.items, this._options._getHierarchyRelation(this._options)));
+            }
          },
          //В режиме поиска в дереве, при выборе всех записей, выбираем только листья, т.к. папки в этом режиме не видны.
          setSelectedItemsAll: function(parentFn) {
