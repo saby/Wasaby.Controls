@@ -811,17 +811,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._scrollToItem(hash);
       },
 
-      _pickerMouseEnterHandler: function (event) {
-         //не устанавливаем title на мобильных устройствах:
-         //во-первых не нужно, во-вторых на ios из-за установки аттрибута не работает клик
-         if (!detection.isMobilePlatform) {
-            var itemText = this.textContent;
-            if (!this.getAttribute('title') && getTextWidth(itemText) > this.clientWidth) {
-               this.setAttribute('title', itemText);
-            }
-         }
-      },
-
       _initializePicker: function(){
          var self = this;
          ComboBox.superclass._initializePicker.call(self);
@@ -832,7 +821,18 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          self._picker.subscribe('onKeyPressed', function (eventObject, event) {
             self._keyboardHover(event);
          });
-         $('.controls-ComboBox__item', this._picker.getContainer()).bind('mouseenter', this._pickerMouseEnterHandler);
+         $('.controls-ComboBox__item', this._picker.getContainer()).bind('mouseenter', function itemMouseEnter(event) {
+            //не устанавливаем title на мобильных устройствах:
+            //во-первых не нужно, во-вторых на ios из-за установки аттрибута не работает клик
+            if (!detection.isMobilePlatform) {
+               var itemContainer = event.target.closest('.controls-ComboBox__item'),
+                  itemText = itemContainer.innerText,
+                  textLineCount = itemText.split('\n').length; //Показываем подсказку, если внутри итема нет прикладной верстки. Узлы при получении innerText разделяются \n
+               if (!itemContainer.getAttribute('title') && textLineCount === 1 && getTextWidth(itemText) > itemContainer.clientWidth) {
+                  itemContainer.setAttribute('title', itemText);
+               }
+            }
+         });
          TextBoxUtils.setEqualPickerWidth(this._picker);
       },
 
@@ -867,7 +867,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       destroy: function() {
          if (this._picker) {
-            $('.controls-ComboBox__item', this._picker.getContainer()).unbind('mouseenter', this._pickerMouseEnterHandler);
+            $('.controls-ComboBox__item', this._picker.getContainer()).unbind();
          }
          ComboBox.superclass.destroy.apply(this, arguments);
       },
