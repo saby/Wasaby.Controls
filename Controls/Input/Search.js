@@ -8,14 +8,10 @@ define('js!Controls/Input/Search',
        * Строка поиска с кнопкой
        * @class Controls/Input/Search
        * @extends Controls/Input/Text
+       * @mixes Controls/Input/interface/ISearch
        * @control
        * @public
        * @category Input
-       */
-
-      /**
-       * @name Controls/Input/Search#searchStartCharacter
-       * @cfg {Number} Минимальное количество символов для отображения автодополнения
        */
 
       /**

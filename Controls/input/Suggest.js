@@ -6,6 +6,7 @@ define('js!Controls/Input/Suggest', [
     * @class Controls/Input/Suggest
     * @extends Controls/Input/Text
     * @mixes Controls/interface/IDataSource
+    * @mixes Controls/Input/interface/ISearch
     * @control
     * @public
     * @category Input
@@ -14,11 +15,6 @@ define('js!Controls/Input/Suggest', [
    /**
     * @name Controls/Input/Suggest#withoutCross
     * @cfg {Boolean} Скрыть крестик удаления значения
-    */
-
-   /**
-    * @name Controls/Input/Suggest#searchStartCharacter
-    * @cfg {Number} Минимальное количество символов для отображения автодополнения
     */
 
    /**
@@ -34,11 +30,6 @@ define('js!Controls/Input/Suggest', [
    /**
     * @name Controls/Input/Suggest#searchParam
     * @cfg {string} Устанавливает имя параметра, который будет передан при вызове метода БЛ
-    */
-
-   /**
-    * @name Controls/Input/Suggest#debouncingTimeout
-    * @cfg {number} Время задержки перед выполнением поиска
     */
 
    /**
