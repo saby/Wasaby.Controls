@@ -23,6 +23,9 @@ define('js!Controls/Input/resources/TargetUtil',
             target.setSelectionRange(position, position);
          },
 
+         /*
+         * Разобрать значение из таргета, на
+         * */
          buildSplitValue: function(target, oldValue){
             var
                newValue = target.value,

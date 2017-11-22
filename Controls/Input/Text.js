@@ -4,7 +4,8 @@ define('js!Controls/Input/Text',
       'js!Controls/Input/resources/ValidateHelper',
       'tmpl!Controls/Input/Text/Text',
       'js!WS.Data/Type/descriptor',
-      'css!SBIS3.CONTROLS.TextBox'
+      'css!SBIS3.CONTROLS.TextBox',
+      'tmpl!Controls/Input/resources/input'
    ],
    function(Control, ValidateHelper, template, types) {
 

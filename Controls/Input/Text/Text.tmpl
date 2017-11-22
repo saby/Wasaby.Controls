@@ -8,13 +8,13 @@
         event:onTagHover="_notifyHandler('onTagHover')"
         event:onTagClick="_notifyHandler('onTagClick')">
    <ws:content>
-      <input
-              autocomplete="off"
-              type="text"
-              value="{{_value}}"
-              class="controls-TextBox__field"
-              readonly="{{isEnabled() ? '' : 'readonly'}}"
-              placeholder="{{_options.enabled ? _options.placeholder}}"
+
+      <ws:partial
+         template="tmpl!Controls/Input/resources/input"
+         enabled="{{isEnabled()}}"
+         value="{{_value}}"
+         placeholder="{{_options.placeholder}}"
       />
+
    </ws:content>
 </ws:Controls.Input.resources.InputRender.InputRender>

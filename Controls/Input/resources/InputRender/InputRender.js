@@ -31,14 +31,17 @@ define('js!Controls/Input/resources/InputRender/InputRender',
          },
 
          _inputHandler: function(e) {
-            var res = this._options.prepareValue(this._targetUtil.buildSplitValue(e.target, this._value));
+            //Подготавливаем объект с разобранным значением
+            var splitValue = this._targetUtil.buildSplitValue(e.target, this._value);
+            // Отправляем на валидацию и в prepareValue.
+            var processedData = this._options.prepareValue(splitValue);
 
-            this._targetUtil.setValue(e.target, res.value, res.position);
+            this._targetUtil.setValue(e.target, processedData.value, processedData.position);
             this._targetUtil.saveSelectionPosition(e.target);
 
-            if(this._value !== res.value){
-               this._value = res.value;
-               this._notify('onChangeValue', res.value);
+            if(this._value !== processedData.value){
+               this._value = processedData.value;
+               this._notify('onChangeValue', this._value);
             }
          },
 
