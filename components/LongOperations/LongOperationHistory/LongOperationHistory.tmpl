@@ -4,6 +4,21 @@
       className="controls-Browser__view"
       >
       <ws:content>
+         <ws:if data="{{resultHandler}}">
+         <ws:SBIS3.CONTROLS.Link
+            name="resultButton"
+            className="controls-LongOperationsHistory__resultButton"
+            >
+            <ws:caption>
+                <ws:if data="{{resultWayOfUse}}">
+                    {{resultWayOfUse}}
+                </ws:if>
+                <ws:else>
+                    {[Частичный результат]}
+                </ws:else>
+            </ws:caption>
+         </ws:SBIS3.CONTROLS.Link>
+         </ws:if>
          <div class="controls-Browser__table">
             <div class="controls-Browser__tableRow">
                <div class="controls-Browser__tableCell-fastDataFilter">
@@ -24,21 +39,6 @@
                </div>
             </div>
          </div>
-         <ws:if data="{{resultHandler}}">
-         <ws:SBIS3.CONTROLS.Link
-            name="resultButton"
-            className="controls-LongOperationsHistory__resultButton"
-            >
-            <ws:caption>
-                <ws:if data="{{resultWayOfUse}}">
-                    {{resultWayOfUse}}
-                </ws:if>
-                <ws:else>
-                    {[Частичный результат]}
-                </ws:else>
-            </ws:caption>
-         </ws:SBIS3.CONTROLS.Link>
-         </ws:if>
          <div class="controls-Browser__view">
             <ws:SBIS3.CONTROLS.DataGridView
                idProperty="id"
