@@ -141,14 +141,12 @@ define('js!Controls/List/ListControl', [
       },
 
       scrollWatcherConstants: {
-         topPlaceholderClassName: 'ws-ListControl__topPlaceholder',
-         bottomPlaceholderClassName: 'ws-ListControl__bottomPlaceholder',
          topLoadTriggerClass: 'ws-ListControl__topLoadTrigger',
          bottomLoadTriggerClass: 'ws-ListControl__bottomLoadTrigger',
          topListTriggerClass: 'ws-ListControl__topListTrigger',
          bottomListTriggerClass: 'ws-ListControl__bottomListTrigger'
       },
-      createScrollWatcher: function(container, loadOffset) {
+      createScrollWatcher: function(container, loadOffset, eventHandlers) {
          var
             children = container.children(),
             triggers = {},
@@ -170,7 +168,8 @@ define('js!Controls/List/ListControl', [
          return new ScrollWatcher ({
             triggers : triggers,
             scrollContainer: scrollContainer,
-            loadOffset: loadOffset
+            loadOffset: loadOffset,
+            eventHandlers: eventHandlers
          });
       }
    };
@@ -449,19 +448,22 @@ define('js!Controls/List/ListControl', [
 
          _afterMount: function() {
             ListView.superclass._afterMount.apply(this, arguments);
-            this._scrollWatcher = _private.createScrollWatcher(this._container, this._loadOffset);
+            var
+               self = this,
+               eventHandlers = {
+                  onLoadTriggerTop: function() {
+                     self._scrollLoadMore('up');
+                  },
+                  onLoadTriggerBottom: function() {
+                     self._scrollLoadMore('down');
+                  },
+                  onListTop: function() {
+                  },
+                  onListBottom: function() {
+                  }
+               };
 
-            var self = this;
-            this._scrollWatcher.subscribe('onLoadTriggerTop', function() {
-               self._scrollLoadMore('up');
-               console.log('onLoadTriggerTop');
-            });
-            this._scrollWatcher.subscribe('onLoadTriggerBottom', function() {
-               self._scrollLoadMore('down');
-               console.log('onLoadTriggerBottom');
-            });
-            this._scrollWatcher.subscribe('onListTop', function() { console.log('onListTop'); });
-            this._scrollWatcher.subscribe('onListBottom', function() { console.log('onListBottom'); });
+            this._scrollWatcher = _private.createScrollWatcher(this._container, this._loadOffset, eventHandlers);
          },
 
          _beforeUpdate: function(newOptions) {

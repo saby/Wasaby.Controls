@@ -1,23 +1,23 @@
 define('js!Controls/List/Controllers/ScrollWatcher',
-   ['Core/core-simpleExtend', 'Core/Abstract', 'Core/helpers/Function/throttle'],
-   function(simpleExtend, Abstract, throttle) {
+   ['Core/core-simpleExtend', 'Core/helpers/Function/throttle'],
+   function(simpleExtend, throttle) {
 
       var _private = {
          onScrollWithoutIntersectionObserver: function(e, scrollTop) {
             //Проверка на триггеры начала/конца блока
             if (scrollTop <= 0) {
-               this._notify('onListTop');
+               this._options.eventHandlers.onListTop && this._options.eventHandlers.onListTop();
             }
             if (scrollTop + e.target.clientHeight >= e.target.scrollHeight) {
-               this._notify('onListBottom');
+               this._options.eventHandlers.onListBottom && this._options.eventHandlers.onListBottom();
             }
 
             //Проверка на триггеры загрузки
             if (scrollTop <= this._options.loadOffset) {
-               this._notify('onLoadTriggerTop');
+               this._options.eventHandlers.onLoadTriggerTop && this._options.eventHandlers.onLoadTriggerTop();
             }
             if (scrollTop + e.target.clientHeight >= e.target.scrollHeight - this._options.loadOffset) {
-               this._notify('onLoadTriggerBottom');
+               this._options.eventHandlers.onLoadTriggerBottom && this._options.eventHandlers.onLoadTriggerBottom();
             }
          },
 
@@ -25,7 +25,7 @@ define('js!Controls/List/Controllers/ScrollWatcher',
             var scrollTop = e.target.scrollTop;
             additionalHandler(e, scrollTop);
 
-            this._notify('onListScroll', scrollTop);
+            this._options.eventHandlers.onListScroll && this._options.eventHandlers.onListScroll(scrollTop);
          }
       };
 
@@ -34,7 +34,7 @@ define('js!Controls/List/Controllers/ScrollWatcher',
        * @author Девятов Илья
        * @public
        */
-      var ScrollWatcher = Abstract.extend({
+      var ScrollWatcher = simpleExtend.extend({
          _observer: null,
 
          constructor: function(cfg) {
@@ -77,16 +77,16 @@ define('js!Controls/List/Controllers/ScrollWatcher',
                   if (changes[i].isIntersecting) {
                      switch (changes[i].target) {
                         case elements.topLoadTrigger:
-                           self._notify('onLoadTriggerTop');
+                           self._options.eventHandlers.onLoadTriggerTop && self._options.eventHandlers.onLoadTriggerTop();
                            break;
                         case elements.bottomLoadTrigger:
-                           self._notify('onLoadTriggerBottom');
+                           self._options.eventHandlers.onLoadTriggerBottom && self._options.eventHandlers.onLoadTriggerBottom();
                            break;
                         case elements.topListTrigger:
-                           self._notify('onListTop');
+                           self._options.eventHandlers.onListTop && self._options.eventHandlers.onListTop();
                            break;
                         case elements.bottomListTrigger:
-                           self._notify('onListBottom');
+                           self._options.eventHandlers.onListBottom && self._options.eventHandlers.onListBottom();
                            break;
                      }
                   }
