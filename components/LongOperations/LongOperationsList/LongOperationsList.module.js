@@ -118,39 +118,38 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
             ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered'/*, 'ondestroy'*/].forEach(function (evtType) {
                self.subscribeTo(longOperationsManager, evtType, function (evtName, evt) {
                   var dontReload;
-                  switch (evtName.name) {
-                     case 'onlongoperationchanged':
-                        var model = self.lookupItem(evt.tabKey, evt.producer, evt.operationId);;
-                        if (model) {
-                           if (evt.changed === 'progress') {
-                              model.set('progressCurrent', evt.progress.value);
-                              model.set('progressTotal', evt.progress.total);
-                              dontReload = true;
-                           }
-                           else {
-                              if (evt.changed === 'status') {
-                                 if (evt.status === STATUSES.running && model.get('status') === STATUSES.suspended) {
-                                    model.set('timeIdle', (new Date()).getTime() - model.get('startedAt').getTime() - model.get('timeSpent'));
-                                 }
-                              }
-                              else {
+                  if (['onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted'].indexOf(evtName.name) !== -1) {
+                     var model = self.lookupItem(evt.tabKey, evt.producer, evt.operationId);
+                     dontReload = !model;
+                     if (model) {
+                        switch (evtName.name) {
+                           case 'onlongoperationchanged':
+                              if (evt.changed === 'progress') {
+                                 model.set('progressCurrent', evt.progress.value);
+                                 model.set('progressTotal', evt.progress.total);
                                  dontReload = true;
                               }
-                              model.set(evt.changed, evt[evt.changed]);
-                           }
-                           self._checkItems();
+                              else {
+                                 if (evt.changed === 'status') {
+                                    if (evt.status === STATUSES.running && model.get('status') === STATUSES.suspended) {
+                                       model.set('timeIdle', (new Date()).getTime() - model.get('startedAt').getTime() - model.get('timeSpent'));
+                                    }
+                                 }
+                                 else {
+                                    dontReload = true;
+                                 }
+                                 model.set(evt.changed, evt[evt.changed]);
+                              }
+                              self._checkItems();
+                              break;
+                           case 'onlongoperationended':
+                              self._animationAdd(model.getId(), !evt.error);
+                              self._animationRun();
+                              break;
+                           /*case 'onlongoperationdeleted':
+                              break;*/
                         }
-                        else {
-                           dontReload = true;
-                        }
-                        break;
-                     case 'onlongoperationended':
-                        var model = self.lookupItem(evt.tabKey, evt.producer, evt.operationId);
-                        if (model) {
-                           self._animationAdd(model.getId(), !evt.error);
-                           self._animationRun();
-                        }
-                        break;
+                     }
                   }
                   if (evt) {
                      evt.isCurrentTab = evt.tabKey === longOperationsManager.getTabKey();
@@ -360,7 +359,13 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
             if (!(action === 'suspend' || action === 'resume' ? model.get('canSuspend') : (action === 'delete' ? model.get('canDelete') : null))) {
                return Deferred.fail('Action not allowed');
             }
-            return longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
+            var promise = longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
+            // Удаление в LRS может занимать много времени, поэтому перезапросить список нужно сразу - удаляемая операция в него уже не войдёт. Для
+            // остальных действий вызывать reload не нужно, это произойдёт по событию, пришедшему в результате выпонения действия
+            if (action === 'delete') {
+               promise.addCallback(this.reload.bind(this));
+            }
+            return promise;
          },
 
          /**
