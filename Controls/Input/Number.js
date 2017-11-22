@@ -92,7 +92,7 @@ define('js!Controls/Input/Number', [
          //Запишет значение в input и поставит курсор в указанное место
          return {
             value: splitValueInterface.getValueWithDelimiters(),
-            position: splitValueInterface.getCursorPosition()
+            position: splitValueInterface.getCursorPosition(true)
          };
       }
    });
@@ -131,35 +131,32 @@ define('js!Controls/Input/Number', [
    /**
     * Модуль для работы с объектом из TextRender
     * Возможности:
-    * Получение оригинального объекта splitValue -- getOriginalObject()
     * Склейка объекта splitValue в строку -- concat()
     * Получение "чистой" (без пробелов) склеенной строки -- getClear()
     * Получение текущей позиции курсора -- getCursorPosition()
     * Есть геттеры и сеттеры свойств
     * Валидация -- validate(regExp)
-    * Получение целой части -- getIntegers()
-    * Получение дробной части -- getDecimals()
     */
    function SplitValueModule(splitValueObj) {
       var
          _splitValueObj = Object.assign({}, splitValueObj);
 
       return {
-         getSplitValue: function() {
-            return _splitValueObj;
-         },
          concat: function() {
             return _splitValueObj.beforeInputValue + _splitValueObj.inputValue + _splitValueObj.afterInputValue;
          },
-         getClear: function() {
-            return this.concat().replace(/ /g, '');
-         },
-         getCursorPosition: function() {
-            //FIXME подумать как сделать получше
+         getCursorPosition: function(withDelimeters) {
             var
-               beforeNewDelimetersSpacesCnt = this.concat().split(' ').length - 1,
-               afterNewDelimetersSpacesCnt = this.getValueWithDelimiters().split(' ').length - 1,
+               beforeNewDelimetersSpacesCnt,
+               afterNewDelimetersSpacesCnt,
+               spacesCntDiff = 0;
+
+            if (withDelimeters) {
+               beforeNewDelimetersSpacesCnt = this.concat().split(' ').length - 1;
+               afterNewDelimetersSpacesCnt = this.getValueWithDelimiters().split(' ').length - 1;
                spacesCntDiff = afterNewDelimetersSpacesCnt - beforeNewDelimetersSpacesCnt;
+            }
+
             return _splitValueObj.beforeInputValue.length + _splitValueObj.inputValue.length + spacesCntDiff;
          },
          setBeforeInputValue: function(value) {
@@ -176,12 +173,11 @@ define('js!Controls/Input/Number', [
          getInputValue: function() {
             return _splitValueObj.inputValue;
          },
-         setAfterInputValue: function(value) {
-            _splitValueObj.afterInputValue = value || '';
-            return this;
-         },
-         getAfterInputValue: function() {
-            return _splitValueObj.afterInputValue;
+
+
+
+         getClear: function() {
+            return this.concat().replace(/ /g, '');
          },
          validate: function(regExp) {
             return regExp.test(this.getClear());
@@ -194,12 +190,6 @@ define('js!Controls/Input/Number', [
             clearValSplited[0] = clearValSplited[0].replace(/(\d)(?=(\d{3})+$)/g, '$& ');
 
             return clearValSplited.join('.');
-         },
-         getIntegers: function() {
-            return this.getClear().split('.')[0];
-         },
-         getDecimals: function() {
-            return this.getClear().split('.')[1] || '';
          }
       }
    }
