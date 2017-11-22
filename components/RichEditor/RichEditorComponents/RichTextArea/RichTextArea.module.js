@@ -2086,9 +2086,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                });
             }
             this._tinyReady.addCallback(function () {
-               // Если начальный контент пуст, то за счёт неправильного положения каретки(курсора ввода) в MSIE при начале ввода в конце добавится
-               // лишний параграф. Чтобы этого избежать - добавим символ "не символ"
-               this._tinyEditor.setContent(this._prepareContent(this.getText()) || (cConstants.browser.isIE ? '&#65279;' : ''));
+               this._tinyEditor.setContent(this._prepareContent(this.getText()) || '');
                //Проблема:
                //          1) При инициализации тини в историю действий добавляет контент блока на котором он построился
                //                (если пусто то <p><br data-mce-bogus="1"><p>)
