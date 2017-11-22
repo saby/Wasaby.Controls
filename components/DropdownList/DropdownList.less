@@ -124,7 +124,7 @@
 
 .controls-DropdownList, .controls-DropdownList__picker {
    .controls-DropdownList__icon {
-      margin-right: 5px;
+      margin-right: 6px;
    }
 }
 
@@ -141,6 +141,22 @@
    .controls-DropdownList__item, .controls-DropdownList__selectedItem * {
       font-size: @DropdownList-picker-menu-font-size;
       cursor: pointer;
+   }
+
+   .controls-DropdownList__item.controls-DropdownList__item__selected {
+      &:not(.controls-DropdownList__multiselect) {
+         & when (@DropdownList-picker-menu-selected-marker = true) {
+            &:before {
+               content: '';
+               background: #D94700;
+               width: @DropdownList-picker-menu-selected-marker-width;
+               height: @DropdownList-picker-menu-selected-marker-height;
+               position: absolute;
+               left: 0;
+               top: calc((@DropdownList-picker-menu-line-height - @DropdownList-picker-menu-selected-marker-height)/2 + @DropdownList-picker-menu-item-padding-top);
+            }
+         }
+      }
    }
 
    &.controls-DropdownList__equalsWidth.controls-FloatArea .controls-DropdownList__body {
@@ -339,6 +355,7 @@
       background: @DropdownList-picker-menu-item-color;
       margin: 0;
       font-size: @DropdownList-picker-menu-font-size;
+      position: relative;
       .controls-DropdownList__itemTextWrapper {
          max-width: 100%;
          min-width: 0; //flex hack
