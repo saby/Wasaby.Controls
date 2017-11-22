@@ -12,17 +12,27 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
     function (Action, DialogMixin, OpenDialogUtil, cMerge, Deferred, Context, Indicator, forAliveOnly) {
        'use strict';
        /**
-       * Класс, который описывает действие открытия окна с заданным шаблоном. Из этого окна можно осуществлять выбор.
-       * @class SBIS3.CONTROLS.Action.SelectorAction
-       * @extends SBIS3.CONTROLS.Action.Action
-       *
-       * @mixes SBIS3.CONTROLS.Action.DialogMixin
-       *
-       * @demo SBIS3.CONTROLS.Demo.DemoSelectorAction
-       *
-       * @public
-       * @author Герасимов А.М.
-       */
+        * Класс, который описывает действие открытия окна с заданным шаблоном. Из этого окна можно осуществлять выбор.
+        * @class SBIS3.CONTROLS.Action.SelectorAction
+        * @extends SBIS3.CONTROLS.Action.Action
+        *
+        * @mixes SBIS3.CONTROLS.Action.DialogMixin
+        *
+        * @demo SBIS3.CONTROLS.Demo.DemoSelectorAction
+        *
+        * @public
+        * @author Герасимов А.М.
+        *
+        * @ignoreOptions allowChangeEnable alwaysShowExtendedTooltip className enabled tabindex tooltip visible
+        *
+        * @ignoreMethods addOwnedContext canAcceptFocus describe getAlignment getContainer getId getMinHeight getMinSize
+        * @ignoreMethods getMinWidth getParent getParentByClass getParentByName getParentWindow getProperty getTooltip
+        * @ignoreMethods getTopParent hasEvent hide init initializeProperty isAllowChangeEnable isCanExecute isEnabled
+        * @ignoreMethods isInitialized isSubControl isVisible isVisibleWithParents runInPropertiesUpdate setAllowChangeEnable
+        * @ignoreMethods setEnabled setProperties setProperty setVisible show subscribeOnceTo subscribeTo toggle unbind unsubscribeFrom
+        *
+        * @ignoreEvents onCommandCatch onDestroy onDragIn onDragMove onDragOut onDragStart onDragStop onPropertiesChanged onPropertyChanged
+        */
        var SelectorAction = Action.extend([DialogMixin], /** @lends SBIS3.CONTROLS.Action.SelectorAction.prototype */{
            /**
             * @event onExecuted Происходит после выполнения действия.
