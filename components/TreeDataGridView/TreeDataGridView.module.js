@@ -228,7 +228,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (this._getItemsProjection()) {
             this._createAllFolderFooters();
          }
-         this._checkBreadCrumbsWidth();
+         this.once('onDrawItems', function() {
+            this._checkBreadCrumbsWidth();
+         });
       },
    
       _afterAddItems: function() {
