@@ -1,6 +1,10 @@
 <div class="controls-TextBox">
    <div class="controls-TextBox__wrapper">
-      <ws:partial if="{{_beforeFieldWrapper}}" template="{{_beforeFieldWrapper}}"/>
+
+      <ws:partial
+         if="{{_beforeFieldWrapper}}"
+         template="{{_beforeFieldWrapper}}"
+      />
 
       <div event:oninput="_inputHandler()"
            event:onclick="_clickHandler()"
@@ -12,15 +16,22 @@
          <ws:partial template="{{_options.content}}"/>
       </div>
 
-      <span if="{{_options.tagStyle}}" event:onmouseenter="_notifyHandler('onTagHover')">
-      <ws:SBIS3.CONTROLS.IconButton
+      <span
+         if="{{_options.tagStyle}}"
+         event:onmouseenter="_notifyHandler('onTagHover')">
+         <ws:SBIS3.CONTROLS.IconButton
               icon="icon-size icon-Listbox"
               allowChangeEnable="{{false}}"
               className="controls-informationIcon icon-{{_options.tagStyle}}"
-              event:onActivated="_notifyHandler('onTagClick')"/>
-   </span>
+              event:onActivated="_notifyHandler('onTagClick')"
+         />
+      </span>
 
-      <ws:partial if="{{_afterFieldWrapper}}" template="{{_afterFieldWrapper}}"/>
+      <ws:partial
+         if="{{_afterFieldWrapper}}"
+         template="{{_afterFieldWrapper}}"
+      />
+
    </div>
 </div>
 

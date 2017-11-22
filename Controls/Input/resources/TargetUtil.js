@@ -8,17 +8,14 @@ define('js!Controls/Input/resources/TargetUtil',
 
       var TargetUtil = coreExtend({
 
-         saveSelection: function(target){
+         saveSelectionPosition: function(target){
             this._selectionStart = target.selectionStart;
             this._selectionEnd = target.selectionEnd;
          },
 
-         setPosition: function(target, position) {
-            target.setSelectionRange(position, position);
-         },
-
-         setValue: function(target, value){
+         setValue: function(target, value, position){
             target.value = value;
+            target.setSelectionRange(position, position);
          },
 
          /*Доработать*/

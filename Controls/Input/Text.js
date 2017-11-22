@@ -109,10 +109,8 @@ define('js!Controls/Input/Text',
          },
 
          _changeValueHandler: function(event, value) {
-            if (this._value !== value) {
-               this._value = value;
-               this._notify('onChangeValue', value);
-            }
+            this._value = value;
+            this._notify('onChangeValue', value);
          },
 
          _notifyHandler: function(event, value) {

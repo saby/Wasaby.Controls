@@ -24,9 +24,8 @@ define('js!Controls/Input/resources/BoxRender/BoxRender',
          _inputHandler: function(e) {
             var res = this._options.prepareValue(this._targetUtil.buildSplitValue(e.target, this._value));
 
-            this._targetUtil.setValue(e.target, res.value);
-            this._targetUtil.setPosition(e.target, res.position);
-            this._targetUtil.saveSelection(e.target);
+            this._targetUtil.setValue(e.target, res.value, res.position);
+            this._targetUtil.saveSelectionPosition(e.target);
 
             if(this._value !== res.value){
                this._value = res.value;
@@ -35,20 +34,23 @@ define('js!Controls/Input/resources/BoxRender/BoxRender',
          },
 
          _keyUpHandler: function(e) {
-            if (e.nativeEvent.keyCode > 36 && e.nativeEvent.keyCode < 41) {
-               this._targetUtil.saveSelection(e.target);
+            var keyCode = e.nativeEvent.keyCode;
+
+            // При нажатии стрелок происходит смещение курсора.
+            if (keyCode > 36 && keyCode < 41) {
+               this._targetUtil.saveSelectionPosition(e.target);
             }
          },
 
          _clickHandler: function(e) {
-            this._targetUtil.saveSelection(e.target);
+            this._targetUtil.saveSelectionPosition(e.target);
          },
 
          _selectionHandler: function(e){
-            this._targetUtil.saveSelection(e.target);
+            this._targetUtil.saveSelectionPosition(e.target);
          },
 
-         _notifyHandler: function(event, value) {
+         _notifyHandler: function(e, value) {
             this._notify(value);
          },
 
