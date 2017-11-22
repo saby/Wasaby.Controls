@@ -1,8 +1,8 @@
-<div class="controls-BackButton {{ !caption ? 'controls-BackButton__empty'}} {{ !visible ? 'ws-hidden' }}">
-   <a href="{{href}}" class="controls-BackButton__captionArrow"></a>
+<div class="controls-BackButton {{ !caption ? 'controls-BackButton__empty'}} {{ !visible ? 'ws-hidden' }}{{style ? ' controls-BackButton_' + style}}">
+   <a href="{{href}}" class="controls-BackButton__captionArrow{{style ? ' controls-BackButton__captionArrow_' + style}}"></a>
    <ws:SBIS3.CONTROLS.Link
       name="BackButton-caption"
-      className="controls-BackButton__caption"
+      className="controls-BackButton__caption{{style ? ' controls-BackButton__caption_' + style}}"
       caption="{{ caption }}"
       tooltip="{{ tooltip || caption }}"
       icon="{{ icon }}"
