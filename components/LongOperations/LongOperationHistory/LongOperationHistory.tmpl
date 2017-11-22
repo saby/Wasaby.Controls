@@ -2,7 +2,7 @@
    <ws:SBIS3.CONTROLS.Browser
       name="brows"
       className="controls-Browser__view"
-   >
+      >
       <ws:content>
          <div class="controls-Browser__table">
             <div class="controls-Browser__tableRow">
@@ -10,7 +10,7 @@
                   <ws:SBIS3.CONTROLS.FastDataFilter
                      name="browserFastDataFilter"
                      className="controls-Browser__fastDataFilter"
-                  >
+                     >
                      <ws:filterStructure>
                         <ws:Array>
                            <ws:Object
@@ -24,6 +24,21 @@
                </div>
             </div>
          </div>
+         <ws:if data="{{resultHandler}}">
+         <ws:SBIS3.CONTROLS.Link
+            name="resultButton"
+            className="controls-LongOperationsHistory__resultButton"
+            >
+            <ws:caption>
+                <ws:if data="{{resultWayOfUse}}">
+                    {{resultWayOfUse}}
+                </ws:if>
+                <ws:else>
+                    {[Частичный результат]}
+                </ws:else>
+            </ws:caption>
+         </ws:SBIS3.CONTROLS.Link>
+         </ws:if>
          <div class="controls-Browser__view">
             <ws:SBIS3.CONTROLS.DataGridView
                idProperty="id"
@@ -36,7 +51,7 @@
                filter="{{'filter'|mutable}}"
                className="controls-Browser__view controls-DataGridView__hasSeparator controls-DataGridView__overflow-ellipsis"
                ladder="{{ ['Date'] }}"
-            >
+               >
                <ws:columns>
                   <ws:Array>
                      <ws:Object
