@@ -6,26 +6,44 @@ define('js!SBIS3.CONTROLS.Action.Save', [
 ], function (Action, cInstance, moduleStubs, Deferred) {
 
     /**
-     * Базовый action для сохранения данных.
+     * Базовый класс действия для сохранения данных.
      * @class SBIS3.CONTROLS.Action.Save
      * @public
      * @extends SBIS3.CONTROLS.Action.Action
-     * @author Сухоручкин Андрей Сергеевич
+     * @author Сухоручкин А.С.
      */
     var Save = Action.extend(/** @lends SBIS3.CONTROLS.Action.Save.prototype */{
         $protected: {
             _options: {
                /**
                 * @cfg {SBIS3.CONTROLS.ISaveStrategy) Стратегия сохранения. Класс, который реализует сохранение записей.
-                * @see {@link SBIS3.CONTROLS.ISaveStrategy}
-                * @see {@link SBIS3.CONTROLS.SaveStrategy.Base}
-                * @see {@link SBIS3.CONTROLS.SaveStrategy.Sbis}
+                * @see SBIS3.CONTROLS.ISaveStrategy
+                * @see SBIS3.CONTROLS.SaveStrategy.Base
+                * @see SBIS3.CONTROLS.SaveStrategy.Sbis
                 */
                 saveStrategy: 'js!SBIS3.CONTROLS.SaveStrategy.Base'
             },
             _saveStrategy: undefined
         },
-
+        /**
+         * @name SBIS3.CONTROLS.Action.Save#execute
+         * @function
+         * @description
+         * Запускает выполнение действия.
+         * @remark
+         * Действие может быть выполнено, когда это не запрещено в опции {@link _canExecute}.
+         * Перед выполнением происходит событие {@link onExecute}, после выполнения - {@link onExecuted}, а в случае ошибки - {@link onError}.
+         * @param {Object} meta Метаданные.
+         * @param {Array} [meta.columns] Колонки, которые будут сохраняться.
+         * @param {String} [meta.xsl] Имя файла с xsl преобразованием.
+         * @param {String} [meta.endpoint] Имя объекта бизнес-логики, который осуществляет сохранение данных.
+         * Если параметр не указан, данные выведутся на печать.
+         * @param {String} [meta.fileName] Имя сохраняемого файла.
+         * @param {Boolean} [meta.isExcel] Файл сохраняется в формате EXCEL.
+         * @param {Number} [meta.pageOrientation] Ориентация страниц при сохранении в PDF формат.
+         * @param {WS.Data/Collection/RecordSet} [meta.recordSet] Набор данных, который будет сохранён.
+         * @param {WS.Data/Query/Query} [meta.query] Запрос, по которому будут получены данные для сохранения.
+         */
         /**
          * Сохраняет елементы.
          * @private

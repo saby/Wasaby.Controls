@@ -4,26 +4,10 @@
     font-size: @money-text-box-decimals-font-size;
     color: @money-text-box-decimals-color; //@gray-ccc-color;
   }
-  //cascade
-  .controls-TextBox__field {
-    z-index: 1;
-    padding:0;//чтобы копейки были близко к основному тексту в задизабленом состоянии
-  }
 
   &.ws-enabled {
     .controls-TextBox__field:focus {
       text-overflow: clip;
     }
-  }
-
-  .controls-TextBox__wrapper {
-    .box-sizing(border-box);
-    .justify-content(flex-end);
-    padding: @text-box-input-padding;//чтобы копейки были близко к основному тексту в задизабленом состоянии
-  }
-  .controls-TextBox__placeholder {
-    z-index: 0;
-    padding: 0; //тк отступ на враппере
-    .flex-direction(row-reverse)
   }
 }

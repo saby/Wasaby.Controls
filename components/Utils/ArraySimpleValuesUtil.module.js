@@ -25,6 +25,46 @@ define('js!SBIS3.CONTROLS.ArraySimpleValuesUtil', [], function() {
          }
 
          return index;
+      },
+
+      addSubArray: function(array, items) {
+         items.forEach(function (item) {
+            if (!this.hasInArray(array, item)) {
+               array.push(item);
+            }
+         }, this);
+      },
+
+      removeSubArray: function(array, items) {
+         var index;
+         items.forEach(function (item) {
+            index = this.invertTypeIndexOf(array, item);
+            if (index !== -1) {
+               array.splice(index, 1);
+            }
+         }, this);
+      },
+      /**
+       * Сравнивает два массива, возвращает разницу между ними
+       * @param arrayOne
+       * @param arrayTwo
+       * @returns {{added: Array, removed: Array}}
+       */
+      getArrayDifference : function(arrayOne, arrayTwo) {
+         var
+            result = {},
+            self = this;
+
+         result.removed = arrayOne.filter(function(item) {
+            return !self.hasInArray(arrayTwo, item);
+         });
+
+         result.added = arrayTwo.filter(function(item) {
+            return !self.hasInArray(arrayOne, item);
+         });
+
+         return result;
       }
+
    };
 });

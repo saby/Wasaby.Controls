@@ -31,10 +31,14 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
     * @ignoreMethods setTabindex setTooltip setUserData setValidators setValue storeActiveChild subscribe unregisterChildControl
     * @ignoreMethods unregisterDefaultButton unsubscribe validate waitAllPendingOperations waitChildControlById waitChildControlByName
     * @ignoreMethods setVisible toggle show isVisible hide getTooltip isAllowChangeEnable isEnabled isVisibleWithParents
+    * @ignoreMethods addOwnedContext canAcceptFocus describe getAlignment getContainer getEditRecordDeferred getId getMinHeight
+    * @ignoreMethods getMinSize getMinWidth getName getParent getParentByClass getParentByName getParentWindow getProperty
+    * @ignoreMethods getTopParent hasEvent init initializeProperty isCanExecute isInitialized isSubControl runInPropertiesUpdate
+    * @ignoreMethods setAllowChangeEnable setEnabled setProperties setProperty subscribeOnceTo subscribeTo unbind unsubscribeFrom
     *
-    * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
+    * @ignoreEvents onActivate onAfterLoad onBeforeControlsLoad onBeforeLoad onChange onClick onPropertyChanged
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
-    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onCommandCatch onDestroy onPropertiesChanged
     *
     * @control
     * @public
@@ -65,11 +69,6 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
-       /**
-        * @event onAfterClose Происходит при закрытии диалога редактирования.
-        * @param {Core/EventObject} eventObject Дескриптор события.
-        * @param {*} result Параметр приходит из команды {@link SBIS3.CORE.FloatArea#close}.
-        */
       $protected: {
          _options: {
             /**

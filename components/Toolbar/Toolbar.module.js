@@ -170,7 +170,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
     *
     * @control
     * @public
-    * @category Buttons
+    * @category Button
     */
 
    var Toolbar = ButtonGroupBase.extend(/** @lends SBIS3.CONTROLS.Toolbar.prototype */ {

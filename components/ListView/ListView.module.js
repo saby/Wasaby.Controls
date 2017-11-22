@@ -4,6 +4,7 @@
 
 define('js!SBIS3.CONTROLS.ListView',
    [
+   'js!SBIS3.CONTROLS.Utils.ConfigByClasses',
    'Core/core-merge',
    'Core/core-clone',
    'Core/helpers/Function/shallowClone',
@@ -27,7 +28,6 @@ define('js!SBIS3.CONTROLS.ListView',
    'tmpl!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'js!SBIS3.CONTROLS.CommonHandlers',
-   'js!SBIS3.CONTROLS.MassSelectionController',
    'js!SBIS3.CONTROLS.ImitateEvents',
    'js!SBIS3.CORE.LayoutManager',
    'Core/helpers/markup-helpers',
@@ -69,9 +69,9 @@ define('js!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
-   function (cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
+   function (ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
-    TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager, mHelpers,
+    TemplateUtil, CommonHandlers, ImitateEvents, LayoutManager, mHelpers,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
     Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, LocalStorageNative, forAliveOnly, memoize, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove, once) {
      'use strict';
@@ -203,7 +203,7 @@ define('js!SBIS3.CONTROLS.ListView',
            * @param {Core/EventObject} eventObject Дескриптор события.
            * @param {String} id Первичный ключ записи.
            * @param {WS.Data/Entity/Model} data Экземпляр класса записи.
-           * @param {jQuery} target DOM-элемент, на который кликнули. Например, это может быть DOM-элемент ячейки (&lt;td class="controls-DataGridView__td"&gt;...&lt;/td&gt;) или её содержимого (&lt;div class="controls-DataGridView__columnValue"&gt;...&lt;/div&gt;).
+           * @param {Object} target DOM-элемент, на который кликнули. Например, это может быть DOM-элемент ячейки (&lt;td class="controls-DataGridView__td"&gt;...&lt;/td&gt;) или её содержимого (&lt;div class="controls-DataGridView__columnValue"&gt;...&lt;/div&gt;).
            * @param {Object} e Объект события.
            * @param {Object} clickedCell Объект с расширенной информацией о ячейке, по которой произвели клик.
            * @param {jQuery} clickedCell.cellContainer DOM-элемент ячейки.
@@ -374,9 +374,9 @@ define('js!SBIS3.CONTROLS.ListView',
           * Показать ошибку перемещения
           * <pre>
           * view.subscribe('onEndMove', function(e, result) {
-          *    if (result instanseOf Error) {
+          *    if (result instanceof Error) {
           *       result.processed = true;//Надо поставить флаг что ошибка обработана;
-          *       require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(){
+          *       require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager) {
           *          InformationPopupManager.showMessageDialog(
           *             {
           *                message: result.message,
@@ -804,10 +804,10 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Это поведение считается нормальным в целях решения прикладных задач.
                 * Чтобы отображать только шаблон строки без прозрачного фона, нужно установить для него свойство background-color.
                 * Данная опция обладает большим приоритетом, чем установленный в колонках редактор (см. {@link SBIS3.CONTROLS.DataGridView#columns}).
-                * Данная опция может быть переопределена с помощью метода (@see setEditingTemplate).
-                * Переопределить опцию можно в любой момент до показа редакторов на строке, например: (@see onBeginEdit) или (@see onItemClick).
+                * Данная опция может быть переопределена с помощью метода (см. {@link setEditingTemplatesetEditingTemplate}).
+                * Переопределить опцию можно в любой момент до показа редакторов на строке, например {@link SBIS3.CONTROLS.DataGridView#onBeginEdit} или {@link SBIS3.CONTROLS.DataGridView#onItemClick}.
                 * @example
-                * Пример шаблона вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/template/">Шаблон строки редактирования по месту</a>.
+                * Пример шаблона вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/#_4">Шаблон строки редактирования по месту</a>.
                 * @see editMode
                 * @see setEditingTemplate
                 * @see getEditingTemplate
@@ -938,11 +938,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @remark по умолчанию опция включена
                 */
                enabledMove: true,
-               /**
-                * @cfg {Boolean} Использовать функционал выбора всех записей
-                * @see getSelection
-                */
-               useSelectAll: false,
                virtualScrolling: false,
                //это использется для отображения аватарки драгндропа, она должна быть жекорированной ссылкой
                //временное решение пока не будет выпонена задача https://online.sbis.ru/debug/opendoc.html?guid=32162686-eee0-4206-873a-39bc7b4ca7d7&des=
@@ -1086,42 +1081,21 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _addOptionsFromClass: function(opts, attrToMerge) {
-            var className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || opts.className || "";
-            var classes = [
-               { class: 'controls-small-ListView', optionName: 'isSmall', value: true, defaultValue: false },
-               { class: 'controls-ListView__disableHover', optionName: 'itemsHover', value: false, defaultValue: true },
-               { class: 'controls-ListView__pagerNoSizePicker', optionName: 'noSizePicker', value: true, defaultValue: false },
-               { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false },
-               { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
-               { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false },
-               { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false },
-               { class: 'controls-ListView__showCheckboxes', optionName: 'showCheckboxes', value: true, defaultValue: false },
-               { class: 'controls-ListView__hideCheckboxes', optionName: 'hideCheckboxes', value: true, defaultValue: false}
-            ];
-            function hasClass(fullClass, className) {
-               if(typeof fullClass === 'string') {
-                  var index = fullClass.split(' ')
-                     .filter(function (el) {
-                        return el !== ''
-                     })
-                     .indexOf(className);
-                  return !!~index;
-               } else {
-                  return undefined;
-               }
-            }
-            var el;
-            for(var i = 0; i < classes.length; i++) {
-               el = classes[i];
-               if (hasClass(className, el.class)) {
-                  opts[el.optionName] = el.value;
-               } else {
-                  if (!opts[el.optionName]) {
-                     opts[el.optionName] = el.defaultValue;
-                  }
-               }
-            }
-         },
+            var
+               classes = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || opts.className || '',
+               params = [
+                  { class: 'controls-small-ListView', optionName: 'isSmall', value: true, defaultValue: false },
+                  { class: 'controls-ListView__disableHover', optionName: 'itemsHover', value: false, defaultValue: true },
+                  { class: 'controls-ListView__pagerNoSizePicker', optionName: 'noSizePicker', value: true, defaultValue: false },
+                  { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false },
+                  { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
+                  { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false },
+                  { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false },
+                  { class: 'controls-ListView__showCheckboxes', optionName: 'showCheckboxes', value: true, defaultValue: false },
+                  { class: 'controls-ListView__hideCheckboxes', optionName: 'hideCheckboxes', value: true, defaultValue: false}
+               ];
+            ConfigByClasses(opts, params, classes);
+},
 
          _prepareClassesByConfig: function(cfg) {
             if (cfg.multiselect !== false) {
@@ -1154,16 +1128,13 @@ define('js!SBIS3.CONTROLS.ListView',
             if(lvOpts.selectedKey && lvOpts._itemData) {
                lvOpts._itemData.selectedKey = lvOpts.selectedKey;
             }
-            if (!lvOpts.multiselect && lvOpts.useSelectAll) {
-               lvOpts.useSelectAll = false;
-            }
             return lvOpts;
          },
 
          _getElementToFocus: function() {
             return $('.controls-ListView__fakeFocusElement', this._container).first();
          },
-   
+
          /* Переопределяю метод из Control.compatible.js
             _isAcceptKeyEvents: function(){
                return this.isEnabled();
@@ -1838,6 +1809,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
             this._getEmptyDataContainer().empty().html(Sanitize(html, {validNodes: {component: true}, validAttributes : {config: true} }));
+            this._reviveItems();
             this._toggleEmptyData(this._getItemsProjection() && !this._getItemsProjection().getCount());
          },
 
@@ -1973,55 +1945,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             return result;
          },
-
-         /*MASS SELECTION START*/
-         /*TODO: После перехода на новый механизм переименовать метод в setSelectedAll и удалить старый метод, выделяющий 1000 записей*/
-         setSelectedAllNew: function(selected) {
-            if (this._options.useSelectAll) {
-               this._getMassSelectionController().setSelectedAll(selected);
-            }
-         },
-
-         toggleSelectedAll: function() {
-            if (this._options.useSelectAll) {
-               this._getMassSelectionController().toggleSelectedAll();
-            }
-         },
-         /**
-          * @typedef {Object} Selection
-          * @property {Array} [marked] Идентификаторы выделенныех элементов, в случае выбора ВСЕХ ЗАПИСЕЙ этот массив содержит ID корня.
-          * @property {Array} [excluded] Идентификаторы исключённых из выборки записей.
-          */
-         /**
-          * Получить текущее состояние выделения
-          * @returns {Selection} selection
-          * @see useSelectAll
-          */
-         getSelection: function() {
-            if (this._options.useSelectAll) {
-               return this._getMassSelectionController().getSelection();
-            }
-         },
-
-         _getMassSelectionController: function() {
-            if (!this._massSelectionController) {
-               this._makeMassSelectionController();
-            }
-            return this._massSelectionController;
-         },
-
-         _makeMassSelectionController: function() {
-            this._massSelectionController = new MassSelectionController(this._getMassSelectorConfig());
-         },
-
-         _getMassSelectorConfig: function() {
-            return {
-               linkedObject: this,
-               idProperty: this._options.idProperty
-            }
-         },
-
-         /*MASS SELECTION END*/
 
          _loadFullData: function() {
             return this.reload(this.getFilter(), this.getSorting(), 0, 1000);
@@ -3333,7 +3256,7 @@ define('js!SBIS3.CONTROLS.ListView',
                                (this._options.infiniteScroll === 'both'),
                infiniteScroll = this._getOption('infiniteScroll'),
                loadType;
-            
+
             if (scrollOnEdge && this.getItems()) {
                // Досткролили вверх, но на самом деле подгружаем данные как обычно, а рисуем вверх
                if (type == 'top' && this._infiniteScrollState.reverse) {
@@ -3341,7 +3264,7 @@ define('js!SBIS3.CONTROLS.ListView',
                } else {
                   this._setInfiniteScrollState(type == 'top' ? 'up' : 'down');
                }
-               
+
                if (this._isCursorNavigation()) {
                   if (infiniteScroll === 'both') {
                      if (type === 'bottom') {
@@ -3357,11 +3280,11 @@ define('js!SBIS3.CONTROLS.ListView',
                      loadType = infiniteScroll;
                   }
                }
-               
+
                this._scrollLoadNextPage(loadType);
             }
          },
-         
+
          _isCursorNavigation: function() {
             return this._options.navigation && this._options.navigation.type === 'cursor';
          },
@@ -3374,7 +3297,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var scrollDown = this._infiniteScrollState.mode === 'down' && !this._infiniteScrollState.reverse,
                 infiniteScroll = this._getOption('infiniteScroll'),
                 isCursorNavigation = this._isCursorNavigation();
-            
+
             // При подгрузке в обе стороны необходимо определять направление, а не ориентироваться по state'у
             // Пока делаю так только при навигации по курсорам, чтобы не поломать остальной функционал
             if (isCursorNavigation) {
@@ -3382,7 +3305,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   scrollDown = this.getListNavigation().hasNextPage('down');
                }
             }
-            
+
             // Если  скролл вверху (при загрузке вверх) или скролл внизу (при загрузке вниз) или скролла вообще нет - нужно догрузить данные
             // //при подгрузке в обе стороны изначально может быть mode == 'down', но загрузить нужно вверх - так как скролл вверху
             if ((scrollDown && this.isScrollOnBottom()) || (!this._scrollWatcher.hasScroll() && infiniteScroll !== 'both')) {
@@ -3783,7 +3706,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if (type) {
                   this._options.infiniteScroll = type;
                   this._allowInfiniteScroll = true;
-                  
+
                   if (type === 'down') {
                      this._setInfiniteScrollState('down');
                   }
@@ -4388,9 +4311,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             if (this._listNavigation) {
                this._listNavigation.destroy();
-            }
-            if (this._massSelectionController) {
-               this._massSelectionController.destroy();
             }
             if (this._mover) {
                this._mover.destroy();
