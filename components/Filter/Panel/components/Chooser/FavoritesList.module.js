@@ -3,10 +3,10 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
     'Core/core-clone',
     'WS.Data/Collection/RecordSet',
     'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList/resources/FilterPanelChooserFavoritesHeader',
+    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList/FavoritesList/FilterPanelChooser.FavoritesList',
+    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList/FavoritesList/resources/FilterPanelChooserFavoritesHeader',
     'js!SBIS3.CONTROLS.FilterPanelBoolean',
-    'css!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList'
+    'css!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList/FavoritesList/FilterPanelChooser.FavoritesList'
 ], function(FilterPanelChooserDictionary, coreClone, RecordSet, ArraySimpleUtil, dotTplFn, headerTpl) {
 
     var favoritesIsChecked = function(value, favorites) {

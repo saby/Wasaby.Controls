@@ -4,9 +4,9 @@
 define('js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup', [
    'js!SBIS3.CONTROLS.FilterPanelChooser.Base',
    'js!SBIS3.CONTROLS.RadioGroup',
-   'tmpl!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup/resources/FilterPanelChooserRadioGroupTpl',
+   'tmpl!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup/RadioGroup/resources/FilterPanelChooserRadioGroupTpl',
    'Core/core-clone',
-   'css!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup'
+   'css!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup/RadioGroup/FilterPanelChooser.RadioGroup'
 ], function(FilterPanelChooserBase, RadioGroup, chooserTpl, coreClone) {
    'use strict';
    /**

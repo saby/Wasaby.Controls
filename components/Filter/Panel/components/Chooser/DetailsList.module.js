@@ -3,8 +3,8 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
    'js!SBIS3.CONTROLS.ItemsMoveController',
    'WS.Data/Source/Memory',
    'Core/CommandDispatcher',
-   'tmpl!SBIS3.CONTROLS.FilterPanelChooser.DetailsList/resources/ItemTpl',
-   'css!SBIS3.CONTROLS.FilterPanelChooser.DetailsList'
+   'tmpl!SBIS3.CONTROLS.FilterPanelChooser.DetailsList/DetailsList/resources/ItemTpl',
+   'css!SBIS3.CONTROLS.FilterPanelChooser.DetailsList/DetailsList/FilterPanelChooser.DetailsList'
 ], function(FilterPanelChooserBaseList, ItemsMoveController, Memory, CommandDispatcher, ItemTpl) {
 
    'use strict';

@@ -3,14 +3,14 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
     'Core/core-merge',
     'Core/CommandDispatcher',
     'WS.Data/Functor/Compute',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/ItemContentTpl',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/ItemTemplate',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/FilterPanelChooserList',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/FilterPanelChooserListFooter',
+    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/List/FilterPanelChooser.List',
+    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/List/resources/ItemContentTpl',
+    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/List/resources/ItemTemplate',
+    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/List/resources/FilterPanelChooserList',
+    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/List/resources/FilterPanelChooserListFooter',
     'js!SBIS3.CONTROLS.Link',
     'js!SBIS3.CONTROLS.ListView',
-    'css!SBIS3.CONTROLS.FilterPanelChooser.List'
+    'css!SBIS3.CONTROLS.FilterPanelChooser.List/List/FilterPanelChooser.List'
 ], function(FilterPanelChooserBaseList, coreMerge, CommandDispatcher, ComputeFunctor, dotTplFn, itemContentTpl, itemTemplate, chooserTpl, footerTpl) {
     var
         itemsFilterMethod = function(model, index, proj, projIndex) {
