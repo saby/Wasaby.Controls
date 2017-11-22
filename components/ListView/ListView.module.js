@@ -4738,21 +4738,27 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._headIsChanged = true;
                   this._redrawResults(true);
                }.bind(this);
+               this._onRecordSetPropertyChange = function onRecordSetPropertyChange(event, data) {
+                  //При изменении мета-данных переподписываюсь на рекорд строки итогов и перерисовываю их.
+                  if (data.metaData.results) {
+                     this.subscribeTo(data.metaData.results, 'onPropertyChange', this._onMetaDataResultsChange);
+                  }
+                  this._onMetaDataResultsChange();
+               }.bind(this);
             }
             if (!needObserve || !this._isResultObserved()) {
                if (this.getItems()) {
-                  this[methodName](this.getItems(), 'onPropertyChange', this._onMetaDataResultsChange);
+                  this[methodName](this.getItems(), 'onPropertyChange', this._onRecordSetPropertyChange);
                   metaData = this.getItems().getMetaData();
                   if (metaData && metaData.results) {
                      this[methodName](metaData.results, 'onPropertyChange', this._onMetaDataResultsChange);
                   }
                }
             }
-
          },
 
          _isResultObserved: function() {
-            return this.getItems() && this.getItems().getEventHandlers('onPropertyChange').indexOf(this._onMetaDataResultsChange) > -1;
+            return this.getItems() && this.getItems().getEventHandlers('onPropertyChange').indexOf(this._onRecordSetPropertyChange) > -1;
          },
 
          _redrawFoot: function() {
