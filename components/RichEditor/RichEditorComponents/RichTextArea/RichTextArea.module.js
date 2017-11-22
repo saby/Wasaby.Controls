@@ -487,10 +487,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                         }.bind(this);
                      $(window).on('resize', resizeHandler);
                   }
-                  else
-                  if (cConstants.browser.isMobileIOS) {
-                     this._scrollTo(this._inputControl[0], 'top');
-                  }
                   if (cConstants.browser.isMobilePlatform) {
                      this._notifyMobileInputFocus();
                   }
@@ -2267,11 +2263,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                curHeight;
             if (this.isVisible()) {
                curHeight = this._container.height();
-               //Производим подкрутку вверх если курсор провалился под клавиатуру на iPad
-               //Делаем проверку на ipad сразу тк на остальный устройствах приводит к тормозам getBoundingClientRect в методе _elementIsUnderKeyboard
-               if (cConstants.browser.isMobileIOS) {
-                  this._backspinForIpad();
-               }
                if (curHeight !== this._lastHeight) {
                   this._lastHeight = curHeight;
                   this._notifyOnSizeChanged();
@@ -2285,28 +2276,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                targetOffset = target.getBoundingClientRect(),
                keyboardCoef = (window.innerHeight > window.innerWidth) ? constants.ipadCoefficient[side].vertical : constants.ipadCoefficient[side].horizontal; //Для альбома и портрета коэффициенты разные.
             return cConstants.browser.isMobileIOS && this.isEnabled() && targetOffset[side] > window.innerHeight * keyboardCoef;
-         },
-
-         _scrollTo: function(target, side){
-            if (this._elementIsUnderKeyboard(target, side)) {
-               target.scrollIntoView(true);
-            }
-         },
-
-         //метод осушествляет подрутку до места ввода ( параграфа) если его нижний край находится под клавитурой
-         _backspinForIpad: function() {
-            if (this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this._textChanged && (this._inputControl[0] === document.activeElement)) {
-               var
-                  closestParagraph = $(this._tinyEditor.selection.getNode()).closest('p')[0];
-               if (closestParagraph) {
-                  //Необходимо осуществлять подскролл к предыдущему узлу если текущий под клавиатурой
-                  if (closestParagraph.previousSibling && this._elementIsUnderKeyboard(closestParagraph, 'bottom')) {
-                     closestParagraph.previousSibling.scrollIntoView(true);
-                  }
-                  //Если после подскрола к предыдущему узлу текущий узел всё еще под клавиатурой, то осуществляется подскролл к текущему
-                  this._scrollTo(closestParagraph, 'bottom');
-               }
-            }
          },
 
          //Метод обновляющий значение редактора в задизабленом состоянии
