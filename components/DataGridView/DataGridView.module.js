@@ -741,9 +741,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          var td = this._getCellContainerByElement(e.target),
              columns = this.getColumns(),
-             trs = [],
-             cells = [],
-             index, hoveredColumn, cell, colIndex, colValue, colValueText;
+             index, hoveredColumn, colIndex, colValue, colValueText;
 
          if(td.length) {
             index = td.index();
@@ -765,20 +763,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             if (hoveredColumn.columnIndex !== index) {
                this._clearHoveredColumn();
                hoveredColumn.columnIndex = index;
-               trs = $(this._tbody[0].children);
-
-               if(this._options.showHead) {
-                  trs.push(this.getTHead()[0].children[0]);
-               }
-
-               for(var i = 0, len = trs.length; i < len; i++) {
-                  cell = trs[i].children[index];
-                  if(cell) {
-                     cells.push(cell);
-                  }
-               }
-
-               hoveredColumn.cells = $(cells).addClass('controls-DataGridView__hoveredColumn__cell');
+               this._updateHoveredColumnCells();
             }
          }
       },
@@ -795,6 +780,28 @@ define('js!SBIS3.CONTROLS.DataGridView',
             hoveredColumn.cells.removeClass('controls-DataGridView__hoveredColumn__cell');
             hoveredColumn.cells = null;
             hoveredColumn.columnIndex = null;
+         }
+      },
+      
+      _updateHoveredColumnCells: function() {
+         if (this._hoveredColumn.columnIndex) {
+            var cells = [],
+                trs, cell;
+   
+            trs = $(this._tbody[0].children);
+   
+            if(this._options.showHead) {
+               trs.push(this.getTHead()[0].children[0]);
+            }
+   
+            for(var i = 0, len = trs.length; i < len; i++) {
+               cell = trs[i].children[this._hoveredColumn.columnIndex];
+               if(cell) {
+                  cells.push(cell);
+               }
+            }
+   
+            this._hoveredColumn.cells = $(cells).addClass('controls-DataGridView__hoveredColumn__cell');
          }
       },
    
