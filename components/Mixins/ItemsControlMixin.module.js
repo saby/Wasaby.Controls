@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "WS.Data/Display/Enum",
    "WS.Data/Display/Flags",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "tmpl!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate",
+   "tmpl!SBIS3.CONTROLS.ItemsControlMixin/ItemsControlMixin/resources/ItemsTemplate",
    "WS.Data/Utils",
    "WS.Data/Entity/Model",
    'Core/markup/ParserUtilities',

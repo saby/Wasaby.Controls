@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "js!SBIS3.CONTROLS.BreadCrumbs",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
    "WS.Data/Display/Tree",
-   "tmpl!SBIS3.CONTROLS.TreeMixin/resources/searchRender",
+   "tmpl!SBIS3.CONTROLS.TreeMixin/TreeMixin/resources/searchRender",
    "WS.Data/Entity/Model",
    "WS.Data/Relation/Hierarchy",
    "Core/core-instance",
