@@ -69,7 +69,6 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
             idProperty: 'name',
             allowChangeEnable: false
          },
-         _useSelectAll: false,
          _markCheckBox: undefined,
          _isInternalCheckedChange: false
       },
@@ -95,7 +94,6 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          var self = this;
          if (linkedView && cInstance.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
             this._options.linkedView = linkedView;
-            this._useSelectAll = linkedView._options.useSelectAll;
             this._menuButton.once('onPickerOpen', function() {
                //Если есть бесконечный скролл то показываем кнопку "Все", иначе показываем кнопку "Всю страницу"
                self._menuButton.getItemInstance('selectCurrentPage').toggle(!linkedView._options.infiniteScroll);
@@ -181,9 +179,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
        */
       selectAll: function() {
          var self = this;
-         if (this._useSelectAll) {
-            this._options.linkedView.setSelectedAllNew(true);
-         } else if (this._options.useSelectAll) {
+         if (this._options.useSelectAll) {
             //Заблокируем кнопку при отметке 1000 записей, а после выполнения отметки вернём её в исходное состояние.
             this.setAllowChangeEnable(true);
             this.setEnabled(false);
@@ -205,21 +201,13 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
        * Снять выделение со всех элементов.
        */
       removeSelection: function() {
-         if (this._useSelectAll) {
-            this._options.linkedView.setSelectedAllNew(false);
-         } else {
-            this._options.linkedView.setSelectedKeys([]);
-         }
+         this._options.linkedView.removeItemsSelectionAll();
       },
       /**
        * Инвертировать выделение всех элементов.
        */
       invertSelection: function() {
-         if (this._useSelectAll) {
-            this._options.linkedView.toggleSelectedAll();
-         } else {
-            this._options.linkedView.toggleItemsSelectionAll();
-         }
+         this._options.linkedView.toggleItemsSelectionAll();
       }
    });
 

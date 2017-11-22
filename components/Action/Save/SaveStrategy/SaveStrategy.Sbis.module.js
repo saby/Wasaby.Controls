@@ -12,31 +12,29 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
     'use strict';
 
    /**
-    * Стратегия для сохранения данных, умеющая работать с бизнес логикой.
+    * Класс стратегии для сохранения данных. Позволяет взамодействовать с бизнес-логикой.
     * @class SBIS3.CONTROLS.SaveStrategy.Sbis
     * @public
     * @extends SBIS3.CONTROLS.SaveStrategy.Base
-    * @author Сухоручкин Андрей Сергеевич
+    * @author Сухоручкин А.С.
     */
 
     var SaveStrategySbis = SaveStrategyBase.extend(/** @lends SBIS3.CONTROLS.SaveStrategy.Sbis.prototype */{
 
        /**
-        * @typedef {Object} Meta
-        * @property {Array} [columns] Колонки которые будут сохраняться.
-        * @property {String} [xsl] Имя файла с xsl преобразованием.
-        * @property {String} [endpoint] Имя объекта бизнес логики, который осуществляет сохранение данных.
-        * Если endpoint не указан, данные выведутся на печать.
-        * @property {String} [fileName] Имя сохраняемого файла.
-        * @property {Boolean} [isExcel] Файл сохраняется в формате EXCEL.
-        * @property {Number} [pageOrientation] Ориентация страниц при сохранении в PDF формат.
-        * @property {WS.Data/Collection/RecordSet} [recordSet] Набор данных который будет сохранён.
-        * @property {WS.Data/Query/Query} [query] Запрос, по которому будут получены данные для сохранения.
-        */
-       /**
-        * Метод сохранения данных.
-        * @param {Meta} meta - Методанные для сохранения.
-        * @see SBIS3.CONTROLS.ISaveStrategy
+        * Сохраняет данные.
+        * @remark
+        * Выгрузка производится через сервис file-transfer.
+        * @param {Object} meta Метаданные.
+        * @param {Array} [meta.columns] Колонки, которые будут сохраняться.
+        * @param {String} [meta.xsl] Имя файла с xsl преобразованием.
+        * @param {String} [meta.endpoint] Имя объекта бизнес-логики, который осуществляет сохранение данных.
+        * Если параметр не указан, данные выведутся на печать.
+        * @param {String} [meta.fileName] Имя сохраняемого файла.
+        * @param {Boolean} [meta.isExcel] Файл сохраняется в формате EXCEL.
+        * @param {Number} [meta.pageOrientation] Ориентация страниц при сохранении в PDF формат.
+        * @param {WS.Data/Collection/RecordSet} [meta.recordSet] Набор данных, который будет сохранён.
+        * @param {WS.Data/Query/Query} [meta.query] Запрос, по которому будут получены данные для сохранения.
         */
         saveAs: function (meta) {
             if (meta.endpoint) {
@@ -45,7 +43,20 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
                 SaveStrategySbis.superclass.saveAs.apply(this, arguments);
             }
         },
-
+       /**
+        * Сохраняет данные в файл.
+        * Выгрузка производится через сервис file-transfer.
+        * @param {Object} meta Метаданные.
+        * @param {Array} [meta.columns] Колонки, которые будут сохраняться.
+        * @param {String} [meta.xsl] Имя файла с xsl преобразованием.
+        * @param {String} [meta.endpoint] Имя объекта бизнес-логики, который осуществляет сохранение данных.
+        * Если параметр не указан, данные выведутся на печать.
+        * @param {String} [meta.fileName] Имя сохраняемого файла.
+        * @param {Boolean} [meta.isExcel] Файл сохраняется в формате EXCEL.
+        * @param {Number} [meta.pageOrientation] Ориентация страниц при сохранении в PDF формат.
+        * @param {WS.Data/Collection/RecordSet} [meta.recordSet] Набор данных, который будет сохранён.
+        * @param {WS.Data/Query/Query} [meta.query] Запрос, по которому будут получены данные для сохранения.
+        */
         saveToFile: function(meta) {
             if (meta.recordSet) {
                 if (meta.serverSideExport) {
@@ -61,7 +72,22 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
                 }
             }
         },
-
+       /**
+        * Сохраняет данные в HTML.
+        * @remark
+        * Для сохранения применяется метод бизнес-логики <a href="https://wi.sbis.ru/docs/bl/Excel/Excel/methods/SaveHTML/">Excel.SaveHTM</a>.
+        * Выгрузка производится через сервис file-transfer.
+        * @param {Object} meta Метаданные.
+        * @param {Array} [meta.columns] Колонки, которые будут сохраняться.
+        * @param {String} [meta.xsl] Имя файла с xsl преобразованием.
+        * @param {String} [meta.endpoint] Имя объекта бизнес-логики, который осуществляет сохранение данных.
+        * Если параметр не указан, данные выведутся на печать.
+        * @param {String} [meta.fileName] Имя сохраняемого файла.
+        * @param {Boolean} [meta.isExcel] Файл сохраняется в формате EXCEL.
+        * @param {Number} [meta.pageOrientation] Ориентация страниц при сохранении в PDF формат.
+        * @param {WS.Data/Collection/RecordSet} [meta.recordSet] Набор данных, который будет сохранён.
+        * @param {WS.Data/Query/Query} [meta.query] Запрос, по которому будут получены данные для сохранения.
+        */
         exportHTML: function(meta) {
             var self = this;
             this._serializeData(meta.recordSet, meta.columns, meta.xsl).addCallback(function(html){
@@ -72,7 +98,22 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
                 }, meta);
             });
         },
-
+       /**
+        * Сохраняет данные в RecordSet.
+        * @remark
+        * Для сохранения применяется метод бизнес-логики <a href="https://wi.sbis.ru/docs/bl/Excel/Excel/methods/SaveRecordSet/">Excel.SaveRecordSet</a>.
+        * Выгрузка производится через сервис file-transfer.
+        * @param {Object} meta Метаданные.
+        * @param {Array} [meta.columns] Колонки, которые будут сохраняться.
+        * @param {String} [meta.xsl] Имя файла с xsl преобразованием.
+        * @param {String} [meta.endpoint] Имя объекта бизнес-логики, который осуществляет сохранение данных.
+        * Если параметр не указан, данные выведутся на печать.
+        * @param {String} [meta.fileName] Имя сохраняемого файла.
+        * @param {Boolean} [meta.isExcel] Файл сохраняется в формате EXCEL.
+        * @param {Number} [meta.pageOrientation] Ориентация страниц при сохранении в PDF формат.
+        * @param {WS.Data/Collection/RecordSet} [meta.recordSet] Набор данных, который будет сохранён.
+        * @param {WS.Data/Query/Query} [meta.query] Запрос, по которому будут получены данные для сохранения.
+        */
         exportRecordSet: function(meta) {
             var
                cfg = {
@@ -85,7 +126,22 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
 
             this.exportFileTransfer('SaveRecordSet', cfg, meta);
         },
-
+       /**
+        * Сохраняет данные в списком.
+        * @remark
+        * Для сохранения применяется метод бизнес-логики <a href="https://wi.sbis.ru/docs/bl/Excel/Excel/methods/SaveList/">Excel.SaveList</a>.
+        * Выгрузка производится через сервис file-transfer.
+        * @param {Object} meta Метаданные.
+        * @param {Array} [meta.columns] Колонки, которые будут сохраняться.
+        * @param {String} [meta.xsl] Имя файла с xsl преобразованием.
+        * @param {String} [meta.endpoint] Имя объекта бизнес-логики, который осуществляет сохранение данных.
+        * Если параметр не указан, данные выведутся на печать.
+        * @param {String} [meta.fileName] Имя сохраняемого файла.
+        * @param {Boolean} [meta.isExcel] Файл сохраняется в формате EXCEL.
+        * @param {Number} [meta.pageOrientation] Ориентация страниц при сохранении в PDF формат.
+        * @param {WS.Data/Collection/RecordSet} [meta.recordSet] Набор данных, который будет сохранён.
+        * @param {WS.Data/Query/Query} [meta.query] Запрос, по которому будут получены данные для сохранения.
+        */
         exportList: function(meta) {
            var cfg = this._getFilterForList(meta);
            cfg.HierarchyField = meta.parentProperty && meta.endpoint !== 'PDF' ? meta.parentProperty : undefined;
@@ -94,7 +150,22 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
 
            this.exportFileTransfer('SaveList', cfg, meta);
         },
-
+       /**
+        * Сохраняет только отмеченные данные.
+        * @remark
+        * Для сохранения применяется метод бизнес-логики <a href="https://wi.sbis.ru/docs/bl/Excel/Excel/methods/SaveMarked/">Excel.SaveMarked</a>.
+        * Выгрузка производится через сервис file-transfer.
+        * @param {Object} meta Метаданные.
+        * @param {Array} [meta.columns] Колонки, которые будут сохраняться.
+        * @param {String} [meta.xsl] Имя файла с xsl преобразованием.
+        * @param {String} [meta.endpoint] Имя объекта бизнес-логики, который осуществляет сохранение данных.
+        * Если параметр не указан, данные выведутся на печать.
+        * @param {String} [meta.fileName] Имя сохраняемого файла.
+        * @param {Boolean} [meta.isExcel] Файл сохраняется в формате EXCEL.
+        * @param {Number} [meta.pageOrientation] Ориентация страниц при сохранении в PDF формат.
+        * @param {WS.Data/Collection/RecordSet} [meta.recordSet] Набор данных, который будет сохранён.
+        * @param {WS.Data/Query/Query} [meta.query] Запрос, по которому будут получены данные для сохранения.
+        */
         exportMarked: function(meta) {
            var cfg = this._getFilterForList(meta);
            cfg.HierarchyField = meta.parentProperty || null;
@@ -105,11 +176,20 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
         },
 
         /**
-         * Универсальная выгрузка данных через сервис file-transfer
-         * @param methodName
-         * @param cfg
-         * @param meta
-         * @returns {Core/Deferred}
+         * Универсальная выгрузка данных через сервис file-transfer.
+         * @param {String} methodName Имя метода бизнес-логики, который осуществляет выгрузку данных.
+         * @param {Object} cfg Параметры, передаваемые для вызова метода бизнес-логики.
+         * @param {Object} meta Метаданные.
+         * @param {Array} [meta.columns] Колонки, которые будут сохраняться.
+         * @param {String} [meta.xsl] Имя файла с xsl преобразованием.
+         * @param {String} [meta.endpoint] Имя объекта бизнес-логики, который осуществляет сохранение данных.
+         * Если параметр не указан, данные выведутся на печать. При использовании в Престо или Рознице выгрузку производят через объекты БЛ <a href="https://wi.sbis.ru/docs/bl/Excel/Excel/">Excel</a> или PDF.
+         * @param {String} [meta.fileName] Имя сохраняемого файла.
+         * @param {Boolean} [meta.isExcel] Файл сохраняется в формате EXCEL.
+         * @param {Number} [meta.pageOrientation] Ориентация страниц при сохранении в PDF формат.
+         * @param {WS.Data/Collection/RecordSet} [meta.recordSet] Набор данных, который будет сохранён.
+         * @param {WS.Data/Query/Query} [meta.query] Запрос, по которому будут получены данные для сохранения.
+         * @returns {Core/Deferred} В случае ошибки в пользовательском интерфейсе будет отображён диалог с ошибкой, созданный на основе класса {@link SBIS3.CONTROLS.SubmitPopup}.
          */
         exportFileTransfer: function(methodName, cfg, meta) {
             var self = this,

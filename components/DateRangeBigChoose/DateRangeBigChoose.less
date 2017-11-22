@@ -311,34 +311,35 @@
       .justify-content(center);
    }
 
-   &:hover {
-      border: 1px dotted @gray-color;
-      color: @date-range-big-choose-link-text-color;
-      .controls-Link__field {
-         text-decoration: none !important;
-      }
-   }
-}
-// В новом стандарте нет такой кнопки
-.controls-DateRangeBigChoose__years-back {
-   display: inline-flex;
-   border: 1px dotted transparent;
-   margin: 0 20px 0 20px;
-   width: ~"calc("@date-range-big-choose-years-panel-back-button-line-height~" + 2px)";
-   height: ~"calc("@date-range-big-choose-years-panel-back-button-line-height~" + 2px)";
-   .box-sizing(border-box);
-   &.controls-IconButton {
-      .controls-Button__icon {
-         font-weight: normal;
-         font-size: @date-range-big-choose-years-panel-back-button-font-size !important;
-         line-height: @date-range-big-choose-years-panel-back-button-line-height !important;
-         &.icon-primary.action-hover:hover {
+         &:hover {
             border: 1px dotted @gray-color;
-            color: @date-range-big-choose-link-text-color !important;
+            color: @date-range-big-choose-link-text-color;
+            .controls-Link__field {
+               text-decoration: none !important;
+            }
          }
       }
-   }
-}
+// В новом стандарте нет такой кнопки
+      .controls-DateRangeBigChoose__years-back {
+         display: inline-flex;
+         border: 1px dotted transparent;
+         margin: 0 20px 0 20px;
+         text-align: center;width: ~"calc("@date-range-big-choose-years-panel-back-button-line-height~" + 2px)";
+         height: ~"calc("@date-range-big-choose-years-panel-back-button-line-height~" + 2px)";
+         .box-sizing(border-box);
+         &.controls-IconButton {
+            .controls-Button__icon {
+               font-weight: normal;
+               font-size: @date-range-big-choose-years-panel-back-button-font-size !important;
+               line-height: @date-range-big-choose-years-panel-back-button-line-height !important;
+               &.icon-primary.action-hover:hover {
+                  border: 1px dotted @gray-color;
+                  color: @date-range-big-choose-link-text-color !important;
+               }
+            }
+         }
+      }
+
 
 .controls-DateRangeBigChoose__months {
    position: relative;

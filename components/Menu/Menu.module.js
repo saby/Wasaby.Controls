@@ -15,10 +15,11 @@ define('js!SBIS3.CONTROLS.Menu', [
    'Core/helpers/markup-helpers',
    'Core/Sanitize',
    'Core/helpers/String/escapeHtml',
-   "Core/IoC",
+   'Core/IoC',
+   'Core/core-merge',
    'css!SBIS3.CONTROLS.Menu'
 
-], function(CommandDispatcher, ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, MenuItem, Hierarchy, CommandsSeparator, mkpHelpers, Sanitize, escapeHtml, IoC) {
+], function(CommandDispatcher, ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, MenuItem, Hierarchy, CommandsSeparator, mkpHelpers, Sanitize, escapeHtml, IoC, cMerge) {
 
    'use strict';
 
@@ -153,20 +154,9 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
       _getItemTemplate: function(item) {
          var
-             isEnabled = item.get('enabled'),
-             visible = item.get('visible'),
              caption = Sanitize(item.get(this._options.displayProperty), {validNodes: {component: true}}),
-             options = {
-               className: item.get('className'),
-               activableByClick: false,
-               command: item.get('command'),
-               commandArgs: item.get('commandArgs'),
-               enabled: isEnabled === undefined ? true : isEnabled,
-               visible: visible === undefined ? true : visible,
-               icon: item.get('icon'),
-               tooltip: item.get('tooltip'),
-               allowChangeEnable: item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable
-            };
+             options = this._getItemConfig({}, item);
+
          if (item.get('escapeCaptionHtml')){
             caption = escapeHtml(caption);
          }
@@ -177,6 +167,24 @@ define('js!SBIS3.CONTROLS.Menu', [
          return '<component data-component="SBIS3.CONTROLS.MenuItem" config="' + mkpHelpers.encodeCfgAttr(options) + '">' +
                '<option name="caption" type="string">' + caption + '</option>' +
              '</component>';
+      },
+
+      _getItemConfig: function (cfg, item) {
+         var isEnabled = item.get('enabled'),
+             visible = item.get('visible'),
+             options = {
+             className: item.get('className'),
+             activableByClick: false,
+             command: item.get('command'),
+             commandArgs: item.get('commandArgs'),
+             enabled: isEnabled === undefined ? true : isEnabled,
+             visible: visible === undefined ? true : visible,
+             icon: item.get('icon'),
+             tooltip: item.get('tooltip'),
+             allowChangeEnable: item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable
+         };
+
+         return cMerge(cfg || {}, options);
       },
 
       _itemActivatedHandler : function(id, event){

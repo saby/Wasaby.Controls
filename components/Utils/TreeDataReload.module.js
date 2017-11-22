@@ -63,17 +63,23 @@ define('js!SBIS3.CONTROLS.Utils.TreeDataReload', function() {
                }
             });
          }
-         items.setEventRaising(false, true);
          if (config.direction === 'inside') {
             recursivePrepareItemsToRemoveInside(item);
          }
-         itemsToRemove.forEach(function(elem) {
-            items.remove(elem);
-         });
+         if (itemsToRemove.length) {
+            // Отключаем eventRaising только если имеются элементы для удаления, иначе проекция присылает вместо события
+            // replace последовательность из событий remove и add, а в событии remove развернутые узлы сворачиваются.
+            items.setEventRaising(false, true);
+            itemsToRemove.forEach(function(elem) {
+               items.remove(elem);
+            });
+         }
          items.merge(updatedItems, {
             remove: false
          });
-         items.setEventRaising(true, true);
+         if (itemsToRemove.length) {
+            items.setEventRaising(true, true);
+         }
       }
    };
 

@@ -248,9 +248,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
          },
 
          addItems: function (items, at) {
-            var hash, i;
-
-            for (i = 0; i < items.length; i++) {
+            for (var i = 0; i < items.length; i++) {
                this._heights.splice(at + i, 0, this._getItemHeight(items[i]));
                if (i + at < this._currentWindow[0]) { // Добавили до видимого окна
                   this._currentWindow[0] += 1;

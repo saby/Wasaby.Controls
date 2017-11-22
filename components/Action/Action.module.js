@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.Action.Action',
           *     <li>Если возвращается deferred, то действие выполнится в обработчике callback. Примечание: когда в результаты callback переданы *false* или строка *custom*, выполнение действия также прерывается.</li>
           * </ul>
           * @param {Core/EventObject} eventObject Дескриптор события.
-          * @param {Object} meta Метаданные, переданные при вызове метода {@link execute}.
+          * @param {Object} meta Метаданные, переданные при вызове метода (см. {@link execute}).
           * Они дополняют сведения о контексте выполнения действия, а также о свойствах сущностей, с которыми происходит взаимодействие.
           * Для каждого класса существует собственный набор метаданных.
           * @see execute
@@ -54,22 +54,25 @@ define('js!SBIS3.CONTROLS.Action.Action',
           * @param {Object} meta Метаданные, с которыми было выполнено действие.
           * Они дополняют сведения о контексте выполнения действия, а также о свойствах сущностей, с которыми происходит взаимодействие.
           * Для каждого класса существует собственный набор метаданных.
-          * @param {*} result Результат, переданный по окончании выполнения действия. Для каждого класса result может быть различным.
-          * Например, для класса {@link SBIS3.CONTROLS.Action.OpenEditDialog} в result приходит экземпляр редактируемой записи.
-          * А для класса {@link SBIS3.CONTROLS.Action.OpenDialog} result - это признак того, как был закрыт диалог: нажата кнопка "Да" (значение true) или кнопка "Нет" (значение false).
+          * @param {*} result Результат, переданный по окончании выполнения действия. Для каждого класса действия набор значений параметра может быть различным.
+          * <ul>
+          *     <li>Для класса {@link SBIS3.CONTROLS.Action.OpenEditDialog} в result приходит экземпляр редактируемой записи.</li>
+          *     <li>Для класса {@link SBIS3.CONTROLS.Action.OpenDialog} result - это признак того, как был закрыт диалог: нажата кнопка "Да" (значение true) или кнопка "Нет" (значение false).</li>
+          *     <li>Для класса {@link  SBIS3.CONTROLS.Action.SelectorAction} result - это массив, где каждый элемент - это выбранная на диалоге запись (см. {@Link WS.Data/Entity/Record}).</li>
+          * </ul>
           * @see execute
           */
           /**
           * @event onError Происходит, когда выполнение действия было прервано в результате ошибки.
           * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Error} error Экземпляр класса Error.
-          * @param {Object} meta Метаданные, с которыми выполнялось действие.
+          * @param {Object} meta Метаданные, с которыми выполнялось действие (см. {@link execute}).
           * Они дополняют сведения о контексте выполнения действия, а также о свойствах сущностей, с которыми происходит взаимодействие.
           * Для каждого класса существует собственный набор метаданных.
           * @see execute
           */
           /**
-          * @event onChangeCanExecute Происходит, когда для действия был изменён признак "Можно выполнять" (см. {@link CanExecute}).
+          * @event onChangeCanExecute Происходит, когда для действия был изменён признак "Можно выполнять" (см. {@link setCanExecute}).
           * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Boolean} canExecute true - действие можно выполнять, false - нельзя выполнять.
           * @see setCanExecute
@@ -133,7 +136,7 @@ define('js!SBIS3.CONTROLS.Action.Action',
             }
          },
          /**
-          * Устанавливает признак может ли выполнится Action.
+          * Устанавливает признак: может ли выполнится действие.
           * @remark
           * При вызове метода происходит событие {@link onChangeCanExecute}.
           * @param {Boolean} canExecute
@@ -176,7 +179,7 @@ define('js!SBIS3.CONTROLS.Action.Action',
             return new Deferred().callback(evenResult);
          },
          /**
-          * Вовращает признак: может ли выполниться Action.
+          * Вовращает признак: может ли выполниться действие.
           * @returns {Boolean}
           * @see setCanExecute
           */

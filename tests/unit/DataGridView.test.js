@@ -3,7 +3,11 @@ define(['js!SBIS3.CONTROLS.DataGridView'], function (DataGridView) {
 
    describe('SBIS3.CONTROLS.DataGridView', function () {
       // this.timeout(1500000);
-
+      beforeEach(function () {
+         if (typeof $ === 'undefined') {
+            this.skip();
+         }
+      });
 
       describe('._addStickyToGroups', function () {
          let _this, obj;
@@ -41,6 +45,19 @@ define(['js!SBIS3.CONTROLS.DataGridView'], function (DataGridView) {
             obj = {data: {}};
             DataGridView.prototype._addStickyToGroups.call(_this, [obj]);
             assert.equal(obj.data.stickyHeader, undefined);
+         });
+      });
+   
+      describe('._setPartScrollShift', function () {
+         it('shift without ratio', function() {
+            var dgv = new DataGridView();
+            dgv._thumb = $(document.createElement('div'));
+            dgv._checkThumbPosition = function(){
+               return 0;
+            };
+            dgv._setPartScrollShift();
+            assert.equal(dgv._options._columnsShift, 0);
+            dgv.destroy();
          });
       });
 

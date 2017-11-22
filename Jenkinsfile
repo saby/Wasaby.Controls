@@ -30,7 +30,7 @@ node('controls') {
                 description: '',
                 name: 'branch_engine'),
             string(
-                defaultValue: props["atf_co"],
+                defaultValue: "",
                 description: '',
                 name: 'branch_atf'),
             choice(
@@ -49,14 +49,28 @@ node('controls') {
     ws(workspace) {
         echo "Чистим рабочую директорию"
         deleteDir()
-        echo "Назначаем переменную"
+        
+		echo "Назначаем переменные"
         def server_address=props["SERVER_ADDRESS"]
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
         def SDK = ""
         def items = "controls:${workspace}/controls"
-        def branch_atf = params.branch_atf
-        def branch_engine = params.branch_engine
+		
+		def branch_atf
+		if (params.branch_atf) {
+			branch_atf = params.branch_atf
+		} else {
+			branch_atf = props["atf_co"]
+		}
+        
+        def branch_engine
+		if (params.branch_engine) {
+			branch_engine = params.branch_engine
+		} else {
+			branch_engine = props["engine"]
+		}
+		
         def inte = params.run_int
         def regr = params.run_reg
         def unit = params.run_unit
@@ -64,7 +78,8 @@ node('controls') {
             inte = true
             regr = true
             unit = true
-        }
+        }	
+		
         echo "Выкачиваем хранилища"
         stage("Checkout"){
             parallel (
@@ -294,8 +309,8 @@ node('controls') {
                             export test_server_port=10253
                             export test_url_port=10253
                             export WEBDRIVER_remote_enabled=1
-                            export WEBDRIVER_remote_host=10.76.163.98
-                            export WEBDRIVER_remote_port=4380
+                            export WEBDRIVER_remote_host=10.76.159.209
+                            export WEBDRIVER_remote_port=4444
                             export test_report=artifacts/test-browser-report.xml
                             sh ./bin/test-browser"""
                         }
@@ -444,17 +459,17 @@ node('controls') {
         stage("Запуск тестов интеграционных и верстки"){
             def site = "http://${NODE_NAME}:30001"
             site.trim()
-            dir("./controls/tests/int"){
-                tmp_smoke = sh returnStatus:true, script: """
-                    source /home/sbis/venv_for_test/bin/activate
-                    ${python_ver} smoke_test.py --SERVER_ADDRESS ${server_address}
-                    deactivate
-                """
-                if ( "${tmp_smoke}" != "0" ) {
-                    currentBuild.result = 'ABORTED'
-                    error('Стенд неработоспособен (не прошел smoke test).')
-                }
-            }
+            //dir("./controls/tests/int"){
+            //    tmp_smoke = sh returnStatus:true, script: """
+            //        source /home/sbis/venv_for_test/bin/activate
+            //        ${python_ver} smoke_test.py --SERVER_ADDRESS ${server_address}
+            //        deactivate
+            //    """
+            //    if ( "${tmp_smoke}" != "0" ) {
+            //        currentBuild.result = 'ABORTED'
+            //        error('Стенд неработоспособен (не прошел smoke test).')
+            //    }
+            //}
             parallel (
                 int_test: {
                     echo "Запускаем интеграционные тесты"

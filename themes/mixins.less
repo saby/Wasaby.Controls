@@ -153,7 +153,6 @@
   font-family: @default-font-name;
   font-size: @button-font-size;
   font-weight: normal;
-  text-align: @button-text-alignment;
   position: relative;
   .box-shadow(@button-default-shadow);
   border: none;
@@ -167,11 +166,11 @@
   .align-items(center);
 }
 
-.baseline-fix(@height: auto) {
+.baseline-fix() {
   &:before {
     content: '.';
     width: 0;
-    height: @height;
+    display: inline-block;
     visibility: hidden;
   }
 }
@@ -276,8 +275,8 @@
    margin-top: -(@height / 2 - @padding-top);
 }
 
-.marker(@position: left top, @image: 'img/rowSelect.png') {
-  background-image: url("@{themeName}/@{image}");
+.marker(@position: left top) {
+  background-image: url("@{themeName}/img/rowSelect.png");
   background-position: @position;
   background-repeat: repeat-y;
 }
