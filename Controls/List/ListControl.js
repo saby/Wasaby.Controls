@@ -7,7 +7,8 @@ define('js!Controls/List/ListControl', [
    'Core/core-instance',
    'js!Controls/List/Controllers/PageNavigation',
    'js!Controls/List/Controllers/ScrollWatcher',
-   'Core/helpers/functional-helpers'
+   'Core/helpers/functional-helpers',
+   'css!Controls/List/ListControl'
 ], function (Control,
              ListControlTpl,
              DataSourceUtil,
@@ -147,36 +148,29 @@ define('js!Controls/List/ListControl', [
          topListTriggerClass: 'ws-ListControl__topListTrigger',
          bottomListTriggerClass: 'ws-ListControl__bottomListTrigger'
       },
-      createScrollWatcher: function(container) {
+      createScrollWatcher: function(container, loadOffset) {
          var
             children = container.children(),
-            elements = {
-               scrollContainer: container.closest('.ws-scrolling-content')
-            };
+            triggers = {},
+            scrollContainer = container.closest('.ws-scrolling-content');
 
          // TODO: когда будет возможность получить дом-элемент по имени - переписать этот код
          for (var i = 0; i < children.length; i++) {
-            if (children[i].className === this.scrollWatcherConstants.topPlaceholderClassName) {
-               for (var k = 0; k < children[i].children.length; k++) {
-                  if (children[i].children[k].className === this.scrollWatcherConstants.topLoadTriggerClass) {
-                     elements.topLoadTrigger = children[i].children[k];
-                  }
-               }
-            } else if (children[i].className === this.scrollWatcherConstants.bottomPlaceholderClassName) {
-               for (var k = 0; k < children[i].children.length; k++) {
-                  if (children[i].children[k].className === this.scrollWatcherConstants.bottomLoadTriggerClass) {
-                     elements.bottomLoadTrigger = children[i].children[k];
-                  }
-               }
-            } else if (children[i].className === this.scrollWatcherConstants.topListTriggerClass) {
-               elements.topListTrigger = children[i];
+            if (children[i].className === this.scrollWatcherConstants.topListTriggerClass) {
+               triggers.topListTrigger = children[i];
             } else if (children[i].className === this.scrollWatcherConstants.bottomListTriggerClass) {
-               elements.bottomListTrigger = children[i];
+               triggers.bottomListTrigger = children[i];
+            } else if (children[i].className === this.scrollWatcherConstants.topLoadTriggerClass) {
+               triggers.topLoadTrigger = children[i];
+            } else if (children[i].className === this.scrollWatcherConstants.bottomLoadTriggerClass) {
+               triggers.bottomLoadTrigger = children[i];
             }
          }
 
          return new ScrollWatcher ({
-            elements : elements
+            triggers : triggers,
+            scrollContainer: scrollContainer,
+            loadOffset: loadOffset
          });
       }
    };
@@ -421,6 +415,8 @@ define('js!Controls/List/ListControl', [
 
          _itemTemplate: null,
 
+         _loadOffset: 100,
+
          constructor: function (cfg) {
             ListView.superclass.constructor.apply(this, arguments);
             this._items = cfg.items;
@@ -453,17 +449,19 @@ define('js!Controls/List/ListControl', [
 
          _afterMount: function() {
             ListView.superclass._afterMount.apply(this, arguments);
-            this._scrollWatcher = _private.createScrollWatcher(this._container);
+            this._scrollWatcher = _private.createScrollWatcher(this._container, this._loadOffset);
 
             var self = this;
             this._scrollWatcher.subscribe('onLoadTriggerTop', function() {
                self._scrollLoadMore('up');
+               console.log('onLoadTriggerTop');
             });
-            this._scrollWatcher.subscribe('onLoadTriggertBottom', function() {
+            this._scrollWatcher.subscribe('onLoadTriggerBottom', function() {
                self._scrollLoadMore('down');
+               console.log('onLoadTriggerBottom');
             });
-            this._scrollWatcher.subscribe('onListTop', function() { });
-            this._scrollWatcher.subscribe('onListBottom', function() { });
+            this._scrollWatcher.subscribe('onListTop', function() { console.log('onListTop'); });
+            this._scrollWatcher.subscribe('onListBottom', function() { console.log('onListBottom'); });
          },
 
          _beforeUpdate: function(newOptions) {
@@ -478,6 +476,12 @@ define('js!Controls/List/ListControl', [
             }
 
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
+         },
+
+         _beforeUnmount: function() {
+            this._scrollWatcher.destroy();
+
+            ListView.superclass._beforeUnmount.apply(this, arguments);
          },
 
          //<editor-fold desc='DataSourceMethods'>

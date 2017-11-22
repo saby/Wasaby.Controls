@@ -10,17 +10,3 @@
 .ws-ListView__item__selected {
   border-left: 3px solid orange;
 }
-.ws-ListControl__topPlaceholder,
-.ws-ListControl__bottomPlaceholder {
-  position: relative;
-}
-.ws-ListControl__topLoadTrigger,
-.ws-ListControl__bottomLoadTrigger {
-  position: absolute;
-}
-.ws-ListControl__topLoadTrigger {
-  bottom: -100px;
-}
-.ws-ListControl__bottomLoadTrigger {
-  top: -100px;
-}

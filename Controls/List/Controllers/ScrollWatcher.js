@@ -1,28 +1,66 @@
 define('js!Controls/List/Controllers/ScrollWatcher',
-   ['Core/Abstract'],
-   function(Abstract) {
+   ['Core/core-simpleExtend', 'Core/Abstract', 'Core/helpers/Function/throttle'],
+   function(simpleExtend, Abstract, throttle) {
+
+      var _private = {
+         onScrollWithoutIntersectionObserver: function(e, scrollTop) {
+            //Проверка на триггеры начала/конца блока
+            if (scrollTop <= 0) {
+               this._notify('onListTop');
+            }
+            if (scrollTop + e.target.clientHeight >= e.target.scrollHeight) {
+               this._notify('onListBottom');
+            }
+
+            //Проверка на триггеры загрузки
+            if (scrollTop <= this._options.loadOffset) {
+               this._notify('onLoadTriggerTop');
+            }
+            if (scrollTop + e.target.clientHeight >= e.target.scrollHeight - this._options.loadOffset) {
+               this._notify('onLoadTriggerBottom');
+            }
+         },
+
+         onScrollHandler: function(additionalHandler, e) {
+            var scrollTop = e.target.scrollTop;
+            additionalHandler(e, scrollTop);
+
+            this._notify('onListScroll', scrollTop);
+         }
+      };
+
       /**
        *
        * @author Девятов Илья
        * @public
        */
       var ScrollWatcher = Abstract.extend({
+         _observer: null,
+
          constructor: function(cfg) {
             ScrollWatcher.superclass.constructor.apply(this, arguments);
             this._options = cfg;
 
-            this._hasIntersectionObserver = !!(window && window.IntersectionObserver);
-            this._initHandlers(cfg.elements);
-         },
-
-         _initHandlers: function (elements) {
-            //Есть IntersectionObserver - работаем через него. Иначе - через onScroll
-            if (this._hasIntersectionObserver) {
-               this._initIntersectionObserver(elements);
+            //Есть нет IntersectionObserver, то в обработчике onScroll нужно дополнительно обсчитывать все триггеры
+            var additionalOnScrollHandler = function() { };
+            if (!window || !window.IntersectionObserver) {
+               additionalOnScrollHandler = _private.onScrollWithoutIntersectionObserver.bind(this);
+            } else {
+               this._initIntersectionObserver(cfg.triggers);
             }
 
-            this._initOnScroll(elements.scrollContainer);
+            cfg.scrollContainer[0].addEventListener('scroll', throttle(_private.onScrollHandler, 200, true).bind(this, additionalOnScrollHandler), {passive: true});
+         },
 
+         destroy: function() {
+            if (this._observer) {
+               this._observer.unobserve(this._options.triggers.topLoadTrigger);
+               this._observer.unobserve(this._options.triggers.bottomLoadTrigger);
+               this._observer.unobserve(this._options.triggers.topListTrigger);
+               this._observer.unobserve(this._options.triggers.bottomListTrigger);
+            }
+
+            this._options = null;   //TODO это надо??
          },
 
          /**
@@ -31,65 +69,34 @@ define('js!Controls/List/Controllers/ScrollWatcher',
           * @private
           */
          _initIntersectionObserver: function(elements) {
-            var self = this,
-               observer = new IntersectionObserver(function(changes) {
-                  for (var i = 0; i < changes.length; i++) {
-                     if (changes[i].isIntersecting) {
-                        switch (changes[i].target) {
-                           case elements.topLoadTrigger:
-                              self._notify('onLoadTriggerTop');
-                              break;
-                           case elements.bottomLoadTrigger:
-                              self._notify('onLoadTriggertBottom');
-                              break;
-                           case elements.topListTrigger:
-                              self._notify('onListTop');
-                              break;
-                           case elements.bottomListTrigger:
-                              self._notify('onListBottom');
-                              break;
-                        }
+            var
+               self = this;
+
+            this._observer = new IntersectionObserver(function(changes) {
+               for (var i = 0; i < changes.length; i++) {
+                  if (changes[i].isIntersecting) {
+                     switch (changes[i].target) {
+                        case elements.topLoadTrigger:
+                           self._notify('onLoadTriggerTop');
+                           break;
+                        case elements.bottomLoadTrigger:
+                           self._notify('onLoadTriggerBottom');
+                           break;
+                        case elements.topListTrigger:
+                           self._notify('onListTop');
+                           break;
+                        case elements.bottomListTrigger:
+                           self._notify('onListBottom');
+                           break;
                      }
                   }
-               }, {});
-            observer.observe(elements.topLoadTrigger);
-            observer.observe(elements.bottomLoadTrigger);
-
-            observer.observe(elements.topListTrigger);
-            observer.observe(elements.bottomListTrigger);
-         },
-
-         /**
-          * Установка обработчика на onScroll
-          * TODO когда будет механизм подписок Зуева - перейти на него
-          * @param scrollContainer
-          * @private
-          */
-         _initOnScroll: function(scrollContainer) {
-            scrollContainer[0].addEventListener('scroll', this._onScroll.bind(this));
-         },
-
-         /**
-          * Обработчик onScroll. Вычисление, какие триггеры попали в область видимости
-          * @param e
-          * @private
-          */
-         _onScroll: function(e) {
-            clearTimeout(this._scrollTimeout);
-            this._scrollTimeout = setTimeout(function () {
-               var scrollTop = e.target.scrollTop;
-
-               if (!this._hasIntersectionObserver) {
-                  //TODO нужно более грамотное вычисление достижения низа. Это скорее всего где-то не заработает
-                  if (scrollTop <= 0) {
-                     this._notify('onLoadTriggerTop');
-                  } else if (scrollTop + e.target.clientHeight >= e.target.scrollHeight) {
-                     this._notify('onLoadTriggertBottom');
-                  }
                }
+            }, {});
+            this._observer.observe(elements.topLoadTrigger);
+            this._observer.observe(elements.bottomLoadTrigger);
 
-               this._notify('onListScroll', scrollTop);
-            }.bind(this), 25);
+            this._observer.observe(elements.topListTrigger);
+            this._observer.observe(elements.bottomListTrigger);
          }
       });
 
