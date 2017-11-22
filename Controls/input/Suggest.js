@@ -17,7 +17,7 @@ define('js!Controls/Input/Suggest', [
     */
 
    /**
-    * @name Controls/Input/Suggest#startCharacter
+    * @name Controls/Input/Suggest#searchStartCharacter
     * @cfg {Number} Минимальное количество символов для отображения автодополнения
     */
 
