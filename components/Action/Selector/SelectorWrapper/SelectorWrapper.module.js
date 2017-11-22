@@ -28,6 +28,10 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
    };
 
    var SELECT_ACTION_NAME = 'controls.select';
+   
+   var DEFAULT_SELECTED_FILTER = function () {
+      return true;
+   };
 
    var SelectorWrapper = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.SelectorWrapper.prototype */ {
       _dotTplFn: dotTplFn,
@@ -42,11 +46,23 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
              */
             linkedObjectName: '',
             /**
-             * @cfg {String} Фильтр выбранных записей
+             * @cfg {Function} Фильтр выбранных записей
              */
-            selectedFilter: function () {
-               return true;
-            },
+            selectedFilter: null,
+            /**
+             * @cfg {String} Устанавливает тип доступных для выбора элементов.
+             * @remark
+             * Опция актуальна для использования совместно с иерархическим списком.
+             * <br/>
+             * Возможные значения:
+             * <ul>
+             *     <li>all - для выбора доступны любые типы элементов;<li>
+             *     <li>allBySelectAction - для выбора доступны любые типы элементов; Выбор происходит при нажатии на кнопку "Выбрать".<li>
+             *     <li>node - для выбора доступны только элементы типа "Узел" и "Скрытый узел";<li>
+             *     <li>leaf - для выбора доступны только элементы типа "Лист".<li>
+             * </ul>
+             * Подробнее о каждом типе элементов читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
+             */
             selectionType: 'all'
 
          },
@@ -296,7 +312,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             idProperty = linkedObject.getProperty('idProperty');
 
          items.each(function(rec) {
-            if(self._options.selectedFilter(rec)) {
+            if((self._options.selectedFilter || DEFAULT_SELECTED_FILTER)(rec)) {
                keys.push(rec.get(idProperty));
             }
          });
