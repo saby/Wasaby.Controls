@@ -3459,7 +3459,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _hasNextPage: function(more, offset, direction) {
-            if (this._isScrollingUp()) {
+            if (this._infiniteScrollState.mode === 'up') {
                if (!direction) {
                   direction = 'before';
                }
