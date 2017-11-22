@@ -2635,6 +2635,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._revivePackageParams.revive = this._revivePackageParams.revive || needToRevive;
          this._revivePackageParams.light = false;
       },
+      _onCollectionReset: function() {
+         this.redraw(true);
+      },
       _onCollectionRemove: function(items, notCollapsed) {
          if (items.length) {
             this._removeItems(items);
@@ -2751,7 +2754,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 	               break;
 
 	            case IBindCollection.ACTION_RESET:
-                  this.redraw(true);
+	               this._onCollectionReset();
 	               break;
 	         }
       	}
