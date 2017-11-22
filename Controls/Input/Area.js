@@ -47,6 +47,9 @@ define('js!Controls/Input/Area', [
          this._container.children().find('.controls-TextArea__fakeField_value')[0].innerText = value;
       },
 
+      /*
+      * Проверяет, есть ли скролл на фэйковой textArea (div)
+      * */
       checkScroll: function(){
          var fakeArea = this._container.children().find('.controls-TextArea__fakeField')[0];
          var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
@@ -58,23 +61,23 @@ define('js!Controls/Input/Area', [
       },
 
       prepareValue: function(splitValue) {
-         var calcValue = splitValue.inputValue;
+         var inputValue = splitValue.inputValue;
 
          if (this._options.constraint) {
-            calcValue = ValidateHelper.constraint(calcValue, this._options.constraint);
+            inputValue = ValidateHelper.constraint(inputValue, this._options.constraint);
          }
 
          if (this._options.trim) {
-            calcValue = calcValue.trim();
+            inputValue = inputValue.trim();
          }
 
          if(this._options.maxLength){
-            calcValue = ValidateHelper.maxLength(calcValue, splitValue, this._options.maxLength);
+            inputValue = ValidateHelper.maxLength(inputValue, splitValue, this._options.maxLength);
          }
 
          return {
-            value: splitValue.beforeInputValue + calcValue + splitValue.afterInputValue,
-            position: splitValue.beforeInputValue.length + calcValue.length
+            value: splitValue.beforeInputValue + inputValue + splitValue.afterInputValue,
+            position: splitValue.beforeInputValue.length + inputValue.length
          };
       }
    };
@@ -148,7 +151,6 @@ define('js!Controls/Input/Area', [
          tagStyle: types(String),
          newLineKey: types(String).oneOf([
           'enter',
-          'ctrlEnter',
           'shiftEnter'
           ])
       };

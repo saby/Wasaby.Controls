@@ -6,6 +6,11 @@ define('js!Controls/Input/resources/TargetUtil',
 
       'use strict';
 
+      /*
+      * Предназначен для удобной работы с полями ввода.
+      * Абстрагирует в себе работу с кареткой и выделением.
+      * */
+
       var TargetUtil = coreExtend({
 
          saveSelectionPosition: function(target){
@@ -18,30 +23,32 @@ define('js!Controls/Input/resources/TargetUtil',
             target.setSelectionRange(position, position);
          },
 
-         /*Доработать*/
          buildSplitValue: function(target, oldValue){
-            var newValue = target.value;
-            var position = target.selectionEnd;
+            var
+               newValue = target.value,
+               position = target.selectionEnd,
+               selectionLength = this._selectionEnd - this._selectionStart;
 
-            if(!(this._selectionEnd - this._selectionStart) && this._selectionStart >= position){
-               return {
-                  beforeInputValue: newValue.substring(0, position),
-                  inputValue: '',
-                  afterInputValue: newValue.substring(position)
-               }
+            var beforeInputValue, afterInputValue, inputValue;
+
+            //Если до этого не было выделения и каретка сместилась назад или осталась на прошлом месте,
+            // значит это удаление.
+            if(!selectionLength && this._selectionStart >= position){
+               afterInputValue = newValue.substring(position);
+               beforeInputValue = newValue.substring(0, position);
+               inputValue = '';
             }
             else {
-               var selectionLength = this._selectionEnd - this._selectionStart;
-               var afterInputValue = newValue.substring(position);
-               var beforeInputValue = oldValue.substring(0, oldValue.length - afterInputValue.length - selectionLength);
-               var inputValue = newValue.substring(beforeInputValue.length, newValue.length - afterInputValue.length);
-
-               return {
-                  beforeInputValue: beforeInputValue,
-                  inputValue: inputValue,
-                  afterInputValue: afterInputValue
-               };
+               afterInputValue = newValue.substring(position);
+               beforeInputValue = oldValue.substring(0, oldValue.length - afterInputValue.length - selectionLength);
+               inputValue = newValue.substring(beforeInputValue.length, newValue.length - afterInputValue.length);
             }
+
+            return {
+               beforeInputValue: beforeInputValue,
+               inputValue: inputValue,
+               afterInputValue: afterInputValue
+            };
          }
 
       });

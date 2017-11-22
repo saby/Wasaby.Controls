@@ -16,16 +16,16 @@
          <ws:partial template="{{_options.content}}"/>
       </div>
 
-      <span
-         if="{{_options.tagStyle}}"
-         event:onmouseenter="_notifyHandler('onTagHover')">
-         <ws:SBIS3.CONTROLS.IconButton
-              icon="icon-size icon-Listbox"
-              allowChangeEnable="{{false}}"
-              className="controls-informationIcon icon-{{_options.tagStyle}}"
-              event:onActivated="_notifyHandler('onTagClick')"
-         />
-      </span>
+      <ws:if data="{{_options.tagStyle}}">
+         <span  event:onmouseenter="_notifyHandler('onTagHover')">
+            <ws:SBIS3.CONTROLS.IconButton
+               icon="icon-size icon-Listbox"
+               allowChangeEnable="{{false}}"
+               className="controls-informationIcon icon-{{_options.tagStyle}}"
+               event:onActivated="_notifyHandler('onTagClick')"
+            />
+         </span>
+      </ws:if>
 
       <ws:partial
          if="{{_afterFieldWrapper}}"

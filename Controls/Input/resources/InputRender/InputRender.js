@@ -1,8 +1,8 @@
-define('js!Controls/Input/resources/BoxRender/BoxRender',
+define('js!Controls/Input/resources/InputRender/InputRender',
    [
       'Core/Control',
       'js!WS.Data/Type/descriptor',
-      'tmpl!Controls/Input/resources/BoxRender/BoxRender',
+      'tmpl!Controls/Input/resources/InputRender/InputRender',
       'js!Controls/Input/resources/TargetUtil',
       'css!SBIS3.CONTROLS.TextBox'
    ],
@@ -10,13 +10,22 @@ define('js!Controls/Input/resources/BoxRender/BoxRender',
 
       'use strict';
 
-      var BoxRender = Control.extend({
+      /**
+       * @class Controls.Input.resources.InputRender.InputRender
+       * @extends Core/Control
+       * @control
+       * @private
+       * @category Input
+       * @author Журавлев Максим Сергеевич
+       */
+
+      var InputRender = Control.extend({
          
-         _controlName: 'Controls/Input/resources/BoxRender/BoxRender',
+         _controlName: 'Controls/Input/resources/InputRender/InputRender',
          _template: template,
 
          constructor: function(options) {
-            BoxRender.superclass.constructor.apply(this, arguments);
+            InputRender.superclass.constructor.apply(this, arguments);
             this._value = options.value;
             this._targetUtil = new TargetUtil();
          },
@@ -61,14 +70,14 @@ define('js!Controls/Input/resources/BoxRender/BoxRender',
          }
       });
 
-      BoxRender.getDefaultOptions = function() {
+      InputRender.getDefaultOptions = function() {
          return {
             value: '',
             selectOnClick: false
          };
       };
 
-      /*BoxRender.getOptionTypes = function() {
+      InputRender.getOptionTypes = function() {
          return {
             value: types(String),
             selectOnClick: types(Boolean),
@@ -81,8 +90,8 @@ define('js!Controls/Input/resources/BoxRender/BoxRender',
                'info'
             ])
          };
-      };*/
+      };
 
-      return BoxRender;
+      return InputRender;
    }
 );

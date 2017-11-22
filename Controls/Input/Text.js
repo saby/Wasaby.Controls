@@ -70,23 +70,23 @@ define('js!Controls/Input/Text',
       var _private = {
 
          prepareValue: function(splitValue) {
-            var calcValue = splitValue.inputValue;
+            var inputValue = splitValue.inputValue;
 
             if (this._options.constraint) {
-               calcValue = ValidateHelper.constraint(calcValue, this._options.constraint);
+               inputValue = ValidateHelper.constraint(inputValue, this._options.constraint);
             }
 
             if (this._options.trim) {
-               calcValue = calcValue.trim();
+               inputValue = inputValue.trim();
             }
 
             if(this._options.maxLength){
-               calcValue = ValidateHelper.maxLength(calcValue, splitValue, this._options.maxLength);
+               inputValue = ValidateHelper.maxLength(inputValue, splitValue, this._options.maxLength);
             }
 
             return {
-               value: splitValue.beforeInputValue + calcValue + splitValue.afterInputValue,
-               position: splitValue.beforeInputValue.length + calcValue.length
+               value: splitValue.beforeInputValue + inputValue + splitValue.afterInputValue,
+               position: splitValue.beforeInputValue.length + inputValue.length
             };
          }
 
