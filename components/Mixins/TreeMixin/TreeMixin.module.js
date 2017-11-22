@@ -553,9 +553,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             _curRoot: null,
             /**
              * @cfg {String} Устанавливает режим отображения иконки разворота узла
-             * @variant "always" Отображать иконку разворота узла всегда, не зависимо от наличия дочерних элементов
-             * @variant "withChild" Отображать иконку разворота узла в том случае, если имеется хотя бы один дочерний элемент
-             * @variant "never" Скрывать иконку разворота узла всегда
+             * @variant always Отображать иконку разворота узла всегда, не зависимо от наличия дочерних элементов
+             * @variant withChild Отображать иконку разворота узла в том случае, если имеется хотя бы один дочерний элемент
+             * @variant never Скрывать иконку разворота узла всегда
              */
             expanderDisplayMode: 'always',
             /**
@@ -1097,9 +1097,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             parentFn(cfg);
             if (cfg.expanderDisplayMode === 'withChild') {
                cfg.preparedClasses += ' controls-TreeView__hideExpanderEmptyNodes';
-               if (cfg._hasNodeWithChild(cfg._items, cfg._getHierarchyRelation(cfg))) {
+               if (!cfg._hasNodeWithChild(cfg._items, cfg._getHierarchyRelation(cfg))) {
                   cfg.preparedClasses += ' controls-TreeView__hideExpands';
                }
+            } else if (cfg.expanderDisplayMode === 'never') {
+               cfg.preparedClasses += ' controls-TreeView__hideExpands';
             }
          },
          /**
