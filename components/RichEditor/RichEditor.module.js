@@ -98,7 +98,9 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
          _setEnabled: function(enabled){
             if (this._options.toolbar && (this._hasToolbar() || enabled)) {
-               this._getToolbar().setEnabled(enabled);
+               this._performByReady(function () {
+                  this._getToolbar().setEnabled(enabled);
+               }.bind(this));
             }
             RichEditor.superclass._setEnabled.apply(this, arguments);
          },
@@ -106,7 +108,6 @@ define('js!SBIS3.CONTROLS.RichEditor',
          _hasToolbar: function(){
             return !!this._toolbar;
          },
-
 
          /**
           * Возращает элемент тулбара с указанным именем или false (если он отсутствует)

@@ -1,6 +1,14 @@
 #!groovy
 echo "Задаем параметры сборки"
-properties([
+def version = "3.17.300"
+if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
+        currentBuild.result = 'ABORTED'
+        error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
+    }
+node('controls') {
+    echo "Назначем версию и определяем рабочую директорию"
+    def props = readProperties file: "/home/jenkins/shared_autotest87/settings_${version}.props"
+    properties([
     disableConcurrentBuilds(),
     buildDiscarder(
         logRotator(
@@ -8,54 +16,61 @@ properties([
             artifactNumToKeepStr: '3',
             daysToKeepStr: '3',
             numToKeepStr: '3')),
-    parameters([
-        string(
-            defaultValue: 'sdk',
-            description: '',
-            name: 'ws_revision'),
-        string(
-            defaultValue: 'sdk',
-            description: '',
-            name: 'ws_data_revision'),
-        string(
-            defaultValue: 'rc-3.17.300',
-            description: '',
-            name: 'branch_engine'),
-        string(
-            defaultValue: 'dda/flink-improve',
-            description: '',
-            name: 'branch_atf'),
-        choice(
-            choices: "online\npresto\ncarry\ngenie",
-            description: '',
-            name: 'theme'),
-        choice(choices: "chrome\nff", description: '', name: 'browser_type'),
-        booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
-        booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
-        booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
-        booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST')
-        ]),
-    pipelineTriggers([])
-])
-if ( "${env.BUILD_NUMBER}" != "1" && params.run_reg == false && params.run_int == false && params.run_unit == false ) {
-        currentBuild.result = 'ABORTED'
-        error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
-    }
-
-node('controls') {
-    echo "Назначем версию и определяем рабочую директорию"
-    def version = "3.17.300"
+        parameters([
+            string(
+                defaultValue: 'sdk',
+                description: '',
+                name: 'ws_revision'),
+            string(
+                defaultValue: 'sdk',
+                description: '',
+                name: 'ws_data_revision'),
+            string(
+                defaultValue: "rc-${version}",
+                description: '',
+                name: 'branch_engine'),
+            string(
+                defaultValue: "",
+                description: '',
+                name: 'branch_atf'),
+            choice(
+                choices: "online\npresto\ncarry\ngenie",
+                description: '',
+                name: 'theme'),
+            choice(choices: "chrome\nff", description: '', name: 'browser_type'),
+            booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
+            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
+            booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
+            booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST')
+            ]),
+        pipelineTriggers([])
+    ])
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
         echo "Чистим рабочую директорию"
         deleteDir()
-        echo "Назначаем переменную"
+        
+		echo "Назначаем переменные"
+        def server_address=props["SERVER_ADDRESS"]
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
         def SDK = ""
         def items = "controls:${workspace}/controls"
-        def branch_atf = params.branch_atf
-        def branch_engine = params.branch_engine
+		
+		def branch_atf
+		if (params.branch_atf) {
+			branch_atf = params.branch_atf
+		} else {
+			branch_atf = props["atf_co"]
+		}
+        
+        def branch_engine
+		if (params.branch_engine) {
+			branch_engine = params.branch_engine
+		} else {
+			branch_engine = props["engine"]
+		}
+		
         def inte = params.run_int
         def regr = params.run_reg
         def unit = params.run_unit
@@ -63,7 +78,8 @@ node('controls') {
             inte = true
             regr = true
             unit = true
-        }
+        }	
+		
         echo "Выкачиваем хранилища"
         stage("Checkout"){
             parallel (
@@ -293,8 +309,8 @@ node('controls') {
                             export test_server_port=10253
                             export test_url_port=10253
                             export WEBDRIVER_remote_enabled=1
-                            export WEBDRIVER_remote_host=10.76.163.98
-                            export WEBDRIVER_remote_port=4380
+                            export WEBDRIVER_remote_host=10.76.159.209
+                            export WEBDRIVER_remote_port=4444
                             export test_report=artifacts/test-browser-report.xml
                             sh ./bin/test-browser"""
                         }
@@ -385,8 +401,7 @@ node('controls') {
             WAIT_ELEMENT_LOAD = 20
             HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/
             SERVER = test-autotest-db1
-            BASE_VERSION = css_${NODE_NAME}${ver}1
-            server_address = http://10.76.163.98:4380/wd/hub"""
+            BASE_VERSION = css_${NODE_NAME}${ver}1"""
         if ( "${params.theme}" != "online" ) {
             writeFile file: "./controls/tests/reg/config.ini",
             text:
@@ -442,17 +457,28 @@ node('controls') {
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
         stage("Запуск тестов интеграционных и верстки"){
+            def site = "http://${NODE_NAME}:30001"
+            site.trim()
+            //dir("./controls/tests/int"){
+            //    tmp_smoke = sh returnStatus:true, script: """
+            //        source /home/sbis/venv_for_test/bin/activate
+            //        ${python_ver} smoke_test.py --SERVER_ADDRESS ${server_address}
+            //        deactivate
+            //    """
+            //    if ( "${tmp_smoke}" != "0" ) {
+            //        currentBuild.result = 'ABORTED'
+            //        error('Стенд неработоспособен (не прошел smoke test).')
+            //    }
+            //}
             parallel (
                 int_test: {
                     echo "Запускаем интеграционные тесты"
                     stage("Инт.тесты"){
                         if ( inte ){
-                            def site = "http://${NODE_NAME}:30001"
-                            site.trim()
                             dir("./controls/tests/int"){
                                  sh """
                                  source /home/sbis/venv_for_test/bin/activate
-                                 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
+                                 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address}
                                  deactivate
                                  """
                             }

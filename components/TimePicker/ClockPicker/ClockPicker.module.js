@@ -110,8 +110,8 @@ define('js!SBIS3.CONTROLS.ClockPicker',
 
             //Метки для режимов.
             _unitTime: {
-               hours: 'ЧАСЫ',
-               minutes: 'МИНУТЫ'
+               hours: rk('ЧАСЫ'),
+               minutes: rk('МИНУТЫ')
             },
 
             _animationEnabled: true

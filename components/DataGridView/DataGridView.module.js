@@ -1532,8 +1532,21 @@ define('js!SBIS3.CONTROLS.DataGridView',
              this._setPartScrollShift(0);
           }
           checkColumns(this._options);
-          this._destroyEditInPlaceController();
+          // Обновим список колонок для редактирования по месту
+          this._updateEditInPlaceColumns(this._options.columns);
        },
+
+      _updateEditInPlaceColumns: function(columns) {
+         if (this._hasEditInPlace()) {
+            // Если используется редактирование по месту, то необходимо:
+            // 1. Поменять набор колонок в контроллере
+            this._getEditInPlace().addCallback(function(editInPlaceController) {
+               editInPlaceController.setColumns(columns);
+            });
+            // 2. Уничтожить запущенное редактирование по месту, чтобы оно пересоздалось с актуальными колонками
+            this._destroyEditInPlace();
+         }
+      },
 
       _oldRedraw: function() {
          DataGridView.superclass._oldRedraw.apply(this, arguments);
@@ -1543,8 +1556,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
       setMultiselect: function() {
          DataGridView.superclass.setMultiselect.apply(this, arguments);
          // При установке multiselect создается отдельная td'шка под checkbox, которая не учитывается при редактировании по месту.
-         // Уничтожаем контроллер редактирования по месту, чтобы пересоздать его с новым набором колонок.
-         this._destroyEditInPlaceController();
+         // Обновим список колонок для редактирования по месту
+         this._updateEditInPlaceColumns();
 
          if(this.getItems()) {
             this.redraw();

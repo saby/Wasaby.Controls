@@ -2,7 +2,7 @@ define('js!Controls/Button/interface/ICaption', [
 ], function() {
 
    /**
-    * Интерфейс работы переключетеля
+    * Интерфейс работы кнопок
     * @mixin Controls/Button/interface/ICaption
     * @public
     */

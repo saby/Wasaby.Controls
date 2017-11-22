@@ -3,13 +3,7 @@
     <table class="controls-Calendar__dayTable">
         <thead class="controls-Calendar__tableHead">
             <tr>
-                <td class="controls-Calendar__tableElement controls-Calendar__tableElementFog">Пн</td>
-                <td class="controls-Calendar__tableElement controls-Calendar__tableElementFog">Вт</td>
-                <td class="controls-Calendar__tableElement controls-Calendar__tableElementFog">Ср</td>
-                <td class="controls-Calendar__tableElement controls-Calendar__tableElementFog">Чт</td>
-                <td class="controls-Calendar__tableElement controls-Calendar__tableElementFog">Пт</td>
-                <td class="controls-Calendar__tableElement controls-Calendar__tableElementFog">Сб</td>
-                <td class="controls-Calendar__tableElement controls-Calendar__tableElementFog">Вс</td>
+                <td for="day in _days" class="controls-Calendar__tableElement controls-Calendar__tableElementFog">{{ day }}</td>
             </tr>
         </thead>
     </table>

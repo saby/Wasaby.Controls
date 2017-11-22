@@ -549,7 +549,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var res = TreeDataGridView.superclass._isHoverControl.apply(this, arguments);
 
          if(!res && (this._options.editArrow || this._options.arrowActivatedHandler)) {
-            return contains(this.getEditArrow().getContainer()[0], target[0]);
+            return contains(this.getEditArrow().getContainer()[0], target[0]) || this.getEditArrow().getContainer()[0] === target[0];
          }
          return res;
       },

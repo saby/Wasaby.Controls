@@ -162,7 +162,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              _lastFieldLinkWidth: null,
              _showAllButton: null,
              _options: {
-                _paddingClass: ' controls-TextBox__paddingLeft',
+                _paddingClass: ' controls-TextBox_paddingLeft',
                 /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
                 afterFieldWrapper: afterFieldWrapper,
                 beforeFieldWrapper: beforeFieldWrapper,
@@ -1141,6 +1141,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if (this._showAllButton) {
                 this._showAllButton.toggleClass('controls-FieldLink__showAllLinks-disabled', !this.isEnabled());
              }
+             this._getAfterFieldWrapper().toggleClass('controls-FieldLink__afterFieldWrapper-disabled', !this.isEnabled());
              FieldLink.superclass._setEnabled.apply(this, arguments);
           },
 
@@ -1302,6 +1303,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
           /* Заглушка, само поле связи не занимается загрузкой списка */
           reload: function () {
 
+          },
+
+          _getAfterFieldWrapper: function() {
+             if(!this._afterFieldWrapper) {
+                this._afterFieldWrapper = this.getContainer().find('.controls-FieldLink__afterFieldWrapper');
+             }
+             return this._afterFieldWrapper;
           },
 
           destroy: function() {

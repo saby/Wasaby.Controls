@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
              */
             /**
              * @cfg {Validator[]} Устанавливает валидаторы контрола.
-             * Подробнее о валидации можно прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/validation/ руководстве разработчика}.
+             * Подробнее о валидации можно прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/ руководстве разработчика}.
              * @example
              * Пример массива, описывающего валидацию значения из опции text. Такой валидатор, например, можно использовать в контроле {@link SBIS3.CONTROLS.TextBox}.
              * <pre class="brush: xml">

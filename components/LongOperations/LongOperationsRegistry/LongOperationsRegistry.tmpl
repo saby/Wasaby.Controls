@@ -1,45 +1,8 @@
 <div class="controls-LongOperations controls-LongOperationsRegistry">
-   <ws:template name="browserFilterButtonTpl">
-      <ws:SBIS3.CONTROLS.FilterButton
-         name="browserFilterButton"
-         className="controls-Browser__filterButton"
-         tabindex="0"
-         filterStructure="{{ [
-                        {
-                           'internalValueField': 'PeriodKey',
-                           'internalCaptionField': 'PeriodTitle',
-                           'value': periodValue,
-                           'resetValue': null
-                        },
-                        {
-                           'internalValueField': 'StateKey',
-                           'internalCaptionField': 'StateTitle',
-                           'value': statusValue,
-                           'itemTemplate': null,
-                           'resetValue': null
-                        },
-                        {
-                           'internalValueField': 'DurationKey',
-                           'internalCaptionField': 'DurationTitle',
-                           'value': durationValue,
-                           'resetValue': null
-                        },
-                        userId ? undefined : {
-                           'internalValueField': 'UserId',
-                           'internalCaptionField': 'UserName',
-                           'value': userIdValue
-                        }
-                     ] }}"
-      >
-         <ws:template>
-            <ws:SBIS3.CONTROLS.LongOperationsFilter hideStaffFilter="{{hideStaffFilter}}"/>
-         </ws:template>
-      </ws:SBIS3.CONTROLS.FilterButton>
-   </ws:template>
    <ws:SBIS3.CONTROLS.Browser
       name="longOperationsBrowser"
       className="controls-Browser__view"
-   >
+      >
       <ws:content>
          <div class="controls-Browser__table controls-Browser__table-fullFilterBlock">
             <div class="controls-Browser__tableCell-search">
@@ -53,33 +16,108 @@
             </div>
             <div class="controls-Browser__tableRow">
                <div class="controls-Browser__tableCell-filterButton">
-                  <ws:partial
-                     template="browserFilterButtonTpl"
-                     userIdValue="{{'filter/UserId'|mutable}}"
-                     statusValue="{{'filter/status'|mutable}}"
-                     periodValue="{{'filter/period'|mutable}}"
-                     durationValue="{{'filter/duration'|mutable}}"
-                     scope="{{...}}"
-                  />
+                  <ws:SBIS3.CONTROLS.FilterButton
+                     name="browserFilterButton"
+                     className="controls-Browser__filterButton"
+                     tabindex="0"
+                     >
+                     <ws:filterStructure>
+                        <ws:Array>
+                           <ws:Object
+                              internalValueField="StateKey"
+                              internalCaptionField="StateTitle"
+                              value="{{'filter/status'|mutable}}"
+                              resetValue="{{undefined}}"
+                              itemTemplate=""
+                           />
+                           <ws:Object
+                              internalValueField="PeriodKey"
+                              internalCaptionField="PeriodTitle"
+                              value="{{'filter/period'|mutable}}"
+                              resetValue="{{undefined}}"
+                           />
+                           <ws:Object
+                              internalValueField="DurationKey"
+                              internalCaptionField="DurationTitle"
+                              value="{{'filter/duration'|mutable}}"
+                              resetValue="{{undefined}}"
+                           />
+                           <ws:Object
+                              internalValueField="UserId"
+                              internalCaptionField="UserName"
+                              value="{{'filter/UserId'|mutable}}"
+                              resetValue="{{!userId ? undefined : userId}}"
+                              visibilityValue="{{!userId}}"
+                              itemTemplate="{{!userId ? undefined : ''}}"
+                           />
+                        </ws:Array>
+                     </ws:filterStructure>
+                     <ws:template>
+                        <ws:SBIS3.CONTROLS.LongOperationsFilter hideStaffFilter="{{hideStaffFilter}}" />
+                     </ws:template>
+                  </ws:SBIS3.CONTROLS.FilterButton>
                </div>
                <div class="controls-Browser__tableCell-fastDataFilter">
                   <ws:SBIS3.CONTROLS.FastDataFilter
                      name="browserFastDataFilter"
                      className="controls-Browser__fastDataFilter"
                      tabindex="0"
-                     items="{{ [
-                        {
-                           'idProperty': 'key'
-                        }
-                     ] }}"
-                  >
+                     >
+                     <ws:items>
+                        <ws:Array>
+                           <ws:Object
+                              idProperty="key"
+                              displayProperty="title"
+                              parentProperty="parent"
+                              multiselect="{{false}}"
+                              values="{{ [
+                                 {
+                                 'key': null,
+                                 'title': rk('В любом состоянии')
+                                 },
+                                 {
+                                 'key': 'running',
+                                 'title': rk('В процессе')
+                                 },
+                                 {
+                                 'key': 'ended',
+                                 'title': rk('Завершенные')
+                                 },
+                                 {
+                                 'key': 'success-ended',
+                                 'title': rk('Успешно'),
+                                 'parent': 'ended'
+                                 },
+                                 {
+                                 'key': 'error-ended',
+                                 'title': rk('С ошибками'),
+                                 'parent': 'ended'
+                                 },
+                                 {
+                                 'key': 'suspended',
+                                 'title': rk('Приостановленные')
+                                 }
+                              ] }}"
+                              >
+                              <!--<ws:values>
+                                 <ws:Array>
+                                    <ws:Object key="{{null}}" title="{[В любом состоянии]}"></ws:Object>
+                                    <ws:Object key="running" title="{[В процессе]}"></ws:Object>
+                                    <ws:Object key="ended" title="{[Завершенные]}"></ws:Object>
+                                    <ws:Object key="success-ended" title="{[Успешно]}" parent="ended"></ws:Object>
+                                    <ws:Object key="error-ended" title="{[С ошибками]}" parent="ended"></ws:Object>
+                                    <ws:Object key="suspended" title="{[Приостановленные]}"></ws:Object>
+                                 </ws:Array>
+                              </ws:values>-->
+                           </ws:Object>
+                        </ws:Array>
+                     </ws:items>
                      <ws:filterStructure>
                         <ws:Array>
                            <ws:Object
                               internalValueField="key"
                               internalCaptionField="title"
                               value="{{'filter/status'|mutable}}"
-                              resetValue="null"
                            />
                         </ws:Array>
                      </ws:filterStructure>

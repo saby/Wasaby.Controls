@@ -481,9 +481,11 @@ define(
           * @private
           */
          _updateTextByTimeInterval: function(needUpdate){
-            var currentText = this._getFormatModel().getText(this._getMaskReplacer());
-            if ((needUpdate === true) || (currentText !== this._getEmptyText())){
-               this._setText(this._getTextByTimeInterval());
+            var
+               textByTimeInterval = this._getTextByTimeInterval(),
+               currentText = this._getFormatModel().getText(this._getMaskReplacer());
+            if ((needUpdate === true || currentText !== this._getEmptyText()) && currentText !== textByTimeInterval){
+               this._setText(textByTimeInterval);
             }
          },
          /**

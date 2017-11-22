@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
        * @param {String} template имя шаблона в виде 'js!SBIS3.CONTROLS.MyTemplate'
        * @param {Object} componentOptions опции которые прокинутся в компонент выбора
        */
-      _showChooser: function(template, componentOptions) {
+      _showChooser: function(template, componentOptions, dialogOptions) {
          var self = this,
              config = this._getAdditionalChooserConfig(),
              version, selectorConfig, commonConfig, clickResult;
@@ -160,7 +160,9 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
             target: this.getContainer()
          }, config || {});
 
-
+         if (dialogOptions) {
+            commonConfig = cMerge(commonConfig, dialogOptions);
+         }
 
          requirejs([this._chooserConfig.type[version][this._options.chooserMode]], function(ctrl) {
             self._chooserDialog = new ctrl(cMerge(coreClone(self._chooserConfig.config), cMerge(selectorConfig[version], commonConfig)));
@@ -171,7 +173,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
       },
       
       showSelector: function(cfg) {
-         this._showChooser(cfg.template, cfg.componentOptions);
+         this._showChooser(cfg.template, cfg.componentOptions, cfg.dialogOptions);
       },
 
       _getAdditionalChooserConfig: function () {

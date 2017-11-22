@@ -217,12 +217,15 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
          var self = this;
          
          ProcessStateIndicator.superclass.init.apply(this, arguments);
-         
-         this.getContainer().delegate('.controls-ProcessStateIndicator__box', 'mouseover', function(e) {
-            var itemIndex = self.getContainer().find('.controls-ProcessStateIndicator__box').index(e.target);
-            self._notify('onItemOver', +e.target.getAttribute('data-item'), itemIndex)             
-         });
+         this._mouseOverIndicatorHandler = this._mouseOverIndicatorHandler.bind(this);
+         this.getContainer().on('.controls-ProcessStateIndicator__box', 'mouseover', this._mouseOverIndicatorHandler);
       },
+      
+      _mouseOverIndicatorHandler: function(e) {
+         var itemIndex = this.getContainer().find('.controls-ProcessStateIndicator__box').index(e.target);
+         this._notify('onItemOver', + e.target.getAttribute('data-item'), itemIndex)
+      },
+      
       _modifyOptions: function() {
          var opts = ProcessStateIndicator.superclass._modifyOptions.apply(this, arguments);
          
@@ -269,6 +272,12 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
                   'data-item': colorState[i] ? colorState[i].item : -1
                });  
          });
+      },
+      
+      destroy: function() {
+         this.getContainer().off('.controls-ProcessStateIndicator__box', 'mouseover', this._mouseOverIndicatorHandler);
+         this._mouseOverIndicatorHandler = null;
+         ProcessStateIndicator.superclass.destroy.apply(this, arguments);
       }
    });
    

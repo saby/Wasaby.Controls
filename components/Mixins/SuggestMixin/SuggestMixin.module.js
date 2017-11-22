@@ -650,6 +650,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          }
    
          showAllConfig.componentOptions.listConfig = listConfig;
+         showAllConfig.dialogOptions  = {
+            className: 'ws-float-area__block-layout'
+         };
    
          this.hidePicker();
          this.showSelector(showAllConfig);

@@ -23,7 +23,6 @@ define('js!SBIS3.CONTROLS.FilterController', [
        * @cfg {SBIS3.CONTROLS.ListView} Представление
        */
       _$view: null,
-      _$task1174428326: false,
    
       /**
        * Связывает фильтры и представление данных
@@ -35,14 +34,20 @@ define('js!SBIS3.CONTROLS.FilterController', [
          var filterButton = fButton || this._getOption('filterButton'),
              fastDataFilter = fDataFilter || this._getOption('fastDataFilter'),
              view = viewInst || this._getOption('view'),
-             parentContext = view.getParent().getContext();
+             parentContext = view.getParent().getContext(),
+            /* Т.к. отслеживается изменени опции filterStructure в фильтрах,
+               то нам необходимо блокировать повторную синхронизацию опции,
+               чтобы не было зацикливания, иначе при синхронизации опять сработает подписка на изменение опции тд.. */
+             blockSync;
    
          if(filterButton || fastDataFilter) {
             /* Синхронизация кнопки фильтров и быстрого фильтра */
             var syncFilters = function(from, to) {
-               if(from && to) {
+               if(from && to && !blockSync) {
+                  blockSync = true;
                   //Не нужно сбрасывать value в resetValue, если элемента стукруры из from нет в эл.структуры из to
                   to.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(coreClone(from.getFilterStructure()), to.getFilterStructure(), true));
+                  blockSync = false;
                }
             };
       
@@ -85,13 +90,22 @@ define('js!SBIS3.CONTROLS.FilterController', [
                   }
                   parentContext.setValue(BROWSER_FILTER_FIELD, resultFilter);
                },
+               structureChanged = function(event, prop) {
+                  if (prop === 'filterStructure') {
+                     filterChangeHandler.call(this);
+                  }
+               },
                subscribeFilter = function(filter) {
                   filter.subscribe('onApplyFilter', filterChangeHandler)
                         .subscribe('onResetFilter', filterChangeHandler);
+   
+                  filter.subscribe('onPropertyChanged', structureChanged);
                },
                unsubscribeFilter = function(filter) {
                   filter.unsubscribe('onApplyFilter', filterChangeHandler)
                         .unsubscribe('onResetFilter', filterChangeHandler);
+   
+                  filter.unsubscribe('onPropertyChanged', structureChanged);
                };
 
             if (filterButton && fastDataFilter) {

@@ -51,10 +51,19 @@
   }
 }
 
-.controls-ClockPicker-flex-center() {
+.controls-ClockPicker-flex-center(@height: 0) {
+  /**
+   * Текст не верно выранивается по вертикали c помощью align-items, поэтому используем line-height.
+   * Поэтому если передали @height, то нам нужно выравнять текст, а если нет, то нужно выравнять блоки.
+   */
+  & when (@height = 0) {
+    .align-items(center);
+  }
+  & when not(@height = 0) {
+    line-height: @height;
+  }
   .flexbox();
   .justify-content(center);
-  .align-items(center);
 }
 
 .controls-ClockPicker {
@@ -107,7 +116,7 @@
   height: 2 * @clock-picker-outer-tick-radius;
   width: 2 * @clock-picker-outer-tick-radius;
   font-size: @font-popup-size;
-  .controls-ClockPicker-flex-center();
+  .controls-ClockPicker-flex-center(2 * @clock-picker-outer-tick-radius);
 }
 
 .controls-ClockPicker__tick_inner {
@@ -115,7 +124,7 @@
   width: 2 * @clock-picker-inner-tick-radius;
   font-size: @font-popup-size;
   background-color: @clock-picker-inner-tick-background-color;
-  .controls-ClockPicker-flex-center();
+  .controls-ClockPicker-flex-center(2 * @clock-picker-inner-tick-radius);
 }
 
 .controls-ClockPicker__arrow {
@@ -173,6 +182,9 @@
   font-weight: @bold-font-weight;
   color: @clock-picker-unit-time-color;
   background-color: @clock-picker-background-color;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .controls-ClockPicker_animationOff .controls-ClockPicker__circle {

@@ -193,15 +193,10 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
              historyRS;
 
          beforeLoadHistoryResult = this._notify('onBeforeLoadHistory', queryFilter);
-
-         //Если в нашей истории нет данных, не делаем лишний запрос
-         if (this._historyController.getCount()) {
-            this._historyDeferred = this.getList().getDataSource().query(query);
-            pd.push(this._historyDeferred);
-         }
-         else {
-            pd.push((new Deferred).callback());
-         }
+   
+         /* Необходимо сделать запрос, аже если истории для выбора нет, т.к. на бл могут дополнять выборку */
+         this._historyDeferred = this.getList().getDataSource().query(query);
+         pd.push(this._historyDeferred);
 
          if (cInstance.instanceOfModule(beforeLoadHistoryResult, 'Core/Deferred')) {
             pd.push(beforeLoadHistoryResult);
@@ -463,8 +458,10 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
             if(this._options.searchParam) {
                var togglePicker = function() {
-                     if(self._checkPickerState(!self._options.showEmptyList) && !self.getList().isLoading()) {
-                        self.showPicker();
+                     if(self._checkPickerState(!self._options.showEmptyList)) {
+                        if(!self.getList().isLoading()) {
+                           self.showPicker();
+                        }
                      } else {
                         self.hidePicker();
                      }

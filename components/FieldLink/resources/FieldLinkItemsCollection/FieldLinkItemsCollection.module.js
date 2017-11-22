@@ -10,8 +10,10 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
       'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemContentTemplate',
       'Core/core-instance',
       'Core/helpers/Function/callNext',
+      'Core/detection',
+      'Core/helpers/Hcontrol/getScrollWidth',
       'js!SBIS3.CONTROLS.Utils.ItemsSelection'
-   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, cInstance, callNext, ItemsSelection) {
+   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, cInstance, callNext, detection, getScrollWidth, ItemsSelection) {
 
       'use strict';
 
@@ -63,6 +65,12 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             };
          };
          return tplOptions;
+      }
+      
+      function setPickerWidth(width) {
+         var pickerContainer = this.getPicker().getContainer();
+         pickerContainer[0].style.maxWidth = width + 'px';
+         pickerContainer[0].style.minWidth = width + 'px';
       }
 
       var FieldLinkItemsCollection =  CompoundControl.extend([DSMixin, PickerMixin], {
@@ -180,6 +188,8 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          showPicker: function() {
+            var pickerContainer, pickerWidth;
+            
             /* Чтобы не было перемаргивания в задизейбленом состоянии,
                просто вешаем класс ws-invisible */
             if (this.isEnabled()) {
@@ -190,6 +200,19 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             FieldLinkItemsCollection.superclass.showPicker.apply(this, arguments);
             this._options._isPickerVisible = true;
             this.redraw();
+            
+            pickerContainer = this._picker.getContainer();
+            pickerWidth = this._parentFieldLink.getContainer()[0].offsetWidth;
+   
+            setPickerWidth.call(this, pickerWidth);
+   
+            /* Из-за того, что ie располагает скроллбар не внутри контейнера, а за его пределами,
+             надо учитывать это при расчётах ширины пикера */
+            if ((detection.isIE10 || detection.isIE11) && pickerContainer[0].offsetHeight < pickerContainer[0].scrollHeight) {
+               pickerWidth -= getScrollWidth();
+               this._picker.recalcPosition(true);
+               setPickerWidth.call(this, pickerWidth);
+            }
             this._picker.recalcPosition(true);
          },
 
@@ -240,14 +263,6 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                         self.getContainer().removeClass('ws-invisible');
                      }
                      setTimeout(self.redraw.bind(self), 0);
-                  },
-
-                  onShow: function() {
-                     var pickerContainer = self._picker.getContainer(),
-                         pickerWidth = self._parentFieldLink.getContainer()[0].offsetWidth;
-
-                     pickerContainer[0].style.maxWidth = pickerWidth + 'px';
-                     pickerContainer[0].style.minWidth = pickerWidth + 'px';
                   }
                }
             };

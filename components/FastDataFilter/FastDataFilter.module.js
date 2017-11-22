@@ -122,12 +122,11 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          _setItemPositionForIE10: function(){
             //Дичайший баг в ie - если установлено несколько выпадающий списков - 1 из них визуально пропадает
             //Не отдебагать, т.к. при любом взаимодействии с dom'ом идет перерисовка узлов и выпадающий список появляется
-            //Добавил костыль: вызываю перерисовку узла, взаимодействуя со свойтсвом top
+            //Добавил костыль: вызываю перерисовку узла, задавая min-width
             if (constants.browser.isIE10){
-               this.getContainer().find('.controls-DropdownList').css({top: ''}); //Убираю top, чтобы когда выставится top: 0 браузер понял что значение изменилось и перерисовал узел
                setTimeout(function(){
-                  this.getContainer().find('.controls-DropdownList').css({position: 'relative', top: '0'});
-               }.bind(this), 100);
+                  this.getContainer().find('.controls-DropdownList').css('min-width', '10px');
+               }.bind(this), 200);
             }
          },
          _getCurrentContext : function(){

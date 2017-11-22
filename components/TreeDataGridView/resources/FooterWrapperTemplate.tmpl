@@ -1,8 +1,8 @@
-<tr class="controls-TreeDataGridView__folderFooter" data-parent="{{key}}">
+<tr class="controls-DataGridView__tr controls-TreeDataGridView__folderFooter" data-parent="{{key}}">
     <ws:if data="{{multiselect}}">
         <td></td>
     </ws:if>
-    <td class="controls-TreeDataGridView__folderFooter-td" colspan="{{colspan}}">
+    <td class="controls-TreeDataGridView__folderFooter-td{{footerTpl ? ' controls-TreeDataGridView__folderFooter-separator'}}" colspan="{{colspan}}">
       <div class="controls-TreeView__folderFooterContainer">
          <div class="controls-TreeDataGridView__levelPaddingWrap">
             <ws:for data="i in (level + 1)">

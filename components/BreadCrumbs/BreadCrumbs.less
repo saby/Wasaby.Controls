@@ -100,12 +100,17 @@
       .controls-BreadCrumbs__crumb, .controls-BreadCrumbs__crumb:hover {
          cursor: default;
       }
-      .controls-BreadCrumbs__crumb:hover{
+      .controls-BreadCrumbs__crumb {
          .controls-BreadCrumbs__title{
-            color: #0055BB!important;
+            text-decoration: none;
          }
-         .controls-BreadCrumbs__arrow, .controls-BreadCrumbs__home {
-            color: #587AB0!important;
+         &:hover{
+            .controls-BreadCrumbs__title{
+               color: #0055BB!important;
+            }
+            .controls-BreadCrumbs__arrow, .controls-BreadCrumbs__home {
+               color: #587AB0!important;
+            }
          }
       }
    }
