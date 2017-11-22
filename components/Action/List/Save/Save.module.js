@@ -20,16 +20,16 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
      * @extends SBIS3.CONTROLS.Action.Save
      * @mixes SBIS3.CONTROLS.Action.List.ListMixin
      * @public
-     * @author Сухоручкин Андрей Сергеевич
+     * @author Сухоручкин А.С.
      */
     var SaveList = Save.extend([ListMixin], /** @lends SBIS3.CONTROLS.Action.List.Save.prototype */{
         $protected: {
             _options: {
                /**
                 * @cfg {SBIS3.CONTROLS.ISaveStrategy) Стратегия сохранения данных.
-                * @see {@link SBIS3.CONTROLS.ISaveStrategy}
-                * @see {@link SBIS3.CONTROLS.SaveStrategy.Base}
-                * @see {@link SBIS3.CONTROLS.SaveStrategy.Sbis}
+                * @see SBIS3.CONTROLS.ISaveStrategy
+                * @see SBIS3.CONTROLS.SaveStrategy.Base
+                * @see SBIS3.CONTROLS.SaveStrategy.Sbis
                 */
                 saveStrategy: 'js!SBIS3.CONTROLS.SaveStrategy.Sbis',
                 /**

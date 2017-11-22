@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
    /**
     * @mixin SBIS3.CONTROLS.Action.List.ListMixin
     * @public
-    * @author Ганшин Ярослав Олегович
+    * @author Ганшин Я.О.
     */
    var ListMixin = /** @lends SBIS3.CONTROLS.Action.List.ListMixin.prototype */{
       $protected: {
