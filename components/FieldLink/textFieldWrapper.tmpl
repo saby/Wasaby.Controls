@@ -7,9 +7,7 @@
 		placeholder="{{enabled && _useNativePlaceholder ? placeholder}}"
 		maxlength="{{maxLength ? maxLength}}"
 	/>
-	<div if="{{ !_useNativePlaceholder }}" class="controls-TextBox__placeholder">
-		<span class="controls-TextBox__placeholder__overflow">
-			<ws:partial template="{{ placeholder }}"/>
-		</span>
-	</div>
+	<ws:if data="{{ _drawCompatiblePlaceholder }}">
+		<ws:partial template="{{ compatiblePlaceholderTemplate }}" scope="{{...}}"/>
+	</ws:if>
 </div>

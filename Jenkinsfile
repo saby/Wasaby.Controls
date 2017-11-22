@@ -1,6 +1,6 @@
 #!groovy
 echo "Задаем параметры сборки"
-def version = "3.17.220"
+def version = "3.17.300"
 if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
         currentBuild.result = 'ABORTED'
         error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
@@ -30,7 +30,7 @@ node('controls') {
                 description: '',
                 name: 'branch_engine'),
             string(
-                defaultValue: props["atf_co"],
+                defaultValue: "",
                 description: '',
                 name: 'branch_atf'),
             choice(
@@ -49,14 +49,28 @@ node('controls') {
     ws(workspace) {
         echo "Чистим рабочую директорию"
         deleteDir()
-        echo "Назначаем переменную"
+        
+		echo "Назначаем переменные"
         def server_address=props["SERVER_ADDRESS"]
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
         def SDK = ""
         def items = "controls:${workspace}/controls"
-        def branch_atf = params.branch_atf
-        def branch_engine = params.branch_engine
+		
+		def branch_atf
+		if (params.branch_atf) {
+			branch_atf = params.branch_atf
+		} else {
+			branch_atf = props["atf_co"]
+		}
+        
+        def branch_engine
+		if (params.branch_engine) {
+			branch_engine = params.branch_engine
+		} else {
+			branch_engine = props["engine"]
+		}
+		
         def inte = params.run_int
         def regr = params.run_reg
         def unit = params.run_unit
@@ -64,7 +78,8 @@ node('controls') {
             inte = true
             regr = true
             unit = true
-        }
+        }	
+		
         echo "Выкачиваем хранилища"
         stage("Checkout"){
             parallel (

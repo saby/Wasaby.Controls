@@ -90,18 +90,26 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
       _modifyOptions: function() {
          var opts = DateRangeSlider.superclass._modifyOptions.apply(this, arguments);
          opts._caption = this._getCaption(opts);
+         opts._isMinWidth = this._isMinWidth(opts);
+         opts._prevNextButtonsEnabledClass = this.isEnabled() ? ' controls-DateRangeSlider__prevNextButtons-enabled' : ' controls-DateRangeSlider__prevNextButtons-disabled';
+         opts._valueEnabledClass = this.isEnabled() ? ' controls-DateRangeSlider__value-enabled' : ' controls-DateRangeSlider__value-disabled';
          return opts;
       },
 
+      _isMinWidth: function (opts) {
+         // Минимальную высоту устанавливаем если контрол находится в режиме выбора не только года и включены стрелки влево или вправо
+         return (opts.showMonths || opts.showQuarters || opts.showHalfyears) && (opts.showPrevArrow || opts.showNextArrow);
+      },
+
       _onPrevBtnClick: function () {
-         if (this.isEnabled()) {
+         if (this.isEnabled() && this.getStartValue() && this.getEndValue()) {
             this.setPrev();
             this._updateValueView();
          }
       },
 
       _onNextBtnClick: function () {
-         if (this.isEnabled()) {
+         if (this.isEnabled() && this.getStartValue() && this.getEndValue()) {
             this.setNext();
             this._updateValueView();
          }
@@ -192,6 +200,21 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
             btnContainer.removeClass('.controls-DateRangeSlider__lock-locked icon-Lock icon-primary');
             btnContainer.addClass('icon-Unlock icon-disabled');
          }
+      },
+
+      _setEnabled: function () {
+         var container = this.getContainer();
+         DateRangeSlider.superclass._setEnabled.apply(this, arguments);
+         container.find('.controls-DateRangeSlider__prev, .controls-DateRangeSlider__next')
+            .toggleClass('controls-DateRangeSlider__prevNextButtons-disabled', !this.isEnabled())
+            .toggleClass('controls-DateRangeSlider__prevNextButtons-enabled', this.isEnabled());
+         container.find('.controls-DateRangeSlider__value')
+            .toggleClass('controls-DateRangeSlider__value-disabled', !this.isEnabled())
+            .toggleClass('controls-DateRangeSlider__value-enabled', this.isEnabled());
+      },
+      markControl: function () {
+         DateRangeSlider.superclass.markControl.apply(this, arguments);
+         this.getContainer().toggleClass('controls-DateRangeSlider__validation-error', this.isMarked());
       }
    });
 

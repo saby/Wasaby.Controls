@@ -1,4 +1,3 @@
-@controls-Spoiler-title-font: bold @default-text-size @default-font-name;
 @controls-Spoiler-title-cursor: pointer;
 @controls-Spoiler-title-height: 30px;
 @controls-Spoiler-title-line-height: 30px;
@@ -8,7 +7,9 @@
    .controls-Spoiler__title {
       cursor: @controls-Spoiler-title-cursor;
       height: @controls-Spoiler-title-height;
-      font: @controls-Spoiler-title-font;
+      font: @default-font-name;
+      font-weight: bold;
+      font-size: @default-text-size;
       box-sizing: border-box;
       position: relative;
       overflow: hidden;

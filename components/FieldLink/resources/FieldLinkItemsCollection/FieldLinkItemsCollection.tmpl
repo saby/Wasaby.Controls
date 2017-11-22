@@ -1,4 +1,4 @@
-<div class="controls-FieldLink__itemsCollection">
+<div class="controls-FieldLink__itemsCollection{{reverseOrder ? ' controls-FieldLink__itemsCollection-reverseOrder' : ' controls-FieldLink__itemsCollection-normalOrder'}}">
     <ws:if data="{{ _serverRender }}">
         <ws:partial template="{{_itemsTemplate}}" records="{{_records}}" tplData="{{_itemData}}" />
     </ws:if>

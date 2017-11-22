@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup',
     *
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     * @initial
     * <component data-component='SBIS3.CONTROLS.CheckBoxGroup'>
     *    <options name="items" type="array">

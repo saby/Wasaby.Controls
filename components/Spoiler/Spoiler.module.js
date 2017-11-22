@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
     *    <option name='caption' value='Спойлер'></option>
     * </component>
     * @public
-    * @category Buttons
+    * @category Button
     *
     * @author Авраменко Алексей Сергеевич
     *

@@ -4,14 +4,7 @@
 }
 
 .controls-TimeHeader__containerBlock {
-  & when (get-unit(@icon-button-round-border-height) = rem) {
-    @iconHomeHeight: 3rem;
-    padding-top: calc(~"@{controls-Popup-closeButton-top} + (@{closeButtonHeight} - @{iconHomeHeight}) / 2");
-  }
-  & when not (get-unit(@icon-button-round-border-height) = rem) {
-    @iconHomeHeight: @icon-button-round-border-height;
-    padding-top: @controls-Popup-closeButton-top + (@closeButtonHeight - @iconHomeHeight) / 2;
-  }
+  padding-top: @time-header-container-block-padding;
   .flexbox();
   .justify-content(space-between);
   .align-items(center);

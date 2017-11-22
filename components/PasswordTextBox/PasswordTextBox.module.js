@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
     * @ignoreEvents onReady
     *
     * @public
-    * @category Inputs
+    * @category Input
     * @control
     */
    var PasswordTextBox;
@@ -55,12 +55,6 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
                tooltip: rk("Скрыть"),
                icon: "icon-medium icon-Hide icon-disabled"
             }
-         }
-      },
-      $constructor: function() {
-         //TODO: избавиться от фикса высоты поля ввода пароля в IE>8
-         if (constants.browser.isIE) {
-            this.getContainer().find('.controls-TextBox__field').addClass('controls-TextBox__field__fixIE');
          }
       },
 
