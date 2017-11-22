@@ -1226,6 +1226,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             this._removeFromLoadedRemoteNodes(oldItems);
             this._updateExpanderDisplay();
          },
+         _onCollectionReset: function(parentFn) {
+            parentFn.call(this);
+            this._updateExpanderDisplay();
+         },
+         _onCollectionReplace: function(parentFn, newItems) {
+            parentFn.call(this, newItems);
+            this._updateExpanderDisplay();
+         },
          _updateExpanderDisplay: function() {
             if (this._options.expanderDisplayMode === 'withChild') {
                this._container.toggleClass('controls-TreeView__hideExpands',
