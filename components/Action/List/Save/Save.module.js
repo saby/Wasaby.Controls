@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
             var
                result,
                selection = this.getLinkedObject().getSelection();
-            if (selection && selection.marked && selection.marked.length) {
+            if (selection && selection.marked) {
                result = this._getDataFromSelection(meta.dataSource, meta.serverSideExport, selection);
             } else {
                result = this._getSelectedRecordSet();
