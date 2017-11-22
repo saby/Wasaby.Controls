@@ -1511,25 +1511,32 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (this._options.editorConfig.browser_spellcheck) {
                // Если включена проверка правописания, нужно при исправлениях обновлять принудительно text
                var _onSelectionChange1 = function () {
-                  editor.once('SelectionChange', _onSelectionChange2);
+                  cConstants.$doc.one('selectionchange', _onSelectionChange2);
                   // Хотя цепляемся на один раз, но всё же отцепим через пару минут, если ничего не случится за это время
-                  setTimeout(editor.off.bind(editor, 'SelectionChange', _onSelectionChange2), 120000);
+                  setTimeout(function() {
+                     cConstants.$doc.off('selectionchange', _onSelectionChange2);
+                  }, 120000);
                }.bind(this);
 
                var _onSelectionChange2 = function () {
                   this._updateTextByTiny();
                }.bind(this);
 
-               editor.on('contextmenu', function (evt) {
-                  if (evt.currentTarget === this._inputControl[0] && (evt.target === evt.currentTarget || $.contains(evt.currentTarget, evt.target))) {
-                     editor.off('SelectionChange', _onSelectionChange2);
-                     if (cConstants.browser.safari) {
-                        // Для safari обязательно нужно отложить подписку на событие (потому что safari в тот момент, когда делается эта подписка
-                        // меняет выделение, и потом меняет его в момент вставки. Чтобы первое не ловить - отложить)
-                        setTimeout(editor.once('SelectionChange', _onSelectionChange1), 1);
-                     }
-                     else {
-                        editor.once('SelectionChange', _onSelectionChange1);
+               //В IE событие contextmenu не стреляет при включенной проверке орфографии, так что подписываемся на mousedown
+               editor.on('mousedown', function (evt) {
+                  if (evt.button === 2) {
+                     if (evt.currentTarget === this._inputControl[0] && (evt.target === evt.currentTarget || $.contains(evt.currentTarget, evt.target))) {
+                        cConstants.$doc.off('selectionchange', _onSelectionChange2);
+                        if (cConstants.browser.safari || cConstants.browser.chrome) {
+                           // Для safari и chrome обязательно нужно отложить подписку на событие (потому что в тот момент, когда делается эта подписка
+                           // они меняют выделение, и потом меняют его в момент вставки. Чтобы первое не ловить - отложить)
+                           setTimeout(function() {
+                              cConstants.$doc.one('selectionchange', _onSelectionChange1);
+                           }, 1);
+                        }
+                        else {
+                           cConstants.$doc.one('selectionchange', _onSelectionChange1);
+                        }
                      }
                   }
                }.bind(this));
