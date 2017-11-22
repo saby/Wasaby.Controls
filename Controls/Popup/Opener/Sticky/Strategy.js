@@ -1,15 +1,22 @@
-define('js!WSControls/Windows/Strategy/StickyPositioningStrategy',
+define('js!Controls/Popup/Opener/Sticky/Strategy',
    [
       'Core/Abstract',
-      'js!WSControls/Windows/Strategy/IPositioningStrategy',
-      'js!WSControls/Windows/Strategy/TargetCoords'
+      'js!Controls/Popup/interface/IStrategy',
+      'js!Controls/Popup/TargetCoords'
    ],
+   function (Abstract, IStrategy, TargetCoords) {
 
-   function (Abstract, IPositioningStrategy, TargetCoords) {
-
-      var StickyPositioningStrategy = Abstract.extend([IPositioningStrategy], {
+      /**
+       * Стратегия позиционирования прилипающего диалога.
+       * @class Controls/Popup/Opener/Sticky/Strategy
+       * @mixes Controls/Popup/interface/IStrategy
+       * @control
+       * @public
+       * @category Popup
+       */
+      var Strategy = Abstract.extend([IStrategy], {
          constructor: function (cfg) {
-            StickyPositioningStrategy.superclass.constructor.apply(this, arguments);
+            Strategy.superclass.constructor.apply(this, arguments);
             this._options = cfg;
          },
 
@@ -50,5 +57,6 @@ define('js!WSControls/Windows/Strategy/StickyPositioningStrategy',
          }
       });
 
-      return StickyPositioningStrategy;
-   });
+      return Strategy;
+   }
+);

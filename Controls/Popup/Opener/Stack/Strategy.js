@@ -1,4 +1,4 @@
-define('js!Controls/Popup/Opener/Notification/Strategy',
+define('js!Controls/Popup/Opener/Stack/Strategy',
    [
       'Core/Abstract',
       'js!Controls/Popup/interface/IStrategy'
@@ -6,8 +6,8 @@ define('js!Controls/Popup/Opener/Notification/Strategy',
    function (Abstract, IStrategy) {
 
       /**
-       * Стратегия позиционирования нотификационного окна.
-       * @class Controls/Popup/Opener/Notification/Strategy
+       * Стратегия позиционирования окна.
+       * @class Controls/Popup/Opener/Stack/Strategy
        * @mixes Controls/Popup/interface/IStrategy
        * @control
        * @public
@@ -16,17 +16,18 @@ define('js!Controls/Popup/Opener/Notification/Strategy',
       var Strategy = Abstract.extend([IStrategy], {
          constructor: function (cfg) {
             Strategy.superclass.constructor.apply(this, arguments);
+            this._options = cfg;
          },
 
-         getPosition: function () {
+         getPosition: function (popup) {
             return {
-               right: 16,
-               bottom: 16
-            };
+               top: 0,
+               right: 0,
+               bottom: 0
+            }
          }
       });
 
       return Strategy;
-
    }
 );

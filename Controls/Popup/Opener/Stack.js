@@ -1,20 +1,21 @@
-define('js!Controls/Popup/Opener/Dialog',
+define('js!Controls/Popup/Opener/Stack',
    [
       'Core/Control',
       'js!Controls/Popup/Manager',
-      'js!Controls/Popup/Opener/Dialog/Strategy'
+      'js!Controls/Popup/Opener/Stack/Strategy'
    ],
    function (Control, Manager, Strategy) {
+
       /**
-       * Действие открытия окна
-       * @class Controls/Popup/Opener/Dialog
+       * Действие открытия прилипающего окна
+       * @class Controls/Popup/Opener/Stack
        * @mixes Controls/Popup/interface/IAction
        * @control
        * @public
        * @category Popup
        */
       var Dialog = Control.extend({
-         _controlName: 'Controls/Popup/Opener/Dialog',
+         _controlName: 'Controls/Popup/Opener/Stack',
          iWantVDOM: true,
 
          constructor: function (cfg) {
