@@ -288,8 +288,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                if (this.isFixed()) {
                   this._initSizes();
                }
-               this.recalcPosition();
-               this._checkTargetPosition();
+               else if (!isInitial) {
+                  this.recalcPosition();
+                  this._checkTargetPosition();
+               }
             }
          } else {
             this._initSizes();
@@ -400,6 +402,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
                offset.top = this._calculateOverflow(offset, 'vertical');
                offset.left = this._calculateOverflow(offset, 'horizontal');
+
+               var containerScrollWidth = this._container[0].offsetWidth - this._container[0].clientWidth - this._containerSizes.border * 2;
+               //Если позиционирование слева от таргета, то смещаемся на ширину скролла
+               if (containerScrollWidth && this._options.horizontalAlign.side === 'right') {
+                  offset.left -= containerScrollWidth;
+               }
 
                this._notifyOnAlignmentChange();
 
