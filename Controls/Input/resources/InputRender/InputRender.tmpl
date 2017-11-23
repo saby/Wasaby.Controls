@@ -1,10 +1,9 @@
-<div class="controls-TextBox">
+<div class="controls-TextBox" title="{{tooltip}}">
    <div class="controls-TextBox__wrapper">
 
-      <ws:partial
-         if="{{_beforeFieldWrapper}}"
-         template="{{_beforeFieldWrapper}}"
-      />
+      <ws:if data="{{_beforeFieldWrapper}}">
+         <ws:partial template="{{_beforeFieldWrapper}}"/>
+      </ws:if>
 
       <div event:oninput="_inputHandler()"
            event:onclick="_clickHandler()"
@@ -16,22 +15,17 @@
          <ws:partial template="{{_options.content}}"/>
       </div>
 
-      <ws:if data="{{_options.tagStyle}}">
-         <span  event:onmouseenter="_notifyHandler('onTagHover')">
-            <ws:SBIS3.CONTROLS.IconButton
-               icon="icon-size icon-Listbox"
-               allowChangeEnable="{{false}}"
-               className="controls-informationIcon icon-{{_options.tagStyle}}"
-               event:onActivated="_notifyHandler('onTagClick')"
-            />
-         </span>
+      <ws:if data="{{_afterFieldWrapper}}">
+         <ws:partial template="{{_afterFieldWrapper}}"/>
       </ws:if>
 
-      <ws:partial
-         if="{{_afterFieldWrapper}}"
-         template="{{_afterFieldWrapper}}"
-      />
-
    </div>
+
+   <ws:if data="{{_options.tagStyle}}">
+      <div event:onmouseenter="_notifyHandler('onTagHover')"
+           event:onclick="_notifyHandler('onTagClick')"
+           class="controls-TextBox__informationIcon icon-size icon-Listbox controls-informationIcon {{'icon-' + _options.tagStyle}}">
+      </div>
+   </ws:if>
 </div>
 

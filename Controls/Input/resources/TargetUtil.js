@@ -24,7 +24,16 @@ define('js!Controls/Input/resources/TargetUtil',
          },
 
          /*
-         * Разобрать значение из таргета
+         * Разобрать значение из таргета на слудующий формат:
+         * {
+         *   before - подстрока до введнной
+         *   input - введенная подстрока
+         *   after - подстрока после введенной
+         * }
+         *
+         * @param target таргет
+         * @param oldValue старое значение
+         *
          * */
          buildSplitValue: function(target, oldValue){
             var

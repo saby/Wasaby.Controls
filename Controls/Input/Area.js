@@ -48,10 +48,8 @@ define('js!Controls/Input/Area', [
          this._container.children().find('.controls-TextArea__fakeField_value')[0].innerHTML = value;
       },
 
-      /*
-      * Проверяет, есть ли скролл на фэйковой textArea (div)
-      * */
-      checkScroll: function(){
+      //Обновляет наличие скролла, в зависимости от того, есть ли скролл на фейковой текст арии
+      updateScroll: function(){
          var fakeArea = this._container.children().find('.controls-TextArea__fakeField')[0];
          var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
 
@@ -66,6 +64,7 @@ define('js!Controls/Input/Area', [
          }
       },
 
+      //Валидирует и подготавливает новое значение по splitValue
       prepareValue: function(splitValue) {
          var input = splitValue.input;
 
@@ -98,17 +97,17 @@ define('js!Controls/Input/Area', [
       },
 
       _afterMount: function() {
-         _private.checkScroll.call(this);
+         _private.updateScroll.call(this);
       },
 
       _beforeUpdate: function(newOptions) {
          _private.setValue.call(this, newOptions.value);
-         _private.checkScroll.call(this);
+         _private.updateScroll.call(this);
       },
 
       _changeValueHandler: function(e, value){
          _private.setValue.call(this, value);
-         _private.checkScroll.call(this);
+         _private.updateScroll.call(this);
          this._notify('valueChanged', value);
       },
 
@@ -118,7 +117,7 @@ define('js!Controls/Input/Area', [
             var newValue = this._value.trim();
             if(newValue !== this._value){
                _private.setValue.call(this, newValue);
-               _private.checkScroll.call(this);
+               _private.updateScroll.call(this);
                this._notify('valueChanged', newValue);
                this._forceUpdate();
             }
@@ -132,16 +131,22 @@ define('js!Controls/Input/Area', [
       },
 
       _keyDownHandler: function(e){
-         if(e.nativeEvent.keyCode === constants.key.enter){
-            switch(this._options.newLineKey){
-               case 'shiftEnter':
-                  !e.nativeEvent.shiftKey && e.preventDefault();
-                  break;
-               case 'enter':
-                  e.nativeEvent.shiftKey && e.preventDefault();
-                  break;
+
+         //В режиме newLineKey === 'ctrlEnter' будем эмулировать переход на новую строку в ручную
+         if(e.nativeEvent.keyCode === constants.key.enter && this._options.newLineKey === 'ctrlEnter'){
+
+            //Обычный enter прерываем
+            if(!e.nativeEvent.shiftKey && !e.nativeEvent.ctrlKey){
+               e.preventDefault();
             }
-          }
+
+            //Вроде не очень хорошо. Но если хотим перенести на новую строку сами, придется вмешиваться.
+            if(e.nativeEvent.ctrlKey){
+               e.target.value += '\n';
+               this._children.inputRender._inputHandler(e);
+            }
+         }
+
       }
 
    });
@@ -150,7 +155,7 @@ define('js!Controls/Input/Area', [
       return {
          value: '',
          trim: false,
-         selectOnClick: true,
+         selectOnClick: false,
          newLineKey: 'enter'
       };
    };
@@ -168,8 +173,8 @@ define('js!Controls/Input/Area', [
          tagStyle: types(String),
          newLineKey: types(String).oneOf([
           'enter',
-          'shiftEnter'
-          ])
+          'ctrlEnter'
+         ])
       };
    };
 

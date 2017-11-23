@@ -70,6 +70,7 @@ define('js!Controls/Input/Text',
 
       var _private = {
 
+         //Валидирует и подготавливает новое значение по splitValue
          prepareValue: function(splitValue) {
             var input = splitValue.input;
 
