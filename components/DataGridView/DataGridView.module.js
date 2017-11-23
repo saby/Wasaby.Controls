@@ -784,7 +784,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
       
       _updateHoveredColumnCells: function() {
-         if (this._hoveredColumn.columnIndex) {
+         if (this._hoveredColumn.columnIndex !== null) {
             var cells = [],
                 trs, cell;
    
