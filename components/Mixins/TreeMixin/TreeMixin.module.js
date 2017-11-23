@@ -1236,7 +1236,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          },
          _updateExpanderDisplay: function() {
             if (this._options.expanderDisplayMode === 'withChild') {
-               this._container.toggleClass('controls-TreeView__hideExpands', this._options._items &&
+               this._container.toggleClass('controls-TreeView__hideExpands',
                   !this._options._hasNodeWithChild(this._options._items, this._options._getHierarchyRelation(this._options)));
             }
          },
