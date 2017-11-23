@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.ButtonGroup', ['js!SBIS3.CONTROLS.ToolbarBase', 'css!SBIS3.CONTROLS.ButtonGroup'], function(ToolbarBase) {
+define('js!SBIS3.CONTROLS.ButtonGroup', ['js!SBIS3.CONTROLS.ToolbarBase', 'css!SBIS3.CONTROLS.ButtonGroup/ButtonGroup/ButtonGroup'], function(ToolbarBase) {
 
    'use strict';
 

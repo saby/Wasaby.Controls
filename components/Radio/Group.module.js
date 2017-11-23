@@ -3,11 +3,11 @@
  */
 
 define('js!SBIS3.CONTROLS.RadioGroup', ['js!SBIS3.CONTROLS.RadioGroupBase',
-      'tmpl!SBIS3.CONTROLS.RadioGroup',
-      'tmpl!SBIS3.CONTROLS.RadioGroup/resources/ItemTemplate',
+      'tmpl!SBIS3.CONTROLS.RadioGroup/Group/RadioGroup',
+      'tmpl!SBIS3.CONTROLS.RadioGroup/Group/resources/ItemTemplate',
       'js!SBIS3.CONTROLS.ITextValue',
       'js!SBIS3.CONTROLS.RadioButton',
-      'css!SBIS3.CONTROLS.RadioGroup'
+      'css!SBIS3.CONTROLS.RadioGroup/Group/RadioGroup'
       ],
 function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
 

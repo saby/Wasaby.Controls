@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "tmpl!SBIS3.CONTROLS.DropdownList/DropdownList/DropdownListItemContent",
    "tmpl!SBIS3.CONTROLS.DropdownList/DropdownList/DropdownListPicker",
    "i18n!SBIS3.CONTROLS.DropdownList",
-   'css!SBIS3.CONTROLS.DropdownList'
+   'css!SBIS3.CONTROLS.DropdownList/DropdownList/DropdownList'
 ],
 
    function (EventBus, IoC, constants, cMerge, cInstance, format, shallowClone, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {

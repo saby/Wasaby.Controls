@@ -10,7 +10,7 @@ define(
       'js!SBIS3.CONTROLS.DateRangeBigChoose',
       'js!SBIS3.CONTROLS.TimePicker',
       'tmpl!SBIS3.CONTROLS.DatePicker/Picker/DatePicker',
-      'tmpl!SBIS3.CONTROLS.DateBox/DateBox/DateBox',
+      'tmpl!SBIS3.CONTROLS.DateBox/Box/DateBox',
       'tmpl!SBIS3.CONTROLS.DatePicker/Picker/elementPickerContent',
       'js!SBIS3.CONTROLS.Utils.IsChildControl',
       "Core/IoC",
@@ -18,7 +18,7 @@ define(
       'js!SBIS3.CONTROLS.IconButton',
       'css!SBIS3.CONTROLS.DatePicker/Picker/DatePicker',
       'css!SBIS3.CONTROLS.FormattedTextBox/FormattedTextBox/FormattedTextBox',
-      'css!SBIS3.CONTROLS.DateBox/DateBox/DateBox'
+      'css!SBIS3.CONTROLS.DateBox/Box/DateBox'
    ],
    function (EventBus, DateBox, PickerMixin, DateRangeBigChoose, TimePicker, dotTplFn, dateBoxTpl, ElementPickerContent, isChildControl, IoC) {
 

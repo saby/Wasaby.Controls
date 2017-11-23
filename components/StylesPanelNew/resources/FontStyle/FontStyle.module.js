@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.FontStyle', [
    'js!SBIS3.CONTROLS.IconButton',
    'js!WSControls/Buttons/ToggleButton',
    'js!SBIS3.CONTROLS.ComboBox',
-   'css!SBIS3.CONTROLS.ToggleButton/resources/ToggleButton__square'
+   'css!SBIS3.CONTROLS.ToggleButton/ToggleButton/resources/ToggleButton__square'
 ], function(CompoundControl, dotTplFn) {
 
    'use strict';

@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.OperationsPanel', [
    'js!SBIS3.CORE.CompoundControl',
-   'tmpl!SBIS3.CONTROLS.OperationsPanel',
+   'tmpl!SBIS3.CONTROLS.OperationsPanel/OperationsPanel/OperationsPanel',
    'js!SBIS3.CONTROLS.ItemsControlMixin',
    'Core/core-instance',
    'tmpl!SBIS3.CONTROLS.OperationsPanel/OperationsPanel/resources/ItemTemplate',

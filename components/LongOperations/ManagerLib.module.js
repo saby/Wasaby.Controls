@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
       'js!SBIS3.CONTROLS.LongOperations.Tools.Bunch',
       'js!SBIS3.CONTROLS.LongOperations.Tools.CallsPool',
       'js!SBIS3.CONTROLS.LongOperations.Tools.TabCalls',
-      'js!SBIS3.CONTROLS.LongOperationsList/resources/model'
+      'js!SBIS3.CONTROLS.LongOperationsList/List/resources/model'
    ],
 
    function (Chain, RecordSet, DataSet, LongOperationsConst, LongOperationEntry, LongOperationHistoryItem, LongOperationsBunch, LongOperationsCallsPool, LongOperationsTabCalls, Model) {

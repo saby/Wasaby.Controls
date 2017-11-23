@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.CommandsButton', [
    'js!WSControls/Buttons/MenuButton',
    'css!SBIS3.CONTROLS.CommandsButton',
-   'css!SBIS3.CONTROLS.IconButton'
+   'css!SBIS3.CONTROLS.IconButton/IconButton/IconButton'
 ], function(MenuIcon){
 
    'use strict';

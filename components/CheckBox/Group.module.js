@@ -5,10 +5,10 @@
 define('js!SBIS3.CONTROLS.CheckBoxGroup',
    [
       'js!SBIS3.CONTROLS.CheckBoxGroupBase',
-      'tmpl!SBIS3.CONTROLS.CheckBoxGroup',
-      'tmpl!SBIS3.CONTROLS.CheckBoxGroup/resources/ItemTemplate',
+      'tmpl!SBIS3.CONTROLS.CheckBoxGroup/Group/CheckBoxGroup',
+      'tmpl!SBIS3.CONTROLS.CheckBoxGroup/Group/resources/ItemTemplate',
       'js!SBIS3.CONTROLS.CheckBox',
-      'css!SBIS3.CONTROLS.CheckBoxGroup'
+      'css!SBIS3.CONTROLS.CheckBoxGroup/Group/CheckBoxGroup'
    ],
    function(CheckBoxGroupBase, dotTplFn, ItemTemplate) {
 

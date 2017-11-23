@@ -8,13 +8,13 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea', [
    'Core/CommandDispatcher',
    'js!SBIS3.CONTROLS.ItemsMoveController',
    'WS.Data/Collection/RecordSet',
-   'tmpl!SBIS3.CONTROLS.ColumnsEditorArea',
-   'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/itemContentTpl',
+   'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/ColumnsEditorArea/ColumnsEditorArea',
+   'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/ColumnsEditorArea/resources/itemContentTpl',
    'js!SBIS3.CONTROLS.Button',
    'js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.CheckBoxGroup',
-   'css!SBIS3.CONTROLS.ColumnsEditorArea',
-   'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/groupTpl',
+   'css!SBIS3.CONTROLS.ColumnsEditorArea/ColumnsEditorArea/ColumnsEditorArea',
+   'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/ColumnsEditorArea/resources/groupTpl',
    'js!SBIS3.CONTROLS.ScrollContainer'
  ],
    function(CompoundControl, ColumnsEditorUtils, CommandDispatcher, ItemsMoveController, RecordSet, dotTplFn, ItemContentTpl) {

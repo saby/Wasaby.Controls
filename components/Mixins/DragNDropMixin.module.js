@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
     "js!SBIS3.CONTROLS.DragObject",
     "WS.Data/Di",
     "Core/core-instance",
-    'css!SBIS3.CONTROLS.DragNDropMixin'
+    'css!SBIS3.CONTROLS.DragNDropMixin/DragAndDropMixin/DragNDropMixin'
 ], function ( EventBus,DragObject, Di, cInstance) {
     'use strict';
     /**

@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
    'Core/core-instance',
    'js!SBIS3.CONTROLS.DragEntity.Row',
    'js!SBIS3.CONTROLS.DragEntity.List',
-   'css!SBIS3.CONTROLS.ListView.DragMove'
+   'css!SBIS3.CONTROLS.ListView.DragMove/DragMove/DragMove'
 ], function (Abstract, DragObject, Di, cInstance) {
    /**
     * Реализация перемещения dragndrop'ом у списочных контролов

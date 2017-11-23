@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.FilterPanelBoolean', [
    'tmpl!SBIS3.CONTROLS.FilterPanelBoolean/Boolean/FilterPanelBoolean',
    'tmpl!SBIS3.CONTROLS.FilterPanelBoolean/Boolean/resources/ContentTemplate',
    'js!SBIS3.CONTROLS.CheckBox',
-   'css!SBIS3.CONTROLS.FilterPanelBoolean'
+   'css!SBIS3.CONTROLS.FilterPanelBoolean/Boolean/FilterPanelBoolean'
 ], function (CompoundControl, IFilterItem, dotTplFn, ContentTemplate) {
 
 var

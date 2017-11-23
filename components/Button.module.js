@@ -3,10 +3,9 @@ define('js!SBIS3.CONTROLS.Button',
       'Core/Control',
       'is!compatibleLayer?js!SBIS3.CONTROLS.Button/Button.compatible',
       'tmpl!SBIS3.CONTROLS.Button/Button/Button',
-      'is',
       'is!compatibleLayer?js!SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor',
       'is!compatibleLayer?js!SBIS3.CORE.Control/ControlGoodCode',
-      'css!SBIS3.CONTROLS.Button',
+      'css!SBIS3.CONTROLS.Button/Button/Button',
       'css!WSControls/Buttons/resources/ButtonBase'
          ],
 

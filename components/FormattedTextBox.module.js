@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.FormattedTextBox',
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'tmpl!SBIS3.CONTROLS.FormattedTextBox/FormattedTextBox/FormattedTextBox',
       'css!SBIS3.CONTROLS.FormattedTextBox/FormattedTextBox/FormattedTextBox',
-      'css!SBIS3.CONTROLS.TextBox/TextBox/TextBox'
+      'css!SBIS3.CONTROLS.TextBox/Box/TextBox'
    ],
    function (FormattedTextBoxBase, dotTplFn) {
 
