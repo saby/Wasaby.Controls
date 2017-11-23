@@ -410,7 +410,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       var
          hasNodeWithChild = false,
          idx = 0,
-         itemsCount = items.getCount(),
+         itemsCount = items ? items.getCount() : 0,
          child, item;
       while (idx < itemsCount && !hasNodeWithChild) {
          item = items.at(idx);
