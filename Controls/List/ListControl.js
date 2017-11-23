@@ -140,34 +140,40 @@ define('js!Controls/List/ListControl', [
          }
       },
 
-      scrollWatcherConstants: {
-         topLoadTriggerClass: 'ws-ListControl__topLoadTrigger',
-         bottomLoadTriggerClass: 'ws-ListControl__bottomLoadTrigger',
-         topListTriggerClass: 'ws-ListControl__topListTrigger',
-         bottomListTriggerClass: 'ws-ListControl__bottomListTrigger'
-      },
-      createScrollWatcher: function(container, loadOffset, eventHandlers) {
+      createScrollWatcher: function(container, loadOffset) {
          var
+            self = this,
             children = container.children(),
             triggers = {},
-            scrollContainer = container.closest('.ws-scrolling-content');
+            eventHandlers = {
+               onLoadTriggerTop: function() {
+                  self._scrollLoadMore('up');
+               },
+               onLoadTriggerBottom: function() {
+                  self._scrollLoadMore('down');
+               },
+               onListTop: function() {
+               },
+               onListBottom: function() {
+               }
+            };
 
          // TODO: когда будет возможность получить дом-элемент по имени - переписать этот код
          for (var i = 0; i < children.length; i++) {
-            if (children[i].className === this.scrollWatcherConstants.topListTriggerClass) {
+            if (children[i].className === 'ws-ListControl__topListTrigger') {
                triggers.topListTrigger = children[i];
-            } else if (children[i].className === this.scrollWatcherConstants.bottomListTriggerClass) {
+            } else if (children[i].className === 'ws-ListControl__bottomListTrigger') {
                triggers.bottomListTrigger = children[i];
-            } else if (children[i].className === this.scrollWatcherConstants.topLoadTriggerClass) {
+            } else if (children[i].className === 'ws-ListControl__topLoadTrigger') {
                triggers.topLoadTrigger = children[i];
-            } else if (children[i].className === this.scrollWatcherConstants.bottomLoadTriggerClass) {
+            } else if (children[i].className === 'ws-ListControl__bottomLoadTrigger') {
                triggers.bottomLoadTrigger = children[i];
             }
          }
 
          return new ScrollWatcher ({
             triggers : triggers,
-            scrollContainer: scrollContainer,
+            scrollContainer: container.closest('.ws-scrolling-content')[0],
             loadOffset: loadOffset,
             eventHandlers: eventHandlers
          });
@@ -448,22 +454,8 @@ define('js!Controls/List/ListControl', [
 
          _afterMount: function() {
             ListView.superclass._afterMount.apply(this, arguments);
-            var
-               self = this,
-               eventHandlers = {
-                  onLoadTriggerTop: function() {
-                     self._scrollLoadMore('up');
-                  },
-                  onLoadTriggerBottom: function() {
-                     self._scrollLoadMore('down');
-                  },
-                  onListTop: function() {
-                  },
-                  onListBottom: function() {
-                  }
-               };
 
-            this._scrollWatcher = _private.createScrollWatcher(this._container, this._loadOffset, eventHandlers);
+            this._scrollWatcher = _private.createScrollWatcher.call(this, this._container, this._loadOffset);
          },
 
          _beforeUpdate: function(newOptions) {
