@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
           $protected: {
              _options: {
                 /**
-                 * @cfg {Array.<String>} Устанавливает набор выбранных элементов.
+                 * @cfg {Array.<WS.Data/Entity/Record>} Устанавливает набор выбранных элементов.
                  */
                 selectedItems: null,
                 /**

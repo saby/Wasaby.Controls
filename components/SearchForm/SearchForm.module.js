@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
          var self = this;
 
          this.subscribe('onTextChange', function(e, text) {
-            $('.js-controls-SearchForm__reset', self.getContainer()).toggleClass('ws-invisible', text == '');
+            $('.js-controls-SearchForm__reset', self.getContainer()).toggleClass('ws-hidden', text === '');
          });
 
          this.getContainer().on('click', '.js-controls-SearchForm__reset', function() {

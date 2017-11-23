@@ -193,15 +193,10 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
              historyRS;
 
          beforeLoadHistoryResult = this._notify('onBeforeLoadHistory', queryFilter);
-
-         //Если в нашей истории нет данных, не делаем лишний запрос
-         if (this._historyController.getCount()) {
-            this._historyDeferred = this.getList().getDataSource().query(query);
-            pd.push(this._historyDeferred);
-         }
-         else {
-            pd.push((new Deferred).callback());
-         }
+   
+         /* Необходимо сделать запрос, аже если истории для выбора нет, т.к. на бл могут дополнять выборку */
+         this._historyDeferred = this.getList().getDataSource().query(query);
+         pd.push(this._historyDeferred);
 
          if (cInstance.instanceOfModule(beforeLoadHistoryResult, 'Core/Deferred')) {
             pd.push(beforeLoadHistoryResult);

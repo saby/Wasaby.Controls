@@ -15,25 +15,12 @@
    .user-select();
    overflow: hidden;
    white-space: nowrap;
-   line-height: @controls-OperationsPanel-height;
    background-color: @controls-OperationsPanel-bg;
    height: @controls-OperationsPanel-height;
    position: relative;
    width: 100%;
    .flexbox();
    .align-items(center);
-
-
-   .controls-operationsPanel__actions {
-      .inline-flexbox();
-      .align-items(@controls-OperationsPanel-actions-align);
-      overflow: hidden;
-
-      .controls-operationsPanel__action {
-         min-height: inherit;
-      }
-   }
-
    .controls-operationsPanel-modes();
    .controls-operationsPanel__actionType-mass,
    .controls-operationsPanel__actionType-selection,
@@ -52,6 +39,14 @@
          }
       }
 
+   }
+}
+.controls-operationsPanel__actions {
+   .inline-flexbox();
+   .align-items(center);
+   overflow: hidden;
+   .controls-operationsPanel__action {
+      min-height: inherit;
    }
 }
 .controls-operationsPanel__itemsMenu_picker {

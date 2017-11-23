@@ -80,7 +80,14 @@
      }
    }
 }
-
+.ws-is-desktop-safari, .ws-is-mobile-safari {
+  .controls-IconButton {
+    &.controls-IconButton__round-border, &.controls-IconButton__round-border-24, &.controls-IconButton__round-border-32 {
+      // https://stackoverflow.com/questions/17202128/rounded-cornes-border-radius-safari-issue
+      -webkit-transform: translateZ(0);
+    }
+  }
+}
 .ws-is-desktop-platform {
   .controls-IconButton:not(.ws-disabled):not(.controls-Click__active) {
     &:hover {
