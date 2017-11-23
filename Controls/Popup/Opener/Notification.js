@@ -18,10 +18,6 @@ define('js!Controls/Popup/Opener/Notification',
          _controlName: 'Controls/Popup/Opener/Notification',
          iWantVDOM: true,
 
-         constructor: function (cfg) {
-            Notification.superclass.constructor.apply(this, arguments);
-         },
-
          execute: function () {
             var strategy = new Strategy();
             Manager.show(this._options.popupOptions, this, strategy);

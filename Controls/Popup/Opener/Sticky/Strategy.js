@@ -15,15 +15,19 @@ define('js!Controls/Popup/Opener/Sticky/Strategy',
        * @category Popup
        */
       var Strategy = Abstract.extend([IStrategy], {
-         constructor: function (cfg) {
+         constructor: function (cfg, target) {
             Strategy.superclass.constructor.apply(this, arguments);
             this._options = cfg;
+            this._target = target;
          },
 
          getPosition: function (popup) {
+            if( !this._target ){
+               this._target = $('body');
+            }
             var
                container = popup.getContainer(),
-               targetCoords = TargetCoords.get(this._options.target, this._options.corner),
+               targetCoords = TargetCoords.get(this._target, this._options.corner),
                position = {};
             // вертикальное выравнивание
             if( this._options.verticalAlign ){

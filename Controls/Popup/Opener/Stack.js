@@ -2,9 +2,10 @@ define('js!Controls/Popup/Opener/Stack',
    [
       'Core/Control',
       'js!Controls/Popup/Manager',
-      'js!Controls/Popup/Opener/Stack/Strategy'
+      'js!Controls/Popup/Opener/Stack/Strategy',
+      'Core/core-merge'
    ],
-   function (Control, Manager, Strategy) {
+   function (Control, Manager, Strategy, cMerge) {
 
       /**
        * Действие открытия прилипающего окна
@@ -18,13 +19,11 @@ define('js!Controls/Popup/Opener/Stack',
          _controlName: 'Controls/Popup/Opener/Stack',
          iWantVDOM: true,
 
-         constructor: function (cfg) {
-            Dialog.superclass.constructor.apply(this, arguments);
-         },
-
-         execute: function () {
-            var strategy = new Strategy();
-            Manager.show(this._options.popupOptions, this, strategy);
+         execute: function (config, opener) {
+            var cfg = config || {};
+            cMerge(cfg, this._options);
+            var strategy = new Strategy(cfg.position, opener);
+            Manager.show(cfg.popupOptions, this, strategy);
          }
       });
 

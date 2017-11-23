@@ -19,16 +19,11 @@ define('js!Controls/Popup/Opener/Sticky',
          _controlName: 'Controls/Popup/Opener/Sticky',
          iWantVDOM: true,
 
-         constructor: function (cfg) {
-            Dialog.superclass.constructor.apply(this, arguments);
-         },
-
-         execute: function (config) {
-            cMerge(this._options, config);
-            var strategy = new Strategy({
-               target: this._options.target
-            });
-            Manager.show(this._options.popupOptions, this, strategy);
+         execute: function (config, target) {
+            var cfg = config || {};
+            cMerge(cfg, this._options);
+            var strategy = new Strategy(cfg.position, target);
+            Manager.show(cfg.popupOptions, this, strategy);
          }
       });
 

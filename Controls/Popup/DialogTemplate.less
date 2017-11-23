@@ -1,17 +1,28 @@
 .ws-DialogTemplate{
-   width: 100%;
+   background-color: #FFFFFF;
+}
+
+.ws-DialogTemplate__top-area{
+   display: flex;
+   height: 44px;
+   padding-right: 48px;
+   /* удалить */
+   background-color: #F4F4F4;
+}
+
+.ws-DialogTemplate__content-area{
+   display: flex;
+   padding-bottom: 12px;
 }
 
 .ws-DialogTemplate__close_button{
-   right: 0;
    position: absolute;
    top: 10px;
+   right: 0;
    width: 36px;
    height: 24px;
    cursor: pointer;
-   background: url('../../sbis3-ws/ws/lib/Control/FloatArea/resources/images/areaCloseButton.png') 0 -1px;
-   z-index: 100;
-   margin-top: 0;
+   background: url('resources/areaCloseButton.png') 0 -1px;
 
    &:hover{
       background-position: 0 -25px;
@@ -27,14 +38,8 @@
    overflow: hidden;
    box-sizing: border-box;
    white-space: nowrap;
-   padding-left: 12px;
-   max-width: calc(100% - 40px);
-   line-height: 40px;
-}
-
-.ws-DialogTemplate__top-area{
    margin-left: 12px;
-   height: 44px;
-   display: flex;
-   margin-right: 48px;
+   max-width: calc(100% - 48px);
+   line-height: 44px;
+
 }

@@ -2,9 +2,10 @@ define('js!Controls/Popup/Manager/Container',
    [
       'Core/Control',
       'Core/CommandDispatcher',
-      'tmpl!Controls/Popup/Manager/Container'
+      'tmpl!Controls/Popup/Manager/Container',
+      'WS.Data/Collection/List'
    ],
-   function (Control, CommandDispatcher, template) {
+   function (Control, CommandDispatcher, template, List) {
       'use strict';
       /**
        * Контенер для отображения окон
@@ -22,14 +23,24 @@ define('js!Controls/Popup/Manager/Container',
 
          constructor: function (cfg){
             Container.superclass.constructor.call(this, cfg);
-            this._publish('onClosePopup');
+            this._publish('onClickPopup', 'onFocusPopup');
+            CommandDispatcher.declareCommand(this, 'focusPopup', this.focusPopup);
             CommandDispatcher.declareCommand(this, 'closePopup', this.closePopup);
          },
 
          _beforeMount: function(options){
-            if( !options.popupItems ){
-               options.popupItems = [];
+            if( !options._popupItems ){
+               options._popupItems = new List();
             }
+         },
+
+         /**
+          * @event Controls/Popup/Manager/Container#focusPopup Происходит при приходе/уходе фокуса.
+          * @param {Object} popup Инстанс попапа.
+          * @param {Object} isFocused Признак пришел или ушел фокус.
+          */
+         focusPopup: function(popup, isFocused){
+            this._notify('onFocusPopup', popup, isFocused);
          },
 
          /**
@@ -37,7 +48,7 @@ define('js!Controls/Popup/Manager/Container',
           * @param {Object} popup Инстанс попапа.
           */
          closePopup: function(popup){
-            this._notify('onClosePopup', popup.getId());
+            this._notify('onClosePopup', popup);
          },
 
          /**
@@ -46,7 +57,7 @@ define('js!Controls/Popup/Manager/Container',
           * @param popupItems новый набор окон
           */
          setPopupItems: function (popupItems) {
-            this._options.popupItems = popupItems;
+            this._options._popupItems = popupItems;
             this._forceUpdate();
          }
       });

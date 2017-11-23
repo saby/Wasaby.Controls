@@ -2,11 +2,13 @@ define('js!Controls/Popup/Manager',
    [
       'Core/Control',
       'Core/core-merge',
+      'Core/core-instance',
       'Core/helpers/random-helpers',
-      'js!Controls/Popup/Manager/Container'
+      'js!Controls/Popup/Manager/Container',
+      'WS.Data/Collection/List'
    ],
 
-   function (Control, coreMerge, random, Container) {
+   function (Control, CoreMerge, CoreInstance, Random, Container, List) {
       'use strict';
       /**
        * Менеджер окон
@@ -25,41 +27,60 @@ define('js!Controls/Popup/Manager',
           * @param strategy стратегия позиционирования всплывающего окна
           */
          show: function (popupOptions, opener, strategy) {
-            var cfg = {};
-            cfg.id = random.randomId();
+            if( !strategy || !CoreInstance.instanceOfMixin(strategy, 'Controls/Popup/interface/IStrategy') ){
+               throw new Error('Strategy is not defined');
+            }
+            var element = {};
+            element.id = Random.randomId();
             popupOptions.strategy = strategy;
-            cfg.popupOptions = popupOptions;
-            Manager.popupItems.push(cfg);
-            Manager.popupContainer.setPopupItems(Manager.popupItems);
+            element.popupOptions = popupOptions;
+            Manager._popupItems.add(element);
+            Container.setPopupItems(Manager._popupItems);
          },
-
-         remove: function(id){
-            Manager.popupItems = Manager.popupItems.filter(function(element) {
-               return element.id !== id;
-            });
-            Manager.popupContainer.setPopupItems(Manager.popupItems);
+         /**
+          * Вытолкнуть окно наверх
+          * @function Controls/Popup/Manager#pushUp
+          * @param popup инстанс попапа
+          */
+         pushUp: function(popup){
+            if( popup.isStack() ){
+               var
+                  index = Manager._popupItems.getIndexByValue('id', popup.getId());
+               if( index > -1 ){
+                  Manager._popupItems.move(index, Manager._popupItems.getCount() - 1);
+                  Container.setPopupItems(Manager._popupItems);
+               }
+            }
          },
-
-         _addToStack: function(){
-
-         },
-
-         _removeFromStack: function(){
-
-         },
-
-         getCurrentZIndex: function(){
-            return Manager._currentZIndex;
+         /**
+          * Удалить окно
+          * @function Controls/Popup/Manager#remove
+          * @param popup инстанс попапа
+          */
+         remove: function(popup){
+            var
+               id = popup.getId(),
+               index = Manager._popupItems.getIndexByValue('id', id);
+            if( index > -1 ){
+               Manager._popupItems.removeAt(index);
+               Container.setPopupItems(Manager._popupItems);
+            }
          }
       };
 
-      Manager.popupItems = [];
-      Manager._popupStack = [];
-      Manager._currentZIndex = 1000;
-
-      Manager.popupContainer = Container;
-      Manager.popupContainer.subscribe('onClosePopup', function(event, popupId){
-         Manager.remove(popupId);
+      Manager._popupItems = new List();
+      Container.subscribe('onClosePopup', function(event, popup){
+         Manager.remove(popup);
+      });
+      Container.subscribe('onFocusPopup', function(event, popup, focusIn){
+         if( focusIn ){
+            Manager.pushUp(popup);
+         }
+         else{
+            if( popup._autoHide ){
+               Manager.remove(popup);
+            }
+         }
       });
 
       return Manager;
