@@ -115,7 +115,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                }.bind(self);
                self._styleBox.once('onPickerOpen', self._pickerOpenHandler);
             }
-
          },
 
          $constructor: function() {
