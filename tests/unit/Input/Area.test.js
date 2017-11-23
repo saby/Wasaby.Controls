@@ -3,16 +3,21 @@ define([
 ], function(Area){
    describe('Controls.Input.Area', function () {
 
-      $('<div id="areaContainer"></div>').appendTo('#mocha');
+      var area;
 
-      var createControl = function(cfg){
-         return Area.createControl(Area, cfg || {}, $('<div></div>').appendTo('#areaContainer'));
+      var create = function(cfg){
+         area = Area.createControl(Area, cfg || {}, $('<div></div>').appendTo('#mocha'));
       };
 
       describe('Options', function () {
 
+         afterEach(function(){
+            area.destroy();
+         });
+
          it('constraint', function () {
-            var area = createControl({
+
+            create({
                constraint: '[0-9]'
             });
 
@@ -31,7 +36,8 @@ define([
          });
 
          it('maxLength', function () {
-            var area = createControl({
+
+            create({
                maxLength: '1'
             });
 
@@ -46,8 +52,6 @@ define([
                input: '2',
                after: ''
             }).value, '1');
-
-            $('#areaContainer').remove();
 
          });
 
