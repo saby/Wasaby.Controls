@@ -1,7 +1,6 @@
 .text-overflow() {
   overflow: hidden;
   text-overflow: ellipsis;
-  -ms-text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -583,6 +582,16 @@
   border: none;
   outline: none;
   background: transparent;
+}
+
+.generate-height(@className, @i: 1) when (@i =< 10) {
+  .@{className}_maxheight-@{i} {
+    max-height : @i * @default-line-height;
+  }
+  .@{className}_minheight-@{i} {
+    min-height: @i * @default-line-height;
+  }
+  .generate-height(@className, @i + 1);
 }
 
 //---------------Имитация цикла for---------------//

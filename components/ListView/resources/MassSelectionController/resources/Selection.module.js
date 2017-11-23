@@ -17,7 +17,6 @@ define('js!SBIS3.CONTROLS.Selection', [
          this._options = options;
          this._options.selectedKeys = options.selectedKeys || [];
          this._options.excludedKeys = options.excludedKeys || [];
-         this._idProperty = options.projection.getIdProperty();
          Selection.superclass.constructor.apply(this, arguments);
       },
 
@@ -60,6 +59,7 @@ define('js!SBIS3.CONTROLS.Selection', [
 
       setProjection: function(projection) {
          this._options.projection = projection;
+         this._idProperty = projection.getIdProperty();
       },
 
       getSelection: function() {

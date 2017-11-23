@@ -2,7 +2,8 @@
 define(
    ['js!SBIS3.CONTROLS.Selection',
     'WS.Data/Collection/RecordSet',
-    'WS.Data/Display/Display'
+    'WS.Data/Display/Display',
+    'WS.Data/Display/Collection'
    ],
    function (Selection, RecordSet, Projection) {
       'use strict';
