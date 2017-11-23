@@ -10,7 +10,7 @@
          & > .ws-block__group {
             margin-left: @margin-row;
             margin-right: @margin-row;
-            &:first-of-type:not(.ws-block_topOffset) {
+            &:first-of-type {
                margin-top: @margin-row;
             }
             &:last-of-type {
@@ -23,7 +23,7 @@
          .box-sizing();
       }
       &_topOffset {
-         border-top: @margin-block solid @color-between-blocks;
+         border-top: @spacing-between-blocks solid @color-between-blocks;
       }
       &_rebuild {
          .flex-wrap(wrap);
