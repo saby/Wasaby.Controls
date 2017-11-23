@@ -4,12 +4,12 @@
 
 define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
    'js!SBIS3.CONTROLS.RichEditorToolbarBase',
-   'tmpl!SBIS3.CONTROLS.RichEditorRoundToolbar',
-   'js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
+   'tmpl!SBIS3.CONTROLS.RichEditorRoundToolbar/RoundToolbar/RichEditorRoundToolbar',
+   'js!SBIS3.CONTROLS.RichEditorRoundToolbar/RoundToolbar/resources/config',
    'WS.Data/Di',
    'js!SBIS3.CONTROLS.MenuIcon',
    'js!SBIS3.CONTROLS.IconButton',
-   'css!SBIS3.CONTROLS.RichEditorRoundToolbar',
+   'css!SBIS3.CONTROLS.RichEditorRoundToolbar/RoundToolbar/RichEditorRoundToolbar',
    'js!SBIS3.CONTROLS.IconButton'
 ], function(RichEditorToolbarBase, dotTplFn, defaultConfig, Di) {
 

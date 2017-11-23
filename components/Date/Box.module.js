@@ -8,13 +8,13 @@ define(
       'Core/constants',
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
-      'tmpl!SBIS3.CONTROLS.DateBox/DateBox/DateBox',
+      'tmpl!SBIS3.CONTROLS.DateBox/Box/DateBox',
       'tmpl!SBIS3.CONTROLS.FormattedTextBox/FormattedTextBox/FormattedTextBox',
       'js!SBIS3.CONTROLS.ControlsValidators',
       // Разобраться с общими стилями https://inside.tensor.ru/opendoc.html?guid=37032b47-6830-4b96-a4f3-727ea938bf58&des
       'css!SBIS3.CONTROLS.TextBox/TextBox/TextBox',
       'css!SBIS3.CONTROLS.FormattedTextBox/FormattedTextBox/FormattedTextBox',
-      'css!SBIS3.CONTROLS.DateBox/DateBox/DateBox'
+      'css!SBIS3.CONTROLS.DateBox/Box/DateBox'
       // 'i18n!SBIS3.CONTROLS.DateBox'
    ],
    function (IoC, constants, FormattedTextBoxBase, DateUtil, dotTplFn, FormattedTextBoxTpl, ControlsValidators) {

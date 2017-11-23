@@ -1,14 +1,14 @@
 define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
    'js!SBIS3.CORE.CompoundControl',
-   'tmpl!SBIS3.CONTROLS.DateRangeSliderBase/DateRangeSliderBase/DateRangeSliderBase',
-   'tmpl!SBIS3.CONTROLS.DateRangeSliderBase/DateRangeSliderBase/resources/LockIcon',
+   'tmpl!SBIS3.CONTROLS.DateRangeSliderBase/RangeSliderBase/DateRangeSliderBase',
+   'tmpl!SBIS3.CONTROLS.DateRangeSliderBase/RangeSliderBase/resources/LockIcon',
    'js!SBIS3.CONTROLS.RangeMixin',
    'js!SBIS3.CONTROLS.DateRangeMixin',
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.FormWidgetMixin',
    'Core/helpers/date-helpers',
    'js!SBIS3.CONTROLS.Link',
-   'css!SBIS3.CONTROLS.DateRangeSliderBase'
+   'css!SBIS3.CONTROLS.DateRangeSliderBase/RangeSliderBase/DateRangeSliderBase'
 ], function (CompoundControl, dotTplFn, lockIconTemplate, RangeMixin, DateRangeMixin, PickerMixin, FormWidgetMixin, dateHelpers) {
    'use strict';
 

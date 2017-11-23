@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
    "Core/constants",
    "js!SBIS3.CORE.CompoundControl",
-   "tmpl!SBIS3.CONTROLS.DateRangeBigChoose/DateRangeBigChoose/DateRangeBigChoose",
+   "tmpl!SBIS3.CONTROLS.DateRangeBigChoose/RangeBigChoose/DateRangeBigChoose",
    "js!SBIS3.CONTROLS.RangeMixin",
    "js!SBIS3.CONTROLS.RangeSelectableViewMixin",
    "js!SBIS3.CONTROLS.Utils.DateUtil",
@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
    "js!SBIS3.CONTROLS.DateRangeBigChoose.Validators",
    "browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers",
    'i18n!SBIS3.CONTROLS.DateRangeBigChoose',
-   'css!SBIS3.CONTROLS.DateRangeBigChoose/DateRangeBigChoose/DateRangeBigChoose'
+   'css!SBIS3.CONTROLS.DateRangeBigChoose/RangeBigChoose/DateRangeBigChoose'
 
 ], function ( constants,CompoundControl, dotTplFn, RangeMixin, RangeSelectableViewMixin, DateUtil, eHelpers) {
    'use strict';

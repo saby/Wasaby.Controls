@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/constants",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.TextBoxBase",
-   "tmpl!SBIS3.CONTROLS.RichTextArea",
+   "tmpl!SBIS3.CONTROLS.RichTextArea/RichTextArea/RichTextArea",
    "js!SBIS3.CONTROLS.Utils.RichTextAreaUtil",
    "js!SBIS3.CONTROLS.RichTextArea/resources/smiles",
    'WS.Data/Di',
@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    'Core/EventBus',
    "css!SBIS3.CORE.RichContentStyles",
    "i18n!SBIS3.CONTROLS.RichEditor",
-   'css!SBIS3.CONTROLS.RichTextArea'
+   'css!SBIS3.CONTROLS.RichTextArea/RichTextArea/RichTextArea'
 ], function (
       UserConfig,
       cPathResolver,

@@ -2,7 +2,7 @@
 define('js!SBIS3.CONTROLS.DateRange', [
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.PickerMixin',
-   'tmpl!SBIS3.CONTROLS.DateRange/DateRange/DateRange',
+   'tmpl!SBIS3.CONTROLS.DateRange/Range/DateRange',
    'js!SBIS3.CONTROLS.FormWidgetMixin',
    'js!SBIS3.CONTROLS.RangeMixin',
    'js!SBIS3.CONTROLS.DateRangeMixin',
@@ -11,9 +11,9 @@ define('js!SBIS3.CONTROLS.DateRange', [
    'i18n!SBIS3.CONTROLS.DateRange',
    'js!SBIS3.CONTROLS.DateBox',
    'js!SBIS3.CONTROLS.IconButton',
-   'css!SBIS3.CONTROLS.DateRange/DateRange/DateRange',
+   'css!SBIS3.CONTROLS.DateRange/Range/DateRange',
    'css!SBIS3.CONTROLS.FormattedTextBox/FormattedTextBox/FormattedTextBox',
-   'css!SBIS3.CONTROLS.DateBox/DateBox/DateBox'
+   'css!SBIS3.CONTROLS.DateBox/Box/DateBox'
 ], function (CompoundControl, PickerMixin, dotTplFn, FormWidgetMixin, RangeMixin, DateRangeMixin, DateRangeBigChoose, ControlsValidators) {
    'use strict';
    /**

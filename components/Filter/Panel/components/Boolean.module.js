@@ -1,9 +1,11 @@
 define('js!SBIS3.CONTROLS.FilterPanelBoolean', [
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.IFilterItem',
-   'tmpl!SBIS3.CONTROLS.FilterPanelBoolean',
-   'tmpl!SBIS3.CONTROLS.FilterPanelBoolean/resources/ContentTemplate',
-   'js!SBIS3.CONTROLS.CheckBox', 'css!SBIS3.CONTROLS.FilterPanelBoolean'], function (CompoundControl, IFilterItem, dotTplFn, ContentTemplate) {
+   'tmpl!SBIS3.CONTROLS.FilterPanelBoolean/Boolean/FilterPanelBoolean',
+   'tmpl!SBIS3.CONTROLS.FilterPanelBoolean/Boolean/resources/ContentTemplate',
+   'js!SBIS3.CONTROLS.CheckBox',
+   'css!SBIS3.CONTROLS.FilterPanelBoolean'
+], function (CompoundControl, IFilterItem, dotTplFn, ContentTemplate) {
 
 var
     /**

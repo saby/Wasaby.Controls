@@ -5,7 +5,7 @@
 define('js!SBIS3.CONTROLS.Menu', [
    "Core/CommandDispatcher",
    'js!SBIS3.CONTROLS.ButtonGroupBaseDS',
-   'tmpl!SBIS3.CONTROLS.Menu',
+   'tmpl!SBIS3.CONTROLS.Menu/Menu/Menu',
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'js!SBIS3.CONTROLS.TreeMixinDS',
    'js!SBIS3.CONTROLS.FloatArea',
@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.Menu', [
    'Core/helpers/String/escapeHtml',
    'Core/IoC',
    'Core/core-merge',
-   'css!SBIS3.CONTROLS.Menu'
+   'css!SBIS3.CONTROLS.Menu/Menu/Menu'
 
 ], function(CommandDispatcher, ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, MenuItem, Hierarchy, CommandsSeparator, mkpHelpers, Sanitize, escapeHtml, IoC, cMerge) {
 

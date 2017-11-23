@@ -2,7 +2,7 @@
 define('js!SBIS3.CONTROLS.DateRangeBig', [
    'js!SBIS3.CONTROLS.DateRange',
    'js!SBIS3.CONTROLS.DateRangeBigChoose',
-   'css!SBIS3.CONTROLS.DateRangeBig/DateRangeBig/DateRangeBig'
+   'css!SBIS3.CONTROLS.DateRangeBig/RangeBig/DateRangeBig'
 ], function (DateRange, DateRangeBigChoose) {
    'use strict';
    /**

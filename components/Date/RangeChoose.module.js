@@ -3,14 +3,14 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
    "Core/Deferred",
    "Core/IoC",
    "js!SBIS3.CORE.CompoundControl",
-   "tmpl!SBIS3.CONTROLS.DateRangeChoose/DateRangeChoose/DateRangeChoose",
+   "tmpl!SBIS3.CONTROLS.DateRangeChoose/RangeChoose/DateRangeChoose",
    "js!SBIS3.CONTROLS.RangeMixin",
    "js!SBIS3.CONTROLS.DateRangeMixin",
    "Core/helpers/event-helpers",
    "Core/helpers/date-helpers",
    "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CONTROLS.Link",
-   'css!SBIS3.CONTROLS.DateRangeChoose/DateRangeChoose/DateRangeChoose'
+   'css!SBIS3.CONTROLS.DateRangeChoose/RangeChoose/DateRangeChoose'
 ], function (constants, Deferred, IoC, CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, eHelpers, dateHelpers) {
    'use strict';
     /**

@@ -5,16 +5,16 @@
 define('js!SBIS3.CONTROLS.RichEditorToolbar', [
    "Core/core-merge",
    "js!SBIS3.CONTROLS.RichEditorToolbarBase",
-   "tmpl!SBIS3.CONTROLS.RichEditorToolbar",
-   "js!SBIS3.CONTROLS.RichEditorToolbar/resources/config",
+   "tmpl!SBIS3.CONTROLS.RichEditorToolbar/Toolbar/RichEditorToolbar",
+   "js!SBIS3.CONTROLS.RichEditorToolbar/Toolbar/resources/config",
    'js!SBIS3.CONTROLS.RichEditor.ImagePanel',
    "js!WSControls/Buttons/Button",
    "js!WSControls/Buttons/ToggleButton",
    'js!SBIS3.CONTROLS.MenuButton',
    'js!SBIS3.CONTROLS.ComboBox',
-   'css!SBIS3.CONTROLS.RichEditorToolbar',
+   'css!SBIS3.CONTROLS.RichEditorToolbar/Toolbar/RichEditorToolbar',
    'css!SBIS3.CONTROLS.ToggleButton/resources/ToggleButton__square',
-   'css!SBIS3.CONTROLS.MenuIcon'
+   'css!SBIS3.CONTROLS.MenuIcon/MenuIcon/MenuIcon'
 ], function( cMerge, RichEditorToolbarBase, dotTplFn, defaultConfig, ImagePanel) {
 
    'use strict';

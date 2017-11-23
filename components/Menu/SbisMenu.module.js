@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
     'WS.Data/Adapter/Sbis',
     'Core/helpers/Object/isEqual',
     'Core/core-clone',
-    'css!SBIS3.CONTROLS.SbisMenu'
+    'css!SBIS3.CONTROLS.SbisMenu/SbisMenu/SbisMenu'
 ], function (ContextMenu, SbisService, Chain, Model, RecordSet, SbisAdapter, isEqualObject, coreClone) {
 
     'use strict';

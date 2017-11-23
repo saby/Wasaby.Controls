@@ -2,9 +2,9 @@ define('js!SBIS3.CONTROLS.BackButton',
    [
     'js!SBIS3.CORE.CompoundControl',
     'Core/helpers/string-helpers',
-    'tmpl!SBIS3.CONTROLS.BackButton',
+    'tmpl!SBIS3.CONTROLS.BackButton/BackButton/BackButton',
     'js!SBIS3.CONTROLS.Link',
-    'css!SBIS3.CONTROLS.BackButton'
+    'css!SBIS3.CONTROLS.BackButton/BackButton/BackButton'
    ],
     function(CompoundControl, strHelpers, dotTpl) {
    'use strict';

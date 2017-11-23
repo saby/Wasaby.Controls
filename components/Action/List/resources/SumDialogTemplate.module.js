@@ -3,11 +3,11 @@
  */
 define('js!SBIS3.CONTROLS.SumDialogTemplate', [
    'js!SBIS3.CORE.CompoundControl',
-   'tmpl!SBIS3.CONTROLS.SumDialogTemplate',
+   'tmpl!SBIS3.CONTROLS.SumDialogTemplate/SumDialogTemplate/SumDialogTemplate',
    'Core/defaultRenders',
    'js!SBIS3.CONTROLS.Button',
    'i18n!SBIS3.CONTROLS.SumDialogTemplate',
-   'css!SBIS3.CONTROLS.SumDialogTemplate'
+   'css!SBIS3.CONTROLS.SumDialogTemplate/SumDialogTemplate/SumDialogTemplate'
 ], function(Control, dotTplFn, defaultRenders) {
 
    var SumDialogTemplate = Control.extend({

@@ -1,4 +1,8 @@
-define('js!SBIS3.CONTROLS.MenuLink', ['js!WSControls/Buttons/MenuButton', 'css!SBIS3.CONTROLS.Link', 'css!SBIS3.CONTROLS.MenuLink'], function(WSMenuButton) {
+define('js!SBIS3.CONTROLS.MenuLink', [
+   'js!WSControls/Buttons/MenuButton',
+   'css!SBIS3.CONTROLS.Link/Link/Link',
+   'css!SBIS3.CONTROLS.MenuLink/MenuLink/MenuLink'
+], function(WSMenuButton) {
 
    'use strict';
 

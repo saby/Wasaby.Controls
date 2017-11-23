@@ -1,4 +1,8 @@
-define('js!SBIS3.CONTROLS.MenuIcon', ['js!WSControls/Buttons/MenuButton', 'css!SBIS3.CONTROLS.IconButton', 'css!SBIS3.CONTROLS.MenuIcon'], function(WSMenuButton) {
+define('js!SBIS3.CONTROLS.MenuIcon', [
+   'js!WSControls/Buttons/MenuButton',
+   'css!SBIS3.CONTROLS.IconButton/IconButton/IconButton',
+   'css!SBIS3.CONTROLS.MenuIcon/MenuIcon/MenuIcon'
+], function(WSMenuButton) {
 
    'use strict';
 

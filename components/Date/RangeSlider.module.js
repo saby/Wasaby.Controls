@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
    'Core/helpers/date-helpers',
    'Core/IoC',
    'js!SBIS3.CONTROLS.Link',
-   'css!SBIS3.CONTROLS.DateRangeSlider/DateRangeSlider/DateRangeSlider'
+   'css!SBIS3.CONTROLS.DateRangeSlider/RangeSlider/DateRangeSlider'
 ], function (DateRangeSliderBase, DateRangeChoosePickerMixin, DateUtil, dateHelpers, IoC) {
    'use strict';
 
