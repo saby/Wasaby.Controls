@@ -410,7 +410,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       var
          hasNodeWithChild = false,
          idx = 0,
-         itemsCount = items ? items.getCount() : 0,
+         itemsCount = items.getCount(),
          child, item;
       while (idx < itemsCount && !hasNodeWithChild) {
          item = items.at(idx);
@@ -1097,7 +1097,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             parentFn(cfg);
             if (cfg.expanderDisplayMode === 'withChild') {
                cfg.preparedClasses += ' controls-TreeView__hideExpanderEmptyNodes';
-               if (!cfg._hasNodeWithChild(cfg._items, cfg._getHierarchyRelation(cfg))) {
+               if (cfg._items && !cfg._hasNodeWithChild(cfg._items, cfg._getHierarchyRelation(cfg))) {
                   cfg.preparedClasses += ' controls-TreeView__hideExpands';
                }
             } else if (cfg.expanderDisplayMode === 'never') {
@@ -1236,8 +1236,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          },
          _updateExpanderDisplay: function() {
             if (this._options.expanderDisplayMode === 'withChild') {
-               this._container.toggleClass('controls-TreeView__hideExpands',
-                  !this._options._hasNodeWithChild(this._options.items, this._options._getHierarchyRelation(this._options)));
+               this._container.toggleClass('controls-TreeView__hideExpands', this._options._items &&
+                  !this._options._hasNodeWithChild(this._options._items, this._options._getHierarchyRelation(this._options)));
             }
          },
          //В режиме поиска в дереве, при выборе всех записей, выбираем только листья, т.к. папки в этом режиме не видны.
