@@ -5,10 +5,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
    'Core/helpers/String/escapeHtml',
    'js!SBIS3.CONTROLS.Utils.LinkWrap',
    "Core/IoC",
-   //'Core/helpers/Hcontrol/trackElement',
    "browser!js!SBIS3.CORE.FieldText/resources/Autosize-plugin",
    'css!SBIS3.CONTROLS.TextArea'
-], function( constants,TextBox, inputField, escapeHtml, LinkWrap, IoC, trackElement) {
+], function( constants,TextBox, inputField, escapeHtml, LinkWrap, IoC) {
 
    'use strict';
 
@@ -16,13 +15,13 @@ define('js!SBIS3.CONTROLS.TextArea', [
       if (!max || max < min) {
          max = min;
       }
-      return 'controls-TextArea__field__minheight-' + min + ' controls-TextArea__field__maxheight-' + max;
+      return 'controls-TextArea__field_minheight-' + min + ' controls-TextArea__field_maxheight-' + max;
    }
 
    function modifyHeightClasses(container, addClasses) {
       var curClasses = container.className, newClasses = '';
-      newClasses = curClasses.replace(/controls\-TextArea__field__maxheight\-[0-9]*/g, '');
-      newClasses = newClasses.replace(/controls\-TextArea__field__minheight\-[0-9]*/g, '');
+      newClasses = curClasses.replace(/controls\-TextArea__field_maxheight\-[0-9]*/g, '');
+      newClasses = newClasses.replace(/controls\-TextArea__field_minheight\-[0-9]*/g, '');
       newClasses = newClasses + ' ' + addClasses;
       container.className = newClasses;
    }
@@ -53,8 +52,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
     */
 
    var TextArea = TextBox.extend( /** @lends SBIS3.CONTROLS.TextArea.prototype */ {
-      //_dotTplFn: dotTplFn,
       $protected: {
+         _isMultiline: true,
          _inputField: null,
          _cachedW: null,
          _cachedH: null,
@@ -66,7 +65,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          _autoHeightInitialized: false,
          
          _options: {
-            _paddingClass: ' controls-TextBox_paddingLeft',
+            _paddingClass: ' controls-TextArea_padding',
             textFieldWrapper: inputField,
             wrapUrls: LinkWrap.wrapURLs,
             escapeHtml: escapeHtml,
@@ -202,16 +201,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
                this._autosizeTextArea();
             }
 
-            //var trg = trackElement(this._container, true);
-
-
-
-            /*trg.subscribe('onVisible', function (event, visible) {
-               if (visible) {
-                  self._autosizeOnShow()
-               }
-            });*/
-
             this.subscribeTo(this, 'onAfterVisibilityChange', function(e, visible){
                if (visible) {
                   this._autosizeOnShow()
@@ -244,28 +233,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
       },
 
       _removeAutoSizeDognail: function() {
-         //Автовысота считается на клиенте отложенно. А высота контрола стоит авто именно по размерам текстареи
-         //поэтому на момент, когда она еще не посчиталась абсолютное позиционирование дизаблед враппера снято и высота считается исходя из размеров враппера
-         //controls-TextArea__heightInit навешивает абсолютное позиционирование после расчета высоты и высота начинает считаться исходя из размеров area
-
-         //так же при отключенном абсолютном позиционировании если на text-area ws-invisible, то еще добавляется ее высота
-         //поэтому изначально скрываем ws-hidden, а потом уже делаем ws-invisible
-         if (!this.isEnabled()) {
-            this._inputField.removeClass('ws-hidden').addClass('ws-invisible');
-         }
-         else {
-            $('.controls-TextArea__view', this._container.get(0)).removeClass('ws-invisible').addClass('ws-hidden');
-            this._inputField.removeClass('ws-hidden').removeClass('ws-invisible');
-            if (!this._options.text) {
-               $('.controls-TextArea__view', this._container.get(0)).empty();
-               $('.controls-TextArea__view', this._container.get(0)).removeClass('controls-TextArea__view__empty');
-            }
-         }
          //нельзя классы, ограничивающие высоту ставить сразу в шаблоне, потому что из-за них некорректно считается высота, т.к. оин сразу добавляют скролл, а считать высоту надо без скролла
          var hClasses = generateClassesName(this._options.minLinesCount, this._options.maxLinesCount);
          modifyHeightClasses(this._inputField.get(0), hClasses);
-         this._container.find('.controls-TextArea__view').addClass('controls-TextArea__view__init');
-         this._container.find('.controls-TextArea__field').addClass('controls-TextArea__field__init');
          this._autoHeightInitialized = true;
       },
 
@@ -303,7 +273,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
             this._disabledWrapper.toggleClass('ws-invisible', state);
          }
          this._updateDisabledWrapper();
-         this._disabledWrapper.toggleClass('controls-TextArea__view__disabled', !state);
       },
 
       setText: function(text){
@@ -327,7 +296,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
             var
                newText = escapeHtml(this.getText());
             this._disabledWrapper.html(LinkWrap.wrapURLs(newText));
-            this._disabledWrapper.toggleClass('controls-TextArea__view__empty', !newText);
          }
       },
 
@@ -374,7 +342,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
          this._inputField.trigger('autosize.resize');
          var hClasses = generateClassesName(cnt, this._options.maxLinesCount);
          modifyHeightClasses(this._inputField.get(0), hClasses);
-         modifyHeightClasses(this._disabledWrapper.get(0), hClasses);
       },
 
       _drawText: function(text) {
@@ -398,7 +365,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
       destroy: function() {
          this._inputField instanceof $ && this._inputField.trigger('autosize.destroy');
-         //trackElement(this._container, false);
          TextArea.superclass.destroy.apply(this, arguments);
       }
    });
