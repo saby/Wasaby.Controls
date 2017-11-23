@@ -10,7 +10,7 @@ define('js!Controls/Input/resources/ValidateHelper', [],
          },
 
          maxLength: function(value, splitValue, maxLength){
-            return value.substring(0, maxLength - splitValue.beforeInputValue.length - splitValue.afterInputValue.length);
+            return value.substring(0, maxLength - splitValue.before.length - splitValue.after.length);
          }
 
       };

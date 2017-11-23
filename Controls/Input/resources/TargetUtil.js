@@ -24,7 +24,7 @@ define('js!Controls/Input/resources/TargetUtil',
          },
 
          /*
-         * Разобрать значение из таргета, на
+         * Разобрать значение из таргета
          * */
          buildSplitValue: function(target, oldValue){
             var
@@ -32,25 +32,25 @@ define('js!Controls/Input/resources/TargetUtil',
                position = target.selectionEnd,
                selectionLength = this._selectionEnd - this._selectionStart;
 
-            var beforeInputValue, afterInputValue, inputValue;
+            var before, after, input;
 
             //Если до этого не было выделения и каретка сместилась назад или осталась на прошлом месте,
             // значит это удаление.
             if(!selectionLength && this._selectionStart >= position){
-               afterInputValue = newValue.substring(position);
-               beforeInputValue = newValue.substring(0, position);
-               inputValue = '';
+               after = newValue.substring(position);
+               before = newValue.substring(0, position);
+               input = '';
             }
             else {
-               afterInputValue = newValue.substring(position);
-               beforeInputValue = oldValue.substring(0, oldValue.length - afterInputValue.length - selectionLength);
-               inputValue = newValue.substring(beforeInputValue.length, newValue.length - afterInputValue.length);
+               after = newValue.substring(position);
+               before = oldValue.substring(0, oldValue.length - after.length - selectionLength);
+               input = newValue.substring(before.length, newValue.length - after.length);
             }
 
             return {
-               beforeInputValue: beforeInputValue,
-               inputValue: inputValue,
-               afterInputValue: afterInputValue
+               before: before,
+               input: input,
+               after: after
             };
          }
 

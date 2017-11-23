@@ -3,9 +3,10 @@ define('js!Controls/Input/Area', [
    'Core/constants',
    'js!WS.Data/Type/descriptor',
    'js!Controls/Input/resources/ValidateHelper',
+   'Core/detection',
    'tmpl!Controls/Input/Area/Area',
    'css!Controls/Input/Area/Area'
-], function(Control, constants, types, ValidateHelper, template) {
+], function(Control, constants, types, ValidateHelper, detection, template) {
 
    'use strict';
 
@@ -44,7 +45,7 @@ define('js!Controls/Input/Area', [
       setValue: function(value){
          this._value = value;
          //TODO: this._children.fakeArea.innerText = value;
-         this._container.children().find('.controls-TextArea__fakeField_value')[0].innerText = value;
+         this._container.children().find('.controls-TextArea__fakeField_value')[0].innerHTML = value;
       },
 
       /*
@@ -54,6 +55,11 @@ define('js!Controls/Input/Area', [
          var fakeArea = this._container.children().find('.controls-TextArea__fakeField')[0];
          var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
 
+         //Для IE, текст мы показываем из fakeArea, поэтому обновим скролл.
+         if(needScroll && detection.isIE){
+            fakeArea.scrollTop = this._container.children().find('.controls-TextArea__realField').get(0).scrollTop;
+         }
+
          if(needScroll !== this._hasScroll){
             this._hasScroll = needScroll;
             this._forceUpdate();
@@ -61,23 +67,19 @@ define('js!Controls/Input/Area', [
       },
 
       prepareValue: function(splitValue) {
-         var inputValue = splitValue.inputValue;
+         var input = splitValue.input;
 
          if (this._options.constraint) {
-            inputValue = ValidateHelper.constraint(inputValue, this._options.constraint);
-         }
-
-         if (this._options.trim) {
-            inputValue = inputValue.trim();
+            input = ValidateHelper.constraint(input, this._options.constraint);
          }
 
          if(this._options.maxLength){
-            inputValue = ValidateHelper.maxLength(inputValue, splitValue, this._options.maxLength);
+            input = ValidateHelper.maxLength(input, splitValue, this._options.maxLength);
          }
 
          return {
-            value: splitValue.beforeInputValue + inputValue + splitValue.afterInputValue,
-            position: splitValue.beforeInputValue.length + inputValue.length
+            value: splitValue.before + input + splitValue.after,
+            position: splitValue.before.length + input.length
          };
       }
    };
@@ -108,6 +110,21 @@ define('js!Controls/Input/Area', [
          _private.setValue.call(this, value);
          _private.checkScroll.call(this);
          this._notify('valueChanged', value);
+      },
+
+      _inputCompletedHandler: function(){
+         //Если стоит опция trim, то перед завершением удалим лишние пробелы и ещё раз стрельнем valueChanged
+         if(this._options.trim){
+            var newValue = this._value.trim();
+            if(newValue !== this._value){
+               _private.setValue.call(this, newValue);
+               _private.checkScroll.call(this);
+               this._notify('valueChanged', newValue);
+               this._forceUpdate();
+            }
+         }
+
+         this._notify('inputCompleted', this._value);
       },
 
       _notifyHandler: function(event, value) {

@@ -1,109 +1,56 @@
 define([
-   'js!Controls/Input/Area',
-   'Core/helpers/Function/runDelayed'
-], function(Area, runDelayed){
+   'js!Controls/Input/Area'
+], function(Area){
    describe('Controls.Input.Area', function () {
 
+      $('<div id="areaContainer"></div>').appendTo('#mocha');
+
       var createControl = function(cfg){
-         return Area.createControl(Area, cfg, $('<div></div>').appendTo('#mocha'));
+         return Area.createControl(Area, cfg || {}, $('<div></div>').appendTo('#areaContainer'));
       };
 
-      var destroyControl = function(control){
-         runDelayed(function(){
-            control.destroy();
-         });
-      };
+      describe('Options', function () {
 
-      describe('Options tests', function () {
-
-         it('value', function () {
+         it('constraint', function () {
             var area = createControl({
-               value: 'Test value'
+               constraint: '[0-9]'
             });
 
-            runDelayed(function(){
-               assert.equal(area._value, 'Test value');
-               assert.equal(area._container.find('.controls-TextArea__realField').get(0).textContent, 'Test value');
-               destroyControl(area);
-            });
+            assert.equal(area._prepareValue({
+               before: '',
+               input: 'a',
+               after: ''
+            }).value, '');
+
+            assert.equal(area._prepareValue({
+               before: '',
+               input: '1',
+               after: ''
+            }).value, '1');
 
          });
 
-         it('trim', function () {
+         it('maxLength', function () {
             var area = createControl({
-               value: ' Test value ',
-               trim: true
+               maxLength: '1'
             });
 
-            runDelayed(function(){
-               assert.equal(area._container.find('.controls-TextArea__realField').get(0).textContent, 'Test value');
-               destroyControl(area);
-            });
+            assert.equal(area._prepareValue({
+               before: '',
+               input: '1',
+               after: ''
+            }).value, '1');
+
+            assert.equal(area._prepareValue({
+               before: '1',
+               input: '2',
+               after: ''
+            }).value, '1');
+
+            $('#areaContainer').remove();
 
          });
-
-         /*it('trim', function () {
-            var area = createControl({
-               value: '  Test value  '
-            });
-
-            area.
-
-            assert.equal(area._value, 'Test value');
-
-            destroyControl(area);
-         });*/
-
-
-
-
-
-
-         /*it('check in private field', function () {
-            runDelayed(function(){
-               assert.equal(area._value, 'Test value');
-               /!*assert.equal(area._container.find('.controls-TextArea__realField').get(0).textContent, 'Test value');
-               assert.equal(area._container.find('.controls-TextArea__fakeField').get(0).textContent, 'Test value');*!/
-               area.destroy();
-            });
-         });
-
-         it('check in container', function () {
-            runDelayed(function(){
-               assert.equal(area._container.find('.controls-TextArea__realField').get(0).textContent, 'Test value');
-               area.destroy();
-            });
-         });*/
 
       });
-
-      /*
-
-      describe('Options test: trim', function () {
-         area = Area.createControl(Area, {
-            value: '  Test value  '
-         }, container);
-
-         it('check in real container', function () {
-            assert.equal(area._value, 'Test value');
-            assert.equal(container.children('.controls-TextArea__realField').textContent, 'Test value');
-            assert.equal(container.children('.controls-TextArea__testField').textContent, 'Test value');
-         });
-      });
-
-      describe('Options test: trim', function () {
-         area = Area.createControl(Area, {
-            value: '  Test value  '
-         }, container);
-
-         it('check in real container', function () {
-            assert.equal(area._value, 'Test value');
-            assert.equal(container.children('.controls-TextArea__realField').textContent, 'Test value');
-            assert.equal(container.children('.controls-TextArea__testField').textContent, 'Test value');
-         });
-      });*/
-
-
-
    })
 });
