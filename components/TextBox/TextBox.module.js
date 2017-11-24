@@ -521,7 +521,11 @@ define('js!SBIS3.CONTROLS.TextBox', [
             из-за коготорого, если во flex контейнере лежит input без placeholder'a ломается базовая линия.
             placeholder с пустой строкой и так будет не виден, т.ч. проблем быть не должно */
          if(this._compatPlaceholder) {
-            this._compatPlaceholder.toggleClass("ws-hidden", !enabled);
+            if (!enabled){
+               this._compatPlaceholder.addClass("ws-hidden");
+            } else if (this._isEmptyValue(this._options.text)) {
+               this._compatPlaceholder.removeClass("ws-hidden");
+            }
          } else {
             this._setPlaceholder(enabled ? this._options.placeholder : ' ');
          }

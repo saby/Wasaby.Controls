@@ -20,7 +20,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             onActivated: handlers.undo
          },
          enabled: false,
-         order: 10
+         order: 10,
+         tabindex: 0
       },
 
       {
@@ -33,7 +34,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             onActivated: handlers.redo
          },
          enabled: false,
-         order: 10
+         order: 10,
+         tabindex: 0
       },
       {
          name: 'styles',
@@ -45,7 +47,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             onActivated: handlers.styles
          },
          visible: false,
-         order: 25
+         order: 25,
+         tabindex: 0
       },
       {
          name: 'style',
@@ -63,7 +66,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          handlers: {
             onSelectedItemChange: handlers.style
          },
-         order: 20
+         order: 20,
+         tabindex: 0
       },
 
       {
@@ -75,7 +79,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          handlers: {
             onActivated: handlers.bold
          },
-         order: 30
+         order: 30,
+         tabindex: 0
       },
 
       {
@@ -87,7 +92,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          handlers: {
             onActivated: handlers.italic
          },
-         order: 40
+         order: 40,
+         tabindex: 0
       },
 
       {
@@ -99,7 +105,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          handlers: {
             onActivated: handlers.underline
          },
-         order: 50
+         order: 50,
+         tabindex: 0
       },
 
       {
@@ -111,7 +118,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          handlers: {
             onActivated: handlers.strikethrough
          },
-         order: 60
+         order: 60,
+         tabindex: 0
       },
 
       {
@@ -123,7 +131,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          handlers: {
             onActivated: handlers.mceBlockQuote
          },
-         order: 65
+         order: 65,
+         tabindex: 0
       },
 
       {
@@ -155,7 +164,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                offset: 6
             }
          },
-         order: 80
+         order: 80,
+         tabindex: 0
       },
 
       {
@@ -186,7 +196,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                offset: 6
             }
          },
-         order: 70
+         order: 70,
+         tabindex: 0
       },
 
       {
@@ -214,7 +225,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                offset: 6
             }
          },
-         order: 90
+         order: 90,
+         tabindex: 0
       },
 
       {
@@ -227,7 +239,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             onActivated: handlers.link
          },
          visible: true,
-         order: 100
+         order: 100,
+         tabindex: 0
       },
 
       {
@@ -241,7 +254,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          },
          enabled: false,
          visible: true,
-         order: 110
+         order: 110,
+         tabindex: 0
       },
 
       {
@@ -253,7 +267,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          handlers: {
             onActivated: handlers.image
          },
-         order: 140
+         order: 140,
+         tabindex: 0
       },
 
       {
@@ -269,7 +284,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          },
          idProperty: 'key',
          visible: false,
-         order: 150
+         order: 150,
+         tabindex: 0
       },
 
       {
@@ -299,7 +315,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          },
          idProperty: 'key',
          visible: !constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
-         order: 120
+         order: 120,
+         tabindex: 0
       },
 
       {
@@ -311,7 +328,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          handlers: {
             onActivated: handlers.source
          },
-         order: 160
+         order: 160,
+         tabindex: 0
       },
       {
          name: 'history',
@@ -336,7 +354,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             }
          },
          visible:false,
-         order: 160
+         order: 160,
+         tabindex: 0
       },
       {
          name: 'codesample',
@@ -349,7 +368,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             onActivated: handlers.codesample
          },
          visible: false,//!constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
-         order: 130
+         order: 130,
+         tabindex: 0
       }
    ];
    };

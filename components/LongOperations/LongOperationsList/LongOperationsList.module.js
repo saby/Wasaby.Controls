@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
       'js!SBIS3.CONTROLS.LongOperations.Manager',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
       'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
+      'js!SBIS3.CORE.FloatArea',
       'tmpl!SBIS3.CONTROLS.LongOperationsList',
       'css!SBIS3.CONTROLS.LongOperationsList',
       'tmpl!SBIS3.CONTROLS.LongOperationsList/resources/LongOperationsListStateTemplate',
@@ -18,7 +19,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
       'js!SBIS3.CONTROLS.DataGridView'
    ],
 
-   function (Deferred, IoC, CompoundControl, LongOperationEntry, Model, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, dotTplFn) {
+   function (Deferred, IoC, CompoundControl, LongOperationEntry, Model, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, FloatArea, dotTplFn) {
       'use strict';
 
       /**
@@ -118,39 +119,38 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
             ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered'/*, 'ondestroy'*/].forEach(function (evtType) {
                self.subscribeTo(longOperationsManager, evtType, function (evtName, evt) {
                   var dontReload;
-                  switch (evtName.name) {
-                     case 'onlongoperationchanged':
-                        var model = self.lookupItem(evt.tabKey, evt.producer, evt.operationId);;
-                        if (model) {
-                           if (evt.changed === 'progress') {
-                              model.set('progressCurrent', evt.progress.value);
-                              model.set('progressTotal', evt.progress.total);
-                              dontReload = true;
-                           }
-                           else {
-                              if (evt.changed === 'status') {
-                                 if (evt.status === STATUSES.running && model.get('status') === STATUSES.suspended) {
-                                    model.set('timeIdle', (new Date()).getTime() - model.get('startedAt').getTime() - model.get('timeSpent'));
-                                 }
-                              }
-                              else {
+                  if (['onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted'].indexOf(evtName.name) !== -1) {
+                     var model = self.lookupItem(evt.tabKey, evt.producer, evt.operationId);
+                     dontReload = !model;
+                     if (model) {
+                        switch (evtName.name) {
+                           case 'onlongoperationchanged':
+                              if (evt.changed === 'progress') {
+                                 model.set('progressCurrent', evt.progress.value);
+                                 model.set('progressTotal', evt.progress.total);
                                  dontReload = true;
                               }
-                              model.set(evt.changed, evt[evt.changed]);
-                           }
-                           self._checkItems();
+                              else {
+                                 if (evt.changed === 'status') {
+                                    if (evt.status === STATUSES.running && model.get('status') === STATUSES.suspended) {
+                                       model.set('timeIdle', (new Date()).getTime() - model.get('startedAt').getTime() - model.get('timeSpent'));
+                                    }
+                                 }
+                                 else {
+                                    dontReload = true;
+                                 }
+                                 model.set(evt.changed, evt[evt.changed]);
+                              }
+                              self._checkItems();
+                              break;
+                           case 'onlongoperationended':
+                              self._animationAdd(model.getId(), !evt.error);
+                              self._animationRun();
+                              break;
+                           /*case 'onlongoperationdeleted':
+                              break;*/
                         }
-                        else {
-                           dontReload = true;
-                        }
-                        break;
-                     case 'onlongoperationended':
-                        var model = self.lookupItem(evt.tabKey, evt.producer, evt.operationId);
-                        if (model) {
-                           self._animationAdd(model.getId(), !evt.error);
-                           self._animationRun();
-                        }
-                        break;
+                     }
                   }
                   if (evt) {
                      evt.isCurrentTab = evt.tabKey === longOperationsManager.getTabKey();
@@ -360,96 +360,162 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
             if (!(action === 'suspend' || action === 'resume' ? model.get('canSuspend') : (action === 'delete' ? model.get('canDelete') : null))) {
                return Deferred.fail('Action not allowed');
             }
-            return longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
+            var promise = longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
+            // Удаление в LRS может занимать много времени, поэтому перезапросить список нужно сразу - удаляемая операция в него уже не войдёт. Для
+            // остальных действий вызывать reload не нужно, это произойдёт по событию, пришедшему в результате выпонения действия
+            if (action === 'delete') {
+               promise.addCallback(this.reload.bind(this));
+            }
+            return promise;
          },
 
          /**
-          * Выполнить результирующее действие длительной операции. Возвращает true если дальнейшая обработка не нужна
+          * Выполнить результирующее действие длительной операции
           * @public
+          * @param {SBIS3.CONTROLS.LongOperationsList/resources/model} model Модель длительной операции
+          */
+         applyResultAction: function (model) {
+            //Только если операция завершена или содержит ошибку
+            if (model && (model.get('status') === LongOperationEntry.STATUSES.ended || model.get('isFailed'))) {
+               if (!model.get('isFailed')) {
+                  // Выполнить действие, указанное в качестве результата
+                  if (!this._showResult(model)) {
+                     //Если нет, то если операция может иметь историю и является составной - открыть журнал операции
+                     if (this.canHasHistory(model) && 1 < model.get('progressTotal')) {
+                        this._showHistory(model);
+                     }
+                  }
+               }
+               else {
+                  this._showHistory(model, true);
+               }
+            }
+         },
+
+         /**
+          * Выполнить действие, указанное в качестве результата длительной операции. Возвращает true если дальнейшая обработка не нужна
+          * @protected
           * @param {SBIS3.CONTROLS.LongOperationsList/resources/model} model Модель длительной операции
           * @return {boolean}
           */
-         applyResultAction: function (model) {
-            if (model.get('status') !== LongOperationEntry.STATUSES.ended && !model.get('isFailed')) {
-               return false;
-            }
-            var handler = model.get('resultHandler');
-            var url = model.get('resultUrl');
-            if (handler || url) {
-               // Если есть хоть какой-то результат для показа - проверить не истёк ли его срок годности
-               var until = model.get('resultValidUntil');
-               if (until && until < new Date()) {
-                  InformationPopupManager.showMessageDialog({
-                     message:rk('Операция устарела.'),
-                     details:rk('Выполните повторно.')
+         _showResult: function (model) {
+            //Только если операция завершена или содержит ошибку
+            if (model && (model.get('status') === LongOperationEntry.STATUSES.ended || model.get('isFailed'))) {
+               var handler = model.get('resultHandler');
+               var url = model.get('resultUrl');
+               if (handler || url) {
+                  // Если есть хоть какой-то результат для показа - проверить не истёк ли его срок годности
+                  var until = model.get('resultValidUntil');
+                  if (until && until < new Date()) {
+                     InformationPopupManager.showMessageDialog({
+                        message:rk('Операция устарела.'),
+                        details:rk('Выполните повторно.')
+                     });
+                     return true;
+                  }
+               }
+               if (handler) {
+                  var path = handler.split(':');
+                  require([path.shift()], function (module) {
+                     var args = model.get('resultHandlerArgs');
+                     if (args) {
+                        if (typeof args === 'string') {
+                           // Это могут быть как сложные данные в виде json, так и просто одиночная строка
+                           try {
+                              args = JSON.parse(args);
+                           }
+                           catch (ex) {
+                              // Значит просто строка
+                           }
+                        }
+                        if (!Array.isArray(args)) {
+                           args = [args];
+                        }
+                     }
+                     else {
+                        args = [];
+                     }
+                     if (1 < path.length && !(args.length === 0 || args.length === path.length)) {
+                        throw new Error('Handler and its arguments are not compatible');
+                     }
+                     if (path.length) {
+                        for (var subject = module; path.length; ) {
+                           if (!subject || typeof subject !== 'object') {
+                              throw new Error('Subhandler is or not valid');
+                           }
+                           var method = path.shift();
+                           if (typeof subject[method] !== 'function') {
+                              throw new Error('Handler method is or not valid');
+                           }
+                           var arg = args.length ? args.shift() : [];
+                           subject = subject[method].apply(subject, Array.isArray(arg) ? arg : [arg]);
+                        }
+                     }
+                     else {
+                        if (!module || typeof module !== 'function') {
+                           throw new Error('Handler is or not valid');
+                        }
+                        module.apply(null, args);
+                     }
                   });
                   return true;
                }
-            }
-            if (handler) {
-               var path = handler.split(':');
-               require([path.shift()], function (module) {
-                  var args = model.get('resultHandlerArgs');
-                  if (args) {
-                     if (typeof args === 'string') {
-                        // Это могут быть как сложные данные в виде json, так и просто одиночная строка
-                        try {
-                           args = JSON.parse(args);
-                        }
-                        catch (ex) {
-                           // Значит просто строка
-                        }
-                     }
-                     if (!Array.isArray(args)) {
-                        args = [args];
-                     }
+               if (url) {
+                  /*Если файл нужно скачать, воспользуемся стандартным способом, созданием ссылку с аттрибутом и дернем триггер клик */
+                  if (model.get('resultUrlAsDownload')) {
+                     var a = document.createElement('a');
+                     a.setAttribute('href', url);
+                     a.setAttribute('download', '');
+                     /*Для совместимости с IE ссылку нужно вставить в DOM, иначе работать не будет*/
+                     a.style.display = 'none';
+                     document.body.appendChild(a);
+                     a.click();
+                     document.body.removeChild(a);
                   }
                   else {
-                     args = [];
+                     window.open(url, '_blank');
                   }
-                  if (1 < path.length && !(args.length === 0 || args.length === path.length)) {
-                     throw new Error('Handler and its arguments are not compatible');
-                  }
-                  if (path.length) {
-                     for (var subject = module; path.length; ) {
-                        if (!subject || typeof subject !== 'object') {
-                           throw new Error('Subhandler is or not valid');
-                        }
-                        var method = path.shift();
-                        if (typeof subject[method] !== 'function') {
-                           throw new Error('Handler method is or not valid');
-                        }
-                        var arg = args.length ? args.shift() : [];
-                        subject = subject[method].apply(subject, Array.isArray(arg) ? arg : [arg]);
-                     }
-                  }
-                  else {
-                     if (!module || typeof module !== 'function') {
-                        throw new Error('Handler is or not valid');
-                     }
-                     module.apply(null, args);
-                  }
-               });
-               return true;
-            }
-            if (url) {
-               /*Если файл нужно скачать, воспользуемся стандартным способом, созданием ссылку с аттрибутом и дернем триггер клик */
-               if (model.get('resultUrlAsDownload')) {
-                  var a = document.createElement('a');
-                  a.setAttribute('href', url);
-                  a.setAttribute('download', '');
-                  /*Для совместимости с IE ссылку нужно вставить в DOM, иначе работать не будет*/
-                  a.style.display = 'none';
-                  document.body.appendChild(a);
-                  a.click();
-                  document.body.removeChild(a);
+                  return true;
                }
-               else {
-                  window.open(url, '_blank');
-               }
-               return true;
             }
             return false;
+         },
+
+         /**
+          * Открыть историю указанной длительной операции
+          * @protected
+          * @param {SBIS3.CONTROLS.LongOperationsList/resources/model} model Модель длительной операции
+          * @param {boolean} useResultHandler Использовать обработчик результата операции
+          */
+         _showHistory: function (model, useResultHandler) {
+            //Только если операция завершена или содержит ошибку
+            if (model && (model.get('status') === LongOperationEntry.STATUSES.ended || model.get('isFailed'))) {
+               var resultHandler = useResultHandler && (model.get('resultHandler') || model.get('resultUrl')) ? this._showResult.bind(this, model) : null;
+               var resultWayOfUse = resultHandler ? model.get('resultWayOfUse') : null;
+               var floatArea = new FloatArea({
+                  title: rk('Журнал выполнения операции'),
+                  template: 'js!SBIS3.CONTROLS.LongOperationHistory',
+                  componentOptions: this.canHasHistory(model) ? {
+                     tabKey: model.get('tabKey'),
+                     producer: model.get('producer'),
+                     operationId: model.get('id'),
+                     isFailed: model.get('isFailed'),
+                     resultHandler: resultHandler,
+                     resultWayOfUse: resultWayOfUse
+                  } : {
+                     failedOperation: model,
+                     resultHandler: resultHandler
+                  },
+                  opener: this,
+                  direction: 'left',
+                  animation: 'slide',
+                  isStack: true,
+                  autoCloseOnHide: true,
+                  maxWidth: 680
+               });
+               this._notify('onSizeChange');
+               this.subscribeOnceTo(floatArea, 'onAfterClose', this._notify.bind(this, 'onSizeChange'));
+            }
          },
 
          /**
