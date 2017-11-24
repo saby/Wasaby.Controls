@@ -17,23 +17,17 @@
                margin-bottom: @margin-row;
             }
          }
+         &_detached {
+            border-top: @spacing-between-blocks solid @color-between-blocks;
+         }
       }
       &__content {
          border: @margin-block solid @color-between-blocks;
          .box-sizing();
       }
-      &_topOffset {
-         border-top: @spacing-between-blocks solid @color-between-blocks;
-      }
-      &_rebuild {
-         .flex-wrap(wrap);
-         > * {
-            .flex-grow(1);
-         }
-      }
    }
-   // Модификаторы цвета блоков ws-background_bg, ..., ws-background_hover.
-   .for(@color-modificator-name, { .ws-background_@{_item} {
+   // Модификаторы цвета блоков ws-background_bg, ..., ws-background_hover. Нужно уточнить.
+   /*.for(@color-modificator-name, { .ws-background_@{_item} {
       background-color: extract(@color-modificator-value, @_i);
-   } });
+   } });*/
 }
