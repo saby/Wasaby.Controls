@@ -11178,8 +11178,9 @@
     * @class tinymce.html.Node
     * @version 3.4
     */
-   define("tinymce/html/Node", [], function() {
-      var whiteSpaceRegExp = /^[ \t\r\n]*$/, typeLookup = {
+   define("tinymce/html/Node", ["tinymce/Env"], function(Env) {
+      // Так как в MSIE симол FEFF иногда используется вместо <br data-mce-bogus="1">
+      var whiteSpaceRegExp = Env.ie ? /^[ \t\r\n\uFEFF]*$/ : /^[ \t\r\n]*$/, typeLookup = {
          '#text': 3,
          '#comment': 8,
          '#cdata': 4,
@@ -22773,7 +22774,12 @@
 
             // Returns true/false if the caret is at the start/end of the parent block element
             function isCaretAtStartOrEndOfBlock(start) {
-               var walker, node, name;
+               // Так как в MSIE симол FEFF иногда используется вместо <br data-mce-bogus="1">
+               var
+                  whiteSpaceRegExp = Env.ie ? /^[ \t\r\n\uFEFF]*$/ : /^[ \t\r\n]*$/,
+                  walker,
+                  node,
+                  name;
 
                // Caret is in the middle of a text node like "a|b"
                if (container.nodeType == 3 && (start ? offset > 0 : offset < container.nodeValue.length)) {
@@ -22817,7 +22823,7 @@
                            return false;
                         }
                      }
-                  } else if (node.nodeType === 3 && !/^[ \t\r\n]*$/.test(node.nodeValue)) {
+                  } else if (node.nodeType === 3 && !whiteSpaceRegExp.test(node.nodeValue)) {
                      return false;
                   }
 

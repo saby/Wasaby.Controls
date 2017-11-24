@@ -386,7 +386,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                active = this.isActive(),
                enabled = this.isEnabled(),
                marked = this.isMarked();
-            return 'controls-TextBox_state_' + (marked ? 'error' : !enabled ? 'disabled' : active ? 'active' : 'default');
+            return 'controls-TextBox_state_' + (marked ? 'error' : !enabled ? 'disabled controls-TextBox_state_disabled_singleLine' : active ? 'active' : 'default');
          }
       });
 

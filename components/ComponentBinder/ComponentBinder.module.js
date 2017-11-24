@@ -35,11 +35,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       if (hideCheckBoxes) {
          gridView.toggleCheckboxes(operationPanel.isVisible());
          if (!visible) {
-            if (gridView._options.useSelectAll) {
-               gridView.setSelectedAllNew(false);
-            } else {
-               gridView.removeItemsSelectionAll();
-            }
+            gridView.removeItemsSelectionAll();
          }
       }
       if (gridView._options.startScrollColumn !== undefined) {

@@ -57,6 +57,14 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
             _view: null
          },
 
+         _modifyOptions: function () {
+            var options = moduleClass.superclass._modifyOptions.apply(this, arguments);
+            if (options.resultHandler && !options.resultWayOfUse && options.failedOperation) {
+               options.resultWayOfUse = options.failedOperation.get('resultWayOfUse');
+            }
+            return options;
+         },
+
          $constructor: function () {
             this.getLinkedContext().setValue('filter', {onlyErrors:!!this._options.isFailed});
          },
@@ -86,6 +94,13 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
                   }
                });
             });
+
+            var resultHandler = this._options.resultHandler;
+            if (resultHandler && this.hasChildControlByName('resultButton')) {
+               this.subscribeTo(this.getChildControlByName('resultButton'), 'onActivated', function () {
+                  resultHandler.call();
+               });
+            }
          },
 
          _reload: function () {
