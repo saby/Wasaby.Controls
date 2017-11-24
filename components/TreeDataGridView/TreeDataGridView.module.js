@@ -13,12 +13,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender",
-   'js!SBIS3.CONTROLS.MassSelectionHierarchyController',
    "Core/ConsoleLogger",
    'js!SBIS3.CONTROLS.Link',
    'css!SBIS3.CONTROLS.TreeDataGridView',
    'css!SBIS3.CONTROLS.TreeView'
-], function( cMerge, constants, CommandDispatcher, cInstance, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
+], function( cMerge, constants, CommandDispatcher, cInstance, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
 
 
    var
@@ -214,9 +213,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (this._options._serverRender) {
             this._createAllFolderFooters();
          }
-         if (this._options.useSelectAll) {
-            this._makeMassSelectionController();
-         }
       },
 
       redraw: function() {
@@ -228,7 +224,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (this._getItemsProjection()) {
             this._createAllFolderFooters();
          }
-         this._checkBreadCrumbsWidth();
+         // Правильно именно по onDrawItems пересчитывать размеры, т.к. в searchController'e по этому событию вешается
+         // доп. класс "controls-GridView__searchMode", влияющий на отступы
+         this.once('onDrawItems', function() {
+            this._checkBreadCrumbsWidth();
+         });
       },
    
       _afterAddItems: function() {
@@ -262,10 +262,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                breadCrumbs.width(this.getContainer().width() - cellPadding - firstColWidth);
             }
          }
-      },
-
-      _makeMassSelectionController: function() {
-         this._massSelectionController = new MassSelectionHierarchyController(this._getMassSelectorConfig());
       },
 
       _drawItemsCallback: function() {

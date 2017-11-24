@@ -239,7 +239,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                 itemActionsInstances = this.getItemsInstances();
             for(var i in menuInstances) {
                if(menuInstances.hasOwnProperty(i)) {
-                  menuInstances[i].getContainer()[itemActionsInstances.hasOwnProperty(i) && itemActionsInstances[i].isVisible() ? 'show' : 'hide']();
+                  menuInstances[i].getContainer().toggleClass('ws-hidden', !(itemActionsInstances.hasOwnProperty(i) && itemActionsInstances[i].isVisible()));
                   menuInstances[i].setCaption(itemActionsInstances.hasOwnProperty(i) && itemActionsInstances[i].getCaption());
                   menuInstances[i].setTooltip(itemActionsInstances.hasOwnProperty(i) && itemActionsInstances[i].getTooltip());
                   menuInstances[i].setIcon(itemActionsInstances.hasOwnProperty(i) && itemActionsInstances[i].getIcon());
