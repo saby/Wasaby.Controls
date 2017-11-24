@@ -5,9 +5,15 @@
 // TODO: (+) Посмотреть опции по фазам (первичная инициализация и открытие пикера)
 // TODO: ( ) Сортировать ли по группам?
 // TODO: (+) Предусмотреть возможность работы без кнопки и с FloatArea
+// TODO: (+) Вернуть пресеты
+// TODO: (+) Проработать отсутствие групп
+// TODO: ( ) Вернуть сохранение в конфиг пользователя + предопределённые пресеты их опций
+// TODO: ( ) Сделать классы типов (Columns.Config, Columns.ColumnInfo, Columns.Preset, ...)
+// TODO: ( ) Более строго провести везде опцию usePresets
+// TODO: ( ) Разделить ColumnsEditor На Columns.EditorButton и Columns.Editor
 // TODO: ( )
 /**
- * Created by as.avramenko on 24.01.2017.
+  * Created by as.avramenko on 24.01.2017.
  */
 
 define('js!SBIS3.CONTROLS.ColumnsEditor',
@@ -60,6 +66,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                showButton: true,
                title: rk('Отображение колонок'),
                moveColumns: true,
+               usePresets: true,
                targetRegistryName: 'default',
                defaultPreset: null,
                newPresetTitle: rk('Новый шаблон'),
@@ -247,6 +254,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                   groupField: cfg.groupField || opts.groupField,
                   groupTitleTpl: cfg.groupTitleTpl || opts.groupTitleTpl || null,
                   groupTitles: cfg.groupTitles || opts.groupTitles || null,
+                  usePresets: opts.usePresets,
                   _getPresets: this._getPresets.bind(this),//^^^
                   _getSelectedPreset: this._getSelectedPreset.bind(this),//^^^
                   selectedColumns: cfg.selectedColumns,

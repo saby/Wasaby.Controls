@@ -411,7 +411,7 @@ define('js!SBIS3.CONTROLS.Browser', [
          }
          this._getView().setColumns(this._columnsController.getColumns(this._options.columnsConfig.columns));
          this._getView().redraw();
-         this._ensureColumnsEditor(/*^^^true*/);
+         this._ensureColumnsEditor(true);
       },
 
       _bindView: function() {

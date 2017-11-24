@@ -185,7 +185,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
        * Собрать данные о колонках (асинхронно). Возвращает обещание, разрешаемое списком объектов со свойствами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView)
        * @protected
        * @param {object} data Дополнительные данные для вычисления колонок
-       * return {Core/Deferred<object[]|WS.Data/Collection/RecordSet>}
+       * @return {Core/Deferred<object[]|WS.Data/Collection/RecordSet>}
        */
       _gatherColumnsInfo: function (data) {
          if (this._options.useColumnsEditor) {

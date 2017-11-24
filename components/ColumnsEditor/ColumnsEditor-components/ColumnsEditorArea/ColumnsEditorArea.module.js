@@ -42,6 +42,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                columns: undefined,
                selectedColumns: [],
                moveColumns: true,
+               usePresets: true,
                groupField: ''
             },
             _presetView: undefined,
@@ -56,6 +57,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             };
             _prepareChildItemsAndGroups(cfg);
             _prepareGroupCollapsing(cfg);
+            cfg.hasGroups = !!cfg._groups && 0 < cfg._groups.length;
             cfg._optsSelectable.onItemClick = _onItemClick;
             if (!cfg.moveColumns) {
                // Добавляем автосортировку отмеченных элементов - они должны отображаться перед неотмеченными
@@ -72,33 +74,35 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
 
          init: function () {
             ColumnsEditorArea.superclass.init.apply(this, arguments);
-            this._presetView = this.getChildControlByName('controls-ColumnsEditorArea__Preset');
+            this._presetView = _getChildComponent(this, 'controls-ColumnsEditorArea__Preset');
             this._fixedView = this.getChildControlByName('controls-ColumnsEditorArea__FixedList');
             this._selectableView = this.getChildControlByName('controls-ColumnsEditorArea__SelectableList');
 
-            if (this._presetView.isInitialized()) {
-               _updatePresetView(this, true);
-            }
-            else {
-               this.subscribeOnceTo(this._presetView, 'onInit', _updatePresetView.bind(null, this, true));
-            }
-
-            //^^^this._presetView.setItemsHover(false);
-            //^^^this.subscribeTo(this._presetView, 'onChangeHoveredItem', this._presetView.setItemsHover.bind(this._presetView, false));
-            this._presetView.setItemsActions(_makeItemsActions(this));
-            this.subscribeTo(this._presetView, 'onAfterBeginEdit', this._presetView.setItemsActions.bind(this._presetView, []));
-            this.subscribeTo(this._presetView, 'onEndEdit', function (evtName, model, withSaving) {
-               if (withSaving) {
-                  this.sendCommand('changePreset', model.get('title')).addCallback(function (isSuccess) {
-                     if (!isSuccess) {
-                        // TODO: Изменение не сохранено - откатится назад
-                     }
-                  });
+            if (this._presetView) {
+               if (this._presetView.isInitialized()) {
+                  _updatePresetView(this, true);
                }
-            }.bind(this));
-            this.subscribeTo(this._presetView, 'onAfterEndEdit', function (evtName, model, $target, withSaving) {
+               else {
+                  this.subscribeOnceTo(this._presetView, 'onInit', _updatePresetView.bind(null, this, true));
+               }
+
+               //^^^this._presetView.setItemsHover(false);
+               //^^^this.subscribeTo(this._presetView, 'onChangeHoveredItem', this._presetView.setItemsHover.bind(this._presetView, false));
                this._presetView.setItemsActions(_makeItemsActions(this));
-            }.bind(this));
+               this.subscribeTo(this._presetView, 'onAfterBeginEdit', this._presetView.setItemsActions.bind(this._presetView, []));
+               this.subscribeTo(this._presetView, 'onEndEdit', function (evtName, model, withSaving) {
+                  if (withSaving) {
+                     this.sendCommand('changePreset', model.get('title')).addCallback(function (isSuccess) {
+                        if (!isSuccess) {
+                           // TODO: Изменение не сохранено - откатится назад
+                        }
+                     });
+                  }
+               }.bind(this));
+               this.subscribeTo(this._presetView, 'onAfterEndEdit', function (evtName, model, $target, withSaving) {
+                  this._presetView.setItemsActions(_makeItemsActions(this));
+               }.bind(this));
+            }
 
             // В опциях могут быть указаны группы, которые нужно распахнуть при открытии
             _applyGroupCollapsing(this);
@@ -198,7 +202,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                if (selectedColumns.indexOf(columnId) !== -1) {
                   selectable.markedKeys.push(columnId);
                }
-               var group = column.get(groupField);
+               var group = column.get(groupField) || null;
                if (groups.indexOf(group) === -1) {
                   groups.push(group);
                }
@@ -229,7 +233,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          groups.sort();
          cfg._optsFixed = fixed;
          cfg._optsSelectable = selectable;
-         cfg._groups = groups;
+         cfg._groups = 1 < groups.length || (groups.length && groups[0] != null) ? groups : null;
       };
 
       var _prepareGroupCollapsing = function (cfg) {
@@ -276,11 +280,19 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          return recordset;
       };
 
+
+
+      var _getChildComponent = function (self, name) {
+         if (self.hasChildControlByName(name)) {
+            return self.getChildControlByName(name);
+         }
+      };
+
       var _updatePresetView = function (self, dontSet) {
          if (!dontSet) {
             self._presetView.setItems(_makePresetItems(self._options._getPresets(), self._options._getSelectedPreset()));
          }
-         var dropdown = self._presetView.getChildControlByName('controls-controls-ColumnsEditorArea__Preset-item-title');
+         var dropdown = _getChildComponent(self._presetView, 'controls-controls-ColumnsEditorArea__Preset-item-title');
          if (dropdown) {
             self.subscribeTo(dropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
                self.sendCommand('selectPreset', selected[0]);
@@ -314,13 +326,13 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                tooltip: inf.title,
                isMainAction: true,
                onActivated: function ($item, itemId, itemModel, action) {
-                  _applyTemplateAction(self, action, itemModel);
+                  _applyPresetAction(self, action, itemModel);
                }
             };
          });
       };
 
-      var _applyTemplateAction = function (self, action, model) {
+      var _applyPresetAction = function (self, action, model) {
          switch (action) {
             case 'edit':
                self._presetView.beginEdit(model, false);
