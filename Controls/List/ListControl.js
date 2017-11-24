@@ -40,8 +40,6 @@ define('js!Controls/List/ListControl', [
       },
 
       prepareQueryParams: function(direction) {
-
-         //TODO Тут не было вообще переменной params
          var params = {};
          if (this._navigationController) {
             var addParams = this._navigationController.prepareQueryParams(this._display, direction);
@@ -140,9 +138,10 @@ define('js!Controls/List/ListControl', [
          }
       },
 
-      createScrollWatcher: function(container, children, loadOffset) {
+      createScrollWatcher: function(scrollContainer) {
          var
             self = this,
+            children = this._children,
             triggers = {
                topListTrigger: children.topListTrigger,
                bottomListTrigger: children.bottomListTrigger,
@@ -164,8 +163,8 @@ define('js!Controls/List/ListControl', [
 
          return new ScrollWatcher ({
             triggers : triggers,
-            scrollContainer: container.closest('.ws-scrolling-content')[0],
-            loadOffset: loadOffset,
+            scrollContainer: scrollContainer,
+            loadOffset: this._loadOffset,
             eventHandlers: eventHandlers
          });
       }
@@ -446,7 +445,8 @@ define('js!Controls/List/ListControl', [
          _afterMount: function() {
             ListView.superclass._afterMount.apply(this, arguments);
 
-            this._scrollWatcher = _private.createScrollWatcher.call(this, this._container, this._children, this._loadOffset);
+            var scrollContainer = this._container.closest('.ws-scrolling-content')[0];
+            this._scrollWatcher = _private.createScrollWatcher.call(this, scrollContainer);
          },
 
          _beforeUpdate: function(newOptions) {

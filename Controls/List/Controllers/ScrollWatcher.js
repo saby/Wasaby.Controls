@@ -7,70 +7,6 @@ define('js!Controls/List/Controllers/ScrollWatcher', [
    'use strict';
 
    var _private = {
-      onScrollWithoutIntersectionObserver: function(e, scrollTop) {
-         //Проверка на триггеры начала/конца блока
-         if (scrollTop <= 0) {
-            this._options.eventHandlers.onListTop && this._options.eventHandlers.onListTop();
-         }
-         if (scrollTop + e.target.clientHeight >= e.target.scrollHeight) {
-            this._options.eventHandlers.onListBottom && this._options.eventHandlers.onListBottom();
-         }
-
-         //Проверка на триггеры загрузки
-         if (scrollTop <= this._options.loadOffset) {
-            this._options.eventHandlers.onLoadTriggerTop && this._options.eventHandlers.onLoadTriggerTop();
-         }
-         if (scrollTop + e.target.clientHeight >= e.target.scrollHeight - this._options.loadOffset) {
-            this._options.eventHandlers.onLoadTriggerBottom && this._options.eventHandlers.onLoadTriggerBottom();
-         }
-      },
-
-      onScrollHandler: function(additionalHandler, e) {
-         var scrollTop = e.target.scrollTop;
-         additionalHandler(e, scrollTop);
-
-         this._options.eventHandlers.onListScroll && this._options.eventHandlers.onListScroll(scrollTop);
-      }
-   };
-
-   /**
-    *
-    * @author Девятов Илья
-    * @public
-    */
-   var ScrollWatcher = simpleExtend.extend({
-      _options: null,
-      _observer: null,
-
-      constructor: function(cfg) {
-         ScrollWatcher.superclass.constructor.apply(this, arguments);
-         this._options = cfg;
-
-         //Есть нет IntersectionObserver, то в обработчике onScroll нужно дополнительно обсчитывать все триггеры
-         var additionalOnScrollHandler = function() { };
-         if (!global || !global.IntersectionObserver) {
-            additionalOnScrollHandler = _private.onScrollWithoutIntersectionObserver.bind(this);
-         } else {
-            this._initIntersectionObserver(cfg.triggers);
-         }
-
-         cfg.scrollContainer.addEventListener(
-            'scroll',
-            throttle(_private.onScrollHandler.bind(this, additionalOnScrollHandler), 200, true),
-            {passive: true});
-      },
-
-      destroy: function() {
-         if (this._observer) {
-            this._observer.unobserve(this._options.triggers.topLoadTrigger);
-            this._observer.unobserve(this._options.triggers.bottomLoadTrigger);
-            this._observer.unobserve(this._options.triggers.topListTrigger);
-            this._observer.unobserve(this._options.triggers.bottomListTrigger);
-            this._observer = null;
-         }
-
-      },
-
       /**
        * Подписка на появление элементов в видимой области (через IntersectionObserver)
        * @param elements
@@ -105,6 +41,69 @@ define('js!Controls/List/Controllers/ScrollWatcher', [
 
          this._observer.observe(elements.topListTrigger);
          this._observer.observe(elements.bottomListTrigger);
+      },
+
+      onScrollWithoutIntersectionObserver: function(e, scrollTop, loadOffset, eventHandlers) {
+         //Проверка на триггеры начала/конца блока
+         if (scrollTop <= 0) {
+            eventHandlers.onListTop && eventHandlers.onListTop();
+         }
+         if (scrollTop + e.target.clientHeight >= e.target.scrollHeight) {
+            eventHandlers.onListBottom && eventHandlers.onListBottom();
+         }
+
+         //Проверка на триггеры загрузки
+         if (scrollTop <= loadOffset) {
+            eventHandlers.onLoadTriggerTop && eventHandlers.onLoadTriggerTop();
+         }
+         if (scrollTop + e.target.clientHeight >= e.target.scrollHeight - loadOffset) {
+            eventHandlers.onLoadTriggerBottom && eventHandlers.onLoadTriggerBottom();
+         }
+      },
+
+      onScrollHandler: function(additionalHandler, e) {
+         var scrollTop = e.target.scrollTop;
+         additionalHandler && additionalHandler(e, scrollTop, this._options.loadOffset, this._options.eventHandlers);
+
+         this._options.eventHandlers.onListScroll && this._options.eventHandlers.onListScroll(scrollTop);
+      }
+   };
+
+   /**
+    *
+    * @author Девятов Илья
+    * @public
+    */
+   var ScrollWatcher = simpleExtend.extend({
+      _options: null,
+      _observer: null,
+
+      constructor: function(cfg) {
+         ScrollWatcher.superclass.constructor.apply(this, arguments);
+         this._options = cfg;
+
+         //Есть нет IntersectionObserver, то в обработчике onScroll нужно дополнительно обсчитывать все триггеры
+         var additionalOnScrollHandler = undefined;
+         if (!global || !global.IntersectionObserver) {
+            additionalOnScrollHandler = _private.onScrollWithoutIntersectionObserver;
+         } else {
+            _private._initIntersectionObserver.call(this, cfg.triggers);
+         }
+
+         cfg.scrollContainer.addEventListener(
+            'scroll',
+            throttle(_private.onScrollHandler.bind(this, additionalOnScrollHandler), 200, true),
+            {passive: true});
+      },
+
+      destroy: function() {
+         if (this._observer) {
+            this._observer.unobserve(this._options.triggers.topLoadTrigger);
+            this._observer.unobserve(this._options.triggers.bottomLoadTrigger);
+            this._observer.unobserve(this._options.triggers.topListTrigger);
+            this._observer.unobserve(this._options.triggers.bottomListTrigger);
+            this._observer = null;
+         }
       }
    });
 
