@@ -13,12 +13,11 @@ define(
          idProperty: 'id'
       });
 
-      var selection = new Selection({
-         projection: Projection.getDefaultDisplay(data, {
-            idProperty: 'id'
-         })
-      });
+      var selection = new Selection({});
 
+      selection.setProjection(Projection.getDefaultDisplay(data, {
+         idProperty: 'id'
+      }));
 
       describe('SBIS3.CONTROLS.Selection', function () {
          beforeEach(function() {
