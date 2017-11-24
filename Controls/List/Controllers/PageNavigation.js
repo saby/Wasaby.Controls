@@ -95,19 +95,22 @@ define('js!Controls/List/Controllers/PageNavigation',
             source.setOptions(options);
          },
 
-         setBeginState: function() {
-            this._page = 0;
-         },
-
-         setEndState: function() {
-            if (typeof this._more == 'number') {
-               this._page = this._more / this._options.pageSize - 1;
+         setEdgeState: function(direction) {
+            if (direction == 'up') {
+               this._page = 0;
+            }
+            else if (direction == 'down') {
+               if (typeof this._more == 'number') {
+                  this._page = this._more / this._options.pageSize - 1;
+               }
+               else {
+                  this._page = -1;
+               }
             }
             else {
-               this._page = -1;
+               throw new Error ('Wrong argument Direction in NavigationController::setEdgeState');
             }
          }
-
       });
 
       return PageNavigation;
