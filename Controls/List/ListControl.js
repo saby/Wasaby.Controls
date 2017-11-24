@@ -140,11 +140,15 @@ define('js!Controls/List/ListControl', [
          }
       },
 
-      createScrollWatcher: function(container, loadOffset) {
+      createScrollWatcher: function(container, children, loadOffset) {
          var
             self = this,
-            children = container.children(),
-            triggers = {},
+            triggers = {
+               topListTrigger: children.topListTrigger,
+               bottomListTrigger: children.bottomListTrigger,
+               topLoadTrigger: children.topLoadTrigger,
+               bottomLoadTrigger: children.bottomLoadTrigger
+            },
             eventHandlers = {
                onLoadTriggerTop: function() {
                   self._scrollLoadMore('up');
@@ -157,19 +161,6 @@ define('js!Controls/List/ListControl', [
                onListBottom: function() {
                }
             };
-
-         // TODO: когда будет возможность получить дом-элемент по имени - переписать этот код
-         for (var i = 0; i < children.length; i++) {
-            if (children[i].className === 'ws-ListControl__topListTrigger') {
-               triggers.topListTrigger = children[i];
-            } else if (children[i].className === 'ws-ListControl__bottomListTrigger') {
-               triggers.bottomListTrigger = children[i];
-            } else if (children[i].className === 'ws-ListControl__topLoadTrigger') {
-               triggers.topLoadTrigger = children[i];
-            } else if (children[i].className === 'ws-ListControl__bottomLoadTrigger') {
-               triggers.bottomLoadTrigger = children[i];
-            }
-         }
 
          return new ScrollWatcher ({
             triggers : triggers,
@@ -455,7 +446,7 @@ define('js!Controls/List/ListControl', [
          _afterMount: function() {
             ListView.superclass._afterMount.apply(this, arguments);
 
-            this._scrollWatcher = _private.createScrollWatcher.call(this, this._container, this._loadOffset);
+            this._scrollWatcher = _private.createScrollWatcher.call(this, this._container, this._children, this._loadOffset);
          },
 
          _beforeUpdate: function(newOptions) {
