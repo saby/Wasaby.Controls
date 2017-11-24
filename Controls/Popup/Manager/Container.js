@@ -3,7 +3,8 @@ define('js!Controls/Popup/Manager/Container',
       'Core/Control',
       'Core/CommandDispatcher',
       'tmpl!Controls/Popup/Manager/Container',
-      'WS.Data/Collection/List'
+      'WS.Data/Collection/List',
+      'css!Controls/Popup/Manager/Container'
    ],
    function (Control, CommandDispatcher, template, List) {
       'use strict';
@@ -23,9 +24,10 @@ define('js!Controls/Popup/Manager/Container',
 
          constructor: function (cfg){
             Container.superclass.constructor.call(this, cfg);
-            this._publish('onClickPopup', 'onFocusPopup');
-            CommandDispatcher.declareCommand(this, 'focusPopup', this.focusPopup);
+            this._publish('closePopup', 'focusPopup', 'recalcPosition');
             CommandDispatcher.declareCommand(this, 'closePopup', this.closePopup);
+            CommandDispatcher.declareCommand(this, 'focusPopup', this.focusPopup);
+            CommandDispatcher.declareCommand(this, 'recalcPosition', this.recalcPosition);
          },
 
          _beforeMount: function(options){
@@ -35,20 +37,28 @@ define('js!Controls/Popup/Manager/Container',
          },
 
          /**
+          * @event Controls/Popup/Manager/Container#closePopup Происходит при закрытии попапа.
+          * @param {Object} popup Инстанс попапа.
+          */
+         closePopup: function(popup){
+            this._notify('closePopup', popup);
+         },
+
+         /**
           * @event Controls/Popup/Manager/Container#focusPopup Происходит при приходе/уходе фокуса.
           * @param {Object} popup Инстанс попапа.
           * @param {Object} isFocused Признак пришел или ушел фокус.
           */
          focusPopup: function(popup, isFocused){
-            this._notify('onFocusPopup', popup, isFocused);
+            this._notify('focusPopup', popup, isFocused);
          },
 
          /**
-          * @event Controls/Popup/Manager/Container#closePopup Происходит при закрытии попапа.
+          * @event Controls/Popup/Manager/Container#recalcPosition Происходит при закрытии попапа.
           * @param {Object} popup Инстанс попапа.
           */
-         closePopup: function(popup){
-            this._notify('onClosePopup', popup);
+         recalcPosition: function(popup){
+            this._notify('recalcPosition', popup);
          },
 
          /**

@@ -1,10 +1,12 @@
 define('js!Controls/Popup/Opener/Dialog',
    [
       'Core/Control',
+      'js!Controls/Popup/interface/IAction',
       'js!Controls/Popup/Manager',
-      'js!Controls/Popup/Opener/Dialog/Strategy'
+      'js!Controls/Popup/Opener/Dialog/Strategy',
+      'Core/core-merge'
    ],
-   function (Control, Manager, Strategy) {
+   function (Control, IAction, Manager, Strategy, cMerge) {
       /**
        * Действие открытия окна
        * @class Controls/Popup/Opener/Dialog
@@ -13,13 +15,14 @@ define('js!Controls/Popup/Opener/Dialog',
        * @public
        * @category Popup
        */
-      var Dialog = Control.extend({
+      var Dialog = Control.extend([IAction], {
          _controlName: 'Controls/Popup/Opener/Dialog',
          iWantVDOM: true,
 
-         execute: function () {
-            var strategy = new Strategy();
-            Manager.show(this._options.popupOptions, this, strategy);
+         execute: function (config) {
+            var cfg = config || {};
+            cMerge(cfg, this._options);
+            Manager.show(cfg, this, Strategy);
          }
       });
 

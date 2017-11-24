@@ -14,11 +14,8 @@ define('js!Controls/Popup/Opener/Notification/Strategy',
        * @category Popup
        */
       var Strategy = Abstract.extend([IStrategy], {
-         constructor: function (cfg) {
-            Strategy.superclass.constructor.apply(this, arguments);
-         },
 
-         getPosition: function () {
+         getPosition: function (popup) {
             return {
                right: 16,
                bottom: 16
@@ -26,7 +23,6 @@ define('js!Controls/Popup/Opener/Notification/Strategy',
          }
       });
 
-      return Strategy;
-
+      return new Strategy();
    }
 );

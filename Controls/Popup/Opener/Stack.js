@@ -1,11 +1,12 @@
 define('js!Controls/Popup/Opener/Stack',
    [
       'Core/Control',
+      'js!Controls/Popup/interface/IAction',
       'js!Controls/Popup/Manager',
       'js!Controls/Popup/Opener/Stack/Strategy',
       'Core/core-merge'
    ],
-   function (Control, Manager, Strategy, cMerge) {
+   function (Control, IAction, Manager, Strategy, cMerge) {
 
       /**
        * Действие открытия прилипающего окна
@@ -15,15 +16,14 @@ define('js!Controls/Popup/Opener/Stack',
        * @public
        * @category Popup
        */
-      var Dialog = Control.extend({
+      var Dialog = Control.extend([IAction], {
          _controlName: 'Controls/Popup/Opener/Stack',
          iWantVDOM: true,
 
-         execute: function (config, opener) {
+         execute: function (config) {
             var cfg = config || {};
             cMerge(cfg, this._options);
-            var strategy = new Strategy(cfg.position, opener);
-            Manager.show(cfg.popupOptions, this, strategy);
+            Manager.show(cfg, this, Strategy);
          }
       });
 

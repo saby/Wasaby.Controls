@@ -1,10 +1,12 @@
 define('js!Controls/Popup/Opener/Notification',
    [
       'Core/Control',
+      'js!Controls/Popup/interface/IAction',
       'js!Controls/Popup/Manager',
-      'js!Controls/Popup/Opener/Notification/Strategy'
+      'js!Controls/Popup/Opener/Notification/Strategy',
+      'Core/core-merge'
    ],
-   function (Control, Manager, Strategy) {
+   function (Control, IAction, Manager, Strategy, cMerge) {
 
       /**
        * Действие открытия окна
@@ -14,13 +16,14 @@ define('js!Controls/Popup/Opener/Notification',
        * @public
        * @category Popup
        */
-      var Notification = Control.extend({
+      var Notification = Control.extend([IAction], {
          _controlName: 'Controls/Popup/Opener/Notification',
          iWantVDOM: true,
 
-         execute: function () {
-            var strategy = new Strategy();
-            Manager.show(this._options.popupOptions, this, strategy);
+         execute: function (config) {
+            var cfg = config || {};
+            cMerge(cfg, this._options);
+            Manager.show(cfg, this, Strategy);
          }
       });
 

@@ -15,52 +15,40 @@ define('js!Controls/Popup/Opener/Sticky/Strategy',
        * @category Popup
        */
       var Strategy = Abstract.extend([IStrategy], {
-         constructor: function (cfg, target) {
-            Strategy.superclass.constructor.apply(this, arguments);
-            this._options = cfg;
-            this._target = target;
-         },
-
-         getPosition: function (popup) {
-            if( !this._target ){
-               this._target = $('body');
+         getPosition: function (popup){
+            if( !popup._options.target ){
+               popup._options.target = $('body');
             }
             var
-               container = popup.getContainer(),
-               targetCoords = TargetCoords.get(this._target, this._options.corner),
+               container = popup && popup.getContainer(),
+               targetCoords = TargetCoords.get(popup._options.target, popup._options.corner),
                position = {};
             // вертикальное выравнивание
-            if( this._options.verticalAlign ){
-               position.top = targetCoords.top;
-               if(this._options.verticalAlign.side === 'bottom'){
-                  var offsetTop = position.top - container.height();
+            position.top = targetCoords.top;
+            if( popup._options.verticalAlign ){
+               // сможем посчитать только на _afterMount, когда будут известны размеры контейнера
+               if( container && popup._options.verticalAlign.side === 'bottom'){
+                  var offsetTop = position.top - container.height() + (popup._options.verticalAlign.offset || 0);
                   if( offsetTop > 0 ){
                      position.top = offsetTop;
                   }
                }
-               position.top += this._options.verticalAlign.offset || 0;
             }
-            else{
-               position.top = targetCoords.top;
-            }
+            position.left = targetCoords.left;
             // горизонтальное выравнивание
-            if( this._options.horizontalAlign ){
-               position.left = targetCoords.left;
-               if(this._options.horizontalAlign.side === 'right'){
-                  var offsetLeft = position.left - container.width();
+            if( popup._options.horizontalAlign ){
+               // сможем посчитать только на _afterMount, когда будут известны размеры контейнера
+               if( container && popup._options.horizontalAlign.side === 'right'){
+                  var offsetLeft = position.left - container.width() + (popup._options.horizontalAlign.offset || 0);
                   if( offsetLeft > 0 ){
                      position.left = offsetLeft;
                   }
                }
-               position.left += this._options.horizontalAlign.offset || 0;
-            }
-            else{
-               position.left = targetCoords.left;
             }
             return position;
          }
       });
 
-      return Strategy;
+      return new Strategy();
    }
 );

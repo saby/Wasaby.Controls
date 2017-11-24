@@ -22,36 +22,24 @@ define('js!Controls/Popup/Manager',
          /**
           * Показать всплывающее окно
           * @function Controls/Popup/Manager#show
-          * @param popupOptions компонент, который будет показан в окне
-          * @param opener компонент, который инициировал открытие окна
+          * @param options компонент, который будет показан в окне
+          * @param opener компонент, который будет показан в окне
           * @param strategy стратегия позиционирования всплывающего окна
           */
-         show: function (popupOptions, opener, strategy) {
+         show: function (options, opener, strategy) {
             if( !strategy || !CoreInstance.instanceOfMixin(strategy, 'Controls/Popup/interface/IStrategy') ){
                throw new Error('Strategy is not defined');
             }
             var element = {};
             element.id = Random.randomId();
-            popupOptions.strategy = strategy;
-            element.popupOptions = popupOptions;
+            element.zIndex = Manager.calculateZIndex();
+            element.strategy = strategy;
+            element.position = strategy.getPosition();
+            element.popupOptions = options.popupOptions;
             Manager._popupItems.add(element);
             Container.setPopupItems(Manager._popupItems);
          },
-         /**
-          * Вытолкнуть окно наверх
-          * @function Controls/Popup/Manager#pushUp
-          * @param popup инстанс попапа
-          */
-         pushUp: function(popup){
-            if( popup.isStack() ){
-               var
-                  index = Manager._popupItems.getIndexByValue('id', popup.getId());
-               if( index > -1 ){
-                  Manager._popupItems.move(index, Manager._popupItems.getCount() - 1);
-                  Container.setPopupItems(Manager._popupItems);
-               }
-            }
-         },
+
          /**
           * Удалить окно
           * @function Controls/Popup/Manager#remove
@@ -65,22 +53,64 @@ define('js!Controls/Popup/Manager',
                Manager._popupItems.removeAt(index);
                Container.setPopupItems(Manager._popupItems);
             }
+         },
+
+         /**
+          * Вытолкнуть окно наверх
+          * @function Controls/Popup/Manager#_pushUp
+          * @param popup инстанс попапа
+          */
+         _pushUp: function(popup){
+            var
+               index = Manager._popupItems.getIndexByValue('id', popup.getId());
+            if( index > -1 ){
+               var element = Manager._popupItems.at(index);
+               element.zIndex = Manager.calculateZIndex();
+               Container.setPopupItems(Manager._popupItems);
+            }
+         },
+
+         /**
+          * Пересчитать положение попапа
+          * @function Controls/Popup/Manager#_recalcPosition
+          * @param popup инстанс попапа
+          */
+         _recalcPosition: function(popup){
+            var
+               index = Manager._popupItems.getIndexByValue('id', popup.getId());
+            if( index > -1 ) {
+               var element = Manager._popupItems.at(index);
+               Manager._popupItems.at(index).position = element.strategy.getPosition(popup);
+               Container.setPopupItems(Manager._popupItems);
+            }
+         },
+
+         /**
+          * Вернуть следующий z-index
+          * @function Controls/Popup/Manager#calculateZIndex
+          */
+         calculateZIndex: function(){
+            if( !Manager._zIndex ){
+               Manager._zIndex = 10;
+            }
+            return Manager._zIndex += 10;
          }
       };
 
       Manager._popupItems = new List();
-      Container.subscribe('onClosePopup', function(event, popup){
+      
+      Container.subscribe('closePopup', function(event, popup){
          Manager.remove(popup);
       });
-      Container.subscribe('onFocusPopup', function(event, popup, focusIn){
-         if( focusIn ){
-            Manager.pushUp(popup);
+      
+      Container.subscribe('focusPopup', function(event, popup, focusIn){
+         if( !focusIn && popup.isAutoHide()){
+            Manager.remove(popup);
          }
-         else{
-            if( popup._autoHide ){
-               Manager.remove(popup);
-            }
-         }
+      });
+      
+      Container.subscribe('recalcPosition', function(event, popup){
+         Manager._recalcPosition(popup);
       });
 
       return Manager;

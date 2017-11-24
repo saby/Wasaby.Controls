@@ -35,6 +35,6 @@
   box-sizing: border-box;
   white-space: nowrap;
   margin-left: 12px;
-  max-width: calc(52%);
+  max-width: calc(100% - 48px);
   line-height: 44px;
 }
