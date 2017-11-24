@@ -2,11 +2,11 @@ define('js!Controls/Input/Area', [
    'Core/Control',
    'Core/constants',
    'js!WS.Data/Type/descriptor',
-   'js!Controls/Input/resources/ValidateHelper',
+   'js!Controls/Input/resources/Helper',
    'Core/detection',
    'tmpl!Controls/Input/Area/Area',
    'css!Controls/Input/Area/Area'
-], function(Control, constants, types, ValidateHelper, detection, template) {
+], function(Control, constants, types, Helper, detection, template) {
 
    'use strict';
 
@@ -64,20 +64,20 @@ define('js!Controls/Input/Area', [
       },
 
       //Валидирует и подготавливает новое значение по splitValue
-      prepareValue: function(splitValue) {
-         var input = splitValue.input;
+      prepareData: function(splitValue) {
+         var insert = splitValue.insert;
 
          if (this._options.constraint) {
-            input = ValidateHelper.constraint(input, this._options.constraint);
+            insert = Helper.constraint(insert, this._options.constraint);
          }
 
          if(this._options.maxLength){
-            input = ValidateHelper.maxLength(input, splitValue, this._options.maxLength);
+            insert = Helper.maxLength(insert, splitValue, this._options.maxLength);
          }
 
          return {
-            value: splitValue.before + input + splitValue.after,
-            position: splitValue.before.length + input.length
+            value: splitValue.before + insert + splitValue.after,
+            position: splitValue.before.length + insert.length
          };
       }
    };
@@ -92,7 +92,7 @@ define('js!Controls/Input/Area', [
 
          this._value = options.value;
          this._hasScroll = false;
-         this._prepareValue = _private.prepareValue.bind(this);
+         this._prepareData = _private.prepareData.bind(this);
       },
 
       _afterMount: function() {
@@ -107,7 +107,7 @@ define('js!Controls/Input/Area', [
       _changeValueHandler: function(e, value){
          _private.setValue.call(this, value);
          _private.updateScroll.call(this);
-         this._notify('valueChanged', value);
+         this._notify('onChangeValue', value);
       },
 
       _inputCompletedHandler: function(){
@@ -117,8 +117,7 @@ define('js!Controls/Input/Area', [
             if(newValue !== this._value){
                _private.setValue.call(this, newValue);
                _private.updateScroll.call(this);
-               this._notify('valueChanged', newValue);
-               this._forceUpdate();
+               this._notify('onChangeValue', newValue);
             }
          }
 

@@ -1,10 +1,10 @@
 <ws:Controls.Input.resources.InputRender.InputRender
         value="{{_value}}"
         selectOnClick="{{_options.selectOnClick}}"
-        prepareValue="{{_prepareValue}}"
+        prepareData="{{_prepareData}}"
         tagStyle="{{_options.tagStyle}}"
         event:onChangeValue="_changeValueHandler()"
-        event:onInputCompleted="_notifyHandler('onInputCompleted')"
+        event:onInputCompleted="_inputCompletedHandler()"
         event:onTagHover="_notifyHandler('onTagHover')"
         event:onTagClick="_notifyHandler('onTagClick')">
    <ws:content>

@@ -21,13 +21,13 @@ define([
                constraint: '[0-9]'
             });
 
-            assert.equal(area._prepareValue({
+            assert.equal(area._prepareData({
                before: '',
                input: 'a',
                after: ''
             }).value, '');
 
-            assert.equal(area._prepareValue({
+            assert.equal(area._prepareData({
                before: '',
                input: '1',
                after: ''
@@ -41,13 +41,13 @@ define([
                maxLength: '1'
             });
 
-            assert.equal(area._prepareValue({
+            assert.equal(area._prepareData({
                before: '',
                input: '1',
                after: ''
             }).value, '1');
 
-            assert.equal(area._prepareValue({
+            assert.equal(area._prepareData({
                before: '1',
                input: '2',
                after: ''

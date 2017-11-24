@@ -1,13 +1,13 @@
 define('js!Controls/Input/Text',
    [
       'Core/Control',
-      'js!Controls/Input/resources/ValidateHelper',
+      'js!Controls/Input/resources/Helper',
       'tmpl!Controls/Input/Text/Text',
       'js!WS.Data/Type/descriptor',
       'css!SBIS3.CONTROLS.TextBox',
       'tmpl!Controls/Input/resources/input'
    ],
-   function(Control, ValidateHelper, template, types) {
+   function(Control, Helper, template, types) {
 
       'use strict';
 
@@ -71,24 +71,24 @@ define('js!Controls/Input/Text',
       var _private = {
 
          //Валидирует и подготавливает новое значение по splitValue
-         prepareValue: function(splitValue) {
-            var input = splitValue.input;
+         prepareData: function(splitValue) {
+            var insert = splitValue.insert;
 
             if (this._options.constraint) {
-               input = ValidateHelper.constraint(input, this._options.constraint);
+               insert = Helper.constraint(insert, this._options.constraint);
             }
 
             if (this._options.trim) {
-               input = input.trim();
+               insert = insert.trim();
             }
 
             if(this._options.maxLength){
-               input = ValidateHelper.maxLength(input, splitValue, this._options.maxLength);
+               insert = Helper.maxLength(insert, splitValue, this._options.maxLength);
             }
 
             return {
-               value: splitValue.before + input + splitValue.after,
-               position: splitValue.before.length + input.length
+               value: splitValue.before + insert + splitValue.after,
+               position: splitValue.before.length + insert.length
             };
          }
 
@@ -103,7 +103,7 @@ define('js!Controls/Input/Text',
             TextBox.superclass.constructor.call(this, options);
 
             this._value = options.value;
-            this._prepareValue = _private.prepareValue.bind(this);
+            this._prepareData = _private.prepareData.bind(this);
          },
 
          _beforeUpdate: function(newOptions) {
@@ -113,6 +113,19 @@ define('js!Controls/Input/Text',
          _changeValueHandler: function(event, value) {
             this._value = value;
             this._notify('onChangeValue', value);
+         },
+
+         _inputCompletedHandler: function(){
+            //Если стоит опция trim, то перед завершением удалим лишние пробелы и ещё раз стрельнем valueChanged
+            if(this._options.trim){
+               var newValue = this._value.trim();
+               if(newValue !== this._value){
+                  this._value = newValue;
+                  this._notify('onChangeValue', newValue);
+               }
+            }
+
+            this._notify('inputCompleted', this._value);
          },
 
          _notifyHandler: function(event, value) {

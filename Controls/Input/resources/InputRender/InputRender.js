@@ -3,10 +3,10 @@ define('js!Controls/Input/resources/InputRender/InputRender',
       'Core/Control',
       'js!WS.Data/Type/descriptor',
       'tmpl!Controls/Input/resources/InputRender/InputRender',
-      'js!Controls/Input/resources/Util',
+      'js!Controls/Input/resources/RenderHelper',
       'css!SBIS3.CONTROLS.TextBox'
    ],
-   function(Control, types, template, Util) {
+   function(Control, types, template, RenderHelper) {
 
       'use strict';
 
@@ -19,29 +19,56 @@ define('js!Controls/Input/resources/InputRender/InputRender',
        * @author Журавлев Максим Сергеевич
        */
 
+      var _private = {
+
+         getSelection: function(){
+            return this._selection;
+         },
+
+         getTargetPosition: function(target){
+            return target.selectionEnd;
+         },
+
+         saveSelection: function(target){
+            this._selection = this._selection || {};
+            this._selection = target.selectionStart;
+            this._selection = target.selectionEnd;
+         },
+
+         setTargetData: function(target, data){
+            target.value = data.value;
+            target.setSelectionRange(data.position, data.position);
+         }
+
+      };
+
       var InputRender = Control.extend({
          
          _controlName: 'Controls/Input/resources/InputRender/InputRender',
          _template: template,
 
-         constructor: function(options) {
-            InputRender.superclass.constructor.apply(this, arguments);
-            this._value = options.value;
-            this._targetUtil = new Util();
-         },
-
          _inputHandler: function(e) {
+            var
+               value = this._options.value,
+               newValue = e.target.value,
+               selection = _private.getSelection.call(this),
+               position = _private.getTargetPosition.call(this, e.target),
+               inputType, splitValue, processedData;
+
+            inputType = e.nativeEvent.inputType ?
+                  RenderHelper.getAdaptiveInputType(e.nativeEvent.inputType, selection) :
+                  RenderHelper.getInputType(value, newValue, position, selection);
             //Подготавливаем объект с разобранным значением
-            var splitValue = this._targetUtil.buildSplitValue(e.target, this._value);
-            // Отправляем на валидацию и в prepareValue.
-            var processedData = this._options.prepareValue(splitValue);
+            splitValue = RenderHelper.getSplitInputValue(value, newValue, position, selection, inputType);
 
-            this._targetUtil.setValue(e.target, processedData.value, processedData.position);
-            this._targetUtil.saveSelectionPosition(e.target);
+            // Отправляем на валидацию и в prepareData
+            processedData = this._options.prepareData(splitValue, inputType);
 
-            if(this._value !== processedData.value){
-               this._value = processedData.value;
-               this._notify('onChangeValue', this._value);
+            _private.setTargetData.call(this, e.target, processedData);
+            _private.saveSelection.call(this, e.target);
+
+            if(value !== processedData.value){
+               this._notify('onChangeValue', processedData.value);
             }
          },
 
@@ -50,16 +77,16 @@ define('js!Controls/Input/resources/InputRender/InputRender',
 
             // При нажатии стрелок происходит смещение курсора.
             if (keyCode > 36 && keyCode < 41) {
-               this._targetUtil.saveSelectionPosition(e.target);
+               _private.saveSelection.call(this, e.target);
             }
          },
 
          _clickHandler: function(e) {
-            this._targetUtil.saveSelectionPosition(e.target);
+            _private.saveSelection.call(this, e.target);
          },
 
          _selectionHandler: function(e){
-            this._targetUtil.saveSelectionPosition(e.target);
+            _private.saveSelection.call(this, e.target);
          },
 
          _notifyHandler: function(e, value) {
