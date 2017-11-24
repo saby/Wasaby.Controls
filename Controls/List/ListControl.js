@@ -120,24 +120,22 @@ define('js!Controls/List/ListControl', [
          }
       },
 
-      toBegin: function() {
+      scrollToEdge: function(direction) {
          var self = this;
-         if (this._navigationController) {
-            this._navigationController.setBeginState();
+         if (this._navigationController && this._navigationController.hasMoreData(direction)) {
+            this._navigationController.setEdgeState(direction);
             _private.load.call(this).addCallback(function(){
-               self._container.closest('.ws-scrolling-content').get(0).scrollTop = 0;
+               _private.scrollTo.call(self, direction == 'up' ? 0 : 100000000)
             });
+         }
+         else {
+            _private.scrollTo.call(self, direction == 'up' ? 0 : 100000000)
          }
       },
 
-      toEnd: function() {
-         var self = this;
-         if (this._navigationController) {
-            this._navigationController.setEndState();
-            _private.load.call(this).addCallback(function(){
-               self._container.closest('.ws-scrolling-content').get(0).scrollTop = 10000000;
-            });
-         }
+      scrollTo: function(offset) {
+         //TODO без скролл вотчера пока так
+         this._container.closest('.ws-scrolling-content').get(0).scrollTop = offset;
       }
    };
 
@@ -465,8 +463,8 @@ define('js!Controls/List/ListControl', [
                switch (arrow) {
                   case 'Next': this._scrollPagingCtr.scrollForward(); break;
                   case 'Prev': this._scrollPagingCtr.scrollBackward(); break;
-                  case 'Begin': _private.toBegin.call(this); break;
-                  case 'End': _private.toEnd.call(this); break;
+                  case 'Begin': _private.scrollToEdge.call(this, 'up'); break;
+                  case 'End': _private.scrollToEdge.call(this, 'down'); break;
                }
             }
          },
