@@ -163,7 +163,7 @@ node('controls') {
                     dir(workspace) {
                         echo "Выкачиваем cdn"
                         checkout([$class: 'GitSCM',
-                        branches: [[name: '1.0']],
+                        branches: [[name: props["cdn"]],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [[
                             $class: 'RelativeTargetDirectory',
