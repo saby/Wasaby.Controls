@@ -1,8 +1,8 @@
 <div class="controls-TextBox">
    <div class="controls-TextBox__wrapper">
       <ws:partial
-         if="{{_beforeFieldWrapper}}"
-         template="{{_beforeFieldWrapper}}"
+         if="{{_options.beforeFieldWrapper}}"
+         template="{{_options.beforeFieldWrapper}}"
       />
       <input
          autocomplete="off"
@@ -30,8 +30,8 @@
          </span>
       </ws:if>
       <ws:partial
-         if="{{_afterFieldWrapper}}"
-         template="{{_afterFieldWrapper}}"
+         if="{{_options.afterFieldWrapper}}"
+         template="{{_options.afterFieldWrapper}}"
       />
    </div>
 </div>

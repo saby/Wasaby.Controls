@@ -9,5 +9,11 @@
    event:onChangeValue="_inputHandler()"
    event:onTagHover="_notifyHandler('onTagHover')"
    event:onTagClick="_notifyHandler('onTagClick')"
-   event:onInputFinish="_notifyHandler('onInputFinish')"
-/>
+   event:onInputFinish="_notifyHandler('onInputFinish')">
+   <ws:afterFieldWrapper>
+       <ws:partial if="{{_afterFieldWrapper}}" template="{{_afterFieldWrapper}}" scope="{{...}}"/>
+   </ws:afterFieldWrapper>
+    <ws:beforeFieldWrapper>
+        <ws:partial if="{{_beforeFieldWrapper}}" template="{{_beforeFieldWrapper}}" scope="{{...}}"/>
+    </ws:beforeFieldWrapper>
+</ws:Controls.Input.resources.TextRender.TextRender>

@@ -13,10 +13,6 @@ define('js!Controls/List/resources/utils/Search',
        * Checks required parameters
        */
       function checkRequiredParams(params) {
-         if (!params.searchParam) {
-            throw new Error('searchParam is required for search')
-         }
-   
          if (!params.dataSource) {
             throw new Error('dataSource is required for search')
          }
