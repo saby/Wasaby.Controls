@@ -48,7 +48,7 @@ define('js!Controls/List/Controllers/ScrollWatcher', [
 
          //Есть нет IntersectionObserver, то в обработчике onScroll нужно дополнительно обсчитывать все триггеры
          var additionalOnScrollHandler = function() { };
-         if (!window || !window.IntersectionObserver) {
+         if (!global || !global.IntersectionObserver) {
             additionalOnScrollHandler = _private.onScrollWithoutIntersectionObserver.bind(this);
          } else {
             this._initIntersectionObserver(cfg.triggers);
