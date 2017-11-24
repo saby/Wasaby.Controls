@@ -44,18 +44,17 @@ define('js!Controls/Input/Area', [
 
       setValue: function(value){
          this._value = value;
-         //TODO: this._children.fakeArea.innerText = value;
-         this._container.children().find('.controls-TextArea__fakeField_value')[0].innerHTML = value;
+         this._children.fakeAreaValue.innerHTML = value;
       },
 
       //Обновляет наличие скролла, в зависимости от того, есть ли скролл на фейковой текст арии
       updateScroll: function(){
-         var fakeArea = this._container.children().find('.controls-TextArea__fakeField')[0];
+         var fakeArea = this._children.fakeArea;
          var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
 
          //Для IE, текст мы показываем из fakeArea, поэтому обновим скролл.
          if(needScroll && detection.isIE){
-            fakeArea.scrollTop = this._container.children().find('.controls-TextArea__realField').get(0).scrollTop;
+            fakeArea.scrollTop = this._children.realArea.scrollTop;
          }
 
          if(needScroll !== this._hasScroll){
