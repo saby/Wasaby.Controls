@@ -10,7 +10,7 @@
          <ws:Controls.List.Paging.DigitButtons
                className="ws-Paging__digitButons"
                event:onDigitClick="__digitClick()"
-               selectedKey="{{_selectedKey}}"
+               selectedKey="{{_options.selectedKey}}"
                count="{{_options.pagesCount}}"></ws:Controls.List.Paging.DigitButtons>
       </ws:if>
       <span class="ws-Paging__btn ws-Paging__arrow ws-Paging__arrow__state-{{_stateNext}}" event:onclick="__arrowClick('Next')">

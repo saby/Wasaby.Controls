@@ -26,21 +26,21 @@ define('js!Controls/List/Paging', [
          },
 
          _beforeMount: function(newOptions) {
-            this._selectedKey = newOptions.selectedKey;
             if (newOptions.showDigits) {
-               this.__calcBtnStates(this._selectedKey);
+               this.__calcBtnStates(newOptions.selectedKey);
             }
          },
 
          _beforeUpdate: function(newOptions) {
-            this._selectedKey = newOptions.selectedKey;
             if (newOptions.showDigits) {
-               this.__calcBtnStates(this._selectedKey);
+               this.__calcBtnStates(newOptions.selectedKey);
             }
-            this._stateBegin = newOptions.stateBegin || 'disabled';
-            this._stateEnd = newOptions.stateEnd || 'disabled';
-            this._stateNext = newOptions.stateNext || 'disabled';
-            this._statePrev = newOptions.statePrev || 'disabled';
+            else {
+               this._stateBegin = newOptions.stateBegin || 'disabled';
+               this._stateEnd = newOptions.stateEnd || 'disabled';
+               this._stateNext = newOptions.stateNext || 'disabled';
+               this._statePrev = newOptions.statePrev || 'disabled';
+            }
          },
 
          __calcBtnStates: function(selKey) {
@@ -68,10 +68,8 @@ define('js!Controls/List/Paging', [
          },
 
          __changePage: function(page) {
-            if (this._selectedKey != page) {
-               this._selectedKey = page;
-               this.__calcBtnStates(this._selectedKey);
-               this._notify('onSelectedKeyChange');
+            if (this._options.selectedKey != page) {
+               this._notify('onChangeSelectedKey', page);
             }
          },
 
@@ -82,8 +80,8 @@ define('js!Controls/List/Paging', [
                   switch (btnName) {
                      case 'Begin': targetPage = 1; break;
                      case 'End': targetPage = this._options.pagesCount; break;
-                     case 'Prev': targetPage = this._selectedKey - 1; break;
-                     case 'Next': targetPage = this._selectedKey + 1; break;
+                     case 'Prev': targetPage = this._options.selectedKey - 1; break;
+                     case 'Next': targetPage = this._options.selectedKey + 1; break;
                   }
                   this.__changePage(targetPage);
                }
