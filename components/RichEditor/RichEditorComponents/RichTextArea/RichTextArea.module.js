@@ -2129,28 +2129,35 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * Убрать пустые строки из начала и конца текста
           * @returns {*} текст без пустх строк вначале и конце
           */
-         _trimText: function(text) {
-            var
-               beginReg = new RegExp('^<p> *(&nbsp; *)*(&nbsp;)?</p>'),// регулярка начала строки
-               endReg = new RegExp('<p> *(&nbsp; *)*(&nbsp;)?</p>$'),// регулярка конца строки
-               regShiftLine1 = new RegExp('<p>(<br( ?/)?>)+(&nbsp;)?'),// регулярка пустой строки через shift+ enter и space
-               regShiftLine2 = new RegExp('(&nbsp;)?(<br( ?/)?>)+</p>'),// регулярка пустой строки через space и shift+ enter
-               regResult;
+         _trimText: function (text) {
+            if (!text) {
+               return '';
+            }
+            var regs = {
+               regShiftLine1: /<p>[\s\xA0]*(?:<br[^<>]*>)+[\s\xA0]*/gi,    // регулярка пустой строки через shift+ enter и space
+               regShiftLine2: /[\s\xA0]*(?:<br[^<>]*>)+[\s\xA0]*<\x2Fp>/gi,// регулярка пустой строки через space и shift+ enter
+               beginReg: /^<p>[\s\xA0]*<\x2Fp>[\s\xA0]*/i,        // регулярка начала строки
+               endReg: /[\s\xA0]*<p>[\s\xA0]*<\x2Fp>$/i           // регулярка конца строки
+            };
+            var substitutes = {
+               regShiftLine1: '<p>',
+               regShiftLine2: '</p>'
+            };
             text = this._removeEmptyTags(text);
-            while (regShiftLine1.test(text)) {
-               text = text.replace(regShiftLine1, '<p>');
+            text = text.replace(/&nbsp;/gi, String.fromCharCode(160));
+            for (var name in regs) {
+               for (var prev = -1, cur = text.length; cur !== prev; prev = cur, cur = text.length) {
+                  text = text.replace(regs[name], substitutes[name] || '');
+               }
+               text = text.replace(/^[\s\xA0]+|[\s\xA0]+$/g, '');
+               if (!text) {
+                  return '';
+               }
             }
-            while (regShiftLine2.test(text)) {
-               text = text.replace(regShiftLine2, '</p>');
-            }
-            while ((regResult = beginReg.exec(text)) !== null) {
-               text = text.substr(regResult[0].length + 1);
-            }
-            while ((regResult = endReg.exec(text)) !== null) {
-               text = text.substr(0, text.length - regResult[0].length - 1);
-            }
-            return (text === null || text === undefined) ? '' : ('' + text).replace(/^\s*|\s*$/g, '');
+            text = text.replace(/\xA0/gi, '&nbsp;');
+            return text;
          },
+
          /**
           * Проблема:
           *          при нажатии клавиши установки формата( полужирный/курсив и тд) генерируется пустой тег (strong,em и тд)
