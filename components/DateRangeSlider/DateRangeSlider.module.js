@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
             var picker = self.getPicker();
             picker.setHorizontalAlign({
                side: 'left',
-               offset: (container.outerWidth() - picker.getContainer().width()) / 2
+               offset: (container.outerWidth() - picker.getContainer().outerWidth()) / 2
             });
          });
       },
