@@ -1,4 +1,4 @@
-define('js!Controls/Input/resources/TargetUtil',
+define('js!Controls/Input/resources/Util',
    [
       'Core/core-extend'
    ],
@@ -11,7 +11,7 @@ define('js!Controls/Input/resources/TargetUtil',
       * Абстрагирует в себе работу с кареткой и выделением.
       * */
 
-      var TargetUtil = coreExtend({
+      var Util = coreExtend({
 
          saveSelectionPosition: function(target){
             this._selectionStart = target.selectionStart;
@@ -65,6 +65,6 @@ define('js!Controls/Input/resources/TargetUtil',
 
       });
 
-      return TargetUtil;
+      return Util;
    }
 );

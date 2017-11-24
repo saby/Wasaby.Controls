@@ -3,10 +3,10 @@ define('js!Controls/Input/resources/InputRender/InputRender',
       'Core/Control',
       'js!WS.Data/Type/descriptor',
       'tmpl!Controls/Input/resources/InputRender/InputRender',
-      'js!Controls/Input/resources/TargetUtil',
+      'js!Controls/Input/resources/Util',
       'css!SBIS3.CONTROLS.TextBox'
    ],
-   function(Control, types, template, TargetUtil) {
+   function(Control, types, template, Util) {
 
       'use strict';
 
@@ -27,7 +27,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
          constructor: function(options) {
             InputRender.superclass.constructor.apply(this, arguments);
             this._value = options.value;
-            this._targetUtil = new TargetUtil();
+            this._targetUtil = new Util();
          },
 
          _inputHandler: function(e) {
