@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'Core/helpers/Function/memoize',
    'css!SBIS3.CONTROLS.BreadCrumbs/BreadCrumbs/BreadCrumbs',
    'css!SBIS3.CONTROLS.Menu/Menu/Menu',
-   'css!SBIS3.CONTROLS.MenuItem'
+   'css!SBIS3.CONTROLS.MenuItem/MenuItem/MenuItem'
 ], function(CompoundControl, ItemsControlMixin, PickerMixin, DecorableMixin, dotTplFn, itemContentTpl, dotsTpl, itemTpl, menuItem, escapeHtml, escapeUnicode, IoC, memoize) {
    /**
     * Класс контрола "Хлебные крошки". Основное применение - <a href='https://wi.sbis.ru/doc/platform/patterns-and-practices/typical-list/'>иерархические реестры</a>.

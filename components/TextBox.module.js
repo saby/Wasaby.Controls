@@ -2,16 +2,16 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'Core/EventBus',
    'Core/constants',
    'js!SBIS3.CONTROLS.TextBoxBase',
-   'tmpl!SBIS3.CONTROLS.TextBox/Box/TextBox',
-   'tmpl!SBIS3.CONTROLS.TextBox/Box/resources/textFieldWrapper',
-   'tmpl!SBIS3.CONTROLS.TextBox/Box/resources/compatiblePlaceholder',
+   'tmpl!SBIS3.CONTROLS.TextBox/TextBox/TextBox',
+   'tmpl!SBIS3.CONTROLS.TextBox/TextBox/resources/textFieldWrapper',
+   'tmpl!SBIS3.CONTROLS.TextBox/TextBox/resources/compatiblePlaceholder',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'js!SBIS3.CONTROLS.TextBoxUtils',
    'js!SBIS3.CONTROLS.Utils.GetTextWidth',
    'Core/helpers/Function/forAliveOnly',
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'js!SBIS3.CONTROLS.IconButton',
-   'css!SBIS3.CONTROLS.TextBox/Box/TextBox'
+   'css!SBIS3.CONTROLS.TextBox/TextBox/TextBox'
 
 ], function(
     EventBus,

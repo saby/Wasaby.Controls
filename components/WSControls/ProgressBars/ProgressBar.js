@@ -6,7 +6,7 @@ define('js!WSControls/ProgressBars/ProgressBar',
       'Core/Control',
       'tmpl!WSControls/ProgressBars/ProgressBar',
       'js!WS.Data/Type/descriptor',
-      'css!SBIS3.CONTROLS.ProgressBar'
+      'css!SBIS3.CONTROLS.ProgressBar/ProgressBar/ProgressBar'
    ],
    function(Control, template, types) {
       /**

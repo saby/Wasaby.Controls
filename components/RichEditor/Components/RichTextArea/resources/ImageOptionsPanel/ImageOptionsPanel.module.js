@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'js!SBIS3.CONTROLS.CommandsButton',
       'js!SBIS3.CONTROLS.Link',
       'css!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
-      'css!SBIS3.CONTROLS.Menu'
+      'css!SBIS3.CONTROLS.Menu/Menu/Menu'
    ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, dotTplFn, ImagePanel) {
       'use strict';
       //todo: отказаться от этого модуля в 3.7.5.50 перейти на контекстное меню

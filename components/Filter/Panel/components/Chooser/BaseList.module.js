@@ -2,10 +2,10 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.BaseList', [
    'js!SBIS3.CONTROLS.FilterPanelChooser.Base',
    'Core/core-clone',
    'Core/core-merge',
-   'tmpl!SBIS3.CONTROLS.FilterPanelChooser.BaseList/Base/resources/ItemTpl',
-   'tmpl!SBIS3.CONTROLS.FilterPanelChooser.BaseList/Base/resources/FilterPanelChooserBaseList',
+   'tmpl!SBIS3.CONTROLS.FilterPanelChooser.BaseList/BaseList/resources/ItemTpl',
+   'tmpl!SBIS3.CONTROLS.FilterPanelChooser.BaseList/BaseList/resources/FilterPanelChooserBaseList',
    'js!SBIS3.CONTROLS.ListView',
-   'css!SBIS3.CONTROLS.FilterPanelChooser.BaseList/Base/FilterPanelChooser.BaseList'
+   'css!SBIS3.CONTROLS.FilterPanelChooser.BaseList/BaseList/FilterPanelChooser.BaseList'
 ], function(FilterPanelChooserBase, coreClone, coreMerge, itemTpl, chooserTpl) {
    'use strict';
    /**

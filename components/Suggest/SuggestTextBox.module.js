@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
    'js!SBIS3.CONTROLS.SearchMixin',
    'tmpl!SBIS3.CONTROLS.SuggestTextBox/resources/afterFieldWrapper',
    'Core/core-instance',
-   'css!SBIS3.CONTROLS.SuggestTextBox/TextBox/SuggestTextBox'
+   'css!SBIS3.CONTROLS.SuggestTextBox/SuggestTextBox/SuggestTextBox'
 ], function (
     TextBox,
     TextBoxUtils,

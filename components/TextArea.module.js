@@ -1,13 +1,13 @@
 define('js!SBIS3.CONTROLS.TextArea', [
    "Core/constants",
    "js!SBIS3.CONTROLS.TextBox",
-   'tmpl!SBIS3.CONTROLS.TextArea/Area/resources/inputField',
+   'tmpl!SBIS3.CONTROLS.TextArea/TextArea/resources/inputField',
    'Core/helpers/String/escapeHtml',
    'js!SBIS3.CONTROLS.Utils.LinkWrap',
    "Core/IoC",
    //'Core/helpers/Hcontrol/trackElement',
    "browser!js!SBIS3.CORE.FieldText/resources/Autosize-plugin",
-   'css!SBIS3.CONTROLS.TextArea/Area/TextArea'
+   'css!SBIS3.CONTROLS.TextArea/TextArea/TextArea'
 ], function( constants,TextBox, inputField, escapeHtml, LinkWrap, IoC, trackElement) {
 
    'use strict';

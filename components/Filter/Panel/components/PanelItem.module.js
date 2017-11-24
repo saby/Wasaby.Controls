@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.FilterPanelItem', [
    'tmpl!SBIS3.CONTROLS.FilterPanelItem/PanelItem/FilterPanelItem',
    'tmpl!SBIS3.CONTROLS.FilterPanelItem/PanelItem/resources/FilterPanelItemSpoilerRightPartTitleTemplate',
    'js!SBIS3.CONTROLS.IconButton',
-   'css!SBIS3.CONTROLS.FilterPanel/PanelItem/resources/FilterPanelButton'
+   'css!SBIS3.CONTROLS.FilterPanel/Panel/resources/FilterPanelButton'
 ], function (cContext, CompoundControl, dotTplFn) {
    /**
     * Миксин, задающий любому контролу поведение работы с набором фильтров.

@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'Core/core-instance',
    'js!SBIS3.CONTROLS.Utils.Contains',
    "js!SBIS3.CONTROLS.DataGridView",
-   "tmpl!SBIS3.CONTROLS.TreeDataGridView",
+   "tmpl!SBIS3.CONTROLS.TreeDataGridView/DataGridView/TreeDataGridView",
    "js!SBIS3.CONTROLS.TreeMixin",
    "js!SBIS3.CONTROLS.TreeViewMixin",
    "js!SBIS3.CONTROLS.IconButton",

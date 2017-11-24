@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       "js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible",
       'js!SBIS3.CORE.BaseCompatible',
       'js!SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor',
-      'tmpl!SBIS3.CONTROLS.ScrollContainer',
+      'tmpl!SBIS3.CONTROLS.ScrollContainer/ScrollContainer/ScrollContainer',
       'js!SBIS3.CONTROLS.Scrollbar',
       'Core/detection',
       'Core/compatibility',
@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'Core/constants',
       'Core/EventBus',
       'Core/CommandDispatcher',
-      'css!SBIS3.CONTROLS.ScrollContainer'
+      'css!SBIS3.CONTROLS.ScrollContainer/ScrollContainer/ScrollContainer'
    ],
    function (extend,
              AbstractCompatible,

@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    'js!SBIS3.CONTROLS.Utils.GetTextWidth',
    'Core/Sanitize',
    'js!SBIS3.StickyHeaderManager',
-   'css!SBIS3.CONTROLS.DataGridView'
+   'css!SBIS3.CONTROLS.DataGridView/DataGridView/DataGridView'
 ],
    function(
       CommandDispatcher,

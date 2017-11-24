@@ -5,9 +5,9 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
     'Core/core-merge',
     'Core/core-instance',
     'WS.Data/Collection/RecordSet',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList/resources/FilterPanelChooserDictionaryFooter',
+    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList/DictionaryList/resources/FilterPanelChooserDictionaryFooter',
     'js!SBIS3.CONTROLS.Action.SelectorAction',
-    'css!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList'
+    'css!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList/DictionaryList/FilterPanelChooser.DictionaryList'
 ], function(FilterPanelChooserList, CommandDispatcher, coreClone, coreMerge, cInstance, RecordSet, footerTpl, SelectorAction) {
 
     'use strict';

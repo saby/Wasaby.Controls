@@ -6,9 +6,9 @@
 define('js!SBIS3.CONTROLS.RadioButton',
    [
       'js!SBIS3.CONTROLS.RadioButtonBase',
-      'tmpl!SBIS3.CONTROLS.RadioButton',
+      'tmpl!SBIS3.CONTROLS.RadioButton/Button/RadioButton',
       'Core/Sanitize',
-      'css!SBIS3.CONTROLS.RadioButton'
+      'css!SBIS3.CONTROLS.RadioButton/Button/RadioButton'
    ],
    function(RadioButtonBase,dotTplFn, Sanitize) {
 

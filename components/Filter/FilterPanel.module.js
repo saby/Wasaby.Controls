@@ -26,9 +26,9 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    'js!SBIS3.CONTROLS.FilterPanelDataRange',
    'js!SBIS3.CONTROLS.FilterPanelBoolean',
    'js!SBIS3.CONTROLS.IconButton',
-   'css!SBIS3.CONTROLS.FilterPanel/panel/resources/FilterPanelButton',
+   'css!SBIS3.CONTROLS.FilterPanel/Panel/resources/FilterPanelButton',
    'js!SBIS3.CONTROLS.ScrollContainer',
-   'css!SBIS3.CONTROLS.FilterPanel'
+   'css!SBIS3.CONTROLS.FilterPanel/Panel/FilterPanel'
 ], function(coreClone, CommandDispatcher, CompoundControl, Expandable, RecordSet, FilterPanelItem, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
 
    'use strict';
