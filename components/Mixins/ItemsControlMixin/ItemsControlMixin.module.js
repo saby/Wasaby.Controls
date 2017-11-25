@@ -348,7 +348,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @example
        * <pre>
        *    myView.subscribe('onDataLoadError', function(eventObject, error) {
-       *       event.setResult(true);
+       *       eventObject.setResult(true);
        *       TextBox.setText('Ошибка при загрузке данных');
        *    });
        * </pre>
