@@ -221,6 +221,14 @@ define('js!WSControls/Buttons/MenuButton', [
          }, self._options.historyId);
       },
 
+      getPicker: function () {
+        if(!requirejs.defined('js!SBIS3.CONTROLS.ContextMenu')) {
+            IoC.resolve('ILogger').log('MenuButton', 'ContextMenu не загружено');
+           return;
+        }
+        return MenuButton.superclass.getPicker.call(this);
+      },
+
       _createPicker: function(targetElement){
          var menuconfig = {
             parent: this.getParent(),
@@ -436,7 +444,7 @@ define('js!WSControls/Buttons/MenuButton', [
 
       /*TODO блок сеттеров для временного решения проблем с названиями опций полей. Избавиться с переходм на интерфейсы вместо миксинов*/
        setKeyField: function(prop) {
-           IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setKeyField устарел, используйте setIdProperty');
+           IoC.resolve('ILogger').log('MenuButton', 'Метод setKeyField устарел, используйте setIdProperty');
            this.setIdProperty(prop);
        },
 
@@ -445,7 +453,7 @@ define('js!WSControls/Buttons/MenuButton', [
        },
 
        setDisplayField: function(prop) {
-           IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setDisplayField устарел, используйте setDisplayProperty');
+           IoC.resolve('ILogger').log('MenuButton', 'Метод setDisplayField устарел, используйте setDisplayProperty');
            this.setDisplayProperty(prop);
        },
 
@@ -454,7 +462,7 @@ define('js!WSControls/Buttons/MenuButton', [
        },
 
        setHierField: function(prop) {
-           IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
+           IoC.resolve('ILogger').log('MenuButton', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
            this.setParentProperty(prop);
        },
 
