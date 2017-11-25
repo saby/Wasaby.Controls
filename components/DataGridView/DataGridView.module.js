@@ -1773,8 +1773,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          DataGridView.superclass._reviveItems.apply(this, arguments);
       },
 
-      _onReviveItems: function() {
-         if (this._headIsChanged) {
+      _onReviveItems: function(lightVer, silent) {
+         if (this._headIsChanged && !silent) {
             this._notify('onDrawHead');
             this._headIsChanged = false;
          }
