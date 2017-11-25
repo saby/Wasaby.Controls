@@ -85,7 +85,8 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
              moneyValue: null,
              _decimalsPart: null,
              _integersPart: null
-         }
+         },
+         _dotOverstep: false
       },
 
       _modifyOptions: function(options){
