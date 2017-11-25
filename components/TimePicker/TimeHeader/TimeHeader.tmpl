@@ -1,10 +1,11 @@
 <div class="controls-TimeHeader">
    <div class="controls-TimeHeader__containerBlock">
       <div class="controls-TimeHeader__startBlock">
-         <div class="controls-TimeHeader__title">Время</div>
+         <div class="controls-TimeHeader__title">{[Время]}</div>
          <div class="controls-TimeHeader__toggleTime">
             <div
                class="controls-TimeHeader__time js-controls-TimeHeader__hours"
+               title="{[Установить часы]}"
                data-bind="{
                   html: time/hours,
                   css: {
@@ -16,6 +17,7 @@
             <div class="controls-TimeHeader__separator">:</div>
             <div
                class="controls-TimeHeader__time js-controls-TimeHeader__minutes"
+               title="{[Установить минуты]}"
                data-bind="{
                   html: time/minutes,
                   css: {
@@ -30,6 +32,7 @@
          name="homeButton"
          className="controls-IconButton__round-border controls-TimeHeader__homeButton"
          icon="controld-TimeHeader__icon_size icon-16 icon-Home3 icon-primary"
+         tooltip="{[Установить текущее время]}"
       />
    </div>
 </div>

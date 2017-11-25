@@ -1,6 +1,6 @@
 #!groovy
 echo "Задаем параметры сборки"
-def version = "3.17.210"
+def version = "3.17.220"
 if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
         currentBuild.result = 'ABORTED'
         error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
@@ -163,7 +163,7 @@ node('controls') {
                     dir(workspace) {
                         echo "Выкачиваем cdn"
                         checkout([$class: 'GitSCM',
-                        branches: [[name: '1.0']],
+                        branches: [[name: props["cdn"]]],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [[
                             $class: 'RelativeTargetDirectory',

@@ -228,7 +228,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (this._getItemsProjection()) {
             this._createAllFolderFooters();
          }
-         this._checkBreadCrumbsWidth();
+         // Правильно именно по onDrawItems пересчитывать размеры, т.к. в searchController'e по этому событию вешается
+         // доп. класс "controls-GridView__searchMode", влияющий на отступы
+         this.once('onDrawItems', function() {
+            this._checkBreadCrumbsWidth();
+         });
       },
    
       _afterAddItems: function() {
