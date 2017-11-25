@@ -2683,6 +2683,23 @@ define('js!SBIS3.CONTROLS.ListView',
                };
             return config;
          },
+
+         _redrawItemInner: function(item) {
+            var
+               toolbar = this._getItemsToolbar(),
+               toolbarTarget = toolbar.getCurrentTarget(),
+               targetElement = this._getDomElementByItem(item);
+            ListView.superclass._redrawItemInner.apply(this, arguments);
+
+            //Если перерисовалась запись, которая является текущим контейнером для тулбара,
+            //то перезаписшем в тулбар, новую ссылку на дом элемент, для того, чтобы тулбар смог
+            //правильно спозионироваться.
+            if (toolbarTarget && targetElement && toolbarTarget.container.get(0) === targetElement.get(0)) {
+               toolbarTarget.container = this._getDomElementByItem(item);
+               toolbar.setCurrentTarget(toolbarTarget);
+            }
+         },
+
          _showToolbar: function(model) {
             var itemsInstances, itemsToolbar, editedItem, editedContainer;
             if (this._options.editMode.indexOf('toolbar') !== -1) {

@@ -247,6 +247,14 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           isToolbarLocking: function() {
              return this._lockingToolbar;
           },
+
+          getCurrentTarget: function() {
+             return this._currentTarget;
+          },
+
+          setCurrentTarget: function(target) {
+             this._currentTarget = target;
+          },
           /**
            * Включает слежение за позицей currentTarget
            * @private
