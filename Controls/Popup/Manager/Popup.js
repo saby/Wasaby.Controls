@@ -21,7 +21,6 @@ define('js!Controls/Popup/Manager/Popup',
             _controlName: 'Controls/Popup/Manager/Popup',
             _template: template,
             iWantVDOM: true,
-            _position: {},
 
             constructor: function(cfg){
                Popup.superclass.constructor.apply(this, arguments);
@@ -29,19 +28,28 @@ define('js!Controls/Popup/Manager/Popup',
             },
 
             _afterMount: function(){
-               this.subscribe('onFocusIn', this._focus.bind(this, true));
-               this.subscribe('onFocusOut', this._focus.bind(this, false));
-               this.recalcPosition();
-               // TODO не всегда нужно ставить фокус
-               this.focus();
-            },
-
-            _beforeUpdate: function(){
+               this.subscribe('onFocusIn', this._focusIn);
+               this.subscribe('onFocusOut', this._focusOut);
+               if( this._options.catchFocus === undefined || this._options.catchFocus ){
+                  this.focus();
+               }
                this.recalcPosition();
             },
 
+            /**
+             * автоматически скрывать popup при потере фокуса
+             * @function Controls/Popup/Manager/Popup#close
+             */
             isAutoHide: function(){
                return !!this._options.autoHide;
+            },
+
+            /**
+             * Закрыть popup
+             * @function Controls/Popup/Manager/Popup#close
+             */
+            close: function(){
+               CommandDispatcher.sendCommand(this, 'closePopup', this);
             },
 
             /**
@@ -53,20 +61,22 @@ define('js!Controls/Popup/Manager/Popup',
             },
 
             /**
-             * Закрыть окно
-             * @function Controls/Popup/Manager/Popup#close
+             * Обработка установки фокуса
+             * @function Controls/Popup/Manager/Popup#_focusIn
+             * @param event
              */
-            close: function(){
-               CommandDispatcher.sendCommand(this, 'closePopup', this);
+            _focusIn: function(event){
+               CommandDispatcher.sendCommand(this, 'focusInPopup', this);
             },
 
             /**
-             * Обработка фокуса
-             * @function Controls/Popup/Manager/Popup#_focus
-             * @param focusIn
+             * Обработка удаления фокуса
+             * @function Controls/Popup/Manager/Popup#_focusOut
+             * @param event
+             * @param focusedControl
              */
-            _focus: function(focusIn){
-               CommandDispatcher.sendCommand(this, 'focusPopup', this, focusIn);
+            _focusOut: function(event, focusedControl){
+               CommandDispatcher.sendCommand(this, 'focusOutPopup', this, focusedControl);
             }
          });
 

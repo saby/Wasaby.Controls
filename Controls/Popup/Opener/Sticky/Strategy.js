@@ -34,8 +34,8 @@ define('js!Controls/Popup/Opener/Sticky/Strategy',
                   }
                }
             }
-            position.left = targetCoords.left;
             // горизонтальное выравнивание
+            position.left = targetCoords.left;
             if( popup._options.horizontalAlign ){
                // сможем посчитать только на _afterMount, когда будут известны размеры контейнера
                if( container && popup._options.horizontalAlign.side === 'right'){
@@ -43,6 +43,10 @@ define('js!Controls/Popup/Opener/Sticky/Strategy',
                   if( offsetLeft > 0 ){
                      position.left = offsetLeft;
                   }
+               }
+               else if( popup._options.autoWidth ){
+                  var right = window.innerWidth - ( targetCoords.width + targetCoords.left );
+                  position.right = right >= 0 ? right : 0;
                }
             }
             return position;

@@ -15,7 +15,7 @@ define('js!Controls/Popup/Opener/Dialog/Strategy',
        */
       var Strategy = Abstract.extend([IStrategy], {
 
-         getPosition: function (popup){
+         getPosition: function (){
             return {
                top: 0,
                left: 0

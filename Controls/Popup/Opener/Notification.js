@@ -20,10 +20,10 @@ define('js!Controls/Popup/Opener/Notification',
          _controlName: 'Controls/Popup/Opener/Notification',
          iWantVDOM: true,
 
-         execute: function (config) {
+         execute: function (config, opener) {
             var cfg = config || {};
-            cMerge(cfg, this._options);
-            Manager.show(cfg, this, Strategy);
+            cMerge(cfg, this._options.popupOptions);
+            Manager.show(cfg, opener || this, Strategy);
          }
       });
 

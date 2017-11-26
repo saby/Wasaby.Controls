@@ -23,7 +23,7 @@ define('js!Controls/Popup/Manager',
           * Показать всплывающее окно
           * @function Controls/Popup/Manager#show
           * @param options компонент, который будет показан в окне
-          * @param opener компонент, который будет показан в окне
+          * @param opener компонент, который инициировал открытие окна
           * @param strategy стратегия позиционирования всплывающего окна
           */
          show: function (options, opener, strategy) {
@@ -31,11 +31,11 @@ define('js!Controls/Popup/Manager',
                throw new Error('Strategy is not defined');
             }
             var element = {};
-            element.id = Random.randomId();
-            element.zIndex = Manager.calculateZIndex();
+            element.id = Random.randomId('popup-');
+            options.opener = opener;
+            element.popupOptions = options;
             element.strategy = strategy;
-            element.position = strategy.getPosition();
-            element.popupOptions = options.popupOptions;
+            element.zIndex = Manager.calculateZIndex();
             Manager._popupItems.add(element);
             Container.setPopupItems(Manager._popupItems);
          },
@@ -52,6 +52,23 @@ define('js!Controls/Popup/Manager',
             if( index > -1 ){
                Manager._popupItems.removeAt(index);
                Container.setPopupItems(Manager._popupItems);
+            }
+         },
+
+         /**
+          * Вернуть следующий z-index
+          * @function Controls/Popup/Manager#calculateZIndex
+          */
+         calculateZIndex: function(){
+            if( !Manager._zIndex ){
+               Manager._zIndex = 10;
+            }
+            return Manager._zIndex += 10;
+         },
+
+         _focusOut: function(popup, focusedControl){
+            if( popup.isAutoHide() && popup._options.opener !== focusedControl.to){
+               Manager.remove(popup);
             }
          },
 
@@ -83,17 +100,6 @@ define('js!Controls/Popup/Manager',
                Manager._popupItems.at(index).position = element.strategy.getPosition(popup);
                Container.setPopupItems(Manager._popupItems);
             }
-         },
-
-         /**
-          * Вернуть следующий z-index
-          * @function Controls/Popup/Manager#calculateZIndex
-          */
-         calculateZIndex: function(){
-            if( !Manager._zIndex ){
-               Manager._zIndex = 10;
-            }
-            return Manager._zIndex += 10;
          }
       };
 
@@ -103,10 +109,12 @@ define('js!Controls/Popup/Manager',
          Manager.remove(popup);
       });
       
-      Container.subscribe('focusPopup', function(event, popup, focusIn){
-         if( !focusIn && popup.isAutoHide()){
-            Manager.remove(popup);
-         }
+      Container.subscribe('focusInPopup', function(event, popup){
+
+      });
+
+      Container.subscribe('focusOutPopup', function(event, popup, focusedControl){
+         Manager._focusOut(popup, focusedControl);
       });
       
       Container.subscribe('recalcPosition', function(event, popup){

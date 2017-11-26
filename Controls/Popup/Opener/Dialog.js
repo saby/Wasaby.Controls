@@ -19,10 +19,10 @@ define('js!Controls/Popup/Opener/Dialog',
          _controlName: 'Controls/Popup/Opener/Dialog',
          iWantVDOM: true,
 
-         execute: function (config) {
+         execute: function (config, opener) {
             var cfg = config || {};
-            cMerge(cfg, this._options);
-            Manager.show(cfg, this, Strategy);
+            cMerge(cfg, this._options.popupOptions);
+            Manager.show(cfg, opener || this, Strategy);
          }
       });
 

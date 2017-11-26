@@ -24,9 +24,10 @@ define('js!Controls/Popup/Manager/Container',
 
          constructor: function (cfg){
             Container.superclass.constructor.call(this, cfg);
-            this._publish('closePopup', 'focusPopup', 'recalcPosition');
+            this._publish('closePopup', 'focusInPopup', 'focusOutPopup', 'recalcPosition');
             CommandDispatcher.declareCommand(this, 'closePopup', this.closePopup);
-            CommandDispatcher.declareCommand(this, 'focusPopup', this.focusPopup);
+            CommandDispatcher.declareCommand(this, 'focusInPopup', this.focusInPopup);
+            CommandDispatcher.declareCommand(this, 'focusOutPopup', this.focusOutPopup);
             CommandDispatcher.declareCommand(this, 'recalcPosition', this.recalcPosition);
          },
 
@@ -45,12 +46,20 @@ define('js!Controls/Popup/Manager/Container',
          },
 
          /**
-          * @event Controls/Popup/Manager/Container#focusPopup Происходит при приходе/уходе фокуса.
+          * @event Controls/Popup/Manager/Container#focusPopup Происходит при установке/уходе фокуса.
           * @param {Object} popup Инстанс попапа.
-          * @param {Object} isFocused Признак пришел или ушел фокус.
           */
-         focusPopup: function(popup, isFocused){
-            this._notify('focusPopup', popup, isFocused);
+         focusInPopup: function(popup){
+            this._notify('focusInPopup', popup);
+         },
+
+         /**
+          * @event Controls/Popup/Manager/Container#focusPopup Происходит при уходе фокуса.
+          * @param {Object} popup Инстанс попапа.
+          * @param {Object} focusedControl Контрол, на который перешёл фокус. Если контрол неизвестен, то undefined.
+          */
+         focusOutPopup: function(popup, focusedControl){
+            this._notify('focusOutPopup', popup, focusedControl);
          },
 
          /**
@@ -64,7 +73,7 @@ define('js!Controls/Popup/Manager/Container',
          /**
           * Изменить набор окон
           * @function Controls/Popup/Manager/Container#setPopupItems
-          * @param popupItems новый набор окон
+          * @param {List} popupItems новый набор окон
           */
          setPopupItems: function (popupItems) {
             this._options._popupItems = popupItems;
