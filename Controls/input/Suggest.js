@@ -13,12 +13,12 @@ define('js!Controls/Input/Suggest', [
     */
 
    /**
-    * @name Controls/Input/Suggest#withoutCross
+    * @name Controls/Input/Suggest#clearable
     * @cfg {Boolean} Скрыть крестик удаления значения
     */
 
    /**
-    * @name Controls/Input/Suggest#suggestTemplateName
+    * @name Controls/Input/Suggest#suggestTemplate
     * @cfg {String} Имя шаблона списка
     */
 
