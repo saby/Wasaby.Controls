@@ -23,7 +23,8 @@ define('js!Controls/Input/Suggest', [
     */
 
    /**
-    * @name Controls/Input/Suggest#showEmptySuggest
+    * Обсудить
+    * @name #showEmptySuggest
     * @cfg {Boolean} Показывать ли выпадающий блок, при пустом списке
     */
 
