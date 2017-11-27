@@ -37748,12 +37748,18 @@
             }
 
             peekCaretPosition = direction == -1 ? caretWalker.prev(caretPosition) : caretWalker.next(caretPosition);
+            var newRng;
             if (beforeFn(peekCaretPosition)) {
                if (direction === -1) {
-                  return mergeTextBlocks(direction, caretPosition, peekCaretPosition);
+                  newRng = mergeTextBlocks(direction, caretPosition, peekCaretPosition);
                }
 
-               return mergeTextBlocks(direction, peekCaretPosition, caretPosition);
+               newRng = mergeTextBlocks(direction, peekCaretPosition, caretPosition);
+            }
+            // Используем новый рэнж только если в результате не пустой рэнж не сколлапсировал. И если он действительный
+            // https://online.sbis.ru/opendoc.html?guid=03b7e733-3ca8-4d24-9e51-e47b709ce5ee
+            if (newRng && !(!range.collapsed && newRng.collapsed) && newRng.commonAncestorContainer.parentNode) {
+               return newRng;
             }
          }
 
