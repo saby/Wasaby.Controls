@@ -64,8 +64,34 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
             выставляется он методе setText. Если опция забиндена на контекст, то компонент должен создаваться уже проставленой опцией,
             поэтому в методе setText опция должна меняться. */
          _textChanged: false,
-         _options: {
-            _paddingClass: ' controls-TextBox__paddingBoth',
+          _isMultiline: false,
+          _options: {
+            _prepareClassesByConfig: function() {
+               var
+                  fieldClasses = [],
+                  wrapperClasses = [],
+                  containerClasses = [];
+
+               containerClasses.push('controls-TextBox_state_' + (this.enabled ? 'default' : 'disabled'));
+               !this.enabled && containerClasses.push('controls-TextBox_state_disabled_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
+               containerClasses.push('controls-TextBox_size_' + (this.size ? this.size : 'm'));
+               containerClasses.push('controls-TextBox_text-align_' + this.textAlign);
+               containerClasses.push(this._paddingClass);
+               if (this.textTransform) {
+                  fieldClasses.push('controls-TextBox__field-' + this.textTransform);
+               }
+               //В новой престо в больших полях ввода будет отступ снизу
+               if (this.size === 'l') {
+                  fieldClasses.push('controls-TextBox__field_size_l');
+               }
+
+               return {
+                  container: containerClasses.join(' '),
+                  field: fieldClasses.join(' '),
+                  wrapper: wrapperClasses.join(' ')
+               }
+            },
+            _paddingClass: ' controls-TextBox_paddingBoth',
             /**
              * @cfg {String} Устанавливает текстовое значение в поле ввода.
              * @remark
@@ -265,6 +291,9 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
       _setEnabled: function(enabled) {
          TextBoxBase.superclass._setEnabled.apply(this, arguments);
+         if (this._options.placeholder) {
+            this.getContainer().toggleClass('controls-TextBox__hiddenPlaceholder', !enabled);
+         }
          this._toggleState();
       },
       clearMark: function() {
@@ -284,7 +313,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
       _toggleState: function() {
          var container = this._getStateToggleContainer()[0];
-         container.className = container.className.replace(/(^|\s)controls-TextBox__state__\S+/gi, '');
+         container.className = container.className.replace(/(^|\s)controls-TextBox_state_\S+/gi, '');
          this._getStateToggleContainer().addClass(this._getToggleState());
       },
       _getToggleState: function() {
@@ -292,7 +321,9 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
             active = this.isActive(),
             enabled = this.isEnabled(),
             marked = this.isMarked();
-         return 'controls-TextBox__state__' + (marked ? 'marked' : !enabled ? 'disabled' : active ? 'active' : 'default');
+         return 'controls-TextBox_state_' +
+            (marked ? 'error' : !enabled ? 'disabled' +
+            (this._isMultiline ? ' controls-TextBox_state_disabled_multiLine' : ' controls-TextBox_state_disabled_singleLine') : active ? 'active' : 'default');
       }
    });
 

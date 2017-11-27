@@ -80,6 +80,7 @@ define('js!WSControls/Buttons/ButtonBase', [
               * // надпись на кнопке - "Войти"
               * </pre>
               * @see caption
+              * @noShow
               */
             escapeCaptionHtml: true,
             task1174347539: false

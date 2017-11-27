@@ -452,7 +452,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {String} width Ширина колонки. Значение необходимо устанавливать для колонок с фиксированной шириной.
              * Значение можно установить как в px (суффикс устанавливать не требуется), так и в %.
              * @property {Boolean} [highlight=true] Признак подсвечивания фразы при поиске. Если установить значение в false, то при поиске данных по таблице не будет производиться подсветка совпадений.
-             * @property {String} [resultTemplate] Шаблон отображения колонки в строке итогов. Подробнее о создании такого шиблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/">Строка итогов</a>.
+             * @property {String} [resultTemplate] Шаблон отображения колонки в строке итогов. Подробнее о создании такого шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/">Строка итогов</a>.
              * @property {String} [className] Имя CSS-класса, который будет применён к заголовку и всем ячейкам колонки.
              * Список классов:
              * <ul>
@@ -1373,7 +1373,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _setPartScrollShift: function(position) {
          this._currentScrollPosition = typeof position === 'object' ? this._checkThumbPosition(position) : this._checkThumbPosition({left: position});
          /* Записываем в опцию, чтобы была возможность использовать в шаблоне */
-         this._options._columnsShift = -this._currentScrollPosition*this._partScrollRatio;
+         this._options._columnsShift = -this._currentScrollPosition*(this._partScrollRatio || 0);
          this._thumb[0].style.left = this._currentScrollPosition + 'px';
       },
 
@@ -1532,8 +1532,21 @@ define('js!SBIS3.CONTROLS.DataGridView',
              this._setPartScrollShift(0);
           }
           checkColumns(this._options);
-          this._destroyEditInPlaceController();
+          // Обновим список колонок для редактирования по месту
+          this._updateEditInPlaceColumns(this._options.columns);
        },
+
+      _updateEditInPlaceColumns: function(columns) {
+         if (this._hasEditInPlace()) {
+            // Если используется редактирование по месту, то необходимо:
+            // 1. Поменять набор колонок в контроллере
+            this._getEditInPlace().addCallback(function(editInPlaceController) {
+               editInPlaceController.setColumns(columns);
+            });
+            // 2. Уничтожить запущенное редактирование по месту, чтобы оно пересоздалось с актуальными колонками
+            this._destroyEditInPlace();
+         }
+      },
 
       _oldRedraw: function() {
          DataGridView.superclass._oldRedraw.apply(this, arguments);
@@ -1543,8 +1556,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
       setMultiselect: function() {
          DataGridView.superclass.setMultiselect.apply(this, arguments);
          // При установке multiselect создается отдельная td'шка под checkbox, которая не учитывается при редактировании по месту.
-         // Уничтожаем контроллер редактирования по месту, чтобы пересоздать его с новым набором колонок.
-         this._destroyEditInPlaceController();
+         // Обновим список колонок для редактирования по месту
+         this._updateEditInPlaceColumns();
 
          if(this.getItems()) {
             this.redraw();

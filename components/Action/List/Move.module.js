@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
          $protected: {
             _options:{
                /**
-                * @cfg {WS.Data/MoveStrategy/IMoveStrategy) Стратегия перемещения. Класс, который реализует перемещение записей. Подробнее тут {@link WS.Data/MoveStrategy/Base}.
+                * @cfg {WS.Data/MoveStrategy/IMoveStrategy} Стратегия перемещения. Класс, который реализует перемещение записей. Подробнее тут {@link WS.Data/MoveStrategy/Base}.
                 * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} или {@link onEndMove}.
                 * @see {@link WS.Data/MoveStrategy/Base}
                 * @see {@link WS.Data/MoveStrategy/IMoveStrategy}

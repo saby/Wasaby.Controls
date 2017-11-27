@@ -382,6 +382,19 @@ define('js!Controls/List/ListControl', [
             this._publish('onDataLoad');
          },
 
+         /**
+          * Load more data after reaching end or start of the list.
+          *
+          * @param e
+          * @param direction 'up' | 'down'
+          * @private
+          */
+         _scrollLoadMore: function(e, direction) {
+            if (this._navigationController && this._navigationController.hasMoreData(direction)) {
+               _private.loadPage.call(this, direction);
+            }
+         },
+
          _beforeMount: function(newOptions) {
             this._filter = newOptions.filter;
 

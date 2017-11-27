@@ -406,6 +406,26 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       return tplOptions;
    },
 
+   hasNodeWithChild = function(items, hierarchyRelation) {
+      var
+         hasNodeWithChild = false,
+         idx = 0,
+         itemsCount = items.getCount(),
+         child, item;
+      while (idx < itemsCount && !hasNodeWithChild) {
+         item = items.at(idx);
+         child = hierarchyRelation.getChildren(
+            item.getId(),
+            items
+         );
+         if (child.length) {
+            hasNodeWithChild = true;
+         }
+         idx++;
+      }
+      return hasNodeWithChild;
+   },
+
    getHierarchyRelation = function(cfg) {
       var
          items = cfg._items;
@@ -515,6 +535,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        */
       $protected: {
          _options: {
+            _hasNodeWithChild: hasNodeWithChild,
             _folderOffsets : {},
             _folderHasMore : {},
             _prepareGroupId: prepareGroupId,
@@ -530,6 +551,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             _getRecordsForRedrawTree: getRecordsForRedraw,
             _createDefaultProjection : createDefaultProjection,
             _curRoot: null,
+            /**
+             * @cfg {String} Устанавливает режим отображения иконки разворота узла
+             * @variant always Отображать иконку разворота узла всегда, не зависимо от наличия дочерних элементов
+             * @variant withChild Отображать иконку разворота узла в том случае, если имеется хотя бы один дочерний элемент
+             * @variant never Скрывать иконку разворота узла всегда
+             */
+            expanderDisplayMode: 'always',
             /**
              * @cfg {String, Number} Устанавливает идентификатор узла, относительно которого отображаются данные в текущий момент
              */
@@ -799,11 +827,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var item;
          if (hash) {
             item = this._getItemsProjection().getByHash(hash);
-         }
-         else {
+         } else {
             item = this._getItemProjectionByItemId(id);
          }
          if (item) {
+            // Реакция на сворачивание может настать раньше чем долетит и будет обработано событие onChangeExpanded
+            // Следовательно, при сворачивании сразу синхронизируем список развернутых узлов.
+            delete this._options.openedPath[id];
             item.setExpanded(false);
             return Deferred.success();
          } else {
@@ -840,7 +870,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        */
       expandNode: function(id, hash) {
          //todo https://online.sbis.ru/opendoc.html?guid=561eb028-84bd-4395-a19f-898c0e2d2b5e&des=
-         var item;
+         var
+            item,
+            ignoreKeys = {};
          if (hash) {
             item = this._getItemsProjection().getByHash(hash);
          }
@@ -852,7 +884,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                return Deferred.success();
             } else {
                if (this._options.singleExpand) {
-                  this._collapseNodes(this.getOpenedPath(), id);
+                  ignoreKeys[id] = true;
+                  this._collapseNodes(this.getOpenedPath(), ignoreKeys);
                }
                this._options.openedPath[id] = true;
                return this._loadNode(id).addCallback(forAliveOnly(function() {
@@ -959,7 +992,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          else {
             if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
                groupId = items[0].getContents();
-               if (items.length > 1 && this._canApplyGrouping(items[1])) {
+               if (groupId !== false && items.length > 1 && this._canApplyGrouping(items[1])) {
                   this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
                }
                items.splice(0, 1);
@@ -992,14 +1025,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          return filter;
       },
       /**
-       * Закрыть ветки, кроме переданной в параметре ignoreKey
-       * @param key
+       * Закрыть ветки, кроме переданных в параметре ignoreKeys
+       * @param openedPath
+       * @param ignoreKeys
        * @private
        */
-      _collapseNodes: function(openedPath, ignoreKey) {
+      _collapseNodes: function(openedPath, ignoreKeys) {
          for (var key in openedPath) {
             if (openedPath.hasOwnProperty(key)) {
-               if (!ignoreKey || key != ignoreKey) {
+               if (!ignoreKeys || !ignoreKeys[key]) {
                   this.collapseNode(key);
                }
             }
@@ -1033,12 +1067,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             projectionFilter;
          if (itemsProjection) { // Если имеется проекция - то применяем разворот к итемам, иначе он применится после создания проекции
             projectionFilter = resetFilterAndStopEventRaising(itemsProjection, true);
-            this._collapseNodes(this.getOpenedPath());
-            this._options.openedPath = openedPath;
+            this._collapseNodes(this.getOpenedPath(), openedPath);
+            this._options.openedPath = coreClone(openedPath);
             applyExpandToItemsProjection(itemsProjection, this._options);
             restoreFilterAndRunEventRaising(itemsProjection, projectionFilter, true);
          } else {
-            this._options.openedPath = openedPath;
+            this._options.openedPath = coreClone(openedPath);
          }
       },
       _removeFromLoadedRemoteNodes: function(remoteNodes) {
@@ -1059,6 +1093,17 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          }
       },
       around: {
+         _prepareClassesByConfig: function(parentFn, cfg) {
+            parentFn(cfg);
+            if (cfg.expanderDisplayMode === 'withChild') {
+               cfg.preparedClasses += ' controls-TreeView__hideExpanderEmptyNodes';
+               if (!cfg._hasNodeWithChild(cfg._items, cfg._getHierarchyRelation(cfg))) {
+                  cfg.preparedClasses += ' controls-TreeView__hideExpands';
+               }
+            } else if (cfg.expanderDisplayMode === 'never') {
+               cfg.preparedClasses += ' controls-TreeView__hideExpands';
+            }
+         },
          /**
           * Позволяет перезагрузить данные как одной модели, так и всей иерархии из дочерних элементов этой записи.
           * @param {Number} id Идентификатор записи
@@ -1179,6 +1224,21 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             parentFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
             this._findAndRedrawChangedBranches(newItems, oldItems);
             this._removeFromLoadedRemoteNodes(oldItems);
+            this._updateExpanderDisplay();
+         },
+         _onCollectionReset: function(parentFn) {
+            parentFn.call(this);
+            this._updateExpanderDisplay();
+         },
+         _onCollectionReplace: function(parentFn, newItems) {
+            parentFn.call(this, newItems);
+            this._updateExpanderDisplay();
+         },
+         _updateExpanderDisplay: function() {
+            if (this._options.expanderDisplayMode === 'withChild') {
+               this._container.toggleClass('controls-TreeView__hideExpands',
+                  !this._options._hasNodeWithChild(this._options.items, this._options._getHierarchyRelation(this._options)));
+            }
          },
          //В режиме поиска в дереве, при выборе всех записей, выбираем только листья, т.к. папки в этом режиме не видны.
          setSelectedItemsAll: function(parentFn) {

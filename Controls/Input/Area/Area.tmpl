@@ -1,0 +1,38 @@
+<ws:Controls.Input.resources.InputRender.InputRender
+        name="inputRender"
+        value="{{_value}}"
+        selectOnClick="{{_options.selectOnClick}}"
+        prepareData="{{_prepareData}}"
+        tagStyle="{{_options.tagStyle}}"
+        attr:class="controls-TextArea"
+        event:onChangeValue="_changeValueHandler()"
+        event:onInputCompleted="_inputCompletedHandler()"
+        event:onTagHover="_notifyHandler('onTagHover')"
+        event:onTagClick="_notifyHandler('onTagClick')">
+   <ws:content>
+      <!--TODO контейнер убрать-->
+      <div>
+         <textarea
+                 name="realArea"
+                 spellcheck="false"
+                 class="controls-TextArea__field controls-TextArea__realField controls-TextBox__field js-controls-TextBox__field"
+                 placeholder="{{_options.placeholder}}"
+                 readonly="{{!isEnabled() ? 'readonly'}}"
+                 style="overflow-y: {{_hasScroll ? 'scroll' : 'hidden'}}"
+                 event:onkeydown="_keyDownHandler()"
+         >{{_value}}</textarea>
+
+         <div class="controls-fakeTextArea__firstWrapper">
+            <div class="controls-fakeTextArea__secondWrapper">
+               <div
+                  name="fakeArea"
+                  class="controls-TextArea__field controls-TextArea__fakeField controls-TextBox__field js-controls-TextBox__field"
+                  style="{{_options.minLines ? ('min-height: ' + _options.minLines * 100 + '%;')}} {{_options.maxLines ? 'max-height: ' + _options.maxLines * 100 + '%'}}">
+                  <span name="fakeAreaValue">{{_value}}</span><br/>
+               </div>
+            </div>
+            <div style="clear:both;"></div>
+         </div>
+      </div>
+   </ws:content>
+</ws:Controls.Input.resources.InputRender.InputRender>

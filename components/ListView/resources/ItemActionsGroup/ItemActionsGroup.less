@@ -175,9 +175,12 @@
       .icon-size(@list-view-items-toolbar-icon-size, @list-view-items-toolbar-font-family);
    }
    &.controls-popup-revert-vertical {
+      .controls-Menu__itemsContainer {
+         padding: @menu-subpopup-padding;
+      }
       .controls-PopupMixin__closeButton {
          top: auto;
-         bottom: 8px;
+         bottom: @list-view-actions-menu-close-top;
       }
    }
    &.controls-ItemActions__contextMenu {

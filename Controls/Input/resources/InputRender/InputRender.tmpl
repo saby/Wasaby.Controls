@@ -1,0 +1,31 @@
+<div class="controls-TextBox" title="{{tooltip}}">
+   <div class="controls-TextBox__wrapper">
+
+      <ws:if data="{{_beforeFieldWrapper}}">
+         <ws:partial template="{{_beforeFieldWrapper}}"/>
+      </ws:if>
+
+      <div event:oninput="_inputHandler()"
+           event:onclick="_clickHandler()"
+           event:onselect="_selectionHandler()"
+           event:onkeyup="_keyUpHandler()"
+           event:onfocus="_focusHandler()"
+           event:onchange="_notifyHandler('onInputCompleted')"
+           attr:style="width: 100%">
+         <ws:partial template="{{_options.content}}"/>
+      </div>
+
+      <ws:if data="{{_afterFieldWrapper}}">
+         <ws:partial template="{{_afterFieldWrapper}}"/>
+      </ws:if>
+
+   </div>
+
+   <ws:if data="{{_options.tagStyle}}">
+      <div event:onmouseenter="_notifyHandler('onTagHover')"
+           event:onclick="_notifyHandler('onTagClick')"
+           class="controls-TextBox__informationIcon icon-size icon-Listbox controls-informationIcon {{'icon-' + _options.tagStyle}}">
+      </div>
+   </ws:if>
+</div>
+

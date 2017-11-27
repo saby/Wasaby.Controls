@@ -95,28 +95,7 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
 
             //Открываем ссылку, если она есть, иначе открываем журнал выполнения операции
             this.subscribeTo(longOperationsBrowser, 'onEdit', function (e, meta) {
-               var item = meta.item;
-               if (!self._longOpList.applyResultAction(item)) {
-                  // Если действие ещё не обработано
-                  var STATUSES = LongOperationEntry.STATUSES;
-                  var status = item.get('status');
-                  var canHasHistory = self._longOpList.canHasHistory(item);
-                  //Открыть журнал операций только для завершенных составных операций или ошибок
-                  if (status === STATUSES.ended && (item.get('isFailed') || (canHasHistory && 1 < item.get('progressTotal')))) {
-                     meta.dialogOptions = {
-                        title: rk('Журнал выполнения операции')
-                     };
-                     meta.componentOptions = canHasHistory ? {
-                        tabKey: item.get('tabKey'),
-                        producer: item.get('producer'),
-                        operationId: item.get('id'),
-                        isFailed: item.get('isFailed')
-                     } : {
-                        failedOperation: item
-                     };
-                     self.getChildControlByName('action').execute(meta);
-                  }
-               }
+               self._longOpList.applyResultAction(meta.item);
             });
 
             this.subscribeTo(view, 'onDataLoad'/*'onItemsReady'*/, function (evtName, recordset) {

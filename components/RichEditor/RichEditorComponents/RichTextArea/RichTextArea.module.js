@@ -51,6 +51,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       EventBus
    ) {
       'use strict';
+
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
       var
          EDITOR_MODULES = ['css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/skin.min',
@@ -468,7 +469,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          setActive: function(active) {
             //если тини еще не готов а мы передадим setActive родителю то потом у тини буддет баг с потерей ренжа,
             //поэтому если isEnabled то нужно передавать setActive родителю только по готовности тини
-            var args = [].slice.call(arguments);
+            var
+               args = [].slice.call(arguments),
+               editor, manager;
             if (active && this._needFocusOnActivated() && this.isEnabled()) {
                this._performByReady(function() {
                   this._tinyEditor.focus();
@@ -484,10 +487,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                         }.bind(this);
                      $(window).on('resize', resizeHandler);
                   }
-                  else
-                  if (cConstants.browser.isMobileIOS) {
-                     this._scrollTo(this._inputControl[0], 'top');
-                  }
                   if (cConstants.browser.isMobilePlatform) {
                      this._notifyMobileInputFocus();
                   }
@@ -496,11 +495,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
             else {
                if (!active) {
-                  var editor = this._tinyEditor;
-                  var manager = editor.editorManager;
-                  // Если компонент должен стать неактивным - нужно сбросить фокусированный редактор (Аналогично обработчику 'focusout' в TinyMCE в строке 40891)
-                  if (manager && manager.focusedEditor === editor) {
-                     manager.focusedEditor = null;
+                  editor = this._tinyEditor;
+                  if (editor) {
+                     manager = editor.editorManager;
+                     // Если компонент должен стать неактивным - нужно сбросить фокусированный редактор (Аналогично обработчику 'focusout' в TinyMCE в строке 40891)
+                     if (manager && manager.focusedEditor === editor) {
+                        manager.focusedEditor = null;
+                     }
                   }
                }
                if (cConstants.browser.isMobilePlatform) {
@@ -1507,35 +1508,35 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                content.innerHTML = html;
             }.bind(this));
 
-            if (this._options.editorConfig.browser_spellcheck && (cConstants.browser.chrome || cConstants.browser.safari)) {
+            if (this._options.editorConfig.browser_spellcheck) {
                // Если включена проверка правописания, нужно при исправлениях обновлять принудительно text
-               var _onSelectionChange1 = function (evt) {
-                  if (evt.target === document) {
-                     editor.off('SelectionChange', _onSelectionChange1);
-                     if (editor.selection.getContent()) {
-                        editor.once('SelectionChange', _onSelectionChange2);
-                        // Хотя цепляемся на один раз, но всё же отцепим через пару минут, если ничего не случится за это время
-                        setTimeout(editor.off.bind(editor, 'SelectionChange', _onSelectionChange2), 120000);
-                     }
-                  }
+               var _onSelectionChange1 = function () {
+                  cConstants.$doc.one('selectionchange', _onSelectionChange2);
+                  // Хотя цепляемся на один раз, но всё же отцепим через пару минут, если ничего не случится за это время
+                  setTimeout(function() {
+                     cConstants.$doc.off('selectionchange', _onSelectionChange2);
+                  }, 120000);
                }.bind(this);
 
-               var _onSelectionChange2 = function (evt) {
-                  if (evt.target === document) {
-                     this._updateTextByTiny();
-                  }
+               var _onSelectionChange2 = function () {
+                  this._updateTextByTiny();
                }.bind(this);
 
-               editor.on('contextmenu', function (evt) {
-                  if (evt.currentTarget === this._inputControl[0] && (evt.target === evt.currentTarget || $.contains(event.currentTarget, evt.target))) {
-                     editor.off('SelectionChange', _onSelectionChange2);
-                     if (cConstants.browser.safari) {
-                        // Для safari обязательно нужно отложить подписку на событие (потому что safari в тот момент, когда делается эта подписка
-                        // меняет выделение, и потом меняет его в момент вставки. Чтобы первое не ловить - отложить)
-                        setTimeout(editor.on.bind(editor, 'SelectionChange', _onSelectionChange1), 1);
-                     }
-                     else {
-                        editor.on('SelectionChange', _onSelectionChange1);
+               //В IE событие contextmenu не стреляет при включенной проверке орфографии, так что подписываемся на mousedown
+               editor.on('mousedown', function (evt) {
+                  if (evt.button === 2) {
+                     if (evt.currentTarget === this._inputControl[0] && (evt.target === evt.currentTarget || $.contains(evt.currentTarget, evt.target))) {
+                        cConstants.$doc.off('selectionchange', _onSelectionChange2);
+                        if (cConstants.browser.safari || cConstants.browser.chrome) {
+                           // Для safari и chrome обязательно нужно отложить подписку на событие (потому что в тот момент, когда делается эта подписка
+                           // они меняют выделение, и потом меняют его в момент вставки. Чтобы первое не ловить - отложить)
+                           setTimeout(function() {
+                              cConstants.$doc.one('selectionchange', _onSelectionChange1);
+                           }, 1);
+                        }
+                        else {
+                           cConstants.$doc.one('selectionchange', _onSelectionChange1);
+                        }
                      }
                   }
                }.bind(this));
@@ -2088,9 +2089,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                });
             }
             this._tinyReady.addCallback(function () {
-               // Если начальный контент пуст, то за счёт неправильного положения каретки(курсора ввода) в MSIE при начале ввода в конце добавится
-               // лишний параграф. Чтобы этого избежать - добавим символ "не символ"
-               this._tinyEditor.setContent(this._prepareContent(this.getText()) || (cConstants.browser.isIE ? '&#65279;' : ''));
+               this._tinyEditor.setContent(this._prepareContent(this.getText()) || '');
                //Проблема:
                //          1) При инициализации тини в историю действий добавляет контент блока на котором он построился
                //                (если пусто то <p><br data-mce-bogus="1"><p>)
@@ -2269,11 +2268,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                curHeight;
             if (this.isVisible()) {
                curHeight = this._container.height();
-               //Производим подкрутку вверх если курсор провалился под клавиатуру на iPad
-               //Делаем проверку на ipad сразу тк на остальный устройствах приводит к тормозам getBoundingClientRect в методе _elementIsUnderKeyboard
-               if (cConstants.browser.isMobileIOS) {
-                  this._backspinForIpad();
-               }
                if (curHeight !== this._lastHeight) {
                   this._lastHeight = curHeight;
                   this._notifyOnSizeChanged();
@@ -2287,28 +2281,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                targetOffset = target.getBoundingClientRect(),
                keyboardCoef = (window.innerHeight > window.innerWidth) ? constants.ipadCoefficient[side].vertical : constants.ipadCoefficient[side].horizontal; //Для альбома и портрета коэффициенты разные.
             return cConstants.browser.isMobileIOS && this.isEnabled() && targetOffset[side] > window.innerHeight * keyboardCoef;
-         },
-
-         _scrollTo: function(target, side){
-            if (this._elementIsUnderKeyboard(target, side)) {
-               target.scrollIntoView(true);
-            }
-         },
-
-         //метод осушествляет подрутку до места ввода ( параграфа) если его нижний край находится под клавитурой
-         _backspinForIpad: function() {
-            if (this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this._textChanged && (this._inputControl[0] === document.activeElement)) {
-               var
-                  closestParagraph = $(this._tinyEditor.selection.getNode()).closest('p')[0];
-               if (closestParagraph) {
-                  //Необходимо осуществлять подскролл к предыдущему узлу если текущий под клавиатурой
-                  if (closestParagraph.previousSibling && this._elementIsUnderKeyboard(closestParagraph, 'bottom')) {
-                     closestParagraph.previousSibling.scrollIntoView(true);
-                  }
-                  //Если после подскрола к предыдущему узлу текущий узел всё еще под клавиатурой, то осуществляется подскролл к текущему
-                  this._scrollTo(closestParagraph, 'bottom');
-               }
-            }
          },
 
          //Метод обновляющий значение редактора в задизабленом состоянии

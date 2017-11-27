@@ -197,7 +197,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          }
 
 	      options.cssClassName += ' controls-NumberTextBox';
-         options._paddingClass = options.enableArrows ? ' controls-TextBox__paddingLeft' : ' controls-TextBox__paddingBoth';
+         options._paddingClass = options.enableArrows ? ' controls-TextBox_paddingLeft' : ' controls-TextBox_paddingBoth';
          this._addOptionsFromClass(options, attrToMerge);
          return options;
       },

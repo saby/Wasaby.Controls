@@ -2,9 +2,8 @@
  * Created by kraynovdo on 23.10.2017.
  */
 define([
-   'js!Controls/List/ListControl/ListView',
-   'js!Controls/List/resources/utils/ItemsUtil'
-], function(ListView, ItemsUtil){
+   'js!Controls/List/ListControl/ListView'
+], function(ListView){
    describe('Controls.List.ListView', function () {
       var data, display;
       beforeEach(function() {
@@ -27,23 +26,6 @@ define([
          ];
 
       });
-      it('Selected key', function () {
-         var cfg = {
-            items: data,
-            idProperty: 'id',
-            selectedKey: 2
-         };
-         var lv = new ListView(cfg);
-         lv._beforeMount(cfg);
-
-         var selItem = lv._display.at(1);
-         assert.equal(selItem, lv._selectedItem, 'Incorrect selected item before mounting');
-
-         lv = new ListView({});
-         lv._beforeUpdate(cfg);
-         selItem = lv._display.at(1);
-         assert.equal(selItem, lv._selectedItem, 'Incorrect selected item before updating');
-      });
 
       it('Item click', function () {
          var cfg = {
@@ -55,10 +37,10 @@ define([
          lv.saveOptions(cfg);
          lv._beforeMount(cfg);
 
-         var dispItem = lv._display.at(2);
+         var dispItem = lv._listModel._itemsModel._display.at(2);
 
          lv._onItemClick({}, dispItem);
-         assert.equal(dispItem, lv._selectedItem, 'Incorrect selected item before updating');
+         assert.equal(dispItem, lv._listModel._selectedItem, 'Incorrect selected item before updating');
       })
    })
 });

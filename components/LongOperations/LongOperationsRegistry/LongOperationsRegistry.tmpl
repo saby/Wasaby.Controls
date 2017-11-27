@@ -27,21 +27,26 @@
                               internalValueField="StateKey"
                               internalCaptionField="StateTitle"
                               value="{{'filter/status'|mutable}}"
+                              resetValue="{{null}}"
+                              itemTemplate=""
                            />
                            <ws:Object
                               internalValueField="PeriodKey"
                               internalCaptionField="PeriodTitle"
                               value="{{'filter/period'|mutable}}"
+                              resetValue="{{null}}"
                            />
                            <ws:Object
                               internalValueField="DurationKey"
                               internalCaptionField="DurationTitle"
                               value="{{'filter/duration'|mutable}}"
+                              resetValue="{{null}}"
                            />
                            <ws:Object
                               internalValueField="UserId"
                               internalCaptionField="UserName"
                               value="{{'filter/UserId'|mutable}}"
+                              resetValue="{{!userId ? null : userId}}"
                               visibilityValue="{{!userId}}"
                               itemTemplate="{{!userId ? undefined : ''}}"
                            />
@@ -131,10 +136,4 @@
          </div>
       </ws:content>
    </ws:SBIS3.CONTROLS.Browser>
-   <ws:SBIS3.CONTROLS.Action.OpenEditDialog
-      name="action"
-      template="js!SBIS3.CONTROLS.LongOperationHistory"
-      mode="floatArea"
-      initializingWay="local"
-   />
 </div>

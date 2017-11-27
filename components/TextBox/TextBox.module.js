@@ -293,12 +293,12 @@ define('js!SBIS3.CONTROLS.TextBox', [
          TextBox.superclass.init.apply(this, arguments);
 
          if(this._options.informationIconColor) {
-            this._informationIcon = this.getChildControlByName('informationIcon');
+            this._informationIcon = $('.controls-TextBox__informationIcon', this.getContainer());
 
-            this._informationIcon.getContainer().on('mouseenter', function() {
+            this._informationIcon.on('mouseenter', function() {
                self._notify('onInformationIconMouseEnter');
             });
-            this._informationIcon.subscribe('onActivated', function(){
+            this._informationIcon.on('click', function(){
                self._notify('onInformationIconActivated');
             });
          }
@@ -434,6 +434,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _setPlaceholder: function(text){
+         /* В placeholder могут передать шаблон */
          text = text ? text : text == 0 ? text : '';
          if (!this._useNativePlaceHolder(text) && this._needShowCompatiblePlaceholder(this._options)) {
             this._destroyCompatPlaceholder();
@@ -519,7 +520,15 @@ define('js!SBIS3.CONTROLS.TextBox', [
          /* Когда дизейблят поле ввода, ставлю placeholder в виде пробела, в старом webkit'e есть баг,
             из-за коготорого, если во flex контейнере лежит input без placeholder'a ломается базовая линия.
             placeholder с пустой строкой и так будет не виден, т.ч. проблем быть не должно */
-         this._setPlaceholder(enabled ? this._options.placeholder : ' ');
+         if(this._compatPlaceholder) {
+            if (!enabled){
+               this._compatPlaceholder.addClass("ws-hidden");
+            } else if (this._isEmptyValue(this._options.text)) {
+               this._compatPlaceholder.removeClass("ws-hidden");
+            }
+         } else {
+            this._setPlaceholder(enabled ? this._options.placeholder : ' ');
+         }
          // FIXME Шаблонизатор сейчас не позволяет навешивать одиночные атрибуты, у Зуева Димы в планах на сентябрь
          // сделать возможность вешать через префикс attr-
          this._inputField.prop('readonly', !enabled);
@@ -623,17 +632,11 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _getAfterFieldWrapper: function() {
-         if(!this._afterFieldWrapper) {
-            this._afterFieldWrapper = this.getContainer().find('.controls-TextBox__afterFieldWrapper');
-         }
-         return this._afterFieldWrapper;
+
       },
 
       _getBeforeFieldWrapper: function() {
-         if(!this._beforeFieldWrapper) {
-            this._beforeFieldWrapper = this.getContainer().find('.controls-TextBox__beforeFieldWrapper');
-         }
-         return this._beforeFieldWrapper;
+
       },
 
       destroy: function() {

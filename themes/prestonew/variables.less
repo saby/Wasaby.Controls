@@ -30,10 +30,6 @@
 
 @items-toolbar-bottom-style-background:   url('img/items-toolbar-bottom-style-background.png');
 @list-view-scroll-bg:                     url('img/ajax-loader-indicator-big.gif') no-repeat center;
-//OperationsPanelButton
-@controls-OperationsPanelButton-font-family: @icon-font;
-@controls-OperationsPanelButton-icon:     "\e9aa";
-@controls-OperationsPanelButton-icon-expand:"\e9a8";
 //InformationPopup
 @controls-InformationPopup-border-width:                 1px;
 @controls-InformationPopup-closeButton-font-family:      @icon-font;
@@ -49,11 +45,12 @@
 @ProgressBar-value-padding:               0 round(6px * @multiplier);
 @ProgressBar-value-font-size:             round(28px * @multiplier);
 @DropdownList-picker-menu-height-ff:      round(84px * @multiplier); //Решаю конфликт в 155, за не тот файл для этого кода извени
+@DropdownList-picker-menu-selected-marker:false;
 //TabButton
 @tab-buttons-border-bottom:               1px solid #293543;
 //sundry
-@list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center;
-@list-view-loading-indicator-gradient-bg-up:url(@list-view-scroll-spritesheet) no-repeat center;
+@list-view-loading-indicator-gradient-bg: @list-view-scroll-spritesheet no-repeat center;
+@list-view-loading-indicator-gradient-bg-up: @list-view-scroll-spritesheet no-repeat center;
 @header-font:                             400 round(40px * @multiplier) escape('/') @header-height @default-font-name;
 @combo-box-picker-border:                 @default-border-width solid @default-border-color-second;
 @controls-NotificationPopup-header-padding-with-close-button: @controls-NotificationPopup-header-padding round(58px * @multiplier) @controls-NotificationPopup-header-padding 8px;
