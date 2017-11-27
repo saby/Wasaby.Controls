@@ -28,6 +28,10 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
    'use strict';
 
+   function needShowCompatiblePlaceholder(cfg) {
+      return cfg.enabled && !cfg.text;
+   }
+
    /**
     * Однострочное текстовое поле ввода.
     * Специальные поля:
@@ -91,6 +95,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
          _textFieldWrapper: null,
          _informationIcon: null,
          _options: {
+      	   _needShowCompatiblePlaceholder: needShowCompatiblePlaceholder,
+      	   _needShowCompatiblePlaceholderST: needShowCompatiblePlaceholder,
             compatiblePlaceholderTemplate: compatiblePlaceholderTemplate,
             textFieldWrapper: textFieldWrapper,
             beforeFieldWrapper: null,
@@ -273,6 +279,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
             чтобы у них был __vStorage, для возможности обращаться к опциям по ссылке (ref) */
          cfg.beforeFieldWrapper = TemplateUtil.prepareTemplate(cfg.beforeFieldWrapper);
          cfg.afterFieldWrapper = TemplateUtil.prepareTemplate(cfg.afterFieldWrapper);
+         cfg._drawCompatiblePlaceholder = cfg._needShowCompatiblePlaceholder(cfg);
          return cfg;
       },
 
@@ -302,7 +309,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
                self._notify('onInformationIconActivated');
             });
          }
-         if (this._needShowCompatiblePlaceholder(this._options)) {
+         if (this._options._needShowCompatiblePlaceholder(this._options)) {
             this._compatPlaceholder = this._container.find('.controls-TextBox__placeholder');
             this._initPlaceholderEvents(this._compatPlaceholder);
          }
@@ -394,7 +401,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _updateCompatiblePlaceholderState: function() {
-         if (!this._needShowCompatiblePlaceholder(this._options)) {
+         if (!this._options._needShowCompatiblePlaceholder(this._options)) {
             this._destroyCompatPlaceholder();
          } else if (!this._compatPlaceholder && !this._useNativePlaceHolder()) {
             this._createCompatiblePlaceholder();
@@ -429,14 +436,10 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._setPlaceholder(text);
       },
 
-      _needShowCompatiblePlaceholder: function(cfg) {
-         return cfg.enabled && !cfg.text;
-      },
-
       _setPlaceholder: function(text){
          /* В placeholder могут передать шаблон */
          text = text ? text : text == 0 ? text : '';
-         if (!this._useNativePlaceHolder(text) && this._needShowCompatiblePlaceholder(this._options)) {
+         if (!this._useNativePlaceHolder(text) && this._options._needShowCompatiblePlaceholder(this._options)) {
             this._destroyCompatPlaceholder();
             this._createCompatiblePlaceholder();
          }
