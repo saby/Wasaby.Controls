@@ -165,13 +165,15 @@ define('js!WSControls/Buttons/MenuButton', [
       //TODO: Постараться придумать что то получше
       // Вешаем на пункты меню отступы слева в соответствии с иконкой у самой кнопки
       _checkItemsIcons: function(items){
-         var padding = 'controls-MenuItem__';
+         var self = this,
+             padding = 'controls-MenuItem__',
+             sizes = ['16' , '24', '32', 'small', 'medium', 'large'];
          if (this._options.icon && items && !this._container.hasClass('controls-Menu__hide-menu-header')){
-            if (this._options.icon.indexOf('icon-16') !== -1){
-               padding += 'padding-16';
-            } else if (this._options.icon.indexOf('icon-24') !== -1){
-               padding += 'padding-24';
-            }
+            sizes.forEach(function(size){
+                if(self._options.icon.indexOf('icon-' + size) !== -1){
+                    padding += 'padding-' + size;
+                }
+            });
          }
          $('> .controls-MenuItem', this._picker.getContainer().find('.controls-Menu__itemsContainer')).each(function(){
             var $this = $(this);
