@@ -104,3 +104,10 @@ body .ws-window.ws-LoadingIndicator__window {
     width: calc(100%~' - '2*@padding_ComboBox_item_separator);
   }
 }
+.controls-DropdownList__multiselect {
+  &.controls-DropdownList__item {
+    &:after {
+      left: @padding_DropDownList_item_child_text;
+    }
+  }
+}
