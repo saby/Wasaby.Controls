@@ -33,7 +33,6 @@
 //combo-box
 @combo-box-icon-size:                             @default-icon-size-large;
 @combo-box-arrow-padding:                         0px;
-@combo-box-shadow-display:                        none;
 //suggest-text-box
 @suggest-text-box-icon-size:                      @default-icon-size-large;
 //search-form
@@ -42,6 +41,9 @@
 @search-loop-size:                                round(80px * @multiplier);
 @search-form-icon-padding:                        0;
 @search-field-padding:                            0;
+@search-form-suggest-close-offset:                round(8px * @multiplier);
+@search-form-suggest-top-offset:                  @search-form-suggest-close-offset + @default-border-width + @default-height;
+@search-form-suggest-left-offset:                 @search-form-suggest-close-offset + @default-border-width;
 //fieldLink
 @fieldLink-showAll-shadow-width:                  round(28px * @multiplier);
 @fieldLink-linkItem-line-height:                  @default-base-line-height;
@@ -666,7 +668,7 @@
 @bottomStyle-items-toolbar-margin-top:    round(8px * @multiplier);
 @image-bar-height:                        round(100px * @multiplier);
 @image-bar-horizontal-padding:            0;
-@money-text-box-decimals-font-size:       @default-text-size;
+@font-size_MoneyTextBox-decimals:         @default-text-size;
 @controls-toolbar-item-vertical-align:    baseline;
 @date-range-big-choose-years-btn:         round(14px * @multiplier);
 @DropdownList-picker-offset:              round(-11px * @multiplier) 0 0 round(-19px * @multiplier);

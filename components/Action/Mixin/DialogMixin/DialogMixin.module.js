@@ -89,6 +89,15 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          return (new Deferred).callback();
       },
 
+      /**
+       * Закрывает открытый диалог
+       */
+      closeDialog: function() {
+         if (this._dialog) {
+            this._dialog.close();
+         }
+      },
+
       _openDialog: function(meta) {
          this._openComponent(meta, 'dialog');
       },

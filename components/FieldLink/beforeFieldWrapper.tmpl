@@ -1,19 +1,21 @@
-<div class="controls-FieldLink__beforeFieldWrapper">
-    <div class="controls-FieldLink__linksWrapper">
-        <ws:SBIS3.CONTROLS.FieldLinkItemsCollection
-            cssClassName="controls-FieldLink__linksContainer"
-            name="FieldLinkItemsCollection"
-            tabindex="0"
-            displayProperty="{{ displayProperty }}"
-            idProperty="{{ idProperty }}"
-            itemTpl="{{ itemTpl }}"
-            itemContentTpl="{{ itemContentTpl }}"
-            includedTemplates="{{ includedTemplates }}"
-            items="{{ preRenderItems }}"
-            boldItems="{{ boldItems }}"
-            underlinedItems="{{ underlinedItems }}"
-            bigItems="{{ bigItems }}"
-            itemsSortMethod="{{ itemsSortMethod }}">
-        </ws:SBIS3.CONTROLS.FieldLinkItemsCollection>
+<ws:if data="{{ selectedKeys.length }}">
+    <div class="controls-FieldLink__beforeFieldWrapper">
+        <div class="controls-FieldLink__linksWrapper">
+            <ws:SBIS3.CONTROLS.FieldLinkItemsCollection
+                cssClassName="controls-FieldLink__linksContainer"
+                name="FieldLinkItemsCollection"
+                tabindex="0"
+                displayProperty="{{ displayProperty }}"
+                idProperty="{{ idProperty }}"
+                itemTpl="{{ itemTpl }}"
+                itemContentTpl="{{ itemContentTpl }}"
+                includedTemplates="{{ includedTemplates }}"
+                items="{{ preRenderItems }}"
+                boldItems="{{ boldItems }}"
+                underlinedItems="{{ underlinedItems }}"
+                bigItems="{{ bigItems }}"
+                itemsSortMethod="{{ itemsSortMethod }}">
+            </ws:SBIS3.CONTROLS.FieldLinkItemsCollection>
+        </div>
     </div>
-</div>
+</ws:if>
