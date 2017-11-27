@@ -1073,7 +1073,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
             event.setResult(this.showEip(record, {isEdit: true}, false, targetColumnIndex)
                .addCallback(function (result) {
                   if (originalEvent.type === 'click') {
-                     ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
+                     // С IOS 11 версии перестал работать подскролл к нужному месту. Отключаем наш код, который при клике
+                     // проваливается в редактор по месту, иначе вызывается неправильно работающий scrollIntoView и всё
+                     // ломает: https://online.sbis.ru/opendoc.html?guid=742195a5-c89c-4af8-8121-cdeefa26959e
+                     if (!constants.browser.isMobileIOS && cDetection.IOSVersion >= 11) {
+                        ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
+                     }
                   }
                   return !result;
                })
