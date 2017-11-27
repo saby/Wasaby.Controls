@@ -45,22 +45,6 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
              * * false Скрыть иконку просмотра пароля.
              */
             showPassword: false
-         },
-         _iconOptions: {
-            password: {
-               tooltip: rk("Показать"),
-               icon: "icon-medium icon-Show icon-disabled"
-            },
-            text: {
-               tooltip: rk("Скрыть"),
-               icon: "icon-medium icon-Hide icon-disabled"
-            }
-         }
-      },
-      $constructor: function() {
-         //TODO: избавиться от фикса высоты поля ввода пароля в IE>8
-         if (constants.browser.isIE) {
-            this.getContainer().find('.controls-TextBox__field').addClass('controls-TextBox__field__fixIE');
          }
       },
 
@@ -77,11 +61,12 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
        */
       _initEventChangeType: function() {
          var self = this;
-         this.getChildControlByName("showPassword").subscribe("onActivated", function () {
-            //Показываем/скрываем пароль
-            self._changeType();
-            this.setProperties(self._iconOptions[self._options.type]);
-         });
+         this._passwordIcon = $('.controls-PasswordTextBox__showPassword', this.getContainer());
+         this.getContainer().on('click', function(e) {
+            if (e.target === self._passwordIcon[0]) {
+               self._changeType();
+            }
+         })
       },
 
       /**
@@ -90,6 +75,9 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
       _changeType: function () {
          this._options.type = this._options.type === "password" ? "text" : "password";
          this._inputField.attr("type", this._options.type);
+         this._passwordIcon.attr('title', this._options.type === 'password' ? rk('Показать') : rk('Скрыть'));
+         this._passwordIcon.toggleClass('icon-Show', this._options.type === 'password');
+         this._passwordIcon.toggleClass('icon-Hide', this._options.type === 'text');
       }
    });
 

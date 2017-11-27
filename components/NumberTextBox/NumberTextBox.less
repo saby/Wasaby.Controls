@@ -1,21 +1,38 @@
+/*
+   <div class="controls-TextBox controls-TextArea">
+      <div class="controls-TextBox__wrapper">
+         <div class="controls-TextBox__field"></div>
+      </div>
+      <div class="controls-TextBox__informationIcon"></div>
+      <div class="controls-NumberTextBox__afterFieldWrapper{{ !enabled ? ' ws-invisible' }}">
+        <i class="controls-NumberTextBox__arrow"></i>
+        <i class="controls-NumberTextBox__arrow"></i>
+     </div>
+   </div>
+ */
+
 .controls-NumberTextBox__afterFieldWrapper {
   .inline-flexbox();
   .flex-direction(column);
   height: 100%;
-  padding-left: @default-padding;
+  padding-left: @padding-left_NumberTextBox-arrow;
 }
 .controls-NumberTextBox__arrow {
   .align-items(center) ;
-  .icon-size(@number-text-box-icon-size, @default-icon-font);
+  .icon-size(@icon-size_NumberTextBox-arrow);
   cursor: pointer;
   height: 50%;
   overflow: hidden; //чтобы клик проходил только по контейнеру, а не по иконке
 }
+
+/*
+   СЛОЙ СОВМЕСТИМОСТИ
+ */
 //https://online.sbis.ru/opendoc.html?guid=4795f4da-c0d4-43bf-96ff-a9f45097f373&des=
 .controls-NumberTextBox__mirror {
   visibility: hidden;
   display: inline;
-  font-size: @default-text-size;
+  font-size: @font-size_NumberTextBox-mirror;
   position: absolute;
   width: auto;
   height: auto;

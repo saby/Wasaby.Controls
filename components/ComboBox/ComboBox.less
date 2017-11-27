@@ -3,6 +3,8 @@
    &__fieldNotEditable {
       display: none;
       line-height: @line-height_TextBox;
+      white-space: nowrap;
+      overflow: hidden;
       &__placeholder {
          color: @default-placeholder-color;
       }
@@ -11,9 +13,6 @@
       .controls-ComboBox__fieldNotEditable {
          color: @default-placeholder-color;
       }
-   }
-   .controls-TextBox__field {
-      text-overflow: clip;
    }
    .controls-ComboBox__afterFieldWrapper {
       .align-items(center);
@@ -49,18 +48,6 @@
          display: inline-block;
       }
    }
-   &__overflow {
-      .controls-ComboBox__shadow {
-         content: '';
-         position: absolute;
-         display: @combo-box-shadow-display;
-         top:0;
-         right: @combo-box-icon-size;
-         bottom: 0;
-         width: 24px;
-         background: linear-gradient(to left, @combo-box-picker-item-bg, rgba(255, 255, 255, 0));
-      }
-   }
    &.controls-Picker__show {
       background-color: @combo-box-picker-show-background-color;
       color: @compo-box-picker-show-color;
@@ -79,9 +66,6 @@
       .controls-ComboBox__item {
          white-space: normal;
          word-wrap: break-word;
-      }
-      .controls-ComboBox__shadow {
-         display: none;
       }
    }
    .controls-ComboBox__body {
@@ -112,21 +96,9 @@
       &:hover {
          color: @combo-box-picker-item-hover-text-color;
          background: @combo-box-picker-item-hover-bg;
-         .controls-ComboBox__shadow {
-            background: linear-gradient(to left, @combo-box-picker-item-hover-bg, rgba(255, 255, 255, 0));
-         }
       }
       .controls-ComboBox__item {
          white-space: nowrap;
-      }
-      .controls-ComboBox__shadow {
-         content: '';
-         position: absolute;
-         top:0;
-         right: 0;
-         bottom: 0;
-         width: 24px;
-         background: linear-gradient(to left, @combo-box-picker-item-bg, rgba(255, 255, 255, 0));
       }
    }
    &.controls-popup-revert-vertical {

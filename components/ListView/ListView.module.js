@@ -1809,7 +1809,8 @@ define('js!SBIS3.CONTROLS.ListView',
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
             this._getEmptyDataContainer().empty().html(Sanitize(html, {validNodes: {component: true}, validAttributes : {config: true} }));
-            this._reviveItems();
+            //когда меняют emptyHTML надо оживить компоненты, но не надо потом вызывать всякие события drawItems и прочие методы, отдаем второй арумент silent
+            this._reviveItems(false, true);
             this._toggleEmptyData(this._getItemsProjection() && !this._getItemsProjection().getCount());
          },
 
@@ -2606,6 +2607,23 @@ define('js!SBIS3.CONTROLS.ListView',
                };
             return config;
          },
+
+         _redrawItemInner: function(item) {
+            var
+               toolbar = this._getItemsToolbar(),
+               toolbarTarget = toolbar.getCurrentTarget(),
+               targetElement = this._getDomElementByItem(item);
+            ListView.superclass._redrawItemInner.apply(this, arguments);
+
+            //Если перерисовалась запись, которая является текущим контейнером для тулбара,
+            //то перезаписшем в тулбар, новую ссылку на дом элемент, для того, чтобы тулбар смог
+            //правильно спозионироваться.
+            if (toolbarTarget && targetElement && toolbarTarget.container.get(0) === targetElement.get(0)) {
+               toolbarTarget.container = this._getDomElementByItem(item);
+               toolbar.setCurrentTarget(toolbarTarget);
+            }
+         },
+
          _showToolbar: function(model) {
             var itemsInstances, itemsToolbar, editedItem, editedContainer;
             if (this._options.editMode.indexOf('toolbar') !== -1) {
@@ -3386,21 +3404,37 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this._loadingIndicator.css('top', top);
          },
-
-         _hasNextPage: function(more, offset) {
-            if (this._infiniteScrollState.mode == 'up'){
+   
+         /**
+          *
+          * @param more
+          * @param offset Смещение
+          * @param direction Проверять наличие записей до или после текущего смещения. Варианты: after / before
+          * @returns {Boolean}
+          * @private
+          */
+         _hasNextPage: function(more, offset, direction) {
+            if (this._infiniteScrollState.mode === 'up') {
+               if (!direction) {
+                  direction = 'before';
+               }
+               
                //перезагрузка с сохранением страницы может произойти на нулевой странице
                //TODO: Должен быть один сценарий, для этого нужно, что бы оффсеты всегда считались и обновлялись до запроса
                if (this._options.saveReloadPosition) {
                   return this._scrollOffset.top >= 0;
                } else {
-                  // А подгрузка вверх должна остановиться на нулевой странице и не запрашивать больше
-                  return this._scrollOffset.top > 0;
+                  if (direction === 'before') {
+                     // А подгрузка вверх должна остановиться на нулевой странице и не запрашивать больше
+                     return this._scrollOffset.top > 0;
+                  } else {
+                     return ListView.superclass._hasNextPage.apply(this, arguments);
+                  }
                }
             } else {
                // Если загружена последняя страница, то вниз грузить больше не нужно
                // при этом смотреть на .getMetaData().more - бесполезно, так как при загруке страниц вверх more == true
-               return !this._lastPageLoaded && ListView.superclass._hasNextPage.call(this, more, offset);
+               return !this._lastPageLoaded && ListView.superclass._hasNextPage.apply(this, arguments);
             }
          },
 
@@ -4642,21 +4676,27 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._headIsChanged = true;
                   this._redrawResults(true);
                }.bind(this);
+               this._onRecordSetPropertyChange = function onRecordSetPropertyChange(event, data) {
+                  //При изменении мета-данных переподписываюсь на рекорд строки итогов и перерисовываю их.
+                  if (data.metaData.results) {
+                     this.subscribeTo(data.metaData.results, 'onPropertyChange', this._onMetaDataResultsChange);
+                  }
+                  this._onMetaDataResultsChange();
+               }.bind(this);
             }
             if (!needObserve || !this._isResultObserved()) {
                if (this.getItems()) {
-                  this[methodName](this.getItems(), 'onPropertyChange', this._onMetaDataResultsChange);
+                  this[methodName](this.getItems(), 'onPropertyChange', this._onRecordSetPropertyChange);
                   metaData = this.getItems().getMetaData();
                   if (metaData && metaData.results) {
                      this[methodName](metaData.results, 'onPropertyChange', this._onMetaDataResultsChange);
                   }
                }
             }
-
          },
 
          _isResultObserved: function() {
-            return this.getItems() && this.getItems().getEventHandlers('onPropertyChange').indexOf(this._onMetaDataResultsChange) > -1;
+            return this.getItems() && this.getItems().getEventHandlers('onPropertyChange').indexOf(this._onRecordSetPropertyChange) > -1;
          },
 
          _redrawFoot: function() {
