@@ -783,7 +783,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              cfg._selectedMultipleItems = _private.selectedMultipleItems(cfg);
           },
 
-          _modifyOptions: function(baseCfg, attrToMerge) {
+          _modifyOptions: function(baseCfg, parsedOptions, attrToMerge) {
              var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments),
                  classesToAdd = ['controls-FieldLink'],
                  selectedKeysLength, items;
