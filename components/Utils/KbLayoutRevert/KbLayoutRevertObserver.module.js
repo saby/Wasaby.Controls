@@ -297,7 +297,10 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                         data.setMetaData(self._itemsBeforeTranslate.getMetaData());
                      }
                      backOldSearchValue();
-                     self._toggleItemsEventRaising(true);
+                     /* Без анализа изменений, т.к. рекордсет при поиске меняется через assign,
+                        и там меняются всегда все записи. Если делать анализ имзенений,
+                        то перерисовка будет просиходить по одной записи, что вызывает тормоза. */
+                     self._toggleItemsEventRaising(true, false);
                      self._hideMissSpell();
                   } else {
                      viewFilter[searchParam] = self._textBeforeTranslate;
