@@ -76,6 +76,9 @@ define('js!Controls/List/ListControl', [
                queryParams = _private.paramsWithUserEvent(queryParams, userParams);
             }
 
+            this._loadingState = direction ? direction : 'all';
+            _private.showIndicator.call(this);
+
             def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
                .addCallback(fHelpers.forAliveOnly(function (list) {
                   self._notify('onDataLoad', list);
@@ -107,7 +110,8 @@ define('js!Controls/List/ListControl', [
                      }
                   }, 100);
 
-
+                  this._loadingState = null;
+                  _private.hideIndicator.call(this);
 
                   return list;
                }, self))
@@ -136,6 +140,19 @@ define('js!Controls/List/ListControl', [
       scrollTo: function(offset) {
          //TODO без скролл вотчера пока так
          this._container.closest('.ws-scrolling-content').get(0).scrollTop = offset;
+      },
+
+      showIndicator: function() {
+         var self = this;
+         setTimeout(function() {
+            self._loadingIndicatorState = self._loadingState || null;
+            self._forceUpdate();
+         }, 2000)
+      },
+
+      hideIndicator: function() {
+         this._loadingIndicatorState = null;
+         this._forceUpdate();
       }
    };
 
@@ -372,6 +389,8 @@ define('js!Controls/List/ListControl', [
 
          _dataSource: null,
          _loader: null,
+         _loadingState: null,
+         _loadingIndicatorState: null,
 
          //TODO пока спорные параметры
          _filter: undefined,
