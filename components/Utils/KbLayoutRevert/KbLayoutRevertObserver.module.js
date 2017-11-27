@@ -296,11 +296,14 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                         data.assign(self._itemsBeforeTranslate);
                         data.setMetaData(self._itemsBeforeTranslate.getMetaData());
                      }
+                     /* оптимизация, т.к. рекордсет при поиске меняется через assign, то там меняются всегда все записи.
+                        Если делать анализ имзенений, то перерисовка будет просиходить по одной записи, что вызывает тормоза.
+                        Сделано через !(self._itemsBeforeTranslate && self._itemsBeforeTranslate.getCount()),
+                        т.к. если первая загрузка записей неудачной (пришел пустой рекордсет),
+                        то assign в пустой рекордсет не вызовет событие onCollectionChange у проекции,
+                        если не будут анализироваться изменения, которые произошли в период заморозки проекции. */
+                     self._toggleItemsEventRaising(true, !(self._itemsBeforeTranslate && self._itemsBeforeTranslate.getCount()));
                      backOldSearchValue();
-                     /* Без анализа изменений, т.к. рекордсет при поиске меняется через assign,
-                        и там меняются всегда все записи. Если делать анализ имзенений,
-                        то перерисовка будет просиходить по одной записи, что вызывает тормоза. */
-                     self._toggleItemsEventRaising(true, false);
                      self._hideMissSpell();
                   } else {
                      viewFilter[searchParam] = self._textBeforeTranslate;
