@@ -30,18 +30,20 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
 
    var HierarchySelection = Selection.extend(/** @lends SBIS3.CONTROLS.HierarchySelection */{
       _parentProperty: undefined,
-      _idProperty: undefined,
       _hierarchyRelations: {},
       _markedTree: undefined,
 
       constructor: function (options) {
          HierarchySelection.superclass.constructor.call(this, options);
-         this._parentProperty = options.projection.getParentProperty();
-         this._idProperty = options.projection.getIdProperty();
          this._markedTree = new RecordSet({
             rawData: options.markedTree || [],
             idProperty: ID_FIELD
          });
+      },
+
+      setProjection: function(projection) {
+         HierarchySelection.superclass.setProjection.apply(this, arguments);
+         this._parentProperty = projection.getParentProperty();
       },
 
       select: function (ids) {

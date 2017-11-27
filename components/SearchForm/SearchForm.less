@@ -67,12 +67,12 @@
 
 //todo
 .controls-Suggest__picker.controls-searchForm__suggest {
-  margin-left: -8px;
-  margin-top: -32px;
+  margin-left: -@search-form-suggest-left-offset;
+  margin-top: -@search-form-suggest-top-offset;
   .box-shadow(@menu-shadow);
-  padding-top: 32px;
+  padding-top: @search-form-suggest-top-offset;
 }
 
 .controls-searchForm__suggest .controls-PopupMixin__closeButton {
-  top: 8px;
+  top: @search-form-suggest-close-offset;
 }

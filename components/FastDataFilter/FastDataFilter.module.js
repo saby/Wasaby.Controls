@@ -171,7 +171,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             this._resetMaxWidth();
             var dropdownLists = $('.controls-DropdownList', this.getContainer());
             dropdownLists.sort(function (el1, el2) {
-               return $(el1).width() > $(el2).width();
+               return $(el1).width() - $(el2).width();
             });
             for (var i = 0, l = dropdownLists.length; i < l; i++) {
                $(dropdownLists[i]).addClass('ws-flex-shrink-' + (i + 1));

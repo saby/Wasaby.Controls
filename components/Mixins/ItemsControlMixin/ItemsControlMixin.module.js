@@ -348,7 +348,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @example
        * <pre>
        *    myView.subscribe('onDataLoadError', function(eventObject, error) {
-       *       event.setResult(true);
+       *       eventObject.setResult(true);
        *       TextBox.setText('Ошибка при загрузке данных');
        *    });
        * </pre>
@@ -1361,14 +1361,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._getItemsContainer().find('.js-controls-ListView__item[data-hash="' + item.getHash() + '"]');
       },
 
-      _reviveItems : function(lightVer) {
-         this.reviveComponents().addCallback(this._onReviveItems.bind(this, lightVer)).addErrback(function(e){
+      _reviveItems : function(lightVer, silent) {
+         this.reviveComponents().addCallback(this._onReviveItems.bind(this, lightVer, silent)).addErrback(function(e){
             throw e;
          });
       },
 
-      _onReviveItems: function(lightVer){
-         this._notifyOnDrawItems(lightVer);
+      _onReviveItems: function(lightVer, silent){
+         if (!silent) {
+            this._notifyOnDrawItems(lightVer);
+         }
       },
 
       _notifyOnDrawItems: function(lightVer) {
@@ -2636,6 +2638,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._revivePackageParams.revive = this._revivePackageParams.revive || needToRevive;
          this._revivePackageParams.light = false;
       },
+      _onCollectionReset: function() {
+         this.redraw(true);
+      },
       _onCollectionRemove: function(items, notCollapsed) {
          if (items.length) {
             this._removeItems(items);
@@ -2752,7 +2757,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 	               break;
 
 	            case IBindCollection.ACTION_RESET:
-                  this.redraw(true);
+	               this._onCollectionReset();
 	               break;
 	         }
       	}
