@@ -25,10 +25,8 @@ define('js!Controls/Popup/Manager/Container',
          constructor: function (cfg){
             Container.superclass.constructor.call(this, cfg);
             this._publish('closePopup', 'focusInPopup', 'focusOutPopup', 'recalcPosition');
-            CommandDispatcher.declareCommand(this, 'closePopup', this.closePopup);
-            CommandDispatcher.declareCommand(this, 'focusInPopup', this.focusInPopup);
-            CommandDispatcher.declareCommand(this, 'focusOutPopup', this.focusOutPopup);
-            CommandDispatcher.declareCommand(this, 'recalcPosition', this.recalcPosition);
+            CommandDispatcher.declareCommand(this, 'closePopup', this._closePopup);
+            CommandDispatcher.declareCommand(this, 'recalcPosition', this._recalcPosition);
          },
 
          _beforeMount: function(options){
@@ -41,32 +39,15 @@ define('js!Controls/Popup/Manager/Container',
           * @event Controls/Popup/Manager/Container#closePopup Происходит при закрытии попапа.
           * @param {Object} popup Инстанс попапа.
           */
-         closePopup: function(popup){
+         _closePopup: function(popup){
             this._notify('closePopup', popup);
-         },
-
-         /**
-          * @event Controls/Popup/Manager/Container#focusPopup Происходит при установке/уходе фокуса.
-          * @param {Object} popup Инстанс попапа.
-          */
-         focusInPopup: function(popup){
-            this._notify('focusInPopup', popup);
-         },
-
-         /**
-          * @event Controls/Popup/Manager/Container#focusPopup Происходит при уходе фокуса.
-          * @param {Object} popup Инстанс попапа.
-          * @param {Object} focusedControl Контрол, на который перешёл фокус. Если контрол неизвестен, то undefined.
-          */
-         focusOutPopup: function(popup, focusedControl){
-            this._notify('focusOutPopup', popup, focusedControl);
          },
 
          /**
           * @event Controls/Popup/Manager/Container#recalcPosition Происходит при закрытии попапа.
           * @param {Object} popup Инстанс попапа.
           */
-         recalcPosition: function(popup){
+         _recalcPosition: function(popup){
             this._notify('recalcPosition', popup);
          },
 

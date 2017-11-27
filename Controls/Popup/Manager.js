@@ -20,6 +20,17 @@ define('js!Controls/Popup/Manager',
        */
       var Manager = {
          /**
+          * Вернуть следующий z-index
+          * @function Controls/Popup/Manager#calculateZIndex
+          */
+         calculateZIndex: function(){
+            if( !Manager._zIndex ){
+               Manager._zIndex = 10;
+            }
+            return Manager._zIndex += 10;
+         },
+
+         /**
           * Показать всплывающее окно
           * @function Controls/Popup/Manager#show
           * @param options компонент, который будет показан в окне
@@ -52,23 +63,6 @@ define('js!Controls/Popup/Manager',
             if( index > -1 ){
                Manager._popupItems.removeAt(index);
                Container.setPopupItems(Manager._popupItems);
-            }
-         },
-
-         /**
-          * Вернуть следующий z-index
-          * @function Controls/Popup/Manager#calculateZIndex
-          */
-         calculateZIndex: function(){
-            if( !Manager._zIndex ){
-               Manager._zIndex = 10;
-            }
-            return Manager._zIndex += 10;
-         },
-
-         _focusOut: function(popup, focusedControl){
-            if( popup.isAutoHide() && popup._options.opener !== focusedControl.to){
-               Manager.remove(popup);
             }
          },
 
@@ -107,14 +101,6 @@ define('js!Controls/Popup/Manager',
       
       Container.subscribe('closePopup', function(event, popup){
          Manager.remove(popup);
-      });
-      
-      Container.subscribe('focusInPopup', function(event, popup){
-
-      });
-
-      Container.subscribe('focusOutPopup', function(event, popup, focusedControl){
-         Manager._focusOut(popup, focusedControl);
       });
       
       Container.subscribe('recalcPosition', function(event, popup){
