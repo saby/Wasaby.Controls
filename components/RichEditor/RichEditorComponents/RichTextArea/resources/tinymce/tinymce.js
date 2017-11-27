@@ -34715,7 +34715,9 @@
             editor.on('keydown', function (e) {
                var keyCode = e.keyCode;
 
-               if (!isDefaultPrevented(e) && (keyCode == DELETE || keyCode == BACKSPACE)) {
+               // При нажатии Shift+Delete нельзя просто удалить, нужно выполнить вставку в клипборд
+               // https://online.sbis.ru/opendoc.html?guid=a31eef66-cce3-4d5c-9917-7800c0fbaeca
+               if (!isDefaultPrevented(e) && ((keyCode == DELETE && !e.shiftKey) || keyCode == BACKSPACE)) {
                   if (isEverythingSelected(editor)) {
                      e.preventDefault();
                      editor.setContent('');
