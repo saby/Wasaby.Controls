@@ -4739,8 +4739,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._redrawResults(true);
                }.bind(this);
                this._onRecordSetPropertyChange = function onRecordSetPropertyChange(event, data) {
-                  //При изменении мета-данных переподписываюсь на рекорд строки итогов и перерисовываю их.
+                  // В рекордсете может не быть метаданных.
+                  // Событие так же стреляет при измении любого св-ва рекордсета (idProperty например)
                   if (data.metaData && data.metaData.results) {
+                     //При изменении мета-данных переподписываюсь на рекорд строки итогов и перерисовываю их.
                      this.subscribeTo(data.metaData.results, 'onPropertyChange', this._onMetaDataResultsChange);
                   }
                   this._onMetaDataResultsChange();
