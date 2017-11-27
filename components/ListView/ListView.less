@@ -119,11 +119,6 @@ controls-ListView__item__withHover:hover {
    }
 }
 
-// Нельзя устанавливать минимальную высоту для копии таблицы которая используется для фиксации заголовков
-.controls-ListView__dataNotLoaded:not(.ws-sticky-header__table-header-copy) {
-   min-height: @list-view-min-height;
-}
-
 .controls-ListView {
     position: relative;
 }
@@ -167,7 +162,7 @@ controls-ListView__item__withHover:hover {
 }
 
 .controls-ListView__indicatorVisible:not(.ws-sticky-header__table-header-copy) {
-    min-height: @list-view-scroll-height + @data-grid-header-cell-height; // Высота индикатор скрола + высота ячейки шапки, чтобы при подгрузке скролл не скрывался под шапкой
+    min-height: @list-view-scroll-height;
     > .controls-ListView-scrollIndicator {
       display: block;
    }

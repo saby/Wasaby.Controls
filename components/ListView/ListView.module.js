@@ -3858,6 +3858,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             this._showedLoading = show;
             if (show) {
+               // Показываем контейнер который перекрывает контент, блокируя взаимодействие пользователя с таблицей.
                if (!self.isDestroyed() && self._showedLoading) {
                   scrollContainer = self._getScrollContainer()[0];
                   indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
@@ -3873,6 +3874,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      indicator[0].style.top = '';
                   }
                }
+               // После задержки показываем индикатор загрузки.
                this._loadingIndicatorTimer = setTimeout(this._showIndicator.bind(this), INDICATOR_DELAY);
             }
             else {
