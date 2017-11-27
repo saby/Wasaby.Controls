@@ -23,12 +23,6 @@ define('js!Controls/Input/Suggest', [
     */
 
    /**
-    * Обсудить
-    * @name #showEmptySuggest
-    * @cfg {Boolean} Показывать ли выпадающий блок, при пустом списке
-    */
-
-   /**
     * @name Controls/Input/Suggest#searchParam
     * @cfg {string} Устанавливает имя параметра, который будет передан при вызове метода БЛ
     */
