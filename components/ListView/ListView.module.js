@@ -2417,7 +2417,12 @@ define('js!SBIS3.CONTROLS.ListView',
                result = this.showEip(model, { isEdit: true }, false);
                if (originalEvent.type === 'click') {
                   result.addCallback(function(res) {
-                     ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
+                     // С IOS 11 версии перестал работать подскролл к нужному месту. Отключаем наш код, который при клике
+                     // проваливается в редактор по месту, иначе вызывается неправильно работающий scrollIntoView и всё
+                     // ломает: https://online.sbis.ru/opendoc.html?guid=742195a5-c89c-4af8-8121-cdeefa26959e
+                     if (!constants.browser.isMobileIOS) {
+                        ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
+                     }
                      return res;
                   });
                }
