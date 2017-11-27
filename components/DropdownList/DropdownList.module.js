@@ -916,12 +916,18 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _showInfobox: function() {
             var self = this,
                textValues = [];
-            if (!this.isEnabled() && this.getSelectedKeys().length > 1) {
+            if (!this.isEnabled() && (this.getSelectedKeys().length > 1 || this.getTooltip())) {
                requirejs(['js!SBIS3.CORE.Infobox'], function(Infobox) {
                   textValues = [];
-                  self.getSelectedItems().each(function(item) {
-                     textValues.push(item.get(self._options.displayProperty));
-                  });
+                  if (self.getSelectedKeys().length > 1) {
+                     self.getSelectedItems().each(function(item) {
+                        textValues.push(item.get(self._options.displayProperty));
+                     });
+                  }
+                  else {
+                     textValues = [self.getTooltip()];
+                  }
+
                   Infobox.show({
                      control: self.getContainer(),
                      message: textValues.join(', '),

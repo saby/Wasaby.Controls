@@ -1,35 +1,41 @@
-define(['js!SBIS3.CONTROLS.Action.OpenDialog', 'Core/core-instance'
+define(['js!SBIS3.CONTROLS.Action.OpenDialog', 'Core/core-instance', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea'
 ], function (OpenDialog, cInstance) {
    describe('SBIS3.CONTROLS.Action.OpenDialog', function() {
       beforeEach(function () {
          if (typeof window === 'undefined') {
             this.skip();
-            return;
+            
          }
       });
       describe('execute', function() {
          it('should open dialog', function(done) {
             let action = new OpenDialog({
-               mode: 'dialog'
+               mode: 'dialog',
+               dialogOptions: {
+                  animationLength: 0
+               }
             });
             action.execute();
-            action.subscribe('onAfterShow', function (e, dialog) {
+            action.subscribe('onBeforeShow', function (e, dialog) {
                assert.isTrue(cInstance.instanceOfModule(dialog), 'SBIS3.CORE.Dialog');
+               done();
                dialog.close();
-               done()
             });
 
          });
 
          it('should open floatArea', function(done) {
             let action = new OpenDialog({
-               mode: 'floatArea'
+               mode: 'floatArea',
+               dialogOptions: {
+                  animationLength: 0
+               }
             });
             action.execute();
-            action.subscribe('onAfterShow', function (e, dialog) {
+            action.subscribe('onBeforeShow', function (e, dialog) {
                assert.isTrue(cInstance.instanceOfModule(dialog), 'SBIS3.CORE.FloatArea');
+               done();
                action.getDialog().close();
-               done()
             });
          });
       });

@@ -1,15 +1,10 @@
 .controls-MoneyTextBox {
-  min-width: @money-text-box-min-width;
-  &__decimals {
-    font-size: @money-text-box-decimals-font-size;
-    color: @money-text-box-decimals-color; //@gray-ccc-color;
-  }
+  min-width: @min-width_MoneyTextBox;
+}
 
-  &.ws-enabled {
-    .controls-TextBox__field:focus {
-      text-overflow: clip;
-    }
-  }
+.controls-MoneyTextBox__decimals {
+  font-size: @font-size_MoneyTextBox-decimals;
+  color: @color_MoneyTextBox-decimals;
 }
 
 .controls-MoneyTextBox__field {
