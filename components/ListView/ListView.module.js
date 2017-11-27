@@ -1809,7 +1809,8 @@ define('js!SBIS3.CONTROLS.ListView',
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
             this._getEmptyDataContainer().empty().html(Sanitize(html, {validNodes: {component: true}, validAttributes : {config: true} }));
-            this._reviveItems();
+            //когда меняют emptyHTML надо оживить компоненты, но не надо потом вызывать всякие события drawItems и прочие методы, отдаем второй арумент silent
+            this._reviveItems(false, true);
             this._toggleEmptyData(this._getItemsProjection() && !this._getItemsProjection().getCount());
          },
 
@@ -2606,6 +2607,23 @@ define('js!SBIS3.CONTROLS.ListView',
                };
             return config;
          },
+
+         _redrawItemInner: function(item) {
+            var
+               toolbar = this._getItemsToolbar(),
+               toolbarTarget = toolbar.getCurrentTarget(),
+               targetElement = this._getDomElementByItem(item);
+            ListView.superclass._redrawItemInner.apply(this, arguments);
+
+            //Если перерисовалась запись, которая является текущим контейнером для тулбара,
+            //то перезаписшем в тулбар, новую ссылку на дом элемент, для того, чтобы тулбар смог
+            //правильно спозионироваться.
+            if (toolbarTarget && targetElement && toolbarTarget.container.get(0) === targetElement.get(0)) {
+               toolbarTarget.container = this._getDomElementByItem(item);
+               toolbar.setCurrentTarget(toolbarTarget);
+            }
+         },
+
          _showToolbar: function(model) {
             var itemsInstances, itemsToolbar, editedItem, editedContainer;
             if (this._options.editMode.indexOf('toolbar') !== -1) {
