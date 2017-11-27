@@ -1,8 +1,6 @@
 & {
    @margin-block: @spacing-between-blocks / 2;
    @margin-row: -@margin-block;
-   @color-modificator-name: bg, ghostWhite, whiteSnow, whiteSmoke, mintCream, hover;
-   @color-modificator-value: @default-bg-color, @ghost-white-color, @white-snow-color, @white-smoke-color, @mint-cream-color, @default-hover-color;
 
    .ws-block {
       &__layout {
@@ -26,8 +24,4 @@
          .box-sizing();
       }
    }
-   // Модификаторы цвета блоков ws-background_bg, ..., ws-background_hover. Нужно уточнить.
-   /*.for(@color-modificator-name, { .ws-background_@{_item} {
-      background-color: extract(@color-modificator-value, @_i);
-   } });*/
 }
