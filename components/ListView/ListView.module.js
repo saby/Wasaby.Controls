@@ -1650,9 +1650,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   set position(value) {
                   },
                   get size() {
+                     var targetSizes = correctTarget[0].getBoundingClientRect();
                      return {
-                         height: correctTarget[0].offsetHeight,
-                         width: correctTarget[0].offsetWidth
+                         height: targetSizes.height,
+                         width: targetSizes.width
                      };
                   },
                   set size(value) {
