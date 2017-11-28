@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
              * @cfg {String} Устанавливает шаблон диалога редактирования.
              * @remark
              * В качестве значения устанавливают имя компонента в виде "js!SBIS3.MyArea.MyName".
-             * Подробнее о создании шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/create/">Создание диалога редактирования</a>.
+             * Подробнее о создании шаблона читайте в разделе <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/create/">Создание диалога редактирования</a>.
              * @see mode
              */
             template : '',
@@ -87,6 +87,15 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             return this._executeDeferred;
          }
          return (new Deferred).callback();
+      },
+
+      /**
+       * Закрывает открытый диалог
+       */
+      closeDialog: function() {
+         if (this._dialog) {
+            this._dialog.close();
+         }
       },
 
       _openDialog: function(meta) {

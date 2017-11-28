@@ -165,13 +165,15 @@ define('js!WSControls/Buttons/MenuButton', [
       //TODO: Постараться придумать что то получше
       // Вешаем на пункты меню отступы слева в соответствии с иконкой у самой кнопки
       _checkItemsIcons: function(items){
-         var padding = 'controls-MenuItem__';
+         var self = this,
+             padding = 'controls-MenuItem__',
+             sizes = ['16' , '24', '32', 'small', 'medium', 'large'];
          if (this._options.icon && items && !this._container.hasClass('controls-Menu__hide-menu-header')){
-            if (this._options.icon.indexOf('icon-16') !== -1){
-               padding += 'padding-16';
-            } else if (this._options.icon.indexOf('icon-24') !== -1){
-               padding += 'padding-24';
-            }
+            sizes.forEach(function(size){
+                if(self._options.icon.indexOf('icon-' + size) !== -1){
+                    padding += 'padding-' + size;
+                }
+            });
          }
          $('> .controls-MenuItem', this._picker.getContainer().find('.controls-Menu__itemsContainer')).each(function(){
             var $this = $(this);
@@ -219,6 +221,14 @@ define('js!WSControls/Buttons/MenuButton', [
          _getContextMenu(function() {
             MenuButton.superclass.showPicker.call(self);
          }, self._options.historyId);
+      },
+
+      getPicker: function () {
+        if(!requirejs.defined('js!SBIS3.CONTROLS.ContextMenu')) {
+            IoC.resolve('ILogger').log('MenuButton', 'ContextMenu не загружено');
+           return;
+        }
+        return MenuButton.superclass.getPicker.call(this);
       },
 
       _createPicker: function(targetElement){
@@ -436,7 +446,7 @@ define('js!WSControls/Buttons/MenuButton', [
 
       /*TODO блок сеттеров для временного решения проблем с названиями опций полей. Избавиться с переходм на интерфейсы вместо миксинов*/
        setKeyField: function(prop) {
-           IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setKeyField устарел, используйте setIdProperty');
+           IoC.resolve('ILogger').log('MenuButton', 'Метод setKeyField устарел, используйте setIdProperty');
            this.setIdProperty(prop);
        },
 
@@ -445,7 +455,7 @@ define('js!WSControls/Buttons/MenuButton', [
        },
 
        setDisplayField: function(prop) {
-           IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setDisplayField устарел, используйте setDisplayProperty');
+           IoC.resolve('ILogger').log('MenuButton', 'Метод setDisplayField устарел, используйте setDisplayProperty');
            this.setDisplayProperty(prop);
        },
 
@@ -454,7 +464,7 @@ define('js!WSControls/Buttons/MenuButton', [
        },
 
        setHierField: function(prop) {
-           IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
+           IoC.resolve('ILogger').log('MenuButton', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
            this.setParentProperty(prop);
        },
 

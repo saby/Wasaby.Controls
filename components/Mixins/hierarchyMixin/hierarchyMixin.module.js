@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
              * @cfg {String} Устанавливает поле иерархии.
              * @remark
              * Полем иерархии называют поле записи, по значениям которой устанавливаются иерархические отношения между записями набора данных.
-             * Для таблиц БД, для которых установлен <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">тип отношений Иерархия</a>, по умолчанию поле иерархии называется "Раздел".
+             * Для таблиц БД, для которых установлен <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">тип отношений Иерархия</a>, по умолчанию поле иерархии называется "Раздел".
              * @see setParentProperty
              * @see getParentProperty
              */
@@ -264,7 +264,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
        * Устанавливает текущий корень иерархии.
        * @remark
        * Метод производит изменение набора данных: он будет соответствовать содержимому узла, идентификатор которого был установлен в качестве корня иерархии.
-       * В иерархических списках существует три типа записей: лист, узел и скрытый узел. Подробнее о различиях между ними читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Типы отношений в БД</a>.
+       * В иерархических списках существует три типа записей: лист, узел и скрытый узел. Подробнее о различиях между ними читайте в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Типы отношений в БД</a>.
        * При выполнении метода происходит событие {@link onBeforeSetRoot}.
        * @param {String|Number|Null} key Идентификатор узла иерархии, который нужно установить. Null - это вершина иерархии, в наборе данных отображены только те записи, которые являются родительскими для других.
        * @see getCurrentRoot

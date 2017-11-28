@@ -1,18 +1,26 @@
-.controls-MoneyTextBox {
-  min-width: @money-text-box-min-width;
-  &__decimals {
-    font-size: @money-text-box-decimals-font-size;
-    color: @money-text-box-decimals-color; //@gray-ccc-color;
-  }
+/*
+   <div class="controls-MoneyTextBox">
+      <div class="controls-TextBox__wrapper">
+         <span class="controls-MoneyTextBox__field">123<span class="controls-MoneyTextBox__decimals">.45</span></span>
+         <div class="controls-TextBox__placeholder">
+             <span class="controls-TextBox__placeholder__overflow"> -placeholder- </span>
+         </div>
+      </div>
+      <div class="controls-TextBox__informationIcon"></div>
+   </div>
+ */
 
-  &.ws-enabled {
-    .controls-TextBox__field:focus {
-      text-overflow: clip;
-    }
-  }
+.controls-MoneyTextBox {
+  min-width: @min-width_MoneyTextBox;
+}
+
+.controls-MoneyTextBox__decimals {
+  font-size: @font-size_MoneyTextBox-decimals;
+  color: @color_MoneyTextBox-decimals;
 }
 
 .controls-MoneyTextBox__field {
   white-space: nowrap;
   overflow: hidden;
+  .baseline-fix();
 }

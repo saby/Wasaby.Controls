@@ -168,7 +168,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                /**
                 * @cfg {String} Устанавливает шаблон отображения шапки.
                 * @remark
-                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/logicless-template/">logicless-шаблонизатора</a> и doT.js-шаблонизатора.<br/>
+                * Шаблон может быть создан с использованием <a href="/doc/platform/developmentapl/interface-development/component-infrastructure/logicless-template/">logicless-шаблонизатора</a> и doT.js-шаблонизатора.<br/>
                 * Шаблон создают в компоненте в подпапке <b>resources</b>.<br/>
                 * Порядок работы с шаблоном:
                 * <ol>
@@ -260,7 +260,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                /**
                 * @cfg {String} Устанавливает шаблон отображения элемента коллекции выпадающего списка.
                 * @remark
-                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/logicless-template/">logicless-шаблонизатора</a> и doT.js-шаблонизатора.
+                * Шаблон может быть создан с использованием <a href="/doc/platform/developmentapl/interface-development/component-infrastructure/logicless-template/">logicless-шаблонизатора</a> и doT.js-шаблонизатора.
                 * Шаблон создают в компоненте в подпапке resources.
                 * @example
                 * Чтобы можно было использовать шаблон в компоненте и передать в опцию itemTpl, нужно выполнить следующее:
@@ -551,12 +551,15 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (!row.length || !row.data('hash')) {
                return undefined;
             }
-            var itemProjection = this._getItemsProjection().getByHash(row.data('hash'));
-            if (this._isEnumTypeData()) {
-               return this._getItemsProjection().getSourceIndexByItem(itemProjection);
+            var projItem = this._getItemsProjection().getByHash(row.data('hash'));
+
+            if (!projItem) { // Если записи в данных не нашлось, значит выбрали emptyValue
+               return null;
             }
-            //Если запись в проекции не найдена - значит выбрали пустую запись(добавляется опцией emptyValue), у которой ключ null
-            return itemProjection ? itemProjection.getContents().getId() : null;
+            if (this._isEnumTypeData()) {
+               return this._getItemsProjection().getSourceIndexByItem(projItem);
+            }
+            return projItem.getContents().getId();
          },
 
          _dblClickItemHandler : function(e){
@@ -674,6 +677,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
                return false;
             }
             return DropdownList.superclass._checkEmptySelection.apply(this, arguments);
+         },
+         _isEmptySelection: function() {
+           if (this._isEnumTypeData()) { //В enum нет пустой выборки
+              return false;
+           }
+           return DropdownList.superclass._isEmptySelection.apply(this, arguments);
          },
          _setSelectedItems: function(){
             //Перебиваю метод из multeselectable mixin'a. см. коммент у метода _isEnumTypeData
@@ -916,12 +925,18 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _showInfobox: function() {
             var self = this,
                textValues = [];
-            if (!this.isEnabled() && this.getSelectedKeys().length > 1) {
+            if (!this.isEnabled() && (this.getSelectedKeys().length > 1 || this.getTooltip())) {
                requirejs(['js!SBIS3.CORE.Infobox'], function(Infobox) {
                   textValues = [];
-                  self.getSelectedItems().each(function(item) {
-                     textValues.push(item.get(self._options.displayProperty));
-                  });
+                  if (self.getSelectedKeys().length > 1) {
+                     self.getSelectedItems().each(function(item) {
+                        textValues.push(item.get(self._options.displayProperty));
+                     });
+                  }
+                  else {
+                     textValues = [self.getTooltip()];
+                  }
+
                   Infobox.show({
                      control: self.getContainer(),
                      message: textValues.join(', '),
