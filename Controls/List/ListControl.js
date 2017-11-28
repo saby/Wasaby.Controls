@@ -6,7 +6,9 @@ define('js!Controls/List/ListControl', [
    'WS.Data/Source/ISource',
    'Core/core-instance',
    'js!Controls/List/Controllers/PageNavigation',
-   'Core/helpers/functional-helpers'
+   'js!Controls/List/Controllers/ScrollWatcher',
+   'Core/helpers/functional-helpers',
+   'css!Controls/List/ListControl'
 ], function (Control,
              ListControlTpl,
              DataSourceUtil,
@@ -14,6 +16,7 @@ define('js!Controls/List/ListControl', [
              ISource,
              cInstance,
              PageNavigation,
+             ScrollWatcher,
              fHelpers
    ) {
    'use strict';
@@ -37,7 +40,7 @@ define('js!Controls/List/ListControl', [
       },
 
       prepareQueryParams: function(direction) {
-
+         var params = {};
          if (this._navigationController) {
             var addParams = this._navigationController.prepareQueryParams(this._display, direction);
             params.limit = addParams.limit;
@@ -133,6 +136,37 @@ define('js!Controls/List/ListControl', [
          else {
             throw new Error('Option dataSource is undefined. Can\'t load page');
          }
+      },
+
+      createScrollWatcher: function(scrollContainer) {
+         var
+            self = this,
+            children = this._children,
+            triggers = {
+               topListTrigger: children.topListTrigger,
+               bottomListTrigger: children.bottomListTrigger,
+               topLoadTrigger: children.topLoadTrigger,
+               bottomLoadTrigger: children.bottomLoadTrigger
+            },
+            eventHandlers = {
+               onLoadTriggerTop: function() {
+                  self._scrollLoadMore('up');
+               },
+               onLoadTriggerBottom: function() {
+                  self._scrollLoadMore('down');
+               },
+               onListTop: function() {
+               },
+               onListBottom: function() {
+               }
+            };
+
+         return new ScrollWatcher ({
+            triggers : triggers,
+            scrollContainer: scrollContainer,
+            loadOffset: this._loadOffset,
+            eventHandlers: eventHandlers
+         });
       }
    };
 
@@ -376,6 +410,8 @@ define('js!Controls/List/ListControl', [
 
          _itemTemplate: null,
 
+         _loadOffset: 100,
+
          constructor: function (cfg) {
             ListView.superclass.constructor.apply(this, arguments);
             this._items = cfg.items;
@@ -385,11 +421,10 @@ define('js!Controls/List/ListControl', [
          /**
           * Load more data after reaching end or start of the list.
           *
-          * @param e
           * @param direction 'up' | 'down'
           * @private
           */
-         _scrollLoadMore: function(e, direction) {
+         _scrollLoadMore: function(direction) {
             if (this._navigationController && this._navigationController.hasMoreData(direction)) {
                _private.loadPage.call(this, direction);
             }
@@ -407,6 +442,13 @@ define('js!Controls/List/ListControl', [
             }
          },
 
+         _afterMount: function() {
+            ListView.superclass._afterMount.apply(this, arguments);
+
+            var scrollContainer = this._container.closest('.ws-scrolling-content')[0];
+            this._scrollWatcher = _private.createScrollWatcher.call(this, scrollContainer);
+         },
+
          _beforeUpdate: function(newOptions) {
             if (newOptions.filter != this._options.filter) {
                this._filter = newOptions.filter;
@@ -419,6 +461,12 @@ define('js!Controls/List/ListControl', [
             }
 
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
+         },
+
+         _beforeUnmount: function() {
+            this._scrollWatcher.destroy();
+
+            ListView.superclass._beforeUnmount.apply(this, arguments);
          },
 
          //<editor-fold desc='DataSourceMethods'>
