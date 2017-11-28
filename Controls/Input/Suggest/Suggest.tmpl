@@ -1,0 +1,17 @@
+<ws:Controls.Input.Text
+    trim="{{_options.trim|orEmpty}}"
+    selectOnClick="{{_options.selectOnClick|orEmpty}}"
+    inputCharRegExp="{{_options.inputCharRegExp|orEmpty}}"
+    constraint="{{_options.constraint|orEmpty}}"
+    value="{{_value}}"
+    enabled="{{isEnabled()}}"
+    tagStyle="{{_options.tagStyle}}"
+    placeholder="{{_options.placeholder}}"
+    event:onChangeValue="_changeValueHandler()">
+    <ws:afterFieldWrapper >
+        <div if="{{_value}}"
+             class="icon-size icon-Close"
+             title="{[Очистить поле]}"
+             event:onclick="_clearValue()"/>
+    </ws:afterFieldWrapper>
+</ws:Controls.Input.Text>

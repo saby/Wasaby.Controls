@@ -114,7 +114,9 @@ define('js!Controls/Input/Text',
 
       TextBox.getDefaultOptions = function() {
          return {
-            value: ''
+            value: '',
+            trim: false,
+            selectOnClick: false
          };
       };
 

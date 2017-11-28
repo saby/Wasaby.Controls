@@ -1,4 +1,4 @@
-define('js!Controls/Input/Suggest/PopupSearchController',
+define('js!Controls/Input/resources/Utils/PopupSearchController',
    [
       'Core/core-extend',
       'Core/core-merge',
@@ -12,23 +12,21 @@ define('js!Controls/Input/Suggest/PopupSearchController',
       
       var PopupSearchController = extend({
          constructor: function(options) {
-            this._search = new Search({
-               dataSource: options.dataSource,
-               searchDelay: options.searchDelay
-            });
-            this._filter = options.filter;
-            this._searchParam = options.searchParam;
-            this._popupOpener = options.popupOpener;
-            this._popupTarget = options.popupTarget;
-            this._popupTemplate = options.popupTemplate;
+            this._options = options;
          },
-         
          search: function(textValue) {
-            var filter = cMerge({}, this._filter || {}),
+            var filter = cMerge({}, this._options.filter || {}),
                 self = this;
             
-            filter[this._searchParam] = textValue;
-            requirejs([self._popupTemplate]);
+            if (!this._search) {
+               this._search = new Search({
+                  dataSource: this._options.dataSource,
+                  searchDelay: this._options.searchDelay
+               });
+            }
+            
+            filter[this._options.searchParam] = textValue;
+            requirejs([self._options.popupTemplate]);
             this._search.search({filter: filter}).addCallback(function(searchResult) {
                PapupManager.show(
                   {
@@ -36,7 +34,7 @@ define('js!Controls/Input/Suggest/PopupSearchController',
                         componentOptions: {
                            items: searchResult
                         },
-                        template: self._popupTemplate
+                        template: self._options.popupTemplate
                      }
                   },
                   self._popupOpener,
@@ -45,14 +43,16 @@ define('js!Controls/Input/Suggest/PopupSearchController',
                         vertical: 'bottom',
                         horizontal: 'left'
                      },
-                     target: self._popupTarget || self._popupOpener.getContainer()
+                     target: self._options.popupOpener.getContainer()
                   })
                );
             });
          },
          
          abort: function() {
-            this._search.abort();
+            if (this._search) {
+               this._search.abort();
+            }
          }
       });
       

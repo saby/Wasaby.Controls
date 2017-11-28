@@ -69,7 +69,7 @@ define('js!Controls/List/resources/utils/Search',
             cfg = cfg || {};
             checkRequiredParams(cfg);
             this._searchDelay = cfg.hasOwnProperty('searchDelay') ? cfg.searchDelay : 500;
-            this._dataSource = cfg.dataSource;
+            this._dataSource = DataSourceUtil.prepareSource(cfg.dataSource);
             Search.superclass.constructor.apply(this, arguments);
          },
    

@@ -1,14 +1,13 @@
 define('js!Controls/Input/Suggest',
    [
+      'Core/Control',
       'js!Controls/Input/Text',
-      'tmpl!Controls/Input/Suggest/afterFieldWrapper',
-      'Core/Deferred',
-      'Core/moduleStubs',
+      'tmpl!Controls/Input/Suggest/Suggest',
       'Core/core-merge',
       'js!WS.Data/Type/descriptor',
-      'js!Controls/List/resources/utils/DataSourceUtil'
+      'js!Controls/Input/resources/Utils/SuggestController'
    ],
-   function(Text, afterFieldWrapper, Deferred, mStubs, cMerge, types, DataSourceUtil) {
+   function(Control, Text, template, cMerge, types, SuggestController) {
    
       /**
        * Поле ввода с автодополнением
@@ -42,57 +41,19 @@ define('js!Controls/Input/Suggest',
        */
    
       'use strict';
+      
+      var Suggest = Control.extend({
    
-      function getSearchController() {
-         var self = this;
-         return mStubs.require('js!Controls/Input/Suggest/PopupSearchController').addCallback(function(res) {
-            if (!self._searchController) {
-               self._searchController = new res[0]({
-                  dataSource: self._dataSource,
-                  searchParam: self._searchParam,
-                  searchDelay: self._searchDelay,
-                  filter: self._filter,
-                  popupTemplate: self._suggestTemplateName,
-                  popupOpener: self
-               });
-            }
-            return self._searchController;
-         });
-      }
-      
-      function search(textValue) {
-         this._searching = true; //show loading Indicator
-         getSearchController.call(this).addCallback(function(searchController) {
-            searchController.search(textValue);
-            return searchController;
-         });
-      }
-      
-      function abortSearch() {
-         this._searching = false; //hide loading Indicator
-         getSearchController.call(this).addCallback(function(searchController) {
-            searchController.abort();
-            return searchController;
-         });
-      }
-      
-      function onChangeValueHandler(event, text) {
-         if (text.length >= this._options.searchStartCharacter) {
-            search.call(this, text)
-         } else {
-            abortSearch.call(this);
-         }
-      }
-      
-      var Suggest = Text.extend({
-         
+         _template: template,
          _controlName: 'Controls/Input/Suggest',
-         _afterFieldWrapper: afterFieldWrapper,
-   
          // <editor-fold desc="handlers">
          
-         _clearTextClick: function(event) {
-            this._inputHandler(event, '');
+         _clearValue: function() {
+            this._value = '';
+         },
+         
+         _changeValueHandler: function(event, value) {
+            this._value = value;
          },
          
          // </editor-fold>
@@ -100,21 +61,28 @@ define('js!Controls/Input/Suggest',
          // <editor-fold desc="LifeCycle">
          
          constructor: function(cfg) {
+            this._value = cfg.value;
             Suggest.superclass.constructor.call(this, cfg);
-            
-            this._dataSource = DataSourceUtil.prepareSource(cfg.dataSource);
-            this._searchParam = cfg.searchParam;
-            this._searchDelay = cfg.searchDelay;
-            this._filter = cfg.filter;
-            this._suggestTemplateName = cfg.suggestTemplateName;
-            
-            this.subscribe('onChangeValue', onChangeValueHandler.bind(this));
          },
    
-         _beforeUnmount: function() {
-            abortSearch.call(this);
-            this._search = null;
-            Suggest.superclass._beforeUnmount.call(this);
+         _afterMount: function() {
+            var suggestController = new SuggestController({
+               suggestTemplate: this._options.suggestTemplate,
+               dataSource: this._options.dataSource,
+               searchDelay: this._options.searchDelay,
+               filter: this._options.filter,
+               minSearchLength: this._options.minSearchLength,
+               searchParam: this._options.searchParam,
+               textComponent: this._childControls[0]
+            });
+   
+            this.once('onDestroy', function() {
+               suggestController.destroy();
+            });
+         },
+   
+         _beforeUpdate: function(newOptions) {
+            this._value = newOptions.value;
          }
          
          // </editor-fold>
@@ -123,23 +91,23 @@ define('js!Controls/Input/Suggest',
    
    
       // <editor-fold desc="OptionsDesc">
-      var origOptionTypes = Suggest.getOptionTypes;
+      var textOptionTypes = Text.getOptionTypes;
       Suggest.getOptionTypes = function() {
-         return cMerge(origOptionTypes(), {
+         return cMerge(textOptionTypes(), {
             searchDelay: types(Number),
-            searchStartCharacter: types(Number),
-            showEmptySuggest: types(Boolean),
+            minSearchLength: types(Number),
             filter: types(Object),
-            searchParam: types(String)
+            searchParam: types(String),
+            clearable: types(Boolean)
          });
       };
    
-      var origDefaultOptions = Suggest.getDefaultOptions;
+      var textDefaultOptions = Text.getDefaultOptions;
       Suggest.getDefaultOptions = function() {
-         return cMerge(origDefaultOptions(), {
+         return cMerge(textDefaultOptions(), {
             searchDelay: 500,
-            searchStartCharacter: 3,
-            showEmptySuggest: true
+            minSearchLength: 3,
+            clearable: true
          });
       };
       // </editor-fold>
