@@ -1,7 +1,7 @@
 .controls-SearchForm.controls-TextBox {
   .border-radius(@search-border-radius);
-  border-color: transparent;
-  border-bottom-color: transparent;
+  border-color: @border-color_SearchForm;
+  border-bottom-color: @border-color_SearchForm;
   background: @search-background;
   position: relative;
 
@@ -11,8 +11,8 @@
       background: @search-background;
     }
     &.ws-disabled {
-      background: @search-background-disabled;
-      border-color:@default-border-color-disabled;
+      background: @search-background; //todo?
+      border-color:@border-color_SearchForm_disabled;
       .controls-SearchForm__search {
         cursor: default;
         color: @icon-color-disabled;
@@ -24,10 +24,6 @@
         visibility: hidden;
       }
     }
-  .controls-TextBox__field {
-    padding: @search-field-padding;
-  }
-
   .controls-SearchForm__afterFieldWrapper {
     .inline-flexbox();
     padding: @search-button-wrapper-padding;//по стандарту - 8, но 8 - 1(бордер) - 2(паддинг иконки) = 5
@@ -64,15 +60,17 @@
     }
   }
 }
-
-//todo
+.controls-SearchForm_padding {
+   padding: @padding_SearchForm;
+}
+//позиционирование всплывающего над поиском пикера
 .controls-Suggest__picker.controls-searchForm__suggest {
-  margin-left: -@search-form-suggest-left-offset;
-  margin-top: -@search-form-suggest-top-offset;
+  margin-left: @margin-left__searchForm_picker;
+  margin-top: @margin-top__searchForm_picker;
   .box-shadow(@menu-shadow);
-  padding-top: @search-form-suggest-top-offset;
+  padding-top: @padding-top__searchForm_picker;
 }
 
 .controls-searchForm__suggest .controls-PopupMixin__closeButton {
-  top: @search-form-suggest-close-offset;
+  top: @top_searchForm_picker_closeButton;
 }
