@@ -54,6 +54,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/handlers',
             this.getParent()._setText(this.getItems().getRecordById(key).get('value'));
          },
          openHistory: function(){
+            //TODO Лениво подгружаем данные и имитируем клик по иконке для открытия пикера
+            //Убрать костыль с выполнением задачи https://online.sbis.ru/opendoc.html?guid=34fb484f-ef6f-4ac8-8f2a-f7c99ab7b35c
             var toolbar = this.getParent();
             toolbar._initHistory(function(){
                toolbar.getItemInstance('history').showPicker();
