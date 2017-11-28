@@ -12,7 +12,7 @@ define('js!Controls/List/Controllers/ScrollWatcher', [
        * @param elements
        * @private
        */
-      _initIntersectionObserver: function(elements) {
+      initIntersectionObserver: function(elements) {
          var
             self = this;
 
@@ -87,7 +87,7 @@ define('js!Controls/List/Controllers/ScrollWatcher', [
          if (!global || !global.IntersectionObserver) {
             additionalOnScrollHandler = _private.onScrollWithoutIntersectionObserver;
          } else {
-            _private._initIntersectionObserver.call(this, cfg.triggers);
+            _private.initIntersectionObserver.call(this, cfg.triggers);
          }
 
          cfg.scrollContainer.addEventListener(
