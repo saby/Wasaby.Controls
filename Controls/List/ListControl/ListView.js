@@ -4,28 +4,17 @@
 define('js!Controls/List/ListControl/ListView', [
    'Core/Control',
    'tmpl!Controls/List/ListControl/ListView',
-   'js!Controls/List/ListControl/ListViewModel',
    'js!Controls/List/resources/utils/ItemsUtil',
    'tmpl!Controls/List/ListControl/ItemTemplate',
    'css!Controls/List/ListControl/ListView'
 ], function (BaseControl,
              ListViewTpl,
-             ListViewModel,
              ItemsUtil,
              defaultItemTemplate
    ) {
    'use strict';
 
    var _private = {
-      createListModel: function(cfg) {
-         return new ListViewModel ({
-            items : cfg.items,
-            idProperty: cfg.idProperty,
-            displayProperty: cfg.displayProperty,
-            selectedKey: cfg.selectedKey
-         })
-      },
-
       onListChange: function() {
          this._forceUpdate();
       }
@@ -35,6 +24,7 @@ define('js!Controls/List/ListControl/ListView', [
       {
          _controlName: 'Controls/List/ListControl/ListView',
 
+         _listModel: null,
          _template: ListViewTpl,
          _defaultItemTemplate: defaultItemTemplate,
 
@@ -44,16 +34,16 @@ define('js!Controls/List/ListControl/ListView', [
          },
 
          _beforeMount: function(newOptions) {
-            if (newOptions.items) {
-               this._listModel = _private.createListModel(newOptions);
+            if (newOptions.listModel) {
+               this._listModel = newOptions.listModel;
                this._listModel.subscribe('onListChange', this._onListChangeFnc);
             }
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
          },
 
          _beforeUpdate: function(newOptions) {
-            if (newOptions.items && (this._items != newOptions.items)) {
-               this._listModel = _private.createListModel(newOptions);
+            if (newOptions.listModel && (this._listModel != newOptions.listModel)) {
+               this._listModel = newOptions.listModel;
                this._listModel.subscribe('onListChange', this._onListChangeFnc);
             }
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
