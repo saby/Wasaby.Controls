@@ -1,6 +1,7 @@
 define('js!Controls/List/ListControl', [
    'Core/Control',
    'tmpl!Controls/List/ListControl',
+   'js!Controls/List/ListControl/ListViewModel',
    'js!Controls/List/resources/utils/DataSourceUtil',
    'WS.Data/Type/descriptor',
    'WS.Data/Source/ISource',
@@ -11,6 +12,7 @@ define('js!Controls/List/ListControl', [
    'css!Controls/List/ListControl'
 ], function (Control,
              ListControlTpl,
+             ListViewModel,
              DataSourceUtil,
              Types,
              ISource,
@@ -22,6 +24,14 @@ define('js!Controls/List/ListControl', [
    'use strict';
 
    var _private = {
+      createListModel: function(items, cfg) {
+         return new ListViewModel ({
+            items : items,
+            idProperty: cfg.idProperty,
+            displayProperty: cfg.displayProperty,
+            selectedKey: cfg.selectedKey
+         })
+      },
       //проверка на то, нужно ли создавать новый инстанс рекордсета или же можно положить данные в старый
       isEqualRecordset: function(oldList, newList) {
          return oldList && cInstance.instanceOfModule(oldList, 'WS.Data/Collection/RecordSet')
@@ -66,7 +76,7 @@ define('js!Controls/List/ListControl', [
          return params;
       },
 
-      reload: function() {
+      reload: function(newOptions) {
          if (this._dataSource) {
             var def, queryParams,
                self = this;
@@ -96,6 +106,7 @@ define('js!Controls/List/ListControl', [
                      self._items.assign(list);
                   } else {
                      self._items = list;
+                     self._listModel = _private.createListModel(self._items, newOptions);
                   }
                   if (self._navigationController) {
                      self._navigationController.calculateState(list)
@@ -414,7 +425,6 @@ define('js!Controls/List/ListControl', [
 
          constructor: function (cfg) {
             ListView.superclass.constructor.apply(this, arguments);
-            this._items = cfg.items;
             this._publish('onDataLoad');
          },
 
@@ -432,7 +442,10 @@ define('js!Controls/List/ListControl', [
 
          _beforeMount: function(newOptions) {
             this._filter = newOptions.filter;
-
+            if (newOptions.items) {
+               this._items = newOptions.items;
+               this._listModel = _private.createListModel(this._items, newOptions);
+            }
             if (newOptions.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
@@ -452,6 +465,11 @@ define('js!Controls/List/ListControl', [
          _beforeUpdate: function(newOptions) {
             if (newOptions.filter != this._options.filter) {
                this._filter = newOptions.filter;
+            }
+
+            if (newOptions.items && newOptions.items != this._options.items) {
+               this._items = newOptions.items;
+               this._listModel = _private.createListModel(this._items, newOptions);
             }
 
             if (newOptions.dataSource !== this._options.dataSource) {
