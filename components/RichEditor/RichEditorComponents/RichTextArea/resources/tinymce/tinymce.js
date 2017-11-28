@@ -33752,7 +33752,8 @@
                   var rng = sel.getRng();
                   e.clipboardData.setData('text/html', rng.startOffset === 0 && rng.commonAncestorContainer.nodeType === 3 && rng.endOffset === rng.commonAncestorContainer.nodeValue.length && !sel.dom.isBlock(sel.getNode())
                               ? sel.dom.getOuterHTML(sel.getNode()) : sel.getContent());
-                  e.clipboardData.setData('text/plain', sel.getContent({format:'text'}));
+                  var text = sel.getContent({format:'text'});
+                  e.clipboardData.setData('text/plain', navigator.userAgent.search(/\bwindows\b/i) !== -1 ? text.replace(/\n/gi, '\r\n') : text);
 
                   // Needed delay for https://code.google.com/p/chromium/issues/detail?id=363288#c3
                   // Nested delete/forwardDelete not allowed on execCommand("cut")
