@@ -158,7 +158,8 @@ define('js!Controls/Input/Area', [
       };
    };
 
-   Area.getOptionTypes = function() {
+   //TODO расскоментировать когда полечат https://online.sbis.ru/opendoc.html?guid=e53e46a0-9478-4026-b7d1-75cc5ac0398b
+   /*Area.getOptionTypes = function() {
       return {
          value: types(String),
          trim: types(Boolean),
@@ -174,7 +175,7 @@ define('js!Controls/Input/Area', [
           'ctrlEnter'
          ])
       };
-   };
+   };*/
 
    return Area;
 

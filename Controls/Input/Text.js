@@ -139,7 +139,8 @@ define('js!Controls/Input/Text',
          };
       };
 
-      TextBox.getOptionTypes = function() {
+      //TODO расскоментировать когда полечат https://online.sbis.ru/opendoc.html?guid=e53e46a0-9478-4026-b7d1-75cc5ac0398b
+      /*TextBox.getOptionTypes = function() {
          return {
             trim: types(Boolean),
             selectOnClick: types(Boolean),
@@ -148,7 +149,7 @@ define('js!Controls/Input/Text',
             value: types(String),
             maxLength: types(Number)
          };
-      };
+      };*/
 
       return TextBox;
    }

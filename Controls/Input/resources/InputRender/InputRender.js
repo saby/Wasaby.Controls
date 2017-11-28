@@ -31,8 +31,8 @@ define('js!Controls/Input/resources/InputRender/InputRender',
 
          saveSelection: function(target){
             this._selection = this._selection || {};
-            this._selection = target.selectionStart;
-            this._selection = target.selectionEnd;
+            this._selection.selectionStart = target.selectionStart;
+            this._selection.selectionEnd = target.selectionEnd;
          },
 
          setTargetData: function(target, data){
@@ -107,7 +107,8 @@ define('js!Controls/Input/resources/InputRender/InputRender',
          };
       };
 
-      InputRender.getOptionTypes = function() {
+      //TODO расскоментировать когда полечат https://online.sbis.ru/opendoc.html?guid=e53e46a0-9478-4026-b7d1-75cc5ac0398b
+      /*InputRender.getOptionTypes = function() {
          return {
             value: types(String),
             selectOnClick: types(Boolean),
@@ -120,7 +121,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
                'info'
             ])
          };
-      };
+      };*/
 
       return InputRender;
    }
