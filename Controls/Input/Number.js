@@ -3,7 +3,8 @@ define('js!Controls/Input/Number', [
    'tmpl!Controls/Input/Number/Number',
    'js!WS.Data/Type/descriptor',
 
-   'js!Controls/Input/resources/TextRender/TextRender'
+   'js!Controls/Input/resources/InputRender/InputRender',
+   'tmpl!Controls/Input/resources/input'
 ], function (
    Control,
    template,
@@ -11,8 +12,48 @@ define('js!Controls/Input/Number', [
 ) {
 
    'use strict';
+   var
+      _private,
+      NumberTextBox;
 
-   var NumberTextBox = Control.extend({
+   _private = {
+      //Валидирует и подготавливает новое значение по splitValue
+      prepareData: function(splitValue) {
+         var
+            splitValueInterface = new SplitValueModule(splitValue);
+
+         //Если был удален пробел - нужно его оставить и сдвинуть курсор влево
+         if (splitValueInterface.getDeletedValue() === ' ') {
+            return {
+               value: splitValueInterface.getValueWithDelimiters(),
+               position: splitValueInterface.getCursorPosition()
+            };
+         }
+
+         //Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
+         splitValueInterface.setInputValue(splitValueInterface.getInputValue().toLowerCase().replace(/,|б|ю/, '.'));
+
+         //Если валидация не прошла, то не даем ничего ввести
+         if (!splitValueInterface.validate(_getRegexp(this._options))) {
+            splitValueInterface.setInputValue('');
+         } else {
+            //Если в начале строки ввода точка, а до неё ничего нет, то предполагаем что хотят видеть '0.'
+            if (splitValueInterface.getInputValue()[0] === '.' && !splitValueInterface.getBeforeInputValue()) {
+               splitValueInterface.setBeforeInputValue('0');
+            }
+         }
+
+         //Тут нужно произвести какую-то обработку пришедшего значения (в сплит-формате) и вернуть итоговое значение и позицию
+
+         //Запишет значение в input и поставит курсор в указанное место
+         return {
+            value: splitValueInterface.getValueWithDelimiters(),
+            position: splitValueInterface.getCursorPosition(true)
+         };
+      }
+   };
+
+   NumberTextBox = Control.extend({
       /**
        * Поле ввода числа.
        * @class Controls/Input/Number
@@ -53,47 +94,26 @@ define('js!Controls/Input/Number', [
 
        _template: template,
 
-      _beforeMount: function (options) {
-         this._value = options.value;
-         this._getInputData = this._getInputData.bind(this);
+      constructor: function(options) {
+         NumberTextBox.superclass.constructor.apply(this, arguments);
+         this._prepareData = _private.prepareData.bind(this);
       },
 
       _beforeUpdate: function (newOptions) {
          this._value = newOptions.value;
       },
 
-      _inputHandler: function (event, newValue) {
-         if (this._value !== newValue) {
-            this._value = newValue;
-            this._notify('onChangeValue', newValue);
-         }
+      _changeValueHandler: function(event, value) {
+         this._value = value;
+         this._notify('onChangeValue', value);
       },
 
-      //Срабатывает при вводе символа. Позволяет скорректировать итоговое значение поля
-      _getInputData: function (splitValue) {
-         var
-            splitValueInterface = new SplitValueModule(splitValue);
+      _inputCompletedHandler: function(){
+         this._notify('inputCompleted', this._value);
+      },
 
-         //Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
-         splitValueInterface.setInputValue(splitValueInterface.getInputValue().toLowerCase().replace(/,|б|ю/, '.'));
-
-         //Если валидация не прошла, то не даем ничего ввести
-         if (!splitValueInterface.validate(_getRegexp(this._options))) {
-            splitValueInterface.setInputValue('');
-         } else {
-            //Если в начале строки ввода точка, а до неё ничего нет, то предполагаем что хотят видеть '0.'
-            if (splitValueInterface.getInputValue()[0] === '.' && !splitValueInterface.getBeforeInputValue()) {
-               splitValueInterface.setBeforeInputValue('0');
-            }
-         }
-
-         //Тут нужно произвести какую-то обработку пришедшего значения (в сплит-формате) и вернуть итоговое значение и позицию
-
-         //Запишет значение в input и поставит курсор в указанное место
-         return {
-            value: splitValueInterface.getValueWithDelimiters(),
-            position: splitValueInterface.getCursorPosition(true)
-         };
+      _notifyHandler: function(event, value) {
+         this._notify(value);
       }
    });
 
@@ -143,7 +163,7 @@ define('js!Controls/Input/Number', [
 
       return {
          concat: function() {
-            return _splitValueObj.beforeInputValue + _splitValueObj.inputValue + _splitValueObj.afterInputValue;
+            return _splitValueObj.before + _splitValueObj.insert + _splitValueObj.after;
          },
          getCursorPosition: function(withDelimeters) {
             var
@@ -157,25 +177,25 @@ define('js!Controls/Input/Number', [
                spacesCntDiff = afterNewDelimetersSpacesCnt - beforeNewDelimetersSpacesCnt;
             }
 
-            return _splitValueObj.beforeInputValue.length + _splitValueObj.inputValue.length + spacesCntDiff;
+            return _splitValueObj.before.length + _splitValueObj.insert.length + spacesCntDiff;
          },
          setBeforeInputValue: function(value) {
-            _splitValueObj.beforeInputValue = value || '';
+            _splitValueObj.before = value || '';
             return this;
          },
          getBeforeInputValue: function() {
-            return _splitValueObj.beforeInputValue;
+            return _splitValueObj.before;
          },
          setInputValue: function(value) {
-            _splitValueObj.inputValue = value || '';
+            _splitValueObj.insert = value || '';
             return this;
          },
          getInputValue: function() {
-            return _splitValueObj.inputValue;
+            return _splitValueObj.insert;
          },
-
-
-
+         getDeletedValue: function () {
+            return _splitValueObj.delete
+         },
          getClear: function() {
             return this.concat().replace(/ /g, '');
          },

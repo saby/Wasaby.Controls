@@ -36,10 +36,11 @@ define(
             it('Only positive values check', function () {
                var
                   inputResult;
-               inputResult = numberTextBox._getInputData({
-                  beforeInputValue: '',
-                  inputValue: '-',
-                  afterInputValue: '123'
+               inputResult = numberTextBox._prepareData({
+                  before: '',
+                  insert: '-',
+                  after: '123',
+                  delete: ''
                });
                assert.equal(inputResult.value, '123');
                assert.equal(inputResult.position, 0);
@@ -49,10 +50,11 @@ define(
             it('Max integers length check', function () {
                var
                   inputResult;
-               inputResult = numberTextBox._getInputData({
-                  beforeInputValue: '12 345',
-                  inputValue: '6',
-                  afterInputValue: ''
+               inputResult = numberTextBox._prepareData({
+                  before: '12 345',
+                  insert: '6',
+                  after: '',
+                  delete: ''
                });
                assert.equal(inputResult.value, '12 345');
                assert.equal(inputResult.position, 6);
@@ -62,10 +64,11 @@ define(
             it('Max decimals length check', function () {
                var
                   inputResult;
-               inputResult = numberTextBox._getInputData({
-                  beforeInputValue: '0.12345',
-                  inputValue: '6',
-                  afterInputValue: ''
+               inputResult = numberTextBox._prepareData({
+                  before: '0.12345',
+                  insert: '6',
+                  after: '',
+                  delete: ''
                });
                assert.equal(inputResult.value, '0.12345');
                assert.equal(inputResult.position, 7);
@@ -82,10 +85,11 @@ define(
                   precision: 0
                });
 
-               inputResult = numberTextBox._getInputData({
-                  beforeInputValue: '12',
-                  inputValue: '.',
-                  afterInputValue: ''
+               inputResult = numberTextBox._prepareData({
+                  before: '12',
+                  insert: '.',
+                  after: '',
+                  delete: ''
                });
                assert.equal(inputResult.value, '12');
                assert.equal(inputResult.position, 2);
@@ -95,10 +99,11 @@ define(
             it('Inserting a dot at the beginning of a line results in \'0.\'', function () {
                var
                   inputResult;
-               inputResult = numberTextBox._getInputData({
-                  beforeInputValue: '',
-                  inputValue: '.',
-                  afterInputValue: ''
+               inputResult = numberTextBox._prepareData({
+                  before: '',
+                  insert: '.',
+                  after: '',
+                  delete: ''
                });
                assert.equal(inputResult.value, '0.');
                assert.equal(inputResult.position, 2);
@@ -111,14 +116,29 @@ define(
                   possibleInsertValuesArr = [',', 'б', 'ю', 'Б', 'Ю'];
 
                possibleInsertValuesArr.forEach(function(item) {
-                  inputResult = numberTextBox._getInputData({
-                     beforeInputValue: '123',
-                     inputValue: item,
-                     afterInputValue: ''
+                  inputResult = numberTextBox._prepareData({
+                     before: '123',
+                     insert: item,
+                     after: '',
+                     delete: ''
                   });
                   assert.equal(inputResult.value, '123.');
                   assert.equal(inputResult.position, 4);
                });
+            });
+
+            //Удаление разделительного пробела даёт просто сдвиг курсора влево
+            it('Delete space operation just moves cursor left', function () {
+               var
+                  inputResult;
+               inputResult = numberTextBox._prepareData({
+                  before: '123',
+                  insert: '',
+                  after: '456',
+                  delete: ' '
+               });
+               assert.equal(inputResult.value, '123 456');
+               assert.equal(inputResult.position, 3);
             });
          });
       });
