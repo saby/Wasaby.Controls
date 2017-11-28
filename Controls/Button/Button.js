@@ -15,11 +15,18 @@ define('js!Controls/Button/Button', [
     */
 
    /**
-    * @name Controls/Button/Button#type
+    * @name Controls/Button/Button#style
     * @cfg {String} Внешний вид кнопки
     * @variant standard Стандартная кнопка
     * @variant link Кнопка ссылка
     * @variant flat Кнопка без контура
+    */
+
+   /**
+    * @name Controls/Button/Button#size
+    * @cfg {String} Размер кнопки
+    * @variant m Средняя кнопка
+    * @variant l Большая кнопка
     */
 
 });

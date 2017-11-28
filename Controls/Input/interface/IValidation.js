@@ -1,15 +1,15 @@
-define('js!Controls/Input/interface/IValidation', [
+define('js!Controls/Input/interface/IValidationError', [
 ], function() {
 
    /**
-    * Интерфейс работы валидации в поле ввода.
-    * @mixin Controls/Input/interface/IValidation
+    * Интерфейс невалидного состояния поля.
+    * @mixin Controls/Input/interface/IValidationError
     * @public
     */
 
    /**
-    * @name Controls/Input/interface/IValidation#validators
-    * @cfg {Array} Список валидаторов
+    * @name Controls/Input/interface/IValidationError#validationError
+    * @cfg {String} Сообщение об ошибке
     */
 
 });
