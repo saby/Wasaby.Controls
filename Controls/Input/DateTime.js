@@ -12,7 +12,7 @@ define('js!Controls/Input/DateTime', [
     * @class Controls/Input/DateTime
     * @extends Controls/Control
     * @mixes Controls/Input/interface/IInputDateTime
-    * @mixes Controls/Input/interface/IValidation
+    * @mixes Controls/Input/interface/IValidationError
     * @mixes Controls/Input/interface/IInputTag
     * @control
     * @public
