@@ -17,7 +17,7 @@ define('js!Controls/Input/Text',
        * @extends Controls/Control
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IInputPlaceholder
-       * @mixes Controls/Input/interface/IValidation
+       * @mixes Controls/Input/interface/IValidationError
        * @mixes Controls/Input/interface/IInputTag
        * @control
        * @public
@@ -25,7 +25,7 @@ define('js!Controls/Input/Text',
        * @author Журавлев Максим Сергеевич
        */
 
-          * @mixes Controls/Input/interface/IValidationError
+
       /**
        * @name Controls/Input/Text#maxLength
        * @cfg {Number} Максимальное количество символов, которое может содержать поле ввода.
