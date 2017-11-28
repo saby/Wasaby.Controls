@@ -8,6 +8,7 @@ define('js!Controls/Popup/Opener/Notification/Strategy', [
     * @control
     * @public
     * @category Popup
+    * @extends Controls/Control
     */
 
 });
