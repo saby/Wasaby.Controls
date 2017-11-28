@@ -30,7 +30,7 @@ node('controls') {
                 description: '',
                 name: 'branch_engine'),
             string(
-                defaultValue: future/selenium3,
+                defaultValue: "future/selenium3",
                 description: '',
                 name: 'branch_atf'),
             string(
