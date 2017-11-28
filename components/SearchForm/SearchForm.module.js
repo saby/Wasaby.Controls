@@ -55,7 +55,8 @@ define('js!SBIS3.CONTROLS.SearchForm', [
              * @translatable
              */
             btnCaption: '',
-            usePicker: false
+            usePicker: false,
+            _paddingClass: 'controls-SearchForm_padding'
          }
       },
 
