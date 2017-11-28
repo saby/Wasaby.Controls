@@ -56,7 +56,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/handlers',
          openHistory: function(){
             var toolbar = this.getParent();
             toolbar._initHistory(function(){
-               toolbar.getItemInstance('history').getContainer().click();
+               toolbar.getItemInstance('history').showPicker();
             });
          },
          codesample: function () {
