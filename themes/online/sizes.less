@@ -21,7 +21,7 @@
 @font-size_TextBox_l:             18px;
 @line-height_TextBox:             22px;
 @padding_TextBox-container:       0 4px;
-@padding-bottom_TextBox-container_l:     0;//на данный момент большое и малое поле ввода не различаются в теме online //todo @default-padding-small
+@padding-bottom_TextBox-container_l:     4px;
 @padding_TextBox-container_left:  0 0 0 4px;
 @border-radius_TextBox:           0px;
 @border-width_TextBox:            1px;
@@ -37,7 +37,9 @@
 //combo-box
 @combo-box-icon-size:             @default-icon-size;
 @combo-box-arrow-padding:         0 0 0 @default-padding;
-@combo-box-shadow-display:        block;
+//MoneyTextBox
+@min-width_MoneyTextBox:          102px;
+@font-size_MoneyTextBox-decimals: 12px;
 //suggest-text-box
 @suggest-text-box-icon-size:                @default-icon-size;
 @suggest-text-box-icon-cross-padding:       0 0 0 @default-padding;
@@ -49,6 +51,9 @@
 @search-button-wrapper-padding:   0 1px 0 0;
 @search-loop-size:                @default-icon-size;
 @search-form-icon-padding:        0 2px;
+@search-form-suggest-close-offset:8px;
+@search-form-suggest-top-offset:  @default-height + @search-form-suggest-close-offset;
+@search-form-suggest-left-offset: @search-form-suggest-close-offset;
 //fieldLink
 @fieldLink-icon-size:             @default-icon-size;
 @fieldLink-picker-icon-size:      @default-icon-size;

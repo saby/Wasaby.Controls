@@ -12,11 +12,11 @@
    text-align: left;
    font-size:  @menu-item-font-size;
 
-   &.controls-MenuItem__padding-16{
+   &.controls-MenuItem__padding-16, &.controls-MenuItem__padding-small{
       padding-left: @menu-item-padding-16;
    }
 
-   &.controls-MenuItem__padding-24, &.controls-ListView__item.controls-MenuItem__padding-24{
+   &.controls-MenuItem__padding-24, &.controls-ListView__item.controls-MenuItem__padding-24, &.controls-MenuItem__padding-medium{
       padding-left: @menu-item-padding-24;
    }
 
@@ -46,7 +46,7 @@
          position: absolute;
          top: @menu-item-icon-top-offset;
          left: @menu-item-icon-left-offset;
-         &.icon-24 {
+         &.icon-24, &.icon-medium {
             top: @menu-item-icon24-top-offset;
             left: @menu-item-icon24-left-offset;
          }

@@ -82,6 +82,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
                }
                //В новой престо в больших полях ввода будет отступ снизу
                if (this.size === 'l') {
+                  wrapperClasses.push('controls-TextBox__wrapper_size_l');
                   fieldClasses.push('controls-TextBox__field_size_l');
                }
 

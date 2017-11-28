@@ -6,8 +6,9 @@ if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !para
         error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
     }
 node('controls') {
-    echo "Назначем версию и определяем рабочую директорию"
+    echo "Читаем settings_${version}.props"
     def props = readProperties file: "/home/jenkins/shared_autotest87/settings_${version}.props"
+    echo "Генерируем параметры"
     properties([
     disableConcurrentBuilds(),
     buildDiscarder(
@@ -45,6 +46,7 @@ node('controls') {
             ]),
         pipelineTriggers([])
     ])
+    echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
         echo "Чистим рабочую директорию"

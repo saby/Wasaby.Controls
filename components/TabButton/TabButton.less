@@ -115,7 +115,7 @@
       font-size: @tab-button-large-inner-font-size;
       height: @tab-button-inner-wrapper-height;
       .flex-shrink(1);
-      .flexbox();
+      display: inline-block; //Здесь флекс не нужен + на флексе нет троеточия
 
       .controls-TextBox__field {
          font-size: 18px;

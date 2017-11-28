@@ -1809,7 +1809,8 @@ define('js!SBIS3.CONTROLS.ListView',
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
             this._getEmptyDataContainer().empty().html(Sanitize(html, {validNodes: {component: true}, validAttributes : {config: true} }));
-            this._reviveItems();
+            //когда меняют emptyHTML надо оживить компоненты, но не надо потом вызывать всякие события drawItems и прочие методы, отдаем второй арумент silent
+            this._reviveItems(false, true);
             this._toggleEmptyData(this._getItemsProjection() && !this._getItemsProjection().getCount());
          },
 
@@ -2340,7 +2341,12 @@ define('js!SBIS3.CONTROLS.ListView',
                result = this.showEip(model, { isEdit: true }, false);
                if (originalEvent.type === 'click') {
                   result.addCallback(function(res) {
-                     ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
+                     // С IOS 11 версии перестал работать подскролл к нужному месту. Отключаем наш код, который при клике
+                     // проваливается в редактор по месту, иначе вызывается неправильно работающий scrollIntoView и всё
+                     // ломает: https://online.sbis.ru/opendoc.html?guid=742195a5-c89c-4af8-8121-cdeefa26959e
+                     if (!constants.browser.isMobileIOS && cDetection.IOSVersion >= 11) {
+                        ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
+                     }
                      return res;
                   });
                }
@@ -2606,6 +2612,23 @@ define('js!SBIS3.CONTROLS.ListView',
                };
             return config;
          },
+
+         _redrawItemInner: function(item) {
+            var
+               toolbar = this._getItemsToolbar(),
+               toolbarTarget = toolbar.getCurrentTarget(),
+               targetElement = this._getDomElementByItem(item);
+            ListView.superclass._redrawItemInner.apply(this, arguments);
+
+            //Если перерисовалась запись, которая является текущим контейнером для тулбара,
+            //то перезаписшем в тулбар, новую ссылку на дом элемент, для того, чтобы тулбар смог
+            //правильно спозионироваться.
+            if (toolbarTarget && targetElement && toolbarTarget.container.get(0) === targetElement.get(0)) {
+               toolbarTarget.container = this._getDomElementByItem(item);
+               toolbar.setCurrentTarget(toolbarTarget);
+            }
+         },
+
          _showToolbar: function(model) {
             var itemsInstances, itemsToolbar, editedItem, editedContainer;
             if (this._options.editMode.indexOf('toolbar') !== -1) {
@@ -4659,8 +4682,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._redrawResults(true);
                }.bind(this);
                this._onRecordSetPropertyChange = function onRecordSetPropertyChange(event, data) {
-                  //При изменении мета-данных переподписываюсь на рекорд строки итогов и перерисовываю их.
-                  if (data.metaData.results) {
+                  // Событие так же стреляет при измении любого св-ва рекордсета (idProperty например),
+                  // и в data придут не данные, а изменённое св-во
+                  if (data.metaData && data.metaData.results) {
+                     //При изменении мета-данных переподписываюсь на рекорд строки итогов и перерисовываю их.
                      this.subscribeTo(data.metaData.results, 'onPropertyChange', this._onMetaDataResultsChange);
                   }
                   this._onMetaDataResultsChange();
