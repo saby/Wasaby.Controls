@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.SumDialogTemplate', [
             _defaultRenders: defaultRenders,
             name: 'controls-sumDialog',
             resizable: false,
-            width: 300,
+            width: 'auto',
             title: rk("Суммирование"),
             fields: undefined,
             item: undefined

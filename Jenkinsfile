@@ -6,8 +6,9 @@ if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !para
         error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
     }
 node('controls') {
-    echo "Назначем версию и определяем рабочую директорию"
+    echo "Читаем settings_${version}.props"
     def props = readProperties file: "/home/jenkins/shared_autotest87/settings_${version}.props"
+    echo "Генерируем параметры"
     properties([
     disableConcurrentBuilds(),
     buildDiscarder(
@@ -45,6 +46,7 @@ node('controls') {
             ]),
         pipelineTriggers([])
     ])
+    echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
         echo "Чистим рабочую директорию"
@@ -421,8 +423,6 @@ node('controls') {
                 HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
                 SERVER = test-autotest-db1
                 BASE_VERSION = css_${NODE_NAME}${ver}1
-                server_address = http://10.76.159.209:4444/wd/hub
-                CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe
                 [regression]
                 IMAGE_DIR = capture_${params.theme}
                 RUN_REGRESSION=True"""
@@ -445,8 +445,6 @@ node('controls') {
                 HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
                 SERVER = test-autotest-db1
                 BASE_VERSION = css_${NODE_NAME}${ver}1
-                server_address = http://10.76.159.209:4444/wd/hub
-                CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe
                 [regression]
                 IMAGE_DIR = capture
                 RUN_REGRESSION=True"""
@@ -493,7 +491,7 @@ node('controls') {
                             dir("./controls/tests/reg"){
                                 sh """
                                     source /home/sbis/venv_for_test/bin/activate
-                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
+                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform
                                     deactivate
                                 """
                             }

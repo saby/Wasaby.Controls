@@ -168,7 +168,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                /**
                 * @cfg {String} Устанавливает шаблон отображения шапки.
                 * @remark
-                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/logicless-template/">logicless-шаблонизатора</a> и doT.js-шаблонизатора.<br/>
+                * Шаблон может быть создан с использованием <a href="/doc/platform/developmentapl/interface-development/component-infrastructure/logicless-template/">logicless-шаблонизатора</a> и doT.js-шаблонизатора.<br/>
                 * Шаблон создают в компоненте в подпапке <b>resources</b>.<br/>
                 * Порядок работы с шаблоном:
                 * <ol>
@@ -260,7 +260,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                /**
                 * @cfg {String} Устанавливает шаблон отображения элемента коллекции выпадающего списка.
                 * @remark
-                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/logicless-template/">logicless-шаблонизатора</a> и doT.js-шаблонизатора.
+                * Шаблон может быть создан с использованием <a href="/doc/platform/developmentapl/interface-development/component-infrastructure/logicless-template/">logicless-шаблонизатора</a> и doT.js-шаблонизатора.
                 * Шаблон создают в компоненте в подпапке resources.
                 * @example
                 * Чтобы можно было использовать шаблон в компоненте и передать в опцию itemTpl, нужно выполнить следующее:

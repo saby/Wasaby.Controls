@@ -21,7 +21,7 @@
 @font-size_TextBox_l:             18px;
 @line-height_TextBox:             22px;
 @padding_TextBox-container:       0 4px;
-@padding-bottom_TextBox-container_l:     0;//на данный момент большое и малое поле ввода не различаются в теме online //todo @default-padding-small
+@padding-bottom_TextBox-container_l:     4px;
 @padding_TextBox-container_left:  0 0 0 4px;
 @border-radius_TextBox:           0px;
 @border-width_TextBox:            1px;
@@ -47,13 +47,14 @@
 @fieldLink-link-cross-size:       @default-icon-size;
 //search-form
 @search-border-radius:            10px;
-@search-field-padding:            0 0 0 8px;
+@padding_SearchForm:              0 4px 0 12px;
 @search-button-wrapper-padding:   0 1px 0 0;
 @search-loop-size:                @default-icon-size;
 @search-form-icon-padding:        0 2px;
-@search-form-suggest-close-offset:8px;
-@search-form-suggest-top-offset:  @default-height + @search-form-suggest-close-offset;
-@search-form-suggest-left-offset: @search-form-suggest-close-offset;
+@margin-left__searchForm_picker:  -@top_searchForm_picker_closeButton;
+@margin-top__searchForm_picker:   -@padding-top__searchForm_picker;
+@padding-top__searchForm_picker:  @default-height + @top_searchForm_picker_closeButton;
+@top_searchForm_picker_closeButton:8px;
 //fieldLink
 @fieldLink-icon-size:             @default-icon-size;
 @fieldLink-picker-icon-size:      @default-icon-size;
@@ -67,7 +68,8 @@
 //button
 @button-large-height:             @default-height-big;
 @button-large-border-radius:      24px;
-@button-large-font-size:          18px;@search-border-radius:                                                                                                  10px;
+@button-large-font-size:          18px;
+@search-border-radius:                                                                                                  10px;
 //area-blocks
 @spacing-between-blocks:                                                                                                6px;
 //missspell
@@ -80,3 +82,8 @@
 //engine-browser
 @browser-search-margin:           10px 0 10px 12px;
 @browser-top-template-padding:    10px 8px;
+//DropDownList
+@padding_DropDownList_item_child:      3px 8px 2px 8px;
+@padding_DropDownList_item_child_text: 16px;
+@font-size_DropDownList:               @default-text-size;
+@top_DropdownList_picker_marker:       13px;
