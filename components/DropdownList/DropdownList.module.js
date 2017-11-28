@@ -717,6 +717,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                //В этом случае выбираем первый элемент как выбранный.
                //Нельзя присваивать новый массив с 1 элементом, т.к. собьется ссылка на массив и контексты будут воспринимать значение как новое => использую splice
                keys.splice(0, keys.length, id);
+               this._defaultId = keys[0]; //в хотфикс так, в 310 выписал задачу на избавление от defaultId, от ни к чему, т.к. равен идентификатору первой записи в RS. https://online.sbis.ru/opendoc.html?guid=0282cf53-8849-4fd1-a8be-9a5e9f086e47
             }
          },
          _setHasMoreButtonVisibility: function(){
