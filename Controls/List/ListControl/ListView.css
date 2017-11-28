@@ -1,16 +1,5 @@
-/*group*/
 .ws-ListView {
   position: relative;
-}
-.ws-ListView__topLoadTrigger,
-.ws-ListView__bottomLoadTrigger {
-  position: absolute;
-}
-.ws-ListView__topLoadTrigger {
-  top: 100px;
-}
-.ws-ListView__bottomLoadTrigger {
-  bottom: 100px;
 }
 .ws-ListView__item:hover {
   background-color: lightblue;
