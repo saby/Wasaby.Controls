@@ -138,7 +138,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        /**
         * Класс контрола "Поле связи".
         * <a href="http://axure.tensor.ru/standarts/v7/%D0%BF%D0%BE%D0%BB%D0%B5_%D1%81%D0%B2%D1%8F%D0%B7%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_03_.html">Спецификация</a>.
-        * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/field-link/index/">Документация</a>.
+        * <a href="/doc/platform/developmentapl/interface-development/components/textbox/field-link/index/">Документация</a>.
         *
         * @class SBIS3.CONTROLS.FieldLink
         * @extends SBIS3.CONTROLS.SuggestTextBox
@@ -211,7 +211,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * @property {String} name Имя (Идентификатор справочника).
                  * @property {selectionTypeDef} selectionType
                  * @property {Object} dialogOptions Опции для диалога.
-                 * Передаются при включенной опции <a href="https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/SelectorButton/options/useSelectorAction/">useSelectorAction</a>.
+                 * Передаются при включенной опции <a href="/docs/js/SBIS3/CONTROLS/SelectorButton/options/useSelectorAction/">useSelectorAction</a>.
                  * <pre class="brush: xml">
                  *     <option name="template">js!SBIS3.MyArea.MyDatGridView</option>
                  *     <options name="dialogOptions">
@@ -238,7 +238,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  *    <li>использование компонента {@link SBIS3.CONTROLS.DataGridView}: ![](/FieldLink00.png) </li>
                  *    <li>использование компонента {@link SBIS3.CONTROLS.TreeDataGridView}: ![](/FieldLink01.png) </li>
                  * </ul>
-                 * Подробнее о правилах создания компонента для справочника поля связи вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/field-link/">Поле связи</a>.
+                 * Подробнее о правилах создания компонента для справочника поля связи вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/components/textbox/field-link/">Поле связи</a>.
                  * @property {Object} componentOptions
                  * Группа опций, которые передаются в секцию _options компонента из опции template. На его основе строится справочник.
                  * Значения переданных опций можно использовать в дочерних компонентах справочника через инструкции шаблонизатора.

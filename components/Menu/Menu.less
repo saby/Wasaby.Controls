@@ -142,6 +142,21 @@
    }
 }
 
+.controls-Menu__separator {
+   position: relative;
+   height: @menu-separator-height;
+}
+.controls-Menu__separator:before {
+   content: '';
+   position: absolute;
+   display: inline-block;
+   right: @menu-separator-line-offset;
+   left: @menu-separator-line-offset;
+   top: @menu-separator-line-top;
+   height: @menu-separator-line-height;
+   background-color: @default-border-color-bottom-disabled;
+}
+
 .ws-is-ie {
    //в IE flex-direction(column-reverse) должен находиться на контейнере, у которого переворачиваем узлы
    //Иначе вылезает баг: не появится скролл.
