@@ -551,12 +551,15 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (!row.length || !row.data('hash')) {
                return undefined;
             }
-            var itemProjection = this._getItemsProjection().getByHash(row.data('hash'));
-            if (this._isEnumTypeData()) {
-               return this._getItemsProjection().getSourceIndexByItem(itemProjection);
+            var projItem = this._getItemsProjection().getByHash(row.data('hash'));
+
+            if (!projItem) { // Если записи в данных не нашлось, значит выбрали emptyValue
+               return null;
             }
-            //Если запись в проекции не найдена - значит выбрали пустую запись(добавляется опцией emptyValue), у которой ключ null
-            return itemProjection ? itemProjection.getContents().getId() : null;
+            if (this._isEnumTypeData()) {
+               return this._getItemsProjection().getSourceIndexByItem(projItem);
+            }
+            return projItem.getContents().getId();
          },
 
          _dblClickItemHandler : function(e){
@@ -674,6 +677,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
                return false;
             }
             return DropdownList.superclass._checkEmptySelection.apply(this, arguments);
+         },
+         _isEmptySelection: function() {
+           if (this._isEnumTypeData()) { //В enum нет пустой выборки
+              return false;
+           }
+           return DropdownList.superclass._isEmptySelection.apply(this, arguments);
          },
          _setSelectedItems: function(){
             //Перебиваю метод из multeselectable mixin'a. см. коммент у метода _isEnumTypeData
