@@ -8,6 +8,7 @@ define('js!Controls/List/ListControl', [
    'Core/core-instance',
    'js!Controls/List/Controllers/PageNavigation',
    'js!Controls/List/Controllers/ScrollWatcher',
+   'js!Controls/List/Controllers/VirtualScroll',
    'Core/helpers/functional-helpers',
    'css!Controls/List/ListControl'
 ], function (Control,
@@ -19,6 +20,7 @@ define('js!Controls/List/ListControl', [
              cInstance,
              PageNavigation,
              ScrollWatcher,
+             VirtualScroll,
              fHelpers
    ) {
    'use strict';
@@ -110,6 +112,9 @@ define('js!Controls/List/ListControl', [
                   }
                   if (self._navigationController) {
                      self._navigationController.calculateState(list)
+                  }
+                  if (self._virtualScroll) {
+                     self._virtualScroll.setListModel(self._listModel);
                   }
                   return list;
                }, self))
@@ -453,6 +458,9 @@ define('js!Controls/List/ListControl', [
                   _private.reload.call(this, newOptions);
                }
             }
+            this._virtualScroll = new VirtualScroll({
+               listModel: this._listModel
+            });
          },
 
          _afterMount: function() {
