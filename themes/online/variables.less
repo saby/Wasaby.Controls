@@ -349,6 +349,7 @@
 @tab-button-overlay-background:                 #FFFFFF;
 @tab-button-overlay-ms-filter:                  "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
 @margin-right_TabButton_icon:                   6px;
+@margin-bottom_TabButton_checked_tab:           3px;
 // -----------  //
 // Tab control //
 // -----------  //
@@ -1183,6 +1184,8 @@
 @DropdownList-footer-select-icon-size:                26px!important;
 @DropdownList-disabled-text:                          #000;
 @shadow_DropDownList_picker:                          @menu-shadow;
+@border-width_DropDownList_picker:                    0;
+@border-color_DropDownList_picker:                    #CCC;
 //ProgressBar
 @ProgressBar-height:                      16px;
 @ProgressBar-width:                       100%;
@@ -1262,7 +1265,6 @@
 //FieldLink
 @fieldLink-border-color-focus-hover:      @gray-ccc-color;
 @fieldLink-border-color-picker-show:      @fieldLink-border-color-focus-hover;
-@fieldLink-border:                        1px solid;
 @fieldLink-picker-show-color:             @white-color;
 @fieldLink-picker-show-field-color:       initial; //В онлайне цвет никак не перебивается, перебивается в темах
 
@@ -1272,7 +1274,6 @@
 @fieldLink-picker-min-height:             16px;
 @fieldLink-linkItem-cross-width:          20px;
 @fieldLink-afterField-button-margin:      0 @default-padding 0 0;
-@fieldLink-link-color-hover:              #313E78;
 @fieldLink-showSelector-color:            @icon-color-primary;
 @fieldLink-showSelector-color-hover:      @link-hover-text-color;
 @fieldLink-big-fontSize:                  15px;
@@ -1280,6 +1281,7 @@
 @fieldLink-big-fontSize-color:            #313E78;
 @fieldLink-FilterButton-color:            #0055bb;
 @fieldLink-FilterButton-color-hover:      @fieldLink-FilterButton-color;
+@font-size_FieldLink_itemCaption_normal:  @default-text-size;
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
 @controls-SelectorButton-line-height:              24px;
@@ -1327,7 +1329,7 @@
 @controls-InformationPopup-default-status-border-color:       #0055BB;
 @controls-InformationPopup-success-status-border-color:       #72BE44;
 @controls-InformationPopup-error-status-border-color:         #EF463A;
-@controls-InformationPopup-warning-status-border-color:       #FEC63F;
+@controls-InformationPopup-warning-status-border-color:       @warning-color;
 @controls-InformationPopup-border-width:                      3px 0 0 0;
 @controls-InformationPopup-closeButton-top:                   5px;
 @controls-InformationPopup-closeButton-right:                 5px;
