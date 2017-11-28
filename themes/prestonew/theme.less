@@ -651,11 +651,11 @@ body {
 
 .controls-Menu{
   .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
-     &.icon-24 {
+     &.icon-24, &.icon-medium {
         top: round(28px * @multiplier);
         left: round(-6px * @multiplier);
      }
-     &.icon-16 {
+     &.icon-16, &.icon-small {
          top: round(32px * @multiplier);
      }
   }
@@ -853,7 +853,7 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-
    height: round(84px * @multiplier);
 }
 
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateBox .controls-TextBox__wrapper {
+body .controls-DateRangeBigChoose__header .controls-DateBox {
     border-width: @default-border-width;
     border-radius: 0;
 }

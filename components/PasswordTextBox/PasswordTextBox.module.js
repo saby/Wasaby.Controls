@@ -62,8 +62,8 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
       _initEventChangeType: function() {
          var self = this;
          this._passwordIcon = $('.controls-PasswordTextBox__showPassword', this.getContainer());
-         this.getContainer.on('click', function(e) {
-            if (e.target === self._passwordIcon) {
+         this.getContainer().on('click', function(e) {
+            if (e.target === self._passwordIcon[0]) {
                self._changeType();
             }
          })
