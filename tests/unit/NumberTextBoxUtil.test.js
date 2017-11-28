@@ -132,11 +132,16 @@ define(['js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil'], function (NumberTextBoxUti
             assert.equal(newState.value, '1.24');
             assert.equal(newState.caretPosition, 3);
          });
-         it('1.2|34 => 1|.34', function (){
-            newState = NumberTextBoxUtil.backspacePressed(3, 3, '1.234', true, 3);
+         it('1.2|34 => 1|.34 overstep: true', function (){
+            newState = NumberTextBoxUtil.backspacePressed(3, 3, '1.234', true, 3, true);
             assert.equal(newState.value, '1.34');
             assert.equal(newState.caretPosition, 1);
          });
+          it('1.2|34 => 1.|34 overstep: false', function (){
+              newState = NumberTextBoxUtil.backspacePressed(3, 3, '1.234', true, 3, false);
+              assert.equal(newState.value, '1.34');
+              assert.equal(newState.caretPosition, 2);
+          });
          it('|1.234| => _', function (){
             newState = NumberTextBoxUtil.backspacePressed(0, 5, '1.234', true, 3);
             assert.equal(newState.value, '');
