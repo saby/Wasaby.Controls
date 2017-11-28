@@ -53,6 +53,12 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/handlers',
          history: function (e, key) {
             this.getParent()._setText(this.getItems().getRecordById(key).get('value'));
          },
+         openHistory: function(){
+            var toolbar = this.getParent();
+            toolbar._initHistory(function(){
+               toolbar.getItemInstance('history').getContainer().click();
+            });
+         },
          codesample: function () {
             this.getParent()._codeSample(this);
          }

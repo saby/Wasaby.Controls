@@ -102,7 +102,8 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             multiselect: false,
             className: 'controls-IconButton__round-border',
             handlers: {
-               onMenuItemActivate: handlers.history
+               onMenuItemActivate: handlers.history,
+               onActivated: handlers.openHistory
             },
             idProperty: 'key',
             order: 60
