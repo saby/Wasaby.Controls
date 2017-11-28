@@ -1266,6 +1266,7 @@ define('js!SBIS3.CONTROLS.ListView',
             // Создаем пейджинг скрытым если включено сохранение позиции при reload, но сам пейджинг выключен
             // Так как для сохранения страницы все равно нужекн рассчет страниц скролла
             var hiddenPager = !this._options.scrollPaging && this._options.saveReloadPosition;
+            hiddenPager = hiddenPager && isElementVisible(this.getContainer());
             this._scrollBinder.bindScrollPaging(this._scrollPager, hiddenPager);
 
             if (!this._inScrollContainerControl) {
@@ -2341,7 +2342,12 @@ define('js!SBIS3.CONTROLS.ListView',
                result = this.showEip(model, { isEdit: true }, false);
                if (originalEvent.type === 'click') {
                   result.addCallback(function(res) {
-                     ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
+                     // С IOS 11 версии перестал работать подскролл к нужному месту. Отключаем наш код, который при клике
+                     // проваливается в редактор по месту, иначе вызывается неправильно работающий scrollIntoView и всё
+                     // ломает: https://online.sbis.ru/opendoc.html?guid=742195a5-c89c-4af8-8121-cdeefa26959e
+                     if (!constants.browser.isMobileIOS || cDetection.IOSVersion <= 11) {
+                        ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
+                     }
                      return res;
                   });
                }
@@ -4677,8 +4683,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._redrawResults(true);
                }.bind(this);
                this._onRecordSetPropertyChange = function onRecordSetPropertyChange(event, data) {
-                  //При изменении мета-данных переподписываюсь на рекорд строки итогов и перерисовываю их.
-                  if (data.metaData.results) {
+                  // Событие так же стреляет при измении любого св-ва рекордсета (idProperty например),
+                  // и в data придут не данные, а изменённое св-во
+                  if (data.metaData && data.metaData.results) {
+                     //При изменении мета-данных переподписываюсь на рекорд строки итогов и перерисовываю их.
                      this.subscribeTo(data.metaData.results, 'onPropertyChange', this._onMetaDataResultsChange);
                   }
                   this._onMetaDataResultsChange();

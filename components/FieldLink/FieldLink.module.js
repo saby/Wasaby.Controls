@@ -79,6 +79,31 @@ define('js!SBIS3.CONTROLS.FieldLink',
     ) {
 
        'use strict';
+       function needShowCompatiblePlaceholder(cfg) {
+          var
+             useNativePlaceholder = _private.isSimplePlaceholder(cfg.placeholder),
+             selectedKeysLength = cfg.selectedKeys.length,
+             innerCheckShow = !useNativePlaceholder && (!selectedKeysLength || (cfg.multiselect && !cfg.alwaysShowTextBox));
+          return cfg._needShowCompatiblePlaceholderST(cfg) && innerCheckShow;
+       }
+
+       function _addOptionsFromClass(opts, attrToMerge) {
+          var
+             classes = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || opts.className || '',
+             params = [
+                { class: 'controls-FieldLink__itemsEdited', optionName: 'underlinedItems', value: true, defaultValue: false },
+                { class: 'controls-FieldLink__itemsBold', optionName: 'boldItems', value: true, defaultValue: false },
+                { class: 'controls-FieldLink__big-fontSize', optionName: 'bigItems', value: true, defaultValue: false },
+                { class: 'controls-FieldLink__hideSelector', optionName: 'showSelector', value: false, defaultValue: true }
+             ];
+          ConfigByClasses(opts, params, classes);
+       }
+
+       function _addOptionsByState(cfg) {
+          /* Чтобы вёрстка сразу строилась с корректным placeholder'ом, в случае, если там лежит ссылка */
+          cfg._drawNativePlaceholder = _private.isSimplePlaceholder(cfg.placeholder) && cfg.enabled;
+          cfg._selectedMultipleItems = _private.selectedMultipleItems(cfg);
+       }
 
        var classes = {
           MULTISELECT: 'controls-FieldLink__multiselect',
@@ -162,6 +187,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              _lastFieldLinkWidth: null,
              _showAllButton: null,
              _options: {
+                _needShowCompatiblePlaceholder: needShowCompatiblePlaceholder,
                 _paddingClass: ' controls-TextBox_paddingLeft',
                 /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
                 afterFieldWrapper: afterFieldWrapper,
@@ -764,26 +790,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              };
           },
 
-          _addOptionsFromClass: function(opts, attrToMerge) {
-             var
-                classes = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || '',
-                params = [
-                   { class: 'controls-FieldLink__itemsEdited', optionName: 'underlinedItems', value: true, defaultValue: false },
-                   { class: 'controls-FieldLink__itemsBold', optionName: 'boldItems', value: true, defaultValue: false },
-                   { class: 'controls-FieldLink__big-fontSize', optionName: 'bigItems', value: true, defaultValue: false },
-                   { class: 'controls-FieldLink__hideSelector', optionName: 'showSelector', value: false, defaultValue: true }
-                ];
-             ConfigByClasses(opts, params, classes);
-          },
-
-          _addOptionsByState: function(cfg) {
-             /* Чтобы вёрстка сразу строилась с корректным placeholder'ом, в случае, если там лежит ссылка */
-             cfg._drawNativePlaceholder = _private.isSimplePlaceholder(cfg.placeholder) && cfg.enabled;
-             cfg._drawCompatiblePlaceholder = this._needShowCompatiblePlaceholder(cfg);
-             cfg._selectedMultipleItems = _private.selectedMultipleItems(cfg);
-          },
-
-          _modifyOptions: function(baseCfg, attrToMerge) {
+          _modifyOptions: function(baseCfg, parsedOptions, attrToMerge) {
              var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments),
                  classesToAdd = ['controls-FieldLink'],
                  selectedKeysLength, items;
@@ -820,17 +827,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
              /* className вешаем через modifyOptions,
                 так меньше работы с DOM'ом */
              cfg.cssClassName += ' ' + classesToAdd.join(' ');
-             this._addOptionsFromClass(cfg, attrToMerge);
-             this._addOptionsByState(cfg);
+             _addOptionsFromClass(cfg, attrToMerge);
+             _addOptionsByState(cfg);
              return cfg;
-          },
-
-          _needShowCompatiblePlaceholder: function(cfg) {
-            var
-               useNativePlaceholder = _private.isSimplePlaceholder(cfg.placeholder),
-               selectedKeysLength = cfg.selectedKeys.length,
-               innerCheckShow = !useNativePlaceholder && (!selectedKeysLength || (cfg.multiselect && !cfg.alwaysShowTextBox));
-             return FieldLink.superclass._needShowCompatiblePlaceholder.apply(this, arguments) && innerCheckShow;
           },
           
           _getInputMinWidth: function() {
