@@ -33,6 +33,10 @@ node('controls') {
                 defaultValue: props["atf_co"],
                 description: '',
                 name: 'branch_atf'),
+            string(
+                   defaultValue: '15',
+                   description: '',
+                   name: 'stream_number'),
             choice(
                 choices: "online\npresto\ncarry\ngenie",
                 description: '',
@@ -52,7 +56,8 @@ node('controls') {
         echo "Назначаем переменную"
         def server_address=props["SERVER_ADDRESS"]
         def ver = version.replaceAll('.','')
-        def python_ver = 'python3'
+		def python_ver = 'python3'
+        def stream_number = params.stream_number
         def SDK = ""
         def items = "controls:${workspace}/controls"
         def branch_atf = params.branch_atf
@@ -379,7 +384,7 @@ node('controls') {
             DO_NOT_RESTART = True
             SOFT_RESTART = True
             NO_RESOURCES = True
-            STREAMS_NUMBER = 15
+            STREAMS_NUMBER = ${stream_number}
             DELAY_RUN_TESTS = 1
             TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
@@ -462,8 +467,8 @@ node('controls') {
                         if ( inte ){
                             dir("./controls/tests/int"){
                                  sh """
-                                 source /home/sbis/venv_for_test/bin/activate
-                                 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address}
+                                 source /home/sbis/selenium3/bin/activate
+                                 python start_tests.py --SERVER_ADDRESS http://test-selenium5:4445/wd/hub -ft 0 ${run_test_fail}
                                  deactivate
                                  """
                             }
