@@ -423,8 +423,6 @@ node('controls') {
                 HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
                 SERVER = test-autotest-db1
                 BASE_VERSION = css_${NODE_NAME}${ver}1
-                server_address = http://10.76.159.209:4444/wd/hub
-                CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe
                 [regression]
                 IMAGE_DIR = capture_${params.theme}
                 RUN_REGRESSION=True"""
@@ -447,8 +445,6 @@ node('controls') {
                 HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
                 SERVER = test-autotest-db1
                 BASE_VERSION = css_${NODE_NAME}${ver}1
-                server_address = http://10.76.159.209:4444/wd/hub
-                CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe
                 [regression]
                 IMAGE_DIR = capture
                 RUN_REGRESSION=True"""
@@ -495,7 +491,7 @@ node('controls') {
                             dir("./controls/tests/reg"){
                                 sh """
                                     source /home/sbis/venv_for_test/bin/activate
-                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
+                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform
                                     deactivate
                                 """
                             }
