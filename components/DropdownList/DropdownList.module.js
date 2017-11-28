@@ -347,7 +347,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
             _pickerBodyContainer: null,
             _resetButton: null,
             _pickerResetButton: null,
-            _defaultId: null,
             _buttonChoose : null,
             _buttonHasMore: null,
             _currentSelection: []
@@ -422,7 +421,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var defaultArgs = DropdownList.superclass._buildTplArgs.apply(this, arguments);
             return cMerge(defaultArgs, {
                item: item,
-               defaultId: this._defaultId,
+               defaultId: this.getDefaultId(),
                hierField: this._options.parentProperty,
                parentProperty: this._options.parentProperty,
                multiselect: this._options.multiselect
@@ -454,7 +453,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
          setSelectedKeys: function(idArray){
             //Если выбрана запись "Не выбрано", то отрисуем ее вручную, т.к. эта запись отсуствует в рекордсете и не может быть обработана по стандартной логике
-            if (this._options.emptyValue && idArray.length === 1 && idArray[0] == this._defaultId){
+            if (this._options.emptyValue && idArray.length === 1 && idArray[0] == this.getDefaultId()){
                var oldKeys = this.getSelectedKeys();
                this._options.selectedItems && this._options.selectedItems.clear();
                this._options.selectedKeys = idArray;
@@ -469,7 +468,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                //Т.к. ключи могут отличаться по типу (0 !== '0'), то придется перебирать массив самостоятельно.
                if (idArray.length > 1) {
                   for (var i = 0; i < idArray.length; i++) {
-                     if (idArray[i] == this._defaultId){
+                     if (idArray[i] == this.getDefaultId()){
                         idArray.splice(i, 1);
                         break;
                      }
@@ -663,7 +662,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
             else {
                item = this.getItems().at(0);
                if (item && !this._options.emptyValue) {
-                  this._defaultId = item.getId();
                   if (this._picker) {
                      this._getHtmlItemByItem(item).addClass('controls-ListView__defaultItem');
                   }
@@ -717,7 +715,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                //В этом случае выбираем первый элемент как выбранный.
                //Нельзя присваивать новый массив с 1 элементом, т.к. собьется ссылка на массив и контексты будут воспринимать значение как новое => использую splice
                keys.splice(0, keys.length, id);
-               this._defaultId = keys[0]; //в хотфикс так, в 310 выписал задачу на избавление от defaultId, от ни к чему, т.к. равен идентификатору первой записи в RS. https://online.sbis.ru/opendoc.html?guid=0282cf53-8849-4fd1-a8be-9a5e9f086e47
             }
          },
          _setHasMoreButtonVisibility: function(){
@@ -755,7 +752,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   this._buttonChoose = this._picker.getChildControlByName('DropdownList_buttonChoose');
                   this._buttonChoose.subscribe('onActivated', function(){
                      if (!self._isSimilarArrays(self.getSelectedKeys(), self._currentSelection)) {
-                        var keys = self._currentSelection.length ? self._currentSelection : [self._defaultId];
+                        var keys = self._currentSelection.length ? self._currentSelection : [self.getDefaultId()];
                         self.setSelectedKeys(keys);
                      }
                      self.hidePicker();
@@ -788,8 +785,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             //для DDL эта логика не подходит, по кнопке "Еще" могут выбрать запись, которой на текущий момент нет в наборе данных, и вставить ее на первое место в рекордсете
             //При нажатии на крест, нам нужно выбрать дефолтный id, который был, а не новую запись, которая встала на первое место
             //выписал задачу, чтобы обобщить эту логику https://inside.tensor.ru/opendoc.html?guid=bf8da125-b41a-47d9-aa1a-2f2ba2f309f4&des=
-            if (this._defaultId !== undefined){
-               this.setSelectedKeys([this._defaultId]);
+            if (this.getDefaultId() !== undefined){
+               this.setSelectedKeys([this.getDefaultId()]);
             }
             else{
                DropdownList.superclass.removeItemsSelectionAll.apply(this, arguments);
@@ -884,7 +881,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
 
          _drawSelectedValue: function(id, textValue){
-            var isDefaultIdSelected = id == this._defaultId,
+            var isDefaultIdSelected = id == this.getDefaultId(),
                 text = prepareText(textValue),
                 pickerContainer;
             if (this._picker && !this._options.multiselect) {
@@ -951,7 +948,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
           * @returns {*|String|Number}
           */
          getDefaultId: function() {
-            return this._defaultId;
+            var items = this.getItems();
+            if (this._options.emptyValue || !items) {
+               return null;
+            }
+            return this._isEnumTypeData() ? items.get() : items.at(0).getId();
          },
          _isDefaultIdSelected: function() {
            return this.getSelectedKeys()[0] == this.getDefaultId();
