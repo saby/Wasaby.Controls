@@ -1,9 +1,9 @@
 define('js!Controls/Input/resources/InputRender/InputRender',
    [
       'Core/Control',
-      'js!WS.Data/Type/descriptor',
+      'WS.Data/Type/descriptor',
       'tmpl!Controls/Input/resources/InputRender/InputRender',
-      'js!Controls/Input/resources/RenderHelper',
+      'Controls/Input/resources/RenderHelper',
       'css!SBIS3.CONTROLS.TextBox'
    ],
    function(Control, types, template, RenderHelper) {

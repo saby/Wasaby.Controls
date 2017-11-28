@@ -1,5 +1,5 @@
 define([
-   'js!Controls/Input/resources/Helper'
+   'Controls/Input/resources/Helper'
 ], function(Helper){
    describe('Controls.Input.Helper', function () {
 

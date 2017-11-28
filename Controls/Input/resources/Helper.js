@@ -1,4 +1,4 @@
-define('js!Controls/Input/resources/Helper',
+define('Controls/Input/resources/Helper',
    [],
    function() {
 

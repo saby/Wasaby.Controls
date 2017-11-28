@@ -1,13 +1,14 @@
-define('js!Controls/Input/Text',
-   [
+define('js!Controls/Input/Text', [
       'Core/Control',
-      'js!Controls/Input/resources/Helper',
+      'Controls/Input/resources/Helper',
       'tmpl!Controls/Input/Text/Text',
-      'js!WS.Data/Type/descriptor',
+      'WS.Data/Type/descriptor',
       'css!SBIS3.CONTROLS.TextBox',
       'tmpl!Controls/Input/resources/input'
-   ],
-   function(Control, Helper, template, types) {
+   ], function(Control,
+               Helper,
+               template,
+               types) {
 
       'use strict';
 
@@ -79,10 +80,6 @@ define('js!Controls/Input/Text',
                insert = Helper.constraint(insert, this._options.constraint);
             }
 
-            if (this._options.trim) {
-               insert = insert.trim();
-            }
-
             if(this._options.maxLength){
                insert = Helper.maxLength(insert, splitValue, this._options.maxLength);
             }
@@ -111,8 +108,12 @@ define('js!Controls/Input/Text',
             this._value = newOptions.value;
          },
 
-         _changeValueHandler: function(event, value) {
+         _setValue: function(value){
             this._value = value;
+         },
+
+         _changeValueHandler: function(event, value) {
+            this._setValue(value);
             this._notify('onChangeValue', value);
          },
 
@@ -121,7 +122,7 @@ define('js!Controls/Input/Text',
             if(this._options.trim){
                var newValue = this._value.trim();
                if(newValue !== this._value){
-                  this._value = newValue;
+                  this._setValue(newValue);
                   this._notify('onChangeValue', newValue);
                }
             }
@@ -142,15 +143,15 @@ define('js!Controls/Input/Text',
 
       //TODO расскоментировать когда полечат https://online.sbis.ru/opendoc.html?guid=e53e46a0-9478-4026-b7d1-75cc5ac0398b
       /*TextBox.getOptionTypes = function() {
-         return {
-            trim: types(Boolean),
-            selectOnClick: types(Boolean),
-            placeholder: types(String),
-            constraint: types(String),
-            value: types(String),
-            maxLength: types(Number)
-         };
-      };*/
+       return {
+       trim: types(Boolean),
+       selectOnClick: types(Boolean),
+       placeholder: types(String),
+       constraint: types(String),
+       value: types(String),
+       maxLength: types(Number)
+       };
+       };*/
 
       return TextBox;
    }
