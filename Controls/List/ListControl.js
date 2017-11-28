@@ -1,6 +1,7 @@
 define('js!Controls/List/ListControl', [
    'Core/Control',
    'tmpl!Controls/List/ListControl',
+   'js!Controls/List/ListControl/ListViewModel',
    'js!Controls/List/resources/utils/DataSourceUtil',
    'WS.Data/Type/descriptor',
    'WS.Data/Source/ISource',
@@ -8,26 +9,38 @@ define('js!Controls/List/ListControl', [
    'Core/helpers/functional-helpers',
    'Core/core-instance',
    'require',
+   'js!Controls/List/Controllers/ScrollWatcher',
+   'Core/helpers/functional-helpers',
    'css!Controls/List/ListControl/ListControl'
 ], function (Control,
              ListControlTpl,
+             ListViewModel,
              DataSourceUtil,
              Types,
              ISource,
              PageNavigation,
              fHelpers,
              cInstance,
-             require
-   ) {
+             require,
+             ScrollWatcher
+ ) {
    'use strict';
 
    var _private = {
-      isEqualItems: function(oldItems, newItems) {
-         return oldItems && cInstance.instanceOfModule(oldItems, 'WS.Data/Collection/RecordSet')
-            && (newItems.getModel() === oldItems.getModel())
-            && (Object.getPrototypeOf(newItems).constructor == Object.getPrototypeOf(oldItems).constructor)
-            && (Object.getPrototypeOf(newItems.getAdapter()).constructor == Object.getPrototypeOf(oldItems.getAdapter()).constructor)
-
+      createListModel: function(items, cfg) {
+         return new ListViewModel ({
+            items : items,
+            idProperty: cfg.idProperty,
+            displayProperty: cfg.displayProperty,
+            selectedKey: cfg.selectedKey
+         })
+      },
+      //проверка на то, нужно ли создавать новый инстанс рекордсета или же можно положить данные в старый
+      isEqualItems: function(oldList, newList) {
+         return oldList && cInstance.instanceOfModule(oldList, 'WS.Data/Collection/RecordSet')
+         && (newList.getModel() === oldList.getModel())
+         && (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor)
+         && (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor)
       },
       initNavigation: function(navOption, dataSource) {
          var navController;
@@ -54,7 +67,7 @@ define('js!Controls/List/ListControl', [
          return params;
       },
 
-      load: function(direction) {
+      load: function(direction, config) {
          if (this._dataSource) {
             var def, queryParams,
                self = this;
@@ -79,7 +92,6 @@ define('js!Controls/List/ListControl', [
             def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
                .addCallback(fHelpers.forAliveOnly(function (list) {
                   self._notify('onDataLoad', list);
-
                   if (direction == 'down') {
                      self._items.append(list);
                   } else if (direction == 'up') {
@@ -90,6 +102,7 @@ define('js!Controls/List/ListControl', [
                      }
                      else {
                         self._items = list;
+                        self._listModel = _private.createListModel(self._items, self._options);
                         self._forceUpdate();
                      }
 
@@ -106,19 +119,17 @@ define('js!Controls/List/ListControl', [
                         self._scrollPagingCtr.resetHeights();
                      }
                   }, 100);
-
-
-
                   return list;
                }, self))
                .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
             this._loader = def;
-            return def;
          }
          else {
             throw new Error('Option dataSource is undefined. Can\'t reload view');
          }
       },
+
+
 
       scrollToEdge: function(direction) {
          var self = this;
@@ -136,6 +147,37 @@ define('js!Controls/List/ListControl', [
       scrollTo: function(offset) {
          //TODO без скролл вотчера пока так
          this._container.closest('.ws-scrolling-content').get(0).scrollTop = offset;
+      },
+
+      createScrollWatcher: function(scrollContainer) {
+         var
+            self = this,
+            children = this._children,
+            triggers = {
+               topListTrigger: children.topListTrigger,
+               bottomListTrigger: children.bottomListTrigger,
+               topLoadTrigger: children.topLoadTrigger,
+               bottomLoadTrigger: children.bottomLoadTrigger
+            },
+            eventHandlers = {
+               onLoadTriggerTop: function() {
+                  self._scrollLoadMore('up');
+               },
+               onLoadTriggerBottom: function() {
+                  self._scrollLoadMore('down');
+               },
+               onListTop: function() {
+               },
+               onListBottom: function() {
+               }
+            };
+
+         return new ScrollWatcher ({
+            triggers : triggers,
+            scrollContainer: scrollContainer,
+            loadOffset: this._loadOffset,
+            eventHandlers: eventHandlers
+         });
       }
    };
 
@@ -379,20 +421,19 @@ define('js!Controls/List/ListControl', [
 
          _itemTemplate: null,
 
+         _loadOffset: 100,
+
          constructor: function (cfg) {
             ListControl.superclass.constructor.apply(this, arguments);
-            this._items = cfg.items;
             this._publish('onDataLoad');
          },
 
          /**
           * Load more data after reaching end or start of the list.
           *
-          * @param e
           * @param direction 'up' | 'down'
-          * @private
-          */
-         _scrollLoadMore: function(e, direction) {
+          * @private*/
+         _scrollLoadMore: function(direction) {
             //TODO нужна компенсация при подгрузке вверх
 
             if (this._navigationController && this._navigationController.hasMoreData(direction)) {
@@ -405,7 +446,10 @@ define('js!Controls/List/ListControl', [
             //TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
 
             this._filter = newOptions.filter;
-
+            if (newOptions.items) {
+               this._items = newOptions.items;
+               this._listModel = _private.createListModel(this._items, newOptions);
+            }
             if (newOptions.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
@@ -415,26 +459,15 @@ define('js!Controls/List/ListControl', [
             }
          },
 
-         _beforeUpdate: function(newOptions) {
-
-            //TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
-
-            if (newOptions.filter != this._options.filter) {
-               this._filter = newOptions.filter;
-            }
-
-            if (newOptions.dataSource !== this._options.dataSource) {
-               this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
-               this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
-               _private.load.call(this);
-            }
-            //TODO обработать смену фильтров и т.д. позвать релоад если надо
-         },
-
          _afterMount: function() {
+            ListControl.superclass._afterMount.apply(this, arguments);
+
+            var scrollContainer = this._container.closest('.ws-scrolling-content')[0];
+            this._scrollWatcher = _private.createScrollWatcher.call(this, scrollContainer);
+
             if (this._options.navigation && this._options.navigation.view == 'infinity') {
                //TODO кривое обращение к DOM
-               var scrollContainer = this._container.closest('.ws-scrolling-content');
+               scrollContainer = this._container.closest('.ws-scrolling-content');
                if (scrollContainer.length && this._options.navigation.viewConfig && this._options.navigation.viewConfig.pagingMode) {
                   var self = this;
                   require(['js!Controls/List/Controllers/ScrollPaging'], function (ScrollPagingController) {
@@ -454,6 +487,34 @@ define('js!Controls/List/ListControl', [
             }
          },
 
+         _beforeUpdate: function(newOptions) {
+
+            //TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
+
+            if (newOptions.filter != this._options.filter) {
+               this._filter = newOptions.filter;
+            }
+
+            if (newOptions.items && newOptions.items != this._options.items) {
+               this._items = newOptions.items;
+               this._listModel = _private.createListModel(this._items, newOptions);
+            }
+
+            if (newOptions.dataSource !== this._options.dataSource) {
+               this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
+               this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
+               _private.load.call(this);
+            }
+            //TODO обработать смену фильтров и т.д. позвать релоад если надо
+         },
+
+         _beforeUnmount: function() {
+            this._scrollWatcher.destroy();
+
+            ListControl.superclass._beforeUnmount.apply(this, arguments);
+         },
+
+
          _afterUpdate: function() {
 
          },
@@ -468,7 +529,7 @@ define('js!Controls/List/ListControl', [
                }
             }
          },
-
+         //<editor-fold desc='DataSourceMethods'>
          reload: function() {
             _private.load.call(this);
          },
