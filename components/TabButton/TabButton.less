@@ -225,14 +225,25 @@
          }
       }
    }
+   //todo - Каскады вызваны тем, что вкладки второго уровня перебивают стили основных вкладок. Удалить все каскады по новому стандарту, в котором останутся только вкладки второго уровня
    .controls-TabButton {
-      border-color: transparent!important; //todo - все important удалятся, когда останутся только вкладки 2 уровня
-      border-bottom: @tab-buttons-border-bottom!important;
+      border-color: transparent;
+      border-bottom: @tab-buttons-border-bottom;
       .controls-TabButton__inner {
-         border-color: transparent!important;
+         border-color: transparent;
          color: @tab-button-simple-inner-color;
          &:before {
-            display: block!important;
+            display: block;
+         }
+      }
+      &:not(.controls-Checked__checked):hover {
+         border-color: transparent;
+         .controls-TabButton__inner {
+            border-color: transparent;
+            background: transparent;
+            &:before {
+               display: block;
+            }
          }
       }
       &:hover {
@@ -246,6 +257,7 @@
          z-index: 10; //чтобы не пропадал разделитель
          .controls-TabButton__inner {
             color: @tab-button-simple-inner-checked-color;
+            background: transparent;
             .controls-TabButton__wrapper {
                margin-bottom: 3px;
             }
