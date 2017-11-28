@@ -450,9 +450,12 @@ define('js!Controls/List/ListControl', [
          _afterMount: function() {
             ListView.superclass._afterMount.apply(this, arguments);
 
-            //Если список обернут в скроллКонтейнер, то создаем ScrollWatcher
-            var scrollContainer = this._container.closest('.ws-scrolling-content');
-            if (scrollContainer && scrollContainer.length) {
+            //Если список обернут в скроллКонтейнер и есть подгрузка по скроллу, то создаем ScrollWatcher
+            var
+               loadOnScroll = this._options.navigation && this._options.navigation.type === 'page',
+               scrollContainer = this._container.closest('.ws-scrolling-content');
+
+            if (scrollContainer && scrollContainer.length && loadOnScroll) {
                this._scrollWatcher = _private.createScrollWatcher.call(this, scrollContainer[0]);
             }
          },
