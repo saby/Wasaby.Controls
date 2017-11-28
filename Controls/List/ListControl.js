@@ -297,7 +297,7 @@ define('js!Controls/List/ListControl', [
     */
 
    /**
-    * @event Controls/List/ListControl#onItemClick Происходит клике по строке
+    * @event Controls/List/ListControl#onItemClick Происходит при клике по строке
     */
 
    /**
