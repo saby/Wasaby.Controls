@@ -27,16 +27,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
     */
    /*методы для поиска*/
 
-   function toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes) {
-      var visible = operationPanel.isVisible();
+   function toggleCheckBoxes(visible, gridView, hideCheckBoxes) {
       //Вешаем класс даже для браузеров с multiselect = false, т.к. multiselect может измениться динамически, и проще
       //всегда тоглить классы, чем отслеживать изменение multiselect на браузере
-      gridView.getContainer().toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
+      gridView.getContainer().toggleClass('controls-ListView__showCheckBoxes', visible);
       if (hideCheckBoxes) {
-         gridView.toggleCheckboxes(operationPanel.isVisible());
-         if (!visible) {
-            gridView.removeItemsSelectionAll();
-         }
+         gridView.toggleCheckboxes(visible);
       }
       if (gridView._options.startScrollColumn !== undefined) {
          gridView.updateScrollAndColumns();
@@ -251,7 +247,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             drawItemsCallback(operationPanel, view);
          });
          drawItemsCallback(operationPanel, view);
-         toggleCheckBoxes(operationPanel, view, hideCheckBoxes);
+         toggleCheckBoxes(operationPanel.isVisible(), view, hideCheckBoxes);
          view.subscribe('onSelectedItemsChange', function(event, idArray) {
             if (idArray.length && !operationPanel.isVisible()) {
                operationPanel.show();
@@ -259,7 +255,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             operationPanel.onSelectedItemsChange(idArray);
          });
          operationPanel.subscribe('onToggle', function() {
-            toggleCheckBoxes(operationPanel, view, hideCheckBoxes);
+            var visible = operationPanel.isVisible();
+            toggleCheckBoxes(visible, view, hideCheckBoxes);
+            if (hideCheckBoxes && !visible) {
+               view.removeItemsSelectionAll();
+            }
          });
       },
       
