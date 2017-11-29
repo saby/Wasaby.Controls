@@ -33290,11 +33290,26 @@
                caretNodeBefore = findCaretNode(startBlock, false);
                caretNodeAfter = findCaretNode(endBlock, true);
 
-               if (!dom.isEmpty(endBlock)) {
+               // Тини принудительно пересаживает всех детей финального узла в стартовый независимо ни от чего и финальный узел удалялся.
+               // Теперь это будет происходить, только если оба узла не пусты. Удаляются и стартовый, и финальный узел, если они пусты
+               // https://online.sbis.ru/opendoc.html?guid=03646515-89d2-4b7d-8473-f84eaa53e32e
+               var _removeWhileEmpty = function (node) {
+                  for ( ; dom.isEmpty(node.parentNode); ) { node = node.parentNode; }
+                  node.parentNode.removeChild(node);
+               }
+               var isEmptyStart = dom.isEmpty(startBlock);
+               var isEmptyEnd = dom.isEmpty(endBlock);
+               if (isEmptyStart) {
+                  _removeWhileEmpty(startBlock);
+               }
+               if (!isEmptyStart && !isEmptyEnd) {
                   $(startBlock).append(endBlock.childNodes);
+                  isEmptyEnd = true;
                }
 
-               $(endBlock).remove();
+               if (isEmptyEnd) {
+                  _removeWhileEmpty(endBlock);
+               }
 
                if (caretNodeBefore) {
                   if (caretNodeBefore.nodeType == 1) {
