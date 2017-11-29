@@ -5,7 +5,7 @@ define('js!Controls/Popup/Container', [
     * Контенер для отображения окон
     * @class Controls/Popup/Container
     * @control
-    * @extends Core/Control
+    * @extends Controls/Control
     * @public
     * @category Popup
     * @singleton

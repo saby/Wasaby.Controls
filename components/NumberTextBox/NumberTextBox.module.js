@@ -163,7 +163,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
              */
             numericValue: null
          },
-         _inputMirror: null
+         _inputMirror: null,
+         _dotOverstep: true
       },
 
       _addOptionsFromClass: function(opts, attrToMerge) {
@@ -506,7 +507,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
                  e,
                  currentVal,
                  this._options.delimiters,
-                 this._options.decimals
+                 this._options.decimals,
+                 this._dotOverstep
              );
 
          this._setText(newState.value);

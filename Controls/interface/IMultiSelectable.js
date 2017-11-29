@@ -13,6 +13,11 @@ define('js!Controls/interface/IMultiSelectable', [
     */
 
    /**
+    * @event Controls/interface/ISingleSelectable#allowEmptyMultiSelection
+    * @cfg {Boolean} Устанавливает конфигурацию для режима множественного выбора, при которой разрешается/запрещается отсутствие выбранных элементов коллекции.
+    */
+
+   /**
     * @event Controls/interface/IMultiSelectable#selectedKeysChanged Происходит при изменении массива выделенных записей.
     * @param {Array} keys массив ключей выбранных элементов коллекции.
     * @param {Array} added массив добавленных ключей в списке выбранных элементов коллекции.

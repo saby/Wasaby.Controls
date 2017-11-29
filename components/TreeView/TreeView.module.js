@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.TreeView', [
    /**
     * Класс контрола "Иерархическое представление" (Дерево).
     * <a href="http://axure.tensor.ru/standarts/v7/%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html">Спецификация</a>
-    * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Документация</a>.
+    * <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/">Документация</a>.
     *
     * @class SBIS3.CONTROLS.TreeView
     * @extends SBIS3.CONTROLS.ListView

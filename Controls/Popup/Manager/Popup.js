@@ -5,7 +5,7 @@ define('js!Controls/Popup/Popup', [
     * Компонент вспывающего окна
     * @class Controls/Popup/Popup
     * @control
-    * @extends Core/Control
+    * @extends Controls/Control
     * @public
     * @category Popup
     */
