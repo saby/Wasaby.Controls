@@ -20,7 +20,7 @@ define('js!Controls/Popup/Opener/Sticky/Strategy',
                popup._options.target = $('body');
             }
             var
-               container = popup && popup.getContainer(),
+               container = popup.getContainer(),
                targetCoords = TargetCoords.get(popup._options.target, popup._options.corner),
                position = {};
             // вертикальное выравнивание
@@ -43,10 +43,6 @@ define('js!Controls/Popup/Opener/Sticky/Strategy',
                   if( offsetLeft > 0 ){
                      position.left = offsetLeft;
                   }
-               }
-               else if( popup._options.autoWidth ){
-                  var right = window.innerWidth - ( targetCoords.width + targetCoords.left );
-                  position.right = right >= 0 ? right : 0;
                }
             }
             return position;
