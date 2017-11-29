@@ -20,6 +20,7 @@
                  readonly="{{!isEnabled() ? 'readonly'}}"
                  style="overflow-y: {{_hasScroll ? 'scroll' : 'hidden'}}"
                  event:onkeydown="_keyDownHandler()"
+                 event:onfocus="_focusHandler()"
          >{{_value}}</textarea>
 
          <div class="controls-fakeTextArea__firstWrapper">

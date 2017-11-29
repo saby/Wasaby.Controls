@@ -91,12 +91,6 @@ define('js!Controls/Input/resources/InputRender/InputRender',
 
          _notifyHandler: function(e, value) {
             this._notify(value);
-         },
-
-         _focusHandler: function(e) {
-            if (this._options.selectOnClick) {
-               e.target.select();
-            }
          }
       });
 

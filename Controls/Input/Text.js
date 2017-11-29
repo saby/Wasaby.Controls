@@ -132,12 +132,20 @@ define('js!Controls/Input/Text', [
 
          _notifyHandler: function(event, value) {
             this._notify(value);
+         },
+
+         _focusHandler: function(e) {
+            if (this._options.selectOnClick) {
+               e.target.select();
+            }
          }
       });
 
       TextBox.getDefaultOptions = function() {
          return {
-            value: ''
+            value: '',
+            trim: false,
+            selectOnClick: true
          };
       };
 

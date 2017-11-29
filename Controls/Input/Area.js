@@ -2,14 +2,12 @@ define('js!Controls/Input/Area', [
    'js!Controls/Input/Text',
    'Core/constants',
    'WS.Data/Type/descriptor',
-   'Controls/Input/resources/Helper',
    'Core/detection',
    'tmpl!Controls/Input/Area/Area',
    'css!Controls/Input/Area/Area'
 ], function(Text,
             constants,
             types,
-            Helper,
             detection,
             template) {
 
@@ -58,7 +56,7 @@ define('js!Controls/Input/Area', [
          var fakeArea = this._children.fakeArea;
          var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
 
-         //Для IE, текст мы показываем из fakeArea, поэтому обновим скролл.
+         //Для IE, текст мы показываем из fakeArea, поэтому сдвинем скролл.
          if(needScroll && detection.isIE){
             fakeArea.scrollTop = this._children.realArea.scrollTop;
          }
