@@ -99,6 +99,7 @@ define('js!SBIS3.CONTROLS.Browser', [
          _filterButton: null,
          _fastDataFilter: null,
          _columnsController: null,
+         _columnsEditorButton: null,
          _columnsEditor: null,
          _hierMode : false,
          _componentBinder : null,
@@ -273,13 +274,12 @@ define('js!SBIS3.CONTROLS.Browser', [
          Browser.superclass.init.apply(this, arguments);
 
          this._onItemActivateHandler = this._onItemActivate.bind(this);
-         this._onColumnsEditorShowHandler = this._onColumnsEditorShow.bind(this);
          this._folderEditHandler = this._folderEdit.bind(this);
          this._onApplyFilterHandler = this._onApplyFilter.bind(this);
          this._onInitBindingsHandler = this._onInitBindings.bind(this);
          this._bindView();
 
-         CommandDispatcher.declareCommand(this, 'setColumnsConfig', this.setColumnsConfig);
+         CommandDispatcher.declareCommand(this, 'setColumnsConfig', this.setColumnsConfig);//TODO: Убать после того, как columnsConfig будет перенесон из SBIS3.CATALOG.Browsers.CatalogGridView в SBIS3.CATALOG.Browsers.Catalog
          CommandDispatcher.declareCommand(this, 'showColumnsEditor', this.showColumnsEditor);
       },
 
@@ -309,24 +309,29 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
 
       /**
-       * Показать редактор колонок. Возвращает обещание, которое будет разрешено списком идентификаторов выбранных колонок
-       * (Редактор колонок не сформирует событие onColumnsEditorShow при этом)
+       * Показать редактор колонок. Возвращает обещание, которое будет разрешено объектом конфигурации колонок
        * @public
-       * @param {object} columnsConfig Параметры открытия
+       * @param {object} [columnsConfig] Объект конфигурации колонок (опционально, если нет, будет использован текущий columnsConfig браузера)
        * @return {Deferred<object>}
        * @command showColumnsEditor
        */
       showColumnsEditor: function (columnsConfig) {
-         this._ensureColumnsEditor(false);
-         return this._columnsEditor ? this._columnsEditor.show(columnsConfig || this._options.columnsConfig) : Deferred.fail();
+         var options = columnsConfig || this._options.columnsConfig;
+         if (!options) {
+            throw new Error('ColumnsConfig required');
+         }
+         var promise = new Deferred();
+         require(['js!SBIS3.CONTROLS.Columns.Editor'], function (ColumnsEditor) {
+            if (!this._columnsEditor) {
+               this._columnsEditor = new ColumnsEditor();
+            }
+            promise.dependOn(this._columnsEditor.start(options));
+         });
+         return promise;
       },
 
-      _onColumnsEditorShow: function (event, promise) {
-         event.setResult({
-            columns: this._options.columnsConfig.columns,
-            selectedColumns: this._columnsController.getState()
-         });
-         promise.addCallback(function (columnsConfig) {
+      _onColumnsEditorButton: function () {
+         this.showColumnsEditor().addCallback(function (columnsConfig) {
             if (columnsConfig) {
                this._changeColumns(columnsConfig.selectedColumns);
             }
@@ -387,8 +392,8 @@ define('js!SBIS3.CONTROLS.Browser', [
          if (this._columnsController) {
             this._columnsController.destroy();
          }
-         if (this._columnsEditor) {
-            this._unsubscribeFromColumnsEditor();
+         if (this._columnsEditorButton) {
+            this.unsubscribeFrom(this._columnsEditorButton, 'onActivate', this._onColumnsEditorButtonHandler);
          }
          if (this._backButton) {
             this._backButton.unsubscribe('onArrowActivated', this._folderEditHandler);
@@ -401,19 +406,6 @@ define('js!SBIS3.CONTROLS.Browser', [
          }
       },
 
-      _initColumnsController: function() {
-         var
-            columnsState;
-         this._columnsController = new ColumnsController();
-         columnsState = this._columnsController.getState();
-         if (!columnsState) {
-            this._columnsController.setState(this._options.columnsConfig.selectedColumns);
-         }
-         this._getView().setColumns(this._columnsController.getColumns(this._options.columnsConfig.columns));
-         this._getView().redraw();
-         this._ensureColumnsEditor(true);
-      },
-
       _bindView: function() {
          var
             self = this;
@@ -422,6 +414,12 @@ define('js!SBIS3.CONTROLS.Browser', [
 
          if (this._options.columnsConfig) {
             this._initColumnsController();
+         }
+
+         this._columnsEditorButton = this._getColumnsEditorButton();
+         if (this._columnsEditorButton) {
+            this._onColumnsEditorButtonHandler = this._onColumnsEditorButton.bind(this);
+            this.subscribeTo(this._columnsEditorButton, 'onActivate', this._onColumnsEditorButtonHandler);
          }
 
          this._hierMode = checkViewType(this._view);
@@ -502,6 +500,18 @@ define('js!SBIS3.CONTROLS.Browser', [
          }
       },
 
+      _initColumnsController: function() {
+         var
+            columnsState;
+         this._columnsController = new ColumnsController();
+         columnsState = this._columnsController.getState();
+         if (!columnsState) {
+            this._columnsController.setState(this._options.columnsConfig.selectedColumns);
+         }
+         this._getView().setColumns(this._columnsController.getColumns(this._options.columnsConfig.columns));
+         this._getView().redraw();
+      },
+
       _onItemActivate: function(e, itemMeta) {
          this._notifyOnEditByActivate(itemMeta);
       },
@@ -533,37 +543,6 @@ define('js!SBIS3.CONTROLS.Browser', [
       setHistoryId: function(id) {
          this._options.historyId = id;
          this._bindFilterHistory();
-      },
-
-      // TODO: Убрать метод ?
-      _setColumnsEditor: function() {
-         this._ensureColumnsEditor(true);
-      },
-
-      /**
-       * Удостовериться, что редактора колонок точно есть и правильно подготовлен
-       * @protected
-       * @param {true} renew Создать новый экзепляр если старый уже есть
-       */
-      _ensureColumnsEditor: function (renew) {
-         if (renew && this._columnsEditor) {
-            this._columnsEditor.destroy();
-            this._columnsEditor = null;
-         }
-         if (!this._columnsEditor) {
-            this._columnsEditor = this._getColumnsEditor();
-            if (this._columnsEditor) {
-               this._subscribeToColumnsEditor();
-            }
-         }
-      },
-
-      _subscribeToColumnsEditor: function() {
-         this.subscribeTo(this._columnsEditor, 'onColumnsEditorShow', this._onColumnsEditorShowHandler);
-      },
-
-      _unsubscribeFromColumnsEditor: function () {
-         this.unsubscribeFrom(this._columnsEditor, 'onColumnsEditorShow', this._onColumnsEditorShowHandler);
       },
 
       _bindFilterHistory: function() {
@@ -608,8 +587,8 @@ define('js!SBIS3.CONTROLS.Browser', [
       _getSearchForm: function() {
          return this._getLinkedControl('browserSearch');
       },
-      _getColumnsEditor: function() {
-         return this._getLinkedControl('browserColumnsEditor');
+      _getColumnsEditorButton: function() {
+         return this._getLinkedControl('browserColumnsEditorButton');
       },
       _getBackButton: function() {
          return this._getLinkedControl('browserBackButton');
