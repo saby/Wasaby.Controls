@@ -2,7 +2,8 @@
 define(
    ['js!SBIS3.CONTROLS.Selection',
     'WS.Data/Collection/RecordSet',
-    'WS.Data/Display/Display'
+    'WS.Data/Display/Display',
+    'WS.Data/Display/Collection'
    ],
    function (Selection, RecordSet, Projection) {
       'use strict';
@@ -12,12 +13,11 @@ define(
          idProperty: 'id'
       });
 
-      var selection = new Selection({
-         projection: Projection.getDefaultDisplay(data, {
-            idProperty: 'id'
-         })
-      });
+      var selection = new Selection({});
 
+      selection.setProjection(Projection.getDefaultDisplay(data, {
+         idProperty: 'id'
+      }));
 
       describe('SBIS3.CONTROLS.Selection', function () {
          beforeEach(function() {

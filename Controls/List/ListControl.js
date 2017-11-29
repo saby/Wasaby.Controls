@@ -1,24 +1,37 @@
 define('js!Controls/List/ListControl', [
    'Core/Control',
    'tmpl!Controls/List/ListControl',
+   'js!Controls/List/ListControl/ListViewModel',
    'js!Controls/List/resources/utils/DataSourceUtil',
    'WS.Data/Type/descriptor',
    'WS.Data/Source/ISource',
    'Core/core-instance',
    'js!Controls/List/Controllers/PageNavigation',
-   'Core/helpers/functional-helpers'
+   'js!Controls/List/Controllers/ScrollWatcher',
+   'Core/helpers/functional-helpers',
+   'css!Controls/List/ListControl'
 ], function (Control,
              ListControlTpl,
+             ListViewModel,
              DataSourceUtil,
              Types,
              ISource,
              cInstance,
              PageNavigation,
+             ScrollWatcher,
              fHelpers
    ) {
    'use strict';
 
    var _private = {
+      createListModel: function(items, cfg) {
+         return new ListViewModel ({
+            items : items,
+            idProperty: cfg.idProperty,
+            displayProperty: cfg.displayProperty,
+            selectedKey: cfg.selectedKey
+         })
+      },
       //проверка на то, нужно ли создавать новый инстанс рекордсета или же можно положить данные в старый
       isEqualRecordset: function(oldList, newList) {
          return oldList && cInstance.instanceOfModule(oldList, 'WS.Data/Collection/RecordSet')
@@ -37,7 +50,7 @@ define('js!Controls/List/ListControl', [
       },
 
       prepareQueryParams: function(direction) {
-
+         var params = {};
          if (this._navigationController) {
             var addParams = this._navigationController.prepareQueryParams(this._display, direction);
             params.limit = addParams.limit;
@@ -63,7 +76,7 @@ define('js!Controls/List/ListControl', [
          return params;
       },
 
-      reload: function() {
+      reload: function(newOptions) {
          if (this._dataSource) {
             var def, queryParams,
                self = this;
@@ -93,6 +106,7 @@ define('js!Controls/List/ListControl', [
                      self._items.assign(list);
                   } else {
                      self._items = list;
+                     self._listModel = _private.createListModel(self._items, newOptions);
                   }
                   if (self._navigationController) {
                      self._navigationController.calculateState(list)
@@ -133,27 +147,52 @@ define('js!Controls/List/ListControl', [
          else {
             throw new Error('Option dataSource is undefined. Can\'t load page');
          }
+      },
+
+      createScrollWatcher: function(scrollContainer) {
+         var
+            self = this,
+            children = this._children,
+            triggers = {
+               topListTrigger: children.topListTrigger,
+               bottomListTrigger: children.bottomListTrigger,
+               topLoadTrigger: children.topLoadTrigger,
+               bottomLoadTrigger: children.bottomLoadTrigger
+            },
+            eventHandlers = {
+               onLoadTriggerTop: function() {
+                  self._scrollLoadMore('up');
+               },
+               onLoadTriggerBottom: function() {
+                  self._scrollLoadMore('down');
+               },
+               onListTop: function() {
+               },
+               onListBottom: function() {
+               }
+            };
+
+         return new ScrollWatcher ({
+            triggers : triggers,
+            scrollContainer: scrollContainer,
+            loadOffset: this._loadOffset,
+            eventHandlers: eventHandlers
+         });
       }
    };
 
-
+   //TODO
    /*
     Опции
     * dragEntity, dragEntityList, enabledMove, itemsDragNDrop - обсудить с Яриком, возможно будет достаточно события dragStart
     * resultsPosition, resultsText, resultsTpl - как настраивать
-    *
-    * Удалил:
-    * colorField, colorMarkEnabled, highlightEnabled, highlightText, includedTemplates, validateIfDisabled, itemTpl
-    * footerTpl, templateBinding, useSelectAll
-    *
-    * allowEmptyMultiSelection, allowEmptySelection - в интерфейс selectable
     * */
 
 
    /**
     * List Control
     * @class Controls/List/ListControl
-    * @extends Core/Control
+    * @extends Controls/Control
     * @mixes Controls/interface/IItems
     * @mixes Controls/interface/IDataSource
     * @mixes Controls/interface/ISingleSelectable
@@ -165,12 +204,12 @@ define('js!Controls/List/ListControl', [
     */
 
    /**
-    * @name Controls/List/ListControl#contextMenu
+    * @name Controls/List/ListControl#showContextMenu
     * @cfg {Boolean} Показывать ли контекстное меню при клике на правую кнопку мыши
     */
 
    /**
-    * @name Controls/List/ListControl#editingTemplate
+    * @name Controls/List/ListControl#itemEditTemplate
     * @cfg {Function} Шаблон редактирования строки
     */
 
@@ -178,9 +217,6 @@ define('js!Controls/List/ListControl', [
     * @name Controls/List/ListControl#emptyTemplate
     * @cfg {Function} Шаблон отображения пустого списка
     */
-
-
-   /* по названиям вопрос sorting, filtering sort, filter ???? */
 
    /**
     * @name Controls/List/ListControl#filter
@@ -277,7 +313,7 @@ define('js!Controls/List/ListControl', [
     * @function Controls/interface/IPromisedSelectable#commitEdit
     */
 
-
+   //TODO
    /**
     * Подумать
     *
@@ -343,7 +379,7 @@ define('js!Controls/List/ListControl', [
     * @event Controls/List/ListControl#onEndMove Происходит после перемещения записей
     */
 
-
+   //TODO
    /**
     * Вроде есть смена выделеной записи, пока спилим
     * @event -#onItemActivate Происходит при смене записи (активации) под курсором мыши
@@ -353,6 +389,7 @@ define('js!Controls/List/ListControl', [
     * @event Controls/List/ListControl#onItemClick Происходит при любом клике по записи
     */
 
+   //TODO
    /**
     * в чем разница между dataLoad и dataMerge?
     * @event Controls/List/ListControl#onDataLoad Происходит при загрузке данных
@@ -376,20 +413,20 @@ define('js!Controls/List/ListControl', [
 
          _itemTemplate: null,
 
+         _loadOffset: 100,
+
          constructor: function (cfg) {
             ListView.superclass.constructor.apply(this, arguments);
-            this._items = cfg.items;
             this._publish('onDataLoad');
          },
 
          /**
           * Load more data after reaching end or start of the list.
           *
-          * @param e
           * @param direction 'up' | 'down'
           * @private
           */
-         _scrollLoadMore: function(e, direction) {
+         _scrollLoadMore: function(direction) {
             if (this._navigationController && this._navigationController.hasMoreData(direction)) {
                _private.loadPage.call(this, direction);
             }
@@ -397,7 +434,10 @@ define('js!Controls/List/ListControl', [
 
          _beforeMount: function(newOptions) {
             this._filter = newOptions.filter;
-
+            if (newOptions.items) {
+               this._items = newOptions.items;
+               this._listModel = _private.createListModel(this._items, newOptions);
+            }
             if (newOptions.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
@@ -407,9 +447,21 @@ define('js!Controls/List/ListControl', [
             }
          },
 
+         _afterMount: function() {
+            ListView.superclass._afterMount.apply(this, arguments);
+
+            var scrollContainer = this._container.closest('.ws-scrolling-content')[0];
+            this._scrollWatcher = _private.createScrollWatcher.call(this, scrollContainer);
+         },
+
          _beforeUpdate: function(newOptions) {
             if (newOptions.filter != this._options.filter) {
                this._filter = newOptions.filter;
+            }
+
+            if (newOptions.items && newOptions.items != this._options.items) {
+               this._items = newOptions.items;
+               this._listModel = _private.createListModel(this._items, newOptions);
             }
 
             if (newOptions.dataSource !== this._options.dataSource) {
@@ -419,6 +471,12 @@ define('js!Controls/List/ListControl', [
             }
 
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
+         },
+
+         _beforeUnmount: function() {
+            this._scrollWatcher.destroy();
+
+            ListView.superclass._beforeUnmount.apply(this, arguments);
          },
 
          //<editor-fold desc='DataSourceMethods'>

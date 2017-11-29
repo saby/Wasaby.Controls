@@ -1,3 +1,15 @@
+/*
+   <div class="controls-TextBox">
+      <div class="controls-TextBox__wrapper">
+         <input class="controls-TextBox__field" />
+         <div class="controls-TextBox__placeholder">
+             <span class="controls-TextBox__placeholder__overflow"> -placeholder- </span>
+         </div>
+      </div>
+      <div class="controls-TextBox__informationIcon"></div>
+   </div>
+ */
+
 .controls-TextBox {
    box-sizing: border-box;
    border-radius: @border-radius_TextBox;
@@ -10,6 +22,8 @@
    //цвет границы задаётся в зависимости от состояния
    border-width: @border-width_TextBox;
    border-style: solid;
+   //Сбрасываем white-space в значение по умолчанию, чтобы прикладники не могли случайно перебить
+   white-space: normal;
    max-width: 100%; //Чтобы в IE текстбокс не выходил за пределы родителя
 }
 
@@ -23,19 +37,17 @@
 
 .controls-TextBox__field {
    .placeholder(@color_TextBox-placeholder); //В престо другие цвета
-   .text-overflow();
    .flex-shrink(1); //В IE10 по умолчанию flex-shrink: 0
    .reset-browser-input-styles();
+   text-overflow: ellipsis;
    width: 100%;
+   //Иначе в Firefox и Edge input не будет сжиматься
+   //https://jsfiddle.net/hr9mvn2o/
+   min-width: 0;
    //Наследуем явно, иначе браузерные стили будут иметь более высокий приоритет
    font: inherit;
    color: inherit;
    text-align: inherit;
-   //Иначе в Firefox пустой div будет иметь нулевую высоту
-   //https://jsfiddle.net/k6p9r03s/5/
-   //https://bugzilla.mozilla.org/show_bug.cgi?id=1098151
-   //TODO: если везде отказаться от div с contenteditable, то можно удалить эти стили
-   .baseline-fix();
    //https://inside.tensor.ru/opendoc.html?guid=f0c1b032-e2e4-4e65-b98f-8f9413ac0652&des=
    &::-webkit-contacts-auto-fill-button {
       display: none;
@@ -59,11 +71,13 @@
    cursor: text;
    color: @color_TextBox-placeholder;
    font: inherit;
-   &__overflow {
-      .text-overflow();
-      display: inline-block;
-      width: 100%;
-   }
+}
+
+//На controls-TextBox__placeholder нельзя вешать text-overflow, потому что флексы не обрезаются
+.controls-TextBox__placeholder__overflow {
+   .text-overflow();
+   display: inline-block;
+   width: 100%;
 }
 
 .controls-TextBox__informationIcon {
@@ -87,12 +101,22 @@
 
 .controls-TextBox_state_active {
    border-color: @border-color_TextBox_active;
+   &:focus {
+      text-overflow: clip;
+   }
 }
 
 .controls-TextBox_state_disabled {
    background-color: @background-color_TextBox_disabled;
-   border-color: @border-color_TextBox_disabled;
    caret-color: transparent;
+}
+
+.controls-TextBox_state_disabled_singleLine {
+   border-color: @border-color_TextBox_disabled;
+}
+
+.controls-TextBox_state_disabled_multiLine {
+   border-color: transparent;
 }
 
 .controls-TextBox_state_error {
@@ -121,6 +145,17 @@
 }
 
 //Модификаторы
+.controls-TextBox_paddingBoth {
+   padding: @padding_TextBox-container;
+}
+
+.controls-TextBox_paddingLeft {
+   padding: @padding_TextBox-container_left;
+}
+
+/*
+   СЛОЙ СОВМЕСТИМОСТИ
+ */
 .controls-TextBox__field-uppercase {
    text-transform: uppercase;
 }
@@ -135,12 +170,4 @@
 
 .controls-TextBox_text-align_right {
    text-align: right;
-}
-
-.controls-TextBox_paddingBoth {
-   padding: @padding_TextBox-container;
-}
-
-.controls-TextBox_paddingLeft {
-   padding: @padding_TextBox-container_left;
 }

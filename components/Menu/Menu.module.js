@@ -346,14 +346,21 @@ define('js!SBIS3.CONTROLS.Menu', [
          Menu.superclass._drawItemsCallback.apply(this, arguments);
       },
       _createSubMenu : function(target, parent, isFirstLevel, item) {
+         var config = this._getSubMenuConfig(isFirstLevel, item),
+             subMenu;
+
          target = $(target);
-         var config = this._getSubMenuConfig(isFirstLevel, item);
          config.element = $('<div class="controls-Menu__SubMenuPopup ' + this.getClassName() + '"></div>');
          config.parent = parent;
          config.opener = typeof parent.getOpener == 'function' ? parent.getOpener() : parent;
          config.target = target;
          config._fixJqueryPositionBug = true;
-         return new FloatArea(config);
+
+         subMenu = new FloatArea(config);
+         //У меню отличные от дефолтного попапа углы разворота. Задаю здесь.
+         subMenu._oppositeCorners.br.horizontal.bottom = 'tl';
+         subMenu._oppositeCorners.tl.horizontal.top = 'tl';
+         return subMenu;
       },
 
       _getSubMenuConfig : function(isFirstLevel, item) {

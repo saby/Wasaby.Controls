@@ -243,11 +243,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                }
             }
          });
-
-         //Если текст уже установлен, проверим, влезает ли он в инпут полностью, и если нет, то добавим затенение.
-         if (this.getText()) {
-            this._toggleShadow();
-         }
       },
 
       _modifyOptions: function(){
@@ -429,20 +424,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          fieldNotEditableContainer.text(text || this._options.placeholder || '');
          if (this._options.editable) {
             this._setKeyByText();
-         }
-         this._toggleShadow();
-      },
-
-      _toggleShadow: function() {
-         // Иногда $(...).width() возвращает не целое число (замечено в MSIE), из-за этого сравнение даёт неверный результат. Так что округляем:
-         var width = $('.controls-TextBox__field', this.getContainer()).width(),
-            fieldNotEditableContainer = $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)),
-            isTextOverflow = 0 < width && getTextWidth(this.getText()) > Math.round(width),
-            //Если у нас виден инпут, то показываем тень только когда он не в фокусе. иначе в момент ввода появится ненужное затемнение.
-            needShadow = isTextOverflow && (!this.isEditable() || !this._inputField.is(':focus'));
-         this.getContainer().toggleClass('controls-ComboBox__overflow', needShadow);
-         if (needShadow) {
-            fieldNotEditableContainer[0].setAttribute('title', fieldNotEditableContainer[0].textContent);
          }
       },
 

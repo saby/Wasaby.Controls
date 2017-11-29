@@ -23,16 +23,17 @@ define(
       });
 
       var selection = new Selection({
-         projection: new Projection({
-            collection: data,
-            idProperty: 'id',
-            parentProperty: 'parent',
-            nodeProperty: 'parent@',
-            root: null,
-            rootEnumerable: false
-         }),
          root: null
       });
+
+      selection.setProjection(new Projection({
+         collection: data,
+         idProperty: 'id',
+         parentProperty: 'parent',
+         nodeProperty: 'parent@',
+         root: null,
+         rootEnumerable: false
+      }));
 
 
       describe('SBIS3.CONTROLS.HierarchySelection', function () {
