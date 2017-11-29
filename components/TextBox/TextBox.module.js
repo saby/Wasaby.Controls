@@ -314,7 +314,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
             this._initPlaceholderEvents(this._compatPlaceholder);
          }
          /* Надо проверить значение input'a, т.к. при дублировании вкладки там уже может быть что-то написано */
-         this._checkInputVal();
+         this._checkInputVal(true);
       },
 
       /**
@@ -361,10 +361,11 @@ define('js!SBIS3.CONTROLS.TextBox', [
          return constants.compatibility.placeholder;
       },
 
-      _checkInputVal: function() {
+      _checkInputVal: function(fromInit) {
          var text = this._getInputValue();
 
-         if (this._options.trim) {
+         //При ините не должен вызываться trim, поэтому будем проверять по этому флагу попали в checkInputVal из init или нет
+         if (this._options.trim && !fromInit) {
             text = text.trim();
          }
          //Установим текст только если значения различны и оба не пустые
