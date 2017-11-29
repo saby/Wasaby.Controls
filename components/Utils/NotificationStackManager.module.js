@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
 
             if(!notHide){
                setTimeout(function(){
-                  //self._deleteNotification(instId); //todo
+                  self._deleteNotification(instId);
                   self._windowsIdWithLifeTime.splice(self._windowsIdWithLifeTime.indexOf(inst.getId()), 1);
                }, LIFE_TIME);
                this._windowsIdWithLifeTime.push(inst.getId());
