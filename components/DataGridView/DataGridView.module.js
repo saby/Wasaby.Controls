@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/SortingTemplate",
    "Core/helpers/Object/isEmpty",
    'Core/helpers/String/escapeHtml',
-   'js!SBIS3.CONTROLS.Utils.GetTextWidth',
+   'js!SBIS3.CONTROLS.Utils.TitleUtil',
    'Core/Sanitize',
    'js!SBIS3.StickyHeaderManager',
    'css!SBIS3.CONTROLS.DataGridView'
@@ -66,7 +66,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       SortingTemplate,
       isEmpty,
       escapeHtml,
-      getTextWidth,
+      TitleUtil,
       Sanitize,
       StickyHeaderManager) {
 
@@ -752,14 +752,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
             if(columns[colIndex] && !columns[colIndex].cellTemplate && !td[0].getAttribute('title')) {
                colValue = td.find('.controls-DataGridView__columnValue')[0];
-
-               if(colValue && !colValue.getAttribute('title')) {
-                  colValueText = colValue.innerText;
-
-                  if (getTextWidth(escapeHtml(colValueText)) > colValue.offsetWidth) {
-                     colValue.setAttribute('title', colValueText);
-                  }
-               }
+               TitleUtil.setTitle(colValue);
             }
 
             if (hoveredColumn.columnIndex !== index) {

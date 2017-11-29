@@ -16,14 +16,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.SearchMixin",
    "js!SBIS3.CONTROLS.ScrollContainer",
-   'js!SBIS3.CONTROLS.Utils.GetTextWidth',
+   'js!SBIS3.CONTROLS.Utils.TitleUtil',
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown",
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
    "Core/core-instance",
    "i18n!SBIS3.CONTROLS.СomboBox",
    'css!SBIS3.CONTROLS.ComboBox'
-], function ( constants, Deferred, IoC, detection, LayoutManager, TextBox, TextBoxUtils, textFieldWrapper, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, getTextWidth, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
+], function ( constants, Deferred, IoC, detection, LayoutManager, TextBox, TextBoxUtils, textFieldWrapper, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, TitleUtil, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
     * Класс контрола "Комбинированный выпадающий список" с возможностью ввода значения с клавиатуры.
@@ -826,10 +826,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             //во-первых не нужно, во-вторых на ios из-за установки аттрибута не работает клик
             if (!detection.isMobilePlatform) {
                var itemContainer = event.target.closest('.controls-ComboBox__item'),
-                  itemText = itemContainer.innerText,
-                  textLineCount = itemText.split('\n').length; //Показываем подсказку, если внутри итема нет прикладной верстки. Узлы при получении innerText разделяются \n
-               if (!itemContainer.getAttribute('title') && textLineCount === 1 && getTextWidth(itemText) > itemContainer.clientWidth) {
-                  itemContainer.setAttribute('title', itemText);
+                   textLineCount = itemContainer.innerText.split('\n').length; //Показываем подсказку, если внутри итема нет прикладной верстки. Узлы при получении innerText разделяются \n
+               if (textLineCount === 1) {
+                  TitleUtil.setTitle(itemContainer);
                }
             }
          });
