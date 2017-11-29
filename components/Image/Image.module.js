@@ -383,9 +383,6 @@ define('js!SBIS3.CONTROLS.Image',
                      }.bind(this))
                   }
                }
-               if (this.getDataSource()) {
-                  this.reload();
-               }
             },
             /* ------------------------------------------------------------
                Блок публичных методов
