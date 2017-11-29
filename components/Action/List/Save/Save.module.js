@@ -196,7 +196,7 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
                 serverSideExport = false;
             }
            //Для IOS всегда будем выгружать через сервер.
-            meta.serverSideExport = serverSideExport || constants.browser.isMobileSafari;
+            meta.serverSideExport = serverSideExport;
             meta.pageOrientation = meta.endpoint === 'PDF' ? meta.pageOrientation || 1 : undefined;
             if (cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
                 meta.parentProperty = linkedObject.getParentProperty();
