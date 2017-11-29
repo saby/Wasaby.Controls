@@ -29,9 +29,8 @@
             />
          </span>
       </ws:if>
-      <ws:partial
-         if="{{_options.afterFieldWrapper}}"
-         template="{{_options.afterFieldWrapper}}"
-      />
+      <ws:if data="{{_options.afterFieldWrapper}}">
+         <div><ws:partial template="{{_options.afterFieldWrapper}}"/></div>
+      </ws:if>
    </div>
 </div>

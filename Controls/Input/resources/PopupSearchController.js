@@ -1,9 +1,9 @@
-define('js!Controls/Input/resources/Utils/PopupSearchController',
+define('js!Controls/Input/resources/PopupSearchController',
    [
       'Core/core-extend',
       'Core/core-merge',
       'js!Controls/List/resources/utils/Search',
-      'js!WSControls/Windows/PopupManager',
+      'js!WSControls/Windows/Popup/Popup',
       'js!WSControls/Windows/Strategy/StickyPositioningStrategy'
    ],
    function(extend, cMerge, Search, PapupManager, StickyStrategy) {
@@ -30,6 +30,7 @@ define('js!Controls/Input/resources/Utils/PopupSearchController',
             this._search.search({filter: filter}).addCallback(function(searchResult) {
                PapupManager.show(
                   {
+                     catchFocus: false,
                      dialogOptions: {
                         componentOptions: {
                            items: searchResult
@@ -53,7 +54,9 @@ define('js!Controls/Input/resources/Utils/PopupSearchController',
             if (this._search) {
                this._search.abort();
             }
-         }
+         },
+         
+         _moduleName: 'Controls/Input/resources/PopupSearchController'
       });
       
       return PopupSearchController;

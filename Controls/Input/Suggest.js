@@ -2,10 +2,10 @@ define('js!Controls/Input/Suggest',
    [
       'Core/Control',
       'js!Controls/Input/Text',
-      'tmpl!Controls/Input/Suggest/Suggest',
+      'tmpl!Controls/Input/Suggest',
       'Core/core-merge',
       'js!WS.Data/Type/descriptor',
-      'js!Controls/Input/resources/Utils/SuggestController'
+      'js!Controls/Input/resources/SuggestController'
    ],
    function(Control, Text, template, cMerge, types, SuggestController) {
    
