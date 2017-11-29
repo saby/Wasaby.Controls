@@ -326,7 +326,7 @@ define('js!SBIS3.CONTROLS.Browser', [
                this._columnsEditor = new ColumnsEditor();
             }
             promise.dependOn(this._columnsEditor.start(options));
-         });
+         }.bind(this));
          return promise;
       },
 

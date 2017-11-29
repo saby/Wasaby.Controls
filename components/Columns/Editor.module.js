@@ -106,26 +106,6 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
 
          _onLoadPresets: function (data) {
             var values = data && typeof data === 'string' ? JSON.parse(data) : data || [];
-            //////////////////////////////////////////////////^^^
-            if (!values.length) {
-               values.push({
-                  title: 'Пробный шаблон 1',
-                  selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП'],
-                  expandedGroups: ['1']
-               }, {
-                  title: 'Пробный шаблон 2',
-                  selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП'],
-                  expandedGroups: ['2']
-               }, {
-                  title: 'Пробный шаблон 3',
-                  selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП'],
-                  expandedGroups: ['3']
-               });
-            }
-            else {
-               //^^^values = [values[0]];
-            }
-            //////////////////////////////////////////////////
             var recordset = this._options._presets;
             //recordset.clear();
             recordset.setRawData(values);
@@ -193,19 +173,6 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
           */
          start: function (columnsConfig) {
             this._columnsConfig = columnsConfig;
-            //////////////////////////////////////////////////^^^
-            var cfg = this._columnsConfig;
-            if (cfg.columns && cfg.columns.getCount()) {
-               var groupField = cfg.groupField || this._options.groupField;
-               cfg.columns.each(function (column) {
-                  column.set(groupField, '' + Math.ceil(3*Math.random()));
-               });
-            }
-            //^^^cfg.selectedColumns
-            cfg.groupTitleTpl = '{{?it.group == "1"}}Группа: a1{{??it.group == "2"}}Группа: a2{{??it.group == "3"}}Группа: a3{{??}}Группа: a{{=it.group}}{{?}}';//<ws:if data="{{groupId == "1v}}">Группа: a1</ws:if><ws:else data="{{groupId == "2"}}">Группа: a2</ws:else><ws:else data="{{groupId == "3"}}">Группа: a3</ws:else><ws:else>Группа: a{{groupId}}</ws:else>
-            cfg.groupTitles = {'1':'Группа: b1', '2':'Группа: b2', '3':'Группа: b3'};
-            cfg.expandedGroups = ['2'];
-            //////////////////////////////////////////////////
             /*this.showPicker();*/
             this._areaContainer = new FloatArea(coreMerge({
                opener: this,
@@ -266,7 +233,7 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
                   expandedGroups: cfg.expandedGroups,
                   moveColumns: opts.moveColumns,
                   handlers: {
-                     onComplete/*^^^onSelectedColumnsChange*/: this._onAreaComplete.bind(this)
+                     onComplete: this._onAreaComplete.bind(this)
                   }
                },
                handlers: {

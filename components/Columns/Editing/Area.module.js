@@ -5,7 +5,7 @@
 define('js!SBIS3.CONTROLS.Columns.Editing.Area',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
-      'js!SBIS3.CONTROLS.Columns.Editing.Area/templates/Model',
+      'js!SBIS3.CONTROLS.Columns.Editing.Area/AreaSelectableModel',
       'js!SBIS3.CONTROLS.ItemsMoveController',
       'Core/CommandDispatcher',
       'WS.Data/Functor/Compute',
@@ -58,9 +58,6 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
             _prepareChildItemsAndGroups(cfg);
             _prepareGroupCollapsing(cfg);
             cfg.hasGroups = !!cfg._groups && 0 < cfg._groups.length;
-            //////////////////////////////////////////////////
-            console.log('DBG: CE_Area._modifyOptions: cfg.hasGroups=', cfg.hasGroups, '; cfg._groups=', cfg._groups, '; cfg._optsSelectable.items=', cfg._optsSelectable.items, ';');
-            //////////////////////////////////////////////////
             cfg._optsSelectable.onItemClick = _onItemClick;
             if (!cfg.moveColumns) {
                // Добавляем автосортировку отмеченных элементов - они должны отображаться перед неотмеченными
@@ -72,7 +69,7 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
 
          $constructor: function () {
             CommandDispatcher.declareCommand(this, 'applyColumns', this._commandApplyColumns);
-            this._publish('onComplete'/*^^^'onSelectedColumnsChange'*/);
+            this._publish('onComplete');
          },
 
          init: function () {
@@ -138,7 +135,7 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
             if (selectedColumns.length) {
                //^^^this._options.selectedColumns = selectedColumns;
                //^^^this._notifyOnPropertyChanged('selectedColumns');
-               this._notify('onComplete'/*^^^'onSelectedColumnsChange'*/, selectedColumns, _collectExpandedGroups(this));
+               this._notify('onComplete', selectedColumns, _collectExpandedGroups(this));
             }
             else {
                this._notify('onClose');
@@ -276,9 +273,6 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
       };
 
       var _makePresetItems = function (presets, selectedPreset) {
-         //////////////////////////////////////////////////
-         console.log('DBG: CE_Area._makePresetItems: selectedPreset=', selectedPreset, '; presets=', presets, ';');
-         //////////////////////////////////////////////////
          var recordset = new RecordSet({idProperty:'title'});
          if (selectedPreset) {
             recordset.add(presets.getRecordById(selectedPreset));

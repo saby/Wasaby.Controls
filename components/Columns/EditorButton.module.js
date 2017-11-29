@@ -41,12 +41,12 @@ define('js!SBIS3.CONTROLS.Columns.EditorButton',
                title: rk('Отображение колонок'),
                moveColumns: true,
                usePresets: true,
-               targetRegistryName: 'def---ault',
+               targetRegistryName: 'default',
                defaultPreset: null,
                newPresetTitle: rk('Новый шаблон'),
                autoSaveFirstPreset: true,
                useNumberedTitle: true,
-               groupField: 'group',//^^^
+               groupField: 'group',
                groupTitleTpl: null,
                groupTitles: null,
 
@@ -92,26 +92,6 @@ define('js!SBIS3.CONTROLS.Columns.EditorButton',
 
          _onLoadPresets: function (data) {
             var values = data && typeof data === 'string' ? JSON.parse(data) : data || [];
-            //////////////////////////////////////////////////^^^
-            if (!values.length) {
-               values.push({
-                  title: 'Пробный шаблон 1',
-                  selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП'],
-                  expandedGroups: ['1']
-               }, {
-                  title: 'Пробный шаблон 2',
-                  selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП'],
-                  expandedGroups: ['2']
-               }, {
-                  title: 'Пробный шаблон 3',
-                  selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП'],
-                  expandedGroups: ['3']
-               });
-            }
-            else {
-               //^^^values = [values[0]];
-            }
-            //////////////////////////////////////////////////
             var recordset = this._options._presets;
             //recordset.clear();
             recordset.setRawData(values);
