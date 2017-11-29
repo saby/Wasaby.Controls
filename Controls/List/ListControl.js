@@ -181,24 +181,18 @@ define('js!Controls/List/ListControl', [
       }
    };
 
-
+   //TODO
    /*
     Опции
     * dragEntity, dragEntityList, enabledMove, itemsDragNDrop - обсудить с Яриком, возможно будет достаточно события dragStart
     * resultsPosition, resultsText, resultsTpl - как настраивать
-    *
-    * Удалил:
-    * colorField, colorMarkEnabled, highlightEnabled, highlightText, includedTemplates, validateIfDisabled, itemTpl
-    * footerTpl, templateBinding, useSelectAll
-    *
-    * allowEmptyMultiSelection, allowEmptySelection - в интерфейс selectable
     * */
 
 
    /**
     * List Control
     * @class Controls/List/ListControl
-    * @extends Core/Control
+    * @extends Controls/Control
     * @mixes Controls/interface/IItems
     * @mixes Controls/interface/IDataSource
     * @mixes Controls/interface/ISingleSelectable
@@ -210,12 +204,12 @@ define('js!Controls/List/ListControl', [
     */
 
    /**
-    * @name Controls/List/ListControl#contextMenu
+    * @name Controls/List/ListControl#showContextMenu
     * @cfg {Boolean} Показывать ли контекстное меню при клике на правую кнопку мыши
     */
 
    /**
-    * @name Controls/List/ListControl#editingTemplate
+    * @name Controls/List/ListControl#itemEditTemplate
     * @cfg {Function} Шаблон редактирования строки
     */
 
@@ -223,9 +217,6 @@ define('js!Controls/List/ListControl', [
     * @name Controls/List/ListControl#emptyTemplate
     * @cfg {Function} Шаблон отображения пустого списка
     */
-
-
-   /* по названиям вопрос sorting, filtering sort, filter ???? */
 
    /**
     * @name Controls/List/ListControl#filter
@@ -322,7 +313,7 @@ define('js!Controls/List/ListControl', [
     * @function Controls/interface/IPromisedSelectable#commitEdit
     */
 
-
+   //TODO
    /**
     * Подумать
     *
@@ -388,7 +379,7 @@ define('js!Controls/List/ListControl', [
     * @event Controls/List/ListControl#onEndMove Происходит после перемещения записей
     */
 
-
+   //TODO
    /**
     * Вроде есть смена выделеной записи, пока спилим
     * @event -#onItemActivate Происходит при смене записи (активации) под курсором мыши
@@ -398,6 +389,7 @@ define('js!Controls/List/ListControl', [
     * @event Controls/List/ListControl#onItemClick Происходит при любом клике по записи
     */
 
+   //TODO
    /**
     * в чем разница между dataLoad и dataMerge?
     * @event Controls/List/ListControl#onDataLoad Происходит при загрузке данных

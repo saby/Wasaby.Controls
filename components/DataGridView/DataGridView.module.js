@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "Core/Deferred",
    'Core/detection',
    "Core/EventBus",
+   'Core/helpers/Function/memoize',
    "js!SBIS3.CONTROLS.ListView",
    "tmpl!SBIS3.CONTROLS.DataGridView",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/rowTpl",
@@ -42,6 +43,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       Deferred,
       cDetection,
       EventBus,
+      memoize,
       ListView,
       dotTplFn,
       rowTpl,
@@ -704,7 +706,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          CommandDispatcher.declareCommand(this, 'ColumnSorting', this._setColumnSorting);
          this._updateAjaxLoaderPosition();
       },
-      
+
       _onDataLoad: function(list) {
          /* Если установлен table-layout: auto,
             то после перезагрузки могут поменться данные и ширина колонок,
@@ -843,25 +845,51 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return DataGridView.superclass._itemsReadyCallback.apply(this, arguments);
       },
 
-      _showIndicator: function(){
-         this._updateAjaxLoaderPosition();
+      _toggleIndicator: function(show){
+         DataGridView.superclass._toggleIndicator.apply(this, arguments);
+         if (!show) {
+            // После скрытия индикатора загрузки убираем все кастомные стили
+            this._setMinHeight('');
+            this._getAjaxLoaderContainer().css({top: '', height: ''});
+         }
+      },
+
+      _showIndicator: function () {
          DataGridView.superclass._showIndicator.apply(this, arguments);
+         this._updateAjaxLoaderPosition();
       },
 
       _updateAjaxLoaderPosition: function () {
-         var height, styles;
+         var tHeadHeight, styles;
          if (!this._thead) {
             return;
          }
          // Смещаем индикатор загрузки вниз на высоту заголовков.
-         height = this._thead.outerHeight();
-         styles = {top: height || ''};
+         tHeadHeight = this._thead.outerHeight();
+         styles = {top: tHeadHeight || ''};
          // Корректируем хак ".ws-is-webkit .controls-AjaxLoader {height: 100%;}" из стилей ListView.
          if (cDetection.webkit) {
-            styles.height =  height ? 'calc(100% - ' + height + 'px)' : '';
+            styles.height =  height ? 'calc(100% - ' + tHeadHeight + 'px)' : '';
          }
          this._getAjaxLoaderContainer().css(styles);
+
+         this._setMinHeight(tHeadHeight + this._getAjaxLoaderMinHeight() + 'px');
       },
+
+      _getMinHeightContainer: memoize(function () {
+         return this.getContainer().find('.js-controls-DataGridView__minHeight');
+      }, '_getMinHeightContainer'),
+
+      _setMinHeight: function (height) {
+         // Индикатор загрузки позиционируется абсолютно, поэтому не участвует в рассчете высоты компонента.
+         // Корректируем минимальную высоту компонента с учетом зафиксированных заголовков
+         // что бы он не вылазил за пределы компонента.
+         this._getMinHeightContainer().css('height', height);
+      },
+
+      _getAjaxLoaderMinHeight: memoize(function () {
+         return parseInt(this._getAjaxLoaderContainer().css('min-height'), 10);
+      }, '_getAjaxLoaderMinHeight'),
 
       _redrawHead : function() {
          var
@@ -1076,7 +1104,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                      // С IOS 11 версии перестал работать подскролл к нужному месту. Отключаем наш код, который при клике
                      // проваливается в редактор по месту, иначе вызывается неправильно работающий scrollIntoView и всё
                      // ломает: https://online.sbis.ru/opendoc.html?guid=742195a5-c89c-4af8-8121-cdeefa26959e
-                     if (!constants.browser.isMobileIOS || cDetection.IOSVersion <= 11) {
+                     if (!constants.browser.isMobileIOS || cDetection.IOSVersion < 11) {
                         ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
                      }
                   }

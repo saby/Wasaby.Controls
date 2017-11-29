@@ -17,7 +17,7 @@ define('js!Controls/Input/Text',
           * @extends Controls/Control
           * @mixes Controls/Input/interface/IInputText
           * @mixes Controls/Input/interface/IInputPlaceholder
-          * @mixes Controls/Input/interface/IValidation
+          * @mixes Controls/Input/interface/IValidationError
           * @mixes Controls/Input/interface/IInputTag
           * @control
           * @public
@@ -42,11 +42,6 @@ define('js!Controls/Input/Text',
           * @cfg {Boolean} Определяет режим выделения текста в поле ввода при получении фокуса.
           * @variant true Выделять текст.
           * @variant false Не выделять текст.
-          */
-
-         /**
-          * @name Controls/Input/Text#inputCharRegExp
-          * @cfg {String} Регулярное выражение, в соответствии с которым будет осуществляться валидация вводимых символов.
           */
          
          /**

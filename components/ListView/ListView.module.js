@@ -2345,7 +2345,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      // С IOS 11 версии перестал работать подскролл к нужному месту. Отключаем наш код, который при клике
                      // проваливается в редактор по месту, иначе вызывается неправильно работающий scrollIntoView и всё
                      // ломает: https://online.sbis.ru/opendoc.html?guid=742195a5-c89c-4af8-8121-cdeefa26959e
-                     if (!constants.browser.isMobileIOS || cDetection.IOSVersion <= 11) {
+                     if (!constants.browser.isMobileIOS || cDetection.IOSVersion < 11) {
                         ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
                      }
                      return res;
@@ -3882,6 +3882,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             this._showedLoading = show;
             if (show) {
+               // Показываем контейнер который перекрывает контент, блокируя взаимодействие пользователя с таблицей.
                if (!self.isDestroyed() && self._showedLoading) {
                   scrollContainer = self._getScrollContainer()[0];
                   indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
@@ -3897,6 +3898,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      indicator[0].style.top = '';
                   }
                }
+               // После задержки показываем индикатор загрузки.
                this._loadingIndicatorTimer = setTimeout(this._showIndicator.bind(this), INDICATOR_DELAY);
             }
             else {

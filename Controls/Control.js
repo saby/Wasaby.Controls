@@ -11,7 +11,7 @@ define('js!Controls/Control', [
 
 
    /**
-    * @name Controls/Control#enabled
+    * @name Controls/Control#readOnly
     * @cfg {Boolean} Значение, указывающее, может ли элемент управления реагировать на взаимодействие пользователя.
     */
 

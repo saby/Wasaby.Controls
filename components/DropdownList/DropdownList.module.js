@@ -551,12 +551,15 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (!row.length || !row.data('hash')) {
                return undefined;
             }
-            var itemProjection = this._getItemsProjection().getByHash(row.data('hash'));
-            if (this._isEnumTypeData()) {
-               return this._getItemsProjection().getSourceIndexByItem(itemProjection);
+            var projItem = this._getItemsProjection().getByHash(row.data('hash'));
+
+            if (!projItem) { // Если записи в данных не нашлось, значит выбрали emptyValue
+               return null;
             }
-            //Если запись в проекции не найдена - значит выбрали пустую запись(добавляется опцией emptyValue), у которой ключ null
-            return itemProjection ? itemProjection.getContents().getId() : null;
+            if (this._isEnumTypeData()) {
+               return this._getItemsProjection().getSourceIndexByItem(projItem);
+            }
+            return projItem.getContents().getId();
          },
 
          _dblClickItemHandler : function(e){
@@ -675,6 +678,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             return DropdownList.superclass._checkEmptySelection.apply(this, arguments);
          },
+         _isEmptySelection: function() {
+           if (this._isEnumTypeData()) { //В enum нет пустой выборки
+              return false;
+           }
+           return DropdownList.superclass._isEmptySelection.apply(this, arguments);
+         },
          _setSelectedItems: function(){
             //Перебиваю метод из multeselectable mixin'a. см. коммент у метода _isEnumTypeData
             if (!this._isEnumTypeData()) {
@@ -708,6 +717,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                //В этом случае выбираем первый элемент как выбранный.
                //Нельзя присваивать новый массив с 1 элементом, т.к. собьется ссылка на массив и контексты будут воспринимать значение как новое => использую splice
                keys.splice(0, keys.length, id);
+               this._defaultId = keys[0]; //в хотфикс так, в 310 выписал задачу на избавление от defaultId, от ни к чему, т.к. равен идентификатору первой записи в RS. https://online.sbis.ru/opendoc.html?guid=0282cf53-8849-4fd1-a8be-9a5e9f086e47
             }
          },
          _setHasMoreButtonVisibility: function(){
