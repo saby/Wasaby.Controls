@@ -12,30 +12,15 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
     */
    function( cWindowManager, EventBus, Control){
       'use strict';
-
-      //Расстояние между блоками
-      var BLOCK_MARGIN = 16;
       //Время через которое блоки скрываются
       var LIFE_TIME = 5000;
 
-      //Отступ снизу
-      var BOTTOM = 16;
-
-      //Отступ справа
-      var RIGHT = 16;
-
       var NotificationStackManager = Control.Control.extend( /** @lends SBIS3.CONTROLS.Utils.NotificationStackManager.prototype */ {
          $protected: {
-            _options: {
-
-            },
             _items: [],
             _hiddenItems: [],
             _windowsIdWithLifeTime: []
          },
-         $constructor : function(){
-         },
-
          init: function() {
             NotificationStackManager.superclass.init.call(this);
 
@@ -139,12 +124,29 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
           * @private
           */
          _updatePositions: function(){
-            var bottom = BOTTOM;
-
-            for(var i = 0, l = this._items.length; i < l; i++){
-               var container = this._items[i].getContainer();
-               var zIndex = this._zIndex;
-
+            var
+               bottom,
+               containerOffset,
+               getIntCss = function(container, cssName) {
+                  return +container.css(cssName).replace('px', '');
+               };
+            for (var i = 0, l = this._items.length; i < l; i++){
+               var
+                  container = this._items[i].getContainer(),
+                  cashedMargin = container.css('margin'),
+                  zIndex = this._zIndex;
+               //Для первого окна запоминаем отступы
+               if (!i) {
+                   //Popupmixin при инициализации проставляет Margin, сбрасываем его чтобы получить margin из стилей
+                  container.css('margin', '');
+                  bottom = getIntCss(container, 'margin-bottom');
+                  containerOffset = {
+                     bottom: getIntCss(container, 'margin-bottom'),
+                     right: getIntCss(container, 'margin-right')
+                  };
+                   //Восстанавливаем margin установленный popupmixin`om
+                   container.css('margin', cashedMargin);
+               }
                /*Самозакрывающиеся окна показываем выше всех модальных*/
                if(this._windowsIdWithLifeTime.indexOf(this._items[i].getId()) !== -1){
                   zIndex = 1000000;
@@ -152,14 +154,14 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
 
                container.css({
                   bottom: bottom,
-                  right: RIGHT,
+                  right: containerOffset.right,
                   display: 'block',
                   'z-index': zIndex
                });
 
                this._items[i]._zIndex = zIndex;
 
-               bottom += container.height() + BLOCK_MARGIN;
+               bottom += container.outerHeight() + containerOffset.bottom;
 
                if(container.offset().top <= 0){
                   container.css('display', 'none');
