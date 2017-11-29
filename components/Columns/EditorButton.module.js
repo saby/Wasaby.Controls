@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.Columns.EditorButton',
             CommandDispatcher.declareCommand(this, 'changePreset', this._commandChangePreset);
             CommandDispatcher.declareCommand(this, 'clonePreset', this._commandClonePreset);
             CommandDispatcher.declareCommand(this, 'deletePreset', this._commandDeletePreset);
-            this._publish('onActivate');
+            this._publish('onColumnsEditorButtonActivate');
          },
 
          init: function () {
@@ -73,14 +73,14 @@ define('js!SBIS3.CONTROLS.Columns.EditorButton',
             this._presetDropdown = this._options.usePresets ? this.getChildControlByName('controls-Columns-EditorButton__preset') : null;
             this._button = this.getChildControlByName('controls-Columns-EditorButton__button');
 
-            this.subscribeTo(this._button, 'onActivate', this._notify.bind(this, 'onActivate'));
+            this.subscribeTo(this._button, 'onActivate', this._notify.bind(this, 'onColumnsEditorButtonActivate'));
 
             ClientsGlobalConfig/*UserConfig*/.getParam(this._userConfigName).addCallback(function (data) {
                this._onLoadPresets(data);
                if (this._presetDropdown) {
                   this.subscribeTo(this._presetDropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
                      this._setSelectedPreset(selected[0]);
-                     this._notify('onActivate');
+                     this._notify('onColumnsEditorButtonActivate');
                   }.bind(this));
                }
             }.bind(this));
