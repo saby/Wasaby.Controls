@@ -15,8 +15,8 @@ define(
    'use strict';
 
       var
-         createModel = function(controlCharactersSet, mask) {
-            return new FormatModel({controlCharactersSet: controlCharactersSet, mask: mask});
+         createModel = function(controlCharactersSet, mask, regExp) {
+            return new FormatModel({controlCharactersSet: controlCharactersSet, mask: mask, regExp: regExp});
          };
 
       var
@@ -114,9 +114,12 @@ define(
        * @private
        */
 
-      _charToRegExp = function(c) {
+      _charToRegExp = function(c, customRegExp) {
          var regexp;
          switch(c) {
+            case 'r':
+               regexp = customRegExp;
+               break;
             case 'd':
                regexp = '[0-9]';
                break;
@@ -226,7 +229,7 @@ define(
          var group = [],
             groupInner = [],
             separator = [],
-            groupCharactersRegExp = /[LldxX]/,
+            groupCharactersRegExp = /[LldxXr]/,
             maskChar,
             innerChar;
 
@@ -350,7 +353,8 @@ define(
          maskChar = group.innerMask.charAt(position);
          if (group.isGroup) {
             //получить регулярное выражение для проверки
-            regExpChar = new RegExp(_charToRegExp(maskChar));
+
+            regExpChar = new RegExp(_charToRegExp(maskChar, this._options.regExp));
             //соответствует ли символ регулярному выражению
             if (!regExpChar.test(character)) {
                return false;
@@ -678,8 +682,10 @@ define(
                'L': 'L',
                'l': 'l',
                'X': 'X',
-               'x': 'x'
+               'x': 'x',
+               'r': 'r'
             },
+
             /**
              * Символ-заполнитель, на который замещаются все управляющие символы в маске для последующего отображения на
              * странице. В маске изначально не должны присутствовать символы-заполнители. По умолчанию используется знак
@@ -916,7 +922,7 @@ define(
             character: isRemove ? oldText[i][j] : newText[i][j],
             // проверка на возможность ввода символа в группу,
             // если в данную группу нельзя ввести символы, то вводим в первую позицию след разрешенной группы
-            position: maskGroups[i].replace(/[l,L,d,D,h,H,i,I,s,S,x,X,m,M,y,Y]/g,'').length === maskGroups[i].length ? 0 : j,
+            position: maskGroups[i].replace(/[l,L,d,D,h,H,i,I,s,S,x,X,m,M,y,Y,r]/g,'').length === maskGroups[i].length ? 0 : j,
             groupNum: this._getCursor(true)[0]
          }
       },
@@ -1027,7 +1033,7 @@ define(
        * Изменяем опции до отрисовки
        */
       _modifyOptions: function(options) {
-         var formatModel = createModel(options._controlCharactersSet, options.mask);
+         var formatModel = createModel(options._controlCharactersSet, options.mask, options.regExp);
          if (options.text) {
             formatModel.setText(options.text, options._maskReplacer);
          }
