@@ -332,11 +332,9 @@ define('js!SBIS3.CONTROLS.TextBox', [
        * @see informationIconColor
        */
       setInformationIconColor: function (color) {
-         var informationIconContainer = this._informationIcon.getContainer();
-
-          informationIconContainer.removeClass('icon-' + this._options.informationIconColor);
+          this._informationIcon.removeClass('controls-TextBox__informationIcon-' + this._options.informationIconColor);
           this._options.informationIconColor = color;
-          informationIconContainer.addClass('icon-' + color);
+          this._informationIcon.addClass('controls-TextBox__informationIcon-' + color);
       },
 
       _keyboardDispatcher: function(event){
@@ -650,7 +648,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._inputField = undefined;
          this._destroyCompatPlaceholder();
          if(this._informationIcon) {
-            this._informationIcon.getContainer().off('*');
+            this._informationIcon.off('*');
             this._informationIcon = undefined;
          }
          TextBox.superclass.destroy.apply(this, arguments);
