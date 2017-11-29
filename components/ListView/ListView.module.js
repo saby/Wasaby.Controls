@@ -1266,7 +1266,6 @@ define('js!SBIS3.CONTROLS.ListView',
             // Создаем пейджинг скрытым если включено сохранение позиции при reload, но сам пейджинг выключен
             // Так как для сохранения страницы все равно нужекн рассчет страниц скролла
             var hiddenPager = !this._options.scrollPaging && this._options.saveReloadPosition;
-            hiddenPager = hiddenPager && isElementVisible(this.getContainer());
             this._scrollBinder.bindScrollPaging(this._scrollPager, hiddenPager);
 
             if (!this._inScrollContainerControl) {
