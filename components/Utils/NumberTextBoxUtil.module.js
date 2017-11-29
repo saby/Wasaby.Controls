@@ -150,7 +150,7 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
              * @param decimals
              * @returns {{value: (*|XML|string|void|tinymce.html.Node), caretPosition: *, step: *}}
              */
-            backspacePressed: function (b, e, currentVal, delimiters, decimals) {
+            backspacePressed: function (b, e, currentVal, delimiters, decimals, dotOverstep) {
                 var dotPosition = currentVal.indexOf('.'),
                     newCaretPosition = b, step;
 
@@ -182,7 +182,7 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
                             if (!(b == dotPosition + 1 && decimals !== 0)) {
                                 currentVal = currentVal.substr(0, b - 1) + currentVal.substr(e);
                             }
-                            newCaretPosition = dotPosition === b - 2 ? newCaretPosition - 2 : newCaretPosition - 1;
+                            newCaretPosition = (dotPosition === b - 2) && dotOverstep ? newCaretPosition - 2 : newCaretPosition - 1;
                         } else {
                             currentVal = currentVal.substr(0, b) + currentVal.substr(e);
                             newCaretPosition = b;

@@ -217,7 +217,7 @@
    .controls-ListView__itemCheckBox {
       .checkbox-border-size();
       &.controls-DataGridView__th__checkBox__checked{
-         .checkbox-checked-size(@check-box-icon-successful-size, @check-box-icon-successful-left, @check-box-icon-successful-top);
+         .checkbox-checked-size();
       }
    }
 }
@@ -446,4 +446,20 @@
       }
    }
 }
-
+// Контейнер на который программно устанавливается минимальная высота. Используем пустой контейнер который не влияет
+// на внешний вид, но влияет на высоту. min-height нельзя устанавливать на корневой контейнер компонента т.к.
+// это внешний стиль который могут задавать прикладники. На таблицу его тоже устанавливать нельзя,
+// он не применяется если в таблице нет тела, и если в ней есть 1 строка, то она растягивается на всю высоту таблицы.
+.controls-DataGridView__minHeight {
+   float: left;
+}
+.controls-DataGridView {
+   &:after {
+      content: "";
+      display: block;
+      height: 0;
+      line-height: 0;
+      clear: both;
+      visibility: hidden;
+   }
+}

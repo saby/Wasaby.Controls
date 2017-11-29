@@ -22,10 +22,12 @@
    padding: @controls-NotificationPopup-header-padding-with-close-button;
 }
 
-.controls-NotificationPopup__header_icon.icon-24 {
-   background-size: cover;
-   margin-right: @controls-NotificationPopup-header-icon-right-margin;
-   .flex-shrink(@shrink: 0);
+.controls-NotificationPopup__header_icon{
+   &.icon-24, &.icon-medium {
+      background-size: cover;
+      margin-right: @controls-NotificationPopup-header-icon-right-margin;
+      .flex-shrink(@shrink: 0);
+   }
 }
 
 .controls-NotificationPopup__header_caption{

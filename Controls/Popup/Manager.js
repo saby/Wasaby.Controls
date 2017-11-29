@@ -8,6 +8,7 @@ define('js!Controls/Popup/Manager', [
     * @public
     * @category Popup
     * @singleton
+    * @extends Controls/Control
     */
 
    /**

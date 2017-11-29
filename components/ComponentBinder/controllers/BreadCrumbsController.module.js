@@ -110,12 +110,15 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
                   result.push(createBreadCrumb(elem));
                   return result;
                }, []));
-               if (self._options.backButtonTemplate && self._currentRoot) {
-                  caption = self._options.backButtonTemplate(self._currentRoot.data);
-               } else {
-                  caption = self._currentRoot ? self._currentRoot.title : '';
+
+               if (!backButton.isDestroyed()) {
+                  if (self._options.backButtonTemplate && self._currentRoot) {
+                     caption = self._options.backButtonTemplate(self._currentRoot.data);
+                  } else {
+                     caption = self._currentRoot ? self._currentRoot.title : '';
+                  }
+                  backButton.setCaption(caption);
                }
-               backButton.setCaption(caption);
             }
          }
 
