@@ -419,7 +419,7 @@ define('js!SBIS3.CONTROLS.Browser', [
          this._columnsEditorButton = this._getColumnsEditorButton();
          if (this._columnsEditorButton) {
             this._onColumnsEditorButtonHandler = this._onColumnsEditorButton.bind(this);
-            this.subscribeTo(this._columnsEditorButton, 'onColumnsEditorButtonActivate', this._onColumnsEditorButtonHandler);
+            this.subscribeTo(this._columnsEditorButton, 'onActivated', this._onColumnsEditorButtonHandler);
          }
 
          this._hierMode = checkViewType(this._view);
