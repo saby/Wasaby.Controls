@@ -2,38 +2,38 @@
  * Created by as.avramenko on 24.01.2017.
  */
 
-define('js!SBIS3.CONTROLS.ColumnsEditorArea',
+define('js!SBIS3.CONTROLS.Columns.Editing.Area',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
-      'js!SBIS3.CONTROLS.ColumnsEditorArea/resources/Model',
+      'js!SBIS3.CONTROLS.Columns.Editing.Area/templates/Model',
       'js!SBIS3.CONTROLS.ItemsMoveController',
       'Core/CommandDispatcher',
       'WS.Data/Functor/Compute',
       'WS.Data/Collection/RecordSet',
-      'tmpl!SBIS3.CONTROLS.ColumnsEditorArea',
-      'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/preset',
-      'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/presetEdit',
-      'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/selectableGroupContent',
-      'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/selectableItemContent',
-      'css!SBIS3.CONTROLS.ColumnsEditorArea',
+      'tmpl!SBIS3.CONTROLS.Columns.Editing.Area',
+      'tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/preset',
+      'tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/presetEdit',
+      'tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/selectableGroupContent',
+      'tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/selectableItemContent',
+      'css!SBIS3.CONTROLS.Columns.Editing.Area',
       'js!SBIS3.CONTROLS.Button',
       'js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.CheckBoxGroup',
       'js!SBIS3.CONTROLS.ScrollContainer'
    ],
 
-   function (CompoundControl, ColumnsEditorModel, ItemsMoveController, CommandDispatcher, ComputeFunctor, RecordSet, dotTplFn) {
+   function (CompoundControl, AreaSelectableModel, ItemsMoveController, CommandDispatcher, ComputeFunctor, RecordSet, dotTplFn) {
       'use strict';
 
       /**
        * Класс контрола "Редактор колонок".
        *
        * @author Авраменко Алексей Сергеевич
-       * @class SBIS3.CONTROLS.ColumnsEditorArea
+       * @class SBIS3.CONTROLS.Columns.Editing.Area
        * @public
        * @extends SBIS3.CONTROLS.CompoundControl
        */
-      var ColumnsEditorArea = CompoundControl.extend(/** @lends SBIS3.CONTROLS.ColumnsEditorArea.prototype */ {
+      var Area = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Columns.Editing.Area.prototype */ {
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          },
 
          _modifyOptions: function () {
-            var cfg = ColumnsEditorArea.superclass._modifyOptions.apply(this, arguments);
+            var cfg = Area.superclass._modifyOptions.apply(this, arguments);
             cfg._optsPreset = {
                items: _makePresetItems(cfg._getPresets(), cfg._getSelectedPreset())
             };
@@ -76,10 +76,10 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          },
 
          init: function () {
-            ColumnsEditorArea.superclass.init.apply(this, arguments);
-            this._presetView = _getChildComponent(this, 'controls-ColumnsEditorArea__Preset');
-            this._fixedView = this.getChildControlByName('controls-ColumnsEditorArea__FixedList');
-            this._selectableView = this.getChildControlByName('controls-ColumnsEditorArea__SelectableList');
+            Area.superclass.init.apply(this, arguments);
+            this._presetView = _getChildComponent(this, 'controls-Columns-Editing-Area__Preset');
+            this._fixedView = this.getChildControlByName('controls-Columns-Editing-Area__FixedList');
+            this._selectableView = this.getChildControlByName('controls-Columns-Editing-Area__SelectableList');
 
             if (this._presetView) {
                if (this._presetView.isInitialized()) {
@@ -149,7 +149,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             if (this._itemsMoveController) {
                this._itemsMoveController.destroy();
             }
-            ColumnsEditorArea.superclass.destroy.apply(this, arguments);
+            Area.superclass.destroy.apply(this, arguments);
          }
       });
 
@@ -229,7 +229,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             selectable.items = new RecordSet({
                rawData: preparingItems,
                idProperty: 'id',
-               model: ColumnsEditorModel
+               model: AreaSelectableModel
             });
             _applySelectedToItems(selectable.markedKeys, selectable.items);
          }
@@ -298,7 +298,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          if (!dontSet) {
             self._presetView.setItems(_makePresetItems(self._options._getPresets(), self._options._getSelectedPreset()));
          }
-         var dropdown = _getChildComponent(self._presetView, 'controls-controls-ColumnsEditorArea__Preset-item-title');
+         var dropdown = _getChildComponent(self._presetView, 'controls-controls-Columns-Editing-Area__Preset-item-title');
          if (dropdown) {
             self.subscribeTo(dropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
                self.sendCommand('selectPreset', selected[0]);
@@ -402,6 +402,6 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
 
 
 
-      return ColumnsEditorArea;
+      return Area;
    }
 );

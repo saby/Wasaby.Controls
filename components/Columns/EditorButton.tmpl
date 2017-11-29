@@ -1,17 +1,15 @@
-<div class="controls-ColumnsEditor">
-   <ws:if data="{{showButton}}">
-      <ws:if data="{{usePresets}}">
-         <ws:SBIS3.CONTROLS.DropdownList
-            name="controls-ColumnsEditor__preset"
-            className="controls-ColumnsEditor__preset"
-            multiselect="{{false}}"
-            mode="click"
-            type="titleHeader"
-            title="{[Выберите шаблон]}"
-            idProperty="title"
-            displayProperty="title"
-         />
-      </ws:if>
-      <ws:SBIS3.CONTROLS.IconButton icon="sprite:icon-24 icon-Settings icon-primary" command="openColumnsEditorArea" />
+<div class="controls-Columns-EditorButton">
+   <ws:if data="{{usePresets}}">
+      <ws:SBIS3.CONTROLS.DropdownList
+         name="controls-Columns-EditorButton__preset"
+         className="controls-Columns-EditorButton__preset"
+         multiselect="{{false}}"
+         mode="click"
+         type="titleHeader"
+         title="{[Выберите шаблон]}"
+         idProperty="title"
+         displayProperty="title"
+      />
    </ws:if>
+   <ws:SBIS3.CONTROLS.IconButton icon="sprite:icon-24 icon-Settings icon-primary" name="controls-Columns-EditorButton__button" command="" />
 </div>

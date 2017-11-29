@@ -1,45 +1,45 @@
-<div class="controls-ColumnsEditorArea">
-   <div class="controls-ColumnsEditorArea__head">
-      <div class="controls-ColumnsEditorArea__head-title">
-         <div class="controls-ColumnsEditorArea__head-title-left">{{ title }}</div>
-         <div class="controls-ColumnsEditorArea__head-title-right">
-            <ws:SBIS3.CONTROLS.Button class="controls-ColumnsEditorArea__ApplyColumnsButton" caption="{{ applyButtonTitle }}" command="applyColumns" primary="true" />
+<div class="controls-Columns-Editing-Area">
+   <div class="controls-Columns-Editing-Area__head">
+      <div class="controls-Columns-Editing-Area__head-title">
+         <div class="controls-Columns-Editing-Area__head-title-left">{{ title }}</div>
+         <div class="controls-Columns-Editing-Area__head-title-right">
+            <ws:SBIS3.CONTROLS.Button class="controls-Columns-Editing-Area__ApplyColumnsButton" caption="{{ applyButtonTitle }}" command="applyColumns" primary="true" />
          </div>
       </div>
       <ws:if data="{{usePresets && _optsPreset.items && _optsPreset.items.getCount()}}">
-         <div class="controls-ColumnsEditorArea__head-preset">
-            <div class="controls-ColumnsEditorArea__head-preset-label">{[Шаблон]}</div>
-            <div class="controls-ColumnsEditorArea__head-preset-editor">
+         <div class="controls-Columns-Editing-Area__head-preset">
+            <div class="controls-Columns-Editing-Area__head-preset-label">{[Шаблон]}</div>
+            <div class="controls-Columns-Editing-Area__head-preset-editor">
                <ws:SBIS3.CONTROLS.ListView
-                  class="controls-ColumnsEditorArea__Preset controls-ListView__disableHover"
-                  name="controls-ColumnsEditorArea__Preset"
+                  class="controls-Columns-Editing-Area__Preset controls-ListView__disableHover"
+                  name="controls-Columns-Editing-Area__Preset"
                   items="{{_optsPreset.items}}"
                   itemsHover="{{false}}"
                   itemsDragNDrop="{{false}}"
                   idProperty="id"
                   displayProperty="title"
                   editMode=""
-                  editingTemplate="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/presetEdit"
+                  editingTemplate="tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/presetEdit"
                   >
                   <!--^^^
                   itemsActions="{{_optsPreset.itemsActions}}"
-                  itemContentTpl="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/preset"
+                  itemContentTpl="tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/preset"
                   editMode="click|single"
                   <ws:handlers onItemClick="{{_optsPreset.onItemClick}}"/>
                   -->
                   <ws:itemContentTpl>
-                     <ws:partial template="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/preset" scope="{{itemContentTpl}}" presets="{{_getPresets()}}" />
+                     <ws:partial template="tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/preset" scope="{{itemContentTpl}}" presets="{{_getPresets()}}" />
                   </ws:itemContentTpl>
                </ws:SBIS3.CONTROLS.ListView>
             </div>
          </div>
       </ws:if>
    </div>
-   <ws:SBIS3.CONTROLS.ScrollContainer class="controls-ColumnsEditorArea__body">
+   <ws:SBIS3.CONTROLS.ScrollContainer class="controls-Columns-Editing-Area__body">
       <ws:content type="string">
          <ws:SBIS3.CONTROLS.CheckBoxGroup
-            class="controls-ColumnsEditorArea__FixedList"
-            name="controls-ColumnsEditorArea__FixedList"
+            class="controls-Columns-Editing-Area__FixedList"
+            name="controls-Columns-Editing-Area__FixedList"
             items="{{ _optsFixed.items }}"
             idProperty="id"
             displayProperty="title"
@@ -48,8 +48,8 @@
             multiselect="{{ true }}"
          />
          <ws:SBIS3.CONTROLS.ListView
-            class="controls-ColumnsEditorArea__SelectableList"
-            name="controls-ColumnsEditorArea__SelectableList"
+            class="controls-Columns-Editing-Area__SelectableList"
+            name="controls-Columns-Editing-Area__SelectableList"
             items="{{ _optsSelectable.items }}"
             easyGroup="{{ true }}"
             _groupCollapsing="{{_groupCollapsing}}"
@@ -59,7 +59,7 @@
             displayProperty="title"
             itemsSortMethod="{{_optsSelectable.itemsSortMethod}}"
             selectedKeys="{{_optsSelectable.markedKeys}}"
-            itemContentTpl="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/selectableItemContent"
+            itemContentTpl="tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/selectableItemContent"
             multiselect="{{ true }}"
             >
             <ws:handlers onItemClick="{{_optsSelectable.onItemClick}}" onSelectedItemsChange="{{_optsSelectable.onSelectedItemsChange}}"/>
@@ -68,7 +68,7 @@
                >
                <ws:contentTemplate>
                   <ws:if data="{{hasGroups}}">
-                     <ws:partial template="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/selectableGroupContent" scope="{{contentTemplate}}" groupTitleTpl="{{groupTitleTpl}}" groupTitles="{{groupTitles}}" />
+                     <ws:partial template="tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/selectableGroupContent" scope="{{contentTemplate}}" groupTitleTpl="{{groupTitleTpl}}" groupTitles="{{groupTitles}}" />
                   </ws:if>
                </ws:contentTemplate>
             </ws:groupBy>

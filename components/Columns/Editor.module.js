@@ -17,7 +17,7 @@
   * Created by as.avramenko on 24.01.2017.
  */
 
-define('js!SBIS3.CONTROLS.ColumnsEditor',
+define('js!SBIS3.CONTROLS.Columns.Editor',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
       'Core/CommandDispatcher',
@@ -29,10 +29,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
       /*'js!SBIS3.CONTROLS.PickerMixin',*/
       'js!SBIS3.CORE.FloatArea',
       /*^^^'Core/tmpl/tmplstr', 'js!SBIS3.CONTROLS.Utils.TemplateUtil',*/
-      'tmpl!SBIS3.CONTROLS.ColumnsEditor',
-      'css!SBIS3.CONTROLS.ColumnsEditor',
+      'css!SBIS3.CONTROLS.Columns.Editor',
       'js!SBIS3.CONTROLS.IconButton',
-      'js!SBIS3.CONTROLS.ColumnsEditorArea'
+      'js!SBIS3.CONTROLS.Columns.Editing.Area'
    ],
 
    function (CompoundControl, CommandDispatcher, coreMerge, Deferred, ClientsGlobalConfig, /*UserConfig,*/ RecordSet, /*PickerMixin,*/ FloatArea, dotTplFn) {
@@ -42,13 +41,13 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
        * Класс контрола "Редактор колонок".
        *
        * @author Авраменко Алексей Сергеевич
-       * @class SBIS3.CONTROLS.ColumnsEditor
+       * @class SBIS3.CONTROLS.Columns.Editor
        * @public
        * @extends SBIS3.CONTROLS.CompoundControl
        *
        * @mixes SBIS3.CONTROLS.PickerMixin ^^^
        */
-      var ColumnsEditor = CompoundControl.extend([/*PickerMixin*/], /** @lends SBIS3.CONTROLS.ColumnsEditor.prototype */{
+      var Editor = CompoundControl.extend([/*PickerMixin*/], /** @lends SBIS3.CONTROLS.Columns.Editor.prototype */{
          /**
           * @typedef {Object} ColumnsConfigObject
           * @property {WS.Data/Collection/RecordSet} columns Набор записей, каждая из которых описывает элемент панели редактирования колонок. <br/>
@@ -64,7 +63,6 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
-               showButton: true,
                title: rk('Отображение колонок'),
                moveColumns: true,
                usePresets: true,
@@ -82,32 +80,23 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             },
             _userConfigName: null,
             _result: null,
-            _presetDropdown: null
          },
 
          $constructor: function () {
-            CommandDispatcher.declareCommand(this, 'openColumnsEditorArea', this._commandOpenColumnsEditorArea);
             CommandDispatcher.declareCommand(this, 'selectPreset', this._commandSelectPreset);
             CommandDispatcher.declareCommand(this, 'changePreset', this._commandChangePreset);
             CommandDispatcher.declareCommand(this, 'clonePreset', this._commandClonePreset);
             CommandDispatcher.declareCommand(this, 'deletePreset', this._commandDeletePreset);
-            this._publish('onColumnsEditorShow');
+            this._publish('onStart', 'onComplete');
          },
 
          init: function () {
-            ColumnsEditor.superclass.init.apply(this, arguments);
+            Editor.superclass.init.apply(this, arguments);
             this._userConfigName = 'ColumnsEditor#' + this._options.targetRegistryName;
             this._options._presets = new RecordSet({rawData:[], idProperty:'title'});
-            this._presetDropdown = this._options.showButton ? this.getChildControlByName('controls-ColumnsEditor__preset') : null;
 
             ClientsGlobalConfig/*UserConfig*/.getParam(this._userConfigName).addCallback(function (data) {
                this._onLoadPresets(data);
-               if (this._presetDropdown) {
-                  this.subscribeTo(this._presetDropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
-                     this._setSelectedPreset(selected[0]);
-                     this.sendCommand('showColumnsEditor');
-                  }.bind(this));
-               }
             }.bind(this));
          },
 
@@ -147,7 +136,6 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                selected = selected && values.map(function (v) { return v.title; }).indexOf(selected) !== -1 ? selected : values[0].title;
             }
             this._options._selectedPreset = selected;
-            _updateDropdown(this);
          },
 
          _getSelectedPreset: function () {
@@ -160,9 +148,6 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
 
          _commandSelectPreset: function (title) {
             this._setSelectedPreset(title);
-            if (this._presetDropdown) {
-               this._presetDropdown.setSelectedKeys([title]);
-            }
          },
 
          _commandChangePreset: function (title) {
@@ -200,29 +185,13 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             return _completeChangePresetsAndSave(this, 1 < count ? recordset.at(i).get('title') : null);
          },
 
-         _commandOpenColumnsEditorArea: function () {
-            if (!this._areaContainer) {
-               this._show(this._notify('onColumnsEditorShow', this._result = new Deferred()));
-            }
-         },
-
          /**
-          * Показать редактор колонок. Возвращает обещание, которое будет разрешено списком идентификаторов выбранных колонок
-          * Событие onColumnsEditorShow при этом не сформируется
+          * Открыть редактор колонок. Возвращает обещание, которое будет разрешено списком идентификаторов выбранных колонок
           * @public
           * @param {object} columnsConfig Параметры открыттия
           * @return {Deferred<string[]>}
           */
-         show: function (columnsConfig) {
-            this._show(columnsConfig);
-            return this._result = new Deferred();
-         },
-
-         /**
-          * @protected
-          * @param {object} columnsConfig Параметры открыттия
-          */
-         _show: function (columnsConfig) {
+         start: function (columnsConfig) {
             this._columnsConfig = columnsConfig;
             //////////////////////////////////////////////////^^^
             var cfg = this._columnsConfig;
@@ -248,6 +217,8 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             }, this._getAreaOptions()));
             this._notify('onSizeChange');
             this.subscribeOnceTo(this._areaContainer, 'onAfterClose', this._notify.bind(this, 'onSizeChange'));
+            this._notify('onStart');
+            return this._result = new Deferred();
          },
 
          /*_setPickerConfig: function () {
@@ -278,8 +249,8 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             return {
                //title: null,
                parent: this,
-               template: 'js!SBIS3.CONTROLS.ColumnsEditorArea',
-               cssClassName: 'controls-ColumnsEditor-area',
+               template: 'js!SBIS3.CONTROLS.Columns.Editing.Area',
+               cssClassName: 'controls-Columns-Editor__area',
                closeByExternalClick: true,
                closeButton: true,
                componentOptions: {
@@ -333,6 +304,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             /*this._picker.hide();*/
             this._areaContainer.close();
             this._sentResult({columns:this._columnsConfig.columns, selectedColumns:selectedColumns, expandedGroups:expandedGroups});
+            this._notify('onComplete');
          },
 
          _onAreaClose: function () {
@@ -364,18 +336,6 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
       var _completeChangePresets = function (self, title) {
          self._options._selectedPreset = title;
          self._options._presets.acceptChanges();
-         _updateDropdown(self);
-      };
-
-      var _updateDropdown = function (self) {
-         var dropdown = self._presetDropdown;
-         if (dropdown) {
-            var presets = self._options._presets;
-            dropdown.setItems(presets);
-            var selected = self._options._selectedPreset;
-            dropdown.setSelectedKeys(selected ? [selected] : []);
-            dropdown.setEnabled(1 < presets.getCount());
-         }
       };
 
       var _save = function (self) {
@@ -392,6 +352,6 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
 
 
 
-      return ColumnsEditor;
+      return Editor;
    }
 );
