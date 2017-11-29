@@ -10,6 +10,7 @@
 // TODO: ( ) Вернуть сохранение в конфиг пользователя + предопределённые пресеты их опций
 // TODO: ( ) Сделать классы типов (Columns.Config, Columns.ColumnInfo, Columns.Preset, ...)
 // TODO: ( ) Более строго провести везде опцию usePresets
+// TODO: ( ) Возможно, стоит использовать SBIS3.CONTROLS.ItemsToolbar напрямую ?...
 // TODO: ( ) Разделить ColumnsEditor На Columns.EditorButton и Columns.Editor
 // TODO: ( )
 /**
@@ -67,12 +68,12 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                title: rk('Отображение колонок'),
                moveColumns: true,
                usePresets: true,
-               targetRegistryName: 'default',
+               targetRegistryName: 'def---ault',
                defaultPreset: null,
                newPresetTitle: rk('Новый шаблон'),
                autoSaveFirstPreset: true,
                useNumberedTitle: true,
-               groupField: 'group',
+               groupField: 'group',//^^^
                groupTitleTpl: null,
                groupTitles: null,
 
@@ -116,6 +117,26 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
 
          _onLoadPresets: function (data) {
             var values = data && typeof data === 'string' ? JSON.parse(data) : data || [];
+            //////////////////////////////////////////////////^^^
+            if (!values.length) {
+               values.push({
+                  title: 'Пробный шаблон 1',
+                  selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП'],
+                  expandedGroups: ['1']
+               }, {
+                  title: 'Пробный шаблон 2',
+                  selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП'],
+                  expandedGroups: ['2']
+               }, {
+                  title: 'Пробный шаблон 3',
+                  selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП'],
+                  expandedGroups: ['3']
+               });
+            }
+            else {
+               //^^^values = [values[0]];
+            }
+            //////////////////////////////////////////////////
             var recordset = this._options._presets;
             //recordset.clear();
             recordset.setRawData(values);
@@ -203,6 +224,19 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
           */
          _show: function (columnsConfig) {
             this._columnsConfig = columnsConfig;
+            //////////////////////////////////////////////////^^^
+            var cfg = this._columnsConfig;
+            if (cfg.columns && cfg.columns.getCount()) {
+               var groupField = cfg.groupField || this._options.groupField;
+               cfg.columns.each(function (column) {
+                  column.set(groupField, '' + Math.ceil(3*Math.random()));
+               });
+            }
+            //^^^cfg.selectedColumns
+            cfg.groupTitleTpl = '{{?it.group == "1"}}Группа: a1{{??it.group == "2"}}Группа: a2{{??it.group == "3"}}Группа: a3{{??}}Группа: a{{=it.group}}{{?}}';//<ws:if data="{{groupId == "1v}}">Группа: a1</ws:if><ws:else data="{{groupId == "2"}}">Группа: a2</ws:else><ws:else data="{{groupId == "3"}}">Группа: a3</ws:else><ws:else>Группа: a{{groupId}}</ws:else>
+            cfg.groupTitles = {'1':'Группа: b1', '2':'Группа: b2', '3':'Группа: b3'};
+            cfg.expandedGroups = ['2'];
+            //////////////////////////////////////////////////
             /*this.showPicker();*/
             this._areaContainer = new FloatArea(coreMerge({
                opener: this,

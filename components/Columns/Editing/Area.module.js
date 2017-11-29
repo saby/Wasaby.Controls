@@ -58,6 +58,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             _prepareChildItemsAndGroups(cfg);
             _prepareGroupCollapsing(cfg);
             cfg.hasGroups = !!cfg._groups && 0 < cfg._groups.length;
+            //////////////////////////////////////////////////
+            console.log('DBG: CE_Area._modifyOptions: cfg.hasGroups=', cfg.hasGroups, '; cfg._groups=', cfg._groups, '; cfg._optsSelectable.items=', cfg._optsSelectable.items, ';');
+            //////////////////////////////////////////////////
             cfg._optsSelectable.onItemClick = _onItemClick;
             if (!cfg.moveColumns) {
                // Добавляем автосортировку отмеченных элементов - они должны отображаться перед неотмеченными
@@ -273,6 +276,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
       };
 
       var _makePresetItems = function (presets, selectedPreset) {
+         //////////////////////////////////////////////////
+         console.log('DBG: CE_Area._makePresetItems: selectedPreset=', selectedPreset, '; presets=', presets, ';');
+         //////////////////////////////////////////////////
          var recordset = new RecordSet({idProperty:'title'});
          if (selectedPreset) {
             recordset.add(presets.getRecordById(selectedPreset));
