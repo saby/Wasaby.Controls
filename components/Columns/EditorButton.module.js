@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.Columns.EditorButton',
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
-               usePresets: true,
+               usePresets: false,// TODO: Включить после переделки дропдауна с пресетами
                targetRegistryName: 'default',
                defaultPreset: null,
 

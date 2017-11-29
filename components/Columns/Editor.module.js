@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
             _options: {
                title: rk('Отображение колонок'),
                moveColumns: true,
-               usePresets: true,
+               usePresets: false,// TODO: Включить после переделки дропдауна с пресетами
                targetRegistryName: 'def---ault',
                defaultPreset: null,
                newPresetTitle: rk('Новый шаблон'),
