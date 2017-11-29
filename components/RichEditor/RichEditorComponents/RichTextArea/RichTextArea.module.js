@@ -418,7 +418,19 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (typeof html === 'string' && this._tinyEditor) {
                this._performByReady(function() {
                   html = this._prepareContent(html);
-                  this._tinyEditor.insertContent(html);
+                  var editor = this._tinyEditor;
+                  var lastRng = this._tinyLastRng;
+                  if (lastRng) {
+                     // Если определён последний рэнж, значит вставка происходит в неактивный редактор или в отсутствии фокуса. Если текщий рэнж
+                     // не соответствунет ему - используем последний.
+                     // https://online.sbis.ru/opendoc.html?guid=e1e07406-30c3-493a-9cc0-b85ebdf055bd
+                     // https://online.sbis.ru/opendoc.html?guid=49da7b60-c4d2-46c8-b1b7-db1eb86e4443
+                     var rng = editor.selection.getRng();
+                     if (rng.startContainer !== lastRng.startContainer || rng.startOffset !== lastRng.startOffset || rng.endContainer !== lastRng.endContainer || rng.endOffset !== lastRng.endOffset) {
+                        editor.selection.setRng(lastRng);
+                     }
+                  }
+                  editor.insertContent(html);
                   //вставка контента может быть инициирована любым контролом,
                   //необходимо нотифицировать о появлении клавиатуры в любом случае
                   if (cConstants.browser.isMobilePlatform) {
@@ -1763,6 +1775,18 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             editor.on('NodeChange', function(e) {
                self._notify('onNodeChange', e)
             });
+
+            // Для правильной работы метода insertHtml в отсутствии фокуса будем фиксировать последний актуальный рэнж
+            editor.on('focus focusin', function (evt) {
+               self._tinyLastRng = null;
+            });
+            editor.on('blur focusout', function (evt) {
+               var rng = editor.selection.getRng();
+               if (!(rng.collapsed && rng.startOffset === 0 && rng.startContainer === editor.getBody())) {
+                  self._tinyLastRng = rng;
+               }
+            });
+
             editor.on('focusin', function(e) {
                if (self._fromTouch){
                   self._notifyMobileInputFocus();
