@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
       'use strict';
       /**
        * Контрол, отображающий набор выпадающих списков SBIS3.CONTROLS.DropdownList и работающий с фильтром в контексте
-       * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterfast/">Быстрые фильтры</a>.
+       * Подробнее конфигурирование контрола описано в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterfast/">Быстрые фильтры</a>.
        * @class SBIS3.CONTROLS.FastDataFilter
        * @extends SBIS3.CORE.CompoundControl
        *
@@ -171,7 +171,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             this._resetMaxWidth();
             var dropdownLists = $('.controls-DropdownList', this.getContainer());
             dropdownLists.sort(function (el1, el2) {
-               return $(el1).width() > $(el2).width();
+               return $(el1).width() - $(el2).width();
             });
             for (var i = 0, l = dropdownLists.length; i < l; i++) {
                $(dropdownLists[i]).addClass('ws-flex-shrink-' + (i + 1));

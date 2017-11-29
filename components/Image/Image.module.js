@@ -327,6 +327,7 @@ define('js!SBIS3.CONTROLS.Image',
                _buttonUpload: undefined,
                _boundEvents: undefined,
                _saveIndicator: undefined,
+               _saveIndicatorState: undefined,
                _firstLoaded: false,
                _pickerIsOpen: false,
                _cursorInside: false,
@@ -660,6 +661,7 @@ define('js!SBIS3.CONTROLS.Image',
              * Показать/скрыть индикатор сохранения изображения
              */
             _toggleSaveIndicator: function(state) {
+               this._saveIndicatorState = state;
                if (state) {
                   if (!this._saveIndicator) {
                      require(['js!SBIS3.CORE.LoadingIndicator'], function(LoadingIndicator) {
@@ -667,6 +669,9 @@ define('js!SBIS3.CONTROLS.Image',
                            'message': rk('Сохранение'),
                            'name': 'ws-load-indicator'
                         });
+                        if (!this._saveIndicatorState) {
+                            this._saveIndicator.hide();
+                        }
                      }.bind(this))
                   } else {
                      this._saveIndicator.show();

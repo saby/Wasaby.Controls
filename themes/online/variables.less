@@ -2,8 +2,8 @@
 @import "colors";
 @import "sizes";
 //Переменные с версиями шрифтов
-@tensorFontNormalVer:                     '1.0.1';
-@tensorFontVer:                           '1.0.1';
+@tensorFontForIE:                         '1.0.1';
+@tensorFontVer:                           '1.0.3';
 @emojiFontVer:                            '1.0.0';
 // Кошерные переменные "на выход"
 @default-text-color:                      #000;
@@ -348,6 +348,7 @@
 @tab-button-left-margin-left:                   -1px;
 @tab-button-overlay-background:                 #FFFFFF;
 @tab-button-overlay-ms-filter:                  "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+@margin-right_TabButton_icon:                   6px;
 // -----------  //
 // Tab control //
 // -----------  //
@@ -391,7 +392,8 @@
 // -------- //
 // Checkbox //
 // -------- //
-@check-box-icon-size:                           24px;
+@height_CheckBox:                               24px;
+@width_CheckBox:                                @height_CheckBox;
 @check-box-icon-successful-size:                18px;
 @check-box-font-size:                           @default-text-size;
 @check-box-icon-successful-top:                 0;
@@ -402,7 +404,7 @@
 @check-box-icon-box-color:                      @innacent-color2;
 @check-box-disabled-color:                      @disabled-color;
 @check-box-icon-successful-top-ie:              0;
-@check-box-caption-line-height:                 @check-box-icon-size - 2 * extract(@check-box-caption-padding, 1);
+@check-box-caption-line-height:                 18px;
 // -------------- //
 // Checkbox group //
 // -------------- //
@@ -446,9 +448,10 @@
 @popup-header-font-weight:                bold;
 @popup-header-caption-color:              @blue-dark-color;
 @menu-margin:                             -1px 0 0;
-@menu-subpopup-margin:                    -5px 0 0 0px;
-@menu-subpopup-padding:                   4px 0;
-@menu-padding:                            0 0 4px 0;
+@menu-subpopup-margin:                    -3px 0 0 0px;
+@menu-padding-value:                      2px;
+@menu-subpopup-padding:                   @menu-padding-value 0;
+@menu-padding:                            0 0 @menu-padding-value 0;
 @menu-border-width:                       @default-border-width;
 @menu-border-color:                       @gray-ccc-color;
 @menu-header-bg-color:                    #f4f4f4;
@@ -466,6 +469,10 @@
 @menu-header-padding:                     0 12px;
 @menu-header-icon-padding:                6px;
 @menu-header-icon-color:                  @icon-active-color;
+@menu-separator-height:                   9px;
+@menu-separator-line-offset:              12px;
+@menu-separator-line-height:              1px;
+@menu-separator-line-top:                 4px;
 // --------- //
 // Menu item //
 // --------- //
@@ -495,8 +502,8 @@
 @menu-button-menu-border-color:                         @menu-border-color;
 @menu-button-menu-bg:                                   @white-color;
 @menu-link-menu-margin:                   -5px 0 0 -13px;
-@menu-link-menu-item-container-padding:   4px 0 0 0;
-@menu-link-menu-revert-item-container-padding: 4px 0 4px 0;
+@menu-link-menu-item-container-padding:   @menu-padding-value 0 0 0;
+@menu-link-menu-revert-item-container-padding: @menu-padding-value 0 @menu-padding-value 0;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
 @menu-link-header-bg-color:               #F4F4F4;
 @menu-link-header-font-size:              @popup-font-size;
@@ -508,12 +515,6 @@
 // -------- //
 //todo
 @text-box-focus-bg:                       @background-color_TextBox;
-// --------------- //
-// Money text box  //
-// --------------- //
-@money-text-box-min-width:            102px;
-@money-text-box-decimals-font-size:   12px;
-@money-text-box-decimals-color:                       @gray-ccc-color;
 // --------- //
 // Combo box //
 // --------- //
@@ -530,6 +531,7 @@
 @combo-box-picker-show-border-color:            @gray-ccc-color;
 @combo-box-picker-show-background-color:        @text-box-focus-bg;
 @combo-box-arrowDown-color-picker-show:         @accent-color;
+@shadow_ComboBox_picker:                        none;
 // --------------- //
 // SuggestTextBox //
 // -------------- //
@@ -537,8 +539,7 @@
 // ----------- //
 // Suggest //
 // ----------- //
-@suggest-loading-spritesheet:                   url('img/ajax-loader-indicator.gif');
-@suggest-loading-bg:                            @suggest-loading-spritesheet 0 0 no-repeat;
+@suggest-loading-bg:                            @list-view-scroll-spritesheet 0 0 no-repeat;
 @suggest-loading-width:                         16px;
 @suggest-loading-right:                         3px;
 
@@ -848,7 +849,6 @@
 // --------- //
 // List view //
 // --------- //
-@list-view-min-height:                          90px;
 @listView-check-box-left:                       0;
 @listView-check-box-top:                        0;
 @list-view-actions-item-height:                 24px;
@@ -878,13 +878,13 @@
 @list-view-actions-menu-icon-width:             24px;
 @list-view-actions-icon-top:                    4px;
 @list-view-actions-menu-touch-size:             4px 18px;
-@list-view-actions-menu-touch-close-top:        8px;
-@list-view-actions-menu-close-top:              8px;
+@list-view-actions-menu-touch-close-top:        6px;
+@list-view-actions-menu-close-top:              6px;
 @list-view-actions-menu-close-right:            8px;
 @list-view-actions-menu-close-height:           24px;
 @list-view-actions-menu-close-width:            24px;
 @list-view-actions-menu-item-padding-right:     38px;
-@list-view-actions-menu-margin:                 4px 0 0 5px;
+@list-view-actions-menu-margin:                 6px 0 0 5px;
 @list-view-actions-menu-text-margin:            6px 0 6px 30px;
 @list-view-context-menu-close-right:            6px;
 @list-view-context-menu-close-top:              7px;
@@ -1021,8 +1021,8 @@
 @data-grid-cell-separator-color:                #F5F5F5;
 @data-grid-edge-cell-separator-color:           #EAEAEA;
 @data-grid-cell-bg:                             transparent;
-@data-grid-td-checkbox-width:                   24px;
-@data-grid-td-visible-checkbox-width:           24px;
+@data-grid-td-checkbox-width:                   @width_CheckBox;
+@data-grid-td-visible-checkbox-width:           @width_CheckBox;
 @data-grid-td-hidden-checkbox-width:            12px;
 @data-grid-td-checkbox-width-without-marker:    20px;
 @data-grid-check-box-top:                       2px;
@@ -1079,6 +1079,7 @@
 // --------------- //
 //   OperationSum  //
 // --------------- //
+@width_SumDialogTemplate:                                         300px;
 @controls-SumDialogTemplate-modelView-margin:                     5px 15px;
 @controls-SumDialogTemplate-row-height:                           30px;
 @controls-SumDialogTemplate-row-title-max-width:                  170px;
@@ -1131,14 +1132,14 @@
 @DropdownList-picker-margin-top:                      -1px;
 @DropdownList-picker-close-btn-top:                   4px;
 @DropdownList-picker-close-btn-right:                 6px;
-@DropdownList-picker-head-padding:                    4px 8px;
+@DropdownList-picker-head-padding:                    4px 12px;
 @DropdownList-picker-head-weight:                     bold;
 @DropdownList-picker-head-height:                     24px;
 @DropdownList-picker-head-color:                      #313E78;
 @DropdownList-picker-title-type-header-bg:            #f4f4f4;
 @DropdownList-picker-title-type-margin-top:           -6px;
 @DropdownList-picker-head-duplicate-type-top-padding: 4px;
-@DropdownList-picker-padding:                         4px 0;
+@DropdownList-picker-padding:                         2px 0;
 @DropdownList-picker-max-width:                       400px;
 @DropdownList-picker-max-height:                      400px;
 @DropdownList-picker-border:                          1px solid @DropdownList-border-color;
@@ -1148,7 +1149,8 @@
 @DropdownList-picker-menu-font-size:                  15px;
 @DropdownList-picker-menu-item-base-color:            @default-text-color;
 @DropdownList-picker-menu-line-height:                24px;
-@DropdownList-picker-menu-item-padding:               5px 8px 3px 8px;
+@DropdownList-picker-menu-item-padding-top:           5px;
+@DropdownList-picker-menu-item-padding:               @DropdownList-picker-menu-item-padding-top 12px 3px 12px;
 @DropdownList-picker-menu-item-height:                24px;
 @DropdownList-picker-menu-item-height-ff:             19px;
 @DropdownList-picker-menu-height-ff:                  25px;
@@ -1156,6 +1158,10 @@
 @DropdownList-picker-menu-item-color-blur:            rgba(255, 255, 255, 0);
 @DropdownList-picker-menu-item-hover:                 #F0F5FB;
 @DropdownList-picker-menu-item-hover-blur:            rgba(240, 245, 251, 0);
+@DropdownList-picker-menu-selected-marker-width:      6px;
+@DropdownList-picker-menu-selected-marker-height:     8px;
+@DropdownList-picker-menu-selected-marker-bg:         #D94700;
+@DropdownList-picker-menu-selected-marker:            true;
 @DropdownList-after-caption-top:                      3px;
 @DropdownList-linkStyleColor:                         @link-text-color;
 @DropdownList-linkStyleHoverColor:                    #313E78;
@@ -1174,6 +1180,7 @@
 @DropdownList-footer-select-icon-container-size:      28px!important;
 @DropdownList-footer-select-icon-size:                26px!important;
 @DropdownList-disabled-text:                          #000;
+@shadow_DropDownList_picker:                          @menu-shadow;
 //ProgressBar
 @ProgressBar-height:                      16px;
 @ProgressBar-width:                       100%;
@@ -1196,6 +1203,7 @@
 @controls-Popup-closeButton-top:                  10px;
 @controls-filterButton-button-height:             24px;
 @controls-filterButton-button-width:              24px;
+@controls-filterButton-button-empty-left-margin:  8px;
 @controls-filterButton-button-verSide-margin:     12px;
 @controls-filterButton-button-margin:             8px @controls-filterButton-button-verSide-margin 8px 0;
 @controls-filterButton-button-margin-right-align: 8px 0 8px @controls-filterButton-button-verSide-margin;
@@ -1262,7 +1270,6 @@
 @fieldLink-picker-min-height:             16px;
 @fieldLink-linkItem-cross-width:          20px;
 @fieldLink-afterField-button-margin:      0 @default-padding 0 0;
-@fieldLink-link-color:                    #8991A9;
 @fieldLink-link-color-hover:              #313E78;
 @fieldLink-showSelector-color:            @icon-color-primary;
 @fieldLink-showSelector-color-hover:      @link-hover-text-color;

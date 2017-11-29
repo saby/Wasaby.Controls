@@ -5,9 +5,8 @@ define('js!SBIS3.CONTROLS.TreeView', [
    'tmpl!SBIS3.CONTROLS.TreeView/resources/ItemTemplate',
    'tmpl!SBIS3.CONTROLS.TreeView/resources/ItemContentTemplate',
    "tmpl!SBIS3.CONTROLS.TreeView/resources/FooterWrapperTemplate",
-   'js!SBIS3.CONTROLS.MassSelectionHierarchyController',
    'css!SBIS3.CONTROLS.TreeView'
-], function (ListView, TreeMixin, TreeViewMixin, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, MassSelectionHierarchyController) {
+], function (ListView, TreeMixin, TreeViewMixin, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate) {
    'use strict';
    var getItemTemplateData = function (cfg) {
       var config = {
@@ -29,7 +28,7 @@ define('js!SBIS3.CONTROLS.TreeView', [
    /**
     * Класс контрола "Иерархическое представление" (Дерево).
     * <a href="http://axure.tensor.ru/standarts/v7/%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html">Спецификация</a>
-    * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Документация</a>.
+    * <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/">Документация</a>.
     *
     * @class SBIS3.CONTROLS.TreeView
     * @extends SBIS3.CONTROLS.ListView
@@ -70,13 +69,6 @@ define('js!SBIS3.CONTROLS.TreeView', [
       init: function () {
          TreeView.superclass.init.apply(this, arguments);
          this._container.addClass('controls-TreeView');
-         if (this._options.useSelectAll) {
-            this._makeMassSelectionController();
-         }
-      },
-
-      _makeMassSelectionController: function() {
-         this._massSelectionController = new MassSelectionHierarchyController(this._getMassSelectorConfig());
       },
 
       _onDragHandler: function (dragObject, e) {

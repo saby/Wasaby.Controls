@@ -13,12 +13,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender",
-   'js!SBIS3.CONTROLS.MassSelectionHierarchyController',
    "Core/ConsoleLogger",
    'js!SBIS3.CONTROLS.Link',
    'css!SBIS3.CONTROLS.TreeDataGridView',
    'css!SBIS3.CONTROLS.TreeView'
-], function( cMerge, constants, CommandDispatcher, cInstance, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
+], function( cMerge, constants, CommandDispatcher, cInstance, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
 
 
    var
@@ -103,7 +102,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    /**
     * Класс контрола "Иерархическое табличное представление".
     * <a href="http://axure.tensor.ru/standarts/v7/%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html">Спецификация</a>
-    * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Документация</a>.
+    * <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/">Документация</a>.
     *
     * @class SBIS3.CONTROLS.TreeDataGridView
     * @extends SBIS3.CONTROLS.DataGridView
@@ -214,9 +213,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (this._options._serverRender) {
             this._createAllFolderFooters();
          }
-         if (this._options.useSelectAll) {
-            this._makeMassSelectionController();
-         }
       },
 
       redraw: function() {
@@ -228,7 +224,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (this._getItemsProjection()) {
             this._createAllFolderFooters();
          }
-         this._checkBreadCrumbsWidth();
+         // Правильно именно по onDrawItems пересчитывать размеры, т.к. в searchController'e по этому событию вешается
+         // доп. класс "controls-GridView__searchMode", влияющий на отступы
+         this.once('onDrawItems', function() {
+            this._checkBreadCrumbsWidth();
+         });
       },
    
       _afterAddItems: function() {
@@ -262,10 +262,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                breadCrumbs.width(this.getContainer().width() - cellPadding - firstColWidth);
             }
          }
-      },
-
-      _makeMassSelectionController: function() {
-         this._massSelectionController = new MassSelectionHierarchyController(this._getMassSelectorConfig());
       },
 
       _drawItemsCallback: function() {

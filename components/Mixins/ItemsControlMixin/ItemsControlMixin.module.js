@@ -296,7 +296,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * В обработчике события Вы можете изменить параметры, с которыми впоследствии будет выполнен запрос.
         * Конфигурацию источника данных устанавливают в опции {@link dataSource}.
         * Выполнение запроса можно инициировать методом {@link reload}.
-        * В <a href="https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/ItemsControlMixin/">описании миксина</a> приведена последовательность событий, происходящих при взаимодействии с источником данных компонента.
+        * В <a href="/docs/js/SBIS3/CONTROLS/ItemsControlMixin/">описании миксина</a> приведена последовательность событий, происходящих при взаимодействии с источником данных компонента.
         * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {Object} filters Параметры фильтрации. Они используются в качестве условия для отбора возвращаемых записей. Значение параметра определяется опцией {@link filter}.
         * @param {Array.<Object>} sorting Параметры сортировки записей, возвращаемых в результате выполнения запроса. Значение параметра  определяется опцией {@link sorting}.
@@ -348,7 +348,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @example
        * <pre>
        *    myView.subscribe('onDataLoadError', function(eventObject, error) {
-       *       event.setResult(true);
+       *       eventObject.setResult(true);
        *       TextBox.setText('Ошибка при загрузке данных');
        *    });
        * </pre>
@@ -1361,14 +1361,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._getItemsContainer().find('.js-controls-ListView__item[data-hash="' + item.getHash() + '"]');
       },
 
-      _reviveItems : function(lightVer) {
-         this.reviveComponents().addCallback(this._onReviveItems.bind(this, lightVer)).addErrback(function(e){
+      _reviveItems : function(lightVer, silent) {
+         this.reviveComponents().addCallback(this._onReviveItems.bind(this, lightVer, silent)).addErrback(function(e){
             throw e;
          });
       },
 
-      _onReviveItems: function(lightVer){
-         this._notifyOnDrawItems(lightVer);
+      _onReviveItems: function(lightVer, silent){
+         if (!silent) {
+            this._notifyOnDrawItems(lightVer);
+         }
       },
 
       _notifyOnDrawItems: function(lightVer) {
@@ -2636,6 +2638,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._revivePackageParams.revive = this._revivePackageParams.revive || needToRevive;
          this._revivePackageParams.light = false;
       },
+      _onCollectionReset: function() {
+         this.redraw(true);
+      },
       _onCollectionRemove: function(items, notCollapsed) {
          if (items.length) {
             this._removeItems(items);
@@ -2752,7 +2757,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 	               break;
 
 	            case IBindCollection.ACTION_RESET:
-                  this.redraw(true);
+	               this._onCollectionReset();
 	               break;
 	         }
       	}

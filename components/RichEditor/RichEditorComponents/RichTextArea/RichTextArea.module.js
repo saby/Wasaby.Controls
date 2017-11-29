@@ -487,10 +487,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                         }.bind(this);
                      $(window).on('resize', resizeHandler);
                   }
-                  else
-                  if (cConstants.browser.isMobileIOS) {
-                     this._scrollTo(this._inputControl[0], 'top');
-                  }
                   if (cConstants.browser.isMobilePlatform) {
                      this._notifyMobileInputFocus();
                   }
@@ -1515,25 +1511,32 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (this._options.editorConfig.browser_spellcheck) {
                // Если включена проверка правописания, нужно при исправлениях обновлять принудительно text
                var _onSelectionChange1 = function () {
-                  editor.once('SelectionChange', _onSelectionChange2);
+                  cConstants.$doc.one('selectionchange', _onSelectionChange2);
                   // Хотя цепляемся на один раз, но всё же отцепим через пару минут, если ничего не случится за это время
-                  setTimeout(editor.off.bind(editor, 'SelectionChange', _onSelectionChange2), 120000);
+                  setTimeout(function() {
+                     cConstants.$doc.off('selectionchange', _onSelectionChange2);
+                  }, 120000);
                }.bind(this);
 
                var _onSelectionChange2 = function () {
                   this._updateTextByTiny();
                }.bind(this);
 
-               editor.on('contextmenu', function (evt) {
-                  if (evt.currentTarget === this._inputControl[0] && (evt.target === evt.currentTarget || $.contains(evt.currentTarget, evt.target))) {
-                     editor.off('SelectionChange', _onSelectionChange2);
-                     if (cConstants.browser.safari) {
-                        // Для safari обязательно нужно отложить подписку на событие (потому что safari в тот момент, когда делается эта подписка
-                        // меняет выделение, и потом меняет его в момент вставки. Чтобы первое не ловить - отложить)
-                        setTimeout(editor.once('SelectionChange', _onSelectionChange1), 1);
-                     }
-                     else {
-                        editor.once('SelectionChange', _onSelectionChange1);
+               //В IE событие contextmenu не стреляет при включенной проверке орфографии, так что подписываемся на mousedown
+               editor.on('mousedown', function (evt) {
+                  if (evt.button === 2) {
+                     if (evt.currentTarget === this._inputControl[0] && (evt.target === evt.currentTarget || $.contains(evt.currentTarget, evt.target))) {
+                        cConstants.$doc.off('selectionchange', _onSelectionChange2);
+                        if (cConstants.browser.safari || cConstants.browser.chrome) {
+                           // Для safari и chrome обязательно нужно отложить подписку на событие (потому что в тот момент, когда делается эта подписка
+                           // они меняют выделение, и потом меняют его в момент вставки. Чтобы первое не ловить - отложить)
+                           setTimeout(function() {
+                              cConstants.$doc.one('selectionchange', _onSelectionChange1);
+                           }, 1);
+                        }
+                        else {
+                           cConstants.$doc.one('selectionchange', _onSelectionChange1);
+                        }
                      }
                   }
                }.bind(this));
@@ -2086,9 +2089,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                });
             }
             this._tinyReady.addCallback(function () {
-               // Если начальный контент пуст, то за счёт неправильного положения каретки(курсора ввода) в MSIE при начале ввода в конце добавится
-               // лишний параграф. Чтобы этого избежать - добавим символ "не символ"
-               this._tinyEditor.setContent(this._prepareContent(this.getText()) || (cConstants.browser.isIE ? '&#65279;' : ''));
+               this._tinyEditor.setContent(this._prepareContent(this.getText()) || '');
                //Проблема:
                //          1) При инициализации тини в историю действий добавляет контент блока на котором он построился
                //                (если пусто то <p><br data-mce-bogus="1"><p>)
@@ -2128,28 +2129,35 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * Убрать пустые строки из начала и конца текста
           * @returns {*} текст без пустх строк вначале и конце
           */
-         _trimText: function(text) {
-            var
-               beginReg = new RegExp('^<p> *(&nbsp; *)*(&nbsp;)?</p>'),// регулярка начала строки
-               endReg = new RegExp('<p> *(&nbsp; *)*(&nbsp;)?</p>$'),// регулярка конца строки
-               regShiftLine1 = new RegExp('<p>(<br( ?/)?>)+(&nbsp;)?'),// регулярка пустой строки через shift+ enter и space
-               regShiftLine2 = new RegExp('(&nbsp;)?(<br( ?/)?>)+</p>'),// регулярка пустой строки через space и shift+ enter
-               regResult;
+         _trimText: function (text) {
+            if (!text) {
+               return '';
+            }
+            var regs = {
+               regShiftLine1: /<p>[\s\xA0]*(?:<br[^<>]*>)+[\s\xA0]*/gi,    // регулярка пустой строки через shift+ enter и space
+               regShiftLine2: /[\s\xA0]*(?:<br[^<>]*>)+[\s\xA0]*<\x2Fp>/gi,// регулярка пустой строки через space и shift+ enter
+               beginReg: /^<p>[\s\xA0]*<\x2Fp>[\s\xA0]*/i,        // регулярка начала строки
+               endReg: /[\s\xA0]*<p>[\s\xA0]*<\x2Fp>$/i           // регулярка конца строки
+            };
+            var substitutes = {
+               regShiftLine1: '<p>',
+               regShiftLine2: '</p>'
+            };
             text = this._removeEmptyTags(text);
-            while (regShiftLine1.test(text)) {
-               text = text.replace(regShiftLine1, '<p>');
+            text = text.replace(/&nbsp;/gi, String.fromCharCode(160));
+            for (var name in regs) {
+               for (var prev = -1, cur = text.length; cur !== prev; prev = cur, cur = text.length) {
+                  text = text.replace(regs[name], substitutes[name] || '');
+               }
+               text = text.replace(/^[\s\xA0]+|[\s\xA0]+$/g, '');
+               if (!text) {
+                  return '';
+               }
             }
-            while (regShiftLine2.test(text)) {
-               text = text.replace(regShiftLine2, '</p>');
-            }
-            while ((regResult = beginReg.exec(text)) !== null) {
-               text = text.substr(regResult[0].length + 1);
-            }
-            while ((regResult = endReg.exec(text)) !== null) {
-               text = text.substr(0, text.length - regResult[0].length - 1);
-            }
-            return (text === null || text === undefined) ? '' : ('' + text).replace(/^\s*|\s*$/g, '');
+            text = text.replace(/\xA0/gi, '&nbsp;');
+            return text;
          },
+
          /**
           * Проблема:
           *          при нажатии клавиши установки формата( полужирный/курсив и тд) генерируется пустой тег (strong,em и тд)
@@ -2267,11 +2275,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                curHeight;
             if (this.isVisible()) {
                curHeight = this._container.height();
-               //Производим подкрутку вверх если курсор провалился под клавиатуру на iPad
-               //Делаем проверку на ipad сразу тк на остальный устройствах приводит к тормозам getBoundingClientRect в методе _elementIsUnderKeyboard
-               if (cConstants.browser.isMobileIOS) {
-                  this._backspinForIpad();
-               }
                if (curHeight !== this._lastHeight) {
                   this._lastHeight = curHeight;
                   this._notifyOnSizeChanged();
@@ -2285,28 +2288,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                targetOffset = target.getBoundingClientRect(),
                keyboardCoef = (window.innerHeight > window.innerWidth) ? constants.ipadCoefficient[side].vertical : constants.ipadCoefficient[side].horizontal; //Для альбома и портрета коэффициенты разные.
             return cConstants.browser.isMobileIOS && this.isEnabled() && targetOffset[side] > window.innerHeight * keyboardCoef;
-         },
-
-         _scrollTo: function(target, side){
-            if (this._elementIsUnderKeyboard(target, side)) {
-               target.scrollIntoView(true);
-            }
-         },
-
-         //метод осушествляет подрутку до места ввода ( параграфа) если его нижний край находится под клавитурой
-         _backspinForIpad: function() {
-            if (this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this._textChanged && (this._inputControl[0] === document.activeElement)) {
-               var
-                  closestParagraph = $(this._tinyEditor.selection.getNode()).closest('p')[0];
-               if (closestParagraph) {
-                  //Необходимо осуществлять подскролл к предыдущему узлу если текущий под клавиатурой
-                  if (closestParagraph.previousSibling && this._elementIsUnderKeyboard(closestParagraph, 'bottom')) {
-                     closestParagraph.previousSibling.scrollIntoView(true);
-                  }
-                  //Если после подскрола к предыдущему узлу текущий узел всё еще под клавиатурой, то осуществляется подскролл к текущему
-                  this._scrollTo(closestParagraph, 'bottom');
-               }
-            }
          },
 
          //Метод обновляющий значение редактора в задизабленом состоянии

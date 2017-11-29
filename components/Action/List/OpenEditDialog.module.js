@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
    'use strict';
 
    /**
-    * Класс, описывающий действие открытия окна с заданным шаблоном. Применяется для работы с <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/">диалогами редактирования списков</a>.
+    * Класс, описывающий действие открытия окна с заданным шаблоном. Применяется для работы с <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/">диалогами редактирования списков</a>.
     * @class SBIS3.CONTROLS.Action.OpenEditDialog
     * @extends SBIS3.CONTROLS.Action.OpenDialog
     * @author Красильников Андрей Сергеевич
@@ -31,10 +31,14 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
     * @ignoreMethods setTabindex setTooltip setUserData setValidators setValue storeActiveChild subscribe unregisterChildControl
     * @ignoreMethods unregisterDefaultButton unsubscribe validate waitAllPendingOperations waitChildControlById waitChildControlByName
     * @ignoreMethods setVisible toggle show isVisible hide getTooltip isAllowChangeEnable isEnabled isVisibleWithParents
+    * @ignoreMethods addOwnedContext canAcceptFocus describe getAlignment getContainer getEditRecordDeferred getId getMinHeight
+    * @ignoreMethods getMinSize getMinWidth getName getParent getParentByClass getParentByName getParentWindow getProperty
+    * @ignoreMethods getTopParent hasEvent init initializeProperty isCanExecute isInitialized isSubControl runInPropertiesUpdate
+    * @ignoreMethods setAllowChangeEnable setEnabled setProperties setProperty subscribeOnceTo subscribeTo unbind unsubscribeFrom
     *
-    * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
+    * @ignoreEvents onActivate onAfterLoad onBeforeControlsLoad onBeforeLoad onChange onClick onPropertyChanged
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
-    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onCommandCatch onDestroy onPropertiesChanged
     *
     * @control
     * @public
@@ -65,23 +69,18 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
-       /**
-        * @event onAfterClose Происходит при закрытии диалога редактирования.
-        * @param {Core/EventObject} eventObject Дескриптор события.
-        * @param {*} result Параметр приходит из команды {@link SBIS3.CORE.FloatArea#close}.
-        */
       $protected: {
          _options: {
             /**
              * @cfg {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} Устанавливает список, связанный с диалогом редактирования.
              * @remark
-             * Для связанного списка автоматическиприменяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/">синхронизация изменений</a>.
+             * Для связанного списка автоматическиприменяется <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/">синхронизация изменений</a>.
              * @see setLinkedObject
              * @see getLinkedObject
              */
             linkedObject: undefined,
             /**
-             * @cfg {String} Устанавливает <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/initializing-way/">способ инициализации данных</a> диалога редактирования.
+             * @cfg {String} Устанавливает <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/initializing-way/">способ инициализации данных</a> диалога редактирования.
              * @variant local
              * @variant remote
              * @variant delayedRemote
@@ -111,8 +110,8 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       /**
        * Устанавливает список, связанный с диалогом редактирования.
        * @remark
-       * Для связанного списка автоматическиприменяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/">синхронизация изменений</a>.
-       * @param {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">списка</a>.
+       * Для связанного списка автоматическиприменяется <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/">синхронизация изменений</a>.
+       * @param {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/">списка</a>.
        * @see linkedObject
        * @see getLinkedObject
        */
@@ -122,8 +121,8 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        /**
         * Возвращает экземпляр класса списка, который связан с диалогом редактирования.
         * @remark
-        * Для связанного списка автоматическиприменяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/">синхронизация изменений</a>.
-        * @returns {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">списка</a>.
+        * Для связанного списка автоматическиприменяется <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/">синхронизация изменений</a>.
+        * @returns {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/">списка</a>.
         * @see linkedObject
         * @see setLinkedObject
         */
@@ -306,7 +305,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _showLoadingIndicator: function() {
          this._toggleOverlay(true);
-         cIndicator.setMessage('Загрузка...', true);
+         cIndicator.setMessage(rk('Загрузка'), true);
       },
 
       _hideLoadingIndicator: function() {

@@ -1,6 +1,16 @@
 <div class="controls-LongOperationsList__groupTpl_td">
    <div class="controls-LongOperationsList__groupTpl_title">
-      <ws:template name="ValueTpl">{{(value === 0) ? 'В процессе' : (value === 1) ? 'Приостановленные' : 'Завершенные'}}</ws:template>
+      <ws:template name="ValueTpl">
+        <ws:if data="{{value === 0}}">
+        {[В процессе]}
+        </ws:if>
+        <ws:else data="{{value === 1}}">
+        {[Приостановленные]}
+        </ws:else>
+        <ws:else>
+        {[Завершенные]}
+        </ws:else>
+      </ws:template>
       <ws:partial template="ValueTpl" value="{{item.get('status')}}"/>
    </div>
    <div class="controls-LongOperationsList__groupTpl_separator"></div>

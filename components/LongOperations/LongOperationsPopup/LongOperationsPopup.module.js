@@ -145,41 +145,14 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                }
             });
 
-            var clickHandler = function (item) {
-               if (!self._longOpList.applyResultAction(item)) {
-                  // Если действие ещё не обработано
-                  var STATUSES = LongOperationEntry.STATUSES;
-                  var status = item.get('status');
-                  var canHasHistory = self._longOpList.canHasHistory(item);
-                  //Открыть журнал операций только для завершенных составных операций или ошибок
-                  if (status === STATUSES.ended && (item.get('isFailed') || (canHasHistory && 1 < item.get('progressTotal')))) {
-                     var options = {};
-                     self._showFloatArea({
-                        title: rk('Журнал выполнения операции'),
-                        template: 'js!SBIS3.CONTROLS.LongOperationHistory',
-                        componentOptions: canHasHistory ? {
-                           /*###key: item.getId(),*/
-                           tabKey: item.get('tabKey'),
-                           producer: item.get('producer'),
-                           operationId: item.get('id'),
-                           isFailed: item.get('isFailed')
-                        } : {
-                           failedOperation: item
-                        },
-                        maxWidth: 680
-                     });
-                  }
-               }
-            };
-
             //При клике по записи, открываем журнал операции или ссылку, если она есть
             this.subscribeTo(view, 'onItemActivate', function (e, meta) {
-               clickHandler(meta.item);
+               self._longOpList.applyResultAction(meta.item);
             });
 
             this.subscribeTo(this.getChildControlByName('downloadButton'), 'onActivated', function () {
                if (self._activeOperation) {
-                  clickHandler(self._activeOperation);
+                  self._longOpList.applyResultAction(self._activeOperation);
                }
             });
 

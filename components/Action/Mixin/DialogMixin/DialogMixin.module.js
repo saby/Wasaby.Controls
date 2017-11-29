@@ -8,25 +8,29 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
    'use strict';
 
    /**
-    * Действие открытия окна с заданным шаблоном
+    * Миксин, который описывает Действие открытия окна, созданного по шаблону.
     * @mixin  SBIS3.CONTROLS.Action.DialogMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var DialogMixin = /** @lends SBIS3.CONTROLS.Action.DialogMixin.prototype */{
        /**
         * @event onAfterShow Происходит после отображения диалога.
+        * @param {Core/EventObject} eventObject Дескриптор события.
+        * @param {SBIS3.CONTROLS.Action.DialogMixin} this Экземпляр класса Действия.
         * @see onBeforeShow
         */
        /**
         * @event onBeforeShow Происходит перед отображением диалога.
+        * @param {Core/EventObject} eventObject Дескриптор события.
+        * @param {SBIS3.CONTROLS.Action.DialogMixin} this Экземпляр класса Действия.
         * @see onAfterShow
         */
       $protected : {
          _options : {
             /**
              * @deprecated Используйте опцию {@link template}.
-             * @cfg {String} Устанавливает компонент, который будет использован в качестве диалога редактирования записи.
+             * @cfg {String} Устанавливает компонент, который будет использован в качестве диалога.
              * @see template
              * @see setDialogComponent
              */
@@ -35,7 +39,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
              * @cfg {String} Устанавливает шаблон диалога редактирования.
              * @remark
              * В качестве значения устанавливают имя компонента в виде "js!SBIS3.MyArea.MyName".
-             * Подробнее о создании шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/create/">Создание диалога редактирования</a>.
+             * Подробнее о создании шаблона читайте в разделе <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/create/">Создание диалога редактирования</a>.
              * @see mode
              */
             template : '',
@@ -51,11 +55,11 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
              */
             mode: 'dialog',
             /**
-             * @cfg {Object} Объект с пользовательскими опциями, которые передаются в диалог редактирования в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/oop/#configuration-class-parameters">секцию _options</a>.
+             * @cfg {Object} Объект с пользовательскими опциями, которые передаются в диалог в секцию _options.
              */
             componentOptions: null,
             /**
-             * @cfg {Object} Объект с конфигурацией контрола, на основе которого создаётся диалог редактирования (см. {@link mode}). В числе опций также передают и {@link SBIS3.CORE.Control#linkedContext}.
+             * @cfg {Object} Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link SBIS3.CORE.Control#linkedContext}.
              */
             dialogOptions: null
          },
@@ -83,6 +87,15 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             return this._executeDeferred;
          }
          return (new Deferred).callback();
+      },
+
+      /**
+       * Закрывает открытый диалог
+       */
+      closeDialog: function() {
+         if (this._dialog) {
+            this._dialog.close();
+         }
       },
 
       _openDialog: function(meta) {
@@ -237,8 +250,10 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
 
       /**
-       * Устана режим открытия диалога редактирования компонента.
+       * Устанавливает режим открытия диалога редактирования компонента.
        * @param {String} mode режим открытия диалога редактирования компонента {@link mode}.
+       * @see mode
+       * @see getMode
        */
       setMode: function(mode) {
          this._options.mode = mode;
@@ -246,14 +261,16 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       /**
        * Получить режим открытия диалога редактирования компонента.
        * @param {String} mode режим открытия диалога редактирования компонента {@link mode}.
+       * @see mode
+       * @see setMode
        */
       getMode: function() {
          return this._options.mode;
       },
       /**
-       * Устанавливает название шаблона
-       * @param {String} template Название модуля шаблона.
-       * @deprecated
+       * @deprecated Используйте опцию {@link template}.
+       * @description
+       * Устанавливает компонент, который будет использован в качестве диалога редактирования записи.
        */
       setDialogComponent: function (template) {
          //нужно для того чтобы работал метод setProperty(dialogComponent)

@@ -361,14 +361,16 @@
 }
 
 .controls-TreeDataGridView:not(.controls-TreeDataGridView__withPhoto) {
-   &:not(.controls-ListView__multiselect) {
-      .controls-DataGridView__th, .controls-DataGridView__td {
-         &.controls-DataGridView__firstContentCell {
+   &:not(.controls-ListView__multiselect):not(.controls-ListView__padding-XS):not(.controls-ListView__padding-S) {
+      &:not(.controls-ListView__padding-M):not(.controls-ListView__padding-L):not(.controls-ListView__padding-XL) {
+         .controls-DataGridView__th, .controls-DataGridView__td {
+            &.controls-DataGridView__firstContentCell {
+               padding-left: @tree-view-padding-left-DEFAULT;
+            }
+         }
+         .controls-TreeView__folderFooterContainer {
             padding-left: @tree-view-padding-left-DEFAULT;
          }
-      }
-      .controls-TreeView__folderFooterContainer {
-         padding-left: @tree-view-padding-left-DEFAULT;
       }
    }
    &.controls-ListView__hideCheckBoxes.controls-ListView__multiselect {

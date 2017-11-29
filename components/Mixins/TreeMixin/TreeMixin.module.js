@@ -406,6 +406,26 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       return tplOptions;
    },
 
+   hasNodeWithChild = function(items, hierarchyRelation) {
+      var
+         hasNodeWithChild = false,
+         idx = 0,
+         itemsCount = items.getCount(),
+         child, item;
+      while (idx < itemsCount && !hasNodeWithChild) {
+         item = items.at(idx);
+         child = hierarchyRelation.getChildren(
+            item.getId(),
+            items
+         );
+         if (child.length) {
+            hasNodeWithChild = true;
+         }
+         idx++;
+      }
+      return hasNodeWithChild;
+   },
+
    getHierarchyRelation = function(cfg) {
       var
          items = cfg._items;
@@ -515,6 +535,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        */
       $protected: {
          _options: {
+            _hasNodeWithChild: hasNodeWithChild,
             _folderOffsets : {},
             _folderHasMore : {},
             _prepareGroupId: prepareGroupId,
@@ -530,6 +551,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             _getRecordsForRedrawTree: getRecordsForRedraw,
             _createDefaultProjection : createDefaultProjection,
             _curRoot: null,
+            /**
+             * @cfg {String} Устанавливает режим отображения иконки разворота узла
+             * @variant always Отображать иконку разворота узла всегда, не зависимо от наличия дочерних элементов
+             * @variant withChild Отображать иконку разворота узла в том случае, если имеется хотя бы один дочерний элемент
+             * @variant never Скрывать иконку разворота узла всегда
+             */
+            expanderDisplayMode: 'always',
             /**
              * @cfg {String, Number} Устанавливает идентификатор узла, относительно которого отображаются данные в текущий момент
              */
@@ -550,7 +578,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * @remark
              * Поле иерархии хранит первичный ключ той записи, которая является узлом для текущей. Значение null - запись расположена в корне иерархии.
              * Например, поле иерархии "Раздел". Название поля "Раздел" необязательное, и в каждом случае может быть разным.
-             * По полю иерархии устанавливаются два других служебных поля - "Раздел@" и "Раздел$" , подробнее о назначении которых вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/hierarchy/#_2">Требования к источнику данных</a>.
+             * По полю иерархии устанавливаются два других служебных поля - "Раздел@" и "Раздел$" , подробнее о назначении которых вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/hierarchy/#_2">Требования к источнику данных</a>.
              * @example
              * <pre>
              *    <option name="hierField">Раздел</option>
@@ -581,7 +609,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             /**
              * @cfg {String} Устанавливает режим отображения записей: отображать только записи типа "Узел" (папка) или любые типы записей.
              * @remark
-             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * В режиме развернутого списка будут отображены узлы группировки данных (папки) и данные, сгруппированные по этим узлам.
              * В режиме свернутого списка будет отображен только список узлов (папок).
              * @variant folders Отображать только записи типа "Узел".
@@ -598,7 +626,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             /**
              * @cfg {Boolean} Устанавливает поведение, при котором единовременно может быть раскрыт только одна запись типа "Узел" или "Скрытый узел" на одном структурном уровне.
              * @remark
-             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
              *    <option name="singleExpand">true</option>
@@ -609,7 +637,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * @cfg {Boolean} Устанавливает режим отображения содержимого записей типа "Узел" (папка) при первой загрузке контрола.
              * @remark
              * true - содержимое узлов раскрыто, false - содержимое узлов скрыто.
-             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
              *    <option name="expand">true</option>
@@ -625,7 +653,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              *    <li>В значении true данные подгружаются только при раскрытии или проваливании внутрь.</li>
              *    <li>В значении false данные подгружается сразу при загрузке контролов.</li>
              * </ul>
-             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
              *    <option name="partialyReload">false</option>
@@ -640,7 +668,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             /**
              * @cfg {Object} Устанавливает список записей типа "Узел" (папка) и "Скрытый узел", содержимое которых будет раскрыто.
              * @remark
-             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
              *    <options name="openedPath">
@@ -655,7 +683,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * @cfg {Boolean} Устанавливает признак, при котором клик по записи типа "Узел" (папка) не производит проваливание внутрь иерархии, а раскрывает её содержимое.
              * @remark
              * При клике по записи типа "Скрытый узел" проваливание внутрь иерархии запрещено по умолчанию и не подлежит изменению.
-             * Подробнее о типах иерархических записей читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+             * Подробнее о типах иерархических записей читайте в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
              *    <option name="allowEnterToFolder">false</option>
@@ -1065,6 +1093,17 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          }
       },
       around: {
+         _prepareClassesByConfig: function(parentFn, cfg) {
+            parentFn(cfg);
+            if (cfg.expanderDisplayMode === 'withChild') {
+               cfg.preparedClasses += ' controls-TreeView__hideExpanderEmptyNodes';
+               if (cfg._items && !cfg._hasNodeWithChild(cfg._items, cfg._getHierarchyRelation(cfg))) {
+                  cfg.preparedClasses += ' controls-TreeView__hideExpands';
+               }
+            } else if (cfg.expanderDisplayMode === 'never') {
+               cfg.preparedClasses += ' controls-TreeView__hideExpands';
+            }
+         },
          /**
           * Позволяет перезагрузить данные как одной модели, так и всей иерархии из дочерних элементов этой записи.
           * @param {Number} id Идентификатор записи
@@ -1185,6 +1224,21 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             parentFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
             this._findAndRedrawChangedBranches(newItems, oldItems);
             this._removeFromLoadedRemoteNodes(oldItems);
+            this._updateExpanderDisplay();
+         },
+         _onCollectionReset: function(parentFn) {
+            parentFn.call(this);
+            this._updateExpanderDisplay();
+         },
+         _onCollectionReplace: function(parentFn, newItems) {
+            parentFn.call(this, newItems);
+            this._updateExpanderDisplay();
+         },
+         _updateExpanderDisplay: function() {
+            if (this._options.expanderDisplayMode === 'withChild') {
+               this._container.toggleClass('controls-TreeView__hideExpands',
+                  !this._options._hasNodeWithChild(this._options._items, this._options._getHierarchyRelation(this._options)));
+            }
          },
          //В режиме поиска в дереве, при выборе всех записей, выбираем только листья, т.к. папки в этом режиме не видны.
          setSelectedItemsAll: function(parentFn) {
@@ -1531,7 +1585,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       /**
        * Устанавливает режим отображения содержимого записей типа "Узел" (папка) при первой загрузке контрола.
        * @remark
-       * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+       * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
        * @param {Boolena} expand true - содержимое узлов раскрыто, false - содержимое узлов скрыто.
        * @see expand
        * @see getExpand
@@ -1542,7 +1596,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       /**
        * Возвращает признак установленного режима отображения содержимого записей типа "Узел" (папка) при первой загрузке контрола.
        * @remark
-       * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+       * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
        * @returns {Boolean} true - содержимое узлов раскрыто, false - содержимое узлов скрыто.
        * @see expand
        * @see setExpand
