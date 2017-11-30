@@ -257,7 +257,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * @event onBeginAdd Происходит перед созданием в списке нового элемента коллекции.
           * @remark
-          * Событие происходит при вызове команды {@link beginAdd} и при <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/add-in-place/'>добавлении по месту</a> из пользовательского интерфейса.
+          * Событие происходит при вызове команды {@link beginAdd} и при <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/add-in-place/'>добавлении по месту</a> из пользовательского интерфейса.
           * В обработчике события можно установить инициализирующие значения полей для создаваемого элемента коллекции.
           * @param {Core/EventObject} eventObject Дескриптор события.
           * @returns {Object|Deferred} Object - опции создания записи. Deferred - используется для самостоятельной подготовки добавляемой записи. Из Deferred необходимо обязательно возвращать запись, открываемую на добавление.
@@ -486,7 +486,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Для доступа к полям элемента коллекции в шаблоне подразумевается использование конструкций шаблонизатора.
                 * <br/>
                 * Шаблон может быть создан в отдельном XHTML-файле, когда вёрстка большая или требуется использовать его в разных компонентах.
-                * Шаблон создают в директории компонента в подпапке resources согласно правилам, описанным в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/file-structure/ Файловая структура компонента}.
+                * Шаблон создают в директории компонента в подпапке resources согласно правилам, описанным в разделе {@link /doc/platform/developmentapl/interface-development/core/component/file-structure/ Файловая структура компонента}.
                 * <br/>
                 * Чтобы такой шаблон можно было использовать, нужно:
                 * 1. Подключить шаблон в массив зависимостей компонента и импортировать его в переменную:
@@ -745,8 +745,8 @@ define('js!SBIS3.CONTROLS.ListView',
                 * </ol>
                 * Чтобы установить тип постраничной навигации, используйте опцию {@link partialPaging}.
                 * <br/>
-                * Тип постраничной навигации устанавливается по параметру "n" (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/cooperationservice/json-rpc/#recordset-json-rpc-3'>RecordSet - выборка данных в JSON-RPC для СБиС 3</a>), который возвращается в ответе на запрос к источнику данных (см. {@link dataSource}).
-                * Параметр по умолчанию поддерживается <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/logicworkapl/objects/blmethods/bllist/declr/'>декларативным методом бизнес-логики</a>, его значение будет установлено в соответствии со значением опции <i>partialPaging</i>.
+                * Тип постраничной навигации устанавливается по параметру "n" (см. <a href='/doc/platform/developmentapl/cooperationservice/json-rpc/#recordset-json-rpc-3'>RecordSet - выборка данных в JSON-RPC для СБиС 3</a>), который возвращается в ответе на запрос к источнику данных (см. {@link dataSource}).
+                * Параметр по умолчанию поддерживается <a href='/doc/platform/developmentapl/workdata/logicworkapl/objects/blmethods/bllist/declr/'>декларативным методом бизнес-логики</a>, его значение будет установлено в соответствии со значением опции <i>partialPaging</i>.
                 * Когда вы применяете другой тип списочного метода, опция <i>partialPaging</i> игнорируется, а значение параметра "n" должно быть установлено внутри метода: true - тип частичной постраничной навигации.
                 * <br/>
                 * Для контролов {@link SBIS3.CONTROLS.CompositeView} и {@link SBIS3.CONTROLS.TreeCompositeView} режим постраничной навигации имеет свои особенности работы:
@@ -785,7 +785,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * <pre>
                 *    <option name="editMode">click|toolbar</option>
                 * </pre>
-                * Подробное описание каждого режима редактирования и их демонстрационные примеры вы можете найти в разделе документации {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/ Редактирование по месту}.
+                * Подробное описание каждого режима редактирования и их демонстрационные примеры вы можете найти в разделе документации {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/ Редактирование по месту}.
                 * @example
                 * Установлен режим редактирования по клику на элемент коллекции.
                 * <pre>
@@ -821,7 +821,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @remark
                 * Отображение строки итогов конфигурируется тремя опциями: resultsPosition, {@link resultsText} и {@link resultsTpl}.
                 * Данная опция определяет расположение строки итогов, а также предоставляет возможность отображения строки в случае отсутствия записей.
-                * С подробным описанием можно ознакомиться в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/ Строка итогов}.
+                * С подробным описанием можно ознакомиться в статье {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/ Строка итогов}.
                 * @example
                 * <pre class="brush: xml">
                 *     <option name="resultsPosition">bottom</option> <!-- Строка итогов будет отображена под всеми элементами коллекции -->
@@ -835,7 +835,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @remark
                 * Отображение строки итогов конфигурируется тремя опциями: resultsText, {@link resultsPosition} и {@link resultsTpl}.
                 * В данную опцию передается заголовок строки итогов.
-                * С подробным описанием можно ознакомиться в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/ Строка итогов}.
+                * С подробным описанием можно ознакомиться в статье {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/ Строка итогов}.
                 * @example
                 * <pre class="brush: xml">
                 *    <option name="resultsText">Перечислено за квартал: </option>
@@ -852,7 +852,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Чтобы шаблон можно было передать в опцию компонента, его нужно предварительно подключить в массив зависимостей.
                 * Опция позволяет пользователю выводить в строку требуемые данные и задать для нее определенное стилевое оформление.
                 * Подсчет каких-либо итоговых сумм в строке не предусмотрен. Все итоги рассчитываются на стороне источника данных.
-                * С подробным описанием можно ознакомиться в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/ Строка итогов}.
+                * С подробным описанием можно ознакомиться в статье {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/ Строка итогов}.
                 * @example
                 * 1. Подключаем шаблон в массив зависимостей:
                 * <pre>
@@ -4211,10 +4211,10 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Создаёт в списке новый элемент коллекции.
           * @remark
-          * Команда инициирует создание в списке нового элемента коллекции через функционал <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/add-in-place/'>Добавление по месту</a>.
+          * Команда инициирует создание в списке нового элемента коллекции через функционал <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/add-in-place/'>Добавление по месту</a>.
           * При создании элемента коллекции происходит событие {@link onBeginAdd}.
           * @param {Object} [options] Параметры вызова команды.
-          * @param {String|Number} [options.parentId] Идентификатор узла, в который добавляют элемент коллекции. Параметр актуален для <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/#_4'>ирерахических списков</a>.
+          * @param {String|Number} [options.parentId] Идентификатор узла, в который добавляют элемент коллекции. Параметр актуален для <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/#_4'>ирерахических списков</a>.
           * @param {String} [options.addPosition=bottom] Расположение созданного элемента коллекции в режиме редактирования.
           * <ul>
           *     <li>top - отображается в начале списка;</li>

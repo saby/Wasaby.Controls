@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
             *     <li>node - для выбора доступны только записи типа "Узел" и "Скрытый узел";<li>
             *     <li>leaf - для выбора доступны только записи типа "Лист".<li>
             * </ul>
-            * Подробнее о каждом типе записей читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
+            * Подробнее о каждом типе записей читайте в разделе <a href='/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
             * @param {Object} [meta.componentOptions] Объект с пользовательскими опциями, которые передаются в диалог в секцию _options.
             * @param {Object} [meta.dialogOptions] Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link SBIS3.CORE.Control#linkedContext}.
             * @param {Array.<WS.Data/Entity/Record>} result Массив, где каждый элемент - это выбранная на диалоге запись (см. {@Link WS.Data/Entity/Record}).
@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
             *     <li>node - для выбора доступны только записи типа "Узел" и "Скрытый узел";<li>
             *     <li>leaf - для выбора доступны только записи типа "Лист".<li>
             * </ul>
-            * Подробнее о каждом типе записей читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
+            * Подробнее о каждом типе записей читайте в разделе <a href='/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
             * @param {Object} [meta.componentOptions] Объект с пользовательскими опциями, которые передаются в диалог в секцию _options.
             * @param {Object} [meta.dialogOptions] Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link SBIS3.CORE.Control#linkedContext}.
             * @see execute
@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
             *     <li>node - для выбора доступны только записи типа "Узел" и "Скрытый узел";<li>
             *     <li>leaf - для выбора доступны только записи типа "Лист".<li>
             * </ul>
-            * Подробнее о каждом типе записей читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
+            * Подробнее о каждом типе записей читайте в разделе <a href='/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
             * @param {Object} [meta.componentOptions] Объект с пользовательскими опциями, которые передаются в диалог в секцию _options.
             * @param {Object} [meta.dialogOptions] Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link SBIS3.CORE.Control#linkedContext}.
             * @see execute
@@ -119,7 +119,7 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
             *     <li>node - для выбора доступны только записи типа "Узел" и "Скрытый узел";<li>
             *     <li>leaf - для выбора доступны только записи типа "Лист".<li>
             * </ul>
-            * Подробнее о каждом типе записей читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
+            * Подробнее о каждом типе записей читайте в разделе <a href='/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
             * @param {Object} [meta.componentOptions] Объект с пользовательскими опциями, которые передаются в диалог в секцию _options.
             * @param {Object} [meta.dialogOptions] Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link SBIS3.CORE.Control#linkedContext}.
             */

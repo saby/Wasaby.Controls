@@ -1,5 +1,5 @@
 ���������� - ��� ������ ������ ��������. ����� �������� ������� �������� �� ������ ������ ����������,
-������� ����� ������������ ��� {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/ ����������� ������ � �������}.
+������� ����� ������������ ��� {@link /doc/platform/developmentapl/interface-development/components/list/ ����������� ������ � �������}.
 
 ��������� �� ������ ����������� �� ������ ��������� {@link SBIS3.CONTROLS.FieldLink/Dictionaries.typedef �����}.
 
@@ -11,10 +11,10 @@
 
 1. ���������� ���������, �� ������ �������� ����� �������� ����� �������� ������� ������ ��� ���� �����.
    ���������, ������� ����� ����������� ��� ���������� ������� ������ ��������, ��� ������� �������� �� ������ ��������� ���������.
-   ��������, {@link https://wi.sbis.ru/docs/3-8-0/SBIS3/CONTROLS/DataGridView/ DataGridView} ��� {@link https://wi.sbis.ru/docs/3-8-0/SBIS3/CONTROLS/TreeDataGridView/ TreeGridView}. ��� ��������� �� ������� �����-�� ���������.
+   ��������, {@link /docs/3-8-0/SBIS3/CONTROLS/DataGridView/ DataGridView} ��� {@link /docs/3-8-0/SBIS3/CONTROLS/TreeDataGridView/ TreeGridView}. ��� ��������� �� ������� �����-�� ���������.
    
 2. ��� ��������������� ����������:
-   1. {@link https://wi.sbis.ru/doc/platform/developmentapl/workdata/binding-data-and-views/ ���������} � {@link https://wi.sbis.ru/doc/platform/developmentapl/workdata/logicworkapl/logic/source/ �������} �������� ������.
+   1. {@link /doc/platform/developmentapl/workdata/binding-data-and-views/ ���������} � {@link /doc/platform/developmentapl/workdata/logicworkapl/logic/source/ �������} �������� ������.
    2. ��������� ����� ������ �������: ��������� ��� �������������.
       ���� ���� ����� ����� ����������� � ����� ���������� ������ ��������, ��������� ������� ����� �������
       ���������� � ��� �� ����� ������. ����� �������� ����� ������������� ������ �� ������� �������� ������.
