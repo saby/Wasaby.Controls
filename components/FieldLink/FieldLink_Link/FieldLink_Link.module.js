@@ -1,11 +1,9 @@
 define('js!SBIS3.CONTROLS.FieldLink.Link', [
-      'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.Clickable',
-      'Core/core-instance',
+      'js!WSControls/Buttons/ButtonBase',
       'tmpl!SBIS3.CONTROLS.FieldLink.Link',
       'css!SBIS3.CONTROLS.FieldLink.Link'
    ],
-   function(CompoundControl, Clickable, cInstance, dotTplFn) {
+   function(ButtonBase, dotTplFn) {
       
       'use strict';
       
@@ -24,13 +22,17 @@ define('js!SBIS3.CONTROLS.FieldLink.Link', [
        * @public
        */
       
-      var FieldLink_Link = CompoundControl.extend([ Clickable ], {
+      var FieldLink_Link = ButtonBase.extend({
          _dotTplFn: dotTplFn,
          $constructor: function() {
             this._options.command = 'showSelector';
             // Если ссылка находится внутри поля связи (placeholder) фокус принимать она не должна.
             this._options.activableByClick = false;
             this.setTabindex(0);
+         },
+         setCaption: function() {
+            FieldLink_Link.superclass.setCaption.apply(this, arguments);
+            this.getContainer().html(this._options.caption);
          }
       });
       

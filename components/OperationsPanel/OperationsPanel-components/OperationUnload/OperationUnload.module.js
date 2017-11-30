@@ -318,8 +318,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
          return this.getItems().getRecordById(this._currentItem);
       },
       _isClientUnload : function() {
-         //Для IOS всегда будем выгружать через сервер. Android прекрасно умеет выгружать
-         return !(this._getCurrentItem().get('serverSideExport') || constants.browser.isMobileSafari);
+         return !this._getCurrentItem().get('serverSideExport');
       }
    });
 

@@ -869,7 +869,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          styles = {top: tHeadHeight || ''};
          // Корректируем хак ".ws-is-webkit .controls-AjaxLoader {height: 100%;}" из стилей ListView.
          if (cDetection.webkit) {
-            styles.height =  height ? 'calc(100% - ' + tHeadHeight + 'px)' : '';
+            styles.height =  tHeadHeight ? 'calc(100% - ' + tHeadHeight + 'px)' : '';
          }
          this._getAjaxLoaderContainer().css(styles);
 

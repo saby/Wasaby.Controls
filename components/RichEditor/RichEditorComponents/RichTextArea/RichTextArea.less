@@ -248,8 +248,15 @@
       br[data-mce-bogus] {
          display: none;
       }
+      /* Без ненулевого пэддинга (и при жирном или курсивном шрифте) у последнего элемента неправильно считаются размеры,
+       * разсогласуется offsetHeight и scrollHeight, появляется мерцающая прокрутка в родительском элементе
+       */
+      .controls-RichEditor__editorFrame.ws-basic-style > p:last-child {
+         padding-bottom: 1px;
+      }
    }
 }
+
 .ws-is-chrome {
    .controls-RichEditor__editorFrame.ws-basic-style p:empty{
       min-height: 18px;
