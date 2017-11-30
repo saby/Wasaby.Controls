@@ -21,6 +21,7 @@
                  style="overflow-y: {{_hasScroll ? 'scroll' : 'hidden'}}"
                  event:onkeydown="_keyDownHandler()"
                  event:onfocus="_focusHandler()"
+                 event:onscroll="_scrollHandler()"
          >{{_value}}</textarea>
 
          <div class="controls-fakeTextArea__firstWrapper">

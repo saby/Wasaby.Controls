@@ -115,6 +115,10 @@ define('js!Controls/Input/Area', [
             }
          }
 
+      },
+
+      _scrollHandler: function(){
+         _private.updateScroll.call(this);
       }
 
    });
