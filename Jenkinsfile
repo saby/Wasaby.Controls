@@ -403,7 +403,7 @@ node('controls') {
                 DO_NOT_RESTART = True
                 SOFT_RESTART = False
                 NO_RESOURCES = True
-                STREAMS_NUMBER = 15
+                STREAMS_NUMBER = ${stream_number}
                 DELAY_RUN_TESTS = 1
                 TAGS_TO_START = ${params.theme}
                 ELEMENT_OUTPUT_LOG = locator
@@ -427,7 +427,7 @@ node('controls') {
                 DO_NOT_RESTART = True
                 SOFT_RESTART = False
                 NO_RESOURCES = True
-                STREAMS_NUMBER = 15
+                STREAMS_NUMBER = ${stream_number}
                 DELAY_RUN_TESTS = 2
                 TAGS_TO_START = ${params.theme}
                 ELEMENT_OUTPUT_LOG = locator
@@ -468,7 +468,7 @@ node('controls') {
                             dir("./controls/tests/int"){
                                  sh """
                                  source /home/sbis/selenium3/bin/activate
-                                 python start_tests.py --SERVER_ADDRESS http://test-selenium5:4445/wd/hub -ft 0 ${run_test_fail}
+                                 python start_tests.py --SERVER_ADDRESS http://test-selenium5:4445/wd/hub -ft 0 ${run_test_fail} -sn ${stream_number}
                                  deactivate
                                  """
                             }
