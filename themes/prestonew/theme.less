@@ -230,14 +230,6 @@ body {
          }
       }
    }
-   .controls-DropdownList__picker {
-      .controls-DropdownList__body {
-         .controls-DropdownListFooter_select .controls-Button__icon.icon-16{
-            font-size: round(64px * @multiplier)!important;
-         }
-      }
-   }
-
     .ws-float-area-stack-panel-shadow {
         border-left: @default-border-width solid #00a2ef;
         border-color: #00a4f0;
@@ -474,10 +466,6 @@ body {
    }
 }
 
-.controls-FloatArea {
-  border: @default-border-width solid @default-border-color-second;
-  background: @basic-block-bg-color;
-}
 .controls-Suggest__picker {
   .controls-ListView__hoveredItem {
     background-color:  @suggest-list-hover-color !important;
@@ -496,22 +484,6 @@ body {
    }
 }
 
-
-body .controls-DropdownList__picker {
-   .controls-DropdownList__itemCheckBox{
-      top: round(17px * @multiplier);
-      padding-right: round(6px * @multiplier);
-   }
-   .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
-      visibility: visible;
-   }
-   .controls-DropdownList__buttonsBlock.controls-DropdownList__multiselect {
-      min-width: round(224px * @multiplier);
-      .controls-DropdownListFooter_select {
-         border: none;
-      }
-   }
-}
 .controls-ListView__item__selected {
    .controls-DataGridView__td:first-child {
       .marker()
@@ -651,11 +623,11 @@ body {
 
 .controls-Menu{
   .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
-     &.icon-24 {
+     &.icon-24, &.icon-medium {
         top: round(28px * @multiplier);
         left: round(-6px * @multiplier);
      }
-     &.icon-16 {
+     &.icon-16, &.icon-small {
          top: round(32px * @multiplier);
      }
   }
@@ -725,9 +697,6 @@ body .ws-window.ws-LoadingIndicator__window {
 .controls-ComboBox__picker {
    box-sizing: border-box;
 }
-.controls-DropdownList__picker .controls-DropdownList__item {
-  line-height: round(91px * @multiplier);
-}
 
 .controls-FormattedTextBox .controls-TextBox__wrapper {
   text-align: center;
@@ -745,7 +714,7 @@ body .controls-Browser__filterButton .controls__filterButton__filterLine-text {
     height: round(40px * @multiplier)
 }
 body .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton {
-    top: round(11px * @multiplier);
+    top: round(8px * @multiplier);
 }
 .controls-PopupMixin__closeButton {
   position: absolute;
@@ -819,7 +788,7 @@ body {
 }
 
 .controls-BreadCrumbs__crumb {
-   top: round(8px * @multiplier)
+   top: round(9px * @multiplier)
 }
 
 .ws-is-sbis-desktop {
@@ -853,7 +822,7 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-
    height: round(84px * @multiplier);
 }
 
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateBox .controls-TextBox__wrapper {
+body .controls-DateRangeBigChoose__header .controls-DateBox {
     border-width: @default-border-width;
     border-radius: 0;
 }
@@ -880,9 +849,6 @@ body {
    }
 }
 
-.controls-ComboBox__picker .controls-ComboBox__scrollContainer {
-    background: #f0f5fb;
-}
 .controls-DateRangeBigChoose__noBorder {
   border: none !important;
 }
@@ -934,12 +900,12 @@ body {
 }
 
 .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-   top: round(10px * @multiplier) !important;
+   top: round(11px * @multiplier) !important;
 }
 
 .ws-is-sbis-desktop {
   .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-    top: round(10px * @multiplier) !important;
+    top: round(11px * @multiplier) !important;
   }
 }
 

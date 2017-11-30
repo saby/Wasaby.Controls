@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
        /**
         * Класс контрола "Кнопка фильтров".
         *
-        * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/">Панель фильтров</a>.
+        * Подробнее конфигурирование контрола описано в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/">Панель фильтров</a>.
         * @class SBIS3.CONTROLS.FilterButton
         * @extends SBIS3.CORE.CompoundControl
         * @author Герасимов Александр Максимович

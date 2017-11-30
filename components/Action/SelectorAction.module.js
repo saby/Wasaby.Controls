@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
             * @param {Object} meta Метаданные, с которыми было выполнено действие (см. {@link execute}).
             * @param {Boolean} [meta.multiselect] Признак: множественный выбор записей из списка.
             * @param {Array.<WS.Data/Entity/Record>} [meta.selectedItems] Записи, которые будут выбраны по умолчанию.
-            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический списком.
+            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический списком.
             * Возможные значения:
             * <ul>
             *     <li>all - для выбора доступны любые типы записей;<li>
@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
             * @param {Object} meta Метаданные, с которыми выполнялось действие (см. {@link execute}).
             * @param {Boolean} [meta.multiselect] Признак: множественный выбор записей из списка.
             * @param {Array.<WS.Data/Entity/Record>} [meta.selectedItems] Записи, которые будут выбраны по умолчанию.
-            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический списком.
+            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический списком.
             * Возможные значения:
             * <ul>
             *     <li>all - для выбора доступны любые типы записей;<li>
@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
             * @param {Object} meta Метаданные, переданные при вызове метода (см. {@link execute}).
             * @param {Boolean} [meta.multiselect] Признак: множественный выбор записей из списка.
             * @param {Array.<WS.Data/Entity/Record>} [meta.selectedItems] Записи, которые будут выбраны по умолчанию.
-            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический списком.
+            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический списком.
             * Возможные значения:
             * <ul>
             *     <li>all - для выбора доступны любые типы записей;<li>
@@ -111,7 +111,7 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
             * @param {Object} meta Метаданные. Дополняют сведения о контексте выполнения действия, а также о свойствах сущностей, с которыми происходит взаимодействие. Для каждого класса существует собственный набор метаданных.
             * @param {Boolean} [meta.multiselect] Признак: множественный выбор записей из списка.
             * @param {Array.<WS.Data/Entity/Record>} [meta.selectedItems] Записи, которые будут выбраны по умолчанию.
-            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический списком.
+            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический списком.
             * Возможные значения:
             * <ul>
             *     <li>all - для выбора доступны любые типы записей;<li>

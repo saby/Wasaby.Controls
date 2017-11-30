@@ -3,6 +3,8 @@
    &__fieldNotEditable {
       display: none;
       line-height: @line-height_TextBox;
+      white-space: nowrap;
+      overflow: hidden;
       &__placeholder {
          color: @default-placeholder-color;
       }
@@ -11,9 +13,6 @@
       .controls-ComboBox__fieldNotEditable {
          color: @default-placeholder-color;
       }
-   }
-   .controls-TextBox__field {
-      text-overflow: clip;
    }
    .controls-ComboBox__afterFieldWrapper {
       .align-items(center);
@@ -49,18 +48,6 @@
          display: inline-block;
       }
    }
-   &__overflow {
-      .controls-ComboBox__shadow {
-         content: '';
-         position: absolute;
-         display: @combo-box-shadow-display;
-         top:0;
-         right: @combo-box-icon-size;
-         bottom: 0;
-         width: 24px;
-         background: linear-gradient(to left, @combo-box-picker-item-bg, rgba(255, 255, 255, 0));
-      }
-   }
    &.controls-Picker__show {
       background-color: @combo-box-picker-show-background-color;
       color: @compo-box-picker-show-color;
@@ -75,13 +62,11 @@
    overflow-y: hidden !important;
    border: @combo-box-picker-border;
    box-sizing: border-box;
+   .box-shadow(@shadow_ComboBox_picker);
    .controls-ComboBox__multiline.controls-ComboBox__itemRow{
       .controls-ComboBox__item {
          white-space: normal;
          word-wrap: break-word;
-      }
-      .controls-ComboBox__shadow {
-         display: none;
       }
    }
    .controls-ComboBox__body {
@@ -96,11 +81,12 @@
    .controls-ComboBox__scrollContainer{
      max-height: 400px;
      height: inherit;
+     background-color: @background-color_ComboBox_scrollContainer;
    }
 
    .controls-ComboBox__itemRow {
       &.controls-ComboBox__emptyRow, &.controls-ComboBox__emptyRow:hover{
-        color: #ccc;
+        color: @color_Combobox_empty_row;
       }
       position: relative;
       font: inherit;
@@ -112,21 +98,9 @@
       &:hover {
          color: @combo-box-picker-item-hover-text-color;
          background: @combo-box-picker-item-hover-bg;
-         .controls-ComboBox__shadow {
-            background: linear-gradient(to left, @combo-box-picker-item-hover-bg, rgba(255, 255, 255, 0));
-         }
       }
       .controls-ComboBox__item {
          white-space: nowrap;
-      }
-      .controls-ComboBox__shadow {
-         content: '';
-         position: absolute;
-         top:0;
-         right: 0;
-         bottom: 0;
-         width: 24px;
-         background: linear-gradient(to left, @combo-box-picker-item-bg, rgba(255, 255, 255, 0));
       }
    }
    &.controls-popup-revert-vertical {

@@ -21,6 +21,8 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
     * @mixes SBIS3.CONTROLS.Clickable
     * @mixes SBIS3.CONTROLS.Checkable
     *
+    * @cssModifier controls-OperationsPanelButton__showSeparator Отображает разделитель слева от кнопки.
+    *
     * @control
     * @public
     * @category Actions

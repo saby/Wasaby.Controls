@@ -98,7 +98,7 @@ module.exports = function less1by1Task(grunt) {
             complete: '♥',
             incomplete: '_',
             width: 30,
-            total: 138
+            total: 141
         });
         helpers.recurse(rootPath, function(filepath, cb) {
           let relpath = path.relative(rootPath, filepath);
@@ -128,6 +128,7 @@ module.exports = function less1by1Task(grunt) {
                            !~filepath.indexOf('general.less') &&
                            !~filepath.indexOf('flex.less') &&
                            !~filepath.indexOf('defaults.less') &&
+                           !~filepath.indexOf('theme-fixme.less') &&
                            !~filepath.indexOf('variables.less') &&
                            !~filepath.indexOf('sizes.less') &&
                            !~filepath.indexOf('colors.less')) {

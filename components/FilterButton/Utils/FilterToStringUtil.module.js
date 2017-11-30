@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
     [
        'js!SBIS3.CONTROLS.Utils.TemplateUtil',
        'Core/helpers/Object/isEqual',
-       'Core/helpers/date-helpers'
-    ], function (TemplateUtil, isEqualObject, dateHelpers) {
+       'Core/helpers/date-helpers',
+       'Core/helpers/String/escapeTagsFromStr'
+    ], function (TemplateUtil, isEqualObject, dateHelpers, escapeTagsFromStr) {
 
        function isEqualValues(val1, val2) {
           /* Даты нельзя сравнивать по обычному равенству (===) */
@@ -42,7 +43,8 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
                 /* Некорректно сравнивать elem.value и elem.resetValue, когда нет value,
                    поэтому считаем, что это значение по-умолчанию */
                 if (structure[elem].caption && structure[elem].hasOwnProperty('value') && !isEqualValues(structure[elem].value, structure[elem].resetValue)) {
-                   res.push(structure[elem].caption);
+                   /* Вырезаем теги, если не задан пользовательский шаблон */
+                   res.push(escapeTagsFromStr(structure[elem].caption, ''));
                 }
                 return res;
              }, []);

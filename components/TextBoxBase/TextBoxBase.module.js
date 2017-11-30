@@ -64,7 +64,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
             выставляется он методе setText. Если опция забиндена на контекст, то компонент должен создаваться уже проставленой опцией,
             поэтому в методе setText опция должна меняться. */
          _textChanged: false,
-         _options: {
+          _isMultiline: false,
+          _options: {
             _prepareClassesByConfig: function() {
                var
                   fieldClasses = [],
@@ -72,6 +73,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
                   containerClasses = [];
 
                containerClasses.push('controls-TextBox_state_' + (this.enabled ? 'default' : 'disabled'));
+               !this.enabled && containerClasses.push('controls-TextBox_state_disabled_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
                containerClasses.push('controls-TextBox_size_' + (this.size ? this.size : 'm'));
                containerClasses.push('controls-TextBox_text-align_' + this.textAlign);
                containerClasses.push(this._paddingClass);
@@ -319,7 +321,9 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
             active = this.isActive(),
             enabled = this.isEnabled(),
             marked = this.isMarked();
-         return 'controls-TextBox_state_' + (marked ? 'error' : !enabled ? 'disabled' : active ? 'active' : 'default');
+         return 'controls-TextBox_state_' +
+            (marked ? 'error' : !enabled ? 'disabled' +
+            (this._isMultiline ? ' controls-TextBox_state_disabled_multiLine' : ' controls-TextBox_state_disabled_singleLine') : active ? 'active' : 'default');
       }
    });
 

@@ -28,8 +28,9 @@
 @date-range-dash-border-top:              @default-border-width solid @date-range-dash-color;
 @date-range-choose-border-hover:          solid @default-border-color-second;
 
-@items-toolbar-bottom-style-background:   url('img/items-toolbar-bottom-style-background.png');
-@list-view-scroll-bg:                     url('img/ajax-loader-indicator-big.gif') no-repeat center;
+@items-toolbar-bottom-style-background:    url('img/items-toolbar-bottom-style-background.png');
+@list-view-scroll-spritesheet-big:         url('img/ajax-loader-indicator-big.gif');
+@list-view-scroll-bg:                      @list-view-scroll-spritesheet-big no-repeat center;
 //InformationPopup
 @controls-InformationPopup-border-width:                 1px;
 @controls-InformationPopup-closeButton-font-family:      @icon-font;
@@ -45,6 +46,7 @@
 @ProgressBar-value-padding:               0 round(6px * @multiplier);
 @ProgressBar-value-font-size:             round(28px * @multiplier);
 @DropdownList-picker-menu-height-ff:      round(84px * @multiplier); //Решаю конфликт в 155, за не тот файл для этого кода извени
+@DropdownList-picker-menu-selected-marker:false;
 //TabButton
 @tab-buttons-border-bottom:               1px solid #293543;
 //sundry

@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
        /**
         * Сохраняет данные в HTML.
         * @remark
-        * Для сохранения применяется метод бизнес-логики <a href="https://wi.sbis.ru/docs/bl/Excel/Excel/methods/SaveHTML/">Excel.SaveHTM</a>.
+        * Для сохранения применяется метод бизнес-логики <a href="/docs/bl/Excel/Excel/methods/SaveHTML/">Excel.SaveHTM</a>.
         * Выгрузка производится через сервис file-transfer.
         * @param {Object} meta Метаданные.
         * @param {Array} [meta.columns] Колонки, которые будут сохраняться.
@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
        /**
         * Сохраняет данные в RecordSet.
         * @remark
-        * Для сохранения применяется метод бизнес-логики <a href="https://wi.sbis.ru/docs/bl/Excel/Excel/methods/SaveRecordSet/">Excel.SaveRecordSet</a>.
+        * Для сохранения применяется метод бизнес-логики <a href="/docs/bl/Excel/Excel/methods/SaveRecordSet/">Excel.SaveRecordSet</a>.
         * Выгрузка производится через сервис file-transfer.
         * @param {Object} meta Метаданные.
         * @param {Array} [meta.columns] Колонки, которые будут сохраняться.
@@ -129,7 +129,7 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
        /**
         * Сохраняет данные в списком.
         * @remark
-        * Для сохранения применяется метод бизнес-логики <a href="https://wi.sbis.ru/docs/bl/Excel/Excel/methods/SaveList/">Excel.SaveList</a>.
+        * Для сохранения применяется метод бизнес-логики <a href="/docs/bl/Excel/Excel/methods/SaveList/">Excel.SaveList</a>.
         * Выгрузка производится через сервис file-transfer.
         * @param {Object} meta Метаданные.
         * @param {Array} [meta.columns] Колонки, которые будут сохраняться.
@@ -153,7 +153,7 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
        /**
         * Сохраняет только отмеченные данные.
         * @remark
-        * Для сохранения применяется метод бизнес-логики <a href="https://wi.sbis.ru/docs/bl/Excel/Excel/methods/SaveMarked/">Excel.SaveMarked</a>.
+        * Для сохранения применяется метод бизнес-логики <a href="/docs/bl/Excel/Excel/methods/SaveMarked/">Excel.SaveMarked</a>.
         * Выгрузка производится через сервис file-transfer.
         * @param {Object} meta Метаданные.
         * @param {Array} [meta.columns] Колонки, которые будут сохраняться.
@@ -183,7 +183,7 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
          * @param {Array} [meta.columns] Колонки, которые будут сохраняться.
          * @param {String} [meta.xsl] Имя файла с xsl преобразованием.
          * @param {String} [meta.endpoint] Имя объекта бизнес-логики, который осуществляет сохранение данных.
-         * Если параметр не указан, данные выведутся на печать. При использовании в Престо или Рознице выгрузку производят через объекты БЛ <a href="https://wi.sbis.ru/docs/bl/Excel/Excel/">Excel</a> или PDF.
+         * Если параметр не указан, данные выведутся на печать. При использовании в Престо или Рознице выгрузку производят через объекты БЛ <a href="/docs/bl/Excel/Excel/">Excel</a> или PDF.
          * @param {String} [meta.fileName] Имя сохраняемого файла.
          * @param {Boolean} [meta.isExcel] Файл сохраняется в формате EXCEL.
          * @param {Number} [meta.pageOrientation] Ориентация страниц при сохранении в PDF формат.

@@ -1,7 +1,7 @@
 @import "../Utils/HtmlDecorators/HighlightDecorator";
 
 .controls-ListView__itemCheckBox {
-   .checkbox(@check-box-icon-size);
+   .checkbox();
    cursor: pointer;
    display: inline-block;
    position: absolute;
@@ -77,13 +77,13 @@ controls-ListView__item__withHover:hover {
 .controls-ListView__item__multiSelected:not(.controls-ListView__item__partiallySelected) {
    .controls-ListView__itemCheckBox {
       .checkbox-border-size();
-      .checkbox-checked-size(@check-box-icon-successful-size, @check-box-icon-successful-left, @check-box-icon-successful-top);
+      .checkbox-checked-size();
    }
 }
 .controls-ListView__item__partiallySelected {
    .controls-ListView__itemCheckBox {
       .checkbox-border-size();
-      .checkbox-null-size(@check-box-icon-size, @check-box-icon-null-size);
+      .checkbox-null-size();
    }
 }
 
@@ -117,11 +117,6 @@ controls-ListView__item__withHover:hover {
       overflow: hidden;
       position: relative;
    }
-}
-
-// Нельзя устанавливать минимальную высоту для копии таблицы которая используется для фиксации заголовков
-.controls-ListView__dataNotLoaded:not(.ws-sticky-header__table-header-copy) {
-   min-height: @list-view-min-height;
 }
 
 .controls-ListView {
@@ -167,7 +162,7 @@ controls-ListView__item__withHover:hover {
 }
 
 .controls-ListView__indicatorVisible:not(.ws-sticky-header__table-header-copy) {
-    min-height: @list-view-scroll-height + @data-grid-header-cell-height; // Высота индикатор скрола + высота ячейки шапки, чтобы при подгрузке скролл не скрывался под шапкой
+    min-height: @list-view-scroll-height;
     > .controls-ListView-scrollIndicator {
       display: block;
    }

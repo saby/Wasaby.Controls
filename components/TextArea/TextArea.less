@@ -1,68 +1,40 @@
-.controls-TextArea {
-   .generate-height(@i: 1) when (@i =< 10) {
-   &__field__maxheight-@{i} {
-   max-height : @i * @default-line-height;
-      }
-      &__field__minheight-@{i} {
-         min-height: @i * @default-line-height;
-      }
-      .generate-height(@i + 1);
-   }
-   .generate-height();
-   &__field {
-      position: absolute;
-      line-height:  @default-line-height;
-      padding-right: @default-padding;
-      resize: none;
-      display: block;
-      &__init {
-         position: static;
-         height: 100%; //todo: может быть ээто можно вешать всегда?
-      }
-   }
-   &__view {
-      .flex-shrink(0);
-      .box-sizing(border-box);
-      line-height:  @default-line-height;
-      padding-right: @default-padding;
-      width:100%;
-      overflow-x: hidden;
-      overflow-y: auto;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      min-height:  @default-line-height;
-      max-height: 100%;
-      &__empty {
-          color: @default-placeholder-color;
-      }
-      &__init {
-         position: absolute;
-         min-height: 0;
-         top: 0;
-      }
-      &__disabled {
-         min-height: 0;
-      }
-   }
-   //todo: cascade
-   &.ws-disabled.controls-TextBox {
-      border-bottom-color: @default-border-color-disabled;
-   }
-   .controls-TextBox__field {
-      white-space: pre-wrap; //https://bugzilla.mozilla.org/show_bug.cgi?id=1137650 //todo
-      overflow: auto; //todo
-   }
-   .controls-TextBox__wrapper {
-      .align-items(baseline);
-      margin: calc(@default-height / 2 - @default-line-height / 2 ~'-' @default-border-width) 0; //margin тк padding увеличиват высоту блока, из за этого view становится больше чем field
-      &:before {
-         line-height: @default-line-height; //todo: need????
-      }
-   }
-   // для разных размеров шрифтов необходимо указывать разный Line-height
-   // необходимо дефолтныый LH вынести в блок size__m и size__auto
-   // в рамках проекта темы оформления
-   .controls-TextArea__view__size__l, .controls-TextArea__field__size__l {
-      line-height: @text-area-line-height-l;
-   }
+/*
+   <div class="controls-TextBox controls-TextArea">
+      <div class="controls-TextBox__wrapper">
+         <textarea class="controls-TextBox__field controls-TextArea__field" />
+         <div class="controls-TextArea__view"></div>
+      </div>
+      <div class="controls-TextBox__informationIcon"></div>
+   </div>
+ */
+
+.generate-height(controls-TextArea__field);
+
+.controls-TextArea_padding {
+   padding: @padding_TextArea-container;
+}
+
+.controls-TextArea__field {
+   padding: @padding_TextArea-field; //если отступ справа будет висеть на контейнере, то между скроллом и контейнером будет отступ
+   resize: none; //по умолчанию both
+   white-space: pre-wrap; //https://bugzilla.mozilla.org/show_bug.cgi?id=1137650
+}
+
+.controls-TextArea__view {
+   //Чтобы высота считалась только по textarea
+   position: absolute;
+   //Иначе элемент в каждом браузере позиционируется по-разному
+   //https://jsfiddle.net/pbm9c1mo/
+   top: 0;
+   left: 0;
+   .flex-shrink(0);
+   box-sizing: border-box;
+   padding: @padding_TextArea-field;
+   width: 100%;
+   overflow-x: hidden;
+   overflow-y: auto;
+   white-space: pre-wrap;
+   word-wrap: break-word;
+   min-height: @min-height_TextArea;
+   max-height: 100%;
 }
