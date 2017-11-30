@@ -2,28 +2,28 @@
  * Класс контрола "Выпадающий список пресетов/шаблонов редактора колонок"
  *
  * @public
- * @class SBIS3.CONTROLS.Columns.PresetsList
+ * @class SBIS3.CONTROLS.Columns.Preset.Dropdown
  * @extends SBIS3.CONTROLS.CompoundControl
  */
-define('js!SBIS3.CONTROLS.Columns.PresetsList',
+define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
    [
       'Core/CommandDispatcher',
       'Core/Deferred',
       'Core/ClientsGlobalConfig',
       /*'Core/UserConfig',*/
       'WS.Data/Collection/RecordSet',
-      'js!SBIS3.CONTROLS.Columns.Preset',
+      'js!SBIS3.CONTROLS.Columns.Preset.Unit',
       'js!SBIS3.CONTROLS.CompoundControl',
-      'tmpl!SBIS3.CONTROLS.Columns.PresetsList',
-      'css!SBIS3.CONTROLS.Columns.PresetsList'
+      'tmpl!SBIS3.CONTROLS.Columns.Preset.Dropdown',
+      'css!SBIS3.CONTROLS.Columns.Preset.Dropdown'
    ],
 
-   function (CommandDispatcher, Deferred, ClientsGlobalConfig, /*UserConfig,*/ RecordSet, Preset, CompoundControl, dotTplFn) {
+   function (CommandDispatcher, Deferred, ClientsGlobalConfig, /*UserConfig,*/ RecordSet, PresetUnit, CompoundControl, dotTplFn) {
       'use strict';
 
 
 
-      var PresetsList = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.Columns.PresetsList.prototype*/ {
+      var PresetDropdown = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.Columns.Preset.Dropdown.prototype*/ {
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
@@ -42,10 +42,10 @@ define('js!SBIS3.CONTROLS.Columns.PresetsList',
          },
 
          init: function () {
-            PresetsList.superclass.init.apply(this, arguments);
+            PresetDropdown.superclass.init.apply(this, arguments);
             this._userConfigName = 'ColumnsEditor#' + this._options.targetRegistryName;
             this._options._presets = new RecordSet({rawData:[], idProperty:'title'});
-            this._dropdown = this.getChildControlByName('controls-Columns-PresetsList__dropdown');
+            this._dropdown = this.getChildControlByName('controls-Columns-Preset-Dropdown__dropdown');
 
             ClientsGlobalConfig/*UserConfig*/.getParam(this._userConfigName).addCallback(function (data) {
                _onLoadPresets(this, data);
@@ -77,7 +77,7 @@ define('js!SBIS3.CONTROLS.Columns.PresetsList',
          var values = data && typeof data === 'string' ? JSON.parse(data) : data || [];
          var recordset = self._options._presets;
          //recordset.clear();
-         recordset.setRawData(values.map(function (value) { return new Preset(value); }));
+         recordset.setRawData(values.map(function (value) { return new PresetUnit(value); }));
          recordset.acceptChanges();
          var selected = null;
          if (values.length) {
@@ -99,6 +99,6 @@ define('js!SBIS3.CONTROLS.Columns.PresetsList',
 
 
 
-      return PresetsList;
+      return PresetDropdown;
    }
 );

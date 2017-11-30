@@ -2,9 +2,9 @@
  * Класс пресета/шаблона редактора колонок
  *
  * @public
- * @class SBIS3.CONTROLS.Columns.Preset
+ * @class SBIS3.CONTROLS.Columns.Preset.Unit
  */
-define('js!SBIS3.CONTROLS.Columns.Preset',
+define('js!SBIS3.CONTROLS.Columns.Preset.Unit',
    [],
 
    function () {
@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset',
        * @param {(string|number)[]} [options.expandedGroups] Список идентификаторов распахнутых групп (опциональный)
        * @param {boolean}           options.isStatic Пресет/шаблон является статическим (не сохраняемым) (опциональный)
        */
-      var Preset = function (options) {
+      var PresetUnit = function (options) {
          if (!options || typeof options !== 'object') {
             throw new Error('Object required');
          }
@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset',
          this.isStatic = options.isStatic;
       };
 
-      Preset.prototype = /**@lends SBIS3.CONTROLS.Columns.Preset.prototype*/ {
+      PresetUnit.prototype = /**@lends SBIS3.CONTROLS.Columns.Preset.Unit.prototype*/ {
          /**
           * Идентификатор пресета/шаблона
           * @type {string|number}
@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset',
          }
       };
 
-      Preset.prototype.constructor = Preset;
+      PresetUnit.prototype.constructor = PresetUnit;
 
 
 
@@ -102,6 +102,6 @@ define('js!SBIS3.CONTROLS.Columns.Preset',
 
 
 
-      return PresetsList;
+      return PresetUnit;
    }
 );
