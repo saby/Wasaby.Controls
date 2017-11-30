@@ -318,7 +318,7 @@ define('js!SBIS3.CONTROLS.Browser', [
       showColumnsEditor: function (columnsConfig) {
          var options = columnsConfig || this._options.columnsConfig;
          if (!options) {
-            throw new Error('ColumnsConfig required');
+            return Deferred.fail('ColumnsConfig required');
          }
          var promise = new Deferred();
          require(['js!SBIS3.CONTROLS.Columns.Editor'], function (ColumnsEditor) {
