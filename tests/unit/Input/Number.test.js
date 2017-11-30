@@ -7,41 +7,25 @@ define(
 
       'use strict';
 
-      var
-         numberTextBox;
-
-      //Создание NumberTextBox с переданными опциями и добавление его в вёрстку
-      function createNumberTextBox(options) {
-         return Control.createControl(NumberTextBox, {
-            onlyPositive: options.onlyPositive,
-            integersLength: options.integersLength,
-            precision: options.precision
-         }, $('<div id="NumberTextBox__test"></div>').appendTo('#mocha'));
-      }
-
       describe('WSControls.Input.Number', function() {
          describe('Restrictions check', function() {
-            beforeEach(function () {
-               numberTextBox = createNumberTextBox({
-                  onlyPositive: true,
-                  integersLength: 5,
-                  precision: 5
-               });
-            });
-            afterEach(function () {
-               numberTextBox.destroy();
-            });
-
             //Проверим что в начало стоки нельзя вставить минус при onlyPositive: true
             it('Only positive values check', function () {
                var
                   inputResult;
-               inputResult = numberTextBox._prepareData({
-                  before: '',
-                  insert: '-',
-                  after: '123',
-                  delete: ''
-               });
+               inputResult = NumberTextBox._private.prepareData.call(
+                  {
+                     _options: {
+                        onlyPositive: true
+                     }
+                  },
+                  {
+                     before: '',
+                     insert: '-',
+                     after: '123',
+                     delete: ''
+                  }
+               );
                assert.equal(inputResult.value, '123');
                assert.equal(inputResult.position, 0);
             });
@@ -50,12 +34,19 @@ define(
             it('Max integers length check', function () {
                var
                   inputResult;
-               inputResult = numberTextBox._prepareData({
-                  before: '12 345',
-                  insert: '6',
-                  after: '',
-                  delete: ''
-               });
+               inputResult = NumberTextBox._private.prepareData.call(
+                  {
+                     _options: {
+                        integersLength: 5
+                     }
+                  },
+                  {
+                     before: '12 345',
+                     insert: '6',
+                     after: '',
+                     delete: ''
+                  }
+               );
                assert.equal(inputResult.value, '12 345');
                assert.equal(inputResult.position, 6);
             });
@@ -64,12 +55,19 @@ define(
             it('Max decimals length check', function () {
                var
                   inputResult;
-               inputResult = numberTextBox._prepareData({
-                  before: '0.12345',
-                  insert: '6',
-                  after: '',
-                  delete: ''
-               });
+               inputResult = NumberTextBox._private.prepareData.call(
+                  {
+                     _options: {
+                        precision: 5
+                     }
+                  },
+                  {
+                     before: '0.12345',
+                     insert: '6',
+                     after: '',
+                     delete: ''
+                  }
+               );
                assert.equal(inputResult.value, '0.12345');
                assert.equal(inputResult.position, 7);
             });
@@ -78,19 +76,19 @@ define(
             it('Forbid dot if zero precision', function () {
                var
                   inputResult;
-
-               //В отдельную группу выносить не логично, но нужно чтобы numberTextBox создался с precision: 0
-               numberTextBox.destroy();
-               numberTextBox = createNumberTextBox({
-                  precision: 0
-               });
-
-               inputResult = numberTextBox._prepareData({
-                  before: '12',
-                  insert: '.',
-                  after: '',
-                  delete: ''
-               });
+               inputResult = NumberTextBox._private.prepareData.call(
+                  {
+                     _options: {
+                        precision: 0
+                     }
+                  },
+                  {
+                     before: '12',
+                     insert: '.',
+                     after: '',
+                     delete: ''
+                  }
+               );
                assert.equal(inputResult.value, '12');
                assert.equal(inputResult.position, 2);
             });
@@ -99,12 +97,18 @@ define(
             it('Inserting a dot at the beginning of a line results in \'0.\'', function () {
                var
                   inputResult;
-               inputResult = numberTextBox._prepareData({
-                  before: '',
-                  insert: '.',
-                  after: '',
-                  delete: ''
-               });
+               inputResult = NumberTextBox._private.prepareData.call(
+                  {
+                     _options: {
+                     }
+                  },
+                  {
+                     before: '',
+                     insert: '.',
+                     after: '',
+                     delete: ''
+                  }
+               );
                assert.equal(inputResult.value, '0.');
                assert.equal(inputResult.position, 2);
             });
@@ -116,12 +120,18 @@ define(
                   possibleInsertValuesArr = [',', 'б', 'ю', 'Б', 'Ю'];
 
                possibleInsertValuesArr.forEach(function(item) {
-                  inputResult = numberTextBox._prepareData({
-                     before: '123',
-                     insert: item,
-                     after: '',
-                     delete: ''
-                  });
+                  inputResult = NumberTextBox._private.prepareData.call(
+                     {
+                        _options: {
+                        }
+                     },
+                     {
+                        before: '123',
+                        insert: item,
+                        after: '',
+                        delete: ''
+                     }
+                  );
                   assert.equal(inputResult.value, '123.');
                   assert.equal(inputResult.position, 4);
                });
@@ -131,12 +141,18 @@ define(
             it('Delete space operation just moves cursor left', function () {
                var
                   inputResult;
-               inputResult = numberTextBox._prepareData({
-                  before: '123',
-                  insert: '',
-                  after: '456',
-                  delete: ' '
-               });
+               inputResult = NumberTextBox._private.prepareData.call(
+                  {
+                     _options: {
+                     }
+                  },
+                  {
+                     before: '123',
+                     insert: '',
+                     after: '456',
+                     delete: ' '
+                  }
+               );
                assert.equal(inputResult.value, '123 456');
                assert.equal(inputResult.position, 3);
             });

@@ -199,5 +199,7 @@ define('js!Controls/Input/Number', [
       };
    };
 
+   NumberTextBox._private = _private;
+
    return NumberTextBox;
 });
