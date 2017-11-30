@@ -10,6 +10,17 @@ define('js!Controls/Input/resources/PopupSearchController',
       
       'use strict';
       
+      function getSearchController() {
+         if (!this._search) {
+            this._search = new Search({
+               dataSource: this._options.dataSource,
+               searchDelay: this._options.searchDelay
+            });
+         }
+         
+         return this._search;
+      }
+      
       var PopupSearchController = extend({
          constructor: function(options) {
             this._options = options;
@@ -18,16 +29,9 @@ define('js!Controls/Input/resources/PopupSearchController',
             var filter = cMerge({}, this._options.filter || {}),
                 self = this;
             
-            if (!this._search) {
-               this._search = new Search({
-                  dataSource: this._options.dataSource,
-                  searchDelay: this._options.searchDelay
-               });
-            }
-            
             filter[this._options.searchParam] = textValue;
             requirejs([self._options.popupTemplate]);
-            this._search.search({filter: filter}).addCallback(function(searchResult) {
+            getSearchController.call(this).search({filter: filter}).addCallback(function(searchResult) {
                PapupManager.show(
                   {
                      catchFocus: false,
