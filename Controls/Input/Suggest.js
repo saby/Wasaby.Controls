@@ -20,7 +20,7 @@ define('js!Controls/Input/Suggest',
        * @category Input
        */
       /**
-       * @name Controls/Input/Suggest#withoutCross
+       * @name Controls/Input/Suggest#clerable
        * @cfg {Boolean} Скрыть крестик удаления значения
        */
       /**
