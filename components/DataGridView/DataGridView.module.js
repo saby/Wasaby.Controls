@@ -138,6 +138,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             };
             tplOptions.startScrollColumn = cfg.startScrollColumn;
             tplOptions.columnsShift = cfg._columnsShift;
+            tplOptions.hoveredColumn = cfg._hoveredColumn;
             buildTplArgsLadder(tplOptions.cellData, cfg);
 
             return tplOptions;
@@ -417,10 +418,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          _arrowLeft: undefined,                       //Контейнер для левой стрелки
          _arrowRight: undefined,                      //Контейнер для правой стрелки
          _thumb: undefined,                           //Контейнер для ползунка
-         _hoveredColumn: {
-            cells: null,
-            columnIndex: null
-         },
          _stopMovingCords: {
             left: 0,
             right: 0
@@ -442,6 +439,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
             _buildTplArgsDG: buildTplArgsDG,
             _groupTemplate: GroupTemplate,
             _columnsShift: 0,
+            _hoveredColumn: {
+               cells: null,
+               columnIndex: null
+            },
             /**
              * @typedef {Object} columnSorting
              * @variant single при сортировке по этой колонке, сортировка по остальным колонкам будет сброшена
@@ -735,6 +736,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
          element = element instanceof jQuery ? element : $(element);
          return element.closest('.controls-DataGridView__td, .controls-DataGridView__th', this.getContainer());
       },
+      
+      _getHoveredColumn: function() {
+         return this._options._hoveredColumn;
+      },
 
       _mouseMoveHandler: function(e) {
          DataGridView.superclass._mouseMoveHandler.apply(this, arguments);
@@ -745,7 +750,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          if(td.length) {
             index = td.index();
-            hoveredColumn = this._hoveredColumn;
+            hoveredColumn = this._getHoveredColumn();
             colIndex = index - (this.getMultiselect() ? 1 : 0);
 
             if(columns[colIndex] && !columns[colIndex].cellTemplate && !td[0].getAttribute('title')) {
@@ -774,7 +779,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _clearHoveredColumn: function() {
-         var hoveredColumn = this._hoveredColumn;
+         var hoveredColumn = this._getHoveredColumn();
 
          if(hoveredColumn.columnIndex !== null) {
             hoveredColumn.cells.removeClass('controls-DataGridView__hoveredColumn__cell');
@@ -811,7 +816,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              clickedCell = {
                 cellContainer: cell,
                 //При клике на touch устройствах не будет hoveredColumn, поэтому ищем по элементу, по котрому кликнули
-                cellIndex: this._hoveredColumn.columnIndex || cell.index()
+                cellIndex: this._getHoveredColumn().columnIndex || cell.index()
              };
       
          return this._notify('onItemClick', id, data, target, e, clickedCell);
