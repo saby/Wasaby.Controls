@@ -4,26 +4,38 @@ define('js!Controls/Popup/Opener/Dialog',
       'js!Controls/Popup/interface/IAction',
       'js!Controls/Popup/Manager',
       'js!Controls/Popup/Opener/Dialog/Strategy',
-      'Core/core-merge'
+      'Core/core-merge',
+      'js!Controls/Popup/Controller'
    ],
-   function (Control, IAction, Manager, Strategy, cMerge) {
-   /**
-    * Действие открытия окна
-    * @class Controls/Popup/Opener/Dialog
-    * @mixes Controls/Popup/interface/IAction
-    * @control
-    * @public
-    * @category Popup
-    * @extends Controls/Control
-    */
+   function (Control, IAction, Manager, Strategy, CoreMerge, Controller) {
+      /**
+       * Действие открытия окна
+       * @class Controls/Popup/Opener/Dialog
+       * @mixes Controls/Popup/interface/IAction
+       * @control
+       * @public
+       * @category Popup
+       * @extends Controls/Control
+       */
       var Dialog = Control.extend([IAction], {
          _controlName: 'Controls/Popup/Opener/Dialog',
-         iWantVDOM: true,
 
-         execute: function (config, opener) {
-            var cfg = config || {};
-            cMerge(cfg, this._options.popupOptions);
-            Manager.show(cfg, opener || this, Strategy);
+         execute: function (config) {
+            var
+               cfg = config || {};
+            CoreMerge(cfg, this._options.popupOptions);
+            if (this._popupId) {
+               this._popupId = Manager.update(this._popupId, cfg);
+            }
+            if (!this._popupId) {
+               this._controller = new Controller();
+               this._controller.subscribe('onResult', this._notifyOnResult.bind(this));
+               this._popupId = Manager.show(cfg, this, Strategy, this._controller);
+            }
+         },
+
+         _notifyOnResult: function (event, args) {
+            this._notify.apply(this, ['onResult'].concat(args));
          }
       });
 

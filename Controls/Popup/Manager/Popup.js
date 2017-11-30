@@ -29,13 +29,16 @@ define('js!Controls/Popup/Manager/Popup',
             CommandDispatcher.declareCommand(this, 'sendResult', this.sendResult);
          },
 
+         _beforeMount: function(options) {
+            this._controller = options.controller;
+            this._opener = options.opener;
+         },
+
          _afterMount: function () {
             this.subscribe('onFocusIn', this._focusIn);
             this.subscribe('onFocusOut', this._focusOut);
-
-            var opener = this._options.opener;
-            if (opener) {
-               this.subscribeTo(opener, 'onFocusOut', this._focusOut.bind(this));
+            if (this._opener) {
+               this.subscribeTo(this._opener, 'onFocusOut', this._focusOut.bind(this));
             }
             this._recalcPosition();
          },
@@ -53,9 +56,8 @@ define('js!Controls/Popup/Manager/Popup',
           * @function Controls/Popup/Manager/Popup#sendResult
           */
          sendResult: function () {
-            if (this._options.opener) {
-               var args = Array.prototype.slice.call(arguments);
-               CommandDispatcher.sendCommand.apply(CommandDispatcher, [this._options.opener, 'onResult'].concat(args));
+            if (this._controller) {
+               this._controller.notifyOnResult.call(this._controller, Array.prototype.slice.call(arguments));
             }
          },
 
@@ -77,7 +79,7 @@ define('js!Controls/Popup/Manager/Popup',
          _focusOut: function (event, focusedControl) {
             if (!!this._options.autoHide) {
                var
-                  opener = this._options.opener,
+                  opener = this._opener,
                   parent = focusedControl.to;
                while (!!parent) {
                   if (parent === opener || parent === this) {

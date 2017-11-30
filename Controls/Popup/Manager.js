@@ -37,20 +37,38 @@ define('js!Controls/Popup/Manager',
           * @param options компонент, который будет показан в окне
           * @param opener компонент, который инициировал открытие окна
           * @param strategy стратегия позиционирования всплывающего окна
+          * @param controller контроллер
           */
-         show: function (options, opener, strategy) {
+         show: function (options, opener, strategy, controller) {
             if (!strategy || !CoreInstance.instanceOfMixin(strategy, 'Controls/Popup/interface/IStrategy')) {
                throw new Error('Strategy is not defined');
             }
             var element = {};
             element.id = Random.randomId('popup-');
             options.opener = opener;
+            options.controller = controller;
             element.popupOptions = options;
             element.strategy = strategy;
-            element.position = {left: -10000, top: -10000};
+            element.position = {
+               left: -10000,
+               top: -10000
+            };
             element.zIndex = Manager.calculateZIndex();
             Manager._popupItems.add(element);
             Container.setPopupItems(Manager._popupItems);
+            return element.id;
+         },
+
+         update: function (id, options) {
+            var
+               index = Manager._popupItems.getIndexByValue('id', id);
+            if (index > -1) {
+               var element = Manager._popupItems.at(index);
+               CoreMerge(element.popupOptions, options);
+               Container.setPopupItems(Manager._popupItems);
+               return id;
+            }
+            return null;
          },
 
          /**

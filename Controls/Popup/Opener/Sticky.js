@@ -4,9 +4,10 @@ define('js!Controls/Popup/Opener/Sticky',
       'js!Controls/Popup/interface/IAction',
       'js!Controls/Popup/Manager',
       'js!Controls/Popup/Opener/Sticky/Strategy',
-      'Core/core-merge'
+      'Core/core-merge',
+      'js!Controls/Popup/Controller'
    ],
-   function (Control, IAction, Manager, Strategy, cMerge) {
+   function (Control, IAction, Manager, Strategy, CoreMerge, Controller) {
 
       /**
        * Действие открытия прилипающего окна
@@ -16,17 +17,28 @@ define('js!Controls/Popup/Opener/Sticky',
        * @public
        * @category Popup
        */
-      var Dialog = Control.extend([IAction], {
+      var Sticky = Control.extend([IAction], {
          _controlName: 'Controls/Popup/Opener/Sticky',
-         iWantVDOM: true,
 
-         execute: function (config, opener) {
-            var cfg = config || {};
-            cMerge(cfg, this._options.popupOptions);
-            Manager.show(cfg, opener || this, Strategy);
+         execute: function (config) {
+            var
+               cfg = config || {};
+            CoreMerge(cfg, this._options.popupOptions);
+            if (this._popupId) {
+               this._popupId = Manager.update(this._popupId, cfg);
+            }
+            if (!this._popupId) {
+               this._controller = new Controller();
+               this._controller.subscribe('onResult', this._notifyOnResult.bind(this));
+               this._popupId = Manager.show(cfg, this, Strategy, this._controller);
+            }
+         },
+
+         _notifyOnResult: function (event, args) {
+            this._notify.apply(this, ['onResult'].concat(args));
          }
       });
 
-      return Dialog;
+      return Sticky;
    }
 );
