@@ -323,7 +323,7 @@ define('js!SBIS3.CONTROLS.Browser', [
          var promise = new Deferred();
          require(['js!SBIS3.CONTROLS.Columns.Editor'], function (ColumnsEditor) {
             if (!this._columnsEditor) {
-               this._columnsEditor = new ColumnsEditor();
+               this._columnsEditor = new ColumnsEditor(this._columnsEditorButton ? {moveColumns:this._columnsEditorButton._options.moveColumns} : null);
             }
             promise.dependOn(this._columnsEditor.start(options));
          }.bind(this));
@@ -505,6 +505,7 @@ define('js!SBIS3.CONTROLS.Browser', [
          if (this._columnsEditorButton) {
             this._onColumnsEditorButtonHandler = this._onColumnsEditorButton.bind(this);
             this.subscribeTo(this._columnsEditorButton, 'onActivated', this._onColumnsEditorButtonHandler);
+            this._columnsEditor = null;
          }
       },
 
