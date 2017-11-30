@@ -58,7 +58,8 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!WSControls/Buttons/MenuButton', 'css!S
       },
 
       _modifyOptions : function() {
-         var opts = MenuIcon.superclass._modifyOptions.apply(this, arguments);
+         var opts = MenuIcon.superclass._modifyOptions.apply(this, arguments),
+             sizes = ['16', '24', '32', 'small', 'medium', 'large'];
          opts.pickerClassName += ' controls-MenuIcon__Menu';
          opts.cssClassName += ' controls-MenuIcon controls-IconButton';
 
@@ -74,6 +75,14 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!WSControls/Buttons/MenuButton', 'css!S
             }else {
                 opts.pickerClassName += ' controls-IconButton__round-border';
             }
+         }
+
+         if(opts.icon){
+             sizes.forEach(function(size){
+                if(opts.icon.indexOf('icon-' + size) !== -1) {
+                    opts.pickerClassName += ' controls-Menu_offset_icon-' + size;
+                }
+             });
          }
 
          if (opts.icon && (opts.icon.indexOf('icon-24') !== -1 || opts.icon.indexOf('icon-large') !== -1) && opts.className.indexOf('controls-Menu__hide-menu-header') === -1){

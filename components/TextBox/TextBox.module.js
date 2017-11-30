@@ -314,7 +314,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
             this._initPlaceholderEvents(this._compatPlaceholder);
          }
          /* Надо проверить значение input'a, т.к. при дублировании вкладки там уже может быть что-то написано */
-         this._checkInputVal();
+         this._checkInputVal(true);
       },
 
       /**
@@ -332,11 +332,9 @@ define('js!SBIS3.CONTROLS.TextBox', [
        * @see informationIconColor
        */
       setInformationIconColor: function (color) {
-         var informationIconContainer = this._informationIcon.getContainer();
-
-          informationIconContainer.removeClass('icon-' + this._options.informationIconColor);
+          this._informationIcon.removeClass('controls-TextBox__informationIcon-' + this._options.informationIconColor);
           this._options.informationIconColor = color;
-          informationIconContainer.addClass('icon-' + color);
+          this._informationIcon.addClass('controls-TextBox__informationIcon-' + color);
       },
 
       _keyboardDispatcher: function(event){
@@ -361,10 +359,11 @@ define('js!SBIS3.CONTROLS.TextBox', [
          return constants.compatibility.placeholder;
       },
 
-      _checkInputVal: function() {
+      _checkInputVal: function(fromInit) {
          var text = this._getInputValue();
 
-         if (this._options.trim) {
+         //При ините не должен вызываться trim, поэтому будем проверять по этому флагу попали в checkInputVal из init или нет
+         if (this._options.trim && !fromInit) {
             text = text.trim();
          }
          //Установим текст только если значения различны и оба не пустые
@@ -582,11 +581,11 @@ define('js!SBIS3.CONTROLS.TextBox', [
        },
 
       _focusOutHandler: function(event, isDestroyed, focusedControl) {
-         TextBox.superclass._focusOutHandler.apply(this, arguments);
-
          if(!isDestroyed  && (!focusedControl || !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) ) {
             this._checkInputVal();
          }
+
+         TextBox.superclass._focusOutHandler.apply(this, arguments);
       },
       
       _inputClickHandler: function (e) {
@@ -649,7 +648,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._inputField = undefined;
          this._destroyCompatPlaceholder();
          if(this._informationIcon) {
-            this._informationIcon.getContainer().off('*');
+            this._informationIcon.off('*');
             this._informationIcon = undefined;
          }
          TextBox.superclass.destroy.apply(this, arguments);
