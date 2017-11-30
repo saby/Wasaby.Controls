@@ -55,7 +55,7 @@ define('js!Controls/Input/Number', [
       //Валидирует и подготавливает новое значение по splitValue
       prepareData: function (splitValue) {
          var
-            regExp = _private.getRegexp(this._options);
+            regExp = _private.getRegexp(this._options.onlyPositive, this._options.integersLength, this._options.precision);
 
          _private.splitValue = splitValue;
 
@@ -88,28 +88,28 @@ define('js!Controls/Input/Number', [
       },
 
       //Функция генерирует регулярное выражение в зависимости от переданных опций
-      getRegexp: function (options) {
+      getRegexp: function (onlyPositive, integersLength, precision) {
          var
             regExpString = '^';
 
          //Разрешён ли минус в начале
-         if (!options.onlyPositive) {
+         if (!onlyPositive) {
             regExpString += '\\-?';
          }
 
          //Ограничение длины целой части
-         if (options.integersLength) {
-            regExpString += '\\d{0,' + options.integersLength + '}';
+         if (integersLength) {
+            regExpString += '\\d{0,' + integersLength + '}';
          } else {
             regExpString += '\\d*';
          }
 
          //Ограничение дробной части
          //По умолчанию можно вводить любое количество
-         if (typeof options.precision === 'undefined') {
+         if (typeof precision === 'undefined') {
             regExpString += '(\\.\\d*)?';
-         } else if (options.precision !== 0) {
-            regExpString += '(\\.\\d{0,' + options.precision + '})?';
+         } else if (precision !== 0) {
+            regExpString += '(\\.\\d{0,' + precision + '})?';
          }
 
          regExpString += '$';
