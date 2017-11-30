@@ -15,38 +15,75 @@ define('js!Controls/Input/Number', [
       NumberTextBox;
 
    _private = {
+      splitValue: null,
+
+      getClearValue: function() {
+         return _private.concatSplitValue().replace(/ /g, '');
+      },
+
+      concatSplitValue: function() {
+         return _private.splitValue.before + _private.splitValue.insert + _private.splitValue.after;
+      },
+
+      getValueWithDelimiters: function() {
+         var
+            clearValSplited = _private.getClearValue().split('.');
+
+         //Разбиваем на триады только часть до точки
+         clearValSplited[0] = clearValSplited[0].replace(/(\d)(?=(\d{3})+$)/g, '$& ');
+
+         return clearValSplited.join('.');
+      },
+
+      getCursorPosition: function (withDelimeters) {
+         var
+            beforeNewDelimetersSpacesCnt,
+            afterNewDelimetersSpacesCnt,
+            spacesCntDiff = 0;
+
+         if (withDelimeters) {
+            beforeNewDelimetersSpacesCnt = _private.concatSplitValue().split(' ').length - 1;
+            afterNewDelimetersSpacesCnt = _private.getValueWithDelimiters().split(' ').length - 1;
+            spacesCntDiff = afterNewDelimetersSpacesCnt - beforeNewDelimetersSpacesCnt;
+         }
+
+         return _private.splitValue.before.length + _private.splitValue.insert.length + spacesCntDiff;
+      },
+
+
+
       //Валидирует и подготавливает новое значение по splitValue
       prepareData: function (splitValue) {
          var
-            splitValueInterface = new _private.SplitValueModule(splitValue);
+            regExp = _private.getRegexp(this._options);
+
+         _private.splitValue = splitValue;
 
          //Если был удален пробел - нужно его оставить и сдвинуть курсор влево
-         if (splitValueInterface.getDeletedValue() === ' ') {
+         if (splitValue.delete === ' ') {
             return {
-               value: splitValueInterface.getValueWithDelimiters(),
-               position: splitValueInterface.getCursorPosition()
+               value: _private.getValueWithDelimiters(),
+               position: _private.getCursorPosition()
             };
          }
 
          //Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
-         splitValueInterface.setInputValue(splitValueInterface.getInputValue().toLowerCase().replace(/,|б|ю/, '.'));
+         splitValue.insert = splitValue.insert.toLowerCase().replace(/,|б|ю/, '.');
 
          //Если валидация не прошла, то не даем ничего ввести
-         if (!splitValueInterface.validate(_private.getRegexp(this._options))) {
-            splitValueInterface.setInputValue('');
+         if (!regExp.test(_private.getClearValue())) {
+            splitValue.insert = '';
          } else {
             //Если в начале строки ввода точка, а до неё ничего нет, то предполагаем что хотят видеть '0.'
-            if (splitValueInterface.getInputValue()[0] === '.' && !splitValueInterface.getBeforeInputValue()) {
-               splitValueInterface.setBeforeInputValue('0');
+            if (splitValue.insert[0] === '.' && !splitValue.before) {
+               splitValue.before = '0';
             }
          }
 
-         //Тут нужно произвести какую-то обработку пришедшего значения (в сплит-формате) и вернуть итоговое значение и позицию
-
          //Запишет значение в input и поставит курсор в указанное место
          return {
-            value: splitValueInterface.getValueWithDelimiters(),
-            position: splitValueInterface.getCursorPosition(true)
+            value: _private.getValueWithDelimiters(),
+            position: _private.getCursorPosition(true)
          };
       },
 
@@ -78,73 +115,6 @@ define('js!Controls/Input/Number', [
          regExpString += '$';
 
          return new RegExp(regExpString);
-      },
-
-
-      /**
-       * Модуль для работы с объектом из TextRender
-       * Возможности:
-       * Склейка объекта splitValue в строку -- concat()
-       * Получение "чистой" (без пробелов) склеенной строки -- getClear()
-       * Получение текущей позиции курсора -- getCursorPosition()
-       * Есть геттеры и сеттеры свойств
-       * Валидация -- validate(regExp)
-       */
-      SplitValueModule: function (splitValueObj) {
-         var
-            _splitValueObj = Object.assign({}, splitValueObj);
-
-         return {
-            concat: function () {
-               return _splitValueObj.before + _splitValueObj.insert + _splitValueObj.after;
-            },
-            getCursorPosition: function (withDelimeters) {
-               var
-                  beforeNewDelimetersSpacesCnt,
-                  afterNewDelimetersSpacesCnt,
-                  spacesCntDiff = 0;
-
-               if (withDelimeters) {
-                  beforeNewDelimetersSpacesCnt = this.concat().split(' ').length - 1;
-                  afterNewDelimetersSpacesCnt = this.getValueWithDelimiters().split(' ').length - 1;
-                  spacesCntDiff = afterNewDelimetersSpacesCnt - beforeNewDelimetersSpacesCnt;
-               }
-
-               return _splitValueObj.before.length + _splitValueObj.insert.length + spacesCntDiff;
-            },
-            setBeforeInputValue: function (value) {
-               _splitValueObj.before = value || '';
-               return this;
-            },
-            getBeforeInputValue: function () {
-               return _splitValueObj.before;
-            },
-            setInputValue: function (value) {
-               _splitValueObj.insert = value || '';
-               return this;
-            },
-            getInputValue: function () {
-               return _splitValueObj.insert;
-            },
-            getDeletedValue: function () {
-               return _splitValueObj.delete
-            },
-            getClear: function () {
-               return this.concat().replace(/ /g, '');
-            },
-            validate: function (regExp) {
-               return regExp.test(this.getClear());
-            },
-            getValueWithDelimiters: function () {
-               var
-                  clearValSplited = this.getClear().split('.');
-
-               //Разбиваем на триады только часть до точки
-               clearValSplited[0] = clearValSplited[0].replace(/(\d)(?=(\d{3})+$)/g, '$& ');
-
-               return clearValSplited.join('.');
-            }
-         }
       }
    };
 
@@ -204,6 +174,15 @@ define('js!Controls/Input/Number', [
       },
 
       _inputCompletedHandler: function () {
+         var
+            tmp = this._value.split('.'),
+            integers = tmp[0],
+            decimals = tmp[1];
+
+         if (!parseInt(decimals, 10)) {
+            this._value = integers;
+         }
+
          this._notify('inputCompleted', this._value);
       },
 
