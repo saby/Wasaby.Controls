@@ -416,11 +416,7 @@ define('js!SBIS3.CONTROLS.Browser', [
             this._initColumnsController();
          }
 
-         this._columnsEditorButton = this._getColumnsEditorButton();
-         if (this._columnsEditorButton) {
-            this._onColumnsEditorButtonHandler = this._onColumnsEditorButton.bind(this);
-            this.subscribeTo(this._columnsEditorButton, 'onActivated', this._onColumnsEditorButtonHandler);
-         }
+         this._attachColumnsEditorButton();
 
          this._hierMode = checkViewType(this._view);
 
@@ -497,6 +493,18 @@ define('js!SBIS3.CONTROLS.Browser', [
          }
          else {
             this.subscribe('onInit', this._onInitBindingsHandler);
+         }
+      },
+
+      /**
+       * Подключить кнопку редактора колонок
+       * @protected
+       */
+      _attachColumnsEditorButton: function () {
+         this._columnsEditorButton = this._getColumnsEditorButton();
+         if (this._columnsEditorButton) {
+            this._onColumnsEditorButtonHandler = this._onColumnsEditorButton.bind(this);
+            this.subscribeTo(this._columnsEditorButton, 'onActivated', this._onColumnsEditorButtonHandler);
          }
       },
 
