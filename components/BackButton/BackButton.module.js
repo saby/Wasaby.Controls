@@ -92,15 +92,18 @@ define('js!SBIS3.CONTROLS.BackButton',
             href: '',
 
             /**
-             * @cfg {String} Устанавливает оформление кнопки назад в виде заголовка.
-             * @variant header_blue-h2
-             * @variant header_orange-h2
-             * @variant header_blue-h3
-             * @variant header_orange-h3
-             * @variant header_blue-h6
-             * @variant header_orange-h6
+             * @cfg {String} Устанавливает цвет кнопки назад в виде заголовка.
+             * @variant accent1
+             * @variant accent2
              */
-            style: ''
+            style: 'default-backButton',
+            /**
+             * @cfg {String} Устанавливает размер кнопки назад в виде заголовка.
+             * @variant h2
+             * @variant h3
+             * @variant h6
+             */
+            size: 'default-backButton'
          }
       },
 

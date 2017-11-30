@@ -15,48 +15,52 @@
    .ws-header-size-mixin(@default-text-size);
 }
 
-.ws-header_color_blue {
+.ws-header_color_accent1 {
    color: @accent-color;
 }
 
-.ws-header_color_orange {
+.ws-header_color_accent2 {
    color: @header-orange;
 }
 
-.ws-header_color-hover_blue {
+.ws-header_color-hover_accent1 {
    &:hover {
-      .ws-header-blue-hover();
+      .ws-header-accent1-hover();
    }
 }
 
-.ws-header_color-hover_orange {
+.ws-header_color-hover_accent2 {
    &:hover {
-      .ws-header-orange-hover();
+      .ws-header-accent2-hover();
    }
 }
 
-.ws-header-blue-hover() {
+.ws-header-accent1-hover() {
    color: @darkcyan-color;
 }
 
-.ws-header-orange-hover() {
+.ws-header-accent2-hover() {
    color: @primary-color;
 }
 
-.ws-header_size_bold {
-   font-weight: 700;
+.ws-header_size_weight {
+   font-weight: @header-font-weight;
 }
 
-.ws-backArrow_color_orange {
-   content: @back-arrow-orange;
+.ws-backArrow_color_accent1 {
+   &:before {
+      content: @back-arrow-orange;
+   }
 }
 
-.ws-backArrow_color_blue {
-   content: @back-arrow-blue;
+.ws-backArrow_color_accent2 {
+   &:before {
+      content: @back-arrow-blue;
+   }
 }
 
-//ws-backArrow_size_20, ws-backArrow_size_18, ws-backArrow_size_15
-.for(20 18 15, { .ws-backArrow_size_@{_item} {
+//ws-backArrow_size_h2, ws-backArrow_size_h3, ws-backArrow_size_h6
+.for(h2 h3 h6, { .ws-backArrow_size_@{_item} {
    .ws-back-arrow-size-mixin(~"@{back-arrow-width-@{_item}}", ~"@{back-arrow-height-@{_item}}");
 } });
 
