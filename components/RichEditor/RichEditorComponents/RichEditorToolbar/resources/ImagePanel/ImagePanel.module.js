@@ -3,13 +3,11 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
       'js!SBIS3.CONTROLS.CompoundControl',
       'js!SBIS3.CONTROLS.PopupMixin',
       'js!SBIS3.CORE.LikeWindowMixin',
-      'js!SBIS3.CORE.FileStorageLoader',
       'WS.Data/Di',
-      'Core/helpers/fast-control-helpers',
       'tmpl!SBIS3.CONTROLS.RichEditor.ImagePanel',
       "Core/EventBus",
       'css!SBIS3.CONTROLS.RichEditor.ImagePanel'
-   ], function(CompoundControl, PopupMixin, LikeWindowMixin, FileStorageLoader, Di, fcHelpers, dotTplFn, EventBus) {
+   ], function(CompoundControl, PopupMixin, LikeWindowMixin, Di, dotTplFn, EventBus) {
       'use strict';
 
       var

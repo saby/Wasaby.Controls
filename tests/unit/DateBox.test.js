@@ -1,4 +1,4 @@
-define(['js!SBIS3.CONTROLS.DateBox', 'js!SBIS3.CONTROLS.ControlsValidators',], function (DateBox, ControlsValidators) {
+define(['js!SBIS3.CONTROLS.DateBox', 'js!SBIS3.CONTROLS.ControlsValidators'], function (DateBox, ControlsValidators) {
    'use strict';
 
    let requiredValidator = [{validator: ControlsValidators.required}],

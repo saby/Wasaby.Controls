@@ -1,11 +1,9 @@
 define('js!WSControls/Windows/PopupManager',
    [
-      'Core/Control',
-      'Core/core-merge',
       'Core/helpers/random-helpers',
       'js!WSControls/Windows/PopupContainer/PopupContainer'
    ],
-   function (Control, coreMerge, random, PopupContainer) {
+   function (random, PopupContainer) {
       'use strict';
 
       /**

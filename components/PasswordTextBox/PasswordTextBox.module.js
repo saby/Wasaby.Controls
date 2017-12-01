@@ -3,11 +3,10 @@
  */
 
 define('js!SBIS3.CONTROLS.PasswordTextBox', [
-   "Core/constants",
    "js!SBIS3.CONTROLS.TextBox",
    "tmpl!SBIS3.CONTROLS.PasswordTextBox/resources/showPasswordTemplate",
    'css!SBIS3.CONTROLS.PasswordTextBox'
-], function ( constants,TextBox, showPasswordTemplate) {
+], function (TextBox, showPasswordTemplate) {
 
    'use strict';
    /**

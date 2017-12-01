@@ -3,17 +3,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    "Core/Deferred",
    "Core/IoC",
    "WS.Data/Source/Memory",
-   "WS.Data/Source/SbisService",
    "WS.Data/Query/Query",
    "WS.Data/Collection/ObservableList",
    "WS.Data/Display/Display",
    "WS.Data/Collection/IBind",
-   "WS.Data/Display/Collection",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "Core/core-instance",
    "Core/helpers/Function/forAliveOnly",
    "Core/helpers/Object/isEmpty"
-], function (coreClone, Deferred, IoC, MemorySource, SbisService, Query, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, cInstance, forAliveOnly, isEmptyObject) {
+], function (coreClone, Deferred, IoC, MemorySource, Query, ObservableList, Projection, IBindCollection, TemplateUtil, cInstance, forAliveOnly, isEmptyObject) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
