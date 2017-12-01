@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
       'use strict';
 
       /**
-       * Класс контрола "Редактор колонок".
+       * Класс контрола "Редактор колонок"
        *
        * @author Авраменко Алексей Сергеевич
        * @class SBIS3.CONTROLS.Columns.Editor
@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
        *
        * @mixes SBIS3.CONTROLS.PickerMixin ^^^
        */
-      var Editor = CompoundControl.extend([/*PickerMixin*/], /** @lends SBIS3.CONTROLS.Columns.Editor.prototype */{
+      var Editor = CompoundControl.extend([/*PickerMixin*/], /**@lends SBIS3.CONTROLS.Columns.Editor.prototype*/ {
          /**
           * @typedef {Object} ColumnsConfigObject
           * @property {WS.Data/Collection/RecordSet} columns Набор записей, каждая из которых описывает элемент панели редактирования колонок. <br/>

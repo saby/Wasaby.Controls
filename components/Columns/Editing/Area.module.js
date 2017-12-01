@@ -26,14 +26,14 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
       'use strict';
 
       /**
-       * Класс контрола "Редактор колонок".
+       * Класс контрола "Область редактирования колонок"
        *
        * @author Авраменко Алексей Сергеевич
        * @class SBIS3.CONTROLS.Columns.Editing.Area
        * @public
        * @extends SBIS3.CONTROLS.CompoundControl
        */
-      var Area = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Columns.Editing.Area.prototype */ {
+      var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS.Columns.Editing.Area.prototype*/ {
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {

@@ -1,5 +1,5 @@
 /**
- * Класс пресета/шаблона редактора колонок
+ * Класс пресета редактора колонок
  *
  * @public
  * @class SBIS3.CONTROLS.Columns.Preset.Unit
@@ -11,15 +11,16 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Unit',
       'use strict';
 
 
+
       /**
        * Конструктор
        * @public
        * @param {object} options Параметры конструктора
-       * @param {string|number}     options.id Идентификатор пресета/шаблона (обязательный)
-       * @param {string}            options.title Название пресета/шаблона (обязательный)
+       * @param {string|number}     options.id Идентификатор пресета (обязательный)
+       * @param {string}            options.title Название пресета (обязательный)
        * @param {(string|number)[]} [options.selectedColumns] Список идентификаторов выбранных колонок (опциональный)
        * @param {(string|number)[]} [options.expandedGroups] Список идентификаторов распахнутых групп (опциональный)
-       * @param {boolean}           options.isStatic Пресет/шаблон является статическим (не сохраняемым) (опциональный)
+       * @param {boolean}           options.isStatic Пресет является статическим (не сохраняемым) (опциональный)
        */
       var PresetUnit = function (options) {
          if (!options || typeof options !== 'object') {
@@ -34,7 +35,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Unit',
 
       PresetUnit.prototype = /**@lends SBIS3.CONTROLS.Columns.Preset.Unit.prototype*/ {
          /**
-          * Идентификатор пресета/шаблона
+          * Идентификатор пресета
           * @type {string|number}
           */
          set id (value) {
@@ -45,7 +46,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Unit',
          },
 
          /**
-          * Название пресета/шаблона
+          * Название пресета
           * @type {string}
           */
          set title (value) {
@@ -72,7 +73,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Unit',
          },
 
          /**
-          * Пресет/шаблон является статическим (не сохраняемым)
+          * Пресет является статическим (не сохраняемым)
           * @type {boolean}
           */
          set isStatic (value) {
@@ -86,6 +87,8 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Unit',
       PresetUnit.prototype.constructor = PresetUnit;
 
 
+
+      // Приватные методы
 
       var _check = function (value) {
          if (value && !Array.isArray(value)) {

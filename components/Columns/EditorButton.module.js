@@ -1,3 +1,10 @@
+/**
+ * Класс контрола "Кнопка открытия редактора колонок"
+ *
+ * @public
+ * @class SBIS3.CONTROLS.Columns.EditorButton
+ * @extends SBIS3.CONTROLS.CompoundControl
+ */
 define('js!SBIS3.CONTROLS.Columns.EditorButton',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
@@ -14,27 +21,7 @@ define('js!SBIS3.CONTROLS.Columns.EditorButton',
    function (CompoundControl, CommandDispatcher, Deferred, ClientsGlobalConfig, /*UserConfig,*/ RecordSet, dotTplFn) {
       'use strict';
 
-      /**
-       * Класс контрола "Редактор колонок".
-       *
-       * @author Авраменко Алексей Сергеевич
-       * @class SBIS3.CONTROLS.Columns.EditorButton
-       * @public
-       * @extends SBIS3.CONTROLS.CompoundControl
-       */
-      var EditorButton = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.Columns.EditorButton.prototype */{
-         /**
-          * @typedef {Object} ColumnsConfigObject
-          * @property {WS.Data/Collection/RecordSet} columns Набор записей, каждая из которых описывает элемент панели редактирования колонок. <br/>
-          * Поля записи:
-          * <ol>
-          *    <li><b>id (String)</b> - идентификатор элемента.</li>
-          *    <li><b>title (String)</b> - отображаемый текст элемента.</li>
-          *    <li><b>fixed (Boolean)</b> - признак "Фиксированный". На панели редактирования колонок элементы с таким признаком выбраны и недоступны для взаимодействия, а колонки элемента, описанные в опции **columnConfig**, всегда отображены в списке.</li>
-          *    <li><b>columnConfig (Array)</b> - массив с конфигурацией колонок (см. {@link SBIS3.CONTROLS.DataGridView#columns columns}).</li>
-          * </ol>
-          * @property {Array.<String|Number>} selectedColumns Массив идентификаторов элементов, которые будут отмечены на панели редактирования колонок. Параметр актуален для элементов с опцией *fixed=false*.
-          */
+      var EditorButton = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.Columns.EditorButton.prototype*/ {
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
