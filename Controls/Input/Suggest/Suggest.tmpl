@@ -7,11 +7,8 @@
     enabled="{{isEnabled()}}"
     tagStyle="{{_options.tagStyle}}"
     placeholder="{{_options.placeholder}}"
-    event:onChangeValue="_changeValueHandler()">
-    <ws:afterFieldWrapper >
-        <div if="{{_value}}"
-             class="icon-size icon-Close"
-             title="{[Очистить поле]}"
-             event:onclick="_clearValue()"></div>
-    </ws:afterFieldWrapper>
-</ws:Controls.Input.Text>
+    event:onChangeValue="_notifyProxy()"
+    event:onInputFinish="_notifyProxy()"
+    event:onTagClick="_notifyProxy()"
+    event:onTagHover="_notifyProxy()"
+/>

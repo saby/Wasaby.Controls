@@ -2,7 +2,7 @@ define('js!Controls/Input/Suggest',
    [
       'Core/Control',
       'js!Controls/Input/Text',
-      'tmpl!Controls/Input/Suggest',
+      'tmpl!Controls/Input/Suggest/Suggest',
       'Core/core-merge',
       'js!WS.Data/Type/descriptor',
       'js!Controls/Input/resources/SuggestController'
@@ -46,23 +46,13 @@ define('js!Controls/Input/Suggest',
    
          _template: template,
          _controlName: 'Controls/Input/Suggest',
-         // <editor-fold desc="handlers">
-         
-         _clearValue: function() {
-            this._value = '';
-         },
-         
-         _changeValueHandler: function(event, value) {
-            this._value = value;
-         },
-         
-         // </editor-fold>
    
          // <editor-fold desc="LifeCycle">
-         
-         constructor: function(cfg) {
-            this._value = cfg.value;
-            Suggest.superclass.constructor.call(this, cfg);
+   
+         _notifyProxy: function(event) {
+            var args = [].slice.call(arguments, 1);
+            args.unshift(event.name);
+            event.setResult(this._notify.apply(this, args));
          },
    
          _afterMount: function() {
@@ -79,10 +69,6 @@ define('js!Controls/Input/Suggest',
             this.once('onDestroy', function() {
                suggestController.destroy();
             });
-         },
-   
-         _beforeUpdate: function(newOptions) {
-            this._value = newOptions.value;
          }
          
          // </editor-fold>
@@ -106,8 +92,7 @@ define('js!Controls/Input/Suggest',
       Suggest.getDefaultOptions = function() {
          return cMerge(textDefaultOptions(), {
             searchDelay: 500,
-            minSearchLength: 3,
-            clearable: true
+            minSearchLength: 3
          });
       };
       // </editor-fold>
