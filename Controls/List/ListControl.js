@@ -59,45 +59,56 @@ define('js!Controls/List/ListControl', [
          return params;
       },
 
-      load: function(direction) {
-         if (this._dataSource) {
-            var def, queryParams,
-               self = this;
+      reload: function(self) {
+         _private.load(self, function(self, list){
+            if (!self._listModel) {
+               self._listModel = _private.createListModel(list, self._options);
+               self._forceUpdate();
+            }
+            else {
+               self._listModel.setItems(list);
+            }
+         })
+      },
+
+      loadToDirection: function(self, direction) {
+         _private.load(self, function(self, list){
+            if (direction == 'down') {
+               self._listModel.appendItems(list);
+            } else if (direction == 'up') {
+               self._listModel.prependItems(list);
+            }
+         }, direction)
+      },
+
+
+      load: function(self, loadCallback, direction) {
+         if (self._dataSource) {
+            var def, queryParams;
 
             queryParams = {
-               filter: this._filter,
-               sorting: this._sorting,
+               filter: self._filter,
+               sorting: self._sorting,
                limit: undefined,
                offset: undefined
             };
             //модифицируем параметры через навигацию
-            if (this._navigationController) {
-               queryParams = _private.paramsWithNavigation(queryParams, this._navigationController, this._display, direction);
+            if (self._navigationController) {
+               queryParams = _private.paramsWithNavigation(queryParams, self._navigationController, self._display, direction);
             }
 
             //позволяем модифицировать параметры юзеру
-            var userParams = this._notify('onBeforeDataLoad', queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit);
+            var userParams = self._notify('onBeforeDataLoad', queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit);
             if (userParams) {
                queryParams = _private.paramsWithUserEvent(queryParams, userParams);
             }
 
-            def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
+            def = DataSourceUtil.callQuery(self._dataSource, self._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
                .addCallback(fHelpers.forAliveOnly(function (list) {
                   self._notify('onDataLoad', list);
-                  if (direction == 'down') {
-                     self._listModel.appendItems(list);
-                  } else if (direction == 'up') {
-                     self._listModel.prependItems(list);
-                  } else { //без направления - это перезагрузка
-                     //модели нет, если это первая загрузка и не были заданы items в компонента
-                     if (!self._listModel) {
-                        self._listModel = _private.createListModel(list, self._options);
-                        self._forceUpdate();
-                     }
-                     else {
-                        self._listModel.setItems(list);
-                     }
-                  }
+
+                  loadCallback(self, list);
+
                   if (self._navigationController) {
                      self._navigationController.calculateState(list, direction);
                   }
@@ -105,6 +116,7 @@ define('js!Controls/List/ListControl', [
 
 
                   //TODO это кривой способ заставить пэйджинг пересчитаться. Передалть, когда будут готовы команды от Зуева
+                  //убираю, когда будет готов реквест от Зуева
                   window.setTimeout(function(){
                      if (self._scrollPagingCtr) {
                         self._scrollPagingCtr.resetHeights();
@@ -126,7 +138,7 @@ define('js!Controls/List/ListControl', [
          var self = this;
          if (this._navigationController && this._navigationController.hasMoreData(direction)) {
             this._navigationController.setEdgeState(direction);
-            _private.load.call(this).addCallback(function(){
+            _private.reload(this).addCallback(function(){
                _private.scrollTo.call(self, direction == 'up' ? 0 : 100000000)
             });
          }
@@ -420,7 +432,7 @@ define('js!Controls/List/ListControl', [
             //TODO нужна компенсация при подгрузке вверх
 
             if (this._navigationController && this._navigationController.hasMoreData(direction)) {
-               _private.load.call(this, direction);
+               _private.loadToDirection(this, direction);
             }
          },
 
@@ -437,7 +449,7 @@ define('js!Controls/List/ListControl', [
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
                if (!this._items) {
-                  _private.load.call(this);
+                  _private.reload(this);
                }
             }
          },
@@ -491,7 +503,7 @@ define('js!Controls/List/ListControl', [
             if (newOptions.dataSource !== this._options.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
-               _private.load.call(this);
+               _private.reload(this);
             }
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
          },
@@ -521,7 +533,7 @@ define('js!Controls/List/ListControl', [
          },
          //<editor-fold desc='DataSourceMethods'>
          reload: function() {
-            _private.load.call(this);
+            _private.reload(this);
          },
 
          destroy: function() {

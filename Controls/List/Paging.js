@@ -80,19 +80,20 @@ define('js!Controls/List/Paging', [
       },
 
       __arrowClick: function(e, btnName) {
-         if(this['_state' + btnName] == 'normal') {
-            if (this._options.showDigits) {
-               var targetPage;
-               switch (btnName) {
-                  case 'Begin': targetPage = 1; break;
-                  case 'End': targetPage = this._options.pagesCount; break;
-                  case 'Prev': targetPage = this._options.selectedPage - 1; break;
-                  case 'Next': targetPage = this._options.selectedPage + 1; break;
-               }
-               this.__changePage(targetPage);
-            }
-            this._notify('onArrowClick', btnName);
+         if(this['_state' + btnName] != 'normal') {
+            return;
          }
+         if (this._options.showDigits) {
+            var targetPage;
+            switch (btnName) {
+               case 'Begin': targetPage = 1; break;
+               case 'End': targetPage = this._options.pagesCount; break;
+               case 'Prev': targetPage = this._options.selectedPage - 1; break;
+               case 'Next': targetPage = this._options.selectedPage + 1; break;
+            }
+            this.__changePage(targetPage);
+         }
+         this._notify('onArrowClick', btnName);
       }
    });
    return ModuleClass;
