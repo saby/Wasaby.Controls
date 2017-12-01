@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
                /**
                 * @cfg {string|number} Идентификатор первоначально выбранного пресета в дропдауне
                 */
-               defaultPreset: null,
+               defaultPreset: null
             },
             _dropdown: null,
             _selectedPreset: null
@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
          init: function () {
             PresetDropdown.superclass.init.apply(this, arguments);
             this._dropdown = this.getChildControlByName('controls-Columns-Preset-Dropdown__dropdown');
-            this._selectedPreset = _selectedPreset;
+            this._selectedPreset = _selectedPreset || this._options.defaultPreset;
             var namespace = this._options.presetNamespace;
             if (namespace) {
                this._cacheHandler = this._updateDropdown.bind(this);
@@ -125,17 +125,13 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
             var dropdown = this._dropdown;
             dropdown.setItems(presets);
             var selected = this._selectedPreset;
-            if (!selected) {
-               var defSelected = this._options.defaultPreset;
-               if (defSelected && presets.map(function (v) { return v.id; }).indexOf(defSelected) !== -1) {
-                  selected = defSelected;
-               }
-               else
-               if (presets.length) {
-                  selected = presets[0].id;
-               }
-               this._selectedPreset = selected;
+            if (selected && (!presets.length || presets.map(function (v) { return v.id; }).indexOf(selected) === -1)) {
+               selected = null;
             }
+            if (!selected && presets.length) {
+               selected = presets[0].id;
+            }
+            this._selectedPreset = selected;
             dropdown.setSelectedKeys(selected ? [selected] : []);
             dropdown.setEnabled(1 < presets.length);
             this._isDropdownReady = 0 < presets.length;
