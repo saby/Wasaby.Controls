@@ -49,7 +49,7 @@ define('js!Controls/List/Paging', [
 
       _beforeMount: function(newOptions) {
          if (newOptions.showDigits) {
-            _private.__calcBtnStates(this, newOptions.selectedPage, newOptions);
+            _private.initArrowStateBySelectedPage(this, newOptions.selectedPage, newOptions);
          }
          else {
             _private.initArrowDefaultStates(this, newOptions);
@@ -58,15 +58,11 @@ define('js!Controls/List/Paging', [
 
       _beforeUpdate: function(newOptions) {
          if (newOptions.showDigits) {
-            _private.__calcBtnStates(this, newOptions.selectedPage, newOptions);
+            _private.initArrowStateBySelectedPage(this, newOptions.selectedPage, newOptions);
          }
          else {
             _private.initArrowDefaultStates(this, newOptions);
          }
-      },
-
-      __calcBtnStates: function(selKey) {
-
       },
 
       __digitClick: function(e, digit) {
