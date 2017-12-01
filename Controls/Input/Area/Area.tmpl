@@ -15,18 +15,20 @@
          <textarea
                  name="realArea"
                  spellcheck="false"
-                 class="controls-TextArea__field controls-TextArea__realField controls-TextBox__field js-controls-TextBox__field"
+                 class="controls-TextArea__field controls-TextArea__realField controls-TextBox__field"
                  placeholder="{{_options.placeholder}}"
                  readonly="{{!isEnabled() ? 'readonly'}}"
                  style="overflow-y: {{_hasScroll ? 'scroll' : 'hidden'}}"
                  event:onkeydown="_keyDownHandler()"
+                 event:onfocus="_focusHandler()"
+                 event:onscroll="_scrollHandler()"
          >{{_value}}</textarea>
 
          <div class="controls-fakeTextArea__firstWrapper">
             <div class="controls-fakeTextArea__secondWrapper">
                <div
                   name="fakeArea"
-                  class="controls-TextArea__field controls-TextArea__fakeField controls-TextBox__field js-controls-TextBox__field"
+                  class="controls-TextArea__field controls-TextArea__fakeField controls-TextBox__field"
                   style="{{_options.minLines ? ('min-height: ' + _options.minLines * 100 + '%;')}} {{_options.maxLines ? 'max-height: ' + _options.maxLines * 100 + '%'}}">
                   <span name="fakeAreaValue">{{_value}}</span><br/>
                </div>

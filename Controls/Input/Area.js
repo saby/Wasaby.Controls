@@ -1,12 +1,15 @@
 define('js!Controls/Input/Area', [
-   'Core/Control',
+   'js!Controls/Input/Text',
    'Core/constants',
-   'js!WS.Data/Type/descriptor',
-   'js!Controls/Input/resources/Helper',
+   'WS.Data/Type/descriptor',
    'Core/detection',
    'tmpl!Controls/Input/Area/Area',
    'css!Controls/Input/Area/Area'
-], function(Control, constants, types, Helper, detection, template) {
+], function(Text,
+            constants,
+            types,
+            detection,
+            template) {
 
    'use strict';
 
@@ -42,17 +45,18 @@ define('js!Controls/Input/Area', [
 
    var _private = {
 
-      setValue: function(value){
-         this._value = value;
+      setFakeAreaValue: function(value){
          this._children.fakeAreaValue.innerHTML = value;
       },
 
-      //Обновляет наличие скролла, в зависимости от того, есть ли скролл на фейковой текст арии
+      /*
+      * Обновляет наличие скролла, в зависимости от того, есть ли скролл на фейковой текст арии
+      */
       updateScroll: function(){
          var fakeArea = this._children.fakeArea;
          var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
 
-         //Для IE, текст мы показываем из fakeArea, поэтому обновим скролл.
+         //Для IE, текст мы показываем из fakeArea, поэтому сдвинем скролл.
          if(needScroll && detection.isIE){
             fakeArea.scrollTop = this._children.realArea.scrollTop;
          }
@@ -61,71 +65,37 @@ define('js!Controls/Input/Area', [
             this._hasScroll = needScroll;
             this._forceUpdate();
          }
-      },
-
-      //Валидирует и подготавливает новое значение по splitValue
-      prepareData: function(splitValue) {
-         var insert = splitValue.insert;
-
-         if (this._options.constraint) {
-            insert = Helper.constraint(insert, this._options.constraint);
-         }
-
-         if(this._options.maxLength){
-            insert = Helper.maxLength(insert, splitValue, this._options.maxLength);
-         }
-
-         return {
-            value: splitValue.before + insert + splitValue.after,
-            position: splitValue.before.length + insert.length
-         };
       }
    };
 
-   var Area = Control.extend({
+   var Area = Text.extend({
 
       _controlName: 'Controls/Input/Area',
       _template: template,
 
-      constructor: function(options) {
-         Area.superclass.constructor.apply(this, arguments);
-
-         this._value = options.value;
-         this._hasScroll = false;
-         this._prepareData = _private.prepareData.bind(this);
-      },
+      _hasScroll: false,
 
       _afterMount: function() {
+         Area.superclass._afterMount.apply(this, arguments);
          _private.updateScroll.call(this);
       },
 
       _beforeUpdate: function(newOptions) {
-         _private.setValue.call(this, newOptions.value);
+         Area.superclass._beforeUpdate.apply(this, arguments);
+         _private.setFakeAreaValue.call(this, newOptions.value);
          _private.updateScroll.call(this);
       },
 
       _changeValueHandler: function(e, value){
-         _private.setValue.call(this, value);
+         Area.superclass._changeValueHandler.apply(this, arguments);
+         _private.setFakeAreaValue.call(this, value);
          _private.updateScroll.call(this);
-         this._notify('onChangeValue', value);
       },
 
-      _inputCompletedHandler: function(){
-         //Если стоит опция trim, то перед завершением удалим лишние пробелы и ещё раз стрельнем valueChanged
-         if(this._options.trim){
-            var newValue = this._value.trim();
-            if(newValue !== this._value){
-               _private.setValue.call(this, newValue);
-               _private.updateScroll.call(this);
-               this._notify('onChangeValue', newValue);
-            }
-         }
-
-         this._notify('inputCompleted', this._value);
-      },
-
-      _notifyHandler: function(event, value) {
-         this._notify(value);
+      _setValue: function(value){
+         Area.superclass._setValue.apply(this, arguments);
+         _private.setFakeAreaValue.call(this, value);
+         _private.updateScroll.call(this);
       },
 
       _keyDownHandler: function(e){
@@ -145,36 +115,31 @@ define('js!Controls/Input/Area', [
             }
          }
 
+      },
+
+      _scrollHandler: function(){
+         _private.updateScroll.call(this);
       }
 
    });
 
    Area.getDefaultOptions = function() {
       return {
-         value: '',
-         trim: false,
-         selectOnClick: false,
          newLineKey: 'enter'
       };
    };
 
-   Area.getOptionTypes = function() {
+   //TODO раскомментировать когда полечат https://online.sbis.ru/opendoc.html?guid=e53e46a0-9478-4026-b7d1-75cc5ac0398b
+   /*Area.getOptionTypes = function() {
       return {
-         value: types(String),
-         trim: types(Boolean),
-         placeholder: types(String),
-         selectOnClick: types(Boolean),
-         constraint: types(String),
          minLines: types(Number),
          maxLines: types(Number),
-         maxLength: types(Number),
-         tagStyle: types(String),
          newLineKey: types(String).oneOf([
           'enter',
           'ctrlEnter'
          ])
       };
-   };
+   };*/
 
    return Area;
 

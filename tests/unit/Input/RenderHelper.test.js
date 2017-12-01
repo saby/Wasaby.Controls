@@ -1,6 +1,6 @@
 define(
    [
-      'js!Controls/Input/resources/RenderHelper'
+      'Controls/Input/resources/RenderHelper'
    ],
    function(RenderHelper) {
       

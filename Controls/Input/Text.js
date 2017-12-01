@@ -1,13 +1,14 @@
-define('js!Controls/Input/Text',
-   [
+define('js!Controls/Input/Text', [
       'Core/Control',
-      'js!Controls/Input/resources/Helper',
+      'Controls/Input/resources/Helper',
       'tmpl!Controls/Input/Text/Text',
-      'js!WS.Data/Type/descriptor',
+      'WS.Data/Type/descriptor',
       'css!SBIS3.CONTROLS.TextBox',
       'tmpl!Controls/Input/resources/input'
-   ],
-   function(Control, Helper, template, types) {
+   ], function(Control,
+               Helper,
+               template,
+               types) {
 
       'use strict';
 
@@ -25,21 +26,22 @@ define('js!Controls/Input/Text',
        * @author Журавлев Максим Сергеевич
        */
 
+
       /**
        * @name Controls/Input/Text#maxLength
-       * @cfg {Number} Максимальное количество символов, которое может содержать поле ввода.
+       * @cfg {Number} Максимальное количество символов, которое может содержать поле ввода
        */
 
       /**
        * @name Controls/Input/Text#trim
-       * @cfg {Boolean} Режим обрезки пробелов в начале и конце добавляемого текста.
+       * @cfg {Boolean} Режим обрезки пробелов в начале и конце добавляемого текста
        * @variant true Обрезать пробелы.
        * @variant false Не обрезать пробелы.
        */
 
          /**
           * @name Controls/Input/Text#selectOnClick
-          * @cfg {Boolean} Определяет режим выделения текста в поле ввода при получении фокуса.
+          * @cfg {Boolean} Определяет режим выделения текста в поле ввода при получении фокуса
           * @variant true Выделять текст.
           * @variant false Не выделять текст.
           */
@@ -71,10 +73,6 @@ define('js!Controls/Input/Text',
                insert = Helper.constraint(insert, this._options.constraint);
             }
 
-            if (this._options.trim) {
-               insert = insert.trim();
-            }
-
             if(this._options.maxLength){
                insert = Helper.maxLength(insert, splitValue, this._options.maxLength);
             }
@@ -102,8 +100,12 @@ define('js!Controls/Input/Text',
             this._value = newOptions.value;
          },
 
-         _changeValueHandler: function(event, value) {
+         _setValue: function(value){
             this._value = value;
+         },
+
+         _changeValueHandler: function(event, value) {
+            this._setValue(value);
             this._notify('onChangeValue', value);
          },
 
@@ -112,7 +114,7 @@ define('js!Controls/Input/Text',
             if(this._options.trim){
                var newValue = this._value.trim();
                if(newValue !== this._value){
-                  this._value = newValue;
+                  this._setValue(newValue);
                   this._notify('onChangeValue', newValue);
                }
             }
@@ -122,25 +124,34 @@ define('js!Controls/Input/Text',
 
          _notifyHandler: function(event, value) {
             this._notify(value);
+         },
+
+         _focusHandler: function(e) {
+            if (this._options.selectOnClick) {
+               e.target.select();
+            }
          }
       });
 
       TextBox.getDefaultOptions = function() {
          return {
-            value: ''
+            value: '',
+            trim: false,
+            selectOnClick: true
          };
       };
 
-      TextBox.getOptionTypes = function() {
-         return {
-            trim: types(Boolean),
-            selectOnClick: types(Boolean),
-            placeholder: types(String),
-            constraint: types(String),
-            value: types(String),
-            maxLength: types(Number)
-         };
-      };
+      //TODO расскоментировать когда полечат https://online.sbis.ru/opendoc.html?guid=e53e46a0-9478-4026-b7d1-75cc5ac0398b
+      /*TextBox.getOptionTypes = function() {
+       return {
+       trim: types(Boolean),
+       selectOnClick: types(Boolean),
+       placeholder: types(String),
+       constraint: types(String),
+       value: types(String),
+       maxLength: types(Number)
+       };
+       };*/
 
       return TextBox;
    }

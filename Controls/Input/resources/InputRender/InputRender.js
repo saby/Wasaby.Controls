@@ -1,9 +1,9 @@
 define('js!Controls/Input/resources/InputRender/InputRender',
    [
       'Core/Control',
-      'js!WS.Data/Type/descriptor',
+      'WS.Data/Type/descriptor',
       'tmpl!Controls/Input/resources/InputRender/InputRender',
-      'js!Controls/Input/resources/RenderHelper',
+      'Controls/Input/resources/RenderHelper',
       'css!SBIS3.CONTROLS.TextBox'
    ],
    function(Control, types, template, RenderHelper) {
@@ -31,8 +31,8 @@ define('js!Controls/Input/resources/InputRender/InputRender',
 
          saveSelection: function(target){
             this._selection = this._selection || {};
-            this._selection = target.selectionStart;
-            this._selection = target.selectionEnd;
+            this._selection.selectionStart = target.selectionStart;
+            this._selection.selectionEnd = target.selectionEnd;
          },
 
          setTargetData: function(target, data){
@@ -91,12 +91,6 @@ define('js!Controls/Input/resources/InputRender/InputRender',
 
          _notifyHandler: function(e, value) {
             this._notify(value);
-         },
-
-         _focusHandler: function(e) {
-            if (this._options.selectOnClick) {
-               e.target.select();
-            }
          }
       });
 
@@ -107,7 +101,8 @@ define('js!Controls/Input/resources/InputRender/InputRender',
          };
       };
 
-      InputRender.getOptionTypes = function() {
+      //TODO расскоментировать когда полечат https://online.sbis.ru/opendoc.html?guid=e53e46a0-9478-4026-b7d1-75cc5ac0398b
+      /*InputRender.getOptionTypes = function() {
          return {
             value: types(String),
             selectOnClick: types(Boolean),
@@ -120,7 +115,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
                'info'
             ])
          };
-      };
+      };*/
 
       return InputRender;
    }

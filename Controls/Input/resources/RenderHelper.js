@@ -1,4 +1,4 @@
-define('js!Controls/Input/resources/RenderHelper',
+define('Controls/Input/resources/RenderHelper',
    [],
    function() {
 
