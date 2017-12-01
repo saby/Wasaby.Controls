@@ -9,6 +9,7 @@
       event:ontouchend="_onTouchEnd()"
       event:ontouchmove="_onTouchMove()"
       tabindex="{{_options.tabindex}}"
+      data-component="{{ _moduleName }}"
       class="controls-Button controls-ButtonBase
  controls-Button-size__{{!!_options.size ? _options.size : 'default'}}
  controls-Button-color__{{_options.primary ? 'primary':'default'}}
