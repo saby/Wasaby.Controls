@@ -16,14 +16,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.SearchMixin",
    "js!SBIS3.CONTROLS.ScrollContainer",
-   'js!SBIS3.CONTROLS.Utils.GetTextWidth',
+   'js!SBIS3.CONTROLS.Utils.TitleUtil',
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown",
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
    "Core/core-instance",
    "i18n!SBIS3.CONTROLS.СomboBox",
    'css!SBIS3.CONTROLS.ComboBox'
-], function ( constants, Deferred, IoC, detection, LayoutManager, TextBox, TextBoxUtils, textFieldWrapper, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, getTextWidth, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
+], function ( constants, Deferred, IoC, detection, LayoutManager, TextBox, TextBoxUtils, textFieldWrapper, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, TitleUtil, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
     * Класс контрола "Комбинированный выпадающий список" с возможностью ввода значения с клавиатуры.
@@ -811,17 +811,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._scrollToItem(hash);
       },
 
-      _pickerMouseEnterHandler: function (event) {
-         //не устанавливаем title на мобильных устройствах:
-         //во-первых не нужно, во-вторых на ios из-за установки аттрибута не работает клик
-         if (!detection.isMobilePlatform) {
-            var itemText = this.textContent;
-            if (!this.getAttribute('title') && getTextWidth(itemText) > this.clientWidth) {
-               this.setAttribute('title', itemText);
-            }
-         }
-      },
-
       _initializePicker: function(){
          var self = this;
          ComboBox.superclass._initializePicker.call(self);
@@ -832,7 +821,17 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          self._picker.subscribe('onKeyPressed', function (eventObject, event) {
             self._keyboardHover(event);
          });
-         $('.controls-ComboBox__item', this._picker.getContainer()).bind('mouseenter', this._pickerMouseEnterHandler);
+         $('.controls-ComboBox__item', this._picker.getContainer()).bind('mouseenter', function itemMouseEnter(event) {
+            //не устанавливаем title на мобильных устройствах:
+            //во-первых не нужно, во-вторых на ios из-за установки аттрибута не работает клик
+            if (!detection.isMobilePlatform) {
+               var itemContainer = event.target.closest('.controls-ComboBox__item'),
+                   textLineCount = itemContainer.innerText.split('\n').length; //Показываем подсказку, если внутри итема нет прикладной верстки. Узлы при получении innerText разделяются \n
+               if (textLineCount === 1) {
+                  TitleUtil.setTitle(itemContainer);
+               }
+            }
+         });
          TextBoxUtils.setEqualPickerWidth(this._picker);
       },
 
@@ -867,7 +866,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       destroy: function() {
          if (this._picker) {
-            $('.controls-ComboBox__item', this._picker.getContainer()).unbind('mouseenter', this._pickerMouseEnterHandler);
+            $('.controls-ComboBox__item', this._picker.getContainer()).unbind();
          }
          ComboBox.superclass.destroy.apply(this, arguments);
       },
