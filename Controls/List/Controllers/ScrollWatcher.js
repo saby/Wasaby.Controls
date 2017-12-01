@@ -75,7 +75,7 @@ define('js!Controls/List/Controllers/ScrollWatcher', [
     * @public
     */
    var ScrollWatcher = simpleExtend.extend({
-      _options: null,
+      _options: null,// eslint-disable-line check-location-options
       _observer: null,
 
       constructor: function(cfg) {
