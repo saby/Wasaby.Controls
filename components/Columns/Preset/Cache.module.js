@@ -8,10 +8,11 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Cache',
    [
       'Core/Deferred',
       'Core/EventBus',
-      'Core/UserConfig'
+      'Core/UserConfig',
+      'js!SBIS3.CONTROLS.Columns.Preset.Unit'
    ],
 
-   function (Deferred, EventBus, UserConfig) {
+   function (Deferred, EventBus, UserConfig, PresetUnit) {
       'use strict';
 
 

@@ -20,41 +20,33 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Unit',
        * @param {string}            options.title Название пресета (обязательный)
        * @param {(string|number)[]} [options.selectedColumns] Список идентификаторов выбранных колонок (опциональный)
        * @param {(string|number)[]} [options.expandedGroups] Список идентификаторов распахнутых групп (опциональный)
-       * @param {boolean}           options.isStatic Пресет является статическим (не сохраняемым) (опциональный)
+       * @param {boolean}           options.isStorable Пресет является статическим (не сохраняемым) (опциональный)
        */
       var PresetUnit = function (options) {
          if (!options || typeof options !== 'object') {
             throw new Error('Object required');
          }
+         Object.defineProperty(this, 'id', {enumerable:true, set:_setId, get:_getId});
+         Object.defineProperty(this, 'title', {enumerable:true, set:_setTitle, get:_getTitle});
          this.id = options.id;
          this.title = options.title;
          this.selectedColumns = options.selectedColumns;
          this.expandedGroups = options.expandedGroups;
-         this.isStatic = options.isStatic;
+         this.isStorable = options.isStorable;
       };
 
       PresetUnit.prototype = /**@lends SBIS3.CONTROLS.Columns.Preset.Unit.prototype*/ {
          /**
           * Идентификатор пресета
           * @type {string|number}
+          * @name SBIS3.CONTROLS.Columns.Preset.Unit#id
           */
-         set id (value) {
-            if (!value || !(typeof value === 'string' || typeof value === 'number')) {
-               throw new Error('None empty string or number required');
-            }
-            this._id = value;
-         },
 
          /**
           * Название пресета
           * @type {string}
+          * @name SBIS3.CONTROLS.Columns.Preset.Unit#title
           */
-         set title (value) {
-            if (!value || typeof value !== 'string') {
-               throw new Error('None empty string required');
-            }
-            this._title = value;
-         },
 
          /**
           * Список идентификаторов выбранных колонок
@@ -62,6 +54,9 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Unit',
           */
          set selectedColumns (value) {
             this._selectedColumns = _check(value);
+         },
+         get selectedColumns () {
+            return this._selectedColumns;
          },
 
          /**
@@ -71,16 +66,22 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Unit',
          set expandedGroups (value) {
             this._expandedGroups = _check(value);
          },
+         get expandedGroups () {
+            return this._expandedGroups;
+         },
 
          /**
-          * Пресет является статическим (не сохраняемым)
+          * Пресет является сохраняемым
           * @type {boolean}
           */
-         set isStatic (value) {
+         set isStorable (value) {
             if (value && typeof value !== 'boolean') {
                throw new Error('Boolean required');
             }
-            this._isStatic = value || undefined;
+            this._isStorable = value || undefined;
+         },
+         get isStorable () {
+            return this._isStorable;
          }
       };
 
@@ -89,6 +90,26 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Unit',
 
 
       // Приватные методы
+
+      var _setId = function (value) {
+         if (!value || !(typeof value === 'string' || typeof value === 'number')) {
+            throw new Error('None empty string or number required');
+         }
+         this._id = value;
+      };
+      var _getId = function () {
+         return this._id;
+      };
+
+      var _setTitle = function (value) {
+         if (!value || typeof value !== 'string') {
+            throw new Error('None empty string required');
+         }
+         this._title = value;
+      };
+      var _getTitle = function () {
+         return this._title;
+      };
 
       var _check = function (value) {
          if (value && !Array.isArray(value)) {

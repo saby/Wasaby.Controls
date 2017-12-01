@@ -33,8 +33,21 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
+               /**
+                * @cfg {string} Заголовок дропдауна
+                */
+               title: null,//rk('Выберите шаблон')
+               /**
+                * @cfg {SBIS3.CONTROLS.Columns.Preset.Unit[]} Список объектов статически задаваемых пресетов
+                */
                presets: null,
+               /**
+                * @cfg {string} Пространство имён для сохранения пользовательских пресетов
+                */
                presetNamespace: null,
+               /**
+                * @cfg {string|number} Идентификатор первоначально выбранного пресета в дропдауне
+                */
                defaultPreset: null,
             },
             _dropdown: null,
@@ -94,16 +107,16 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
           * @param {SBIS3.CONTROLS.Columns.Preset.Unit} units Список пресетов редактора колонок
           */
          _updateDropdown: function (units) {
-            var presets = self._options.presets || [];
+            var presets = this._options.presets || [];
             if (units && units.length) {
-               presets.concat(units);
+               presets = presets.concat(units);
             }
             var dropdown = this._dropdown;
             dropdown.setItems(presets);
             var selected = this._selectedPreset;
             if (!selected) {
                var defSelected = this._options.defaultPreset;
-               if (defSelected && unis.map(function (v) { return v.id; }).indexOf(defSelected) !== -1) {
+               if (defSelected && presets.map(function (v) { return v.id; }).indexOf(defSelected) !== -1) {
                   selected = defSelected;
                }
                else
@@ -113,7 +126,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
                this._selectedPreset = selected;
             }
             dropdown.setSelectedKeys(selected ? [selected] : []);
-            dropdown.setEnabled(1 < presets.getCount());
+            dropdown.setEnabled(1 < presets.length);
          },
 
          /**

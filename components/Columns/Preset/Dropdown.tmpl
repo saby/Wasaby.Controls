@@ -5,8 +5,14 @@
       multiselect="{{false}}"
       mode="click"
       type="titleHeader"
-      title="{[Выберите шаблон]}"
-      idProperty="title"
+      idProperty="id"
       displayProperty="title"
-   />
+      >
+      <ws:title>
+         <ws:String>
+            <ws:if data="{{title}}">{{title}}</ws:if>
+            <ws:else>{[Выберите пресет]}</ws:else>
+         </ws:String>
+      </ws:title>
+   </ws:SBIS3.CONTROLS.DropdownList>
 </div>
