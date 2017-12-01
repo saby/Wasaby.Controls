@@ -12,7 +12,7 @@ define('js!Controls/Input/Number', [
    'use strict';
    var
       _private,
-      NumberTextBox;
+      NumberInput;
 
    _private = {
       splitValue: null,
@@ -136,7 +136,7 @@ define('js!Controls/Input/Number', [
       }
    };
 
-   NumberTextBox = Control.extend({
+   NumberInput = Control.extend({
       /**
        * Поле ввода числа.
        * @class Controls/Input/Number
@@ -178,7 +178,7 @@ define('js!Controls/Input/Number', [
       _template: template,
 
       constructor: function (options) {
-         NumberTextBox.superclass.constructor.apply(this, arguments);
+         NumberInput.superclass.constructor.apply(this, arguments);
          this._prepareData = _private.prepareData.bind(this);
       },
 
@@ -210,7 +210,7 @@ define('js!Controls/Input/Number', [
       }
    });
 
-   NumberTextBox.getOptionTypes = function () {
+   NumberInput.getOptionTypes = function () {
       return {
          precision: types(Number), //Точность (кол-во знаков после запятой)
          integersLength: types(Number), //Длина целой части
@@ -218,7 +218,7 @@ define('js!Controls/Input/Number', [
       };
    };
 
-   NumberTextBox._private = _private;
+   NumberInput._private = _private;
 
-   return NumberTextBox;
+   return NumberInput;
 });
