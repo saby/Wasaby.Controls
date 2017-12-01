@@ -145,16 +145,14 @@
 
    .controls-DropdownList__item.controls-DropdownList__item__selected {
       &:not(.controls-DropdownList__multiselect) {
-         & when (@DropdownList-picker-menu-selected-marker = true) {
-            &:before {
-               content: '';
-               background: @DropdownList-picker-menu-selected-marker-bg;
-               width: @DropdownList-picker-menu-selected-marker-width;
-               height: @DropdownList-picker-menu-selected-marker-height;
-               position: absolute;
-               left: 0;
-               top: @top_DropdownList_picker_marker;
-            }
+         &:before {
+            content: '';
+            background: @DropdownList-picker-menu-selected-marker-bg;
+            width: @DropdownList-picker-menu-selected-marker-width;
+            height: @DropdownList-picker-menu-selected-marker-height;
+            position: absolute;
+            left: 0;
+            top: @top_DropdownList_picker_marker;
          }
       }
    }
