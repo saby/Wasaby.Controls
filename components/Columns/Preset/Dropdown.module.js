@@ -27,6 +27,13 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
        */
       var _channel = EventBus.channel();
 
+      /**
+       * Текущий выбранный пресет
+       * @private
+       * @type {Core/EventBusChannel}
+       */
+      var _selectedPreset;
+
 
 
       var PresetDropdown = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.Columns.Preset.Dropdown.prototype*/ {
@@ -61,6 +68,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
          init: function () {
             PresetDropdown.superclass.init.apply(this, arguments);
             this._dropdown = this.getChildControlByName('controls-Columns-Preset-Dropdown__dropdown');
+            this._selectedPreset = _selectedPreset;
             var namespace = this._options.presetNamespace;
             if (namespace) {
                this._cacheHandler = this._updateDropdown.bind(this);
@@ -70,8 +78,11 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
 
                this.subscribeTo(this._dropdown, 'onSelectedItemsChange', function (evtName, selecteds, changes) {
                   this._selectedPreset = selecteds[0];
-                  this._notify('onChange', selecteds[0]);
-                  _channel.notifyWithTarget('onChangeSelectedPreset', this, selecteds[0]);
+                  _selectedPreset = this._selectedPreset;
+                  if (this._isDropdownReady) {
+                     this._notify('onChange', this._selectedPreset);
+                     _channel.notifyWithTarget('onChangeSelectedPreset', this, this._selectedPreset);
+                  }
                }.bind(this));
 
                this._publish('onChange');
@@ -127,6 +138,8 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
             }
             dropdown.setSelectedKeys(selected ? [selected] : []);
             dropdown.setEnabled(1 < presets.length);
+            this._isDropdownReady = 0 < presets.length;
+            dropdown.setVisible(this._isDropdownReady);
          },
 
          /**
