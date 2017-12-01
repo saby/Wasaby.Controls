@@ -455,7 +455,7 @@ define('js!Controls/List/ListControl', [
             ListControl.superclass._afterMount.apply(this, arguments);
 
             //Если есть подгрузка по скроллу и список обернут в скроллКонтейнер, то создаем ScrollWatcher
-            if (this._options.navigation && this._options.navigation.type === 'page') {
+            if (this._options.navigation && this._options.navigation.source === 'page') {
                var scrollContainer = this._container.closest('.ws-scrolling-content');
                if (scrollContainer && scrollContainer.length) {
                   this._scrollWatcher = _private.createScrollWatcher.call(this, scrollContainer[0]);
