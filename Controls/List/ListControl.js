@@ -139,6 +139,8 @@ define('js!Controls/List/ListControl', [
          if (this._navigationController && this._navigationController.hasMoreData(direction)) {
             this._navigationController.setEdgeState(direction);
             _private.reload(this).addCallback(function(){
+
+               //TODO Убрать перейдя на методы из ScrollWatcher
                _private.scrollTo.call(self, direction == 'up' ? 0 : 100000000)
             });
          }
@@ -467,6 +469,7 @@ define('js!Controls/List/ListControl', [
 
             if (this._options.navigation && this._options.navigation.view == 'infinity') {
                //TODO кривое обращение к DOM
+               //убарть когда перейду на скролл вотчер от Ильи Девятова
                scrollContainer = this._container.closest('.ws-scrolling-content');
                if (scrollContainer.length && this._options.navigation.viewConfig && this._options.navigation.viewConfig.pagingMode) {
                   var self = this;

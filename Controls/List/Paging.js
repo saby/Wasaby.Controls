@@ -70,13 +70,13 @@ define('js!Controls/List/Paging', [
       },
 
       __changePage: function(page) {
-         if (this._options.selectedPage != page) {
+         if (this._options.selectedPage !== page) {
             this._notify('onChangeSelectedPage', page);
          }
       },
 
       __arrowClick: function(e, btnName) {
-         if(this['_state' + btnName] != 'normal') {
+         if(this['_state' + btnName] !== 'normal') {
             return;
          }
          if (this._options.showDigits) {
