@@ -35,22 +35,29 @@ define('js!Controls/List/resources/utils/DataSourceUtil', [
       },
 
       callQuery: function (dataSource, idProperty, filter, sorting, offset, limit) {
+         var queryDef, query = getQueryForCall(filter, sorting, offset, limit);
 
-         //TODO временное решение. Проблема в том что деферред с синхронным кодом на самом деле не сихронный. И в коллбэке релоада у контрола нет опций
-         var queryDef = cDeferred.fromTimer(50);
 
-         queryDef.addCallback(function(){
-            var query = getQueryForCall(filter, sorting, offset, limit);
+         queryDef = dataSource.query(query).addCallback((function(dataSet) {
+            if (idProperty && idProperty !== dataSet.getIdProperty()) {
+               dataSet.setIdProperty(idProperty);
+            }
+            return dataSet.getAll();
+         }));
 
-            return dataSource.query(query).addCallback((function(dataSet) {
-               if (idProperty && idProperty !== dataSet.getIdProperty()) {
-                  dataSet.setIdProperty(idProperty);
-               }
-               return dataSet.getAll();
-            }));
-         });
+         if (cInstance.instanceOfModule(dataSource, 'WS.Data/Source/Memory')) {
 
-         return queryDef;
+            /*TODO временное решение. Проблема в том что деферред с синхронным кодом статического источника выполняется сихронно.
+            в итоге в коолбэк релоада мы приходим в тот момент, когда еще не отработал _beforeMount и заполнение опций, и не можем обратиться к this._options*/
+            var queryDefAsync = cDeferred.fromTimer(0);
+            queryDefAsync.addCallback(function(){
+               return queryDef;
+            });
+            return queryDefAsync;
+         }
+         else {
+            return queryDef;
+         }
       }
    };
    return DataSourceUtil;

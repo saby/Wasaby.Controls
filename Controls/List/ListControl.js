@@ -67,7 +67,7 @@ define('js!Controls/List/ListControl', [
          return params;
       },
 
-      load: function(direction, config) {
+      load: function(direction) {
          if (this._dataSource) {
             var def, queryParams,
                self = this;
