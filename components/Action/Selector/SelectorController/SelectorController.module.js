@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
        /**
         * Класс компонента, который описывает логику выбора из диалога/панели.
-        * Пример использования класса описан в статье <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/'>Окно выбора из справочника</a>.
+        * Пример использования класса описан в статье <a href='/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/'>Окно выбора из справочника</a>.
         *
         * @class SBIS3.CONTROLS.SelectorController
         * @extends SBIS3.CORE.CompoundControl
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                  *     <li>node - для выбора доступны только элементы типа "Узел" и "Скрытый узел";<li>
                  *     <li>leaf - для выбора доступны только элементы типа "Лист".<li>
                  * </ul>
-                 * Подробнее о каждом типе элементов читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
+                 * Подробнее о каждом типе элементов читайте в разделе <a href='/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
                  */
                 selectionType: 'all',
                 /**

@@ -46,9 +46,9 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
       $protected: {
          _options: {
             /**
-             * @cfg {Boolean} Устанавливает поддержку представлений данных из пространства имен {@link https://wi.sbis.ru/docs/3-8-0/$ws/proto/ SBIS3.CORE}.
-             * Данная опция требуется, если в диалоге выбора для отображения данных используются контролы {@link https://wi.sbis.ru/docs/3-8-0/$ws/proto/TableView/ TableView},
-             * {@link https://wi.sbis.ru/docs/js/SBIS3/CORE/TreeView/ TreeView}, {@link https://wi.sbis.ru/docs/js/SBIS3/CORE/HierarchyView/ HierarchyView}.
+             * @cfg {Boolean} Устанавливает поддержку представлений данных из пространства имен {@link /docs/3-8-0/$ws/proto/ SBIS3.CORE}.
+             * Данная опция требуется, если в диалоге выбора для отображения данных используются контролы {@link /docs/3-8-0/$ws/proto/TableView/ TableView},
+             * {@link /docs/js/SBIS3/CORE/TreeView/ TreeView}, {@link /docs/js/SBIS3/CORE/HierarchyView/ HierarchyView}.
              * @example
              * <pre class="brush: xml">
              *     <option name="oldViews">true</option>
