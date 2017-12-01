@@ -70,6 +70,14 @@ define('js!Controls/List/ListControl/ListViewModel',
             this._itemsModel.setItems(items)
          },
 
+         appendItems: function(items) {
+            this._itemsModel.appendItems(items);
+         },
+
+         prependItems: function(items) {
+            this._itemsModel.prependItems(items);
+         },
+
          __calcSelectedItem: function(display, selKey, idProperty) {
 
             //TODO надо вычислить индекс

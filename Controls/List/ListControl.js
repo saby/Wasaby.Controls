@@ -7,7 +7,6 @@ define('js!Controls/List/ListControl', [
    'WS.Data/Source/ISource',
    'js!Controls/List/Controllers/PageNavigation',
    'Core/helpers/functional-helpers',
-   'Core/core-instance',
    'require',
    'js!Controls/List/Controllers/ScrollWatcher',
    'Core/helpers/functional-helpers',
@@ -20,7 +19,6 @@ define('js!Controls/List/ListControl', [
              ISource,
              PageNavigation,
              fHelpers,
-             cInstance,
              require,
              ScrollWatcher
  ) {
@@ -35,13 +33,7 @@ define('js!Controls/List/ListControl', [
             selectedKey: cfg.selectedKey
          })
       },
-      //проверка на то, нужно ли создавать новый инстанс рекордсета или же можно положить данные в старый
-      isEqualItems: function(oldList, newList) {
-         return oldList && cInstance.instanceOfModule(oldList, 'WS.Data/Collection/RecordSet')
-         && (newList.getModel() === oldList.getModel())
-         && (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor)
-         && (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor)
-      },
+
       initNavigation: function(navOption, dataSource) {
          var navController;
          if (navOption && navOption.source == 'page') {
@@ -93,19 +85,18 @@ define('js!Controls/List/ListControl', [
                .addCallback(fHelpers.forAliveOnly(function (list) {
                   self._notify('onDataLoad', list);
                   if (direction == 'down') {
-                     self._items.append(list);
+                     self._listModel.appendItems(list);
                   } else if (direction == 'up') {
-                     self._items.prepend(list);
+                     self._listModel.prependItems(list);
                   } else { //без направления - это перезагрузка
-                     if (_private.isEqualItems(self._items, list)) {
-                        self._items.assign(list);
-                     }
-                     else {
-                        self._items = list;
-                        self._listModel = _private.createListModel(self._items, self._options);
+                     //модели нет, если это первая загрузка и не были заданы items в компонента
+                     if (!self._listModel) {
+                        self._listModel = _private.createListModel(list, self._options);
                         self._forceUpdate();
                      }
-
+                     else {
+                        self._listModel.setItems(list);
+                     }
                   }
                   if (self._navigationController) {
                      self._navigationController.calculateState(list, direction);
