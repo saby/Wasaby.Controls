@@ -2,8 +2,9 @@
  * Created by kraynovdo on 23.10.2017.
  */
 define([
-   'js!Controls/List/ListControl/ListView'
-], function(ListView){
+   'js!Controls/List/ListControl/ListView',
+   'js!Controls/List/ListControl/ListViewModel'
+], function(ListView, ListViewModel){
    describe('Controls.List.ListView', function () {
       var data, display;
       beforeEach(function() {
@@ -28,8 +29,12 @@ define([
       });
 
       it('Item click', function () {
-         var cfg = {
+         var model = new ListViewModel({
             items: data,
+            idProperty: 'id'
+         });
+         var cfg = {
+            listModel: model,
             idProperty: 'id',
             selectedKey: 2
          };
@@ -38,7 +43,6 @@ define([
          lv._beforeMount(cfg);
 
          var dispItem = lv._listModel._itemsModel._display.at(2);
-
          lv._onItemClick({}, dispItem);
          assert.equal(dispItem, lv._listModel._selectedItem, 'Incorrect selected item before updating');
       })

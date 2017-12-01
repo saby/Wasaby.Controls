@@ -35,6 +35,14 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       return value || '';
    }
 
+   function isFalsy(value) {
+      return typeof value !== 'undefined' && value !== null && !isNaN(value) && value !== '';
+   }
+
+   function needShowCompatiblePlaceholder(cfg) {
+      return cfg._needShowCompatiblePlaceholderST(cfg) && !isFalsy(cfg.moneyValue) && !isFalsy(cfg.numericValue);
+   }
+
     /**
      * Класс контрола "Поле ввода денег".
      *
@@ -48,6 +56,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS.MoneyTextBox.prototype */ {
       $protected: {
          _options: {
+            _needShowCompatiblePlaceholder: needShowCompatiblePlaceholder,
             textAlign: 'right',
             _paddingClass: ' controls-TextBox_paddingBoth',
             textFieldWrapper: textFieldWrapper,
@@ -85,7 +94,8 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
              moneyValue: null,
              _decimalsPart: null,
              _integersPart: null
-         }
+         },
+         _dotOverstep: false
       },
 
       _modifyOptions: function(options){

@@ -1,34 +1,39 @@
 define('js!Controls/List/ListControl', [
    'Core/Control',
    'tmpl!Controls/List/ListControl',
+   'js!Controls/List/ListControl/ListViewModel',
    'js!Controls/List/resources/utils/DataSourceUtil',
    'WS.Data/Type/descriptor',
    'WS.Data/Source/ISource',
    'js!Controls/List/Controllers/PageNavigation',
    'Core/helpers/functional-helpers',
-   'Core/core-instance',
    'require',
+   'js!Controls/List/Controllers/ScrollWatcher',
+   'Core/helpers/functional-helpers',
    'css!Controls/List/ListControl/ListControl'
 ], function (Control,
              ListControlTpl,
+             ListViewModel,
              DataSourceUtil,
              Types,
              ISource,
              PageNavigation,
              fHelpers,
-             cInstance,
-             require
-   ) {
+             require,
+             ScrollWatcher
+ ) {
    'use strict';
 
    var _private = {
-      isEqualItems: function(oldItems, newItems) {
-         return oldItems && cInstance.instanceOfModule(oldItems, 'WS.Data/Collection/RecordSet')
-            && (newItems.getModel() === oldItems.getModel())
-            && (Object.getPrototypeOf(newItems).constructor == Object.getPrototypeOf(oldItems).constructor)
-            && (Object.getPrototypeOf(newItems.getAdapter()).constructor == Object.getPrototypeOf(oldItems.getAdapter()).constructor)
-
+      createListModel: function(items, cfg) {
+         return new ListViewModel ({
+            items : items,
+            idProperty: cfg.idProperty,
+            displayProperty: cfg.displayProperty,
+            selectedKey: cfg.selectedKey
+         })
       },
+
       initNavigation: function(navOption, dataSource) {
          var navController;
          if (navOption && navOption.source == 'page') {
@@ -54,49 +59,58 @@ define('js!Controls/List/ListControl', [
          return params;
       },
 
-      load: function(direction) {
-         if (this._dataSource) {
-            var def, queryParams,
-               self = this;
+      reload: function(self) {
+         _private.load(self, function(self, list){
+            if (!self._listModel) {
+               self._listModel = _private.createListModel(list, self._options);
+               self._forceUpdate();
+            }
+            else {
+               self._listModel.setItems(list);
+            }
+         })
+      },
+
+      loadToDirection: function(self, direction) {
+         _private.load(self, function(self, list){
+            if (direction == 'down') {
+               self._listModel.appendItems(list);
+            } else if (direction == 'up') {
+               self._listModel.prependItems(list);
+            }
+         }, direction)
+      },
+
+
+      load: function(self, loadCallback, direction) {
+         if (self._dataSource) {
+            var def, queryParams;
 
             queryParams = {
-               filter: this._filter,
-               sorting: this._sorting,
+               filter: self._filter,
+               sorting: self._sorting,
                limit: undefined,
                offset: undefined
             };
             //модифицируем параметры через навигацию
-            if (this._navigationController) {
-               queryParams = _private.paramsWithNavigation(queryParams, this._navigationController, this._display, direction);
+            if (self._navigationController) {
+               queryParams = _private.paramsWithNavigation(queryParams, self._navigationController, self._display, direction);
             }
 
             //позволяем модифицировать параметры юзеру
-            var userParams = this._notify('onBeforeDataLoad', queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit);
+            var userParams = self._notify('onBeforeDataLoad', queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit);
             if (userParams) {
                queryParams = _private.paramsWithUserEvent(queryParams, userParams);
             }
 
-            this._loadingState = direction ? direction : 'all';
-            _private.showIndicator.call(this);
-
-            def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
+            self._loadingState = direction ? direction : 'all';
+            _private.showIndicator(this);
+            def = DataSourceUtil.callQuery(self._dataSource, self._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
                .addCallback(fHelpers.forAliveOnly(function (list) {
                   self._notify('onDataLoad', list);
 
-                  if (direction == 'down') {
-                     self._items.append(list);
-                  } else if (direction == 'up') {
-                     self._items.prepend(list);
-                  } else { //без направления - это перезагрузка
-                     if (_private.isEqualItems(self._items, list)) {
-                        self._items.assign(list);
-                     }
-                     else {
-                        self._items = list;
-                        self._forceUpdate();
-                     }
+                  loadCallback(self, list);
 
-                  }
                   if (self._navigationController) {
                      self._navigationController.calculateState(list, direction);
                   }
@@ -104,6 +118,7 @@ define('js!Controls/List/ListControl', [
 
 
                   //TODO это кривой способ заставить пэйджинг пересчитаться. Передалть, когда будут готовы команды от Зуева
+                  //убираю, когда будет готов реквест от Зуева
                   window.setTimeout(function(){
                      if (self._scrollPagingCtr) {
                         self._scrollPagingCtr.resetHeights();
@@ -111,24 +126,27 @@ define('js!Controls/List/ListControl', [
                   }, 100);
 
                   this._loadingState = null;
-                  _private.hideIndicator.call(this);
+                  _private.hideIndicator(this);
 
                   return list;
                }, self))
                .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
             this._loader = def;
-            return def;
          }
          else {
             throw new Error('Option dataSource is undefined. Can\'t reload view');
          }
       },
 
+
+
       scrollToEdge: function(direction) {
          var self = this;
          if (this._navigationController && this._navigationController.hasMoreData(direction)) {
             this._navigationController.setEdgeState(direction);
-            _private.load.call(this).addCallback(function(){
+            _private.reload(this).addCallback(function(){
+
+               //TODO Убрать перейдя на методы из ScrollWatcher
                _private.scrollTo.call(self, direction == 'up' ? 0 : 100000000)
             });
          }
@@ -142,21 +160,50 @@ define('js!Controls/List/ListControl', [
          this._container.closest('.ws-scrolling-content').get(0).scrollTop = offset;
       },
 
-      showIndicator: function() {
-         var self = this;
+      createScrollWatcher: function(scrollContainer) {
+         var
+            self = this,
+            children = this._children,
+            triggers = {
+               topListTrigger: children.topListTrigger,
+               bottomListTrigger: children.bottomListTrigger,
+               topLoadTrigger: children.topLoadTrigger,
+               bottomLoadTrigger: children.bottomLoadTrigger
+            },
+            eventHandlers = {
+               onLoadTriggerTop: function() {
+                  self._scrollLoadMore('up');
+               },
+               onLoadTriggerBottom: function() {
+                  self._scrollLoadMore('down');
+               },
+               onListTop: function() {
+               },
+               onListBottom: function() {
+               }
+            };
+
+         return new ScrollWatcher ({
+            triggers : triggers,
+            scrollContainer: scrollContainer,
+            loadOffset: this._loadOffset,
+            eventHandlers: eventHandlers
+         });
+      },
+      showIndicator: function(self) {
          setTimeout(function() {
             self._loadingIndicatorState = self._loadingState || null;
             self._forceUpdate();
          }, 2000)
       },
 
-      hideIndicator: function() {
-         this._loadingIndicatorState = null;
-         this._forceUpdate();
+      hideIndicator: function(self) {
+         self._loadingIndicatorState = null;
+         self._forceUpdate();
       }
    };
 
-
+   /*
    /*
     Опции
     * dragEntity, dragEntityList, enabledMove, itemsDragNDrop - обсудить с Яриком, возможно будет достаточно события dragStart
@@ -164,12 +211,6 @@ define('js!Controls/List/ListControl', [
     *
     * Удалил:
     * colorField, colorMarkEnabled, highlightEnabled, highlightText, includedTemplates, validateIfDisabled, itemTpl
-    * footerTpl, templateBinding, useSelectAll
-    *
-    * allowEmptyMultiSelection, allowEmptySelection - в интерфейс selectable
-    * */
-
-
    /**
     * List Control
     * @class Controls/List/ListControl
@@ -199,14 +240,11 @@ define('js!Controls/List/ListControl', [
     * @cfg {Function} Шаблон отображения пустого списка
     */
 
+   /* по названиям вопрос sorting, filtering sort, filter ????
 
-   /* по названиям вопрос sorting, filtering sort, filter ???? */
-
-   /**
     * @name Controls/List/ListControl#filter
     * @cfg {Object} Настройки фильтра
     */
-
    /**
     * @name Controls/List/ListControl#sorting
     * @cfg {Object} Настройки сортировки
@@ -297,7 +335,7 @@ define('js!Controls/List/ListControl', [
     * @function Controls/interface/IPromisedSelectable#commitEdit
     */
 
-
+   /**
    /**
     * Подумать
     *
@@ -363,7 +401,7 @@ define('js!Controls/List/ListControl', [
     * @event Controls/List/ListControl#onEndMove Происходит после перемещения записей
     */
 
-
+   /**
    /**
     * Вроде есть смена выделеной записи, пока спилим
     * @event -#onItemActivate Происходит при смене записи (активации) под курсором мыши
@@ -373,6 +411,7 @@ define('js!Controls/List/ListControl', [
     * @event Controls/List/ListControl#onItemClick Происходит при любом клике по записи
     */
 
+   /**
    /**
     * в чем разница между dataLoad и dataMerge?
     * @event Controls/List/ListControl#onDataLoad Происходит при загрузке данных
@@ -398,9 +437,10 @@ define('js!Controls/List/ListControl', [
 
          _itemTemplate: null,
 
+         _loadOffset: 100,
+
          constructor: function (cfg) {
             ListControl.superclass.constructor.apply(this, arguments);
-            this._items = cfg.items;
             this._publish('onDataLoad');
          },
 
@@ -408,14 +448,13 @@ define('js!Controls/List/ListControl', [
           * Load more data after reaching end or start of the list.
           *
           * @param e
-          * @param direction 'up' | 'down'
-          * @private
-          */
-         _scrollLoadMore: function(e, direction) {
+          * @param direction 'up' | 'down'*/
+
+         _scrollLoadMore: function(direction) {
             //TODO нужна компенсация при подгрузке вверх
 
             if (this._navigationController && this._navigationController.hasMoreData(direction)) {
-               _private.load.call(this, direction);
+               _private.loadToDirection(this, direction);
             }
          },
 
@@ -424,36 +463,34 @@ define('js!Controls/List/ListControl', [
             //TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
 
             this._filter = newOptions.filter;
-
+            if (newOptions.items) {
+               this._items = newOptions.items;
+               this._listModel = _private.createListModel(this._items, newOptions);
+            }
             if (newOptions.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
                if (!this._items) {
-                  _private.load.call(this);
+                  _private.reload(this);
                }
             }
          },
 
-         _beforeUpdate: function(newOptions) {
+         _afterMount: function() {
+            ListControl.superclass._afterMount.apply(this, arguments);
 
             //TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
-
-            if (newOptions.filter != this._options.filter) {
-               this._filter = newOptions.filter;
+            if (this._options.navigation && this._options.navigation.source === 'page') {
+               var scrollContainer = this._container.closest('.ws-scrolling-content');
+               if (scrollContainer && scrollContainer.length) {
+                  this._scrollWatcher = _private.createScrollWatcher.call(this, scrollContainer[0]);
+               }
             }
 
-            if (newOptions.dataSource !== this._options.dataSource) {
-               this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
-               this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
-               _private.load.call(this);
-            }
-            //TODO обработать смену фильтров и т.д. позвать релоад если надо
-         },
-
-         _afterMount: function() {
             if (this._options.navigation && this._options.navigation.view == 'infinity') {
                //TODO кривое обращение к DOM
-               var scrollContainer = this._container.closest('.ws-scrolling-content');
+               //убарть когда перейду на скролл вотчер от Ильи Девятова
+               scrollContainer = this._container.closest('.ws-scrolling-content');
                if (scrollContainer.length && this._options.navigation.viewConfig && this._options.navigation.viewConfig.pagingMode) {
                   var self = this;
                   require(['js!Controls/List/Controllers/ScrollPaging'], function (ScrollPagingController) {
@@ -473,6 +510,36 @@ define('js!Controls/List/ListControl', [
             }
          },
 
+         _beforeUpdate: function(newOptions) {
+
+            //TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
+
+            if (newOptions.filter != this._options.filter) {
+               this._filter = newOptions.filter;
+            }
+
+            if (newOptions.items && newOptions.items != this._options.items) {
+               this._items = newOptions.items;
+               this._listModel = _private.createListModel(this._items, newOptions);
+            }
+
+            if (newOptions.dataSource !== this._options.dataSource) {
+               this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
+               this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
+               _private.reload(this);
+            }
+            //TODO обработать смену фильтров и т.д. позвать релоад если надо
+         },
+
+         _beforeUnmount: function() {
+            if (this._scrollWatcher) {
+               this._scrollWatcher.destroy();
+            }
+
+            ListControl.superclass._beforeUnmount.apply(this, arguments);
+         },
+
+
          _afterUpdate: function() {
 
          },
@@ -487,9 +554,9 @@ define('js!Controls/List/ListControl', [
                }
             }
          },
-
+         //<editor-fold desc='DataSourceMethods'>
          reload: function() {
-            _private.load.call(this);
+            _private.reload(this);
          },
 
          destroy: function() {

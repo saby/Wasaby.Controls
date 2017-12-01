@@ -14,7 +14,7 @@
 @default-padding:              round(14px * @multiplier);
 @default-padding-small:        round(7px * @multiplier);
 //textbox
-@height_TextBox_m:                                round(84px * @multiplier);
+@height_TextBox_m:                                round(84px * @multiplier) + @default-border-width;
 @height_TextBox_l:                                round(84px * @multiplier);
 @font-size_TextBox_m:                             round(32px * @multiplier);
 @font-size_TextBox_l:                             round(40px * @multiplier);
@@ -29,7 +29,7 @@
 @padding_TextArea-field:                          0 round(14px * @multiplier) 0 0;
 //NumberTextBox
 @icon-size_NumberTextBox-arrow:                   round(84px * @multiplier);
-@padding-left_NumberTextBox-arrow:                round(14px * @multiplier);
+@padding_NumberTextBox-arrow:                     0 0 0 round(14px * @multiplier);
 //combo-box
 @combo-box-icon-size:                             @default-icon-size-large;
 @combo-box-arrow-padding:                         0px;
@@ -40,10 +40,11 @@
 @search-button-wrapper-padding:                   0;
 @search-loop-size:                                round(80px * @multiplier);
 @search-form-icon-padding:                        0;
-@search-field-padding:                            0;
-@search-form-suggest-close-offset:                round(8px * @multiplier);
-@search-form-suggest-top-offset:                  @search-form-suggest-close-offset + @default-border-width + @default-height;
-@search-form-suggest-left-offset:                 @search-form-suggest-close-offset + @default-border-width;
+@padding_SearchForm:                              0 round(14px * @multiplier);
+@top_searchForm_picker_closeButton:               round(8px * @multiplier);
+@margin-left__searchForm_picker:                  -(@top_searchForm_picker_closeButton + @default-border-width);
+@margin-top__searchForm_picker:                   -@padding-top__searchForm_picker;
+@padding-top__searchForm_picker:                  @top_searchForm_picker_closeButton + @default-border-width + @default-height;
 //fieldLink
 @fieldLink-showAll-shadow-width:                  round(28px * @multiplier);
 @fieldLink-linkItem-line-height:                  @default-base-line-height;
@@ -189,7 +190,7 @@
 @radio-button-icon-border-width:          round(3px * @multiplier);
 @radio-button-text-font-size:             round(32px * @multiplier);
 //Checkbox
-@check-box-icon-size:                     round(50px * @multiplier);
+@height_CheckBox:                         round(50px * @multiplier);
 @check-box-icon-successful-size:          round(50px * @multiplier);
 @check-box-font-size:                     round(32px * @multiplier);
 @check-box-icon-successful-top:           round(-4px * @multiplier);
@@ -226,7 +227,7 @@
 @switcher-do-text-margin:                 round(16px * @multiplier);
 //Menu
 @popup-font-size:                         @huge-text-size; // откатил размер из-за того, что меню стало меньше чем кнпока т.к. в самих кнопках размер шрифта используется больший
-@menu-subpopup-margin:                    0 0 0 @default-border-width;
+@menu-subpopup-margin:                    0;
 @menu-expand-width:                       @icon-large-size;
 @menu-expand-height:                      @icon-large-size;
 @menu-expand-top-offset:                  round(8px * @multiplier);;
@@ -250,10 +251,12 @@
 @menu-item-line-height:                   round(100px * @multiplier);
 @menu-item-padding-16:                    round(56px * @multiplier);
 @menu-item-padding-24:                    round(70px * @multiplier);
+@menu-item-padding-32:                    round(100px * @multiplier);
 // Menu
 @menu-button-menu-margin:                 -10px 0 0 -2px;
 @menu-icon-menu-margin:                   round(-10px * @multiplier) 0 0 round(-7px * @multiplier);
-@menu-icon-big-menu-margin:               round(-10px * @multiplier) 0 0 round(10px * @multiplier);;
+@menu-icon-big-menu-margin:               round(-10px * @multiplier) 0 0 round(10px * @multiplier);
+@menu-icon-menu-large-margin:             round(-10px * @multiplier) 0 0 round(-18px * @multiplier);
 @menu-padding:                            0;
 //Menu link
 @menu-link-menu-margin:                   round(-11px * @multiplier) 0 0 round(-18px * @multiplier);
@@ -263,7 +266,7 @@
 @search-button-wrapper-padding:				0;
 //  Combo box
 @combo-box-picker-item-font-size:         round(32px * @multiplier);
-@combo-box-picker-item-padding:           round(32px * @multiplier) round(16px * @multiplier) round(32px * @multiplier) round(16px * @multiplier);
+@combo-box-picker-item-padding:           round(32px * @multiplier) round(16px * @multiplier);
 @combo-box-picker-item-font-size:         round(32px * @multiplier);
 // Suggest
 @suggest-list-footer-height:              round(88px * @multiplier);
@@ -360,7 +363,6 @@
 @edit-at-place-editor-overlay-border-radius:          round(3px * @multiplier);
 //List view
 @controls-view-padding-S:                 round(9px * @multiplier);
-@list-view-min-height:                    round(224px * @multiplier);
 @listView-servicefooter-height:           round(41px * @multiplier);
 @listView-servicefooter-padding:          0 round(22px * @multiplier);
 @listView-loadmorebutton-font-size:       round(24px * @multiplier);
@@ -410,8 +412,6 @@
 @data-grid-cell-height:                   round(50px * @multiplier);
 @data-grid-cell-padding:                  0 @data-grid-cell-padding-right;
 @data-grid-cell-padding-right:            round(8px * @multiplier);
-@data-grid-td-checkbox-width:             round(49px * @multiplier);
-@data-grid-td-visible-checkbox-width:     round(49px * @multiplier);
 @data-grid-check-box-top:                 -@default-border-width;
 @data-grid-money-header-cell-padding:     round(40px * @multiplier);
 @data-grid-money-header-cell-padding-last:round(64px * @multiplier);

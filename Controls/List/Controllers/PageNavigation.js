@@ -65,6 +65,7 @@ define('js!Controls/List/Controllers/PageNavigation',
                this._prevPage--;
             }
             else {
+               //Если направление не указано, значит это расчет параметров после начальной загрузки списка или после перезагрузки
                this._nextPage = this._page + 1;
                this._prevPage = this._page - 1;
             }

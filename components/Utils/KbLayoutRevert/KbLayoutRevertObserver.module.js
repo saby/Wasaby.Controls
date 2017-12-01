@@ -200,7 +200,10 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                searchParam = this._options.param,
                searchValue = viewFilter[searchParam],
                textBox = this._options.textBox,
-               useCustomQuery = cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.IItemsControl') || cInstance.instanceOfModule(view.getDataSource(), 'WS.Data/Source/Memory'),
+               /* Для memorySource особая логика, т.к. query у memorySource отрабатывают синхронно,
+                  и получается, что код выполняемый на callback второго query, отрабатываем быстрее, чем код первого query. */
+               isMemorySource = cInstance.instanceOfModule(view.getDataSource(), 'WS.Data/Source/Memory'),
+               useCustomQuery = cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.IItemsControl') || isMemorySource,
                self = this;
 
             function reloadWithRevert() {
@@ -274,6 +277,9 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                         textBox.setText(searchValue);
                         view.setHighlightText(searchValue, false);
                      }
+                     if (isMemorySource) {
+                        analyzeQueryResult.call(self, data, self._itemsBeforeTranslate);
+                     }
                      self._textBeforeTranslate = null;
                      self._toggleItemsEventRaising(true);
                   }
@@ -296,8 +302,14 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                         data.assign(self._itemsBeforeTranslate);
                         data.setMetaData(self._itemsBeforeTranslate.getMetaData());
                      }
+                     /* оптимизация, т.к. рекордсет при поиске меняется через assign, то там меняются всегда все записи.
+                        Если делать анализ имзенений, то перерисовка будет просиходить по одной записи, что вызывает тормоза.
+                        Сделано через !(self._itemsBeforeTranslate && self._itemsBeforeTranslate.getCount()),
+                        т.к. если первая загрузка записей была неудачной (пришел пустой рекордсет),
+                        то assign в пустой рекордсет не вызовет событие onCollectionChange у проекции,
+                        если не будут анализироваться изменения, которые произошли в период заморозки проекции. */
+                     self._toggleItemsEventRaising(true, !(self._itemsBeforeTranslate && self._itemsBeforeTranslate.getCount()));
                      backOldSearchValue();
-                     self._toggleItemsEventRaising(true);
                      self._hideMissSpell();
                   } else {
                      viewFilter[searchParam] = self._textBeforeTranslate;
@@ -306,6 +318,9 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                      self._toggleItemsEventRaising(true);
                   }
                } else {
+                  if (isMemorySource) {
+                     self._itemsBeforeTranslate = data;
+                  }
                   reloadWithRevert();
                }
             }

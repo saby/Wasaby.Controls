@@ -11,6 +11,38 @@ define('js!Controls/List/Controllers/ScrollPaging',
        * @author Крайнов Дмитрий
        * @public
        */
+      var _private = {
+         getDefaultPagingConfig: function(viewHeight, viewportHeight) {
+            var config = {};
+            if (viewHeight > viewportHeight) {
+               config = {
+                  stateBegin: 'disabled',
+                  statePrev: 'disabled',
+                  stateNext: 'normal',
+                  stateEnd: 'normal'
+               }
+            }
+            return config;
+         },
+
+         getPagingConfig: function(viewHeight, viewportHeight, scrollTop) {
+            var defConfig = _private.getDefaultPagingConfig(viewHeight, viewportHeight);
+            if (scrollTop > 0) {
+               defConfig.stateBegin = 'normal';
+               defConfig.statePrev = 'normal';
+            }
+            if ((scrollTop + viewportHeight) >= viewHeight) {
+               defConfig.stateNext = 'normal';
+               defConfig.stateEnd = 'normal';
+               defConfig.stateNext = 'disabled';
+               defConfig.stateEnd = 'disabled';
+            }
+
+            return defConfig;
+         }
+      };
+
+
       var Paging = Abstract.extend({
          _selectedPage: null,
          _onScrollHdl: null,
@@ -26,34 +58,11 @@ define('js!Controls/List/Controllers/ScrollPaging',
 
          },
 
-         __getDefaultPagingConfig: function() {
-            var config = {};
-            if (this._viewHeight > this._viewportHeight) {
-               config = {
-                  stateBegin: 'disabled',
-                  statePrev: 'disabled',
-                  stateNext: 'normal',
-                  stateEnd: 'normal'
-               }
-            }
-            return config;
-         },
 
          _onScroll: function(e) {
             var pCfg, scrollTop;
             scrollTop = e.target.scrollTop;
-
-            pCfg = this.__getDefaultPagingConfig();
-            if (scrollTop > 0) {
-               pCfg.stateBegin = 'normal';
-               pCfg.statePrev = 'normal';
-            }
-            if ((scrollTop + this._viewportHeight) >= this._viewHeight) {
-               pCfg.stateNext = 'normal';
-               pCfg.stateEnd = 'normal';
-               pCfg.stateNext = 'disabled';
-               pCfg.stateEnd = 'disabled';
-            }
+            pCfg = _private.getPagingConfig(this._viewHeight, this._viewportHeight, scrollTop);
 
             this._notify('onChangePagingCfg', pCfg);
          },
@@ -63,7 +72,7 @@ define('js!Controls/List/Controllers/ScrollPaging',
                this._onScrollHdl = this._onScroll.bind(this);
             }
             this._options.scrollContainer.addEventListener('scroll', this._onScrollHdl);
-            this._notify('onChangePagingCfg', this.__getDefaultPagingConfig());
+            this._notify('onChangePagingCfg', _private.getDefaultPagingConfig(this._viewHeight, this._viewportHeight));
          },
 
          stopObserve: function() {
@@ -73,6 +82,8 @@ define('js!Controls/List/Controllers/ScrollPaging',
 
          resetHeights: function() {
             this._cacheHeights(this._options.scrollContainer);
+
+            this._notify('onChangePagingCfg', _private.getPagingConfig(this._viewHeight, this._viewportHeight, this._options.scrollContainer.scrollTop));
          },
 
          scrollView: function(btn) {

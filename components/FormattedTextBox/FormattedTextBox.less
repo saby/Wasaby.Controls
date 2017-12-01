@@ -15,6 +15,10 @@
 
 .controls-FormattedTextBox__field {
   .user-select(text);
+  //Иначе в Firefox пустой div будет иметь нулевую высоту
+  //https://jsfiddle.net/k6p9r03s/5/
+  //https://bugzilla.mozilla.org/show_bug.cgi?id=1098151
+  .baseline-fix();
 }
 
 .controls-FormattedTextBox__field-symbol {

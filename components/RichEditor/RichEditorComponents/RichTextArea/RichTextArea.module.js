@@ -418,7 +418,19 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (typeof html === 'string' && this._tinyEditor) {
                this._performByReady(function() {
                   html = this._prepareContent(html);
-                  this._tinyEditor.insertContent(html);
+                  var editor = this._tinyEditor;
+                  var lastRng = this._tinyLastRng;
+                  if (lastRng) {
+                     // Если определён последний рэнж, значит вставка происходит в неактивный редактор или в отсутствии фокуса. Если текщий рэнж
+                     // не соответствунет ему - используем последний.
+                     // https://online.sbis.ru/opendoc.html?guid=e1e07406-30c3-493a-9cc0-b85ebdf055bd
+                     // https://online.sbis.ru/opendoc.html?guid=49da7b60-c4d2-46c8-b1b7-db1eb86e4443
+                     var rng = editor.selection.getRng();
+                     if (rng.startContainer !== lastRng.startContainer || rng.startOffset !== lastRng.startOffset || rng.endContainer !== lastRng.endContainer || rng.endOffset !== lastRng.endOffset) {
+                        editor.selection.setRng(lastRng);
+                     }
+                  }
+                  editor.insertContent(html);
                   //вставка контента может быть инициирована любым контролом,
                   //необходимо нотифицировать о появлении клавиатуры в любом случае
                   if (cConstants.browser.isMobilePlatform) {
@@ -1763,6 +1775,18 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             editor.on('NodeChange', function(e) {
                self._notify('onNodeChange', e)
             });
+
+            // Для правильной работы метода insertHtml в отсутствии фокуса будем фиксировать последний актуальный рэнж
+            editor.on('focus focusin', function (evt) {
+               self._tinyLastRng = null;
+            });
+            editor.on('blur focusout', function (evt) {
+               var rng = editor.selection.getRng();
+               if (!(rng.collapsed && rng.startOffset === 0 && rng.startContainer === editor.getBody())) {
+                  self._tinyLastRng = rng;
+               }
+            });
+
             editor.on('focusin', function(e) {
                if (self._fromTouch){
                   self._notifyMobileInputFocus();
@@ -2129,28 +2153,35 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * Убрать пустые строки из начала и конца текста
           * @returns {*} текст без пустх строк вначале и конце
           */
-         _trimText: function(text) {
-            var
-               beginReg = new RegExp('^<p> *(&nbsp; *)*(&nbsp;)?</p>'),// регулярка начала строки
-               endReg = new RegExp('<p> *(&nbsp; *)*(&nbsp;)?</p>$'),// регулярка конца строки
-               regShiftLine1 = new RegExp('<p>(<br( ?/)?>)+(&nbsp;)?'),// регулярка пустой строки через shift+ enter и space
-               regShiftLine2 = new RegExp('(&nbsp;)?(<br( ?/)?>)+</p>'),// регулярка пустой строки через space и shift+ enter
-               regResult;
+         _trimText: function (text) {
+            if (!text) {
+               return '';
+            }
+            var regs = {
+               regShiftLine1: /<p>[\s\xA0]*(?:<br[^<>]*>)+[\s\xA0]*/gi,    // регулярка пустой строки через shift+ enter и space
+               regShiftLine2: /[\s\xA0]*(?:<br[^<>]*>)+[\s\xA0]*<\x2Fp>/gi,// регулярка пустой строки через space и shift+ enter
+               beginReg: /^<p>[\s\xA0]*<\x2Fp>[\s\xA0]*/i,        // регулярка начала строки
+               endReg: /[\s\xA0]*<p>[\s\xA0]*<\x2Fp>$/i           // регулярка конца строки
+            };
+            var substitutes = {
+               regShiftLine1: '<p>',
+               regShiftLine2: '</p>'
+            };
             text = this._removeEmptyTags(text);
-            while (regShiftLine1.test(text)) {
-               text = text.replace(regShiftLine1, '<p>');
+            text = text.replace(/&nbsp;/gi, String.fromCharCode(160));
+            for (var name in regs) {
+               for (var prev = -1, cur = text.length; cur !== prev; prev = cur, cur = text.length) {
+                  text = text.replace(regs[name], substitutes[name] || '');
+               }
+               text = text.replace(/^[\s\xA0]+|[\s\xA0]+$/g, '');
+               if (!text) {
+                  return '';
+               }
             }
-            while (regShiftLine2.test(text)) {
-               text = text.replace(regShiftLine2, '</p>');
-            }
-            while ((regResult = beginReg.exec(text)) !== null) {
-               text = text.substr(regResult[0].length + 1);
-            }
-            while ((regResult = endReg.exec(text)) !== null) {
-               text = text.substr(0, text.length - regResult[0].length - 1);
-            }
-            return (text === null || text === undefined) ? '' : ('' + text).replace(/^\s*|\s*$/g, '');
+            text = text.replace(/\xA0/gi, '&nbsp;');
+            return text;
          },
+
          /**
           * Проблема:
           *          при нажатии клавиши установки формата( полужирный/курсив и тд) генерируется пустой тег (strong,em и тд)

@@ -92,5 +92,21 @@ define([
             view.destroy();
          })
       });
+   
+      describe('change recordset', function () {
+         it('change IdProperty', function () {
+            var dataSource = new Memory({
+                  data: [{id: 1}, {id: 2}]
+               }),
+               elem = $('<div></div>').appendTo('body'),
+               view = new ListView({
+                  element:  elem,
+                  dataSource: dataSource,
+                  idProperty: 'id'
+               });
+            view.getItems().setIdProperty('test');
+            assert.equal(view.getItems().getIdProperty(), 'test');
+         })
+      });
    });
 });

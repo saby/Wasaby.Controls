@@ -13,7 +13,12 @@ define('js!Controls/interface/ISingleSelectable', [
     */
 
    /**
-    * @event Controls/interface/ISingleSelectable#selectedKeyChanged Происходит при выборе записи.
+    * @event Controls/interface/ISingleSelectable#allowEmptySelection
+    * @cfg {Boolean} Разрешить отсутствие выбранного элемента в группе
+    */
+
+   /**
+    * @event Controls/interface/ISingleSelectable#selectedKeyChanged Происходит при выборе записи
     * @param {Number} key ключ выбранного элемента коллекции.
     */
 

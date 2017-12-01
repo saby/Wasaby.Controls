@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "Core/Deferred",
    'Core/detection',
    "Core/EventBus",
+   'Core/helpers/Function/memoize',
    "js!SBIS3.CONTROLS.ListView",
    "tmpl!SBIS3.CONTROLS.DataGridView",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/rowTpl",
@@ -42,6 +43,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       Deferred,
       cDetection,
       EventBus,
+      memoize,
       ListView,
       dotTplFn,
       rowTpl,
@@ -364,7 +366,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    /**
     * Класс контрола "Список с колонками".
     * <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">Спецификация</a>.
-    * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Документация</a>.
+    * <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/">Документация</a>.
     *
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
@@ -372,8 +374,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @mixes SBIS3.CONTROLS.DragAndDropMixin
     *
     *
-    * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
-    * @cssModifier controls-DataGridView__markerRight Устанавливает отображение маркера активной строки справа от записи. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
+    * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
+    * @cssModifier controls-DataGridView__markerRight Устанавливает отображение маркера активной строки справа от записи. Подробнее о маркере вы можете прочитать в <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
     * @cssModifier controls-DataGridView__hasSeparator Устанавливает отображение линий-разделителей между строками.
     * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
     * @cssModifier controls-DataGridView__overflow-ellipsis Устанавливает обрезание троеточием текста во всех колонках таблицы.
@@ -452,7 +454,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {String} width Ширина колонки. Значение необходимо устанавливать для колонок с фиксированной шириной.
              * Значение можно установить как в px (суффикс устанавливать не требуется), так и в %.
              * @property {Boolean} [highlight=true] Признак подсвечивания фразы при поиске. Если установить значение в false, то при поиске данных по таблице не будет производиться подсветка совпадений.
-             * @property {String} [resultTemplate] Шаблон отображения колонки в строке итогов. Подробнее о создании такого шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/">Строка итогов</a>.
+             * @property {String} [resultTemplate] Шаблон отображения колонки в строке итогов. Подробнее о создании такого шаблона читайте в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/">Строка итогов</a>.
              * @property {String} [className] Имя CSS-класса, который будет применён к заголовку и всем ячейкам колонки.
              * Список классов:
              * <ul>
@@ -464,15 +466,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *    <li><b>controls-DataGridView-cell-verticalAlignBottom</b>. Класс устанавливает выравнивание текста по нижнему краю.</li>
              * </ul>
              * Текст в заголовке и ячейках колонки по умолчанию выравнивается по левому краю.
-             * @property {String} [headTemplate] Шаблон отображения шапки колонки. Подробнее о создании такого шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/columns/head-template/">Шаблон отображения заголовка</a>.
+             * @property {String} [headTemplate] Шаблон отображения шапки колонки. Подробнее о создании такого шаблона читайте в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/columns/head-template/">Шаблон отображения заголовка</a>.
              * @property {String} [headTooltip] Всплывающая подсказка, отображаемая при наведении курсора на шапку колонки.
              * @property {String} [editor] Устанавливает редактор колонки для режима редактирования по месту.
              * Редактор отрисовывается поверх редактируемой строки с прозрачным фоном. Это поведение считается нормальным в целях решения прикладных задач.
              * Чтобы отображать только редактор строки без прозрачного фона, нужно установить для него свойство background-color.
-             * Пример использования опции вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/simple-edit-in-place/">Редактирование записи по клику</a>.
-             * @property {Boolean} [sorting] Активирует режим сортировки по полю. Подробное описание можно найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/list-sorting/">Сортировка записей в списках</a>.
+             * Пример использования опции вы можете найти в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/simple-edit-in-place/">Редактирование записи по клику</a>.
+             * @property {Boolean} [sorting] Активирует режим сортировки по полю. Подробное описание можно найти в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/list-sorting/">Сортировка записей в списках</a>.
              * @property {Boolean} [allowChangeEnable] Доступность установки сотояния активности редактирования колонки в зависимости от состояния табличного представления
-             * @property {String} [cellTemplate] Шаблон отображения ячейки. Подробнее о создании такого шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/templates/cell-template/">Шаблон отображения ячейки</a>.
+             * @property {String} [cellTemplate] Шаблон отображения ячейки. Подробнее о создании такого шаблона читайте в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/templates/cell-template/">Шаблон отображения ячейки</a>.
              * Данные, которые передаются в cellTemplate:
              * <ol>
              *    <li>item - отрисовываемая запись {@link WS.Data/Entity/Record}</li>
@@ -556,7 +558,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @cfg {Number} Устанавливает количество столбцов слева, которые будут не скроллируемы.
              * @remark
              * Для отображения частичного скролла, нужно установить такую ширину колонок, чтобы суммарная ширина всех столбцов была больше чем ширина контейнера таблицы.
-             * Подробнее об использовании опции вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/columns/horizontal-scroll/">Горизонтальный скролл колонок</a>.
+             * Подробнее об использовании опции вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/columns/horizontal-scroll/">Горизонтальный скролл колонок</a>.
              * @example
              * <pre>
              *     <option name="startScrollColumn">3</option>
@@ -567,7 +569,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             /**
              * @cfg {Array.<String>} Устанавливает набор столбцов для режима отображения "Лесенка".
              * @remark
-             * Подробнее о данном режиме списка вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/ladder/">Отображение записей лесенкой</a>.
+             * Подробнее о данном режиме списка вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/ladder/">Отображение записей лесенкой</a>.
              * @example
              * <pre>
              *    <option name="ladder" type="array">
@@ -617,7 +619,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *    <li>Колонки с одинаковым title будут объединены;</li>
              *    <li>Для колонок, title которых задан через разделитель "точка", т.е. вида выводимоеОбщееИмя.выводимоеИмяДаннойКолонки, будет отрисован двустрочный заголовок.</li>
              * </ul>
-             * Пример использования опции вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/columns/head-merge/">Объединение заголовков</a>.
+             * Пример использования опции вы можете найти в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/columns/head-merge/">Объединение заголовков</a>.
              * @example
              * <pre>
              *     <option name="transformHead">true</option>
@@ -635,7 +637,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             /**
              * @cfg {Boolean} Устанавливает фиксацию/прилипание заголовков списка к "шапке" страницы/всплывающей панели.
              * @remark
-             * Подробнее об этом механизме вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/fixed-header/">Фиксация шапки страниц и всплывающих панелей</a>.
+             * Подробнее об этом механизме вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/fixed-header/">Фиксация шапки страниц и всплывающих панелей</a>.
              * @example
              * <pre>
              *     <option name="stickyHeader">true</option>
@@ -704,7 +706,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          CommandDispatcher.declareCommand(this, 'ColumnSorting', this._setColumnSorting);
          this._updateAjaxLoaderPosition();
       },
-      
+
       _onDataLoad: function(list) {
          /* Если установлен table-layout: auto,
             то после перезагрузки могут поменться данные и ширина колонок,
@@ -843,25 +845,51 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return DataGridView.superclass._itemsReadyCallback.apply(this, arguments);
       },
 
-      _showIndicator: function(){
-         this._updateAjaxLoaderPosition();
+      _toggleIndicator: function(show){
+         DataGridView.superclass._toggleIndicator.apply(this, arguments);
+         if (!show) {
+            // После скрытия индикатора загрузки убираем все кастомные стили
+            this._setMinHeight('');
+            this._getAjaxLoaderContainer().css({top: '', height: ''});
+         }
+      },
+
+      _showIndicator: function () {
          DataGridView.superclass._showIndicator.apply(this, arguments);
+         this._updateAjaxLoaderPosition();
       },
 
       _updateAjaxLoaderPosition: function () {
-         var height, styles;
+         var tHeadHeight, styles;
          if (!this._thead) {
             return;
          }
          // Смещаем индикатор загрузки вниз на высоту заголовков.
-         height = this._thead.outerHeight();
-         styles = {top: height || ''};
+         tHeadHeight = this._thead.outerHeight();
+         styles = {top: tHeadHeight || ''};
          // Корректируем хак ".ws-is-webkit .controls-AjaxLoader {height: 100%;}" из стилей ListView.
          if (cDetection.webkit) {
-            styles.height =  height ? 'calc(100% - ' + height + 'px)' : '';
+            styles.height =  tHeadHeight ? 'calc(100% - ' + tHeadHeight + 'px)' : '';
          }
          this._getAjaxLoaderContainer().css(styles);
+
+         this._setMinHeight(tHeadHeight + this._getAjaxLoaderMinHeight() + 'px');
       },
+
+      _getMinHeightContainer: memoize(function () {
+         return this.getContainer().find('.js-controls-DataGridView__minHeight');
+      }, '_getMinHeightContainer'),
+
+      _setMinHeight: function (height) {
+         // Индикатор загрузки позиционируется абсолютно, поэтому не участвует в рассчете высоты компонента.
+         // Корректируем минимальную высоту компонента с учетом зафиксированных заголовков
+         // что бы он не вылазил за пределы компонента.
+         this._getMinHeightContainer().css('height', height);
+      },
+
+      _getAjaxLoaderMinHeight: memoize(function () {
+         return parseInt(this._getAjaxLoaderContainer().css('min-height'), 10);
+      }, '_getAjaxLoaderMinHeight'),
 
       _redrawHead : function() {
          var
@@ -1073,7 +1101,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
             event.setResult(this.showEip(record, {isEdit: true}, false, targetColumnIndex)
                .addCallback(function (result) {
                   if (originalEvent.type === 'click') {
-                     ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
+                     // С IOS 11 версии перестал работать подскролл к нужному месту. Отключаем наш код, который при клике
+                     // проваливается в редактор по месту, иначе вызывается неправильно работающий scrollIntoView и всё
+                     // ломает: https://online.sbis.ru/opendoc.html?guid=742195a5-c89c-4af8-8121-cdeefa26959e
+                     if (!constants.browser.isMobileIOS || cDetection.IOSVersion < 11) {
+                        ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
+                     }
                   }
                   return !result;
                })

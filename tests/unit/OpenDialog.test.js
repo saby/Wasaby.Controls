@@ -4,7 +4,6 @@ define(['js!SBIS3.CONTROLS.Action.OpenDialog', 'Core/core-instance', 'js!SBIS3.C
       beforeEach(function () {
          if (typeof window === 'undefined') {
             this.skip();
-            
          }
       });
       describe('execute', function() {
@@ -17,7 +16,7 @@ define(['js!SBIS3.CONTROLS.Action.OpenDialog', 'Core/core-instance', 'js!SBIS3.C
             });
             action.execute();
             action.subscribe('onBeforeShow', function (e, dialog) {
-               assert.isTrue(cInstance.instanceOfModule(dialog), 'SBIS3.CORE.Dialog');
+               assert.isTrue(cInstance.instanceOfModule(dialog, 'SBIS3.CORE.Dialog'));
                done();
                dialog.close();
             });
@@ -33,7 +32,7 @@ define(['js!SBIS3.CONTROLS.Action.OpenDialog', 'Core/core-instance', 'js!SBIS3.C
             });
             action.execute();
             action.subscribe('onBeforeShow', function (e, dialog) {
-               assert.isTrue(cInstance.instanceOfModule(dialog), 'SBIS3.CORE.FloatArea');
+               assert.isTrue(cInstance.instanceOfModule(dialog, 'Lib/Control/FloatArea/FloatArea'));
                done();
                action.getDialog().close();
             });
