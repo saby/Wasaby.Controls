@@ -1,14 +1,13 @@
 define('js!Controls/Popup/Manager',
    [
       'Core/Control',
-      'Core/core-merge',
       'Core/core-instance',
       'Core/helpers/random-helpers',
       'js!Controls/Popup/Manager/Container',
       'WS.Data/Collection/List'
    ],
 
-   function (Control, CoreMerge, CoreInstance, Random, Container, List) {
+   function (Control, CoreInstance, Random, Container, List) {
       'use strict';
       /**
        * Менеджер окон
@@ -64,7 +63,7 @@ define('js!Controls/Popup/Manager',
                index = Manager._popupItems.getIndexByValue('id', id);
             if (index > -1) {
                var element = Manager._popupItems.at(index);
-               CoreMerge(element.popupOptions, options);
+               element.popupOptions = options;
                Container.setPopupItems(Manager._popupItems);
                return id;
             }
