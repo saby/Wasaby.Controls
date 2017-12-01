@@ -111,6 +111,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Cache',
           * @return {Core/Deferred<boolean>}
           */
          create: function (namespace, data) {
+            data.id = data.id || _uniqueHex(50);
             _change(namespace, 'create', new PresetUnit(data));
          },
 
@@ -321,6 +322,14 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Cache',
             }
          }
       };
+
+      /**
+       * Сгенерировать случайную hex-строку указанной длины
+       * @protected
+       * @param {number} n Длина строки
+       * @return {string}
+       */
+      var _uniqueHex = function(n){var l=[];for(var i=0;i<n;i++){l[i]=Math.round(15*Math.random()).toString(16)}return l.join('')};
 
 
 
