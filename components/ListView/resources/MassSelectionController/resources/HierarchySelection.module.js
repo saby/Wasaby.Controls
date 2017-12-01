@@ -113,7 +113,8 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
       getSelection: function (allMarked) {
          return {
             marked: this._getMarked(allMarked),
-            excluded: this._options.excludedKeys
+            excluded: this._options.excludedKeys,
+            markedAll: this._options.markedAll
          }
       },
 
