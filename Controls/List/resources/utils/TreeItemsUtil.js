@@ -1,9 +1,8 @@
 define('js!Controls/List/resources/utils/TreeItemsUtil', [
    'WS.Data/Display/Tree',
    'WS.Data/Entity/Model',
-   'Core/core-instance',
    'Core/helpers/Object/isPlainObject'
-], function(TreeDisplay, Model, CoreInstance, isPlainObject) {
+], function(TreeDisplay, Model, isPlainObject) {
 
    function isVisibleItem(item, onlyFolders) {
       if (onlyFolders && item.isNode() !== true) {
