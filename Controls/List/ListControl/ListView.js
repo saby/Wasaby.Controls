@@ -54,10 +54,6 @@ define('js!Controls/List/ListControl/ListView', [
             item = dispItem.getContents();
             newKey = ItemsUtil.getPropertyValue(item, this._options.idProperty);
             this._listModel.setSelectedKey(newKey);
-         },
-
-         setItems: function(items) {
-            this._listModel.setItems(items);
          }
       });
 
