@@ -17,14 +17,26 @@ define('js!Controls/Input/Number', [
    _private = {
       splitValue: null,
 
+      /**
+       * Возвращает значение инпута без разделительных пробелов
+       * @returns {String}
+       */
       getClearValue: function() {
          return _private.concatSplitValue().replace(/ /g, '');
       },
 
+      /**
+       * Возвращает значение инпута в виде строки
+       * @returns {String}
+       */
       concatSplitValue: function() {
          return _private.splitValue.before + _private.splitValue.insert + _private.splitValue.after;
       },
 
+      /**
+       * Возвращает готовую строку с разделителями
+       * @returns {String}
+       */
       getValueWithDelimiters: function() {
          var
             clearValSplited = _private.getClearValue().split('.');
@@ -35,36 +47,36 @@ define('js!Controls/Input/Number', [
          return clearValSplited.join('.');
       },
 
-      getCursorPosition: function (withDelimeters) {
+      /**
+       * Возвращает позицию курсора с учетом разделителей
+       * @param shift {Integer} дополнительный сдвиг курсора
+       * @returns {Integer}
+       */
+      getCursorPosition: function (shift) {
          var
-            beforeNewDelimetersSpacesCnt,
-            afterNewDelimetersSpacesCnt,
-            spacesCntDiff = 0;
-
-         if (withDelimeters) {
-            beforeNewDelimetersSpacesCnt = _private.concatSplitValue().split(' ').length - 1;
-            afterNewDelimetersSpacesCnt = _private.getValueWithDelimiters().split(' ').length - 1;
+            beforeNewDelimetersSpacesCnt = _private.concatSplitValue().split(' ').length - 1,
+            afterNewDelimetersSpacesCnt = _private.getValueWithDelimiters().split(' ').length - 1,
             spacesCntDiff = afterNewDelimetersSpacesCnt - beforeNewDelimetersSpacesCnt;
-         }
 
-         return _private.splitValue.before.length + _private.splitValue.insert.length + spacesCntDiff;
+         return _private.splitValue.before.length + _private.splitValue.insert.length + spacesCntDiff + shift;
       },
 
-
-
-      //Валидирует и подготавливает новое значение по splitValue
+      /**
+       * Валидирует и подготавливает новое значение по splitValue
+       * @param splitValue
+       * @returns {{value: (*|String), position: (*|Integer)}}
+       */
       prepareData: function (splitValue) {
          var
-            regExp = _private.getRegexp(this._options.onlyPositive, this._options.integersLength, this._options.precision);
+            regExp = _private.getRegexp(this._options.onlyPositive, this._options.integersLength, this._options.precision),
+            shift = 0;
 
          _private.splitValue = splitValue;
 
-         //Если был удален пробел - нужно его оставить и сдвинуть курсор влево
+         //Если был удалён пробел, то нужно удалить цифру слева от него и сдвинуть курсор на единицу влево
          if (splitValue.delete === ' ') {
-            return {
-               value: _private.getValueWithDelimiters(),
-               position: _private.getCursorPosition()
-            };
+            splitValue.before = splitValue.before.substr(0, splitValue.before.length - 1);
+            shift = -1;
          }
 
          //Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
@@ -83,11 +95,17 @@ define('js!Controls/Input/Number', [
          //Запишет значение в input и поставит курсор в указанное место
          return {
             value: _private.getValueWithDelimiters(),
-            position: _private.getCursorPosition(true)
+            position: _private.getCursorPosition(shift)
          };
       },
 
-      //Функция генерирует регулярное выражение в зависимости от переданных опций
+      /**
+       * Генерирует регулярное выражение в зависимости от переданных опций
+       * @param onlyPositive Только положительные значения
+       * @param integersLength Максимальная длина целой части
+       * @param precision Максимальная длина дробной части
+       * @returns {RegExp}
+       */
       getRegexp: function (onlyPositive, integersLength, precision) {
          var
             regExpString = '^';
@@ -179,6 +197,7 @@ define('js!Controls/Input/Number', [
             integers = tmp[0],
             decimals = tmp[1];
 
+         //Если дробная часть пустая или нулевая, то нужно убрать её
          if (!parseInt(decimals, 10)) {
             this._value = integers;
          }
