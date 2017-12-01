@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
             CommandDispatcher.declareCommand(this, 'changePreset', this._commandChangePreset);
             CommandDispatcher.declareCommand(this, 'clonePreset', this._commandClonePreset);
             CommandDispatcher.declareCommand(this, 'deletePreset', this._commandDeletePreset);
-            this._publish('onStart', 'onComplete');
+            this._publish('onOpen', 'onComplete');
          },
 
          init: function () {
@@ -171,7 +171,7 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
           * @param {object} columnsConfig Параметры открыттия
           * @return {Deferred<string[]>}
           */
-         start: function (columnsConfig) {
+         open: function (columnsConfig) {
             this._columnsConfig = columnsConfig;
             /*this.showPicker();*/
             this._areaContainer = new FloatArea(coreMerge({
@@ -184,7 +184,7 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
             }, this._getAreaOptions()));
             this._notify('onSizeChange');
             this.subscribeOnceTo(this._areaContainer, 'onAfterClose', this._notify.bind(this, 'onSizeChange'));
-            this._notify('onStart');
+            this._notify('onOpen');
             return this._result = new Deferred();
          },
 

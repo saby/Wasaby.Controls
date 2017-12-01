@@ -325,7 +325,7 @@ define('js!SBIS3.CONTROLS.Browser', [
             if (!this._columnsEditor) {
                this._columnsEditor = new ColumnsEditor(this._columnsEditorButton ? {moveColumns:this._columnsEditorButton._options.moveColumns} : null);
             }
-            promise.dependOn(this._columnsEditor.start(options));
+            promise.dependOn(this._columnsEditor.open(options));
          }.bind(this));
          return promise;
       },
