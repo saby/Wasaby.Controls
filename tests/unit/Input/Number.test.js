@@ -137,8 +137,8 @@ define(
                });
             });
 
-            //Удаление разделительного пробела даёт просто сдвиг курсора влево
-            it('Delete space operation just moves cursor left', function () {
+            //При попытке удалить пробел происходит удаление символа левее него и сдвиг курсора влево
+            it('Delete space operation removes symbol before space and moves cursor left', function () {
                var
                   inputResult;
                inputResult = NumberTextBox._private.prepareData.call(
@@ -153,8 +153,8 @@ define(
                      delete: ' '
                   }
                );
-               assert.equal(inputResult.value, '123 456');
-               assert.equal(inputResult.position, 3);
+               assert.equal(inputResult.value, '12 456');
+               assert.equal(inputResult.position, 2);
             });
          });
       });
