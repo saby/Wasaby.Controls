@@ -249,6 +249,7 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
 
       _getMarked: function (allMarked) {
          var
+            parent,
             record,
             status,
             parentId,
@@ -261,7 +262,8 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
                if (status === STATUS.SELECTED || status === STATUS.PARTIALLY_FULL) {
                   if (id !== this._options.root) {
                      parentId = this._markedTree.getRecordById(id).get(PARENT_FIELD);
-                     parentStatus = this._markedTree.getRecordById(parentId).get(STATUS_FILED);
+                     parent = this._markedTree.getRecordById(parentId);
+                     parentStatus = parent ? parent.get(STATUS_FILED) : STATUS.NOT_SELECTED;
                   }
                   if (allMarked || id === this._options.root || (parentStatus !== STATUS.PARTIALLY_FULL && parentStatus !== STATUS.SELECTED)) {
                      result.push(id);
