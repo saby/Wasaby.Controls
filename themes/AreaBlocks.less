@@ -1,27 +1,24 @@
-& {
-   @margin-block: @spacing-between-blocks / 2;
-   @margin-row: -@margin-block;
-
-   .ws-block {
-      &__layout {
-         overflow: hidden;
-         & > .ws-block__group {
-            margin-left: @margin-row;
-            margin-right: @margin-row;
-            &:first-of-type {
-               margin-top: @margin-row;
-            }
-            &:last-of-type {
-               margin-bottom: @margin-row;
-            }
+.ws-Block {
+   border: @spacing_Block / 2 solid @bg_BlockLayout;
+   .box-sizing();
+   .for(6, { &_style_@{_i} {
+      background-color: ~"@{bg_Block_style-@{_i}}";
+   } });
+   &Layout {
+      overflow: hidden;
+      background-color: @bg_BlockLayout;
+      & > .ws-BlockGroup {
+         margin-left: @margin_BlockGroup;
+         margin-right: @margin_BlockGroup;
+         &:first-of-type {
+            margin-top: @margin_BlockGroup;
          }
-         &_detached {
-            border-top: @spacing-between-blocks solid @color-between-blocks;
+         &:last-of-type {
+            margin-bottom: @margin_BlockGroup;
          }
       }
-      &__content {
-         border: @margin-block solid @color-between-blocks;
-         .box-sizing();
+      &_detached {
+         padding-top: @spacing_Block;
       }
    }
 }
