@@ -209,7 +209,24 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          CommandDispatcher.declareCommand(this, 'loadNode', this._folderLoad);
       },
       init: function(){
+         var
+            self = this;
          TreeDataGridView.superclass.init.call(this);
+         // Костыль для правильного отображения лесенки в режиме поиска:
+         // Назначаем собственный конвертер и в режиме поиска не строим лесенку для узлов, отображаемых в хлебных крошках.
+         // https://online.sbis.ru/opendoc.html?guid=c0cfbaf3-923b-46ea-a378-9f1ae36fa00a
+         // todo Чтобы убрать это - нужно перейти на SearchDisplay, что в рамках текущей реализации практически анреал задача.
+         this.once('onDrawItems', function() {
+            this._options._ladderInstance._columnNames.forEach(function(columnName) {
+               self._options._ladderInstance.setConverter(columnName, function (value, item) {
+                  if (self._isSearchMode() && item.get(self._options.nodeProperty)) {
+                     return;
+                  } else {
+                     return value;
+                  }
+               });
+            });
+         });
          if (this._options._serverRender) {
             this._createAllFolderFooters();
          }
