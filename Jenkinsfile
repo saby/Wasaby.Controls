@@ -382,7 +382,7 @@ node('controls') {
             SITE = http://${NODE_NAME}:30001
             fail_test_repeat_times = 0
             DO_NOT_RESTART = True
-            SOFT_RESTART = True
+            SOFT_RESTART = False
             NO_RESOURCES = True
             STREAMS_NUMBER = ${stream_number}
             DELAY_RUN_TESTS = 1
