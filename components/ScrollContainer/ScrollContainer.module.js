@@ -239,8 +239,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                this.subscribeTo(EventBus.channel('stickyHeader'), 'onStickyHeadersChanged', this._stickyHeadersChangedHandler.bind(this));
 
-               this._toggleGradient();
-
                // Что бы до инициализации не было видно никаких скроллов
                this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
                // Скрываем нативный скролл.
@@ -351,6 +349,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
             }
+            this._toggleGradient();
          },
 
          // Показать скролл
