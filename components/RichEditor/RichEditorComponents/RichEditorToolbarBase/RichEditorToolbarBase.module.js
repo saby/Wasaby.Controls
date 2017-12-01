@@ -114,6 +114,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                editor = this._options.linkedEditor;
             this._handlersInstances.format = this._formatChangeHandler.bind(this);
             this.subscribeTo(editor, 'onFormatChange', this._handlersInstances.format);
+
+            //Грузим историю сразу, для того чтобы в случае ее отсутствия можно было заблокировать кнопку!
+            this._fillHistory();
          },
 
          _formatChangeHandler : function() {},
@@ -179,13 +182,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
             return this._itemsContainer;
          },
 
-         _initHistory: function(callback){
-            if(!this._isHistoryInited){
-               this._fillHistory().addCallback(callback);
-               this._isHistoryInited = true;
-            }
-         },
-
          _fillHistory: function(){
             var
                prepareHistory = function(value){
@@ -206,7 +202,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                   return stripText;
                };
             if (this.getItems().getRecordById('history')) {
-               return this.getLinkedEditor().getHistory().addCallback(function (arrBL) {
+               this.getLinkedEditor().getHistory().addCallback(function (arrBL) {
                   //Проблема:
                   //          После прихода данных тулбар уже может быть уничтожен
                   //Решение 1:
