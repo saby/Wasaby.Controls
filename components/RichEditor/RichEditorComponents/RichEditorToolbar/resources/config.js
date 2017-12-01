@@ -340,8 +340,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          multiselect: false,
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          handlers: {
-            onMenuItemActivate: handlers.history,
-            onActivated: handlers.openHistory
+            onMenuItemActivate: handlers.history
          },
          idProperty: 'key',
          pickerConfig: {
