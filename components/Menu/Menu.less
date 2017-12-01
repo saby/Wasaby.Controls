@@ -38,12 +38,14 @@
    .controls-MenuItem-additional {
       min-height: 0;
       height: 0;
+      visibility: hidden;
    }
    &.controls-Menu-showAdditionalItems {
       .controls-MenuItem-additional {
          .flexbox();
          min-height: @menu-item-height;
          height: auto;
+         visibility: visible;
       }
    }
    .controls-Menu__itemsContainer {
