@@ -6,8 +6,8 @@
    placeholder="{{_options.placeholder}}"
    selectOnClick="{{_options.selectOnClick}}"
    getInputData="{{_getInputData}}"
-   event:onChangeValue="_inputHandler()"
-   event:onTagHover="_notifyHandler('onTagHover')"
-   event:onTagClick="_notifyHandler('onTagClick')"
-   event:onInputFinish="_notifyHandler('onInputFinish')"
+   on:onChangeValue="_inputHandler()"
+   on:onTagHover="_notifyHandler('onTagHover')"
+   on:onTagClick="_notifyHandler('onTagClick')"
+   on:onInputFinish="_notifyHandler('onInputFinish')"
 />
