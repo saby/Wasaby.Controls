@@ -10,15 +10,14 @@
         event:onTagHover="_notifyHandler('onTagHover')"
         event:onTagClick="_notifyHandler('onTagClick')">
    <ws:content>
-      <!--TODO контейнер убрать-->
+      <!--TODO контейнер убрать https://online.sbis.ru/opendoc.html?guid=25000158-64ff-4db9-9605-a986cbc37b0f-->
       <div>
          <textarea
                  name="realArea"
                  spellcheck="false"
-                 class="controls-TextArea__field controls-TextArea__realField controls-TextBox__field"
+                 class="controls-TextArea__field controls-TextArea__realField controls-TextBox__field {{_hasScroll ? 'controls-TextArea__realField_scroll-scroll' : 'controls-TextArea__realField_scroll-hidden'}}"
                  placeholder="{{_options.placeholder}}"
                  readonly="{{!isEnabled() ? 'readonly'}}"
-                 style="overflow-y: {{_hasScroll ? 'scroll' : 'hidden'}}"
                  event:onkeydown="_keyDownHandler()"
                  event:onfocus="_focusHandler()"
                  event:onscroll="_scrollHandler()"

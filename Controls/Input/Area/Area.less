@@ -20,6 +20,13 @@
       position: absolute;
       top: 0;
       -webkit-appearance: none;
+
+      &_scroll-hidden {
+         overflow-y: hidden;
+      }
+      &_scroll-scroll {
+         overflow-y: scroll;
+      }
    }
 
    //Фэйковая textArea (div)
@@ -35,8 +42,11 @@
    .controls-TextArea {
       &__field {
          box-sizing: content-box;
+         //Чтобы показывался скролл
          -webkit-overflow-scrolling: touch;
       }
+      //TextArea на safari и chrome на ios имеет отступы слева и српава, которые не убрать
+      //Поэтому в фейковой текст арии проставим такие же
       &__fakeField {
          padding: 0 7px;
          width: calc(~"100% - 6px");
