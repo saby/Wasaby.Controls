@@ -154,6 +154,14 @@ define('js!Controls/List/ListControl', [
          this._container.closest('.ws-scrolling-content').get(0).scrollTop = offset;
       },
 
+      scrollLoadMore: function(self, direction) {
+         //TODO нужна компенсация при подгрузке вверх
+
+         if (self._navigationController && self._navigationController.hasMoreData(direction)) {
+            _private.loadToDirection(self, direction);
+         }
+      },
+
       createScrollWatcher: function(scrollContainer) {
          var
             self = this,
@@ -166,10 +174,10 @@ define('js!Controls/List/ListControl', [
             },
             eventHandlers = {
                onLoadTriggerTop: function() {
-                  self._scrollLoadMore('up');
+                  _private.scrollLoadMore(self, 'up');
                },
                onLoadTriggerBottom: function() {
-                  self._scrollLoadMore('down');
+                  _private.scrollLoadMore(self, 'down');
                },
                onListTop: function() {
                },
@@ -423,19 +431,6 @@ define('js!Controls/List/ListControl', [
          constructor: function (cfg) {
             ListControl.superclass.constructor.apply(this, arguments);
             this._publish('onDataLoad');
-         },
-
-         /**
-          * Load more data after reaching end or start of the list.
-          *
-          * @param direction 'up' | 'down'
-          * @private*/
-         _scrollLoadMore: function(direction) {
-            //TODO нужна компенсация при подгрузке вверх
-
-            if (this._navigationController && this._navigationController.hasMoreData(direction)) {
-               _private.loadToDirection(this, direction);
-            }
          },
 
          _beforeMount: function(newOptions) {
