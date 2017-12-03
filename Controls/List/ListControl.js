@@ -125,7 +125,7 @@ define('js!Controls/List/ListControl', [
                      }
                   }, 100);
 
-                  this._loadingState = null;
+                  self._loadingState = null;
                   _private.hideIndicator(this);
 
                   return list;
@@ -447,7 +447,6 @@ define('js!Controls/List/ListControl', [
          /**
           * Load more data after reaching end or start of the list.
           *
-          * @param e
           * @param direction 'up' | 'down'*/
 
          _scrollLoadMore: function(direction) {
