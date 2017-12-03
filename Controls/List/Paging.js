@@ -37,6 +37,11 @@ define('js!Controls/List/Paging', [
             self._stateEnd = 'normal';
             self._stateNext = 'normal';
          }
+      },
+      changePage: function(self, page) {
+         if (self._options.selectedPage !== page) {
+            self._notify('onChangeSelectedPage', page);
+         }
       }
    };
 
@@ -66,18 +71,12 @@ define('js!Controls/List/Paging', [
       },
 
       __digitClick: function(e, digit) {
-         this.__changePage(digit);
-      },
-
-      __changePage: function(page) {
-         if (this._options.selectedPage !== page) {
-            this._notify('onChangeSelectedPage', page);
-         }
+         _private.changePage(this, digit);
       },
 
       __arrowClick: function(e, btnName) {
          var targetPage;
-         if(this['_state' + btnName] !== 'normal') {
+         if (this['_state' + btnName] !== 'normal') {
             return;
          }
          if (this._options.showDigits) {
@@ -87,7 +86,7 @@ define('js!Controls/List/Paging', [
                case 'Prev': targetPage = this._options.selectedPage - 1; break;
                case 'Next': targetPage = this._options.selectedPage + 1; break;
             }
-            this.__changePage(targetPage);
+            _private.changePage(this, targetPage);
          }
          this._notify('onArrowClick', btnName);
       }
