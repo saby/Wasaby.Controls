@@ -43,21 +43,17 @@ define('js!Controls/List/Controllers/PageNavigation',
          calculateState: function(list, direction) {
             var meta = list.getMetaData();
             if (this._options.mode == 'totalCount') {
-               if (typeof meta.more == 'number') {
-                  this._more = meta.more;
-               }
-               else {
+               if (typeof meta.more != 'number') {
                   throw new Error('"more" Parameter has incorrect type. Must be numeric')
                }
             }
             else {
-               if (typeof meta.more == 'boolean') {
-                  this._more = meta.more;
-               }
-               else {
+               if (typeof meta.more != 'boolean') {
                   throw new Error('"more" Parameter has incorrect type. Must be boolean')
                }
             }
+            this._more = meta.more;
+
             if (direction == 'down') {
                this._nextPage++;
             }

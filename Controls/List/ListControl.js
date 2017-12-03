@@ -60,7 +60,12 @@ define('js!Controls/List/ListControl', [
       },
 
       reload: function(self) {
-         _private.load(self, function(self, list){
+         _private.load(self).addCallback(function(list){
+
+            if (self._navigationController) {
+               self._navigationController.calculateState(list);
+            }
+
             if (!self._listModel) {
                self._listModel = _private.createListModel(list, self._options);
                self._forceUpdate();
@@ -72,17 +77,22 @@ define('js!Controls/List/ListControl', [
       },
 
       loadToDirection: function(self, direction) {
-         _private.load(self, function(self, list){
-            if (direction == 'down') {
+         _private.load(self, direction).addCallback(function(list){
+
+            if (self._navigationController) {
+               self._navigationController.calculateState(list, direction);
+            }
+
+            if (direction === 'down') {
                self._listModel.appendItems(list);
-            } else if (direction == 'up') {
+            } else if (direction === 'up') {
                self._listModel.prependItems(list);
             }
-         }, direction)
+         })
       },
 
 
-      load: function(self, loadCallback, direction) {
+      load: function(self, direction) {
          if (self._dataSource) {
             var def, queryParams;
 
@@ -109,14 +119,6 @@ define('js!Controls/List/ListControl', [
                .addCallback(fHelpers.forAliveOnly(function (list) {
                   self._notify('onDataLoad', list);
 
-                  loadCallback(self, list);
-
-                  if (self._navigationController) {
-                     self._navigationController.calculateState(list, direction);
-                  }
-
-
-
                   //TODO это кривой способ заставить пэйджинг пересчитаться. Передалть, когда будут готовы команды от Зуева
                   //убираю, когда будет готов реквест от Зуева
                   window.setTimeout(function(){
@@ -130,15 +132,34 @@ define('js!Controls/List/ListControl', [
 
                   return list;
                }, self))
-               .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
+               .addErrback(fHelpers.forAliveOnly(function(err){
+                  _private.processLoadError(self, err);
+               }, self));
             this._loader = def;
+            return def;
          }
          else {
-            throw new Error('Option dataSource is undefined. Can\'t reload view');
+            throw new Error('Option dataSource is undefined. Can\'t load data');
          }
       },
 
+      processLoadError: function(self, error) {
+         if (!error.canceled) {
+            //this._toggleIndicator(false);
+            if (self._notify('onDataLoadError', error) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
+               //TODO новые попапы
+               /*InformationPopupManager.showMessageDialog(
 
+
+                     opener: self,
+                     status: 'error'
+                  }
+               );*/
+               error.processed = true;
+            }
+         }
+         return error;
+      },
 
       scrollToEdge: function(direction) {
          var self = this;
@@ -160,6 +181,14 @@ define('js!Controls/List/ListControl', [
          this._container.closest('.ws-scrolling-content').get(0).scrollTop = offset;
       },
 
+      scrollLoadMore: function(self, direction) {
+         //TODO нужна компенсация при подгрузке вверх
+
+         if (self._navigationController && self._navigationController.hasMoreData(direction)) {
+            _private.loadToDirection(self, direction);
+         }
+      },
+
       createScrollWatcher: function(scrollContainer) {
          var
             self = this,
@@ -172,10 +201,10 @@ define('js!Controls/List/ListControl', [
             },
             eventHandlers = {
                onLoadTriggerTop: function() {
-                  self._scrollLoadMore('up');
+                  _private.scrollLoadMore(self, 'up');
                },
                onLoadTriggerBottom: function() {
-                  self._scrollLoadMore('down');
+                  _private.scrollLoadMore(self, 'down');
                },
                onListTop: function() {
                },
@@ -442,19 +471,6 @@ define('js!Controls/List/ListControl', [
          constructor: function (cfg) {
             ListControl.superclass.constructor.apply(this, arguments);
             this._publish('onDataLoad');
-         },
-
-         /**
-          * Load more data after reaching end or start of the list.
-          *
-          * @param direction 'up' | 'down'*/
-
-         _scrollLoadMore: function(direction) {
-            //TODO нужна компенсация при подгрузке вверх
-
-            if (this._navigationController && this._navigationController.hasMoreData(direction)) {
-               _private.loadToDirection(this, direction);
-            }
          },
 
          _beforeMount: function(newOptions) {
