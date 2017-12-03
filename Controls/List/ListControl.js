@@ -113,8 +113,7 @@ define('js!Controls/List/ListControl', [
                queryParams = _private.paramsWithUserEvent(queryParams, userParams);
             }
 
-            self._loadingState = direction ? direction : 'all';
-            _private.showIndicator(this);
+            _private.showIndicator(this, direction);
             def = DataSourceUtil.callQuery(self._dataSource, self._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
                .addCallback(fHelpers.forAliveOnly(function (list) {
                   self._notify('onDataLoad', list);
@@ -127,7 +126,6 @@ define('js!Controls/List/ListControl', [
                      }
                   }, 100);
 
-                  self._loadingState = null;
                   _private.hideIndicator(this);
 
                   return list;
@@ -219,7 +217,8 @@ define('js!Controls/List/ListControl', [
             eventHandlers: eventHandlers
          });
       },
-      showIndicator: function(self) {
+      showIndicator: function(self, direction) {
+         self._loadingState = direction ? direction : 'all';
          setTimeout(function() {
             self._loadingIndicatorState = self._loadingState || null;
             self._forceUpdate();
@@ -227,6 +226,7 @@ define('js!Controls/List/ListControl', [
       },
 
       hideIndicator: function(self) {
+         self._loadingState = null;
          self._loadingIndicatorState = null;
          self._forceUpdate();
       }
