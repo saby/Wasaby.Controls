@@ -8,6 +8,37 @@ define('js!Controls/Popup/Manager/Container',
    ],
    function (Control, CommandDispatcher, template, List) {
       'use strict';
+
+      var _private = {
+         /**
+          * @param id идентификатор попапа.
+          */
+         closePopup: function (id) {
+            this._notify('closePopup', id);
+         },
+
+         /**
+          * @param id идентификатор попапа.
+          */
+         focusInPopup: function(id){
+            this._notify('focusInPopup', id);
+         },
+
+         /**
+          * @param id идентификатор попапа.
+          * @param {Object} focusedControl контрол, на который кшел фокус.
+          */
+         focusOutPopup: function(id, focusedControl){
+            this._notify('focusOutPopup', id, focusedControl);
+         },
+
+         /**
+          * @param {Object} popup Инстанс попапа.
+          */
+         recalcPosition: function (popup) {
+            this._notify('recalcPosition', popup);
+         }
+      };
       /**
        * Контенер для отображения окон
        * @class Controls/Popup/Manager/Container
@@ -25,30 +56,16 @@ define('js!Controls/Popup/Manager/Container',
          constructor: function (cfg) {
             Container.superclass.constructor.call(this, cfg);
             this._publish('closePopup', 'focusInPopup', 'focusOutPopup', 'recalcPosition');
-            CommandDispatcher.declareCommand(this, 'closePopup', this._closePopup);
-            CommandDispatcher.declareCommand(this, 'recalcPosition', this._recalcPosition);
+            CommandDispatcher.declareCommand(this, 'closePopup', _private.closePopup);
+            CommandDispatcher.declareCommand(this, 'focusInPopup', _private.focusInPopup);
+            CommandDispatcher.declareCommand(this, 'focusOutPopup', _private.focusOutPopup);
+            CommandDispatcher.declareCommand(this, 'recalcPosition', _private.recalcPosition);
          },
 
          _beforeMount: function (options) {
             if (!options._popupItems) {
                options._popupItems = new List();
             }
-         },
-
-         /**
-          * @event Controls/Popup/Manager/Container#closePopup Происходит при закрытии попапа.
-          * @param {Object} popup Инстанс попапа.
-          */
-         _closePopup: function (popup) {
-            this._notify('closePopup', popup);
-         },
-
-         /**
-          * @event Controls/Popup/Manager/Container#recalcPosition Происходит при закрытии попапа.
-          * @param {Object} popup Инстанс попапа.
-          */
-         _recalcPosition: function (popup) {
-            this._notify('recalcPosition', popup);
          },
 
          /**
@@ -62,6 +79,7 @@ define('js!Controls/Popup/Manager/Container',
          }
       });
 
+      // TODO довольно спорный способ встроить контйнер на страницу
       var newDiv = document.createElement('div');
       newDiv.setAttribute('id', 'popup');
       document.body.appendChild(newDiv);

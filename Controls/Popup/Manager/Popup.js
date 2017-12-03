@@ -8,7 +8,47 @@ define('js!Controls/Popup/Manager/Popup',
    ],
    function (Control, template, CommandDispatcher, CoreConstants) {
       'use strict';
-      /**
+
+      var _private = {
+         /**
+          * Закрыть popup
+          */
+         close: function () {
+            CommandDispatcher.sendCommand(this, 'closePopup', this.getId());
+         },
+
+         /**
+          * Обработчик фокусировки элемента.
+          */
+         focusIn: function () {
+            CommandDispatcher.sendCommand(this, 'focusInPopup', this.getId());
+         },
+
+         /**
+          * Обработчик потери фокуса.
+          * @param event
+          * @param focusedControl
+          */
+         focusOut: function (event, focusedControl) {
+            CommandDispatcher.sendCommand(this, 'focusOutPopup', this.getId(), focusedControl);
+         },
+
+         /**
+          * Отправить результат
+          */
+         sendResult: function () {
+            if (this._controller) {
+               this._controller.notifyOnResult.call(this._controller, Array.prototype.slice.call(arguments));
+            }
+         },
+
+         /**
+          * Пересчитать позицию попапа
+          */
+         recalcPosition: function () {
+            CommandDispatcher.sendCommand(this, 'recalcPosition', this);
+         }
+      };
 
        /**
        * Компонент вспывающего окна
@@ -25,8 +65,8 @@ define('js!Controls/Popup/Manager/Popup',
 
          constructor: function (cfg) {
             Popup.superclass.constructor.apply(this, arguments);
-            CommandDispatcher.declareCommand(this, 'close', this.close);
-            CommandDispatcher.declareCommand(this, 'sendResult', this.sendResult);
+            CommandDispatcher.declareCommand(this, 'close', _private.close);
+            CommandDispatcher.declareCommand(this, 'sendResult', _private.sendResult);
          },
 
          _beforeMount: function(options) {
@@ -35,60 +75,9 @@ define('js!Controls/Popup/Manager/Popup',
          },
 
          _afterMount: function () {
-            this.subscribe('onFocusIn', this._focusIn);
-            this.subscribe('onFocusOut', this._focusOut);
-            if (this._opener) {
-               this.subscribeTo(this._opener, 'onFocusOut', this._focusOut.bind(this));
-            }
-            this._recalcPosition();
-         },
-
-         /**
-          * Закрыть popup
-          * @function Controls/Popup/Manager/Popup#close
-          */
-         close: function () {
-            CommandDispatcher.sendCommand(this, 'closePopup', this);
-         },
-
-         /**
-          * Отправить результат
-          * @function Controls/Popup/Manager/Popup#sendResult
-          */
-         sendResult: function () {
-            if (this._controller) {
-               this._controller.notifyOnResult.call(this._controller, Array.prototype.slice.call(arguments));
-            }
-         },
-
-         /**
-          * Обработчик фокусировки элемента.
-          * @function Controls/Popup/Manager/Popup#_focusIn
-          * @param event
-          */
-         _focusIn: function (event) {
-
-         },
-
-         /**
-          * Обработчик потери фокуса.
-          * @function Controls/Popup/Manager/Popup#_focusOut
-          * @param event
-          * @param focusedControl
-          */
-         _focusOut: function (event, focusedControl) {
-            if (!!this._options.autoHide) {
-               var
-                  opener = this._opener,
-                  parent = focusedControl.to;
-               while (!!parent) {
-                  if (parent === opener || parent === this) {
-                     return;
-                  }
-                  parent = parent.getParent();
-               }
-               this.close();
-            }
+            this.subscribe('onFocusIn', _private.focusIn);
+            this.subscribe('onFocusOut', _private.focusOut);
+            _private.recalcPosition.call(this);
          },
 
          /**
@@ -98,16 +87,8 @@ define('js!Controls/Popup/Manager/Popup',
           */
          _keyPressed: function (event) {
             if (event.nativeEvent.keyCode === CoreConstants.key.esc) {
-               this.close();
+               _private.close.call(this);
             }
-         },
-
-         /**
-          * Пересчитать позицию попапа
-          * @function Controls/Popup/Manager/Popup#_recalcPosition
-          */
-         _recalcPosition: function () {
-            CommandDispatcher.sendCommand(this, 'recalcPosition', this);
          }
       });
 

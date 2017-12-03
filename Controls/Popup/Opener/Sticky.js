@@ -20,7 +20,7 @@ define('js!Controls/Popup/Opener/Sticky',
       var Sticky = Control.extend([IOpener], {
          _controlName: 'Controls/Popup/Opener/Sticky',
 
-         open: function (config) {
+         open: function (config, opener) {
             var
                cfg = config || {};
             CoreMerge(cfg, this._options.popupOptions);
@@ -30,7 +30,7 @@ define('js!Controls/Popup/Opener/Sticky',
             if (!this._popupId) {
                this._controller = new Controller();
                this._controller.subscribe('onResult', this._notifyOnResult.bind(this));
-               this._popupId = Manager.show(cfg, this, Strategy, this._controller);
+               this._popupId = Manager.show(cfg, opener || this, Strategy, this._controller);
             }
          }
       });
