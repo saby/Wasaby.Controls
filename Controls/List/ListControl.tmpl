@@ -18,4 +18,9 @@
    <ws:if data="{{_pagingCfg}}">
       <ws:Controls.List.Paging className="ws-ListControl__paging" scope="{{_pagingCfg}}" event:onArrowClick="__onPagingArrowClick()"></ws:Controls.List.Paging>
    </ws:if>
+   <ws:if data="{{_loadingIndicatorState}}">
+      <div class="ws-ListControl__loadingIndicator ws-ListControl__loadingIndicator__state-{{_loadingIndicatorState}}">
+         <div class="ws-ListControl__loadingIndicatorImg"></div>
+      </div>
+   </ws:if>
 </div>

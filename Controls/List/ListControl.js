@@ -32,7 +32,7 @@ define('js!Controls/List/ListControl', [
 
       initNavigation: function(navOption, dataSource) {
          var navController;
-         if (navOption && navOption.source == 'page') {
+         if (navOption && navOption.source === 'page') {
             navController = new PageNavigation(navOption.sourceConfig);
             navController.prepareSource(dataSource);
          }
@@ -109,6 +109,7 @@ define('js!Controls/List/ListControl', [
                queryParams = _private.paramsWithUserEvent(queryParams, userParams);
             }
 
+            _private.showIndicator(self, direction);
             def = DataSourceUtil.callQuery(self._dataSource, self._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
                .addCallback(fHelpers.forAliveOnly(function (list) {
                   self._notify('onDataLoad', list);
@@ -120,6 +121,8 @@ define('js!Controls/List/ListControl', [
                         self._scrollPagingCtr.resetHeights();
                      }
                   }, 100);
+
+                  _private.hideIndicator(self);
 
                   return list;
                }, self))
@@ -136,12 +139,12 @@ define('js!Controls/List/ListControl', [
 
       processLoadError: function(self, error) {
          if (!error.canceled) {
-            //this._toggleIndicator(false);
+            _private.hideIndicator(self);
             if (self._notify('onDataLoadError', error) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
                //TODO новые попапы
                /*InformationPopupManager.showMessageDialog(
 
-
+                     opener: self,
 
                      status: 'error'
                   }
@@ -209,6 +212,19 @@ define('js!Controls/List/ListControl', [
             loadOffset: this._loadOffset,
             eventHandlers: eventHandlers
          });
+      },
+      showIndicator: function(self, direction) {
+         self._loadingState = direction ? direction : 'all';
+         setTimeout(function() {
+            self._loadingIndicatorState = self._loadingState || null;
+            self._forceUpdate();
+         }, 2000)
+      },
+
+      hideIndicator: function(self) {
+         self._loadingState = null;
+         self._loadingIndicatorState = null;
+         self._forceUpdate();
       }
    };
 
@@ -322,6 +338,7 @@ define('js!Controls/List/ListControl', [
     * @variant append Добавлять, при этом записи с одинаковыми id будут выводиться в списке
     */
 
+
    /**
     * Перезагружает набор записей представления данных с последующим обновлением отображения
     * @function Controls/List/ListControl#reload
@@ -346,6 +363,8 @@ define('js!Controls/List/ListControl', [
 
          _dataSource: null,
          _loader: null,
+         _loadingState: null,
+         _loadingIndicatorState: null,
 
          //TODO пока спорные параметры
          _filter: undefined,
