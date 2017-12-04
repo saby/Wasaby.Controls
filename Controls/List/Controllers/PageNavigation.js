@@ -10,13 +10,14 @@ define('js!Controls/List/Controllers/PageNavigation',
          _nextPage: 1,
          _prevPage: -1,
          _more: null,
+         _page: 0,
          constructor: function(cfg) {
             this._options = cfg;
             PageNavigation.superclass.constructor.apply(this, arguments);
-            this._options.page = cfg.page || 0;
-            if (this._options.page !== undefined) {
-               this._prevPage = this._options.page - 1;
-               this._nextPage = this._options.page + 1;
+            this._page = cfg.page || 0;
+            if (this._page !== undefined) {
+               this._prevPage = this._page - 1;
+               this._nextPage = this._page + 1;
             }
             if (!this._options.pageSize) {
                throw new Error ('Option pageSize is undefined in PageNavigation')
@@ -30,7 +31,7 @@ define('js!Controls/List/Controllers/PageNavigation',
             } else if (direction == 'up') {
                neededPage = this._prevPage;
             } else {
-               neededPage = this._options.page;
+               neededPage = this._page;
             }
 
             addParams.offset = neededPage * this._options.pageSize;
@@ -42,29 +43,27 @@ define('js!Controls/List/Controllers/PageNavigation',
          calculateState: function(list, direction) {
             var meta = list.getMetaData();
             if (this._options.mode == 'totalCount') {
-               if (typeof meta.more == 'number') {
-                  this._more = meta.more;
-               }
-               else {
+               if (typeof meta.more != 'number') {
                   throw new Error('"more" Parameter has incorrect type. Must be numeric')
                }
             }
             else {
-               if (typeof meta.more == 'boolean') {
-                  this._more = meta.more;
-               }
-               else {
+               if (typeof meta.more != 'boolean') {
                   throw new Error('"more" Parameter has incorrect type. Must be boolean')
                }
             }
+            this._more = meta.more;
+
             if (direction == 'down') {
                this._nextPage++;
             }
             else if (direction == 'up') {
-               this._nextPage--;
+               this._prevPage--;
             }
             else {
-               this._nextPage = this._options.page + 1;
+               //Если направление не указано, значит это расчет параметров после начальной загрузки списка или после перезагрузки
+               this._nextPage = this._page + 1;
+               this._prevPage = this._page - 1;
             }
          },
 
@@ -91,8 +90,24 @@ define('js!Controls/List/Controllers/PageNavigation',
             var options = source.getOptions();
             options.navigationType = SbisService.prototype.NAVIGATION_TYPE.PAGE;
             source.setOptions(options);
-         }
+         },
 
+         setEdgeState: function(direction) {
+            if (direction == 'up') {
+               this._page = 0;
+            }
+            else if (direction == 'down') {
+               if (typeof this._more == 'number') {
+                  this._page = this._more / this._options.pageSize - 1;
+               }
+               else {
+                  this._page = -1;
+               }
+            }
+            else {
+               throw new Error ('Wrong argument Direction in NavigationController::setEdgeState');
+            }
+         }
       });
 
       return PageNavigation;
