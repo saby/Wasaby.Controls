@@ -122,7 +122,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
       },
 
       _notifyDeprecated: function() {
-         IoC.resolve('ILogger').info('LadderDecorator:', 'module SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator is deprecated and will be removed in 3.7.5. Use "it.ladder.get(it.item, it.field)" in your template instead. See https://wi.sbis.ru/docs/WS/Data/Display/Ladder/ for details.');
+         IoC.resolve('ILogger').info('LadderDecorator:', 'module SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator is deprecated and will be removed in 3.7.5. Use "it.ladder.get(it.item, it.field)" in your template instead. See /docs/WS/Data/Display/Ladder/ for details.');
          this._notifyDeprecated = function(){};
       }
    });

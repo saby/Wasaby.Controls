@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!WSControls/Buttons/MenuButton', 'css!S
    /**
     * Класс контрола "Кнопка в виде значка с выпадающим меню".
     *
-    * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/buttons/button-icon/#menu-icon Демонстрационные примеры}.
+    * {@link /doc/platform/developmentapl/interface-development/components/textbox/buttons/button-icon/#menu-icon Демонстрационные примеры}.
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
     *
     * @class SBIS3.CONTROLS.MenuIcon
@@ -58,7 +58,8 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!WSControls/Buttons/MenuButton', 'css!S
       },
 
       _modifyOptions : function() {
-         var opts = MenuIcon.superclass._modifyOptions.apply(this, arguments);
+         var opts = MenuIcon.superclass._modifyOptions.apply(this, arguments),
+             sizes = ['16', '24', '32', 'small', 'medium', 'large'];
          opts.pickerClassName += ' controls-MenuIcon__Menu';
          opts.cssClassName += ' controls-MenuIcon controls-IconButton';
 
@@ -74,6 +75,14 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!WSControls/Buttons/MenuButton', 'css!S
             }else {
                 opts.pickerClassName += ' controls-IconButton__round-border';
             }
+         }
+
+         if(opts.icon){
+             sizes.forEach(function(size){
+                if(opts.icon.indexOf('icon-' + size) !== -1) {
+                    opts.pickerClassName += ' controls-Menu_offset_icon-' + size;
+                }
+             });
          }
 
          if (opts.icon && (opts.icon.indexOf('icon-24') !== -1 || opts.icon.indexOf('icon-large') !== -1) && opts.className.indexOf('controls-Menu__hide-menu-header') === -1){

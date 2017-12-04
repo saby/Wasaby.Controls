@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        function needShowCompatiblePlaceholder(cfg) {
           var
              useNativePlaceholder = _private.isSimplePlaceholder(cfg.placeholder),
-             selectedKeysLength = cfg.selectedKeys.length,
+             selectedKeysLength = _private.keysFix(cfg.selectedKeys).length,
              innerCheckShow = !useNativePlaceholder && (!selectedKeysLength || (cfg.multiselect && !cfg.alwaysShowTextBox));
           return cfg._needShowCompatiblePlaceholderST(cfg) && innerCheckShow;
        }
@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           SELECTED: 'controls-FieldLink__selected',
           SELECTED_SINGLE: 'controls-FieldLink__selected-single',
           INPUT_MIN_WIDTH: 'controls-FieldLink__inputMinWidth',
-          HIDDEN: 'ws-hidden'
+          INVISIBLE: 'ws-invisible'
        };
 
        var _private = {
@@ -233,7 +233,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * Опция caption определяет название справочника в этом подменю:
                  * ![](/FieldLink02.png)
                  * @property {String} template Компонент, на основе которого организован справочник.
-                 * Список значений справочника строится на основе любого компонента, который можно использовать для {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/ отображения данных в списках}:
+                 * Список значений справочника строится на основе любого компонента, который можно использовать для {@link /doc/platform/developmentapl/interface-development/components/list/ отображения данных в списках}:
                  * <ul>
                  *    <li>использование компонента {@link SBIS3.CONTROLS.DataGridView}: ![](/FieldLink00.png) </li>
                  *    <li>использование компонента {@link SBIS3.CONTROLS.TreeDataGridView}: ![](/FieldLink01.png) </li>
@@ -1062,14 +1062,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              /* Нужно скрыть контрол отображающий элементы, перед загрузкой, потому что часто бл может отвечать >500мс и
               отображаемое значение в поле связи долго не меняется, особенно заметно в редактировании по месту. */
-             linkCollectionContainer.addClass(classes.HIDDEN);
+             linkCollectionContainer.addClass(classes.INVISIBLE);
              this.getSelectedItems(true, amount).addCallback(function(list){
                 /* Если поле связи отрисовывается скрытым, необходимо сбросить запомненную ширину,
                    чтобы при отображении пересчитались размеры. */
                 if(!this.isVisibleWithParents()) {
                    this._lastFieldLinkWidth = null;
                 }
-                linkCollectionContainer.removeClass(classes.HIDDEN);
+                linkCollectionContainer.removeClass(classes.INVISIBLE);
                 this._linkCollection.setItems(list);
                 return list;
              }.bind(this));

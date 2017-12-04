@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
              *     <li>node - для выбора доступны только элементы типа "Узел" и "Скрытый узел";<li>
              *     <li>leaf - для выбора доступны только элементы типа "Лист".<li>
              * </ul>
-             * Подробнее о каждом типе элементов читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
+             * Подробнее о каждом типе элементов читайте в разделе <a href='/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
              */
             selectionType: 'all'
 

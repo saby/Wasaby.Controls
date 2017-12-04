@@ -220,7 +220,11 @@ define('js!WSControls/Buttons/MenuButton', [
          var self = this;
          _getContextMenu(function() {
             MenuButton.superclass.showPicker.call(self);
+            self._picker.subscribe("ondrawitems", function(){
+                self._checkItemsIcons(self._picker.getItems());
+            });
          }, self._options.historyId);
+
       },
 
       getPicker: function () {

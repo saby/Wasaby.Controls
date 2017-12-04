@@ -191,13 +191,17 @@
          cursor: @list-view-actions-cursor;
          right: @list-view-context-menu-close-right;
          top: @list-view-context-menu-close-top;
-         color: @gray-ccc-color !important;
+         color: @list-view-context-menu-close-color !important;
+         // используем important т.к. controls-PopupMixin__closeButton используется в старых контролах и стилизована в themes.less
+         // и по другому сейчас не перебить, пока
+         box-shadow: none !important;
 
          &:before {
             content: "\e66c";
+            text-shadow: none;
          }
 
-         .icon-24();
+         .icon-size(@list-view-items-toolbar-context-icon-size, @font-family_closeButton-icon);
       }
       &.controls-popup-revert-vertical {
          .controls-PopupMixin__closeButton {
@@ -218,7 +222,7 @@
       &.controls-ItemActions__contextMenu {
          .controls-PopupMixin__closeButton {
             &:hover {
-               color: @blue-dark-color !important;
+               color: @list-view-context-menu-close-hover-color !important;
                background: none;
             }
          }

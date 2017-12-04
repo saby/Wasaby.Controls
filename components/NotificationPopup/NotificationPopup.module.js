@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
       var ICONS = {
          success: 'icon-size icon-24 icon-Yes icon-done',
          error: 'icon-size icon-24 icon-Alert icon-error',
-         warning: '',
+         warning: 'icon-size icon-24 icon-Alert icon-attention',
          'default': ''
       };
 
@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
                 * @cfg {String} Устанавливает иконку в заголовке нотификационного уведомления.
                 * @remark
                 * По умолчанию отображается в шапке нотификационного сообщения и зависит от значения опции {@link SBIS3.CONTROLS.InformationPopup#status}.
-                * Список иконок доступен <a href='https://wi.sbis.ru/docs/icons/'>здесь</a>.
+                * Список иконок доступен <a href='/docs/icons/'>здесь</a>.
                 * @see setIcon
                 */
                icon: null,
@@ -119,7 +119,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
          },
          /**
           * Установливает иконку в заголовке нотификационного уведомления.
-          * @param {String} icon Иконка. Список иконок доступен <a href='https://wi.sbis.ru/docs/icons/'>здесь</a>.
+          * @param {String} icon Иконка. Список иконок доступен <a href='/docs/icons/'>здесь</a>.
           * @see icon
           */
          setIcon: function(icon){

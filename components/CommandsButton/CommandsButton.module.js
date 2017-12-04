@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.CommandsButton', [
      *     <li><b>Иконка.</b> (опция {@link SBIS3.CONTROLS.IconMixin#icon})
      *     Когда выпадающее меню не отображается, пользователь видит иконку "Стрелка вниз" (ExpandDown) - класс "icon-24 icon-ExpandDown icon-primary".
      *     Когда выпадающе меню отображено, иконка меняется на "Стрелка вверх" (ExpandUp) - класс "icon-24 icon-ExpandUp icon-primary".
-     *     Список иконок вы можете найти <a href='https://wi.sbis.ru/docs/icons/'>здесь</a>.
+     *     Список иконок вы можете найти <a href='/docs/icons/'>здесь</a>.
      *     </li>
      *     <li><b>Заголовок в выпадающем меню.</b> (опция {@link WSControls/Buttons/ButtonBase#caption}). Скрыт. По умолчанию установлен css-модификатор "controls-Menu__hide-menu-header".</li>
      *     <li>Для выпадающего меню раскрытие производится в правую сторону от кнопки.</li>
