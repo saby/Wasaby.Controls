@@ -80,10 +80,6 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
                if (this.textTransform) {
                   fieldClasses.push('controls-TextBox__field-' + this.textTransform);
                }
-               //В новой престо в больших полях ввода будет отступ снизу
-               if (this.size === 'l') {
-                  fieldClasses.push('controls-TextBox__field_size_l');
-               }
 
                return {
                   container: containerClasses.join(' '),
@@ -323,7 +319,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
             marked = this.isMarked();
          return 'controls-TextBox_state_' +
             (marked ? 'error' : !enabled ? 'disabled' +
-            (this._isMultiline ? ' controls-TextBox_state_disabled_multiLine' : ' controls-TextBox_state_disabled_singleLine') : active ? 'active' : 'default');
+            (this._options._isMultiline ? ' controls-TextBox_state_disabled_multiLine' : ' controls-TextBox_state_disabled_singleLine') : active ? 'active' : 'default');
       }
    });
 

@@ -105,12 +105,6 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
          return PhoneTextBox.superclass._modifyOptions.apply(this, arguments);
       },
 
-      _setEnabled: function(state) {
-         PhoneTextBox.superclass._setEnabled.apply(this, arguments);
-         $('.js-controls-FormattedTextBox__field', this._container.get(0)).toggleClass('ws-hidden', !state);
-         $('.controls-PhoneTextBox__link', this._container.get(0)).toggleClass('ws-hidden', state);
-      },
-
       _updateText: function() {
          PhoneTextBox.superclass._updateText.apply(this, arguments);
          this._options.srcText = getSrcText(this.getText());
