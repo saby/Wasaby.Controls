@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        function needShowCompatiblePlaceholder(cfg) {
           var
              useNativePlaceholder = _private.isSimplePlaceholder(cfg.placeholder),
-             selectedKeysLength = cfg.selectedKeys.length,
+             selectedKeysLength = _private.keysFix(cfg.selectedKeys).length,
              innerCheckShow = !useNativePlaceholder && (!selectedKeysLength || (cfg.multiselect && !cfg.alwaysShowTextBox));
           return cfg._needShowCompatiblePlaceholderST(cfg) && innerCheckShow;
        }
