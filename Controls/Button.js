@@ -1,9 +1,14 @@
-define('js!Controls/Button/Button', [
-], function() {
+define('Controls/Button', [
+    'Core/Control',
+    'tmpl!Controls/Button/Button',
+    'css!WSControls/Buttons/resources/ButtonBase',
+    'css!Controls/Button/Button'
+], function(Control, template) {
+    'use strict';
 
    /**
     * Кнопка
-    * @class Controls/Button/Button
+    * @class Controls/Button
     * @extends Controls/Control
     * @mixes Controls/Button/interface/IHref
     * @mixes Controls/Button/interface/ICaption
@@ -15,18 +20,16 @@ define('js!Controls/Button/Button', [
     */
 
    /**
-    * @name Controls/Button/Button#style
+    * @name Controls/Button#type
     * @cfg {String} Внешний вид кнопки
     * @variant standard Стандартная кнопка
     * @variant link Кнопка ссылка
     * @variant flat Кнопка без контура
     */
+   var Button = Control.extend({
+       _controlName: 'Controls/Button',
+       _template: template
+   });
 
-   /**
-    * @name Controls/Button/Button#size
-    * @cfg {String} Размер кнопки
-    * @variant m Средняя кнопка
-    * @variant l Большая кнопка
-    */
-
+    return Button;
 });

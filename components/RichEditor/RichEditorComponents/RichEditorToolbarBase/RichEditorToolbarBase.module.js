@@ -114,6 +114,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                editor = this._options.linkedEditor;
             this._handlersInstances.format = this._formatChangeHandler.bind(this);
             this.subscribeTo(editor, 'onFormatChange', this._handlersInstances.format);
+
+            //Грузим историю сразу, для того чтобы в случае ее отсутствия можно было заблокировать кнопку!
             this._fillHistory();
          },
 

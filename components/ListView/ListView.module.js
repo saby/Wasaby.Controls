@@ -1266,7 +1266,6 @@ define('js!SBIS3.CONTROLS.ListView',
             // Создаем пейджинг скрытым если включено сохранение позиции при reload, но сам пейджинг выключен
             // Так как для сохранения страницы все равно нужекн рассчет страниц скролла
             var hiddenPager = !this._options.scrollPaging && this._options.saveReloadPosition;
-            hiddenPager = hiddenPager && isElementVisible(this.getContainer());
             this._scrollBinder.bindScrollPaging(this._scrollPager, hiddenPager);
 
             if (!this._inScrollContainerControl) {
@@ -3068,6 +3067,9 @@ define('js!SBIS3.CONTROLS.ListView',
             /* при изменении размера таблицы необходимо вызвать перерасчет позиции тулбара
              позиция тулбара может сбиться например при появление пэйджинга */
             if(this._itemsToolbar && this._itemsToolbar.isVisible()){
+               if(this._touchSupport) {
+                   this._itemsToolbar.setHeightInTouchMode();
+               }
                this._itemsToolbar.recalculatePosition();
             }
             /* Т.к. для редактирования нет parent'a, надо ресайц звать руками */

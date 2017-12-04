@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        function needShowCompatiblePlaceholder(cfg) {
           var
              useNativePlaceholder = _private.isSimplePlaceholder(cfg.placeholder),
-             selectedKeysLength = cfg.selectedKeys.length,
+             selectedKeysLength = _private.keysFix(cfg.selectedKeys).length,
              innerCheckShow = !useNativePlaceholder && (!selectedKeysLength || (cfg.multiselect && !cfg.alwaysShowTextBox));
           return cfg._needShowCompatiblePlaceholderST(cfg) && innerCheckShow;
        }
@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           SELECTED: 'controls-FieldLink__selected',
           SELECTED_SINGLE: 'controls-FieldLink__selected-single',
           INPUT_MIN_WIDTH: 'controls-FieldLink__inputMinWidth',
-          HIDDEN: 'ws-hidden'
+          INVISIBLE: 'ws-invisible'
        };
 
        var _private = {
@@ -1062,14 +1062,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              /* Нужно скрыть контрол отображающий элементы, перед загрузкой, потому что часто бл может отвечать >500мс и
               отображаемое значение в поле связи долго не меняется, особенно заметно в редактировании по месту. */
-             linkCollectionContainer.addClass(classes.HIDDEN);
+             linkCollectionContainer.addClass(classes.INVISIBLE);
              this.getSelectedItems(true, amount).addCallback(function(list){
                 /* Если поле связи отрисовывается скрытым, необходимо сбросить запомненную ширину,
                    чтобы при отображении пересчитались размеры. */
                 if(!this.isVisibleWithParents()) {
                    this._lastFieldLinkWidth = null;
                 }
-                linkCollectionContainer.removeClass(classes.HIDDEN);
+                linkCollectionContainer.removeClass(classes.INVISIBLE);
                 this._linkCollection.setItems(list);
                 return list;
              }.bind(this));

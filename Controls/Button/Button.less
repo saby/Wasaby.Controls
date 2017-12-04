@@ -1,0 +1,51 @@
+.controls-Button {
+  display: inline-block;
+  font-size: @link-font-size;
+  text-decoration: none;
+  line-height: normal;
+  height: @default-height;
+  min-width: @button-min-width;
+  box-sizing: border-box;
+  border-style: solid;
+  border-width: @button-border-width;
+  .border-radius(@button-border-radius);
+  .user-select();
+}
+
+.controls-Button__style-primary {
+  border-color: @button-primary-border-color;
+
+  &:active {
+    border-color: @button-primary-hover-border-color;
+    background: @button-primary-bg-active;
+    box-shadow: none;
+  }
+}
+
+.controls-Button__style-disabled {
+  cursor: default;
+  color: @default-disabled-color;
+  border: @button-disabled-border;
+  background: @button-disabled-bg;
+
+  .controls-Button__icon {
+    color: @icon-color-disabled !important;
+  }
+}
+
+.controls-Button__wrapper_style-primary {
+  padding: @button-padding;
+  .justify-content(center);
+}
+.controls-Button__text_gap {
+  margin-left: @button-icon-gap;
+}
+
+.ws-is-desktop-platform {
+  .controls-Button__style-primary {
+    &:hover {
+      border-color: @button-primary-hover-border-color;
+      background: @button-primary-hover-bg;
+    }
+  }
+}

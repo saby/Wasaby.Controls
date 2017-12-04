@@ -9,7 +9,7 @@
 @default-icon-size:            round(37px * @multiplier);
 @default-icon-size-medium:     round(50px * @multiplier);
 @default-icon-size-large:      round(84px * @multiplier);
-@default-line-height:          round(42px * @multiplier); //42px;
+@default-line-height:          round(41px * @multiplier);
 @default-base-line-height:     round(80px * @multiplier);//todo:   @default-height - 2 * @default-border-width
 @default-padding:              round(14px * @multiplier);
 @default-padding-small:        round(7px * @multiplier);
@@ -49,7 +49,7 @@
 @fieldLink-showAll-shadow-width:                  round(28px * @multiplier);
 @fieldLink-linkItem-line-height:                  @default-base-line-height;
 @fieldLink-icon-size:                             round(80px * @multiplier); //todo: при переходе на cbuc-icons отказаться от этого щита
-@max-height_FieldLink-beforeFieldWrapper:         @default-base-line-height;
+@max-height_FieldLink-beforeFieldWrapper:         @default-line-height;
 //treeview
 @tree-view-folder-text-size:                      @default-text-size;
 //button
@@ -227,7 +227,7 @@
 @switcher-do-text-margin:                 round(16px * @multiplier);
 //Menu
 @popup-font-size:                         @huge-text-size; // откатил размер из-за того, что меню стало меньше чем кнпока т.к. в самих кнопках размер шрифта используется больший
-@menu-subpopup-margin:                    0 0 0 @default-border-width;
+@menu-subpopup-margin:                    0;
 @menu-expand-width:                       @icon-large-size;
 @menu-expand-height:                      @icon-large-size;
 @menu-expand-top-offset:                  round(8px * @multiplier);;
@@ -251,10 +251,12 @@
 @menu-item-line-height:                   round(100px * @multiplier);
 @menu-item-padding-16:                    round(56px * @multiplier);
 @menu-item-padding-24:                    round(70px * @multiplier);
+@menu-item-padding-32:                    round(100px * @multiplier);
 // Menu
 @menu-button-menu-margin:                 -10px 0 0 -2px;
 @menu-icon-menu-margin:                   round(-10px * @multiplier) 0 0 round(-7px * @multiplier);
-@menu-icon-big-menu-margin:               round(-10px * @multiplier) 0 0 round(10px * @multiplier);;
+@menu-icon-big-menu-margin:               round(-10px * @multiplier) 0 0 round(10px * @multiplier);
+@menu-icon-menu-large-margin:             round(-10px * @multiplier) 0 0 round(-18px * @multiplier);
 @menu-padding:                            0;
 //Menu link
 @menu-link-menu-margin:                   round(-11px * @multiplier) 0 0 round(-18px * @multiplier);
