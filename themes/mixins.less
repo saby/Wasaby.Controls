@@ -624,3 +624,18 @@
   border-left-color: transparent;
   border-bottom-color: transparent;
 }
+
+
+.ws-header-size-mixin(@text-size) {
+  display: inline-block;
+  font-size: @text-size;
+  height: @default-height;
+  line-height: @default-height;
+  font-family: @default-font-name;
+}
+.ws-back-arrow-size-mixin(@width, @height) {
+  &:before {
+    width: @width;
+    height: @height;
+  }
+}
