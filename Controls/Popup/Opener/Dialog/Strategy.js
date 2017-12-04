@@ -1,5 +1,9 @@
-define('js!Controls/Popup/Opener/Dialog/Strategy', [
-], function() {
+define('js!Controls/Popup/Opener/Dialog/Strategy',
+   [
+      'Core/Abstract',
+      'js!Controls/Popup/interface/IStrategy'
+   ],
+   function (Abstract, IStrategy) {
 
    /**
     * Стратегия позиционирования окна.
@@ -10,5 +14,16 @@ define('js!Controls/Popup/Opener/Dialog/Strategy', [
     * @category Popup
     * @extends Controls/Control
     */
+      var Strategy = Abstract.extend([IStrategy], {
 
-});
+         getPosition: function (){
+            return {
+               top: 0,
+               left: 0
+            };
+         }
+      });
+
+      return new Strategy();
+   }
+);
