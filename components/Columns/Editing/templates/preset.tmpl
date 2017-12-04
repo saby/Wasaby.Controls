@@ -2,17 +2,18 @@
 
    <!--^^^<span class="controls-Columns-Editing-Area__Preset-item-text">{{item[displayProperty]}}</span>--->
 
-   <ws:SBIS3.CONTROLS.DropdownList
-      name="controls-controls-Columns-Editing-Area__Preset-item-title"
+   <ws:SBIS3.CONTROLS.Columns.Preset.Dropdown
+      name="controls-Columns-Editing-Area__Preset-item-title"
       className="controls-Columns-Editing-Area__Preset-item-title"
-      multiselect="{{false}}"
-      items="{{presets}}"
-      selectedKeys="{{[item[displayProperty]]}}"
-      mode="click"
-      type="titleHeader"
-      title="{[Выберите шаблон]}"
-      idProperty="title"
-      displayProperty="title"
-      enabled="{{1 < presets.getCount()}}"
-   />
+      staticPresets="{{staticPresets}}"
+      presetNamespace="{{presetNamespace}}"
+      selectedPreset="{{selectedPreset}}"
+      >
+      <ws:title>
+         <ws:String>
+            <ws:if data="{{presetsTitle}}">{{presetsTitle}}</ws:if>
+            <ws:else>{[Выберите пресет]}</ws:else>
+         </ws:String>
+      </ws:title>
+   </ws:SBIS3.CONTROLS.Columns.Preset.Dropdown>
 </div>

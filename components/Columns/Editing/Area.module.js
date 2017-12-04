@@ -4,12 +4,14 @@
 
 define('js!SBIS3.CONTROLS.Columns.Editing.Area',
    [
-      'js!SBIS3.CONTROLS.CompoundControl',
-      'js!SBIS3.CONTROLS.Columns.Editing.Area/AreaSelectableModel',
-      'js!SBIS3.CONTROLS.ItemsMoveController',
       'Core/CommandDispatcher',
-      'WS.Data/Functor/Compute',
+      'Core/Deferred',
       'WS.Data/Collection/RecordSet',
+      'WS.Data/Functor/Compute',
+      'js!SBIS3.CONTROLS.Columns.Editing.Area/AreaSelectableModel',
+      'js!SBIS3.CONTROLS.Columns.Preset.Cache',
+      'js!SBIS3.CONTROLS.CompoundControl',
+      'js!SBIS3.CONTROLS.ItemsMoveController',
       'tmpl!SBIS3.CONTROLS.Columns.Editing.Area',
       'tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/preset',
       'tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/presetEdit',
@@ -17,12 +19,13 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
       'tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/selectableItemContent',
       'css!SBIS3.CONTROLS.Columns.Editing.Area',
       'js!SBIS3.CONTROLS.Button',
-      'js!SBIS3.CONTROLS.ListView',
+      'js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
       'js!SBIS3.CONTROLS.CheckBoxGroup',
+      'js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.ScrollContainer'
    ],
 
-   function (CompoundControl, AreaSelectableModel, ItemsMoveController, CommandDispatcher, ComputeFunctor, RecordSet, dotTplFn) {
+   function (CommandDispatcher, Deferred, RecordSet, ComputeFunctor, AreaSelectableModel, PresetCache, CompoundControl, ItemsMoveController, dotTplFn) {
       'use strict';
 
       /**
@@ -38,25 +41,31 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
          $protected: {
             _options: {
                title: '',
-               applyButtonTitle: rk('Применить'),
+               applyButtonTitle: null,//Определено в шаблоне
                columns: undefined,
                selectedColumns: [],
                moveColumns: true,
+               groupField: '',
                usePresets: true,
-               groupField: ''
+               presetsTitle: null,
+               staticPresets: null,
+               presetNamespace: null,
+               selectedPreset: null
             },
             _presetView: undefined,
             _fixedView: undefined,
-            _selectableView: undefined
+            _selectableView: undefined,
+            _currentPreset: null
          },
 
          _modifyOptions: function () {
             var cfg = Area.superclass._modifyOptions.apply(this, arguments);
-            cfg._optsPreset = {
-               items: _makePresetItems(cfg._getPresets(), cfg._getSelectedPreset())
-            };
-            _prepareChildItemsAndGroups(cfg);
-            _prepareGroupCollapsing(cfg);
+            var preset = cfg.usePresets ? _getPreset(cfg.staticPresets, cfg.selectedPreset) : null;
+            cfg._optsPreset = cfg.usePresets ? {
+               items: _makePresetViewItems(preset)
+            } : null;
+            _prepareChildItemsAndGroups(cfg, preset);
+            _prepareGroupCollapsing(cfg, preset);
             cfg.hasGroups = !!cfg._groups && 0 < cfg._groups.length;
             cfg._optsSelectable.onItemClick = _onItemClick;
             if (!cfg.moveColumns) {
@@ -74,39 +83,38 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
 
          init: function () {
             Area.superclass.init.apply(this, arguments);
-            this._presetView = _getChildComponent(this, 'controls-Columns-Editing-Area__Preset');
+            var options = this._options;
+            this._presetView = options.usePresets ? _getChildComponent(this, 'controls-Columns-Editing-Area__Preset') : null;
             this._fixedView = this.getChildControlByName('controls-Columns-Editing-Area__FixedList');
             this._selectableView = this.getChildControlByName('controls-Columns-Editing-Area__SelectableList');
 
             if (this._presetView) {
-               if (this._presetView.isInitialized()) {
+               _getPresets(this).addCallback(function (presets) {
+                  this._currentPreset = _getPreset(presets, options.selectedPreset);
                   _updatePresetView(this, true);
-               }
-               else {
-                  this.subscribeOnceTo(this._presetView, 'onInit', _updatePresetView.bind(null, this, true));
-               }
 
-               //^^^this._presetView.setItemsHover(false);
-               //^^^this.subscribeTo(this._presetView, 'onChangeHoveredItem', this._presetView.setItemsHover.bind(this._presetView, false));
-               this._presetView.setItemsActions(_makeItemsActions(this));
-               this.subscribeTo(this._presetView, 'onAfterBeginEdit', this._presetView.setItemsActions.bind(this._presetView, []));
-               this.subscribeTo(this._presetView, 'onEndEdit', function (evtName, model, withSaving) {
-                  if (withSaving) {
-                     this.sendCommand('changePreset', model.get('title')).addCallback(function (isSuccess) {
-                        if (!isSuccess) {
-                           // TODO: Изменение не сохранено - откатится назад
-                        }
-                     });
-                  }
-               }.bind(this));
-               this.subscribeTo(this._presetView, 'onAfterEndEdit', function (evtName, model, $target, withSaving) {
+                  //^^^this._presetView.setItemsHover(false);
+                  //^^^this.subscribeTo(this._presetView, 'onChangeHoveredItem', this._presetView.setItemsHover.bind(this._presetView, false));
                   this._presetView.setItemsActions(_makeItemsActions(this));
+                  this.subscribeTo(this._presetView, 'onAfterBeginEdit', this._presetView.setItemsActions.bind(this._presetView, []));
+                  this.subscribeTo(this._presetView, 'onEndEdit', function (evtName, model, withSaving) {
+                     if (withSaving) {
+                        this.sendCommand('changePreset', model.get('title')).addCallback(function (isSuccess) {
+                           if (!isSuccess) {
+                              // TODO: Изменение не сохранено - откатится назад
+                           }
+                        });
+                     }
+                  }.bind(this));
+                  this.subscribeTo(this._presetView, 'onAfterEndEdit', function (evtName, model, $target, withSaving) {
+                     this._presetView.setItemsActions(_makeItemsActions(this));
+                  }.bind(this));
                }.bind(this));
             }
 
             // В опциях могут быть указаны группы, которые нужно распахнуть при открытии
             _applyGroupCollapsing(this);
-            if (this._options.moveColumns) {
+            if (options.moveColumns) {
                this._itemsMoveController = new ItemsMoveController({
                   linkedView: this._selectableView
                });
@@ -154,23 +162,26 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
 
       // Private methods:
 
-      var _getPresetValue = function (presets, selectedPreset, property) {
-         return selectedPreset ? presets.getRecordById(selectedPreset).get(property) : null;
+      var _getPreset = function (presets, selectedPresetId) {
+         if (presets && presets.length) {
+            var i = selectedPresetId ? presets.map(function (v) { return v.id; }).indexOf(selectedPresetId) : -1;
+            return presets[i !== -1 ? i : 0];
+         }
       };
 
       var _uniqueConcat = function (list1, list2) {
          return list1 && list1.length ? (list2 && list2.length ? list1.concat(list2).reduce(function (r, v) { if (r.indexOf(v) === -1) { r.push(v); }; return r; }, []) : list1) : (list2 && list2.length ? list2 : []);
       };
 
-      var _getSelectedColumns = function (cfg) {
-         return _uniqueConcat(_getPresetValue(cfg._getPresets(), cfg._getSelectedPreset(), 'selectedColumns'), cfg.selectedColumns);
+      var _getSelectedColumns = function (cfg, preset) {
+         return _uniqueConcat(preset ? preset.selectedColumns : null, cfg.selectedColumns);
       };
 
-      var _prepareChildItemsAndGroups = function (cfg) {
+      var _prepareChildItemsAndGroups = function (cfg, preset) {
          var
             groupField = cfg.groupField,
             columns = cfg.columns,
-            selectedColumns = _getSelectedColumns(cfg),
+            selectedColumns = _getSelectedColumns(cfg, preset),
             moveColumns = cfg.moveColumns;
          var
             preparingItems = [],
@@ -236,10 +247,10 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
          cfg._groups = 1 < groups.length || (groups.length && groups[0] != null) ? groups : null;
       };
 
-      var _prepareGroupCollapsing = function (cfg) {
+      var _prepareGroupCollapsing = function (cfg, preset) {
          var groups = cfg._groups;
          if (groups && groups.length) {
-            var expandedGroups = _uniqueConcat(_getPresetValue(cfg._getPresets(), cfg._getSelectedPreset(), 'expandedGroups'), cfg.expandedGroups);
+            var expandedGroups = _uniqueConcat(preset ? preset.expandedGroups : null, cfg.expandedGroups);
             var groupCollapsing = {};
             var has = !!(expandedGroups && expandedGroups.length);
             for (var i = 0; i < groups.length; i++) {
@@ -272,15 +283,34 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
          }, ['selected']);
       };
 
-      var _makePresetItems = function (presets, selectedPreset) {
-         var recordset = new RecordSet({idProperty:'title'});
-         if (selectedPreset) {
-            recordset.add(presets.getRecordById(selectedPreset));
-         }
-         return recordset;
+      var _makePresetViewItems = function (preset) {
+         return new RecordSet({idProperty:'id', rawData:preset ? [preset] : []});
       };
 
 
+
+      /**
+       * Получить общий список пресетов (и заданных статически, и сохраняемых пользовательских)
+       * @private
+       * @param {object} self "Этот" объект
+       * @return {Core/Deferred<SBIS3.CONTROLS.Columns.Preset.Unit>}
+       */
+      var _getPresets = function (self) {
+         var presets = self._options.staticPresets || [];
+         var namespace = self._options.presetNamespace;
+         if (namespace) {
+            return PresetCache.list(namespace).addCallback(function (units) {
+               if (units && units.length) {
+                  presets = presets.concat(units);
+                  // TODO: Нужна ли общая сортировка ? Если да, то как пользователь будет различить статические и пользовательские пресеты ?
+               }
+               return presets;
+            });
+         }
+         else {
+            return Deferred.success(presets);
+         }
+      };
 
       var _getChildComponent = function (self, name) {
          if (self.hasChildControlByName(name)) {
@@ -288,29 +318,33 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
          }
       };
 
-      var _updatePresetView = function (self, dontSet) {
-         if (!dontSet) {
-            self._presetView.setItems(_makePresetItems(self._options._getPresets(), self._options._getSelectedPreset()));
+      var _updatePresetView = function (self, renew) {
+         if (renew) {
+            self._presetView.setItems(_makePresetViewItems(self._currentPreset));
          }
-         var dropdown = _getChildComponent(self._presetView, 'controls-controls-Columns-Editing-Area__Preset-item-title');
-         if (dropdown) {
-            self.subscribeTo(dropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
-               self.sendCommand('selectPreset', selected[0]);
-               _updatePresetView(self);
-               var cfg = self._options;
-               var allSelected = _getSelectedColumns(cfg);
-               var selectedColumns = [];
-               cfg.columns.each(function (record) {
-                  var column = record.getId();
-                  if (!record.get('fixed') && allSelected.indexOf(column) !== -1) {
-                     selectedColumns.push(column);
-                  }
+         setTimeout(function () {
+            var dropdown = _getChildComponent(self._presetView, 'controls-Columns-Editing-Area__Preset-item-title');
+            if (dropdown) {
+               self.subscribeTo(dropdown, 'onChange', function (evtName, selectedPresetId) {
+                  _getPresets(self).addCallback(function (presets) {
+                     self._currentPreset = _getPreset(presets, dropdown.getSelectedPresetId());
+                     _updatePresetView(self, true);
+                     var cfg = self._options;
+                     var allSelected = _getSelectedColumns(cfg, this._currentPreset);
+                     var selectedColumns = [];
+                     cfg.columns.each(function (record) {
+                        var column = record.getId();
+                        if (!record.get('fixed') && allSelected.indexOf(column) !== -1) {
+                           selectedColumns.push(column);
+                        }
+                     });
+                     self._selectableView.setSelectedKeys(selectedColumns);
+                     _prepareGroupCollapsing(cfg, this._currentPreset);
+                     _applyGroupCollapsing(self);
+                  });
                });
-               self._selectableView.setSelectedKeys(selectedColumns);
-               _prepareGroupCollapsing(cfg);
-               _applyGroupCollapsing(self);
-            });
-         }
+            }
+         }, 1);
       };
 
       var _makeItemsActions = function (self) {
@@ -345,7 +379,7 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
                      // TODO: Изменение не сохранено - откатится назад
                   }
                });
-               _updatePresetView(self);
+               _updatePresetView(self, true);
                break;
          }
       };

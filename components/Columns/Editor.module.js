@@ -63,11 +63,28 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
-               title: rk('Отображение колонок'),
+               title: null,
                moveColumns: true,
                usePresets: false,// TODO: Включить после переделки дропдауна с пресетами
-               targetRegistryName: 'def---ault',
-               defaultPreset: null,
+               targetRegistryName: 'def---ault',//^^^
+
+               /**
+                * @cfg {string} Заголовок дропдауна
+                */
+               presetsTitle: null,//rk('Выберите пресет')
+               /**
+                * @cfg {SBIS3.CONTROLS.Columns.Preset.Unit[]} Список объектов статически задаваемых пресетов
+                */
+               staticPresets: null,
+               /**
+                * @cfg {string} Пространство имён для сохранения пользовательских пресетов
+                */
+               presetNamespace: 'default',// TODO: Убрать, не должно быть умолчания
+               /**
+                * @cfg {string|number} Идентификатор первоначально выбранного пресета в дропдауне
+                */
+               selectedPreset: null,
+
                newPresetTitle: rk('Новый шаблон'),
                autoSaveFirstPreset: true,
                useNumberedTitle: true,
@@ -75,63 +92,51 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
                groupTitleTpl: null,
                groupTitles: null,
 
-               _presets: null,
-               _selectedPreset: null
+               TMP_presets: null,//^^^
+               _selectedPreset: null//^^^
             },
-            _userConfigName: null,
+            _userConfigName: null,//^^^
             _result: null,
          },
 
          $constructor: function () {
-            CommandDispatcher.declareCommand(this, 'selectPreset', this._commandSelectPreset);
-            CommandDispatcher.declareCommand(this, 'changePreset', this._commandChangePreset);
-            CommandDispatcher.declareCommand(this, 'clonePreset', this._commandClonePreset);
-            CommandDispatcher.declareCommand(this, 'deletePreset', this._commandDeletePreset);
+            //^^^CommandDispatcher.declareCommand(this, 'selectPreset', this._commandSelectPreset);
+            CommandDispatcher.declareCommand(this, 'changePreset', this._commandChangePreset);//^^^
+            CommandDispatcher.declareCommand(this, 'clonePreset', this._commandClonePreset);//^^^
+            CommandDispatcher.declareCommand(this, 'deletePreset', this._commandDeletePreset);//^^^
             this._publish('onOpen', 'onComplete');
          },
 
          init: function () {
             Editor.superclass.init.apply(this, arguments);
-            this._userConfigName = 'ColumnsEditor#' + this._options.targetRegistryName;
-            this._options._presets = new RecordSet({rawData:[], idProperty:'title'});
+            this._userConfigName = 'ColumnsEditor#' + this._options.targetRegistryName;//^^^
+            this._options.TMP_presets = new RecordSet({rawData:[], idProperty:'title'});//^^^
 
-            ClientsGlobalConfig/*UserConfig*/.getParam(this._userConfigName).addCallback(function (data) {
+            /*^^^ClientsGlobalConfig/*UserConfig* /.getParam(this._userConfigName).addCallback(function (data) {
                this._onLoadPresets(data);
-            }.bind(this));
+            }.bind(this));*/
          },
 
-         _getPresets: function () {
-            return this._options._presets;
-         },
-
-         _onLoadPresets: function (data) {
+         /*^^^_onLoadPresets: function (data) {
             var values = data && typeof data === 'string' ? JSON.parse(data) : data || [];
-            var recordset = this._options._presets;
+            var recordset = this._options.TMP_presets;
             //recordset.clear();
             recordset.setRawData(values);
             recordset.acceptChanges();
             var selected = null;
             if (values.length) {
-               selected = this._options.defaultPreset;
+               selected = this._options.selectedPreset;
                selected = selected && values.map(function (v) { return v.title; }).indexOf(selected) !== -1 ? selected : values[0].title;
             }
             this._options._selectedPreset = selected;
-         },
+         },*/
 
-         _getSelectedPreset: function () {
-            return this._options._selectedPreset;
-         },
-
-         _setSelectedPreset: function (title) {
+         /*^^^_commandSelectPreset: function (title) {
             this._options._selectedPreset = title;
-         },
-
-         _commandSelectPreset: function (title) {
-            this._setSelectedPreset(title);
-         },
+         },*/
 
          _commandChangePreset: function (title) {
-            var recordset = this._options._presets;
+            var recordset = this._options.TMP_presets;
             if (!recordset.getCount()) {
                throw new Error('Nothing to change');
             }
@@ -140,7 +145,7 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
          },
 
          _commandClonePreset: function () {
-            var recordset = this._options._presets;
+            var recordset = this._options.TMP_presets;
             if (!recordset.getCount()) {
                throw new Error('Nothing to clone');
             }
@@ -154,7 +159,7 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
          },
 
          _commandDeletePreset: function () {
-            var recordset = this._options._presets;
+            var recordset = this._options.TMP_presets;
             var count = recordset.getCount();
             if (!count) {
                throw new Error('Nothing to delete');
@@ -166,10 +171,10 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
          },
 
          /**
-          * Открыть редактор колонок. Возвращает обещание, которое будет разрешено списком идентификаторов выбранных колонок
+          * Открыть редактор колонок. Возвращает обещание, которое будет разрешено новыми параметрами конфигурации колонок
           * @public
-          * @param {object} columnsConfig Параметры открыттия
-          * @return {Deferred<string[]>}
+          * @param {object} columnsConfig Параметры конфигурации колонок
+          * @return {Deferred<object>}
           */
          open: function (columnsConfig) {
             this._columnsConfig = columnsConfig;
@@ -223,14 +228,16 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
                componentOptions: {
                   title: opts.title,
                   columns: cfg.columns,
+                  selectedColumns: cfg.selectedColumns,
                   groupField: cfg.groupField || opts.groupField,
                   groupTitleTpl: cfg.groupTitleTpl || opts.groupTitleTpl || null,
                   groupTitles: cfg.groupTitles || opts.groupTitles || null,
-                  usePresets: opts.usePresets,
-                  _getPresets: this._getPresets.bind(this),//^^^
-                  _getSelectedPreset: this._getSelectedPreset.bind(this),//^^^
-                  selectedColumns: cfg.selectedColumns,
                   expandedGroups: cfg.expandedGroups,
+                  usePresets: opts.usePresets,
+                  presetsTitle: cfg.presetsTitle,
+                  staticPresets: cfg.staticPresets,
+                  presetNamespace: cfg.presetNamespace || opts.presetNamespace,
+                  selectedPreset: cfg.selectedPreset,
                   moveColumns: opts.moveColumns,
                   handlers: {
                      onComplete: this._onAreaComplete.bind(this)
@@ -243,7 +250,7 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
          },
 
          _onAreaComplete: function (evtName, selectedColumns, expandedGroups) {
-            var recordset = this._options._presets;
+            var recordset = this._options.TMP_presets;
             var isColumnsChanged;
             var isAnyChanged;
             if (recordset.getCount()) {
@@ -302,12 +309,12 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
 
       var _completeChangePresets = function (self, title) {
          self._options._selectedPreset = title;
-         self._options._presets.acceptChanges();
+         self._options.TMP_presets.acceptChanges();
       };
 
       var _save = function (self) {
          var promise = new Deferred();
-         ClientsGlobalConfig/*UserConfig*/.setParam(self._userConfigName, JSON.stringify(self._options._presets.getRawData())).addCallbacks(
+         ClientsGlobalConfig/*UserConfig*/.setParam(self._userConfigName, JSON.stringify(self._options.TMP_presets.getRawData())).addCallbacks(
             promise.callback.bind(promise, true),
             function (err) {
                // TODO: Изменение не сохранено - откатится назад если пикер ещё открыт

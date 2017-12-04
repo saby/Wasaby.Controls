@@ -1,12 +1,23 @@
 <div class="controls-Columns-Editing-Area">
    <div class="controls-Columns-Editing-Area__head">
       <div class="controls-Columns-Editing-Area__head-title">
-         <div class="controls-Columns-Editing-Area__head-title-left">{{ title }}</div>
+         <div class="controls-Columns-Editing-Area__head-title-left">
+            <ws:if data="{{title}}">{{title}}</ws:if>
+            <ws:else>{[Отображение колонок]}</ws:else>
+         </div>
          <div class="controls-Columns-Editing-Area__head-title-right">
-            <ws:SBIS3.CONTROLS.Button class="controls-Columns-Editing-Area__ApplyColumnsButton" caption="{{ applyButtonTitle }}" command="applyColumns" primary="true" />
+            <ws:SBIS3.CONTROLS.Button
+               class="controls-Columns-Editing-Area__ApplyColumnsButton"
+               command="applyColumns" primary="true"
+               >
+               <ws:caption>
+                  <ws:if data="{{applyButtonTitle}}">{{applyButtonTitle}}</ws:if>
+                  <ws:else>{[Применить]}</ws:else>
+               </ws:caption>
+            </ws:SBIS3.CONTROLS.Button>
          </div>
       </div>
-      <ws:if data="{{usePresets && _optsPreset.items && _optsPreset.items.getCount()}}">
+      <ws:if data="{{usePresets && ((staticPresets && staticPresets.length) || presetNamespace)}}">
          <div class="controls-Columns-Editing-Area__head-preset">
             <div class="controls-Columns-Editing-Area__head-preset-label">{[Шаблон]}</div>
             <div class="controls-Columns-Editing-Area__head-preset-editor">
@@ -28,7 +39,14 @@
                   <ws:handlers onItemClick="{{_optsPreset.onItemClick}}"/>
                   -->
                   <ws:itemContentTpl>
-                     <ws:partial template="tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/preset" scope="{{itemContentTpl}}" presets="{{_getPresets()}}" />
+                     <ws:partial
+                        template="tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/preset"
+                        scope="{{itemContentTpl}}"
+                        presetsTitle="{{presetsTitle}}"
+                        staticPresets="{{staticPresets}}"
+                        presetNamespace="{{presetNamespace}}"
+                        selectedPreset="{{selectedPreset}}"
+                        />
                   </ws:itemContentTpl>
                </ws:SBIS3.CONTROLS.ListView>
             </div>

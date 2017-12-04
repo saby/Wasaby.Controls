@@ -3,14 +3,14 @@
       <ws:SBIS3.CONTROLS.Columns.Preset.Dropdown
          name="controls-Columns-EditorButton__presetDropdown"
          className="controls-Columns-EditorButton__presetDropdown"
-         presets="{{presets}}"
+         staticPresets="{{staticPresets}}"
          presetNamespace="{{presetNamespace}}"
-         defaultPreset="{{defaultPreset}}"
+         selectedPreset="{{selectedPreset}}"
          >
          <ws:title>
             <ws:String>
-               <ws:if data="{{presetTitle}}">{{presetTitle}}</ws:if>
-               <ws:else>{[Выберите шаблон]}</ws:else>
+               <ws:if data="{{presetsTitle}}">{{presetsTitle}}</ws:if>
+               <ws:else>{[Выберите пресет]}</ws:else>
             </ws:String>
          </ws:title>
       </ws:SBIS3.CONTROLS.Columns.Preset.Dropdown>

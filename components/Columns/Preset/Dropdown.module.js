@@ -30,9 +30,9 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
       /**
        * Текущий выбранный пресет
        * @private
-       * @type {Core/EventBusChannel}
+       * @type {string|number}
        */
-      var _selectedPreset;
+      var _lastSelected;
 
 
 
@@ -43,11 +43,11 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
                /**
                 * @cfg {string} Заголовок дропдауна
                 */
-               title: null,//rk('Выберите шаблон')
+               title: null,//Определено в шаблоне
                /**
                 * @cfg {SBIS3.CONTROLS.Columns.Preset.Unit[]} Список объектов статически задаваемых пресетов
                 */
-               presets: null,
+               staticPresets: null,
                /**
                 * @cfg {string} Пространство имён для сохранения пользовательских пресетов
                 */
@@ -55,10 +55,10 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
                /**
                 * @cfg {string|number} Идентификатор первоначально выбранного пресета в дропдауне
                 */
-               defaultPreset: null
+               selectedPresetId: null
             },
             _dropdown: null,
-            _selectedPreset: null
+            _selectedPresetId: null
          },
 
          $constructor: function () {
@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
          init: function () {
             PresetDropdown.superclass.init.apply(this, arguments);
             this._dropdown = this.getChildControlByName('controls-Columns-Preset-Dropdown__dropdown');
-            this._selectedPreset = _selectedPreset || this._options.defaultPreset;
+            this._selectedPresetId = _lastSelected || this._options.selectedPresetId;
             var namespace = this._options.presetNamespace;
             if (namespace) {
                this._cacheHandler = this._updateDropdown.bind(this);
@@ -77,11 +77,14 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
                PresetCache.list(namespace).addCallback(this._updateDropdown.bind(this));
 
                this.subscribeTo(this._dropdown, 'onSelectedItemsChange', function (evtName, selecteds, changes) {
-                  this._selectedPreset = selecteds[0];
-                  _selectedPreset = this._selectedPreset;
-                  if (this._isDropdownReady) {
-                     this._notify('onChange', this._selectedPreset);
-                     _channel.notifyWithTarget('onChangeSelectedPreset', this, this._selectedPreset);
+                  var selectedId = selecteds[0];
+                  if (selectedId !== this._selectedPresetId) {
+                     this._selectedPresetId = selectedId;
+                     _lastSelected = selectedId;
+                     if (this._isDropdownReady) {
+                        this._notify('onChange', selectedId);
+                        _channel.notifyWithTarget('onChangeSelectedPreset', this, selectedId);
+                     }
                   }
                }.bind(this));
 
@@ -108,8 +111,8 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
           * @public
           * @return {string|number}
           */
-         getSelectedPreset: function () {
-            return this._selectedPreset;
+         getSelectedPresetId: function () {
+            return this._selectedPresetId;
          },
 
          /**
@@ -118,21 +121,22 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
           * @param {SBIS3.CONTROLS.Columns.Preset.Unit} units Список пресетов редактора колонок
           */
          _updateDropdown: function (units) {
-            var presets = this._options.presets || [];
+            var presets = this._options.staticPresets || [];
             if (units && units.length) {
                presets = presets.concat(units);
+               // TODO: Нужна ли общая сортировка ? Если да, то как пользователь будет различить статические и пользовательские пресеты ?
             }
             var dropdown = this._dropdown;
             dropdown.setItems(presets);
-            var selected = this._selectedPreset;
-            if (selected && (!presets.length || presets.map(function (v) { return v.id; }).indexOf(selected) === -1)) {
-               selected = null;
+            var selectedId = this._selectedPresetId;
+            if (selectedId && (!presets.length || presets.map(function (v) { return v.id; }).indexOf(selectedId) === -1)) {
+               selectedId = null;
             }
-            if (!selected && presets.length) {
-               selected = presets[0].id;
+            if (!selectedId && presets.length) {
+               selectedId = presets[0].id;
             }
-            this._selectedPreset = selected;
-            dropdown.setSelectedKeys(selected ? [selected] : []);
+            this._selectedPresetId = selectedId;
+            dropdown.setSelectedKeys(selectedId ? [selectedId] : []);
             dropdown.setEnabled(1 < presets.length);
             this._isDropdownReady = 0 < presets.length;
             dropdown.setVisible(this._isDropdownReady);
@@ -142,12 +146,12 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
           * Обработчик события
           * @protected
           * @param {Core/EventObject} evtName Идентификатор события
-          * @param {string} selectedPreset Идентификатор пресета редактора колонок
+          * @param {string} selectedPresetId Идентификатор пресета редактора колонок
           */
-         _onChannel: function (evtName, selectedPreset) {
-            if (evtName.getTarget() !== this) {
-               this._selectedPreset = selectedPreset;
-               this._dropdown.setSelectedKeys([selectedPreset]);
+         _onChannel: function (evtName, selectedPresetId) {
+            if (evtName.getTarget() !== this && selectedPresetId !== this._selectedPresetId) {
+               this._selectedPresetId = selectedPresetId;
+               this._dropdown.setSelectedKeys([selectedPresetId]);
                //this._notify('onChange', selecteds[0]);
             }
          }

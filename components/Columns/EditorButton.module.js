@@ -22,10 +22,10 @@ define('js!SBIS3.CONTROLS.Columns.EditorButton',
          $protected: {
             _options: {
                usePresets: false,// TODO: Включить после переделки дропдауна с пресетами
-               presetTitle: null,
-               presets: null,
+               presetsTitle: null,
+               staticPresets: null,
                presetNamespace: 'default',// TODO: Убрать, не должно быть умолчания
-               defaultPreset: null
+               selectedPreset: null
             },
             _presetDropdown: null,
             _button: null
