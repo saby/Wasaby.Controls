@@ -1,4 +1,5 @@
-define('js!WSControls/Windows/Strategy/TargetCoords', [],
+define('js!Controls/Popup/TargetCoords',
+   [],
 
    function () {
 
@@ -36,4 +37,5 @@ define('js!WSControls/Windows/Strategy/TargetCoords', [],
             };
          }
       };
-   });
+   }
+);

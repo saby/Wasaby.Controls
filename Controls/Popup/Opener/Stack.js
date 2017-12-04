@@ -1,24 +1,24 @@
-define('js!Controls/Popup/Opener/Dialog',
+define('js!Controls/Popup/Opener/Stack',
    [
       'Core/Control',
       'js!Controls/Popup/interface/IOpener',
       'js!Controls/Popup/Manager',
-      'js!Controls/Popup/Opener/Dialog/Strategy',
+      'js!Controls/Popup/Opener/Stack/Strategy',
       'Core/core-merge',
       'js!Controls/Popup/Controller'
    ],
    function (Control, IOpener, Manager, Strategy, CoreMerge, Controller) {
+
       /**
-       * Действие открытия окна
-       * @class Controls/Popup/Opener/Dialog
+       * Действие открытия прилипающего окна
+       * @class Controls/Popup/Opener/Stack
        * @mixes Controls/Popup/interface/IOpener
        * @control
        * @public
        * @category Popup
-       * @extends Controls/Control
        */
-      var Dialog = Control.extend([IOpener], {
-         _controlName: 'Controls/Popup/Opener/Dialog',
+      var Stack = Control.extend([IOpener], {
+         _controlName: 'Controls/Popup/Opener/Stack',
 
          open: function (config, opener) {
             var
@@ -35,6 +35,6 @@ define('js!Controls/Popup/Opener/Dialog',
          }
       });
 
-      return Dialog;
+      return Stack;
    }
 );
