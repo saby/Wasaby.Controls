@@ -726,6 +726,9 @@ define(
          this._inputField.bind('dragstart', function(e) {
             e.preventDefault();
          });
+         this._inputField.bind('drop', function(e) {
+            e.preventDefault();
+         });
          //keypress учитывает расскладку, keydown - нет
          this._inputField.keypress(this._onKeyPress.bind(this));
          //keydown ловит управляющие символы, keypress - нет

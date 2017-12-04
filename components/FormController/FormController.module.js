@@ -418,20 +418,18 @@ define('js!SBIS3.CONTROLS.FormController', [
          cIndicator.hide();
       },
       _processError: function(e, hideErrorDialog, eventName) {
-         var
-            eResult = this._notify('onFail', e, eventName),
-            eMessage = e && e.message;
-         if(!hideErrorDialog && (eResult || eResult === undefined)) { // string, undefined
-            if(typeof eResult == 'string') {
-               eMessage = eResult;
-            }
-            if(eMessage) {
-               var self = this;
+         var eResult = this._notify('onFail', e, eventName),
+             eMessage = typeof eResult === 'string' ? eResult : e.message,
+             self = this;
+         if(!hideErrorDialog && eResult !== false) {
+            //Не показываем сообщение, если запрос был прерван
+            //В новом ff при переходе по ссылке обрываются все активные xhr => показываются ненужные алерты о том, что запрос был прерван
+            if(eMessage && eMessage !== 'Cancel') {
                InformationPopupManager.showMessageDialog({
                   message: eMessage,
                   status: 'error'
                }, function(){
-                  if (e.httpError == 403){
+                  if (e.httpError === 403){
                      self._closePanel();
                   }
                });
