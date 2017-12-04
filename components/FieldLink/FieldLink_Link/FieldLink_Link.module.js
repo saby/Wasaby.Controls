@@ -33,6 +33,12 @@ define('js!SBIS3.CONTROLS.FieldLink.Link', [
          setCaption: function() {
             FieldLink_Link.superclass.setCaption.apply(this, arguments);
             this.getContainer().html(this._options.caption);
+         },
+         setEnabled: function(enabled) {
+            FieldLink_Link.superclass.setEnabled.apply(this, arguments);
+            this.getContainer()
+               .toggleClass('controls-FieldLink__Link_enabled', enabled)
+               .toggleClass('controls-FieldLink__Link_disabled', !enabled);
          }
       });
       

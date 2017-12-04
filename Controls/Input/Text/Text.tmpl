@@ -1,13 +1,20 @@
-<ws:Controls.Input.resources.TextRender.TextRender
-   type="text"
-   value="{{_value}}"
-   enabled="{{isEnabled()}}"
-   tagStyle="{{_options.tagStyle}}"
-   placeholder="{{_options.placeholder}}"
-   selectOnClick="{{_options.selectOnClick}}"
-   getInputData="{{_getInputData}}"
-   on:onChangeValue="_inputHandler()"
-   on:onTagHover="_notifyHandler('onTagHover')"
-   on:onTagClick="_notifyHandler('onTagClick')"
-   on:onInputFinish="_notifyHandler('onInputFinish')"
-/>
+<ws:Controls.Input.resources.InputRender.InputRender
+        value="{{_value}}"
+        selectOnClick="{{_options.selectOnClick}}"
+        prepareData="{{_prepareData}}"
+        tagStyle="{{_options.tagStyle}}"
+        on:onChangeValue="_changeValueHandler()"
+        on:onInputCompleted="_inputCompletedHandler()"
+        on:onTagHover="_notifyHandler('onTagHover')"
+        on:onTagClick="_notifyHandler('onTagClick')">
+   <ws:content>
+
+      <ws:partial
+         template="tmpl!Controls/Input/resources/input"
+         enabled="{{isEnabled()}}"
+         value="{{_value}}"
+         placeholder="{{_options.placeholder}}"
+      />
+
+   </ws:content>
+</ws:Controls.Input.resources.InputRender.InputRender>
