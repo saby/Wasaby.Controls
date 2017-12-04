@@ -37,6 +37,7 @@ define('js!Controls/List/ListControl/ListView', [
             if (newOptions.listModel) {
                this._listModel = newOptions.listModel;
                this._listModel.subscribe('onListChange', this._onListChangeFnc);
+               this._listModel.subscribe('onUpdateIndexes', function() {this._forceUpdate();}.bind(this));
             }
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
          },

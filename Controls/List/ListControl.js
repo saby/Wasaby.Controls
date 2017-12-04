@@ -7,7 +7,7 @@ define('js!Controls/List/ListControl', [
    'Core/helpers/functional-helpers',
    'require',
    'js!Controls/List/Controllers/ScrollWatcher',
-   'Core/helpers/functional-helpers',
+   'js!Controls/List/Controllers/VirtualScroll',
    'css!Controls/List/ListControl/ListControl'
 ], function (Control,
              ListControlTpl,
@@ -16,7 +16,8 @@ define('js!Controls/List/ListControl', [
              PageNavigation,
              fHelpers,
              require,
-             ScrollWatcher
+             ScrollWatcher,
+             VirtualScroll
  ) {
    'use strict';
 
@@ -68,6 +69,10 @@ define('js!Controls/List/ListControl', [
             }
             else {
                self._listModel.setItems(list);
+            }
+
+            if (self._virtualScroll) {
+               self._virtualScroll.setDisplayCount(self._listModel._itemsModel._display.getCount());
             }
          })
       },
@@ -123,6 +128,14 @@ define('js!Controls/List/ListControl', [
                   }, 100);
 
                   _private.hideIndicator(self);
+
+                  /*if (self._virtualScroll) {
+                     self._virtualScroll.setDisplayCount(self._listModel._itemsModel._display.getCount());
+                  }
+
+                  //TODO !!!!!!!!!!!!!!!!!!!
+                  self._bottomPlaceholderHeight = (self._listModel._itemsModel._display.getCount() - 50) * 25;
+                  */
 
                   return list;
                }, self))
@@ -203,7 +216,8 @@ define('js!Controls/List/ListControl', [
                onListTop: function() {
                },
                onListBottom: function() {
-               }
+               },
+               onListScroll: _private.onListScroll.bind(self)
             };
 
          return new ScrollWatcher ({
@@ -225,6 +239,19 @@ define('js!Controls/List/ListControl', [
          self._loadingState = null;
          self._loadingIndicatorState = null;
          self._forceUpdate();
+      },
+
+      onListScroll: function(scrollTop) {
+         var virtualResult = this._virtualScroll.calcVirtualWindow(scrollTop, this._listModel);
+         //Если нужно, обновляем индексы видимых записей и распорки
+         if (virtualResult) {
+            this._topPlaceholderHeight = virtualResult.topPlaceholderHeight;
+            this._bottomPlaceholderHeight = virtualResult.bottomPlaceholderHeight;
+            this._listModel.updateIndexes(virtualResult.indexStart, virtualResult.indexStop);
+            this._forceUpdate();
+         }
+
+
       }
    };
 
@@ -373,6 +400,8 @@ define('js!Controls/List/ListControl', [
          _itemTemplate: null,
 
          _loadOffset: 100,
+         _topPlaceholderHeight: 0,
+         _bottomPlaceholderHeight: 0,
 
          constructor: function (cfg) {
             ListControl.superclass.constructor.apply(this, arguments);
@@ -395,13 +424,20 @@ define('js!Controls/List/ListControl', [
                   _private.reload(this);
                }
             }
+
+            this._virtualScroll = new VirtualScroll({
+               maxRows: 75,
+               listModel: this._listModel,
+               displayCount: 0//this._listModel._itemsModel._display.getCount()
+            });
          },
 
          _afterMount: function() {
             ListControl.superclass._afterMount.apply(this, arguments);
 
             //Если есть подгрузка по скроллу и список обернут в скроллКонтейнер, то создаем ScrollWatcher
-            if (this._options.navigation && this._options.navigation.source === 'page') {
+            //TODO условие поправить
+            if ((this._options.navigation && this._options.navigation.source === 'page') || true) {
                var scrollContainer = this._container.closest('.ws-scrolling-content');
                if (scrollContainer && scrollContainer.length) {
                   this._scrollWatcher = _private.createScrollWatcher.call(this, scrollContainer[0]);
