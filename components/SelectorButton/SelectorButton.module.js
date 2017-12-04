@@ -55,8 +55,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * Класса контрола "Кнопка выбора", который отображает выбранные записи в виде текстовых значений через запятую.
     * Контрол применяется в качестве альтернативы полю связи {@link SBIS3.CONTROLS.FieldLink}.
     *
-    * Подробнее о поле связи и кнопке выбора вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/field-link/'>Поле связи</a>.
-    * Обратить внимание: метод <a href='https://wi.sbis.ru/docs/WSControls/Buttons/Button/methods/setCaption/'>setCaption</a>, устанавливающий текст на кнопке, не работает.
+    * Подробнее о поле связи и кнопке выбора вы можете прочитать в разделе <a href='/doc/platform/developmentapl/interface-development/components/textbox/field-link/'>Поле связи</a>.
+    * Обратить внимание: метод <a href='/docs/WSControls/Buttons/Button/methods/setCaption/'>setCaption</a>, устанавливающий текст на кнопке, не работает.
     * caption проставляется только по выбору записи по displayProperty или же строится по шаблону.
     *
     * @class SBIS3.CONTROLS.SelectorButton
@@ -108,7 +108,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
              * @typedef {Array} dictionaries
              * @property {String} caption Название, которое будет использовано в меню выбора справочника. Опция неактуальна, когда установлен только один справочник.
              * @property {String} template Шаблон справочника. В качестве значения передают имя компонента.
-             * @property {Object} componentOptions Опции, которые будут переданы в секцию _options (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/oop/'>ООП-обертка в веб-фреймворке WS</a>) компонента справочника.
+             * @property {Object} componentOptions Опции, которые будут переданы в секцию _options (см. <a href='/doc/platform/developmentapl/interface-development/core/oop/'>ООП-обертка в веб-фреймворке WS</a>) компонента справочника.
              * @translatable caption
              */
             /**
@@ -136,7 +136,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
             /**
              * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS.Action.SelectorAction}
              * @remark
-             * При включенной опции в <a href='https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/FieldLink/options/dictionaries/'>dictionaries</a> можно передать <a href='https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/FieldLink/typedefs/Dictionaries/'>dialogOptions</a>.
+             * При включенной опции в <a href='/docs/js/SBIS3/CONTROLS/FieldLink/options/dictionaries/'>dictionaries</a> можно передать <a href='/docs/js/SBIS3/CONTROLS/FieldLink/typedefs/Dictionaries/'>dialogOptions</a>.
              */
             useSelectorAction: false,
             /**

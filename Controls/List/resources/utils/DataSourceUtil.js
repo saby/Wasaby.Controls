@@ -1,7 +1,8 @@
 define('js!Controls/List/resources/utils/DataSourceUtil', [
    'WS.Data/Query/Query',
-   'Core/core-instance'
-], function(Query, cInstance) {
+   'Core/core-instance',
+   'Core/Deferred'
+], function(Query, cInstance, cDeferred) {
    
    function getQueryForCall (filter, sorting, offset, limit) {
       var query = new Query();
@@ -34,15 +35,29 @@ define('js!Controls/List/resources/utils/DataSourceUtil', [
       },
 
       callQuery: function (dataSource, idProperty, filter, sorting, offset, limit) {
+         var queryDef, query = getQueryForCall(filter, sorting, offset, limit);
 
-         var query = getQueryForCall(filter, sorting, offset, limit);
 
-         return dataSource.query(query).addCallback((function(dataSet) {
+         queryDef = dataSource.query(query).addCallback((function(dataSet) {
             if (idProperty && idProperty !== dataSet.getIdProperty()) {
                dataSet.setIdProperty(idProperty);
             }
             return dataSet.getAll();
          }));
+
+         if (cInstance.instanceOfModule(dataSource, 'WS.Data/Source/Memory')) {
+
+            /*TODO временное решение. Проблема в том что деферред с синхронным кодом статического источника выполняется сихронно.
+            в итоге в коолбэк релоада мы приходим в тот момент, когда еще не отработал _beforeMount и заполнение опций, и не можем обратиться к this._options*/
+            var queryDefAsync = cDeferred.fromTimer(0);
+            queryDefAsync.addCallback(function(){
+               return queryDef;
+            });
+            return queryDefAsync;
+         }
+         else {
+            return queryDef;
+         }
       }
    };
    return DataSourceUtil;

@@ -59,6 +59,9 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             this.initHeights();
             this._currentWindow = this._getRangeToShow(0, PAGES_COUNT);
             clearTimeout(this._scrollTimeout);
+
+            // Enable scroll handler after reset
+            this.disableScrollHandler(false);
          },
 
          _scrollHandler: function (e, scrollTop) {

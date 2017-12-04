@@ -1,12 +1,17 @@
 .controls-FieldLink__Link {
    text-decoration: underline;
    display: inline-block;
-   cursor: pointer;
-   color: @fieldLink-link-color;
    line-height: @link-line-height;
    font-size: @default-text-size;
+}
+.controls-FieldLink__Link_enabled {
+   cursor: pointer;
+   color: @fieldLink-link-color-enabled;
    &:hover {
       text-decoration: underline;
-      color: @fieldLink-link-color-hover;
+      color: @fieldLink-link-color-enabled-hover;
    }
+}
+.controls-FieldLink__Link_disabled {
+   color: @fieldLink-link-color-disabled;
 }
