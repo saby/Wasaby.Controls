@@ -4,13 +4,10 @@
 define('js!Controls/List/ItemsView', [
    'Core/Control',
    'tmpl!Controls/List/ItemsView',
-   'WS.Data/Type/descriptor',
    'js!Controls/List/ListControl/ItemsViewModel'
 ], function (BaseControl,
              ItemsRenderTpl,
-             Types,
-             ItemsViewModel,
-             ForTpl
+             ItemsViewModel
    ) {
    'use strict';
    var _private = {

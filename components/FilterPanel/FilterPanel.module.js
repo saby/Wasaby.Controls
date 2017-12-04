@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
     *
     * <h2>Разметка компонента</h2>
     *
-    * Разметку компонента создают только в TMPL-файлах с использованием <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/logicless-template/'>logicless-шаблонизатора</a>.
+    * Разметку компонента создают только в TMPL-файлах с использованием <a href='/doc/platform/developmentapl/interface-development/component-infrastructure/logicless-template/'>logicless-шаблонизатора</a>.
     *
     * <br/>
     *
@@ -132,7 +132,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              *     <li>details - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.DetailsList}.</li>
              * </ul>
              * @property {Object} properties.properties Объект, в который передают опции для конфигурации контрола {@link SBIS3.CONTROLS.FieldLink}, на основе которого создан редактор {@link SBIS3.CONTROLS.FilterPanelChooser.FieldLink}.
-             * Описание контрола и список его опций вы можете найти <a href='https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/FieldLink/'>здесь</a> и <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/field-link/selector-action//'>здесь</a>.
+             * Описание контрола и список его опций вы можете найти <a href='/docs/js/SBIS3/CONTROLS/FieldLink/'>здесь</a> и <a href='/doc/platform/developmentapl/interface-development/components/textbox/field-link/selector-action//'>здесь</a>.
              * @property {Object} properties.items Набор данных, по которому будет построен список значений. Актуально для редакторов типа "SBIS3.CONTROLS.FilterPanelChooser.*".
              */
             /**

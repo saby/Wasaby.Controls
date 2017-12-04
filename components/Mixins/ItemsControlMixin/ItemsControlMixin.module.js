@@ -587,7 +587,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @cfg {GroupBy} Устанавливает группировку элементов коллекции.
              * @remark file ItemsControlMixin-groupBy.md
              * @remark
-             * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/'>здесь</a>.
+             * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/'>здесь</a>.
              * @example
              * 1. Подключение шаблона группировки:
              * <pre>
@@ -2125,7 +2125,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @remark
        * Если нужно, чтобы стандартаная группировка для элемента не вызывалась - нужно обязательно переопределить (передать) все опции (field, method, template, render), иначе в группировку запишутся стандартные параметры.
        * Всем элементам группы добавляется css-класс "controls-GroupBy".
-       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
+       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
        * @param {GroupBy} group Параметры группировки.
        * @param {Boolean} redraw Произвести перерисовку списка после изменения параметров группировки.
        * @see groupBy
@@ -2157,7 +2157,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /**
        * Возвращает параметры группировки элементов коллекции.
        * @remark
-       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
+       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
        * @return {GroupBy}
        * @see groupBy
        * @see setGroupBy

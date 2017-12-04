@@ -872,7 +872,9 @@
 @list-view-items-toolbar-bottom-tile:                2px;
 @list-view-items-toolbar-icon-size:                  24px;
 @list-view-items-toolbar-menu-icon-size:             @list-view-items-toolbar-icon-size;
-@list-view-items-toolbar-font-family:                @default-icon-medium-font;
+@list-view-items-toolbar-font-family:                'cbuc-icons24';
+@font-family_closeButton-icon:                       @list-view-items-toolbar-font-family;
+@list-view-items-toolbar-context-icon-size:          @icon-medium-size;
 @list-view-items-toolbar-zindex:                     10;
 @bottomStyle-items-toolbar-margin-top:               2px;
 @list-view-actions-verAlign-margin:             8px 3px 0 0;
@@ -890,7 +892,10 @@
 @list-view-actions-menu-text-margin:            6px 0 6px 30px;
 @list-view-context-menu-close-right:            6px;
 @list-view-context-menu-close-top:              7px;
+@list-view-context-menu-close-color:            #CCC;
+@list-view-context-menu-close-hover-color:      @blue-dark-color;
 @list-view-scroll-spritesheet:                  url('img/ajax-loader-indicator.gif');
+@list-view-close-button-font-family:            @default-icon-medium-font;
 @list-view-scroll-bg:                           @list-view-scroll-spritesheet 0 0 no-repeat;
 @list-view-scroll-height:                       32px;
 @list-view-loading-indicator-gradient-bg:       @list-view-scroll-spritesheet no-repeat center, linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
@@ -1163,7 +1168,6 @@
 @DropdownList-picker-menu-selected-marker-width:      6px;
 @DropdownList-picker-menu-selected-marker-height:     8px;
 @DropdownList-picker-menu-selected-marker-bg:         #D94700;
-@DropdownList-picker-menu-selected-marker:            true;
 @DropdownList-after-caption-top:                      3px;
 @DropdownList-linkStyleColor:                         @link-text-color;
 @DropdownList-linkStyleHoverColor:                    #313E78;
@@ -1232,7 +1236,7 @@
 @controls-filterButton-history-actions-bottom:    -1px;
 @controls-filterButton-history-item-min-height:   24px;
 @controls-filterButton-history-titleCont-right:   8px;
-@controls-filterButton-history-titleCont-left:    18px;
+@controls-filterButton-history-titleCont-left:    22px;
 @controls-filterButton-history-title-height:      24px;
 @controls-filterButton-history-title-color:       @blue-dark-color !important;
 //CommandsSeparator
@@ -1272,7 +1276,7 @@
 @fieldLink-picker-min-height:             16px;
 @fieldLink-linkItem-cross-width:          20px;
 @fieldLink-afterField-button-margin:      0 @default-padding 0 0;
-@fieldLink-link-color-hover:              #313E78;
+@fieldLink-link-color-enabled-hover:      #313E78;
 @fieldLink-showSelector-color:            @icon-color-primary;
 @fieldLink-showSelector-color-hover:      @link-hover-text-color;
 @fieldLink-big-fontSize:                  15px;

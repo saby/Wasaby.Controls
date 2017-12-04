@@ -130,6 +130,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             
             if (self._needShowHistory()) {
                self._showHistory();
+            } else if (self.isPickerVisible()) {
+               self.getPicker().recalcPosition(true, true)
             }
          });
          

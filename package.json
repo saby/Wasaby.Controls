@@ -10,6 +10,7 @@
     "build": "grunt build",
     "rebuild": "grunt rebuild",
     "test": "node node_modules/ws-unit-testing/mocha test-isolated",
+    "test-debug": "node node_modules/ws-unit-testing/mocha %NODE_DEBUG_OPTION% test-isolated",
     "coverage": "node node_modules/ws-unit-testing/cover test-isolated"
   },
   "config": {

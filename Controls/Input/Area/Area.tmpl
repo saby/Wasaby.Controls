@@ -1,0 +1,39 @@
+<ws:Controls.Input.resources.InputRender.InputRender
+        name="inputRender"
+        value="{{_value}}"
+        selectOnClick="{{_options.selectOnClick}}"
+        prepareData="{{_prepareData}}"
+        tagStyle="{{_options.tagStyle}}"
+        attr:class="controls-TextArea"
+        event:onChangeValue="_changeValueHandler()"
+        event:onInputCompleted="_inputCompletedHandler()"
+        event:onTagHover="_notifyHandler('onTagHover')"
+        event:onTagClick="_notifyHandler('onTagClick')">
+   <ws:content>
+      <!--TODO контейнер убрать https://online.sbis.ru/opendoc.html?guid=25000158-64ff-4db9-9605-a986cbc37b0f-->
+      <div>
+         <textarea
+                 name="realArea"
+                 spellcheck="false"
+                 class="controls-TextArea__field controls-TextArea__realField controls-TextBox__field {{_hasScroll ? 'controls-TextArea__realField_scroll-scroll' : 'controls-TextArea__realField_scroll-hidden'}}"
+                 placeholder="{{_options.placeholder}}"
+                 readonly="{{!isEnabled() ? 'readonly'}}"
+                 event:onkeydown="_keyDownHandler()"
+                 event:onfocus="_focusHandler()"
+                 event:onscroll="_scrollHandler()"
+         >{{_value}}</textarea>
+
+         <div class="controls-fakeTextArea__firstWrapper">
+            <div class="controls-fakeTextArea__secondWrapper">
+               <div
+                  name="fakeArea"
+                  class="controls-TextArea__field controls-TextArea__fakeField controls-TextBox__field"
+                  style="{{_options.minLines ? ('min-height: ' + _options.minLines * 100 + '%;')}} {{_options.maxLines ? 'max-height: ' + _options.maxLines * 100 + '%'}}">
+                  <span name="fakeAreaValue">{{_value}}</span><br/>
+               </div>
+            </div>
+            <div style="clear:both;"></div>
+         </div>
+      </div>
+   </ws:content>
+</ws:Controls.Input.resources.InputRender.InputRender>

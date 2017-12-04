@@ -597,7 +597,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              */
             parentProperty: null,
             /**
-             * @cfg {String} Устанавливает поле, по значениям которого определяется <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>типа записи в иерархии</a>.
+             * @cfg {String} Устанавливает поле, по значениям которого определяется <a href='/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>типа записи в иерархии</a>.
              * @see parentProperty
              */
             nodeProperty: null,
@@ -615,7 +615,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * @variant folders Отображать только записи типа "Узел".
              * @variant all Отображать записи всех типов иерархии.
              *
-             * Подробное описание иерархической структуры приведено в документе {@link https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy "Типы отношений в таблицах БД"}
+             * Подробное описание иерархической структуры приведено в документе {@link /doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy "Типы отношений в таблицах БД"}
              * @example
              * Устанавливаем режим полного отображения данных: будут отображены элементы коллекции и папки, по которым сгруппированы эти элементы.
              * <pre class="brush:xml">
