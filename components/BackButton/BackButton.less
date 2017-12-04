@@ -52,7 +52,7 @@
       max-width: calc(~"100% - @{back-arrow-width-h6} - @{back-button-arrow-padding-right-2}");
    }
    &_size_default-backButton.controls-Link {
-      .ws-header-size-mixin(@back-button-font-size);
+      font-size: @back-button-font-size;
       max-width: calc(~"100% - @{back-arrow-width-h3} - @{back-button-arrow-padding-right-2}");
    }
    &_size_bold.controls-Link {
@@ -77,12 +77,18 @@
 }
 .ws-backArrow_color_default-backButton {
    .ws-backArrow_color_accent1();
+   &:before {
+      color: @primary-color;
+   }
 }
 .controls-BackButton__orange .ws-backArrow_color_default-backButton {
    .ws-backArrow_color_accent2();
 }
 .ws-backArrow_size_default-backButton {
    .ws-backArrow_size_h3();
+   &:before {
+      font-size: @back-button-font-size;
+   }
 }
 .controls-BackButton__empty {
    visibility: hidden;
