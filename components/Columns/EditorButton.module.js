@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.Columns.EditorButton',
                presetsTitle: null,
                staticPresets: null,
                presetNamespace: 'default',// TODO: Убрать, не должно быть умолчания
-               selectedPreset: null
+               selectedPresetId: null
             },
             _presetDropdown: null,
             _button: null

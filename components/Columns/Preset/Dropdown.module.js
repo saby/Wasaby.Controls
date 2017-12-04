@@ -107,6 +107,19 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
          },
 
          /**
+          * Установить идентификатор выбранного пресета редактора колонок
+          * @public
+          * @param {string|number} selectedPresetId Идентификатор пресета редактора колонок
+          */
+         setSelectedPresetId: function (selectedPresetId) {
+            if (selectedPresetId !== this._selectedPresetId) {
+               this._selectedPresetId = selectedPresetId;
+               _lastSelected = selectedPresetId;
+               this._dropdown.setSelectedKeys([selectedPresetId]);
+            }
+         },
+
+         /**
           * Получить идентификатор выбранного пресета редактора колонок
           * @public
           * @return {string|number}

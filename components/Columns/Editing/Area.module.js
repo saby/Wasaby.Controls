@@ -1,7 +1,10 @@
 /**
- * Created by as.avramenko on 24.01.2017.
+ * Контрол "Область редактирования редактора колонок"
+ *
+ * @public
+ * @class SBIS3.CONTROLS.Columns.Editing.Area
+ * @extends SBIS3.CONTROLS.CompoundControl
  */
-
 define('js!SBIS3.CONTROLS.Columns.Editing.Area',
    [
       'Core/CommandDispatcher',
@@ -10,6 +13,7 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
       'WS.Data/Functor/Compute',
       'js!SBIS3.CONTROLS.Columns.Editing.Area/AreaSelectableModel',
       'js!SBIS3.CONTROLS.Columns.Preset.Cache',
+      'js!SBIS3.CONTROLS.Columns.Preset.Unit',
       'js!SBIS3.CONTROLS.CompoundControl',
       'js!SBIS3.CONTROLS.ItemsMoveController',
       'tmpl!SBIS3.CONTROLS.Columns.Editing.Area',
@@ -25,24 +29,31 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
       'js!SBIS3.CONTROLS.ScrollContainer'
    ],
 
-   function (CommandDispatcher, Deferred, RecordSet, ComputeFunctor, AreaSelectableModel, PresetCache, CompoundControl, ItemsMoveController, dotTplFn) {
+   function (CommandDispatcher, Deferred, RecordSet, ComputeFunctor, AreaSelectableModel, PresetCache, PresetUnit, CompoundControl, ItemsMoveController, dotTplFn) {
       'use strict';
 
+
+
       /**
-       * Класс контрола "Область редактирования колонок"
-       *
-       * @author Авраменко Алексей Сергеевич
-       * @class SBIS3.CONTROLS.Columns.Editing.Area
-       * @public
-       * @extends SBIS3.CONTROLS.CompoundControl
+       * (Как бы) константа списка действий с пресетами
+       * @protected
+       * @type {object[]}
        */
+      var _PRESET_ACTIONS = [
+         {name:'edit', title:rk('Редактировать'), icon:'sprite:icon-16 icon-Edit icon-primary action-hover'},
+         {name:'clone', title:rk('Дублировать'), icon:'sprite:icon-16 icon-Copy icon-primary action-hover'},
+         {name:'delete', title:rk('Удалить'), icon:'sprite:icon-16 icon-Erase icon-error'}
+      ];
+
+
+
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS.Columns.Editing.Area.prototype*/ {
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
                title: '',
                applyButtonTitle: null,//Определено в шаблоне
-               columns: undefined,
+               columns: null,
                selectedColumns: [],
                moveColumns: true,
                groupField: '',
@@ -50,17 +61,22 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
                presetsTitle: null,
                staticPresets: null,
                presetNamespace: null,
-               selectedPreset: null
+               selectedPresetId: null,
+               newPresetTitle: rk('Новый пресет'),
+               autoSaveFirstPreset: true,
+               useNumberedTitle: true
+
             },
-            _presetView: undefined,
-            _fixedView: undefined,
-            _selectableView: undefined,
+            _presetView: null,
+            _presetDropdown: null,
+            _fixedView: null,
+            _selectableView: null,
             _currentPreset: null
          },
 
          _modifyOptions: function () {
             var cfg = Area.superclass._modifyOptions.apply(this, arguments);
-            var preset = cfg.usePresets ? _getPreset(cfg.staticPresets, cfg.selectedPreset) : null;
+            var preset = cfg.usePresets ? _getPreset(cfg.staticPresets, cfg.selectedPresetId) : null;
             cfg._optsPreset = cfg.usePresets ? {
                items: _makePresetViewItems(preset)
             } : null;
@@ -89,8 +105,10 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
             this._selectableView = this.getChildControlByName('controls-Columns-Editing-Area__SelectableList');
 
             if (this._presetView) {
+               //PresetCache.subscribe(options.presetNamespace, 'onCacheError', function () {});
+
                _getPresets(this).addCallback(function (presets) {
-                  this._currentPreset = _getPreset(presets, options.selectedPreset);
+                  this._currentPreset = _getPreset(presets, options.selectedPresetId);
                   _updatePresetView(this, true);
 
                   //^^^this._presetView.setItemsHover(false);
@@ -99,11 +117,7 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
                   this.subscribeTo(this._presetView, 'onAfterBeginEdit', this._presetView.setItemsActions.bind(this._presetView, []));
                   this.subscribeTo(this._presetView, 'onEndEdit', function (evtName, model, withSaving) {
                      if (withSaving) {
-                        this.sendCommand('changePreset', model.get('title')).addCallback(function (isSuccess) {
-                           if (!isSuccess) {
-                              // TODO: Изменение не сохранено - откатится назад
-                           }
-                        });
+                        _modifyPresets(this, 'change-title', model.get('title'));
                      }
                   }.bind(this));
                   this.subscribeTo(this._presetView, 'onAfterEndEdit', function (evtName, model, $target, withSaving) {
@@ -320,14 +334,15 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
 
       var _updatePresetView = function (self, renew) {
          if (renew) {
+            self._presetDropdown = null;
             self._presetView.setItems(_makePresetViewItems(self._currentPreset));
          }
          setTimeout(function () {
-            var dropdown = _getChildComponent(self._presetView, 'controls-Columns-Editing-Area__Preset-item-title');
-            if (dropdown) {
-               self.subscribeTo(dropdown, 'onChange', function (evtName, selectedPresetId) {
+            self._presetDropdown = _getChildComponent(self._presetView, 'controls-Columns-Editing-Area__Preset-item-title');
+            if (self._presetDropdown) {
+               self.subscribeTo(self._presetDropdown, 'onChange', function (evtName, selectedPresetId) {
                   _getPresets(self).addCallback(function (presets) {
-                     self._currentPreset = _getPreset(presets, dropdown.getSelectedPresetId());
+                     self._currentPreset = _getPreset(presets, self._presetDropdown.getSelectedPresetId());
                      _updatePresetView(self, true);
                      var cfg = self._options;
                      var allSelected = _getSelectedColumns(cfg, this._currentPreset);
@@ -348,37 +363,26 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
       };
 
       var _makeItemsActions = function (self) {
-         return [
-            {name:'edit', title:rk('Редактировать'), icon:'sprite:icon-16 icon-Edit icon-primary action-hover'},
-            {name:'clone', title:rk('Дублировать'), icon:'sprite:icon-16 icon-Copy icon-primary action-hover'},
-            {name:'delete', title:rk('Удалить'), icon:'sprite:icon-16 icon-Erase icon-error'}
-         ].map(function (inf) {
+         return _PRESET_ACTIONS.map(function (inf) {
             return {
                name: inf.name,
                icon: inf.icon,
                caption: inf.title,
                tooltip: inf.title,
                isMainAction: true,
-               onActivated: function ($item, itemId, itemModel, action) {
-                  _applyPresetAction(self, action, itemModel);
-               }
+               onActivated: _applyPresetAction.bind(null, self, inf.name)
             };
          });
       };
 
-      var _applyPresetAction = function (self, action, model) {
+      var _applyPresetAction = function (self, action, $item, itemId, itemModel) {
          switch (action) {
             case 'edit':
-               self._presetView.beginEdit(model, false);
+               self._presetView.beginEdit(itemModel, false);
                break;
             case 'clone':
             case 'delete':
-               var commands = {'clone':'clonePreset', 'delete':'deletePreset'};
-               self.sendCommand(commands[action]).addCallback(function (isSuccess) {
-                  if (!isSuccess) {
-                     // TODO: Изменение не сохранено - откатится назад
-                  }
-               });
+               _modifyPresets(self, action);
                _updatePresetView(self, true);
                break;
          }
@@ -407,6 +411,43 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
                }
             }
             return expandedGroups;
+         }
+      };
+
+      var _modifyPresets = function (self, action, arg) {
+         var preset = self._currentPreset;
+         if (!preset) {
+            throw new Error('Nothing to modify');
+         }
+         var namespace = self._options.presetNamespace;
+         var presets, index;
+         if (action !== 'change-title' && self._presetDropdown) {
+            presets = self._presetDropdown.getItems().getRawData();
+            index = presets && presets.length ? presets.map(function (v) { return v.id; }).indexOf(preset) : -1;
+         }
+         switch (action) {
+            case 'change-title':
+               preset.title = arg;
+               PresetCache.update(namespace, preset);
+               break;
+
+            case 'clone':
+               var newPreset = new PresetUnit(preset);
+               newPreset.title = self._options.newPresetTitle;// TODO: Возможно, лучше сделать старый заголовок с цифрой в конце - self._options.useNumberedTitle
+               newPreset.isStorable = true;
+               PresetCache.add(namespace, newPreset);
+               self._presetDropdown.setSelectedPresetId(newPreset.id);
+               self._currentPreset = newPreset;//^^^ ???
+               break;
+
+            case 'delete':
+               var nextPreset = index !== -1 && 1 < presets.length ? presets[index !== presets.length - 1 ? index + 1 : index - 1] : null;
+               if (nextPreset) {
+                  self._presetDropdown.setSelectedPresetId(nextPreset.id);
+               }
+               self._currentPreset = nextPreset;//^^^ ???
+               PresetCache.delete(namespace, preset);
+               break;
          }
       };
 
