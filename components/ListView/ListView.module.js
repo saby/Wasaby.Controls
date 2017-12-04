@@ -902,6 +902,20 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                /**
                 * @cfg {ListViewNavigation} Устанавливает конфиг для контроллера навигации ListView
+                * @example
+                * Пример 1:
+                * navigation: {
+                *    type: 'cursor',
+                *    config: {
+                *       field: 'timestamp',
+                *       position: 150
+                *    }
+                * }
+                * Пример 2:
+                * <ws:navigation type="cursor">
+                *    <ws:config field="Курсор" direction="both" position="{{ null }}"/>
+                * </ws:navigation>
+                *
                 */
                navigation: null,
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
