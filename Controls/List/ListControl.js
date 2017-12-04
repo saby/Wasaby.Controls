@@ -114,8 +114,12 @@ define('js!Controls/List/ListControl', [
                      self._navigationController.calculateState(list)
                   }
                   if (self._virtualScroll) {
-                     self._virtualScroll.setListModel(self._listModel);
+                     self._virtualScroll.setDisplayCount(self._listModel._itemsModel._display.getCount());
                   }
+
+                  //TODO !!!!!!!!!!!!!!!!!!!
+                  self._bottomPlaceholderHeight = (self._listModel._itemsModel._display.getCount() - 50) * 25;
+
                   return list;
                }, self))
                .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
@@ -142,6 +146,9 @@ define('js!Controls/List/ListControl', [
                   }
                   if (self._navigationController) {
                      self._navigationController.calculateState(list, direction);
+                  }
+                  if (self._virtualScroll) {
+                     self._virtualScroll.updateListModel(direction);
                   }
 
                   return list;
@@ -174,7 +181,8 @@ define('js!Controls/List/ListControl', [
                onListTop: function() {
                },
                onListBottom: function() {
-               }
+               },
+               onListScroll: _private.onListScroll.bind(self)
             };
 
          return new ScrollWatcher ({
@@ -183,6 +191,17 @@ define('js!Controls/List/ListControl', [
             loadOffset: this._loadOffset,
             eventHandlers: eventHandlers
          });
+      },
+
+      onListScroll: function(scrollTop) {
+         var virtualResult = this._virtualScroll.calcVirtualWindow(scrollTop, this._listModel);
+         //Если нужно, обновляем индексы видимых записей и распорки
+         if (virtualResult) {
+            this._topPlaceholderHeight = virtualResult.topPlaceholderHeight;
+            this._bottomPlaceholderHeight = virtualResult.bottomPlaceholderHeight;
+            this._listModel.updateIndexes(virtualResult.indexStart, virtualResult.indexStop);
+            this._forceUpdate();
+         }
       }
    };
 
@@ -427,6 +446,8 @@ define('js!Controls/List/ListControl', [
          _itemTemplate: null,
 
          _loadOffset: 100,
+         _topPlaceholderHeight: 0,
+         _bottomPlaceholderHeight: 0,
 
          constructor: function (cfg) {
             ListView.superclass.constructor.apply(this, arguments);
@@ -458,8 +479,11 @@ define('js!Controls/List/ListControl', [
                   _private.reload.call(this, newOptions);
                }
             }
+
             this._virtualScroll = new VirtualScroll({
-               listModel: this._listModel
+               maxRows: 75,
+               listModel: this._listModel,
+               displayCount: this._listModel._itemsModel._display.getCount()
             });
          },
 

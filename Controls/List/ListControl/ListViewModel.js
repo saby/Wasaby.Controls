@@ -32,6 +32,10 @@ define('js!Controls/List/ListControl/ListViewModel',
             if (cfg.selectedKey !== undefined) {
                this._selectedItem = this.getItemById(cfg.selectedKey, cfg.idProperty);
             }
+
+            //TODO переделать рассчет _stopIndex
+            this._startIndex = 0;
+            this._stopIndex = Math.min(50, this._itemsModel._display.getCount());
          },
 
          destroy: function() {
@@ -40,15 +44,17 @@ define('js!Controls/List/ListControl/ListViewModel',
          },
 
          reset: function() {
-            this._itemsModel.reset();
+            //TODO убрать this._itemsModel._curIndex
+            this._itemsModel._curIndex = this._startIndex;
          },
 
          isEnd: function() {
-            return this._itemsModel.isEnd();
+            //TODO убрать this._itemsModel._curIndex
+            return this._itemsModel._curIndex < this._stopIndex;
          },
 
          goToNext: function() {
-            this._itemsModel.goToNext();
+            this._itemsModel._curIndex++;
          },
 
          getCurrent: function() {
@@ -64,6 +70,13 @@ define('js!Controls/List/ListControl/ListViewModel',
          setSelectedKey: function(key) {
             this._selectedItem = this.getItemById(key, this._options.idProperty);
             this._notify('onListChange');
+         },
+
+         updateIndexes: function(startIndex, stopIndex) {
+            console.log('ListViewModel:updateIndexes');
+            this._startIndex = startIndex;
+            this._stopIndex= stopIndex;
+            this._notify('onUpdateIndexes');
          },
 
          __calcSelectedItem: function(display, selKey, idProperty) {
