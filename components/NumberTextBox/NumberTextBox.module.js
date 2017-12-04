@@ -169,7 +169,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
 
       _addOptionsFromClass: function(opts, attrToMerge) {
          var
-            classes = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || '',
+            classes = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || opts.className || '',
             params = [
                { class: 'controls-NumberTextBox__text-align-right', optionName: 'textAlign', value: 'right', defaultValue: 'left' }
             ];
