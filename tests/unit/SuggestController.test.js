@@ -6,10 +6,10 @@
  */
 define(
    [
-      'js!Controls/Input/resources/_SuggestController',
+      'js!Controls/Input/resources/SuggestController',
       'Core/core-instance'
    ],
-   function(_SuggestController, cInstance) {
+   function(SuggestController, cInstance) {
       'use strict';
       
       describe('Controls.Input._SuggestController', function () {
@@ -19,9 +19,9 @@ define(
                 result = false;
             
             self._options = {};
-            _SuggestController.getSearchController.call(self).addCallback(function(controller) {
+            SuggestController._private.getSearchController(self).addCallback(function(controller) {
                controller.search = function() {result = true};
-               _SuggestController.search.call(self);
+               SuggestController._private.search(self);
                assert.isTrue(result);
                done();
             });
@@ -30,7 +30,7 @@ define(
          it('.getSearchController', function(done) {
             var self = {};
             self._options = {};
-            _SuggestController.getSearchController.call(self).addCallback(function(controller) {
+            SuggestController._private.getSearchController(self).addCallback(function(controller) {
                assert.isTrue(cInstance.instanceOfModule(controller, 'js!Controls/Input/resources/PopupSearchController'));
                assert.isTrue(cInstance.instanceOfModule(self._searchController, 'js!Controls/Input/resources/PopupSearchController'));
                done();
@@ -42,9 +42,10 @@ define(
                result = false;
       
             self._options = {};
-            _SuggestController.getSearchController.call(self).addCallback(function(controller) {
+            self.once = function() {};
+            SuggestController._private.getSearchController(self).addCallback(function(controller) {
                controller.abort = function() {result = true};
-               _SuggestController.abort.call(self);
+               SuggestController._private.abortSearch(self);
                assert.isTrue(result);
                done();
             });
@@ -55,24 +56,25 @@ define(
                searchResult = false,
                abortResult = false;
       
+            self.once = function() {};
             self._options = {};
             self._options.minSearchLength = 3;
-            
-            _SuggestController.getSearchController.call(self).addCallback(function(controller) {
+   
+            SuggestController._private.getSearchController(self).addCallback(function(controller) {
                controller.abort = function() {abortResult = true};
                controller.search = function() {searchResult = true;};
-               
-               _SuggestController.onChangeValueHandler.call(self, null, '');
+   
+               SuggestController._private.onChangeValueHandler(self, null, '');
                
                assert.isFalse(searchResult);
                assert.isTrue(abortResult);
    
-               _SuggestController.onChangeValueHandler.call(self, null, 'te');
+               SuggestController._private.onChangeValueHandler(self, null, 'te');
    
                assert.isFalse(searchResult);
                assert.isTrue(abortResult);
    
-               _SuggestController.onChangeValueHandler.call(self, null, 'test');
+               SuggestController._private.onChangeValueHandler(self, null, 'test');
    
                assert.isTrue(searchResult);
                done();

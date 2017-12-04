@@ -10,16 +10,18 @@ define('js!Controls/Input/resources/PopupSearchController',
       
       'use strict';
       
-      function getSearchController() {
-         if (!this._search) {
-            this._search = new Search({
-               dataSource: this._options.dataSource,
-               searchDelay: this._options.searchDelay
-            });
+      var _private = {
+         getSearchController: function(self) {
+            if (!self._search) {
+               self._search = new Search({
+                  dataSource: self._options.dataSource,
+                  searchDelay: self._options.searchDelay
+               });
+            }
+   
+            return self._search;
          }
-         
-         return this._search;
-      }
+      };
       
       var PopupSearchController = extend({
          constructor: function(options) {
@@ -31,7 +33,8 @@ define('js!Controls/Input/resources/PopupSearchController',
             
             filter[this._options.searchParam] = textValue;
             requirejs([self._options.popupTemplate]);
-            getSearchController.call(this).search({filter: filter}).addCallback(function(searchResult) {
+            _private.getSearchController(this).search({filter: filter}).addCallback(function(searchResult) {
+               //TODO Жду правок от Лощинина, чтобы доделать выбор из попапа и отображение
                PapupManager.show(
                   {
                      catchFocus: false,
@@ -62,6 +65,9 @@ define('js!Controls/Input/resources/PopupSearchController',
          
          _moduleName: 'Controls/Input/resources/PopupSearchController'
       });
+   
+      /** For tests **/
+      PopupSearchController._private = _private;
       
       return PopupSearchController;
    }
