@@ -22,7 +22,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "js!SBIS3.CONTROLS.Utils.SourceUtil",
    "Core/helpers/Object/isEmpty",
    "Core/helpers/Function/debounce",
-   "js!SBIS3.CORE.Control"
+   "js!SBIS3.CORE.Control",
+   "WS.Data/Display/Collection",
+   "WS.Data/Display/Enum",
+   "WS.Data/Display/Flags",
 ], function (
    coreClone,
    Deferred,
