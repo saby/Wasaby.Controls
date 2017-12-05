@@ -1,0 +1,9 @@
+/*group*/
+.ws-Container__popup {
+  position: absolute;
+  transition-property: transform;
+  transition-duration: 0.15s;
+  -webkit-box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+  background: #FFFFFF;
+}
