@@ -1,10 +1,11 @@
 body {
   @infobox-border: @default-border-width solid transparent;
   .ws-info-box {
-    background: @basic-block-bg-color !important;
+    background: @background-color_infobox !important;
     color: @default-text-color;
     border: @infobox-border;
-    padding: round(24px * @multiplier) round(84px * @multiplier) round(24px * @multiplier) round(24px * @multiplier) !important;
+    padding: round(24px * @multiplier) round(68px * @multiplier) round(24px * @multiplier) round(24px * @multiplier) !important;
+    box-shadow: rgba(0, 0, 0, 0.5) 0 0 round(20px * @multiplier);
     &.ws-infobox-type-error {
       box-shadow: rgba(0, 0, 0, 0.5) 0 0 round(20px * @multiplier);
     }
@@ -14,7 +15,7 @@ body {
       width: round(25px * @multiplier);
       height: round(25px * @multiplier);
       box-sizing: border-box;
-      background: @basic-block-bg-color !important;;
+      background: @background-color_infobox !important;;
       transform:  scaleY(1.055555555555556) rotate(45deg);
       &.ws-infobox-triangle-bottom {
         bottom: round(-13px * @multiplier);
@@ -36,6 +37,18 @@ body {
         border-left: @infobox-border;
         border-bottom: @infobox-border;
       }
+      &.ws-infobox-triangle-right {
+        right: round(24px * @multiplier);
+      }
+      &.ws-infobox-triangle-left {
+        left: round(24px * @multiplier);
+      }
+      &.ws-infobox-triangle-vertical-top {
+        top: round(24px * @multiplier);
+      }
+      &.ws-infobox-triangle-vertical-bottom {
+        bottom: round(24px * @multiplier);
+      }
     }
     .ws-infobox-close-button.icon-disabled{
       font-size: round(52px * @multiplier)!important;
@@ -51,6 +64,9 @@ body {
       &:before {
         line-height: round(52px * @multiplier)!important;
       }
+    }
+    &.ws-infobox-has-title .ws-infobox-content {
+      padding-right: 0;
     }
   }
 }
@@ -110,4 +126,20 @@ body .ws-window.ws-LoadingIndicator__window {
       left: @padding_DropDownList_item_child_text;
     }
   }
+}
+.controls-FloatArea {
+  background: @basic-block-bg-color;
+}
+//todo: поддержать в компоненте
+.controls-ComboBox {
+  &.ws-disabled {
+    &.controls-ComboBox__emptyValue {
+      .controls-ComboBox__fieldNotEditable{
+        color: @default-text-color;
+      }
+    }
+  }
+}
+.controls-TextBox_size_l.controls-TextArea {
+  height: auto;
 }

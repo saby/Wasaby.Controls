@@ -59,6 +59,7 @@
 
 .placeholder(@color: @default-placeholder-color) {
   &::-webkit-input-placeholder {
+    opacity: 1;
     color: @color;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -66,20 +67,16 @@
     text-overflow:ellipsis;
   }
 
-  &:-moz-placeholder {
-    color: @color;
-    -moz-user-select: none;
-    text-overflow:ellipsis;
-  }
-
   &::-moz-placeholder {
+    opacity: 1;
     color: @color;
     -moz-user-select: none;
     text-overflow:ellipsis;
   }
 
   &:-ms-input-placeholder {
-     color: @color;
+    opacity: 1;
+    color: @color;
     //-ms-user-select: none; Убираю, т.к. из-за этого IE ставит курсор не в инпут, а куда то в рандомное место на странице
     text-overflow:ellipsis;
   }
