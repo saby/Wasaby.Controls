@@ -481,7 +481,7 @@ node('controlsFF57') {
                             dir("./controls/tests/int"){
                                  sh """
                                  source /home/sbis/selenium3/bin/activate
-                                 python start_tests.py --SERVER_ADDRESS http://test-selenium5:4445/wd/hub -ft 0 ${run_test_fail} -sn ${stream_number}
+                                 python start_tests.py --SERVER_ADDRESS http://test-selenium5:4445/wd/hub -ft 1 ${run_test_fail} -sn ${stream_number}
                                  deactivate
                                  """
                             }
