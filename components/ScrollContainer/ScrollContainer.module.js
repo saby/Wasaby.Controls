@@ -1,12 +1,7 @@
 define('js!SBIS3.CONTROLS.ScrollContainer', [
-      'Core/core-extend',
-      "Core/Abstract.compatible",
-      'js!SBIS3.CORE.Control/Control.compatible',
-      "js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible",
-      'js!SBIS3.CORE.BaseCompatible',
-      'js!SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor',
-      'tmpl!SBIS3.CONTROLS.ScrollContainer',
+      'js!SBIS3.CONTROLS.CompoundControl',
       'js!SBIS3.CONTROLS.Scrollbar',
+      'tmpl!SBIS3.CONTROLS.ScrollContainer',
       'Core/detection',
       'Core/compatibility',
       'js!SBIS3.CORE.FloatAreaManager',
@@ -16,14 +11,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'Core/CommandDispatcher',
       'css!SBIS3.CONTROLS.ScrollContainer'
    ],
-   function (extend,
-             AbstractCompatible,
-             ControlCompatible,
-             AreaAbstractCompatible,
-             BaseCompatible,
-             WsCompatibleConstructor,
-             template,
+   function (CompoundControl,
              Scrollbar,
+             template,
              cDetection,
              compatibility,
              FloatAreaManager,
@@ -87,18 +77,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        *     </option>
        * </component>
        */
-      var ScrollContainer = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, WsCompatibleConstructor], /** @lends SBIS3.CONTROLS.ScrollContainer.prototype */{
-         _template: template,
-         iWantVDOM: false,
-         _controlName: 'SBIS3.CONTROLS.ScrollContainer',
-         _useNativeAsMain: true,
-         _doNotSetDirty: true,
-
-         constructor: function (cfg) {
-
-            this._options = {
+      var ScrollContainer = CompoundControl.extend(/** @lends SBIS3.CONTROLS.ScrollContainer.prototype */{
+         _dotTplFn: template,
+         $protected: {
+            _options: {
                /**
-                * @cfg {Content} Пользовательская разметка, отображаемая в SBIS3.CONTROLS.ScrollContainer и для которой будет отображён скролл.
+                * @cfg {Content} Контент в ScrollContainer
+                * @remark
+                * Контент в ScrollContainer - это пользовательская верстка, которая будет скроллироваться.
                 * @example
                 * <pre class="brush: html">
                 *    <option name="content">
@@ -114,13 +100,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 * @see getContent
                 */
                content: '',
+
                /**
-                * @cfg {Boolean} Признак, который устанавливает фиксацию заголовоков в рамках контейнера SBIS3.CONTROLS.ScrollContainer.
+                * @cfg {Boolean} Включает фиксацию заголовоков в рамках контенера ScrollContainer
                 */
                stickyContainer: false,
-               /**
-                * @cfg {Boolean}
-                */
+
                activableByClick: false,
                /**
                 * @cfg {Boolean}
@@ -130,10 +115,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 * @cfg {Object}
                 */
                navigationToolbar: {
-                 /**
-                  * @cfg {Boolean}
-                  * @name SBIS3.CONTROLS.ScrollContainer#navigationToolbar.begin
-                  */
+                  /**
+                   * @cfg {Boolean}
+                   * @name SBIS3.CONTROLS.ScrollContainer#navigationToolbar.begin
+                   */
                   begin: false,
                   /**
                    * @cfg {Boolean}
@@ -157,20 +142,16 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   end: false
                },
                takeScrollbarHidden: true
-            };
-            this._content = null;
-            this._headerHeight = 0;
-            this._ctxSync = {
-               selfToPrev: {},
-               selfCtxRemoved: {},
-               selfNeedSync: 0,
-               prevToSelf: {},
-               prevCtxRemoved: {},
-               prevNeedSync: 0
-            };
-            this._isMobileIOS = cDetection.isMobileIOS;
-            this.deprecatedContr(cfg);
+            },
+            _content: null
+         },
 
+         $constructor: function() {
+            // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась,
+            // сделаем свой контекст прозрачным
+            this._headerHeight = 0;
+            this._craftedContext = false;
+            this._context = this._context.getPrevious();
             // на resizeYourself команду перерисовываем только себя, не трогая children.
             // Сейчас команда отправляется только из ListView когда его items изменились (а значит могли измениться размеры)
             CommandDispatcher.declareCommand(this, 'resizeYourself', function () {
@@ -178,9 +159,20 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }.bind(this));
          },
 
-         _containerReady: function() {
+         _modifyOptions: function(cfg) {
+            var cfg = ScrollContainer.superclass._modifyOptions.apply(this, arguments);
+            cfg._isMobileIOS = cDetection.isMobileIOS;
+            return cfg;
+         },
+
+         _modifyOptionsAfter: function(finalConfig) {
+            delete finalConfig.content;
+         },
+
+         init: function() {
+            ScrollContainer.superclass.init.call(this);
             var showScrollbar;
-            if (window && this._container && (typeof this._container.length === "number")) {
+
 
                this._content = $('> .controls-ScrollContainer__content', this.getContainer());
                showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid);
@@ -249,7 +241,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
 
                this._initPaging();
-            }
+
          },
 
          _hideBrowserScrollbar: function(){
@@ -360,116 +352,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          //Скрыть скролл
          _hideScrollbar: function() {
             this._container.toggleClass('controls-ScrollContainer__scrollbar_show', false);
-         },
-
-         bothIsNaN: function(a, b){
-            return (typeof a === "number") && (typeof b === "number") && isNaN(a) && isNaN(b);
-         },
-
-         nullOrUndefined: function(a){
-            return a === null || a === undefined;
-         },
-
-         compare: function(a, b){
-            /**
-             * Если одно из значений null или undefined то сравниваем с типами, чтобы null!==undefined
-             * Если оба значения не null и не undefined, то сравниваем без типов, чтобы 1=="1"
-             */
-            var temp = (this.nullOrUndefined(a) || this.nullOrUndefined(b))?(a===b):(a==b);
-            return this.bothIsNaN(a,b) || temp;
-         },
-
-         fixOpacityField: function(name){
-            if (this.compare(this._ctxSync.selfToPrev[name], this._ctxSync.prevToSelf[name])){
-               /**
-                * Если данные пролетают сквозь контекст самоятоятельно, то не нужно их синхронизировать
-                */
-               delete this._ctxSync.selfToPrev[name];
-               delete this._ctxSync.prevToSelf[name];
-               this._ctxSync.selfNeedSync--;
-               this._ctxSync.prevNeedSync--;
-            }
-         },
-
-         setContext: function(ctx){
-            BaseCompatible.setContext.call(this, ctx);
-            /**
-             * Добавим проксирование данных для EngineBrowser
-             * Этот костыль будет выпилен в 3.17.20
-             */
-            if (this.getParent()) {
-               var
-                  self = this,
-                  selfCtx = this._context,
-                  prevContext = this._context.getPrevious(),
-                  onFieldChange = function(ev, name, value) {
-                     //if (this.getValueSelf(name) !== undefined)
-                     {
-                        if (!self.compare(value, prevContext.getValue(name)) &&
-                           !self.compare(value, self._ctxSync.selfToPrev[name])) {
-                           self._ctxSync.selfToPrev[name] = value;
-                           self._ctxSync.selfNeedSync++;
-                           self.fixOpacityField(name);
-                        }
-                     }
-                  },
-                  prevOnFieldChange = function(ev, name, value) {
-                     //if (prevContext.getValueSelf(name) !== undefined)
-                     {
-                        if (!self.compare(value, selfCtx.getValue(name)) &&
-                           !self.compare(value, self._ctxSync.prevToSelf[name])){
-                           self._ctxSync.prevToSelf[name] = value;
-                           self._ctxSync.prevNeedSync++;
-                           self.fixOpacityField(name);
-                        }
-                     }
-                  },
-                  onFieldsChanged = function() {
-                     if (self._ctxSync.selfNeedSync) {
-                        self._ctxSync.selfNeedSync = 0;
-                        prevContext.setValue(self._ctxSync.selfToPrev);
-                        self._ctxSync.selfToPrev = {};
-                     }
-                  },
-                  prevOnFieldsChanged = function() {
-                     if (self._ctxSync.prevNeedSync) {
-                        self._ctxSync.prevNeedSync = 0;
-                        selfCtx.setValue(self._ctxSync.prevToSelf);
-                        self._ctxSync.prevToSelf = {};
-                     }
-                  },
-                  onFieldRemove = function(ev, name, value) {
-                     self._ctxSync.selfCtxRemoved[name] = false;
-                     if (prevContext.getValueSelf(name) !== undefined &&
-                        !self._ctxSync.prevCtxRemoved[name]) {
-                        self._ctxSync.prevCtxRemoved[name] = true;
-                        prevContext.removeValue(name);
-                     }
-                  },
-                  prevOnFieldRemove = function(ev, name, value) {
-                     self._ctxSync.prevCtxRemoved[name] = false;
-                     if (selfCtx.getValueSelf(name) !== undefined && !self._ctxSync.selfCtxRemoved[name]) {
-                        self._ctxSync.selfCtxRemoved[name] = true;
-                        selfCtx.removeValue(name);
-                     }
-                  };
-
-               this._context.subscribe('onFieldChange', onFieldChange);
-               prevContext.subscribe('onFieldChange', prevOnFieldChange);
-               this._context.subscribe('onFieldsChanged', onFieldsChanged);
-               prevContext.subscribe('onFieldsChanged', prevOnFieldsChanged);
-               this._context.subscribe('onFieldRemove', onFieldRemove);
-               prevContext.subscribe('onFieldRemove', prevOnFieldRemove);
-
-               this.once('onDestroy', function(){
-                  this._context.unsubscribe('onFieldChange', onFieldChange);
-                  prevContext.unsubscribe('onFieldChange', prevOnFieldChange);
-                  this._context.unsubscribe('onFieldsChanged', onFieldsChanged);
-                  prevContext.unsubscribe('onFieldsChanged', prevOnFieldsChanged);
-                  this._context.unsubscribe('onFieldRemove', onFieldRemove);
-                  prevContext.unsubscribe('onFieldRemove', prevOnFieldRemove);
-               });
-            }
          },
 
          _subscribeOnScroll: function(){
@@ -646,7 +528,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onResizeHandler: function(){
-            AreaAbstractCompatible._onResizeHandler.apply(this, arguments);
+            ScrollContainer.superclass._onResizeHandler.apply(this, arguments);
             this._resizeInner();
          },
 
@@ -768,7 +650,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                .unsubscribe('onReturnTakeScrollbar', this._returnTakeScrollbarHandler)
                .unsubscribe('onRequestTakeScrollbar',  this._requestTakeScrollbarHandler);
 
-            BaseCompatible.destroy.call(this);
+            ScrollContainer.superclass.destroy.call(this);
             // task: 1173330288
             // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
             delete FloatAreaManager._scrollableContainers[ this.getId() ];

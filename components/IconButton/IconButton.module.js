@@ -3,26 +3,18 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
-      'tmpl!SBIS3.CONTROLS.IconButton',
-      'Core/constants',
-      'css!SBIS3.CONTROLS.IconButton'
-], function(WSButton,
-            template,
-            cConstants) {
+define('js!SBIS3.CONTROLS.IconButton', [ 'js!WSControls/Buttons/Button', 'css!SBIS3.CONTROLS.IconButton'], function(WSButton) {
 
    'use strict';
 
    /**
-    * Класс контрола "Кнопка в виде значка".
-    *
-    * {@link /doc/platform/developmentapl/interface-development/components/textbox/buttons/button-icon/#icon-button Демонстрационные примеры}.
-    * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
+    * Класс контрола, который предназначен для отображения кнопки в виде иконки.
     *
     * @class SBIS3.CONTROLS.IconButton
-    * @extends SBIS3.CONTROLS.Button
-    *
-    * @author Романов Валерий Сергеевич
+    * @extends SBIS3.CONTROLS.WSButtonBase
+    * @mixes SBIS3.CONTROLS.IconMixin
+    * @demo SBIS3.CONTROLS.Demo.MyIconButton
+    * @author Борисов Петр Сергеевич
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
@@ -46,12 +38,12 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
     *
     * @cssModifier controls-IconButton__round-border Добавляет круглую границу вокруг иконки. Размер границы подстраивается под размеры иконки.
     * По умолчанию граница серого цвета. При наведении курсора цвет границы изменяется в соответствии с цветом иконки, установленной в опции {@link icon}.
-    * @cssModifier controls-IconButton__round-border-24 Устанавливает круглую границу (диаметр в 24 px) вокруг иконки быстрой операции, доступной по наведению курсора. Подробнее о таких типах операций вы можете прочитать <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/items-action/fast/">здесь</a>.
+    * @cssModifier controls-IconButton__round-border-24 Устанавливает круглую границу (диаметр в 24 px) вокруг иконки быстрой операции, доступной по наведению курсора. Подробнее о таких типах операций вы можете прочитать <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">здесь</a>.
     * Модификатор применяется совместно с иконками 16 px. Цвет границы соответствует цвету иконки, установленной в опции {@link icon}.
     * @cssModifier controls-IconButton__filter-left Устанавливает внешний вид для кнопки открытия/закрытия фильтров слева.
     * @cssModifier controls-IconButton__filter-right Устанавливает внешний вид  для кнопки открытия/закрытия фильтров справа.
     *
-    * @category Button
+    * @category Buttons
     * @control
     * @public
     * @initial
@@ -61,99 +53,38 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
     */
 
    var IconButton = WSButton.extend([], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
-      _template: template,
-      _controlName: 'SBIS3.CONTROLS.IconButton',
-      _useNativeAsMain: true,
-      iWantVDOM: false,
-      _doNotSetDirty: true,
-
-      constructor: function(cfg) {
-         cfg.tooltip = cfg.tooltip || cfg.caption;
-         IconButton.superclass.constructor.call(this, cfg);
+      $protected: {
+         _options: {
+         }
       },
 
-      /*TODO: Удалить при переходе на VDOM*/
-      _onMouseClick: function(e) {
-         if (this._isTouchEnded) {
-            this._isTouchEnded = false;
-            /**
-             * Если клик обработали на touchend - надо его стопнуть
-             */
-            if (e && e.stopImmediatePropagation) {
-               // если не остановить, будет долетать до области, а у нее обработчик на клик - onBringToFront. фокус будет улетать не туда
-               e.stopImmediatePropagation();
+      _modifyOptions: function () {
+         var
+             options = IconButton.superclass._modifyOptions.apply(this, arguments),
+             iconClass = options._iconClass;
+
+         options.className += ' controls-IconButton';
+
+         if (iconClass) {
+            if (((iconClass.indexOf('icon-error') >= 0) || (iconClass.indexOf('icon-done') >= 0))){
+               if (iconClass.indexOf('icon-error') >= 0) {
+                  options.className += ' controls-IconButton__errorBorder';
+               }
+               else {
+                  options.className += ' controls-IconButton__doneBorder';
+               }
             }
-            return;
          }
-         this._isWaitingClick = false;
-         if (!this.isEnabled()) {
-            return;
-         }
-         
-         //Временная поддержка clickThrottle в кнопке, в VDom'e это уже будет зашито
-         if (!this._options.clickThrottle || (this._options.clickThrottle && (e.originalEvent.detail <= 1 || cConstants.browser.isIE))) {
-            this._onClickHandler(e);
-         }
+         return options;
       },
 
-      _containerReady:function(container){
-         if (window) {
-            container.on('click', this._onMouseClick.bind(this));
-            var self = this;
-
-            container.keydown(function(e) {
-               var result = self._notify('onKeyPressed', e);
-               if (e.which == cConstants.key.enter && result !== false ) {
-                  self._onClickHandler(e);
-               }
-            });
-
-            // todo временное решение. нужно звать stopPropagation для всех компонентов, как это было раньше
-            // останавливаю всплытие, как это было раньше в Control.module.js, сейчас это ломает старую логику.
-            // например, при нажатии на кнопку в datepicker-е фокусируется его текстовое поле
-            container.on("focusin", function (e) {
-               e.stopPropagation();
-            });
-
-            container.on("touchstart", function (e) {
-               if (self.isEnabled()) {
-                  self._container.addClass('controls-Click__active');
-                  self._onTouchStart(e);
-               }
-            });
-
-            container.on("touchmove", function (e) {
-               self._onTouchMove(e);
-            });
-
-            container.on("touchend", function (e) {
-               self._onTouchEnd(e);
-            });
-
-            container.on("mousedown", function (e) {
-               if (e.which == 1 && self.isEnabled()) {
-                  self._container.addClass('controls-Click__active');
-               }
-            });
-
-            container.on("mouseenter", function (e) {
-               self._showExtendedTooltipCompatible();
-               //return false;
-            });
-
-            container.on("mouseleave", function (e) {
-               if(self.isActive()) {
-                  self._hideExtendedTooltipCompatible();
-               }
-               //return false;
-            });
-         }
+      $constructor: function () {
          /*TODO оставляем добавку класса через jquery
           * чтобы избавиться - надо убрать зависимость от icons.css
           * в котором прописаны поведение и цвета для иконок по ховеру*/
-         var className = (typeof(container.get)==="function") && container.get(0).className;
+         var className = this._container.get(0).className;
          if (className && className.indexOf('controls-IconButton__round-border') >= 0) {
-            container.removeClass('action-hover');
+            this._container.removeClass('action-hover');
          }
       }
    });
