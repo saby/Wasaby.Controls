@@ -31,6 +31,7 @@ define([
 
       var virtualScroll = new VirtualScroll({
          maxRows: 75,
+         rowHeight: 25,
          listModel: prepareListViewModel(),
          displayCount: 500
       });

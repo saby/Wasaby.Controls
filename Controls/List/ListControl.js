@@ -428,6 +428,7 @@ define('js!Controls/List/ListControl', [
             this._virtualScroll = new VirtualScroll({
                maxRows: 75,
                listModel: this._listModel,
+               rowHeight: 25,
                displayCount: 0//this._listModel._itemsModel._display.getCount()
             });
          },
