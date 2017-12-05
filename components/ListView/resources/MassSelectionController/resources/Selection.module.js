@@ -65,7 +65,8 @@ define('js!SBIS3.CONTROLS.Selection', [
       getSelection: function() {
          return {
             marked: this._options.markedAll ? [] : this._options.selectedKeys,
-            excluded: this._options.markedAll ? this._options.excludedKeys : []
+            excluded: this._options.markedAll ? this._options.excludedKeys : [],
+            markedAll: this._options.markedAll
          }
       },
 
