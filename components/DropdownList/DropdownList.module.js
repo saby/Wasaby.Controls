@@ -952,7 +952,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (this._options.emptyValue || !items) {
                return null;
             }
-            return this._isEnumTypeData() ? items.get() : items.at(0).getId();
+            return this._isEnumTypeData() ? items.get() : (items.at(0) && items.at(0).getId());
          },
          _isDefaultIdSelected: function() {
            return this.getSelectedKeys()[0] == this.getDefaultId();
