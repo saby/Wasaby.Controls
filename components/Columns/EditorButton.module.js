@@ -31,23 +31,16 @@ define('js!SBIS3.CONTROLS.Columns.EditorButton',
             _button: null
          },
 
-         $constructor: function () {
-            this._publish('onActivated');
-         },
-
          init: function () {
             EditorButton.superclass.init.apply(this, arguments);
             this._presetDropdown = this._options.usePresets ? this.getChildControlByName('controls-Columns-EditorButton__presetDropdown') : null;
             this._button = this.getChildControlByName('controls-Columns-EditorButton__button');
 
+            var handler = this.sendCommand.bind(this, 'showColumnsEditor', null, true);
             if (this._presetDropdown) {
-               this.subscribeTo(this._presetDropdown, 'onChange', function () {
-                  this._notify('onActivated');
-               }.bind(this));
+               this.subscribeTo(this._presetDropdown, 'onChange', handler);
             }
-            this.subscribeTo(this._button, 'onActivated', function () {
-               this._notify('onActivated');
-            }.bind(this));
+            this.subscribeTo(this._button, 'onActivated', handler);
          }
       });
 

@@ -99,7 +99,6 @@ define('js!SBIS3.CONTROLS.Browser', [
          _filterButton: null,
          _fastDataFilter: null,
          _columnsController: null,
-         _columnsEditorButton: null,
          _columnsEditor: null,
          _hierMode : false,
          _componentBinder : null,
@@ -280,6 +279,10 @@ define('js!SBIS3.CONTROLS.Browser', [
          this._bindView();
 
          CommandDispatcher.declareCommand(this, 'setColumnsConfig', this.setColumnsConfig);//TODO: Убать после того, как columnsConfig будет перенесон из SBIS3.CATALOG.Browsers.CatalogGridView в SBIS3.CATALOG.Browsers.Catalog
+         /**
+          * Показать редактор колонок. Возвращает обещание, которое будет разрешено объектом конфигурации колонок
+          * @command showColumnsEditor
+          */
          CommandDispatcher.declareCommand(this, 'showColumnsEditor', this.showColumnsEditor);
       },
 
@@ -312,10 +315,11 @@ define('js!SBIS3.CONTROLS.Browser', [
        * Показать редактор колонок. Возвращает обещание, которое будет разрешено объектом конфигурации колонок
        * @public
        * @param {object} [columnsConfig] Объект конфигурации колонок (опционально, если нет, будет использован текущий columnsConfig браузера)
+       * @param {boolean} [applyToSelf] Применить результат редактирования к этому компоненту
        * @return {Deferred<object>}
        * @command showColumnsEditor
        */
-      showColumnsEditor: function (columnsConfig) {
+      showColumnsEditor: function (columnsConfig, applyToSelf) {
          var options = columnsConfig || this._options.columnsConfig;
          if (!options) {
             return Deferred.fail('ColumnsConfig required');
@@ -323,19 +327,19 @@ define('js!SBIS3.CONTROLS.Browser', [
          var promise = new Deferred();
          require(['js!SBIS3.CONTROLS.Columns.Editor'], function (ColumnsEditor) {
             if (!this._columnsEditor) {
-               this._columnsEditor = new ColumnsEditor(this._columnsEditorButton ? {moveColumns:this._columnsEditorButton._options.moveColumns} : null);
+               var columnsEditorButton = this._getColumnsEditorButton();
+               this._columnsEditor = new ColumnsEditor(columnsEditorButton ? {moveColumns:columnsEditorButton._options.moveColumns} : null);
             }
             promise.dependOn(this._columnsEditor.open(options));
-         }.bind(this));
-         return promise;
-      },
-
-      _onColumnsEditorButton: function () {
-         this.showColumnsEditor().addCallback(function (columnsConfig) {
-            if (columnsConfig) {
-               this._changeColumns(columnsConfig.selectedColumns);
+            if (applyToSelf) {
+               promise.addCallback(function (columnsConfig) {
+                  if (columnsConfig) {
+                     this._changeColumns(columnsConfig.selectedColumns);
+                  }
+               }.bind(this))
             }
          }.bind(this));
+         return promise;
       },
 
       _changeColumns: function (columns) {
@@ -392,9 +396,6 @@ define('js!SBIS3.CONTROLS.Browser', [
          if (this._columnsController) {
             this._columnsController.destroy();
          }
-         if (this._columnsEditorButton) {
-            this.unsubscribeFrom(this._columnsEditorButton, 'onActivate', this._onColumnsEditorButtonHandler);
-         }
          if (this._backButton) {
             this._backButton.unsubscribe('onArrowActivated', this._folderEditHandler);
          }
@@ -415,8 +416,6 @@ define('js!SBIS3.CONTROLS.Browser', [
          if (this._options.columnsConfig) {
             this._initColumnsController();
          }
-
-         this._attachColumnsEditorButton();
 
          this._hierMode = checkViewType(this._view);
 
@@ -493,19 +492,6 @@ define('js!SBIS3.CONTROLS.Browser', [
          }
          else {
             this.subscribe('onInit', this._onInitBindingsHandler);
-         }
-      },
-
-      /**
-       * Подключить кнопку редактора колонок
-       * @protected
-       */
-      _attachColumnsEditorButton: function () {
-         this._columnsEditorButton = this._getColumnsEditorButton();
-         if (this._columnsEditorButton) {
-            this._onColumnsEditorButtonHandler = this._onColumnsEditorButton.bind(this);
-            this.subscribeTo(this._columnsEditorButton, 'onActivated', this._onColumnsEditorButtonHandler);
-            this._columnsEditor = null;
          }
       },
 
