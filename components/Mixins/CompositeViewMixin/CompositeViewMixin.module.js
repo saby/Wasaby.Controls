@@ -12,8 +12,9 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/InvisibleItemsTemplate',
    'Core/core-merge',
    'Core/core-instance',
+   'Core/CommandDispatcher',
    'js!SBIS3.CONTROLS.Link'
-], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge, cInstance) {
+], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge, cInstance, CommandDispatcher) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
@@ -237,9 +238,10 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
 
          this._calculateTileHandler = this._calculateTile.bind(this);
          this.subscribe('onDrawItems', this._calculateTileHandler);
-         //TODO:Нужен какой то общий канал для ресайза окна
-         $(window).bind('resize', this._calculateTileHandler);
-
+         
+         CommandDispatcher.declareCommand(this, 'resizeYourself', this._calculateTileHandler);
+         this.subscribe('onAfterVisibilityChange', this._calculateTileHandler);
+         
          if (this._options.tileTemplate) {
             IoC.resolve('ILogger').log('CompositeView', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан tileTemplate');
          }
