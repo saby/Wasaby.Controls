@@ -1,4 +1,4 @@
-define(['js!SBIS3.CONTROLS.DateBox', 'js!SBIS3.CONTROLS.ControlsValidators',], function (DateBox, ControlsValidators) {
+define(['Core/constants', 'js!SBIS3.CONTROLS.DateBox', 'js!SBIS3.CONTROLS.ControlsValidators',], function (constants, DateBox, ControlsValidators) {
    'use strict';
 
    let requiredValidator = [{validator: ControlsValidators.required}],
@@ -164,6 +164,55 @@ define(['js!SBIS3.CONTROLS.DateBox', 'js!SBIS3.CONTROLS.ControlsValidators',], f
             assert.strictEqual(this.testControl.getDate(), date);
             assert.strictEqual(this.testControl.getText(), text);
             sandbox.restore();
+         });
+
+         let dateMasks = ['DD.MM.YYYY', 'DD.MM.YY', 'DD.MM', 'YYYY-MM-DD', 'YY-MM-DD', 'DD.MM.YYYY HH:II:SS.UUU',
+               'DD.MM.YYYY HH:II:SS', 'DD.MM.YYYY HH:II', 'DD.MM.YY HH:II:SS.UUU', 'DD.MM.YY HH:II:SS',
+               'DD.MM.YY HH:II', 'DD.MM HH:II:SS.UUU', 'DD.MM HH:II:SS', 'DD.MM HH:II', 'YYYY-MM-DD HH:II:SS.UUU',
+               'YYYY-MM-DD HH:II:SS', 'YYYY-MM-DD HH:II', 'YY-MM-DD HH:II:SS.UUU', 'YY-MM-DD HH:II:SS', 'YY-MM-DD HH:II'],
+         timeMasks = ['HH:II:SS.UUU', 'HH:II:SS', 'HH:II'];
+
+         describe('+ key click', function () {
+            dateMasks.forEach(function (mask) {
+               it(`should increase date if mask = ${mask}`, function () {
+                  let date = 1;
+                  this.testControl._options.mask = mask;
+                  this.testControl._options.date = new Date(2017, 0, date);
+                  this.testControl._keyDownBind({which: constants.key.plus, preventDefault: function () {}});
+                  assert.equal(this.testControl.getDate().toSQL(), (new Date(2017, 0, date + 1)).toSQL());
+               });
+            });
+
+            timeMasks.forEach(function (mask) {
+               it(`should not increase date if mask = ${mask}`, function () {
+                  let date = 1;
+                  this.testControl._options.mask = mask;
+                  this.testControl._options.date = new Date(2017, 0, date);
+                  this.testControl._keyDownBind({which: constants.key.plus, preventDefault: function () {}});
+                  assert.equal(this.testControl.getDate().toSQL(), (new Date(2017, 0, date)).toSQL());
+               });
+            });
+         });
+         describe('- key click', function () {
+            dateMasks.forEach(function (mask) {
+               it(`should decrease date if mask = ${mask}`, function () {
+                  let date = 1;
+                  this.testControl._options.mask = mask;
+                  this.testControl._options.date = new Date(2017, 0, date);
+                  this.testControl._keyDownBind({which: constants.key.minus, preventDefault: function () {}});
+                  assert.equal(this.testControl.getDate().toSQL(), (new Date(2017, 0, date - 1)).toSQL());
+               });
+            });
+
+            timeMasks.forEach(function (mask) {
+               it(`should not decrease date if mask = ${mask}`, function () {
+                  let date = 1;
+                  this.testControl._options.mask = mask;
+                  this.testControl._options.date = new Date(2017, 0, date);
+                  this.testControl._keyDownBind({which: constants.key.minus, preventDefault: function () {}});
+                  assert.equal(this.testControl.getDate().toSQL(), (new Date(2017, 0, date)).toSQL());
+               });
+            });
          });
       });
 
