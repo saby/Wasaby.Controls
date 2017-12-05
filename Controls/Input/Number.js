@@ -18,6 +18,59 @@ define('js!Controls/Input/Number', [
       splitValue: null,
 
       /**
+       * Валидирует значение splitValue
+       * @param onlyPositive
+       * @param integersLength
+       * @param precision
+       * @returns {boolean}
+       */
+      validate: function(onlyPositive, integersLength, precision) {
+         var
+            clearVal = _private.getClearValue();
+
+         if (
+            !this.validators.isNumber(clearVal) ||
+            typeof onlyPositive !== 'undefined' && !this.validators.onlyPositive(clearVal) ||
+            typeof integersLength !== 'undefined' && !this.validators.maxIntegersLength(clearVal, integersLength) ||
+            typeof precision !== 'undefined' && !this.validators.maxDecimalsLength(clearVal, precision)
+         ) {
+            return false;
+         }
+
+         return true;
+      },
+
+      //Набор валидаторов для числа
+      validators: {
+         //Проверяет что строка является числом и не содержит недопустимых символов
+         isNumber: function(valueToValidate) {
+            return valueToValidate.match(/^\-?\d*(\.\d*)?$/);
+         },
+         //Только положительные значения
+         onlyPositive: function(valueToValidate) {
+            return valueToValidate[0] !== '-';
+         },
+         //Ограничение максимальной длины целой части
+         maxIntegersLength: function(valueToValidate, maxLength) {
+            var
+               integers = valueToValidate.split('.')[0].replace('-', '');
+            return !maxLength || integers.length <= maxLength;
+         },
+         //Ограничение максимальной длины дробной части
+         maxDecimalsLength: function(valueToValidate, maxLength) {
+            var
+               decimals = valueToValidate.split('.')[1] || '';
+
+               //Если дробная часть запрещена, то нельзя давать ввести точку
+               if (maxLength === 0) {
+                  return !~valueToValidate.indexOf('.');
+               }
+
+            return !maxLength || decimals.length <= maxLength;
+         }
+      },
+
+      /**
        * Возвращает значение инпута без разделительных пробелов
        * @returns {String}
        */
@@ -68,7 +121,6 @@ define('js!Controls/Input/Number', [
        */
       prepareData: function (splitValue) {
          var
-            regExp = _private.getRegexp(this._options.onlyPositive, this._options.integersLength, this._options.precision),
             shift = 0;
 
          _private.splitValue = splitValue;
@@ -82,14 +134,14 @@ define('js!Controls/Input/Number', [
          //Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
          splitValue.insert = splitValue.insert.toLowerCase().replace(/,|б|ю/, '.');
 
+         //Если в начале строки ввода точка, а до неё ничего нет, то предполагаем что хотят видеть '0.'
+         if (splitValue.insert[0] === '.' && !splitValue.before) {
+            splitValue.before = '0';
+         }
+
          //Если валидация не прошла, то не даем ничего ввести
-         if (!regExp.test(_private.getClearValue())) {
+         if (!_private.validate(this._options.onlyPositive, this._options.integersLength, this._options.precision)) {
             splitValue.insert = '';
-         } else {
-            //Если в начале строки ввода точка, а до неё ничего нет, то предполагаем что хотят видеть '0.'
-            if (splitValue.insert[0] === '.' && !splitValue.before) {
-               splitValue.before = '0';
-            }
          }
 
          //Запишет значение в input и поставит курсор в указанное место
@@ -97,42 +149,6 @@ define('js!Controls/Input/Number', [
             value: _private.getValueWithDelimiters(),
             position: _private.getCursorPosition(shift)
          };
-      },
-
-      /**
-       * Генерирует регулярное выражение в зависимости от переданных опций
-       * @param onlyPositive Только положительные значения
-       * @param integersLength Максимальная длина целой части
-       * @param precision Максимальная длина дробной части
-       * @returns {RegExp}
-       */
-      getRegexp: function (onlyPositive, integersLength, precision) {
-         var
-            regExpString = '^';
-
-         //Разрешён ли минус в начале
-         if (!onlyPositive) {
-            regExpString += '\\-?';
-         }
-
-         //Ограничение длины целой части
-         if (integersLength) {
-            regExpString += '\\d{0,' + integersLength + '}';
-         } else {
-            regExpString += '\\d*';
-         }
-
-         //Ограничение дробной части
-         //По умолчанию можно вводить любое количество
-         if (typeof precision === 'undefined') {
-            regExpString += '(\\.\\d*)?';
-         } else if (precision !== 0) {
-            regExpString += '(\\.\\d{0,' + precision + '})?';
-         }
-
-         regExpString += '$';
-
-         return new RegExp(regExpString);
       }
    };
 
