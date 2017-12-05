@@ -58,12 +58,30 @@ define('js!SBIS3.CONTROLS.IconButton', [ 'js!WSControls/Buttons/Button', 'css!SB
          }
       },
 
+      setIcon: function(icon) {
+         if (icon) {
+            if (((icon.indexOf('icon-error') >= 0) || (icon.indexOf('icon-done') >= 0))){
+               if (icon.indexOf('icon-error') >= 0) {
+                  this.getContainer().removeClass('controls-IconButton__doneBorder').addClass('controls-IconButton__errorBorder');
+               }
+               else {
+                  this.getContainer().addClass('controls-IconButton__doneBorder').removeClass('controls-IconButton__errorBorder');
+               }
+            } else {
+               this.getContainer().removeClass('controls-IconButton__doneBorder').removeClass('controls-IconButton__errorBorder');
+            }
+         } else {
+            this.getContainer().removeClass('controls-IconButton__doneBorder').removeClass('controls-IconButton__errorBorder');
+         }
+      },
+
       _modifyOptions: function () {
          var
              options = IconButton.superclass._modifyOptions.apply(this, arguments),
              iconClass = options._iconClass;
 
          options.className += ' controls-IconButton';
+
 
          if (iconClass) {
             if (((iconClass.indexOf('icon-error') >= 0) || (iconClass.indexOf('icon-done') >= 0))){
