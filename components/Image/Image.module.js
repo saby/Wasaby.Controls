@@ -383,6 +383,11 @@ define('js!SBIS3.CONTROLS.Image',
                      }.bind(this))
                   }
                }
+               //Если задан источник данных и изображение не загрузилось то перезагружаем его.
+               //Определяем битое изображение по https://stackoverflow.com/questions/92720/jquery-javascript-to-replace-broken-images
+               if (this.getDataSource() && (typeof this._image[0].naturalWidth === "undefined" || this._image[0].naturalWidth === 0 )) {
+                   this.reload();
+               }
             },
             /* ------------------------------------------------------------
                Блок публичных методов
