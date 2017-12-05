@@ -282,6 +282,7 @@ define('js!SBIS3.CONTROLS.Browser', [
          /**
           * Показать редактор колонок. Возвращает обещание, которое будет разрешено объектом конфигурации колонок
           * @command showColumnsEditor
+          * @see showColumnsEditor
           */
          CommandDispatcher.declareCommand(this, 'showColumnsEditor', this.showColumnsEditor);
       },
@@ -314,27 +315,30 @@ define('js!SBIS3.CONTROLS.Browser', [
       /**
        * Показать редактор колонок. Возвращает обещание, которое будет разрешено объектом конфигурации колонок
        * @public
-       * @param {object} [columnsConfig] Объект конфигурации колонок (опционально, если нет, будет использован текущий columnsConfig браузера)
-       * @param {boolean} [applyToSelf] Применить результат редактирования к этому компоненту
+       * @param {object} [options] Опции открытия редактора колонок (опционально)
+       * @param {object} [options.columnsConfig] Объект конфигурации колонок (опционально, если нет, будет использован текущий columnsConfig браузера) (опционально)
+       * @param {object} [options.editorOptions] Опции редактора, например moveColumns и т.д. (опционально)
+       * @param {boolean} [options.applyToSelf] Применить результат редактирования к этому компоненту (опционально)
        * @return {Deferred<object>}
        * @command showColumnsEditor
        */
-      showColumnsEditor: function (columnsConfig, applyToSelf) {
-         var options = columnsConfig || this._options.columnsConfig;
-         if (!options) {
+      showColumnsEditor: function (options) {
+         var hasArgs = options && typeof options === 'object';
+         var columnsConfig = hasArgs && options.columnsConfig ? options.columnsConfig : this._options.columnsConfig;
+         if (!columnsConfig) {
             return Deferred.fail('ColumnsConfig required');
          }
          var promise = new Deferred();
          require(['js!SBIS3.CONTROLS.Columns.Editor'], function (ColumnsEditor) {
             if (!this._columnsEditor) {
-               var columnsEditorButton = this._getColumnsEditorButton();
-               this._columnsEditor = new ColumnsEditor(columnsEditorButton ? {moveColumns:columnsEditorButton._options.moveColumns} : null);
+               this._columnsEditor = new ColumnsEditor();
             }
-            promise.dependOn(this._columnsEditor.open(options));
-            if (applyToSelf) {
-               promise.addCallback(function (columnsConfig) {
-                  if (columnsConfig) {
-                     this._changeColumns(columnsConfig.selectedColumns);
+
+            promise.dependOn(this._columnsEditor.open(columnsConfig, options.editorOptions));
+            if (hasArgs && options.applyToSelf) {
+               promise.addCallback(function (resultColumnsConfig) {
+                  if (resultColumnsConfig) {
+                     this._changeColumns(resultColumnsConfig.selectedColumns);
                   }
                }.bind(this))
             }

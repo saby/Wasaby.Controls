@@ -55,32 +55,11 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
          //_dotTplFn: null,
          $protected: {
             _options: {
-               title: null,
                moveColumns: true,
                usePresets: false,// TODO: Включить после переделки дропдауна с пресетами
-
-               /**
-                * @cfg {string} Заголовок дропдауна
-                */
-               presetsTitle: null,//rk('Выберите пресет')
-               /**
-                * @cfg {SBIS3.CONTROLS.Columns.Preset.Unit[]} Список объектов статически задаваемых пресетов
-                */
-               staticPresets: null,
-               /**
-                * @cfg {string} Пространство имён для сохранения пользовательских пресетов
-                */
-               presetNamespace: 'default',// TODO: Убрать, не должно быть умолчания
-               /**
-                * @cfg {string|number} Идентификатор первоначально выбранного пресета в дропдауне
-                */
-               selectedPresetId: null,
-
                newPresetTitle: rk('Новый шаблон'),
                autoSaveFirstPreset: true,
-               useNumberedTitle: true,
-               groupTitleTpl: null,
-               groupTitles: null
+               useNumberedTitle: true
             },
             _result: null
          },
@@ -93,9 +72,23 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
           * Открыть редактор колонок. Возвращает обещание, которое будет разрешено новыми параметрами конфигурации колонок
           * @public
           * @param {object} columnsConfig Параметры конфигурации колонок
+          * @param {object} [editorOptions] Дополнительные опции редактора (опционально)
+          * @param {} [editorOptions.title]  (опционально)
+          * @param {} [editorOptions.groupTitleTpl]  (опционально)
+          * @param {} [editorOptions.groupTitles]  (опционально)
+          * @param {} [editorOptions.expandedGroups]  (опционально)
+          * @param {} [editorOptions.usePresets]  (опционально)
+          * @param {string} [editorOptions.presetsTitle] Заголовок дропдауна (опционально)
+          * @param {SBIS3.CONTROLS.Columns.Preset.Unit[]} [editorOptions.staticPresets] Список объектов статически задаваемых пресетов (опционально)
+          * @param {string} [editorOptions.presetNamespace] Пространство имён для сохранения пользовательских пресетов (опционально)
+          * @param {string|number} [editorOptions.selectedPresetId] Идентификатор первоначально выбранного пресета в дропдауне (опционально)
+          * @param {} [editorOptions.newPresetTitle]  (опционально)
+          * @param {} [editorOptions.autoSaveFirstPreset]  (опционально)
+          * @param {} [editorOptions.useNumberedTitle]  (опционально)
+          * @param {boolean} [editorOptions.moveColumns]  (опционально)
           * @return {Deferred<object>}
           */
-         open: function (columnsConfig) {
+         open: function (columnsConfig, editorOptions) {
             this._columnsConfig = columnsConfig;
             this._areaContainer = new FloatArea(coreMerge({
                opener: this,
@@ -104,16 +97,16 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
                //maxWidth: 388 + 2,
                isStack: true,
                autoCloseOnHide: true
-            }, this._getAreaOptions()));
+            }, this._getAreaOptions(editorOptions)));
             this._notify('onSizeChange');
             this.subscribeOnceTo(this._areaContainer, 'onAfterClose', this._notify.bind(this, 'onSizeChange'));
             this._notify('onOpen');
             return this._result = new Deferred();
          },
 
-         _getAreaOptions: function () {
-            var opts = this._options;
-            var cfg = this._columnsConfig;
+         _getAreaOptions: function (options) {
+            var defaults = this._options;
+            var columnsConfig = this._columnsConfig;
             return {
                //title: null,
                parent: this,
@@ -122,18 +115,22 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
                closeByExternalClick: true,
                closeButton: true,
                componentOptions: {
-                  title: opts.title,
-                  columns: cfg.columns,
-                  selectedColumns: cfg.selectedColumns,
-                  groupTitleTpl: cfg.groupTitleTpl || opts.groupTitleTpl || null,
-                  groupTitles: cfg.groupTitles || opts.groupTitles || null,
-                  expandedGroups: cfg.expandedGroups,
-                  usePresets: opts.usePresets,
-                  presetsTitle: cfg.presetsTitle,
-                  staticPresets: cfg.staticPresets,
-                  presetNamespace: cfg.presetNamespace || opts.presetNamespace,
-                  selectedPresetId: cfg.selectedPresetId,
-                  moveColumns: opts.moveColumns,
+                  title: options.title || null,
+                  columns: columnsConfig.columns,
+                  //TODO: Для булей так нельзя, сделать фунцию
+                  selectedColumns: columnsConfig.selectedColumns,
+                  groupTitleTpl: columnsConfig.groupTitleTpl || options.groupTitleTpl || null,
+                  groupTitles: columnsConfig.groupTitles || options.groupTitles || null,
+                  expandedGroups: columnsConfig.expandedGroups || options.expandedGroups || null,
+                  usePresets: columnsConfig.usePresets || options.usePresets || defaults.usePresets,
+                  presetsTitle: columnsConfig.presetsTitle || options.presetsTitle || null,
+                  staticPresets: columnsConfig.staticPresets || options.staticPresets || null,
+                  presetNamespace: columnsConfig.presetNamespace || options.presetNamespace,
+                  selectedPresetId: columnsConfig.selectedPresetId || options.selectedPresetId || null,
+                  newPresetTitle: columnsConfig.newPresetTitle || options.newPresetTitle || defaults.newPresetTitle,
+                  autoSaveFirstPreset: columnsConfig.autoSaveFirstPreset || options.autoSaveFirstPreset || defaults.autoSaveFirstPreset,
+                  useNumberedTitle: columnsConfig.useNumberedTitle || options.useNumberedTitle || defaults.useNumberedTitle,
+                  moveColumns: options.moveColumns || defaults.moveColumns,
                   handlers: {
                      onComplete: this._onAreaComplete.bind(this)
                   }

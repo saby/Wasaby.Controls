@@ -189,7 +189,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
        */
       _gatherColumnsInfo: function (data) {
          if (this._options.useColumnsEditor) {
-            var promise = this.sendCommand('showColumnsEditor');
+            var promise = this.sendCommand('showColumnsEditor'/*, {editorOptions:{...}}*/);
             if (promise && (!promise.isReady() || promise.isSuccessful())) {
                return promise.addCallback(function (columnsConfig) {
                   // Возвратить список объектов со свойствами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView)

@@ -21,11 +21,30 @@ define('js!SBIS3.CONTROLS.Columns.EditorButton',
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
-               usePresets: false,// TODO: Включить после переделки дропдауна с пресетами
+               /**
+                * @cfg {boolean} Показывать дропдаун с выбором пресета рядом с кнопкой
+                */
+               usePresets: true/*^^^*/,// TODO: Включить после переделки дропдауна с пресетами
+               /**
+                * @cfg {string} Заголовок дропдауна
+                */
                presetsTitle: null,
+               /**
+                * @cfg {SBIS3.CONTROLS.Columns.Preset.Unit[]} Список объектов статически задаваемых пресетов
+                */
                staticPresets: null,
+               /**
+                * @cfg {string} Пространство имён для сохранения пользовательских пресетов
+                */
                presetNamespace: 'default',// TODO: Убрать, не должно быть умолчания
-               selectedPresetId: null
+               /**
+                * @cfg {string|number} Идентификатор первоначально выбранного пресета в дропдауне
+                */
+               selectedPresetId: null,
+               /**
+                * @cfg {object} Дополнительные опции редактора колонок, например moveColumns и т.д.
+                */
+               editorOptions: null
             },
             _presetDropdown: null,
             _button: null
@@ -36,7 +55,7 @@ define('js!SBIS3.CONTROLS.Columns.EditorButton',
             this._presetDropdown = this._options.usePresets ? this.getChildControlByName('controls-Columns-EditorButton__presetDropdown') : null;
             this._button = this.getChildControlByName('controls-Columns-EditorButton__button');
 
-            var handler = this.sendCommand.bind(this, 'showColumnsEditor', null, true);
+            var handler = this.sendCommand.bind(this, 'showColumnsEditor', {editorOptions:this._options.editorOptions, applyToSelf:true});
             if (this._presetDropdown) {
                this.subscribeTo(this._presetDropdown, 'onChange', handler);
             }
