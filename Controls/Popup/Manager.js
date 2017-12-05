@@ -1,14 +1,12 @@
 define('js!Controls/Popup/Manager',
    [
-      'Core/Control',
       'Core/core-instance',
       'Core/helpers/random-helpers',
       'js!Controls/Popup/Manager/Container',
-      'WS.Data/Collection/List',
-      'Core/core-merge'
+      'WS.Data/Collection/List'
    ],
 
-   function (Control, CoreInstance, Random, Container, List, CoreMerge) {
+   function (CoreInstance, Random, Container, List) {
       'use strict';
 
       var _private = {
@@ -78,7 +76,6 @@ define('js!Controls/Popup/Manager',
        * @public
        * @category Popup
        * @singleton
-       * @extends Controls/Control
        */
       var Manager = {
          /**
