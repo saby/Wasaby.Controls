@@ -53,7 +53,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
    var TextArea = TextBox.extend( /** @lends SBIS3.CONTROLS.TextArea.prototype */ {
       $protected: {
-         _isMultiline: true,
          _inputField: null,
          _cachedW: null,
          _cachedH: null,
@@ -65,6 +64,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          _autoHeightInitialized: false,
          
          _options: {
+            _isMultiline: true,
             _paddingClass: ' controls-TextArea_padding',
             textFieldWrapper: inputField,
             wrapUrls: LinkWrap.wrapURLs,

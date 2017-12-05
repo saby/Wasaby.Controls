@@ -704,7 +704,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          DataGridView.superclass.init.call(this);
          this._updateHeadAfterInit();
          CommandDispatcher.declareCommand(this, 'ColumnSorting', this._setColumnSorting);
-         this._updateAjaxLoaderPosition();
       },
 
       _onDataLoad: function(list) {
