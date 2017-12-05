@@ -9,6 +9,46 @@ define(
 
       describe('WSControls.Input.Number', function() {
          describe('Restrictions check', function() {
+            //Проверим что нельзя вставить букву в целую часть
+            it('Only numbers in integers check', function () {
+               var
+                  inputResult;
+               inputResult = NumberTextBox._private.prepareData.call(
+                  {
+                     _options: {
+                     }
+                  },
+                  {
+                     before: '12',
+                     insert: 'a',
+                     after: '',
+                     delete: ''
+                  }
+               );
+               assert.equal(inputResult.value, '12');
+               assert.equal(inputResult.position, 2);
+            });
+
+            //Проверим что нельзя вставить букву в дробную часть
+            it('Only numbers in decimals check', function () {
+               var
+                  inputResult;
+               inputResult = NumberTextBox._private.prepareData.call(
+                  {
+                     _options: {
+                     }
+                  },
+                  {
+                     before: '12.3',
+                     insert: 'a',
+                     after: '',
+                     delete: ''
+                  }
+               );
+               assert.equal(inputResult.value, '12.3');
+               assert.equal(inputResult.position, 4);
+            });
+
             //Проверим что в начало стоки нельзя вставить минус при onlyPositive: true
             it('Only positive values check', function () {
                var
