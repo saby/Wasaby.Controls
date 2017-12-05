@@ -1,24 +1,24 @@
-define('js!Controls/Popup/Opener/Dialog',
+define('js!Controls/Popup/Opener/Notification',
    [
       'Core/Control',
       'js!Controls/Popup/interface/IOpener',
       'js!Controls/Popup/Manager',
-      'js!Controls/Popup/Opener/Dialog/Strategy',
+      'js!Controls/Popup/Opener/Notification/Strategy',
       'Core/core-merge',
       'js!Controls/Popup/Controller'
    ],
    function (Control, IOpener, Manager, Strategy, CoreMerge, Controller) {
+
       /**
        * Действие открытия окна
-       * @class Controls/Popup/Opener/Dialog
+       * @class Controls/Popup/Opener/Notification
        * @mixes Controls/Popup/interface/IOpener
        * @control
        * @public
        * @category Popup
-       * @extends Controls/Control
        */
-      var Dialog = Control.extend([IOpener], {
-         _controlName: 'Controls/Popup/Opener/Dialog',
+      var Notification = Control.extend([IOpener], {
+         _controlName: 'Controls/Popup/Opener/Notification',
 
          open: function (config, opener) {
             var
@@ -35,6 +35,6 @@ define('js!Controls/Popup/Opener/Dialog',
          }
       });
 
-      return Dialog;
+      return Notification;
    }
 );

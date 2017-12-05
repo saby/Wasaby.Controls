@@ -1,0 +1,15 @@
+<div class="ws-PopupContainer">
+    <ws:for data="index, item in _options._popupItems">
+        <div class="ws-Container__popup"
+             style="z-index: {{item.zIndex}};
+                left: {{item.position.left === undefined ? 'auto' : item.position.left + 'px'}};
+                right: {{item.position.right === undefined ? 'auto' : item.position.right + 'px'}};
+                top: {{item.position.top === undefined ? 'auto': item.position.top + 'px'}};
+                bottom: {{item.position.bottom === undefined ? 'auto': item.position.bottom + 'px'}}">
+            <ws:Controls.Popup.Manager.Popup __key="{{item.id}}"
+                    id="{{item.id}}"
+                    scope="{{item.popupOptions}}"
+            />
+        </div>
+    </ws:for>
+</div>

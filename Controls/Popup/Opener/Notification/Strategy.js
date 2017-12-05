@@ -1,5 +1,9 @@
-define('js!Controls/Popup/Opener/Notification/Strategy', [
-], function() {
+define('js!Controls/Popup/Opener/Notification/Strategy',
+   [
+      'Core/Abstract',
+      'js!Controls/Popup/interface/IStrategy'
+   ],
+   function (Abstract, IStrategy) {
 
    /**
     * Стратегия позиционирования нотификационного окна.
@@ -10,5 +14,16 @@ define('js!Controls/Popup/Opener/Notification/Strategy', [
     * @category Popup
     * @extends Controls/Control
     */
+      var Strategy = Abstract.extend([IStrategy], {
 
-});
+         getPosition: function (popup) {
+            return {
+               right: 16,
+               bottom: 16
+            };
+         }
+      });
+
+      return new Strategy();
+   }
+);
