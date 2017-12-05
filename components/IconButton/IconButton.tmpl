@@ -4,6 +4,7 @@
       newconfig="{{_options.__$config}}"
       class="controls-IconButton controls-ButtonBase{{!isVisible() ? ' ws-hidden'}}{{!isEnabled() ? ' ws-disabled':' ws-enabled'}}{{_options.icon && _options.icon.indexOf('icon-error') >= 0?' controls-IconButton__errorBorder'}}{{_options.icon && _options.icon.indexOf('icon-done') >= 0?' controls-IconButton__doneBorder'}}"
       title="{{_options.tooltip}}"
+      data-component="{{ _moduleName }}"
       disabled="{{!isEnabled() ? 'disabled'}}">
     <span class="controls-Button__wrapper">
         <ws:if data="{{!!_options.icon||!!_options._iconClass}}">
