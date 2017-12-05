@@ -33290,11 +33290,26 @@
                caretNodeBefore = findCaretNode(startBlock, false);
                caretNodeAfter = findCaretNode(endBlock, true);
 
-               if (!dom.isEmpty(endBlock)) {
+               // Тини принудительно пересаживает всех детей финального узла в стартовый независимо ни от чего и финальный узел удалялся.
+               // Теперь это будет происходить, только если оба узла не пусты. Удаляются и стартовый, и финальный узел, если они пусты
+               // https://online.sbis.ru/opendoc.html?guid=03646515-89d2-4b7d-8473-f84eaa53e32e
+               var _removeWhileEmpty = function (node) {
+                  for ( ; dom.isEmpty(node.parentNode); ) { node = node.parentNode; }
+                  node.parentNode.removeChild(node);
+               }
+               var isEmptyStart = dom.isEmpty(startBlock);
+               var isEmptyEnd = dom.isEmpty(endBlock);
+               if (isEmptyStart) {
+                  _removeWhileEmpty(startBlock);
+               }
+               if (!isEmptyStart && !isEmptyEnd) {
                   $(startBlock).append(endBlock.childNodes);
+                  isEmptyEnd = true;
                }
 
-               $(endBlock).remove();
+               if (isEmptyEnd) {
+                  _removeWhileEmpty(endBlock);
+               }
 
                if (caretNodeBefore) {
                   if (caretNodeBefore.nodeType == 1) {
@@ -33752,7 +33767,8 @@
                   var rng = sel.getRng();
                   e.clipboardData.setData('text/html', rng.startOffset === 0 && rng.commonAncestorContainer.nodeType === 3 && rng.endOffset === rng.commonAncestorContainer.nodeValue.length && !sel.dom.isBlock(sel.getNode())
                               ? sel.dom.getOuterHTML(sel.getNode()) : sel.getContent());
-                  e.clipboardData.setData('text/plain', sel.getContent({format:'text'}));
+                  var text = sel.getContent({format:'text'});
+                  e.clipboardData.setData('text/plain', navigator.userAgent.search(/\bwindows\b/i) !== -1 ? text.replace(/\n/gi, '\r\n') : text);
 
                   // Needed delay for https://code.google.com/p/chromium/issues/detail?id=363288#c3
                   // Nested delete/forwardDelete not allowed on execCommand("cut")
@@ -34715,7 +34731,9 @@
             editor.on('keydown', function (e) {
                var keyCode = e.keyCode;
 
-               if (!isDefaultPrevented(e) && (keyCode == DELETE || keyCode == BACKSPACE)) {
+               // При нажатии Shift+Delete нельзя просто удалить, нужно выполнить вставку в клипборд
+               // https://online.sbis.ru/opendoc.html?guid=a31eef66-cce3-4d5c-9917-7800c0fbaeca
+               if (!isDefaultPrevented(e) && ((keyCode == DELETE && !e.shiftKey) || keyCode == BACKSPACE)) {
                   if (isEverythingSelected(editor)) {
                      e.preventDefault();
                      editor.setContent('');
@@ -37748,12 +37766,18 @@
             }
 
             peekCaretPosition = direction == -1 ? caretWalker.prev(caretPosition) : caretWalker.next(caretPosition);
+            var newRng;
             if (beforeFn(peekCaretPosition)) {
                if (direction === -1) {
-                  return mergeTextBlocks(direction, caretPosition, peekCaretPosition);
+                  newRng = mergeTextBlocks(direction, caretPosition, peekCaretPosition);
                }
 
-               return mergeTextBlocks(direction, peekCaretPosition, caretPosition);
+               newRng = mergeTextBlocks(direction, peekCaretPosition, caretPosition);
+            }
+            // Используем новый рэнж только если в результате не пустой рэнж не сколлапсировал. И если он действительный
+            // https://online.sbis.ru/opendoc.html?guid=03b7e733-3ca8-4d24-9e51-e47b709ce5ee
+            if (newRng && !(!range.collapsed && newRng.collapsed) && newRng.commonAncestorContainer.parentNode) {
+               return newRng;
             }
          }
 

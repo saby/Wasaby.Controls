@@ -242,7 +242,7 @@ define('js!SBIS3.CONTROLS.Image',
                    * @cfg {Object} Устанавливает связанный источник данных - {@link WS.Data/Source/SbisService}.
                    * @remark
                    * Обязательная для конфигурации опция. Если опция не установлена, то контрол не будет отображён.
-                   * Для работы с изображениями (чтение и запись в БД) применются <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/logicworkapl/objects/blmethods/blfile/'>методы БЛ для работы с файлами</a>.
+                   * Для работы с изображениями (чтение и запись в БД) применются <a href='/doc/platform/developmentapl/workdata/logicworkapl/objects/blmethods/blfile/'>методы БЛ для работы с файлами</a>.
                    * @example
                    * Конфигурация источника через JS-код:
                    * <pre>
@@ -277,7 +277,7 @@ define('js!SBIS3.CONTROLS.Image',
                    * @cfg {Object} Устанавливает фильтр данных.
                    * @remark
                    * Как правило, опция применяется, чтобы установить значение параметров для методов источника данных (см. {@link dataSource}).
-                   * Например, метод чтения файла принимает аргумент: либо идентификатор записи, либо идентификатор файла, которые используются для получения файла изображения (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/logicworkapl/objects/blmethods/blfile/read/'>Прочитать. Read file method</a>.)
+                   * Например, метод чтения файла принимает аргумент: либо идентификатор записи, либо идентификатор файла, которые используются для получения файла изображения (см. <a href='/doc/platform/developmentapl/workdata/logicworkapl/objects/blmethods/blfile/read/'>Прочитать. Read file method</a>.)
                    * @example
                    * Для изображение установлено, что из контекста из поля"record/@Товар" будет получено значение параметра Идо, который используется для метода получения избражения.
                    * <pre>
@@ -382,9 +382,6 @@ define('js!SBIS3.CONTROLS.Image',
                         }.bind(this))
                      }.bind(this))
                   }
-               }
-               if (this.getDataSource()) {
-                  this.reload();
                }
             },
             /* ------------------------------------------------------------

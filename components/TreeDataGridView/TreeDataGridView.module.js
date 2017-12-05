@@ -102,14 +102,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    /**
     * Класс контрола "Иерархическое табличное представление".
     * <a href="http://axure.tensor.ru/standarts/v7/%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html">Спецификация</a>
-    * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Документация</a>.
+    * <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/">Документация</a>.
     *
     * @class SBIS3.CONTROLS.TreeDataGridView
     * @extends SBIS3.CONTROLS.DataGridView
     * @mixes SBIS3.CONTROLS.TreeMixin
     * @mixes SBIS3.CONTROLS.TreeViewMixin
     *
-    * @cssModifier controls-TreeDataGridView__hideExpandsOnHiddenNodes Скрывает треугольник рядом с записью типа "Скрытый узел" (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>). Для контрола SBIS3.CONTROLS.TreeCompositeView модификатор актуален только для режима отображения "Таблица" (см. {@link SBIS3.CONTROLS.CompositeViewMixin#viewMode viewMode}=table).
+    * @cssModifier controls-TreeDataGridView__hideExpandsOnHiddenNodes Скрывает треугольник рядом с записью типа "Скрытый узел" (см. <a href='/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>). Для контрола SBIS3.CONTROLS.TreeCompositeView модификатор актуален только для режима отображения "Таблица" (см. {@link SBIS3.CONTROLS.CompositeViewMixin#viewMode viewMode}=table).
     * @cssModifier controls-TreeDataGridView__withPhoto-S Устанавливает отступы с учетом расположения в верстке изображения, размера S.
     * @cssModifier controls-TreeDataGridView__withPhoto-M Устанавливает отступы с учетом расположения в верстке изображения, размера M.
     * @cssModifier controls-TreeDataGridView__withPhoto-L Устанавливает отступы с учетом расположения в верстке изображения, размера L.
@@ -167,11 +167,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              *    <li> false - стрелка не отображается;</li>
              *    <li> custom - стрелка показывается платформенным механизмом, но место расположения определяет прикладной программист, сделать это можно расположив "маркер" c классом js-controls-TreeView__editArrow;</li>
              * </ul>
-             * Папкой в контексте иерархического списка может быть запись типа "Узел" и "Скрытый узел". Подробнее о различиях между типами записей вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
+             * Папкой в контексте иерархического списка может быть запись типа "Узел" и "Скрытый узел". Подробнее о различиях между типами записей вы можете прочитать в разделе <a href='/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
              * <br/>
              * Кнопка отображается в виде иконки с классом icon-16 icon-View icon-primary (синяя двойная стрелочка). Изменение иконки не поддерживается.
              * <br/>
-             * При клике по стрелке происходит событие {@link onItemActivate}, в обработчике которого, как правило, устанавливают отрытие <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/'>диалога редактирования</a>.
+             * При клике по стрелке происходит событие {@link onItemActivate}, в обработчике которого, как правило, устанавливают отрытие <a href='/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/'>диалога редактирования</a>.
              * @example
              * Устанавливаем опцию:
              * <pre>
@@ -209,7 +209,24 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          CommandDispatcher.declareCommand(this, 'loadNode', this._folderLoad);
       },
       init: function(){
+         var
+            self = this;
          TreeDataGridView.superclass.init.call(this);
+         // Костыль для правильного отображения лесенки в режиме поиска:
+         // Назначаем собственный конвертер и в режиме поиска не строим лесенку для узлов, отображаемых в хлебных крошках.
+         // https://online.sbis.ru/opendoc.html?guid=c0cfbaf3-923b-46ea-a378-9f1ae36fa00a
+         // todo Чтобы убрать это - нужно перейти на SearchDisplay, что в рамках текущей реализации практически анреал задача.
+         this.once('onDrawItems', function() {
+            this._options._ladderInstance._columnNames.forEach(function(columnName) {
+               self._options._ladderInstance.setConverter(columnName, function (value, item) {
+                  if (self._isSearchMode() && item.get(self._options.nodeProperty)) {
+                     return;
+                  } else {
+                     return value;
+                  }
+               });
+            });
+         });
          if (this._options._serverRender) {
             this._createAllFolderFooters();
          }

@@ -296,7 +296,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * В обработчике события Вы можете изменить параметры, с которыми впоследствии будет выполнен запрос.
         * Конфигурацию источника данных устанавливают в опции {@link dataSource}.
         * Выполнение запроса можно инициировать методом {@link reload}.
-        * В <a href="https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/ItemsControlMixin/">описании миксина</a> приведена последовательность событий, происходящих при взаимодействии с источником данных компонента.
+        * В <a href="/docs/js/SBIS3/CONTROLS/ItemsControlMixin/">описании миксина</a> приведена последовательность событий, происходящих при взаимодействии с источником данных компонента.
         * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {Object} filters Параметры фильтрации. Они используются в качестве условия для отбора возвращаемых записей. Значение параметра определяется опцией {@link filter}.
         * @param {Array.<Object>} sorting Параметры сортировки записей, возвращаемых в результате выполнения запроса. Значение параметра  определяется опцией {@link sorting}.
@@ -597,7 +597,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @cfg {GroupBy} Устанавливает группировку элементов коллекции.
              * @remark file ItemsControlMixin-groupBy.md
              * @remark
-             * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/'>здесь</a>.
+             * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/'>здесь</a>.
              * @example
              * 1. Подключение шаблона группировки:
              * <pre>
@@ -2135,7 +2135,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @remark
        * Если нужно, чтобы стандартаная группировка для элемента не вызывалась - нужно обязательно переопределить (передать) все опции (field, method, template, render), иначе в группировку запишутся стандартные параметры.
        * Всем элементам группы добавляется css-класс "controls-GroupBy".
-       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
+       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
        * @param {GroupBy} group Параметры группировки.
        * @param {Boolean} redraw Произвести перерисовку списка после изменения параметров группировки.
        * @see groupBy
@@ -2167,7 +2167,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /**
        * Возвращает параметры группировки элементов коллекции.
        * @remark
-       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
+       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
        * @return {GroupBy}
        * @see groupBy
        * @see setGroupBy

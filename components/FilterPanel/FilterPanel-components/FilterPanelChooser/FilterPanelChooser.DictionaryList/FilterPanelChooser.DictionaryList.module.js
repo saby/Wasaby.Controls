@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
                 /**
                  * @typedef {Object} dictionaryOptions
                  * @property {String} template Компонент, на основе которого производится построение справочника.
-                 * @property {String} selectionType Режим выбора записей. О типах записей вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>. Возможные значения:
+                 * @property {String} selectionType Режим выбора записей. О типах записей вы можете прочитать в разделе <a href='/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>. Возможные значения:
                  * <ul>
                  *     <li>node - выбираются только записи типа "Узел" и "Скрытый узел".</li>
                  *     <li>leaf - выбираются только записи типа "Лист".</li>

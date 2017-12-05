@@ -163,12 +163,13 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
              */
             numericValue: null
          },
-         _inputMirror: null
+         _inputMirror: null,
+         _dotOverstep: true
       },
 
       _addOptionsFromClass: function(opts, attrToMerge) {
          var
-            classes = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || '',
+            classes = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || opts.className || '',
             params = [
                { class: 'controls-NumberTextBox__text-align-right', optionName: 'textAlign', value: 'right', defaultValue: 'left' }
             ];
@@ -506,7 +507,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
                  e,
                  currentVal,
                  this._options.delimiters,
-                 this._options.decimals
+                 this._options.decimals,
+                 this._dotOverstep
              );
 
          this._setText(newState.value);

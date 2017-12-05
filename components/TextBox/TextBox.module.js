@@ -299,27 +299,31 @@ define('js!SBIS3.CONTROLS.TextBox', [
          var self = this;
          TextBox.superclass.init.apply(this, arguments);
 
-         if(this._options.informationIconColor) {
+         if (this._options.informationIconColor) {
             this._informationIcon = $('.controls-TextBox__informationIcon', this.getContainer());
-
-            this._informationIcon.on('mouseenter', function() {
-               self._notify('onInformationIconMouseEnter');
-            });
-            this._informationIcon.on('click', function(){
-               self._notify('onInformationIconActivated');
-            });
          }
+
+         this._container.on('mouseenter', function(e) {
+            if ($(e.target).hasClass('controls-TextBox__informationIcon')) {
+               self._notify('onInformationIconMouseEnter');
+            }
+         });
+         this._container.on('click', function(e) {
+            if ($(e.target).hasClass('controls-TextBox__informationIcon')) {
+               self._notify('onInformationIconActivated');
+            }
+         });
+
          if (this._options._needShowCompatiblePlaceholder(this._options)) {
             this._compatPlaceholder = this._container.find('.controls-TextBox__placeholder');
             this._initPlaceholderEvents(this._compatPlaceholder);
          }
          /* Надо проверить значение input'a, т.к. при дублировании вкладки там уже может быть что-то написано */
-         this._checkInputVal();
+         this._checkInputVal(true);
       },
 
       /**
        * Устанавливает цвет информационной иконки.
-       * @returns {String} Стандартный цвет иконки.
        * Цвета доступные для установки:
        * <ol>
        *    <li>done</li>
@@ -332,11 +336,30 @@ define('js!SBIS3.CONTROLS.TextBox', [
        * @see informationIconColor
        */
       setInformationIconColor: function (color) {
-         var informationIconContainer = this._informationIcon.getContainer();
+         if (!color) {
+            this._destroyInformationIcon();
+            return;
+         }
 
-          informationIconContainer.removeClass('icon-' + this._options.informationIconColor);
-          this._options.informationIconColor = color;
-          informationIconContainer.addClass('icon-' + color);
+         if (!this._informationIcon) {
+            this._createInformationIcon(color);
+         }
+
+         this._informationIcon.removeClass('controls-TextBox__informationIcon-' + this._options.informationIconColor);
+         this._options.informationIconColor = color;
+         this._informationIcon.addClass('controls-TextBox__informationIcon-' + color);
+      },
+
+      _createInformationIcon: function(color) {
+         this._informationIcon = $('<div class="controls-TextBox__informationIcon controls-TextBox__informationIcon-' + color + '"></div>');
+         this.getContainer().append(this._informationIcon);
+      },
+
+      _destroyInformationIcon: function() {
+         if (this._informationIcon) {
+            this._informationIcon.remove();
+            this._informationIcon = undefined;
+         }
       },
 
       _keyboardDispatcher: function(event){
@@ -361,10 +384,11 @@ define('js!SBIS3.CONTROLS.TextBox', [
          return constants.compatibility.placeholder;
       },
 
-      _checkInputVal: function() {
+      _checkInputVal: function(fromInit) {
          var text = this._getInputValue();
 
-         if (this._options.trim) {
+         //При ините не должен вызываться trim, поэтому будем проверять по этому флагу попали в checkInputVal из init или нет
+         if (this._options.trim && !fromInit) {
             text = text.trim();
          }
          //Установим текст только если значения различны и оба не пустые
@@ -582,11 +606,11 @@ define('js!SBIS3.CONTROLS.TextBox', [
        },
 
       _focusOutHandler: function(event, isDestroyed, focusedControl) {
-         TextBox.superclass._focusOutHandler.apply(this, arguments);
-
          if(!isDestroyed  && (!focusedControl || !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) ) {
             this._checkInputVal();
          }
+
+         TextBox.superclass._focusOutHandler.apply(this, arguments);
       },
       
       _inputClickHandler: function (e) {
@@ -648,10 +672,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._inputField.off('*');
          this._inputField = undefined;
          this._destroyCompatPlaceholder();
-         if(this._informationIcon) {
-            this._informationIcon.getContainer().off('*');
-            this._informationIcon = undefined;
-         }
+         this._destroyInformationIcon();
          TextBox.superclass.destroy.apply(this, arguments);
       }
    });

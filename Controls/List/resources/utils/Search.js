@@ -2,10 +2,9 @@ define('js!Controls/List/resources/utils/Search',
    [
       'Core/core-extend',
       'Core/Deferred',
-      'WS.Data/Query/Query',
       'js!Controls/List/resources/utils/DataSourceUtil'
    ],
-   function (extend, Deferred, Query, DataSourceUtil) {
+   function (extend, Deferred, DataSourceUtil) {
       
       'use strict';
       

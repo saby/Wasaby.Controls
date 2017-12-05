@@ -25,298 +25,412 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
      * @category Buttons
      */
 
-    function _getHistoryDataSource() {
-        if(this._options.historyId) {
-            this._historyDataSource = new SbisService({
-                endpoint: {
-                    address: '/input-history/service/',
-                    contract: 'InputHistory'
+    var _private = {
+        /**
+         * Добавляет элемент в сервис истории
+         * @param id - идентификатор элемента
+         * @private
+         */
+        addToHistory: function (self, id) {
+            _private.getHistoryDataSource(this).call(typeof id === 'string' ? 'Add' : 'AddInt', {
+                history_id: self._options.historyId,
+                id: id,
+                history_context: null
+            });
+        },
+
+        /**
+         * Устанавливает пин элемента
+         * @param id - идентификатор элемента
+         * @private
+         */
+        setPin: function (self, id, pin) {
+            _private.getHistoryDataSource(self).call(typeof id === 'string' ? 'SetPin' : 'SetIntPin', {
+                history_id: self._options.historyId,
+                id: id,
+                history_context: null,
+                pin: pin
+            });
+        },
+
+
+        getOriginId: function (id) {
+            id = (id + '').replace('pinned-', '').replace('recent-', '').replace('frequent-', '');
+            return id;
+        },
+
+        getHistoryDataSource: function (self) {
+            if (!self._historyDataSource) {
+                self._historyDataSource = new SbisService({
+                    endpoint: {
+                        address: '/input-history/service/',
+                        contract: 'InputHistory'
+                    }
+                });
+            }
+            return self._historyDataSource;
+        },
+
+        getUnionList: function (self) {
+            return _private.getHistoryDataSource(self).call('UnionList', {
+                params: {
+                    blEndpoint: {
+                        address: '/service/',
+                        contract: self._options.blParams.blEndpoint.contract
+                    },
+                    binding: {
+                        query: self._options.blParams.binding.query,
+                        read: self._options.blParams.binding.read
+                    },
+                    historyId: self._options.historyId,
+                    displayField: self._options.blParams.displayField,
+                    pinned: {
+                        count: self._options.pinned ? 10 : 0
+                    },
+                    frequent: {
+                        count: self._options.frequent ? 7 : 0
+                    },
+                    recent: {
+                        count: 10
+                    }
                 }
             });
-        }
-    }
+        },
 
-    function _getOriginId (id) {
-        id = (id + '').replace('pinned-', '').replace('recent-', '').replace('frequent-', '');
-        return id;
-    }
+        initRecordSet: function (self, format) {
+            self._pinned = _private.getEmptyHistoryRecord(format);
+            self._recent = _private.getEmptyHistoryRecord(format);
+            self._frequent = _private.getEmptyHistoryRecord(format);
+        },
 
-    /**
-     * Добавляет элемент в сервис истории
-     * @param id - идентификатор элемента
-     * @private
-     */
-    function _addToHistory (id) {
-        this._historyDataSource.call(typeof id === 'string' ? 'Add' : 'AddInt', {
-            history_id: this._options.historyId,
-            id: id,
-            history_context: null
-        });
-    }
-    /**
-     * Устанавливает пин элемента
-     * @param id - идентификатор элемента
-     * @private
-     */
-    function _setPin (id, pin) {
-        this._historyDataSource.call(typeof id === 'string' ? 'SetPin' : 'SetIntPin', {
-            history_id: this._options.historyId,
-            id: id,
-            history_context: null,
-            pin: pin
-        });
-    }
+        prepareRecordSet: function (self, record, idPrefix, history) {
+            _private.addProperty(self, record, 'visible', 'boolean', true);
+            _private.addProperty(self, record, 'pinned', 'boolean', false);
+            _private.addProperty(self, record, 'historyItem', 'boolean', history);
+            _private.addProperty(self, record, 'historyId', 'string', 'id');
+            _private.addProperty(self, record, 'groupSeparator', 'boolean', false);
+            if (self._options.additionalProperty === 'additional') {
+                _private.addProperty(self, record, 'additional', 'boolean', false);
+            }
 
-
-    function _prepareRecordSet (record, idPrefix, history){
-        _addProperty.call(this, record, 'visible', 'boolean', true);
-        _addProperty.call(this, record, 'pinned', 'boolean', false);
-        _addProperty.call(this, record, 'historyItem', 'boolean', history);
-        _addProperty.call(this, record, 'historyId', 'string', 'id');
-        _addProperty.call(this, record, 'lastHistoryItem', 'boolean', false);
-
-        record.forEach(function(item){
-            item.set('historyId', idPrefix + item.getId());
-        });
-
-        record.setIdProperty('historyId');
-    }
-
-    function _addProperty (record, name, type, defaultValue){
-        if(record.getFormat().getFieldIndex(name) === -1) {
-            record.addField({
-                name: name,
-                type: type,
-                defaultValue: defaultValue
+            record.forEach(function (item) {
+                item.set('historyId', idPrefix + item.getId());
             });
-        }
-    }
 
-    function _getUnionList() {
-        return this._historyDataSource.call('UnionList', {
-            params: {
-                blEndpoint: {
-                    address: '/service/',
-                    contract: this._options.blParams.blEndpoint.contract
-                },
-                binding: {
-                    query: this._options.blParams.binding.query,
-                    read: this._options.blParams.binding.read
-                },
-                historyId: this._options.historyId,
-                displayField: this._options.blParams.displayField,
-                pinned: {
-                    count: this._options.pinned ? 10 : 0
-                },
-                frequent: {
-                    count: this._options.frequent ? 7 : 0
-                },
-                recent: {
-                    count: 10
+            record.setIdProperty('historyId');
+        },
+
+        prepareHistoryData: function (self) {
+            _private.prepareRecordSet(self, self._oldItems, '', false);
+            _private.prepareRecordSet(self, self._pinned, 'pinned-', true);
+            _private.prepareRecordSet(self, self._recent, 'recent-', true);
+            _private.prepareRecordSet(self, self._frequent, 'frequent-', true);
+        },
+
+        addProperty: function (self, record, name, type, defaultValue) {
+            if (record.getFormat().getFieldIndex(name) === -1) {
+                record.addField({
+                    name: name,
+                    type: type,
+                    defaultValue: defaultValue
+                });
+            }
+        },
+
+        getEmptyHistoryRecord: function (format) {
+            return new RecordSet({
+                format: format,
+                adapter: new SbisAdapter()
+            });
+        },
+
+        filterFrequent: function (self) {
+            var myself = this,
+                id;
+
+            // из популярных убираем запиненые
+            return Chain(self._frequent).filter(function (item) {
+                id = myself.getOriginId(item.getId());
+                return !self._pinned.getRecordById('pinned-' + id);
+            }).value();
+        },
+
+        filterRecent: function (self) {
+            var myself = this,
+                id;
+
+            // убираем из последних выбранных запиненые и популярные пункты
+            return Chain(self._recent).filter(function (item) {
+                id = myself.getOriginId(item.getId());
+                return !(self._pinned.getRecordById('pinned-' + id) || self._frequent.getRecordById('frequent-' + id));
+            }).value();
+        },
+
+        fillPinned: function (self, historyItems) {
+            var myself = this,
+                id, oldElement;
+
+            self._pinned.forEach(function (item) {
+                id = myself.getOriginId(item.getId());
+                oldElement = self._oldItems.getRecordById(id);
+
+                if (oldElement && !oldElement.get(self._options.parentProperty) && !self._subContainers[oldElement.getId()]) {
+                    oldElement.set('visible', false);
+                }
+
+                if (item.get(self._options.parentProperty)) {
+                    item.set(self._options.parentProperty, null);
+                }
+
+                item.set('pinned', true);
+                oldElement.set('pinned', true);
+                self._count++;
+            });
+
+            historyItems.append(self._pinned);
+        },
+
+        fillRecent: function (self, filteredRecent) {
+            var myself = this,
+                items = [],
+                i = 0,
+                id, oldElement, item, newItem;
+
+            while (self._count < 10 && i < filteredRecent.length && i < 3) {
+                item = filteredRecent[i];
+                id = myself.getOriginId(item.getId());
+                oldElement = self._oldItems.getRecordById(id);
+
+                // скрываем старый элемент только в том случае если он не находится в подменю и у него нет детей
+                if (oldElement && !oldElement.get(self._options.parentProperty) && !self._subContainers[oldElement.getId()]) {
+                    oldElement.set('visible', false);
+                }
+                newItem = new Model({
+                    rawData: item.getRawData(),
+                    adapter: item.getAdapter()
+                });
+
+                if (newItem.get(self._options.parentProperty)) {
+                    newItem.set(self._options.parentProperty, null);
+                }
+
+                items.push(newItem);
+
+                self._count++;
+                i++;
+            }
+            return items;
+        },
+
+        fillFrequent: function (self, filteredFrequent) {
+            var myself = this,
+                i = 0,
+                items = [],
+                id, oldElement, item, newItem;
+
+            while (self._count < 10 && i < filteredFrequent.length && i < 7) {
+                item = filteredFrequent[i];
+                id = myself.getOriginId(item.getId());
+                oldElement = self._oldItems.getRecordById(id);
+
+                if (oldElement && !oldElement.get(self._options.parentProperty) && !self._subContainers[oldElement.getId()]) {
+                    oldElement.set('visible', false);
+                }
+
+                newItem = new Model({
+                    rawData: item.getRawData(),
+                    adapter: item.getAdapter()
+                });
+
+                if (newItem.get(self._options.parentProperty)) {
+                    newItem.set(self._options.parentProperty, null);
+                }
+
+                items.push(newItem);
+
+                self._count++;
+                i++;
+            }
+            return items;
+        },
+
+        getFrequent: function (self) {
+            var frequentItems = [],
+                items = [];
+
+            items = _private.filterFrequent(self);
+            if (self._options.frequent && items.length) {
+                frequentItems = _private.fillFrequent(self, items);
+            }
+            return frequentItems;
+        },
+
+        getRecent: function (self) {
+            var recentItems = [],
+                items = [];
+
+            items = _private.filterRecent(self);
+            if (items.length) {
+                recentItems = _private.fillRecent(self, items);
+            }
+            return recentItems;
+        },
+
+        processHistory: function (self) {
+            var processedItems = new RecordSet({adapter: new SbisAdapter(), idProperty: 'historyId'}),
+                needToDrawSeparate = false,
+                itemCount = 0,
+                indexLastHistoryItem = null,
+                isHistoryFull, recentItems, frequentItems, countOfVisible, isInternalItem;
+
+            self._count = 0;
+            self._oldItems.forEach(function (element) {
+                element.set('visible', true);
+            });
+
+            // запиненые отображаются всегда
+            if (self._options.pinned) {
+                _private.fillPinned(self, processedItems);
+            }
+
+            recentItems = _private.getRecent(self);
+            frequentItems = _private.getFrequent(self);
+
+            processedItems.append(frequentItems);
+            processedItems.append(recentItems);
+            if (processedItems.getCount()) {
+                indexLastHistoryItem = processedItems.getCount() - 1;
+            }
+            processedItems.append(self._oldItems);
+
+            // скрываем лишние
+            if (processedItems.getCount() > 11) {
+                countOfVisible = 0;
+                // пробегаемся по всем элементам и показываем только первые 10 видимых элементов, остальные скрываем
+                processedItems.forEach(function (item) {
+                    isInternalItem = self._options.parentProperty && item.get(self._options.parentProperty);
+
+                    if (countOfVisible < 10) {
+                        if (item.get('visible') && !isInternalItem) {
+                            countOfVisible++;
+                        }
+                    } else {
+                        if (!isInternalItem) {
+                            item.set(self._options.additionalProperty, true);
+                        }
+                    }
+                });
+                // в истории меню максимум может быть 10 элементов,
+                // если меню полностью заполнено, то отображать разделитель в свернутом состоянии не нужно
+                isHistoryFull = processedItems.at(9).get('historyItem');
+                if (self._container) {
+                    self._container.toggleClass('controls-SbisMenu-fullHistory', isHistoryFull);
                 }
             }
-        });
-    }
 
-    function _filterFrequent () {
-        var self = this,
-            id;
+            // нужно проверять только в случае, когда есть история
+            if(indexLastHistoryItem !== null) {
+                // если в истории находятся все элементы меню, то показывать разделитель не нужно
+                // это может произойти, если меню без подуровней и все элементы запинены
+                while (itemCount < self._oldItems.getCount() && !needToDrawSeparate) {
+                    if (self._oldItems.at(itemCount).get('visible') ||
+                        (self._options.parentProperty && self._oldItems.at(itemCount).get(self._options.parentProperty))) {
+                        needToDrawSeparate = true;
+                    }
+                    itemCount++;
+                }
 
-        // из популярных убираем запиненые
-        return Chain(this._frequent).filter(function(item){
-            id = _getOriginId(item.getId());
-            return !self._pinned.getRecordById('pinned-' + id);
-        }).value();
-    }
-
-    function _filterRecent () {
-        var self = this,
-            id;
-
-        // убираем из последних выбранных запиненые и популярные пункты
-        return Chain(this._recent).filter(function(item){
-            id = _getOriginId(item.getId());
-
-            return !(self._pinned.getRecordById('pinned-' + id) || self._frequent.getRecordById('frequent-' + id));
-        }).value();
-    }
-
-
-    function _fillPinned (historyItems) {
-        var self = this,
-            id, oldElement;
-
-        this._pinned.forEach(function(item){
-            id = _getOriginId(item.getId());
-            oldElement = self._oldItems.getRecordById(id);
-
-            if(oldElement && !oldElement.get(self._options.parentProperty) && !self._subContainers[oldElement.getId()]) {
-                oldElement.set('visible', false);
+                if (needToDrawSeparate) {
+                    processedItems.at(indexLastHistoryItem).set('groupSeparator', true);
+                }
             }
 
-            if(item.get(self._options.parentProperty)){
-                item.set(self._options.parentProperty, null);
+            return processedItems;
+        },
+
+        prepareHistory: function (self) {
+            var historyItems;
+
+            historyItems = _private.processHistory(self);
+            self.setItems(historyItems);
+        },
+
+
+        processPinnedItem: function(self, id, origId, pinItem){
+            var pinned = true,
+                newItem, oldItem;
+
+            if (!pinItem.get('pinned')) {
+                newItem = new Model({
+                    rawData: pinItem.getRawData(),
+                    adapter: pinItem.getAdapter(),
+                    format: pinItem.getFormat()
+                });
+                if (self._options.parentProperty) {
+                    newItem.set(self._options.parentProperty, null);
+                }
+                newItem.set('historyItem', true);
+                newItem.set('historyId', 'pinned-' + origId);
+                newItem.set('groupSeparator', false);
+                newItem.set(self._options.additionalProperty, false);
+                self._pinned.add(newItem);
+                self._pinned.setIdProperty('historyId');
+                pinItem.set('visible', false);
+                pinned = true;
+            } else {
+                // получаем старый id и восстанавливаем видимость пункта меню
+                self._pinned = Chain(self._pinned).filter(function (element) {
+                    return _private.getOriginId(element.getId()) !== origId;
+                }).value(recordSetFactory, {adapter: new SbisAdapter()});
+
+                self._pinned.setIdProperty('historyId');
+
+                oldItem = self._oldItems.getRecordById(origId);
+                oldItem.set('visible', true);
+                oldItem.set('pinned', false);
+
+                pinned = false;
             }
+            return pinned;
+        },
 
-            item.set('pinned', true);
-            oldElement.set('pinned', true);
-            self._count++;
-        });
+        togglePinnedItem: function (self, id, origId) {
+            var pinned,
+                menuItem = self._items.getRecordById(id);
 
-        historyItems.append(this._pinned);
-    }
+            pinned = _private.processPinnedItem(self, id, origId, menuItem);
 
-    function _fillRecent (filteredRecent) {
-        var self = this,
-            items = [],
-            i = 0,
-            id, oldElement, item, newItem;
+            _private.prepareHistory(self);
+            _private.setPin(self, origId, pinned);
+        },
 
-        while(this._count < 10 && i < filteredRecent.length && i < 3){
-            item = filteredRecent[i];
-            id = _getOriginId(item.getId());
-            oldElement = this._oldItems.getRecordById(id);
+        addToRecent: function (self, origId, newItem) {
+            var records;
 
-            // скрываем старый элемент только в том случае если он не находится в подменю и у него нет детей
-            if(oldElement && !oldElement.get(self._options.parentProperty) && !self._subContainers[oldElement.getId()]) {
-                oldElement.set('visible', false);
-            }
-            newItem = new Model({
-                rawData: item.getRawData(),
-                adapter: item.getAdapter()
-            });
-
-            if(newItem.get(this._options.parentProperty)){
-                newItem.set(this._options.parentProperty, null);
-            }
-
-            items.push(newItem);
-
-            this._count++;
-            i++;
-        }
-        return items;
-    }
-
-    function _fillFrequent(filteredFrequent) {
-        var self = this,
-            i = 0,
-            items = [],
-            id, oldElement, item, newItem;
-
-        while(this._count < 10 && i < filteredFrequent.length && i < 7){
-            item = filteredFrequent[i];
-            id = _getOriginId(item.getId());
-            oldElement = this._oldItems.getRecordById(id);
-
-            if(oldElement && !oldElement.get(this._options.parentProperty) && !self._subContainers[oldElement.getId()]) {
-                oldElement.set('visible', false);
-            }
-
-            newItem = new Model({
-                rawData: item.getRawData(),
-                adapter: item.getAdapter()
-            });
-
-            if(newItem.get(this._options.parentProperty)){
-                newItem.set(this._options.parentProperty, null);
-            }
-
-            items.push(newItem);
-
-            this._count++;
-            i++;
-        }
-        return items;
-    }
-
-    function _getFrequent () {
-        var frequentItems = [],
-            items = [];
-
-        items = _filterFrequent.call(this);
-        if(this._options.frequent && items.length) {
-            frequentItems = _fillFrequent.call(this, items);
-        }
-        return frequentItems;
-    }
-
-    function _getRecent () {
-        var recentItems = [],
-            items = [];
-
-        items = _filterRecent.call(this);
-        if(items.length) {
-            recentItems =  _fillRecent.call(this, items);
-        }
-        return recentItems;
-    }
-
-    function _prepareHistory () {
-        var historyItems = new RecordSet({adapter: new SbisAdapter(), idProperty: 'historyId'}),
-            recentItems, frequentItems;
-
-        this._count = 0;
-
-        this._oldItems.forEach(function(element){
-            element.set('visible', true);
-        });
-
-        // запиненые отображаются всегда
-        if(this._options.pinned) {
-            _fillPinned.call(this, historyItems);
-        }
-
-        recentItems =  _getRecent.call(this);
-        frequentItems = _getFrequent.call(this);
-
-        historyItems.append(frequentItems);
-        historyItems.append(recentItems);
-        if(historyItems.getCount()) {
-            historyItems.at(historyItems.getCount() - 1).set('lastHistoryItem', true);
-        }
-        historyItems.append(this._oldItems);
-        this.setItems(historyItems);
-    }
-
-    function _togglePinnedItem (item, id, origId) {
-        var menuItem = this._items.getRecordById(id),
-            pinned = true,
-            oldId = _getOriginId(id),
-            newItem, oldItem, newPinned;
-
-        if (!menuItem.get('pinned')) {
-            newItem = new Model({
-                rawData: menuItem.getRawData(),
-                adapter: menuItem.getAdapter()
-            });
-            if(this._options.parentProperty){
-                newItem.set(this._options.parentProperty, null);
-            }
-            newItem.set('historyItem', true);
-            newItem.set('historyId', 'pinned-' + origId);
-            newItem.set('lastHistoryItem', false);
-            this._pinned.add(newItem);
-            menuItem.set('visible', false);
-            pinned = true;
-        } else {
-            // получаем старый id и восстанавливаем видимость пункта меню
-            this._pinned = Chain(this._pinned).filter(function(element){
-                return _getOriginId(element.getId()) !== oldId;
+            self._recent = Chain(self._recent).filter(function (element) {
+                return _private.getOriginId(element.getId()) !== origId;
             }).value(recordSetFactory, {adapter: new SbisAdapter()});
 
-            this._pinned.setIdProperty('historyId');
-
-            oldItem = this._oldItems.getRecordById(oldId);
-            oldItem.set('visible', true);
-            oldItem.set('pinned', false);
-
-            pinned = false;
+            if (self._options.parentProperty) {
+                newItem.set(self._options.parentProperty, null);
+            }
+            if (self._options.parentProperty) {
+                newItem.set('historyItem', true);
+            }
+            newItem.set('pinned', false);
+            newItem.set('groupSeparator', false);
+            newItem.set('historyId', 'recent-' + origId);
+            newItem.set(self._options.additionalProperty, false);
+            records = new RecordSet({
+                format: self._oldItems.getFormat(),
+                adapter: new SbisAdapter()
+            });
+            records.add(newItem);
+            self._recent.prepend(records);
+            self._recent.setIdProperty('historyId');
+            self._pinned.setIdProperty('historyId');
         }
-
-        _prepareHistory.call(this);
-        _setPin.call(this, oldId, pinned);
-    }
+    };
 
     var SbisMenu = ContextMenu.extend(/** @lends SBIS3.CONTROLS.ContextMenu.prototype */ {
         $protected: {
@@ -357,99 +471,89 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
             _count: 0
         },
 
-        _modifyOptions : function(cfg) {
+        _modifyOptions: function (cfg) {
             var opts = SbisMenu.superclass._modifyOptions.apply(this, arguments);
 
-            opts.className = cfg.pinned ? opts.className + ' controls-SbisMenu-padding-right': opts.className;
+            opts.className = cfg.pinned ? opts.className + ' controls-SbisMenu-padding-right' : opts.className;
+            opts.additionalProperty = opts.additionalProperty ? opts.additionalProperty : 'additional';
 
             return opts;
         },
 
-        $constructor: function () {
-            _getHistoryDataSource.call(this);
-        },
+        show: function () {
+            var self = this,
+                format;
 
-        show: function() {
-            var self = this;
+            if (!this._historyDeffered) {
+                self._oldItems = coreClone(self._items);
+                format = self._oldItems.getFormat();
+                _private.initRecordSet(self, format);
 
-            if(!this._historyDeffered) {
-                this._historyDeffered = _getUnionList.call(this).addCallback(function (dataSet) {
+                this._historyDeffered = _private.getUnionList(self).addCallback(function (dataSet) {
                     var rows = dataSet.getRow();
 
                     if (rows) {
-                        self._oldItems = coreClone(self._items);
 
-                        self._pinned = self._options.pinned && rows.get('pinned')? rows.get('pinned') : new RecordSet({format: self._oldItems.getFormat(), adapter: new SbisAdapter()});
-                        self._recent = rows.get('recent') && rows.get('recent') ? rows.get('recent') : new RecordSet({format: self._oldItems.getFormat(),  adapter: new SbisAdapter()});
-                        self._frequent = self._options.frequent && rows.get('frequent') ? rows.get('frequent') : new RecordSet({format: self._oldItems.getFormat(),  adapter: new SbisAdapter()});
+                        if (self._options.pinned && rows.get('pinned')) {
+                            self._pinned = rows.get('pinned');
+                        }
+                        if (rows.get('recent')) {
+                            self._recent = rows.get('recent');
+                        }
+                        if (self._options.frequent && rows.get('frequent')) {
+                            self._frequent = rows.get('frequent');
+                        }
 
-                        _prepareRecordSet.call(self, self._oldItems, '', false);
-                        _prepareRecordSet.call(self, self._pinned, 'pinned-', true);
-                        _prepareRecordSet.call(self, self._recent, 'recent-', true);
-                        _prepareRecordSet.call(self, self._frequent, 'frequent-', true);
-
-                        _prepareHistory.call(self);
+                        _private.prepareHistoryData(self);
+                        _private.prepareHistory(self);
                         SbisMenu.superclass.show.apply(self, arguments);
                     }
+                }).addErrback(function (error) {
+                    _private.prepareHistoryData(self);
+                    _private.prepareHistory(self);
+                    SbisMenu.superclass.show.apply(self, arguments);
                 });
-            }else {
-                SbisMenu.superclass.show.apply(self, arguments);
+            } else {
+                if (this._historyDeffered.isReady()) {
+                    SbisMenu.superclass.show.apply(self, arguments);
+                }
             }
         },
 
         _getItemConfig: function (cfg, item) {
             cfg.pinned = this._options.pinned ? !!item.get('pinned') : undefined;
             cfg.historyItem = !!item.get('historyItem');
-            cfg.lastHistoryItem = item.get('lastHistoryItem');
+            cfg.groupSeparator = item.get('groupSeparator');
 
             return SbisMenu.superclass._getItemConfig.apply(this, arguments);
         },
 
         _itemActivatedHandler: function (id, event) {
             var targetClassName = event.target.className,
-                item = this.getItems().getRecordById(id),
-                origId = _getOriginId(id),
+                origId = _private.getOriginId(id),
                 menuItem = this._items.getRecordById(id),
-                newItem, records;
+                newItem;
 
             if (targetClassName.indexOf('controls-Menu-item-pin') !== -1) { // кликнули по пину
-                _togglePinnedItem.call(this, item, id, origId);
+                _private.togglePinnedItem(this, id, origId);
                 return;
             }
-            if(!this._subContainers[origId]) {
+            if (!this._subContainers[origId] && this._recent) {
                 newItem = new Model({
                     rawData: menuItem.getRawData(),
                     adapter: menuItem.getAdapter()
                 });
 
-                if (this._recent) {
-                    this._recent = Chain(this._recent).filter(function(element){
-                        return _getOriginId(element.getId()) !== origId;
-                    }).value(recordSetFactory, {adapter: new SbisAdapter()});
-
-                    if (this._options.parentProperty) {
-                        newItem.set(this._options.parentProperty, null);
-                    }
-                    if (this._options.parentProperty) {
-                        newItem.set('historyItem', true);
-                    }
-                    newItem.set('pinned', false);
-                    newItem.set('historyId', 'recent-' + origId);
-                    records = new RecordSet({format: this._oldItems.getFormat(), adapter: new SbisAdapter()});
-                    records.add(newItem);
-                    this._recent.prepend(records);
-
-                    _prepareHistory.call(this);
-                }
+                _private.addToRecent(this, origId, newItem);
+                _private.prepareHistory(this);
             }
-
             // стрелять нужно старым id
-
-            _addToHistory.call(this, origId);
-
+            _private.addToHistory(this, origId);
             SbisMenu.superclass._itemActivatedHandler.call(this, origId, event);
         }
     });
+
+    SbisMenu._private = _private;
 
     return SbisMenu;
 

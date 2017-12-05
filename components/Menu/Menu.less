@@ -38,12 +38,14 @@
    .controls-MenuItem-additional {
       min-height: 0;
       height: 0;
+      visibility: hidden;
    }
    &.controls-Menu-showAdditionalItems {
       .controls-MenuItem-additional {
          .flexbox();
          min-height: @menu-item-height;
          height: auto;
+         visibility: visible;
       }
    }
    .controls-Menu__itemsContainer {
@@ -140,6 +142,21 @@
          display: none;
       }
    }
+}
+
+.controls-Menu__separator {
+   position: relative;
+   height: @menu-separator-height;
+}
+.controls-Menu__separator:before {
+   content: '';
+   position: absolute;
+   display: inline-block;
+   right: @menu-separator-line-offset;
+   left: @menu-separator-line-offset;
+   top: @menu-separator-line-top;
+   height: @menu-separator-line-height;
+   background-color: @default-border-color-bottom-disabled;
 }
 
 .ws-is-ie {

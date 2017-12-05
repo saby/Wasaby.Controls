@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.FormController', [
    function( cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC, cInstance, forAliveOnly, doAutofocus, CompoundControl, cIndicator, Record, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
    /**
     * Компонент, на основе которого создают диалог, данные которого инициализируются по записи.
-    * В частном случае компонент применяется для создания <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/'>диалогов редактирования записи</a>.
+    * В частном случае компонент применяется для создания <a href='/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/'>диалогов редактирования записи</a>.
     *
     * @class SBIS3.CONTROLS.FormController
     * @extends SBIS3.CORE.CompoundControl
@@ -418,20 +418,18 @@ define('js!SBIS3.CONTROLS.FormController', [
          cIndicator.hide();
       },
       _processError: function(e, hideErrorDialog, eventName) {
-         var
-            eResult = this._notify('onFail', e, eventName),
-            eMessage = e && e.message;
-         if(!hideErrorDialog && (eResult || eResult === undefined)) { // string, undefined
-            if(typeof eResult == 'string') {
-               eMessage = eResult;
-            }
-            if(eMessage) {
-               var self = this;
+         var eResult = this._notify('onFail', e, eventName),
+             eMessage = typeof eResult === 'string' ? eResult : e.message,
+             self = this;
+         if(!hideErrorDialog && eResult !== false) {
+            //Не показываем сообщение, если запрос был прерван
+            //В новом ff при переходе по ссылке обрываются все активные xhr => показываются ненужные алерты о том, что запрос был прерван
+            if(eMessage && eMessage !== 'Cancel') {
                InformationPopupManager.showMessageDialog({
                   message: eMessage,
                   status: 'error'
                }, function(){
-                  if (e.httpError == 403){
+                  if (e.httpError === 403){
                      self._closePanel();
                   }
                });
@@ -478,7 +476,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          return this._newRecord;
       },
       setDataSource: function (source, config) {
-         throw new Error('FormController: Задавать источник данных необходимо через опцию dataSource. Подробнее https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/create/');
+         throw new Error('FormController: Задавать источник данных необходимо через опцию dataSource. Подробнее /doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/create/');
       },
       /**
        * Устанавливает запись, по данным которой производится инициализация данных диалога.
@@ -662,7 +660,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @param {Boolean} [config.hideErrorDialog=false] Не показывать сообщение при ошибке.
        * @param {Boolean} [config.hideIndicator=false] Не показывать индикатор сохранения.
        * @remark
-       * При сохранении записи происходит проверка всех <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/'>валидаторов</a> диалога.
+       * При сохранении записи происходит проверка всех <a href='/doc/platform/developmentapl/interface-development/forms-and-validation/validation/'>валидаторов</a> диалога.
        * Если на одном из полей ввода валидация будет не пройдена, то сохранение записи отменяется, и пользователь увидит сообщение "Некорректно заполнены обязательные поля!".
        * Если процесс сохранения записи происходит длительное время, то в пользовательском интерфейсе будет выведено сообщение "Подождите, идёт сохранение". Текст сообщения можно конфигурировать с помощью опции {@link indicatorSavingMessage}.
        * При успешном сохранении записи происходит событие {@link onUpdateModel}, а в случае ошибки - {@link onFail}.
@@ -857,7 +855,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        *     // отменяется логика сохранения записи, предустановленная в FormController
        *     this.sendCommand('notify', 'onUpdateModel', someParams);
        * </pre>
-       * Логика обработки события должна быть определена разработчиком в SBIS3.CONTROLS.Action.OpenEditDialog, о чем подробнее вы можете прочитать в <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/'>этом разделе</a>.
+       * Логика обработки события должна быть определена разработчиком в SBIS3.CONTROLS.Action.OpenEditDialog, о чем подробнее вы можете прочитать в <a href='/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/'>этом разделе</a>.
        * @param {String} eventName Имя события: onUpdateModel, onReadModel,onCreateModel или onDestroyModel.
        * @param {*} additionalData Данные, которые должны быть переданы в качестве аргументов события.
        * @command notify

@@ -1,39 +1,24 @@
-& {
-  @margin-row: -@border-col;
-  @border-col: @spacing-between-blocks / 2;
-  @color-modificator-name: bg, ghostWhite, whiteSnow, whiteSmoke, mintCream, hover;
-  @color-modificator-value: @default-bg-color, @ghost-white-color, @white-snow-color, @white-smoke-color, @mint-cream-color, @default-hover-color;
-
-  .ws-areaBlocks__ {
-    &area {
+.ws-Block {
+   border: @spacing_Block / 2 solid @bg_BlockLayout;
+   .box-sizing();
+   .for(6, { &_style_@{_i} {
+      background-color: ~"@{bg_Block_style-@{_i}}";
+   } });
+   &Layout {
       overflow: hidden;
-      background: @default-border-color;
-      &_topOffset {
-        > .ws-areaBlocks__row:first-child {
-          margin-top: @spacing-between-blocks;
-        }
+      background-color: @bg_BlockLayout;
+      & > .ws-BlockGroup {
+         margin-left: @margin_BlockGroup;
+         margin-right: @margin_BlockGroup;
+         &:first-of-type {
+            margin-top: @margin_BlockGroup;
+         }
+         &:last-of-type {
+            margin-bottom: @margin_BlockGroup;
+         }
       }
-    }
-    &row {
-      margin-left: @margin-row;
-      margin-right: @margin-row;
-      .flexbox();
-
-      &:not(:last-child) {
-        margin-bottom: @spacing-between-blocks;
+      &_detached {
+         padding-top: @spacing_Block;
       }
-    }
-    &col {
-      border-width: 0 @border-col;
-      border-color: @default-border-color;
-      border-style: solid;
-      .box-sizing();
-    }
-  }
-  // Модификаторы цвета блоков ws-background_bg, ..., ws-background_hover.
-  .for(@color-modificator-name, {
-    .ws-background_@{_item} {
-      background-color: extract(@color-modificator-value, @_i);
-    }
-  });
+   }
 }

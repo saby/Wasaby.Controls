@@ -29,10 +29,19 @@
 
 .controls-TextBox__wrapper {
    .inline-flexbox();
-   .align-items(center);
    position: relative;
    width: 100%;
    height: 100%;
+}
+
+.controls-TextBox__wrapper_singleLine {
+   .align-items(center);
+}
+
+.controls-TextBox__wrapper_multiLine {
+   //У TextArea height: auto, поэтому если на wrapper'е будет align-items: center, то текст будет выравниваться по центру TextArea
+   //https://jsfiddle.net/18273t6v/
+   .align-items(baseline);
 }
 
 .controls-TextBox__field {
@@ -80,11 +89,32 @@
    width: 100%;
 }
 
+// риусем информационный треугольник через border, чтобы он занимал свои физические размеры
 .controls-TextBox__informationIcon {
+   display: inline-block;
    position: absolute;
-   top: 0;
    right: 0;
-   .icon-size(@font-size_TextBox-InformationIcon);
+   top: 0;
+   .top-right-triangle(@height_TextBox-InformationIcon);
+   width: @width_TextBox-InformationIcon;
+   height: @height_TextBox-InformationIcon;
+   cursor: pointer;
+   box-sizing: border-box;
+}
+.controls-TextBox__informationIcon-attention {
+   border-right-color: @icon-color-attention;
+}
+.controls-TextBox__informationIcon-done {
+   border-right-color: @icon-color-done;
+}
+.controls-TextBox__informationIcon-error {
+   border-right-color: @icon-color-error;
+}
+.controls-TextBox__informationIcon-primary {
+   border-right-color: @icon-color-primary;
+}
+.controls-TextBox__informationIcon-disabled {
+   border-right-color: @icon-color-disabled;
 }
 
 .controls-TextBox__hiddenPlaceholder {
@@ -132,14 +162,10 @@
 
 .controls-TextBox_size_l {
    height: @height_TextBox_l;
-}
-
-.controls-TextBox__wrapper_size_l {
-   .baseline-fix();
+   font-size: @font-size_TextBox_l;
 }
 
 .controls-TextBox__field_size_l {
-   font-size: @font-size_TextBox_l;
    padding-bottom: @padding-bottom_TextBox-container_l;
 }
 

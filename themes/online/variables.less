@@ -86,7 +86,8 @@
 @link-disabled-text-color:                @gray-ccc-color;
 @link-text-decoration:                    none;
 @link-text-alignment:                     center;
-@link-line-height:                        24px;
+@link-height:                             24px;
+@link-line-height:                        @link-height;
 @link-padding:                            0;
 @link-font-size:                          @default-text-size;
 @link-cursor:                             pointer;
@@ -349,6 +350,7 @@
 @tab-button-overlay-background:                 #FFFFFF;
 @tab-button-overlay-ms-filter:                  "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
 @margin-right_TabButton_icon:                   6px;
+@margin-bottom_TabButton_checked_tab:           1px;
 // -----------  //
 // Tab control //
 // -----------  //
@@ -469,6 +471,10 @@
 @menu-header-padding:                     0 12px;
 @menu-header-icon-padding:                6px;
 @menu-header-icon-color:                  @icon-active-color;
+@menu-separator-height:                   9px;
+@menu-separator-line-offset:              12px;
+@menu-separator-line-height:              1px;
+@menu-separator-line-top:                 4px;
 // --------- //
 // Menu item //
 // --------- //
@@ -478,6 +484,7 @@
 @menu-item-expand-padding-right:          30px;
 @menu-item-padding-16:                    33px;
 @menu-item-padding-24:                    42px;
+@menu-item-padding-32:                    51px;
 @menu-item-text-color:                    @black-color;
 @menu-item-font-size:                     @popup-font-size;
 @menu-item-disabled-text-color:           #ccc;
@@ -505,6 +512,7 @@
 @menu-link-header-font-size:              @popup-font-size;
 @menu-icon-menu-margin:                   -9px 0 0 -13px;
 @menu-icon-big-menu-margin:               -5px 0 0 -13px;
+@menu-icon-menu-large-margin:             -5px 0 0 -13px;
 @menu-icon-menu-bg:                       @menu-button-menu-bg;
 // -------- //
 // Text box //
@@ -845,7 +853,6 @@
 // --------- //
 // List view //
 // --------- //
-@list-view-min-height:                          90px;
 @listView-check-box-left:                       0;
 @listView-check-box-top:                        0;
 @list-view-actions-item-height:                 24px;
@@ -868,6 +875,8 @@
 @list-view-items-toolbar-icon-size:                  24px;
 @list-view-items-toolbar-menu-icon-size:             @list-view-items-toolbar-icon-size;
 @list-view-items-toolbar-font-family:                @default-icon-medium-font;
+@font-family_closeButton-icon:                       @list-view-items-toolbar-font-family;
+@list-view-items-toolbar-context-icon-size:          @icon-medium-size;
 @list-view-items-toolbar-zindex:                     10;
 @bottomStyle-items-toolbar-margin-top:               2px;
 @list-view-actions-verAlign-margin:             8px 3px 0 0;
@@ -885,7 +894,10 @@
 @list-view-actions-menu-text-margin:            6px 0 6px 30px;
 @list-view-context-menu-close-right:            6px;
 @list-view-context-menu-close-top:              7px;
+@list-view-context-menu-close-color:            #CCC;
+@list-view-context-menu-close-hover-color:      @blue-dark-color;
 @list-view-scroll-spritesheet:                  url('img/ajax-loader-indicator.gif');
+@list-view-close-button-font-family:            @default-icon-medium-font;
 @list-view-scroll-bg:                           @list-view-scroll-spritesheet 0 0 no-repeat;
 @list-view-scroll-height:                       32px;
 @list-view-loading-indicator-gradient-bg:       @list-view-scroll-spritesheet no-repeat center, linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
@@ -1158,7 +1170,6 @@
 @DropdownList-picker-menu-selected-marker-width:      6px;
 @DropdownList-picker-menu-selected-marker-height:     8px;
 @DropdownList-picker-menu-selected-marker-bg:         #D94700;
-@DropdownList-picker-menu-selected-marker:            true;
 @DropdownList-after-caption-top:                      3px;
 @DropdownList-linkStyleColor:                         @link-text-color;
 @DropdownList-linkStyleHoverColor:                    #313E78;
@@ -1178,6 +1189,8 @@
 @DropdownList-footer-select-icon-size:                26px!important;
 @DropdownList-disabled-text:                          #000;
 @shadow_DropDownList_picker:                          @menu-shadow;
+@border-width_DropDownList_picker:                    0;
+@border-color_DropDownList_picker:                    #CCC;
 //ProgressBar
 @ProgressBar-height:                      16px;
 @ProgressBar-width:                       100%;
@@ -1227,7 +1240,7 @@
 @controls-filterButton-history-actions-bottom:    -1px;
 @controls-filterButton-history-item-min-height:   24px;
 @controls-filterButton-history-titleCont-right:   8px;
-@controls-filterButton-history-titleCont-left:    18px;
+@controls-filterButton-history-titleCont-left:    22px;
 @controls-filterButton-history-title-height:      24px;
 @controls-filterButton-history-title-color:       @blue-dark-color !important;
 //CommandsSeparator
@@ -1257,7 +1270,6 @@
 //FieldLink
 @fieldLink-border-color-focus-hover:      @gray-ccc-color;
 @fieldLink-border-color-picker-show:      @fieldLink-border-color-focus-hover;
-@fieldLink-border:                        1px solid;
 @fieldLink-picker-show-color:             @white-color;
 @fieldLink-picker-show-field-color:       initial; //В онлайне цвет никак не перебивается, перебивается в темах
 
@@ -1267,7 +1279,8 @@
 @fieldLink-picker-min-height:             16px;
 @fieldLink-linkItem-cross-width:          20px;
 @fieldLink-afterField-button-margin:      0 @default-padding 0 0;
-@fieldLink-link-color-hover:              #313E78;
+@fieldLink-link-color-enabled-hover:      #313E78;
+@fieldLink-link-line-height:              24px;
 @fieldLink-showSelector-color:            @icon-color-primary;
 @fieldLink-showSelector-color-hover:      @link-hover-text-color;
 @fieldLink-big-fontSize:                  15px;
@@ -1275,6 +1288,7 @@
 @fieldLink-big-fontSize-color:            #313E78;
 @fieldLink-FilterButton-color:            #0055bb;
 @fieldLink-FilterButton-color-hover:      @fieldLink-FilterButton-color;
+@font-size_FieldLink_itemCaption_normal:  @default-text-size;
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
 @controls-SelectorButton-line-height:              24px;
@@ -1322,7 +1336,7 @@
 @controls-InformationPopup-default-status-border-color:       #0055BB;
 @controls-InformationPopup-success-status-border-color:       #72BE44;
 @controls-InformationPopup-error-status-border-color:         #EF463A;
-@controls-InformationPopup-warning-status-border-color:       #FEC63F;
+@controls-InformationPopup-warning-status-border-color:       @warning-color;
 @controls-InformationPopup-border-width:                      3px 0 0 0;
 @controls-InformationPopup-closeButton-top:                   5px;
 @controls-InformationPopup-closeButton-right:                 5px;
@@ -1346,6 +1360,7 @@
 @controls-NotificationPopup-header-icon-right-margin:                        8px;
 @controls-NotificationPopup-max-width:                                       440px;
 @controls-NotificationPopup-min-width:                                       180px;
+@margin_NotificationPopup:                                                   16px;
 //SubmitPopup
 @controls-SubmitPopup-size-standard-width:         351px;
 @controls-SubmitPopup-size-big-width:              440px;
@@ -1521,11 +1536,15 @@
 @wait-indicator-small-margin: 6px;
 @wait-indicator-font-size: 14px;
 @wait-indicator-line-height: 18px;
-@wait-indicator-font-color: rgb(0, 0, 0);
+@wait-indicator-font-color: @default-text-color;
 @wait-indicator-overlay-default: rgba(255, 255, 255, 0.05);
 @wait-indicator-overlay-dark: rgba(0, 0, 0, 0.1);
 @wait-indicator-gradient-white: rgb(255, 255, 255);
 @wait-indicator-gradient-gray: rgb(234, 234, 234);
+@background-color_WaitIndicator: #ffffff;
+@border-radius_WaitIndicator:   @wait-indicator-gap;
+@background_url_WaitIndicator: @list-view-scroll-spritesheet;
+@background_url_WaitIndicator_small: url('img/ajax-loader-16x16-wheel.gif');;
 
 
 //----------------//

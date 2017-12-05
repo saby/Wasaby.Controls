@@ -1,18 +1,33 @@
+.controls-SbisMenu-fullHistory:not(.controls-Menu-showAdditionalItems) {
+  .control-SbisMenu-item__historySeparator {
+    margin-bottom: 0;
+
+    &:before {
+      content: none;
+    }
+  }
+}
+
 .controls-SbisMenu-padding-right {
   .controls-MenuItem {
     padding-right: @menu-item-expand-padding-right;
   }
 }
 
-.control-SbisMenu-item__history-last:before {
+.control-SbisMenu-item__historySeparator {
+  margin-bottom: @menu-separator-height;
+}
+
+.control-SbisMenu-item__historySeparator:before {
   content: ' ';
   position: absolute;
   display: block;
-  width: calc(~"100% - 24px");
-  height: 1px;
-  background-color: #EAEAEA;
-  left: 12px;
-  bottom: 0;
+  height: @menu-separator-line-height;
+  background-color: @default-border-color-bottom-disabled;
+  left: @menu-separator-line-offset;
+  right: @menu-separator-line-offset;
+  bottom: -5px;
+  pointer-events: none;
 }
 
 .controls-Menu-item-user-pinned{

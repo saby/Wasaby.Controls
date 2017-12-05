@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        function needShowCompatiblePlaceholder(cfg) {
           var
              useNativePlaceholder = _private.isSimplePlaceholder(cfg.placeholder),
-             selectedKeysLength = cfg.selectedKeys.length,
+             selectedKeysLength = _private.keysFix(cfg.selectedKeys).length,
              innerCheckShow = !useNativePlaceholder && (!selectedKeysLength || (cfg.multiselect && !cfg.alwaysShowTextBox));
           return cfg._needShowCompatiblePlaceholderST(cfg) && innerCheckShow;
        }
@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           SELECTED: 'controls-FieldLink__selected',
           SELECTED_SINGLE: 'controls-FieldLink__selected-single',
           INPUT_MIN_WIDTH: 'controls-FieldLink__inputMinWidth',
-          HIDDEN: 'ws-hidden'
+          INVISIBLE: 'ws-invisible'
        };
 
        var _private = {
@@ -138,7 +138,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        /**
         * Класс контрола "Поле связи".
         * <a href="http://axure.tensor.ru/standarts/v7/%D0%BF%D0%BE%D0%BB%D0%B5_%D1%81%D0%B2%D1%8F%D0%B7%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_03_.html">Спецификация</a>.
-        * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/field-link/index/">Документация</a>.
+        * <a href="/doc/platform/developmentapl/interface-development/components/textbox/field-link/index/">Документация</a>.
         *
         * @class SBIS3.CONTROLS.FieldLink
         * @extends SBIS3.CONTROLS.SuggestTextBox
@@ -211,7 +211,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * @property {String} name Имя (Идентификатор справочника).
                  * @property {selectionTypeDef} selectionType
                  * @property {Object} dialogOptions Опции для диалога.
-                 * Передаются при включенной опции <a href="https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/SelectorButton/options/useSelectorAction/">useSelectorAction</a>.
+                 * Передаются при включенной опции <a href="/docs/js/SBIS3/CONTROLS/SelectorButton/options/useSelectorAction/">useSelectorAction</a>.
                  * <pre class="brush: xml">
                  *     <option name="template">js!SBIS3.MyArea.MyDatGridView</option>
                  *     <options name="dialogOptions">
@@ -233,12 +233,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * Опция caption определяет название справочника в этом подменю:
                  * ![](/FieldLink02.png)
                  * @property {String} template Компонент, на основе которого организован справочник.
-                 * Список значений справочника строится на основе любого компонента, который можно использовать для {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/ отображения данных в списках}:
+                 * Список значений справочника строится на основе любого компонента, который можно использовать для {@link /doc/platform/developmentapl/interface-development/components/list/ отображения данных в списках}:
                  * <ul>
                  *    <li>использование компонента {@link SBIS3.CONTROLS.DataGridView}: ![](/FieldLink00.png) </li>
                  *    <li>использование компонента {@link SBIS3.CONTROLS.TreeDataGridView}: ![](/FieldLink01.png) </li>
                  * </ul>
-                 * Подробнее о правилах создания компонента для справочника поля связи вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/field-link/">Поле связи</a>.
+                 * Подробнее о правилах создания компонента для справочника поля связи вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/components/textbox/field-link/">Поле связи</a>.
                  * @property {Object} componentOptions
                  * Группа опций, которые передаются в секцию _options компонента из опции template. На его основе строится справочник.
                  * Значения переданных опций можно использовать в дочерних компонентах справочника через инструкции шаблонизатора.
@@ -1062,14 +1062,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              /* Нужно скрыть контрол отображающий элементы, перед загрузкой, потому что часто бл может отвечать >500мс и
               отображаемое значение в поле связи долго не меняется, особенно заметно в редактировании по месту. */
-             linkCollectionContainer.addClass(classes.HIDDEN);
+             linkCollectionContainer.addClass(classes.INVISIBLE);
              this.getSelectedItems(true, amount).addCallback(function(list){
                 /* Если поле связи отрисовывается скрытым, необходимо сбросить запомненную ширину,
                    чтобы при отображении пересчитались размеры. */
                 if(!this.isVisibleWithParents()) {
                    this._lastFieldLinkWidth = null;
                 }
-                linkCollectionContainer.removeClass(classes.HIDDEN);
+                linkCollectionContainer.removeClass(classes.INVISIBLE);
                 this._linkCollection.setItems(list);
                 return list;
              }.bind(this));

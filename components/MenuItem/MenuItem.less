@@ -1,7 +1,6 @@
 .controls-MenuItem {
    position: relative;
    .flexbox();
-   overflow: hidden;
    align-items: center;
    .box-sizing(border-box);
    cursor: pointer;
@@ -20,12 +19,17 @@
       padding-left: @menu-item-padding-24;
    }
 
+   &.controls-MenuItem__padding-32, &.controls-MenuItem__padding-large{
+      padding-left: @menu-item-padding-32;
+   }
+
    &:active {
       color: @menu-item-hover-text-color;
       background: @menu-item-hover-bg;
    }
 
    .controls-MenuItem__content {
+      overflow: hidden;
       position: relative;
       width: 100%;
       min-height: @menu-item-height;

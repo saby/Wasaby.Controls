@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
             /**
              * @cfg {String} Устанавливает путь к иконке, отображаемой на кнопке.
              * @remark
-             * Список иконок доступен <a href="https://wi.sbis.ru/docs/icons/">здесь</a>.
+             * Список иконок доступен <a href="/docs/icons/">здесь</a>.
              */
             icon: 'sprite:icon-24 action-hover icon-Print icon-primary',
             /**

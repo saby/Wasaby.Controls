@@ -62,7 +62,18 @@ define('js!SBIS3.CONTROLS.FormattedTextBox',
              *     mask: 'dd ddd dddd/dd'
              * </pre>
              */
-            mask: ''
+            mask: '',
+
+            /**
+             * @cfg {String} Регулярное выражение, по которому будут проверяться вводимые знаки,
+             * помеченные в маске символом 'r'.
+             *
+             * @example
+             * <pre>
+             *    regExp: '[0-9]'
+             * </pre>
+             */
+            regExp: ''
          }
       },
 

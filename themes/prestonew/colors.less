@@ -195,13 +195,13 @@
 @calendar-day-cell-active-hover-bg:       @calendar-day-cell-hover-bg;
 //fieldlink
 @fieldLink-border-color-focus-hover:      @border-color_TextBox_active;
-@fieldLink-link-color:                    #26B8FF;
+@fieldLink-link-color-enabled:            #26B8FF;
 @fieldLink-showSelector-color:            @default-text-color;
 @fieldLink-picker-show-field-color:       @default-text-color;
 //MonthView
 @month-view-bg:                           #2c3e50;
 @month-view-day-cell-text-color:          #fff;
-@month-view-day-cell-bg:                  #f2f2f2;
+@month-view-day-cell-bg:                  transparent;
 @month-view-day-cell-hover-text-color:    @month-view-day-cell-text-color;
 @month-view-day-cell-hover-bg:            #e5ecf4;
 @month-view-day-cell-active-text-color:   @month-view-day-cell-text-color;
@@ -252,6 +252,8 @@
 @list-view-items-toolbar-locked-bg:       @controls-editInPlace-editor-bg;
 @list-view-actions-active-bg:             @data-grid-bg;
 @listView-empty-data-color:               @disabled-color;
+@list-view-context-menu-close-color:      #8991A9;
+@list-view-context-menu-close-hover-color:#313E78;
 //Tree view
 @tree-view-expand-color:                  @gray-lamantin-color;
 @tree-view-expand-hover-color:            @darkcyan-color;
@@ -350,7 +352,7 @@
 @data-grid-row-hover-add-bg:              rgba(41, 58, 75, 0);
 @data-grid-row-selected-add-bg:           @data-grid-row-hover-add-bg;
 @back-button-text-color:                  #FFCC99;
-@fieldLink-link-color-hover:              @default-hover-color;
+@fieldLink-link-color-enabled-hover:      @default-hover-color;
 @commands-button-close-icon-color:        @icon-color-primary;
 @controls-SubmitPopup-footer-bg:          inherit;
 //back-button
@@ -359,3 +361,6 @@
 @arrow-fill-blue:                         @header-color;
 @arrow-fill-orange:                       @back-button-text-color;
 @suggest-picker-bg-color:                 #f0f5fb;
+//waitIndicator
+@wait-indicator-overlay-default:          rgba(0, 0, 0, 0.35);
+@background-color_WaitIndicator:          #2C3E50;
