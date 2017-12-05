@@ -96,7 +96,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             $constructor: function () {
                this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace', 'onHeightChange', 'onBeginSave', 'onEndSave');
-               this._createEip();
                this._savingDeferred = Deferred.success();
             },
 

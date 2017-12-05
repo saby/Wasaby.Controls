@@ -9,6 +9,9 @@
       <div class="controls-TextBox__informationIcon"></div>
    </div>
  */
+//Поля ввода и кнопки разных размеров в одной демке: https://jsfiddle.net/Lkfcejmp/
+//В этой демке показывается зачем нужен был padding-bottom в больших полях: https://jsfiddle.net/jrt9sLa8/
+//Суть в том, что поля ввода могут быть внутри контейнера с display: flex и align-items: center и из-за этого съедет базовая линия
 
 .controls-TextBox {
    box-sizing: border-box;
@@ -29,10 +32,19 @@
 
 .controls-TextBox__wrapper {
    .inline-flexbox();
-   .align-items(center);
    position: relative;
    width: 100%;
    height: 100%;
+}
+
+.controls-TextBox__wrapper_singleLine {
+   .align-items(center);
+}
+
+.controls-TextBox__wrapper_multiLine {
+   //У TextArea height: auto, поэтому если на wrapper'е будет align-items: center, то текст будет выравниваться по центру TextArea
+   //https://jsfiddle.net/18273t6v/
+   .align-items(baseline);
 }
 
 .controls-TextBox__field {
@@ -156,16 +168,20 @@
    font-size: @font-size_TextBox_l;
 }
 
-.controls-TextBox__field_size_l {
-   padding-bottom: @padding-bottom_TextBox-container_l;
-}
-
 .controls-TextBox_size_auto {
    height: auto;
    font-size: @font-size_TextBox_m;
 }
 
 //Модификаторы
+/*
+   Проблемы, если везде задавать padding с двух сторон:
+   1) В TextArea появится отступ у скролла.
+   2) В NumberTextBox появится отступ у стрелок.
+   3) В FieldLink отступ 4px заложен в иконку.
+
+   https://jsfiddle.net/ze4p2fsq/1/
+ */
 .controls-TextBox_paddingBoth {
    padding: @padding_TextBox-container;
 }

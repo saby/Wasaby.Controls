@@ -14,7 +14,7 @@
 @default-padding:              round(14px * @multiplier);
 @default-padding-small:        round(7px * @multiplier);
 //textbox
-@height_TextBox_m:                                round(84px * @multiplier) + @default-border-width;
+@height_TextBox_m:                                round(84px * @multiplier);
 @height_TextBox_l:                                round(84px * @multiplier);
 @font-size_TextBox_m:                             round(32px * @multiplier);
 @font-size_TextBox_l:                             round(40px * @multiplier);
@@ -22,14 +22,12 @@
 @padding_TextBox-container:                       0 round(14px * @multiplier);
 @padding_TextBox-container_left:                  0 0 0 round(14px * @multiplier);
 @border-width_TextBox:                            2px;
-@font-size_TextBox-InformationIcon:               round(28px * @multiplier);
 //textarea
 @min-height_TextArea:                             round(42px * @multiplier);
 @padding_TextArea-container:                      round(19px * @multiplier) 0 round(19px * @multiplier) round(14px * @multiplier);
 @padding_TextArea-field:                          0 round(14px * @multiplier) 0 0;
 //NumberTextBox
 @icon-size_NumberTextBox-arrow:                   round(84px * @multiplier);
-@padding_NumberTextBox-arrow:                     0 0 0 round(14px * @multiplier);
 //combo-box
 @combo-box-icon-size:                             @default-icon-size-large;
 @combo-box-arrow-padding:                         0px;
@@ -123,6 +121,7 @@
 @font-folder-size:                        @default-text-size;
 @check-box-default-font-size:             @default-text-size;
 @link-line-height:                        normal;
+@link-height:                             auto;
 @link-font-size:                          @default-text-size;
 @link-icon-field-margin:                  0 0 0 round(4px * @multiplier);
 @icon-button-round-border-width:          auto;
@@ -700,7 +699,17 @@
 @back-arrow-height:               round(28px * @multiplier);
 //engine-browser
 @browser-search-margin:           round(8px * @multiplier);
+@width_browser_search:            round(600px * @multiplier);
+@width_browser_search_small:      round(350px * @multiplier);
 @browser-top-template-padding:    @browser-search-margin;
 
 @DropdownList-picker-title-type-margin-top: round(-8px * @multiplier);
 @tab-button-simple-inner-bottom-height:   round(8px * @multiplier);
+//waitIndicator
+@wait-indicator-size:             round(74px * @multiplier);
+@wait-indicator-gap:              round(13px * @multiplier);
+@wait-indicator-font-size:        round(24px * @multiplier);
+@wait-indicator-labeled-width:    round(386px * @multiplier);
+@border-radius_WaitIndicator:     round(16px * @multiplier);
+@wait-indicator-small-size:       round(42px * @multiplier);
+@wait-indicator-small-gap:        round(13px * @multiplier);

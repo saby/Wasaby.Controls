@@ -39,7 +39,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        * @mixes SBIS3.CORE.BaseCompatible
        * @mixes SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor
        *
-       * @remark Для работы SBIS3.CONTROLS.ScrollContainer требуется установить CSS-свойства height или max-height:
+       * @remark
+       * Пример 1:
+       * Для работы SBIS3.CONTROLS.ScrollContainer требуется установить CSS-свойства height или max-height:
        * <ul>
        *    <li>Когда установлено свойство height, тонкий скролл появится, если высота контента (см. {@link content}) станет больше установленной высоты SBIS3.CONTROLS.ScrollContainer.</li>
        *    <li>Когда установлено свойство max-height, то SBIS3.CONTROLS.ScrollContainer будет растягиваться по мере увеличения контента. Когда размер контента превысит max-height, тогда появится тонкий скролл.</li>
@@ -58,6 +60,13 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        *       </option>
        *    </component>
        * </pre>
+       *
+       * Пример 2:
+       * Для перерасчетов размеров SBIS3.CONTROLS.ScrollContainer необходимо:
+       * <pre class="brush: html">
+       * control._notify('onResize')
+       * </pre>
+       * control - экземпляр класса любого родительского контрола, в котором есть ScrollContainer
        *
        * @cssModifier controls-ScrollContainer__light Устанавливает светлый тонкий скролл.
        * @cssModifier controls-ScrollContainer__hiddenScrollbar Скрывает отображение ползунка.
