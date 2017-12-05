@@ -5,25 +5,30 @@ define('js!Controls/List/Controllers/VirtualScroll', [
    ) {
    'use strict';
 
+   //TODO количество записей на 1 видимой странице (для изменения индексов нужно проскроллить на это число)
+   var virtualPageSize = 15;
+
    var _private = {
       /**
-       * Получить индекс текущей видимой страницы
+       * Получить индексы текущей видимой страницы и первой видимой записи
        * @param scrollTop
        * @returns {number}
        * @private
        */
       getPage: function(scrollTop) {
          //Индекс первой видимой записи
-         var topIndex = scrollTop / rowHeight;
+         var topIndex = Math.floor(scrollTop / rowHeight);
 
-         //номер видимой страницы
-         return Math.ceil(topIndex / virtualPageSize);
+         return {
+            topIndex: topIndex,
+            page: Math.ceil(topIndex / virtualPageSize)
+         };
       },
 
       /**
        * рассчитать высоты распорок
-       * @param virtualWindow
-       * @param displayCount
+       * @param virtualWindow индексы начала/конца видимого промежутка записей
+       * @param displayCount общее число записей
        * @returns {{top: number, bottom: number}}
        * @private
        */
@@ -37,35 +42,24 @@ define('js!Controls/List/Controllers/VirtualScroll', [
 
       /**
        * Индексы отображаемых записей
-       * @param page номер видимой страницы
+       * @param firstIndex номер первой видимой записи
        * @param maxVisibleRows максимальное число отображаемых записей
        * @param displayCount общее число записей
        * @returns {{start: number, stop: number}}
        * @private
        */
-      getRangeToShow: function(page, maxVisibleRows, displayCount) {
+      getRangeToShowByIndex: function(firstIndex, maxVisibleRows, displayCount) {
          var
-            pagesCount = maxVisibleRows / virtualPageSize,
-            //половина страниц
-            halfPage = Math.ceil(pagesCount / 2),
-            // Нижняя страница = (текущая + половина страниц), но не меньше чем количество отображаемых страниц
-            bottomPage = page + halfPage < pagesCount ? pagesCount : page + halfPage,
-            // Верхняя страница = (теущая - половина страниц), но не меньше -1
-            topPage = page - halfPage < 0 ? 0 : page - halfPage + 1;
+            thridRows = Math.ceil(maxVisibleRows / 3),   //Треть от максимального числа записей
+            topIndex = Math.max(firstIndex - thridRows, 0),                    //показываем от (текущая - треть)
+            bottomIndex = Math.min(firstIndex + thridRows * 2, displayCount);  //до (текущая + две трети)
 
-         topPage *= virtualPageSize;
-         bottomPage *= virtualPageSize;
-         bottomPage = Math.min(bottomPage, displayCount);
-
-         return {start: topPage, stop: bottomPage};
+         return {start: topIndex, stop: bottomIndex};
       }
    };
 
    //TODO высота строки
    var rowHeight = 25;
-
-   //TODO количество записей на 1 видимой странице
-   var virtualPageSize = 15;
 
 
    /**
@@ -103,23 +97,24 @@ define('js!Controls/List/Controllers/VirtualScroll', [
       calcVirtualWindow: function(scrollTop) {
          var newPage = _private.getPage(scrollTop);
 
-         if (this._currentPage === newPage) {
+         if (this._currentPage === newPage.page) {
             return false;
          }
 
-         this._currentPage = newPage;
-         return this._onPageChange(newPage);
+         this._currentPage = newPage.page;
+         return this._onPageChange(newPage.page, newPage.topIndex);
       },
 
 
       /**
        * рассчитать начало/конец видимой области и высоты распорок
        * @param page - новая отображаемая страница
+       * @param page - первый отображаемый индекс
        * @private
        */
-      _onPageChange: function(page) {
+      _onPageChange: function(page, topIndex) {
          var
-            newWindow = _private.getRangeToShow(page, this._maxVisibleRows, this._displayCount),
+            newWindow = _private.getRangeToShowByIndex(topIndex, this._maxVisibleRows, this._displayCount),
             wrapperHeight = _private.calcPlaceholderHeight(newWindow, this._displayCount);
 
          var res = {
