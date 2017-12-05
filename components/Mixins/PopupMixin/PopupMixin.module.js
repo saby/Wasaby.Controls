@@ -238,7 +238,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                self.hide();
             });
          }
-
+         this._findParenContainer();
          if (this._options.parentContainer) {
             container.appendTo(this._getParentContainer());
          }
@@ -257,6 +257,19 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          }
       },
 
+      _findParenContainer: function() {
+          if (!this._options.parentContainer) {
+              var
+                  linkedContainer = this._options.target ?
+                      this._options.target :
+                      this._options.opener && this._options.opener._container ?
+                          this._options.opener._container: false,
+                  parent = linkedContainer ? $(linkedContainer).closest('.popup-container') : false;
+              if (parent.length) {
+                  this._options.parentContainer = parent;
+              }
+          }
+      },
 
       _touchKeyboardMoveHandler: function(){
          this.recalcPosition();
