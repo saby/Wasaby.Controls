@@ -789,7 +789,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
       
       _updateHoveredColumnCells: function() {
-         if (this._hoveredColumn.columnIndex !== null) {
+         var hoveredColumn = this._getHoveredColumn();
+         
+         if (hoveredColumn.columnIndex !== null) {
             var cells = [],
                 trs, cell;
    
@@ -800,13 +802,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
    
             for(var i = 0, len = trs.length; i < len; i++) {
-               cell = trs[i].children[this._hoveredColumn.columnIndex];
+               cell = trs[i].children[hoveredColumn.columnIndex];
                if(cell) {
                   cells.push(cell);
                }
             }
    
-            this._hoveredColumn.cells = $(cells).addClass('controls-DataGridView__hoveredColumn__cell');
+            hoveredColumn.cells = $(cells).addClass('controls-DataGridView__hoveredColumn__cell');
          }
       },
    
