@@ -925,25 +925,30 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           */
          execCommand: function (command) {
             var editor = this._tinyEditor;
+            var needPrepocess;
+            var execCmd;
             if (command === 'blockquote') {
-               if (!editor.formatter.match(command)) {
-                  var rng = editor.selection.getRng();
-                  var node = rng.startContainer;
-                  if (rng.endContainer === node && node.nodeType === 3 && node.previousSibling && node.previousSibling.nodeType === 1) {
-                     var startOffset = rng.startOffset;
-                     var endOffset = rng.endOffset;
-                     editor.dom.split(node.parentNode, node);
-                     var newRng = editor.getDoc().createRange();
-                     newRng.setStart(node, startOffset);
-                     newRng.setEnd(node, endOffset);
-                     editor.selection.setRng(newRng);
-                  }
+               needPrepocess = true;
+               execCmd = 'mceBlockQuote';
+            }
+            else
+            if (command === 'InsertOrderedList' || command === 'InsertUnorderedList') {
+               needPrepocess = true;
+            }
+            if (needPrepocess && !editor.formatter.match(command)) {
+               var rng = editor.selection.getRng();
+               var node = rng.startContainer;
+               if (rng.endContainer === node && node.nodeType === 3 && node.previousSibling && node.previousSibling.nodeType === 1) {
+                  var startOffset = rng.startOffset;
+                  var endOffset = rng.endOffset;
+                  editor.dom.split(node.parentNode, node);
+                  var newRng = editor.getDoc().createRange();
+                  newRng.setStart(node, startOffset);
+                  newRng.setEnd(node, endOffset);
+                  editor.selection.setRng(newRng);
                }
-               editor.execCommand('mceBlockQuote');
             }
-            else {
-               editor.execCommand(command);
-            }
+            editor.execCommand(execCmd || command);
             //TODO:https://github.com/tinymce/tinymce/issues/3104, восстанавливаю выделение тк оно теряется если после нжатия кнопки назад редактор стал пустым
             if ((cConstants.browser.firefox || cConstants.browser.isIE) && command == 'undo' && this._getTinyEditorValue() == '') {
                editor.selection.select(editor.getBody(), true);
