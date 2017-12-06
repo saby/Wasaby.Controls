@@ -23,7 +23,7 @@ define([
          }
          else {
             testNum++;
-            $('#mocha').append('<div id="component"></div>');//Для добавления верстки на страницу
+            $('#mocha').append('<div id="component123"></div>');//Для добавления верстки на страницу
          }
       });
 
@@ -42,7 +42,7 @@ define([
 
       it('SimpleCase - Validation1 - single validator', function (done) {
          global.requirejs(['Core/Control', 'js!DemoComponents/Validation/Validation1/Validation1'], function (CoreControl, Component) {
-            var element = $('#component');
+            var element = $('#component123');
             testControl = CoreControl.createControl(Component, {element: element}, element);
 
             testControl._afterMount = function () {
@@ -83,7 +83,7 @@ define([
 
       it('SimpleCase - Form1 - single validator', function (done) {
          global.requirejs(['Core/Control', 'js!DemoComponents/Validation/Form1/Form1'], function (CoreControl, Component) {
-            var element = $('#component');
+            var element = $('#component123');
             testControl = CoreControl.createControl(Component, {element: element}, element);
 
             testControl._afterMount = function () {
@@ -107,7 +107,7 @@ define([
 
       it('SimpleCase - Form2 - multiple validators', function (done) {
          global.requirejs(['Core/Control', 'js!DemoComponents/Validation/Form2/Form2'], function (CoreControl, Component) {
-            var element = $('#component');
+            var element = $('#component123');
             testControl = CoreControl.createControl(Component, {element: element}, element);
 
             testControl._afterMount = function () {
