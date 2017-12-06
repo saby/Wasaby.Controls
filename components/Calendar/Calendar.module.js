@@ -308,6 +308,7 @@ define(
          },
 
          destroy: function() {
+            this.getContainer().find('.controls-Calendar__tableBodyElement').off('click');
             ControlHierarchyManager.removeNode(this, this.getParent());
             Calendar.superclass.destroy.apply(this, arguments);
          }
