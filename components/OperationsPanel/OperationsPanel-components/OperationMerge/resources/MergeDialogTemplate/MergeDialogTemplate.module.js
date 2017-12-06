@@ -6,7 +6,6 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
    "js!SBIS3.CORE.CompoundControl",
    "tmpl!SBIS3.CONTROLS.MergeDialogTemplate",
    "WS.Data/Source/SbisService",
-   "WS.Data/Adapter/Sbis",
    "WS.Data/Query/Query",
    "WS.Data/Collection/RecordSet",
    "Core/helpers/fast-control-helpers",
@@ -21,7 +20,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
    "i18n!!SBIS3.CONTROLS.MergeDialogTemplate",
    'css!SBIS3.CONTROLS.MergeDialogTemplate',
    'css!SBIS3.CONTROLS.RadioButton'
-], function( CommandDispatcher, Control, dotTplFn, SbisServiceSource, SbisAdapter, Query, RecordSet, fcHelpers, cellRadioButtonTpl, cellCommentTpl, cellTitleTpl, rowTpl) {
+], function( CommandDispatcher, Control, dotTplFn, SbisServiceSource, Query, RecordSet, fcHelpers, cellRadioButtonTpl, cellCommentTpl, cellTitleTpl, rowTpl) {
 
 
     var COMMENT_FIELD_NAME = 'Comment',

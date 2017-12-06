@@ -5,21 +5,19 @@
 define('js!SBIS3.CONTROLS.ItemActionsGroup',
    [
    "Core/CommandDispatcher",
-   "Core/IoC",
-   "Core/ConsoleLogger",
    "js!SBIS3.CONTROLS.ButtonGroupBaseDS",
-   "js!SBIS3.CONTROLS.IconButton",
-   "js!SBIS3.CONTROLS.Link",
    "tmpl!SBIS3.CONTROLS.ItemActionsGroup",
    "tmpl!SBIS3.CONTROLS.ItemActionsGroup/ItemTpl",
    "Core/helpers/Object/find",
    "Core/helpers/markup-helpers",
    "Core/helpers/Function/forAliveOnly",
    "Core/moduleStubs",
+   "js!SBIS3.CONTROLS.IconButton",
+   "js!SBIS3.CONTROLS.Link",
    "css!SBIS3.CONTROLS.ItemActionsGroup",
    "i18n!SBIS3.CONTROLS.ItemActionsGroup"
 ],
-   function( CommandDispatcher, IoC, ConsoleLogger,ButtonGroupBaseDS, IconButton, Link, dotTplFn, dotTplFnForItem, objectFind, mkpHelpers, forAliveOnly, moduleStubs) {
+   function( CommandDispatcher, ButtonGroupBaseDS, dotTplFn, dotTplFnForItem, objectFind, mkpHelpers, forAliveOnly, moduleStubs) {
 
       'use strict';
 

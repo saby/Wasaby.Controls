@@ -2,15 +2,15 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
       'js!SBIS3.CONTROLS.PopupMixin',
-      'js!SBIS3.CORE.FileStorageLoader',
       'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'js!SBIS3.CONTROLS.RichEditor.ImagePanel',
+      'js!SBIS3.CORE.FileStorageLoader',
       'js!SBIS3.CONTROLS.CommandsButton',
       'js!SBIS3.CONTROLS.Link',
       'css!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'css!SBIS3.CONTROLS.Menu'
-   ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, dotTplFn, ImagePanel) {
+   ], function(CompoundControl, PopupMixin, Di, dotTplFn, ImagePanel) {
       'use strict';
       //todo: отказаться от этого модуля в 3.7.5.50 перейти на контекстное меню
       var
@@ -71,7 +71,13 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                     icon,
                     target,
                     className,
-                    buttons;
+                    buttons,
+                    setTemplate = function() {
+                        buttons = this._commandsButton.getItemsInstances();
+                        if (buttons) {
+                            buttons.template.setIcon('icon-16 icon-' + icon + ' icon-primary')
+                        }
+                    }.bind(this);
                 if (this._options.templates && this._commandsButton) {
                     target = this.getTarget();
                     className = target.attr('class');
@@ -85,9 +91,10 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                     } else {
                         icon = 'PicLeft';
                     }
-                    buttons = this._commandsButton.getItemsInstances();
-                    if (buttons) {
-                        buttons.template.setIcon('icon-16 icon-' + icon + ' icon-primary')
+                    if (this._commandsButton.getPicker()) {
+                        setTemplate();
+                    } else {
+                        this.subscribeOnceTo(this._commandsButton, 'onPickerOpen', setTemplate);
                     }
                 }
             },

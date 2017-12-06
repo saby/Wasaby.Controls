@@ -6,17 +6,17 @@
 @closeBigButtonImage:                     url('img/areaBigCloseButton.png') 0 0;
 @closeBigButtonImageHover:                url('img/areaBigCloseButton.png') 0 round(-84px * @multiplier);
 //Icon Button
-@button-text-color:                       @white-color;
-@button-text-shadow:                      0px 1px 0px rgba(0, 0, 0, 0.35);
-@button-shadow:                           0px 1px 4px rgba(0, 0, 0, 0.5);
+@color_Button:                            @white-color;
+@text-shadow_Button:                      0px 1px 0px rgba(0, 0, 0, 0.35);
+@box-shadow_Button:                       0px 1px 4px rgba(0, 0, 0, 0.5);
 // Normal default button
-@button-border:                           @button-border-width solid @default-border-color-second;
+@button-border:                           @border-width_Button solid @default-border-color-second;
 // Normal primary button
-@button-primary-border:                   @default-border-width solid @button-primary-border-color;
+@button-primary-border:                   @default-border-width solid @border-color_Button_primary;
 @button-primary-active-border:            @default-border-width solid #d94700;
 // Normal disabled button
-@button-disabled-border:                  @button-border-width solid @button-bg-color;
-@button-checked-border:                   @button-border-width solid @button-checked-border-color;
+@border_Button_disabled:                  @border-width_Button solid @background_Button;
+@button-checked-border:                   @border-width_Button solid @button-checked-border-color;
 // Normal primary button
 @button-primary-checked-border:           @button-primary-active-border;
 @switcher-border:                         @default-border-width solid #2C4458;
