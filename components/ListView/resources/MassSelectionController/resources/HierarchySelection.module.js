@@ -66,6 +66,12 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
          this.select([rootId]);
       },
 
+      unselectAll: function () {
+         this._markedTree.clear();
+         HierarchySelection.superclass.unselectAll.call(this);
+      },
+
+
       toggleAll: function () {
          var rootId = this._options.projection.getRoot().getContents();
          if (rootId === this._options.root) {
