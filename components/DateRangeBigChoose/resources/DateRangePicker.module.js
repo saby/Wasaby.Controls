@@ -27,9 +27,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
            query: function (query) {
               var executor = (function() {
                     var now = new Date(),
+                       adapter = this.getAdapter().forTable(),
                        items = [];
-
-                    adapter = this.getAdapter().forTable();
 
                     for (var i = 0; i < limit; i++) {
                        items.push({id: i, date: new Date(now.getFullYear(), offset + i, 1)});
@@ -47,7 +46,6 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
 
                     return items;
                  }).bind(this),
-                 adapter,
                  offset = query.getOffset(),
                  limit = query.getLimit() || 1;
 
