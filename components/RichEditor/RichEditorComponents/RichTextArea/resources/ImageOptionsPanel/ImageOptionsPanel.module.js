@@ -66,10 +66,42 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                   this._commandsButton.getItemInstance('edit').setVisible(!!this._options.imageUuid);
                }
             },
-
+            updateTemplate: function() {
+                var
+                    icon,
+                    target,
+                    className,
+                    buttons,
+                    setTemplate = function() {
+                        buttons = this._commandsButton.getItemsInstances();
+                        if (buttons) {
+                            buttons.template.setIcon('icon-16 icon-' + icon + ' icon-primary')
+                        }
+                    }.bind(this);
+                if (this._options.templates && this._commandsButton) {
+                    target = this.getTarget();
+                    className = target.attr('class');
+                    if (className) {
+                        icon = 'PicRight';
+                        if (className === 'image-template-left') {
+                            icon = 'PicLeftT';
+                        }
+                    } else if (target.parent('.image-template-center').length) {
+                        icon = 'PicCenter';
+                    } else {
+                        icon = 'PicLeft';
+                    }
+                    if (this._commandsButton.getPicker()) {
+                        setTemplate();
+                    } else {
+                        this.subscribeOnceTo(this._commandsButton, 'onPickerOpen', setTemplate);
+                    }
+                }
+            },
             recalcPosition: function() {
                //todo: убрать при переходе на контекстное меню
                ImageOptionsPanel.superclass.recalcPosition.apply(this, arguments);
+               this.updateTemplate();
                var
                   parent = this.getParent(),
                   srcollParent = parent.getContainer().parent('.controls-ScrollContainer__content'),

@@ -257,12 +257,12 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                      def.callback(newKeys);
                   },
                   function() {
-                     def.callback([instance._defaultId]);
+                     def.callback([instance.getDefaultId()]);
                   }
                );
                return def;
             }
-            return def.callback([instance._defaultId]);
+            return def.callback([instance.getDefaultId()]);
          },
          //TODO это дублЬ! нужно вынести в хелпер!!!
          _isSimilarArrays : function(arr1, arr2){

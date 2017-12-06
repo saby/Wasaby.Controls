@@ -655,6 +655,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._inputField.attr('placeholder', '');
          this._compatPlaceholder = $(compatiblePlaceholderTemplate(this._options));
          this._inputField.after(this._compatPlaceholder);
+         this.reviveComponents();
          this._initPlaceholderEvents(this._compatPlaceholder);
       },
 
