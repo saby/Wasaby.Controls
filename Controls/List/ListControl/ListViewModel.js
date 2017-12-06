@@ -75,7 +75,7 @@ define('js!Controls/List/ListControl/ListViewModel',
          updateIndexes: function(startIndex, stopIndex) {
             this._startIndex = startIndex;
             this._stopIndex = stopIndex;
-            this._notify('onUpdateIndexes');
+            this._notify('onListChange');
          },
 
          setItems: function(items) {
