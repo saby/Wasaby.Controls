@@ -238,8 +238,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                self.hide();
             });
          }
-         this._findParentContainer();
-         if (this._options.parentContainer) {
+         if (this._findParentContainer()) {
             container.appendTo(this._getParentContainer());
          }
          else {
@@ -269,6 +268,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                   this._options.parentContainer = parent;
               }
           }
+          return this._options.parentContainer;
       },
 
       _touchKeyboardMoveHandler: function(){
