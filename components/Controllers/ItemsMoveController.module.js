@@ -58,23 +58,18 @@ define('js!SBIS3.CONTROLS.ItemsMoveController', [
       },
 
       _updateItemsActions: function(item) {
-         var toggleActions = function() {
-               var
-                  itemsInstances = itemsActions.getItemsInstances(),
-                  items = linkedView.getItems(),
-                  nextItem = items.at(items.getIndex(item) + 1),
-                  prevItem = items.at(items.getIndex(item) - 1);
-               itemsInstances['moveUp'].toggle(prevItem);
-               itemsInstances['moveDown'].toggle(nextItem);
-            },
-            linkedView = this._options.linkedView,
+         var linkedView = this._options.linkedView,
             itemsActions = linkedView.getItemsActions();
 
-         if (itemsActions.isLoading()) {
-            itemsActions.once('onDrawItems', toggleActions);
-         } else {
-            toggleActions();
-         }
+         itemsActions.ready().addCallback(function() {
+            var
+               itemsInstances = itemsActions.getItemsInstances(),
+               items = linkedView.getItems(),
+               nextItem = items.at(items.getIndex(item) + 1),
+               prevItem = items.at(items.getIndex(item) - 1);
+            itemsInstances['moveUp'].toggle(prevItem);
+            itemsInstances['moveDown'].toggle(nextItem);
+         });
       },
 
       _onChangeHoveredItem: function(event, hoveredItem) {

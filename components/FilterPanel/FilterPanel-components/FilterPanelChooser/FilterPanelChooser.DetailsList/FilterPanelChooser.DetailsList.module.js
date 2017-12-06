@@ -160,7 +160,14 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
       },
 
       _onChangeHoveredItem: function(event, hoveredItem) {
-         var toggleActions = function() {
+         var listView,
+            itemsActions,
+            item = hoveredItem.record;
+
+         if (item) {
+            listView = this._getListView();
+            itemsActions = listView.getItemsActions();
+            itemsActions.ready().addCallback(function() {
                var itemsInstances = itemsActions.getItemsInstances(),
                   isItemSelected = listView.getSelectedKeys().indexOf(item.getId()) !== -1;
                // Согласно стандарту, отображаем иконку включения иерархии если иерархия отключена или иерархия включена, но запись не отмечена
@@ -168,19 +175,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
                // Согласно стандарту, отображаем иконку выключения иерархии если иерархия включена и запись отмечена
                itemsInstances['disableHierarchy'].toggle(item.get('hierarchy') === true && isItemSelected);
 
-            },
-            listView,
-            itemsActions,
-            item = hoveredItem.record;
-
-         if (item) {
-            listView = this._getListView();
-            itemsActions = listView.getItemsActions();
-            if (itemsActions.isLoading()) {
-               itemsActions.once('onDrawItems', toggleActions);
-            } else {
-               toggleActions();
-            }
+            });
          }
       },
 
