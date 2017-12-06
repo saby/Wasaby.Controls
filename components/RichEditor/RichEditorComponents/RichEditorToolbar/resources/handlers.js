@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/handlers',
          italic: onButtonClick,
          underline: onButtonClick,
          strikethrough: onButtonClick,
-         mceBlockQuote: onButtonClick,
+         blockquote: onButtonClick,
          align: function (event, key) {
             this.getParent()._setTextAlign(key);
          },

@@ -925,11 +925,35 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * </pre>
           * @public
           */
-         execCommand: function(command) {
-            this._tinyEditor.execCommand(command);
+         execCommand: function (command) {
+            var editor = this._tinyEditor;
+            var needPrepocess;
+            var execCmd;
+            if (command === 'blockquote') {
+               needPrepocess = true;
+               execCmd = 'mceBlockQuote';
+            }
+            else
+            if (command === 'InsertOrderedList' || command === 'InsertUnorderedList') {
+               needPrepocess = true;
+            }
+            if (needPrepocess && !editor.formatter.match(command)) {
+               var rng = editor.selection.getRng();
+               var node = rng.startContainer;
+               if (rng.endContainer === node && node.nodeType === 3 && node.previousSibling && node.previousSibling.nodeType === 1) {
+                  var startOffset = rng.startOffset;
+                  var endOffset = rng.endOffset;
+                  editor.dom.split(node.parentNode, node);
+                  var newRng = editor.getDoc().createRange();
+                  newRng.setStart(node, startOffset);
+                  newRng.setEnd(node, endOffset);
+                  editor.selection.setRng(newRng);
+               }
+            }
+            editor.execCommand(execCmd || command);
             //TODO:https://github.com/tinymce/tinymce/issues/3104, восстанавливаю выделение тк оно теряется если после нжатия кнопки назад редактор стал пустым
             if ((cConstants.browser.firefox || cConstants.browser.isIE) && command == 'undo' && this._getTinyEditorValue() == '') {
-               this._tinyEditor.selection.select(this._tinyEditor.getBody(), true);
+               editor.selection.select(editor.getBody(), true);
             }
          },
 
@@ -1158,29 +1182,24 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          insertImageTemplate: function(key, fileobj) {
+            //необходимо вставлять каретку(курсор ввода), чтобы пользователь понимал куда будет производиться ввод
+            var CARET = cConstants.browser.chrome /*|| cConstants.browser.firefox*/ ? '&#xFEFF;{$caret}' : '{$caret}';
             var className, before, after;
-            //TODO: придумтаь как сделать без without-margin
             switch (key) {
                case '1':
                   className = 'image-template-left';
-                  before = '<p class="without-margin">';
-                  //необходимо вставлять пустой абзац с кареткой(курсором ввода), чтобы пользователь понимал куда будет производиться ввод
-                  after = '</p><p>{$caret}</p>';
+                  after = CARET;
                   break;
                case '2':
                   before = '<p class="controls-RichEditor__noneditable image-template-center">';
-                  after = '</p><p></p>';
+                  after = '</p>' + CARET;
                   break;
                case '3':
                   className = 'image-template-right';
-                  before = '<p class="without-margin">';
-                  //необходимо вставлять пустой абзац с кареткой(курсором ввода), чтобы пользователь понимал куда будет производиться ввод
-                  after = '</p><p>{$caret}</p>';
+                  after = CARET;
                   break;
                case '6':
-                  if (cConstants.browser.chrome || cConstants.browser.firefox) {
-                     after = '&#xFEFF;{$caret}';
-                  }
+                  after = CARET;
                   break;
                case '4':
                   //todo: сделать коллаж
@@ -1804,34 +1823,34 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             imageOptionsPanel.show();
          },
 
-         _changeImageTemplate: function(target, template) {
-            var
-               parent = target.parent();
-            parent.removeClass();
-            parent.removeAttr ('contenteditable');
-            target.removeClass();
-
+         _changeImageTemplate: function ($img, template) {
+            $img.removeClass();
+            var $parent = $img.parent();
+            var needUnwrap = $parent.hasClass('image-template-center');
+            if (needUnwrap && template != '2') {
+               $img.unwrap();
+            }
             switch (template) {
-               case "1":
-                  target.addClass('image-template-left');
-                  parent.addClass('without-margin');
+               case '1':
+                  $img.addClass('image-template-left');
                   break;
-               case "2":
-                  var
-                     //todo: go to tmpl
-                     width = target[0].style.width || (target.width() + 'px'),
-                     imageParagraph = '<p class="controls-RichEditor__noneditable image-template-center" contenteditable="false">' + //tinyMCE не проставляет contenteditable если изменение происходит  через dom.replace
+               case '2':
+                  //todo: go to tmpl
+                  var width = $img[0].style.width || ($img.width() + 'px');
+                  var html = '<p class="controls-RichEditor__noneditable image-template-center" contenteditable="false">' + //tinyMCE не проставляет contenteditable если изменение происходит  через dom.replace
                         '<img' +
-                        ' src="' + target.attr('src') + '"' +
+                        ' src="' + $img.attr('src') + '"' +
                         ' style="width:' + (width ? width : constants.defaultImagePercentSize + '%') + '"' +
-                        ' alt="' + target.attr('alt') + '"' +
+                        ' alt="' + $img.attr('alt') + '"' +
+                        ' data-img-uuid="' + $img.attr('data-img-uuid') + '"' +
                         '></img>' +
                      '</p>';
-                  this._tinyEditor.dom.replace($(imageParagraph)[0],target[0],false);
+                  this._tinyEditor.dom.replace($(html)[0], (needUnwrap ? $parent : $img)[0],false);
                   break;
-               case "3":
-                  target.addClass('image-template-right');
-                  parent.addClass('without-margin');
+               case '3':
+                  $img.addClass('image-template-right');
+                  break;
+               case '6':
                   break;
             };
             this._updateTextByTiny();
@@ -2422,7 +2441,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                               'subTitleText',
                               'additionalText',
                               'controls-RichEditor__noneditable',
-                              'without-margin',
+                              //'without-margin',
                               'image-template-left',
                               'image-template-center',
                               'image-template-right',
