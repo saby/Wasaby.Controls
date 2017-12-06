@@ -407,57 +407,28 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   // Если есть хоть какой-то результат для показа - проверить не истёк ли его срок годности
                   var until = model.get('resultValidUntil');
                   if (until && until < new Date()) {
-                     InformationPopupManager.showMessageDialog({
-                        message:rk('Операция устарела.'),
-                        details:rk('Выполните повторно.')
-                     });
+                     this._obsoleteResult();
                      return true;
                   }
                }
                if (handler) {
-                  var path = handler.split(':');
-                  require([path.shift()], function (module) {
-                     var args = model.get('resultHandlerArgs');
-                     if (args) {
-                        if (typeof args === 'string') {
-                           // Это могут быть как сложные данные в виде json, так и просто одиночная строка
-                           try {
-                              args = JSON.parse(args);
+                  var checker = model.get('resultChecker');
+                  if (checker) {
+                     this._execHandler(checker, model.get('resultCheckerArgs')).addCallbacks(
+                        function (isValid) {
+                           if (isValid) {
+                              this._execHandler(handler, model.get('resultHandlerArgs'));
                            }
-                           catch (ex) {
-                              // Значит просто строка
+                           else {
+                              this._obsoleteResult();
                            }
-                        }
-                        if (!Array.isArray(args)) {
-                           args = [args];
-                        }
-                     }
-                     else {
-                        args = [];
-                     }
-                     if (1 < path.length && !(args.length === 0 || args.length === path.length)) {
-                        throw new Error('Handler and its arguments are not compatible');
-                     }
-                     if (path.length) {
-                        for (var subject = module; path.length; ) {
-                           if (!subject || typeof subject !== 'object') {
-                              throw new Error('Subhandler is or not valid');
-                           }
-                           var method = path.shift();
-                           if (typeof subject[method] !== 'function') {
-                              throw new Error('Handler method is or not valid');
-                           }
-                           var arg = args.length ? args.shift() : [];
-                           subject = subject[method].apply(subject, Array.isArray(arg) ? arg : [arg]);
-                        }
-                     }
-                     else {
-                        if (!module || typeof module !== 'function') {
-                           throw new Error('Handler is or not valid');
-                        }
-                        module.apply(null, args);
-                     }
-                  });
+                        }.bind(this),
+                        this._obsoleteResult.bind(this)
+                     );
+                  }
+                  else {
+                     this._execHandler(handler, model.get('resultHandlerArgs'));
+                  }
                   return true;
                }
                if (url) {
@@ -479,6 +450,75 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                }
             }
             return false;
+         },
+
+         /**
+          * Показать сообщение о том, что результат устарел
+          * @protected
+          */
+         _obsoleteResult: function () {
+            InformationPopupManager.showMessageDialog({
+               message:rk('Операция устарела.'),
+               details:rk('Выполните повторно.')
+            });
+         },
+
+         /**
+          * Выполнить (асинхронно) обработчик, заданный строками методов и аргументов, и вернуть результат (если есть)
+          * @protected
+          * @param {string} method Строка методов
+          * @param {string} args Строка аргументов
+          * @return {Core/Deferred<any>}
+          */
+         _execHandler: function (method, args) {
+            var path = method.split(':');
+            var promise = new Deferred();
+            require([path.shift()], function (module) {
+               var value;
+               if (args) {
+                  if (typeof args === 'string') {
+                     // Это могут быть как сложные данные в виде json, так и просто одиночная строка
+                     try {
+                        args = JSON.parse(args);
+                     }
+                     catch (ex) {
+                        // Значит просто строка
+                     }
+                  }
+                  if (!Array.isArray(args)) {
+                     args = [args];
+                  }
+               }
+               else {
+                  args = [];
+               }
+               if (1 < path.length && !(args.length === 0 || args.length === path.length)) {
+                  throw new Error('Method and its arguments are not compatible');
+               }
+               if (path.length) {
+                  var subject = module;
+                  for ( ; path.length; ) {
+                     if (!subject || typeof subject !== 'object') {
+                        throw new Error('Submethod is or not valid');
+                     }
+                     var submethod = path.shift();
+                     if (typeof subject[submethod] !== 'function') {
+                        throw new Error('Submethod is or not valid');
+                     }
+                     var arg = args.length ? args.shift() : [];
+                     subject = subject[submethod].apply(subject, Array.isArray(arg) ? arg : [arg]);
+                  }
+                  value = subject;
+               }
+               else {
+                  if (!module || typeof module !== 'function') {
+                     throw new Error('Method is or not valid');
+                  }
+                  value = module.apply(null, args);
+               }
+               promise.callback.apply(promise, value !== undefined ? [value] : []);
+            });
+            return promise;
          },
 
          /**
