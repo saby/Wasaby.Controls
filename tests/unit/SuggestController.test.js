@@ -31,8 +31,8 @@ define(
             var self = {};
             self._options = {};
             SuggestController._private.getSearchController(self).addCallback(function(controller) {
-               assert.isTrue(cInstance.instanceOfModule(controller, 'js!Controls/Input/resources/PopupSearchController'));
-               assert.isTrue(cInstance.instanceOfModule(self._searchController, 'js!Controls/Input/resources/PopupSearchController'));
+               assert.isTrue(cInstance.instanceOfModule(controller, 'js!Controls/Input/resources/SuggestPopupController'));
+               assert.isTrue(cInstance.instanceOfModule(self._searchController, 'js!Controls/Input/resources/SuggestPopupController'));
                done();
             });
          });

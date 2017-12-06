@@ -1,13 +1,11 @@
 define('js!Controls/Input/Suggest',
    [
       'Core/Control',
-      'js!Controls/Input/Text',
       'tmpl!Controls/Input/Suggest/Suggest',
-      'Core/core-merge',
       'js!WS.Data/Type/descriptor',
       'js!Controls/Input/resources/SuggestController'
    ],
-   function(Control, Text, template, cMerge, types, SuggestController) {
+   function(Control, template, types, SuggestController) {
    
       /**
        * Поле ввода с автодополнением
@@ -49,12 +47,6 @@ define('js!Controls/Input/Suggest',
    
          // <editor-fold desc="LifeCycle">
    
-         _notifyProxy: function(event) {
-            var args = [].slice.call(arguments, 1);
-            args.unshift(event.name);
-            event.setResult(this._notify.apply(this, args));
-         },
-   
          _afterMount: function() {
             var suggestController = new SuggestController({
                suggestTemplate: this._options.suggestTemplate,
@@ -77,23 +69,21 @@ define('js!Controls/Input/Suggest',
    
    
       // <editor-fold desc="OptionsDesc">
-      var textOptionTypes = Text.getOptionTypes;
       Suggest.getOptionTypes = function() {
-         return cMerge(textOptionTypes(), {
+         return {
             searchDelay: types(Number),
             minSearchLength: types(Number),
             filter: types(Object),
             searchParam: types(String),
             clearable: types(Boolean)
-         });
+         };
       };
    
-      var textDefaultOptions = Text.getDefaultOptions;
       Suggest.getDefaultOptions = function() {
-         return cMerge(textDefaultOptions(), {
+         return {
             searchDelay: 500,
             minSearchLength: 3
-         });
+         };
       };
       // </editor-fold>
       

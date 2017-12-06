@@ -41,7 +41,7 @@ define('js!Controls/Input/resources/SuggestController',
    
          self._loadSearchControllerDeferred = new Deferred();
       
-         requirejs(['js!Controls/Input/resources/PopupSearchController'], function (controller) {
+         requirejs(['js!Controls/Input/resources/SuggestPopupController'], function (controller) {
             self._loadSearchControllerDeferred.callback(self._searchController = new controller({
                dataSource: self._options.dataSource,
                searchParam: self._options.searchParam,

@@ -1,4 +1,4 @@
-define('js!Controls/Input/resources/PopupSearchController',
+define('js!Controls/Input/resources/SuggestPopupController',
    [
       'Core/core-extend',
       'Core/core-merge',
@@ -23,7 +23,7 @@ define('js!Controls/Input/resources/PopupSearchController',
          }
       };
       
-      var PopupSearchController = extend({
+      var SuggestPopupController = extend({
          constructor: function(options) {
             this._options = options;
          },
@@ -63,12 +63,12 @@ define('js!Controls/Input/resources/PopupSearchController',
             }
          },
          
-         _moduleName: 'Controls/Input/resources/PopupSearchController'
+         _moduleName: 'Controls/Input/resources/SuggestPopupController'
       });
    
       /** For tests **/
-      PopupSearchController._private = _private;
+      SuggestPopupController._private = _private;
       
-      return PopupSearchController;
+      return SuggestPopupController;
    }
 );
