@@ -529,6 +529,11 @@ define(
                return null;
             }
             return new Date(month.getFullYear(), month.getMonth(), 1);
+         },
+
+         destroy: function() {
+            this.getContainer().find('.' + this._MONTH_VIEW_CSS_CLASSES.TABLE).off('click mouseenter mouseleave');
+            MonthView.superclass.destroy.apply(this, arguments);
          }
       });
 
