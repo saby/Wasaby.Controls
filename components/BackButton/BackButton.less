@@ -52,8 +52,8 @@
       max-width: calc(~"100% - @{back-arrow-width-h6} - @{back-button-arrow-padding-right-2}");
    }
    &_size_default-backButton.controls-Link {
-      font-size: @back-button-font-size;
       max-width: calc(~"100% - @{back-arrow-width-h3} - @{back-button-arrow-padding-right-2}");
+      .ws-header-size-mixin(@back-button-font-size, @back-button-height);
    }
    &_size_bold.controls-Link {
       .ws-header_size_weight();

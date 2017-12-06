@@ -623,11 +623,11 @@
 }
 
 
-.ws-header-size-mixin(@text-size) {
+.ws-header-size-mixin(@text-size, @height: @default-height) {
   display: inline-block;
   font-size: @text-size;
-  height: @default-height;
-  line-height: @default-height;
+  height: @height;
+  line-height: @height;
   font-family: @default-font-name;
 }
 .ws-back-arrow-size-mixin(@width, @height) {
