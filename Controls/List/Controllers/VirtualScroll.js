@@ -92,10 +92,6 @@ define('js!Controls/List/Controllers/VirtualScroll', [
          this._displayCount = displayCount;
       },
 
-      updateListModel: function(direction) {
-         //console.log('VirtualScroll::updateListModel ' + direction);
-      },
-
       calcVirtualWindow: function(scrollTop) {
          var newPage = _private.getPage(scrollTop, this._rowHeight);
 
@@ -131,6 +127,8 @@ define('js!Controls/List/Controllers/VirtualScroll', [
          return res;
       }
    });
+
+   VirtualScroll._private = _private;
 
    return VirtualScroll;
 });

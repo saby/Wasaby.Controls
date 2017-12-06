@@ -129,14 +129,6 @@ define('js!Controls/List/ListControl', [
 
                   _private.hideIndicator(self);
 
-                  /*if (self._virtualScroll) {
-                     self._virtualScroll.setDisplayCount(self._listModel._itemsModel._display.getCount());
-                  }
-
-                  //TODO !!!!!!!!!!!!!!!!!!!
-                  self._bottomPlaceholderHeight = (self._listModel._itemsModel._display.getCount() - 50) * 25;
-                  */
-
                   return list;
                }, self))
                .addErrback(fHelpers.forAliveOnly(function(err){

@@ -42,14 +42,30 @@ define([
 
       //Корректность метода вычисления текущей страницы
       it('Calc current page', function() {
-         virtualScroll.calcVirtualWindow(0, virtualScroll._listModel);
-         assert.equal(virtualScroll._currentPage, 0);
+         var pageInfo = VirtualScroll._private.getPage(0, 25);
+         assert.equal(pageInfo.page, 0);
 
-         virtualScroll.calcVirtualWindow(200, virtualScroll._listModel);
-         assert.equal(virtualScroll._currentPage, 1);
+         pageInfo = VirtualScroll._private.getPage(200, 25);
+         assert.equal(pageInfo.page, 1);
 
-         virtualScroll.calcVirtualWindow(2000, virtualScroll._listModel);
-         assert.equal(virtualScroll._currentPage, 6);
+         pageInfo = VirtualScroll._private.getPage(2000, 25);
+         assert.equal(pageInfo.page, 6);
+      });
+
+      //Корректность метода вычисления видимого диапазона
+      it('Calc range to show', function() {
+         var res = VirtualScroll._private.getRangeToShowByIndex(0, 75, 500);
+         assert.equal(res.start, 0);
+         assert.equal(res.stop, 50);
+
+         res = VirtualScroll._private.getRangeToShowByIndex(25, 75, 500);
+         assert.equal(res.start, 0);
+         assert.equal(res.stop, 75);
+
+         res = VirtualScroll._private.getRangeToShowByIndex(500, 75, 500);
+         assert.equal(res.start, 475);
+         assert.equal(res.stop, 500);
+
       });
 
       it('Scroll to top List', function() {
