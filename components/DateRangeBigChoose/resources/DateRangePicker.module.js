@@ -25,34 +25,39 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
            },
 
            query: function (query) {
-              var adapter,
+              var executor = (function() {
+                    var now = new Date(),
+                       items = [];
+
+                    adapter = this.getAdapter().forTable();
+
+                    for (var i = 0; i < limit; i++) {
+                       items.push({id: i, date: new Date(now.getFullYear(), offset + i, 1)});
+                    }
+
+                    this._each(
+                       items,
+                       function(item) {
+                          adapter.add(item);
+                       }
+                    );
+                    items = this._prepareQueryResult(
+                       {items: adapter.getData(), total: 1000000000000}
+                    );
+
+                    return items;
+                 }).bind(this),
+                 adapter,
                  offset = query.getOffset(),
-                 limit = query.getLimit() || 1,
-                 now,
-                 items;
+                 limit = query.getLimit() || 1;
 
               offset = offset - _startingOffset;
-              return this._loadAdditionalDependencies().addCallback((function() {
-                 adapter = this.getAdapter().forTable(),
-                    now = new Date(),
-                    items = [];
 
-                 for (var i = 0; i < limit; i++) {
-                    items.push({id: i, date: new Date(now.getFullYear(), offset + i, 1)});
-                 }
-
-                 this._each(
-                    items,
-                    function(item) {
-                       adapter.add(item);
-                    }
-                 );
-                 items = this._prepareQueryResult(
-                    {items: adapter.getData(), total: 1000000000000}
-                 );
-
-                 return items;
-              }).bind(this));
+              if (this._loadAdditionalDependencies) {
+                 return this._loadAdditionalDependencies().addCallback(executor);
+              } else {
+                 return Deferred.success(executor());
+              }
            }
        });
 
