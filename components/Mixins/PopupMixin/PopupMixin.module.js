@@ -238,7 +238,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                self.hide();
             });
          }
-         this._findParenContainer();
+         this._findParentContainer();
          if (this._options.parentContainer) {
             container.appendTo(this._getParentContainer());
          }
@@ -257,7 +257,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          }
       },
 
-      _findParenContainer: function() {
+      _findParentContainer: function() {
           if (!this._options.parentContainer) {
               var
                   linkedContainer = this._options.target ?
