@@ -13,11 +13,8 @@ define(
             it('Only numbers in integers check', function () {
                var
                   inputResult;
-               inputResult = NumberTextBox._private.prepareData.call(
-                  {
-                     _options: {
-                     }
-                  },
+               inputResult = NumberTextBox._private.prepareData(
+                  {},
                   {
                      before: '12',
                      insert: 'a',
@@ -33,11 +30,8 @@ define(
             it('Only numbers in decimals check', function () {
                var
                   inputResult;
-               inputResult = NumberTextBox._private.prepareData.call(
-                  {
-                     _options: {
-                     }
-                  },
+               inputResult = NumberTextBox._private.prepareData(
+                  {},
                   {
                      before: '12.3',
                      insert: 'a',
@@ -53,11 +47,9 @@ define(
             it('Only positive values check', function () {
                var
                   inputResult;
-               inputResult = NumberTextBox._private.prepareData.call(
+               inputResult = NumberTextBox._private.prepareData(
                   {
-                     _options: {
-                        onlyPositive: true
-                     }
+                     onlyPositive: true
                   },
                   {
                      before: '',
@@ -74,11 +66,9 @@ define(
             it('Max integers length check', function () {
                var
                   inputResult;
-               inputResult = NumberTextBox._private.prepareData.call(
+               inputResult = NumberTextBox._private.prepareData(
                   {
-                     _options: {
-                        integersLength: 5
-                     }
+                     integersLength: 5
                   },
                   {
                      before: '12 345',
@@ -95,11 +85,9 @@ define(
             it('Max decimals length check', function () {
                var
                   inputResult;
-               inputResult = NumberTextBox._private.prepareData.call(
+               inputResult = NumberTextBox._private.prepareData(
                   {
-                     _options: {
-                        precision: 5
-                     }
+                     precision: 5
                   },
                   {
                      before: '0.12345',
@@ -116,11 +104,9 @@ define(
             it('Forbid dot if zero precision', function () {
                var
                   inputResult;
-               inputResult = NumberTextBox._private.prepareData.call(
+               inputResult = NumberTextBox._private.prepareData(
                   {
-                     _options: {
-                        precision: 0
-                     }
+                     precision: 0
                   },
                   {
                      before: '12',
@@ -137,11 +123,8 @@ define(
             it('Inserting a dot at the beginning of a line results in \'0.\'', function () {
                var
                   inputResult;
-               inputResult = NumberTextBox._private.prepareData.call(
-                  {
-                     _options: {
-                     }
-                  },
+               inputResult = NumberTextBox._private.prepareData(
+                  {},
                   {
                      before: '',
                      insert: '.',
@@ -160,11 +143,8 @@ define(
                   possibleInsertValuesArr = [',', 'б', 'ю', 'Б', 'Ю'];
 
                possibleInsertValuesArr.forEach(function(item) {
-                  inputResult = NumberTextBox._private.prepareData.call(
-                     {
-                        _options: {
-                        }
-                     },
+                  inputResult = NumberTextBox._private.prepareData(
+                     {},
                      {
                         before: '123',
                         insert: item,
@@ -181,11 +161,8 @@ define(
             it('Delete space operation removes symbol before space and moves cursor left', function () {
                var
                   inputResult;
-               inputResult = NumberTextBox._private.prepareData.call(
-                  {
-                     _options: {
-                     }
-                  },
+               inputResult = NumberTextBox._private.prepareData(
+                  {},
                   {
                      before: '123',
                      insert: '',

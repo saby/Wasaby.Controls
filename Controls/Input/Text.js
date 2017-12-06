@@ -66,15 +66,15 @@ define('js!Controls/Input/Text', [
          var _private = {
 
          //Валидирует и подготавливает новое значение по splitValue
-         prepareData: function(splitValue) {
+         prepareData: function(config, splitValue) {
             var insert = splitValue.insert;
 
-            if (this._options.constraint) {
-               insert = Helper.constraint(insert, this._options.constraint);
+            if (config.constraint) {
+               insert = Helper.constraint(insert, config.constraint);
             }
 
-            if(this._options.maxLength){
-               insert = Helper.maxLength(insert, splitValue, this._options.maxLength);
+            if(config.maxLength){
+               insert = Helper.maxLength(insert, splitValue, config.maxLength);
             }
 
             return {
@@ -93,7 +93,13 @@ define('js!Controls/Input/Text', [
             TextBox.superclass.constructor.call(this, options);
 
             this._value = options.value;
-            this._prepareData = _private.prepareData.bind(this);
+            this._prepareData = {
+               config: {
+                  constraint: options.constraint,
+                  maxLength: options.maxLength
+               },
+               func: _private.prepareData
+            }
          },
 
          _beforeUpdate: function(newOptions) {

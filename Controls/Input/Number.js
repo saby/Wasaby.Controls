@@ -105,7 +105,7 @@ define('js!Controls/Input/Number', [
       /**
        * Возвращает позицию курсора с учетом разделителей
        * @param splitValue
-       * @param shift {Integer} дополнительный сдвиг курсора
+       * @param shift {Integer} дополнительный сдвиг курсора, на случай если он должен стоять не сразу после введённого значения
        * @returns {Integer}
        */
       getCursorPosition: function (splitValue, shift) {
@@ -119,10 +119,11 @@ define('js!Controls/Input/Number', [
 
       /**
        * Валидирует и подготавливает новое значение по splitValue
+       * @param config объект с необходимыми опциями
        * @param splitValue
        * @returns {{value: (*|String), position: (*|Integer)}}
        */
-      prepareData: function (splitValue) {
+      prepareData: function (config, splitValue) {
          var
             shift = 0;
 
@@ -143,7 +144,7 @@ define('js!Controls/Input/Number', [
          }
 
          //Если валидация не прошла, то не даем ничего ввести
-         if (!_private.validate(splitValue, this._options.onlyPositive, this._options.integersLength, this._options.precision)) {
+         if (!_private.validate(splitValue, config.onlyPositive, config.integersLength, config.precision)) {
             splitValue.insert = '';
          }
 
@@ -198,7 +199,14 @@ define('js!Controls/Input/Number', [
 
       constructor: function (options) {
          NumberInput.superclass.constructor.apply(this, arguments);
-         this._prepareData = _private.prepareData.bind(this);
+         this._prepareData = {
+            config: {
+               onlyPositive: options.onlyPositive,
+               integersLength: options.integersLength,
+               precision: options.precision
+            },
+            func: _private.prepareData
+         }
       },
 
       _beforeUpdate: function (newOptions) {
