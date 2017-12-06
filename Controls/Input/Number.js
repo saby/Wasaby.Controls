@@ -29,10 +29,10 @@ define('js!Controls/Input/Number', [
             clearVal = _private.getClearValue();
 
          if (
-            !this.validators.isNumber(clearVal) ||
-            typeof onlyPositive !== 'undefined' && !this.validators.onlyPositive(clearVal) ||
-            typeof integersLength !== 'undefined' && !this.validators.maxIntegersLength(clearVal, integersLength) ||
-            typeof precision !== 'undefined' && !this.validators.maxDecimalsLength(clearVal, precision)
+            !_private.validators.isNumber(clearVal) ||
+            typeof onlyPositive !== 'undefined' && !_private.validators.onlyPositive(clearVal) ||
+            typeof integersLength !== 'undefined' && !_private.validators.maxIntegersLength(clearVal, integersLength) ||
+            typeof precision !== 'undefined' && !_private.validators.maxDecimalsLength(clearVal, precision)
          ) {
             return false;
          }
