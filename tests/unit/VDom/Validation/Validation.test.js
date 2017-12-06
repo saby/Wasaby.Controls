@@ -40,6 +40,47 @@ define([
          });
       }
 
+      it('SimpleCase - Validation1 - single validator', function (done) {
+         global.requirejs(['Core/Control', 'js!DemoComponents/Validation/Validation1/Validation1'], function (CoreControl, Component) {
+            var element = $('#component');
+            testControl = CoreControl.createControl(Component, {element: element}, element);
+
+            testControl._afterMount = function () {
+               runDelayed(function() {
+                  $(document).ready(function () {
+                     setTimeout(function () { // ждем когда оживятся дети
+
+                        testControl._children.validate._focusOutHandler();
+                        runDelayed(function () { // ждем синхронизатор
+                           runDelayed(function () { // ждем runDelayed из DOMEnvironment который нужен для reviveSuperOldControls
+                              runDelayed(function () { // ждем когда пройдет валидация
+                                 assert.deepEqual(testControl._children.textBox._options.validationError, [false]);
+
+                                 testControl.setText('ya@ya.ya');
+                                 runDelayed(function () { // ждем синхронизатор
+                                    runDelayed(function () { // ждем runDelayed из DOMEnvironment который нужен для reviveSuperOldControls
+                                       testControl._children.validate._focusOutHandler();
+                                       runDelayed(function () { // ждем синхронизатор
+                                          runDelayed(function () { // ждем runDelayed из DOMEnvironment который нужен для reviveSuperOldControls
+                                             runDelayed(function () { // ждем когда пройдет валидация
+                                                assert.deepEqual(testControl._children.textBox._options.validationError, true);
+                                                done();
+                                             });
+                                          });
+                                       });
+                                    });
+                                 });
+
+                              });
+                           });
+                        });
+                     }, 200);
+                  });
+               });
+            };
+         });
+      });
+
       it('SimpleCase - Form1 - single validator', function (done) {
          global.requirejs(['Core/Control', 'js!DemoComponents/Validation/Form1/Form1'], function (CoreControl, Component) {
             var element = $('#component');
@@ -100,8 +141,12 @@ define([
 
       afterEach(function () {
          testControl.__$destroyFromDirtyChecking = true;
-         testControl._children.Form.__$destroyFromDirtyChecking = true;
-         testControl._children.validate.__$destroyFromDirtyChecking = true;
+         if (testControl._children.Form) {
+            testControl._children.Form.__$destroyFromDirtyChecking = true;
+         }
+         if (testControl._children.validate) {
+            testControl._children.validate.__$destroyFromDirtyChecking = true;
+         }
          testControl && testControl.destroy();
       });
    });

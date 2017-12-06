@@ -20,13 +20,17 @@ define('Components/Validate/Validate',
 
          constructor: function(cfg) {
             Validate.superclass.constructor.call(this, cfg);
-            this.subscribe('onFocusOut', function() {
+
+            this._focusOutHandler = function() {
                this._shouldValidate = true;
                this._forceUpdate();
-            }.bind(this));
-            this.subscribe('onFocusIn', function() {
+            }.bind(this);
+            this._focusInHandler = function() {
                this.setValidationResult(true);
-            }.bind(this));
+            }.bind(this);
+
+            this.subscribe('onFocusIn', this._focusInHandler);
+            this.subscribe('onFocusOut', this._focusOutHandler);
          },
          _afterMount: function () {
             this._notify('validateCreated', this);
