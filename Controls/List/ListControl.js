@@ -73,6 +73,7 @@ define('js!Controls/List/ListControl', [
 
             if (self._virtualScroll) {
                self._virtualScroll.setDisplayCount(self._listModel._itemsModel._display.getCount());
+               _private.onListScroll.call(self, 0);
             }
          })
       },
@@ -234,7 +235,7 @@ define('js!Controls/List/ListControl', [
       },
 
       onListScroll: function(scrollTop) {
-         var virtualResult = this._virtualScroll.calcVirtualWindow(scrollTop, this._listModel);
+         var virtualResult = this._virtualScroll.calcVirtualWindow(scrollTop);
          //Если нужно, обновляем индексы видимых записей и распорки
          if (virtualResult) {
             this._topPlaceholderHeight = virtualResult.topPlaceholderHeight;
@@ -242,8 +243,6 @@ define('js!Controls/List/ListControl', [
             this._listModel.updateIndexes(virtualResult.indexStart, virtualResult.indexStop);
             this._forceUpdate();
          }
-
-
       }
    };
 
@@ -421,7 +420,7 @@ define('js!Controls/List/ListControl', [
                maxRows: 75,
                listModel: this._listModel,
                rowHeight: 25,
-               displayCount: 0//this._listModel._itemsModel._display.getCount()
+               displayCount: 0
             });
          },
 

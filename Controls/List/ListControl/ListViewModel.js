@@ -33,9 +33,8 @@ define('js!Controls/List/ListControl/ListViewModel',
                this._selectedItem = this.getItemById(cfg.selectedKey, cfg.idProperty);
             }
 
-            //TODO переделать рассчет _stopIndex
             this._startIndex = 0;
-            this._stopIndex = Math.min(50, this._itemsModel._display.getCount());
+            this._stopIndex = this._itemsModel._display.getCount();
          },
 
          destroy: function() {
@@ -44,16 +43,17 @@ define('js!Controls/List/ListControl/ListViewModel',
          },
 
          reset: function() {
-            //TODO убрать this._itemsModel._curIndex
+            //TODO убрать this._itemsModel._curIndex ?
             this._itemsModel._curIndex = this._startIndex;
          },
 
          isEnd: function() {
-            //TODO убрать this._itemsModel._curIndex
+            //TODO убрать this._itemsModel._curIndex ?
             return this._itemsModel._curIndex < this._stopIndex;
          },
 
          goToNext: function() {
+            //TODO убрать this._itemsModel._curIndex ?
             this._itemsModel._curIndex++;
          },
 
