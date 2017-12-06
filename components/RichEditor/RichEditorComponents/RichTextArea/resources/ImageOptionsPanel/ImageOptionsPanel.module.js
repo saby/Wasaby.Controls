@@ -71,7 +71,13 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                     icon,
                     target,
                     className,
-                    buttons;
+                    buttons,
+                    setTemplate = function() {
+                        buttons = this._commandsButton.getItemsInstances();
+                        if (buttons) {
+                            buttons.template.setIcon('icon-16 icon-' + icon + ' icon-primary')
+                        }
+                    }.bind(this);
                 if (this._options.templates && this._commandsButton) {
                     target = this.getTarget();
                     className = target.attr('class');
@@ -85,9 +91,10 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                     } else {
                         icon = 'PicLeft';
                     }
-                    buttons = this._commandsButton.getItemsInstances();
-                    if (buttons) {
-                        buttons.template.setIcon('icon-16 icon-' + icon + ' icon-primary')
+                    if (this._commandsButton.getPicker()) {
+                        setTemplate();
+                    } else {
+                        this.subscribeOnceTo(this._commandsButton, 'onPickerOpen', setTemplate);
                     }
                 }
             },
