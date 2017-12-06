@@ -15,18 +15,17 @@ define('js!Controls/Input/Number', [
       NumberInput;
 
    _private = {
-      splitValue: null,
-
       /**
        * Валидирует значение splitValue
+       * @param splitValue
        * @param onlyPositive
        * @param integersLength
        * @param precision
        * @returns {boolean}
        */
-      validate: function(onlyPositive, integersLength, precision) {
+      validate: function(splitValue, onlyPositive, integersLength, precision) {
          var
-            clearVal = _private.getClearValue();
+            clearVal = _private.getClearValue(splitValue);
 
          if (
             !_private.validators.isNumber(clearVal) ||
@@ -72,27 +71,30 @@ define('js!Controls/Input/Number', [
 
       /**
        * Возвращает значение инпута без разделительных пробелов
+       * @param splitValue
        * @returns {String}
        */
-      getClearValue: function() {
-         return _private.concatSplitValue().replace(/ /g, '');
+      getClearValue: function(splitValue) {
+         return _private.concatSplitValue(splitValue).replace(/ /g, '');
       },
 
       /**
        * Возвращает значение инпута в виде строки
+       * @param splitValue
        * @returns {String}
        */
-      concatSplitValue: function() {
-         return _private.splitValue.before + _private.splitValue.insert + _private.splitValue.after;
+      concatSplitValue: function(splitValue) {
+         return splitValue.before + splitValue.insert + splitValue.after;
       },
 
       /**
        * Возвращает готовую строку с разделителями
+       * @param splitValue
        * @returns {String}
        */
-      getValueWithDelimiters: function() {
+      getValueWithDelimiters: function(splitValue) {
          var
-            clearValSplited = _private.getClearValue().split('.');
+            clearValSplited = _private.getClearValue(splitValue).split('.');
 
          //Разбиваем на триады только часть до точки
          clearValSplited[0] = clearValSplited[0].replace(/(\d)(?=(\d{3})+$)/g, '$& ');
@@ -102,16 +104,17 @@ define('js!Controls/Input/Number', [
 
       /**
        * Возвращает позицию курсора с учетом разделителей
+       * @param splitValue
        * @param shift {Integer} дополнительный сдвиг курсора
        * @returns {Integer}
        */
-      getCursorPosition: function (shift) {
+      getCursorPosition: function (splitValue, shift) {
          var
-            beforeNewDelimetersSpacesCnt = _private.concatSplitValue().split(' ').length - 1,
-            afterNewDelimetersSpacesCnt = _private.getValueWithDelimiters().split(' ').length - 1,
+            beforeNewDelimetersSpacesCnt = _private.concatSplitValue(splitValue).split(' ').length - 1,
+            afterNewDelimetersSpacesCnt = _private.getValueWithDelimiters(splitValue).split(' ').length - 1,
             spacesCntDiff = afterNewDelimetersSpacesCnt - beforeNewDelimetersSpacesCnt;
 
-         return _private.splitValue.before.length + _private.splitValue.insert.length + spacesCntDiff + shift;
+         return splitValue.before.length + splitValue.insert.length + spacesCntDiff + shift;
       },
 
       /**
@@ -140,14 +143,14 @@ define('js!Controls/Input/Number', [
          }
 
          //Если валидация не прошла, то не даем ничего ввести
-         if (!_private.validate(this._options.onlyPositive, this._options.integersLength, this._options.precision)) {
+         if (!_private.validate(splitValue, this._options.onlyPositive, this._options.integersLength, this._options.precision)) {
             splitValue.insert = '';
          }
 
          //Запишет значение в input и поставит курсор в указанное место
          return {
-            value: _private.getValueWithDelimiters(),
-            position: _private.getCursorPosition(shift)
+            value: _private.getValueWithDelimiters(splitValue),
+            position: _private.getCursorPosition(splitValue, shift)
          };
       }
    };
