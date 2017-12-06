@@ -2105,6 +2105,11 @@ define('js!SBIS3.CONTROLS.ListView',
                this.scrollToFirstPage();
                // Will reset pages after redrawing items
                this._resetPaging = true;
+            }
+
+            // Убираем распорки даже когда опция вирт скроллинга отключена
+            // При начале поиска мы отключаем вирт скролл, но при этом распорки все равно надо убрать
+            if (this._topWrapper && this._bottomWrapper) {
                this._topWrapper.height(0);
                this._bottomWrapper.height(0);
             }

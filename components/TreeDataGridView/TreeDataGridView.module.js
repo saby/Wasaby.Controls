@@ -399,8 +399,16 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       expandNode: function (key, hash) {
+         var self = this,
+             expandResult;
+         
          this._hideItemsToolbar();
-         return TreeDataGridView.superclass.expandNode.apply(this, arguments);
+         expandResult = TreeDataGridView.superclass.expandNode.apply(this, arguments);
+         expandResult.addCallback(function(result) {
+            self._updateHoveredColumnCells();
+            return result;
+         });
+         return expandResult;
       },
 
       /**
