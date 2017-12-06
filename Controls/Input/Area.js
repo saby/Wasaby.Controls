@@ -1,13 +1,13 @@
 define('js!Controls/Input/Area', [
    'js!Controls/Input/Text',
    'Core/constants',
-   'WS.Data/Type/descriptor',
+   /*'WS.Data/Type/descriptor',*/
    'Core/detection',
    'tmpl!Controls/Input/Area/Area',
    'css!Controls/Input/Area/Area'
 ], function(Text,
             constants,
-            types,
+            /*types,*/
             detection,
             template) {
 
@@ -129,7 +129,7 @@ define('js!Controls/Input/Area', [
       };
    };
 
-   //TODO раскомментировать когда полечат https://online.sbis.ru/opendoc.html?guid=e53e46a0-9478-4026-b7d1-75cc5ac0398b
+   //TODO раскомментировать этот блок + зависимость types когда полечат https://online.sbis.ru/opendoc.html?guid=e53e46a0-9478-4026-b7d1-75cc5ac0398b
    /*Area.getOptionTypes = function() {
       return {
          minLines: types(Number),

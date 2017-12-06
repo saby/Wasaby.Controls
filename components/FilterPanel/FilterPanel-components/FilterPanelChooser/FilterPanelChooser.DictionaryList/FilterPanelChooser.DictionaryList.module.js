@@ -116,12 +116,14 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
             var
                 item,
                 items = this._getListView().getItems();
+            items.setEventRaising(false, true);
             changed.removed.forEach(function(id) {
                 item = items.getRecordById(id);
                 if (item) {
                     items.remove(item);
                 }
             });
+            items.setEventRaising(true, true);
             this._getListView().redraw();
             this._addItemsFromDefault();
             this._toggleAllButton();
