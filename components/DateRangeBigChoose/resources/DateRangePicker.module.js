@@ -25,28 +25,34 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
            },
 
            query: function (query) {
-               // throw new Error('Method must be implemented');
-               var adapter = this.getAdapter().forTable(),
-                   offset = query.getOffset(),
-                   limit = query.getLimit() || 1,
-                   now = new Date(),
-                   items = [];
-               offset = offset - _startingOffset;
+              var adapter,
+                 offset = query.getOffset(),
+                 limit = query.getLimit() || 1,
+                 now,
+                 items;
 
-               for (var i = 0; i < limit; i++) {
-                   items.push({id: i, date: new Date(now.getFullYear(), offset + i, 1)});
-               }
+              offset = offset - _startingOffset;
+              return this._loadAdditionalDependencies().addCallback((function() {
+                 adapter = this.getAdapter().forTable(),
+                    now = new Date(),
+                    items = [];
 
-               this._each(
-                   items,
-                   function(item) {
+                 for (var i = 0; i < limit; i++) {
+                    items.push({id: i, date: new Date(now.getFullYear(), offset + i, 1)});
+                 }
+
+                 this._each(
+                    items,
+                    function(item) {
                        adapter.add(item);
-                   }
-               );
-               items = this._prepareQueryResult(
-                   {items: adapter.getData(), total: 1000000000000}
-               );
-               return Deferred.success(items);
+                    }
+                 );
+                 items = this._prepareQueryResult(
+                    {items: adapter.getData(), total: 1000000000000}
+                 );
+
+                 return items;
+              }).bind(this));
            }
        });
 
