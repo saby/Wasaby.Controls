@@ -178,6 +178,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 'target': mergeTo,
                 'merged': this._getMergedKeys(mergeTo)
             }).addCallback(function (data) {
+                items.setEventRaising(false, true);
                 data.getAll().each(function(rec) {
                     id = rec.get(idProperty);
                     record = items.getRecordById(id);
@@ -192,6 +193,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 }, self);
                 //Выбранной записи всегда выставляем AVAILABLE = true
                 items.getRecordById(mergeTo).set(AVAILABLE_FIELD_NAME, true);
+                items.setEventRaising(true, true);
                 self._applyContainer.toggleClass('ws-hidden', !showMergeButton);
             }).addBoth(function() {
                 self._treeView._toggleIndicator(false);

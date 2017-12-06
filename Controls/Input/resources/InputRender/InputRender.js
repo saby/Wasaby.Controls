@@ -1,12 +1,12 @@
 define('js!Controls/Input/resources/InputRender/InputRender',
    [
       'Core/Control',
-      'WS.Data/Type/descriptor',
+      /*'WS.Data/Type/descriptor',*/
       'tmpl!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
       'css!SBIS3.CONTROLS.TextBox'
    ],
-   function(Control, types, template, RenderHelper) {
+   function(Control, /*types,*/ template, RenderHelper) {
 
       'use strict';
 
@@ -101,7 +101,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
          };
       };
 
-      //TODO расскоментировать когда полечат https://online.sbis.ru/opendoc.html?guid=e53e46a0-9478-4026-b7d1-75cc5ac0398b
+      //TODO расскоментировать этот блок + зависимость types когда полечат https://online.sbis.ru/opendoc.html?guid=e53e46a0-9478-4026-b7d1-75cc5ac0398b
       /*InputRender.getOptionTypes = function() {
          return {
             value: types(String),
