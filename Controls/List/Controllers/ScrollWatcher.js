@@ -92,7 +92,7 @@ define('js!Controls/List/Controllers/ScrollWatcher', [
 
          cfg.scrollContainer.addEventListener(
             'scroll',
-            throttle(_private.onScrollHandler.bind(this, additionalOnScrollHandler), 200, true),
+            throttle(_private.onScrollHandler.bind(this, additionalOnScrollHandler), 100, true),
             {passive: true});
       },
 
