@@ -248,21 +248,19 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
 
          _toggleState: function(state, obj) {
             // TODO: Тоже отрефакторить ? (с использованием editro.getCurrentFormats() )
-            var
-               selectors = {
+            var selectors = {
                   'bold':  'strong',
                   'italic':  'em',
                   'underline':  'span[style*="decoration: underline"]',
                   'strikethrough':  'span[style*="decoration: line-through"]'
-               },
-               name = obj.format === 'blockquote' ? 'mceBlockQuote' : obj.format;
+               }
             if (!state && $(obj.node).closest(selectors[obj.format]).length) {
                state = true;
             }
             if (['bold', 'italic', 'underline', 'strikethrough'].indexOf(obj.format) != -1) {
                this._buttons[obj.format] = state;
             }
-            return {state: state, name: name};
+            return {state: state, name:obj.format};
          },
 
          getStylesPanel: function(button){
@@ -324,6 +322,12 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                });
             }
             return this._stylesPanel;
+         },
+
+         _execCommand: function(name) {
+            if (this._options.linkedEditor) {
+               this._options.linkedEditor.execCommand(name);
+            }
          },
 
          destroy: function() {
