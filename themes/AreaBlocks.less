@@ -4,6 +4,18 @@
    .for(6, { &_style_@{_i} {
       background-color: ~"@{bg_Block_style-@{_i}}";
    } });
+
+   &__content {
+      border: @border-width_Block-content solid @border-color_Block-content;
+      border-radius: @border-radius_Block-content;
+      box-shadow: @box-shadow_Block-content;
+   }
+   &__contentSeparator {
+      width: 100%;
+      height: @height_Block-contentSeparator;
+      background: @bg_Block-contentSeparator;
+   }
+
    &Layout {
       overflow: hidden;
       background-color: @bg_BlockLayout;
