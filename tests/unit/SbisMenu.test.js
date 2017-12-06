@@ -224,7 +224,7 @@ define([
                 ],
                 newEmptyRecord;
 
-                newEmptyRecord = SbisMenu._private.getEmptyHistoryRecord(myFormat);
+                newEmptyRecord = SbisMenu._private.getEmptyHistoryRecord(self, myFormat);
                 assert.equal(newEmptyRecord.getFormat().getCount(), 3);
                 assert.equal(newEmptyRecord.getCount(), 0);
             });
