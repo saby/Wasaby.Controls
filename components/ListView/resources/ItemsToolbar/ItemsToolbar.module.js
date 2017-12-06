@@ -5,17 +5,17 @@
 define('js!SBIS3.CONTROLS.ItemsToolbar',
     [
        'js!SBIS3.CONTROLS.CompoundControl',
-       'js!SBIS3.CONTROLS.IconButton',
        'js!SBIS3.CONTROLS.ItemActionsGroup',
        'tmpl!SBIS3.CONTROLS.ItemsToolbar',
        'tmpl!SBIS3.CONTROLS.ItemsToolbar/editActions',
        'Core/Deferred',
        'Core/helpers/Hcontrol/trackElement',
        'js!SBIS3.CONTROLS.Utils.Contains',
+       'js!SBIS3.CONTROLS.IconButton',
        'i18n!SBIS3.CONTROLS.ItemsToolbar',
        'css!SBIS3.CONTROLS.ItemsToolbar'
     ],
-    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, Deferred, trackElement, contains) {
+    function(CompoundControl, ItemActionsGroup, dotTplFn, editActionsTpl, Deferred, trackElement, contains) {
 
        'use strict';
 

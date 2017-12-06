@@ -73,6 +73,7 @@ define('js!SBIS3.CONTROLS.IconButton', [ 'js!WSControls/Buttons/Button', 'css!SB
          } else {
             this.getContainer().removeClass('controls-IconButton__doneBorder').removeClass('controls-IconButton__errorBorder');
          }
+         IconButton.superclass.setIcon.call(icon);
       },
 
       _modifyOptions: function () {

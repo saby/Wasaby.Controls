@@ -1,6 +1,6 @@
 .link-mixin(@icon-width) {
   & + .controls-Button__text {
-    margin-left: @icon-width + @button-icon-gap;
+    margin-left: @icon-width + @spacing_Button-between-icon-text;
   }
 }
 
@@ -39,7 +39,7 @@
   .controls-Button__icon {
     left: 0;
     & + .controls-Button__text {
-      margin-left: @button-icon-gap;
+      margin-left: @spacing_Button-between-icon-text;
     }
   }
   &.ws-disabled {

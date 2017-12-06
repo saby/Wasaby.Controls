@@ -254,25 +254,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _hideBrowserScrollbar: function(){
-            var style, styleMarginRight;
+            var style;
 
             if (widthBrowserScrollbar === null) {
                widthBrowserScrollbar = this._getBrowserScrollbarWidth();
             }
 
-            /**
-             * В новой версии firefox игнорируется overflow: scroll и скрывается скролл,
-             * когда контейнер становится меньше скролла(34px).
-             * Поэтому нужно установить marginRight = 0, если такое случилось.
-             */
-            if (cDetection.firefox && this._container.height() < 34) {
-               styleMarginRight = 0;
-            } else {
-               styleMarginRight = -widthBrowserScrollbar;
-            }
-
             style = {
-               marginRight: styleMarginRight
+               marginRight: -widthBrowserScrollbar
             };
 
             // На планшете c OS Windown 10 для скрытия нативного скролла, кроме margin требуется padding.
