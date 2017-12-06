@@ -217,6 +217,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _codeSampleDialog: undefined,
             _beforeFocusOutRng: undefined,
             _images: {},
+            _lastActive: undefined,
             _lastSavedText: undefined
          },
 
@@ -468,30 +469,31 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          setActive: function(active) {
-            //если тини еще не готов а мы передадим setActive родителю то потом у тини буддет баг с потерей ренжа,
-            //поэтому если isEnabled то нужно передавать setActive родителю только по готовности тини
             var
                args = [].slice.call(arguments),
                editor, manager;
+            this._lastActive = active;
             if (active && this._needFocusOnActivated() && this.isEnabled()) {
                this._performByReady(function() {
-                  this._tinyEditor.focus();
-                  if (cConstants.browser.isMobileAndroid) {
-                     // на android устройствах не происходит подскролла нативного
-                     // наш функционал тестируется на планшете фирмы MI на котором клавиатура появляется долго ввиду анимации =>
-                     // => сразу сделать подскролл нельзя
-                     // появление клавиатуры стрельнет resize у window в этот момент можно осуществить подскролл до элемента ввода текста
-                     var
-                        resizeHandler = function(){
-                           this._inputControl[0].scrollIntoView(false);
-                           $(window).off('resize', resizeHandler);
-                        }.bind(this);
-                     $(window).on('resize', resizeHandler);
+                  //Активность могла поменяться пока грузится tinymce.js
+                  if (this._lastActive) {
+                     this._tinyEditor.focus();
+                     if (cConstants.browser.isMobileAndroid) {
+                        // на android устройствах не происходит подскролла нативного
+                        // наш функционал тестируется на планшете фирмы MI на котором клавиатура появляется долго ввиду анимации =>
+                        // => сразу сделать подскролл нельзя
+                        // появление клавиатуры стрельнет resize у window в этот момент можно осуществить подскролл до элемента ввода текста
+                        var
+                           resizeHandler = function(){
+                              this._inputControl[0].scrollIntoView(false);
+                              $(window).off('resize', resizeHandler);
+                           }.bind(this);
+                        $(window).on('resize', resizeHandler);
+                     }
+                     if (cConstants.browser.isMobilePlatform) {
+                        this._notifyMobileInputFocus();
+                     }
                   }
-                  if (cConstants.browser.isMobilePlatform) {
-                     this._notifyMobileInputFocus();
-                  }
-                  RichTextArea.superclass.setActive.apply(this, args);
                }.bind(this));
             }
             else {
@@ -508,8 +510,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (cConstants.browser.isMobilePlatform) {
                   EventBus.globalChannel().notify('MobileInputFocusOut');
                }
-               RichTextArea.superclass.setActive.apply(this, args);
             }
+            RichTextArea.superclass.setActive.apply(this, args);
          },
 
          destroy: function() {
