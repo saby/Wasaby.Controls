@@ -4,10 +4,11 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
     'Core/EventBus',
     'Core/core-merge',
     'Core/helpers/transport-helpers',
+    'js!SBIS3.CONTROLS.WaitIndicator',
     'WS.Data/Source/SbisService',
     'WS.Data/Entity/Record',
     'Core/moduleStubs'
-], function (SaveStrategyBase, EventBus, coreMerge, transHelpers, SbisService, Record, moduleStubs) {
+], function (SaveStrategyBase, EventBus, coreMerge, transHelpers, WaitIndicator, SbisService, Record, moduleStubs) {
 
     'use strict';
 
@@ -193,12 +194,14 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
          */
         exportFileTransfer: function(methodName, cfg, meta) {
             var self = this,
-                source = new SbisService({ endpoint: meta.endpoint });
+                source = new SbisService({ endpoint: meta.endpoint }),
+                useLongOperations = this._useLongOperations(meta, methodName),
+                def;
 
-            return source.call(methodName, cfg).addCallback(function(result) {
+            def = source.call(methodName, cfg).addCallback(function(result) {
                //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
                //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем endpoint
-                if (self._useLongOperations(meta, methodName)) {
+                if (useLongOperations) {
                     EventBus.channel('LongOperations').notify('onOperationStarted');
                 } else {
                     self._downloadFile(result.getScalar(), meta.endpoint === "Excel" || meta.isExcel);
@@ -215,6 +218,15 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
                }
                return error;
             });
+
+            if (!useLongOperations) {
+               WaitIndicator.make({
+                  message: rk('Пожалуйста подождите...'),
+                  overlay: 'dark'
+               }, def);
+            }
+
+            return def;
         },
 
         /**

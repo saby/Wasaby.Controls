@@ -24,8 +24,7 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
          NOT_SELECTED: 0,
          SELECTED: 1,
          PARTIALLY_FULL: 2,
-         PARTIALLY: 3,
-         SELECTED_ALL_CHILDREN: 4
+         PARTIALLY: 3
    };
 
    var HierarchySelection = Selection.extend(/** @lends SBIS3.CONTROLS.HierarchySelection */{
@@ -65,16 +64,6 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
             HierarchySelection.superclass.selectAll.call(this);
          }
          this.select([rootId]);
-      },
-
-      unselectAll: function () {
-         var rootId = this._options.projection.getRoot().getContents();
-         if (rootId === this._options.root) {
-            this._markedTree.clear();
-            HierarchySelection.superclass.unselectAll.call(this);
-         } else {
-            this.unselect([rootId]);
-         }
       },
 
       toggleAll: function () {
@@ -164,9 +153,8 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
             selectionStatus = itemFromSelection ? itemFromSelection.get(STATUS_FILED) : STATUS.NOT_SELECTED;
          if (status === true) {
             if (selectionStatus !== STATUS.SELECTED) {
-               addStatus = STATUS.SELECTED_ALL_CHILDREN;
+               addStatus = STATUS.PARTIALLY;
             }
-            result.push(id);
          } else if (status === false) {
             addStatus = STATUS.NOT_SELECTED;
             result.push(id);
@@ -174,9 +162,6 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
             if (selectionStatus === STATUS.SELECTED) {
                result.push(id);
                addStatus = STATUS.PARTIALLY_FULL;
-            } else if (selectionStatus === STATUS.SELECTED_ALL_CHILDREN) {
-               result.push(id);
-               addStatus = STATUS.PARTIALLY;
             } else if (selectionStatus === STATUS.NOT_SELECTED) {
                addStatus = STATUS.PARTIALLY;
             }
@@ -232,7 +217,7 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
          } else {
             childrenFromTree.forEach(function (item) {
                status = item.get(STATUS_FILED);
-               if (status === STATUS.SELECTED || status === STATUS.SELECTED_ALL_CHILDREN) {
+               if (status === STATUS.SELECTED) {
                   selectedCount++;
                } else {
                   partiallySelectedCount++;
