@@ -76,7 +76,7 @@
 @date-range-choose-home-button-size:                                  40px;//todo: mironov
 @date-range-choose-home-button-font-size:                             32px;//todo: mironov
 @date-range-choose-home-button-line-height:                           40px;//todo: mironov
-@date-range-big-choose-years-panel-toggle-choose-year-button-margin:  0 60px;//todo: mironov
+@date-range-big-choose-years-panel-toggle-choose-year-button-margin:  0 round(60px * @multiplier);//todo: mironov
 @date-range-big-choose-months-button-first-padding-top:               2px;//todo: mironov
 @date-range-big-choose-months-button-last-padding-bottom:             3px;//todo: mironov
 @date-range-big-choose-years-panel-wrapper-font-size:                 24px;//todo: mironov
@@ -105,6 +105,7 @@
 @DropdownList-picker-head-padding:                       0 round(16px * @multiplier);//todo: krasilnikov
 @DropdownList-picker-head-duplicate-type-top-padding:    0px;//todo: krasilnikov
 @DropdownList-picker-menu-item-padding:                  round(5px * @multiplier) round(16px * @multiplier);
+@border-width_DropDownList_picker:                       @default-border-width;
 //MoveDialog
 @controls-movedialog-min-width:                 536px;
 @controls-movedialog-max-width:                 536px;
@@ -409,6 +410,7 @@
 //Data grid
 @data-grid-header-cell-height:            round(50px * @multiplier);
 @data-grid-cell-line-height:              round(44px * @multiplier);
+@data-grid-results-cell-line-height:      @data-grid-cell-line-height;
 @data-grid-header-cell-padding:           @data-grid-cell-padding;
 @data-grid-header-cell-padding-side:      round(10px * @multiplier);
 @data-grid-header-cell-font-size:         round(24px * @multiplier);
