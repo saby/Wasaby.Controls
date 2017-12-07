@@ -7,7 +7,7 @@ define('js!Controls/List/ListControl', [
    'Core/helpers/functional-helpers',
    'require',
    'js!Controls/List/Controllers/ScrollWatcher',
-   'Core/helpers/functional-helpers',
+   'js!Controls/List/Controllers/VirtualScroll',
    'css!Controls/List/ListControl/ListControl'
 ], function (Control,
              ListControlTpl,
@@ -16,7 +16,8 @@ define('js!Controls/List/ListControl', [
              PageNavigation,
              fHelpers,
              require,
-             ScrollWatcher
+             ScrollWatcher,
+             VirtualScroll
  ) {
    'use strict';
 
@@ -69,6 +70,9 @@ define('js!Controls/List/ListControl', [
             else {
                self._listModel.setItems(list);
             }
+
+            self._virtualScroll.setItemsCount(self._listModel.getCount());
+            _private.handleListScroll.call(self, 0);
          })
       },
 
@@ -203,6 +207,9 @@ define('js!Controls/List/ListControl', [
                onListTop: function() {
                },
                onListBottom: function() {
+               },
+               onListScroll: function(scrollTop) {
+                  _private.handleListScroll.call(self, scrollTop);
                }
             };
 
@@ -225,6 +232,21 @@ define('js!Controls/List/ListControl', [
          self._loadingState = null;
          self._loadingIndicatorState = null;
          self._forceUpdate();
+      },
+
+      /**
+       * Обработать прокрутку списка виртуальным скроллом
+       * @param scrollTop
+       */
+      handleListScroll: function(scrollTop) {
+         var virtualWindow = this._virtualScroll.calcVirtualWindow(scrollTop);
+         //Если нужно, обновляем индексы видимых записей и распорки
+         if (virtualWindow) {
+            this._topPlaceholderHeight = virtualWindow.topPlaceholderHeight;
+            this._bottomPlaceholderHeight = virtualWindow.bottomPlaceholderHeight;
+            this._listModel.updateIndexes(virtualWindow.indexStart, virtualWindow.indexStop);
+            this._forceUpdate();
+         }
       }
    };
 
@@ -401,6 +423,8 @@ define('js!Controls/List/ListControl', [
          _itemTemplate: null,
 
          _loadOffset: 100,
+         _topPlaceholderHeight: 0,
+         _bottomPlaceholderHeight: 0,
 
          constructor: function (cfg) {
             ListControl.superclass.constructor.apply(this, arguments);
@@ -408,6 +432,12 @@ define('js!Controls/List/ListControl', [
          },
 
          _beforeMount: function(newOptions) {
+            this._virtualScroll = new VirtualScroll({
+               maxRows: 75,
+               rowHeight: 25,
+               itemsCount: 0
+            });
+
           /* Load more data after reaching end or start of the list.
             TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
           */
@@ -429,12 +459,14 @@ define('js!Controls/List/ListControl', [
             ListControl.superclass._afterMount.apply(this, arguments);
 
             //Если есть подгрузка по скроллу и список обернут в скроллКонтейнер, то создаем ScrollWatcher
-            if (this._options.navigation && this._options.navigation.source === 'page') {
+            //TODO вместо проверки на навигацию - позже будет аналогичная проверка на наличие виртуального скролла.
+            //TODO пока создаем ScrollWatcher всегда, когда есть скроллКонтейнер
+            //if ((this._options.navigation && this._options.navigation.source === 'page')) {
                var scrollContainer = this._container.closest('.ws-scrolling-content');
                if (scrollContainer && scrollContainer.length) {
                   this._scrollWatcher = _private.createScrollWatcher.call(this, scrollContainer[0]);
                }
-            }
+            //}
 
             if (this._options.navigation && this._options.navigation.view == 'infinity') {
                //TODO кривое обращение к DOM
