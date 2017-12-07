@@ -123,13 +123,13 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
       },
 
       {
-         name: 'mceBlockQuote',
+         name: 'blockquote',
          componentType: 'WSControls/Buttons/ToggleButton',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          tooltip: rk('Цитата'),
          icon: 'sprite:icon-24 icon-Quote icon-primary',
          handlers: {
-            onActivated: handlers.mceBlockQuote
+            onActivated: handlers.blockquote
          },
          order: 65,
          tabindex: 0

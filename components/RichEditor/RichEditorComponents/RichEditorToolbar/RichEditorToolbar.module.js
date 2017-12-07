@@ -323,11 +323,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          },
 
          /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТПРАВКИ КОМАНД РЕДАКТОРУ*/
-         _execCommand : function(name) {
-            if (this._options.linkedEditor) {
-               this._options.linkedEditor.execCommand(name);
-            }
-         },
 
          _setFontStyle: function(style) {
          //_fromFormatChange - означает, что формат сменился под курсором и не нужно применять стиль
