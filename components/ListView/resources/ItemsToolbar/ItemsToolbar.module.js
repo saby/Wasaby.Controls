@@ -8,13 +8,14 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
        'js!SBIS3.CONTROLS.ItemActionsGroup',
        'tmpl!SBIS3.CONTROLS.ItemsToolbar',
        'tmpl!SBIS3.CONTROLS.ItemsToolbar/editActions',
+       'Core/Deferred',
        'Core/helpers/Hcontrol/trackElement',
        'js!SBIS3.CONTROLS.Utils.Contains',
        'js!SBIS3.CONTROLS.IconButton',
        'i18n!SBIS3.CONTROLS.ItemsToolbar',
        'css!SBIS3.CONTROLS.ItemsToolbar'
     ],
-    function(CompoundControl, ItemActionsGroup, dotTplFn, editActionsTpl, trackElement, contains) {
+    function(CompoundControl, ItemActionsGroup, dotTplFn, editActionsTpl, Deferred, trackElement, contains) {
 
        'use strict';
 
@@ -400,51 +401,64 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * Показать тулбар, если он не зафиксирован у какого-нибудь элемента
            * @param {Object} target
            * @param {Boolean} animate
+           * @return {Core/Deferred}
            */
           show: function(target, animate) {
-             var isActionsHidden = this._isItemsActionsHidden() && this._isEditActionsHidden(),
-                 hasItemsActions = this._options.itemsActions.length,
-                 itemsActions, toolbarContent;
+             var onItemsActionsReady = (function() {
+                   var isActionsHidden = this._isItemsActionsHidden() && this._isEditActionsHidden(),
+                      hasItemsActions = this._options.itemsActions.length,
+                      itemsActions;
 
-             this._target = target;
-             //Если тулбар зафиксирован или отсутствуют опции записи и кнопки редактирования по месту, то ничего не делаем
-             if (this._lockingToolbar || isActionsHidden) {
+                   result.callback();
+                   this._target = target;
+                   //Если тулбар зафиксирован или отсутствуют опции записи и кнопки редактирования по месту, то ничего не делаем
+                   if (this._lockingToolbar || isActionsHidden) {
 
-                /* Если операций нет, то сроем тулбар */
-                if(isActionsHidden) {
-                   this.hide();
-                } else if(hasItemsActions) {
-                   itemsActions = this.getItemsActions();
+                      /* Если операций нет, то сроем тулбар */
+                      if(isActionsHidden) {
+                         this.hide();
+                      } else if(hasItemsActions) {
+                         itemsActions = this.getItemsActions();
 
-                   /* Если показаны операции над записью и открыто меню, то надо обновить видимость */
-                   if(itemsActions.isItemActionsMenuVisible()) {
-                      this.getItemsActions().applyItemActions();
+                         /* Если показаны операции над записью и открыто меню, то надо обновить видимость */
+                         if(itemsActions.isItemActionsMenuVisible()) {
+                            this.getItemsActions().applyItemActions();
+                         }
+                      }
+                      return;
                    }
-                }
-                return;
-             }
-             /* Запоминаем таргет в качестве текущего */
-             this._currentTarget = target;
+                   /* Запоминаем таргет в качестве текущего */
+                   this._currentTarget = target;
 
-             if(this._lockingToolbar) {
-                this._trackingTarget();
-             }
-             if (hasItemsActions) {       // Если имеются опции записи, то создаем их и отображаем
-                this.showItemsActions(target);
+                   if(this._lockingToolbar) {
+                      this._trackingTarget();
+                   }
+                   if (hasItemsActions) {       // Если имеются опции записи, то создаем их и отображаем
+                      this.showItemsActions(target);
+                   }
+
+                   this.getContainer().removeClass('ws-hidden');
+                   this._setPosition(this._getPosition(target));
+
+                   this._isVisible = true;
+                   //Если режим touch, то отображаем тулбар с анимацией.
+                   if (this._options.touchMode) {
+                      this._trackingTarget();
+                      if (animate) {
+                         this._toolbarContent.addClass('itemsToolbar-leftSwipeAnimation');
+                         this.setHeightInTouchMode();
+                      }
+                   }
+                }).bind(this),
+                result = new Deferred();
+
+             if (this._itemsActions) {
+                this._itemsActions.ready().addCallback(onItemsActionsReady);
+             } else {
+                onItemsActionsReady();
              }
 
-             this.getContainer().removeClass('ws-hidden');
-             this._setPosition(this._getPosition(target));
-             
-             this._isVisible = true;
-             //Если режим touch, то отображаем тулбар с анимацией.
-             if (this._options.touchMode) {
-                this._trackingTarget();
-                if (animate) {
-                   this._toolbarContent.addClass('itemsToolbar-leftSwipeAnimation');
-                   this.setHeightInTouchMode();
-                }
-             }
+             return result;
           },
 
           _animationEndHandler: function (e) {
