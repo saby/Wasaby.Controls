@@ -2,14 +2,14 @@ define('js!Controls/Input/Number', [
    'Core/Control',
    'tmpl!Controls/Input/Number/Number',
    'js!WS.Data/Type/descriptor',
-   'Controls/Input/resources/PrepareData',
+   'Controls/Input/resources/ConfigBinder',
 
    'js!Controls/Input/resources/InputRender/InputRender',
    'tmpl!Controls/Input/resources/input'
 ], function (Control,
              template,
              types,
-             PrepareData) {
+             ConfigBinder) {
 
    'use strict';
    var
@@ -201,7 +201,7 @@ define('js!Controls/Input/Number', [
       constructor: function (options) {
          NumberInput.superclass.constructor.apply(this, arguments);
 
-         this._prepareData = new PrepareData(options, _private.prepareData);
+         this._prepareData = new ConfigBinder(options, _private.prepareData);
       },
 
       _beforeUpdate: function (newOptions) {

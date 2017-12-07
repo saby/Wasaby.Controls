@@ -3,7 +3,7 @@ define('js!Controls/Input/Text', [
       'Controls/Input/resources/Helper',
       'tmpl!Controls/Input/Text/Text',
       'WS.Data/Type/descriptor',
-      'Controls/Input/resources/PrepareData',
+      'Controls/Input/resources/ConfigBinder',
 
       'css!SBIS3.CONTROLS.TextBox',
       'tmpl!Controls/Input/resources/input'
@@ -11,7 +11,7 @@ define('js!Controls/Input/Text', [
                Helper,
                template,
                types,
-               PrepareData) {
+               ConfigBinder) {
 
       'use strict';
 
@@ -97,7 +97,7 @@ define('js!Controls/Input/Text', [
 
             this._value = options.value;
 
-            this._prepareData = new PrepareData(options, _private.prepareData);
+            this._prepareData = new ConfigBinder(options, _private.prepareData);
          },
 
          _beforeUpdate: function(newOptions) {
