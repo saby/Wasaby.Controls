@@ -278,7 +278,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   if (!this._notFirst
                         && status === STATUSES.ended
                         && from < model.get('startedAt').getTime() + model.get('timeSpent') + model.get('timeIdle')) {
-                     this._animationAdd(model.getId(), !model.get('isFailed'));
+                     this._animationAdd(model.getId(), !model.get('isFailed') && !model.get('viewAsFailed'));
                   }
                   if (!hasRun && status === STATUSES.running) {
                      hasRun = true;

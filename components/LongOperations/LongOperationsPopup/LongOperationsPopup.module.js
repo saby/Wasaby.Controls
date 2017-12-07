@@ -354,7 +354,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                      break;
 
                   case STATUSES.ended:
-                     var isSuccess = !model.get('isFailed');
+                     var isSuccess = !model.get('isFailed') && !model.get('viewAsFailed');
                      this._setHeader(title, isSuccess ? 'success' : 'error', isSuccess ? 'icon-size icon-24 icon-Yes icon-done' : 'icon-size icon-24 icon-Alert icon-error');
                      pauseIcon.addClass('ws-hidden');
                      break;
