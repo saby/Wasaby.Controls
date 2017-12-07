@@ -19,7 +19,7 @@ define('js!Controls/Container/Scroll',
             return this._children.content.scrollHeight;
          },
          _getContainerHeight: function() {
-            return this._container.get(0).offsetHeight;
+            return this._children.content.offsetHeight;
          },
          _toggleGradient: function() {
             // maxScrollTop > 1 - погрешность округления на различных браузерах.
@@ -30,15 +30,15 @@ define('js!Controls/Container/Scroll',
          _getScrollTop: function(){
             return this._children.content.scrollTop;
          },
-         initScrollbar: function initScrollbar() {
+         _initScrollbar: function initScrollbar() {
             this.showScrollbar = !(detection.isMobileIOS || detection.isMobileAndroid);
             this.contentHeight = this._getScrollHeight();
             this.scrollBarPosition = this._getScrollTop();
          },
-         hideScrollbar: function hideScrollbar() {
+         _hideScrollbar: function hideScrollbar() {
             this.showScrollbar = false;
          },
-         onScroll: function onScroll() {
+         _onScroll: function onScroll() {
             var scrollTop = this._getScrollTop();
             if (this.showScrollbar) {
                this.scrollBarPosition = scrollTop;
