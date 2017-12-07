@@ -280,30 +280,22 @@ define('js!Controls/List/ListControl', [
     */
 
    /**
-    * @name Controls/List/ListControl#highlighter
-    * @cfg {Function} IHighlighter
+    * @typedef {Object} Highlighter
     */
 
    /**
-    * @typedef {Object} FilterSetting
-    * @property {String} fieldName имя поля
-    * @property {String} value значение
+    * @name Controls/List/ListControl#highlighter
+    * @cfg {Array.<Highlighter>} Массив выделителей
     */
 
    /**
     * @name Controls/List/ListControl#filter
-    * @cfg {Array.<FilterSetting>} Настройки фильтра
-    */
-
-   /**
-    * @typedef {Object} SortingSetting
-    * @property {String} fieldName имя поля
-    * @property {String} order порядок ('ASC' - по возрастанию или 'DESC' - по убыванию)
+    * @cfg {Object} Конфигурация фильтра (объект с ключами полей и их значениями)
     */
 
    /**
     * @name Controls/List/ListControl#sorting
-    * @cfg {Array.<SortingSetting>} Настройки сортировки
+    * @cfg {Object} Конфигурация сортировки (ключи объекта - названия полей; значения - тип сортировки: 'ASC' - по возрастанию или 'DESC' - по убыванию)
     */
 
    /**
