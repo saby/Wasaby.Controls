@@ -31,9 +31,7 @@ define('js!Controls/Popup/Opener/Notification',
                if (!self._popupId) {
                   self._controller = new Controller();
                   self._controller.subscribe('onResult', self._notifyOnResult.bind(self));
-
                   self._popupId = Manager.show(cfg, opener || self, Strategy, self._controller);
-
                }
             });
          }

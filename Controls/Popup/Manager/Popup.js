@@ -83,7 +83,7 @@ define('js!Controls/Popup/Manager/Popup',
           */
          _sendResult: function () {
             if (this._controller) {
-               this._controller.notifyOnResult.call(this._controller, Array.prototype.slice.call(arguments));
+               this._controller.notifyOnResult.call(this._controller, Array.prototype.slice.call(arguments, 1));
             }
          }
       });
