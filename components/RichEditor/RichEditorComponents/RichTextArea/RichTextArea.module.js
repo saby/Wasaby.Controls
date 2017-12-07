@@ -2123,7 +2123,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                });
             }
             this._tinyReady.addCallback(function () {
-               this._tinyEditor.setContent(this._prepareContent(this.getText()) || '');
+               var editor = this._tinyEditor;
+               var text = this._prepareContent(this.getText()) || '';
+               editor.setContent(text);
+               if (text) {
+                  this.setCursorToTheEnd();
+                  this._togglePlaceholder(text);
+               }
                //Проблема:
                //          1) При инициализации тини в историю действий добавляет контент блока на котором он построился
                //                (если пусто то <p><br data-mce-bogus="1"><p>)
@@ -2140,8 +2146,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                //Решение:
                //          Очистить историю редактора (clear) после его построения, чтобы пункт 2 был
                //          первым в истории изщменений и редактор не стрелял 'change'
-               this._tinyEditor.undoManager.clear();
-               this._tinyEditor.undoManager.add();
+               editor.undoManager.clear();
+               editor.undoManager.add();
             }.bind(this));
          },
 
