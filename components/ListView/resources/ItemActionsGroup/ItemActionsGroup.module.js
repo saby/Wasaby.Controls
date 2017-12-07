@@ -263,9 +263,13 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          ready: function() {
             var result = new Deferred();
             if (this.isLoading()) {
-               this.once('onDrawItems', function() {
-                  result.callback();
-               });
+               this.once('onDrawItems', (function() {
+                  if (this.isDestroyed()) {
+                     result.cancel();
+                  } else {
+                     result.callback();
+                  }
+               }).bind(this));
             } else {
                result.callback();
             }
