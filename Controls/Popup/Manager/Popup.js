@@ -2,26 +2,18 @@ define('js!Controls/Popup/Manager/Popup',
    [
       'Core/Control',
       'tmpl!Controls/Popup/Manager/Popup',
-      'Core/CommandDispatcher',
       'Core/constants',
       'css!Controls/Popup/Manager/Popup'
    ],
-   function (Control, template, CommandDispatcher, CoreConstants) {
+   function (Control, template, CoreConstants) {
       'use strict';
 
       var _private = {
          /**
-          * Закрыть popup
-          */
-         close: function () {
-            CommandDispatcher.sendCommand(this, 'closePopup', this.getId());
-         },
-
-         /**
           * Обработчик фокусировки элемента.
           */
          focusIn: function () {
-            CommandDispatcher.sendCommand(this, 'focusInPopup', this.getId());
+            this._notify('focusInPopup', this._options.id);
          },
 
          /**
@@ -30,27 +22,18 @@ define('js!Controls/Popup/Manager/Popup',
           * @param focusedControl
           */
          focusOut: function (event, focusedControl) {
-            CommandDispatcher.sendCommand(this, 'focusOutPopup', this.getId(), focusedControl);
-         },
-
-         /**
-          * Отправить результат
-          */
-         sendResult: function () {
-            if (this._controller) {
-               this._controller.notifyOnResult.call(this._controller, Array.prototype.slice.call(arguments));
-            }
+            this._notify('focusOutPopup', this._options.id, focusedControl);
          },
 
          /**
           * Пересчитать позицию попапа
           */
          recalcPosition: function () {
-            CommandDispatcher.sendCommand(this, 'recalcPosition', this);
+            this._notify('recalcPosition', this);
          }
       };
 
-       /**
+      /**
        * Компонент вспывающего окна
        * @class Controls/Popup/Manager/Popup
        * @control
@@ -61,15 +44,12 @@ define('js!Controls/Popup/Manager/Popup',
       var Popup = Control.extend({
          _controlName: 'Controls/Popup/Manager/Popup',
          _template: template,
-         iWantVDOM: true,
 
          constructor: function (cfg) {
             Popup.superclass.constructor.apply(this, arguments);
-            CommandDispatcher.declareCommand(this, 'close', _private.close);
-            CommandDispatcher.declareCommand(this, 'sendResult', _private.sendResult);
          },
 
-         _beforeMount: function(options) {
+         _beforeMount: function (options) {
             this._controller = options.controller;
             this._opener = options.opener;
          },
@@ -81,13 +61,29 @@ define('js!Controls/Popup/Manager/Popup',
          },
 
          /**
+          * Закрыть popup
+          */
+         _close: function () {
+            this._notify('closePopup', this._options.id);
+         },
+
+         /**
           * Обработчик нажатия на клавиши.
           * @function Controls/Popup/Manager/Popup#_keyPressed
           * @param event
           */
          _keyPressed: function (event) {
             if (event.nativeEvent.keyCode === CoreConstants.key.esc) {
-               _private.close.call(this);
+               this._close();
+            }
+         },
+
+         /**
+          * Отправить результат
+          */
+         _sendResult: function () {
+            if (this._controller) {
+               this._controller.notifyOnResult.call(this._controller, Array.prototype.slice.call(arguments));
             }
          }
       });
