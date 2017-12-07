@@ -3907,14 +3907,18 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                }
                // После задержки показываем индикатор загрузки.
-               this._loadingIndicatorTimer = setTimeout(this._showIndicator.bind(this), INDICATOR_DELAY);
+               if (!this._loadingIndicatorTimer) {
+                  this._loadingIndicatorTimer = setTimeout(this._showIndicator.bind(this), INDICATOR_DELAY);
+               }
             }
             else {
                clearTimeout(this._loadingIndicatorTimer);
+               this._loadingIndicatorTimer = undefined;
                ajaxLoader.addClass('ws-hidden').removeClass('controls-AjaxLoader__showIndication');
             }
          },
          _showIndicator: function () {
+            this._loadingIndicatorTimer = undefined;
             this._getAjaxLoaderContainer().addClass('controls-AjaxLoader__showIndication');
          },
 
