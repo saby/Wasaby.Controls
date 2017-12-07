@@ -235,7 +235,6 @@ define('js!Controls/List/ListControl', [
     * @mixes Controls/interface/IItems
     * @mixes Controls/interface/IDataSource
     * @mixes Controls/interface/ISingleSelectable
-    * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedView
     * @control
@@ -244,13 +243,8 @@ define('js!Controls/List/ListControl', [
     */
 
    /**
-    * @name Controls/List/ListControl#showContextMenu
+    * @name Controls/List/ListControl#contextMenuEnabled
     * @cfg {Boolean} Показывать ли контекстное меню при клике на правую кнопку мыши
-    */
-
-   /**
-    * @name Controls/List/ListControl#itemEditTemplate
-    * @cfg {Function} Шаблон редактирования строки
     */
 
    /**
@@ -259,18 +253,57 @@ define('js!Controls/List/ListControl', [
     */
 
    /**
-    * @name Controls/List/ListControl#resultsTemplate
-    * @cfg {Function} Шаблон строки итогов
+    * @name Controls/List/ListControl#footerTemplate
+    * @cfg {Function} Устанавливает шаблон, который будет отображаться под элементами коллекции.
+    */
+
+   /**
+    * @typedef {String} ResultsPosition
+    * @variant top отобразить перед списком
+    * @variant bottom отобразить после списка
+    */
+
+   /**
+    * @typedef {Object} Results
+    * @property {Function} template шаблон отображения
+    * @property {ResultsPosition} position позиция в списке
+    */
+
+   /**
+    * @name Controls/List/ListControl#results
+    * @cfg {Results} Настройки отображения строки итогов
+    */
+
+   /**
+    * @name Controls/List/ListControl#virtualScroll
+    * @cfg {Object} Конфигурация виртуального скролла
+    */
+
+   /**
+    * @name Controls/List/ListControl#highlighter
+    * @cfg {Function} IHighlighter
+    */
+
+   /**
+    * @typedef {Object} FilterSetting
+    * @property {String} fieldName имя поля
+    * @property {String} value значение
     */
 
    /**
     * @name Controls/List/ListControl#filter
-    * @cfg {Object} Настройки фильтра
+    * @cfg {Array.<FilterSetting>} Настройки фильтра
+    */
+
+   /**
+    * @typedef {Object} SortingSetting
+    * @property {String} fieldName имя поля
+    * @property {String} order порядок ('ASC' - по возрастанию или 'DESC' - по убыванию)
     */
 
    /**
     * @name Controls/List/ListControl#sorting
-    * @cfg {Object} Настройки сортировки
+    * @cfg {Array.<SortingSetting>} Настройки сортировки
     */
 
    /**
@@ -318,38 +351,41 @@ define('js!Controls/List/ListControl', [
 
    /**
     * @name Controls/List/ListControl#navigation
-    * @property {ListNavigation} Настройки навигации
+    * @cfg {ListNavigation} Конфигурация навигации
     */
 
    /**
-    * @name Controls/List/ListControl#multiselect
+    * @name Controls/List/ListControl#multiSelectVisibility
     * @cfg {Boolean} Разрешен ли множественный выбор.
+    * @variant visible Показывать всегда
+    * @variant hidden Никогда не показывать
+    * @variant onhover Показывать только по ховеру
+    * @variant null По умолчанию
     */
 
    /**
-    * @name Controls/List/ListControl#itemsActions
+    * @name Controls/List/ListControl#itemActions
     * @cfg {Array} Операции над записью
     */
 
    /**
-    * @name Controls/List/ListControl#loadItemsStrategy
+    * @name Controls/List/ListControl#uniqueKeys
     * @cfg {String} Стратегия действий с подгружаемыми в список записями
-    * @variant merge Мержить, при этом записи с одинаковыми id схлопнутся в одну
-    * @variant append Добавлять, при этом записи с одинаковыми id будут выводиться в списке
+    * @variant true Мержить, при этом записи с одинаковыми id схлопнутся в одну
+    * @variant false Добавлять, при этом записи с одинаковыми id будут выводиться в списке
     */
 
-
    /**
-    * Перезагружает набор записей представления данных с последующим обновлением отображения
     * @function Controls/List/ListControl#reload
+    * Перезагружает набор записей представления данных с последующим обновлением отображения
     */
 
    /**
-    * @event Controls/List/ListControl#onItemClick Происходит при клике по строке
+    * @event Controls/List/ListControl#itemClicked Происходит при клике по строке
     */
 
    /**
-    * @event Controls/List/ListControl#onDataLoad Происходит при загрузке данных
+    * @event Controls/List/ListControl#dataLoaded Происходит при загрузке данных
     */
 
    var ListControl = Control.extend({
