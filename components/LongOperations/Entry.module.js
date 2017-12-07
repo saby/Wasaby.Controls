@@ -54,6 +54,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Entry',
          timeIdle: 'number',
          status: 'number',
          isFailed: 'boolean',
+         viewAsFailed: 'boolean',
          progressTotal: 'number',
          progressCurrent: 'number',
          canDelete: 'boolean',
@@ -101,6 +102,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Entry',
           * @param {string|number} [options.status] Статус операции. Возможные значения: 'running', 0, 'suspended', 1, 'ended', 2.
           *                                         (опционально, если не указано, будет использовано 'running')
           * @param {boolean}       [options.isFailed] Показывает, что операция завершена с ошибкой (опционально)
+          * @param {boolean}       [options.viewAsFailed] Показывает, что операция следует визуально отображать как завершённую с ошибкой (опционально)
           * @param {number}        [options.progressTotal] Общее количество стадий выполнения (опционально, если не указано, будет использована 1)
           * @param {number}        [options.progress.total] Общее количество стадий выполнения - альтернативно
           * @param {number}        [options.progressCurrent] Текущая стадия выполнения (опционально, если не указано, будет использован 0)
@@ -120,6 +122,10 @@ define('js!SBIS3.CONTROLS.LongOperations.Entry',
           * @param {string}        [options.user.lastName] Фамилия пользователя - альтернативно
           * @param {string}        [options.userPic] Урл изображения, если применимо к данной операции (опционально)
           * @param {string}        [options.user.pic] Урл изображения, если применимо к данной операции - альтернативно
+          * @param {string}        [options.resultChecker] Строка модуль-метод для проверки доступности результата операции (опционально)
+          * @param {string}        [options.result.checker] Строка модуль-метод для проверки доступности результата операции - альтернативно
+          * @param {string|object} [options.resultCheckerArgs] Аргументы обработчика проверки доступности результата операции (объект или json-строка) (опционально)
+          * @param {string|object} [options.result.checkerArgs] Аргументы обработчика проверки доступности результата операции (объект или json-строка) - альтернативно
           * @param {string}        [options.resultWayOfUse] Название способа использования результата ("Скачать", "Открыть" и т.д.) (опционально)
           * @param {string}        [options.resultMessage] Сообщение о результате операции (опционально)
           * @param {string}        [options.result.message] Сообщение о результате операции - альтернативно
