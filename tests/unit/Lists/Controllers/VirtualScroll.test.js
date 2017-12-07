@@ -33,7 +33,7 @@ define([
          maxRows: 75,
          rowHeight: 25,
          listModel: prepareListViewModel(),
-         displayCount: 500
+         itemsCount: 500
       });
 
       beforeEach(function() {

@@ -90,6 +90,10 @@ define('js!Controls/List/ListControl/ListViewModel',
             this._itemsModel.prependItems(items);
          },
 
+         getCount: function() {
+            return this._itemsModel.getCount();
+         },
+
          __calcSelectedItem: function(display, selKey, idProperty) {
 
             //TODO надо вычислить индекс

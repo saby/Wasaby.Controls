@@ -10,6 +10,27 @@ define('js!Controls/List/Controllers/VirtualScroll', [
 
    var _private = {
       /**
+       * рассчитать начало/конец видимой области и высоты распорок
+       * @param topIndex - первый отображаемый индекс
+       * @param rowHeight - средняя высота записи
+       * @param maxVisibleRows - максимальное число видимых записей
+       * @param itemsCount - общее число записей в проекции
+       * @private
+       */
+      onPageChange: function(topIndex, rowHeight, maxVisibleRows, itemsCount) {
+         var
+            newWindow = _private.getRangeToShowByIndex(topIndex, maxVisibleRows, itemsCount),
+            wrapperHeight = _private.calcPlaceholderHeight(newWindow, itemsCount, rowHeight);
+
+         return {
+            indexStart: newWindow.start,
+            indexStop: newWindow.stop,
+
+            topPlaceholderHeight: wrapperHeight.top,
+            bottomPlaceholderHeight: wrapperHeight.bottom
+         };
+      },
+      /**
        * Получить индексы текущей видимой страницы и первой видимой записи
        * @param scrollTop
        * @param rowHeight средняя высота записей
@@ -22,7 +43,7 @@ define('js!Controls/List/Controllers/VirtualScroll', [
 
          return {
             topIndex: topIndex,
-            page: topIndex//Math.ceil(topIndex / virtualPageSize)
+            page: Math.ceil(topIndex / virtualPageSize)
          };
       },
 
@@ -67,9 +88,9 @@ define('js!Controls/List/Controllers/VirtualScroll', [
     * @public контроллер для работы виртуального скролла. Вычисляет по scrollTop диапазон отображаемых записей
     */
    var VirtualScroll = simpleExtend.extend({
-      _displayCount: null,
-      _maxVisibleRows: 75,
-      _rowHeight: 25,
+      _itemsCount: null,      //Число записей в проекции
+      _maxVisibleRows: 75,    //максимальное число одновременно отображаемых записей
+      _rowHeight: 25,         //Средняя высота строки
 
       _currentPage: null,
 
@@ -77,19 +98,19 @@ define('js!Controls/List/Controllers/VirtualScroll', [
        *
        * @param cfg
        * @param cfg.maxRows {Number} - максимальное число отображаемых записей
-       * @param cfg.displayCount {Number} - общее число записей в проекции
+       * @param cfg.itemsCount {Number} - общее число записей в проекции
        * @param cfg.rowHeight {Number} - высота (средняя) однй строки
        */
       constructor: function(cfg) {
          VirtualScroll.superclass.constructor.apply(this, arguments);
 
          this._maxVisibleRows = cfg.maxRows || this._maxVisibleRows;
-         this._displayCount = cfg.displayCount;
+         this._itemsCount = cfg.itemsCount;
          this._rowHeight = cfg.rowHeight;
       },
 
-      setDisplayCount: function(displayCount) {
-         this._displayCount = displayCount;
+      setItemsCount: function(itemsCount) {
+         this._itemsCount = itemsCount;
       },
 
       calcVirtualWindow: function(scrollTop) {
@@ -100,31 +121,7 @@ define('js!Controls/List/Controllers/VirtualScroll', [
          }
 
          this._currentPage = newPage.page;
-         return this._onPageChange(newPage.page, newPage.topIndex, this._rowHeight);
-      },
-
-
-      /**
-       * рассчитать начало/конец видимой области и высоты распорок
-       * @param page - новая отображаемая страница
-       * @param topIndex - первый отображаемый индекс
-       * @param rowHeight - средняя высота записи
-       * @private
-       */
-      _onPageChange: function(page, topIndex, rowHeight) {
-         var
-            newWindow = _private.getRangeToShowByIndex(topIndex, this._maxVisibleRows, this._displayCount),
-            wrapperHeight = _private.calcPlaceholderHeight(newWindow, this._displayCount, rowHeight);
-
-         var res = {
-            indexStart: newWindow.start,
-            indexStop: newWindow.stop,
-
-            topPlaceholderHeight: wrapperHeight.top,
-            bottomPlaceholderHeight: wrapperHeight.bottom
-         };
-
-         return res;
+         return _private.onPageChange(newPage.topIndex, this._rowHeight, this._maxVisibleRows, this._itemsCount);
       }
    });
 

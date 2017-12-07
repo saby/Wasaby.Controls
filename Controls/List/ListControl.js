@@ -71,10 +71,8 @@ define('js!Controls/List/ListControl', [
                self._listModel.setItems(list);
             }
 
-            if (self._virtualScroll) {
-               self._virtualScroll.setDisplayCount(self._listModel._itemsModel._display.getCount());
-               _private.handleListScroll.call(self, 0);
-            }
+            self._virtualScroll.setItemsCount(self._listModel.getCount());
+            _private.handleListScroll.call(self, 0);
          })
       },
 
@@ -406,6 +404,12 @@ define('js!Controls/List/ListControl', [
          },
 
          _beforeMount: function(newOptions) {
+            this._virtualScroll = new VirtualScroll({
+               maxRows: 75,
+               rowHeight: 25,
+               itemsCount: 0
+            });
+
           /* Load more data after reaching end or start of the list.
             TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
           */
@@ -421,26 +425,20 @@ define('js!Controls/List/ListControl', [
                   _private.reload(this);
                }
             }
-
-            this._virtualScroll = new VirtualScroll({
-               maxRows: 75,
-               listModel: this._listModel,
-               rowHeight: 25,
-               displayCount: 0
-            });
          },
 
          _afterMount: function() {
             ListControl.superclass._afterMount.apply(this, arguments);
 
             //Если есть подгрузка по скроллу и список обернут в скроллКонтейнер, то создаем ScrollWatcher
-            //TODO условие поправить
-            if ((this._options.navigation && this._options.navigation.source === 'page') || true) {
+            //TODO вместо проверки на навигацию - позже будет аналогичная проверка на наличие виртуального скролла.
+            //TODO пока создаем ScrollWatcher всегда, когда есть скроллКонтейнер
+            //if ((this._options.navigation && this._options.navigation.source === 'page')) {
                var scrollContainer = this._container.closest('.ws-scrolling-content');
                if (scrollContainer && scrollContainer.length) {
                   this._scrollWatcher = _private.createScrollWatcher.call(this, scrollContainer[0]);
                }
-            }
+            //}
 
             if (this._options.navigation && this._options.navigation.view == 'infinity') {
                //TODO кривое обращение к DOM
