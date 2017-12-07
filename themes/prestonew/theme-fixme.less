@@ -90,6 +90,66 @@ body {
   .controls-ListView__scrollPager {
     height: round(84px * @multiplier) !important;
   }
+  //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
+  .ws-paging{
+    .ws-paging-small{
+      width: round(84px * @multiplier) !important;
+      height: round(84px * @multiplier) !important;
+      background: none !important;
+      border: @default-border-width solid #8991A9 !important;
+      font-size: round(48px * @multiplier) !important;
+      background-color: #354B62 !important;
+      line-height:   round(84px * @multiplier) !important;
+      margin: 0 8px 0 0 !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
+      color: #8991A9 !important;
+      &.ws-paging-active{
+        border: @default-border-width solid @default-border-color !important;
+        color: #E4E4E4 !important;
+        &:hover{
+          background-color: #1b2530 !important;
+        }
+      }
+      &.ws-paging-current{
+        border: @default-border-width solid @primary-color !important;
+        background:#354B62 !important;
+        color: #E4E4E4 !important;
+      }
+      &.ws-paging-next, &.ws-paging-end, &.ws-paging-first, &.ws-paging-prev {
+        position:relative;
+        &:before {
+          text-indent: 0 !important;
+          font-size: round(84px * @multiplier);
+          position:absolute;
+          top:-2px;
+          left:-2px;
+          font-family: 'carrypresto-icons' !important;
+        }
+      }
+      &.ws-paging-next {
+        &:before {
+          content: "\e97e";
+        }
+      }
+      &.ws-paging-end {
+        &:before {
+          content: "\e97d";
+
+        }
+      }
+      &.ws-paging-first {
+        &:before {
+          content: "\e980";
+        }
+      }
+      &.ws-paging-prev{
+        &:before {
+          content: "\e97f";
+        }
+      }
+    }
+  }
 }
 .ws-is-desktop-platform {
    .controls-ListView__scrollPager:not(.ws-disabled):not(:active) {
