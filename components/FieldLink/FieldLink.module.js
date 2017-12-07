@@ -78,8 +78,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
        function needShowCompatiblePlaceholder(cfg) {
           var
              useNativePlaceholder = _private.isSimplePlaceholder(cfg.placeholder),
-             selectedKeysLength = _private.keysFix(cfg.selectedKeys).length,
-             innerCheckShow = !useNativePlaceholder && (!selectedKeysLength || (cfg.multiselect && !cfg.alwaysShowTextBox));
+             isEmptySelection = cfg._isEmptySelection(cfg),
+             innerCheckShow = !useNativePlaceholder && (isEmptySelection || (cfg.multiselect && !cfg.alwaysShowTextBox));
           return cfg._needShowCompatiblePlaceholderST(cfg) && innerCheckShow;
        }
 
@@ -787,11 +787,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           _modifyOptions: function(baseCfg, parsedOptions, attrToMerge) {
+             baseCfg.selectedKeys = _private.keysFix(baseCfg.selectedKeys);
+
              var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments),
                  classesToAdd = ['controls-FieldLink'],
                  selectedKeysLength, items;
 
-             cfg.selectedKeys = _private.keysFix(cfg.selectedKeys);
              selectedKeysLength = cfg.selectedKeys.length;
 
              if(cfg.multiselect) {
