@@ -985,11 +985,24 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       },
 
       _getItemsForRedrawOnAdd: function(items) {
-         var itemsToAdd = [], start = 0, groupId;
+         var
+            itemsToAdd = [], start = 0, groupId,
+            lastItem, breadCrumbs;
          if (this._options.hierarchyViewMode) {
             itemsToAdd = searchProcessing(items, this._options);
-         }
-         else {
+            // При поиске может возникнуть ситуация, когда часть хлебных крошек прилетает на первой странице, а часть на второй.
+            // В связи с этим проверяем последний элемент в itemsContainer. Если он является хлебными крошками, то проверяем
+            // что первый элемент - является теми же крошками, то просто меняем набор данных в крошках и удаляем первый элемент.
+            // https://online.sbis.ru/opendoc.html?guid=3c76d37f-365c-47a2-97b6-2851d3b66bf1
+            lastItem = this._getItemsContainer().find('>.controls-ListView__item:last');
+            if (lastItem.hasClass('controls-HierarchyDataGridView__path')) {
+               breadCrumbs = lastItem.find('.controls-BreadCrumbs').wsControl();
+               if (breadCrumbs.getItems().at(0).getId() === itemsToAdd[0].data.path[0]['Id']) {
+                  breadCrumbs.setItems(itemsToAdd[0].data.path);
+                  itemsToAdd.shift();
+               }
+            }
+         } else {
             if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
                groupId = items[0].getContents();
                if (groupId !== false && items.length > 1 && this._canApplyGrouping(items[1])) {
