@@ -2,12 +2,14 @@ define('js!Controls/Input/Number', [
    'Core/Control',
    'tmpl!Controls/Input/Number/Number',
    'js!WS.Data/Type/descriptor',
+   'Controls/Input/resources/PrepareData',
 
    'js!Controls/Input/resources/InputRender/InputRender',
    'tmpl!Controls/Input/resources/input'
 ], function (Control,
              template,
-             types) {
+             types,
+             PrepareData) {
 
    'use strict';
    var
@@ -119,11 +121,10 @@ define('js!Controls/Input/Number', [
 
       /**
        * Валидирует и подготавливает новое значение по splitValue
-       * @param config объект с необходимыми опциями
        * @param splitValue
        * @returns {{value: (*|String), position: (*|Integer)}}
        */
-      prepareData: function (config, splitValue) {
+      prepareData: function (splitValue) {
          var
             shift = 0;
 
@@ -144,7 +145,7 @@ define('js!Controls/Input/Number', [
          }
 
          //Если валидация не прошла, то не даем ничего ввести
-         if (!_private.validate(splitValue, config.onlyPositive, config.integersLength, config.precision)) {
+         if (!_private.validate(splitValue, this.config.onlyPositive, this.config.integersLength, this.config.precision)) {
             splitValue.insert = '';
          }
 
@@ -199,14 +200,8 @@ define('js!Controls/Input/Number', [
 
       constructor: function (options) {
          NumberInput.superclass.constructor.apply(this, arguments);
-         this._prepareData = {
-            config: {
-               onlyPositive: options.onlyPositive,
-               integersLength: options.integersLength,
-               precision: options.precision
-            },
-            func: _private.prepareData
-         }
+
+         this._prepareData = new PrepareData(options, _private.prepareData);
       },
 
       _beforeUpdate: function (newOptions) {

@@ -3,12 +3,15 @@ define('js!Controls/Input/Text', [
       'Controls/Input/resources/Helper',
       'tmpl!Controls/Input/Text/Text',
       'WS.Data/Type/descriptor',
+      'Controls/Input/resources/PrepareData',
+
       'css!SBIS3.CONTROLS.TextBox',
       'tmpl!Controls/Input/resources/input'
    ], function(Control,
                Helper,
                template,
-               types) {
+               types,
+               PrepareData) {
 
       'use strict';
 
@@ -66,15 +69,15 @@ define('js!Controls/Input/Text', [
          var _private = {
 
          //Валидирует и подготавливает новое значение по splitValue
-         prepareData: function(config, splitValue) {
+         prepareData: function(splitValue) {
             var insert = splitValue.insert;
 
-            if (config.constraint) {
-               insert = Helper.constraint(insert, config.constraint);
+            if (this.config.constraint) {
+               insert = Helper.constraint(insert, this.config.constraint);
             }
 
-            if(config.maxLength){
-               insert = Helper.maxLength(insert, splitValue, config.maxLength);
+            if(this.config.maxLength){
+               insert = Helper.maxLength(insert, splitValue, this.config.maxLength);
             }
 
             return {
@@ -93,13 +96,8 @@ define('js!Controls/Input/Text', [
             TextBox.superclass.constructor.call(this, options);
 
             this._value = options.value;
-            this._prepareData = {
-               config: {
-                  constraint: options.constraint,
-                  maxLength: options.maxLength
-               },
-               func: _private.prepareData
-            }
+
+            this._prepareData = new PrepareData(options, _private.prepareData);
          },
 
          _beforeUpdate: function(newOptions) {
