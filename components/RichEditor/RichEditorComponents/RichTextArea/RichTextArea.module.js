@@ -2126,6 +2126,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                var editor = this._tinyEditor;
                var text = this._prepareContent(this.getText()) || '';
                editor.setContent(text);
+               // Если при инициализации редактора есть начальный контент - нужно установить курсор в конец и переключить местоимение (placeholder)
+               // 1174747440 https://online.sbis.ru/opendoc.html?guid=3ffa28b7-7924-469d-8e42-c7570d3939d5
                if (text) {
                   this.setCursorToTheEnd();
                   this._togglePlaceholder(text);
