@@ -309,7 +309,7 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
                             countOfVisible++;
                         }
                     } else {
-                        if (!isInternalItem) {
+                        if (!isInternalItem && item.get('visible')) {
                             item.set(self._options.additionalProperty, true);
                         }
                     }
@@ -360,6 +360,11 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
         parseHistoryData: function(self, data){
             var rawData = data.getRawData(),
                 displayProperty = self._options.displayProperty,
+                config = {
+                    adapter: new SbisAdapter(),
+                    idProperty: self._oldItems.getIdProperty(),
+                    format: self._oldItems.getFormat().clone()
+                },
                 firstName, secondName;
 
             if (self._options.pinned && rawData.pinned) {
@@ -371,8 +376,7 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
                 secondName = second.get(displayProperty);
 
                 return (firstName < secondName) ? -1 : (firstName > secondName) ? 1 : 0;
-            }).value(recordSetFactory, {adapter: new SbisAdapter()});
-            self._pinned.setIdProperty(self._oldItems.getIdProperty());
+            }).value(recordSetFactory, config);
             if (rawData.recent) {
                 _private.fillHistoryRecord(self, rawData.recent, self._recent);
             }
@@ -414,9 +418,11 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
                 // получаем старый id и восстанавливаем видимость пункта меню
                 self._pinned = Chain(self._pinned).filter(function (element) {
                     return _private.getOriginId(element.getId()) !== origId;
-                }).value(recordSetFactory, {adapter: new SbisAdapter()});
-
-                self._pinned.setIdProperty('historyId');
+                }).value(recordSetFactory, {
+                    adapter: new SbisAdapter(),
+                    idProperty: 'historyId',
+                    format: self._oldItems.getFormat().clone()
+                });
 
                 oldItem = self._oldItems.getRecordById(origId);
                 oldItem.set('visible', true);
@@ -442,7 +448,11 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
 
             self._recent = Chain(self._recent).filter(function (element) {
                 return _private.getOriginId(element.getId()) !== origId;
-            }).value(recordSetFactory, {adapter: new SbisAdapter()});
+            }).value(recordSetFactory, {
+                adapter: new SbisAdapter(),
+                idProperty: 'historyId',
+                format: self._oldItems.getFormat().clone()
+            });
 
             if (self._options.parentProperty) {
                 newItem.set(self._options.parentProperty, null);

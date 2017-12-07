@@ -237,9 +237,11 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
 
          this._calculateTileHandler = this._calculateTile.bind(this);
          this.subscribe('onDrawItems', this._calculateTileHandler);
+   
          //TODO:Нужен какой то общий канал для ресайза окна
          $(window).bind('resize', this._calculateTileHandler);
-
+         this.subscribe('onAfterVisibilityChange', this._calculateTileHandler);
+         
          if (this._options.tileTemplate) {
             IoC.resolve('ILogger').log('CompositeView', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан tileTemplate');
          }
