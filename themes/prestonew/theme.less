@@ -147,34 +147,6 @@ body {
       height: round(100px * @multiplier);
    }
 
-   .controls-ListView__scrollPager {
-      .controls-IconButton {
-         background: @background_Button;
-         padding: 0;
-         border-style: solid;
-         border-width: @border-width_Button;
-         border-color: @background_Button;
-        .box-shadow(@box-shadow_Button);
-         .controls-Button__icon {
-            height: round(84px * @multiplier)!important;
-            width: round(84px * @multiplier)!important;
-            line-height: round(84px * @multiplier) !important;
-            position: absolute;
-            top: -@default-border-width;
-            left: -@default-border-width;
-            color: #E4E4E4 !important;
-         }
-         &:active {
-           background: @background_Button_active;
-           box-shadow: none;
-         }
-         &.ws-disabled {
-            .controls-Button__icon {
-               color: @color_Button_disabled !important
-            }
-         }
-      }
-   }
   .ws-float-area-title-generated {
       line-height: round(100px * @multiplier);
   }
@@ -412,9 +384,6 @@ body  .ws-window {
 .controls-Button.controls-Button--prestogray {
     color: #2C3E50;
   background: #e4e4e4;
-}
-.controls-ListView__scrollPager {
-  height: round(84px * @multiplier) !important;
 }
 .controls-Link.controls__filter-button__clear-filter.ws-disabled {
   color: rgba(102, 170, 221, .2);
@@ -928,13 +897,6 @@ body {
       }
     }
   }
-
-  .controls-ListView__scrollPager:not(.ws-disabled):not(:active) {
-    &:hover {
-      border-color: @background_Button_hovered;
-    }
-  }
-
 }
 
 .controls-MergeDialogTemplate .controls-TreeDataGridView__levelPadding {

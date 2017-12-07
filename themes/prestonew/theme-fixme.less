@@ -58,3 +58,43 @@ body {
   border-radius: 16px;
   background-size: round(74px * @multiplier);
 }
+body {
+  .controls-ListView__scrollPager {
+    .controls-IconButton {
+      background: @background_Button;
+      padding: 0;
+      border-style: solid;
+      border-width: @border-width_Button;
+      border-color: @background_Button;
+      .box-shadow(@box-shadow_Button);
+      .controls-Button__icon {
+        height: round(84px * @multiplier)!important;
+        width: round(84px * @multiplier)!important;
+        line-height: round(84px * @multiplier) !important;
+        position: absolute;
+        top: -@default-border-width;
+        left: -@default-border-width;
+        color: #E4E4E4 !important;
+      }
+      &:active {
+        background: @background_Button_active;
+        box-shadow: none;
+      }
+      &.ws-disabled {
+        .controls-Button__icon {
+          color: @color_Button_disabled !important
+        }
+      }
+    }
+  }
+  .controls-ListView__scrollPager {
+    height: round(84px * @multiplier) !important;
+  }
+}
+.ws-is-desktop-platform {
+   .controls-ListView__scrollPager:not(.ws-disabled):not(:active) {
+    &:hover {
+      border-color: @background_Button_hovered;
+    }
+  }
+}
