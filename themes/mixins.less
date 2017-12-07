@@ -164,7 +164,7 @@
 
 .baseline-fix() {
   &:before {
-    content: '.';
+    content: '\200b'; //zero width space
     width: 0;
     display: inline-block;
     visibility: hidden;
@@ -405,12 +405,13 @@
   }
 }
 
-.ws-header-mixin(@padding-left, @padding-right, @font, @color, @hoverColor: @color) {
+.ws-header-mixin(@padding-left, @padding-right, @font, @color, @height, @hoverColor: @color) {
   display: inline-block;
   padding-left: @padding-left;
   padding-right: @padding-right;
   font: @font;
   color: @color;
+  height: @height;
   &:hover {
     color:@hoverColor;
   }

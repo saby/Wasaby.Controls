@@ -157,14 +157,23 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
             captionRender = this._options.captionRender || this._captionRender;
          if (hasMarkOptions) {
             selectedCount = this._options.linkedView.getSelectedKeys().length;
-            caption = typeof this._options.caption === 'string' ? this._options.caption : captionRender(selectedCount);
+            caption = typeof this._options.caption === 'string' ? this._options.caption : captionRender.call(this, selectedCount);
             this._menuButton.setCaption(caption);
          }
          this._menuButton.setVisible(hasMarkOptions);
          this._notifyOnSizeChanged(true);
       },
       _captionRender: function(selectedCount) {
-         return selectedCount ? rk('Отмечено') + '(' + selectedCount + ')' : rk('Отметить');
+         var
+            caption,
+            selection = this._options.linkedView.getSelection();
+            if (selection && selection.markedAll) {
+               caption = selection.excluded.length ? rk('Отмечено') : rk('Отмечено всё')
+            } else {
+               caption = selectedCount ? rk('Отмечено') + '(' + selectedCount + ')' : rk('Отметить');
+            }
+
+         return caption;
       },
 
       //Метод выполняется при изменении выделения в табличном преставлении данных. На это же выделение, ранее могли подписаться

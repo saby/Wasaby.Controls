@@ -7,7 +7,7 @@
          <div title="{[Приостановлено]}"></div>
       </ws:else>
       <ws:else data="{{value === 2}}">
-         <ws:if data="{{item.get('isFailed')}}">
+         <ws:if data="{{item.get('isFailed') || item.get('viewAsFailed')}}">
             <div class="icon-16 icon-size icon-Alert icon-error" title="{[Завершено с ошибками]}"></div>
          </ws:if>
          <ws:else>

@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             name: 'image',
             componentType: 'SBIS3.CONTROLS.IconButton',
             tooltip: rk('Вставить картинку'),
-            icon: 'sprite:icon-16 icon-Picture icon-primary',
+            icon: 'sprite:icon-16 icon-PicBtr icon-primary',
             className: 'controls-IconButton__round-border',
             handlers: {
                onActivated: handlers.image

@@ -71,19 +71,10 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
             return self._historyDataSource;
         },
 
-        getUnionList: function (self) {
-            return _private.getHistoryDataSource(self).call('UnionList', {
+        getUnionIndexesList: function (self) {
+            return _private.getHistoryDataSource(self).call('UnionIndexesList', {
                 params: {
-                    blEndpoint: {
-                        address: '/service/',
-                        contract: self._options.blParams.blEndpoint.contract
-                    },
-                    binding: {
-                        query: self._options.blParams.binding.query,
-                        read: self._options.blParams.binding.read
-                    },
                     historyId: self._options.historyId,
-                    displayField: self._options.blParams.displayField,
                     pinned: {
                         count: self._options.pinned ? 10 : 0
                     },
@@ -98,9 +89,9 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
         },
 
         initRecordSet: function (self, format) {
-            self._pinned = _private.getEmptyHistoryRecord(format);
-            self._recent = _private.getEmptyHistoryRecord(format);
-            self._frequent = _private.getEmptyHistoryRecord(format);
+            self._pinned = _private.getEmptyHistoryRecord(self, format);
+            self._recent = _private.getEmptyHistoryRecord(self, format);
+            self._frequent = _private.getEmptyHistoryRecord(self, format);
         },
 
         prepareRecordSet: function (self, record, idPrefix, history) {
@@ -137,10 +128,13 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
             }
         },
 
-        getEmptyHistoryRecord: function (format) {
+        getEmptyHistoryRecord: function (self, format) {
+            var newFormat = !Array.isArray(format) ? format.clone() : coreClone(format);
+
             return new RecordSet({
-                format: format,
-                adapter: new SbisAdapter()
+                format: newFormat,
+                adapter: new SbisAdapter(),
+                idProperty: self._oldItems.getIdProperty()
             });
         },
 
@@ -315,7 +309,7 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
                             countOfVisible++;
                         }
                     } else {
-                        if (!isInternalItem) {
+                        if (!isInternalItem && item.get('visible')) {
                             item.set(self._options.additionalProperty, true);
                         }
                     }
@@ -346,6 +340,49 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
             }
 
             return processedItems;
+        },
+
+        fillHistoryRecord: function(self, items, recordSet){
+            var oldItem, newItem;
+            items.forEach(function(id){
+                oldItem = self._oldItems.getRecordById(id);
+                if(oldItem){
+                    newItem = new Model({
+                        rawData: oldItem.getRawData(),
+                        adapter: oldItem.getAdapter(),
+                        format: oldItem.getFormat()
+                    });
+                    recordSet.add(newItem);
+                }
+            });
+        },
+
+        parseHistoryData: function(self, data){
+            var rawData = data.getRawData(),
+                displayProperty = self._options.displayProperty,
+                config = {
+                    adapter: new SbisAdapter(),
+                    idProperty: self._oldItems.getIdProperty(),
+                    format: self._oldItems.getFormat().clone()
+                },
+                firstName, secondName;
+
+            if (self._options.pinned && rawData.pinned) {
+                _private.fillHistoryRecord(self, rawData.pinned, self._pinned);
+            }
+            // сортируем по алфавиту запиненные записи
+            self._pinned = Chain(self._pinned).sort(function (first, second) {
+                firstName = first.get(displayProperty);
+                secondName = second.get(displayProperty);
+
+                return (firstName < secondName) ? -1 : (firstName > secondName) ? 1 : 0;
+            }).value(recordSetFactory, config);
+            if (rawData.recent) {
+                _private.fillHistoryRecord(self, rawData.recent, self._recent);
+            }
+            if (self._options.frequent && rawData.frequent) {
+                _private.fillHistoryRecord(self, rawData.frequent, self._frequent);
+            }
         },
 
         prepareHistory: function (self) {
@@ -381,9 +418,11 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
                 // получаем старый id и восстанавливаем видимость пункта меню
                 self._pinned = Chain(self._pinned).filter(function (element) {
                     return _private.getOriginId(element.getId()) !== origId;
-                }).value(recordSetFactory, {adapter: new SbisAdapter()});
-
-                self._pinned.setIdProperty('historyId');
+                }).value(recordSetFactory, {
+                    adapter: new SbisAdapter(),
+                    idProperty: 'historyId',
+                    format: self._oldItems.getFormat().clone()
+                });
 
                 oldItem = self._oldItems.getRecordById(origId);
                 oldItem.set('visible', true);
@@ -409,7 +448,11 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
 
             self._recent = Chain(self._recent).filter(function (element) {
                 return _private.getOriginId(element.getId()) !== origId;
-            }).value(recordSetFactory, {adapter: new SbisAdapter()});
+            }).value(recordSetFactory, {
+                adapter: new SbisAdapter(),
+                idProperty: 'historyId',
+                format: self._oldItems.getFormat().clone()
+            });
 
             if (self._options.parentProperty) {
                 newItem.set(self._options.parentProperty, null);
@@ -489,25 +532,11 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
                 format = self._oldItems.getFormat();
                 _private.initRecordSet(self, format);
 
-                this._historyDeffered = _private.getUnionList(self).addCallback(function (dataSet) {
-                    var rows = dataSet.getRow();
-
-                    if (rows) {
-
-                        if (self._options.pinned && rows.get('pinned')) {
-                            self._pinned = rows.get('pinned');
-                        }
-                        if (rows.get('recent')) {
-                            self._recent = rows.get('recent');
-                        }
-                        if (self._options.frequent && rows.get('frequent')) {
-                            self._frequent = rows.get('frequent');
-                        }
-
-                        _private.prepareHistoryData(self);
-                        _private.prepareHistory(self);
-                        SbisMenu.superclass.show.apply(self, arguments);
-                    }
+                this._historyDeffered = _private.getUnionIndexesList(self).addCallback(function (data) {
+                    _private.parseHistoryData(self, data);
+                    _private.prepareHistoryData(self);
+                    _private.prepareHistory(self);
+                    SbisMenu.superclass.show.apply(self, arguments);
                 }).addErrback(function (error) {
                     _private.prepareHistoryData(self);
                     _private.prepareHistory(self);
