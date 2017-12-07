@@ -517,7 +517,12 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   value = module.apply(null, args);
                }
                if (value !== undefined) {
-                  promise.callback(value);
+                  if (value instanceof Deferred) {
+                     promise.dependOn(value);
+                  }
+                  else {
+                     promise.callback(value);
+                  }
                }
                else {
                   promise.callback();
