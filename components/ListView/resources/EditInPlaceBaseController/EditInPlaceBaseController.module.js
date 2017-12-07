@@ -108,6 +108,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return !this._pendingOperation || this.validate();
             },
 
+            _canAreaAcceptFocus: function() {
+               return this.isEdit();
+            },
+
             isEdit: function() {
                return this._eip && this._eip.isEdit();
             },
