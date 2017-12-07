@@ -1,17 +1,15 @@
 define('js!Controls/Input/Text', [
       'Core/Control',
-      'Controls/Input/resources/Helper',
       'tmpl!Controls/Input/Text/Text',
       /*'WS.Data/Type/descriptor',*/
-      'Controls/Input/resources/ConfigBinder',
+      'Controls/Input/Text/ViewModel',
 
       'css!SBIS3.CONTROLS.TextBox',
       'tmpl!Controls/Input/resources/input'
    ], function(Control,
-               Helper,
                template,
                /*types,*/
-               ConfigBinder) {
+               TextViewModel) {
 
       'use strict';
 
@@ -66,27 +64,6 @@ define('js!Controls/Input/Text', [
           *     <option name="constraint">[а-яА-ЯёЁ]</option>
           * </pre>
           */
-         var _private = {
-
-         //Валидирует и подготавливает новое значение по splitValue
-         prepareData: function(splitValue) {
-            var insert = splitValue.insert;
-
-            if (this.config.constraint) {
-               insert = Helper.constraint(insert, this.config.constraint);
-            }
-
-            if(this.config.maxLength){
-               insert = Helper.maxLength(insert, splitValue, this.config.maxLength);
-            }
-
-            return {
-               value: splitValue.before + insert + splitValue.after,
-               position: splitValue.before.length + insert.length
-            };
-         }
-
-      };
 
       var TextBox = Control.extend({
          _controlName: 'Controls/Input/Text',
@@ -97,7 +74,10 @@ define('js!Controls/Input/Text', [
 
             this._value = options.value;
 
-            this._prepareData = new ConfigBinder(options, _private.prepareData);
+            this._textViewModel = new TextViewModel({
+               constraint: options.constraint,
+               maxLength: options.maxLength
+            });
          },
 
          _beforeUpdate: function(newOptions) {

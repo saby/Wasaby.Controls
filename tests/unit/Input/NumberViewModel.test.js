@@ -1,9 +1,9 @@
 define(
    [
       'Core/Control',
-      'js!Controls/Input/Number'
+      'Controls/Input/Number/ViewModel'
    ],
-   function(Control, NumberTextBox) {
+   function(Control, NumberViewModel) {
 
       'use strict';
 
@@ -13,8 +13,8 @@ define(
             it('Only numbers in integers check', function () {
                var
                   inputResult;
-               inputResult = NumberTextBox._private.prepareData(
-                  {},
+               inputResult = new NumberViewModel({
+               }).prepareData(
                   {
                      before: '12',
                      insert: 'a',
@@ -30,8 +30,8 @@ define(
             it('Only numbers in decimals check', function () {
                var
                   inputResult;
-               inputResult = NumberTextBox._private.prepareData(
-                  {},
+               inputResult = new NumberViewModel({
+               }).prepareData(
                   {
                      before: '12.3',
                      insert: 'a',
@@ -47,10 +47,9 @@ define(
             it('Only positive values check', function () {
                var
                   inputResult;
-               inputResult = NumberTextBox._private.prepareData(
-                  {
-                     onlyPositive: true
-                  },
+               inputResult = new NumberViewModel({
+                  onlyPositive: true
+               }).prepareData(
                   {
                      before: '',
                      insert: '-',
@@ -66,10 +65,9 @@ define(
             it('Max integers length check', function () {
                var
                   inputResult;
-               inputResult = NumberTextBox._private.prepareData(
-                  {
-                     integersLength: 5
-                  },
+               inputResult = new NumberViewModel({
+                  integersLength: 5
+               }).prepareData(
                   {
                      before: '12 345',
                      insert: '6',
@@ -85,10 +83,9 @@ define(
             it('Max decimals length check', function () {
                var
                   inputResult;
-               inputResult = NumberTextBox._private.prepareData(
-                  {
-                     precision: 5
-                  },
+               inputResult = new NumberViewModel({
+                  precision: 5
+               }).prepareData(
                   {
                      before: '0.12345',
                      insert: '6',
@@ -104,10 +101,9 @@ define(
             it('Forbid dot if zero precision', function () {
                var
                   inputResult;
-               inputResult = NumberTextBox._private.prepareData(
-                  {
-                     precision: 0
-                  },
+               inputResult = new NumberViewModel({
+                  precision: 0
+               }).prepareData(
                   {
                      before: '12',
                      insert: '.',
@@ -123,8 +119,8 @@ define(
             it('Inserting a dot at the beginning of a line results in \'0.\'', function () {
                var
                   inputResult;
-               inputResult = NumberTextBox._private.prepareData(
-                  {},
+               inputResult = new NumberViewModel({
+               }).prepareData(
                   {
                      before: '',
                      insert: '.',
@@ -143,8 +139,8 @@ define(
                   possibleInsertValuesArr = [',', 'б', 'ю', 'Б', 'Ю'];
 
                possibleInsertValuesArr.forEach(function(item) {
-                  inputResult = NumberTextBox._private.prepareData(
-                     {},
+                  inputResult = new NumberViewModel({
+                  }).prepareData(
                      {
                         before: '123',
                         insert: item,
@@ -161,8 +157,8 @@ define(
             it('Delete space operation removes symbol before space and moves cursor left', function () {
                var
                   inputResult;
-               inputResult = NumberTextBox._private.prepareData(
-                  {},
+               inputResult = new NumberViewModel({
+               }).prepareData(
                   {
                      before: '123',
                      insert: '',
