@@ -257,6 +257,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       },
 
       _findParentContainer: function() {
+          //todo: https://online.sbis.ru/opendoc.html?guid=7074fd5d-268f-4939-8f68-95e7f262f90d
+          //Временное решение, до момента когда компоненты начнут поддерживать опцию theme
           if (!this._options.parentContainer) {
               var
                   linkedContainer = this._options.target ?
