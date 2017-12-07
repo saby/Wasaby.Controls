@@ -73,7 +73,7 @@ define('js!Controls/List/ListControl', [
 
             if (self._virtualScroll) {
                self._virtualScroll.setDisplayCount(self._listModel._itemsModel._display.getCount());
-               _private.onListScroll.call(self, 0);
+               _private.handleListScroll.call(self, 0);
             }
          })
       },
@@ -210,7 +210,9 @@ define('js!Controls/List/ListControl', [
                },
                onListBottom: function() {
                },
-               onListScroll: _private.onListScroll.bind(self)
+               onListScroll: function(scrollTop) {
+                  _private.handleListScroll.call(self, scrollTop);
+               }
             };
 
          return new ScrollWatcher ({
@@ -234,13 +236,17 @@ define('js!Controls/List/ListControl', [
          self._forceUpdate();
       },
 
-      onListScroll: function(scrollTop) {
-         var virtualResult = this._virtualScroll.calcVirtualWindow(scrollTop);
+      /**
+       * Обработать прокрутку списка виртуальным скроллом
+       * @param scrollTop
+       */
+      handleListScroll: function(scrollTop) {
+         var virtualWindow = this._virtualScroll.calcVirtualWindow(scrollTop);
          //Если нужно, обновляем индексы видимых записей и распорки
-         if (virtualResult) {
-            this._topPlaceholderHeight = virtualResult.topPlaceholderHeight;
-            this._bottomPlaceholderHeight = virtualResult.bottomPlaceholderHeight;
-            this._listModel.updateIndexes(virtualResult.indexStart, virtualResult.indexStop);
+         if (virtualWindow) {
+            this._topPlaceholderHeight = virtualWindow.topPlaceholderHeight;
+            this._bottomPlaceholderHeight = virtualWindow.bottomPlaceholderHeight;
+            this._listModel.updateIndexes(virtualWindow.indexStart, virtualWindow.indexStop);
             this._forceUpdate();
          }
       }

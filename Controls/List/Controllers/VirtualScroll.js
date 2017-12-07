@@ -22,7 +22,7 @@ define('js!Controls/List/Controllers/VirtualScroll', [
 
          return {
             topIndex: topIndex,
-            page: Math.ceil(topIndex / virtualPageSize)
+            page: topIndex//Math.ceil(topIndex / virtualPageSize)
          };
       },
 
@@ -52,9 +52,9 @@ define('js!Controls/List/Controllers/VirtualScroll', [
        */
       getRangeToShowByIndex: function(firstIndex, maxVisibleRows, displayCount) {
          var
-            thridRows = Math.ceil(maxVisibleRows / 3),   //Треть от максимального числа записей
-            topIndex = Math.max(firstIndex - thridRows, 0),                    //показываем от (текущая - треть)
-            bottomIndex = Math.min(firstIndex + thridRows * 2, displayCount);  //до (текущая + две трети)
+            thirdOfRows = Math.ceil(maxVisibleRows / 3),   //Треть от максимального числа записей
+            topIndex = Math.max(firstIndex - thirdOfRows, 0),                    //показываем от (текущая - треть)
+            bottomIndex = Math.min(firstIndex + thirdOfRows * 2, displayCount);  //до (текущая + две трети)
 
          return {start: topIndex, stop: bottomIndex};
       }

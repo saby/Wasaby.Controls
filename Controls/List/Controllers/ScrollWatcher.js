@@ -90,6 +90,8 @@ define('js!Controls/List/Controllers/ScrollWatcher', [
             _private.initIntersectionObserver.call(this, cfg.triggers);
          }
 
+         // подписка на скролл через throttle. Нужно подобрать оптимальное значение,
+         // как часто кидать внутреннее событие скролла. На простом списке - раз в 100мс достаточно.
          cfg.scrollContainer.addEventListener(
             'scroll',
             throttle(_private.onScrollHandler.bind(this, additionalOnScrollHandler), 100, true),
