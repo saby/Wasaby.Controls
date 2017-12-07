@@ -74,6 +74,15 @@ define([
                 ],
                 [
                     '9', 'Документация', null
+                ],
+                [
+                    '10', 'Согласование отгула', null
+                ],
+                [
+                    '11', 'Новый регламент', null
+                ],
+                [
+                    '12', 'Прогул', null
                 ]
             ],
             s: [
@@ -106,6 +115,9 @@ define([
                         ],
                         [
                             '5', 'Согласование', 2
+                        ],
+                        [
+                            '12', 'Прогул', null
                         ]
                     ],
                     s: [
@@ -242,11 +254,16 @@ define([
                 filterFrequent = SbisMenu._private.filterFrequent(self);
                 assert.equal(filterFrequent.length, 2);
             });
-            it('processHistory', function () {
-                var processedItems;
+            it('processHistory, check additional', function () {
+                var hiddenByPinItem,
+                    processedItems;
 
                 processedItems = SbisMenu._private.processHistory(self);
-                assert.equal(processedItems.getCount(), 15);
+                hiddenByPinItem = processedItems.getRecordById('12');
+                assert.equal(processedItems.getCount(), 19);
+                // проверяем что элемент, который скрыли в истории не скрыли ещё раз дополнительный >10 видимых элементов
+                assert.equal(hiddenByPinItem.get(self._options.additionalProperty), false);
+
             });
             it('addToRecent', function () {
                 var recentItem;

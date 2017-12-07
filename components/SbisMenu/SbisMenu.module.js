@@ -309,7 +309,7 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
                             countOfVisible++;
                         }
                     } else {
-                        if (!isInternalItem) {
+                        if (!isInternalItem && item.get('visible')) {
                             item.set(self._options.additionalProperty, true);
                         }
                     }
