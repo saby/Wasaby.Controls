@@ -61,8 +61,8 @@ define('js!Controls/Input/resources/InputRender/InputRender',
             //Подготавливаем объект с разобранным значением
             splitValue = RenderHelper.getSplitInputValue(value, newValue, position, selection, inputType);
 
-            // Отправляем на валидацию и в prepareData
-            processedData = this._options.prepareData(splitValue, inputType);
+            //
+            processedData = this._options.viewModel.prepareData(splitValue, inputType);
 
             _private.setTargetData.call(this, e.target, processedData);
             _private.saveSelection.call(this, e.target);
