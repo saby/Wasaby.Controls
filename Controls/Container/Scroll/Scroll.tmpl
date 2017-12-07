@@ -1,7 +1,7 @@
 <div
     name="container"
-    event:onmouseenter="_initScrollbar()"
-    event:onmouseleave="_hideScrollbar()"
+    on:mouseenter="_initScrollbar()"
+    on:mouseleave="_hideScrollbar()"
     class="controls-ScrollContainer ws-scrolling-content
     {{ topGradient ? ' controls-ScrollContainer__top-gradient' }}
     {{ bottomGradient ? ' controls-ScrollContainer__bottom-gradient' }}
@@ -9,7 +9,7 @@
     <div
         name="content"
         class="controls-ScrollContainer__content ws-scrolling-content"
-        event:onscroll="_onScroll()">
+        on:scroll="_onScroll()">
         <ws:partial template="{{_options.content}}"/>
     </div>
     <Controls:Container:Scrollbar:Scrollbar

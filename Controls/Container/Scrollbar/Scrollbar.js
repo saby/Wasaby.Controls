@@ -39,8 +39,8 @@ define('js!Controls/Container/Scrollbar/Scrollbar', [
 
          _afterMount: function () {
             this.position = this._options.position;
-            this._containerHeight = this._container.height();
-            this._containerOuterHeight = this._container.outerHeight(true);
+            this._containerHeight = this._children.scrollbar.offsetHeight;
+            this._containerOuterHeight = this._children.scrollbar.offsetHeight;
             this._browserScrollbarMinHeight = parseFloat(getComputedStyle(this._children.thumb).minHeight);
 
             this._setViewportRatio();
@@ -150,7 +150,7 @@ define('js!Controls/Container/Scrollbar/Scrollbar', [
          },
 
          _setScrollRatio: function () {
-            this._scrollRatio = (this.getContainer().height() - this._thumbHeight) / (this.getContentHeight() - this._containerOuterHeight);
+            this._scrollRatio = (this._children.scrollbar.offsetHeight - this._thumbHeight) / (this.getContentHeight() - this._containerOuterHeight);
          },
          _wheelHandler: function(event) {
             var deltaY;
