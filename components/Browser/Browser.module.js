@@ -334,7 +334,7 @@ define('js!SBIS3.CONTROLS.Browser', [
                this._columnsEditor = new ColumnsEditor();
             }
 
-            promise.dependOn(this._columnsEditor.open(columnsConfig, options.editorOptions));
+            promise.dependOn(this._columnsEditor.open(columnsConfig, hasArgs ? options.editorOptions : null));
             if (hasArgs && options.applyToSelf) {
                promise.addCallback(function (resultColumnsConfig) {
                   if (resultColumnsConfig) {
