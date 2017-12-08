@@ -62,6 +62,7 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
         getHistoryDataSource: function (self) {
             if (!self._historyDataSource) {
                 self._historyDataSource = new SbisService({
+                    adapter: 'adapter.json',
                     endpoint: {
                         address: '/input-history/service/',
                         contract: 'InputHistory'
@@ -358,7 +359,7 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
         },
 
         parseHistoryData: function(self, data){
-            var rawData = data.getRawData(),
+            var rows = data.getRow(),
                 displayProperty = self._options.displayProperty,
                 config = {
                     adapter: new SbisAdapter(),
@@ -367,8 +368,8 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
                 },
                 firstName, secondName;
 
-            if (self._options.pinned && rawData.pinned) {
-                _private.fillHistoryRecord(self, rawData.pinned, self._pinned);
+            if (self._options.pinned && rows.get('pinned')) {
+                _private.fillHistoryRecord(self, rows.get('pinned'), self._pinned);
             }
             // сортируем по алфавиту запиненные записи
             self._pinned = Chain(self._pinned).sort(function (first, second) {
@@ -377,11 +378,11 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
 
                 return (firstName < secondName) ? -1 : (firstName > secondName) ? 1 : 0;
             }).value(recordSetFactory, config);
-            if (rawData.recent) {
-                _private.fillHistoryRecord(self, rawData.recent, self._recent);
+            if (rows.get('recent')) {
+                _private.fillHistoryRecord(self, rows.get('recent'), self._recent);
             }
-            if (self._options.frequent && rawData.frequent) {
-                _private.fillHistoryRecord(self, rawData.frequent, self._frequent);
+            if (self._options.frequent && rows.get('frequent')) {
+                _private.fillHistoryRecord(self, rows.get('frequent'), self._frequent);
             }
         },
 
