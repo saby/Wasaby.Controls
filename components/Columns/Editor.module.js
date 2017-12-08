@@ -1,23 +1,10 @@
-// TODO: (+) Проработать правильное сохранение (Пресеты могут быть не только личными)
-// TODO: ( ) Проработать ситуацию без сохранённых пресетов и с одним созранённым пресетом
-// TODO: (+) Реализовать использование информации из пресета (колонки и группы)
-// TODO: (+) Проработать правильное сочетание(совмещение) информации из пресетов и прямой информации из опций
-// TODO: (+) Посмотреть опции по фазам (первичная инициализация и открытие пикера)
-// TODO: ( ) Сортировать ли по группам?
-// TODO: (+) Предусмотреть возможность работы без кнопки и с FloatArea
-// TODO: (+) Вернуть пресеты
-// TODO: (+) Проработать отсутствие групп
-// TODO: (+) Вернуть сохранение в конфиг пользователя + предопределённые пресеты их опций
-// TODO: ( ) Сделать классы типов (Columns.Config, Columns.ColumnInfo, Columns.Preset, ...)
-// TODO: (+) Более строго провести везде опцию usePresets
-// TODO: ( ) Возможно, стоит использовать SBIS3.CONTROLS.ItemsToolbar напрямую ?...
-// TODO: (+) Разделить ColumnsEditor На Columns.EditorButton и Columns.Editor
-// TODO: ( ) Более строго провести везде isStorable
-// TODO: ( )
 /**
-  * Created by as.avramenko on 24.01.2017.
+ * Класс контрола "Редактор колонок"
+ *
+ * @class SBIS3.CONTROLS.Columns.Editor
+ * @public
+ * @extends SBIS3.CONTROLS.CompoundControl
  */
-
 define('js!SBIS3.CONTROLS.Columns.Editor',
    [
       'Core/core-merge',
@@ -31,14 +18,6 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
    function (coreMerge, Deferred, CompoundControl, FloatArea) {
       'use strict';
 
-      /**
-       * Класс контрола "Редактор колонок"
-       *
-       * @author Авраменко Алексей Сергеевич
-       * @class SBIS3.CONTROLS.Columns.Editor
-       * @public
-       * @extends SBIS3.CONTROLS.CompoundControl
-       */
       var Editor = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.Columns.Editor.prototype*/ {
          /**
           * @typedef {Object} ColumnsConfigObject
@@ -64,9 +43,9 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
             _result: null
          },
 
-         $constructor: function () {
+         /*$constructor: function () {
             this._publish('onOpen', 'onComplete');
-         },
+         },*/
 
          /**
           * Открыть редактор колонок. Возвращает обещание, которое будет разрешено новыми параметрами конфигурации колонок
@@ -100,11 +79,12 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
             }, this._getAreaOptions(editorOptions)));
             this._notify('onSizeChange');
             this.subscribeOnceTo(this._areaContainer, 'onAfterClose', this._notify.bind(this, 'onSizeChange'));
-            this._notify('onOpen');
+            //this._notify('onOpen');
             return this._result = new Deferred();
          },
 
          _getAreaOptions: function (options) {
+            options = options || {};
             var defaults = this._options;
             var columnsConfig = this._columnsConfig;
             return {
@@ -144,7 +124,7 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
          _onAreaComplete: function (evtName, selectedColumns, expandedGroups) {
             this._areaContainer.close();
             this._sentResult({columns:this._columnsConfig.columns, selectedColumns:selectedColumns, expandedGroups:expandedGroups});
-            this._notify('onComplete');
+            //this._notify('onComplete');
          },
 
          _onAreaClose: function () {
