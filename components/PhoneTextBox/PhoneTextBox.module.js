@@ -9,13 +9,12 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
     * @description
     * Пример:
     * <pre>
-    *    <ws:SBIS3.CONTROLS.PhoneTextBox enabled="{{false}}" srcText="88005553535" mask="ddd-(ddd)-dd-dd" size="l" />
+    *    <ws:SBIS3.CONTROLS.PhoneTextBox enabled="{{false}}" srcText="88005553535" mask="ddd-(ddd)-dd-dd"/>
     * </pre>
     * В примере использованы опции:
     * enabled - задает отображение PhoneTextBox в виде ссылки, по умолчанию PhoneTextBox отображается как поле ввода,
     * srcText - задает телефонный номер,
     * mask    - задает формат отображения телефонного номера,
-    * size    - задает размер отображения телефонного номера: по умолчанию size = "m", значение "l" устaновит большой размер.
     *
     * @demo SBIS3.CONTROLS.Demo.PagePhoneTextBox
     *
