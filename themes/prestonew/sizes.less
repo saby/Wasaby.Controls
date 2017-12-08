@@ -40,9 +40,9 @@
 @search-form-icon-padding:                        0;
 @padding_SearchForm:                              0 round(14px * @multiplier);
 @top_searchForm_picker_closeButton:               round(8px * @multiplier);
-@margin-left__searchForm_picker:                  -(@top_searchForm_picker_closeButton + @default-border-width);
-@margin-top__searchForm_picker:                   -@padding-top__searchForm_picker;
-@padding-top__searchForm_picker:                  @top_searchForm_picker_closeButton + @default-border-width + @default-height;
+@margin-left__searchForm_picker:                  -(@default-border-width + @top_searchForm_picker_closeButton);
+@margin-top__searchForm_picker:                   -(@padding-top__searchForm_picker + @default-border-width - @top_searchForm_picker_closeButton);
+@padding-top__searchForm_picker:                  (@top_searchForm_picker_closeButton * 2) + @height_TextBox_m;
 //fieldLink
 @fieldLink-showAll-shadow-width:                  round(28px * @multiplier);
 @fieldLink-linkItem-line-height:                  @default-base-line-height;
