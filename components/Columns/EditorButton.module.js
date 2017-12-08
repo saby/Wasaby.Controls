@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.Columns.EditorButton',
                /**
                 * @cfg {string} Пространство имён для сохранения пользовательских пресетов
                 */
-               presetNamespace: 'default',// TODO: Убрать, не должно быть умолчания
+               presetNamespace: null,
                /**
                 * @cfg {string|number} Идентификатор первоначально выбранного пресета в дропдауне
                 */

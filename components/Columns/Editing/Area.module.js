@@ -51,21 +51,58 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
-               title: '',
+               /**
+                * @cfg {string} Заголовок редактора колонок (опционально)
+                */
+               title: null,
+               /**
+                * @cfg {string} Название кнопки применения результата редактирования (опционально)
+                */
                applyButtonTitle: null,//Определено в шаблоне
+               /**
+                * @cfg {} ^^^
+                */
                columns: null,
+               /**
+                * @cfg {} ^^^
+                */
                selectedColumns: [],
-               moveColumns: true,
-               groupField: '',
+               /**
+                * @cfg {boolean} Показывает на обязательность использования пресетов (опционально)
+                */
                usePresets: true,
+               /**
+                * @cfg {string} Заголовок дропдауна (опционально)
+                */
                presetsTitle: null,
+               /**
+                * @cfg {SBIS3.CONTROLS.Columns.Preset.Unit[]} Список объектов статически задаваемых пресетов (опционально)
+                */
                staticPresets: null,
+               /**
+                * @cfg {string} Пространство имён для сохранения пользовательских пресетов (опционально)
+                */
                presetNamespace: null,
+               /**
+                * @cfg {string|number} Идентификатор первоначально выбранного пресета в дропдауне (опционально)
+                */
                selectedPresetId: null,
+               /**
+                * @cfg {string} Начальное название нового пользовательского пресета (опционально)
+                */
                newPresetTitle: rk('Новый пресет'),
+               /**
+                * @cfg {boolean} Сохранять автоматически единственный пользовательский пресет (опционально)
+                */
                autoSaveFirstPreset: true,
-               useNumberedTitle: true
-
+               /**
+                * @cfg {boolean} При добавлении новых пользовательских пресетов строить название из предыдущего с добавлением следующего порядкового номера (опционально)
+                */
+               useNumberedTitle: true,
+               /**
+                * @cfg {boolean} Указывает на необходимость включить перемещнение пользователем пунктов списка колонок (опционально)
+                */
+               moveColumns: true
             },
             _presetView: null,
             _presetDropdown: null,
@@ -193,7 +230,6 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
 
       var _prepareChildItemsAndGroups = function (cfg, preset) {
          var
-            groupField = cfg.groupField,
             columns = cfg.columns,
             selectedColumns = _getSelectedColumns(cfg, preset),
             moveColumns = cfg.moveColumns;
@@ -227,7 +263,7 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
                if (selectedColumns.indexOf(columnId) !== -1) {
                   selectable.markedKeys.push(columnId);
                }
-               var group = column.get(groupField) || null;
+               var group = column.get('group') || null;
                if (groups.indexOf(group) === -1) {
                   groups.push(group);
                }

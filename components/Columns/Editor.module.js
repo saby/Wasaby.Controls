@@ -52,42 +52,39 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
           * @public
           * @param {object} columnsConfig Параметры конфигурации колонок
           * @param {object} [editorOptions] Дополнительные опции редактора (опционально)
-          * @param {} [editorOptions.title]  (опционально)
-          * @param {} [editorOptions.groupTitleTpl]  (опционально)
-          * @param {} [editorOptions.groupTitles]  (опционально)
-          * @param {} [editorOptions.expandedGroups]  (опционально)
-          * @param {} [editorOptions.usePresets]  (опционально)
+          * @param {string} [editorOptions.title] Заголовок редактора колонок (опционально)
+          * @param {string} [editorOptions.applyButtonTitle] Название кнопки применения результата редактирования (опционально)
+          * @param {string} [editorOptions.groupTitleTpl] Шаблон имён групп (опционально)
+          * @param {object} [editorOptions.groupTitles] Ассоциированый массив имён групп по идентификаторам (опционально)
+          * @param {(string|number)[]} [editorOptions.expandedGroups] Список идентификаторов распахнутых групп (опционально)
+          * @param {boolean} [editorOptions.usePresets] Показывает на обязательность использования пресетов (опционально)
           * @param {string} [editorOptions.presetsTitle] Заголовок дропдауна (опционально)
           * @param {SBIS3.CONTROLS.Columns.Preset.Unit[]} [editorOptions.staticPresets] Список объектов статически задаваемых пресетов (опционально)
           * @param {string} [editorOptions.presetNamespace] Пространство имён для сохранения пользовательских пресетов (опционально)
           * @param {string|number} [editorOptions.selectedPresetId] Идентификатор первоначально выбранного пресета в дропдауне (опционально)
-          * @param {} [editorOptions.newPresetTitle]  (опционально)
-          * @param {} [editorOptions.autoSaveFirstPreset]  (опционально)
-          * @param {} [editorOptions.useNumberedTitle]  (опционально)
-          * @param {boolean} [editorOptions.moveColumns]  (опционально)
+          * @param {string} [editorOptions.newPresetTitle] Начальное название нового пользовательского пресета (опционально)
+          * @param {boolean} [editorOptions.autoSaveFirstPreset] Сохранять автоматически единственный пользовательский пресет (опционально)
+          * @param {boolean} [editorOptions.useNumberedTitle] При добавлении новых пользовательских пресетов строить название из предыдущего с добавлением следующего порядкового номера (опционально)
+          * @param {boolean} [editorOptions.moveColumns] Указывает на необходимость включить перемещнение пользователем пунктов списка колонок (опционально)
           * @return {Deferred<object>}
           */
          open: function (columnsConfig, editorOptions) {
+            if (this._result) {
+               return Deferred.fail('Allready open');
+            }
             this._columnsConfig = columnsConfig;
-            this._areaContainer = new FloatArea(coreMerge({
+            var defaults = this._options;
+            var hasEditorOptions = !!editorOptions && !!Object.keys(editorOptions).length;
+            var optSources3 = hasEditorOptions ? [columnsConfig, editorOptions, defaults] : [columnsConfig, defaults];
+            var optSources2 = hasEditorOptions ? [columnsConfig, editorOptions] : [columnsConfig];
+            var optSources1 = hasEditorOptions ? [editorOptions, defaults] : [defaults];
+            this._areaContainer = new FloatArea({
                opener: this,
                direction: 'left',
                animation: 'slide',
-               //maxWidth: 388 + 2,
                isStack: true,
-               autoCloseOnHide: true
-            }, this._getAreaOptions(editorOptions)));
-            this._notify('onSizeChange');
-            this.subscribeOnceTo(this._areaContainer, 'onAfterClose', this._notify.bind(this, 'onSizeChange'));
-            //this._notify('onOpen');
-            return this._result = new Deferred();
-         },
+               autoCloseOnHide: true,
 
-         _getAreaOptions: function (options) {
-            options = options || {};
-            var defaults = this._options;
-            var columnsConfig = this._columnsConfig;
-            return {
                //title: null,
                parent: this,
                template: 'js!SBIS3.CONTROLS.Columns.Editing.Area',
@@ -95,22 +92,22 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
                closeByExternalClick: true,
                closeButton: true,
                componentOptions: {
-                  title: options.title || null,
+                  title: hasEditorOptions ? editorOptions.title : undefined,
+                  applyButtonTitle: hasEditorOptions ? editorOptions.applyButtonTitle : undefined,
                   columns: columnsConfig.columns,
-                  //TODO: Для булей так нельзя, сделать фунцию
                   selectedColumns: columnsConfig.selectedColumns,
-                  groupTitleTpl: columnsConfig.groupTitleTpl || options.groupTitleTpl || null,
-                  groupTitles: columnsConfig.groupTitles || options.groupTitles || null,
-                  expandedGroups: columnsConfig.expandedGroups || options.expandedGroups || null,
-                  usePresets: columnsConfig.usePresets || options.usePresets || defaults.usePresets,
-                  presetsTitle: columnsConfig.presetsTitle || options.presetsTitle || null,
-                  staticPresets: columnsConfig.staticPresets || options.staticPresets || null,
-                  presetNamespace: columnsConfig.presetNamespace || options.presetNamespace,
-                  selectedPresetId: columnsConfig.selectedPresetId || options.selectedPresetId || null,
-                  newPresetTitle: columnsConfig.newPresetTitle || options.newPresetTitle || defaults.newPresetTitle,
-                  autoSaveFirstPreset: columnsConfig.autoSaveFirstPreset || options.autoSaveFirstPreset || defaults.autoSaveFirstPreset,
-                  useNumberedTitle: columnsConfig.useNumberedTitle || options.useNumberedTitle || defaults.useNumberedTitle,
-                  moveColumns: options.moveColumns || defaults.moveColumns,
+                  groupTitleTpl: _selectValue('groupTitleTpl', optSources2),
+                  groupTitles: _selectValue('groupTitles', optSources2),
+                  expandedGroups: _selectValue('expandedGroups', optSources2),
+                  usePresets: _selectValue('usePresets', optSources3, 'boolean'),
+                  presetsTitle: _selectValue('presetsTitle', optSources2),
+                  staticPresets: _selectValue('staticPresets', optSources2),
+                  presetNamespace: _selectValue('presetNamespace', optSources2),
+                  selectedPresetId: _selectValue('selectedPresetId', optSources2),
+                  newPresetTitle: _selectValue('newPresetTitle', optSources3),
+                  autoSaveFirstPreset: _selectValue('autoSaveFirstPreset', optSources3, 'boolean'),
+                  useNumberedTitle: _selectValue('useNumberedTitle', optSources3, 'boolean'),
+                  moveColumns: _selectValue('moveColumns', optSources1, 'boolean'),
                   handlers: {
                      onComplete: this._onAreaComplete.bind(this)
                   }
@@ -118,7 +115,11 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
                handlers: {
                   onClose: this._onAreaClose.bind(this)
                }
-            };
+            });
+            this._notify('onSizeChange');
+            this.subscribeOnceTo(this._areaContainer, 'onAfterClose', this._notify.bind(this, 'onSizeChange'));
+            //this._notify('onOpen');
+            return this._result = new Deferred();
          },
 
          _onAreaComplete: function (evtName, selectedColumns, expandedGroups) {
@@ -143,6 +144,29 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
             this._result = null;
          }
       });
+
+
+
+      // Приватные свойства
+
+      var _selectValue = function (name, sources, type) {
+         var noType = !type;
+         for (var i = 0; i < sources.length; i++) {
+            var src = sources[i];
+            if (name in src) {
+               var value = src[name];
+               if (noType || typeof value === type) {
+                  //////////////////////////////////////////////////
+                  console.log('DBG: CE._selectValue: name=', name, '; value=', value, ';');
+                  //////////////////////////////////////////////////
+                  return value;
+               }
+            }
+         }
+         //////////////////////////////////////////////////
+         console.log('DBG: CE._selectValue: name=', name, '; undefined;');
+         //////////////////////////////////////////////////
+      };
 
 
 
