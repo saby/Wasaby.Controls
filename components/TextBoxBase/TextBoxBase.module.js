@@ -336,7 +336,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
             if (!(e.altKey || e.shiftKey || e.ctrlKey || e.metaKey)) {
                parent = control;
 
-               while(true) {
+               while(parent) {
 
                   while (parent && !parent._defaultAction) {
                      parent = parent.getParent();
