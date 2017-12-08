@@ -122,17 +122,23 @@ define('js!SBIS3.CONTROLS.SearchForm', [
    
       _setPickerConfig: function() {
          var config =  SearchForm.superclass._setPickerConfig.apply(this, arguments),
-            self = this;
+             container = this.getContainer(),
+             inputField = this._getInputField(),
+             self = this;
       
          config.parentContainer = this.getContainer().parent();
          config.className = 'controls-searchForm__suggest';
          config.closeButton = true;
          config.handlers = {
             onShow: function() {
-               self.getContainer().css('z-index', parseInt(self._picker.getContainer().css('z-index'), 10) + 1);
+               container.css('z-index', parseInt(self._picker.getContainer().css('z-index'), 10) + 1)
+                        .addClass('controls-searchForm__suggest-shown');
+               inputField.addClass('controls-searchForm__field-suggest-shown');
             },
             onClose: function() {
-               self.getContainer().css('z-index', '');
+               container.css('z-index', '')
+                        .removeClass('controls-searchForm__suggest-shown');
+               inputField.removeClass('controls-searchForm__field-suggest-shown');
             }
          };
          return config;
