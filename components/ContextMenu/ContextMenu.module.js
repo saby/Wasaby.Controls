@@ -30,9 +30,7 @@ define('js!SBIS3.CONTROLS.ContextMenu', [
         },
 
         _itemActivatedHandler: function (id, event) {
-            var menuItem = this.getItemInstance(id);
-
-            if (!(menuItem.getContainer().hasClass('controls-Menu__hasChild'))) {
+            if (!(this._isItemHasChild(id))) {
                 this.hide();
 
                 for (var j in this._subMenus) {
@@ -49,6 +47,11 @@ define('js!SBIS3.CONTROLS.ContextMenu', [
         _drawItemsCallback: function () {
             ContextMenu.superclass._drawItemsCallback.apply(this, arguments);
             this.recalcPosition(true);
+        },
+
+        _isItemHasChild: function(id){
+            var itemInstance = this.getItemInstance(id);
+            return itemInstance && itemInstance.getContainer().hasClass('controls-Menu__hasChild');
         },
 
         /* Заглушка, ContextMenu не должно вызывать расчёты авторазмеров, т.к. создаётся абсолютом в body */
