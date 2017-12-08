@@ -3,10 +3,11 @@
  */
 
 define('js!SBIS3.CONTROLS.PasswordTextBox', [
+   "Core/compatibility",
    "js!SBIS3.CONTROLS.TextBox",
    "tmpl!SBIS3.CONTROLS.PasswordTextBox/resources/showPasswordTemplate",
    'css!SBIS3.CONTROLS.PasswordTextBox'
-], function (TextBox, showPasswordTemplate) {
+], function (compatibility, TextBox, showPasswordTemplate) {
 
    'use strict';
    /**
@@ -61,7 +62,7 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
       _initEventChangeType: function() {
          var self = this;
          this._passwordIcon = $('.controls-PasswordTextBox__showPassword', this.getContainer());
-         this.getContainer().on('click', function(e) {
+         this.getContainer().on(compatibility.touch ? 'touchend' : 'click', function(e) {
             if (e.target === self._passwordIcon[0]) {
                self._changeType();
             }
