@@ -1,3 +1,4 @@
+@area-vertical-padding: 2px;
 .controls-InputRender__field.controls-TextArea {
    &__field {
       overflow-x: hidden;
@@ -18,7 +19,7 @@
       resize: none;
       height: 100%;
       position: absolute;
-      top: 0;
+      top: @area-vertical-padding;
       -webkit-appearance: none;
 
       &_scroll-hidden {
@@ -58,6 +59,8 @@
    vertical-align: bottom;
    display: inline-block;
    width: 100%;
+   padding-top: @area-vertical-padding;
+   padding-bottom: @area-vertical-padding;
 }
 
 .controls-fakeTextArea__secondWrapper {
