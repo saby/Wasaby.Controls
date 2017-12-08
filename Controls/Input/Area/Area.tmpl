@@ -1,4 +1,6 @@
 <ws:Controls.Input.resources.InputRender.InputRender
+        size="auto"
+        sidePadding="Left"
         name="inputRender"
         value="{{_value}}"
         selectOnClick="{{_options.selectOnClick}}"
@@ -11,11 +13,11 @@
         on:onTagClick="_notifyHandler('onTagClick')">
    <ws:content>
       <!--TODO контейнер убрать https://online.sbis.ru/opendoc.html?guid=25000158-64ff-4db9-9605-a986cbc37b0f-->
-      <div>
+      <div class="controls-InputRender__wrapper">
          <textarea
                  name="realArea"
                  spellcheck="false"
-                 class="controls-TextArea__field controls-TextArea__realField controls-TextBox__field {{_hasScroll ? 'controls-TextArea__realField_scroll-scroll' : 'controls-TextArea__realField_scroll-hidden'}}"
+                 class="controls-TextArea__field controls-TextArea__realField controls-InputRender__field {{_hasScroll ? 'controls-TextArea__realField_scroll-scroll' : 'controls-TextArea__realField_scroll-hidden'}}"
                  placeholder="{{_options.placeholder}}"
                  readonly="{{!isEnabled() ? 'readonly'}}"
                  on:keydown="_keyDownHandler()"
@@ -27,7 +29,7 @@
             <div class="controls-fakeTextArea__secondWrapper">
                <div
                   name="fakeArea"
-                  class="controls-TextArea__field controls-TextArea__fakeField controls-TextBox__field"
+                  class="controls-TextArea__field controls-TextArea__fakeField controls-InputRender__field"
                   style="{{_options.minLines ? ('min-height: ' + _options.minLines * 100 + '%;')}} {{_options.maxLines ? 'max-height: ' + _options.maxLines * 100 + '%'}}">
                   <span name="fakeAreaValue">{{_value}}</span><br/>
                </div>

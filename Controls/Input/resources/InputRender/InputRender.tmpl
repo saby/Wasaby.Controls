@@ -1,5 +1,5 @@
-<div class="controls-TextBox" title="{{tooltip}}">
-   <div class="controls-TextBox__wrapper">
+<div class="controls-InputRender {{ _prepareClassesByConfig(...).container }}" title="{{tooltip}}">
+   <div class="controls-InputRender__wrapper">
 
       <ws:if data="{{_beforeFieldWrapper}}">
          <ws:partial template="{{_beforeFieldWrapper}}"/>
@@ -10,7 +10,7 @@
            on:select="_selectionHandler()"
            on:keyup="_keyUpHandler()"
            on:change="_notifyHandler('onInputCompleted')"
-           attr:style="width: 100%">
+           class="controls-InputRender__wrapper">
          <ws:partial template="{{_options.content}}"/>
       </div>
 
@@ -23,7 +23,7 @@
    <ws:if data="{{_options.tagStyle}}">
       <div on:mouseenter="_notifyHandler('onTagHover')"
            on:click="_notifyHandler('onTagClick')"
-           class="controls-TextBox__informationIcon icon-size icon-Listbox controls-informationIcon {{'icon-' + _options.tagStyle}}">
+           class="controls-InputRender__tagStyle controls-InputRender__tagStyle-{{_options.tagStyle}}">
       </div>
    </ws:if>
 </div>

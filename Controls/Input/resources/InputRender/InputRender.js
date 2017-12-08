@@ -4,7 +4,8 @@ define('js!Controls/Input/resources/InputRender/InputRender',
       /*'WS.Data/Type/descriptor',*/
       'tmpl!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
-      'css!SBIS3.CONTROLS/TextBox'
+
+      'css!Controls/Input/resources/InputRender/InputRender'
    ],
    function(Control, /*types,*/ template, RenderHelper) {
 
@@ -46,6 +47,37 @@ define('js!Controls/Input/resources/InputRender/InputRender',
          
          _controlName: 'Controls/Input/resources/InputRender/InputRender',
          _template: template,
+
+         constructor: function() {
+            InputRender.superclass.constructor.apply(this, arguments);
+
+            this._prepareClassesByConfig = function() {
+               var
+                  fieldClasses = [],
+                  wrapperClasses = [],
+                  containerClasses = [],
+                  isEnabled = this.isEnabled();
+
+               containerClasses.push('controls-InputRender_state_' + (isEnabled ? 'default' : 'disabled'));
+               !isEnabled && containerClasses.push('controls-InputRender_state_disabled_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
+               containerClasses.push('controls-InputRender_size_' + (this._options.size ? this._options.size : 'm'));
+               containerClasses.push('controls-InputRender_padding' + (this._options.sidePadding ? this._options.sidePadding : 'Both'));
+               if (this.textTransform) {
+                  fieldClasses.push('controls-InputRender__field-' + this.textTransform);
+               }
+               //В новой престо в больших полях ввода будет отступ снизу
+               if (this.size === 'l') {
+                  fieldClasses.push('controls-InputRender__field_size_l');
+               }
+               wrapperClasses.push('controls-InputRender__wrapper_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
+
+               return {
+                  container: containerClasses.join(' '),
+                  field: fieldClasses.join(' '),
+                  wrapper: wrapperClasses.join(' ')
+               }
+            };
+         },
 
          _inputHandler: function(e) {
             var
