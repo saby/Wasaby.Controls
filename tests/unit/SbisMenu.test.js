@@ -97,10 +97,35 @@ define([
             adapter: new SbisAdapter(),
             format: myFormat
         }),
+        rawHistoryDataWidthEmptyPinned = {
+            pinned: [],
+            frequent: [1, 4, 5, 7],
+            recent: [1, 3, 4, 5, 7, 8]
+        },
+        rawHistoryData = {
+            pinned: [1, 5],
+            frequent: [1, 4, 5, 7],
+            recent: [1, 3, 4, 5, 7, 8]
+        },
+        data = {
+            rawData: null,
+            setRawData: function (data) {
+                this.rawData = data;
+            },
+            getRow: function() {
+                return {
+                    rawData: this.rawData,
+                    get: function(type) {
+                        return this.rawData[type];
+                    }
+                }
+            }
+        },
         self = {
             _options: {
                 additionalProperty: 'additional',
                 parentProperty: 'Parent',
+                displayProperty: 'title',
                 pinned: true,
                 frequent: true
             },
@@ -193,8 +218,6 @@ define([
         },
         item;
 
-    SbisMenu._private.prepareHistoryData(self);
-
     describe('SBIS3.CONTROLS.SbisMenu', function () {
         describe('getOriginId', function () {
             it('pinned', function () {
@@ -216,6 +239,20 @@ define([
         });
 
         describe('prepareRecordSet', function () {
+            it('check with empty pinned items', function () {
+                SbisMenu._private.initRecordSet(self, self._oldItems.getFormat());
+                data.setRawData(rawHistoryDataWidthEmptyPinned);
+                SbisMenu._private.parseHistoryData(self, data);
+                assert.equal(self._pinned.getFormat().getCount(), self._oldItems.getFormat().getCount());
+            });
+            it('parseHistoryData', function () {
+                SbisMenu._private.initRecordSet(self, self._oldItems.getFormat());
+                data.setRawData(rawHistoryData);
+                SbisMenu._private.parseHistoryData(self, data);
+                SbisMenu._private.prepareHistoryData(self);
+                assert.equal(self._pinned.getFormat().getCount(), self._oldItems.getFormat().getCount());
+            });
+
             it('init recordSet', function () {
                 item = self._pinned.getRecordById('pinned-1');
                 assert.equal(item.get('title'), 'Задача в разработку');
