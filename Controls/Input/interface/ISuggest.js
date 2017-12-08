@@ -9,17 +9,17 @@ define('js!Controls/Input/interface/ISuggest', [
     */
 
    /**
-    * @name Controls/Input/Suggest#suggestTemplate
+    * @name Controls/Input/interface/ISuggest#suggestTemplate
     * @cfg {Function} Основной шаблон отображения саггеста
     */
 
    /**
-    * @name Controls/Input/Suggest#suggestFooterTemplate
+    * @name Controls/Input/interface/ISuggest#suggestFooterTemplate
     * @cfg {Function} Шаблон для отображения футера (кнопка 'показать все')
     */
 
    /**
-    * @name Controls/Input/Suggest#historyId
+    * @name Controls/Input/interface/ISuggest#historyId
     * @cfg {String} Уникальный идентификатор для хранения истории ввода
     */
 });

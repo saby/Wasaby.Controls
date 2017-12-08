@@ -12,7 +12,7 @@ define('js!Controls/interface/IHighlighter', [
     */
 
    /**
-    * @name Controls/List/ListControl#highlighter
+    * @name Controls/interface/IHighlighter#highlighter
     * @cfg {Array.<Highlighter>} Массив выделителей
     */
 });

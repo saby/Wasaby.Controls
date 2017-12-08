@@ -52,7 +52,7 @@ define('js!Controls/interface/INavigation', [
     */
 
    /**
-    * @name Controls/List/ListControl#navigation
+    * @name Controls/interface/INavigation#navigation
     * @cfg {ListNavigation} Конфигурация навигации
     */
 
