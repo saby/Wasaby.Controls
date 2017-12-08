@@ -1,26 +1,26 @@
-define('js!Controls/List/interface/IGrid', [
+define('js!Controls/List/interface/IGridControl', [
 ], function() {
 
    /**
     * Интерфейс работы грида (табличного представления)
     *
-    * @mixin Controls/List/interface/IGrid
+    * @mixin Controls/List/interface/IGridControl
     * @public
     */
 
    /**
-    * @name Controls/List/interface/IGrid#stickyColumnsCount
+    * @name Controls/List/interface/IGridControl#stickyColumnsCount
     * @cfg {Number} Количество колонок, которые фиксируются при горизонтальном скроле
     */
 
    /**
-    * @name Controls/List/interface/IGrid#stickyFields
+    * @name Controls/List/interface/IGridControl#stickyFields
     * @cfg {Array.<String>} Массив полей, по которым формируется "лесенка"
     */
 
    /**
-    * @name Controls/List/interface/IGrid#templateColumns
-    * @cfg {Array.<String|Number>} templateColumns Описание ширины колонок (pixels/percent/auto).
+    * @name Controls/List/interface/IGridControl#columnWidths
+    * @cfg {Array.<String|Number>} columnWidths Описание ширины колонок (pixels/percent/auto).
     */
 
    /**
@@ -34,7 +34,7 @@ define('js!Controls/List/interface/IGrid', [
     */
 
    /**
-    * @name Controls/List/interface/IGrid#header
+    * @name Controls/List/interface/IGridControl#header
     * @cfg {Array.<Array.<HeaderCell>>} Определяет заголовок списка.
     */
 
@@ -48,7 +48,7 @@ define('js!Controls/List/interface/IGrid', [
     */
 
    /**
-    * @name Controls/List/interface/IGrid#columns
+    * @name Controls/List/interface/IGridControl#columns
     * @cfg {Array.<Column>} Устанавливает набор колонок списка.
     */
 

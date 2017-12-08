@@ -1,25 +1,25 @@
-define('js!Controls/List/interface/IList', [
+define('js!Controls/List/interface/IListControl', [
 ], function() {
 
    /**
     * Интерфейс работы списков.
     *
-    * @mixin Controls/List/interface/IList
+    * @mixin Controls/List/interface/IListControl
     * @public
     */
 
    /**
-    * @name Controls/List/interface/IList#contextMenuEnabled
+    * @name Controls/List/interface/IListControl#contextMenuEnabled
     * @cfg {Boolean} Показывать ли контекстное меню при клике на правую кнопку мыши
     */
 
    /**
-    * @name Controls/List/interface/IList#emptyTemplate
+    * @name Controls/List/interface/IListControl#emptyTemplate
     * @cfg {Function} Шаблон отображения пустого списка
     */
 
    /**
-    * @name Controls/List/interface/IList#footerTemplate
+    * @name Controls/List/interface/IListControl#footerTemplate
     * @cfg {Function} Устанавливает шаблон, который будет отображаться под элементами коллекции.
     */
 
@@ -36,22 +36,22 @@ define('js!Controls/List/interface/IList', [
     */
 
    /**
-    * @name Controls/List/interface/IList#results
+    * @name Controls/List/interface/IListControl#results
     * @cfg {Results} Настройки отображения строки итогов
     */
 
    /**
-    * @name Controls/List/interface/IList#virtualScroll
+    * @name Controls/List/interface/IListControl#virtualScroll
     * @cfg {Object} Конфигурация виртуального скролла
     */
 
    /**
-    * @name Controls/List/interface/IList#sorting
+    * @name Controls/List/interface/IListControl#sorting
     * @cfg {Object} Конфигурация сортировки (ключи объекта - названия полей; значения - тип сортировки: 'ASC' - по возрастанию или 'DESC' - по убыванию)
     */
 
    /**
-    * @name Controls/List/interface/IList#multiSelectVisibility
+    * @name Controls/List/interface/IListControl#multiSelectVisibility
     * @cfg {Boolean} Разрешен ли множественный выбор.
     * @variant visible Показывать всегда
     * @variant hidden Никогда не показывать
@@ -60,27 +60,27 @@ define('js!Controls/List/interface/IList', [
     */
 
    /**
-    * @name Controls/List/interface/IList#itemActions
+    * @name Controls/List/interface/IListControl#itemActions
     * @cfg {Array} Операции над записью
     */
 
    /**
-    * @name Controls/List/interface/IList#uniqueKeys
+    * @name Controls/List/interface/IListControl#uniqueKeys
     * @cfg {String} Стратегия действий с подгружаемыми в список записями
     * @variant true Мержить, при этом записи с одинаковыми id схлопнутся в одну
     * @variant false Добавлять, при этом записи с одинаковыми id будут выводиться в списке
     */
 
    /**
-    * @function Controls/List/interface/IList#reload
+    * @function Controls/List/interface/IListControl#reload
     * Перезагружает набор записей представления данных с последующим обновлением отображения
     */
 
    /**
-    * @event Controls/List/interface/IList#itemClicked Происходит при клике по строке
+    * @event Controls/List/interface/IListControl#itemClicked Происходит при клике по строке
     */
 
    /**
-    * @event Controls/List/interface/IList#dataLoaded Происходит при загрузке данных
+    * @event Controls/List/interface/IListControl#dataLoaded Происходит при загрузке данных
     */
 });

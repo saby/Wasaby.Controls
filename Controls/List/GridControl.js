@@ -6,7 +6,7 @@ define('js!Controls/List/GridControl', [
     * List Control
     * @class Controls/List/GridControl
     * @extends Controls/List/ListControl
-    * @mixes Controls/List/interface/IGrid
+    * @mixes Controls/List/interface/IGridControl
     * @control
     * @public
     * @category List

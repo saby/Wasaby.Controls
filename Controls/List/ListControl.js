@@ -262,7 +262,7 @@ define('js!Controls/List/ListControl', [
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
-    * @mixes Controls/List/interface/IList
+    * @mixes Controls/List/interface/IListControl
     * @control
     * @public
     * @category List
