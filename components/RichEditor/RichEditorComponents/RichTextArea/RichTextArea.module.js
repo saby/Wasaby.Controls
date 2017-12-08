@@ -421,6 +421,17 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      }
                   }
                   editor.insertContent(html);
+                  // Иногда в FF после вставки рэнж охватывает весь элемент редактора, а не находится внутри него - поставить курсор в конец
+                  // в таком случае
+                  // 1174769960 https://online.sbis.ru/opendoc.html?guid=268d5fe6-e038-40d3-b185-eff696796f12
+                  // 1174769988 https://online.sbis.ru/opendoc.html?guid=5c37d724-1e7b-4627-afe6-257db37d4798
+                  if (cConstants.browser.firefox) {
+                     var rng = editor.selection.getRng();
+                     var editorBody = editor.getBody();
+                     if (rng.startContainer === editorBody && rng.endContainer === editorBody) {
+                        this.setCursorToTheEnd();
+                     }
+                  }
                   //вставка контента может быть инициирована любым контролом,
                   //необходимо нотифицировать о появлении клавиатуры в любом случае
                   if (cConstants.browser.isMobilePlatform) {
@@ -926,6 +937,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @public
           */
          execCommand: function (command) {
+            //////////////////////////////////////////////////
+            console.log('DBG: RTE_Area.execCommand: command=', command, ';');
+            //////////////////////////////////////////////////
             var editor = this._tinyEditor;
             var needPrepocess;
             var execCmd;
