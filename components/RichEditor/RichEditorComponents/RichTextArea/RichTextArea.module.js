@@ -937,9 +937,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @public
           */
          execCommand: function (command) {
-            //////////////////////////////////////////////////
-            console.log('DBG: RTE_Area.execCommand: command=', command, ';');
-            //////////////////////////////////////////////////
             var editor = this._tinyEditor;
             var needPrepocess;
             var execCmd;
