@@ -147,6 +147,7 @@ body {
   //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
   //Страшно представить но с 2015 года никто не переписывал пейджинг поэтому мы положим эту кучку здесь
   .ws-paging {
+    font-size: 0;
     .ws-paging-small {
       .box-sizing();
       width: round(86px * @multiplier)!important;
@@ -156,29 +157,29 @@ body {
       border: 2px solid transparent !important;
       font-size: round(40px * @multiplier) ;
       color: #8991A9 !important;
-      margin: 0 4px 0 0 ;
+      margin: 0 round(8px * @multiplier) 0 0 !important;
       padding: 0 !important;
       cursor: default;
       &.ws-paging-prev, &.ws-paging-first, &.ws-paging-next, &.ws-paging-end {
-        background: #567395 !important;
-        .box-shadow(0 1px 4px rgba(0, 0, 0, 1););
+        background: @background_Button !important;
+        .box-shadow(0 1px 4px rgba(0, 0, 0, 1));
       }
       &.ws-paging-active {
-        .box-shadow(0 1px 4px rgba(0, 0, 0, 1););
+        .box-shadow(0 1px 4px rgba(0, 0, 0, 1));
         color: #FFFFFF !important;
         background: #567395 !important;
         cursor: pointer;
         &:hover {
-          background: #516B8C;
+          background: @background_Button_active;
         }
         &:active {
           .box-shadow(none);
-          background: #516B8C;
+          background:@background_Button_active;
         }
       }
       &.ws-paging-current {
         .box-shadow(none);
-        background: #516B8C !important;
+        background:@background_Button_active !important;
         border: 2px solid #26B8FF !important;
         color: #FFFFFF !important;
       }
@@ -188,4 +189,30 @@ body {
     }
   }
   .controls-Pager-block-amount {display: none}
+  .controls-ListView__scrollPager {
+    padding: round(11px * @multiplier) 0;
+    .controls-IconButton {
+      background: @background_Button;
+      padding: 0;
+      border-style: solid;
+      border-width: @border-width_Button;
+      border-color: @background_Button;
+      .box-shadow(0 1px 4px rgba(0, 0, 0, 1));
+      .controls-Button__icon {
+        height: @default-icon-size-large!important;
+        width: @default-icon-size-large!important;
+        line-height: @default-icon-size-large !important;
+        color: #ffffff !important;
+      }
+      &:active {
+        background: @background_Button_active;
+        box-shadow: none;
+      }
+      &.ws-disabled {
+        .controls-Button__icon {
+          color: #8991A9 !important;
+        }
+      }
+    }
+  }
 }
