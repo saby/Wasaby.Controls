@@ -2134,7 +2134,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                });
             }
             this._tinyReady.addCallback(function () {
-               this._tinyEditor.setContent(this._prepareContent(this.getText()) || '');
+               var editor = this._tinyEditor;
+               var text = this._prepareContent(this.getText()) || '';
+               editor.setContent(text);
+               // Если при инициализации редактора есть начальный контент - нужно установить курсор в конец и переключить местоимение (placeholder)
+               // 1174747440 https://online.sbis.ru/opendoc.html?guid=3ffa28b7-7924-469d-8e42-c7570d3939d5
+               if (text) {
+                  this.setCursorToTheEnd();
+                  this._togglePlaceholder(text);
+               }
                //Проблема:
                //          1) При инициализации тини в историю действий добавляет контент блока на котором он построился
                //                (если пусто то <p><br data-mce-bogus="1"><p>)
@@ -2151,8 +2159,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                //Решение:
                //          Очистить историю редактора (clear) после его построения, чтобы пункт 2 был
                //          первым в истории изщменений и редактор не стрелял 'change'
-               this._tinyEditor.undoManager.clear();
-               this._tinyEditor.undoManager.add();
+               editor.undoManager.clear();
+               editor.undoManager.add();
             }.bind(this));
          },
 
