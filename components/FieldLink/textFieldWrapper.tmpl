@@ -6,6 +6,7 @@
 		value="{{text}}"
 		placeholder="{{enabled && _drawNativePlaceholder ? placeholder}}"
 		maxlength="{{maxLength ? maxLength}}"
+		required="true"
 	/>
 	<ws:if data="{{ _drawCompatiblePlaceholder }}">
 		<ws:partial template="{{ compatiblePlaceholderTemplate }}" scope="{{...}}"/>

@@ -3896,40 +3896,48 @@ define('js!SBIS3.CONTROLS.ListView',
          }, '_getAjaxLoaderContainer'),
 
          _toggleIndicator: function(show){
-            var self = this,
-                container = this.getContainer(),
-                ajaxLoader = this._getAjaxLoaderContainer(),
-                indicator, centerCord, scrollContainer;
-
-
             this._showedLoading = show;
             if (show) {
                // Показываем контейнер который перекрывает контент, блокируя взаимодействие пользователя с таблицей.
-               if (!self.isDestroyed() && self._showedLoading) {
-                  scrollContainer = self._getScrollContainer()[0];
-                  indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
-                  ajaxLoader.removeClass('ws-hidden');
-                  if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
-                     /* Ищем кординату, которая находится по середине отображаемой области грида */
-                     centerCord =
-                        (Math.max(scrollContainer.getBoundingClientRect().bottom, 0) - Math.max(ajaxLoader[0].getBoundingClientRect().top, 0))/2;
-                     /* Располагаем индикатор, учитывая прокрутку */
-                     indicator[0].style.top = centerCord + scrollContainer.scrollTop + 'px';
-                  } else {
-                     /* Если скрола нет, то сбросим кординату, чтобы индикатор сам расположился по середине */
-                     indicator[0].style.top = '';
-                  }
+               if (!this.isDestroyed() && this._showedLoading) {
+                  this._showLoadingOverlay();
                }
                // После задержки показываем индикатор загрузки.
-               this._loadingIndicatorTimer = setTimeout(this._showIndicator.bind(this), INDICATOR_DELAY);
+               if (!this._loadingIndicatorTimer) {
+                  this._loadingIndicatorTimer = setTimeout(this._showIndicator.bind(this), INDICATOR_DELAY);
+               }
             }
             else {
                clearTimeout(this._loadingIndicatorTimer);
-               ajaxLoader.addClass('ws-hidden').removeClass('controls-AjaxLoader__showIndication');
+               this._loadingIndicatorTimer = undefined;
+               this._hideLoadingOverlayAndIndicator();
+            }
+         },
+         _showLoadingOverlay: function() {
+            var container = this.getContainer(),
+               ajaxLoader = this._getAjaxLoaderContainer(),
+               scrollContainer = this._getScrollContainer()[0],
+               indicator, centerCord;
+
+            indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
+            ajaxLoader.removeClass('ws-hidden');
+            if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
+               /* Ищем кординату, которая находится по середине отображаемой области грида */
+               centerCord =
+                  (Math.max(scrollContainer.getBoundingClientRect().bottom, 0) - Math.max(ajaxLoader[0].getBoundingClientRect().top, 0))/2;
+               /* Располагаем индикатор, учитывая прокрутку */
+               indicator[0].style.top = centerCord + scrollContainer.scrollTop + 'px';
+            } else {
+               /* Если скрола нет, то сбросим кординату, чтобы индикатор сам расположился по середине */
+               indicator[0].style.top = '';
             }
          },
          _showIndicator: function () {
+            this._loadingIndicatorTimer = undefined;
             this._getAjaxLoaderContainer().addClass('controls-AjaxLoader__showIndication');
+         },
+         _hideLoadingOverlayAndIndicator: function() {
+            this._getAjaxLoaderContainer().addClass('ws-hidden').removeClass('controls-AjaxLoader__showIndication');
          },
 
          _toggleEmptyData: function(show) {

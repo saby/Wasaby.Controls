@@ -219,7 +219,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          this.once('onDrawItems', function() {
             this._options._ladderInstance._columnNames.forEach(function(columnName) {
                self._options._ladderInstance.setConverter(columnName, function (value, item) {
-                  if (self._isSearchMode() && item.get(self._options.nodeProperty)) {
+                  if (self._isSearchMode() && (!item.get || item.get(self._options.nodeProperty))) {
                      return;
                   } else {
                      return value;
