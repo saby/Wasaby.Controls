@@ -1,0 +1,18 @@
+<div class="controls-Columns-Preset-Dropdown">
+   <ws:SBIS3.CONTROLS.DropdownList
+      name="controls-Columns-Preset-Dropdown__dropdown"
+      className="controls-Columns-Preset-Dropdown__dropdown"
+      multiselect="{{false}}"
+      mode="click"
+      type="titleHeader"
+      idProperty="id"
+      displayProperty="title"
+      >
+      <ws:title>
+         <ws:String>
+            <ws:if data="{{title}}">{{title}}</ws:if>
+            <ws:else>{[Выберите пресет]}</ws:else>
+         </ws:String>
+      </ws:title>
+   </ws:SBIS3.CONTROLS.DropdownList>
+</div>

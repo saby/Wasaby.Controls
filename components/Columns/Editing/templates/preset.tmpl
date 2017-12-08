@@ -1,0 +1,19 @@
+<div class="controls-Columns-Editing-Area__Preset-item">
+
+   <!--^^^<span class="controls-Columns-Editing-Area__Preset-item-text">{{item[displayProperty]}}</span>--->
+
+   <ws:SBIS3.CONTROLS.Columns.Preset.Dropdown
+      name="controls-Columns-Editing-Area__Preset-item-title"
+      className="controls-Columns-Editing-Area__Preset-item-title"
+      staticPresets="{{staticPresets}}"
+      presetNamespace="{{presetNamespace}}"
+      selectedPresetId="{{selectedPresetId}}"
+      >
+      <ws:title>
+         <ws:String>
+            <ws:if data="{{presetsTitle}}">{{presetsTitle}}</ws:if>
+            <ws:else>{[Выберите пресет]}</ws:else>
+         </ws:String>
+      </ws:title>
+   </ws:SBIS3.CONTROLS.Columns.Preset.Dropdown>
+</div>
