@@ -289,7 +289,9 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       _setEnabled: function(enabled) {
          TextBoxBase.superclass._setEnabled.apply(this, arguments);
          if (this._options.placeholder) {
-            this.getContainer().toggleClass('controls-TextBox__hiddenPlaceholder', !enabled);
+            if (this._inputField) {
+               this._inputField.toggleClass('controls-TextBox__hiddenPlaceholder', !enabled);
+            }
          }
          this._toggleState();
       },
