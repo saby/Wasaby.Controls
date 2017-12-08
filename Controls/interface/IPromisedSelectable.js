@@ -2,7 +2,8 @@ define('js!Controls/interface/IPromisedSelectable', [
 ], function() {
 
    /**
-    * Интерфейс работы списков.
+    * Интерфейс для выделения в коллекции с неизвестным количеством элементов
+    *
     * @mixin Controls/interface/IPromisedSelectable
     * @public
     */
