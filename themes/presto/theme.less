@@ -148,38 +148,44 @@ body {
   //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
   .ws-paging {
     .ws-paging-small {
+      .box-sizing();
       width: round(96px * @multiplier)!important;
       height: @default-height;
-      background: #567395;
-      border: @default-border-width solid transparent;
+      line-height: @default-height !important;
+      background: transparent !important;
+      border: 2px solid transparent !important;
       font-size: round(40px * @multiplier) ;
-      //line-height:   round(84px * @multiplier) ;
-      margin: 0 8px 0 0 ;
-      padding: 0 ;
-      box-sizing: border-box ;
-      color: #FFFFFF;
-      &.ws-paging-active{
-        border: @default-border-width solid @default-border-color ;
-        color: #E4E4E4 ;
-        &:hover{
-          background-color: #1b2530 ;
+      color: #8991A9 !important;
+      margin: 0 4px 0 0 ;
+      padding: 0;
+      cursor: default;
+      &.ws-paging-prev, &.ws-paging-first, &.ws-paging-next, &.ws-paging-end {
+        background: #567395 !important;
+        .box-shadow(0 1px 4px rgba(0, 0, 0, 1););
+      }
+      &.ws-paging-active {
+        .box-shadow(0 1px 4px rgba(0, 0, 0, 1););
+        color: #FFFFFF !important;
+        background: #567395 !important;
+        cursor: pointer;
+        &:hover {
+          background: #516B8C;
+        }
+        &:active {
+          .box-shadow(none);
+          background: #516B8C;
         }
       }
-      &.ws-paging-current{
-        border: @default-border-width solid @primary-color ;
-        background:#354B62;
+      &.ws-paging-current {
+        .box-shadow(none);
+        background: #516B8C !important;
+        border: 2px solid #26B8FF !important;
+        color: #FFFFFF !important;
       }
-      /*&.ws-paging-next, &.ws-paging-end, &.ws-paging-first, &.ws-paging-prev {
-        position:relative;
-        &:before {
-          text-indent: 0 ;
-          font-size: round(84px * @multiplier);
-          position:absolute;
-          top:-2px;
-          left:-2px;
-          font-family: 'carrypresto-icons' !important;
-        }
-      }*/
+      &.icon-16{
+        font-size:@default-icon-size-large !important;
+      }
     }
   }
+  .controls-Pager-block-amount {display: none}
 }
