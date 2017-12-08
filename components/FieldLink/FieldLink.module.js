@@ -474,7 +474,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }
                 if ($target.hasClass('controls-FieldLink__dropAllLinks')) {
                    this.sendCommand('clearAllItems');
-                   return;
+                   
                 }
              }
           },
@@ -620,7 +620,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if(this._options.useSelectorAction) {
                 this._getSelectorAction().execute(wsCoreMerge(actionCfg, cfg));
              } else {
-                this._showChooser(cfg.template, cfg.componentOptions);
+                this._showChooser(cfg.template, cfg.componentOptions, cfg.dialogOptions);
              }
           },
 
