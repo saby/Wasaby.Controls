@@ -339,10 +339,16 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
    });
 
    function breadthFirstSearch(items, callback, context) {
-      var callbackResult;
+      var
+         callbackResult,
+         processedItems = [];
       items = cClone(items);
       for (var i = 0; i < items.length; i++) {
-         callbackResult = callback.call(context, items[i]);
+         //Защита от зацикливания при обходе в ширину
+         if (processedItems.indexOf(items[i]) === -1) {
+            callbackResult = callback.call(context, items[i]);
+            processedItems.push(items[i]);
+         }
          if (callbackResult instanceof Array) {
             items = items.concat(callbackResult);
          } else if (callbackResult === false) {
