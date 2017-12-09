@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
             this._selectedPresetId = _lastSelected || this._options.selectedPresetId;
             var namespace = this._options.presetNamespace;
             if (namespace) {
-               this._cacheHandler = this._updateDropdown.bind(this);
+               this._cacheHandler = this._onCache.bind(this);
                PresetCache.subscribe(namespace, 'onCacheChanged', this._cacheHandler);
 
                PresetCache.list(namespace).addCallback(this._updateDropdown.bind(this));
@@ -153,6 +153,16 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
             dropdown.setEnabled(1 < presets.length);
             this._isDropdownReady = 0 < presets.length;
             dropdown.setVisible(this._isDropdownReady);
+         },
+
+         /**
+          * Обработчик события
+          * @protected
+          * @param {Core/EventObject} evtName Идентификатор события
+          * @param {SBIS3.CONTROLS.Columns.Preset.Unit} units Список пресетов редактора колонок
+          */
+         _onCache: function (evtName, units) {
+            this._updateDropdown(units);
          },
 
          /**

@@ -95,6 +95,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Cache',
                      }
                      _save(namespace);
                   }
+                  _channel.notify('onCacheLoaded', namespace, _data[namespace]);
                   return _data[namespace];
                },
                function (err) {
@@ -250,10 +251,12 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Cache',
          if (!list) {
             throw new Error('Nothing to save');
          }
-         _channel.notify('onCacheChanged', namespace);
+         _channel.notify('onCacheChanged', namespace, _data[namespace]);
          //TODO: Возможно, стоит сделать метод toJSON у юнитов (для уменьшения веса) ?..
          UserConfig.setParam(_PREFIX + namespace, JSON.stringify(cached)).addCallbacks(
-               function () {},
+               function () {
+                  _channel.notify('onCacheSaved', namespace, _data[namespace]);
+               },
                function (err) {
                   // Произошла ошибка - данные теперь неактуальны, всё сбросить
                   delete _data[namespace];
@@ -318,8 +321,10 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Cache',
       var _onEvent = function (evtName, namespace) {
          var listeners = _sublisteners[evtName.name][namespace];
          if (listeners) {
+            var args = [].slice.call(arguments);
+            args.splice(1, 1);
             for (var i = 0; i < listeners.length; i++) {
-               listeners[i].call(null, evtName);
+               listeners[i].apply(null, args);
             }
          }
       };
@@ -335,7 +340,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Cache',
 
 
       // Опубликовать свои события
-      _channel.publish('onCacheChanged', 'onCacheError');
+      _channel.publish('onCacheLoaded', 'onCacheChanged', 'onCacheSaved', 'onCacheError');
 
       return PresetCache;
    }
