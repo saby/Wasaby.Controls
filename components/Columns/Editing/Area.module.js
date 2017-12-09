@@ -60,11 +60,11 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
                 */
                applyButtonTitle: null,//Определено в шаблоне
                /**
-                * @cfg {} ^^^
+                * @cfg {WS.Data/Collection/RecordSet} Список колнок
                 */
                columns: null,
                /**
-                * @cfg {} ^^^
+                * @cfg {(string|number)[]} Список идентификаторов выбранных колонок
                 */
                selectedColumns: [],
                /**
@@ -104,6 +104,12 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
                 */
                moveColumns: true
             },
+            _childNames: {
+               presetView: 'controls-Columns-Editing-Area__Preset',
+               fixedView: 'controls-Columns-Editing-Area__FixedList',
+               selectableView: 'controls-Columns-Editing-Area__SelectableList',
+               presetDropdown: 'controls-Columns-Editing-Area__Preset-item-title'
+            },
             _presetView: null,
             _presetDropdown: null,
             _fixedView: null,
@@ -137,16 +143,16 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
          init: function () {
             Area.superclass.init.apply(this, arguments);
             var options = this._options;
-            this._presetView = options.usePresets ? _getChildComponent(this, 'controls-Columns-Editing-Area__Preset') : null;
-            this._fixedView = this.getChildControlByName('controls-Columns-Editing-Area__FixedList');
-            this._selectableView = this.getChildControlByName('controls-Columns-Editing-Area__SelectableList');
+            this._presetView = options.usePresets ? _getChildComponent(this, this._childNames.presetView) : null;
+            this._fixedView = this.getChildControlByName(this._childNames.fixedView);
+            this._selectableView = this.getChildControlByName(this._childNames.selectableView);
 
             if (this._presetView) {
                //PresetCache.subscribe(options.presetNamespace, 'onCacheError', function () {});
 
                _getPresets(this).addCallback(function (presets) {
                   this._currentPreset = _getPreset(presets, options.selectedPresetId);
-                  _updatePresetView(this, true);
+                  _updatePresetView(this);
 
                   //^^^this._presetView.setItemsHover(false);
                   //^^^this.subscribeTo(this._presetView, 'onChangeHoveredItem', this._presetView.setItemsHover.bind(this._presetView, false));
@@ -334,7 +340,7 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
       };
 
       var _makePresetViewItems = function (preset) {
-         return new RecordSet({idProperty:'id', rawData:preset ? [preset] : []});
+         return new RecordSet({idProperty:'id', rawData:preset ? [{id:preset.id, title:preset.title}] : []});
       };
 
 
@@ -368,34 +374,36 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
          }
       };
 
-      var _updatePresetView = function (self, renew) {
-         if (renew) {
-            self._presetDropdown = null;
-            self._presetView.setItems(_makePresetViewItems(self._currentPreset));
-         }
+      var _updatePresetView = function (self) {
+         self._presetDropdown = null;
+         self._presetView.setItems(_makePresetViewItems(self._currentPreset));
          setTimeout(function () {
-            self._presetDropdown = _getChildComponent(self._presetView, 'controls-Columns-Editing-Area__Preset-item-title');
+            self._presetDropdown = _getChildComponent(self._presetView, self._childNames.presetDropdown);
             if (self._presetDropdown) {
                self.subscribeTo(self._presetDropdown, 'onChange', function (evtName, selectedPresetId) {
-                  _getPresets(self).addCallback(function (presets) {
-                     self._currentPreset = _getPreset(presets, self._presetDropdown.getSelectedPresetId());
-                     _updatePresetView(self, true);
-                     var cfg = self._options;
-                     var allSelected = _getSelectedColumns(cfg, this._currentPreset);
-                     var selectedColumns = [];
-                     cfg.columns.each(function (record) {
-                        var column = record.getId();
-                        if (!record.get('fixed') && allSelected.indexOf(column) !== -1) {
-                           selectedColumns.push(column);
-                        }
-                     });
-                     self._selectableView.setSelectedKeys(selectedColumns);
-                     _prepareGroupCollapsing(cfg, this._currentPreset);
-                     _applyGroupCollapsing(self);
-                  });
+                  _onPresetDropdownChanged(self);
                });
             }
          }, 1);
+      };
+
+      var _onPresetDropdownChanged = function (self) {
+         _getPresets(self).addCallback(function (presets) {
+            self._currentPreset = _getPreset(presets, self._presetDropdown.getSelectedPresetId());
+            _updatePresetView(self);
+            var cfg = self._options;
+            var allSelected = _getSelectedColumns(cfg, this._currentPreset);
+            var selectedColumns = [];
+            cfg.columns.each(function (record) {
+               var column = record.getId();
+               if (!record.get('fixed') && allSelected.indexOf(column) !== -1) {
+                  selectedColumns.push(column);
+               }
+            });
+            self._selectableView.setSelectedKeys(selectedColumns);
+            _prepareGroupCollapsing(cfg, this._currentPreset);
+            _applyGroupCollapsing(self);
+         });
       };
 
       var _makeItemsActions = function (self) {
@@ -419,7 +427,7 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
             case 'clone':
             case 'delete':
                _modifyPresets(self, action);
-               _updatePresetView(self, true);
+               _updatePresetView(self);
                break;
          }
       };
