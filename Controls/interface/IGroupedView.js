@@ -2,7 +2,8 @@ define('js!Controls/interface/IGroupedView', [
 ], function() {
 
    /**
-    * Интерфейс для работы группировкой.
+    * Интерфейс для работы с группировкой.
+    *
     * @mixin Controls/interface/IGroupedView
     * @public
     */

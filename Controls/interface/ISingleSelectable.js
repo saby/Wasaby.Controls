@@ -2,7 +2,8 @@ define('js!Controls/interface/ISingleSelectable', [
 ], function() {
 
    /**
-    * Интерфейс работы списков.
+    * Интерфейс для выбора элемента из коллекции
+    *
     * @mixin Controls/interface/ISingleSelectable
     * @public
     */
