@@ -84,7 +84,9 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Cache',
                function (data) {
                   var values = data && typeof data === 'string' ? JSON.parse(data) : data || [];
                   values = values && Array.isArray(values) && values.length ? values.map(function (value) {
-                     return new PresetUnit(value);
+                     var preset = new PresetUnit(value);
+                     preset.isStorable = true;
+                     return preset;
                   }) : [];
                   _data[namespace] = values;
                   // Если есть отложенные вызовы - выполнить (и сохранить результат)
@@ -110,11 +112,14 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Cache',
           * @public
           * @param {string} namespace Пространство имён
           * @param {object} data Данные для создания нового пресета редактора колонок
-          * @return {Core/Deferred<boolean>}
+          * @return {SBIS3.CONTROLS.Columns.Preset.Unit}
           */
          create: function (namespace, data) {
             data.id = data.id || _uniqueHex(50);
-            _change(namespace, 'create', new PresetUnit(data));
+            data.isStorable = true;
+            var preset = new PresetUnit(data);
+            _change(namespace, 'create', preset);
+            return preset;
          },
 
          /**
@@ -132,7 +137,6 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Cache',
           * @public
           * @param {string} namespace Пространство имён
           * @param {SBIS3.CONTROLS.Columns.Preset.Unit} preset Пресет редактора колонок
-          * @return {Core/Deferred<boolean>}
           */
          delete: function (namespace, preset) {
             _change(namespace, 'delete', preset);
@@ -176,6 +180,9 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Cache',
          }
          if (!(preset instanceof PresetUnit)) {
             throw new Error('Wrong "preset"');
+         }
+         if (!preset.isStorable) {
+            throw new Error('Not storable');
          }
          if (_data[namespace]) {
             _applyChange(namespace, action, preset);
@@ -252,8 +259,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Cache',
             throw new Error('Nothing to save');
          }
          _channel.notify('onCacheChanged', namespace, _data[namespace]);
-         //TODO: Возможно, стоит сделать метод toJSON у юнитов (для уменьшения веса) ?..
-         UserConfig.setParam(_PREFIX + namespace, JSON.stringify(cached)).addCallbacks(
+         UserConfig.setParam(_PREFIX + namespace, JSON.stringify(list.map(_toCompact))).addCallbacks(
                function () {
                   _channel.notify('onCacheSaved', namespace, _data[namespace]);
                },
@@ -264,6 +270,26 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Cache',
                   _channel.notify('onCacheError', namespace);
                }
          );
+      };
+
+      /**
+       * Компактифицировать пресет для сохранения
+       * @private
+       * @param {SBIS3.CONTROLS.Columns.Preset.Unit} preset Пресет редактора колонок
+       * @return {object}
+       */
+      var _toCompact = function (preset) {
+         var data = {
+            id: preset.id,
+            title: preset.title
+         };
+         if (preset.selectedColumns.length) {
+            data.selectedColumns = data.selectedColumns;
+         }
+         if (preset.expandedGroups.length) {
+            data.expandedGroups = data.expandedGroups;
+         }
+         return data;
       };
 
       /**

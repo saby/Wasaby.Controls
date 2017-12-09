@@ -28,11 +28,11 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
       var _channel = EventBus.channel();
 
       /**
-       * Текущий выбранный пресет
+       * Текущие идентификаторы выбранных пресетов (раздельно по нэмспейсам)
        * @private
-       * @type {string|number}
+       * @type {object}
        */
-      var _lastSelected;
+      var _lastSelecteds = {};
 
 
 
@@ -68,31 +68,29 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
          init: function () {
             PresetDropdown.superclass.init.apply(this, arguments);
             this._dropdown = this.getChildControlByName('controls-Columns-Preset-Dropdown__dropdown');
-            this._selectedPresetId = _lastSelected || this._options.selectedPresetId;
-            var namespace = this._options.presetNamespace;
+            var namespace = this._options.presetNamespace || '';
+            this._selectedPresetId = _lastSelecteds[namespace] || this._options.selectedPresetId;
             if (namespace) {
                this._cacheHandler = this._onCache.bind(this);
                PresetCache.subscribe(namespace, 'onCacheChanged', this._cacheHandler);
 
                PresetCache.list(namespace).addCallback(this._updateDropdown.bind(this));
-
-               this.subscribeTo(this._dropdown, 'onSelectedItemsChange', function (evtName, selecteds, changes) {
-                  var selectedId = selecteds[0];
-                  if (selectedId !== this._selectedPresetId) {
-                     this._selectedPresetId = selectedId;
-                     _lastSelected = selectedId;
-                     if (this._isDropdownReady) {
-                        this._notify('onChange', selectedId);
-                        _channel.notifyWithTarget('onChangeSelectedPreset', this, selectedId);
-                     }
-                  }
-               }.bind(this));
-
-               this._publish('onChange');
             }
             else {
                this._updateDropdown();
             }
+
+            this.subscribeTo(this._dropdown, 'onSelectedItemsChange', function (evtName, selecteds, changes) {
+               var selectedId = selecteds[0];
+               if (selectedId !== this._selectedPresetId) {
+                  this._selectedPresetId = selectedId;
+                  _lastSelecteds[namespace] = selectedId;
+                  if (this._isDropdownReady) {
+                     this._notify('onChange', selectedId);
+                     _channel.notifyWithTarget('onChangeSelectedPreset', this, selectedId);
+                  }
+               }
+            }.bind(this));
 
             this._channelHandler = this._onChannel.bind(this);
             _channel.subscribe('onChangeSelectedPreset', this._channelHandler);
@@ -114,7 +112,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
          setSelectedPresetId: function (selectedPresetId) {
             if (selectedPresetId !== this._selectedPresetId) {
                this._selectedPresetId = selectedPresetId;
-               _lastSelected = selectedPresetId;
+               _lastSelecteds[this._options.presetNamespace || ''] = selectedPresetId;
                this._dropdown.setSelectedKeys([selectedPresetId]);
             }
          },
@@ -126,6 +124,15 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
           */
          getSelectedPresetId: function () {
             return this._selectedPresetId;
+         },
+
+         /**
+          * Получить список всех отображаемых пресетов редактора колонок
+          * @public
+          * @return {SBIS3.CONTROLS.Columns.Preset.Unit[]}
+          */
+         getPresets: function () {
+            return this._dropdown.getItems().getRawData();
          },
 
          /**
@@ -179,6 +186,19 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
             }
          }
       });
+
+      /**
+       * Получить идентификатор последнего выбранного пресета редактора колонок
+       * @public
+       * @static
+       * @param {string} namespace Пространство имён для сохранения пользовательских пресетов
+       * @return {string|number}
+       */
+      PresetDropdown.getLastSelected = function (namespace) {
+         return _lastSelecteds[namespace || ''];
+      };
+
+
 
       return PresetDropdown;
    }
