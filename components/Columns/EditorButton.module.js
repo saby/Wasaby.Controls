@@ -7,6 +7,7 @@
  */
 define('js!SBIS3.CONTROLS.Columns.EditorButton',
    [
+      'Core/core-merge',
       'js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
       'js!SBIS3.CONTROLS.CompoundControl',
       'tmpl!SBIS3.CONTROLS.Columns.EditorButton',
@@ -14,7 +15,7 @@ define('js!SBIS3.CONTROLS.Columns.EditorButton',
       'js!SBIS3.CONTROLS.IconButton'
    ],
 
-   function (PresetDropdown, CompoundControl, dotTplFn) {
+   function (coreMerge, PresetDropdown, CompoundControl, dotTplFn) {
       'use strict';
 
       var EditorButton = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.Columns.EditorButton.prototype*/ {
@@ -55,13 +56,26 @@ define('js!SBIS3.CONTROLS.Columns.EditorButton',
             this._presetDropdown = this._options.usePresets ? this.getChildControlByName('controls-Columns-EditorButton__presetDropdown') : null;
             this._button = this.getChildControlByName('controls-Columns-EditorButton__button');
 
-            var handler = this.sendCommand.bind(this, 'showColumnsEditor', {editorOptions:this._options.editorOptions, applyToSelf:true});
+            var editorOptions = this._options.editorOptions;
             if (this._presetDropdown) {
-               this.subscribeTo(this._presetDropdown, 'onChange', handler);
+               this.subscribeTo(this._presetDropdown, 'onChange', function (evtName, selectedPresetId) {
+                  this.sendCommand('showColumnsEditor', _makeArgs(editorOptions, selectedPresetId));
+               }.bind(this));
             }
-            this.subscribeTo(this._button, 'onActivated', handler);
+            this.subscribeTo(this._button, 'onActivated', this.sendCommand.bind(this, 'showColumnsEditor', _makeArgs(editorOptions)));
          }
       });
+
+      var _makeArgs = function (editorOptions, selectedPresetId) {
+         var args = {applyToSelf:true};
+         if (editorOptions) {
+            args.editorOptions = coreMerge({}, editorOptions);
+         }
+         if (selectedPresetId) {
+            (args.editorOptions = args.editorOptions || {}).selectedPresetId = selectedPresetId;
+         }
+         return args;
+      };
 
       return EditorButton;
    }
