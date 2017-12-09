@@ -56,25 +56,27 @@ define('js!SBIS3.CONTROLS.Columns.EditorButton',
             this._presetDropdown = this._options.usePresets ? this.getChildControlByName('controls-Columns-EditorButton__presetDropdown') : null;
             this._button = this.getChildControlByName('controls-Columns-EditorButton__button');
 
-            var editorOptions = this._options.editorOptions;
+            var handler = _handler.bind(null, this);
             if (this._presetDropdown) {
-               this.subscribeTo(this._presetDropdown, 'onChange', function (evtName, selectedPresetId) {
-                  this.sendCommand('showColumnsEditor', _makeArgs(editorOptions, selectedPresetId));
-               }.bind(this));
+               this.subscribeTo(this._presetDropdown, 'onChange', handler);
             }
-            this.subscribeTo(this._button, 'onActivated', this.sendCommand.bind(this, 'showColumnsEditor', _makeArgs(editorOptions)));
+            this.subscribeTo(this._button, 'onActivated', handler);
          }
       });
 
-      var _makeArgs = function (editorOptions, selectedPresetId) {
+      var _handler = function (self) {
          var args = {applyToSelf:true};
-         if (editorOptions) {
-            args.editorOptions = coreMerge({}, editorOptions);
+         var options = self._options.editorOptions;
+         if (options) {
+            args.editorOptions = coreMerge({}, options);
          }
-         if (selectedPresetId) {
-            (args.editorOptions = args.editorOptions || {}).selectedPresetId = selectedPresetId;
+         if (self._presetDropdown) {
+            var selected = self._presetDropdown.getSelectedPresetId();
+            if (selected) {
+               (args.editorOptions = args.editorOptions || {}).selectedPresetId = selected;
+            }
          }
-         return args;
+         self.sendCommand('showColumnsEditor', args);
       };
 
       return EditorButton;
