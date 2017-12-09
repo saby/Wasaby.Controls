@@ -13,7 +13,6 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
       'WS.Data/Functor/Compute',
       'js!SBIS3.CONTROLS.Columns.Editing.Area/AreaSelectableModel',
       'js!SBIS3.CONTROLS.Columns.Preset.Cache',
-      'js!SBIS3.CONTROLS.Columns.Preset.Unit',
       'js!SBIS3.CONTROLS.CompoundControl',
       'js!SBIS3.CONTROLS.ItemsMoveController',
       'tmpl!SBIS3.CONTROLS.Columns.Editing.Area',
@@ -29,7 +28,7 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
       'js!SBIS3.CONTROLS.ScrollContainer'
    ],
 
-   function (CommandDispatcher, Deferred, RecordSet, ComputeFunctor, AreaSelectableModel, PresetCache, PresetUnit, CompoundControl, ItemsMoveController, dotTplFn) {
+   function (CommandDispatcher, Deferred, RecordSet, ComputeFunctor, AreaSelectableModel, PresetCache, CompoundControl, ItemsMoveController, dotTplFn) {
       'use strict';
 
 
@@ -464,11 +463,6 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
             throw new Error('Nothing to modify');
          }
          var namespace = self._options.presetNamespace;
-         var presets, index;
-         if (action !== 'change-title' && self._presetDropdown) {
-            presets = self._presetDropdown.getItems().getRawData();
-            index = presets && presets.length ? presets.map(function (v) { return v.id; }).indexOf(preset) : -1;
-         }
          switch (action) {
             case 'change-title':
                preset.title = arg;
@@ -476,15 +470,21 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
                break;
 
             case 'clone':
-               var newPreset = new PresetUnit(preset);
-               newPreset.title = self._options.newPresetTitle;// TODO: Возможно, лучше сделать старый заголовок с цифрой в конце - self._options.useNumberedTitle
-               newPreset.isStorable = true;
-               PresetCache.add(namespace, newPreset);
+               var newPreset = PresetCache.create(namespace, {
+                  title: self._options.newPresetTitle,// TODO: Возможно, лучше сделать старый заголовок с цифрой в конце - self._options.useNumberedTitle
+                  selectedColumns: preset.selectedColumns.slice(),
+                  expandedGroups: preset.expandedGroups.slice()
+               });
                self._presetDropdown.setSelectedPresetId(newPreset.id);
                self._currentPreset = newPreset;//^^^ ???
                break;
 
             case 'delete':
+               var presets, index;
+               if (action !== 'change-title' && self._presetDropdown) {
+                  presets = self._presetDropdown.getPresets();
+                  index = presets && presets.length ? presets.map(function (v) { return v.id; }).indexOf(preset) : -1;
+               }
                var nextPreset = index !== -1 && 1 < presets.length ? presets[index !== presets.length - 1 ? index + 1 : index - 1] : null;
                if (nextPreset) {
                   self._presetDropdown.setSelectedPresetId(nextPreset.id);
