@@ -4841,7 +4841,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             if (beginDeleteResult !== BeginDeleteResult.CANCEL) {
                this._toggleIndicator(true);
-               this._deleteRecordsFromSource(idArray).addCallback(function (result) {
+               this._deleteRecordsFromSource(idArray).addCallback(forAliveOnly(function (result) {
                   //Если записи удалялись из DataSource, то перезагрузим реест. Если DataSource нет, то удалим записи из items
                   if (self.getDataSource() && beginDeleteResult !== BeginDeleteResult.WITHOUT_RELOAD) {
                      resultDeferred = self._reloadViewAfterDelete(idArray).addCallback(function () {
@@ -4854,7 +4854,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      resultDeferred = Deferred.success(result);
                   }
                   return resultDeferred;
-               }).addErrback(function (result) {
+               }, this)).addErrback(function (result) {
                   InformationPopupManager.showMessageDialog({
                      message: result.message,
                      opener: self,
