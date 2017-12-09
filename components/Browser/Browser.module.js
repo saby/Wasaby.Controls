@@ -278,7 +278,6 @@ define('js!SBIS3.CONTROLS.Browser', [
          this._onInitBindingsHandler = this._onInitBindings.bind(this);
          this._bindView();
 
-         CommandDispatcher.declareCommand(this, 'setColumnsConfig', this.setColumnsConfig);//TODO: Убать после того, как columnsConfig будет перенесон из SBIS3.CATALOG.Browsers.CatalogGridView в SBIS3.CATALOG.Browsers.Catalog
          /**
           * Показать редактор колонок. Возвращает обещание, которое будет разрешено объектом конфигурации колонок
           * @command showColumnsEditor
