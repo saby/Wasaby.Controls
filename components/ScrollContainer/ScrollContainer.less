@@ -1,14 +1,6 @@
 .controls-ScrollContainer {
    overflow: hidden;
-   // Если включена фиксация заголовков внутри скролируемой области, то иногда стили на ws-sticky-header__wrapper
-   // переопределяют overflow
-   &.ws-sticky-header__wrapper {
-      overflow: hidden;
-   }
-   position: relative;
-   outline: none;
-   z-index: 0;
-   
+
    &:before, &:after {
       content: '';
       position: absolute;
@@ -42,12 +34,6 @@
    contain: strict;
 }
 
-.controls-ScrollContainer:not(.controls-ScrollContainer__hiddenScrollbar) {
-   .controls-Scrollbar.controls-Scrollbar__dragging {
-      display: block;
-   }
-}
-
 .controls-ScrollContainer__content {
    position: relative;
    overflow-y: scroll;
@@ -55,11 +41,6 @@
    height: 100%;
    max-height: inherit;
    min-width: inherit;
-   /*https://inside.tensor.ru/opendoc.html?guid=3d32d044-8a60-432d-9cd8-db555ad0786d&des=
-   R! Убрать с новых контролов класс ws-area с height:100%, чтобы работало по человечески.*/
-   &> .controls-ListView {
-      height: auto;
-   }
    -webkit-overflow-scrolling: touch;
    // isolation создает изолированный контект отображения и iframe в полноэкранном режиме отображается неправильно
    // (элементы с isolation: isolate отображаются поверх него, т.к. у них собственный контекст рендера).
@@ -106,25 +87,6 @@ body.ws-is-ie .controls-ScrollContainer__content {
          width: auto!important;
       }
    }
-}
-/*TODO временный фикс для выпуска*/
-.controls-ScrollContainer{
-   &.controls-ScrollContainer__withHead {
-      .controls-ScrollContainer__scrollbar {
-         top: 24px;
-         height: calc(~"100% - 32px");
-      }
-   }
-}
-
-.controls-ScrollContainer.ws-sticky-header__scrollable-container {
-   width: auto;
-}
-// Заголовки должны быть выше тени. Если этот z-index вызовет проблемы, то надо будет сделать, что бы при фиксации
-// заголовков на враппер фиксированных заголовков накидывался соответсвующий класс и при его наличии тень в скрол
-// контейнере вообще не отображалась.
-.controls-ScrollContainer > .ws-sticky-header__header-container {
-   z-index: 1;
 }
 
 .controls-ScrollContainer__hiddenScrollbar > .controls-Scrollbar {

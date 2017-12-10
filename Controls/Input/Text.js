@@ -1,14 +1,15 @@
 define('js!Controls/Input/Text', [
       'Core/Control',
-      'Controls/Input/resources/Helper',
       'tmpl!Controls/Input/Text/Text',
-      'WS.Data/Type/descriptor',
+      /*'WS.Data/Type/descriptor',*/
+      'Controls/Input/Text/ViewModel',
+
       'css!SBIS3.CONTROLS.TextBox',
       'tmpl!Controls/Input/resources/input'
    ], function(Control,
-               Helper,
                template,
-               types) {
+               /*types,*/
+               TextViewModel) {
 
       'use strict';
 
@@ -39,61 +40,32 @@ define('js!Controls/Input/Text', [
        * @variant false Не обрезать пробелы.
        */
 
-      /**
-       * @name Controls/Input/Text#selectOnClick
-       * @cfg {Boolean} Определяет режим выделения текста в поле ввода при получении фокуса
-       * @variant true Выделять текст.
-       * @variant false Не выделять текст.
-       */
+         /**
+          * @name Controls/Input/Text#selectOnClick
+          * @cfg {Boolean} Определяет режим выделения текста в поле ввода при получении фокуса
+          * @variant true Выделять текст.
+          * @variant false Не выделять текст.
+          */
 
-      /**
-       * @name Controls/Input/Text#inputCharRegExp
-       * @cfg {String} Регулярное выражение, в соответствии с которым будет осуществляться валидация вводимых символов
-       */
-
-      /**
-       * @name Controls/Input/Text#constraint
-       * @cfg {String} Устанавливает регулярное выражение, в соответствии с которым будет осуществляться валидация вводимых символов
-       * @remark
-       * Служит для фильтрации вводимых символов в поле ввода по условию, установленному регулярным выражением.
-       * Каждый вводимый символ будет проверяться на соответствие указанному в этой опции регулярному выражению;
-       * несоответствующие символы ввести будет невозможно.
-       * @example
-       * Разрешен ввод только цифр:
-       * <pre class="brush:xml">
-       *     <option name="constraint">[0-9]</option>
-       * </pre>
-       * Разрешен ввод только кириллицы:
-       * <pre class="brush:xml">
-       *     <option name="constraint">[а-яА-ЯёЁ]</option>
-       * </pre>
-       */
-
-
-      var _private = {
-
-         //Валидирует и подготавливает новое значение по splitValue
-         prepareData: function(splitValue) {
-            var insert = splitValue.insert;
-
-            if (this._options.constraint) {
-               insert = Helper.constraint(insert, this._options.constraint);
-            }
-
-            if(this._options.maxLength){
-               insert = Helper.maxLength(insert, splitValue, this._options.maxLength);
-            }
-
-            return {
-               value: splitValue.before + insert + splitValue.after,
-               position: splitValue.before.length + insert.length
-            };
-         }
-
-      };
+         /**
+          * @name  Controls/Input/Text#constraint
+          * @cfg {String} Устанавливает регулярное выражение, в соответствии с которым будет осуществляться валидация вводимых символов.
+          * @remark
+          * Служит для фильтрации вводимых символов в поле ввода по условию, установленному регулярным выражением.
+          * Каждый вводимый символ будет проверяться на соответствие указанному в этой опции регулярному выражению;
+          * несоответствующие символы ввести будет невозможно.
+          * @example
+          * Разрешен ввод только цифр:
+          * <pre class="brush:xml">
+          *     <option name="constraint">[0-9]</option>
+          * </pre>
+          * Разрешен ввод только кириллицы:
+          * <pre class="brush:xml">
+          *     <option name="constraint">[а-яА-ЯёЁ]</option>
+          * </pre>
+          */
 
       var TextBox = Control.extend({
-
          _controlName: 'Controls/Input/Text',
          _template: template,
 
@@ -101,7 +73,11 @@ define('js!Controls/Input/Text', [
             TextBox.superclass.constructor.call(this, options);
 
             this._value = options.value;
-            this._prepareData = _private.prepareData.bind(this);
+
+            this._textViewModel = new TextViewModel({
+               constraint: options.constraint,
+               maxLength: options.maxLength
+            });
          },
 
          _beforeUpdate: function(newOptions) {
@@ -149,7 +125,7 @@ define('js!Controls/Input/Text', [
          };
       };
 
-      //TODO расскоментировать когда полечат https://online.sbis.ru/opendoc.html?guid=e53e46a0-9478-4026-b7d1-75cc5ac0398b
+      //TODO расскоментировать этот блок + зависимость types когда полечат https://online.sbis.ru/opendoc.html?guid=e53e46a0-9478-4026-b7d1-75cc5ac0398b
       /*TextBox.getOptionTypes = function() {
        return {
        trim: types(Boolean),

@@ -11,13 +11,13 @@
       background: @search-background;
     }
     &.ws-disabled {
-      background: @search-background; //todo?
+      background: @search-background;
       border-color:@border-color_SearchForm_disabled;
       .controls-SearchForm__search {
         cursor: default;
-        color: @icon-color-disabled;
+        color: @color_searchForm_icon_disabled;
         &:hover {
-          color: @icon-color-disabled;
+          color: @color_searchForm_icon_disabled;
         }
       }
       .controls-SearchForm__reset{
@@ -73,4 +73,11 @@
 
 .controls-searchForm__suggest .controls-PopupMixin__closeButton {
   top: @top_searchForm_picker_closeButton;
+}
+
+.controls-searchForm__suggest-shown {
+  background: @suggest-text-box-bg-show-picker-color;
+}
+.controls-searchForm__field-suggest-shown {
+  color: @suggest-text-box-bg-show-picker-font-color;
 }

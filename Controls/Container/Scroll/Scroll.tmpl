@@ -1,5 +1,21 @@
-<div class="ws-Scroll">
-    <div class="ws-Scroll__content ws-scrolling-content">
+<div
+    name="container"
+    on:mouseenter="_initScrollbar()"
+    on:mouseleave="_hideScrollbar()"
+    class="controls-ScrollContainer ws-scrolling-content
+    {{ topGradient ? ' controls-ScrollContainer__top-gradient' }}
+    {{ bottomGradient ? ' controls-ScrollContainer__bottom-gradient' }}
+    {{ showScrollbar ? ' controls-ScrollContainer__scrollbar_show' }}">
+    <div
+        name="content"
+        class="controls-ScrollContainer__content ws-scrolling-content"
+        on:scroll="_onScroll()">
         <ws:partial template="{{_options.content}}"/>
     </div>
+    <Controls:Container:Scrollbar:Scrollbar
+        if="{{ showScrollbar }}"
+        position="{{ scrollBarPosition }}"
+        contentHeight="{{ contentHeight }}"
+        class="controls-ScrollContainer__scrollbar"
+    />
 </div>

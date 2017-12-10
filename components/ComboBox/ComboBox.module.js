@@ -15,15 +15,15 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "js!SBIS3.CONTROLS.Selectable",
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.SearchMixin",
-   "js!SBIS3.CONTROLS.ScrollContainer",
    'js!SBIS3.CONTROLS.Utils.TitleUtil',
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown",
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
    "Core/core-instance",
+   "js!SBIS3.CONTROLS.ScrollContainer",
    "i18n!SBIS3.CONTROLS.СomboBox",
    'css!SBIS3.CONTROLS.ComboBox'
-], function ( constants, Deferred, IoC, detection, LayoutManager, TextBox, TextBoxUtils, textFieldWrapper, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, TitleUtil, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
+], function ( constants, Deferred, IoC, detection, LayoutManager, TextBox, TextBoxUtils, textFieldWrapper, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, TitleUtil, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
     * Класс контрола "Комбинированный выпадающий список" с возможностью ввода значения с клавиатуры.
@@ -808,7 +808,27 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          if (!hash && projection.getCount() > 0) {
             hash = projection.at(0).getHash();
          }
+
+         $('.controls-ComboBox__item', this._picker.getContainer()).bind('mouseenter', function itemMouseEnter(event) {
+            //не устанавливаем title на мобильных устройствах:
+            //во-первых не нужно, во-вторых на ios из-за установки аттрибута не работает клик
+            if (!detection.isMobilePlatform) {
+               var itemContainer = event.target.closest('.controls-ComboBox__item'),
+                  textLineCount = itemContainer.innerText.split('\n').length; //Показываем подсказку, если внутри итема нет прикладной верстки. Узлы при получении innerText разделяются \n
+               if (textLineCount === 1) {
+                  TitleUtil.setTitle(itemContainer);
+               }
+            }
+         });
+
          this._scrollToItem(hash);
+      },
+
+      hidePicker: function() {
+         if (this._picker) {
+            $('.controls-ComboBox__item', this._picker.getContainer()).unbind();
+         }
+        ComboBox.superclass.hidePicker.apply(this, arguments);
       },
 
       _initializePicker: function(){
@@ -820,17 +840,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          // TODO чтобы избежать этого нужно переписать Combobox на ItemsControlMixin, тогда метод _scrollToItem не будет переводить фокус на пикер
          self._picker.subscribe('onKeyPressed', function (eventObject, event) {
             self._keyboardHover(event);
-         });
-         $('.controls-ComboBox__item', this._picker.getContainer()).bind('mouseenter', function itemMouseEnter(event) {
-            //не устанавливаем title на мобильных устройствах:
-            //во-первых не нужно, во-вторых на ios из-за установки аттрибута не работает клик
-            if (!detection.isMobilePlatform) {
-               var itemContainer = event.target.closest('.controls-ComboBox__item'),
-                   textLineCount = itemContainer.innerText.split('\n').length; //Показываем подсказку, если внутри итема нет прикладной верстки. Узлы при получении innerText разделяются \n
-               if (textLineCount === 1) {
-                  TitleUtil.setTitle(itemContainer);
-               }
-            }
          });
          TextBoxUtils.setEqualPickerWidth(this._picker);
       },
@@ -862,13 +871,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._isClearing = true;
          }
          ComboBox.superclass.setSelectedKey.apply(this, arguments);
-      },
-
-      destroy: function() {
-         if (this._picker) {
-            $('.controls-ComboBox__item', this._picker.getContainer()).unbind();
-         }
-         ComboBox.superclass.destroy.apply(this, arguments);
       },
 
       _scrollToItem: function(itemHash) {

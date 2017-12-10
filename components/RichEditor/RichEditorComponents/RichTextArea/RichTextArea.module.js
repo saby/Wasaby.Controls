@@ -184,17 +184,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                 */
                highlightLinks: false,
                /**
-                * Позволяет при вставке контента распознавать ссылки и декорировать их в отдельные блоки
-                * @cfg {Boolean} декорировать ссылки ссылки
-                */
-               decorateLinks: false,
-               /**
-                * Имя декоратора, ккоторый зарегистирован в системе, с помощью которого декорировать ссылки
-                * Если декоратор не укзан, то сыылки будут оборачиваться в <a>
-                * @cfg {String} имя декоратора
-                */
-               decoratorName: '', // engine - 'linkDecorator',
-               /**
                 * Имя каталога, в который будут загружаться изображения
                 * @cfg {String} имя декоратора
                 */
@@ -228,6 +217,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _codeSampleDialog: undefined,
             _beforeFocusOutRng: undefined,
             _images: {},
+            _lastActive: undefined,
             _lastSavedText: undefined
          },
 
@@ -431,6 +421,17 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      }
                   }
                   editor.insertContent(html);
+                  // Иногда в FF после вставки рэнж охватывает весь элемент редактора, а не находится внутри него - поставить курсор в конец
+                  // в таком случае
+                  // 1174769960 https://online.sbis.ru/opendoc.html?guid=268d5fe6-e038-40d3-b185-eff696796f12
+                  // 1174769988 https://online.sbis.ru/opendoc.html?guid=5c37d724-1e7b-4627-afe6-257db37d4798
+                  if (cConstants.browser.firefox) {
+                     var rng = editor.selection.getRng();
+                     var editorBody = editor.getBody();
+                     if (rng.startContainer === editorBody && rng.endContainer === editorBody) {
+                        this.setCursorToTheEnd();
+                     }
+                  }
                   //вставка контента может быть инициирована любым контролом,
                   //необходимо нотифицировать о появлении клавиатуры в любом случае
                   if (cConstants.browser.isMobilePlatform) {
@@ -479,30 +480,31 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          setActive: function(active) {
-            //если тини еще не готов а мы передадим setActive родителю то потом у тини буддет баг с потерей ренжа,
-            //поэтому если isEnabled то нужно передавать setActive родителю только по готовности тини
             var
                args = [].slice.call(arguments),
                editor, manager;
+            this._lastActive = active;
             if (active && this._needFocusOnActivated() && this.isEnabled()) {
                this._performByReady(function() {
-                  this._tinyEditor.focus();
-                  if (cConstants.browser.isMobileAndroid) {
-                     // на android устройствах не происходит подскролла нативного
-                     // наш функционал тестируется на планшете фирмы MI на котором клавиатура появляется долго ввиду анимации =>
-                     // => сразу сделать подскролл нельзя
-                     // появление клавиатуры стрельнет resize у window в этот момент можно осуществить подскролл до элемента ввода текста
-                     var
-                        resizeHandler = function(){
-                           this._inputControl[0].scrollIntoView(false);
-                           $(window).off('resize', resizeHandler);
-                        }.bind(this);
-                     $(window).on('resize', resizeHandler);
+                  //Активность могла поменяться пока грузится tinymce.js
+                  if (this._lastActive) {
+                     this._tinyEditor.focus();
+                     if (cConstants.browser.isMobileAndroid) {
+                        // на android устройствах не происходит подскролла нативного
+                        // наш функционал тестируется на планшете фирмы MI на котором клавиатура появляется долго ввиду анимации =>
+                        // => сразу сделать подскролл нельзя
+                        // появление клавиатуры стрельнет resize у window в этот момент можно осуществить подскролл до элемента ввода текста
+                        var
+                           resizeHandler = function(){
+                              this._inputControl[0].scrollIntoView(false);
+                              $(window).off('resize', resizeHandler);
+                           }.bind(this);
+                        $(window).on('resize', resizeHandler);
+                     }
+                     if (cConstants.browser.isMobilePlatform) {
+                        this._notifyMobileInputFocus();
+                     }
                   }
-                  if (cConstants.browser.isMobilePlatform) {
-                     this._notifyMobileInputFocus();
-                  }
-                  RichTextArea.superclass.setActive.apply(this, args);
                }.bind(this));
             }
             else {
@@ -519,8 +521,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (cConstants.browser.isMobilePlatform) {
                   EventBus.globalChannel().notify('MobileInputFocusOut');
                }
-               RichTextArea.superclass.setActive.apply(this, args);
             }
+            RichTextArea.superclass.setActive.apply(this, args);
          },
 
          destroy: function() {
@@ -934,11 +936,35 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * </pre>
           * @public
           */
-         execCommand: function(command) {
-            this._tinyEditor.execCommand(command);
+         execCommand: function (command) {
+            var editor = this._tinyEditor;
+            var needPrepocess;
+            var execCmd;
+            if (command === 'blockquote') {
+               needPrepocess = true;
+               execCmd = 'mceBlockQuote';
+            }
+            else
+            if (command === 'InsertOrderedList' || command === 'InsertUnorderedList') {
+               needPrepocess = true;
+            }
+            if (needPrepocess && !editor.formatter.match(command)) {
+               var rng = editor.selection.getRng();
+               var node = rng.startContainer;
+               if (rng.endContainer === node && node.nodeType === 3 && node.previousSibling && node.previousSibling.nodeType === 1) {
+                  var startOffset = rng.startOffset;
+                  var endOffset = rng.endOffset;
+                  editor.dom.split(node.parentNode, node);
+                  var newRng = editor.getDoc().createRange();
+                  newRng.setStart(node, startOffset);
+                  newRng.setEnd(node, endOffset);
+                  editor.selection.setRng(newRng);
+               }
+            }
+            editor.execCommand(execCmd || command);
             //TODO:https://github.com/tinymce/tinymce/issues/3104, восстанавливаю выделение тк оно теряется если после нжатия кнопки назад редактор стал пустым
             if ((cConstants.browser.firefox || cConstants.browser.isIE) && command == 'undo' && this._getTinyEditorValue() == '') {
-               this._tinyEditor.selection.select(this._tinyEditor.getBody(), true);
+               editor.selection.select(editor.getBody(), true);
             }
          },
 
@@ -1167,29 +1193,24 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          insertImageTemplate: function(key, fileobj) {
+            //необходимо вставлять каретку(курсор ввода), чтобы пользователь понимал куда будет производиться ввод
+            var CARET = cConstants.browser.chrome /*|| cConstants.browser.firefox*/ ? '&#xFEFF;{$caret}' : '{$caret}';
             var className, before, after;
-            //TODO: придумтаь как сделать без without-margin
             switch (key) {
                case '1':
                   className = 'image-template-left';
-                  before = '<p class="without-margin">';
-                  //необходимо вставлять пустой абзац с кареткой(курсором ввода), чтобы пользователь понимал куда будет производиться ввод
-                  after = '</p><p>{$caret}</p>';
+                  after = CARET;
                   break;
                case '2':
                   before = '<p class="controls-RichEditor__noneditable image-template-center">';
-                  after = '</p><p></p>';
+                  after = '</p>' + CARET;
                   break;
                case '3':
                   className = 'image-template-right';
-                  before = '<p class="without-margin">';
-                  //необходимо вставлять пустой абзац с кареткой(курсором ввода), чтобы пользователь понимал куда будет производиться ввод
-                  after = '</p><p>{$caret}</p>';
+                  after = CARET;
                   break;
                case '6':
-                  if (cConstants.browser.chrome || cConstants.browser.firefox) {
-                     after = '&#xFEFF;{$caret}';
-                  }
+                  after = CARET;
                   break;
                case '4':
                   //todo: сделать коллаж
@@ -1813,34 +1834,34 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             imageOptionsPanel.show();
          },
 
-         _changeImageTemplate: function(target, template) {
-            var
-               parent = target.parent();
-            parent.removeClass();
-            parent.removeAttr ('contenteditable');
-            target.removeClass();
-
+         _changeImageTemplate: function ($img, template) {
+            $img.removeClass();
+            var $parent = $img.parent();
+            var needUnwrap = $parent.hasClass('image-template-center');
+            if (needUnwrap && template != '2') {
+               $img.unwrap();
+            }
             switch (template) {
-               case "1":
-                  target.addClass('image-template-left');
-                  parent.addClass('without-margin');
+               case '1':
+                  $img.addClass('image-template-left');
                   break;
-               case "2":
-                  var
-                     //todo: go to tmpl
-                     width = target[0].style.width || (target.width() + 'px'),
-                     imageParagraph = '<p class="controls-RichEditor__noneditable image-template-center" contenteditable="false">' + //tinyMCE не проставляет contenteditable если изменение происходит  через dom.replace
+               case '2':
+                  //todo: go to tmpl
+                  var width = $img[0].style.width || ($img.width() + 'px');
+                  var html = '<p class="controls-RichEditor__noneditable image-template-center" contenteditable="false">' + //tinyMCE не проставляет contenteditable если изменение происходит  через dom.replace
                         '<img' +
-                        ' src="' + target.attr('src') + '"' +
+                        ' src="' + $img.attr('src') + '"' +
                         ' style="width:' + (width ? width : constants.defaultImagePercentSize + '%') + '"' +
-                        ' alt="' + target.attr('alt') + '"' +
+                        ' alt="' + $img.attr('alt') + '"' +
+                        ' data-img-uuid="' + $img.attr('data-img-uuid') + '"' +
                         '></img>' +
                      '</p>';
-                  this._tinyEditor.dom.replace($(imageParagraph)[0],target[0],false);
+                  this._tinyEditor.dom.replace($(html)[0], (needUnwrap ? $parent : $img)[0],false);
                   break;
-               case "3":
-                  target.addClass('image-template-right');
-                  parent.addClass('without-margin');
+               case '3':
+                  $img.addClass('image-template-right');
+                  break;
+               case '6':
                   break;
             };
             this._updateTextByTiny();
@@ -2113,7 +2134,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                });
             }
             this._tinyReady.addCallback(function () {
-               this._tinyEditor.setContent(this._prepareContent(this.getText()) || '');
+               var editor = this._tinyEditor;
+               var text = this._prepareContent(this.getText()) || '';
+               editor.setContent(text);
+               // Если при инициализации редактора есть начальный контент - нужно установить курсор в конец и переключить местоимение (placeholder)
+               // 1174747440 https://online.sbis.ru/opendoc.html?guid=3ffa28b7-7924-469d-8e42-c7570d3939d5
+               if (text) {
+                  this.setCursorToTheEnd();
+                  this._togglePlaceholder(text);
+               }
                //Проблема:
                //          1) При инициализации тини в историю действий добавляет контент блока на котором он построился
                //                (если пусто то <p><br data-mce-bogus="1"><p>)
@@ -2130,8 +2159,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                //Решение:
                //          Очистить историю редактора (clear) после его построения, чтобы пункт 2 был
                //          первым в истории изщменений и редактор не стрелял 'change'
-               this._tinyEditor.undoManager.clear();
-               this._tinyEditor.undoManager.add();
+               editor.undoManager.clear();
+               editor.undoManager.add();
             }.bind(this));
          },
 
@@ -2431,7 +2460,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                               'subTitleText',
                               'additionalText',
                               'controls-RichEditor__noneditable',
-                              'without-margin',
+                              //'without-margin',
                               'image-template-left',
                               'image-template-center',
                               'image-template-right',

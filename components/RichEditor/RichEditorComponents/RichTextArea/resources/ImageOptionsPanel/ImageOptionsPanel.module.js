@@ -2,15 +2,15 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
       'js!SBIS3.CONTROLS.PopupMixin',
-      'js!SBIS3.CORE.FileStorageLoader',
       'WS.Data/Di',
       'tmpl!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'js!SBIS3.CONTROLS.RichEditor.ImagePanel',
+      'js!SBIS3.CORE.FileStorageLoader',
       'js!SBIS3.CONTROLS.CommandsButton',
       'js!SBIS3.CONTROLS.Link',
       'css!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'css!SBIS3.CONTROLS.Menu'
-   ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, dotTplFn, ImagePanel) {
+   ], function(CompoundControl, PopupMixin, Di, dotTplFn, ImagePanel) {
       'use strict';
       //todo: отказаться от этого модуля в 3.7.5.50 перейти на контекстное меню
       var
@@ -66,10 +66,42 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                   this._commandsButton.getItemInstance('edit').setVisible(!!this._options.imageUuid);
                }
             },
-
+            updateTemplate: function() {
+                var
+                    icon,
+                    target,
+                    className,
+                    buttons,
+                    setTemplate = function() {
+                        buttons = this._commandsButton.getItemsInstances();
+                        if (buttons) {
+                            buttons.template.setIcon('icon-16 icon-' + icon + ' icon-primary')
+                        }
+                    }.bind(this);
+                if (this._options.templates && this._commandsButton) {
+                    target = this.getTarget();
+                    className = target.attr('class');
+                    if (className) {
+                        icon = 'PicRight';
+                        if (className === 'image-template-left') {
+                            icon = 'PicLeftT';
+                        }
+                    } else if (target.parent('.image-template-center').length) {
+                        icon = 'PicCenter';
+                    } else {
+                        icon = 'PicLeft';
+                    }
+                    if (this._commandsButton.getPicker()) {
+                        setTemplate();
+                    } else {
+                        this.subscribeOnceTo(this._commandsButton, 'onPickerOpen', setTemplate);
+                    }
+                }
+            },
             recalcPosition: function() {
                //todo: убрать при переходе на контекстное меню
                ImageOptionsPanel.superclass.recalcPosition.apply(this, arguments);
+               this.updateTemplate();
                var
                   parent = this.getParent(),
                   srcollParent = parent.getContainer().parent('.controls-ScrollContainer__content'),

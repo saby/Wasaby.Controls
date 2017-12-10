@@ -8,13 +8,13 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
    "js!SBIS3.CONTROLS.ItemsControlMixin",
    "js!SBIS3.CONTROLS.FilterMixin",
    'Core/Deferred',
-   "js!SBIS3.CONTROLS.DropdownList",
    "tmpl!SBIS3.CONTROLS.FastDataFilter",
    "tmpl!SBIS3.CONTROLS.FastDataFilter/ItemTpl",
+   "js!SBIS3.CONTROLS.DropdownList",
    'css!SBIS3.CONTROLS.FastDataFilter'
 ],
 
-   function(constants, CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, DropdownList, dotTplFn, ItemTpl) {
+   function(constants, CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, dotTplFn, ItemTpl) {
 
       'use strict';
       /**
@@ -257,12 +257,12 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                      def.callback(newKeys);
                   },
                   function() {
-                     def.callback([instance._defaultId]);
+                     def.callback([instance.getDefaultId()]);
                   }
                );
                return def;
             }
-            return def.callback([instance._defaultId]);
+            return def.callback([instance.getDefaultId()]);
          },
          //TODO это дублЬ! нужно вынести в хелпер!!!
          _isSimilarArrays : function(arr1, arr2){

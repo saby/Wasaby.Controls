@@ -9,11 +9,10 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
       'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemTemplate',
       'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemContentTemplate',
       'Core/core-instance',
-      'Core/helpers/Function/callNext',
       'Core/detection',
       'Core/helpers/Hcontrol/getScrollWidth',
       'js!SBIS3.CONTROLS.Utils.ItemsSelection'
-   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, cInstance, callNext, detection, getScrollWidth, ItemsSelection) {
+   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, cInstance, detection, getScrollWidth, ItemsSelection) {
 
       'use strict';
 

@@ -146,12 +146,6 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
             if (this._options.linkedEditor) {
                this._options.linkedEditor.insertSmile(smile);
             }
-         },
-
-         _execCommand : function(name) {
-            if (this._options.linkedEditor) {
-               this._options.linkedEditor.execCommand(name);
-            }
          }
 
          /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТПРАВКИ КОМАНД РЕДАКТОРУ*/

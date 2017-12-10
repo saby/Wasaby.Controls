@@ -2,7 +2,12 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS.Selectable', 'Core/core-instance'], function(ButtonGroupBase, Selectable, cInstance) {
+define('js!SBIS3.CONTROLS.RadioGroupBase',
+   [
+      'js!SBIS3.CONTROLS.ButtonGroupBase',
+      'js!SBIS3.CONTROLS.Selectable'
+   ],
+   function(ButtonGroupBase, Selectable) {
 
    'use strict';
 
@@ -15,10 +20,17 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
     * @author Крайнов Дмитрий Олегович
     */
 
+   var buildTplArgs = function(cfg) {
+      var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
+      tplOptions.selectedKey = cfg.selectedKey;
+      return tplOptions;
+   };
+
    var RadioGroupBase = ButtonGroupBase.extend([Selectable], /** @lends SBIS3.CONTROLS.RadioGroupBase.prototype */ {
       $protected: {
          _options: {
-            allowEmptySelection: false
+            allowEmptySelection: false,
+            _buildTplArgs: buildTplArgs
          }
       },
 

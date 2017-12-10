@@ -7,10 +7,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
    'js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil',
    'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.NumberTextBox/resources/FormatText',
-   'tmpl!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows',
    'js!SBIS3.CONTROLS.Utils.ConfigByClasses',
    'css!SBIS3.CONTROLS.NumberTextBox'
-], function ( constants, NumberTextBoxUtil, TextBox, FormatText, arrowTpl, ConfigByClasses) {
+], function ( constants, NumberTextBoxUtil, TextBox, FormatText, ConfigByClasses) {
 
 
    'use strict';
@@ -23,7 +22,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
     *    <li>{@link hideEmptyDecimals прятать ли пустую дробную часть};</li>
     *    <li>запрещение ввода {@link onlyPositive отрицательных чисел};</li>
     *    <li>запрещение ввода {@link onlyInteger дробных чисел};</li>
-    *    <li>{@link enableArrows наличие стрелок} для увеличения/уменьшения числа;</li>
     *    <li>{@link text начальное значение}.</li>
     * </ol>
     * @class SBIS3.CONTROLS.NumberTextBox
@@ -69,7 +67,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          _SHIFT_KEY: false,
          _CTRL_KEY: false,
          _options: {
-            afterFieldWrapper: arrowTpl,
             /**
              * @cfg {Boolean} Ввод только положительных чисел
              * Возможные значения:
@@ -131,17 +128,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
              */
             hideEmptyDecimals: true,
             /**
-             * @cfg {Boolean} Использовать ли кнопки для изменения значения
-             * С помощью кнопок можно увеличивать/уменьшать целую часть числа на 1.
-             * @example
-             * <pre>
-             *     <option name="enableArrows">true</option>
-             * </pre>
-             * @see integers
-             * @see onlyInteger
-             */
-            enableArrows: false,
-            /**
              * @cfg {Boolean} Показать разделители триад
              * @example
              * <pre>
@@ -169,7 +155,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
 
       _addOptionsFromClass: function(opts, attrToMerge) {
          var
-            classes = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || '',
+            classes = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || opts.className || '',
             params = [
                { class: 'controls-NumberTextBox__text-align-right', optionName: 'textAlign', value: 'right', defaultValue: 'left' }
             ];
@@ -206,16 +192,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       $constructor: function () {
          var self = this;
          this._createMirrorInput();
-         this.getContainer().click(function(e) {
-            if (self.isEnabled()) {
-               if ($(e.target).hasClass('js-controls-NumberTextBox__arrowUp')) {
-                  self._arrowUpClick();
-               }
-               if ($(e.target).hasClass('js-controls-NumberTextBox__arrowDown')) {
-                  self._arrowDownClick();
-               }
-            }
-         });
 
          this._inputField.bind('blur', function(){
             self._blurHandler();
@@ -253,10 +229,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          });
 
          this._publish('onChangeNumericValue');
-      },
-
-      init: function() {
-         NumberTextBox.superclass.init.apply(this, arguments);
       },
 
        _blurHandler: function() {
@@ -402,16 +374,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             this._options.maxLength,
             this._options.hideEmptyDecimals
          );
-      },
-
-      _arrowUpClick: function(){
-         this.setNumericValue(this._getSibling(1));
-      },
-
-      _arrowDownClick: function(){
-         if (!(this._options.onlyPositive && this.getNumericValue() < 1)) {
-            this.setNumericValue(this._getSibling(-1));
-         }
       },
 
       _keyDownBind: function (event) {
@@ -563,17 +525,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          }
       },
 
-      _getSibling: function (a) {
-         var sibling = this.getNumericValue();
-         if ((sibling < 1 && sibling > 0 && a == -1) ||
-             (sibling > -1 && sibling < 0 && a == 1)){
-            this._toggleMinus();
-            return -sibling;
-         } else {
-            return sibling + a;
-         }
-      },
-
       /**
        * Возвращает массив содержащий координаты выделения
        * @return {Array} массив содержащий координаты выделения
@@ -620,15 +571,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             obj.focus();
          }
       },
-
-      _setEnabled: function(enabled) {
-         NumberTextBox.superclass._setEnabled.apply(this, arguments);
-         //Если удалять стрелки из DOM, то ширина input будет меняться, https://jsfiddle.net/mrLjpqu6/
-         if (this._options.enableArrows) {
-            $('.controls-NumberTextBox__afterFieldWrapper', this.getContainer()).toggleClass('ws-invisible', !enabled);
-         }
-      }
-
    });
 
    return NumberTextBox;

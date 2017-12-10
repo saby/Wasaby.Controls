@@ -9,7 +9,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
        'Core/helpers/Function/memoize',
        'js!SBIS3.CONTROLS.Utils.Contains',
        "Core/helpers/string-helpers",
-       'Core/markup/ParserUtilities',
        'js!SBIS3.CONTROLS.ControlHierarchyManager',
        "js!SBIS3.CONTROLS.SuggestTextBox",
        "js!SBIS3.CONTROLS.ItemsControlMixin",
@@ -18,16 +17,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.Selectable",
        "js!SBIS3.CONTROLS.ActiveSelectable",
        "js!SBIS3.CONTROLS.SyncSelectionMixin",
-       "js!SBIS3.CONTROLS.FieldLinkItemsCollection",
        "tmpl!SBIS3.CONTROLS.FieldLink/afterFieldWrapper",
        "tmpl!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper",
        "tmpl!SBIS3.CONTROLS.FieldLink/textFieldWrapper",
        "js!SBIS3.CONTROLS.ITextValue",
-       "js!SBIS3.CONTROLS.Utils.TemplateUtil",
        "js!SBIS3.CONTROLS.ToSourceModel",
        "WS.Data/Collection/List",
        "js!SBIS3.CONTROLS.Utils.ItemsSelection",
        "Core/helpers/Object/find",
+       "js!SBIS3.CONTROLS.FieldLinkItemsCollection",
+       "js!SBIS3.CONTROLS.Utils.TemplateUtil",
        "js!SBIS3.CONTROLS.IconButton",
        "js!SBIS3.CONTROLS.Action.SelectorAction",
        'js!SBIS3.CONTROLS.FieldLink.Link',
@@ -47,7 +46,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
         memoize,
         contains,
         strHelpers,
-        ParserUtilities,
         ControlHierarchyManager,
         SuggestTextBox,
         ItemsControlMixin,
@@ -63,7 +61,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
         /********************************************/
 
         SyncSelectionMixin,
-        FieldLinkItemsCollection,
 
         /* Служебные шаблоны поля связи */
         afterFieldWrapper,
@@ -71,7 +68,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
         textFieldWrapper,
         /********************************************/
         ITextValue,
-        TemplateUtil,
         ToSourceModel,
         List,
         ItemsSelectionUtil,
@@ -82,8 +78,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
        function needShowCompatiblePlaceholder(cfg) {
           var
              useNativePlaceholder = _private.isSimplePlaceholder(cfg.placeholder),
-             selectedKeysLength = _private.keysFix(cfg.selectedKeys).length,
-             innerCheckShow = !useNativePlaceholder && (!selectedKeysLength || (cfg.multiselect && !cfg.alwaysShowTextBox));
+             isEmptySelection = cfg._isEmptySelection(cfg),
+             innerCheckShow = !useNativePlaceholder && (isEmptySelection || (cfg.multiselect && !cfg.alwaysShowTextBox));
           return cfg._needShowCompatiblePlaceholderST(cfg) && innerCheckShow;
        }
 
@@ -478,7 +474,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }
                 if ($target.hasClass('controls-FieldLink__dropAllLinks')) {
                    this.sendCommand('clearAllItems');
-                   return;
+                   
                 }
              }
           },
@@ -624,7 +620,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if(this._options.useSelectorAction) {
                 this._getSelectorAction().execute(wsCoreMerge(actionCfg, cfg));
              } else {
-                this._showChooser(cfg.template, cfg.componentOptions);
+                this._showChooser(cfg.template, cfg.componentOptions, cfg.dialogOptions);
              }
           },
 
@@ -791,11 +787,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           _modifyOptions: function(baseCfg, parsedOptions, attrToMerge) {
+             baseCfg.selectedKeys = _private.keysFix(baseCfg.selectedKeys);
+
              var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments),
                  classesToAdd = ['controls-FieldLink'],
                  selectedKeysLength, items;
 
-             cfg.selectedKeys = _private.keysFix(cfg.selectedKeys);
              selectedKeysLength = cfg.selectedKeys.length;
 
              if(cfg.multiselect) {
