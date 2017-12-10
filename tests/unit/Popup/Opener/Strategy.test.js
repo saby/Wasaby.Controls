@@ -10,10 +10,21 @@ define(
       'use strict';
       describe('Controls/Popup/Strategy', function () {
          describe('Controls/Popup/Opener/Sticky/Strategy', function () {
-            it('Target coords', function() {
-               var pos = {};
-               assert.isTrue(pos.top === 15);
-               assert.isTrue(pos.height === 40);
+            it('horizontal alignment', function(){
+               assert.equal(Sticky._horizontal({left: 80}, {}, 20), 80);
+               assert.equal(Sticky._horizontal({left: 80}, {side: 'right'}, 20), 60);
+               assert.equal(Sticky._horizontal({left: 80}, {side: 'right'}, 100), 80);
+               assert.equal(Sticky._horizontal({left: 80}, {'offset': -30}, 20), 50);
+               assert.equal(Sticky._horizontal({left: 80}, {'offset': -100}, 20), 80);
+               assert.equal(Sticky._horizontal({left: 80}, {side: 'right', 'offset': -20}, 20), 40);
+            });
+            it('vertical alignment', function(){
+               assert.equal(Sticky._vertical({top: 80}, {}, 20), 80);
+               assert.equal(Sticky._vertical({top: 80}, {side: 'bottom'}, 20), 60);
+               assert.equal(Sticky._vertical({top: 80}, {side: 'bottom'}, 100), 80);
+               assert.equal(Sticky._vertical({top: 80}, {'offset': 20}, 20), 100);
+               assert.equal(Sticky._vertical({top: 80}, {'offset': -100}, 20), 80);
+               assert.equal(Sticky._vertical({top: 80}, {side: 'bottom', 'offset': -20}, 20), 40);
             });
          });
 
