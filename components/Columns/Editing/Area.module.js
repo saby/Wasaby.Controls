@@ -38,11 +38,11 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
        * @protected
        * @type {object[]}
        */
-      var _PRESET_ACTIONS = [
-         {name:'edit', title:rk('Редактировать'), icon:'sprite:icon-16 icon-Edit icon-primary action-hover'},
-         {name:'clone', title:rk('Дублировать'), icon:'sprite:icon-16 icon-Copy icon-primary action-hover'},
-         {name:'delete', title:rk('Удалить'), icon:'sprite:icon-16 icon-Erase icon-error'}
-      ];
+      var _PRESET_ACTIONS = {
+         edit: {title: rk('Редактировать'), icon: 'sprite:icon-16 icon-Edit icon-primary action-hover'},
+         clone: {title: rk('Дублировать'), icon: 'sprite:icon-16 icon-Copy icon-primary action-hover'},
+         'delete': {title: rk('Удалить'), icon: 'sprite:icon-16 icon-Erase icon-error'}
+      };
 
 
 
@@ -155,7 +155,6 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
 
                   //^^^this._presetView.setItemsHover(false);
                   //^^^this.subscribeTo(this._presetView, 'onChangeHoveredItem', this._presetView.setItemsHover.bind(this._presetView, false));
-                  this._presetView.setItemsActions(_makeItemsActions(this));
                   this.subscribeTo(this._presetView, 'onAfterBeginEdit', this._presetView.setItemsActions.bind(this._presetView, []));
                   this.subscribeTo(this._presetView, 'onEndEdit', function (evtName, model, withSaving) {
                      if (withSaving) {
@@ -163,7 +162,7 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
                      }
                   }.bind(this));
                   this.subscribeTo(this._presetView, 'onAfterEndEdit', function (evtName, model, $target, withSaving) {
-                     this._presetView.setItemsActions(_makeItemsActions(this));
+                     this._presetView.setItemsActions(_makePresetItemsActions(this, this._currentPreset.isStorable));
                   }.bind(this));
                }.bind(this));
             }
@@ -375,9 +374,12 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
 
       var _updatePresetView = function (self) {
          self._presetDropdown = null;
-         self._presetView.setItems(_makePresetViewItems(self._currentPreset));
+         var presetView = self._presetView;
+         var preset = self._currentPreset;
+         presetView.setItems(_makePresetViewItems(preset));
+         presetView.setItemsActions(_makePresetItemsActions(self, preset.isStorable));
          setTimeout(function () {
-            self._presetDropdown = _getChildComponent(self._presetView, self._childNames.presetDropdown);
+            self._presetDropdown = _getChildComponent(presetView, self._childNames.presetDropdown);
             if (self._presetDropdown) {
                self.subscribeTo(self._presetDropdown, 'onChange', function (evtName, selectedPresetId) {
                   _onPresetDropdownChanged(self);
@@ -405,15 +407,16 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
          });
       };
 
-      var _makeItemsActions = function (self) {
-         return _PRESET_ACTIONS.map(function (inf) {
+      var _makePresetItemsActions = function (self, useAllActions) {
+         return (useAllActions ? Object.keys(_PRESET_ACTIONS) : ['clone']).map(function (action) {
+            var inf = _PRESET_ACTIONS[action];
             return {
-               name: inf.name,
+               name: action,
                icon: inf.icon,
                caption: inf.title,
                tooltip: inf.title,
                isMainAction: true,
-               onActivated: _applyPresetAction.bind(null, self, inf.name)
+               onActivated: _applyPresetAction.bind(null, self, action)
             };
          });
       };
@@ -461,6 +464,9 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
          var preset = self._currentPreset;
          if (!preset) {
             throw new Error('Nothing to modify');
+         }
+         if (!preset.isStorable && action !== 'clone') {
+            return;
          }
          var namespace = self._options.presetNamespace;
          switch (action) {
