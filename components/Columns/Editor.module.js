@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
             _options: {
                moveColumns: true,
                usePresets: false,// TODO: Включить после переделки дропдауна с пресетами
-               newPresetTitle: rk('Новый шаблон'),
+               newPresetTitle: rk('Новый пресет'),
                autoSaveFirstPreset: true,
                useNumberedTitle: true
             },

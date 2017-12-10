@@ -25,6 +25,13 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Cache',
       var _PREFIX = 'ColumnsEditor#';
 
       /**
+       * Длина идентификаторов, генерируемых для новых пресетов
+       * @private
+       * @type {number}
+       */
+      var _ID_LENGTH = 24;
+
+      /**
        * Кэш данных
        * @private
        * @type {object}
@@ -115,7 +122,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Cache',
           * @return {SBIS3.CONTROLS.Columns.Preset.Unit}
           */
          create: function (namespace, data) {
-            data.id = data.id || _uniqueHex(50);
+            data.id = data.id || _uniqueHex(_ID_LENGTH);
             data.isStorable = true;
             var preset = new PresetUnit(data);
             _change(namespace, 'create', preset);
@@ -213,7 +220,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Cache',
             list.push(preset);
          }
          else {
-            var i = _findIndex(preset, function (value) { return preset.id === value.id; });
+            var i = _findIndex(list, function (value) { return preset.id === value.id; });
             if (i === -1) {
                throw new Error('Not found');
             }
@@ -284,10 +291,10 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Cache',
             title: preset.title
          };
          if (preset.selectedColumns.length) {
-            data.selectedColumns = data.selectedColumns;
+            data.selectedColumns = preset.selectedColumns;
          }
          if (preset.expandedGroups.length) {
-            data.expandedGroups = data.expandedGroups;
+            data.expandedGroups = preset.expandedGroups;
          }
          return data;
       };
