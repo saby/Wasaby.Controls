@@ -82,8 +82,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
        function needShowCompatiblePlaceholder(cfg) {
           var
              useNativePlaceholder = _private.isSimplePlaceholder(cfg.placeholder),
-             selectedKeysLength = _private.keysFix(cfg.selectedKeys).length,
-             innerCheckShow = !useNativePlaceholder && (!selectedKeysLength || (cfg.multiselect && !cfg.alwaysShowTextBox));
+             isEmptySelection = cfg._isEmptySelection(cfg),
+             innerCheckShow = !useNativePlaceholder && (isEmptySelection || (cfg.multiselect && !cfg.alwaysShowTextBox));
           return cfg._needShowCompatiblePlaceholderST(cfg) && innerCheckShow;
        }
 
@@ -478,7 +478,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }
                 if ($target.hasClass('controls-FieldLink__dropAllLinks')) {
                    this.sendCommand('clearAllItems');
-                   return;
+                   
                 }
              }
           },
@@ -624,7 +624,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if(this._options.useSelectorAction) {
                 this._getSelectorAction().execute(wsCoreMerge(actionCfg, cfg));
              } else {
-                this._showChooser(cfg.template, cfg.componentOptions);
+                this._showChooser(cfg.template, cfg.componentOptions, cfg.dialogOptions);
              }
           },
 
@@ -791,11 +791,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           _modifyOptions: function(baseCfg, parsedOptions, attrToMerge) {
+             baseCfg.selectedKeys = _private.keysFix(baseCfg.selectedKeys);
+
              var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments),
                  classesToAdd = ['controls-FieldLink'],
                  selectedKeysLength, items;
 
-             cfg.selectedKeys = _private.keysFix(cfg.selectedKeys);
              selectedKeysLength = cfg.selectedKeys.length;
 
              if(cfg.multiselect) {

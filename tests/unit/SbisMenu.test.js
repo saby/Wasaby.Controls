@@ -74,6 +74,15 @@ define([
                 ],
                 [
                     '9', 'Документация', null
+                ],
+                [
+                    '10', 'Согласование отгула', null
+                ],
+                [
+                    '11', 'Новый регламент', null
+                ],
+                [
+                    '12', 'Прогул', null
                 ]
             ],
             s: [
@@ -88,10 +97,35 @@ define([
             adapter: new SbisAdapter(),
             format: myFormat
         }),
+        rawHistoryDataWidthEmptyPinned = {
+            pinned: [],
+            frequent: [1, 4, 5, 7],
+            recent: [1, 3, 4, 5, 7, 8]
+        },
+        rawHistoryData = {
+            pinned: [1, 5],
+            frequent: [1, 4, 5, 7],
+            recent: [1, 3, 4, 5, 7, 8]
+        },
+        data = {
+            rawData: null,
+            setRawData: function (data) {
+                this.rawData = data;
+            },
+            getRow: function() {
+                return {
+                    rawData: this.rawData,
+                    get: function(type) {
+                        return this.rawData[type];
+                    }
+                }
+            }
+        },
         self = {
             _options: {
                 additionalProperty: 'additional',
                 parentProperty: 'Parent',
+                displayProperty: 'title',
                 pinned: true,
                 frequent: true
             },
@@ -106,6 +140,9 @@ define([
                         ],
                         [
                             '5', 'Согласование', 2
+                        ],
+                        [
+                            '12', 'Прогул', null
                         ]
                     ],
                     s: [
@@ -181,8 +218,6 @@ define([
         },
         item;
 
-    SbisMenu._private.prepareHistoryData(self);
-
     describe('SBIS3.CONTROLS.SbisMenu', function () {
         describe('getOriginId', function () {
             it('pinned', function () {
@@ -204,6 +239,20 @@ define([
         });
 
         describe('prepareRecordSet', function () {
+            it('check with empty pinned items', function () {
+                SbisMenu._private.initRecordSet(self, self._oldItems.getFormat());
+                data.setRawData(rawHistoryDataWidthEmptyPinned);
+                SbisMenu._private.parseHistoryData(self, data);
+                assert.equal(self._pinned.getFormat().getCount(), self._oldItems.getFormat().getCount());
+            });
+            it('parseHistoryData', function () {
+                SbisMenu._private.initRecordSet(self, self._oldItems.getFormat());
+                data.setRawData(rawHistoryData);
+                SbisMenu._private.parseHistoryData(self, data);
+                SbisMenu._private.prepareHistoryData(self);
+                assert.equal(self._pinned.getFormat().getCount(), self._oldItems.getFormat().getCount());
+            });
+
             it('init recordSet', function () {
                 item = self._pinned.getRecordById('pinned-1');
                 assert.equal(item.get('title'), 'Задача в разработку');
@@ -242,11 +291,16 @@ define([
                 filterFrequent = SbisMenu._private.filterFrequent(self);
                 assert.equal(filterFrequent.length, 2);
             });
-            it('processHistory', function () {
-                var processedItems;
+            it('processHistory, check additional', function () {
+                var hiddenByPinItem,
+                    processedItems;
 
                 processedItems = SbisMenu._private.processHistory(self);
-                assert.equal(processedItems.getCount(), 15);
+                hiddenByPinItem = processedItems.getRecordById('12');
+                assert.equal(processedItems.getCount(), 19);
+                // проверяем что элемент, который скрыли в истории не скрыли ещё раз дополнительный >10 видимых элементов
+                assert.equal(hiddenByPinItem.get(self._options.additionalProperty), false);
+
             });
             it('addToRecent', function () {
                 var recentItem;

@@ -36,6 +36,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          tplOptions.hasScroll = tplOptions.startScrollColumn !== undefined;
          tplOptions.foldersColspan = cfg.foldersColspan;
          tplOptions.getItemContentTplData = getItemContentTplData;
+         tplOptions.hasChildrenProperty = cfg.hasChildrenProperty;
+         tplOptions.partialyReload = cfg.partialyReload;
+         tplOptions.expanderDisplayMode = cfg.expanderDisplayMode;
          tplOptions.cellData.isSearch = tvOptions.isSearch;
          return tplOptions;
       },
@@ -71,8 +74,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          };
          config.children = cfg.hierarchy.getChildren(cfg.item, config.projection.getCollection());
          config.isLoaded = cfg.projItem.isLoaded();
-         config.hasLoadedChild = config.children.length > 0;
          config.classIsLoaded = config.isLoaded ? ' controls-ListView__item-loaded' : '';
+         if (cfg.partialyReload && cfg.expanderDisplayMode === 'withChild' && !config.isLoaded) {
+            config.hasLoadedChild = cfg.item.get(cfg.hasChildrenProperty);
+         } else {
+            config.hasLoadedChild = config.children.length > 0;
+         }
          config.classHasLoadedChild = config.hasLoadedChild ? ' controls-ListView__item-with-child' : ' controls-ListView__item-without-child';
          config.classNodeType = ' controls-ListView__item-type-' + (config.nodePropertyValue == null ? 'leaf' : config.nodePropertyValue == true ? 'node' : 'hidden');
          config.classNodeState = config.nodePropertyValue !== null ? (' controls-TreeView__item-' + (cfg.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '';
@@ -219,7 +226,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          this.once('onDrawItems', function() {
             this._options._ladderInstance._columnNames.forEach(function(columnName) {
                self._options._ladderInstance.setConverter(columnName, function (value, item) {
-                  if (self._isSearchMode() && item.get(self._options.nodeProperty)) {
+                  if (self._isSearchMode() && (!item.get || item.get(self._options.nodeProperty))) {
                      return;
                   } else {
                      return value;

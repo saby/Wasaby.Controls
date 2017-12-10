@@ -406,20 +406,27 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       return tplOptions;
    },
 
-   hasNodeWithChild = function(items, hierarchyRelation) {
+   hasNodeWithChild = function(cfg) {
       var
+         items = cfg.items,
+         itemsProjection = cfg._itemsProjection,
+         hierarchyRelation = cfg._getHierarchyRelation(cfg),
          hasNodeWithChild = false,
          idx = 0,
-         itemsCount = items.getCount(),
-         child, item;
+         itemsCount = itemsProjection.getCount(),
+         child, itemProjection;
       while (idx < itemsCount && !hasNodeWithChild) {
-         item = items.at(idx);
-         child = hierarchyRelation.getChildren(
-            item.getId(),
-            items
-         );
-         if (child.length) {
-            hasNodeWithChild = true;
+         itemProjection = itemsProjection.at(idx);
+         if (cfg.partialyReload && !itemProjection.isLoaded()) {
+            hasNodeWithChild = !!itemProjection.getContents().get(cfg.hasChildrenProperty);
+         } else {
+            child = hierarchyRelation.getChildren(
+               itemProjection.getContents().getId(),
+               items
+            );
+            if (child.length) {
+               hasNodeWithChild = true;
+            }
          }
          idx++;
       }
@@ -985,11 +992,24 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       },
 
       _getItemsForRedrawOnAdd: function(items) {
-         var itemsToAdd = [], start = 0, groupId;
+         var
+            itemsToAdd = [], start = 0, groupId,
+            lastItem, breadCrumbs;
          if (this._options.hierarchyViewMode) {
             itemsToAdd = searchProcessing(items, this._options);
-         }
-         else {
+            // При поиске может возникнуть ситуация, когда часть хлебных крошек прилетает на первой странице, а часть на второй.
+            // В связи с этим проверяем последний элемент в itemsContainer. Если он является хлебными крошками, то проверяем
+            // что первый элемент - является теми же крошками, то просто меняем набор данных в крошках и удаляем первый элемент.
+            // https://online.sbis.ru/opendoc.html?guid=3c76d37f-365c-47a2-97b6-2851d3b66bf1
+            lastItem = this._getItemsContainer().find('>.controls-ListView__item:last');
+            if (lastItem.hasClass('controls-HierarchyDataGridView__path')) {
+               breadCrumbs = lastItem.find('.controls-BreadCrumbs').wsControl();
+               if (breadCrumbs.getItems().at(0).getId() === itemsToAdd[0].data.path[0]['Id']) {
+                  breadCrumbs.setItems(itemsToAdd[0].data.path);
+                  itemsToAdd.shift();
+               }
+            }
+         } else {
             if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
                groupId = items[0].getContents();
                if (groupId !== false && items.length > 1 && this._canApplyGrouping(items[1])) {
@@ -1097,7 +1117,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             parentFn(cfg);
             if (cfg.expanderDisplayMode === 'withChild') {
                cfg.preparedClasses += ' controls-TreeView__hideExpanderEmptyNodes';
-               if (cfg._items && !cfg._hasNodeWithChild(cfg._items, cfg._getHierarchyRelation(cfg))) {
+               if (cfg._items && !cfg._hasNodeWithChild(cfg)) {
                   cfg.preparedClasses += ' controls-TreeView__hideExpands';
                }
             } else if (cfg.expanderDisplayMode === 'never') {
@@ -1230,6 +1250,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             parentFn.call(this);
             this._updateExpanderDisplay();
          },
+         _onUpdateItemProperty: function (parentFn, item, property) {
+            parentFn.call(this, item, property);
+            this._updateExpanderDisplay();
+         },
          _onCollectionReplace: function(parentFn, newItems) {
             parentFn.call(this, newItems);
             this._updateExpanderDisplay();
@@ -1237,7 +1261,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          _updateExpanderDisplay: function() {
             if (this._options.expanderDisplayMode === 'withChild') {
                this._container.toggleClass('controls-TreeView__hideExpands',
-                  !this._options._hasNodeWithChild(this._options._items, this._options._getHierarchyRelation(this._options)));
+                  !this._options._hasNodeWithChild(this._options));
             }
          },
          //В режиме поиска в дереве, при выборе всех записей, выбираем только листья, т.к. папки в этом режиме не видны.

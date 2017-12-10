@@ -108,6 +108,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return !this._pendingOperation || this.validate();
             },
 
+            // Говорим, что область готова принимать фокус всегда, когда активно редактирование по месту
+            // https://online.sbis.ru/opendoc.html?guid=4a15311b-fbe0-4818-89bf-16fb4d1f457c
+            _canAreaAcceptFocus: function() {
+               return this.isEdit();
+            },
+
             isEdit: function() {
                return this._eip && this._eip.isEdit();
             },
