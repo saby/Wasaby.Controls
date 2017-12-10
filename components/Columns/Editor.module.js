@@ -37,7 +37,6 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
                moveColumns: true,
                usePresets: false,// TODO: Включить после переделки дропдауна с пресетами
                newPresetTitle: rk('Новый пресет'),
-               autoSaveFirstPreset: true,
                useNumberedTitle: true
             },
             _result: null
@@ -63,7 +62,6 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
           * @param {string} [editorOptions.presetNamespace] Пространство имён для сохранения пользовательских пресетов (опционально)
           * @param {string|number} [editorOptions.selectedPresetId] Идентификатор первоначально выбранного пресета в дропдауне (опционально)
           * @param {string} [editorOptions.newPresetTitle] Начальное название нового пользовательского пресета (опционально)
-          * @param {boolean} [editorOptions.autoSaveFirstPreset] Сохранять автоматически единственный пользовательский пресет (опционально)
           * @param {boolean} [editorOptions.useNumberedTitle] При добавлении новых пользовательских пресетов строить название из предыдущего с добавлением следующего порядкового номера (опционально)
           * @param {boolean} [editorOptions.moveColumns] Указывает на необходимость включить перемещнение пользователем пунктов списка колонок (опционально)
           * @return {Deferred<object>}
@@ -105,7 +103,6 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
                   presetNamespace: _selectValue('presetNamespace', edColfSources),
                   selectedPresetId: _selectValue('selectedPresetId', edColfSources),
                   newPresetTitle: _selectValue('newPresetTitle', allSources),
-                  autoSaveFirstPreset: _selectValue('autoSaveFirstPreset', allSources, 'boolean'),
                   useNumberedTitle: _selectValue('useNumberedTitle', allSources, 'boolean'),
                   moveColumns: _selectValue('moveColumns', edDefSources, 'boolean'),
                   handlers: {

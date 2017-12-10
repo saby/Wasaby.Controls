@@ -92,10 +92,6 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
                 */
                newPresetTitle: rk('Новый пресет'),
                /**
-                * @cfg {boolean} Сохранять автоматически единственный пользовательский пресет (опционально)
-                */
-               autoSaveFirstPreset: true,
-               /**
                 * @cfg {boolean} При добавлении новых пользовательских пресетов строить название из предыдущего с добавлением следующего порядкового номера (опционально)
                 */
                useNumberedTitle: true,
@@ -196,10 +192,18 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
                   }
                }
             }
+            var expandedGroups = _collectExpandedGroups(this);
             if (selectedColumns.length) {
-               //^^^this._options.selectedColumns = selectedColumns;
-               //^^^this._notifyOnPropertyChanged('selectedColumns');
-               this._notify('onComplete', selectedColumns, _collectExpandedGroups(this));
+               if (this._options.usePresets) {
+                  var namespace = this._options.presetNamespace;
+                  var preset = this._currentPreset;
+                  if (namespace && preset && preset.isStorable && (!_isEqualLists(selectedColumns, preset.selectedColumns) || !_isEqualLists(expandedGroups, preset.expandedGroups))) {
+                     preset.selectedColumns = selectedColumns;
+                     preset.expandedGroups = expandedGroups;
+                     PresetCache.update(namespace, preset);
+                  }
+               }
+               this._notify('onComplete', selectedColumns, expandedGroups);
             }
             else {
                this._notify('onClose');
@@ -342,6 +346,19 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
          return new RecordSet({idProperty:'id', rawData:preset ? [{id:preset.id, title:preset.title}] : []});
       };
 
+      var _isEqualLists = function (list1, list2) {
+         var len = list1 ? list1.length : 0;
+         if (len !== (list2 ? list2.length : 0)) {
+            return false;
+         }
+         for (var i = 0; i < len; i++) {
+            if (list1[i] !== list2[i]) {
+               return false;
+            }
+         }
+         return true;
+      };
+
 
 
       /**
@@ -460,14 +477,14 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
       };
 
       var _modifyPresets = function (self, action, arg) {
+         var namespace = self._options.presetNamespace;
          var preset = self._currentPreset;
-         if (!preset) {
+         if (!namespace || !preset) {
             throw new Error('Nothing to modify');
          }
          if (!preset.isStorable && action !== 'clone') {
             return;
          }
-         var namespace = self._options.presetNamespace;
          switch (action) {
             case 'change-title':
                preset.title = arg;
@@ -481,20 +498,20 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
                   expandedGroups: preset.expandedGroups.slice()
                });
                self._presetDropdown.setSelectedPresetId(newPreset.id);
-               self._currentPreset = newPreset;//^^^ ???
+               self._currentPreset = newPreset;
                break;
 
             case 'delete':
                var presets, index;
-               if (action !== 'change-title' && self._presetDropdown) {
+               if (self._presetDropdown) {
                   presets = self._presetDropdown.getPresets();
-                  index = presets && presets.length ? presets.map(function (v) { return v.id; }).indexOf(preset) : -1;
+                  index = presets && presets.length ? presets.map(function (v) { return v.id; }).indexOf(preset.id) : -1;
                }
                var nextPreset = index !== -1 && 1 < presets.length ? presets[index !== presets.length - 1 ? index + 1 : index - 1] : null;
                if (nextPreset) {
                   self._presetDropdown.setSelectedPresetId(nextPreset.id);
                }
-               self._currentPreset = nextPreset;//^^^ ???
+               self._currentPreset = nextPreset;
                PresetCache.delete(namespace, preset);
                break;
          }
