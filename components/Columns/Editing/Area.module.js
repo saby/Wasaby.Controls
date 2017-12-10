@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
       'js!SBIS3.CONTROLS.Columns.Preset.Cache',
       'js!SBIS3.CONTROLS.CompoundControl',
       'js!SBIS3.CONTROLS.ItemsMoveController',
+      'js!SBIS3.CONTROLS.EditInPlaceBaseController',
       'tmpl!SBIS3.CONTROLS.Columns.Editing.Area',
       'tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/preset',
       'tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/presetEdit',
@@ -28,7 +29,7 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
       'js!SBIS3.CONTROLS.ScrollContainer'
    ],
 
-   function (CommandDispatcher, Deferred, RecordSet, ComputeFunctor, AreaSelectableModel, PresetCache, CompoundControl, ItemsMoveController, dotTplFn) {
+   function (CommandDispatcher, Deferred, RecordSet, ComputeFunctor, AreaSelectableModel, PresetCache, CompoundControl, ItemsMoveController, EditInPlaceBaseController, dotTplFn) {
       'use strict';
 
 
@@ -155,8 +156,9 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
 
                   this.subscribeTo(this._presetView, 'onAfterBeginEdit', this._presetView.setItemsActions.bind(this._presetView, []));
                   this.subscribeTo(this._presetView, 'onEndEdit', function (evtName, model, withSaving) {
-                     evtName.setResult(false);
                      if (withSaving) {
+                        evtName.setResult(EditInPlaceBaseController.EndEditResult.CUSTOM_LOGIC);
+                        this._presetView.getItems().replace(model, 0);
                         _modifyPresets(this, 'change-title', model.get('title'));
                      }
                   }.bind(this));
