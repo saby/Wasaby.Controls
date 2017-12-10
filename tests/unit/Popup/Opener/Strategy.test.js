@@ -1,18 +1,17 @@
 define(
    [
-      'js!Controls/Popup/TargetCoords',
       'js!Controls/Popup/Opener/Sticky/Strategy',
       'js!Controls/Popup/Opener/Dialog/Strategy',
       'js!Controls/Popup/Opener/Stack/Strategy',
       'js!Controls/Popup/Opener/Notification/Strategy'
    ],
 
-   function (TargetCoords, Sticky, Dialog, Stack, Notification) {
+   function (Sticky, Dialog, Stack, Notification) {
       'use strict';
       describe('Controls/Popup/Strategy', function () {
          describe('Controls/Popup/Opener/Sticky/Strategy', function () {
             it('Target coords', function() {
-               var pos = TargetCoords.get($('#mocha-stats'));
+               var pos = {};
                assert.isTrue(pos.top === 15);
                assert.isTrue(pos.height === 40);
             });
