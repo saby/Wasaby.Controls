@@ -115,13 +115,16 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Unit',
          if (value && !Array.isArray(value)) {
             throw new Error('Array of none empty sting or numbers required');
          }
-         for (var i = 0; i < value.length; i++) {
-            var v = value[i];
-            if (!v || !(typeof v === 'string' || typeof v === 'number')) {
-               throw new Error('Array of none empty sting or numbers required');
+         var has = value && value.length;
+         if (has) {
+            for (var i = 0; i < value.length; i++) {
+               var v = value[i];
+               if (!v || !(typeof v === 'string' || typeof v === 'number')) {
+                  throw new Error('Array of none empty sting or numbers required');
+               }
             }
          }
-         return value && value.length ? value.slice() : [];
+         return has ? value.slice() : [];
       };
 
 
