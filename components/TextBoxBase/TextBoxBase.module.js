@@ -80,10 +80,6 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
                if (this.textTransform) {
                   fieldClasses.push('controls-TextBox__field-' + this.textTransform);
                }
-               //В новой престо в больших полях ввода будет отступ снизу
-               if (this.size === 'l') {
-                  fieldClasses.push('controls-TextBox__field_size_l');
-               }
                wrapperClasses.push('controls-TextBox__wrapper_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
 
                return {
@@ -293,7 +289,9 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       _setEnabled: function(enabled) {
          TextBoxBase.superclass._setEnabled.apply(this, arguments);
          if (this._options.placeholder) {
-            this.getContainer().toggleClass('controls-TextBox__hiddenPlaceholder', !enabled);
+            if (this._inputField) {
+               this._inputField.toggleClass('controls-TextBox__hiddenPlaceholder', !enabled);
+            }
          }
          this._toggleState();
       },
@@ -336,7 +334,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
             if (!(e.altKey || e.shiftKey || e.ctrlKey || e.metaKey)) {
                parent = control;
 
-               while(true) {
+               while(parent) {
 
                   while (parent && !parent._defaultAction) {
                      parent = parent.getParent();

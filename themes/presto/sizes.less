@@ -23,13 +23,12 @@
 @padding-bottom_TextBox-container_l: round(4px * @multiplier);
 @padding_TextBox-container_left:  0 0 0 round(15px * @multiplier);
 @border-width_TextBox:            @default-border-width;
-@font-size_TextBox-InformationIcon: round(37px * @multiplier);
 @width_TextBox-InformationIcon:   round(20px * @multiplier);
 @height_TextBox-InformationIcon:  @width_TextBox-InformationIcon;
+//MoneyTextBox
 @font-size_MoneyTextBox-decimals: @small-text-size;
 //NumberTextBox
 @icon-size_NumberTextBox-arrow:                   round(32px * @multiplier);
-@padding_NumberTextBox-arrow:                     0 0 0 round(15px * @multiplier);
 //TextArea
 @padding_TextArea-container:      round(7px * @multiplier) 0 round(7px * @multiplier) round(15px * @multiplier);//люто
 @padding_TextArea-field:          0 round(15px * @multiplier) 0 0;
@@ -37,7 +36,12 @@
 @search-loop-size:             @default-icon-size-medium;
 @search-border-radius:         round(3px * @multiplier);
 //button
-@button-large-height:          @default-height-big;
+@font-size_Button:             round(32px * @multiplier);
+@height_Button:                round(58px * @multiplier);
+@min-width_Button:             round(86px * @multiplier);
+@padding_Button-wrapper:       0 round(16px * @multiplier);
+@font-size_Button_l:           round(40px * @multiplier);
+@height_Button_l:              @default-height-big;
 //combobox
 @combo-box-icon-size:          @default-icon-size-medium;
 @combo-box-arrow-padding:      0 0 0 @default-padding-small;
@@ -57,7 +61,6 @@
 @list-view-items-toolbar-menu-icon-size:  @icon-large-size;
 //fieldlink
 @fieldLink-icon-size:          @default-icon-size-medium;
-@fieldLink-afterField-button-margin: 0 @default-padding 0 0;
 @fieldLink-linkItem-cross-width:     @default-icon-size-medium + @default-padding;
 @fieldLink-linkItem-line-height:     round(77px * @multiplier);
 @padding_FieldLink_item_in_picker:   0 0 0 @default-padding;
@@ -162,3 +165,5 @@
 //waitIndicator
 @wait-indicator-font-size:                            round(32px * @multiplier);
 @wait-indicator-labeled-width:                        round(467px * @multiplier);
+//progressBar
+@ProgressBar-border-radius:                           1px;

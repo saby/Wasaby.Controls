@@ -32,6 +32,9 @@ define('js!Controls/List/ListControl/ListViewModel',
             if (cfg.selectedKey !== undefined) {
                this._selectedItem = this.getItemById(cfg.selectedKey, cfg.idProperty);
             }
+
+            this._startIndex = 0;
+            this._stopIndex = this._itemsModel._display.getCount();
          },
 
          destroy: function() {
@@ -40,15 +43,18 @@ define('js!Controls/List/ListControl/ListViewModel',
          },
 
          reset: function() {
-            this._itemsModel.reset();
+            //TODO убрать this._itemsModel._curIndex ?
+            this._itemsModel._curIndex = this._startIndex;
          },
 
          isEnd: function() {
-            return this._itemsModel.isEnd();
+            //TODO убрать this._itemsModel._curIndex ?
+            return this._itemsModel._curIndex < this._stopIndex;
          },
 
          goToNext: function() {
-            this._itemsModel.goToNext();
+            //TODO убрать this._itemsModel._curIndex ?
+            this._itemsModel._curIndex++;
          },
 
          getCurrent: function() {
@@ -66,6 +72,12 @@ define('js!Controls/List/ListControl/ListViewModel',
             this._notify('onListChange');
          },
 
+         updateIndexes: function(startIndex, stopIndex) {
+            this._startIndex = startIndex;
+            this._stopIndex = stopIndex;
+            this._notify('onListChange');
+         },
+
          setItems: function(items) {
             this._itemsModel.setItems(items)
          },
@@ -76,6 +88,10 @@ define('js!Controls/List/ListControl/ListViewModel',
 
          prependItems: function(items) {
             this._itemsModel.prependItems(items);
+         },
+
+         getCount: function() {
+            return this._itemsModel.getCount();
          },
 
          __calcSelectedItem: function(display, selKey, idProperty) {

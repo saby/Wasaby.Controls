@@ -2,19 +2,15 @@ define('js!Controls/interface/ISingleSelectable', [
 ], function() {
 
    /**
-    * Интерфейс работы списков.
+    * Интерфейс для выбора элемента из коллекции
+    *
     * @mixin Controls/interface/ISingleSelectable
     * @public
     */
 
    /**
     * @name Controls/interface/ISingleSelectable#selectedKey
-    * @cfg {Number} Ключевое поле выбранного элемента коллекции.
-    */
-
-   /**
-    * @event Controls/interface/ISingleSelectable#allowEmptySelection
-    * @cfg {Boolean} Разрешить отсутствие выбранного элемента в группе
+    * @cfg {Number} Ключ выбранного элемента коллекции.
     */
 
    /**

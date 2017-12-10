@@ -1,11 +1,10 @@
 
 define('js!WSControls/Buttons/Button', [
    'Core/constants',
-   'Core/Sanitize',
    'js!WSControls/Buttons/ButtonBase',
    'tmpl!WSControls/Buttons/Button',
    'tmpl!WSControls/Buttons/resources/contentTemplate'
-], function(constants, Sanitize, ButtonBase, dotTplFn, contentTemplate) {
+], function(constants, ButtonBase, dotTplFn, contentTemplate) {
 
    'use strict';
 

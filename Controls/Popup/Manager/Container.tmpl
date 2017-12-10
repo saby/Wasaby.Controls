@@ -9,6 +9,10 @@
             <ws:Controls.Popup.Manager.Popup __key="{{item.id}}"
                     id="{{item.id}}"
                     scope="{{item.popupOptions}}"
+                    on:closePopup="_closePopup()"
+                    on:focusInPopup="_focusInPopup()"
+                    on:focusOutPopup="_focusOutPopup()"
+                    on:recalcPosition="_recalcPosition()"
             />
         </div>
     </ws:for>
