@@ -3,10 +3,10 @@ define('js!Controls/Input/resources/SuggestPopupController',
       'Core/core-extend',
       'Core/core-merge',
       'js!Controls/List/resources/utils/Search',
-      'js!WSControls/Windows/Popup/Popup',
-      'js!WSControls/Windows/Strategy/StickyPositioningStrategy'
+      'Controls/Popup/Manager',
+      'Controls/Popup/Opener/Sticky/Strategy'
    ],
-   function(extend, cMerge, Search, PapupManager, StickyStrategy) {
+   function(extend, cMerge, Search, PopupManager, StickyStrategy) {
       
       'use strict';
       
@@ -35,7 +35,7 @@ define('js!Controls/Input/resources/SuggestPopupController',
             requirejs([self._options.popupTemplate]);
             _private.getSearchController(this).search({filter: filter}).addCallback(function(searchResult) {
                //TODO Жду правок от Лощинина, чтобы доделать выбор из попапа и отображение
-               PapupManager.show(
+               PopupManager.show(
                   {
                      catchFocus: false,
                      dialogOptions: {
