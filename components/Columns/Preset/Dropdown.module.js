@@ -111,9 +111,8 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
           */
          setSelectedPresetId: function (selectedPresetId) {
             if (selectedPresetId !== this._selectedPresetId) {
-               this._selectedPresetId = selectedPresetId;
+               this._setSelectedPresetId(selectedPresetId);
                _lastSelecteds[this._options.presetNamespace || ''] = selectedPresetId;
-               this._dropdown.setSelectedKeys([selectedPresetId]);
             }
          },
 
@@ -136,6 +135,19 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
          },
 
          /**
+          * Установить идентификатор выбранного пресета редактора колонок
+          * @protected
+          * @param {string|number} selectedPresetId Идентификатор пресета редактора колонок
+          */
+         _setSelectedPresetId: function (selectedPresetId) {
+            // Если указанный идентификатор пустой или есть в списке
+            if (!selectedPresetId || this.getPresets().map(function (v) { return v.id; }).indexOf(selectedPresetId) !== -1) {
+               this._selectedPresetId = selectedPresetId;
+               this._dropdown.setSelectedKeys(selectedPresetId ? [selectedPresetId] : []);
+            }
+         },
+
+         /**
           * Обновить дропдаун
           * @protected
           * @param {SBIS3.CONTROLS.Columns.Preset.Unit} units Список пресетов редактора колонок
@@ -155,8 +167,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
             if (!selectedId && presets.length) {
                selectedId = presets[0].id;
             }
-            this._selectedPresetId = selectedId;
-            dropdown.setSelectedKeys(selectedId ? [selectedId] : []);
+            this._setSelectedPresetId(selectedId);
             dropdown.setEnabled(1 < presets.length);
             this._isDropdownReady = 0 < presets.length;
             dropdown.setVisible(this._isDropdownReady);
@@ -180,8 +191,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
           */
          _onChannel: function (evtName, selectedPresetId) {
             if (evtName.getTarget() !== this && selectedPresetId !== this._selectedPresetId) {
-               this._selectedPresetId = selectedPresetId;
-               this._dropdown.setSelectedKeys([selectedPresetId]);
+               this._setSelectedPresetId(selectedPresetId);
                //this._notify('onChange', selecteds[0]);
             }
          }
