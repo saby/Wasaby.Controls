@@ -153,10 +153,9 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
                   this._currentPreset = _getPreset(presets, options.selectedPresetId);
                   _updatePresetView(this);
 
-                  //^^^this._presetView.setItemsHover(false);
-                  //^^^this.subscribeTo(this._presetView, 'onChangeHoveredItem', this._presetView.setItemsHover.bind(this._presetView, false));
                   this.subscribeTo(this._presetView, 'onAfterBeginEdit', this._presetView.setItemsActions.bind(this._presetView, []));
                   this.subscribeTo(this._presetView, 'onEndEdit', function (evtName, model, withSaving) {
+                     evtName.setResult(false);
                      if (withSaving) {
                         _modifyPresets(this, 'change-title', model.get('title'));
                      }
@@ -376,16 +375,14 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
          self._presetDropdown = null;
          var presetView = self._presetView;
          var preset = self._currentPreset;
+         self.subscribeOnceTo(presetView, 'onDrawItems'/*onItemsReady*/, function () {
+            self._presetDropdown = _getChildComponent(presetView, self._childNames.presetDropdown);
+            self.subscribeTo(self._presetDropdown, 'onChange', function (evtName, selectedPresetId) {
+               _onPresetDropdownChanged(self);
+            });
+         });
          presetView.setItems(_makePresetViewItems(preset));
          presetView.setItemsActions(_makePresetItemsActions(self, preset.isStorable));
-         setTimeout(function () {
-            self._presetDropdown = _getChildComponent(presetView, self._childNames.presetDropdown);
-            if (self._presetDropdown) {
-               self.subscribeTo(self._presetDropdown, 'onChange', function (evtName, selectedPresetId) {
-                  _onPresetDropdownChanged(self);
-               });
-            }
-         }, 1);
       };
 
       var _onPresetDropdownChanged = function (self) {
