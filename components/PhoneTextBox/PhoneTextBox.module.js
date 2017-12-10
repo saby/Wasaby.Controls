@@ -6,6 +6,18 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
     * Класс контрола, отображающий ссылку, при нажатии на которую произойдет звонок.
     * @class SBIS3.CONTROLS.PhoneTextBox
     * @extends SBIS3.CONTROLS.FormattedTextBox
+    * @description
+    * Пример:
+    * <pre>
+    *    <ws:SBIS3.CONTROLS.PhoneTextBox enabled="{{false}}" srcText="88005553535" mask="ddd-(ddd)-dd-dd"/>
+    * </pre>
+    * В примере использованы опции:
+    * enabled - задает отображение PhoneTextBox в виде ссылки, по умолчанию PhoneTextBox отображается как поле ввода,
+    * srcText - задает телефонный номер,
+    * mask    - задает формат отображения телефонного номера,
+    *
+    * @demo SBIS3.CONTROLS.Demo.PagePhoneTextBox
+    *
     * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
@@ -37,9 +49,8 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
     * @control
     * @category Button
     * @initial
-    * <component data-component='SBIS3.CONTROLS.PhoneCall'>
-    *    <option name='caption' value='Позвонить Гене'></option>
-    *    <option name='number' value='8(800)200-600'></option>
+    * <component data-component='SBIS3.CONTROLS.PhoneTextBox'>
+    *    <option name='srcText' value='8800200600'></option>
     * </component>
     */
    var getSrcText = function(fullText) {
@@ -84,7 +95,35 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
       _dotTplFn: dotTpl,
       $protected: {
          _options: {
+            /**
+             * @cfg {String} Устанавливает номер телефона без символов-разделителей
+             * Номер будет отображен в соответствии с установленной {@link mask маской}
+             * @example
+             * <pre>
+             *     <ws:SBIS3.CONTROLS.PhoneTextBox srcText="88001002424" />
+             * </pre>
+             * @see mask
+             * @see getSrcText
+             * @see setSrcText
+             */
             srcText: undefined,
+            /**
+             * @cfg {String} Устанавливает маску, в соответствии с которой будет отображен телефонный номер
+             * Символы, которые задают маску:
+             * <ul>
+             *    <li>L - заглавная буква (русский/английский алфавит),</li>
+             *    <li>l - строчная буква,</li>
+             *    <li>d - цифра,</li>
+             *    <li>x - буква или цифра,</li>
+             *    <li>все остальные символы являются разделителями.</li>
+             * </ul>
+             *
+             * @example
+             * <pre>
+             *     mask: 'ddd-dd-dddd/dd'
+             * </pre>
+             * @see srcText
+             */
             mask: '+d(ddd)ddd-dd-dd'
          }
       },
@@ -135,11 +174,33 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
             PhoneTextBox.superclass._focusHandler.apply(this, arguments);
          }
       },
-
+      /**
+       * Получает текстовое значение поля ввода телефонного номера
+       * @returns {*|srcText|string}
+       * @example
+       * <pre>
+       *     myComponent.subscribe('onTextChange', function(){
+       *        myPhone.getSrcText();
+       *     });
+       * </pre>
+       * @see srcText
+       * @see setSrcText
+       */
       getSrcText: function() {
          return this._options.srcText;
       },
-
+      /**
+       * Устанавливает текстовое значение поля ввода телефонного номера
+       * @param srcText
+       * @example
+       * <pre>
+       *     myComponent.subscribe('onClick', function(){
+       *        myPhone.setSrcText("88001002424");
+       *     });
+       * </pre>
+       * @see srcText
+       * @see getSrcText
+       */
       setSrcText: function(srcText) {
          this._options.srcText = srcText;
          this.setText(getFullText(srcText, this._getFormatModel().model));
