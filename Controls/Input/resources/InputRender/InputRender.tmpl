@@ -1,4 +1,5 @@
-<div class="controls-InputRender controls-InputRender_state_{{ _activeState }} {{ _prepareClassesByConfig(...).container }}" title="{{tooltip}}">
+<div class="controls-InputRender controls-InputRender_state_{{ isEnabled() ? 'default' : 'disabled' }} {{ !isEnabled() ? 'controls-InputRender_state_disabled_' + (_options._isMultiline ? 'multiLine' : 'singleLine') }} controls-InputRender_size_{{ _options.size ? _options.size : 'm' }} controls-InputRender_padding{{ _options.sidePadding ? _options.sidePadding : 'Both' }}"
+     title="{{tooltip}}">
    <div class="controls-InputRender__wrapper">
 
       <ws:if data="{{_options.beforeFieldWrapper}}">
