@@ -75,9 +75,9 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
             this._columnsConfig = columnsConfig;
             var defaults = this._options;
             var hasEditorOptions = !!editorOptions && !!Object.keys(editorOptions).length;
-            var optSources3 = hasEditorOptions ? [columnsConfig, editorOptions, defaults] : [columnsConfig, defaults];
-            var optSources2 = hasEditorOptions ? [columnsConfig, editorOptions] : [columnsConfig];
-            var optSources1 = hasEditorOptions ? [editorOptions, defaults] : [defaults];
+            var allSources = hasEditorOptions ? [editorOptions, columnsConfig, defaults] : [columnsConfig, defaults];
+            var edColfSources = hasEditorOptions ? [editorOptions, columnsConfig] : [columnsConfig];
+            var edDefSources = hasEditorOptions ? [editorOptions, defaults] : [defaults];
             this._areaContainer = new FloatArea({
                opener: this,
                direction: 'left',
@@ -96,18 +96,18 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
                   applyButtonTitle: hasEditorOptions ? editorOptions.applyButtonTitle : undefined,
                   columns: columnsConfig.columns,
                   selectedColumns: columnsConfig.selectedColumns,
-                  groupTitleTpl: _selectValue('groupTitleTpl', optSources2),
-                  groupTitles: _selectValue('groupTitles', optSources2),
-                  expandedGroups: _selectValue('expandedGroups', optSources2),
-                  usePresets: _selectValue('usePresets', optSources3, 'boolean'),
-                  presetsTitle: _selectValue('presetsTitle', optSources2),
-                  staticPresets: _selectValue('staticPresets', optSources2),
-                  presetNamespace: _selectValue('presetNamespace', optSources2),
-                  selectedPresetId: _selectValue('selectedPresetId', optSources2),
-                  newPresetTitle: _selectValue('newPresetTitle', optSources3),
-                  autoSaveFirstPreset: _selectValue('autoSaveFirstPreset', optSources3, 'boolean'),
-                  useNumberedTitle: _selectValue('useNumberedTitle', optSources3, 'boolean'),
-                  moveColumns: _selectValue('moveColumns', optSources1, 'boolean'),
+                  groupTitleTpl: _selectValue('groupTitleTpl', edColfSources),
+                  groupTitles: _selectValue('groupTitles', edColfSources),
+                  expandedGroups: _selectValue('expandedGroups', edColfSources),
+                  usePresets: _selectValue('usePresets', allSources, 'boolean'),
+                  presetsTitle: _selectValue('presetsTitle', edColfSources),
+                  staticPresets: _selectValue('staticPresets', edColfSources),
+                  presetNamespace: _selectValue('presetNamespace', edColfSources),
+                  selectedPresetId: _selectValue('selectedPresetId', edColfSources),
+                  newPresetTitle: _selectValue('newPresetTitle', allSources),
+                  autoSaveFirstPreset: _selectValue('autoSaveFirstPreset', allSources, 'boolean'),
+                  useNumberedTitle: _selectValue('useNumberedTitle', allSources, 'boolean'),
+                  moveColumns: _selectValue('moveColumns', edDefSources, 'boolean'),
                   handlers: {
                      onComplete: this._onAreaComplete.bind(this)
                   }
@@ -156,16 +156,10 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
             if (name in src) {
                var value = src[name];
                if (noType || typeof value === type) {
-                  //////////////////////////////////////////////////
-                  console.log('DBG: CE._selectValue: name=', name, '; value=', value, ';');
-                  //////////////////////////////////////////////////
                   return value;
                }
             }
          }
-         //////////////////////////////////////////////////
-         console.log('DBG: CE._selectValue: name=', name, '; undefined;');
-         //////////////////////////////////////////////////
       };
 
 
