@@ -41,7 +41,7 @@ define('js!Controls/List/interface/IListControl', [
     */
 
    /**
-    * @name Controls/List/interface/IListControl#virtualScroll
+    * @name Controls/List/interface/IListControl#virtualScrollConfig
     * @cfg {Object} Конфигурация виртуального скролла
     */
 
@@ -74,6 +74,26 @@ define('js!Controls/List/interface/IListControl', [
    /**
     * @function Controls/List/interface/IListControl#reload
     * Перезагружает набор записей представления данных с последующим обновлением отображения
+    */
+
+   /**
+    * @function Controls/List/interface/IListControl#reloadItem
+    * Перезагружает модель из источника данных, мержит изменения к текущим данным и перерисовывает запись
+    */
+
+   /**
+    * @function Controls/List/interface/IListControl#scrollToTop
+    * Скролит табличное представление в самый вверх
+    */
+
+   /**
+    * @function Controls/List/interface/IListControl#scrollToBottom
+    * Скролит табличное представление в самый низ
+    */
+
+   /**
+    * @function Controls/List/interface/IListControl#scrollToItem
+    * Скролит табличное представление к указанному элементу
     */
 
    /**
