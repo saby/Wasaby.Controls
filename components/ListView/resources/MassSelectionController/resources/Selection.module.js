@@ -78,7 +78,8 @@ define('js!SBIS3.CONTROLS.Selection', [
 
          this._options.projection.each(function(item) {
             contents = item.getContents();
-            if (contents.get instanceof Function) {
+            //instanceOfModule тяжолая проверка, проверяем на наличие .get
+            if (contents.get) {
                id = contents.get(this._idProperty);
                if (!ArraySimpleValuesUtil.hasInArray(keys, id)) {
                   keys.push(item.getContents().get(this._idProperty));
