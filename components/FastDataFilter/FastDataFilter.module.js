@@ -10,11 +10,12 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
    'Core/Deferred',
    "tmpl!SBIS3.CONTROLS.FastDataFilter",
    "tmpl!SBIS3.CONTROLS.FastDataFilter/ItemTpl",
+   'Core/helpers/Object/isEqual',
    "js!SBIS3.CONTROLS.DropdownList",
    'css!SBIS3.CONTROLS.FastDataFilter'
 ],
 
-   function(constants, CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, dotTplFn, ItemTpl) {
+   function(constants, CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, dotTplFn, ItemTpl, isEqual) {
 
       'use strict';
       /**
@@ -145,11 +146,12 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                //Если выбрали дефолтное значение, то нужно взять из resetValue
                //TODO может быть всегда отдавать массивом?
                    filterValue =  idArray.length === 1 && (idArray[0] === this.getDefaultId()) && self._filterStructure[idx] ? self._filterStructure[idx].resetValue :
-                         (this._options.multiselect ?  idArray : idArray[0]);
+                         (this._options.multiselect ?  idArray : idArray[0]),
+                   currentValue = self._filterStructure[idx].value;
                //TODO Непонятно как это сделать в обратную сторону (когда из контекста кришло значение его нужно поставить в dropdownList)
                //В контексте текуший DropdownList, у него задавали поле с фильтром
                //Если не нашли, значит искать мне это надо как-то по-другому....
-               if (idx >= 0) {
+               if (idx >= 0 && !isEqual(currentValue, filterValue)) {
                   this.getSelectedItems(true).addCallback(function(list) {
                      self._filterStructure[idx].value = filterValue;
 
