@@ -261,7 +261,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
       {
          name: 'image',
          componentType: 'WSControls/Buttons/Button',
-         icon: 'sprite:icon-24 icon-Picture icon-primary',
+         icon: 'sprite:icon-24 icon-PicBtr icon-primary',
          tooltip: rk('Вставить изображение'),
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          handlers: {

@@ -387,6 +387,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                self._loadDeferred = list.reload(self._options.listFilter).addCallback(function () {
                   if (self._checkPickerState(!self._options.showEmptyList)) {
                      self.showPicker();
+                  } else {
+                     self.hidePicker();
                   }
                });
             }, this._options.delay);

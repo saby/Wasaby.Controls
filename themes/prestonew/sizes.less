@@ -42,9 +42,9 @@
 @search-form-icon-padding:                        0;
 @padding_SearchForm:                              0 round(14px * @multiplier);
 @top_searchForm_picker_closeButton:               round(8px * @multiplier);
-@margin-left__searchForm_picker:                  -(@top_searchForm_picker_closeButton + @default-border-width);
-@margin-top__searchForm_picker:                   -@padding-top__searchForm_picker;
-@padding-top__searchForm_picker:                  @top_searchForm_picker_closeButton + @default-border-width + @default-height;
+@margin-left__searchForm_picker:                  -(@default-border-width + @top_searchForm_picker_closeButton);
+@margin-top__searchForm_picker:                   -(@padding-top__searchForm_picker + @default-border-width - @top_searchForm_picker_closeButton);
+@padding-top__searchForm_picker:                  (@top_searchForm_picker_closeButton * 2) + @height_TextBox_m;
 //fieldLink
 @fieldLink-showAll-shadow-width:                  round(28px * @multiplier);
 @fieldLink-linkItem-line-height:                  @default-base-line-height;
@@ -253,7 +253,7 @@
 @menu-item-icon-left-offset:              0;
 @menu-item-icon24-top-offset:             0;
 @menu-item-icon24-top-offset-big:         0;
-@menu-item-icon24-left-offset:            round(-16px * @multiplier);
+@menu-item-icon24-left-offset:            0;
 @menu-item-line-height:                   round(100px * @multiplier);
 @menu-item-padding-16:                    round(56px * @multiplier);
 @menu-item-padding-24:                    round(70px * @multiplier);
@@ -375,7 +375,7 @@
 @list-view-actions-item-height:           @icon-small-size;
 @list-view-actions-margin:                0 round(4px * @multiplier);
 @list-view-actions-icon-top:              round(23px * @multiplier);
-@list-view-actions-menu-text-margin:      round(18px * @multiplier) 0 round(8px * @multiplier) round(82px * @multiplier);
+@list-view-actions-menu-text-margin:      round(18px * @multiplier) 0 round(8px * @multiplier) round(98px * @multiplier);
 @list-view-items-toolbar-elements-margin: 0 round(4px * @multiplier);
 @list-view-items-toolbar-line-height:     round(49px * @multiplier);
 @list-view-items-toolbar-vertical-line-height:round(24px * @multiplier);
