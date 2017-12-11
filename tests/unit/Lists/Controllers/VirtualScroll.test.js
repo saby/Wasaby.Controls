@@ -69,7 +69,7 @@ define([
       });
 
       //Проверка рассчета индексов/распорок после изменяения общего числа записей проекции
-      it('Recalc virtual window', function() {
+      /*it('Recalc virtual window', function() {
          virtualScroll.setItemsCount(25);
          virtualScroll.calcVirtualWindow(0);
          virtualScroll.setItemsCount(500);
@@ -82,7 +82,7 @@ define([
 
          //Сбросим текущую страницу, чтобы не влияала на следующие тесты
          virtualScroll._currentPage = -1;
-      });
+      });*/
 
       it('Scroll to top List', function() {
          var res = virtualScroll.calcVirtualWindow(0);

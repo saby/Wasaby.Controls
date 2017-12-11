@@ -83,15 +83,17 @@ define('js!Controls/List/ListControl', [
                self._navigationController.calculateState(list, direction);
             }
 
+            var addPosition;
             if (direction === 'down') {
+               addPosition = self._listModel.getCount();
                self._listModel.appendItems(list);
             } else if (direction === 'up') {
+               addPosition = 0;
                self._listModel.prependItems(list);
             }
 
             //отдать новые данные в virtualScroll и рассчитать новый диапазон отображаемых записей
-            self._virtualScroll.setItemsCount(self._listModel.getCount());
-            _private.updateIndexesAndPlaceholder(self, self._virtualScroll.recalcVirtualWindow());
+            _private.updateIndexesAndPlaceholder(self, self._virtualScroll.addItems(list.getCount(), addPosition));
          })
       },
 

@@ -90,10 +90,11 @@ define('js!Controls/List/Controllers/VirtualScroll', [
    var VirtualScroll = simpleExtend.extend({
       _itemsCount: null,      //Число записей в проекции
       _maxVisibleRows: 75,    //максимальное число одновременно отображаемых записей
-      _rowHeight: 25,         //Средняя высота строки
+      _rowHeight: null,         //Средняя высота строки
 
       _currentPage: null,
       _currentTopIndex: null,
+      _virtualWindow: null,
 
       /**
        *
@@ -115,6 +116,39 @@ define('js!Controls/List/Controllers/VirtualScroll', [
       },
 
       /**
+       * //TODO подумать, как сдлеать лучше
+       * в проекции добавились элементы
+       * @param countAddedItems количество добавленных элементов
+       * @param at позиция, с которой появились новые элементы
+       */
+      addItems: function(countAddedItems, at) {
+         var virtualWindow = this._virtualWindow;
+         for (var i = at; i < at + countAddedItems; i++) {
+            if (i < virtualWindow.indexStart) {
+               //Если добавили ДО видимого диапазона, сдвинем видимый диапазон и увеличим верхнюю распорку
+               virtualWindow.indexStart++;
+               virtualWindow.indexStop++;
+               virtualWindow.topPlaceholderHeight += this._rowHeight;
+            } else {
+               //В остальных случаях - увеличим нижнюю границу
+               virtualWindow.indexStop++;
+            }
+            this._itemsCount++;
+         }
+
+         //Получаем новый видимый диапазон
+         var range = _private.getRangeToShowByIndex(this._currentTopIndex, this._maxVisibleRows, this._itemsCount);
+
+         //корректируем конец видимого диапазона
+         if (virtualWindow.indexStop > range.stop) {
+            virtualWindow.bottomPlaceholderHeight += (virtualWindow.indexStop - range.stop) * this._rowHeight;
+            virtualWindow.indexStop = range.stop;
+         }
+
+         return virtualWindow;
+      },
+
+      /**
        * рассчиать индексы и распорки, исходя из позиции скролла.
        * @param scrollTop
        * @returns {*}
@@ -128,15 +162,9 @@ define('js!Controls/List/Controllers/VirtualScroll', [
 
          this._currentPage = newPage.page;
          this._currentTopIndex = newPage.topIndex;
-         return _private.onPageChange(newPage.topIndex, this._rowHeight, this._maxVisibleRows, this._itemsCount);
-      },
+         this._virtualWindow = _private.onPageChange(newPage.topIndex, this._rowHeight, this._maxVisibleRows, this._itemsCount);
 
-      /**
-       * Пересчитать индексы и распорки. Вызывается при изменении общего количества записей в рекордсете
-       * @returns {*|{indexStart, indexStop, topPlaceholderHeight, bottomPlaceholderHeight}}
-       */
-      recalcVirtualWindow: function() {
-         return _private.onPageChange(this._currentTopIndex, this._rowHeight, this._maxVisibleRows, this._itemsCount);
+         return this._virtualWindow;
       }
    });
 
