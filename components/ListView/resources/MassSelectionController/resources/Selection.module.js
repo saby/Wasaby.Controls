@@ -2,10 +2,12 @@
 define('js!SBIS3.CONTROLS.Selection', [
    'Core/Abstract',
    'Core/core-clone',
+   'Core/core-instance',
    'js!SBIS3.CONTROLS.ArraySimpleValuesUtil'
 ], function (
    Abstract,
    cClone,
+   cInstance,
    ArraySimpleValuesUtil
 ) {
    'use strict';
@@ -73,12 +75,16 @@ define('js!SBIS3.CONTROLS.Selection', [
       _getAllKeys: function() {
          var
             id,
+            contents,
             keys = [];
 
          this._options.projection.each(function(item) {
-            id = item.getContents().get(this._idProperty);
-            if (!ArraySimpleValuesUtil.hasInArray(keys, id)) {
-               keys.push(item.getContents().get(this._idProperty));
+            contents = item.getContents();
+            if (cInstance.instanceOfModule(contents, 'WS.Data/Entity/Record')) {
+               id = contents.get(this._idProperty);
+               if (!ArraySimpleValuesUtil.hasInArray(keys, id)) {
+                  keys.push(item.getContents().get(this._idProperty));
+               }
             }
          }, this);
 
