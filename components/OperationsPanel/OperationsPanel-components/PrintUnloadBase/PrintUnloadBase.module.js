@@ -11,10 +11,9 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
    "js!SBIS3.CORE.DialogSelector",
    "WS.Data/Chain",
    "WS.Data/Collection/Factory/RecordSet",
-   "WS.Data/Adapter/Json",
    "WS.Data/Collection/RecordSet",
    "Core/helpers/fast-control-helpers"
-], function(Deferred, Deprecated, MenuLink, Dialog, Chain, RecordSetFactory, SbisAdapter, RecordSet, fcHelpers) {
+], function(Deferred, Deprecated, MenuLink, Dialog, Chain, RecordSetFactory, RecordSet, fcHelpers) {
    //TODO: ограничение на максимальное количество записей, получаемое на клиент для печати/выгрузки.
    //Необходимо т.к. на сервере сейчас невозможно произвести xsl преобразование. Выписана задача:
    //(https://inside.tensor.ru/opendoc.html?guid=f852d5cc-b75e-4957-9635-3401e1832e80&description=)

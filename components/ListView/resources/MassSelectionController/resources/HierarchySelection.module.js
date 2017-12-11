@@ -5,11 +5,9 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
    'WS.Data/Relation/Hierarchy',
    'WS.Data/Collection/RecordSet',
    'Core/core-clone',
-   'Core/core-instance',
-   'WS.Data/Chain',
    'Core/IoC',
    'js!SBIS3.CONTROLS.ArraySimpleValuesUtil'
-], function (Selection, Record, HierarchyRelation, RecordSet, cClone, cInstance, Chain, IoC, ArraySimpleValuesUtil) {
+], function (Selection, Record, HierarchyRelation, RecordSet, cClone, IoC, ArraySimpleValuesUtil) {
    'use strict';
 
    var

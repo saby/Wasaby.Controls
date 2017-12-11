@@ -5,10 +5,10 @@
         viewModel="{{_textViewModel}}"
         tagStyle="{{_options.tagStyle}}"
         attr:class="controls-TextArea"
-        event:onChangeValue="_changeValueHandler()"
-        event:onInputCompleted="_inputCompletedHandler()"
-        event:onTagHover="_notifyHandler('onTagHover')"
-        event:onTagClick="_notifyHandler('onTagClick')">
+        on:onChangeValue="_changeValueHandler()"
+        on:onInputCompleted="_inputCompletedHandler()"
+        on:onTagHover="_notifyHandler('onTagHover')"
+        on:onTagClick="_notifyHandler('onTagClick')">
    <ws:content>
       <!--TODO контейнер убрать https://online.sbis.ru/opendoc.html?guid=25000158-64ff-4db9-9605-a986cbc37b0f-->
       <div>
@@ -18,9 +18,9 @@
                  class="controls-TextArea__field controls-TextArea__realField controls-TextBox__field {{_hasScroll ? 'controls-TextArea__realField_scroll-scroll' : 'controls-TextArea__realField_scroll-hidden'}}"
                  placeholder="{{_options.placeholder}}"
                  readonly="{{!isEnabled() ? 'readonly'}}"
-                 event:onkeydown="_keyDownHandler()"
-                 event:onfocus="_focusHandler()"
-                 event:onscroll="_scrollHandler()"
+                 on:keydown="_keyDownHandler()"
+                 on:focus="_focusHandler()"
+                 on:scroll="_scrollHandler()"
          >{{_value}}</textarea>
 
          <div class="controls-fakeTextArea__firstWrapper">

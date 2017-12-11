@@ -20,7 +20,7 @@ define('js!Controls/Popup/Opener/Sticky/Strategy',
                popup._options.target = $('body');
             }
             var
-               container = popup.getContainer(),
+               container = popup._container,
                targetCoords = TargetCoords.get(popup._options.target, popup._options.corner),
                position = {};
             // вертикальное выравнивание

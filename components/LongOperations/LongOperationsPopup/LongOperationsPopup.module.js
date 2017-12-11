@@ -9,7 +9,6 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       /*###'js!SBIS3.CONTROLS.WaitIndicator',*/
       "js!SBIS3.CONTROLS.NotificationPopup",
       'js!SBIS3.CONTROLS.LongOperations.Entry',
-      'js!SBIS3.CONTROLS.LongOperationsList/resources/model',
       "tmpl!SBIS3.CONTROLS.LongOperationsPopup/resources/headerTemplate",
       "tmpl!SBIS3.CONTROLS.LongOperationsPopup/resources/contentTemplate",
       "tmpl!SBIS3.CONTROLS.LongOperationsPopup/resources/footerTemplate",
@@ -18,7 +17,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       "js!SBIS3.CONTROLS.LongOperationsList"
    ],
 
-   function (UserInfo, cMerge, Deferred, EventBus, /*###strHelpers,*/ TabMessage, /*###WaitIndicator,*/ NotificationPopup, LongOperationEntry, Model, headerTemplate, contentTpl, footerTpl, FloatArea) {
+   function (UserInfo, cMerge, Deferred, EventBus, /*###strHelpers,*/ TabMessage, /*###WaitIndicator,*/ NotificationPopup, LongOperationEntry, headerTemplate, contentTpl, footerTpl, FloatArea) {
       'use strict';
 
       var FILTER_NOT_SUSPENDED = 'not-suspended';

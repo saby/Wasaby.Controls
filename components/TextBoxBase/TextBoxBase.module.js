@@ -80,10 +80,6 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
                if (this.textTransform) {
                   fieldClasses.push('controls-TextBox__field-' + this.textTransform);
                }
-               //В новой престо в больших полях ввода будет отступ снизу
-               if (this.size === 'l') {
-                  fieldClasses.push('controls-TextBox__field_size_l');
-               }
                wrapperClasses.push('controls-TextBox__wrapper_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
 
                return {

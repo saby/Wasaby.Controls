@@ -30,7 +30,7 @@ define('js!Controls/Popup/Manager',
                      opener = element.popupOptions.opener,
                      parent = focusedControl.to;
                   while (!!parent) {
-                     if (parent.getId() === opener.getId() || parent.getId() === id) {
+                     if (parent._options.id === opener._options.id || parent._options.id === id) {
                         return;
                      }
                      parent = parent.getParent();
@@ -46,7 +46,7 @@ define('js!Controls/Popup/Manager',
           */
          pushUp: function (popup) {
             var
-               index = Manager._popupItems.getIndexByValue('id', popup.getId());
+               index = Manager._popupItems.getIndexByValue('id', popup._options.id);
             if (index > -1) {
                var element = Manager._popupItems.at(index);
                element.zIndex = _private.calculateZIndex();
@@ -60,7 +60,7 @@ define('js!Controls/Popup/Manager',
           */
          recalcPosition: function (popup) {
             var
-               index = Manager._popupItems.getIndexByValue('id', popup.getId());
+               index = Manager._popupItems.getIndexByValue('id', popup._options.id);
             if (index > -1) {
                var element = Manager._popupItems.at(index);
                Manager._popupItems.at(index).position = element.strategy.getPosition(popup);

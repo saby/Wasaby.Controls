@@ -7,7 +7,6 @@
    controls-TextBox_text-align-{{ textAlign }}
    {{ _paddingClass }}">
    <div class="controls-TextBox__wrapper controls-TextBox__wrapper_singleLine">
-      <div class="js-controls-FormattedTextBox__field controls-TextBox__field{{enabled ? '' : ' ws-hidden'}}" contenteditable="{{enabled}}">{{_maskTemplateFn(_modelForMaskTpl)|sanitize}}</div>
-      <a href="tel:{{srcText}}" class="controls-PhoneTextBox__link controls-Link ws-hover-target{{enabled ? ' ws-hidden'}}">{{(text || '&nbsp;')|sanitize}}</a>
+      <div class="js-controls-FormattedTextBox__field controls-TextBox__field" contenteditable="{{enabled}}">{{_maskTemplateFn(_modelForMaskTpl)|sanitize}}</div>
    </div>
 </div>

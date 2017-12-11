@@ -8,13 +8,13 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    'js!SBIS3.CONTROLS.CompoundControl',
    'js!SBIS3.CONTROLS.Expandable',
    'WS.Data/Collection/RecordSet',
-   'js!SBIS3.CONTROLS.FilterPanelItem',
    'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
    'tmpl!SBIS3.CONTROLS.FilterPanel',
    'tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelContent',
    'tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelItemContentTemplate',
    'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser',
    'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateDataRange',
+   'js!SBIS3.CONTROLS.FilterPanelItem',
    'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.Accordion',
    'js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList',
@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    'css!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelButton',
    'js!SBIS3.CONTROLS.ScrollContainer',
    'css!SBIS3.CONTROLS.FilterPanel'
-], function(coreClone, CommandDispatcher, CompoundControl, Expandable, RecordSet, FilterPanelItem, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
+], function(coreClone, CommandDispatcher, CompoundControl, Expandable, RecordSet, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
 
    'use strict';
    /**

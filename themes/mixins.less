@@ -141,7 +141,7 @@
   box-sizing: border-box;
 }
 
-.button-default-style(@button-font-size: @button-font-size, @button-default-shadow: none) {
+.button-default-style(@button-font-size: @font-size_Button, @button-default-shadow: none) {
   cursor: pointer;
   display: inline-block;
   outline: none;
@@ -483,7 +483,7 @@
 
   & + .controls-Button__text {
     margin-right: calc(@margin-right ~'-' @border-width);
-    margin-left: calc(@margin-left ~'+' @icon-width ~'+' @button-icon-gap ~'-' @border-width);
+    margin-left: calc(@margin-left ~'+' @icon-width ~'+' @spacing_Button-between-icon-text ~'-' @border-width);
   }
 }
 
@@ -579,6 +579,7 @@
   border: none;
   outline: none;
   background: transparent;
+  .box-shadow(none);
 }
 
 .generate-height(@className, @i: 1) when (@i =< 10) {
