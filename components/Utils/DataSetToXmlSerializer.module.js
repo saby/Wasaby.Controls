@@ -2,7 +2,6 @@
  * Created by ad.chistyakova on 22.04.2015.
  */
 define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
-   "Core/xslt-async",
    "Transport/ReportPrinter",
    'Core/helpers/unrelated-helpers',
    "Core/core-extend",
@@ -11,7 +10,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
    "Core/core-instance",
    "Core/helpers/string-helpers",
    "i18n!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer"
-], function( cXSLT, cReportPrinter, uHelpers, cExtend, constants, IoC, cInstance, strHelpers) {
+], function(cReportPrinter, uHelpers, cExtend, constants, IoC, cInstance, strHelpers) {
    return cExtend({}, {
 
       _complexFields: {

@@ -8,7 +8,6 @@ define(
       'Core/constants',
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
-      'tmpl!SBIS3.CONTROLS.DateBox',
       'tmpl!SBIS3.CONTROLS.FormattedTextBox',
       'js!SBIS3.CONTROLS.ControlsValidators',
       // Разобраться с общими стилями https://inside.tensor.ru/opendoc.html?guid=37032b47-6830-4b96-a4f3-727ea938bf58&des
@@ -17,7 +16,7 @@ define(
       'css!SBIS3.CONTROLS.DateBox'
       // 'i18n!SBIS3.CONTROLS.DateBox'
    ],
-   function (IoC, constants, FormattedTextBoxBase, DateUtil, dotTplFn, FormattedTextBoxTpl, ControlsValidators) {
+   function (IoC, constants, FormattedTextBoxBase, DateUtil, FormattedTextBoxTpl, ControlsValidators) {
 
    'use strict';
 
@@ -110,7 +109,6 @@ define(
           * Опции создаваемого контролла
           */
          _options: {
-            formattedTextBoxTpl: FormattedTextBoxTpl,
             /**
              * Допустимые управляющие символы в маске.
              * Условные обозначения:
@@ -278,7 +276,11 @@ define(
          } else if (key == constants.key.plus || key == constants.key.minus) {
             if (curDate) {
                curDate = new Date(curDate);
-               curDate.setDate(curDate.getDate() + (key == constants.key.plus ? 1 : -1));
+               if (this.getType() === 'time') {
+                  return;
+               } else {
+                  curDate.setDate(curDate.getDate() + (key == constants.key.plus ? 1 : -1));
+               }
                // При обновлении даты создаем новый экземпляр, чтобы корректно работало определение того,
                // что свойство изменилось во внешнем коде. oldValue === newValue.
                // Плюс мы не хотим менять когда то возвращенное значение.

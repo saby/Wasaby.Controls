@@ -91,20 +91,14 @@ define('js!SBIS3.CONTROLS.FilterController', [
                   parentContext.setValue(BROWSER_FILTER_FIELD, resultFilter);
                },
                structureChanged = function(event, prop) {
-                  if (prop === 'filterStructure') {
+                  if (prop === 'filterStructure' && !blockSync) {
                      filterChangeHandler.call(this);
                   }
                },
                subscribeFilter = function(filter) {
-                  filter.subscribe('onApplyFilter', filterChangeHandler)
-                        .subscribe('onResetFilter', filterChangeHandler);
-   
                   filter.subscribe('onPropertyChanged', structureChanged);
                },
                unsubscribeFilter = function(filter) {
-                  filter.unsubscribe('onApplyFilter', filterChangeHandler)
-                        .unsubscribe('onResetFilter', filterChangeHandler);
-   
                   filter.unsubscribe('onPropertyChanged', structureChanged);
                };
 

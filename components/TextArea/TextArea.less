@@ -10,6 +10,11 @@
 
 .generate-height(controls-TextArea__field);
 
+/*
+   В однострочных полях ввода высота явно задаётся на контейнере, в TextArea на контейнере height: auto.
+   Получается, что в TextArea нужно добавлять отступы, чтобы однострочная TextArea и TextBox были одного размера
+   https://jsfiddle.net/txd821ov/
+ */
 .controls-TextArea_padding {
    padding: @padding_TextArea-container;
 }
@@ -18,6 +23,7 @@
    padding: @padding_TextArea-field; //если отступ справа будет висеть на контейнере, то между скроллом и контейнером будет отступ
    resize: none; //по умолчанию both
    white-space: pre-wrap; //https://bugzilla.mozilla.org/show_bug.cgi?id=1137650
+   overflow-x: hidden; //https://bugzilla.mozilla.org/show_bug.cgi?id=33654 https://jsfiddle.net/aowv52p6/
 }
 
 .controls-TextArea__view {

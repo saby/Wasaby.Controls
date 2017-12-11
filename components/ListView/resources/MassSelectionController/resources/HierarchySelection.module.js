@@ -5,11 +5,9 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
    'WS.Data/Relation/Hierarchy',
    'WS.Data/Collection/RecordSet',
    'Core/core-clone',
-   'Core/core-instance',
-   'WS.Data/Chain',
    'Core/IoC',
    'js!SBIS3.CONTROLS.ArraySimpleValuesUtil'
-], function (Selection, Record, HierarchyRelation, RecordSet, cClone, cInstance, Chain, IoC, ArraySimpleValuesUtil) {
+], function (Selection, Record, HierarchyRelation, RecordSet, cClone, IoC, ArraySimpleValuesUtil) {
    'use strict';
 
    var
@@ -24,8 +22,7 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
          NOT_SELECTED: 0,
          SELECTED: 1,
          PARTIALLY_FULL: 2,
-         PARTIALLY: 3,
-         SELECTED_ALL_CHILDREN: 4
+         PARTIALLY: 3
    };
 
    var HierarchySelection = Selection.extend(/** @lends SBIS3.CONTROLS.HierarchySelection */{
@@ -68,14 +65,10 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
       },
 
       unselectAll: function () {
-         var rootId = this._options.projection.getRoot().getContents();
-         if (rootId === this._options.root) {
-            this._markedTree.clear();
-            HierarchySelection.superclass.unselectAll.call(this);
-         } else {
-            this.unselect([rootId]);
-         }
+         this._markedTree.clear();
+         HierarchySelection.superclass.unselectAll.call(this);
       },
+
 
       toggleAll: function () {
          var rootId = this._options.projection.getRoot().getContents();
@@ -113,7 +106,8 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
       getSelection: function (allMarked) {
          return {
             marked: this._getMarked(allMarked),
-            excluded: this._options.excludedKeys
+            excluded: this._options.excludedKeys,
+            markedAll: this._options.markedAll
          }
       },
 
@@ -163,9 +157,8 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
             selectionStatus = itemFromSelection ? itemFromSelection.get(STATUS_FILED) : STATUS.NOT_SELECTED;
          if (status === true) {
             if (selectionStatus !== STATUS.SELECTED) {
-               addStatus = STATUS.SELECTED_ALL_CHILDREN;
+               addStatus = STATUS.PARTIALLY;
             }
-            result.push(id);
          } else if (status === false) {
             addStatus = STATUS.NOT_SELECTED;
             result.push(id);
@@ -173,9 +166,6 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
             if (selectionStatus === STATUS.SELECTED) {
                result.push(id);
                addStatus = STATUS.PARTIALLY_FULL;
-            } else if (selectionStatus === STATUS.SELECTED_ALL_CHILDREN) {
-               result.push(id);
-               addStatus = STATUS.PARTIALLY;
             } else if (selectionStatus === STATUS.NOT_SELECTED) {
                addStatus = STATUS.PARTIALLY;
             }
@@ -231,7 +221,7 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
          } else {
             childrenFromTree.forEach(function (item) {
                status = item.get(STATUS_FILED);
-               if (status === STATUS.SELECTED || status === STATUS.SELECTED_ALL_CHILDREN) {
+               if (status === STATUS.SELECTED) {
                   selectedCount++;
                } else {
                   partiallySelectedCount++;
@@ -349,10 +339,16 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
    });
 
    function breadthFirstSearch(items, callback, context) {
-      var callbackResult;
+      var
+         callbackResult,
+         processedItems = [];
       items = cClone(items);
       for (var i = 0; i < items.length; i++) {
-         callbackResult = callback.call(context, items[i]);
+         //Защита от зацикливания при обходе в ширину
+         if (processedItems.indexOf(items[i]) === -1) {
+            callbackResult = callback.call(context, items[i]);
+            processedItems.push(items[i]);
+         }
          if (callbackResult instanceof Array) {
             items = items.concat(callbackResult);
          } else if (callbackResult === false) {

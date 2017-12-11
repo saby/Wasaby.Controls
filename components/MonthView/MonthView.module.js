@@ -6,7 +6,6 @@ define(
    [
       'Core/constants',
       'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.ControlHierarchyManager',
       'js!SBIS3.CONTROLS.RangeMixin',
       'js!SBIS3.CONTROLS.DateRangeMixin',
       'js!SBIS3.CONTROLS.RangeSelectableViewMixin',
@@ -17,7 +16,7 @@ define(
       'i18n!SBIS3.CONTROLS.Calendar',
       'css!SBIS3.CONTROLS.MonthView'
    ],
-   function (constants, CompoundControl, ControlHierarchyManager, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, MonthViewTableBodyTpl, dotTplFn) {
+   function (constants, CompoundControl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, MonthViewTableBodyTpl, dotTplFn) {
 
       'use strict';
 
@@ -530,6 +529,11 @@ define(
                return null;
             }
             return new Date(month.getFullYear(), month.getMonth(), 1);
+         },
+
+         destroy: function() {
+            this.getContainer().find('.' + this._MONTH_VIEW_CSS_CLASSES.TABLE).off('click mouseenter mouseleave');
+            MonthView.superclass.destroy.apply(this, arguments);
          }
       });
 

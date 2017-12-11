@@ -31,12 +31,9 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.ImitateEvents',
    'js!SBIS3.CORE.LayoutManager',
    'Core/helpers/markup-helpers',
-   'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.ScrollWatcher',
    'WS.Data/Collection/IBind',
-   'WS.Data/Collection/List',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
-   'tmpl!SBIS3.CONTROLS.ListView/resources/emptyData',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
    'tmpl!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
@@ -62,6 +59,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.VirtualScrollController',
    'js!SBIS3.CONTROLS.ListView.DragMove',
    'Core/helpers/Function/once',
+   'js!SBIS3.CONTROLS.Link',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'WS.Data/Collection/RecordSet',
    'i18n!SBIS3.CONTROLS.ListView',
@@ -72,7 +70,7 @@ define('js!SBIS3.CONTROLS.ListView',
    function (ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, ImitateEvents, LayoutManager, mHelpers,
-    Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+    ScrollWatcher, IBindCollection, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
     Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, LocalStorageNative, forAliveOnly, memoize, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove, once) {
      'use strict';
 
@@ -902,6 +900,20 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                /**
                 * @cfg {ListViewNavigation} Устанавливает конфиг для контроллера навигации ListView
+                * @example
+                * Пример 1:
+                * navigation: {
+                *    type: 'cursor',
+                *    config: {
+                *       field: 'timestamp',
+                *       position: 150
+                *    }
+                * }
+                * Пример 2:
+                * <ws:navigation type="cursor">
+                *    <ws:config field="Курсор" direction="both" position="{{ null }}"/>
+                * </ws:navigation>
+                *
                 */
                navigation: null,
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
@@ -2091,6 +2103,11 @@ define('js!SBIS3.CONTROLS.ListView',
                this.scrollToFirstPage();
                // Will reset pages after redrawing items
                this._resetPaging = true;
+            }
+
+            // Убираем распорки даже когда опция вирт скроллинга отключена
+            // При начале поиска мы отключаем вирт скролл, но при этом распорки все равно надо убрать
+            if (this._topWrapper && this._bottomWrapper) {
                this._topWrapper.height(0);
                this._bottomWrapper.height(0);
             }
@@ -3877,40 +3894,48 @@ define('js!SBIS3.CONTROLS.ListView',
          }, '_getAjaxLoaderContainer'),
 
          _toggleIndicator: function(show){
-            var self = this,
-                container = this.getContainer(),
-                ajaxLoader = this._getAjaxLoaderContainer(),
-                indicator, centerCord, scrollContainer;
-
-
             this._showedLoading = show;
             if (show) {
                // Показываем контейнер который перекрывает контент, блокируя взаимодействие пользователя с таблицей.
-               if (!self.isDestroyed() && self._showedLoading) {
-                  scrollContainer = self._getScrollContainer()[0];
-                  indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
-                  ajaxLoader.removeClass('ws-hidden');
-                  if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
-                     /* Ищем кординату, которая находится по середине отображаемой области грида */
-                     centerCord =
-                        (Math.max(scrollContainer.getBoundingClientRect().bottom, 0) - Math.max(ajaxLoader[0].getBoundingClientRect().top, 0))/2;
-                     /* Располагаем индикатор, учитывая прокрутку */
-                     indicator[0].style.top = centerCord + scrollContainer.scrollTop + 'px';
-                  } else {
-                     /* Если скрола нет, то сбросим кординату, чтобы индикатор сам расположился по середине */
-                     indicator[0].style.top = '';
-                  }
+               if (!this.isDestroyed() && this._showedLoading) {
+                  this._showLoadingOverlay();
                }
                // После задержки показываем индикатор загрузки.
-               this._loadingIndicatorTimer = setTimeout(this._showIndicator.bind(this), INDICATOR_DELAY);
+               if (!this._loadingIndicatorTimer) {
+                  this._loadingIndicatorTimer = setTimeout(this._showIndicator.bind(this), INDICATOR_DELAY);
+               }
             }
             else {
                clearTimeout(this._loadingIndicatorTimer);
-               ajaxLoader.addClass('ws-hidden').removeClass('controls-AjaxLoader__showIndication');
+               this._loadingIndicatorTimer = undefined;
+               this._hideLoadingOverlayAndIndicator();
+            }
+         },
+         _showLoadingOverlay: function() {
+            var container = this.getContainer(),
+               ajaxLoader = this._getAjaxLoaderContainer(),
+               scrollContainer = this._getScrollContainer()[0],
+               indicator, centerCord;
+
+            indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
+            ajaxLoader.removeClass('ws-hidden');
+            if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
+               /* Ищем кординату, которая находится по середине отображаемой области грида */
+               centerCord =
+                  (Math.max(scrollContainer.getBoundingClientRect().bottom, 0) - Math.max(ajaxLoader[0].getBoundingClientRect().top, 0))/2;
+               /* Располагаем индикатор, учитывая прокрутку */
+               indicator[0].style.top = centerCord + scrollContainer.scrollTop + 'px';
+            } else {
+               /* Если скрола нет, то сбросим кординату, чтобы индикатор сам расположился по середине */
+               indicator[0].style.top = '';
             }
          },
          _showIndicator: function () {
+            this._loadingIndicatorTimer = undefined;
             this._getAjaxLoaderContainer().addClass('controls-AjaxLoader__showIndication');
+         },
+         _hideLoadingOverlayAndIndicator: function() {
+            this._getAjaxLoaderContainer().addClass('ws-hidden').removeClass('controls-AjaxLoader__showIndication');
          },
 
          _toggleEmptyData: function(show) {
@@ -4816,7 +4841,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             if (beginDeleteResult !== BeginDeleteResult.CANCEL) {
                this._toggleIndicator(true);
-               this._deleteRecordsFromSource(idArray).addCallback(function (result) {
+               this._deleteRecordsFromSource(idArray).addCallback(forAliveOnly(function (result) {
                   //Если записи удалялись из DataSource, то перезагрузим реест. Если DataSource нет, то удалим записи из items
                   if (self.getDataSource() && beginDeleteResult !== BeginDeleteResult.WITHOUT_RELOAD) {
                      resultDeferred = self._reloadViewAfterDelete(idArray).addCallback(function () {
@@ -4829,7 +4854,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      resultDeferred = Deferred.success(result);
                   }
                   return resultDeferred;
-               }).addErrback(function (result) {
+               }, this)).addErrback(function (result) {
                   InformationPopupManager.showMessageDialog({
                      message: result.message,
                      opener: self,

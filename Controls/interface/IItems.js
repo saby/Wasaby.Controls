@@ -3,6 +3,7 @@ define('js!Controls/interface/IItems', [
 
    /**
     * Интерфейс работы списков.
+    *
     * @mixin Controls/interface/IItems
     * @public
     */
@@ -14,7 +15,7 @@ define('js!Controls/interface/IItems', [
 
    /**
     * @name Controls/interface/IItems#itemTemplate
-    * @cfg Шаблон для отображения строки списка.
+    * @cfg {Function} Шаблон для отображения строки списка.
     */
 
    /**

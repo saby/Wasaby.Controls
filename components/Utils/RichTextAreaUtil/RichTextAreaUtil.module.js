@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
                         }
                      });
                      if (backs.length) {
-                        target.addAttribute('data-ws-back-styles', backs.join(','));
+                        target.setAttribute('data-ws-back-styles', backs.join(','));
                      }
                   }
                   else {

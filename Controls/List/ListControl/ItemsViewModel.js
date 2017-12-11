@@ -64,6 +64,10 @@ define('js!Controls/List/ListControl/ItemsViewModel',
             return ItemsUtil.getDisplayItemById(this._display, id, idProperty)
          },
 
+         getCount: function() {
+            return this._display.getCount();
+         },
+
          _onCollectionChange: function() {
             this._notify('onListChange');
          },

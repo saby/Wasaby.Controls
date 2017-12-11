@@ -6,7 +6,6 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
    "js!SBIS3.CORE.CompoundControl",
    "tmpl!SBIS3.CONTROLS.MergeDialogTemplate",
    "WS.Data/Source/SbisService",
-   "WS.Data/Adapter/Sbis",
    "WS.Data/Query/Query",
    "WS.Data/Collection/RecordSet",
    "Core/helpers/fast-control-helpers",
@@ -21,7 +20,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
    "i18n!!SBIS3.CONTROLS.MergeDialogTemplate",
    'css!SBIS3.CONTROLS.MergeDialogTemplate',
    'css!SBIS3.CONTROLS.RadioButton'
-], function( CommandDispatcher, Control, dotTplFn, SbisServiceSource, SbisAdapter, Query, RecordSet, fcHelpers, cellRadioButtonTpl, cellCommentTpl, cellTitleTpl, rowTpl) {
+], function( CommandDispatcher, Control, dotTplFn, SbisServiceSource, Query, RecordSet, fcHelpers, cellRadioButtonTpl, cellCommentTpl, cellTitleTpl, rowTpl) {
 
 
     var COMMENT_FIELD_NAME = 'Comment',
@@ -179,6 +178,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 'target': mergeTo,
                 'merged': this._getMergedKeys(mergeTo)
             }).addCallback(function (data) {
+                items.setEventRaising(false, true);
                 data.getAll().each(function(rec) {
                     id = rec.get(idProperty);
                     record = items.getRecordById(id);
@@ -193,6 +193,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 }, self);
                 //Выбранной записи всегда выставляем AVAILABLE = true
                 items.getRecordById(mergeTo).set(AVAILABLE_FIELD_NAME, true);
+                items.setEventRaising(true, true);
                 self._applyContainer.toggleClass('ws-hidden', !showMergeButton);
             }).addBoth(function() {
                 self._treeView._toggleIndicator(false);

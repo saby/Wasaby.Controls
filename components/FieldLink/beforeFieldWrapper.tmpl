@@ -1,4 +1,4 @@
-<ws:if data="{{ selectedKeys.length }}">
+<ws:if data="{{ selectedKeys.length || selectedItems.length || selectedKey || selectedItem }}">
     <div class="controls-FieldLink__beforeFieldWrapper">
         <div class="controls-FieldLink__linksWrapper">
             <ws:SBIS3.CONTROLS.FieldLinkItemsCollection
