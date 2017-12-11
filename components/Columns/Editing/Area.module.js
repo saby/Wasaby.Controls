@@ -120,7 +120,7 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
                items: _makePresetViewItems(preset)
             } : null;
             _prepareChildItemsAndGroups(cfg, preset);
-            _prepareGroupCollapsing(cfg, preset);
+            _prepareGroupCollapsing(cfg, preset, true);
             cfg.hasGroups = !!cfg._groups && 0 < cfg._groups.length;
             cfg._optsSelectable.onItemClick = _onItemClick;
             if (!cfg.moveColumns) {
@@ -159,6 +159,7 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
                      }
                   }.bind(this));
                   this.subscribeTo(this._presetView, 'onAfterEndEdit', function (evtName, model, $target, withSaving) {
+                     _initPresetDropdown(this);
                      this._presetView.setItemsActions(_makePresetItemsActions(this, this._currentPreset.isStorable));
                   }.bind(this));
                }.bind(this));
@@ -233,14 +234,15 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
          return list1 && list1.length ? (list2 && list2.length ? list1.concat(list2).reduce(function (r, v) { if (r.indexOf(v) === -1) { r.push(v); }; return r; }, []) : list1) : (list2 && list2.length ? list2 : []);
       };
 
-      var _getSelectedColumns = function (cfg, preset) {
-         return _uniqueConcat(preset ? preset.selectedColumns : null, cfg.selectedColumns);
+      var _getSelectedColumns = function (cfg, preset, concatAll) {
+         var selected = preset ? preset.selectedColumns : null;
+         return concatAll ? _uniqueConcat(selected, cfg.selectedColumns) : (selected || []);
       };
 
       var _prepareChildItemsAndGroups = function (cfg, preset) {
          var
             columns = cfg.columns,
-            selectedColumns = _getSelectedColumns(cfg, preset),
+            selectedColumns = _getSelectedColumns(cfg, preset, true),
             moveColumns = cfg.moveColumns;
          var
             preparingItems = [],
@@ -306,10 +308,13 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
          cfg._groups = 1 < groups.length || (groups.length && groups[0] != null) ? groups : null;
       };
 
-      var _prepareGroupCollapsing = function (cfg, preset) {
+      var _prepareGroupCollapsing = function (cfg, preset, concatAll) {
          var groups = cfg._groups;
          if (groups && groups.length) {
-            var expandedGroups = _uniqueConcat(preset ? preset.expandedGroups : null, cfg.expandedGroups);
+            var expandedGroups = preset ? preset.expandedGroups : null;
+            if (concatAll) {
+               expandedGroups = _uniqueConcat(expandedGroups, cfg.expandedGroups)
+            }
             var groupCollapsing = {};
             var has = !!(expandedGroups && expandedGroups.length);
             for (var i = 0; i < groups.length; i++) {
@@ -394,14 +399,16 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
          self._presetDropdown = null;
          var presetView = self._presetView;
          var preset = self._currentPreset;
-         self.subscribeOnceTo(presetView, 'onDrawItems'/*onItemsReady*/, function () {
-            self._presetDropdown = _getChildComponent(presetView, self._childNames.presetDropdown);
-            self.subscribeTo(self._presetDropdown, 'onChange', function (evtName, selectedPresetId) {
-               _onPresetDropdownChanged(self);
-            });
-         });
+         self.subscribeOnceTo(presetView, 'onDrawItems'/*onItemsReady*/, _initPresetDropdown.bind(null, self));
          presetView.setItems(_makePresetViewItems(preset));
          presetView.setItemsActions(_makePresetItemsActions(self, preset.isStorable));
+      };
+
+      var _initPresetDropdown = function (self) {
+         self._presetDropdown = _getChildComponent(self._presetView, self._childNames.presetDropdown);
+         self.subscribeTo(self._presetDropdown, 'onChange', function (evtName, selectedPresetId) {
+            _onPresetDropdownChanged(self);
+         });
       };
 
       var _onPresetDropdownChanged = function (self) {
@@ -409,16 +416,16 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
             self._currentPreset = _getPreset(presets, self._presetDropdown.getSelectedPresetId());
             _updatePresetView(self);
             var cfg = self._options;
-            var allSelected = _getSelectedColumns(cfg, this._currentPreset);
+            var selectedIds = _getSelectedColumns(cfg, self._currentPreset, false);
             var selectedColumns = [];
             cfg.columns.each(function (record) {
                var column = record.getId();
-               if (!record.get('fixed') && allSelected.indexOf(column) !== -1) {
+               if (!record.get('fixed') && selectedIds.indexOf(column) !== -1) {
                   selectedColumns.push(column);
                }
             });
             self._selectableView.setSelectedKeys(selectedColumns);
-            _prepareGroupCollapsing(cfg, this._currentPreset);
+            _prepareGroupCollapsing(cfg, self._currentPreset, false);
             _applyGroupCollapsing(self);
          });
       };
