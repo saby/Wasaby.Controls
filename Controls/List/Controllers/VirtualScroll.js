@@ -93,6 +93,7 @@ define('js!Controls/List/Controllers/VirtualScroll', [
       _rowHeight: 25,         //Средняя высота строки
 
       _currentPage: null,
+      _currentTopIndex: null,
 
       /**
        *
@@ -113,6 +114,11 @@ define('js!Controls/List/Controllers/VirtualScroll', [
          this._itemsCount = itemsCount;
       },
 
+      /**
+       * рассчиать индексы и распорки, исходя из позиции скролла.
+       * @param scrollTop
+       * @returns {*}
+       */
       calcVirtualWindow: function(scrollTop) {
          var newPage = _private.getPage(scrollTop, this._rowHeight);
 
@@ -121,7 +127,16 @@ define('js!Controls/List/Controllers/VirtualScroll', [
          }
 
          this._currentPage = newPage.page;
+         this._currentTopIndex = newPage.topIndex;
          return _private.onPageChange(newPage.topIndex, this._rowHeight, this._maxVisibleRows, this._itemsCount);
+      },
+
+      /**
+       * Пересчитать индексы и распорки. Вызывается при изменении общего количества записей в рекордсете
+       * @returns {*|{indexStart, indexStop, topPlaceholderHeight, bottomPlaceholderHeight}}
+       */
+      recalcVirtualWindow: function() {
+         return _private.onPageChange(this._currentTopIndex, this._rowHeight, this._maxVisibleRows, this._itemsCount);
       }
    });
 

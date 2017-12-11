@@ -88,6 +88,10 @@ define('js!Controls/List/ListControl', [
             } else if (direction === 'up') {
                self._listModel.prependItems(list);
             }
+
+            //отдать новые данные в virtualScroll и рассчитать новый диапазон отображаемых записей
+            self._virtualScroll.setItemsCount(self._listModel.getCount());
+            _private.updateIndexesAndPlaceholder(self, self._virtualScroll.recalcVirtualWindow());
          })
       },
 
@@ -235,18 +239,25 @@ define('js!Controls/List/ListControl', [
       },
 
       /**
+       * Обновить размеры распорок и начало/конец отображаемых элементов
+       * @param virtualWindow результат из virtualScroll контроллера
+       */
+      updateIndexesAndPlaceholder: function(self, virtualWindow) {
+         if (virtualWindow) {
+            self._topPlaceholderHeight = virtualWindow.topPlaceholderHeight;
+            self._bottomPlaceholderHeight = virtualWindow.bottomPlaceholderHeight;
+            self._listModel.updateIndexes(virtualWindow.indexStart, virtualWindow.indexStop);
+            self._forceUpdate();
+         }
+      },
+
+      /**
        * Обработать прокрутку списка виртуальным скроллом
        * @param scrollTop
        */
       handleListScroll: function(scrollTop) {
          var virtualWindow = this._virtualScroll.calcVirtualWindow(scrollTop);
-         //Если нужно, обновляем индексы видимых записей и распорки
-         if (virtualWindow) {
-            this._topPlaceholderHeight = virtualWindow.topPlaceholderHeight;
-            this._bottomPlaceholderHeight = virtualWindow.bottomPlaceholderHeight;
-            this._listModel.updateIndexes(virtualWindow.indexStart, virtualWindow.indexStop);
-            this._forceUpdate();
-         }
+         _private.updateIndexesAndPlaceholder(this, virtualWindow);
       }
    };
 
@@ -300,7 +311,7 @@ define('js!Controls/List/ListControl', [
          _beforeMount: function(newOptions) {
             this._virtualScroll = new VirtualScroll({
                maxRows: 75,
-               rowHeight: 25,
+               rowHeight: 18,
                itemsCount: 0
             });
 
