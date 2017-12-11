@@ -67,6 +67,9 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 displayProperty: undefined,
                 titleCellTemplate: undefined
             },
+             //Флаг необходим из-за того, что при смене выделенной записи мы перерисовываем весь список, что в свою очередь
+             //приводит к нотификации о смене выбранной записи. Получается зацикливание.
+            _silent: false,
             _treeView: undefined,
             _treeViewKeys: [],
             _applyContainer: undefined
@@ -174,31 +177,35 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 showMergeButton,
                 idProperty = this._options.idProperty,
                 items = this._treeView.getItems();
-            this._treeView._toggleIndicator(true);
-            this._options.dataSource.call(this._options.testMergeMethodName, {
-                'target': mergeTo,
-                'merged': this._getMergedKeys(mergeTo)
-            }).addCallback(function (data) {
-                items.setEventRaising(false, true);
-                data.getAll().each(function(rec) {
+           if (!this._silent) {
+              this._treeView._toggleIndicator(true);
+              this._options.dataSource.call(this._options.testMergeMethodName, {
+                 'target': mergeTo,
+                 'merged': this._getMergedKeys(mergeTo)
+              }).addCallback(function (data) {
+                 items.setEventRaising(false, true);
+                 data.getAll().each(function (rec) {
                     id = rec.get(idProperty);
                     record = items.getRecordById(id);
                     //Приводим типы к одному формату, т.к. прикладной метод бл, может вернуть идентификатор записи как
                     //строкой так и числом.
                     if (String(id) !== String(mergeTo)) {
-                        isAvailable = rec.get(AVAILABLE_FIELD_NAME);
-                        showMergeButton = showMergeButton || isAvailable;
+                       isAvailable = rec.get(AVAILABLE_FIELD_NAME);
+                       showMergeButton = showMergeButton || isAvailable;
                     }
                     record.set(AVAILABLE_FIELD_NAME, isAvailable);
                     record.set(COMMENT_FIELD_NAME, rec.get(COMMENT_FIELD_NAME));
-                }, self);
-                //Выбранной записи всегда выставляем AVAILABLE = true
-                items.getRecordById(mergeTo).set(AVAILABLE_FIELD_NAME, true);
-                items.setEventRaising(true, true);
-                self._applyContainer.toggleClass('ws-hidden', !showMergeButton);
-            }).addBoth(function() {
-                self._treeView._toggleIndicator(false);
-            });
+                 }, self);
+                 //Выбранной записи всегда выставляем AVAILABLE = true
+                 items.getRecordById(mergeTo).set(AVAILABLE_FIELD_NAME, true);
+                 self._silent = true;
+                 items.setEventRaising(true, true);
+                 self._silent = false;
+                 self._applyContainer.toggleClass('ws-hidden', !showMergeButton);
+              }).addBoth(function () {
+                 self._treeView._toggleIndicator(false);
+              });
+           }
         }
     });
 
