@@ -218,7 +218,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _beforeFocusOutRng: undefined,
             _images: {},
             _lastActive: undefined,
-            _lastSavedText: undefined
+            _lastSavedText: undefined,
+            //МЕГАкостыль, т.к. один человек, очень быстро нажимает ctr + Enter и отпускаение Enter происходит уже без нажатия ctr
+            //Получаем что TextArea думает, что просто отпустили Enter и не пропускает событие. Ошибка обусловлена тем что
+            //исторически сложилось так, редактирование по месту обрабатывает нажатия на keyup и от этого нужно уходить.
+            //Выписал задачу https://online.sbis.ru/opendoc.html?guid=41cf6afb-ddd1-46b6-9ebf-09dd62e798b5 и надеюсь что
+            //в VDOM это заработет само и ни какие костыли с keyup больше не понадобятся.
+            _ctrlKeyUpTimestamp: undefined,
+
          },
 
          _modifyOptions: function(options) {
@@ -1608,7 +1615,16 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             //Запрещаем всплытие Enter, Up и Down
             this._container.bind('keyup', function(e) {
-               if ((e.which === cConstants.key.enter && !e.ctrlKey)|| e.which === cConstants.key.up || e.which === cConstants.key.down) {
+               var ctrlKey = e.ctrlKey;
+
+               if (e.which === cConstants.key.enter && !ctrlKey && self._ctrlKeyUpTimestamp) {
+                  ctrlKey = (new Date() - self._ctrlKeyUpTimestamp) < 100;
+               }
+               if (e.which === cConstants.key.ctrl) {
+                  self._ctrlKeyUpTimestamp = new Date();
+               }
+
+               if ((e.which === cConstants.key.enter && !ctrlKey)|| e.which === cConstants.key.up || e.which === cConstants.key.down) {
                   e.stopPropagation();
                   e.preventDefault();
                }
@@ -2159,7 +2175,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                });
             }
             this._tinyReady.addCallback(function () {
-               this._tinyEditor.setContent(this._prepareContent(this.getText()) || '');
+               var editor = this._tinyEditor;
+               var text = this._prepareContent(this.getText()) || '';
+               editor.setContent(text);
+               // Если при инициализации редактора есть начальный контент - нужно установить курсор в конец и переключить местоимение (placeholder)
+               // 1174747440 https://online.sbis.ru/opendoc.html?guid=3ffa28b7-7924-469d-8e42-c7570d3939d5
+               if (text) {
+                  this.setCursorToTheEnd();
+                  this._togglePlaceholder(text);
+               }
                //Проблема:
                //          1) При инициализации тини в историю действий добавляет контент блока на котором он построился
                //                (если пусто то <p><br data-mce-bogus="1"><p>)
@@ -2176,8 +2200,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                //Решение:
                //          Очистить историю редактора (clear) после его построения, чтобы пункт 2 был
                //          первым в истории изщменений и редактор не стрелял 'change'
-               this._tinyEditor.undoManager.clear();
-               this._tinyEditor.undoManager.add();
+               editor.undoManager.clear();
+               editor.undoManager.add();
             }.bind(this));
          },
 

@@ -15,10 +15,17 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
     * @author Крайнов Дмитрий Олегович
     */
 
+   var buildTplArgs = function(cfg) {
+      var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
+      tplOptions.selectedKey = cfg.selectedKey;
+      return tplOptions;
+   };
+
    var RadioGroupBase = ButtonGroupBase.extend([Selectable], /** @lends SBIS3.CONTROLS.RadioGroupBase.prototype */ {
       $protected: {
          _options: {
-            allowEmptySelection: false
+            allowEmptySelection: false,
+            _buildTplArgs: buildTplArgs
          }
       },
 
