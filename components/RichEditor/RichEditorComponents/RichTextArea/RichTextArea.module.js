@@ -1201,7 +1201,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          insertImageTemplate: function(key, fileobj) {
             //необходимо вставлять каретку(курсор ввода), чтобы пользователь понимал куда будет производиться ввод
-            var CARET = cConstants.browser.chrome /*|| cConstants.browser.firefox*/ ? '&#xFEFF;{$caret}' : '{$caret}';
+            var CARET = '{$caret}';
             var className, before, after;
             switch (key) {
                case '1':
