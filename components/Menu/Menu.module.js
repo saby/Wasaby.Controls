@@ -357,9 +357,6 @@ define('js!SBIS3.CONTROLS.Menu', [
          config._fixJqueryPositionBug = true;
 
          subMenu = new FloatArea(config);
-         //У меню отличные от дефолтного попапа углы разворота. Задаю здесь.
-         subMenu._oppositeCorners.br.horizontal.bottom = 'tl';
-         subMenu._oppositeCorners.tl.horizontal.top = 'tl';
          return subMenu;
       },
 
