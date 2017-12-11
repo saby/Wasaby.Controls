@@ -279,7 +279,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   if (!this._notFirst
                         && status === STATUSES.ended
                         && from < model.get('startedAt').getTime() + model.get('timeSpent') + model.get('timeIdle')) {
-                     this._animationAdd(model.getId(), !model.get('isFailed') && !model.get('viewAsFailed'));
+                     this._animationAdd(model.getId(), !model.get('isFailed'));
                   }
                   if (!hasRun && status === STATUSES.running) {
                      hasRun = true;
@@ -377,16 +377,18 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
          applyResultAction: function (model) {
             //Только если операция завершена или содержит ошибку
             if (model && (model.get('status') === LongOperationEntry.STATUSES.ended || model.get('isFailed'))) {
-               if (!model.get('isFailed')) {
-                  // Выполнить действие, указанное в качестве результата
+               if (!model.get('isFailed') || model.get('useResult')) {
+                  // Если операция завершена успешно или ей явно предписано использовать результат - выполнить действие, указанное в качестве результата
                   if (!this._showResult(model)) {
-                     //Если нет, то если операция может иметь историю и является составной - открыть журнал операции
-                     if (this.canHasHistory(model) && 1 < model.get('progressTotal')) {
+                     // Если нет, то если операция может иметь историю и является составной - открыть журнал операции (либо если было предписано
+                     // показать результат, но его не оказалось)
+                     if ((this.canHasHistory(model) && 1 < model.get('progressTotal')) || model.get('useResult')) {
                         this._showHistory(model);
                      }
                   }
                }
                else {
+                  // Иначе показать историю
                   this._showHistory(model, true);
                }
             }
