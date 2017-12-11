@@ -103,7 +103,7 @@ define([
             recent: [1, 3, 4, 5, 7, 8]
         },
         rawHistoryData = {
-            pinned: [1, 5],
+            pinned: [1, 5, 12],
             frequent: [1, 4, 5, 7],
             recent: [1, 3, 4, 5, 7, 8]
         },
