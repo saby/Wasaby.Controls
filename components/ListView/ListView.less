@@ -151,7 +151,9 @@ controls-ListView__item__withHover:hover {
    height: @list-view-scroll-height;
    bottom: 0;
    position: absolute;
-   z-index: 1;
+   // ставим z-index выше чем у Операций над записью,
+   // чтобы по время подгрузки индикатор их не перекрывал
+   z-index: 11;
    right: 0;
    width: 100%;
    background: @list-view-loading-indicator-gradient-bg;
