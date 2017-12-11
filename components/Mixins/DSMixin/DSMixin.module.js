@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    "Core/core-instance",
    "Core/helpers/Function/forAliveOnly",
    "Core/helpers/Object/isEmpty",
-   "WS.Data/Display/Collection",
+   "WS.Data/Display/Collection"
 ], function (coreClone, Deferred, IoC, MemorySource, Query, ObservableList, Projection, IBindCollection, TemplateUtil, cInstance, forAliveOnly, isEmptyObject) {
 
    /**
