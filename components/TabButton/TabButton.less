@@ -287,9 +287,49 @@
    }
 }
 
-.ws-is-ie {
+.ws-is-ie, .ws-is-firefox {
+   //Как-то так должно выглядеть редактирование по месту, перебил все что можно
    .controls-TabButton .controls-EditAtPlace__fieldWrapper {
-      display: block;
-      line-height: 24px; //в редактировании стоит line-height:20px, в ie все поехал
+      .inline-flexbox();
+      height: 24px;
+      line-height: normal;
+      margin: 0;
+      border: none;
+   }
+   //Костыли, вызванные версткой editAtPlace. нужно переделывать.
+   .controls-TabButton.controls-TabButton__main-item {
+      .controls-TabButton__caption > * {
+         max-height: 26px;
+      }
+   }
+   //Для главной вкладки, внутри которой 1 текстбокс c font-size: 18px. ошибка из-за overflow:hidden на редактировании
+   .controls-EditAtPlace {
+      &.controls-TextBox_size_l {
+         .controls-EditAtPlace__fieldWrapper {
+            position: relative;
+            top: -1px;
+         }
+         .controls-TextBox_size_l.controls-TextBox {
+            .flexbox();
+         }
+      }
+   }
+}
+
+.ws-is-firefox {
+   .controls-TabButton__flex {
+      .controls-TabButton__additionalText2 .controls-EditAtPlace__fieldWrapper {
+         position: relative;
+         top: 1px;
+      }
+   }
+}
+
+.ws-is-ie {
+   .controls-TabButton__flex {
+      > .controls-TabButton__mainText {
+         position: relative;
+         top: -1px;
+      }
    }
 }
