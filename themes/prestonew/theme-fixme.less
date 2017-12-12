@@ -165,3 +165,69 @@ body {
     padding: 0;
   }
 }
+body {
+  .ws-info-box {
+    background: @basic-block-bg-color;
+    color: @default-text-color;
+    border: @button-border;
+    padding: round(24px * @multiplier) round(84px * @multiplier) round(24px * @multiplier) round(24px * @multiplier);
+    &.ws-infobox-type-error {
+      box-shadow: rgba(0, 0, 0, 0.5) 0 0 round(20px * @multiplier);
+    }
+    .ws-infobox-triangle {
+      width: round(24px * @multiplier);
+      height: round(24px * @multiplier);
+      background: @basic-block-bg-color;
+      &.ws-infobox-triangle-bottom {
+        bottom: round(-15px * @multiplier);
+        border-right: @button-border;
+        border-bottom: @button-border;
+      }
+      &.ws-infobox-triangle-top {
+        top: round(-15px * @multiplier);
+        border-left: @button-border;
+        border-top: @button-border;
+      }
+      &.ws-infobox-triangle-vertical-right {
+        right: round(-15px * @multiplier);
+        border-right: @button-border;
+        border-top: @button-border;
+      }
+      &.ws-infobox-triangle-vertical-left {
+        left: round(-15px * @multiplier);
+        border-left: @button-border;
+        border-bottom: @button-border;
+      }
+    }
+
+    .ws-infobox-content {
+      color: @default-text-color;
+      font-size: round(28px * @multiplier);
+      ul {
+        padding-left: round(28px * @multiplier);
+      }
+    }
+
+    .ws-infobox-close-button.icon-disabled{
+      font-size: round(84px * @multiplier)!important;
+      width: round(84px * @multiplier)!important;
+      height: round(84px * @multiplier)!important;
+      right: 0;
+      top: 0;
+      color: @Infobox-cross-color!important;
+      overflow: hidden;
+      &:hover {
+        color: @Infobox-cross-color-hover!important;
+      }
+      &:before {
+        line-height: round(76px * @multiplier)!important;
+      }
+    }
+  }
+  .ws-window-titlebar {
+    background: transparent !important;
+  }
+  .ws-window-content {
+    background-color: @basic-block-bg-color !important;
+  }
+}
