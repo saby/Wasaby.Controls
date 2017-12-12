@@ -1,21 +1,10 @@
 define('js!SBIS3.CONTROLS.Button',
    [
-      'Core/Control',
-      'is!compatibleLayer?js!SBIS3.CONTROLS.Button/Button.compatible',
-      'tmpl!SBIS3.CONTROLS.Button',
-      'is',
-      'is!compatibleLayer?js!SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor',
-      'is!compatibleLayer?js!SBIS3.CORE.Control/ControlGoodCode',
-      'css!SBIS3.CONTROLS.Button',
-      'css!WSControls/Buttons/resources/ButtonBase'
+      'js!WSControls/Buttons/Button',
+      'css!SBIS3.CONTROLS.Button'
          ],
 
-   function (Base,
-             ButtonCompatible,
-             template,
-             isJs,
-             WsCompatibleConstructor,
-             ControlGoodCode) {
+   function (Base) {
 
    'use strict';
 
@@ -71,157 +60,27 @@ define('js!SBIS3.CONTROLS.Button',
     * @initial
     * <ws:SBIS3.CONTROLS.Button caption="Кнопка" />
     */
-   var Button = Base.extend([
-         ButtonCompatible,
-         WsCompatibleConstructor,
-         ControlGoodCode],
-      {
-         _controlName: 'SBIS3.CONTROLS.Button',
-         _template: template,
-         iWantVDOM: true,
-         _isActiveByClick: false,
-         _isWaitingClick: false,
-         _isTouchEnded: false,
-         _touchMoveCount: 0,
+   var Button = Base.extend( [], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
+      _modifyOptions : function() {
+         var opts = Button.superclass._modifyOptions.apply(this, arguments);
+         opts.cssClassName += ' controls-Button';
+         opts.cssClassName += ' controls-Button-size__' + (!!opts.size ? opts.size : 'default');
+         opts.cssClassName += ' controls-Button-color__' + (!!opts.primary ? 'primary' : 'default');
+         opts.cssClassName += (!!opts.primary ? ' controls-Button__primary' : '');
+         return opts;
+      },
+      show: function(){
+         // если кнопка скрыта при построение, то она не зарегистрируется дефолтной,
+         // поэтому при показе такой кнопки регистрируем её как дефолтную
+         var oldVisible = this.isVisible();
 
-         //Какая-то дичь с сервеной частью, у класса определено _useNativeAsMain в слое совместимости,
-         //НО core-extend этого не замечает, и получается, что пытается строить кнопки через цепочку $constructor
-         //ПОКА у класса есть наследники с $constructor, класс должен установить это свойство!
-         _useNativeAsMain: true,
-         constructor: function (cfg) {
-            Button.superclass.constructor.call(this, cfg);
-            this._publish('onActivated');
-         },
-
-         //<editor-fold desc="Event handlers">
-
-         _onMouseClick: function (e) {
-            if (this._isTouchEnded) {
-               this._isTouchEnded = false;
-               /**
-                * Если клик обработали на touchend - надо его стопнуть
-                */
-               if (e && e.stopImmediatePropagation) {
-                  // если не остановить, будет долетать до области, а у нее обработчик на клик - onBringToFront. фокус будет улетать не туда
-                  e.stopImmediatePropagation();
-               }
-               return;
-            }
-            this._isWaitingClick = false;
-            if (!this.isEnabled()) {
-               return;
-            }
-            if (isJs.features.compatibleLayer) {
-               this._onClickHandler(e);
-            }
-            this._notify("onActivated", e);
-            this._forceUpdate();
-         },
-
-         _onMouseDown: function () {
-            if (!this.isEnabled()) {
-               return;
-            }
-           this._isActiveByClick = true;
-         },
-
-         _onMouseUp: function () {
-            this._isActiveByClick = false;
-         },
-
-         _onTouchStart: function(e) {
-            this._touchMoveCount = 0;
-            this._isWaitingClick = true;
-            this._isActiveByClick = true;
-            this._isTouchEnded = false;
-         },
-
-         _onTouchMove: function(e) {
-            this._touchMoveCount++;
-            if(this._touchMoveCount > 1) {
-               this._isWaitingClick = false;
-            }
-         },
-
-         _onTouchEnd: function(e) {
-            /**
-             * ipad имеет специфическую систему событий связанных с touch
-             * onClick может произойти между onTouchStart и onTouchEnd, или
-             * в течение 1000мс после onTouchEnd, или не произойти вообще
-             * + передаем контекст в setTimeout
-             */
-            setTimeout(function() {
-               if(this._isWaitingClick) {
-                  this._onMouseClick();
-                  this._isTouchEnded = true;
-               }
-               this._isActiveByClick = false;
-               //т.к. появилась асинхронность, руками дернем флаг о перерисовке, чтобы кнопка
-               //не осталась "подвисшей"
-               if (this.iWantVDOM) {
-                  this._forceUpdate();
-               }
-            }.bind(this), 1000);
-         },
-
-         _onKeyDown: function (e) {
-            var result = this._notify('onKeyPressed', e);
-            if (e.nativeEvent.key === 'Enter' && result !== false) {
-               this._onMouseClick(e);
-            }
-         },
-
-         _onMouseEnter: function(e){
-            if (isJs.features.compatibleLayer) {
-               this._showExtendedTooltipCompatible();
-            }
-            this._notify('onMouseEnter', e);
-         },
-
-         _onMouseLeave: function(e){
-            if (isJs.features.compatibleLayer) {
-               if (this.isActive()) {
-                  this._hideExtendedTooltipCompatible();
-               }
-            }
-            this._notify('onMouseLeave', e);
-         },
-
-         _onFocusIn: function(e){
-            var self = this;
-            if (isJs.features.compatibleLayer) {
-               this._showExtendedTooltipCompatible();
-            }
-         },
-
-         _onFocusOut: function(e){
-            var self = this;
-            if (isJs.features.compatibleLayer) {
-               this._hideExtendedTooltipCompatible();
-            }
-         },
-
-         show: function(){
-            // если кнопка скрыта при построение, то она не зарегистрируется дефолтной,
-            // поэтому при показе такой кнопки регистрируем её как дефолтную
-            var oldVisible = this.isVisible();
-
-            Button.superclass.show.call(this);
-            if (isJs.features.compatibleLayer && !oldVisible && this.isPrimary()) {
-               this.setDefaultButton(true);
-            }
-         },
-
-         destroy: function() {
-            if (isJs.features.compatibleLayer) {
-               if (this.isPrimary()) {
-                  this._unregisterDefaultButton();
-               }
-            }
-            Button.superclass.destroy.call(this);
+         Button.superclass.show.call(this);
+         if (!oldVisible && this.isPrimary()) {
+            this.setDefaultButton(true);
          }
-         //</editor-fold>
-      });
+      }
+   });
 
       return Button;
+
    });

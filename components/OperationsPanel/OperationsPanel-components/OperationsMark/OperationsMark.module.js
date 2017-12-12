@@ -147,21 +147,27 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          this._setCheckedInternal(selectedCount === recordsCount && recordsCount ? true : selectedCount ? null : false);
       },
       _updateMarkButton: function() {
-         if (!this._menuButton.getItems()) {
-            this._menuButton.reload();
+         var onMenuButtonLoad = function() {
+            var
+               caption,
+               selectedCount,
+               hasMarkOptions = !!this._menuButton.getItems().getCount(),
+               captionRender = this._options.captionRender || this._captionRender;
+            if (hasMarkOptions) {
+               selectedCount = this._options.linkedView.getSelectedKeys().length;
+               caption = typeof this._options.caption === 'string' ? this._options.caption : captionRender.call(this, selectedCount);
+               this._menuButton.setCaption(caption);
+            }
+            this._menuButton.setVisible(hasMarkOptions);
+            this._notifyOnSizeChanged(true);
+
+         }.bind(this);
+
+         if (this._menuButton.getItems()) {
+            onMenuButtonLoad();
+         } else {
+            this._menuButton.reload().addCallback(onMenuButtonLoad);
          }
-         var
-            caption,
-            selectedCount,
-            hasMarkOptions = !!this._menuButton.getItems().getCount(),
-            captionRender = this._options.captionRender || this._captionRender;
-         if (hasMarkOptions) {
-            selectedCount = this._options.linkedView.getSelectedKeys().length;
-            caption = typeof this._options.caption === 'string' ? this._options.caption : captionRender.call(this, selectedCount);
-            this._menuButton.setCaption(caption);
-         }
-         this._menuButton.setVisible(hasMarkOptions);
-         this._notifyOnSizeChanged(true);
       },
       _captionRender: function(selectedCount) {
          var

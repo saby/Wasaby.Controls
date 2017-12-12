@@ -1,7 +1,6 @@
 define('js!SBIS3.CONTROLS.LongOperationsRegistry',
    [
       'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.LongOperations.Entry',
       'Core/RightsManager',
       'tmpl!SBIS3.CONTROLS.LongOperationsRegistry/resources/groupTpl',
       'tmpl!SBIS3.CONTROLS.LongOperationsRegistry/resources/emptyHTMLTpl',
@@ -15,7 +14,7 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
       'js!SBIS3.CONTROLS.LongOperationsFilter'
    ],
 
-   function (CompoundControl, LongOperationEntry, RightsManager, groupTpl, emptyHTMLTpl, dotTplFn) {
+   function (CompoundControl, RightsManager, groupTpl, emptyHTMLTpl, dotTplFn) {
       'use strict';
 
       var FILTER_STATUSES = {

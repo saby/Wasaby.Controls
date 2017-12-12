@@ -28,14 +28,12 @@
 @width_TextBox-InformationIcon:                   round(37px * @multiplier);
 @height_TextBox-InformationIcon:                  round(37px * @multiplier);
 @border-width_TextBox:                            2px;
-@font-size_TextBox-InformationIcon:               round(28px * @multiplier);
 //textarea
 @min-height_TextArea:                             round(42px * @multiplier);
 @padding_TextArea-container:                      round(19px * @multiplier) 0 round(19px * @multiplier) round(14px * @multiplier);
 @padding_TextArea-field:                          0 round(14px * @multiplier) 0 0;
 //NumberTextBox
 @icon-size_NumberTextBox-arrow:                   round(84px * @multiplier);
-@padding_NumberTextBox-arrow:                     0 0 0 round(14px * @multiplier);
 //combo-box
 @combo-box-icon-size:                             @default-icon-size-large;
 @combo-box-arrow-padding:                         0px;
@@ -59,7 +57,7 @@
 //treeview
 @tree-view-folder-text-size:                      @default-text-size;
 //button
-@button-border-radius:                            1px;
+@border-radius_Button:                            1px;
 //back-button
 @back-button-margin-before:                       0 4px 0 0;//todo: romanov
 @back-button-padding-before:                      1px 0;//todo: romanov
@@ -148,11 +146,11 @@
 @listView-empty-data-padding-top:         round(54px * @multiplier);
 //Button
 @button-height:                           @default-height;
-@button-font-size:                        round(40px * @multiplier);
-@button-min-width:                        round(24px * @multiplier);
-@button-padding:                          0 round(14px * @multiplier);
+@font-size_Button:                        round(40px * @multiplier);
+@min-width_Button:                        round(24px * @multiplier);
+@padding_Button-wrapper:                  0 round(14px * @multiplier);
 @button-icon-top-offset:                  round(12px * @multiplier);                     // top offset of 16x16 icon
-@button-icon-gap:                         round(4px * @multiplier);                      // gap between icon and text
+@spacing_Button-between-icon-text:                         round(4px * @multiplier);                      // gap between icon and text
 @button-icon-text-margin:                 0 round(8px * @multiplier) 0 round(28px * @multiplier);             // margin of text following 16x16 icon
 @button-icon-big-top-offset:              round(8px * @multiplier);                     // top offset of 24x24 icon
 @button-icon-left-offset:                 round(14px * @multiplier);
@@ -171,22 +169,22 @@
 @filter-panel-chooser-list-view-check-box-left:        round(4px * @multiplier);
 @filter-panel-chooser-list-view-title-max-height:      round(144px * @multiplier);
 @filter-panel-chooser-list-view-title-shadow-height:   round(32px * @multiplier);
-@button-border-width:                                  2px;
+@border-width_Button:                                  2px;
 // Big button
-@button-big-padding:                      @button-padding;
+@padding_Button-wrapper_l:                @padding_Button-wrapper;
 @button-big-icon-top-offset:              round(20px * @multiplier);                           // top offset of 16x16 icon
 @button-big-icon-left-offset:             round(16px * @multiplier);
 @button-big-icon-text-margin:             @button-icon-text-margin;         // margin of text following 16x16 icon
 @button-big-icon-big-top-offset:          round(15px * @multiplier);
-@button-large-height:                     @button-height;
-@button-large-border-radius:               0;
-@button-large-font-size:                  @button-font-size;
+@height_Button_l:                         @button-height;
+@border-radius_Button_l:                  0;
+@font-size_Button_l:                      @font-size_Button;
 //Button group
 @button-group-horizontal-item-margin:     0 round(49px * @multiplier) 0 0;
 @button-group-vertical-item-margin:       0 0 round(49px * @multiplier) 0;
 // Normal default button
-@button-checked-border-width:             @button-border-width;
-@button-checked-padding:                  @button-padding;
+@button-checked-border-width:             @border-width_Button;
+@button-checked-padding:                  @padding_Button-wrapper;
 // Tab button
 @tab-button-large-secondAddText-font-size:round(13px * @multiplier);
 //Radio button
@@ -497,7 +495,6 @@
 @controls-filterButton-area-header-width:    round(667px * @multiplier);
 //BackButton
 @back-button-font-size:                   round(40px * @multiplier);
-@back-button-line-height:                 round(50px * @multiplier);
 @back-button-height:                      round(50px * @multiplier);
 //BreadCrumbs
 @breadcrumbs-top:                         0;
@@ -603,6 +600,7 @@
 @paging-font-size:                        @default-height;
 @scrollpager-border:                      none;
 @scrollpager-bottom:                      round(9px * @multiplier);
+@height_ListView_ScrollPager:             @default-height;
 @closeBigButtonWidth:                     @default-height;
 @date-range-big-choose-width:				   round(722px * @multiplier);
 @date-range-big-choose-left-right-width:  @default-height;
@@ -705,8 +703,8 @@
 //printDialog
 @printDialog-activate-right:              round(92px * @multiplier); //ширина кнопки 84px+8px отступ
 //back-button
-@back-arrow-width:                round(28px * @multiplier);
-@back-arrow-height:               round(28px * @multiplier);
+@back-arrow-width-h3:             round(21px * @multiplier);
+@back-arrow-height-h3:            round(21px * @multiplier);
 //engine-browser
 @browser-search-margin:           round(8px * @multiplier);
 @width_browser_search:            round(600px * @multiplier);
@@ -724,3 +722,7 @@
 @border-radius_WaitIndicator:     round(16px * @multiplier);
 @wait-indicator-small-size:       round(42px * @multiplier);
 @wait-indicator-small-gap:        round(13px * @multiplier);
+//header
+@header-font-weight:              @default-font-weight;
+//popup,floatarea,window
+@top_window_button:               round(8px * @multiplier);

@@ -4,10 +4,9 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
       'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
       'tmpl!SBIS3.CONTROLS.FilterButton.FilterLine',
       'Core/helpers/String/escapeTagsFromStr',
-      'Core/Sanitize',
       'js!SBIS3.CONTROLS.Clickable'
    ],
-   function(CompoundControl, FilterToStringUtil, dotTplFn, escapeTagsFromStr, Sanitize, Clickable) {
+   function(CompoundControl, FilterToStringUtil, dotTplFn, escapeTagsFromStr, Clickable) {
 
       /**
        * Контрол, отображающий строку из применённых фильтров рядом с кнопкой фильтров.
