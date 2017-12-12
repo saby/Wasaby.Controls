@@ -170,15 +170,16 @@ define('js!SBIS3.CONTROLS.ListView',
           * Ниже приведён код, с помощью которого можно изменять отображение набора операций для записей списка.
           * <pre>
           *    dataGrid.subscribe('onChangeHoveredItem', function(eventObject, hoveredItem) {
-          *       var actions = DataGridView.getItemsActions(),
-          *           instances = actions.getItemsInstances();
-          *       for (var i in instances) {
-          *          if (instances.hasOwnProperty(i)) {
-          *
-          *             // Будем скрывать кнопку удаления для всех строк
-          *             instances[i][i === 'delete' ? 'show' : 'hide']();
+          *       var actions = DataGridView.getItemsActions();
+          *       actions.ready().addCallback(function() {
+          *          var instances = actions.getItemsInstances();
+          *          for (var i in instances) {
+          *             if (instances.hasOwnProperty(i)) {
+          *                // Будем скрывать кнопку удаления для всех строк
+          *                instances[i][i === 'delete' ? 'show' : 'hide']();
+          *             }
           *          }
-          *       }
+          *       });
           *    });
           * </pre>
           * Подобная задача часто сводится к отображению различных операций для узлов, скрытых узлов и листьев для иерархических списков.
