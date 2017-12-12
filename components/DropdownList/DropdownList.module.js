@@ -904,7 +904,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
               return this._getItemsProjection().getCurrent().getHash();
            }
            var selectedRecord = this.getItems().getRecordById(id);
-           return selectedRecord.getHash();
+           return selectedRecord && selectedRecord.getHash();
          },
          _resizeFastDataFilter: function(){
             var parent = this.getParent();
