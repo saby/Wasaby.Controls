@@ -83,6 +83,8 @@ define('js!SBIS3.CONTROLS.TextBoxUtils', ['Core/constants'], function(constants)
                */
                minWidth = parseInt(picker.getContainer().css('min-width'));
 
+               /* Если для пикера установлен min-width, который больше ширины поля ввода,
+                  то берём этот min-width в качестве ширины для пикера */
                if (minWidth && (minWidth > textBoxWidth)) {
                   textBoxWidth = minWidth;
                }
