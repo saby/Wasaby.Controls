@@ -93,7 +93,7 @@ define('js!Controls/List/ListControl', [
             }
 
             //отдать новые данные в virtualScroll и рассчитать новый диапазон отображаемых записей
-            _private.updateIndexesAndPlaceholder(self, self._virtualScroll.addItems(list.getCount(), addPosition));
+            _private.updateVirtualScrollIndexesAndPlaceholder(self, self._virtualScroll.addItems(list.getCount(), addPosition));
          })
       },
 
@@ -244,7 +244,7 @@ define('js!Controls/List/ListControl', [
        * Обновить размеры распорок и начало/конец отображаемых элементов
        * @param virtualWindow результат из virtualScroll контроллера
        */
-      updateIndexesAndPlaceholder: function(self, virtualWindow) {
+      updateVirtualScrollIndexesAndPlaceholder: function(self, virtualWindow) {
          if (virtualWindow) {
             self._topPlaceholderHeight = virtualWindow.topPlaceholderHeight;
             self._bottomPlaceholderHeight = virtualWindow.bottomPlaceholderHeight;
@@ -259,7 +259,7 @@ define('js!Controls/List/ListControl', [
        */
       handleListScroll: function(scrollTop) {
          var virtualWindow = this._virtualScroll.calcVirtualWindow(scrollTop);
-         _private.updateIndexesAndPlaceholder(this, virtualWindow);
+         _private.updateVirtualScrollIndexesAndPlaceholder(this, virtualWindow);
       }
    };
 

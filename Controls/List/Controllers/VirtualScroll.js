@@ -116,7 +116,7 @@ define('js!Controls/List/Controllers/VirtualScroll', [
       },
 
       /**
-       * //TODO подумать, как сдлеать лучше
+       * //TODO подумать, как сделать лучше
        * в проекции добавились элементы
        * @param countAddedItems количество добавленных элементов
        * @param at позиция, с которой появились новые элементы
@@ -130,16 +130,15 @@ define('js!Controls/List/Controllers/VirtualScroll', [
                virtualWindow.indexStop++;
                virtualWindow.topPlaceholderHeight += this._rowHeight;
             } else {
-               //В остальных случаях - увеличим нижнюю границу
+               //В остальных случаях - просто увеличим нижнюю границу (затем скорректируем)
                virtualWindow.indexStop++;
             }
             this._itemsCount++;
          }
 
-         //Получаем новый видимый диапазон
          var range = _private.getRangeToShowByIndex(this._currentTopIndex, this._maxVisibleRows, this._itemsCount);
 
-         //корректируем конец видимого диапазона
+         //корректируем конец видимого диапазона (часть добавленных записей может уйти в распорку, часть в видимую область)
          if (virtualWindow.indexStop > range.stop) {
             virtualWindow.bottomPlaceholderHeight += (virtualWindow.indexStop - range.stop) * this._rowHeight;
             virtualWindow.indexStop = range.stop;
