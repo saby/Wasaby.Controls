@@ -1,24 +1,24 @@
 <div class="controls-LongOperations controls-LongOperationsRegistry">
    <ws:SBIS3.CONTROLS.Browser
       name="longOperationsBrowser"
-      className="controls-Browser__view"
+      className="controls-Browser__view controls-LongOperationsRegistry__view"
       >
       <ws:content>
-         <div class="controls-Browser__table controls-Browser__table-fullFilterBlock">
-            <div class="controls-Browser__tableCell-search">
+         <div class="controls-Browser__table controls-LongOperationsRegistry__table controls-Browser__table-fullFilterBlock controls-LongOperationsRegistry__table-fullFilterBlock">
+            <div class="controls-Browser__tableCell-search controls-LongOperationsRegistry__tableCell-search">
                <ws:SBIS3.CONTROLS.SearchForm
                   tabindex="2"
                   name="browserSearch"
                   allowChangeEnable="{{false}}"
                   placeholder="{[искать@@найти...]}"
-                  className="controls-Browser__search ws-bootup-autofocus"
+                  className="controls-Browser__search controls-LongOperationsRegistry__search ws-bootup-autofocus"
                />
             </div>
-            <div class="controls-Browser__tableRow">
-               <div class="controls-Browser__tableCell-filterButton">
+            <div class="controls-Browser__tableRow controls-LongOperationsRegistry__tableRow">
+               <div class="controls-Browser__tableCell-filterButton controls-LongOperationsRegistry__tableCell-filterButton">
                   <ws:SBIS3.CONTROLS.FilterButton
                      name="browserFilterButton"
-                     className="controls-Browser__filterButton"
+                     className="controls-Browser__filterButton controls-LongOperationsRegistry__filterButton"
                      tabindex="0"
                      >
                      <ws:filterStructure>
@@ -57,10 +57,10 @@
                      </ws:template>
                   </ws:SBIS3.CONTROLS.FilterButton>
                </div>
-               <div class="controls-Browser__tableCell-fastDataFilter">
+               <div class="controls-Browser__tableCell-fastDataFilter controls-LongOperationsRegistry__tableCell-fastDataFilter">
                   <ws:SBIS3.CONTROLS.FastDataFilter
                      name="browserFastDataFilter"
-                     className="controls-Browser__fastDataFilter"
+                     className="controls-Browser__fastDataFilter controls-LongOperationsRegistry__fastDataFilter"
                      tabindex="0"
                      >
                      <ws:items>
@@ -125,7 +125,7 @@
                </div>
             </div>
          </div>
-         <div class="controls-Browser__view">
+         <div class="controls-Browser__view controls-LongOperationsRegistry__view">
             <ws:SBIS3.CONTROLS.LongOperationsList
                name="operationList"
                columns="{{columns}}"
