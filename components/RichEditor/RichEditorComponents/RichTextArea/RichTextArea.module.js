@@ -1204,7 +1204,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          insertImageTemplate: function(key, fileobj) {
             //необходимо вставлять каретку(курсор ввода), чтобы пользователь понимал куда будет производиться ввод
-            var CARET = '{$caret}';
+            var CARET = cConstants.browser.chrome /*|| cConstants.browser.firefox*/ ? '&#xFEFF;{$caret}' : '{$caret}';
             var className, before, after;
             switch (key) {
                case '1':
@@ -1707,6 +1707,31 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   delete a.dataset.wsPrev;
                }
             };
+
+            // Если (в chrome-е) при удалении бэкспейсом пред курсором находится символ &#xFEFF; , то удалить его тоже
+            // 1174778405 https://online.sbis.ru/opendoc.html?guid=d572d435-488a-4ac0-9c28-ebed44e4e51e
+            if (cConstants.browser.chrome) {
+               editor.on('keydown', function (e) {
+                  if (e.key === 'Backspace') {
+                     var selection = this._tinyEditor.selection;
+                     if (selection.isCollapsed()) {
+                        var rng = selection.getRng();
+                        var node = rng.startContainer;
+                        var index = rng.startOffset;
+                        if (node.nodeType === 3 && 0 < index) {
+                           var text = node.nodeValue;
+                           if (text.charCodeAt(index - 1) === 65279/*&#xFEFF;*/) {
+                              node.nodeValue = 1 < text.length ? text.substring(0, index - 1) + text.substring(index) : '';
+                              var newRng = editor.dom.createRng();
+                              newRng.setStart(node, index - 1);
+                              newRng.setEnd(node, index - 1);
+                              selection.setRng(newRng);
+                           }
+                        }
+                     }
+                  }
+               }.bind(this));
+            }
 
             // Обработка изменения содержимого редактора.
             editor.on('keydown', function(e) {
