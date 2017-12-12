@@ -350,11 +350,12 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
          if (processedItems.indexOf(items[i]) === -1) {
             callbackResult = callback.call(context, items[i]);
             processedItems.push(items[i]);
-         }
-         if (callbackResult instanceof Array) {
-            items = items.concat(callbackResult);
-         } else if (callbackResult === false) {
-            break;
+
+            if (callbackResult instanceof Array) {
+               items = items.concat(callbackResult);
+            } else if (callbackResult === false) {
+               break;
+            }
          }
       }
    }
