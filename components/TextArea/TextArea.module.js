@@ -127,6 +127,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
             cfg.maxLinesCount = 10;
          }
 
+         if (!cfg.minLinesCount) {
+            cfg.minLinesCount = 2;
+         }
          if (cfg.minLinesCount > cfg.maxLinesCount) {
             cfg.maxLinesCount = cfg.minLinesCount;
          }
@@ -208,9 +211,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
             });
 
          } else {
-            if (this._options.minLinesCount){
-               this._inputField.attr('rows',parseInt(this._options.minLinesCount, 10));
-            }
+            this._inputField.attr('rows',parseInt(this._options.minLinesCount, 10));
             this._removeAutoSizeDognail();
          }
       },
@@ -233,9 +234,22 @@ define('js!SBIS3.CONTROLS.TextArea', [
       },
 
       _removeAutoSizeDognail: function() {
+         //Изначально рассчитываем высоту по view, а на textarea висит position: absolute.
+         if (this.isEnabled()) {
+            this._disabledWrapper.addClass('ws-hidden');
+            this._inputField.removeClass('ws-hidden');
+         } else {
+            this._inputField.removeClass('ws-hidden').addClass('ws-invisible');
+         }
+         if (!this._options.text) { //Во view мог находиться плейсхолдер, но после инициализации он нам уже не нужен
+            this._disabledWrapper.empty();
+            this._disabledWrapper.removeClass('controls-TextArea__view_empty');
+         }
          //нельзя классы, ограничивающие высоту ставить сразу в шаблоне, потому что из-за них некорректно считается высота, т.к. оин сразу добавляют скролл, а считать высоту надо без скролла
          var hClasses = generateClassesName(this._options.minLinesCount, this._options.maxLinesCount);
          modifyHeightClasses(this._inputField.get(0), hClasses);
+         this._disabledWrapper.addClass('controls-TextArea__view_init');
+         this._inputField.addClass('controls-TextArea__field_init');
          this._autoHeightInitialized = true;
       },
 
