@@ -1,5 +1,6 @@
 define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'Core/constants',
+   'Core/Deferred',
    'tmpl!SBIS3.CONTROLS.CompositeViewMixin',
    'Core/IoC',
    'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/CompositeItemsTemplate',
@@ -13,7 +14,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'Core/core-merge',
    'Core/core-instance',
    'js!SBIS3.CONTROLS.Link'
-], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge, cInstance) {
+], function(constants, Deferred, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge, cInstance) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
@@ -259,14 +260,27 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
       _setHoveredStyles: function(item) {
          if (item && !item.hasClass('controls-CompositeView__hoverStylesInit')) {
             this._calculateHoveredStyles(item);
-            item.toggleClass('controls-CompositeView__item-withoutItemsAction', !this._hasItemsActions());
+            this._hasItemsActions().addCallback(function(hasItemsActions) {
+               item.toggleClass('controls-CompositeView__item-withoutItemsAction', !hasItemsActions);
+            });
             item.addClass('controls-CompositeView__hoverStylesInit');
          }
       },
 
       _hasItemsActions: function() {
-         var itemsActions = this.getItemsActions();
-         return itemsActions && itemsActions.hasVisibleActions();
+         var
+            result,
+            itemsActions = this.getItemsActions();
+
+         if (itemsActions) {
+            result = itemsActions.ready().addCallback(function() {
+               return !!itemsActions.hasVisibleActions();
+            });
+         } else {
+            result = Deferred.success(false);
+         }
+
+         return result;
       },
 
       _calculateHoveredStyles: function(item) {
