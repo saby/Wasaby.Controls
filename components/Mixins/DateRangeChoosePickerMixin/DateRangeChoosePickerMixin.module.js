@@ -140,6 +140,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
                showHalfyears: this._options.showHalfyears,
                showYears: this._options.showYears,
                showUndefined: this._options.showUndefined,
+               emptyCaption: this._options.emptyCaption,
                customPeriod: this._options.customPeriod,
                checkedStart: this._options.checkedStart,
                checkedEnd: this._options.checkedEnd,
