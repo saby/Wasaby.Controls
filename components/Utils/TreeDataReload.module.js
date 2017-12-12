@@ -75,7 +75,8 @@ define('js!SBIS3.CONTROLS.Utils.TreeDataReload', function() {
             });
          }
          items.merge(updatedItems, {
-            remove: false
+            remove: false,
+            inject: true // Выполняем мерж именно с inject, чтобы обновить исходные данные записей, а не рекордсета
          });
          if (itemsToRemove.length) {
             items.setEventRaising(true, true);
