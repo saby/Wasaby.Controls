@@ -527,15 +527,22 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
                //2. Если это удаление
                // тогда можно отрисовать как обычно
                // в остальных случаях полная перерисовка
-               if (((lastItemsIndex == newItemsIndex) && !(cInstance.instanceOfModule(newItems[0], 'WS.Data/Display/TreeItem') && newItems[0].isNode())) || action == 'rm') {
+               if (((lastItemsIndex == newItemsIndex) && !(cInstance.instanceOfModule(newItems[0], 'WS.Data/Display/TreeItem') && newItems[0].isNode()) && !this._redrawOnCollectionChange) || action == 'rm') {
                   parentFnc.apply(this, args);
                }
                else {
+                  this._redrawOnCollectionChange = true;
                   this.redraw();
                }
 
             }
          },
+   
+         _afterCollectionChange: function(parentFnc) {
+            parentFnc.call(this);
+            this._redrawOnCollectionChange = false;
+         },
+         
          _getItemsTemplateForAdd: function(parentFnc) {
             if (this._options.viewMode == 'table') {
                return parentFnc.call(this);
