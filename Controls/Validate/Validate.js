@@ -1,7 +1,7 @@
-define('Components/Validate/Validate',
+define('js!Controls/Validate/Validate',
    [
       'Core/Control',
-      'tmpl!Components/Validate/Validate',
+      'tmpl!Controls/Validate/Validate',
       'Core/IoC',
       'Core/ParallelDeferred',
       'Core/Deferred'
