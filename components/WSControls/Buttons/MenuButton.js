@@ -445,6 +445,7 @@ define('js!WSControls/Buttons/MenuButton', [
        _dataLoadedCallback : function() {
          if (this._picker){
             this.hidePicker();
+            this._picker.setItems(this.getItems());
          }
        },
 
