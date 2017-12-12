@@ -2701,7 +2701,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._revivePackageParams.light = this._revivePackageParams.light && (item.getContents().getId() != this._options.selectedKey);
             }
          }
-      }
+      },
+      
+      _afterCollectionChange: function() {}
    };
 
    var
@@ -2772,6 +2774,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._notifyOnDrawItems(this._revivePackageParams.light);
          }
          this._revivePackageParams.processed = true;
+         this._afterCollectionChange();
       };
    return ItemsControlMixin;
 
