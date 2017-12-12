@@ -4,20 +4,20 @@
   text-decoration: none;
   line-height: normal;
   height: @default-height;
-  min-width: @button-min-width;
+  min-width: @min-width_Button;
   box-sizing: border-box;
   border-style: solid;
-  border-width: @button-border-width;
-  .border-radius(@button-border-radius);
+  border-width: @border-width_Button;
+  .border-radius(@border-radius_Button);
   .user-select();
 }
 
 .controls-Button__style-primary {
-  border-color: @button-primary-border-color;
+  border-color: @border-color_Button_primary;
 
   &:active {
-    border-color: @button-primary-hover-border-color;
-    background: @button-primary-bg-active;
+    border-color: @border-color_Button_primary_hovered;
+    background: @background_Button_primary_active;
     box-shadow: none;
   }
 }
@@ -25,8 +25,8 @@
 .controls-Button__style-disabled {
   cursor: default;
   color: @default-disabled-color;
-  border: @button-disabled-border;
-  background: @button-disabled-bg;
+  border: @border_Button_disabled;
+  background: @background_Button_disabled;
 
   .controls-Button__icon {
     color: @icon-color-disabled !important;
@@ -34,18 +34,18 @@
 }
 
 .controls-Button__wrapper_style-primary {
-  padding: @button-padding;
+  padding: @padding_Button-wrapper;
   .justify-content(center);
 }
 .controls-Button__text_gap {
-  margin-left: @button-icon-gap;
+  margin-left: @spacing_Button-between-icon-text;
 }
 
 .ws-is-desktop-platform {
   .controls-Button__style-primary {
     &:hover {
-      border-color: @button-primary-hover-border-color;
-      background: @button-primary-hover-bg;
+      border-color: @border-color_Button_primary_hovered;
+      background: @background_Button_primary_hovered;
     }
   }
 }
