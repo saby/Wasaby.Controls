@@ -1,5 +1,9 @@
 @multiplier:                   1;
 //default-sizes
+@icon-size_default:            round(37px * @multiplier);
+@icon-size_default_medium:     round(50px * @multiplier);
+@icon-size_default_large:      round(84px * @multiplier);
+//старые default-sizes
 @default-height:               round(84px * @multiplier);
 @default-border-width:         2px;
 @default-text-size:            round(32px * @multiplier);
@@ -21,6 +25,8 @@
 @line-height_TextBox:                             round(80px * @multiplier);
 @padding_TextBox-container:                       0 round(14px * @multiplier);
 @padding_TextBox-container_left:                  0 0 0 round(14px * @multiplier);
+@width_TextBox-InformationIcon:                   round(37px * @multiplier);
+@height_TextBox-InformationIcon:                  round(37px * @multiplier);
 @border-width_TextBox:                            2px;
 //textarea
 @min-height_TextArea:                             round(42px * @multiplier);
@@ -694,7 +700,7 @@
 @radio-button-icon-margin:                round(8px * @multiplier);
 @back-button-text-fontweight:             @default-font-weight;
 //printDialog
-@printDialog-activate-right:              round(67px * @multiplier);
+@printDialog-activate-right:              round(92px * @multiplier); //ширина кнопки 84px+8px отступ
 //back-button
 @back-arrow-width-h3:             round(21px * @multiplier);
 @back-arrow-height-h3:            round(21px * @multiplier);

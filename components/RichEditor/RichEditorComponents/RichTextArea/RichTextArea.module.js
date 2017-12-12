@@ -951,14 +951,24 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (needPrepocess && !editor.formatter.match(command)) {
                var rng = editor.selection.getRng();
                var node = rng.startContainer;
-               if (rng.endContainer === node && node.nodeType === 3 && node.previousSibling && node.previousSibling.nodeType === 1) {
-                  var startOffset = rng.startOffset;
-                  var endOffset = rng.endOffset;
-                  editor.dom.split(node.parentNode, node);
-                  var newRng = editor.getDoc().createRange();
-                  newRng.setStart(node, startOffset);
-                  newRng.setEnd(node, endOffset);
-                  editor.selection.setRng(newRng);
+               if (rng.endContainer === node) {
+                  if (node.nodeType === 3 && node.previousSibling && node.previousSibling.nodeType === 1) {
+                     var startOffset = rng.startOffset;
+                     var endOffset = rng.endOffset;
+                     editor.dom.split(node.parentNode, node);
+                     var newRng = editor.getDoc().createRange();
+                     newRng.setStart(node, startOffset);
+                     newRng.setEnd(node, endOffset);
+                     editor.selection.setRng(newRng);
+                  }
+                  else
+                  // FF иногда "поднимает" рэнж выше по дереву
+                  if (cConstants.browser.firefox && node.nodeType === 1 && rng.collapsed && node.childNodes.length) {
+                     var newNode = editor.dom.create(node.nodeName);
+                     newNode.innerHTML = '<br data-mce-bogus="1" />';
+                     node.parentNode.insertBefore(newNode, node.nextSibling);
+                     editor.selection.select(newNode, true);
+                  }
                }
             }
             editor.execCommand(execCmd || command);
@@ -1194,7 +1204,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          insertImageTemplate: function(key, fileobj) {
             //необходимо вставлять каретку(курсор ввода), чтобы пользователь понимал куда будет производиться ввод
-            var CARET = cConstants.browser.chrome /*|| cConstants.browser.firefox*/ ? '&#xFEFF;{$caret}' : '{$caret}';
+            var CARET = '{$caret}';
             var className, before, after;
             switch (key) {
                case '1':
