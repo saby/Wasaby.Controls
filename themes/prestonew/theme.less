@@ -10,14 +10,14 @@
   height: @default-height;
   background-color: #405A77;
   background-image: none !important;
-  -webkit-box-shadow: @button-shadow !important;
-  -moz-box-shadow: @button-shadow !important;
-  box-shadow: @button-shadow !important;
-  .border-radius(@button-border-radius);
+  -webkit-box-shadow: @box-shadow_Button !important;
+  -moz-box-shadow: @box-shadow_Button !important;
+  box-shadow: @box-shadow_Button !important;
+  .border-radius(@border-radius_Button);
 
   &:before {
     content: "\e66c";
-    text-shadow: @button-text-shadow;
+    text-shadow: @text-shadow_Button;
   }
 
   &:hover {
@@ -149,12 +149,12 @@ body {
 
    .controls-ListView__scrollPager {
       .controls-IconButton {
-         background: @button-bg-color;
+         background: @background_Button;
          padding: 0;
          border-style: solid;
-         border-width: @button-border-width;
-         border-color: @button-bg-color;
-        .box-shadow(@button-shadow);
+         border-width: @border-width_Button;
+         border-color: @background_Button;
+        .box-shadow(@box-shadow_Button);
          .controls-Button__icon {
             height: round(84px * @multiplier)!important;
             width: round(84px * @multiplier)!important;
@@ -165,12 +165,12 @@ body {
             color: #E4E4E4 !important;
          }
          &:active {
-           background: @button-bg-active;
+           background: @background_Button_active;
            box-shadow: none;
          }
          &.ws-disabled {
             .controls-Button__icon {
-               color: @button-disabled-text-color !important
+               color: @color_Button_disabled !important
             }
          }
       }
@@ -922,7 +922,7 @@ body {
 
   .controls-ListView__scrollPager:not(.ws-disabled):not(:active) {
     &:hover {
-      border-color: @button-hover-bg;
+      border-color: @background_Button_hovered;
     }
   }
 

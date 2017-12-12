@@ -1,6 +1,5 @@
 define('js!SBIS3.CONTROLS.EditAtPlace',
    ['js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.TextBox',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.EditAtPlaceMixin',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
@@ -11,10 +10,11 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'Core/constants',
       'js!SBIS3.CONTROLS.ControlHierarchyManager',
       'Core/helpers/Object/isEmpty',
+      'js!SBIS3.CONTROLS.TextBox',
       'i18n!SBIS3.CONTROLS.EditAtPlace',
       'css!SBIS3.CONTROLS.EditAtPlace'
    ],
-   function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, FormWidgetMixin, DateFormatDecorator, dotTplFn, escapeHtml, TemplateUtil, constants, ControlHierarchyManager, objectIsEmpty) {
+   function (CompoundControl, PickerMixin, EditAtPlaceMixin, FormWidgetMixin, DateFormatDecorator, dotTplFn, escapeHtml, TemplateUtil, constants, ControlHierarchyManager, objectIsEmpty) {
       'use strict';
 
       var dateDecorator = null;

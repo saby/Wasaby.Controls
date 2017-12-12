@@ -1,5 +1,7 @@
 <div class="ws-Popup"
-     event:onkeyup="_keyPressed()"
+     on:keyup="_keyPressed()"
+     on:close="_close()"
+     on:sendResult="_sendResult()"
 >
     <ws:partial template="{{_options.template}}" scope="{{_options.componentOptions}}"></ws:partial>
 </div>

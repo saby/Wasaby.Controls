@@ -4,9 +4,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
    "Core/Deferred",
    "js!SBIS3.CONTROLS.PickerMixin",
    "Core/core-instance",
-   'Core/helpers/Object/find',
-   "js!SBIS3.CONTROLS.ControlHierarchyManager"
-], function (coreClone, cMerge, Deferred, PickerMixin, cInstance, find, ControlHierarchyManager) {
+   'Core/helpers/Object/find'
+], function (coreClone, cMerge, Deferred, PickerMixin, cInstance, find) {
    'use strict';
 
    var DEFAULT_SHOW_ALL_TEMPLATE = 'js!SBIS3.CONTROLS.SuggestShowAll';

@@ -1,0 +1,30 @@
+<table>
+   <thead>
+   <tr>
+      <td>Пн</td>
+      <td>Вт</td>
+      <td>Ср</td>
+      <td>Чт</td>
+      <td>Пт</td>
+      <td>Сб</td>
+      <td>Вс</td>
+   </tr>
+   </thead>
+   <!--Предполагается, что offset, weeksInMonth, daysInMonth будут переданы в шаблон-->
+   <tbody>
+      {{ var date = offset * -1 + 1; }}
+      <ws:for data="week in weeksInMonth">
+         <tr>
+            <ws:for data="i in 7">
+               <ws:if data="{{date > 0 && date <= daysInMonth}}">
+                  <td>date</td>
+               </ws:if>
+               <ws:else>
+                  <td></td>
+               </ws:else>
+               {{ date++ }}
+            </ws:for>
+         </tr>
+      </ws:for>
+   </tbody>
+</table>
