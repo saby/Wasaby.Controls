@@ -8,12 +8,13 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'tmpl!SBIS3.CONTROLS.EditAtPlace',
       'Core/helpers/String/escapeHtml',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+      'Core/constants',
       'js!SBIS3.CONTROLS.ControlHierarchyManager',
       'Core/helpers/Object/isEmpty',
       'i18n!SBIS3.CONTROLS.EditAtPlace',
       'css!SBIS3.CONTROLS.EditAtPlace'
    ],
-   function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, FormWidgetMixin, DateFormatDecorator, dotTplFn, escapeHtml, TemplateUtil, ControlHierarchyManager, objectIsEmpty) {
+   function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, FormWidgetMixin, DateFormatDecorator, dotTplFn, escapeHtml, TemplateUtil, constants, ControlHierarchyManager, objectIsEmpty) {
       'use strict';
 
       var dateDecorator = null;
@@ -288,10 +289,26 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             this._options.displayAsEditor = inPlace;
             $('.js-controls-EditAtPlace__fieldWrapper', this._container).toggleClass('ws-hidden', inPlace);
             $('.js-controls-EditAtPlace__editor', this._container).toggleClass('ws-hidden', !inPlace);
+            this._fixIE10TabButtonsEditMode();
             if (inPlace) {
                this._notify('onShowEditor');
             }
             this._notifyOnSizeChanged(this, this, true);
+         },
+
+         _fixIE10TabButtonsEditMode: function () {
+            //Редактирование по месту, лежащее во вкладке, при переходе в режим редактирования увеличивается в ширине
+            //ie не понимает что контент внутри увеличился, и вместо того, чтобы увеличить ширину родительского контейнера (который никто не ограничивает)
+            //пытается ужать содержимое внутри себя. Манипуляции с min-width вызывают reflow и все отрисовывается как надо.
+            if (constants.browser.isIE) {
+               var tbInnerContainer = this.getContainer().closest('.controls-TabButton__inner');
+               if (tbInnerContainer.length) {
+                  tbInnerContainer.css('min-width', 0);
+                  setTimeout(function() {
+                     tbInnerContainer.css('min-width', '');
+                  }, 50);
+               }
+            }
          },
 
          _cancelEdit: function () {
