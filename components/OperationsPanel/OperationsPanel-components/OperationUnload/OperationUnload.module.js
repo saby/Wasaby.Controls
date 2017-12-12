@@ -2,7 +2,6 @@
  * Created by ad.chistyakova on 08.04.2015.
  */
 define('js!SBIS3.CONTROLS.OperationUnload', [
-   "Core/constants",
    "Core/core-instance",
    'Core/Deferred',
    'Core/deprecated',
@@ -11,7 +10,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
    "WS.Data/Entity/Record",
    "WS.Data/Adapter/Sbis",
    "i18n!SBIS3.CONTROLS.OperationUnload"
-], function( constants, cInstance, Deferred, Deprecated, PrintUnloadBase, Exporter, Record, SbisAdapter) {
+], function(cInstance, Deferred, Deprecated, PrintUnloadBase, Exporter, Record, SbisAdapter) {
    //TODO Идея! нужно просто вызвать у view.export, он в свою очередь поднимает событие onUnload, а событие подхыватит выгрузчик. тогда в кнопке вообще только визуализация будет
 
    /**

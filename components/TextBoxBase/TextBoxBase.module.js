@@ -328,8 +328,9 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
 
    TextBoxBase.runDefaultAction = function(event, e) {
-      var control = event.getTarget(),
-         res;
+      var
+         control = event.getTarget(),
+         res, parent;
          if (e.which === constants.key.enter) {
             if (!(e.altKey || e.shiftKey || e.ctrlKey || e.metaKey)) {
                parent = control;
