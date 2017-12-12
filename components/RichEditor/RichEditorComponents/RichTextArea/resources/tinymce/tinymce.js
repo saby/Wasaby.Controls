@@ -33294,8 +33294,10 @@
                // Теперь это будет происходить, только если оба узла не пусты. Удаляются и стартовый, и финальный узел, если они пусты
                // https://online.sbis.ru/opendoc.html?guid=03646515-89d2-4b7d-8473-f84eaa53e32e
                var _removeWhileEmpty = function (node) {
-                  for ( ; dom.isEmpty(node.parentNode); ) { node = node.parentNode; }
-                  node.parentNode.removeChild(node);
+                  for (var p = node.parentNode; p && p.parentNode && p !== root && dom.isEmpty(p); p = p.parentNode) { node = p; }
+                  if (node && node.parentNode) {
+                     node.parentNode.removeChild(node);
+                  }
                }
                var isEmptyStart = dom.isEmpty(startBlock);
                var isEmptyEnd = dom.isEmpty(endBlock);
@@ -33727,17 +33729,6 @@
 
             editor.on('dragstart', function(e) {
                dragStartRng = selection.getRng();
-               // Если перетаскивание началось с пустым рэнжем, то это ошибка (например в FF при перетаскивании картинки), попробуем восстановить
-               // рэнж, если это возможно
-               // https://online.sbis.ru/opendoc.html?guid=6ca8d265-e804-4794-9301-55d9d357c0fe
-               if (dragStartRng.collapsed) {
-                  var elm = doc.elementFromPoint(e.clientX, e.clientY);
-                  if (elm) {
-                     dragStartRng = doc.createRange();
-                     dragStartRng.setStartBefore(elm);
-                     dragStartRng.setEndAfter(elm);
-                  }
-               }
                setMceInternalContent(e);
             });
 
@@ -34813,7 +34804,6 @@
          // Gecko
          if (isGecko) {
             emptyEditorOnDeleteEverything();
-            cleanupStylesWhenDeleting();
             removeHrOnBackspace();
             focusBody();
             removeStylesWhenDeletingAcrossBlockElements();

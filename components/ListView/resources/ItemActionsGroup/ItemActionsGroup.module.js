@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
    "js!SBIS3.CONTROLS.ButtonGroupBaseDS",
    "tmpl!SBIS3.CONTROLS.ItemActionsGroup",
    "tmpl!SBIS3.CONTROLS.ItemActionsGroup/ItemTpl",
+   'Core/Deferred',
    "Core/helpers/Object/find",
    "Core/helpers/markup-helpers",
    "Core/helpers/Function/forAliveOnly",
@@ -17,7 +18,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
    "css!SBIS3.CONTROLS.ItemActionsGroup",
    "i18n!SBIS3.CONTROLS.ItemActionsGroup"
 ],
-   function( CommandDispatcher, ButtonGroupBaseDS, dotTplFn, dotTplFnForItem, objectFind, mkpHelpers, forAliveOnly, moduleStubs) {
+   function( CommandDispatcher, ButtonGroupBaseDS, dotTplFn, dotTplFnForItem, Deferred, objectFind, mkpHelpers, forAliveOnly, moduleStubs) {
 
       'use strict';
 
@@ -253,6 +254,26 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   и он вернёт неверный результат, поэтому проверяем и на isEnabled */
                return instance.isVisible() && instance.isEnabled();
             });
+         },
+
+         /**
+          * Возвращает признак готовности
+          * @return {Core/Deferred}
+          */
+         ready: function() {
+            var result = new Deferred();
+            if (this.isLoading()) {
+               this.once('onDrawItems', (function() {
+                  if (this.isDestroyed()) {
+                     result.cancel();
+                  } else {
+                     result.callback();
+                  }
+               }).bind(this));
+            } else {
+               result.callback();
+            }
+            return result;
          },
 
          /**

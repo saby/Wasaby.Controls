@@ -1,17 +1,17 @@
-define('js!Controls/interface/IIGroupedView', [
+define('js!Controls/interface/IGroupedView', [
 ], function() {
 
    /**
-    * Интерфейс для работы группировкой.
-    * @mixin Controls/interface/IIGroupedView
+    * Интерфейс для работы с группировкой.
+    *
+    * @mixin Controls/interface/IGroupedView
     * @public
     */
 
    /**
-    * @name Controls/interface/IIGroupedView#itemsGroup
+    * @name Controls/interface/IGroupedView#itemsGroup
     * @cfg {Object} {
         method: () => void,
-        field: string,
         template: () => void
     }
     */

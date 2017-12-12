@@ -316,12 +316,16 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _toggleGradient: function() {
-            // $elem[0].scrollHeight - integer, $elem.height() - float
-         	var maxScrollTop = this._getScrollHeight() - this._getContainerHeight();
+         	var maxScrollTop;
 
-         	// maxScrollTop > 1 - погрешность округления на различных браузерах.
-            this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 1 && this._getScrollTop() < maxScrollTop);
-            this._container.toggleClass('controls-ScrollContainer__top-gradient', this._getScrollTop() > 0);
+         	// Не устанавливаем тень у контейнера с 0 высотой.
+         	if (this._getContainerHeight()) {
+               // $elem[0].scrollHeight - integer, $elem.height() - float
+               maxScrollTop = this._getScrollHeight() - this._getContainerHeight();
+               // maxScrollTop > 1 - погрешность округления на различных браузерах.
+               this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 1 && this._getScrollTop() < maxScrollTop);
+               this._container.toggleClass('controls-ScrollContainer__top-gradient', this._getScrollTop() > 0);
+            }
          },
 
          _initScrollbar: function(){

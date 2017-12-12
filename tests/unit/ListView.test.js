@@ -108,5 +108,48 @@ define([
             assert.equal(view.getItems().getIdProperty(), 'test');
          })
       });
+      describe('_toggleIndicator', function () {
+         let _this;
+
+         beforeEach(function () {
+            _this = {
+               isDestroyed: function () {
+                  return false;
+               },
+               _showLoadingOverlay: sinon.spy(),
+               _showIndicator: sinon.spy(),
+               _hideLoadingOverlayAndIndicator: sinon.spy()
+            };
+            // Почему то приводит к падениям других тестов. Мокаем таймеры в каждом тесте по месту
+            // clock = sinon.useFakeTimers((new Date()).getTime(), 'setTimeout', 'clearTimeout');
+         });
+
+         // afterEach(function () {
+         //    clock.restore();
+         // });
+
+         it('should call _showIndicator once on multiple execution', function () {
+            let clock = sinon.useFakeTimers((new Date()).getTime(), 'setTimeout', 'clearTimeout');
+            ListView.prototype._toggleIndicator.call(_this, true);
+            assert.isDefined(_this._loadingIndicatorTimer);
+            ListView.prototype._toggleIndicator.call(_this, true);
+            clock.tick(1000);
+            assert(_this._showLoadingOverlay.called);
+            assert(_this._showIndicator.calledOnce);
+            clock.restore();
+         });
+
+         it('should not call _showIndicator if show cancel', function () {
+            let clock = sinon.useFakeTimers((new Date()).getTime(), 'setTimeout', 'clearTimeout');
+            ListView.prototype._toggleIndicator.call(_this, true);
+            assert.isDefined(_this._loadingIndicatorTimer);
+            ListView.prototype._toggleIndicator.call(_this, false);
+            clock.tick(1000);
+            assert.isUndefined(_this._loadingIndicatorTimer);
+            assert(_this._showLoadingOverlay.called);
+            assert(_this._showIndicator.notCalled);
+            clock.restore();
+         });
+      });
    });
 });

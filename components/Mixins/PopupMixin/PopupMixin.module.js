@@ -238,8 +238,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                self.hide();
             });
          }
-
-         if (this._options.parentContainer) {
+         if (this._findParentContainer()) {
             container.appendTo(this._getParentContainer());
          }
          else {
@@ -257,6 +256,22 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          }
       },
 
+      _findParentContainer: function() {
+          //todo: https://online.sbis.ru/opendoc.html?guid=7074fd5d-268f-4939-8f68-95e7f262f90d
+          //Временное решение, до момента когда компоненты начнут поддерживать опцию theme
+          if (!this._options.parentContainer) {
+              var
+                  linkedContainer = this._options.target ?
+                      this._options.target :
+                      this._options.opener && this._options.opener._container ?
+                          this._options.opener._container: false,
+                  parent = linkedContainer ? $(linkedContainer).closest('.popup-container') : false;
+              if (parent.length) {
+                  this._options.parentContainer = parent;
+              }
+          }
+          return this._options.parentContainer;
+      },
 
       _touchKeyboardMoveHandler: function(){
          this.recalcPosition();

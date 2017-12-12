@@ -289,7 +289,9 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       _setEnabled: function(enabled) {
          TextBoxBase.superclass._setEnabled.apply(this, arguments);
          if (this._options.placeholder) {
-            this.getContainer().toggleClass('controls-TextBox__hiddenPlaceholder', !enabled);
+            if (this._inputField) {
+               this._inputField.toggleClass('controls-TextBox__hiddenPlaceholder', !enabled);
+            }
          }
          this._toggleState();
       },
@@ -326,13 +328,14 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
 
    TextBoxBase.runDefaultAction = function(event, e) {
-      var control = event.getTarget(),
-         res;
+      var
+         control = event.getTarget(),
+         res, parent;
          if (e.which === constants.key.enter) {
             if (!(e.altKey || e.shiftKey || e.ctrlKey || e.metaKey)) {
                parent = control;
 
-               while(true) {
+               while(parent) {
 
                   while (parent && !parent._defaultAction) {
                      parent = parent.getParent();

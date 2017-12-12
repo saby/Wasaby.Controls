@@ -26,6 +26,7 @@
     }
   .controls-SearchForm__afterFieldWrapper {
     .inline-flexbox();
+    .flex-shrink(0);
     padding: @search-button-wrapper-padding;//по стандарту - 8, но 8 - 1(бордер) - 2(паддинг иконки) = 5
   }
   //данный стили находятся внутри .controls-SearchForm.controls-TextBox чтобы в пакетированном режиме их не перебивали стили иконок icon-size{ display: inline-block }
@@ -34,6 +35,7 @@
     .flexbox();
     .align-items(center) ;
     .icon-size(@search-loop-size);
+    .flex-shrink(0);
     cursor: pointer;
     height: 100%;
     overflow: hidden;
@@ -73,4 +75,11 @@
 
 .controls-searchForm__suggest .controls-PopupMixin__closeButton {
   top: @top_searchForm_picker_closeButton;
+}
+
+.controls-searchForm__suggest-shown {
+  background: @suggest-text-box-bg-show-picker-color;
+}
+.controls-searchForm__field-suggest-shown {
+  color: @suggest-text-box-bg-show-picker-font-color;
 }

@@ -2,6 +2,7 @@
  * Created by dv.zuev on 18.05.2017.
  */
 define([
+   
    'Core/constants',
    'js!SBIS3.CORE.CompoundControl',
    'js!WSTest/Focus/TestFocusHelpers',
@@ -11,14 +12,14 @@ define([
              fHelpers,
              iHelpers) {
    'use strict';
-
+   
    var testNum = 1;
-
+   
    var skipTests = [24, 29];//Пропустить тест
    var skipComponent = [13, 14, 15, 16, 17, 18, 19, 20, 26, 30, 32, 33]; //Для тестов, которые сами создают контролы,
    // и для асинхронных тестов.
    // Аргументом в функцию проверки передается done
-
+   
    describe('Focus-tests', function () {
       var testControl;
       beforeEach(function () {
@@ -42,7 +43,7 @@ define([
                      var comp = focusTestControl.extend({
                         _dotTplFn: caseTmpl
                      });
-
+                     
                      testControl = new comp({
                         element: 'component',
                         name: 'Case' + i + 'Control'
@@ -56,7 +57,6 @@ define([
             });
          })(i);
       }
-      ;
       afterEach(function () {
          testControl && testControl.destroy();
       });

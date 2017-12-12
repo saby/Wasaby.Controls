@@ -161,7 +161,7 @@ body {
    }
 
    .controls-DateRangeChoose {
-      .controls-DateRangeBigChoose__homeBtn .icon-16 {
+      .controls-DateRangeChoose__home .icon-16 {
          font-size: round(84px * @multiplier) !important;
          line-height: round(84px * @multiplier) !important;
          width: round(84px * @multiplier);
@@ -387,11 +387,6 @@ body {
 }
 
 body {
-   .controls-BackButton {
-      .controls-BackButton__caption.controls-Link {
-         color: #FFCC99;
-      }
-   }
   .ws-float-area-title-generated {
       line-height: round(100px * @multiplier);
   }
@@ -501,10 +496,6 @@ body {
   .controls-Link__field {
     vertical-align: baseline;
   }
-}
-
-.controls-Link {
-  font-size: round(32px * @multiplier);
 }
 .controls-Browser {
    .controls-Browser__topTemplate {
@@ -891,6 +882,20 @@ body {
         color: @error-color;
       }
     }
+  }
+  //todo: временное решение на неопределенный срок
+  //Проблема: css контролов не из CONTROLS (например ENGINE) нельзя включить в presto.css
+  //Поэтому данные котнролы подключают свои css сами, но в теме Online`а
+  //Необходимо: возобновить работы по отказу от control-list.less (Кудрявцев И.)
+  //Возникающие проблемы: переключение темы (как переключать отдельные файлы контролов)
+  //Возможные решения:
+  //                  Доработать механизм переключения тем в престе(Гатауллина Г.)
+  //                  Доработать роутинг в пересте и перезагружать страницу
+  .controls-Browser__search {
+    width: round(600px * @multiplier);
+  }
+  .controls-Browser__search-small .controls-Browser__search {
+    width: round(350px * @multiplier);
   }
 }
 

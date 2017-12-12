@@ -16,10 +16,9 @@ define('js!Controls/Popup/DialogTemplate',
       return Control.extend({
          _controlName: 'Controls/Popup/DialogTemplate',
          _template: template,
-         iWantVDOM: true,
 
          closePopup: function (){
-            this.sendCommand('close');
+            this._notify('close');
          }
       });
    }

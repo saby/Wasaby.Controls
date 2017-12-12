@@ -1160,25 +1160,29 @@ define('js!SBIS3.CONTROLS.ListView',
             var currentTouch = this._touchSupport;
             this._touchSupport = Boolean(support);
 
-            var container = this.getContainer(),
-                toggleClass = container.toggleClass.bind(container, 'controls-ListView__touchMode', this._touchSupport);
-
             if(this._itemsToolbar) {
-               /* При таче, можно поменять вид операций,
-                  т.к. это не будет вызывать никаких визуальных дефектов,
-                  а просто покажет операции в тач моде */
-               if(
-                   (!this._itemsToolbar.isVisible() || this._touchSupport) &&
-                   this._itemsToolbar.getProperty('touchMode') !== this._touchSupport &&
-                   /* Когда тулбар зафиксирован, не меняем вид операций */
-                   !this._itemsToolbar.isToolbarLocking()
-               ) {
-                  toggleClass();
-                  this._itemsToolbar.setTouchMode(this._touchSupport);
-               }
+               this._setTouchMode(this._touchSupport);
             } else if(currentTouch !== this._touchSupport) {
-               toggleClass();
+                this._toggleTouchClass();
             }
+         },
+
+         _setTouchMode: function(touchSupport){
+            /* При таче, можно поменять вид операций,
+             т.к. это не будет вызывать никаких визуальных дефектов,
+             а просто покажет операции в тач моде */
+             if( this._itemsToolbar.getProperty('touchMode') !== touchSupport &&
+                 /* Когда тулбар зафиксирован, не меняем вид операций */
+                 !this._itemsToolbar.isToolbarLocking()
+             ) {
+                 this._toggleTouchClass(touchSupport);
+                 this._itemsToolbar.setTouchMode(touchSupport);
+             }
+         },
+
+         _toggleTouchClass: function(touchSupport) {
+            var container = this.getContainer();
+            container.toggleClass('controls-ListView__touchMode', touchSupport);
          },
 
          _eventProxyHandler: function(e) {
@@ -2572,6 +2576,10 @@ define('js!SBIS3.CONTROLS.ListView',
                      onAfterBeginEdit: function(event, model) {
                         var
                            itemsToolbarContainer = this._itemsToolbar && this._itemsToolbar.getContainer();
+
+                        if(this._itemsToolbar) {
+                            this._setTouchMode(false);
+                        }
                         /*Скрывать emptyData нужно перед показом тулбара, иначе тулбар спозиционируется с учётом emptyData,
                         * а после удаления emptyData, тулбар визуально подскочит вверх*/
                         this._toggleEmptyData(false);
@@ -3085,7 +3093,7 @@ define('js!SBIS3.CONTROLS.ListView',
             /* при изменении размера таблицы необходимо вызвать перерасчет позиции тулбара
              позиция тулбара может сбиться например при появление пэйджинга */
             if(this._itemsToolbar && this._itemsToolbar.isVisible()){
-               if(this._touchSupport) {
+               if(this._touchSupport && !this._editInPlace.isVisible()) {
                    this._itemsToolbar.setHeightInTouchMode();
                }
                this._itemsToolbar.recalculatePosition();
@@ -3894,40 +3902,48 @@ define('js!SBIS3.CONTROLS.ListView',
          }, '_getAjaxLoaderContainer'),
 
          _toggleIndicator: function(show){
-            var self = this,
-                container = this.getContainer(),
-                ajaxLoader = this._getAjaxLoaderContainer(),
-                indicator, centerCord, scrollContainer;
-
-
             this._showedLoading = show;
             if (show) {
                // Показываем контейнер который перекрывает контент, блокируя взаимодействие пользователя с таблицей.
-               if (!self.isDestroyed() && self._showedLoading) {
-                  scrollContainer = self._getScrollContainer()[0];
-                  indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
-                  ajaxLoader.removeClass('ws-hidden');
-                  if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
-                     /* Ищем кординату, которая находится по середине отображаемой области грида */
-                     centerCord =
-                        (Math.max(scrollContainer.getBoundingClientRect().bottom, 0) - Math.max(ajaxLoader[0].getBoundingClientRect().top, 0))/2;
-                     /* Располагаем индикатор, учитывая прокрутку */
-                     indicator[0].style.top = centerCord + scrollContainer.scrollTop + 'px';
-                  } else {
-                     /* Если скрола нет, то сбросим кординату, чтобы индикатор сам расположился по середине */
-                     indicator[0].style.top = '';
-                  }
+               if (!this.isDestroyed() && this._showedLoading) {
+                  this._showLoadingOverlay();
                }
                // После задержки показываем индикатор загрузки.
-               this._loadingIndicatorTimer = setTimeout(this._showIndicator.bind(this), INDICATOR_DELAY);
+               if (!this._loadingIndicatorTimer) {
+                  this._loadingIndicatorTimer = setTimeout(this._showIndicator.bind(this), INDICATOR_DELAY);
+               }
             }
             else {
                clearTimeout(this._loadingIndicatorTimer);
-               ajaxLoader.addClass('ws-hidden').removeClass('controls-AjaxLoader__showIndication');
+               this._loadingIndicatorTimer = undefined;
+               this._hideLoadingOverlayAndIndicator();
+            }
+         },
+         _showLoadingOverlay: function() {
+            var container = this.getContainer(),
+               ajaxLoader = this._getAjaxLoaderContainer(),
+               scrollContainer = this._getScrollContainer()[0],
+               indicator, centerCord;
+
+            indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
+            ajaxLoader.removeClass('ws-hidden');
+            if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
+               /* Ищем кординату, которая находится по середине отображаемой области грида */
+               centerCord =
+                  (Math.max(scrollContainer.getBoundingClientRect().bottom, 0) - Math.max(ajaxLoader[0].getBoundingClientRect().top, 0))/2;
+               /* Располагаем индикатор, учитывая прокрутку */
+               indicator[0].style.top = centerCord + scrollContainer.scrollTop + 'px';
+            } else {
+               /* Если скрола нет, то сбросим кординату, чтобы индикатор сам расположился по середине */
+               indicator[0].style.top = '';
             }
          },
          _showIndicator: function () {
+            this._loadingIndicatorTimer = undefined;
             this._getAjaxLoaderContainer().addClass('controls-AjaxLoader__showIndication');
+         },
+         _hideLoadingOverlayAndIndicator: function() {
+            this._getAjaxLoaderContainer().addClass('ws-hidden').removeClass('controls-AjaxLoader__showIndication');
          },
 
          _toggleEmptyData: function(show) {
@@ -4833,7 +4849,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             if (beginDeleteResult !== BeginDeleteResult.CANCEL) {
                this._toggleIndicator(true);
-               this._deleteRecordsFromSource(idArray).addCallback(function (result) {
+               this._deleteRecordsFromSource(idArray).addCallback(forAliveOnly(function (result) {
                   //Если записи удалялись из DataSource, то перезагрузим реест. Если DataSource нет, то удалим записи из items
                   if (self.getDataSource() && beginDeleteResult !== BeginDeleteResult.WITHOUT_RELOAD) {
                      resultDeferred = self._reloadViewAfterDelete(idArray).addCallback(function () {
@@ -4846,7 +4862,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      resultDeferred = Deferred.success(result);
                   }
                   return resultDeferred;
-               }).addErrback(function (result) {
+               }, this)).addErrback(function (result) {
                   InformationPopupManager.showMessageDialog({
                      message: result.message,
                      opener: self,
