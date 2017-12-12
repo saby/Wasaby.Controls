@@ -5,8 +5,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "Core/constants",
    "Core/CommandDispatcher",
    "Core/Deferred",
-   "js!SBIS3.CONTROLS.BreadCrumbs",
-   "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
    "WS.Data/Display/Tree",
    "tmpl!SBIS3.CONTROLS.TreeMixin/resources/searchRender",
    "WS.Data/Entity/Model",
@@ -17,8 +15,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "Core/IoC",
    "Core/helpers/Object/isEmpty",
    "Core/helpers/Object/isPlainObject",
+   "js!SBIS3.CONTROLS.BreadCrumbs",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
    "WS.Data/Adapter/Sbis"
-], function (coreClone, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject) {
+], function (coreClone, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject) {
 
    var createDefaultProjection = function(items, cfg) {
       var

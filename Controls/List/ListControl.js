@@ -7,7 +7,7 @@ define('js!Controls/List/ListControl', [
    'Core/helpers/functional-helpers',
    'require',
    'js!Controls/List/Controllers/ScrollWatcher',
-   'Core/helpers/functional-helpers',
+   'js!Controls/List/Controllers/VirtualScroll',
    'css!Controls/List/ListControl/ListControl'
 ], function (Control,
              ListControlTpl,
@@ -16,7 +16,8 @@ define('js!Controls/List/ListControl', [
              PageNavigation,
              fHelpers,
              require,
-             ScrollWatcher
+             ScrollWatcher,
+             VirtualScroll
  ) {
    'use strict';
 
@@ -69,6 +70,9 @@ define('js!Controls/List/ListControl', [
             else {
                self._listModel.setItems(list);
             }
+
+            self._virtualScroll.setItemsCount(self._listModel.getCount());
+            _private.handleListScroll.call(self, 0);
          })
       },
 
@@ -203,6 +207,9 @@ define('js!Controls/List/ListControl', [
                onListTop: function() {
                },
                onListBottom: function() {
+               },
+               onListScroll: function(scrollTop) {
+                  _private.handleListScroll.call(self, scrollTop);
                }
             };
 
@@ -225,6 +232,21 @@ define('js!Controls/List/ListControl', [
          self._loadingState = null;
          self._loadingIndicatorState = null;
          self._forceUpdate();
+      },
+
+      /**
+       * Обработать прокрутку списка виртуальным скроллом
+       * @param scrollTop
+       */
+      handleListScroll: function(scrollTop) {
+         var virtualWindow = this._virtualScroll.calcVirtualWindow(scrollTop);
+         //Если нужно, обновляем индексы видимых записей и распорки
+         if (virtualWindow) {
+            this._topPlaceholderHeight = virtualWindow.topPlaceholderHeight;
+            this._bottomPlaceholderHeight = virtualWindow.bottomPlaceholderHeight;
+            this._listModel.updateIndexes(virtualWindow.indexStart, virtualWindow.indexStop);
+            this._forceUpdate();
+         }
       }
    };
 
@@ -235,121 +257,15 @@ define('js!Controls/List/ListControl', [
     * @mixes Controls/interface/IItems
     * @mixes Controls/interface/IDataSource
     * @mixes Controls/interface/ISingleSelectable
-    * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedView
+    * @mixes Controls/interface/INavigation
+    * @mixes Controls/interface/IFilter
+    * @mixes Controls/interface/IHighlighter
+    * @mixes Controls/List/interface/IListControl
     * @control
     * @public
     * @category List
-    */
-
-   /**
-    * @name Controls/List/ListControl#showContextMenu
-    * @cfg {Boolean} Показывать ли контекстное меню при клике на правую кнопку мыши
-    */
-
-   /**
-    * @name Controls/List/ListControl#itemEditTemplate
-    * @cfg {Function} Шаблон редактирования строки
-    */
-
-   /**
-    * @name Controls/List/ListControl#emptyTemplate
-    * @cfg {Function} Шаблон отображения пустого списка
-    */
-
-   /**
-    * @name Controls/List/ListControl#resultsTemplate
-    * @cfg {Function} Шаблон строки итогов
-    */
-
-   /**
-    * @name Controls/List/ListControl#filter
-    * @cfg {Object} Настройки фильтра
-    */
-
-   /**
-    * @name Controls/List/ListControl#sorting
-    * @cfg {Object} Настройки сортировки
-    */
-
-   /**
-    * @typedef {String} ListNavigationSource
-    * @variant position Описание
-    * @variant offset Описание
-    * @variant page Описание
-    */
-
-   /**
-    * @typedef {String} ListNavigationView
-    * @variant infinity Описание
-    * @variant pages Описание
-    * @variant demand Описание
-    */
-
-   /**
-    * @typedef {Object} ListNavigationPositionSourceConfig
-    * @property {String} field Описание
-    * @property {String} direction Описание
-    */
-
-   /**
-    * @typedef {Object} ListNavigationOffsetSourceConfig
-    * @property {Number} limit Описание
-    */
-
-   /**
-    * @typedef {Object} ListNavigationInfinityViewConfig
-    * @property {String} pagingMode Описание
-    */
-
-   /**
-    * @typedef {Object} ListNavigationPagesViewConfig
-    * @property {Boolean} pagesCountSelector Описание
-    */
-
-   /**
-    * @typedef {Object} ListNavigation
-    * @property {ListNavigationSource} source Описание
-    * @property {ListNavigationView} view Описание
-    * @property {ListNavigationPositionSourceConfig|ListNavigationOffsetSourceConfig} sourceConfig Описание
-    * @property {ListNavigationInfinityViewConfig|ListNavigationPagesViewConfig} viewConfig Описание
-    */
-
-   /**
-    * @name Controls/List/ListControl#navigation
-    * @property {ListNavigation} Настройки навигации
-    */
-
-   /**
-    * @name Controls/List/ListControl#multiselect
-    * @cfg {Boolean} Разрешен ли множественный выбор.
-    */
-
-   /**
-    * @name Controls/List/ListControl#itemsActions
-    * @cfg {Array} Операции над записью
-    */
-
-   /**
-    * @name Controls/List/ListControl#loadItemsStrategy
-    * @cfg {String} Стратегия действий с подгружаемыми в список записями
-    * @variant merge Мержить, при этом записи с одинаковыми id схлопнутся в одну
-    * @variant append Добавлять, при этом записи с одинаковыми id будут выводиться в списке
-    */
-
-
-   /**
-    * Перезагружает набор записей представления данных с последующим обновлением отображения
-    * @function Controls/List/ListControl#reload
-    */
-
-   /**
-    * @event Controls/List/ListControl#onItemClick Происходит при клике по строке
-    */
-
-   /**
-    * @event Controls/List/ListControl#onDataLoad Происходит при загрузке данных
     */
 
    var ListControl = Control.extend({
@@ -373,6 +289,8 @@ define('js!Controls/List/ListControl', [
          _itemTemplate: null,
 
          _loadOffset: 100,
+         _topPlaceholderHeight: 0,
+         _bottomPlaceholderHeight: 0,
 
          constructor: function (cfg) {
             ListControl.superclass.constructor.apply(this, arguments);
@@ -380,6 +298,12 @@ define('js!Controls/List/ListControl', [
          },
 
          _beforeMount: function(newOptions) {
+            this._virtualScroll = new VirtualScroll({
+               maxRows: 75,
+               rowHeight: 25,
+               itemsCount: 0
+            });
+
           /* Load more data after reaching end or start of the list.
             TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
           */
@@ -401,12 +325,14 @@ define('js!Controls/List/ListControl', [
             ListControl.superclass._afterMount.apply(this, arguments);
 
             //Если есть подгрузка по скроллу и список обернут в скроллКонтейнер, то создаем ScrollWatcher
-            if (this._options.navigation && this._options.navigation.source === 'page') {
+            //TODO вместо проверки на навигацию - позже будет аналогичная проверка на наличие виртуального скролла.
+            //TODO пока создаем ScrollWatcher всегда, когда есть скроллКонтейнер
+            //if ((this._options.navigation && this._options.navigation.source === 'page')) {
                var scrollContainer = this._container.closest('.ws-scrolling-content');
                if (scrollContainer && scrollContainer.length) {
                   this._scrollWatcher = _private.createScrollWatcher.call(this, scrollContainer[0]);
                }
-            }
+            //}
 
             if (this._options.navigation && this._options.navigation.view == 'infinity') {
                //TODO кривое обращение к DOM

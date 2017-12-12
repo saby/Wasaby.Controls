@@ -8,13 +8,13 @@
 define('js!SBIS3.CONTROLS.Pager', [
    'js!SBIS3.CORE.CompoundControl',
    'tmpl!SBIS3.CONTROLS.Pager',
-   'js!SBIS3.CONTROLS.DropdownList',
-   'js!SBIS3.CORE.Paging',
    'Core/core-instance',
    'Core/helpers/string-helpers',
+   'js!SBIS3.CONTROLS.DropdownList',
+   'js!SBIS3.CORE.Paging',
    'i18n!SBIS3.CONTROLS.Pager',
    'css!SBIS3.CONTROLS.Pager'
-], function(CompoundControl, dotTplFn, Combobox, Paging, cInstance, strHelpers) {
+], function(CompoundControl, dotTplFn, cInstance, strHelpers) {
 
    'use strict';
 

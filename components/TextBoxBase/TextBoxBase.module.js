@@ -80,10 +80,6 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
                if (this.textTransform) {
                   fieldClasses.push('controls-TextBox__field-' + this.textTransform);
                }
-               //В новой престо в больших полях ввода будет отступ снизу
-               if (this.size === 'l') {
-                  fieldClasses.push('controls-TextBox__field_size_l');
-               }
                wrapperClasses.push('controls-TextBox__wrapper_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
 
                return {
@@ -332,8 +328,9 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
 
    TextBoxBase.runDefaultAction = function(event, e) {
-      var control = event.getTarget(),
-         res;
+      var
+         control = event.getTarget(),
+         res, parent;
          if (e.which === constants.key.enter) {
             if (!(e.altKey || e.shiftKey || e.ctrlKey || e.metaKey)) {
                parent = control;
