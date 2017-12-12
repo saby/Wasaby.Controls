@@ -1,4 +1,4 @@
-.controls-LongOperationsRegistry .controls-Browser__search {
+.controls-LongOperationsRegistry .controls-LongOperationsRegistry__search {
    width: 200px;
 }
 
@@ -10,11 +10,11 @@
    margin-top: 8px;
 }
 
-/*Это вероятно лишнее, но пока так*/
+
 
 .controls-LongOperationsRegistry .controls-Browser {
    &,
-   .controls-Browser__view {
+   .controls-LongOperationsRegistry__view {
       min-height: 0;
       height: 100%;
       clear: both;
@@ -22,7 +22,7 @@
       .flex-direction(column);
    }
 
-   .controls-Browser__table {
+   .controls-LongOperationsRegistry__table {
       .flex-shrink(0);
    }
 }
@@ -30,7 +30,7 @@
 .ws-is-old-webkit {
    .controls-LongOperationsRegistry .controls-Browser {
       &,
-      .controls-Browser__view {
+      .controls-LongOperationsRegistry__view {
          .flex-basis(0);
          .flex-grow(1);
       }
@@ -40,19 +40,19 @@
 .ws-is-ie {
    .controls-LongOperationsRegistry .controls-Browser {
       &,
-      .controls-Browser__view {
+      .controls-LongOperationsRegistry__view {
          .flex-shrink(1);
       }
    }
 }
 
 .controls-LongOperationsRegistry {
-   .controls-Browser__table {
+   .controls-LongOperationsRegistry__table {
       width: 100%;
       .flexbox();
    }
 
-   .controls-Browser__tableRow {
+   .controls-LongOperationsRegistry__tableRow {
       height: auto;
       .inline-flexbox();
       .justify-content(flex-end);
@@ -62,18 +62,18 @@
       .flex-shrink(1);
    }
 
-   .controls-Browser__search {
+   .controls-LongOperationsRegistry__search {
       margin: 8px 0 8px 8px;
       width: 335px;
       display: block;
    }
 
-   .controls-Browser__tableCell-search {
+   .controls-LongOperationsRegistry__tableCell-search {
       .inline-flexbox();
       .flex-shrink(0);
    }
 
-   .controls-Browser__tableCell-fastDataFilter {
+   .controls-LongOperationsRegistry__table .controls-LongOperationsRegistry__tableCell-fastDataFilter {
       .order(2);
       overflow: hidden;
       min-width: 30px;
@@ -81,39 +81,44 @@
       margin-right: 8px;
    }
 
-   .controls-Browser__table.controls-Browser__table-fullFilterBlock .controls-Browser__tableCell-fastDataFilter {
-      margin: 8px 0 0 4px;
+   .controls-LongOperationsRegistry__table.controls-LongOperationsRegistry__table-fullFilterBlock .controls-LongOperationsRegistry__tableCell-fastDataFilter {
+      margin-right: 4px;
    }
 
-   .controls-Browser__table .controls-Browser__fastDataFilter {
+   .controls-LongOperationsRegistry__table .controls-LongOperationsRegistry__fastDataFilter {
       .flexbox();
       -webkit-box-pack: start;
       .justify-content(flex-start);
       .flex-shrink(1);
    }
 
-   .controls-Browser__tableCell-filterButton {
+   .controls-LongOperationsRegistry__fastDataFilter .controls-DropdownList {
+      margin-top: 10px;
+      overflow: hidden;
+   }
+
+   .controls-LongOperationsRegistry__tableCell-filterButton {
       max-width: 100%;
    }
 
-   .controls-Browser__table.controls-Browser__table-fullFilterBlock .controls-Browser__tableCell-filterButton {
+   .controls-LongOperationsRegistry__table.controls-LongOperationsRegistry__table-fullFilterBlock .controls-LongOperationsRegistry__tableCell-filterButton {
       width: auto;
       overflow: hidden;
       .order(3);
       max-width: 100%;
    }
 
-   .controls-Browser__tableCell-filterButton .controls-Browser__filterButton {
+   .controls-LongOperationsRegistry__tableCell-filterButton .controls-LongOperationsRegistry__filterButton {
       max-width: 100%;
       float: right;
+      margin: 2px 0;
    }
 
-   .controls-Browser__filterButton .controls__filterButton__filterLine-text {
-      display: inline-block;
+   .controls-LongOperationsRegistry__filterButton .controls__filterButton__filterLine-text {
       height: 19px;
    }
 
-   .ws-sticky-header__block.ws-sticky-header__fixed.controls-Browser__table {
+   .ws-sticky-header__block.ws-sticky-header__fixed.controls-LongOperationsRegistry__table {
       z-index: 3;
    }
 
