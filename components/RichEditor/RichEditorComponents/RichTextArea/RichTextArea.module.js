@@ -1130,14 +1130,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * Установить курсор в конец контента.
           */
          setCursorToTheEnd: function() {
-            var
-               editor, nodeForSelect, root;
-            if (this._tinyEditor) {
-               editor = this._tinyEditor,
-               nodeForSelect = editor.getBody(),
-               root = editor.dom.getRoot();
+            var editor = this._tinyEditor;
+            // Устанавливать курсор только если редактор активен (чтобы не забирать фокус)
+            // 1174789546 https://online.sbis.ru/opendoc.html?guid=9675e20f-5a90-4a34-b6be-e24805813bb9
+            if (editor && this.isActive() && !this._sourceContainerIsActive()) {
+               var nodeForSelect = editor.getBody();
                // But firefox places the selection outside of that tag, so we need to go one level deeper:
                if (editor.isGecko) {
+                  var root = editor.dom.getRoot();
                   nodeForSelect = root.childNodes[root.childNodes.length - 1];
                   nodeForSelect = nodeForSelect.childNodes[nodeForSelect.childNodes.length - 1];
                }
@@ -2403,7 +2403,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (this.isEnabled() && this._tinyReady.isReady()) {
                   this._tinyEditor.setContent(text, autoFormat ? undefined : {format: 'raw'});
                   this._tinyEditor.undoManager.add();
-                  if (this.isActive() && !this._sourceContainerIsActive() && !!text) {
+                  if (text) {
                      this.setCursorToTheEnd();
                   }
                } else {
