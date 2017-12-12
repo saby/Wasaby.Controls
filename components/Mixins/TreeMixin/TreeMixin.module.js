@@ -408,7 +408,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
    hasNodeWithChild = function(cfg) {
       var
-         items = cfg.items,
+         items = cfg._items,
          itemsProjection = cfg._itemsProjection,
          hierarchyRelation = cfg._getHierarchyRelation(cfg),
          hasNodeWithChild = false,
