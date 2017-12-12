@@ -54,7 +54,6 @@ define('js!SBIS3.CONTROLS.LongOperations.Entry',
          timeIdle: 'number',
          status: 'number',
          isFailed: 'boolean',
-         viewAsFailed: 'boolean',
          progressTotal: 'number',
          progressCurrent: 'number',
          canDelete: 'boolean',
@@ -66,6 +65,8 @@ define('js!SBIS3.CONTROLS.LongOperations.Entry',
          userPatronymicName: 'string',
          userLastName: 'string',
          userPic: 'string',
+         resultChecker: 'string',
+         resultCheckerArgs: ['string', 'object'],
          resultWayOfUse: 'string',
          resultMessage: 'string',
          resultUrl: 'string',
@@ -73,6 +74,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Entry',
          resultValidUntil: 'Date',
          resultHandler: 'string',
          resultHandlerArgs: ['string', 'object'],
+         useResult: 'boolean',
          extra: 'object',
          notification: 'string'//TODO: Поменять на progressMessage
       };
@@ -102,7 +104,6 @@ define('js!SBIS3.CONTROLS.LongOperations.Entry',
           * @param {string|number} [options.status] Статус операции. Возможные значения: 'running', 0, 'suspended', 1, 'ended', 2.
           *                                         (опционально, если не указано, будет использовано 'running')
           * @param {boolean}       [options.isFailed] Показывает, что операция завершена с ошибкой (опционально)
-          * @param {boolean}       [options.viewAsFailed] Показывает, что операция следует визуально отображать как завершённую с ошибкой (опционально)
           * @param {number}        [options.progressTotal] Общее количество стадий выполнения (опционально, если не указано, будет использована 1)
           * @param {number}        [options.progress.total] Общее количество стадий выполнения - альтернативно
           * @param {number}        [options.progressCurrent] Текущая стадия выполнения (опционально, если не указано, будет использован 0)
@@ -139,6 +140,8 @@ define('js!SBIS3.CONTROLS.LongOperations.Entry',
           * @param {string}        [options.result.handler] Строка модуль-метод для отображения результата операции - альтернативно
           * @param {string|object} [options.resultHandlerArgs] Аргументы обработчика отображения результата операции (объект или json-строка) (опционально)
           * @param {string|object} [options.result.handlerArgs] Аргументы обработчика отображения результата операции (объект или json-строка) - альтернативно
+          * @param {boolean}       [options.useResult] Показывает, что даже если операция завершена с ошибкой, то всёравно следует отображать результат операции, а не её историю (опционально)
+          * @param {boolean}       [options.result.use] Показывает, что даже если операция завершена с ошибкой, то всёравно следует отображать результат операции, а не её историю (опционально)
           * @param {object}        [options.extra] Дополнительная информация, определяемая конкретным продюсером, если необходимо (опционально)
           * @param {string}        [options.notification] Уведомление, если применимо (опционально)
           */

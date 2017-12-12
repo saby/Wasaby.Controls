@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
    'js!SBIS3.CONTROLS.NumberTextBox',
    'js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil',
    'tmpl!SBIS3.CONTROLS.MoneyTextBox/resources/textFieldWrapper',
+   'is!msIe?js!SBIS3.CORE.FieldString/resources/ext/ierange-m2-min',
    'css!SBIS3.CONTROLS.MoneyTextBox'
 ], function (cDefaultRenders, constants, NumberTextBox, NumberTextBoxUtil, textFieldWrapper) {
 
@@ -229,32 +230,24 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
        * @return {Array} массив содержащий координаты выделения
        */
       _getCaretPosition : function(){
-         var selection,
-             selectionRange,
-             b,
-             e,
-             l;
+         var selection, selectionRange, b, e;
 
-         if(window.getSelection){
-            selection = window.getSelection();
-            selectionRange = selection.getRangeAt(0);
-            b = selectionRange.startOffset;
-            if(!constants.browser.firefox) {
-                e = selectionRange.endOffset;
-            }else {
-                // TODO перейти на общий механизм работы с FormattedTextBoxBase
-               e = b + selection.toString().length;
-            }
+         selection = constants.browser.isIE10 ? window.getSelectionForIE() : window.getSelection();
 
-         }
-         else if(document.selection){
-            selection = document.selection.createRange();
-            l = selection.text.length;
-            selection.moveStart('textedit', -1);
-            e = selection.text.length;
-            selection.moveEnd('textedit', -1);
-            b = e - l;
-         }
+          if (selection.rangeCount > 0) {
+              try {
+                  selectionRange = selection.getRangeAt(0);
+                  b = selectionRange.startOffset;
+                  if (!constants.browser.firefox) {
+                      e = selectionRange.endOffset;
+                  } else {
+                      // TODO перейти на общий механизм работы с FormattedTextBoxBase
+                      e = b + selection.toString().length;
+                  }
+              }catch(e){
+                 return this._caretPosition;
+              }
+          }
          return [b,e];
       },
       /**

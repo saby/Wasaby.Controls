@@ -25,28 +25,37 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
            },
 
            query: function (query) {
-               // throw new Error('Method must be implemented');
-               var adapter = this.getAdapter().forTable(),
-                   offset = query.getOffset(),
-                   limit = query.getLimit() || 1,
-                   now = new Date(),
-                   items = [];
-               offset = offset - _startingOffset;
+              var executor = (function() {
+                    var now = new Date(),
+                       adapter = this.getAdapter().forTable(),
+                       items = [];
 
-               for (var i = 0; i < limit; i++) {
-                   items.push({id: i, date: new Date(now.getFullYear(), offset + i, 1)});
-               }
+                    for (var i = 0; i < limit; i++) {
+                       items.push({id: i, date: new Date(now.getFullYear(), offset + i, 1)});
+                    }
 
-               this._each(
-                   items,
-                   function(item) {
-                       adapter.add(item);
-                   }
-               );
-               items = this._prepareQueryResult(
-                   {items: adapter.getData(), total: 1000000000000}
-               );
-               return Deferred.success(items);
+                    this._each(
+                       items,
+                       function(item) {
+                          adapter.add(item);
+                       }
+                    );
+                    items = this._prepareQueryResult(
+                       {items: adapter.getData(), total: 1000000000000}
+                    );
+
+                    return items;
+                 }).bind(this),
+                 offset = query.getOffset(),
+                 limit = query.getLimit() || 1;
+
+              offset = offset - _startingOffset;
+
+              if (this._loadAdditionalDependencies) {
+                 return this._loadAdditionalDependencies().addCallback(executor);
+              } else {
+                 return Deferred.success(executor());
+              }
            }
        });
 

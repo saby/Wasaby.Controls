@@ -9,7 +9,6 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       /*###'js!SBIS3.CONTROLS.WaitIndicator',*/
       "js!SBIS3.CONTROLS.NotificationPopup",
       'js!SBIS3.CONTROLS.LongOperations.Entry',
-      'js!SBIS3.CONTROLS.LongOperationsList/resources/model',
       "tmpl!SBIS3.CONTROLS.LongOperationsPopup/resources/headerTemplate",
       "tmpl!SBIS3.CONTROLS.LongOperationsPopup/resources/contentTemplate",
       "tmpl!SBIS3.CONTROLS.LongOperationsPopup/resources/footerTemplate",
@@ -18,7 +17,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       "js!SBIS3.CONTROLS.LongOperationsList"
    ],
 
-   function (UserInfo, cMerge, Deferred, EventBus, /*###strHelpers,*/ TabMessage, /*###WaitIndicator,*/ NotificationPopup, LongOperationEntry, Model, headerTemplate, contentTpl, footerTpl, FloatArea) {
+   function (UserInfo, cMerge, Deferred, EventBus, /*###strHelpers,*/ TabMessage, /*###WaitIndicator,*/ NotificationPopup, LongOperationEntry, headerTemplate, contentTpl, footerTpl, FloatArea) {
       'use strict';
 
       var FILTER_NOT_SUSPENDED = 'not-suspended';
@@ -355,7 +354,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                      break;
 
                   case STATUSES.ended:
-                     var isSuccess = !model.get('isFailed') && !model.get('viewAsFailed');
+                     var isSuccess = !model.get('isFailed');
                      this._setHeader(title, isSuccess ? 'success' : 'error', isSuccess ? 'icon-size icon-24 icon-Yes icon-done' : 'icon-size icon-24 icon-Alert icon-error');
                      pauseIcon.addClass('ws-hidden');
                      break;

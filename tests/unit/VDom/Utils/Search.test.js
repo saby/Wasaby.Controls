@@ -113,11 +113,7 @@ define(
                try {
                   new Search({searchParam: 'name'});
                } catch (e) {
-                  try {
-                     new Search({dataSource: source});
-                  } catch (e) {
-                     done();
-                  }
+                  done();
                }
             });
          });

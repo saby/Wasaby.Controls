@@ -31,12 +31,9 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.ImitateEvents',
    'js!SBIS3.CORE.LayoutManager',
    'Core/helpers/markup-helpers',
-   'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.ScrollWatcher',
    'WS.Data/Collection/IBind',
-   'WS.Data/Collection/List',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
-   'tmpl!SBIS3.CONTROLS.ListView/resources/emptyData',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
    'tmpl!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
@@ -62,6 +59,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.VirtualScrollController',
    'js!SBIS3.CONTROLS.ListView.DragMove',
    'Core/helpers/Function/once',
+   'js!SBIS3.CONTROLS.Link',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'WS.Data/Collection/RecordSet',
    'i18n!SBIS3.CONTROLS.ListView',
@@ -72,7 +70,7 @@ define('js!SBIS3.CONTROLS.ListView',
    function (ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, ImitateEvents, LayoutManager, mHelpers,
-    Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+    ScrollWatcher, IBindCollection, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
     Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, LocalStorageNative, forAliveOnly, memoize, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove, once) {
      'use strict';
 
@@ -1162,25 +1160,29 @@ define('js!SBIS3.CONTROLS.ListView',
             var currentTouch = this._touchSupport;
             this._touchSupport = Boolean(support);
 
-            var container = this.getContainer(),
-                toggleClass = container.toggleClass.bind(container, 'controls-ListView__touchMode', this._touchSupport);
-
             if(this._itemsToolbar) {
-               /* При таче, можно поменять вид операций,
-                  т.к. это не будет вызывать никаких визуальных дефектов,
-                  а просто покажет операции в тач моде */
-               if(
-                   (!this._itemsToolbar.isVisible() || this._touchSupport) &&
-                   this._itemsToolbar.getProperty('touchMode') !== this._touchSupport &&
-                   /* Когда тулбар зафиксирован, не меняем вид операций */
-                   !this._itemsToolbar.isToolbarLocking()
-               ) {
-                  toggleClass();
-                  this._itemsToolbar.setTouchMode(this._touchSupport);
-               }
+               this._setTouchMode(this._touchSupport);
             } else if(currentTouch !== this._touchSupport) {
-               toggleClass();
+                this._toggleTouchClass();
             }
+         },
+
+         _setTouchMode: function(touchSupport){
+            /* При таче, можно поменять вид операций,
+             т.к. это не будет вызывать никаких визуальных дефектов,
+             а просто покажет операции в тач моде */
+             if( this._itemsToolbar.getProperty('touchMode') !== touchSupport &&
+                 /* Когда тулбар зафиксирован, не меняем вид операций */
+                 !this._itemsToolbar.isToolbarLocking()
+             ) {
+                 this._toggleTouchClass(touchSupport);
+                 this._itemsToolbar.setTouchMode(touchSupport);
+             }
+         },
+
+         _toggleTouchClass: function(touchSupport) {
+            var container = this.getContainer();
+            container.toggleClass('controls-ListView__touchMode', touchSupport);
          },
 
          _eventProxyHandler: function(e) {
@@ -2574,6 +2576,10 @@ define('js!SBIS3.CONTROLS.ListView',
                      onAfterBeginEdit: function(event, model) {
                         var
                            itemsToolbarContainer = this._itemsToolbar && this._itemsToolbar.getContainer();
+
+                        if(this._itemsToolbar) {
+                            this._setTouchMode(false);
+                        }
                         /*Скрывать emptyData нужно перед показом тулбара, иначе тулбар спозиционируется с учётом emptyData,
                         * а после удаления emptyData, тулбар визуально подскочит вверх*/
                         this._toggleEmptyData(false);
@@ -3087,7 +3093,7 @@ define('js!SBIS3.CONTROLS.ListView',
             /* при изменении размера таблицы необходимо вызвать перерасчет позиции тулбара
              позиция тулбара может сбиться например при появление пэйджинга */
             if(this._itemsToolbar && this._itemsToolbar.isVisible()){
-               if(this._touchSupport) {
+               if(this._touchSupport && !this._editInPlace.isVisible()) {
                    this._itemsToolbar.setHeightInTouchMode();
                }
                this._itemsToolbar.recalculatePosition();
@@ -4843,7 +4849,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             if (beginDeleteResult !== BeginDeleteResult.CANCEL) {
                this._toggleIndicator(true);
-               this._deleteRecordsFromSource(idArray).addCallback(function (result) {
+               this._deleteRecordsFromSource(idArray).addCallback(forAliveOnly(function (result) {
                   //Если записи удалялись из DataSource, то перезагрузим реест. Если DataSource нет, то удалим записи из items
                   if (self.getDataSource() && beginDeleteResult !== BeginDeleteResult.WITHOUT_RELOAD) {
                      resultDeferred = self._reloadViewAfterDelete(idArray).addCallback(function () {
@@ -4856,7 +4862,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      resultDeferred = Deferred.success(result);
                   }
                   return resultDeferred;
-               }).addErrback(function (result) {
+               }, this)).addErrback(function (result) {
                   InformationPopupManager.showMessageDialog({
                      message: result.message,
                      opener: self,

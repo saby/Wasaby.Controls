@@ -421,6 +421,17 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      }
                   }
                   editor.insertContent(html);
+                  // Иногда в FF после вставки рэнж охватывает весь элемент редактора, а не находится внутри него - поставить курсор в конец
+                  // в таком случае
+                  // 1174769960 https://online.sbis.ru/opendoc.html?guid=268d5fe6-e038-40d3-b185-eff696796f12
+                  // 1174769988 https://online.sbis.ru/opendoc.html?guid=5c37d724-1e7b-4627-afe6-257db37d4798
+                  if (cConstants.browser.firefox) {
+                     var rng = editor.selection.getRng();
+                     var editorBody = editor.getBody();
+                     if (rng.startContainer === editorBody && rng.endContainer === editorBody) {
+                        this.setCursorToTheEnd();
+                     }
+                  }
                   //вставка контента может быть инициирована любым контролом,
                   //необходимо нотифицировать о появлении клавиатуры в любом случае
                   if (cConstants.browser.isMobilePlatform) {
@@ -940,14 +951,24 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (needPrepocess && !editor.formatter.match(command)) {
                var rng = editor.selection.getRng();
                var node = rng.startContainer;
-               if (rng.endContainer === node && node.nodeType === 3 && node.previousSibling && node.previousSibling.nodeType === 1) {
-                  var startOffset = rng.startOffset;
-                  var endOffset = rng.endOffset;
-                  editor.dom.split(node.parentNode, node);
-                  var newRng = editor.getDoc().createRange();
-                  newRng.setStart(node, startOffset);
-                  newRng.setEnd(node, endOffset);
-                  editor.selection.setRng(newRng);
+               if (rng.endContainer === node) {
+                  if (node.nodeType === 3 && node.previousSibling && node.previousSibling.nodeType === 1) {
+                     var startOffset = rng.startOffset;
+                     var endOffset = rng.endOffset;
+                     editor.dom.split(node.parentNode, node);
+                     var newRng = editor.getDoc().createRange();
+                     newRng.setStart(node, startOffset);
+                     newRng.setEnd(node, endOffset);
+                     editor.selection.setRng(newRng);
+                  }
+                  else
+                  // FF иногда "поднимает" рэнж выше по дереву
+                  if (cConstants.browser.firefox && node.nodeType === 1 && rng.collapsed && node.childNodes.length) {
+                     var newNode = editor.dom.create(node.nodeName);
+                     newNode.innerHTML = '<br data-mce-bogus="1" />';
+                     node.parentNode.insertBefore(newNode, node.nextSibling);
+                     editor.selection.select(newNode, true);
+                  }
                }
             }
             editor.execCommand(execCmd || command);
@@ -1183,7 +1204,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          insertImageTemplate: function(key, fileobj) {
             //необходимо вставлять каретку(курсор ввода), чтобы пользователь понимал куда будет производиться ввод
-            var CARET = cConstants.browser.chrome /*|| cConstants.browser.firefox*/ ? '&#xFEFF;{$caret}' : '{$caret}';
+            var CARET = '{$caret}';
             var className, before, after;
             switch (key) {
                case '1':
@@ -2123,7 +2144,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                });
             }
             this._tinyReady.addCallback(function () {
-               this._tinyEditor.setContent(this._prepareContent(this.getText()) || '');
+               var editor = this._tinyEditor;
+               var text = this._prepareContent(this.getText()) || '';
+               editor.setContent(text);
+               // Если при инициализации редактора есть начальный контент - нужно установить курсор в конец и переключить местоимение (placeholder)
+               // 1174747440 https://online.sbis.ru/opendoc.html?guid=3ffa28b7-7924-469d-8e42-c7570d3939d5
+               if (text) {
+                  this.setCursorToTheEnd();
+                  this._togglePlaceholder(text);
+               }
                //Проблема:
                //          1) При инициализации тини в историю действий добавляет контент блока на котором он построился
                //                (если пусто то <p><br data-mce-bogus="1"><p>)
@@ -2140,8 +2169,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                //Решение:
                //          Очистить историю редактора (clear) после его построения, чтобы пункт 2 был
                //          первым в истории изщменений и редактор не стрелял 'change'
-               this._tinyEditor.undoManager.clear();
-               this._tinyEditor.undoManager.add();
+               editor.undoManager.clear();
+               editor.undoManager.add();
             }.bind(this));
          },
 
