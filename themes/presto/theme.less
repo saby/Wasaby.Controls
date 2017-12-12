@@ -224,11 +224,15 @@ body {
     background-color: #273749;
   }
   .ws-window-content{
-    padding: round(11px * @multiplier) round(8px * @multiplier)
+    padding: round(11px * @multiplier) round(8px * @multiplier);
+    border-width: @default-border-width;
+    border-style: solid;
+    border-color: transparent;
+    border-top: none;
   }
   .ws-window {
     .box-shadow(@controls-panel-shadow);
-    border-color: transparent;
+    border: none;
   }
   .ws-window-title {
     color: #FFCC99;
