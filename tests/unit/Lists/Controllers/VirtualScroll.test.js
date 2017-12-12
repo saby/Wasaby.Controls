@@ -69,22 +69,22 @@ define([
       });
 
       //Проверка рассчета индексов/распорок после изменяения общего числа записей проекции
-      /*it('Recalc virtual window', function() {
+      it('Add items', function() {
          virtualScroll.setItemsCount(25);
          virtualScroll.calcVirtualWindow(0);
-         virtualScroll.setItemsCount(500);
-         var res = virtualScroll.recalcVirtualWindow();
+         var res = virtualScroll.addItems(100, 0);
 
          assert.equal(res.topPlaceholderHeight, 0);
-         assert.equal(res.bottomPlaceholderHeight, 11250);
+         assert.equal(res.bottomPlaceholderHeight, 1875);
          assert.equal(res.indexStart, 0);
          assert.equal(res.indexStop, 50);
 
          //Сбросим текущую страницу, чтобы не влияала на следующие тесты
          virtualScroll._currentPage = -1;
-      });*/
+      });
 
       it('Scroll to top List', function() {
+         virtualScroll.setItemsCount(500);
          var res = virtualScroll.calcVirtualWindow(0);
 
          assert.equal(res.topPlaceholderHeight, 0);
@@ -94,6 +94,7 @@ define([
       });
 
       it('Scroll to middle List', function() {
+         virtualScroll.setItemsCount(500);
          var res = virtualScroll.calcVirtualWindow(5286);
 
          assert.equal(res.topPlaceholderHeight, 4650);
@@ -103,6 +104,7 @@ define([
       });
 
       it('Scroll to bottom List', function() {
+         virtualScroll.setItemsCount(500);
          var res = virtualScroll.calcVirtualWindow(12325);
 
          assert.equal(res.topPlaceholderHeight, 11700);
