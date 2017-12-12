@@ -1,1 +1,1 @@
-<ws:partial template="{{ _options.content }}" validationError="{{isValid()}}"/>
+<ws:partial template="{{ _options.content }}" validationError="{{isValid()}}" on:onFocusIn="_focusInHandler()" on:onFocusOut="_focusOutHandler()"/>

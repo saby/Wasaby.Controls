@@ -28,9 +28,6 @@ define('js!Controls/Validate/Controller',
             this._focusInHandler = function() {
                this.setValidationResult(true);
             }.bind(this);
-
-            this.subscribe('onFocusIn', this._focusInHandler);
-            this.subscribe('onFocusOut', this._focusOutHandler);
          },
          _afterMount: function () {
             this._notify('validateCreated', this);
