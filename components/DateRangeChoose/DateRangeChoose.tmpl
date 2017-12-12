@@ -51,12 +51,7 @@
       </div>
       <ws:if data="{{showUndefined}}">
          <div  class="controls-DateRangeChoose__extended-period controls-DateRangeChoose__undefined-period">
-            <ws:if data="{{showMonths && (showQuarters || showHalfyears)}}">
-               {{ rk('Период не указан') }}
-            </ws:if>
-            <ws:else>
-               {{ rk('Не указан') }}
-            </ws:else>
+            {{ emptyCaption }}
          </div>
       </ws:if>
       <ws:if data="{{showCustom}}">
