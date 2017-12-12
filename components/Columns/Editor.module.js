@@ -55,7 +55,6 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
           * @param {string} [editorOptions.applyButtonTitle] Название кнопки применения результата редактирования (опционально)
           * @param {string} [editorOptions.groupTitleTpl] Шаблон имён групп (опционально)
           * @param {object} [editorOptions.groupTitles] Ассоциированый массив имён групп по идентификаторам (опционально)
-          * @param {(string|number)[]} [editorOptions.expandedGroups] Список идентификаторов распахнутых групп (опционально)
           * @param {boolean} [editorOptions.usePresets] Показывает на обязательность использования пресетов (опционально)
           * @param {string} [editorOptions.presetsTitle] Заголовок дропдауна (опционально)
           * @param {SBIS3.CONTROLS.Columns.Preset.Unit[]} [editorOptions.staticPresets] Список объектов статически задаваемых пресетов (опционально)
@@ -96,7 +95,6 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
                   selectedColumns: columnsConfig.selectedColumns,
                   groupTitleTpl: _selectValue('groupTitleTpl', edColfSources),
                   groupTitles: _selectValue('groupTitles', edColfSources),
-                  expandedGroups: _selectValue('expandedGroups', edColfSources),
                   usePresets: _selectValue('usePresets', allSources, 'boolean'),
                   presetsTitle: _selectValue('presetsTitle', edColfSources),
                   staticPresets: _selectValue('staticPresets', edColfSources),
@@ -119,9 +117,9 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
             return this._result = new Deferred();
          },
 
-         _onAreaComplete: function (evtName, selectedColumns, expandedGroups) {
+         _onAreaComplete: function (evtName, selectedColumns) {
             this._areaContainer.close();
-            this._sentResult({columns:this._columnsConfig.columns, selectedColumns:selectedColumns, expandedGroups:expandedGroups});
+            this._sentResult({columns:this._columnsConfig.columns, selectedColumns:selectedColumns});
             //this._notify('onComplete');
          },
 
