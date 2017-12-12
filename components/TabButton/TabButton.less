@@ -144,6 +144,7 @@
       }
       .controls-TabButton__caption > * {
          font-weight: @tab-button-large-inner-font-weight;
+         min-height: 24px;
       }
       .controls-TabButton__additionalText1, .controls-TabButton__additionalText1 > * {
          .flex-shrink(0);
@@ -162,12 +163,13 @@
       }
       &.controls-Checked__checked {
          .controls-TabButton__caption {
-            min-height: 26px; //Для выравнивания в главной вкладки, чтобы центрирование не зависило от высоты внутреннего содержимого
+            min-height: 25px; //Для выравнивания в главной вкладки, чтобы центрирование не зависило от высоты внутреннего содержимого
          }
       }
       .controls-MenuLink {
          font-size: @tab-button-large-inner-font-size;
          color: @tab-button-large-firstAddText-color-hover;
+         height: 23px;
       }
    }
 
@@ -331,5 +333,11 @@
          position: relative;
          top: -1px;
       }
+   }
+}
+
+.ws-is-desktop-safari, .ws-is-mobile-safari {
+   .controls-TabButton .controls-TabButton__mainText {
+      max-width: ~"calc(100% + 1px)"; //опять полупиксели, на сотые доли не влезает текст, появляется троеточие
    }
 }
