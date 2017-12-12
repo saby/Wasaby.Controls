@@ -1491,6 +1491,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             editor.on('BeforePastePreProcess', function(e) {
                var isRichContent = e.content.indexOf('data-ws-is-rich-text="true"') !== -1;
                e.content = e.content.replace('data-ws-is-rich-text="true"', '');
+               if (cConstants.browser.isIE12 && cConstants.browser.isWin10) {
+                  // При копировании в MSEdge сверху добавляются 8 полей - отрезать их
+                  // 1174787118 https://online.sbis.ru/opendoc.html?guid=0d74d2ac-a25c-4d03-b75f-98debcc303a2
+                  var msedgeHeads = ['Version', 'StartHTML', 'EndHTML', 'StartFragment', 'EndFragment', 'StartSelection', 'EndSelection', 'SourceURL'];
+                  var msedgeRe = new RegExp('^' + msedgeHeads.join(':[^\\r\\n]+\\r\\n') + ':[^\\r\\n]+\\r\\n[]*');
+                  e.content = e.content.replace(msedgeRe, '');
+               }
                //Необходимо заменять декорированные ссылки обратно на url
                //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
                e.content = self._prepareContent(e.content);
