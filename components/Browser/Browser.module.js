@@ -348,8 +348,10 @@ define('js!SBIS3.CONTROLS.Browser', [
       _changeColumns: function (columns) {
          var result = this._notify('onColumnsChange', columns);
          this._columnsController.setState(columns);
+         var columnsConfig = this._options.columnsConfig;
+         columnsConfig.selectedColumns = columns;
          var view = this._getView();
-         view.setColumns(this._columnsController.getColumns(this._options.columnsConfig.columns));
+         view.setColumns(this._columnsController.getColumns(columnsConfig.columns));
          if (result === ChangeColumnsResult.RELOAD) {
             view.reload();
          }
