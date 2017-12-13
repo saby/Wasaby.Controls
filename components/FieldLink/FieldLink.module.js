@@ -1138,6 +1138,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this._scrollListToBottom();
           },
 
+          /**
+           * Метод для управления видимостью кнопки открытия справочника.
+           * @param show {Boolean} - true - показать иконку, false - скрыть
+           */
+          toggleShowSelectorButton: function(show) {
+             $('.controls-FieldLink__afterFieldWrapper', this.getContainer()).toggleClass('ws-hidden', !show);
+          },
+
           _setEnabled: function() {
              this._lastFieldLinkWidth = null;
              if (this._showAllButton) {
