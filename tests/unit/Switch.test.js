@@ -44,5 +44,16 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
             assert(SW._isDoubleSwitcher === false);
          });
       });
+      describe('isDouble private function', function () {
+         it('2 captions', function () {
+            assert(Switch._private.isDouble(['capt1','capt2']) === true);
+         });
+         it('1 caption', function () {
+            assert(Switch._private.isDouble(['capt1']) === false);
+         });
+         it('no captions', function () {
+            assert(Switch._private.isDouble([]) === false);
+         });
+      });
    });
 });
