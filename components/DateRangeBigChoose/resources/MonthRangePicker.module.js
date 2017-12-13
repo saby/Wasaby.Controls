@@ -27,28 +27,37 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
       },
 
       query: function (query) {
-         var adapter = this.getAdapter().forTable(),
+         var executor = (function() {
+               var adapter = this.getAdapter().forTable(),
+                  now = new Date(),
+                  items = [];
+
+               for (var i = 0; i < limit; i++) {
+                  items.push({id: i, month: new Date(now.getFullYear(), offset + i, 1)})
+               }
+
+               this._each(
+                  items,
+                  function(item) {
+                     adapter.add(item);
+                  }
+               );
+               items = this._prepareQueryResult(
+                  {items: adapter.getData(), total: 1000000000000}
+               );
+
+               return items;
+            }).bind(this),
             offset = query.getOffset(),
-            limit = query.getLimit() || 1,
-            now = new Date(),
-            items = [];
+            limit = query.getLimit() || 1;
 
          offset = offset - _startingOffset;
 
-         for (var i = 0; i < limit; i++) {
-            items.push({id: i, month: new Date(now.getFullYear(), offset + i, 1)})
+         if (this._loadAdditionalDependencies) {
+            return this._loadAdditionalDependencies().addCallback(executor);
+         } else {
+            return Deferred.success(executor());
          }
-
-         this._each(
-            items,
-            function(item) {
-               adapter.add(item);
-            }
-         );
-         items = this._prepareQueryResult(
-            {items: adapter.getData(), total: 1000000000000}
-         );
-         return Deferred.success(items);
       }
       //region Public methods
       //endregion Public methods

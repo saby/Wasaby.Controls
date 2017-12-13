@@ -5,11 +5,9 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
    'WS.Data/Relation/Hierarchy',
    'WS.Data/Collection/RecordSet',
    'Core/core-clone',
-   'Core/core-instance',
-   'WS.Data/Chain',
    'Core/IoC',
    'js!SBIS3.CONTROLS.ArraySimpleValuesUtil'
-], function (Selection, Record, HierarchyRelation, RecordSet, cClone, cInstance, Chain, IoC, ArraySimpleValuesUtil) {
+], function (Selection, Record, HierarchyRelation, RecordSet, cClone, IoC, ArraySimpleValuesUtil) {
    'use strict';
 
    var
@@ -65,6 +63,12 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
          }
          this.select([rootId]);
       },
+
+      unselectAll: function () {
+         this._markedTree.clear();
+         HierarchySelection.superclass.unselectAll.call(this);
+      },
+
 
       toggleAll: function () {
          var rootId = this._options.projection.getRoot().getContents();
@@ -335,14 +339,21 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
    });
 
    function breadthFirstSearch(items, callback, context) {
-      var callbackResult;
+      var
+         callbackResult,
+         processedItems = [];
       items = cClone(items);
       for (var i = 0; i < items.length; i++) {
-         callbackResult = callback.call(context, items[i]);
-         if (callbackResult instanceof Array) {
-            items = items.concat(callbackResult);
-         } else if (callbackResult === false) {
-            break;
+         //Защита от зацикливания при обходе в ширину
+         if (processedItems.indexOf(items[i]) === -1) {
+            callbackResult = callback.call(context, items[i]);
+            processedItems.push(items[i]);
+
+            if (callbackResult instanceof Array) {
+               items = items.concat(callbackResult);
+            } else if (callbackResult === false) {
+               break;
+            }
          }
       }
    }

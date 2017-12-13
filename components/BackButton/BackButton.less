@@ -1,163 +1,96 @@
+@import (reference) "../../themes/header";
+
 .controls-BackButton {
    cursor: pointer;
-   display: inline-block;
-   line-height: @back-button-line-height;
-   height: @back-button-height;
    white-space: nowrap;
-   font-weight: 700;
-   font-size: @back-button-font-size;
-
-   .controls-BackButton__caption.controls-Link {
-      font-style: normal;
+   display: inline-block;
+   height: @back-button-height;
+}
+.controls-BackButton_color-hover_accent1:hover .controls-BackButton__caption {
+   &, &.controls-Click__active, &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover):hover {
+      .ws-header-accent1-hover();
+   }
+}
+.controls-BackButton_color-hover_accent2:hover .controls-BackButton__caption {
+   &, &.controls-Click__active, &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover):hover {
+      .ws-header-accent2-hover();
+   }
+}
+.controls-BackButton_color-hover_default-backButton:hover .controls-BackButton__caption {
+   &, &.controls-Click__active, &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover):hover {
+      color: @back-button-caption-active-color;
+   }
+}
+.controls-BackButton__orange.controls-BackButton_color-hover_default-backButton:hover .controls-BackButton__caption {
+   &, &.controls-Click__active, &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover):hover {
+      color: @primary-color;
+   }
+}
+.controls-BackButton__caption {
+   &_color_accent1.controls-Link {
+      .ws-header_color_accent1();
+   }
+   &_color_accent2.controls-Link {
+      .ws-header_color_accent2();
+   }
+   &_color_default-backButton.controls-Link {
       color: @back-button-text-color;
-      text-align: left;
-      max-width: calc(~"100% - @{back-button-width-before}");
-      line-height: normal;
-      height: auto;
-      font-weight: @back-button-text-fontweight;
+   }
+   .controls-BackButton__orange &_color_default-backButton.controls-Link {
+      color: @header-color;
+   }
+   &_size_h2.controls-Link {
+      .ws-header_size_h2();
+      max-width: calc(~"100% - @{back-arrow-width-h2} - @{back-button-arrow-padding-right-1}");
+   }
+   &_size_h3.controls-Link {
+      .ws-header_size_h3();
+      max-width: calc(~"100% - @{back-arrow-width-h3} - @{back-button-arrow-padding-right-2}");
+   }
+   &_size_h6.controls-Link {
+      .ws-header_size_h6();
+      max-width: calc(~"100% - @{back-arrow-width-h6} - @{back-button-arrow-padding-right-2}");
+   }
+   &_size_default-backButton.controls-Link {
+      max-width: calc(~"100% - @{back-arrow-width-h3} - @{back-button-arrow-padding-right-2}");
+      .ws-header-size-mixin(@back-button-font-size, @back-button-height);
+   }
+   &_size_bold.controls-Link {
+      .ws-header_size_weight();
+   }
+   &Arrow_size_1 {
+      padding-right: @back-button-arrow-padding-right-1;
+   }
+   &Arrow_size_2 {
+      padding-right: @back-button-arrow-padding-right-2;
+   }
+   .ws-is-desktop-platform &.controls-Link:not(.ws-disabled):not(.controls-Click__active):hover .controls-Button__text,
+   &.controls-Link.controls-Click__active .controls-Button__text {
+      text-decoration: none;
+   }
+}
+.controls-BackButton__arrow.controls-Link {
+   display: none;
+}
+.controls-BackButton__show-arrow:hover .controls-BackButton__arrow {
+   display: inline-block;
+}
+.ws-backArrow_color_default-backButton {
+   .ws-backArrow_color_accent1();
+   &:before {
+      color: @primary-color;
+   }
+}
+.controls-BackButton__orange .ws-backArrow_color_default-backButton {
+   .ws-backArrow_color_accent2();
+}
+.ws-backArrow_size_default-backButton {
+   .ws-backArrow_size_h3();
+   &:before {
       font-size: @back-button-font-size;
    }
-
-   &.controls-BackButton__show-arrow{
-      &:hover {
-         .controls-BackButton__arrow{
-            display: inline-block;
-            color: @icon-color-primary !important;
-         }
-      }
-      &.controls-BackButton__hover-arrow{
-         .controls-BackButton__arrow{
-            margin-right: -@icon-width;
-         }
-      }
-   }
-
-   .controls-BackButton__arrow{
-      display: none;
-   }
-
-   .controls-BackButton__caption.controls-Link{
-      &.controls-Click__active {
-         text-decoration: none;
-         .controls-Button__text {
-            text-decoration: none;
-            color: @back-button-caption-hover-color;
-         }
-      }
-   }
-   &.controls-BackButton__empty {
-      .controls-BackButton__caption {
-         padding-left: 0;
-         &Arrow:before {
-            content: '';
-            width: 0;
-            margin: 0;
-         }
-      }
-   }
-
 }
-
-.controls-BackButton__hover-arrow {
-   position: relative;
+.controls-BackButton__empty {
+   visibility: hidden;
+   width: 0;
 }
-
-.ws-is-mobile-platform{
-   .controls-BackButton{
-      &:hover {
-         .controls-BackButton__caption {
-            color: @back-button-caption-hover-color;
-         }
-      }
-      &:active{
-         .controls-BackButton__caption {
-            color: @back-button-caption-active-color;
-         }
-      }
-   }
-}
-
-.ws-is-desktop-platform {
-   .controls-BackButton:hover {
-      .controls-BackButton__caption.controls-Link:not(.ws-disabled):not(.controls-Click__active) {
-         color: @back-button-caption-active-color;
-         .controls-Button__text {
-            text-decoration: none;
-         }
-      }
-   }
-}
-
-.ws-is-mobile-safari, .ws-is-desktop-safari, .ws-is-mobile-chrome-ios{
-   .controls-BackButton {
-      .controls-BackButton__caption {
-         max-width: calc(~"100% - 7px");
-      }
-   }
-}
-
-.back-button-before-fix(){
-   .controls-BackButton {
-      .controls-BackButton__caption {
-         margin-left: -4px;
-         &Arrow:before {
-            display: inline-block;
-            vertical-align: top;
-            float: none;
-         }
-      }
-   }
-}
-
-.has_path{
-   .controls-BackButton__arrow {
-      width: 20px;
-      background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
-      right: 16px;
-   }
-}
-
-.controls-BackButton__captionArrow:before {
-   content: @default-arrow-img;
-   &:hover:before {
-      color: @back-button-arrow-hover-color;
-   }
-   width: @back-button-width-before;
-   color: @primary-color;
-   font-weight: normal;
-   float: left;
-   margin: @back-button-margin-before;
-   padding: @back-button-padding-before;
-   line-height: @back-button-linheight-before;
-}
-
-// ALERT: Расположение этого кода в конце файла - важно! Сделано для того чтобы перебить селектор с такой же силой. Не нагородив при этом кучи каскада
-// По правилам применяется селектор, который описан "позже". Т.е. самый последний
-.controls-BackButton {
-   &.controls-BackButton__orange {
-      .controls-BackButton__caption {
-         color: @header-color;
-         &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover):hover {
-            color: @primary-color;
-         }
-         &Arrow:before {
-            content: @orange-arrow-img;
-            color: @blue-dark-color;
-         }
-         &.controls-Link.controls-Click__active {
-            .controls-Button__text {
-               color: @primary-color;
-            }
-         }
-      }
-      &:hover {
-         //Роман Валера скоро перепишет стили для кнопки назад, пока без таких каскадов никак
-         .controls-BackButton__caption:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover) {
-            color: @primary-color;
-            &Arrow:before {
-               color: @primary-color;
-            }
-         }
-      }
-   }
- }

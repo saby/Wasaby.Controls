@@ -3,11 +3,11 @@
  */
 define('js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup', [
    'js!SBIS3.CONTROLS.FilterPanelChooser.Base',
-   'js!SBIS3.CONTROLS.RadioGroup',
    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup/resources/FilterPanelChooserRadioGroupTpl',
    'Core/core-clone',
+   'js!SBIS3.CONTROLS.RadioGroup',
    'css!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup'
-], function(FilterPanelChooserBase, RadioGroup, chooserTpl, coreClone) {
+], function(FilterPanelChooserBase, chooserTpl, coreClone) {
    'use strict';
    /**
     * Класс редактора "Набор радиокнопок".

@@ -43,43 +43,55 @@ define([
         }),
         myFormat = [
             {name: 'id', type: 'string'},
-            {name: 'title', type: 'string'}
+            {name: 'title', type: 'string'},
+            {name: 'Parent', type: 'string'},
+            {name: 'visible', type: 'boolean'}
         ],
         myData = {
             _type: 'recordset',
             d: [
                 [
-                    '1', 'Задача в разработку', null
+                    '1', 'Задача в разработку', null, true
                 ],
                 [
-                    '2', 'Ошибка в разработку', null
+                    '2', 'Ошибка в разработку', null, true
                 ],
                 [
-                    '3', 'Поручение', null
+                    '3', 'Поручение', null, true
                 ],
                 [
-                    '4', 'Выполнить на боевом', null
+                    '4', 'Выполнить на боевом', null, true
                 ],
                 [
-                    '5', 'Согласование', 2
+                    '5', 'Согласование', 2, false
                 ],
                 [
-                    '6', 'Заявки', 2
+                    '6', 'Заявки', 2, true
                 ],
                 [
-                    '7', 'Продажи', null
+                    '7', 'Продажи', null, true
                 ],
                 [
-                    '8', 'Обучение', null
+                    '8', 'Обучение', null, true
                 ],
                 [
-                    '9', 'Документация', null
+                    '9', 'Документация', null, true
+                ],
+                [
+                    '10', 'Согласование отгула', null, true
+                ],
+                [
+                    '11', 'Новый регламент', null, true
+                ],
+                [
+                    '12', 'Прогул', null, true
                 ]
             ],
             s: [
                 {n: 'id', t: 'Строка'},
                 {n: 'title', t: 'Строка'},
-                {n: 'Parent', t: 'Строка'}
+                {n: 'Parent', t: 'Строка'},
+                {n: 'visible', t: 'Логический'}
             ]
         },
         myRecord = new RecordSet({
@@ -88,10 +100,35 @@ define([
             adapter: new SbisAdapter(),
             format: myFormat
         }),
+        rawHistoryDataWidthEmptyPinned = {
+            pinned: [],
+            frequent: [1, 4, 5, 7],
+            recent: [1, 3, 4, 5, 7, 8]
+        },
+        rawHistoryData = {
+            pinned: [1, 5, 12],
+            frequent: [1, 4, 5, 7],
+            recent: [1, 3, 4, 5, 7, 8]
+        },
+        data = {
+            rawData: null,
+            setRawData: function (data) {
+                this.rawData = data;
+            },
+            getRow: function() {
+                return {
+                    rawData: this.rawData,
+                    get: function(type) {
+                        return this.rawData[type];
+                    }
+                }
+            }
+        },
         self = {
             _options: {
                 additionalProperty: 'additional',
                 parentProperty: 'Parent',
+                displayProperty: 'title',
                 pinned: true,
                 frequent: true
             },
@@ -102,16 +139,20 @@ define([
                     _type: 'recordset',
                     d: [
                         [
-                            '1', 'Задача в разработку', null
+                            '1', 'Задача в разработку', null, true
                         ],
                         [
-                            '5', 'Согласование', 2
+                            '5', 'Согласование', 2, true
+                        ],
+                        [
+                            '12', 'Прогул', null, true
                         ]
                     ],
                     s: [
                         {n: 'id', t: 'Строка'},
                         {n: 'title', t: 'Строка'},
-                        {n: 'Parent', t: 'Строка'}
+                        {n: 'Parent', t: 'Строка'},
+                        {n: 'visible', t: 'Логический'}
                     ]
                 },
                 idProperty: 'id',
@@ -123,28 +164,29 @@ define([
                     _type: 'recordset',
                     d: [
                         [
-                            '1', 'Задача в разработку', null
+                            '1', 'Задача в разработку', null, true
                         ],
                         [
-                            '3', 'Поручение', null
+                            '3', 'Поручение', null, true
                         ],
                         [
-                            '4', 'Выполнить на боевом', null
+                            '4', 'Выполнить на боевом', null, true
                         ],
                         [
-                            '5', 'Согласование', 2
+                            '5', 'Согласование', 2, true
                         ],
                         [
-                            '7', 'Продажи', null
+                            '7', 'Продажи', null, true
                         ],
                         [
-                            '8', 'Обучение', null
+                            '8', 'Обучение', null, true
                         ]
                     ],
                     s: [
                         {n: 'id', t: 'Строка'},
                         {n: 'title', t: 'Строка'},
-                        {n: 'Parent', t: 'Строка'}
+                        {n: 'Parent', t: 'Строка'},
+                        {n: 'visible', t: 'Логический'}
                     ]
                 },
                 idProperty: 'id',
@@ -156,22 +198,23 @@ define([
                     _type: 'recordset',
                     d: [
                         [
-                            '1', 'Задача в разработку', null
+                            '1', 'Задача в разработку', null, true
                         ],
                         [
-                            '4', 'Выполнить на боевом', null
+                            '4', 'Выполнить на боевом', null, true
                         ],
                         [
-                            '5', 'Согласование', 2
+                            '5', 'Согласование', 2, true
                         ],
                         [
-                            '7', 'Продажи', null
+                            '7', 'Продажи', null, true
                         ]
                     ],
                     s: [
                         {n: 'id', t: 'Строка'},
                         {n: 'title', t: 'Строка'},
-                        {n: 'Parent', t: 'Строка'}
+                        {n: 'Parent', t: 'Строка'},
+                        {n: 'visible', t: 'Логический'}
                     ]
                 },
                 idProperty: 'id',
@@ -180,8 +223,6 @@ define([
             })
         },
         item;
-
-    SbisMenu._private.prepareHistoryData(self);
 
     describe('SBIS3.CONTROLS.SbisMenu', function () {
         describe('getOriginId', function () {
@@ -204,6 +245,20 @@ define([
         });
 
         describe('prepareRecordSet', function () {
+            it('check with empty pinned items', function () {
+                SbisMenu._private.initRecordSet(self, self._oldItems.getFormat());
+                data.setRawData(rawHistoryDataWidthEmptyPinned);
+                SbisMenu._private.parseHistoryData(self, data);
+                assert.equal(self._pinned.getFormat().getCount(), self._oldItems.getFormat().getCount());
+            });
+            it('parseHistoryData', function () {
+                SbisMenu._private.initRecordSet(self, self._oldItems.getFormat());
+                data.setRawData(rawHistoryData);
+                SbisMenu._private.parseHistoryData(self, data);
+                SbisMenu._private.prepareHistoryData(self);
+                assert.equal(self._pinned.getFormat().getCount(), self._oldItems.getFormat().getCount());
+            });
+
             it('init recordSet', function () {
                 item = self._pinned.getRecordById('pinned-1');
                 assert.equal(item.get('title'), 'Задача в разработку');
@@ -224,7 +279,7 @@ define([
                 ],
                 newEmptyRecord;
 
-                newEmptyRecord = SbisMenu._private.getEmptyHistoryRecord(myFormat);
+                newEmptyRecord = SbisMenu._private.getEmptyHistoryRecord(self, myFormat);
                 assert.equal(newEmptyRecord.getFormat().getCount(), 3);
                 assert.equal(newEmptyRecord.getCount(), 0);
             });
@@ -242,11 +297,16 @@ define([
                 filterFrequent = SbisMenu._private.filterFrequent(self);
                 assert.equal(filterFrequent.length, 2);
             });
-            it('processHistory', function () {
-                var processedItems;
+            it('processHistory, check additional', function () {
+                var hiddenByPinItem,
+                    processedItems;
 
                 processedItems = SbisMenu._private.processHistory(self);
-                assert.equal(processedItems.getCount(), 15);
+                hiddenByPinItem = processedItems.getRecordById('12');
+                assert.equal(processedItems.getCount(), 19);
+                // проверяем что элемент, который скрыли в истории не скрыли ещё раз дополнительный >10 видимых элементов
+                assert.equal(hiddenByPinItem.get(self._options.additionalProperty), false);
+
             });
             it('addToRecent', function () {
                 var recentItem;

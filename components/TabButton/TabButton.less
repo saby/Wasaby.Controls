@@ -60,7 +60,7 @@
          display: none;
       }
       //стиль для встраиваемых компонентов, чтобы текст был по стандарту
-      .controls-TabButton__mainText {
+      .controls-TabButton__mainText,.controls-TabButton__mainText.controls-MenuLink {
          color: @tab-button-checked-inner-color;
       }
    }
@@ -117,6 +117,11 @@
       .flex-shrink(1);
       .inline-flexbox();
 
+      max-width: 100%;
+      > * {
+         max-width: 100%; //защищаемся от рандомной верстки, не даем дочерним элементам вылехти за пределы контейнера
+      }
+
       .controls-TextBox__field {
          font-size: 18px;
       }
@@ -136,10 +141,6 @@
          .controls-TabButton__wrapper {
             margin-bottom: @margin-bottom_TabButton_checked_tab;
          }
-
-         .controls-MenuLink {
-            font-size: @tab-button-large-inner-font-size;
-         }
       }
       .controls-TabButton__caption > * {
          font-weight: @tab-button-large-inner-font-weight;
@@ -158,6 +159,15 @@
          color: @tab-button-large-secondAddText-color;
          font-size: @tab-button-large-secondAddText-font-size;
          font-weight: normal;
+      }
+      &.controls-Checked__checked {
+         .controls-TabButton__caption {
+            min-height: 26px; //Для выравнивания в главной вкладки, чтобы центрирование не зависило от высоты внутреннего содержимого
+         }
+      }
+      .controls-MenuLink {
+         font-size: @tab-button-large-inner-font-size;
+         color: @tab-button-large-firstAddText-color-hover;
       }
    }
 
@@ -273,6 +283,53 @@
          right: 1px;
          height: @tab-button-simple-inner-bottom-height;
          display: none;
+      }
+   }
+}
+
+.ws-is-ie, .ws-is-firefox {
+   //Как-то так должно выглядеть редактирование по месту, перебил все что можно
+   .controls-TabButton .controls-EditAtPlace__fieldWrapper {
+      .inline-flexbox();
+      height: 24px;
+      line-height: normal;
+      margin: 0;
+      border: none;
+   }
+   //Костыли, вызванные версткой editAtPlace. нужно переделывать.
+   .controls-TabButton.controls-TabButton__main-item {
+      .controls-TabButton__caption > * {
+         max-height: 26px;
+      }
+   }
+   //Для главной вкладки, внутри которой 1 текстбокс c font-size: 18px. ошибка из-за overflow:hidden на редактировании
+   .controls-EditAtPlace {
+      &.controls-TextBox_size_l {
+         .controls-EditAtPlace__fieldWrapper {
+            position: relative;
+            top: -1px;
+         }
+         .controls-TextBox_size_l.controls-TextBox {
+            .flexbox();
+         }
+      }
+   }
+}
+
+.ws-is-firefox {
+   .controls-TabButton__flex {
+      .controls-TabButton__additionalText2 .controls-EditAtPlace__fieldWrapper {
+         position: relative;
+         top: 1px;
+      }
+   }
+}
+
+.ws-is-ie {
+   .controls-TabButton__flex {
+      > .controls-TabButton__mainText {
+         position: relative;
+         top: -1px;
       }
    }
 }

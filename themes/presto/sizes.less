@@ -1,4 +1,8 @@
 //default-sizes
+@icon-size_default:            round(32px * @multiplier);
+@icon-size_default_medium:     round(42px * @multiplier);
+@icon-size_default_large:      round(52px * @multiplier);
+//старые default-sizes
 @default-height:               round(78px * @multiplier);
 @default-height-big:           round(78px * @multiplier);
 @default-border-width:         1px;
@@ -36,7 +40,12 @@
 @search-loop-size:             @default-icon-size-medium;
 @search-border-radius:         round(3px * @multiplier);
 //button
-@button-large-height:          @default-height-big;
+@font-size_Button:             round(32px * @multiplier);
+@height_Button:                round(58px * @multiplier);
+@min-width_Button:             round(86px * @multiplier);
+@padding_Button-wrapper:       0 round(16px * @multiplier);
+@font-size_Button_l:           round(40px * @multiplier);
+@height_Button_l:              @default-height-big;
 //combobox
 @combo-box-icon-size:          @default-icon-size-medium;
 @combo-box-arrow-padding:      0 0 0 @default-padding-small;
@@ -62,6 +71,8 @@
 @font-size_FieldLink_itemCaption_normal:@large-text-size;
 //searchForm
 @search-form-icon-padding:     0 0 0 round(8px * @multiplier) ;
+//PrintDialog
+@printDialog-activate-right:                          round(92px * @multiplier); //ширина кнопки 84px+8px отступ
 //todo:
 @margin-left__searchForm_picker:  round(-8px * @multiplier);
 @margin-top__searchForm_picker:   round(-90px * @multiplier); //опытным путем
@@ -156,6 +167,21 @@
 @border-width_DropDownList_picker:                    @default-border-width;
 //listView
 @list-view-scroll-height:                             round(148px * @multiplier);
+@background-size_ListView_ScrollIndicator:            round(74px * @multiplier);
 //waitIndicator
 @wait-indicator-font-size:                            round(32px * @multiplier);
 @wait-indicator-labeled-width:                        round(467px * @multiplier);
+//progressBar
+@ProgressBar-border-radius:                           1px;
+//pager
+@padding_Pager:                                       round(11px * @multiplier) round(3px * @multiplier) round(11px * @multiplier) 0;
+@controls-Pager-height:                               round(100px * @multiplier);
+@paging-font-size:                                    @default-icon-size-large;
+@controls-Paging-btn-padding:                         0;
+@controls-Paging-item-width:                          round(86px * @multiplier);
+@scrollpager-bottom:                                  round(0px * @multiplier);
+@controls-Paging-btn-margin:                          0 0 0 round(8px * @multiplier);
+//popup,floatarea,window
+@top_window_button:                                   round(11px * @multiplier);
+@controls-Popup-closeButton-top:                      round(11px * @multiplier);
+@controls-printdialog-activate-margin-top:            round(11px * @multiplier);

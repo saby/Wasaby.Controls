@@ -32,6 +32,35 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
           }
 
           return keys;
+       },
+       _private = {
+          isEmptySelection: function(cfg) {
+             var selectedKeys = cfg.selectedKeys,
+                selectedItems = cfg.selectedItems,
+                items = cfg._items,
+                isEmpty = true;
+
+             if(selectedKeys.length) {
+                /* Для правильной работы биндингов, предполагаем, что масив [null] тоже является пустым выделением */
+                if(isEqualObject(selectedKeys, EMPTY_SELECTION)) {
+
+                   /* Пробуем найти в рекордсете запись с ключём null, если она есть - выделение не пустое. */
+                   if(items && items.getIndexByValue(cfg.idProperty, EMPTY_SELECTION[0]) !== -1) {
+                      isEmpty = false;
+                   }
+
+                   /* Пробуем найти среди selectedItems запись с ключём null, если она есть - выделение не пустое. */
+                   if(isEmpty && selectedItems && selectedItems.getIndexByValue(cfg.idProperty, EMPTY_SELECTION[0]) !== -1) {
+                      isEmpty = false;
+                   }
+                } else if(isEmpty) {
+                   /* Если есть ключи и они не равны [null] - выделение не пустое. */
+                   isEmpty = false;
+                }
+             }
+
+             return isEmpty;
+          }
        };
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
@@ -155,7 +184,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
              * @cfg {Boolean} Использовать функционал выбора всех записей
              * @see getSelection
              */
-            useSelectAll: false
+            useSelectAll: false,
+            _isEmptySelection: _private.isEmptySelection
          },
          _loadItemsDeferred: undefined,
          _selectorController: undefined
@@ -955,31 +985,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
       },
 
       _isEmptySelection: function() {
-         var selectedKeys = this._options.selectedKeys,
-             selectedItems = this._options.selectedItems,
-             items = this.getItems(),
-             isEmpty = true;
-
-         if(selectedKeys.length) {
-            /* Для правильной работы биндингов, предполагаем, что масив [null] тоже является пустым выделением */
-            if(isEqualObject(selectedKeys, EMPTY_SELECTION)) {
-
-               /* Пробуем найти в рекордсете запись с ключём null, если она есть - выделение не пустое. */
-               if(items && items.getIndexByValue(this._options.idProperty, EMPTY_SELECTION[0]) !== -1) {
-                  isEmpty = false;
-               }
-
-               /* Пробуем найти среди selectedItems запись с ключём null, если она есть - выделение не пустое. */
-               if(isEmpty && selectedItems && selectedItems.getIndexByValue(this._options.idProperty, EMPTY_SELECTION[0]) !== -1) {
-                  isEmpty = false;
-               }
-            } else if(isEmpty) {
-               /* Если есть ключи и они не равны [null] - выделение не пустое. */
-               isEmpty = false;
-            }
-         }
-
-         return isEmpty;
+         return this._options._isEmptySelection(this._options);
       },
 
       /**

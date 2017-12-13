@@ -1,5 +1,6 @@
 define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'Core/constants',
+   'Core/Deferred',
    'tmpl!SBIS3.CONTROLS.CompositeViewMixin',
    'Core/IoC',
    'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/CompositeItemsTemplate',
@@ -13,7 +14,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'Core/core-merge',
    'Core/core-instance',
    'js!SBIS3.CONTROLS.Link'
-], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge, cInstance) {
+], function(constants, Deferred, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge, cInstance) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
@@ -237,9 +238,11 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
 
          this._calculateTileHandler = this._calculateTile.bind(this);
          this.subscribe('onDrawItems', this._calculateTileHandler);
+   
          //TODO:Нужен какой то общий канал для ресайза окна
          $(window).bind('resize', this._calculateTileHandler);
-
+         this.subscribe('onAfterVisibilityChange', this._calculateTileHandler);
+         
          if (this._options.tileTemplate) {
             IoC.resolve('ILogger').log('CompositeView', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан tileTemplate');
          }
@@ -257,14 +260,27 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
       _setHoveredStyles: function(item) {
          if (item && !item.hasClass('controls-CompositeView__hoverStylesInit')) {
             this._calculateHoveredStyles(item);
-            item.toggleClass('controls-CompositeView__item-withoutItemsAction', !this._hasItemsActions());
+            this._hasItemsActions().addCallback(function(hasItemsActions) {
+               item.toggleClass('controls-CompositeView__item-withoutItemsAction', !hasItemsActions);
+            });
             item.addClass('controls-CompositeView__hoverStylesInit');
          }
       },
 
       _hasItemsActions: function() {
-         var itemsActions = this.getItemsActions();
-         return itemsActions && itemsActions.hasVisibleActions();
+         var
+            result,
+            itemsActions = this.getItemsActions();
+
+         if (itemsActions) {
+            result = itemsActions.ready().addCallback(function() {
+               return !!itemsActions.hasVisibleActions();
+            });
+         } else {
+            result = Deferred.success(false);
+         }
+
+         return result;
       },
 
       _calculateHoveredStyles: function(item) {
@@ -525,15 +541,28 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
                //2. Если это удаление
                // тогда можно отрисовать как обычно
                // в остальных случаях полная перерисовка
-               if (((lastItemsIndex == newItemsIndex) && !(cInstance.instanceOfModule(newItems[0], 'WS.Data/Display/TreeItem') && newItems[0].isNode())) || action == 'rm') {
+               if (((lastItemsIndex == newItemsIndex) && !(cInstance.instanceOfModule(newItems[0], 'WS.Data/Display/TreeItem') && newItems[0].isNode()) && !this._redrawOnCollectionChange) || action == 'rm') {
                   parentFnc.apply(this, args);
                }
                else {
+                  /* Дополнение к комментарию выше:
+                     во время одной пачки изменений может происходить несколько событий,
+                     например, несколько add подряд.
+                     И если мы перерисовали список один раз, то и на все последующие события данной пачки изменений,
+                     мы тоже должны вызывать перерисовку. Иначе может возникнуть ситуация,
+                     когда после перерисовки добавятся записи в конец и задублируются. */
+                  this._redrawOnCollectionChange = true;
                   this.redraw();
                }
 
             }
          },
+   
+         _afterCollectionChange: function(parentFnc) {
+            parentFnc.call(this);
+            this._redrawOnCollectionChange = false;
+         },
+         
          _getItemsTemplateForAdd: function(parentFnc) {
             if (this._options.viewMode == 'table') {
                return parentFnc.call(this);

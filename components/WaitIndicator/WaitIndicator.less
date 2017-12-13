@@ -141,6 +141,7 @@ x{}
     overflow: hidden;
     border-radius: @border-radius_WaitIndicator;
     background: @background-color_WaitIndicator @background_url_WaitIndicator 50% 50% no-repeat;
+    background-size: @wait-indicator-size;
     cursor: default !important;
     pointer-events: auto;
     font-family: 'TensorFont Обычный', 'TensorFont Regular', 'TensorFont', sans-serif;
@@ -183,6 +184,7 @@ x{}
     border-radius: (@wait-indicator-small-size + 2*@wait-indicator-small-gap)/4;
     background-color: transparent;
     background-image: @background_url_WaitIndicator_small;
+    background-size: @wait-indicator-small-size;
 }
 
 .ws-wait-indicator_small-left .ws-wait-indicator-in {

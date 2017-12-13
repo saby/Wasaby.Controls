@@ -1,12 +1,11 @@
 define('js!SBIS3.CONTROLS.EditAtPlaceMixin',
    [
    "js!SBIS3.CORE.ModalOverlay",
-   "Core/constants",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.IconButton",
-   "js!SBIS3.CORE.Dialog",
-   "js!SBIS3.CORE.ModalOverlay"
-], function( cModalOverlay, constants, Deferred,IconButton, Dialog, ModalOverlay) {
+   "js!SBIS3.CORE.ModalOverlay",
+   "js!SBIS3.CORE.Dialog"
+], function( cModalOverlay, Deferred, IconButton, ModalOverlay) {
       /**
        * @mixin SBIS3.CONTROLS.EditAtPlaceMixin
        * @public

@@ -6,19 +6,15 @@ define('js!Controls/Toggle/Switch', [
     * @class Controls/Toggle/Switch
     * @extends Controls/Control
     * @mixes Controls/Toggle/interface/ICheckable
+    * @mixes Controls/interface/ITooltip
     * @control
     * @public
     * @category Toggle
     */
 
    /**
-    * @name Controls/Toggle/Switch#caption
-    * @cfg {String} Заголовок
-    */
-
-   /**
-    * @name Controls/Toggle/Switch#captionTwo
-    * @cfg {String} Второй заголовок
+    * @name Controls/Toggle/Switch#captions
+    * @cfg {Array} Набор заголовков
     */
 
    /**
