@@ -3,10 +3,12 @@
  */
 
 define('js!SBIS3.CONTROLS.PasswordTextBox', [
-   "js!SBIS3.CONTROLS.TextBox",
-   "tmpl!SBIS3.CONTROLS.PasswordTextBox/resources/showPasswordTemplate",
+   'js!SBIS3.CONTROLS.TextBox',
+   'tmpl!SBIS3.CONTROLS.PasswordTextBox/resources/showPasswordTemplate',
+   'Core/CommandDispatcher',
+   'js!WSControls/Buttons/Button',
    'css!SBIS3.CONTROLS.PasswordTextBox'
-], function (TextBox, showPasswordTemplate) {
+], function (TextBox, showPasswordTemplate, CommandDispatcher) {
 
    'use strict';
    /**
@@ -47,31 +49,21 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
          }
       },
 
-      init: function() {
-         PasswordTextBox.superclass.init.apply(this, arguments);
-         //Инициализируем событие просмотра пароля
-         if (this._options.showPassword) {
-            this._initEventChangeType();
-         }
+      $constructor: function() {
+         CommandDispatcher.declareCommand(this, 'togglePasswordVisibility', this._togglePasswordVisibility.bind(this));
       },
 
-      /**
-       * Инициализирует событие для функционала отображения пароля
-       */
-      _initEventChangeType: function() {
-         var self = this;
-         this._passwordIcon = $('.controls-PasswordTextBox__showPassword', this.getContainer());
-         this.getContainer().on('click', function(e) {
-            if (e.target === self._passwordIcon[0]) {
-               self._changeType();
-            }
-         })
+      init: function() {
+         PasswordTextBox.superclass.init.apply(this, arguments);
+         if (this._options.showPassword) {
+            this._passwordIcon = $('.controls-PasswordTextBox__showPassword', this.getContainer());
+         }
       },
 
       /**
        * Изменяет тип поля с password на text и обратно 
        */
-      _changeType: function () {
+      _togglePasswordVisibility: function () {
          this._options.type = this._options.type === "password" ? "text" : "password";
          this._inputField.attr("type", this._options.type);
          this._passwordIcon.attr('title', this._options.type === 'password' ? rk('Показать') : rk('Скрыть'));

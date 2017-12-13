@@ -351,10 +351,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             }
             if(this._list) {
                this._list.setFilter(this._options.listFilter, true);
-
-               if(this.isPickerVisible()) {
-                  this.hidePicker();
-               }
             }
             return;
          }
@@ -386,6 +382,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                self._loadDeferred = list.reload(self._options.listFilter).addCallback(function () {
                   if (self._checkPickerState(!self._options.showEmptyList)) {
                      self.showPicker();
+                  } else {
+                     self.hidePicker();
                   }
                });
             }, this._options.delay);

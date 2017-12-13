@@ -10,6 +10,7 @@ define('js!Controls/Toggle/Switch', [
     * @class Controls/Toggle/Switch
     * @extends Controls/Control
     * @mixes Controls/Toggle/interface/ICheckable
+    * @mixes Controls/interface/ITooltip
     * @control
     * @public
     * @category Toggle

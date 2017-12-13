@@ -234,6 +234,11 @@ define(
             innerChar;
 
          this.model = [];
+
+         //Явно преобразуем маску к строке, т.к. при построении на сервере, в ней лежит объект rk.
+         strMask = '' + strMask;
+
+
          for (var i = 0; i < strMask.length; i++) {
             maskChar = strMask.charAt(i);
             //заменяем символы маски на внутренние, например HH:MM на dd:dd
@@ -707,17 +712,10 @@ define(
          // Проверяем, является ли маска, с которой создается контролл, допустимой
          this._checkPossibleMask();
          this._inputField = $('.js-controls-FormattedTextBox__field', this.getContainer().get(0));
-         //Control.module прерывает focusin, сюда он не долетает. нужно отлавливать наше событие, которое стрельнет после setActive
-         this.subscribe('onFocusIn', function () {
-            //событие onFocusIn не гарантирует, что нативный фокус уже стоит в компоненте. Для правильной работы установки каретки, переводим фокус вручную
-            //В FireFox если фокус находтся не в блоке, куда мы хотим заколапсить курсор, то этого сделать не получится.
-            //Поэтому перед созданием курсора, установим фокус в contenteditable блок.
-            if (constants.browser.firefox) {
-               self._inputField.focus();
-            }
-            else {
-               self.getContainer().focus();
-            }
+         //Единственно верная подписка, которая гарантирует что фокус там где надо.
+         //Не надо перевешивать подписку на _container иначе https://online.sbis.ru/opendoc.html?guid=9f0d7c3f-f44c-41d4-86bb-05d93e82dc22
+         //Не надо переходить на плаформенный onFocusIn иначе https://online.sbis.ru/opendoc.html?guid=55c1221e-6896-489c-b4b5-ca9c5d1b649f
+         this._inputField.bind('focus', function () {
             self._focusHandler();
          });
          this._inputField.keyup(function (event) {

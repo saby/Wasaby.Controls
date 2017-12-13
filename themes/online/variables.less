@@ -2,7 +2,7 @@
 @import "colors";
 @import "sizes";
 //Переменные с версиями шрифтов
-@tensorFontForIE:                         '1.0.1';
+@tensorFontForIE:                         '1.0.3';
 @tensorFontVer:                           '1.0.3';
 @emojiFontVer:                            '1.0.0';
 // Кошерные переменные "на выход"
@@ -1108,6 +1108,7 @@
 @controls-OperationsPanelButton-bg-color:          transparent;
 @controls-OperationsPanelButton-bg-color-active:   transparent;
 @controls-OperationsPanelButton-bg-color-hover:    transparent;
+@shadow_operationsPanelButton:                     none;
 // ----------------------- //
 //      EditInPlace        //
 // ----------------------- //
@@ -1137,8 +1138,8 @@
 @DropdownList-height:                     24px;
 @DropdownList-picker-bg:                              @white-color;
 @DropdownList-header-bg:                              @DropdownList-picker-bg;
-@DropdownList-picker-offset:                          -10px 0 0 -9px;
-@DropdownList-picker-fastdatafilter-offset:           -9px 0 0 3px;
+@DropdownList-picker-offset:                          -8px 0 0 -13px;
+@DropdownList-picker-fastdatafilter-offset:           -7px 0 0 3px;
 @DropdownList-picker-fdf-left:                        -13px;
 @DropdownList-picker-margin-top:                      -1px;
 @DropdownList-picker-close-btn-top:                   4px;
@@ -1148,7 +1149,7 @@
 @DropdownList-picker-head-height:                     24px;
 @DropdownList-picker-head-color:                      #313E78;
 @DropdownList-picker-title-type-header-bg:            #f4f4f4;
-@DropdownList-picker-title-type-margin-top:           -6px;
+@DropdownList-picker-title-type-margin-top:           -4px;
 @DropdownList-picker-head-duplicate-type-top-padding: 4px;
 @DropdownList-picker-padding:                         2px 0;
 @DropdownList-picker-max-width:                       400px;
@@ -1207,6 +1208,7 @@
 //Pager
 @controls-Pager-amount-text:              @gray-color;
 @controls-Pager-height:                   29px;
+@padding_Pager:                           4px 0 0 6px;
 //FilterButton
 @controls-filterButton-picker-bg:                 #F4F4F4;
 @controls-filterButton-picker-border-width:       @default-border-width;
@@ -1297,13 +1299,14 @@
 @controls-SelectorButton-error-outline:            1px solid #ff302b;
 // BackButton
 @back-button-font-size:                            18px;
-@back-button-line-height:                          @default-height;
 @back-button-height:                               @default-height;
-@back-button-margin-before:                        0;
+@back-button-margin-before:                        0 3px 0 0;
 @back-button-padding-before:                       0;
 @icon-size:                                        16px;//todo
 @icon-width:                                       16px;//todo
 @back-button-arrow-hover-color:                    @primary-color;
+@back-button-arrow-padding-right-1:                2px;
+@back-button-arrow-padding-right-2:                3px;
 // BreadCrumbs
 @bread-crumb-title-hover-color:                    @icon-active-color;
 @bread-crumb-title-color:                          #0055BB;
@@ -1516,12 +1519,13 @@
 
 @paging-font-size:                                      18px;
 @scrollpager-bg:                                         white;
+@height_ListView_ScrollPager:                            32px;
 @scrollpager-bottom:                                     0px;
 @scrollpager-border:                                     1px solid @default-color;
 @date-range-big-header-bg:								#f9f9f9;
 @date-range-big-bg:										#fff;
 @back-button-linheight-before:                inherit;
-@back-button-width-before:                                  12px;
+@back-button-width-before:                                  9px;
 @back-button-text-fontweight:               @bold-font-weight;
 @dropdownlist-item-text-color:              inherit;
 
