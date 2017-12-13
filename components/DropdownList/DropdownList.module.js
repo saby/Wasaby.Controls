@@ -899,12 +899,15 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._redrawHead(isDefaultIdSelected);
             this._resizeFastDataFilter();
          },
-         _getItemHash: function(id) {
-           if (this._isEnumTypeData()) {
-              return this._getItemsProjection().getCurrent().getHash();
-           }
-           var selectedRecord = this.getItems().getRecordById(id);
-           return selectedRecord && selectedRecord.getHash();
+         _getItemHash: function (id) {
+            var selectedRecord;
+            if (this._isEnumTypeData()) {
+               selectedRecord = this._getItemsProjection().getCurrent();
+            }
+            else {
+               selectedRecord = this.getItems().getRecordById(id);
+            }
+            return selectedRecord && selectedRecord.getHash();
          },
          _resizeFastDataFilter: function(){
             var parent = this.getParent();
