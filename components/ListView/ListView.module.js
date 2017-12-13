@@ -2581,7 +2581,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         // Поэтому вначале подскролливаем к тулбару и затем скролим к элементу.
                         // Такой порядок выбран исходя из того, что запись имеет бо́льший приоритет при отображении, чем тулбар
                         // https://online.sbis.ru/opendoc.html?guid=0e0b1cad-2d09-45f8-b705-b1756b52ad99
-                        if (itemsToolbarContainer && this.getContainer().hasClass('controls-ListView__bottomStyle')) {
+                        if (itemsToolbarContainer && this._isBottomStyleToolbar()) {
                            LayoutManager.scrollToElement(itemsToolbarContainer, true);
                         }
                         this.scrollToItem(model);
@@ -2808,7 +2808,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var self= this,
                 hoveredItem = this.getHoveredItem(),
                 key = target[0].getAttribute('data-id'),
-                columns = target.find('.controls-DataGridView__td').not('.controls-DataGridView__td__checkBox');
+                columns = target.find('.controls-DataGridView__td').not('.controls-DataGridView__td__checkBox'),
+                animation;
             if(hoveredItem && hoveredItem.key !== key && self.getMultiselect()){
                 columns.addClass('rightSwipeAnimation');
                 setTimeout(function(){
@@ -2818,8 +2819,13 @@ define('js!SBIS3.CONTROLS.ListView',
                 }, 300);
             }
             if (this._isSupportedItemsToolbar()) {
-               this._hideItemsToolbar(true);
+               animation = !this._isBottomStyleToolbar();
+               this._hideItemsToolbar(animation);
             }
+         },
+
+         _isBottomStyleToolbar: function (){
+            return this.getContainer().hasClass('controls-ListView__bottomStyle');
          },
 
          _tapHandler: function(e){
@@ -2859,7 +2865,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _showItemsToolbar: function(target) {
             var
                 toolbar = this._getItemsToolbar();
-            toolbar.show(target, this._touchSupport);
+            toolbar.show(target, this._touchSupport && !this._isBottomStyleToolbar());
             //При показе тулбара, возможно он будет показан у редактируемой строки.
             //Цвет редактируемой строки отличается от цвета строки по ховеру.
             //В таком случае переключим классы тулбара в режим редактирования.
