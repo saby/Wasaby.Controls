@@ -54,6 +54,14 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
          it('no captions', function () {
             assert(Switch._private.isDouble([]) === false);
          });
+         it('more than 2 captions', function () {
+            try {
+               Switch._private.isDouble([]);
+            }
+            catch(e){
+               assert(e.message === 'You cannot set more than 2 captions.')
+            }
+         });
       });
    });
 });
