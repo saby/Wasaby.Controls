@@ -130,6 +130,9 @@
       min-width: 1px; //Нужно, чтобы flex правильно позиционировал ужимаемый контейнер. с 0 в ie11 не работает
       .controls-EditAtPlace {
          background: transparent;
+         .controls-TextBox__fieldWrapper {
+            padding: 0; //по стандарту
+         }
          .controls-EditAtPlace__textField{
             border-bottom-style: none;
          }
