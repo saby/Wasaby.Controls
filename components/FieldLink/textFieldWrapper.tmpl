@@ -7,7 +7,7 @@
 		placeholder="{{enabled && _drawNativePlaceholder ? placeholder}}"
 		maxlength="{{maxLength ? maxLength}}"
 		required="true"
-		title="{{' '}}"
+		title="{{tooltip ? tooltip : ' '}}"
 	/>
 	<ws:if data="{{ _drawCompatiblePlaceholder }}">
 		<ws:partial template="{{ compatiblePlaceholderTemplate }}" scope="{{...}}"/>
