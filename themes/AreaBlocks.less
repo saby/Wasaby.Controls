@@ -1,20 +1,29 @@
 .ws-Block {
-   border: @spacing_Block / 2 solid @bg_BlockLayout;
+   position: relative;
+   border: @spacing_Block / 2 + @border-width_Block solid @bg_BlockLayout;
    .box-sizing();
    .for(6, { &_style_@{_i} {
       background-color: ~"@{bg_Block_style-@{_i}}";
    } });
 
-   &__content {
-      border: @border-width_Block-content solid @border-color_Block-content;
-      border-radius: @border-radius_Block-content;
-      box-shadow: @box-shadow_Block-content;
+   &:after {
+      content: '';
+      position: absolute;
+      top: -@border-width_Block;
+      right: -@border-width_Block;
+      bottom: -@border-width_Block;
+      left: -@border-width_Block;
+      border: @border-width_Block solid @border-color_Block;
+      border-radius: @border-radius_Block;
+      box-shadow: @box-shadow_Block;
    }
-   &__contentSeparator {
+
+   // TODO: Не понятно должно ли быть в блоках. Раскоментировать или перенести после обсуждения.
+   /*&Separator {
       width: 100%;
-      height: @height_Block-contentSeparator;
-      background: @bg_Block-contentSeparator;
-   }
+      height: @height_BlockSeparator;
+      background: @bg_BlockSeparator;
+   }*/
 
    &Layout {
       overflow: hidden;
