@@ -3,10 +3,8 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
    'use strict';
 
    /**
-    * Класс контрола, отображающий ссылку, при нажатии на которую произойдет звонок.
-    * @class SBIS3.CONTROLS.PhoneTextBox
-    * @extends SBIS3.CONTROLS.FormattedTextBox
-    * @description
+    * Класс контрола, отображающий поле для ввода телефонного номера.
+    * <a href='http://axure.tensor.ru/standarts/v7/%D0%BF%D0%BE%D0%BB%D0%B5_%D0%B2%D0%B2%D0%BE%D0%B4%D0%B0__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_03_.html'>Спецификация</a>.
     * Пример:
     * <pre>
     *    <ws:SBIS3.CONTROLS.PhoneTextBox enabled="{{false}}" srcText="88005553535" mask="ddd-(ddd)-dd-dd"/>
@@ -16,6 +14,8 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
     * srcText - задает телефонный номер,
     * mask    - задает формат отображения телефонного номера,
     *
+    * @class SBIS3.CONTROLS.PhoneTextBox
+    * @extends SBIS3.CONTROLS.FormattedTextBox
     * @demo SBIS3.CONTROLS.Demo.PagePhoneTextBox
     *
     * @author Крайнов Дмитрий Олегович
@@ -39,9 +39,6 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
-    *
-    * @cssModifier controls-Button__ellipsis При нехватке ширины текст на кнопке оборвётся многоточием.
-    * !Важно: при добавлении этого класса сломается "Базовая линия".
     *
     * @css controls-Link__icon Класс для изменения отображения иконки кнопки.
     *
