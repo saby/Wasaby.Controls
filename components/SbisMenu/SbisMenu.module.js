@@ -62,6 +62,7 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
         getHistoryDataSource: function (self) {
             if (!self._historyDataSource) {
                 self._historyDataSource = new SbisService({
+                    adapter: 'adapter.json',
                     endpoint: {
                         address: '/input-history/service/',
                         contract: 'InputHistory'
@@ -176,6 +177,7 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
                     item.set(self._options.parentProperty, null);
                 }
 
+                item.set('visible', true);
                 item.set('pinned', true);
                 oldElement.set('pinned', true);
                 self._count++;
@@ -207,7 +209,7 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
                 if (newItem.get(self._options.parentProperty)) {
                     newItem.set(self._options.parentProperty, null);
                 }
-
+                newItem.set('visible', true);
                 items.push(newItem);
 
                 self._count++;
@@ -240,6 +242,7 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
                     newItem.set(self._options.parentProperty, null);
                 }
 
+                newItem.set('visible', true);
                 items.push(newItem);
 
                 self._count++;
@@ -309,7 +312,7 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
                             countOfVisible++;
                         }
                     } else {
-                        if (!isInternalItem) {
+                        if (!isInternalItem && item.get('visible')) {
                             item.set(self._options.additionalProperty, true);
                         }
                     }
@@ -358,12 +361,17 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
         },
 
         parseHistoryData: function(self, data){
-            var rawData = data.getRawData(),
+            var rows = data.getRow(),
                 displayProperty = self._options.displayProperty,
+                config = {
+                    adapter: new SbisAdapter(),
+                    idProperty: self._oldItems.getIdProperty(),
+                    format: self._oldItems.getFormat().clone()
+                },
                 firstName, secondName;
 
-            if (self._options.pinned && rawData.pinned) {
-                _private.fillHistoryRecord(self, rawData.pinned, self._pinned);
+            if (self._options.pinned && rows.get('pinned')) {
+                _private.fillHistoryRecord(self, rows.get('pinned'), self._pinned);
             }
             // сортируем по алфавиту запиненные записи
             self._pinned = Chain(self._pinned).sort(function (first, second) {
@@ -371,13 +379,12 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
                 secondName = second.get(displayProperty);
 
                 return (firstName < secondName) ? -1 : (firstName > secondName) ? 1 : 0;
-            }).value(recordSetFactory, {adapter: new SbisAdapter()});
-            self._pinned.setIdProperty(self._oldItems.getIdProperty());
-            if (rawData.recent) {
-                _private.fillHistoryRecord(self, rawData.recent, self._recent);
+            }).value(recordSetFactory, config);
+            if (rows.get('recent')) {
+                _private.fillHistoryRecord(self, rows.get('recent'), self._recent);
             }
-            if (self._options.frequent && rawData.frequent) {
-                _private.fillHistoryRecord(self, rawData.frequent, self._frequent);
+            if (self._options.frequent && rows.get('frequent')) {
+                _private.fillHistoryRecord(self, rows.get('frequent'), self._frequent);
             }
         },
 
@@ -414,9 +421,11 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
                 // получаем старый id и восстанавливаем видимость пункта меню
                 self._pinned = Chain(self._pinned).filter(function (element) {
                     return _private.getOriginId(element.getId()) !== origId;
-                }).value(recordSetFactory, {adapter: new SbisAdapter()});
-
-                self._pinned.setIdProperty('historyId');
+                }).value(recordSetFactory, {
+                    adapter: new SbisAdapter(),
+                    idProperty: 'historyId',
+                    format: self._oldItems.getFormat().clone()
+                });
 
                 oldItem = self._oldItems.getRecordById(origId);
                 oldItem.set('visible', true);
@@ -442,7 +451,11 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
 
             self._recent = Chain(self._recent).filter(function (element) {
                 return _private.getOriginId(element.getId()) !== origId;
-            }).value(recordSetFactory, {adapter: new SbisAdapter()});
+            }).value(recordSetFactory, {
+                adapter: new SbisAdapter(),
+                idProperty: 'historyId',
+                format: self._oldItems.getFormat().clone()
+            });
 
             if (self._options.parentProperty) {
                 newItem.set(self._options.parentProperty, null);
@@ -552,22 +565,23 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
                 origId = _private.getOriginId(id),
                 menuItem = this._items.getRecordById(id),
                 newItem;
+            if (!(this._isItemHasChild(id))) {
+                if (targetClassName.indexOf('controls-Menu-item-pin') !== -1) { // кликнули по пину
+                    _private.togglePinnedItem(this, id, origId);
+                    return;
+                }
+                if (!this._subContainers[origId] && this._recent) {
+                    newItem = new Model({
+                        rawData: menuItem.getRawData(),
+                        adapter: menuItem.getAdapter()
+                    });
 
-            if (targetClassName.indexOf('controls-Menu-item-pin') !== -1) { // кликнули по пину
-                _private.togglePinnedItem(this, id, origId);
-                return;
+                    _private.addToRecent(this, origId, newItem);
+                    _private.prepareHistory(this);
+                }
+                // стрелять нужно старым id
+                _private.addToHistory(this, origId);
             }
-            if (!this._subContainers[origId] && this._recent) {
-                newItem = new Model({
-                    rawData: menuItem.getRawData(),
-                    adapter: menuItem.getAdapter()
-                });
-
-                _private.addToRecent(this, origId, newItem);
-                _private.prepareHistory(this);
-            }
-            // стрелять нужно старым id
-            _private.addToHistory(this, origId);
             SbisMenu.superclass._itemActivatedHandler.call(this, origId, event);
         }
     });

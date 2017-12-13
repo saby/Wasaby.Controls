@@ -1,6 +1,5 @@
 define('js!SBIS3.CONTROLS.ScrollPagingController', 
    [
-      'js!SBIS3.StickyHeaderManager',
       'Core/Abstract',
       'Core/core-instance',
       'Core/WindowManager',
@@ -8,7 +7,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       'Core/helpers/Hcontrol/isElementVisible',
       'css!SBIS3.CONTROLS.ScrollPagingController'
    ],
-   function(StickyHeaderManager, cAbstract, cInstance, WindowManager, throttle, isElementVisible) {
+   function(cAbstract, cInstance, WindowManager, throttle, isElementVisible) {
 
    var SCROLL_THROTTLE_DELAY = 200;
    

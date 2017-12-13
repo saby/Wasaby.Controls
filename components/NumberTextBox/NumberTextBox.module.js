@@ -570,7 +570,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             obj.setSelectionRange(pos, pos2);
             obj.focus();
          }
-      },
+      }
    });
 
    return NumberTextBox;

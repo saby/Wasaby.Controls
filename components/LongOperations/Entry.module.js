@@ -65,6 +65,8 @@ define('js!SBIS3.CONTROLS.LongOperations.Entry',
          userPatronymicName: 'string',
          userLastName: 'string',
          userPic: 'string',
+         resultChecker: 'string',
+         resultCheckerArgs: ['string', 'object'],
          resultWayOfUse: 'string',
          resultMessage: 'string',
          resultUrl: 'string',
@@ -72,6 +74,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Entry',
          resultValidUntil: 'Date',
          resultHandler: 'string',
          resultHandlerArgs: ['string', 'object'],
+         useResult: 'boolean',
          extra: 'object',
          notification: 'string'//TODO: Поменять на progressMessage
       };
@@ -120,6 +123,10 @@ define('js!SBIS3.CONTROLS.LongOperations.Entry',
           * @param {string}        [options.user.lastName] Фамилия пользователя - альтернативно
           * @param {string}        [options.userPic] Урл изображения, если применимо к данной операции (опционально)
           * @param {string}        [options.user.pic] Урл изображения, если применимо к данной операции - альтернативно
+          * @param {string}        [options.resultChecker] Строка модуль-метод для проверки доступности результата операции (опционально)
+          * @param {string}        [options.result.checker] Строка модуль-метод для проверки доступности результата операции - альтернативно
+          * @param {string|object} [options.resultCheckerArgs] Аргументы обработчика проверки доступности результата операции (объект или json-строка) (опционально)
+          * @param {string|object} [options.result.checkerArgs] Аргументы обработчика проверки доступности результата операции (объект или json-строка) - альтернативно
           * @param {string}        [options.resultWayOfUse] Название способа использования результата ("Скачать", "Открыть" и т.д.) (опционально)
           * @param {string}        [options.resultMessage] Сообщение о результате операции (опционально)
           * @param {string}        [options.result.message] Сообщение о результате операции - альтернативно
@@ -133,6 +140,8 @@ define('js!SBIS3.CONTROLS.LongOperations.Entry',
           * @param {string}        [options.result.handler] Строка модуль-метод для отображения результата операции - альтернативно
           * @param {string|object} [options.resultHandlerArgs] Аргументы обработчика отображения результата операции (объект или json-строка) (опционально)
           * @param {string|object} [options.result.handlerArgs] Аргументы обработчика отображения результата операции (объект или json-строка) - альтернативно
+          * @param {boolean}       [options.useResult] Показывает, что даже если операция завершена с ошибкой, то всёравно следует отображать результат операции, а не её историю (опционально)
+          * @param {boolean}       [options.result.use] Показывает, что даже если операция завершена с ошибкой, то всёравно следует отображать результат операции, а не её историю (опционально)
           * @param {object}        [options.extra] Дополнительная информация, определяемая конкретным продюсером, если необходимо (опционально)
           * @param {string}        [options.notification] Уведомление, если применимо (опционально)
           */

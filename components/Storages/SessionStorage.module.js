@@ -3,11 +3,10 @@
  */
 define('js!SBIS3.CONTROLS.SessionStorage',
    [
-      'Core/core-extend',
-      'Core/SessionStorage',
-      'js!SBIS3.CONTROLS.IStorage'],
+      'Core/SessionStorage'
+   ],
 
-   function(coreExtend, CSessionStorage, IStorage) {
+   function(CSessionStorage) {
 
       'use strict';
 

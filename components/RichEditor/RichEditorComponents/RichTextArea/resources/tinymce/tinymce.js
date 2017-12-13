@@ -33294,8 +33294,10 @@
                // Теперь это будет происходить, только если оба узла не пусты. Удаляются и стартовый, и финальный узел, если они пусты
                // https://online.sbis.ru/opendoc.html?guid=03646515-89d2-4b7d-8473-f84eaa53e32e
                var _removeWhileEmpty = function (node) {
-                  for ( ; dom.isEmpty(node.parentNode); ) { node = node.parentNode; }
-                  node.parentNode.removeChild(node);
+                  for (var p = node.parentNode; p && p.parentNode && p !== root && dom.isEmpty(p); p = p.parentNode) { node = p; }
+                  if (node && node.parentNode) {
+                     node.parentNode.removeChild(node);
+                  }
                }
                var isEmptyStart = dom.isEmpty(startBlock);
                var isEmptyEnd = dom.isEmpty(endBlock);

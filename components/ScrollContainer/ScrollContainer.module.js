@@ -254,25 +254,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _hideBrowserScrollbar: function(){
-            var style, styleMarginRight;
+            var style;
 
             if (widthBrowserScrollbar === null) {
                widthBrowserScrollbar = this._getBrowserScrollbarWidth();
             }
 
-            /**
-             * В новой версии firefox игнорируется overflow: scroll и скрывается скролл,
-             * когда контейнер становится меньше скролла(34px).
-             * Поэтому нужно установить marginRight = 0, если такое случилось.
-             */
-            if (cDetection.firefox && this._container.height() < 34) {
-               styleMarginRight = 0;
-            } else {
-               styleMarginRight = -widthBrowserScrollbar;
-            }
-
             style = {
-               marginRight: styleMarginRight
+               marginRight: -widthBrowserScrollbar
             };
 
             // На планшете c OS Windown 10 для скрытия нативного скролла, кроме margin требуется padding.
@@ -327,12 +316,16 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _toggleGradient: function() {
-            // $elem[0].scrollHeight - integer, $elem.height() - float
-         	var maxScrollTop = this._getScrollHeight() - this._getContainerHeight();
+         	var maxScrollTop;
 
-         	// maxScrollTop > 1 - погрешность округления на различных браузерах.
-            this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 1 && this._getScrollTop() < maxScrollTop);
-            this._container.toggleClass('controls-ScrollContainer__top-gradient', this._getScrollTop() > 0);
+         	// Не устанавливаем тень у контейнера с 0 высотой.
+         	if (this._getContainerHeight()) {
+               // $elem[0].scrollHeight - integer, $elem.height() - float
+               maxScrollTop = this._getScrollHeight() - this._getContainerHeight();
+               // maxScrollTop > 1 - погрешность округления на различных браузерах.
+               this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 1 && this._getScrollTop() < maxScrollTop);
+               this._container.toggleClass('controls-ScrollContainer__top-gradient', this._getScrollTop() > 0);
+            }
          },
 
          _initScrollbar: function(){

@@ -9,17 +9,17 @@ define('js!SBIS3.CONTROLS.Menu', [
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'js!SBIS3.CONTROLS.TreeMixinDS',
    'js!SBIS3.CONTROLS.FloatArea',
-   'js!SBIS3.CONTROLS.MenuItem',
    'WS.Data/Relation/Hierarchy',
-   'js!SBIS3.CONTROLS.CommandsSeparator',
    'Core/helpers/markup-helpers',
    'Core/Sanitize',
    'Core/helpers/String/escapeHtml',
    'Core/IoC',
    'Core/core-merge',
+   'js!SBIS3.CONTROLS.CommandsSeparator',
+   'js!SBIS3.CONTROLS.MenuItem',
    'css!SBIS3.CONTROLS.Menu'
 
-], function(CommandDispatcher, ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, MenuItem, Hierarchy, CommandsSeparator, mkpHelpers, Sanitize, escapeHtml, IoC, cMerge) {
+], function(CommandDispatcher, ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, Hierarchy, mkpHelpers, Sanitize, escapeHtml, IoC, cMerge) {
 
    'use strict';
 
@@ -357,9 +357,6 @@ define('js!SBIS3.CONTROLS.Menu', [
          config._fixJqueryPositionBug = true;
 
          subMenu = new FloatArea(config);
-         //У меню отличные от дефолтного попапа углы разворота. Задаю здесь.
-         subMenu._oppositeCorners.br.horizontal.bottom = 'tl';
-         subMenu._oppositeCorners.tl.horizontal.top = 'tl';
          return subMenu;
       },
 

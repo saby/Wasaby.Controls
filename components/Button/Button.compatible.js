@@ -2,8 +2,7 @@
  * Created by dv.zuev on 13.03.2017.
  */
 define('js!SBIS3.CONTROLS.Button/Button.compatible', [
-   "Core/constants"
-], function (cConstants) {
+], function () {
    'use strict';
 
    /**
