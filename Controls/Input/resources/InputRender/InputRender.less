@@ -9,6 +9,9 @@
       <div class="controls-InputRender__tagStyle"></div>
    </div>
  */
+//Поля ввода и кнопки разных размеров в одной демке: https://jsfiddle.net/Lkfcejmp/
+//В этой демке показывается зачем нужен был padding-bottom в больших полях: https://jsfiddle.net/jrt9sLa8/
+//Суть в том, что поля ввода могут быть внутри контейнера с display: flex и align-items: center и из-за этого съедет базовая линия
 
 .controls-InputRender {
    box-sizing: border-box;
@@ -28,7 +31,8 @@
 }
 
 .controls-InputRender__wrapper {
-   .flexbox();
+   .baseline-fix(); //В safari базовая линия у пустых input'ов прижимается к низу элемента https://bugs.webkit.org/show_bug.cgi?id=142968
+   .inline-flexbox();
    position: relative;
    width: 100%;
    height: 100%;
@@ -105,6 +109,10 @@
    .inline-flexbox();
 }
 
+.controls-InputRender__field:invalid {
+   color: @color_TextBox-placeholder;
+}
+
 // риусем информационный треугольник через border, чтобы он занимал свои физические размеры
 .controls-InputRender__tagStyle {
    display: inline-block;
@@ -112,7 +120,7 @@
    right: 0;
    top: 0;
    .top-right-triangle(@height_TextBox-InformationIcon);
-   width: @height_TextBox-InformationIcon;
+   width: @width_TextBox-InformationIcon;
    height: @height_TextBox-InformationIcon;
    cursor: pointer;
    box-sizing: border-box;
@@ -181,16 +189,20 @@
    font-size: @font-size_TextBox_l;
 }
 
-.controls-InputRender__field_size_l {
-   padding-bottom: @padding-bottom_TextBox-container_l;
-}
-
 .controls-InputRender_size_auto {
    height: auto;
    font-size: @font-size_TextBox_m;
 }
 
 //Модификаторы
+/*
+   Проблемы, если везде задавать padding с двух сторон:
+   1) В TextArea появится отступ у скролла.
+   2) В NumberTextBox появится отступ у стрелок.
+   3) В FieldLink отступ 4px заложен в иконку.
+
+   https://jsfiddle.net/ze4p2fsq/1/
+ */
 .controls-InputRender_paddingBoth {
    padding: @padding_TextBox-container;
 }
