@@ -51,6 +51,11 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
             showUndefined: false,
 
             /**
+             * @cfg {String} текст который используется если период не выбран
+             */
+            emptyCaption: null,
+
+            /**
              * @cfg {customPeriod} Конфигурация кастомной кнопки снизу для выбора периода заданного на прикладной стороне
              */
             customPeriod: null,
@@ -131,6 +136,13 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
             opts.year = this._getDefaultYear(opts);
             if (!opts.year) {
                opts.year = (new Date()).getFullYear();
+            }
+         }
+         if (!opts.emptyCaption) {
+            if (opts.showMonths && (opts.showQuarters || opts.showHalfyears)) {
+               opts.emptyCaption = rk('Период не указан');
+            } else {
+               opts.emptyCaption = rk('Не указан');
             }
          }
          // локализация может поменяться в рантайме, берем актуальный перевод месяцев при каждой инициализации компонента
@@ -387,8 +399,17 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          this.getContainer().find(
             ['.', this._cssDateRangeChoose.currentValue].join('')
          ).text(
-            dateHelpers.getFormattedDateRange(this.getStartValue(), this.getEndValue(),
-               {contractToMonth: true, fullNameOfMonth: true, contractToQuarter: true, contractToHalfYear: true, emptyPeriodTitle: rk('Период не указан')})
+            dateHelpers.getFormattedDateRange(
+               this.getStartValue(),
+               this.getEndValue(),
+               {
+                  contractToMonth: true,
+                  fullNameOfMonth: true,
+                  contractToQuarter: true,
+                  contractToHalfYear: true,
+                  emptyPeriodTitle: this._options.emptyCaption
+               }
+            )
          );
       },
 

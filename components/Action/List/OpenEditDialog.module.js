@@ -102,6 +102,9 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          _showedLoading: false,
          _openInNewTab: false
       },
+      $constructor: function() {
+        this._publish('onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onReadModel');
+      },
       init: function () {
          OpenEditDialog.superclass.init.apply(this, arguments);
          this._setOpeningModeHandler = this._setOpeningMode.bind(this);

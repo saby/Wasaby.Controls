@@ -579,6 +579,7 @@
   border: none;
   outline: none;
   background: transparent;
+  .box-shadow(none);
 }
 
 .generate-height(@className, @i: 1) when (@i =< 10) {
@@ -621,4 +622,20 @@
   border-top-color: transparent;
   border-left-color: transparent;
   border-bottom-color: transparent;
+}
+
+
+.ws-header-size-mixin(@text-size, @height: @default-height) {
+  display: inline-block;
+  font-size: @text-size;
+  height: @height;
+  line-height: @height;
+  font-family: @default-font-name;
+}
+.ws-back-arrow-size-mixin(@width, @height) {
+  &:before {
+    display: inline-block;
+    width: @width;
+    height: @height;
+  }
 }

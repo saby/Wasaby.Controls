@@ -170,15 +170,16 @@ define('js!SBIS3.CONTROLS.ListView',
           * Ниже приведён код, с помощью которого можно изменять отображение набора операций для записей списка.
           * <pre>
           *    dataGrid.subscribe('onChangeHoveredItem', function(eventObject, hoveredItem) {
-          *       var actions = DataGridView.getItemsActions(),
-          *           instances = actions.getItemsInstances();
-          *       for (var i in instances) {
-          *          if (instances.hasOwnProperty(i)) {
-          *
-          *             // Будем скрывать кнопку удаления для всех строк
-          *             instances[i][i === 'delete' ? 'show' : 'hide']();
+          *       var actions = DataGridView.getItemsActions();
+          *       actions.ready().addCallback(function() {
+          *          var instances = actions.getItemsInstances();
+          *          for (var i in instances) {
+          *             if (instances.hasOwnProperty(i)) {
+          *                // Будем скрывать кнопку удаления для всех строк
+          *                instances[i][i === 'delete' ? 'show' : 'hide']();
+          *             }
           *          }
-          *       }
+          *       });
           *    });
           * </pre>
           * Подобная задача часто сводится к отображению различных операций для узлов, скрытых узлов и листьев для иерархических списков.
@@ -1160,25 +1161,29 @@ define('js!SBIS3.CONTROLS.ListView',
             var currentTouch = this._touchSupport;
             this._touchSupport = Boolean(support);
 
-            var container = this.getContainer(),
-                toggleClass = container.toggleClass.bind(container, 'controls-ListView__touchMode', this._touchSupport);
-
             if(this._itemsToolbar) {
-               /* При таче, можно поменять вид операций,
-                  т.к. это не будет вызывать никаких визуальных дефектов,
-                  а просто покажет операции в тач моде */
-               if(
-                   (!this._itemsToolbar.isVisible() || this._touchSupport) &&
-                   this._itemsToolbar.getProperty('touchMode') !== this._touchSupport &&
-                   /* Когда тулбар зафиксирован, не меняем вид операций */
-                   !this._itemsToolbar.isToolbarLocking()
-               ) {
-                  toggleClass();
-                  this._itemsToolbar.setTouchMode(this._touchSupport);
-               }
+               this._setTouchMode(this._touchSupport);
             } else if(currentTouch !== this._touchSupport) {
-               toggleClass();
+                this._toggleTouchClass();
             }
+         },
+
+         _setTouchMode: function(touchSupport){
+            /* При таче, можно поменять вид операций,
+             т.к. это не будет вызывать никаких визуальных дефектов,
+             а просто покажет операции в тач моде */
+             if( this._itemsToolbar.getProperty('touchMode') !== touchSupport &&
+                 /* Когда тулбар зафиксирован, не меняем вид операций */
+                 !this._itemsToolbar.isToolbarLocking()
+             ) {
+                 this._toggleTouchClass(touchSupport);
+                 this._itemsToolbar.setTouchMode(touchSupport);
+             }
+         },
+
+         _toggleTouchClass: function(touchSupport) {
+            var container = this.getContainer();
+            container.toggleClass('controls-ListView__touchMode', touchSupport);
          },
 
          _eventProxyHandler: function(e) {
@@ -2572,6 +2577,10 @@ define('js!SBIS3.CONTROLS.ListView',
                      onAfterBeginEdit: function(event, model) {
                         var
                            itemsToolbarContainer = this._itemsToolbar && this._itemsToolbar.getContainer();
+
+                        if(this._itemsToolbar) {
+                            this._setTouchMode(false);
+                        }
                         /*Скрывать emptyData нужно перед показом тулбара, иначе тулбар спозиционируется с учётом emptyData,
                         * а после удаления emptyData, тулбар визуально подскочит вверх*/
                         this._toggleEmptyData(false);
@@ -3085,7 +3094,7 @@ define('js!SBIS3.CONTROLS.ListView',
             /* при изменении размера таблицы необходимо вызвать перерасчет позиции тулбара
              позиция тулбара может сбиться например при появление пэйджинга */
             if(this._itemsToolbar && this._itemsToolbar.isVisible()){
-               if(this._touchSupport) {
+               if(this._touchSupport && !this._editInPlace.isVisible()) {
                    this._itemsToolbar.setHeightInTouchMode();
                }
                this._itemsToolbar.recalculatePosition();
