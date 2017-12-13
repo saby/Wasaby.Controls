@@ -517,6 +517,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                         manager.focusedEditor = null;
                      }
                   }
+                  // Убрать FakeCarret в редакторе при переходе в не активное состояние
+                  // 1174789437 https://online.sbis.ru/opendoc.html?guid=e21b8722-3ffa-4a47-a499-c8bd01af0985
+                  this._removeTinyFakeCaret();
                }
                if (cConstants.browser.isMobilePlatform) {
                   EventBus.globalChannel().notify('MobileInputFocusOut');
@@ -2141,6 +2144,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             //Требуем в будущем пересчитать размеры контрола
             this._notifyOnSizeChanged();
 
+            // Убрать FakeCarret в редакторе при неактивном состоянии
+            // 1174789437 https://online.sbis.ru/opendoc.html?guid=e21b8722-3ffa-4a47-a499-c8bd01af0985
+            if (enabled && !this.isActive()) {
+               setTimeout(this._removeTinyFakeCaret.bind(this), 1);
+            }
+
             RichTextArea.superclass._setEnabled.apply(this, arguments);
          },
 
@@ -2311,6 +2320,19 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                text = text.replace(new RegExp(smile.title, 'gi'), String.fromCodePoint(smile.code));
             });
             return text;
+         },
+
+         /**
+          * Убрать FakeCarret в редакторе
+          */
+         _removeTinyFakeCaret: function () {
+            var editor = this._tinyEditor;
+            if (editor) {
+               var selectionOverrides = editor._selectionOverrides;
+               if (selectionOverrides) {
+                  selectionOverrides.hideFakeCaret();
+               }
+            }
          },
 
          _addToHistory: function(text) {
