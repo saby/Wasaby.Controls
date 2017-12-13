@@ -127,9 +127,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
             cfg.maxLinesCount = 10;
          }
 
-         if (!cfg.minLinesCount) {
-            cfg.minLinesCount = 2;
-         }
          if (cfg.minLinesCount > cfg.maxLinesCount) {
             cfg.maxLinesCount = cfg.minLinesCount;
          }
@@ -211,7 +208,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
             });
 
          } else {
-            this._inputField.attr('rows',parseInt(this._options.minLinesCount, 10));
+            if (this._options.minLinesCount) {
+               this._inputField.attr('rows', parseInt(this._options.minLinesCount, 10));
+            }
             this._removeAutoSizeDognail();
          }
       },
@@ -236,8 +235,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _removeAutoSizeDognail: function() {
          //Изначально рассчитываем высоту по view, а на textarea висит position: absolute.
          if (this.isEnabled()) {
-            this._disabledWrapper.addClass('ws-hidden');
-            this._inputField.removeClass('ws-hidden');
+            this._disabledWrapper.removeClass('ws-invisible').addClass('ws-hidden');
+            this._inputField.removeClass('ws-invisible').removeClass('ws-hidden');
          } else {
             this._inputField.removeClass('ws-hidden').addClass('ws-invisible');
          }
