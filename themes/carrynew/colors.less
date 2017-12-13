@@ -44,7 +44,7 @@
 @success-color:                           #72BE44;
 @accent-color:							         #26B8FF;
 @acent-color2:                            #F8F8F8;//Цвет акцентной плашки
-@default-hover-color:                     #E0ECF5;
+@default-hover-color:                     #E0ECF5;//Переменную нужно удалить, она дублирует @default-bg-color-hovered-item
 @innacent-color2:						         #999999; //Неакцентные элементы, заголовки таблиц, комментарии
 @black-color:                             #333;
 @gray-color:                              #3b5d79;
@@ -56,7 +56,8 @@
 @bread-crumb-title-hover-color:           @primary-color;
 @blue-dark-color:							      rgb(49, 62, 120);
 @darkcyan-color: 							      #8991A9;
-@default-itemHover-color:                 @default-hover-color;
+@default-bg-color-hovered-item:           #E0ECF5;
+@default-itemHover-color:                 @default-hover-color;//Переменную нужно удалить, она дублирует @default-bg-color-hovered-item
 @icon-color-primary:                      #2D68B5;
 @link-text-color:                         #2D68B5;
 @link-hover-text-color:                   #313e78;
@@ -143,9 +144,7 @@
 @tree-view-expand-hidden-color:                 @gray-lamantin-color;
 @tree-view-copy-arrow-background:               @white-color;
 // Data grid //
-@data-grid-row-hover-bg:                        @default-hover-color;
-@data-grid-row-hover-cell-bg:                   @default-hover-color;
-@data-grid-row-hover-cell-text-color:           #000;
+@data-grid-row-hover-bg:                        @default-hover-color;//Переменную нужно удалить, она дублирует @background-color_DataGridView-item_hovered
 @data-grid-edge-cell-separator-color:           #EAEAEA;
 @data-grid-row-selected-main-bg:                @default-bg-color;
 @data-grid-partScroll-notScrolledCell-Color:    @default-bg-color;
@@ -214,7 +213,6 @@
 @DropdownList-picker-menu-item-color:     #FFFFFF;
 @DropdownList-picker-menu-item-hover:     #F0F5FB;
 @image-bar-bg-color:                      rgba(255, 255, 255, .5);
-@data-grid-row-hover-cell-bg:             #E0ECF5;
 @icon-color-disabled:                     #ccc !important;
 @date-range-big-choose-date-range-picker-border-color:#0055BB;
 @date-range-big-choose-date-range-picker-bg-boundary-selected-color:#0055BB;
