@@ -1,33 +1,33 @@
-.close-button-mixin {
+.close-button-mixin(@important: '') {
   .inline-flexbox();
   .align-items(center);
   .justify-content(center);
-  color: #8991A9 !important;
-  font-size: round(56px * @multiplier) !important;
-  line-height: round(56px * @multiplier) !important;
-  font-family: 'cbuc-icons' !important;
-  width: @default-height !important;
-  height: @default-height  !important;
-  background-color: #405A77  !important;
-  background-image: none !important;
+  color: #8991A9 @important;
+  font-size: round(56px * @multiplier) @important;
+  line-height: round(56px * @multiplier) @important;
+  font-family: 'cbuc-icons' @important;
+  width: @default-height @important;
+  height: @default-height @important;
+  background-color: #405A77 @important;
+  background-image: none @important;
   -webkit-box-shadow: @box-shadow_Button !important;
   -moz-box-shadow: @box-shadow_Button !important;
   box-shadow: @box-shadow_Button !important;
   .border-radius(@border-radius_Button);
 
   &:before {
-    content: "\e66c" !important;
-    text-shadow: @text-shadow_Button !important;
+    content: "\e66c" @important;
+    text-shadow: @text-shadow_Button @important;
   }
 
   &:hover {
-    background: none !important;
-    background-color: #3D5571 !important;
+    background: none @important;
+    background-color: #3D5571 @important;
   }
   &:active {
-    background: none !important;
+    background: none @important;
     box-shadow: none !important;
-    background-color: #3D5571;
+    background-color: #3D5571 @important;
   }
 }
 
@@ -715,7 +715,7 @@ body {
 //ОКНА И ЭРИИ ИЗ WS`А
 //!IMPORTANT лучше чем увеличение веса селектора через BODY тк возможно собирать тему под селектором
 .ws-window-titlebar-action.close {
-  .close-button-mixin();
+  .close-button-mixin(~'!important');
 }
 .ws-float-area-title {
   font-size: round(40px * @multiplier)!important;
