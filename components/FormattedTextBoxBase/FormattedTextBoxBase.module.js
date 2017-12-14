@@ -1245,6 +1245,8 @@ define(
          model.setText(text, this._getMaskReplacer());
          this._updateText();
          this._textChanged = true;
+         //снимаем выделение валидатора на время ввода
+         this.clearMark();
          //обновить html
          this._inputField.html(this._getHtmlMask());
          if (model.isFilled()) {
