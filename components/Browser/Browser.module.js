@@ -328,7 +328,7 @@ define('js!SBIS3.CONTROLS.Browser', [
             return Deferred.fail('ColumnsConfig required');
          }
          var promise = new Deferred();
-         require(['js!SBIS3.CONTROLS.Browser.ColumnsEditor.Editor'], function (ColumnsEditor) {
+         require(['js!SBIS3.CONTROLS.Browser/ColumnsEditor/Editor'], function (ColumnsEditor) {
             if (!this._columnsEditor) {
                this._columnsEditor = new ColumnsEditor();
             }
