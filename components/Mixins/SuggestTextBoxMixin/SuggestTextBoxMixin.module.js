@@ -128,13 +128,13 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          this._options.observableControls.unshift(this);
          CommandDispatcher.declareCommand(this, 'changeSearchParam', function(searchParam) {
             self.setSearchParamName(searchParam);
-            self._updateList();
             
             if (self._needShowHistory()) {
                self._showHistory();
             } else if (self.isPickerVisible()) {
                self.getPicker().recalcPosition(true, true)
             }
+            self._updateList();
          });
          
          /* Инициализация searchController'a происходит лениво,
