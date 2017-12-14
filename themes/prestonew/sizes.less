@@ -25,8 +25,8 @@
 @line-height_TextBox:                             round(80px * @multiplier);
 @padding_TextBox-container:                       0 round(14px * @multiplier);
 @padding_TextBox-container_left:                  0 0 0 round(14px * @multiplier);
-@width_TextBox-InformationIcon:                   round(37px * @multiplier);
-@height_TextBox-InformationIcon:                  round(37px * @multiplier);
+@width_TextBox-InformationIcon:                   round(14px * @multiplier);
+@height_TextBox-InformationIcon:                  round(14px * @multiplier);
 @border-width_TextBox:                            2px;
 //textarea
 @min-height_TextArea:                             round(42px * @multiplier);
@@ -58,6 +58,10 @@
 @tree-view-folder-text-size:                      @default-text-size;
 //button
 @border-radius_Button:                            1px;
+//area-blocks
+@spacing_Block:                                   round(8px * @multiplier);
+@border-width_Block:                              1px;
+@border-radius_Block:                             1px;
 //back-button
 @back-button-margin-before:                       0 4px 0 0;//todo: romanov
 @back-button-padding-before:                      1px 0;//todo: romanov
@@ -128,20 +132,20 @@
 @font-folder-size:                        @default-text-size;
 @check-box-default-font-size:             @default-text-size;
 @link-line-height:                        normal;
-@link-height:                             auto;
-@link-font-size:                          @default-text-size;
+@height_Link:                             auto;
+@font-size_Link:                          @default-text-size;
 @link-icon-field-margin:                  0 0 0 round(4px * @multiplier);
-@icon-button-round-border-width:          auto;
-@icon-button-round-border-height:         round(64px * @multiplier);
-@icon-button-round-border-line-height:    round(62px * @multiplier);
+@width_IconButton-icon_round:          auto;
+@height_IconButton-icon_round:         round(64px * @multiplier);
+@line-height_IconButton-icon_round:    round(62px * @multiplier);
 @border-radius:                           0;
-@icon-button-border-width:                0px;
+@border-width_IconButton-icon:                0px;
 //ListView
 @list-view-items-toolbar-icon-button-border-width:0;
 @list-view-items-toolbar-icon-button-border-radius:0;
 @list-view-items-toolbar-icon-button-border-font-size:@icon-large-size;
-@icon-button-edit-round-border-height:    @icon-large-size;
-@icon-button-edit-round-border-width:     @icon-large-size;
+@height_IconButton_round_edit:    @icon-large-size;
+@width_IconButton_round_edit:     @icon-large-size;
 @icon-button-edit-round-border-line-height:@icon-large-size;
 @listView-empty-data-padding-top:         round(54px * @multiplier);
 //Button

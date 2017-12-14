@@ -14,14 +14,20 @@
 
 .controls-FieldLink .icon-size {
   &:hover {
-    color: @button-icon-color-hover !important;
+    color: @color_Link-icon_hovered !important;
   }
 }
-body {
-  .ws-window-titlebar {
-    color: #313E78;
-  }
-  .ws-window-title{
-    color: #313E78;
-  }
+//!IMPORTANT лучше чем увеличение веса селектора через BODY тк возможно собирать тему под селектором
+.ws-window-titlebar {
+  color: #313E78 !important;
+}
+.ws-window-title{
+  color: #313E78 !important;
+}
+.ws-window-content {
+  background-color: #ffffff !important;
+}
+.ws-window {
+  background-color: #fff !important;
+  border-color: #BDBDBD !important;
 }
