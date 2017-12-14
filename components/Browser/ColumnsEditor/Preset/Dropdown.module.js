@@ -96,6 +96,15 @@ define('js!SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Dropdown',
             _channel.subscribe('onChangeSelectedPreset', this._channelHandler);
          },
 
+         setEnabled: function (enabled) {
+            PresetDropdown.superclass.setEnabled.apply(this, arguments);
+            var dropdown = this._dropdown;
+            if (dropdown) {
+               var items;
+               dropdown.setEnabled(enabled && (items = dropdown.getItems()) && 1 < items.getCount())
+            }
+         },
+
          destroy: function () {
             PresetDropdown.superclass.destroy.apply(this, arguments);
             if (this._cacheHandler) {
@@ -168,7 +177,7 @@ define('js!SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Dropdown',
                selectedId = presets[0].id;
             }
             this._setSelectedPresetId(selectedId);
-            dropdown.setEnabled(1 < presets.length);
+            dropdown.setEnabled(this.isEnabled() && 1 < presets.length);
             this._isDropdownReady = 0 < presets.length;
             dropdown.setVisible(this._isDropdownReady);
          },
