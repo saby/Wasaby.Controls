@@ -1,6 +1,6 @@
 define([
    'Core/Abstract',
-   'js!SBIS3.CORE.Control/Control.compatible',
+   'Lib/Control/Control.compatible',
    'js!SBIS3.CONTROLS.RangeMixin'
 ], function (Abstract, Control, RangeMixin) {
    'use strict';
