@@ -1019,3 +1019,12 @@ body {
 .controls-Browser__topTemplate {
    padding: round(8px * @multiplier);
 }
+//делаю только для тем, ибо опасно
+ws-is-ie, .ws-is-firefox {
+  .controls-DropdownList .controls-DropdownList__selectedItem {
+    display: inline-flex !important;
+    display: -ms-flexbox !important;
+    display: -ms-inline-flexbox !important;
+    display: -webkit-inline-flex !important;
+  }
+}
