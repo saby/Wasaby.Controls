@@ -30,17 +30,17 @@
                   idProperty="id"
                   displayProperty="title"
                   editMode=""
-                  editingTemplate="tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/Area/templates/presetEdit"
+                  editingTemplate="tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/templates/presetEdit"
                   >
                   <!--^^^
                   itemsActions="{{_optsPreset.itemsActions}}"
-                  itemContentTpl="tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/Area/templates/preset"
+                  itemContentTpl="tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/templates/preset"
                   editMode="click|single"
                   <ws:handlers onItemClick="{{_optsPreset.onItemClick}}"/>
                   -->
                   <ws:itemContentTpl>
                      <ws:partial
-                        template="tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/Area/templates/preset"
+                        template="tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/templates/preset"
                         scope="{{itemContentTpl}}"
                         presetsTitle="{{presetsTitle}}"
                         staticPresets="{{staticPresets}}"
@@ -76,7 +76,7 @@
             displayProperty="title"
             itemsSortMethod="{{_optsSelectable.itemsSortMethod}}"
             selectedKeys="{{_optsSelectable.markedKeys}}"
-            itemContentTpl="tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/Area/templates/selectableItemContent"
+            itemContentTpl="tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/templates/selectableItemContent"
             multiselect="{{ true }}"
             >
             <ws:handlers onItemClick="{{_optsSelectable.onItemClick}}" onSelectedItemsChange="{{_optsSelectable.onSelectedItemsChange}}"/>
@@ -85,7 +85,7 @@
                >
                <ws:contentTemplate>
                   <ws:if data="{{hasGroups}}">
-                     <ws:partial template="tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/Area/templates/selectableGroupContent" scope="{{contentTemplate}}" groupTitleTpl="{{groupTitleTpl}}" groupTitles="{{groupTitles}}" />
+                     <ws:partial template="tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/templates/selectableGroupContent" scope="{{contentTemplate}}" groupTitleTpl="{{groupTitleTpl}}" groupTitles="{{groupTitles}}" />
                   </ws:if>
                </ws:contentTemplate>
             </ws:groupBy>
