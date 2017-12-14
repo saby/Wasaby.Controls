@@ -4,7 +4,7 @@
    box-sizing: border-box;
    line-height: @DropdownList-height;
    .controls-DropdownList__selectedItem {
-      .inline-flexbox();
+      .flexbox();
       width: 100%;
       white-space: nowrap;
       font-size: 0;
@@ -512,7 +512,11 @@
       }
    }
 }
-
+.ws-is-ie, .ws-is-firefox {
+   .controls-DropdownList .controls-DropdownList__selectedItem{
+      .inline-flexbox();
+   }
+}
 //Пример баги в ios https://jsfiddle.net/zk5755vg/12/
 .ws-is-mobile-chrome-ios, .ws-is-mobile-safari, .ws-is-old-webkit, .ws-is-sbis-desktop{
    .controls-DropdownList__picker {
