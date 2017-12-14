@@ -116,14 +116,13 @@ define('js!Controls/List/Controllers/VirtualScroll', [
       },
 
       /**
-       * //TODO подумать, как сделать лучше
        * в проекции добавились элементы
+       * @param index позиция, с которой появились новые элементы
        * @param countAddedItems количество добавленных элементов
-       * @param at позиция, с которой появились новые элементы
        */
-      addItems: function(countAddedItems, at) {
+      onAddedItems: function(index, countAddedItems) {
          var virtualWindow = this._virtualWindow;
-         for (var i = at; i < at + countAddedItems; i++) {
+         for (var i = index; i < index + countAddedItems; i++) {
             if (i < virtualWindow.indexStart) {
                //Если добавили ДО видимого диапазона, сдвинем видимый диапазон и увеличим верхнюю распорку
                virtualWindow.indexStart++;

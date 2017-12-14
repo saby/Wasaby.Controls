@@ -83,17 +83,18 @@ define('js!Controls/List/ListControl', [
                self._navigationController.calculateState(list, direction);
             }
 
-            var addPosition;
+            var newItemsIndex;
             if (direction === 'down') {
-               addPosition = self._listModel.getCount();
+               newItemsIndex = self._listModel.getCount();
                self._listModel.appendItems(list);
             } else if (direction === 'up') {
-               addPosition = 0;
+               newItemsIndex = 0;
                self._listModel.prependItems(list);
             }
 
             //отдать новые данные в virtualScroll и рассчитать новый диапазон отображаемых записей
-            _private.updateVirtualScrollIndexesAndPlaceholder(self, self._virtualScroll.addItems(list.getCount(), addPosition));
+            var newVirtualWindow = self._virtualScroll.onAddedItems(newItemsIndex, list.getCount());
+            _private.updateVirtualWindow(self, newVirtualWindow);
          })
       },
 
@@ -244,7 +245,7 @@ define('js!Controls/List/ListControl', [
        * Обновить размеры распорок и начало/конец отображаемых элементов
        * @param virtualWindow результат из virtualScroll контроллера
        */
-      updateVirtualScrollIndexesAndPlaceholder: function(self, virtualWindow) {
+      updateVirtualWindow: function(self, virtualWindow) {
          if (virtualWindow) {
             self._topPlaceholderHeight = virtualWindow.topPlaceholderHeight;
             self._bottomPlaceholderHeight = virtualWindow.bottomPlaceholderHeight;
@@ -259,7 +260,7 @@ define('js!Controls/List/ListControl', [
        */
       handleListScroll: function(scrollTop) {
          var virtualWindow = this._virtualScroll.calcVirtualWindow(scrollTop);
-         _private.updateVirtualScrollIndexesAndPlaceholder(this, virtualWindow);
+         _private.updateVirtualWindow(this, virtualWindow);
       }
    };
 
@@ -312,7 +313,7 @@ define('js!Controls/List/ListControl', [
 
          _beforeMount: function(newOptions) {
             this._virtualScroll = new VirtualScroll({
-               maxRows: 75,
+               maxRows: 60,
                rowHeight: 18,
                itemsCount: 0
             });
