@@ -1221,14 +1221,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _getItemsForRedrawOnAdd: function(items) {
          var
             itemsToAdd = [],
-            groupId;
+            groupId, groupHash;
 
          if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
             if (items.length > 1) {
                groupId = items[0].getContents();
+               groupHash = items[0].getHash();
                //todo Переделать, чтобы группы скрывались функцией пользовательской фильтрации
                if (groupId !== false) {
-                  this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
+                  this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options, groupHash);
                }
                items.splice(0, 1);
                itemsToAdd = itemsToAdd.concat(items);
