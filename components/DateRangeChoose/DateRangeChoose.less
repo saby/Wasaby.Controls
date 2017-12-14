@@ -96,7 +96,7 @@
    display: inline-block;
    font-size: @date-range-choose-year-prev-next-btns-font-size;
    font-weight: normal;
-   color: @link-text-color;
+   color: @color_Link-text;
    //position: absolute;
    top: 0;
    text-align: center;
@@ -105,7 +105,7 @@
    width: @date-range-choose-year-prev-next-btns-width;
    line-height: @date-range-choose-year-height;
    &:hover {
-      color: @link-hover-text-color;
+      color: @color_Link-text_hovered;
    }
 }
 .controls-DateRangeChoose__year-prev {
@@ -124,7 +124,7 @@
    }
 }
 .controls-DateRangeChoose__year {
-   color: @link-text-color;
+   color: @color_Link-text;
    display: block;
    font-size: @date-range-choose-year-font-size;
    font-weight: bold;
@@ -362,7 +362,7 @@
    // Синий цвет у полугодий и кварталов в режиме когда еще показываются месяца
    .controls-DateRangeChoose__halfYear-caption,
    .controls-DateRangeChoose__quarter-caption {
-      color: @link-text-color;
+      color: @color_Link-text;
    }
    .controls-DateRangeChoose__quarter-caption {
       &:hover {
@@ -437,14 +437,14 @@
 .controls-DateRangeChoose__yearsMode-prev,
 .controls-DateRangeChoose__yearsMode-next {
    cursor: pointer;
-   color: @link-text-color;
+   color: @color_Link-text;
    text-align: center;
    height: @date-range-choose-year-height;
    line-height: @date-range-choose-year-height;
    font-size: @date-range-choose-year-prev-next-btns-font-size;
    font-weight: normal;
    &:hover {
-      color: @link-hover-text-color;
+      color: @color_Link-text_hovered;
    }
 }
 
