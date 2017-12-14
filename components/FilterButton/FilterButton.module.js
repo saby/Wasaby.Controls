@@ -328,9 +328,12 @@ define('js!SBIS3.CONTROLS.FilterButton',
           },
    
           _setPickerConfig: function () {
-             var isRightAlign = this._options.filterAlign === 'right';
+             var isRightAlign = this._options.filterAlign === 'right',
+               self = this;
 
-             this._pickerContext = FilterPanelUtils.createFilterContext(this);
+             this._pickerContext = FilterPanelUtils.createFilterContext(this.getLinkedContext(),
+                this._options.internalContextFilterName,
+                this._filterStructure);
 
              return FilterPanelUtils.getPanelConfig({
                 corner: isRightAlign ? 'tl' : 'tr',
@@ -341,8 +344,18 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 },
                 context: this._pickerContext,
                 template: 'js!SBIS3.CONTROLS.FilterButtonArea',
-                componentOptions: this._getAreaOptions()
-             }, this);
+                componentOptions: this._getAreaOptions(),
+                handlers: {
+                   onClose: function() {
+                      /* Разрушаем панель при закрытии,
+                       надо для: сбрасывания валидации, удаления ненужных значений из контролов */
+                      if (self._picker) {
+                         self._picker.destroy();
+                         self._picker = null;
+                      }
+                   }
+                }
+             });
           },
 
           _getCurrentContext : function(){
