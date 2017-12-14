@@ -408,7 +408,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
    hasNodeWithChild = function(cfg) {
       var
-         items = cfg.items,
+         items = cfg._items,
          itemsProjection = cfg._itemsProjection,
          hierarchyRelation = cfg._getHierarchyRelation(cfg),
          hasNodeWithChild = false,
@@ -1004,7 +1004,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             lastItem = this._getItemsContainer().find('>.controls-ListView__item:last');
             if (lastItem.hasClass('controls-HierarchyDataGridView__path')) {
                breadCrumbs = lastItem.find('.controls-BreadCrumbs').wsControl();
-               if (breadCrumbs.getItems().at(0).getId() === itemsToAdd[0].data.path[0]['Id']) {
+               if (itemsToAdd[0].data && breadCrumbs.getItems().at(0).getId() === itemsToAdd[0].data.path[0]['Id']) {
                   breadCrumbs.setItems(itemsToAdd[0].data.path);
                   itemsToAdd.shift();
                }

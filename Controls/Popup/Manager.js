@@ -1,12 +1,11 @@
 define('js!Controls/Popup/Manager',
    [
-      'Core/core-instance',
       'Core/helpers/random-helpers',
       'js!Controls/Popup/Manager/Container',
       'WS.Data/Collection/List'
    ],
 
-   function (CoreInstance, Random, Container, List) {
+   function (Random, Container, List) {
       'use strict';
 
       var _private = {
@@ -22,9 +21,8 @@ define('js!Controls/Popup/Manager',
 
          focusOut: function (id, focusedControl) {
             var
-               index = Manager._popupItems.getIndexByValue('id', id);
-            if (index > -1) {
-               var element = Manager._popupItems.at(index);
+               element = Manager._find(id);
+            if (element) {
                if (!!element.popupOptions.autoHide) {
                   var
                      opener = element.popupOptions.opener,
@@ -46,9 +44,8 @@ define('js!Controls/Popup/Manager',
           */
          pushUp: function (popup) {
             var
-               index = Manager._popupItems.getIndexByValue('id', popup._options.id);
-            if (index > -1) {
-               var element = Manager._popupItems.at(index);
+               element = Manager._find(popup._options.id);
+            if (element) {
                element.zIndex = _private.calculateZIndex();
                Container.setPopupItems(Manager._popupItems);
             }
@@ -60,11 +57,12 @@ define('js!Controls/Popup/Manager',
           */
          recalcPosition: function (popup) {
             var
-               index = Manager._popupItems.getIndexByValue('id', popup._options.id);
-            if (index > -1) {
-               var element = Manager._popupItems.at(index);
-               Manager._popupItems.at(index).position = element.strategy.getPosition(popup);
-               Container.setPopupItems(Manager._popupItems);
+               element = Manager._find(popup._options.id);
+            if (element) {
+               if (element.strategy) {
+                  element.position = element.strategy.getPosition(popup);
+                  Container.setPopupItems(Manager._popupItems);
+               }
             }
          }
       };
@@ -87,9 +85,6 @@ define('js!Controls/Popup/Manager',
           * @param controller контроллер
           */
          show: function (options, opener, strategy, controller) {
-            if (!strategy || !CoreInstance.instanceOfMixin(strategy, 'Controls/Popup/interface/IStrategy')) {
-               throw new Error('Strategy is not defined');
-            }
             var element = {};
             element.id = Random.randomId('popup-');
             options.opener = opener;
@@ -115,9 +110,8 @@ define('js!Controls/Popup/Manager',
           */
          update: function (id, options) {
             var
-               index = Manager._popupItems.getIndexByValue('id', id);
-            if (index > -1) {
-               var element = Manager._popupItems.at(index);
+               element = Manager._find(id);
+            if (element) {
                options.opener = element.popupOptions.opener;
                options.controller = element.popupOptions.controller;
                element.popupOptions = options;
@@ -134,11 +128,21 @@ define('js!Controls/Popup/Manager',
           */
          remove: function (id) {
             var
-               index = Manager._popupItems.getIndexByValue('id', id);
-            if (index > -1) {
-               Manager._popupItems.removeAt(index);
+               element = Manager._find(id);
+            if (element) {
+               Manager._popupItems.remove(element);
                Container.setPopupItems(Manager._popupItems);
             }
+         },
+
+         _find: function (id) {
+            var
+               element,
+               index = Manager._popupItems.getIndexByValue('id', id);
+            if (index > -1) {
+               element = Manager._popupItems.at(index);
+            }
+            return element;
          }
       };
 

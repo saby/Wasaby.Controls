@@ -82,31 +82,7 @@ input[type="reset"]::-moz-focus-inner {
 .blue-color {
   color: @darkcyan-color;
 }
-.controls-Link {
-// Модификаторы цвета ссылки
-  &.mainLink__2 {
-    color: @gray-lamantin-color;
-    &:hover {
-      color: @gray-lamantin-color;
-    }
-  }
 
-  &.additionalLink {
-    color: @link-additional-color;
-  }
-  &.additionalLink__2 {
-    color: @default-text-color;
-  }
-  &.additionalLink__3 {
-    color: @red-color;
-  }
-  &.additionalLink__4 {
-    color: @green-color;
-  }
-  &.additionalLink__5 {
-    color: @purple-color;
-  }
-}
 .blue-dark-color {
   color: @blue-dark-color;
 }
@@ -171,26 +147,26 @@ input[type="reset"]::-moz-focus-inner {
  .asLink должен вести себя правильно в любом состоянии
 */
 .asLink {
-  font-size: @link-font-size;
+  font-size: @font-size_Link;
   background-color: transparent ! important;
   font-family: @default-font-name;
-  color: @link-text-color;
+  color: @color_Link-text;
   cursor: pointer;
   text-decoration: none;
 }
 .asLink[disabled='disabled'] {
   cursor: default;
-  color: @link-disabled-text-color;
+  color: @color_Link-text_disabled;
   text-decoration: none;
 }
 .ws-is-desktop-platform .asLink[disabled='disabled']:hover {
-  color: @link-disabled-text-color;
+  color: @color_Link-text_disabled;
   text-decoration: none;
 }
 
 .ws-is-desktop-platform .asLink:hover, .asLink:active {
   text-decoration: underline;
-  color: @link-hover-text-color;
+  color: @color_Link-text_hovered;
 }
 
 .controls-ListView__withoutMarker {

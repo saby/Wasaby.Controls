@@ -170,15 +170,16 @@ define('js!SBIS3.CONTROLS.ListView',
           * Ниже приведён код, с помощью которого можно изменять отображение набора операций для записей списка.
           * <pre>
           *    dataGrid.subscribe('onChangeHoveredItem', function(eventObject, hoveredItem) {
-          *       var actions = DataGridView.getItemsActions(),
-          *           instances = actions.getItemsInstances();
-          *       for (var i in instances) {
-          *          if (instances.hasOwnProperty(i)) {
-          *
-          *             // Будем скрывать кнопку удаления для всех строк
-          *             instances[i][i === 'delete' ? 'show' : 'hide']();
+          *       var actions = DataGridView.getItemsActions();
+          *       actions.ready().addCallback(function() {
+          *          var instances = actions.getItemsInstances();
+          *          for (var i in instances) {
+          *             if (instances.hasOwnProperty(i)) {
+          *                // Будем скрывать кнопку удаления для всех строк
+          *                instances[i][i === 'delete' ? 'show' : 'hide']();
+          *             }
           *          }
-          *       }
+          *       });
           *    });
           * </pre>
           * Подобная задача часто сводится к отображению различных операций для узлов, скрытых узлов и листьев для иерархических списков.
@@ -2593,7 +2594,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         // Поэтому вначале подскролливаем к тулбару и затем скролим к элементу.
                         // Такой порядок выбран исходя из того, что запись имеет бо́льший приоритет при отображении, чем тулбар
                         // https://online.sbis.ru/opendoc.html?guid=0e0b1cad-2d09-45f8-b705-b1756b52ad99
-                        if (itemsToolbarContainer && this.getContainer().hasClass('controls-ListView__bottomStyle')) {
+                        if (itemsToolbarContainer && this._isBottomStyleToolbar()) {
                            LayoutManager.scrollToElement(itemsToolbarContainer, true);
                         }
                         this.scrollToItem(model);
@@ -2820,7 +2821,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var self= this,
                 hoveredItem = this.getHoveredItem(),
                 key = target[0].getAttribute('data-id'),
-                columns = target.find('.controls-DataGridView__td').not('.controls-DataGridView__td__checkBox');
+                columns = target.find('.controls-DataGridView__td').not('.controls-DataGridView__td__checkBox'),
+                animation;
             if(hoveredItem && hoveredItem.key !== key && self.getMultiselect()){
                 columns.addClass('rightSwipeAnimation');
                 setTimeout(function(){
@@ -2830,8 +2832,13 @@ define('js!SBIS3.CONTROLS.ListView',
                 }, 300);
             }
             if (this._isSupportedItemsToolbar()) {
-               this._hideItemsToolbar(true);
+               animation = !this._isBottomStyleToolbar();
+               this._hideItemsToolbar(animation);
             }
+         },
+
+         _isBottomStyleToolbar: function (){
+            return this.getContainer().hasClass('controls-ListView__bottomStyle');
          },
 
          _tapHandler: function(e){
@@ -2871,7 +2878,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _showItemsToolbar: function(target) {
             var
                 toolbar = this._getItemsToolbar();
-            toolbar.show(target, this._touchSupport);
+            toolbar.show(target, this._touchSupport && !this._isBottomStyleToolbar());
             //При показе тулбара, возможно он будет показан у редактируемой строки.
             //Цвет редактируемой строки отличается от цвета строки по ховеру.
             //В таком случае переключим классы тулбара в режим редактирования.
@@ -3433,7 +3440,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _updateScrollIndicatorTop: function () {
             var top = '';
             // Если скролим вверх и есть что загружать сверху
-            if (this._isScrollingUp() && this.getItems() && this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.top)) {
+            if (this._isScrollingUp() && this.getItems() && this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.top) || this._loadingIndicator.hasClass('controls-ListView-scrollIndicator__up')) {
                top = StickyHeaderManager.getStickyHeaderIntersectionHeight(this.getContainer()) - this._scrollWatcher.getScrollContainer().scrollTop();
             }
             this._loadingIndicator.css('top', top);

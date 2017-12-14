@@ -66,7 +66,6 @@ define('js!SBIS3.CONTROLS.TextBoxUtils', ['Core/constants'], function(constants)
        setEqualPickerWidth: function(picker) {
            var textBoxWidth = picker.getTarget()[0].getBoundingClientRect().width,
                pickerContainer = picker.getContainer()[0],
-               needSetWidth = true,
                /* Необходимо восстанавливать scrollTop после перерасчётов пикера */
                currentScrollTop = pickerContainer.scrollTop,
                minWidth;
@@ -83,17 +82,20 @@ define('js!SBIS3.CONTROLS.TextBoxUtils', ['Core/constants'], function(constants)
                поэтому устанавливаем min-width, а после его затираем, чтобы не перебивать прикладные стили
                */
                minWidth = parseInt(picker.getContainer().css('min-width'));
-               needSetWidth = !minWidth || minWidth < textBoxWidth;
-               if(needSetWidth) {
-                   pickerContainer.style.minWidth = textBoxWidth + 'px';
-                   pickerContainer.style.maxWidth = textBoxWidth + 'px';
+
+               /* Если для пикера установлен min-width, который больше ширины поля ввода,
+                  то берём этот min-width в качестве ширины для пикера */
+               if (minWidth && (minWidth > textBoxWidth)) {
+                  textBoxWidth = minWidth;
                }
+               pickerContainer.style.minWidth = textBoxWidth + 'px';
+               pickerContainer.style.maxWidth = textBoxWidth + 'px';
+
                picker.recalcPosition(true, true);
-               if(needSetWidth) {
-                   pickerContainer.style.width = textBoxWidth + 'px';
-                   pickerContainer.style.minWidth = '';
-               }
-              pickerContainer.scrollTop = currentScrollTop;
+
+               pickerContainer.style.width = textBoxWidth + 'px';
+               pickerContainer.style.minWidth = '';
+               pickerContainer.scrollTop = currentScrollTop;
            }
        }
    }

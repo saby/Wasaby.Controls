@@ -1,3 +1,4 @@
+<div>{{ itemData.item['calendarTitle'] }}</div>
 <table>
    <thead>
    <tr>
@@ -10,19 +11,16 @@
       <td>Вс</td>
    </tr>
    </thead>
-   <!--Предполагается, что offset, weeksInMonth, daysInMonth будут переданы в шаблон-->
    <tbody>
-      {{ var date = offset * -1 + 1; }}
-      <ws:for data="week in weeksInMonth">
+      <ws:for data="week in itemData.item['weeksArray']">
          <tr>
-            <ws:for data="i in 7">
-               <ws:if data="{{date > 0 && date <= daysInMonth}}">
-                  <td>date</td>
+            <ws:for data="day in week">
+               <ws:if data="{{day > 0}}">
+                  <td>{{day}}</td>
                </ws:if>
                <ws:else>
                   <td></td>
                </ws:else>
-               {{ date++ }}
             </ws:for>
          </tr>
       </ws:for>

@@ -127,8 +127,8 @@
   background-clip: padding-box;
 }
 
-.round-button-mixin(@border-color, @border-radius, @icon-button-border-width) {
-  border: @icon-button-border-width solid @border-color;
+.round-button-mixin(@border-color, @border-radius, @border-width_IconButton-icon) {
+  border: @border-width_IconButton-icon solid @border-color;
   border-radius: @border-radius;
   text-align: center;
 
@@ -450,9 +450,9 @@
       color: @icon-button-round-icon-color-hover;
     }
     &.controls-IconButton__errorBorder {
-      border-color: @icon-button-error-color;
+      border-color: @color_IconButton-icon_error;
       .controls-Button__icon {
-        color: @icon-button-error-color;
+        color: @color_IconButton-icon_error;
       }
       &.ws-disabled {
         border-color: @gray-ccc-color;
@@ -462,9 +462,9 @@
       }
     }
     &.controls-IconButton__doneBorder {
-      border-color: @icon-button-done-color;
+      border-color: @color_IconButton-icon_done;
       .controls-Button__icon {
-        color: @icon-button-done-color;
+        color: @color_IconButton-icon_done;
       }
       &.ws-disabled {
         border-color: @gray-ccc-color;

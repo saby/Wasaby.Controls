@@ -517,6 +517,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                         manager.focusedEditor = null;
                      }
                   }
+                  // Убрать FakeCarret в редакторе при переходе в не активное состояние
+                  // 1174789437 https://online.sbis.ru/opendoc.html?guid=e21b8722-3ffa-4a47-a499-c8bd01af0985
+                  this._removeTinyFakeCaret();
                }
                if (cConstants.browser.isMobilePlatform) {
                   EventBus.globalChannel().notify('MobileInputFocusOut');
@@ -1123,14 +1126,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * Установить курсор в конец контента.
           */
          setCursorToTheEnd: function() {
-            var
-               editor, nodeForSelect, root;
-            if (this._tinyEditor) {
-               editor = this._tinyEditor,
-               nodeForSelect = editor.getBody(),
-               root = editor.dom.getRoot();
+            var editor = this._tinyEditor;
+            // Устанавливать курсор только если редактор активен (чтобы не забирать фокус)
+            // 1174789546 https://online.sbis.ru/opendoc.html?guid=9675e20f-5a90-4a34-b6be-e24805813bb9
+            if (editor && this.isActive() && !this._sourceContainerIsActive()) {
+               var nodeForSelect = editor.getBody();
                // But firefox places the selection outside of that tag, so we need to go one level deeper:
                if (editor.isGecko) {
+                  var root = editor.dom.getRoot();
                   nodeForSelect = root.childNodes[root.childNodes.length - 1];
                   nodeForSelect = nodeForSelect.childNodes[nodeForSelect.childNodes.length - 1];
                }
@@ -1204,7 +1207,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          insertImageTemplate: function(key, fileobj) {
             //необходимо вставлять каретку(курсор ввода), чтобы пользователь понимал куда будет производиться ввод
-            var CARET = '{$caret}';
+            var CARET = cConstants.browser.chrome /*|| cConstants.browser.firefox*/ ? '&#xFEFF;{$caret}' : '{$caret}';
             var className, before, after;
             switch (key) {
                case '1':
@@ -1484,6 +1487,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             editor.on('BeforePastePreProcess', function(e) {
                var isRichContent = e.content.indexOf('data-ws-is-rich-text="true"') !== -1;
                e.content = e.content.replace('data-ws-is-rich-text="true"', '');
+               if (cConstants.browser.isIE12 && cConstants.browser.isWin10) {
+                  // При копировании в MSEdge сверху добавляются 8 полей - отрезать их
+                  // 1174787118 https://online.sbis.ru/opendoc.html?guid=0d74d2ac-a25c-4d03-b75f-98debcc303a2
+                  var msedgeHeads = ['Version', 'StartHTML', 'EndHTML', 'StartFragment', 'EndFragment', 'StartSelection', 'EndSelection', 'SourceURL'];
+                  var msedgeRe = new RegExp('^' + msedgeHeads.join(':[^\\r\\n]+\\r\\n') + ':[^\\r\\n]+\\r\\n[]*');
+                  e.content = e.content.replace(msedgeRe, '');
+               }
                //Необходимо заменять декорированные ссылки обратно на url
                //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
                e.content = self._prepareContent(e.content);
@@ -1707,6 +1717,31 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   delete a.dataset.wsPrev;
                }
             };
+
+            // Если (в chrome-е) при удалении бэкспейсом пред курсором находится символ &#xFEFF; , то удалить его тоже
+            // 1174778405 https://online.sbis.ru/opendoc.html?guid=d572d435-488a-4ac0-9c28-ebed44e4e51e
+            if (cConstants.browser.chrome) {
+               editor.on('keydown', function (e) {
+                  if (e.key === 'Backspace') {
+                     var selection = this._tinyEditor.selection;
+                     if (selection.isCollapsed()) {
+                        var rng = selection.getRng();
+                        var node = rng.startContainer;
+                        var index = rng.startOffset;
+                        if (node.nodeType === 3 && 0 < index) {
+                           var text = node.nodeValue;
+                           if (text.charCodeAt(index - 1) === 65279/*&#xFEFF;*/) {
+                              node.nodeValue = 1 < text.length ? text.substring(0, index - 1) + text.substring(index) : '';
+                              var newRng = editor.dom.createRng();
+                              newRng.setStart(node, index - 1);
+                              newRng.setEnd(node, index - 1);
+                              selection.setRng(newRng);
+                           }
+                        }
+                     }
+                  }
+               }.bind(this));
+            }
 
             // Обработка изменения содержимого редактора.
             editor.on('keydown', function(e) {
@@ -2109,6 +2144,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             //Требуем в будущем пересчитать размеры контрола
             this._notifyOnSizeChanged();
 
+            // Убрать FakeCarret в редакторе при неактивном состоянии
+            // 1174789437 https://online.sbis.ru/opendoc.html?guid=e21b8722-3ffa-4a47-a499-c8bd01af0985
+            if (enabled && !this.isActive()) {
+               setTimeout(this._removeTinyFakeCaret.bind(this), 1);
+            }
+
             RichTextArea.superclass._setEnabled.apply(this, arguments);
          },
 
@@ -2281,6 +2322,19 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             return text;
          },
 
+         /**
+          * Убрать FakeCarret в редакторе
+          */
+         _removeTinyFakeCaret: function () {
+            var editor = this._tinyEditor;
+            if (editor) {
+               var selectionOverrides = editor._selectionOverrides;
+               if (selectionOverrides) {
+                  selectionOverrides.hideFakeCaret();
+               }
+            }
+         },
+
          _addToHistory: function(text) {
             return UserConfig.setParamValue(this._getNameForHistory(), this._replaceSmilesToCode(text));
          },
@@ -2387,7 +2441,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (this.isEnabled() && this._tinyReady.isReady()) {
                   this._tinyEditor.setContent(text, autoFormat ? undefined : {format: 'raw'});
                   this._tinyEditor.undoManager.add();
-                  if (this.isActive() && !this._sourceContainerIsActive() && !!text) {
+                  if (text) {
                      this.setCursorToTheEnd();
                   }
                } else {

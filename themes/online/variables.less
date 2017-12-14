@@ -2,7 +2,7 @@
 @import "colors";
 @import "sizes";
 //Переменные с версиями шрифтов
-@tensorFontForIE:                         '1.0.1';
+@tensorFontForIE:                         '1.0.3';
 @tensorFontVer:                           '1.0.3';
 @emojiFontVer:                            '1.0.0';
 // Кошерные переменные "на выход"
@@ -11,7 +11,7 @@
 @primary-color:                           #ff7033;
 @innacent-color:                     	   #8991A9;
 @accent-color:							         #313E78;
-@default-hover-color:                     #F0F5FB;
+@default-hover-color:                     #F0F5FB;//Переменную нужно удалить, она дублирует @default-bg-color-hovered-item
 @innacent-color2:						         #999999; //Неакцентные элементы, заголовки таблиц, комментарии
 @basic-block-bg-color:					      #EAEAEA; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
 @default-font-weight:                     400;
@@ -67,7 +67,7 @@
 @closeButtonWidth:                        36px;
 @closeButtonHeight:                       24px;
 
-@default-itemHover-color:                 #F0F5FB;
+@default-itemHover-color:                 #F0F5FB;//Переменную нужно удалить, она дублирует @default-bg-color-hovered-item
 @default-itemSelected-color:              #F3F3F3;
 
 @hover-color:                             @blue-dark-color;
@@ -82,27 +82,28 @@
 // ---- //
 
 @link-font:                               @default-text-size @default-font-name;
-@link-text-color:                         @darkcyan-color;
-@link-disabled-text-color:                @gray-ccc-color;
-@link-text-decoration:                    none;
+@color_Link-text:                         @darkcyan-color;
+@color_Link-text_disabled:                @gray-ccc-color;
+@text-decoration_Link:                    none;
 @link-text-alignment:                     center;
-@link-height:                             24px;
-@link-line-height:                        @link-height;
-@link-padding:                            0;
-@link-font-size:                          @default-text-size;
+@height_Link:                             24px;
+@link-line-height:                        @height_Link;
+@padding_Link:                            0;
+@font-size_Link:                          @default-text-size;
 @link-cursor:                             pointer;
 
-@link-hover-text-color:                   @icon-color-primary-hover;
+@color_Link-text_hovered:                   @icon-color-primary-hover;
 
-@link-active-text-color:                  @link-hover-text-color;
+@color_Link-text_active:                  @color_Link-text_hovered;
 
 @link-icon-vertical-alignment:            middle;
 @link-icon-margin:                        -3px 0 0;
 
-@link-field-margin:                       0;
 @link-icon-field-margin:                  0 0 0 6px;
 
-@link-additional-color:                   @gray-color;
+@color_Link-additional:                   @gray-color;
+@color_Link-additional-2:                 @default-text-color;
+@color_Link-additional-3:                 @red-color;
 
 // ------ //
 // Button //
@@ -117,7 +118,7 @@
 @padding_Button-wrapper:                          0 11px;
 @button-margin:                           auto;
 @border-radius_Button:                    16px;
-@button-icon-color-hover:                 @icon-color-primary-hover;
+@color_Link-icon_hovered:                 @icon-color-primary-hover;
 @button-icon-color:                       @icon-color-primary;
 @button-icon-top-offset:                  4px;                      // top offset of 16x16 icon
 @button-icon-left-offset:                 12px;
@@ -268,20 +269,20 @@
 // ------------ //
 //  Icon Button //
 // ------------ //
-@icon-button-done-color: #72BE44;
-@icon-button-error-color: #EF463A;
+@color_IconButton-icon_done: #72BE44;
+@color_IconButton-icon_error: #EF463A;
 @icon-button-round-border-position:     absolute;
-@icon-button-round-border-width:        28px;
-@icon-button-round-border-height:       28px;
-@icon-button-round-border-line-height:  26px;
+@width_IconButton-icon_round:        28px;
+@height_IconButton-icon_round:       28px;
+@line-height_IconButton-icon_round:  26px;
 @icon-button-round-icon-color-hover:    @default-color;
 @border-radius:                         14px;
-@icon-button-border-width:              1px;
-@list-view-items-toolbar-icon-button-border-width:      @icon-button-border-width;
+@border-width_IconButton-icon:              1px;
+@list-view-items-toolbar-icon-button-border-width:      @border-width_IconButton-icon;
 @list-view-items-toolbar-icon-button-border-radius:     @border-radius;
 @list-view-items-toolbar-icon-button-border-font-size:  16px;
-@icon-button-edit-round-border-height:             @icon-medium-size;
-@icon-button-edit-round-border-width:              @icon-medium-size;
+@height_IconButton_round_edit:             @icon-medium-size;
+@width_IconButton_round_edit:              @icon-medium-size;
 @icon-button-edit-round-border-line-height:        @icon-medium-size - 2 * @default-border-width;
 @list-view-items-toolbar-animate-duration:         0.35s;
 // Normal default button
@@ -617,8 +618,8 @@
 @month-picker-field-height:                     16px;
 @month-picker-field-margin:                     0 16px;
 @month-picker-field-font:                       700 14px/16px @default-font-name;
-@month-picker-field-text-color:                 @link-text-color;
-@month-picker-field-hover-text-color:           @link-hover-text-color;
+@month-picker-field-text-color:                 @color_Link-text;
+@month-picker-field-hover-text-color:           @color_Link-text_hovered;
 @month-picker-arrow-spritesheet:                'img/MonthPicker-arrows.png';
 @month-picker-arrow-width:                      16px;
 @month-picker-arrow-height:                     16px;
@@ -909,7 +910,7 @@
 @listView-servicefooter-padding:                0 8px;
 @listView-servicefooter-height:                 32px;
 @listView-servicefooter-fontsize:               12px;
-@listView-loadmorebutton-font-size:             @link-font-size;
+@listView-loadmorebutton-font-size:             @font-size_Link;
 @scrollPaging-padding:                          32px;
 // ItemsToolbar small
 @items-toolbar-bottom-style-background: 			url('img/items-toolbar-bottom-style-background.png');
@@ -1007,11 +1008,8 @@
 // --------- //
 @data-grid-bg:                                  transparent;
 @data-grid-row-bg:                              transparent;
-@data-grid-row-hover-bg:                        @default-itemHover-color;
+@data-grid-row-hover-bg:                        @default-itemHover-color;//Переменную нужно удалить, она дублирует @background-color_DataGridView-item_hovered
 @data-grid-row-selected-bg:                     transparent;
-@data-grid-row-hover-header-cell-bg:            @data-grid-row-hover-bg;
-@data-grid-row-hover-cell-text-color:           inherit;
-@data-grid-row-hover-cell-bg:                   @data-grid-row-hover-bg;
 @data-grid-header-cell-height:                  14px;
 @data-grid-header-cell-padding:                 4px @data-grid-cell-padding-right;
 @data-grid-header-cell-padding-side:            12px;
@@ -1020,8 +1018,6 @@
 @data-grid-header-cell-sorting-icon-size:       16px;
 @data-grid-header-cell-text-color:              #8991a9;
 @data-grid-header-cell-bg:                      transparent;
-@data-grid-header-cell-hover-text-color:        @data-grid-header-cell-text-color;
-@data-grid-header-cell-hover-bg:                @data-grid-header-cell-bg;
 @data-grid-cell-height:                         30px;
 @data-grid-cell-line-height:                    20px;
 @data-grid-results-cell-line-height:            19px;
@@ -1138,7 +1134,7 @@
 @DropdownList-height:                     24px;
 @DropdownList-picker-bg:                              @white-color;
 @DropdownList-header-bg:                              @DropdownList-picker-bg;
-@DropdownList-picker-offset:                          -8px 0 0 -9px;
+@DropdownList-picker-offset:                          -8px 0 0 -13px;
 @DropdownList-picker-fastdatafilter-offset:           -7px 0 0 3px;
 @DropdownList-picker-fdf-left:                        -13px;
 @DropdownList-picker-margin-top:                      -1px;
@@ -1174,7 +1170,7 @@
 @DropdownList-picker-menu-selected-marker-height:     8px;
 @DropdownList-picker-menu-selected-marker-bg:         #D94700;
 @DropdownList-after-caption-top:                      3px;
-@DropdownList-linkStyleColor:                         @link-text-color;
+@DropdownList-linkStyleColor:                         @color_Link-text;
 @DropdownList-linkStyleHoverColor:                    #313E78;
 @DropdownList-footer-buttonsBlock-height:             24px;
 @DropdownList-footer-multisel-buttonsBlock-h:         32px;
@@ -1185,7 +1181,7 @@
 @DropdownList-footer-hasMore-left-multiselect:        24px;
 @DropdownList-footer-hasMore-top-multiselect:         4px;
 @DropdownList-footer-hasMore-top:                     0;
-@DropdownList-footer-hasMore-hover-color:             @link-active-text-color;
+@DropdownList-footer-hasMore-hover-color:             @color_Link-text_active;
 @DropdownList-footer-select-right:                    6px;
 @DropdownList-footer-select-top:                      2px;
 @DropdownList-footer-select-icon-container-size:      28px!important;
@@ -1208,6 +1204,7 @@
 //Pager
 @controls-Pager-amount-text:              @gray-color;
 @controls-Pager-height:                   29px;
+@padding_Pager:                           4px 0 0 6px;
 //FilterButton
 @controls-filterButton-picker-bg:                 #F4F4F4;
 @controls-filterButton-picker-border-width:       @default-border-width;
@@ -1285,7 +1282,7 @@
 @fieldLink-link-color-enabled-hover:      #313E78;
 @fieldLink-link-line-height:              24px;
 @fieldLink-showSelector-color:            @icon-color-primary;
-@fieldLink-showSelector-color-hover:      @link-hover-text-color;
+@fieldLink-showSelector-color-hover:      @color_Link-text_hovered;
 @fieldLink-big-fontSize:                  15px;
 @fieldLink-big-height:                    20px;
 @fieldLink-big-fontSize-color:            #313E78;
@@ -1518,6 +1515,7 @@
 
 @paging-font-size:                                      18px;
 @scrollpager-bg:                                         white;
+@height_ListView_ScrollPager:                            32px;
 @scrollpager-bottom:                                     0px;
 @scrollpager-border:                                     1px solid @default-color;
 @date-range-big-header-bg:								#f9f9f9;
