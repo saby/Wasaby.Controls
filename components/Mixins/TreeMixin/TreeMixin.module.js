@@ -243,10 +243,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          records = searchProcessing(projection, cfg);
       }
       else {
-         var needGroup = false, groupId;
+         var needGroup = false, groupId, groupHash;
          projection.each(function(item) {
             if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
                groupId = item.getContents();
+               groupHash = item.getHash();
                needGroup = true;
             }
             else {
@@ -255,7 +256,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }
                if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
                   if (cfg._canApplyGrouping(item, cfg) && needGroup && groupId) {
-                     cfg._groupItemProcessing(groupId, records, item, cfg);
+                     cfg._groupItemProcessing(groupId, records, item, cfg, groupHash);
                      needGroup = false;
                   }
                }
@@ -993,7 +994,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
       _getItemsForRedrawOnAdd: function(items) {
          var
-            itemsToAdd = [], start = 0, groupId,
+            itemsToAdd = [], start = 0, groupId, groupHash,
             lastItem, breadCrumbs;
          if (this._options.hierarchyViewMode) {
             itemsToAdd = searchProcessing(items, this._options);
@@ -1012,8 +1013,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          } else {
             if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
                groupId = items[0].getContents();
+               groupHash = items[0].getHash();
                if (groupId !== false && items.length > 1 && this._canApplyGrouping(items[1])) {
-                  this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
+                  this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options, groupHash);
                }
                items.splice(0, 1);
                itemsToAdd = itemsToAdd.concat(items);
