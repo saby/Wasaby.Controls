@@ -15,7 +15,7 @@ define('js!Controls/List/interface/ITreeControl', [
 
    /**
     * @name Controls/List/interface/ITreeControl#hasChildrenProperty
-    * @cfg {String} Имя поля в записи, в котором содержится информация о наличии потомков для данной записи
+    * @cfg {String} Имя свойства элемента, в котором содержится информация о наличии потомков для данного элемента
     */
 
    /**
@@ -30,12 +30,12 @@ define('js!Controls/List/interface/ITreeControl', [
 
    /**
     * @name Controls/List/interface/ITreeControl#nodeProperty
-    * @cfg {String} Имя поля в записи, в котором содержится информация о типе записи (лист/узел/скрытый узел)
+    * @cfg {String} Имя свойства элемента, в котором содержится информация о типе элемента (лист/узел/скрытый узел)
     */
 
    /**
     * @name Controls/List/interface/ITreeControl#parentProperty
-    * @cfg {String} Имя поля в записи, в котором содержится информация о родительской записи
+    * @cfg {String} Имя свойства элемента, в котором содержится информация о родительском элементе
     */
 
    /**
