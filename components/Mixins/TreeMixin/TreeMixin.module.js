@@ -1462,6 +1462,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                this._previousRoot = this._options.currentRoot;
 
             }
+            this._updateExpanderDisplay();
          }
       },
       /**
