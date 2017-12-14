@@ -2,7 +2,8 @@ define('js!Controls/Input/Password',
     [
         'Core/Control',
         'tmpl!Controls/Input/Password/Password',
-        'WS.Data/Type/descriptor'
+        'WS.Data/Type/descriptor',
+        'css!Controls/Input/Password/Password'
     ],
 
 function(Control, template, types) {
