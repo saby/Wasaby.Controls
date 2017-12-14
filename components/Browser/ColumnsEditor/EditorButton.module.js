@@ -53,8 +53,8 @@ define('js!SBIS3.CONTROLS.Browser.ColumnsEditor.EditorButton',
 
          init: function () {
             EditorButton.superclass.init.apply(this, arguments);
-            this._presetDropdown = this._options.usePresets ? this.getChildControlByName('controls-Columns-EditorButton__presetDropdown') : null;
-            this._button = this.getChildControlByName('controls-Columns-EditorButton__button');
+            this._presetDropdown = this._options.usePresets ? this.getChildControlByName('controls-Browser-ColumnsEditor-EditorButton__presetDropdown') : null;
+            this._button = this.getChildControlByName('controls-Browser-ColumnsEditor-EditorButton__button');
 
             var handler = _handler.bind(null, this);
             if (this._presetDropdown) {

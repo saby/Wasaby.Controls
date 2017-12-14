@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Dropdown',
 
          init: function () {
             PresetDropdown.superclass.init.apply(this, arguments);
-            this._dropdown = this.getChildControlByName('controls-Columns-Preset-Dropdown__dropdown');
+            this._dropdown = this.getChildControlByName('controls-Browser-ColumnsEditor-Preset-Dropdown__dropdown');
             var namespace = this._options.presetNamespace || '';
             this._selectedPresetId = _lastSelecteds[namespace] || this._options.selectedPresetId;
             if (namespace) {

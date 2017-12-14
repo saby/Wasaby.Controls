@@ -101,10 +101,10 @@ define('js!SBIS3.CONTROLS.Browser.ColumnsEditor.Editing.Area',
                moveColumns: true
             },
             _childNames: {
-               presetView: 'controls-Columns-Editing-Area__Preset',
-               fixedView: 'controls-Columns-Editing-Area__FixedList',
-               selectableView: 'controls-Columns-Editing-Area__SelectableList',
-               presetDropdown: 'controls-Columns-Editing-Area__Preset-item-title'
+               presetView: 'controls-Browser-ColumnsEditor-Editing-Area__Preset',
+               fixedView: 'controls-Browser-ColumnsEditor-Editing-Area__FixedList',
+               selectableView: 'controls-Browser-ColumnsEditor-Editing-Area__SelectableList',
+               presetDropdown: 'controls-Browser-ColumnsEditor-Editing-Area__Preset-item-title'
             },
             _presetView: null,
             _presetDropdown: null,

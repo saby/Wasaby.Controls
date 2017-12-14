@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.Browser.ColumnsEditor.Editor',
                //title: null,
                parent: this,
                template: 'js!SBIS3.CONTROLS.Browser.ColumnsEditor.Editing.Area',
-               cssClassName: 'controls-Columns-Editor__area',
+               cssClassName: 'controls-Browser-ColumnsEditor-Editor__area',
                closeByExternalClick: true,
                closeButton: true,
                componentOptions: {
