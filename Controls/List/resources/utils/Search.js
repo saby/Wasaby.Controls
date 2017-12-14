@@ -12,10 +12,6 @@ define('js!Controls/List/resources/utils/Search',
        * Checks required parameters
        */
       function checkRequiredParams(params) {
-         if (!params.searchParam) {
-            throw new Error('searchParam is required for search')
-         }
-   
          if (!params.dataSource) {
             throw new Error('dataSource is required for search')
          }
@@ -72,7 +68,7 @@ define('js!Controls/List/resources/utils/Search',
             cfg = cfg || {};
             checkRequiredParams(cfg);
             this._searchDelay = cfg.hasOwnProperty('searchDelay') ? cfg.searchDelay : 500;
-            this._dataSource = cfg.dataSource;
+            this._dataSource = DataSourceUtil.prepareSource(cfg.dataSource);
             Search.superclass.constructor.apply(this, arguments);
          },
    

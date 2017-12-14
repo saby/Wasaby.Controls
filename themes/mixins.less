@@ -59,6 +59,7 @@
 
 .placeholder(@color: @default-placeholder-color) {
   &::-webkit-input-placeholder {
+    opacity: 1;
     color: @color;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -66,20 +67,16 @@
     text-overflow:ellipsis;
   }
 
-  &:-moz-placeholder {
-    color: @color;
-    -moz-user-select: none;
-    text-overflow:ellipsis;
-  }
-
   &::-moz-placeholder {
+    opacity: 1;
     color: @color;
     -moz-user-select: none;
     text-overflow:ellipsis;
   }
 
   &:-ms-input-placeholder {
-     color: @color;
+    opacity: 1;
+    color: @color;
     //-ms-user-select: none; Убираю, т.к. из-за этого IE ставит курсор не в инпут, а куда то в рандомное место на странице
     text-overflow:ellipsis;
   }
@@ -130,8 +127,8 @@
   background-clip: padding-box;
 }
 
-.round-button-mixin(@border-color, @border-radius, @icon-button-border-width) {
-  border: @icon-button-border-width solid @border-color;
+.round-button-mixin(@border-color, @border-radius, @border-width_IconButton-icon) {
+  border: @border-width_IconButton-icon solid @border-color;
   border-radius: @border-radius;
   text-align: center;
 
@@ -144,7 +141,7 @@
   box-sizing: border-box;
 }
 
-.button-default-style(@button-font-size: @button-font-size, @button-default-shadow: none) {
+.button-default-style(@button-font-size: @font-size_Button, @button-default-shadow: none) {
   cursor: pointer;
   display: inline-block;
   outline: none;
@@ -167,7 +164,7 @@
 
 .baseline-fix() {
   &:before {
-    content: '.';
+    content: '\200b'; //zero width space
     width: 0;
     display: inline-block;
     visibility: hidden;
@@ -408,12 +405,13 @@
   }
 }
 
-.ws-header-mixin(@padding-left, @padding-right, @font, @color, @hoverColor: @color) {
+.ws-header-mixin(@padding-left, @padding-right, @font, @color, @height, @hoverColor: @color) {
   display: inline-block;
   padding-left: @padding-left;
   padding-right: @padding-right;
   font: @font;
   color: @color;
+  height: @height;
   &:hover {
     color:@hoverColor;
   }
@@ -452,9 +450,9 @@
       color: @icon-button-round-icon-color-hover;
     }
     &.controls-IconButton__errorBorder {
-      border-color: @icon-button-error-color;
+      border-color: @color_IconButton-icon_error;
       .controls-Button__icon {
-        color: @icon-button-error-color;
+        color: @color_IconButton-icon_error;
       }
       &.ws-disabled {
         border-color: @gray-ccc-color;
@@ -464,9 +462,9 @@
       }
     }
     &.controls-IconButton__doneBorder {
-      border-color: @icon-button-done-color;
+      border-color: @color_IconButton-icon_done;
       .controls-Button__icon {
-        color: @icon-button-done-color;
+        color: @color_IconButton-icon_done;
       }
       &.ws-disabled {
         border-color: @gray-ccc-color;
@@ -485,7 +483,7 @@
 
   & + .controls-Button__text {
     margin-right: calc(@margin-right ~'-' @border-width);
-    margin-left: calc(@margin-left ~'+' @icon-width ~'+' @button-icon-gap ~'-' @border-width);
+    margin-left: calc(@margin-left ~'+' @icon-width ~'+' @spacing_Button-between-icon-text ~'-' @border-width);
   }
 }
 
@@ -581,6 +579,7 @@
   border: none;
   outline: none;
   background: transparent;
+  .box-shadow(none);
 }
 
 .generate-height(@className, @i: 1) when (@i =< 10) {
@@ -623,4 +622,20 @@
   border-top-color: transparent;
   border-left-color: transparent;
   border-bottom-color: transparent;
+}
+
+
+.ws-header-size-mixin(@text-size, @height: @default-height) {
+  display: inline-block;
+  font-size: @text-size;
+  height: @height;
+  line-height: @height;
+  font-family: @default-font-name;
+}
+.ws-back-arrow-size-mixin(@width, @height) {
+  &:before {
+    display: inline-block;
+    width: @width;
+    height: @height;
+  }
 }

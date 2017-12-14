@@ -45,7 +45,6 @@
    .flex-grow(1);
    .flex-direction(row-reverse);
    .align-items(center);
-   max-height: @max-height_FieldLink-beforeFieldWrapper; //todo
    max-width: ~'calc(100% - '@fieldLink-linkItem-cross-width~')';
    overflow: hidden;
 }
@@ -72,7 +71,9 @@
 .controls-FieldLink__picker {
    max-height: @fieldLink-picker-max-height;
    min-height: @fieldLink-picker-min-height;
-   border: @fieldLink-border @gray-ccc-color;
+   border-width: @default-border-width;
+   border-style: solid;
+   border-color: @border-color_FieldLink_picker;
    box-sizing: border-box;
    margin-top: 0;
    overflow: auto;
@@ -85,15 +86,14 @@
    position: relative;
    padding-right: @default-padding;
    cursor: pointer;
-   color: @link-text-color;
+   color: @color_FieldLink_show_all;
    .flex-shrink(0);
    &:hover {
       text-decoration: underline;
-      color: @link-hover-text-color;
+      color: @color_FieldLink_show_all_hover;
    }
 }
 .controls-FieldLink__showAllLinks-disabled {
-   top: -@default-line-height;
    background: @default-bg-color;
    padding-right: 0;
    &:after {
@@ -108,7 +108,7 @@
    }
 }
 .controls-FieldLink__dropAllLinks {
-   color: @fieldLink-link-color-enabled;
+   color: @color_FieldLink_dropAllLinks
 }
 .controls-FieldLink__dropAllLinks, .controls-FieldLink__showSelector {
    margin: @fieldLink-afterField-button-margin;
@@ -119,7 +119,7 @@
    display: inline-block;
 }
 .controls-FieldLink__item-caption__normal {
-   font-size: @default-text-size;
+   font-size: @font-size_FieldLink_itemCaption_normal;
 }
 .controls-FieldLink__item-caption__underlined:hover {
    text-decoration: underline;
@@ -134,6 +134,9 @@
    color: @fieldLink-big-fontSize-color;
    height: @fieldLink-big-height;
 }
+.controls-FieldLink__icon {
+   .icon-size-without-important(@fieldLink-icon-size);
+}
 
 // fixme
 .controls-FieldLink {
@@ -144,7 +147,7 @@
          .inline-flexbox();
          align-items: center;
          margin: 0;
-         padding: 0;
+         padding: @padding_FieldLink_item_in_picker;
          line-height: @fieldLink-linkItem-line-height;
          height: auto;
          &:after {
@@ -152,7 +155,9 @@
          }
       }
       &.controls-popup-revert-vertical {
-         border-top: @fieldLink-border @gray-ccc-color;
+         border-top-width: @default-border-width;
+         border-top-style: solid;
+         border-top-color: @border-color_FieldLink_picker;
          border-bottom: none;
       }
       &.controls-FieldLink__big-fontSize {
@@ -188,8 +193,6 @@
       max-width:100%;
    }
    .controls-FieldLink__beforeFieldWrapper {
-      .flex-wrap(wrap);
-      .flex-direction();
       max-width: 100%;
    }
    .controls-FieldLink__item-caption {

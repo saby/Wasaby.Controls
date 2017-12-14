@@ -22,18 +22,18 @@
 // ---- //
 
 @link-font:                               @default-text-size @default-font-name;
-@link-text-color:                         @primary-color;
+@color_Link-text:                         @primary-color;
 @link-line-height:                        normal;
-@link-hover-text-color:                   @primary-color;
+@color_Link-text_hovered:                   @primary-color;
 @link-icon-field-margin:                  0 0 0 4px;
 // ------ //
 // Button //
 // ------ //
 // Normal button
 @button-height:                           30px;
-@button-padding:                          0 8px;
-@button-border-radius:                    2px;
-@button-icon-color-hover:                 #313E78;
+@padding_Button-wrapper:                          0 8px;
+@border-radius_Button:                    2px;
+@color_Link-icon_hovered:                 #313E78;
 @button-icon-top-offset:                  7px;                      // top offset of 16x16 icon
 @button-icon-left-offset:                 8px;
 @button-icon-text-margin:                 0 8px 0 28px;             // margin of text following 16x16 icon
@@ -48,33 +48,33 @@
 @filter-panel-chooser-list-view-check-box-top:                    6px;
 @filter-panel-chooser-list-view-check-box-left:                   4px;
 // Normal default button
-@button-border:                           @button-border-width solid @gray-light-color;
-@button-bg-color:                               @default-color;
-@button-border-color:                     @gray-light-color;
+@button-border:                           @border-width_Button solid @gray-light-color;
+@background_Button:                               @default-color;
+@border-color_Button:                     @gray-light-color;
 @button-hover-text-color:                 @white-color;
 @button-hover-border:                     1px solid @primary-color;
-@button-hover-bg:                         @primary-color;
+@background_Button_hovered:                         @primary-color;
 @button-active-text-color:               @primary-color;
 @button-active-border:                    @button-hover-border;
-@button-bg-active:                        @white-color;
+@background_Button_active:                        @white-color;
 // Normal primary button
-@button-primary-text-color:               @white-color;
+@color_Button_primary:               @white-color;
 @button-primary-bg:                       @primary-color;
 @button-primary-hover-text-color:         @primary-color;
-@button-primary-hover-shadow:             @button-shadow;
-@button-primary-hover-bg:                 lighten(@primary-color, 55%);
+@button-primary-hover-shadow:             @box-shadow_Button;
+@background_Button_primary_hovered:                 lighten(@primary-color, 55%);
 @button-primary-active-text-color:        @button-active-text-color;
 @button-primary-active-border:            @button-active-border;
 @button-primary-active-shadow:            @button-active-shadow;
-@button-primary-bg-active:                @button-bg-active;
+@background_Button_primary_active:                @background_Button_active;
 // Normal disabled button
-@button-disabled-border:                  @button-border;
-@button-disabled-bg:                      @gray-light-color;
+@border_Button_disabled:                  @button-border;
+@background_Button_disabled:                      @gray-light-color;
 // Big button
 @button-big-font-size:                    (@default-text-size * 1.2);
 @button-big-text-alignment:               @button-text-alignment;
 @button-big-height:                       54px;
-@button-big-padding:                      15px 20px;
+@padding_Button-wrapper_l:                      15px 20px;
 @button-big-margin:                       @button-margin;
 @button-big-border-radius:                6px;
 @button-big-icon-top-offset:              19px;                             // top offset of 16x16 icon
@@ -86,9 +86,9 @@
 @button-big-text-margin-left:             20px;
 @button-big-text-padding:                 11px 0 0;
 
-@button-large-height:                                                                                                   48px;
-@button-large-border-radius:                                                                                            24px;
-@button-large-font-size:                                                                                                18px;
+@height_Button_l:                                                                                                   48px;
+@border-radius_Button_l:                                                                                            24px;
+@font-size_Button_l:                                                                                                18px;
 
 // ------------ //
 // Button group //
@@ -99,11 +99,11 @@
 // Toggle button //
 // ------------- //
 // Normal default button
-@button-checked-border-width:             @button-border-width;
+@button-checked-border-width:             @border-width_Button;
 @button-checked-border:                   @button-active-border;
-@button-checked-bg:                       @button-bg-active;
+@button-checked-bg:                       @background_Button_active;
 @button-primary-checked-border:           @button-primary-active-border;
-@button-primary-checked-bg:               @button-primary-bg-active;
+@button-primary-checked-bg:               @background_Button_primary_active;
 // ---------- //
 // Tab button //
 // ---------- //
@@ -291,6 +291,7 @@
 @data-grid-header-cell-text-color:              @gray-color;
 @data-grid-cell-height:                         @data-grid-header-cell-height;
 @data-grid-cell-line-height:                    21px;
+@data-grid-results-cell-line-height:            @data-grid-cell-line-height;
 @data-grid-cell-padding:                        @data-grid-header-cell-padding;
 @data-grid-ms-first-content-cell-padding-left:  @data-grid-header-cell-padding-side;
 @data-grid-td-checkbox-width:                   16px;

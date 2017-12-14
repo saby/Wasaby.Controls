@@ -1,5 +1,9 @@
 @multiplier:                   1;
 //default-sizes
+@icon-size_default:            round(37px * @multiplier);
+@icon-size_default_medium:     round(50px * @multiplier);
+@icon-size_default_large:      round(84px * @multiplier);
+//старые default-sizes
 @default-height:               round(84px * @multiplier);
 @default-border-width:         2px;
 @default-text-size:            round(32px * @multiplier);
@@ -14,22 +18,22 @@
 @default-padding:              round(14px * @multiplier);
 @default-padding-small:        round(7px * @multiplier);
 //textbox
-@height_TextBox_m:                                round(84px * @multiplier) + @default-border-width;
+@height_TextBox_m:                                round(84px * @multiplier);
 @height_TextBox_l:                                round(84px * @multiplier);
 @font-size_TextBox_m:                             round(32px * @multiplier);
 @font-size_TextBox_l:                             round(40px * @multiplier);
 @line-height_TextBox:                             round(80px * @multiplier);
 @padding_TextBox-container:                       0 round(14px * @multiplier);
 @padding_TextBox-container_left:                  0 0 0 round(14px * @multiplier);
+@width_TextBox-InformationIcon:                   round(14px * @multiplier);
+@height_TextBox-InformationIcon:                  round(14px * @multiplier);
 @border-width_TextBox:                            2px;
-@font-size_TextBox-InformationIcon:               round(28px * @multiplier);
 //textarea
 @min-height_TextArea:                             round(42px * @multiplier);
 @padding_TextArea-container:                      round(19px * @multiplier) 0 round(19px * @multiplier) round(14px * @multiplier);
 @padding_TextArea-field:                          0 round(14px * @multiplier) 0 0;
 //NumberTextBox
 @icon-size_NumberTextBox-arrow:                   round(84px * @multiplier);
-@padding_NumberTextBox-arrow:                     0 0 0 round(14px * @multiplier);
 //combo-box
 @combo-box-icon-size:                             @default-icon-size-large;
 @combo-box-arrow-padding:                         0px;
@@ -42,9 +46,9 @@
 @search-form-icon-padding:                        0;
 @padding_SearchForm:                              0 round(14px * @multiplier);
 @top_searchForm_picker_closeButton:               round(8px * @multiplier);
-@margin-left__searchForm_picker:                  -(@top_searchForm_picker_closeButton + @default-border-width);
-@margin-top__searchForm_picker:                   -@padding-top__searchForm_picker;
-@padding-top__searchForm_picker:                  @top_searchForm_picker_closeButton + @default-border-width + @default-height;
+@margin-left__searchForm_picker:                  -(@default-border-width + @top_searchForm_picker_closeButton);
+@margin-top__searchForm_picker:                   -(@padding-top__searchForm_picker + @default-border-width - @top_searchForm_picker_closeButton);
+@padding-top__searchForm_picker:                  (@top_searchForm_picker_closeButton * 2) + @height_TextBox_m;
 //fieldLink
 @fieldLink-showAll-shadow-width:                  round(28px * @multiplier);
 @fieldLink-linkItem-line-height:                  @default-base-line-height;
@@ -53,7 +57,11 @@
 //treeview
 @tree-view-folder-text-size:                      @default-text-size;
 //button
-@button-border-radius:                            1px;
+@border-radius_Button:                            1px;
+//area-blocks
+@spacing_Block:                                   round(8px * @multiplier);
+@border-width_Block:                              1px;
+@border-radius_Block:                             1px;
 //back-button
 @back-button-margin-before:                       0 4px 0 0;//todo: romanov
 @back-button-padding-before:                      1px 0;//todo: romanov
@@ -76,7 +84,7 @@
 @date-range-choose-home-button-size:                                  40px;//todo: mironov
 @date-range-choose-home-button-font-size:                             32px;//todo: mironov
 @date-range-choose-home-button-line-height:                           40px;//todo: mironov
-@date-range-big-choose-years-panel-toggle-choose-year-button-margin:  0 60px;//todo: mironov
+@date-range-big-choose-years-panel-toggle-choose-year-button-margin:  0 round(60px * @multiplier);//todo: mironov
 @date-range-big-choose-months-button-first-padding-top:               2px;//todo: mironov
 @date-range-big-choose-months-button-last-padding-bottom:             3px;//todo: mironov
 @date-range-big-choose-years-panel-wrapper-font-size:                 24px;//todo: mironov
@@ -105,6 +113,7 @@
 @DropdownList-picker-head-padding:                       0 round(16px * @multiplier);//todo: krasilnikov
 @DropdownList-picker-head-duplicate-type-top-padding:    0px;//todo: krasilnikov
 @DropdownList-picker-menu-item-padding:                  round(5px * @multiplier) round(16px * @multiplier);
+@border-width_DropDownList_picker:                       @default-border-width;
 //MoveDialog
 @controls-movedialog-min-width:                 536px;
 @controls-movedialog-max-width:                 536px;
@@ -123,28 +132,29 @@
 @font-folder-size:                        @default-text-size;
 @check-box-default-font-size:             @default-text-size;
 @link-line-height:                        normal;
-@link-font-size:                          @default-text-size;
+@height_Link:                             auto;
+@font-size_Link:                          @default-text-size;
 @link-icon-field-margin:                  0 0 0 round(4px * @multiplier);
-@icon-button-round-border-width:          auto;
-@icon-button-round-border-height:         round(64px * @multiplier);
-@icon-button-round-border-line-height:    round(62px * @multiplier);
+@width_IconButton-icon_round:          auto;
+@height_IconButton-icon_round:         round(64px * @multiplier);
+@line-height_IconButton-icon_round:    round(62px * @multiplier);
 @border-radius:                           0;
-@icon-button-border-width:                0px;
+@border-width_IconButton-icon:                0px;
 //ListView
 @list-view-items-toolbar-icon-button-border-width:0;
 @list-view-items-toolbar-icon-button-border-radius:0;
 @list-view-items-toolbar-icon-button-border-font-size:@icon-large-size;
-@icon-button-edit-round-border-height:    @icon-large-size;
-@icon-button-edit-round-border-width:     @icon-large-size;
+@height_IconButton_round_edit:    @icon-large-size;
+@width_IconButton_round_edit:     @icon-large-size;
 @icon-button-edit-round-border-line-height:@icon-large-size;
 @listView-empty-data-padding-top:         round(54px * @multiplier);
 //Button
 @button-height:                           @default-height;
-@button-font-size:                        round(40px * @multiplier);
-@button-min-width:                        round(24px * @multiplier);
-@button-padding:                          0 round(14px * @multiplier);
+@font-size_Button:                        round(40px * @multiplier);
+@min-width_Button:                        round(24px * @multiplier);
+@padding_Button-wrapper:                  0 round(14px * @multiplier);
 @button-icon-top-offset:                  round(12px * @multiplier);                     // top offset of 16x16 icon
-@button-icon-gap:                         round(4px * @multiplier);                      // gap between icon and text
+@spacing_Button-between-icon-text:                         round(4px * @multiplier);                      // gap between icon and text
 @button-icon-text-margin:                 0 round(8px * @multiplier) 0 round(28px * @multiplier);             // margin of text following 16x16 icon
 @button-icon-big-top-offset:              round(8px * @multiplier);                     // top offset of 24x24 icon
 @button-icon-left-offset:                 round(14px * @multiplier);
@@ -163,22 +173,22 @@
 @filter-panel-chooser-list-view-check-box-left:        round(4px * @multiplier);
 @filter-panel-chooser-list-view-title-max-height:      round(144px * @multiplier);
 @filter-panel-chooser-list-view-title-shadow-height:   round(32px * @multiplier);
-@button-border-width:                                  2px;
+@border-width_Button:                                  2px;
 // Big button
-@button-big-padding:                      @button-padding;
+@padding_Button-wrapper_l:                @padding_Button-wrapper;
 @button-big-icon-top-offset:              round(20px * @multiplier);                           // top offset of 16x16 icon
 @button-big-icon-left-offset:             round(16px * @multiplier);
 @button-big-icon-text-margin:             @button-icon-text-margin;         // margin of text following 16x16 icon
 @button-big-icon-big-top-offset:          round(15px * @multiplier);
-@button-large-height:                     @button-height;
-@button-large-border-radius:               0;
-@button-large-font-size:                  @button-font-size;
+@height_Button_l:                         @button-height;
+@border-radius_Button_l:                  0;
+@font-size_Button_l:                      @font-size_Button;
 //Button group
 @button-group-horizontal-item-margin:     0 round(49px * @multiplier) 0 0;
-@button-group-vertical-item-margin:       0 0 round(49px * @multiplier) 0;
+@button-group-vertical-item-margin:       0 0 round(25px * @multiplier) 0;
 // Normal default button
-@button-checked-border-width:             @button-border-width;
-@button-checked-padding:                  @button-padding;
+@button-checked-border-width:             @border-width_Button;
+@button-checked-padding:                  @padding_Button-wrapper;
 // Tab button
 @tab-button-large-secondAddText-font-size:round(13px * @multiplier);
 //Radio button
@@ -251,7 +261,7 @@
 @menu-item-icon-left-offset:              0;
 @menu-item-icon24-top-offset:             0;
 @menu-item-icon24-top-offset-big:         0;
-@menu-item-icon24-left-offset:            round(-16px * @multiplier);
+@menu-item-icon24-left-offset:            0;
 @menu-item-line-height:                   round(100px * @multiplier);
 @menu-item-padding-16:                    round(56px * @multiplier);
 @menu-item-padding-24:                    round(70px * @multiplier);
@@ -373,7 +383,7 @@
 @list-view-actions-item-height:           @icon-small-size;
 @list-view-actions-margin:                0 round(4px * @multiplier);
 @list-view-actions-icon-top:              round(23px * @multiplier);
-@list-view-actions-menu-text-margin:      round(18px * @multiplier) 0 round(8px * @multiplier) round(82px * @multiplier);
+@list-view-actions-menu-text-margin:      round(18px * @multiplier) 0 round(8px * @multiplier) round(98px * @multiplier);
 @list-view-items-toolbar-elements-margin: 0 round(4px * @multiplier);
 @list-view-items-toolbar-line-height:     round(49px * @multiplier);
 @list-view-items-toolbar-vertical-line-height:round(24px * @multiplier);
@@ -408,6 +418,7 @@
 //Data grid
 @data-grid-header-cell-height:            round(50px * @multiplier);
 @data-grid-cell-line-height:              round(44px * @multiplier);
+@data-grid-results-cell-line-height:      @data-grid-cell-line-height;
 @data-grid-header-cell-padding:           @data-grid-cell-padding;
 @data-grid-header-cell-padding-side:      round(10px * @multiplier);
 @data-grid-header-cell-font-size:         round(24px * @multiplier);
@@ -488,7 +499,6 @@
 @controls-filterButton-area-header-width:    round(667px * @multiplier);
 //BackButton
 @back-button-font-size:                   round(40px * @multiplier);
-@back-button-line-height:                 round(50px * @multiplier);
 @back-button-height:                      round(50px * @multiplier);
 //BreadCrumbs
 @breadcrumbs-top:                         0;
@@ -594,6 +604,7 @@
 @paging-font-size:                        @default-height;
 @scrollpager-border:                      none;
 @scrollpager-bottom:                      round(9px * @multiplier);
+@height_ListView_ScrollPager:             @default-height;
 @closeBigButtonWidth:                     @default-height;
 @date-range-big-choose-width:				   round(722px * @multiplier);
 @date-range-big-choose-left-right-width:  @default-height;
@@ -694,13 +705,28 @@
 @radio-button-icon-margin:                round(8px * @multiplier);
 @back-button-text-fontweight:             @default-font-weight;
 //printDialog
-@printDialog-activate-right:              round(67px * @multiplier);
+@printDialog-activate-right:              round(92px * @multiplier); //ширина кнопки 84px+8px отступ
 //back-button
-@back-arrow-width:                round(28px * @multiplier);
-@back-arrow-height:               round(28px * @multiplier);
+@back-arrow-width-h3:             round(21px * @multiplier);
+@back-arrow-height-h3:            round(21px * @multiplier);
 //engine-browser
 @browser-search-margin:           round(8px * @multiplier);
+@width_browser_search:            round(600px * @multiplier);
+@width_browser_search_small:      round(350px * @multiplier);
 @browser-top-template-padding:    @browser-search-margin;
+@padding-left_Browser-backButton: round(16px * @multiplier);
 
 @DropdownList-picker-title-type-margin-top: round(-8px * @multiplier);
 @tab-button-simple-inner-bottom-height:   round(8px * @multiplier);
+//waitIndicator
+@wait-indicator-size:             round(74px * @multiplier);
+@wait-indicator-gap:              round(13px * @multiplier);
+@wait-indicator-font-size:        round(24px * @multiplier);
+@wait-indicator-labeled-width:    round(386px * @multiplier);
+@border-radius_WaitIndicator:     round(16px * @multiplier);
+@wait-indicator-small-size:       round(42px * @multiplier);
+@wait-indicator-small-gap:        round(13px * @multiplier);
+//header
+@header-font-weight:              @default-font-weight;
+//popup,floatarea,window
+@top_window_button:               round(8px * @multiplier);

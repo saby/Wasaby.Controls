@@ -11,14 +11,13 @@ define('js!SBIS3.CONTROLS.LongOperations.AbstractProducer',
       'Core/core-extend',
       'Core/Deferred',
       'Core/IoC',
-      'Core/UserInfo',
       'WS.Data/Entity/ObservableMixin',
       'js!SBIS3.CONTROLS.LongOperations.IProducer',
       'js!SBIS3.CONTROLS.LongOperations.Entry',
       'js!SBIS3.CONTROLS.LongOperations.Const'
    ],
 
-   function (CoreExtend, Deferred, IoC, UserInfo, ObservableMixin, ILongOperationsProducer, LongOperationEntry, LongOperationsConst) {
+   function (CoreExtend, Deferred, IoC, ObservableMixin, ILongOperationsProducer, LongOperationEntry, LongOperationsConst) {
       'use strict';
 
       /**

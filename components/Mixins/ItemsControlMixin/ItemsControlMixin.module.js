@@ -4,19 +4,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/IoC",
    "Core/core-merge",
    "WS.Data/Source/Memory",
-   "WS.Data/Source/SbisService",
    "WS.Data/Collection/RecordSet",
    "WS.Data/Query/Query",
    "WS.Data/Collection/ObservableList",
    "WS.Data/Display/Display",
    "WS.Data/Collection/IBind",
-   "WS.Data/Display/Collection",
-   "WS.Data/Display/Enum",
-   "WS.Data/Display/Flags",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "tmpl!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate",
    "WS.Data/Utils",
-   "WS.Data/Entity/Model",
    'Core/markup/ParserUtilities',
    "Core/Sanitize",
    "js!SBIS3.CORE.LayoutManager",
@@ -27,26 +22,24 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "js!SBIS3.CONTROLS.Utils.SourceUtil",
    "Core/helpers/Object/isEmpty",
    "Core/helpers/Function/debounce",
-   "js!SBIS3.CORE.Control"
+   "js!SBIS3.CORE.Control",
+   "WS.Data/Display/Collection",
+   "WS.Data/Display/Enum",
+   "WS.Data/Display/Flags"
 ], function (
    coreClone,
    Deferred,
    IoC,
    cMerge,
    MemorySource,
-   SbisService,
    RecordSet,
    Query,
    ObservableList,
    Projection,
    IBindCollection,
-   CollectionDisplay,
-   EnumDisplay,
-   FlagsDisplay,
    TemplateUtil,
    ItemsTemplate,
    Utils,
-   Model,
    ParserUtilities,
    Sanitize,
    LayoutManager,
@@ -136,7 +129,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       return !isEmpty(cfg.groupBy) && (cfg._itemsProjection.getSort().length === 0 || !projItem || !projItem.isNode || !projItem.isNode());
    },
 
-   groupItemProcessing = function(groupId, records, item, cfg) {
+   groupItemProcessing = function(groupId, records, item, cfg, groupHash) {
       if (cfg._canApplyGrouping(item, cfg)) {
          var groupBy = cfg.groupBy;
          if (cfg._groupTemplate) {
@@ -151,6 +144,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   item: item.getContents(),
                   groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.contentTemplate || ''),
                   groupId: groupId,
+                  groupHash: groupHash,
                   groupCollapsing: cfg._groupCollapsing
                },
                groupTemplateFnc;
@@ -171,16 +165,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       var
          records = [];
       if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
-         var needGroup = false, groupId;
+         var needGroup = false, groupId, groupHash;
          projection.each(function (item, index) {
             if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
                groupId = item.getContents();
+               groupHash = item.getHash();
                needGroup = true;
             }
             else {
                if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
                   if (needGroup && groupId) {
-                     cfg._groupItemProcessing(groupId, records, item, cfg);
+                     cfg._groupItemProcessing(groupId, records, item, cfg, groupHash);
                      needGroup = false;
                   }
                }
@@ -1349,7 +1344,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _getDomElementByItem : function(item) {
          var container;
          if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
-            container = this._getItemsContainer().find('.controls-GroupBy[data-group="' + item.getContents() + '"]');
+            container = this._getItemsContainer().find('.controls-GroupBy[data-group-hash="' + item.getHash() + '"]');
          }
          else {
             container = this._getRecordElemByItem(item);
@@ -2699,7 +2694,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._revivePackageParams.light = this._revivePackageParams.light && (item.getContents().getId() != this._options.selectedKey);
             }
          }
-      }
+      },
+      
+      _afterCollectionChange: function() {}
    };
 
    var
@@ -2770,6 +2767,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._notifyOnDrawItems(this._revivePackageParams.light);
          }
          this._revivePackageParams.processed = true;
+         this._afterCollectionChange();
       };
    return ItemsControlMixin;
 

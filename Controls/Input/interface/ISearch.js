@@ -9,13 +9,17 @@ define('js!Controls/Input/interface/ISearch', [
     */
 
    /**
-    * @name Controls/Input/interface/ISearch#minSearchLength
-    * @cfg {Number} Минимальное количество символов для отображения автодополнения
+    * @name Controls/Input/interface/ISearch#searchParam
+    * @cfg {String} Название поля для поиска
     */
 
    /**
-    * @name Controls/Input/Suggest#searchDelay
-    * @cfg {number} Время задержки перед выполнением поиска
+    * @name Controls/Input/interface/ISearch#minSearchLength
+    * @cfg {Number} Минимальное количество символов для поискового запроса
     */
 
+   /**
+    * @name Controls/Input/interface/ISearch#searchDelay
+    * @cfg {Number} Время задержки перед выполнением поиска
+    */
 });

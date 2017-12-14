@@ -1,10 +1,11 @@
 body {
   @infobox-border: @default-border-width solid transparent;
   .ws-info-box {
-    background: @basic-block-bg-color !important;
+    background: @background-color_infobox !important;
     color: @default-text-color;
     border: @infobox-border;
-    padding: round(24px * @multiplier) round(84px * @multiplier) round(24px * @multiplier) round(24px * @multiplier) !important;
+    padding: round(24px * @multiplier) round(68px * @multiplier) round(24px * @multiplier) round(24px * @multiplier) !important;
+    box-shadow: rgba(0, 0, 0, 0.5) 0 0 round(20px * @multiplier);
     &.ws-infobox-type-error {
       box-shadow: rgba(0, 0, 0, 0.5) 0 0 round(20px * @multiplier);
     }
@@ -14,7 +15,7 @@ body {
       width: round(25px * @multiplier);
       height: round(25px * @multiplier);
       box-sizing: border-box;
-      background: @basic-block-bg-color !important;;
+      background: @background-color_infobox !important;;
       transform:  scaleY(1.055555555555556) rotate(45deg);
       &.ws-infobox-triangle-bottom {
         bottom: round(-13px * @multiplier);
@@ -36,6 +37,18 @@ body {
         border-left: @infobox-border;
         border-bottom: @infobox-border;
       }
+      &.ws-infobox-triangle-right {
+        right: round(24px * @multiplier);
+      }
+      &.ws-infobox-triangle-left {
+        left: round(24px * @multiplier);
+      }
+      &.ws-infobox-triangle-vertical-top {
+        top: round(24px * @multiplier);
+      }
+      &.ws-infobox-triangle-vertical-bottom {
+        bottom: round(24px * @multiplier);
+      }
     }
     .ws-infobox-close-button.icon-disabled{
       font-size: round(52px * @multiplier)!important;
@@ -51,6 +64,9 @@ body {
       &:before {
         line-height: round(52px * @multiplier)!important;
       }
+    }
+    &.ws-infobox-has-title .ws-infobox-content {
+      padding-right: 0;
     }
   }
 }
@@ -109,5 +125,116 @@ body .ws-window.ws-LoadingIndicator__window {
     &:after {
       left: @padding_DropDownList_item_child_text;
     }
+  }
+}
+.controls-FloatArea {
+  background: @basic-block-bg-color;
+}
+//todo: поддержать в компоненте
+.controls-ComboBox {
+  &.ws-disabled {
+    &.controls-ComboBox__emptyValue {
+      .controls-ComboBox__fieldNotEditable{
+        color: @default-text-color;
+      }
+    }
+  }
+}
+.controls-TextBox_size_l.controls-TextArea {
+  height: auto;
+}
+body {
+  //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
+  //Страшно представить но с 2015 года никто не переписывал пейджинг поэтому мы положим эту кучку здесь
+  .ws-paging {
+    font-size: 0;
+    .ws-paging-small {
+      .box-sizing();
+      width: round(86px * @multiplier)!important;
+      height: @default-height;
+      line-height: @default-height !important;
+      background: transparent !important;
+      border: 2px solid transparent !important;
+      font-size: round(40px * @multiplier) ;
+      color: #8991A9 !important;
+      margin: 0 round(8px * @multiplier) 0 0 !important;
+      padding: 0 !important;
+      cursor: default;
+      &.ws-paging-prev, &.ws-paging-first, &.ws-paging-next, &.ws-paging-end {
+        background: @background_Button !important;
+        .box-shadow(0 1px 4px rgba(0, 0, 0, 1));
+      }
+      &.ws-paging-active {
+        .box-shadow(0 1px 4px rgba(0, 0, 0, 1));
+        color: #FFFFFF !important;
+        background: #567395 !important;
+        cursor: pointer;
+        &:hover {
+          background: @background_Button_active;
+        }
+        &:active {
+          .box-shadow(none);
+          background:@background_Button_active;
+        }
+      }
+      &.ws-paging-current {
+        .box-shadow(none);
+        background:@background_Button_active !important;
+        border: 2px solid #26B8FF !important;
+        color: #FFFFFF !important;
+      }
+      &.icon-16{
+        font-size:@default-icon-size-large !important;
+      }
+    }
+  }
+  .controls-Pager-block-amount {display: none}
+  .controls-ListView__scrollPager {
+    padding: round(11px * @multiplier);
+    .controls-IconButton {
+      background: @background_Button;
+      padding: 0;
+      border-style: solid;
+      border-width: @border-width_Button;
+      border-color: @background_Button;
+      .box-shadow(0 1px 4px rgba(0, 0, 0, 1));
+      .controls-Button__icon {
+        height: @default-icon-size-large!important;
+        width: @default-icon-size-large!important;
+        line-height: @default-icon-size-large !important;
+        color: #ffffff !important;
+      }
+      &:active {
+        background: @background_Button_active;
+        box-shadow: none;
+      }
+      &.ws-disabled {
+        .controls-Button__icon {
+          color: #8991A9 !important;
+        }
+      }
+    }
+  }
+}
+body {
+  .ws-window-titlebar {
+    background-color: #39506A !important;
+  }
+  .ws-window-content {
+    background-color: #273749;
+  }
+  .ws-window-content{
+    padding: round(11px * @multiplier) round(8px * @multiplier);
+    border-width: @default-border-width;
+    border-style: solid;
+    border-color: transparent;
+    border-top: none;
+  }
+  .ws-window {
+    .box-shadow(@controls-panel-shadow);
+    border: none;
+  }
+  .ws-window-title {
+    color: #FFCC99;
   }
 }

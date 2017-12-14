@@ -1,28 +1,62 @@
 .link-mixin(@icon-width) {
   & + .controls-Button__text {
-    margin-left: @icon-width + @button-icon-gap;
+    margin-left: @icon-width + @spacing_Button-between-icon-text;
   }
+}
+// Модификаторы цвета ссылки
+.controls-Link_main {
+  color: @color_Link-text;
+}
+.controls-Link_main-2 {
+  color: @gray-lamantin-color;
+  &:hover {
+    color: @gray-lamantin-color;
+  }
+}
+.controls-Link_main-3 {
+  color: @gray-lamantin-color;
+  .controls-Button__text {
+    text-decoration: underline;
+  }
+}
+.controls-Link_additional {
+  color: @color_Link-additional;
+}
+.controls-Link_additional-2 {
+  color: @color_Link-additional-2;
+}
+.controls-Link_additional-3 {
+  color: @color_Link-additional-3;
+}
+.controls-Link_additional-4 {
+  color: @green-color;
+}
+.controls-Link_additional-5 {
+  color: @purple-color;
 }
 
 .controls-Link {
-  .button-default-style(@link-font-size);
-  color: @link-text-color;
-  text-decoration: @link-text-decoration;
-  line-height: @link-line-height;
-  padding: @link-padding;
+  .button-default-style(@font-size_Link);
+  text-decoration: @text-decoration_Link;
+  line-height: normal;
+  height: @height_Link;
+  padding: @padding_Link;
   background: transparent;
 
 
-  &.controls-Click__active:not(.controls-Link__disabledHover) {
-    cursor: pointer;
-    color: @link-active-text-color;
-    .controls-Button__icon {
-      &.icon-primary {
-        color: @link-active-text-color !important;
+  &.controls-Link_main, &.controls-Link_main-3 {
+    &:active:not(.ws-disabled) {
+      cursor: pointer;
+      color: @color_Link-text_active;
+      .controls-Button__icon {
+        &.icon-primary {
+          color: @color_Link-text_active !important;
+        }
       }
     }
   }
-  &.controls-Click__active {
+
+  &:active:not(.ws-disabled) {
     .controls-Button__text {
       text-decoration: underline;
     }
@@ -38,27 +72,19 @@
   .controls-Button__icon {
     left: 0;
     & + .controls-Button__text {
-      margin-left: @button-icon-gap;
+      margin-left: @spacing_Button-between-icon-text;
     }
   }
   &.ws-disabled {
-    color: @link-disabled-text-color;
+    color: @color_Link-text_disabled;
     cursor: default;
     text-decoration: none;
     .controls-Button__icon{
-      color: @link-disabled-text-color !important;
+      color: @color_Link-text_disabled !important;
     }
     &.controls-Link__underline {
       text-decoration: none;
     }
-  }
-
-  .controls-Link__field {
-    margin: @link-field-margin;
-  }
-
-  .controls-Button__icon + .controls-Link__field:empty {
-    margin: @link-field-margin;
   }
 
   .controls-Button__text {
@@ -128,7 +154,17 @@
 }
 
 .ws-is-desktop-platform {
+  .controls-Link_main, .controls-Link_main-3 {
+    .link-hover-mixin(@color_Link-text_hovered, @color_Link-icon_hovered, controls-Button__text);
+  }
   .controls-Link {
-    .link-hover-mixin(@link-hover-text-color, @button-icon-color-hover, controls-Button__text);
+    &:not(.ws-disabled):not(.controls-Click__active) {
+      &:hover {
+        .controls-Button__text {
+          cursor: pointer;
+          text-decoration: underline;
+        }
+      }
+    }
   }
 }

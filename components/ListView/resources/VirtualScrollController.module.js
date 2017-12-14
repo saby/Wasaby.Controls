@@ -253,8 +253,9 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
          addItems: function (items, at) {
             for (var i = 0; i < items.length; i++) {
                this._heights.splice(at + i, 0, this._getItemHeight(items[i]));
-               if (i + at < this._currentWindow[0]) { // Добавили до видимого окна
+               if (i + at < this._currentWindow[0]) { // Добавили до видимого окна - надо сдвинуть индексы
                   this._currentWindow[0] += 1;
+                  this._currentWindow[1] += 1;
                } else if (i + at - 1 <= this._currentWindow[1] + 1) { // Добавили в видимом окне
                   this._currentWindow[1] += 1;
                }
@@ -268,8 +269,9 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             this._heights.splice(at, items.length);
 
             for (i = 0; i < items.length; i++) {
-               if (i + at < this._currentWindow[0]) { // Удалили до видимого окна
+               if (i + at < this._currentWindow[0]) { // Удалили до видимого окна - надо сдвинуть индексы
                   this._currentWindow[0] -= 1;
+                  this._currentWindow[1] -= 1;
                } else if (i + at <= this._currentWindow[1]) { // Удалили в видимом окне
                   this._currentWindow[1] -= 1;
                } 

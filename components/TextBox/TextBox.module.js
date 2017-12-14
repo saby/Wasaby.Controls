@@ -299,16 +299,21 @@ define('js!SBIS3.CONTROLS.TextBox', [
          var self = this;
          TextBox.superclass.init.apply(this, arguments);
 
-         if(this._options.informationIconColor) {
+         if (this._options.informationIconColor) {
             this._informationIcon = $('.controls-TextBox__informationIcon', this.getContainer());
-
-            this._informationIcon.on('mouseenter', function() {
-               self._notify('onInformationIconMouseEnter');
-            });
-            this._informationIcon.on('click', function(){
-               self._notify('onInformationIconActivated');
-            });
          }
+
+         this._container.on('mouseenter', function(e) {
+            if ($(e.target).hasClass('controls-TextBox__informationIcon')) {
+               self._notify('onInformationIconMouseEnter');
+            }
+         });
+         this._container.on('click', function(e) {
+            if ($(e.target).hasClass('controls-TextBox__informationIcon')) {
+               self._notify('onInformationIconActivated');
+            }
+         });
+
          if (this._options._needShowCompatiblePlaceholder(this._options)) {
             this._compatPlaceholder = this._container.find('.controls-TextBox__placeholder');
             this._initPlaceholderEvents(this._compatPlaceholder);
@@ -319,7 +324,6 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
       /**
        * Устанавливает цвет информационной иконки.
-       * @returns {String} Стандартный цвет иконки.
        * Цвета доступные для установки:
        * <ol>
        *    <li>done</li>
@@ -332,9 +336,30 @@ define('js!SBIS3.CONTROLS.TextBox', [
        * @see informationIconColor
        */
       setInformationIconColor: function (color) {
-          this._informationIcon.removeClass('controls-TextBox__informationIcon-' + this._options.informationIconColor);
-          this._options.informationIconColor = color;
-          this._informationIcon.addClass('controls-TextBox__informationIcon-' + color);
+         if (!color) {
+            this._destroyInformationIcon();
+            return;
+         }
+
+         if (!this._informationIcon) {
+            this._createInformationIcon(color);
+         }
+
+         this._informationIcon.removeClass('controls-TextBox__informationIcon-' + this._options.informationIconColor);
+         this._options.informationIconColor = color;
+         this._informationIcon.addClass('controls-TextBox__informationIcon-' + color);
+      },
+
+      _createInformationIcon: function(color) {
+         this._informationIcon = $('<div class="controls-TextBox__informationIcon controls-TextBox__informationIcon-' + color + '"></div>');
+         this.getContainer().append(this._informationIcon);
+      },
+
+      _destroyInformationIcon: function() {
+         if (this._informationIcon) {
+            this._informationIcon.remove();
+            this._informationIcon = undefined;
+         }
       },
 
       _keyboardDispatcher: function(event){
@@ -630,6 +655,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._inputField.attr('placeholder', '');
          this._compatPlaceholder = $(compatiblePlaceholderTemplate(this._options));
          this._inputField.after(this._compatPlaceholder);
+         this.reviveComponents();
          this._initPlaceholderEvents(this._compatPlaceholder);
       },
 
@@ -647,10 +673,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._inputField.off('*');
          this._inputField = undefined;
          this._destroyCompatPlaceholder();
-         if(this._informationIcon) {
-            this._informationIcon.off('*');
-            this._informationIcon = undefined;
-         }
+         this._destroyInformationIcon();
          TextBox.superclass.destroy.apply(this, arguments);
       }
    });

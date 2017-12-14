@@ -10,7 +10,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    'WS.Data/Di',
    "WS.Data/Query/Query",
    'Core/core-merge',
-   'Core/Deferred',
    "Core/ParallelDeferred",
    "Core/core-instance",
    "Core/core-clone",
@@ -27,7 +26,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    Di,
    Query,
    cMerge,
-   Deferred,
    ParallelDeferred,
    cInstance,
    coreClone,
@@ -294,6 +292,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
       _initializeSearchController: function() {
          this.subscribe('onSearch', function(e, text, force) {
+            var listFilter = coreClone(this.getList().getFilter()); /* Клонируем фильтр, т.к. он передаётся по ссылке */
+            listFilter[this._options.searchParam] = text;
+            this.setListFilter(listFilter, true);
             if(!force) {
                this._showLoadingIndicator();
             }

@@ -50,7 +50,7 @@
          border-style: solid;
          background: @tab-button-checked-inner-bg;
          .controls-TabButton__wrapper {
-            margin-bottom: 4px;
+            margin-bottom: 1px;
          }
          &:before {
             display: none;
@@ -60,7 +60,7 @@
          display: none;
       }
       //стиль для встраиваемых компонентов, чтобы текст был по стандарту
-      .controls-TabButton__mainText {
+      .controls-TabButton__mainText,.controls-TabButton__mainText.controls-MenuLink {
          color: @tab-button-checked-inner-color;
       }
    }
@@ -71,7 +71,7 @@
       height: 100%;
       max-width: @tab-button-large-inner-max-width;
       .flexbox();
-      .align-items(flex-end);
+      .align-items(center);
       &:before {
          content: '';
          display: block;
@@ -87,7 +87,6 @@
          .flex-direction(row);
          .align-items(center);
          height: @tab-button-inner-wrapper-height;
-         margin-bottom: 2px;
          max-width: 100%;
       }
       .controls-TabButton__caption {
@@ -97,8 +96,8 @@
          overflow: hidden;
          text-overflow: ellipsis;
          white-space: nowrap;
-         max-width: 100%;
-         max-height: 100%;
+         max-width: ~"calc(100% + 0.2px)"; //в ff и хроме появилась проблема с отрисовкой текста. Если в __caption лежит один(!) блочный элемент с текстом и overflow:hidden,
+         //то браузер считает, что тексту не хватает сотых долей пикселя, чтобы влезть в контейнер (хотя это не так), вследствие чего появляется троеточие
       }
       .controls-TabButton__icon {
          margin-right: @margin-right_TabButton_icon;//6px;
@@ -116,7 +115,12 @@
       font-size: @tab-button-large-inner-font-size;
       height: @tab-button-inner-wrapper-height;
       .flex-shrink(1);
-      display: inline-block; //Здесь флекс не нужен + на флексе нет троеточия
+      .inline-flexbox();
+
+      max-width: 100%;
+      > * {
+         max-width: 100%; //защищаемся от рандомной верстки, не даем дочерним элементам вылехти за пределы контейнера
+      }
 
       .controls-TextBox__field {
          font-size: 18px;
@@ -126,13 +130,11 @@
       min-width: 1px; //Нужно, чтобы flex правильно позиционировал ужимаемый контейнер. с 0 в ie11 не работает
       .controls-EditAtPlace {
          background: transparent;
+         .controls-TextBox__fieldWrapper {
+            padding: 0; //по стандарту
+         }
          .controls-EditAtPlace__textField{
             border-bottom-style: none;
-         }
-      }
-      &.controls-Checked__checked {
-         .controls-TabButton__inner .controls-TabButton__wrapper {
-            margin-bottom: 4px;
          }
       }
       .controls-TabButton__inner {
@@ -140,15 +142,16 @@
          font-weight: @tab-button-large-inner-font-weight;
 
          .controls-TabButton__wrapper {
-            margin-bottom: 3px;
-         }
-
-         .controls-MenuLink {
-            font-size: @tab-button-large-inner-font-size;
+            margin-bottom: @margin-bottom_TabButton_checked_tab;
          }
       }
-      .controls-TabButton__caption > * {
-         font-weight: @tab-button-large-inner-font-weight;
+      .controls-TabButton__caption {
+         > * {
+            font-weight: @tab-button-large-inner-font-weight;
+         }
+         &:first-child {
+            min-height: 24px;
+         }
       }
       .controls-TabButton__additionalText1, .controls-TabButton__additionalText1 > * {
          .flex-shrink(0);
@@ -164,6 +167,16 @@
          color: @tab-button-large-secondAddText-color;
          font-size: @tab-button-large-secondAddText-font-size;
          font-weight: normal;
+      }
+      &.controls-Checked__checked {
+         .controls-TabButton__caption {
+            min-height: 25px; //Для выравнивания в главной вкладки, чтобы центрирование не зависило от высоты внутреннего содержимого
+         }
+      }
+      .controls-MenuLink {
+         font-size: @tab-button-large-inner-font-size;
+         color: @tab-button-large-firstAddText-color-hover;
+         height: 23px;
       }
    }
 
@@ -216,6 +229,12 @@
          }
       }
    }
+   .controls-EditAtPlace {
+      background: transparent; //Фон в редактировании должен быть от вкладки
+   }
+   .controls-EditAtPlace__fieldWrapper {
+      .flexbox(); //Проблемы с выравниванием редактирования по месту, пока решаю на уровне вкладок, потом надо на самом компоненте
+   }
 }
 
 .controls-TabButtons__simple-view {
@@ -259,9 +278,6 @@
          .controls-TabButton__inner {
             color: @tab-button-simple-inner-checked-color;
             background: transparent;
-            .controls-TabButton__wrapper {
-               margin-bottom: 3px;
-            }
          }
          &:after {
             display: block;
@@ -277,5 +293,58 @@
          height: @tab-button-simple-inner-bottom-height;
          display: none;
       }
+   }
+}
+
+.ws-is-ie, .ws-is-firefox {
+   //Как-то так должно выглядеть редактирование по месту, перебил все что можно
+   .controls-TabButton .controls-EditAtPlace__fieldWrapper {
+      .inline-flexbox();
+      height: 24px;
+      line-height: normal;
+      margin: 0;
+      border: none;
+   }
+   //Костыли, вызванные версткой editAtPlace. нужно переделывать.
+   .controls-TabButton.controls-TabButton__main-item {
+      .controls-TabButton__caption > * {
+         max-height: 26px;
+      }
+   }
+   //Для главной вкладки, внутри которой 1 текстбокс c font-size: 18px. ошибка из-за overflow:hidden на редактировании
+   .controls-EditAtPlace {
+      &.controls-TextBox_size_l {
+         .controls-EditAtPlace__fieldWrapper {
+            position: relative;
+            top: -1px;
+         }
+         .controls-TextBox_size_l.controls-TextBox {
+            .flexbox();
+         }
+      }
+   }
+}
+
+.ws-is-firefox {
+   .controls-TabButton__flex {
+      .controls-TabButton__additionalText2 .controls-EditAtPlace__fieldWrapper {
+         position: relative;
+         top: 1px;
+      }
+   }
+}
+
+.ws-is-ie {
+   .controls-TabButton__flex {
+      > .controls-TabButton__mainText {
+         position: relative;
+         top: -1px;
+      }
+   }
+}
+
+.ws-is-desktop-safari, .ws-is-mobile-safari {
+   .controls-TabButton .controls-TabButton__mainText {
+      max-width: ~"calc(100% + 1px)"; //опять полупиксели, на сотые доли не влезает текст, появляется троеточие
    }
 }

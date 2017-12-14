@@ -6,6 +6,7 @@ define('js!Controls/Button/Back', [
     * @class Controls/Button/Back
     * @extends Controls/Control
     * @mixes Controls/Button/interface/ICaption
+    * @mixes Controls/interface/ITooltip
     * @mixes Controls/Button/interface/IClick
     * @control
     * @public

@@ -96,7 +96,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             $constructor: function () {
                this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace', 'onHeightChange', 'onBeginSave', 'onEndSave');
-               this._createEip();
                this._savingDeferred = Deferred.success();
             },
 
@@ -107,6 +106,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             isValidChanges: function() {
                // Данные считаются валидными, если изменений не было (на это указывает признак наличия операции ожидания) или валидация вернула true
                return !this._pendingOperation || this.validate();
+            },
+
+            // Говорим, что область готова принимать фокус всегда, когда активно редактирование по месту
+            // https://online.sbis.ru/opendoc.html?guid=4a15311b-fbe0-4818-89bf-16fb4d1f457c
+            _canAreaAcceptFocus: function() {
+               return this.isEdit();
             },
 
             isEdit: function() {

@@ -24,3 +24,10 @@
   overflow: hidden;
   .baseline-fix();
 }
+
+.ws-is-firefox {
+  .controls-MoneyTextBox__field:empty {
+    //FF в пустых contenteditable игнорирует text-align: right https://jsfiddle.net/jq7owrLz/
+    direction: rtl;
+  }
+}

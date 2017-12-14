@@ -129,6 +129,9 @@
 }
 
 .controls-DropdownList__picker {
+   border-width: @border-width_DropDownList_picker;
+   border-style: solid;
+   border-color: @border-color_DropDownList_picker;
    .controls-DropdownList__scrollContainer {
       background: @DropdownList-picker-bg;
       max-height: @DropdownList-picker-max-height - @DropdownList-footer-multisel-buttonsBlock-h;
@@ -507,10 +510,6 @@
 }
 
 .ws-is-mobile-chrome-ios, .ws-is-mobile-safari {
-   .controls-DropdownList__picker.controls-DropdownList__type-fastDataFilter .controls-DropdownList__body .controls-DropdownList__item {
-      padding-top: 5px;
-      padding-bottom: 8px;
-   }
    .controls-DropdownList__picker .controls-DropdownList__item {
       &:hover {
          background: @DropdownList-picker-menu-item-color;

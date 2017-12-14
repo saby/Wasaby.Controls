@@ -65,19 +65,25 @@ define('js!SBIS3.CONTROLS.Selection', [
       getSelection: function() {
          return {
             marked: this._options.markedAll ? [] : this._options.selectedKeys,
-            excluded: this._options.markedAll ? this._options.excludedKeys : []
+            excluded: this._options.markedAll ? this._options.excludedKeys : [],
+            markedAll: this._options.markedAll
          }
       },
 
       _getAllKeys: function() {
          var
             id,
+            contents,
             keys = [];
 
          this._options.projection.each(function(item) {
-            id = item.getContents().get(this._idProperty);
-            if (!ArraySimpleValuesUtil.hasInArray(keys, id)) {
-               keys.push(item.getContents().get(this._idProperty));
+            contents = item.getContents();
+            //instanceOfModule тяжолая проверка, проверяем на наличие .get
+            if (contents.get) {
+               id = contents.get(this._idProperty);
+               if (!ArraySimpleValuesUtil.hasInArray(keys, id)) {
+                  keys.push(item.getContents().get(this._idProperty));
+               }
             }
          }, this);
 

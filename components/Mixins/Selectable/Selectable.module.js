@@ -418,7 +418,8 @@ define('js!SBIS3.CONTROLS.Selectable', [
                         if (this._options.selectedIndex > count - 1) {
                            this._options.selectedIndex = count - 1;
                         }
-                        if (oldItems.length == 1 && action == IBindCollection.ACTION_REMOVE && oldItems[0].getContents().getId() == this._options.selectedKey) {
+                        // isNode равен undefined у элемента проекции "группа". Это самая быстрая проверка на группу.
+                        if (oldItems.length == 1 && action == IBindCollection.ACTION_REMOVE && oldItems[0].isNode !== undefined && oldItems[0].getContents().getId() == this._options.selectedKey) {
                            this._isMove = true;
                            this._isMoveKey = this._options.selectedKey;
                         }

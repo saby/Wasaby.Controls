@@ -13,8 +13,6 @@
 @icon-color-primary:                                                                                                    #2D68B5;
 //text-box
 @background-color_TextBox:                                                                                              @default-bg-color;
-//PhoneTextBox
-@color_PhoneTextBox-link:                                                                                               #2D68B5;
 //search-form
 @search-form-icon-color:                                                                                                #2D68B5;
 @search-form-icon-reset-color:                                                                                          #2D68B5;
@@ -46,7 +44,7 @@
 @success-color:                           #72BE44;
 @accent-color:							         #26B8FF;
 @acent-color2:                            #F8F8F8;//Цвет акцентной плашки
-@default-hover-color:                     #E0ECF5;
+@default-hover-color:                     #E0ECF5;//Переменную нужно удалить, она дублирует @default-bg-color-hovered-item
 @innacent-color2:						         #999999; //Неакцентные элементы, заголовки таблиц, комментарии
 @black-color:                             #333;
 @gray-color:                              #3b5d79;
@@ -58,16 +56,17 @@
 @bread-crumb-title-hover-color:           @primary-color;
 @blue-dark-color:							      rgb(49, 62, 120);
 @darkcyan-color: 							      #8991A9;
-@default-itemHover-color:                 @default-hover-color;
+@default-bg-color-hovered-item:           #E0ECF5;
+@default-itemHover-color:                 @default-hover-color;//Переменную нужно удалить, она дублирует @default-bg-color-hovered-item
 @icon-color-primary:                      #2D68B5;
-@link-text-color:                         #2D68B5;
-@link-hover-text-color:                   #313e78;
-@link-disabled-text-color:                @disabled-color;
+@color_Link-text:                         #2D68B5;
+@color_Link-text_hovered:                   #313e78;
+@color_Link-text_disabled:                @disabled-color;
 @link-header-hover-color:                 #FF7033;
 // Normal button
-@button-icon-color-hover:                 #313E78;
+@color_Link-icon_hovered:                 #313E78;
 // Normal primary button
-@button-primary-active-text-color:        @button-primary-text-color;
+@button-primary-active-text-color:        @color_Button_primary;
 @button-big-hover-bg:                     #ff7033;
 @button-big-bg:                           #fd8a6b;
 @button-hover-text-color:                 #000;
@@ -101,9 +100,9 @@
 @combo-box-picker-item-bg:                #ffffff;
 @combo-box-picker-item-hover-bg:          #f0f5fb;
 @combo-box-arrowDown-color:               @icon-color-primary;
-@combo-box-arrowDown-color-focus:         @button-icon-color-hover;
-@combo-box-arrowDown-color-picker-show:   @button-icon-color-hover;
-@combo-box-arrowDown-color-hover:         @button-icon-color-hover;
+@combo-box-arrowDown-color-focus:         @color_Link-icon_hovered;
+@combo-box-arrowDown-color-picker-show:   @color_Link-icon_hovered;
+@combo-box-arrowDown-color-hover:         @color_Link-icon_hovered;
 @combo-box-picker-item-text-color:        #000;
 @combo-box-picker-item-hover-text-color:  #000;
 
@@ -115,7 +114,7 @@
 @fieldLink-picker-show-field-color: @default-text-color;
 @fieldLink-link-color-enabled:   #2D68B5;
 @fieldLink-FilterButton-color:   #2D68B5;
-@fieldLink-FilterButton-color-hover:@link-hover-text-color;
+@fieldLink-FilterButton-color-hover:@color_Link-text_hovered;
 @fieldLink-border-color-focus-hover:@gray-ccc-color;
 @fieldLink-border-color-picker-show:#0055BB;
 @fieldLink-showSelector-color:   #2D68B5;
@@ -145,9 +144,7 @@
 @tree-view-expand-hidden-color:                 @gray-lamantin-color;
 @tree-view-copy-arrow-background:               @white-color;
 // Data grid //
-@data-grid-row-hover-bg:                        @default-hover-color;
-@data-grid-row-hover-cell-bg:                   @default-hover-color;
-@data-grid-row-hover-cell-text-color:           #000;
+@data-grid-row-hover-bg:                        @default-hover-color;//Переменную нужно удалить, она дублирует @background-color_DataGridView-item_hovered
 @data-grid-edge-cell-separator-color:           #EAEAEA;
 @data-grid-row-selected-main-bg:                @default-bg-color;
 @data-grid-partScroll-notScrolledCell-Color:    @default-bg-color;
@@ -216,7 +213,6 @@
 @DropdownList-picker-menu-item-color:     #FFFFFF;
 @DropdownList-picker-menu-item-hover:     #F0F5FB;
 @image-bar-bg-color:                      rgba(255, 255, 255, .5);
-@data-grid-row-hover-cell-bg:             #E0ECF5;
 @icon-color-disabled:                     #ccc !important;
 @date-range-big-choose-date-range-picker-border-color:#0055BB;
 @date-range-big-choose-date-range-picker-bg-boundary-selected-color:#0055BB;
@@ -234,3 +230,10 @@
 // SUGGEST //
 @suggest-picker-color:                    #000000;
 @suggest-list-hover-color:                #F0F5FB;
+@suggest-picker-bg-color:                 #ffffff;
+//waitIndicator
+@wait-indicator-overlay-default:          rgba(0, 0, 0, 0.1);
+@background-color_WaitIndicator:          #FFFFFF;
+//area-blocks
+@bg_Block_style-1:                       @acent-color2;
+@border-color_Block:                     @default-bg-color;

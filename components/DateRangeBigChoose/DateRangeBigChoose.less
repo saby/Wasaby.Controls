@@ -111,7 +111,9 @@
 
    // Нестандартный внешний вид у поля ввода, после редизайна будет стандартным
    .controls-DateBox {
-      border: 1px solid @date-range-big-choose-header-date-box-border-color;
+      border-style: solid;
+      border-width: 1px;
+      border-color: @date-range-big-choose-header-date-box-border-color;
       border-radius: 3px;
       font-size: @date-range-big-choose-header-date-box-font-size;
       &:hover,
@@ -265,7 +267,7 @@
    &:hover {
       color: #000000;
       font-weight: bold;
-      background-color: @button-hover-bg;
+      background-color: @background_Button_hovered;
    }
    &.controls-RangeSelectable__item.controls-RangeSelectable__item-selected:not(.controls-RangeSelectable__item-selectedStart) {
       border-left: none;
@@ -279,7 +281,7 @@
   .controls-DateRangeBigChoose__years-currentYearBtn.controls-Link {
     &:hover {
        .controls-Link__field.controls-Button__text {
-          text-decoration: none;
+          text-decoration: none!important;
        }
     }
   }
