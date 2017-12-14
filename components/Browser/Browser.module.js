@@ -281,9 +281,9 @@ define('js!SBIS3.CONTROLS.Browser', [
          /**
           * Показать редактор колонок. Возвращает обещание, которое будет разрешено объектом конфигурации колонок
           * @command showColumnsEditor
-          * @see showColumnsEditor
+          * @see _showColumnsEditor
           */
-         CommandDispatcher.declareCommand(this, 'showColumnsEditor', this.showColumnsEditor);
+         CommandDispatcher.declareCommand(this, 'showColumnsEditor', this._showColumnsEditor);
       },
 
       /**
@@ -313,7 +313,7 @@ define('js!SBIS3.CONTROLS.Browser', [
 
       /**
        * Показать редактор колонок. Возвращает обещание, которое будет разрешено объектом конфигурации колонок
-       * @public
+       * @protected
        * @param {object} [options] Опции открытия редактора колонок (опционально)
        * @param {object} [options.columnsConfig] Объект конфигурации колонок (опционально, если нет, будет использован текущий columnsConfig браузера) (опционально)
        * @param {object} [options.editorOptions] Опции редактора, например moveColumns и т.д. (опционально)
@@ -321,7 +321,7 @@ define('js!SBIS3.CONTROLS.Browser', [
        * @return {Deferred<object>}
        * @command showColumnsEditor
        */
-      showColumnsEditor: function (options) {
+      _showColumnsEditor: function (options) {
          var hasArgs = options && typeof options === 'object';
          var columnsConfig = hasArgs && options.columnsConfig ? options.columnsConfig : this._options.columnsConfig;
          if (!columnsConfig) {
