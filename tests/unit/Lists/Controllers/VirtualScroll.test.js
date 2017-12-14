@@ -72,7 +72,7 @@ define([
       it('Add items', function() {
          virtualScroll.setItemsCount(25);
          virtualScroll.calcVirtualWindow(0);
-         var res = virtualScroll.onAddedItems(100, 0);
+         var res = virtualScroll.onAddedItems(0, 100);
 
          assert.equal(res.topPlaceholderHeight, 0);
          assert.equal(res.bottomPlaceholderHeight, 1875);
