@@ -1,37 +1,60 @@
 
-@ColumnsEditingArea-head-title-height: 24px;
-@ColumnsEditingArea-head-preset-height: 24px;
-@ColumnsEditingArea-head-gap-top: 8px;
-@ColumnsEditingArea-head-gap-inner: 12px;
-@ColumnsEditingArea-head-gap-bottom: 4px;
+//@width-ColumnsEditor-Editing-Area: 388px;
+//@height-ColumnsEditor-Editing-Area-head-title: 24px;
+//@height-ColumnsEditor-Editing-Area-head-preset: 24px;
+//@padding-top-ColumnsEditor-Editing-Area-head: 8px;
+//@spacing-ColumnsEditor-Editing-Area-head: 12px;
+//@padding-bottom-ColumnsEditor-Editing-Area-head: 4px;
+//@background-color-ColumnsEditor-Editing-Area-head: #f7f4f0;
+//@color-ColumnsEditor-Editing-Area__head-title-left: #313E78;
+//@font-size-ColumnsEditor-Editing-Area__head-title-left: 18px;
+//@font-weight-ColumnsEditor-Editing-Area__head-title-left: bold;
+//@margin-right-ColumnsEditor-Editing-Area__head-title-right: 38px;
+//@font-size-ColumnsEditor-Editing-Area__head-preset: 15px;
+//@padding-ColumnsEditor-Editing-Area__head-preset-label: 3px 8px 0px 0px;
+//@color-ColumnsEditor-Editing-Area__head-preset-label: rgb(153, 153, 153);
+//@padding-left-ColumnsEditor-Editing-Area__Preset-item: 6px;
+//@padding-top-ColumnsEditor-Editing-Area__Preset-item-title: 1px;
+//@border-top-ColumnsEditor-Editing-Area__body: 1px solid #CCCCCC;
+//@padding-ColumnsEditor-Editing-Area__body: 12px 0;
+//@padding-ColumnsEditor-Editing-Area__FixedList-CheckBox: 4px;
+//@padding-left-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption: 8px;
+//@color-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption: @black-color !important;
+//@height-ColumnsEditor-Editing-Area__view-item: 32px;
+//@left-ColumnsEditor-Editing-Area__view-item__itemCheckBox: 4px;
+//@top-ColumnsEditor-Editing-Area__view-item__itemCheckBox: 4px;
+//@padding-left-ColumnsEditor-Editing-Area__view-item-text: 36px;
+//@line-height-ColumnsEditor-Editing-Area__view-item-text: 32px;
+//@color-ColumnsEditor-Editing-Area__view-item-text: #8991a9;
+//@color-ColumnsEditor-Editing-Area__view-item-text__multiSelected: @black-color;
 
 .controls-Columns-Editing-Area {
    position: relative;
-   width: 388px;
+   width: @width-ColumnsEditor-Editing-Area;
    height: 100%;
 }
 
 .controls-Columns-Editing-Area__head {
    box-sizing: border-box;
-   padding: @ColumnsEditingArea-head-gap-top 6px @ColumnsEditingArea-head-gap-bottom 12px;
-   background-color: #f7f4f0;
+   padding: @padding-top-ColumnsEditor-Editing-Area-head 6px @padding-bottom-ColumnsEditor-Editing-Area-head 12px;
+   background-color: @background-color-ColumnsEditor-Editing-Area-head;
 }
 
 .controls-Columns-Editing-Area__head-title {
-   height: @ColumnsEditingArea-head-title-height;
-   margin-bottom: @ColumnsEditingArea-head-gap-inner;
+   height: @height-ColumnsEditor-Editing-Area-head-title;
+   margin-bottom: @spacing-ColumnsEditor-Editing-Area-head;
 }
 
 .controls-Columns-Editing-Area__head-title-left {
    float: left;
-   color: #313E78;
-   font-size: 18px;
-   font-weight: bold;
+   color: @color-ColumnsEditor-Editing-Area__head-title-left;
+   font-size: @font-size-ColumnsEditor-Editing-Area__head-title-left;
+   font-weight: @font-weight-ColumnsEditor-Editing-Area__head-title-left;
 }
 
 .controls-Columns-Editing-Area__head-title-right {
    float: right;
-   margin-right: 38px;
+   margin-right: @margin-right-ColumnsEditor-Editing-Area__head-title-right;
 }
 
 .controls-Columns-Editing-Area__ApplyColumnsButton {
@@ -39,24 +62,20 @@
 }
 
 .controls-Columns-Editing-Area__head-preset {
-   font-size: 15px;
+   font-size: @font-size-ColumnsEditor-Editing-Area__head-preset;
 }
 
 .controls-Columns-Editing-Area__head-preset-label {
    float: left;
-   padding: 3px 8px 0px 0px;
-   color: rgb(153, 153, 153);
+   padding: @padding-ColumnsEditor-Editing-Area__head-preset-label;
+   color: @color-ColumnsEditor-Editing-Area__head-preset-label;
 }
 
 .controls-Columns-Editing-Area__head-preset-editor {
-   height: @ColumnsEditingArea-head-preset-height;
-
-   .controls-ListView__hoveredItem {
-      /*^^^background-color: transparent;*/
-   }
+   height: @height-ColumnsEditor-Editing-Area-head-preset;
 
    .controls-ItemsToolbar {
-      bottom: 0px;
+      bottom: 0;
       background-color: transparent;
    }
 
@@ -70,22 +89,12 @@
 
 .controls-Columns-Editing-Area__Preset-item {
    box-sizing: border-box;
-   height: @ColumnsEditingArea-head-preset-height;
-   padding: 0 0 0 6px;
+   height: @height-ColumnsEditor-Editing-Area-head-preset;
+   padding: 0 0 0 @padding-left-ColumnsEditor-Editing-Area__Preset-item;
 }
 
-/*.controls-Columns-Editing-Area__Preset-item-text {
-   padding: 3px 0 0 0;
-   color: rgb(0, 85, 187);
-   cursor: pointer;
-}*/
-
-/*.controls-Columns-Editing-Area__Preset-item-text:hover {
-   text-decoration: underline;
-}*/
-
 .controls-Columns-Editing-Area__Preset-item-title {
-   padding: 1px 0 0 0;
+   padding: @padding-top-ColumnsEditor-Editing-Area__Preset-item-title 0 0 0;
 }
 
 .controls-Columns-Editing-Area__Preset-input {
@@ -94,43 +103,43 @@
 
 .controls-Columns-Editing-Area__body {
    box-sizing: border-box;
-   height: ~"calc(100% - "(@ColumnsEditingArea-head-title-height + @ColumnsEditingArea-head-preset-height + @ColumnsEditingArea-head-gap-top + @ColumnsEditingArea-head-gap-inner + @ColumnsEditingArea-head-gap-bottom)~")";
-   border-top: 1px solid #CCCCCC;
-   padding: 12px 0;
+   height: ~"calc(100% - "(@height-ColumnsEditor-Editing-Area-head-title + @height-ColumnsEditor-Editing-Area-head-preset + @padding-top-ColumnsEditor-Editing-Area-head + @spacing-ColumnsEditor-Editing-Area-head + @padding-bottom-ColumnsEditor-Editing-Area-head)~")";
+   border-top: @border-top-ColumnsEditor-Editing-Area__body;
+   padding: @padding-ColumnsEditor-Editing-Area__body;
 }
 
 .controls-Columns-Editing-Area__FixedList {
    .controls-CheckBox {
       display: block;
-      padding: 4px;
+      padding: @padding-ColumnsEditor-Editing-Area__FixedList-CheckBox;
    }
 
    /*.controls-CheckBox*/ .controls-CheckBox__caption {
-      padding-left: 8px;
+      padding-left: @padding-left-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption;
       box-sizing: border-box;
-      color: @black-color !important;
+      color: @color-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption;
    }
 }
 
 .controls-Columns-Editing-Area__view-item {
-   height: 32px;
+   height: @height-ColumnsEditor-Editing-Area__view-item;
    display: inline-block;
 
    .controls-ListView__itemCheckBox {
-      left: 4px;
-      top: 4px;
+      left: @left-ColumnsEditor-Editing-Area__view-item__itemCheckBox;
+      top: @top-ColumnsEditor-Editing-Area__view-item__itemCheckBox;
    }
 }
 
 .controls-Columns-Editing-Area__view-item-text {
    display: inline-block;
-   padding-left: 36px;
-   line-height: 32px;
-   color: #8991a9;
+   padding-left: @padding-left-ColumnsEditor-Editing-Area__view-item-text;
+   line-height: @line-height-ColumnsEditor-Editing-Area__view-item-text;
+   color: @color-ColumnsEditor-Editing-Area__view-item-text;
 }
 .controls-ListView__item__multiSelected {
    .controls-Columns-Editing-Area__view-item-text {
-      color: @black-color;
+      color: @color-ColumnsEditor-Editing-Area__view-item-text__multiSelected;
    }
 }
 
@@ -139,28 +148,5 @@
 }
 
 .controls-Columns-Editing-Area__SelectableList__group {
-   /*height: 18px;*/
    position: relative;
 }
-
-/*.controls-Columns-Editing-Area__SelectableList__group-line {
-   content: ' ';
-   height: 1px;
-   left: 0;
-   right: 0;
-   top: 9px;
-   background-color: #E4E4E4;
-   z-index: 1;
-   position: absolute;
-}*/
-
-/*.controls-Columns-Editing-Area__SelectableList__group-caption {
-   float: right;
-   padding: 0 6px;
-   position: relative;
-   overflow: hidden;
-   font-size: 12px;
-   color: #999999;
-   background-color: white;
-   z-index: 2;
-}*/
