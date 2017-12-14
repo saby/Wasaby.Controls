@@ -6,6 +6,7 @@ define('js!Controls/Toggle/Checkbox', [
     * @class Controls/Toggle/Checkbox
     * @extends Controls/Control
     * @mixes Controls/Button/interface/ICaption
+    * @mixes Controls/interface/ITooltip
     * @control
     * @public
     * @category Toggle

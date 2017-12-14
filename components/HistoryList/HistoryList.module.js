@@ -6,7 +6,6 @@ define('js!SBIS3.CONTROLS.HistoryList',
       'js!SBIS3.CONTROLS.HistoryController',
       'WS.Data/Collection/IList',
       'WS.Data/Collection/IEnumerable',
-      'WS.Data/Collection/IIndexedCollection',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Entity/Record',
       'Core/Serializer',
@@ -14,7 +13,7 @@ define('js!SBIS3.CONTROLS.HistoryList',
       'Core/helpers/Object/isEqual'
    ],
 
-   function(HistoryController, IList, IEnumerable, IIndexedCollection, RecordSet, Record, Serializer, genHelpers, isEqualObject) {
+   function(HistoryController, IList, IEnumerable, RecordSet, Record, Serializer, genHelpers, isEqualObject) {
 
       'use strict';
 

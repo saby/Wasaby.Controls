@@ -12,7 +12,6 @@
 define('js!SBIS3.CONTROLS.LongOperations.Manager',
    [
       'Core/core-instance',
-      'Core/Deferred',
       'Core/EventBus',
       'js!SBIS3.CORE.TabMessage',
       'js!SBIS3.CONTROLS.LongOperations.Const',
@@ -21,7 +20,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
       'js!SBIS3.CONTROLS.LongOperations.Tools.ProtectedScope'
    ],
 
-   function (CoreInstance, Deferred, EventBus, TabMessage, LongOperationsConst, TabKey, Postloader, ProtectedScope) {
+   function (CoreInstance, EventBus, TabMessage, LongOperationsConst, TabKey, Postloader, ProtectedScope) {
       'use strict';
 
       /**

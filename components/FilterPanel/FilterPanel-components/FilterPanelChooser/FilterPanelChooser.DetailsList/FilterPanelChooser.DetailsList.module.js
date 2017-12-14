@@ -160,17 +160,22 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
       },
 
       _onChangeHoveredItem: function(event, hoveredItem) {
-         var
-            itemsInstances,
-            item = hoveredItem.record,
-            isItemSelected;
+         var listView,
+            itemsActions,
+            item = hoveredItem.record;
+
          if (item) {
-            itemsInstances = this._getListView().getItemsActions().getItemsInstances();
-            isItemSelected = this._getListView().getSelectedKeys().indexOf(item.getId()) !== -1;
-            // Согласно стандарту, отображаем иконку включения иерархии если иерархия отключена или иерархия включена, но запись не отмечена
-            itemsInstances['enableHierarchy'].toggle(item.get('hierarchy') === false || (item.get('hierarchy') === true && !isItemSelected));
-            // Согласно стандарту, отображаем иконку выключения иерархии если иерархия включена и запись отмечена
-            itemsInstances['disableHierarchy'].toggle(item.get('hierarchy') === true && isItemSelected);
+            listView = this._getListView();
+            itemsActions = listView.getItemsActions();
+            itemsActions.ready().addCallback(function() {
+               var itemsInstances = itemsActions.getItemsInstances(),
+                  isItemSelected = listView.getSelectedKeys().indexOf(item.getId()) !== -1;
+               // Согласно стандарту, отображаем иконку включения иерархии если иерархия отключена или иерархия включена, но запись не отмечена
+               itemsInstances['enableHierarchy'].toggle(item.get('hierarchy') === false || (item.get('hierarchy') === true && !isItemSelected));
+               // Согласно стандарту, отображаем иконку выключения иерархии если иерархия включена и запись отмечена
+               itemsInstances['disableHierarchy'].toggle(item.get('hierarchy') === true && isItemSelected);
+
+            });
          }
       },
 

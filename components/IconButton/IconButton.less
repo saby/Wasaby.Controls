@@ -21,15 +21,15 @@
         }
     }
      &.controls-IconButton__errorBorder {
-        border-color: @icon-button-error-color;
+        border-color: @color_IconButton-icon_error;
         .controls-Button__icon {
-          color: @icon-button-error-color;
+          color: @color_IconButton-icon_error;
         }
      }
      &.controls-IconButton__doneBorder {
-        border-color: @icon-button-done-color;
+        border-color: @color_IconButton-icon_done;
         .controls-Button__icon {
-          color: @icon-button-done-color;
+          color: @color_IconButton-icon_done;
         }
      }
   }
@@ -41,28 +41,28 @@
 
    &.controls-IconButton__doneBorder {
      .controls-Button__icon {
-       color: @icon-button-done-color;
+       color: @color_IconButton-icon_done;
      }
    }
    &.controls-IconButton__errorBorder {
      .controls-Button__icon {
-       color: @icon-button-error-color;
+       color: @color_IconButton-icon_error;
      }
    }
    &.controls-IconButton__round-border{
-      .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
-      height: @icon-button-round-border-width;
-      width: @icon-button-round-border-height;
-      line-height: @icon-button-round-border-line-height !important;
+      .round-button-mixin(@gray-ccc-color, @border-radius, @border-width_IconButton-icon);
+      height: @width_IconButton-icon_round;
+      width: @height_IconButton-icon_round;
+      line-height: @line-height_IconButton-icon_round !important;
    }
 
    &.controls-IconButton__round-border-24{
-      .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
-      height: @icon-button-edit-round-border-height;
-      width: @icon-button-edit-round-border-width;
+      .round-button-mixin(@gray-ccc-color, @border-radius, @border-width_IconButton-icon);
+      height: @height_IconButton_round_edit;
+      width: @width_IconButton_round_edit;
    }
    &.controls-IconButton__round-border-32{
-      .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
+      .round-button-mixin(@gray-ccc-color, @border-radius, @border-width_IconButton-icon);
       border-radius: 20px;
       height: 38px !important;
       width: 38px !important;
