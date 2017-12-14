@@ -2,36 +2,36 @@
  * Класс контрола "Кнопка открытия редактора колонок"
  *
  * @public
- * @class SBIS3.CONTROLS.Columns.EditorButton
+ * @class SBIS3.CONTROLS.Browser.ColumnsEditor.EditorButton
  * @extends SBIS3.CONTROLS.CompoundControl
  */
-define('js!SBIS3.CONTROLS.Columns.EditorButton',
+define('js!SBIS3.CONTROLS.Browser.ColumnsEditor.EditorButton',
    [
       'Core/core-merge',
-      'js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
+      'js!SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Dropdown',
       'js!SBIS3.CONTROLS.CompoundControl',
-      'tmpl!SBIS3.CONTROLS.Columns.EditorButton',
-      'css!SBIS3.CONTROLS.Columns.EditorButton',
+      'tmpl!SBIS3.CONTROLS.Browser.ColumnsEditor.EditorButton',
+      'css!SBIS3.CONTROLS.Browser.ColumnsEditor.EditorButton',
       'js!SBIS3.CONTROLS.IconButton'
    ],
 
    function (coreMerge, PresetDropdown, CompoundControl, dotTplFn) {
       'use strict';
 
-      var EditorButton = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.Columns.EditorButton.prototype*/ {
+      var EditorButton = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.Browser.ColumnsEditor.EditorButton.prototype*/ {
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
                /**
                 * @cfg {boolean} Показывать дропдаун с выбором пресета рядом с кнопкой
                 */
-               usePresets: true/*^^^*/,// TODO: Включить после переделки дропдауна с пресетами
+               usePresets: false,// TODO: Включить после переделки дропдауна с пресетами
                /**
                 * @cfg {string} Заголовок дропдауна
                 */
                presetsTitle: null,
                /**
-                * @cfg {SBIS3.CONTROLS.Columns.Preset.Unit[]} Список объектов статически задаваемых пресетов
+                * @cfg {SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Unit[]} Список объектов статически задаваемых пресетов
                 */
                staticPresets: null,
                /**

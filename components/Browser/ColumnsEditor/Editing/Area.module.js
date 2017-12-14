@@ -2,28 +2,28 @@
  * Контрол "Область редактирования редактора колонок"
  *
  * @public
- * @class SBIS3.CONTROLS.Columns.Editing.Area
+ * @class SBIS3.CONTROLS.Browser.ColumnsEditor.Editing.Area
  * @extends SBIS3.CONTROLS.CompoundControl
  */
-define('js!SBIS3.CONTROLS.Columns.Editing.Area',
+define('js!SBIS3.CONTROLS.Browser.ColumnsEditor.Editing.Area',
    [
       'Core/CommandDispatcher',
       'Core/Deferred',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Functor/Compute',
-      'js!SBIS3.CONTROLS.Columns.Editing.Area/AreaSelectableModel',
-      'js!SBIS3.CONTROLS.Columns.Preset.Cache',
+      'js!SBIS3.CONTROLS.Browser.ColumnsEditor.Editing.Area/AreaSelectableModel',
+      'js!SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Cache',
       'js!SBIS3.CONTROLS.CompoundControl',
       'js!SBIS3.CONTROLS.ItemsMoveController',
       'js!SBIS3.CONTROLS.EditInPlaceBaseController',
-      'tmpl!SBIS3.CONTROLS.Columns.Editing.Area',
-      'tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/preset',
-      'tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/presetEdit',
-      'tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/selectableGroupContent',
-      'tmpl!SBIS3.CONTROLS.Columns.Editing.Area/templates/selectableItemContent',
-      'css!SBIS3.CONTROLS.Columns.Editing.Area',
+      'tmpl!SBIS3.CONTROLS.Browser.ColumnsEditor.Editing.Area',
+      'tmpl!SBIS3.CONTROLS.Browser.ColumnsEditor.Editing.Area/templates/preset',
+      'tmpl!SBIS3.CONTROLS.Browser.ColumnsEditor.Editing.Area/templates/presetEdit',
+      'tmpl!SBIS3.CONTROLS.Browser.ColumnsEditor.Editing.Area/templates/selectableGroupContent',
+      'tmpl!SBIS3.CONTROLS.Browser.ColumnsEditor.Editing.Area/templates/selectableItemContent',
+      'css!SBIS3.CONTROLS.Browser.ColumnsEditor.Editing.Area',
       'js!SBIS3.CONTROLS.Button',
-      'js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
+      'js!SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Dropdown',
       'js!SBIS3.CONTROLS.CheckBoxGroup',
       'js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.ScrollContainer'
@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
 
 
 
-      var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS.Columns.Editing.Area.prototype*/ {
+      var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS.Browser.ColumnsEditor.Editing.Area.prototype*/ {
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
                 */
                presetsTitle: null,
                /**
-                * @cfg {SBIS3.CONTROLS.Columns.Preset.Unit[]} Список объектов статически задаваемых пресетов (опционально)
+                * @cfg {SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Unit[]} Список объектов статически задаваемых пресетов (опционально)
                 */
                staticPresets: null,
                /**
@@ -349,7 +349,7 @@ define('js!SBIS3.CONTROLS.Columns.Editing.Area',
        * Получить общий список пресетов (и заданных статически, и сохраняемых пользовательских)
        * @private
        * @param {object} self "Этот" объект
-       * @return {Core/Deferred<SBIS3.CONTROLS.Columns.Preset.Unit>}
+       * @return {Core/Deferred<SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Unit>}
        */
       var _getPresets = function (self) {
          var presets = self._options.staticPresets || [];

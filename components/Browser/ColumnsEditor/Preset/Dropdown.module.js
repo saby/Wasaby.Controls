@@ -2,17 +2,17 @@
  * Контрол "Выпадающий список пресетов редактора колонок"
  *
  * @public
- * @class SBIS3.CONTROLS.Columns.Preset.Dropdown
+ * @class SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Dropdown
  * @extends SBIS3.CONTROLS.CompoundControl
  */
-define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
+define('js!SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Dropdown',
    [
       'Core/EventBus',
-      'js!SBIS3.CONTROLS.Columns.Preset.Cache',
-      'js!SBIS3.CONTROLS.Columns.Preset.Unit',
+      'js!SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Cache',
+      'js!SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Unit',
       'js!SBIS3.CONTROLS.CompoundControl',
-      'tmpl!SBIS3.CONTROLS.Columns.Preset.Dropdown',
-      'css!SBIS3.CONTROLS.Columns.Preset.Dropdown'
+      'tmpl!SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Dropdown',
+      'css!SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Dropdown'
    ],
 
    function (EventBus, PresetCache, PresetUnit, CompoundControl, dotTplFn) {
@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
 
 
 
-      var PresetDropdown = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.Columns.Preset.Dropdown.prototype*/ {
+      var PresetDropdown = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Dropdown.prototype*/ {
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
                 */
                title: null,//Определено в шаблоне
                /**
-                * @cfg {SBIS3.CONTROLS.Columns.Preset.Unit[]} Список объектов статически задаваемых пресетов
+                * @cfg {SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Unit[]} Список объектов статически задаваемых пресетов
                 */
                staticPresets: null,
                /**
@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
          /**
           * Получить список всех отображаемых пресетов редактора колонок
           * @public
-          * @return {SBIS3.CONTROLS.Columns.Preset.Unit[]}
+          * @return {SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Unit[]}
           */
          getPresets: function () {
             return this._dropdown.getItems().getRawData();
@@ -150,7 +150,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
          /**
           * Обновить дропдаун
           * @protected
-          * @param {SBIS3.CONTROLS.Columns.Preset.Unit} units Список пресетов редактора колонок
+          * @param {SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Unit} units Список пресетов редактора колонок
           */
          _updateDropdown: function (units) {
             var presets = this._options.staticPresets || [];
@@ -177,7 +177,7 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Dropdown',
           * Обработчик события
           * @protected
           * @param {Core/EventObject} evtName Идентификатор события
-          * @param {SBIS3.CONTROLS.Columns.Preset.Unit} units Список пресетов редактора колонок
+          * @param {SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Unit} units Список пресетов редактора колонок
           */
          _onCache: function (evtName, units) {
             this._updateDropdown(units);

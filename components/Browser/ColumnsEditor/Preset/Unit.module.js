@@ -2,9 +2,9 @@
  * Класс пресета редактора колонок
  *
  * @public
- * @class SBIS3.CONTROLS.Columns.Preset.Unit
+ * @class SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Unit
  */
-define('js!SBIS3.CONTROLS.Columns.Preset.Unit',
+define('js!SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Unit',
    [],
 
    function () {
@@ -35,17 +35,17 @@ define('js!SBIS3.CONTROLS.Columns.Preset.Unit',
          this.isStorable = options.isStorable;
       };
 
-      PresetUnit.prototype = /**@lends SBIS3.CONTROLS.Columns.Preset.Unit.prototype*/ {
+      PresetUnit.prototype = /**@lends SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Unit.prototype*/ {
          /**
           * Идентификатор пресета
           * @type {string|number}
-          * @name SBIS3.CONTROLS.Columns.Preset.Unit#id
+          * @name SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Unit#id
           */
 
          /**
           * Название пресета
           * @type {string}
-          * @name SBIS3.CONTROLS.Columns.Preset.Unit#title
+          * @name SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Unit#title
           */
 
          /**

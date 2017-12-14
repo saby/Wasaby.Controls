@@ -1,24 +1,24 @@
 /**
  * Класс контрола "Редактор колонок"
  *
- * @class SBIS3.CONTROLS.Columns.Editor
+ * @class SBIS3.CONTROLS.Browser.ColumnsEditor.Editor
  * @public
  * @extends SBIS3.CONTROLS.CompoundControl
  */
-define('js!SBIS3.CONTROLS.Columns.Editor',
+define('js!SBIS3.CONTROLS.Browser.ColumnsEditor.Editor',
    [
       'Core/core-merge',
       'Core/Deferred',
       'js!SBIS3.CONTROLS.CompoundControl',
       'js!SBIS3.CORE.FloatArea',
-      'css!SBIS3.CONTROLS.Columns.Editor',
-      'js!SBIS3.CONTROLS.Columns.Editing.Area'
+      'css!SBIS3.CONTROLS.Browser.ColumnsEditor.Editor',
+      'js!SBIS3.CONTROLS.Browser.ColumnsEditor.Editing.Area'
    ],
 
    function (coreMerge, Deferred, CompoundControl, FloatArea) {
       'use strict';
 
-      var Editor = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.Columns.Editor.prototype*/ {
+      var Editor = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.Browser.ColumnsEditor.Editor.prototype*/ {
          /**
           * @typedef {Object} ColumnsConfigObject
           * @property {WS.Data/Collection/RecordSet} columns Набор записей, каждая из которых описывает элемент панели редактирования колонок. <br/>
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
           * @param {object} [editorOptions.groupTitles] Ассоциированый массив имён групп по идентификаторам (опционально)
           * @param {boolean} [editorOptions.usePresets] Показывает на обязательность использования пресетов (опционально)
           * @param {string} [editorOptions.presetsTitle] Заголовок дропдауна (опционально)
-          * @param {SBIS3.CONTROLS.Columns.Preset.Unit[]} [editorOptions.staticPresets] Список объектов статически задаваемых пресетов (опционально)
+          * @param {SBIS3.CONTROLS.Browser.ColumnsEditor.Preset.Unit[]} [editorOptions.staticPresets] Список объектов статически задаваемых пресетов (опционально)
           * @param {string} [editorOptions.presetNamespace] Пространство имён для сохранения пользовательских пресетов (опционально)
           * @param {string|number} [editorOptions.selectedPresetId] Идентификатор первоначально выбранного пресета в дропдауне (опционально)
           * @param {string} [editorOptions.newPresetTitle] Начальное название нового пользовательского пресета (опционально)
@@ -84,7 +84,7 @@ define('js!SBIS3.CONTROLS.Columns.Editor',
 
                //title: null,
                parent: this,
-               template: 'js!SBIS3.CONTROLS.Columns.Editing.Area',
+               template: 'js!SBIS3.CONTROLS.Browser.ColumnsEditor.Editing.Area',
                cssClassName: 'controls-Columns-Editor__area',
                closeByExternalClick: true,
                closeButton: true,

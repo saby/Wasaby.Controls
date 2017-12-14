@@ -6,7 +6,7 @@ define([/*'js!SBIS3.CONTROLS.ColumnsEditorUtils',*/ 'WS.Data/Collection/RecordSe
 
    'use strict';
 
-   describe('SBIS3.CONTROLS.Columns.EditorButton', function() {
+   describe('SBIS3.CONTROLS.Browser.ColumnsEditor.EditorButton', function() {
       var
          testItems = new RecordSet({
             rawData: [
