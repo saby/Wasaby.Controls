@@ -14,6 +14,7 @@ define('Controls/Button', [
     * @mixes Controls/Button/interface/ICaption
     * @mixes Controls/Button/interface/IClick
     * @mixes Controls/Button/interface/IIcon
+    * @mixes Controls/interface/ITooltip
     * @control
     * @public
     * @category Button

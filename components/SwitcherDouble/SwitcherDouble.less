@@ -1,5 +1,4 @@
 @import (reference) "../Switcher/Switcher";
-@switcher-do-text-selected-cursor:              text;
 .controls-SwitcherDouble__toggle {
    &:extend(.controls-Switcher);
    &:not(:hover) {
@@ -137,12 +136,13 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-SwitcherDouble .controls-S
    display: inline-block;
    height: @switcher-height;
    line-height: @switcher-height;
+   font-size: @font-size_Switcher_text;
    .ws-enabled.controls-SwitcherDouble & {
       &.controls-SwitcherDouble__unselected {
-         cursor: @default-hover-cursor;
+         cursor: pointer;
       }
       &:not(controls-SwitcherDouble__unselected) {
-         cursor: @switcher-do-text-selected-cursor;
+         cursor: text;
       }
    }
 }
@@ -153,15 +153,17 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-SwitcherDouble .controls-S
 }
 .controls-SwitcherDouble__textOff {
    margin-right: @switcher-do-text-margin;
+   color: @default-text-color;
 }
 .ws-enabled.controls-SwitcherDouble .controls-SwitcherDouble__unselected {
    color: @switcher-do-unselected-text-color;
    &:hover {
-      text-decoration: underline;
+      text-decoration: @text-decoration_switcher_text_unselected_hover;
+      color: @color_switcher_text_unselected_hover;
    }
 }
 
 .ws-disabled.controls-SwitcherDouble .controls-SwitcherDouble__text {
-   color: @disabled-color;
-   cursor: @switcher-do-text-selected-cursor;
+   color: @color_SwitherDouble_text_disabled;
+   cursor: text;
 }

@@ -99,7 +99,7 @@ define([
    // Из-за того, что ScrollWatcher без IntersectionObserver'a работает через throttle, нужно
    // перед каждым тестом создавать свой ScrollWatcher, иначе получается каша из событий, тесты путаются
    describe('Controls/List/Controllers/ScrollWatcher', function() {
-      var scrollWathecr, eventHandlers, scrollContainer, originalIntersectionObserver;
+      var scrollWatcher, eventHandlers, scrollContainer, originalIntersectionObserver;
       beforeEach(function() {
          //удаляем IntersectionObserver, если он вдруг есть
          originalIntersectionObserver = global.IntersectionObserver;
@@ -108,7 +108,7 @@ define([
          eventHandlers = getEventHandlers();
          scrollContainer = createScrollContainer();
 
-         scrollWathecr = new ScrollWatcher ({
+         scrollWatcher = new ScrollWatcher ({
             triggers : {},
             scrollContainer: scrollContainer,
             loadOffset: 100,

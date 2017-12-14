@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MenuLink', ['js!WSControls/Buttons/MenuButton', 'css!SBIS3.CONTROLS.Link', 'css!SBIS3.CONTROLS.MenuLink'], function(WSMenuButton) {
+define('js!SBIS3.CONTROLS.MenuLink', ['js!WSControls/Buttons/MenuButton', 'js!SBIS3.CONTROLS.Utils.LinkUtil', 'css!SBIS3.CONTROLS.Link', 'css!SBIS3.CONTROLS.MenuLink'], function(WSMenuButton, LinkUtil) {
 
    'use strict';
 
@@ -64,6 +64,8 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!WSControls/Buttons/MenuButton', 'css!S
          opts.pickerClassName += ' controls-MenuLink__Menu';
          opts.cssClassName += ' controls-MenuLink controls-Link';
          opts._textClass = ' controls-Link__field';
+
+          LinkUtil.preparedClassFromOptions(opts);
 
          return opts;
       }
