@@ -2,7 +2,7 @@
 define([
    'js!SBIS3.CONTROLS.DateRangeRelationController',
    'Core/Abstract',
-   'js!SBIS3.CORE.Control/Control.compatible',
+   'Lib/Control/Control.compatible',
    'js!SBIS3.CONTROLS.RangeMixin',
    'js!SBIS3.CONTROLS.DateRangeMixin',
 ], function (DateRangeRelationController, cAbstract, Control, RangeMixin, DateRangeMixin) {
