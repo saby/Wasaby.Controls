@@ -4,7 +4,7 @@
    box-sizing: border-box;
    line-height: @DropdownList-height;
    .controls-DropdownList__selectedItem {
-      .flexbox();
+      .inline-flexbox();
       width: 100%;
       white-space: nowrap;
       font-size: 0;
@@ -502,13 +502,6 @@
       top: @DropdownList-after-caption-top;
    }
 }
-
-.ws-is-ie, .ws-is-firefox {
-  .controls-DropdownList .controls-DropdownList__selectedItem{
-     .inline-flexbox();
-  }
-}
-
 .ws-is-mobile-chrome-ios, .ws-is-mobile-safari {
    .controls-DropdownList__picker .controls-DropdownList__item {
       &:hover {
