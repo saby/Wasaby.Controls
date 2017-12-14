@@ -1053,7 +1053,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                               }))
                            .append(okButton);
                         new Button({
-                           caption: 'ОК',
+                           caption: rk('ОК'),
                            primary: true,
                            parent: this,
                            handlers: {
