@@ -1408,6 +1408,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          setItems: function() {
             this._stateResetHandler();
          },
+         redraw: function() {
+            this._updateExpanderDisplay();
+         },
          _applyExpandToItems: function(items) {
             var hierarchy = this._options._getHierarchyRelation(this._options),
                openedPath = this._options.openedPath;
