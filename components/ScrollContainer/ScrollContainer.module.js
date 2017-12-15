@@ -121,6 +121,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 */
                isPaging: false,
                /**
+                * @cfg {String}
+                * @variant none тень отсутствует.
+                * @variant standart.
+                */
+               styleShadow: 'standart',
+               /**
                 * @cfg {Object}
                 */
                navigationToolbar: {
@@ -319,7 +325,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          	var maxScrollTop;
 
          	// Не устанавливаем тень у контейнера с 0 высотой.
-         	if (this._getContainerHeight()) {
+         	if (this._getContainerHeight() && this._options.styleShadow !== 'none') {
                // $elem[0].scrollHeight - integer, $elem.height() - float
                maxScrollTop = this._getScrollHeight() - this._getContainerHeight();
                // maxScrollTop > 1 - погрешность округления на различных браузерах.
