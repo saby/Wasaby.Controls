@@ -10,45 +10,45 @@ define('js!Controls/interface/INavigation', [
 
    /**
     * @typedef {String} ListNavigationSource
-    * @variant position Описание
-    * @variant offset Описание
-    * @variant page Описание
+    * @variant position работа с курсорами
+    * @variant offset работа с оффсетом
+    * @variant page работа со страницами
     */
 
    /**
     * @typedef {String} ListNavigationView
-    * @variant infinity Описание
-    * @variant pages Описание
-    * @variant demand Описание
+    * @variant infinity бесконечный скролл
+    * @variant pages разбиение на страницы с пэйджингом
+    * @variant demand подгрузка по кнопке
     */
 
    /**
     * @typedef {Object} ListNavigationPositionSourceConfig
-    * @property {String} field Описание
-    * @property {String} direction Описание
+    * @property {String} field поле, по которому строится курсор
+    * @property {String} direction направление
     */
 
    /**
     * @typedef {Object} ListNavigationOffsetSourceConfig
-    * @property {Number} limit Описание
+    * @property {Number} limit количество элементов в порции данных
     */
 
    /**
     * @typedef {Object} ListNavigationInfinityViewConfig
-    * @property {String} pagingMode Описание
+    * @property {String} pagingMode режим отображения пэйджинга
     */
 
    /**
     * @typedef {Object} ListNavigationPagesViewConfig
-    * @property {Boolean} pagesCountSelector Описание
+    * @property {Boolean} pagesCountSelector возможность настройки количества элментов на странице
     */
 
    /**
     * @typedef {Object} ListNavigation
-    * @property {ListNavigationSource} source Описание
-    * @property {ListNavigationView} view Описание
-    * @property {ListNavigationPositionSourceConfig|ListNavigationOffsetSourceConfig} sourceConfig Описание
-    * @property {ListNavigationInfinityViewConfig|ListNavigationPagesViewConfig} viewConfig Описание
+    * @property {ListNavigationSource} source способ работы с источником данных
+    * @property {ListNavigationView} view внешнее отображение навигации
+    * @property {ListNavigationPositionSourceConfig|ListNavigationOffsetSourceConfig} sourceConfig настройки способа работы с источником
+    * @property {ListNavigationInfinityViewConfig|ListNavigationPagesViewConfig} viewConfig настройки внешнего отображение навигации
     */
 
    /**
