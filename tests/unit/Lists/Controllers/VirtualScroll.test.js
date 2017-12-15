@@ -68,23 +68,6 @@ define([
 
       });
 
-      //Проверка рассчета индексов/распорок после изменяения общего числа записей проекции
-      it('Add items', function() {
-         virtualScroll.setRowCount(25);
-         virtualScroll.calcVirtualWindow(0);
-         virtualScroll.updateOnAddingItems(0, 100);
-         var res = virtualScroll.getVirtualWindow();
-
-         assert.equal(res.topPlaceholderHeight, 0);
-         assert.equal(res.bottomPlaceholderHeight, 1875);
-         assert.equal(res.indexStart, 0);
-         assert.equal(res.indexStop, 50);
-         assert.equal(virtualScroll._rowCount, 125);
-
-         //Сбросим текущую страницу, чтобы не влияала на следующие тесты
-         virtualScroll._currentPage = -1;
-      });
-
       it('Scroll to top List', function() {
          virtualScroll.setRowCount(500);
          var res = virtualScroll.calcVirtualWindow(0);
@@ -114,6 +97,92 @@ define([
          assert.equal(res.virtualWindow.indexStart, 468);
          assert.equal(res.virtualWindow.indexStop, 500);
 
+      });
+
+      //Проверка рассчета индексов/распорок после изменяения общего числа записей проекции
+      describe('Add items', function() {
+         var tests = [
+            {
+               name: 'Add to first page',
+               initialRowCount: 25,
+               scrollTop: 0,
+               addIndexes: [0, 5, 14],
+               countAddedItems: 100,
+               result: {
+                  indexStart: 0,
+                  indexStop: 50,
+                  topPlaceholderHeight: 0,
+                  bottomPlaceholderHeight: 1875,
+                  rowCount: 125
+               }
+            },
+            {
+               name: 'Add to current page',
+               initialRowCount: 100,
+               scrollTop: 650,
+               addIndexes: [20, 35],
+               countAddedItems: 5,
+               result: {
+                  indexStart: 1,
+                  indexStop: 76,
+                  topPlaceholderHeight: 25,
+                  bottomPlaceholderHeight: 725,
+                  rowCount: 105
+               }
+            },
+            {
+               name: 'Add before current page',
+               initialRowCount: 100,
+               scrollTop: 650,
+               addIndexes: [0],
+               countAddedItems: 5,
+               result: {
+                  indexStart: 6,
+                  indexStop: 76,
+                  topPlaceholderHeight: 150,
+                  bottomPlaceholderHeight: 725,
+                  rowCount: 105
+               }
+            },
+            {
+               name: 'Add after current page',
+               initialRowCount: 100,
+               scrollTop: 650,
+               addIndexes: [80],
+               countAddedItems: 5,
+               result: {
+                  indexStart: 1,
+                  indexStop: 76,
+                  topPlaceholderHeight: 25,
+                  bottomPlaceholderHeight: 725,
+                  rowCount: 105
+               }
+            }
+         ];
+
+         beforeEach(function() {
+         });
+
+         for (var i = 0; i < tests.length; i++) {
+            (function(i) {
+               it(tests[i].name, function() {
+                  for (var k = 0; k < tests[i].addIndexes.length; k++) {
+                     virtualScroll._currentPage = -1;
+
+                     virtualScroll.setRowCount(tests[i].initialRowCount);
+                     virtualScroll.calcVirtualWindow(tests[i].scrollTop);
+                     virtualScroll.updateOnAddingItems(tests[i].addIndexes[k], tests[i].countAddedItems);
+                     var res = virtualScroll.getVirtualWindow();
+
+                     assert.equal(res.indexStart, tests[i].result.indexStart);
+                     assert.equal(res.indexStop, tests[i].result.indexStop);
+                     assert.equal(res.topPlaceholderHeight, tests[i].result.topPlaceholderHeight);
+                     assert.equal(res.bottomPlaceholderHeight, tests[i].result.bottomPlaceholderHeight);
+                     assert.equal(virtualScroll._rowCount, tests[i].result.rowCount);
+                  }
+               });
+            })(i);
+         }
       });
 
       afterEach(function() {
