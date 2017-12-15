@@ -1,4 +1,4 @@
-define('js!Controls/List/HierarchyControl', [
+define('js!Controls/List/Explorer', [
    'Core/Control'
 
 ], function (Control
@@ -8,8 +8,8 @@ define('js!Controls/List/HierarchyControl', [
    var _private = {};
 
    /**
-    * Tree Control
-    * @class Controls/List/HierarchyControl
+    * Компонент иерархичесего списка, с возможностью распахивания, а так же проваливания в узлы. Обладает возможностью загрузки/подгрузки данных из источника.
+    * @class Controls/List/Explorer
     * @extends Controls/Control
     * @mixes Controls/interface/IItems
     * @mixes Controls/interface/IDataSource
@@ -19,16 +19,17 @@ define('js!Controls/List/HierarchyControl', [
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
+    * @mixes Controls/List/interface/IHierarchy
     * @mixes Controls/List/interface/ITreeControl
-    * @mixes Controls/List/interface/IHierarchyControl
+    * @mixes Controls/List/interface/IExplorer
     * @control
     * @public
     * @category List
     */
 
-   var HierarchyControl = Control.extend({
-      _controlName: 'Controls/List/HierarchyControl'
+   var Explorer = Control.extend({
+      _controlName: 'Controls/List/Explorer'
 
    });
-   return HierarchyControl;
+   return Explorer;
 });
