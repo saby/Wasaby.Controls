@@ -6,7 +6,7 @@
             <ws:else>{[Отображение колонок]}</ws:else>
          </div>
          <div class="controls-Browser-ColumnsEditor-Editing-Area__head-title-right">
-            <ws:SBIS3.CONTROLS.Button
+            <SBIS3.CONTROLS:Button
                class="controls-Browser-ColumnsEditor-Editing-Area__ApplyColumnsButton"
                command="applyColumns" primary="true"
                >
@@ -14,14 +14,14 @@
                   <ws:if data="{{applyButtonTitle}}">{{applyButtonTitle}}</ws:if>
                   <ws:else>{[Применить]}</ws:else>
                </ws:caption>
-            </ws:SBIS3.CONTROLS.Button>
+            </SBIS3.CONTROLS:Button>
          </div>
       </div>
       <ws:if data="{{usePresets && ((staticPresets && staticPresets.length) || presetNamespace)}}">
          <div class="controls-Browser-ColumnsEditor-Editing-Area__head-preset">
             <div class="controls-Browser-ColumnsEditor-Editing-Area__head-preset-label">{[Шаблон]}</div>
             <div class="controls-Browser-ColumnsEditor-Editing-Area__head-preset-editor">
-               <ws:SBIS3.CONTROLS.ListView
+               <SBIS3.CONTROLS:ListView
                   class="controls-Browser-ColumnsEditor-Editing-Area__Preset controls-ListView__disableHover"
                   name="controls-Browser-ColumnsEditor-Editing-Area__Preset"
                   items="{{_optsPreset.items}}"
@@ -30,17 +30,17 @@
                   idProperty="id"
                   displayProperty="title"
                   editMode=""
-                  editingTemplate="tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/templates/presetEdit"
+                  editingTemplate="tmpl!SBIS3.CONTROLS/ColumnsEditor/Editing/templates/presetEdit"
                   >
                   <!--^^^
                   itemsActions="{{_optsPreset.itemsActions}}"
-                  itemContentTpl="tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/templates/preset"
+                  itemContentTpl="tmpl!SBIS3.CONTROLS/ColumnsEditor/Editing/templates/preset"
                   editMode="click|single"
                   <ws:handlers onItemClick="{{_optsPreset.onItemClick}}"/>
                   -->
                   <ws:itemContentTpl>
                      <ws:partial
-                        template="tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/templates/preset"
+                        template="tmpl!SBIS3.CONTROLS/ColumnsEditor/Editing/templates/preset"
                         scope="{{itemContentTpl}}"
                         presetsTitle="{{presetsTitle}}"
                         staticPresets="{{staticPresets}}"
@@ -48,14 +48,14 @@
                         selectedPresetId="{{selectedPresetId}}"
                         />
                   </ws:itemContentTpl>
-               </ws:SBIS3.CONTROLS.ListView>
+               </SBIS3.CONTROLS:ListView>
             </div>
          </div>
       </ws:if>
    </div>
-   <ws:SBIS3.CONTROLS.ScrollContainer class="controls-Browser-ColumnsEditor-Editing-Area__body">
+   <SBIS3.CONTROLS:ScrollContainer class="controls-Browser-ColumnsEditor-Editing-Area__body">
       <ws:content type="string">
-         <ws:SBIS3.CONTROLS.CheckBoxGroup
+         <SBIS3.CONTROLS:CheckBox:Group
             class="controls-Browser-ColumnsEditor-Editing-Area__FixedList"
             name="controls-Browser-ColumnsEditor-Editing-Area__FixedList"
             items="{{ _optsFixed.items }}"
@@ -65,7 +65,7 @@
             selectedKeys="{{ _optsFixed.markedKeys }}"
             multiselect="{{ true }}"
          />
-         <ws:SBIS3.CONTROLS.ListView
+         <SBIS3.CONTROLS:ListView
             class="controls-Browser-ColumnsEditor-Editing-Area__SelectableList"
             name="controls-Browser-ColumnsEditor-Editing-Area__SelectableList"
             items="{{ _optsSelectable.items }}"
@@ -76,7 +76,7 @@
             displayProperty="title"
             itemsSortMethod="{{_optsSelectable.itemsSortMethod}}"
             selectedKeys="{{_optsSelectable.markedKeys}}"
-            itemContentTpl="tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/templates/selectableItemContent"
+            itemContentTpl="tmpl!SBIS3.CONTROLS/ColumnsEditor/Editing/templates/selectableItemContent"
             multiselect="{{ true }}"
             >
             <ws:handlers onItemClick="{{_optsSelectable.onItemClick}}" onSelectedItemsChange="{{_optsSelectable.onSelectedItemsChange}}"/>
@@ -85,11 +85,11 @@
                >
                <ws:contentTemplate>
                   <ws:if data="{{hasGroups}}">
-                     <ws:partial template="tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/templates/selectableGroupContent" scope="{{contentTemplate}}" groupTitleTpl="{{groupTitleTpl}}" groupTitles="{{groupTitles}}" />
+                     <ws:partial template="tmpl!SBIS3.CONTROLS/ColumnsEditor/Editing/templates/selectableGroupContent" scope="{{contentTemplate}}" groupTitleTpl="{{groupTitleTpl}}" groupTitles="{{groupTitles}}" />
                   </ws:if>
                </ws:contentTemplate>
             </ws:groupBy>
-         </ws:SBIS3.CONTROLS.ListView>
+         </SBIS3.CONTROLS:ListView>
       </ws:content>
-   </ws:SBIS3.CONTROLS.ScrollContainer>
+   </SBIS3.CONTROLS:ScrollContainer>
 </div>

@@ -2,14 +2,14 @@
  * Класс, кэширующий пресеты редактора колонок
  *
  * @public
- * @class SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Cache
+ * @class SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Cache
  */
-define('js!SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Cache',
+define('SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Cache',
    [
       'Core/Deferred',
       'Core/EventBus',
       'Core/UserConfig',
-      'js!SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Unit'
+      'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit'
    ],
 
    function (Deferred, EventBus, UserConfig, PresetUnit) {
@@ -62,13 +62,13 @@ define('js!SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Cache',
 
 
 
-      var PresetCache = /**@lends SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Cache.prototype*/ {
+      var PresetCache = /**@lends SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Cache.prototype*/ {
          /**
           * Получить список всех имеющихся пресетов редактора колонок
           * @public
           * @param {string} namespace Пространство имён
           * @param {boolean} force Форсировать запрос
-          * @return {Core/Deferred<SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Unit[]>}
+          * @return {Core/Deferred<SBIS3.CONTROLS.Browser/Browser/ColumnsEditor/Preset/Unit[]>}
           */
          list: function (namespace, force) {
             if (!namespace || typeof namespace !== 'string') {
@@ -119,7 +119,7 @@ define('js!SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Cache',
           * @public
           * @param {string} namespace Пространство имён
           * @param {object} data Данные для создания нового пресета редактора колонок
-          * @return {SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Unit}
+          * @return {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit}
           */
          create: function (namespace, data) {
             data.id = data.id || _uniqueHex(_ID_LENGTH);
@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Cache',
           * Обновить пресет редактора колонок
           * @public
           * @param {string} namespace Пространство имён
-          * @param {SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Unit} preset Пресет редактора колонок
+          * @param {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit} preset Пресет редактора колонок
           */
          update: function (namespace, preset) {
             _change(namespace, 'update', preset);
@@ -143,7 +143,7 @@ define('js!SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Cache',
           * Удалить пресет редактора колонок
           * @public
           * @param {string} namespace Пространство имён
-          * @param {SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Unit} preset Пресет редактора колонок
+          * @param {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit} preset Пресет редактора колонок
           */
          delete: function (namespace, preset) {
             _change(namespace, 'delete', preset);
@@ -179,7 +179,7 @@ define('js!SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Cache',
        * @private
        * @param {string} namespace Пространство имён
        * @param {string} action Способ изменения
-       * @param {SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Unit} preset Пресет редактора колонок
+       * @param {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit} preset Пресет редактора колонок
        */
       var _change = function (namespace, action, preset) {
          if (!namespace || typeof namespace !== 'string') {
@@ -209,7 +209,7 @@ define('js!SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Cache',
        * @private
        * @param {string} namespace Пространство имён
        * @param {string} action Способ изменения
-       * @param {SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Unit} preset Пресет редактора колонок
+       * @param {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit} preset Пресет редактора колонок
        */
       var _applyChange = function (namespace, action, preset) {
          var list = _data[namespace];
@@ -282,7 +282,7 @@ define('js!SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Cache',
       /**
        * Компактифицировать пресет для сохранения
        * @private
-       * @param {SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Unit} preset Пресет редактора колонок
+       * @param {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit} preset Пресет редактора колонок
        * @return {object}
        */
       var _toCompact = function (preset) {

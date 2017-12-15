@@ -1,11 +1,11 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
-   'js!SBIS3.CONTROLS.ListView',
+   'SBIS3.CONTROLS/ListView',
    'WS.Data/Collection/RecordSet',
    'WS.Data/Source/Memory'
 ], function (ListView, RecordSet, Memory) {
    'use strict';
-   describe('SBIS3.CONTROLS.ListView', function () {
+   describe('SBIS3.CONTROLS/ListView', function () {
       beforeEach(function () {
          if (typeof $ === 'undefined') {
             this.skip();

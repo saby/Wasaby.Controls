@@ -38,6 +38,11 @@ dirWalker(testResources);
 dirWalker(sandBoxResources);
 dirWalker(vdomCtrlResources);
 dirWalker(wsResources);
-
-fs.writeFileSync(path.join(__dirname, 'components/contents.json'), JSON.stringify({jsModules: jsModules}, null, 3));
-fs.writeFileSync(path.join(__dirname, 'components/contents.js'), 'contents = ' + JSON.stringify({jsModules: jsModules}, null, 3) + ';');
+let contents = {
+   jsModules: jsModules,
+   "requirejsPaths": {
+      "SBIS3.CONTROLS":"~resources"
+   }
+};
+fs.writeFileSync(path.join(__dirname, 'components/contents.json'), JSON.stringify(contents, null, 3));
+fs.writeFileSync(path.join(__dirname, 'components/contents.js'), 'contents = ' + JSON.stringify(contents, null, 3) + ';');

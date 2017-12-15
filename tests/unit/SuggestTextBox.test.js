@@ -1,17 +1,17 @@
 /**
  * Created by as.krasilnikov on 12.07.17.
  */
-define(['js!SBIS3.CONTROLS.SuggestTextBox', 'WS.Data/Entity/Record', 'WS.Data/Source/Memory'], function (SuggestTextBox, Record, Memory) {
+define(['SBIS3.CONTROLS/Suggest/SuggestTextBox', 'WS.Data/Entity/Record', 'WS.Data/Source/Memory'], function (SuggestTextBox, Record, Memory) {
 
    'use strict';
-   describe('SBIS3.CONTROLS.SuggestTextBox', function () {
+   describe('SBIS3.CONTROLS/Suggest/SuggestTextBox', function () {
       if (typeof window === 'undefined') {
          return;
       }
       let config = {
          historyId: 'suggestTextBoxHistoryId1',
          list: {
-            component: 'js!SBIS3.CONTROLS.DataGridView',
+            component: 'SBIS3.CONTROLS/DataGridView',
             options: {
                columns: [
                   {

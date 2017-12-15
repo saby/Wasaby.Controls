@@ -1,6 +1,6 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
-      'js!SBIS3.CONTROLS.LongOperations.Tools.Bunch'
+      'SBIS3.CONTROLS/LongOperations/Tools/Bunch'
    ],
 
    function (LongOperationsBunch) {

@@ -2,23 +2,23 @@
  * Класс контрола "Кнопка открытия редактора колонок"
  *
  * @public
- * @class SBIS3.CONTROLS.Browser/ColumnsEditor/EditorButton
- * @extends SBIS3.CONTROLS.CompoundControl
+ * @class SBIS3.CONTROLS/Browser/ColumnsEditor/EditorButton
+ * @extends SBIS3.CONTROLS/CompoundControl
  */
-define('js!SBIS3.CONTROLS.Browser/ColumnsEditor/EditorButton',
+define('SBIS3.CONTROLS/Browser/ColumnsEditor/EditorButton',
    [
       'Core/core-merge',
-      'js!SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Dropdown',
-      'js!SBIS3.CONTROLS.CompoundControl',
-      'tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/EditorButton',
-      'css!SBIS3.CONTROLS.Browser/ColumnsEditor/EditorButton',
-      'js!SBIS3.CONTROLS.IconButton'
+      'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
+      'SBIS3.CONTROLS/CompoundControl',
+      'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/EditorButton',
+      'css!SBIS3.CONTROLS/Browser/ColumnsEditor/EditorButton',
+      'SBIS3.CONTROLS/Button/IconButton'
    ],
 
    function (coreMerge, PresetDropdown, CompoundControl, dotTplFn) {
       'use strict';
 
-      var EditorButton = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.Browser/ColumnsEditor/EditorButton.prototype*/ {
+      var EditorButton = CompoundControl.extend([], /**@lends SBIS3.CONTROLS/Browser/ColumnsEditor/EditorButton.prototype*/ {
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.Browser/ColumnsEditor/EditorButton',
                 */
                presetsTitle: null,
                /**
-                * @cfg {SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Unit[]} Список объектов статически задаваемых пресетов
+                * @cfg {SBIS3.CONTROLS.Browser/Browser/ColumnsEditor/Preset/Unit[]} Список объектов статически задаваемых пресетов
                 */
                staticPresets: null,
                /**

@@ -2,31 +2,31 @@
  * Контрол "Область редактирования редактора колонок"
  *
  * @public
- * @class SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/Area
- * @extends SBIS3.CONTROLS.CompoundControl
+ * @class SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area
+ * @extends SBIS3.CONTROLS/CompoundControl
  */
-define('js!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/Area',
+define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
    [
       'Core/CommandDispatcher',
       'Core/Deferred',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Functor/Compute',
-      'js!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/AreaSelectableModel',
-      'js!SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Cache',
-      'js!SBIS3.CONTROLS.CompoundControl',
-      'js!SBIS3.CONTROLS.ItemsMoveController',
-      'js!SBIS3.CONTROLS.EditInPlaceBaseController',
-      'tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/Area',
-      'tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/templates/preset',
-      'tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/templates/presetEdit',
-      'tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/templates/selectableGroupContent',
-      'tmpl!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/templates/selectableItemContent',
-      'css!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/Area',
-      'js!SBIS3.CONTROLS.Button',
-      'js!SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Dropdown',
-      'js!SBIS3.CONTROLS.CheckBoxGroup',
-      'js!SBIS3.CONTROLS.ListView',
-      'js!SBIS3.CONTROLS.ScrollContainer'
+      'SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/AreaSelectableModel',
+      'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Cache',
+      'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/Controllers/ItemsMoveController',
+      'SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController',
+      'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
+      'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/preset',
+      'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/presetEdit',
+      'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableGroupContent',
+      'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItemContent',
+      'css!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
+      'SBIS3.CONTROLS/Button',
+      'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
+      'SBIS3.CONTROLS/CheckBox/Group',
+      'SBIS3.CONTROLS/ListView',
+      'SBIS3.CONTROLS/ScrollContainer'
    ],
 
    function (CommandDispatcher, Deferred, RecordSet, ComputeFunctor, AreaSelectableModel, PresetCache, CompoundControl, ItemsMoveController, EditInPlaceBaseController, dotTplFn) {
@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/Area',
 
 
 
-      var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/Area.prototype*/ {
+      var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area.prototype*/ {
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/Area',
                 */
                presetsTitle: null,
                /**
-                * @cfg {SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Unit[]} Список объектов статически задаваемых пресетов (опционально)
+                * @cfg {SBIS3.CONTROLS.Browser/Browser/ColumnsEditor/Preset/Unit[]} Список объектов статически задаваемых пресетов (опционально)
                 */
                staticPresets: null,
                /**
@@ -349,7 +349,7 @@ define('js!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/Area',
        * Получить общий список пресетов (и заданных статически, и сохраняемых пользовательских)
        * @private
        * @param {object} self "Этот" объект
-       * @return {Core/Deferred<SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Unit>}
+       * @return {Core/Deferred<SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit>}
        */
       var _getPresets = function (self) {
          var presets = self._options.staticPresets || [];
