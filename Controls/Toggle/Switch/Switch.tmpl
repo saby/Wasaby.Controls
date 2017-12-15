@@ -6,22 +6,22 @@
       <ws:partial template="tmpl!Controls/Toggle/Switch/resources/SwitchToggle"  _isDoubleSwitcher="{{_isDoubleSwitcher}}" _checked="{{_options.checked}}"/>
       <span class="controls-SwitcherDouble__textBlock">
          <span>
-            <ws:partial template="tmpl!Controls/Toggle/Switch/resources/SwitchText" _on="{{true}}" _checked="{{_options.checked}}" _caption="{{_options.captions[0]}}"/>
+            <ws:partial on:click="_clickHandler(true)" class="js-controls-SwitcherDouble__textOn controls-SwitcherDouble__textOn" template="tmpl!Controls/Toggle/Switch/resources/SwitchText" _checked="{{_options.checked}}" _caption="{{_options.captions[0]}}"/>
          </span>
          <span>
-            <ws:partial template="tmpl!Controls/Toggle/Switch/resources/SwitchText" _on="{{false}}" _checked="{{_options.checked}}" _caption="{{_options.captions[1]}}"/>
+            <ws:partial on:click="_clickHandler(false)" class="js-controls-SwitcherDouble__textOff controls-SwitcherDouble__textOff" template="tmpl!Controls/Toggle/Switch/resources/SwitchText" _checked="{{!_options.checked}}" _caption="{{_options.captions[1]}}"/>
          </span>
       </span>
    </ws:if>
    <ws:else>
       <span>
-         <ws:partial template="tmpl!Controls/Toggle/Switch/resources/SwitchText" _on="{{false}}" _checked="{{_options.checked}}" _caption="{{_options.captions[1]}}"/>
+         <ws:partial on:click="_clickHandler(false)" class="js-controls-SwitcherDouble__textOff controls-SwitcherDouble__textOff" template="tmpl!Controls/Toggle/Switch/resources/SwitchText" _checked="{{!_options.checked}}" _caption="{{_options.captions[1]}}"/>
       </span>
       <span>
-         <ws:partial template="tmpl!Controls/Toggle/Switch/resources/SwitchToggle"  _isDoubleSwitcher="{{_isDoubleSwitcher}}" _checked="{{_options.checked}}"/>
+         <ws:partial  template="tmpl!Controls/Toggle/Switch/resources/SwitchToggle"  _isDoubleSwitcher="{{_isDoubleSwitcher}}" _checked="{{_options.checked}}"/>
       </span>
       <span>
-         <ws:partial template="tmpl!Controls/Toggle/Switch/resources/SwitchText" _on="{{true}}" _checked="{{_options.checked}}" _caption="{{_options.captions[0]}}"/>
+         <ws:partial on:click="_clickHandler(true)" class="js-controls-SwitcherDouble__textOn controls-SwitcherDouble__textOn" template="tmpl!Controls/Toggle/Switch/resources/SwitchText" _checked="{{_options.checked}}" _caption="{{_options.captions[0]}}"/>
       </span>
    </ws:else>
 </span>
