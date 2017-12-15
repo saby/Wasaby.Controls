@@ -88,15 +88,15 @@ define('js!Controls/Popup/DialogHelper',
          },
 
          info: function(cfg, handler){
-            _private.openDialog.call(this, cfg, 'default', handler);
+            _private.openDialog.call(this, cfg, 'default', null, null, handler);
          },
 
          error: function(cfg, handler){
-            _private.openDialog.call(this, cfg, 'error', handler);
+            _private.openDialog.call(this, cfg, 'error', null, null, handler);
          },
 
          success: function(cfg, handler){
-            _private.openDialog.call(this, cfg, 'success', handler);
+            _private.openDialog.call(this, cfg, 'success', null, null, handler);
          }
 
       });
