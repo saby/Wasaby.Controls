@@ -343,8 +343,20 @@
    }
 }
 
+.ws-is-ie12 {
+   //В edge множество багов с рендером элементов у которых дробная ширина или высота https://stackoverflow.com/questions/32313551/microsoft-edge-bug
+   .controls-TabButton.controls-TabButton__main-item .controls-MenuLink {
+      height: 24px;
+   }
+}
+
 .ws-is-desktop-safari, .ws-is-mobile-safari {
    .controls-TabButton .controls-TabButton__mainText {
-      max-width: ~"calc(100% + 1px)"; //опять полупиксели, на сотые доли не влезает текст, появляется троеточие
+      max-width: ~"calc(100% + 2px)"; //опять полупиксели, на сотые доли не влезает текст, появляется троеточие
    }
+}
+
+//модификатор, который возвращает дефолтные паддинги в редактирование по месту. Нужно пересмотреть стандарт на компонент.
+.controls-TabButton.controls-TabButton__main-item .controls-TabButton__fixEditAtPlace-padding.controls-EditAtPlace .controls-TextBox__fieldWrapper {
+   padding: 0 4px;
 }
