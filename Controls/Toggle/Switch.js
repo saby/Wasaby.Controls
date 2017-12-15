@@ -48,7 +48,7 @@ define('js!Controls/Toggle/Switch', [
 
       _clickHandler: function (e, checked) {
          //если дабл свитчер и кликнутый заголовок, то не надо переключаться
-         if (!this._isDoubleSwitcher || this._options.checked !== checked) {
+         if (!this._isDoubleSwitcher || this._options.checked !== (checked === "On" ? true : false) || checked==="Toggle") {
             this._notify('checkedChanged', !this._options.checked);
          }
       },
