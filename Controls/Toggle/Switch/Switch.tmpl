@@ -1,30 +1,27 @@
 <!-- TODO: remove ws-enabled -->
-<ws:template name="toggle">
-    <span  class="controls-SwitcherDouble__empty">&nbsp;</span>
-    <span class="{{_isDoubleSwitcher ? 'js-controls-Switcher__toggle controls-SwitcherDouble__toggle' : 'controls-Switcher ws-enabled'}}
-   {{_checked && !_isDoubleSwitcher ? ' controls-Checked__checked' : ''}}
-   {{_isDoubleSwitcher ? ' controls-SwitcherDouble-' + (_checked ? 'on' : 'off') + '-toggled'}}"
-          on:click="_clickHandler()">
-      &nbsp;
-      <span class="{{_isDoubleSwitcher ? 'controls-SwitcherDouble__line' : 'controls-Switcher__line'}}"></span>
-      <span class="{{_isDoubleSwitcher ? 'controls-SwitcherDouble__btn' : 'controls-Switcher__btn'}}"></span>
-   </span>
-</ws:template>
-
-<span
-class="controls-SwitcherDouble {{_options.checked ? ' controls-Checked__checked' : ''}}{{_options.orientation === 'vertical' &&  _isDoubleSwitcher ? ' controls-SwitcherDouble_vertical' : ''}}"
-title="{{_options.tooltip}}"
->
+<!-- TODO: remove Span-->
+<!-- Спаны нужны из-за того что вдом неправильно работает с ключами-->
+<span class="controls-SwitcherDouble {{_options.checked ? ' controls-Checked__checked' : ''}}{{_options.orientation === 'vertical' &&  _isDoubleSwitcher ? ' controls-SwitcherDouble_vertical' : ''}}" title="{{_options.tooltip}}">
    <ws:if data="{{_options.orientation === 'vertical'}}">
-      <ws:partial template="toggle" _isDoubleSwitcher="{{_isDoubleSwitcher}}" _checked="{{_options.checked}}"/>
+      <ws:partial template="tmpl!Controls/Toggle/Switch/resources/SwitchToggle"  _isDoubleSwitcher="{{_isDoubleSwitcher}}" _checked="{{_options.checked}}"/>
       <span class="controls-SwitcherDouble__textBlock">
-         <span on:click="_clickHandler(true)" class="js-controls-SwitcherDouble__textOn controls-SwitcherDouble__text controls-SwitcherDouble__textOn{{_options.checked ? '' : ' controls-SwitcherDouble__unselected'}}" >{{_options.captions[0]}}</span>
-         <span on:click="_clickHandler(false)" class="js-controls-SwitcherDouble__textOff controls-SwitcherDouble__text controls-SwitcherDouble__textOff{{_options.checked ? ' controls-SwitcherDouble__unselected' : ''}}">{{_options.captions[1]}}</span>
+         <span>
+            <ws:partial template="tmpl!Controls/Toggle/Switch/resources/SwitchTextOn" _checked="{{_options.checked}}" _captions="{{_options.captions}}"/>
+         </span>
+         <span>
+            <ws:partial template="tmpl!Controls/Toggle/Switch/resources/SwitchTextOff" _checked="{{_options.checked}}" _captions="{{_options.captions}}"/>
+         </span>
       </span>
    </ws:if>
    <ws:else>
-      <span on:click="_clickHandler(false)" class="js-controls-SwitcherDouble__textOff controls-SwitcherDouble__text controls-SwitcherDouble__textOff{{_options.checked ? ' controls-SwitcherDouble__unselected' : ''}}">{{_options.captions[1]}}</span>
-      <ws:partial template="toggle"  _isDoubleSwitcher="{{_isDoubleSwitcher}}" _checked="{{_options.checked}}"/>
-      <span on:click="_clickHandler(true)" class="js-controls-SwitcherDouble__textOn controls-SwitcherDouble__text controls-SwitcherDouble__textOn{{_options.checked ? '' : ' controls-SwitcherDouble__unselected'}}">{{_options.captions[0]}}</span>
+      <span>
+         <ws:partial template="tmpl!Controls/Toggle/Switch/resources/SwitchTextOff" _checked="{{_options.checked}}" _captions="{{_options.captions}}"/>
+      </span>
+      <span>
+         <ws:partial template="tmpl!Controls/Toggle/Switch/resources/SwitchToggle"  _isDoubleSwitcher="{{_isDoubleSwitcher}}" _checked="{{_options.checked}}"/>
+      </span>
+      <span>
+         <ws:partial template="tmpl!Controls/Toggle/Switch/resources/SwitchTextOn" _checked="{{_options.checked}}" _captions="{{_options.captions}}"/>
+      </span>
    </ws:else>
 </span>
