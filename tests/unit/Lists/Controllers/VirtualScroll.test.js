@@ -30,7 +30,7 @@ define([
       }
 
       var virtualScroll = new VirtualScroll({
-         maxRows: 75,
+         maxVisibleRows: 75,
          rowHeight: 25,
          listModel: prepareListViewModel(),
          itemsCount: 500
@@ -70,47 +70,49 @@ define([
 
       //Проверка рассчета индексов/распорок после изменяения общего числа записей проекции
       it('Add items', function() {
-         virtualScroll.setItemsCount(25);
+         virtualScroll.setRowCount(25);
          virtualScroll.calcVirtualWindow(0);
-         var res = virtualScroll.onAddedItems(0, 100);
+         virtualScroll.updateOnAddingItems(0, 100);
+         var res = virtualScroll.getVirtualWindow();
 
          assert.equal(res.topPlaceholderHeight, 0);
          assert.equal(res.bottomPlaceholderHeight, 1875);
          assert.equal(res.indexStart, 0);
          assert.equal(res.indexStop, 50);
+         assert.equal(virtualScroll._rowCount, 125);
 
          //Сбросим текущую страницу, чтобы не влияала на следующие тесты
          virtualScroll._currentPage = -1;
       });
 
       it('Scroll to top List', function() {
-         virtualScroll.setItemsCount(500);
+         virtualScroll.setRowCount(500);
          var res = virtualScroll.calcVirtualWindow(0);
 
-         assert.equal(res.topPlaceholderHeight, 0);
-         assert.equal(res.bottomPlaceholderHeight, 11250);
-         assert.equal(res.indexStart, 0);
-         assert.equal(res.indexStop, 50);
+         assert.equal(res.virtualWindow.topPlaceholderHeight, 0);
+         assert.equal(res.virtualWindow.bottomPlaceholderHeight, 11250);
+         assert.equal(res.virtualWindow.indexStart, 0);
+         assert.equal(res.virtualWindow.indexStop, 50);
       });
 
       it('Scroll to middle List', function() {
-         virtualScroll.setItemsCount(500);
+         virtualScroll.setRowCount(500);
          var res = virtualScroll.calcVirtualWindow(5286);
 
-         assert.equal(res.topPlaceholderHeight, 4650);
-         assert.equal(res.bottomPlaceholderHeight, 5975);
-         assert.equal(res.indexStart, 186);
-         assert.equal(res.indexStop, 261);
+         assert.equal(res.virtualWindow.topPlaceholderHeight, 4650);
+         assert.equal(res.virtualWindow.bottomPlaceholderHeight, 5975);
+         assert.equal(res.virtualWindow.indexStart, 186);
+         assert.equal(res.virtualWindow.indexStop, 261);
       });
 
       it('Scroll to bottom List', function() {
-         virtualScroll.setItemsCount(500);
+         virtualScroll.setRowCount(500);
          var res = virtualScroll.calcVirtualWindow(12325);
 
-         assert.equal(res.topPlaceholderHeight, 11700);
-         assert.equal(res.bottomPlaceholderHeight, 0);
-         assert.equal(res.indexStart, 468);
-         assert.equal(res.indexStop, 500);
+         assert.equal(res.virtualWindow.topPlaceholderHeight, 11700);
+         assert.equal(res.virtualWindow.bottomPlaceholderHeight, 0);
+         assert.equal(res.virtualWindow.indexStart, 468);
+         assert.equal(res.virtualWindow.indexStop, 500);
 
       });
 

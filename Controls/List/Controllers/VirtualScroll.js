@@ -1,7 +1,6 @@
 define('js!Controls/List/Controllers/VirtualScroll', [
    'Core/core-simpleExtend'
-], function(simpleExtend,
-            throttle
+], function(simpleExtend
    ) {
    'use strict';
 
@@ -17,7 +16,7 @@ define('js!Controls/List/Controllers/VirtualScroll', [
        * @param itemsCount - общее число записей в проекции
        * @private
        */
-      onPageChange: function(topIndex, rowHeight, maxVisibleRows, itemsCount) {
+      calculateVirtualWindow: function(topIndex, rowHeight, maxVisibleRows, itemsCount) {
          var
             newWindow = _private.getRangeToShowByIndex(topIndex, maxVisibleRows, itemsCount),
             wrapperHeight = _private.calcPlaceholderHeight(newWindow, itemsCount, rowHeight);
@@ -51,7 +50,7 @@ define('js!Controls/List/Controllers/VirtualScroll', [
        * рассчитать высоты распорок
        * @param virtualWindow индексы начала/конца видимого промежутка записей
        * @param displayCount общее число записей
-       * @param rowHeight средняя высота записей
+       * @param rowHeight средняя высота строки
        * @returns {{top: number, bottom: number}}
        * @private
        */
@@ -85,12 +84,12 @@ define('js!Controls/List/Controllers/VirtualScroll', [
    /**
     *
     * @author Девятов Илья
-    * @public контроллер для работы виртуального скролла. Вычисляет по scrollTop диапазон отображаемых записей
+    * @public контроллер для работы виртуального скролла. Вычисляет по scrollTop диапазон отображаемых записей и высоты распорок
     */
    var VirtualScroll = simpleExtend.extend({
-      _itemsCount: null,      //Число записей в проекции
-      _maxVisibleRows: 75,    //максимальное число одновременно отображаемых записей
-      _rowHeight: null,         //Средняя высота строки
+      _rowCount: null,           // Число записей в проекции
+      _maxVisibleRows: 75,       // максимальное число одновременно отображаемых записей
+      _averageRowHeight: null,   // Средняя высота строки
 
       _currentPage: null,
       _currentTopIndex: null,
@@ -99,51 +98,51 @@ define('js!Controls/List/Controllers/VirtualScroll', [
       /**
        *
        * @param cfg
-       * @param cfg.maxRows {Number} - максимальное число отображаемых записей
+       * @param cfg.maxVisibleRows {Number} - максимальное число отображаемых записей
        * @param cfg.itemsCount {Number} - общее число записей в проекции
        * @param cfg.rowHeight {Number} - высота (средняя) однй строки
        */
       constructor: function(cfg) {
          VirtualScroll.superclass.constructor.apply(this, arguments);
 
-         this._maxVisibleRows = cfg.maxRows || this._maxVisibleRows;
-         this._itemsCount = cfg.itemsCount;
-         this._rowHeight = cfg.rowHeight;
+         this._maxVisibleRows = cfg.maxVisibleRows || this._maxVisibleRows;
+         this._rowCount = cfg.itemsCount;
+         this._averageRowHeight = cfg.rowHeight;
       },
 
-      setItemsCount: function(itemsCount) {
-         this._itemsCount = itemsCount;
+      getVirtualWindow: function() {
+         return this._virtualWindow;
+      },
+
+      setRowCount: function(rowCount) {
+         this._rowCount = rowCount;
       },
 
       /**
-       * в проекции добавились элементы
+       * Обновление виртуального окна после того, как в проекции добавились элементы
        * @param index позиция, с которой появились новые элементы
        * @param countAddedItems количество добавленных элементов
        */
-      onAddedItems: function(index, countAddedItems) {
-         var virtualWindow = this._virtualWindow;
-         for (var i = index; i < index + countAddedItems; i++) {
-            if (i < virtualWindow.indexStart) {
-               //Если добавили ДО видимого диапазона, сдвинем видимый диапазон и увеличим верхнюю распорку
-               virtualWindow.indexStart++;
-               virtualWindow.indexStop++;
-               virtualWindow.topPlaceholderHeight += this._rowHeight;
-            } else {
-               //В остальных случаях - просто увеличим нижнюю границу (затем скорректируем)
-               virtualWindow.indexStop++;
-            }
-            this._itemsCount++;
+      updateOnAddingItems: function(index, countAddedItems) {
+         if (index < this._virtualWindow.indexStart) {
+            //Если добавили ДО видимого диапазона, сдвинем видимый диапазон и увеличим верхнюю распорку
+            this._virtualWindow.indexStart += countAddedItems;
+            this._virtualWindow.indexStop += countAddedItems;
+            this._virtualWindow.topPlaceholderHeight += (this._averageRowHeight * countAddedItems);
+         } else {
+            //В остальных случаях - просто увеличим нижнюю границу (затем скорректируем)
+            this._virtualWindow.indexStop += countAddedItems;
          }
+         this._rowCount += countAddedItems;
 
-         var range = _private.getRangeToShowByIndex(this._currentTopIndex, this._maxVisibleRows, this._itemsCount);
+         //Рассчитать новый максимальный индекс с учетом того, тчо записей стало больше
+         var range = _private.getRangeToShowByIndex(this._currentTopIndex, this._maxVisibleRows, this._rowCount);
 
          //корректируем конец видимого диапазона (часть добавленных записей может уйти в распорку, часть в видимую область)
-         if (virtualWindow.indexStop > range.stop) {
-            virtualWindow.bottomPlaceholderHeight += (virtualWindow.indexStop - range.stop) * this._rowHeight;
-            virtualWindow.indexStop = range.stop;
+         if (this._virtualWindow.indexStop > range.stop) {
+            this._virtualWindow.bottomPlaceholderHeight += (this._virtualWindow.indexStop - range.stop) * this._averageRowHeight;
+            this._virtualWindow.indexStop = range.stop;
          }
-
-         return virtualWindow;
       },
 
       /**
@@ -152,17 +151,23 @@ define('js!Controls/List/Controllers/VirtualScroll', [
        * @returns {*}
        */
       calcVirtualWindow: function(scrollTop) {
-         var newPage = _private.getPage(scrollTop, this._rowHeight);
+         var newPage = _private.getPage(scrollTop, this._averageRowHeight);
 
          if (this._currentPage === newPage.page) {
-            return false;
+            return {
+               changed: false,
+               virtualWindow: this._virtualWindow
+            };
          }
 
          this._currentPage = newPage.page;
          this._currentTopIndex = newPage.topIndex;
-         this._virtualWindow = _private.onPageChange(newPage.topIndex, this._rowHeight, this._maxVisibleRows, this._itemsCount);
+         this._virtualWindow = _private.calculateVirtualWindow(newPage.topIndex, this._averageRowHeight, this._maxVisibleRows, this._rowCount);
 
-         return this._virtualWindow;
+         return {
+            changed: true,
+            virtualWindow: this._virtualWindow
+         };
       }
    });
 

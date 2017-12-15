@@ -71,7 +71,7 @@ define('js!Controls/List/ListControl', [
                self._listModel.setItems(list);
             }
 
-            self._virtualScroll.setItemsCount(self._listModel.getCount());
+            self._virtualScroll.setRowCount(self._listModel.getCount());
             _private.handleListScroll.call(self, 0);
          })
       },
@@ -93,8 +93,8 @@ define('js!Controls/List/ListControl', [
             }
 
             //отдать новые данные в virtualScroll и рассчитать новый диапазон отображаемых записей
-            var newVirtualWindow = self._virtualScroll.onAddedItems(newItemsIndex, list.getCount());
-            _private.updateVirtualWindow(self, newVirtualWindow);
+            self._virtualScroll.updateOnAddingItems(newItemsIndex, list.getCount());
+            _private.updateVirtualWindow(self, self._virtualScroll.getVirtualWindow());
          })
       },
 
@@ -246,12 +246,10 @@ define('js!Controls/List/ListControl', [
        * @param virtualWindow результат из virtualScroll контроллера
        */
       updateVirtualWindow: function(self, virtualWindow) {
-         if (virtualWindow) {
-            self._topPlaceholderHeight = virtualWindow.topPlaceholderHeight;
-            self._bottomPlaceholderHeight = virtualWindow.bottomPlaceholderHeight;
-            self._listModel.updateIndexes(virtualWindow.indexStart, virtualWindow.indexStop);
-            self._forceUpdate();
-         }
+         self._topPlaceholderHeight = virtualWindow.topPlaceholderHeight;
+         self._bottomPlaceholderHeight = virtualWindow.bottomPlaceholderHeight;
+         self._listModel.updateIndexes(virtualWindow.indexStart, virtualWindow.indexStop);
+         self._forceUpdate();
       },
 
       /**
@@ -259,8 +257,10 @@ define('js!Controls/List/ListControl', [
        * @param scrollTop
        */
       handleListScroll: function(scrollTop) {
-         var virtualWindow = this._virtualScroll.calcVirtualWindow(scrollTop);
-         _private.updateVirtualWindow(this, virtualWindow);
+         var result = this._virtualScroll.calcVirtualWindow(scrollTop);
+         if (result.changed) {
+            _private.updateVirtualWindow(this, result.virtualWindow);
+         }
       }
    };
 
@@ -313,7 +313,7 @@ define('js!Controls/List/ListControl', [
 
          _beforeMount: function(newOptions) {
             this._virtualScroll = new VirtualScroll({
-               maxRows: 60,
+               maxVisibleRows: 60,
                rowHeight: 18,
                itemsCount: 0
             });
