@@ -60,13 +60,14 @@ define(
                 lastRightItem,
                 tmpl, itemTpl, item;
             if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
+               var context = this.linkedContext;
                projection.each(function (itemProj) {
                   item = itemProj.getContents();
                   itemTpl = item.get(opts.displayProperty);
                   tmpl = itemTpl && TemplateUtil.prepareTemplate(itemTpl)({
                      item: item.getRawData(),
                      options: opts
-                  });
+                  }, undefined, context);
                   if (item.get('align') === 'left') {
                      if (!firstLeftItem) {
                         firstLeftItem = item;
