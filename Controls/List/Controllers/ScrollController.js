@@ -1,4 +1,4 @@
-define('js!Controls/List/Controllers/ScrollWatcher', [
+define('js!Controls/List/Controllers/ScrollController', [
    'Core/core-simpleExtend',
    'Core/helpers/Function/throttle'
 ], function(simpleExtend,
@@ -74,12 +74,12 @@ define('js!Controls/List/Controllers/ScrollWatcher', [
     * @author Девятов Илья
     * @public
     */
-   var ScrollWatcher = simpleExtend.extend({
+   var ScrollController = simpleExtend.extend({
       _options: null,// eslint-disable-line check-location-options
       _observer: null,
 
       constructor: function(cfg) {
-         ScrollWatcher.superclass.constructor.apply(this, arguments);
+         ScrollController.superclass.constructor.apply(this, arguments);
          this._options = cfg;
 
          //Есть нет IntersectionObserver, то в обработчике onScroll нужно дополнительно обсчитывать все триггеры
@@ -106,8 +106,37 @@ define('js!Controls/List/Controllers/ScrollWatcher', [
             this._observer.unobserve(this._options.triggers.bottomListTrigger);
             this._observer = null;
          }
+      },
+
+      /**
+       * Прокрутить до верха контейнера
+       */
+      scrollToTop: function() {
+         this._options.scrollContainer.scrollTop = 0;
+      },
+
+      /**
+       * Прокрутить до низа контейнера
+       */
+      scrollToBottom: function() {
+         this._options.scrollContainer.scrollTop = this._options.scrollContainer.scrollHeight;
+      },
+
+      /**
+       * Прокрутить на 1 страницу вверх
+       */
+      scrollPageUp: function() {
+         this._options.scrollContainer.scrollTop -= this._options.scrollContainer.clientHeight;
+      },
+
+      /**
+       * Прокрутить на 1 страницу вниз
+       */
+      scrollPageDown: function() {
+         this._options.scrollContainer.scrollTop += this._options.scrollContainer.clientHeight;
       }
+
    });
 
-   return ScrollWatcher;
+   return ScrollController;
 });

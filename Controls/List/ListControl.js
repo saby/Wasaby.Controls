@@ -6,7 +6,7 @@ define('js!Controls/List/ListControl', [
    'js!Controls/List/Controllers/PageNavigation',
    'Core/helpers/functional-helpers',
    'require',
-   'js!Controls/List/Controllers/ScrollWatcher',
+   'js!Controls/List/Controllers/ScrollController',
    'js!Controls/List/Controllers/VirtualScroll',
    'css!Controls/List/ListControl/ListControl'
 ], function (Control,
@@ -16,7 +16,7 @@ define('js!Controls/List/ListControl', [
              PageNavigation,
              fHelpers,
              require,
-             ScrollWatcher,
+             ScrollController,
              VirtualScroll
  ) {
    'use strict';
@@ -187,7 +187,7 @@ define('js!Controls/List/ListControl', [
          }
       },
 
-      createScrollWatcher: function(scrollContainer) {
+      createScrollController: function(scrollContainer) {
          var
             self = this,
             children = this._children,
@@ -213,7 +213,7 @@ define('js!Controls/List/ListControl', [
                }
             };
 
-         return new ScrollWatcher ({
+         return new ScrollController ({
             triggers : triggers,
             scrollContainer: scrollContainer,
             loadOffset: this._loadOffset,
@@ -330,7 +330,7 @@ define('js!Controls/List/ListControl', [
             //if ((this._options.navigation && this._options.navigation.source === 'page')) {
                var scrollContainer = this._container.closest('.ws-scrolling-content');
                if (scrollContainer && scrollContainer.length) {
-                  this._scrollWatcher = _private.createScrollWatcher.call(this, scrollContainer[0]);
+                  this._scrollController = _private.createScrollController.call(this, scrollContainer[0]);
                }
             //}
 
@@ -379,8 +379,8 @@ define('js!Controls/List/ListControl', [
          },
 
          _beforeUnmount: function() {
-            if (this._scrollWatcher) {
-               this._scrollWatcher.destroy();
+            if (this._scrollController) {
+               this._scrollController.destroy();
             }
 
             ListControl.superclass._beforeUnmount.apply(this, arguments);
