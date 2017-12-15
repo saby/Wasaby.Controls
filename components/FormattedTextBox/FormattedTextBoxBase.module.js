@@ -234,6 +234,11 @@ define(
             innerChar;
 
          this.model = [];
+
+         //Явно преобразуем маску к строке, т.к. при построении на сервере, в ней лежит объект rk.
+         strMask = '' + strMask;
+
+
          for (var i = 0; i < strMask.length; i++) {
             maskChar = strMask.charAt(i);
             //заменяем символы маски на внутренние, например HH:MM на dd:dd
@@ -1238,6 +1243,8 @@ define(
          model.setText(text, this._getMaskReplacer());
          this._updateText();
          this._textChanged = true;
+         //снимаем выделение валидатора на время ввода
+         this.clearMark();
          //обновить html
          this._inputField.html(this._getHtmlMask());
          if (model.isFilled()) {

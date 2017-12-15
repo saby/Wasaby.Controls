@@ -68,6 +68,16 @@ define('js!SBIS3.CONTROLS.Button',
          opts.cssClassName += ' controls-Button-color__' + (!!opts.primary ? 'primary' : 'default');
          opts.cssClassName += (!!opts.primary ? ' controls-Button__primary' : '');
          return opts;
+      },
+      show: function(){
+         // если кнопка скрыта при построение, то она не зарегистрируется дефолтной,
+         // поэтому при показе такой кнопки регистрируем её как дефолтную
+         var oldVisible = this.isVisible();
+
+         Button.superclass.show.call(this);
+         if (!oldVisible && this.isPrimary()) {
+            this.setDefaultButton(true);
+         }
       }
    });
 

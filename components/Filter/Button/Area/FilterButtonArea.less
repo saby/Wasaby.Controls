@@ -75,7 +75,7 @@
 }
 
 .controls__filterButton__area-scrollContainer {
-	height: calc(100% ~'-' @controls-filterButton-area-header-height * 2);
+	height: calc(100% ~'-' @controls-filterButton-area-header-height + (@controls-filterButton-header-vertical-spacing * 2));
 }
 
 .controls__filterButton__area {
@@ -206,7 +206,7 @@
 				&.controls-Link {
 					&.ws-enabled {
 						&:hover {
-							color: @link-text-color;
+							color: @color_Link-text;
 						}
 					}
 				}

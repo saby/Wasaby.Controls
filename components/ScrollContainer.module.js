@@ -124,10 +124,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 * @cfg {Object}
                 */
                navigationToolbar: {
-                  /**
-                   * @cfg {Boolean}
-                   * @name SBIS3.CONTROLS.ScrollContainer#navigationToolbar.begin
-                   */
+                 /**
+                  * @cfg {Boolean}
+                  * @name SBIS3.CONTROLS.ScrollContainer#navigationToolbar.begin
+                  */
                   begin: false,
                   /**
                    * @cfg {Boolean}

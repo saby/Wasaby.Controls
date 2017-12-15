@@ -1,12 +1,12 @@
 define([
-   'js!Controls/List/Controllers/ScrollWatcher'
-], function(ScrollWatcher) {
+   'js!Controls/List/Controllers/ScrollController'
+], function(ScrollController) {
 
    var currentTriggers, currentScrollTop;
 
    function createScrollContainer() {
       return {
-         //Подписка на событие в ScrollWatcher, сохраняем тут обработчик scrollHandler
+         //Подписка на событие в ScrollController, сохраняем тут обработчик scrollHandler
          addEventListener: function(eventName, scrollHandler, options) {
             this.scrollHandler = scrollHandler;
          },
@@ -20,7 +20,11 @@ define([
                   clientHeight: clientHeight
                }
             });
-         }
+         },
+
+         scrollHeight: 1000,
+         clientHeight: 300,
+         scrollTop: null
       };
    }
 
@@ -36,8 +40,8 @@ define([
    }
 
    // Тестирование при доступном в браузере IntersectionObserver'е.
-   // Все происходит синхронно, можно не создавать на каждый тест свой ScrollWatcher
-   describe('Controls/List/Controllers/ScrollWatcherWithObserver', function() {
+   // Все происходит синхронно, можно не создавать на каждый тест свой ScrollController
+   describe('Controls/List/Controllers/ScrollControllerWithObserver', function() {
       var triggers, eventHandlers, scrollContainer, originalIntersectionObserver;
 
       //триггеры для IntersectionObserver
@@ -60,7 +64,7 @@ define([
          }
       };
 
-      var sw = new ScrollWatcher ({
+      var sw = new ScrollController ({
          triggers : triggers,
          scrollContainer: scrollContainer,
          loadOffset: 100,
@@ -96,10 +100,10 @@ define([
    });
 
    // Тестирование работы без IntersectionObserver
-   // Из-за того, что ScrollWatcher без IntersectionObserver'a работает через throttle, нужно
-   // перед каждым тестом создавать свой ScrollWatcher, иначе получается каша из событий, тесты путаются
-   describe('Controls/List/Controllers/ScrollWatcher', function() {
-      var scrollWatcher, eventHandlers, scrollContainer, originalIntersectionObserver;
+   // Из-за того, что ScrollController без IntersectionObserver'a работает через throttle, нужно
+   // перед каждым тестом создавать свой ScrollController, иначе получается каша из событий, тесты путаются
+   describe('Controls/List/Controllers/ScrollController', function() {
+      var scrollController, eventHandlers, scrollContainer, originalIntersectionObserver;
       beforeEach(function() {
          //удаляем IntersectionObserver, если он вдруг есть
          originalIntersectionObserver = global.IntersectionObserver;
@@ -108,7 +112,7 @@ define([
          eventHandlers = getEventHandlers();
          scrollContainer = createScrollContainer();
 
-         scrollWatcher = new ScrollWatcher ({
+         scrollController = new ScrollController ({
             triggers : {},
             scrollContainer: scrollContainer,
             loadOffset: 100,
@@ -143,6 +147,20 @@ define([
       it('onListScroll', function() {
          currentScrollTop = 200;
          scrollContainer.onScroll(currentScrollTop);
+      });
+
+      it('Scroll to [top, bottom, pageUp, pageDown]', function() {
+         scrollController.scrollToTop();
+         assert.equal(scrollController._options.scrollContainer.scrollTop, 0, 'Incorrect current scrollTop');
+
+         scrollController.scrollToBottom();
+         assert.equal(scrollController._options.scrollContainer.scrollTop, 1000, 'Incorrect current scrollTop');
+
+         scrollController.scrollPageUp();
+         assert.equal(scrollController._options.scrollContainer.scrollTop, 700, 'Incorrect current scrollTop after scrollPageUp');
+
+         scrollController.scrollPageDown();
+         assert.equal(scrollController._options.scrollContainer.scrollTop, 1000, 'Incorrect current scrollTop after scrollPageDown');
       });
 
       afterEach(function() {

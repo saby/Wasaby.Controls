@@ -158,7 +158,7 @@
 
 .controls-ClockPicker__arrow_inner {
   height: calc(~"@{clock-picker-inner-circle-radius} - @{clock-picker-inner-tick-radius} - @{clock-picker-arrow-tip-border-width}");
-  z-index: @clock-picker-inner-arrow-z-index;
+  z-index: 4;
   .controls-ClockPicker__arrowTip {
     bottom: calc(~"-1 * (2 * (@{clock-picker-inner-tick-radius} + @{clock-picker-arrow-tip-border-width}))");
     left: calc(~"-1 * (@{clock-picker-inner-tick-radius} + @{clock-picker-arrow-tip-border-width})");
@@ -175,8 +175,8 @@
 
 
 .controls-ClockPicker__unitTime {
-  cursor: @default-hover-cursor;
-  z-index: @clock-picker-unit-time-z-index;
+  cursor: pointer;
+  z-index: 16;
   font-size: @clock-picker-unit-time-font-size;
   line-height: @clock-picker-unit-time-font-size;
   font-weight: @bold-font-weight;

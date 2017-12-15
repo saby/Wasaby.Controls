@@ -8,13 +8,6 @@
    </div>
  */
 
-.generate-height(controls-TextArea__field);
-
-/*
-   В однострочных полях ввода высота явно задаётся на контейнере, в TextArea на контейнере height: auto.
-   Получается, что в TextArea нужно добавлять отступы, чтобы однострочная TextArea и TextBox были одного размера
-   https://jsfiddle.net/txd821ov/
- */
 .controls-TextArea_padding {
    padding: @padding_TextArea-container;
 }
@@ -27,12 +20,6 @@
 }
 
 .controls-TextArea__view {
-   //Чтобы высота считалась только по textarea
-   position: absolute;
-   //Иначе элемент в каждом браузере позиционируется по-разному
-   //https://jsfiddle.net/pbm9c1mo/
-   top: 0;
-   left: 0;
    .flex-shrink(0);
    box-sizing: border-box;
    padding: @padding_TextArea-field;
@@ -43,4 +30,27 @@
    word-wrap: break-word;
    min-height: @min-height_TextArea;
    max-height: 100%;
+}
+
+.generate-height(controls-TextArea__field);
+
+/*
+   СЛОЙ СОВМЕСТИМОСТИ
+ */
+.controls-TextArea__field {
+   position: absolute;
+   top: 0;
+   left: 0;
+}
+.controls-TextArea__view_empty {
+   color: @color_TextBox-placeholder; //Т.к. до инициализации textarea скрыта, то плейсхолдер находится в div'e и он должен иметь корректный цвет
+   .baseline-fix(); //Пустой блок увеличивает размеры родительского и ломает базовую линию
+}
+.controls-TextArea__field_init {
+   position: static;
+}
+.controls-TextArea__view_init {
+   position: absolute;
+   top: 0;
+   left: 0;
 }

@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
       'js!SBIS3.CONTROLS.Browser',
       'js!SBIS3.CONTROLS.SearchForm',
       'js!SBIS3.CONTROLS.FilterButton',
+      'js!SBIS3.CONTROLS.FastDataFilter',
       'js!SBIS3.CONTROLS.LongOperationsList',
       'js!SBIS3.CONTROLS.LongOperationsFilter'
    ],

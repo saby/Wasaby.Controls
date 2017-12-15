@@ -130,6 +130,9 @@
       min-width: 1px; //Нужно, чтобы flex правильно позиционировал ужимаемый контейнер. с 0 в ie11 не работает
       .controls-EditAtPlace {
          background: transparent;
+         .controls-TextBox__fieldWrapper {
+            padding: 0; //по стандарту
+         }
          .controls-EditAtPlace__textField{
             border-bottom-style: none;
          }
@@ -142,8 +145,13 @@
             margin-bottom: @margin-bottom_TabButton_checked_tab;
          }
       }
-      .controls-TabButton__caption > * {
-         font-weight: @tab-button-large-inner-font-weight;
+      .controls-TabButton__caption {
+         > * {
+            font-weight: @tab-button-large-inner-font-weight;
+         }
+         &:first-child {
+            min-height: 24px;
+         }
       }
       .controls-TabButton__additionalText1, .controls-TabButton__additionalText1 > * {
          .flex-shrink(0);
@@ -162,12 +170,13 @@
       }
       &.controls-Checked__checked {
          .controls-TabButton__caption {
-            min-height: 26px; //Для выравнивания в главной вкладки, чтобы центрирование не зависило от высоты внутреннего содержимого
+            min-height: 25px; //Для выравнивания в главной вкладки, чтобы центрирование не зависило от высоты внутреннего содержимого
          }
       }
       .controls-MenuLink {
          font-size: @tab-button-large-inner-font-size;
          color: @tab-button-large-firstAddText-color-hover;
+         height: 23px;
       }
    }
 
@@ -287,9 +296,67 @@
    }
 }
 
-.ws-is-ie {
+.ws-is-ie, .ws-is-firefox {
+   //Как-то так должно выглядеть редактирование по месту, перебил все что можно
    .controls-TabButton .controls-EditAtPlace__fieldWrapper {
-      display: block;
-      line-height: 24px; //в редактировании стоит line-height:20px, в ie все поехал
+      .inline-flexbox();
+      height: 24px;
+      line-height: normal;
+      margin: 0;
+      border: none;
    }
+   //Костыли, вызванные версткой editAtPlace. нужно переделывать.
+   .controls-TabButton.controls-TabButton__main-item {
+      .controls-TabButton__caption > * {
+         max-height: 26px;
+      }
+   }
+   //Для главной вкладки, внутри которой 1 текстбокс c font-size: 18px. ошибка из-за overflow:hidden на редактировании
+   .controls-EditAtPlace {
+      &.controls-TextBox_size_l {
+         .controls-EditAtPlace__fieldWrapper {
+            position: relative;
+            top: -1px;
+         }
+         .controls-TextBox_size_l.controls-TextBox {
+            .flexbox();
+         }
+      }
+   }
+}
+
+.ws-is-firefox {
+   .controls-TabButton__flex {
+      .controls-TabButton__additionalText2 .controls-EditAtPlace__fieldWrapper {
+         position: relative;
+         top: 1px;
+      }
+   }
+}
+
+.ws-is-ie {
+   .controls-TabButton__flex {
+      > .controls-TabButton__mainText {
+         position: relative;
+         top: -1px;
+      }
+   }
+}
+
+.ws-is-ie12 {
+   //В edge множество багов с рендером элементов у которых дробная ширина или высота https://stackoverflow.com/questions/32313551/microsoft-edge-bug
+   .controls-TabButton.controls-TabButton__main-item .controls-MenuLink {
+      height: 24px;
+   }
+}
+
+.ws-is-desktop-safari, .ws-is-mobile-safari {
+   .controls-TabButton .controls-TabButton__mainText {
+      max-width: ~"calc(100% + 2px)"; //опять полупиксели, на сотые доли не влезает текст, появляется троеточие
+   }
+}
+
+//модификатор, который возвращает дефолтные паддинги в редактирование по месту. Нужно пересмотреть стандарт на компонент.
+.controls-TabButton.controls-TabButton__main-item .controls-TabButton__fixEditAtPlace-padding.controls-EditAtPlace .controls-TextBox__fieldWrapper {
+   padding: 0 4px;
 }

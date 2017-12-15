@@ -80,12 +80,19 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
 
       showPicker: function() {
          SuggestTextBox.superclass.showPicker.apply(this, arguments);
-          TextBoxUtils.setEqualPickerWidth(this._picker);
+         TextBoxUtils.setEqualPickerWidth(this._picker);
       },
 
       _onListDrawItems: function() {
          SuggestTextBox.superclass._onListDrawItems.apply(this, arguments);
-          TextBoxUtils.setEqualPickerWidth(this._picker);
+         TextBoxUtils.setEqualPickerWidth(this._picker);
+      },
+
+      _updateList: function() {
+         SuggestTextBox.superclass._updateList.apply(this, arguments);
+         if(this.isPickerVisible()) {
+            TextBoxUtils.setEqualPickerWidth(this._picker);
+         }
       },
 
       destroy: function(){

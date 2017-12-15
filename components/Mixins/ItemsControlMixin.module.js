@@ -129,7 +129,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       return !isEmpty(cfg.groupBy) && (cfg._itemsProjection.getSort().length === 0 || !projItem || !projItem.isNode || !projItem.isNode());
    },
 
-   groupItemProcessing = function(groupId, records, item, cfg) {
+   groupItemProcessing = function(groupId, records, item, cfg, groupHash) {
       if (cfg._canApplyGrouping(item, cfg)) {
          var groupBy = cfg.groupBy;
          if (cfg._groupTemplate) {
@@ -144,6 +144,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   item: item.getContents(),
                   groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.contentTemplate || ''),
                   groupId: groupId,
+                  groupHash: groupHash,
                   groupCollapsing: cfg._groupCollapsing
                },
                groupTemplateFnc;
@@ -164,16 +165,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       var
          records = [];
       if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
-         var needGroup = false, groupId;
+         var needGroup = false, groupId, groupHash;
          projection.each(function (item, index) {
             if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
                groupId = item.getContents();
+               groupHash = item.getHash();
                needGroup = true;
             }
             else {
                if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
                   if (needGroup && groupId) {
-                     cfg._groupItemProcessing(groupId, records, item, cfg);
+                     cfg._groupItemProcessing(groupId, records, item, cfg, groupHash);
                      needGroup = false;
                   }
                }
@@ -1219,14 +1221,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _getItemsForRedrawOnAdd: function(items) {
          var
             itemsToAdd = [],
-            groupId;
+            groupId, groupHash;
 
          if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
             if (items.length > 1) {
                groupId = items[0].getContents();
+               groupHash = items[0].getHash();
                //todo Переделать, чтобы группы скрывались функцией пользовательской фильтрации
                if (groupId !== false) {
-                  this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
+                  this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options, groupHash);
                }
                items.splice(0, 1);
                itemsToAdd = itemsToAdd.concat(items);
@@ -1342,7 +1345,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _getDomElementByItem : function(item) {
          var container;
          if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
-            container = this._getItemsContainer().find('.controls-GroupBy[data-group="' + item.getContents() + '"]');
+            container = this._getItemsContainer().find('.controls-GroupBy[data-group-hash="' + item.getHash() + '"]');
          }
          else {
             container = this._getRecordElemByItem(item);
@@ -2692,7 +2695,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._revivePackageParams.light = this._revivePackageParams.light && (item.getContents().getId() != this._options.selectedKey);
             }
          }
-      }
+      },
+      
+      _afterCollectionChange: function() {}
    };
 
    var
@@ -2763,6 +2768,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._notifyOnDrawItems(this._revivePackageParams.light);
          }
          this._revivePackageParams.processed = true;
+         this._afterCollectionChange();
       };
    return ItemsControlMixin;
 

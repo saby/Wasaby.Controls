@@ -243,10 +243,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          records = searchProcessing(projection, cfg);
       }
       else {
-         var needGroup = false, groupId;
+         var needGroup = false, groupId, groupHash;
          projection.each(function(item) {
             if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
                groupId = item.getContents();
+               groupHash = item.getHash();
                needGroup = true;
             }
             else {
@@ -255,7 +256,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }
                if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
                   if (cfg._canApplyGrouping(item, cfg) && needGroup && groupId) {
-                     cfg._groupItemProcessing(groupId, records, item, cfg);
+                     cfg._groupItemProcessing(groupId, records, item, cfg, groupHash);
                      needGroup = false;
                   }
                }
@@ -408,7 +409,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
    hasNodeWithChild = function(cfg) {
       var
-         items = cfg.items,
+         items = cfg._items,
          itemsProjection = cfg._itemsProjection,
          hierarchyRelation = cfg._getHierarchyRelation(cfg),
          hasNodeWithChild = false,
@@ -993,7 +994,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
       _getItemsForRedrawOnAdd: function(items) {
          var
-            itemsToAdd = [], start = 0, groupId,
+            itemsToAdd = [], start = 0, groupId, groupHash,
             lastItem, breadCrumbs;
          if (this._options.hierarchyViewMode) {
             itemsToAdd = searchProcessing(items, this._options);
@@ -1004,7 +1005,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             lastItem = this._getItemsContainer().find('>.controls-ListView__item:last');
             if (lastItem.hasClass('controls-HierarchyDataGridView__path')) {
                breadCrumbs = lastItem.find('.controls-BreadCrumbs').wsControl();
-               if (breadCrumbs.getItems().at(0).getId() === itemsToAdd[0].data.path[0]['Id']) {
+               if (itemsToAdd[0].data && breadCrumbs.getItems().at(0).getId() === itemsToAdd[0].data.path[0]['Id']) {
                   breadCrumbs.setItems(itemsToAdd[0].data.path);
                   itemsToAdd.shift();
                }
@@ -1012,8 +1013,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          } else {
             if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
                groupId = items[0].getContents();
+               groupHash = items[0].getHash();
                if (groupId !== false && items.length > 1 && this._canApplyGrouping(items[1])) {
-                  this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
+                  this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options, groupHash);
                }
                items.splice(0, 1);
                itemsToAdd = itemsToAdd.concat(items);
@@ -1406,6 +1408,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          setItems: function() {
             this._stateResetHandler();
          },
+         redraw: function() {
+            this._updateExpanderDisplay();
+         },
          _applyExpandToItems: function(items) {
             var hierarchy = this._options._getHierarchyRelation(this._options),
                openedPath = this._options.openedPath;
@@ -1462,6 +1467,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                this._previousRoot = this._options.currentRoot;
 
             }
+            this._updateExpanderDisplay();
          }
       },
       /**

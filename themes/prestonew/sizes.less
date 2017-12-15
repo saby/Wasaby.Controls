@@ -25,8 +25,8 @@
 @line-height_TextBox:                             round(80px * @multiplier);
 @padding_TextBox-container:                       0 round(14px * @multiplier);
 @padding_TextBox-container_left:                  0 0 0 round(14px * @multiplier);
-@width_TextBox-InformationIcon:                   round(37px * @multiplier);
-@height_TextBox-InformationIcon:                  round(37px * @multiplier);
+@width_TextBox-InformationIcon:                   round(14px * @multiplier);
+@height_TextBox-InformationIcon:                  round(14px * @multiplier);
 @border-width_TextBox:                            2px;
 //textarea
 @min-height_TextArea:                             round(42px * @multiplier);
@@ -58,6 +58,10 @@
 @tree-view-folder-text-size:                      @default-text-size;
 //button
 @border-radius_Button:                            1px;
+//area-blocks
+@spacing_Block:                                   round(8px * @multiplier);
+@border-width_Block:                              1px;
+@border-radius_Block:                             1px;
 //back-button
 @back-button-margin-before:                       0 4px 0 0;//todo: romanov
 @back-button-padding-before:                      1px 0;//todo: romanov
@@ -128,20 +132,20 @@
 @font-folder-size:                        @default-text-size;
 @check-box-default-font-size:             @default-text-size;
 @link-line-height:                        normal;
-@link-height:                             auto;
-@link-font-size:                          @default-text-size;
+@height_Link:                             auto;
+@font-size_Link:                          @default-text-size;
 @link-icon-field-margin:                  0 0 0 round(4px * @multiplier);
-@icon-button-round-border-width:          auto;
-@icon-button-round-border-height:         round(64px * @multiplier);
-@icon-button-round-border-line-height:    round(62px * @multiplier);
+@width_IconButton-icon_round:          auto;
+@height_IconButton-icon_round:         round(64px * @multiplier);
+@line-height_IconButton-icon_round:    round(62px * @multiplier);
 @border-radius:                           0;
-@icon-button-border-width:                0px;
+@border-width_IconButton-icon:                0px;
 //ListView
 @list-view-items-toolbar-icon-button-border-width:0;
 @list-view-items-toolbar-icon-button-border-radius:0;
 @list-view-items-toolbar-icon-button-border-font-size:@icon-large-size;
-@icon-button-edit-round-border-height:    @icon-large-size;
-@icon-button-edit-round-border-width:     @icon-large-size;
+@height_IconButton_round_edit:    @icon-large-size;
+@width_IconButton_round_edit:     @icon-large-size;
 @icon-button-edit-round-border-line-height:@icon-large-size;
 @listView-empty-data-padding-top:         round(54px * @multiplier);
 //Button
@@ -181,7 +185,7 @@
 @font-size_Button_l:                      @font-size_Button;
 //Button group
 @button-group-horizontal-item-margin:     0 round(49px * @multiplier) 0 0;
-@button-group-vertical-item-margin:       0 0 round(49px * @multiplier) 0;
+@button-group-vertical-item-margin:       0 0 round(25px * @multiplier) 0;
 // Normal default button
 @button-checked-border-width:             @border-width_Button;
 @button-checked-padding:                  @padding_Button-wrapper;
@@ -214,10 +218,7 @@
 @switcher-dot-margin:                     0;
 @switcher-dot-margin-hover:               0;
 @switcher-dot-radius:                     round(6px * @multiplier);
-@switcher-width:                          round(100px * @multiplier);
-@switcher-height:                         round(50px * @multiplier);
 @switcher-btn-radius:                     round(28px * @multiplier);
-@switcherline-height:                     round(3px * @multiplier);
 @switcher-btn-border-width:	              round(3px * @multiplier);
 @switcher-btn-border-hover:               round(3px * @multiplier);
 @switcher-btn-size:	                      round(26px * @multiplier);
@@ -225,12 +226,10 @@
 @switcher-border-radius:                  round(28px * @multiplier);
 @switcher-width:                          round(100px * @multiplier);;
 @switcher-height:                         round(50px * @multiplier);
-@switcher-border-radius:                  round(60px * @multiplier);
 @switcher-hover-border-width:             2px;
 @switcherline-height:                     2px;
 @switcherline-width:                      round(70px * @multiplier);
 @switcher-btn-size:                       round(26px * @multiplier);
-@switcher-btn-border-width:               round(3px * @multiplier);
 @switcher-btn-hover-border-width:         @switcher-btn-border-width;
 @switcher-dot-size:                       @switcher-btn-size;
 //SwitcherDouble
@@ -482,7 +481,8 @@
 @controls-filterButton-button-empty-left-margin:   0px;
 @controls-filterButton-button-margin-right-align:round(8px * @multiplier) 0 round(8px * @multiplier) round(8px * @multiplier);
 @controls-filterButton-area-text-weight:	normal;
-@controls-filterButton-area-header-padding:round(8px * @multiplier) @default-height round(8px * @multiplier) round(24px * @multiplier);
+@controls-filterButton-header-vertical-spacing: round(8px * @multiplier);
+@controls-filterButton-area-header-padding:@controls-filterButton-header-vertical-spacing @default-height @controls-filterButton-header-vertical-spacing round(24px * @multiplier);
 @controls-filterButton-area-text-size:    round(40px * @multiplier);
 @controls-filterButton-area-text-margin:   0 round(24px * @multiplier) 0 0;
 @controls-filterButton-clear-margin-right: round(24px * @multiplier);
@@ -600,6 +600,7 @@
 @paging-font-size:                        @default-height;
 @scrollpager-border:                      none;
 @scrollpager-bottom:                      round(9px * @multiplier);
+@height_ListView_ScrollPager:             @default-height;
 @closeBigButtonWidth:                     @default-height;
 @date-range-big-choose-width:				   round(722px * @multiplier);
 @date-range-big-choose-left-right-width:  @default-height;
@@ -721,6 +722,7 @@
 @border-radius_WaitIndicator:     round(16px * @multiplier);
 @wait-indicator-small-size:       round(42px * @multiplier);
 @wait-indicator-small-gap:        round(13px * @multiplier);
-
 //header
 @header-font-weight:              @default-font-weight;
+//popup,floatarea,window
+@top_window_button:               round(8px * @multiplier);

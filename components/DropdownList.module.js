@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "Core/helpers/String/format",
    'Core/helpers/Function/shallowClone',
    "js!SBIS3.CORE.CompoundControl",
+   'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
    "js!SBIS3.CONTROLS.PickerMixin",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
    "js!SBIS3.CONTROLS.Utils.RecordSetUtil",
@@ -32,7 +33,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    'css!SBIS3.CONTROLS.DropdownList/DropdownList/DropdownList'
 ],
 
-   function (EventBus, IoC, constants, cMerge, cInstance, format, shallowClone, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
+   function (EventBus, IoC, constants, cMerge, cInstance, format, shallowClone, Control, ArraySimpleValuesUtil, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -586,7 +587,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._updateCurrentSelection();
                //Восстановим выделение по элементам
                for (var i = 0 ; i < items.length; i++) {
-                  $(items[i]).toggleClass('controls-DropdownList__item__selected', this._currentSelection.indexOf(this._getIdByRow($(items[i]))) > -1);
+                  $(items[i]).toggleClass('controls-DropdownList__item__selected', ArraySimpleValuesUtil.hasInArray(this._currentSelection, this._getIdByRow($(items[i]))));
                }
                //Если выбрали дефолтную запись - скрываем крестик сброса
                //Нужно перед показом пикера, чтобы перед позиционированием контейнер имел правильные размеры, т.к.
@@ -613,6 +614,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _redrawSelectedItems: function() {
             this._removeOldKeys();
+            if (this._isEnumTypeData()) {
+               this._setFirstItemAsSelected();
+            }
             if (this._isEmptyValueSelected()) {
                if (this.getSelectedKeys()[0] !== null) {
                   this._options.selectedKeys = [null];
@@ -883,16 +887,32 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _drawSelectedValue: function(id, textValue){
             var isDefaultIdSelected = id == this.getDefaultId(),
                 text = prepareText(textValue),
+                hash = this._getItemHash(id),
                 pickerContainer;
             if (this._picker && !this._options.multiselect) {
                pickerContainer = this._getPickerContainer();
                pickerContainer.find('.controls-DropdownList__item__selected').removeClass('controls-DropdownList__item__selected');
-               pickerContainer.find('[data-id="' + id + '"]').addClass('controls-DropdownList__item__selected');
+               pickerContainer.find('[data-hash="' + hash + '"]').addClass('controls-DropdownList__item__selected');
                this._setHasMoreButtonVisibility();
             }
             this._setText(text);
             this._redrawHead(isDefaultIdSelected);
             this._resizeFastDataFilter();
+         },
+         _getItemHash: function (id) {
+            var selectedRecord;
+            
+            if (!this.getItems()) {
+               return;
+            }
+            
+            if (this._isEnumTypeData()) {
+               selectedRecord = this._getItemsProjection().getCurrent();
+            }
+            else {
+               selectedRecord = this.getItems().getRecordById(id);
+            }
+            return selectedRecord && selectedRecord.getHash();
          },
          _resizeFastDataFilter: function(){
             var parent = this.getParent();

@@ -1,9 +1,10 @@
 define('js!SBIS3.CONTROLS.Link', [
    'Core/helpers/String/escapeTagsFromStr',
    'js!WSControls/Buttons/Button',
+   'js!SBIS3.CONTROLS.Utils.LinkUtil',
    'tmpl!SBIS3.CONTROLS.Link/Link/resources/hrefTemplate',
    'css!SBIS3.CONTROLS.Link/Link/Link'
-], function(escapeTagsFromStr, WSButton, hrefTemplate) {
+], function(escapeTagsFromStr, WSButton, LinkUtil, hrefTemplate) {
 
    'use strict';
 
@@ -104,6 +105,7 @@ define('js!SBIS3.CONTROLS.Link', [
          }else {
             options._textClass = ' controls-Link__field';
          }
+         LinkUtil.preparedClassFromOptions(options);
          return options;
       },
 

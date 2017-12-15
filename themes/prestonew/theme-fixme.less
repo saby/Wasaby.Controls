@@ -58,3 +58,177 @@ body {
   border-radius: 16px;
   background-size: round(74px * @multiplier);
 }
+body {
+  .controls-ListView__scrollPager {
+    .controls-IconButton {
+      background: @background_Button;
+      padding: 0;
+      border-style: solid;
+      border-width: @border-width_Button;
+      border-color: @background_Button;
+      .box-shadow(@box-shadow_Button);
+      .controls-Button__icon {
+        height: round(84px * @multiplier)!important;
+        width: round(84px * @multiplier)!important;
+        line-height: round(84px * @multiplier) !important;
+        position: absolute;
+        top: -@default-border-width;
+        left: -@default-border-width;
+        color: #E4E4E4 !important;
+      }
+      &:active {
+        background: @background_Button_active;
+        box-shadow: none;
+      }
+      &.ws-disabled {
+        .controls-Button__icon {
+          color: @color_Button_disabled !important
+        }
+      }
+    }
+  }
+  //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
+  .ws-paging {
+    .ws-paging-small {
+      width: round(84px * @multiplier) !important;
+      height: round(84px * @multiplier) !important;
+      background: none !important;
+      border: @default-border-width solid #8991A9 !important;
+      font-size: round(48px * @multiplier) !important;
+      background-color: #354B62 !important;
+      line-height:   round(84px * @multiplier) !important;
+      margin: 0 8px 0 0 !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
+      color: #8991A9 !important;
+      &.ws-paging-active{
+        border: @default-border-width solid @default-border-color !important;
+        color: #E4E4E4 !important;
+        &:hover{
+          background-color: #1b2530 !important;
+        }
+      }
+      &.ws-paging-current{
+        border: @default-border-width solid @primary-color !important;
+        background:#354B62 !important;
+        color: #E4E4E4 !important;
+      }
+      &.ws-paging-next, &.ws-paging-end, &.ws-paging-first, &.ws-paging-prev {
+        position:relative;
+        &:before {
+          text-indent: 0 !important;
+          font-size: round(84px * @multiplier);
+          position:absolute;
+          top:-2px;
+          left:-2px;
+          font-family: 'carrypresto-icons' !important;
+        }
+      }
+      &.ws-paging-next {
+        &:before {
+          content: "\e97e";
+        }
+      }
+      &.ws-paging-end {
+        &:before {
+          content: "\e97d";
+
+        }
+      }
+      &.ws-paging-first {
+        &:before {
+          content: "\e980";
+        }
+      }
+      &.ws-paging-prev{
+        &:before {
+          content: "\e97f";
+        }
+      }
+    }
+  }
+}
+.ws-is-desktop-platform {
+   .controls-ListView__scrollPager:not(.ws-disabled):not(:active) {
+    &:hover {
+      border-color: @background_Button_hovered;
+    }
+  }
+}
+.controls-Paging .control-Paging__btn .controls-Button__icon {
+  line-height: round(56px * @multiplier) !important;
+  padding-right: round(11px * @multiplier);
+}
+
+.controls-Pager{
+  .controls-Pager-block-amount, .controls-Pager-block-amount, controls-Pager-block-paging{
+    padding: 0;
+  }
+}
+body {
+  .ws-info-box {
+    background: @basic-block-bg-color;
+    color: @default-text-color;
+    border: @button-border;
+    padding: round(24px * @multiplier) round(84px * @multiplier) round(24px * @multiplier) round(24px * @multiplier);
+    &.ws-infobox-type-error {
+      box-shadow: rgba(0, 0, 0, 0.5) 0 0 round(20px * @multiplier);
+    }
+    .ws-infobox-triangle {
+      width: round(24px * @multiplier);
+      height: round(24px * @multiplier);
+      background: @basic-block-bg-color;
+      &.ws-infobox-triangle-bottom {
+        bottom: round(-15px * @multiplier);
+        border-right: @button-border;
+        border-bottom: @button-border;
+      }
+      &.ws-infobox-triangle-top {
+        top: round(-15px * @multiplier);
+        border-left: @button-border;
+        border-top: @button-border;
+      }
+      &.ws-infobox-triangle-vertical-right {
+        right: round(-15px * @multiplier);
+        border-right: @button-border;
+        border-top: @button-border;
+      }
+      &.ws-infobox-triangle-vertical-left {
+        left: round(-15px * @multiplier);
+        border-left: @button-border;
+        border-bottom: @button-border;
+      }
+    }
+
+    .ws-infobox-content {
+      color: @default-text-color;
+      font-size: round(28px * @multiplier);
+      ul {
+        padding-left: round(28px * @multiplier);
+      }
+    }
+
+    .ws-infobox-close-button.icon-disabled{
+      font-size: round(84px * @multiplier)!important;
+      width: round(84px * @multiplier)!important;
+      height: round(84px * @multiplier)!important;
+      right: 0;
+      top: 0;
+      color: @Infobox-cross-color!important;
+      overflow: hidden;
+      &:hover {
+        color: @Infobox-cross-color-hover!important;
+      }
+      &:before {
+        line-height: round(76px * @multiplier)!important;
+      }
+    }
+  }
+}
+//!IMPORTANT лучше чем увеличение веса селектора через BODY тк возможно собирать тему под селектором
+.ws-window-titlebar {
+  background: transparent !important;
+}
+.ws-window-content {
+  background-color: @basic-block-bg-color !important;
+}

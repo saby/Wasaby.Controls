@@ -23,12 +23,7 @@ define('js!Controls/Popup/Manager/Container',
 
          constructor: function (cfg) {
             Container.superclass.constructor.call(this, cfg);
-         },
-
-         _beforeMount: function (options) {
-            if (!options._popupItems) {
-               options._popupItems = new List();
-            }
+            this._popupItems = new List()
          },
 
          /**
@@ -66,15 +61,18 @@ define('js!Controls/Popup/Manager/Container',
           * @param {List} popupItems новый набор окон
           */
          setPopupItems: function (popupItems) {
-            this._options._popupItems = popupItems;
+            this._popupItems = popupItems;
             this._forceUpdate();
          }
       });
 
       // TODO довольно спорный способ встроить контйнер на страницу
-      var newDiv = document.createElement('div');
-      newDiv.setAttribute('id', 'popup');
-      document.body.appendChild(newDiv);
-      return Control.createControl(Container, {}, '#popup');
+      if( document ){
+         var newDiv = document.createElement('div');
+         newDiv.setAttribute('id', 'popup');
+         document.body.appendChild(newDiv);
+         return Control.createControl(Container, {}, '#popup');
+      }
+      return new Container();
    }
 );

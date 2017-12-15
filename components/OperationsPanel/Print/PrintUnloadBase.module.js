@@ -6,13 +6,14 @@
 //Нужно сделать общую точку входа, и ветвление только непосредственно перед вызовом тех или иннных функций бл.
 define('js!SBIS3.CONTROLS.PrintUnloadBase', [
    "Core/Deferred",
+   'Core/deprecated',
    "js!SBIS3.CONTROLS.MenuLink",
    "js!SBIS3.CORE.DialogSelector",
    "WS.Data/Chain",
    "WS.Data/Collection/Factory/RecordSet",
    "WS.Data/Collection/RecordSet",
    "Core/helpers/fast-control-helpers"
-], function( Deferred,MenuLink, Dialog, Chain, RecordSetFactory, RecordSet, fcHelpers) {
+], function(Deferred, Deprecated, MenuLink, Dialog, Chain, RecordSetFactory, RecordSet, fcHelpers) {
    //TODO: ограничение на максимальное количество записей, получаемое на клиент для печати/выгрузки.
    //Необходимо т.к. на сервере сейчас невозможно произвести xsl преобразование. Выписана задача:
    //(https://inside.tensor.ru/opendoc.html?guid=f852d5cc-b75e-4957-9635-3401e1832e80&description=)
@@ -64,9 +65,14 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
              * @cfg {String} Имя файла
              */
             fileName : '',
-            allowChangeEnable: false
+            allowChangeEnable: false,
+
+            /**
+             * @cfg {boolean} Использовать редактор колонок при определении списка колонок тогда, когда это возможно
+             */
+            useColumnsEditor: true
          },
-         _view : undefined
+         _view: undefined
       },
 
       $constructor: function() {
@@ -124,27 +130,28 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
                }
             }
          });
-
       },
+
       /**
        * Must be implemented
        * @param columns
        * @private
        */
       _notifyOnApply : function(columns){
-
       },
+
       _applyMassOperation : function(ds){
          this._applyOperation(ds);
       },
 
       _applyOperation : function(dataSet){
-         var
-             self = this;
-         this._prepareData(dataSet).addCallback(function(data) {
-            self.applyOperation({
-               dataSet: data,
-               columns: self._prepareOperationColumns(data)
+         var self = this;
+         this._prepareData(dataSet).addCallback(function (data) {
+            self._gatherColumnsInfo(data).addCallback(function (columns) {
+               self.applyOperation({
+                  dataSet: data,
+                  columns: columns
+               });
             });
          });
       },
@@ -160,15 +167,49 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          }
       },
 
-      _prepareOperationColumns: function(data){
-         var columns = this._getView().getColumns(),
-             result;
-         result = this._notifyOnApply(columns, data);
-         if (result instanceof Array) {
-            columns = result;
+      /*
+       * @deprecated Используйте метод "_gatherColumnsInfo"
+       */
+      _prepareOperationColumns: function (data) {
+         Deprecated.showInfoLog('Метод "_prepareOperationColumns" помечен как deprecated и будет удален. Используйте метод "_gatherColumnsInfo"');
+         if (this._options.useColumnsEditor) {
+            throw new Error('При включённой опции "useColumnsEditor" используйте асинхронный метод "_gatherColumnsInfo"');
          }
-         return columns;
+         var result;
+         this._gatherColumnsInfo.apply(this, arguments).addCallback(function (arg) { result = arg; });
+         return result;
       },
+
+      /*
+       * Собрать данные о колонках (асинхронно). Возвращает обещание, разрешаемое списком объектов со свойствами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView)
+       * @protected
+       * @param {object} data Дополнительные данные для вычисления колонок
+       * @return {Core/Deferred<object[]|WS.Data/Collection/RecordSet>}
+       */
+      _gatherColumnsInfo: function (data) {
+         if (this._options.useColumnsEditor) {
+            var promise = this.sendCommand('showColumnsEditor'/*, {editorOptions:{...}}*/);
+            if (promise && (!promise.isReady() || promise.isSuccessful())) {
+               return promise.addCallback(function (columnsConfig) {
+                  // Возвратить список объектов со свойствами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView)
+                  var columns = [];
+                  var selected = columnsConfig.selectedColumns;
+                  var notSelected = !(selected && selected.length);
+                  columnsConfig.columns.each(function (column) {
+                     if (notSelected || selected.indexOf(column.getId()) !== -1) {
+                        columns.push(column.get('columnConfig'));
+                     }
+                  });
+                  return columns;
+               }.bind(this));
+            }
+         }
+         // Если не доступен редактор колонок
+         var startColumns = this._getView().getColumns();
+         var resultColumns = this._notifyOnApply(startColumns, data);
+         return Deferred.success(Array.isArray(resultColumns) && resultColumns.length ? resultColumns : startColumns);
+      },
+
       /**
        * Обрабатываем выбранные пользователем записи. Здесь подготавливаем dataSet либо подготавливаем
        * фильтр для выгрузки данных полностью на сервере

@@ -123,6 +123,10 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
       },
       _onTogglePanel: function() {
          this.setChecked(this._options.linkedPanel.isVisible());
+      },
+      _setEnabled: function(enabled) {
+         OperationsPanelButton.superclass._setEnabled.apply(this, arguments);
+         this._container.toggleClass('controls-OperationsPanelButton_state_disabled', !enabled);
       }
    });
 
