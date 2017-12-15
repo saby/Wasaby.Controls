@@ -1,8 +1,8 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['js!SBIS3.CONTROLS.NumberTextBox/resources/FormatText'], function(FormatText) {
+define(['js!SBIS3.CONTROLS.NumberTextBox/NumberTextBox/resources/FormatText'], function(FormatText) {
    'use strict';
 
-   describe('SBIS3.CONTROLS.NumberTextBox/resources/FormatText', function() {
+   describe('SBIS3.CONTROLS.NumberTextBox/NumberTextBox/resources/FormatText', function() {
       beforeEach(function() {
       });
       describe('formatText', function() {

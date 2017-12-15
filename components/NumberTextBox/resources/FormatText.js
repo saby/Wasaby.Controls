@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox/NumberTextBox/resources/FormatText', [
       'Core/defaultRenders',
       'js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil'
    ],
-   function (cDefaultRenders, NumberTextBoxUtil) /** @lends SBIS3.CONTROLS.NumberTextBox/resources/FormatText.prototype */{
+   function (cDefaultRenders, NumberTextBoxUtil) /** @lends SBIS3.CONTROLS.NumberTextBox/NumberTextBox/resources/FormatText.prototype */{
       return {
 
          formatText: function(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength, hideEmptyDecimals){
