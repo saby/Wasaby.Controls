@@ -20,18 +20,28 @@ define('js!Controls/Popup/DialogHelper',
             });
          },
 
-         confirm: function(cfg){
+         _openDialog: function(cfg, status){
             this._children.opener.open({
                componentOptions: merge(merge({
-                  status: 'confirm'
+                  status: status
                }, this._options.dialogOptions), cfg)
             });
          },
 
-         message: function(cfg){
-            this._children.opener.open({
-               componentOptions: merge(merge({}, this._options.dialogOptions), cfg)
-            });
+         confirm: function(cfg){
+            this._openDialog(cfg, 'confirm');
+         },
+
+         info: function(cfg){
+            this._openDialog(cfg, 'default');
+         },
+
+         error: function(cfg){
+            this._openDialog(cfg, 'error');
+         },
+
+         success: function(cfg){
+            this._openDialog(cfg, 'success');
          }
 
       });
