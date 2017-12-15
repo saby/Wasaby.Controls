@@ -1,0 +1,10 @@
+<div>
+   <ws:for data="listModel.reset(); listModel.isEnd(); listModel.goToNext();">
+      <ws:partial
+         template="{{listModel.getCurrent().getPropValue(listModel.getCurrent().item, listModel.getCurrent().itemTemplateProperty) || itemTemplate || defaultItemTemplate}}"
+         defaultItemTemplate="{{defaultItemTemplate}}"
+         content="{{listModel.getCurrent().getPropValue(listModel.getCurrent().item, 'title')}}"
+         itemData="{{listModel.getCurrent()}}"
+         resultHandler="{{resultHandler}}"/>
+   </ws:for>
+</div>

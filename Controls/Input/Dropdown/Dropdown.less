@@ -1,0 +1,27 @@
+.controls-Dropdown {
+   display: inline-block;
+   cursor: pointer;
+}
+
+.controls-Dropdown__wrapper {
+   .flexbox();
+   .align-items(center);
+   height: @default-height;
+}
+
+.controls-Dropdown__text {
+   .inline-flexbox();
+   .align-items(center);
+   box-sizing: border-box;
+   height: 100%;
+   width: 100%;
+   color: @color_Link-text;
+   &:hover {
+      color: @color_Link-text_hovered;
+      cursor: pointer;
+      text-decoration: underline;
+      .controls-BaseButton__text {
+         text-decoration: underline;
+      }
+   }
+}

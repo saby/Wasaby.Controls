@@ -1,0 +1,19 @@
+<div class="controls-Dropdown" on:click="_open()">
+   <div class="controls-Dropdown__wrapper" name="popupTarget">
+      <div if={{_icon}} class="controls-Dropdown__icon"><div class="{{_icon}}"></div></div>
+      <div if={{_text}} class="controls-Dropdown__text">{{_text}}</div>
+   </div>
+   <Controls:Dropdown:Opener name="MenuOpener"
+                                  keyProperty="{{_options.keyProperty}}"
+                                  parentProperty="{{_options.parentProperty}}"
+                                  nodeProperty="{{_options.nodeProperty}}"
+                                  itemTemplateProperty="{{_options.itemTemplateProperty}}"
+                                  itemTemplate="{{_options.itemTemplate}}"
+                                  headTemplate="{{_options.headTemplate}}"
+                                  footerTemplate="{{_options.footerTemplate}}"
+                                  selectedKeys="{{_options.selectedKeys}}">
+      <ws:popupOptions>
+         <ws:eventHandlers onResult="{{_onResult}}"/>
+      </ws:popupOptions>
+   </Controls:Dropdown:Opener>
+</div>

@@ -1,0 +1,14 @@
+<Controls:Popup:Opener:Sticky name="StickyOpener">
+   <ws:popupOptions template="Controls/Dropdown/resources/template/OpenerTemplate"
+                    eventHandlers={{_options.popupOptions.eventHandlers}}
+                    autoHide="{{true}}">
+      <ws:componentOptions keyProperty="{{_options.keyProperty}}"
+                           depth="{{_options.depth}}"
+                           selectedKeys="{{_options.selectedKeys}}"
+                           parentProperty="{{_options.parentProperty}}"
+                           itemTemplateProperty="{{_options.itemTemplateProperty}}"
+                           nodeProperty="{{_options.nodeProperty}}"/>
+      <ws:verticalAlign offset="{{_verticalOffset}}"/>
+      <ws:horizontalAlign offset="{{_horizontalOffset}}"/>
+   </ws:popupOptions>
+</Controls:Popup:Opener:Sticky>

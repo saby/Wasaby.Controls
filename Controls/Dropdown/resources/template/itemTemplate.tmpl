@@ -1,0 +1,20 @@
+<div class="controls-DropdownOpener__item {{itemData.isSelected ? 'controls-DropdownOpener__selected'}}"
+     on:click="_itemClickHandler(itemData.item)" on:mouseenter="_itemMouseEnter(itemData.item, itemData.hasChildren)"
+     on:mouseleave="_itemMouseOut(itemData.item)">
+   <div if={{itemData.icon}} class="controls-DropdownOpener__icon {{itemData.icon}}"></div>
+   <div class="controls-DropdownOpener__text">
+      <ws:partial template="{{content}}" scope="{{...}}"></ws:partial>
+   </div>
+   <div if={{itemData.hasChildren}} class="controls-DropdownOpener__arrow"></div>
+
+   <Controls:Dropdown:Opener if="{{itemData.hasChildren}}"
+                                  name="MenuOpener{{itemData.getPropValue(itemData.item, itemData.idProperty)}}"
+                                  on:onSelectedItemChange="resultHandler()"
+                                  horizontalOffset="{{0}}"
+                                  verticalOffset="{{-1}}">
+      <ws:popupOptions>
+         <ws:corner horizontal="right"/>
+         <ws:eventHandlers onResult="{{resultHandler}}"/>
+      </ws:popupOptions>
+   </Controls:Dropdown:Opener>
+</div>
