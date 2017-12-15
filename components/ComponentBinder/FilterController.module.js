@@ -1,26 +1,26 @@
 /**
  * Created by am.gerasimov on 25.04.2017.
  */
-define('js!SBIS3.CONTROLS.FilterController', [
+define('SBIS3.CONTROLS/ComponentBinder/FilterController', [
    'Core/Abstract',
    'Core/core-merge',
    'Core/core-clone',
-   'js!SBIS3.CONTROLS.FilterHistoryControllerUntil'
+   'SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil'
 ], function(cAbstract, cMerge, coreClone, FilterHistoryControllerUntil) {
    
    var BROWSER_FILTER_FIELD = 'browser.filter';
    
    return cAbstract.extend({
       /**
-       * @cfg {SBIS3.CONTROLS.FilterButton} Кнопка фильтров
+       * @cfg {SBIS3.CONTROLS/Filter/Button} Кнопка фильтров
        */
       _$filterButton: null,
       /**
-       * @cfg {SBIS3.CONTROLS.FastDataFilter} Быстрый фильтр
+       * @cfg {SBIS3.CONTROLS/Filter/FastData} Быстрый фильтр
        */
       _$fastDataFilter: null,
       /**
-       * @cfg {SBIS3.CONTROLS.ListView} Представление
+       * @cfg {SBIS3.CONTROLS/ListView} Представление
        */
       _$view: null,
    

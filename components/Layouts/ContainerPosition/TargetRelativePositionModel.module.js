@@ -1,8 +1,8 @@
 /* Ответственный за модуль: Дубровин Игорь Михайлович */
 /* Created by im.dubrovin */
-define('js!SBIS3.CONTROLS.TargetRelativePositionModel', [
+define('SBIS3.CONTROLS/Layouts/ContainerPosition/TargetRelativePositionModel', [
    'Core/core-extend',
-   'js!SBIS3.CONTROLS.ContainerModel'
+   'SBIS3.CONTROLS/Layouts/ContainerPosition/ContainerModel'
 ], function(cExtend, ContainerModel) {
    /*
    Класс производит необходимы расчеты для позиционирования targetRelative контейнера относительно

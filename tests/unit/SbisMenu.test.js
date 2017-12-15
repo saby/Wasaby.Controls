@@ -1,6 +1,6 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
-    'js!SBIS3.CONTROLS.SbisMenu',
+    'SBIS3.CONTROLS/Menu/SbisMenu',
     'WS.Data/Collection/RecordSet',
     'WS.Data/Adapter/Sbis',
     'WS.Data/Entity/Model'
@@ -224,7 +224,7 @@ define([
         },
         item;
 
-    describe('SBIS3.CONTROLS.SbisMenu', function () {
+    describe('SBIS3.CONTROLS/Menu/SbisMenu', function () {
         describe('getOriginId', function () {
             it('pinned', function () {
                 newId = SbisMenu._private.getOriginId('pinned-27313bd6-bc02-11e4-a1dd-00505691577e');

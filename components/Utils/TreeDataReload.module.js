@@ -1,10 +1,10 @@
-define('js!SBIS3.CONTROLS.Utils.TreeDataReload', function() {
+define('SBIS3.CONTROLS/Utils/TreeDataReload', function() {
 
    'use strict';
 
    /**
     * Утилита для перезагрузки данных в дереве
-    * @class SBIS3.CONTROLS.Utils.TreeDataReload
+    * @class SBIS3.CONTROLS/Utils/TreeDataReload
     * @author Авраменко А.С.
     * @public
     */

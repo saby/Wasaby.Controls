@@ -1,20 +1,20 @@
 /**
  * Created by as.krasilnikov on 23.12.2016.
  */
-define('js!SBIS3.CONTROLS.FilterDropdown', ['js!SBIS3.CONTROLS.DropdownList'], function (DropdownList) {
+define('SBIS3.CONTROLS/Filter/Button/Dropdown', ['SBIS3.CONTROLS/DropdownList'], function (DropdownList) {
 
    'use strict';
    /**
     * Выпадающий список, позволяющий выбрать одно из предложенных значений.
-    * Используется на панели {@link SBIS3.CONTROLS.FilterButton}:
-    * @class SBIS3.CONTROLS.FilterDropdown
-    * @extends SBIS3.CONTROLS.DropdownList
+    * Используется на панели {@link SBIS3.CONTROLS/Filter/Button}:
+    * @class SBIS3.CONTROLS/Filter/Button/Dropdown
+    * @extends SBIS3.CONTROLS/DropdownList
     * @author Красильников Андрей Сергеевич
     * @control
     * @public
     */
 
-   var FilterDropdown = DropdownList.extend([],/** @lends SBIS3.CONTROLS.FilterDropdown.prototype */ {
+   var FilterDropdown = DropdownList.extend([],/** @lends SBIS3.CONTROLS/Filter/Button/Dropdown.prototype */ {
       $protected: {
          _options: {
             /**

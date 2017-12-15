@@ -1,9 +1,9 @@
-define('js!SBIS3.CONTROLS.Scrollbar', [
-      'js!SBIS3.CONTROLS.CompoundControl',
-      'tmpl!SBIS3.CONTROLS.Scrollbar/Scrollbar/Scrollbar',
-      'js!SBIS3.CONTROLS.DragNDropMixin',
+define('SBIS3.CONTROLS/ScrollContainer/Scrollbar', [
+      'SBIS3.CONTROLS/CompoundControl',
+      'tmpl!SBIS3.CONTROLS/ScrollContainer/Scrollbar/Scrollbar',
+      'SBIS3.CONTROLS/Mixins/DragNDropMixin',
       'Core/detection',
-      'css!SBIS3.CONTROLS.Scrollbar/Scrollbar/Scrollbar'
+      'css!SBIS3.CONTROLS/ScrollContainer/Scrollbar/Scrollbar'
    ],
    function (CompoundControl, dotTplFn, DragNDropMixinNew, detection) {
 
@@ -11,16 +11,16 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
       /**
        * Класс контрола "Тонкий скролл".
-       * @class SBIS3.CONTROLS.Scrollbar
-       * @extends SBIS3.CONTROLS.CompoundControl
+       * @class SBIS3.CONTROLS/ScrollContainer/Scrollbar
+       * @extends SBIS3.CONTROLS/CompoundControl
        *
-       * @mixes SBIS3.CONTROLS.DragNDropMixin
+       * @mixes SBIS3.CONTROLS/Mixins/DragNDropMixin
        *
        * @public
        * @control
        * @author Крайнов Дмитрий Олегович
        */
-      var Scrollbar = CompoundControl.extend([DragNDropMixinNew], /** @lends SBIS3.CONTROLS.Scrollbar.prototype */{
+      var Scrollbar = CompoundControl.extend([DragNDropMixinNew], /** @lends SBIS3.CONTROLS/ScrollContainer/Scrollbar.prototype */{
           /**
            * @event onScrollbarDrag Происходит при изменении позиции скролла.
            * @param {Core/EventObject} eventObject Дескриптор события.

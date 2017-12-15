@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.IFilterItem', function () {
+define('SBIS3.CONTROLS/Filter/Panel/resources/IFilterItem', function () {
 
    return {
 

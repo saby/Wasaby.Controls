@@ -2,7 +2,7 @@
  * Created by am.gerasimov on 19.10.2015.
  */
 
-define('js!SBIS3.CONTROLS.SelectorMixin', [
+define('SBIS3.CONTROLS/Mixins/SelectorMixin', [
    "Core/Deferred",
    "Core/core-instance"
 ],
@@ -13,11 +13,11 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [
       /**
        * Описание логики выбора из диалога/панели.
        * SelectorMixin используется полем связи.
-       * @mixin SBIS3.CONTROLS.SelectorMixin
+       * @mixin SBIS3.CONTROLS/Mixins/SelectorMixin
        * @public
        * @author Крайнов Дмитрий Олегович
        */
-      var SelectorMixin = /**@lends SBIS3.CONTROLS.SelectorMixin.prototype  */{
+      var SelectorMixin = /**@lends SBIS3.CONTROLS/Mixins/SelectorMixin.prototype  */{
          $protected: {
             _linkedView: null,
             _selectionConfirmHandler: undefined,
@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [
             _options: {
                /**
                 * @cfg {Boolean} Устанавливает режим множественного выбора элементов коллекции.
-                * Подробно режим множественного выбора описан {@link SBIS3.CONTROLS.MultiSelectable#multiselect здесь}.
+                * Подробно режим множественного выбора описан {@link SBIS3.CONTROLS/Mixins/MultiSelectable#multiselect здесь}.
                 * @variant true Режим множественного выбора элементов коллекции установлен.
                 * @variant false Режим множественного выбора элементов коллекции отменен.
                 * @example
@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [
                 * cfg {Array} Устанавливает выбранными элементы коллекции по переданным первичным ключам.
                 * @remark
                 * Устанавливает выбранными элементы коллекции, которым соответствуют переданные в массиве идентификаторы.
-                * Опция актуальна для контрола, который находится в режиме множественного выбора значений (см. опцию {@link SBIS3.CONTROLS.MultiSelectable#multiselect}).
+                * Опция актуальна для контрола, который находится в режиме множественного выбора значений (см. опцию {@link SBIS3.CONTROLS/Mixins/MultiSelectable#multiselect}).
                 * @example
                 * <pre class="brush: xml">
                 *     <options name="currentSelectedKeys" type="array">
@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [
 
                /* При выборе в иерархических представлених, нельзя реагировать на событие onItemActivate вызваное
                   кликом по узлу / нажатии на >> . Выбор узлов в иерархических представлениях обрабатывается прикладной логикой */
-               if(cInstance.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.TreeMixin') && item.get(linkedView.getNodeProperty())) {
+               if(cInstance.instanceOfMixin(linkedView, 'SBIS3.CONTROLS/Mixins/TreeMixin') && item.get(linkedView.getNodeProperty())) {
                   return;
                }
 
@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [
                for(var i = 0, l = childControls.length; i < l; i++){
                   var childControl = childControls[i];
 
-                  if(cInstance.instanceOfModule(childControl, 'SBIS3.CONTROLS.ListView')){
+                  if(cInstance.instanceOfModule(childControl, 'SBIS3.CONTROLS/ListView')){
                      self.setLinkedView(childControl);
                      break;
                   }
@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [
 
          /**
           * Устанавливает связанное представление данных для диалога/всплывающей панели выбора элементов коллекции.
-          * @param {SBIS3.CONTROLS.ListView} linkedView Экземпляр класса контрола представления данных.
+          * @param {SBIS3.CONTROLS/ListView} linkedView Экземпляр класса контрола представления данных.
           * @example
           * <pre>
           *     var dataView = this.getTopParent().getChildByName('myNewCreatedBrowser');
@@ -144,7 +144,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [
 
          /**
           * Получает связанное представление данных для диалога/всплывающей панели выбора элементов коллекции.
-          * @returns {SBIS3.CONTROLS.ListView} Экземпляр класса контрола представления данных.
+          * @returns {SBIS3.CONTROLS/ListView} Экземпляр класса контрола представления данных.
           * @example
           * <pre>
           *     var dataView;

@@ -1,16 +1,16 @@
 /**
  * Created by am.gerasimov on 26.10.2015.
  */
-define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['WS.Data/Entity/Model', 'Core/core-instance'], function(Model, cInstance) {
+define('SBIS3.CONTROLS/Mixins/ActiveMultiSelectable', ['WS.Data/Entity/Model', 'Core/core-instance'], function(Model, cInstance) {
 
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
-    * @mixin SBIS3.CONTROLS.ActiveMultiSelectable
+    * @mixin SBIS3.CONTROLS/Mixins/ActiveMultiSelectable
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var ActiveMultiSelectable = /**@lends SBIS3.CONTROLS.ActiveMultiSelectable.prototype  */{
+   var ActiveMultiSelectable = /**@lends SBIS3.CONTROLS/Mixins/ActiveMultiSelectable.prototype  */{
       $protected: {
          _options: {
 
@@ -18,14 +18,14 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['WS.Data/Entity/Model', 'Core
       },
 
       $constructor: function() {
-         if(!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.MultiSelectable')) {
+         if(!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS/Mixins/MultiSelectable')) {
             throw new Error('MultiSelectable mixin is required');
          }
       },
 
       /**
        * Устанавливает набор выбранных элементов коллекции.
-       * Опция актуальна, когда контрол находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
+       * Опция актуальна, когда контрол находится в режиме {@link SBIS3.CONTROLS/Mixins/MultiSelectable#multiselect множественного выбора значений}.
        * @param {Array|WS.Data/Collection/List} list Выбранные элементы коллекции.
        * @example
        * <pre>
@@ -35,8 +35,8 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['WS.Data/Entity/Model', 'Core
        *       myFieldLink.setSelectedItems(selectedItems)
        *    }
        * </pre>
-       * @see SBIS3.CONTROLS.MultiSelectable#selectedItems
-       * @see SBIS3.CONTROLS.MultiSelectable#selectedKeys
+       * @see SBIS3.CONTROLS/Mixins/MultiSelectable#selectedItems
+       * @see SBIS3.CONTROLS/Mixins/MultiSelectable#selectedKeys
        * @see clearSelectedItems
        * @see addSelectedItems
        */
@@ -61,10 +61,10 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['WS.Data/Entity/Model', 'Core
 
       /**
        * Очищает набор выбранных элементов коллекции.
-       * Опция актуальна, когда контрол находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
-       * @see SBIS3.CONTROLS.MultiSelectable#multiselect
-       * @see SBIS3.CONTROLS.MultiSelectable#selectedItems
-       * @see SBIS3.CONTROLS.MultiSelectable#selectedKeys
+       * Опция актуальна, когда контрол находится в режиме {@link SBIS3.CONTROLS/Mixins/MultiSelectable#multiselect множественного выбора значений}.
+       * @see SBIS3.CONTROLS/Mixins/MultiSelectable#multiselect
+       * @see SBIS3.CONTROLS/Mixins/MultiSelectable#selectedItems
+       * @see SBIS3.CONTROLS/Mixins/MultiSelectable#selectedKeys
        * @see setSelectedItems
        * @see addSelectedItems
        * @example
@@ -154,9 +154,9 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['WS.Data/Entity/Model', 'Core
 
       /**
        * Добавляет новые элементы коллекции к набору выбранных.
-       * Опция актуальна, когда контрол находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
+       * Опция актуальна, когда контрол находится в режиме {@link SBIS3.CONTROLS/Mixins/MultiSelectable#multiselect множественного выбора значений}.
        * @param {Array | WS.Data/Collection/List} items Массив элементов, которые нужно добавить в набор.
-       * @see SBIS3.CONTROLS.MultiSelectable#multiselect
+       * @see SBIS3.CONTROLS/Mixins/MultiSelectable#multiselect
        * @see selectedItems
        * @see selectedKeys
        * @see setSelectedItems

@@ -1,12 +1,12 @@
-define('js!SBIS3.CONTROLS.MassSelectionHierarchyController',
+define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionHierarchyController',
     [
-        "js!SBIS3.CONTROLS.MassSelectionController",
-        "js!SBIS3.CONTROLS.HierarchySelection",
-        "js!SBIS3.CONTROLS.ArraySimpleValuesUtil"
+        "SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionController",
+        "SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/HierarchySelection",
+        "SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil"
     ],
     function(MassSelectionController, HierarchySelection, ArraySimpleValuesUtil) {
 
-       var MassSelectionHierarchyController = MassSelectionController.extend(/** @lends SBIS3.CONTROLS.MassSelectionHierarchyController.prototype */ {
+       var MassSelectionHierarchyController = MassSelectionController.extend(/** @lends SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionHierarchyController.prototype */ {
           $constructor: function () {
              var linkedObject = this._options.linkedObject;
              this.subscribeTo(linkedObject, 'onDrawItems', this._redrawPartiallySelection.bind(this));
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.MassSelectionHierarchyController',
           },
 
           //Костыль, чтобы при клике на частично выделенную папку снять выделение.
-          //Метод используется в SBIS3.CONTROLS.MultiSelectable
+          //Метод используется в SBIS3.CONTROLS/Mixins/MultiSelectable
           isItemPartiallySelected: function(key) {
              var item = this._selection._markedTree.getRecordById(key);
              return item && item.get('status') !== HierarchySelection.SELECTION_STATUS.SELECTED;

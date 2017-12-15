@@ -2,7 +2,7 @@
     <ws:if data="{{ resetLinkText || !_fastFilterButton}}">
         <ws:partial template="{{ _filterLineTpl }}" scope="{{...}}"/>
     </ws:if>
-    <ws:SBIS3.CONTROLS.IconButton
+    <SBIS3.CONTROLS:Button:IconButton
         cssClassName="controls__filterButton-button"
         icon="icon-24 icon-size icon-FilterNew icon-primary"
         command="show-filter"

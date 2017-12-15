@@ -1,14 +1,14 @@
-define('js!SBIS3.CONTROLS.MassSelectionController',
+define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionController',
     [
-        "js!SBIS3.CORE.Control",
+        "Lib/Control/Control",
         "Core/core-clone",
         "WS.Data/Collection/IBind",
-        "js!SBIS3.CONTROLS.Selection",
-        "js!SBIS3.CONTROLS.ArraySimpleValuesUtil"
+        "SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Selection",
+        "SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil"
     ],
     function(Control, cClone, IBindCollection, Selection, ArraySimpleValuesUtil) {
 
-       var MassSelectionController = Control.Control.extend(/** @lends SBIS3.CONTROLS.MassSelectionController.prototype */ {
+       var MassSelectionController = Control.Control.extend(/** @lends SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionController.prototype */ {
           $protected: {
              _options: {
                 idProperty: undefined,

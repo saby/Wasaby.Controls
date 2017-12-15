@@ -1,10 +1,10 @@
 /**
  * Идентификатор текущей вкладки
  *
- * @class SBIS3.CONTROLS.LongOperations.TabKey
+ * @class SBIS3.CONTROLS/LongOperations/TabKey
  * @public
  */
-define('js!SBIS3.CONTROLS.LongOperations.TabKey',
+define('SBIS3.CONTROLS/LongOperations/TabKey',
    [],
 
    function () {

@@ -1,18 +1,18 @@
 /**
  * Created by iv.cheremushkin on 21.04.2015.
  */
-define('js!SBIS3.CONTROLS.DropdownListMixin', [
-   "js!SBIS3.CONTROLS.Utils.TemplateUtil"
+define('SBIS3.CONTROLS/Mixins/DropdownListMixin', [
+   "SBIS3.CONTROLS/Utils/TemplateUtil"
 ],
     function ( TemplateUtil) {
         /**
-         * @mixin SBIS3.CONTROLS.DropdownListMixin
+         * @mixin SBIS3.CONTROLS/Mixins/DropdownListMixin
          * @public
          * @author Крайнов Дмитрий Олегович
          */
         'use strict';
 
-        var DropdownListMixin = /**@lends SBIS3.CONTROLS.DropdownListMixin.prototype  */{
+        var DropdownListMixin = /**@lends SBIS3.CONTROLS/Mixins/DropdownListMixin.prototype  */{
             $protected: {
                 _options: {
                    /**

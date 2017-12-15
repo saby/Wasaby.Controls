@@ -1,10 +1,10 @@
-define('js!SBIS3.CONTROLS.Label.compatibility', [],
+define('SBIS3.CONTROLS/Label/resources/Label.compatibility', [],
    function() {
        /**
-        * @class SBIS3.CONTROLS.Label.compatibility
+        * @class SBIS3.CONTROLS/Label/resources/Label.compatibility
         * @public
         */
-      return /** @lends SBIS3.CONTROLS.Label.compatibility.prototype */{
+      return /** @lends SBIS3.CONTROLS/Label/resources/Label.compatibility.prototype */{
          /**
           * Возвращает текст метки.
           * @returns {String}

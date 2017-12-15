@@ -1,33 +1,33 @@
 /**
  * Created by am.gerasimov on 15.04.2015.
  */
-define('js!SBIS3.CONTROLS.FastDataFilter',
+define('SBIS3.CONTROLS/Filter/FastData',
    [
    "Core/constants",
-   "js!SBIS3.CORE.CompoundControl",
-   "js!SBIS3.CONTROLS.ItemsControlMixin",
-   "js!SBIS3.CONTROLS.FilterMixin",
+   "Lib/Control/CompoundControl/CompoundControl",
+   "SBIS3.CONTROLS/Mixins/ItemsControlMixin",
+   "SBIS3.CONTROLS/Mixins/FilterMixin",
    'Core/Deferred',
-   "tmpl!SBIS3.CONTROLS.FastDataFilter",
-   "tmpl!SBIS3.CONTROLS.FastDataFilter/FastData/ItemTpl",
+   "tmpl!SBIS3.CONTROLS/Filter/FastData",
+   "tmpl!SBIS3.CONTROLS/Filter/FastData/ItemTpl",
    'Core/helpers/Object/isEqual',
-   "js!SBIS3.CONTROLS.DropdownList",
-   'css!SBIS3.CONTROLS.FastDataFilter/FastData/FastDataFilter'
+   "SBIS3.CONTROLS/DropdownList",
+   'css!SBIS3.CONTROLS/Filter/FastData/FastDataFilter'
 ],
 
    function(constants, CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, dotTplFn, ItemTpl, isEqual) {
 
       'use strict';
       /**
-       * Контрол, отображающий набор выпадающих списков SBIS3.CONTROLS.DropdownList и работающий с фильтром в контексте
+       * Контрол, отображающий набор выпадающих списков SBIS3.CONTROLS/DropdownList и работающий с фильтром в контексте
        * Подробнее конфигурирование контрола описано в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterfast/">Быстрые фильтры</a>.
-       * @class SBIS3.CONTROLS.FastDataFilter
-       * @extends SBIS3.CORE.CompoundControl
+       * @class SBIS3.CONTROLS/Filter/FastData
+       * @extends Lib/Control/CompoundControl/CompoundControl
        *
        * @author Красильников Андрей Сергеевич
        *
-       * @mixes SBIS3.CONTROLS.ItemsControlMixin
-       * @mixes SBIS3.CONTROLS.FilterMixin
+       * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
+       * @mixes SBIS3.CONTROLS/Mixins/FilterMixin
        *
        * @demo SBIS3.Demo.Filter.FastDataFilterMultiselect
        *
@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
        * @public
        * @category Filtering
        */
-      var FastDataFilter = CompoundControl.extend([FilterMixin, ItemsControlMixin],/** @lends SBIS3.CONTROLS.FastDataFilter.prototype */{
+      var FastDataFilter = CompoundControl.extend([FilterMixin, ItemsControlMixin],/** @lends SBIS3.CONTROLS/Filter/FastData.prototype */{
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {

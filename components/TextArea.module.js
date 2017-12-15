@@ -1,12 +1,12 @@
-define('js!SBIS3.CONTROLS.TextArea', [
+define('SBIS3.CONTROLS/TextArea', [
    "Core/constants",
-   "js!SBIS3.CONTROLS.TextBox",
-   'tmpl!SBIS3.CONTROLS.TextArea/TextArea/resources/inputField',
+   "SBIS3.CONTROLS/TextBox",
+   'tmpl!SBIS3.CONTROLS/TextArea/resources/inputField',
    'Core/helpers/String/escapeHtml',
-   'js!SBIS3.CONTROLS.Utils.LinkWrap',
+   'SBIS3.CONTROLS/Utils/LinkWrapUtils',
    "Core/IoC",
-   "browser!js!SBIS3.CORE.FieldText/resources/Autosize-plugin",
-   'css!SBIS3.CONTROLS.TextArea/TextArea/TextArea'
+   "browser!js!Deprecated/Controls/FieldText/resources/Autosize-plugin",
+   'css!SBIS3.CONTROLS/TextArea/TextArea'
 ], function( constants,TextBox, inputField, escapeHtml, LinkWrap, IoC) {
 
    'use strict';
@@ -28,8 +28,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
    /**
     * Класс контрола "Многострочное поле ввода". Контрол может автоматически менять высоту в зависимости от количества введённой информации.
-    * @class SBIS3.CONTROLS.TextArea
-    * @extends SBIS3.CONTROLS.TextBoxBase
+    * @class SBIS3.CONTROLS/TextArea
+    * @extends SBIS3.CONTROLS/TextBox/TextBoxBase
     * @author Романов Валерий Сергеевич
     * @css controls-TextArea Класс для изменения отображения текста в многострочном поле ввода.
     *
@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
     * @category Input
     */
 
-   var TextArea = TextBox.extend( /** @lends SBIS3.CONTROLS.TextArea.prototype */ {
+   var TextArea = TextBox.extend( /** @lends SBIS3.CONTROLS/TextArea.prototype */ {
       $protected: {
          _inputField: null,
          _cachedW: null,

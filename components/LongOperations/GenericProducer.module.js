@@ -1,24 +1,24 @@
 /**
  * Типовой продюсер длительных операций
  *
- * @class SBIS3.CONTROLS.LongOperations.GenericProducer
- * @extends SBIS3.CONTROLS.LongOperations.AbstractProducer
- * @implements SBIS3.CONTROLS.LongOperations.IProducer
+ * @class SBIS3.CONTROLS/LongOperations/GenericProducer
+ * @extends SBIS3.CONTROLS/LongOperations/AbstractProducer
+ * @implements SBIS3.CONTROLS/LongOperations/IProducer
  *
  * @author Спирин Виктор Алексеевич
  *
  * @public
  */
 
-define('js!SBIS3.CONTROLS.LongOperations.GenericProducer',
+define('SBIS3.CONTROLS/LongOperations/GenericProducer',
    [
       'Core/Deferred',
       'Core/UserInfo',
       'Core/EventBusChannel',
-      'js!SBIS3.CONTROLS.LongOperations.Const',
-      'js!SBIS3.CONTROLS.LongOperations.TabKey',
-      'js!SBIS3.CONTROLS.LongOperations.Entry',
-      'js!SBIS3.CONTROLS.LongOperations.AbstractProducer'
+      'SBIS3.CONTROLS/LongOperations/Const',
+      'SBIS3.CONTROLS/LongOperations/TabKey',
+      'SBIS3.CONTROLS/LongOperations/Entry',
+      'SBIS3.CONTROLS/LongOperations/AbstractProducer'
    ],
 
    function (Deferred, UserInfo, EventBusChannel, LongOperationsConst, TabKey, LongOperationEntry, AbstractLongOperationsProducer) {
@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.LongOperations.GenericProducer',
        * @protected
        * @type {string}
        */
-      var PRODUCER_NAME = 'SBIS3.CONTROLS.LongOperations.GenericProducer';
+      var PRODUCER_NAME = 'SBIS3.CONTROLS/LongOperations/GenericProducer';
 
       /**
        * Префикс пространства имён хранилища
@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.LongOperations.GenericProducer',
        * @public
        * @type {object}
        */
-      var GenericLongOperationsProducer = AbstractLongOperationsProducer.extend(/** @lends SBIS3.CONTROLS.LongOperations.GenericProducer.prototype */{
+      var GenericLongOperationsProducer = AbstractLongOperationsProducer.extend(/** @lends SBIS3.CONTROLS/LongOperations/GenericProducer.prototype */{
          _moduleName: PRODUCER_NAME,
 
          $protected: {
@@ -398,7 +398,7 @@ define('js!SBIS3.CONTROLS.LongOperations.GenericProducer',
       /**
        * Обработать событиен с информацией о прогрессе выполнения длительной операции
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperations.GenericProducer} self Экземпляр класса
+       * @param {SBIS3.CONTROLS/LongOperations/GenericProducer} self Экземпляр класса
        * @param {number} operationId Идентификатор длительной операции
        * @param {Core/EventObject} evtName Дескриптор события
        * @param {any} evt Данные события
@@ -427,7 +427,7 @@ define('js!SBIS3.CONTROLS.LongOperations.GenericProducer',
       /**
        * Установить новый статус длительной операции
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperations.GenericProducer} self Экземпляр класса
+       * @param {SBIS3.CONTROLS/LongOperations/GenericProducer} self Экземпляр класса
        * @param {number} operationId Идентификатор длительной операции
        * @param {number} status Новый статус операции
        * @param {any} details Дополнительная информация при завершении. Для успешного завершения - результат, для завершения с ошибкой -
@@ -544,7 +544,7 @@ define('js!SBIS3.CONTROLS.LongOperations.GenericProducer',
        * @public
        * @static
        * @param {string} key Идентификатор экземпляра продюсера
-       * @return {SBIS3.CONTROLS.LongOperations.GenericProducer}
+       * @return {SBIS3.CONTROLS/LongOperations/GenericProducer}
        */
       GenericLongOperationsProducer.getInstance = function (key) {
          // Конструктор уже возвращает синглетоны - на каждый идентификатор экземпляра один экземпляр продюсера

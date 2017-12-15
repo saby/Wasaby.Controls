@@ -1,9 +1,9 @@
-define('js!SBIS3.CONTROLS.Link', [
+define('SBIS3.CONTROLS/Link', [
    'Core/helpers/String/escapeTagsFromStr',
    'js!WSControls/Buttons/Button',
-   'js!SBIS3.CONTROLS.Utils.LinkUtil',
-   'tmpl!SBIS3.CONTROLS.Link/Link/resources/hrefTemplate',
-   'css!SBIS3.CONTROLS.Link/Link/Link'
+   'SBIS3.CONTROLS/Utils/LinkUtil',
+   'tmpl!SBIS3.CONTROLS/Link/resources/hrefTemplate',
+   'css!SBIS3.CONTROLS/Link/Link'
 ], function(escapeTagsFromStr, WSButton, LinkUtil, hrefTemplate) {
 
    'use strict';
@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.Link', [
     * @remark
     * Используется только для веб-приложения online.sbis.ru.
     *
-    * @class SBIS3.CONTROLS.Link
+    * @class SBIS3.CONTROLS/Link
     * @extends WSControls/Buttons/ButtonBase
     * @author Романов Валерий Сергеевич
     *
@@ -65,12 +65,12 @@ define('js!SBIS3.CONTROLS.Link', [
     * @public
     * @category Button
     * @initial
-    * <component data-component='SBIS3.CONTROLS.Link'>
+    * <component data-component='SBIS3.CONTROLS/Link'>
     *    <option name='caption' value='Ссылка'></option>
     * </component>
     */
 
-   var Link = WSButton.extend( /** @lends SBIS3.CONTROLS.Link.prototype */ {
+   var Link = WSButton.extend( /** @lends SBIS3.CONTROLS/Link.prototype */ {
       $protected: {
          _options: {
             /**

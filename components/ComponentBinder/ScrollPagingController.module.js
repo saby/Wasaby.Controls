@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLS.ScrollPagingController', 
+define('SBIS3.CONTROLS/ComponentBinder/ScrollPagingController', 
    [
       'Core/Abstract',
       'Core/core-instance',
       'Core/WindowManager',
       'Core/helpers/Function/throttle',
       'Core/helpers/Hcontrol/isElementVisible',
-      'css!SBIS3.CONTROLS.ScrollPagingController'
+      'css!SBIS3.CONTROLS/ComponentBinder/ScrollPagingController'
    ],
    function(cAbstract, cInstance, WindowManager, throttle, isElementVisible) {
 
@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
       bindScrollPaging: function(paging) {
          var view = this._options.view,
-             isTree = cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
+             isTree = cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS/Mixins/TreeMixin');
         
          paging = paging || this._options.paging;
 

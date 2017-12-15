@@ -2,13 +2,13 @@
  * Created by am.gerasimov on 19.01.2016.
  */
 //Приходится пока что реквайрить dot, потому что очень многие задают шаблоны стркоами
-define('js!SBIS3.CONTROLS.Utils.TemplateUtil', ['Core/js-template-doT'], function() {
+define('SBIS3.CONTROLS/Utils/TemplateUtil', ['Core/js-template-doT'], function() {
 
     /**
-     * @class SBIS3.CONTROLS.Utils.TemplateUtil
+     * @class SBIS3.CONTROLS/Utils/TemplateUtil
      * @public
      */
-   return /** @lends SBIS3.CONTROLS.Utils.TemplateUtil.prototype */{
+   return /** @lends SBIS3.CONTROLS/Utils/TemplateUtil.prototype */{
        /**
         *
         * @param tpl

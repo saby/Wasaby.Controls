@@ -1,11 +1,11 @@
 /**
  * Created by ps.borisov on 23.08.2016.
  */
-define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
+define('SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/resources/config',
    [
-      'js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/handlers',
-      'js!SBIS3.CONTROLS.RichTextArea/resources/smiles',
-      'i18n!SBIS3.CONTROLS.RichEditor'
+      'SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/resources/handlers',
+      'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/smiles',
+      'i18n!SBIS3.CONTROLS/RichEditor'
    ], function (handlers, smiles) {
 
       'use strict';
@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
          return [
          {
             name: 'toggle',
-            componentType: 'SBIS3.CONTROLS.IconButton',
+            componentType: 'SBIS3.CONTROLS/Button/IconButton',
             icon: 'sprite:icon-16 icon-View icon-primary',
             handlers: {
                onActivated: handlers.toggle
@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
          },
          {
             name: 'styles',
-            componentType: 'SBIS3.CONTROLS.IconButton',
+            componentType: 'SBIS3.CONTROLS/Button/IconButton',
             tooltip: rk('Стили'),
             icon: 'sprite:icon-16 icon-TFCurtailRTE2 icon-primary',
             className: 'controls-IconButton__round-border',
@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
 
          {
             name: 'list',
-            componentType: 'SBIS3.CONTROLS.MenuIcon',
+            componentType: 'SBIS3.CONTROLS/Menu/MenuIcon',
             tooltip: rk('Вставить/Удалить список'),
             withoutHeader: true,
             icon   : 'sprite:icon-16 icon-ListMarked icon-primary',
@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
 
          {
             name: 'link',
-            componentType: 'SBIS3.CONTROLS.IconButton',
+            componentType: 'SBIS3.CONTROLS/Button/IconButton',
             tooltip: rk('Вставить/редактировать ссылку'),
             icon: 'sprite:icon-16 icon-Link icon-primary',
             className: 'controls-IconButton__round-border',
@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
 
          {
             name: 'image',
-            componentType: 'SBIS3.CONTROLS.IconButton',
+            componentType: 'SBIS3.CONTROLS/Button/IconButton',
             tooltip: rk('Вставить картинку'),
             icon: 'sprite:icon-16 icon-PicBtr icon-primary',
             className: 'controls-IconButton__round-border',
@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             name: 'smile',
             basic: true,
             tooltip: rk('Вставить смайлик'),
-            componentType: 'SBIS3.CONTROLS.MenuIcon',
+            componentType: 'SBIS3.CONTROLS/Menu/MenuIcon',
             icon: 'sprite:icon-16 icon-EmoiconSmile icon-primary',
             items: smiles,
             pickerClassName: 'controls-Menu__hide-menu-header controls-RichEditorToolbar__smilesPicker',
@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
          {
             name: 'history',
             caption: rk('История ввода'),
-            componentType: 'SBIS3.CONTROLS.MenuIcon',
+            componentType: 'SBIS3.CONTROLS/Menu/MenuIcon',
             icon: 'sprite:icon-16 icon-InputHistory icon-primary',
             pickerClassName: 'controls-RichEditorRoundToolbar__historyPicker',
             multiselect: false,

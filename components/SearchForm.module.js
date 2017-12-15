@@ -1,14 +1,14 @@
-define('js!SBIS3.CONTROLS.SearchForm', [
+define('SBIS3.CONTROLS/SearchForm', [
    "Core/constants",
-   "js!SBIS3.CONTROLS.TextBox",
-   "js!SBIS3.CONTROLS.SearchMixin",
-   "js!SBIS3.CONTROLS.SuggestMixin",
-   "js!SBIS3.CONTROLS.SuggestTextBoxMixin",
-   "js!SBIS3.CONTROLS.ChooserMixin",
-   "js!SBIS3.CONTROLS.PickerMixin",
-   "tmpl!SBIS3.CONTROLS.SearchForm/SearchForm/resources/SearchFormButtons",
-   'css!SBIS3.CONTROLS.SearchForm/SearchForm/SearchForm',
-   'css!SBIS3.CONTROLS.Suggest/Suggest/Suggest'
+   "SBIS3.CONTROLS/TextBox",
+   "SBIS3.CONTROLS/Mixins/SearchMixin",
+   "SBIS3.CONTROLS/Mixins/SuggestMixin",
+   "SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin",
+   "SBIS3.CONTROLS/Mixins/ChooserMixin",
+   "SBIS3.CONTROLS/Mixins/PickerMixin",
+   "tmpl!SBIS3.CONTROLS/SearchForm/resources/SearchFormButtons",
+   'css!SBIS3.CONTROLS/SearchForm/SearchForm',
+   'css!SBIS3.CONTROLS/Suggest/Suggest'
 ], function ( constants,TextBox, SearchMixin, SuggestMixin, SuggestTextBoxMixin, ChooserMixin, PickerMixin, buttonsTpl) {
 
    'use strict';
@@ -16,14 +16,14 @@ define('js!SBIS3.CONTROLS.SearchForm', [
    /**
     * Cтрока поиска, поле ввода + кнопка поиска.
     * Подробнее конфигурирование контрола описано в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-search/">Строка поиска</a>.
-    * @class SBIS3.CONTROLS.SearchForm
-    * @extends SBIS3.CONTROLS.TextBox
+    * @class SBIS3.CONTROLS/SearchForm
+    * @extends SBIS3.CONTROLS/TextBox
     *
-    * @mixes SBIS3.CONTROLS.SearchMixin
-    * @mixes SBIS3.CONTROLS.SuggestMixin
-    * @mixes SBIS3.CONTROLS.SuggestTextBoxMixin
-    * @mixes SBIS3.CONTROLS.ChooserMixin
-    * @mixes SBIS3.CONTROLS.PickerMixin
+    * @mixes SBIS3.CONTROLS/Mixins/SearchMixin
+    * @mixes SBIS3.CONTROLS/Mixins/SuggestMixin
+    * @mixes SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin
+    * @mixes SBIS3.CONTROLS/Mixins/ChooserMixin
+    * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
     *
     * @demo SBIS3.CONTROLS.Demo.MySearchForm
     * @author Крайнов Дмитрий Олегович
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
     * @category Search
     */
 
-   var SearchForm = TextBox.extend([SearchMixin, PickerMixin, SuggestMixin, SuggestTextBoxMixin, ChooserMixin],/** @lends SBIS3.CONTROLS.SearchForm.prototype */ {
+   var SearchForm = TextBox.extend([SearchMixin, PickerMixin, SuggestMixin, SuggestTextBoxMixin, ChooserMixin],/** @lends SBIS3.CONTROLS/SearchForm.prototype */ {
       /**
        * @event onSearch Происходит при нажатии кнопки поиска.
        * @param {Core/EventObject} eventObject Дескриптор события.

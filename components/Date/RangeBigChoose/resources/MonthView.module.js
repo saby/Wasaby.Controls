@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView', [
-   'js!SBIS3.CONTROLS.MonthView'
+define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView', [
+   'SBIS3.CONTROLS/Date/MonthView'
 ], function (MonthView) {
    'use strict';
    /**
     * SBIS3.CONTROLS.DateRangeBig.MonthView
     * @class SBIS3.CONTROLS.DateRangeBig.MonthView
-    * @extends SBIS3.CONTROLS.MonthView
+    * @extends SBIS3.CONTROLS/Date/MonthView
     * @author Миронов Александр Юрьевич
     * @control
     */

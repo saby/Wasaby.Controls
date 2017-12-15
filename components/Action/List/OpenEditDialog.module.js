@@ -1,19 +1,19 @@
-define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
-      'js!SBIS3.CONTROLS.Action.OpenDialog',
+define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
+      'SBIS3.CONTROLS/Action/OpenDialog',
       'Core/core-instance',
       'Core/core-merge',
       'Core/Indicator',
       'Core/Deferred',
       'WS.Data/Entity/Record',
       'WS.Data/Di',
-      'js!SBIS3.CONTROLS.Utils.OpenDialog'
+      'SBIS3.CONTROLS/Action/Utils/OpenDialogUtil'
    ], function (OpenDialog, cInstance, cMerge, cIndicator, Deferred, Record, Di, OpenDialogUtil) {
    'use strict';
 
    /**
     * Класс, описывающий действие открытия окна с заданным шаблоном. Применяется для работы с <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/">диалогами редактирования списков</a>.
-    * @class SBIS3.CONTROLS.Action.OpenEditDialog
-    * @extends SBIS3.CONTROLS.Action.OpenDialog
+    * @class SBIS3.CONTROLS/Action/List/OpenEditDialog
+    * @extends SBIS3.CONTROLS/Action/OpenDialog
     * @author Красильников Андрей Сергеевич
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
@@ -44,10 +44,10 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
     * @public
     * @category Actions
     * @initial
-    * <component data-component="SBIS3.CONTROLS.Action.OpenEditDialog">
+    * <component data-component="SBIS3.CONTROLS/Action/List/OpenEditDialog">
     * </component>
     */
-   var OpenEditDialog = OpenDialog.extend(/** @lends SBIS3.CONTROLS.Action.OpenEditDialog.prototype */{
+   var OpenEditDialog = OpenDialog.extend(/** @lends SBIS3.CONTROLS/Action/List/OpenEditDialog.prototype */{
       /**
        * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога.
        * @param {Core/EventObject} eventObject Дескриптор события.
@@ -171,7 +171,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          templateComponent = this._dialog._getTemplateComponent();
          currentRecord = templateComponent ? templateComponent.getRecord() : null;
          if (currentRecord && currentRecord.isChanged()){
-            require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+            require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager){
                InformationPopupManager.showConfirmDialog({
                      message: rk('Сохранить изменения?')
                   },
@@ -445,7 +445,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
             return;
          }
          //Уберём удаляемый элемент из массива выбранных у контрола, являющегося linkedObject.
-         if (cInstance.instanceOfMixin(collection, 'SBIS3.CONTROLS.MultiSelectable')) {
+         if (cInstance.instanceOfMixin(collection, 'SBIS3.CONTROLS/Mixins/MultiSelectable')) {
             collection.removeItemsSelection([this._getRecordId(collectionRecord, additionalData.idProperty)]);
          }
          if (cInstance.instanceOfModule(collection.getItems && collection.getItems(), 'WS.Data/Collection/RecordSet')) {
@@ -650,7 +650,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _getCollectionData:function(){
          var collection = this.getLinkedObject();
-         if (cInstance.instanceOfMixin(collection, 'SBIS3.CONTROLS.ItemsControlMixin')) {
+         if (cInstance.instanceOfMixin(collection, 'SBIS3.CONTROLS/Mixins/ItemsControlMixin')) {
             collection = collection.getItems();
          }
          return collection;

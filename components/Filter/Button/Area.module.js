@@ -1,28 +1,28 @@
 /**
  * Created by am.gerasimov on 05.04.2017.
  */
-define('js!SBIS3.CONTROLS.FilterButtonArea',
+define('SBIS3.CONTROLS/Filter/Button/Area',
    [
-      'js!SBIS3.CONTROLS.CompoundControl',
-      'tmpl!SBIS3.CONTROLS.FilterButtonArea/Area/FilterButtonArea',
-      'js!SBIS3.CONTROLS.Link',
-      'js!SBIS3.CONTROLS.Button',
-      'js!SBIS3.CONTROLS.ScrollContainer',
-      'js!SBIS3.CONTROLS.AdditionalFilterParams',
-      'js!SBIS3.CONTROLS.FilterHistory',
-      'css!SBIS3.CONTROLS.FilterButtonArea/Area/FilterButtonArea'
+      'SBIS3.CONTROLS/CompoundControl',
+      'tmpl!SBIS3.CONTROLS/Filter/Button/Area/FilterButtonArea',
+      'SBIS3.CONTROLS/Link',
+      'SBIS3.CONTROLS/Button',
+      'SBIS3.CONTROLS/ScrollContainer',
+      'SBIS3.CONTROLS/Filter/Button/AdditionalParams',
+      'SBIS3.CONTROLS/Filter/Button/History',
+      'css!SBIS3.CONTROLS/Filter/Button/Area/FilterButtonArea'
    ], function(CompoundControl, dotTplFn) {
       'use strict';
       
       /**
-       * @class SBIS3.CONTROLS.FilterButtonArea
-       * @extends SBIS3.CONTROLS.CompoundControl
+       * @class SBIS3.CONTROLS/Filter/Button/Area
+       * @extends SBIS3.CONTROLS/CompoundControl
        * @author Герасимов Александр Максимович
        * @control
        * @public
        */
       
-      return CompoundControl.extend([], /** @lends SBIS3.CONTROLS.FilterButtonArea.prototype */ {
+      return CompoundControl.extend([], /** @lends SBIS3.CONTROLS/Filter/Button/Area.prototype */ {
          _dotTplFn: dotTplFn
       });
    });

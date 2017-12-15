@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.hierarchyMixin', [
+define('SBIS3.CONTROLS/Mixins/hierarchyMixin', [
    "Core/core-clone",
    "WS.Data/Relation/Hierarchy",
    'Core/IoC'
@@ -6,15 +6,15 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
 
    /**
     * Миксин, добавляющий только работу с иерархией и методы для отображения.
-    * @mixin SBIS3.CONTROLS.hierarchyMixin
+    * @mixin SBIS3.CONTROLS/Mixins/hierarchyMixin
     * @author Крайнов Дмитрий Олегович
     * @public
     */
-   var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
+   var hierarchyMixin = /** @lends SBIS3.CONTROLS/Mixins/hierarchyMixin.prototype */{
       /**
        * @event onSetRoot Происходит при загрузке данных и перед установкой корня иерархии.
        * @remark
-       * При каждой загрузке данных, например вызванной методом {@link SBIS3.CONTROLS.ListView#reload}, происходит событие onSetRoot.
+       * При каждой загрузке данных, например вызванной методом {@link SBIS3.CONTROLS/ListView#reload}, происходит событие onSetRoot.
        * В этом есть необходимость, потому что в переданных данных может быть установлен новый path - путь для хлебных крошек (см. {@link WS.Data/Collection/RecordSet#meta}).
        * Хлебные крошки не перерисовываются, так как корень не поменялся.
        * @param {Core/EventObject} eventObject Дескриптор события.
@@ -24,8 +24,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
        * <ul>
        *    <li>id - идентификатор текущего узла иерархии;</li>
        *    <li>parent - идентификатор предыдущего узла иерархии;</li>
-       *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS.DSMixin#displayProperty});</li>
-       *    <li>color - значение поля записи, хранящее данные об отметке цветом (см. {@link SBIS3.CONTROLS.DecorableMixin#colorField});</li>
+       *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS/Mixins/DSMixin#displayProperty});</li>
+       *    <li>color - значение поля записи, хранящее данные об отметке цветом (см. {@link SBIS3.CONTROLS/Mixins/DecorableMixin#colorField});</li>
        *    <li>data - запись узла иерархии, экземпляр класса {@link WS.Data/Entity/Record}.</li>
        * </ul>
        * @see onBeforeSetRoot

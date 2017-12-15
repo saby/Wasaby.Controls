@@ -1,12 +1,12 @@
-define('js!SBIS3.CONTROLS.Action.List.Save', [
-    'js!SBIS3.CONTROLS.Action.Save',
-    'js!SBIS3.CONTROLS.Action.List.ListMixin',
+define('SBIS3.CONTROLS/Action/List/Save', [
+    'SBIS3.CONTROLS/Action/Save',
+    'SBIS3.CONTROLS/Action/List/Mixin/ListMixin',
     'Core/helpers/fast-control-helpers',
     'Core/Deferred',
     'Core/core-instance',
     'Core/core-clone',
     'WS.Data/Collection/RecordSet',
-    'js!SBIS3.CORE.DialogSelector',
+    'Deprecated/Controls/DialogSelector/DialogSelector',
     'WS.Data/Query/Query',
     'WS.Data/Entity/Record',
     'Core/moduleStubs'
@@ -15,22 +15,22 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
 
     /**
      * Класс, описывающий действие сохранения данных.
-     * @class SBIS3.CONTROLS.Action.List.Save
-     * @extends SBIS3.CONTROLS.Action.Save
-     * @mixes SBIS3.CONTROLS.Action.List.ListMixin
+     * @class SBIS3.CONTROLS/Action/List/Save
+     * @extends SBIS3.CONTROLS/Action/Save
+     * @mixes SBIS3.CONTROLS/Action/List/Mixin/ListMixin
      * @public
      * @author Сухоручкин А.С.
      */
-    var SaveList = Save.extend([ListMixin], /** @lends SBIS3.CONTROLS.Action.List.Save.prototype */{
+    var SaveList = Save.extend([ListMixin], /** @lends SBIS3.CONTROLS/Action/List/Save.prototype */{
         $protected: {
             _options: {
                /**
                 * @cfg {SBIS3.CONTROLS.ISaveStrategy) Стратегия сохранения данных.
-                * @see SBIS3.CONTROLS.ISaveStrategy
-                * @see SBIS3.CONTROLS.SaveStrategy.Base
-                * @see SBIS3.CONTROLS.SaveStrategy.Sbis
+                * @see SBIS3.CONTROLS/Action/Save/SaveStrategy/ISaveStrategy
+                * @see SBIS3.CONTROLS/Action/Save/SaveStrategy/Base
+                * @see SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis
                 */
-                saveStrategy: 'js!SBIS3.CONTROLS.SaveStrategy.Sbis',
+                saveStrategy: 'SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis',
                 /**
                 * @cfg {Array} Колонки, которые будут сохраняться.
                 **/
@@ -165,7 +165,7 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
             var result = new Deferred();
             new Dialog ({
                 opener : this,
-                template: 'js!SBIS3.CONTROLS.MassAmountSelector',
+                template: 'SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector',
                 caption : title,
                 cssClassName: 'controls-MassAmountSelector',
                 handlers: {
@@ -197,7 +197,7 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
            //Для IOS всегда будем выгружать через сервер.
             meta.serverSideExport = serverSideExport;
             meta.pageOrientation = meta.endpoint === 'PDF' ? meta.pageOrientation || 1 : undefined;
-            if (cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
+            if (cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS/Mixins/TreeMixin')) {
                 meta.parentProperty = linkedObject.getParentProperty();
             }
             if (!meta.columns) {
@@ -210,7 +210,7 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
         _loadData: function(dataSource, query) {
             var result = new Deferred();
 
-           moduleStubs.require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager']).addCallback(function(manager) {
+           moduleStubs.require(['SBIS3.CONTROLS/Utils/InformationPopupManager']).addCallback(function(manager) {
               manager[0].showConfirmDialog({message: 'Операция займет продолжительное время. Провести операцию?'},
                  function (){
                     fcHelpers.toggleIndicator(true);

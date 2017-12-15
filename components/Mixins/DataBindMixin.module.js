@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLS.DataBindMixin', ['js!SBIS3.CORE.AttributeCfgParser'], function(attributeCfgParser){
+define('SBIS3.CONTROLS/Mixins/DataBindMixin', ['Lib/Control/AttributeCfgParser/AttributeCfgParser'], function(attributeCfgParser){
    'use strict';
     /**
-     * @mixin SBIS3.CONTROLS.DataBindMixin
+     * @mixin SBIS3.CONTROLS/Mixins/DataBindMixin
      * @public
      * @author Крайнов Дмитрий Олегович
      */
-    var DataBindMixin = /**@lends SBIS3.CONTROLS.DataBindMixin.prototype  */{
+    var DataBindMixin = /**@lends SBIS3.CONTROLS/Mixins/DataBindMixin.prototype  */{
       $protected : {
          _dataBind : {}
       },

@@ -1,18 +1,18 @@
 /**
  * Created by ganshinyao on 01.06.2017.
  */
-define('js!SBIS3.CONTROLS.ListView.DragMove', [
+define('SBIS3.CONTROLS/ListView/resources/DragMove/DragMove', [
    "Core/Abstract",
-   "js!SBIS3.CONTROLS.DragObject",
+   "SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragObject",
    'WS.Data/Di',
    'Core/core-instance',
-   'js!SBIS3.CONTROLS.DragEntity.Row',
-   'js!SBIS3.CONTROLS.DragEntity.List',
-   'css!SBIS3.CONTROLS.ListView.DragMove'
+   'SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row',
+   'SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/List',
+   'css!SBIS3.CONTROLS/ListView/resources/DragMove/DragMove'
 ], function (Abstract, DragObject, Di, cInstance) {
    /**
     * Реализация перемещения dragndrop'ом у списочных контролов
-    * @class SBIS3.CONTROLS.ListView.DragMove
+    * @class SBIS3.CONTROLS/ListView/resources/DragMove/DragMove
     * @author Крайнов Дмитрий Олегович
     */
    var DRAG_META_INSERT = {
@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       after: 'after',
       before: 'before'
    };
-   var DragMove = Abstract.extend(/**@lends SBIS3.CONTROLS.ListView.Mover.prototype*/{
+   var DragMove = Abstract.extend(/**@lends SBIS3.CONTROLS/ListView/resources/Mover.prototype*/{
       $protected: {
          _options: {
             /**
@@ -28,23 +28,23 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
              */
             projection: null,
             /**
-             * @cfg {SBIS3.CONTROLS.ListView} связанное представление данных
+             * @cfg {SBIS3.CONTROLS/ListView} связанное представление данных
              */
             view: null,
             /**
-             * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS.DragEntity.Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS.DragEntity.Row}
+             * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row}
              * @see DragEntityOptions
-             * @see SBIS3.CONTROLS.DragEntity.Row
+             * @see SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row
              */
             dragEntity: 'dragentity.row',
             /**
-             * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS.DragEntity.Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS.DragEntity.Row}
+             * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row}
              * @see DragEntityListOptions
-             * @see SBIS3.CONTROLS.DragEntity.List
+             * @see SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/List
              */
             dragEntityList: 'dragentity.list',
             /**
-             * @cfg {SBIS3.CONTROLS.ListView.Mover} перемещатор от view
+             * @cfg {SBIS3.CONTROLS/ListView/resources/Mover} перемещатор от view
              */
             mover: null,
             /**
@@ -249,7 +249,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                   dragOwner.getItems(),
                   useDefaultMove
                ).addCallback(function (result) {
-                  if (result !== false && cInstance.instanceOfMixin(DragObject, 'SBIS3.CONTROLS.MultiSelectable')) {
+                  if (result !== false && cInstance.instanceOfMixin(DragObject, 'SBIS3.CONTROLS/Mixins/MultiSelectable')) {
                      DragObject.removeItemsSelectionAll();//сбросим выделение у контрола с которого перемещаются элементы
                   }
                })
@@ -328,7 +328,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       },
 
       _isCorrectSource: function (source) {
-         return source && cInstance.instanceOfModule(source, 'SBIS3.CONTROLS.DragEntity.List');
+         return source && cInstance.instanceOfModule(source, 'SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/List');
       },
       /**
        * Проверяет можно ли перемещать
@@ -341,7 +341,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             this._isCorrectSource(source) &&
             source.getCount() > 0 &&
             DragObject.getTargetsControl() === this._getView() &&
-            cInstance.instanceOfModule(source.at(0), 'SBIS3.CONTROLS.DragEntity.Row') &&
+            cInstance.instanceOfModule(source.at(0), 'SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row') &&
             this._isEqualDataSource()
       },
       /**
@@ -535,8 +535,8 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       /**
        * Создает сущность перемещения.
        * @param {Object} options Объект с опциями которые будут переданы в конструктор сущности.
-       * @returns {SBIS3.CONTROLS.DragEntity.Entity}
-       * @see SBIS3.CONTROLS.DragEntity.Entity
+       * @returns {SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity}
+       * @see SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity
        */
       _makeDragEntity: function(options) {
          return  Di.resolve(this._options.dragEntity, options);
@@ -590,9 +590,9 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       this._isTree = cInstance.instanceOfModule(this._projection, 'WS.Data/Display/Tree');
       if (this._isTree) {
          var source = DragObject.getSource();
-         if (source && cInstance.instanceOfModule(source, 'SBIS3.CONTROLS.DragEntity.List') && this._nodeProperty) {
+         if (source && cInstance.instanceOfModule(source, 'SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/List') && this._nodeProperty) {
             source.forEach(function (item) {
-               if (cInstance.instanceOfModule(item, 'SBIS3.CONTROLS.DragEntity.Row')) {
+               if (cInstance.instanceOfModule(item, 'SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row')) {
                   var item = item.getModel();
                   if (item.get(this._nodeProperty) !== null) {
                      this._sourceExistNode = true

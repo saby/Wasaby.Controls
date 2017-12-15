@@ -1,21 +1,21 @@
 
-define('js!SBIS3.CONTROLS.MenuItem', [
+define('SBIS3.CONTROLS/Menu/MenuItem', [
    'js!WSControls/Buttons/ButtonBase',
-   'tmpl!SBIS3.CONTROLS.MenuItem/MenuItem/MenuItem',
+   'tmpl!SBIS3.CONTROLS/Menu/MenuItem/MenuItem',
    'Core/EventBus',
    'Core/Sanitize',
-   'css!SBIS3.CONTROLS.MenuItem/MenuItem/MenuItem'
+   'css!SBIS3.CONTROLS/Menu/MenuItem/MenuItem'
 ], function(WSButtonBase, dotTplFn, EventBus, Sanitize) {
 
    'use strict';
    /**
     * Контрол, отображающий элемент меню. Работает только в составе группы. В джине не вытаскивается
-    * @class SBIS3.CONTROLS.MenuItem
+    * @class SBIS3.CONTROLS/Menu/MenuItem
     * @public
     * @extends WSControls/Buttons/ButtonBase
     * @author Крайнов Дмитрий Олегович
     */
-   var MenuItem = WSButtonBase.extend( /** @lends SBIS3.CONTROLS.MenuItem.prototype */ {
+   var MenuItem = WSButtonBase.extend( /** @lends SBIS3.CONTROLS/Menu/MenuItem.prototype */ {
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {

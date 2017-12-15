@@ -1,28 +1,28 @@
 /*global define, $ws, rk*/
-define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
-      'js!SBIS3.CONTROLS.Action.List.Move',
-      'js!SBIS3.CONTROLS.Action.DialogMixin',
+define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
+      'SBIS3.CONTROLS/Action/List/Move',
+      'SBIS3.CONTROLS/Action/Mixin/DialogMixin',
       'Core/helpers/string-helpers',
       'Core/Indicator',
       'Core/core-merge',
       'Core/IoC',
       'Core/core-instance',
       'Core/constants',
-      'js!SBIS3.CONTROLS.Utils.InformationPopupManager'
+      'SBIS3.CONTROLS/Utils/InformationPopupManager'
    ],
    function (ListMove, DialogMixin, strHelpers, Indicator, cMerge, IoC, cInstance, constants, InformationPopupManager) {
       'use strict';
       /**
        * Класс, описывающий действие перемещения записей по иерархии с возможностью выбора позиции перемещения через диалог. По умолчанию переносит выделенные записи.
-       * @class SBIS3.CONTROLS.Action.List.InteractiveMove
+       * @class SBIS3.CONTROLS/Action/List/InteractiveMove
        * @public
-       * @extends SBIS3.CONTROLS.Action.List.Move
-       * @mixes SBIS3.CONTROLS.Action.DialogMixin
+       * @extends SBIS3.CONTROLS/Action/List/Move
+       * @mixes SBIS3.CONTROLS/Action/Mixin/DialogMixin
        * @author Ганшин Ярослав Олегович
        * @example
        * Пример использования InteractiveMove:
        * <pre>
-       *    define('js!SBIS3.Demo.InteractiveMove', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.Action.List.InteractiveMove'],
+       *    define('js!SBIS3.Demo.InteractiveMove', ['Lib/Control/CompoundControl/CompoundControl', 'SBIS3.CONTROLS/Action/List/InteractiveMove'],
        *    function(CompoundControl, InteractiveMove){
        *       var move;
        *       return CompoundControl.extend({
@@ -46,14 +46,14 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
        * В xhtml навесим обработчик:
        * <pre>
        *    <div class="MyListView">
-       *    <component data-component="SBIS3.CONTROLS.Button" name="ButtonHierMove" class="Button">
+       *    <component data-component="SBIS3.CONTROLS/Button" name="ButtonHierMove" class="Button">
        *       <option name="caption">Переместить</option>
        *       <options name="handlers">
        *          <option name="onActivated" type="function">js!SBIS3.Demo.InteractiveMove:prototype.buttonInteractiveMove
        *       </option>
        *       </options>
        *    </component>
-       *    <component data-component="SBIS3.CONTROLS.ListView" name="MyListView">
+       *    <component data-component="SBIS3.CONTROLS/ListView" name="MyListView">
        *       <options name="itemsActions" type="Array">
        *          <options>
        *             <option name="name" value="moveUp"></option>
@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
        * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
        */
 
-      var InteractiveMove = ListMove.extend([DialogMixin],/** @lends SBIS3.CONTROLS.Action.List.InteractiveMove.prototype */{
+      var InteractiveMove = ListMove.extend([DialogMixin],/** @lends SBIS3.CONTROLS/Action/List/InteractiveMove.prototype */{
          $protected:{
             /**
              * @typedef {Object} componentOptions
@@ -105,7 +105,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                 /**
                  * @cfg {String} Шаблон.
                  */
-               template : 'js!SBIS3.CONTROLS.SelectionDialog',
+               template : 'SBIS3.CONTROLS/Action/resources/SelectionDialog',
                 /**
                  * @cfg {String} Устанавливает имя поля иерархии, по которому будут установлены иерархические связи записей списка.
                  */
@@ -242,7 +242,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             }
          },
          _syncOptions: function () {
-            if (cInstance.instanceOfMixin(this._options.linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
+            if (cInstance.instanceOfMixin(this._options.linkedObject, 'SBIS3.CONTROLS/Mixins/TreeMixin')) {
                cMerge(this._options, {
                   parentProperty: this._options.linkedObject.getParentProperty(),
                   nodeProperty: this._options.linkedObject.getNodeProperty()

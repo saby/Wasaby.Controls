@@ -1,10 +1,10 @@
-define('js!SBIS3.CONTROLS.DateRangeSlider',[
-   'js!SBIS3.CONTROLS.DateRangeSliderBase',
-   'js!SBIS3.CONTROLS.DateRangeChoosePickerMixin',
-   'js!SBIS3.CONTROLS.Utils.DateUtil',
+define('SBIS3.CONTROLS/Date/RangeSlider',[
+   'SBIS3.CONTROLS/Date/RangeSliderBase',
+   'SBIS3.CONTROLS/Mixins/DateRangeChoosePickerMixin',
+   'SBIS3.CONTROLS/Utils/DateUtil',
    'Core/IoC',
-   'js!SBIS3.CONTROLS.Link',
-   'css!SBIS3.CONTROLS.DateRangeSlider/RangeSlider/DateRangeSlider'
+   'SBIS3.CONTROLS/Link',
+   'css!SBIS3.CONTROLS/Date/RangeSlider/DateRangeSlider'
 ], function (DateRangeSliderBase, DateRangeChoosePickerMixin, DateUtil, IoC) {
    'use strict';
 
@@ -16,11 +16,11 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
     * Вторая дата вычислится автоматически исходя из типа диапазона который можно выбрать.
     * Это позволяет привязывать одну из дат к контексту не заботясь о второй.
     *
-    * SBIS3.CONTROLS.DateRangeSlider
-    * @class SBIS3.CONTROLS.DateRangeSlider
-    * @extends SBIS3.CONTROLS.DateRangeSliderBase
+    * SBIS3.CONTROLS/Date/RangeSlider
+    * @class SBIS3.CONTROLS/Date/RangeSlider
+    * @extends SBIS3.CONTROLS/Date/RangeSliderBase
     *
-    * @mixes SBIS3.CONTROLS.DateRangeChoosePickerMixin
+    * @mixes SBIS3.CONTROLS/Mixins/DateRangeChoosePickerMixin
     *
     * @author Миронов Александр Юрьевич
     * @demo SBIS3.CONTROLS.Demo.MyDateRangeSlider
@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
     * @public
     * @category Date/Time
     */
-   var DateRangeSlider = DateRangeSliderBase.extend([DateRangeChoosePickerMixin], /** @lends SBIS3.CONTROLS.DateRangeSlider.prototype */{
+   var DateRangeSlider = DateRangeSliderBase.extend([DateRangeChoosePickerMixin], /** @lends SBIS3.CONTROLS/Date/RangeSlider.prototype */{
       $protected: {
          _options: {
             /**
@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                   (!this._options.showHalfyears && this._options.showQuarters && !this._options.showMonths && !isCheckedOptions)
             )) {
             IoC.resolve('ILogger').log(
-               'SBIS3.CONTROLS.DateRangeSliderBase',
+               'SBIS3.CONTROLS/Date/RangeSliderBase',
                this.getName() + ': Используемое сочетание опций showMonths, showQuarters, showHalfyears, showYears и опций установки иконок не стандартизовано и не должно использоваться. Возможна не корректная работа контрола.'
             )
          }

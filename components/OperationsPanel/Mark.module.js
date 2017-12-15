@@ -1,25 +1,25 @@
 /**
  * Created by as.suhoruchkin on 02.04.2015.
  */
-define('js!SBIS3.CONTROLS.OperationsMark', [
-   'js!SBIS3.CONTROLS.CompoundControl',
+define('SBIS3.CONTROLS/OperationsPanel/Mark', [
+   'SBIS3.CONTROLS/CompoundControl',
    'Core/core-instance',
    'Core/helpers/Function/forAliveOnly',
-   'tmpl!SBIS3.CONTROLS.OperationsMark/Mark/OperationsMark',
-   'js!SBIS3.CONTROLS.MenuLink',
-   'js!SBIS3.CONTROLS.CheckBox',
-   'css!SBIS3.CONTROLS.OperationsMark/Mark/OperationsMark'
+   'tmpl!SBIS3.CONTROLS/OperationsPanel/Mark/OperationsMark',
+   'SBIS3.CONTROLS/Menu/MenuLink',
+   'SBIS3.CONTROLS/CheckBox',
+   'css!SBIS3.CONTROLS/OperationsPanel/Mark/OperationsMark'
 ], function(CompoundControl, cInstance, forAliveOnly, template) {
    /**
     * Операции выделения.
     *
-    * SBIS3.CONTROLS.OperationsMark
-    * @class SBIS3.CONTROLS.OperationsMark
-    * @extends SBIS3.CONTROLS.MenuLink
+    * SBIS3.CONTROLS/OperationsPanel/Mark
+    * @class SBIS3.CONTROLS/OperationsPanel/Mark
+    * @extends SBIS3.CONTROLS/Menu/MenuLink
     * @author Сухоручкин Андрей Сергеевич
     * @public
     */
-   var OperationsMark = CompoundControl.extend(/** @lends SBIS3.CONTROLS.OperationsMark.prototype */{
+   var OperationsMark = CompoundControl.extend(/** @lends SBIS3.CONTROLS/OperationsPanel/Mark.prototype */{
       _dotTplFn: template,
       $protected: {
          _options: {
@@ -88,11 +88,11 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
       },
       /**
        * Метод установки или замены связанного представления данных.
-       * @param {SBIS3.CONTROLS.ListView} linkedView
+       * @param {SBIS3.CONTROLS/ListView} linkedView
        */
       setLinkedView: function(linkedView) {
          var self = this;
-         if (linkedView && cInstance.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
+         if (linkedView && cInstance.instanceOfMixin(linkedView, 'SBIS3.CONTROLS/Mixins/MultiSelectable')) {
             this._options.linkedView = linkedView;
             this._menuButton.once('onPickerOpen', function() {
                //Если есть бесконечный скролл то показываем кнопку "Все", иначе показываем кнопку "Всю страницу"

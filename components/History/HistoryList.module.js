@@ -1,9 +1,9 @@
 /**
  * Created by gersa_000 on 30.10.2016.
  */
-define('js!SBIS3.CONTROLS.HistoryList',
+define('SBIS3.CONTROLS/History/HistoryList',
    [
-      'js!SBIS3.CONTROLS.HistoryController',
+      'SBIS3.CONTROLS/History/HistoryController',
       'WS.Data/Collection/IList',
       'WS.Data/Collection/IEnumerable',
       'WS.Data/Collection/RecordSet',

@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.Utils.ConfigByClasses', [], function () {
+define('SBIS3.CONTROLS/Utils/ConfigByClasses', [], function () {
    'use strict';
    return function(opts, params, classes) {
       var

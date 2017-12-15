@@ -1,14 +1,14 @@
 /**
  * Created by as.suhoruchkin on 12.03.2015.
  */
-define('js!SBIS3.CONTROLS.OperationsPanel', [
-   'js!SBIS3.CORE.CompoundControl',
-   'tmpl!SBIS3.CONTROLS.OperationsPanel/OperationsPanel/OperationsPanel',
-   'js!SBIS3.CONTROLS.ItemsControlMixin',
+define('SBIS3.CONTROLS/OperationsPanel', [
+   'Lib/Control/CompoundControl/CompoundControl',
+   'tmpl!SBIS3.CONTROLS/OperationsPanel/OperationsPanel',
+   'SBIS3.CONTROLS/Mixins/ItemsControlMixin',
    'Core/core-instance',
-   'tmpl!SBIS3.CONTROLS.OperationsPanel/OperationsPanel/resources/ItemTemplate',
+   'tmpl!SBIS3.CONTROLS/OperationsPanel/resources/ItemTemplate',
    'Core/moduleStubs',
-   'css!SBIS3.CONTROLS.OperationsPanel/OperationsPanel/OperationsPanel'
+   'css!SBIS3.CONTROLS/OperationsPanel/OperationsPanel'
 ], function(Control, dotTplFn, ItemsControlMixin, cInstance, ItemTemplate, moduleStubs) {
 
    var ITEMS_MENU_WIDTH = 28;
@@ -35,13 +35,13 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       };
 
    /**
-    * Компонент "Панель действий" используют совместно с представлениями данных ({@link SBIS3.CONTROLS.ListView} или любой его контрол-наследник),
+    * Компонент "Панель действий" используют совместно с представлениями данных ({@link SBIS3.CONTROLS/ListView} или любой его контрол-наследник),
     * с записями которых требуется производить манипуляции. Он состоит из всплывающей панели, скрытой по умолчанию, и
-    * кнопки управления её отображением - {@link SBIS3.CONTROLS.OperationsPanelButton}.
+    * кнопки управления её отображением - {@link SBIS3.CONTROLS/OperationsPanel/PanelButton/OperationsPanelButton}.
     *
     * <ul>
-    *    <li>Связывание панели и представления данных производится при помощи {@link SBIS3.CONTROLS.ComponentBinder}.</li>
-    *    <li>Кнопка управления должна быть связана с всплывающей панелью методом {@link SBIS3.CONTROLS.OperationsPanelButton#setLinkedPanel}. Одной кнопкой можно управлять несколькими панелями.</li>
+    *    <li>Связывание панели и представления данных производится при помощи {@link SBIS3.CONTROLS/ComponentBinder}.</li>
+    *    <li>Кнопка управления должна быть связана с всплывающей панелью методом {@link SBIS3.CONTROLS/OperationsPanel/PanelButton/OperationsPanelButton#setLinkedPanel}. Одной кнопкой можно управлять несколькими панелями.</li>
     *    <li>Набор действий, отображаемых на панели, настраивают в опции {@link items}.</li>
     * </ul>
     *
@@ -60,10 +60,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * </ol>
     *
     * Также допустимо создание новых действий, для которых настраивается иконка и поведение при клике.
-    * @class SBIS3.CONTROLS.OperationsPanel
-    * @extends SBIS3.CORE.CompoundControl
+    * @class SBIS3.CONTROLS/OperationsPanel
+    * @extends Lib/Control/CompoundControl/CompoundControl
     *
-    * @mixes SBIS3.CONTROLS.ItemsControlMixin
+    * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
     *
     * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel Пример 1. Типовые массовые операции над записями.
     *
@@ -77,10 +77,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * @public
     * @category Actions
     * @initial
-    * <component data-component='SBIS3.CONTROLS.OperationsPanel' style="height: 30px;">
+    * <component data-component='SBIS3.CONTROLS/OperationsPanel' style="height: 30px;">
     * </component>
     */
-   var OperationsPanel = Control.extend([ItemsControlMixin],/** @lends SBIS3.CONTROLS.OperationsPanel.prototype */{
+   var OperationsPanel = Control.extend([ItemsControlMixin],/** @lends SBIS3.CONTROLS/OperationsPanel.prototype */{
       /**
        * @event onToggle Происходит при изменении видимости панели действий: появление или скрытие.
        * @param {Core/EventObject} eventObject Дескриптор события.
@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             items: [
                {
                    name: 'delete',
-                   componentType: 'js!SBIS3.CONTROLS.OperationDelete',
+                   componentType: 'SBIS3.CONTROLS/OperationsPanel/Delete',
                    type: {
                        mass: true,
                        selection: true
@@ -119,7 +119,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                },
                {
                    name: 'operationsMark',
-                   componentType: 'js!SBIS3.CONTROLS.OperationsMark',
+                   componentType: 'SBIS3.CONTROLS/OperationsPanel/Mark',
                    type: {
                        'mark': true
                    },
@@ -400,7 +400,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
 
          if(!this._itemsMenuCreated){
             this._itemsMenuCreated = true;
-            moduleStubs.require(['js!SBIS3.CONTROLS.MenuIcon']).addCallback(function (MenuIcon) {
+            moduleStubs.require(['SBIS3.CONTROLS/Menu/MenuIcon']).addCallback(function (MenuIcon) {
 
                var massMode = self._container.hasClass('controls-operationsPanel__massMode');
                var selectionMode = self._container.hasClass('controls-operationsPanel__selectionMode');
@@ -435,10 +435,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                   var item = this.getItems().getRecordById(id);
                   if (item) {
                      var instance = item.get('instance');
-                     if(cInstance.instanceOfModule(instance, 'SBIS3.CONTROLS.MenuLink') && instance.getItems().getCount() > 1){
+                     if(cInstance.instanceOfModule(instance, 'SBIS3.CONTROLS/Menu/MenuLink') && instance.getItems().getCount() > 1){
                         instance._notify('onMenuItemActivate', id);
                      }
-                     else if(cInstance.instanceOfMixin(instance, 'SBIS3.CONTROLS.Clickable')) {
+                     else if(cInstance.instanceOfMixin(instance, 'SBIS3.CONTROLS/Mixins/Clickable')) {
                         instance._onClickHandler(event);
                      }
                      else {

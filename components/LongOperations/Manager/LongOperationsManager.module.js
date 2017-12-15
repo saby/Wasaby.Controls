@@ -1,2 +1,2 @@
 // ВРЕМЕННО, для обратной совместимости
-define('js!SBIS3.CONTROLS.LongOperationsManager', ['js!SBIS3.CONTROLS.LongOperations.Manager'], function (arg) { return arg; });
+define('SBIS3.CONTROLS/LongOperations/Manager/LongOperationsManager', ['SBIS3.CONTROLS/LongOperations/Manager'], function (arg) { return arg; });

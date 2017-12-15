@@ -2,25 +2,25 @@
  * Created by ps.borisov on 08.09.2016.
  */
 
-define('js!SBIS3.CONTROLS.FilterPanelDataRange',
+define('SBIS3.CONTROLS/Filter/Panel/components/DataRange',
    [
-      'js!SBIS3.CONTROLS.IFilterItem',
-      'js!SBIS3.CONTROLS.SliderInput'
+      'SBIS3.CONTROLS/Filter/Panel/resources/IFilterItem',
+      'SBIS3.CONTROLS/Slider/Input'
    ], function(IFilterItem, SliderInput) {
       'use strict';
       var
           /**
-           * Класс контрола "Диапазон выбора значений", который применяется для панели фильтров {@link SBIS3.CONTROLS.FilterPanel}.
-           * Создан на основе контрола {@link SBIS3.CONTROLS.SliderInput}.
-           * @class SBIS3.CONTROLS.FilterPanelDataRange
-           * @extends SBIS3.CONTROLS.SliderInput
+           * Класс контрола "Диапазон выбора значений", который применяется для панели фильтров {@link SBIS3.CONTROLS/Filter/FilterPanel}.
+           * Создан на основе контрола {@link SBIS3.CONTROLS/Slider/Input}.
+           * @class SBIS3.CONTROLS/Filter/Panel/components/DataRange
+           * @extends SBIS3.CONTROLS/Slider/Input
            * @public
            *
            * @author Борисов Петр Сергеевич
            *
-           * @mixes SBIS3.CONTROLS.IFilterItem
+           * @mixes SBIS3.CONTROLS/Filter/Panel/resources/IFilterItem
            */
-         FilterPanelDataRange = SliderInput.extend([IFilterItem], /** @lends SBIS3.CONTROLS.FilterPanelDataRange.prototype */{
+         FilterPanelDataRange = SliderInput.extend([IFilterItem], /** @lends SBIS3.CONTROLS/Filter/Panel/components/DataRange.prototype */{
             $protected: {
                _options: {
                   /**

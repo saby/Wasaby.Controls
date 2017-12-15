@@ -1,18 +1,18 @@
-define('js!SBIS3.CONTROLS.DecorableMixin', [
-   'js!SBIS3.CONTROLS.Utils.HtmlDecorators',
-   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.HighlightDecorator',
-   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.ColorMarkDecorator'
+define('SBIS3.CONTROLS/Mixins/DecorableMixin', [
+   'SBIS3.CONTROLS/Utils/HtmlDecorators/HtmlDecorators',
+   'SBIS3.CONTROLS/Utils/HtmlDecorators/HighlightDecorator',
+   'SBIS3.CONTROLS/Utils/HtmlDecorators/ColorMarkDecorator'
 ], function (HtmlDecorators, HighlightDecorator, ColorMarkDecorator) {
    'use strict';
 
    /**
     * Миксин, задающий любому контролу возможность подсветки текста и отметки цветом
-    * @mixin SBIS3.CONTROLS.DecorableMixin
+    * @mixin SBIS3.CONTROLS/Mixins/DecorableMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var DecorableMixin = /** @lends SBIS3.CONTROLS.DecorableMixin.prototype */{
+   var DecorableMixin = /** @lends SBIS3.CONTROLS/Mixins/DecorableMixin.prototype */{
       $protected: {
          _options: {
             _decorators: null,

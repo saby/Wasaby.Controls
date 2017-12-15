@@ -2,15 +2,15 @@
  * Created by ps.borisov on 23.08.2016.
  */
 
-define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
-   'js!SBIS3.CONTROLS.RichEditorToolbarBase',
-   'tmpl!SBIS3.CONTROLS.RichEditorRoundToolbar/RoundToolbar/RichEditorRoundToolbar',
-   'js!SBIS3.CONTROLS.RichEditorRoundToolbar/RoundToolbar/resources/config',
+define('SBIS3.CONTROLS/RichEditor/Components/RoundToolbar', [
+   'SBIS3.CONTROLS/RichEditor/Components/ToolbarBase',
+   'tmpl!SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/RichEditorRoundToolbar',
+   'SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/resources/config',
    'WS.Data/Di',
-   'js!SBIS3.CONTROLS.MenuIcon',
-   'js!SBIS3.CONTROLS.IconButton',
-   'css!SBIS3.CONTROLS.RichEditorRoundToolbar/RoundToolbar/RichEditorRoundToolbar',
-   'js!SBIS3.CONTROLS.IconButton'
+   'SBIS3.CONTROLS/Menu/MenuIcon',
+   'SBIS3.CONTROLS/Button/IconButton',
+   'css!SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/RichEditorRoundToolbar',
+   'SBIS3.CONTROLS/Button/IconButton'
 ], function(RichEditorToolbarBase, dotTplFn, defaultConfig, Di) {
 
    'use strict';
@@ -19,13 +19,13 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
          INLINE_TEMPLATE: '6'
       },
       /**
-       * @class SBIS3.CONTROLS.RichEditorRoundToolbar
-       * @extends SBIS3.CONTROLS.RichEditorToolbarBase
+       * @class SBIS3.CONTROLS/RichEditor/Components/RoundToolbar
+       * @extends SBIS3.CONTROLS/RichEditor/Components/ToolbarBase
        * @author Спирин Виктор Алексеевич
        * @public
        * @control
        */
-      RichEditorRoundToolbar = RichEditorToolbarBase.extend(/** @lends SBIS3.CONTROLS.RichEditorRoundToolbar.prototype */{
+      RichEditorRoundToolbar = RichEditorToolbarBase.extend(/** @lends SBIS3.CONTROLS/RichEditor/Components/RoundToolbar.prototype */{
          _dotTplFn: dotTplFn,
          $protected : {
             _options : {
@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                 *    <li>smile - смайлики;</li>
                 *    <li>history - история ввода.</li>
                 * </ol>
-                * Пользовательские кнопки задаются аналогично {@link SBIS3.CONTROLS.ItemsControlMixin#items}.
+                * Пользовательские кнопки задаются аналогично {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#items}.
                 * <ul>
                 *   <li>componentType - обязательный параметр, определяющий вид компонента;</li>
                 *   <li>name - имя компонента, по которому можно получить элемент тулбара;</li>
@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                 *          <option name="name">myButton</option>
                 *          <option name="order">100</option>
                 *          <option name="basic">true</option>
-                *          <option name="componentType">SBIS3.CONTROLS.Button</option>
+                *          <option name="componentType">SBIS3.CONTROLS/Button</option>
                 *          <option name="icon" >sprite:icon-16 icon-Add icon-primary</option>
                 *          <options name="handlers">
                 *             <option name="onActivated" type="function">js!MyComponentName:prototype.myButtonClick</option>

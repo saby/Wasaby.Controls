@@ -1,15 +1,15 @@
-define('js!SBIS3.CONTROLS.FilterPanelItem', [
+define('SBIS3.CONTROLS/Filter/Panel/components/PanelItem', [
    'Core/Context',
-   'js!SBIS3.CONTROLS.CompoundControl',
-   'tmpl!SBIS3.CONTROLS.FilterPanelItem/PanelItem/FilterPanelItem',
-   'tmpl!SBIS3.CONTROLS.FilterPanelItem/PanelItem/resources/FilterPanelItemSpoilerRightPartTitleTemplate',
-   'js!SBIS3.CONTROLS.IconButton',
-   'css!SBIS3.CONTROLS.FilterPanel/Panel/resources/FilterPanelButton'
+   'SBIS3.CONTROLS/CompoundControl',
+   'tmpl!SBIS3.CONTROLS/Filter/Panel/components/PanelItem/FilterPanelItem',
+   'tmpl!SBIS3.CONTROLS/Filter/Panel/components/PanelItem/resources/FilterPanelItemSpoilerRightPartTitleTemplate',
+   'SBIS3.CONTROLS/Button/IconButton',
+   'css!SBIS3.CONTROLS/Filter/Panel/resources/FilterPanelButton'
 ], function (cContext, CompoundControl, dotTplFn) {
    /**
     * Миксин, задающий любому контролу поведение работы с набором фильтров.
-    * Сейчас применяется для конфигурации фильтров на Панели фильтров (см. {@link SBIS3.CONTROLS.FilterPanel}).
-    * @mixin SBIS3.CONTROLS.FilterPanelItem
+    * Сейчас применяется для конфигурации фильтров на Панели фильтров (см. {@link SBIS3.CONTROLS/Filter/FilterPanel}).
+    * @mixin SBIS3.CONTROLS/Filter/Panel/components/PanelItem
     * @public
     * @author Авраменко Алексей Сергеевич
     */
@@ -20,14 +20,14 @@ define('js!SBIS3.CONTROLS.FilterPanelItem', [
       ITEM_FILTER_VALUE = 'value',
       ITEM_FILTER_TEXT_VALUE = 'textValue',
 
-      FilterPanelItem = CompoundControl.extend(/**@lends SBIS3.CONTROLS.FilterPanelItem.prototype  */{
+      FilterPanelItem = CompoundControl.extend(/**@lends SBIS3.CONTROLS/Filter/Panel/components/PanelItem.prototype  */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
             /**
              * @cfg {WS.Data/Entity/Record} Запись, описывающая конфигурацию фильтр.
              * @remark
-             * Пример полей для записи, которая определяется миксином, описан в {@link SBIS3.CONTROLS.FilterPanel/FilterPanelItem.typedef}.
+             * Пример полей для записи, которая определяется миксином, описан в {@link SBIS3.CONTROLS/Filter/FilterPanelItem.typedef}.
              */
             item: null
          }
@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.FilterPanelItem', [
 
       init: function() {
          FilterPanelItem.superclass.init.apply(this, arguments);
-         if (this._options.item.get('template') !== 'js!SBIS3.CONTROLS.FilterPanelBoolean') {
+         if (this._options.item.get('template') !== 'SBIS3.CONTROLS/Filter/Panel/components/Boolean') {
             // Называем компонент именно по ID, т.к. в дальнейшем ID может быть использован для определения конкретного фильтра
             this.getChildControlByName(this._options.item.getId()).subscribe('onExpandedChange', this._onExpandedChange.bind(this));
          }

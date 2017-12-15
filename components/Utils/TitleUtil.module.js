@@ -1,9 +1,9 @@
-define('js!SBIS3.CONTROLS.Utils.TitleUtil', ['js!SBIS3.CONTROLS.Utils.GetTextWidth', 'Core/helpers/String/escapeHtml'], function (getTextWidth, escapeHtml) {
+define('SBIS3.CONTROLS/Utils/TitleUtil', ['SBIS3.CONTROLS/Utils/GetTextWidth', 'Core/helpers/String/escapeHtml'], function (getTextWidth, escapeHtml) {
    /**
-    * @class SBIS3.CONTROLS.Utils.TitleUtil
+    * @class SBIS3.CONTROLS/Utils/TitleUtil
     * @public
     */
-   return /** @lends SBIS3.CONTROLS.Utils.TitleUtil.prototype */ {
+   return /** @lends SBIS3.CONTROLS/Utils/TitleUtil.prototype */ {
       /**
        *
        * @param container

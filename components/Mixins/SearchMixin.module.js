@@ -1,21 +1,21 @@
 /**
  * Created by cheremushkin iv on 19.01.2015.
  */
-define('js!SBIS3.CONTROLS.SearchMixin',
+define('SBIS3.CONTROLS/Mixins/SearchMixin',
     [
        'Core/helpers/Function/forAliveOnly',
        'Core/CommandDispatcher',
-       'js!SBIS3.CONTROLS.Utils.SearchMixin'
+       'SBIS3.CONTROLS/Mixins/SearchMixin/SearchMixinUtil'
     ], function(forAliveOnly, CommandDispatcher, SearchMixinUtil) {
 
    /**
     * Миксин, добавляющий иконку
-    * @mixin SBIS3.CONTROLS.SearchMixin
+    * @mixin SBIS3.CONTROLS/Mixins/SearchMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var SearchMixin = /**@lends SBIS3.CONTROLS.SearchMixin.prototype  */{
+   var SearchMixin = /**@lends SBIS3.CONTROLS/Mixins/SearchMixin.prototype  */{
       /**
        * @event onSearch При поиске
        * @param {Core/EventObject} eventObject Дескриптор события.
@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.SearchMixin',
              *
              * Перед отображением автодополнения по умолчанию существует задержка в 500 мс, которую можно изменить в опции {@link searchDelay}.
              *
-             * <b>Внимание:</b> для контрола {@link SBIS3.CONTROLS.FieldLink} использование опции *startCharacter* актуально, когда установлена опция {@link SBIS3.CONTROLS.SuggestTextBoxMixin#searchParam}.
+             * <b>Внимание:</b> для контрола {@link SBIS3.CONTROLS/FieldLink} использование опции *startCharacter* актуально, когда установлена опция {@link SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin#searchParam}.
              * @see searchDelay
              */
             startCharacter : 3,

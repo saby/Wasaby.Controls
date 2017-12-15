@@ -1,23 +1,23 @@
 /**
  * Created by as.avramenko on 02.10.2015.
  */
-define('js!SBIS3.CONTROLS.Image.EditDialog', [
+define('SBIS3.CONTROLS/Image/resources/EditDialog/EditDialog', [
    "Transport/BLObject",
-   "js!SBIS3.CORE.CompoundControl",
-   "tmpl!SBIS3.CONTROLS.Image.EditDialog",
-   "js!SBIS3.CONTROLS.Image.CropPlugin",
-   "js!SBIS3.CONTROLS.Utils.ImageUtil",
+   "Lib/Control/CompoundControl/CompoundControl",
+   "tmpl!SBIS3.CONTROLS/Image/resources/EditDialog/EditDialog",
+   "SBIS3.CONTROLS/Image/CropPlugin/CropPlugin",
+   "SBIS3.CONTROLS/Utils/ImageUtil",
    "Core/helpers/transport-helpers",
-   "js!SBIS3.CONTROLS.Button",
-   "i18n!SBIS3.CONTROLS.Image.EditDialog",
-   'css!SBIS3.CONTROLS.Image.EditDialog'
+   "SBIS3.CONTROLS/Button",
+   "i18n!SBIS3.CONTROLS/Image/resources/EditDialog/EditDialog",
+   'css!SBIS3.CONTROLS/Image/resources/EditDialog/EditDialog'
 ], function( BLObject,CompoundControl, dotTplFn, CropPlugin, ImageUtil, transHelpers) {
    /**
-    * SBIS3.CONTROLS.Image.EditDialog
-    * @class SBIS3.CONTROLS.Image.EditDialog
-    * @extends SBIS3.CORE.CompoundControl
+    * SBIS3.CONTROLS/Image/resources/EditDialog/EditDialog
+    * @class SBIS3.CONTROLS/Image/resources/EditDialog/EditDialog
+    * @extends Lib/Control/CompoundControl/CompoundControl
     */
-   var EditDialog = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Image.EditDialog.prototype */{
+   var EditDialog = CompoundControl.extend(/** @lends SBIS3.CONTROLS/Image/resources/EditDialog/EditDialog.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

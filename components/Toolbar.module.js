@@ -1,13 +1,13 @@
-define('js!SBIS3.CONTROLS.Toolbar', [
+define('SBIS3.CONTROLS/Toolbar', [
    "Core/IoC",
    "Core/core-clone",
-   "js!SBIS3.CONTROLS.ButtonGroupBase",
-   "tmpl!SBIS3.CONTROLS.Toolbar/Toolbar/Toolbar",
-   "tmpl!SBIS3.CONTROLS.Toolbar/Toolbar/resources/ItemTemplate",
+   "SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase",
+   "tmpl!SBIS3.CONTROLS/Toolbar/Toolbar",
+   "tmpl!SBIS3.CONTROLS/Toolbar/resources/ItemTemplate",
    "Core/core-instance",
-   "js!SBIS3.CONTROLS.IconButton",
-   "js!SBIS3.CONTROLS.CommandsButton",
-   'css!SBIS3.CONTROLS.Toolbar/Toolbar/Toolbar'
+   "SBIS3.CONTROLS/Button/IconButton",
+   "SBIS3.CONTROLS/Commands/CommandsButton",
+   'css!SBIS3.CONTROLS/Toolbar/Toolbar'
 ], function( IoC, coreClone, ButtonGroupBase, dotTplFn, ItemTemplate, cInstance) {
 
    'use strict';
@@ -163,8 +163,8 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          };
    /**
     * Контрол, отображающий панель с иконками.
-    * @class SBIS3.CONTROLS.Toolbar
-    * @extends SBIS3.CONTROLS.ButtonGroupBase
+    * @class SBIS3.CONTROLS/Toolbar
+    * @extends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase
     * @demo SBIS3.CONTROLS.Demo.MyToolbar
     * @author Сухоручкин Андрей Сергеевич
     *
@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
     * @category Button
     */
 
-   var Toolbar = ButtonGroupBase.extend(/** @lends SBIS3.CONTROLS.Toolbar.prototype */ {
+   var Toolbar = ButtonGroupBase.extend(/** @lends SBIS3.CONTROLS/Toolbar.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

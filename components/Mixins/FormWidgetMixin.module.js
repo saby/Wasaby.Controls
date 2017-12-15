@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.FormWidgetMixin', [
+define('SBIS3.CONTROLS/Mixins/FormWidgetMixin', [
    "Core/constants",
    "Core/IoC",
    'Core/core-clone',
@@ -8,11 +8,11 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
    /**
     * Миксин, который добавляет функционал валидаторов.
     * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/validation/">Валидация вводимых данных</a>.
-    * @mixin SBIS3.CONTROLS.FormWidgetMixin
+    * @mixin SBIS3.CONTROLS/Mixins/FormWidgetMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var FormWidgetMixin = /** @lends SBIS3.CONTROLS.FormWidgetMixin.prototype */{
+   var FormWidgetMixin = /** @lends SBIS3.CONTROLS/Mixins/FormWidgetMixin.prototype */{
        /**
         * @event onValidate Происходит при прохождении валидации.
         * @param {Core/EventObject} eventObject Дескриптор события.
@@ -53,11 +53,11 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
              * @cfg {Validator[]} Устанавливает валидаторы контрола.
              * Подробнее о валидации можно прочитать в {@link /doc/platform/developmentapl/interface-development/forms-and-validation/validation/ руководстве разработчика}.
              * @example
-             * Пример массива, описывающего валидацию значения из опции text. Такой валидатор, например, можно использовать в контроле {@link SBIS3.CONTROLS.TextBox}.
+             * Пример массива, описывающего валидацию значения из опции text. Такой валидатор, например, можно использовать в контроле {@link SBIS3.CONTROLS/TextBox}.
              * <pre class="brush: xml">
              *     <options name="validators" type="array">
              *        <options>
-             *           <option name="validator" type="function" value="js!SBIS3.CONTROLS.ControlsValidators:inRange"></option>  <!-- Устанавливаем функцию валидации -->
+             *           <option name="validator" type="function" value="SBIS3.CONTROLS/Utils/ControlsValidators:inRange"></option>  <!-- Устанавливаем функцию валидации -->
              *           <option name="option">text</option>                                                                      <!-- Устанавливаем опцию контрола, значение которой нужно валидировать -->
              *           <option name="errorMessage">Пожалуйста, введите в данное поле ваше имя!</option>                         <!-- Устанавливаем текст сообщение об ошибке валидации -->
              *           <options name="params" type="array">                                                                     <!-- Устанавливаем аргументы, которые будут переданны в функцию валидации -->
@@ -175,7 +175,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
        * <br/>
        * При работе с диалогами редактирования, валидации по умолчанию производится при попытке сохранения редактируемой записи.
        * <br/>
-       * Если для контрола ограничено взаимодействие через опцию {@link SBIS3.CORE.Control#enabled}, то для него валидация не производится.
+       * Если для контрола ограничено взаимодействие через опцию {@link Lib/Control/Control#enabled}, то для него валидация не производится.
        * <br/>
        * Подробнее о валидации вы можете прочитать в {@link /doc/platform/developmentapl/interface-development/forms-and-validation/validation/ руководстве разработчика}.
        * @returns {Boolean} Признак: валидация пройдена успешно (true) или с ошибками (false).
@@ -362,7 +362,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
             return infoboxDeferred.callback();
          }
 
-         require(['js!SBIS3.CORE.Infobox'], function(Infobox){
+         require(['Lib/Control/Infobox/Infobox'], function(Infobox){
             this._infobox = Infobox;
             infoboxDeferred.callback();
          }.bind(this));

@@ -1,28 +1,28 @@
-define('js!SBIS3.CONTROLS.ComboBox', [
+define('SBIS3.CONTROLS/ComboBox', [
    "Core/constants",
    "Core/Deferred",
    'Core/IoC',
    'Core/detection',
-   'js!SBIS3.CORE.LayoutManager',
-   'js!SBIS3.CONTROLS.TextBox',
-   'js!SBIS3.CONTROLS.TextBoxUtils',
-   "tmpl!SBIS3.CONTROLS.ComboBox/ComboBox/resources/textFieldWrapper",
-   "tmpl!SBIS3.CONTROLS.ComboBox/ComboBox/resources/ComboBoxPicker",
-   "js!SBIS3.CONTROLS.PickerMixin",
-   "js!SBIS3.CONTROLS.ItemsControlMixin",
+   'Lib/LayoutManager/LayoutManager',
+   'SBIS3.CONTROLS/TextBox',
+   'SBIS3.CONTROLS/TextBox/resources/TextBoxUtils',
+   "tmpl!SBIS3.CONTROLS/ComboBox/resources/textFieldWrapper",
+   "tmpl!SBIS3.CONTROLS/ComboBox/resources/ComboBoxPicker",
+   "SBIS3.CONTROLS/Mixins/PickerMixin",
+   "SBIS3.CONTROLS/Mixins/ItemsControlMixin",
    "WS.Data/Collection/RecordSet",
    "WS.Data/Display/Display",
-   "js!SBIS3.CONTROLS.Selectable",
-   "js!SBIS3.CONTROLS.DataBindMixin",
-   "js!SBIS3.CONTROLS.SearchMixin",
-   'js!SBIS3.CONTROLS.Utils.TitleUtil',
-   "tmpl!SBIS3.CONTROLS.ComboBox/ComboBox/resources/ComboBoxArrowDown",
-   "tmpl!SBIS3.CONTROLS.ComboBox/ComboBox/resources/ItemTemplate",
-   "tmpl!SBIS3.CONTROLS.ComboBox/ComboBox/resources/ItemContentTemplate",
+   "SBIS3.CONTROLS/Mixins/Selectable",
+   "SBIS3.CONTROLS/Mixins/DataBindMixin",
+   "SBIS3.CONTROLS/Mixins/SearchMixin",
+   'SBIS3.CONTROLS/Utils/TitleUtil',
+   "tmpl!SBIS3.CONTROLS/ComboBox/resources/ComboBoxArrowDown",
+   "tmpl!SBIS3.CONTROLS/ComboBox/resources/ItemTemplate",
+   "tmpl!SBIS3.CONTROLS/ComboBox/resources/ItemContentTemplate",
    "Core/core-instance",
-   "js!SBIS3.CONTROLS.ScrollContainer",
+   "SBIS3.CONTROLS/ScrollContainer",
    "i18n!SBIS3.CONTROLS.СomboBox",
-   'css!SBIS3.CONTROLS.ComboBox/ComboBox/ComboBox'
+   'css!SBIS3.CONTROLS/ComboBox/ComboBox'
 ], function ( constants, Deferred, IoC, detection, LayoutManager, TextBox, TextBoxUtils, textFieldWrapper, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, TitleUtil, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
@@ -40,26 +40,26 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * <br/>
     * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Type/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
     * <pre>
-    *    <component data-component="SBIS3.CONTROLS.ComboBox">
+    *    <component data-component="SBIS3.CONTROLS/ComboBox">
     *       <options name="items" type="array" bind="record/MyEnumField"></options>
     *       <option name="idProperty">@Идентификатор</option>
     *       <option name="displayProperty">Описание</option>
     *    </component>
     * </pre>
     *
-    * @class SBIS3.CONTROLS.ComboBox
-    * @extends SBIS3.CONTROLS.TextBox
+    * @class SBIS3.CONTROLS/ComboBox
+    * @extends SBIS3.CONTROLS/TextBox
     *
     * @author Красильников Андрей Сергеевич
     *
     * @demo SBIS3.CONTROLS.Demo.MyComboBox Пример 1. Выпадающий список, для которого установлен набора данных в опции items.
     * @demo SBIS3.CONTROLS.Demo.MyComboBoxDS Пример 2. Выпадающий список, для которого установлен источник данных в опции dataSource.
     *
-    * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.ItemsControlMixin
-    * @mixes SBIS3.CONTROLS.Selectable
-    * @mixes SBIS3.CONTROLS.DataBindMixin
-    * @mixes SBIS3.CONTROLS.SearchMixin
+    * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
+    * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
+    * @mixes SBIS3.CONTROLS/Mixins/Selectable
+    * @mixes SBIS3.CONTROLS/Mixins/DataBindMixin
+    * @mixes SBIS3.CONTROLS/Mixins/SearchMixin
     *
     * <b>Важно:</b> при добавлении этого класса сломается "Базовая линия".
     *
@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @control
     * @category Input
     * @initial
-    * <component data-component='SBIS3.CONTROLS.ComboBox'>
+    * <component data-component='SBIS3.CONTROLS/ComboBox'>
     *     <options name="items" type="array">
     *        <options>
     *            <option name="key">1</option>
@@ -94,12 +94,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
    function checkDisplayProperty(cfg) {
       if (!cfg.displayProperty && cfg._items && !cInstance.instanceOfModule(cfg._items, 'WS.Data/Type/Enum')) {
-         IoC.resolve('ILogger').error('SBIS3.CONTROLS.ComboBox', 'Не задана опция displayProperty');
+         IoC.resolve('ILogger').error('SBIS3.CONTROLS/ComboBox', 'Не задана опция displayProperty');
          cfg.displayProperty = 'title';
       }
    }
 
-   var ComboBox = TextBox.extend([PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
+   var ComboBox = TextBox.extend([PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS/ComboBox.prototype */{
       _dotTplFnPicker: dotTplFnPicker,
       /**
        * @typedef {Object} ItemsComboBox
@@ -109,7 +109,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        */
       /**
        * @cfg {ItemsComboBox[]} Набор исходных данных, по которому строится отображение
-       * @name SBIS3.CONTROLS.ComboBox#items
+       * @name SBIS3.CONTROLS/ComboBox#items
        * @remark
        * !Важно: данные для выпадающего списка можно задать либо в этой опции,
        * либо через источник данных методом {@link setDataSource}.
@@ -165,7 +165,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              *         </div>
              *     </option>
              * </pre>
-             * @deprecated Используйте опцию {@link SBIS3.CONTROLS.ItemsControlMixin#itemTpl}.
+             * @deprecated Используйте опцию {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#itemTpl}.
              */
             itemTemplate: '',
             afterFieldWrapper: arrowTpl,
@@ -194,7 +194,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              * При выборе этого пункта сбрасывается ранее установленное значение. Также говорят, что устанавливается пустое значение.
              * Выбор пункта аналогичен выполнению следующего кода:
              * <pre>
-             * // myComboBox - экземпляр класса SBIS3.CONTROLS.ComboBox
+             * // myComboBox - экземпляр класса SBIS3.CONTROLS/ComboBox
              * myComboBox.setSelectedKey(null);
              * </pre>
              * Чтобы установить текст, отображаемый в поле ввода после выбора пустого значения, определите значение в опции {@link placeholder}.

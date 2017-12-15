@@ -1,23 +1,23 @@
-define('js!SBIS3.CONTROLS.TimeHeader',
+define('SBIS3.CONTROLS/Date/TimePicker/TimeHeader',
    [
-      'js!SBIS3.CONTROLS.CompoundControl',
-      'tmpl!SBIS3.CONTROLS.TimeHeader/TimeHeader/TimeHeader',
-      'js!SBIS3.CONTROLS.TimePickerUtils',
-      'js!SBIS3.CONTROLS.IconButton',
-      'css!SBIS3.CONTROLS.TimeHeader/TimeHeader/TimeHeader'
+      'SBIS3.CONTROLS/CompoundControl',
+      'tmpl!SBIS3.CONTROLS/Date/TimePicker/TimeHeader/TimeHeader',
+      'SBIS3.CONTROLS/Date/TimePicker/TimePickerUtils',
+      'SBIS3.CONTROLS/Button/IconButton',
+      'css!SBIS3.CONTROLS/Date/TimePicker/TimeHeader/TimeHeader'
    ],
    function(CompoundControl, dotTplFn, Utils) {
 
       'use strict';
 
       /**
-       * Шапка для {@link SBIS3.CONTROLS.TimePicker}.
+       * Шапка для {@link SBIS3.CONTROLS/Date/TimePicker}.
        *
-       * @class SBIS3.CONTROLS.TimeHeader
-       * @extend SBIS3.CONTROLS.CompoundControl
+       * @class SBIS3.CONTROLS/Date/TimePicker/TimeHeader
+       * @extend SBIS3.CONTROLS/CompoundControl
        *
        * @initial
-       * <ws:SBIS3.CONTROLS.TimeHeader>
+       * <ws:SBIS3.CONTROLS/Date/TimePicker/TimeHeader>
        *    <ws:time>
        *       <ws:Object>
        *          <ws:hours>
@@ -31,13 +31,13 @@ define('js!SBIS3.CONTROLS.TimeHeader',
        *    <ws:mode>
        *       <ws:String>minutes</ws:String>
        *    </ws:mode>
-       * </ws:SBIS3.CONTROLS.TimeHeader>
+       * </ws:SBIS3.CONTROLS/Date/TimePicker/TimeHeader>
        *
        * @control
        * @private
        * @author Крайнов Дмитрий Олегович
        */
-      var TimeHeader = CompoundControl.extend(/** @lends SBIS3.CONTROLS.TimeHeader.prototype */{
+      var TimeHeader = CompoundControl.extend(/** @lends SBIS3.CONTROLS/Date/TimePicker/TimeHeader.prototype */{
          _dotTplFn: dotTplFn,
 
          $protected: {

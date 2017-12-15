@@ -1,7 +1,7 @@
 /**
  * Утилита рассчета высоты клавиатуры на тач устройствах
  */
-define('js!SBIS3.CONTROLS.TouchKeyboardHelper', [
+define('SBIS3.CONTROLS/Utils/TouchKeyboardHelper', [
    "Core/constants",
    "Core/EventBus"
 ], function( constants, EventBus) {

@@ -1,1 +1,1 @@
-define('js!SBIS3.CONTROLS.Utils.LinkWrap', ['Core/helpers/String/linkWrap'], function (linkWrap) { return linkWrap; });
+define('SBIS3.CONTROLS/Utils/LinkWrapUtils', ['Core/helpers/String/linkWrap'], function (linkWrap) { return linkWrap; });

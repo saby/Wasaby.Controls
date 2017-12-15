@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/handlers',
+define('SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/resources/handlers',
    [],
 
    function () {

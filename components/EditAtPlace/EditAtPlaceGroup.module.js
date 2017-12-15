@@ -1,30 +1,30 @@
 /**
  * Created by iv.cheremushkin on 18.11.2014.
  */
-define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
-   ['js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.PickerMixin',
-      'js!SBIS3.CONTROLS.EditAtPlace',
-      'js!SBIS3.CONTROLS.EditAtPlaceMixin',
-      'tmpl!SBIS3.CONTROLS.EditAtPlaceGroup',
-      'css!SBIS3.CONTROLS.EditAtPlaceGroup'],
+define('SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup',
+   ['Lib/Control/CompoundControl/CompoundControl',
+      'SBIS3.CONTROLS/Mixins/PickerMixin',
+      'SBIS3.CONTROLS/EditAtPlace',
+      'SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
+      'tmpl!SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup',
+      'css!SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup'],
    function (CompoundControl, PickerMixin, EditAtPlace, EditAtPlaceMixin, dotTplFn) {
       'use strict';
       /**
-       * @class SBIS3.CONTROLS.EditAtPlaceGroup
-       * @extends SBIS3.CORE.CompoundControl
+       * @class SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup
+       * @extends Lib/Control/CompoundControl/CompoundControl
        * @control
        * @public
        * @category Input
        *
-       * @mixes SBIS3.CONTROLS.PickerMixin
-       * @mixes SBIS3.CONTROLS.EditAtPlaceMixin
+       * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
+       * @mixes SBIS3.CONTROLS/Mixins/EditAtPlaceMixin
        *
        * @author Крайнов Дмитрий Олегович
        * @demo SBIS3.CONTROLS.Demo.MyEditAtPlace
        */
 
-      var EditAtPlaceGroup = CompoundControl.extend([PickerMixin, EditAtPlaceMixin], /** @lends SBIS3.CONTROLS.EditAtPlaceGroup.prototype */{
+      var EditAtPlaceGroup = CompoundControl.extend([PickerMixin, EditAtPlaceMixin], /** @lends SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup.prototype */{
          /**
           * @event onCancel Происходит при отмене сохранения изменений.
           * @param {Core/EventObject} eventObject Дескриптор события.
@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
                child._setClickHandler(self._clickHandler.bind(self));
                child._setKeyPressHandler(self._keyPressHandler.bind(self));
                child._setEditInGroup();
-               if ($(child._options.editorTpl).attr('data-component') == 'SBIS3.CONTROLS.TextArea'){
+               if ($(child._options.editorTpl).attr('data-component') == 'SBIS3.CONTROLS/TextArea'){
                   $(child._container.children()[0]).addClass('controls-EditAtPlace__textAreaWrapper');
                }
                child.subscribe('onTextChange', function(event, text){

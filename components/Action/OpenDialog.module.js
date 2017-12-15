@@ -1,7 +1,7 @@
 /*global define, require, $ws*/
-define('js!SBIS3.CONTROLS.Action.OpenDialog', [
-   'js!SBIS3.CONTROLS.Action.Action',
-   'js!SBIS3.CONTROLS.Action.DialogMixin',
+define('SBIS3.CONTROLS/Action/OpenDialog', [
+   'SBIS3.CONTROLS/Action',
+   'SBIS3.CONTROLS/Action/Mixin/DialogMixin',
    'WS.Data/Entity/Model',
    'WS.Data/Utils'
 ], function(Action, DialogMixin) {
@@ -9,10 +9,10 @@ define('js!SBIS3.CONTROLS.Action.OpenDialog', [
 
    /**
     * Класс, описывающий действие открытия диалога с заданным шаблоном.
-    * @class SBIS3.CONTROLS.Action.OpenDialog
-    * @extends SBIS3.CONTROLS.Action.Action
+    * @class SBIS3.CONTROLS/Action/OpenDialog
+    * @extends SBIS3.CONTROLS/Action
     *
-    * @mixes SBIS3.CONTROLS.Action.DialogMixin
+    * @mixes SBIS3.CONTROLS/Action/Mixin/DialogMixin
     *
     * @public
     * @author Красильников Андрей Сергеевич
@@ -41,15 +41,15 @@ define('js!SBIS3.CONTROLS.Action.OpenDialog', [
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onCommandCatch onDestroy onPropertiesChanged
     */
-   var OpenDialog = Action.extend([DialogMixin],/** @lends SBIS3.CONTROLS.Action.OpenDialog.prototype */{
+   var OpenDialog = Action.extend([DialogMixin],/** @lends SBIS3.CONTROLS/Action/OpenDialog.prototype */{
 
       /**
        * Производит <a href='/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/open/'>открытие диалога редактирования</a>.
        * @param {Object} meta Параметры, которые переопределяют конфигурацию диалога.
-       * @param {String|Number} meta.id Идентификатор записи. Переопределяет значение опции {@link SBIS3.CONTROLS.FormController#key key}.
-       * @param {WS.Data/Entity/Record} meta.item Экземпляр класса записи. Переопределяет значение опции {@link SBIS3.CONTROLS.FormController#record record}.
-       * @param {Object} meta.filter Набор инициализирующих значений, который используется при создании новой записи. Переопределяет значение опции {@link SBIS3.CONTROLS.FormController#initValues initValues}.
-       * @param {Object} meta.readMetaData Набор инициализирующих значений, который используется при чтении записи. Переопределяет значение опции  {@link SBIS3.CONTROLS.FormController#readMetaData readMetaData}.
+       * @param {String|Number} meta.id Идентификатор записи. Переопределяет значение опции {@link SBIS3.CONTROLS/FormController#key key}.
+       * @param {WS.Data/Entity/Record} meta.item Экземпляр класса записи. Переопределяет значение опции {@link SBIS3.CONTROLS/FormController#record record}.
+       * @param {Object} meta.filter Набор инициализирующих значений, который используется при создании новой записи. Переопределяет значение опции {@link SBIS3.CONTROLS/FormController#initValues initValues}.
+       * @param {Object} meta.readMetaData Набор инициализирующих значений, который используется при чтении записи. Переопределяет значение опции  {@link SBIS3.CONTROLS/FormController#readMetaData readMetaData}.
        * @param {String} meta.initializingWay переопределяет <a href='/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/initializing-way/'>способ инициализации данных диалога</a>.
        * @param {Object} meta.dialogOptions Объект с пользовательскими опциями, которые передаются в диалог редактирования в <a href='/doc/platform/developmentapl/interface-development/core/oop/#configuration-class-parameters'>секцию _options</a>.
        * @param {Object} meta.componentOptions Объект с конфигурацией контрола, на основе которого создаётся диалог редактирования (см. {@link mode}).
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.Action.OpenDialog', [
        * @example
        * <pre>
        * // myButton - экземпляр класса кнопки
-       * // myDialogAction - экземпляр класса SBIS3.CONTROLS.Action.OpenDialog
+       * // myDialogAction - экземпляр класса SBIS3.CONTROLS/Action/OpenDialog
        * myButton.subscribe('onActivated', function() {
        *    myDialogAction.execute({
        *       id: myId,

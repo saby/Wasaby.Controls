@@ -1,18 +1,18 @@
-define('js!SBIS3.CONTROLS.SwitcherDouble',
+define('SBIS3.CONTROLS/Switcher/Double',
    [
-      'js!SBIS3.CORE.Control',
-      'tmpl!SBIS3.CONTROLS.SwitcherDouble/Double/SwitcherDouble',
-      'js!SBIS3.CONTROLS.Clickable',
-      'js!SBIS3.CONTROLS.FormWidgetMixin',
-      'js!SBIS3.CONTROLS.Checkable',
-      'css!SBIS3.CONTROLS.SwitcherDouble/Double/SwitcherDouble'
+      'Lib/Control/Control',
+      'tmpl!SBIS3.CONTROLS/Switcher/Double/SwitcherDouble',
+      'SBIS3.CONTROLS/Mixins/Clickable',
+      'SBIS3.CONTROLS/Mixins/FormWidgetMixin',
+      'SBIS3.CONTROLS/Mixins/Checkable',
+      'css!SBIS3.CONTROLS/Switcher/Double/SwitcherDouble'
    ],
    function(Control, dotTplFn, Clickable, FormWidgetMixin, Checkable) {
 
    'use strict';
    /**
     * Контрол, отображающий двухпозиционный переключатель для поддержания макетов online.sbis.ru.
-    * Переключатель отличается от обычного {@link SBIS3.CONTROLS.Switcher} только внешне. Функционально они одинаковые.
+    * Переключатель отличается от обычного {@link SBIS3.CONTROLS/Switcher} только внешне. Функционально они одинаковые.
     * В качестве конфигурации можно изменять следующие настройки:
     * <ol>
     *    <li>{@link state} - устанавливает начальное состояние переключателя;</li>
@@ -20,12 +20,12 @@ define('js!SBIS3.CONTROLS.SwitcherDouble',
     *    <li>{@link stateOff} - устанавливает текст подписи переключателя при выключенном состоянии.</li>
     * </ol>
     *
-    * @class SBIS3.CONTROLS.SwitcherDouble
-    * @extends SBIS3.CORE.Control
+    * @class SBIS3.CONTROLS/Switcher/Double
+    * @extends Lib/Control/Control
     *
-    * @mixes SBIS3.CONTROLS.FormWidgetMixin
-    * @mixes SBIS3.CONTROLS.Clickable
-    * @mixes SBIS3.CONTROLS.Checkable
+    * @mixes SBIS3.CONTROLS/Mixins/FormWidgetMixin
+    * @mixes SBIS3.CONTROLS/Mixins/Clickable
+    * @mixes SBIS3.CONTROLS/Mixins/Checkable
     *
     * @demo SBIS3.Demo.MySwitcherDouble
     *
@@ -49,12 +49,12 @@ define('js!SBIS3.CONTROLS.SwitcherDouble',
     * @public
     * @category Button
     * @initial
-    * <component data-component='SBIS3.CONTROLS.SwitcherDouble'>
+    * <component data-component='SBIS3.CONTROLS/Switcher/Double'>
     *    <option name="stateOff" value="Выкл"></option>
     *    <option name="stateOn" value="Вкл"></option>
     * </component>
     */
-   var SwitcherDouble = Control.Control.extend( [Clickable, FormWidgetMixin, Checkable], /** @lends SBIS3.CONTROLS.SwitcherDouble.prototype */ {
+   var SwitcherDouble = Control.Control.extend( [Clickable, FormWidgetMixin, Checkable], /** @lends SBIS3.CONTROLS/Switcher/Double.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _textContainer: {},

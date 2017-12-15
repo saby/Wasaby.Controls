@@ -1,20 +1,20 @@
 /**
  * Created by am.gerasimov on 05.07.2016.
  */
-define('js!SBIS3.CONTROLS.FilterLink', ['js!SBIS3.CONTROLS.Link'], function(Link) {
+define('SBIS3.CONTROLS/Filter/Button/Link', ['SBIS3.CONTROLS/Link'], function(Link) {
        'use strict';
 
        /**
         * Компонент, отображающий ссылку. Умеет скрваться/отобрадаться в зависимости от опции {@link invertedVisible}
-        * Используется на панели {@link SBIS3.CONTROLS.FilterButton}:
-        * @class SBIS3.CONTROLS.FilterLink
-        * @extends SBIS3.CONTROLS.Link
+        * Используется на панели {@link SBIS3.CONTROLS/Filter/Button}:
+        * @class SBIS3.CONTROLS/Filter/Button/Link
+        * @extends SBIS3.CONTROLS/Link
         * @author Герасимов Александр Максимович
         * @control
         * @public
         */
 
-       var FilterLink = Link.extend(/** @lends SBIS3.CONTROLS.FilterLink.prototype */{
+       var FilterLink = Link.extend(/** @lends SBIS3.CONTROLS/Filter/Button/Link.prototype */{
           $protected: {
              _options: {
                 /**

@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.TextBoxUtils', ['Core/constants'], function(constants){
+define('SBIS3.CONTROLS/TextBox/resources/TextBoxUtils', ['Core/constants'], function(constants){
    return {
       getTextFromDropEvent: function(event) {
          return event.originalEvent.dataTransfer.getData('text');

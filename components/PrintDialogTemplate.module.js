@@ -1,12 +1,12 @@
-define('js!SBIS3.CONTROLS.PrintDialogTemplate',
+define('SBIS3.CONTROLS/PrintDialogTemplate',
    [
-      'js!SBIS3.CORE.CompoundControl',
-      'tmpl!SBIS3.CONTROLS.PrintDialogTemplate/PrintDialogTemplate/PrintDialogTemplate',
+      'Lib/Control/CompoundControl/CompoundControl',
+      'tmpl!SBIS3.CONTROLS/PrintDialogTemplate/PrintDialogTemplate',
       'Core/SessionStorage',
       'Core/constants',
       'Core/helpers/fast-control-helpers',
       'Core/CommandDispatcher',
-      'css!SBIS3.CONTROLS.PrintDialogTemplate/PrintDialogTemplate/PrintDialogTemplate'
+      'css!SBIS3.CONTROLS/PrintDialogTemplate/PrintDialogTemplate'
    ], function(CompoundControl, template, SessionStorage, constants, fcHelpers, CommandDispatcher) {
       "use strict";
 

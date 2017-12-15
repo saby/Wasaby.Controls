@@ -1,13 +1,13 @@
 /**
  * Created by ps.borisov on 08.10.2015.
  */
-define('js!SBIS3.CONTROLS.Utils.ImageUtil',['Core/Deferred', 'Core/constants'], function (Deferred, constants) {
+define('SBIS3.CONTROLS/Utils/ImageUtil',['Core/Deferred', 'Core/constants'], function (Deferred, constants) {
    'use strict';
    /**
-    * @class SBIS3.CONTROLS.Utils.ImageUtil
+    * @class SBIS3.CONTROLS/Utils/ImageUtil
     * @public
     */
-   var ImageUtil = /** @lends SBIS3.CONTROLS.Utils.ImageUtil.prototype */ {
+   var ImageUtil = /** @lends SBIS3.CONTROLS/Utils/ImageUtil.prototype */ {
        /**
         *
         * @param target

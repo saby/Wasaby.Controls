@@ -1,14 +1,14 @@
 /*global define*/
-define('js!SBIS3.CONTROLS.DateRangeBig', [
-   'js!SBIS3.CONTROLS.DateRange',
-   'js!SBIS3.CONTROLS.DateRangeBigChoose',
-   'css!SBIS3.CONTROLS.DateRangeBig/RangeBig/DateRangeBig'
+define('SBIS3.CONTROLS/Date/RangeBig', [
+   'SBIS3.CONTROLS/Date/Range',
+   'SBIS3.CONTROLS/Date/RangeBigChoose',
+   'css!SBIS3.CONTROLS/Date/RangeBig/DateRangeBig'
 ], function (DateRange, DateRangeBigChoose) {
    'use strict';
    /**
-    * SBIS3.CONTROLS.DateRangeBig
-    * @class SBIS3.CONTROLS.DateRangeBig
-    * @extends SBIS3.CONTROLS.DateRange
+    * SBIS3.CONTROLS/Date/RangeBig
+    * @class SBIS3.CONTROLS/Date/RangeBig
+    * @extends SBIS3.CONTROLS/Date/Range
     *
     * @author Миронов Александр Юрьевич
     *
@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.DateRangeBig', [
     *
     * @demo SBIS3.CONTROLS.Demo.MyDateRangeBig
     */
-   var DateRangeBig = DateRange.extend( /** @lends SBIS3.CONTROLS.DateRangeBig.prototype */{
+   var DateRangeBig = DateRange.extend( /** @lends SBIS3.CONTROLS/Date/RangeBig.prototype */{
       $protected: {
          _chooseControlClass: DateRangeBigChoose
       }

@@ -1,18 +1,18 @@
-define('js!SBIS3.CONTROLS.EditAtPlace',
-   ['js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.PickerMixin',
-      'js!SBIS3.CONTROLS.EditAtPlaceMixin',
-      'js!SBIS3.CONTROLS.FormWidgetMixin',
-      'js!SBIS3.CONTROLS.Utils.HtmlDecorators.DateFormatDecorator',
-      'tmpl!SBIS3.CONTROLS.EditAtPlace/EditAtPlace/EditAtPlace',
+define('SBIS3.CONTROLS/EditAtPlace',
+   ['Lib/Control/CompoundControl/CompoundControl',
+      'SBIS3.CONTROLS/Mixins/PickerMixin',
+      'SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
+      'SBIS3.CONTROLS/Mixins/FormWidgetMixin',
+      'SBIS3.CONTROLS/Utils/HtmlDecorators/DateFormatDecorator',
+      'tmpl!SBIS3.CONTROLS/EditAtPlace/EditAtPlace',
       'Core/helpers/String/escapeHtml',
-      'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+      'SBIS3.CONTROLS/Utils/TemplateUtil',
       'Core/constants',
-      'js!SBIS3.CONTROLS.ControlHierarchyManager',
+      'SBIS3.CONTROLS/ControlHierarchyManager',
       'Core/helpers/Object/isEmpty',
-      'js!SBIS3.CONTROLS.TextBox',
-      'i18n!SBIS3.CONTROLS.EditAtPlace',
-      'css!SBIS3.CONTROLS.EditAtPlace/EditAtPlace/EditAtPlace'
+      'SBIS3.CONTROLS/TextBox',
+      'i18n!SBIS3.CONTROLS/EditAtPlace',
+      'css!SBIS3.CONTROLS/EditAtPlace/EditAtPlace'
    ],
    function (CompoundControl, PickerMixin, EditAtPlaceMixin, FormWidgetMixin, DateFormatDecorator, dotTplFn, escapeHtml, TemplateUtil, constants, ControlHierarchyManager, objectIsEmpty) {
       'use strict';
@@ -51,20 +51,20 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       }
 
       /**
-       * @class SBIS3.CONTROLS.EditAtPlace
-       * @extends SBIS3.CORE.CompoundControl
+       * @class SBIS3.CONTROLS/EditAtPlace
+       * @extends Lib/Control/CompoundControl/CompoundControl
        * @control
        * @public
        * @category Input
        *
-       * @mixes SBIS3.CONTROLS.PickerMixin
-       * @mixes SBIS3.CONTROLS.EditAtPlaceMixin
-       * @mixes SBIS3.CONTROLS.FormWidgetMixin
+       * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
+       * @mixes SBIS3.CONTROLS/Mixins/EditAtPlaceMixin
+       * @mixes SBIS3.CONTROLS/Mixins/FormWidgetMixin
        *
        * @author Герасимов Александр Максимович
        * @cssModifier controls-EditAtPlace__ellipsis Текстовое поле обрезается троеточием, если не умещается в контейнере
        */
-      var EditAtPlace = CompoundControl.extend([PickerMixin, EditAtPlaceMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.EditAtPlace.prototype */{
+      var EditAtPlace = CompoundControl.extend([PickerMixin, EditAtPlaceMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS/EditAtPlace.prototype */{
          /**
           * @event onApply Срабатывает при успешном завершении редактирования
           * @param {Core/EventObject} eventObject Дескриптор события.
@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                /**
                 * @cfg {Content} Устанавливает компонент, который будет использован для редактирования текста.т
                 */
-               editorTpl: '<component data-component="SBIS3.CONTROLS.TextBox"></component>',
+               editorTpl: '<component data-component="SBIS3.CONTROLS/TextBox"></component>',
                /**
                 * @cfg {String|Function} Шаблон отрисовываемого текста
                 */
@@ -150,7 +150,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                self._requireDialog = text != self._oldText;
             });
 
-            if ($(this._options.editorTpl).attr('data-component') == 'SBIS3.CONTROLS.TextArea'){
+            if ($(this._options.editorTpl).attr('data-component') == 'SBIS3.CONTROLS/TextArea'){
                $(this._container.children()[0]).addClass('controls-EditAtPlace__textAreaWrapper');
             }
          },

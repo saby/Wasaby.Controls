@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
+define('SBIS3.CONTROLS/ControlHierarchyManager', [], function () {
 
    return {
       zIndexManager: {

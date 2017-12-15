@@ -1,16 +1,16 @@
-define('js!SBIS3.CONTROLS.CompositeView', [
-   'js!SBIS3.CONTROLS.DataGridView',
-   'js!SBIS3.CONTROLS.CompositeViewMixin',
-   'css!SBIS3.CONTROLS.CompositeView/CompositeView/CompositeView',
-   'css!SBIS3.CONTROLS.ListView/ListView/resources/ItemActionsGroup/ItemActionsGroup'], function(DataGridView, CompositeViewMixin) {
+define('SBIS3.CONTROLS/CompositeView', [
+   'SBIS3.CONTROLS/DataGridView',
+   'SBIS3.CONTROLS/Mixins/CompositeViewMixin',
+   'css!SBIS3.CONTROLS/CompositeView/CompositeView',
+   'css!SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup'], function(DataGridView, CompositeViewMixin) {
    'use strict';
 
       /**
        * Контрол, отображающий набор данных в виде таблицы, плитки или списка. Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/">Настройка списков</a>.
        *
-       * @class SBIS3.CONTROLS.CompositeView
-       * @extends SBIS3.CONTROLS.DataGridView
-       * @mixes SBIS3.CONTROLS.CompositeViewMixin
+       * @class SBIS3.CONTROLS/CompositeView
+       * @extends SBIS3.CONTROLS/DataGridView
+       * @mixes SBIS3.CONTROLS/Mixins/CompositeViewMixin
        * @author Сухоручкин Андрей Сергеевич
        *
        * @demo SBIS3.CONTROLS.Demo.MyCompositeView
@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.CompositeView', [
        * @public
        * @category Lists
        * @initial
-       * <component data-component='SBIS3.CONTROLS.CompositeView'>
+       * <component data-component='SBIS3.CONTROLS/CompositeView'>
        *    <options name="columns" type="array">
        *       <options>
        *          <option name="title">Поле 1</option>
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.CompositeView', [
        * </component>
        */   
       
-   var CompositeView = DataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.CompositeView.prototype*/ {
+   var CompositeView = DataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS/CompositeView.prototype*/ {
 
       $protected: {
 

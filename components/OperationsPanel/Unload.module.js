@@ -1,27 +1,27 @@
 /**
  * Created by ad.chistyakova on 08.04.2015.
  */
-define('js!SBIS3.CONTROLS.OperationUnload', [
+define('SBIS3.CONTROLS/OperationsPanel/Unload', [
    "Core/core-instance",
    'Core/Deferred',
    'Core/deprecated',
-   "js!SBIS3.CONTROLS.PrintUnloadBase",
-   "js!SBIS3.CONTROLS.Utils.DataProcessor",
+   "SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase",
+   "SBIS3.CONTROLS/Utils/DataProcessor",
    "WS.Data/Entity/Record",
    "WS.Data/Adapter/Sbis",
-   "i18n!SBIS3.CONTROLS.OperationUnload"
+   "i18n!SBIS3.CONTROLS/OperationsPanel/Unload"
 ], function(cInstance, Deferred, Deprecated, PrintUnloadBase, Exporter, Record, SbisAdapter) {
    //TODO Идея! нужно просто вызвать у view.export, он в свою очередь поднимает событие onUnload, а событие подхыватит выгрузчик. тогда в кнопке вообще только визуализация будет
 
    /**
     * Контрол для экспорта в Excel, PDF  подготовленных данных
-    * @class SBIS3.CONTROLS.OperationUnload
-    * @extends SBIS3.CONTROLS.PrintUnloadBase
+    * @class SBIS3.CONTROLS/OperationsPanel/Unload
+    * @extends SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase
     * @author Сухоручкин Андрей Сергеевич
     * @control
     * @public
     */
-   var OperationUnload = PrintUnloadBase.extend(/** @lends SBIS3.CONTROLS.OperationUnload.prototype */{
+   var OperationUnload = PrintUnloadBase.extend(/** @lends SBIS3.CONTROLS/OperationsPanel/Unload.prototype */{
       /**
        * <pre>
        *
@@ -225,7 +225,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                   filter: view.getFilter(),
                   offset: view._offset
                };
-            if (cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin')) {
+            if (cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS/Mixins/TreeMixin')) {
                cfg.hierField = view.getParentProperty();
                cfg.openedPath = view.getOpenedPath();
                cfg.root = view.getCurrentRoot();

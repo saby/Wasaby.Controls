@@ -1,6 +1,6 @@
-/* На основе SBIS3.CORE.SwitchableArea */
-define('js!SBIS3.CONTROLS.SwitchableArea', [
-   'js!SBIS3.CORE.SwitchableArea',
+/* На основе Deprecated/Controls/SwitchableArea/SwitchableArea */
+define('SBIS3.CONTROLS/SwitchableArea', [
+   'Deprecated/Controls/SwitchableArea/SwitchableArea',
    'Core/core-instance'], function (CoreSwitchableArea, cInstance) {
 
    'use strict';
@@ -9,13 +9,13 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
     * Контрол, содержащий несколько областей содержащих контент.
     * В каждый момент времени отображается только одна область.
     * Отображаемая область может переключаться при помощи команд.
-    * @class SBIS3.CONTROLS.SwitchableArea
-    * @extends SBIS3.CORE.SwitchableArea
+    * @class SBIS3.CONTROLS/SwitchableArea
+    * @extends Deprecated/Controls/SwitchableArea/SwitchableArea
     * @author Красильников Андрей Сергеевич
     * @public
     */
 
-   var SwitchableAreaOld = CoreSwitchableArea.extend(/** @lends SBIS3.CONTROLS.SwitchableArea.prototype */ {
+   var SwitchableAreaOld = CoreSwitchableArea.extend(/** @lends SBIS3.CONTROLS/SwitchableArea.prototype */ {
       /**
        * Устанавливает новый набор переключаемых областей.
        * @param {Array.<Object>} items Набор новых областей. Свойства объекта:

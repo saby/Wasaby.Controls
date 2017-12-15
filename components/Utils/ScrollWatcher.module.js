@@ -1,19 +1,19 @@
 /**
  * Created by ad.chistyakova on 12.11.2015.
  */
-define('js!SBIS3.CONTROLS.ScrollWatcher', [
+define('SBIS3.CONTROLS/Utils/ScrollWatcher', [
    "Core/Abstract",
-   "js!SBIS3.CORE.LayoutManager"
+   "Lib/LayoutManager/LayoutManager"
 ], function( cAbstract, LayoutManager) {
    'use strict';
 
    /**
-    * @class SBIS3.CONTROLS.ScrollWatcher
+    * @class SBIS3.CONTROLS/Utils/ScrollWatcher
     * @extends SBIS3.CORE.Abstract
     * @author Крайнов Дмитрий Олегович
     * @public
     */
-   var ScrollWatcher = cAbstract.extend(/** @lends SBIS3.CONTROLS.ScrollWatcher.prototype */{
+   var ScrollWatcher = cAbstract.extend(/** @lends SBIS3.CONTROLS/Utils/ScrollWatcher.prototype */{
       /**
        * @event onScroll Событие проиходит, когда срабатывает проверка на скроллею Например, когда достигли низа страницы
        * @remark

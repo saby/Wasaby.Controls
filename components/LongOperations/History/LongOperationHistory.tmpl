@@ -1,11 +1,11 @@
 <div class="controls-LongOperations controls-LongOperationHistory">
-   <ws:SBIS3.CONTROLS.Browser
+   <SBIS3.CONTROLS:Browser
       name="brows"
       className="controls-Browser__view"
       >
       <ws:content>
          <ws:if data="{{resultHandler}}">
-         <ws:SBIS3.CONTROLS.Link
+         <SBIS3.CONTROLS:Link
             name="resultButton"
             className="controls-LongOperationsHistory__resultButton"
             >
@@ -17,12 +17,12 @@
                     {[Частичный результат]}
                 </ws:else>
             </ws:caption>
-         </ws:SBIS3.CONTROLS.Link>
+         </SBIS3.CONTROLS:Link>
          </ws:if>
          <div class="controls-Browser__table">
             <div class="controls-Browser__tableRow">
                <div class="controls-Browser__tableCell-fastDataFilter">
-                  <ws:SBIS3.CONTROLS.FastDataFilter
+                  <SBIS3.CONTROLS:Filter:FastData
                      name="browserFastDataFilter"
                      className="controls-Browser__fastDataFilter"
                      >
@@ -35,12 +35,12 @@
                            />
                         </ws:Array>
                      </ws:filterStructure>
-                  </ws:SBIS3.CONTROLS.FastDataFilter>
+                  </SBIS3.CONTROLS:Filter:FastData>
                </div>
             </div>
          </div>
          <div class="controls-Browser__view">
-            <ws:SBIS3.CONTROLS.DataGridView
+            <SBIS3.CONTROLS:DataGridView
                idProperty="id"
                name="browserView"
                pageSize="2000"
@@ -56,12 +56,12 @@
                   <ws:Array>
                      <ws:Object
                         title="{[Дата]}"
-                        cellTemplate="tmpl!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryDateTemplate"
+                        cellTemplate="tmpl!SBIS3.CONTROLS/LongOperations/resources/LongOperationHistoryDateTemplate"
                         width="60"
                      />
                      <ws:Object
                         title="{[Время]}"
-                        cellTemplate="tmpl!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryTimeTemplate"
+                        cellTemplate="tmpl!SBIS3.CONTROLS/LongOperations/resources/LongOperationHistoryTimeTemplate"
                         width="60"
                      />
                      <ws:Object
@@ -70,12 +70,12 @@
                      />
                      <ws:Object
                         title="{[Статус]}"
-                        cellTemplate="tmpl!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryStatusTemplate"
+                        cellTemplate="tmpl!SBIS3.CONTROLS/LongOperations/resources/LongOperationHistoryStatusTemplate"
                      />
                   </ws:Array>
                </ws:columns>
-            </ws:SBIS3.CONTROLS.DataGridView>
+            </SBIS3.CONTROLS:DataGridView>
          </div>
       </ws:content>
-   </ws:SBIS3.CONTROLS.Browser>
+   </SBIS3.CONTROLS:Browser>
 </div>

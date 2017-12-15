@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.FormController', [
+define('SBIS3.CONTROLS/FormController', [
    'Core/Context',
    'Core/core-clone',
    'Core/core-merge',
@@ -9,23 +9,23 @@ define('js!SBIS3.CONTROLS.FormController', [
    'Core/core-instance',
    'Core/helpers/Function/forAliveOnly',
    'Core/helpers/Hcontrol/doAutofocus',
-   'js!SBIS3.CORE.CompoundControl',
+   'Lib/Control/CompoundControl/CompoundControl',
    'Core/Indicator',
    'WS.Data/Entity/Record',
    'WS.Data/Source/SbisService',
-   'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
-   'js!SBIS3.CONTROLS.Utils.OpenDialog',
-   'js!SBIS3.CONTROLS.TitleManager',
-   'i18n!SBIS3.CONTROLS.FormController',
-   'css!SBIS3.CONTROLS.FormController/FormController/FormController'
+   'SBIS3.CONTROLS/Utils/InformationPopupManager',
+   'SBIS3.CONTROLS/Action/Utils/OpenDialogUtil',
+   'SBIS3.CONTROLS/TitleManager',
+   'i18n!SBIS3.CONTROLS/FormController',
+   'css!SBIS3.CONTROLS/FormController/FormController'
 ],
    function( cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC, cInstance, forAliveOnly, doAutofocus, CompoundControl, cIndicator, Record, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
    /**
     * Компонент, на основе которого создают диалог, данные которого инициализируются по записи.
     * В частном случае компонент применяется для создания <a href='/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/'>диалогов редактирования записи</a>.
     *
-    * @class SBIS3.CONTROLS.FormController
-    * @extends SBIS3.CORE.CompoundControl
+    * @class SBIS3.CONTROLS/FormController
+    * @extends Lib/Control/CompoundControl/CompoundControl
     * @public
     * @author Красильников Андрей Сергеевич
     *
@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.FormController', [
     */
    'use strict';
 
-   var FormController = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.FormController.prototype */ {
+   var FormController = CompoundControl.extend([], /** @lends SBIS3.CONTROLS/FormController.prototype */ {
       /**
        * @typedef {Object} dataSource
        * @property {WS.Data/Source/ISource/Binding/typedef[]} [Binding] Соответствие методов CRUD+ контракту.
@@ -454,7 +454,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        * Возвращает источник данных диалога редактирования.
        * @return {Object} Объект с конфигурацией источника данных.
        * @remark
-       * Также для диалога редактирования может быть по умолчанию установлен источник данных. Это происходит при его вызове через {@link SBIS3.CONTROLS.DialogActionBase}.
+       * Также для диалога редактирования может быть по умолчанию установлен источник данных. Это происходит при его вызове через {@link SBIS3.CONTROLS/Action/DialogActionBase}.
        * @example
        * В примере продемонстрирована задача изменения списочного метода источника данных
        * <pre>
@@ -847,7 +847,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
       },
       /**
-       * Оповещает экземпляр класса действия (см. {@link SBIS3.CONTROLS.Action.OpenEditDialog}) о произошедшем событии.
+       * Оповещает экземпляр класса действия (см. {@link SBIS3.CONTROLS/Action/List/OpenEditDialog}) о произошедшем событии.
        * @remark
        * Логика обработки такого события, которая по умолчанию предопределена классом SBIS3.CONTROLS.FormController, не будет выполнена.
        * Например,
@@ -916,7 +916,7 @@ define('js!SBIS3.CONTROLS.FormController', [
 
          //TODO в рамках совместимости
          if (Object.isEmpty(options.dataSource) && !options.source){
-            IoC.resolve('ILogger').error('SBIS3.CONTROLS.FormController', 'Необходимо задать опцию dataSource');
+            IoC.resolve('ILogger').error('SBIS3.CONTROLS/FormController', 'Необходимо задать опцию dataSource');
             return false;
          }
 

@@ -1,22 +1,22 @@
-define('js!SBIS3.CONTROLS.TreeMixinDS', [
+define('SBIS3.CONTROLS/Mixins/TreeMixinDS', [
    "Core/core-clone",
    "Core/core-merge",
    "Core/constants",
-   "js!SBIS3.CORE.Control",
-   "js!SBIS3.CONTROLS.BreadCrumbs",
-   "tmpl!SBIS3.CONTROLS.DataGridView/DataGridView/resources/DataGridViewGroupBy",
+   "Lib/Control/Control",
+   "SBIS3.CONTROLS/BreadCrumbs",
+   "tmpl!SBIS3.CONTROLS/DataGridView/resources/DataGridViewGroupBy",
    "WS.Data/Display/Tree",
    "WS.Data/Relation/Hierarchy",
    'Core/helpers/Function/forAliveOnly'
 ], function (coreClone, cMerge, constants,Control, BreadCrumbs, groupByTpl, TreeProjection, HierarchyRelation, forAliveOnly) {
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
-    * @mixin SBIS3.CONTROLS.TreeMixinDS
+    * @mixin SBIS3.CONTROLS/Mixins/TreeMixinDS
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var TreeMixinDS = /** @lends SBIS3.CONTROLS.TreeMixinDS.prototype */{
+   var TreeMixinDS = /** @lends SBIS3.CONTROLS/Mixins/TreeMixinDS.prototype */{
       /**
        * @event onSearchPathClick При клике по хлебным крошкам в режиме поиска.
        * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска

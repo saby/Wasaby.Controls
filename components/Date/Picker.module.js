@@ -2,23 +2,23 @@
  * TODO Компонент пока тестировался только в Chrome
  */
 define(
-   'js!SBIS3.CONTROLS.DatePicker',
+   'SBIS3.CONTROLS/Date/Picker',
    [
       'Core/EventBus',
-      'js!SBIS3.CONTROLS.DateBox',
-      'js!SBIS3.CONTROLS.PickerMixin',
-      'js!SBIS3.CONTROLS.DateRangeBigChoose',
-      'js!SBIS3.CONTROLS.TimePicker',
-      'tmpl!SBIS3.CONTROLS.DatePicker/Picker/DatePicker',
-      'tmpl!SBIS3.CONTROLS.DateBox/Box/DateBox',
-      'tmpl!SBIS3.CONTROLS.DatePicker/Picker/elementPickerContent',
-      'js!SBIS3.CONTROLS.Utils.IsChildControl',
+      'SBIS3.CONTROLS/Date/Box',
+      'SBIS3.CONTROLS/Mixins/PickerMixin',
+      'SBIS3.CONTROLS/Date/RangeBigChoose',
+      'SBIS3.CONTROLS/Date/TimePicker',
+      'tmpl!SBIS3.CONTROLS/Date/Picker/DatePicker',
+      'tmpl!SBIS3.CONTROLS/Date/Box/DateBox',
+      'tmpl!SBIS3.CONTROLS/Date/Picker/elementPickerContent',
+      'SBIS3.CONTROLS/Utils/IsChildControl',
       "Core/IoC",
-      'i18n!SBIS3.CONTROLS.DatePicker',
-      'js!SBIS3.CONTROLS.IconButton',
-      'css!SBIS3.CONTROLS.DatePicker/Picker/DatePicker',
-      'css!SBIS3.CONTROLS.FormattedTextBox/FormattedTextBox/FormattedTextBox',
-      'css!SBIS3.CONTROLS.DateBox/Box/DateBox'
+      'i18n!SBIS3.CONTROLS/Date/Picker',
+      'SBIS3.CONTROLS/Button/IconButton',
+      'css!SBIS3.CONTROLS/Date/Picker/DatePicker',
+      'css!SBIS3.CONTROLS/FormattedTextBox/FormattedTextBox',
+      'css!SBIS3.CONTROLS/Date/Box/DateBox'
    ],
    function (EventBus, DateBox, PickerMixin, DateRangeBigChoose, TimePicker, dotTplFn, dateBoxTpl, ElementPickerContent, isChildControl, IoC) {
 
@@ -38,10 +38,10 @@ define(
     * Если контролу в опцию {@link date} установлена несуществующая календарная дата, то в качестве значения будет установлен null.
     * Аналогичное поведение свойственно и при работе с контекстом: если опция date привязана к полю контекста, в котором хранится несуществующая календарная дата, то в значение контрола будет установлен null.
     *
-    * @class SBIS3.CONTROLS.DatePicker
-    * @extends SBIS3.CONTROLS.DateBox
+    * @class SBIS3.CONTROLS/Date/Picker
+    * @extends SBIS3.CONTROLS/Date/Box
     *
-    * @mixes SBIS3.CONTROLS.PickerMixin
+    * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
     *
     * @author Крайнов Дмитрий Олегович
     *
@@ -52,7 +52,7 @@ define(
     * @category Date/Time
     */
 
-   var DatePicker = DateBox.extend([PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
+   var DatePicker = DateBox.extend([PickerMixin], /** @lends SBIS3.CONTROLS/Date/Picker.prototype */{
       _dotTplFn: dotTplFn,
       /**
         * @event onDateChange Происходит при изменении даты.

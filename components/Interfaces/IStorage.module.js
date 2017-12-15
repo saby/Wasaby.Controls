@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 18.01.2017.
  */
-define('js!SBIS3.CONTROLS.IStorage', [], function() {
+define('SBIS3.CONTROLS/Interfaces/IStorage', [], function() {
 
    'use strict';
 
@@ -9,10 +9,10 @@ define('js!SBIS3.CONTROLS.IStorage', [], function() {
     * Интерфейс хранения данных в хранилище.
     * Позволяет добавлять, изменять или удалять сохраненные элементы данных.
     * @public
-    * @mixin SBIS3.CONTROLS.IStorage
+    * @mixin SBIS3.CONTROLS/Interfaces/IStorage
     * @author Герасимов Александр
     */
-   var IStorage =/** @lends SBIS3.CONTROLS.IStorage.prototype */ {
+   var IStorage =/** @lends SBIS3.CONTROLS/Interfaces/IStorage.prototype */ {
       /**
        * Строка, содержащая название ключа, по которому получается значение из хранилища.
        * @param key {String}

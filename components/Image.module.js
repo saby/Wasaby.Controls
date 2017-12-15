@@ -1,28 +1,28 @@
 /**
  * Created by ps.borisov on 30.09.2015.
  */
-define('js!SBIS3.CONTROLS.Image',
+define('SBIS3.CONTROLS/Image',
    [
-   'js!SBIS3.CONTROLS.Utils.ImageUtil',
+   'SBIS3.CONTROLS/Utils/ImageUtil',
    'Core/helpers/vital/processImagePath',
    "Core/Indicator",
    "Core/core-merge",
    "Core/CommandDispatcher",
    "Core/Deferred",
-   "js!SBIS3.CORE.CompoundControl",
+   "Lib/Control/CompoundControl/CompoundControl",
    "WS.Data/Source/SbisService",
-   "tmpl!SBIS3.CONTROLS.Image/Image/Image",
-   "js!SBIS3.CORE.FileLoader",
+   "tmpl!SBIS3.CONTROLS/Image/Image",
+   "Lib/Control/FileLoader/FileLoader",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/transport-helpers",
-   "js!SBIS3.CONTROLS.Utils.SourceUtil",
-   'js!SBIS3.CONTROLS.ControlHierarchyManager',
-   'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
+   "SBIS3.CONTROLS/Utils/SourceUtil",
+   'SBIS3.CONTROLS/ControlHierarchyManager',
+   'SBIS3.CONTROLS/Utils/InformationPopupManager',
    'Core/helpers/Function/debounce',
-   "js!SBIS3.CONTROLS.Link",
-   'js!SBIS3.CONTROLS.MenuLink',
-   "i18n!SBIS3.CONTROLS.Image",
-   'css!SBIS3.CONTROLS.Image/Image/Image'
+   "SBIS3.CONTROLS/Link",
+   'SBIS3.CONTROLS/Menu/MenuLink',
+   "i18n!SBIS3.CONTROLS/Image",
+   'css!SBIS3.CONTROLS/Image/Image'
 ], function(
    ImageUtil,
    processImagePath,
@@ -48,8 +48,8 @@ define('js!SBIS3.CONTROLS.Image',
          /**
           * Класс контрол "Изображение". Позволяет отображать и редактировать изображения, полученные из источника данных.
           * В качестве источника данных допускается использовать только {@link WS.Data/Source/SbisService}.
-          * @class SBIS3.CONTROLS.Image
-          * @extends SBIS3.CORE.CompoundControl
+          * @class SBIS3.CONTROLS/Image
+          * @extends Lib/Control/CompoundControl/CompoundControl
           * @author Борисов Пётр Сергеевич
           *
           * @ignoreOptions validators
@@ -60,10 +60,10 @@ define('js!SBIS3.CONTROLS.Image',
           * @control
           * @category Decorate
           * @initial
-          * <component data-component='SBIS3.CONTROLS.Image' style='width: 100px; height: 100px'>
+          * <component data-component='SBIS3.CONTROLS/Image' style='width: 100px; height: 100px'>
           * </component>
           */
-         Image = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Image.prototype */{
+         Image = CompoundControl.extend(/** @lends SBIS3.CONTROLS/Image.prototype */{
             /**
              * @event onBeginLoad Происходит перед началом загрузки изображения в компоненте.
              * @param {Core/EventObject} eventObject Дескриптор события.
@@ -237,7 +237,7 @@ define('js!SBIS3.CONTROLS.Image',
                    *     <option name="defaultImage">/resources/SBIS3.CONTROLS/components/Image/resources/default-image.png</option>
                    * </pre>
                    */
-                  defaultImage: processImagePath('js!SBIS3.CONTROLS.Image/resources/default-image.png'),
+                  defaultImage: processImagePath('SBIS3.CONTROLS/resources/default-image.png'),
                   /**
                    * @cfg {Object} Устанавливает связанный источник данных - {@link WS.Data/Source/SbisService}.
                    * @remark
@@ -281,7 +281,7 @@ define('js!SBIS3.CONTROLS.Image',
                    * @example
                    * Для изображение установлено, что из контекста из поля"record/@Товар" будет получено значение параметра Идо, который используется для метода получения избражения.
                    * <pre>
-                   *    <component data-component="SBIS3.CONTROLS.Image">
+                   *    <component data-component="SBIS3.CONTROLS/Image">
                    *       ...
                    *       <options name="filter">
                    *          <option name="ИдО" bind="record/@Товар" value=""/>
@@ -611,10 +611,10 @@ define('js!SBIS3.CONTROLS.Image',
                } else if (showCropResult) {
                    filter = showCropResult;
                }
-               require(['js!SBIS3.CORE.Dialog'], function(Dialog) {
+               require(['Lib/Control/Dialog/Dialog'], function(Dialog) {
                   new Dialog({
                      animatedWindows: false,
-                     template: 'js!SBIS3.CONTROLS.Image.EditDialog',
+                     template: 'SBIS3.CONTROLS/Image/resources/EditDialog/EditDialog',
                      opener: self,
                      visible: false,
                      minWidth: 390,
@@ -667,7 +667,7 @@ define('js!SBIS3.CONTROLS.Image',
                this._saveIndicatorState = state;
                if (state) {
                   if (!this._saveIndicator) {
-                     require(['js!SBIS3.CORE.LoadingIndicator'], function(LoadingIndicator) {
+                     require(['Deprecated/Controls/LoadingIndicator/LoadingIndicator'], function(LoadingIndicator) {
                         this._saveIndicator = new LoadingIndicator({
                            'message': rk('Сохранение'),
                            'name': 'ws-load-indicator'
@@ -931,7 +931,7 @@ define('js!SBIS3.CONTROLS.Image',
                   def = new Deferred(),
                   cont = $('<div class="controls-image__file-cam-loader"></div>');
                self.getContainer().append(cont);
-               require(['js!SBIS3.CORE.FileCamLoader'], function (FileCamLoader) {
+               require(['Lib/Control/FileCamLoader/FileCamLoader'], function (FileCamLoader) {
                   self._fileCamLoader = new FileCamLoader({
                      extensions: ['image'],
                      element: cont,

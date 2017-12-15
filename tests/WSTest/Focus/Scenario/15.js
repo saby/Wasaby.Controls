@@ -3,9 +3,9 @@
  */
 define('js!WSTest/Focus/Scenario/15', [
    'Core/constants',
-   'js!SBIS3.CONTROLS.TextBox',
+   'SBIS3.CONTROLS/TextBox',
    'js!WSTest/Focus/TestFocusHelpers',
-   'js!SBIS3.CORE.Window',
+   'Lib/Control/Window/Window',
    'js!WSTest/Focus/Case15Parent',
    'js!WSTest/Focus/Case15',
    'css!' + wsConfig.wsRoot + 'css/core.css',

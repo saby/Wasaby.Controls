@@ -2,19 +2,19 @@
  * TODO Компонент пока тестировался только в Chrome
  */
 define(
-   'js!SBIS3.CONTROLS.DateBox',
+   'SBIS3.CONTROLS/Date/Box',
    [
       'Core/IoC',
       'Core/constants',
-      'js!SBIS3.CONTROLS.FormattedTextBoxBase',
-      'js!SBIS3.CONTROLS.Utils.DateUtil',
-      'tmpl!SBIS3.CONTROLS.FormattedTextBox/FormattedTextBox/FormattedTextBox',
-      'js!SBIS3.CONTROLS.ControlsValidators',
+      'SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase',
+      'SBIS3.CONTROLS/Utils/DateUtil',
+      'tmpl!SBIS3.CONTROLS/FormattedTextBox/FormattedTextBox',
+      'SBIS3.CONTROLS/Utils/ControlsValidators',
       // Разобраться с общими стилями https://inside.tensor.ru/opendoc.html?guid=37032b47-6830-4b96-a4f3-727ea938bf58&des
-      'css!SBIS3.CONTROLS.TextBox/TextBox/TextBox',
-      'css!SBIS3.CONTROLS.FormattedTextBox/FormattedTextBox/FormattedTextBox',
-      'css!SBIS3.CONTROLS.DateBox/Box/DateBox'
-      // 'i18n!SBIS3.CONTROLS.DateBox'
+      'css!SBIS3.CONTROLS/TextBox/TextBox',
+      'css!SBIS3.CONTROLS/FormattedTextBox/FormattedTextBox',
+      'css!SBIS3.CONTROLS/Date/Box/DateBox'
+      // 'i18n!SBIS3.CONTROLS/Date/Box'
    ],
    function (IoC, constants, FormattedTextBoxBase, DateUtil, FormattedTextBoxTpl, ControlsValidators) {
 
@@ -31,8 +31,8 @@ define(
     * </ol>
     * Осуществить ввод информации можно только с клавиатуры.
     * Можно вводить только значения особого формата даты.
-    * @class SBIS3.CONTROLS.DateBox
-    * @extends SBIS3.CONTROLS.FormattedTextBoxBase
+    * @class SBIS3.CONTROLS/Date/Box
+    * @extends SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase
     *
     *
     * @control
@@ -40,7 +40,7 @@ define(
     * @public
     */
 
-   var DateBox = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS.DateBox.prototype */{
+   var DateBox = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS/Date/Box.prototype */{
       _dotTplFn: FormattedTextBoxTpl,
        /**
         * @event onDateChange Происходит при изменении даты.
@@ -335,7 +335,7 @@ define(
        * Производит установки даты.
        * @param {Date} date Новая дата.
        * @remark
-       * При использовании с контролом {@link SBIS3.CONTROLS.DatePicker} существует следующее поведение: если в методе устанавливают несуществующую календарную дату, то в качестве значения контрола будет установлен null.
+       * При использовании с контролом {@link SBIS3.CONTROLS/Date/Picker} существует следующее поведение: если в методе устанавливают несуществующую календарную дату, то в качестве значения контрола будет установлен null.
        * @example
        * <pre>
        *    //Зададим март 2016

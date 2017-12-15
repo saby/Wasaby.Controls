@@ -1,10 +1,10 @@
-define('js!SBIS3.CONTROLS.FontStyle', [
-   'js!SBIS3.CORE.CompoundControl',
-   'tmpl!SBIS3.CONTROLS.FontStyle',
-   'js!SBIS3.CONTROLS.IconButton',
+define('SBIS3.CONTROLS/StylesPanelNew/resources/FontStyle/FontStyle', [
+   'Lib/Control/CompoundControl/CompoundControl',
+   'tmpl!SBIS3.CONTROLS/StylesPanelNew/resources/FontStyle/FontStyle',
+   'SBIS3.CONTROLS/Button/IconButton',
    'js!WSControls/Buttons/ToggleButton',
-   'js!SBIS3.CONTROLS.ComboBox',
-   'css!SBIS3.CONTROLS.ToggleButton/ToggleButton/resources/ToggleButton__square'
+   'SBIS3.CONTROLS/ComboBox',
+   'css!SBIS3.CONTROLS/Button/ToggleButton/resources/ToggleButton__square'
 ], function(CompoundControl, dotTplFn) {
 
    'use strict';

@@ -1,18 +1,18 @@
 /**
  * Created by am.gerasimov on 01.02.2016.
  */
-define('js!SBIS3.CONTROLS.DateRangeBigChoose.Validators', [
+define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/Validators', [
    'Core/helpers/String/format',
-   'i18n!SBIS3.CONTROLS.DateRangeBigChoose'
+   'i18n!SBIS3.CONTROLS/Date/RangeBigChoose'
 ], function (format) {
    'use strict';
 
    /**
-    * SBIS3.CONTROLS.DateRangeBigChoose.Validators
-    * @class SBIS3.CONTROLS.DateRangeBigChoose.Validators
+    * SBIS3.CONTROLS/Date/RangeBigChoose/resources/Validators
+    * @class SBIS3.CONTROLS/Date/RangeBigChoose/resources/Validators
     * @author Миронов Александр Юрьевич
     */
-   return /** @lends SBIS3.CONTROLS.DateRangeBigChoose.Validators.prototype */{
+   return /** @lends SBIS3.CONTROLS/Date/RangeBigChoose/resources/Validators.prototype */{
       //TODO: Доработать и вынести в общие валидаторы
       compareExt: function (controlName, getterName, eType, currentValue) {
          var compareValue, errorString;

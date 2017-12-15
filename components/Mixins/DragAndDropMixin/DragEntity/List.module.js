@@ -1,16 +1,16 @@
 /*global define, $ws, $*/
-define('js!SBIS3.CONTROLS.DragEntity.List', [
+define('SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/List', [
    'WS.Data/Di',
    'WS.Data/Collection/List'
 ], function (Di, CollectionList) {
    'use strict';
    /**
     * Список строк, обладающий информацией о том как обработать перемещаемые записи.
-    * @class SBIS3.CONTROLS.DragEntity.List
+    * @class SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/List
     * @public
     */
-   var List = CollectionList.extend(/**@lends SBIS3.CONTROLS.DragEntity.List.prototype*/{
-      _moduleName: 'SBIS3.CONTROLS.DragEntity.List',
+   var List = CollectionList.extend(/**@lends SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/List.prototype*/{
+      _moduleName: 'SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/List',
       /**
        * @typedef {String} Operation
        * @variant move Перемещает запись: в новый список добавляет из старого удаляет.

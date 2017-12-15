@@ -1,20 +1,20 @@
 /**
- * Простая оболочка над SBIS3.CONTROLS.LongOperations.Manager для имплементации интерфейса WS.Data/Source/ISource
+ * Простая оболочка над SBIS3.CONTROLS/LongOperations/Manager для имплементации интерфейса WS.Data/Source/ISource
  *
  * @class SBIS3.CONTROLS.LongOperationsListDataSource
  * @implements WS.Data/Source/ISource
  * @public
  */
 
-define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
+define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
    [
       'Core/core-extend',
       'Core/Deferred',
       'WS.Data/Source/ISource',
       'WS.Data/Entity/ObservableMixin',
       'WS.Data/Source/DataSet',
-      'js!SBIS3.CONTROLS.LongOperations.Manager',
-      'js!SBIS3.CONTROLS.LongOperations.Entry',
+      'SBIS3.CONTROLS/LongOperations/Manager',
+      'SBIS3.CONTROLS/LongOperations/Entry',
       'Core/TimeInterval'
    ],
 
@@ -22,12 +22,12 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
       'use strict';
 
       /**
-       * Простая оболочка над SBIS3.CONTROLS.LongOperations.Manager для имплементации интерфейса WS.Data/Source/ISource
+       * Простая оболочка над SBIS3.CONTROLS/LongOperations/Manager для имплементации интерфейса WS.Data/Source/ISource
        * @public
        * @type {object}
        */
       var LongOperationsListDataSource = CoreExtend.extend({}, [ISource, ObservableMixin], /** @lends SBIS3.CONTROLS.LongOperationsListDataSource.prototype */{
-         _moduleName: 'SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
+         _moduleName: 'SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
 
          $constructor: function $LongOperationsListDataSource () {
             this._publish('onBeforeProviderCall');

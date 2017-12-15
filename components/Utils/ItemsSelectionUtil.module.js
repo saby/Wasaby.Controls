@@ -5,7 +5,7 @@
 /**
  * Утилита для работы компонентов с интерфейсами selectable / multiselectable и асинхронной загрузкой записей.
  */
-define('js!SBIS3.CONTROLS.Utils.ItemsSelection', ['Core/core-instance', 'Core/detection'], function(cInstance, detection) {
+define('SBIS3.CONTROLS/Utils/ItemsSelectionUtil', ['Core/core-instance', 'Core/detection'], function(cInstance, detection) {
    
    var delayedEvents = {
       onSelectedItemsChange: 'getSelectedItems'

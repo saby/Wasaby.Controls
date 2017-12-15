@@ -2,20 +2,20 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.ButtonGroupBase', [
-   'js!SBIS3.CORE.CompoundControl',
-   'js!SBIS3.CONTROLS.ItemsControlMixin',
-   'tmpl!SBIS3.CONTROLS.ButtonGroupBase/resources/ItemTemplate'
+define('SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase', [
+   'Lib/Control/CompoundControl/CompoundControl',
+   'SBIS3.CONTROLS/Mixins/ItemsControlMixin',
+   'tmpl!SBIS3.CONTROLS/Button/ButtonGroup/resources/ItemTemplate'
 ], function(CompoundControl, ItemsControlMixin, ItemTemplate) {
 
    'use strict';
 
    /**
     * Класс, реализующий поведение выбора одного из нескольких значений при помощи набора радиокнопок. Отображения не имеет.
-    * @class SBIS3.CONTROLS.ButtonGroupBase
-    * @extends SBIS3.CORE.CompoundControl
+    * @class SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase
+    * @extends Lib/Control/CompoundControl/CompoundControl
     *
-    * @mixes SBIS3.CONTROLS.ItemsControlMixin
+    * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
     *
     * @ignoreEvents onAfterLoad onChange onStateChange
     * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', [
     * @author Крайнов Дмитрий Олегович
     */
 
-   var ButtonGroupBase = CompoundControl.extend([ItemsControlMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBase.prototype */ {
+   var ButtonGroupBase = CompoundControl.extend([ItemsControlMixin], /** @lends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase.prototype */ {
       $protected: {
          _options: {
             _defaultItemTemplate: ItemTemplate

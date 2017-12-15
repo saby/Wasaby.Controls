@@ -2,20 +2,20 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.ToolbarOnline', ['js!SBIS3.CONTROLS.ToolbarBase'], function(ToolbarBase) {
+define('SBIS3.CONTROLS/Toolbar/Online', ['SBIS3.CONTROLS/Toolbar/ToolbarBase'], function(ToolbarBase) {
 
    'use strict';
 
    /**
     * Контрол, отображающий тулбар для макетов online.sbis.ru.
     * Например, некоторые кнопки могут дублироваться в выпадающем списке.
-    * @class SBIS3.CONTROLS.ToolbarOnline
-    * @extends SBIS3.CONTROLS.ToolbarBase
+    * @class SBIS3.CONTROLS/Toolbar/Online
+    * @extends SBIS3.CONTROLS/Toolbar/ToolbarBase
     * @author Крайнов Дмитрий Олегович
     * @public
     */
 
-   var ToolbarOnline = ToolbarBase.extend( /** @lends SBIS3.CONTROLS.ToolbarOnline.prototype */ {
+   var ToolbarOnline = ToolbarBase.extend( /** @lends SBIS3.CONTROLS/Toolbar/Online.prototype */ {
       $protected: {
          _options: {
             /**

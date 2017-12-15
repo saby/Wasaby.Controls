@@ -1,11 +1,11 @@
 /**
  * Created by gersa_000 on 30.10.2016.
  */
-define('js!SBIS3.CONTROLS.SBISClientsGlobalConfigStorage',
+define('SBIS3.CONTROLS/Storages/SBIS/SBISClientsGlobalConfigStorage',
    [
-      'js!SBIS3.CONTROLS.SBISStorageAdapter',
+      'SBIS3.CONTROLS/Storages/SBIS/SBISStorageAdapter',
       'Core/ClientsGlobalConfig',
-      'js!SBIS3.CONTROLS.IStorage'
+      'SBIS3.CONTROLS/Interfaces/IStorage'
    ],
 
    function(SBISStorageAdapter, ClientsGlobalConfig) {
@@ -18,8 +18,8 @@ define('js!SBIS3.CONTROLS.SBISClientsGlobalConfigStorage',
        * Все операции отражаются на глобальном контексте.
        *
        * @author Герасимов Александр
-       * @class SBIS3.CONTROLS.SBISClientsGlobalConfigStorage
-       * @mixes SBIS3.CONTROLS.IStorage
+       * @class SBIS3.CONTROLS/Storages/SBIS/SBISClientsGlobalConfigStorage
+       * @mixes SBIS3.CONTROLS/Interfaces/IStorage
        * @public
        */
 

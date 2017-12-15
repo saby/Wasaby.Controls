@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLS.TabControl', [
-   'js!SBIS3.CORE.CompoundControl',
-   'tmpl!SBIS3.CONTROLS.TabControl/Control/TabControl',
-   'js!SBIS3.CORE.HasItemsMixin',
+define('SBIS3.CONTROLS/Tab/Control', [
+   'Lib/Control/CompoundControl/CompoundControl',
+   'tmpl!SBIS3.CONTROLS/Tab/Control/TabControl',
+   'Lib/Mixins/HasItemsMixin',
    "Core/IoC",
-   'js!SBIS3.CONTROLS.SwitchableArea',
-   'js!SBIS3.CONTROLS.TabButtons/Buttons/TabButtons',
-   'css!SBIS3.CONTROLS.TabControl/Control/TabControl'
+   'SBIS3.CONTROLS/SwitchableArea',
+   'SBIS3.CONTROLS/Tab/Buttons/TabButtons',
+   'css!SBIS3.CONTROLS/Tab/Control/TabControl'
 ], function(CompoundControl, dotTplFn, HasItemsMixin, IoC) {
 
    'use strict';
@@ -15,10 +15,10 @@ define('js!SBIS3.CONTROLS.TabControl', [
     * В каждый момент времени отображается только одна область.
     * Отображаемая область может переключаться при клике на корешок вкладки.
     * Стандарт описан <a href='http://axure.tensor.ru/standarts/v7/%D0%B2%D0%BA%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_05_.html'>здесь</a>.
-    * @class SBIS3.CONTROLS.TabControl
-    * @extends SBIS3.CORE.CompoundControl
+    * @class SBIS3.CONTROLS/Tab/Control
+    * @extends Lib/Control/CompoundControl/CompoundControl
     *
-    * @mixes SBIS3.CORE.HasItemsMixin
+    * @mixes Lib/Mixins/HasItemsMixin
     *
     * @control
     * @author Красильников Андрей Сергеевич
@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
     * @demo SBIS3.CONTROLS.Demo.MyTabControl
     */
 
-   var TabControl = CompoundControl.extend([HasItemsMixin], /** @lends SBIS3.CONTROLS.TabControl.prototype */ {
+   var TabControl = CompoundControl.extend([HasItemsMixin], /** @lends SBIS3.CONTROLS/Tab/Control.prototype */ {
       /**
        * @event onSelectedItemChange Происходит при измении выбранной вкладки.
        * @param {String|Number} id Идентификатор выбранной вкладки (см. {@link selectedKey}).
@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
              * @cfg {String} Устанавливает идентификатор вкладки, выбранной по умолчанию.
              * @remark
              * Обязательная для установки опция.
-             * @see SBIS3.CONTROLS.DSMixin#idProperty
+             * @see SBIS3.CONTROLS/Mixins/DSMixin#idProperty
              */
             selectedKey: null,
             /**
@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
              * @example
              * <pre>
              *     <option name="tabSpaceTemplate">
-             *        <component data-component="SBIS3.CONTROLS.Button" name="Button 1">
+             *        <component data-component="SBIS3.CONTROLS/Button" name="Button 1">
              *           <option name="caption">Кнопка между вкладками</option>
              *        </component>
              *     </option>
@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
             observeVisibleProperty: false, //опция tabButtons
             /**
              * Опция SwitchableArea - устанавливает произвольный шаблон переключаемой области
-             * Если не задана, используется стандартный SBIS3.CORE.SwitchableArea/SwitchableArea_area
+             * Если не задана, используется стандартный Deprecated/Controls/SwitchableArea/SwitchableArea_area
              */
             switchableAreaTemplate: undefined
          }

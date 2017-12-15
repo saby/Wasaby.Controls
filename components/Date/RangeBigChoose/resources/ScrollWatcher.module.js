@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DateRangeBigChoose.ScrollWatcher', ['js!SBIS3.CONTROLS.ScrollWatcher'], function(_ScrollWatcher) {
+define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/ScrollWatcher', ['SBIS3.CONTROLS/Utils/ScrollWatcher'], function(_ScrollWatcher) {
    'use strict';
    /**
     * На данный момент не используется, делалось для анимирования бесконечной прокрутки вверх и вниз.

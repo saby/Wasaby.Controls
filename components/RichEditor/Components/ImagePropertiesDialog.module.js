@@ -1,10 +1,10 @@
-define('js!SBIS3.CONTROLS.RichEditor.ImagePropertiesDialog', [
-   'js!SBIS3.CORE.CompoundControl',
-   'tmpl!SBIS3.CONTROLS.RichEditor.ImagePropertiesDialog/ImagePropertiesDialog/ImagePropertiesDialog',
-   'js!SBIS3.CORE.Button',
-   'js!SBIS3.CORE.FieldInteger',
-   'js!SBIS3.CORE.FieldDropdown',
-   'js!SBIS3.CORE.FieldLabel'
+define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
+   'Lib/Control/CompoundControl/CompoundControl',
+   'tmpl!SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog/ImagePropertiesDialog',
+   'Deprecated/Controls/Button/Button',
+   'Deprecated/Controls/FieldInteger/FieldInteger',
+   'Deprecated/Controls/FieldDropdown/FieldDropdown',
+   'Deprecated/Controls/FieldLabel/FieldLabel'
 ], function(CompoundControl, dotTplFn) {
 
 

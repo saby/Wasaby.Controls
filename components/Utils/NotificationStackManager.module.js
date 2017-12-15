@@ -1,13 +1,13 @@
-define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
+define('SBIS3.CONTROLS/Utils/NotificationStackManager',
    [
    "Core/WindowManager",
    "Core/EventBus",
-   "js!SBIS3.CORE.Control"
+   "Lib/Control/Control"
 ],
 
    /**
     * Синглтон для работы со стеком нотификационных окон.
-    * @class SBIS3.CONTROLS.Utils.NotificationStackManager
+    * @class SBIS3.CONTROLS/Utils/NotificationStackManager
     * @author Степин П.В.
     */
    function( cWindowManager, EventBus, Control){
@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
       //Время через которое блоки скрываются
       var LIFE_TIME = 5000;
 
-      var NotificationStackManager = Control.Control.extend( /** @lends SBIS3.CONTROLS.Utils.NotificationStackManager.prototype */ {
+      var NotificationStackManager = Control.Control.extend( /** @lends SBIS3.CONTROLS/Utils/NotificationStackManager.prototype */ {
          $protected: {
             _items: [],
             _hiddenItems: [],

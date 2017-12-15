@@ -1,2 +1,2 @@
 // ВРЕМЕННО, для обратной совместимости
-define('js!SBIS3.CONTROLS.ILongOperationsHistoricalProducer', ['js!SBIS3.CONTROLS.LongOperations.IHistoricalProducer'], function (arg) { return arg; });
+define('SBIS3.CONTROLS/LongOperations/IHistoricalProducer/ILongOperationsHistoricalProducer', ['SBIS3.CONTROLS/LongOperations/IHistoricalProducer'], function (arg) { return arg; });

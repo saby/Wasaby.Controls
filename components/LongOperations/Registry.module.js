@@ -1,18 +1,18 @@
-define('js!SBIS3.CONTROLS.LongOperationsRegistry',
+define('SBIS3.CONTROLS/LongOperations/Registry',
    [
-      'js!SBIS3.CORE.CompoundControl',
+      'Lib/Control/CompoundControl/CompoundControl',
       'Core/RightsManager',
-      'tmpl!SBIS3.CONTROLS.LongOperationsRegistry/Registry/resources/groupTpl',
-      'tmpl!SBIS3.CONTROLS.LongOperationsRegistry/Registry/resources/emptyHTMLTpl',
-      'tmpl!SBIS3.CONTROLS.LongOperationsRegistry/Registry/LongOperationsRegistry',
-      'css!SBIS3.CONTROLS.LongOperationsRegistry/Registry/LongOperationsRegistry',
-      'js!SBIS3.CONTROLS.Action.OpenEditDialog',
-      'js!SBIS3.CONTROLS.Browser',
-      'js!SBIS3.CONTROLS.SearchForm',
-      'js!SBIS3.CONTROLS.FilterButton',
-      'js!SBIS3.CONTROLS.FastDataFilter',
-      'js!SBIS3.CONTROLS.LongOperationsList',
-      'js!SBIS3.CONTROLS.LongOperationsFilter'
+      'tmpl!SBIS3.CONTROLS/LongOperations/Registry/resources/groupTpl',
+      'tmpl!SBIS3.CONTROLS/LongOperations/Registry/resources/emptyHTMLTpl',
+      'tmpl!SBIS3.CONTROLS/LongOperations/Registry/LongOperationsRegistry',
+      'css!SBIS3.CONTROLS/LongOperations/Registry/LongOperationsRegistry',
+      'SBIS3.CONTROLS/Action/List/OpenEditDialog',
+      'SBIS3.CONTROLS/Browser',
+      'SBIS3.CONTROLS/SearchForm',
+      'SBIS3.CONTROLS/Filter/Button',
+      'SBIS3.CONTROLS/Filter/FastData',
+      'SBIS3.CONTROLS/LongOperations/List',
+      'SBIS3.CONTROLS/LongOperations/Registry/resources/LongOperationsFilter'
    ],
 
    function (CompoundControl, RightsManager, groupTpl, emptyHTMLTpl, dotTplFn) {
@@ -29,13 +29,13 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
 
       /**
        * Класс для отображения реестра длительных операций
-       * @class SBIS3.CONTROLS.LongOperationsRegistry
-       * @extends SBIS3.CORE.CompoundControl
+       * @class SBIS3.CONTROLS/LongOperations/Registry
+       * @extends Lib/Control/CompoundControl/CompoundControl
        *
        * @author Спирин Виктор Алексеевич
        *
        */
-      var LongOperationsRegistry = CompoundControl.extend(/** @lends SBIS3.CONTROLS.LongOperationsRegistry.prototype */{
+      var LongOperationsRegistry = CompoundControl.extend(/** @lends SBIS3.CONTROLS/LongOperations/Registry.prototype */{
          _dotTplFn: dotTplFn,
 
          $protected: {

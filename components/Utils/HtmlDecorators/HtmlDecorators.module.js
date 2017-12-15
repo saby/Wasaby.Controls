@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
+define('SBIS3.CONTROLS/Utils/HtmlDecorators/HtmlDecorators', [
    "Core/core-extend",
    "WS.Data/Utils"
 ], function ( cExtend, Utils) {
@@ -11,11 +11,11 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
 
    /**
     * Декораторы для HTML - позволяют внедрять обёртки в разметку
-    * @class SBIS3.CONTROLS.Utils.HtmlDecorators
+    * @class SBIS3.CONTROLS/Utils/HtmlDecorators/HtmlDecorators
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var HtmlDecorators = cExtend({}, /** @lends SBIS3.CONTROLS.Utils.HtmlDecorators.prototype */{
+   var HtmlDecorators = cExtend({}, /** @lends SBIS3.CONTROLS/Utils/HtmlDecorators/HtmlDecorators.prototype */{
       $protected: {
          /**
           * @var {Object} Типы зон декорирования
@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
 
       /**
        * Добавляет декоратор
-       * @param {SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator} decorator Декоратор
+       * @param {SBIS3.CONTROLS/Utils/HtmlDecorators/AbstractDecorator} decorator Декоратор
        * @param {String} [area=''] Область декорирования
        * @param {String} [kind=HtmlDecorators.AREA_KIND_TEXT] Вид области декорирования
        */
@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
        * @deprecated Используйте {@link applyOnly}.
        */
       applyIf: function (value, condition, area) {
-         Utils.logger.stack('SBIS3.CONTROLS.Utils.HtmlDecorators Опция applyIf не поддерживается с 3.7.3.100, вместо нее используйте applyOnly', 1);
+         Utils.logger.stack('SBIS3.CONTROLS/Utils/HtmlDecorators/HtmlDecorators Опция applyIf не поддерживается с 3.7.3.100, вместо нее используйте applyOnly', 1);
          return this.applyOnly.apply(this, arguments);
       },
       /**

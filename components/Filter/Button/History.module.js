@@ -1,16 +1,16 @@
 /**
  * Created by am.gerasimov on 10.12.2015.
  */
-define('js!SBIS3.CONTROLS.FilterHistory',
+define('SBIS3.CONTROLS/Filter/Button/History',
     [
    "Core/CommandDispatcher",
-   "js!SBIS3.CORE.CompoundControl",
-   "tmpl!SBIS3.CONTROLS.FilterHistory/History/FilterHistory",
-   "tmpl!SBIS3.CONTROLS.FilterHistory/History/ItemContentTpl",
-   "js!SBIS3.CONTROLS.CommandsSeparator",
-   "js!SBIS3.CONTROLS.ListView",
-   'css!SBIS3.CONTROLS.CommandsSeparator/Commands/CommandsSeparator',
-   "i18n!SBIS3.CONTROLS.FilterButton"
+   "Lib/Control/CompoundControl/CompoundControl",
+   "tmpl!SBIS3.CONTROLS/Filter/Button/History/FilterHistory",
+   "tmpl!SBIS3.CONTROLS/Filter/Button/History/ItemContentTpl",
+   "SBIS3.CONTROLS/Commands/CommandsSeparator",
+   "SBIS3.CONTROLS/ListView",
+   'css!SBIS3.CONTROLS/Commands/Commands/CommandsSeparator',
+   "i18n!SBIS3.CONTROLS/Filter/Button"
 ],
     function( CommandDispatcher,CompoundControl, dotTpl) {
 
@@ -20,11 +20,11 @@ define('js!SBIS3.CONTROLS.FilterHistory',
 
    /**
     * Контрол, отображающий историю фильтров в кнопке фильтров
-    * @class SBIS3.CONTROLS.FilterHistory
-    * @extends SBIS3.CORE.CompoundControl
+    * @class SBIS3.CONTROLS/Filter/Button/History
+    * @extends Lib/Control/CompoundControl/CompoundControl
     */
 
-   var FilterHistory = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.FilterHistory.prototype*/ {
+   var FilterHistory = CompoundControl.extend([], /** @lends SBIS3.CONTROLS/Filter/Button/History.prototype*/ {
       _dotTplFn : dotTpl,
       $protected: {
          _options: {
@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
 
       /**
        * Устанавливает контроллер для работы с историей
-       * @param {SBIS3.CONTROLS.FilterHistoryController} controller
+       * @param {SBIS3.CONTROLS/Filter/HistoryController} controller
        */
       setHistoryController: function(controller) {
          this._historyController = controller;

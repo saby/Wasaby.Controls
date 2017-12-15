@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 10.04.2015.
  */
-define('js!SBIS3.CONTROLS.DropdownList',
+define('SBIS3.CONTROLS/DropdownList',
    [
    "Core/EventBus",
    "Core/IoC",
@@ -10,27 +10,27 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "Core/core-instance",
    "Core/helpers/String/format",
    'Core/helpers/Function/shallowClone',
-   "js!SBIS3.CORE.CompoundControl",
-   'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
-   "js!SBIS3.CONTROLS.PickerMixin",
-   "js!SBIS3.CONTROLS.ItemsControlMixin",
-   "js!SBIS3.CONTROLS.Utils.RecordSetUtil",
-   "js!SBIS3.CONTROLS.MultiSelectable",
-   "js!SBIS3.CONTROLS.DataBindMixin",
-   "js!SBIS3.CONTROLS.DropdownListMixin",
-   "js!SBIS3.CONTROLS.FormWidgetMixin",
-   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+   "Lib/Control/CompoundControl/CompoundControl",
+   'SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil',
+   "SBIS3.CONTROLS/Mixins/PickerMixin",
+   "SBIS3.CONTROLS/Mixins/ItemsControlMixin",
+   "SBIS3.CONTROLS/Utils/RecordSetUtil",
+   "SBIS3.CONTROLS/Mixins/MultiSelectable",
+   "SBIS3.CONTROLS/Mixins/DataBindMixin",
+   "SBIS3.CONTROLS/Mixins/DropdownListMixin",
+   "SBIS3.CONTROLS/Mixins/FormWidgetMixin",
+   "SBIS3.CONTROLS/Utils/TemplateUtil",
    "WS.Data/Collection/RecordSet",
    "WS.Data/Display/Display",
    "WS.Data/Collection/List",
-   "tmpl!SBIS3.CONTROLS.DropdownList/DropdownList/DropdownList",
-   "tmpl!SBIS3.CONTROLS.DropdownList/DropdownList/DropdownListHead",
-   "tmpl!SBIS3.CONTROLS.DropdownList/DropdownList/DropdownListPickerHead",
-   "tmpl!SBIS3.CONTROLS.DropdownList/DropdownList/DropdownListItem",
-   "tmpl!SBIS3.CONTROLS.DropdownList/DropdownList/DropdownListItemContent",
-   "tmpl!SBIS3.CONTROLS.DropdownList/DropdownList/DropdownListPicker",
-   "i18n!SBIS3.CONTROLS.DropdownList",
-   'css!SBIS3.CONTROLS.DropdownList/DropdownList/DropdownList'
+   "tmpl!SBIS3.CONTROLS/DropdownList/DropdownList",
+   "tmpl!SBIS3.CONTROLS/DropdownList/DropdownListHead",
+   "tmpl!SBIS3.CONTROLS/DropdownList/DropdownListPickerHead",
+   "tmpl!SBIS3.CONTROLS/DropdownList/DropdownListItem",
+   "tmpl!SBIS3.CONTROLS/DropdownList/DropdownListItemContent",
+   "tmpl!SBIS3.CONTROLS/DropdownList/DropdownListPicker",
+   "i18n!SBIS3.CONTROLS/DropdownList",
+   'css!SBIS3.CONTROLS/DropdownList/DropdownList'
 ],
 
    function (EventBus, IoC, constants, cMerge, cInstance, format, shallowClone, Control, ArraySimpleValuesUtil, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
@@ -47,24 +47,24 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * <br/>
        * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Type/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
        * <pre>
-       *    <component data-component="SBIS3.CONTROLS.DropdownList">
+       *    <component data-component="SBIS3.CONTROLS/DropdownList">
        *       <options name="items" type="array" bind="record/MyEnumField"></options>
        *       <option name="idProperty">@Идентификатор</option>
        *       <option name="displayProperty">Описание</option>
        *    </component>
        * </pre>
        *
-       * @class SBIS3.CONTROLS.DropdownList
-       * @extends SBIS3.CORE.CompoundControl
+       * @class SBIS3.CONTROLS/DropdownList
+       * @extends Lib/Control/CompoundControl/CompoundControl
        *
        * @author Красильников Андрей Сергеевич
        *
-       * @mixes SBIS3.CONTROLS.ItemsControlMixin
-       * @mixes SBIS3.CONTROLS.MultiSelectable
-       * @mixes SBIS3.CONTROLS.DropdownListMixin
-       * @mixes SBIS3.CONTROLS.PickerMixin
-       * @mixes SBIS3.CONTROLS.DataBindMixin
-       * @mixes SBIS3.CONTROLS.FormWidgetMixin
+       * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
+       * @mixes SBIS3.CONTROLS/Mixins/MultiSelectable
+       * @mixes SBIS3.CONTROLS/Mixins/DropdownListMixin
+       * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
+       * @mixes SBIS3.CONTROLS/Mixins/DataBindMixin
+       * @mixes SBIS3.CONTROLS/Mixins/FormWidgetMixin
        *
        * @demo SBIS3.CONTROLS.Demo.MyDropdownList Пример работы контрола
        *
@@ -155,7 +155,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          }
       }
 
-      var DropdownList = Control.extend([PickerMixin, ItemsControlMixin, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
+      var DropdownList = Control.extend([PickerMixin, ItemsControlMixin, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS/DropdownList.prototype */{
          _dotTplFn: dotTplFn,
          /**
           * @event onClickMore Происходит при клике на кнопку "Ещё", которая отображается в выпадающем списке.
@@ -916,7 +916,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _resizeFastDataFilter: function(){
             var parent = this.getParent();
-            if (cInstance.instanceOfModule(parent, 'SBIS3.CONTROLS.FastDataFilter')) {
+            if (cInstance.instanceOfModule(parent, 'SBIS3.CONTROLS/Filter/FastData')) {
                this._notifyOnSizeChanged();
                parent._recalcDropdownWidth();
             }
@@ -944,7 +944,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var self = this,
                textValues = [];
             if (!this.isEnabled() && (this.getSelectedKeys().length > 1 || this.getTooltip())) {
-               requirejs(['js!SBIS3.CORE.Infobox'], function(Infobox) {
+               requirejs(['Lib/Control/Infobox/Infobox'], function(Infobox) {
                   textValues = [];
                   if (self.getSelectedKeys().length > 1) {
                      self.getSelectedItems().each(function(item) {

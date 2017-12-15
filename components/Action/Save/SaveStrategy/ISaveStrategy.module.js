@@ -1,15 +1,15 @@
 /* global define */
-define('js!SBIS3.CONTROLS.ISaveStrategy', [], function () {
+define('SBIS3.CONTROLS/Action/Save/SaveStrategy/ISaveStrategy', [], function () {
     'use strict';
 
    /**
     * Интерфейс стратегии сохранения данных.
-    * @class SBIS3.CONTROLS.ISaveStrategy
+    * @class SBIS3.CONTROLS/Action/Save/SaveStrategy/ISaveStrategy
     * @public
     * @author Сухоручкин А.С.
     */
 
-    return /** @lends SBIS3.CONTROLS.ISaveStrategy.prototype */{
+    return /** @lends SBIS3.CONTROLS/Action/Save/SaveStrategy/ISaveStrategy.prototype */{
         /**
          * Метод сохранения данных.
          */

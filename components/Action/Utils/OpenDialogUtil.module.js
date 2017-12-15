@@ -4,7 +4,7 @@
 /**
  * Created by am.gerasimov on 15.02.2017.
  */
-define('js!SBIS3.CONTROLS.Utils.OpenDialog', ['Core/core-merge'], function (cMerge) {
+define('SBIS3.CONTROLS/Action/Utils/OpenDialogUtil', ['Core/core-merge'], function (cMerge) {
    'use strict';
 
    var OpenDialogUtil = {
@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.Utils.OpenDialog', ['Core/core-merge'], function (cMer
 
       errorProcess: function(err) {
          err.processed = true;
-         require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+         require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager){
             InformationPopupManager.showMessageDialog({
                message: err.message,
                status: 'error'

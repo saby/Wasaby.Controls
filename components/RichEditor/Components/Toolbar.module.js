@@ -2,19 +2,19 @@
  * Created by ps.borisov on 18.07.2016.
  */
 
-define('js!SBIS3.CONTROLS.RichEditorToolbar', [
+define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
    "Core/core-merge",
-   "js!SBIS3.CONTROLS.RichEditorToolbarBase",
-   "tmpl!SBIS3.CONTROLS.RichEditorToolbar/Toolbar/RichEditorToolbar",
-   "js!SBIS3.CONTROLS.RichEditorToolbar/Toolbar/resources/config",
-   'js!SBIS3.CONTROLS.RichEditor.ImagePanel',
+   "SBIS3.CONTROLS/RichEditor/Components/ToolbarBase",
+   "tmpl!SBIS3.CONTROLS/RichEditor/Components/Toolbar/RichEditorToolbar",
+   "SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config",
+   'SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel',
    "js!WSControls/Buttons/Button",
    "js!WSControls/Buttons/ToggleButton",
-   'js!SBIS3.CONTROLS.MenuButton',
-   'js!SBIS3.CONTROLS.ComboBox',
-   'css!SBIS3.CONTROLS.RichEditorToolbar/Toolbar/RichEditorToolbar',
-   'css!SBIS3.CONTROLS.ToggleButton/resources/ToggleButton__square',
-   'css!SBIS3.CONTROLS.MenuIcon/MenuIcon/MenuIcon'
+   'SBIS3.CONTROLS/Menu/MenuButton',
+   'SBIS3.CONTROLS/ComboBox',
+   'css!SBIS3.CONTROLS/RichEditor/Components/Toolbar/RichEditorToolbar',
+   'css!SBIS3.CONTROLS/Button/resources/ToggleButton__square',
+   'css!SBIS3.CONTROLS/Menu/MenuIcon/MenuIcon'
 ], function( cMerge, RichEditorToolbarBase, dotTplFn, defaultConfig, ImagePanel) {
 
    'use strict';
@@ -24,13 +24,13 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          toolbarHeight: 32
       },
       /**
-       * @class SBIS3.CONTROLS.RichEditorToolbar
-       * @extends SBIS3.CONTROLS.RichEditorToolbarBase
+       * @class SBIS3.CONTROLS/RichEditor/Components/Toolbar
+       * @extends SBIS3.CONTROLS/RichEditor/Components/ToolbarBase
        * @author Борисов П.С.
        * @public
        * @control
        */
-      RichEditorToolbar = RichEditorToolbarBase.extend(/** @lends SBIS3.CONTROLS.RichEditorToolbar.prototype */{
+      RichEditorToolbar = RichEditorToolbarBase.extend(/** @lends SBIS3.CONTROLS/RichEditor/Components/Toolbar.prototype */{
          _dotTplFn: dotTplFn,
          $protected : {
             _options : {
@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                 *    <li>history - история ввода;</li>
                 *    <li>codesample - вставка кода (ведутся работы);</li>
                 * </ol>
-                * Пользовательские кнопки задаются аналогично {@link SBIS3.CONTROLS.ItemsControlMixin#items}.
+                * Пользовательские кнопки задаются аналогично {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#items}.
                 * <ul>
                 *    <li>componentType - обязательный параметр, определяющий вид компонента</li>
                 *    <li>name - имя компонента, по которому можно получить элемент тулбара.</li>
@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                 *    <options name="items" type="array">
                 *       <options>
                 *          <option name="name">myButton</option>
-                *          <option name="componentType">SBIS3.CONTROLS.Button</option>
+                *          <option name="componentType">SBIS3.CONTROLS/Button</option>
                 *          <option name="icon" >sprite:icon-16 icon-Add icon-primary</option>
                 *          <options name="handlers">
                 *             <option name="onActivated" type="function">js!MyComponentName:prototype.myButtonClick</option>

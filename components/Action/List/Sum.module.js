@@ -1,9 +1,9 @@
 /*global define, $ws*/
-define('js!SBIS3.CONTROLS.Action.List.Sum', [
+define('SBIS3.CONTROLS/Action/List/Sum', [
    "Core/Deferred",
-   "js!SBIS3.CONTROLS.Action.Action",
-   "js!SBIS3.CONTROLS.Action.List.ListMixin",
-   "js!SBIS3.CONTROLS.Action.DialogMixin",
+   "SBIS3.CONTROLS/Action",
+   "SBIS3.CONTROLS/Action/List/Mixin/ListMixin",
+   "SBIS3.CONTROLS/Action/Mixin/DialogMixin",
    "WS.Data/Source/SbisService",
    "WS.Data/Entity/Model",
    "Core/core-merge",
@@ -15,13 +15,13 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
         'use strict';
         /**
          * Класс, описывающий действие суммирования полей в списке.
-         * @class SBIS3.CONTROLS.Action.List.Sum
+         * @class SBIS3.CONTROLS/Action/List/Sum
          * @public
-         * @extends SBIS3.CONTROLS.Action.Action
+         * @extends SBIS3.CONTROLS/Action
          * @author Сухоручкин Андрей Сергеевич
          *
-         * @mixes SBIS3.CONTROLS.Action.List.ListMixin
-         * @mixes SBIS3.CONTROLS.Action.DialogMixin
+         * @mixes SBIS3.CONTROLS/Action/List/Mixin/ListMixin
+         * @mixes SBIS3.CONTROLS/Action/Mixin/DialogMixin
          *
          * @demo SBIS3.CONTROLS.Demo.SumAction
          *
@@ -42,13 +42,13 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
          * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
          * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
          */
-        var Sum = ActionBase.extend([ListMixin, DialogMixin], /** @lends SBIS3.CONTROLS.Action.List.Sum.prototype */{
+        var Sum = ActionBase.extend([ListMixin, DialogMixin], /** @lends SBIS3.CONTROLS/Action/List/Sum.prototype */{
             $protected: {
                 _options: {
                     /**
                      * @cfg {String} Шаблон диалога сохранения .
                      */
-                    template : 'js!SBIS3.CONTROLS.SumDialogTemplate',
+                    template : 'SBIS3.CONTROLS/Action/List/resources/SumDialogTemplate',
                     /**
                      * @cfg {Object} Поля для суммирования
                      * @remark
@@ -161,7 +161,7 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
                     resultRecord = new Model({
                         adapter: 'adapter.sbis'
                     }),
-                    nodeProperty = cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin') ? linkedObject.getNodeProperty() : undefined;
+                    nodeProperty = cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS/Mixins/TreeMixin') ? linkedObject.getNodeProperty() : undefined;
                 for (i = 0; i < fields.length; i++) {
                     resultFields[fields[i]] = 0;
                 }

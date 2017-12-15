@@ -1,19 +1,19 @@
 /**
  * Created by as.suhoruchkin on 02.04.2015.
  */
-define('js!SBIS3.CONTROLS.OperationDelete', [
-   'js!SBIS3.CONTROLS.IconButton'
+define('SBIS3.CONTROLS/OperationsPanel/Delete', [
+   'SBIS3.CONTROLS/Button/IconButton'
 ], function(IconButton) {
    /**
     * Операция удаления.
     *
-    * SBIS3.CONTROLS.OperationDelete
-    * @class SBIS3.CONTROLS.OperationDelete
-    * @extends SBIS3.CONTROLS.IconButton
+    * SBIS3.CONTROLS/OperationsPanel/Delete
+    * @class SBIS3.CONTROLS/OperationsPanel/Delete
+    * @extends SBIS3.CONTROLS/Button/IconButton
     * @author Сухоручкин Андрей Сергеевич
     * @public
     */
-   var OperationDelete = IconButton.extend(/** @lends SBIS3.CONTROLS.OperationDelete.prototype */{
+   var OperationDelete = IconButton.extend(/** @lends SBIS3.CONTROLS/OperationsPanel/Delete.prototype */{
 
       $protected: {
          _options: {

@@ -1,28 +1,28 @@
-define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
-   'js!SBIS3.CORE.CompoundControl',
-   'tmpl!SBIS3.CONTROLS.DateRangeSliderBase/RangeSliderBase/DateRangeSliderBase',
-   'tmpl!SBIS3.CONTROLS.DateRangeSliderBase/RangeSliderBase/resources/LockIcon',
-   'js!SBIS3.CONTROLS.RangeMixin',
-   'js!SBIS3.CONTROLS.DateRangeMixin',
-   'js!SBIS3.CONTROLS.PickerMixin',
-   'js!SBIS3.CONTROLS.FormWidgetMixin',
+define('SBIS3.CONTROLS/Date/RangeSliderBase',[
+   'Lib/Control/CompoundControl/CompoundControl',
+   'tmpl!SBIS3.CONTROLS/Date/RangeSliderBase/DateRangeSliderBase',
+   'tmpl!SBIS3.CONTROLS/Date/RangeSliderBase/resources/LockIcon',
+   'SBIS3.CONTROLS/Mixins/RangeMixin',
+   'SBIS3.CONTROLS/Mixins/DateRangeMixin',
+   'SBIS3.CONTROLS/Mixins/PickerMixin',
+   'SBIS3.CONTROLS/Mixins/FormWidgetMixin',
    'Core/helpers/date-helpers',
-   'js!SBIS3.CONTROLS.Link',
-   'css!SBIS3.CONTROLS.DateRangeSliderBase/RangeSliderBase/DateRangeSliderBase'
+   'SBIS3.CONTROLS/Link',
+   'css!SBIS3.CONTROLS/Date/RangeSliderBase/DateRangeSliderBase'
 ], function (CompoundControl, dotTplFn, lockIconTemplate, RangeMixin, DateRangeMixin, PickerMixin, FormWidgetMixin, dateHelpers) {
    'use strict';
 
    /**
     * Базовый класс для контролов выглядящих как ссыслка с возможностью листать периоды в большую и меньшую сторону.
     *
-    * SBIS3.CONTROLS.DateRangeSliderBase
-    * @class SBIS3.CONTROLS.DateRangeSliderBase
-    * @extends SBIS3.CORE.CompoundControl
+    * SBIS3.CONTROLS/Date/RangeSliderBase
+    * @class SBIS3.CONTROLS/Date/RangeSliderBase
+    * @extends Lib/Control/CompoundControl/CompoundControl
     *
-    * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.RangeMixin
-    * @mixes SBIS3.CONTROLS.DateRangeMixin
-    * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
+    * @mixes SBIS3.CONTROLS/Mixins/RangeMixin
+    * @mixes SBIS3.CONTROLS/Mixins/DateRangeMixin
+    * @mixes SBIS3.CONTROLS/Mixins/FormWidgetMixin
     *
     * @author Миронов Александр Юрьевич
     *
@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
     * @public
     * @category Date/Time
     */
-   var DateRangeSlider = CompoundControl.extend([PickerMixin, RangeMixin, DateRangeMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateRangeSliderBase.prototype */{
+   var DateRangeSlider = CompoundControl.extend([PickerMixin, RangeMixin, DateRangeMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS/Date/RangeSliderBase.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

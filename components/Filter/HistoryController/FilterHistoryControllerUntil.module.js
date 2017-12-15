@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 19.10.2016.
  */
-define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
+define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
     [
        'Core/core-clone',
        'Core/helpers/Object/isEqual',

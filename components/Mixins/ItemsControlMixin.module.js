@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.ItemsControlMixin', [
+define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
    'Core/core-clone',
    "Core/Deferred",
    "Core/IoC",
@@ -9,20 +9,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "WS.Data/Collection/ObservableList",
    "WS.Data/Display/Display",
    "WS.Data/Collection/IBind",
-   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "tmpl!SBIS3.CONTROLS.ItemsControlMixin/ItemsControlMixin/resources/ItemsTemplate",
+   "SBIS3.CONTROLS/Utils/TemplateUtil",
+   "tmpl!SBIS3.CONTROLS/Mixins/ItemsControlMixin/resources/ItemsTemplate",
    "WS.Data/Utils",
    'Core/markup/ParserUtilities',
    "Core/Sanitize",
-   "js!SBIS3.CORE.LayoutManager",
+   "Lib/LayoutManager/LayoutManager",
    "Core/core-instance",
-   "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
+   "SBIS3.CONTROLS/Utils/InformationPopupManager",
    "Core/helpers/Function/forAliveOnly",
    'Core/helpers/String/escapeHtml',
-   "js!SBIS3.CONTROLS.Utils.SourceUtil",
+   "SBIS3.CONTROLS/Utils/SourceUtil",
    "Core/helpers/Object/isEmpty",
    "Core/helpers/Function/debounce",
-   "js!SBIS3.CORE.Control",
+   "Lib/Control/Control",
    "WS.Data/Display/Collection",
    "WS.Data/Display/Enum",
    "WS.Data/Display/Flags"
@@ -266,11 +266,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
     * 2. При успешном выполнении запроса: {@link onDataLoad} &#8594; {@link onItemsReady}.
     * 3. При ошибке выполнения запроса: {@link onDataLoadError}.
     *
-    * @mixin SBIS3.CONTROLS.ItemsControlMixin
+    * @mixin SBIS3.CONTROLS/Mixins/ItemsControlMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var ItemsControlMixin = /**@lends SBIS3.CONTROLS.ItemsControlMixin.prototype  */{
+   var ItemsControlMixin = /**@lends SBIS3.CONTROLS/Mixins/ItemsControlMixin.prototype  */{
        /**
         * @event onDrawItems Происходит после отрисовки всех элементов коллекции.
         * @param {Core/EventObject} eventObject Дескриптор события.
@@ -410,9 +410,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @see items
              * @see displayProperty
              * @see setDataSource
-             * @see SBIS3.CONTROLS.Selectable#selectedKey
-             * @see SBIS3.CONTROLS.Selectable#setSelectedKey
-             * @see SBIS3.CONTROLS.Selectable#getSelectedKey
+             * @see SBIS3.CONTROLS/Mixins/Selectable#selectedKey
+             * @see SBIS3.CONTROLS/Mixins/Selectable#setSelectedKey
+             * @see SBIS3.CONTROLS/Mixins/Selectable#getSelectedKey
              */
             idProperty : null,
             /**
@@ -423,9 +423,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             /**
              * @cfg {String} Имя поля, данные которого будут по умолчанию отображены в шаблоне элемента коллекции.
              * @remark
-             * Например, для списочного контрола {@link SBIS3.CONTROLS.ListView} по умолчанию предустановлен шаблон, по которому происходит построение каждой записи списка.
+             * Например, для списочного контрола {@link SBIS3.CONTROLS/ListView} по умолчанию предустановлен шаблон, по которому происходит построение каждой записи списка.
              * В этом шаблоне выводится содержимое того поля записи, которое установлено в опции **displayProperty**.
-             * Поэтому для списка класса SBIS3.CONTROLS.ListView использование опции актуально в тех случаях, когда применяется шаблон по умолчанию.
+             * Поэтому для списка класса SBIS3.CONTROLS/ListView использование опции актуально в тех случаях, когда применяется шаблон по умолчанию.
              * Для любых других контролов, в которые подмешан миксин SBIS3.CONTROLS.ItemControlMixin, опция displayProperty может быть использована по-другому.
              * @see setDisplayProperty
              */
@@ -686,7 +686,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @example
              * <pre>
              *    <div>
-             *       <component data-component="SBIS3.CONTROLS.Link">
+             *       <component data-component="SBIS3.CONTROLS/Link">
              *          <option name="caption">+ Документ</option>
              *       </component>
              *    </div>
@@ -1605,7 +1605,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /*TODO поддержка старого API*/
       getDataSet: function(compatibilityMode) {
          if(!compatibilityMode) {
-            Utils.logger.stack('SBIS3.CONTROLS.ItemsControlMixin Получение DataSet явялется устаревшим функционалом используйте getItems()', 1);
+            Utils.logger.stack('SBIS3.CONTROLS/Mixins/ItemsControlMixin Получение DataSet явялется устаревшим функционалом используйте getItems()', 1);
          }
          return this._options._items;
       },

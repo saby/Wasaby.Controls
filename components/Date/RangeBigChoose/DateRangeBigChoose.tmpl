@@ -1,6 +1,6 @@
 <div class="controls-DateRangeBigChoose controls-DateRangeBigChoose__noBorder">
    <ws:template name="DateBoxTpl">
-      <ws:SBIS3.CONTROLS.DateBox
+      <SBIS3.CONTROLS:Date:Box
          tabindex="2"
          mask="{{mask}}"
          name="DatePickerEnd"
@@ -20,7 +20,7 @@
       />
    </ws:template>
    <div class="controls-DateRangeBigChoose__header">
-      <ws:SBIS3.CONTROLS.IconButton
+      <SBIS3.CONTROLS:Button:IconButton
          tabindex="0"
          name="HomeButton"
          activableByClick="{{false}}"
@@ -29,7 +29,7 @@
          className="controls-IconButton__round-border controls-DateRangeBigChoose__homeBtn"
       />
       <div class="controls-DateRangeBigChoose__header-date-pickers">
-         <ws:SBIS3.CONTROLS.IconButton
+         <SBIS3.CONTROLS:Button:IconButton
             tabindex="0"
             name="ApplyButton"
             primary="{{true}}"
@@ -39,12 +39,12 @@
          />
          <div class="controls-DateRangeBigChoose__datePickerEnd-wrapper{{rangeselect ? '' : ' ws-hidden'}}">
             <ws:partial template="DateBoxTpl" scope="{{...}}">
-               <ws:compareExt type="function">js!SBIS3.CONTROLS.DateRangeBigChoose.Validators:compareExt</ws:compareExt>
+               <ws:compareExt type="function">SBIS3.CONTROLS/Date/RangeBigChoose/resources/Validators:compareExt</ws:compareExt>
                <ws:errorMessage type="string">{[Дата конца периода должна быть больше даты начала.]}</ws:errorMessage>
             </ws:partial>
             <div class="controls-DateRangeBigChoose__header-rangeDash"></div>
          </div>
-         <ws:SBIS3.CONTROLS.DateBox
+         <SBIS3.CONTROLS:Date:Box
             tabindex="1"
             mask="{{mask}}"
             name="DatePickerStart"
@@ -54,7 +54,7 @@
             className="controls-DateRangeBigChoose__datePickerStart"
          />
       </div>
-      <ws:SBIS3.CORE.CloseButton
+      <Deprecated:Controls:CloseButton:CloseButton
          tabindex="0"
          name="CloseButton"
          className="controls-DateRangeBigChoose__closeButton"
@@ -62,7 +62,7 @@
    </div>
    <div class="controls-DateRangeBigChoose__years">
       <div class="controls-DateRangeBigChoose__left">
-         <ws:SBIS3.CONTROLS.IconButton
+         <SBIS3.CONTROLS:Button:IconButton
             tabindex="0"
             name="PrevYearButton"
             activableByClick="{{false}}"
@@ -73,7 +73,7 @@
       <div  class="controls-DateRangeBigChoose__center">
          <div class="controls-DateRangeBigChoose__years-year">
             <div class="controls-DateRangeBigChoose__years-panel-wrapper">
-               <ws:SBIS3.CONTROLS.Link
+               <SBIS3.CONTROLS:Link
                   tabindex="0"
                   caption="..."
                   activableByClick="{{false}}"
@@ -83,7 +83,7 @@
                />
             </div>
             <div class="controls-DateRangeBigChoose__years-panel-wrapper">
-               <ws:SBIS3.CONTROLS.Link
+               <SBIS3.CONTROLS:Link
                   tabindex="0"
                   name="CurrentYearButton"
                   activableByClick="{{false}}"
@@ -92,7 +92,7 @@
                />
             </div>
             <div class="controls-DateRangeBigChoose__years-panel-wrapper{{rangeselect ? '' : ' ws-hidden'}}">
-               <ws:SBIS3.CONTROLS.IconButton
+               <SBIS3.CONTROLS:Button:IconButton
                   tabindex="0"
                   visible="{{false}}"
                   name="BackToYearButton"
@@ -119,7 +119,7 @@
          </div>
       </div>
       <div class="controls-DateRangeBigChoose__right">
-         <ws:SBIS3.CONTROLS.IconButton
+         <SBIS3.CONTROLS:Button:IconButton
             tabindex="0"
             name="NextYearButton"
             activableByClick="{{false}}"
@@ -156,7 +156,7 @@
          </ws:for>
       </div>
       <div class="controls-DateRangeBigChoose__months-month controls-DateRangeBigChoose__center">
-         <ws:SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker
+         <SBIS3.CONTROLS:Date:RangeBigChoose:resources:MonthRangePicker
             tabindex="0"
             name="MonthRangePicker"
             activableByClick="{{false}}"
@@ -184,7 +184,7 @@
          </ws:for>
       </div>
       <div class="controls-DateRangeBigChoose__dates-dates-wrapper">
-         <ws:SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker
+         <SBIS3.CONTROLS:Date:RangeBigChoose:resources:DateRangePicker
             tabindex="0"
             name="MonthDateRangePicker"
             activableByClick="{{false}}"

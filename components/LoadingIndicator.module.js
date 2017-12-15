@@ -2,18 +2,18 @@
  * Created by iv.cheremushkin on 12.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.LoadingIndicator', ['js!SBIS3.CORE.Control'], function(Control) {
+define('SBIS3.CONTROLS/LoadingIndicator', ['Lib/Control/Control'], function(Control) {
 
    'use strict';
 
    /**
     * Контрол, представляющий из себя диалоговое окно с рисунком или анимацией, визуально отображающей процесс прохождения какой-либо длительной операции
-    * @class SBIS3.CONTROLS.LoadingIndicator
+    * @class SBIS3.CONTROLS/LoadingIndicator
     * @author Крайнов Дмитрий Олегович
-    * @extends SBIS3.CORE.Control
+    * @extends Lib/Control/Control
     */
 
-   var LoadingIndicator = Control.Control.extend( /** @lends SBIS3.CONTROLS.LoadingIndicator.prototype*/ {
+   var LoadingIndicator = Control.Control.extend( /** @lends SBIS3.CONTROLS/LoadingIndicator.prototype*/ {
       $protected: {
          _options: {
             /**

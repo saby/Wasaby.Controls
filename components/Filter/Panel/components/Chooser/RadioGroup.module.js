@@ -1,33 +1,33 @@
 /**
  * Created by ps.borisov on 09.12.2016.
  */
-define('js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup', [
-   'js!SBIS3.CONTROLS.FilterPanelChooser.Base',
-   'tmpl!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup/RadioGroup/resources/FilterPanelChooserRadioGroupTpl',
+define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/RadioGroup', [
+   'SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base',
+   'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/RadioGroup/resources/FilterPanelChooserRadioGroupTpl',
    'Core/core-clone',
-   'js!SBIS3.CONTROLS.RadioGroup',
-   'css!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup/RadioGroup/FilterPanelChooser.RadioGroup'
+   'SBIS3.CONTROLS/Radio/Group',
+   'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/RadioGroup/FilterPanelChooser.RadioGroup'
 ], function(FilterPanelChooserBase, chooserTpl, coreClone) {
    'use strict';
    /**
     * Класс редактора "Набор радиокнопок".
-    * Применяется для панели фильтра с набираемыми параметрами (см. {@link SBIS3.CONTROLS.FilterPanel}).
-    * Реализует выборку идентификатора из списка {@link SBIS3.CONTROLS.RadioGroup}.
+    * Применяется для панели фильтра с набираемыми параметрами (см. {@link SBIS3.CONTROLS/Filter/FilterPanel}).
+    * Реализует выборку идентификатора из списка {@link SBIS3.CONTROLS/Radio/Group}.
     *
     * <h2>Конфигурация редактора</h2>
-    * Чтобы изменить конфигурацию редактора, используют подопцию *properties.properties* (см. {@link SBIS3.CONTROLS.FilterPanel/FilterPanelItem.typedef}) в {@link SBIS3.CONTROLS.FilterPanel#items}.
-    * По умолчанию опции для контрола редактора {@link SBIS3.CONTROLS.RadioGroup} не установлены. Полный список опций и примеры конфигурации радиокнопок вы можете найти в описании его класса.
+    * Чтобы изменить конфигурацию редактора, используют подопцию *properties.properties* (см. {@link SBIS3.CONTROLS/Filter/FilterPanelItem.typedef}) в {@link SBIS3.CONTROLS/Filter/FilterPanel#items}.
+    * По умолчанию опции для контрола редактора {@link SBIS3.CONTROLS/Radio/Group} не установлены. Полный список опций и примеры конфигурации радиокнопок вы можете найти в описании его класса.
     *
     * <h2>Создание пользовательского редактора</h2>
     * Вы можете создать собственный класс редактора, на основе класса редактора "Набор радиокнопок".
-    * Особенность: контрол, который будет использован в редакторе, должен иметь фиксированное имя в опции {@link SBIS3.CORE.Control#name} - "controls-FilterPanelChooser__RadioGroup".
+    * Особенность: контрол, который будет использован в редакторе, должен иметь фиксированное имя в опции {@link Lib/Control/Control#name} - "controls-FilterPanelChooser__RadioGroup".
     *
-    * @class SBIS3.CONTROLS.FilterPanelChooser.RadioGroup
-    * @extends SBIS3.CONTROLS.FilterPanelChooser.Base
+    * @class SBIS3.CONTROLS/Filter/Panel/components/Chooser/RadioGroup
+    * @extends SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base
     * @author Борисов Петр Сергеевич
     * @public
     */
-   var FilterPanelChooserRadioGroup = FilterPanelChooserBase.extend( /** @lends SBIS3.CONTROLS.FilterPanelChooser.RadioGroup.prototype */ {
+   var FilterPanelChooserRadioGroup = FilterPanelChooserBase.extend( /** @lends SBIS3.CONTROLS/Filter/Panel/components/Chooser/RadioGroup.prototype */ {
       $protected: {
          _options: {
             chooserTemplate: chooserTpl

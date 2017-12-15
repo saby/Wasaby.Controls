@@ -1,28 +1,28 @@
 /**
  * Created by am.gerasimov on 28.01.2016.
  */
-define('js!SBIS3.CONTROLS.SelectorButton',
+define('SBIS3.CONTROLS/SelectorButton',
     [
-   'tmpl!SBIS3.CONTROLS.SelectorButton/SelectorButton/SelectorButton',
-   "tmpl!SBIS3.CONTROLS.SelectorButton/SelectorButton/resources/contentTemplate",
-   "tmpl!SBIS3.CONTROLS.SelectorButton/SelectorButton/resources/defaultItemContentTemplate",
-   "tmpl!SBIS3.CONTROLS.SelectorButton/SelectorButton/resources/defaultItemTemplate",
+   'tmpl!SBIS3.CONTROLS/SelectorButton/SelectorButton',
+   "tmpl!SBIS3.CONTROLS/SelectorButton/resources/contentTemplate",
+   "tmpl!SBIS3.CONTROLS/SelectorButton/resources/defaultItemContentTemplate",
+   "tmpl!SBIS3.CONTROLS/SelectorButton/resources/defaultItemTemplate",
    "js!WSControls/Buttons/Button",
-   "js!SBIS3.CONTROLS.ItemsControlMixin",
-   "js!SBIS3.CONTROLS.MultiSelectable",
-   "js!SBIS3.CONTROLS.ActiveMultiSelectable",
-   "js!SBIS3.CONTROLS.Selectable",
-   "js!SBIS3.CONTROLS.ActiveSelectable",
-   "js!SBIS3.CONTROLS.SyncSelectionMixin",
-   "js!SBIS3.CONTROLS.ChooserMixin",
-   "js!SBIS3.CONTROLS.IconMixin",
+   "SBIS3.CONTROLS/Mixins/ItemsControlMixin",
+   "SBIS3.CONTROLS/Mixins/MultiSelectable",
+   "SBIS3.CONTROLS/Mixins/ActiveMultiSelectable",
+   "SBIS3.CONTROLS/Mixins/Selectable",
+   "SBIS3.CONTROLS/Mixins/ActiveSelectable",
+   "SBIS3.CONTROLS/Mixins/SyncSelectionMixin",
+   "SBIS3.CONTROLS/Mixins/ChooserMixin",
+   "SBIS3.CONTROLS/Mixins/IconMixin",
    "Core/core-instance",
    'Core/helpers/string-helpers',
-   'js!SBIS3.CONTROLS.ToSourceModel',
-   'js!SBIS3.CONTROLS.Utils.ItemsSelection',
+   'SBIS3.CONTROLS/Utils/ToSourceModel',
+   'SBIS3.CONTROLS/Utils/ItemsSelectionUtil',
    'WS.Data/Collection/List',
-   "js!SBIS3.CONTROLS.Action.SelectorAction",
-   'css!SBIS3.CONTROLS.SelectorButton/SelectorButton/SelectorButton'
+   "SBIS3.CONTROLS/Action/SelectorAction",
+   'css!SBIS3.CONTROLS/SelectorButton/SelectorButton'
 ],
     function(
        dotTplFn,
@@ -51,25 +51,25 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    
    /**
     * Класса контрола "Кнопка выбора", который отображает выбранные записи в виде текстовых значений через запятую.
-    * Контрол применяется в качестве альтернативы полю связи {@link SBIS3.CONTROLS.FieldLink}.
+    * Контрол применяется в качестве альтернативы полю связи {@link SBIS3.CONTROLS/FieldLink}.
     *
     * Подробнее о поле связи и кнопке выбора вы можете прочитать в разделе <a href='/doc/platform/developmentapl/interface-development/components/textbox/field-link/'>Поле связи</a>.
     * Обратить внимание: метод <a href='/docs/WSControls/Buttons/Button/methods/setCaption/'>setCaption</a>, устанавливающий текст на кнопке, не работает.
     * caption проставляется только по выбору записи по displayProperty или же строится по шаблону.
     *
-    * @class SBIS3.CONTROLS.SelectorButton
+    * @class SBIS3.CONTROLS/SelectorButton
     * @extends WSControls/Buttons/Button
     *
     * @author Герасимов Александр Максимович
     *
-    * @mixes SBIS3.CONTROLS.IconMixin
-    * @mixes SBIS3.CONTROLS.MultiSelectable
-    * @mixes SBIS3.CONTROLS.ActiveMultiSelectable
-    * @mixes SBIS3.CONTROLS.Selectable
-    * @mixes SBIS3.CONTROLS.ActiveSelectable
-    * @mixes SBIS3.CONTROLS.SyncSelectionMixin
-    * @mixes SBIS3.CONTROLS.ChooserMixin
-    * @mixes SBIS3.CONTROLS.ItemsControlMixin
+    * @mixes SBIS3.CONTROLS/Mixins/IconMixin
+    * @mixes SBIS3.CONTROLS/Mixins/MultiSelectable
+    * @mixes SBIS3.CONTROLS/Mixins/ActiveMultiSelectable
+    * @mixes SBIS3.CONTROLS/Mixins/Selectable
+    * @mixes SBIS3.CONTROLS/Mixins/ActiveSelectable
+    * @mixes SBIS3.CONTROLS/Mixins/SyncSelectionMixin
+    * @mixes SBIS3.CONTROLS/Mixins/ChooserMixin
+    * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
     *
     * @cssModifier controls-SelectorButton__asLink Отображает текст как ссылку.
     * @cssModifier controls-SelectorButton__withoutCross Скрывает крестик справа от текста.
@@ -84,7 +84,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * @public
     */
 
-   var SelectorButton = WSButton.extend([ItemsControlMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin], /** @lends SBIS3.CONTROLS.SelectorButton.prototype */ {
+   var SelectorButton = WSButton.extend([ItemsControlMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin], /** @lends SBIS3.CONTROLS/SelectorButton.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -132,7 +132,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
              */
             selectMode: 'floatArea',
             /**
-             * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS.Action.SelectorAction}
+             * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS/Action/SelectorAction}
              * @remark
              * При включенной опции в <a href='/docs/js/SBIS3/CONTROLS/FieldLink/options/dictionaries/'>dictionaries</a> можно передать <a href='/docs/js/SBIS3/CONTROLS/FieldLink/typedefs/Dictionaries/'>dialogOptions</a>.
              */

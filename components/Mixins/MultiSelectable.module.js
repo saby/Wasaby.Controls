@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLS.MultiSelectable', [
+define('SBIS3.CONTROLS/Mixins/MultiSelectable', [
    "Core/ParallelDeferred",
    'Core/core-clone',
    "Core/Deferred",
    "Core/moduleStubs",
    "Core/IoC",
    "WS.Data/Collection/List",
-   "js!SBIS3.CONTROLS.ArraySimpleValuesUtil",
+   "SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil",
    "Core/helpers/Object/isEqual",
    "Core/core-instance",
    "Core/helpers/Function/forAliveOnly",
@@ -64,12 +64,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        };
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
-    * @mixin SBIS3.CONTROLS.MultiSelectable
+    * @mixin SBIS3.CONTROLS/Mixins/MultiSelectable
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var MultiSelectable = /**@lends SBIS3.CONTROLS.MultiSelectable.prototype  */{
+   var MultiSelectable = /**@lends SBIS3.CONTROLS/Mixins/MultiSelectable.prototype  */{
        /**
         * @typedef {Object} ChangedKeys
         * @property {Array.<String>} added Ключи, которые были добавлены.
@@ -123,9 +123,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
              * @remark
              * Устанавливает массив идентификаторов элементов коллекции, которые будут по умолчанию выбраны для контрола.
              * Опция актуальна только для контрола в режиме множественного выбора значений, который устанавливают с помощью опции {@link multiselect}.
-             * Чтобы элементы коллекции были выбраны, для контрола дополнительно должны быть установлены {@link SBIS3.CONTROLS.DSMixin#idProperty поле первичного ключа} и {@link SBIS3.CONTROLS.DSMixin#dataSource источник данных}.
+             * Чтобы элементы коллекции были выбраны, для контрола дополнительно должны быть установлены {@link SBIS3.CONTROLS/Mixins/DSMixin#idProperty поле первичного ключа} и {@link SBIS3.CONTROLS/Mixins/DSMixin#dataSource источник данных}.
              * @example
-             * В контрол, отображающий набор данных в виде таблицы {@link SBIS3.CONTROLS.DataGridView},  переданы три идентификатора элементов коллекции:
+             * В контрол, отображающий набор данных в виде таблицы {@link SBIS3.CONTROLS/DataGridView},  переданы три идентификатора элементов коллекции:
              * ![](/MultiSelectable03.png)
              * фрагмент верстки:
              * <pre class="brush: xml">
@@ -195,8 +195,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
          this._publish('onSelectedItemsChange');
 
          if (this._options.useSelectAll) {
-            var moduleName = cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.TreeMixin') ?
-               'js!SBIS3.CONTROLS.MassSelectionHierarchyController' : 'js!SBIS3.CONTROLS.MassSelectionController';
+            var moduleName = cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS/Mixins/TreeMixin') ?
+               'SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionHierarchyController' : 'SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionController';
             moduleStubs.require([moduleName]).addCallback(function(controller) {
                this._selectorController = new controller[0]({
                   linkedObject: this,
@@ -262,7 +262,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
       },
       /**
        * По массиву идентификаторов устанавливает массив выбранных элементов коллекции для контрола, который находится в режиме множественного выбора.
-       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля}.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS/Mixins/DSMixin#idProperty ключевого поля}.
        * @param {Array} idArray Массив идентификаторов выбранных элементов коллекции.
        * @example
        * <pre>
@@ -311,7 +311,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
 
       /**
        * Устанавливает все элементы коллекции выбранными.
-       * Метод актуален для контрола, который находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
+       * Метод актуален для контрола, который находится в режиме {@link SBIS3.CONTROLS/Mixins/MultiSelectable#multiselect множественного выбора значений}.
        * @example
        * <pre>
        *     if (checkBox.isChecked()) {
@@ -340,8 +340,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
 
       /**
        * Получает массив индентификаторов выбранных элементов коллекции.
-       * Метод актуален для контрола, который находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
-       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля}.
+       * Метод актуален для контрола, который находится в режиме {@link SBIS3.CONTROLS/Mixins/MultiSelectable#multiselect множественного выбора значений}.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS/Mixins/DSMixin#idProperty ключевого поля}.
        * @example
        * <pre>
        *    if (!checkBoxGroup.getSelectedKeys().length) {
@@ -358,9 +358,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
 
       /**
        * Добавляет указанные элементы коллекции в набор уже выбранных элементов.
-       * Метод актуален для контрола, который находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
+       * Метод актуален для контрола, который находится в режиме {@link SBIS3.CONTROLS/Mixins/MultiSelectable#multiselect множественного выбора значений}.
        * @param {Array} idArray Массив идентификаторов элементов, добавляемых к выбранным.
-       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля}.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS/Mixins/DSMixin#idProperty ключевого поля}.
        * @example
        * <pre>
        *    var keys = checkBoxGroup.getSelectedKeys();
@@ -417,9 +417,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
 
       /**
        * Удаляет указанные элементы коллекции из набора выбранных элементов.
-       * Метод актуален для контрола, который находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
+       * Метод актуален для контрола, который находится в режиме {@link SBIS3.CONTROLS/Mixins/MultiSelectable#multiselect множественного выбора значений}.
        * @param {Array} idArray Массив идентификаторов элементов к удалению из выбранных.
-       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля}.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS/Mixins/DSMixin#idProperty ключевого поля}.
        * @example
        * <pre>
        *     if (checkBox.isChecked()) {
@@ -470,7 +470,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
 
       /**
        * Убирает все элементы коллекции из набора выбранных.
-       * Метод актуален для контрола, который находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
+       * Метод актуален для контрола, который находится в режиме {@link SBIS3.CONTROLS/Mixins/MultiSelectable#multiselect множественного выбора значений}.
        * @example
        * <pre>
        *     if (checkBoxGroup.getSelectedKeys().indexOf(3))  {
@@ -505,9 +505,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * Для всех элементов коллекции, идентификаторы которых будут переданы в массиве idArray,
        * в зависимости от того, были они выбраны или нет, метод произведет противоположное действие:
        * уберет элементы коллекции из набора выбранных или добавит элементы в набор.
-       * Метод актуален для контрола, который находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
+       * Метод актуален для контрола, который находится в режиме {@link SBIS3.CONTROLS/Mixins/MultiSelectable#multiselect множественного выбора значений}.
        * @param {Array} idArray Массив идентификаторов элементов для инвертирования.
-       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля}.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS/Mixins/DSMixin#idProperty ключевого поля}.
        * @example
        * <pre>
        *     if (needToggle) {
@@ -570,7 +570,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
       },
 
       _isItemPartiallySelected: function(item) {
-         return cInstance.instanceOfModule(this._selectorController, 'SBIS3.CONTROLS.MassSelectionHierarchyController') && this._selectorController.isItemPartiallySelected(item);
+         return cInstance.instanceOfModule(this._selectorController, 'SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionHierarchyController') && this._selectorController.isItemPartiallySelected(item);
       },
 
       /**
@@ -578,7 +578,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * @remark
        * В зависимости от состояния элементов коллекции (были они выбраны, или нет) метод произведет над ними противоположное
        * действие: уберет все элементы коллекции из набора выбранных элементов или добавит все элементы в набор.
-       * Метод актуален для контрола, который находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
+       * Метод актуален для контрола, который находится в режиме {@link SBIS3.CONTROLS/Mixins/MultiSelectable#multiselect множественного выбора значений}.
        * @example
        * <pre>
        *     if (checkBoxGroup.getSelectedKeys().count == 0) {

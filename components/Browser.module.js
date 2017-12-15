@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLS.Browser', [
+define('SBIS3.CONTROLS/Browser', [
    'Core/CommandDispatcher',
    'Core/Deferred',
-   'js!SBIS3.CORE.CompoundControl',
-   'tmpl!SBIS3.CONTROLS.Browser/Browser/Browser',
-   'js!SBIS3.CONTROLS.ComponentBinder',
-   'js!SBIS3.CONTROLS.ColumnsController',
-   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+   'Lib/Control/CompoundControl/CompoundControl',
+   'tmpl!SBIS3.CONTROLS/Browser/Browser',
+   'SBIS3.CONTROLS/ComponentBinder',
+   'SBIS3.CONTROLS/Controllers/ColumnsController',
+   'SBIS3.CONTROLS/Utils/TemplateUtil',
    'Core/core-instance',
    'Core/helpers/Object/find'
 ], function(CommandDispatcher, Deferred, CompoundControl, dotTplFn, ComponentBinder, ColumnsController, tplUtil, cInstance, cFind){
@@ -14,8 +14,8 @@ define('js!SBIS3.CONTROLS.Browser', [
    /**
     * Базовый класс для реестра
     *
-    * @class SBIS3.CONTROLS.Browser
-    * @extends SBIS3.CORE.CompoundControl
+    * @class SBIS3.CONTROLS/Browser
+    * @extends Lib/Control/CompoundControl/CompoundControl
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyBrowser
     *
@@ -30,8 +30,8 @@ define('js!SBIS3.CONTROLS.Browser', [
 
    var
       checkViewType = function(view) {
-         if (view && cInstance.instanceOfModule(view, 'SBIS3.CONTROLS.ListView')) {
-            return cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
+         if (view && cInstance.instanceOfModule(view, 'SBIS3.CONTROLS/ListView')) {
+            return cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS/Mixins/TreeMixin');
          }
          else {
             throw new Error('Browser: Can\'t define linkedView');
@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.Browser', [
          RELOAD: 'Reload'     // После смены колонок выполнить перезагрузку табличного представления
       },
 
-      Browser = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Browser.prototype */{
+      Browser = CompoundControl.extend( /** @lends SBIS3.CONTROLS/Browser.prototype */{
       /**
        * @event onEdit Происходит при редактировании или создании новой записи реестра.
        * @remark
@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.Browser', [
        * @param {String} id Идентификатор редактируемой папки. В случае добавления новой папки значение параметра - null.
        */
       /**
-       * @event onFiltersReady Происходит после построения экземпляра классов окружения списка: "Быстрый фильтр" (см. {@link SBIS3.CONTROLS.FastDataFilter}) и "Кнопки с фильтром" (см. {@link SBIS3.CONTROLS.FilterButton}).
+       * @event onFiltersReady Происходит после построения экземпляра классов окружения списка: "Быстрый фильтр" (см. {@link SBIS3.CONTROLS/Filter/FastData}) и "Кнопки с фильтром" (см. {@link SBIS3.CONTROLS/Filter/Button}).
        * @param {Core/EventObject} eventObject Дескриптор события.
        */
       /**
@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.Browser', [
        *    <li><b>id (String)</b> - идентификатор элемента.</li>
        *    <li><b>title (String)</b> - отображаемый текст элемента.</li>
        *    <li><b>fixed (Boolean)</b> - признак "Фиксированный". На панели редактирования колонок элементы с таким признаком выбраны и недоступны для взаимодействия, а колонки элемента, описанные в опции **columnConfig**, всегда отображены в списке.</li>
-       *    <li><b>columnConfig (Array)</b> - массив с конфигурацией колонок (см. {@link SBIS3.CONTROLS.DataGridView#columns columns}).</li>
+       *    <li><b>columnConfig (Array)</b> - массив с конфигурацией колонок (см. {@link SBIS3.CONTROLS/DataGridView#columns columns}).</li>
        * </ol>
        * @property {Array.<String|Number>} selectedColumns Массив идентификаторов элементов, которые будут отмечены на панели редактирования колонок. Параметр актуален для элементов с опцией *fixed=false*.
        */
@@ -328,7 +328,7 @@ define('js!SBIS3.CONTROLS.Browser', [
             return Deferred.fail('ColumnsConfig required');
          }
          var promise = new Deferred();
-         require(['js!SBIS3.CONTROLS.Browser/ColumnsEditor/Editor'], function (ColumnsEditor) {
+         require(['SBIS3.CONTROLS/Browser/ColumnsEditor/Editor'], function (ColumnsEditor) {
             if (!this._columnsEditor) {
                this._columnsEditor = new ColumnsEditor();
             }

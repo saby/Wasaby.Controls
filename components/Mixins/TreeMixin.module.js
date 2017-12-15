@@ -1,22 +1,22 @@
-define('js!SBIS3.CONTROLS.TreeMixin', [
+define('SBIS3.CONTROLS/Mixins/TreeMixin', [
    "Core/core-clone",
    "Core/core-merge",
-   'js!SBIS3.CONTROLS.Utils.TreeDataReload',
+   'SBIS3.CONTROLS/Utils/TreeDataReload',
    "Core/constants",
    "Core/CommandDispatcher",
    "Core/Deferred",
    "WS.Data/Display/Tree",
-   "tmpl!SBIS3.CONTROLS.TreeMixin/TreeMixin/resources/searchRender",
+   "tmpl!SBIS3.CONTROLS/Mixins/TreeMixin/resources/searchRender",
    "WS.Data/Entity/Model",
    "WS.Data/Relation/Hierarchy",
    "Core/core-instance",
-   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+   "SBIS3.CONTROLS/Utils/TemplateUtil",
    "Core/helpers/Function/forAliveOnly",
    "Core/IoC",
    "Core/helpers/Object/isEmpty",
    "Core/helpers/Object/isPlainObject",
-   "js!SBIS3.CONTROLS.BreadCrumbs",
-   "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
+   "SBIS3.CONTROLS/BreadCrumbs",
+   "tmpl!SBIS3.CONTROLS/resources/DataGridViewGroupBy",
    "WS.Data/Adapter/Sbis"
 ], function (coreClone, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject) {
 
@@ -454,14 +454,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    /**
     * Миксин позволяет контролу отображать данные, которые имеют иерархическую структуру, и работать с ними.
     * На DOM-элементы, отображающие развернутые узлы вешается css-класс "controls-TreeView__item-expanded". Для свернутых узлов используется css-класс "controls-TreeView__item-collapsed".
-    * @mixin SBIS3.CONTROLS.TreeMixin
+    * @mixin SBIS3.CONTROLS/Mixins/TreeMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var TreeMixin = /** @lends SBIS3.CONTROLS.TreeMixin.prototype */{
+   var TreeMixin = /** @lends SBIS3.CONTROLS/Mixins/TreeMixin.prototype */{
 
       /**
-       * @name SBIS3.CONTROLS.TreeMixin#reload
+       * @name SBIS3.CONTROLS/Mixins/TreeMixin#reload
        * @function
        * @description Перезагружает набор записей представления данных с последующим обновлением отображения.
        * @param {Object} filter Параметры фильтрации.
@@ -491,7 +491,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       /**
        * @event onSetRoot Происходит при загрузке данных и перед установкой корня иерархии.
        * @remark
-       * При каждой загрузке данных, например вызванной методом {@link SBIS3.CONTROLS.ListView#reload}, происходит событие onSetRoot.
+       * При каждой загрузке данных, например вызванной методом {@link SBIS3.CONTROLS/ListView#reload}, происходит событие onSetRoot.
        * В этом есть необходимость, потому что в переданных данных может быть установлен новый path - путь для хлебных крошек (см. {@link WS.Data/Collection/RecordSet#meta}).
        * Хлебные крошки не перерисовываются, так как корень не поменялся.
        * @param {Core/EventObject} eventObject Дескриптор события.
@@ -501,8 +501,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * <ul>
        *    <li>id - идентификатор текущего узла иерархии;</li>
        *    <li>parent - идентификатор предыдущего узла иерархии;</li>
-       *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS.DSMixin#displayProperty});</li>
-       *    <li>color - значение поля записи, хранящее данные об отметке цветом (см. {@link SBIS3.CONTROLS.DecorableMixin#colorField});</li>
+       *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS/Mixins/DSMixin#displayProperty});</li>
+       *    <li>color - значение поля записи, хранящее данные об отметке цветом (см. {@link SBIS3.CONTROLS/Mixins/DecorableMixin#colorField});</li>
        *    <li>data - запись узла иерархии, экземпляр класса {@link WS.Data/Entity/Record}.</li>
        * </ul>
        * @see onBeforeSetRoot
@@ -720,8 +720,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              *          }
              *       });
              * </pre>
-             * @see SBIS3.CONTROLS.ItemsControlMixin#itemsSortMethod
-             * @see SBIS3.CONTROLS.ItemsControlMixin#setItemsSortMethod
+             * @see SBIS3.CONTROLS/Mixins/ItemsControlMixin#itemsSortMethod
+             * @see SBIS3.CONTROLS/Mixins/ItemsControlMixin#setItemsSortMethod
              */
             itemsSortMethod: _defaultItemsSortMethod,
             _applyFilterToProjection: applyFilterToProjection,
@@ -1651,7 +1651,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
       _onDragCallback: function(dragObject) {
          var target = dragObject.getTarget();
-         if (target && cInstance.instanceOfModule(target, 'SBIS3.CONTROLS.DragEntity.Row')) {
+         if (target && cInstance.instanceOfModule(target, 'SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row')) {
             var model = target.getModel(),
                itemsProjection = this._getItemsProjection(),
                projectionItem = itemsProjection.getItemBySourceItem(model);

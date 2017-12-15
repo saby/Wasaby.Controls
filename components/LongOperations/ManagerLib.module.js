@@ -1,21 +1,21 @@
 /**
  * Библиотека постзагружаемых методов для менеджера длительных операций
  *
- * @class SBIS3.CONTROLS.LongOperations.ManagerLib
+ * @class SBIS3.CONTROLS/LongOperations/ManagerLib
  * @public
  */
-define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
+define('SBIS3.CONTROLS/LongOperations/ManagerLib',
    [
       'WS.Data/Chain',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Source/DataSet',
-      'js!SBIS3.CONTROLS.LongOperations.Const',
-      'js!SBIS3.CONTROLS.LongOperations.Entry',
-      'js!SBIS3.CONTROLS.LongOperations.HistoryItem',
-      'js!SBIS3.CONTROLS.LongOperations.Tools.Bunch',
-      'js!SBIS3.CONTROLS.LongOperations.Tools.CallsPool',
-      'js!SBIS3.CONTROLS.LongOperations.Tools.TabCalls',
-      'js!SBIS3.CONTROLS.LongOperationsList/List/resources/model'
+      'SBIS3.CONTROLS/LongOperations/Const',
+      'SBIS3.CONTROLS/LongOperations/Entry',
+      'SBIS3.CONTROLS/LongOperations/HistoryItem',
+      'SBIS3.CONTROLS/LongOperations/Tools/Bunch',
+      'SBIS3.CONTROLS/LongOperations/Tools/CallsPool',
+      'SBIS3.CONTROLS/LongOperations/Tools/TabCalls',
+      'SBIS3.CONTROLS/LongOperations/List/resources/model'
    ],
 
    function (Chain, RecordSet, DataSet, LongOperationsConst, LongOperationEntry, LongOperationHistoryItem, LongOperationsBunch, LongOperationsCallsPool, LongOperationsTabCalls, Model) {
@@ -240,7 +240,7 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
             /*tabKey:*/protectedOf(self)._tabKey,
             /*router:*/self.getByName.bind(self),
             /*packer:*/function (v) {
-               // Упаковщик для отправки. Ожидается, что все объекты будут экземплярами SBIS3.CONTROLS.LongOperations.Entry
+               // Упаковщик для отправки. Ожидается, что все объекты будут экземплярами SBIS3.CONTROLS/LongOperations/Entry
                return v && typeof v.toSnapshot === 'function' ? v.toSnapshot() : v;
             },
             /*channel:*/protectedOf(self)._tabChannel
@@ -287,7 +287,7 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
                   if (len) {
                      var useMemberTab = member.tab === inner._tabKey ? !inner._producers[member.producer].hasCrossTabData() : !inner._producers[member.producer] || !inner._tabManagers[member.tab][member.producer].hasCrossTabData();
                      values[iterate](function (v) {
-                        // Значение должно быть экземпляром SBIS3.CONTROLS.LongOperations.Entry и иметь правилное имя продюсера
+                        // Значение должно быть экземпляром SBIS3.CONTROLS/LongOperations/Entry и иметь правилное имя продюсера
                         if (!(v instanceof LongOperationEntry && v.producer === prodName)) {
                            throw new Error('Invalid result');
                         }
@@ -310,7 +310,7 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
              * Обработчик полного результата
              * @param {object} query Параметры выполнявшегося запроса
              * @param {SBIS3.CONTROLS.LongOperations.Entry[][]} resultList Список результатов обработки одиночных результатов
-             * @return {WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperations.Entry>}
+             * @return {WS.Data/Collection/RecordSet<SBIS3.CONTROLS/LongOperations/Entry>}
              */
             /*handleComplete:*/function (query, resultList) {
                var operations;

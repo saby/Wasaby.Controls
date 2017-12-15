@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
+define('SBIS3.CONTROLS/ListView/resources/VirtualScrollController', ['Core/Abstract'],
    function (cAbstract) {
 
       var BATCH_SIZE = 20;

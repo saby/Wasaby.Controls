@@ -4,11 +4,11 @@
 //TODO: Сейчас печать и выгрузка очень напоминают старые контролы, где нет общих точек и вообще не понятно что происходит.
 //Невероятное ветвление кода, и вроде бы таки одинаковые вещи как выгрузка всех записей и выгрузка выбранных совершенно в разных ветках.
 //Нужно сделать общую точку входа, и ветвление только непосредственно перед вызовом тех или иннных функций бл.
-define('js!SBIS3.CONTROLS.PrintUnloadBase', [
+define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
    "Core/Deferred",
    'Core/deprecated',
-   "js!SBIS3.CONTROLS.MenuLink",
-   "js!SBIS3.CORE.DialogSelector",
+   "SBIS3.CONTROLS/Menu/MenuLink",
+   "Deprecated/Controls/DialogSelector/DialogSelector",
    "WS.Data/Chain",
    "WS.Data/Collection/Factory/RecordSet",
    "WS.Data/Collection/RecordSet",
@@ -21,13 +21,13 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
    var MAX_RECORDS_COUNT = 20000;
    /**
     * Базовый контрол для работы с ListView. Подготовливает данные для печати и выгрузки
-    * @class SBIS3.CONTROLS.PrintUnloadBase
-    * @extends SBIS3.CONTROLS.MenuLink
+    * @class SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase
+    * @extends SBIS3.CONTROLS/Menu/MenuLink
     * @author Сухоручкин Андрей Сергеевич
     * @control
     * @public
     */
-   var PrintUnloadBase = MenuLink.extend(/** @lends SBIS3.CONTROLS.PrintUnloadBase.prototype */{
+   var PrintUnloadBase = MenuLink.extend(/** @lends SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase.prototype */{
       /**
        * @event onPrepareData Происходит при подготовке данных.
        * @param {Core/EventObject} eventObject Дескриптор события.
@@ -116,7 +116,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          //Показать диалог выбора записей
          new Dialog ({
             opener : this,
-            template: 'js!SBIS3.CONTROLS.MassAmountSelector',
+            template: 'SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector',
             caption : title,
             cssClassName: 'controls-MassAmountSelector',
             handlers: {
@@ -241,7 +241,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          var deferred = new Deferred(),
             self = this;
 
-         require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(manager){
+         require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(manager){
             manager.showConfirmDialog({message: 'Операция займет продолжительное время. Провести операцию?'},
                function (){
                   fcHelpers.toggleIndicator(true);

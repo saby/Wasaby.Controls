@@ -2,11 +2,11 @@
  * Created by as.avramenko on 06.07.2017.
  */
 
-define([/*'js!SBIS3.CONTROLS.ColumnsEditorUtils',*/ 'WS.Data/Collection/RecordSet', 'WS.Data/Display/Display', 'WS.Data/Display/Collection'], function (/*ColumnsEditorUtils,*/ RecordSet, Display) {
+define([/*'SBIS3.CONTROLS/Utils/ColumnsEditorUtils',*/ 'WS.Data/Collection/RecordSet', 'WS.Data/Display/Display', 'WS.Data/Display/Collection'], function (/*ColumnsEditorUtils,*/ RecordSet, Display) {
 
    'use strict';
 
-   describe('SBIS3.CONTROLS.Browser/ColumnsEditor/EditorButton', function() {
+   describe('SBIS3.CONTROLS/Browser/ColumnsEditor/EditorButton', function() {
       var
          testItems = new RecordSet({
             rawData: [

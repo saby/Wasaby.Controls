@@ -1,17 +1,17 @@
 /*global $ws, define*/
-define('js!SBIS3.CONTROLS.Action.Action',
+define('SBIS3.CONTROLS/Action',
    [
    "Core/Deferred",
-   "js!SBIS3.CORE.Control"
+   "Lib/Control/Control"
 ],
    function ( Deferred,Control) {
       'use strict';
 
       /**
        * Класс базовый для всех стандартных действий, которые можно использовать в интерфейсе
-       * @class SBIS3.CONTROLS.Action.Action
+       * @class SBIS3.CONTROLS/Action
        * @public
-       * @extends SBIS3.CORE.Control
+       * @extends Lib/Control/Control
        * @author Крайнов Дмитрий Олегович
        *
        * @ignoreOptions validators independentContext contextRestriction extendedTooltip
@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.Action.Action',
        * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onCommandCatch onDestroy onPropertiesChanged
        */
       //TODO наследуемся от контрола, чтоб можно было размещать в xhtml
-      var Action = Control.Control.extend(/** @lends SBIS3.CONTROLS.Action.Action.prototype */{
+      var Action = Control.Control.extend(/** @lends SBIS3.CONTROLS/Action.prototype */{
          /**
           * @event onExecute Происходит перед выполнением действия.
           * @remark
@@ -63,9 +63,9 @@ define('js!SBIS3.CONTROLS.Action.Action',
           * Для каждого класса существует собственный набор метаданных.
           * @param {*} result Результат, переданный по окончании выполнения действия. Для каждого класса действия набор значений параметра может быть различным.
           * <ul>
-          *     <li>Для класса {@link SBIS3.CONTROLS.Action.OpenEditDialog} в result приходит экземпляр редактируемой записи.</li>
-          *     <li>Для класса {@link SBIS3.CONTROLS.Action.OpenDialog} result - это признак того, как был закрыт диалог: нажата кнопка "Да" (значение true) или кнопка "Нет" (значение false).</li>
-          *     <li>Для класса {@link  SBIS3.CONTROLS.Action.SelectorAction} result - это массив, где каждый элемент - это выбранная на диалоге запись (см. {@Link WS.Data/Entity/Record}).</li>
+          *     <li>Для класса {@link SBIS3.CONTROLS/Action/List/OpenEditDialog} в result приходит экземпляр редактируемой записи.</li>
+          *     <li>Для класса {@link SBIS3.CONTROLS/Action/OpenDialog} result - это признак того, как был закрыт диалог: нажата кнопка "Да" (значение true) или кнопка "Нет" (значение false).</li>
+          *     <li>Для класса {@link  SBIS3.CONTROLS/Action/SelectorAction} result - это массив, где каждый элемент - это выбранная на диалоге запись (см. {@Link WS.Data/Entity/Record}).</li>
           * </ul>
           * @see execute
           */

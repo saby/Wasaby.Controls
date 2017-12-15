@@ -1,12 +1,12 @@
 
-define('js!SBIS3.CONTROLS.CheckBox', [
+define('SBIS3.CONTROLS/CheckBox', [
    "Core/constants",
    "js!WSControls/Buttons/ButtonBase",
-   "js!SBIS3.CONTROLS.Checkable",
-   "tmpl!SBIS3.CONTROLS.CheckBox/CheckBox/CheckBox",
-   "tmpl!SBIS3.CONTROLS.CheckBox/CheckBox/resources/ContentTemplate",
-   "js!SBIS3.CONTROLS.ITextValue",
-   'css!SBIS3.CONTROLS.CheckBox/CheckBox/CheckBox'
+   "SBIS3.CONTROLS/Mixins/Checkable",
+   "tmpl!SBIS3.CONTROLS/CheckBox/CheckBox",
+   "tmpl!SBIS3.CONTROLS/CheckBox/resources/ContentTemplate",
+   "SBIS3.CONTROLS/Mixins/ITextValue",
+   'css!SBIS3.CONTROLS/CheckBox/CheckBox'
 ], function( constants,WSButtonBase, Checkable, dotTplFn, defaultContentTemplate, ITextValue) {
 
    'use strict';
@@ -22,12 +22,12 @@ define('js!SBIS3.CONTROLS.CheckBox', [
     *    <li>{@link threeState} - количество состояний;</li>
     *    <li>{@link checked} - начальное состояние.</li>
     * </ol>
-    * При необходимости создания нескольких флажков используйте {@link SBIS3.CONTROLS.CheckBoxGroup CheckBoxGroup}.
-    * @class SBIS3.CONTROLS.CheckBox
+    * При необходимости создания нескольких флажков используйте {@link SBIS3.CONTROLS/CheckBox/Group CheckBoxGroup}.
+    * @class SBIS3.CONTROLS/CheckBox
     * @extends WSControls/Buttons/ButtonBase
     *
-    * @mixes SBIS3.CONTROLS.Checkable
-    * @mixes SBIS3.CONTROLS.ITextValue
+    * @mixes SBIS3.CONTROLS/Mixins/Checkable
+    * @mixes SBIS3.CONTROLS/Mixins/ITextValue
     *
     *
     * @demo SBIS3.CONTROLS.Demo.MyCheckbox
@@ -51,12 +51,12 @@ define('js!SBIS3.CONTROLS.CheckBox', [
     * @public
     * @category Input
     * @initial
-    * <component data-component='SBIS3.CONTROLS.CheckBox'>
+    * <component data-component='SBIS3.CONTROLS/CheckBox'>
     *     <option name="caption">CheckBox</option>
     * </component>
     */
 
-   var CheckBox = WSButtonBase.extend([Checkable, ITextValue], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
+   var CheckBox = WSButtonBase.extend([Checkable, ITextValue], /** @lends SBIS3.CONTROLS/CheckBox.prototype */ {
       _dotTplFn : dotTplFn,
       $protected: {
          _checkBoxCaption: null,

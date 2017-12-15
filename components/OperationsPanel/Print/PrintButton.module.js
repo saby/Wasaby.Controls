@@ -1,6 +1,6 @@
-define('js!SBIS3.CONTROLS.PrintButton',
+define('SBIS3.CONTROLS/OperationsPanel/Print/PrintButton',
 [
-   'js!SBIS3.CONTROLS.MenuLink'
+   'SBIS3.CONTROLS/Menu/MenuLink'
 ], function(MenuLink) {
    var PrintButton = MenuLink.extend({
       $protected: {

@@ -1,11 +1,11 @@
 /**
  * Created by am.gerasimov on 01.02.2016.
  */
-define('js!SBIS3.CONTROLS.ControlsValidators', [
-   'js!SBIS3.CORE.CoreValidators',
+define('SBIS3.CONTROLS/Utils/ControlsValidators', [
+   'Lib/CoreValidators/CoreValidators',
    'Core/core-instance',
    'Core/IoC',
-   'i18n!SBIS3.CONTROLS.ControlsValidators'
+   'i18n!SBIS3.CONTROLS/Utils/ControlsValidators'
 ],function(CoreValidators, cInstace, IoC) {
 
    'use strict';
@@ -24,11 +24,11 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
    /**
     * Компонент с набором платформенных валидаторов, которые можно применять только к контролам из пространства имён SBIS3.CONTROLS.
     * Подробнее о работе с валидаторами вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/validation/">Валидация вводимых данных</a>.
-    * @class SBIS3.CONTROLS.ControlsValidators
+    * @class SBIS3.CONTROLS/Utils/ControlsValidators
     * @public
     * @author Красильников Андрей Сергеевич
     */
-   return /** @lends SBIS3.CONTROLS.ControlsValidators.prototype */{
+   return /** @lends SBIS3.CONTROLS/Utils/ControlsValidators.prototype */{
       /**
        * Проверяет наличие введённого значения.
        * @param {String} option Название опции контрола, значение которой валидируется.
@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
                break;
             case 'object' :
                if(cInstace.instanceOfModule(option, 'Deprecated/Enum')) {
-                  IoC.resolve('ILogger').error('SBIS3.CONTROLS.ControlsValidators', 'использует устаревший модуль Deprecated/Enum. Выпишите ошибку на Интерфейсный фреймворк со скриншотом.');
+                  IoC.resolve('ILogger').error('SBIS3.CONTROLS/Utils/ControlsValidators', 'использует устаревший модуль Deprecated/Enum. Выпишите ошибку на Интерфейсный фреймворк со скриншотом.');
                   isEmpty = option.getCurrentValue() === null;
                } else if(cInstace.instanceOfModule(option, 'WS.Data/Collection/List')) {
                   isEmpty = !Boolean(option.getCount());

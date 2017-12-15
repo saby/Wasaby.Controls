@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
+define('SBIS3.CONTROLS/Mixins/RangeMixin', [], function() {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -7,11 +7,11 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
    }
    /**
     * Миксин, добавляющий поведение хранения начального и конечного значений диапазона.
-    * @mixin SBIS3.CONTROLS.RangeMixin
+    * @mixin SBIS3.CONTROLS/Mixins/RangeMixin
     * @author Миронов А.Ю.
     * @public
     */
-   var RangeMixin = /**@lends SBIS3.CONTROLS.RangeMixin.prototype  */{
+   var RangeMixin = /**@lends SBIS3.CONTROLS/Mixins/RangeMixin.prototype  */{
       /**
        * @event onStartValueChange После изменения начального значения диапазона
        * @param {Core/EventObject} eventObject Дескриптор события.
@@ -78,7 +78,7 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
       },
 
       /**
-       * @name SBIS3.CONTROLS.RangeMixin#setStartValue
+       * @name SBIS3.CONTROLS/Mixins/RangeMixin#setStartValue
        * @function
        * @description
        * Установить начальное значение диапазона.
@@ -100,7 +100,7 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
       },
 
       /**
-       * @name SBIS3.CONTROLS.RangeMixin#setEndValue
+       * @name SBIS3.CONTROLS/Mixins/RangeMixin#setEndValue
        * @function
        * @description
        * Установить конечное значение диапазона.
@@ -122,7 +122,7 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
       },
 
       /**
-       * @name SBIS3.CONTROLS.RangeMixin#setRange
+       * @name SBIS3.CONTROLS/Mixins/RangeMixin#setRange
        * @function
        * @description
        * Установить начальное и конечное значение.

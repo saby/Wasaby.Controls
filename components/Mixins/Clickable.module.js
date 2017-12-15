@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.Clickable', [
+define('SBIS3.CONTROLS/Mixins/Clickable', [
    "Core/constants"
 ], function(constants) {
 
@@ -10,12 +10,12 @@ define('js!SBIS3.CONTROLS.Clickable', [
 
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного
-    * @mixin SBIS3.CONTROLS.Clickable
+    * @mixin SBIS3.CONTROLS/Mixins/Clickable
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var Clickable = /**@lends SBIS3.CONTROLS.Clickable.prototype  */{
+   var Clickable = /**@lends SBIS3.CONTROLS/Mixins/Clickable.prototype  */{
       /**
        * @event onActivated При активации кнопки (клик мышкой, кнопки клавиатуры)
        * @param {Core/EventObject} eventObject Дескриптор события.

@@ -1,13 +1,13 @@
-define('js!SBIS3.CONTROLS.IListNavigation',
+define('SBIS3.CONTROLS/Controllers/IListNavigation',
    [],
    function () {
       /**
        * Контроллер, позволяющий связывать компоненты осуществляя базовое взаимодейтсие между ними
        * @author Крайнов Дмитрий
-       * @mixin SBIS3.CONTROLS.IListNavigation
+       * @mixin SBIS3.CONTROLS/Controllers/IListNavigation
        * @public
        */
-      var ListNavigation = /** @lends SBIS3.CONTROLS.IListNavigation.prototype */{
+      var ListNavigation = /** @lends SBIS3.CONTROLS/Controllers/IListNavigation.prototype */{
          $protected: {
             _options: {
                type: 'pages',

@@ -1,15 +1,15 @@
 /* global define */
-define('js!SBIS3.CONTROLS.ITextValue', [], function () {
+define('SBIS3.CONTROLS/Mixins/ITextValue', [], function () {
    'use strict';
 
    /**
     * Интерфейс контрола, который может отдавать выбранное в нем значение в виде текста
-    * @mixin SBIS3.CONTROLS.ITextValue
+    * @mixin SBIS3.CONTROLS/Mixins/ITextValue
     * @public
     * @author Крайнов Дмитрий
     */
 
-   var ITextValue = /** @lends SBIS3.CONTROLS.ITextValue.prototype */{
+   var ITextValue = /** @lends SBIS3.CONTROLS/Mixins/ITextValue.prototype */{
       /**
        * Возвращает текстовое значение контрола
        * @returns {String}

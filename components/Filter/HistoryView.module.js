@@ -1,12 +1,12 @@
-define('js!SBIS3.CONTROLS.FilterHistoryView',
+define('SBIS3.CONTROLS/Filter/HistoryView',
     [
-       'js!SBIS3.CONTROLS.ListView',
-       'tmpl!SBIS3.CONTROLS.FilterHistoryView/HistoryView/footerTpl',
-       'tmpl!SBIS3.CONTROLS.FilterHistoryView/HistoryView/itemTpl',
-       'js!SBIS3.CONTROLS.HistoryList',
+       'SBIS3.CONTROLS/ListView',
+       'tmpl!SBIS3.CONTROLS/Filter/HistoryView/footerTpl',
+       'tmpl!SBIS3.CONTROLS/Filter/HistoryView/itemTpl',
+       'SBIS3.CONTROLS/History/HistoryList',
        'Core/CommandDispatcher',
-       'js!SBIS3.CONTROLS.CommandsSeparator',
-       'css!SBIS3.CONTROLS.FilterHistoryView/HistoryView/HistoryView'
+       'SBIS3.CONTROLS/Commands/CommandsSeparator',
+       'css!SBIS3.CONTROLS/Filter/HistoryView/HistoryView'
     ],
 
     function(ListView, footerTpl, itemTpl, HistoryList, CommandDispatcher) {
@@ -14,10 +14,10 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
        'use strict';
         /**
          *
-         * @class SBIS3.CONTROLS.FilterHistoryView
-         * @extends SBIS3.CONTROLS.ListView
+         * @class SBIS3.CONTROLS/Filter/HistoryView
+         * @extends SBIS3.CONTROLS/ListView
          */
-       var FilterHistoryView = ListView.extend(/** @lends SBIS3.CONTROLS.FilterHistoryView.prototype*/{
+       var FilterHistoryView = ListView.extend(/** @lends SBIS3.CONTROLS/Filter/HistoryView.prototype*/{
           $protected: {
              _options: {
                 historyId: '',

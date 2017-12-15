@@ -1,12 +1,12 @@
 /**
  * Created by iv.cheremushkin on 03.09.2014.
  */
-define('js!SBIS3.CONTROLS.ColorPicker',
-   ['js!SBIS3.CONTROLS.TextBox',
-    'js!SBIS3.CONTROLS.PickerMixin',
-    'tmpl!SBIS3.CONTROLS.ColorPicker/ColorPicker/resources/ColorSquare',
-    'browser!js!SBIS3.CONTROLS.ColorPicker/ColorPicker/resources/colpick',
-    'browser!css!SBIS3.CONTROLS.ColorPicker/ColorPicker/resources/colpick'
+define('SBIS3.CONTROLS/ColorPicker',
+   ['SBIS3.CONTROLS/TextBox',
+    'SBIS3.CONTROLS/Mixins/PickerMixin',
+    'tmpl!SBIS3.CONTROLS/ColorPicker/resources/ColorSquare',
+    'browser!SBIS3.CONTROLS/ColorPicker/resources/colpick',
+    'browser!css!SBIS3.CONTROLS/ColorPicker/resources/colpick'
    ], function(TextBox, PickerMixin, ColorSquareTpl) {
 
    'use strict';
@@ -14,17 +14,17 @@ define('js!SBIS3.CONTROLS.ColorPicker',
    /**
     * Контрол, позволяющий выбрать цвет.
     * Можно задать как шестадцатеричный код в виде текста, так и выбрать из выпадающего блока.
-    * @class SBIS3.CONTROLS.ColorPicker
+    * @class SBIS3.CONTROLS/ColorPicker
     * @author Крайнов Дмитрий Олегович
-    * @extends SBIS3.CONTROLS.TextBox
-    * @mixes SBIS3.CONTROLS.PickerMixin
+    * @extends SBIS3.CONTROLS/TextBox
+    * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
     *
     * @control
     * @public
     * @category Input
     */
 
-   var ColorPicker = TextBox.extend( [PickerMixin],/** @lends SBIS3.CONTROLS.ColorPicker.prototype */{
+   var ColorPicker = TextBox.extend( [PickerMixin],/** @lends SBIS3.CONTROLS/ColorPicker.prototype */{
       $protected: {
          _colorBox: null,
          _byKeyUp: true,

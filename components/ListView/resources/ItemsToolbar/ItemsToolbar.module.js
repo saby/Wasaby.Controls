@@ -2,18 +2,18 @@
  * Created by as.avramenko on 29.01.2016.
  */
 
-define('js!SBIS3.CONTROLS.ItemsToolbar',
+define('SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
     [
-       'js!SBIS3.CONTROLS.CompoundControl',
-       'js!SBIS3.CONTROLS.ItemActionsGroup',
-       'tmpl!SBIS3.CONTROLS.ItemsToolbar',
-       'tmpl!SBIS3.CONTROLS.ItemsToolbar/editActions',
+       'SBIS3.CONTROLS/CompoundControl',
+       'SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup',
+       'tmpl!SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
+       'tmpl!SBIS3.CONTROLS/ListView/resources/ItemsToolbar/editActions',
        'Core/Deferred',
        'Core/helpers/Hcontrol/trackElement',
-       'js!SBIS3.CONTROLS.Utils.Contains',
-       'js!SBIS3.CONTROLS.IconButton',
-       'i18n!SBIS3.CONTROLS.ItemsToolbar',
-       'css!SBIS3.CONTROLS.ItemsToolbar'
+       'SBIS3.CONTROLS/Utils/Contains',
+       'SBIS3.CONTROLS/Button/IconButton',
+       'i18n!SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
+       'css!SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar'
     ],
     function(CompoundControl, ItemActionsGroup, dotTplFn, editActionsTpl, Deferred, trackElement, contains) {
 
@@ -24,15 +24,15 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           'itemsToolbar-leftSwipe' : 'itemsToolbar-leftSwipeAnimation'
        };
        /**
-        * @class SBIS3.CONTROLS.ItemsToolbar
-        * @extends SBIS3.CONTROLS.CompoundControl
+        * @class SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar
+        * @extends SBIS3.CONTROLS/CompoundControl
         * @author Авраменко Алексей Сергеевич
         *
         * @cssModifier controls-ItemsToolbar__small устанавливает размер элементов тулбара равным 16px
         *
         * @public
         */
-       var ItemsToolbar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.ItemsToolbar.prototype */ {
+       var ItemsToolbar = CompoundControl.extend( /** @lends SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar.prototype */ {
           _dotTplFn: dotTplFn,
           $protected: {
              _options: {

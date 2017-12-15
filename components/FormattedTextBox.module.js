@@ -1,9 +1,9 @@
-define('js!SBIS3.CONTROLS.FormattedTextBox',
+define('SBIS3.CONTROLS/FormattedTextBox',
    [
-      'js!SBIS3.CONTROLS.FormattedTextBoxBase',
-      'tmpl!SBIS3.CONTROLS.FormattedTextBox/FormattedTextBox/FormattedTextBox',
-      'css!SBIS3.CONTROLS.FormattedTextBox/FormattedTextBox/FormattedTextBox',
-      'css!SBIS3.CONTROLS.TextBox/TextBox/TextBox'
+      'SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase',
+      'tmpl!SBIS3.CONTROLS/FormattedTextBox/FormattedTextBox',
+      'css!SBIS3.CONTROLS/FormattedTextBox/FormattedTextBox',
+      'css!SBIS3.CONTROLS/TextBox/TextBox'
    ],
    function (FormattedTextBoxBase, dotTplFn) {
 
@@ -13,8 +13,8 @@ define('js!SBIS3.CONTROLS.FormattedTextBox',
     * Можно вводить только значения особого формата.
     * В поле ввода уже заранее будут введены символы, определяющие формат (например, скобки и тире для телефона)
     * и останется ввести только недостающие символы.
-    * @class SBIS3.CONTROLS.FormattedTextBox
-    * @extends SBIS3.CONTROLS.FormattedTextBoxBase
+    * @class SBIS3.CONTROLS/FormattedTextBox
+    * @extends SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase
     * @demo SBIS3.CONTROLS.Demo.MyFormattedTextBox
     * @author Романов Валерий Сергеевич
     *
@@ -35,11 +35,11 @@ define('js!SBIS3.CONTROLS.FormattedTextBox',
     * @category Input
     * @control
     * @initial
-    * <component data-component='SBIS3.CONTROLS.FormattedTextBox' style="width:150px;">
+    * <component data-component='SBIS3.CONTROLS/FormattedTextBox' style="width:150px;">
     * </component>
     */
 
-   var FormattedTextBox = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS.FormattedTextBox.prototype */{
+   var FormattedTextBox = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS/FormattedTextBox.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          /**

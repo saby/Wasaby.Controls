@@ -1,24 +1,24 @@
 /**
  * Created by as.suhoruchkin on 02.04.2015.
  */
-define('js!SBIS3.CONTROLS.OperationSum', [
-    'js!SBIS3.CONTROLS.Link'
+define('SBIS3.CONTROLS/OperationsPanel/Sum', [
+    'SBIS3.CONTROLS/Link'
 ], function(Link) {
     /**
      * Операция суммирования.
      *
-     * SBIS3.CONTROLS.OperationSum
-     * @class SBIS3.CONTROLS.OperationSum
-     * @extends SBIS3.CONTROLS.Link
+     * SBIS3.CONTROLS/OperationsPanel/Sum
+     * @class SBIS3.CONTROLS/OperationsPanel/Sum
+     * @extends SBIS3.CONTROLS/Link
      * @control
      * @public
      * @author Сухоручкин Андрей Сергеевич
      * @initial
-     * <component data-component='SBIS3.CONTROLS.OperationSum'>
+     * <component data-component='SBIS3.CONTROLS/OperationsPanel/Sum'>
      *
      * </component>
      */
-    var OperationSum = Link.extend(/** @lends SBIS3.CONTROLS.OperationSum.prototype */{
+    var OperationSum = Link.extend(/** @lends SBIS3.CONTROLS/OperationsPanel/Sum.prototype */{
 
         $protected: {
             _options: {

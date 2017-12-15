@@ -1,19 +1,19 @@
 /**
  * Created by am.gerasimov on 25.01.2016.
  */
-define('js!SBIS3.CONTROLS.SuggestShowAll',
-    [  'js!SBIS3.CORE.CompoundControl',
-       'tmpl!SBIS3.CONTROLS.SuggestShowAll/SuggestShowAll/SuggestShowAll',
-       'js!SBIS3.CONTROLS.DataGridView',
-       'i18n!SBIS3.CONTROLS.SuggestShowAll',
-       'css!SBIS3.CONTROLS.SuggestShowAll/SuggestShowAll/SuggestShowAll',
-       'js!SBIS3.CONTROLS.Button'
+define('SBIS3.CONTROLS/Suggest/SuggestShowAll',
+    [  'Lib/Control/CompoundControl/CompoundControl',
+       'tmpl!SBIS3.CONTROLS/Suggest/SuggestShowAll/SuggestShowAll',
+       'SBIS3.CONTROLS/DataGridView',
+       'i18n!SBIS3.CONTROLS/Suggest/SuggestShowAll',
+       'css!SBIS3.CONTROLS/Suggest/SuggestShowAll/SuggestShowAll',
+       'SBIS3.CONTROLS/Button'
     ], function (CompoundControl, dotTplFn) {
 
        var optionsToSet = ['columns', 'itemTpl', 'idProperty', 'filter', 'dataSource'];
        /**
         * SBIS3.CORE.SuggestShowAll
-        * @extends SBIS3.CORE.CompoundControl
+        * @extends Lib/Control/CompoundControl/CompoundControl
         */
        var SuggestShowAllDialog = CompoundControl.extend({
           _dotTplFn: dotTplFn,

@@ -1,21 +1,21 @@
-define('js!SBIS3.CONTROLS.TreeDataGridView', [
+define('SBIS3.CONTROLS/Tree/DataGridView', [
    "Core/core-merge",
    "Core/constants",
    'Core/CommandDispatcher',
-   'js!SBIS3.CONTROLS.Utils.Contains',
-   "js!SBIS3.CONTROLS.DataGridView",
-   "tmpl!SBIS3.CONTROLS.TreeDataGridView/DataGridView/TreeDataGridView",
-   "js!SBIS3.CONTROLS.TreeMixin",
-   "js!SBIS3.CONTROLS.TreeViewMixin",
-   "js!SBIS3.CONTROLS.IconButton",
-   "tmpl!SBIS3.CONTROLS.TreeDataGridView/DataGridView/resources/ItemTemplate",
-   "tmpl!SBIS3.CONTROLS.TreeDataGridView/DataGridView/resources/ItemContentTemplate",
-   "tmpl!SBIS3.CONTROLS.TreeDataGridView/DataGridView/resources/FooterWrapperTemplate",
-   "tmpl!SBIS3.CONTROLS.TreeDataGridView/DataGridView/resources/searchRender",
+   'SBIS3.CONTROLS/Utils/Contains',
+   "SBIS3.CONTROLS/DataGridView",
+   "tmpl!SBIS3.CONTROLS/Tree/DataGridView/TreeDataGridView",
+   "SBIS3.CONTROLS/Mixins/TreeMixin",
+   "SBIS3.CONTROLS/Mixins/TreeViewMixin",
+   "SBIS3.CONTROLS/Button/IconButton",
+   "tmpl!SBIS3.CONTROLS/Tree/DataGridView/resources/ItemTemplate",
+   "tmpl!SBIS3.CONTROLS/Tree/DataGridView/resources/ItemContentTemplate",
+   "tmpl!SBIS3.CONTROLS/Tree/DataGridView/resources/FooterWrapperTemplate",
+   "tmpl!SBIS3.CONTROLS/Tree/DataGridView/resources/searchRender",
    "Core/ConsoleLogger",
-   'js!SBIS3.CONTROLS.Link',
-   'css!SBIS3.CONTROLS.TreeDataGridView/DataGridView/TreeDataGridView',
-   'css!SBIS3.CONTROLS.TreeView/View/TreeView'
+   'SBIS3.CONTROLS/Link',
+   'css!SBIS3.CONTROLS/Tree/DataGridView/TreeDataGridView',
+   'css!SBIS3.CONTROLS/Tree/View/TreeView'
 ], function( cMerge, constants, CommandDispatcher, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
 
 
@@ -110,12 +110,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * <a href="http://axure.tensor.ru/standarts/v7/%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html">Спецификация</a>
     * <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/">Документация</a>.
     *
-    * @class SBIS3.CONTROLS.TreeDataGridView
-    * @extends SBIS3.CONTROLS.DataGridView
-    * @mixes SBIS3.CONTROLS.TreeMixin
-    * @mixes SBIS3.CONTROLS.TreeViewMixin
+    * @class SBIS3.CONTROLS/Tree/DataGridView
+    * @extends SBIS3.CONTROLS/DataGridView
+    * @mixes SBIS3.CONTROLS/Mixins/TreeMixin
+    * @mixes SBIS3.CONTROLS/Mixins/TreeViewMixin
     *
-    * @cssModifier controls-TreeDataGridView__hideExpandsOnHiddenNodes Скрывает треугольник рядом с записью типа "Скрытый узел" (см. <a href='/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>). Для контрола SBIS3.CONTROLS.TreeCompositeView модификатор актуален только для режима отображения "Таблица" (см. {@link SBIS3.CONTROLS.CompositeViewMixin#viewMode viewMode}=table).
+    * @cssModifier controls-TreeDataGridView__hideExpandsOnHiddenNodes Скрывает треугольник рядом с записью типа "Скрытый узел" (см. <a href='/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>). Для контрола SBIS3.CONTROLS/Tree/CompositeView модификатор актуален только для режима отображения "Таблица" (см. {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#viewMode viewMode}=table).
     * @cssModifier controls-TreeDataGridView__withPhoto-S Устанавливает отступы с учетом расположения в верстке изображения, размера S.
     * @cssModifier controls-TreeDataGridView__withPhoto-M Устанавливает отступы с учетом расположения в верстке изображения, размера M.
     * @cssModifier controls-TreeDataGridView__withPhoto-L Устанавливает отступы с учетом расположения в верстке изображения, размера L.
@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * @public
     * @category Lists
     * @initial
-    * <component data-component='SBIS3.CONTROLS.TreeDataGridView'>
+    * <component data-component='SBIS3.CONTROLS/Tree/DataGridView'>
     *    <options name="columns" type="array">
     *       <options>
     *          <option name="title">№</option>
@@ -143,7 +143,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * </component>
     */
 
-   var TreeDataGridView = DataGridView.extend([TreeMixin, TreeViewMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
+   var TreeDataGridView = DataGridView.extend([TreeMixin, TreeViewMixin], /** @lends SBIS3.CONTROLS/Tree/DataGridView.prototype*/ {
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {
@@ -190,7 +190,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              * });
              * </pre>
              * @see arrowActivatedHandler
-             * @see SBIS3.CONTROLS.ListView#onItemActivate
+             * @see SBIS3.CONTROLS/ListView#onItemActivate
              */
             editArrow: false,
             /**

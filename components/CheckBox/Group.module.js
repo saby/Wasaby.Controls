@@ -2,13 +2,13 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.CheckBoxGroup',
+define('SBIS3.CONTROLS/CheckBox/Group',
    [
-      'js!SBIS3.CONTROLS.CheckBoxGroupBase',
-      'tmpl!SBIS3.CONTROLS.CheckBoxGroup/Group/CheckBoxGroup',
-      'tmpl!SBIS3.CONTROLS.CheckBoxGroup/Group/resources/ItemTemplate',
-      'js!SBIS3.CONTROLS.CheckBox',
-      'css!SBIS3.CONTROLS.CheckBoxGroup/Group/CheckBoxGroup'
+      'SBIS3.CONTROLS/CheckBox/Group/GroupBase',
+      'tmpl!SBIS3.CONTROLS/CheckBox/Group/CheckBoxGroup',
+      'tmpl!SBIS3.CONTROLS/CheckBox/Group/resources/ItemTemplate',
+      'SBIS3.CONTROLS/CheckBox',
+      'css!SBIS3.CONTROLS/CheckBox/Group/CheckBoxGroup'
    ],
    function(CheckBoxGroupBase, dotTplFn, ItemTemplate) {
 
@@ -16,8 +16,8 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup',
 
    /**
     * Контрол, отображающий группу чекбоксов
-    * @class SBIS3.CONTROLS.CheckBoxGroup
-    * @extends SBIS3.CONTROLS.CheckBoxGroupBase
+    * @class SBIS3.CONTROLS/CheckBox/Group
+    * @extends SBIS3.CONTROLS/CheckBox/Group/GroupBase
     * @demo SBIS3.CONTROLS.Demo.MyCheckBoxGroup
     * @author Журавлев Максим Сергеевич
     * @cssModifier controls-ButtonGroup__vertical Задаёт вертикальное расположение элементов в группе.
@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup',
     * @public
     * @category Input
     * @initial
-    * <component data-component='SBIS3.CONTROLS.CheckBoxGroup'>
+    * <component data-component='SBIS3.CONTROLS/CheckBox/Group'>
     *    <options name="items" type="array">
     *       <options>
     *          <option name="id" type="string">1</option>
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup',
     * </component>
     */
 
-   var CheckBoxGroup = CheckBoxGroupBase.extend( /** @lends SBIS3.CONTROLS.CheckBoxGroup.prototype */ {
+   var CheckBoxGroup = CheckBoxGroupBase.extend( /** @lends SBIS3.CONTROLS/CheckBox/Group.prototype */ {
       _dotTplFn : dotTplFn,
        /**
         * @typedef {Object} GroupItems
@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup',
         */
        /**
         * @cfg {GroupItems[]} Набор исходных данных, по которому строится отображение группы
-        * @name SBIS3.CONTROLS.CheckBoxGroup#items
+        * @name SBIS3.CONTROLS/CheckBox/Group#items
         * @example
         * <pre class="brush:xml">
         *     <options name="items" type="array">

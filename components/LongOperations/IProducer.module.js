@@ -1,11 +1,11 @@
 /**
  * Интерфейс продюсера длительных операций
- * @interface SBIS3.CONTROLS.LongOperations.IProducer
+ * @interface SBIS3.CONTROLS/LongOperations/IProducer
  * @public
  * @author Спирин Виктор Алексеевич
  */
 
-define('js!SBIS3.CONTROLS.LongOperations.IProducer',
+define('SBIS3.CONTROLS/LongOperations/IProducer',
    [],
 
    function () {
@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.LongOperations.IProducer',
        */
       var NOT_IMPLEMENTED = 'Method must be implemented';
 
-      return /** @lends SBIS3.CONTROLS.LongOperations.IProducer.prototype */{
+      return /** @lends SBIS3.CONTROLS/LongOperations/IProducer.prototype */{
          /**
           * @event onlongoperationstarted Происходит при начале исполнения новой длительной операции
           * @param {Core/EventObject} evtName Дескриптор события

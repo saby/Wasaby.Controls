@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 14.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.Selectable', [
+define('SBIS3.CONTROLS/Mixins/Selectable', [
    'WS.Data/Utils',
    'WS.Data/Collection/IBind',
    'Core/core-instance'
@@ -10,12 +10,12 @@ define('js!SBIS3.CONTROLS.Selectable', [
 
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного.
-    * @mixin SBIS3.CONTROLS.Selectable
+    * @mixin SBIS3.CONTROLS/Mixins/Selectable
     * @author Крайнов Дмитрий Олегович
     * @public
     */
 
-   var Selectable = /**@lends SBIS3.CONTROLS.Selectable.prototype  */{
+   var Selectable = /**@lends SBIS3.CONTROLS/Mixins/Selectable.prototype  */{
        /**
         * @event onSelectedItemChange Происходит при смене выбранного элемента коллекции.
         * @param {Core/EventObject} eventObject Дескриптор события.
@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
         * @see selectedKey
         * @see setSelectedKey
         * @see getSelectedKey
-        * @see SBIS3.CONTROLS.DSMixin#idProperty
+        * @see SBIS3.CONTROLS/Mixins/DSMixin#idProperty
         */
       $protected: {
           /*не различаются события move и remove/add при смене пор номеров, поэтому используем этот флаг, см ниже*/
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
               * @cfg {String} Устанавливает выбранным элемент коллекции по переданному индексу (порядковому номеру).
               * @remark
               * <ol>
-              *    <li>Элемент будет выбран по переданному идентификатору только при условии, что для контрола установлен источник данных в опции {@link SBIS3.CONTROLS.DSMixin#dataSource}.</li>
+              *    <li>Элемент будет выбран по переданному идентификатору только при условии, что для контрола установлен источник данных в опции {@link SBIS3.CONTROLS/Mixins/DSMixin#dataSource}.</li>
               *    <li>Установить новый идентификатор элемента коллекции можно с помощью метода {@link setSelectedIndex}, а получить идентификатор - с помощью метода {@link getSelectedIndex}.</li>
               * </ol>
               * @example
@@ -57,10 +57,10 @@ define('js!SBIS3.CONTROLS.Selectable', [
               */
              selectedIndex: null,
              /**
-              * @cfg {String|Number} Устанавливает выбранным элемент коллекции по переданному идентификатору - значению {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля} элемента коллекции.
+              * @cfg {String|Number} Устанавливает выбранным элемент коллекции по переданному идентификатору - значению {@link SBIS3.CONTROLS/Mixins/DSMixin#idProperty ключевого поля} элемента коллекции.
               * @remark
               * <ol>
-              *    <li>Элемент будет выбран по переданному идентификатору только при условии, что для контрола установлен источник данных в опции {@link SBIS3.CONTROLS.DSMixin#dataSource}.</li>
+              *    <li>Элемент будет выбран по переданному идентификатору только при условии, что для контрола установлен источник данных в опции {@link SBIS3.CONTROLS/Mixins/DSMixin#dataSource}.</li>
               *    <li>Установить новый идентификатор элемента коллекции можно с помощью метода {@link setSelectedKey}, а получить идентификатор - с помощью метода {@link getSelectedKey}.</li>
               * </ol>
               * @example
@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
               * @see selectedKey
               * @see setSelectedKey
               * @see getSelectedKey
-              * @see SBIS3.CONTROLS.DSMixin#idProperty
+              * @see SBIS3.CONTROLS/Mixins/DSMixin#idProperty
               */
             allowEmptySelection : true
          }
@@ -238,11 +238,11 @@ define('js!SBIS3.CONTROLS.Selectable', [
       /**
        * Устанавливает выбранным элемент коллекции по переданному идентификатору.
        * @remark
-       * Метод актуален для использования при условии, что для контрола установлен источник данных в опции {@link SBIS3.CONTROLS.DSMixin#dataSource} и поле первичного ключа в опции {@link SBIS3.CONTROLS.DSMixin#idProperty}.
+       * Метод актуален для использования при условии, что для контрола установлен источник данных в опции {@link SBIS3.CONTROLS/Mixins/DSMixin#dataSource} и поле первичного ключа в опции {@link SBIS3.CONTROLS/Mixins/DSMixin#idProperty}.
        * Для возвращения коллекции к состоянию без выбранного элемента нужно передать null.
        * При использовании метода происходит событие {@link onSelectedItemChange}.
        * @param {String|Number} id Идентификатор элемента, который нужно установить в качестве выбранного.
-       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля}.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS/Mixins/DSMixin#idProperty ключевого поля}.
        * @example
        * <pre>
        *     var newKey = (someValue > 0) ? 'positive' : 'negative';
@@ -250,7 +250,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
        * </pre>
        * @see selectedKey
        * @see getSelectedKey
-       * @see SBIS3.CONTROLS.DSMixin#idProperty
+       * @see SBIS3.CONTROLS/Mixins/DSMixin#idProperty
        * @see onSelectedItemChange
        */
       setSelectedKey : function(id) {
@@ -264,7 +264,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
       /**
        * Устанавливает выбранным элемент коллекции по переданному индексу (порядковому номеру).
        * @remark
-       * Метод актуален для использования при условии, что для контрола установлен источник данных в опции {@link SBIS3.CONTROLS.DSMixin#dataSource} и поле первичного ключа в опции {@link SBIS3.CONTROLS.DSMixin#idProperty}.
+       * Метод актуален для использования при условии, что для контрола установлен источник данных в опции {@link SBIS3.CONTROLS/Mixins/DSMixin#dataSource} и поле первичного ключа в опции {@link SBIS3.CONTROLS/Mixins/DSMixin#idProperty}.
        * @param {String|Number} index Индекс выбранного элемента коллекции.
        * @example
        * <pre>
@@ -282,7 +282,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
       },
       /**
        * Возвращает идентификатор выбранного элемента коллекции.
-       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля}.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS/Mixins/DSMixin#idProperty ключевого поля}.
        * @return {String|Number} Первичный ключ выбранного элемента коллекции.
        * @example
        * <pre>
@@ -294,7 +294,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
        * @see selectedKey
        * @see setSelectedKey
        * @see onSelectedItemChange
-       * @see SBIS3.CONTROLS.DSMixin#idProperty
+       * @see SBIS3.CONTROLS/Mixins/DSMixin#idProperty
        */
       getSelectedKey : function() {
          return this._options.selectedKey;

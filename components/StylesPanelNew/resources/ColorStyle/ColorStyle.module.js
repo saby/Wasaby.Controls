@@ -2,10 +2,10 @@
  * Created by ps.borisov on 29.08.2016.
  */
 
-define('js!SBIS3.CONTROLS.ColorStyle', [
-   'js!SBIS3.CONTROLS.RadioGroup',
-   'tmpl!SBIS3.CONTROLS.ColorStyle/resources/ItemTemplate',
-   'js!SBIS3.CONTROLS.ColorRadioButtonNew'
+define('SBIS3.CONTROLS/StylesPanelNew/resources/ColorStyle/ColorStyle', [
+   'SBIS3.CONTROLS/Radio/Group',
+   'tmpl!SBIS3.CONTROLS/StylesPanelNew/resources/ColorStyle/resources/ItemTemplate',
+   'SBIS3.CONTROLS/StylesPanelNew/resources/ColorStyle/resources/ColorRadioButton/ColorRadioButtonNew'
 ], function(RadioGroup, ItemTemplate) {
 
    'use strict';
@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.ColorStyle', [
    /**
     * Контрол, реализующий поведение выбора цвета
     * @class SBIS3.CONTROLS.ColorGroup
-    * @extends SBIS3.CONTROLS.RadioGroup
+    * @extends SBIS3.CONTROLS/Radio/Group
     * @public
     * @author Борисов П.С.
     */

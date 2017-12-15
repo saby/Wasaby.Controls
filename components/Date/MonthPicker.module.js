@@ -5,16 +5,16 @@
  */
 
 define(
-   'js!SBIS3.CONTROLS.MonthPicker',
+   'SBIS3.CONTROLS/Date/MonthPicker',
    [
       'Core/constants',
-      'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.PickerMixin',
-      'js!SBIS3.CONTROLS.Utils.DateUtil',
-      'tmpl!SBIS3.CONTROLS.MonthPicker/MonthPicker/MonthPickerDropdown',
-      'tmpl!SBIS3.CONTROLS.MonthPicker/MonthPicker/MonthPicker',
-      'i18n!SBIS3.CONTROLS.MonthPicker',
-      'css!SBIS3.CONTROLS.MonthPicker/MonthPicker/MonthPicker'
+      'Lib/Control/CompoundControl/CompoundControl',
+      'SBIS3.CONTROLS/Mixins/PickerMixin',
+      'SBIS3.CONTROLS/Utils/DateUtil',
+      'tmpl!SBIS3.CONTROLS/Date/MonthPicker/MonthPickerDropdown',
+      'tmpl!SBIS3.CONTROLS/Date/MonthPicker/MonthPicker',
+      'i18n!SBIS3.CONTROLS/Date/MonthPicker',
+      'css!SBIS3.CONTROLS/Date/MonthPicker/MonthPicker'
    ],
    function(constants, CompoundControl, PickerMixin, DateUtil, DropdownTpl, dotTplFn) {
 
@@ -23,12 +23,12 @@ define(
    /**
     * Контрол выбор месяца и года, или только года, с выпадающей вниз панелью.
     * Не наследуется от поля ввода, потому что там в принципе не требуется текстовый ввод.
-    * @class SBIS3.CONTROLS.MonthPicker
-    * @extends SBIS3.CORE.CompoundControl
-    * @mixes SBIS3.CONTROLS.PickerMixin
+    * @class SBIS3.CONTROLS/Date/MonthPicker
+    * @extends Lib/Control/CompoundControl/CompoundControl
+    * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyMonthPicker
-    * @deprecated Используйте {@link SBIS3.CONTROLS.DateRangeSlider}.
+    * @deprecated Используйте {@link SBIS3.CONTROLS/Date/RangeSlider}.
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
@@ -47,7 +47,7 @@ define(
     * @category Date/Time
     */
 
-   var MonthPicker = CompoundControl.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.MonthPicker.prototype */{
+   var MonthPicker = CompoundControl.extend( [PickerMixin], /** @lends SBIS3.CONTROLS/Date/MonthPicker.prototype */{
       _dropdownTpl: DropdownTpl,
       _dotTplFn: dotTplFn,
        /**

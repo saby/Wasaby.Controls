@@ -1,23 +1,23 @@
-define('js!SBIS3.CONTROLS.TreeCompositeView', [
+define('SBIS3.CONTROLS/Tree/CompositeView', [
    "Core/core-clone",
    "Core/constants",
    "Core/Deferred",
    "Core/ParallelDeferred",
    "Core/helpers/Object/isEmpty",
-   "js!SBIS3.CONTROLS.TreeDataGridView",
-   "js!SBIS3.CONTROLS.CompositeViewMixin",
-   "tmpl!SBIS3.CONTROLS.TreeCompositeView/CompositeView/resources/CompositeView__folderTpl",
-   'tmpl!SBIS3.CONTROLS.TreeCompositeView/CompositeView/resources/TreeCompositeItemsTemplate',
-   'tmpl!SBIS3.CONTROLS.TreeCompositeView/CompositeView/resources/FolderTemplate',
-   'tmpl!SBIS3.CONTROLS.TreeCompositeView/CompositeView/resources/ListFolderTemplate',
-   'tmpl!SBIS3.CONTROLS.TreeCompositeView/CompositeView/resources/FolderContentTemplate',
-   'tmpl!SBIS3.CONTROLS.TreeCompositeView/CompositeView/resources/StaticFolderContentTemplate',
+   "SBIS3.CONTROLS/Tree/DataGridView",
+   "SBIS3.CONTROLS/Mixins/CompositeViewMixin",
+   "tmpl!SBIS3.CONTROLS/Tree/CompositeView/resources/CompositeView__folderTpl",
+   'tmpl!SBIS3.CONTROLS/Tree/CompositeView/resources/TreeCompositeItemsTemplate',
+   'tmpl!SBIS3.CONTROLS/Tree/CompositeView/resources/FolderTemplate',
+   'tmpl!SBIS3.CONTROLS/Tree/CompositeView/resources/ListFolderTemplate',
+   'tmpl!SBIS3.CONTROLS/Tree/CompositeView/resources/FolderContentTemplate',
+   'tmpl!SBIS3.CONTROLS/Tree/CompositeView/resources/StaticFolderContentTemplate',
    "Core/helpers/fast-control-helpers",
-   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+   'SBIS3.CONTROLS/Utils/TemplateUtil',
    'Core/core-merge',
    'Core/core-instance',
-   'css!SBIS3.CONTROLS.CompositeView/CompositeView/CompositeView',
-   'css!SBIS3.CONTROLS.TreeCompositeView/CompositeView/TreeCompositeView'
+   'css!SBIS3.CONTROLS/CompositeView/CompositeView',
+   'css!SBIS3.CONTROLS/Tree/CompositeView/TreeCompositeView'
 ], function(coreClone, constants, Deferred, ParallelDeferred, isEmpty, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, StaticFolderContentTemplate, fcHelpers, TemplateUtil, cMerge, cInstance) {
 
    'use strict';
@@ -25,10 +25,10 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    /**
     * Контрол, отображающий набор данных с иерархической структурой в виде таблицы, плитки или списка.
     * Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/">Настройка списков</a>.
-    * @class SBIS3.CONTROLS.TreeCompositeView
-    * @extends SBIS3.CONTROLS.TreeDataGridView
+    * @class SBIS3.CONTROLS/Tree/CompositeView
+    * @extends SBIS3.CONTROLS/Tree/DataGridView
     *
-    * @mixes SBIS3.CONTROLS.CompositeViewMixin
+    * @mixes SBIS3.CONTROLS/Mixins/CompositeViewMixin
     *
     * @author
     *
@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
     * @control
     * @category Lists
     * @initial
-    * <component data-component='SBIS3.CONTROLS.TreeCompositeView'>
+    * <component data-component='SBIS3.CONTROLS/Tree/CompositeView'>
     *    <options name="columns" type="array">
     *       <options>
     *          <option name="title">Поле 1</option>
@@ -170,7 +170,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
       return !(cfg.itemTemplate || cfg.listTemplate || cfg.tileTemplate || cfg.folderTemplate || cfg.listFolderTemplate)
    };
 
-   var TreeCompositeView = TreeDataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.TreeCompositeView.prototype*/ {
+   var TreeCompositeView = TreeDataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS/Tree/CompositeView.prototype*/ {
 
       $protected: {
          _prevMode: null,
@@ -180,15 +180,15 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             /**
              * @cfg {String} Устанавливает шаблон, который используется для отрисовки папки в режимах "Список" и "Плитка"
              * @remark
-             * Когда опция не задана, используется стандартный шаблон. Для его работы требуется установить опцию {@link SBIS3.CONTROLS.DSMixin#displayProperty}.
+             * Когда опция не задана, используется стандартный шаблон. Для его работы требуется установить опцию {@link SBIS3.CONTROLS/Mixins/DSMixin#displayProperty}.
              * Для режима отображения "Список" можно переопределить шаблон папки с помощью опции {@link listFolderTemplate}.
-             * Кроме шаблона папки, можно установить шаблон отображения элементов коллекции с помощью опций {@link SBIS3.CONTROLS.DataGridView/Columns.typedef cellTemplate}, {@link SBIS3.CONTROLS.ListView#itemTemplate}, {@link SBIS3.CONTROLS.CompositeViewMixin#listTemplate} и {@link SBIS3.CONTROLS.CompositeViewMixin#tileTemplate}.
+             * Кроме шаблона папки, можно установить шаблон отображения элементов коллекции с помощью опций {@link SBIS3.CONTROLS/Columns.typedef cellTemplate}, {@link SBIS3.CONTROLS/ListView#itemTemplate}, {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#listTemplate} и {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#tileTemplate}.
              * @see listFolderTemplate
-             * SBIS3.CONTROLS.DSMixin#displayProperty
-             * @see SBIS3.CONTROLS.DataGridView/Columns.typedef
-             * @see SBIS3.CONTROLS.ListView#itemTemplate
-             * @see SBIS3.CONTROLS.CompositeViewMixin#listTemplate
-             * @see SBIS3.CONTROLS.CompositeViewMixin#tileTemplate
+             * SBIS3.CONTROLS/Mixins/DSMixin#displayProperty
+             * @see SBIS3.CONTROLS/Columns.typedef
+             * @see SBIS3.CONTROLS/ListView#itemTemplate
+             * @see SBIS3.CONTROLS/Mixins/CompositeViewMixin#listTemplate
+             * @see SBIS3.CONTROLS/Mixins/CompositeViewMixin#tileTemplate
              * @example
              * <pre>
              *    <div class="controls-ListView__demo-folder">\
@@ -202,15 +202,15 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             /**
              * @cfg {String} Устанавливает шаблон, который используется для отрисовки папки в режимах "Список"
              * @remark
-             * Когда опция не задана, используется стандартный шаблон. Для его работы требуется установить опцию {@link SBIS3.CONTROLS.DSMixin#displayProperty}.
+             * Когда опция не задана, используется стандартный шаблон. Для его работы требуется установить опцию {@link SBIS3.CONTROLS/Mixins/DSMixin#displayProperty}.
              * Для режима отображения "Плитка" можно переопределить шаблон папки с помощью опции {@link folderTemplate}.
-             * Кроме шаблона папки, можно установить шаблон отображения элементов коллекции с помощью опций {@link SBIS3.CONTROLS.DataGridView/Columns.typedef cellTemplate}, {@link SBIS3.CONTROLS.ListView#itemTemplate}, {@link SBIS3.CONTROLS.CompositeViewMixin#listTemplate} и {@link SBIS3.CONTROLS.CompositeViewMixin#tileTemplate}.
+             * Кроме шаблона папки, можно установить шаблон отображения элементов коллекции с помощью опций {@link SBIS3.CONTROLS/Columns.typedef cellTemplate}, {@link SBIS3.CONTROLS/ListView#itemTemplate}, {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#listTemplate} и {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#tileTemplate}.
              * @see folderTemplate
-             * SBIS3.CONTROLS.DSMixin#displayProperty
-             * @see SBIS3.CONTROLS.DataGridView/Columns.typedef
-             * @see SBIS3.CONTROLS.ListView#itemTemplate
-             * @see SBIS3.CONTROLS.CompositeViewMixin#listTemplate
-             * @see SBIS3.CONTROLS.CompositeViewMixin#tileTemplate
+             * SBIS3.CONTROLS/Mixins/DSMixin#displayProperty
+             * @see SBIS3.CONTROLS/Columns.typedef
+             * @see SBIS3.CONTROLS/ListView#itemTemplate
+             * @see SBIS3.CONTROLS/Mixins/CompositeViewMixin#listTemplate
+             * @see SBIS3.CONTROLS/Mixins/CompositeViewMixin#tileTemplate
              * <pre>
              *    <div class="controls-ListView__demo-folder">\
              *       {{=it.item.get("title")}}\

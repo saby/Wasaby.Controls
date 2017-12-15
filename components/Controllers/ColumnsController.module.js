@@ -2,18 +2,18 @@
  * Created by as.avramenko on 24.01.2017.
  */
 
-define('js!SBIS3.CONTROLS.ColumnsController', ['Core/Abstract'], function(cAbstract) {
+define('SBIS3.CONTROLS/Controllers/ColumnsController', ['Core/Abstract'], function(cAbstract) {
    'use strict';
    /**
     * Класс контроллера редакторования колонок.
     *
     * @author Авраменко Алексей Сергеевич
-    * @class SBIS3.CONTROLS.ColumnsController
+    * @class SBIS3.CONTROLS/Controllers/ColumnsController
     * @public
     * @extends Core/Abstract
     */
    var
-      ColumnsController = cAbstract.extend(/** @lends SBIS3.CONTROLS.ColumnsController.prototype */ {
+      ColumnsController = cAbstract.extend(/** @lends SBIS3.CONTROLS/Controllers/ColumnsController.prototype */ {
          $protected: {
             _options: {
             },

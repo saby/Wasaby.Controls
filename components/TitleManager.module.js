@@ -1,17 +1,17 @@
 /*global define, $ws, $*/
-define('js!SBIS3.CONTROLS.TitleManager', [
+define('SBIS3.CONTROLS/TitleManager', [
    'Core/Abstract'
 ], function(cAbstract) {
    'use strict';
    /**
     * Синглтон, который управляет заголовком страницы, он хранит контролы и заголовки, при уничтожении контрола
     * он устанавливает предыдущий заголовок из стека.
-    * @class SBIS3.CONTROLS.TitleManager
+    * @class SBIS3.CONTROLS/TitleManager
     * @public
     * @author Крайнов Дмитрий Олегович
     * @singleton
     */
-   var TitleManager = cAbstract.extend(/**@lends SBIS3.CONTROLS.TitleManager.prototype*/{
+   var TitleManager = cAbstract.extend(/**@lends SBIS3.CONTROLS/TitleManager.prototype*/{
       $protected: {
          _store: [],
          _defaultTitle: "/СБИС"
@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.TitleManager', [
       /**
        * Устанавливает title
        * @param {String} title Заголовок
-       * @param {SBIS3.CONTROLS.Control} control Контрол на время жизни которого нужно установить заголовок
+       * @param {SBIS3.CONTROLS/Control} control Контрол на время жизни которого нужно установить заголовок
        */
       set: function (title, control) {
          if (!control.isDestroyed()) {

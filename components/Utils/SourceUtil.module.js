@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 06.03.2017.
  */
-define('js!SBIS3.CONTROLS.Utils.SourceUtil', [
+define('SBIS3.CONTROLS/Utils/SourceUtil', [
    'Core/core-instance',
    'require'
 ], function (
@@ -9,10 +9,10 @@ define('js!SBIS3.CONTROLS.Utils.SourceUtil', [
    requirejs
 ) {
     /**
-     * @class SBIS3.CONTROLS.Utils.SourceUtil
+     * @class SBIS3.CONTROLS/Utils/SourceUtil
      * @public
      */
-   return /** @lends SBIS3.CONTROLS.Utils.SourceUtil.prototype */ {
+   return /** @lends SBIS3.CONTROLS/Utils/SourceUtil.prototype */ {
        /**
         *
         * @param sourceOpt

@@ -1,2 +1,2 @@
 // ВРЕМЕННО, для обратной совместимости
-define('js!SBIS3.CONTROLS.GenericLongOperationsProducer', ['js!SBIS3.CONTROLS.LongOperations.GenericProducer'], function (arg) { return arg; });
+define('SBIS3.CONTROLS/LongOperations/GenericProducer/GenericLongOperationsProducer', ['SBIS3.CONTROLS/LongOperations/GenericProducer'], function (arg) { return arg; });

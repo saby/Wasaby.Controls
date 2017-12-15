@@ -1,12 +1,12 @@
 /* global define */
-define('js!SBIS3.CONTROLS.HierarchySelection', [
-   'js!SBIS3.CONTROLS.Selection',
+define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/HierarchySelection', [
+   'SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Selection',
    'WS.Data/Entity/Record',
    'WS.Data/Relation/Hierarchy',
    'WS.Data/Collection/RecordSet',
    'Core/core-clone',
    'Core/IoC',
-   'js!SBIS3.CONTROLS.ArraySimpleValuesUtil'
+   'SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil'
 ], function (Selection, Record, HierarchyRelation, RecordSet, cClone, IoC, ArraySimpleValuesUtil) {
    'use strict';
 
@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
          PARTIALLY: 3
    };
 
-   var HierarchySelection = Selection.extend(/** @lends SBIS3.CONTROLS.HierarchySelection */{
+   var HierarchySelection = Selection.extend(/** @lends SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/HierarchySelection */{
       _parentProperty: undefined,
       _hierarchyRelations: {},
       _markedTree: undefined,

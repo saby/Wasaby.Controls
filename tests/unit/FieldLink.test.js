@@ -4,10 +4,10 @@
 /**
  * Created by am.gerasimov on 12.04.2017.
  */
-define(['js!SBIS3.CONTROLS.FieldLink'], function (FieldLink) {
+define(['SBIS3.CONTROLS/FieldLink'], function (FieldLink) {
    'use strict';
    
-   describe('SBIS3.CONTROLS.Utils.ItemsSelection', function () {
+   describe('SBIS3.CONTROLS/Utils/ItemsSelectionUtil', function () {
       
       context('need JQ', function() {
          var getContainer = function() {

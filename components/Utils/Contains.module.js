@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.Utils.Contains', function () {
+define('SBIS3.CONTROLS/Utils/Contains', function () {
     /**
      * Модуль, в котором реализована функция <b>contains(parent, child)</b>.
      * Проверяет, лежит ли элемент 2 в дом дереве элемента 1.
@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.Utils.Contains', function () {
      * <h2>Возвращает</h2>
      * {Boolean}
      *
-     * @class SBIS3.CONTROLS.Utils.Contains
+     * @class SBIS3.CONTROLS/Utils/Contains
      * @public
      * @author Мальцев Алексей Александрович
      */

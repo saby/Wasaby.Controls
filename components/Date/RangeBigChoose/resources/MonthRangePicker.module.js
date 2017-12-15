@@ -1,14 +1,14 @@
-define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
+define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
    "Core/constants",
    "Core/Deferred",
-   "js!SBIS3.CONTROLS.ListView",
-   "tmpl!SBIS3.CONTROLS.DateRangeBigChoose/RangeBigChoose/resources/MonthRangePickerItem",
-   "js!SBIS3.CONTROLS.RangeMixin",
-   "js!SBIS3.CONTROLS.RangeSelectableViewMixin",
+   "SBIS3.CONTROLS/ListView",
+   "tmpl!SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePickerItem",
+   "SBIS3.CONTROLS/Mixins/RangeMixin",
+   "SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin",
    "WS.Data/Source/Base",
    "Core/core-instance",
-   "js!SBIS3.CONTROLS.Utils.DateUtil",
-   "js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView"
+   "SBIS3.CONTROLS/Utils/DateUtil",
+   "SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView"
 ], function ( constants, Deferred, ListView, ItemTmpl, RangeMixin, RangeSelectableViewMixin, Base, cInstance, dateUtils) {
    'use strict';
 
@@ -70,15 +70,15 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
    var yearSource = new YearSource();
 
    /**
-    * SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker
-    * @class SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker
-    * @extends SBIS3.CONTROLS.ListView
+    * SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker
+    * @class SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker
+    * @extends SBIS3.CONTROLS/ListView
     * @author Миронов Александр Юрьевич
     * @control
-    * @mixes SBIS3.CONTROLS.RangeSelectableViewMixin
-    * @mixes SBIS3.CONTROLS.RangeMixin
+    * @mixes SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin
+    * @mixes SBIS3.CONTROLS/Mixins/RangeMixin
     */
-   var MonthRangePicker = ListView.extend([RangeSelectableViewMixin, RangeMixin], /** @lends SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker.prototype */{
+   var MonthRangePicker = ListView.extend([RangeSelectableViewMixin, RangeMixin], /** @lends SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker.prototype */{
       $protected: {
          _options: {
             liveSelection: true,
@@ -315,7 +315,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
       },
 
       _isMonthView: function (control) {
-         return cInstance.instanceOfModule(control, 'SBIS3.CONTROLS.DateRangeBigChoose.MonthView');
+         return cInstance.instanceOfModule(control, 'SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView');
       },
 
       forEachMonthView: function (func) {

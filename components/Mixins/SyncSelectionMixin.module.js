@@ -1,11 +1,11 @@
 /**
  * Created by am.gerasimov on 28.01.2016.
  */
-define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
+define('SBIS3.CONTROLS/Mixins/SyncSelectionMixin', [
    'WS.Data/Entity/Model',
    'Core/core-instance',
-   'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
-   'js!SBIS3.CONTROLS.Utils.ItemsSelection'
+   'SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil',
+   'SBIS3.CONTROLS/Utils/ItemsSelectionUtil'
 ], function(Model, cInstace, ArraySimpleValuesUtil, ItemsSelectionUtil) {
 
    /**
@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
     * @remark
     * selectedItem всегда смотрит на первый элемент из selectedItems
     * selectedKey всегда смотрит на перывй элемент из selectedKeys
-    * @mixin SBIS3.CONTROLS.SyncSelectionMixin
+    * @mixin SBIS3.CONTROLS/Mixins/SyncSelectionMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
       selectedKey: true
    };
 
-   var SyncSelectionMixin = /**@lends SBIS3.CONTROLS.SyncSelectionMixin.prototype  */{
+   var SyncSelectionMixin = /**@lends SBIS3.CONTROLS/Mixins/SyncSelectionMixin.prototype  */{
       $constructor: function() {
          /* Если уже в конструкторе есть selectedItem, то синхронизируем с selectedItems */
          if(this._options.selectedItem instanceof Model) {

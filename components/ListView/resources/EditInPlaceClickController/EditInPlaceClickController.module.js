@@ -2,24 +2,24 @@
  * Created by as.suhoruchkin on 15.10.2015.
  */
 
-define('js!SBIS3.CONTROLS.EditInPlaceClickController',
+define('SBIS3.CONTROLS/ListView/resources/EditInPlaceClickController/EditInPlaceClickController',
    [
-      'js!SBIS3.CONTROLS.EditInPlaceBaseController'
+      'SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController'
    ],
    function (EditInPlaceBaseController) {
 
       'use strict';
 
       /**
-       * @class SBIS3.CONTROLS.EditInPlaceClickController
-       * @extends SBIS3.CONTROLS.EditInPlaceBaseController
+       * @class SBIS3.CONTROLS/ListView/resources/EditInPlaceClickController/EditInPlaceClickController
+       * @extends SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController
        * @author Сухоручкин Андрей Сергеевич
        * @control
        * @public
        */
 
       var
-         EditInPlaceClickController = EditInPlaceBaseController.extend(/** @lends SBIS3.CONTROLS.EditInPlaceClickController.prototype */ {
+         EditInPlaceClickController = EditInPlaceBaseController.extend(/** @lends SBIS3.CONTROLS/ListView/resources/EditInPlaceClickController/EditInPlaceClickController.prototype */ {
             $protected: {
                _options: {
                }

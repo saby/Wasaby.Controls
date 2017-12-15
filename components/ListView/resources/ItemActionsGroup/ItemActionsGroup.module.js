@@ -2,21 +2,21 @@
  * Created by am.gerasimov on 26.03.2015.
  */
 
-define('js!SBIS3.CONTROLS.ItemActionsGroup',
+define('SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup',
    [
    "Core/CommandDispatcher",
-   "js!SBIS3.CONTROLS.ButtonGroupBaseDS",
-   "tmpl!SBIS3.CONTROLS.ItemActionsGroup",
-   "tmpl!SBIS3.CONTROLS.ItemActionsGroup/ItemTpl",
+   "SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBaseDS",
+   "tmpl!SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup",
+   "tmpl!SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemTpl",
    'Core/Deferred',
    "Core/helpers/Object/find",
    "Core/helpers/markup-helpers",
    "Core/helpers/Function/forAliveOnly",
    "Core/moduleStubs",
-   "js!SBIS3.CONTROLS.IconButton",
-   "js!SBIS3.CONTROLS.Link",
-   "css!SBIS3.CONTROLS.ItemActionsGroup",
-   "i18n!SBIS3.CONTROLS.ItemActionsGroup"
+   "SBIS3.CONTROLS/Button/IconButton",
+   "SBIS3.CONTROLS/Link",
+   "css!SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup",
+   "i18n!SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup"
 ],
    function( CommandDispatcher, ButtonGroupBaseDS, dotTplFn, dotTplFnForItem, Deferred, objectFind, mkpHelpers, forAliveOnly, moduleStubs) {
 
@@ -47,12 +47,12 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
       };
       /**
        * Класс для работы с операциями над записями, которые появляются при наведении курсора мыши.
-       * @class SBIS3.CONTROLS.ItemActionsGroup
-       * @extends SBIS3.CONTROLS.ButtonGroupBaseDS
+       * @class SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup
+       * @extends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBaseDS
        * @author Герасимов Александр Максимович
        * @public
        */
-      var ItemActionsGroup = ButtonGroupBaseDS.extend( /** @lends SBIS3.CONTROLS.ItemActionsGroup.prototype */ {
+      var ItemActionsGroup = ButtonGroupBaseDS.extend( /** @lends SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup.prototype */ {
          _dotTplFn: dotTplFn,
          $protected: {
             _itemActionsButtons: {},
@@ -207,7 +207,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          showItemActionsMenu: function(align) {
             //TODO перейти на menuIcon при переводе операций на Vdom
-            moduleStubs.require("js!SBIS3.CONTROLS.ContextMenu").addCallback(forAliveOnly(function(mods) {
+            moduleStubs.require("SBIS3.CONTROLS/Menu/ContextMenu").addCallback(forAliveOnly(function(mods) {
                /* Если за время загрузки меню операции скрылись, то и показывать меню не надо */
                if(!this.isVisible()) {
                   return;

@@ -1,18 +1,18 @@
-define('js!SBIS3.CONTROLS.SubmitPopup', [
+define('SBIS3.CONTROLS/SubmitPopup', [
    "Core/constants",
-   "js!SBIS3.CONTROLS.InformationPopup",
+   "SBIS3.CONTROLS/InformationPopup",
    "Core/helpers/Function/runDelayed",
-   "tmpl!SBIS3.CONTROLS.SubmitPopup/SubmitPopup/resources/template",
-   "js!SBIS3.CONTROLS.Button",
-   "js!SBIS3.CONTROLS.Link",
-   'css!SBIS3.CONTROLS.SubmitPopup/SubmitPopup/SubmitPopup'
+   "tmpl!SBIS3.CONTROLS/SubmitPopup/resources/template",
+   "SBIS3.CONTROLS/Button",
+   "SBIS3.CONTROLS/Link",
+   'css!SBIS3.CONTROLS/SubmitPopup/SubmitPopup'
 ],
 
    /**
     * Класс контрола "Окно подтверждения". В зависимости от состояния (см. {@link status}), может быть диалогом подтверждения, с кнопками "Да", "Нет" и "Отмена" (опционально), или диалогом с кнопкой "Ок".
-    * Для вызова контрола рекомендуется использовать {@link SBIS3.CONTROLS.Utils.InformationPopupManager}.
-    * @class SBIS3.CONTROLS.SubmitPopup
-    * @extends SBIS3.CONTROLS.InformationPopup
+    * Для вызова контрола рекомендуется использовать {@link SBIS3.CONTROLS/Utils/InformationPopupManager}.
+    * @class SBIS3.CONTROLS/SubmitPopup
+    * @extends SBIS3.CONTROLS/InformationPopup
     * @control
     * @public
     * @author Степин Павел Владимирович
@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
    function(constants, InformationPopup, runDelayed, template){
       'use strict';
 
-      var SubmitPopup = InformationPopup.extend(/** @lends SBIS3.CONTROLS.SubmitPopup.prototype */ {
+      var SubmitPopup = InformationPopup.extend(/** @lends SBIS3.CONTROLS/SubmitPopup.prototype */ {
          /**
           * @typedef {String} SubmitPopupStatus
           * @variant confirm  Диалог подтверждения. Имеет кнопки "Да", "Нет" и "Отмена" (опционально). Цвет диалога - синий.
@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
          $protected: {
             _options: {
                /**
-                * @name SBIS3.CONTROLS.SubmitPopup#opener
+                * @name SBIS3.CONTROLS/SubmitPopup#opener
                 * @cfg {undefined|SBIS3.CORE.Control} Устанавливает контрол, который будет считаться инициатором открытия диалога.
                 */
                /**

@@ -1,15 +1,15 @@
-define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
-   'js!SBIS3.CORE.Control',
-   'tmpl!SBIS3.CONTROLS.ProcessStateIndicator/ProcessStateIndicator/ProcessStateIndicator',
-   'css!SBIS3.CONTROLS.ProcessStateIndicator/ProcessStateIndicator/ProcessStateIndicator'
+define('SBIS3.CONTROLS/ProcessStateIndicator', [
+   'Lib/Control/Control',
+   'tmpl!SBIS3.CONTROLS/ProcessStateIndicator/ProcessStateIndicator',
+   'css!SBIS3.CONTROLS/ProcessStateIndicator/ProcessStateIndicator'
 ], function(control, tplFn) {
 
    'use strict';
    
    /**
     * Компонент "Идникатор процесса"
-    * @class SBIS3.CONTROLS.ProcessStateIndicator
-    * @extends SBIS3.CORE.Control
+    * @class SBIS3.CONTROLS/ProcessStateIndicator
+    * @extends Lib/Control/Control
     * @author Елифантьев Олег Николаевич
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
     * @public
     * @control
     * @initial
-    * <component data-component='SBIS3.CONTROLS.ProcessStateIndicator'>
+    * <component data-component='SBIS3.CONTROLS/ProcessStateIndicator'>
     * </component>
     */
    
@@ -137,7 +137,7 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
    }
 
    
-   ProcessStateIndicator = control.Control.extend(/** @lends SBIS3.CONTROLS.ProcessStateIndicator.prototype */ {
+   ProcessStateIndicator = control.Control.extend(/** @lends SBIS3.CONTROLS/ProcessStateIndicator.prototype */ {
       /**
        * @event onItemOver Происходит при наведении мыши на любой из элементов индикатора
        * @param {Core/EventObject} eventObject Дескриптор события.

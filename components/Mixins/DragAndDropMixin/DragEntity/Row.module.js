@@ -1,19 +1,19 @@
 /*global define, $ws, $*/
-define('js!SBIS3.CONTROLS.DragEntity.Row', [
-   'js!SBIS3.CONTROLS.DragEntity.Entity',
+define('SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row', [
+   'SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity',
    'WS.Data/Di'
 ], function (Entity, Di) {
    'use strict';
    /**
     * Drag'n'drop объект списочного контрола. Объекты этого класса (либо его наследники) создаются ListView, когда пользователь начинает перемещать элемент.
     *
-    * @class SBIS3.CONTROLS.DragEntity.Row
+    * @class SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row
     * @public
     * @author Крайнов Дмитрий Олегович
     * @example
     * Рассмотрим пример, как создать свою Drag'n'drop-сущность:
     * <pre>
-    *    defined('js!SBIS3.Demo.DragEntity.Task', ['js!SBIS3.CONTROLS.DragEntity.Row', 'WS.Data/Di'], function (Row, Di) {
+    *    defined('js!SBIS3.Demo.DragEntity.Task', ['SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row', 'WS.Data/Di'], function (Row, Di) {
     *       var Task = Row.extend({
     *          $protected: {
     *             _options: {
@@ -40,19 +40,19 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
     * Внедряем фабрику в ListView через xhtml:
     * <pre>
     *    ...
-    *    <component data-component="SBIS3.CONTROLS.ListView" name="listView">
+    *    <component data-component="SBIS3.CONTROLS/ListView" name="listView">
     *       ...
     *       <option name="dragEntity">demo.taskfactory</option>
     *       ...
     *    </component>
     *    ...
     * </pre>
-    * @see SBIS3.CONTROLS.ListView#dragEntity
-    * @see SBIS3.CONTROLS.ListView#DragEntityOptions
-    * @see SBIS3.CONTROLS.DragObject
+    * @see SBIS3.CONTROLS/ListView#dragEntity
+    * @see SBIS3.CONTROLS/ListView#DragEntityOptions
+    * @see SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragObject
     */
-   var Row = Entity.extend(/**@lends SBIS3.CONTROLS.DragEntity.Row.prototype*/{
-      _moduleName: 'SBIS3.CONTROLS.DragEntity.Row',
+   var Row = Entity.extend(/**@lends SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row.prototype*/{
+      _moduleName: 'SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row',
       /**
        * @typedef {String} DragPosition
        * @variant on Вставить перемещаемые элементы внутрь текущей записи.

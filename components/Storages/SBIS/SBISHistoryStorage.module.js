@@ -1,11 +1,11 @@
 /**
  * Created by am.gerasimov on 18.01.2017.
  */
-define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
+define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
    "Core/EventBus",
-   "js!SBIS3.CONTROLS.SessionStorage",
-   "js!SBIS3.CONTROLS.SBISUserConfigStorage",
-   "js!SBIS3.CONTROLS.SBISClientsGlobalConfigStorage",
+   "SBIS3.CONTROLS/Storages/SessionStorage",
+   "SBIS3.CONTROLS/Storages/SBIS/SBISUserConfigStorage",
+   "SBIS3.CONTROLS/Storages/SBIS/SBISClientsGlobalConfigStorage",
    "Core/Abstract",
    'Core/helpers/string-helpers-min',
    "Core/Deferred",
@@ -32,10 +32,10 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
    /**
     * Контроллер, который предоставляет базовые механизмы работы с историей.
     * @author Герасимов Александр Максимович
-    * @class SBIS3.CONTROLS.SBISHistoryStorage
+    * @class SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage
     * @public
     */
-   var SBISHistoryStorage = cAbstract.extend([],/** @lends SBIS3.CONTROLS.SBISHistoryStorage.prototype */{
+   var SBISHistoryStorage = cAbstract.extend([],/** @lends SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage.prototype */{
       $protected: {
          _options: {
             /**

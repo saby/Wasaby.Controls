@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 21.01.2016.
  */
-define('js!SBIS3.CONTROLS.ChooserMixin', [
+define('SBIS3.CONTROLS/Mixins/ChooserMixin', [
    "Core/Context",
    "Core/core-clone",
    "Core/core-merge",
@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
 ], function( cContext, coreClone, cMerge, Deferred,Model, SbisAdapter) {
    /**
     * Миксин, добавляющий интерфейс для открытия окна выбора.
-    * @mixin SBIS3.CONTROLS.ChooserMixin
+    * @mixin SBIS3.CONTROLS/Mixins/ChooserMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
       })
    }
 
-   var ChooserMixin = /**@lends SBIS3.CONTROLS.ChooserMixin.prototype  */{
+   var ChooserMixin = /**@lends SBIS3.CONTROLS/Mixins/ChooserMixin.prototype  */{
           /**
            * @event onChooserClick Происходит при клике на кнопку открытия диалога выбора.
            * @return {Deferred|Boolean|*} Возможные значения:
@@ -84,12 +84,12 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
             },
             type: {
                old: {
-                  dialog: 'js!SBIS3.CORE.DialogSelector',
-                  floatArea: 'js!SBIS3.CORE.FloatAreaSelector'
+                  dialog: 'Deprecated/Controls/DialogSelector/DialogSelector',
+                  floatArea: 'Deprecated/Controls/DialogSelector/FloatAreaSelector'
                },
                newType: {
-                  dialog: 'js!SBIS3.CONTROLS.DialogSelector',
-                  floatArea: 'js!SBIS3.CONTROLS.FloatAreaSelector'
+                  dialog: 'SBIS3.CONTROLS/Dialog/DialogSelector',
+                  floatArea: 'SBIS3.CONTROLS/FloatArea/FloatAreaSelector'
                }
             }
          }

@@ -1,18 +1,18 @@
-define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
+define('SBIS3.CONTROLS/Filter/Button/Line',
    [
-      'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
-      'tmpl!SBIS3.CONTROLS.FilterButton.FilterLine/Line/FilterLine',
+      'Lib/Control/CompoundControl/CompoundControl',
+      'SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil',
+      'tmpl!SBIS3.CONTROLS/Filter/Button/Line/FilterLine',
       'Core/helpers/String/escapeTagsFromStr',
-      'js!SBIS3.CONTROLS.Clickable'
+      'SBIS3.CONTROLS/Mixins/Clickable'
    ],
    function(CompoundControl, FilterToStringUtil, dotTplFn, escapeTagsFromStr, Clickable) {
 
       /**
        * Контрол, отображающий строку из применённых фильтров рядом с кнопкой фильтров.
        * Умеет отображать строку по определенному шаблону. Работает исключительно через контекст.
-       * @class SBIS3.CONTROLS.FilterButton.FilterLine
-       * @extends SBIS3.CORE.CompoundControl
+       * @class SBIS3.CONTROLS/Filter/Button/Line
+       * @extends Lib/Control/CompoundControl/CompoundControl
        * @author Крайнов Дмитрий Олегович
        * @control
        * @public

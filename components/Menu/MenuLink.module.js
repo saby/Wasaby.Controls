@@ -1,7 +1,7 @@
-define('js!SBIS3.CONTROLS.MenuLink', [
+define('SBIS3.CONTROLS/Menu/MenuLink', [
    'js!WSControls/Buttons/MenuButton',
-   'js!SBIS3.CONTROLS.Utils.LinkUtil', 'css!SBIS3.CONTROLS.Link/Link/Link',
-   'css!SBIS3.CONTROLS.MenuLink/MenuLink/MenuLink'
+   'SBIS3.CONTROLS/Utils/LinkUtil', 'css!SBIS3.CONTROLS/Link/Link',
+   'css!SBIS3.CONTROLS/Menu/MenuLink/MenuLink'
 ], function(WSMenuButton, LinkUtil) {
 
    'use strict';
@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.MenuLink', [
     * @remark
     * Если в меню задан только один пункт, то меню не будет показано. При нажатии на кнопку будет выполнено действие, соответствующее этому пункту.
     *
-    * @class SBIS3.CONTROLS.MenuLink
+    * @class SBIS3.CONTROLS/Menu/MenuLink
     * @extends WSControls/Buttons/MenuButton
 	*
     * @demo SBIS3.CONTROLS.Demo.MyMenuLink
@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.MenuLink', [
     * @public
     * @control
     * @initial
-    * <component data-component='SBIS3.CONTROLS.MenuLink'>
+    * <component data-component='SBIS3.CONTROLS/Menu/MenuLink'>
     *    <option name='caption' value='Ссылка с меню'></option>
     *    <options name="items" type="array">
     *        <options>
@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.MenuLink', [
     * @cssModifier controls-Menu__hide-menu-header Скрывает из выпадающего меню заголовок, который устанавливают с помощью опции {@link caption}.
     */
 
-   var MenuLink = WSMenuButton.extend( [], /** @lends SBIS3.CONTROLS.MenuLink.prototype */ {
+   var MenuLink = WSMenuButton.extend( [], /** @lends SBIS3.CONTROLS/Menu/MenuLink.prototype */ {
       $protected: {
          _zIndex: ''
       },

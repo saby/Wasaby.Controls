@@ -1,30 +1,30 @@
 /*global define*/
-define('js!SBIS3.CONTROLS.DateRange', [
-   'js!SBIS3.CORE.CompoundControl',
-   'js!SBIS3.CONTROLS.PickerMixin',
-   'tmpl!SBIS3.CONTROLS.DateRange/Range/DateRange',
-   'js!SBIS3.CONTROLS.FormWidgetMixin',
-   'js!SBIS3.CONTROLS.RangeMixin',
-   'js!SBIS3.CONTROLS.DateRangeMixin',
-   'js!SBIS3.CONTROLS.DateRangeBigChoose',
-   'js!SBIS3.CONTROLS.ControlsValidators',
-   'i18n!SBIS3.CONTROLS.DateRange',
-   'js!SBIS3.CONTROLS.DateBox',
-   'js!SBIS3.CONTROLS.IconButton',
-   'css!SBIS3.CONTROLS.DateRange/Range/DateRange',
-   'css!SBIS3.CONTROLS.FormattedTextBox/FormattedTextBox/FormattedTextBox',
-   'css!SBIS3.CONTROLS.DateBox/Box/DateBox'
+define('SBIS3.CONTROLS/Date/Range', [
+   'Lib/Control/CompoundControl/CompoundControl',
+   'SBIS3.CONTROLS/Mixins/PickerMixin',
+   'tmpl!SBIS3.CONTROLS/Date/Range/DateRange',
+   'SBIS3.CONTROLS/Mixins/FormWidgetMixin',
+   'SBIS3.CONTROLS/Mixins/RangeMixin',
+   'SBIS3.CONTROLS/Mixins/DateRangeMixin',
+   'SBIS3.CONTROLS/Date/RangeBigChoose',
+   'SBIS3.CONTROLS/Utils/ControlsValidators',
+   'i18n!SBIS3.CONTROLS/Date/Range',
+   'SBIS3.CONTROLS/Date/Box',
+   'SBIS3.CONTROLS/Button/IconButton',
+   'css!SBIS3.CONTROLS/Date/Range/DateRange',
+   'css!SBIS3.CONTROLS/FormattedTextBox/FormattedTextBox',
+   'css!SBIS3.CONTROLS/Date/Box/DateBox'
 ], function (CompoundControl, PickerMixin, dotTplFn, FormWidgetMixin, RangeMixin, DateRangeMixin, DateRangeBigChoose, ControlsValidators) {
    'use strict';
    /**
     * Класс контрола выбора диапазона дат.
-    * @class SBIS3.CONTROLS.DateRange
-    * @extends SBIS3.CORE.CompoundControl
+    * @class SBIS3.CONTROLS/Date/Range
+    * @extends Lib/Control/CompoundControl/CompoundControl
     *
-    * @mixes SBIS3.CONTROLS.RangeMixin
-    * @mixes SBIS3.CONTROLS.DateRangeMixin
-    * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    * @mixes SBIS3.CONTROLS/Mixins/RangeMixin
+    * @mixes SBIS3.CONTROLS/Mixins/DateRangeMixin
+    * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
+    * @mixes SBIS3.CONTROLS/Mixins/FormWidgetMixin
     *
     * @author Миронов Александр Юрьевич
     * @demo SBIS3.CONTROLS.Demo.MyDateRange
@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
     * @public
     * @category Date/Time
     */
-   var DateRange = CompoundControl.extend([RangeMixin, DateRangeMixin, PickerMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateRange.prototype */{
+   var DateRange = CompoundControl.extend([RangeMixin, DateRangeMixin, PickerMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS/Date/Range.prototype */{
       /**
        * @event onDateRangeChange При изменении диапазона дат как через поле ввода, так и через календарь.
        * @param {Core/EventObject} eventObject Дескриптор события.
@@ -220,7 +220,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
          };
       },
       /**
-       * Прокидывает валидаторы SBIS3.CONTROLS.ControlsValidators:required со свойств начала и конца периода
+       * Прокидывает валидаторы SBIS3.CONTROLS/Utils/ControlsValidators:required со свойств начала и конца периода
        * на соответствующие поля ввода
        * @private
        */

@@ -1,18 +1,18 @@
 /**
  * Created by ps.borisov on 03.12.2015.
  */
-define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
+define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil',[
    'Core/constants',
    'Core/markup/ParserUtilities'
 ], function (constants, Parser) {
    'use strict';
    /**
     * Утилиты для работы с контентом полученным из Богатого текстового редактора
-    * @class SBIS3.CONTROLS.Utils.RichTextAreaUtil
+    * @class SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil
     * @author Авраменко А.С.
     * @public
     */
-   var RichTextAreaUtil = /** @lends SBIS3.CONTROLS.Utils.RichTextAreaUtil.prototype */{
+   var RichTextAreaUtil = /** @lends SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil.prototype */{
       /**
        * Метод для добавления определяющей метки в контент при копировании/вырезки из БТРа
        * @param {$object}$object - jquery элемент при копировании/вырезке из которого в буффер необходимо добавлять метку БТРа

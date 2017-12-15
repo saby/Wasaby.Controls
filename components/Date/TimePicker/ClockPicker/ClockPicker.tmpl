@@ -1,6 +1,6 @@
 <div class="controls-ClockPicker controls-ClockPicker_{{mode}}">
    <ws:partial
-      template="tmpl!SBIS3.CONTROLS.ClockPicker/ClockPicker/resources/Circle"
+      template="tmpl!SBIS3.CONTROLS/Date/TimePicker/ClockPicker/resources/Circle"
       mode="{{mode}}"
       circleName="outer"
       ticks="{{_ticks[mode].outer}}"
@@ -39,7 +39,7 @@
    </div>
    <ws:if data="{{_ticks[mode].inner}}">
       <ws:partial
-         template="tmpl!SBIS3.CONTROLS.ClockPicker/ClockPicker/resources/Circle"
+         template="tmpl!SBIS3.CONTROLS/Date/TimePicker/ClockPicker/resources/Circle"
          mode="{{mode}}"
          circleName="inner"
          ticks="{{_ticks[mode].inner}}"

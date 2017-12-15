@@ -1,14 +1,14 @@
 /**
  * Created by am.gerasimov on 16.09.2016.
  */
-define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
+define('SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertObserver',
    [
       "Core/core-extend",
       "Core/helpers/String/diffAt",
       "Core/core-clone",
-      "js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil",
-      "js!SBIS3.CONTROLS.MissSpell",
-      'js!SBIS3.CONTROLS.Utils.Query',
+      "SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertUtil",
+      "SBIS3.CONTROLS/Utils/KbLayoutRevert/resources/MissSpell",
+      'SBIS3.CONTROLS/Utils/QueryUtil',
       'Core/core-instance'
    ],
    function (cExtend, diffAt, coreClone, KbLayoutRevertUtil, MissSpell, queryUtil, cInstance) {
@@ -49,32 +49,32 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
 
       /**
        * Класс, который позволяет отслеживать изменения раскладки введённого текста и автоматически изменять её (с кириллицы на латиницу и наоборот), если в результате запроса не было выбрано ни одной записи.
-       * Класс (утилита) предназначен, чтобы связать работу поля ввода и списка, который создан на основе {@link SBIS3.CONTROLS.ListView}.
-       * @class SBIS3.CONTROLS.Utils.KbLayoutRevertObserver
+       * Класс (утилита) предназначен, чтобы связать работу поля ввода и списка, который создан на основе {@link SBIS3.CONTROLS/ListView}.
+       * @class SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertObserver
        * @extends Core/core-extend
        * @public
        */
-      var KbLayoutRevertObserver = cExtend({}, /** @lends SBIS3.CONTROLS.Utils.KbLayoutRevertObserver.prototype */{
+      var KbLayoutRevertObserver = cExtend({}, /** @lends SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertObserver.prototype */{
          $protected: {
             _options: {
                /**
-                * @cfg {SBIS3.CONTROLS.TextBoxBase} Устанавливает экземляр класса контрола, через который пользователь осуществляет ввод поискового запроса.
+                * @cfg {SBIS3.CONTROLS/TextBox/TextBoxBase} Устанавливает экземляр класса контрола, через который пользователь осуществляет ввод поискового запроса.
                 * @remark
-                * В опцию можно передать любой экземпляр класса, который наследуется от {@link SBIS3.CONTROLS.TextBoxBase}.
+                * В опцию можно передать любой экземпляр класса, который наследуется от {@link SBIS3.CONTROLS/TextBox/TextBoxBase}.
                 * В этом контроле будет автоматически изменена раскладка, если запрос в связанном списке (см. {@link view}) вернул 0 записей.
                 *
                 */
                textBox: null,
                /**
-                * @cfg {SBIS3.CONTROLS.ListView} Устанавливает экземляр класса списка, в котором отображаются результаты поиска.
+                * @cfg {SBIS3.CONTROLS/ListView} Устанавливает экземляр класса списка, в котором отображаются результаты поиска.
                 * @remark
-                * В опцию можно передать любой экземпляр класса, который наследуется от {@link SBIS3.CONTROLS.ListView}.
+                * В опцию можно передать любой экземпляр класса, который наследуется от {@link SBIS3.CONTROLS/ListView}.
                 */
                view: null,
                /**
                 * @cfg {String} Устанавливает имя параметра фильтрации.
                 * @remark
-                * Смысл этого параметра фильтрации подробно описан в опции {@link SBIS3.CONTROLS.SuggestTextBoxMixin#seacrhParam}.
+                * Смысл этого параметра фильтрации подробно описан в опции {@link SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin#seacrhParam}.
                 * @see setParam
                 * @see getParam
                 */
@@ -203,7 +203,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                /* Для memorySource особая логика, т.к. query у memorySource отрабатывают синхронно,
                   и получается, что код выполняемый на callback второго query, отрабатываем быстрее, чем код первого query. */
                isMemorySource = cInstance.instanceOfModule(view.getDataSource(), 'WS.Data/Source/Memory'),
-               useCustomQuery = cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.IItemsControl') || isMemorySource,
+               useCustomQuery = cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS/Interfaces/IItemsControl') || isMemorySource,
                self = this;
 
             function reloadWithRevert() {
@@ -349,7 +349,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
             if(!items) {
                /* Т.к. есть люди, которые просто поддерживают интерфейс listView,
                   проверим на это (может не быть метода _getItemsProjection). */
-               if (cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.ItemsControlMixin')) {
+               if (cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS/Mixins/ItemsControlMixin')) {
                   items = view._getItemsProjection();
                } else {
                   items = view.getItems();

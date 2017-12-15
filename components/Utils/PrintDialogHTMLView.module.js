@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.Utils.PrintDialogHTMLView', [
+define('SBIS3.CONTROLS/Utils/PrintDialogHTMLView', [
    'Core/core-merge',
    'Core/Deferred',
    'Core/moduleStubs'
@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.Utils.PrintDialogHTMLView', [
          visible: false,
          isStack: true,
          task_1174068748: true,
-         template: 'js!SBIS3.CONTROLS.PrintDialogTemplate',
+         template: 'SBIS3.CONTROLS/PrintDialogTemplate',
          minWidth: minWidth,
          componentOptions: {
             minWidth: minWidth,
@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.Utils.PrintDialogHTMLView', [
          }
       }, {preferSource: true});
 
-      return moduleStubs.require(['js!SBIS3.CORE.Dialog']).addCallback(function(result) {
+      return moduleStubs.require(['Lib/Control/Dialog/Dialog']).addCallback(function(result) {
          var
             def = new Deferred(),
             dlg = new result[0](options);

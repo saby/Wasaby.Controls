@@ -1,11 +1,11 @@
 /**
  * Created by ps.borisov on 21.05.2016.
  */
-define('js!SBIS3.CONTROLS.RichEditor',
+define('SBIS3.CONTROLS/RichEditor',
    [
-      'js!SBIS3.CONTROLS.RichTextArea',
-      'tmpl!SBIS3.CONTROLS.RichEditor/RichEditor/RichEditor',
-      'js!SBIS3.CONTROLS.RichEditorToolbar'
+      'SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
+      'tmpl!SBIS3.CONTROLS/RichEditor/RichEditor',
+      'SBIS3.CONTROLS/RichEditor/Components/Toolbar'
    ], function(RichTextArea, dotTplFn, Toolbar) {
       'use strict';
 
@@ -14,19 +14,19 @@ define('js!SBIS3.CONTROLS.RichEditor',
          toolbarHeight: 32
       },
       /**
-       * Контрол "Богатый текстовый редактор" (БТР). Состоит из двух компонентов: {@link SBIS3.CONTROLS.RichTextArea} и {@link SBIS3.CONTROLS.RichEditorToolbar}.
-       * @class SBIS3.CONTROLS.RichEditor
-       * @extends SBIS3.CONTROLS.RichTextArea
+       * Контрол "Богатый текстовый редактор" (БТР). Состоит из двух компонентов: {@link SBIS3.CONTROLS/RichEditor/Components/RichTextArea} и {@link SBIS3.CONTROLS/RichEditor/Components/Toolbar}.
+       * @class SBIS3.CONTROLS/RichEditor
+       * @extends SBIS3.CONTROLS/RichEditor/Components/RichTextArea
        * @author Спирин Виктор Алексеевич
        * @public
        * @control
        *
        * @demo SBIS3.CONTROLS.Demo.RichEditorDemo В следующем примере первый контрол - SBIS3.CONTROLS.RichEditor.
-       * Ниже добавлен контрол SBIS3.CONTROLS.RichEditorToolbar, который связан с контролом SBIS3.CONTROLS.RichTextArea с помощью метода {@link SBIS3.CONTROLS.RichEditorToolbarBase#setLinkedEditor}.
+       * Ниже добавлен контрол SBIS3.CONTROLS.RichEditorToolbar, который связан с контролом SBIS3.CONTROLS/RichEditor/Components/RichTextArea с помощью метода {@link SBIS3.CONTROLS/RichEditor/Components/ToolbarBase#setLinkedEditor}.
        *
        * @category Input
        */
-      RichEditor = RichTextArea.extend(/** @lends SBIS3.CONTROLS.RichEditor.prototype */{
+      RichEditor = RichTextArea.extend(/** @lends SBIS3.CONTROLS/RichEditor.prototype */{
          _dotTplFn: dotTplFn,
          $protected : {
             _options : {
@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
                 */
                toolbarVisible: true,
                /** Пользовательские элементы тулбара
-                *  Конфигурирование опции смотрите в классе {@link SBIS3.CONTROLS.RichEditorToolbar#items}.
+                *  Конфигурирование опции смотрите в классе {@link SBIS3.CONTROLS/RichEditor/Components/Toolbar#items}.
                 */
                items:undefined
             },

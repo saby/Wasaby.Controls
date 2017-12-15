@@ -1,17 +1,17 @@
 /*global $ws, define*/
-define('js!SBIS3.CONTROLS.List.Remove', [
-      'js!SBIS3.CONTROLS.Action.Action',
-      'js!SBIS3.CONTROLS.Action.List.ListMixin',
+define('SBIS3.CONTROLS/Action/List/Remove', [
+      'SBIS3.CONTROLS/Action',
+      'SBIS3.CONTROLS/Action/List/Mixin/ListMixin',
       'Core/core-instance'
    ],
    function (ActionBase, ListMixin, cInstance) {
       'use strict';
       /**
        * Класс, описывающий действие удаления записей.
-       * @class SBIS3.CONTROLS.List.Remove
+       * @class SBIS3.CONTROLS/Action/List/Remove
        * @public
-       * @extends SBIS3.CONTROLS.Action.Action
-       * @mixes SBIS3.CONTROLS.Action.List.ListMixin
+       * @extends SBIS3.CONTROLS/Action
+       * @mixes SBIS3.CONTROLS/Action/List/Mixin/ListMixin
        * @author Ганшин Ярослав Олегович
        * @example
        * Пример использования
@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.List.Remove', [
        * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
        * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
        */
-      var Remove = ActionBase.extend([ListMixin], /** @lends SBIS3.CONTROLS.List.Remove.prototype */{
+      var Remove = ActionBase.extend([ListMixin], /** @lends SBIS3.CONTROLS/Action/List/Remove.prototype */{
          /**
           * @event onRemove Происходит перед удалением записей.
           * @param {Core/EventObject} eventObject Дескриптор события.
@@ -92,7 +92,7 @@ define('js!SBIS3.CONTROLS.List.Remove', [
                   self = this,
                   def = new Deferred();
 
-               require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+               require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager){
                   InformationPopupManager.showConfirmDialog({
                      message: confirmText
                   }, function(){
@@ -127,7 +127,7 @@ define('js!SBIS3.CONTROLS.List.Remove', [
             });
          },
          _handleError: function (error) {
-            require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+            require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager){
                InformationPopupManager.showMessageDialog({
                   message: error.message,
                   status: 'error'
@@ -140,7 +140,7 @@ define('js!SBIS3.CONTROLS.List.Remove', [
 
          _removeSelection: function(items) {
             var linkedObject = this.getLinkedObject();
-            if (cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.MultiSelectable')) {
+            if (cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS/Mixins/MultiSelectable')) {
                var ids = [];
                for (var i = 0; i < items.length; i++) {
                   ids.push(items[i].getId());

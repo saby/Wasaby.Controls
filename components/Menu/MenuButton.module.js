@@ -1,7 +1,7 @@
-define('js!SBIS3.CONTROLS.MenuButton', [
+define('SBIS3.CONTROLS/Menu/MenuButton', [
    'js!WSControls/Buttons/MenuButton',
-   'css!SBIS3.CONTROLS.Button/Button/Button',
-   'css!SBIS3.CONTROLS.MenuButton/MenuButton/MenuButton'
+   'css!SBIS3.CONTROLS/Button/Button',
+   'css!SBIS3.CONTROLS/Menu/MenuButton/MenuButton'
 ], function(WSMenuButton) {
 
    'use strict';
@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.MenuButton', [
     * @remark
     * Если в меню задан только один пункт, то меню НЕ будет показано, а при нажатии на кнопку будет выполнено действие, соответствующее этому пункту.
     *
-    * @class SBIS3.CONTROLS.MenuButton
+    * @class SBIS3.CONTROLS/Menu/MenuButton
     * @extends WSControls/Buttons/MenuButton
     *
     * @author Крайнов Дмитрий Олегович
@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.MenuButton', [
     * @public
     * @category Button
     * @initial
-    * <component data-component='SBIS3.CONTROLS.MenuButton'>
+    * <component data-component='SBIS3.CONTROLS/Menu/MenuButton'>
     *    <option name='caption' value='Кнопка с меню'></option>
     *    <options name="items" type="array">
     *        <options>
@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.MenuButton', [
     * </component>
     */
 
-   var MenuButton = WSMenuButton.extend( [], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
+   var MenuButton = WSMenuButton.extend( [], /** @lends SBIS3.CONTROLS/Menu/MenuButton.prototype */ {
       _modifyOptions : function() {
          var opts = MenuButton.superclass._modifyOptions.apply(this, arguments);
          opts.cssClassName += ' controls-Button';

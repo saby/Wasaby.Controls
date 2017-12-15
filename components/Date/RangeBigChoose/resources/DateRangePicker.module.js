@@ -1,12 +1,12 @@
-define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
+define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
    "Core/Deferred",
-   "js!SBIS3.CONTROLS.ListView",
-   "tmpl!SBIS3.CONTROLS.DateRangeBigChoose/RangeBigChoose/resources/DateRangePickerItem",
-   "js!SBIS3.CONTROLS.RangeMixin",
+   "SBIS3.CONTROLS/ListView",
+   "tmpl!SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePickerItem",
+   "SBIS3.CONTROLS/Mixins/RangeMixin",
    "WS.Data/Source/Base",
-   "js!SBIS3.CONTROLS.Utils.DateUtil",
+   "SBIS3.CONTROLS/Utils/DateUtil",
    "Core/core-instance",
-   "js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView"
+   "SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView"
 ], function ( Deferred,ListView, ItemTmpl, RangeMixin, Base, DateUtil, cInstance) {
    'use strict';
 
@@ -64,10 +64,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
    /**
      * SBIS3.CONTROLS.DateRangeBig.DateRangePicker
      * @class SBIS3.CONTROLS.DateRangeBig.DateRangePicker
-     * @extends SBIS3.CONTROLS.ListView
+     * @extends SBIS3.CONTROLS/ListView
      * @author Миронов Александр Юрьевич
      * @control
-     * @mixes SBIS3.CONTROLS.RangeMixin
+     * @mixes SBIS3.CONTROLS/Mixins/RangeMixin
      */
    var Component = ListView.extend([RangeMixin], /** @lends SBIS3.CONTROLS.DateRangeBig.DateRangePicker.prototype */{
       $protected: {
@@ -271,7 +271,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
       },
 
       _isMonthView: function (control) {
-         return cInstance.instanceOfModule(control, 'SBIS3.CONTROLS.DateRangeBigChoose.MonthView');
+         return cInstance.instanceOfModule(control, 'SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView');
       },
 
       forEachMonthView: function (func) {

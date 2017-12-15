@@ -1,19 +1,19 @@
 /**
  * Created by ad.chistyakova on 08.04.2015.
  */
-define('js!SBIS3.CONTROLS.OperationPrint', [
-   'js!SBIS3.CONTROLS.PrintUnloadBase',
-   'js!SBIS3.CONTROLS.Utils.DataProcessor',
-   'i18n!SBIS3.CONTROLS.OperationPrint'
+define('SBIS3.CONTROLS/OperationsPanel/Print', [
+   'SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase',
+   'SBIS3.CONTROLS/Utils/DataProcessor',
+   'i18n!SBIS3.CONTROLS/OperationsPanel/Print'
 ], function(PrintUnloadBase, Printer) {
    /**
-    * Класс контрола "Кнопка для печати подготовленных данных". Применяется на "Панели действий" (см. {@link SBIS3.CONTROLS.OperationsPanel}).
-    * @class SBIS3.CONTROLS.OperationPrint
-    * @extends SBIS3.CONTROLS.PrintUnloadBase
+    * Класс контрола "Кнопка для печати подготовленных данных". Применяется на "Панели действий" (см. {@link SBIS3.CONTROLS/OperationsPanel}).
+    * @class SBIS3.CONTROLS/OperationsPanel/Print
+    * @extends SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase
     * @author Сухоручкин Андрей Сергеевич
     * @public
     */
-   var OperationPrint = PrintUnloadBase.extend(/** @lends SBIS3.CONTROLS.OperationPrint.prototype */{
+   var OperationPrint = PrintUnloadBase.extend(/** @lends SBIS3.CONTROLS/OperationsPanel/Print.prototype */{
 
       $protected: {
          _options: {

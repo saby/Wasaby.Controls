@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 15.02.2017.
  */
-define('js!SBIS3.CONTROLS.ToSourceModel', [
+define('SBIS3.CONTROLS/Utils/ToSourceModel', [
    'WS.Data/Di',
    'Core/core-instance',
    'Core/core-clone',

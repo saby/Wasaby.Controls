@@ -1,19 +1,19 @@
-define('js!SBIS3.CONTROLS.EditAtPlaceMixin',
+define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
    [
-   "js!SBIS3.CORE.ModalOverlay",
+   "Deprecated/Controls/ModalOverlay/ModalOverlay",
    "Core/Deferred",
-   "js!SBIS3.CONTROLS.IconButton",
-   "js!SBIS3.CORE.ModalOverlay",
-   "js!SBIS3.CORE.Dialog"
+   "SBIS3.CONTROLS/Button/IconButton",
+   "Deprecated/Controls/ModalOverlay/ModalOverlay",
+   "Lib/Control/Dialog/Dialog"
 ], function( cModalOverlay, Deferred, IconButton, ModalOverlay) {
       /**
-       * @mixin SBIS3.CONTROLS.EditAtPlaceMixin
+       * @mixin SBIS3.CONTROLS/Mixins/EditAtPlaceMixin
        * @public
        * @author Крайнов Дмитрий Олегович
        */
       'use strict';
 
-      var EditAtPlaceMixin = /**@lends SBIS3.CONTROLS.EditAtPlaceMixin.prototype  */ {
+      var EditAtPlaceMixin = /**@lends SBIS3.CONTROLS/Mixins/EditAtPlaceMixin.prototype  */ {
          $protected: {
             _inEditMode: null,
             _cntrlPanel: null,
@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin',
                self = this,
                deferred = new Deferred();
 
-            require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+            require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager){
                InformationPopupManager.showConfirmDialog({
                   message: rk('Сохранить изменения?'),
                   details: rk('Чтобы продолжить редактирование, нажмите "Отмена".'),

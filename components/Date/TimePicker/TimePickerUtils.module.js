@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.TimePickerUtils',
+define('SBIS3.CONTROLS/Date/TimePicker/TimePickerUtils',
    [
       'Core/helpers/String/ucFirst'
    ],

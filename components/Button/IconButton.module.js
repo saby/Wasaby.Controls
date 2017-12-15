@@ -3,16 +3,16 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.IconButton', [ 'js!WSControls/Buttons/Button', 'css!SBIS3.CONTROLS.IconButton/IconButton/IconButton'], function(WSButton) {
+define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'css!SBIS3.CONTROLS/Button/IconButton/IconButton'], function(WSButton) {
 
    'use strict';
 
    /**
     * Класс контрола, который предназначен для отображения кнопки в виде иконки.
     *
-    * @class SBIS3.CONTROLS.IconButton
+    * @class SBIS3.CONTROLS/Button/IconButton
     * @extends WSControls/Buttons/Button
-    * @mixes SBIS3.CONTROLS.IconMixin
+    * @mixes SBIS3.CONTROLS/Mixins/IconMixin
     * @demo SBIS3.CONTROLS.Demo.MyIconButton
     * @author Борисов Петр Сергеевич
     *
@@ -47,12 +47,12 @@ define('js!SBIS3.CONTROLS.IconButton', [ 'js!WSControls/Buttons/Button', 'css!SB
     * @control
     * @public
     * @initial
-    * <component data-component='SBIS3.CONTROLS.IconButton'>
+    * <component data-component='SBIS3.CONTROLS/Button/IconButton'>
     *    <option name="icon" value="icon-16 icon-AddButton icon-primary"></option>
     * </component>
     */
 
-   var IconButton = WSButton.extend([], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
+   var IconButton = WSButton.extend([], /** @lends SBIS3.CONTROLS/Button/IconButton.prototype */ {
       $protected: {
          _options: {
          }

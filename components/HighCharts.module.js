@@ -1,17 +1,17 @@
-define('js!SBIS3.CONTROLS.HighCharts', [
+define('SBIS3.CONTROLS/HighCharts', [
    "WS.Data/Source/SbisService",
    "WS.Data/Query/Query",
    'Core/helpers/getType',
    "Core/core-clone",
    "Core/constants",
    "Core/Deferred",
-   "js!SBIS3.CORE.Control",
-   "tmpl!SBIS3.CONTROLS.HighCharts/HighCharts/HighCharts",
+   "Lib/Control/Control",
+   "tmpl!SBIS3.CONTROLS/HighCharts/HighCharts",
    'Core/helpers/Function/forAliveOnly',
    'Core/helpers/Hcontrol/trackElement',
    "browser!/cdn/highcharts/4.2.7/highcharts-more.js",
-   "css!SBIS3.CONTROLS.HighCharts/HighCharts/HighCharts",
-   "i18n!SBIS3.CONTROLS.HighCharts"
+   "css!SBIS3.CONTROLS/HighCharts/HighCharts",
+   "i18n!SBIS3.CONTROLS/HighCharts"
 ],
 function( SbisService, Query, getType, coreClone, constants, Deferred,BaseControl, dotTpl, forAliveOnly, trackElement){
    'use strict';
@@ -41,8 +41,8 @@ function( SbisService, Query, getType, coreClone, constants, Deferred,BaseContro
    }
    /**
     * Диаграмма HighCharts. Демо-примеры диаграмм вы можете найти на сайте <a href='http://www.highcharts.com/demo'>www.highcharts.com</a>.
-    * @class SBIS3.CONTROLS.HighCharts
-    * @extends SBIS3.CORE.Control
+    * @class SBIS3.CONTROLS/HighCharts
+    * @extends Lib/Control/Control
     * @control
     * @public
     *
@@ -51,10 +51,10 @@ function( SbisService, Query, getType, coreClone, constants, Deferred,BaseContro
     * @designTime actions /design/design
     *
     * @initial
-    * <component data-component='SBIS3.CONTROLS.HighCharts'>
+    * <component data-component='SBIS3.CONTROLS/HighCharts'>
     * </component>
     */
-   var HighCharts = BaseControl.Control.extend(/** @lends SBIS3.CONTROLS.HighCharts.prototype */{
+   var HighCharts = BaseControl.Control.extend(/** @lends SBIS3.CONTROLS/HighCharts.prototype */{
       /**
        * @event onBeforeReload перед перерисовкой диаграммы
        * может использоваться для задания специфических опций при отрисовке диаграммы, например, когда надо сделать подпись в зависимости от условий
@@ -1174,7 +1174,7 @@ function( SbisService, Query, getType, coreClone, constants, Deferred,BaseContro
 
             if (error instanceof Error && !error.canceled) {
                if (!error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
-                  require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+                  require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager){
                      InformationPopupManager.showMessageDialog({
                         message: error.message.toString().replace('Error: ', ''),
                         status: 'error'

@@ -2,14 +2,14 @@
  * Created by iv.cheremushkin on 28.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.MoneyTextBox', [
+define('SBIS3.CONTROLS/MoneyTextBox', [
    'Core/defaultRenders',
    'Core/constants',
-   'js!SBIS3.CONTROLS.NumberTextBox',
-   'js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil',
-   'tmpl!SBIS3.CONTROLS.MoneyTextBox/MoneyTextBox/resources/textFieldWrapper',
-   'is!msIe?js!SBIS3.CORE.FieldString/resources/ext/ierange-m2-min',
-   'css!SBIS3.CONTROLS.MoneyTextBox/MoneyTextBox/MoneyTextBox'
+   'SBIS3.CONTROLS/NumberTextBox',
+   'SBIS3.CONTROLS/Utils/NumberTextBoxUtil',
+   'tmpl!SBIS3.CONTROLS/MoneyTextBox/resources/textFieldWrapper',
+   'is!msIe?Deprecated/Controls/FieldString/resources/ext/ierange-m2-min',
+   'css!SBIS3.CONTROLS/MoneyTextBox/MoneyTextBox'
 ], function (cDefaultRenders, constants, NumberTextBox, NumberTextBoxUtil, textFieldWrapper) {
 
    'use strict';
@@ -47,14 +47,14 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
     /**
      * Класс контрола "Поле ввода денег".
      *
-     * @class SBIS3.CONTROLS.MoneyTextBox
-     * @extends SBIS3.CONTROLS.NumberTextBox
+     * @class SBIS3.CONTROLS/MoneyTextBox
+     * @extends SBIS3.CONTROLS/NumberTextBox
      * @public
      * @control
      * @author Романов Валерий Сергеевич
      *
      */
-   var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS.MoneyTextBox.prototype */ {
+   var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS/MoneyTextBox.prototype */ {
       $protected: {
          _options: {
             _needShowCompatiblePlaceholder: needShowCompatiblePlaceholder,

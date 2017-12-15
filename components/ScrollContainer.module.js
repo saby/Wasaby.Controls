@@ -1,15 +1,15 @@
-define('js!SBIS3.CONTROLS.ScrollContainer', [
-      'js!SBIS3.CONTROLS.CompoundControl',
-      'js!SBIS3.CONTROLS.Scrollbar',
-      'tmpl!SBIS3.CONTROLS.ScrollContainer/ScrollContainer/ScrollContainer',
+define('SBIS3.CONTROLS/ScrollContainer', [
+      'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/ScrollContainer/Scrollbar',
+      'tmpl!SBIS3.CONTROLS/ScrollContainer/ScrollContainer',
       'Core/detection',
       'Core/compatibility',
-      'js!SBIS3.CORE.FloatAreaManager',
-      'js!SBIS3.StickyHeaderManager',
+      'Lib/FloatAreaManager/FloatAreaManager',
+      'Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager',
       'Core/constants',
       'Core/EventBus',
       'Core/CommandDispatcher',
-      'css!SBIS3.CONTROLS.ScrollContainer/ScrollContainer/ScrollContainer'
+      'css!SBIS3.CONTROLS/ScrollContainer/ScrollContainer'
    ],
    function (CompoundControl,
              Scrollbar,
@@ -27,30 +27,30 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       var widthBrowserScrollbar = null;
 
       /**
-       * Класс контрола "Контейнер для контента с тонким скроллом". В качестве тонкого скролла применяется класс контрола {@link SBIS3.CONTROLS.Scrollbar}.
+       * Класс контрола "Контейнер для контента с тонким скроллом". В качестве тонкого скролла применяется класс контрола {@link SBIS3.CONTROLS/ScrollContainer/Scrollbar}.
        *
-       * @class SBIS3.CONTROLS.ScrollContainer
+       * @class SBIS3.CONTROLS/ScrollContainer
        * @extends Core/core-extend
        * @author Журавлев Максим Сергеевич
        *
        * @mixes Core/Abstract.compatible
-       * @mixes SBIS3.CORE.Control/Control.compatible
-       * @mixes SBIS3.CORE.AreaAbstract/AreaAbstract.compatible
-       * @mixes SBIS3.CORE.BaseCompatible
-       * @mixes SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor
+       * @mixes Lib/Control/Control.compatible
+       * @mixes Lib/Control/AreaAbstract/AreaAbstract.compatible
+       * @mixes Lib/Control/BaseCompatible/BaseCompatible
+       * @mixes Lib/Control/BaseCompatible/Mixins/WsCompatibleConstructor
        *
        * @remark
        * Пример 1:
-       * Для работы SBIS3.CONTROLS.ScrollContainer требуется установить CSS-свойства height или max-height:
+       * Для работы SBIS3.CONTROLS/ScrollContainer требуется установить CSS-свойства height или max-height:
        * <ul>
        *    <li>Когда установлено свойство height, тонкий скролл появится, если высота контента (см. {@link content}) станет больше установленной высоты SBIS3.CONTROLS.ScrollContainer.</li>
-       *    <li>Когда установлено свойство max-height, то SBIS3.CONTROLS.ScrollContainer будет растягиваться по мере увеличения контента. Когда размер контента превысит max-height, тогда появится тонкий скролл.</li>
+       *    <li>Когда установлено свойство max-height, то SBIS3.CONTROLS/ScrollContainer будет растягиваться по мере увеличения контента. Когда размер контента превысит max-height, тогда появится тонкий скролл.</li>
        * </ul>
        *
        * <pre class="brush: html">
-       *    <component data-component="SBIS3.CONTROLS.ScrollContainer" class="myScrollContainer">
+       *    <component data-component="SBIS3.CONTROLS/ScrollContainer" class="myScrollContainer">
        *       <option name="content">
-       *          <component data-component="SBIS3.CONTROLS.ListView">
+       *          <component data-component="SBIS3.CONTROLS/ListView">
        *             <option name="displayProperty">title</option>
        *             <option name="idProperty">id</option>
        *             <option name="infiniteScroll">down</option>
@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        * </pre>
        *
        * Пример 2:
-       * Для перерасчетов размеров SBIS3.CONTROLS.ScrollContainer необходимо:
+       * Для перерасчетов размеров SBIS3.CONTROLS/ScrollContainer необходимо:
        * <pre class="brush: html">
        * control._notify('onResize')
        * </pre>
@@ -72,21 +72,21 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        * @cssModifier controls-ScrollContainer__hiddenScrollbar Скрывает отображение ползунка.
        * @cssModifier controls-ScrollContainer__flex Модификатор применяется в тех случаях, когда контрол встроен внутрь flex-контейнера.
        *
-       * @demo SBIS3.CONTROLS.Demo.MyScrollContainer Использование SBIS3.CONTROLS.ScrollContainer с автоподгрузкой вниз и с вложенным в него списком, который создан на основе класса {@link SBIS3.CONTROLS.ListView}.
+       * @demo SBIS3.CONTROLS.Demo.MyScrollContainer Использование SBIS3.CONTROLS/ScrollContainer с автоподгрузкой вниз и с вложенным в него списком, который создан на основе класса {@link SBIS3.CONTROLS/ListView}.
        *
        * @control
        * @public
        * @initial
-       * <component data-component='SBIS3.CONTROLS.ScrollContainer' name="MyScrollContainer>
+       * <component data-component='SBIS3.CONTROLS/ScrollContainer' name="MyScrollContainer>
        *     <option name="content">
-       *         <component data-component="SBIS3.CONTROLS.ListView" name="ContentList">
+       *         <component data-component="SBIS3.CONTROLS/ListView" name="ContentList">
        *             <option name="idProperty">key</option>
        *             <option name="displayProperty">title</option>
        *         </component>
        *     </option>
        * </component>
        */
-      var ScrollContainer = CompoundControl.extend(/** @lends SBIS3.CONTROLS.ScrollContainer.prototype */{
+      var ScrollContainer = CompoundControl.extend(/** @lends SBIS3.CONTROLS/ScrollContainer.prototype */{
          _dotTplFn: template,
          $protected: {
             _options: {
@@ -97,7 +97,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 * @example
                 * <pre class="brush: html">
                 *    <option name="content">
-                *       <component data-component="SBIS3.CONTROLS.ListView">
+                *       <component data-component="SBIS3.CONTROLS/ListView">
                 *          <option name="displayProperty">title</option>
                 *          <option name="idProperty">id</option>
                 *          <option name="infiniteScroll">down</option>
@@ -126,27 +126,27 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                navigationToolbar: {
                  /**
                   * @cfg {Boolean}
-                  * @name SBIS3.CONTROLS.ScrollContainer#navigationToolbar.begin
+                  * @name SBIS3.CONTROLS/ScrollContainer#navigationToolbar.begin
                   */
                   begin: false,
                   /**
                    * @cfg {Boolean}
-                   * @name SBIS3.CONTROLS.ScrollContainer#navigationToolbar.prev
+                   * @name SBIS3.CONTROLS/ScrollContainer#navigationToolbar.prev
                    */
                   prev: false,
                   /**
                    * @cfg {Boolean}
-                   * @name SBIS3.CONTROLS.ScrollContainer#navigationToolbar.pages
+                   * @name SBIS3.CONTROLS/ScrollContainer#navigationToolbar.pages
                    */
                   pages: false,
                   /**
                    * @cfg {Boolean}
-                   * @name SBIS3.CONTROLS.ScrollContainer#navigationToolbar.next
+                   * @name SBIS3.CONTROLS/ScrollContainer#navigationToolbar.next
                    */
                   next: false,
                   /**
                    * @cfg {Boolean}
-                   * @name SBIS3.CONTROLS.ScrollContainer#navigationToolbar.end
+                   * @name SBIS3.CONTROLS/ScrollContainer#navigationToolbar.end
                    */
                   end: false
                },
@@ -677,7 +677,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _initPaging: function() {
             if (this._options.isPaging) {
-               requirejs(['js!SBIS3.CONTROLS.Paging'], function(paging) {
+               requirejs(['SBIS3.CONTROLS/Paging'], function(paging) {
                   this._paging = new paging({
                      element: this._container.find('.js-controls-ScrollContainer__paging'),
                      className: 'controls-ScrollContainer__paging controls-ListView__scrollPager',

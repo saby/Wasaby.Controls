@@ -1,26 +1,26 @@
 /* global define  */
-define('js!SBIS3.CONTROLS.SaveStrategy.Base', [
+define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Base', [
     'Core/Abstract',
     'Core/helpers/fast-control-helpers',
-    'js!SBIS3.CONTROLS.Utils.PrintDialogHTMLView',
-    'js!SBIS3.CONTROLS.ISaveStrategy',
-    'js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer'
+    'SBIS3.CONTROLS/Utils/PrintDialogHTMLView',
+    'SBIS3.CONTROLS/Action/Save/SaveStrategy/ISaveStrategy',
+    'SBIS3.CONTROLS/Utils/DataSetToXmlSerializer'
 ], function (Abstract, fcHelpers, PrintDialogHTMLView, ISaveStrategy, Serializer) {
 
     'use strict';
 
    /**
     * Класс базовой стратегии для сохранения данных.
-    * @class SBIS3.CONTROLS.SaveStrategy.Base
+    * @class SBIS3.CONTROLS/Action/Save/SaveStrategy/Base
     * @extends Core/Abstract
     *
-    * @mixes SBIS3.CONTROLS.ISaveStrategy
+    * @mixes SBIS3.CONTROLS/Action/Save/SaveStrategy/ISaveStrategy
     *
     * @public
     * @author Сухоручкин А.С.
     */
 
-    var SaveStrategyBase = Abstract.extend([ISaveStrategy], /** @lends SBIS3.CONTROLS.SaveStrategy.Base.prototype */{
+    var SaveStrategyBase = Abstract.extend([ISaveStrategy], /** @lends SBIS3.CONTROLS/Action/Save/SaveStrategy/Base.prototype */{
         $protected: {
             _options: {
                 _defaultXslTransform: 'default-list-transform.xsl'

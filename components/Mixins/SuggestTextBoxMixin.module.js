@@ -1,11 +1,11 @@
 /**
  * Created by am.gerasimov on 08.06.2016.
  */
-define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
+define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
    "Core/constants",
-   'js!SBIS3.CONTROLS.SearchController',
-   'js!SBIS3.CONTROLS.HistoryList',
-   'js!SBIS3.CONTROLS.ControlHierarchyManager',
+   'SBIS3.CONTROLS/ComponentBinder/SearchController',
+   'SBIS3.CONTROLS/History/HistoryList',
+   'SBIS3.CONTROLS/ControlHierarchyManager',
    'WS.Data/Collection/RecordSet',
    'WS.Data/Di',
    "WS.Data/Query/Query",
@@ -45,11 +45,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
    /**
     * Миксин, задающий любому полю ввода работу с автодополнением.
-    * @mixin SBIS3.CONTROLS.SuggestTextBoxMixin
+    * @mixin SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var SuggestTextBoxMixin = /**@lends SBIS3.CONTROLS.SuggestTextBoxMixin.prototype  */{
+   var SuggestTextBoxMixin = /**@lends SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin.prototype  */{
       /**
        * @event onBeforeLoadHistory Происходит перед вызовом списочного метода для получения истории.
        * @remark
@@ -82,9 +82,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
              * @remark
              * Опция searchParam доступна в тех классах, которые расширены миксином SBIS3.CONTROLS.SuggestTextBoxMixin. Она, как можно понять из названия, нужна, чтобы организовать поиск данных.
              * @example
-             * Рассмотрим использование опции searchParam на примере контрола "Строка поиска" (см. {@link SBIS3.CONTROLS.SearchForm}).
+             * Рассмотрим использование опции searchParam на примере контрола "Строка поиска" (см. {@link SBIS3.CONTROLS/SearchForm}).
              * <pre class="brush: xml">
-             *    <ws:SBIS3.CONTROLS.SearchForm searchParam="searchString" … />
+             *    <ws:SBIS3.CONTROLS/SearchForm searchParam="searchString" … />
              * </pre>
              * Пользователь вводит поисковый запрос "Ноутбук".
              * В результате для поиска данных вызывается метод бизнес-логики "Goods.List".

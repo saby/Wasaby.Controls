@@ -1,18 +1,18 @@
-define('js!SBIS3.CONTROLS.CursorListNavigation',
+define('SBIS3.CONTROLS/Controllers/CursorListNavigation',
    [
       'Core/Abstract',
-      'js!SBIS3.CONTROLS.IListNavigation'
+      'SBIS3.CONTROLS/Controllers/IListNavigation'
    ],
    function (Abstract, IListNavigation) {
       /**
        * Контроллер, позволяющий связывать компоненты осуществляя базовое взаимодейтсие между ними
        * @author Крайнов Дмитрий
-       * @class SBIS3.CONTROLS.CursorListNavigation
+       * @class SBIS3.CONTROLS/Controllers/CursorListNavigation
        * @extends Core/Abstract
-       * @mixes SBIS3.CONTROLS.IListNavigation
+       * @mixes SBIS3.CONTROLS/Controllers/IListNavigation
        * @public
        */
-      var CursorListNavigation = Abstract.extend([IListNavigation],/**@lends SBIS3.CONTROLS.CursorListNavigation.prototype*/{
+      var CursorListNavigation = Abstract.extend([IListNavigation],/**@lends SBIS3.CONTROLS/Controllers/CursorListNavigation.prototype*/{
          $protected: {
             _hasMore: {
                'before' : false,

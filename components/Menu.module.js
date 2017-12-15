@@ -2,22 +2,22 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.Menu', [
+define('SBIS3.CONTROLS/Menu', [
    "Core/CommandDispatcher",
-   'js!SBIS3.CONTROLS.ButtonGroupBaseDS',
-   'tmpl!SBIS3.CONTROLS.Menu/Menu/Menu',
-   'js!SBIS3.CONTROLS.hierarchyMixin',
-   'js!SBIS3.CONTROLS.TreeMixinDS',
-   'js!SBIS3.CONTROLS.FloatArea',
+   'SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBaseDS',
+   'tmpl!SBIS3.CONTROLS/Menu/Menu',
+   'SBIS3.CONTROLS/Mixins/hierarchyMixin',
+   'SBIS3.CONTROLS/Mixins/TreeMixinDS',
+   'SBIS3.CONTROLS/FloatArea',
    'WS.Data/Relation/Hierarchy',
    'Core/helpers/markup-helpers',
    'Core/Sanitize',
    'Core/helpers/String/escapeHtml',
    'Core/IoC',
    'Core/core-merge',
-   'js!SBIS3.CONTROLS.CommandsSeparator',
-   'js!SBIS3.CONTROLS.MenuItem',
-   'css!SBIS3.CONTROLS.Menu/Menu/Menu'
+   'SBIS3.CONTROLS/Commands/CommandsSeparator',
+   'SBIS3.CONTROLS/Menu/MenuItem',
+   'css!SBIS3.CONTROLS/Menu/Menu'
 
 ], function(CommandDispatcher, ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, Hierarchy, mkpHelpers, Sanitize, escapeHtml, IoC, cMerge) {
 
@@ -25,11 +25,11 @@ define('js!SBIS3.CONTROLS.Menu', [
 
    /**
     * Контрол, отображающий меню, всплывающее в определенном месте страницы
-    * @class SBIS3.CONTROLS.Menu
-    * @extends SBIS3.CONTROLS.ButtonGroupBaseDS
+    * @class SBIS3.CONTROLS/Menu
+    * @extends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBaseDS
     *
-    * @mixes SBIS3.CONTROLS.hierarchyMixin
-    * @mixes SBIS3.CONTROLS.TreeMixinDS
+    * @mixes SBIS3.CONTROLS/Mixins/hierarchyMixin
+    * @mixes SBIS3.CONTROLS/Mixins/TreeMixinDS
     *
     * @public
     *
@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.Menu', [
     * @cssModifier controls-MenuPicker__resetIconColor Отменяет перекрашивание иконки в темно-синий цвет в заголовке меню.
     */
 
-   var Menu = ButtonGroupBase.extend([hierarchyMixin, TreeMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
+   var Menu = ButtonGroupBase.extend([hierarchyMixin, TreeMixin], /** @lends SBIS3.CONTROLS/Menu.prototype */ {
       /**
        * @event onMenuItemActivate При активации пункта меню
        * @param {Core/EventObject} eventObject Дескриптор события.
@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.Menu', [
       _dotTplFn : dot,
        /**
         * @typedef {Object} ItemsMenu
-        * @description Каждый элемент строится на основе класса {@link SBIS3.CONTROLS.MenuItem}, в описании к которому приведён полный список опций для конфигурации каждого пункта меню.
+        * @description Каждый элемент строится на основе класса {@link SBIS3.CONTROLS/Menu/MenuItem}, в описании к которому приведён полный список опций для конфигурации каждого пункта меню.
         * @property {String} id Идентификатор.
         * @property {String} title Текст пункта меню.
         * @property {String} icon Иконка пункта меню.
@@ -66,8 +66,8 @@ define('js!SBIS3.CONTROLS.Menu', [
         */
        /**
         * @cfg {ItemsMenu[]} Устанавливает конфигурацию пунктов меню.
-        * @name SBIS3.CONTROLS.Menu#items
-        * @description Каждый пункт меню строится на основе класса {@link SBIS3.CONTROLS.MenuItem}.
+        * @name SBIS3.CONTROLS/Menu#items
+        * @description Каждый пункт меню строится на основе класса {@link SBIS3.CONTROLS/Menu/MenuItem}.
         * @example
         * <pre>
         *     <options name="items" type="array">
@@ -164,7 +164,7 @@ define('js!SBIS3.CONTROLS.Menu', [
             options.className = (options.className ? options.className : '') + ' controls-MenuItem-additional';
             this._needShowToggleButton = true;
          }
-         return '<component data-component="SBIS3.CONTROLS.MenuItem" config="' + mkpHelpers.encodeCfgAttr(options) + '">' +
+         return '<component data-component="SBIS3.CONTROLS/Menu/MenuItem" config="' + mkpHelpers.encodeCfgAttr(options) + '">' +
                '<option name="caption" type="string">' + caption + '</option>' +
              '</component>';
       },

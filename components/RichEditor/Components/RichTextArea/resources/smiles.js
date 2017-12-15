@@ -1,7 +1,7 @@
 /**
  * Created by ps.borisov on 19.07.2016.
  */
-define('js!SBIS3.CONTROLS.RichTextArea/resources/smiles', ['i18n!SBIS3.CONTROLS.RichEditor'], function () {
+define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/smiles', ['i18n!SBIS3.CONTROLS/RichEditor'], function () {
 
    'use strict';
 

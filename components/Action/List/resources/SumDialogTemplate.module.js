@@ -1,13 +1,13 @@
 /**
  * Created by as.suhoruchkin on 02.04.2015.
  */
-define('js!SBIS3.CONTROLS.SumDialogTemplate', [
-   'js!SBIS3.CORE.CompoundControl',
-   'tmpl!SBIS3.CONTROLS.SumDialogTemplate/SumDialogTemplate/SumDialogTemplate',
+define('SBIS3.CONTROLS/Action/List/resources/SumDialogTemplate', [
+   'Lib/Control/CompoundControl/CompoundControl',
+   'tmpl!SBIS3.CONTROLS/Action/List/resources/SumDialogTemplate/SumDialogTemplate',
    'Core/defaultRenders',
-   'js!SBIS3.CONTROLS.Button',
-   'i18n!SBIS3.CONTROLS.SumDialogTemplate',
-   'css!SBIS3.CONTROLS.SumDialogTemplate/SumDialogTemplate/SumDialogTemplate'
+   'SBIS3.CONTROLS/Button',
+   'i18n!SBIS3.CONTROLS/Action/List/resources/SumDialogTemplate',
+   'css!SBIS3.CONTROLS/Action/List/resources/SumDialogTemplate/SumDialogTemplate'
 ], function(Control, dotTplFn, defaultRenders) {
 
    var SumDialogTemplate = Control.extend({

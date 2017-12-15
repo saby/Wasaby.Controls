@@ -1,18 +1,18 @@
 /**
  * Created by ad.chistyakova on 14.04.2015.
  */
-define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
+define('SBIS3.CONTROLS/Utils/DataProcessor', [
    "Core/core-extend",
    "Core/core-clone",
    "Core/EventBus",
    "WS.Data/Entity/Record",
-   "js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer",
-   "js!SBIS3.CORE.LoadingIndicator",
+   "SBIS3.CONTROLS/Utils/DataSetToXmlSerializer",
+   "Deprecated/Controls/LoadingIndicator/LoadingIndicator",
    "WS.Data/Source/SbisService",
    "Core/helpers/transport-helpers",
-   "js!SBIS3.CONTROLS.Utils.PrintDialogHTMLView",
-   "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
-   "i18n!SBIS3.CONTROLS.Utils.DataProcessor"
+   "SBIS3.CONTROLS/Utils/PrintDialogHTMLView",
+   "SBIS3.CONTROLS/Utils/InformationPopupManager",
+   "i18n!SBIS3.CONTROLS/Utils/DataProcessor"
 ], function( cExtend, coreClone, EventBus, Record, Serializer, LoadingIndicator, SbisService, transHelpers, PrintDialogHTMLView, InformationPopupManager) {
    /**
     * Обработчик данных для печати и выгрузки(экспорта) в Excel, PDF. Печать осуществляется по готову XSL-шаблону через XSLT-преобразование.
@@ -21,11 +21,11 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
     *    <li>подготовить данные на клиенте и через xslt преобразовать в HTML, а дальше отправить на сервер.</li>
     *    <li>Подготовить либо данные, либо просто фильтр для списочного метода и отправить на сервер, где будет происходить обработка данных и их преобразование в Excel или PDF. В данном случае будет использован сервис file-transfer.</li>
     * </ul>
-    * @class SBIS3.CONTROLS.Utils.DataProcessor
+    * @class SBIS3.CONTROLS/Utils/DataProcessor
     * @author Крайнов Дмитрий Олегович
     * @public
     */
-   return cExtend({},/** @lends SBIS3.CONTROLS.Utils.DataProcessor.prototype */ {
+   return cExtend({},/** @lends SBIS3.CONTROLS/Utils/DataProcessor.prototype */ {
 
       $protected: {
          _options: {

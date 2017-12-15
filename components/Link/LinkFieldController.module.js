@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 16.06.2016.
  */
-define('js!SBIS3.CONTROLS.LinkFieldController', [
+define('SBIS3.CONTROLS/Link/LinkFieldController', [
    'Core/Abstract',
    'Core/Deferred',
    'Core/ParallelDeferred',
@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
 
    /**
     * Контроллер, который умеет обновлять поля связной записи при изменении идентификатора свзяи.
-    * @class SBIS3.CONTROLS.LinkFieldController
+    * @class SBIS3.CONTROLS/Link/LinkFieldController
     * @extends SBIS3.CORE.Abstract
     * @author Герасимов Александр Максимович
     * @public

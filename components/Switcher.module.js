@@ -1,10 +1,10 @@
-define('js!SBIS3.CONTROLS.Switcher',
+define('SBIS3.CONTROLS/Switcher',
    [
-      'js!SBIS3.CORE.Control',
-      'tmpl!SBIS3.CONTROLS.Switcher/Switcher/Switcher',
-      'js!SBIS3.CONTROLS.Checkable',
-      'js!SBIS3.CONTROLS.Clickable',
-      'css!SBIS3.CONTROLS.Switcher/Switcher/Switcher'
+      'Lib/Control/Control',
+      'tmpl!SBIS3.CONTROLS/Switcher/Switcher',
+      'SBIS3.CONTROLS/Mixins/Checkable',
+      'SBIS3.CONTROLS/Mixins/Clickable',
+      'css!SBIS3.CONTROLS/Switcher/Switcher'
    ],
    function(Control, dotTplFn, Checkable, Clickable) {
 
@@ -12,10 +12,10 @@ define('js!SBIS3.CONTROLS.Switcher',
 
    /**
     * Контрол, отображающий обычный переключатель.
-    * @class SBIS3.CONTROLS.Switcher
-    * @extends SBIS3.CORE.Control
-    * @mixes SBIS3.CONTROLS.Checkable
-    * @mixes SBIS3.CONTROLS.Clickable
+    * @class SBIS3.CONTROLS/Switcher
+    * @extends Lib/Control/Control
+    * @mixes SBIS3.CONTROLS/Mixins/Checkable
+    * @mixes SBIS3.CONTROLS/Mixins/Clickable
     * @author Журавлев Максим Сергеевич
     * @demo SBIS3.CONTROLS.Demo.MySwitcher
     *
@@ -36,12 +36,12 @@ define('js!SBIS3.CONTROLS.Switcher',
     * @public
     * @category Button
     * @initial
-    * <component data-component='SBIS3.CONTROLS.Switcher'>
+    * <component data-component='SBIS3.CONTROLS/Switcher'>
     *     <option name='checked' type="boolean">true</option>
     * </component>
     */
 
-   var Switcher = Control.Control.extend([Checkable, Clickable], /** @lends SBIS3.CONTROLS.Switcher.prototype */ {
+   var Switcher = Control.Control.extend([Checkable, Clickable], /** @lends SBIS3.CONTROLS/Switcher.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _checkClickByTap: true

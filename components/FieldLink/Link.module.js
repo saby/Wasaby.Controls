@@ -1,7 +1,7 @@
-define('js!SBIS3.CONTROLS.FieldLink.Link', [
+define('SBIS3.CONTROLS/FieldLink/Link', [
       'js!WSControls/Buttons/ButtonBase',
-      'tmpl!SBIS3.CONTROLS.FieldLink.Link/Link/FieldLink_Link',
-      'css!SBIS3.CONTROLS.FieldLink.Link/Link/FieldLink_Link'
+      'tmpl!SBIS3.CONTROLS/FieldLink/Link/FieldLink_Link',
+      'css!SBIS3.CONTROLS/FieldLink/Link/FieldLink_Link'
    ],
    function(ButtonBase, dotTplFn) {
       
@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.FieldLink.Link', [
        * Так же можно положить её в placeholder поля связи.
        * Клик по ссылке посылает комманду showSelector. Если ссылка используется в качестве метки,
        * то нужно задать опцию {@link owner}, чтобы комманду обработало поле связи с имененем, указанном в {@link owner}.
-       * @class SBIS3.CONTROLS.FieldLink.Link
+       * @class SBIS3.CONTROLS/FieldLink/Link
        * @extends WSControls/Buttons/ButtonBase
        * @author Герасимов Александр Максимович
        *

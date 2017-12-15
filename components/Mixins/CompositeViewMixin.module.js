@@ -1,24 +1,24 @@
-define('js!SBIS3.CONTROLS.CompositeViewMixin', [
+define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
    'Core/constants',
    'Core/Deferred',
-   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/CompositeViewMixin/CompositeViewMixin',
+   'tmpl!SBIS3.CONTROLS/Mixins/CompositeViewMixin/CompositeViewMixin',
    'Core/IoC',
-   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/CompositeViewMixin/resources/CompositeItemsTemplate',
-   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/CompositeViewMixin/resources/TileTemplate',
-   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/CompositeViewMixin/resources/TileContentTemplate',
-   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/CompositeViewMixin/resources/ListTemplate',
-   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/CompositeViewMixin/resources/ListContentTemplate',
-   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/CompositeViewMixin/resources/ItemsTemplate',
-   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/CompositeViewMixin/resources/InvisibleItemsTemplate',
+   'tmpl!SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/CompositeItemsTemplate',
+   'SBIS3.CONTROLS/Utils/TemplateUtil',
+   'tmpl!SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/TileTemplate',
+   'tmpl!SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/TileContentTemplate',
+   'tmpl!SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/ListTemplate',
+   'tmpl!SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/ListContentTemplate',
+   'tmpl!SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/ItemsTemplate',
+   'tmpl!SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/InvisibleItemsTemplate',
    'Core/core-merge',
    'Core/core-instance',
-   'js!SBIS3.CONTROLS.Link'
+   'SBIS3.CONTROLS/Link'
 ], function(constants, Deferred, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge, cInstance) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
-    * @mixin SBIS3.CONTROLS.CompositeViewMixin
+    * @mixin SBIS3.CONTROLS/Mixins/CompositeViewMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
@@ -97,7 +97,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
       cMerge(parentOptions, myOptions);
       return parentOptions;
    };
-   var MultiView = /** @lends SBIS3.CONTROLS.CompositeViewMixin.prototype */{
+   var MultiView = /** @lends SBIS3.CONTROLS/Mixins/CompositeViewMixin.prototype */{
        /**
         * @event onViewModeChanged Происходит при изменении режима отображения {@link mode}.
         * @param {Core/EventObject} Дескриптор события.
@@ -136,7 +136,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
              * Файловое поле используется в шаблоне для построения отображения элементов коллекции.
              * Использование опции актуально для режимов отображения "Список" и "Плитка".
              * Если для этих режимов используется пользовательский шаблон (задаётся опциями {@link listTemplate} и {@link tileTemplate}), то опция также неактуальна.
-             * @see SBIS3.CONTROLS.DSMixin#displayProperty
+             * @see SBIS3.CONTROLS/Mixins/DSMixin#displayProperty
              * @see tileTemplate
              * @see listTemplate
              */
@@ -181,7 +181,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
              *    </div>
              * </pre>
              * @see listTemplate
-             * @see SBIS3.CONTROLS.ListView#itemTemplate
+             * @see SBIS3.CONTROLS/ListView#itemTemplate
              */
             tileContentTpl : null,
             /**
@@ -195,7 +195,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
              *    {{it.className="myClass";}}{{=it.defaultTileTpl(it)}}
              * </pre>
              * @see listTemplate
-             * @see SBIS3.CONTROLS.ListView#itemTemplate
+             * @see SBIS3.CONTROLS/ListView#itemTemplate
              */
             tileTpl: null,
             /**
@@ -212,7 +212,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
              *    </div>
              * </pre>
              * @see listTemplate
-             * @see SBIS3.CONTROLS.ListView#itemTemplate
+             * @see SBIS3.CONTROLS/ListView#itemTemplate
              */
             listContentTpl : null,
             /**
@@ -226,7 +226,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
              *    {{it.className="myClass";}}{{=it.defaultTileTpl(it)}}
              * </pre>
              * @see listTemplate
-             * @see SBIS3.CONTROLS.ListView#itemTemplate
+             * @see SBIS3.CONTROLS/ListView#itemTemplate
              */
             listTpl: null
          }

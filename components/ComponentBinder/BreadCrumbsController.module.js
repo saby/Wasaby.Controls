@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstract", 'Core/core-clone'], function(constants, cAbstract, coreClone) {
+define('SBIS3.CONTROLS/ComponentBinder/BreadCrumbsController', ["Core/constants", "Core/Abstract", 'Core/core-clone'], function(constants, cAbstract, coreClone) {
 
    var BreadCrumbsController = cAbstract.extend({
       $protected: {

@@ -1,13 +1,13 @@
-define('js!SBIS3.CONTROLS.SbisMenu', [
-    'js!SBIS3.CONTROLS.ContextMenu',
-    'js!WS.Data/Source/SbisService',
+define('SBIS3.CONTROLS/Menu/SbisMenu', [
+    'SBIS3.CONTROLS/Menu/ContextMenu',
+    'WS.Data/Source/SbisService',
     'WS.Data/Chain',
     'WS.Data/Entity/Model',
     'WS.Data/Collection/RecordSet',
     'WS.Data/Collection/Factory/RecordSet',
     'WS.Data/Adapter/Sbis',
     'Core/core-clone',
-    'css!SBIS3.CONTROLS.SbisMenu/SbisMenu/SbisMenu'
+    'css!SBIS3.CONTROLS/Menu/SbisMenu/SbisMenu'
 ], function (ContextMenu, SbisService, Chain, Model, RecordSet, recordSetFactory, SbisAdapter, coreClone) {
 
     'use strict';
@@ -17,9 +17,9 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
      *
      * Стандарт описан <a href='http://axure.tensor.ru/standarts/v7/#p=контекстное_меню__версия_1_'>здесь</a>.
      *
-     * @class SBIS3.CONTROLS.SbisMenu
+     * @class SBIS3.CONTROLS/Menu/SbisMenu
      * @author Крайнов Дмитрий Олегович
-     * @extends SBIS3.CONTROLS.ContextMenu
+     * @extends SBIS3.CONTROLS/Menu/ContextMenu
      * @control
      * @public
      * @category Buttons
@@ -478,7 +478,7 @@ define('js!SBIS3.CONTROLS.SbisMenu', [
         }
     };
 
-    var SbisMenu = ContextMenu.extend(/** @lends SBIS3.CONTROLS.ContextMenu.prototype */ {
+    var SbisMenu = ContextMenu.extend(/** @lends SBIS3.CONTROLS/Menu/ContextMenu.prototype */ {
         $protected: {
             _options: {
                 /**

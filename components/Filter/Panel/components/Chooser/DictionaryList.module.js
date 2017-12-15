@@ -1,21 +1,21 @@
-define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
-    'js!SBIS3.CONTROLS.FilterPanelChooser.List',
+define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
+    'SBIS3.CONTROLS/Filter/Panel/components/Chooser/List',
     'Core/CommandDispatcher',
     'Core/core-clone',
     'Core/core-merge',
     'Core/core-instance',
     'WS.Data/Collection/RecordSet',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList/DictionaryList/resources/FilterPanelChooserDictionaryFooter',
-    'js!SBIS3.CONTROLS.Action.SelectorAction',
-    'css!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList/DictionaryList/FilterPanelChooser.DictionaryList'
+    'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList/resources/FilterPanelChooserDictionaryFooter',
+    'SBIS3.CONTROLS/Action/SelectorAction',
+    'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList/FilterPanelChooser.DictionaryList'
 ], function(FilterPanelChooserList, CommandDispatcher, coreClone, coreMerge, cInstance, RecordSet, footerTpl, SelectorAction) {
 
     'use strict';
 
     /**
      * Класс редактора "Список со справочником".
-     * Применяется для панели фильтра с набираемыми параметрами (см. {@link SBIS3.CONTROLS.FilterPanel}).
-     * Реализует выборку идентификаторов как из списка {@link SBIS3.CONTROLS.ListView}, так и из справочника (см. {@link dictionaryOptions}), вызов которого производится по кнопке "Ещё" под списком или командой {@link showDictionary}.
+     * Применяется для панели фильтра с набираемыми параметрами (см. {@link SBIS3.CONTROLS/Filter/FilterPanel}).
+     * Реализует выборку идентификаторов как из списка {@link SBIS3.CONTROLS/ListView}, так и из справочника (см. {@link dictionaryOptions}), вызов которого производится по кнопке "Ещё" под списком или командой {@link showDictionary}.
      *
      * <h2>Особенности отображения редактора</h2>
      * По умолчанию отображается 3 записи в списке.
@@ -23,9 +23,9 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
      * Чтобы открыть справочник и произвести выбор записей, используйте кнопку "Ещё" или команду {@link showDictionary}.
      *
      * <h2>Конфигурация редактора</h2>
-     * Чтобы изменить конфигурацию редактора, используют подопцию *properties* (см. {@link SBIS3.CONTROLS.FilterPanel/FilterPanelItem.typedef}) в {@link SBIS3.CONTROLS.FilterPanel#items}.
-     * По умолчанию для списка вы можете переопределить следующие опции: {@link SBIS3.CONTROLS.ItemsControlMixin#idProperty}, {@link SBIS3.CONTROLS.ItemsControlMixin#displayProperty}, {@link SBIS3.CONTROLS.ItemsControlMixin#items} и {@link SBIS3.CONTROLS.MultiSelectable#selectedKeys}.
-     * Опции, для которых конфигурация фиксирована: {@link SBIS3.CONTROLS.ListView#multiselect}=true, {@link SBIS3.CONTROLS.ListView#itemsDragNDrop}=false и {@link  SBIS3.CONTROLS.ListView#itemsActions}=&#91;&#93;.
+     * Чтобы изменить конфигурацию редактора, используют подопцию *properties* (см. {@link SBIS3.CONTROLS/Filter/FilterPanelItem.typedef}) в {@link SBIS3.CONTROLS/Filter/FilterPanel#items}.
+     * По умолчанию для списка вы можете переопределить следующие опции: {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#idProperty}, {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#displayProperty}, {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#items} и {@link SBIS3.CONTROLS/Mixins/MultiSelectable#selectedKeys}.
+     * Опции, для которых конфигурация фиксирована: {@link SBIS3.CONTROLS/ListView#multiselect}=true, {@link SBIS3.CONTROLS/ListView#itemsDragNDrop}=false и {@link  SBIS3.CONTROLS/ListView#itemsActions}=&#91;&#93;.
      *
      * <h2>Кнопка "Все"</h2>
      * Отображается под списком, когда записей списка больше 3.
@@ -44,18 +44,18 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
      *
      * <h2>Создание пользовательского редактора</h2>
      * Вы можете создать собственный класс редактора, на основе класса редактора "Список со справочником".
-     * Особенность: контрол, который будет отображать список записей, должен иметь фиксированное имя в опции {@link SBIS3.CORE.Control#name} - "controls-FilterPanelChooser__ListView".
+     * Особенность: контрол, который будет отображать список записей, должен иметь фиксированное имя в опции {@link Lib/Control/Control#name} - "controls-FilterPanelChooser__ListView".
      *
      *
-     * @class SBIS3.CONTROLS.FilterPanelChooser.DictionaryList
-     * @extends SBIS3.CONTROLS.FilterPanelChooser.List
+     * @class SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList
+     * @extends SBIS3.CONTROLS/Filter/Panel/components/Chooser/List
      * @author Сухоручкин Андрей Сергеевич
      * @public
      *
      * @demo SBIS3.CONTROLS.Demo.MyFilterView
      */
 
-    var FilterPanelChooserDictionary = FilterPanelChooserList.extend(/** @lends SBIS3.CONTROLS.FilterPanelChooser.DictionaryList.prototype */ {
+    var FilterPanelChooserDictionary = FilterPanelChooserList.extend(/** @lends SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList.prototype */ {
         $protected: {
             _options: {
                 _afterChooserWrapper: footerTpl,
@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
                  *     <li>all - выбираются все типы записей.</li>
                  * </ul>
                  * @property {Object} componentOptions
-                 * Группа опций, которые передаются в секцию <b>_options</b> компонента из опции template (см. {@link SBIS3.CONTROLS.OperationsPanel/FilterPanelItem.typedef FilterPanelItem}). На его основе строится справочник.
+                 * Группа опций, которые передаются в секцию <b>_options</b> компонента из опции template (см. {@link SBIS3.CONTROLS/FilterPanelItem.typedef FilterPanelItem}). На его основе строится справочник.
                  * Значения переданных опций можно использовать в дочерних компонентах справочника через инструкции шаблонизатора.
                  */
                 /**

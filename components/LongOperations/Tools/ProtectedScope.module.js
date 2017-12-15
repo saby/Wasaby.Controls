@@ -1,6 +1,6 @@
-﻿/**
+/**
  * Защищённая область для хранения защищённых членов классов
- * @class SBIS3.CONTROLS.LongOperations.Tools.ProtectedScope
+ * @class SBIS3.CONTROLS/LongOperations/Tools/ProtectedScope
  * @public
  *
  * @example
@@ -21,7 +21,7 @@
  * </pre>
  */
 
-define('js!SBIS3.CONTROLS.LongOperations.Tools.ProtectedScope',
+define('SBIS3.CONTROLS/LongOperations/Tools/ProtectedScope',
    [],
 
    function () {

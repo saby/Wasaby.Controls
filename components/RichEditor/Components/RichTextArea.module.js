@@ -1,7 +1,7 @@
 /**
  * Created by ps.borisov on 21.05.2016.
  */
-define('js!SBIS3.CONTROLS.RichTextArea',
+define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    [
    "Core/UserConfig",
    "Core/pathResolver",
@@ -11,22 +11,22 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/CommandDispatcher",
    "Core/constants",
    "Core/Deferred",
-   "js!SBIS3.CONTROLS.TextBoxBase",
-   "tmpl!SBIS3.CONTROLS.RichTextArea/RichTextArea/RichTextArea",
-   "js!SBIS3.CONTROLS.Utils.RichTextAreaUtil",
-   "js!SBIS3.CONTROLS.RichTextArea/resources/smiles",
+   "SBIS3.CONTROLS/TextBox/TextBoxBase",
+   "tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextArea",
+   "SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil",
+   "SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/smiles",
    'WS.Data/Di',
-   "js!SBIS3.CONTROLS.Utils.ImageUtil",
+   "SBIS3.CONTROLS/Utils/ImageUtil",
    "Core/Sanitize",
    'Core/helpers/String/escapeTagsFromStr',
    'Core/helpers/String/escapeHtml',
    'Core/helpers/String/linkWrap',
-   'js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
-   'js!SBIS3.CONTROLS.RichEditor.CodeSampleDialog',
+   'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel',
+   'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/CodeSampleDialog/CodeSampleDialog',
    'Core/EventBus',
    "css!SBIS3.CORE.RichContentStyles",
-   "i18n!SBIS3.CONTROLS.RichEditor",
-   'css!SBIS3.CONTROLS.RichTextArea/RichTextArea/RichTextArea'
+   "i18n!SBIS3.CONTROLS/RichEditor",
+   'css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextArea'
 ], function (
       UserConfig,
       cPathResolver,
@@ -54,9 +54,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
       var
-         EDITOR_MODULES = ['css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/skin.min',
-            'css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/content.inline.min',
-            'js!SBIS3.CONTROLS.RichTextArea/resources/tinymce/tinymce'],
+         EDITOR_MODULES = ['css!SBIS3.CONTROLS/RichEditor/Components/resources/tinymce/skins/lightgray/skin.min',
+            'css!SBIS3.CONTROLS/RichEditor/Components/resources/tinymce/skins/lightgray/content.inline.min',
+            'SBIS3.CONTROLS/RichEditor/Components/resources/tinymce/tinymce'],
          constants = {
             baseAreaWidth: 768,//726
             defaultImagePercentSize: 25,// Начальный размер картинки (в процентах)
@@ -93,14 +93,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
          },
          /**
-          * Поле ввода для богатого текстового редактора. Чтобы связать с ним тулбар {@link SBIS3.CONTROLS.RichEditorToolbar}, используйте метод {@link SBIS3.CONTROLS.RichEditorToolbarBase#setLinkedEditor}.
-          * @class SBIS3.CONTROLS.RichTextArea
-          * @extends SBIS3.CONTROLS.TextBoxBase
+          * Поле ввода для богатого текстового редактора. Чтобы связать с ним тулбар {@link SBIS3.CONTROLS/RichEditor/Components/Toolbar}, используйте метод {@link SBIS3.CONTROLS/RichEditor/Components/ToolbarBase#setLinkedEditor}.
+          * @class SBIS3.CONTROLS/RichEditor/Components/RichTextArea
+          * @extends SBIS3.CONTROLS/TextBox/TextBoxBase
           * @author Спирин Виктор Алексеевич
           * @public
           * @control
           */
-         RichTextArea = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.RichTextArea.prototype */{
+         RichTextArea = TextBoxBase.extend(/** @lends SBIS3.CONTROLS/RichEditor/Components/RichTextArea.prototype */{
          _dotTplFn: dotTplFn,
          $protected : {
             _options : {
@@ -613,7 +613,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                },
                createDialog = function() {
                   cIndicator.hide();
-                  require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function (InformationPopupManager) {
+                  require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function (InformationPopupManager) {
                      document.addEventListener('paste', onPaste, true);
                      dialog = InformationPopupManager.showMessageDialog({
                            className: 'controls-RichEditor__pasteWithStyles-alert',
@@ -1000,7 +1000,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                dom = editor.dom,
                protocol = /(https?|ftp|file):\/\//gi,
                dialogWidth = 440;
-            require(['js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FieldString', 'js!SBIS3.CONTROLS.Button'], function(Dialog, FieldString, Button) {
+            require(['Lib/Control/Dialog/Dialog', 'Deprecated/Controls/FieldString/FieldString', 'SBIS3.CONTROLS/Button'], function(Dialog, FieldString, Button) {
                new Dialog({
                   title: rk('Вставить/редактировать ссылку'),
                   disableActions: true,
@@ -1313,10 +1313,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                editor = this._tinyEditor,
                scrollTop = this._inputControl.scrollTop(),
                self = this;
-            require(['js!SBIS3.CORE.Dialog'], function(Dialog) {
+            require(['Lib/Control/Dialog/Dialog'], function(Dialog) {
                new Dialog({
                   name: 'imagePropertiesDialog',
-                  template: 'js!SBIS3.CONTROLS.RichEditor.ImagePropertiesDialog',
+                  template: 'SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog',
                   selectedImage: $image,
                   editorWidth: self._inputControl.width(),
                   handlers: {
@@ -2180,7 +2180,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (!this._tinyEditor && !this._tinyIsInit) {
                this._tinyIsInit = true;
                this._requireTinyMCE().addCallback(function() {
-                  tinyMCE.baseURL = cPathResolver.resolveComponentPath('SBIS3.CONTROLS.RichTextArea') + 'resources/tinymce';
+                  tinyMCE.baseURL = cPathResolver.resolveComponentPath('SBIS3.CONTROLS/RichEditor/Components/RichTextArea') + 'resources/tinymce';
                   tinyMCE.init(self._options.editorConfig);
                });
             }

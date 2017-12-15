@@ -1,17 +1,17 @@
-define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
-   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator',
+define('SBIS3.CONTROLS/Utils/HtmlDecorators/LadderDecorator', [
+   'SBIS3.CONTROLS/Utils/HtmlDecorators/AbstractDecorator',
    'Core/IoC'
 ], function (AbstractDecorator, IoC) {
    'use strict';
 
    /**
     * Декоратор текста, обеспечивающий построение лесенки
-    * @class SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator
+    * @class SBIS3.CONTROLS/Utils/HtmlDecorators/LadderDecorator
     * @public
     * @author Крайнов Дмитрий Олегович
     * @deprecated Используйте {@link WS.Data/Display/Ladder}.
     */
-   var LadderDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator.prototype */{
+   var LadderDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS/Utils/HtmlDecorators/LadderDecorator.prototype */{
       $protected: {
          _name: 'ladder',
          _options: {
@@ -122,7 +122,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
       },
 
       _notifyDeprecated: function() {
-         IoC.resolve('ILogger').info('LadderDecorator:', 'module SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator is deprecated and will be removed in 3.7.5. Use "it.ladder.get(it.item, it.field)" in your template instead. See /docs/WS/Data/Display/Ladder/ for details.');
+         IoC.resolve('ILogger').info('LadderDecorator:', 'module SBIS3.CONTROLS/Utils/HtmlDecorators/LadderDecorator is deprecated and will be removed in 3.7.5. Use "it.ladder.get(it.item, it.field)" in your template instead. See /docs/WS/Data/Display/Ladder/ for details.');
          this._notifyDeprecated = function(){};
       }
    });

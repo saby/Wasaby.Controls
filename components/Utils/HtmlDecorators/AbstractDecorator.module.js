@@ -1,15 +1,15 @@
-define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator', [
+define('SBIS3.CONTROLS/Utils/HtmlDecorators/AbstractDecorator', [
    "Core/core-extend"
 ], function( cExtend) {
    'use strict';
 
    /**
     * Абстрактный декоратор
-    * @class SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator
+    * @class SBIS3.CONTROLS/Utils/HtmlDecorators/AbstractDecorator
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var AbstractDecorator = cExtend({}, /** @lends SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator.prototype */{
+   var AbstractDecorator = cExtend({}, /** @lends SBIS3.CONTROLS/Utils/HtmlDecorators/AbstractDecorator.prototype */{
       $protected: {
          _options: {
             /**

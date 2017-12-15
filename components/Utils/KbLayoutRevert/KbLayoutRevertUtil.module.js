@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 06.05.2016.
  */
-define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil',
+define('SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertUtil',
     [],
     function () {
        'use strict';
@@ -15,17 +15,17 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil',
         /**
          * Модуль для преобразования текста, введенного в неверной раскладке. Если передатьь текст в кириллице, то он преобразуется в латиницу.
          * Модуль поставляет единственный метод статический метод {@link #process}.
-         * @class SBIS3.CONTROLS.Utils.KbLayoutRevertUtil
+         * @class SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertUtil
          * @public
          * @example
          * <pre>
-         * define(..., ['js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil'], function(KbLayoutRevertUtil) {
+         * define(..., ['SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertUtil'], function(KbLayoutRevertUtil) {
          *    ...
          *    var res = KbLayoutRevertUtil.process(someString);
          * });
          * </pre>
          */
-       return /** @lends SBIS3.CONTROLS.Utils.KbLayoutRevertUtil.prototype SBIS3.CONTROLS.Utils.KbLayoutRevertUtil */{
+       return /** @lends SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertUtil.prototype SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertUtil */{
           _layouts :
           {
              "ru-en" : "йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮqwertyuiop[]asdfghjkl;'zxcvbnm,.QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>"

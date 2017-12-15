@@ -1,10 +1,10 @@
 /**
  * Created by am.gerasimov on 18.01.2017.
  */
-define('js!SBIS3.CONTROLS.SBISStorageAdapter',
+define('SBIS3.CONTROLS/Storages/SBIS/SBISStorageAdapter',
    [
       'Core/core-extend',
-      'js!SBIS3.CONTROLS.IStorage'],
+      'SBIS3.CONTROLS/Interfaces/IStorage'],
 
    function(coreExtend, IStorage) {
 

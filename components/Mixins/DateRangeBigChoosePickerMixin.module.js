@@ -1,17 +1,17 @@
-define('js!SBIS3.CONTROLS.DateRangeBigChoosePickerMixin', [
-   'js!SBIS3.CONTROLS.DateRangeBigChoose',
+define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
+   'SBIS3.CONTROLS/Date/RangeBigChoose',
    'Core/core-instance'
 ], function (DateRangeBigChoose, cInstance) {
    /**
     * Миксин, умеющий отображать выпадающий вниз блок содержащий контрол SBIS3.CONTROLS.DateRangeBigChoose.
     * Используется только совместно с SBIS3.CONTROLS.DateRangeMixin(SBIS3.CONTROLS.RangeMixin) и SBIS3.CONTROLS.PickerMixin.
     * Связывает данные текущего контрола и открываемого в выпадающем блоке.
-    * @mixin SBIS3.CONTROLS.DateRangeBigChoosePickerMixin
+    * @mixin SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin
     * @public
     * @author Миронов Александр Юрьевич
     */
 
-   var DateRangeBigChoosePickerMixin = /**@lends SBIS3.CONTROLS.DateRangeBigChoosePickerMixin.prototype  */{
+   var DateRangeBigChoosePickerMixin = /**@lends SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin.prototype  */{
       $protected: {
          _options: {
             /**
@@ -39,11 +39,11 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoosePickerMixin', [
       },
 
       $constructor: function () {
-         if (!(cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.RangeMixin' ||
-               cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.DateRangeMixin')))) {
+         if (!(cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS/Mixins/RangeMixin' ||
+               cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS/Mixins/DateRangeMixin')))) {
             throw new Error('RangeMixin or DateRangeMixin mixin is required');
          }
-         if (!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.PickerMixin')) {
+         if (!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS/Mixins/PickerMixin')) {
             throw new Error('PickerMixin mixin is required');
          }
       },

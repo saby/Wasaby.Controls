@@ -1,20 +1,20 @@
-define('js!SBIS3.CONTROLS.HighChartsLight', [
+define('SBIS3.CONTROLS/HighChartsLight', [
    "Core/core-clone",
    "Core/core-merge",
    "Core/constants",
-   "js!SBIS3.CORE.Control",
-   "tmpl!SBIS3.CONTROLS.HighChartsLight/HighChartsLight/HighChartsLight",
+   "Lib/Control/Control",
+   "tmpl!SBIS3.CONTROLS/HighChartsLight/HighChartsLight",
    'Core/helpers/Hcontrol/trackElement',
    "browser!/cdn/highcharts/4.2.7/highcharts-more.js",
-   "css!SBIS3.CONTROLS.HighChartsLight/HighChartsLight/HighChartsLight"
+   "css!SBIS3.CONTROLS/HighChartsLight/HighChartsLight"
 ],
 function(coreClone, cMerge, constants,BaseControl, dotTpl, trackElement){
    'use strict';
 
    /**
     * Диаграмма HighChartsLight
-    * @class SBIS3.CONTROLS.HighChartsLight
-    * @extends SBIS3.CORE.Control
+    * @class SBIS3.CONTROLS/HighChartsLight
+    * @extends Lib/Control/Control
     *
     * @cssModifier controls-HighChartsLight__overflow-visible Отменяет обрезание для контенеров в которых лежит график. Все элементы которые рисуются с опцией useHTML не будут обрезаться границами контенера
     * @cssModifier controls-HighChartsLight__svg-overflow-visible Отменяет обрезание для контенеров в которых лежит график, в том числе и для самого svg контенера графика. Все элементы в том числе и те, которые рисуются внутри svg, не будут обрезаться.
@@ -25,10 +25,10 @@ function(coreClone, cMerge, constants,BaseControl, dotTpl, trackElement){
     * @category Table
     * @designTime actions /design/design
     * @initial
-    * <component data-component='SBIS3.CONTROLS.HighChartsLight'>
+    * <component data-component='SBIS3.CONTROLS/HighChartsLight'>
     * </component>
     */
-   var HighChartsLight = BaseControl.Control.extend(/** @lends SBIS3.CONTROLS.HighChartsLight.prototype */{
+   var HighChartsLight = BaseControl.Control.extend(/** @lends SBIS3.CONTROLS/HighChartsLight.prototype */{
       _dotTplFn : dotTpl,
       $protected : {
          _chartObj : null,
@@ -633,7 +633,7 @@ function(coreClone, cMerge, constants,BaseControl, dotTpl, trackElement){
        * http://api.highcharts.com/highcharts/Chart.reflow
        */
       reflow: function () {
-         // TODO: выделить в базовый класс однотипный функционал для SBIS3.CONTROLS.HighChartsLight и SBIS3.CONTROLS.HighCharts
+         // TODO: выделить в базовый класс однотипный функционал для SBIS3.CONTROLS/HighChartsLight и SBIS3.CONTROLS/HighCharts
          if (this._chartObj) {
             this._chartObj.reflow();
          }

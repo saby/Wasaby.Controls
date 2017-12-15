@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DateRangeRelationController', [
+define('SBIS3.CONTROLS/ComponentBinder/DateRangeRelationController', [
    'Core/Abstract',
    'Core/helpers/date-helpers'
 ], function(cAbstract, dateHelpers) {
@@ -6,10 +6,10 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
    /**
     * Контроллер, позволяющий связывать контролы выбора периодов
     * @author Александр Миронов
-    * @class SBIS3.CONTROLS.DateRangeRelationController
+    * @class SBIS3.CONTROLS/ComponentBinder/DateRangeRelationController
     * @extends Core/Abstract
     */
-   var DateRangeController = cAbstract.extend(/**@lends SBIS3.CONTROLS.DateRangeRelationController.prototype*/{
+   var DateRangeController = cAbstract.extend(/**@lends SBIS3.CONTROLS/ComponentBinder/DateRangeRelationController.prototype*/{
       /**
        * @event onDatesChange Происходит при изменении значения хотя бы одного из синхронизируемых контролов.
        * @param {Core/EventObject} eventObject Дескриптор события.

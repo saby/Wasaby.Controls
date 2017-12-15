@@ -1,12 +1,12 @@
-define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', ['Core/core-instance'], function(cInstance) {
+define('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', ['Core/core-instance'], function(cInstance) {
    /**
     * Миксин, добавляющий поведение выделения интервала из нескольких фиксированных элементов
-    * @mixin SBIS3.CONTROLS.RangeSelectableViewMixin
+    * @mixin SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin
     * @public
     * @author Миронов Александр Юрьевич
     */
 
-   var RangeSelectableViewMixin = /**@lends SBIS3.CONTROLS.RangeSelectableViewMixin.prototype  */{
+   var RangeSelectableViewMixin = /**@lends SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin.prototype  */{
       $protected: {
          _options: {
             // TODO: переименовать в selectionMode {'range', 'single'}. см SBIS3.CONTROLS.DateRangeBigChoosePickerMixin.
@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', ['Core/core-instance'], fun
       },
 
       $constructor: function() {
-         if(!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.RangeSelectableViewMixin')) {
+         if(!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin')) {
             throw new Error('RangeSelectableViewMixin mixin is required');
          }
          this._publish('onBeforeSelectionStarted', 'onSelectionStarted', 'onBeforeSelectionEnded', 'onSelectionEnded');

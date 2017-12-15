@@ -1,29 +1,29 @@
-define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
-   'js!SBIS3.CONTROLS.FilterPanelChooser.BaseList',
-   'js!SBIS3.CONTROLS.ItemsMoveController',
+define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList', [
+   'SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList',
+   'SBIS3.CONTROLS/Controllers/ItemsMoveController',
    'WS.Data/Source/Memory',
    'Core/CommandDispatcher',
-   'tmpl!SBIS3.CONTROLS.FilterPanelChooser.DetailsList/DetailsList/resources/ItemTpl',
-   'css!SBIS3.CONTROLS.FilterPanelChooser.DetailsList/DetailsList/FilterPanelChooser.DetailsList'
+   'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList/resources/ItemTpl',
+   'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList/FilterPanelChooser.DetailsList'
 ], function(FilterPanelChooserBaseList, ItemsMoveController, Memory, CommandDispatcher, ItemTpl) {
 
    'use strict';
 
    /**
     * Класс редактора "Детализация".
-    * Применяется для панели фильтрации (см. {@link SBIS3.CONTROLS.FilterPanel/FilterPanelItem.typedef FilterPanelItem}).
+    * Применяется для панели фильтрации (см. {@link SBIS3.CONTROLS/Filter/FilterPanelItem.typedef FilterPanelItem}).
     * <br/>
     * Реализует выборку идентификаторов из ListView.
     * <br/>
-    * @class SBIS3.CONTROLS.FilterPanelChooser.DetailsList
-    * @extends SBIS3.CONTROLS.FilterPanelChooser.BaseList
+    * @class SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList
+    * @extends SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList
     * @author Авраменко Алексей Сергеевич
     * @public
     *
     * @demo SBIS3.CONTROLS.Demo.MyFilterView
     */
 
-   var FilterPanelChooserDetailsList = FilterPanelChooserBaseList.extend(/** @lends SBIS3.CONTROLS.FilterPanelChooser.DetailsList.prototype */ {
+   var FilterPanelChooserDetailsList = FilterPanelChooserBaseList.extend(/** @lends SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList.prototype */ {
       $protected: {
          _itemsMoveController: null
       },

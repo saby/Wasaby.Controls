@@ -1,12 +1,12 @@
-define('js!SBIS3.CONTROLS.ClockPicker',
+define('SBIS3.CONTROLS/Date/TimePicker/ClockPicker',
    [
-      'js!SBIS3.CORE.CompoundControl',
-      'tmpl!SBIS3.CONTROLS.ClockPicker/ClockPicker/ClockPicker',
-      'js!SBIS3.CONTROLS.DragNDropMixin',
-      'tmpl!SBIS3.CONTROLS.ClockPicker/ClockPicker/resources/Circle',
+      'Lib/Control/CompoundControl/CompoundControl',
+      'tmpl!SBIS3.CONTROLS/Date/TimePicker/ClockPicker/ClockPicker',
+      'SBIS3.CONTROLS/Mixins/DragNDropMixin',
+      'tmpl!SBIS3.CONTROLS/Date/TimePicker/ClockPicker/resources/Circle',
       'Core/core-clone',
-      'js!SBIS3.CONTROLS.TimePickerUtils',
-      'css!SBIS3.CONTROLS.ClockPicker/ClockPicker/ClockPicker'
+      'SBIS3.CONTROLS/Date/TimePicker/TimePickerUtils',
+      'css!SBIS3.CONTROLS/Date/TimePicker/ClockPicker/ClockPicker'
    ],
    function(CompoundControl, dotTplFn, DragNDropMixinNew, circleTplFn, coreClone, Utils) {
 
@@ -19,8 +19,8 @@ define('js!SBIS3.CONTROLS.ClockPicker',
        * Контрол представляющий из себя часы с быстрым выбором значения часов и минут.
        * Он состоит из стрелки для выбора и набора tick - значение для выбора.
        *
-       * @class SBIS3.CONTROLS.ClockPicker
-       * @extend SBIS3.CONTROLS.CompoundControl
+       * @class SBIS3.CONTROLS/Date/TimePicker/ClockPicker
+       * @extend SBIS3.CONTROLS/CompoundControl
        *
        * @initial
        * Пример инициализации контрола.
@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.ClockPicker',
        *            режима на hours(см. {@link setMode}) будет ClockPicker с выбором часов,
        *            и стрелкой показывающей на 20.
        *
-       * <ws:SBIS3.CONTROLS.ClockPicker>
+       * <ws:SBIS3.CONTROLS/Date/TimePicker/ClockPicker>
        *    <ws:time>
        *       <ws:Object>
        *          <ws:hours>20</ws:hours>
@@ -36,13 +36,13 @@ define('js!SBIS3.CONTROLS.ClockPicker',
        *       </ws:Object>
        *    </ws:time>
        *    <ws:mode>minutes</ws:mode>
-       * </ws:SBIS3.CONTROLS.ClockPicker>
+       * </ws:SBIS3.CONTROLS/Date/TimePicker/ClockPicker>
        *
        * @control
        * @private
        * @author Крайнов Дмитрий Олегович
        */
-      var ClockPicker = CompoundControl.extend([DragNDropMixinNew], /** @lends SBIS3.CONTROLS.ClockPicker.prototype */ {
+      var ClockPicker = CompoundControl.extend([DragNDropMixinNew], /** @lends SBIS3.CONTROLS/Date/TimePicker/ClockPicker.prototype */ {
          _dotTplFn: dotTplFn,
 
          $protected: {
@@ -287,7 +287,7 @@ define('js!SBIS3.CONTROLS.ClockPicker',
          },
 
          /**
-          * SBIS3.CONTROLS.DragNDropMixin
+          * SBIS3.CONTROLS/Mixins/DragNDropMixin
           * Вернуть метод который инициализирует DragNDrop
           */
          _dragInitHandler: function(event) {

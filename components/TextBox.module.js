@@ -1,17 +1,17 @@
-define('js!SBIS3.CONTROLS.TextBox', [
+define('SBIS3.CONTROLS/TextBox', [
    'Core/EventBus',
    'Core/constants',
-   'js!SBIS3.CONTROLS.TextBoxBase',
-   'tmpl!SBIS3.CONTROLS.TextBox/TextBox/TextBox',
-   'tmpl!SBIS3.CONTROLS.TextBox/TextBox/resources/textFieldWrapper',
-   'tmpl!SBIS3.CONTROLS.TextBox/TextBox/resources/compatiblePlaceholder',
-   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'js!SBIS3.CONTROLS.TextBoxUtils',
-   'js!SBIS3.CONTROLS.Utils.GetTextWidth',
+   'SBIS3.CONTROLS/TextBox/TextBoxBase',
+   'tmpl!SBIS3.CONTROLS/TextBox/TextBox',
+   'tmpl!SBIS3.CONTROLS/TextBox/resources/textFieldWrapper',
+   'tmpl!SBIS3.CONTROLS/TextBox/resources/compatiblePlaceholder',
+   'SBIS3.CONTROLS/Utils/TemplateUtil',
+   'SBIS3.CONTROLS/TextBox/resources/TextBoxUtils',
+   'SBIS3.CONTROLS/Utils/GetTextWidth',
    'Core/helpers/Function/forAliveOnly',
-   'js!SBIS3.CONTROLS.ControlHierarchyManager',
-   'js!SBIS3.CONTROLS.IconButton',
-   'css!SBIS3.CONTROLS.TextBox/TextBox/TextBox'
+   'SBIS3.CONTROLS/ControlHierarchyManager',
+   'SBIS3.CONTROLS/Button/IconButton',
+   'css!SBIS3.CONTROLS/TextBox/TextBox'
 
 ], function(
     EventBus,
@@ -36,10 +36,10 @@ define('js!SBIS3.CONTROLS.TextBox', [
     * Однострочное текстовое поле ввода.
     * Специальные поля:
     * <ul>
-    *    <li>{@link SBIS3.CONTROLS.NumberTextBox NumberTextBox} - поле ввода числа;</li>
-    *    <li>{@link SBIS3.CONTROLS.PasswordTextBox PasswordTextBox} - поле ввода пароля;</li>
-    *    <li>{@link SBIS3.CONTROLS.TextArea TextArea} - многострочное поле ввода;</li>
-    *    <li>{@link SBIS3.CONTROLS.FormattedTextBox FormattedTextBox} - поле ввода с маской.</li>
+    *    <li>{@link SBIS3.CONTROLS/NumberTextBox NumberTextBox} - поле ввода числа;</li>
+    *    <li>{@link SBIS3.CONTROLS/PasswordTextBox PasswordTextBox} - поле ввода пароля;</li>
+    *    <li>{@link SBIS3.CONTROLS/TextArea TextArea} - многострочное поле ввода;</li>
+    *    <li>{@link SBIS3.CONTROLS/FormattedTextBox FormattedTextBox} - поле ввода с маской.</li>
     * </ul>
     *
     * Для поля ввода можно задать:
@@ -50,8 +50,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
     *    <li>{@link selectOnClick} - выделять ли текст при получении контролом фокуса;</li>
     *    <li>{@link textTransform} - форматирование регистра текста.</li>
     * </ol>
-    * @class SBIS3.CONTROLS.TextBox
-    * @extends SBIS3.CONTROLS.TextBoxBase
+    * @class SBIS3.CONTROLS/TextBox
+    * @extends SBIS3.CONTROLS/TextBox/TextBoxBase
     * @author Романов Валерий Сергеевич
     * @demo SBIS3.CONTROLS.Demo.MyTextBox
     *
@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
     * @category Input
     */
 
-   var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.TextBox.prototype */ {
+   var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS/TextBox.prototype */ {
       _dotTplFn: dotTplFn,
       /**
        * @event onInformationIconMouseEnter Происходит когда курсор мыши входит в область информационной иконки.
@@ -131,13 +131,13 @@ define('js!SBIS3.CONTROLS.TextBox', [
              * Используется в случаях, когда поле ввода нужно использовать в качестве источника текстовой информации:
              * пользователю требуется скопировать строку в поле для каких-либо дальнейших действий.
              * @example
-             * Иллюстрация выделения текста, переданного в поле связи опцией {@link SBIS3.CONTROLS.TextBoxBase#text}:
+             * Иллюстрация выделения текста, переданного в поле связи опцией {@link SBIS3.CONTROLS/TextBox/TextBoxBase#text}:
              * ![](/TextBox03.png)
              * фрагмент верстки:
              * <pre class="brush:xml">
              *     <option name="selectOnClick">true</option>
              * </pre>
-             * @see SBIS3.CONTROLS.TextBoxBase#text
+             * @see SBIS3.CONTROLS/TextBox/TextBoxBase#text
              */
             selectOnClick: false,
             /**

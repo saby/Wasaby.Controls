@@ -1,6 +1,6 @@
 define('js!WSTest/Focus/Case30', [
    'tmpl!WSTest/Focus/Case30',
-   'js!SBIS3.CORE.CompoundControl'
+   'Lib/Control/CompoundControl/CompoundControl'
 ], function(dotTplFn, CompoundControl) {
 
    var moduleClass = CompoundControl.extend({

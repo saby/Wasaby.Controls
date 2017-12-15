@@ -2,17 +2,17 @@
  * TODO Компонент пока тестировался только в Chrome
  */
 define(
-   'js!SBIS3.CONTROLS.Calendar',
+   'SBIS3.CONTROLS/Calendar',
    [
       'Core/constants',
-      'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.ControlHierarchyManager',
-      'js!SBIS3.CONTROLS.Utils.DateUtil',
-      'tmpl!SBIS3.CONTROLS.Calendar/Calendar/resources/CalendarTableBody',
-      'tmpl!SBIS3.CONTROLS.Calendar/Calendar/Calendar',
-      'js!SBIS3.CONTROLS.MonthPicker',
-      'i18n!SBIS3.CONTROLS.Calendar',
-      'css!SBIS3.CONTROLS.Calendar/Calendar/Calendar'
+      'Lib/Control/CompoundControl/CompoundControl',
+      'SBIS3.CONTROLS/ControlHierarchyManager',
+      'SBIS3.CONTROLS/Utils/DateUtil',
+      'tmpl!SBIS3.CONTROLS/Calendar/resources/CalendarTableBody',
+      'tmpl!SBIS3.CONTROLS/Calendar/Calendar',
+      'SBIS3.CONTROLS/Date/MonthPicker',
+      'i18n!SBIS3.CONTROLS/Calendar',
+      'css!SBIS3.CONTROLS/Calendar/Calendar'
    ],
    function (constants, CompoundControl, ControlHierarchyManager, DateUtil, CalendarTableBodyTpl, dotTplFn) {
 
@@ -21,8 +21,8 @@ define(
       /**
        * Календарь имеет соответствующее названию контрола визуальное отображение.
        * Предназначен для задания даты путём выбора.
-       * @class SBIS3.CONTROLS.Calendar
-       * @extends SBIS3.CORE.CompoundControl
+       * @class SBIS3.CONTROLS/Calendar
+       * @extends Lib/Control/CompoundControl/CompoundControl
        * @author Крайнов Дмитрий Олегович
        * @demo SBIS3.CONTROLS.Demo.MyCalendar
        *
@@ -50,7 +50,7 @@ define(
        * @category Date/Time
        */
 
-      var Calendar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Calendar.prototype */{
+      var Calendar = CompoundControl.extend( /** @lends SBIS3.CONTROLS/Calendar.prototype */{
           /**
            * @event onDateChange Срабатывает при изменении даты.
            * @param {Core/EventObject} eventObject Дескриптор события.

@@ -2,11 +2,11 @@
  * TODO Компонент пока тестировался только в Chrome
  */
 define(
-   'js!SBIS3.CONTROLS.TimeInterval',
+   'SBIS3.CONTROLS/Date/TimeInterval',
    [
       'Core/TimeInterval',
-      'js!SBIS3.CONTROLS.FormattedTextBoxBase',
-      'tmpl!SBIS3.CONTROLS.FormattedTextBox/TimeInterval/TimeInterval'
+      'SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase',
+      'tmpl!SBIS3.CONTROLS/TimeInterval/TimeInterval'
    ],
    function (cTimeInterval, FormattedTextBoxBase, dotTplFn) {
 
@@ -15,8 +15,8 @@ define(
       /**
        * Контрол предназначен для ввода информации о количестве времени с точностью от дня до минуты.
        * Можно вводить только значения особого формата даты ISO_8601 с точностью от дней до минут.
-       * @class SBIS3.CONTROLS.TimeInterval
-       * @extends SBIS3.CONTROLS.FormattedTextBoxBase
+       * @class SBIS3.CONTROLS/Date/TimeInterval
+       * @extends SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase
        * @demo SBIS3.CONTROLS.Demo.MyTimeInterval
        * @author Крайнов Дмитрий Олегович
        *
@@ -25,7 +25,7 @@ define(
        * @category Date/Time
        */
 
-      var TimeInterval = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS.TimeInterval.prototype */{
+      var TimeInterval = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS/Date/TimeInterval.prototype */{
          _dotTplFn: dotTplFn,
           /**
            * @event onChangeInterval Срабатывает при изменении временного интервала.

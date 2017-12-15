@@ -1,9 +1,9 @@
 /**
  * Created by am.gerasimov on 18.03.2016.
  */
-define('js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
+define('SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil',
     [
-       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+       'SBIS3.CONTROLS/Utils/TemplateUtil',
        'Core/helpers/Object/isEqual',
        'Core/helpers/date-helpers',
        'Core/helpers/String/escapeTagsFromStr'

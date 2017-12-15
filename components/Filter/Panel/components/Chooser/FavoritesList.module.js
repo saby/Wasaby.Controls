@@ -1,12 +1,12 @@
-define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
-    'js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList',
+define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/FavoritesList', [
+    'SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList',
     'Core/core-clone',
     'WS.Data/Collection/RecordSet',
-    'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList/FavoritesList/FilterPanelChooser.FavoritesList',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList/FavoritesList/resources/FilterPanelChooserFavoritesHeader',
-    'js!SBIS3.CONTROLS.FilterPanelBoolean',
-    'css!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList/FavoritesList/FilterPanelChooser.FavoritesList'
+    'SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil',
+    'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/FavoritesList/FilterPanelChooser.FavoritesList',
+    'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/FavoritesList/resources/FilterPanelChooserFavoritesHeader',
+    'SBIS3.CONTROLS/Filter/Panel/components/Boolean',
+    'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/FavoritesList/FilterPanelChooser.FavoritesList'
 ], function(FilterPanelChooserDictionary, coreClone, RecordSet, ArraySimpleUtil, dotTplFn, headerTpl) {
 
     var favoritesIsChecked = function(value, favorites) {
@@ -24,8 +24,8 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
 
     /**
      * Класс редактора "Список с избранными записями".
-     * Применяется для панели фильтра с набираемыми параметрами (см. {@link SBIS3.CONTROLS.FilterPanel}).
-     * Реализует выборку идентификаторов как из списка {@link SBIS3.CONTROLS.ListView}, так и из справочника, вызов которого производится по кнопке "Ещё" под списком или командой {@link showDictionary}.
+     * Применяется для панели фильтра с набираемыми параметрами (см. {@link SBIS3.CONTROLS/Filter/FilterPanel}).
+     * Реализует выборку идентификаторов как из списка {@link SBIS3.CONTROLS/ListView}, так и из справочника, вызов которого производится по кнопке "Ещё" под списком или командой {@link showDictionary}.
      * <br/>
      * Особенностью данного редактора является возможность добавлять записи в число избранных.
      * Список избранных отображается в справочнике в отдельной вкладке, а также перед списком появляется кнопка "Избранные (N)", где N - число избранных записей.
@@ -37,9 +37,9 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
      * Чтобы открыть справочник и произвести выбор записей, используйте кнопку "Ещё" или команду {@link showDictionary}.
      *
      * <h2>Конфигурация редактора</h2>
-     * Чтобы изменить конфигурацию редактора, используют подопцию *properties* (см. {@link SBIS3.CONTROLS.FilterPanel/FilterPanelItem.typedef}) в {@link SBIS3.CONTROLS.FilterPanel#items}.
-     * По умолчанию для списка вы можете переопределить следующие опции: {@link SBIS3.CONTROLS.ItemsControlMixin#idProperty}, {@link SBIS3.CONTROLS.ItemsControlMixin#displayProperty}, {@link SBIS3.CONTROLS.ItemsControlMixin#items} и {@link SBIS3.CONTROLS.MultiSelectable#selectedKeys}.
-     * Опции, для которых конфигурация фиксирована: {@link SBIS3.CONTROLS.ListView#multiselect}=true, {@link SBIS3.CONTROLS.ListView#itemsDragNDrop}=false и {@link  SBIS3.CONTROLS.ListView#itemsActions}=&#91;&#93;.
+     * Чтобы изменить конфигурацию редактора, используют подопцию *properties* (см. {@link SBIS3.CONTROLS/Filter/FilterPanelItem.typedef}) в {@link SBIS3.CONTROLS/Filter/FilterPanel#items}.
+     * По умолчанию для списка вы можете переопределить следующие опции: {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#idProperty}, {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#displayProperty}, {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#items} и {@link SBIS3.CONTROLS/Mixins/MultiSelectable#selectedKeys}.
+     * Опции, для которых конфигурация фиксирована: {@link SBIS3.CONTROLS/ListView#multiselect}=true, {@link SBIS3.CONTROLS/ListView#itemsDragNDrop}=false и {@link  SBIS3.CONTROLS/ListView#itemsActions}=&#91;&#93;.
      *
      * <h2>Кнопка "Все"</h2>
      * Отображается под списком, когда записей списка больше 3.
@@ -58,23 +58,23 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
      *
      * <h2>Создание пользовательского редактора</h2>
      * Вы можете создать собственный класс редактора, на основе класса редактора "Список с избранными записями".
-     * Особенность: контрол, который будет отображать список записей, должен иметь фиксированное имя в опции {@link SBIS3.CORE.Control#name} - "controls-FilterPanelChooser__ListView".
+     * Особенность: контрол, который будет отображать список записей, должен иметь фиксированное имя в опции {@link Lib/Control/Control#name} - "controls-FilterPanelChooser__ListView".
      *
      * <h2>Избранные записи</h2>
      * Число избранных записей устанавливают в опции {@link favorites}.
      * Шаблон, который отображает кнопку с числом избранных записей, устанавливают в опции {@link beforeChooserWrapper}.
      * Клик по кнопке открывает в справочнике вкладку "Избранные".
-     * По умолчанию для отображения используется класс редактора {@link SBIS3.CONTROLS.FilterPanelBoolean}, для которого фиксировано имя - "controls-FilterPanelChooser__favoritesCheckBox".
+     * По умолчанию для отображения используется класс редактора {@link SBIS3.CONTROLS/Filter/Panel/components/Boolean}, для которого фиксировано имя - "controls-FilterPanelChooser__favoritesCheckBox".
      *
-     * @class SBIS3.CONTROLS.FilterPanelChooser.FavoritesList
-     * @extends SBIS3.CONTROLS.FilterPanelChooser.DictionaryList
+     * @class SBIS3.CONTROLS/Filter/Panel/components/Chooser/FavoritesList
+     * @extends SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList
      * @author Сухоручкин Андрей Сергеевич
      * @public
      *
      * @demo SBIS3.CONTROLS.Demo.MyFilterView
      */
 
-    var FilterPanelChooserFavorites = FilterPanelChooserDictionary.extend(/** @lends SBIS3.CONTROLS.FilterPanelChooser.FavoritesList.prototype */ {
+    var FilterPanelChooserFavorites = FilterPanelChooserDictionary.extend(/** @lends SBIS3.CONTROLS/Filter/Panel/components/Chooser/FavoritesList.prototype */ {
         _dotTplFn: dotTplFn,
         $protected: {
             _options: {

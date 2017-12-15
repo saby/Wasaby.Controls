@@ -1,20 +1,20 @@
 /**
  * Created by as.krasilnikov on 22.11.2016.
  */
-define('js!SBIS3.CONTROLS.FilterSelect',
+define('SBIS3.CONTROLS/Filter/Button/Select',
     [
-       'js!SBIS3.CORE.CompoundControl',
-       'tmpl!SBIS3.CONTROLS.FilterSelect/Select/FilterSelect',
-       'tmpl!SBIS3.CONTROLS.FilterSelect/Select/FilterSelectItem',
-       'js!SBIS3.CONTROLS.ItemsControlMixin',
-       'js!SBIS3.CONTROLS.Clickable',
-       'js!SBIS3.CONTROLS.Link'
+       'Lib/Control/CompoundControl/CompoundControl',
+       'tmpl!SBIS3.CONTROLS/Filter/Button/Select/FilterSelect',
+       'tmpl!SBIS3.CONTROLS/Filter/Button/Select/FilterSelectItem',
+       'SBIS3.CONTROLS/Mixins/ItemsControlMixin',
+       'SBIS3.CONTROLS/Mixins/Clickable',
+       'SBIS3.CONTROLS/Link'
     ], function(CompoundControl, dotTplFn, itemTpl, ItemsControlMixin) {
        'use strict';
 
        /**
         * Компонент, позволяющий выбрать одно из предложенных значений.
-        * Используется на панели {@link SBIS3.CONTROLS.FilterButton}:
+        * Используется на панели {@link SBIS3.CONTROLS/Filter/Button}:
         * @remark
         * Чтобы настроить сброс фильтра по крестику, необходимо в структуре фильтра для свойства value указать значение аттрибута nonexistent равным null
         * <pre>
@@ -26,15 +26,15 @@ define('js!SBIS3.CONTROLS.FilterSelect',
         *        </opts>
         *     </opts>
         * </pre>
-        * @class SBIS3.CONTROLS.FilterSelect
-        * @extends SBIS3.CORE.CompoundControl
-        * @mixes SBIS3.CONTROLS.ItemsControlMixin
+        * @class SBIS3.CONTROLS/Filter/Button/Select
+        * @extends Lib/Control/CompoundControl/CompoundControl
+        * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
         * @author Красильников Андрей Сергеевич
         * @control
         * @public
         */
 
-       var FilterSelect = CompoundControl.extend([ItemsControlMixin], /** @lends SBIS3.CONTROLS.FilterSelect.prototype */ {
+       var FilterSelect = CompoundControl.extend([ItemsControlMixin], /** @lends SBIS3.CONTROLS/Filter/Button/Select.prototype */ {
           _dotTplFn: dotTplFn,
           $protected: {
              _options: {

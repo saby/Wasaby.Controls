@@ -1,7 +1,7 @@
-define('js!SBIS3.CONTROLS.Button',
+define('SBIS3.CONTROLS/Button',
    [
       'js!WSControls/Buttons/Button',
-      'css!SBIS3.CONTROLS.Button/Button/Button'
+      'css!SBIS3.CONTROLS/Button/Button'
          ],
 
    function (Base) {
@@ -17,12 +17,12 @@ define('js!SBIS3.CONTROLS.Button',
     * {@link /doc/platform/developmentapl/interface-development/components/textbox/buttons/button-line/#button Демонстрационные примеры}.
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
     *
-    * @class SBIS3.CONTROLS.Button
+    * @class SBIS3.CONTROLS/Button
     * @extends Core/Control
     *
-    * @mixes SBIS3.CONTROLS.Button/Button.compatible
-    * @mixes SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor
-    * @mixes SBIS3.CORE.Control/ControlGoodCode
+    * @mixes SBIS3.CONTROLS/Button/Button.compatible
+    * @mixes Lib/Control/BaseCompatible/Mixins/WsCompatibleConstructor
+    * @mixes Lib/Control/ControlGoodCode
     *
     * @author Романов Валерий Сергеевич
     *
@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.Button',
     * @category Button
     * @public
     * @initial
-    * <ws:SBIS3.CONTROLS.Button caption="Кнопка" />
+    * <ws:SBIS3.CONTROLS/Button caption="Кнопка" />
     */
    var Button = Base.extend( [], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
       _modifyOptions : function() {

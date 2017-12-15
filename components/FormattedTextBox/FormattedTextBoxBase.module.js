@@ -1,14 +1,14 @@
 define(
-   'js!SBIS3.CONTROLS.FormattedTextBoxBase',
+   'SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase',
    [
       'Core/IoC',
       'Core/constants',
       'Core/core-extend',
-      'js!SBIS3.CONTROLS.Utils.IfEnabled',
-      'js!SBIS3.CONTROLS.TextBoxBase',
-      'tmpl!SBIS3.CONTROLS.FormattedTextBoxBase/FormattedTextBoxBase_mask',
+      'SBIS3.CONTROLS/Utils/IfEnabled',
+      'SBIS3.CONTROLS/TextBox/TextBoxBase',
+      'tmpl!SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase_mask',
       'Core/helpers/Function/forAliveOnly',
-      'is!msIe?js!SBIS3.CORE.FieldString/resources/ext/ierange-m2-min'
+      'is!msIe?Deprecated/Controls/FieldString/resources/ext/ierange-m2-min'
    ],
    function (IoC, constants, cExtend, ifEnabled, TextBoxBase, maskTemplateFn, forAliveOnly) {
 
@@ -612,13 +612,13 @@ define(
     *    <li>x - буква или цифра.</li>
     *    <li>"/", "-", ":", " ", "." - разделители.</li>
     * </ol>
-    * @class SBIS3.CONTROLS.FormattedTextBoxBase
-    * @extends SBIS3.CONTROLS.TextBoxBase
+    * @class SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase
+    * @extends SBIS3.CONTROLS/TextBox/TextBoxBase
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var FormattedTextBoxBase = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.FormattedTextBoxBase.prototype */ {
+   var FormattedTextBoxBase = TextBoxBase.extend(/** @lends SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase.prototype */ {
        /**
         * @event onInputFinished По окончании ввода
         * @param {Core/EventObject} eventObject Дескриптор события.
@@ -1024,7 +1024,7 @@ define(
          }
       },
 
-      /* Переопределяем метод SBIS3.CORE.CompoundActiveFixMixin чтобы при клике нормально фокус ставился
+      /* Переопределяем метод Lib/Mixins/CompoundActiveFixMixin чтобы при клике нормально фокус ставился
        */
       _getElementToFocus: function() {
          return this._inputField;

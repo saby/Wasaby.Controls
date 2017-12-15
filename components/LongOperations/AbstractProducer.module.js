@@ -1,20 +1,20 @@
 /**
  * Абстрактный продюсер длительных операций - заготовка для порождения классов не слишком специфичных продюсеров длительных операций
  *
- * @class SBIS3.CONTROLS.LongOperations.AbstractProducer
- * @implements SBIS3.CONTROLS.LongOperations.IProducer
+ * @class SBIS3.CONTROLS/LongOperations/AbstractProducer
+ * @implements SBIS3.CONTROLS/LongOperations/IProducer
  * @public
  */
 
-define('js!SBIS3.CONTROLS.LongOperations.AbstractProducer',
+define('SBIS3.CONTROLS/LongOperations/AbstractProducer',
    [
       'Core/core-extend',
       'Core/Deferred',
       'Core/IoC',
       'WS.Data/Entity/ObservableMixin',
-      'js!SBIS3.CONTROLS.LongOperations.IProducer',
-      'js!SBIS3.CONTROLS.LongOperations.Entry',
-      'js!SBIS3.CONTROLS.LongOperations.Const'
+      'SBIS3.CONTROLS/LongOperations/IProducer',
+      'SBIS3.CONTROLS/LongOperations/Entry',
+      'SBIS3.CONTROLS/LongOperations/Const'
    ],
 
    function (CoreExtend, Deferred, IoC, ObservableMixin, ILongOperationsProducer, LongOperationEntry, LongOperationsConst) {
@@ -39,8 +39,8 @@ define('js!SBIS3.CONTROLS.LongOperations.AbstractProducer',
        * @public
        * @type {function}
        */
-      var AbstractLongOperationsProducer = CoreExtend.extend({}, [ILongOperationsProducer, ObservableMixin], /** @lends SBIS3.CONTROLS.LongOperations.AbstractProducer.prototype */{
-         _moduleName: 'SBIS3.CONTROLS.LongOperations.AbstractProducer',
+      var AbstractLongOperationsProducer = CoreExtend.extend({}, [ILongOperationsProducer, ObservableMixin], /** @lends SBIS3.CONTROLS/LongOperations/AbstractProducer.prototype */{
+         _moduleName: 'SBIS3.CONTROLS/LongOperations/AbstractProducer',
 
          /*$protected: {
             _options: {
@@ -371,7 +371,7 @@ define('js!SBIS3.CONTROLS.LongOperations.AbstractProducer',
       /**
        * Создать снимок состояния (плоский объект) длительной операции
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperations.Entry} operation Длительная операция
+       * @param {SBIS3.CONTROLS/LongOperations/Entry} operation Длительная операция
        * @return {object}
        */
       var _toSnapshot = function (operation) {
@@ -388,7 +388,7 @@ define('js!SBIS3.CONTROLS.LongOperations.AbstractProducer',
        * @protected
        * @param {object} snapshot Снимок состояния
        * @param {string} producerName Имя текущего продюсера
-       * @return {SBIS3.CONTROLS.LongOperations.Entry}
+       * @return {SBIS3.CONTROLS/LongOperations/Entry}
        */
       var _fromSnapshot = function (snapshot, producerName) {
          if (!snapshot || !(typeof snapshot === 'object')) {
@@ -469,7 +469,7 @@ define('js!SBIS3.CONTROLS.LongOperations.AbstractProducer',
 
       /**
        * Набор внутренних методов для манипуляций с локальным хранилищем
-       * (Модуль SBIS3.CORE.LocalStorage не имеет списочного метода - Задача 1174116054)
+       * (Модуль Lib/Storage/LocalStorage не имеет списочного метода - Задача 1174116054)
        * @protected
        * @type {object}
        */
@@ -586,7 +586,7 @@ define('js!SBIS3.CONTROLS.LongOperations.AbstractProducer',
                   obj = JSON.parse(json);
                }
                catch (ex) {
-                  IoC.resolve('ILogger').error('SBIS3.CONTROLS.LongOperations.AbstractProducer', 'JSON data is corrupted');
+                  IoC.resolve('ILogger').error('SBIS3.CONTROLS/LongOperations/AbstractProducer', 'JSON data is corrupted');
                }
                return obj;
             }

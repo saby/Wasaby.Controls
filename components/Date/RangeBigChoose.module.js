@@ -1,23 +1,23 @@
-define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
+define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    "Core/constants",
-   "js!SBIS3.CORE.CompoundControl",
-   "tmpl!SBIS3.CONTROLS.DateRangeBigChoose/RangeBigChoose/DateRangeBigChoose",
-   "js!SBIS3.CONTROLS.RangeMixin",
-   "js!SBIS3.CONTROLS.RangeSelectableViewMixin",
-   "js!SBIS3.CONTROLS.Utils.DateUtil",
+   "Lib/Control/CompoundControl/CompoundControl",
+   "tmpl!SBIS3.CONTROLS/Date/RangeBigChoose/DateRangeBigChoose",
+   "SBIS3.CONTROLS/Mixins/RangeMixin",
+   "SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin",
+   "SBIS3.CONTROLS/Utils/DateUtil",
    "Core/helpers/event-helpers",
-   "js!SBIS3.CONTROLS.Button",
+   "SBIS3.CONTROLS/Button",
    'js!WSControls/Buttons/Button',
-   "js!SBIS3.CONTROLS.IconButton",
-   "js!SBIS3.CONTROLS.Link",
-   "js!SBIS3.CONTROLS.DateBox",
-   "js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker",
-   "js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker",
-   "js!SBIS3.CORE.CloseButton",
-   "js!SBIS3.CONTROLS.DateRangeBigChoose.Validators",
-   "browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers",
-   'i18n!SBIS3.CONTROLS.DateRangeBigChoose',
-   'css!SBIS3.CONTROLS.DateRangeBigChoose/RangeBigChoose/DateRangeBigChoose'
+   "SBIS3.CONTROLS/Button/IconButton",
+   "SBIS3.CONTROLS/Link",
+   "SBIS3.CONTROLS/Date/Box",
+   "SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker",
+   "SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker",
+   "Deprecated/Controls/CloseButton/CloseButton",
+   "SBIS3.CONTROLS/Date/RangeBigChoose/resources/Validators",
+   "browser!js!SBIS3.CONTROLS/ListView/resources/SwipeHandlers",
+   'i18n!SBIS3.CONTROLS/Date/RangeBigChoose',
+   'css!SBIS3.CONTROLS/Date/RangeBigChoose/DateRangeBigChoose'
 
 ], function ( constants,CompoundControl, dotTplFn, RangeMixin, RangeSelectableViewMixin, DateUtil, eHelpers) {
    'use strict';
@@ -51,16 +51,16 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
       };
     /**
      *
-     * @class SBIS3.CONTROLS.DateRangeBigChoose
-     * @extends SBIS3.CORE.CompoundControl
+     * @class SBIS3.CONTROLS/Date/RangeBigChoose
+     * @extends Lib/Control/CompoundControl/CompoundControl
      *
-     * @mixes SBIS3.CONTROLS.RangeMixin
-     * @mixes SBIS3.CONTROLS.RangeSelectableViewMixin
+     * @mixes SBIS3.CONTROLS/Mixins/RangeMixin
+     * @mixes SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin
      *
      * @public
      * @control
      */
-   var DateRangeBigChoose = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin], /** @lends SBIS3.CONTROLS.DateRangeBigChoose.prototype */{
+   var DateRangeBigChoose = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin], /** @lends SBIS3.CONTROLS/Date/RangeBigChoose.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

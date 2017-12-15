@@ -2,22 +2,22 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', [
+define('SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBaseDS', [
    "Core/IoC",
-   "js!SBIS3.CORE.CompoundControl",
-   "js!SBIS3.CONTROLS.DSMixin",
-   "js!SBIS3.CONTROLS.DataBindMixin"
+   "Lib/Control/CompoundControl/CompoundControl",
+   "SBIS3.CONTROLS/Mixins/DSMixin",
+   "SBIS3.CONTROLS/Mixins/DataBindMixin"
 ], function( IoC, CompoundControl, DSMixin, DataBindMixin) {
 
    'use strict';
 
    /**
     * Класс, реализующий поведение выбора одного из нескольких значений при помощи набора радиокнопок. Отображения не имеет.
-    * @class SBIS3.CONTROLS.ButtonGroupBaseDS
-    * @extends SBIS3.CORE.CompoundControl
+    * @class SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBaseDS
+    * @extends Lib/Control/CompoundControl/CompoundControl
     *
-    * @mixes SBIS3.CONTROLS.DSMixin
-    * @mixes SBIS3.CONTROLS.DataBindMixin
+    * @mixes SBIS3.CONTROLS/Mixins/DSMixin
+    * @mixes SBIS3.CONTROLS/Mixins/DataBindMixin
     *
     * @ignoreEvents onAfterLoad onChange onStateChange
     * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', [
     * @author Крайнов Дмитрий Олегович
     */
 
-   var ButtonGroupBase = CompoundControl.extend([DSMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBaseDS.prototype */ {
+   var ButtonGroupBase = CompoundControl.extend([DSMixin, DataBindMixin], /** @lends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBaseDS.prototype */ {
       $protected: {
          _options: {
             displayProperty : ''

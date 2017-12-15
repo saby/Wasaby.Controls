@@ -1,21 +1,21 @@
 /**
  * Created by as.suhoruchkin on 02.04.2015.
  */
-define('js!SBIS3.CONTROLS.MergeAction', [
+define('SBIS3.CONTROLS/Action/MergeAction', [
    "Core/core-merge",
-   "js!SBIS3.CONTROLS.Action.OpenDialog",
+   "SBIS3.CONTROLS/Action/OpenDialog",
    "Core/IoC",
-   "js!SBIS3.CONTROLS.MergeDialogTemplate"
+   "SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate"
 ], function (cMerge, OpenDialogAction, IoC) {
    /**
     * Действие открытия окна, в котором производится выбор записей для их объединения.
     * Пример использования класса можно найти в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/items-action/panel/basic-operations/merge/ Операция объединения записей реестра}.
-    * @class SBIS3.CONTROLS.MergeAction
+    * @class SBIS3.CONTROLS/Action/MergeAction
     * @public
-    * @extends SBIS3.CONTROLS.Action.OpenDialog
+    * @extends SBIS3.CONTROLS/Action/OpenDialog
     * @author Сухоручкин Андрей Сергеевич
     */
-   var MergeAction = OpenDialogAction.extend(/** @lends SBIS3.CONTROLS.MergeAction.prototype */{
+   var MergeAction = OpenDialogAction.extend(/** @lends SBIS3.CONTROLS/Action/MergeAction.prototype */{
       $protected: {
          _options: {
             /**
@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.MergeAction', [
              * @see mode
              * @see titleCellTemplate
              */
-            dialogComponent: 'js!SBIS3.CONTROLS.MergeDialogTemplate',
+            dialogComponent: 'SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate',
             /**
              * @cfg {String} Устанавливаем режим открытия компонента объединения записей.
              * @variant dialog Компонент открывается в новом диалогом окне.

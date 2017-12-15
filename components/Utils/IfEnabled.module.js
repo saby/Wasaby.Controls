@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.Utils.IfEnabled', function() {
+define('SBIS3.CONTROLS/Utils/IfEnabled', function() {
 
     /**
      * Декоратор для методов контролов. Проверяет является ли контрол активным, и только в этом случае запускает

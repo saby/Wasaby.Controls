@@ -3,28 +3,28 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.CommandsSeparator', [
+define('SBIS3.CONTROLS/Commands/CommandsSeparator', [
    'js!WSControls/Buttons/ButtonBase',
-   'js!SBIS3.CONTROLS.Checkable',
-   'tmpl!SBIS3.CONTROLS.CommandsSeparator',
-   'css!SBIS3.CONTROLS.CommandsSeparator'
+   'SBIS3.CONTROLS/Mixins/Checkable',
+   'tmpl!SBIS3.CONTROLS/Commands/CommandsSeparator',
+   'css!SBIS3.CONTROLS/Commands/CommandsSeparator'
 ], function(WSButtonBase, Checkable, dotTplFn) {
 
    'use strict';
 
    /**
     * Контрол, отображающий разделитель.
-    * @class SBIS3.CONTROLS.CommandsSeparator
+    * @class SBIS3.CONTROLS/Commands/CommandsSeparator
     * @extends WSControls/Buttons/ButtonBase
     * @author Крайнов Дмитрий Олегович
     *
-    * @mixes SBIS3.CONTROLS.Checkable
+    * @mixes SBIS3.CONTROLS/Mixins/Checkable
     *
     * @public
     * @control
     * @category ButtonBase
     * @initial
-    * <component data-component='SBIS3.CONTROLS.CommandsSeparator'>
+    * <component data-component='SBIS3.CONTROLS/Commands/CommandsSeparator'>
     *    <option name='command' value='toggleHistory'></option>
     * </component>
     */

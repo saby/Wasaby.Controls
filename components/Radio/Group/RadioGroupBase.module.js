@@ -2,10 +2,10 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.RadioGroupBase',
+define('SBIS3.CONTROLS/Radio/Group/RadioGroupBase',
    [
-      'js!SBIS3.CONTROLS.ButtonGroupBase',
-      'js!SBIS3.CONTROLS.Selectable'
+      'SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase',
+      'SBIS3.CONTROLS/Mixins/Selectable'
    ],
    function(ButtonGroupBase, Selectable) {
 
@@ -13,9 +13,9 @@ define('js!SBIS3.CONTROLS.RadioGroupBase',
 
    /**
     * Контрол, реализующий поведение выбора одного из нескольких значений при помощи набора радиокнопок. Отображения не имеет.
-    * @class SBIS3.CONTROLS.RadioGroupBase
-    * @mixes SBIS3.CONTROLS.Selectable
-    * @extends SBIS3.CONTROLS.ButtonGroupBase
+    * @class SBIS3.CONTROLS/Radio/Group/RadioGroupBase
+    * @mixes SBIS3.CONTROLS/Mixins/Selectable
+    * @extends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase
     * @public
     * @author Крайнов Дмитрий Олегович
     */
@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.RadioGroupBase',
       return tplOptions;
    };
 
-   var RadioGroupBase = ButtonGroupBase.extend([Selectable], /** @lends SBIS3.CONTROLS.RadioGroupBase.prototype */ {
+   var RadioGroupBase = ButtonGroupBase.extend([Selectable], /** @lends SBIS3.CONTROLS/Radio/Group/RadioGroupBase.prototype */ {
       $protected: {
          _options: {
             allowEmptySelection: false,

@@ -2,18 +2,18 @@
  * Created by am.gerasimov on 04.04.2016.
  */
 
-define('js!SBIS3.CONTROLS.ViewSourceMixin', [
+define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
    "Core/core-merge",
    "Core/Deferred",
-   "js!SBIS3.CONTROLS.Utils.Query",
-   "js!SBIS3.CONTROLS.HistoryController"
+   "SBIS3.CONTROLS/Utils/QueryUtil",
+   "SBIS3.CONTROLS/History/HistoryController"
 ], function( cMerge, Deferred,Query, HistoryController) {
     /**
      *
-     * @mixin SBIS3.CONTROLS.ViewSourceMixin
+     * @mixin SBIS3.CONTROLS/Mixins/ViewSourceMixin
      * @public
      */
-   var ViewSourceMixin = /**@lends SBIS3.CONTROLS.ViewSourceMixin.prototype  */{
+   var ViewSourceMixin = /**@lends SBIS3.CONTROLS/Mixins/ViewSourceMixin.prototype  */{
 
       /**
        * Устанавливает dataSource для представления данных.

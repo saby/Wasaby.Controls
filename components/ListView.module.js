@@ -2,9 +2,9 @@
  * Created by iv.cheremushkin on 14.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.ListView',
+define('SBIS3.CONTROLS/ListView',
    [
-   'js!SBIS3.CONTROLS.Utils.ConfigByClasses',
+   'SBIS3.CONTROLS/Utils/ConfigByClasses',
    'Core/core-merge',
    'Core/core-clone',
    'Core/helpers/Function/shallowClone',
@@ -12,60 +12,60 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/constants',
    'Core/Deferred',
    'Core/IoC',
-   'js!SBIS3.CORE.CompoundControl',
-   'js!SBIS3.StickyHeaderManager',
-   'js!SBIS3.CONTROLS.ItemsControlMixin',
-   'js!SBIS3.CONTROLS.MultiSelectable',
+   'Lib/Control/CompoundControl/CompoundControl',
+   'Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager',
+   'SBIS3.CONTROLS/Mixins/ItemsControlMixin',
+   'SBIS3.CONTROLS/Mixins/MultiSelectable',
    'WS.Data/Query/Query',
    'WS.Data/Entity/Record',
-   'js!SBIS3.CONTROLS.Selectable',
-   'js!SBIS3.CONTROLS.DataBindMixin',
-   'js!SBIS3.CONTROLS.DecorableMixin',
-   'js!SBIS3.CONTROLS.DragNDropMixin',
-   'js!SBIS3.CONTROLS.FormWidgetMixin',
-   'js!SBIS3.CORE.BreakClickBySelectMixin',
-   'js!SBIS3.CONTROLS.ItemsToolbar',
-   'tmpl!SBIS3.CONTROLS.ListView/ListView/ListView',
-   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'js!SBIS3.CONTROLS.CommonHandlers',
-   'js!SBIS3.CONTROLS.ImitateEvents',
-   'js!SBIS3.CORE.LayoutManager',
+   'SBIS3.CONTROLS/Mixins/Selectable',
+   'SBIS3.CONTROLS/Mixins/DataBindMixin',
+   'SBIS3.CONTROLS/Mixins/DecorableMixin',
+   'SBIS3.CONTROLS/Mixins/DragNDropMixin',
+   'SBIS3.CONTROLS/Mixins/FormWidgetMixin',
+   'Lib/Mixins/BreakClickBySelectMixin',
+   'SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
+   'tmpl!SBIS3.CONTROLS/ListView/ListView',
+   'SBIS3.CONTROLS/Utils/TemplateUtil',
+   'SBIS3.CONTROLS/ListView/resources/CommonHandlers',
+   'SBIS3.CONTROLS/Utils/ImitateEvents',
+   'Lib/LayoutManager/LayoutManager',
    'Core/helpers/markup-helpers',
-   'js!SBIS3.CONTROLS.ScrollWatcher',
+   'SBIS3.CONTROLS/Utils/ScrollWatcher',
    'WS.Data/Collection/IBind',
-   'tmpl!SBIS3.CONTROLS.ListView/ListView/resources/ListViewGroupBy',
-   'tmpl!SBIS3.CONTROLS.ListView/ListView/resources/ItemTemplate',
-   'tmpl!SBIS3.CONTROLS.ListView/ListView/resources/ItemContentTemplate',
-   'tmpl!SBIS3.CONTROLS.ListView/ListView/resources/GroupTemplate',
-   'browser!js!SBIS3.CONTROLS.Utils.InformationPopupManager',
-   'js!SBIS3.CONTROLS.Paging',
-   'js!SBIS3.CONTROLS.ComponentBinder',
+   'tmpl!SBIS3.CONTROLS/ListView/resources/ListViewGroupBy',
+   'tmpl!SBIS3.CONTROLS/ListView/resources/ItemTemplate',
+   'tmpl!SBIS3.CONTROLS/ListView/resources/ItemContentTemplate',
+   'tmpl!SBIS3.CONTROLS/ListView/resources/GroupTemplate',
+   'browser!SBIS3.CONTROLS/Utils/InformationPopupManager',
+   'SBIS3.CONTROLS/Paging',
+   'SBIS3.CONTROLS/ComponentBinder',
    'WS.Data/Di',
-   'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
+   'SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil',
    'Core/core-instance',
    'Core/LocalStorageNative',
    'Core/helpers/Function/forAliveOnly',
    'Core/helpers/Function/memoize',
    'Core/helpers/Hcontrol/isElementVisible',
-   'js!SBIS3.CONTROLS.Utils.Contains',
-   'js!SBIS3.CONTROLS.CursorListNavigation',
+   'SBIS3.CONTROLS/Utils/Contains',
+   'SBIS3.CONTROLS/Controllers/CursorListNavigation',
    'WS.Data/Source/SbisService',
    'Core/detection',
-   'js!SBIS3.CONTROLS.ListView.Mover',
+   'SBIS3.CONTROLS/ListView/resources/Mover',
    'Core/helpers/Function/throttle',
    'Core/helpers/Object/isEmpty',
    'Core/Sanitize',
    'Core/WindowManager',
-   'js!SBIS3.CONTROLS.VirtualScrollController',
-   'js!SBIS3.CONTROLS.ListView.DragMove',
+   'SBIS3.CONTROLS/ListView/resources/VirtualScrollController',
+   'SBIS3.CONTROLS/ListView/resources/DragMove/DragMove',
    'Core/helpers/Function/once',
-   'js!SBIS3.CONTROLS.Link',
-   'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
+   'SBIS3.CONTROLS/Link',
+   'browser!SBIS3.CONTROLS/ListView/resources/SwipeHandlers',
    'WS.Data/Collection/RecordSet',
-   'i18n!SBIS3.CONTROLS.ListView',
+   'i18n!SBIS3.CONTROLS/ListView',
    'WS.Data/MoveStrategy/Base',
-   'css!SBIS3.CONTROLS.ListView/ListView/ListView',
-   'css!SBIS3.CONTROLS.ListView/ListView/resources/ItemActionsGroup/ItemActionsGroup'
+   'css!SBIS3.CONTROLS/ListView/ListView',
+   'css!SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
    function (ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
@@ -101,18 +101,18 @@ define('js!SBIS3.CONTROLS.ListView',
        * Контрол, отображающий набор однотипных сущностей. Позволяет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
        * Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/">Настройка списков</a>.
        *
-       * @class SBIS3.CONTROLS.ListView
-       * @extends SBIS3.CORE.CompoundControl
+       * @class SBIS3.CONTROLS/ListView
+       * @extends Lib/Control/CompoundControl/CompoundControl
        * @author Герасимов Александр Максимович
        *
-       * @mixes SBIS3.CONTROLS.DecorableMixin
-       * @mixes SBIS3.CONTROLS.ItemsControlMixin
-       * @mixes SBIS3.CONTROLS.FormWidgetMixin
-       * @mixes SBIS3.CONTROLS.MultiSelectable
-       * @mixes SBIS3.CONTROLS.Selectable
-       * @mixes SBIS3.CONTROLS.DataBindMixin
-       * @mixes SBIS3.CONTROLS.DragNDropMixin
-       * @mixes SBIS3.CONTROLS.CommonHandlers
+       * @mixes SBIS3.CONTROLS/Mixins/DecorableMixin
+       * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
+       * @mixes SBIS3.CONTROLS/Mixins/FormWidgetMixin
+       * @mixes SBIS3.CONTROLS/Mixins/MultiSelectable
+       * @mixes SBIS3.CONTROLS/Mixins/Selectable
+       * @mixes SBIS3.CONTROLS/Mixins/DataBindMixin
+       * @mixes SBIS3.CONTROLS/Mixins/DragNDropMixin
+       * @mixes SBIS3.CONTROLS/ListView/resources/CommonHandlers
        *
        * @cssModifier controls-ListView__orangeMarker Устанавливает отображение маркера активной строки у элементов списка. Модификатор актуален только для класса SBIS3.CONTROLS.ListView.
        * @cssModifier controls-ListView__showCheckBoxes Устанавливает постоянное отображение чекбоксов для записей списка. Модификатор применяется для режима множественного выбора записей (см. {@link multiselect}).
@@ -139,7 +139,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @category Lists
        *
        * @initial
-       * <component data-component='SBIS3.CONTROLS.ListView'>
+       * <component data-component='SBIS3.CONTROLS/ListView'>
        * </component>
        *
        *
@@ -151,7 +151,7 @@ define('js!SBIS3.CONTROLS.ListView',
       };
 
       /*TODO CommonHandlers тут в наследовании не нужны*/
-      var ListView = CompoundControl.extend([DecorableMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DragNDropMixin, CommonHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      var ListView = CompoundControl.extend([DecorableMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DragNDropMixin, CommonHandlers], /** @lends SBIS3.CONTROLS/ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem Происходит при переводе курсора мыши на другой элемент коллекции списка.
@@ -330,14 +330,14 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          /**
           * @typedef {Object} DragEntityOptions
-          * @property {SBIS3.CONTROLS.Control} owner Контрол, которому принадлежит запись.
+          * @property {SBIS3.CONTROLS/Control} owner Контрол, которому принадлежит запись.
           * @property {jQuery} domElement DOM-элемент, отображающий запись.
           * @property {WS.Data/Entity/Model} model Модель, соответствующая записи.
           * @property {MovePosition|undefined} position Позиция элемента после перемещения (определяется только у целевого элемента - того, который находится под курсором мыши).
           */
           /**
           * @typedef {Object} DragEntityListOptions
-          * @property {Array} items Массив перемещаемых элементов {@link SBIS3.CONTROLS.DragEntity.Row}.
+          * @property {Array} items Массив перемещаемых элементов {@link SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row}.
           */
          /**
           * @typedef {String} EndEditResult
@@ -375,7 +375,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * view.subscribe('onEndMove', function(e, result) {
           *    if (result instanceof Error) {
           *       result.processed = true;//Надо поставить флаг что ошибка обработана;
-          *       require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager) {
+          *       require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager) {
           *          InformationPopupManager.showMessageDialog(
           *             {
           *                message: result.message,
@@ -463,7 +463,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      value;
                },
                /**
-                * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
+                * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS/ListView#multiselect multiselect})?
                 * Для отрисовки чекбоксов необходимо в шаблоне отображения элемента коллекции обозначить их место.
                 * Это делают с помощью CSS-классов "controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox".
                 * В следующем примере место отображения чекбоксом обозначено тегом span:
@@ -474,12 +474,12 @@ define('js!SBIS3.CONTROLS.ListView',
                 *        {{=it.item.get("title")}}
                 *     </div>
                 * </pre>
-                * @bind SBIS3.CONTROLS.ListView#itemTemplate
-                * @bind SBIS3.CONTROLS.ListView#multiselect
+                * @bind SBIS3.CONTROLS/ListView#itemTemplate
+                * @bind SBIS3.CONTROLS/ListView#multiselect
                 */
                /**
                 * @cfg {String} Устанавливает шаблон отображения каждого элемента коллекции.
-                * @deprecated Используйте {@link SBIS3.CONTROLS.ItemsControlMixin#itemTpl}.
+                * @deprecated Используйте {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#itemTpl}.
                 * @remark
                 * Шаблон - это пользовательская вёрстка элемента коллекции.
                 * Для доступа к полям элемента коллекции в шаблоне подразумевается использование конструкций шаблонизатора.
@@ -530,8 +530,8 @@ define('js!SBIS3.CONTROLS.ListView',
                 *
                 * @property {String} [toolbarViewMode] Внешний вид кнопки. Допустимые значения:
                 * <ul>
-                *   <li><b>icon</b> - будет отображаться только иконка. Для отображения кнопки установите иконку в опции icon. В этом случае кнопка строится на основе класса контрола {@link SBIS3.CONTROLS.IconButton}.</li>
-                *   <li><b>caption</b> - будет отображаться как текст. Для отображения кнопки установите текст в опции caption. В этом случае кнопка строится на основе класса контрола {@link SBIS3.CONTROLS.Link}</li>
+                *   <li><b>icon</b> - будет отображаться только иконка. Для отображения кнопки установите иконку в опции icon. В этом случае кнопка строится на основе класса контрола {@link SBIS3.CONTROLS/Button/IconButton}.</li>
+                *   <li><b>caption</b> - будет отображаться как текст. Для отображения кнопки установите текст в опции caption. В этом случае кнопка строится на основе класса контрола {@link SBIS3.CONTROLS/Link}</li>
                 * </ul>
                 *
                 * @property {String} [caption] Подпись на кнопке.
@@ -551,10 +551,10 @@ define('js!SBIS3.CONTROLS.ListView',
                 *    <li>item {WS.Data/Entity/Model} - экземпляр класса записи.</li>
                 * </ul>
                 *
-                * @property {Boolean} [allowChangeEnable] Признак, при котором отображение кнопки зависит от значения опции {@link SBIS3.CORE.Control#enabled}.
+                * @property {Boolean} [allowChangeEnable] Признак, при котором отображение кнопки зависит от значения опции {@link Lib/Control/Control#enabled}.
                 *
                 * <ul>
-                *     <li>true. Кнопка не отображается, когда для списка опция {@link SBIS3.CORE.Control#enabled} установлена в значение false.</li>
+                *     <li>true. Кнопка не отображается, когда для списка опция {@link Lib/Control/Control#enabled} установлена в значение false.</li>
                 *     <li>false. Кнопка отображается всегда.</li>
                 * </ul>
                 *
@@ -566,8 +566,8 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {ItemsActions[]} Кнопки, отображаемые при наведении курсора мыши на запись.
                 * @remark
-                * Создаются на основе контролов {@link SBIS3.CONTROLS.IconButton} и {@link SBIS3.CONTROLS.Link}.
-                * Если опция {@link SBIS3.CORE.Control#enabled enabled} контрола установлена в false, то действия, доступные при наведении курсора мыши на запись, отображаться не будут. Однако с помощью опции {@link SBIS3.CORE.Control#allowChangeEnable allowChangeEnable} можно изменить это поведение.
+                * Создаются на основе контролов {@link SBIS3.CONTROLS/Button/IconButton} и {@link SBIS3.CONTROLS/Link}.
+                * Если опция {@link Lib/Control/Control#enabled enabled} контрола установлена в false, то действия, доступные при наведении курсора мыши на запись, отображаться не будут. Однако с помощью опции {@link Lib/Control/Control#allowChangeEnable allowChangeEnable} можно изменить это поведение.
                 * ![](/allowChangeEnable.png)
                 * Подробнее о настройке таких действий вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>.
                 *
@@ -616,14 +616,14 @@ define('js!SBIS3.CONTROLS.ListView',
                 * <div>
                 *    <ws:SBIS3.Engine.Browser name="goodsBrowser">
                 *        <ws:content type="string">
-                *            <ws:SBIS3.CONTROLS.DataGridView>
+                *            <ws:SBIS3.CONTROLS/DataGridView>
                 *                // ...
                 *                <ws:itemsActions>
                 *                    <ws:Array>
                 *                        <ws:Object name="delete" caption="Удалить" tooltip="Удалить" icon="sprite:icon-16 icon-Erase icon-error" isMainAction="true" onActivated="{{ deleteRecord }}"></ws:Object>
                 *                    </ws:Array>
                 *                </ws:itemsActions>
-                *            </ws:SBIS3.CONTROLS.DataGridView>
+                *            </ws:SBIS3.CONTROLS/DataGridView>
                 *        </ws:content>
                 *    </ws:SBIS3.Engine.Browser>
                 * </div>
@@ -748,9 +748,9 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Параметр по умолчанию поддерживается <a href='/doc/platform/developmentapl/workdata/logicworkapl/objects/blmethods/bllist/declr/'>декларативным методом бизнес-логики</a>, его значение будет установлено в соответствии со значением опции <i>partialPaging</i>.
                 * Когда вы применяете другой тип списочного метода, опция <i>partialPaging</i> игнорируется, а значение параметра "n" должно быть установлено внутри метода: true - тип частичной постраничной навигации.
                 * <br/>
-                * Для контролов {@link SBIS3.CONTROLS.CompositeView} и {@link SBIS3.CONTROLS.TreeCompositeView} режим постраничной навигации имеет свои особенности работы:
+                * Для контролов {@link SBIS3.CONTROLS/CompositeView} и {@link SBIS3.CONTROLS/Tree/CompositeView} режим постраничной навигации имеет свои особенности работы:
                 * <ol>
-                *    <li>В режимах отображения "Список" и "Таблица" (см. {@link SBIS3.CONTROLS.CompositeViewMixin#viewMode viewMode}) постраничная навигация не работает, даже если опция <i>showPaging=true</i>. В этих режимах отображения автоматически устанавливается режим бесконечной подгрузки по скроллу - {@link infiniteScroll}.</li>
+                *    <li>В режимах отображения "Список" и "Таблица" (см. {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#viewMode viewMode}) постраничная навигация не работает, даже если опция <i>showPaging=true</i>. В этих режимах отображения автоматически устанавливается режим бесконечной подгрузки по скроллу - {@link infiniteScroll}.</li>
                 *    <li>В режиме отображения "Плитка" постраничная навигация будет работать корректно.</li>
                 * </ol>
                 * @example
@@ -761,10 +761,10 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see getPage
                 * @see infiniteScroll
                 * @see partialPaging
-                * @see SBIS3.CONTROLS.DSMixin#pageSize
-                * @see SBIS3.CONTROLS.CompositeViewMixin#viewMode
-                * @see SBIS3.CONTROLS.TreeCompositeView
-                * @see SBIS3.CONTROLS.CompositeView
+                * @see SBIS3.CONTROLS/Mixins/DSMixin#pageSize
+                * @see SBIS3.CONTROLS/Mixins/CompositeViewMixin#viewMode
+                * @see SBIS3.CONTROLS/Tree/CompositeView
+                * @see SBIS3.CONTROLS/CompositeView
                 */
                showPaging: false,
                /**
@@ -802,9 +802,9 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Такой шаблон отрисовывается поверх редактируемой строки с прозрачным фоном.
                 * Это поведение считается нормальным в целях решения прикладных задач.
                 * Чтобы отображать только шаблон строки без прозрачного фона, нужно установить для него свойство background-color.
-                * Данная опция обладает большим приоритетом, чем установленный в колонках редактор (см. {@link SBIS3.CONTROLS.DataGridView#columns}).
+                * Данная опция обладает большим приоритетом, чем установленный в колонках редактор (см. {@link SBIS3.CONTROLS/DataGridView#columns}).
                 * Данная опция может быть переопределена с помощью метода (см. {@link setEditingTemplatesetEditingTemplate}).
-                * Переопределить опцию можно в любой момент до показа редакторов на строке, например {@link SBIS3.CONTROLS.DataGridView#onBeginEdit} или {@link SBIS3.CONTROLS.DataGridView#onItemClick}.
+                * Переопределить опцию можно в любой момент до показа редакторов на строке, например {@link SBIS3.CONTROLS/DataGridView#onBeginEdit} или {@link SBIS3.CONTROLS/DataGridView#onItemClick}.
                 * @example
                 * Пример шаблона вы можете найти в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/#_4">Шаблон строки редактирования по месту</a>.
                 * @see editMode
@@ -919,15 +919,15 @@ define('js!SBIS3.CONTROLS.ListView',
                navigation: null,
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
                /**
-                * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS.DragEntity.Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS.DragEntity.Row}
+                * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row}
                 * @see DragEntityOptions
-                * @see SBIS3.CONTROLS.DragEntity.Row
+                * @see SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row
                 */
                dragEntity: 'dragentity.row',
                /**
-                * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS.DragEntity.Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS.DragEntity.Row}
+                * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row}
                 * @see DragEntityListOptions
-                * @see SBIS3.CONTROLS.DragEntity.List
+                * @see SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/List
                 */
                dragEntityList: 'dragentity.list',
                /**
@@ -1014,7 +1014,7 @@ define('js!SBIS3.CONTROLS.ListView',
          init: function () {
             // На клиенте для мобильных устройств загружаем контроллеры редактирования сразу, т.к. для правильного функционирования системы фокусов, необходима синхронная логика
             if (cDetection.isMobilePlatform && window) {
-               requirejs(['js!SBIS3.CONTROLS.EditInPlaceHoverController', 'js!SBIS3.CONTROLS.EditInPlaceClickController']);
+               requirejs(['SBIS3.CONTROLS/ListView/resources/EditInPlaceHoverController/EditInPlaceHoverController', 'SBIS3.CONTROLS/ListView/resources/EditInPlaceClickController/EditInPlaceClickController']);
             }
             if (typeof this._options.pageSize === 'string') {
                this._options.pageSize = this._options.pageSize * 1;
@@ -2082,12 +2082,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * @remark
           * Производится запрос на выборку записей из источника данных по установленным параметрам:
           * <ol>
-          *    <li>Параметры фильтрации, которые устанавливают с помощью опции {@link SBIS3.CONTROLS.ItemsControlMixin#filter}.</li>
-          *    <li>Параметры сортировки, которые устанавливают с помощью опции {@link SBIS3.CONTROLS.ItemsControlMixin#sorting}.</li>
-          *    <li>Порядковый номер записи в источнике, с которого будет производиться отбор записей для выборки. Устанавливают с помощью метода {@link SBIS3.CONTROLS.ItemsControlMixin#setOffset}.</li>
-          *    <li>Масимальное число записей, которые будут присутствовать в выборке. Устанавливают с помощью метода {@link SBIS3.CONTROLS.ItemsControlMixin#pageSize}.</li>
+          *    <li>Параметры фильтрации, которые устанавливают с помощью опции {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#filter}.</li>
+          *    <li>Параметры сортировки, которые устанавливают с помощью опции {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#sorting}.</li>
+          *    <li>Порядковый номер записи в источнике, с которого будет производиться отбор записей для выборки. Устанавливают с помощью метода {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#setOffset}.</li>
+          *    <li>Масимальное число записей, которые будут присутствовать в выборке. Устанавливают с помощью метода {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#pageSize}.</li>
           * </ol>
-          * Вызов метода инициирует событие {@link SBIS3.CONTROLS.ItemsControlMixin#onBeforeDataLoad}. В случае успешной перезагрузки набора записей происходит событие {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoad}, а в случае ошибки - {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoadError}.
+          * Вызов метода инициирует событие {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#onBeforeDataLoad}. В случае успешной перезагрузки набора записей происходит событие {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#onDataLoad}, а в случае ошибки - {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#onDataLoadError}.
           * Если источник данных не установлен, производит перерисовку установленного набора данных.
           * @return {Deferred}
           * @example
@@ -2445,7 +2445,7 @@ define('js!SBIS3.CONTROLS.ListView',
                self = this,
                result = new Deferred(),
                controller,
-               moduleName = this._isHoverEditMode() ? 'js!SBIS3.CONTROLS.EditInPlaceHoverController' : 'js!SBIS3.CONTROLS.EditInPlaceClickController';
+               moduleName = this._isHoverEditMode() ? 'SBIS3.CONTROLS/ListView/resources/EditInPlaceHoverController/EditInPlaceHoverController' : 'SBIS3.CONTROLS/ListView/resources/EditInPlaceClickController/EditInPlaceClickController';
 
             // Если процесс создания EIP запущен - то просто возвращаем результат деферреда создания
             if (this._createEditInPlaceDeferred) {
@@ -3246,7 +3246,7 @@ define('js!SBIS3.CONTROLS.ListView',
             /**TODO Это специфическое решение из-за того, что нам нужно догружать данные пока не появится скролл
              * Если мы находися на панельке, то пока она скрыта все данные уже могут загрузиться, но новая пачка не загрузится
              * потому что контейнер невидимый*/
-            if (cInstance.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
+            if (cInstance.instanceOfModule(topParent, 'Lib/Control/FloatArea/FloatArea')){
                var afterFloatAreaShow = function(){
                   if (self.getItems()) {
                      if (self._options.infiniteScroll == 'up'){
@@ -3974,7 +3974,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var self = this;
 
             if (!this._pager) {
-               requirejs(['js!SBIS3.CONTROLS.Pager'], function(pagerCtr) {
+               requirejs(['SBIS3.CONTROLS/Pager'], function(pagerCtr) {
                   if(self._pager || self.isDestroyed()) {
                      return;
                   }
@@ -4268,7 +4268,7 @@ define('js!SBIS3.CONTROLS.ListView',
           *     <li>bottom - отображается в конце списка.</li>
           * </ul>
           * @param {WS.Data/Entity/Model|Object} [options.preparedModel] Модель, используемая, чтобы предустановить значения полей созданного элемента коллекции.
-          * @param {Boolean} [withoutActivateEditor=false] В значении true в режиме редактирования созданного элемента коллекции фокус не установлен ни на один из редакторов (см. {@link SBIS3.CONTROLS.DataGridView/Columns.typedef editor}).
+          * @param {Boolean} [withoutActivateEditor=false] В значении true в режиме редактирования созданного элемента коллекции фокус не установлен ни на один из редакторов (см. {@link SBIS3.CONTROLS/Columns.typedef editor}).
           * @example
           * Производится создание элемента коллекции внутри узла иерархии, в который установлено проваливание. Предустановлено значение для поля "Наименование". Отображение созданного элемента коллекции в режиме редактирования происходит в начале списка.
           * <pre>
@@ -4502,7 +4502,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.enabled && this._needProcessMouseEvent(e);
          },
          _needProcessMouseEvent: function(e) {
-            return !cInstance.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
+            return !cInstance.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS/TextBox/TextBoxBase');
          },
          _beginDragHandler: function () {
             return this._getDragMove().beginDrag();
@@ -4524,12 +4524,12 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Перемещает записи через диалог. По умолчанию берет все выделенные записи.
           * @param {Array} idArray Массив перемещаемых записей
-          * @deprecated Используйте {@link SBIS3.CONTROLS.Action.List.InteractiveMove}.
+          * @deprecated Используйте {@link SBIS3.CONTROLS/Action/List/InteractiveMove}.
           */
          moveRecordsWithDialog: function(idArray) {
             if (this.isEnabledMove()) {
-               require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove', 'WS.Data/Utils'], function (InteractiveMove, Utils) {
-                  //Utils.logger.info(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
+               require(['SBIS3.CONTROLS/Action/List/InteractiveMove', 'WS.Data/Utils'], function (InteractiveMove, Utils) {
+                  //Utils.logger.info(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed. Use "SBIS3.CONTROLS/Action/List/InteractiveMove"');
                   //В OperationMove ни как не передать инстанс экшена через шаблонизатор до решения этой проблемы перейти не получится
                   var
                      action = new InteractiveMove({
@@ -4803,10 +4803,10 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Удаляет записи из источника данных по переданным идентификаторам элементов коллекции.
           * @remark
-          * При использовании метода для в классе {@link SBIS3.CONTROLS.TreeCompositeView} или его наследниках, есть особенность перезагрузки данных.
-          * Для режима отображения "Таблица" (table), который устанавливают с помощью опции {@link SBIS3.CONTROLS.CompositeViewMixin#viewMode}, производится частичная перезагрузка данных в узлах иерархии.
+          * При использовании метода для в классе {@link SBIS3.CONTROLS/Tree/CompositeView} или его наследниках, есть особенность перезагрузки данных.
+          * Для режима отображения "Таблица" (table), который устанавливают с помощью опции {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#viewMode}, производится частичная перезагрузка данных в узлах иерархии.
           * Это означает, что данные списка будут обновлены быстрее: запрос на обновление будет произведён только для тех узлов, элементы которого удаляются методом.
-          * Для списков любых других классов будет произведена полная перезагрузка списка записей, например как при методе {@link SBIS3.CONTROLS.ListView#reload}.
+          * Для списков любых других классов будет произведена полная перезагрузка списка записей, например как при методе {@link SBIS3.CONTROLS/ListView#reload}.
           * @param {Array|Number|String} idArray Массив с идентификаторами элементов коллекции.
           * Если нужно удалить одну запись, то в параметр передаётся простое значение - идентификатор элемента.
           * @param {String} [message] Текст, который будет использован в диалоговом окне перед началом удаления записей из источника.

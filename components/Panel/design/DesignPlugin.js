@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLS.Panel/design/DesignPlugin',
+define('SBIS3.CONTROLS/Panel/design/DesignPlugin',
    [
-      'js!SBIS3.CONTROLS.Panel', 'css!SBIS3.CONTROLS.Panel/design/design'
+      'SBIS3.CONTROLS/Panel', 'css!SBIS3.CONTROLS/design/design'
    ],
    function(Panel){
    /**
     * @class SBIS3.CONTROLS.Panel.DesignPlugin
-    * @extends SBIS3.CONTROLS.Panel
+    * @extends SBIS3.CONTROLS/Panel
     * @plugin
     */
    Panel.extendPlugin({

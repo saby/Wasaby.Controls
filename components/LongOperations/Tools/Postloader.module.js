@@ -1,10 +1,10 @@
 /**
  * Постзагрузчик методов класса
- * @class SBIS3.CONTROLS.LongOperations.Tools.Postloader
+ * @class SBIS3.CONTROLS/LongOperations/Tools/Postloader
  * @public
  */
 
-define('js!SBIS3.CONTROLS.LongOperations.Tools.Postloader',
+define('SBIS3.CONTROLS/LongOperations/Tools/Postloader',
    [
       'Core/Deferred'
    ],
@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Tools.Postloader',
          this._waits = {};
       };
 
-      Postloader.prototype = /** @lends SBIS3.CONTROLS.LongOperations.Tools.Postloader.prototype */{
+      Postloader.prototype = /** @lends SBIS3.CONTROLS/LongOperations/Tools/Postloader.prototype */{
          /**
           * Возвращает метод-заглушку, при вызове которого:
           * - будет возвращено обещание
@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Tools.Postloader',
       /**
        * Функция вызывается из методов-заглушек
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperations.Tools.Postloader} postloader Этот объект
+       * @param {SBIS3.CONTROLS/LongOperations/Tools/Postloader} postloader Этот объект
        * @param {string} method Имя постзагружаемого метода
        * @param {any[]} args Аргументы, с которыми был вызван метод-заглушка
        * @return {Core/Deferred}

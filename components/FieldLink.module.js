@@ -1,39 +1,39 @@
-define('js!SBIS3.CONTROLS.FieldLink',
+define('SBIS3.CONTROLS/FieldLink',
     [
-       'js!SBIS3.CONTROLS.Utils.ConfigByClasses',
+       'SBIS3.CONTROLS/Utils/ConfigByClasses',
        "Core/CommandDispatcher",
        "Core/constants",
        "Core/IoC",
        "Core/core-instance",
        'Core/helpers/Function/forAliveOnly',
        'Core/helpers/Function/memoize',
-       'js!SBIS3.CONTROLS.Utils.Contains',
+       'SBIS3.CONTROLS/Utils/Contains',
        "Core/helpers/string-helpers",
-       'js!SBIS3.CONTROLS.ControlHierarchyManager',
-       "js!SBIS3.CONTROLS.SuggestTextBox",
-       "js!SBIS3.CONTROLS.ItemsControlMixin",
-       "js!SBIS3.CONTROLS.MultiSelectable",
-       "js!SBIS3.CONTROLS.ActiveMultiSelectable",
-       "js!SBIS3.CONTROLS.Selectable",
-       "js!SBIS3.CONTROLS.ActiveSelectable",
-       "js!SBIS3.CONTROLS.SyncSelectionMixin",
-       "tmpl!SBIS3.CONTROLS.FieldLink/FieldLink/afterFieldWrapper",
-       "tmpl!SBIS3.CONTROLS.FieldLink/FieldLink/beforeFieldWrapper",
-       "tmpl!SBIS3.CONTROLS.FieldLink/FieldLink/textFieldWrapper",
-       "js!SBIS3.CONTROLS.ITextValue",
-       "js!SBIS3.CONTROLS.ToSourceModel",
+       'SBIS3.CONTROLS/ControlHierarchyManager',
+       "SBIS3.CONTROLS/Suggest/SuggestTextBox",
+       "SBIS3.CONTROLS/Mixins/ItemsControlMixin",
+       "SBIS3.CONTROLS/Mixins/MultiSelectable",
+       "SBIS3.CONTROLS/Mixins/ActiveMultiSelectable",
+       "SBIS3.CONTROLS/Mixins/Selectable",
+       "SBIS3.CONTROLS/Mixins/ActiveSelectable",
+       "SBIS3.CONTROLS/Mixins/SyncSelectionMixin",
+       "tmpl!SBIS3.CONTROLS/FieldLink/afterFieldWrapper",
+       "tmpl!SBIS3.CONTROLS/FieldLink/beforeFieldWrapper",
+       "tmpl!SBIS3.CONTROLS/FieldLink/textFieldWrapper",
+       "SBIS3.CONTROLS/Mixins/ITextValue",
+       "SBIS3.CONTROLS/Utils/ToSourceModel",
        "WS.Data/Collection/List",
-       "js!SBIS3.CONTROLS.Utils.ItemsSelection",
+       "SBIS3.CONTROLS/Utils/ItemsSelectionUtil",
        "Core/helpers/Object/find",
-       "js!SBIS3.CONTROLS.FieldLinkItemsCollection",
-       "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-       "js!SBIS3.CONTROLS.IconButton",
-       "js!SBIS3.CONTROLS.Action.SelectorAction",
-       'js!SBIS3.CONTROLS.FieldLink.Link',
-       "js!SBIS3.CONTROLS.MenuIcon",
-       "i18n!SBIS3.CONTROLS.FieldLink",
-       'css!SBIS3.CONTROLS.FieldLink/FieldLink/FieldLink',
-       'css!SBIS3.CONTROLS.Suggest/Suggest/Suggest'
+       "SBIS3.CONTROLS/FieldLink/resources/ItemsCollection",
+       "SBIS3.CONTROLS/Utils/TemplateUtil",
+       "SBIS3.CONTROLS/Button/IconButton",
+       "SBIS3.CONTROLS/Action/SelectorAction",
+       'SBIS3.CONTROLS/FieldLink/Link',
+       "SBIS3.CONTROLS/Menu/MenuIcon",
+       "i18n!SBIS3.CONTROLS/FieldLink",
+       'css!SBIS3.CONTROLS/FieldLink/FieldLink',
+       'css!SBIS3.CONTROLS/Suggest/Suggest'
 
     ],
     function (
@@ -127,7 +127,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if (placeholder && placeholder.saveProtoM) {
                 placeholder = '' + placeholder;
              }
-             return typeof placeholder === 'string' && placeholder.indexOf('SBIS3.CONTROLS.FieldLink.Link') === -1;
+             return typeof placeholder === 'string' && placeholder.indexOf('SBIS3.CONTROLS/FieldLink/Link') === -1;
           }
        };
 
@@ -136,18 +136,18 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * <a href="http://axure.tensor.ru/standarts/v7/%D0%BF%D0%BE%D0%BB%D0%B5_%D1%81%D0%B2%D1%8F%D0%B7%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_03_.html">Спецификация</a>.
         * <a href="/doc/platform/developmentapl/interface-development/components/textbox/field-link/index/">Документация</a>.
         *
-        * @class SBIS3.CONTROLS.FieldLink
-        * @extends SBIS3.CONTROLS.SuggestTextBox
+        * @class SBIS3.CONTROLS/FieldLink
+        * @extends SBIS3.CONTROLS/Suggest/SuggestTextBox
         *
         * @author Герасимов Александр Максимович
         *
-        * @mixes SBIS3.CONTROLS.MultiSelectable
-        * @mixes SBIS3.CONTROLS.ActiveMultiSelectable
-        * @mixes SBIS3.CONTROLS.Selectable
-        * @mixes SBIS3.CONTROLS.ActiveSelectable
-        * @mixes SBIS3.CONTROLS.SyncSelectionMixin
-        * @mixes SBIS3.CONTROLS.ItemsControlMixin
-        * @mixes SBIS3.CONTROLS.ITextValue
+        * @mixes SBIS3.CONTROLS/Mixins/MultiSelectable
+        * @mixes SBIS3.CONTROLS/Mixins/ActiveMultiSelectable
+        * @mixes SBIS3.CONTROLS/Mixins/Selectable
+        * @mixes SBIS3.CONTROLS/Mixins/ActiveSelectable
+        * @mixes SBIS3.CONTROLS/Mixins/SyncSelectionMixin
+        * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
+        * @mixes SBIS3.CONTROLS/Mixins/ITextValue
         *
         * @cssModifier controls-FieldLink__hiddenIfEmpty Скрывает отображение (устанавливает CSS-свойство "display:none") контрола "Поле связи", если выполнены два условия: опция {@link enabled}=false и отсутствуют выбранные записи.
         *
@@ -161,9 +161,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @category Input
         */
 
-       var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ItemsControlMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
+       var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ItemsControlMixin, ITextValue],/** @lends SBIS3.CONTROLS/FieldLink.prototype */{
           /**
-           * @name SBIS3.CONTROLS.FieldLink#textValue
+           * @name SBIS3.CONTROLS/FieldLink#textValue
            * @cfg {String} Хранит строку, сформированную из значений поля отображения выбранных элементов коллекции.
            * @remark
            * Значения в строке перечислены через запятую. Отображаемые значения в строке определяются с помощью опции {@link displayProperty} или {@link itemContentTpl}.
@@ -191,7 +191,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 textFieldWrapper: textFieldWrapper,
                 /**********************************************************************************************/
                  list: {
-                   component: 'js!SBIS3.CONTROLS.DataGridView',
+                   component: 'SBIS3.CONTROLS/DataGridView',
                    options: {
                       showHead: false,
                       columns: []
@@ -231,8 +231,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * @property {String} template Компонент, на основе которого организован справочник.
                  * Список значений справочника строится на основе любого компонента, который можно использовать для {@link /doc/platform/developmentapl/interface-development/components/list/ отображения данных в списках}:
                  * <ul>
-                 *    <li>использование компонента {@link SBIS3.CONTROLS.DataGridView}: ![](/FieldLink00.png) </li>
-                 *    <li>использование компонента {@link SBIS3.CONTROLS.TreeDataGridView}: ![](/FieldLink01.png) </li>
+                 *    <li>использование компонента {@link SBIS3.CONTROLS/DataGridView}: ![](/FieldLink00.png) </li>
+                 *    <li>использование компонента {@link SBIS3.CONTROLS/Tree/DataGridView}: ![](/FieldLink01.png) </li>
                  * </ul>
                  * Подробнее о правилах создания компонента для справочника поля связи вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/components/textbox/field-link/">Поле связи</a>.
                  * @property {Object} componentOptions
@@ -250,7 +250,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * Они переопределят уже установленные значения опций, если такие есть.
                  * Чтобы использовать значений опций в дочерних контролах компонента SBIS3.MyArea.MyDatGridView, нужно использовать инструкции шаблонизатора в вёрстке компонента:
                  * <pre class="brush: xml">
-                 *     <component data-component="SBIS3.CONTROLS.TreeCompositeView" name="browserView">
+                 *     <component data-component="SBIS3.CONTROLS/Tree/CompositeView" name="browserView">
                  *        <option name="showHead">{{=it.myShowHeadConfig}}</option>
                  *        <option name="pageSize">{{=it.myPageSizeConfig}}</option>
                  *         . . .
@@ -318,7 +318,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  */
                 showSelector: true,
                 /**
-                 * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS.Action.SelectorAction}
+                 * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS/Action/SelectorAction}
                  */
                 useSelectorAction: false,
                 /**
@@ -577,7 +577,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @example
            * @param {String|Object.<String, *>} template Компонент или конфигурация (объект) компонета, который будет использован для построения справочника.
            * @param {Object} componentOptions Опции, которые будут использованы в компоненте при построении справочника.
-           * Подробное описание можно прочесть {@link SBIS3.CONTROLS.FieldLink/dictionaries.typedef здесь}.
+           * Подробное описание можно прочесть {@link SBIS3.CONTROLS/dictionaries.typedef здесь}.
            * @example
            * <pre>
            *     this.showSelector(
@@ -1201,7 +1201,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 pickerContainer[0].scrollTop = pickerContainer[0].scrollHeight;
                 
                 /* При подскроле вниз всегда устанавливаем маркер на последнюю запись */
-                if(cInstance.instanceOfMixin(list, 'SBIS3.CONTROLS.Selectable')) {
+                if(cInstance.instanceOfMixin(list, 'SBIS3.CONTROLS/Mixins/Selectable')) {
                    newIndex = list.getItems().getCount() - 1;
                    
                    if(newIndex !== list.getSelectedIndex()) {

@@ -1,2 +1,2 @@
 // ВРЕМЕННО, для обратной совместимости
-define('js!SBIS3.CONTROLS.LongOperationEntry', ['js!SBIS3.CONTROLS.LongOperations.Entry'], function (arg) { return arg; });
+define('SBIS3.CONTROLS/LongOperations/Entry/LongOperationEntry', ['SBIS3.CONTROLS/LongOperations/Entry'], function (arg) { return arg; });

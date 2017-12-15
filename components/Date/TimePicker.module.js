@@ -1,12 +1,12 @@
-define('js!SBIS3.CONTROLS.TimePicker',
+define('SBIS3.CONTROLS/Date/TimePicker',
    [
-      'js!SBIS3.CONTROLS.CompoundControl',
-      'tmpl!SBIS3.CONTROLS.TimePicker/TimePicker/TimePicker',
-      'js!SBIS3.CONTROLS.TimePickerUtils',
-      'js!SBIS3.CONTROLS.Utils.DateUtil',
-      'js!SBIS3.CONTROLS.TimeHeader',
-      'js!SBIS3.CONTROLS.ClockPicker',
-      'css!SBIS3.CONTROLS.TimePicker/TimePicker/TimePicker'
+      'SBIS3.CONTROLS/CompoundControl',
+      'tmpl!SBIS3.CONTROLS/Date/TimePicker/TimePicker',
+      'SBIS3.CONTROLS/Date/TimePicker/TimePickerUtils',
+      'SBIS3.CONTROLS/Utils/DateUtil',
+      'SBIS3.CONTROLS/Date/TimePicker/TimeHeader',
+      'SBIS3.CONTROLS/Date/TimePicker/ClockPicker',
+      'css!SBIS3.CONTROLS/Date/TimePicker/TimePicker'
    ],
    function(CompoundControl, dotTplFn, Utils, DateUtil) {
 
@@ -15,8 +15,8 @@ define('js!SBIS3.CONTROLS.TimePicker',
       /**
        * Контрол представляющий из себя шапку часов, и часы с быстрым выбором значения часов или минут.
        *
-       * @class SBIS3.CONTROLS.TimePicker
-       * @extend SBIS3.CONTROLS.CompoundControl
+       * @class SBIS3.CONTROLS/Date/TimePicker
+       * @extend SBIS3.CONTROLS/CompoundControl
        *
        * @initial
        * Пример инициализации контрола.
@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.TimePicker',
        * и подсвеченным временем 17. При смене представления на hours(см. {@link setMode})
        * будет TimePicker с выбором часов, стрелкой показывающей на 20, и шапкой с подсвеченным временем 20.
        *
-       * <ws:SBIS3.CONTROLS.TimePicker
+       * <ws:SBIS3.CONTROLS/Date/TimePicker
        *    time="2017-10-20 20:17"
        *    mode="minutes"
        * />
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.TimePicker',
        * @public
        * @author Крайнов Дмитрий Олегович
        */
-      var TimePicker = CompoundControl.extend(/** @lends SBIS3.CONTROLS.TimePicker.prototype */{
+      var TimePicker = CompoundControl.extend(/** @lends SBIS3.CONTROLS/Date/TimePicker.prototype */{
          _dotTplFn: dotTplFn,
 
          $protected: {
@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.TimePicker',
          /**
           * @event onTimeSelect Происходит при окончании выбора времени.
           * @remark
-          * Окончанием выбора времени является окончание работы со стрелкой выбора времени компонента {@link SBIS3.CONTROLS.ClockPicker}.
+          * Окончанием выбора времени является окончание работы со стрелкой выбора времени компонента {@link SBIS3.CONTROLS/Date/TimePicker/ClockPicker}.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Object} time Время, которое установили.
           */

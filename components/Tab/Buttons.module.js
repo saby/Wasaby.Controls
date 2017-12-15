@@ -2,16 +2,16 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 define(
-   'js!SBIS3.CONTROLS.TabButtons',
+   'SBIS3.CONTROLS/Tab/Buttons',
    [
-      'js!SBIS3.CONTROLS.RadioGroupBase',
-      'tmpl!SBIS3.CONTROLS.TabButtons/Buttons/TabButtons',
-      'tmpl!SBIS3.CONTROLS.TabButtons/Buttons/resources/ItemTemplate',
-      'tmpl!SBIS3.CONTROLS.TabButtons/Buttons/resources/SpaceTemplate',
-      'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+      'SBIS3.CONTROLS/Radio/Group/RadioGroupBase',
+      'tmpl!SBIS3.CONTROLS/Tab/Buttons/TabButtons',
+      'tmpl!SBIS3.CONTROLS/Tab/Buttons/resources/ItemTemplate',
+      'tmpl!SBIS3.CONTROLS/Tab/Buttons/resources/SpaceTemplate',
+      'SBIS3.CONTROLS/Utils/TemplateUtil',
       'Core/core-instance',
-      'js!SBIS3.CONTROLS.TabButton',
-      'css!SBIS3.CONTROLS.TabButtons/Buttons/TabButtons'
+      'SBIS3.CONTROLS/Tab/Button',
+      'css!SBIS3.CONTROLS/Tab/Buttons/TabButtons'
    ],
    function (RadioGroupBase, TabButtonsTpl, ItemTemplate, SpaceTemplate, TemplateUtil, cInstance) {
 
@@ -19,7 +19,7 @@ define(
 
       /**
        * Класс контрола "Вкладки". Чтобы контрол правильно работал, требуется установить опции {@link idProperty} и {@link displayProperty}.
-       * Используется для отображения вкладок. Также применяется в <a href='/docs/js/SBIS3/CONTROLS/TabControl/'>SBIS3.CONTROLS.TabControl</a> - отображает вкладки для <a href='/docs/js/SBIS3/CONTROLS/SwitchableArea/'>областей с контентом</a>.
+       * Используется для отображения вкладок. Также применяется в <a href='/docs/js/SBIS3/CONTROLS/TabControl/'>SBIS3.CONTROLS/Tab/Control</a> - отображает вкладки для <a href='/docs/js/SBIS3/CONTROLS/SwitchableArea/'>областей с контентом</a>.
        * Стандарт вкладок описан <a href='http://axure.tensor.ru/standarts/v7/%D0%B2%D0%BA%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_05_.html'>здесь</a>.
        * @remark
        * Чтобы скрыть одну вкладку, используйте следующий код:
@@ -27,8 +27,8 @@ define(
        *     // myId - идентификатор влкадки
        *     this.getChildControlByName('TabButtons').getItemsInstances()[myId].hide()
        * </pre>
-       * @class SBIS3.CONTROLS.TabButtons
-       * @extends SBIS3.CONTROLS.RadioGroupBase
+       * @class SBIS3.CONTROLS/Tab/Buttons
+       * @extends SBIS3.CONTROLS/Radio/Group/RadioGroupBase
        * @author Крайнов Дмитрий Олегович
        *
        * @public
@@ -91,7 +91,7 @@ define(
             }
             return projection;
          };
-      var TabButtons = RadioGroupBase.extend(/** @lends SBIS3.CONTROLS.TabButtons.prototype */ {
+      var TabButtons = RadioGroupBase.extend(/** @lends SBIS3.CONTROLS/Tab/Buttons.prototype */ {
          $protected: {
             _options: {
                _canServerRender: true,
@@ -102,7 +102,7 @@ define(
                 * @example
                 * <pre>
                 *     <option name="tabSpaceTemplate">
-                *        <component data-component="SBIS3.CONTROLS.Button" name="Button 1">
+                *        <component data-component="SBIS3.CONTROLS/Button" name="Button 1">
                 *           <option name="caption">Кнопка между вкладками</option>
                 *        </component>
                 *     </option>

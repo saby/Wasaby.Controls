@@ -1,20 +1,20 @@
 /*global define, $ws*/
-define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
+define('SBIS3.CONTROLS/Action/List/ReorderMove',[
    "Core/Deferred",
-   "js!SBIS3.CONTROLS.Action.List.Move"
+   "SBIS3.CONTROLS/Action/List/Move"
 ],
    function ( Deferred, ListMove) {
       'use strict';
       /**
        * Класс, описывающий действие перемещения вниз/вверх на одну запись.
-       * @class SBIS3.CONTROLS.Action.List.ReorderMove
+       * @class SBIS3.CONTROLS/Action/List/ReorderMove
        * @public
-       * @extends SBIS3.CONTROLS.Action.List.Move
+       * @extends SBIS3.CONTROLS/Action/List/Move
        * @author Ганшин Ярослав Олегович
        * @example
        * Пример использования ReorderMove:
        * <pre>
-       *    define('js!SBIS3.Demo.ReorderMove', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.Action.List.ReorderMove'],
+       *    define('js!SBIS3.Demo.ReorderMove', ['Lib/Control/CompoundControl/CompoundControl', 'SBIS3.CONTROLS/Action/List/ReorderMove'],
        *    function(CompoundControl, ReorderMove){
        *       var move;
        *       return CompoundControl.extend({
@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
        * В xhtml навесим обработчик:
        * <pre>
        *    <div class="MyListView">
-       *    <component data-component="SBIS3.CONTROLS.ListView" name="MyListView">
+       *    <component data-component="SBIS3.CONTROLS/ListView" name="MyListView">
        *       <options name="itemsActions" type="Array">
        *          <options>
        *             <option name="name" value="moveUp"></option>
@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
        * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
        * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
        */
-      var ReorderMove = ListMove.extend(/** @lends SBIS3.CONTROLS.Action.List.ReorderMove.prototype */{
+      var ReorderMove = ListMove.extend(/** @lends SBIS3.CONTROLS/Action/List/ReorderMove.prototype */{
          $protected: {
             _options: {
                /**

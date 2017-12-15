@@ -2,16 +2,16 @@
  * Created by am.gerasimov on 21.11.2016.
  */
 
-define('js!SBIS3.CONTROLS.SuggestView',
+define('SBIS3.CONTROLS/Suggest/SuggestView',
     [
-       'js!SBIS3.CORE.CompoundControl',
-       'tmpl!SBIS3.CONTROLS.SuggestView/SuggestView/SuggestView',
+       'Lib/Control/CompoundControl/CompoundControl',
+       'tmpl!SBIS3.CONTROLS/Suggest/SuggestView/SuggestView',
        'Core/ParallelDeferred',
        'Core/IoC',
-       'js!SBIS3.CONTROLS.IItemsControl',
-       'js!SBIS3.CONTROLS.TabControl',
-       'js!SBIS3.CONTROLS.ScrollContainer',
-       'css!SBIS3.CONTROLS.SuggestView/SuggestView/SuggestView'
+       'SBIS3.CONTROLS/Interfaces/IItemsControl',
+       'SBIS3.CONTROLS/Tab/Control',
+       'SBIS3.CONTROLS/ScrollContainer',
+       'css!SBIS3.CONTROLS/Suggest/SuggestView/SuggestView'
     ], function(CompoundControl, dotTplFn, ParallelDeferred, IoC, IItemsControl) {
 
        'use strict';
@@ -33,12 +33,12 @@ define('js!SBIS3.CONTROLS.SuggestView',
         * Если передать несколько списков, тогда будут отображаться вкладки.
         * Если список один - то вкладки скрываются и отображается просто список.
         *
-        * @class SBIS3.CONTROLS.SuggestView
-        * @extends SBIS3.CORE.CompoundControl
+        * @class SBIS3.CONTROLS/Suggest/SuggestView
+        * @extends Lib/Control/CompoundControl/CompoundControl
         *
         * @author Герасимов Александр Максимович
         *
-        * @mixes SBIS3.CONTROLS.IItemsControl
+        * @mixes SBIS3.CONTROLS/Interfaces/IItemsControl
         *
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
         * @public
         * @category Lists
         */
-       var SuggestView = CompoundControl.extend([IItemsControl],/** @lends SBIS3.CONTROLS.SuggestView.prototype */ {
+       var SuggestView = CompoundControl.extend([IItemsControl],/** @lends SBIS3.CONTROLS/Suggest/SuggestView.prototype */ {
           _dotTplFn: dotTplFn,
           $protected: {
              _options: {
@@ -76,8 +76,8 @@ define('js!SBIS3.CONTROLS.SuggestView',
                 /**
                  * @cfg {String} Устанавливает идентификатор выбранной вкладки.
                  * @remark
-                 * Для задания выбранного элемента необходимо указать значение {@link SBIS3.CONTROLS.ItemsControlMixin#keyField ключевого поля} элемента коллекции.
-                 * @see SBIS3.CONTROLS.ItemsControlMixin#keyField
+                 * Для задания выбранного элемента необходимо указать значение {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#keyField ключевого поля} элемента коллекции.
+                 * @see SBIS3.CONTROLS/Mixins/ItemsControlMixin#keyField
                  */
                 selectedKey: null,
                 /**
@@ -290,7 +290,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
            * <pre>
            *    fieldLink.getList().getActiveView().setDataSource(mySource);
            * </pre>
-           * @returns {SBIS3.CONTROLS.TabControl}
+           * @returns {SBIS3.CONTROLS/Tab/Control}
            */
           getActiveView: function() {
              return this._getSwitchableArea().getItemById(this.getTabControl().getSelectedKey()).getChildControlByName(VIEW_NAME);
@@ -302,13 +302,13 @@ define('js!SBIS3.CONTROLS.SuggestView',
            * <pre>
            *    fieldLink.getList().getTabControl().setSelectedKey('myTab');
            * </pre>
-           * @returns {SBIS3.CONTROLS.TabControl}
+           * @returns {SBIS3.CONTROLS/Tab/Control}
            */
           getTabControl: function() {
              return this._tabControl || (this._tabControl = this.getChildControlByName('SuggestTabControl'));
           },
 
-          //region SBIS3.CONTROLS.IItemsControl
+          //region SBIS3.CONTROLS/Interfaces/IItemsControl
 
           getItems: function() {
              return this.getActiveView().getItems();
@@ -417,9 +417,9 @@ define('js!SBIS3.CONTROLS.SuggestView',
              return !isLoaded;
           },
 
-          //endregion SBIS3.CONTROLS.IItemsControl
+          //endregion SBIS3.CONTROLS/Interfaces/IItemsControl
 
-          //region SBIS3.CONTROLS.DecorableMixin
+          //region SBIS3.CONTROLS/Mixins/DecorableMixin
 
           setHighlightText: function(text, redraw) {
              this._viewsIterator(function(view) {
@@ -433,9 +433,9 @@ define('js!SBIS3.CONTROLS.SuggestView',
              });
           },
 
-          //endregion SBIS3.CONTROLS.DecorableMixin
+          //endregion SBIS3.CONTROLS/Mixins/DecorableMixin
 
-          //region SBIS3.CONTROLS.ListView
+          //region SBIS3.CONTROLS/ListView
 
           setInfiniteScroll: function(type, noLoad) {
              this.getActiveView().setInfiniteScroll(type, noLoad);
@@ -449,9 +449,9 @@ define('js!SBIS3.CONTROLS.SuggestView',
              this.getActiveView().setColumns(columns);
           },
 
-          //endregion SBIS3.CONTROLS.ListView
+          //endregion SBIS3.CONTROLS/ListView
    
-          //region SBIS3.CONTROLS.Selectable
+          //region SBIS3.CONTROLS/Mixins/Selectable
           
           getSelectedIndex: function() {
              return this.getActiveView().getSelectedIndex();
@@ -461,7 +461,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
              return this.getActiveView().setSelectedIndex(index);
           }
           
-          //endregion SBIS3.CONTROLS.Selectable
+          //endregion SBIS3.CONTROLS/Mixins/Selectable
        });
 
        return SuggestView;

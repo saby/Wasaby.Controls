@@ -1,5 +1,5 @@
 /*global define, $ws*/
-define('js!SBIS3.CONTROLS.Action.DialogMixin', [
+define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
    "Core/core-merge",
    'Core/Deferred',
    "WS.Data/Utils",
@@ -9,21 +9,21 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
 
    /**
     * Миксин, который описывает Действие открытия окна, созданного по шаблону.
-    * @mixin  SBIS3.CONTROLS.Action.DialogMixin
+    * @mixin  SBIS3.CONTROLS/Action/Mixin/DialogMixin
     * @public
     * @author Крайнов Д.О.
     */
-   var DialogMixin = /** @lends SBIS3.CONTROLS.Action.DialogMixin.prototype */{
+   var DialogMixin = /** @lends SBIS3.CONTROLS/Action/Mixin/DialogMixin.prototype */{
        /**
         * @event onAfterShow Происходит после отображения диалога.
         * @param {Core/EventObject} eventObject Дескриптор события.
-        * @param {SBIS3.CONTROLS.Action.DialogMixin} this Экземпляр класса Действия.
+        * @param {SBIS3.CONTROLS/Action/Mixin/DialogMixin} this Экземпляр класса Действия.
         * @see onBeforeShow
         */
        /**
         * @event onBeforeShow Происходит перед отображением диалога.
         * @param {Core/EventObject} eventObject Дескриптор события.
-        * @param {SBIS3.CONTROLS.Action.DialogMixin} this Экземпляр класса Действия.
+        * @param {SBIS3.CONTROLS/Action/Mixin/DialogMixin} this Экземпляр класса Действия.
         * @see onAfterShow
         */
       $protected : {
@@ -45,8 +45,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             template : '',
             /**
              * @cfg {String} Устанавливает режим отображения диалога.
-             * @variant dialog Открытие диалога производится в новом модальном окне, которое создаётся на основе контрола {@link SBIS3.CORE.Dialog}.
-             * @variant floatArea Открытие диалога производится на всплывающей панели, которая создаётся на основе контрола {@link SBIS3.CORE.FloatArea}.
+             * @variant dialog Открытие диалога производится в новом модальном окне, которое создаётся на основе контрола {@link Lib/Control/Dialog/Dialog}.
+             * @variant floatArea Открытие диалога производится на всплывающей панели, которая создаётся на основе контрола {@link Lib/Control/FloatArea/FloatArea}.
              * @remark
              * Для получения/изменения значения опции используйте методы {@link setMode} и {@link getMode}.
              * @see template
@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
              */
             componentOptions: null,
             /**
-             * @cfg {Object} Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link SBIS3.CORE.Control#linkedContext}.
+             * @cfg {Object} Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link Lib/Control/Control#linkedContext}.
              */
             dialogOptions: null
          },
@@ -119,7 +119,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
 
       _createComponent: function(config, meta) {
-         var componentName = (meta.mode == 'floatArea') ? 'js!SBIS3.CORE.FloatArea' : 'js!SBIS3.CORE.Dialog',
+         var componentName = (meta.mode == 'floatArea') ? 'Lib/Control/FloatArea/FloatArea' : 'Lib/Control/Dialog/Dialog',
              resetWidth;
          
          if (this._isNeedToRedrawDialog()){

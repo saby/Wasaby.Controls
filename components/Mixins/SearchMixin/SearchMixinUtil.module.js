@@ -4,7 +4,7 @@
 /**
  * Created by cheremushkin iv on 19.01.2015.
  */
-define('js!SBIS3.CONTROLS.Utils.SearchMixin', [], function() {
+define('SBIS3.CONTROLS/Mixins/SearchMixin/SearchMixinUtil', [], function() {
       
       /**
        * Утилита для поиска

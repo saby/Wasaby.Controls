@@ -1,13 +1,13 @@
-define('js!SBIS3.CONTROLS.ActionBase', ['js!SBIS3.CORE.Control'], function(Control){
+define('SBIS3.CONTROLS/Action/ActionBase', ['Lib/Control/Control'], function(Control){
    'use strict';
 
    /**
     * Класс базовый для всех стандартных действий, которые можно использовать в интерфейсе
-    * @class SBIS3.CONTROLS.ActionBase
+    * @class SBIS3.CONTROLS/Action/ActionBase
     * @public
-    * @extends SBIS3.CORE.Control
+    * @extends Lib/Control/Control
     * @author Крайнов Дмитрий Олегович
-    * @deprecated Используйте {@link SBIS3.CONTROLS.Action.Action}.
+    * @deprecated Используйте {@link SBIS3.CONTROLS/Action}.
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     * @ignoreOptions visible tooltip tabindex enabled className alwaysShowExtendedTooltip allowChangeEnable
@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.ActionBase', ['js!SBIS3.CORE.Control'], function(Contr
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop
     */
    //TODO наследуемся от контрола, чтоб можно было размещать в xhtml
-   var ActionBase = Control.Control.extend(/** @lends SBIS3.CONTROLS.ActionBase.prototype */{
+   var ActionBase = Control.Control.extend(/** @lends SBIS3.CONTROLS/Action/ActionBase.prototype */{
       /**
        * @event onExecuted Происходит после завершения работы действия.
        * @param {Core/EventObject} eventObject Дескриптор события.

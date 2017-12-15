@@ -1,20 +1,20 @@
-define('js!SBIS3.CONTROLS.InformationPopup',
+define('SBIS3.CONTROLS/InformationPopup',
    [
-      'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.PopupMixin',
-      'js!SBIS3.CORE.LikeWindowMixin',
-      'tmpl!SBIS3.CONTROLS.InformationPopup/InformationPopup/InformationPopup',
-      'css!SBIS3.CONTROLS.InformationPopup/InformationPopup/InformationPopup'
+      'Lib/Control/CompoundControl/CompoundControl',
+      'SBIS3.CONTROLS/Mixins/PopupMixin',
+      'Lib/Mixins/LikeWindowMixin',
+      'tmpl!SBIS3.CONTROLS/InformationPopup/InformationPopup',
+      'css!SBIS3.CONTROLS/InformationPopup/InformationPopup'
    ],
 
    /**
     * Класс контрола "Всплывающее информационное окно". Содержимое окна строится по шаблону, установленному в опции {@link template}. Цвет линии в шапке окна зависит от установленного состояния {@link status}.
     *
-    * @class SBIS3.CONTROLS.InformationPopup
-    * @extends SBIS3.CORE.CompoundControl
+    * @class SBIS3.CONTROLS/InformationPopup
+    * @extends Lib/Control/CompoundControl/CompoundControl
     *
-    * @mixes SBIS3.CONTROLS.PopupMixin
-    * @mixes SBIS3.CORE.LikeWindowMixin
+    * @mixes SBIS3.CONTROLS/Mixins/PopupMixin
+    * @mixes Lib/Mixins/LikeWindowMixin
     *
     *
     * @control
@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.InformationPopup',
     */
    function(CompoundControl, PopupMixin, LikeWindowMixin, dotTpl){
       'use strict';
-      var InformationPopup = CompoundControl.extend([PopupMixin, LikeWindowMixin], /** @lends SBIS3.CONTROLS.InformationPopup.prototype */ {
+      var InformationPopup = CompoundControl.extend([PopupMixin, LikeWindowMixin], /** @lends SBIS3.CONTROLS/InformationPopup.prototype */ {
          /**
           * @typedef {String} InformationPopupStatus
           * @variant default  Окно без состояния. Цвет линии в шапке - синий, иконка по умолчанию не задана.

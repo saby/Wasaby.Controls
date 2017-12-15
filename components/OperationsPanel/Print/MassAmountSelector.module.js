@@ -1,15 +1,15 @@
 /**
  * Created by ad.chistyakova on 10.04.2015.
  */
-define('js!SBIS3.CONTROLS.MassAmountSelector', [
-   'js!SBIS3.CORE.CompoundControl',
-   'tmpl!SBIS3.CONTROLS.MassAmountSelector',
-   'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
-   'js!SBIS3.CONTROLS.RadioGroup',
-   'js!SBIS3.CONTROLS.NumberTextBox',
-   'js!SBIS3.CONTROLS.Button',
-   'i18n!SBIS3.CONTROLS.MassAmountSelector',
-   'css!SBIS3.CONTROLS.MassAmountSelector'
+define('SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector', [
+   'Lib/Control/CompoundControl/CompoundControl',
+   'tmpl!SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector',
+   'SBIS3.CONTROLS/Utils/InformationPopupManager',
+   'SBIS3.CONTROLS/Radio/Group',
+   'SBIS3.CONTROLS/NumberTextBox',
+   'SBIS3.CONTROLS/Button',
+   'i18n!SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector',
+   'css!SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector'
 ], function(Control, dotTplFn, InformationPopupManager) {
 
    var MassAmountSelector = Control.extend({

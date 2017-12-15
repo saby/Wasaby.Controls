@@ -1,12 +1,12 @@
-define('js!SBIS3.CONTROLS.Spoiler', [
+define('SBIS3.CONTROLS/Spoiler', [
    'js!WSControls/Buttons/ButtonBase',
-   'js!SBIS3.CONTROLS.Expandable',
-   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'tmpl!SBIS3.CONTROLS.Spoiler/Spoiler/Spoiler',
-   'tmpl!SBIS3.CONTROLS.Spoiler/Spoiler/resources/LeftPartTitleTemplate',
-   'tmpl!SBIS3.CONTROLS.Spoiler/Spoiler/resources/MiddlePartTitleTemplate',
-   'js!SBIS3.CONTROLS.Utils.Contains',
-   'css!SBIS3.CONTROLS.Spoiler/Spoiler/Spoiler'
+   'SBIS3.CONTROLS/Mixins/Expandable',
+   'SBIS3.CONTROLS/Utils/TemplateUtil',
+   'tmpl!SBIS3.CONTROLS/Spoiler/Spoiler',
+   'tmpl!SBIS3.CONTROLS/Spoiler/resources/LeftPartTitleTemplate',
+   'tmpl!SBIS3.CONTROLS/Spoiler/resources/MiddlePartTitleTemplate',
+   'SBIS3.CONTROLS/Utils/Contains',
+   'css!SBIS3.CONTROLS/Spoiler/Spoiler'
 ], function(WSButtonBase, Expandable, TemplateUtil, dotTplFn, LeftPartTitleTemplate, MiddlePartTitleTemplate, contains) {
 
    'use strict';
@@ -24,15 +24,15 @@ define('js!SBIS3.CONTROLS.Spoiler', [
 
    /**
     * Класс контрола "Спойлер". Отображает переключаемую область (спойлер). Длинный заголовок спойлера по умолчанию обрезается.
-    * @class SBIS3.CONTROLS.Spoiler
+    * @class SBIS3.CONTROLS/Spoiler
     * @extends WSControls/Buttons/ButtonBase
-    * @mixes SBIS3.CONTROLS.Expandable
+    * @mixes SBIS3.CONTROLS/Mixins/Expandable
     *
 	* @demo SBIS3.CONTROLS.Demo.MySpoiler
     *
     * @control
     * @initial
-    * <component data-component='SBIS3.CONTROLS.Spoiler'>
+    * <component data-component='SBIS3.CONTROLS/Spoiler'>
     *    <option name='caption' value='Спойлер'></option>
     * </component>
     * @public
@@ -60,7 +60,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
     * @ignoreEvents onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     */
-   var Spoiler = WSButtonBase.extend([Expandable], /** @lends SBIS3.CONTROLS.Spoiler.prototype */ {
+   var Spoiler = WSButtonBase.extend([Expandable], /** @lends SBIS3.CONTROLS/Spoiler.prototype */ {
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {
@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
             /**
              * @cfg {String} Шаблон левой части заголовка спойлера.
              * @remark
-             * В контексте шаблона доступны все опции класса {@link SBIS3.CONTROLS.Spoiler}.
+             * В контексте шаблона доступны все опции класса {@link SBIS3.CONTROLS/Spoiler}.
              * @see contentTpl
              * @see middlePartTitleTpl
              * @see rightPartTitleTpl
@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
             /**
              * @cfg {String} Шаблон центральной части заголовка спойлера.
              * @remark
-             * В контексте шаблона доступны все опции класса {@link SBIS3.CONTROLS.Spoiler}.
+             * В контексте шаблона доступны все опции класса {@link SBIS3.CONTROLS/Spoiler}.
              * По умолчанию в этом шаблоне описана кнопка, клик по которой открывает/закрывает переключаемую область спойлера.
              * @see contentTpl
              * @see leftPartTitleTpl
@@ -99,7 +99,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
             /**
              * @cfg {String} Шаблон правой части заголовка спойлера.
              * @remark
-             * В контексте шаблона доступны все опции класса {@link SBIS3.CONTROLS.Spoiler}.
+             * В контексте шаблона доступны все опции класса {@link SBIS3.CONTROLS/Spoiler}.
              * @see contentTpl
              * @see leftPartTitleTpl
              * @see middlePartTitleTpl

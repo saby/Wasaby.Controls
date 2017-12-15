@@ -2,13 +2,13 @@
  * Created by iv.cheremushkin on 12.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.PopupMixin', [
+define('SBIS3.CONTROLS/Mixins/PopupMixin', [
    "Core/WindowManager",
    "Core/EventBus",
    "Core/Deferred",
-   "js!SBIS3.CONTROLS.ControlHierarchyManager",
-   "js!SBIS3.CORE.ModalOverlay",
-   "js!SBIS3.CONTROLS.TouchKeyboardHelper",
+   "SBIS3.CONTROLS/ControlHierarchyManager",
+   "Deprecated/Controls/ModalOverlay/ModalOverlay",
+   "SBIS3.CONTROLS/Utils/TouchKeyboardHelper",
    'Core/core-instance',
    'Core/helpers/Hcontrol/doAutofocus',
    'Core/helpers/Hcontrol/trackElement',
@@ -47,11 +47,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
    /**
     * Миксин, определяющий поведение контролов, которые отображаются с абсолютным позиционированием поверх всех остальных компонентов (диалоговые окна, плавающие панели, подсказки).
     * При подмешивании этого миксина в контрол он вырезается из своего местоположения и вставляется в Body.
-    * @mixin SBIS3.CONTROLS.PopupMixin
+    * @mixin SBIS3.CONTROLS/Mixins/PopupMixin
     * @author Крайнов Дмитрий Олегович
     * @public
     */
-   var PopupMixin = /** @lends SBIS3.CONTROLS.PopupMixin.prototype */ {
+   var PopupMixin = /** @lends SBIS3.CONTROLS/Mixins/PopupMixin.prototype */ {
        /**
         * @event onShow Происходит при открытии окна.
         * @param {Core/EventObject} eventObject Дескриптор события.
@@ -232,7 +232,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             container.append('<div class="controls-PopupMixin__closeButton"></div>');
             $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {
                //Нужно вызвать активироваться перед hide, чтобы закрылись плав. панели, у которых опенером был этот контрол
-               //TODO: унифицировать код закрытия с SBIS3.CORE.FloatArea: хранить коллекцию дочерних панелей, и закрывать их тут
+               //TODO: унифицировать код закрытия с Lib/Control/FloatArea/FloatArea: хранить коллекцию дочерних панелей, и закрывать их тут
                //(не делая активацию)
                self.setActive(true);
                self.hide();
@@ -249,7 +249,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          this._resetToDefault();
 
          var topParent = this.getTopParent();
-         if (topParent && cInstance.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
+         if (topParent && cInstance.instanceOfModule(topParent, 'Lib/Control/FloatArea/FloatArea')){
             // на iPad при появлении всплывахи над FloatArea при проведении пальцем над всплывахой - скроллится FloatArea (бажное поведение iPad с инетным скроллом)
             // приходится отключать инертный скролл в момент показа всплывахи и включать обратно при скрытии
             this._parentFloatArea = topParent;
@@ -1314,7 +1314,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                    /* Хак для мобильных устройств (c touch), чтобы правильно работал скролл в пикере */
                    if(this._options._canScroll && constants.browser.isMobilePlatform) {
                       var topWindow = cWindowManager.getMaxZWindow(),
-                          isPopUp = cInstance.instanceOfMixin(topWindow, 'SBIS3.CONTROLS.PopupMixin');
+                          isPopUp = cInstance.instanceOfMixin(topWindow, 'SBIS3.CONTROLS/Mixins/PopupMixin');
 
                       /* При скрытии popUp'a:
                          если ниже по стеку тоже popup вешаем на него класс, который фиксит скролл

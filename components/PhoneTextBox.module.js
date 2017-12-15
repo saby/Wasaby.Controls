@@ -1,8 +1,8 @@
-define('js!SBIS3.CONTROLS.PhoneTextBox', [
-   'js!SBIS3.CONTROLS.FormattedTextBox',
-   'tmpl!SBIS3.CONTROLS.PhoneTextBox/PhoneTextBox/PhoneTextBox',
+define('SBIS3.CONTROLS/PhoneTextBox', [
+   'SBIS3.CONTROLS/FormattedTextBox',
+   'tmpl!SBIS3.CONTROLS/PhoneTextBox/PhoneTextBox',
    'Core/detection',
-   'css!SBIS3.CONTROLS.PhoneTextBox/PhoneTextBox/PhoneTextBox'
+   'css!SBIS3.CONTROLS/PhoneTextBox/PhoneTextBox'
 ], function(FormattedTextBoxBase, dotTpl, detection) {
 
    'use strict';
@@ -12,15 +12,15 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', [
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BF%D0%BE%D0%BB%D0%B5_%D0%B2%D0%B2%D0%BE%D0%B4%D0%B0__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_03_.html'>Спецификация</a>.
     * Пример:
     * <pre>
-    *    <ws:SBIS3.CONTROLS.PhoneTextBox enabled="{{false}}" srcText="88005553535" mask="ddd-(ddd)-dd-dd"/>
+    *    <ws:SBIS3.CONTROLS/PhoneTextBox enabled="{{false}}" srcText="88005553535" mask="ddd-(ddd)-dd-dd"/>
     * </pre>
     * В примере использованы опции:
     * enabled - задает отображение PhoneTextBox в виде ссылки, по умолчанию PhoneTextBox отображается как поле ввода,
     * srcText - задает телефонный номер,
     * mask    - задает формат отображения телефонного номера,
     *
-    * @class SBIS3.CONTROLS.PhoneTextBox
-    * @extends SBIS3.CONTROLS.FormattedTextBox
+    * @class SBIS3.CONTROLS/PhoneTextBox
+    * @extends SBIS3.CONTROLS/FormattedTextBox
     * @demo SBIS3.CONTROLS.Demo.PagePhoneTextBox
     *
     * @author Крайнов Дмитрий Олегович
@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', [
     * @control
     * @category Button
     * @initial
-    * <component data-component='SBIS3.CONTROLS.PhoneTextBox'>
+    * <component data-component='SBIS3.CONTROLS/PhoneTextBox'>
     *    <option name='srcText' value='8800200600'></option>
     * </component>
     */
@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', [
       }
    };
 
-   var PhoneTextBox = FormattedTextBoxBase.extend( /** @lends SBIS3.CONTROLS.PhoneTextBox.prototype */ {
+   var PhoneTextBox = FormattedTextBoxBase.extend( /** @lends SBIS3.CONTROLS/PhoneTextBox.prototype */ {
       _dotTplFn: dotTpl,
       $protected: {
          _options: {
@@ -102,7 +102,7 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', [
              * Номер будет отображен в соответствии с установленной {@link mask маской}
              * @example
              * <pre>
-             *     <ws:SBIS3.CONTROLS.PhoneTextBox srcText="88001002424" />
+             *     <ws:SBIS3.CONTROLS/PhoneTextBox srcText="88001002424" />
              * </pre>
              * @see mask
              * @see getSrcText

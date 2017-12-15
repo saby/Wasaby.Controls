@@ -1,25 +1,25 @@
 /**
  * Created by am.gerasimov on 06.10.2015.
  */
-define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
-      'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.ItemsControlMixin',
-      'js!SBIS3.CONTROLS.PickerMixin',
-      'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection/ItemsCollection/FieldLinkItemsCollection',
-      'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection/ItemsCollection/defaultItemTemplate',
-      'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection/ItemsCollection/defaultItemContentTemplate',
+define('SBIS3.CONTROLS/FieldLink/resources/ItemsCollection', [
+      'Lib/Control/CompoundControl/CompoundControl',
+      'SBIS3.CONTROLS/Mixins/ItemsControlMixin',
+      'SBIS3.CONTROLS/Mixins/PickerMixin',
+      'tmpl!SBIS3.CONTROLS/FieldLink/resources/ItemsCollection/FieldLinkItemsCollection',
+      'tmpl!SBIS3.CONTROLS/FieldLink/resources/ItemsCollection/defaultItemTemplate',
+      'tmpl!SBIS3.CONTROLS/FieldLink/resources/ItemsCollection/defaultItemContentTemplate',
       'Core/core-instance',
       'Core/detection',
       'Core/helpers/Hcontrol/getScrollWidth',
-      'js!SBIS3.CONTROLS.Utils.ItemsSelection'
+      'SBIS3.CONTROLS/Utils/ItemsSelectionUtil'
    ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, cInstance, detection, getScrollWidth, ItemsSelection) {
 
       'use strict';
 
       /**
        * Контрол, отображающий набор элементов поля связи.
-       * @class SBIS3.CONTROLS.FieldLinkItemsCollection
-       * @extends SBIS3.CORE.CompoundControl
+       * @class SBIS3.CONTROLS/FieldLink/resources/ItemsCollection
+       * @extends Lib/Control/CompoundControl/CompoundControl
        */
 
       function buildTplArgsFL(cfg) {

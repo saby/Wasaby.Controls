@@ -1,7 +1,7 @@
 /**
  * Created by ad.chistyakova on 22.04.2015.
  */
-define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
+define('SBIS3.CONTROLS/Utils/DataSetToXmlSerializer', [
    "Transport/ReportPrinter",
    'Core/helpers/unrelated-helpers',
    "Core/core-extend",
@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
    "Core/IoC",
    "Core/core-instance",
    "Core/helpers/string-helpers",
-   "i18n!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer"
+   "i18n!SBIS3.CONTROLS/Utils/DataSetToXmlSerializer"
 ], function(cReportPrinter, uHelpers, cExtend, constants, IoC, cInstance, strHelpers) {
    return cExtend({}, {
 
@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                xmlDoc = this.serialize(dataSet, rp.getColumns());
          return rp.prepareReport(dataSet, xsl, undefined, xmlDoc).addErrback(function(error){
 
-            require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+            require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager){
                if(!error.processed){
                   error.processed = true;
                   InformationPopupManager.showMessageDialog({

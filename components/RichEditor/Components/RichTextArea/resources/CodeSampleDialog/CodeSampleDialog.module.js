@@ -1,14 +1,14 @@
-define('js!SBIS3.CONTROLS.RichEditor.CodeSampleDialog',
+define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/CodeSampleDialog/CodeSampleDialog',
 [
-   'tmpl!SBIS3.CONTROLS.RichEditor.CodeSampleDialog',
-   'js!SBIS3.CONTROLS.CompoundControl',
-   'js!SBIS3.CONTROLS.PopupMixin',
-   'js!SBIS3.CORE.LikeWindowMixin',
-   'js!SBIS3.CONTROLS.TextArea',
-   'js!SBIS3.CONTROLS.ComboBox',
-   'js!SBIS3.CONTROLS.Button',
-   'js!SBIS3.CONTROLS.IconButton',
-   'css!SBIS3.CONTROLS.RichEditor.CodeSampleDialog'
+   'tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/CodeSampleDialog/CodeSampleDialog',
+   'SBIS3.CONTROLS/CompoundControl',
+   'SBIS3.CONTROLS/Mixins/PopupMixin',
+   'Lib/Mixins/LikeWindowMixin',
+   'SBIS3.CONTROLS/TextArea',
+   'SBIS3.CONTROLS/ComboBox',
+   'SBIS3.CONTROLS/Button',
+   'SBIS3.CONTROLS/Button/IconButton',
+   'css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/CodeSampleDialog/CodeSampleDialog'
 ], function(dotTplFn, CompoundControl, PopupMixin, LikeWindowMixin) {
    'use strict';
 

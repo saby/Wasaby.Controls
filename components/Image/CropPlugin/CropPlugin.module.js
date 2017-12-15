@@ -1,25 +1,25 @@
 /**
  * Created by as.avramenko on 02.10.2015.
  */
-define('js!SBIS3.CONTROLS.Image.CropPlugin',
+define('SBIS3.CONTROLS/Image/CropPlugin/CropPlugin',
    [
    "Core/Abstract",
    "Transport/BLObject",
    "Core/constants",
    "WS.Data/Source/SbisService",
-   "js!SBIS3.CONTROLS.Utils.ImageUtil",
-   "browser!js!SBIS3.CORE.FieldImage/resources/ext/jcrop/jquery.Jcrop.min",
-   "css!SBIS3.CORE.FieldImage/resources/ext/jcrop/jquery.Jcrop.min"
+   "SBIS3.CONTROLS/Utils/ImageUtil",
+   "browser!js!Deprecated/Controls/FieldImage/resources/ext/jcrop/jquery.Jcrop.min",
+   "css!Deprecated/Controls/FieldImage/resources/ext/jcrop/jquery.Jcrop.min"
 ], function( cAbstract, BLObject, constants, SbisService, ImageUtil) {
       'use strict';
       /**
        * Контрол, позволяющий обрезать произвольное изображение.
-       * @class SBIS3.CONTROLS.Image.CropPlugin
+       * @class SBIS3.CONTROLS/Image/CropPlugin/CropPlugin
        * @extends SBIS3.CORE.Abstract
        * @author Крайнов Дмитрий Олегович
        * @public
        */
-      var CropPlugin = cAbstract.extend(/** @lends SBIS3.CONTROLS.Image.CropPlugin.prototype */{
+      var CropPlugin = cAbstract.extend(/** @lends SBIS3.CONTROLS/Image/CropPlugin/CropPlugin.prototype */{
          $protected: {
             _options: {
                /**

@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 18.01.2017.
  */
-define('js!SBIS3.CONTROLS.SessionStorage',
+define('SBIS3.CONTROLS/Storages/SessionStorage',
    [
       'Core/SessionStorage'
    ],

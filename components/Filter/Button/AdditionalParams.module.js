@@ -1,12 +1,12 @@
 /**
  * Created by am.gerasimov on 01.07.2016.
  */
-define('js!SBIS3.CONTROLS.AdditionalFilterParams',
+define('SBIS3.CONTROLS/Filter/Button/AdditionalParams',
     [
    "Core/CommandDispatcher",
-   "js!SBIS3.CORE.CompoundControl",
-   "tmpl!SBIS3.CONTROLS.AdditionalFilterParams/AdditionalParams/AdditionalFilterParams",
-   "js!SBIS3.CONTROLS.CommandsSeparator"
+   "Lib/Control/CompoundControl/CompoundControl",
+   "tmpl!SBIS3.CONTROLS/Filter/Button/AdditionalParams/AdditionalFilterParams",
+   "SBIS3.CONTROLS/Commands/CommandsSeparator"
 ],
     function( CommandDispatcher,CompoundControl, dotTpl) {
 
@@ -16,11 +16,11 @@ define('js!SBIS3.CONTROLS.AdditionalFilterParams',
 
        /**
         * Контрол, отображающий блок с набираемыми фильтрами в кнопке фильтров
-        * @class SBIS3.CONTROLS.AdditionalFilterParams
-        * @extends SBIS3.CORE.CompoundControl
+        * @class SBIS3.CONTROLS/Filter/Button/AdditionalParams
+        * @extends Lib/Control/CompoundControl/CompoundControl
         */
 
-       var FilterHistory = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.AdditionalFilterParams.prototype */ {
+       var FilterHistory = CompoundControl.extend([], /** @lends SBIS3.CONTROLS/Filter/Button/AdditionalParams.prototype */ {
           _dotTplFn : dotTpl,
           $protected: {
              _options: {

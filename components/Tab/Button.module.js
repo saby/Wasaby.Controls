@@ -4,23 +4,23 @@
  * @description
  */
 define(
-   'js!SBIS3.CONTROLS.TabButton',
+   'SBIS3.CONTROLS/Tab/Button',
    [
-      'js!SBIS3.CONTROLS.RadioButtonBase',
-      'tmpl!SBIS3.CONTROLS.TabButton/Button/TabButton',
-      'js!SBIS3.CONTROLS.IconMixin',
+      'SBIS3.CONTROLS/Radio/Button/RadioButtonBase',
+      'tmpl!SBIS3.CONTROLS/Tab/Button/TabButton',
+      'SBIS3.CONTROLS/Mixins/IconMixin',
       'Core/Sanitize',
-      'css!SBIS3.CONTROLS.TabButton/Button/TabButton'
+      'css!SBIS3.CONTROLS/Tab/Button/TabButton'
    ], function (RadioButtonBase, dotTplFn, IconMixin, Sanitize) {
 
    'use strict';
    /**
     * Контрол, отображающий корешок закладки. Работает только в составе группы. В джине не вытаскивается
-    * @class SBIS3.CONTROLS.TabButton
-    * @extends SBIS3.CONTROLS.RadioButtonBase
+    * @class SBIS3.CONTROLS/Tab/Button
+    * @extends SBIS3.CONTROLS/Radio/Button/RadioButtonBase
     * @author Крайнов Дмитрий Олегович
     *
-    * @mixes SBIS3.CONTROLS.IconMixin
+    * @mixes SBIS3.CONTROLS/Mixins/IconMixin
     */
 
    var prepareOrder = function(order) {
@@ -31,7 +31,7 @@ define(
       ';order:' + order;
    };
 
-   var TabButton = RadioButtonBase.extend([IconMixin],/** @lends SBIS3.CONTROLS.TabButton.prototype */ {
+   var TabButton = RadioButtonBase.extend([IconMixin],/** @lends SBIS3.CONTROLS/Tab/Button.prototype */ {
       $protected: {
          _options: {
             _order: undefined,

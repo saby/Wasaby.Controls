@@ -1,5 +1,5 @@
-define('js!SBIS3.CONTROLS.DateRangeMixin', [
-   'js!SBIS3.CONTROLS.Utils.DateUtil',
+define('SBIS3.CONTROLS/Mixins/DateRangeMixin', [
+   'SBIS3.CONTROLS/Utils/DateUtil',
    'Core/core-instance',
    'Core/helpers/date-helpers'
 ], function (DateUtil, cInstance, dateHelpers) {
@@ -13,11 +13,11 @@ define('js!SBIS3.CONTROLS.DateRangeMixin', [
     * Реализует логику которая приводит значения диапазона к типу Date, а так же общие методы для работы
     * с этим типом диапазона.
     * Используется только совместно с SBIS3.CONTROLS.RangeMixin.
-    * @mixin SBIS3.CONTROLS.DateRangeMixin
+    * @mixin SBIS3.CONTROLS/Mixins/DateRangeMixin
     * @public
     * @author Миронов Александр Юрьевич
     */
-   var DateRangeMixin = /**@lends SBIS3.CONTROLS.DateRangeMixin.prototype  */{
+   var DateRangeMixin = /**@lends SBIS3.CONTROLS/Mixins/DateRangeMixin.prototype  */{
       $protected: {
          _options: {
             /**
@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.DateRangeMixin', [
       },
 
       $constructor: function() {
-         if(!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.RangeMixin')) {
+         if(!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS/Mixins/RangeMixin')) {
             throw new Error('RangeMixin mixin is required');
          }
       },

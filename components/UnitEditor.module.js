@@ -2,12 +2,12 @@
  * Created by iv.cheremushkin on 25.09.2014.
  */
 
-define('js!SBIS3.CONTROLS.UnitEditor',
-     ['js!SBIS3.CONTROLS.NumberTextBox',
-      'js!SBIS3.CONTROLS.PickerMixin',
-      'js!SBIS3.CONTROLS.FloatArea',
-      'tmpl!SBIS3.CONTROLS.UnitEditor/UnitEditor/UnitEditor',
-      'css!SBIS3.CONTROLS.UnitEditor/UnitEditor/UnitEditor'
+define('SBIS3.CONTROLS/UnitEditor',
+     ['SBIS3.CONTROLS/NumberTextBox',
+      'SBIS3.CONTROLS/Mixins/PickerMixin',
+      'SBIS3.CONTROLS/FloatArea',
+      'tmpl!SBIS3.CONTROLS/UnitEditor/UnitEditor',
+      'css!SBIS3.CONTROLS/UnitEditor/UnitEditor'
      ], function (NumberTextBox, PickerMixin, FloatArea, dotTplFn) {
 
       'use strict';
@@ -15,16 +15,16 @@ define('js!SBIS3.CONTROLS.UnitEditor',
       /**
        * Редактор с поддержкой единиц измерения.
        * Можно устанавливать значения вида 96px/50%/auto
-       * @class SBIS3.CONTROLS.UnitEditor
-       * @extends SBIS3.CONTROLS.NumberTextBox
-       * @mixes SBIS3.CONTROLS.PickerMixin
+       * @class SBIS3.CONTROLS/UnitEditor
+       * @extends SBIS3.CONTROLS/NumberTextBox
+       * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
        * @control
        * @author Крайнов Дмитрий Олегович
        * @public
        */
 
       var UnitEditor;
-      UnitEditor = NumberTextBox.extend([PickerMixin], /** @lends SBIS3.CONTROLS.UnitEditor.prototype */ {
+      UnitEditor = NumberTextBox.extend([PickerMixin], /** @lends SBIS3.CONTROLS/UnitEditor.prototype */ {
          $protected: {
             _currentUnit: null,
             _units: ['px','%','-'],

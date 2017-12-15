@@ -1,16 +1,16 @@
 /**
  * Интерфейс продюсера истории длительной операции
- * @interface SBIS3.CONTROLS.LongOperations.IHistoricalProducer
+ * @interface SBIS3.CONTROLS/LongOperations/IHistoricalProducer
  * @public
  */
 
-define('js!SBIS3.CONTROLS.LongOperations.IHistoricalProducer',
+define('SBIS3.CONTROLS/LongOperations/IHistoricalProducer',
    [],
 
    function () {
       'use strict';
 
-      return /** @lends SBIS3.CONTROLS.LongOperations.IHistoricalProducer.prototype */{
+      return /** @lends SBIS3.CONTROLS/LongOperations/IHistoricalProducer.prototype */{
          /**
           * Запросить историю указанной длительной операции
           * При имплементации в возвращаем Deferrred-е нужно использовать опцию cancelCallback, если это применимо с точки зрения природы данных

@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.PagingController', ["Core/Abstract"], function(cAbstract) {
+define('SBIS3.CONTROLS/ComponentBinder/PagingController', ["Core/Abstract"], function(cAbstract) {
 
    var PagingController = cAbstract.extend({
       $protected: {

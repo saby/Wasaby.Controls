@@ -1,16 +1,16 @@
-define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
-    'js!SBIS3.CONTROLS.FilterPanelChooser.BaseList',
+define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/List', [
+    'SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList',
     'Core/core-merge',
     'Core/CommandDispatcher',
     'WS.Data/Functor/Compute',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/List/FilterPanelChooser.List',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/List/resources/ItemContentTpl',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/List/resources/ItemTemplate',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/List/resources/FilterPanelChooserList',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/List/resources/FilterPanelChooserListFooter',
-    'js!SBIS3.CONTROLS.Link',
-    'js!SBIS3.CONTROLS.ListView',
-    'css!SBIS3.CONTROLS.FilterPanelChooser.List/List/FilterPanelChooser.List'
+    'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/List/FilterPanelChooser.List',
+    'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/List/resources/ItemContentTpl',
+    'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/List/resources/ItemTemplate',
+    'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/List/resources/FilterPanelChooserList',
+    'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/List/resources/FilterPanelChooserListFooter',
+    'SBIS3.CONTROLS/Link',
+    'SBIS3.CONTROLS/ListView',
+    'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/List/FilterPanelChooser.List'
 ], function(FilterPanelChooserBaseList, coreMerge, CommandDispatcher, ComputeFunctor, dotTplFn, itemContentTpl, itemTemplate, chooserTpl, footerTpl) {
     var
         itemsFilterMethod = function(model, index, proj, projIndex) {
@@ -23,17 +23,17 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
 
     /**
      * Класс редактора "Список".
-     * Применяется для панели фильтра с набираемыми параметрами (см. {@link SBIS3.CONTROLS.FilterPanel}).
-     * Реализует выборку идентификаторов из списка {@link SBIS3.CONTROLS.ListView}.
+     * Применяется для панели фильтра с набираемыми параметрами (см. {@link SBIS3.CONTROLS/Filter/FilterPanel}).
+     * Реализует выборку идентификаторов из списка {@link SBIS3.CONTROLS/ListView}.
      *
      * <h2>Особенности отображения редактора</h2>
      * По умолчанию отображаются только 3 записи списка.
      * Чтобы получить доступ ко всем записям списка, используйте кнопку "Все".
      *
      * <h2>Конфигурация редактора</h2>
-     * Чтобы изменить конфигурацию редактора, используют подопцию *properties* (см. {@link SBIS3.CONTROLS.FilterPanel/FilterPanelItem.typedef}) в {@link SBIS3.CONTROLS.FilterPanel#items}.
-     * По умолчанию для списка вы можете переопределить следующие опции: {@link SBIS3.CONTROLS.ItemsControlMixin#idProperty}, {@link SBIS3.CONTROLS.ItemsControlMixin#displayProperty}, {@link SBIS3.CONTROLS.ItemsControlMixin#items} и {@link SBIS3.CONTROLS.MultiSelectable#selectedKeys}.
-     * Опции, для которых конфигурация фиксирована: {@link SBIS3.CONTROLS.ListView#multiselect}=true, {@link SBIS3.CONTROLS.ListView#itemsDragNDrop}=false и {@link  SBIS3.CONTROLS.ListView#itemsActions}=&#91;&#93;.
+     * Чтобы изменить конфигурацию редактора, используют подопцию *properties* (см. {@link SBIS3.CONTROLS/Filter/FilterPanelItem.typedef}) в {@link SBIS3.CONTROLS/Filter/FilterPanel#items}.
+     * По умолчанию для списка вы можете переопределить следующие опции: {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#idProperty}, {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#displayProperty}, {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#items} и {@link SBIS3.CONTROLS/Mixins/MultiSelectable#selectedKeys}.
+     * Опции, для которых конфигурация фиксирована: {@link SBIS3.CONTROLS/ListView#multiselect}=true, {@link SBIS3.CONTROLS/ListView#itemsDragNDrop}=false и {@link  SBIS3.CONTROLS/ListView#itemsActions}=&#91;&#93;.
      *
      * <h2>Кнопка "Все"</h2>
      * Отображается под списком, когда записей списка больше 3.
@@ -45,17 +45,17 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
      *
      * <h2>Создание пользовательского редактора</h2>
      * Вы можете создать собственный класс редактора, на основе класса редактора "Список".
-     * Особенность: контрол, который будет отображать список записей, должен иметь фиксированное имя в опции {@link SBIS3.CORE.Control#name} - "controls-FilterPanelChooser__ListView".
+     * Особенность: контрол, который будет отображать список записей, должен иметь фиксированное имя в опции {@link Lib/Control/Control#name} - "controls-FilterPanelChooser__ListView".
      *
-     * @class SBIS3.CONTROLS.FilterPanelChooser.List
-     * @extends SBIS3.CONTROLS.FilterPanelChooser.BaseList
+     * @class SBIS3.CONTROLS/Filter/Panel/components/Chooser/List
+     * @extends SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList
      * @author Сухоручкин Андрей Сергеевич
      * @public
      *
      * @demo SBIS3.CONTROLS.Demo.MyFilterView
      */
 
-    var FilterPanelChooserList = FilterPanelChooserBaseList.extend( /** @lends SBIS3.CONTROLS.FilterPanelChooser.List.prototype */ {
+    var FilterPanelChooserList = FilterPanelChooserBaseList.extend( /** @lends SBIS3.CONTROLS/Filter/Panel/components/Chooser/List.prototype */ {
         _dotTplFn: dotTplFn,
         $protected: {
             _options: {

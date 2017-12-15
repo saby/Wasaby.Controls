@@ -1,15 +1,15 @@
-define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
+define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel',
    [
-      'js!SBIS3.CONTROLS.CompoundControl',
-      'js!SBIS3.CONTROLS.PopupMixin',
+      'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/Mixins/PopupMixin',
       'WS.Data/Di',
-      'tmpl!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
-      'js!SBIS3.CONTROLS.RichEditor.ImagePanel',
+      'tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel',
+      'SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel',
       'js!SBIS3.CORE.FileStorageLoader',
-      'js!SBIS3.CONTROLS.CommandsButton',
-      'js!SBIS3.CONTROLS.Link',
-      'css!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
-      'css!SBIS3.CONTROLS.Menu/Menu/Menu'
+      'SBIS3.CONTROLS/Commands/CommandsButton',
+      'SBIS3.CONTROLS/Link',
+      'css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel',
+      'css!SBIS3.CONTROLS/Menu/Menu'
    ], function(CompoundControl, PopupMixin, Di, dotTplFn, ImagePanel) {
       'use strict';
       //todo: отказаться от этого модуля в 3.7.5.50 перейти на контекстное меню
@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                   this._updateCommandsButtonItems();
                }
                catch (ex) {
-                  require(['js!SBIS3.CONTROLS.ContextMenu'], function (ctxMenu) {
+                  require(['SBIS3.CONTROLS/Menu/ContextMenu'], function (ctxMenu) {
                      this._updateCommandsButtonItems();
                   }.bind(this));
                }

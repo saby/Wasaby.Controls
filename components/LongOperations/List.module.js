@@ -1,21 +1,21 @@
-define('js!SBIS3.CONTROLS.LongOperationsList',
+define('SBIS3.CONTROLS/LongOperations/List',
    [
       'Core/Deferred',
-      'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.LongOperations.Entry',
-      'js!SBIS3.CONTROLS.LongOperationsList/resources/model',
-      'js!SBIS3.CONTROLS.LongOperations.Manager',
-      'js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
-      'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
-      'js!SBIS3.CORE.FloatArea',
-      'tmpl!SBIS3.CONTROLS.LongOperationsList/List/LongOperationsList',
-      'css!SBIS3.CONTROLS.LongOperationsList/List/LongOperationsList',
-      'tmpl!SBIS3.CONTROLS.LongOperationsList/List/resources/LongOperationsListStateTemplate',
-      'tmpl!SBIS3.CONTROLS.LongOperationsList/List/resources/LongOperationsListStartTimeTemplate',
-      'tmpl!SBIS3.CONTROLS.LongOperationsList/List/resources/LongOperationsListExecuteTimeTemplate',
-      'tmpl!SBIS3.CONTROLS.LongOperationsList/List/resources/LongOperationsListUserPhotoTemplate',
-      'tmpl!SBIS3.CONTROLS.LongOperationsList/List/resources/LongOperationsListNameTemplate',
-      'js!SBIS3.CONTROLS.DataGridView'
+      'Lib/Control/CompoundControl/CompoundControl',
+      'SBIS3.CONTROLS/LongOperations/Entry',
+      'SBIS3.CONTROLS/LongOperations/resources/model',
+      'SBIS3.CONTROLS/LongOperations/Manager',
+      'SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
+      'SBIS3.CONTROLS/Utils/InformationPopupManager',
+      'Lib/Control/FloatArea/FloatArea',
+      'tmpl!SBIS3.CONTROLS/LongOperations/List/LongOperationsList',
+      'css!SBIS3.CONTROLS/LongOperations/List/LongOperationsList',
+      'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListStateTemplate',
+      'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListStartTimeTemplate',
+      'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListExecuteTimeTemplate',
+      'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListUserPhotoTemplate',
+      'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListNameTemplate',
+      'SBIS3.CONTROLS/DataGridView'
    ],
 
    function (Deferred, CompoundControl, LongOperationEntry, Model, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, FloatArea, dotTplFn) {
@@ -49,15 +49,15 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
 
       /**
        * Класс для отображения списка длительных операций
-       * @class SBIS3.CONTROLS.LongOperationsList
-       * @extends SBIS3.CORE.CompoundControl
+       * @class SBIS3.CONTROLS/LongOperations/List
+       * @extends Lib/Control/CompoundControl/CompoundControl
        *
        * @author Спирин Виктор Алексеевич
        *
        * @public
        *
        */
-      var LongOperationsList = CompoundControl.extend( /** @lends SBIS3.CONTROLS.LongOperationsList.prototype */{
+      var LongOperationsList = CompoundControl.extend( /** @lends SBIS3.CONTROLS/LongOperations/List.prototype */{
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
@@ -248,7 +248,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
          /**
           * Получить датагрид
           * @public
-          * @return {SBIS3.CONTROLS.DataGridView}
+          * @return {SBIS3.CONTROLS/DataGridView}
           */
          getView: function () {
             return this._view;
@@ -333,7 +333,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                this._checkItems();
             }.bind(this));
             // Индикатор загрузки здесь только приводит к мельканию списка, убрать его
-            // Лучше бы конечно, если бы у SBIS3.CONTROLS.ListView была опция "Не показывать индикатор загрузки. Совсем. Никогда."
+            // Лучше бы конечно, если бы у SBIS3.CONTROLS/ListView была опция "Не показывать индикатор загрузки. Совсем. Никогда."
             this._view.getContainer().find('.controls-AjaxLoader').addClass('ws-hidden').removeClass('controls-AjaxLoader__showIndication');
             return promise;
          },
@@ -341,7 +341,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
          /**
           * Проверить, может ли длительная операция иметь историю
           * @public
-          * @param {SBIS3.CONTROLS.LongOperationsList/resources/model} model Модель длительной операции
+          * @param {SBIS3.CONTROLS/LongOperations/resources/model} model Модель длительной операции
           * @returns {boolean}
           */
          canHasHistory: function (model) {
@@ -352,7 +352,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * Выполнить действие над длительной операцией, инициированное пользователем
           * @public
           * @param {string} action Имя действия (resume, suspend, delete)
-          * @param {SBIS3.CONTROLS.LongOperationsList/resources/model} model Модель длительной операции
+          * @param {SBIS3.CONTROLS/LongOperations/resources/model} model Модель длительной операции
           * @returns {Core/Deferred}
           */
          applyUserAction: function (action, model) {
@@ -371,7 +371,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
          /**
           * Выполнить результирующее действие длительной операции
           * @public
-          * @param {SBIS3.CONTROLS.LongOperationsList/resources/model} model Модель длительной операции
+          * @param {SBIS3.CONTROLS/LongOperations/resources/model} model Модель длительной операции
           */
          applyResultAction: function (model) {
             //Только если операция завершена или содержит ошибку
@@ -396,7 +396,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
          /**
           * Выполнить действие, указанное в качестве результата длительной операции. Возвращает true если дальнейшая обработка не нужна
           * @protected
-          * @param {SBIS3.CONTROLS.LongOperationsList/resources/model} model Модель длительной операции
+          * @param {SBIS3.CONTROLS/LongOperations/resources/model} model Модель длительной операции
           * @return {boolean}
           */
          _showResult: function (model) {
@@ -535,7 +535,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
          /**
           * Открыть историю указанной длительной операции
           * @protected
-          * @param {SBIS3.CONTROLS.LongOperationsList/resources/model} model Модель длительной операции
+          * @param {SBIS3.CONTROLS/LongOperations/resources/model} model Модель длительной операции
           * @param {boolean} useResultHandler Использовать обработчик результата операции
           */
          _showHistory: function (model, useResultHandler) {
@@ -545,7 +545,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                var resultWayOfUse = resultHandler ? model.get('resultWayOfUse') : null;
                var floatArea = new FloatArea({
                   title: rk('Журнал выполнения операции'),
-                  template: 'js!SBIS3.CONTROLS.LongOperationHistory',
+                  template: 'SBIS3.CONTROLS/LongOperations/History',
                   componentOptions: this.canHasHistory(model) ? {
                      tabKey: model.get('tabKey'),
                      producer: model.get('producer'),

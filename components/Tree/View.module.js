@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLS.TreeView', [
-   'js!SBIS3.CONTROLS.ListView',
-   'js!SBIS3.CONTROLS.TreeMixin',
-   'js!SBIS3.CONTROLS.TreeViewMixin',
-   'tmpl!SBIS3.CONTROLS.TreeView/View/resources/ItemTemplate',
-   'tmpl!SBIS3.CONTROLS.TreeView/View/resources/ItemContentTemplate',
-   "tmpl!SBIS3.CONTROLS.TreeView/View/resources/FooterWrapperTemplate",
-   'css!SBIS3.CONTROLS.TreeView/View/TreeView'
+define('SBIS3.CONTROLS/Tree/View', [
+   'SBIS3.CONTROLS/ListView',
+   'SBIS3.CONTROLS/Mixins/TreeMixin',
+   'SBIS3.CONTROLS/Mixins/TreeViewMixin',
+   'tmpl!SBIS3.CONTROLS/Tree/View/resources/ItemTemplate',
+   'tmpl!SBIS3.CONTROLS/Tree/View/resources/ItemContentTemplate',
+   "tmpl!SBIS3.CONTROLS/Tree/View/resources/FooterWrapperTemplate",
+   'css!SBIS3.CONTROLS/Tree/View/TreeView'
 ], function (ListView, TreeMixin, TreeViewMixin, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate) {
    'use strict';
    var getItemTemplateData = function (cfg) {
@@ -30,10 +30,10 @@ define('js!SBIS3.CONTROLS.TreeView', [
     * <a href="http://axure.tensor.ru/standarts/v7/%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html">Спецификация</a>
     * <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/">Документация</a>.
     *
-    * @class SBIS3.CONTROLS.TreeView
-    * @extends SBIS3.CONTROLS.ListView
-    * @mixes SBIS3.CONTROLS.TreeMixin
-    * @mixes SBIS3.CONTROLS.TreeViewMixin
+    * @class SBIS3.CONTROLS/Tree/View
+    * @extends SBIS3.CONTROLS/ListView
+    * @mixes SBIS3.CONTROLS/Mixins/TreeMixin
+    * @mixes SBIS3.CONTROLS/Mixins/TreeViewMixin
     *
     * @author Авраменко Алексей Сергеевич
     *
@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.TreeView', [
     * @category Lists
     *
     * @initial
-    * <component data-component='SBIS3.CONTROLS.TreeView'>
+    * <component data-component='SBIS3.CONTROLS/Tree/View'>
     *    <option name="idProperty">key</option>
     *    <option name="displayProperty">title</option>
     *    <option name="emptyHTML">Нет записей</option>
@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.TreeView', [
     * </component>
     */
 
-   var TreeView = ListView.extend([TreeMixin, TreeViewMixin], /** @lends SBIS3.CONTROLS.TreeView.prototype*/ {
+   var TreeView = ListView.extend([TreeMixin, TreeViewMixin], /** @lends SBIS3.CONTROLS/Tree/View.prototype*/ {
       $protected: {
          _options: {
             _footerWrapperTemplate: FooterWrapperTemplate,

@@ -1,18 +1,18 @@
-define('js!SBIS3.CONTROLS.BackButton',
+define('SBIS3.CONTROLS/Button/BackButton',
    [
-    'js!SBIS3.CORE.CompoundControl',
+    'Lib/Control/CompoundControl/CompoundControl',
     'Core/helpers/string-helpers',
-    'tmpl!SBIS3.CONTROLS.BackButton/BackButton/BackButton',
-    'js!SBIS3.CONTROLS.Link',
-    'css!SBIS3.CONTROLS.BackButton/BackButton/BackButton'
+    'tmpl!SBIS3.CONTROLS/Button/BackButton/BackButton',
+    'SBIS3.CONTROLS/Link',
+    'css!SBIS3.CONTROLS/Button/BackButton/BackButton'
    ],
     function(CompoundControl, strHelpers, dotTpl) {
    'use strict';
    /**
     * Кнопка для реализации поведения возврата назад по истории.
     * Пример использования - иерархические реестры
-    * @class SBIS3.CONTROLS.BackButton
-    * @extends SBIS3.CORE.CompoundControl
+    * @class SBIS3.CONTROLS/Button/BackButton
+    * @extends Lib/Control/CompoundControl/CompoundControl
     * @author Герасимов Александр Максимович
     * @demo SBIS3.CONTROLS.Demo.MyBackButton
     *
@@ -42,11 +42,11 @@ define('js!SBIS3.CONTROLS.BackButton',
     * @public
     * @category Navigation
     * @initial
-    * <component data-component='SBIS3.CONTROLS.BackButton'>
+    * <component data-component='SBIS3.CONTROLS/Button/BackButton'>
     *    <option name="caption">Назад</option>
     * </component>
     */
-   var BackButton = CompoundControl.extend( /** @lends SBIS3.CONTROLS.BackButton.prototype */ {
+   var BackButton = CompoundControl.extend( /** @lends SBIS3.CONTROLS/Button/BackButton.prototype */ {
       _dotTplFn: dotTpl,
       /**
        * @event onActivated При активации кнопки (клик мышкой, кнопки клавиатуры)

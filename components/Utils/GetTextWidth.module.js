@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.Utils.GetTextWidth', function () {
+define('SBIS3.CONTROLS/Utils/GetTextWidth', function () {
 
     /**
      * Модуль, в котором реализована функция <b>getTextWidth(parent, child)</b>.
@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.Utils.GetTextWidth', function () {
      *     helpers.getTextWidth("helloWorld")
      * </pre>
      *
-     * @class SBIS3.CONTROLS.Utils.GetTextWidth
+     * @class SBIS3.CONTROLS/Utils/GetTextWidth
      * @public
      * @author Мальцев Алексей Александрович
      */

@@ -1,16 +1,16 @@
-define('js!SBIS3.CONTROLS.NotificationPopup', [
-      'js!SBIS3.CONTROLS.InformationPopup',
-      'tmpl!SBIS3.CONTROLS.NotificationPopup/NotificationPopup/resources/template',
-      'tmpl!SBIS3.CONTROLS.NotificationPopup/NotificationPopup/resources/headerTpl',
+define('SBIS3.CONTROLS/NotificationPopup', [
+      'SBIS3.CONTROLS/InformationPopup',
+      'tmpl!SBIS3.CONTROLS/NotificationPopup/resources/template',
+      'tmpl!SBIS3.CONTROLS/NotificationPopup/resources/headerTpl',
       'Core/detection',
-      'css!SBIS3.CONTROLS.NotificationPopup/NotificationPopup/NotificationPopup'
+      'css!SBIS3.CONTROLS/NotificationPopup/NotificationPopup'
    ],
 
    /**
     * Класс контрола "Всплывающее нотификационное уведомление", для которого можно установить иконку (см. {@link icon}), заголовок (см. {@link caption}) и шаблоны (см. {@link headerTemplate}, {@link bodyTemplate} и {@link footerTemplate}).
-    * Для вызова контрола рекомендуется использовать {@link SBIS3.CONTROLS.Utils.InformationPopupManager}.
-    * @class SBIS3.CONTROLS.NotificationPopup
-    * @extends SBIS3.CONTROLS.InformationPopup
+    * Для вызова контрола рекомендуется использовать {@link SBIS3.CONTROLS/Utils/InformationPopupManager}.
+    * @class SBIS3.CONTROLS/NotificationPopup
+    * @extends SBIS3.CONTROLS/InformationPopup
     * @control
     * @public
     * @author Степин Павел Владимирович
@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
          'default': ''
       };
 
-      var NotificationPopup = InformationPopup.extend( /** @lends SBIS3.CONTROLS.NotificationPopup.prototype */ {
+      var NotificationPopup = InformationPopup.extend( /** @lends SBIS3.CONTROLS/NotificationPopup.prototype */ {
          $protected: {
             _options: {
                /**
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
                /**
                 * @cfg {String} Устанавливает иконку в заголовке нотификационного уведомления.
                 * @remark
-                * По умолчанию отображается в шапке нотификационного сообщения и зависит от значения опции {@link SBIS3.CONTROLS.InformationPopup#status}.
+                * По умолчанию отображается в шапке нотификационного сообщения и зависит от значения опции {@link SBIS3.CONTROLS/InformationPopup#status}.
                 * Список иконок доступен <a href='/docs/icons/'>здесь</a>.
                 * @see setIcon
                 */

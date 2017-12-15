@@ -2,33 +2,33 @@
  * Created by as.avramenko on 09.08.2016.
  */
 
-define('js!SBIS3.CONTROLS.FilterPanel', [
+define('SBIS3.CONTROLS/Filter/FilterPanel', [
    'Core/core-clone',
    'Core/CommandDispatcher',
-   'js!SBIS3.CONTROLS.CompoundControl',
-   'js!SBIS3.CONTROLS.Expandable',
+   'SBIS3.CONTROLS/CompoundControl',
+   'SBIS3.CONTROLS/Mixins/Expandable',
    'WS.Data/Collection/RecordSet',
-   'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
-   'tmpl!SBIS3.CONTROLS.FilterPanel/panel/FilterPanel',
-   'tmpl!SBIS3.CONTROLS.FilterPanel/panel/resources/FilterPanelContent',
-   'tmpl!SBIS3.CONTROLS.FilterPanel/panel/resources/FilterPanelItemContentTemplate',
-   'tmpl!SBIS3.CONTROLS.FilterPanel/panel/resources/TemplateChooser',
-   'tmpl!SBIS3.CONTROLS.FilterPanel/panel/resources/TemplateDataRange',
-   'js!SBIS3.CONTROLS.FilterPanelItem',
-   'js!SBIS3.CONTROLS.Link',
-   'js!SBIS3.CONTROLS.Accordion',
-   'js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList',
-   'js!SBIS3.CONTROLS.FilterPanelChooser.List',
-   'js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList',
-   'js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList',
-   'js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup',
-   'js!SBIS3.CONTROLS.FilterPanelChooser.FieldLink',
-   'js!SBIS3.CONTROLS.FilterPanelDataRange',
-   'js!SBIS3.CONTROLS.FilterPanelBoolean',
-   'js!SBIS3.CONTROLS.IconButton',
-   'css!SBIS3.CONTROLS.FilterPanel/Panel/resources/FilterPanelButton',
-   'js!SBIS3.CONTROLS.ScrollContainer',
-   'css!SBIS3.CONTROLS.FilterPanel/Panel/FilterPanel'
+   'SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil',
+   'tmpl!SBIS3.CONTROLS/Filter/panel/FilterPanel',
+   'tmpl!SBIS3.CONTROLS/Filter/panel/resources/FilterPanelContent',
+   'tmpl!SBIS3.CONTROLS/Filter/panel/resources/FilterPanelItemContentTemplate',
+   'tmpl!SBIS3.CONTROLS/Filter/panel/resources/TemplateChooser',
+   'tmpl!SBIS3.CONTROLS/Filter/panel/resources/TemplateDataRange',
+   'SBIS3.CONTROLS/Filter/Panel/components/PanelItem',
+   'SBIS3.CONTROLS/Link',
+   'SBIS3.CONTROLS/Accordion',
+   'SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList',
+   'SBIS3.CONTROLS/Filter/Panel/components/Chooser/List',
+   'SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList',
+   'SBIS3.CONTROLS/Filter/Panel/components/Chooser/FavoritesList',
+   'SBIS3.CONTROLS/Filter/Panel/components/Chooser/RadioGroup',
+   'SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink',
+   'SBIS3.CONTROLS/Filter/Panel/components/DataRange',
+   'SBIS3.CONTROLS/Filter/Panel/components/Boolean',
+   'SBIS3.CONTROLS/Button/IconButton',
+   'css!SBIS3.CONTROLS/Filter/Panel/resources/FilterPanelButton',
+   'SBIS3.CONTROLS/ScrollContainer',
+   'css!SBIS3.CONTROLS/Filter/Panel/FilterPanel'
 ], function(coreClone, CommandDispatcher, CompoundControl, Expandable, RecordSet, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
 
    'use strict';
@@ -49,8 +49,8 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
     *
     * <h3>Кнопка открытия панели</h3>
     *
-    * Создание и размещение кнопки открытия панели фильтрации производится самостоятельно. Для этого существуют css-модификаторы компонента {@link SBIS3.CONTROLS.IconButton}.
-    * Стили модификаторов описаны в "css!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelButton".
+    * Создание и размещение кнопки открытия панели фильтрации производится самостоятельно. Для этого существуют css-модификаторы компонента {@link SBIS3.CONTROLS/Button/IconButton}.
+    * Стили модификаторов описаны в "css!SBIS3.CONTROLS/Filter/resources/FilterPanelButton".
     * В зависимости от направления, в котором будет открыта панель (см. {@link filterAlign}), на кнопку открытию устанавливают классы "controls-IconButton__filter-left" (открытие панели влево) или "controls-IconButton__filter-right" (открытие панели вправо).
     * Чтобы открыть панель, используйте метод {@link toggleExpanded}.
     *
@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
     *
     * <h3>Кнопка "Сбросить фильтр"</h3>
     *
-    * По умолчанию присутствует в шаблоне компонента. В опции {@link SBIS3.CORE.Control#name name} для неё предустановлено имя "ResetFilterButton". При клике по кнопке выполняется команда {@link resetFilter}.
+    * По умолчанию присутствует в шаблоне компонента. В опции {@link Lib/Control/Control#name name} для неё предустановлено имя "ResetFilterButton". При клике по кнопке выполняется команда {@link resetFilter}.
     * Из пользовательского интерфейса кнопка доступна для взаимодействия, когда в опции {@link items} установлена структура полей фильтра.
     *
     * <br/>
@@ -74,11 +74,11 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
     * Структуру полей фильтра устанавливают в опции {@link items}.
     *
     * @author Авраменко Алексей Сергеевич
-    * @class SBIS3.CONTROLS.FilterPanel
+    * @class SBIS3.CONTROLS/Filter/FilterPanel
     * @public
-    * @extends SBIS3.CONTROLS.CompoundControl
+    * @extends SBIS3.CONTROLS/CompoundControl
     *
-    * @mixes SBIS3.CONTROLS.Expandable
+    * @mixes SBIS3.CONTROLS/Mixins/Expandable
     *
     * @demo SBIS3.CONTROLS.Demo.MyFilterPanel Временный демонстрационный пример без возможности редактировать исходный код компонента. Чтобы получить доступ к исходного коду компонента, скачайте архив демо-примера.
     */
@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
       ITEM_FILTER_TEXT_VALUE  = 'textValue',
       ITEM_FILTER_RESET_VALUE = 'resetValue',
 
-      FilterPanel = CompoundControl.extend([Expandable], /** @lends SBIS3.CONTROLS.FilterPanel.prototype */ {
+      FilterPanel = CompoundControl.extend([Expandable], /** @lends SBIS3.CONTROLS/Filter/FilterPanel.prototype */ {
       /**
        * @event onFilterReset Происходит при сбросе фильтра.
        * @remark
@@ -116,22 +116,22 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              * @property {String} template Шаблон редактора.
              * Возможные значения:
              * <ol>
-             *    <li><b>tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser</b><br/>Шаблон, реализующий выборку идентификаторов. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS.FilterPanelChooser.Base}.</li>
-             *    <li><b>tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateDataRange</b><br/>Шаблон, реализующий выборку из числового диапазона. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS.FilterPanelDataRange}.</li>
-             *    <li><b>js!SBIS3.CONTROLS.FilterPanelBoolean</b> - обыкновенный чекбокс {@link SBIS3.CONTROLS.FilterPanelBoolean}. Данный редактор поля фильтрации отображается без спойлера (см. {@link SBIS3.CONTROLS.Spoiler}), в связи с чем рекомендуется размещать его в конце списка доступных фильтров.</li>
+             *    <li><b>tmpl!SBIS3.CONTROLS/Filter/resources/TemplateChooser</b><br/>Шаблон, реализующий выборку идентификаторов. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base}.</li>
+             *    <li><b>tmpl!SBIS3.CONTROLS/Filter/resources/TemplateDataRange</b><br/>Шаблон, реализующий выборку из числового диапазона. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS/Filter/Panel/components/DataRange}.</li>
+             *    <li><b>SBIS3.CONTROLS/Filter/Panel/components/Boolean</b> - обыкновенный чекбокс {@link SBIS3.CONTROLS/Filter/Panel/components/Boolean}. Данный редактор поля фильтрации отображается без спойлера (см. {@link SBIS3.CONTROLS/Spoiler}), в связи с чем рекомендуется размещать его в конце списка доступных фильтров.</li>
              * </ol>
              * @property {Object} properties Опции, передаваемые в конфигурацию редактора.
-             * @property {String} properties.editor Тип редактора. Применяется при использовании шаблона редактора "tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser". Когда опция не установлена, используется класс редактора "Список" (значение list).
+             * @property {String} properties.editor Тип редактора. Применяется при использовании шаблона редактора "tmpl!SBIS3.CONTROLS/Filter/resources/TemplateChooser". Когда опция не установлена, используется класс редактора "Список" (значение list).
              * Возможные значения:
              * <ul>
-             *     <li>list - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.List}.</li>
-             *     <li>dictionary - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.DictionaryList}.</li>
-             *     <li>favorites - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.FavoritesList}.</li>
-             *     <li>radio - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.RadioGroup}.</li>
-             *     <li>fieldLink - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.FieldLink}.</li>
-             *     <li>details - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.DetailsList}.</li>
+             *     <li>list - использовать редактор {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/List}.</li>
+             *     <li>dictionary - использовать редактор {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList}.</li>
+             *     <li>favorites - использовать редактор {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/FavoritesList}.</li>
+             *     <li>radio - использовать редактор {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/RadioGroup}.</li>
+             *     <li>fieldLink - использовать редактор {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink}.</li>
+             *     <li>details - использовать редактор {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList}.</li>
              * </ul>
-             * @property {Object} properties.properties Объект, в который передают опции для конфигурации контрола {@link SBIS3.CONTROLS.FieldLink}, на основе которого создан редактор {@link SBIS3.CONTROLS.FilterPanelChooser.FieldLink}.
+             * @property {Object} properties.properties Объект, в который передают опции для конфигурации контрола {@link SBIS3.CONTROLS/FieldLink}, на основе которого создан редактор {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink}.
              * Описание контрола и список его опций вы можете найти <a href='/docs/js/SBIS3/CONTROLS/FieldLink/'>здесь</a> и <a href='/doc/platform/developmentapl/interface-development/components/textbox/field-link/selector-action//'>здесь</a>.
              * @property {Object} properties.items Набор данных, по которому будет построен список значений. Актуально для редакторов типа "SBIS3.CONTROLS.FilterPanelChooser.*".
              */

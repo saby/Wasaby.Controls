@@ -1,17 +1,17 @@
 /**
  * Created by am.gerasimov on 11.08.2016.
  */
-define('js!SBIS3.CONTROLS.SelectorController', [
+define('SBIS3.CONTROLS/Action/Selector/SelectorController', [
    "Core/CommandDispatcher",
-   "js!SBIS3.CORE.CompoundControl",
+   "Lib/Control/CompoundControl/CompoundControl",
    "WS.Data/Di",
    "Core/core-instance",
    'Core/core-clone',
    "WS.Data/Entity/Record",
-   "js!SBIS3.CONTROLS.Utils.Query",
-   "js!SBIS3.CONTROLS.Utils.OpenDialog",
+   "SBIS3.CONTROLS/Utils/QueryUtil",
+   "SBIS3.CONTROLS/Action/Utils/OpenDialogUtil",
    "WS.Data/Collection/List",
-   "js!SBIS3.CONTROLS.SelectorWrapper"
+   "SBIS3.CONTROLS/Action/Selector/SelectorWrapper"
 ],
     function (CommandDispatcher, CompoundControl, Di, cInstance, coreClone, Record, Query, OpenDialogUtil, List) {
 
@@ -23,13 +23,13 @@ define('js!SBIS3.CONTROLS.SelectorController', [
         * Класс компонента, который описывает логику выбора из диалога/панели.
         * Пример использования класса описан в статье <a href='/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/'>Окно выбора из справочника</a>.
         *
-        * @class SBIS3.CONTROLS.SelectorController
-        * @extends SBIS3.CORE.CompoundControl
+        * @class SBIS3.CONTROLS/Action/Selector/SelectorController
+        * @extends Lib/Control/CompoundControl/CompoundControl
         * @public
         * @author Герасимов Александр Максимович
         * @control
         */
-       var SelectorController = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.SelectorController.prototype  */{
+       var SelectorController = CompoundControl.extend([], /**@lends SBIS3.CONTROLS/Action/Selector/SelectorController.prototype  */{
            /**
             * @event onSelectComplete Происходит при выборе элементов коллекции.
             * @param {Core/EventObject} eventObject Дескриптор события.
@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                  */
                 selectionType: 'all',
                 /**
-                 * @cfg {String} Устанавливает имя кнопки (см. {@link SBIS3.CORE.Control#name}), клик по которой завершает выбор отмеченных элементов.
+                 * @cfg {String} Устанавливает имя кнопки (см. {@link Lib/Control/Control#name}), клик по которой завершает выбор отмеченных элементов.
                  */
                 selectButton: 'SelectorControllerButton',
                 /**
@@ -126,7 +126,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
            * Обновляет конфигурацию уже инициализированного экземпляра класса SBIS3.CONTROLS.SelectorController.
            * @remark
            * При выполнении команды обновляется конфигурацию для опций {@link multiselect}, {@link selectedItems} и {@link selectionType}.
-           * @param {SBIS3.CONTROLS.SelectorController} chooserWrapper
+           * @param {SBIS3.CONTROLS/Action/Selector/SelectorController} chooserWrapper
            * @command selectorWrapperInitialized
            * @see selectorWrapperSelectionChanged
            * @see selectComplete

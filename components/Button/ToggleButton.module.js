@@ -3,10 +3,10 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.ToggleButton', [
+define('SBIS3.CONTROLS/Button/ToggleButton', [
    'js!WSControls/Buttons/ToggleButton',
-   'css!SBIS3.CONTROLS.Button/Button/Button',
-   'css!SBIS3.CONTROLS.ToggleButton/ToggleButton/ToggleButton'
+   'css!SBIS3.CONTROLS/Button/Button',
+   'css!SBIS3.CONTROLS/Button/ToggleButton/ToggleButton'
 ], function(WSToggleButton) {
 
    'use strict';
@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.ToggleButton', [
     * {@link /doc/platform/developmentapl/interface-development/components/textbox/buttons/button-line/#toggle-button Демонстрационные примеры}.
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
     *
-    * @class SBIS3.CONTROLS.ToggleButton
+    * @class SBIS3.CONTROLS/Button/ToggleButton
     * @extends WSControls/Buttons/ToggleButton
     * @author Романов Валерий Сергеевич
     *
@@ -44,12 +44,12 @@ define('js!SBIS3.CONTROLS.ToggleButton', [
     * @control
     * @category Button
     * @initial
-    * <component data-component='SBIS3.CONTROLS.ToggleButton'>
+    * <component data-component='SBIS3.CONTROLS/Button/ToggleButton'>
     *    <option name='caption' value='Кнопка с залипанием'></option>
     * </component>
     */
 
-   var ToggleButton = WSToggleButton.extend([], /** @lends SBIS3.CONTROLS.ToggleButton.prototype */ {
+   var ToggleButton = WSToggleButton.extend([], /** @lends SBIS3.CONTROLS/Button/ToggleButton.prototype */ {
       $protected: {
          _options: {
 

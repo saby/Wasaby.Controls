@@ -2,9 +2,9 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.CheckBoxGroupBase', [
-   'js!SBIS3.CONTROLS.ButtonGroupBase',
-   'js!SBIS3.CONTROLS.MultiSelectable',
+define('SBIS3.CONTROLS/CheckBox/Group/GroupBase', [
+   'SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase',
+   'SBIS3.CONTROLS/Mixins/MultiSelectable',
    'Core/core-instance'
 ], function(ButtonGroupBase, MultiSelectable, cInstance) {
 
@@ -12,10 +12,10 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', [
 
    /**
     * Контрол, реализующий поведение выбора одного или нескольких значений из набора. Отображения не имеет.
-    * @class SBIS3.CONTROLS.CheckBoxGroupBase
+    * @class SBIS3.CONTROLS/CheckBox/Group/GroupBase
     * @public
-    * @mixes SBIS3.CONTROLS.MultiSelectable
-    * @extends SBIS3.CONTROLS.ButtonGroupBase
+    * @mixes SBIS3.CONTROLS/Mixins/MultiSelectable
+    * @extends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase
     * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions contextRestriction independentContext
@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', [
     * @ignoreEvents onDragMove onDragOut onDragStart onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     */
 
-   var CheckBoxGroupBase = ButtonGroupBase.extend([MultiSelectable], /** @lends SBIS3.CONTROLS.CheckBoxGroupBase.prototype */ {
+   var CheckBoxGroupBase = ButtonGroupBase.extend([MultiSelectable], /** @lends SBIS3.CONTROLS/CheckBox/Group/GroupBase.prototype */ {
       $protected: {
          _options: {
 

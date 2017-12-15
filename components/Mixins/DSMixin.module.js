@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DSMixin', [
+define('SBIS3.CONTROLS/Mixins/DSMixin', [
    "Core/core-clone",
    "Core/Deferred",
    "Core/IoC",
@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    "WS.Data/Collection/ObservableList",
    "WS.Data/Display/Display",
    "WS.Data/Collection/IBind",
-   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+   "SBIS3.CONTROLS/Utils/TemplateUtil",
    "Core/core-instance",
    "Core/helpers/Function/forAliveOnly",
    "Core/helpers/Object/isEmpty",
@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
-    * @mixin SBIS3.CONTROLS.DSMixin
+    * @mixin SBIS3.CONTROLS/Mixins/DSMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       };
    }
 
-   var DSMixin = /**@lends SBIS3.CONTROLS.DSMixin.prototype  */{
+   var DSMixin = /**@lends SBIS3.CONTROLS/Mixins/DSMixin.prototype  */{
        /**
         * @event onDrawItems Происходит после отрисовки всех элементов коллекции.
         * @param {Core/EventObject} eventObject Дескриптор события.
@@ -133,10 +133,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @see items
              * @see displayProperty
              * @see setDataSource
-             * @see SBIS3.CONTROLS.Selectable#selectedKey
-             * @see SBIS3.CONTROLS.Selectable#setSelectedKey
-             * @see SBIS3.CONTROLS.Selectable#getSelectedKey
-             * @see SBIS3.CONTROLS.SuggestMixin#list
+             * @see SBIS3.CONTROLS/Mixins/Selectable#selectedKey
+             * @see SBIS3.CONTROLS/Mixins/Selectable#setSelectedKey
+             * @see SBIS3.CONTROLS/Mixins/Selectable#getSelectedKey
+             * @see SBIS3.CONTROLS/Mixins/SuggestMixin#list
              */
             idProperty : null,
             /**
@@ -169,10 +169,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               *
               * Данные для коллекции элементов задаются либо с помощью этой опции,
               * либо через источник данных методом {@link setDataSource}.
-              * Опция {@link SBIS3.CONTROLS.TreeMixin#hierField} устанавливает поле,
+              * Опция {@link SBIS3.CONTROLS/Mixins/TreeMixin#hierField} устанавливает поле,
               * по которому будет построена иерархия.
               * @example
-              * Задаем набор данных для отображения календаря; использован класс {@link SBIS3.CONTROLS.TreeDataGridView}:
+              * Задаем набор данных для отображения календаря; использован класс {@link SBIS3.CONTROLS/Tree/DataGridView}:
               * ![](/DSMixin01.png)
               * фрагмент верстки:
               * <pre class="brush:xml">
@@ -205,7 +205,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               * @see idProperty
               * @see displayProperty
               * @see setDataSource
-              * @see SBIS3.CONTROLS.TreeMixin#hierField
+              * @see SBIS3.CONTROLS/Mixins/TreeMixin#hierField
               */
             items: null,
             /**
@@ -274,8 +274,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               * @cfg {Number} Устанавливает количество элементов коллекции, запрашиваемых с источника данных.
               * @remark
               * Опция определяет количество элементов коллекции, которые запрашиваются от источника данных.
-              * Это используется для функционала постраничной навигации {@link SBIS3.CONTROLS.ListView#showPaging} и
-              * бесконечной подгрузки данных по скроллу {@link SBIS3.CONTROLS.ListView#infiniteScroll}.
+              * Это используется для функционала постраничной навигации {@link SBIS3.CONTROLS/ListView#showPaging} и
+              * бесконечной подгрузки данных по скроллу {@link SBIS3.CONTROLS/ListView#infiniteScroll}.
               *
               * При работе с коллекцией иерархической структуры следует учитывать, что в количество элементов коллекции
               * считаются и узлы, и листья, т.е. подсчет идет относительно полностью развернутого представления данных.
@@ -285,8 +285,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               * Если опция pageSize установлена в значение 5, а содержимое узла не раскрыто, то отображен будет только
               * один элемент коллекции - узел.
               * @example
-              * Для {@link SBIS3.CONTROLS.SuggestMixin#list выпадающего блока} в поле связи, отображающего список значений
-              * для автодополнения, установим пять значений и {@link SBIS3.CONTROLS.ListView#showPaging режим постраничной навигации}:
+              * Для {@link SBIS3.CONTROLS/Mixins/SuggestMixin#list выпадающего блока} в поле связи, отображающего список значений
+              * для автодополнения, установим пять значений и {@link SBIS3.CONTROLS/ListView#showPaging режим постраничной навигации}:
               * фрагмент верстки:
               * <pre class="brush:xml">
               *     <option name="pageSize">5</option>
@@ -295,8 +295,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               * результат настройки:
               * ![](/DSMixin03.png)
               * @see setPageSize
-              * @see SBIS3.CONTROLS.ListView#showPaging
-              * @see SBIS3.CONTROLS.ListView#infiniteScroll
+              * @see SBIS3.CONTROLS/ListView#showPaging
+              * @see SBIS3.CONTROLS/ListView#infiniteScroll
               */
             pageSize: undefined,
             /**
@@ -370,7 +370,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              *     </options>
              * </pre>
              * @see setGroupBy
-             * @see SBIS3.CONTROLS.DataGridView#ladder
+             * @see SBIS3.CONTROLS/DataGridView#ladder
              * @see sorting
              */
             groupBy : {},
@@ -414,13 +414,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * Применяется в компонентах, которые используются для отображения данных в списках.
              * Переопределить текст можно при помощи метода {@link setEmptyHTML}.
              * @example
-             * Пример использования опции в {@link SBIS3.CONTROLS.FieldLink#dictionaries справочнике выбора значений}
+             * Пример использования опции в {@link SBIS3.CONTROLS/FieldLink#dictionaries справочнике выбора значений}
              * для поля связи:
              * ![](/DSMixin02.png)
-             * В примере для отображения данных использован компонент класса {@link SBIS3.CONTROLS.DataGridView} -
+             * В примере для отображения данных использован компонент класса {@link SBIS3.CONTROLS/DataGridView} -
              * контрол, отображающий набор данных в виде таблицы с несколькими колонками.
              *
-             * Для {@link SBIS3.CONTROLS.FieldLink поля связи} в настройке {@link SBIS3.CONTROLS.SuggestMixin#list выпадающего блока},
+             * Для {@link SBIS3.CONTROLS/FieldLink поля связи} в настройке {@link SBIS3.CONTROLS/Mixins/SuggestMixin#list выпадающего блока},
              * отображающего список значений для автодополнения, описание опции не дает результата, подобного
              * проиллюстрированному в примере. При отсутствии данных автодополнение работать не будет.
              *
@@ -457,7 +457,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * фрагмент верстки:
              * <pre class="brush:xml">
              *     <options name="list">
-             *        <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option>
+             *        <option name="component" value="SBIS3.CONTROLS/DataGridView"></option>
              *        <options name="options">
              *           <option name="idProperty" value="@Пользователь"></option>
              *           <options name="sorting" type="array">
@@ -824,7 +824,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                    if (!error.canceled) {
                       self._toggleIndicator(false);
                       if (self._notify('onDataLoadError', error) !== true) {
-                         require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+                         require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager){
                             InformationPopupManager.showMessageDialog({
                                message: error.message.toString().replace('Error: ', ''),
                                status: 'success'
@@ -1266,7 +1266,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * Подробнее о группировках элементов коллекции вы можете прочитать в описании к опции {@link groupBy}.
        * Всем элементам группы добавляется css-класс controls-GroupBy.
        * @param {GroupBy} group Объект с настройками группировки элементов.
-       * Обязательными для конфигурации являются подопции method, template и render. Полный список подопций вы можете найти в описании к типу данных {@link SBIS3.CONTROLS.DSMixin/GroupBy.typedef}.
+       * Обязательными для конфигурации являются подопции method, template и render. Полный список подопций вы можете найти в описании к типу данных {@link SBIS3.CONTROLS/Mixins/GroupBy.typedef}.
        * @param {Boolean} [redraw=false] Признак, по которому устанавливается необходимость перерисовски набора элементов коллекции без запроса к источнику данных.
        * В значении true будет произведена перерисовка.
        * @example

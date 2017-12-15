@@ -1,21 +1,21 @@
-define('js!SBIS3.CONTROLS.StylesPanelNew', [
+define('SBIS3.CONTROLS/StylesPanelNew', [
    'Core/CommandDispatcher',
-   'js!SBIS3.CORE.CompoundControl',
-   'js!SBIS3.CONTROLS.PopupMixin',
-   'js!SBIS3.CONTROLS.HistoryController',
+   'Lib/Control/CompoundControl/CompoundControl',
+   'SBIS3.CONTROLS/Mixins/PopupMixin',
+   'SBIS3.CONTROLS/History/HistoryController',
    'Core/helpers/Object/find',
    'Core/helpers/generate-helpers',
-   'tmpl!SBIS3.CONTROLS.StylesPanelNew/StylesPanelNew/StylesPanelNew',
+   'tmpl!SBIS3.CONTROLS/StylesPanelNew/StylesPanelNew',
    'Core/EventBus',
-   'tmpl!SBIS3.CONTROLS.StylesPanelNew/StylesPanelNew/resources/presetItemTemplate',
-   'tmpl!SBIS3.CONTROLS.StylesPanelNew/StylesPanelNew/resources/presetItemContentTpl',
-   'js!SBIS3.CONTROLS.ListView',
-   'js!SBIS3.CONTROLS.FontStyle',
-   'js!SBIS3.CONTROLS.ColorStyle',
-   'js!SBIS3.CONTROLS.IconButton',
-   'js!SBIS3.CONTROLS.CheckBox',
-   'css!SBIS3.CONTROLS.StylesPanelNew/StylesPanelNew/StylesPanelNew',
-   'css!SBIS3.CONTROLS.MenuItem/MenuItem/MenuItem'
+   'tmpl!SBIS3.CONTROLS/StylesPanelNew/resources/presetItemTemplate',
+   'tmpl!SBIS3.CONTROLS/StylesPanelNew/resources/presetItemContentTpl',
+   'SBIS3.CONTROLS/ListView',
+   'SBIS3.CONTROLS/StylesPanelNew/resources/FontStyle/FontStyle',
+   'SBIS3.CONTROLS/StylesPanelNew/resources/ColorStyle/ColorStyle',
+   'SBIS3.CONTROLS/Button/IconButton',
+   'SBIS3.CONTROLS/CheckBox',
+   'css!SBIS3.CONTROLS/StylesPanelNew/StylesPanelNew',
+   'css!SBIS3.CONTROLS/Menu/MenuItem/MenuItem'
 ], function(CommandDispatcher, CompoundControl, PopupMixin, HistoryController, objectFind, genHelpers, dotTplFn, EventBus) {
 
 
@@ -24,15 +24,15 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    /**
     * Панель выбора цвета с возможностью выбора цвета, начертания шрифта, установки предвыбранных стилей и сохранения истории
     *
-    * @class SBIS3.CONTROLS.StylesPanelNew
-    * @extends SBIS3.CORE.CompoundControl
+    * @class SBIS3.CONTROLS/StylesPanelNew
+    * @extends Lib/Control/CompoundControl/CompoundControl
     * @control
     * @author Крайнов Дмитрий Олегович
-    * @mixes SBIS3.CONTROLS.PopupMixin
+    * @mixes SBIS3.CONTROLS/Mixins/PopupMixin
     * @public
     */
 
-   var StylesPanel = CompoundControl.extend([PopupMixin], /** @lends SBIS3.CONTROLS.StylesPanelNew.prototype */ {
+   var StylesPanel = CompoundControl.extend([PopupMixin], /** @lends SBIS3.CONTROLS/StylesPanelNew.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

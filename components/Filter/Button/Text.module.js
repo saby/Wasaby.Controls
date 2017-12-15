@@ -1,20 +1,20 @@
 /**
  * Created by am.gerasimov on 05.07.2016.
  */
-define('js!SBIS3.CONTROLS.FilterText',
+define('SBIS3.CONTROLS/Filter/Button/Text',
     [
        'js!WSControls/Buttons/ButtonBase',
-       'tmpl!SBIS3.CONTROLS.FilterText/Text/FilterText',
-       'js!SBIS3.CONTROLS.ITextValue'
+       'tmpl!SBIS3.CONTROLS/Filter/Button/Text/FilterText',
+       'SBIS3.CONTROLS/Mixins/ITextValue'
     ], function(WSButtonBase, dotTplFn, ITextValue) {
        'use strict';
 
        /**
         * Класс контрола "Кнопка с крестиком".
-        * Используется на Панели фильтрации (см. {@link SBIS3.CONTROLS.FilterButton}) для отображения набранных параметров.
+        * Используется на Панели фильтрации (см. {@link SBIS3.CONTROLS/Filter/Button}) для отображения набранных параметров.
         * Контрол представляет собой текст, рядом с котором в правом верхнем углу расположен крестик.
         * Клик по крестику скрывает контрол, а выбранный параметр удаляется из результирующего фильтра.
-        * Контрол используется на панели {@link SBIS3.CONTROLS.FilterButton}.
+        * Контрол используется на панели {@link SBIS3.CONTROLS/Filter/Button}.
         *
         * Контрол работает непосредственно с фильтром (объект, по набранным параметрам которого будет производиться фильтрация).
         * Текущее значение, переданное из контрола в фильтр, хранится в опции {@link filterValue}.
@@ -23,16 +23,16 @@ define('js!SBIS3.CONTROLS.FilterText',
         * Если контрол скрывается, то в фильтр, ровно как и в опцию **filterValue**, передаётся значение опции {@link resetValue}.
         * Контрол скрывается, когда пользователь нажимает крестик, отображаемый справа от кнопки.
         *
-        * @class SBIS3.CONTROLS.FilterText
+        * @class SBIS3.CONTROLS/Filter/Button/Text
         * @extends WSControls/Buttons/ButtonBase
         * @author Герасимов Александр Максимович
         * @control
         * @public
         *
-        * @mixes SBIS3.CONTROLS.ITextValue
+        * @mixes SBIS3.CONTROLS/Mixins/ITextValue
         */
 
-       var FilterText = WSButtonBase.extend([ITextValue], /** @lends SBIS3.CONTROLS.FilterText.prototype */ {
+       var FilterText = WSButtonBase.extend([ITextValue], /** @lends SBIS3.CONTROLS/Filter/Button/Text.prototype */ {
           _dotTplFn: dotTplFn,
           $protected: {
              _options: {

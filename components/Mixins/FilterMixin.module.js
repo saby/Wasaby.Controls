@@ -1,10 +1,10 @@
 /**
  * Created by ad.chistyakova on 05.10.2015.
  */
-define('js!SBIS3.CONTROLS.FilterMixin', [
+define('SBIS3.CONTROLS/Mixins/FilterMixin', [
    "Core/core-clone",
    "Core/core-merge",
-   "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
+   "SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil",
    "Core/helpers/String/ucFirst",
    "Core/helpers/Object/find"
 ], function (coreClone, cMerge, FilterToStringUtil, ucFirst, objectFind) {
@@ -31,11 +31,11 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
    }
     /**
      * Миксин, задающий любому контролу поведение работы с набором фильтров.
-     * @mixin SBIS3.CONTROLS.FilterMixin
+     * @mixin SBIS3.CONTROLS/Mixins/FilterMixin
      * @public
      * @author Крайнов Дмитрий Олегович
      */
-   var FilterMixin = /**@lends SBIS3.CONTROLS.FilterMixin.prototype  */{
+   var FilterMixin = /**@lends SBIS3.CONTROLS/Mixins/FilterMixin.prototype  */{
       /**
        * @event onResetFilter Происходит при сбросе фильтра.
        * @remark

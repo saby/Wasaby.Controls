@@ -1,9 +1,9 @@
-define('js!SBIS3.CONTROLS.CompoundFocusMixin', ['Core/EventBus'], function(EventBus) {
+define('SBIS3.CONTROLS/Mixins/CompoundFocusMixin', ['Core/EventBus'], function(EventBus) {
    /**
-    * @class SBIS3.CONTROLS.CompoundFocusMixin
+    * @class SBIS3.CONTROLS/Mixins/CompoundFocusMixin
     * @public
     */
-   var CompoundFocusMixin = /** @lends SBIS3.CONTROLS.CompoundFocusMixin.prototype */{
+   var CompoundFocusMixin = /** @lends SBIS3.CONTROLS/Mixins/CompoundFocusMixin.prototype */{
       $constructor: function () {
          this._publish('onChildControlFocusOut', 'onChildControlFocusIn');
          var channel = EventBus.globalChannel();

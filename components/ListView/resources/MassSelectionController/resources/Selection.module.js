@@ -1,8 +1,8 @@
 /* global define */
-define('js!SBIS3.CONTROLS.Selection', [
+define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Selection', [
    'Core/Abstract',
    'Core/core-clone',
-   'js!SBIS3.CONTROLS.ArraySimpleValuesUtil'
+   'SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil'
 ], function (
    Abstract,
    cClone,
@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.Selection', [
 ) {
    'use strict';
 
-   var Selection = Abstract.extend(/** @lends SBIS3.CONTROLS.Selection */{
+   var Selection = Abstract.extend(/** @lends SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Selection */{
       _idProperty: undefined,
 
       constructor: function(options) {

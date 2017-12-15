@@ -1,25 +1,25 @@
-define('js!SBIS3.CONTROLS.FilterButton',
+define('SBIS3.CONTROLS/Filter/Button',
     [
    "Core/moduleStubs",
    "Core/Context",
    "Core/CommandDispatcher",
    "Core/constants",
-   "js!SBIS3.CORE.CompoundControl",
-   "tmpl!SBIS3.CONTROLS.FilterButton/Button/FilterButton",
-   "tmpl!SBIS3.CONTROLS.FilterButton/Button/FilterComponentTemplate",
-   "tmpl!SBIS3.CONTROLS.FilterButton/Button/FilterLineTemplate",
-   "js!SBIS3.CONTROLS.FilterMixin",
-   "js!SBIS3.CONTROLS.PickerMixin",
-   "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
-   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+   "Lib/Control/CompoundControl/CompoundControl",
+   "tmpl!SBIS3.CONTROLS/Filter/Button/FilterButton",
+   "tmpl!SBIS3.CONTROLS/Filter/Button/FilterComponentTemplate",
+   "tmpl!SBIS3.CONTROLS/Filter/Button/FilterLineTemplate",
+   "SBIS3.CONTROLS/Mixins/FilterMixin",
+   "SBIS3.CONTROLS/Mixins/PickerMixin",
+   "SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil",
+   "SBIS3.CONTROLS/Utils/TemplateUtil",
    "Core/ParallelDeferred",
    "Core/IoC",
    "Core/helpers/Function/once",
    "Core/detection",
-   "js!SBIS3.CONTROLS.IconButton",
-   "js!SBIS3.CONTROLS.FilterButton.FilterLine",
-   "i18n!SBIS3.CONTROLS.FilterButton",
-   'css!SBIS3.CONTROLS.FilterButton/Button/FilterButton'
+   "SBIS3.CONTROLS/Button/IconButton",
+   "SBIS3.CONTROLS/Filter/Button/Line",
+   "i18n!SBIS3.CONTROLS/Filter/Button",
+   'css!SBIS3.CONTROLS/Filter/Button/FilterButton'
 ],
     function(
         mStubs,
@@ -45,12 +45,12 @@ define('js!SBIS3.CONTROLS.FilterButton',
         * Класс контрола "Кнопка фильтров".
         *
         * Подробнее конфигурирование контрола описано в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/">Панель фильтров</a>.
-        * @class SBIS3.CONTROLS.FilterButton
-        * @extends SBIS3.CORE.CompoundControl
+        * @class SBIS3.CONTROLS/Filter/Button
+        * @extends Lib/Control/CompoundControl/CompoundControl
         * @author Герасимов Александр Максимович
         *
-        * @mixes SBIS3.CONTROLS.FilterMixin
-        * @mixes SBIS3.CONTROLS.PickerMixin
+        * @mixes SBIS3.CONTROLS/Mixins/FilterMixin
+        * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
         *
         * @demo SBIS3.DOCS.FilterButton
         *
@@ -73,12 +73,12 @@ define('js!SBIS3.CONTROLS.FilterButton',
           additional: 'additionalFilterParamsTemplate'
        };
 
-       var FilterButton = CompoundControl.extend([FilterMixin, PickerMixin],/** @lends SBIS3.CONTROLS.FilterButton.prototype */{
+       var FilterButton = CompoundControl.extend([FilterMixin, PickerMixin],/** @lends SBIS3.CONTROLS/Filter/Button.prototype */{
           _dotTplFn: dotTplFn,
           $protected: {
              _options: {
                 _filterLineTpl: filterLineTpl,
-                _areaTemplate: 'js!SBIS3.CONTROLS.FilterButtonArea',
+                _areaTemplate: 'SBIS3.CONTROLS/Filter/Button/Area',
                 /**
                  * @cfg {String} Устанавливает направление, в котором будет открываться всплывающая панель кнопки фильтров.
                  * @variant left Панель открывается влево.
@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 /**
                  * @сfg {String} Устанавливает шаблон всплывающей панели кнопки фильтров.
                  * @remark
-                 * При каждом открытии/закрытии панели происходят события {@link SBIS3.CONTROLS.PopupMixin#onShow} и {@link SBIS3.CONTROLS.PopupMixin#onClose}.
+                 * При каждом открытии/закрытии панели происходят события {@link SBIS3.CONTROLS/Mixins/PopupMixin#onShow} и {@link SBIS3.CONTROLS/Mixins/PopupMixin#onClose}.
                  * Подробнее о создании шаблона читайте в разделе <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/fbpanel/'>Панель фильтрации</a>.
                  * @example
                  * <pre>
@@ -135,7 +135,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                   * Подробнее читайте в разделе <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/fbstr/'>Строка примененных фильтров</a>.
                   * @see filterLineTemplate
                   */
-                filterLineComponent: 'js!SBIS3.CONTROLS.FilterButton.FilterLine',
+                filterLineComponent: 'SBIS3.CONTROLS/Filter/Button/Line',
                  /**
                   * @cfg {*} Устанавливает шаблон, который отображает строку применённых фильтров.
                   * @remark
@@ -409,7 +409,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 closeOnTargetMove: !detection.isMobilePlatform,
                 context: context,
                 cssClassName: 'controls__filterButton__picker',
-                template: 'js!SBIS3.CONTROLS.FilterButtonArea',
+                template: 'SBIS3.CONTROLS/Filter/Button/Area',
                 componentOptions: this._getAreaOptions(),
                 _canScroll: true,
                 activateAfterShow: true,
@@ -499,7 +499,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
           /**
            * Устанавливает контроллер для работы с историей
-           * @param {SBIS3.CONTROLS.FilterHistoryController} controller
+           * @param {SBIS3.CONTROLS/Filter/HistoryController} controller
            * @noshow
            */
           setHistoryController: function(controller) {

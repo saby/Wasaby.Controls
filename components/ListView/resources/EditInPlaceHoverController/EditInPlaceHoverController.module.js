@@ -2,27 +2,27 @@
  * Created by as.avramenko on 01.04.2015.
  */
 
-define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
+define('SBIS3.CONTROLS/ListView/resources/EditInPlaceHoverController/EditInPlaceHoverController',
    [
    "Core/core-merge",
    "Core/Deferred",
-   "js!SBIS3.CONTROLS.EditInPlaceBaseController",
-   "js!SBIS3.CONTROLS.EditInPlace"
+   "SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController",
+   "SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace"
 ],
    function ( cMerge, Deferred, EditInPlaceBaseController, EditInPlace) {
 
       'use strict';
 
       /**
-       * @class SBIS3.CONTROLS.EditInPlaceHoverController
-       * @extends SBIS3.CONTROLS.EditInPlaceBaseController
+       * @class SBIS3.CONTROLS/ListView/resources/EditInPlaceHoverController/EditInPlaceHoverController
+       * @extends SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController
        * @author Авраменко Алексей Сергеевич
        * @control
        * @public
        */
 
       var
-         EditInPlaceHoverController = EditInPlaceBaseController.extend( /** @lends SBIS3.CONTROLS.EditInPlaceHoverController.prototype */ {
+         EditInPlaceHoverController = EditInPlaceBaseController.extend( /** @lends SBIS3.CONTROLS/ListView/resources/EditInPlaceHoverController/EditInPlaceHoverController.prototype */ {
             $protected: {
                _options: {
                },

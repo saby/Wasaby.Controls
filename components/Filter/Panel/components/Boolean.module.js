@@ -1,27 +1,27 @@
-define('js!SBIS3.CONTROLS.FilterPanelBoolean', [
-   'js!SBIS3.CORE.CompoundControl',
-   'js!SBIS3.CONTROLS.IFilterItem',
-   'tmpl!SBIS3.CONTROLS.FilterPanelBoolean/Boolean/FilterPanelBoolean',
-   'tmpl!SBIS3.CONTROLS.FilterPanelBoolean/Boolean/resources/ContentTemplate',
-   'js!SBIS3.CONTROLS.CheckBox',
-   'css!SBIS3.CONTROLS.FilterPanelBoolean/Boolean/FilterPanelBoolean'
+define('SBIS3.CONTROLS/Filter/Panel/components/Boolean', [
+   'Lib/Control/CompoundControl/CompoundControl',
+   'SBIS3.CONTROLS/Filter/Panel/resources/IFilterItem',
+   'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Boolean/FilterPanelBoolean',
+   'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Boolean/resources/ContentTemplate',
+   'SBIS3.CONTROLS/CheckBox',
+   'css!SBIS3.CONTROLS/Filter/Panel/components/Boolean/FilterPanelBoolean'
 ], function (CompoundControl, IFilterItem, dotTplFn, ContentTemplate) {
 
 var
     /**
-     * Класс контрола "Чекбокс", который применяется для панели фильтров {@link SBIS3.CONTROLS.FilterPanel} в качестве редактора фильтра.
+     * Класс контрола "Чекбокс", который применяется для панели фильтров {@link SBIS3.CONTROLS/Filter/FilterPanel} в качестве редактора фильтра.
      * <br/>
      * По умолчанию для контрола установлено фиксированое имя - "controls-FilterPanelBoolean__CheckBox".
      * При создании собственного редактора, наследуясь от класса SBIS3.CONTROLS.FilterPanelBoolean, для контрола вы должны использовать только это имя.
-     * @class SBIS3.CONTROLS.FilterPanelBoolean
-     * @extends SBIS3.CORE.CompoundControl
+     * @class SBIS3.CONTROLS/Filter/Panel/components/Boolean
+     * @extends Lib/Control/CompoundControl/CompoundControl
      * @public
      *
-     * @mixes SBIS3.CONTROLS.IFilterItem
+     * @mixes SBIS3.CONTROLS/Filter/Panel/resources/IFilterItem
      *
      * @author Авраменко Алексей Сергеевич
      */
-   FilterPanelBoolean = CompoundControl.extend([IFilterItem],/** @lends SBIS3.CONTROLS.FilterPanelBoolean.prototype  */{
+   FilterPanelBoolean = CompoundControl.extend([IFilterItem],/** @lends SBIS3.CONTROLS/Filter/Panel/components/Boolean.prototype  */{
         /**
          * @event onValueChange Происходит при изменении значения контрола.
          * @param {Core/EventObject} eventObject Дескриптор события.

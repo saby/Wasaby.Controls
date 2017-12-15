@@ -2,9 +2,9 @@
  * Created by iv.cheremushkin on 28.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.PasswordTextBox', [
-   'js!SBIS3.CONTROLS.TextBox',
-   'tmpl!SBIS3.CONTROLS.PasswordTextBox/PasswordTextBox/resources/showPasswordTemplate',
+define('SBIS3.CONTROLS/PasswordTextBox', [
+   'SBIS3.CONTROLS/TextBox',
+   'tmpl!SBIS3.CONTROLS/PasswordTextBox/resources/showPasswordTemplate',
    'Core/CommandDispatcher',
    'js!WSControls/Buttons/Button',
     'css!Controls/Input/Password/Password'
@@ -13,8 +13,8 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
    'use strict';
    /**
     * Поле ввода пароля.
-    * @class SBIS3.CONTROLS.PasswordTextBox
-    * @extends SBIS3.CONTROLS.TextBox
+    * @class SBIS3.CONTROLS/PasswordTextBox
+    * @extends SBIS3.CONTROLS/TextBox
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyPasswordTextBox
     *
@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
     * @control
     */
    var PasswordTextBox;
-   PasswordTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS.PasswordTextBox.prototype */ {
+   PasswordTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS/PasswordTextBox.prototype */ {
       $protected: {
          _options: {
             afterFieldWrapper: showPasswordTemplate,

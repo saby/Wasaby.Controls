@@ -2,23 +2,23 @@
  * Created by as.suhoruchkin on 15.10.2015.
  */
 
-define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
+define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController',
    [
    "Core/Context",
    "Core/constants",
    "Core/Deferred",
    "Core/IoC",
-   "js!SBIS3.CORE.CompoundControl",
-   "js!SBIS3.CORE.PendingOperationProducerMixin",
-   "tmpl!SBIS3.CONTROLS.EditInPlaceBaseController/AddRowTpl",
-   "js!SBIS3.CONTROLS.EditInPlace",
-   "js!SBIS3.CONTROLS.ControlHierarchyManager",
+   "Lib/Control/CompoundControl/CompoundControl",
+   "Lib/Mixins/PendingOperationProducerMixin",
+   "tmpl!SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/AddRowTpl",
+   "SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace",
+   "SBIS3.CONTROLS/ControlHierarchyManager",
    "WS.Data/Entity/Model",
    "WS.Data/Entity/Record",
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
-   'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
-   'css!SBIS3.CONTROLS.EditInPlaceBaseController'
+   'SBIS3.CONTROLS/Utils/InformationPopupManager',
+   'css!SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController'
 
 ],
    function (cContext, constants, Deferred, IoC, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, ControlHierarchyManager, Model, Record, cInstance, fcHelpers, InformationPopupManager) {
@@ -26,8 +26,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
       'use strict';
 
       /**
-       * @class SBIS3.CONTROLS.EditInPlaceBaseController
-       * @extends SBIS3.CORE.CompoundControl
+       * @class SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController
+       * @extends Lib/Control/CompoundControl/CompoundControl
        * @author Сухоручкин Андрей Сергеевич
        * @control
        * @public
@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
          },
 
          CONTEXT_RECORD_FIELD = 'sbis3-controls-edit-in-place',
-         EditInPlaceBaseController = CompoundControl.extend([PendingOperationProducerMixin],/** @lends SBIS3.CONTROLS.EditInPlaceBaseController.prototype */ {
+         EditInPlaceBaseController = CompoundControl.extend([PendingOperationProducerMixin],/** @lends SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController.prototype */ {
             $protected: {
                _options: {
                   editingTemplate: undefined,
@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                // Используется в случае, если перед редактированием запись перечитывается, и на редактирование мы отправляем запись, не свзяанную с рекордсетом,
                // и для перерисовки строки после редактирования, необходимо смержит новые данные именно в эту запись
                _editingRecord: undefined,
-               _pendingOperation: undefined, // Используется для хранения операции ожидания, зарегистрированной у первого родителя с SBIS3.CORE.PendingOperationParentMixin
+               _pendingOperation: undefined, // Используется для хранения операции ожидания, зарегистрированной у первого родителя с Lib/Mixins/PendingOperationParentMixin
                //TODO: Данная переменная нужна для автодобавления по enter(mode autoadd), чтобы определить в какой папке происходит добавление элемента
                //Вариант решения проблемы не самый лучший, и добавлен как временное решение для выпуска 3.7.3.150. В версию .200 придумать нормальное решение.
                _lastTargetAdding: undefined,
@@ -355,7 +355,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                record.unsubscribe('onPropertyChange', this._addPendingOperationByChange, this);
             },
             /**
-             * Регистрирует операцию ожидания у родителя, к которому подмешан SBIS3.CORE.PendingOperationParentMixin
+             * Регистрирует операцию ожидания у родителя, к которому подмешан Lib/Mixins/PendingOperationParentMixin
              * @private
              */
             _addPendingOperation: function() {
@@ -375,7 +375,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                this._unsubscribeFromAddPendingOperation(event.getTarget());
             },
             /**
-             * Разрегистрирует операцию ожидания у родителя, к которому подмешан SBIS3.CORE.PendingOperationParentMixin
+             * Разрегистрирует операцию ожидания у родителя, к которому подмешан Lib/Mixins/PendingOperationParentMixin
              * @private
              */
             _removePendingOperation: function() {
@@ -663,7 +663,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   // Если фокус ушел на кнопку закрытия диалога, то редактирование по месту не должно реагировать на это, т.к.
                   // его и так завершат через finishChildPendingOperation (и туда попадет правильный аргумент - с сохранением
                   // или без завершать редактирование по месту)
-                  endEdit = !cInstance.instanceOfModule(focusedControl, 'SBIS3.CORE.CloseButton') && !focusedControl ||
+                  endEdit = !cInstance.instanceOfModule(focusedControl, 'Deprecated/Controls/CloseButton/CloseButton') && !focusedControl ||
                      (this._allowEndEdit(focusedControl) && this._isAnotherTarget(focusedControl, this));
                if (endEdit) {
                   this.commitEdit();

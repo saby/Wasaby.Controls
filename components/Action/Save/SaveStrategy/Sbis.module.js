@@ -1,10 +1,10 @@
 /* global define  */
-define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
-    'js!SBIS3.CONTROLS.SaveStrategy.Base',
+define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
+    'SBIS3.CONTROLS/Action/Save/SaveStrategy/Base',
     'Core/EventBus',
     'Core/core-merge',
     'Core/helpers/transport-helpers',
-    'js!SBIS3.CONTROLS.WaitIndicator',
+    'SBIS3.CONTROLS/WaitIndicator',
     'WS.Data/Source/SbisService',
     'WS.Data/Entity/Record',
     'Core/moduleStubs'
@@ -14,13 +14,13 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
 
    /**
     * Класс стратегии для сохранения данных. Позволяет взамодействовать с бизнес-логикой.
-    * @class SBIS3.CONTROLS.SaveStrategy.Sbis
+    * @class SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis
     * @public
-    * @extends SBIS3.CONTROLS.SaveStrategy.Base
+    * @extends SBIS3.CONTROLS/Action/Save/SaveStrategy/Base
     * @author Сухоручкин А.С.
     */
 
-    var SaveStrategySbis = SaveStrategyBase.extend(/** @lends SBIS3.CONTROLS.SaveStrategy.Sbis.prototype */{
+    var SaveStrategySbis = SaveStrategyBase.extend(/** @lends SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis.prototype */{
 
        /**
         * Сохраняет данные.
@@ -190,7 +190,7 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
          * @param {Number} [meta.pageOrientation] Ориентация страниц при сохранении в PDF формат.
          * @param {WS.Data/Collection/RecordSet} [meta.recordSet] Набор данных, который будет сохранён.
          * @param {WS.Data/Query/Query} [meta.query] Запрос, по которому будут получены данные для сохранения.
-         * @returns {Core/Deferred} В случае ошибки в пользовательском интерфейсе будет отображён диалог с ошибкой, созданный на основе класса {@link SBIS3.CONTROLS.SubmitPopup}.
+         * @returns {Core/Deferred} В случае ошибки в пользовательском интерфейсе будет отображён диалог с ошибкой, созданный на основе класса {@link SBIS3.CONTROLS/SubmitPopup}.
          */
         exportFileTransfer: function(methodName, cfg, meta) {
             var self = this,
@@ -209,7 +209,7 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
             }).addErrback(function(error) {
                //Не показываем ошибку, если было прервано соединение с интернетом
                if (!error._isOfflineMode) {
-                  moduleStubs.require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager']).addCallback(function(manager) {
+                  moduleStubs.require(['SBIS3.CONTROLS/Utils/InformationPopupManager']).addCallback(function(manager) {
                      manager[0].showMessageDialog({
                         message: error.message,
                         status: 'error'

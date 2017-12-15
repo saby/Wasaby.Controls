@@ -1,16 +1,16 @@
 /**
  * Created by am.gerasimov on 26.05.2015.
  */
-define('js!SBIS3.CONTROLS.DragAndDropMixin', [
+define('SBIS3.CONTROLS/Mixins/DragAndDropMixin', [
    "Core/constants"
 ], function(constants) {
 
    var isMobile = constants.browser.isMobilePlatform;
     /**
-     * @mixin SBIS3.CONTROLS.DragAndDropMixin
+     * @mixin SBIS3.CONTROLS/Mixins/DragAndDropMixin
      * @public
      */
-   var DragAndDropMixin = /** @lends SBIS3.CONTROLS.DragAndDropMixin.prototype */{
+   var DragAndDropMixin = /** @lends SBIS3.CONTROLS/Mixins/DragAndDropMixin.prototype */{
       $protected: {
          _dragContainer: undefined,
          _withinElement: undefined,

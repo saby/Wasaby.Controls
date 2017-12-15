@@ -1,15 +1,15 @@
-define('js!SBIS3.CONTROLS.PickerMixin', [
+define('SBIS3.CONTROLS/Mixins/PickerMixin', [
    "Core/constants",
-   "js!SBIS3.CONTROLS.FloatArea"
+   "SBIS3.CONTROLS/FloatArea"
 ], function( constants,FloatArea) {
    /**
     * Миксин, умеющий отображать выдающий вниз блок.
     * Задаётся контент и методы, позволяющие открывать, закрывать блок.
-    * @mixin SBIS3.CONTROLS.PickerMixin
+    * @mixin SBIS3.CONTROLS/Mixins/PickerMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var PickerMixin = /** @lends SBIS3.CONTROLS.PickerMixin.prototype */{
+   var PickerMixin = /** @lends SBIS3.CONTROLS/Mixins/PickerMixin.prototype */{
       /**
        * @event onPickerOpen Происходит при открытии блока.
        * @param {Core/EventObject} Дескриптор события.
@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
               */
             pickerClassName : '',
             /**
-             * @cfg {Object} Устанавливает дополнительные настройки для выпадающего блока {@link SBIS3.CONTROLS.PopupMixin}.
+             * @cfg {Object} Устанавливает дополнительные настройки для выпадающего блока {@link SBIS3.CONTROLS/Mixins/PopupMixin}.
              * Опции, значения которых будут использованы при построении выпадающего блока.
              * @example
              * <pre class="brush:xml">

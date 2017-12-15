@@ -2,26 +2,26 @@
  * Created by ps.borisov on 08.09.2016.
  */
 
-define('js!SBIS3.CONTROLS.SliderInput',
+define('SBIS3.CONTROLS/Slider/Input',
    [
-      'js!SBIS3.CONTROLS.Slider',
-      'tmpl!SBIS3.CONTROLS.SliderInput/Input/SliderInput',
+      'SBIS3.CONTROLS/Slider',
+      'tmpl!SBIS3.CONTROLS/Slider/Input/SliderInput',
       'Core/constants',
-      'js!SBIS3.CONTROLS.NumberTextBox',
-      'css!SBIS3.CONTROLS.SliderInput/Input/SliderInput'
+      'SBIS3.CONTROLS/NumberTextBox',
+      'css!SBIS3.CONTROLS/Slider/Input/SliderInput'
    ], function(Slider, dotTplFn, cConstants) {
       'use strict';
       var
          /**
           * Класс контрола "Слайдер с полям ввода".
-          * @class SBIS3.CONTROLS.SliderInput
-          * @extends SBIS3.CONTROLS.Slider
+          * @class SBIS3.CONTROLS/Slider/Input
+          * @extends SBIS3.CONTROLS/Slider
           *
           * @author Борисов Петр Сергеевич
           *
           * @demo SBIS3.CONTROLS.Demo.SliderInputDemo
           */
-         SliderInput = Slider.extend(/** @lends SBIS3.CONTROLS.SliderInput.prototype */{
+         SliderInput = Slider.extend(/** @lends SBIS3.CONTROLS/Slider/Input.prototype */{
             _dotTplFn : dotTplFn,
             $protected: {
                _options: {

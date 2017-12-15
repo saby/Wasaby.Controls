@@ -1,21 +1,21 @@
 /*global define, $*/
-define('js!SBIS3.CONTROLS.ListView.Mover', [
+define('SBIS3.CONTROLS/ListView/resources/Mover', [
    'WS.Data/Di',
    "Core/core-instance",
    "Core/Deferred",
    "Core/Abstract",
    'WS.Data/Utils',
    'WS.Data/Source/ISource',
-   'js!SBIS3.CONTROLS.Utils.InformationPopupManager'
+   'SBIS3.CONTROLS/Utils/InformationPopupManager'
 
 ], function (Di, cInstance, Deferred, Abstract, Utils, ISource, InformationPopupManager) {
    'use strict';
    /**
     * Перемещает элементы
-    * @class SBIS3.CONTROLS.ListView.Mover
+    * @class SBIS3.CONTROLS/ListView/resources/Mover
     * @author Крайнов Дмитрий Олегович
     */
-   var Mover = Abstract.extend(/**@lends SBIS3.CONTROLS.ListView.Mover.prototype*/{
+   var Mover = Abstract.extend(/**@lends SBIS3.CONTROLS/ListView/resources/Mover.prototype*/{
       $protected: {
          _options: {
             /**
@@ -110,8 +110,8 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       },
       /**
        * Перемещает записи из внешнего контрола, через drag'n'drop
-       * @param {SBIS3.CONTROLS.DragEntity.List} dragSource Объект содержащий данные
-       * @param {SBIS3.CONTROLS.DragEntity.Row} target Объект указывающий куда надо перенести данные
+       * @param {SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/List} dragSource Объект содержащий данные
+       * @param {SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row} target Объект указывающий куда надо перенести данные
        * @param {WS.Data/Collection/RecordSet} ownerItems Рекордсет из которого переносятся данные
        * @param {Boolean} move Использовать стандартное перемещение.
        * @remark Подходит только если у контролов одинаковые источники данных.

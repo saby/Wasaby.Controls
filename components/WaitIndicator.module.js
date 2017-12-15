@@ -1,10 +1,10 @@
-﻿define('js!SBIS3.CONTROLS.WaitIndicator',
+define('SBIS3.CONTROLS/WaitIndicator',
    [
       'Core/core-extend',
       'Core/Deferred',
-      'js!SBIS3.CORE.Control',
+      'Lib/Control/Control',
       'Core/js-template-doT',
-      'css!SBIS3.CONTROLS.WaitIndicator/WaitIndicator/WaitIndicator'
+      'css!SBIS3.CONTROLS/WaitIndicator/WaitIndicator'
    ],
 
    /**
@@ -18,7 +18,7 @@
     * <ul>
     *    <li>Элемент DOM</li>
     *    <li>Коллекция jQuery, при этом в качестве объекта привязки будет использован первый элемент</li>
-    *    <li>Контролы (экземпляры класса SBIS3.CORE.Control и его потомки)</li>
+    *    <li>Контролы (экземпляры класса Lib/Control/Control и его потомки)</li>
     *    <li>null или undefined</li>
     * </ul>
     * Во всех случаях, когда объект привязки не указан или эквивалентен объектам window, document или document.body - создаётся глобальный индикатор.
@@ -65,7 +65,7 @@
     * Несколько примеров можно посмотреть в классе демо MyWaitIndicator, а также на локальном стенде на страницах /pages/WaitIndicator.html и /pages/WaitIndicatorTable.html
     * <br/>
     *
-    * @class SBIS3.CONTROLS.WaitIndicator
+    * @class SBIS3.CONTROLS/WaitIndicator
     * @extends Core/core-extend
     *
     * @author Спирин Виктор Алексеевич
@@ -95,8 +95,8 @@
        *                            вида "ws-wait-indicator_mod-<модификатор>". Все недопустимые для имени класса символы будут удалены
        * @param {number} delay Задержка перед началом показа индикатора. Если указана и неотрицательна - индикатор будет показан, если нет - не будет
        */
-      var WaitIndicatorInstance = CoreExtend.extend(/** @lends SBIS3.CONTROLS.WaitIndicator.prototype */{
-         //_moduleName: 'SBIS3.CONTROLS.WaitIndicator',
+      var WaitIndicatorInstance = CoreExtend.extend(/** @lends SBIS3.CONTROLS/WaitIndicator.prototype */{
+         //_moduleName: 'SBIS3.CONTROLS/WaitIndicator',
 
          constructor: function (target, message, look, delay, useDeferred) {
             var oLook = {

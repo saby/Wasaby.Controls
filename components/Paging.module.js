@@ -1,12 +1,12 @@
 
-define('js!SBIS3.CONTROLS.Paging', [
-   'js!SBIS3.CORE.CompoundControl',
-   'tmpl!SBIS3.CONTROLS.Paging/Paging/Paging',
-   'js!SBIS3.CONTROLS.ItemsControlMixin',
-   'js!SBIS3.CONTROLS.Selectable',
-   'tmpl!SBIS3.CONTROLS.Paging/Paging/resources/ItemsTemplate',
-   'js!SBIS3.CONTROLS.IconButton',
-   'css!SBIS3.CONTROLS.Paging/Paging/Paging'
+define('SBIS3.CONTROLS/Paging', [
+   'Lib/Control/CompoundControl/CompoundControl',
+   'tmpl!SBIS3.CONTROLS/Paging/Paging',
+   'SBIS3.CONTROLS/Mixins/ItemsControlMixin',
+   'SBIS3.CONTROLS/Mixins/Selectable',
+   'tmpl!SBIS3.CONTROLS/Paging/resources/ItemsTemplate',
+   'SBIS3.CONTROLS/Button/IconButton',
+   'css!SBIS3.CONTROLS/Paging/Paging'
 ], function(CompoundControl, dotTplFn, ItemsControlMixin, Selectable, ItemsTemplate) {
 
    'use strict';
@@ -17,11 +17,11 @@ define('js!SBIS3.CONTROLS.Paging', [
     * Отображение последней кнопки зависит от режима постраничной навигации (см. {@link mode}).
     * Отображение номеров страниц устанавливается в опции {@link showPages}.
     *
-    * @class SBIS3.CONTROLS.Paging
-    * @extends SBIS3.CORE.CompoundControl
+    * @class SBIS3.CONTROLS/Paging
+    * @extends Lib/Control/CompoundControl/CompoundControl
     *
-    * @mixes SBIS3.CONTROLS.ItemsControlMixin
-    * @mixes SBIS3.CONTROLS.Selectable
+    * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
+    * @mixes SBIS3.CONTROLS/Mixins/Selectable
     *
     * @control
     * @category Decorate
@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.Paging', [
       }
    };
 
-   var Pager = CompoundControl.extend([ItemsControlMixin, Selectable],/** @lends SBIS3.CONTROLS.Paging.prototype */{
+   var Pager = CompoundControl.extend([ItemsControlMixin, Selectable],/** @lends SBIS3.CONTROLS/Paging.prototype */{
       _dotTplFn: dotTplFn,
       /**
        * @event onPageChange Происходит при смене текущей страницы: при клике по номеру страницы или стрелке перехода на другую страницу.

@@ -1,19 +1,19 @@
-define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
+define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
    "Core/core-clone",
    "Core/core-merge",
    "Core/EventBus",
-   "js!SBIS3.CONTROLS.ButtonGroupBase",
+   "SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase",
    'Core/helpers/String/escapeHtml',
-   'js!SBIS3.CONTROLS.StylesPanelNew',
-   'css!SBIS3.CONTROLS.RichEditorToolbarBase'
+   'SBIS3.CONTROLS/StylesPanelNew',
+   'css!SBIS3.CONTROLS/RichEditor/Components/ToolbarBase'
 ], function(coreClone, cMerge, EventBus, ButtonGroupBase, escapeHtml, StylesPanel) {
 
    'use strict';
 
    var
       /**
-       * @class SBIS3.CONTROLS.RichEditorToolbarBase
-       * @extends SBIS3.CONTROLS.ButtonGroupBase
+       * @class SBIS3.CONTROLS/RichEditor/Components/ToolbarBase
+       * @extends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase
        * @author Спирин Виктор Алексеевич
        * @public
        * @control
@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
       constants = {
          INLINE_TEMPLATE: '6'
       },
-      RichEditorToolbarBase = ButtonGroupBase.extend(/** @lends SBIS3.CONTROLS.RichEditorToolbarBase.prototype */{
+      RichEditorToolbarBase = ButtonGroupBase.extend(/** @lends SBIS3.CONTROLS/RichEditor/Components/ToolbarBase.prototype */{
          $protected : {
             _options : {
                items: undefined,

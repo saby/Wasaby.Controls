@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/handlers',
+define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/handlers',
    [],
 
    function () {

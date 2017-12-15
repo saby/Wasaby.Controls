@@ -1,8 +1,8 @@
 /*global define, $ws*/
-define('js!SBIS3.CONTROLS.Action.List.Move', [
-      'js!SBIS3.CONTROLS.Action.Action',
-      'js!SBIS3.CONTROLS.Action.List.ListMixin',
-      'js!SBIS3.CONTROLS.ListView.Mover',
+define('SBIS3.CONTROLS/Action/List/Move', [
+      'SBIS3.CONTROLS/Action',
+      'SBIS3.CONTROLS/Action/List/Mixin/ListMixin',
+      'SBIS3.CONTROLS/ListView/resources/Mover',
       'WS.Data/Di',
       'Core/core-instance'
    ],
@@ -10,12 +10,12 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
       'use strict';
       /**
        * Базовый класс действия, которое перемещает элементы в списке.
-       * @class SBIS3.CONTROLS.Action.List.Move
+       * @class SBIS3.CONTROLS/Action/List/Move
        * @public
-       * @extends SBIS3.CONTROLS.Action.Action
+       * @extends SBIS3.CONTROLS/Action
        * @author Ганшин Ярослав Олегович
        *
-       * @mixes SBIS3.CONTROLS.Action.List.ListMixin
+       * @mixes SBIS3.CONTROLS/Action/List/Mixin/ListMixin
        *
        * @ignoreOptions validators independentContext contextRestriction extendedTooltip
        *
@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
        * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
        * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
        */
-      var Move = ActionBase.extend([ListMixin], /** @lends SBIS3.CONTROLS.Action.List.Move.prototype */{
+      var Move = ActionBase.extend([ListMixin], /** @lends SBIS3.CONTROLS/Action/List/Move.prototype */{
          $protected: {
             _options:{
                /**

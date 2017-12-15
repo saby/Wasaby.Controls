@@ -1,14 +1,14 @@
 /**
  * Created by am.gerasimov on 07.12.2015.
  */
-define('js!SBIS3.CONTROLS.FilterHistoryController',
+define('SBIS3.CONTROLS/Filter/HistoryController',
     [
    'Core/core-clone',
    "Core/EventBus",
-   "js!SBIS3.CONTROLS.HistoryController",
+   "SBIS3.CONTROLS/History/HistoryController",
    "WS.Data/Collection/List",
-   "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
-   "js!SBIS3.CONTROLS.FilterHistoryControllerUntil",
+   "SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil",
+   "SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil",
    "Core/helpers/Object/isEqual",
    "Core/helpers/generate-helpers",
    "Core/helpers/Function/debounce",
@@ -40,10 +40,10 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
         /**
          *
-         * @class SBIS3.CONTROLS.FilterHistoryController
-         * @extends SBIS3.CONTROLS.HistoryController
+         * @class SBIS3.CONTROLS/Filter/HistoryController
+         * @extends SBIS3.CONTROLS/History/HistoryController
          */
-       var FilterHistoryController = HistoryController.extend(/** @lends SBIS3.CONTROLS.FilterHistoryController.prototype*/{
+       var FilterHistoryController = HistoryController.extend(/** @lends SBIS3.CONTROLS/Filter/HistoryController.prototype*/{
           $protected: {
              _options: {
                 /**
@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              this._hashChangeHandlerFnc = this._hashChangeHandler.bind(this);
              if (this._options.filtersForHistory.length > 0) {
                 HashManager.subscribe('onChange',this._hashChangeHandlerFnc);
-                if (cInstance.instanceOfMixin(this._options.view, 'SBIS3.CONTROLS.TreeMixin')
+                if (cInstance.instanceOfMixin(this._options.view, 'SBIS3.CONTROLS/Mixins/TreeMixin')
                    && this._options.filtersForHistory.indexOf(this._options.view.getParentProperty()) > -1
                 ) {
                    this._options.view.subscribe('onSetRoot', function (e, root) {
@@ -469,7 +469,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                viewFilters = view.getFilter(),
                hashFilters = this._getFiltersFormHash();
              if (
-                cInstance.instanceOfMixin(this._options.view, 'SBIS3.CONTROLS.TreeMixin') &&
+                cInstance.instanceOfMixin(this._options.view, 'SBIS3.CONTROLS/Mixins/TreeMixin') &&
                 this._options.filtersForHistory.indexOf(view.getParentProperty()) > -1
              ) {//если меняется раздел то надо сменить корень у дерева иначе записи не будут отображаться
                 view.setCurrentRoot(hashFilters[view.getParentProperty()]||null);

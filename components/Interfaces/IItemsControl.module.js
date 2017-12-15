@@ -1,12 +1,12 @@
-define('js!SBIS3.CONTROLS.IItemsControl', [], function() {
+define('SBIS3.CONTROLS/Interfaces/IItemsControl', [], function() {
 
    'use strict';
 
    /**
-    * @class SBIS3.CONTROLS.IItemsControl
+    * @class SBIS3.CONTROLS/Interfaces/IItemsControl
     * @author Герасимов А.М.
     */
-   var IItemsControl =/** @lends SBIS3.CONTROLS.IItemsControl.prototype */ {
+   var IItemsControl =/** @lends SBIS3.CONTROLS/Interfaces/IItemsControl.prototype */ {
       /**
        * @event onDrawItems После отрисовки всех элементов коллекции
        * @param {Core/EventObject} eventObject Дескриптор события.

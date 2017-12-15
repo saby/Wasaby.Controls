@@ -1,6 +1,6 @@
-define(['js!SBIS3.CONTROLS.Action.OpenDialog', 'Core/core-instance', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea'
+define(['SBIS3.CONTROLS/Action/OpenDialog', 'Core/core-instance', 'Lib/Control/Dialog/Dialog', 'Lib/Control/FloatArea/FloatArea'
 ], function (OpenDialog, cInstance) {
-   describe('SBIS3.CONTROLS.Action.OpenDialog', function() {
+   describe('SBIS3.CONTROLS/Action/OpenDialog', function() {
       beforeEach(function () {
          if (typeof window === 'undefined') {
             this.skip();
@@ -16,7 +16,7 @@ define(['js!SBIS3.CONTROLS.Action.OpenDialog', 'Core/core-instance', 'js!SBIS3.C
             });
             action.execute();
             action.subscribe('onBeforeShow', function (e, dialog) {
-               assert.isTrue(cInstance.instanceOfModule(dialog, 'SBIS3.CORE.Dialog'));
+               assert.isTrue(cInstance.instanceOfModule(dialog, 'Lib/Control/Dialog/Dialog'));
                done();
                dialog.close();
             });

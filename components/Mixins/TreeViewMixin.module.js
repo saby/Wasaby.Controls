@@ -1,6 +1,6 @@
-define('js!SBIS3.CONTROLS.TreeViewMixin', [
+define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
    "Core/constants",
-   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+   "SBIS3.CONTROLS/Utils/TemplateUtil",
    "Core/core-instance"
 ], function ( constants, TemplateUtil, cInstance) {
 
@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
 
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
-    * @mixin SBIS3.CONTROLS.TreeViewMixin
+    * @mixin SBIS3.CONTROLS/Mixins/TreeViewMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     *
@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
     * @cssModifier controls-ListView__hideCheckBoxes-node Скрывает чекбоксы у папок (узлов и скрытых узлов). Подробнее о данном типе записей списка читайте в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
     */
 
-   var TreeViewMixin = /** @lends SBIS3.CONTROLS.TreeViewMixin.prototype */{
+   var TreeViewMixin = /** @lends SBIS3.CONTROLS/Mixins/TreeViewMixin.prototype */{
       $protected: {
          _options: {
             _getFolderFooterOptions: getFolderFooterOptions,

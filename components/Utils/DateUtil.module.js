@@ -1,15 +1,15 @@
 /**
  * Created by is.protasov on 06.04.2015.
  */
-define('js!SBIS3.CONTROLS.Utils.DateUtil',[
+define('SBIS3.CONTROLS/Utils/DateUtil',[
    "Core/constants"
 ], function( constants) {
    'use strict';
    /**
-    * @class SBIS3.CONTROLS.Utils.DateUtil
+    * @class SBIS3.CONTROLS/Utils/DateUtil
     * @public
     */
-   var DateUtil = /** @lends SBIS3.CONTROLS.Utils.DateUtil.prototype */{
+   var DateUtil = /** @lends SBIS3.CONTROLS/Utils/DateUtil.prototype */{
        /**
         * @param {Core/Date} isoDate
         * @returns {Core/Date}

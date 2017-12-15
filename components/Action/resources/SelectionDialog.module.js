@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLS.SelectionDialog', [
-   'js!SBIS3.CONTROLS.SelectorController',
-   "tmpl!SBIS3.CONTROLS.SelectionDialog/SelectionDialog/SelectionDialog",
-   "tmpl!SBIS3.CONTROLS.SelectionDialog/SelectionDialog/resources/FolderTitleTpl",
-   "js!SBIS3.CONTROLS.Button",
-   "js!SBIS3.CONTROLS.TreeDataGridView",
-   "i18n!SBIS3.CONTROLS.SelectionDialog",
-   'css!SBIS3.CONTROLS.SelectionDialog/SelectionDialog/SelectionDialog'
+define('SBIS3.CONTROLS/Action/resources/SelectionDialog', [
+   'SBIS3.CONTROLS/Action/Selector/SelectorController',
+   "tmpl!SBIS3.CONTROLS/Action/resources/SelectionDialog/SelectionDialog",
+   "tmpl!SBIS3.CONTROLS/Action/resources/SelectionDialog/resources/FolderTitleTpl",
+   "SBIS3.CONTROLS/Button",
+   "SBIS3.CONTROLS/Tree/DataGridView",
+   "i18n!SBIS3.CONTROLS/Action/resources/SelectionDialog",
+   'css!SBIS3.CONTROLS/Action/resources/SelectionDialog/SelectionDialog'
 ], function(SelectorController, dotTplFn, FolderTitleTpl) {
    var SelectionDialog = SelectorController.extend({
       _dotTplFn: dotTplFn,

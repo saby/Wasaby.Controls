@@ -2,12 +2,12 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.RadioGroup', ['js!SBIS3.CONTROLS.RadioGroupBase',
-      'tmpl!SBIS3.CONTROLS.RadioGroup/Group/RadioGroup',
-      'tmpl!SBIS3.CONTROLS.RadioGroup/Group/resources/ItemTemplate',
-      'js!SBIS3.CONTROLS.ITextValue',
-      'js!SBIS3.CONTROLS.RadioButton',
-      'css!SBIS3.CONTROLS.RadioGroup/Group/RadioGroup'
+define('SBIS3.CONTROLS/Radio/Group', ['SBIS3.CONTROLS/Radio/Group/RadioGroupBase',
+      'tmpl!SBIS3.CONTROLS/Radio/Group/RadioGroup',
+      'tmpl!SBIS3.CONTROLS/Radio/Group/resources/ItemTemplate',
+      'SBIS3.CONTROLS/Mixins/ITextValue',
+      'SBIS3.CONTROLS/Radio/Button',
+      'css!SBIS3.CONTROLS/Radio/Group/RadioGroup'
       ],
 function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
 
@@ -15,10 +15,10 @@ function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
 
    /**
     * Контрол задающий оформление выбора одного из нескольких значений в виде классических радиокнопок
-    * @class SBIS3.CONTROLS.RadioGroup
-    * @extends SBIS3.CONTROLS.RadioGroupBase
+    * @class SBIS3.CONTROLS/Radio/Group
+    * @extends SBIS3.CONTROLS/Radio/Group/RadioGroupBase
     *
-    * @mixes SBIS3.CONTROLS.ITextValue
+    * @mixes SBIS3.CONTROLS/Mixins/ITextValue
     *
     * @author Журавлев Максим Сергеевич
     *
@@ -39,7 +39,7 @@ function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
     * @public
     * @category Input
     * @initial
-    * <component data-component='SBIS3.CONTROLS.RadioGroup'>
+    * <component data-component='SBIS3.CONTROLS/Radio/Group'>
     *    <option name="displayProperty">title</option>
     *    <option name="idProperty">id</option>
     *    <options name="items" type="array">
@@ -55,7 +55,7 @@ function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
     * </component>
     */
 
-   var RadioGroup = RadioGroupBase.extend([ITextValue], /** @lends SBIS3.CONTROLS.RadioGroup.prototype */ {
+   var RadioGroup = RadioGroupBase.extend([ITextValue], /** @lends SBIS3.CONTROLS/Radio/Group.prototype */ {
       _dotTplFn : dotTpl,
       /**
        * @typedef {Object} GroupItems
@@ -66,7 +66,7 @@ function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
        */
       /**
         * @cfg {GroupItems[]} Набор исходных данных, по которому строится отображение
-        * @name SBIS3.CONTROLS.RadioGroup#items
+        * @name SBIS3.CONTROLS/Radio/Group#items
         * @example
         * <pre class="brush:xml">
         *     <options name="items" type="array">

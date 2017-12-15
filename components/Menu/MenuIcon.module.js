@@ -1,7 +1,7 @@
-define('js!SBIS3.CONTROLS.MenuIcon', [
+define('SBIS3.CONTROLS/Menu/MenuIcon', [
    'js!WSControls/Buttons/MenuButton',
-   'css!SBIS3.CONTROLS.IconButton/IconButton/IconButton',
-   'css!SBIS3.CONTROLS.MenuIcon/MenuIcon/MenuIcon'
+   'css!SBIS3.CONTROLS/Button/IconButton/IconButton',
+   'css!SBIS3.CONTROLS/Menu/MenuIcon/MenuIcon'
 ], function(WSMenuButton) {
 
    'use strict';
@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.MenuIcon', [
     * {@link /doc/platform/developmentapl/interface-development/components/textbox/buttons/button-icon/#menu-icon Демонстрационные примеры}.
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
     *
-    * @class SBIS3.CONTROLS.MenuIcon
+    * @class SBIS3.CONTROLS/Menu/MenuIcon
     * @extends WSControls/Buttons/MenuButton
     *
     * @demo SBIS3.CONTROLS.Demo.MyMenuIcon
@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.MenuIcon', [
     * @control
     * @public
     * @initial
-    * <component data-component='SBIS3.CONTROLS.MenuIcon'>
+    * <component data-component='SBIS3.CONTROLS/Menu/MenuIcon'>
     *    <option name="icon" value="icon-24 icon-AddButton icon-primary"></option>
     *    <options name="items" type="array">
     *        <options>
@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.MenuIcon', [
     * @cssModifier controls-Menu__hide-menu-header Скрывает из выпадающего меню заголовок, который устанавливают с помощью опции {@link caption}.
     */
 
-   var MenuIcon = WSMenuButton.extend( [], /** @lends SBIS3.CONTROLS.MenuIcon.prototype */ {
+   var MenuIcon = WSMenuButton.extend( [], /** @lends SBIS3.CONTROLS/Menu/MenuIcon.prototype */ {
       _hasHeader: false,
       $protected: {
          _zIndex: ''

@@ -1,16 +1,16 @@
 /**
  * Created by as.avramenko on 07.09.2016.
  */
-define('js!SBIS3.CONTROLS.Expandable', ['Core/CommandDispatcher'], function(CommandDispatcher) {
+define('SBIS3.CONTROLS/Mixins/Expandable', ['Core/CommandDispatcher'], function(CommandDispatcher) {
 
    /**
     * Миксин, добавляющий поведение хранения состояния развернутости
-    * @mixin SBIS3.CONTROLS.Expandable
+    * @mixin SBIS3.CONTROLS/Mixins/Expandable
     * @public
     * @author Авраменко Алексей Сергеевич
     */
 
-   var Expandable = /**@lends SBIS3.CONTROLS.Expandable.prototype  */{
+   var Expandable = /**@lends SBIS3.CONTROLS/Mixins/Expandable.prototype  */{
        /**
         * @event onExpandedChange При изменении состояния развернутости
         * @param {Core/EventObject} Дескриптор события.

@@ -1,28 +1,28 @@
-define('js!SBIS3.CONTROLS.FilterPanelChooser.BaseList', [
-   'js!SBIS3.CONTROLS.FilterPanelChooser.Base',
+define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList', [
+   'SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base',
    'Core/core-clone',
    'Core/core-merge',
-   'tmpl!SBIS3.CONTROLS.FilterPanelChooser.BaseList/BaseList/resources/ItemTpl',
-   'tmpl!SBIS3.CONTROLS.FilterPanelChooser.BaseList/BaseList/resources/FilterPanelChooserBaseList',
-   'js!SBIS3.CONTROLS.ListView',
-   'css!SBIS3.CONTROLS.FilterPanelChooser.BaseList/BaseList/FilterPanelChooser.BaseList'
+   'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList/resources/ItemTpl',
+   'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList/resources/FilterPanelChooserBaseList',
+   'SBIS3.CONTROLS/ListView',
+   'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList/FilterPanelChooser.BaseList'
 ], function(FilterPanelChooserBase, coreClone, coreMerge, itemTpl, chooserTpl) {
    'use strict';
    /**
     * Базовый класс редактора "Список".
-    * Применяется для панели фильтрации (см. {@link SBIS3.CONTROLS.OperationsPanel/FilterPanelItem.typedef FilterPanelItem}).
+    * Применяется для панели фильтрации (см. {@link SBIS3.CONTROLS/FilterPanelItem.typedef FilterPanelItem}).
     * <br/>
-    * Реализует выборку идентификаторов из списка {@link SBIS3.CONTROLS.ListView}.
+    * Реализует выборку идентификаторов из списка {@link SBIS3.CONTROLS/ListView}.
     * <br/>
-    * @class SBIS3.CONTROLS.FilterPanelChooser.BaseList
-    * @extends SBIS3.CONTROLS.FilterPanelChooser.Base
+    * @class SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList
+    * @extends SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base
     * @author Сухоручкин Андрей Сергеевич
     * @public
     *
     * @demo SBIS3.CONTROLS.Demo.MyFilterView
     */
 
-   var FilterPanelChooserBaseList = FilterPanelChooserBase.extend( /** @lends SBIS3.CONTROLS.FilterPanelChooser.BaseList.prototype */ {
+   var FilterPanelChooserBaseList = FilterPanelChooserBase.extend( /** @lends SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList.prototype */ {
       $protected: {
          _options: {
             chooserTemplate: chooserTpl

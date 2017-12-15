@@ -1,6 +1,6 @@
 <div class="controls-LongOperationsFilter">
    <div class="controls-LongOperationsFilter__block">
-      <ws:SBIS3.CONTROLS.DropdownList
+      <SBIS3.CONTROLS:DropdownList
          name="StateFilter"
          className="controls-LongOperationsFilter__stateDropdown controls-DropdownList__withoutArrow controls-DropdownList__linkStyle controls-DropdownList__withoutCross"
          mode="click"
@@ -45,8 +45,8 @@
                />
             </ws:Array>
          </ws:items>
-      </ws:SBIS3.CONTROLS.DropdownList>
-      <ws:SBIS3.CONTROLS.DropdownList
+      </SBIS3.CONTROLS:DropdownList>
+      <SBIS3.CONTROLS:DropdownList
          name="PeriodFilter"
          className="controls-DropdownList__withoutArrow controls-DropdownList__linkStyle controls-DropdownList__withoutCross"
          mode="click"
@@ -88,11 +88,11 @@
                />
             </ws:Array>
          </ws:items>
-      </ws:SBIS3.CONTROLS.DropdownList>
+      </SBIS3.CONTROLS:DropdownList>
    </div>
    <div class="controls-LongOperationsFilter__block">
       <div class="controls-LongOperationsFilter__durationTitle">{[Длительность операции]}</div>
-      <ws:SBIS3.CONTROLS.DropdownList
+      <SBIS3.CONTROLS:DropdownList
          name="DurationFilter"
          className="controls-DropdownList__withoutArrow controls-DropdownList__linkStyle controls-DropdownList__withoutCross"
          mode="click"
@@ -130,7 +130,7 @@
                />
             </ws:Array>
          </ws:items>
-      </ws:SBIS3.CONTROLS.DropdownList>
+      </SBIS3.CONTROLS:DropdownList>
    </div>
    <div if="{{!hideStaffFilter}}" class="controls-LongOperationsFilter__block">
       <div class="controls-LongOperationsFilter__responsibleTitle">{[Ответственный]}</div>

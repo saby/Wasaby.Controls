@@ -1,21 +1,21 @@
 /**
  * Модуль 'Индикатор процесса'.
  */
-define('js!SBIS3.CONTROLS.ProgressBar',
+define('SBIS3.CONTROLS/ProgressBar',
    [
-      'js!SBIS3.CONTROLS.CompoundControl',
-      'tmpl!SBIS3.CONTROLS.ProgressBar/ProgressBar/ProgressBar',
-      'css!SBIS3.CONTROLS.ProgressBar/ProgressBar/ProgressBar'
+      'SBIS3.CONTROLS/CompoundControl',
+      'tmpl!SBIS3.CONTROLS/ProgressBar/ProgressBar',
+      'css!SBIS3.CONTROLS/ProgressBar/ProgressBar'
    ],
    function(CompoundControl, dotTplFn) {
       /**
        * Класс контрола "Индикатор прохождения процесса".
-       * @class SBIS3.CONTROLS.ProgressBar
-       * @extends SBIS3.CONTROLS.CompoundControl
+       * @class SBIS3.CONTROLS/ProgressBar
+       * @extends SBIS3.CONTROLS/CompoundControl
        * @control
        * @author Журавлев Максим Сергеевич
        * @initial
-       * <component data-component='SBIS3.CONTROLS.ProgressBar'>
+       * <component data-component='SBIS3.CONTROLS/ProgressBar'>
        * </component>
        * @public
        * @category Button
@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.ProgressBar',
        * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
        * @ignoreOptions subcontrol verticalAlignment
        */
-      var ProgressBar = CompoundControl.extend(/** @lends SBIS3.CONTROLS.ProgressBar.prototype */{
+      var ProgressBar = CompoundControl.extend(/** @lends SBIS3.CONTROLS/ProgressBar.prototype */{
          _dotTplFn: dotTplFn,
          $protected: {
             _errorText: null,

@@ -1,16 +1,16 @@
 /**
  * Created by cheremushkin iv on 19.01.2015.
  */
-define('js!SBIS3.CONTROLS.IconMixin', ['tmpl!SBIS3.CONTROLS.IconMixin/IconMixin/IconTemplate'], function(IconTemplate) {
+define('SBIS3.CONTROLS/Mixins/IconMixin', ['tmpl!SBIS3.CONTROLS/Mixins/IconMixin/IconTemplate'], function(IconTemplate) {
 
    /**
     * Миксин, добавляющий иконку
-    * @mixin SBIS3.CONTROLS.IconMixin
+    * @mixin SBIS3.CONTROLS/Mixins/IconMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var IconMixin = /**@lends SBIS3.CONTROLS.IconMixin.prototype  */{
+   var IconMixin = /**@lends SBIS3.CONTROLS/Mixins/IconMixin.prototype  */{
       $protected: {
          _oldIcon: '',
          _iconTemplate: IconTemplate,

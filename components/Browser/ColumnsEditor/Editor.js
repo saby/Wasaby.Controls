@@ -1,24 +1,24 @@
 /**
  * Класс контрола "Редактор колонок"
  *
- * @class SBIS3.CONTROLS.Browser/ColumnsEditor/Editor
+ * @class SBIS3.CONTROLS/Browser/ColumnsEditor/Editor
  * @public
- * @extends SBIS3.CONTROLS.CompoundControl
+ * @extends SBIS3.CONTROLS/CompoundControl
  */
-define('js!SBIS3.CONTROLS.Browser/ColumnsEditor/Editor',
+define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
    [
       'Core/core-merge',
       'Core/Deferred',
-      'js!SBIS3.CONTROLS.CompoundControl',
-      'js!SBIS3.CORE.FloatArea',
-      'css!SBIS3.CONTROLS.Browser/ColumnsEditor/Editor',
-      'js!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/Area'
+      'SBIS3.CONTROLS/CompoundControl',
+      'Lib/Control/FloatArea/FloatArea',
+      'css!SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
+      'SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area'
    ],
 
    function (coreMerge, Deferred, CompoundControl, FloatArea) {
       'use strict';
 
-      var Editor = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.Browser/ColumnsEditor/Editor.prototype*/ {
+      var Editor = CompoundControl.extend([], /**@lends SBIS3.CONTROLS/Browser/ColumnsEditor/Editor.prototype*/ {
          /**
           * @typedef {Object} ColumnsConfigObject
           * @property {WS.Data/Collection/RecordSet} columns Набор записей, каждая из которых описывает элемент панели редактирования колонок. <br/>
@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.Browser/ColumnsEditor/Editor',
           *    <li><b>id (String)</b> - идентификатор элемента.</li>
           *    <li><b>title (String)</b> - отображаемый текст элемента.</li>
           *    <li><b>fixed (Boolean)</b> - признак "Фиксированный". На панели редактирования колонок элементы с таким признаком выбраны и недоступны для взаимодействия, а колонки элемента, описанные в опции **columnConfig**, всегда отображены в списке.</li>
-          *    <li><b>columnConfig (Array)</b> - массив с конфигурацией колонок (см. {@link SBIS3.CONTROLS.DataGridView#columns columns}).</li>
+          *    <li><b>columnConfig (Array)</b> - массив с конфигурацией колонок (см. {@link SBIS3.CONTROLS/DataGridView#columns columns}).</li>
           * </ol>
           * @property {Array.<String|Number>} selectedColumns Массив идентификаторов элементов, которые будут отмечены на панели редактирования колонок. Параметр актуален для элементов с опцией *fixed=false*.
           */
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.Browser/ColumnsEditor/Editor',
           * @param {object} [editorOptions.groupTitles] Ассоциированый массив имён групп по идентификаторам (опционально)
           * @param {boolean} [editorOptions.usePresets] Показывает на обязательность использования пресетов (опционально)
           * @param {string} [editorOptions.presetsTitle] Заголовок дропдауна (опционально)
-          * @param {SBIS3.CONTROLS.Browser/ColumnsEditor/Preset/Unit[]} [editorOptions.staticPresets] Список объектов статически задаваемых пресетов (опционально)
+          * @param {SBIS3.CONTROLS.Browser/Browser/ColumnsEditor/Preset/Unit[]} [editorOptions.staticPresets] Список объектов статически задаваемых пресетов (опционально)
           * @param {string} [editorOptions.presetNamespace] Пространство имён для сохранения пользовательских пресетов (опционально)
           * @param {string|number} [editorOptions.selectedPresetId] Идентификатор первоначально выбранного пресета в дропдауне (опционально)
           * @param {string} [editorOptions.newPresetTitle] Начальное название нового пользовательского пресета (опционально)
@@ -84,7 +84,7 @@ define('js!SBIS3.CONTROLS.Browser/ColumnsEditor/Editor',
 
                //title: null,
                parent: this,
-               template: 'js!SBIS3.CONTROLS.Browser/ColumnsEditor/Editing/Area',
+               template: 'SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                cssClassName: 'controls-Browser-ColumnsEditor-Editor__area',
                closeByExternalClick: true,
                closeButton: true,

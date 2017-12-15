@@ -1,5 +1,5 @@
-define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.HighlightDecorator', [
-   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator',
+define('SBIS3.CONTROLS/Utils/HtmlDecorators/HighlightDecorator', [
+   'SBIS3.CONTROLS/Utils/HtmlDecorators/AbstractDecorator',
    'Core/markup/ParserUtilities',
    'Core/core-instance',
    'Core/helpers/String/escapeHtml'
@@ -11,11 +11,11 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.HighlightDecorator', [
 
    /**
     * Декоратор текста, обеспечивающий подсветку фразы
-    * @class SBIS3.CONTROLS.Utils.HtmlDecorators.HighlightDecorator
+    * @class SBIS3.CONTROLS/Utils/HtmlDecorators/HighlightDecorator
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var HighlightDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS.Utils.HtmlDecorators.HighlightDecorator.prototype */{
+   var HighlightDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS/Utils/HtmlDecorators/HighlightDecorator.prototype */{
       $protected: {
          _name: 'highlight',
          _options: {

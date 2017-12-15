@@ -1,17 +1,17 @@
 /**
  * Created by as.avramenko on 09.08.2016.
  */
-define('js!SBIS3.CONTROLS.ImitateEvents', ['Core/detection'], function(CoreDetection) {
+define('SBIS3.CONTROLS/Utils/ImitateEvents', ['Core/detection'], function(CoreDetection) {
 
    'use strict';
 
    /**
     * Модуль, реализующий имитацию различных DOM-событий
-    * @class SBIS3.CONTROLS.ImitateEvents
+    * @class SBIS3.CONTROLS/Utils/ImitateEvents
     * @public
     * @author Авраменко Алексей Сергеевич
     */
-   return /** @lends SBIS3.CONTROLS.ImitateEvents.prototype */{
+   return /** @lends SBIS3.CONTROLS/Utils/ImitateEvents.prototype */{
       /**
        * Имитирует фокусировку для элемента по переданным координатам.
        * Если по переданным координатам находится wsControl, то ему вызывается метод setActive(true). Если просто DOM-элемент, то ему вызывается .focus()

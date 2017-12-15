@@ -1,8 +1,8 @@
 /* global define */
-define('js!SBIS3.CONTROLS.SelectorWrapper', [
-   'js!SBIS3.CORE.CompoundControl',
-   'tmpl!SBIS3.CONTROLS.SelectorWrapper/SelectorWrapper/SelectorWrapper',
-   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+define('SBIS3.CONTROLS/Action/Selector/SelectorWrapper', [
+   'Lib/Control/CompoundControl/CompoundControl',
+   'tmpl!SBIS3.CONTROLS/Action/Selector/SelectorWrapper/SelectorWrapper',
+   'SBIS3.CONTROLS/Utils/TemplateUtil',
    'Core/core-instance',
    'Core/Deferred'
 ], function (CompoundControl, dotTplFn, TemplateUtil, cInstance, Deferred) {
@@ -10,8 +10,8 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
    /**
     * Интерфейс открывателя диалога/всплывающей панели
-    * @class SBIS3.CONTROLS.SelectorWrapper
-    * @extends SBIS3.CORE.CompoundControl
+    * @class SBIS3.CONTROLS/Action/Selector/SelectorWrapper
+    * @extends Lib/Control/CompoundControl/CompoundControl
     * @author Крайнов Дмитрий
     * @public
     * @control
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       return true;
    };
 
-   var SelectorWrapper = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.SelectorWrapper.prototype */ {
+   var SelectorWrapper = CompoundControl.extend([], /** @lends SBIS3.CONTROLS/Action/Selector/SelectorWrapper.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _options : {
@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
                 });
 
             /* Обработка кнопки "Выбрать" для иерархических представлений */
-            if(cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
+            if(cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS/Mixins/TreeMixin')) {
                this.subscribeTo(linkedObject, 'onChangeHoveredItem', this._onChangeHoveredItemHandler.bind(this))
                    .subscribeTo(linkedObject, 'onPropertyChanged', this._onPropertyChangedHandler.bind(this));
             }
@@ -284,7 +284,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             то при обработке выбранной записи надо проверять папка это, или лист.
             Если опция selectionType установлена как 'node' (выбор только папок), то обработку листьев производить не надо.
             Если опция selectionType установлена как 'leaf' (только листьев), то обработку папок производить не надо. */
-         if(cInstance.instanceOfMixin(this._getLinkedObject(), 'SBIS3.CONTROLS.TreeMixin')) {
+         if(cInstance.instanceOfMixin(this._getLinkedObject(), 'SBIS3.CONTROLS/Mixins/TreeMixin')) {
             var isBranch = this._isBranch(item);
 
             if (!isBranch && this.getSelectionType() === 'node' || isBranch && this.getSelectionType() === 'leaf') {
@@ -298,7 +298,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       _isBranch: function(item) {
          var linkedObject = this._getLinkedObject();
 
-         if(cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin') && item) {
+         if(cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS/Mixins/TreeMixin') && item) {
             return item.get(linkedObject.getNodeProperty());
          }
          return false;

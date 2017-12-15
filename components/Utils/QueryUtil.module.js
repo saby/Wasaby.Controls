@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 09.02.2017.
  */
-define('js!SBIS3.CONTROLS.Utils.Query', [
+define('SBIS3.CONTROLS/Utils/QueryUtil', [
    'WS.Data/Query/Query',
    'WS.Data/Source/SbisService',
    'Core/core-instance'],

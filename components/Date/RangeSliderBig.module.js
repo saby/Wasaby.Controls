@@ -1,17 +1,17 @@
 /*global define*/
-define('js!SBIS3.CONTROLS.DateRangeSliderBig', [
-   'js!SBIS3.CONTROLS.DateRangeSliderBase',
-   'js!SBIS3.CONTROLS.DateRangeBigChoosePickerMixin',
-   'js!SBIS3.CONTROLS.ControlsValidators'
+define('SBIS3.CONTROLS/Date/RangeSliderBig', [
+   'SBIS3.CONTROLS/Date/RangeSliderBase',
+   'SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin',
+   'SBIS3.CONTROLS/Utils/ControlsValidators'
 ], function (DateRangeSliderBase, DateRangeBigChoosePickerMixin, ControlsValidators) {
    'use strict';
    /**
     * Контрол позволяющий выбирать произвольный диапазон дат.
-    * SBIS3.CONTROLS.DateRangeSliderBig
-    * @class SBIS3.CONTROLS.DateRangeSliderBig
-    * @extends SBIS3.CONTROLS.DateRangeSliderBase
+    * SBIS3.CONTROLS/Date/RangeSliderBig
+    * @class SBIS3.CONTROLS/Date/RangeSliderBig
+    * @extends SBIS3.CONTROLS/Date/RangeSliderBase
     *
-    * @mixes SBIS3.CONTROLS.DateRangeBigChoosePickerMixin
+    * @mixes SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin
     *
     * @author Миронов Александр Юрьевич
     *
@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBig', [
     * @category Date/Time
     * @demo SBIS3.CONTROLS.Demo.MyDateRangeSliderBig
     */
-   var DateRangeSliderBig = DateRangeSliderBase.extend([DateRangeBigChoosePickerMixin], /** @lends SBIS3.CONTROLS.DateRangeSliderBig.prototype */{
+   var DateRangeSliderBig = DateRangeSliderBase.extend([DateRangeBigChoosePickerMixin], /** @lends SBIS3.CONTROLS/Date/RangeSliderBig.prototype */{
       _modifyOptions: function (opts) {
          opts = DateRangeSliderBig.superclass._modifyOptions.apply(this, arguments);
          opts._caption = this._getCaption(opts);

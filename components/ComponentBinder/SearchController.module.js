@@ -1,6 +1,6 @@
-define('js!SBIS3.CONTROLS.SearchController',
+define('SBIS3.CONTROLS/ComponentBinder/SearchController',
     [
-       'js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
+       'SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertObserver',
        "Core/constants",
        'Core/core-clone',
        "Core/core-merge",
@@ -274,7 +274,7 @@ define('js!SBIS3.CONTROLS.SearchController',
       bindSearch: function() {
          var self = this,
             view = this._options.view,
-            isTree = cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin'),
+            isTree = cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS/Mixins/TreeMixin'),
          searchForm = this._options.searchForm;
 
          if (!this._kbLayoutRevertObserver) {
@@ -326,7 +326,7 @@ define('js!SBIS3.CONTROLS.SearchController',
          var searchForm = this._options.searchForm,
             view = this._options.view,
             self = this,
-            isTree = cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
+            isTree = cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS/Mixins/TreeMixin');
          
          searchForm.subscribe('onReset', function() {
             view.setHighlightText('', false);

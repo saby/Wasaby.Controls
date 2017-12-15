@@ -1,24 +1,24 @@
-define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
-    'js!SBIS3.CORE.CompoundControl',
-    'js!SBIS3.CONTROLS.IFilterItem',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.Base/Base/FilterPanelChooser.Base'
+define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base', [
+    'Lib/Control/CompoundControl/CompoundControl',
+    'SBIS3.CONTROLS/Filter/Panel/resources/IFilterItem',
+    'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base/FilterPanelChooser.Base'
 ], function(CompoundControl, IFilterItem, dotTplFn) {
 
     'use strict';
 
     /**
-     * Базовый класс для редакторов, которые применяют для панели фильтра с набираемыми параметрами (см. {@link SBIS3.CONTROLS.FilterPanel}). Реализует выборку идентификаторов.
+     * Базовый класс для редакторов, которые применяют для панели фильтра с набираемыми параметрами (см. {@link SBIS3.CONTROLS/Filter/FilterPanel}). Реализует выборку идентификаторов.
      *
      * <h2>Список платформенных редакторов</h2>
      *
      * От базового класса созданы следующие платформенные редакторы:
      * <ul>
-     *     <li>{@link SBIS3.CONTROLS.FilterPanelChooser.List} - редактор в виде списка {@link SBIS3.CONTROLS.ListView};</li>
-     *     <li>{@link SBIS3.CONTROLS.FilterPanelChooser.DictionaryList} - редактор в виде списка {@link SBIS3.CONTROLS.ListView} с возможность выбора записей из справочника;</li>
-     *     <li>{@link SBIS3.CONTROLS.FilterPanelChooser.FavoritesList} - редактор в виде списка {@link SBIS3.CONTROLS.ListView} с возможность выбора записей из справочника и добавлением записей в избранное;</li>
-     *     <li>{@link SBIS3.CONTROLS.FilterPanelChooser.DetailsList} - редактор в виде списка {@link SBIS3.CONTROLS.ListView} для детализации;</li>
-     *     <li>{@link SBIS3.CONTROLS.FilterPanelChooser.FieldLink} - редактор в виде поля связи {@link SBIS3.CONTROLS.FieldLink};</li>
-     *     <li>{@link SBIS3.CONTROLS.FilterPanelChooser.RadioGroup} - редактор в виде группы радиокнопок {@link SBIS3.CONTROLS.RadioGroup}.</li>
+     *     <li>{@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/List} - редактор в виде списка {@link SBIS3.CONTROLS/ListView};</li>
+     *     <li>{@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList} - редактор в виде списка {@link SBIS3.CONTROLS/ListView} с возможность выбора записей из справочника;</li>
+     *     <li>{@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/FavoritesList} - редактор в виде списка {@link SBIS3.CONTROLS/ListView} с возможность выбора записей из справочника и добавлением записей в избранное;</li>
+     *     <li>{@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList} - редактор в виде списка {@link SBIS3.CONTROLS/ListView} для детализации;</li>
+     *     <li>{@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink} - редактор в виде поля связи {@link SBIS3.CONTROLS/FieldLink};</li>
+     *     <li>{@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/RadioGroup} - редактор в виде группы радиокнопок {@link SBIS3.CONTROLS/Radio/Group}.</li>
      * </ul>
      *
      * <h2>Создание пользовательского класса редактора</h2>
@@ -27,14 +27,14 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
      * При этом вы обязаны учитывать, что в разметке редактора должен быть использован контрол со строго фиксированным именем.
      * Для каждого типа редактора имя обозначено в описании класса.
      *
-     * @class SBIS3.CONTROLS.FilterPanelChooser.Base
-     * @extends SBIS3.CORE.CompoundControl
+     * @class SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base
+     * @extends Lib/Control/CompoundControl/CompoundControl
      * @author Сухоручкин Андрей Сергеевич
      *
-     * @mixes SBIS3.CONTROLS.IFilterItem
+     * @mixes SBIS3.CONTROLS/Filter/Panel/resources/IFilterItem
      */
 
-    var FilterPanelChooserBase = CompoundControl.extend([IFilterItem], /** @lends SBIS3.CONTROLS.FilterPanelChooser.Base.prototype */ {
+    var FilterPanelChooserBase = CompoundControl.extend([IFilterItem], /** @lends SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base.prototype */ {
         _dotTplFn: dotTplFn,
         $protected: {
             _options: {

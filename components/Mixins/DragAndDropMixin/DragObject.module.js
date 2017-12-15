@@ -1,5 +1,5 @@
 /*global define, $ws, $*/
-define('js!SBIS3.CONTROLS.DragObject', [
+define('SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragObject', [
    'Core/Abstract',
    'Core/WindowManager',
    'Core/core-instance',
@@ -16,21 +16,21 @@ define('js!SBIS3.CONTROLS.DragObject', [
     *    <li>Аватар - иконка, которая отображается около курсора мыши.</li>
     * </ul>
     * DragObject передается во все события DragNDropMixin. Также его можно получить в любом месте через RequireJS.
-    * @class SBIS3.CONTROLS.DragObject
+    * @class SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragObject
     * @public
     * @author Крайнов Дмитрий Олегович
-    * @see SBIS3.CONTROLS.DragNDropMixin
+    * @see SBIS3.CONTROLS/Mixins/DragNDropMixin
     * @example
     * Получим DragObject через require
     * <pre>
-    *    var dragObject = require('js!SBIS3.CONTROLS.DragObject');
+    *    var dragObject = require('SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragObject');
     * </pre>
     */
    var DRAG_AVATAR_OFFSET = 5;
-   var DragObject = cAbstract.extend(/**@lends SBIS3.CONTROLS.DragObject.prototype*/{
+   var DragObject = cAbstract.extend(/**@lends SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragObject.prototype*/{
       $protected: {
          /**
-          * @member {SBIS3.CONTROLS.Control} Контрол, который инициализировал Drag'n'drop.
+          * @member {SBIS3.CONTROLS/Control} Контрол, который инициализировал Drag'n'drop.
           */
          _owner: undefined,
          /**
@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
           */
          _source: undefined,
          /**
-          * @member {SBIS3.CONTROLS.DragEntity.Entity} Элемент, над которым находится курсор мыши.
+          * @member {SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity} Элемент, над которым находится курсор мыши.
           */
          _target: undefined,
          /**
@@ -58,13 +58,13 @@ define('js!SBIS3.CONTROLS.DragObject', [
          */
          _jsEvent: undefined,
          /**
-          * @member {SBIS3.CONTROLS.Control} Контрол, над которым находится курсор мыши.
+          * @member {SBIS3.CONTROLS/Control} Контрол, над которым находится курсор мыши.
           */
          _targetsControl: undefined
       },
       /**
        * Возвращает набор перемещаемых элементов.
-       * @remark Элементы должны быть наследниками класса {@link SBIS3.CONTROLS.DragEntity.Entity}. Их устанавливает контрол, который инициализирует Drag'n'drop.
+       * @remark Элементы должны быть наследниками класса {@link SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity}. Их устанавливает контрол, который инициализирует Drag'n'drop.
        * @returns {WS.Data/Collection/IList|undefined}
        */
       getSource: function () {
@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
       },
       /**
        * Устанавливает набор перемещаемых элементов.
-       * @remark Вызывается из контрола, который инициализирует Drag'n'drop. Элементы должны быть наследниками класса {@link SBIS3.CONTROLS.DragEntity.Entity}.
+       * @remark Вызывается из контрола, который инициализирует Drag'n'drop. Элементы должны быть наследниками класса {@link SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity}.
        * @param {WS.Data/Collection/IList} source
        */
       setSource: function (source) {
@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
       },
       /**
        * Возвращает элемент, над которым находится курсор.
-       * @remark Элемент должен быть наследником класса {@link SBIS3.CONTROLS.DragEntity.Entity}. Его устанавливает контрол, находящийся сейчас под курсором.
+       * @remark Элемент должен быть наследником класса {@link SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity}. Его устанавливает контрол, находящийся сейчас под курсором.
        * @returns {SBIS3.CONTROLS.DragEntity.Entity|undefined}
        */
       getTarget: function () {
@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
       },
       /**
        * Устанавливает элемент над которым находится курсор.
-       * @remark Элемент должен быть наследником класса {@link SBIS3.CONTROLS.DragEntity.Entity}. Вызывается из контрола над которым сейчас находится курсор мыши.
+       * @remark Элемент должен быть наследником класса {@link SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity}. Вызывается из контрола над которым сейчас находится курсор мыши.
        * @param {SBIS3.CONTROLS.DragEntity.Entity|undefined} target
        */
       setTarget: function (target) {
@@ -97,7 +97,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
 
       /**
        * Возвращает контрол, который инициализировал Drag'n'drop.
-       * @returns {SBIS3.CONTROLS.Control}
+       * @returns {SBIS3.CONTROLS/Control}
        */
       getOwner: function () {
          return this._owner;
@@ -126,7 +126,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
       },
       /**
        * Возвращает метаданные объекта.
-       * @remark Дополнительные данные рекомендуется складывать в объекты target или source, создавая свои уникальные реализации сущностей Drag'n'drop, унаследованные от {@link SBIS3.CONTROLS.DragEntity.Entity}.
+       * @remark Дополнительные данные рекомендуется складывать в объекты target или source, создавая свои уникальные реализации сущностей Drag'n'drop, унаследованные от {@link SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity}.
        * @see setMeta
        * returns {Object}
        */
@@ -135,7 +135,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
       },
       /**
        * Устанавливает метаданные объекта.
-       * @remark Дополнительные данные рекомендуется складывать в объекты target или source, создавая свои уникальные реализации сущностей Drag'n'drop, унаследованные от {@link SBIS3.CONTROLS.DragEntity.Entity}.
+       * @remark Дополнительные данные рекомендуется складывать в объекты target или source, создавая свои уникальные реализации сущностей Drag'n'drop, унаследованные от {@link SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity}.
        * @see getMeta
        * returns {Object}
        */
@@ -182,7 +182,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
       },
       /**
        * Возвращает контрол над которым сейчас находится курсор мыши.
-       * @returns {SBIS3.CONTROLS.Control}
+       * @returns {SBIS3.CONTROLS/Control}
        */
       getTargetsControl: function () {
          return this._targetsControl;
@@ -231,7 +231,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
       },
       //region protected
       /**
-       * Устанавливает признак перемещения вызывается только из {@link SBIS3.CONTROLS.DragNDropMixin}.
+       * Устанавливает признак перемещения вызывается только из {@link SBIS3.CONTROLS/Mixins/DragNDropMixin}.
        * @param {Boolean} dragging
        * @protected
        */
@@ -253,8 +253,8 @@ define('js!SBIS3.CONTROLS.DragObject', [
          }
       },
       /**
-       * Устанавливает контрол который инициализировал Drag'n'drop. Метод должен вызываться только из SBIS3.CONTROLS.DragNDropMixin
-       * @param {SBIS3.CONTROLS.Control} owner контрол, который инициализировал Drag'n'drop
+       * Устанавливает контрол который инициализировал Drag'n'drop. Метод должен вызываться только из SBIS3.CONTROLS/Mixins/DragNDropMixin
+       * @param {SBIS3.CONTROLS/Control} owner контрол, который инициализировал Drag'n'drop
        * @protected
        */
       setOwner: function (owner) {
@@ -267,7 +267,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
                //такой поиск нужен что бы в таргете всегда был контрол с dnd миксином, кроме того на ipade контрол находит себя по таргету
                //если внутри контрола будут вложенные контролы то там драгндроп работать не будет.
                if (control) {
-                  if (cInstance.instanceOfMixin(control, 'SBIS3.CONTROLS.DragNDropMixin') && control.getItemsDragNDrop()) {
+                  if (cInstance.instanceOfMixin(control, 'SBIS3.CONTROLS/Mixins/DragNDropMixin') && control.getItemsDragNDrop()) {
                      return control;
                   }
                   return found(control.getParent());

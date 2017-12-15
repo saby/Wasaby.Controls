@@ -1,21 +1,21 @@
-define('js!SBIS3.CONTROLS.TextBoxBase',
+define('SBIS3.CONTROLS/TextBox/TextBoxBase',
    [
    "Core/constants",
    "Core/IoC",
-   "js!SBIS3.CORE.CompoundControl",
-   "js!SBIS3.CONTROLS.FormWidgetMixin",
-   "js!SBIS3.CONTROLS.DataBindMixin",
-   "js!SBIS3.CORE.CompoundActiveFixMixin",
-   "js!SBIS3.CONTROLS.ControlHierarchyManager"
+   "Lib/Control/CompoundControl/CompoundControl",
+   "SBIS3.CONTROLS/Mixins/FormWidgetMixin",
+   "SBIS3.CONTROLS/Mixins/DataBindMixin",
+   "Lib/Mixins/CompoundActiveFixMixin",
+   "SBIS3.CONTROLS/ControlHierarchyManager"
 ], function( constants, IoC, CompoundControl, FormWidgetMixin, DataBindMixin, CompoundActiveFixMixin, ControlHierarchyManager) {
 
    'use strict';
 
    /**
     * Базовый класс для текстового поля
-    * @class SBIS3.CONTROLS.TextBoxBase
-    * @extends SBIS3.CORE.CompoundControl
-    * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    * @class SBIS3.CONTROLS/TextBox/TextBoxBase
+    * @extends Lib/Control/CompoundControl/CompoundControl
+    * @mixes SBIS3.CONTROLS/Mixins/FormWidgetMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     *
@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
     * @ignoreEvents onTooltipContentRequest
     */
 
-   var TextBoxBase = CompoundControl.extend([FormWidgetMixin, DataBindMixin, CompoundActiveFixMixin], /** @lends SBIS3.CONTROLS.TextBoxBase.prototype*/ {
+   var TextBoxBase = CompoundControl.extend([FormWidgetMixin, DataBindMixin, CompoundActiveFixMixin], /** @lends SBIS3.CONTROLS/TextBox/TextBoxBase.prototype*/ {
 
        /**
         * @event onTextChange Происходит при изменении текста в поле ввода.
@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * @cfg {String} Устанавливает текстовое значение в поле ввода.
              * @remark
              * Используется, когда необходимо передать в поле ввода определенное текстовое значение.
-             * С опцией {@link SBIS3.CONTROLS.SuggestMixin#listFilter} используется в настройке параметров фильтрации
+             * С опцией {@link SBIS3.CONTROLS/Mixins/SuggestMixin#listFilter} используется в настройке параметров фильтрации
              * списка значений для автодополнения. Атрибут bind привязывает значение поля ввода к полю контекста.
              * Длина текста, передаваемого в поле ввода, не зависит от настройки опции {@link maxLength}.
              * Установить или изменить текстовое значение в поле ввода можно с помощью метода {@link setText}.
@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * @see maxLength
              * @see setText
              * @see getText
-             * @see SBIS3.CONTROLS.SuggestMixin#listFilter
+             * @see SBIS3.CONTROLS/Mixins/SuggestMixin#listFilter
              * @translatable
              */
             text: '',
@@ -168,12 +168,12 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * Если полей несколько, то, как правило, появление клавиатуры неуместно. Ожидается, что пользователь сам
              * выберет поле для ввода значения.
              * В других случаях, когда на странице или диалоге всего одно поле ввода, появления клавиатуры считается уместным.
-             * Установить или изменить фокус для поля ввода можно с помощью метода {@link SBIS3.CORE.Control#setActive}.
+             * Установить или изменить фокус для поля ввода можно с помощью метода {@link Lib/Control/Control#setActive}.
              * @example
              * <pre class="brush:xml">
              *    <option name="focusOnActivatedOnMobiles">true</option>
              * </pre>
-             * @see SBIS3.CORE.Control#setActive
+             * @see Lib/Control/Control#setActive
              */
             focusOnActivatedOnMobiles: false,
             textAlign: 'left'

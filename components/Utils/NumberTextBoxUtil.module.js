@@ -1,12 +1,12 @@
 /**
  * Created by vs.romanov on 09.01.2017.
  */
-define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
+define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
     /**
-     * @class SBIS3.CONTROLS.Utils.NumberTextBoxUtil
+     * @class SBIS3.CONTROLS/Utils/NumberTextBoxUtil
      * @public
      */
-    function () /** @lends SBIS3.CONTROLS.Utils.NumberTextBoxUtil.prototype */{
+    function () /** @lends SBIS3.CONTROLS/Utils/NumberTextBoxUtil.prototype */{
         return {
             /**
              *

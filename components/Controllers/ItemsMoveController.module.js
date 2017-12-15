@@ -1,13 +1,13 @@
-define('js!SBIS3.CONTROLS.ItemsMoveController', [
+define('SBIS3.CONTROLS/Controllers/ItemsMoveController', [
    'Core/Abstract'
 ], function (cAbstract) {
    /**
     * Контроллер, позволяющий добавить в представление данных возможность перемещения элементов
-    * @mixin SBIS3.CONTROLS.ItemsMoveController
+    * @mixin SBIS3.CONTROLS/Controllers/ItemsMoveController
     * @public
     * @author Авраменко Алексей Сергеевич
     */
-   var ItemsMoveController = cAbstract.extend(/**@lends SBIS3.CONTROLS.ItemsMoveController.prototype*/{
+   var ItemsMoveController = cAbstract.extend(/**@lends SBIS3.CONTROLS/Controllers/ItemsMoveController.prototype*/{
       $protected: {
          _options: {
             linkedView: undefined

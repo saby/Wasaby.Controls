@@ -1,29 +1,29 @@
-define('js!SBIS3.CONTROLS.DateRangeChoose',[
+define('SBIS3.CONTROLS/Date/RangeChoose',[
    'Core/constants',
    "Core/Deferred",
    "Core/IoC",
-   "js!SBIS3.CORE.CompoundControl",
-   "tmpl!SBIS3.CONTROLS.DateRangeChoose/RangeChoose/DateRangeChoose",
-   "js!SBIS3.CONTROLS.RangeMixin",
-   "js!SBIS3.CONTROLS.DateRangeMixin",
+   "Lib/Control/CompoundControl/CompoundControl",
+   "tmpl!SBIS3.CONTROLS/Date/RangeChoose/DateRangeChoose",
+   "SBIS3.CONTROLS/Mixins/RangeMixin",
+   "SBIS3.CONTROLS/Mixins/DateRangeMixin",
    "Core/helpers/event-helpers",
    "Core/helpers/date-helpers",
-   "js!SBIS3.CONTROLS.IconButton",
-   "js!SBIS3.CONTROLS.Link",
-   'css!SBIS3.CONTROLS.DateRangeChoose/RangeChoose/DateRangeChoose'
+   "SBIS3.CONTROLS/Button/IconButton",
+   "SBIS3.CONTROLS/Link",
+   'css!SBIS3.CONTROLS/Date/RangeChoose/DateRangeChoose'
 ], function (constants, Deferred, IoC, CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, eHelpers, dateHelpers) {
    'use strict';
     /**
-     * @class SBIS3.CONTROLS.DateRangeChoose
-     * @extends SBIS3.CORE.CompoundControl
+     * @class SBIS3.CONTROLS/Date/RangeChoose
+     * @extends Lib/Control/CompoundControl/CompoundControl
      *
-     * @mixes SBIS3.CONTROLS.RangeMixin
-     * @mixes SBIS3.CONTROLS.DateRangeMixin
+     * @mixes SBIS3.CONTROLS/Mixins/RangeMixin
+     * @mixes SBIS3.CONTROLS/Mixins/DateRangeMixin
      *
      * @public
      * @control
      */
-   var DateRangeChoose = CompoundControl.extend([RangeMixin, DateRangeMixin], /** @lends SBIS3.CONTROLS.DateRangeChoose.prototype */{
+   var DateRangeChoose = CompoundControl.extend([RangeMixin, DateRangeMixin], /** @lends SBIS3.CONTROLS/Date/RangeChoose.prototype */{
       /**
        * @typedef {Object} customPeriod
        * @property {String} label Заголовок который будет отбражаться в контроле.
@@ -460,11 +460,11 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          } else if (this._options.showQuarters) {
             containers = this.getContainer().find(['.', this._cssDateRangeChoose.quarter].join(''));
          } else {
-            IoC.resolve('ILogger').error('SBIS3.CONTROLS.DateRangeChoose', 'Not implemented.');
+            IoC.resolve('ILogger').error('SBIS3.CONTROLS/Date/RangeChoose', 'Not implemented.');
             return;
          }
          if (icons.length !== containers.length) {
-            IoC.resolve('ILogger').error('SBIS3.CONTROLS.DateRangeChoose', 'Передано не коректное количество иконок в функцию _setIcons.');
+            IoC.resolve('ILogger').error('SBIS3.CONTROLS/Date/RangeChoose', 'Передано не коректное количество иконок в функцию _setIcons.');
          }
          containers.each(function (index) {
             if (typeof(icons[index]) === "boolean") {
@@ -503,7 +503,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
             step = 3;
             pType = 'quarter';
          } else {
-            IoC.resolve('ILogger').error('SBIS3.CONTROLS.DateRangeChoose', 'Not implemented.');
+            IoC.resolve('ILogger').error('SBIS3.CONTROLS/Date/RangeChoose', 'Not implemented.');
             return;
          }
          for (var i = 0; i < 12; i += step) {
@@ -524,7 +524,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          var checkedStart = this._options.checkedStart,
              checkedEnd = this._options.checkedEnd;
          if (!checkedStart && !checkedEnd) {
-            IoC.resolve('ILogger').error('SBIS3.CONTROLS.DateRangeChoose', 'checkedStart and/or checkedEnd options must be set.');
+            IoC.resolve('ILogger').error('SBIS3.CONTROLS/Date/RangeChoose', 'checkedStart and/or checkedEnd options must be set.');
             return [];
          }
          checkedStart = checkedStart? checkedStart.getTime(): 0;

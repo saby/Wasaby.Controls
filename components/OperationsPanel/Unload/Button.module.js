@@ -1,6 +1,6 @@
-define('js!SBIS3.CONTROLS.UnloadButton',
+define('SBIS3.CONTROLS/OperationsPanel/Unload/Button',
 [
-   'js!SBIS3.CONTROLS.MenuLink'
+   'SBIS3.CONTROLS/Menu/MenuLink'
 ], function(MenuLink) {
    var UnloadButton = MenuLink.extend({
       $protected: {

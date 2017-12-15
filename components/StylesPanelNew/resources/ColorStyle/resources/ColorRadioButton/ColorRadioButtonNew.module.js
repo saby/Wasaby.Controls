@@ -2,9 +2,9 @@
  * Created by ps.borisov on 29.08.2016.
  */
 
-define('js!SBIS3.CONTROLS.ColorRadioButtonNew', [
-   'js!SBIS3.CONTROLS.RadioButtonBase',
-   'tmpl!SBIS3.CONTROLS.ColorRadioButtonNew'
+define('SBIS3.CONTROLS/StylesPanelNew/resources/ColorStyle/resources/ColorRadioButton/ColorRadioButtonNew', [
+   'SBIS3.CONTROLS/Radio/Button/RadioButtonBase',
+   'tmpl!SBIS3.CONTROLS/StylesPanelNew/resources/ColorStyle/resources/ColorRadioButton/ColorRadioButtonNew'
 ], function(RadioButtonBase, dotTplFn) {
 
    'use strict';
@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.ColorRadioButtonNew', [
    /**
     * Радиокнопка выбора цвета
     * @class SBIS3.CONTROLS.ColorRadioButton
-    * @extends SBIS3.CONTROLS.RadioButtonBase
+    * @extends SBIS3.CONTROLS/Radio/Button/RadioButtonBase
     * @public
     * @author Борисов П.С.
     */

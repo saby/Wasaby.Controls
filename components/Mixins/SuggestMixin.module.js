@@ -1,14 +1,14 @@
-define('js!SBIS3.CONTROLS.SuggestMixin', [
+define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
    "Core/core-clone",
    "Core/core-merge",
    "Core/Deferred",
-   "js!SBIS3.CONTROLS.PickerMixin",
+   "SBIS3.CONTROLS/Mixins/PickerMixin",
    "Core/core-instance",
    'Core/helpers/Object/find'
 ], function (coreClone, cMerge, Deferred, PickerMixin, cInstance, find) {
    'use strict';
 
-   var DEFAULT_SHOW_ALL_TEMPLATE = 'js!SBIS3.CONTROLS.SuggestShowAll';
+   var DEFAULT_SHOW_ALL_TEMPLATE = 'SBIS3.CONTROLS/Suggest/SuggestShowAll';
    var DEFAULT_SHOW_ALL_CONFIG = {
       template: DEFAULT_SHOW_ALL_TEMPLATE,
       componentOptions: {}
@@ -30,11 +30,11 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
     * @remark
     * Автодополнение - это функционал отображения возможных результатов поиска по введенным символам.
     * Получает готовый экземпляр {@link list контрола}, который будет использоваться для отображения элементов коллекции, либо название компонента и опции.
-    * Данный экземпляр контрола вставляется в контейнер, предоставляемый {@link SBIS3.CONTROLS.PickerMixin}.
+    * Данный экземпляр контрола вставляется в контейнер, предоставляемый {@link SBIS3.CONTROLS/Mixins/PickerMixin}.
     * Также предусмотрена возможность {@link usePicker не менять контейнер}, в этом случае поведение PickerMixin блокируется.
     *
     * Работает исключительно через контекст (т.е. все контролы, которые взаимодействовуют в автодополнением, должны быть заbindены на контекст):
-    * - отслеживает изменения полей контекста, указанных в {@link listFilter}, формирует фильтр, и отправляет его в {@link list контрол списка сущностей}, вызывая SBIS3.CONTROLS.DSMixin::reload();
+    * - отслеживает изменения полей контекста, указанных в {@link listFilter}, формирует фильтр, и отправляет его в {@link list контрол списка сущностей}, вызывая SBIS3.CONTROLS/Mixins/DSMixin::reload();
     * - отслеживает выбор элемента в {@link list контроле списка сущностей}, разбрасывает значения полей выбранного элемента, указанных в {@link resultBindings}, по полям контектста.
     *
     * Кнопку отображения всех элементов коллекции нужно самостоятельно положить в {@link list} и указать ей имя "showAllButton'
@@ -42,16 +42,16 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
     * Для показа автодополнения при получения контролом фокуса, используется {@link autoShow}.
     *
     * В контроле, к которому подмешивается, обязательно требует миксины:
-    * {@link SBIS3.CONTROLS.PickerMixin}
-    * {@link SBIS3.CONTROLS.DataBindMixin}
-    * {@link SBIS3.CONTROLS.ChooserMixin}
+    * {@link SBIS3.CONTROLS/Mixins/PickerMixin}
+    * {@link SBIS3.CONTROLS/Mixins/DataBindMixin}
+    * {@link SBIS3.CONTROLS/Mixins/ChooserMixin}
     *
-    * @mixin SBIS3.CONTROLS.SuggestMixin
+    * @mixin SBIS3.CONTROLS/Mixins/SuggestMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var SuggestMixin = /** @lends SBIS3.CONTROLS.SuggestMixin.prototype */{
+   var SuggestMixin = /** @lends SBIS3.CONTROLS/Mixins/SuggestMixin.prototype */{
       /**
        * @event onFilterBuild Происходит после построения фильтра.
        * Событие происходит после построения фильтра, который будет передан в контрол, отображающий список значений для автодополнения.
@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * Событие происходит после создания экземпляра класса контрола, отображающего список значений для автодополнения и
        * проведения настроек по его привязке.
        * @param {Core/EventObject} eventObject Дескриптор события.
-       * @param {SBIS3.CORE.Control} list Контрол списка сущностей.
+       * @param {Lib/Control/Control} list Контрол списка сущностей.
        */
 
       /**
@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * Чтобы настроить минимальное количество символов, с ввода которых начинается поиск результатов,
              * используйте опцию {@link startChar}.
              *
-             * Подробнее о функционале автодополнения вы можете прочитать в описании к классу {@link SBIS3.CONTROLS.SuggestMixin}.
+             * Подробнее о функционале автодополнения вы можете прочитать в описании к классу {@link SBIS3.CONTROLS/Mixins/SuggestMixin}.
              * @example
              * <pre class="brush: xml">
              *     <!-- Установлена задержка в одну секунду -->
@@ -105,7 +105,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @remark
              * После ввода минимального количества символов происходит временная задержка перед началом поиска,
              * которая устанавливается через опцию {@link delay}.
-             * Подробнее о функционале автодополнения вы можете прочитать в описании к классу {@link SBIS3.CONTROLS.SuggestMixin}.
+             * Подробнее о функционале автодополнения вы можете прочитать в описании к классу {@link SBIS3.CONTROLS/Mixins/SuggestMixin}.
              * @example
              * <pre class="brush: xml">
              *     <option name="startChar">1</option>
@@ -126,9 +126,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @see list
              * @see listFilter
              * @see startChar
-             * @see SBIS3.CONTROLS.ListView#showPaging
-             * @see SBIS3.CONTROLS.DSMixin#pageSize
-             * @see SBIS3.CONTROLS.DataGridView#showHead
+             * @see SBIS3.CONTROLS/ListView#showPaging
+             * @see SBIS3.CONTROLS/Mixins/DSMixin#pageSize
+             * @see SBIS3.CONTROLS/DataGridView#showHead
              */
             autoShow: false,
             /**
@@ -165,8 +165,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             /**
              * @typedef {Object} ListControl
              * @property {String} component Класс контрола, который будет использоваться для отображения списка сущностей.
-             * По умолчанию используется {@link SBIS3.CONTROLS.ListView}. Однако можно указать любой другой контрол, который
-             * наследует функционал {@link SBIS3.CONTROLS.DSMixin}, {@link SBIS3.CONTROLS.Selectable} и {@link SBIS3.CONTROLS.MultiSelectable}.
+             * По умолчанию используется {@link SBIS3.CONTROLS/ListView}. Однако можно указать любой другой контрол, который
+             * наследует функционал {@link SBIS3.CONTROLS/Mixins/DSMixin}, {@link SBIS3.CONTROLS/Mixins/Selectable} и {@link SBIS3.CONTROLS/Mixins/MultiSelectable}.
              * @property {Object} options Опции контрола, которые будут использованы при его построении.
              */
             /**
@@ -175,7 +175,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @example
              * <pre class="brush:xml">
              *     <options name="list">
-             *        <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option> <!-- Указываем класс контрола, на его основе строятся результаты автодополнения -->
+             *        <option name="component" value="SBIS3.CONTROLS/DataGridView"></option> <!-- Указываем класс контрола, на его основе строятся результаты автодополнения -->
              *        <options name="options">
              *           <option name="idProperty" value="@Пользователь"></option> <!-- Указываем ключевое поле -->
              *           <options name="columns" type="array"> <!-- Производим настройку колонок -->
@@ -196,12 +196,12 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @see listFilter
              * @see getList
              * @see startChar
-             * @see SBIS3.CONTROLS.DSMixin#idProperty
-             * @see SBIS3.CORE.FieldLink/Columns.typedef
-             * @see SBIS3.CONTROLS.DataGridView#showHead
+             * @see SBIS3.CONTROLS/Mixins/DSMixin#idProperty
+             * @see Deprecated/Controls/FieldLink/Columns.typedef
+             * @see SBIS3.CONTROLS/DataGridView#showHead
              */
             list: {
-               component: 'js!SBIS3.CONTROLS.ListView',
+               component: 'SBIS3.CONTROLS/ListView',
                options: {}
             },
 
@@ -214,10 +214,10 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * Значение в поле контекста изменяется со стороны какого-либо поля ввода.
              * Пример фильтрации списка значений:
              * ![](/SuggestMixin03.png)
-             * Значение поля ввода привязывается к полю контекста опцией {@link SBIS3.CONTROLS.TextBoxBase#text}, с помощью атрибута bind.
+             * Значение поля ввода привязывается к полю контекста опцией {@link SBIS3.CONTROLS/TextBox/TextBoxBase#text}, с помощью атрибута bind.
              * Минимальное количество введенных символов, необходимое для начала поиска результатов автодополнения, определяется опцией {@link startChar}.
              * Установить фильтр для списка значений можно с помощью метода {@link setListFilter}
-             * Подробнее о функционале автодополнения вы можете прочитать в описании к классу {@link SBIS3.CONTROLS.SuggestMixin}.
+             * Подробнее о функционале автодополнения вы можете прочитать в описании к классу {@link SBIS3.CONTROLS/Mixins/SuggestMixin}.
              * @example
              * <pre class="brush:xml">
              *     <option name="text" bind="myTextField" value=""></option> <!-- Привязываем значения поля связи к полю myTextField в контексте -->
@@ -228,7 +228,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @see setListFilter
              * @see list
              * @see startChar
-             * @see SBIS3.CONTROLS.TextBoxBase#text
+             * @see SBIS3.CONTROLS/TextBox/TextBoxBase#text
              */
 	        listFilter: {},
             /**
@@ -241,7 +241,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @example
              * <pre>
              *    <options name="showAllConfig">
-             *       <option name="template" value="js!SBIS3.CONTROLS.SuggestShowAll"></option>
+             *       <option name="template" value="SBIS3.CONTROLS/Suggest/SuggestShowAll"></option>
              *       <options name="componentOptions">
              *          <option name="showSelectButton" type="Boolean" value="true"></option>
              *       </options>
@@ -259,15 +259,15 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          _resultBindings: {},                   /* {Object} Соответствие полей для подстановки в контекст */
          _delayTimer: null,                     /* {Object|null} Таймер задержки загрузки picker-а */
          _loadingIndicator: undefined,          /* {Object} Индикатор загрузки */
-         _list: undefined,                      /* {SBIS3.CONTROLS.DSMixin}{SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable} Контрол списка сущностей */
+         _list: undefined,                      /* {SBIS3.CONTROLS/Mixins/DSMixin}{SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable} Контрол списка сущностей */
          _listContainer: undefined,             /* {jQuery} Контейнер для контрола списка сущностей */
          _loadDeferred: null,                   /* {Deferred|null} Деферред загрузки данных для контрола списка сущностей */
-         _showAllButton: undefined,              /* {SBIS3.CORE.Control} Кнопка открытия всех записей */
+         _showAllButton: undefined,              /* {Lib/Control/Control} Кнопка открытия всех записей */
          _listReversed: false
       },
       $constructor: function () {
-         if (!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.PickerMixin')) {
-            throw new Error('Mixin SBIS3.CONTROLS.PickerMixin is required.');
+         if (!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS/Mixins/PickerMixin')) {
+            throw new Error('Mixin SBIS3.CONTROLS/Mixins/PickerMixin is required.');
          }
 
          this._publish('onFilterBuild', 'onListReady', 'onListItemSelect');
@@ -470,7 +470,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
       /**
        * Возвращает экземпляр класса контрола, отображающего список значений для автодополнения.
-       * @returns {SBIS3.CORE.Control}
+       * @returns {Lib/Control/Control}
        * @example
        * <pre>
        *     this.getList().setDataSource(new SbisSourse({
@@ -485,7 +485,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          var options, component, dataSource;
 
          if (!this._list) {
-            if (cInstance.instanceOfMixin(this._options.list, 'SBIS3.CONTROLS.DSMixin')) {
+            if (cInstance.instanceOfMixin(this._options.list, 'SBIS3.CONTROLS/Mixins/DSMixin')) {
                /* Если передали в опции готовый инстанс, то ничего создавать не надо */
                this._list = this._options.list;
                this._initList();

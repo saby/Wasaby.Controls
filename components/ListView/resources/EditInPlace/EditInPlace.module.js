@@ -2,22 +2,22 @@
  * Created by as.avramenko on 01.04.2015.
  */
 
-define('js!SBIS3.CONTROLS.EditInPlace',
+define('SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace',
    [
    "Core/Deferred",
-   "js!SBIS3.CORE.CompoundControl",
-   "tmpl!SBIS3.CONTROLS.EditInPlace",
+   "Lib/Control/CompoundControl/CompoundControl",
+   "tmpl!SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace",
    "Core/constants",
-   "js!SBIS3.CONTROLS.CompoundFocusMixin",
+   "SBIS3.CONTROLS/Mixins/CompoundFocusMixin",
    "Core/helpers/fast-control-helpers",
-   'css!SBIS3.CONTROLS.EditInPlace'
+   'css!SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace'
 ],
    function(Deferred, Control, dotTplFn, constants, CompoundFocusMixin, fcHelpers) {
       'use strict';
 
       /**
-       * @class SBIS3.CONTROLS.EditInPlace
-       * @extends SBIS3.CORE.CompoundControl
+       * @class SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace
+       * @extends Lib/Control/CompoundControl/CompoundControl
        * @author Авраменко Алексей Сергеевич
        * @control
        * @public
@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
 
       var
          CONTEXT_RECORD_FIELD = 'sbis3-controls-edit-in-place',
-         EditInPlace = Control.extend([CompoundFocusMixin], /** @lends SBIS3.CONTROLS.EditInPlace.prototype */ {
+         EditInPlace = Control.extend([CompoundFocusMixin], /** @lends SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace.prototype */ {
             _dotTplFn: dotTplFn,
             $protected: {
                _options: {

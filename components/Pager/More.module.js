@@ -1,24 +1,24 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.PagerMore', [
-   'js!SBIS3.CORE.CompoundControl',
+define('SBIS3.CONTROLS/Pager/More', [
+   'Lib/Control/CompoundControl/CompoundControl',
    'WS.Data/Collection/ISourceLoadable',
-   'tmpl!SBIS3.CONTROLS.PagerMore/More/PagerMore',
+   'tmpl!SBIS3.CONTROLS/Pager/More/PagerMore',
    'Core/core-instance',
-   'i18n!SBIS3.CONTROLS.PagerMore',
-   'css!SBIS3.CONTROLS.PagerMore/More/PagerMore'
+   'i18n!SBIS3.CONTROLS/Pager/More',
+   'css!SBIS3.CONTROLS/Pager/More/PagerMore'
 ], function(CompoundControl, ISourceLoadable, dotTplFn, cInstance) {
    'use strict';
 
    /**
     * Пейдер - загружает записи в коллекцию c реализацией интерфейса WS.Data/Collection/ISourceLoadable постранично
-    * @class SBIS3.CONTROLS.PagerMore
-    * @extends SBIS3.CORE.CompoundControl
+    * @class SBIS3.CONTROLS/Pager/More
+    * @extends Lib/Control/CompoundControl/CompoundControl
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var PagerMore = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.PagerMore.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.PagerMore',
+   var PagerMore = CompoundControl.extend([], /** @lends SBIS3.CONTROLS/Pager/More.prototype */{
+      _moduleName: 'SBIS3.CONTROLS/Pager/More',
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

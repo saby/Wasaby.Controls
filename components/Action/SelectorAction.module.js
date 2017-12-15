@@ -1,8 +1,8 @@
-define('js!SBIS3.CONTROLS.Action.SelectorAction',
+define('SBIS3.CONTROLS/Action/SelectorAction',
    [
-      'js!SBIS3.CONTROLS.Action.Action',
-      'js!SBIS3.CONTROLS.Action.DialogMixin',
-      'js!SBIS3.CONTROLS.Utils.OpenDialog',
+      'SBIS3.CONTROLS/Action',
+      'SBIS3.CONTROLS/Action/Mixin/DialogMixin',
+      'SBIS3.CONTROLS/Action/Utils/OpenDialogUtil',
       'Core/core-merge',
       'Core/Deferred',
       'Core/Context',
@@ -13,10 +13,10 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
        'use strict';
        /**
         * Класс, который описывает действие открытия окна с заданным шаблоном. Из этого окна можно осуществлять выбор.
-        * @class SBIS3.CONTROLS.Action.SelectorAction
-        * @extends SBIS3.CONTROLS.Action.Action
+        * @class SBIS3.CONTROLS/Action/SelectorAction
+        * @extends SBIS3.CONTROLS/Action
         *
-        * @mixes SBIS3.CONTROLS.Action.DialogMixin
+        * @mixes SBIS3.CONTROLS/Action/Mixin/DialogMixin
         *
         * @demo SBIS3.CONTROLS.Demo.DemoSelectorAction
         *
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
         *
         * @ignoreEvents onCommandCatch onDestroy onDragIn onDragMove onDragOut onDragStart onDragStop onPropertiesChanged onPropertyChanged
         */
-       var SelectorAction = Action.extend([DialogMixin], /** @lends SBIS3.CONTROLS.Action.SelectorAction.prototype */{
+       var SelectorAction = Action.extend([DialogMixin], /** @lends SBIS3.CONTROLS/Action/SelectorAction.prototype */{
            /**
             * @event onExecuted Происходит после выполнения действия.
             * @param {Core/EventObject} eventObject Дескриптор события.
@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
             * </ul>
             * Подробнее о каждом типе записей читайте в разделе <a href='/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
             * @param {Object} [meta.componentOptions] Объект с пользовательскими опциями, которые передаются в диалог в секцию _options.
-            * @param {Object} [meta.dialogOptions] Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link SBIS3.CORE.Control#linkedContext}.
+            * @param {Object} [meta.dialogOptions] Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link Lib/Control/Control#linkedContext}.
             * @param {Array.<WS.Data/Entity/Record>} result Массив, где каждый элемент - это выбранная на диалоге запись (см. {@Link WS.Data/Entity/Record}).
             * @see execute
             */
@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
             * </ul>
             * Подробнее о каждом типе записей читайте в разделе <a href='/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
             * @param {Object} [meta.componentOptions] Объект с пользовательскими опциями, которые передаются в диалог в секцию _options.
-            * @param {Object} [meta.dialogOptions] Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link SBIS3.CORE.Control#linkedContext}.
+            * @param {Object} [meta.dialogOptions] Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link Lib/Control/Control#linkedContext}.
             * @see execute
             */
            /**
@@ -97,11 +97,11 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
             * </ul>
             * Подробнее о каждом типе записей читайте в разделе <a href='/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
             * @param {Object} [meta.componentOptions] Объект с пользовательскими опциями, которые передаются в диалог в секцию _options.
-            * @param {Object} [meta.dialogOptions] Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link SBIS3.CORE.Control#linkedContext}.
+            * @param {Object} [meta.dialogOptions] Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link Lib/Control/Control#linkedContext}.
             * @see execute
             */
            /**
-            * @name SBIS3.CONTROLS.Action.SelectorAction#execute
+            * @name SBIS3.CONTROLS/Action/SelectorAction#execute
             * @function
             * @description
             * Запускает выполнение действия.
@@ -121,7 +121,7 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
             * </ul>
             * Подробнее о каждом типе записей читайте в разделе <a href='/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
             * @param {Object} [meta.componentOptions] Объект с пользовательскими опциями, которые передаются в диалог в секцию _options.
-            * @param {Object} [meta.dialogOptions] Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link SBIS3.CORE.Control#linkedContext}.
+            * @param {Object} [meta.dialogOptions] Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link Lib/Control/Control#linkedContext}.
             */
           _buildComponentConfig: function(metaConfig) {
              /* Необходимо клонировать metaConfig, чтобы не испортить оригинальный объект */

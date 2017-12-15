@@ -1,9 +1,9 @@
-define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
+define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
    [
    "Core/constants",
-   'js!SBIS3.CONTROLS.RichEditorToolbar/resources/handlers',
-   "js!SBIS3.CONTROLS.RichTextArea/resources/smiles",
-   "i18n!SBIS3.CONTROLS.RichEditor"
+   'SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/handlers',
+   "SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/smiles",
+   "i18n!SBIS3.CONTROLS/RichEditor"
 ], function (constants, handlers, smiles) {
 
    'use strict';
@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
       },
       {
          name: 'style',
-         componentType: 'SBIS3.CONTROLS.ComboBox',
+         componentType: 'SBIS3.CONTROLS/ComboBox',
          items: [
             { key: 'mainText', title: rk('Основной') },
             { key: 'title', title: rk('Заголовок'), className: 'titleText'},

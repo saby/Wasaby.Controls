@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DataGridView',
+define('SBIS3.CONTROLS/DataGridView',
    [
    "Core/CommandDispatcher",
    "Core/core-clone",
@@ -8,32 +8,32 @@ define('js!SBIS3.CONTROLS.DataGridView',
    'Core/detection',
    "Core/EventBus",
    'Core/helpers/Function/memoize',
-   "js!SBIS3.CONTROLS.ListView",
-   "tmpl!SBIS3.CONTROLS.DataGridView/DataGridView/DataGridView",
-   "tmpl!SBIS3.CONTROLS.DataGridView/DataGridView/resources/rowTpl",
-   "tmpl!SBIS3.CONTROLS.DataGridView/DataGridView/resources/colgroupTpl",
-   "tmpl!SBIS3.CONTROLS.DataGridView/DataGridView/resources/headTpl",
-   "tmpl!SBIS3.CONTROLS.DataGridView/DataGridView/resources/footTpl",
-   "tmpl!SBIS3.CONTROLS.DataGridView/DataGridView/resources/ResultsTpl",
-   "js!SBIS3.CONTROLS.DragAndDropMixin",
-   "js!SBIS3.CONTROLS.ImitateEvents",
-   "tmpl!SBIS3.CONTROLS.DataGridView/DataGridView/resources/DataGridViewGroupBy",
+   "SBIS3.CONTROLS/ListView",
+   "tmpl!SBIS3.CONTROLS/DataGridView/DataGridView",
+   "tmpl!SBIS3.CONTROLS/DataGridView/resources/rowTpl",
+   "tmpl!SBIS3.CONTROLS/DataGridView/resources/colgroupTpl",
+   "tmpl!SBIS3.CONTROLS/DataGridView/resources/headTpl",
+   "tmpl!SBIS3.CONTROLS/DataGridView/resources/footTpl",
+   "tmpl!SBIS3.CONTROLS/DataGridView/resources/ResultsTpl",
+   "SBIS3.CONTROLS/Mixins/DragAndDropMixin",
+   "SBIS3.CONTROLS/Utils/ImitateEvents",
+   "tmpl!SBIS3.CONTROLS/DataGridView/resources/DataGridViewGroupBy",
    'WS.Data/Display/Ladder',
-   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
-   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "tmpl!SBIS3.CONTROLS.DataGridView/DataGridView/resources/ItemTemplate",
-   "tmpl!SBIS3.CONTROLS.DataGridView/DataGridView/resources/ItemResultTemplate",
-   "tmpl!SBIS3.CONTROLS.DataGridView/DataGridView/resources/ItemContentTemplate",
-   "tmpl!SBIS3.CONTROLS.DataGridView/DataGridView/resources/cellTemplate",
-   "tmpl!SBIS3.CONTROLS.DataGridView/DataGridView/resources/headColumnTpl",
-   "tmpl!SBIS3.CONTROLS.DataGridView/DataGridView/resources/GroupTemplate",
-   "tmpl!SBIS3.CONTROLS.DataGridView/DataGridView/resources/SortingTemplate",
+   'SBIS3.CONTROLS/Utils/HtmlDecorators/LadderDecorator',
+   "SBIS3.CONTROLS/Utils/TemplateUtil",
+   "tmpl!SBIS3.CONTROLS/DataGridView/resources/ItemTemplate",
+   "tmpl!SBIS3.CONTROLS/DataGridView/resources/ItemResultTemplate",
+   "tmpl!SBIS3.CONTROLS/DataGridView/resources/ItemContentTemplate",
+   "tmpl!SBIS3.CONTROLS/DataGridView/resources/cellTemplate",
+   "tmpl!SBIS3.CONTROLS/DataGridView/resources/headColumnTpl",
+   "tmpl!SBIS3.CONTROLS/DataGridView/resources/GroupTemplate",
+   "tmpl!SBIS3.CONTROLS/DataGridView/resources/SortingTemplate",
    "Core/helpers/Object/isEmpty",
    'Core/helpers/String/escapeHtml',
-   'js!SBIS3.CONTROLS.Utils.TitleUtil',
+   'SBIS3.CONTROLS/Utils/TitleUtil',
    'Core/Sanitize',
-   'js!SBIS3.StickyHeaderManager',
-   'css!SBIS3.CONTROLS.DataGridView/DataGridView/DataGridView'
+   'Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager',
+   'css!SBIS3.CONTROLS/DataGridView/DataGridView'
 ],
    function(
       CommandDispatcher,
@@ -369,16 +369,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">Спецификация</a>.
     * <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/">Документация</a>.
     *
-    * @class SBIS3.CONTROLS.DataGridView
-    * @extends SBIS3.CONTROLS.ListView
+    * @class SBIS3.CONTROLS/DataGridView
+    * @extends SBIS3.CONTROLS/ListView
     * @author Герасимов Александр Максимович
-    * @mixes SBIS3.CONTROLS.DragAndDropMixin
+    * @mixes SBIS3.CONTROLS/Mixins/DragAndDropMixin
     *
     *
     * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
     * @cssModifier controls-DataGridView__markerRight Устанавливает отображение маркера активной строки справа от записи. Подробнее о маркере вы можете прочитать в <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
     * @cssModifier controls-DataGridView__hasSeparator Устанавливает отображение линий-разделителей между строками.
-    * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
+    * При использовании контролов {@link SBIS3.CONTROLS/CompositeView} или {@link SBIS3.CONTROLS/Tree/CompositeView} модификатор применяется только для режима отображения "Таблица".
     * @cssModifier controls-DataGridView__overflow-ellipsis Устанавливает обрезание троеточием текста во всех колонках таблицы.
     * @cssModifier controls-ListView__padding-XS Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 0px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
     * @cssModifier controls-ListView__padding-S Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 12px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
@@ -391,7 +391,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @category Lists
     * @designTime plugin /design/DesignPlugin
     * @initial
-    * <component data-component='SBIS3.CONTROLS.DataGridView'>
+    * <component data-component='SBIS3.CONTROLS/DataGridView'>
     *    <options name="columns" type="array">
     *       <options>
     *          <option name="title">Поле 1</option>
@@ -403,7 +403,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *    </options>
     * </component>
     */
-   var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
+   var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS/DataGridView.prototype*/ {
        /**
         * @event onDrawHead Возникает после отрисовки шапки
         * @param {Core/EventObject} eventObject Дескриптор события.

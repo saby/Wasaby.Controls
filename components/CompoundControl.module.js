@@ -2,20 +2,20 @@
  * Created by iv.cheremushkin on 21.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.CompoundControl', ['js!SBIS3.CORE.CompoundControl'], function(Control) {
+define('SBIS3.CONTROLS/CompoundControl', ['Lib/Control/CompoundControl/CompoundControl'], function(Control) {
 
    'use strict';
 
    /**
     * Базовый класс для всех контролов. Включает в себя объединенные старые классы Control и CompoundControl.
     * Объединение помогает однозначно понимать от какого класса должны наследоваться все остальные контролы.
-    * @class SBIS3.CONTROLS.CompoundControl
+    * @class SBIS3.CONTROLS/CompoundControl
     * @author Крайнов Дмитрий Олегович
-    * @extends SBIS3.CORE.CompoundControl
+    * @extends Lib/Control/CompoundControl/CompoundControl
     * @public
     */
 
-   return Control.extend( /** @lends SBIS3.CONTROLS.CompoundControl.prototype */{
+   return Control.extend( /** @lends SBIS3.CONTROLS/CompoundControl.prototype */{
       $protected: {
          _options : {
             /**
@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.CompoundControl', ['js!SBIS3.CORE.CompoundControl'], f
             /**
              * @cfg {Boolean} Независимый контекст
              * Возможность установить для данной области независимый контекст.
-             * ВНИМАНИЕ! Может испортить контекст, переданный в опции {@link context} и {@link SBIS3.CORE.Control#linkedContext},
+             * ВНИМАНИЕ! Может испортить контекст, переданный в опции {@link context} и {@link Lib/Control/Control#linkedContext},
              * поменяв предка контексту! Передавайте данные объектом.
              * Будет создан новый контекст, зависимый от глобального. Т.е. контролы смогут обмениваться информацией с
              * внешнм миром, если в глобальном контексте присутствует устанавливаемое локально значение.

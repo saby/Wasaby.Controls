@@ -1,11 +1,11 @@
 /**
  * Created by am.gerasimov on 18.01.2017.
  */
-define('js!SBIS3.CONTROLS.SBISUserConfigStorage',
+define('SBIS3.CONTROLS/Storages/SBIS/SBISUserConfigStorage',
    [
-      'js!SBIS3.CONTROLS.SBISStorageAdapter',
+      'SBIS3.CONTROLS/Storages/SBIS/SBISStorageAdapter',
       'Core/UserConfig',
-      'js!SBIS3.CONTROLS.IStorage'
+      'SBIS3.CONTROLS/Interfaces/IStorage'
    ],
 
    function(SBISStorageAdapter, UserConfig) {
@@ -20,8 +20,8 @@ define('js!SBIS3.CONTROLS.SBISUserConfigStorage',
        * Все операции отражаются на глобальном контексте.
        *
        * @author Герасимов Александр
-       * @class SBIS3.CONTROLS.SBISUserConfigStorage
-       * @mixes SBIS3.CONTROLS.IStorage
+       * @class SBIS3.CONTROLS/Storages/SBIS/SBISUserConfigStorage
+       * @mixes SBIS3.CONTROLS/Interfaces/IStorage
        * @public
        */
 

@@ -1,8 +1,8 @@
-define('js!SBIS3.CONTROLS.LongOperations.Tools.TabCalls',
+define('SBIS3.CONTROLS/LongOperations/Tools/TabCalls',
    [
       'Core/core-extend',
       'Core/Deferred',
-      'js!SBIS3.CORE.TabMessage',
+      'Lib/TabMessage/TabMessage',
       'WS.Data/Source/DataSet',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Chain'
@@ -14,15 +14,15 @@ define('js!SBIS3.CONTROLS.LongOperations.Tools.TabCalls',
       /**
        * Класс межвкладочных вызовов методов
        *
-       * @class SBIS3.CONTROLS.LongOperations.Tools.TabCalls
+       * @class SBIS3.CONTROLS/LongOperations/Tools/TabCalls
        *
        * @author Спирин Виктор Алексеевич
        *
        * @public
-       * @type {SBIS3.CONTROLS.LongOperations.Tools.TabCalls}
+       * @type {SBIS3.CONTROLS/LongOperations/Tools/TabCalls}
        */
-      var LongOperationsTabCalls = CoreExtend.extend(/** @lends SBIS3.CONTROLS.LongOperations.Tools.TabCalls.prototype */{
-         _moduleName: 'SBIS3.CONTROLS.LongOperations.Tools.TabCalls',
+      var LongOperationsTabCalls = CoreExtend.extend(/** @lends SBIS3.CONTROLS/LongOperations/Tools/TabCalls.prototype */{
+         _moduleName: 'SBIS3.CONTROLS/LongOperations/Tools/TabCalls',
 
          /**
           * Конструктор
@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Tools.TabCalls',
           * @param {string} tabKey Ключ текущей вкладки
           * @param {function} router Функция для получения объектов вызова по имени
           * @param {function} [packer] Функция для упаковки отправляемых объектов (опционально)
-          * @param {SBIS3.CORE.TabMessage} [channel] Канал событий (опционально)
+          * @param {Lib/TabMessage/TabMessage} [channel] Канал событий (опционально)
           */
          constructor: function (tabKey, router, packer, channel) {
             if (!tabKey || typeof tabKey !== 'string') {
@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Tools.TabCalls',
             this._packer = packer || null;
             /**
              * @protected
-             * @type {SBIS3.CORE.TabMessage}
+             * @type {Lib/TabMessage/TabMessage}
              */
             this._channel = channel ? channel : new TabMessage();
             /**
@@ -270,7 +270,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Tools.TabCalls',
       /**
        * Отослать полученный результат вызова во вкладку, сделавшую вызов
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperations.Tools.TabCalls} self Этот объект
+       * @param {SBIS3.CONTROLS/LongOperations/Tools/TabCalls} self Этот объект
        * @param {string} to Ключ вкладки
        * @param {string} target Имя целевого объекта
        * @param {string} method Имя вызываемого метода
@@ -307,7 +307,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Tools.TabCalls',
       /**
        * Получить запрос из списка выполняющихся во вкладках запросов
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperations.Tools.TabCalls} self Этот объект
+       * @param {SBIS3.CONTROLS/LongOperations/Tools/TabCalls} self Этот объект
        * @param {string} tabKey Ключ вкладки
        * @param {string} target Имя целевого объекта
        * @param {string} method Имя вызываемого метода

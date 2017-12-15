@@ -2,13 +2,13 @@
  * Created by iv.cheremushkin on 28.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.NumberTextBox', [
+define('SBIS3.CONTROLS/NumberTextBox', [
    'Core/constants',
-   'js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil',
-   'js!SBIS3.CONTROLS.TextBox',
-   'js!SBIS3.CONTROLS.NumberTextBox/NumberTextBox/resources/FormatText',
-   'js!SBIS3.CONTROLS.Utils.ConfigByClasses',
-   'css!SBIS3.CONTROLS.NumberTextBox/NumberTextBox/NumberTextBox'
+   'SBIS3.CONTROLS/Utils/NumberTextBoxUtil',
+   'SBIS3.CONTROLS/TextBox',
+   'SBIS3.CONTROLS/NumberTextBox/resources/FormatText',
+   'SBIS3.CONTROLS/Utils/ConfigByClasses',
+   'css!SBIS3.CONTROLS/NumberTextBox/NumberTextBox'
 ], function ( constants, NumberTextBoxUtil, TextBox, FormatText, ConfigByClasses) {
 
 
@@ -24,8 +24,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
     *    <li>запрещение ввода {@link onlyInteger дробных чисел};</li>
     *    <li>{@link text начальное значение}.</li>
     * </ol>
-    * @class SBIS3.CONTROLS.NumberTextBox
-    * @extends SBIS3.CONTROLS.TextBox
+    * @class SBIS3.CONTROLS/NumberTextBox
+    * @extends SBIS3.CONTROLS/TextBox
     * @author Романов Валерий Сергеевич
     * @demo SBIS3.CONTROLS.Demo.MyNumberTextBox
     *
@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
     * @public
     * @category Input
     * @initial
-    * <component data-component='SBIS3.CONTROLS.NumberTextBox'>
+    * <component data-component='SBIS3.CONTROLS/NumberTextBox'>
     *     <option name="text">0</option>
     * </component>
     */
@@ -60,7 +60,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       return value;
    }
 
-   var NumberTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS.NumberTextBox.prototype */ {
+   var NumberTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS/NumberTextBox.prototype */ {
       $protected: {
          _inputField: null,
          _caretPosition: [0, 0],

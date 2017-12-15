@@ -1,12 +1,12 @@
 /**
  * Created by am.gerasimov on 13.02.2017.
  */
-define('js!SBIS3.CONTROLS.MissSpell',
+define('SBIS3.CONTROLS/Utils/KbLayoutRevert/resources/MissSpell',
    [
-      'js!SBIS3.CORE.CompoundControl',
-      'tmpl!SBIS3.CONTROLS.MissSpell',
-      'css!SBIS3.CONTROLS.MissSpell',
-      'js!SBIS3.CONTROLS.Link'
+      'Lib/Control/CompoundControl/CompoundControl',
+      'tmpl!SBIS3.CONTROLS/Utils/KbLayoutRevert/resources/MissSpell',
+      'css!SBIS3.CONTROLS/Utils/KbLayoutRevert/resources/MissSpell',
+      'SBIS3.CONTROLS/Link'
    ],
    function(CompoundControl, tmpl){
       

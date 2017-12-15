@@ -3,12 +3,12 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.RadioButton',
+define('SBIS3.CONTROLS/Radio/Button',
    [
-      'js!SBIS3.CONTROLS.RadioButtonBase',
-      'tmpl!SBIS3.CONTROLS.RadioButton/Button/RadioButton',
+      'SBIS3.CONTROLS/Radio/Button/RadioButtonBase',
+      'tmpl!SBIS3.CONTROLS/Radio/Button/RadioButton',
       'Core/Sanitize',
-      'css!SBIS3.CONTROLS.RadioButton/Button/RadioButton'
+      'css!SBIS3.CONTROLS/Radio/Button/RadioButton'
    ],
    function(RadioButtonBase,dotTplFn, Sanitize) {
 
@@ -16,8 +16,8 @@ define('js!SBIS3.CONTROLS.RadioButton',
 
    /**
     * Контрол, отображающий стандартную радиокнопку. Работает только в составе группы. В WebGenie не вытаскивается.
-    * @class SBIS3.CONTROLS.RadioButton
-    * @extends SBIS3.CONTROLS.RadioButtonBase
+    * @class SBIS3.CONTROLS/Radio/Button
+    * @extends SBIS3.CONTROLS/Radio/Button/RadioButtonBase
     * @cssModifier controls-Radio__primary акцентные кнопки
     * @public
     * @author Журавлев Максим Сергеевич
@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.RadioButton',
     * @css controls-RadioButton__caption Класс для изменения отображения текста подписи у радиокнопки.
     */
 
-   var RadioButton = RadioButtonBase.extend( /** @lends SBIS3.CONTROLS.RadioButton.prototype */ {
+   var RadioButton = RadioButtonBase.extend( /** @lends SBIS3.CONTROLS/Radio/Button.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _radioButtonCaption: '',

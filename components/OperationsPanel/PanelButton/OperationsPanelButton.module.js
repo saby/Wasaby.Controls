@@ -1,25 +1,25 @@
 /**
  * Created by as.suhoruchkin on 02.04.2015.
  */
-define('js!SBIS3.CONTROLS.OperationsPanelButton', [
-   'js!SBIS3.CORE.Control',
-   'js!SBIS3.CONTROLS.Clickable',
-   'js!SBIS3.CONTROLS.Checkable',
-   'tmpl!SBIS3.CONTROLS.OperationsPanelButton',
+define('SBIS3.CONTROLS/OperationsPanel/PanelButton/OperationsPanelButton', [
+   'Lib/Control/Control',
+   'SBIS3.CONTROLS/Mixins/Clickable',
+   'SBIS3.CONTROLS/Mixins/Checkable',
+   'tmpl!SBIS3.CONTROLS/OperationsPanel/PanelButton/OperationsPanelButton',
    'Core/core-instance',
-   'css!SBIS3.CONTROLS.OperationsPanelButton'
+   'css!SBIS3.CONTROLS/OperationsPanel/PanelButton/OperationsPanelButton'
 ], function(Control, Clickable, Checkable, dotTplFn, cInstance) {
 
    /**
     * Кнопка управления панелью массовых операций.
     *
-    * SBIS3.CONTROLS.OperationsPanelButton
-    * @class SBIS3.CONTROLS.OperationsPanelButton
-    * @extends SBIS3.CORE.Control
+    * SBIS3.CONTROLS/OperationsPanel/PanelButton/OperationsPanelButton
+    * @class SBIS3.CONTROLS/OperationsPanel/PanelButton/OperationsPanelButton
+    * @extends Lib/Control/Control
     * @author Сухоручкин Андрей Сергеевич
     *
-    * @mixes SBIS3.CONTROLS.Clickable
-    * @mixes SBIS3.CONTROLS.Checkable
+    * @mixes SBIS3.CONTROLS/Mixins/Clickable
+    * @mixes SBIS3.CONTROLS/Mixins/Checkable
     *
     * @cssModifier controls-OperationsPanelButton__showSeparator Отображает разделитель слева от кнопки.
     *
@@ -27,11 +27,11 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
     * @public
     * @category Actions
     * @initial
-    * <component data-component='SBIS3.CONTROLS.OperationsPanelButton'>
+    * <component data-component='SBIS3.CONTROLS/OperationsPanel/PanelButton/OperationsPanelButton'>
     *
     * </component>
     */
-   var OperationsPanelButton = Control.Control.extend([Clickable, Checkable], /** @lends SBIS3.CONTROLS.OperationsPanelButton.prototype */{
+   var OperationsPanelButton = Control.Control.extend([Clickable, Checkable], /** @lends SBIS3.CONTROLS/OperationsPanel/PanelButton/OperationsPanelButton.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
             this._notify('onBeforeLinkedPanelToggle', linkedPanel.isVisible());
 
             //Проверка для совместимости со тарой панелью операций, у которой метод toggle влияет на видимость
-            linkedPanel[cInstance.instanceOfModule(linkedPanel, 'SBIS3.CONTROLS.OperationsPanel') ? 'toggle' : 'togglePanel']();
+            linkedPanel[cInstance.instanceOfModule(linkedPanel, 'SBIS3.CONTROLS/OperationsPanel') ? 'toggle' : 'togglePanel']();
          }
          OperationsPanelButton.superclass._clickHandler.apply(this);
       },
@@ -100,7 +100,7 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
        * @see linkedPanel
        */
       setLinkedPanel: function(linkedPanel) {
-         if (linkedPanel && (cInstance.instanceOfModule(linkedPanel, 'SBIS3.CORE.OperationsPanel') || cInstance.instanceOfModule(linkedPanel, 'SBIS3.CONTROLS.OperationsPanel'))) {
+         if (linkedPanel && (cInstance.instanceOfModule(linkedPanel, 'Deprecated/Controls/OperationsPanel/OperationsPanel') || cInstance.instanceOfModule(linkedPanel, 'SBIS3.CONTROLS/OperationsPanel'))) {
             this._reassignPanel(linkedPanel);
             this.setChecked(linkedPanel.isVisible());
             this._setOnHover();

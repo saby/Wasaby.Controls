@@ -2,26 +2,26 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.ContextMenu', [
-    'js!SBIS3.CONTROLS.Menu',
-    'js!SBIS3.CONTROLS.PopupMixin'
+define('SBIS3.CONTROLS/Menu/ContextMenu', [
+    'SBIS3.CONTROLS/Menu',
+    'SBIS3.CONTROLS/Mixins/PopupMixin'
 ], function (Menu, PopupMixin) {
 
     'use strict';
 
     /**
      * Контрол, отображающий горизонтальное меню.
-     * @class SBIS3.CONTROLS.ContextMenu
+     * @class SBIS3.CONTROLS/Menu/ContextMenu
      * @author Крайнов Дмитрий Олегович
-     * @extends SBIS3.CONTROLS.Menu
-     * @mixes SBIS3.CONTROLS.PopupMixin
+     * @extends SBIS3.CONTROLS/Menu
+     * @mixes SBIS3.CONTROLS/Mixins/PopupMixin
      *
      * @control
      * @public
      * @category Button
      */
 
-    var ContextMenu = Menu.extend([PopupMixin], /** @lends SBIS3.CONTROLS.ContextMenu.prototype */ {
+    var ContextMenu = Menu.extend([PopupMixin], /** @lends SBIS3.CONTROLS/Menu/ContextMenu.prototype */ {
 
         _modifyOptions: function () {
             var cfg = ContextMenu.superclass._modifyOptions.apply(this, arguments);

@@ -1,25 +1,25 @@
 /**
  * Created by as.suhoruchkin on 02.04.2015.
  */
-define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
+define('SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate', [
    "Core/CommandDispatcher",
-   "js!SBIS3.CORE.CompoundControl",
-   "tmpl!SBIS3.CONTROLS.MergeDialogTemplate/DialogTemplate",
+   "Lib/Control/CompoundControl/CompoundControl",
+   "tmpl!SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate",
    "WS.Data/Source/SbisService",
    "WS.Data/Query/Query",
    "WS.Data/Collection/RecordSet",
    "Core/helpers/fast-control-helpers",
-   "tmpl!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellRadioButtonTpl",
-   "tmpl!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl",
-   "tmpl!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellTitleTpl",
-   "tmpl!SBIS3.CONTROLS.MergeDialogTemplate/resources/rowTpl",
-   "i18n!SBIS3.CONTROLS.MergeDialogTemplate",
-   "js!SBIS3.CONTROLS.Button",
-   "js!SBIS3.CONTROLS.TreeDataGridView",
-   "js!SBIS3.CONTROLS.ScrollContainer",
-   "i18n!!SBIS3.CONTROLS.MergeDialogTemplate",
-   'css!SBIS3.CONTROLS.MergeDialogTemplate/DialogTemplate',
-   'css!SBIS3.CONTROLS.RadioButton'
+   "tmpl!SBIS3.CONTROLS/OperationsPanel/Merge/resources/cellRadioButtonTpl",
+   "tmpl!SBIS3.CONTROLS/OperationsPanel/Merge/resources/cellCommentTpl",
+   "tmpl!SBIS3.CONTROLS/OperationsPanel/Merge/resources/cellTitleTpl",
+   "tmpl!SBIS3.CONTROLS/OperationsPanel/Merge/resources/rowTpl",
+   "i18n!SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate",
+   "SBIS3.CONTROLS/Button",
+   "SBIS3.CONTROLS/Tree/DataGridView",
+   "SBIS3.CONTROLS/ScrollContainer",
+   "i18n!!SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate",
+   'css!SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate',
+   'css!SBIS3.CONTROLS/Radio/Button'
 ], function( CommandDispatcher, Control, dotTplFn, SbisServiceSource, Query, RecordSet, fcHelpers, cellRadioButtonTpl, cellCommentTpl, cellTitleTpl, rowTpl) {
 
 

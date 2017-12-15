@@ -1,32 +1,32 @@
-define('js!SBIS3.CONTROLS.LongOperationHistory',
+define('SBIS3.CONTROLS/LongOperations/History',
    [
-      'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.LongOperations.Manager',
-      'js!SBIS3.CONTROLS.LongOperations.HistoryItem',
+      'Lib/Control/CompoundControl/CompoundControl',
+      'SBIS3.CONTROLS/LongOperations/Manager',
+      'SBIS3.CONTROLS/LongOperations/HistoryItem',
       'WS.Data/Source/DataSet',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Entity/Record',
       'Core/Sanitize',
-      'tmpl!SBIS3.CONTROLS.LongOperationHistory/History/LongOperationHistory',
-      'css!SBIS3.CONTROLS.LongOperationHistory',
-      'js!SBIS3.CONTROLS.Browser'/*###'js!SBIS3.Engine.Browser'*/,
-      'tmpl!SBIS3.CONTROLS.LongOperationHistory/History/resources/LongOperationHistoryDateTemplate',
-      'tmpl!SBIS3.CONTROLS.LongOperationHistory/History/resources/LongOperationHistoryTimeTemplate',
-      'tmpl!SBIS3.CONTROLS.LongOperationHistory/History/resources/LongOperationHistoryStatusTemplate',
-      'js!SBIS3.CONTROLS.FastDataFilter',/*###*/
-      'js!SBIS3.CONTROLS.DataGridView'
+      'tmpl!SBIS3.CONTROLS/LongOperations/History/LongOperationHistory',
+      'css!SBIS3.CONTROLS/LongOperations/History',
+      'SBIS3.CONTROLS/Browser'/*###'js!SBIS3.Engine.Browser'*/,
+      'tmpl!SBIS3.CONTROLS/LongOperations/History/resources/LongOperationHistoryDateTemplate',
+      'tmpl!SBIS3.CONTROLS/LongOperations/History/resources/LongOperationHistoryTimeTemplate',
+      'tmpl!SBIS3.CONTROLS/LongOperations/History/resources/LongOperationHistoryStatusTemplate',
+      'SBIS3.CONTROLS/Filter/FastData',/*###*/
+      'SBIS3.CONTROLS/DataGridView'
    ],
 
    function (CompoundControl, longOperationsManager, LongOperationHistoryItem, DataSet, RecordSet, Record, coreSanitize, dotTplFn) {
 
       /**
-       * SBIS3.CONTROLS.LongOperationHistory
-       * @class SBIS3.CONTROLS.LongOperationHistory
-       * @extends SBIS3.CORE.CompoundControl
+       * SBIS3.CONTROLS/LongOperations/History
+       * @class SBIS3.CONTROLS/LongOperations/History
+       * @extends Lib/Control/CompoundControl/CompoundControl
        *
        * @author Спирин Виктор Алексеевич
        */
-      var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLS.LongOperationHistory.prototype */{
+      var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLS/LongOperations/History.prototype */{
          _dotTplFn: dotTplFn,
 
          $protected: {

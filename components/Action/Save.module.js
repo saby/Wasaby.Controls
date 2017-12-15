@@ -1,5 +1,5 @@
-define('js!SBIS3.CONTROLS.Action.Save', [
-    'js!SBIS3.CONTROLS.Action.Action',
+define('SBIS3.CONTROLS/Action/Save', [
+    'SBIS3.CONTROLS/Action',
     'Core/core-instance',
     'Core/moduleStubs',
     'Core/Deferred'
@@ -7,26 +7,26 @@ define('js!SBIS3.CONTROLS.Action.Save', [
 
     /**
      * Базовый класс действия для сохранения данных.
-     * @class SBIS3.CONTROLS.Action.Save
+     * @class SBIS3.CONTROLS/Action/Save
      * @public
-     * @extends SBIS3.CONTROLS.Action.Action
+     * @extends SBIS3.CONTROLS/Action
      * @author Сухоручкин А.С.
      */
-    var Save = Action.extend(/** @lends SBIS3.CONTROLS.Action.Save.prototype */{
+    var Save = Action.extend(/** @lends SBIS3.CONTROLS/Action/Save.prototype */{
         $protected: {
             _options: {
                /**
                 * @cfg {SBIS3.CONTROLS.ISaveStrategy) Стратегия сохранения. Класс, который реализует сохранение записей.
-                * @see SBIS3.CONTROLS.ISaveStrategy
-                * @see SBIS3.CONTROLS.SaveStrategy.Base
-                * @see SBIS3.CONTROLS.SaveStrategy.Sbis
+                * @see SBIS3.CONTROLS/Action/Save/SaveStrategy/ISaveStrategy
+                * @see SBIS3.CONTROLS/Action/Save/SaveStrategy/Base
+                * @see SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis
                 */
-                saveStrategy: 'js!SBIS3.CONTROLS.SaveStrategy.Base'
+                saveStrategy: 'SBIS3.CONTROLS/Action/Save/SaveStrategy/Base'
             },
             _saveStrategy: undefined
         },
         /**
-         * @name SBIS3.CONTROLS.Action.Save#execute
+         * @name SBIS3.CONTROLS/Action/Save#execute
          * @function
          * @description
          * Запускает выполнение действия.
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.Action.Save', [
 
         /**
          * Возвращает стратегию сохранения
-         * @returns {SBIS3.CONTROLS.ISaveStrategy} strategy - стратегия сохранения
+         * @returns {SBIS3.CONTROLS/Action/Save/SaveStrategy/ISaveStrategy} strategy - стратегия сохранения
          */
         getSaveStrategy: function () {
             return this._saveStrategy || (this._saveStrategy = this._makeSaveStrategy());
@@ -65,10 +65,10 @@ define('js!SBIS3.CONTROLS.Action.Save', [
 
         /**
          * Устанавливает стратегию сохранения
-         * @param {SBIS3.CONTROLS.ISaveStrategy} strategy - стратегия сохранения
+         * @param {SBIS3.CONTROLS/Action/Save/SaveStrategy/ISaveStrategy} strategy - стратегия сохранения
          */
         setSaveStrategy: function (strategy) {
-            if(!cInstance.instanceOfMixin(strategy, 'SBIS3.CONTROLS.ISaveStrategy')){
+            if(!cInstance.instanceOfMixin(strategy, 'SBIS3.CONTROLS/Action/Save/SaveStrategy/ISaveStrategy')){
                 throw new Error('The strategy must implemented interfaces the SBIS3.CONTROLS.ISaveStrategy.')
             }
             this._saveStrategy = Deferred.success(strategy);

@@ -1,18 +1,18 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], function (cInstance) {
+define('SBIS3.CONTROLS/Action/List/Mixin/ListMixin', ['Core/core-instance'], function (cInstance) {
    'use strict';
    /**
-    * @mixin SBIS3.CONTROLS.Action.List.ListMixin
+    * @mixin SBIS3.CONTROLS/Action/List/Mixin/ListMixin
     * @public
     * @author Ганшин Я.О.
     */
-   var ListMixin = /** @lends SBIS3.CONTROLS.Action.List.ListMixin.prototype */{
+   var ListMixin = /** @lends SBIS3.CONTROLS/Action/List/Mixin/ListMixin.prototype */{
       $protected: {
          _options: {
             /**
              * @cfg {*} Связанный список.
              * @remark
-             * Список должен быть с примесью миксинов ({@link SBIS3.CONTROLS.ItemsControlMixin} или {@link WS.Data/Collection/IList}) для работы с однотипными элементами.
+             * Список должен быть с примесью миксинов ({@link SBIS3.CONTROLS/Mixins/ItemsControlMixin} или {@link WS.Data/Collection/IList}) для работы с однотипными элементами.
              * Подробнее о базовых платформенных списках вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/">Виды списков</a>.
              * @see getLinkedObject
              * @see setLinkedObject
@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
          if (this._options.dataSource)
             return this._options.dataSource;
 
-         if (cInstance.instanceOfMixin(this.getLinkedObject(), 'SBIS3.CONTROLS.ItemsControlMixin')) {
+         if (cInstance.instanceOfMixin(this.getLinkedObject(), 'SBIS3.CONTROLS/Mixins/ItemsControlMixin')) {
             return this.getLinkedObject().getDataSource();
          }
       },
@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
          if(!this.getLinkedObject())
             return [];
 
-         if (cInstance.instanceOfMixin(this.getLinkedObject(), 'SBIS3.CONTROLS.MultiSelectable')) {
+         if (cInstance.instanceOfMixin(this.getLinkedObject(), 'SBIS3.CONTROLS/Mixins/MultiSelectable')) {
             var selItems = this.getLinkedObject().getSelectedItems(false),
                records = [];
             if (selItems && selItems.getCount()) {
@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
                return records;
             }
          }
-         if (cInstance.instanceOfMixin(this.getLinkedObject(), 'SBIS3.CONTROLS.Selectable')) {
+         if (cInstance.instanceOfMixin(this.getLinkedObject(), 'SBIS3.CONTROLS/Mixins/Selectable')) {
             var key = this.getLinkedObject().getSelectedKey(),
                record = this.getLinkedObject().getItems().getRecordById(key);
             return record ? [record] : undefined;
@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
        */
       _getItems: function() {
          var listView = this.getLinkedObject();
-         if (cInstance.instanceOfModule(listView, 'SBIS3.CONTROLS.ListView')) {
+         if (cInstance.instanceOfModule(listView, 'SBIS3.CONTROLS/ListView')) {
             return this.getLinkedObject().getItems();
          }
          return this.getLinkedObject();
@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
        */
       _getListView: function() {
          var listView = this.getLinkedObject();
-         if (cInstance.instanceOfModule(listView, 'SBIS3.CONTROLS.ListView')) {
+         if (cInstance.instanceOfModule(listView, 'SBIS3.CONTROLS/ListView')) {
             return listView;
          }
          return undefined;

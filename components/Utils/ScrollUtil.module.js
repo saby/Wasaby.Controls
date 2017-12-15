@@ -1,10 +1,10 @@
 /**
  * Created by ad.chistyakova on 12.11.2015.
  */
-define('js!SBIS3.CONTROLS.ScrollUtil', ['Core/Abstract'], function(cAbstract) {
+define('SBIS3.CONTROLS/Utils/ScrollUtil', ['Core/Abstract'], function(cAbstract) {
    'use strict';
     /**
-     * @class SBIS3.CONTROLS.ScrollUtil
+     * @class SBIS3.CONTROLS/Utils/ScrollUtil
      * @public
      */
    var ScrollUtil = cAbstract.extend(/** @lends SSBIS3.CONTROLS.ScrollUtil.prototype */{

@@ -1,9 +1,9 @@
-define('js!SBIS3.CONTROLS.Utils.LinkUtil', [],
+define('SBIS3.CONTROLS/Utils/LinkUtil', [],
     /**
-     * @class SBIS3.CONTROLS.Utils.LinkUtil
+     * @class SBIS3.CONTROLS/Utils/LinkUtil
      * @public
      */
-    function () /** @lends SBIS3.CONTROLS.Utils.LinkUtil.prototype */{
+    function () /** @lends SBIS3.CONTROLS/Utils/LinkUtil.prototype */{
         return {
             preparedClassFromOptions: function (opts) {
                 var classes = ['mainLink', 'mainLink__2', 'mainLink__3', 'additionalLink', 'additionalLink__2', 'additionalLink__3', 'additionalLink__4', 'additionalLink__5'],

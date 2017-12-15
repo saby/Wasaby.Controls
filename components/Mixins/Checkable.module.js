@@ -1,13 +1,13 @@
-define('js!SBIS3.CONTROLS.Checkable', [], function() {
+define('SBIS3.CONTROLS/Mixins/Checkable', [], function() {
 
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного
-    * @mixin SBIS3.CONTROLS.Checkable
+    * @mixin SBIS3.CONTROLS/Mixins/Checkable
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var Checkable = /**@lends SBIS3.CONTROLS.Checkable.prototype  */{
+   var Checkable = /**@lends SBIS3.CONTROLS/Mixins/Checkable.prototype  */{
        /**
         * @event onCheckedChange При изменении состояния кнопки
         * Событие срабатывает при нажатии на кнопку, выставления/снятия флажка, выборе радиокнопки.

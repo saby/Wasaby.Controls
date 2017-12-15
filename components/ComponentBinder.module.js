@@ -1,15 +1,15 @@
-define('js!SBIS3.CONTROLS.ComponentBinder',
+define('SBIS3.CONTROLS/ComponentBinder',
     [
        "Core/Abstract",
-       'js!SBIS3.CONTROLS.HistoryController',
-       'js!SBIS3.CONTROLS.SearchController',
-       'js!SBIS3.CONTROLS.ScrollPagingController',
-       'js!SBIS3.CONTROLS.PagingController',
-       'js!SBIS3.CONTROLS.BreadCrumbsController',
-       'js!SBIS3.CONTROLS.FilterHistoryController',
-       'js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
-       'js!SBIS3.CONTROLS.DateRangeRelationController',
-       'js!SBIS3.CONTROLS.FilterController',
+       'SBIS3.CONTROLS/History/HistoryController',
+       'SBIS3.CONTROLS/ComponentBinder/SearchController',
+       'SBIS3.CONTROLS/ComponentBinder/ScrollPagingController',
+       'SBIS3.CONTROLS/ComponentBinder/PagingController',
+       'SBIS3.CONTROLS/ComponentBinder/BreadCrumbsController',
+       'SBIS3.CONTROLS/Filter/HistoryController',
+       'SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
+       'SBIS3.CONTROLS/ComponentBinder/DateRangeRelationController',
+       'SBIS3.CONTROLS/ComponentBinder/FilterController',
        "Core/core-instance",
         'Core/helpers/Function/forAliveOnly',
        "Core/helpers/Object/find",
@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
-    * @class SBIS3.CONTROLS.ComponentBinder
+    * @class SBIS3.CONTROLS/ComponentBinder
     * @extends Core/Abstract
     * @author Крайнов Дмитрий Олегович
     * @public
@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       if (gridView._options.startScrollColumn !== undefined) {
          gridView.updateScrollAndColumns();
       }
-      if (cInstance.instanceOfModule(gridView, 'SBIS3.CONTROLS.TreeDataGridView')) {
+      if (cInstance.instanceOfModule(gridView, 'SBIS3.CONTROLS/Tree/DataGridView')) {
          gridView._updateEditArrow();
       }
    }
@@ -58,11 +58,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
    /**
     * Контроллер, позволяющий связывать компоненты осуществляя базовое взаимодейтсие между ними
     * @author Герасимов Александр Максимович
-    * @class SBIS3.CONTROLS.ComponentBinder
+    * @class SBIS3.CONTROLS/ComponentBinder
     * @extends Core/Abstract
     * @public
     */
-   var ComponentBinder = cAbstract.extend(/**@lends SBIS3.CONTROLS.ComponentBinder.prototype*/{
+   var ComponentBinder = cAbstract.extend(/**@lends SBIS3.CONTROLS/ComponentBinder.prototype*/{
       /**
        * @event onDatesChange Происходит при изменении значения хотя бы одного из синхронизируемых контролов.
        * @param {Core/EventObject} eventObject Дескриптор события.
@@ -70,33 +70,33 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       $protected : {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.DataGridView} объект представления данных
+             * @cfg {SBIS3.CONTROLS/DataGridView} объект представления данных
              */
             view: undefined,
             /**
-             * @cfg {SBIS3.CONTROLS.BreadCrumbs} объект хлебных крошек
+             * @cfg {SBIS3.CONTROLS/BreadCrumbs} объект хлебных крошек
              */
             breadCrumbs: undefined,
             /**
-             * @cfg {SBIS3.CONTROLS.BackButton} объект кнопки назад
+             * @cfg {SBIS3.CONTROLS/Button/BackButton} объект кнопки назад
              */
             backButton: undefined,
             /**
-             * @cfg {SBIS3.CONTROLS.SearchForm} объект строки поиска
+             * @cfg {SBIS3.CONTROLS/SearchForm} объект строки поиска
              */
             searchForm: undefined,
             /**
-             * @cfg {SBIS3.CONTROLS.OperationsPanel} объект панели массовых операций
+             * @cfg {SBIS3.CONTROLS/OperationsPanel} объект панели массовых операций
              */
             operationPanel: undefined,
             /**
-             * @cfg {SBIS3.CONTROLS.FilterButton} объект кнопки фильтров
+             * @cfg {SBIS3.CONTROLS/Filter/Button} объект кнопки фильтров
              */
             filterButton: undefined,
             /**
-             * @cfg {SBIS3.CONTROLS.Paging} Устанавливает конфигурацию постраничной навигации.
+             * @cfg {SBIS3.CONTROLS/Paging} Устанавливает конфигурацию постраничной навигации.
              * @remark
-             * В качестве значения передают экземпляр класса {@link SBIS3.CONTROLS.Paging}.
+             * В качестве значения передают экземпляр класса {@link SBIS3.CONTROLS/Paging}.
              * <pre>
              *     // создаём экземпляр класса контрола "Постраничная навигация"
              *     var myPaging = new Paging({
@@ -158,7 +158,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        * для работы необходимо задать опциию view
        * @param {String} searchParamName параметр фильтрации для поиска
        * @param {String} searchCrumbsTpl шаблон отрисовки элемента пути в поиске
-       * @param {SBIS3.CONTROLS.SearchForm} [searchForm] объект формы поиска, если не передан используется тот, что задан в опциях
+       * @param {SBIS3.CONTROLS/SearchForm} [searchForm] объект формы поиска, если не передан используется тот, что задан в опциях
        * @param {String} [searchMode] В каком узле ищем, в текущем или в корне
        * @example
        * <pre>
@@ -202,8 +202,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       /**
        * Метод для связывания хлебных крошек с представлением данных
        * для работы необходимо задать опциию view
-       * @param {SBIS3.CONTROLS.BreadCrumbs} [breadCrumbs] объект хлебных крошек, если не передан используется тот, что задан в опциях
-       * @param {SBIS3.CONTROLS.BackButton} [backButton] объект книпоки назад, если не передан используется тот, что задан в опциях
+       * @param {SBIS3.CONTROLS/BreadCrumbs} [breadCrumbs] объект хлебных крошек, если не передан используется тот, что задан в опциях
+       * @param {SBIS3.CONTROLS/Button/BackButton} [backButton] объект книпоки назад, если не передан используется тот, что задан в опциях
        * @example
        * <pre>
        *     myBinder = new ComponentBinder({
@@ -229,7 +229,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        * Метод для связывания панели массовых оперций с представлением данных
        * для работы необходимо задать опциию view
        * @param {Boolean} hideCheckBoxes флаг, показывающий, скрывать checkBox'ы для отметки записей
-       * @param {SBIS3.CONTROLS.OperationsPanel} [operationPanel] объект панели массовых операций, если не передан используется тот, что задан в опциях
+       * @param {SBIS3.CONTROLS/OperationsPanel} [operationPanel] объект панели массовых операций, если не передан используется тот, что задан в опциях
        * в представлении данных вместе с панелью или нет.
        * @example
        * <pre>
@@ -437,7 +437,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        * @param onlyByCapacity {Boolean} только по разрядности. Т.е., выбирая новый период в одном контроле,
        * новые значения присвоятся в других контролах только если произошла смена разрядности или нарушено
        * условие I < II < III < IV< ... .
-       * @param lockButton {SBIS3.CONTROLS.StateButton} кнопка включаящая/выключаящая связывание компонентов.
+       * @param lockButton {SBIS3.CONTROLS/Button/StateButton} кнопка включаящая/выключаящая связывание компонентов.
        */
       bindDateRanges: function(dateRanges, step, showLock, onlyByCapacity, lockButton) {
          if (!this._dateRangeRelationController) {

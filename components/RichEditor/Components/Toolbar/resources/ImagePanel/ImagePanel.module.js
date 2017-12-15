@@ -1,13 +1,13 @@
-define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
+define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel',
    [
-      'js!SBIS3.CONTROLS.CompoundControl',
-      'js!SBIS3.CONTROLS.PopupMixin',
-      'js!SBIS3.CORE.LikeWindowMixin',
+      'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/Mixins/PopupMixin',
+      'Lib/Mixins/LikeWindowMixin',
       'WS.Data/Di',
-      'tmpl!SBIS3.CONTROLS.RichEditor.ImagePanel',
+      'tmpl!SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel',
       "Core/EventBus",
       'js!SBIS3.CORE.FileStorageLoader',
-      'css!SBIS3.CONTROLS.RichEditor.ImagePanel'
+      'css!SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel'
    ], function(CompoundControl, PopupMixin, LikeWindowMixin, Di, dotTplFn, EventBus) {
       'use strict';
 

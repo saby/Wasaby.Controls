@@ -1,14 +1,14 @@
-define('js!SBIS3.CONTROLS.SuggestTextBox', [
-   'js!SBIS3.CONTROLS.TextBox',
-   'js!SBIS3.CONTROLS.TextBoxUtils',
-   'js!SBIS3.CONTROLS.PickerMixin',
-   'js!SBIS3.CONTROLS.SuggestMixin',
-   'js!SBIS3.CONTROLS.ChooserMixin',
-   'js!SBIS3.CONTROLS.SuggestTextBoxMixin',
-   'js!SBIS3.CONTROLS.SearchMixin',
-   'tmpl!SBIS3.CONTROLS.SuggestTextBox/resources/afterFieldWrapper',
+define('SBIS3.CONTROLS/Suggest/SuggestTextBox', [
+   'SBIS3.CONTROLS/TextBox',
+   'SBIS3.CONTROLS/TextBox/resources/TextBoxUtils',
+   'SBIS3.CONTROLS/Mixins/PickerMixin',
+   'SBIS3.CONTROLS/Mixins/SuggestMixin',
+   'SBIS3.CONTROLS/Mixins/ChooserMixin',
+   'SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin',
+   'SBIS3.CONTROLS/Mixins/SearchMixin',
+   'tmpl!SBIS3.CONTROLS/Suggest/resources/afterFieldWrapper',
    'Core/core-instance',
-   'css!SBIS3.CONTROLS.SuggestTextBox/SuggestTextBox/SuggestTextBox'
+   'css!SBIS3.CONTROLS/Suggest/SuggestTextBox/SuggestTextBox'
 ], function (
     TextBox,
     TextBoxUtils,
@@ -23,14 +23,14 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
 
    /**
     * Поле ввода с автодополнением
-    * @class SBIS3.CONTROLS.SuggestTextBox
-    * @extends SBIS3.CONTROLS.TextBox
+    * @class SBIS3.CONTROLS/Suggest/SuggestTextBox
+    * @extends SBIS3.CONTROLS/TextBox
     *
-    * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.SuggestMixin
-    * @mixes SBIS3.CONTROLS.ChooserMixin
-    * @mixes SBIS3.CONTROLS.SearchMixin
-    * @mixes SBIS3.CONTROLS.SuggestTextBoxMixin
+    * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
+    * @mixes SBIS3.CONTROLS/Mixins/SuggestMixin
+    * @mixes SBIS3.CONTROLS/Mixins/ChooserMixin
+    * @mixes SBIS3.CONTROLS/Mixins/SearchMixin
+    * @mixes SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin
     *
     * @demo SBIS3.CONTROLS.Demo.MySuggestTextBox Поле ввода с автодополнением
     *

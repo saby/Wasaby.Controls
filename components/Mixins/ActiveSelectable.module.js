@@ -1,22 +1,22 @@
 /**
  * Created by am.gerasimov on 24.11.2015.
  */
-define('js!SBIS3.CONTROLS.ActiveSelectable', [
+define('SBIS3.CONTROLS/Mixins/ActiveSelectable', [
    "Core/Deferred",
    "WS.Data/Entity/Model",
    "Core/core-instance",
-   "js!SBIS3.CONTROLS.ToSourceModel",
-   "js!SBIS3.CONTROLS.Utils.SourceUtil",
-   "js!SBIS3.CONTROLS.ArraySimpleValuesUtil"
+   "SBIS3.CONTROLS/Utils/ToSourceModel",
+   "SBIS3.CONTROLS/Utils/SourceUtil",
+   "SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil"
 ], function(Deferred, Model, cInstance, ToSourceModel, SourceUtil, ArraySimpleValuesUtil) {
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента
-    * @mixin SBIS3.CONTROLS.ActiveSelectable
+    * @mixin SBIS3.CONTROLS/Mixins/ActiveSelectable
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var ActiveSelectable = /**@lends SBIS3.CONTROLS.ActiveSelectable.prototype  */{
+   var ActiveSelectable = /**@lends SBIS3.CONTROLS/Mixins/ActiveSelectable.prototype  */{
       $protected: {
          _options: {
             /**
@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
       },
 
       $constructor: function() {
-         if(!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.Selectable')) {
+         if(!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS/Mixins/Selectable')) {
             throw new Error('Selectable mixin is required');
          }
 

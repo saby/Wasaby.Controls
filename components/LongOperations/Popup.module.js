@@ -1,20 +1,20 @@
-define('js!SBIS3.CONTROLS.LongOperationsPopup',
+define('SBIS3.CONTROLS/LongOperations/Popup',
    [
       "Core/UserInfo",
       "Core/core-merge",
       'Core/Deferred',
       'Core/EventBus',
       /*###"Core/helpers/string-helpers",*/
-      'js!SBIS3.CORE.TabMessage',
-      /*###'js!SBIS3.CONTROLS.WaitIndicator',*/
-      "js!SBIS3.CONTROLS.NotificationPopup",
-      'js!SBIS3.CONTROLS.LongOperations.Entry',
-      "tmpl!SBIS3.CONTROLS.LongOperationsPopup/resources/headerTemplate",
-      "tmpl!SBIS3.CONTROLS.LongOperationsPopup/resources/contentTemplate",
-      "tmpl!SBIS3.CONTROLS.LongOperationsPopup/resources/footerTemplate",
-      "js!SBIS3.CORE.FloatArea",
-      "css!SBIS3.CONTROLS.LongOperationsPopup",
-      "js!SBIS3.CONTROLS.LongOperationsList"
+      'Lib/TabMessage/TabMessage',
+      /*###'SBIS3.CONTROLS/WaitIndicator',*/
+      "SBIS3.CONTROLS/NotificationPopup",
+      'SBIS3.CONTROLS/LongOperations/Entry',
+      "tmpl!SBIS3.CONTROLS/LongOperations/resources/headerTemplate",
+      "tmpl!SBIS3.CONTROLS/LongOperations/resources/contentTemplate",
+      "tmpl!SBIS3.CONTROLS/LongOperations/resources/footerTemplate",
+      "Lib/Control/FloatArea/FloatArea",
+      "css!SBIS3.CONTROLS/LongOperations/Popup",
+      "SBIS3.CONTROLS/LongOperations/List"
    ],
 
    function (UserInfo, cMerge, Deferred, EventBus, /*###strHelpers,*/ TabMessage, /*###WaitIndicator,*/ NotificationPopup, LongOperationEntry, headerTemplate, contentTpl, footerTpl, FloatArea) {
@@ -26,12 +26,12 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
 
       /**
        * Класс всплывающего информационное окна длительных операций
-       * @class SBIS3.CONTROLS.LongOperationsPopup
-       * @extends SBIS3.CONTROLS.NotificationPopup
+       * @class SBIS3.CONTROLS/LongOperations/Popup
+       * @extends SBIS3.CONTROLS/NotificationPopup
        *
        * @author Спирин Виктор Алексеевич
        */
-      var LongOperationsPopup = NotificationPopup.extend(/** @lends SBIS3.CONTROLS.LongOperationsPopup.prototype */{
+      var LongOperationsPopup = NotificationPopup.extend(/** @lends SBIS3.CONTROLS/LongOperations/Popup.prototype */{
          $protected: {
             _options: {
                userId: UserInfo.get('Пользователь'),
@@ -159,7 +159,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             this.subscribeTo(this.getChildControlByName('registryOperationButton'), 'onActivated', function () {
                self._showFloatArea({
                   title: rk('Все операции'),
-                  template: 'js!SBIS3.CONTROLS.LongOperationsRegistry',
+                  template: 'SBIS3.CONTROLS/LongOperations/Registry',
                   componentOptions: {
                      columns: {
                         userPic: false
@@ -546,7 +546,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             var self = this;
             var promise = new Deferred();
             if (!this._loadingIndicator) {
-               require(['js!SBIS3.CORE.LoadingIndicator'], function (LoadingIndicator) {
+               require(['Deprecated/Controls/LoadingIndicator/LoadingIndicator'], function (LoadingIndicator) {
                   self._loadingIndicator = new LoadingIndicator({message:self._options.waitIndicatorText || DEFAULT_WAITINDICATOR_TEXT});
                   self._loadingIndicator.show();
                   promise.callback();

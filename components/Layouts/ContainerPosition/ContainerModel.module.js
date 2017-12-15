@@ -1,6 +1,6 @@
    /* Ответственный за модуль: Дубровин Игорь Михайлович */
 /** Created by im.dubrovin */
-define('js!SBIS3.CONTROLS.ContainerModel',[
+define('SBIS3.CONTROLS/Layouts/ContainerPosition/ContainerModel',[
    'Core/core-extend'
 ],function(cExtend) {
    /**

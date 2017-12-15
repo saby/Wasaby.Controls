@@ -2,14 +2,14 @@
  * Created by ps.borisov on 08.09.2016.
  */
 
-define('js!SBIS3.CONTROLS.Slider',
+define('SBIS3.CONTROLS/Slider',
    [
-      'js!SBIS3.CORE.CompoundControl',
-      'tmpl!SBIS3.CONTROLS.Slider/Slider/Slider',
-      'js!SBIS3.CONTROLS.DragNDropMixin',
-      'js!SBIS3.CONTROLS.RangeMixin',
+      'Lib/Control/CompoundControl/CompoundControl',
+      'tmpl!SBIS3.CONTROLS/Slider/Slider',
+      'SBIS3.CONTROLS/Mixins/DragNDropMixin',
+      'SBIS3.CONTROLS/Mixins/RangeMixin',
       'Core/IoC',
-      'css!SBIS3.CONTROLS.Slider/Slider/Slider'
+      'css!SBIS3.CONTROLS/Slider/Slider'
    ], function(CompoundControl, dotTplFn, DragNDropMixinNew, RangeMixin, IoC) {
       'use strict';
       //TODO: documentation
@@ -24,13 +24,13 @@ define('js!SBIS3.CONTROLS.Slider',
          /**
           * Класс контрола "Слайдер".
           *
-          * @class SBIS3.CONTROLS.Slider
-          * @extends SBIS3.CORE.CompoundControl
+          * @class SBIS3.CONTROLS/Slider
+          * @extends Lib/Control/CompoundControl/CompoundControl
           * @public
           * @control
           *
-          * @mixes SBIS3.CONTROLS.DragNDropMixin
-          * @mixes SBIS3.CONTROLS.RangeMixin
+          * @mixes SBIS3.CONTROLS/Mixins/DragNDropMixin
+          * @mixes SBIS3.CONTROLS/Mixins/RangeMixin
           *
           * @author Борисов Петр Сергеевич
           *
@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.Slider',
           *
           * @demo SBIS3.CONTROLS.Demo.SliderDemo
           */
-         Slider = CompoundControl.extend([DragNDropMixinNew, RangeMixin],/** @lends SBIS3.CONTROLS.Slider.prototype */{
+         Slider = CompoundControl.extend([DragNDropMixinNew, RangeMixin],/** @lends SBIS3.CONTROLS/Slider.prototype */{
              /**
               * @event onDrawValueChange Происходит при отрисовке нового положения ползунка слайдера.
               * @param {Number} startValue Положение левого ползунка слайдера.

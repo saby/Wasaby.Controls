@@ -5,15 +5,15 @@
  * Time: 10:50
  * To change this template use File | Settings | File Templates.
  */
-define('js!SBIS3.CONTROLS.Pager', [
-   'js!SBIS3.CORE.CompoundControl',
-   'tmpl!SBIS3.CONTROLS.Pager/Pager/Pager',
+define('SBIS3.CONTROLS/Pager', [
+   'Lib/Control/CompoundControl/CompoundControl',
+   'tmpl!SBIS3.CONTROLS/Pager/Pager',
    'Core/core-instance',
    'Core/helpers/string-helpers',
-   'js!SBIS3.CONTROLS.DropdownList',
-   'js!SBIS3.CORE.Paging',
-   'i18n!SBIS3.CONTROLS.Pager',
-   'css!SBIS3.CONTROLS.Pager/Pager/Pager'
+   'SBIS3.CONTROLS/DropdownList',
+   'Lib/Control/Paging/Paging',
+   'i18n!SBIS3.CONTROLS/Pager',
+   'css!SBIS3.CONTROLS/Pager/Pager'
 ], function(CompoundControl, dotTplFn, cInstance, strHelpers) {
 
    'use strict';
@@ -21,16 +21,16 @@ define('js!SBIS3.CONTROLS.Pager', [
    /**
     * Класс контрола "Блок управления постраничной навигацией".
     * Обычно такой контрол используют совместно со списками и размещают в правом нижнем углу.
-    * Контрол состоит из Кнопок постраничной навигации (см. {@link SBIS3.CONTROLS.Paging}) и выпадающего списка, через который устанавливают количество записей на странице.
-    * @class SBIS3.CONTROLS.Pager
-    * @extends SBIS3.CORE.CompoundControl
+    * Контрол состоит из Кнопок постраничной навигации (см. {@link SBIS3.CONTROLS/Paging}) и выпадающего списка, через который устанавливают количество записей на странице.
+    * @class SBIS3.CONTROLS/Pager
+    * @extends Lib/Control/CompoundControl/CompoundControl
     * @control
     * @category Decorate
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var Pager = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Pager.prototype */{
+   var Pager = CompoundControl.extend(/** @lends SBIS3.CONTROLS/Pager.prototype */{
       /**
        * @event onPageChange Происходит при смене текущей страницы: клик по номеру страницы или стрелке перехода на другую страницу.
        * @param {Core/EventObject} eventObject Дескриптор события.
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.Pager', [
       $protected: {
          _options: {
              /**
-              * @name SBIS3.CONTROLS.Pager#noSizePicker
+              * @name SBIS3.CONTROLS/Pager#noSizePicker
               * @cfg {Boolean} Признак, с помощью которого управляют отображением выпадающего списка, через который в пользовательском интерфейсе устанавливается количество записей на странице.
               * @remark
               * В значении false выпадающий список будет скрыт.
@@ -100,7 +100,7 @@ define('js!SBIS3.CONTROLS.Pager', [
          });
          //TODO Надо как-то по-другому понимать изменения в выделении listView
          opener = this.getOpener();
-         if (cInstance.instanceOfMixin(opener, 'SBIS3.CONTROLS.MultiSelectable')){
+         if (cInstance.instanceOfMixin(opener, 'SBIS3.CONTROLS/Mixins/MultiSelectable')){
             this.subscribeTo(opener, 'onSelectedItemsChange', function(ev, array){
                self.updateAmount(self._lastNumRecords, self._lastNextPage, array.length);
             });
@@ -147,8 +147,8 @@ define('js!SBIS3.CONTROLS.Pager', [
          }
       },
       /**
-       * Получить SBIS3.CORE.Paging
-       * @returns {SBIS3.CORE.Paging}
+       * Получить Lib/Control/Paging/Paging
+       * @returns {Lib/Control/Paging/Paging}
        */
       getPaging: function(){
          return this._paging;

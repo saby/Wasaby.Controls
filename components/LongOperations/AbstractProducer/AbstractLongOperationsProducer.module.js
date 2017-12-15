@@ -1,2 +1,2 @@
 // ВРЕМЕННО, для обратной совместимости
-define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer', ['js!SBIS3.CONTROLS.LongOperations.AbstractProducer'], function (arg) { return arg; });
+define('SBIS3.CONTROLS/LongOperations/AbstractProducer/AbstractLongOperationsProducer', ['SBIS3.CONTROLS/LongOperations/AbstractProducer'], function (arg) { return arg; });

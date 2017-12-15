@@ -1,42 +1,42 @@
-define('js!SBIS3.CONTROLS.BreadCrumbs', [
-   'js!SBIS3.CORE.CompoundControl',
-   'js!SBIS3.CONTROLS.ItemsControlMixin',
-   'js!SBIS3.CONTROLS.PickerMixin',
-   'js!SBIS3.CONTROLS.DecorableMixin',
-   'tmpl!SBIS3.CONTROLS.BreadCrumbs/BreadCrumbs/BreadCrumbs',
-   'tmpl!SBIS3.CONTROLS.BreadCrumbs/BreadCrumbs/resources/itemContentTpl',
-   'tmpl!SBIS3.CONTROLS.BreadCrumbs/BreadCrumbs/resources/dotsTpl',
-   'tmpl!SBIS3.CONTROLS.BreadCrumbs/BreadCrumbs/resources/itemTpl',
-   'tmpl!SBIS3.CONTROLS.BreadCrumbs/BreadCrumbs/resources/menuItem',
+define('SBIS3.CONTROLS/BreadCrumbs', [
+   'Lib/Control/CompoundControl/CompoundControl',
+   'SBIS3.CONTROLS/Mixins/ItemsControlMixin',
+   'SBIS3.CONTROLS/Mixins/PickerMixin',
+   'SBIS3.CONTROLS/Mixins/DecorableMixin',
+   'tmpl!SBIS3.CONTROLS/BreadCrumbs/BreadCrumbs',
+   'tmpl!SBIS3.CONTROLS/BreadCrumbs/resources/itemContentTpl',
+   'tmpl!SBIS3.CONTROLS/BreadCrumbs/resources/dotsTpl',
+   'tmpl!SBIS3.CONTROLS/BreadCrumbs/resources/itemTpl',
+   'tmpl!SBIS3.CONTROLS/BreadCrumbs/resources/menuItem',
    'Core/helpers/String/escapeHtml',
    'Core/helpers/String/escapeUnicode',
    "Core/IoC",
    'Core/helpers/Function/memoize',
-   'css!SBIS3.CONTROLS.BreadCrumbs/BreadCrumbs/BreadCrumbs',
-   'css!SBIS3.CONTROLS.Menu/Menu/Menu',
-   'css!SBIS3.CONTROLS.MenuItem/MenuItem/MenuItem'
+   'css!SBIS3.CONTROLS/BreadCrumbs/BreadCrumbs',
+   'css!SBIS3.CONTROLS/Menu/Menu',
+   'css!SBIS3.CONTROLS/Menu/MenuItem/MenuItem'
 ], function(CompoundControl, ItemsControlMixin, PickerMixin, DecorableMixin, dotTplFn, itemContentTpl, dotsTpl, itemTpl, menuItem, escapeHtml, escapeUnicode, IoC, memoize) {
    /**
     * Класс контрола "Хлебные крошки". Основное применение - <a href='/doc/platform/patterns-and-practices/typical-list/'>иерархические реестры</a>.
-    * @class SBIS3.CONTROLS.BreadCrumbs
-    * @extends SBIS3.CORE.CompoundControl
+    * @class SBIS3.CONTROLS/BreadCrumbs
+    * @extends Lib/Control/CompoundControl/CompoundControl
     *
     * @author Герасимов Александр Максимович
     *
-    * @mixes SBIS3.CONTROLS.ItemsControlMixin
-    * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.DecorableMixin
+    * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
+    * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
+    * @mixes SBIS3.CONTROLS/Mixins/DecorableMixin
     *
     * @control
     * @public
     * @category Navigation
     * @initial
-    * <component data-component='SBIS3.CONTROLS.BreadCrumbs'>
+    * <component data-component='SBIS3.CONTROLS/BreadCrumbs'>
     * </component>
     */
    'use strict';
    var BREAD_CRUMB_MIN_WIDTH = 36;
-   var BreadCrumbs = CompoundControl.extend([ItemsControlMixin, PickerMixin, DecorableMixin], /** @lends SBIS3.CONTROLS.BreadCrumbs.prototype */{
+   var BreadCrumbs = CompoundControl.extend([ItemsControlMixin, PickerMixin, DecorableMixin], /** @lends SBIS3.CONTROLS/BreadCrumbs.prototype */{
        /**
         * @event onItemClick Происходит при клике по хлебным крошкам (элементу коллекции).
         * @param {Number|String} idProperty Идентификатор элемента коллекции.
