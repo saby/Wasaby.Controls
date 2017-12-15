@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.Utils.ItemsSelection', ['Core/core-instance', 'Core/de
    function initSelectorAction(action, ctrl) {
       ctrl.subscribeTo(action, 'onExecuted', function(event, meta, result) {
          if(result) {
-            ctrl.setSelectedItems(result);
+            ctrl.addSelectedItems(result);
          }
          
          if(ctrl.isActive()) {
