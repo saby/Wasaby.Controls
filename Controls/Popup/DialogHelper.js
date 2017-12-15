@@ -9,7 +9,6 @@ define('js!Controls/Popup/DialogHelper',
       'use strict';
 
       /**
-       *
        * Хелпер открытия диалоговых окон
        * @class Controls/Popup/DialogHelper
        * @extends Core/Control
