@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
    "Core/helpers/Object/isEmpty",
    "Core/helpers/Object/isPlainObject",
    "SBIS3.CONTROLS/BreadCrumbs",
-   "tmpl!SBIS3.CONTROLS/resources/DataGridViewGroupBy",
+   "tmpl!SBIS3.CONTROLS/DataGridView/resources/DataGridViewGroupBy",
    "WS.Data/Adapter/Sbis"
 ], function (coreClone, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject) {
 

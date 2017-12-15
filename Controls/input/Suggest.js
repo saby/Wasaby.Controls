@@ -2,7 +2,7 @@ define('js!Controls/Input/Suggest',
    [
       'Core/Control',
       'tmpl!Controls/Input/Suggest/Suggest',
-      'WS.Data/Type/descriptor',
+      'js!WS.Data/Type/descriptor',
       'js!Controls/Input/resources/SuggestController'
    ],
    function(Control, template, types, SuggestController) {
