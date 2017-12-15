@@ -901,6 +901,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _getItemHash: function (id) {
             var selectedRecord;
+            
+            if (!this.getItems()) {
+               return;
+            }
+            
             if (this._isEnumTypeData()) {
                selectedRecord = this._getItemsProjection().getCurrent();
             }
