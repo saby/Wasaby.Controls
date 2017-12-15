@@ -8,9 +8,9 @@ define('js!Controls/List/interface/IHierarchyControl', [
     */
 
    /**
-    * @event Controls/List/interface/IHierarchyControl#nodeEnter (Название не согласовано) Перед проваливанием в папку
+    * @event Controls/List/interface/IHierarchyControl#nodeOpen Перед проваливанием в папку
     */
    /**
-    * @event Controls/List/interface/IHierarchyControl#nodeEntered (Название не согласовано) После проваливания в папку
+    * @event Controls/List/interface/IHierarchyControl#nodeOpened После проваливания в папку
     */
 });
