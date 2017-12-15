@@ -9,7 +9,7 @@ define('js!Controls/interface/IDataSource', [
     */
 
    /**
-    * @name Controls/interface/IDataSource#dataSource
+    * @name Controls/interface/IDataSource#connection
     * @cfg Источник данных.
     */
 

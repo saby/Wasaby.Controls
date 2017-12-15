@@ -1,33 +1,33 @@
-.close-button-mixin {
+.close-button-mixin(@important: ~'') {
   .inline-flexbox();
   .align-items(center);
   .justify-content(center);
-  color: #8991A9;
-  font-size: round(56px * @multiplier);
-  line-height: round(56px * @multiplier);
-  font-family: 'cbuc-icons';
-  width: @default-height;
-  height: @default-height;
-  background-color: #405A77;
-  background-image: none !important;
-  -webkit-box-shadow: @button-shadow !important;
-  -moz-box-shadow: @button-shadow !important;
-  box-shadow: @button-shadow !important;
-  .border-radius(@button-border-radius);
+  color: #8991A9 @important;
+  font-size: round(56px * @multiplier) @important;
+  line-height: round(56px * @multiplier) @important;
+  font-family: 'cbuc-icons' @important;
+  width: @default-height @important;
+  height: @default-height @important;
+  background-color: #405A77 @important;
+  background-image: none @important;
+  -webkit-box-shadow: @box-shadow_Button !important;
+  -moz-box-shadow: @box-shadow_Button !important;
+  box-shadow: @box-shadow_Button !important;
+  .border-radius(@border-radius_Button);
 
   &:before {
-    content: "\e66c";
-    text-shadow: @button-text-shadow;
+    content: "\e66c" @important;
+    text-shadow: @text-shadow_Button @important;
   }
 
   &:hover {
-    background: none;
-    background-color: #3D5571;
+    background: none @important;
+    background-color: #3D5571 @important;
   }
   &:active {
-    background: none;
+    background: none @important;
     box-shadow: none !important;
-    background-color: #3D5571;
+    background-color: #3D5571 @important;
   }
 }
 
@@ -57,73 +57,6 @@ body {
     width: round(84px * @multiplier) !important;
     height: round(84px * @multiplier) !important;
   }
-
-
-   //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
-   .ws-paging{
-      .ws-paging-small{
-         width: round(84px * @multiplier) !important;
-         height: round(84px * @multiplier) !important;
-         background: none !important;
-         border: @default-border-width solid #8991A9 !important;
-         font-size: round(48px * @multiplier) !important;
-         background-color: #354B62 !important;
-         line-height:   round(84px * @multiplier) !important;
-         margin: 0 8px 0 0 !important;
-         padding: 0 !important;
-         box-sizing: border-box !important;
-         color: #8991A9 !important;
-         &.ws-paging-active{
-            border: @default-border-width solid @default-border-color !important;
-            color: #E4E4E4 !important;
-            &:hover{
-               background-color: #1b2530 !important;
-            }
-         }
-         &.ws-paging-current{
-            border: @default-border-width solid @primary-color !important;
-            background:#354B62 !important;
-            color: #E4E4E4 !important;
-         }
-         &.ws-paging-next, &.ws-paging-end, &.ws-paging-first, &.ws-paging-prev {
-            position:relative;
-            &:before {
-               text-indent: 0 !important;
-               font-size: round(84px * @multiplier);
-               position:absolute;
-               top:-2px;
-               left:-2px;
-               font-family: 'carrypresto-icons' !important;
-            }
-         }
-         &.ws-paging-next {
-            &:before {
-               content: "\e97e";
-            }
-         }
-         &.ws-paging-end {
-            &:before {
-               content: "\e97d";
-
-            }
-         }
-         &.ws-paging-first {
-            &:before {
-               content: "\e980";
-            }
-         }
-         &.ws-paging-prev{
-            &:before {
-               content: "\e97f";
-            }
-         }
-      }
-   }
-   .controls-Pager{
-      .controls-Pager-block-amount, .controls-Pager-block-amount, controls-Pager-block-paging{
-         padding: 0;
-      }
-   }
   // стандарт должен соотносится с онлайном будет поправлено в новой тематизации
   // https://online.sbis.ru/opendoc.html?guid=36b0acbc-c8e4-4a57-9c80-7e0c43ed8dbd
   .controls-ItemsToolbar.controls-ItemsToolbar__edit.controls-ItemsToolbar__withEditActions {
@@ -142,77 +75,31 @@ body {
       }
     }
   }
-
+  .engine-Browser__path {
+    max-height: round(56px * @multiplier);
+    height: auto !important;
+  }
    .engine-BrowserTabs__header {
       height: round(100px * @multiplier);
    }
 
-   .controls-ListView__scrollPager {
-      .controls-IconButton {
-         background: @button-bg-color;
-         padding: 0;
-         border-style: solid;
-         border-width: @button-border-width;
-         border-color: @button-bg-color;
-        .box-shadow(@button-shadow);
-         .controls-Button__icon {
-            height: round(84px * @multiplier)!important;
-            width: round(84px * @multiplier)!important;
-            line-height: round(84px * @multiplier) !important;
-            position: absolute;
-            top: -@default-border-width;
-            left: -@default-border-width;
-            color: #E4E4E4 !important;
-         }
-         &:active {
-           background: @button-bg-active;
-           box-shadow: none;
-         }
-         &.ws-disabled {
-            .controls-Button__icon {
-               color: @button-disabled-text-color !important
-            }
-         }
-      }
-   }
-  .ws-float-area-title-generated {
-      line-height: round(100px * @multiplier);
-  }
-  .ws-float-area-title {
-    padding-left: round(24px * @multiplier);
-  }
-
   .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
-
     font-size: round(32px * @multiplier);
-
   }
 
-.controls-DateRangeBigChoose__dates-dates-top-gradient, .controls-DateRangeBigChoose__dates-dates-bottom-gradient {
-  display: none;
-}
+  .controls-DateRangeBigChoose__dates-dates-top-gradient, .controls-DateRangeBigChoose__dates-dates-bottom-gradient {
+    display: none;
+  }
 
-.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
-   border-color: rgba(96, 170, 221, 0.15);
-   border-width: @default-border-width;
-}
-.ws-is-desktop-platform .controls-Button:not(.ws-disabled):not(:active).controls-Button-color__default:hover {
-
-}
-.controls-BreadCrumbs__crumb {
-   .icon-primary {
-      color: @bread-crumb-title-color !important;
-   }
-}
-
-    .ws-float-area-nostack-panel-shadow-standart {
-      border: 1px solid #2e404f;
-      background: #2e404f;
-    }
-    .ws-float-area-title-generated {
-      margin-right: round(84px * @multiplier);
-    }
-
+  .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
+     border-color: rgba(96, 170, 221, 0.15);
+     border-width: @default-border-width;
+  }
+  .controls-BreadCrumbs__crumb {
+     .icon-primary {
+        color: @bread-crumb-title-color !important;
+     }
+  }
     .controls-Button .controls-Button__icon.icon-32 {
       top: 20%
     }
@@ -220,25 +107,16 @@ body {
       top: 50%
     }
 
-   .controls-DropdownList {
-      .controls-DropdownList__selectedItem {
-         .controls-DropdownList__afterCaptionWrapper, .controls-DropdownList__crossIcon {
-            font-size: round(84px * @multiplier) !important;
-            height: round(84px * @multiplier) !important;
-            width: round(84px * @multiplier) !important;
-            line-height: round(84px * @multiplier) !important;
-         }
-      }
-   }
-    .ws-float-area-stack-panel-shadow {
-        border-left: @default-border-width solid #00a2ef;
-        border-color: #00a4f0;
-        border-width: 0 0 0 @default-border-width;
-        border-style: solid;
-        -webkit-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
-        -moz-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
-        box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
-    }
+     .controls-DropdownList {
+        .controls-DropdownList__selectedItem {
+           .controls-DropdownList__afterCaptionWrapper, .controls-DropdownList__crossIcon {
+              font-size: round(84px * @multiplier) !important;
+              height: round(84px * @multiplier) !important;
+              width: round(84px * @multiplier) !important;
+              line-height: round(84px * @multiplier) !important;
+           }
+        }
+     }
 
    .controls-DateRangeBigChoose {
       // в онлайне в большом выборе периода иконки разного размера, а тут одинаковые 3rem
@@ -249,12 +127,10 @@ body {
          height: round(84px * @multiplier);
       }
    }
-
    // Выпилить как будем делать новые темы.
    .controls-DateRangeChoose__bodyWrapper {
       padding-top: round(8px * @multiplier);
    }
-
    .controls-DateRangeChoose {
       .controls-DateRangeChoose__home .icon-16 {
          font-size: round(84px * @multiplier) !important;
@@ -271,27 +147,12 @@ body {
          }
       }
    }
-
-  .ws-float-area-title {
-      font-size: round(40px * @multiplier)!important;
-      font-weight: normal !important;
-  }
-
     .controls__filter-button__clear-filter {
        font-size: round(32px * @multiplier);
     }
-
    .controls-ListView__item__selected .controls-DataGridView__td:first-child {
       background-size: round(5px * @multiplier);
    }
-}
-.ws-float-area-nostack-panel-overflow .ws-float-close.sbisname-window-title-close, .ws-float-close.sbisname-window-title-close {
-   top: round(8px * @multiplier)!important;
-}
-
-.ws-float-close.sbisname-window-title-close,
-body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
-  .close-button-mixin();
 }
 
 // SBIS3.CORE.CloseButton используется в DateRangeSlider. Удалить после того как выпилим SBIS3.CORE.CloseButton
@@ -308,7 +169,6 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
          .align-self(center);
       }
    }
-
    .controls-Browser__table {
       .controls-Browser__tableCell-filterButton {
          .controls__filterButton {
@@ -316,15 +176,6 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
          }
       }
    }
-
-}
-
-.controls-ComboBox {
-  &.controls-Picker__show {
-    border-width: 0;
-    border-style: solid;
-    border-color: @border-color_TextBox_hover;
-  }
 }
 
 .controls-ComboBox__picker {
@@ -360,14 +211,9 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
      background: @closeBigButtonImageHover;
    }
 }
-
-
 .controls-Button {
-  white-space: normal;
-   padding-bottom: 0; // FF only
-}
-.ws-float-area-stack-panel-shadow {
-  background: @basic-block-bg-color !important;
+  white-space: normal; //??
+   padding-bottom: 0; // FF only ???
 }
 
 body {
@@ -396,15 +242,6 @@ body {
    }
 }
 
-body  .ws-window {
-   background-color: #2C3E50;
-   border-style: solid;
-   border-color: transparent;
-   border-width: @default-border-width;
-}
-.ws-window-content {
-  background-color: @basic-block-bg-color !important;
-}
 .controls-listView td {
   font-size: round(28px * @multiplier);
 }
@@ -413,51 +250,9 @@ body  .ws-window {
     color: #2C3E50;
   background: #e4e4e4;
 }
-.controls-ListView__scrollPager {
-  height: round(84px * @multiplier) !important;
-}
 .controls-Link.controls__filter-button__clear-filter.ws-disabled {
   color: rgba(102, 170, 221, .2);
   font-size: round(32px * @multiplier);
-}
-
-
-body {
-  .engine-Browser__path {
-    max-height: round(56px * @multiplier);
-    height: auto !important;
-  }
-  .ws-window-titlebar {
-    color: @default-text-color;
-    line-height: round(100px * @multiplier);
-    height: round(100px * @multiplier);
-    position: absolute;
-    left: 0;
-    right: 0;
-    font-size: round(40px * @multiplier);
-    white-space: nowrap;
-    -moz-box-shadow: none!important;
-    -webkit-box-shadow: none!important;
-    background: transparent !important;
-    box-shadow: none!important;
-    font-weight: normal;
-  }
-  .ws-float-area-title {
-      font-size: round(40px * @multiplier)!important;
-      font-weight: normal !important;
-  }
-   .ws-window-titlebar-action.close {
-      .close-button-mixin();
-   }
-   .ws-window-title {
-      color: @default-text-color;
-      font-size: round(40px * @multiplier);
-      height: round(100px * @multiplier);
-      max-height: round(100px * @multiplier);
-      line-height: round(100px * @multiplier);
-      font-weight: normal;
-      margin: 0 round(92px * @multiplier) 0 round(24px * @multiplier);
-   }
 }
 
 .controls-Suggest__picker {
@@ -485,23 +280,8 @@ body {
 }
 
 body {
-  .ws-float-area-title-generated {
-      line-height: round(100px * @multiplier);
-  }
-  .ws-float-area-title {
-    padding-left: round(24px * @multiplier);
-    width: calc(100% ~'-' round(84px * @multiplier));
-  }
-   .ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
-      height: round(100px * @multiplier);
-      .ws-float-area-title {
-         line-height: round(100px * @multiplier);
-      }
-   }
-  .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
-
+   .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
     font-size: round(32px * @multiplier);
-
   }
 }
 
@@ -537,10 +317,6 @@ body {
       }
    }
 }
-.ws-float-area-stack-scroll-wrapper .ws-float-area-stack-panel-shadow {
-   border-left-color: @default-border-color-second;
-   border-left-width: round(3px * @multiplier);
-}
 .controls-editInPlace .controls-editInPlace__editor {
   background: @controls-editInPlace-editor-bg;
 }
@@ -549,31 +325,21 @@ body {
 }
 //todo: отказаться от данного сомнительного решения
 .controls-FormattedTextBox .controls-TextBox__wrapper .controls-TextBox__field .controls-FormattedTextBox__field-symbol {
-
     line-height: round(56px * @multiplier);
-
-  }
+}
   //TODO: придумать решение лучше, возможно на flex
 .controls-ComboBox.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
      vertical-align: top; // чтобы блок располагался аналогично controls-ComboBox__field, но растягивал блок
 }
-
 .controls-Link__field {
   vertical-align: baseline;
 }
-.controls-Paging .control-Paging__btn .controls-Button__icon {
-    line-height: round(56px * @multiplier)!important;
-    padding-right: round(11px * @multiplier);
-}
-
 .controls-DropdownList__picker .controls-DropdownList__multiselect.controls-DropdownList__item * {
     font-size: round(32px * @multiplier);
 }
-
 .icon-large {
   vertical-align: middle !important;
 }
-
 .controls-ToolBar__menuIcon {
    .icon-24 {
       font-size: @icon-large-size !important;
@@ -583,7 +349,6 @@ body {
       vertical-align: middle !important;
    }
 }
-
 .controls__filterButton__area-header {
    .controls-Link {
       .controls-Button__text{
@@ -591,9 +356,8 @@ body {
       }
    }
 }
-
 .controls__filter-button__apply-filter {
-    margin-right: round(8px * @multiplier);
+    margin-right: @top_window_button;
 }
 .controls__filter-button__clear-filter {
   .controls-Link__field {
@@ -695,7 +459,7 @@ body .controls-Browser__filterButton .controls__filterButton__filterLine-text {
     height: round(40px * @multiplier)
 }
 body .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton {
-    top: round(8px * @multiplier);
+    top: @top_window_button;
 }
 .controls-PopupMixin__closeButton {
   position: absolute;
@@ -707,71 +471,9 @@ body .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__cl
   .close-button-mixin();
 }
 
-body {
-   .ws-info-box {
-      background: @basic-block-bg-color;
-      color: @default-text-color;
-      border: @button-border;
-      padding: round(24px * @multiplier) round(84px * @multiplier) round(24px * @multiplier) round(24px * @multiplier);
-      &.ws-infobox-type-error {
-        box-shadow: rgba(0, 0, 0, 0.5) 0 0 round(20px * @multiplier);
-      }
-      .ws-infobox-triangle {
-         width: round(24px * @multiplier);
-         height: round(24px * @multiplier);
-         background: @basic-block-bg-color;
-         &.ws-infobox-triangle-bottom {
-            bottom: round(-15px * @multiplier);
-            border-right: @button-border;
-            border-bottom: @button-border;
-         }
-         &.ws-infobox-triangle-top {
-            top: round(-15px * @multiplier);
-            border-left: @button-border;
-            border-top: @button-border;
-         }
-         &.ws-infobox-triangle-vertical-right {
-            right: round(-15px * @multiplier);
-            border-right: @button-border;
-            border-top: @button-border;
-         }
-         &.ws-infobox-triangle-vertical-left {
-            left: round(-15px * @multiplier);
-            border-left: @button-border;
-            border-bottom: @button-border;
-         }
-      }
-
-      .ws-infobox-content {
-         color: @default-text-color;
-         font-size: round(28px * @multiplier);
-         ul {
-            padding-left: round(28px * @multiplier);
-         }
-      }
-
-      .ws-infobox-close-button.icon-disabled{
-         font-size: round(84px * @multiplier)!important;
-         width: round(84px * @multiplier)!important;
-         height: round(84px * @multiplier)!important;
-         right: 0;
-         top: 0;
-         color: @Infobox-cross-color!important;
-         overflow: hidden;
-         &:hover {
-            color: @Infobox-cross-color-hover!important;
-         }
-         &:before {
-            line-height: round(76px * @multiplier)!important;
-         }
-      }
-   }
-}
-
 .controls-BreadCrumbs__crumb {
    top: round(9px * @multiplier)
 }
-
 .ws-is-sbis-desktop {
   .controls-BreadCrumbs__crumb {
     top: -1px;
@@ -919,13 +621,6 @@ body {
       }
     }
   }
-
-  .controls-ListView__scrollPager:not(.ws-disabled):not(:active) {
-    &:hover {
-      border-color: @button-hover-bg;
-    }
-  }
-
 }
 
 .controls-MergeDialogTemplate .controls-TreeDataGridView__levelPadding {
@@ -937,8 +632,6 @@ body {
     height: round(84px * @multiplier);
   }
 }
-
-
 
 // В темах престо и розницы все сверстано на внутренних скролируемых контенерах.
 // Делаем что бы флоат арии всегда были с 100% высотой и не надо устанавливать ws-float-area__block-layout.
@@ -1014,14 +707,90 @@ body {
 
 //Убрать когда проектировщики сделают одинаковые отступы, обсуждали на этом совещании: https://online.sbis.ru/obj/Meeting/e6b722a9-d339-4016-9fd6-82b763c4e241
 .controls-ItemsToolbar.controls-ItemsToolbar__withEditActions {
-  bottom: round(8px * @multiplier);
+  bottom:@top_window_button
 }
 .controls-Browser__search {
-   margin: round(8px * @multiplier);
+   margin: @top_window_button
 }
 .controls-Browser__topTemplate {
-   padding: round(8px * @multiplier);
+   padding: @top_window_button
 }
+//ОКНА И ЭРИИ ИЗ WS`А
+//!IMPORTANT лучше чем увеличение веса селектора через BODY тк возможно собирать тему под селектором
+.ws-window-titlebar-action.close {
+  .close-button-mixin(~'!important');
+}
+.ws-float-area-title {
+  font-size: round(40px * @multiplier)!important;
+  font-weight: normal !important;
+  padding-left: round(24px * @multiplier) !important;
+  width: calc(100% ~'-' round(84px * @multiplier)) !important;
+}
+.ws-window-titlebar {
+  color: @default-text-color !important;
+  line-height: round(100px * @multiplier)!important;
+  height: round(100px * @multiplier)!important;
+  font-weight: normal !important;
+}
+.ws-window-title {
+  color: @default-text-color !important;
+  font-size: round(40px * @multiplier) !important;
+  height: round(100px * @multiplier) !important;
+  max-height: round(100px * @multiplier) !important;
+  line-height: round(100px * @multiplier) !important;
+  font-weight: normal !important;
+  margin: 0 round(92px * @multiplier) 0 round(24px * @multiplier) !important;
+}
+.ws-float-area-nostack-panel-shadow-standart {
+  border: 1px solid #2e404f !important;
+  background: #2e404f !important;
+}
+.ws-float-area-stack-panel-shadow {
+  border-left: @default-border-width solid #00a2ef !important;
+  border-color: #00a4f0 !important;
+  border-width: 0 0 0 @default-border-width !important;
+  border-style: solid!important;
+  -webkit-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2) !important;
+  -moz-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2) !important;
+  box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2) !important;
+  background: @basic-block-bg-color !important;
+}
+.ws-float-area-title-generated {
+  margin-right: round(84px * @multiplier) !important;
+  line-height: round(100px * @multiplier) !important;
+}
+
+.ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
+  height: round(100px * @multiplier )!important;
+  .ws-float-area-title {
+    line-height: round(100px * @multiplier) !important;
+  }
+}
+.ws-window {
+  background-color: @basic-block-bg-color !important;
+  border-style: solid !important;
+  border-color: transparent !important;
+  border-width: @default-border-width !important;
+}
+
+.ws-float-area-nostack-panel-overflow .ws-float-close.sbisname-window-title-close, .ws-float-close.sbisname-window-title-close {
+  top: @top_window_button !important;
+}
+
+.ws-float-close.sbisname-window-title-close,
+body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
+  .close-button-mixin();
+}
+.ws-float-area-stack-scroll-wrapper .ws-float-area-stack-panel-shadow {
+  border-left-color: @default-border-color-second;
+  border-left-width: round(3px * @multiplier);
+}
+//!IMPORTANT лучше чем увеличение веса селектора через BODY тк возможно собирать тему под селектором
+.ws-window-titlebar-action {
+  top: @top_window_button !important;
+}
+//ОКНА И ЭРИИ ИЗ WS`А
+
 //делаю только для тем, ибо опасно
 ws-is-ie, .ws-is-firefox {
   .controls-DropdownList .controls-DropdownList__selectedItem {

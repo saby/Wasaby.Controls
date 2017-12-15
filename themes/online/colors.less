@@ -15,6 +15,7 @@
 @default-border-color-bottom-disabled:   #e4e4e4;
 @default-border-color-error:             @error-color;
 @default-bg-color:                       #ffffff;
+@default-bg-color-hovered-item:          #F0F5FB;
 @default-bg-color-error:                 @error-bg-color;
 @default-bg-color-disabled:              transparent;
 @default-placeholder-color:              @disabled-color;
@@ -47,12 +48,12 @@
 //field-link
 @fieldLink-link-color-enabled:           #8991A9;
 @fieldLink-link-color-enabled-hover:     #313E78;
-@fieldLink-link-color-disabled:          @link-disabled-text-color;
+@fieldLink-link-color-disabled:          @color_Link-text_disabled;
 @fieldLink-link-color:                      #8991A9;
 @color_FieldLink_dropAllLinks:              @fieldLink-link-color-enabled;
 @fieldLink-link-color-hover:                #313E78;
-@color_FieldLink_show_all:                  @link-text-color;
-@color_FieldLink_show_all_hover:            @link-hover-text-color;
+@color_FieldLink_show_all:                  @color_Link-text;
+@color_FieldLink_show_all_hover:            @color_Link-text_hovered;
 @border-color_FieldLink_picker:             @gray-ccc-color;
 //search-form
 @border-color_SearchForm:                   transparent;
@@ -69,12 +70,12 @@
 @combo-box-arrowDown-color-hover:           @icon-color-primary-hover;
 @background-color_ComboBox_scrollContainer: @combo-box-picker-item-bg;
 @color_Combobox_empty_row:                  @disabled-color;
-//PhoneTextBox
-@color_PhoneTextBox-link:                   #0055BB;
 //OperationsPanelButton
 @color_OperationsPanelButton_state_disabled: @disabled-color;
-
-
+//ListView
+@background-color_ListView-item_hovered:     @default-bg-color-hovered-item;
+//DataGridView
+@background-color_DataGridView-item_hovered: @default-bg-color-hovered-item;
 //area-blocks
 @bg_BlockLayout:                         @default-border-color;
 @bg_Block_style-1:                       @default-bg-color;
@@ -83,5 +84,8 @@
 @bg_Block_style-4:                       #F7F4F0;
 @bg_Block_style-5:                       #F4F9FD;
 @bg_Block_style-6:                       #F0F5FB;
+@bg_BlockSeparator:                      @default-border-color;
+@border-color_Block:                     transparent;
+@box-shadow_Block:                       transparent;
 //header
 @header-orange:                             #D94700;

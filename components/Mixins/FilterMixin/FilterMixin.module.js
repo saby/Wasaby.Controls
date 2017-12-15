@@ -57,6 +57,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
              * @property {Boolean} resetVisibilityValue Значение поля при сбрасывании фильтра, или при пустом значении в value. Может быть не определено.
              * @property {String} resetCaption Текст по умолчанию. Если задали, то при пустом (или заданном в resetValue) значении будет
              * отображаться заданный здесь текст. Может быть не определено.
+             * @property {String} itemTemplate Шаблон отображения элемента строки примененных фильтров. Описание можно посмотреть <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/fbstr/#_2'>здесь</a>.
              * @translatable caption resetCaption
              */
             /**

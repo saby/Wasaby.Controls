@@ -10,11 +10,8 @@ define('js!Controls/interface/IMultiSelectable', [
    /**
     * @name Controls/interface/IMultiSelectable#selectedKeys
     * @cfg {Array} Массив ключевых полей выбранных элементов коллекции.
-    */
-
-   /**
-    * @event Controls/interface/ISingleSelectable#allowEmptyMultiSelection
-    * @cfg {Boolean} Устанавливает конфигурацию для режима множественного выбора, при которой разрешается/запрещается отсутствие выбранных элементов коллекции.
+    * @variant [null] выделено все
+    * @variant [] не выделено ничего
     */
 
    /**

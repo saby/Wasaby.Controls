@@ -8,14 +8,14 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
    "js!SBIS3.CONTROLS.ItemsControlMixin",
    "js!SBIS3.CONTROLS.FilterMixin",
    'Core/Deferred',
-   "js!SBIS3.CONTROLS.DropdownList",
    "tmpl!SBIS3.CONTROLS.FastDataFilter",
    "tmpl!SBIS3.CONTROLS.FastDataFilter/ItemTpl",
    'Core/helpers/Object/isEqual',
+   "js!SBIS3.CONTROLS.DropdownList",
    'css!SBIS3.CONTROLS.FastDataFilter'
 ],
 
-   function(constants, CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, DropdownList, dotTplFn, ItemTpl, isEqual) {
+   function(constants, CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, dotTplFn, ItemTpl, isEqual) {
 
       'use strict';
       /**

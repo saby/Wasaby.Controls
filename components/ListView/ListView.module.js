@@ -31,12 +31,9 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.ImitateEvents',
    'js!SBIS3.CORE.LayoutManager',
    'Core/helpers/markup-helpers',
-   'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.ScrollWatcher',
    'WS.Data/Collection/IBind',
-   'WS.Data/Collection/List',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
-   'tmpl!SBIS3.CONTROLS.ListView/resources/emptyData',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
    'tmpl!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
@@ -62,6 +59,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.VirtualScrollController',
    'js!SBIS3.CONTROLS.ListView.DragMove',
    'Core/helpers/Function/once',
+   'js!SBIS3.CONTROLS.Link',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'WS.Data/Collection/RecordSet',
    'i18n!SBIS3.CONTROLS.ListView',
@@ -72,7 +70,7 @@ define('js!SBIS3.CONTROLS.ListView',
    function (ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, ImitateEvents, LayoutManager, mHelpers,
-    Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+    ScrollWatcher, IBindCollection, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
     Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, LocalStorageNative, forAliveOnly, memoize, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove, once) {
      'use strict';
 
@@ -172,15 +170,16 @@ define('js!SBIS3.CONTROLS.ListView',
           * Ниже приведён код, с помощью которого можно изменять отображение набора операций для записей списка.
           * <pre>
           *    dataGrid.subscribe('onChangeHoveredItem', function(eventObject, hoveredItem) {
-          *       var actions = DataGridView.getItemsActions(),
-          *           instances = actions.getItemsInstances();
-          *       for (var i in instances) {
-          *          if (instances.hasOwnProperty(i)) {
-          *
-          *             // Будем скрывать кнопку удаления для всех строк
-          *             instances[i][i === 'delete' ? 'show' : 'hide']();
+          *       var actions = DataGridView.getItemsActions();
+          *       actions.ready().addCallback(function() {
+          *          var instances = actions.getItemsInstances();
+          *          for (var i in instances) {
+          *             if (instances.hasOwnProperty(i)) {
+          *                // Будем скрывать кнопку удаления для всех строк
+          *                instances[i][i === 'delete' ? 'show' : 'hide']();
+          *             }
           *          }
-          *       }
+          *       });
           *    });
           * </pre>
           * Подобная задача часто сводится к отображению различных операций для узлов, скрытых узлов и листьев для иерархических списков.
@@ -902,6 +901,20 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                /**
                 * @cfg {ListViewNavigation} Устанавливает конфиг для контроллера навигации ListView
+                * @example
+                * Пример 1:
+                * navigation: {
+                *    type: 'cursor',
+                *    config: {
+                *       field: 'timestamp',
+                *       position: 150
+                *    }
+                * }
+                * Пример 2:
+                * <ws:navigation type="cursor">
+                *    <ws:config field="Курсор" direction="both" position="{{ null }}"/>
+                * </ws:navigation>
+                *
                 */
                navigation: null,
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
