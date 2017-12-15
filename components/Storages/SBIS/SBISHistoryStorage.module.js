@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
    "Core/helpers/Function/forAliveOnly",
    "Core/IoC",
    "Core/constants",
-   "js!SBIS3.CORE.LocalStorage"
+   "Lib/Storage/LocalStorage"
 ], function(EventBus, cSessionStorage, SBISUserConfigStorage, SBISClientsGlobalConfigStorage, cAbstract, strHelpersMin, Deferred, forAliveOnly, IoC, constants, LocalStorage ) {
 
    'use strict';
