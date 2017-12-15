@@ -1641,9 +1641,15 @@ define('js!SBIS3.CONTROLS.ListView',
                   record: item,
                   container: correctTarget,
                   get position() {
-                     var targetCords = correctTarget[0].getBoundingClientRect(),
-                         containerCords = cont.getBoundingClientRect();
-                     return {
+                     // если контейнера нет в DOM'e, то getBoundingClientRect в IE вызовет ошибку
+                      var fakeTarget = {
+                              top: 0,
+                              left: 0
+                          },
+                          containerCords =  cont.getBoundingClientRect(),
+                          targetCords = cDetection.isIE10 && !correctTarget.width() ? fakeTarget: correctTarget[0].getBoundingClientRect();
+
+                      return {
                         /* При расчётах координат по вертикали учитываем прокрутку
                          * округлять нельзя т.к. в IE координаты дробные и из-за этого происходит смещение "операций над записью"
                          */
