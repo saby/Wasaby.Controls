@@ -11,8 +11,12 @@ define(
    ],
    function(SuggestController, cInstance) {
       'use strict';
-      
-      describe('Controls.Input._SuggestController', function () {
+      if (typeof mocha !== 'undefined') {
+         //Из-за того, что загрузка через Core/moduleStubs добавляет в global Deprecated/Controls/LoadingIndicator/LoadingIndicator,
+         //чтобы потом брать его из кэша
+         mocha.setup({globals: ['Controls/Input/resources/SuggestPopupController']});
+      }
+      describe('Controls.Input.SuggestController', function () {
    
          it('.search', function(done) {
             var self = {},

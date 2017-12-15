@@ -31,13 +31,20 @@ define('js!Controls/Input/Suggest',
    
          _afterMount: function() {
             var suggestController = new SuggestController({
-               suggestTemplate: this._options.suggestTemplate,
-               dataSource: this._options.dataSource,
-               searchDelay: this._options.searchDelay,
-               filter: this._options.filter,
-               minSearchLength: this._options.minSearchLength,
-               searchParam: this._options.searchParam,
-               textComponent: this._childControls[0]
+                  suggestTemplate: this._options.suggestTemplate,
+                  dataSource: this._options.dataSource,
+                  searchDelay: this._options.searchDelay,
+                  filter: this._options.filter,
+                  minSearchLength: this._options.minSearchLength,
+                  searchParam: this._options.searchParam,
+                  textComponent: this._childControls[0],
+                  displayProperty: this._options.displayProperty
+               }),
+               self = this;
+            
+            //TODO обсудить. Сделать событием Suggest? Вроде у всех есть.
+            this.subscribeTo(suggestController, 'onSelect', function(event, item) {
+               self._notify('onChangeValue', item.get(self._options.displayProperty));
             });
    
             this.once('onDestroy', function() {
@@ -56,8 +63,9 @@ define('js!Controls/Input/Suggest',
             searchDelay: types(Number),
             minSearchLength: types(Number),
             filter: types(Object),
-            searchParam: types(String),
-            clearable: types(Boolean)
+            searchParam: types(String).required(),
+            clearable: types(Boolean),
+            displayProperty: types(String).required()
          };
       };
    

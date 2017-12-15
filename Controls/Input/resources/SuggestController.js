@@ -4,8 +4,8 @@
 define('js!Controls/Input/resources/SuggestController',
    [
       'Core/Abstract',
-      'Core/Deferred'
-   ], function (Abstract, Deferred) {
+      'Core/moduleStubs'
+   ], function (Abstract, moduleStubs) {
    
    var _private = {
       search: function(self, textValue) {
@@ -31,33 +31,30 @@ define('js!Controls/Input/resources/SuggestController',
       },
    
       getSearchController: function(self) {
-         if (self._searchController) {
-            return Deferred.success(self._searchController);
-         }
-      
-         if (self._loadSearchControllerDeferred) {
-            return self._loadSearchControllerDeferred;
-         }
+         return moduleStubs.require(['js!Controls/Input/resources/SuggestPopupController', self._options.suggestTemplate]).addCallback(function(result) {
+            if (!self._searchController) {
+               self._searchController = new result[0]({
+                  dataSource: self._options.dataSource,
+                  searchParam: self._options.searchParam,
+                  searchDelay: self._options.searchDelay,
+                  filter: self._options.filter,
+                  popupTemplate: self._options.suggestTemplate,
+                  popupOpener: self._options.textComponent,
+                  displayProperty: self._options.displayProperty
+               });
+               
+               //Надо подписаться, т.к. событие от контроллера не всплывает.
+               self.subscribeTo(self._searchController, 'onSelect', function(event, result) {
+                  self._notify('onSelect', result);
+               });
    
-         self._loadSearchControllerDeferred = new Deferred();
-      
-         requirejs(['js!Controls/Input/resources/SuggestPopupController'], function (controller) {
-            self._loadSearchControllerDeferred.callback(self._searchController = new controller({
-               dataSource: self._options.dataSource,
-               searchParam: self._options.searchParam,
-               searchDelay: self._options.searchDelay,
-               filter: self._options.filter,
-               popupTemplate: self._options.suggestTemplate,
-               popupOpener: self._options.textComponent
-            }));
-         
-            self.once('onDestroy', function() {
-               self._searchController.destroy();
-               self._searchController = null;
-            });
+               self.once('onDestroy', function() {
+                  self._searchController.destroy();
+                  self._searchController = null;
+               });
+            }
+            return self._searchController;
          });
-      
-         return self._loadSearchControllerDeferred;
       }
    };
    
@@ -66,7 +63,9 @@ define('js!Controls/Input/resources/SuggestController',
          SuggestController.superclass.constructor.call(this, options);
          this._options = options;
          this.subscribeTo(options.textComponent, 'onChangeValue', _private.onChangeValueHandler.bind(this, this));
-      }
+      },
+   
+      _moduleName: 'Controls/Input/resources/SuggestController'
    });
    
    /** For test **/
