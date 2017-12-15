@@ -59,6 +59,13 @@ body {
   background-size: round(74px * @multiplier);
 }
 body {
+  .controls-CommandsButton__picker {
+    .controls-MenuItem {
+      padding-right: round(78px * @multiplier) !important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
+    }
+  }
+}
+body {
   .controls-ListView__scrollPager {
     .controls-IconButton {
       background: @background_Button;
