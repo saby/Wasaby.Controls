@@ -11,7 +11,7 @@ define(
       describe('Controls/Popup/Manager/Container', function () {
          var id, items = new List();
          it('initialize', function(){
-            assert.equal(Container._options._popupItems.getCount(), 0);
+            assert.equal(Container._popupItems.getCount(), 0);
          });
 
          it('add popupItem', function(){
@@ -22,13 +22,13 @@ define(
                popupOptions: {}
             });
             Container.setPopupItems(items);
-            assert.equal(Container._options._popupItems.getCount(), 1);
+            assert.equal(Container._popupItems.getCount(), 1);
          });
 
          it('remove popupItem', function(){
             items.removeAt(0);
             Container.setPopupItems(items);
-            assert.equal(Container._options._popupItems.getCount(), 0);
+            assert.equal(Container._popupItems.getCount(), 0);
          });
       });
    }
