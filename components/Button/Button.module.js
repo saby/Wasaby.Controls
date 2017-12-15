@@ -90,6 +90,7 @@ define('js!SBIS3.CONTROLS.Button',
          _useNativeAsMain: true,
          constructor: function (cfg) {
             Button.superclass.constructor.call(this, cfg);
+            this._options = cfg;
             this._publish('onActivated');
          },
 
