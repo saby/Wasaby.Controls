@@ -1,10 +1,10 @@
 /**
  * Created by as.krasilnikov on 25.10.16.
  */
-define(['js!SBIS3.CONTROLS.FormattedTextBox'], function (FormattedTextBox) {
+define(['SBIS3.CONTROLS/FormattedTextBox'], function (FormattedTextBox) {
 
    'use strict';
-   describe('js!SBIS3.CONTROLS.FormattedTextBox', function () {
+   describe('SBIS3.CONTROLS/FormattedTextBox', function () {
       var FTB, inputField;
       before(function() {
          if (typeof $ !== 'undefined') {

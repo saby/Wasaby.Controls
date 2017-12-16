@@ -10,7 +10,7 @@ define('js!Controls/interface/IItems', [
 
    /**
     * @name Controls/interface/IItems#items
-    * @cfg {Array} Список с данными для отображения.
+    * @cfg {Array} Список элементов коллекции
     */
 
    /**

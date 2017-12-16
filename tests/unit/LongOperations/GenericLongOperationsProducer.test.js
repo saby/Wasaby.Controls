@@ -1,8 +1,8 @@
 /* global:object define:function, beforeEach:function, afterEach:function, describe:function, context:function, it:function, assert:function, $ws:object */
 define([
-      'js!SBIS3.CONTROLS.LongOperations.GenericProducer',
-      'js!SBIS3.CONTROLS.LongOperations.Entry',
-      'js!SBIS3.CONTROLS.LongOperations.Const',
+      'SBIS3.CONTROLS/LongOperations/GenericProducer',
+      'SBIS3.CONTROLS/LongOperations/Entry',
+      'SBIS3.CONTROLS/LongOperations/Const',
       'Core/core-instance',
       'Core/Deferred',
       'Core/UserInfo'
@@ -15,7 +15,7 @@ define([
          mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug', 'sharedBusLog', 'Lib/ServerEventBus/class/logger/ConnectWatchDog', 'Lib/ServerEventBus/class/logger/ConsoleDocviewWatchDog']});
       }
 
-      var MODULE = 'SBIS3.CONTROLS.LongOperations.GenericProducer';
+      var MODULE = 'SBIS3.CONTROLS/LongOperations/GenericProducer';
       var IS_NODEJS = typeof process !== 'undefined';
 
       var userInfo = {
@@ -249,7 +249,7 @@ define([
             });
 
             it('Созданный экземпляр реализует интерфейс ILongOperationsProducer', function () {
-               assert.isOk(CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.LongOperations.IProducer'));
+               assert.isOk(CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS/LongOperations/IProducer'));
             });
 
             it('Метод getInstance и конструктор возвращают один и тот же экземпляр', function () {
@@ -689,7 +689,7 @@ define([
                assert.instanceOf(producer.fetch(null), Deferred);
             });
 
-            it('Возвращаемый обещаный результат разрешается массивом экземпляров класса SBIS3.CONTROLS.LongOperations.Entry', function (done) {
+            it('Возвращаемый обещаный результат разрешается массивом экземпляров класса SBIS3.CONTROLS/LongOperations/Entry', function (done) {
                producer.fetch(null)
                   .addCallback(function (results) {
                      try {

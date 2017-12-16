@@ -5,10 +5,10 @@
  * Created by am.gerasimov on 12.10.2016.
  */
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil'], function (KbLayoutRevertUtil) {
+define(['SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertUtil'], function (KbLayoutRevertUtil) {
 
    'use strict';
-   describe('SBIS3.CONTROLS.Utils.KbLayoutRevertUtil', function () {
+   describe('SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertUtil', function () {
 
       describe('.process', function (){
 

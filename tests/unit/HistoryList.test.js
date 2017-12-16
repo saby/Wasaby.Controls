@@ -8,10 +8,10 @@
  * Created by am.gerasimov on 12.10.2016.
  */
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['js!SBIS3.CONTROLS.HistoryList'], function (HistoryList) {
+define(['SBIS3.CONTROLS/History/HistoryList'], function (HistoryList) {
 
    'use strict';
-   describe('SBIS3.CONTROLS.HistoryList', function () {
+   describe('SBIS3.CONTROLS/History/HistoryList', function () {
    
       beforeEach(function() {
          if (typeof $ === 'undefined') {

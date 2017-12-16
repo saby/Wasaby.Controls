@@ -1,8 +1,8 @@
-define(['js!SBIS3.CONTROLS.FilterPanel', 'WS.Data/Collection/RecordSet', 'Core/core-functions'], function (FilterPanel, RecordSet, cFunctions) {
+define(['SBIS3.CONTROLS/Filter/FilterPanel', 'WS.Data/Collection/RecordSet', 'Core/core-functions'], function (FilterPanel, RecordSet, cFunctions) {
 
    'use strict';
 
-   describe('SBIS3.CONTROLS.FilterPanel', function () {
+   describe('SBIS3.CONTROLS/Filter/FilterPanel', function () {
       var
          chooserProperties = {
             items: new RecordSet({
@@ -26,7 +26,7 @@ define(['js!SBIS3.CONTROLS.FilterPanel', 'WS.Data/Collection/RecordSet', 'Core/c
                value: [1, 2],
                textValue: 'Item 1, Item 2',
                resetValue: [1],
-               template: 'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser',
+               template: 'tmpl!SBIS3.CONTROLS/Filter/resources/TemplateChooser',
                properties: {
                   name: "List_1",
                   editor: 'list',
@@ -40,7 +40,7 @@ define(['js!SBIS3.CONTROLS.FilterPanel', 'WS.Data/Collection/RecordSet', 'Core/c
                value: [1],
                textValue: 'Item 1',
                resetValue: [],
-               template: 'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser',
+               template: 'tmpl!SBIS3.CONTROLS/Filter/resources/TemplateChooser',
                properties: {
                   name: "Dictionary_1",
                   editor: 'dictionary',
@@ -54,7 +54,7 @@ define(['js!SBIS3.CONTROLS.FilterPanel', 'WS.Data/Collection/RecordSet', 'Core/c
                value: [1, 2],
                textValue: 'Item 1, Item 2',
                resetValue: [],
-               template: 'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser',
+               template: 'tmpl!SBIS3.CONTROLS/Filter/resources/TemplateChooser',
                properties: {
                   name: "Favorites_1",
                   editor: 'favorites',
@@ -76,7 +76,7 @@ define(['js!SBIS3.CONTROLS.FilterPanel', 'WS.Data/Collection/RecordSet', 'Core/c
                value: [1000, 15000],
                textValue: 'from 1000 to 15000',
                resetValue: [null, null],
-               template: 'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateDataRange',
+               template: 'tmpl!SBIS3.CONTROLS/Filter/resources/TemplateDataRange',
                properties: {
                   minValue: 1000,
                   maxValue: 15000,
@@ -92,7 +92,7 @@ define(['js!SBIS3.CONTROLS.FilterPanel', 'WS.Data/Collection/RecordSet', 'Core/c
                value: true,
                textValue: 'boolean_true',
                resetValue: false,
-               template: 'js!SBIS3.CONTROLS.FilterPanelBoolean',
+               template: 'SBIS3.CONTROLS/Filter/Panel/components/Boolean',
                className: 'controls-FilterPanelItem__withSeparator'
             },
             {
@@ -102,7 +102,7 @@ define(['js!SBIS3.CONTROLS.FilterPanel', 'WS.Data/Collection/RecordSet', 'Core/c
                value: 1,
                textValue: 'Item 1',
                resetValue: null,
-               template: 'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser',
+               template: 'tmpl!SBIS3.CONTROLS/Filter/resources/TemplateChooser',
                properties: {
                   editor: 'radio',
                   name: 'RadioGroup_1',

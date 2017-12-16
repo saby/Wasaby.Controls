@@ -1,10 +1,10 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil'], function (NumberTextBoxUtil) {
+define(['SBIS3.CONTROLS/Utils/NumberTextBoxUtil'], function (NumberTextBoxUtil) {
 
    'use strict';
    var
        newState = null;
-   describe('SBIS3.CONTROLS.Utils.NumberTextBoxUtil', function () {
+   describe('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', function () {
 
       describe('.numberPress', function (){
          it('1|3.12 => 12|3.12', function (){

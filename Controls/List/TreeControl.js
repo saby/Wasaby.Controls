@@ -8,7 +8,7 @@ define('js!Controls/List/TreeControl', [
    var _private = {};
 
    /**
-    * Tree Control
+    * Компонент иерархичесего списка, отображаемого в виде дерева, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
     * @class Controls/List/TreeControl
     * @extends Controls/Control
     * @mixes Controls/interface/IItems
@@ -19,6 +19,7 @@ define('js!Controls/List/TreeControl', [
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
+    * @mixes Controls/List/interface/IHierarchy
     * @mixes Controls/List/interface/ITreeControl
     * @control
     * @public
