@@ -33,14 +33,14 @@
                name="positiveButton"
                allowChangeEnable="{{false}}"
                caption="{{positiveButton.caption}}"
-               template="{{'js!' + (positiveButton.isLink ? 'SBIS3.CONTROLS/Link' : 'SBIS3.CONTROLS/Button')}}"
+               template="{{(positiveButton.isLink ? 'SBIS3.CONTROLS/Link' : 'SBIS3.CONTROLS/Button')}}"
                class="controls-SubmitPopup__button{{hasCancelButton ? ' controls-SubmitPopup__button-mini'}} controls-Button__ellipsis"
             />
             <ws:partial
                name="negativeButton"
                allowChangeEnable="{{false}}"
                caption="{{negativeButton.caption}}"
-               template="{{'js!' + (negativeButton.isLink ? 'SBIS3.CONTROLS/Link' : 'SBIS3.CONTROLS/Button')}}"
+               template="{{(negativeButton.isLink ? 'SBIS3.CONTROLS/Link' : 'SBIS3.CONTROLS/Button')}}"
                class="controls-SubmitPopup__button{{hasCancelButton ? ' controls-SubmitPopup__button-mini'}} controls-Button__ellipsis"
             />
             <ws:if data="{{hasCancelButton}}">
@@ -48,7 +48,7 @@
                   name="cancelButton"
                   allowChangeEnable="{{false}}"
                   caption="{{cancelButton.caption}}"
-                  template="{{'js!' + (cancelButton.isLink ? 'SBIS3.CONTROLS/Link' : 'SBIS3.CONTROLS/Button')}}"
+                  template="{{(cancelButton.isLink ? 'SBIS3.CONTROLS/Link' : 'SBIS3.CONTROLS/Button')}}"
                   class="controls-SubmitPopup__button controls-SubmitPopup__button-mini controls-Button__ellipsis"
                />
             </ws:if>
@@ -60,7 +60,7 @@
                allowChangeEnable="{{false}}"
                caption="{{submitButton.caption}}"
                class="controls-SubmitPopup__button controls-Button__ellipsis"
-               template="{{'js!' + (submitButton.isLink ? 'SBIS3.CONTROLS/Link' : 'SBIS3.CONTROLS/Button')}}"
+               template="{{(submitButton.isLink ? 'SBIS3.CONTROLS/Link' : 'SBIS3.CONTROLS/Button')}}"
             />
          </ws:else>
       </div>
