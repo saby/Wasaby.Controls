@@ -4,7 +4,7 @@ define('SBIS3.CONTROLS/Tab/Control', [
    'Lib/Mixins/HasItemsMixin',
    "Core/IoC",
    'SBIS3.CONTROLS/SwitchableArea',
-   'SBIS3.CONTROLS/Tab/Buttons/TabButtons',
+   'SBIS3.CONTROLS/Tab/Buttons',
    'css!SBIS3.CONTROLS/Tab/Control/TabControl'
 ], function(CompoundControl, dotTplFn, HasItemsMixin, IoC) {
 
