@@ -39,10 +39,10 @@ dirWalker(sandBoxResources);
 dirWalker(vdomCtrlResources);
 dirWalker(wsResources);
 let contents = {
-   jsModules: jsModules,
-   "requirejsPaths": {
-      "SBIS3.CONTROLS":"~resources"
-   }
+   jsModules: jsModules
 };
 fs.writeFileSync(path.join(__dirname, 'components/contents.json'), JSON.stringify(contents, null, 3));
+contents["requirejsPaths"] = {
+   "SBIS3.CONTROLS":"~resources"
+}
 fs.writeFileSync(path.join(__dirname, 'components/contents.js'), 'contents = ' + JSON.stringify(contents, null, 3) + ';');
