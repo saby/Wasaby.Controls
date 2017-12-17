@@ -456,8 +456,10 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
       var _checkProducerName = function (prodName) {
          var i = prodName.indexOf(':');
          var modName = i !== -1 ? prodName.substring(0, i) : prodName;
-         var mods = require('Core/constants').jsModules;
-         return modName in mods ? {module:'js!' + modName, initer:i !== -1 ? prodName.substring(i + 1) : null} : null;
+         //var mods = require('Core/constants').jsModules;
+         //return modName in mods ? {module:'js!' + modName, initer:i !== -1 ? prodName.substring(i + 1) : null} : null;
+         //todo для тестов поправил так выписал задачу на рефакторинг https://online.sbis.ru/opendoc.html?guid=263b54d7-1063-4445-ad78-701cac458cc4
+         return {module: requirejs.defined(modName) ? modName : 'js!' + modName, initer:i !== -1 ? prodName.substring(i + 1) : null}
       };
 
       /**
