@@ -12,7 +12,7 @@ define('SBIS3.CONTROLS/Filter/FastData',
    "tmpl!SBIS3.CONTROLS/Filter/FastData/ItemTpl",
    'Core/helpers/Object/isEqual',
    "SBIS3.CONTROLS/DropdownList",
-   'css!SBIS3.CONTROLS/Filter/FastData/FastDataFilter'
+   'css!SBIS3.CONTROLS/Filter/FastData/FastData'
 ],
 
    function(constants, CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, dotTplFn, ItemTpl, isEqual) {
