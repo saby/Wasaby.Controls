@@ -116,12 +116,12 @@ define('SBIS3.CONTROLS/Filter/FilterPanel', [
              * @property {String} template Шаблон редактора.
              * Возможные значения:
              * <ol>
-             *    <li><b>tmpl!SBIS3.CONTROLS/Filter/resources/TemplateChooser</b><br/>Шаблон, реализующий выборку идентификаторов. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base}.</li>
+             *    <li><b>tmpl!SBIS3.CONTROLS/Filter/Panel/resources/TemplateChooser</b><br/>Шаблон, реализующий выборку идентификаторов. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base}.</li>
              *    <li><b>tmpl!SBIS3.CONTROLS/Filter/resources/TemplateDataRange</b><br/>Шаблон, реализующий выборку из числового диапазона. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS/Filter/Panel/components/DataRange}.</li>
              *    <li><b>SBIS3.CONTROLS/Filter/Panel/components/Boolean</b> - обыкновенный чекбокс {@link SBIS3.CONTROLS/Filter/Panel/components/Boolean}. Данный редактор поля фильтрации отображается без спойлера (см. {@link SBIS3.CONTROLS/Spoiler}), в связи с чем рекомендуется размещать его в конце списка доступных фильтров.</li>
              * </ol>
              * @property {Object} properties Опции, передаваемые в конфигурацию редактора.
-             * @property {String} properties.editor Тип редактора. Применяется при использовании шаблона редактора "tmpl!SBIS3.CONTROLS/Filter/resources/TemplateChooser". Когда опция не установлена, используется класс редактора "Список" (значение list).
+             * @property {String} properties.editor Тип редактора. Применяется при использовании шаблона редактора "tmpl!SBIS3.CONTROLS/Filter/Panel/resources/TemplateChooser". Когда опция не установлена, используется класс редактора "Список" (значение list).
              * Возможные значения:
              * <ul>
              *     <li>list - использовать редактор {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/List}.</li>

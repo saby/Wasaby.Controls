@@ -26,7 +26,7 @@ define(['SBIS3.CONTROLS/Filter/FilterPanel', 'WS.Data/Collection/RecordSet', 'Co
                value: [1, 2],
                textValue: 'Item 1, Item 2',
                resetValue: [1],
-               template: 'tmpl!SBIS3.CONTROLS/Filter/resources/TemplateChooser',
+               template: 'tmpl!SBIS3.CONTROLS/Filter/Panel/resources/TemplateChooser',
                properties: {
                   name: "List_1",
                   editor: 'list',
@@ -40,7 +40,7 @@ define(['SBIS3.CONTROLS/Filter/FilterPanel', 'WS.Data/Collection/RecordSet', 'Co
                value: [1],
                textValue: 'Item 1',
                resetValue: [],
-               template: 'tmpl!SBIS3.CONTROLS/Filter/resources/TemplateChooser',
+               template: 'tmpl!SBIS3.CONTROLS/Filter/Panel/resources/TemplateChooser',
                properties: {
                   name: "Dictionary_1",
                   editor: 'dictionary',
@@ -54,7 +54,7 @@ define(['SBIS3.CONTROLS/Filter/FilterPanel', 'WS.Data/Collection/RecordSet', 'Co
                value: [1, 2],
                textValue: 'Item 1, Item 2',
                resetValue: [],
-               template: 'tmpl!SBIS3.CONTROLS/Filter/resources/TemplateChooser',
+               template: 'tmpl!SBIS3.CONTROLS/Filter/Panel/resources/TemplateChooser',
                properties: {
                   name: "Favorites_1",
                   editor: 'favorites',
@@ -102,7 +102,7 @@ define(['SBIS3.CONTROLS/Filter/FilterPanel', 'WS.Data/Collection/RecordSet', 'Co
                value: 1,
                textValue: 'Item 1',
                resetValue: null,
-               template: 'tmpl!SBIS3.CONTROLS/Filter/resources/TemplateChooser',
+               template: 'tmpl!SBIS3.CONTROLS/Filter/Panel/resources/TemplateChooser',
                properties: {
                   editor: 'radio',
                   name: 'RadioGroup_1',
