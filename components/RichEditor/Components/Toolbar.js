@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
    'SBIS3.CONTROLS/Menu/MenuButton',
    'SBIS3.CONTROLS/ComboBox',
    'css!SBIS3.CONTROLS/RichEditor/Components/Toolbar/RichEditorToolbar',
-   'css!SBIS3.CONTROLS/Button/resources/ToggleButton__square',
+   'css!SBIS3.CONTROLS/Button/ToggleButton/resources/ToggleButton__square',
    'css!SBIS3.CONTROLS/Menu/MenuIcon/MenuIcon'
 ], function( cMerge, RichEditorToolbarBase, dotTplFn, defaultConfig, ImagePanel) {
 

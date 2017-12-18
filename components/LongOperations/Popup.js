@@ -9,14 +9,12 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
       /*###'SBIS3.CONTROLS/WaitIndicator',*/
       "SBIS3.CONTROLS/NotificationPopup",
       'SBIS3.CONTROLS/LongOperations/Entry',
-      "tmpl!SBIS3.CONTROLS/LongOperations/resources/headerTemplate",
-      "tmpl!SBIS3.CONTROLS/LongOperations/resources/contentTemplate",
-      "tmpl!SBIS3.CONTROLS/LongOperations/resources/footerTemplate",
+      "tmpl!SBIS3.CONTROLS/LongOperations/Popup/resources/headerTemplate",
+      "tmpl!SBIS3.CONTROLS/LongOperations/Popup/resources/contentTemplate",
+      "tmpl!SBIS3.CONTROLS/LongOperations/Popup/resources/footerTemplate",
       "Lib/Control/FloatArea/FloatArea",
-      "css!SBIS3.CONTROLS/LongOperations/Popup",
-      "SBIS3.CONTROLS/LongOperations/List"
+      "css!SBIS3.CONTROLS/LongOperations/Popup/LongOperationsPopup"
    ],
-
    function (UserInfo, cMerge, Deferred, EventBus, /*###strHelpers,*/ TabMessage, /*###WaitIndicator,*/ NotificationPopup, LongOperationEntry, headerTemplate, contentTpl, footerTpl, FloatArea) {
       'use strict';
 

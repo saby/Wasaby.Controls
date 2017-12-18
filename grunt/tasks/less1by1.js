@@ -33,14 +33,14 @@ function resolveThemeName(filepath) {
 }
 
 function itIsControl(path) {
-  return ~path.indexOf('components');
+  return ~path.indexOf('components') && !~path.indexOf('components\\themes');
 }
 
 module.exports = function less1by1Task(grunt) {
   let root = grunt.option('root') || '',
       app = grunt.option('application') || '',
       rootPath = path.join(root, app),
-      themesPath = path.join(rootPath, './themes/');
+      themesPath = path.join(rootPath, './components/themes/');
 
   function processLessFile(data, filePath, error, theme, itIsControl) {
 
@@ -103,7 +103,7 @@ module.exports = function less1by1Task(grunt) {
         helpers.recurse(rootPath, function(filepath, cb) {
           let relpath = path.relative(rootPath, filepath);
           if (helpers.validateFile(relpath, [grunt.config.get('changed') || `components/**/${lessName}.less`])
-              || helpers.validateFile(relpath, [grunt.config.get('changed') || `themes/**/${lessName}.less`])
+              || helpers.validateFile(relpath, [grunt.config.get('changed') || `components/themes/**/${lessName}.less`])
                || helpers.validateFile(relpath, [grunt.config.get('changed') || `demo/**/${lessName}.less`])
                || helpers.validateFile(relpath, [grunt.config.get('changed') || `Controls/**/${lessName}.less`])) {
                 foundFile = true;

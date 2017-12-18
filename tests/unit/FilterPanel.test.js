@@ -76,7 +76,7 @@ define(['SBIS3.CONTROLS/Filter/FilterPanel', 'WS.Data/Collection/RecordSet', 'Co
                value: [1000, 15000],
                textValue: 'from 1000 to 15000',
                resetValue: [null, null],
-               template: 'tmpl!SBIS3.CONTROLS/Filter/resources/TemplateDataRange',
+               template: 'tmpl!SBIS3.CONTROLS/Filter/Panel/resources/TemplateDataRange',
                properties: {
                   minValue: 1000,
                   maxValue: 15000,

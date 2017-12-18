@@ -65,6 +65,11 @@ define('js!Controls/List/interface/IListControl', [
     */
 
    /**
+    * @name Controls/List/interface/IListControl#markedKey
+    * @cfg {Number} Идентификатор элемента коллекции на котором установлен маркер
+    */
+
+   /**
     * @name Controls/List/interface/IListControl#uniqueKeys
     * @cfg {String} Стратегия действий с подгружаемыми в список записями
     * @variant true Мержить, при этом записи с одинаковыми id схлопнутся в одну
@@ -102,5 +107,10 @@ define('js!Controls/List/interface/IListControl', [
 
    /**
     * @event Controls/List/interface/IListControl#dataLoaded Происходит при загрузке данных
+    */
+
+   /**
+    * @event  Controls/List/interface/IListControl#markedKeyChanged Происходит при выборе записи
+    * @param {Number} key ключ выбранного элемента коллекции.
     */
 });

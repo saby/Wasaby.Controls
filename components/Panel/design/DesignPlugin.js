@@ -1,6 +1,6 @@
 define('SBIS3.CONTROLS/Panel/design/DesignPlugin',
    [
-      'SBIS3.CONTROLS/Panel', 'css!SBIS3.CONTROLS/design/design'
+      'SBIS3.CONTROLS/Panel', 'css!SBIS3.CONTROLS/Panel/design/design'
    ],
    function(Panel){
    /**
