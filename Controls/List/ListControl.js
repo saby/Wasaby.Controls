@@ -255,7 +255,6 @@ define('js!Controls/List/ListControl', [
     * @class Controls/List/ListControl
     * @extends Controls/Control
     * @mixes Controls/interface/ISource
-    * @mixes Controls/interface/ISingleSelectable
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation

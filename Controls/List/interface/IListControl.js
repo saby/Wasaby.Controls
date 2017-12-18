@@ -65,6 +65,11 @@ define('js!Controls/List/interface/IListControl', [
     */
 
    /**
+    * @name Controls/interface/IListControl#markedKey
+    * @cfg {Number} Идентификатор элемента коллекции на котором установлен маркер
+    */
+
+   /**
     * @name Controls/List/interface/IListControl#uniqueKeys
     * @cfg {String} Стратегия действий с подгружаемыми в список записями
     * @variant true Мержить, при этом записи с одинаковыми id схлопнутся в одну
