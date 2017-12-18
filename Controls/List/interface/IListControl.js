@@ -65,7 +65,7 @@ define('js!Controls/List/interface/IListControl', [
     */
 
    /**
-    * @name Controls/interface/IListControl#markedKey
+    * @name Controls/List/interface/IListControl#markedKey
     * @cfg {Number} Идентификатор элемента коллекции на котором установлен маркер
     */
 
@@ -107,5 +107,10 @@ define('js!Controls/List/interface/IListControl', [
 
    /**
     * @event Controls/List/interface/IListControl#dataLoaded Происходит при загрузке данных
+    */
+
+   /**
+    * @event  Controls/List/interface/IListControl#markedKeyChanged Происходит при выборе записи
+    * @param {Number} key ключ выбранного элемента коллекции.
     */
 });
