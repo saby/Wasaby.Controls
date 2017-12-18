@@ -14,7 +14,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
       "tmpl!SBIS3.CONTROLS/LongOperations/Popup/resources/footerTemplate",
       "Lib/Control/FloatArea/FloatArea",
       "css!SBIS3.CONTROLS/LongOperations/Popup/LongOperationsPopup"
-
+   ],
    function (UserInfo, cMerge, Deferred, EventBus, /*###strHelpers,*/ TabMessage, /*###WaitIndicator,*/ NotificationPopup, LongOperationEntry, headerTemplate, contentTpl, footerTpl, FloatArea) {
       'use strict';
 
