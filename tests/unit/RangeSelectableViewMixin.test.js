@@ -1,12 +1,12 @@
 define([
    'Core/Abstract',
    'Lib/Control/Control.compatible',
-   'js!SBIS3.CONTROLS.RangeMixin',
-   'js!SBIS3.CONTROLS.RangeSelectableViewMixin'
+   'SBIS3.CONTROLS/Mixins/RangeMixin',
+   'SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin'
 ], function (Abstract, Control, RangeMixin, RangeSelectableViewMixin) {
    'use strict';
 
-   describe('SBIS3.CONTROLS.RangeSelectableViewMixin', function () {
+   describe('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', function () {
 
       let RangeControlClass = Abstract.extend([Control, RangeMixin, RangeSelectableViewMixin], {
          }),

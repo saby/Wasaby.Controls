@@ -1,0 +1,19 @@
+<div class="controls-Browser-ColumnsEditor-EditorButton">
+   <ws:if data="{{usePresets}}">
+      <SBIS3.CONTROLS:Browser:ColumnsEditor:Preset:Dropdown
+         name="controls-Browser-ColumnsEditor-EditorButton__presetDropdown"
+         className="controls-Browser-ColumnsEditor-EditorButton__presetDropdown"
+         staticPresets="{{staticPresets}}"
+         presetNamespace="{{presetNamespace}}"
+         selectedPresetId="{{selectedPresetId}}"
+         >
+         <ws:title>
+            <ws:String>
+               <ws:if data="{{presetsTitle}}">{{presetsTitle}}</ws:if>
+               <ws:else>{[Выберите пресет]}</ws:else>
+            </ws:String>
+         </ws:title>
+      </SBIS3.CONTROLS:Browser:ColumnsEditor:Preset:Dropdown>
+   </ws:if>
+   <SBIS3.CONTROLS:Button:IconButton icon="sprite:icon-24 icon-Settings icon-primary" name="controls-Browser-ColumnsEditor-EditorButton__button" command="" />
+</div>

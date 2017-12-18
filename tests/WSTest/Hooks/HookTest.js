@@ -3,7 +3,7 @@
  */
 define('js!WSTest/Hooks/HookTest',
    [
-      'js!SBIS3.CONTROLS.Button',
+      'SBIS3.CONTROLS/Button',
       'tmpl!WSTest/Hooks/HookTest'
    ],
    function (

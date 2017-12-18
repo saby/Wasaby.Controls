@@ -1,7 +1,7 @@
 define('js!Controls/Input/Number', [
    'Core/Control',
    'tmpl!Controls/Input/Number/Number',
-   'js!WS.Data/Type/descriptor',
+   'WS.Data/Type/descriptor',
    'Controls/Input/Number/ViewModel',
 
    'js!Controls/Input/resources/InputRender/InputRender',

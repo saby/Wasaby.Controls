@@ -3,7 +3,7 @@ define('js!WSControls/Tooltips/Tooltip',
       'Core/Control',
       'tmpl!WSControls/Tooltips/Tooltip',
       'Core/detection',
-      'js!SBIS3.CONTROLS.Utils.GetTextWidth'
+      'SBIS3.CONTROLS/Utils/GetTextWidth'
    ],
    function(Control, template, detection, getTextWidth) {
 

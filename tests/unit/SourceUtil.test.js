@@ -2,11 +2,11 @@
  * Created by am.gerasimov on 06.03.2017.
  */
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['js!SBIS3.CONTROLS.Utils.SourceUtil', 'WS.Data/Source/Memory', 'Core/core-instance'], function (SourceUtil, Memory, cInstance) {
+define(['SBIS3.CONTROLS/Utils/SourceUtil', 'WS.Data/Source/Memory', 'Core/core-instance'], function (SourceUtil, Memory, cInstance) {
 
    'use strict';
 
-   describe('SBIS3.CONTROLS.Utils.SourceUtil', function () {
+   describe('SBIS3.CONTROLS/Utils/SourceUtil', function () {
 
       describe('.prepareSource', function () {
 

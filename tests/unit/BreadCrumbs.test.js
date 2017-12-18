@@ -3,10 +3,10 @@
  */
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
-   'js!SBIS3.CONTROLS.BreadCrumbs'
+   'SBIS3.CONTROLS/BreadCrumbs'
 ], function (BreadCrumbs) {
    'use strict';
-   describe('SBIS3.CONTROLS.BreadCrumbs', function () {
+   describe('SBIS3.CONTROLS/BreadCrumbs', function () {
       beforeEach(function () {
          if (typeof $ === 'undefined') {
             this.skip();

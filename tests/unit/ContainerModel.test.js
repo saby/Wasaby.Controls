@@ -3,13 +3,13 @@
  */
 /* global define, beforeEach, afterEach, describe, it, assert */
 define([
-   'js!SBIS3.CONTROLS.ContainerModel'
+   'SBIS3.CONTROLS/Layouts/ContainerPosition/ContainerModel'
 ], function (
    ContainerModel
 ) {
    'use strict';
 
-   describe('SBIS3.CONTROLS.ContainerModel', function() {
+   describe('SBIS3.CONTROLS/Layouts/ContainerPosition/ContainerModel', function() {
       var containerModel;
 
       beforeEach(function() {

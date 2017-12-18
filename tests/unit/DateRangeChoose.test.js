@@ -1,13 +1,13 @@
 define([
    'Core/i18n',
-   'js!SBIS3.CONTROLS.DateRangeChoose'
+   'SBIS3.CONTROLS/Date/RangeChoose'
    ], function (
       i18n,
       DateRangeChoose
    ) {
    'use strict';
 
-   describe('SBIS3.CONTROLS.DateRangeChoose', function () {
+   describe('SBIS3.CONTROLS/Date/RangeChoose', function () {
       describe('._modifyOptions', function () {
          describe('localization', function () {
             let saveI18nEnabled = i18n.isEnabled(),
