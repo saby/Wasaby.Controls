@@ -25,7 +25,7 @@ var server = app.listen(port);
 console.log('app available on port ' + port);
 console.log('collecting deps...');
 
-var collectDeps = spawn('node', ['depencyCollector', 'components']);
+var collectDeps = spawn('node', ['depencyCollector']);
 
 collectDeps.stdout.pipe(process.stdout);
 collectDeps.stderr.pipe(process.stderr);

@@ -41,9 +41,8 @@ dirWalker(wsResources);
 let contents = {
    jsModules: jsModules
 };
-var componentsPath = process && process.argv && process.argv[2] && process.argv[2] === 'components' ? 'components' : "~resources"; //вторым аргументом передаётся строка в которой брать компоненты
 fs.writeFileSync(path.join(__dirname, 'components/contents.json'), JSON.stringify(contents, null, 3));
 contents["requirejsPaths"] = {
-   "SBIS3.CONTROLS": componentsPath
+   "SBIS3.CONTROLS": "~resources"
 };
 fs.writeFileSync(path.join(__dirname, 'components/contents.js'), 'contents = ' + JSON.stringify(contents, null, 3) + ';');
