@@ -42,6 +42,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                footerTemplate: footerTpl,
                caption: '',
                className: 'controls-LongOperations controls-LongOperationsPopup controls-LongOperationsPopup__hidden controls-LongOperationsPopup__hiddenContentMode',
+               preConditions: null,
                withAnimation: null,
                waitIndicatorText: null
             },
@@ -68,13 +69,19 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
          init: function () {
             LongOperationsPopup.superclass.init.call(this);
 
+            this._longOpList = this.getChildControlByName('operationList');
+            var preConditions = this._options.preConditions;
+            if (preConditions && preConditions.length) {
+               preConditions.forEach(this._longOpList.addPreCondition.bind(this._longOpList));
+            }
+
             if (this._options.withAnimation) {
                this._animationAtStart();
             }
 
-            this._longOpList = this.getChildControlByName('operationList');
-            this._notificationContainer = this.getContainer().find('.controls-LongOperationsPopup__footer_notification');
-            this._progressContainer = this.getContainer().find('.controls-LongOperationsPopup__footer_progress_container');
+            var container = this.getContainer();
+            this._notificationContainer = container.find('.controls-LongOperationsPopup__footer_notification');
+            this._progressContainer = container.find('.controls-LongOperationsPopup__footer_progress_container');
 
             this._tabChannel = new TabMessage();
 
@@ -252,20 +259,22 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
          },
 
          /**
-          * Проверить, активен ли режим с floatArea.
-          * НЕ ИСПОЛЬЗУЕТСЯ
+          * Установить предусловия для отображаемого списка длительных операций
+          * @public
+          * @param {object} condition Предусловия
           */
-         /*###isFloatAreaMode: function () {
-            return !!this._floatAreaMode;
-         },*/
+         addPreCondition: function (condition) {
+            this._longOpList.addPreCondition(condition);
+         },
 
          /**
-          * Метод перезагружает список и обновляет состояние
-          * @return {Core/Deferred}
+          * Убрать предусловия для отображаемого списка длительных операций
+          * @public
+          * @param {object} condition Предусловия
           */
-         /*###reload: function () {
-            return this._longOpList.reload();
-         },*/
+         removePreCondition: function (condition) {
+            this._longOpList.removePreCondition(condition);
+         },
 
          /**
           * Установливает заголовок нотификационного уведомления.

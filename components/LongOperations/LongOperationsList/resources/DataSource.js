@@ -29,6 +29,13 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
       var LongOperationsListDataSource = CoreExtend.extend({}, [ISource, ObservableMixin], /** @lends SBIS3.CONTROLS.LongOperationsListDataSource.prototype */{
          _moduleName: 'SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
 
+         $protected: {
+            _options: {
+               preConditions: undefined,
+               navigationType: 'Page'
+            }
+         },
+
          $constructor: function $LongOperationsListDataSource () {
             this._publish('onBeforeProviderCall');
          },
@@ -38,9 +45,15 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
           * @return {Object}
           */
          getOptions: function () {
-            return {
-               navigationType: 'Page'
-            };
+            return this._options;
+         },
+
+         /**
+          * Возвращает дополнительные настройки источника данных.
+          * @param {Object}
+          */
+         setOptions: function (options) {
+            this._options = options;
          },
 
          /**

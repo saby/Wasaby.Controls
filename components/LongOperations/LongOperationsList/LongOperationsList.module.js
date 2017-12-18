@@ -1,5 +1,6 @@
 define('js!SBIS3.CONTROLS.LongOperationsList',
    [
+      'Core/core-merge',
       'Core/Deferred',
       'Core/IoC',
       'js!SBIS3.CORE.CompoundControl',
@@ -19,7 +20,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
       'js!SBIS3.CONTROLS.DataGridView'
    ],
 
-   function (Deferred, IoC, CompoundControl, LongOperationEntry, Model, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, FloatArea, dotTplFn) {
+   function (coreMerge, Deferred, IoC, CompoundControl, LongOperationEntry, Model, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, FloatArea, dotTplFn) {
       'use strict';
 
       /**
@@ -337,6 +338,36 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
             // Лучше бы конечно, если бы у SBIS3.CONTROLS.ListView была опция "Не показывать индикатор загрузки. Совсем. Никогда."
             this._view.getContainer().find('.controls-AjaxLoader').addClass('ws-hidden').removeClass('controls-AjaxLoader__showIndication');
             return promise;
+         },
+
+         /**
+          * Установить предусловия для источника данных
+          * @public
+          * @param {object} condition Предусловия
+          */
+         addPreCondition: function (condition) {
+            if (!(condition && typeof condition === 'object' && Object.keys(condition).length)) {
+               throw new Error('None empty object required');
+            }
+            var dataSource = this.getDataSource();
+            var options = dataSource.getOptions();
+            options.preConditions = coreMerge(options.preConditions || {}, condition);
+            dataSource.setOptions(options);
+         },
+
+         /**
+          * Убрать предусловия у источника данных
+          * @public
+          * @param {object} condition Предусловия
+          */
+         removePreCondition: function (condition) {
+            if (!(condition && typeof condition === 'object' && Object.keys(condition).length)) {
+               throw new Error('None empty object required');
+            }
+            var dataSource = this.getDataSource();
+            var options = dataSource.getOptions();
+            options.preConditions = null;
+            dataSource.setOptions(options);
          },
 
          /**
