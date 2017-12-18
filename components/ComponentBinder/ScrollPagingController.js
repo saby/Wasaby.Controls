@@ -5,9 +5,10 @@ define('SBIS3.CONTROLS/ComponentBinder/ScrollPagingController',
       'Core/WindowManager',
       'Core/helpers/Function/throttle',
       'Core/helpers/Hcontrol/isElementVisible',
-      'css!SBIS3.CONTROLS/ComponentBinder/ScrollPagingController'
+      'Core/Detection',
+      'css!SBIS3.CONTROLS.ScrollPagingController'
    ],
-   function(cAbstract, cInstance, WindowManager, throttle, isElementVisible) {
+   function(cAbstract, cInstance, WindowManager, throttle, isElementVisible, detection) {
 
    var SCROLL_THROTTLE_DELAY = 200;
    
@@ -193,6 +194,12 @@ define('SBIS3.CONTROLS/ComponentBinder/ScrollPagingController',
          // У window нет scrollHeight и offsetHeight, поэтому высоту получаем иначе
          this._viewHeight = viewport === window ? document.documentElement.scrollHeight : viewport.scrollHeight;
          this._viewportHeight = viewport === window ? viewport.innerHeight : viewport.offsetHeight;
+
+         // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
+         // 1px для скроллирования.
+         if (detection.isIE && (this._viewHeight - this._viewportHeight <=1)) {
+            this._viewHeight--;
+         }
       },
 
       destroy: function(){

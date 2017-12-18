@@ -576,7 +576,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                if (cDetection.isIE) {
                   // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
                   // 1px для скроллирования.
-                  this._toggleOverflowHidden((this._getScrollHeight() - Math.floor(this._container.height())) === 1);
+                  this._toggleOverflowHidden((this._getScrollHeight() - Math.floor(this._container.height())) <= 1);
                }
                if (!this._options.takeScrollbarHidden) {
                   this._subscribeTakeScrollbar();
