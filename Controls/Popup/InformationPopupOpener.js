@@ -2,7 +2,7 @@ define('js!Controls/Popup/InformationPopupOpener',
    [
       'Core/Control',
       'Core/core-merge',
-      'tmpl!Controls/Popup/InformationPopupOpener/DialogHelper',
+      'tmpl!Controls/Popup/InformationPopupOpener/InformationPopupOpener',
       'js!Controls/Windows/Submit'
    ],
    function (Control, merge, template) {
