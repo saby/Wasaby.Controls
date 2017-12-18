@@ -7,15 +7,17 @@ var express = require('express'),
     fs = require('fs'),
     spawn = require('child_process').spawn,
     bodyParser = require('body-parser'),
+    serveStatic = require('serve-static'),
     app = express();
 
-
+var resourcesPath = path.join('', 'components');
 //Run testing server
 require('./test-server');
 
 app.use(bodyParser.json());
 app.use(cookieParser())
 app.use(express.static(path.resolve(__dirname)));
+app.use('/~resources/', serveStatic(resourcesPath));
 
 var port = process.env.PORT || 666;
 var server = app.listen(port);
