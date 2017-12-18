@@ -254,9 +254,7 @@ define('js!Controls/List/ListControl', [
     * Компонент плоского списка, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
     * @class Controls/List/ListControl
     * @extends Controls/Control
-    * @mixes Controls/interface/IItems
-    * @mixes Controls/interface/IDataSource
-    * @mixes Controls/interface/ISingleSelectable
+    * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
