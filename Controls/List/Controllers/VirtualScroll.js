@@ -121,9 +121,10 @@ define('js!Controls/List/Controllers/VirtualScroll', [
       /**
        * Обновление виртуального окна после того, как в проекции добавились элементы
        * @param index позиция, с которой появились новые элементы
-       * @param countAddedItems количество добавленных элементов
+       * @param items добавленные элементы
        */
-      updateOnAddingItems: function(index, countAddedItems) {
+      addItems: function(index, items) {
+         var countAddedItems = items.getCount();
          if (index < this._virtualWindow.indexStart) {
             //Если добавили ДО видимого диапазона, сдвинем видимый диапазон и увеличим верхнюю распорку
             this._virtualWindow.indexStart += countAddedItems;
@@ -141,6 +142,22 @@ define('js!Controls/List/Controllers/VirtualScroll', [
             this._virtualWindow.bottomPlaceholderHeight += (this._virtualWindow.indexStop - range.stop) * this._averageItemHeight;
             this._virtualWindow.indexStop = range.stop;
          }
+      },
+
+      /**
+       * Добавить новые элементы в конец списка
+       * @param items новые элементы
+       */
+      appendItems: function(items) {
+         this.addItems(this._itemsCount, items);
+      },
+
+      /**
+       * Добавить новые элементы в начало списка
+       * @param items новые элементы
+       */
+      prependItems: function(items) {
+         this.addItems(0, items);
       },
 
       /**

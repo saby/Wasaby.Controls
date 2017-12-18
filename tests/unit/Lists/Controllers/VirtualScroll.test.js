@@ -170,7 +170,7 @@ define([
 
                      virtualScroll.setItemsCount(tests[i].initialRowCount);
                      virtualScroll.calcVirtualWindow(tests[i].scrollTop);
-                     virtualScroll.updateOnAddingItems(tests[i].addIndexes[k], tests[i].countAddedItems);
+                     virtualScroll.addItems(tests[i].addIndexes[k], {getCount: function() { return tests[i].countAddedItems; } });
                      var res = virtualScroll.getVirtualWindow();
 
                      assert.equal(res.indexStart, tests[i].result.indexStart);

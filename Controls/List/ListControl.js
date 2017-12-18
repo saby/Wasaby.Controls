@@ -77,23 +77,21 @@ define('js!Controls/List/ListControl', [
       },
 
       loadToDirection: function(self, direction) {
-         _private.load(self, direction).addCallback(function(list){
+         _private.load(self, direction).addCallback(function(addedItems){
 
             if (self._navigationController) {
-               self._navigationController.calculateState(list, direction);
+               self._navigationController.calculateState(addedItems, direction);
             }
 
-            var newItemsIndex;
             if (direction === 'down') {
-               newItemsIndex = self._listModel.getCount();
-               self._listModel.appendItems(list);
+               self._listModel.appendItems(addedItems);
+               self._virtualScroll.appendItems(addedItems);
             } else if (direction === 'up') {
-               newItemsIndex = 0;
-               self._listModel.prependItems(list);
+               self._listModel.prependItems(addedItems);
+               self._virtualScroll.prependItems(addedItems);
             }
 
-            //отдать новые данные в virtualScroll и рассчитать новый диапазон отображаемых записей
-            self._virtualScroll.updateOnAddingItems(newItemsIndex, list.getCount());
+            //обновить начало/конец видимого диапазона записей и высоты распорок
             _private.updateVirtualWindow(self, self._virtualScroll.getVirtualWindow());
          })
       },
