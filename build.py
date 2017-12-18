@@ -7,7 +7,7 @@ import logging
 def build():
     """Build interface modules"""
 
-    list_dirs = ['themes', 'lang']
+    list_dirs = ['lang']
 
     def _copy(source, target):
         """Copy from 'source' to 'target' with replace"""
