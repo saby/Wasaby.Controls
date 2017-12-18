@@ -218,10 +218,7 @@
 @switcher-dot-margin:                     0;
 @switcher-dot-margin-hover:               0;
 @switcher-dot-radius:                     round(6px * @multiplier);
-@switcher-width:                          round(100px * @multiplier);
-@switcher-height:                         round(50px * @multiplier);
 @switcher-btn-radius:                     round(28px * @multiplier);
-@switcherline-height:                     round(3px * @multiplier);
 @switcher-btn-border-width:	              round(3px * @multiplier);
 @switcher-btn-border-hover:               round(3px * @multiplier);
 @switcher-btn-size:	                      round(26px * @multiplier);
@@ -229,12 +226,10 @@
 @switcher-border-radius:                  round(28px * @multiplier);
 @switcher-width:                          round(100px * @multiplier);;
 @switcher-height:                         round(50px * @multiplier);
-@switcher-border-radius:                  round(60px * @multiplier);
 @switcher-hover-border-width:             2px;
 @switcherline-height:                     2px;
 @switcherline-width:                      round(70px * @multiplier);
 @switcher-btn-size:                       round(26px * @multiplier);
-@switcher-btn-border-width:               round(3px * @multiplier);
 @switcher-btn-hover-border-width:         @switcher-btn-border-width;
 @switcher-dot-size:                       @switcher-btn-size;
 //SwitcherDouble
@@ -486,7 +481,8 @@
 @controls-filterButton-button-empty-left-margin:   0px;
 @controls-filterButton-button-margin-right-align:round(8px * @multiplier) 0 round(8px * @multiplier) round(8px * @multiplier);
 @controls-filterButton-area-text-weight:	normal;
-@controls-filterButton-area-header-padding:round(8px * @multiplier) @default-height round(8px * @multiplier) round(24px * @multiplier);
+@controls-filterButton-header-vertical-spacing: round(8px * @multiplier);
+@controls-filterButton-area-header-padding:@controls-filterButton-header-vertical-spacing @default-height @controls-filterButton-header-vertical-spacing round(24px * @multiplier);
 @controls-filterButton-area-text-size:    round(40px * @multiplier);
 @controls-filterButton-area-text-margin:   0 round(24px * @multiplier) 0 0;
 @controls-filterButton-clear-margin-right: round(24px * @multiplier);
@@ -673,6 +669,7 @@
 @money-decorator-fraction-font-size:round(24px * @multiplier);
 //sundry
 @header-height:                           @default-height;
+@header-font-size:                        round(40px * @multiplier);
 @header-padding-left:                     0;
 @bottomStyle-items-toolbar-height:        round(50px * @multiplier);
 @bottomStyle-items-toolbar-width:         round(42px * @multiplier);
@@ -728,5 +725,9 @@
 @wait-indicator-small-gap:        round(13px * @multiplier);
 //header
 @header-font-weight:              @default-font-weight;
+@font-weight_Header:              normal;
 //popup,floatarea,window
 @top_window_button:               round(8px * @multiplier);
+
+//money
+@money-decorator-integer-basic-registry-font-size: round(28px * @multiplier);

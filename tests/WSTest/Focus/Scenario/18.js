@@ -4,7 +4,7 @@
 define('js!WSTest/Focus/Scenario/18', [
    'Core/constants',
    'js!WSTest/Focus/TestFocusHelpers',
-   'js!SBIS3.CORE.Window',
+   'Lib/Control/Window/Window',
    'css!' + wsConfig.wsRoot + 'css/core.css',
    'css!' + wsConfig.wsRoot + 'css/themes/wi_scheme.css',
    'js!WSTest/Focus/Case18'

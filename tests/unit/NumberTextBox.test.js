@@ -1,5 +1,5 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['js!SBIS3.CONTROLS.NumberTextBox'], function (NumberTextBox) {
+define(['SBIS3.CONTROLS/NumberTextBox'], function (NumberTextBox) {
     'use strict';
     var
         NTB,
@@ -7,7 +7,7 @@ define(['js!SBIS3.CONTROLS.NumberTextBox'], function (NumberTextBox) {
         event,
         eventBlur;
 
-    describe('SBIS3.CONTROLS.NumberTextBox', function () {
+    describe('SBIS3.CONTROLS/NumberTextBox', function () {
         beforeEach(function () {
             if (typeof $ === 'undefined') {
                 this.skip();

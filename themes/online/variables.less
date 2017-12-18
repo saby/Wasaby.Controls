@@ -59,8 +59,6 @@
 @default-font-line-height:                20px;
 
 @bold-font-weight:                        700;
-@default-hover-cursor:                    pointer;
-@disabled-hover-cursor:                   default;
 
 @closeButtonImage:                        url('img/areaCloseButton.png') 0 -1px;
 @closeButtonImageHover:                   url('img/areaCloseButton.png') 0 -25px;
@@ -419,6 +417,7 @@
 // -------- //
 @switcher-width:                                46px;
 @switcher-height:                               24px;
+@font-size_Switcher_text:                       @default-text-size;
 @switcher-border-radius:                        30px;
 @switcher-hover-border-width:                   @default-border-width;
 @switcherline-height:                           2px;
@@ -429,6 +428,7 @@
 @switcher-dot-size:                             4px;
 @switcher-border-color:                         @gray-light-color;
 @switcher-disabled-color:                       @gray-light-color;
+@color_switcher_line:                           @innacent-color2;
 @switcher-line-color-disabled:                  @gray-light-color;
 @switcher-btn-bg-color:                         @white-color;
 @switcher-btn-bg-color-disabled:                @white-color;
@@ -445,6 +445,9 @@
 // ---------------------- //
 @switcher-do-text-margin:                       6px;
 @switcher-do-unselected-text-color:             @gray-color;
+@color_switcher_text_unselected_hover:          @switcher-do-unselected-text-color;
+@color_SwitherDouble_text_disabled:             @disabled-color;
+@text-decoration_switcher_text_unselected_hover: underline;
 @switcher-do-disabled-text-color:               @gray-light-color;
 // ---- //
 // Menu //
@@ -879,7 +882,6 @@
 @list-view-items-toolbar-font-family:                @default-icon-medium-font;
 @font-family_closeButton-icon:                       @list-view-items-toolbar-font-family;
 @list-view-items-toolbar-context-icon-size:          @icon-medium-size;
-@list-view-items-toolbar-zindex:                     10;
 @bottomStyle-items-toolbar-margin-top:               2px;
 @list-view-actions-verAlign-margin:             8px 3px 0 0;
 @list-view-actions-verAlign-width:              25px;
@@ -1040,12 +1042,9 @@
 @data-grid-partScroll-thumb-color:              @blue-dark-color;
 @data-grid-partScroll-thumb-border-radius:      3px 3px;
 @data-grid-partScroll-thumb-margin:             24px;
-@data-grid-partScroll-thumb-zIndex:             2;
 @data-grid-partScroll-thumb-top-shift:          -1px;
 @data-grid-partScroll-thumb-clicked-top-shift:  -2px;
 @data-grid-partScroll-arrowLeft-top-shift:      -12px;
-@data-grid-partScroll-arrowLeft-zIndex:         @list-view-items-toolbar-zindex + 1; // Должен быть выше чем у тулбара
-
 @data-grid-partScroll-arrowRight-top-shift:     @data-grid-partScroll-arrowLeft-top-shift;
 @data-grid-partScroll-arrowRight-left-shift:    4px;
 // --------------- //
@@ -1208,7 +1207,8 @@
 @controls-filterButton-button-margin-right-align: 8px 0 8px @controls-filterButton-button-verSide-margin;
 @controls-filterButton-line-margin-right-align:   8px 0 8px 8px;
 @controls-filterButton-height:                    40px;
-@controls-filterButton-area-header-padding:       10px 48px 10px 12px;
+@controls-filterButton-header-vertical-spacing:   10px;
+@controls-filterButton-area-header-padding:       @controls-filterButton-header-vertical-spacing 48px @controls-filterButton-header-vertical-spacing 12px;
 @controls-filterButton-area-header-height:        24px;
 @controls-filterButton-area-header-width:         310px;
 @controls-filterButton-area-text-size:            18px;
@@ -1408,17 +1408,18 @@
 //----------//
 //  Header  //
 //----------//
+@font-weight_Header:                               bold;
 @header-padding-left:                              8px;
 @header-padding-right:                             12px;
 @header-height:                                    32px;
-@header-font:                                      700 18px escape('/') @header-height @default-font-name;
+@header-font-size:                                 18px;
 @header-color:                                     #D94700;
 @header-color-hover:                               @header-color;
-@bigHeader-font:                                   700 20px escape('/') @header-height @default-font-name;
+@bigHeader-font-size:                              20px;
 @bigHeader-color:                                  @header-color;
-@subheader-font:                                   700 15px escape('/') @header-height @default-font-name;
+@subheader-font-size:                              15px;
 @subheader-color:                                  @blue-dark-color;
-@bigSubheader-font:                                700 18px escape('/') @header-height @default-font-name;
+@bigSubheader-font-size:                           18px;
 @bigSubheader-color:                               @subheader-color;
 //--------------//
 //  LinkHeader  //
@@ -1583,6 +1584,41 @@
 @long-operations-reg-filter-height: 30px;
 @long-operations-reg-filter-title-height: 24px;
 
+//----------------//
+// ColumnsEditor  //
+//----------------//
+
+@margin-right-ColumnsEditor-EditorButton-dropdown: 4px;
+@color-ColumnsEditor-Preset-Dropdown-disabled: @gray-ccc-color;
+@width-ColumnsEditor-Editing-Area: 388px;
+@height-ColumnsEditor-Editing-Area-head-title: 24px;
+@height-ColumnsEditor-Editing-Area-head-preset: 24px;
+@padding-top-ColumnsEditor-Editing-Area-head: 8px;
+@spacing-ColumnsEditor-Editing-Area-head: 12px;
+@padding-bottom-ColumnsEditor-Editing-Area-head: 4px;
+@background-color-ColumnsEditor-Editing-Area-head: #f7f4f0;
+@color-ColumnsEditor-Editing-Area__head-title-left: #313E78;
+@font-size-ColumnsEditor-Editing-Area__head-title-left: 18px;
+@font-weight-ColumnsEditor-Editing-Area__head-title-left: bold;
+@margin-right-ColumnsEditor-Editing-Area__head-title-right: 38px;
+@font-size-ColumnsEditor-Editing-Area__head-preset: 15px;
+@padding-ColumnsEditor-Editing-Area__head-preset-label: 3px 8px 0px 0px;
+@color-ColumnsEditor-Editing-Area__head-preset-label: rgb(153, 153, 153);
+@padding-left-ColumnsEditor-Editing-Area__Preset-item: 6px;
+@padding-top-ColumnsEditor-Editing-Area__Preset-item-title: 1px;
+@border-top-ColumnsEditor-Editing-Area__body: 1px solid #CCCCCC;
+@padding-ColumnsEditor-Editing-Area__body: 12px 0;
+@padding-ColumnsEditor-Editing-Area__FixedList-CheckBox: 4px;
+@padding-left-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption: 8px;
+@color-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption: @black-color !important;
+@height-ColumnsEditor-Editing-Area__view-item: 32px;
+@left-ColumnsEditor-Editing-Area__view-item__itemCheckBox: 4px;
+@top-ColumnsEditor-Editing-Area__view-item__itemCheckBox: 4px;
+@padding-left-ColumnsEditor-Editing-Area__view-item-text: 36px;
+@line-height-ColumnsEditor-Editing-Area__view-item-text: 32px;
+@color-ColumnsEditor-Editing-Area__view-item-text: #8991a9;
+@color-ColumnsEditor-Editing-Area__view-item-text__multiSelected: @black-color;
+
 //--------------//
 //  TimePicker  //
 //--------------//
@@ -1640,13 +1676,11 @@
 @clock-picker-inner-circle-radius:                  83px;
 
 @clock-picker-unit-time-font-size:                  18px;
-@clock-picker-unit-time-z-index:                    16;
 @clock-picker-unit-time-color:                      @gray-ccc-color;
 
 @clock-picker-arrow-width:                          1px;
 @clock-picker-arrow-color:                          @blue-dark-color;
 
-@clock-picker-inner-arrow-z-index:                  4;
 
 @clock-picker-arrow-tip-border-width:               2px;
 @clock-picker-arrow-tip-color:                      @blue-dark-color;

@@ -405,13 +405,16 @@
   }
 }
 
-.ws-header-mixin(@padding-left, @padding-right, @font, @color, @height, @hoverColor: @color) {
+.ws-header-mixin(@padding-left, @padding-right, @font-size, @color, @height, @hoverColor: @color) {
   display: inline-block;
   padding-left: @padding-left;
   padding-right: @padding-right;
-  font: @font;
+  font-size: @font-size;
+  font-weight: @font-weight_Header;
+  font-family: @default-font-name;
   color: @color;
   height: @height;
+  line-height: @height;
   &:hover {
     color:@hoverColor;
   }
