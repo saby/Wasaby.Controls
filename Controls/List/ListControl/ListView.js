@@ -41,6 +41,12 @@ define('js!Controls/List/ListControl/ListView', [
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
          },
 
+         _afterUpdate: function(oldOptions) {
+            if (!oldOptions.listModel || (oldOptions.listModel._startIndex !== this._options.listModel._startIndex) ) {
+               //this._notify('onDrawNewItems');
+            }
+         },
+
          _beforeUpdate: function(newOptions) {
             if (newOptions.listModel && (this._listModel != newOptions.listModel)) {
                this._listModel = newOptions.listModel;

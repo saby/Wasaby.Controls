@@ -1,7 +1,7 @@
 <ws:if data="{{ selectedKeys.length || selectedItems.length || selectedKey || selectedItem }}">
     <div class="controls-FieldLink__beforeFieldWrapper">
         <div class="controls-FieldLink__linksWrapper">
-            <ws:SBIS3.CONTROLS.FieldLinkItemsCollection
+            <SBIS3.CONTROLS:FieldLink:resources:ItemsCollection
                 cssClassName="controls-FieldLink__linksContainer"
                 name="FieldLinkItemsCollection"
                 tabindex="0"
@@ -15,7 +15,7 @@
                 underlinedItems="{{ underlinedItems }}"
                 bigItems="{{ bigItems }}"
                 itemsSortMethod="{{ itemsSortMethod }}">
-            </ws:SBIS3.CONTROLS.FieldLinkItemsCollection>
+            </SBIS3.CONTROLS:FieldLink:resources:ItemsCollection>
         </div>
     </div>
 </ws:if>

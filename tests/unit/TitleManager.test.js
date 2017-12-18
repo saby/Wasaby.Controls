@@ -1,8 +1,8 @@
 /**
  * Created by ganshinyao on 27.06.2017.
  */
-define(['js!SBIS3.CONTROLS.TitleManager', 'js!SBIS3.CONTROLS.Control'], function (TitleManager, Control) {
-   describe('SBIS3.CONTROLS.TitleManager', function () {
+define(['SBIS3.CONTROLS/TitleManager', 'SBIS3.CONTROLS/Control'], function (TitleManager, Control) {
+   describe('SBIS3.CONTROLS/TitleManager', function () {
       var oldTitle;
       beforeEach(function () {
          global.document = global.document || {title:''};

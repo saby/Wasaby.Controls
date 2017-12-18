@@ -1,12 +1,12 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['js!SBIS3.CONTROLS.TextBox'], function (TextBox) {
+define(['SBIS3.CONTROLS/TextBox'], function (TextBox) {
     'use strict';
     var
         TB,
         inputField,
         event;
 
-    describe('SBIS3.CONTROLS.TextBox', function () {
+    describe('SBIS3.CONTROLS/TextBox', function () {
         beforeEach(function() {
             if (typeof $ === 'undefined') {
                 this.skip();

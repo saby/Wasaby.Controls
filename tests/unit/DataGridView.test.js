@@ -1,7 +1,7 @@
-define(['js!SBIS3.CONTROLS.DataGridView'], function (DataGridView) {
+define(['SBIS3.CONTROLS/DataGridView'], function (DataGridView) {
    'use strict';
 
-   describe('SBIS3.CONTROLS.DataGridView', function () {
+   describe('SBIS3.CONTROLS/DataGridView', function () {
       // this.timeout(1500000);
       beforeEach(function () {
          if (typeof $ === 'undefined') {

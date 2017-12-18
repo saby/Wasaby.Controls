@@ -1,0 +1,96 @@
+@import (reference) "../../../themes/header";
+
+.controls-BackButton {
+   cursor: pointer;
+   white-space: nowrap;
+   display: inline-block;
+   height: @back-button-height;
+}
+.controls-BackButton_color-hover_accent1:hover .controls-BackButton__caption {
+   &, &.controls-Click__active, &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover):hover {
+      .ws-header-accent1-hover();
+   }
+}
+.controls-BackButton_color-hover_accent2:hover .controls-BackButton__caption {
+   &, &.controls-Click__active, &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover):hover {
+      .ws-header-accent2-hover();
+   }
+}
+.controls-BackButton_color-hover_default-backButton:hover .controls-BackButton__caption {
+   &, &.controls-Click__active, &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover):hover {
+      color: @back-button-caption-active-color;
+   }
+}
+.controls-BackButton__orange.controls-BackButton_color-hover_default-backButton:hover .controls-BackButton__caption {
+   &, &.controls-Click__active, &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover):hover {
+      color: @primary-color;
+   }
+}
+.controls-BackButton__caption {
+   &_color_accent1.controls-Link {
+      .ws-header_color_accent1();
+   }
+   &_color_accent2.controls-Link {
+      .ws-header_color_accent2();
+   }
+   &_color_default-backButton.controls-Link {
+      color: @back-button-text-color;
+   }
+   .controls-BackButton__orange &_color_default-backButton.controls-Link {
+      color: @header-color;
+   }
+   &_size_h2.controls-Link {
+      .ws-header_size_h2();
+      max-width: calc(~"100% - @{back-arrow-width-h2} - @{back-button-arrow-padding-right-1}");
+   }
+   &_size_h3.controls-Link {
+      .ws-header_size_h3();
+      max-width: calc(~"100% - @{back-arrow-width-h3} - @{back-button-arrow-padding-right-2}");
+   }
+   &_size_h6.controls-Link {
+      .ws-header_size_h6();
+      max-width: calc(~"100% - @{back-arrow-width-h6} - @{back-button-arrow-padding-right-2}");
+   }
+   &_size_default-backButton.controls-Link {
+      max-width: calc(~"100% - @{back-arrow-width-h3} - @{back-button-arrow-padding-right-2}");
+      .ws-header-size-mixin(@back-button-font-size, @back-button-height);
+   }
+   &_size_bold.controls-Link {
+      .ws-header_size_weight();
+   }
+   &Arrow_size_1 {
+      padding-right: @back-button-arrow-padding-right-1;
+   }
+   &Arrow_size_2 {
+      padding-right: @back-button-arrow-padding-right-2;
+   }
+   .ws-is-desktop-platform &.controls-Link:not(.ws-disabled):not(.controls-Click__active):hover .controls-Button__text,
+   &.controls-Link.controls-Click__active .controls-Button__text {
+      text-decoration: none;
+   }
+}
+.controls-BackButton__arrow.controls-Link {
+   display: none;
+}
+.controls-BackButton__show-arrow:hover .controls-BackButton__arrow {
+   display: inline-block;
+}
+.ws-backArrow_color_default-backButton {
+   .ws-backArrow_color_accent1();
+   &:before {
+      color: @primary-color;
+   }
+}
+.controls-BackButton__orange .ws-backArrow_color_default-backButton {
+   .ws-backArrow_color_accent2();
+}
+.ws-backArrow_size_default-backButton {
+   .ws-backArrow_size_h3();
+   &:before {
+      font-size: @back-button-font-size;
+   }
+}
+.controls-BackButton__empty {
+   visibility: hidden;
+   width: 0;
+}

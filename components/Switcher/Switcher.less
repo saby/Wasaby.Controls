@@ -53,11 +53,11 @@
 }
 
 .controls-Switcher__line_enabled-checked() {
-   .horizontal-gradient(@innacent-color2 @crossing-line-btn, transparent @crossing-line-btn);
+   .horizontal-gradient(@color_switcher_line @crossing-line-btn, transparent @crossing-line-btn);
 }
 
 .controls-Switcher__line_enabled-unchecked() {
-   .horizontal-gradient(transparent @switcher-btn-size, @innacent-color2 @switcher-btn-size);
+   .horizontal-gradient(transparent @switcher-btn-size, @color_switcher_line @switcher-btn-size);
 }
 
 .controls-Switcher__btn {
@@ -72,7 +72,7 @@
 }
 
 body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
-   cursor: @default-hover-cursor;
+   cursor: pointer;
    .controls-Switcher__btn {
       border-color: @primary-color;
       border-width: @switcher-btn-hover-border-width;
@@ -98,13 +98,13 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
       .controls-Switcher__line_enabled-unchecked();
    }
    &:not(.controls-Checked__checked) .controls-Switcher__btn {
-      border-color: @innacent-color2;
+      border-color: @color_switcher_line;
    }
 }
 
 .ws-disabled.controls-Switcher {
    &:hover {
-      cursor: @disabled-hover-cursor;
+      cursor: pointer; //??
    }
    &.controls-Checked__checked .controls-Switcher__btn:before {
       background: @switcher-disabled-color;

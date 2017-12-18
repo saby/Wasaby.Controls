@@ -1,4 +1,8 @@
 //default-sizes
+@icon-size_default:            round(32px * @multiplier);
+@icon-size_default_medium:     round(42px * @multiplier);
+@icon-size_default_large:      round(52px * @multiplier);
+//старые default-sizes
 @default-height:               round(78px * @multiplier);
 @default-height-big:           round(78px * @multiplier);
 @default-border-width:         1px;
@@ -67,6 +71,8 @@
 @font-size_FieldLink_itemCaption_normal:@large-text-size;
 //searchForm
 @search-form-icon-padding:     0 0 0 round(8px * @multiplier) ;
+//PrintDialog
+@printDialog-activate-right:                          round(92px * @multiplier); //ширина кнопки 84px+8px отступ
 //todo:
 @margin-left__searchForm_picker:  round(-8px * @multiplier);
 @margin-top__searchForm_picker:   round(-90px * @multiplier); //опытным путем
@@ -149,7 +155,7 @@
 @DropdownList-picker-menu-selected-marker-width:      round(11px * @multiplier);
 @DropdownList-picker-menu-selected-marker-height:     round(16px * @multiplier);
 @top_DropdownList_picker_marker:                      round(30px * @multiplier);
-@DropdownList-picker-offset:                          round(1px * @multiplier) 0 0 round(-16px * @multiplier);
+@DropdownList-picker-offset:                          0 0 0 round(-17px * @multiplier);
 @DropdownList-picker-title-type-margin-top:           round(1px * @multiplier);
 @DropdownList-footer-select-icon-size:                @default-icon-size-medium;
 @DropdownList-footer-select-icon-container-size:      round(58px * @multiplier);
@@ -167,3 +173,30 @@
 @wait-indicator-labeled-width:                        round(467px * @multiplier);
 //progressBar
 @ProgressBar-border-radius:                           1px;
+//pager
+@padding_Pager:                                       round(11px * @multiplier) round(3px * @multiplier) round(11px * @multiplier) 0;
+@controls-Pager-height:                               round(100px * @multiplier);
+@paging-font-size:                                    @default-icon-size-large;
+@controls-Paging-btn-padding:                         0;
+@controls-Paging-item-width:                          round(86px * @multiplier);
+@scrollpager-bottom:                                  round(0px * @multiplier);
+@controls-Paging-btn-margin:                          0 0 0 round(8px * @multiplier);
+//popup,floatarea,window
+@top_window_button:                                   round(11px * @multiplier);
+@controls-Popup-closeButton-top:                      round(11px * @multiplier);
+@controls-printdialog-activate-margin-top:            round(11px * @multiplier);
+//switcher
+@switcher-dot-size:                                   round(14px * @multiplier);
+@switcherline-height:                                 round(4px * @multiplier);
+@switcherline-width:                                  round(76px * @multiplier);
+@font-size_Switcher_text:                             @large-text-size;
+@text-decoration_switcher_text_unselected_hover:      none;
+//RadioButton
+@radio-button-dot-size:                               round(14px * @multiplier);
+@radio-button-dot-margin:                             round(3px * @multiplier)  0 0 round(3px * @multiplier);
+@radio-button-hover-text-decoration:                  none;
+@button-group-vertical-item-margin:                   0 0 round(8px * @multiplier) 0;
+//ScrollBar
+@controls-Scrollbar-animated-width:                   round(16px * @multiplier);
+@controls-Scrollbar-thumb-padding:                    0px round(8px * @multiplier);
+@controls-ScrollContainer-top-gradient-height:        round(32px * @multiplier);

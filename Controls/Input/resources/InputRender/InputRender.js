@@ -4,7 +4,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
       /*'WS.Data/Type/descriptor',*/
       'tmpl!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
-      'css!SBIS3.CONTROLS.TextBox'
+      'css!SBIS3.CONTROLS/TextBox'
    ],
    function(Control, /*types,*/ template, RenderHelper) {
 

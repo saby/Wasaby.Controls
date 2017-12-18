@@ -4,7 +4,7 @@
 define([
    
    'Core/constants',
-   'js!SBIS3.CORE.CompoundControl',
+   'Lib/Control/CompoundControl/CompoundControl',
    'js!WSTest/Focus/TestFocusHelpers',
    'css!WSTest/Focus/FocusTests'
 ], function (cConstants,

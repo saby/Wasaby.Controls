@@ -45,7 +45,6 @@
    .flex-grow(1);
    .flex-direction(row-reverse);
    .align-items(center);
-   max-height: @max-height_FieldLink-beforeFieldWrapper; //todo
    max-width: ~'calc(100% - '@fieldLink-linkItem-cross-width~')';
    overflow: hidden;
 }
@@ -95,7 +94,6 @@
    }
 }
 .controls-FieldLink__showAllLinks-disabled {
-   top: -@default-line-height;
    background: @default-bg-color;
    padding-right: 0;
    &:after {
@@ -195,8 +193,6 @@
       max-width:100%;
    }
    .controls-FieldLink__beforeFieldWrapper {
-      .flex-wrap(wrap);
-      .flex-direction();
       max-width: 100%;
    }
    .controls-FieldLink__item-caption {

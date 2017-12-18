@@ -6,29 +6,20 @@ define('js!Controls/Toggle/Button', [
     * @class Controls/Toggle/Button
     * @extends Controls/Control
     * @mixes Controls/Toggle/interface/ICheckable
+    * @mixes Controls/interface/ITooltip
     * @control
     * @public
     * @category Toggle
     */
 
    /**
-    * @name Controls/Toggle/Button#icon
-    * @cfg {String} Иконка
+    * @name Controls/Toggle/Button#icons
+    * @cfg {Array} Набор иконок
     */
 
    /**
-    * @name Controls/Toggle/Button#iconTwo
-    * @cfg {String} Вторая иконка
-    */
-
-   /**
-    * @name Controls/Toggle/Button#caption
-    * @cfg {String} Заголовок
-    */
-
-   /**
-    * @name Controls/Toggle/Button#captionTwo
-    * @cfg {String} Второй заголовок
+    * @name Controls/Toggle/Button#captions
+    * @cfg {Array} Набор заголовков
     */
 
 });
