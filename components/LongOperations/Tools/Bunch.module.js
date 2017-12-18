@@ -259,7 +259,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Tools.Bunch',
             }
          }
          return values;
-      }
+      };
 
       /**
        * Проверить значение на соответсвие критериям
