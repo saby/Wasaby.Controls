@@ -1571,6 +1571,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (this._options.editorConfig.browser_spellcheck) {
                // Если включена проверка правописания, нужно при исправлениях обновлять принудительно text
                var _onSelectionChange1 = function () {
+                  //В Yandex браузере выделение меняется 2 раза подряд. Откладываем подписку, чтобы ловить только одно.
+                  //Это поведение нельзя объединить с поведением для Safari и Chrome, т.к. тогда в Yandex этот обработчик вообще не сработает.
+                  //Для всех браузеров это сделано потому что все равно человек не сможет выбрать вариант так быстро и нет смысла плодить лишние условия
                   setTimeout(function() {
                      cConstants.$doc.one('selectionchange', _onSelectionChange2);
                   }, 1);
