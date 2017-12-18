@@ -5,7 +5,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
    "SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase",
    'Core/helpers/String/escapeHtml',
    'SBIS3.CONTROLS/StylesPanelNew',
-   'css!SBIS3.CONTROLS/RichEditor/Components/ToolbarBase'
+   'css!SBIS3.CONTROLS/RichEditor/Components/ToolbarBase/RichEditorToolbarBase'
 ], function(coreClone, cMerge, EventBus, ButtonGroupBase, escapeHtml, StylesPanel) {
 
    'use strict';
