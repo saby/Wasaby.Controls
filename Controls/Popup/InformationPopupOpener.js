@@ -9,7 +9,7 @@ define('js!Controls/Popup/InformationPopupOpener',
       'use strict';
 
       /**
-       * Хелпер открытия диалоговых окон
+       * Хелпер открытия информационных окон
        * @class Controls/Popup/InformationPopupOpener
        * @extends Core/Control
        * @control
@@ -19,23 +19,23 @@ define('js!Controls/Popup/InformationPopupOpener',
        */
 
       /**
-       * @function Controls/Popup/InformationPopupOpener#confirm
+       * @function Controls/Popup/InformationPopupOpener#confirmDialog
        * Открыть диалоговое окно подтверждения
        */
 
       /**
-       * @function Controls/Popup/InformationPopupOpener#info
-       * Открыть окно со статусом "информация"
+       * @function Controls/Popup/InformationPopupOpener#infoDialog
+       * Открыть диалоговое окно со статусом "информация"
        */
 
       /**
-       * @function Controls/Popup/InformationPopupOpener#error
-       * Открыть окно со статусом "ошибка"
+       * @function Controls/Popup/InformationPopupOpener#errorDialog
+       * Открыть диалоговое окно со статусом "ошибка"
        */
 
       /**
-       * @function Controls/Popup/InformationPopupOpener#success
-       * Открыть окно со статусом "успех"
+       * @function Controls/Popup/InformationPopupOpener#successDialog
+       * Открыть диалоговое окно со статусом "успех"
        */
 
       var _private = {
