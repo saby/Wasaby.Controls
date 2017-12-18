@@ -50,7 +50,7 @@ define('SBIS3.CONTROLS/Filter/FilterPanel', [
     * <h3>Кнопка открытия панели</h3>
     *
     * Создание и размещение кнопки открытия панели фильтрации производится самостоятельно. Для этого существуют css-модификаторы компонента {@link SBIS3.CONTROLS/Button/IconButton}.
-    * Стили модификаторов описаны в "css!SBIS3.CONTROLS/Filter/resources/FilterPanelButton".
+    * Стили модификаторов описаны в "css!SBIS3.CONTROLS/Filter/Panel/resources/FilterPanelButton".
     * В зависимости от направления, в котором будет открыта панель (см. {@link filterAlign}), на кнопку открытию устанавливают классы "controls-IconButton__filter-left" (открытие панели влево) или "controls-IconButton__filter-right" (открытие панели вправо).
     * Чтобы открыть панель, используйте метод {@link toggleExpanded}.
     *
@@ -117,7 +117,7 @@ define('SBIS3.CONTROLS/Filter/FilterPanel', [
              * Возможные значения:
              * <ol>
              *    <li><b>tmpl!SBIS3.CONTROLS/Filter/Panel/resources/TemplateChooser</b><br/>Шаблон, реализующий выборку идентификаторов. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base}.</li>
-             *    <li><b>tmpl!SBIS3.CONTROLS/Filter/resources/TemplateDataRange</b><br/>Шаблон, реализующий выборку из числового диапазона. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS/Filter/Panel/components/DataRange}.</li>
+             *    <li><b>tmpl!SBIS3.CONTROLS/Filter/Panel/resources/TemplateDataRange</b><br/>Шаблон, реализующий выборку из числового диапазона. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS/Filter/Panel/components/DataRange}.</li>
              *    <li><b>SBIS3.CONTROLS/Filter/Panel/components/Boolean</b> - обыкновенный чекбокс {@link SBIS3.CONTROLS/Filter/Panel/components/Boolean}. Данный редактор поля фильтрации отображается без спойлера (см. {@link SBIS3.CONTROLS/Spoiler}), в связи с чем рекомендуется размещать его в конце списка доступных фильтров.</li>
              * </ol>
              * @property {Object} properties Опции, передаваемые в конфигурацию редактора.
