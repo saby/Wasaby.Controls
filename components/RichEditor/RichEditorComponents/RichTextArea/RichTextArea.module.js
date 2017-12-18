@@ -1571,7 +1571,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (this._options.editorConfig.browser_spellcheck) {
                // Если включена проверка правописания, нужно при исправлениях обновлять принудительно text
                var _onSelectionChange1 = function () {
-                  cConstants.$doc.one('selectionchange', _onSelectionChange2);
+                  setTimeout(function() {
+                     cConstants.$doc.one('selectionchange', _onSelectionChange2);
+                  }, 1);
                   // Хотя цепляемся на один раз, но всё же отцепим через пару минут, если ничего не случится за это время
                   setTimeout(function() {
                      cConstants.$doc.off('selectionchange', _onSelectionChange2);
@@ -1587,7 +1589,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   if (evt.button === 2) {
                      if (evt.currentTarget === this._inputControl[0] && (evt.target === evt.currentTarget || $.contains(evt.currentTarget, evt.target))) {
                         cConstants.$doc.off('selectionchange', _onSelectionChange2);
-                        if (cConstants.browser.safari || cConstants.browser.chrome) {
+                        if (cConstants.browser.safari || cConstants.browser.chrome && !cConstants.browser.yandex) {
                            // Для safari и chrome обязательно нужно отложить подписку на событие (потому что в тот момент, когда делается эта подписка
                            // они меняют выделение, и потом меняют его в момент вставки. Чтобы первое не ловить - отложить)
                            setTimeout(function() {
