@@ -30,9 +30,8 @@ define([
       }
 
       var virtualScroll = new VirtualScroll({
-         maxVisibleRows: 75,
-         rowHeight: 25,
-         listModel: prepareListViewModel(),
+         maxVisibleItems: 75,
+         itemHeight: 25,
          itemsCount: 500
       });
 
@@ -54,22 +53,22 @@ define([
 
       //Корректность метода вычисления видимого диапазона
       it('Calc range to show', function() {
-         var res = VirtualScroll._private.getRangeToShowByIndex(0, 75, 500);
+         var res = VirtualScroll._private.calcVirtualWindowIndexes(0, 75, 500);
          assert.equal(res.start, 0);
          assert.equal(res.stop, 50);
 
-         res = VirtualScroll._private.getRangeToShowByIndex(25, 75, 500);
+         res = VirtualScroll._private.calcVirtualWindowIndexes(25, 75, 500);
          assert.equal(res.start, 0);
          assert.equal(res.stop, 75);
 
-         res = VirtualScroll._private.getRangeToShowByIndex(500, 75, 500);
+         res = VirtualScroll._private.calcVirtualWindowIndexes(500, 75, 500);
          assert.equal(res.start, 475);
          assert.equal(res.stop, 500);
 
       });
 
       it('Scroll to top List', function() {
-         virtualScroll.setRowCount(500);
+         virtualScroll.setItemsCount(500);
          var res = virtualScroll.calcVirtualWindow(0);
 
          assert.equal(res.virtualWindow.topPlaceholderHeight, 0);
@@ -79,7 +78,7 @@ define([
       });
 
       it('Scroll to middle List', function() {
-         virtualScroll.setRowCount(500);
+         virtualScroll.setItemsCount(500);
          var res = virtualScroll.calcVirtualWindow(5286);
 
          assert.equal(res.virtualWindow.topPlaceholderHeight, 4650);
@@ -89,7 +88,7 @@ define([
       });
 
       it('Scroll to bottom List', function() {
-         virtualScroll.setRowCount(500);
+         virtualScroll.setItemsCount(500);
          var res = virtualScroll.calcVirtualWindow(12325);
 
          assert.equal(res.virtualWindow.topPlaceholderHeight, 11700);
@@ -169,7 +168,7 @@ define([
                   for (var k = 0; k < tests[i].addIndexes.length; k++) {
                      virtualScroll._currentPage = -1;
 
-                     virtualScroll.setRowCount(tests[i].initialRowCount);
+                     virtualScroll.setItemsCount(tests[i].initialRowCount);
                      virtualScroll.calcVirtualWindow(tests[i].scrollTop);
                      virtualScroll.updateOnAddingItems(tests[i].addIndexes[k], tests[i].countAddedItems);
                      var res = virtualScroll.getVirtualWindow();
@@ -178,7 +177,7 @@ define([
                      assert.equal(res.indexStop, tests[i].result.indexStop);
                      assert.equal(res.topPlaceholderHeight, tests[i].result.topPlaceholderHeight);
                      assert.equal(res.bottomPlaceholderHeight, tests[i].result.bottomPlaceholderHeight);
-                     assert.equal(virtualScroll._rowCount, tests[i].result.rowCount);
+                     assert.equal(virtualScroll._itemsCount, tests[i].result.rowCount);
                   }
                });
             })(i);

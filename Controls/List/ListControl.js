@@ -71,7 +71,7 @@ define('js!Controls/List/ListControl', [
                self._listModel.setItems(list);
             }
 
-            self._virtualScroll.setRowCount(self._listModel.getCount());
+            self._virtualScroll.setItemsCount(self._listModel.getCount());
             _private.handleListScroll.call(self, 0);
          })
       },
@@ -313,8 +313,8 @@ define('js!Controls/List/ListControl', [
 
          _beforeMount: function(newOptions) {
             this._virtualScroll = new VirtualScroll({
-               maxVisibleRows: 60,
-               rowHeight: 18,
+               maxVisibleItems: 60,
+               itemHeight: 18,
                itemsCount: 0
             });
 
