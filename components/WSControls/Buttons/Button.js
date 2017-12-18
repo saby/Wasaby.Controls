@@ -1,11 +1,10 @@
 
 define('js!WSControls/Buttons/Button', [
    'Core/constants',
-   'Core/Sanitize',
    'js!WSControls/Buttons/ButtonBase',
    'tmpl!WSControls/Buttons/Button',
    'tmpl!WSControls/Buttons/resources/contentTemplate'
-], function(constants, Sanitize, ButtonBase, dotTplFn, contentTemplate) {
+], function(constants, ButtonBase, dotTplFn, contentTemplate) {
 
    'use strict';
 
@@ -13,12 +12,12 @@ define('js!WSControls/Buttons/Button', [
     * Контрол, отображающий обычную кнопку
     * Можно настроить:
     * <ol>
-    *    <li>{@link SBIS3.CORE.Control#allowChangeEnable возможность изменения доступности кнопки};</li>
+    *    <li>{@link Lib/Control/Control#allowChangeEnable возможность изменения доступности кнопки};</li>
     *    <li>{@link WSControls/Buttons/ButtonBase#caption текст на кнопке};</li>
-    *    <li>{@link SBIS3.CORE.Control#enabled возможность взаимодействия с кнопкой};</li>
-    *    <li>{@link SBIS3.CONTROLS.IconMixin#icon иконку на кнопке};</li>
+    *    <li>{@link Lib/Control/Control#enabled возможность взаимодействия с кнопкой};</li>
+    *    <li>{@link SBIS3.CONTROLS/Mixins/IconMixin#icon иконку на кнопке};</li>
     *    <li>{@link primary по умолчанию ли кнопка};</li>
-    *    <li>{@link SBIS3.CORE.Control#visible видимость кнопки};</li>
+    *    <li>{@link Lib/Control/Control#visible видимость кнопки};</li>
     * </ol>
     * @class WSControls/Buttons/Button
     * @extends WSControls/Buttons/ButtonBase

@@ -1,8 +1,8 @@
 /* global:object define:function, beforeEach:function, afterEach:function, describe:function, context:function, it:function, assert:function, $ws:object */
 define([
-      'js!SBIS3.CONTROLS.LongOperations.Manager',
-      'js!SBIS3.CONTROLS.LongOperations.GenericProducer',
-      'js!SBIS3.CONTROLS.LongOperations.IProducer',
+      'SBIS3.CONTROLS/LongOperations/Manager',
+      'SBIS3.CONTROLS/LongOperations/GenericProducer',
+      'SBIS3.CONTROLS/LongOperations/IProducer',
       'Core/core-extend',
       'WS.Data/Entity/ObservableMixin',
       'Core/UserInfo'
@@ -122,7 +122,7 @@ define([
                });
             }, Error);
 
-            it('Аргумент producer не может быть объектом, просто воспроизводящим сигнатуру SBIS3.CONTROLS.LongOperations.IProducer', function () {
+            it('Аргумент producer не может быть объектом, просто воспроизводящим сигнатуру SBIS3.CONTROLS/LongOperations/IProducer', function () {
                assert.throws(function () {
                   longOperationsManager.register({
                      getName: function () { return 'SomeLeftProducer'; },
@@ -138,7 +138,7 @@ define([
                }, Error);
             });
 
-            it('Аргумент producer должен быть экземпляром класса, реализующего интерфейс SBIS3.CONTROLS.LongOperations.IProducer (1)', function () {
+            it('Аргумент producer должен быть экземпляром класса, реализующего интерфейс SBIS3.CONTROLS/LongOperations/IProducer (1)', function () {
                var p1 = new GenericLongOperationsProducer();
                var p2 = new GenericLongOperationsProducer('Второй');
                var p3 = new GenericLongOperationsProducer('Третий');
@@ -149,7 +149,7 @@ define([
                }, Error);
             });
 
-            it('Аргумент producer должен быть экземпляром класса, реализующего интерфейс SBIS3.CONTROLS.LongOperations.IProducer (2)', function (done) {
+            it('Аргумент producer должен быть экземпляром класса, реализующего интерфейс SBIS3.CONTROLS/LongOperations/IProducer (2)', function (done) {
                require(['js!SomeLeftProducer'], function (someLeftProducer) {
                   try {
                      assert.doesNotThrow(function () {
@@ -184,7 +184,7 @@ define([
                });
             }, Error);
 
-            it('Аргумент producer не может быть объектом, просто воспроизводящим сигнатуру SBIS3.CONTROLS.LongOperations.IProducer', function () {
+            it('Аргумент producer не может быть объектом, просто воспроизводящим сигнатуру SBIS3.CONTROLS/LongOperations/IProducer', function () {
                assert.throws(function () {
                   longOperationsManager.isRegistered({
                      getName: function () { return 'SomeLeftProducer'; },
@@ -206,7 +206,7 @@ define([
                });
             }, Error);
 
-            it('Аргумент producer или может быть экземпляром класса, реализующего интерфейс SBIS3.CONTROLS.LongOperations.IProducer', function () {
+            it('Аргумент producer или может быть экземпляром класса, реализующего интерфейс SBIS3.CONTROLS/LongOperations/IProducer', function () {
                var p1 = GenericLongOperationsProducer.getInstance();
                var p2 = GenericLongOperationsProducer.getInstance('Второй');
                var p3 = GenericLongOperationsProducer.getInstance('Третий');
@@ -220,10 +220,10 @@ define([
 
             it('Возвращаются правильные значения', function (done) {
                try {
-                  assert.isTrue(longOperationsManager.isRegistered('SBIS3.CONTROLS.LongOperations.GenericProducer'));
-                  assert.isTrue(longOperationsManager.isRegistered('SBIS3.CONTROLS.LongOperations.GenericProducer:Второй'));
-                  assert.isTrue(longOperationsManager.isRegistered('SBIS3.CONTROLS.LongOperations.GenericProducer:Третий'));
-                  assert.isNotOk(longOperationsManager.isRegistered('SBIS3.CONTROLS.LongOperations.GenericProducer:Не зарегистрированный'));
+                  assert.isTrue(longOperationsManager.isRegistered('SBIS3.CONTROLS/LongOperations/GenericProducer'));
+                  assert.isTrue(longOperationsManager.isRegistered('SBIS3.CONTROLS/LongOperations/GenericProducer:Второй'));
+                  assert.isTrue(longOperationsManager.isRegistered('SBIS3.CONTROLS/LongOperations/GenericProducer:Третий'));
+                  assert.isNotOk(longOperationsManager.isRegistered('SBIS3.CONTROLS/LongOperations/GenericProducer:Не зарегистрированный'));
                   var p1 = GenericLongOperationsProducer.getInstance();
                   var p2 = GenericLongOperationsProducer.getInstance('Второй');
                   var p3 = GenericLongOperationsProducer.getInstance('Третий');
@@ -268,7 +268,7 @@ define([
                });
             }, Error);
 
-            it('Аргумент prodName или может быть экземпляром класса, реализующего интерфейс SBIS3.CONTROLS.LongOperations.IProducer', function () {
+            it('Аргумент prodName или может быть экземпляром класса, реализующего интерфейс SBIS3.CONTROLS/LongOperations/IProducer', function () {
                var p1 = GenericLongOperationsProducer.getInstance();
                assert.throws(function () {
                   longOperationsManager.getByName(p1);
@@ -287,10 +287,10 @@ define([
                   var p1 = GenericLongOperationsProducer.getInstance();
                   var p2 = GenericLongOperationsProducer.getInstance('Второй');
                   var p3 = GenericLongOperationsProducer.getInstance('Третий');
-                  assert.strictEqual(longOperationsManager.getByName('SBIS3.CONTROLS.LongOperations.GenericProducer'), p1);
-                  assert.strictEqual(longOperationsManager.getByName('SBIS3.CONTROLS.LongOperations.GenericProducer:Второй'), p2);
-                  assert.strictEqual(longOperationsManager.getByName('SBIS3.CONTROLS.LongOperations.GenericProducer:Третий'), p3);
-                  assert.isUndefined(longOperationsManager.getByName('SBIS3.CONTROLS.LongOperations.GenericProducer:Не зарегистрированный'));
+                  assert.strictEqual(longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer'), p1);
+                  assert.strictEqual(longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer:Второй'), p2);
+                  assert.strictEqual(longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer:Третий'), p3);
+                  assert.isUndefined(longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer:Не зарегистрированный'));
                   require(['js!SomeLeftProducer'], function (someLeftProducer) {
                      try {
                         assert.strictEqual(longOperationsManager.getByName('SomeLeftProducer'), someLeftProducer);
@@ -327,7 +327,7 @@ define([
                });
             }, Error);
 
-            it('Аргумент producer не может быть объектом, просто воспроизводящим сигнатуру SBIS3.CONTROLS.LongOperations.IProducer', function () {
+            it('Аргумент producer не может быть объектом, просто воспроизводящим сигнатуру SBIS3.CONTROLS/LongOperations/IProducer', function () {
                assert.throws(function () {
                   longOperationsManager.unregister({
                      getName: function () { return 'SomeLeftProducer'; },
@@ -349,7 +349,7 @@ define([
                });
             }, Error);
 
-            it('Аргумент producer или может быть экземпляром класса, реализующего интерфейс SBIS3.CONTROLS.LongOperations.IProducer', function () {
+            it('Аргумент producer или может быть экземпляром класса, реализующего интерфейс SBIS3.CONTROLS/LongOperations/IProducer', function () {
                var p4 = GenericLongOperationsProducer.getInstance('Не зарегистрированный');
                assert.doesNotThrow(function () {
                   longOperationsManager.unregister(p4);
@@ -362,13 +362,13 @@ define([
                   var p2 = GenericLongOperationsProducer.getInstance('Второй');
                   var p3 = GenericLongOperationsProducer.getInstance('Третий');
                   assert.doesNotThrow(function () {
-                     longOperationsManager.unregister('SBIS3.CONTROLS.LongOperations.GenericProducer:Второй');
+                     longOperationsManager.unregister('SBIS3.CONTROLS/LongOperations/GenericProducer:Второй');
                      longOperationsManager.unregister(p3);
                   }, Error);
                   assert.isNotOk(longOperationsManager.isRegistered(p2));
-                  assert.isNotOk(longOperationsManager.isRegistered('SBIS3.CONTROLS.LongOperations.GenericProducer:Третий'));
-                  assert.isUndefined(longOperationsManager.getByName('SBIS3.CONTROLS.LongOperations.GenericProducer:Второй'));
-                  assert.isUndefined(longOperationsManager.getByName('SBIS3.CONTROLS.LongOperations.GenericProducer:Третий'));
+                  assert.isNotOk(longOperationsManager.isRegistered('SBIS3.CONTROLS/LongOperations/GenericProducer:Третий'));
+                  assert.isUndefined(longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer:Второй'));
+                  assert.isUndefined(longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer:Третий'));
                   require(['js!SomeLeftProducer'], function (someLeftProducer) {
                      try {
                         assert.doesNotThrow(function () {
@@ -467,10 +467,10 @@ define([
                assert.doesNotThrow(function () {
                   longOperationsManager.isRegistered(p1);
                   longOperationsManager.isRegistered(p2);
-                  longOperationsManager.isRegistered('SBIS3.CONTROLS.LongOperations.GenericProducer');
-                  longOperationsManager.isRegistered('SBIS3.CONTROLS.LongOperations.GenericProducer:Второй');
-                  longOperationsManager.isRegistered('SBIS3.CONTROLS.LongOperations.GenericProducer:Третий');
-                  longOperationsManager.isRegistered('SBIS3.CONTROLS.LongOperations.GenericProducer:Не зарегистрированный');
+                  longOperationsManager.isRegistered('SBIS3.CONTROLS/LongOperations/GenericProducer');
+                  longOperationsManager.isRegistered('SBIS3.CONTROLS/LongOperations/GenericProducer:Второй');
+                  longOperationsManager.isRegistered('SBIS3.CONTROLS/LongOperations/GenericProducer:Третий');
+                  longOperationsManager.isRegistered('SBIS3.CONTROLS/LongOperations/GenericProducer:Не зарегистрированный');
                   longOperationsManager.isRegistered(p3);
                   longOperationsManager.isRegistered(p4);
                });
@@ -494,19 +494,19 @@ define([
             it('При попытке обратитьься с допустимыми аргументами не будет выброшена ошибка', function () {
                longOperationsManager.destroy();
                assert.doesNotThrow(function () {
-                  longOperationsManager.getByName('SBIS3.CONTROLS.LongOperations.GenericProducer');
-                  longOperationsManager.getByName('SBIS3.CONTROLS.LongOperations.GenericProducer:Второй');
-                  longOperationsManager.getByName('SBIS3.CONTROLS.LongOperations.GenericProducer:Третий');
-                  longOperationsManager.getByName('SBIS3.CONTROLS.LongOperations.GenericProducer:Не зарегистрированный');
+                  longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer');
+                  longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer:Второй');
+                  longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer:Третий');
+                  longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer:Не зарегистрированный');
                });
             }, Error);
 
             it('При попытке обратитьься с допустимыми аргументами не будет возвращено никакое значение', function () {
                longOperationsManager.destroy();
-               assert.isUndefined(longOperationsManager.getByName('SBIS3.CONTROLS.LongOperations.GenericProducer'));
-               assert.isUndefined(longOperationsManager.getByName('SBIS3.CONTROLS.LongOperations.GenericProducer:Второй'));
-               assert.isUndefined(longOperationsManager.getByName('SBIS3.CONTROLS.LongOperations.GenericProducer:Третий'));
-               assert.isUndefined(longOperationsManager.getByName('SBIS3.CONTROLS.LongOperations.GenericProducer:Не зарегистрированный'));
+               assert.isUndefined(longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer'));
+               assert.isUndefined(longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer:Второй'));
+               assert.isUndefined(longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer:Третий'));
+               assert.isUndefined(longOperationsManager.getByName('SBIS3.CONTROLS/LongOperations/GenericProducer:Не зарегистрированный'));
             });
          });
 
@@ -521,10 +521,10 @@ define([
                assert.doesNotThrow(function () {
                   longOperationsManager.unregister(p1);
                   longOperationsManager.unregister(p2);
-                  longOperationsManager.unregister('SBIS3.CONTROLS.LongOperations.GenericProducer');
-                  longOperationsManager.unregister('SBIS3.CONTROLS.LongOperations.GenericProducer:Второй');
-                  longOperationsManager.unregister('SBIS3.CONTROLS.LongOperations.GenericProducer:Третий');
-                  longOperationsManager.unregister('SBIS3.CONTROLS.LongOperations.GenericProducer:Не зарегистрированный');
+                  longOperationsManager.unregister('SBIS3.CONTROLS/LongOperations/GenericProducer');
+                  longOperationsManager.unregister('SBIS3.CONTROLS/LongOperations/GenericProducer:Второй');
+                  longOperationsManager.unregister('SBIS3.CONTROLS/LongOperations/GenericProducer:Третий');
+                  longOperationsManager.unregister('SBIS3.CONTROLS/LongOperations/GenericProducer:Не зарегистрированный');
                   longOperationsManager.unregister(p3);
                   longOperationsManager.unregister(p4);
                });

@@ -1,9 +1,8 @@
 /**
  * Created by dv.zuev on 13.03.2017.
  */
-define('js!SBIS3.CONTROLS.Button/Button.compatible', [
-   "Core/constants"
-], function (cConstants) {
+define('SBIS3.CONTROLS/Button/Button.compatible', [
+], function () {
    'use strict';
 
    /**

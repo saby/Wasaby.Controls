@@ -5,24 +5,24 @@
          <ws:partial template="{{_beforeFieldWrapper}}"/>
       </ws:if>
 
-      <div event:oninput="_inputHandler()"
-           event:onclick="_clickHandler()"
-           event:onselect="_selectionHandler()"
-           event:onkeyup="_keyUpHandler()"
-           event:onchange="_notifyHandler('onInputCompleted')"
+      <div on:input="_inputHandler()"
+           on:click="_clickHandler()"
+           on:select="_selectionHandler()"
+           on:keyup="_keyUpHandler()"
+           on:change="_notifyHandler('onInputCompleted')"
            attr:style="width: 100%">
          <ws:partial template="{{_options.content}}"/>
       </div>
 
-      <ws:if data="{{_afterFieldWrapper}}">
-         <ws:partial template="{{_afterFieldWrapper}}"/>
+      <ws:if data="{{_options.afterFieldWrapper}}">
+         <ws:partial template="{{_options.afterFieldWrapper}}"/>
       </ws:if>
 
    </div>
 
    <ws:if data="{{_options.tagStyle}}">
-      <div event:onmouseenter="_notifyHandler('onTagHover')"
-           event:onclick="_notifyHandler('onTagClick')"
+      <div on:mouseenter="_notifyHandler('onTagHover')"
+           on:click="_notifyHandler('onTagClick')"
            class="controls-TextBox__informationIcon icon-size icon-Listbox controls-informationIcon {{'icon-' + _options.tagStyle}}">
       </div>
    </ws:if>

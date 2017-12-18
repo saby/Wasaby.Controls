@@ -1,4 +1,4 @@
-define(['Core/constants', 'js!SBIS3.CONTROLS.DateBox', 'js!SBIS3.CONTROLS.ControlsValidators',], function (constants, DateBox, ControlsValidators) {
+define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/ControlsValidators'], function (constants, DateBox, ControlsValidators) {
    'use strict';
 
    let requiredValidator = [{validator: ControlsValidators.required}],
@@ -27,7 +27,7 @@ define(['Core/constants', 'js!SBIS3.CONTROLS.DateBox', 'js!SBIS3.CONTROLS.Contro
    };
 
 
-   describe('SBIS3.CONTROLS.DateBox', function () {
+   describe('SBIS3.CONTROLS/Date/Box', function () {
       beforeEach(function () {
          clock = sinon.useFakeTimers(now.getTime(), 'Date');
       });

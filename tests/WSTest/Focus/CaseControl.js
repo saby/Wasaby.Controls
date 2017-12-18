@@ -1,5 +1,5 @@
 define('js!WSTest/Focus/CaseControl', [
-   'js!SBIS3.CORE.CompoundControl'
+   'Lib/Control/CompoundControl/CompoundControl'
 ], function(CompoundControl) {
 
    var moduleClass = CompoundControl.extend({

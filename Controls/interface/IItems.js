@@ -3,28 +3,29 @@ define('js!Controls/interface/IItems', [
 
    /**
     * Интерфейс работы списков.
+    *
     * @mixin Controls/interface/IItems
     * @public
     */
 
    /**
     * @name Controls/interface/IItems#items
-    * @cfg {Array} Список с данными для отображения.
+    * @cfg {Array} Список элементов коллекции
     */
 
    /**
     * @name Controls/interface/IItems#itemTemplate
-    * @cfg Шаблон для отображения строки списка.
+    * @cfg {Function} Шаблон для отображения строки списка.
     */
 
    /**
     * @name Controls/interface/IItems#keyProperty
-    * @cfg {String} Имя поля в объекте из набора items, которое является идентификатором записи.
+    * @cfg {String} Имя свойства элемента, которое является идентификатором записи.
     */
 
    /**
     * @name Controls/interface/IItems#displayProperty
-    * @cfg {String} Имя поля в объекте из набора items, которое используется для отображения значения в шаблоне строки по умолчанию, когда не задана опция itemTemplate.
+    * @cfg {String} Имя свойства элемента, которое используется для отображения значения в шаблоне строки по умолчанию, когда не задана опция itemTemplate.
     */
 
 });

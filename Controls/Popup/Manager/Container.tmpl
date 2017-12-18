@@ -1,5 +1,5 @@
 <div class="ws-PopupContainer">
-    <ws:for data="index, item in _options._popupItems">
+    <ws:for data="index, item in _popupItems">
         <div class="ws-Container__popup"
              style="z-index: {{item.zIndex}};
                 left: {{item.position.left === undefined ? 'auto' : item.position.left + 'px'}};
@@ -9,6 +9,10 @@
             <ws:Controls.Popup.Manager.Popup __key="{{item.id}}"
                     id="{{item.id}}"
                     scope="{{item.popupOptions}}"
+                    on:closePopup="_closePopup()"
+                    on:focusInPopup="_focusInPopup()"
+                    on:focusOutPopup="_focusOutPopup()"
+                    on:recalcPosition="_recalcPosition()"
             />
         </div>
     </ws:for>

@@ -1,0 +1,359 @@
+@import "../online/variables";
+@black-color:                             #353535;
+@gray-dark-color:                         #515151;
+@gray-color:                              #919191;
+@gray-light-color:                        #d1d1d1;
+@default-color:                           #f1f1f1;
+@primary-color:                           #00c795;
+@default-text-color:                      @black-color;
+@popup-font-size:                         13px;
+@font-folder-size:                        14px;
+@closeButtonImage:                        url('img/areaCloseButton.png') 0 -1px;
+@closeButtonImageHover:                   url('img/areaCloseButton.png') 0 -25px;
+@default-itemHover-color:                 @primary-color;
+@default-itemSelected-color:              @primary-color;
+@primary-background-color:                #F1F1F2;
+@secondary-background-color:              #E5E6E6;
+@primary-border-color:                    #D1D2D4;
+@secondary-border-color:                  #999B9F;
+@hover-color:                             @primary-color;
+// ---- //
+// Link //
+// ---- //
+
+@link-font:                               @default-text-size @default-font-name;
+@color_Link-text:                         @primary-color;
+@link-line-height:                        normal;
+@color_Link-text_hovered:                   @primary-color;
+@link-icon-field-margin:                  0 0 0 4px;
+// ------ //
+// Button //
+// ------ //
+// Normal button
+@button-height:                           30px;
+@padding_Button-wrapper:                          0 8px;
+@border-radius_Button:                    2px;
+@color_Link-icon_hovered:                 #313E78;
+@button-icon-top-offset:                  7px;                      // top offset of 16x16 icon
+@button-icon-left-offset:                 8px;
+@button-icon-text-margin:                 0 8px 0 28px;             // margin of text following 16x16 icon
+@button-icon-big-top-offset:              2px;                      // top offset of 24x24 icon
+@button-icon-big-text-margin:             0 8px 0 36px;             // margin of text following 24x24 icon
+@button-text-margin:                      0 8px;
+@button-text-margin-left:                 8px;
+@button-text-margin-right:                8px;
+// ------------------ //
+// FilterPanelChooser //
+// ------------------ //
+@filter-panel-chooser-list-view-check-box-top:                    6px;
+@filter-panel-chooser-list-view-check-box-left:                   4px;
+// Normal default button
+@button-border:                           @border-width_Button solid @gray-light-color;
+@background_Button:                               @default-color;
+@border-color_Button:                     @gray-light-color;
+@button-hover-text-color:                 @white-color;
+@button-hover-border:                     1px solid @primary-color;
+@background_Button_hovered:                         @primary-color;
+@button-active-text-color:               @primary-color;
+@button-active-border:                    @button-hover-border;
+@background_Button_active:                        @white-color;
+// Normal primary button
+@color_Button_primary:               @white-color;
+@button-primary-bg:                       @primary-color;
+@button-primary-hover-text-color:         @primary-color;
+@button-primary-hover-shadow:             @box-shadow_Button;
+@background_Button_primary_hovered:                 lighten(@primary-color, 55%);
+@button-primary-active-text-color:        @button-active-text-color;
+@button-primary-active-border:            @button-active-border;
+@button-primary-active-shadow:            @button-active-shadow;
+@background_Button_primary_active:                @background_Button_active;
+// Normal disabled button
+@border_Button_disabled:                  @button-border;
+@background_Button_disabled:                      @gray-light-color;
+// Big button
+@button-big-font-size:                    (@default-text-size * 1.2);
+@button-big-text-alignment:               @button-text-alignment;
+@button-big-height:                       54px;
+@padding_Button-wrapper_l:                      15px 20px;
+@button-big-margin:                       @button-margin;
+@button-big-border-radius:                6px;
+@button-big-icon-top-offset:              19px;                             // top offset of 16x16 icon
+@button-big-icon-left-offset:             20px;
+@button-big-icon-text-margin:             0 20px 0 40px;                    // margin of text following 16x16 icon
+@button-big-icon-big-top-offset:          16px;                             // top offset of 24x24 icon
+@button-big-icon-big-text-margin:         0 20px 0 48px;                    // margin of text following 24x24 icon
+@button-big-text-margin:                  0 20px;
+@button-big-text-margin-left:             20px;
+@button-big-text-padding:                 11px 0 0;
+
+@height_Button_l:                                                                                                   48px;
+@border-radius_Button_l:                                                                                            24px;
+@font-size_Button_l:                                                                                                18px;
+
+// ------------ //
+// Button group //
+// ------------ //
+@button-group-horizontal-item-margin:     0 16px 0 0;
+@button-group-vertical-item-margin:       0 0 8px 0;
+// ------------- //
+// Toggle button //
+// ------------- //
+// Normal default button
+@button-checked-border-width:             @border-width_Button;
+@button-checked-border:                   @button-active-border;
+@button-checked-bg:                       @background_Button_active;
+@button-primary-checked-border:           @button-primary-active-border;
+@button-primary-checked-bg:               @background_Button_primary_active;
+// ---------- //
+// Tab button //
+// ---------- //
+@tab-button-large-secondAddText-font-size:      13px;
+@tab-button-inner-height:                       29px;
+// ------------ //
+// Radio button //
+// ------------ //
+@radio-button-text-margin:                      0;
+@radio-button-height:                           auto;
+@radio-button-lineheight:                       normal;
+@radio-button-text-color:                       @black-color;
+@radio-button-hover-text-decoration:            none;
+@radio-button-checked-text-color:               @radio-button-text-color;
+@radio-button-checked-hover-text-color:         @radio-button-hover-text-color;
+@radio-button-icon-width:                       16px;
+@radio-button-icon-height:                      16px;
+@radio-button-icon-line-height:                 normal;
+@radio-button-icon-margin:                      0 8px 0 0;
+@radio-button-icon-border-color:                @gray-light-color;
+@radio-button-icon-border-color-checked:        @primary-color;
+@radio-button-icon-border-radius:               8px;
+@radio-button-dot-size:                         8px;
+// -------------- //
+// Checkbox group //
+// -------------- //
+@check-box-group-horizontal-item-margin:        @button-group-horizontal-item-margin;
+@check-box-group-vertical-item-margin:          @button-group-vertical-item-margin;
+// -------- //
+// Switcher //
+// -------- //
+@switcher-width:                                40px;
+@switcher-height:                               20px;
+@switcher-border-radius:                        15px;
+@switcherline-width:                            40px;
+@switcherline-height:                           0px;
+@switcher-btn-size:                             20px;
+@switcher-btn-border-width:                     @default-border-width;
+@switcher-btn-hover-border-width:               @default-border-width;
+@switcher-dot-size:                             0px;
+// ---------------------- //
+// Double online switcher //
+// ---------------------- //
+
+// ---- //
+// Menu //
+// ---- //
+@menu-subpopup-margin:                    @menu-margin;
+@menu-border-color:                       @gray-light-color;
+@menu-shadow:                             0 0 8px 1px #aaa;
+@menu-expand-top-offset:                  3px;
+@menu-expand-right-offset:                8px;
+@menu-expand-spritesheet:                'img/MenuExpand.png';
+@menu-expand-bg:                          url(@menu-expand-spritesheet) 0 0 no-repeat;
+@menu-expand-content:                     " ";
+@menu-expand-hover-bg:                    url(@menu-expand-spritesheet) 0 -16px no-repeat;
+@menu-header-height:                      24px;
+@menu-big-header-height:                  32px;
+// --------- //
+// Menu item //
+// --------- //
+@menu-item-height:                        24px;
+@menu-item-hover-text-color:              @white-color;
+@menu-item-hover-bg:                      @primary-color;
+@menu-item-icon-top-offset:               2px;
+@menu-item-icon-left-offset:              -2px;
+@menu-item-icon24-top-offset:             0px;
+@menu-item-icon24-top-offset-big:         0px;
+// --------- //
+// Menu link //
+// --------- //
+@menu-link-menu-margin:                   0 0 0 -10px;
+@menu-link-menu-padding:                  0;
+@menu-link-menu-item-container-padding:   0;
+@menu-link-menu-revert-item-container-padding: @menu-link-menu-item-container-padding;
+@menu-link-header-bg-color:               @menu-button-menu-bg;
+@menu-icon-menu-margin:                   -5px 0 0 -5px;
+// -------- //
+// Text box //
+// -------- //
+@padding_TextBox-container:               0 7px;
+@border-radius_TextBox:                   2px;
+@border-color_TextBox:                    @gray-light-color;
+@border-color_TextBox_hover:              @primary-color;
+// ----------- //
+// Search form //
+// ----------- //
+@search-form-icon-padding:                            3px 2px;
+@search-loop-size:                                    22px;
+// --------- //
+// Combo box //
+// --------- //
+@combo-box-picker-border:                       1px solid @primary-color;
+@combo-box-picker-border-radius:                0 0 2px 2px;
+@combo-box-picker-item-hover-text-color:        @white-color;
+@combo-box-picker-item-hover-bg:                @primary-color;
+@combo-box-picker-show-border-color:            @primary-color;
+// -------- //
+// Calendar //
+// -------- //
+@calendar-width:                                auto;
+@calendar-day-cell-text-color:                  @black-color;
+@calendar-day-cell-bg:                          @default-color;
+@calendar-day-cell-hover-text-color:            @primary-color;
+@calendar-day-cell-hover-bg:                    @white-color;
+@calendar-day-cell-active-text-color:           @white-color;
+@calendar-day-cell-active-bg:                   @primary-color;
+// ------------ //
+// Month picker //
+// ------------ //
+@month-picker-item-text-color:                  @black-color;
+@month-picker-item-hover-text-color:            @white-color;
+@month-picker-item-hover-bg:                    @primary-color;
+@month-picker-item-active-bg:                   @default-color;
+// ---------- //
+// Data Range //
+// ---------- //
+@date-range-button-hover-color:                 @blue-dark-color !important;
+// -------------- //
+// Date Range Big //
+// -------------- //
+@date-range-big-choose-header-apply-button-left:               4px;
+@date-range-big-choose-left-right-width:                       32px;
+@date-range-big-choose-years-height:                           40px;
+@date-range-big-choose-months-button-last-padding-bottom:            0px;
+// ------------- //
+// Edit at place //
+// ------------- //
+@edit-at-place-wrapper-text-area-padding:       5px 7px;
+
+@edit-at-place-editor-overlay-margin:           -4px 0 0 -4px;
+@edit-at-place-editor-overlay-padding:          4px;
+@edit-at-place-editor-overlay-border:           none;
+@edit-at-place-editor-overlay-border-radius:    3px;
+@edit-at-place-editor-overlay-bg:               @default-color;
+@edit-at-place-cancel-button-width:             16px;
+@edit-at-place-cancel-button-height:            16px;
+@edit-at-place-cancel-button-spritesheet:       'img/cancelIcon-sprite.png';
+@edit-at-place-cancel-button-bg:                url(@edit-at-place-cancel-button-spritesheet) 0 -32px no-repeat;
+@edit-at-place-cancel-button-hover-bg:          url(@edit-at-place-cancel-button-spritesheet) 0 -16px no-repeat;
+
+// --------- //
+// List view //
+// --------- //@controls-Browser-ListView-minHeight
+@listView-check-box-left:                       3px;
+@listView-check-box-top:                        5px;
+@list-view-actions-margin:                      0 4px;
+@list-view-items-toolbar-line-height:                16px;
+@list-view-actions-icon-top:                    @menu-item-icon24-top-offset;
+@list-view-actions-menu-close-top:              4px;
+@list-view-actions-menu-close-right:            4px;
+@list-view-actions-menu-close-height:           16px;
+@list-view-actions-menu-close-width:            16px;
+@list-view-actions-menu-item-padding-right:     24px;
+@list-view-scroll-spritesheet:                  url('img/ajax-loader-indicator.gif');
+// --------- //
+// Tree view //
+// --------- //
+@tree-view-expand-width:                        auto;
+@tree-view-expand-height:                       auto;
+@tree-view-expand-margin:                       3px 0 0 3px;
+@tree-view-expand-border-width:                 6px 0 6px 6px;
+@tree-view-expand-border-style:                 solid;
+@tree-view-expand-border-color:                 transparent transparent transparent @black-color;
+
+@tree-view-expand-open-border-width:            6px 6px 0 6px;
+@tree-view-expand-open-border-color:            @black-color transparent transparent transparent;
+@tree-view-ellipsis-copyArrow-width:            16px;
+@tree-view-item-content-margin:                 0 0 0 15px;
+@tree-view-child-container-padding:             0 0 0 15px;
+@tree-view-hier-wrapper-width:						20px;
+@tree-view-hier-wrapper-height: 						20px;
+@tree-view-folder-title-display:                block;
+// --------- //
+// Data grid //
+// --------- //
+@data-grid-row-hover-bg:                        @primary-color;
+@data-grid-row-selected-bg:                     @data-grid-row-bg;
+@data-grid-row-hover-cell-text-color:           @white-color;
+@data-grid-header-cell-height:                  32px;
+@data-grid-header-cell-padding:                 0 10px;
+@data-grid-header-cell-padding-side:            10px;
+@data-grid-header-cell-font-size:               11px;
+@data-grid-header-cell-icon-size:               @data-grid-header-cell-font-size;
+@data-grid-header-cell-text-color:              @gray-color;
+@data-grid-cell-height:                         @data-grid-header-cell-height;
+@data-grid-cell-line-height:                    21px;
+@data-grid-results-cell-line-height:            @data-grid-cell-line-height;
+@data-grid-cell-padding:                        @data-grid-header-cell-padding;
+@data-grid-ms-first-content-cell-padding-left:  @data-grid-header-cell-padding-side;
+@data-grid-td-checkbox-width:                   16px;
+@data-grid-td-hidden-checkbox-width:            4px;
+@data-grid-check-box-top:                       6px;
+@data-grid-check-box-left:                      6px;
+// ---------- //
+// PartScroll //
+// ---------- //
+@data-grid-partScroll-notScrolledCell-Color:    @data-grid-bg;
+// --------------- //
+//    MultiView    //
+// --------------- //
+@multiView-tile-item-min-width:                     128px;
+@multiView-tile-item-image-margin:                  10px 40px;
+@multiView-tile-item-text-margin:                   7px;
+@multiView-tile-selected-item-bg:                   #E7F0F9;
+@multiView-default-folder-bg:                       url("img/defaultFolder.png");//todo
+@multiView-default-item-bg:                         url("img/defaultItem.png");//todo
+// --------------- //
+// DropdownList//
+// --------------- //
+@DropdownList-border-color:                   #e4e4e4;
+@DropdownList-picker-offset:                          0;
+@DropdownList-picker-fastdatafilter-offset:           0;
+@DropdownList-picker-border:                          2px solid @DropdownList-border-color;
+@DropdownList-picker-list-right-border-radius:        0 4px 4px 4px;
+@DropdownList-picker-list-border-radius:              4px;
+@DropdownList-picker-menu-item-padding:               7px 8px 6px 8px;
+@DropdownList-linkStyleColor:                         #0055bb;
+@DropdownList-linkStyleHoverColor:                    #313E78;
+//ProgressBar
+@controls-ProgressBar-height:                     17px;
+@controls-ProgressBar-border-radius:              8px;
+//Pager
+@controls-Pager-amount-text :                     #999999;
+//FilterButton
+@controls-filterButton-title-text-color:          #313e78;
+@controls-filterButton-line-height:               @default-font-line-height;
+//FilterButtonHistory
+@controls-filterButton-history-actions-left:      -4px !important;
+@controls-filterButton-history-title-color:       #313e78;
+//CommandsSeparator
+@controls-filterLine-link-hover-color:            @primary-color;
+//FieldLink
+@fieldLink-border-color-focus-hover:      @gray-ccc-color @gray-ccc-color @gray-ccc-color @gray-ccc-color;
+@fieldLink-fieldWrapper-minWidth:         108px;
+@fieldLink-showAllLinks-width:            20px;
+// BackButton
+@back-button-caption-active-color:                 @primary-color;
+// BreadCrumbs
+@breadcrumbs-smallItems-font-size:                 13px;
+@breadcrumbs-small-items-top:                      inherit;
+//ListView AjaxIndicator
+@controls-Paging-item-width:                       24px;
+@controls-Paging-btn-width:                        16px;
+@controls-Paging-btn-height:                       16px;
+@controls-Paging-btn-margin:                       8px 0;
+@controls-Paging-btn-padding:                      8px;
+//Scrollbar
+@controls-Scrollbar-thumb-border-radius:           2px;
+@controls-Scrollbar-light-hover-thumb-color:        rgba(255, 255, 255, 0.20);
+@controls-Scrollbar-light-active-thumb-color:       rgba(255, 255, 255, 0.50);
+@controls-Scrollbar-dark-hover-thumb-color:       rgba(0, 0, 0, 0.10);
+@controls-Scrollbar-dark-active-thumb-color:      rgba(0, 0, 0, 0.15);
