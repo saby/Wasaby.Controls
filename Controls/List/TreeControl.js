@@ -12,7 +12,7 @@ define('js!Controls/List/TreeControl', [
     * @class Controls/List/TreeControl
     * @extends Controls/Control
     * @mixes Controls/interface/IItems
-    * @mixes Controls/interface/IDataSource
+    * @mixes Controls/interface/IConnection
     * @mixes Controls/interface/ISingleSelectable
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedView

@@ -6,7 +6,7 @@ define('js!Controls/Input/Dropdown', [
     * @class Controls/Input/Dropdown
     * @extends Controls/Control
     * @mixes Controls/Input/interface/IInputPlaceholder
-    * @mixes Controls/interface/IDataSource
+    * @mixes Controls/interface/IConnection
     * @mixes Controls/interface/IItems
     * @mixes Controls/Input/interface/IValidationError
     * @mixes Controls/Input/interface/IInputTag

@@ -10,12 +10,12 @@ define('js!Controls/interface/IItems', [
 
    /**
     * @name Controls/interface/IItems#items
-    * @cfg {Array} Список элементов коллекции
+    * @cfg {Array} Список элементов коллекции, отображаемый в компоненте.
     */
 
    /**
     * @name Controls/interface/IItems#itemTemplate
-    * @cfg {Function} Шаблон для отображения строки списка.
+    * @cfg {Function} Шаблон для отображения элемента коллекции.
     */
 
    /**
