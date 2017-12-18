@@ -3,7 +3,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
       'Core/Deferred',
       'Lib/Control/CompoundControl/CompoundControl',
       'SBIS3.CONTROLS/LongOperations/Entry',
-      'SBIS3.CONTROLS/LongOperations/resources/model',
+      'SBIS3.CONTROLS/LongOperations/List/resources/model',
       'SBIS3.CONTROLS/LongOperations/Manager',
       'SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
@@ -341,7 +341,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
          /**
           * Проверить, может ли длительная операция иметь историю
           * @public
-          * @param {SBIS3.CONTROLS/LongOperations/resources/model} model Модель длительной операции
+          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
           * @returns {boolean}
           */
          canHasHistory: function (model) {
@@ -352,7 +352,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
           * Выполнить действие над длительной операцией, инициированное пользователем
           * @public
           * @param {string} action Имя действия (resume, suspend, delete)
-          * @param {SBIS3.CONTROLS/LongOperations/resources/model} model Модель длительной операции
+          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
           * @returns {Core/Deferred}
           */
          applyUserAction: function (action, model) {
@@ -371,7 +371,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
          /**
           * Выполнить результирующее действие длительной операции
           * @public
-          * @param {SBIS3.CONTROLS/LongOperations/resources/model} model Модель длительной операции
+          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
           */
          applyResultAction: function (model) {
             //Только если операция завершена или содержит ошибку
@@ -396,7 +396,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
          /**
           * Выполнить действие, указанное в качестве результата длительной операции. Возвращает true если дальнейшая обработка не нужна
           * @protected
-          * @param {SBIS3.CONTROLS/LongOperations/resources/model} model Модель длительной операции
+          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
           * @return {boolean}
           */
          _showResult: function (model) {
@@ -535,7 +535,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
          /**
           * Открыть историю указанной длительной операции
           * @protected
-          * @param {SBIS3.CONTROLS/LongOperations/resources/model} model Модель длительной операции
+          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
           * @param {boolean} useResultHandler Использовать обработчик результата операции
           */
          _showHistory: function (model, useResultHandler) {
