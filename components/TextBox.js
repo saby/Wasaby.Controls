@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/TextBox', [
    'Core/helpers/Function/forAliveOnly',
    'SBIS3.CONTROLS/ControlHierarchyManager',
    'SBIS3.CONTROLS/Button/IconButton',
+   'css!Controls/Input/resources/InputRender/InputRender',
    'css!SBIS3.CONTROLS/TextBox/TextBox'
 
 ], function(
