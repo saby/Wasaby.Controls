@@ -64,7 +64,6 @@ define('js!Controls/Input/Suggest',
             minSearchLength: types(Number),
             filter: types(Object),
             searchParam: types(String).required(),
-            clearable: types(Boolean),
             displayProperty: types(String).required()
          };
       };
