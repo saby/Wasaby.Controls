@@ -43,7 +43,7 @@
    overflow-y: scroll;
 }
 
-/*Демка с растягиванием фейковой area с помощью float: https://jsfiddle.net/85y2oj2s/*/
+/*Демка с растягиванием фейковой area с помощью float: https://jsfiddle.net/85y2oj2s/1/*/
 .controls-TextArea__fakeField {
    float: left; //Необходимо для растягивания блока controls-fakeTextArea__firstWrapper
    visibility: hidden;
@@ -68,13 +68,12 @@
 }
 
 //В IE будем показывать текст из fakeArea, так как иначе при быстром вводе textArea не успевает обновлять размеры и дергается
+// Демка: https://jsfiddle.net/85y2oj2s/1/
 .ws-is-ie {
-   .controls-InputRender__field.controls-TextArea {
-      &__realField {
-         color: rgba(0, 0, 0, 0);
-      }
-      &__fakeField {
-         visibility: visible;
-      }
+   .controls-TextArea__realField {
+      color: rgba(0, 0, 0, 0);
+   }
+   .controls-TextArea__fakeField {
+      visibility: visible;
    }
 }
