@@ -1,8 +1,8 @@
-define('js!Controls/Popup/DialogHelper',
+define('js!Controls/Popup/InformationPopupOpener',
    [
       'Core/Control',
       'Core/core-merge',
-      'tmpl!Controls/Popup/DialogHelper/DialogHelper',
+      'tmpl!Controls/Popup/InformationPopupOpener/DialogHelper',
       'js!Controls/Windows/Submit'
    ],
    function (Control, merge, template) {
@@ -10,7 +10,7 @@ define('js!Controls/Popup/DialogHelper',
 
       /**
        * Хелпер открытия диалоговых окон
-       * @class Controls/Popup/DialogHelper
+       * @class Controls/Popup/InformationPopupOpener
        * @extends Core/Control
        * @control
        * @public
@@ -19,22 +19,22 @@ define('js!Controls/Popup/DialogHelper',
        */
 
       /**
-       * @function Controls/Popup/DialogHelper#confirm
+       * @function Controls/Popup/InformationPopupOpener#confirm
        * Открыть диалоговое окно подтверждения
        */
 
       /**
-       * @function Controls/Popup/DialogHelper#info
+       * @function Controls/Popup/InformationPopupOpener#info
        * Открыть окно со статусом "информация"
        */
 
       /**
-       * @function Controls/Popup/DialogHelper#error
+       * @function Controls/Popup/InformationPopupOpener#error
        * Открыть окно со статусом "ошибка"
        */
 
       /**
-       * @function Controls/Popup/DialogHelper#success
+       * @function Controls/Popup/InformationPopupOpener#success
        * Открыть окно со статусом "успех"
        */
 
@@ -68,7 +68,7 @@ define('js!Controls/Popup/DialogHelper',
       };
 
       return Control.extend({
-         _controlName: 'Controls/Popup/DialogHelper',
+         _controlName: 'Controls/Popup/InformationPopupOpener',
          _template: template,
 
          _positiveHandler: null,
@@ -83,19 +83,19 @@ define('js!Controls/Popup/DialogHelper',
             });
          },
 
-         confirm: function(cfg, positiveHandler, negativeHandler, cancelHandler){
+         confirmDialog: function(cfg, positiveHandler, negativeHandler, cancelHandler){
             _private.openDialog.call(this, cfg, 'confirm', positiveHandler, negativeHandler, cancelHandler);
          },
 
-         info: function(cfg, handler){
+         infoDialog: function(cfg, handler){
             _private.openDialog.call(this, cfg, 'default', null, null, handler);
          },
 
-         error: function(cfg, handler){
+         errorDialog: function(cfg, handler){
             _private.openDialog.call(this, cfg, 'error', null, null, handler);
          },
 
-         success: function(cfg, handler){
+         successDialog: function(cfg, handler){
             _private.openDialog.call(this, cfg, 'success', null, null, handler);
          }
 
