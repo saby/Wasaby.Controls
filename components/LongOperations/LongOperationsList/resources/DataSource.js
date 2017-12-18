@@ -21,17 +21,26 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
    function (CoreExtend, Deferred, ISource, ObservableMixin, DataSet, longOperationsManager, LongOperationEntry, TimeInterval) {
       'use strict';
 
+
+
+      /**
+       * Увеличение лимита при наличии предусловий
+       * @private
+       * @type {number}
+       */
+      var _PRECONDITION_EXTENSION = 4;
+
       /**
        * Простая оболочка над SBIS3.CONTROLS.LongOperations.Manager для имплементации интерфейса WS.Data/Source/ISource
        * @public
-       * @type {object}
+       * @type {WS.Data/Source/ISource}
        */
       var LongOperationsListDataSource = CoreExtend.extend({}, [ISource, ObservableMixin], /** @lends SBIS3.CONTROLS.LongOperationsListDataSource.prototype */{
          _moduleName: 'SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
 
          $protected: {
             _options: {
-               preConditions: undefined,
+               preConditions: [],
                navigationType: 'Page'
             }
          },
@@ -105,6 +114,8 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
                   options.where = where;
                }
             }
+            var preConditions = this._options.preConditions;
+            var hasPreConditions = !!(preConditions && preConditions.length);
             var sorting = query.getOrderBy();
             if (sorting && sorting.length) {
                options.orderBy = sorting;
@@ -115,7 +126,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
             }
             var limit = query.getLimit();
             if (0 < limit) {
-               options.limit = limit;
+               options.limit = hasPreConditions ? limit + preConditions.length*_PRECONDITION_EXTENSION : limit;
             }
             if (filter.needUserInfo) {
                options.extra = {needUserInfo:true};
@@ -124,9 +135,20 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
             var promise = new Deferred();
             longOperationsManager.fetch(Object.keys(options).length ? options : null).addCallbacks(function (recordSet) {
                var meta = recordSet.getMetaData();
+               var items = recordSet.getRawData();
+               if (hasPreConditions && items.length) {
+                  var condition = preConditions.reduce(function (r, v) { ; return v; }, {});
+                  items = items.filter(function (operation) {
+                     var custom = operation.extra ? operation.extra.custom : null;
+                     return !custom || !preConditions.some(function (cond) { return Object.keys(cond).every(function (name) { return cond[name] === custom[name]; }); });
+                  });
+                  if (0 < limit) {
+                     items = items.slice(0, limit);
+                  }
+               }
                promise.callback(new DataSet({
                   rawData: {
-                     items: recordSet.getRawData(),
+                     items: items,
                      more: meta && meta.more
                   },
                   idProperty: recordSet.getIdProperty(),

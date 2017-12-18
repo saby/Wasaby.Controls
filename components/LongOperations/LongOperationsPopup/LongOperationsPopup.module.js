@@ -71,9 +71,10 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
 
             this._longOpList = this.getChildControlByName('operationList');
             var preConditions = this._options.preConditions;
-            if (preConditions && preConditions.length) {
-               preConditions.forEach(this._longOpList.addPreCondition.bind(this._longOpList));
+            if (!preConditions || !Array.isArray(preConditions)) {
+               throw new Error('PreConditions required');
             }
+            this._longOpList.setPreConditions(preConditions);
 
             if (this._options.withAnimation) {
                this._animationAtStart();
@@ -256,24 +257,6 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             this._floatAreaMode = !!toggle;
             //Скрываем панель, во время работы с floatArea, она не нужна
             this.setVisible(!toggle);
-         },
-
-         /**
-          * Установить предусловия для отображаемого списка длительных операций
-          * @public
-          * @param {object} condition Предусловия
-          */
-         addPreCondition: function (condition) {
-            this._longOpList.addPreCondition(condition);
-         },
-
-         /**
-          * Убрать предусловия для отображаемого списка длительных операций
-          * @public
-          * @param {object} condition Предусловия
-          */
-         removePreCondition: function (condition) {
-            this._longOpList.removePreCondition(condition);
          },
 
          /**

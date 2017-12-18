@@ -343,30 +343,15 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
          /**
           * Установить предусловия для источника данных
           * @public
-          * @param {object} condition Предусловия
+          * @param {object[]} preConditions Список предусловий
           */
-         addPreCondition: function (condition) {
-            if (!(condition && typeof condition === 'object' && Object.keys(condition).length)) {
-               throw new Error('None empty object required');
+         setPreConditions: function (preConditions) {
+            if (!(preConditions && Array.isArray(preConditions) && preConditions.every(function (v) { return typeof v === 'object' && !!Object.keys(v).length; }))) {
+               throw new Error('Array of objects required');
             }
             var dataSource = this.getDataSource();
             var options = dataSource.getOptions();
-            options.preConditions = coreMerge(options.preConditions || {}, condition);
-            dataSource.setOptions(options);
-         },
-
-         /**
-          * Убрать предусловия у источника данных
-          * @public
-          * @param {object} condition Предусловия
-          */
-         removePreCondition: function (condition) {
-            if (!(condition && typeof condition === 'object' && Object.keys(condition).length)) {
-               throw new Error('None empty object required');
-            }
-            var dataSource = this.getDataSource();
-            var options = dataSource.getOptions();
-            options.preConditions = null;
+            options.preConditions = preConditions;
             dataSource.setOptions(options);
          },
 
