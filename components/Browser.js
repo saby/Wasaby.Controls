@@ -254,7 +254,25 @@ define('SBIS3.CONTROLS/Browser', [
              *         ...
              *     </ws:SBIS3.Engine.ReportBrowser>
              * </pre>
-             * Для редактирования набора колонок (в том числе отличных от набора колонок данного браузера) используется команда showColumnsEditor.
+             * Для редактирования набора колонок (в том числе отличных от набора колонок данного браузера) используется команда showColumnsEditor (из любых подкомпонентов браузера)
+             * <pre>
+                  this.sendCommand('showColumnsEditor', {
+                     editorOptions:
+                        {editorOptions:{
+                           moveColumns:true
+                        }
+                     }}).addCallbacks(
+                     function (columnsConfig) {
+                        // Получена новая конфигурация колонок - сделать с нею то, что требуется
+                        var columns = columnsConfig.columns;
+                        var selected = columnsConfig.selectedColumns;
+                        ...
+                     },
+                     function (err) {
+                        // Обработать ошибку
+                     }
+                  )
+             * </pre>
              * @see setColumnsConfig
              * @see getColumnsConfig
              * @see showColumnsEditor
