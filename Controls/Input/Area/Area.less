@@ -1,66 +1,61 @@
-@area-vertical-padding: 2px;
-.controls-InputRender__field.controls-TextArea {
-   &__field {
-      overflow-x: hidden;
-      width: 100%;
-      .box-sizing(border-box);
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      line-height: @default-line-height;
-      //Убрать.
-      &:before {
-         display: none;
-      }
-   }
+/*
+   <div class="controls-InputRender controls-TextArea">
+      <div class="controls-InputRender__wrapper">
+         <div class="controls-InputRender__wrapper">
+            <textarea class="controls-TextArea__field controls-TextArea__realField" />
+            <div class="controls-fakeTextArea__firstWrapper">
+                <div class="controls-fakeTextArea__secondWrapper">
+                  <div class="controls-TextArea__field controls-TextArea__fakeField">
+                     <span></span><br/>
+                  </div>
+                </div>
+                <div class="controls-TextArea__clear"></div>
+            </div>
+         </div
+      </div>
+      <div class="controls-InputRender__tagStyle"></div>
+   </div>
+ */
 
-   //Настоящая textArea
-   &__realField {
-      display: block;
-      resize: none;
-      height: 100%;
-      position: absolute;
-      padding-top: @area-vertical-padding;
-      -webkit-appearance: none;
-
-      &_scroll-hidden {
-         overflow-y: hidden;
-      }
-      &_scroll-scroll {
-         overflow-y: scroll;
-      }
-   }
-
-   //Фэйковая textArea (div)
-   &__fakeField {
-      float: left;
-      visibility: hidden;
-      overflow-y: auto;
-   }
+@padding_Area: 2px;
+.controls-TextArea__field {
+   width: 100%;
+   white-space: pre-wrap;
+   word-wrap: break-word;
+   line-height: @default-line-height;
 }
 
-.ws-is-mobile-safari,
-.ws-is-mobile-chrome-ios {
-   .controls-TextArea {
-      &__field {
-         box-sizing: content-box;
-         //Чтобы показывался скролл
-         -webkit-overflow-scrolling: touch;
-      }
-      //TextArea на safari и chrome на ios имеет отступы слева и српава, которые не убрать
-      //Поэтому в фейковой текст арии проставим такие же
-      &__fakeField {
-         padding: 0 7px;
-         width: calc(~"100% - 6px");
-      }
-   }
+.controls-TextArea__realField {
+   resize: none;
+   height: 100%;
+   position: absolute;
+   top: 0;
+   padding-top: @padding_Area;
+   padding-bottom: @padding_Area;
+   box-sizing: border-box;
+}
+
+.controls-TextArea__realField_scroll-hidden {
+   overflow-y: hidden;
+}
+
+.controls-TextArea__realField_scroll-scroll {
+   overflow-y: scroll;
+}
+
+/*Демка с растягиванием фейковой area с помощью float: https://jsfiddle.net/85y2oj2s/*/
+.controls-TextArea__fakeField {
+   float: left; //Необходимо для растягивания блока controls-fakeTextArea__firstWrapper
+   visibility: hidden;
+   overflow-y: auto;
 }
 
 .controls-fakeTextArea__firstWrapper {
    vertical-align: bottom;
    display: inline-block;
    width: 100%;
-   padding-top: @area-vertical-padding;
-   padding-bottom: @area-vertical-padding;
+   padding-top: @padding_Area;
+   padding-bottom: @padding_Area;
 }
 
 .controls-fakeTextArea__secondWrapper {
@@ -68,6 +63,9 @@
    width: 100%;
 }
 
+.controls-TextArea__clear {
+   clear: both;
+}
 
 //В IE будем показывать текст из fakeArea, так как иначе при быстром вводе textArea не успевает обновлять размеры и дергается
 .ws-is-ie {
