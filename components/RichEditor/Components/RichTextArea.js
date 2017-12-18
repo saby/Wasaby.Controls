@@ -56,7 +56,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
       var
          EDITOR_MODULES = ['css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/tinymce/skins/lightgray/skin.min',
             'css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/tinymce/skins/lightgray/content.inline.min',
-            'SBIS3.CONTROLS.RichTextArea/resources/tinymce/tinymce'],
+            'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/tinymce/tinymce'],
          constants = {
             baseAreaWidth: 768,//726
             defaultImagePercentSize: 25,// Начальный размер картинки (в процентах)
