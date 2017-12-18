@@ -3,10 +3,10 @@
       selectOnClick="{{_options.selectOnClick}}"
       viewModel="{{_numberViewModel}}"
       tagStyle="{{_options.tagStyle}}"
-      event:onChangeValue="_changeValueHandler()"
-      event:onInputCompleted="_inputCompletedHandler()"
-      event:onTagHover="_notifyHandler('onTagHover')"
-      event:onTagClick="_notifyHandler('onTagClick')">
+      on:onChangeValue="_changeValueHandler()"
+      on:onInputCompleted="_inputCompletedHandler()"
+      on:onTagHover="_notifyHandler('onTagHover')"
+      on:onTagClick="_notifyHandler('onTagClick')">
    <ws:content>
 
       <ws:partial
