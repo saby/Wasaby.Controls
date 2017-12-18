@@ -11,8 +11,7 @@ define('js!Controls/List/Explorer', [
     * Компонент иерархичесего списка, с возможностью распахивания, а так же проваливания в узлы. Обладает возможностью загрузки/подгрузки данных из источника.
     * @class Controls/List/Explorer
     * @extends Controls/Control
-    * @mixes Controls/interface/IItems
-    * @mixes Controls/interface/IConnection
+    * @mixes Controls/interface/ISource
     * @mixes Controls/interface/ISingleSelectable
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedView

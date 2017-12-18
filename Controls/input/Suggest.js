@@ -12,7 +12,7 @@ define('js!Controls/Input/Suggest',
        * @class Controls/Input/Suggest
        * @extends Controls/Input/Text
        * @mixes Controls/Input/interface/ISearch
-       * @mixes Controls/interface/IConnection
+       * @mixes Controls/interface/ISource
        * @mixes Controls/interface/IFilter
        * @mixes Controls/Input/interface/ISuggest
        * @control
