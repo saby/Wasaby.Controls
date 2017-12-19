@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                footerTemplate: footerTpl,
                caption: '',
                className: 'controls-LongOperations controls-LongOperationsPopup controls-LongOperationsPopup__hidden controls-LongOperationsPopup__hiddenContentMode',
-               preConditions: null,
+               customConditions: null,
                withAnimation: null,
                waitIndicatorText: null
             },
@@ -70,11 +70,12 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             LongOperationsPopup.superclass.init.call(this);
 
             this._longOpList = this.getChildControlByName('operationList');
-            var preConditions = this._options.preConditions;
-            if (!preConditions || !Array.isArray(preConditions)) {
-               throw new Error('PreConditions required');
+            var customConditions = this._options.customConditions;
+            // В текущей реализации наличие непустой опции customConditions обязательно
+            if (!customConditions || !Array.isArray(customConditions)) {
+               throw new Error('customConditions required');
             }
-            this._longOpList.setPreConditions(preConditions);
+            this._longOpList.setСustomConditions(customConditions);
 
             if (this._options.withAnimation) {
                this._animationAtStart();

@@ -343,15 +343,15 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
          /**
           * Установить предусловия для источника данных
           * @public
-          * @param {object[]} preConditions Список предусловий
+          * @param {object[]} customConditions Список предусловий
           */
-         setPreConditions: function (preConditions) {
-            if (!(preConditions && Array.isArray(preConditions) && preConditions.every(function (v) { return typeof v === 'object' && !!Object.keys(v).length; }))) {
+         setCustomConditions: function (customConditions) {
+            if (!(customConditions && Array.isArray(customConditions) && customConditions.every(function (v) { return !!v && typeof v === 'object' && !!Object.keys(v).length; }))) {
                throw new Error('Array of objects required');
             }
             var dataSource = this.getDataSource();
             var options = dataSource.getOptions();
-            options.preConditions = preConditions;
+            options.customConditions = customConditions;
             dataSource.setOptions(options);
          },
 

@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
        * @private
        * @type {number}
        */
-      var _PRECONDITION_EXTENSION = 4;
+      var _CUSTOM_CONDITION_EXTENSION = 4;
 
       /**
        * Простая оболочка над SBIS3.CONTROLS.LongOperations.Manager для имплементации интерфейса WS.Data/Source/ISource
@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
 
          $protected: {
             _options: {
-               preConditions: [],
+               customConditions: [],
                navigationType: 'Page'
             }
          },
@@ -114,8 +114,8 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
                   options.where = where;
                }
             }
-            var preConditions = this._options.preConditions;
-            var hasPreConditions = !!(preConditions && preConditions.length);
+            var customConditions = this._options.customConditions;
+            var hasCustomConditions = !!(customConditions && customConditions.length);
             var sorting = query.getOrderBy();
             if (sorting && sorting.length) {
                options.orderBy = sorting;
@@ -126,7 +126,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
             }
             var limit = query.getLimit();
             if (0 < limit) {
-               options.limit = hasPreConditions ? limit + preConditions.length*_PRECONDITION_EXTENSION : limit;
+               options.limit = hasCustomConditions ? limit + customConditions.length*_CUSTOM_CONDITION_EXTENSION : limit;
             }
             if (filter.needUserInfo) {
                options.extra = {needUserInfo:true};
@@ -136,10 +136,10 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
             longOperationsManager.fetch(Object.keys(options).length ? options : null).addCallbacks(function (recordSet) {
                var meta = recordSet.getMetaData();
                var items = recordSet.getRawData();
-               if (hasPreConditions && items.length) {
+               if (hasCustomConditions && items.length) {
                   items = items.filter(function (operation) {
                      var custom = operation.extra ? operation.extra.custom : null;
-                     return !custom || !preConditions.some(function (cond) { return Object.keys(cond).every(function (name) { return cond[name] === custom[name]; }); });
+                     return !custom || !customConditions.some(function (cond) { return Object.keys(cond).every(function (name) { return cond[name] === custom[name]; }); });
                   });
                   if (options.limit && !options.offset) {
                      items = items.slice(0, options.limit);
