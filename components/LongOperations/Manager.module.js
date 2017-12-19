@@ -127,6 +127,38 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
          _moduleName: 'SBIS3.CONTROLS.LongOperations.Manager',
 
          /**
+          * @event onlongoperationstarted Происходит при начале исполнения новой длительной операции
+          * @param {Core/EventObject} evtName Дескриптор события
+          * @param {object} data Данные события
+          * @see SBIS3.CONTROLS.LongOperations.IProducer
+          *
+          * @event onlongoperationchanged Происходит при изменении свойств длительной операции в процесе исполнения
+          * @param {Core/EventObject} evtName Дескриптор события
+          * @param {object} data Данные события
+          * @see SBIS3.CONTROLS.LongOperations.IProducer
+          *
+          * @event onlongoperationended Происходит при завершении длительной операции по любой причине. При завершении вследствие ошибки
+          * предоставляется информация об ошибке в свойстве data.error
+          * @param {Core/EventObject} evtName Дескриптор события
+          * @param {object} data Данные события
+          * @see SBIS3.CONTROLS.LongOperations.IProducer
+          *
+          * @event onlongoperationdeleted При удалении длительной операции
+          * @param {Core/EventObject} evtName Дескриптор события
+          * @param {object} data Данные события
+          * @see SBIS3.CONTROLS.LongOperations.IProducer
+          *
+          * @event onproducerregistered При регистрации продюсера длительных операций в менеджере
+          * @param {Core/EventObject} evtName Дескриптор события
+          *
+          * @event onproducerunregistered При снятии с регистрации продюсера длительных операций в менеджере
+          * @param {Core/EventObject} evtName Дескриптор события
+          *
+          * @event ondestroy При уничтожении менеджера
+          * @param {Core/EventObject} evtName Дескриптор события
+          */
+
+         /**
           * Получить ключ текущей вкладки
           * @public
           * @return {string}
@@ -744,7 +776,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
       protectedOf(manager)._tabChannel = new TabMessage();
 
       // Опубликовать свои события
-      _channel.publish('onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted');
+      _channel.publish('onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered', 'ondestroy');
 
       // И подписаться на события во вкладках
       protectedOf(manager)._tabChannel.subscribe('LongOperations:Manager:onActivity', _tabListener);
