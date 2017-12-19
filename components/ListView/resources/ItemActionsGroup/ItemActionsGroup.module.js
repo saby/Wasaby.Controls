@@ -224,7 +224,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                this._activeItem.container.addClass(this._activeCls);
                this._itemActionsMenu.recalcPosition(true);
                /*TODO фикс теста, для операций над записью должна быть особая иконка*/
-               $('.controls-PopupMixin__closeButton', this._itemActionsMenu.getContainer()).addClass('icon-size icon-ExpandUp icon-primary');
+               $('.controls-PopupMixin__closeButton', this._itemActionsMenu.getContainer()).addClass('icon-size');
             }, this));
          },
 
