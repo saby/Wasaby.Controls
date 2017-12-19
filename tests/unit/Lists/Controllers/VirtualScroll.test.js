@@ -78,9 +78,14 @@ define([
          assert.equal(res.indexStop, 50);
       });
 
-      it('Scroll to middle List', function() {
+      it('Scroll to middle List and check setScrollTop', function() {
          virtualScroll.setItemsCount(500);
          virtualScroll.setScrollTop(5286);
+
+         if (virtualScroll.setScrollTop(5286)) {
+            assert.fail(null, null, 'Change virtual window after set ident scrollTop');
+         }
+
          var res = virtualScroll.getVirtualWindow();
 
          assert.equal(res.topPlaceholderHeight, 4650);
