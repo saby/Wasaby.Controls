@@ -232,3 +232,26 @@ body {
 .ws-window-content {
   background-color: @basic-block-bg-color !important;
 }
+//daterange
+body {
+  // Выпилить как будем делать новые темы.
+  .controls-DateRangeChoose__bodyWrapper {
+    padding-top: round(8px * @multiplier);
+  }
+  .controls-DateRangeChoose {
+    .controls-DateRangeChoose__home .icon-small {
+      font-size: round(84px * @multiplier) !important;
+      line-height: round(84px * @multiplier) !important;
+      width: round(84px * @multiplier);
+      height: round(84px * @multiplier);
+    }
+    &.controls-DateRangeChoose__showMonths {
+      &.controls-DateRangeChoose__showHalfYears,
+      &.controls-DateRangeChoose__showQuarters {
+        .controls-DateRangeChoose__home {
+          width: round(56px * @multiplier);
+        }
+      }
+    }
+  }
+}
