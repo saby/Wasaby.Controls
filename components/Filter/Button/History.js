@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/Filter/Button/History',
    "tmpl!SBIS3.CONTROLS/Filter/Button/History/ItemContentTpl",
    "SBIS3.CONTROLS/Commands/CommandsSeparator",
    "SBIS3.CONTROLS/ListView",
-   'css!SBIS3.CONTROLS/Commands/Commands/CommandsSeparator',
+   'css!SBIS3.CONTROLS/Commands/CommandsSeparator',
    "i18n!SBIS3.CONTROLS/Filter/Button"
 ],
     function( CommandDispatcher,CompoundControl, dotTpl) {

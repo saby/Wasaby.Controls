@@ -7,8 +7,7 @@ define('js!Controls/List/GridControl', [
     *
     * @class Controls/List/GridControl
     * @extends Controls/Control
-    * @mixes Controls/interface/IItems
-    * @mixes Controls/interface/IDataSource
+    * @mixes Controls/interface/ISource
     * @mixes Controls/interface/ISingleSelectable
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedView

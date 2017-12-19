@@ -15,30 +15,30 @@
       columns="{{ [
          columns.status ? {
             'field': 'status',
-            'cellTemplate': 'tmpl!SBIS3.CONTROLS/LongOperations/resources/LongOperationsListStateTemplate',
+            'cellTemplate': 'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListStateTemplate',
             'width': narrowTmpl ? '' : '40'
          } : undefined,
          columns.startedAt ? {
             'field': 'startedAt',
-            'cellTemplate': 'tmpl!SBIS3.CONTROLS/LongOperations/resources/LongOperationsListStartTimeTemplate',
+            'cellTemplate': 'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListStartTimeTemplate',
             'width': '110',
             'className': 'controls-LongOperationsList__startTimeContainer'
          } : undefined,
          columns.title ? {
             'field': 'title',
-            'cellTemplate': 'tmpl!SBIS3.CONTROLS/LongOperations/resources/LongOperationsListNameTemplate',
+            'cellTemplate': 'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListNameTemplate',
             'width': narrowTmpl ? '' : '100%',
             'className': 'controls-LongOperationsList__nameColumn controls-DataGridView-cell-overflow-ellipsis'
          } : undefined,
          columns.timeSpent ? {
             'field': 'timeSpent',
-            'cellTemplate': 'tmpl!SBIS3.CONTROLS/LongOperations/resources/LongOperationsListExecuteTimeTemplate',
+            'cellTemplate': 'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListExecuteTimeTemplate',
             'width': narrowTmpl ? '' : '130',
             'className': 'controls-LongOperationsList__executeTimeContainer'
          } : undefined,
          columns.userPic ? {
             'field': 'userPic',
-            'cellTemplate': 'tmpl!SBIS3.CONTROLS/LongOperations/resources/LongOperationsListUserPhotoTemplate',
+            'cellTemplate': 'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListUserPhotoTemplate',
             'width': narrowTmpl ? '' : '200',
             'className': 'controls-DataGridView-cell-overflow-ellipsis'
          } : undefined

@@ -237,7 +237,7 @@ define('SBIS3.CONTROLS/Image',
                    *     <option name="defaultImage">/resources/SBIS3.CONTROLS/components/Image/resources/default-image.png</option>
                    * </pre>
                    */
-                  defaultImage: processImagePath('SBIS3.CONTROLS/resources/default-image.png'),
+                  defaultImage: processImagePath('SBIS3.CONTROLS/Image/resources/default-image.png'),
                   /**
                    * @cfg {Object} Устанавливает связанный источник данных - {@link WS.Data/Source/SbisService}.
                    * @remark

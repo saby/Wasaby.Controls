@@ -288,7 +288,12 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
       },
 
       _drawItemsCallback: function() {
-         this._updateEditArrow();
+         var actions = this.getItemsActions();
+         if (actions) {
+            actions.ready(function() {
+               this._updateEditArrow();
+            }.bind(this));
+         }
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
 
