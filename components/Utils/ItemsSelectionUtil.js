@@ -73,6 +73,10 @@ define('SBIS3.CONTROLS/Utils/ItemsSelectionUtil', ['Core/core-instance', 'Core/d
          if(result) {
             ctrl.setSelectedItems(result);
          }
+
+         if (ctrl._options.historyId && result.at(0)) {
+            ctrl._addItemToHistory(result.at(0));
+         }
          
          if(ctrl.isActive()) {
             /* Баг ipad, после изменения размеров input'a, курсор не меняет своё положение:
