@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       'Core/WindowManager',
       'Core/helpers/Function/throttle',
       'Core/helpers/Hcontrol/isElementVisible',
-      'Core/Detection',
+      'Core/detection',
       'css!SBIS3.CONTROLS.ScrollPagingController'
    ],
    function(StickyHeaderManager, cAbstract, cInstance, WindowManager, throttle, isElementVisible, detection) {
