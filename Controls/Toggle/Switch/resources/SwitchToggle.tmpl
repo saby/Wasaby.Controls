@@ -1,9 +1,10 @@
 <span>
    <span  class="controls-SwitcherDouble__empty">&nbsp;</span>
    <span class="{{_isDoubleSwitcher ? 'controls-SwitcherDouble__toggle' : 'controls-Switcher ws-enabled'}}
-   {{_checked && !_isDoubleSwitcher ? ' controls-Checked__checked' : ''}}
-   {{_isDoubleSwitcher ? ' controls-SwitcherDouble-' + (_checked ? 'on' : 'off') + '-toggled'}}"
+   {{_value && !_isDoubleSwitcher ? ' controls-Checked__checked' : ''}}
+   {{_isDoubleSwitcher ? ' controls-SwitcherDouble-' + (_value ? 'on' : 'off') + '-toggled'}}"
    on:click="_clickHandler('Toggle')">
+      &nbsp;
       &nbsp;
       <span class="{{_isDoubleSwitcher ? 'controls-SwitcherDouble__line' : 'controls-Switcher__line'}}"></span>
       <span class="{{_isDoubleSwitcher ? 'controls-SwitcherDouble__btn' : 'controls-Switcher__btn'}}"></span>

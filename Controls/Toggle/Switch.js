@@ -41,25 +41,25 @@ define('js!Controls/Toggle/Switch', [
       _clickHandler: function (e, clickedElement) {
          //если дабл свитчер и кликнутый заголовок, то не надо переключаться.
          //если простой свитчер, то всегда переключаться, вне зависимости кликнутый заголовок или нет.
-         if (!this._isDouble(this._options.captions) || this._options.checked !== (clickedElement === "textOn" ? true : false) || clickedElement==="Toggle") {
-            this._notify('checkedChanged', !this._options.checked);
+         if (!this._isDouble() || this._options.value !== (clickedElement === "textOn" ? true : false) || clickedElement==="Toggle") {
+            this._notify('valueChanged', !this._options.value);
          }
       },
 
-      _isDouble: function(captions) {
-         return captions.length === 2;
+      _isDouble: function() {
+         return this._options.captions.length === 2;
       }
    });
 
    Switch.getDefaultOptions = function getDefaultOptions() {
       return {
-         checked: false
+         value: false
       };
    };
 
    Switch.getOptionTypes = function getOptionTypes() {
       return {
-         checked: types(Boolean),
+         value: types(Boolean),
          orientation: types(String).oneOf([
             'vertical',
             'horizontal'

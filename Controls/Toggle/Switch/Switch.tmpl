@@ -1,9 +1,9 @@
 <!-- TODO: remove ws-enabled -->
 <!-- TODO: remove Span-->
 <!-- Спаны нужны из-за того что вдом неправильно работает с ключами-->
-<span class="controls-SwitcherDouble {{_options.checked ? ' controls-Checked__checked' : ''}}{{_options.orientation === 'vertical' &&  _isDouble(_options.captions) ? ' controls-SwitcherDouble_vertical' : ' controls-SwitcherDouble_horizontal'}}" title="{{_options.tooltip}}">
-   <ws:partial template="tmpl!Controls/Toggle/Switch/resources/SwitchToggle"  _isDoubleSwitcher="{{_isDouble(_options.captions)}}" _checked="{{_options.checked}}"/>
+<span class="controls-SwitcherDouble {{_options.value ? ' controls-Checked__checked' : ''}}{{_options.orientation === 'vertical' &&  _isDouble(_options.captions) ? ' controls-SwitcherDouble_vertical' : ' controls-SwitcherDouble_horizontal'}}" title="{{_options.tooltip}}">
+   <ws:partial template="tmpl!Controls/Toggle/Switch/resources/SwitchToggle"  _isDoubleSwitcher="{{_isDouble()}}" _value="{{_options.value}}"/>
    <span>
-      <ws:partial  template="tmpl!Controls/Toggle/Switch/resources/SwitchTextBlock" _checked="{{_options.checked}}" _captions="{{_options.captions}}"/>
+      <ws:partial  template="tmpl!Controls/Toggle/Switch/resources/SwitchTextBlock" _value="{{_options.value}}" _captions="{{_options.captions}}"/>
    </span>
 </span>
