@@ -1,8 +1,8 @@
-define(['js!SBIS3.CONTROLS.TreeDataGridView'], function (TreeDataGridView) {
+define(['SBIS3.CONTROLS/Tree/DataGridView'], function (TreeDataGridView) {
 
    'use strict';
 
-   describe('SBIS3.CONTROLS.TreeDataGridView', function () {
+   describe('SBIS3.CONTROLS/Tree/DataGridView', function () {
       var
          TestTDGV,
          data = [

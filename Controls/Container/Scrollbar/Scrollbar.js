@@ -10,16 +10,16 @@ define('js!Controls/Container/Scrollbar/Scrollbar', [
 
       /**
        * Класс контрола "Тонкий скролл".
-       * @class SBIS3.CONTROLS.Scrollbar
-       * @extends SBIS3.CONTROLS.CompoundControl
+       * @class SBIS3.CONTROLS/ScrollContainer/Scrollbar
+       * @extends SBIS3.CONTROLS/CompoundControl
        *
-       * @mixes SBIS3.CONTROLS.DragNDropMixin
+       * @mixes SBIS3.CONTROLS/Mixins/DragNDropMixin
        *
        * @public
        * @control
        * @author Крайнов Дмитрий Олегович
        */
-      var Scrollbar = Control.extend(/** @lends SBIS3.CONTROLS.Scrollbar.prototype */{
+      var Scrollbar = Control.extend(/** @lends SBIS3.CONTROLS/ScrollContainer/Scrollbar.prototype */{
          /**
           * @event onScrollbarDrag Происходит при изменении позиции скролла.
           * @param {Core/EventObject} eventObject Дескриптор события.

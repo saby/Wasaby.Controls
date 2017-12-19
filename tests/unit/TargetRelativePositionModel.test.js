@@ -3,13 +3,13 @@
  */
 /* global define, beforeEach, afterEach, describe, it, assert */
 define([
-   'js!SBIS3.CONTROLS.TargetRelativePositionModel'
+   'SBIS3.CONTROLS/Layouts/ContainerPosition/TargetRelativePositionModel'
 ], function (
    TargetRelativePositionModel
 ) {
    'use strict';
 
-   describe('SBIS3.CONTROLS.TargetRelativePositionModel', function() {
+   describe('SBIS3.CONTROLS/Layouts/ContainerPosition/TargetRelativePositionModel', function() {
       var TRPModel,
       testVariantsOf_Offset = [123,undefined, 'abc', [123,'abc'], {},null,
          {tap:10, left:10}, {top:10, loft:10},

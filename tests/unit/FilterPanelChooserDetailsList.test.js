@@ -1,8 +1,8 @@
-define(['js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', 'WS.Data/Collection/RecordSet'], function (DetailsList, RecordSet) {
+define(['SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList', 'WS.Data/Collection/RecordSet'], function (DetailsList, RecordSet) {
 
    'use strict';
 
-   describe('SBIS3.CONTROLS.FilterPanelChooser.DetailsList', function () {
+   describe('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList', function () {
       var
          imitateEvent = {
             setResult: function() {}

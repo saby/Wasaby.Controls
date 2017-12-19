@@ -45,6 +45,10 @@
          border-color: @edit-at-place-field-border-color;
          height: 100%;
          white-space: nowrap;
+         //todo: каскад
+         &.controls-EditAtPlace__multiline {
+            white-space: pre-wrap;
+         }
       }
    }
    .controls-EditAtPlace__editor{
@@ -73,6 +77,7 @@
          text-overflow: ellipsis;
          width: 100%;
          vertical-align: top;
+         box-sizing: border-box;
       }
    }
 }

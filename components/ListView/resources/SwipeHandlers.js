@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers', [], function () {
+define('SBIS3.CONTROLS/ListView/resources/SwipeHandlers', [], function () {
    if (typeof $ != 'undefined') {
       $.event.special.swipe = {
          // свайп уменьшили до 50px т.к. есть места где невозможно сделать свайп длиной 100px

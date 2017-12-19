@@ -125,12 +125,12 @@
 
     function initButtons() {
         require([
-            'js!SBIS3.CONTROLS.Link',
-            'js!SBIS3.CONTROLS.Button',
-            'js!SBIS3.CONTROLS.ToggleButton',
-            'js!SBIS3.CONTROLS.IconButton',
-            'js!SBIS3.CONTROLS.TabButton',
-            'js!SBIS3.CONTROLS.TabButtons'
+            'SBIS3.CONTROLS/Link',
+            'SBIS3.CONTROLS/Button',
+            'SBIS3.CONTROLS/Button/ToggleButton',
+            'SBIS3.CONTROLS/Button/IconButton',
+            'SBIS3.CONTROLS/Tab/Button',
+            'SBIS3.CONTROLS/Tab/Buttons'
         ], function(
             Link,
             Button,
@@ -373,12 +373,12 @@
 
     function initSwitchers() {
         require([
-            'js!SBIS3.CONTROLS.CheckBox',
-            'js!SBIS3.CONTROLS.CheckBoxGroup',
-            'js!SBIS3.CONTROLS.RadioButton',
-            'js!SBIS3.CONTROLS.RadioGroup',
-            'js!SBIS3.CONTROLS.Switcher',
-            'js!SBIS3.CONTROLS.SwitcherDouble',
+            'SBIS3.CONTROLS/CheckBox',
+            'SBIS3.CONTROLS/CheckBox/Group',
+            'SBIS3.CONTROLS/Radio/Button',
+            'SBIS3.CONTROLS/Radio/Group',
+            'SBIS3.CONTROLS/Switcher',
+            'SBIS3.CONTROLS/Switcher/Double',
             'js!SBIS3.Engine.SwitcherDoubleOnline'
         ], function(
             CheckBox,
@@ -556,13 +556,13 @@
 
     function initMenus() {
         require([
-            'js!SBIS3.CONTROLS.ContextMenu',
-            'js!SBIS3.CONTROLS.Menu',
-            'js!SBIS3.CONTROLS.MenuItem',
-            'js!SBIS3.CONTROLS.Button',
-            'js!SBIS3.CONTROLS.MenuButton',
-            'js!SBIS3.CONTROLS.MenuLink',
-            'js!SBIS3.CONTROLS.MenuIcon'
+            'SBIS3.CONTROLS/Menu/ContextMenu',
+            'SBIS3.CONTROLS/Menu',
+            'SBIS3.CONTROLS/Menu/MenuItem',
+            'SBIS3.CONTROLS/Button',
+            'SBIS3.CONTROLS/Menu/MenuButton',
+            'SBIS3.CONTROLS/Menu/MenuLink',
+            'SBIS3.CONTROLS/Menu/MenuIcon'
         ], function(
             ContextMenu,
             Menu,
@@ -736,19 +736,19 @@
 
     function initInputFields() {
         require([
-            'js!SBIS3.CONTROLS.TextBox',
-            'js!SBIS3.CONTROLS.PasswordTextBox',
-            'js!SBIS3.CONTROLS.FormattedTextBox',
-            'js!SBIS3.CONTROLS.DatePicker',
-            'js!SBIS3.CONTROLS.MonthPicker',
-            'js!SBIS3.CONTROLS.NumberTextBox',
-            'js!SBIS3.CONTROLS.ComboBox',
-            'js!SBIS3.CONTROLS.SearchForm',
+            'SBIS3.CONTROLS/TextBox',
+            'SBIS3.CONTROLS/PasswordTextBox',
+            'SBIS3.CONTROLS/FormattedTextBox',
+            'SBIS3.CONTROLS/Date/Picker',
+            'SBIS3.CONTROLS/Date/MonthPicker',
+            'SBIS3.CONTROLS/NumberTextBox',
+            'SBIS3.CONTROLS/ComboBox',
+            'SBIS3.CONTROLS/SearchForm',
             'js!SBIS3.CONTROLS.Demo.MySearchForm',
-            'js!SBIS3.CONTROLS.TextArea',
-            'js!SBIS3.CORE.AreaAbstract',
-            'js!SBIS3.CONTROLS.EditAtPlace',
-            'js!SBIS3.CONTROLS.EditAtPlaceGroup'
+            'SBIS3.CONTROLS/TextArea',
+            'Lib/Control/AreaAbstract/AreaAbstract',
+            'SBIS3.CONTROLS/EditAtPlace',
+            'SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup'
         ], function(
             TextBox,
             PasswordTextBox,

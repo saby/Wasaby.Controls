@@ -1,7 +1,7 @@
-define('js!SBIS3.CONTROLS.Browser/design/DesignPlugin',
+define('SBIS3.CONTROLS/Browser/design/DesignPlugin',
    [
-      'js!SBIS3.CONTROLS.Browser',
-      'css!SBIS3.CONTROLS.Browser/design/design'
+      'SBIS3.CONTROLS/Browser',
+      'css!SBIS3.CONTROLS/Browser/design/design'
    ],
    function(Browser){
 
