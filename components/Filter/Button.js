@@ -228,7 +228,7 @@ define('SBIS3.CONTROLS/Filter/Button',
                 /* Если шаблон указали как имя компонента (строки которые начинаются с js! или SBIS3.),
                    то перед отображением панели фильтров сначала загрузим компонент. */
                 if(template && typeof template === 'string' && /^js!*|^SBIS3.*/.test(template)) {
-                   self._dTemplatesReady.push(mStubs.require(((template.indexOf('js!') !== 0 ? 'js!' : '') + template)).addCallback(function(comp) {
+                   self._dTemplatesReady.push(mStubs.require((requirejs.defined(template) ? template : 'js!' + template)).addCallback(function(comp) {
                       /* Запишем, что в качестве шаблона задали компонент */
                       self._filterTemplates[name] = true;
                       return comp;
@@ -297,7 +297,7 @@ define('SBIS3.CONTROLS/Filter/Button',
 
              /* Если шаблон указали как имя компонента (SBIS3.* || js!SBIS3.*) */
              function getCompTpl(tpl) {
-                return prepTpl(dotTplForComp({component: tpl, componentOptions: self.getProperty('componentOptions')}));
+                return prepTpl(dotTplForComp({component: (requirejs.defined(tpl) ? tpl : 'js!' + tpl), componentOptions: self.getProperty('componentOptions')}));
              }
 
              /* Если в качестве шаблона передали вёрстку */
