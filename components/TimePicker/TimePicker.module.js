@@ -174,6 +174,8 @@ define('js!SBIS3.CONTROLS.TimePicker',
                   break;
                case 'time':
                   var time = this.getTime();
+                  // Создаем новый объект даты, потому что опция может быть записана в контекст.
+                  time = new Date(time);
 
                   time.setHours(value.hours);
                   time.setMinutes(value.minutes);
