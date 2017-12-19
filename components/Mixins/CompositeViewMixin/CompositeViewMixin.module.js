@@ -10,10 +10,13 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/ListContentTemplate',
    'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/ItemsTemplate',
    'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/InvisibleItemsTemplate',
+   'tmpl!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
+   'tmpl!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate',
    'Core/core-merge',
    'Core/core-instance',
    'js!SBIS3.CONTROLS.Link'
-], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge, cInstance) {
+], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate,
+            ItemsTemplate, InvisibleItemsTemplate, ListViewGroupTemplate, DataGridGroupTemplate, cMerge, cInstance) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
@@ -95,6 +98,12 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
       var myOptions = cfg._buildTplArgsComposite(cfg);
       cMerge(parentOptions, myOptions);
       return parentOptions;
+   },
+   getGroupTemplate = function(cfg) {
+      if (cfg.viewMode === 'table') {
+         return DataGridGroupTemplate;
+      }
+      return ListViewGroupTemplate;
    };
    var MultiView = /** @lends SBIS3.CONTROLS.CompositeViewMixin.prototype */{
        /**
@@ -106,6 +115,9 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          _tileWidth: null,
          _folderWidth: null,
          _options: {
+            _getGroupTemplate: getGroupTemplate,
+            _ListViewGroupTemplate: ListViewGroupTemplate,
+            _DataGridGroupTemplate: DataGridGroupTemplate,
             _defaultTileContentTemplate: TileContentTemplate,
             _defaultTileTemplate: TileTemplate,
             _defaultListContentTemplate: ListContentTemplate,
