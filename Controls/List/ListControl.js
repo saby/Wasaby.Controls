@@ -247,6 +247,7 @@ define('js!Controls/List/ListControl', [
          self._topPlaceholderHeight = virtualWindow.topPlaceholderHeight;
          self._bottomPlaceholderHeight = virtualWindow.bottomPlaceholderHeight;
          self._listModel.updateIndexes(virtualWindow.indexStart, virtualWindow.indexStop);
+         self._forceUpdate();
       },
 
       /**
