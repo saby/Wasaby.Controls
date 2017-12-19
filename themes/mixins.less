@@ -533,10 +533,6 @@
     .ws-is-mobile-platform & {
       line-height: calc(~"@{check-box-icon-successful-size} + 1px");
     }
-    // В IE, если значения css свойст в rem, то top расчитывается неправильно, поэтому ставим для IE другой.
-    body.ws-is-ie:not(.ws-is-windows-10) & when not (@check-box-icon-successful-top-ie = 0){
-      top: @check-box-icon-successful-top-ie;
-    }
   }
 }
 
