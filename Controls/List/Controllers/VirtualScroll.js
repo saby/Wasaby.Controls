@@ -121,10 +121,9 @@ define('js!Controls/List/Controllers/VirtualScroll', [
       /**
        * Обновление виртуального окна после того, как в проекции добавились элементы
        * @param index позиция, с которой появились новые элементы
-       * @param items добавленные элементы
+       * @param countAddedItems количество добавленных элементов
        */
-      addItems: function(index, items) {
-         var countAddedItems = items.getCount();
+      insertItems: function(index, countAddedItems) {
          if (index < this._virtualWindow.indexStart) {
             //Если добавили ДО видимого диапазона, сдвинем видимый диапазон и увеличим верхнюю распорку
             this._virtualWindow.indexStart += countAddedItems;
@@ -146,43 +145,37 @@ define('js!Controls/List/Controllers/VirtualScroll', [
 
       /**
        * Добавить новые элементы в конец списка
-       * @param items новые элементы
+       * @param countAddedItems количество добавленных элементов
        */
-      appendItems: function(items) {
-         this.addItems(this._itemsCount, items);
+      appendItems: function(countAddedItems) {
+         this.insertItems(this._itemsCount, countAddedItems);
       },
 
       /**
        * Добавить новые элементы в начало списка
-       * @param items новые элементы
+       * @param countAddedItems количество добавленных элементов
        */
-      prependItems: function(items) {
-         this.addItems(0, items);
+      prependItems: function(countAddedItems) {
+         this.insertItems(0, countAddedItems);
       },
 
       /**
-       * рассчиать индексы и распорки, исходя из позиции скролла.
+       * Установить новый scrollTop, на его основе рассчитать индексы отображаемых записей и распорки
        * @param scrollTop
-       * @returns {*}
+       * @returns {boolean} изменились ли индексы/распорки
        */
-      calcVirtualWindow: function(scrollTop) {
+      setScrollTop: function(scrollTop) {
          var newPage = _private.getPage(scrollTop, this._averageItemHeight);
 
          if (this._currentPage === newPage.page) {
-            return {
-               changed: false,
-               virtualWindow: this._virtualWindow
-            };
+            return false;
          }
 
          this._currentPage = newPage.page;
          this._currentTopIndex = newPage.topIndex;
          this._virtualWindow = _private.calculateVirtualWindow(newPage.topIndex, this._averageItemHeight, this._maxVisibleItems, this._itemsCount);
 
-         return {
-            changed: true,
-            virtualWindow: this._virtualWindow
-         };
+         return true;
       }
    });
 

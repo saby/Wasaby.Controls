@@ -69,32 +69,35 @@ define([
 
       it('Scroll to top List', function() {
          virtualScroll.setItemsCount(500);
-         var res = virtualScroll.calcVirtualWindow(0);
+         virtualScroll.setScrollTop(0);
+         var res = virtualScroll.getVirtualWindow();
 
-         assert.equal(res.virtualWindow.topPlaceholderHeight, 0);
-         assert.equal(res.virtualWindow.bottomPlaceholderHeight, 11250);
-         assert.equal(res.virtualWindow.indexStart, 0);
-         assert.equal(res.virtualWindow.indexStop, 50);
+         assert.equal(res.topPlaceholderHeight, 0);
+         assert.equal(res.bottomPlaceholderHeight, 11250);
+         assert.equal(res.indexStart, 0);
+         assert.equal(res.indexStop, 50);
       });
 
       it('Scroll to middle List', function() {
          virtualScroll.setItemsCount(500);
-         var res = virtualScroll.calcVirtualWindow(5286);
+         virtualScroll.setScrollTop(5286);
+         var res = virtualScroll.getVirtualWindow();
 
-         assert.equal(res.virtualWindow.topPlaceholderHeight, 4650);
-         assert.equal(res.virtualWindow.bottomPlaceholderHeight, 5975);
-         assert.equal(res.virtualWindow.indexStart, 186);
-         assert.equal(res.virtualWindow.indexStop, 261);
+         assert.equal(res.topPlaceholderHeight, 4650);
+         assert.equal(res.bottomPlaceholderHeight, 5975);
+         assert.equal(res.indexStart, 186);
+         assert.equal(res.indexStop, 261);
       });
 
       it('Scroll to bottom List', function() {
          virtualScroll.setItemsCount(500);
-         var res = virtualScroll.calcVirtualWindow(12325);
+         virtualScroll.setScrollTop(12325);
+         var res = virtualScroll.getVirtualWindow();
 
-         assert.equal(res.virtualWindow.topPlaceholderHeight, 11700);
-         assert.equal(res.virtualWindow.bottomPlaceholderHeight, 0);
-         assert.equal(res.virtualWindow.indexStart, 468);
-         assert.equal(res.virtualWindow.indexStop, 500);
+         assert.equal(res.topPlaceholderHeight, 11700);
+         assert.equal(res.bottomPlaceholderHeight, 0);
+         assert.equal(res.indexStart, 468);
+         assert.equal(res.indexStop, 500);
 
       });
 
@@ -169,8 +172,8 @@ define([
                      virtualScroll._currentPage = -1;
 
                      virtualScroll.setItemsCount(tests[i].initialRowCount);
-                     virtualScroll.calcVirtualWindow(tests[i].scrollTop);
-                     virtualScroll.addItems(tests[i].addIndexes[k], {getCount: function() { return tests[i].countAddedItems; } });
+                     virtualScroll.setScrollTop(tests[i].scrollTop);
+                     virtualScroll.insertItems(tests[i].addIndexes[k], tests[i].countAddedItems);
                      var res = virtualScroll.getVirtualWindow();
 
                      assert.equal(res.indexStart, tests[i].result.indexStart);

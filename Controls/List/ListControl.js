@@ -85,14 +85,14 @@ define('js!Controls/List/ListControl', [
 
             if (direction === 'down') {
                self._listModel.appendItems(addedItems);
-               self._virtualScroll.appendItems(addedItems);
+               self._virtualScroll.appendItems(addedItems.getCount());
             } else if (direction === 'up') {
                self._listModel.prependItems(addedItems);
-               self._virtualScroll.prependItems(addedItems);
+               self._virtualScroll.prependItems(addedItems.getCount());
             }
 
             //обновить начало/конец видимого диапазона записей и высоты распорок
-            _private.updateVirtualWindow(self, self._virtualScroll.getVirtualWindow());
+            _private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
          })
       },
 
@@ -243,7 +243,7 @@ define('js!Controls/List/ListControl', [
        * Обновить размеры распорок и начало/конец отображаемых элементов
        * @param virtualWindow результат из virtualScroll контроллера
        */
-      updateVirtualWindow: function(self, virtualWindow) {
+      applyVirtualWindow: function(self, virtualWindow) {
          self._topPlaceholderHeight = virtualWindow.topPlaceholderHeight;
          self._bottomPlaceholderHeight = virtualWindow.bottomPlaceholderHeight;
          self._listModel.updateIndexes(virtualWindow.indexStart, virtualWindow.indexStop);
@@ -255,9 +255,9 @@ define('js!Controls/List/ListControl', [
        * @param scrollTop
        */
       handleListScroll: function(scrollTop) {
-         var result = this._virtualScroll.calcVirtualWindow(scrollTop);
-         if (result.changed) {
-            _private.updateVirtualWindow(this, result.virtualWindow);
+         var virtualWindowIsChanged = this._virtualScroll.setScrollTop(scrollTop);
+         if (virtualWindowIsChanged) {
+            _private.applyVirtualWindow(this, this._virtualScroll.getVirtualWindow());
          }
       }
    };
