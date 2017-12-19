@@ -48,12 +48,13 @@ define('js!Controls/interface/INavigation', [
     * @property {ListNavigationSource} source способ работы с источником данных
     * @property {ListNavigationView} view внешнее отображение навигации
     * @property {ListNavigationPositionSourceConfig|ListNavigationOffsetSourceConfig} sourceConfig настройки способа работы с источником
-    * @property {ListNavigationInfinityViewConfig|ListNavigationPagesViewConfig} viewConfig настройки внешнего отображение навигации
+    * @property {ListNavigationInfinityViewConfig|ListNavigationPagesViewConfig} viewConfig настройки внешнего отображения навигации
     */
 
    /**
     * @name Controls/interface/INavigation#navigation
-    * @cfg {ListNavigation} Конфигурация навигации
+    * @cfg {ListNavigation} Конфигурация навигации. Задает набор настроек, определяющих функционал навигации в списке.
+    * Настраивается формат общения с сервисом для разных типов навигации: постраничная, оффсеты и курсор. Так же можно настроить отображение навигации: пэйджинг, подгрузка по скроллу и подгрузка по требованию
     */
 
 });
