@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "Core/Deferred",
    "Core/IoC",
    "js!SBIS3.CORE.CompoundControl",
+   'Core/CommandDispatcher',
    "js!SBIS3.CORE.PendingOperationProducerMixin",
    "tmpl!SBIS3.CONTROLS.EditInPlaceBaseController/AddRowTpl",
    "js!SBIS3.CONTROLS.EditInPlace",
@@ -21,7 +22,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    'css!SBIS3.CONTROLS.EditInPlaceBaseController'
 
 ],
-   function (cContext, constants, Deferred, IoC, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, ControlHierarchyManager, Model, Record, cInstance, fcHelpers, InformationPopupManager) {
+   function (cContext, constants, Deferred, IoC, CompoundControl, CommandDispatcher, PendingOperationProducerMixin, AddRowTpl, EditInPlace, ControlHierarchyManager, Model, Record, cInstance, fcHelpers, InformationPopupManager) {
 
       'use strict';
 
@@ -96,6 +97,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             $constructor: function () {
                this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace', 'onHeightChange', 'onBeginSave', 'onEndSave');
+               CommandDispatcher.declareCommand(this, 'commitEdit', this.commitEdit);
+               CommandDispatcher.declareCommand(this, 'cancelEdit', this.cancelEdit);
                this._savingDeferred = Deferred.success();
             },
 
