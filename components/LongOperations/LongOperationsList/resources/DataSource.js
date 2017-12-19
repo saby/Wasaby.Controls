@@ -137,13 +137,12 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
                var meta = recordSet.getMetaData();
                var items = recordSet.getRawData();
                if (hasPreConditions && items.length) {
-                  var condition = preConditions.reduce(function (r, v) { ; return v; }, {});
                   items = items.filter(function (operation) {
                      var custom = operation.extra ? operation.extra.custom : null;
                      return !custom || !preConditions.some(function (cond) { return Object.keys(cond).every(function (name) { return cond[name] === custom[name]; }); });
                   });
-                  if (0 < limit) {
-                     items = items.slice(0, limit);
+                  if (options.limit && !options.offset) {
+                     items = items.slice(0, options.limit);
                   }
                }
                promise.callback(new DataSet({
