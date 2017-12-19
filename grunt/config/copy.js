@@ -10,7 +10,7 @@ module.exports = function() {
             src: [
                '**/*'
             ],
-            dest: 'SBIS3.CONTROLS/components'
+            dest: 'SBIS3.CONTROLS'
          }]
       },
       themes: {

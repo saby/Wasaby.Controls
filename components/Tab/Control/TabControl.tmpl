@@ -1,0 +1,22 @@
+<div class="controls-TabControl">
+   <div class="controls-TabControl-tabButtons{{stickyHeader ? ' ws-sticky-header__block'}}">
+      <SBIS3.CONTROLS:Tab:Buttons
+         name="TabButtons"
+         className="{{tabButtonsExtraClass || ''}}"
+         selectedKey="{{selectedKey}}"
+         displayProperty="{{tabsDisplayProperty}}"
+         idProperty="{{idProperty}}"
+         observeVisibleProperty="{{observeVisibleProperty}}"
+         tabSpaceTemplate="{{tabSpaceTemplate}}"
+         items="{{items}}"
+      />
+   </div>
+   <SBIS3.CONTROLS:SwitchableArea
+      name="SwitchableArea"
+      className="controls-TabControl-area"
+      loadType="{{loadType}}"
+      defaultArea="{{selectedKey}}"
+      items="{{items}}"
+      areaTemplate="{{ switchableAreaTemplate }}"
+   />
+</div>

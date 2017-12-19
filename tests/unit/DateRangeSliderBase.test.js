@@ -1,9 +1,9 @@
 define([
-   'js!SBIS3.CONTROLS.DateRangeSliderBase'
+   'SBIS3.CONTROLS/Date/RangeSliderBase'
 ], function (DateRangeSliderBase) {
    'use strict';
 
-   describe('SBIS3.CONTROLS.DateRangeSliderBase', function () {
+   describe('SBIS3.CONTROLS/Date/RangeSliderBase', function () {
       describe('._getCaption', function () {
          it('should return emptyCaption option value if range dont specified.', function () {
             if (typeof $ === 'undefined') {

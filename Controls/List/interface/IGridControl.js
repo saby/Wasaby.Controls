@@ -19,11 +19,6 @@ define('js!Controls/List/interface/IGridControl', [
     */
 
    /**
-    * @name Controls/List/interface/IGridControl#columnWidths
-    * @cfg {Array.<String|Number>} columnWidths Описание ширины колонок (pixels/percent/auto).
-    */
-
-   /**
     * @typedef {Object} HeaderCell Определяет ячеейку заголовка списка.
     * @property {String} [title] Текст в ячейке заголовка.
     * @property {String} [align] Выравнивание текста по горизонтали (left|center|right).
@@ -45,6 +40,7 @@ define('js!Controls/List/interface/IGridControl', [
     * @property {String} [template] Шаблон отображения ячейки.
     * @property {String} [align] Выравнивание текста по горизонтали (left|center|right).
     * @property {String} [valign] Выравнивание текста по вертикали (top|center|bottom).
+    * @property {String|Number} [width] Ширина колонки (pixels/percent/auto).
     */
 
    /**

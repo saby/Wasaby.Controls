@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!WSControls/Buttons/ToggleButton', ['js!WSControls/Buttons/Button', 'js!SBIS3.CONTROLS.Checkable'], function(WSButton, Checkable) {
+define('js!WSControls/Buttons/ToggleButton', ['js!WSControls/Buttons/Button', 'SBIS3.CONTROLS/Mixins/Checkable'], function(WSButton, Checkable) {
 
    'use strict';
 
@@ -16,7 +16,7 @@ define('js!WSControls/Buttons/ToggleButton', ['js!WSControls/Buttons/Button', 'j
     *
     * @author Крайнов Дмитрий Олегович
     *
-    * @mixes SBIS3.CONTROLS.Checkable
+    * @mixes SBIS3.CONTROLS/Mixins/Checkable
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     *

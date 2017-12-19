@@ -1,6 +1,6 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
-    'js!SBIS3.CONTROLS.SbisMenu',
+    'SBIS3.CONTROLS/Menu/SbisMenu',
     'WS.Data/Collection/RecordSet',
     'WS.Data/Adapter/Sbis',
     'WS.Data/Entity/Model'
@@ -132,6 +132,7 @@ define([
                 pinned: true,
                 frequent: true
             },
+            _filteredFrequent: null,
             _subContainers: ['2'],
             _oldItems: myRecord,
             _pinned: new RecordSet({
@@ -224,7 +225,7 @@ define([
         },
         item;
 
-    describe('SBIS3.CONTROLS.SbisMenu', function () {
+    describe('SBIS3.CONTROLS/Menu/SbisMenu', function () {
         describe('getOriginId', function () {
             it('pinned', function () {
                 newId = SbisMenu._private.getOriginId('pinned-27313bd6-bc02-11e4-a1dd-00505691577e');
@@ -285,17 +286,15 @@ define([
             });
         });
         describe('fill History', function () {
+            it('filterFrequent', function () {
+                self._filteredFrequent = SbisMenu._private.filterFrequent(self);
+                assert.equal(self._filteredFrequent.getCount(), 2);
+            });
             it('filterRecent', function () {
                 var filterRecent;
 
                 filterRecent = SbisMenu._private.filterRecent(self);
-                assert.equal(filterRecent.length, 2);
-            });
-            it('filterFrequent', function () {
-                var filterFrequent;
-
-                filterFrequent = SbisMenu._private.filterFrequent(self);
-                assert.equal(filterFrequent.length, 2);
+                assert.equal(filterRecent.getCount(), 2);
             });
             it('processHistory, check additional', function () {
                 var hiddenByPinItem,

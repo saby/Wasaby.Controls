@@ -41,7 +41,7 @@ define('js!Controls/List/interface/IListControl', [
     */
 
    /**
-    * @name Controls/List/interface/IListControl#virtualScroll
+    * @name Controls/List/interface/IListControl#virtualScrollConfig
     * @cfg {Object} Конфигурация виртуального скролла
     */
 
@@ -65,6 +65,11 @@ define('js!Controls/List/interface/IListControl', [
     */
 
    /**
+    * @name Controls/List/interface/IListControl#markedKey
+    * @cfg {Number} Идентификатор элемента коллекции на котором установлен маркер
+    */
+
+   /**
     * @name Controls/List/interface/IListControl#uniqueKeys
     * @cfg {String} Стратегия действий с подгружаемыми в список записями
     * @variant true Мержить, при этом записи с одинаковыми id схлопнутся в одну
@@ -77,10 +82,35 @@ define('js!Controls/List/interface/IListControl', [
     */
 
    /**
+    * @function Controls/List/interface/IListControl#reloadItem
+    * Перезагружает модель из источника данных, мержит изменения к текущим данным и перерисовывает запись
+    */
+
+   /**
+    * @function Controls/List/interface/IListControl#scrollToTop
+    * Скролит табличное представление в самый вверх
+    */
+
+   /**
+    * @function Controls/List/interface/IListControl#scrollToBottom
+    * Скролит табличное представление в самый низ
+    */
+
+   /**
+    * @function Controls/List/interface/IListControl#scrollToItem
+    * Скролит табличное представление к указанному элементу
+    */
+
+   /**
     * @event Controls/List/interface/IListControl#itemClicked Происходит при клике по строке
     */
 
    /**
     * @event Controls/List/interface/IListControl#dataLoaded Происходит при загрузке данных
+    */
+
+   /**
+    * @event  Controls/List/interface/IListControl#markedKeyChanged Происходит при выборе записи
+    * @param {Number} key ключ выбранного элемента коллекции.
     */
 });

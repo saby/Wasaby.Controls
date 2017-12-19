@@ -1,7 +1,7 @@
 define('js!WSControls/Buttons/MenuButton', [
    'js!WSControls/Buttons/Button',
-   'js!SBIS3.CONTROLS.PickerMixin',
-   'js!SBIS3.CONTROLS.DSMixin',
+   'SBIS3.CONTROLS/Mixins/PickerMixin',
+   'SBIS3.CONTROLS/Mixins/DSMixin',
    'Core/IoC',
    'Core/detection',
    'Core/Sanitize',
@@ -11,7 +11,7 @@ define('js!WSControls/Buttons/MenuButton', [
    'use strict';
    
    function _getContextMenu(callback, history) {
-      var ctxMenu = history ? 'js!SBIS3.CONTROLS.SbisMenu' : 'js!SBIS3.CONTROLS.ContextMenu';
+      var ctxMenu = history ? 'SBIS3.CONTROLS/Menu/SbisMenu' : 'SBIS3.CONTROLS/Menu/ContextMenu';
       if(requirejs.defined(ctxMenu)) {
          return callback(requirejs(ctxMenu));
       } else {
@@ -30,8 +30,8 @@ define('js!WSControls/Buttons/MenuButton', [
     * Кнопка с меню - это кнопка с выбором варината действия, и если возможно только одно действие, то оно и будет выполнено по нажатию.
     * @demo SBIS3.CONTROLS.Demo.MyMenuButton Пример кнопки с выпадающим меню
     *
-    * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.DSMixin
+    * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
+    * @mixes SBIS3.CONTROLS/Mixins/DSMixin
     *
     * @author Романов Валерий
     *
@@ -228,7 +228,7 @@ define('js!WSControls/Buttons/MenuButton', [
       },
 
       getPicker: function () {
-        if(!requirejs.defined('js!SBIS3.CONTROLS.ContextMenu')) {
+        if(!requirejs.defined('SBIS3.CONTROLS/Menu/ContextMenu')) {
             IoC.resolve('ILogger').log('MenuButton', 'ContextMenu не загружено');
            return;
         }
@@ -445,6 +445,7 @@ define('js!WSControls/Buttons/MenuButton', [
        _dataLoadedCallback : function() {
          if (this._picker){
             this.hidePicker();
+            this._picker.setItems(this.getItems());
          }
        },
 

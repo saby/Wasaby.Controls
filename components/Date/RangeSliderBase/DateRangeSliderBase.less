@@ -1,0 +1,118 @@
+.controls-DateRangeSlider {
+   display: inline-block;
+   .user-select();
+
+   font-size: @date-range-slider-font-size;
+   line-height: @date-range-slider-height;
+
+   &.ws-enabled {
+      // В новом стандарте нет этой иконки. При реализации она будет помечена как deprecated и позже будет удалена.
+      .controls-DateRangeSlider__lock {
+            cursor: pointer;
+      }
+      .controls-DateRangeSlider__lock.icon-primary {
+         &:hover {
+            color: @color_Link-text_hovered !important;
+         }
+      }
+      .controls-DateRangeSlider__lock.icon-disabled {
+         &:hover {
+            color: @date-range-slider-unlocked-icon-hover-color !important;
+         }
+      }
+   }
+}
+
+// В новой спецификации стрелки будут только при использовании внешнего вида по умолчанию. Будет удалено.
+.controls-DateRangeSlider__link {
+   .controls-DateRangeSlider__prev,
+   .controls-DateRangeSlider__next {
+      margin: 0 4px;
+   }
+}
+// В новой спецификации стрелки будут только при использовании внешнего вида по умолчанию.
+// Уровень .controls-DateRangeSlider__normal будет убран. Часть стилей будет удалена
+.controls-DateRangeSlider__normal {
+   &.ws-enabled {
+      color: @color_Link-text;
+
+      .controls-DateRangeSlider__prev,
+      .controls-DateRangeSlider__next {
+         &:hover {
+            color: @color_Link-text_hovered;;
+         }
+      }
+   }
+   .controls-DateRangeSlider__prev,
+   .controls-DateRangeSlider__next,
+   .controls-DateRangeSlider__value-wrapper {
+      height: @date-range-slider-height;
+   }
+   .controls-DateRangeSlider__prev:before {
+      content: "\e008 ";
+   }
+   .controls-DateRangeSlider__next:before {
+      content: "\e007";
+   }
+   .controls-DateRangeSlider__prev,
+   .controls-DateRangeSlider__next {
+      display: inline-block;
+      font-size: @date-range-slider-prev-next-buttons-font-size;
+      font-weight: normal;
+      text-align: center;
+      line-height: ~"calc("@date-range-slider-height~" - "@date-range-slider-prev-next-buttons-font-size~" + "@date-range-slider-font-size~")";
+      height: @date-range-slider-height;
+      width: @date-range-slider-prev-next-buttons-width;
+   }
+}
+
+.controls-DateRangeSlider__prevNextButtons-enabled,
+.controls-DateRangeSlider__value-enabled {
+   cursor: pointer;
+   &:hover {
+      color: @color_Link-text_hovered;
+   }
+}
+
+.controls-DateRangeSlider__value-enabled {
+   &:hover {
+      text-decoration: underline;
+   }
+}
+
+.controls-DateRangeSlider__prevNextButtons-disabled,
+.controls-DateRangeSlider__value-disabled {
+   color: @disabled-text-color;
+}
+
+.controls-DateRangeSlider__value-wrapper {
+   display: inline-block;
+   text-align: center;
+
+}
+
+.controls-DateRangeSlider__value-wrapper-minWidth {
+   min-width: @date-range-slider-value-min-width;
+}
+.controls-DateRangeSlider__yearState {
+   .controls-DateRangeSlider__value-wrapper-withArrow {
+      min-width: @date-range-slider-year-state-width - @date-range-slider-prev-next-buttons-width*2;
+   }
+}
+
+.controls-DateRangeSlider__lock {
+   margin-right: @date-range-slider-lock-margin-right;
+}
+
+.controls-DateRangeSlider__value {
+   font-weight: @date-range-slider-value-font-weight;
+   padding-top: @date-range-slider-value-padding;
+}
+
+.controls-DateRangeSlider__validation-error {
+   outline-offset: -@date-range-slider-error-border-width;
+   outline-width: @date-range-slider-error-border-width;
+   outline-style: solid;
+   outline-color: @date-range-slider-error-border-color;
+   background: @date-range-slider-error-bg;
+}

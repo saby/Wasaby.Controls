@@ -1,10 +1,10 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
-   ['js!SBIS3.CONTROLS.Action.Action', 'Core/Deferred'],
+   ['SBIS3.CONTROLS/Action', 'Core/Deferred'],
    function (ActionBase, Deferred) {
       'use strict';
 
-      describe('SBIS3.CONTROLS.Action.Action', function () {
+      describe('SBIS3.CONTROLS/Action', function () {
          var actionBase;
 
          beforeEach(function () {

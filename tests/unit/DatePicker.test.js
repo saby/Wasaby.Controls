@@ -1,7 +1,7 @@
-define(['js!SBIS3.CONTROLS.DatePicker'], function (DatePicker) {
+define(['SBIS3.CONTROLS/Date/Picker'], function (DatePicker) {
    'use strict';
 
-   describe('SBIS3.CONTROLS.DatePicker', function () {
+   describe('SBIS3.CONTROLS/Date/Picker', function () {
 
       describe('._modifyOptions', function () {
          let time = 'time',

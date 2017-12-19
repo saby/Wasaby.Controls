@@ -502,18 +502,7 @@
       top: @DropdownList-after-caption-top;
    }
 }
-
-.ws-is-ie, .ws-is-firefox {
-  .controls-DropdownList .controls-DropdownList__selectedItem{
-     .inline-flexbox();
-  }
-}
-
 .ws-is-mobile-chrome-ios, .ws-is-mobile-safari {
-   .controls-DropdownList__picker.controls-DropdownList__type-fastDataFilter .controls-DropdownList__body .controls-DropdownList__item {
-      padding-top: 5px;
-      padding-bottom: 8px;
-   }
    .controls-DropdownList__picker .controls-DropdownList__item {
       &:hover {
          background: @DropdownList-picker-menu-item-color;
@@ -523,7 +512,11 @@
       }
    }
 }
-
+.ws-is-ie, .ws-is-firefox {
+   .controls-DropdownList .controls-DropdownList__selectedItem{
+      .inline-flexbox();
+   }
+}
 //Пример баги в ios https://jsfiddle.net/zk5755vg/12/
 .ws-is-mobile-chrome-ios, .ws-is-mobile-safari, .ws-is-old-webkit, .ws-is-sbis-desktop{
    .controls-DropdownList__picker {

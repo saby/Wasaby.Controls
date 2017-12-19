@@ -1,10 +1,10 @@
 /**
  * Created by am.gerasimov on 27.06.2017.
  */
-define(['js!SBIS3.CONTROLS.Utils.SearchMixin'], function (SearchMixinUtil) {
+define(['SBIS3.CONTROLS/Mixins/SearchMixin/SearchMixinUtil'], function (SearchMixinUtil) {
    
    'use strict';
-   describe('SBIS3.CONTROLS.Utils.SearchMixin', function () {
+   describe('SBIS3.CONTROLS/Mixins/SearchMixin/SearchMixinUtil', function () {
       
       
       
