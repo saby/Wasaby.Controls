@@ -1,41 +1,9 @@
-
-//@width-ColumnsEditor-Editing-Area: 388px;
-//@height-ColumnsEditor-Editing-Area-head-title: 24px;
-//@height-ColumnsEditor-Editing-Area-head-preset: 24px;
-//@padding-top-ColumnsEditor-Editing-Area-head: 8px;
-//@spacing-ColumnsEditor-Editing-Area-head: 12px;
-//@padding-bottom-ColumnsEditor-Editing-Area-head: 4px;
-//@background-color-ColumnsEditor-Editing-Area-head: #f7f4f0;
-//@color-ColumnsEditor-Editing-Area__head-title-left: #313E78;
-//@font-size-ColumnsEditor-Editing-Area__head-title-left: 18px;
-//@font-weight-ColumnsEditor-Editing-Area__head-title-left: bold;
-//@margin-right-ColumnsEditor-Editing-Area__head-title-right: 38px;
-//@font-size-ColumnsEditor-Editing-Area__head-preset: 15px;
-//@padding-ColumnsEditor-Editing-Area__head-preset-label: 3px 8px 0px 0px;
-//@color-ColumnsEditor-Editing-Area__head-preset-label: rgb(153, 153, 153);
-//@padding-left-ColumnsEditor-Editing-Area__Preset-item: 6px;
-//@padding-top-ColumnsEditor-Editing-Area__Preset-item-title: 1px;
-//@border-top-ColumnsEditor-Editing-Area__body: 1px solid #CCCCCC;
-//@padding-ColumnsEditor-Editing-Area__body: 12px 0;
-//@padding-ColumnsEditor-Editing-Area__FixedList-CheckBox: 4px;
-//@padding-left-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption: 8px;
-//@color-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption: @black-color !important;
-//@height-ColumnsEditor-Editing-Area__view-item: 32px;
-//@left-ColumnsEditor-Editing-Area__view-item__itemCheckBox: 4px;
-//@top-ColumnsEditor-Editing-Area__view-item__itemCheckBox: 4px;
-//@padding-left-ColumnsEditor-Editing-Area__view-item-text: 36px;
-//@line-height-ColumnsEditor-Editing-Area__view-item-text: 32px;
-//@color-ColumnsEditor-Editing-Area__view-item-text: #8991a9;
-//@color-ColumnsEditor-Editing-Area__view-item-text__multiSelected: @black-color;
-
 .controls-Browser-ColumnsEditor-Editing-Area {
-   position: relative;
    width: @width-ColumnsEditor-Editing-Area;
    height: 100%;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head {
-   box-sizing: border-box;
    padding: @padding-top-ColumnsEditor-Editing-Area-head 6px @padding-bottom-ColumnsEditor-Editing-Area-head 12px;
    background-color: @background-color-ColumnsEditor-Editing-Area-head;
 }
@@ -57,10 +25,6 @@
    margin-right: @margin-right-ColumnsEditor-Editing-Area__head-title-right;
 }
 
-.controls-Browser-ColumnsEditor-Editing-Area__ApplyColumnsButton {
-   vertical-align: middle;
-}
-
 .controls-Browser-ColumnsEditor-Editing-Area__head-preset {
    font-size: @font-size-ColumnsEditor-Editing-Area__head-preset;
 }
@@ -72,23 +36,16 @@
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head-preset-editor {
-   height: @height-ColumnsEditor-Editing-Area-head-preset;
-
    .controls-ItemsToolbar {
       bottom: 0;
       background-color: transparent;
    }
-
-   /*.controls-editInPlace*/ .controls-editInPlace__editor {
+   .controls-editInPlace__editor {
       padding: 0;
    }
 }
 
-.controls-Browser-ColumnsEditor-Editing-Area__Preset {
-}
-
 .controls-Browser-ColumnsEditor-Editing-Area__Preset-item {
-   box-sizing: border-box;
    height: @height-ColumnsEditor-Editing-Area-head-preset;
    padding: 0 0 0 @padding-left-ColumnsEditor-Editing-Area__Preset-item;
 }
@@ -102,8 +59,6 @@
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__body {
-   box-sizing: border-box;
-   height: ~"calc(100% - "(@height-ColumnsEditor-Editing-Area-head-title + @height-ColumnsEditor-Editing-Area-head-preset + @padding-top-ColumnsEditor-Editing-Area-head + @spacing-ColumnsEditor-Editing-Area-head + @padding-bottom-ColumnsEditor-Editing-Area-head)~")";
    border-top: @border-top-ColumnsEditor-Editing-Area__body;
    padding: @padding-ColumnsEditor-Editing-Area__body;
 }
@@ -113,18 +68,13 @@
       display: block;
       padding: @padding-ColumnsEditor-Editing-Area__FixedList-CheckBox;
    }
-
-   /*.controls-CheckBox*/ .controls-CheckBox__caption {
+   .controls-CheckBox__caption {
       padding-left: @padding-left-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption;
-      box-sizing: border-box;
       color: @color-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption;
    }
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__view-item {
-   height: @height-ColumnsEditor-Editing-Area__view-item;
-   display: inline-block;
-
    .controls-ListView__itemCheckBox {
       left: @left-ColumnsEditor-Editing-Area__view-item__itemCheckBox;
       top: @top-ColumnsEditor-Editing-Area__view-item__itemCheckBox;
@@ -132,7 +82,6 @@
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__view-item-text {
-   display: inline-block;
    padding-left: @padding-left-ColumnsEditor-Editing-Area__view-item-text;
    line-height: @line-height-ColumnsEditor-Editing-Area__view-item-text;
    color: @color-ColumnsEditor-Editing-Area__view-item-text;
@@ -145,8 +94,4 @@
 
 .controls-Browser-ColumnsEditor-Editing-Area__SelectableList {
    cursor: pointer;
-}
-
-.controls-Browser-ColumnsEditor-Editing-Area__SelectableList__group {
-   position: relative;
 }
