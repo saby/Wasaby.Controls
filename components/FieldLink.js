@@ -593,7 +593,6 @@ define('SBIS3.CONTROLS/FieldLink',
           showSelector: function(template, componentOptions, selectionType) {
              var actionCfg = {
                    selectionType: selectionType,
-                   selectedItems: this.getSelectedItems(),
                    multiselect: this.getMultiselect(),
                    opener: this
                 },
@@ -652,32 +651,6 @@ define('SBIS3.CONTROLS/FieldLink',
 
           setActive: function(active, shiftKey, noFocus, focusedControl) {
              var wasActive = this.isActive();
-             
-             /* КОСТЫЛЬ ДЛЯ 3.7.5.50
-                https://inside.tensor.ru/opendoc.html?guid=6be48dda-796d-4de7-a377-7e66c67b4f8a&des=
-                Задача в разработку 07.04.2017 В контроле надо поправить метод setActive Он в случае, если контрол активен всё равно выполняет для …  */
-             noFocus = this._options.task_1173772355 ? this._isControlActive : noFocus;
-
-             /* Хак, который чинит баг firefox с невидимым курсором в input'e.
-              Это довольно старая и распростронённая проблема в firefox'e (а теперь еще и в хроме),
-              повторяется с разными сценариями и с разными способомами почи)нки.
-              В нашем случае, если фокус в input'e, то перед повторной установкой фокуса надо сделать blur (увести фокус из input'a).
-              Чтобы это не вызывало перепрыгов фокуса, делаем это по минимальному таймауту. Выглядит плохо, но другого решения для FF найти не удлось.*/
-             if(active && !this.getText() && this._isEmptySelection()) {
-                var elemToFocus = this._getElementToFocus();
-
-                setTimeout(forAliveOnly(function () {
-                   if(!constants.browser.isMobilePlatform && (constants.browser.firefox || constants.browser.chrome) && elemToFocus[0] === document.activeElement && this._isEmptySelection()){
-                      var suggestShowed = this.isPickerVisible();
-                      elemToFocus.blur().focus();
-
-                      //https://online.sbis.ru/opendoc.html?guid=19af9bf9-0d16-4f63-8aa8-6d0ef7ff0799
-                      if (!suggestShowed && this.isPickerVisible() && !this._options.task1174306848) {
-                         this.hidePicker();
-                      }
-                   }
-                }, this), 30);
-             }
 
              FieldLink.superclass.setActive.call(this, active, shiftKey, noFocus, focusedControl);
 

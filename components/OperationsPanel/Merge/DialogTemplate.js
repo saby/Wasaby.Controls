@@ -19,7 +19,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate', [
    "SBIS3.CONTROLS/ScrollContainer",
    "i18n!!SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate",
    'css!SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate',
-   'css!SBIS3.CONTROLS/Radio/Button'
+   'css!SBIS3.CONTROLS/Radio/Button/RadioButton'
 ], function( CommandDispatcher, Control, dotTplFn, SbisServiceSource, Query, RecordSet, fcHelpers, cellRadioButtonTpl, cellCommentTpl, cellTitleTpl, rowTpl) {
 
 

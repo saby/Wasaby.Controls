@@ -1485,15 +1485,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             //Обработка вставки контента
             editor.on('BeforePastePreProcess', function(e) {
-               var isRichContent = e.content.indexOf('data-ws-is-rich-text="true"') !== -1;
+               // Отключаю форматированную вставку в Win10 -> Edge, т.к. вместе с основным контентом вставляются инородные
+               // элементы, которые портят верстку. Баг пофиксен в свежей версии TinyMCE, нужно обновление.
+               // https://online.sbis.ru/opendoc.html?guid=0d74d2ac-a25c-4d03-b75f-98debcc303a2
+               var
+                  isRichContent = cConstants.browser.isIE12 && cConstants.browser.isWin10 ? false : e.content.indexOf('data-ws-is-rich-text="true"') !== -1;
                e.content = e.content.replace('data-ws-is-rich-text="true"', '');
-               if (cConstants.browser.isIE12 && cConstants.browser.isWin10) {
-                  // При копировании в MSEdge сверху добавляются 8 полей - отрезать их
-                  // 1174787118 https://online.sbis.ru/opendoc.html?guid=0d74d2ac-a25c-4d03-b75f-98debcc303a2
-                  var msedgeHeads = ['Version', 'StartHTML', 'EndHTML', 'StartFragment', 'EndFragment', 'StartSelection', 'EndSelection', 'SourceURL'];
-                  var msedgeRe = new RegExp('^' + msedgeHeads.join(':[^\\r\\n]+\\r\\n') + ':[^\\r\\n]+\\r\\n[]*');
-                  e.content = e.content.replace(msedgeRe, '');
-               }
                //Необходимо заменять декорированные ссылки обратно на url
                //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
                e.content = self._prepareContent(e.content);
@@ -1564,7 +1561,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (this._options.editorConfig.browser_spellcheck) {
                // Если включена проверка правописания, нужно при исправлениях обновлять принудительно text
                var _onSelectionChange1 = function () {
-                  cConstants.$doc.one('selectionchange', _onSelectionChange2);
+                  //В Yandex браузере выделение меняется 2 раза подряд. Откладываем подписку, чтобы ловить только одно.
+                  //Это поведение нельзя объединить с поведением для Safari и Chrome, т.к. тогда в Yandex этот обработчик вообще не сработает.
+                  //Для всех браузеров это сделано потому что все равно человек не сможет выбрать вариант так быстро и нет смысла плодить лишние условия
+                  setTimeout(function() {
+                     cConstants.$doc.one('selectionchange', _onSelectionChange2);
+                  }, 1);
                   // Хотя цепляемся на один раз, но всё же отцепим через пару минут, если ничего не случится за это время
                   setTimeout(function() {
                      cConstants.$doc.off('selectionchange', _onSelectionChange2);
@@ -1580,7 +1582,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (evt.button === 2) {
                      if (evt.currentTarget === this._inputControl[0] && (evt.target === evt.currentTarget || $.contains(evt.currentTarget, evt.target))) {
                         cConstants.$doc.off('selectionchange', _onSelectionChange2);
-                        if (cConstants.browser.safari || cConstants.browser.chrome) {
+                        if (cConstants.browser.safari || cConstants.browser.chrome && !cConstants.browser.yandex) {
                            // Для safari и chrome обязательно нужно отложить подписку на событие (потому что в тот момент, когда делается эта подписка
                            // они меняют выделение, и потом меняют его в момент вставки. Чтобы первое не ловить - отложить)
                            setTimeout(function() {
