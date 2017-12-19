@@ -5,7 +5,7 @@ define('SBIS3.CONTROLS/ComponentBinder/ScrollPagingController',
       'Core/WindowManager',
       'Core/helpers/Function/throttle',
       'Core/helpers/Hcontrol/isElementVisible',
-      'Core/Detection',
+      'Core/detection',
       'css!SBIS3.CONTROLS.ScrollPagingController'
    ],
    function(cAbstract, cInstance, WindowManager, throttle, isElementVisible, detection) {
