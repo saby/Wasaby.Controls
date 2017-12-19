@@ -147,7 +147,11 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
             return Chain(self._frequent).filter(function (item) {
                 id = myself.getOriginId(item.getId());
                 return !self._pinned.getRecordById('pinned-' + id);
-            }).value();
+            }).value(recordSetFactory, {
+                adapter: new SbisAdapter(),
+                idProperty: 'historyId',
+                format: self._oldItems.getFormat().clone()
+            });
         },
 
         filterRecent: function (self) {
@@ -157,8 +161,12 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
             // убираем из последних выбранных запиненые и популярные пункты
             return Chain(self._recent).filter(function (item) {
                 id = myself.getOriginId(item.getId());
-                return !(self._pinned.getRecordById('pinned-' + id) || self._frequent.getRecordById('frequent-' + id));
-            }).value();
+                return !(self._pinned.getRecordById('pinned-' + id) || self._filteredFrequent.getRecordById('frequent-' + id));
+            }).value(recordSetFactory, {
+                adapter: new SbisAdapter(),
+                idProperty: 'historyId',
+                format: self._oldItems.getFormat().clone()
+            });
         },
 
         fillPinned: function (self, historyItems) {
@@ -188,12 +196,16 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
 
         fillRecent: function (self, filteredRecent) {
             var myself = this,
-                items = [],
+                items = new RecordSet({
+                    adapter: new SbisAdapter(),
+                    idProperty: 'historyId',
+                    format: self._oldItems.getFormat().clone()
+                }),
                 i = 0,
                 id, oldElement, item, newItem;
 
-            while (self._count < 10 && i < filteredRecent.length && i < 3) {
-                item = filteredRecent[i];
+            while (self._count < 10 && i < filteredRecent.getCount() && i < 3) {
+                item = filteredRecent.at(i);
                 id = myself.getOriginId(item.getId());
                 oldElement = self._oldItems.getRecordById(id);
 
@@ -210,7 +222,7 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
                     newItem.set(self._options.parentProperty, null);
                 }
                 newItem.set('visible', true);
-                items.push(newItem);
+                items.add(newItem);
 
                 self._count++;
                 i++;
@@ -220,12 +232,20 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
 
         fillFrequent: function (self, filteredFrequent) {
             var myself = this,
+                // количество популярных равно:
+                // максимальное количество истории - количество закрепленных - количество недавних(максимум 3)
+                countRecent = self._recent.getCount(),
+                maxLength = 10 - self._pinned.getCount() - (countRecent > 3 ? 3 : countRecent),
                 i = 0,
-                items = [],
+                items = new RecordSet({
+                    adapter: new SbisAdapter(),
+                    idProperty: 'historyId',
+                    format: self._oldItems.getFormat().clone()
+                }),
                 id, oldElement, item, newItem;
 
-            while (self._count < 10 && i < filteredFrequent.length && i < 7) {
-                item = filteredFrequent[i];
+            while (self._count < 10 && i < filteredFrequent.getCount() && i < 7 && i < maxLength) {
+                item = filteredFrequent.at(i);
                 id = myself.getOriginId(item.getId());
                 oldElement = self._oldItems.getRecordById(id);
 
@@ -243,7 +263,7 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
                 }
 
                 newItem.set('visible', true);
-                items.push(newItem);
+                items.add(newItem);
 
                 self._count++;
                 i++;
@@ -256,7 +276,7 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
                 items = [];
 
             items = _private.filterFrequent(self);
-            if (self._options.frequent && items.length) {
+            if (self._options.frequent && items.getCount()) {
                 frequentItems = _private.fillFrequent(self, items);
             }
             return frequentItems;
@@ -267,7 +287,7 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
                 items = [];
 
             items = _private.filterRecent(self);
-            if (items.length) {
+            if (items.getCount()) {
                 recentItems = _private.fillRecent(self, items);
             }
             return recentItems;
@@ -278,7 +298,7 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
                 needToDrawSeparate = false,
                 itemCount = 0,
                 indexLastHistoryItem = null,
-                isHistoryFull, recentItems, frequentItems, countOfVisible, isInternalItem;
+                isHistoryFull, recentItems, countOfVisible, isInternalItem;
 
             self._count = 0;
             self._oldItems.forEach(function (element) {
@@ -290,10 +310,10 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
                 _private.fillPinned(self, processedItems);
             }
 
+            self._filteredFrequent = _private.getFrequent(self);
             recentItems = _private.getRecent(self);
-            frequentItems = _private.getFrequent(self);
 
-            processedItems.append(frequentItems);
+            processedItems.append(self._filteredFrequent);
             processedItems.append(recentItems);
             if (processedItems.getCount()) {
                 indexLastHistoryItem = processedItems.getCount() - 1;
@@ -373,19 +393,19 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
             if (self._options.pinned && rows.get('pinned')) {
                 _private.fillHistoryRecord(self, rows.get('pinned'), self._pinned);
             }
-            // сортируем по алфавиту запиненные записи
-            self._pinned = Chain(self._pinned).sort(function (first, second) {
-                firstName = first.get(displayProperty);
-                secondName = second.get(displayProperty);
-
-                return (firstName < secondName) ? -1 : (firstName > secondName) ? 1 : 0;
-            }).value(recordSetFactory, config);
             if (rows.get('recent')) {
                 _private.fillHistoryRecord(self, rows.get('recent'), self._recent);
             }
             if (self._options.frequent && rows.get('frequent')) {
                 _private.fillHistoryRecord(self, rows.get('frequent'), self._frequent);
             }
+            // сортируем по алфавиту популярные записи
+            self._frequent = Chain(self._frequent).sort(function (first, second) {
+                firstName = first.get(displayProperty);
+                secondName = second.get(displayProperty);
+
+                return (firstName < secondName) ? -1 : (firstName > secondName) ? 1 : 0;
+            }).value(recordSetFactory, config);
         },
 
         prepareHistory: function (self) {
@@ -514,6 +534,7 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
             _frequent: null,
             _recent: null,
             _oldItems: null,
+            _filteredFrequent: null,
             _count: 0
         },
 
