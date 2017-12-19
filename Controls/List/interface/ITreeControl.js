@@ -16,7 +16,7 @@ define('js!Controls/List/interface/ITreeControl', [
     */
 
    /**
-    * @name Controls/List/interface/ITreeControl#hierarchyViewMode
+    * @name Controls/List/interface/ITreeControl#treeViewMode
     * @cfg {hierarchyViewModeEnum} Режим отображения иерархии
     */
 
@@ -31,11 +31,8 @@ define('js!Controls/List/interface/ITreeControl', [
     */
 
    /**
-    * @name Controls/List/interface/IListControl#multiSelectMode
-    * @cfg {Boolean} (Может поменяться) Режим множественного выбора
-    * @variant all Выделять все
-    * @variant nodes Выделять только узлы
-    * @variant leafs Выделять только листья
+    * @name Controls/List/interface/IListControl#nodeFooterTemplate
+    * @cfg {Function} Устанавливает шаблон футера, рисующегося под содержимым каждого узла
     */
 
 
