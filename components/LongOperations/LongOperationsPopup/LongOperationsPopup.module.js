@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             if (!customConditions || !Array.isArray(customConditions)) {
                throw new Error('customConditions required');
             }
-            this._longOpList.setСustomConditions(customConditions);
+            this._longOpList.setCustomConditions(customConditions);
 
             if (this._options.withAnimation) {
                this._animationAtStart();

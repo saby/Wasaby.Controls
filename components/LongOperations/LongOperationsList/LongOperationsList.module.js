@@ -349,7 +349,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
             if (!(customConditions && Array.isArray(customConditions) && customConditions.every(function (v) { return !!v && typeof v === 'object' && !!Object.keys(v).length; }))) {
                throw new Error('Array of objects required');
             }
-            var dataSource = this.getDataSource();
+            var dataSource = this._view.getDataSource();
             var options = dataSource.getOptions();
             options.customConditions = customConditions;
             dataSource.setOptions(options);

@@ -141,8 +141,8 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
                      var custom = operation.extra ? operation.extra.custom : null;
                      return !custom || !customConditions.some(function (cond) { return Object.keys(cond).every(function (name) { return cond[name] === custom[name]; }); });
                   });
-                  if (options.limit && !options.offset) {
-                     items = items.slice(0, options.limit);
+                  if (0 < limit && !options.offset) {
+                     items = items.slice(0, limit);
                   }
                }
                promise.callback(new DataSet({
