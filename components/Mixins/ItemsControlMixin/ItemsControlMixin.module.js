@@ -1921,7 +1921,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @returns {*|Boolean}
        */
       isLoading: function(){
-         return this._loader && !this._loader.isReady();
+         return this._loader && !this._loader.isReady(true);
       },
       //TODO Сделать публичным? вроде так всем захочется делать
       /**
