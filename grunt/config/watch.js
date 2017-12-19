@@ -5,7 +5,7 @@ module.exports = function() {
    return {
       less: {
          files: [
-            'themes/**/*.less',
+            'components/themes/**/*.less',
             'components/**/*.less',
             'Controls/**/*.less'
          ],

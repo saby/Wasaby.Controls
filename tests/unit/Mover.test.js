@@ -8,14 +8,14 @@
  * Created by am.gerasimov on 12.10.2016.
  */
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['js!SBIS3.CONTROLS.ListView.Mover',
+define(['SBIS3.CONTROLS/ListView/resources/Mover',
    'WS.Data/MoveStrategy/IMoveStrategy',
    'Core/Abstract',
    'Core/Deferred',
    'WS.Data/Collection/RecordSet',
    'WS.Data/Display/Display',
-   'js!SBIS3.CONTROLS.DragEntity.List',
-   'js!SBIS3.CONTROLS.DragEntity.Row',
+   'SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/List',
+   'SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row',
    'WS.Data/Entity/Model',
    'WS.Data/Collection/List'
 ], function (Mover, IMoveStrategy, Abstract, Deferred, RecordSet, Display, DragList, DragRow, Model, List) {
@@ -87,7 +87,7 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
       });
 
    });
-   describe('SBIS3.CONTROLS.ListView.Mover', function () {
+   describe('SBIS3.CONTROLS/ListView/resources/Mover', function () {
 
       describe('.moveRecordDown', function (){
          it('should move a record to down on one row with use move strategy', function(){

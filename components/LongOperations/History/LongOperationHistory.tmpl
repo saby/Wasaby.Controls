@@ -1,0 +1,81 @@
+<div class="controls-LongOperations controls-LongOperationHistory">
+   <SBIS3.CONTROLS:Browser
+      name="brows"
+      className="controls-Browser__view"
+      >
+      <ws:content>
+         <ws:if data="{{resultHandler}}">
+         <SBIS3.CONTROLS:Link
+            name="resultButton"
+            className="controls-LongOperationsHistory__resultButton"
+            >
+            <ws:caption>
+                <ws:if data="{{resultWayOfUse}}">
+                    {{resultWayOfUse}}
+                </ws:if>
+                <ws:else>
+                    {[Частичный результат]}
+                </ws:else>
+            </ws:caption>
+         </SBIS3.CONTROLS:Link>
+         </ws:if>
+         <div class="controls-Browser__table">
+            <div class="controls-Browser__tableRow">
+               <div class="controls-Browser__tableCell-fastDataFilter">
+                  <SBIS3.CONTROLS:Filter:FastData
+                     name="browserFastDataFilter"
+                     className="controls-Browser__fastDataFilter"
+                     >
+                     <ws:filterStructure>
+                        <ws:Array>
+                           <ws:Object
+                              internalValueField="key"
+                              internalCaptionField="title"
+                              value="{{'filter/onlyErrors'|mutable}}"
+                           />
+                        </ws:Array>
+                     </ws:filterStructure>
+                  </SBIS3.CONTROLS:Filter:FastData>
+               </div>
+            </div>
+         </div>
+         <div class="controls-Browser__view">
+            <SBIS3.CONTROLS:DataGridView
+               idProperty="id"
+               name="browserView"
+               pageSize="2000"
+               infiniteScroll="down"
+               itemsActions="{{ [] }}"
+               displayProperty="title"
+               itemsDragNDrop="{{false}}"
+               filter="{{'filter'|mutable}}"
+               className="controls-Browser__view controls-DataGridView__hasSeparator controls-DataGridView__overflow-ellipsis"
+               ladder="{{ ['Date'] }}"
+               >
+               <ws:columns>
+                  <ws:Array>
+                     <ws:Object
+                        title="{[Дата]}"
+                        cellTemplate="tmpl!SBIS3.CONTROLS/LongOperations/History/resources/LongOperationHistoryDateTemplate"
+                        width="60"
+                     />
+                     <ws:Object
+                        title="{[Время]}"
+                        cellTemplate="tmpl!SBIS3.CONTROLS/LongOperations/History/resources/LongOperationHistoryTimeTemplate"
+                        width="60"
+                     />
+                     <ws:Object
+                        title="{[ОперацииНадЗаписями@@Наименование]}"
+                        field="title"
+                     />
+                     <ws:Object
+                        title="{[Статус]}"
+                        cellTemplate="tmpl!SBIS3.CONTROLS/LongOperations/History/resources/LongOperationHistoryStatusTemplate"
+                     />
+                  </ws:Array>
+               </ws:columns>
+            </SBIS3.CONTROLS:DataGridView>
+         </div>
+      </ws:content>
+   </SBIS3.CONTROLS:Browser>
+</div>

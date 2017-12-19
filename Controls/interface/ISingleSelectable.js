@@ -10,7 +10,7 @@ define('js!Controls/interface/ISingleSelectable', [
 
    /**
     * @name Controls/interface/ISingleSelectable#selectedKey
-    * @cfg {Number} Ключ выбранного элемента коллекции.
+    * @cfg {Number} Идентификатор выбранного элемента коллекции.
     */
 
    /**

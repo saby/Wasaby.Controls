@@ -2,14 +2,14 @@
  * Created by am.gerasimov on 12.04.2017.
  */
 define([
-   'js!SBIS3.CONTROLS.Utils.ItemsSelection',
+   'SBIS3.CONTROLS/Utils/ItemsSelectionUtil',
    'WS.Data/Entity/Model',
-   'js!SBIS3.CONTROLS.Action.SelectorAction',
-   'js!SBIS3.CONTROLS.SelectorButton'
+   'SBIS3.CONTROLS/Action/SelectorAction',
+   'SBIS3.CONTROLS/SelectorButton'
 ], function (ItemsSelection, Model, SelectorAction, SelectorButton) {
    'use strict';
    
-   describe('SBIS3.CONTROLS.Utils.ItemsSelection', function () {
+   describe('SBIS3.CONTROLS/Utils/ItemsSelectionUtil', function () {
       
       const displayProp = 'displayProp';
       const idProp = 'idProp';

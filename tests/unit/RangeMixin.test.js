@@ -1,11 +1,11 @@
 define([
    'Core/Abstract',
-   'js!SBIS3.CORE.Control/Control.compatible',
-   'js!SBIS3.CONTROLS.RangeMixin'
+   'Lib/Control/Control.compatible',
+   'SBIS3.CONTROLS/Mixins/RangeMixin'
 ], function (Abstract, Control, RangeMixin) {
    'use strict';
 
-   describe('SBIS3.CONTROLS.RangeMixin', function () {
+   describe('SBIS3.CONTROLS/Mixins/RangeMixin', function () {
 
       let RangeControlClass = Abstract.extend([Control, RangeMixin], {
             _propertiesChangedLock: 0,

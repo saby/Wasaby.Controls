@@ -1,10 +1,10 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
-   'js!SBIS3.CONTROLS.Action.List.InteractiveMove',
-   'js!SBIS3.CONTROLS.TreeView'
+   'SBIS3.CONTROLS/Action/List/InteractiveMove',
+   'SBIS3.CONTROLS/Tree/View'
 ],
 function (InteractiveMove, TreeView) {
-   describe('js!SBIS3.CONTROLS.Action.List.InteractiveMove', function () {
+   describe('SBIS3.CONTROLS/Action/List/InteractiveMove', function () {
       beforeEach(function () {
          if (typeof $ === 'undefined') {
             this.skip();

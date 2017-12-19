@@ -1,9 +1,9 @@
 define('js!WSControls/Buttons/ButtonBase', [
-   'js!SBIS3.CORE.CompoundControl',
-   'js!SBIS3.CONTROLS.Clickable',
-   'js!SBIS3.CONTROLS.FormWidgetMixin',
-   'js!SBIS3.CONTROLS.DataBindMixin',
-   'js!SBIS3.CONTROLS.IconMixin',
+   'Lib/Control/CompoundControl/CompoundControl',
+   'SBIS3.CONTROLS/Mixins/Clickable',
+   'SBIS3.CONTROLS/Mixins/FormWidgetMixin',
+   'SBIS3.CONTROLS/Mixins/DataBindMixin',
+   'SBIS3.CONTROLS/Mixins/IconMixin',
    'Core/helpers/String/escapeHtml',
    'css!WSControls/Buttons/resources/ButtonBase'
 ], function(Control, Clickable, FormWidgetMixin, DataBindMixin, IconMixin, escapeHtml) {
@@ -16,12 +16,12 @@ define('js!WSControls/Buttons/ButtonBase', [
     * Отображение и вёрстка задаются именно в унаследованных классах.
     * @class WSControls/Buttons/ButtonBase
     * @public
-    * @extends SBIS3.CORE.CompoundControl
+    * @extends Lib/Control/CompoundControl/CompoundControl
     *
-    * @mixes SBIS3.CONTROLS.Clickable
-    * @mixes SBIS3.CONTROLS.FormWidgetMixin
-    * @mixes SBIS3.CONTROLS.DataBindMixin
-    * @mixes SBIS3.CONTROLS.IconMixin
+    * @mixes SBIS3.CONTROLS/Mixins/Clickable
+    * @mixes SBIS3.CONTROLS/Mixins/FormWidgetMixin
+    * @mixes SBIS3.CONTROLS/Mixins/DataBindMixin
+    * @mixes SBIS3.CONTROLS/Mixins/IconMixin
     *
     * @author Крайнов Дмитрий Олегович
     *
