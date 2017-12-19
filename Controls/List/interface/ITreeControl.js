@@ -31,11 +31,20 @@ define('js!Controls/List/interface/ITreeControl', [
     */
 
    /**
-    * @name Controls/List/interface/IListControl#multiSelectMode
-    * @cfg {Boolean} (Может поменяться) Режим множественного выбора
+    * @typedef {String} treeMultiSelectMode
     * @variant all Выделять все
     * @variant nodes Выделять только узлы
     * @variant leafs Выделять только листья
+    */
+
+   /**
+    * @name Controls/List/interface/ITreeControl#multiSelectMode
+    * @cfg {treeMultiSelectMode} Режим множественного выбора
+    */
+
+   /**
+    * @name Controls/List/interface/IListControl#nodeFooterTemplate
+    * @cfg {Function} Устанавливает шаблон футера, рисующегося под содержимым каждого узла
     */
 
 
