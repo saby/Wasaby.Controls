@@ -870,6 +870,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          if (key == null && !(this.getItems() && this.getItems().getRecordById(key))) {
             this._isClearing = true;
          }
+         else {
+            this._isClearing = false;
+         }
          ComboBox.superclass.setSelectedKey.apply(this, arguments);
       },
 
