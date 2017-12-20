@@ -11,8 +11,8 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
    'tmpl!SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/ListContentTemplate',
    'tmpl!SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/ItemsTemplate',
    'tmpl!SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/InvisibleItemsTemplate',
-   'tmpl!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
-   'tmpl!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate',
+   'tmpl!SBIS3.CONTROLS/ListView/resources/GroupTemplate',
+   'tmpl!SBIS3.CONTROLS/DataGridView/resources/GroupTemplate',
    'Core/core-merge',
    'Core/core-instance',
    'SBIS3.CONTROLS/Link'
