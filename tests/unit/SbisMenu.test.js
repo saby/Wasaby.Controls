@@ -124,6 +124,7 @@ define([
                 }
             }
         },
+        frequent,
         self = {
             _options: {
                 additionalProperty: 'additional',
@@ -286,7 +287,13 @@ define([
             });
         });
         describe('fill History', function () {
+            it('check getFrequent without frequent items', function () {
+                self._options.frequent = false;
+                frequent = SbisMenu._private.getFrequent(self);
+                assert.equal(frequent.getCount(), 0);
+            });
             it('filterFrequent', function () {
+                self._options.frequent = true;
                 self._filteredFrequent = SbisMenu._private.filterFrequent(self);
                 assert.equal(self._filteredFrequent.getCount(), 2);
             });
