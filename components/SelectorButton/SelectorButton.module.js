@@ -157,8 +157,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
                   или же по значениям в контексте */
                self.getSelectedItems(true).addCallback(function(list) {
                   self.validate();
-                  return list
-               })
+                  return list;
+               });
             }
          });
 
