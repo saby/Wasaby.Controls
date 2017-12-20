@@ -269,7 +269,7 @@ define('SBIS3.CONTROLS/TextBox', [
    
          this._container
             .on('keypress keydown keyup', this._keyboardDispatcher.bind(this))
-            .on('mouseenter', function() { self._applyTooltip(); })
+            .on('keyup mouseenter', function() { self._applyTooltip(); })
             .on('touchstart', function() { self._fromTouch = true;});
       },
 
