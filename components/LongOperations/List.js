@@ -1,6 +1,5 @@
 define('SBIS3.CONTROLS/LongOperations/List',
    [
-      'Core/core-merge',
       'Core/Deferred',
       'Lib/Control/CompoundControl/CompoundControl',
       'SBIS3.CONTROLS/LongOperations/Entry',
@@ -19,7 +18,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
       'SBIS3.CONTROLS/DataGridView'
    ],
 
-   function (coreMerge, Deferred, CompoundControl, LongOperationEntry, Model, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, FloatArea, dotTplFn) {
+   function (Deferred, CompoundControl, LongOperationEntry, Model, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, FloatArea, dotTplFn) {
       'use strict';
 
       /**
