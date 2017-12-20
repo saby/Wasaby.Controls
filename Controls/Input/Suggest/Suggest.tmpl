@@ -1,4 +1,5 @@
 <ws:Controls.Input.Text
+    name="suggestText"
     trim="{{_options.trim}}"
     selectOnClick="{{_options.selectOnClick}}"
     inputCharRegExp="{{_options.inputCharRegExp}}"
@@ -7,4 +8,5 @@
     enabled="{{isEnabled()}}"
     tagStyle="{{_options.tagStyle}}"
     placeholder="{{_options.placeholder}}"
+    on:onChangeValue="_changeValueHandler()"
 />

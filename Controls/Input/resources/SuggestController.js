@@ -4,13 +4,18 @@
 define('js!Controls/Input/resources/SuggestController',
    [
       'Core/Abstract',
-      'Core/moduleStubs'
-   ], function (Abstract, moduleStubs) {
+      'Core/moduleStubs',
+      'Core/core-clone'
+   ], function (Abstract, moduleStubs, cClone) {
+   
+   'use strict';
    
    var _private = {
       search: function(self, textValue) {
          _private.getSearchController(self).addCallback(function(searchController) {
-            searchController.search(textValue);
+            var filter = cClone(self._options.filter || {});
+            filter[self._options.searchParam] = textValue;
+            searchController.search(filter, _private.getPopupOptions(self));
             return searchController;
          });
       },
@@ -22,47 +27,69 @@ define('js!Controls/Input/resources/SuggestController',
          });
       },
    
-      onChangeValueHandler: function(self, event, text) {
+      onChangeValueHandler: function(self, text) {
          if (text.length >= self._options.minSearchLength) {
-            _private.search(self, text)
+            _private.search(self, text);
          } else {
             _private.abortSearch(self);
          }
       },
+      
+      getPopupOptions: function(self) {
+         var container = self._options.textComponent.getContainer();
+         return {
+            target: container,
+            autoHide: true,
+            template: 'js!Controls/Input/resources/SuggestView',
+            corner: {
+               vertical: 'bottom'
+            },
+            verticalAlign: {
+               side: 'top'
+            },
+            componentOptions: {
+               width: container[0].offsetWidth,
+               template: self._options.suggestTemplate
+            }
+         };
+      },
    
       getSearchController: function(self) {
+         /* loading SuggestPopupController and preloading suggest template */
          return moduleStubs.require(['js!Controls/Input/resources/SuggestPopupController', self._options.suggestTemplate]).addCallback(function(result) {
-            if (!self._searchController) {
-               self._searchController = new result[0]({
+            if (!self._suggestPopupController) {
+               self._suggestPopupController = new result[0]({
                   dataSource: self._options.dataSource,
-                  searchParam: self._options.searchParam,
-                  searchDelay: self._options.searchDelay,
-                  filter: self._options.filter,
-                  popupTemplate: self._options.suggestTemplate,
-                  popupOpener: self._options.textComponent,
-                  displayProperty: self._options.displayProperty
+                  searchDelay: self._options.searchDelay
                });
                
                //Надо подписаться, т.к. событие от контроллера не всплывает.
-               self.subscribeTo(self._searchController, 'onSelect', function(event, result) {
+               self.subscribeTo(self._suggestPopupController, 'onSelect', function(event, result) {
                   self._notify('onSelect', result);
                });
-   
-               self.once('onDestroy', function() {
-                  self._searchController.destroy();
-                  self._searchController = null;
-               });
             }
-            return self._searchController;
+            return self._suggestPopupController;
          });
       }
    };
    
    var SuggestController = Abstract.extend({
+      
       constructor: function(options) {
          SuggestController.superclass.constructor.call(this, options);
          this._options = options;
-         this.subscribeTo(options.textComponent, 'onChangeValue', _private.onChangeValueHandler.bind(this, this));
+      },
+      
+      setValue: function(value) {
+         _private.onChangeValueHandler(this, value);
+      },
+      
+      destroy: function() {
+         if (this._suggestPopupController) {
+            this._suggestPopupController.destroy();
+            this._suggestPopupController = null;
+         }
+         SuggestController.superclass.destroy.call(this);
       },
    
       _moduleName: 'Controls/Input/resources/SuggestController'

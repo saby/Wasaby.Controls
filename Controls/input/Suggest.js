@@ -30,26 +30,33 @@ define('js!Controls/Input/Suggest',
          // <editor-fold desc="LifeCycle">
    
          _afterMount: function() {
-            var suggestController = new SuggestController({
-                  suggestTemplate: this._options.suggestTemplate,
-                  dataSource: this._options.dataSource,
-                  searchDelay: this._options.searchDelay,
-                  filter: this._options.filter,
-                  minSearchLength: this._options.minSearchLength,
-                  searchParam: this._options.searchParam,
-                  textComponent: this._childControls[0],
-                  displayProperty: this._options.displayProperty
-               }),
-               self = this;
+            var self = this;
+   
+            this._suggestController = new SuggestController({
+               suggestTemplate: this._options.suggestTemplate,
+               dataSource: this._options.dataSource,
+               searchDelay: this._options.searchDelay,
+               filter: this._options.filter,
+               minSearchLength: this._options.minSearchLength,
+               searchParam: this._options.searchParam,
+               textComponent: this._children.suggestText
+            });
             
-            //TODO обсудить. Сделать событием Suggest? Вроде у всех есть.
-            this.subscribeTo(suggestController, 'onSelect', function(event, item) {
+            this.subscribeTo(this._suggestController, 'onSelect', function(event, item) {
                self._notify('onChangeValue', item.get(self._options.displayProperty));
             });
-   
-            this.once('onDestroy', function() {
-               suggestController.destroy();
-            });
+         },
+         
+         _changeValueHandler: function(event, value) {
+            this._suggestController.setValue(value);
+         },
+         
+         destroy: function() {
+            if (this._suggestController) {
+               this._suggestController.destroy();
+               this._suggestController = null;
+            }
+            Suggest.superclass.destroy.call(this);
          }
          
          // </editor-fold>

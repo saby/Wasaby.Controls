@@ -26,47 +26,44 @@ define('js!Controls/Input/resources/SuggestPopupController',
             return self._search;
          },
          
+         getPopupOpener: function(self) {
+            if (!self._suggestOpener) {
+               self._suggestOpener = new StickyOpener();
+               self._suggestOpener.subscribe('onResult', function(event, result) {
+                  self._notify('onSelect', result);
+               });
+            }
+            
+            return self._suggestOpener;
+         },
+         
          showPopup: function(self, options) {
             if (!self._suggestOpener) {
                self._suggestOpener = new StickyOpener();
-               self._suggestOpener.saveOptions({
-               popupOptions: {
-                  target: self._options.popupOpener.getContainer(),
-                  autoHide: true,
-                  template: 'js!Controls/Input/resources/SuggestView',
-                  corner: {
-                     vertical: 'bottom'
-                  },
-                  verticalAlign: {
-                     side: 'top'
-                  }
-               }});
                self._suggestOpener.subscribe('onResult', function(event, result) {
                   self._notify('onSelect', result);
-               })
+               });
             }
-            self._suggestOpener.open(options, self._options.popupOpener);
+            self._suggestOpener.open(options);
          }
       };
       
       var SuggestPopupController = Abstract.extend({
+         
          constructor: function(options) {
             SuggestPopupController.superclass.constructor.call(this, options);
             this._options = options;
          },
-         search: function(textValue) {
-            var filter = cMerge({}, this._options.filter || {}),
-                self = this;
+         
+         search: function(filter, popupOptions) {
+            var self = this;
             
-            filter[this._options.searchParam] = textValue;
             _private.getSearchController(self).search({filter: filter}).addCallback(function(searchResult) {
-               _private.showPopup(self, {
-                  componentOptions: {
-                     items: searchResult,
-                     template: self._options.popupTemplate,
-                     width: self._options.popupOpener.getContainer()[0].offsetWidth
-                  }
-               });
+               if (!popupOptions.componentOptions) {
+                  popupOptions.componentOptions = {};
+               }
+               popupOptions.componentOptions.items = searchResult;
+               _private.getPopupOpener(self).open(popupOptions);
             });
          },
          
