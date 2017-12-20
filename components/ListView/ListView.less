@@ -71,7 +71,7 @@
 }
 
 controls-ListView__item__withHover:hover {
-   background-color: @default-itemHover-color;
+   background-color: @background-color_ListView-item_hovered;
 }
 
 .controls-ListView__item__multiSelected:not(.controls-ListView__item__partiallySelected) {
@@ -88,7 +88,7 @@ controls-ListView__item__withHover:hover {
 }
 
 .controls-ListView__hoveredItem {
-   background-color: @default-itemHover-color;
+   background-color: @background-color_ListView-item_hovered;
 }
 
 .controls-ListView__small__EmptyData {
@@ -246,11 +246,11 @@ controls-ListView__item__withHover:hover {
   color: #313E78;
 }
 
-.controls-ListView__scrollPager{
+.controls-ListView__scrollPager {
    position: absolute;
    bottom: @scrollpager-bottom;
    right: 0;
-   height: 32px;
+   height: @height_ListView_ScrollPager;
    background: @scrollpager-bg;
    border-top: @scrollpager-border;
    z-index: 10;

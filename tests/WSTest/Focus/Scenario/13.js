@@ -3,7 +3,7 @@
  */
 define('js!WSTest/Focus/Scenario/13', [
    'js!WSTest/Focus/TestFocusHelpers',
-   'js!SBIS3.CORE.Window',
+   'Lib/Control/Window/Window',
    'tmpl!WSTest/Focus/Case1',
    'js!WSTest/Focus/Case13',
    'js!WSTest/Focus/CaseControl',

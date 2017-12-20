@@ -11,7 +11,7 @@
    }
    &.ws-disabled {
       cursor: default;
-      color: @link-disabled-text-color;
+      color: @color_Link-text_disabled;
       .controls-SelectorButton__cross {
          display: none;
       }
@@ -29,8 +29,8 @@
    content: none;
 }
 
-.controls-SelectorButton__icon + .controls-SelectorButton__text:not(.ws-hidden) {
-   padding-left: 4px;
+.controls-SelectorButton__icon + .controls-SelectorButton__text:not(:empty) {
+   padding-left: @spacing_Button-between-icon-text;
 }
 
 .controls-SelectorButton__text {
@@ -41,13 +41,13 @@
 }
 
 .controls-SelectorButton__asLink {
-   color: @link-text-color;
-   text-decoration: @link-text-decoration;
+   color: @color_Link-text;
+   text-decoration: @text-decoration_Link;
 }
 
 .ws-is-desktop-platform {
    .controls-SelectorButton__asLink {
-      .link-hover-mixin(@link-hover-text-color, @button-icon-color-hover, controls-SelectorButton__text);
+      .link-hover-mixin(@color_Link-text_hovered, @color_Link-icon_hovered, controls-SelectorButton__text);
    }
 }
 .ws-is-ie11 {
