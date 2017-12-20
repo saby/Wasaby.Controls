@@ -7,7 +7,7 @@
         selectOnClick="{{_options.selectOnClick}}"
         viewModel="{{_textViewModel}}"
         tagStyle="{{_options.tagStyle}}"
-        attr:class="controls-TextArea"
+        attr:class="controls-InputArea"
         on:onChangeValue="_changeValueHandler()"
         on:onInputCompleted="_inputCompletedHandler()"
         on:onTagHover="_notifyHandler('onTagHover')"
@@ -18,7 +18,7 @@
          <textarea
                  name="realArea"
                  spellcheck="false"
-                 class="controls-TextArea__field controls-TextArea__realField controls-InputRender__field {{_hasScroll ? 'controls-TextArea__realField_scroll-scroll' : 'controls-TextArea__realField_scroll-hidden'}}"
+                 class="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
                  placeholder="{{_options.placeholder}}"
                  readonly="{{!isEnabled() ? 'readonly'}}"
                  on:keydown="_keyDownHandler()"
@@ -30,12 +30,12 @@
             <div class="controls-fakeTextArea__secondWrapper">
                <div
                   name="fakeArea"
-                  class="controls-TextArea__field controls-TextArea__fakeField controls-InputRender__field"
+                  class="controls-InputArea__field controls-InputArea__fakeField controls-InputRender__field"
                   style="{{_options.minLines ? ('min-height: ' + _options.minLines * 100 + '%;')}} {{_options.maxLines ? 'max-height: ' + _options.maxLines * 100 + '%'}}">
                   <span name="fakeAreaValue">{{_value}}</span><br/>
                </div>
             </div>
-            <div class="controls-TextArea__clear"></div>
+            <div class="controls-InputArea__clear"></div>
          </div>
       </div>
    </ws:content>
