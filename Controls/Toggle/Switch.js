@@ -27,6 +27,23 @@ define('js!Controls/Toggle/Switch', [
     * @variant horizontal Горизонтальная ориентация
     * @variant vertical Вертикальная ориентация
     */
+   var _private = {
+      doubleSwitcherClickHandler: function (self, clickedElement) {
+         //если дабл свитчер и кликнутый заголовок, то не надо переключаться.
+         if (self._options.value !== (clickedElement === "textOn" ? true : false)) {
+            this.notifyChangeValue(self);
+         }
+      },
+
+      singleSwitcherClickHandler: function (self) {
+         this.notifyChangeValue(self);
+      },
+
+      notifyChangeValue: function (self) {
+         self._notify('changeValue', !self._options.value);
+      }
+   };
+
 
    var Switch = Control.extend({
       _template: template,
@@ -38,12 +55,17 @@ define('js!Controls/Toggle/Switch', [
          }
       },
 
-      _clickHandler: function (e, clickedElement) {
-         //если дабл свитчер и кликнутый заголовок, то не надо переключаться.
-         //если простой свитчер, то всегда переключаться, вне зависимости кликнутый заголовок или нет.
-         if (!this._isDouble() || this._options.value !== (clickedElement === "textOn" ? true : false) || clickedElement==="Toggle") {
-            this._notify('valueChanged', !this._options.value);
+      _clickTextHandler: function (e, clickedElement) {
+         if (this._isDouble()) {
+            _private.doubleSwitcherClickHandler(this,clickedElement);
          }
+         else{
+            _private.singleSwitcherClickHandler(this);
+         }
+      },
+
+      _clickToggleHandler: function (e) {
+         _private.notifyChangeValue(this);
       },
 
       _isDouble: function() {
@@ -64,9 +86,12 @@ define('js!Controls/Toggle/Switch', [
             'vertical',
             'horizontal'
          ]),
+         //TODO: сделать проверку на массив когда будет сделана задача https://online.sbis.ru/opendoc.html?guid=2016ea16-ed0d-4413-82e5-47c3aeaeac59
          captions: types(Object)
       };
    };
+
+   Switch._private = _private;
 
    return Switch;
 });
