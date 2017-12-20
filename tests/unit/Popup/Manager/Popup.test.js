@@ -14,7 +14,7 @@ define(
                controller: controller
             },
             popup = new Popup();
-         popup.saveOptions();
+         popup.saveOptions(cfg);
 
          it('popup initialize', function () {
             popup._beforeMount(cfg);
