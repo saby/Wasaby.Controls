@@ -14,10 +14,6 @@ define('js!Controls/Popup/interface/IOpener',
           */
          open: function(config) {
             throw new Error('Method execute must be implemented');
-         },
-
-         _notifyOnResult: function (event, args) {
-            this._notify.apply(this, ['onResult'].concat(args));
          }
       };
    }

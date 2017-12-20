@@ -8,6 +8,8 @@ define('js!Controls/Popup/Manager',
    function (Random, Container, List) {
       'use strict';
 
+      var _popupContainer;
+
       var _private = {
          /**
           * Вернуть следующий z-index
@@ -47,7 +49,10 @@ define('js!Controls/Popup/Manager',
                element = Manager._find(popup._options.id);
             if (element) {
                element.zIndex = _private.calculateZIndex();
-               Container.setPopupItems(Manager._popupItems);
+               var container = _private.getPopupContainer();
+               if( container ){
+                  container.setPopupItems(Manager._popupItems);
+               }
             }
          },
 
@@ -61,9 +66,36 @@ define('js!Controls/Popup/Manager',
             if (element) {
                if (element.strategy) {
                   element.position = element.strategy.getPosition(popup);
-                  Container.setPopupItems(Manager._popupItems);
+                  var container = _private.getPopupContainer();
+                  if( container ){
+                     container.setPopupItems(Manager._popupItems);
+                  }
                }
             }
+         },
+
+         getPopupContainer: function(){
+            if( document && !_popupContainer){
+               var element = document.getElementById('popup');
+               if( element && element.controlNodes && element.controlNodes.length ){
+                  _popupContainer = element.controlNodes[0].control;
+                  _popupContainer.eventHandlers = {
+                     onClosePopup: function(event, id){
+                        Manager.remove(id);
+                     },
+                     onFocusIn: function (event, id) {
+
+                     },
+                     onFocusOut: function (event, id, focusedControl) {
+                        _private.focusOut(id, focusedControl);
+                     },
+                     onRecalcPosition: function (event, popup) {
+                        _private.recalcPosition(popup);
+                     }
+                  };
+               }
+            }
+            return _popupContainer;
          }
       };
 
@@ -98,7 +130,10 @@ define('js!Controls/Popup/Manager',
             };
             element.zIndex = _private.calculateZIndex();
             Manager._popupItems.add(element);
-            Container.setPopupItems(Manager._popupItems);
+            var container = _private.getPopupContainer();
+            if( container ){
+               container.setPopupItems(Manager._popupItems);
+            }
             return element.id;
          },
 
@@ -115,7 +150,10 @@ define('js!Controls/Popup/Manager',
                options.opener = element.popupOptions.opener;
                options.controller = element.popupOptions.controller;
                element.popupOptions = options;
-               Container.setPopupItems(Manager._popupItems);
+               var container = _private.getPopupContainer();
+               if( container ){
+                  container.setPopupItems(Manager._popupItems);
+               }
                return id;
             }
             return null;
@@ -131,7 +169,10 @@ define('js!Controls/Popup/Manager',
                element = Manager._find(id);
             if (element) {
                Manager._popupItems.remove(element);
-               Container.setPopupItems(Manager._popupItems);
+               var container = _private.getPopupContainer();
+               if( container ){
+                  container.setPopupItems(Manager._popupItems);
+               }
             }
          },
 
@@ -147,22 +188,6 @@ define('js!Controls/Popup/Manager',
       };
 
       Manager._popupItems = new List();
-
-      Container.subscribe('closePopup', function (event, id) {
-         Manager.remove(id);
-      });
-
-      Container.subscribe('focusInPopup', function (event, id) {
-
-      });
-
-      Container.subscribe('focusOutPopup', function (event, id, focusedControl) {
-         _private.focusOut(id, focusedControl);
-      });
-
-      Container.subscribe('recalcPosition', function (event, popup) {
-         _private.recalcPosition(popup);
-      });
 
       return Manager;
    }

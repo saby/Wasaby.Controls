@@ -1,12 +1,13 @@
 define('js!Controls/Popup/Opener/Sticky',
    [
       'Core/Control',
+      'js!Controls/Popup/Manager',
       'js!Controls/Popup/interface/IOpener',
       'js!Controls/Popup/Opener/Sticky/Strategy',
       'Core/core-merge',
       'js!Controls/Popup/Controller'
    ],
-   function (Control, IOpener, Strategy, CoreMerge, Controller) {
+   function (Control, Manager, IOpener, Strategy, CoreMerge, Controller) {
 
       /**
        * Действие открытия прилипающего окна
@@ -23,17 +24,18 @@ define('js!Controls/Popup/Opener/Sticky',
             var
                self = this,
                cfg = config || {};
-            require(['js!Controls/Popup/Manager'], function (Manager) {
-               CoreMerge(cfg, self._options.popupOptions);
-               if (self._popupId) {
-                  self._popupId = Manager.update(self._popupId, cfg);
-               }
-               if (!self._popupId) {
-                  self._controller = new Controller();
-                  self._controller.subscribe('onResult', self._notifyOnResult.bind(self));
-                  self._popupId = Manager.show(cfg, opener || self, Strategy, self._controller);
-               }
-            });
+            CoreMerge(cfg, self._options.popupOptions);
+            if (self._popupId) {
+               self._popupId = Manager.update(self._popupId, cfg);
+            }
+            if (!self._popupId) {
+               self._controller = new Controller({
+                  eventHandlers: {
+                     onResult: this._options.onResult
+                  }
+               });
+               self._popupId = Manager.show(cfg, opener || self, Strategy, self._controller);
+            }
          }
       });
 
