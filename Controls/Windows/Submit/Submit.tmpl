@@ -5,72 +5,24 @@
         class="controls-InformationPopup controls-InformationPopup__status-{{_options.status}} controls-SubmitPopup_popup">
    <!--Если размер текста сообщения и описания превышает заданные рамки, то увеличиваем размер окна-->
    <div class="controls-SubmitPopup{{_options.autoWidth ? '' : _options.message.length > _options.messageMaxLength || _options.details.length > _options.detailsMaxLength ? ' controls-SubmitPopup__size-big' : ' controls-SubmitPopup__size-standard'}}">
-      <!--Блок с сообщением или шаблоном сообщения-->
-      <div class="controls-SubmitPopup__body">
-         <ws:if data="{{_options.messageTemplate || _options.message}}">
-            <div class="controls-SubmitPopup__message {{(_options.detailsTemplate || _options.details) ? 'controls-SubmitPopup__message_withDetails'}}">
-               <ws:if data="{{_options.messageTemplate}}">
-                  <ws:partial template="{{_options.messageTemplate}}" scope="{{_options.messageTemplateOptions}}"/>
-               </ws:if>
-               <ws:else>
-                  <div class="controls-SubmitPopup__message-centered">{{_options.message|sanitize}}</div>
-               </ws:else>
-            </div>
-         </ws:if>
-         <!--Блок с деталями или шаблоном деталей-->
-         <ws:if data="{{_options.detailsTemplate || _options.details}}">
-            <div class="controls-SubmitPopup__details">
-               <ws:if data="{{_options.detailsTemplate}}">
-                  <ws:partial template="{{_options.detailsTemplate}}" scope="{{_options.detailsTemplateOptions}}"/>
-               </ws:if>
-               <ws:else>
-                  <div class="controls-SubmitPopup__details-centered">{{_options.details|sanitize}}</div>
-               </ws:else>
-            </div>
-         </ws:if>
-      </div>
-      <!--Блок с кнопками-->
-      <div class="controls-SubmitPopup__footer">
-         <div class="controls-SubmitPopup__buttonContainer">
-            <ws:if data="{{_options.status === 'confirm' || _options.useConfirmButtons}}">
-               <ws:partial
-                       ws-autofocus="{{true}}"
-                       style="primary"
-                       name="positiveButton"
-                       caption="{{_options.positiveButton.caption}}"
-                       template="js!Controls/Button"
-                       attr:class="controls-SubmitPopup__button{{_options.hasCancelButton ? ' controls-SubmitPopup__button-mini'}} controls-Button__ellipsis"
-                       on:click="_sendResult(true)"
-               />
-               <ws:partial
-                       name="negativeButton"
-                       caption="{{_options.negativeButton.caption}}"
-                       template="js!Controls/Button"
-                       attr:class="controls-SubmitPopup__button{{_options.hasCancelButton ? ' controls-SubmitPopup__button-mini'}} controls-Button__ellipsis"
-                       on:click="_sendResult(false)"
-               />
-               <ws:if data="{{_options.hasCancelButton}}">
-                  <ws:partial
-                          name="cancelButton"
-                          caption="{{_options.cancelButton.caption}}"
-                          template="js!Controls/Button"
-                          attr:class="controls-SubmitPopup__button controls-SubmitPopup__button-mini controls-Button__ellipsis"
-                          on:click="_sendResult()"
-                  />
-               </ws:if>
-            </ws:if>
-            <ws:else>
-               <ws:partial
-                       ws-autofocus="{{true}}"
-                       name="okButton"
-                       style="primary"
-                       caption="{{_options.submitButton.caption}}"
-                       template="js!Controls/Button"
-                       attr:class="controls-SubmitPopup__button controls-Button__ellipsis"
-                       on:click="_sendResult()"
-               />
-            </ws:else>
-         </div>
-      </div>
+
+      <ws:partial
+              template="{{_options.bodyTemplate}}"
+              message="{{_options.message}}"
+              messageTemplate="{{_options.messageTemplate}}"
+              details="{{_options.details}}"
+              detailsTemplate="{{_options.detailsTemplate}}"
+      ></ws:partial>
+
+      <ws:partial
+              template="{{_options.footerTemplate}}"
+              status="{{_options.status}}"
+              hasCancelButton="{{_options.hasCancelButton}}"
+              useConfirmButtons="{{_options.useConfirmButton}}"
+              positiveButton="{{_options.positiveButton}}"
+              negativeButton="{{_options.negativeButton}}"
+              cancelButton="{{_options.cancelButton}}"
+              submitButton="{{_options.submitButton}}"
+      ></ws:partial>
    </div>
 </div>

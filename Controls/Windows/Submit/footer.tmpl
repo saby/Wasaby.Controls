@@ -1,0 +1,42 @@
+<div class="controls-SubmitPopup__footer">
+   <div class="controls-SubmitPopup__buttonContainer">
+      <ws:if data="{{status === 'confirm' || useConfirmButtons}}">
+         <ws:partial
+                 ws-autofocus="{{true}}"
+                 style="primary"
+                 name="positiveButton"
+                 caption="{{positiveButton.caption}}"
+                 template="Controls/Button"
+                 attr:class="controls-SubmitPopup__button{{_options.hasCancelButton ? ' controls-SubmitPopup__button-mini'}} controls-Button__ellipsis"
+                 on:click="_sendResult(true)"
+         />
+         <ws:partial
+                 name="negativeButton"
+                 caption="{{negativeButton.caption}}"
+                 template="Controls/Button"
+                 attr:class="controls-SubmitPopup__button{{_options.hasCancelButton ? ' controls-SubmitPopup__button-mini'}} controls-Button__ellipsis"
+                 on:click="_sendResult(false)"
+         />
+         <ws:if data="{{hasCancelButton}}">
+            <ws:partial
+                    name="cancelButton"
+                    caption="{{cancelButton.caption}}"
+                    template="Controls/Button"
+                    attr:class="controls-SubmitPopup__button controls-SubmitPopup__button-mini controls-Button__ellipsis"
+                    on:click="_sendResult()"
+            />
+         </ws:if>
+      </ws:if>
+      <ws:else>
+         <ws:partial
+                 ws-autofocus="{{true}}"
+                 name="okButton"
+                 style="primary"
+                 caption="{{submitButton.caption}}"
+                 template="Controls/Button"
+                 attr:class="controls-SubmitPopup__button controls-Button__ellipsis"
+                 on:click="_sendResult()"
+         />
+      </ws:else>
+   </div>
+</div>

@@ -1,15 +1,24 @@
 define('js!Controls/Windows/Submit', [
       'Core/Control',
-      'tmpl!Controls/Windows/Submit/Submit',
       'WS.Data/Type/descriptor',
       'Core/constants',
+      'tmpl!Controls/Windows/Submit/body',
+      'tmpl!Controls/Windows/Submit/footer',
+      'tmpl!Controls/Windows/Submit/message',
+      'tmpl!Controls/Windows/Submit/details',
+      'tmpl!Controls/Windows/Submit/Submit',
+
 
       'css!Controls/Windows/Submit/Submit',
-      'js!Controls/Button'
+      'Controls/Button'
    ], function (Control,
-                template,
                 types,
-                constants) {
+                constants,
+                bodyTemplate,
+                footerTemplate,
+                messageTemplate,
+                detailsTemplate,
+                template) {
 
       'use strict';
 
@@ -156,34 +165,6 @@ define('js!Controls/Windows/Submit', [
        * cfg {Boolean} Включить автоширину. В таком случае фиксация ширина окна ложитсья на сторону пользователя.
        */
 
-      //Эмуляция tab или shift + tab
-      var fireTab = function (target, shift) {
-         var emulatedTabEvent = new KeyboardEvent('keydown');
-         emulatedTabEvent.initKeyboardEvent(
-            /* type         */ 'keydown',
-            /* bubbles      */ true,
-            /* cancelable   */ false,
-            /* view         */ window,
-            /* keyIdentifier*/ '',
-            /* keyLocation  */ 0,
-            /* ctrlKey      */ false,
-            /* altKey       */ false,
-            /* shiftKey     */ shift,
-            /* metaKey      */ false,
-            /* altGraphKey  */ false
-         );
-         var getterCode = {
-            get: function () {
-               return constants.key.tab
-            }
-         };
-         Object.defineProperties(emulatedTabEvent, {
-            which: getterCode,
-            keyCode: getterCode
-         });
-         target.dispatchEvent(emulatedTabEvent);
-      };
-
       var Submit = Control.extend({
          _controlName: 'Controls/Windows/Submit',
          _template: template,
@@ -196,18 +177,8 @@ define('js!Controls/Windows/Submit', [
          _keyPressed: function (e) {
             e.stopPropagation();
 
-            switch (e.nativeEvent.keyCode) {
-               case constants.key.esc:
-                  this._options.hasCancelButton && this._sendResult();
-                  break;
-               case constants.key.left:
-                  //TODO Эмулируем shift+tab https://online.sbis.ru/opendoc.html?guid=069b986f-fd53-4ac8-a7ef-0a5834f41a8e
-                  fireTab(e.target, true);
-                  break;
-               case constants.key.right:
-                  //TODO Эмулируем tab https://online.sbis.ru/opendoc.html?guid=069b986f-fd53-4ac8-a7ef-0a5834f41a8e
-                  fireTab(e.target, false);
-                  break;
+            if(e.nativeEvent.keyCode === constants.key.esc){
+               this._options.hasCancelButton && this._sendResult();
             }
          }
       });
@@ -235,7 +206,11 @@ define('js!Controls/Windows/Submit', [
             messageMaxLength: 100,
             detailsMaxLength: 160,
             useConfirmButtons: false,
-            autoWidth: false
+            autoWidth: false,
+            bodyTemplate: bodyTemplate,
+            footerTemplate: footerTemplate,
+            messageTemplate: messageTemplate,
+            detailsTemplate: detailsTemplate
          };
       };
 
