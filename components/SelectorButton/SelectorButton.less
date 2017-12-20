@@ -29,8 +29,8 @@
    content: none;
 }
 
-.controls-SelectorButton__icon + .controls-SelectorButton__text:not(.ws-hidden) {
-   padding-left: 4px;
+.controls-SelectorButton__icon + .controls-SelectorButton__text:not(:empty) {
+   padding-left: @button-icon-gap;
 }
 
 .controls-SelectorButton__text {
