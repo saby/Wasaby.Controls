@@ -79,7 +79,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
 
             if(this._value !== processedData.value){
                this._value = processedData.value;
-               this._notify('onChangeValue', processedData.value);
+               this._notify('valueChanged', processedData.value);
             }
          },
 
