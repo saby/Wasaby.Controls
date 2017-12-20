@@ -199,52 +199,46 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * @return {object[]}
           */
          _makeItemsActions: function (model) {
-            var actions = [];
+            var actions = {};
             if (model) {
                var STATUSES = LongOperationEntry.STATUSES;
-               var self = this;
-               if (model.get('canSuspend') && model.get('status') === STATUSES.running) {
-                  // Заголовок зависит от модели
-                  var title = rk(model.get('resumeAsRepeat') ? 'Отменить' : 'Приостановить', 'ДлительныеОперации');
-                  actions.push({
-                     name: 'suspend',
-                     icon: 'sprite:icon-16 icon-Pause icon-primary action-hover',
-                     caption: title,
-                     tooltip: title,
-                     isMainAction: true,
-                     onActivated: function ($item, id, itemModel) {
-                        self.applyUserAction('suspend', itemModel);
+               var extra = model.get('extra');
+               if (extra && extra.custom) {
+                  var inf = extra.custom.actions;
+                  if (inf && typeof inf == 'object') {
+                     for (var action in inf) {
+                        if (inf[action] && typeof inf[action] === 'string') {
+                           actions[action] = {title:action, icon:'sprite:icon-16 icon-Favourite icon-done'};
+                        }
                      }
-                  });
+                  }
+               }
+               // Заголовки могут зависесть от модели
+               if (model.get('canSuspend') && model.get('status') === STATUSES.running) {
+                  actions['suspend'] = {title:rk(model.get('resumeAsRepeat') ? 'Отменить' : 'Приостановить', 'ДлительныеОперации'), icon:'sprite:icon-16 icon-Pause icon-primary action-hover'};
                }
                if (model.get('canSuspend') && model.get('status') === STATUSES.suspended) {
-                  var title = rk(model.get('resumeAsRepeat') ? 'Повторить' : 'Возобновить');
-                  actions.push({
-                     name: 'resume',
-                     icon: 'sprite:icon-16 icon-DayForward icon-primary action-hover',
-                     caption: title,
-                     tooltip: title,
-                     isMainAction: true,
-                     onActivated: function ($item, id, itemModel) {
-                        self.applyUserAction('resume', itemModel);
-                     }
-                  });
+                  actions['resume'] = {title:rk(model.get('resumeAsRepeat') ? 'Повторить' : 'Возобновить'), icon:'sprite:icon-16 icon-DayForward icon-primary action-hover'};
                }
                if (model.get('canDelete')) {
-                  var title = rk('Удалить');
-                  actions.push({
-                     name: 'delete',
-                     icon: 'sprite:icon-16 icon-Erase icon-error',
-                     caption: title,
-                     tooltip: title,
-                     isMainAction: true,
-                     onActivated: function ($item, id, itemModel) {
-                        self.applyUserAction('delete', itemModel);
-                     }
-                  });
+                  actions['delete'] = {title:rk('Удалить'), icon:'sprite:icon-16 icon-Erase icon-error'};
                }
             }
-            return actions;
+            return Object.keys(actions).map(function (name) {
+               var action = actions[name];
+               return {
+                  name: name,
+                  icon: action.icon,
+                  caption: action.title,
+                  tooltip: action.title,
+                  isMainAction: true,
+                  onActivated: this._onUserAction.bind(this, name)
+               };
+            }.bind(this));
+         },
+
+         _onUserAction: function (action, $item, id, itemModel) {
+            this.applyUserAction(action, itemModel);
          },
 
          /**
@@ -373,14 +367,41 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * @returns {Core/Deferred}
           */
          applyUserAction: function (action, model) {
-            if (!(action === 'suspend' || action === 'resume' ? model.get('canSuspend') : (action === 'delete' ? model.get('canDelete') : null))) {
+            var isAllow;
+            var customAction;
+            switch (action) {
+               case 'suspend':
+               case 'resume':
+                  isAllow = model.get('canSuspend');
+                  break;
+               case 'delete':
+                  isAllow = model.get('canDelete');
+                  break;
+               default:
+                  var extra = model.get('extra');
+                  if (extra && extra.custom) {
+                     var inf = extra.custom.actions;
+                     if (inf && typeof inf == 'object' && inf[action] && typeof inf[action] === 'string') {
+                        customAction = inf[action];
+                        isAllow = true;
+                     }
+                  }
+                  break;
+            }
+            if (!isAllow) {
                return Deferred.fail('Action not allowed');
             }
-            var promise = longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
-            // Удаление в LRS может занимать много времени, поэтому перезапросить список нужно сразу - удаляемая операция в него уже не войдёт. Для
-            // остальных действий вызывать reload не нужно, это произойдёт по событию, пришедшему в результате выпонения действия
-            if (action === 'delete') {
-               promise.addCallback(this.reload.bind(this));
+            var promise;
+            if (customAction) {
+               promise = this._execHandler(customAction, null);
+            }
+            else {
+               promise = longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
+               // Удаление в LRS может занимать много времени, поэтому перезапросить список нужно сразу - удаляемая операция в него уже не войдёт. Для
+               // остальных действий вызывать reload не нужно, это произойдёт по событию, пришедшему в результате выпонения действия
+               if (action === 'delete') {
+                  promise.addCallback(this.reload.bind(this));
+               }
             }
             return promise;
          },
