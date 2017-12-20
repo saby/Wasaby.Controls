@@ -501,6 +501,16 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
+      _onAfterBeginEdit: function() {
+         TreeDataGridView.superclass._onAfterBeginEdit.apply(this, arguments);
+         this._updateEditArrow();
+      },
+
+      _onAfterEndEdit: function() {
+         TreeDataGridView.superclass._onAfterEndEdit.apply(this, arguments);
+         this._updateEditArrow();
+      },
+
       _updateEditArrow: function() {
          if(this._options.editArrow || this._options.arrowActivatedHandler) {
             if(this._hasHoveredItem()) {
