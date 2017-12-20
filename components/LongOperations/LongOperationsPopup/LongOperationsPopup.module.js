@@ -261,6 +261,14 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
          },
 
          /**
+          * Метод перезагружает список и обновляет состояние
+          * @return {Core/Deferred}
+          */
+         reload: function () {
+            return this._longOpList.reload();
+         },
+
+         /**
           * Установливает заголовок нотификационного уведомления.
           * @param {String} caption Текст заголовка.
           */
