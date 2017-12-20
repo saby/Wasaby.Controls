@@ -1,8 +1,8 @@
-define(['js!SBIS3.CONTROLS.ScrollContainer'], function (ScrollContainer) {
+define(['SBIS3.CONTROLS/ScrollContainer'], function (ScrollContainer) {
 
     'use strict';
 
-    describe.skip('SBIS3.CONTROLS.ScrollContainer', function () {
+    describe.skip('SBIS3.CONTROLS/ScrollContainer', function () {
         /*
         FIXME: тесты рабочие, но почему то падают на завершении тестов при вызове testScrollContainer.destroy().
         Присем начинают падать и другие тесты. Временно скипаю их. Скорее всего дело в самом SBIS3.CONTROLS.ScrollContainer,

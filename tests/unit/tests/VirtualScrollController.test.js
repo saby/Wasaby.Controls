@@ -1,12 +1,12 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], function(VirtualScrollController, cFunctions) {
+define(['SBIS3.CONTROLS/ListView/resources/VirtualScrollController', 'Core/core-functions'], function(VirtualScrollController, cFunctions) {
 
    'use strict';
    var newState = null,
       heights = [10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20,
                  10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20,
                  10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20];
-   describe('SBIS3.CONTROLS.VirtualScrollController', function() {
+   describe('SBIS3.CONTROLS/ListView/resources/VirtualScrollController', function() {
       var controller = new VirtualScrollController();
 
       describe('._getWrappersHeight', function() {

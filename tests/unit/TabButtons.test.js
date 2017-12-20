@@ -1,10 +1,10 @@
 /**
  * Created by as.krasilnikov on 12.07.17.
  */
-define(['js!SBIS3.CONTROLS.TabButtons'], function (TabButtons) {
+define(['SBIS3.CONTROLS/Tab/Buttons'], function (TabButtons) {
 
    'use strict';
-   describe('SBIS3.CONTROLS.TabButtons', function () {
+   describe('SBIS3.CONTROLS/Tab/Buttons', function () {
       if (typeof window === 'undefined') {
          return;
       }

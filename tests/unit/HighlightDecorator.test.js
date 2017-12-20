@@ -1,8 +1,8 @@
 /* global define, describe, it, assert */
-define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators.HighlightDecorator', 'WS.Data/Type/Enum'], function (HighlightDecorator, Enum) {
+define(['SBIS3.CONTROLS/Utils/HtmlDecorators/HighlightDecorator', 'WS.Data/Type/Enum'], function (HighlightDecorator, Enum) {
    'use strict';
 
-   describe('SBIS3.CONTROLS.Utils.HtmlDecorators.HighlightDecorator', function () {
+   describe('SBIS3.CONTROLS/Utils/HtmlDecorators/HighlightDecorator', function () {
 
       function runHighlight(text, highlightText) {
          var hd = new HighlightDecorator({});

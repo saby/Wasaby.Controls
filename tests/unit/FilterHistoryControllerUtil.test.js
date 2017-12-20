@@ -2,10 +2,10 @@
  * Created by am.gerasimov on 28.10.2016.
  */
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHistoryControllerUntil) {
+define(['SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil'], function (FilterHistoryControllerUntil) {
 
    'use strict';
-   describe('SBIS3.CONTROLS.FilterHistoryControllerUntil', function () {
+   describe('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil', function () {
       var structure, secondStructure;
       var date = new Date(2016, 11, 11);
       date.setSQLSerializationMode(false);
