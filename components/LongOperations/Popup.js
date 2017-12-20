@@ -39,6 +39,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                footerTemplate: footerTpl,
                caption: '',
                className: 'controls-LongOperations controls-LongOperationsPopup controls-LongOperationsPopup__hidden controls-LongOperationsPopup__hiddenContentMode',
+               customConditions: null,
                withAnimation: null,
                waitIndicatorText: null
             },
@@ -65,13 +66,21 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
          init: function () {
             LongOperationsPopup.superclass.init.call(this);
 
+            this._longOpList = this.getChildControlByName('operationList');
+            var customConditions = this._options.customConditions;
+            // В текущей реализации наличие непустой опции customConditions обязательно
+            if (!customConditions || !Array.isArray(customConditions)) {
+               throw new Error('customConditions required');
+            }
+            this._longOpList.setCustomConditions(customConditions);
+
             if (this._options.withAnimation) {
                this._animationAtStart();
             }
 
-            this._longOpList = this.getChildControlByName('operationList');
-            this._notificationContainer = this.getContainer().find('.controls-LongOperationsPopup__footer_notification');
-            this._progressContainer = this.getContainer().find('.controls-LongOperationsPopup__footer_progress_container');
+            var container = this.getContainer();
+            this._notificationContainer = container.find('.controls-LongOperationsPopup__footer_notification');
+            this._progressContainer = container.find('.controls-LongOperationsPopup__footer_progress_container');
 
             this._tabChannel = new TabMessage();
 
@@ -249,20 +258,12 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
          },
 
          /**
-          * Проверить, активен ли режим с floatArea.
-          * НЕ ИСПОЛЬЗУЕТСЯ
-          */
-         /*###isFloatAreaMode: function () {
-            return !!this._floatAreaMode;
-         },*/
-
-         /**
           * Метод перезагружает список и обновляет состояние
           * @return {Core/Deferred}
           */
-         /*###reload: function () {
+         reload: function () {
             return this._longOpList.reload();
-         },*/
+         },
 
          /**
           * Установливает заголовок нотификационного уведомления.
