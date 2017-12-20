@@ -9,6 +9,7 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
    "Core/Deferred",
    "Core/IoC",
    "Lib/Control/CompoundControl/CompoundControl",
+   'Core/CommandDispatcher',
    "Lib/Mixins/PendingOperationProducerMixin",
    "tmpl!SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/AddRowTpl",
    "SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace",
@@ -21,7 +22,7 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
    'css!SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController'
 
 ],
-   function (cContext, constants, Deferred, IoC, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, ControlHierarchyManager, Model, Record, cInstance, fcHelpers, InformationPopupManager) {
+   function (cContext, constants, Deferred, IoC, CompoundControl, CommandDispatcher, PendingOperationProducerMixin, AddRowTpl, EditInPlace, ControlHierarchyManager, Model, Record, cInstance, fcHelpers, InformationPopupManager) {
 
       'use strict';
 
@@ -96,6 +97,8 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
             },
             $constructor: function () {
                this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace', 'onHeightChange', 'onBeginSave', 'onEndSave');
+               CommandDispatcher.declareCommand(this, 'commitEdit', this.commitEdit);
+               CommandDispatcher.declareCommand(this, 'cancelEdit', this.cancelEdit);
                this._savingDeferred = Deferred.success();
             },
 
