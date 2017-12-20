@@ -1,6 +1,6 @@
 <div class="controls-SubmitPopup__footer">
    <div class="controls-SubmitPopup__buttonContainer">
-      <ws:if data="{{status === 'confirm' || useConfirmButtons}}">
+      <ws:if data="{{useConfirmButton}}">
          <ws:partial
                  ws-autofocus="{{true}}"
                  style="primary"

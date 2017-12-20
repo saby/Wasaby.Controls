@@ -16,9 +16,8 @@
 
       <ws:partial
               template="{{_options.footerTemplate}}"
-              status="{{_options.status}}"
               hasCancelButton="{{_options.hasCancelButton}}"
-              useConfirmButtons="{{_options.useConfirmButton}}"
+              useConfirmButtons="{{_options.status === 'confirm' || _options.useConfirmButton}}"
               positiveButton="{{_options.positiveButton}}"
               negativeButton="{{_options.negativeButton}}"
               cancelButton="{{_options.cancelButton}}"
