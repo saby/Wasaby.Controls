@@ -1,8 +1,6 @@
 define('js!SBIS3.CONTROLS.LongOperationsList',
    [
-      'Core/core-merge',
       'Core/Deferred',
-      'Core/IoC',
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.LongOperations.Entry',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model',
@@ -20,7 +18,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
       'js!SBIS3.CONTROLS.DataGridView'
    ],
 
-   function (coreMerge, Deferred, IoC, CompoundControl, LongOperationEntry, Model, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, FloatArea, dotTplFn) {
+   function (Deferred, CompoundControl, LongOperationEntry, Model, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, FloatArea, dotTplFn) {
       'use strict';
 
       /**
