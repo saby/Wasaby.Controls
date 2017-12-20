@@ -35,16 +35,6 @@ define('js!Controls/Input/resources/SuggestPopupController',
             }
             
             return self._suggestOpener;
-         },
-         
-         showPopup: function(self, options) {
-            if (!self._suggestOpener) {
-               self._suggestOpener = new StickyOpener();
-               self._suggestOpener.subscribe('onResult', function(event, result) {
-                  self._notify('onSelect', result);
-               });
-            }
-            self._suggestOpener.open(options);
          }
       };
       
