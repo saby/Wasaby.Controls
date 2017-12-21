@@ -91,15 +91,17 @@ define('SBIS3.CONTROLS/FieldLink',
        }
 
        function _addOptionsByState(cfg) {
+          var
+             selectedKeysLength = cfg.selectedKeys.length;
           /* Чтобы вёрстка сразу строилась с корректным placeholder'ом, в случае, если там лежит ссылка */
           cfg._selectedMultipleItems = _private.selectedMultipleItems(cfg);
+          cfg._drawHiddenTextBoxField = !cfg.multiselect && selectedKeysLength > 0 && !cfg.alwaysShowTextBox;
        }
 
        var classes = {
           MULTISELECT: 'controls-FieldLink__multiselect',
           SELECTED: 'controls-FieldLink__selected',
           SELECTED_SINGLE: 'controls-FieldLink__selected-single',
-          INPUT_MIN_WIDTH: 'controls-FieldLink__inputMinWidth',
           INVISIBLE: 'ws-invisible'
        };
 
@@ -385,6 +387,12 @@ define('SBIS3.CONTROLS/FieldLink',
             }
           },
 
+          _updateTextBoxVisible: function() {
+             var
+                drawHiddenTextBoxField = !this.getMultiselect() && this.getSelectedKeys().length > 0 && !this._options.alwaysShowTextBox;
+             this._container.find('.controls-TextBox__field').toggleClass('ws-hidden', drawHiddenTextBoxField);
+          },
+
           init: function() {
              FieldLink.superclass.init.apply(this, arguments);
 
@@ -639,9 +647,8 @@ define('SBIS3.CONTROLS/FieldLink',
 
           setMultiselect: function(multiselect) {
              FieldLink.superclass.setMultiselect.apply(this, arguments);
-             this.getContainer()
-                .toggleClass(classes.MULTISELECT, Boolean(multiselect))
-                .toggleClass(classes.INPUT_MIN_WIDTH, Boolean(multiselect || this._options.alwaysShowTextBox));
+             this.getContainer().toggleClass(classes.MULTISELECT, Boolean(multiselect));
+             this._updateTextBoxVisible();
           },
 
           // FIXME костыль, выписана задача:
@@ -737,16 +744,13 @@ define('SBIS3.CONTROLS/FieldLink',
 
              var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments),
                  classesToAdd = ['controls-FieldLink'],
-                 selectedKeysLength, items;
+                 selectedKeysLength, items,
+                 additionalLinksWrapperClasses = '';
 
              selectedKeysLength = cfg.selectedKeys.length;
 
              if(cfg.multiselect) {
                 classesToAdd.push(classes.MULTISELECT);
-             }
-             
-             if(cfg.multiselect || cfg.alwaysShowTextBox) {
-                classesToAdd.push(classes.INPUT_MIN_WIDTH);
              }
 
              if(selectedKeysLength || cfg.selectedKey !== null) {
@@ -769,12 +773,19 @@ define('SBIS3.CONTROLS/FieldLink',
 
              /* className вешаем через modifyOptions,
                 так меньше работы с DOM'ом */
+             cfg.additionalLinksWrapperClasses = additionalLinksWrapperClasses; //todo ????????????????????????????????????????????
              cfg.cssClassName += ' ' + classesToAdd.join(' ');
              _addOptionsFromClass(cfg, attrToMerge);
              _addOptionsByState(cfg);
              return cfg;
           },
-          
+
+          _toggleShowAllButtonState: function(enabled) {
+             this._showAllButton
+                .toggleClass('controls-FieldLink__showAllLinks-disabled', !enabled)
+                .toggleClass('controls-FieldLink__showAllLinks-enabled', enabled);
+          },
+
           _getInputMinWidth: function() {
              var fieldWrapper = this.getContainer().find('.controls-TextBox__wrapper'),
                  afterFieldWrapper = this._getAfterFieldWrapper();
@@ -1095,9 +1106,12 @@ define('SBIS3.CONTROLS/FieldLink',
           _setEnabled: function() {
              this._lastFieldLinkWidth = null;
              if (this._showAllButton) {
-                this._showAllButton.toggleClass('controls-FieldLink__showAllLinks-disabled', !this.isEnabled());
+                this._toggleShowAllButtonState(this.isEnabled());
              }
              this._getAfterFieldWrapper().toggleClass('controls-FieldLink__afterFieldWrapper-disabled', !this.isEnabled());
+             this._container.find('.controls-FieldLink__beforeFieldWrapper')
+                .toggleClass('controls-FieldLink__beforeFieldWrapper-enabled', this.isEnabled())
+                .toggleClass('controls-FieldLink__beforeFieldWrapper-disabled', !this.isEnabled());
              FieldLink.superclass._setEnabled.apply(this, arguments);
           },
 
@@ -1220,9 +1234,9 @@ define('SBIS3.CONTROLS/FieldLink',
              if (!this._showAllButton) {
                 this._showAllButton = $('<div class="controls-FieldLink__showAllLinks">&#133;</div>');
                 this._container.find('.controls-FieldLink__beforeFieldWrapper')
-                   .append(this._showAllButton);
+                   .prepend(this._showAllButton);
              }
-             this._showAllButton.toggleClass('controls-FieldLink__showAllLinks-disabled', !this.isEnabled())
+             this._toggleShowAllButtonState(this.isEnabled());
           },
           _prepareDropAllButton: function() {
              if (!this._dropAllButton) {

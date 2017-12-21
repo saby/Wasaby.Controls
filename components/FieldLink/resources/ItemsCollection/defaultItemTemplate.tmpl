@@ -1,8 +1,8 @@
-<div class="controls-FieldLink__item js-controls-ListView__item controls-ListView__item {{className|orEmpty}}"
+<div class="controls-FieldLink__item js-controls-ListView__item controls-ListView__item {{className|orEmpty}}{{getItemTemplateData(...).additionalItemClasses}}"
      data-hash="{{ projItem.getHash() }}"
      data-id="{{ item.getId() + '' }}"
      style="{{getItemTemplateData(...).orderStyle}}">
-    <span class="controls-FieldLink__item-caption{{getItemTemplateData(...).additionalItemClasses}}" title="{{ needTitle ? item[displayProperty] }}">
+    <span class="controls-FieldLink__item-caption{{getItemTemplateData(...).additionalItemCaptionClasses}}" title="{{ needTitle ? item[displayProperty] }}">
         <ws:partial template="{{itemContent}}" scope="{{...}}"></ws:partial>
     </span>
     <ws:if data="{{getItemTemplateData(...).drawCross}}">
