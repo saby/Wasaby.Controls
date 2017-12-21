@@ -75,6 +75,7 @@ define('js!Controls/Popup/Manager',
          },
 
          getPopupContainer: function(){
+            // временное решение, пока непонятно как Manager должен узнать о контейнере
             if( document && !_popupContainer){
                var element = document.getElementById('popup');
                if( element && element.controlNodes && element.controlNodes.length ){
