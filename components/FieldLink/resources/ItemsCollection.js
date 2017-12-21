@@ -245,6 +245,16 @@ define('SBIS3.CONTROLS/FieldLink/resources/ItemsCollection', [
             };
          },
 
+         _onAlignmentChangeHandler: function(alignment) {
+            FieldLinkItemsCollection.superclass._onAlignmentChangeHandler.apply(this, arguments);
+
+            if (alignment.verticalAlign.side === 'bottom') {
+               this._picker.getContainer().addClass('controls-FieldLink__picker_revert_vertical');
+            } else {
+               this._picker.getContainer().removeClass('controls-FieldLink__picker_revert_vertical');
+            }
+         },
+
          destroy: function() {
             if (this._picker) {
                this._picker.getContainer().off('click');

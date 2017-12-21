@@ -10,7 +10,7 @@
                </div>
             </div>
          </div>
-         <div class="controls-FieldLink__fieldWrapper">
+         <div class="controls-TextBox__fieldWrapper">
             <input class="controls-TextBox__field"/>
             <div class="controls-TextBox__placeholder"> -placeholder- </div>
          </div>
@@ -23,18 +23,28 @@
 */
 
 /* ------------------------------------------------------------------------------------------------------------------
+   ------------------------------------ controls-FieldLink__flexWrapper --------------------------------------
+   ------------------------------------------------------------------------------------------------------------------ */
+.controls-FieldLink__flexWrapper {
+   .inline-flexbox();
+   .align-items(baseline);
+   width: 100%;
+   height: 100%;
+}
+
+/* ------------------------------------------------------------------------------------------------------------------
    ------------------------------------ controls-FieldLink__beforeFieldWrapper --------------------------------------
    ------------------------------------------------------------------------------------------------------------------ */
 .controls-FieldLink__beforeFieldWrapper {
    .inline-flexbox();
+   .align-items(baseline);
    .flex-shrink(0);
-   .flex-grow(1);
    overflow: hidden;
 }
 // todo Нужно переделать верстку и расчёты поля связи в соответствии с демо: http://jsfiddle.net/alex111089/q0ztd41n/
 // тогда будет полноценная flex-верстка и данные стили можно будет убрать
 .controls-FieldLink__beforeFieldWrapper-enabled {
-   max-width: ~'calc(100% - '@fieldLink-linkItem-cross-width~')';
+   max-width: ~'calc(100% - '@width_FieldLink-item-cross~')';
 }
 .controls-FieldLink__beforeFieldWrapper-disabled {
    max-width: 100%;
@@ -45,6 +55,7 @@
 .controls-FieldLink__itemsCollection {
    .inline-flexbox();
    .justify-content(flex-end);
+   .align-items(baseline);
    width: 100%;
    height: 100%;
    min-width: 0;
@@ -58,7 +69,7 @@
 .controls-FieldLink__item {
    .flex-shrink(0);
    .inline-flexbox();
-   .align-items(center);
+   .align-items(baseline);
    cursor: default;
 }
 .controls-FieldLink__item-single {
@@ -66,8 +77,8 @@
    max-width: 100%;
 }
 .controls-FieldLink__item-inField {
-   .box-sizing();
-   padding: 0 @default-padding 0 0;
+   box-sizing: border-box;
+   padding: 0 @spacing_FieldLink-item_inField 0 0;
    height: 100%;
 }
 .controls-FieldLink__item-caption {
@@ -77,7 +88,7 @@
    max-width: 100%;
 }
 .controls-FieldLink__item-caption__normal {
-   font-size: @default-text-size;
+   font-size: @font-size_FieldLink-item-caption_normal;
 }
 .controls-FieldLink__item-caption__underlined:hover {
    text-decoration: underline;
@@ -87,61 +98,48 @@
    font-weight: bold;
 }
 .controls-FieldLink__item-caption__big {
-   font-size: @large-text-size;
+   font-size: @font-size_FieldLink-item-caption_big;
    font-weight: bold;
-   color: @accent-color;
-   height: @fieldLink-item-big-height;
-}
-/* ------------------------------------------------------------------------------------------------------------------
-   --------------------------------------- controls-FieldLink__fieldWrapper -----------------------------------------
-   ------------------------------------------------------------------------------------------------------------------ */
-.controls-FieldLink__fieldWrapper { // Placeholder has position:absolute and this is container for positing him
-   .flex-shrink(1);
-   .flexbox();
-   position: relative;
-   width: 100%;
-   height: 100%;
-   text-decoration: inherit;
+   color: @color_FieldLink-item-caption_big;
 }
 /* ------------------------------------------------------------------------------------------------------------------
    ------------------------------------ controls-FieldLink__afterfieldWrapper ---------------------------------------
    ------------------------------------------------------------------------------------------------------------------ */
 .controls-FieldLink__afterFieldWrapper {
-   .align-items(center);
-   width: auto;
+   .inline-flexbox();
+   .flex-shrink(0);
 }
 .controls-FieldLink__dropAllLinks {
-   color: @fieldLink-button-color;
+   color: @color_FieldLink_dropAllLinks;
 }
 .controls-FieldLink__dropAllLinks, .controls-FieldLink__showSelector {
-   margin-right: @default-padding;
+   margin: 0 @spacing_FieldLink-dropAllLinks 0 0;
 }
 .controls-FieldLink__button {
-   .icon-size-without-important(@fieldLink-icon-size);
+   .icon-size-without-important(@icon-size_FieldLink-button);
    cursor: pointer;
 }
 .controls-FieldLink__showSelector-button {
-   color: @fieldLink-showSelector-button-color;
+   color: @color_FieldLink-showSelectorButton;
    &:hover {
-      color: @fieldLink-showSelector-button-color-hover;
+      color: @color_FieldLink-showSelectorButton_hovered;
    }
 }
 .controls-FieldLink__showAllLinks {
-   position: relative;
-   line-height: @text-box-line-height;
    cursor: pointer;
-   color: @link-text-color;
+   color: @color_FieldLink-showAllLinks;
    .flex-shrink(0);
    &:hover {
       text-decoration: underline;
-      color: @link-hover-text-color;
+      color: @color_FieldLink-showAllLinks_hovered;
    }
 }
-.controls-FieldLink_showAllLinks-enabled {
-   padding-right: @default-padding;
+.controls-FieldLink__showAllLinks-enabled {
+   padding: 0 @spacing_FieldLink-showAllLinks_enabled 0 0;
 }
 .controls-FieldLink__showAllLinks-disabled {
-   background: @default-bg-color;
+   background: @background_FieldLink-showAllLinks_disabled;
+   position: relative; //todo: тени нет в стандарте, так что всё это не нужно
    &:after {
       content: '';
       position: absolute;
@@ -157,33 +155,24 @@
    ----------------------------------------- controls-FieldLink__picker ---------------------------------------------
    ------------------------------------------------------------------------------------------------------------------ */
 .controls-FieldLink__picker {
-   max-height: @fieldLink-picker-max-height;
-   min-height: @fieldLink-picker-min-height;
-   border: @fieldLink-border @gray-ccc-color;
+   max-height: @max-height_FieldLink-picker;
+   min-height: @min-height_FieldLink-picker;
+   border: @border-width_FieldLink-picker solid @border-color_FieldLink_picker;
    box-sizing: border-box;
    margin-top: 0;
    overflow: auto;
-   padding: @fieldLink-linkContainer-padding;
+   padding: @spacing_FieldLink-linkContainer;
    border-top: none;
    .flexbox();
    .flex-wrap(wrap);
 }
-.controls-FieldLink__item-inPicker {
-   width: 50%;
-   line-height: @fieldLink-linkItem-line-height;
-   height: auto;
-}
-// todo Обсудить вложенность, побороть можно, но сложно
-.controls-FieldLink__withPicker.controls-Picker__show {
-   background: @fieldLink-picker-show-color;
-   color: @fieldLink-picker-show-field-color
-}
-// todo Обсудить вложенность, побороть можно, но сложно
-.controls-FieldLink__picker.controls-popup-revert-vertical {
-   border-top: @fieldLink-border @gray-ccc-color;
+//При открытии пикера не должно показываться 2 границы (от пикера и от текстбокса), так что при открытии вверх не рисуем
+//нижнюю границу, а при открытии вниз - верхнюю
+.controls-FieldLink__picker_revert_vertical {
+   border-top: @border-width_FieldLink-picker solid @border-color_FieldLink_picker;
    border-bottom: none;
 }
-// todo нужно удалить этот модификатор
-.controls-FieldLink__hiddenIfEmpty.ws-disabled:not(.controls-FieldLink__selected) {
-   display: none;
+.controls-FieldLink__item-inPicker {
+   width: 50%;
+   height: auto;
 }
