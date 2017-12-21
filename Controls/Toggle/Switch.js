@@ -41,6 +41,12 @@ define('js!Controls/Toggle/Switch', [
 
       notifyChangeValue: function (self) {
          self._notify('changeValue', !self._options.value);
+      },
+
+      checkNumberOfCaptions: function(options){
+         if (options.captions.length > 2) {
+            throw new Error ('You cannot set more than 2 captions.')
+         }
       }
    };
 
@@ -50,14 +56,12 @@ define('js!Controls/Toggle/Switch', [
 
       constructor: function (options) {
          Switch.superclass.constructor.apply(this, arguments);
-         if (options.captions.length > 2) {
-            throw new Error ('You cannot set more than 2 captions.')
-         }
+         _private.checkNumberOfCaptions(options);
       },
 
       _clickTextHandler: function (e, clickedElement) {
          if (this._isDouble()) {
-            _private.doubleSwitcherClickHandler(this,clickedElement);
+            _private.doubleSwitcherClickHandler(this, clickedElement);
          }
          else{
             _private.singleSwitcherClickHandler(this);
@@ -70,6 +74,10 @@ define('js!Controls/Toggle/Switch', [
 
       _isDouble: function() {
          return this._options.captions.length === 2;
+      },
+
+      _beforeUpdate: function (newOptions) {
+         _private.checkNumberOfCaptions(newOptions);
       }
    });
 
