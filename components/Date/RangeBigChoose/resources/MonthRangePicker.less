@@ -59,9 +59,6 @@
    }
 
    // Стили для календаря
-   table {
-      border-collapse: collapse;
-   }
 
    .controls-MonthView__caption-text {
       height: @date-range-big-choose-month-range-picker-caption-height; // 20?
@@ -72,6 +69,7 @@
 
    .controls-MonthView__dayTable {
       border: 1px solid transparent;
+      border-collapse: collapse;
       &:hover {
          border: @date-range-big-choose-month-range-picker-month-hovered-border;
       }
@@ -87,34 +85,40 @@
       padding: 0;
       text-align: center;
       background: transparent;
-      * {
-         padding: 0;
-      }
+   }
 
-      &.controls-RangeSelectable__item {
-         cursor: pointer;
+   .controls-RangeSelectable__item {
+      cursor: pointer;
+   }
+
+   .controls-MonthView__textColor-disabled-currentMonthDay-notWeekend {
+      color: @date-range-big-choose-month-range-picker-color;
+   }
+
+   .controls-MonthView__dayBorder,
+   .controls-MonthView__dayTitle {
+      padding: 0;
+   }
+
+   .controls-MonthView__weekend {
+      color: @date-range-big-choose-month-range-picker-weekend-color;
+   }
+
+   .controls-MonthView__today {
+      border: 1px solid @date-range-big-choose-month-range-picker-today-border-color;
+   }
+
+   .controls-RangeSelectable__item-selected {
+      color: @date-range-big-choose-month-range-picker-color;
+      background: @date-range-big-choose-month-range-picker-bg-selected;
+
+      &:hover {
+         color: @date-range-big-choose-month-range-picker-color;
+         background: @date-range-big-choose-month-range-picker-bg-selected;
       }
 
       &.controls-MonthView__weekend {
          color: @date-range-big-choose-month-range-picker-weekend-color;
-      }
-
-      &.controls-MonthView__today {
-         border: 1px solid @date-range-big-choose-month-range-picker-today-border-color;
-      }
-
-      &.controls-RangeSelectable__item-selected {
-         color: @date-range-big-choose-month-range-picker-color;
-         background: @date-range-big-choose-month-range-picker-bg-selected;
-
-         &:hover {
-            color: @date-range-big-choose-month-range-picker-color;
-            background: @date-range-big-choose-month-range-picker-bg-selected;
-         }
-
-         &.controls-MonthView__weekend {
-            color: @date-range-big-choose-month-range-picker-weekend-color;
-         }
       }
    }
 }
