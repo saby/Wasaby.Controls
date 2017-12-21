@@ -505,6 +505,16 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
          }
       },
 
+      _onAfterBeginEdit: function() {
+         TreeDataGridView.superclass._onAfterBeginEdit.apply(this, arguments);
+         this._updateEditArrow();
+      },
+
+      _onAfterEndEdit: function() {
+         TreeDataGridView.superclass._onAfterEndEdit.apply(this, arguments);
+         this._updateEditArrow();
+      },
+
       _updateEditArrow: function() {
          if(this._options.editArrow || this._options.arrowActivatedHandler) {
             if(this._hasHoveredItem()) {
