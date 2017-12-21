@@ -39,7 +39,7 @@ define('js!Controls/Popup/Opener/Base',
          },
 
          getStrategy: function(){
-            return null;
+            throw new Error('Method getStrategy must be implemented');
          }
       });
       return Base
