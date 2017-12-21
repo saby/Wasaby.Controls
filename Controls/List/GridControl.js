@@ -3,12 +3,11 @@ define('js!Controls/List/GridControl', [
 ], function (Control) {
 
    /**
-    * Табличное представление данных
+    * Компонент плоского списка, отображаемого в виде таблицы. Обладает возможностью загрузки/подгрузки данных из источника.
     *
     * @class Controls/List/GridControl
     * @extends Controls/Control
-    * @mixes Controls/interface/IItems
-    * @mixes Controls/interface/IDataSource
+    * @mixes Controls/interface/ISource
     * @mixes Controls/interface/ISingleSelectable
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedView

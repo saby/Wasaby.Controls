@@ -1,9 +1,9 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
-   'js!SBIS3.CONTROLS.ListView.DragMove',
-   'js!SBIS3.CONTROLS.DragEntity.List',
-   'js!SBIS3.CONTROLS.DragObject',
-   'js!SBIS3.CONTROLS.ListView',
+   'SBIS3.CONTROLS/ListView/resources/DragMove/DragMove',
+   'SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/List',
+   'SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragObject',
+   'SBIS3.CONTROLS/ListView',
    'WS.Data/Collection/RecordSet',
    'Core/core-instance',
    'WS.Data/Display/Tree'
@@ -134,7 +134,7 @@ define([
          });
          it('should create drag list', function () {
             dragMove.beginDrag();
-            assert.isTrue(cInstance.instanceOfModule(DragObject.getSource(), 'SBIS3.CONTROLS.DragEntity.List'));
+            assert.isTrue(cInstance.instanceOfModule(DragObject.getSource(), 'SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/List'));
          });
          it('should be return the view from source owner', function () {
             view.setSelectedKeys([1,2]);
@@ -171,7 +171,7 @@ define([
          it('should set target', function () {
             dragMove.updateTarget();
             var target = DragObject.getTarget();
-            assert.isTrue(cInstance.instanceOfModule(target, 'SBIS3.CONTROLS.DragEntity.Row'));
+            assert.isTrue(cInstance.instanceOfModule(target, 'SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row'));
             assert.equal(target.getModel().getId(), 1);
          });
          it('should not set target', function () {

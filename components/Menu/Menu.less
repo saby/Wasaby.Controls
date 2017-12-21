@@ -24,9 +24,6 @@
       box-sizing: border-box;
       padding: @menu-header-padding;
       .flex-shrink(0);
-      .icon-16, .icon-small, .icon-24, .icon-medium, .icon-large {
-         padding-right: @menu-header-icon-padding;
-      }
    }
    .controls-MenuItem {
       min-height: @menu-item-height;
@@ -132,9 +129,6 @@
          color: @popup-header-caption-color;
          .flex-shrink(0);
       }
-      .controls-Menu__header-icon + .controls-Menu__header-caption{
-         padding-left: 0;
-      }
    }
    .controls-Menu__header {
       height: @menu-header-height;
@@ -144,6 +138,13 @@
          display: none;
       }
    }
+}
+
+.controls-Menu__header-icon + .controls-Menu__header-caption{
+   padding-left: @menu-header-icon-padding;
+}
+.controls-Menu__header-icon + .controls-Menu__header-caption:empty{
+   padding-left: 0;
 }
 
 .controls-Menu__separator {
