@@ -75,6 +75,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Entry',
          resultHandler: 'string',
          resultHandlerArgs: ['string', 'object'],
          useResult: 'boolean',
+         custom: 'object',
          extra: 'object',
          notification: 'string'//TODO: Поменять на progressMessage
       };
