@@ -325,8 +325,7 @@ define('SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
           recalculatePosition: function() {
              var parentContainer = this.getParent().getContainer()[0],
                  targetContainer = this._currentTarget.container[0],
-                 parentCords = parentContainer.getBoundingClientRect(),
-                 targetCords;
+                 targetCords, parentCords;
 
              /* Событие onMove из трэкера стреляет и при удалении элемента из DOM'a,
                 надо проверить на наличине элемента, а то получим неверные расчёты, а в худшем случае(ie) браузер падает */
@@ -334,17 +333,34 @@ define('SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
                 this._untrackingTarget();
                 return;
              }
-
-             targetCords = targetContainer.getBoundingClientRect();
-             this._currentTarget.position =  {
-                top: Math.floor(targetCords.top - parentCords.top + parentContainer.scrollTop),
-                left: targetCords.left - parentCords.left
-             };
-             this._currentTarget.size = {
-                height: targetContainer.offsetHeight,
-                width: targetContainer.offsetWidth
-             };
-             this._setPosition(this._getPosition(this._currentTarget));
+   
+             if (this._options.itemsActionsInItemContainer) {
+                this._setToolbarTarget(this._currentTarget.container);
+             } else {
+                parentCords = parentContainer.getBoundingClientRect();
+                targetCords = targetContainer.getBoundingClientRect();
+                this._currentTarget.position = {
+                   top: Math.floor(targetCords.top - parentCords.top + parentContainer.scrollTop),
+                   left: targetCords.left - parentCords.left
+                };
+                this._currentTarget.size = {
+                   height: targetContainer.offsetHeight,
+                   width: targetContainer.offsetWidth
+                };
+                this._setPosition(this._getPosition(this._currentTarget));
+             }
+          },
+   
+          _setToolbarTarget: function(target) {
+             var toolbarElement;
+      
+             if (target[0].nodeName === 'TR') {
+                toolbarElement = target.children().last();
+             } else {
+                toolbarElement = target;
+             }
+      
+             this.getContainer().appendTo(toolbarElement);
           },
           /**
            * Устанавливает позицию тулбара
@@ -438,7 +454,12 @@ define('SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
                    }
 
                    this.getContainer().removeClass('ws-hidden');
-                   this._setPosition(this._getPosition(target));
+                   
+                   if (this._options.itemsActionsInItemContainer) {
+                      this._setToolbarTarget(target.container);
+                   } else {
+                      this._setPosition(this._getPosition(target));
+                   }
 
                    this._isVisible = true;
                    //Если режим touch, то отображаем тулбар с анимацией.
