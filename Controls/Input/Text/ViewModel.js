@@ -1,7 +1,7 @@
 define('Controls/Input/Text/ViewModel',
    [
       'Core/core-simpleExtend',
-      'Controls/Input/resources/Helper'
+      'Controls/Input/resources/InputHelper'
    ],
    function (
       simpleExtend,

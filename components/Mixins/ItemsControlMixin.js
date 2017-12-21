@@ -129,10 +129,16 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
       return !isEmpty(cfg.groupBy) && (cfg._itemsProjection.getSort().length === 0 || !projItem || !projItem.isNode || !projItem.isNode());
    },
 
+   getGroupTemplate = function(cfg) {
+      return cfg._groupTemplate;
+   },
+
    groupItemProcessing = function(groupId, records, item, cfg, groupHash) {
       if (cfg._canApplyGrouping(item, cfg)) {
-         var groupBy = cfg.groupBy;
-         if (cfg._groupTemplate) {
+         var
+            groupBy = cfg.groupBy,
+            groupTemplate = cfg._getGroupTemplate(cfg);
+         if (groupTemplate) {
             var
                tplOptions = {
                   columns : coreClone(cfg.columns || []),
@@ -146,15 +152,11 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
                   groupId: groupId,
                   groupHash: groupHash,
                   groupCollapsing: cfg._groupCollapsing
-               },
-               groupTemplateFnc;
+               };
             tplOptions.colspan = tplOptions.columns.length + cfg.multiselect;
 
-
-            groupTemplateFnc = TemplateUtil.prepareTemplate(cfg._groupTemplate);
-
             records.push({
-               tpl: groupTemplateFnc,
+               tpl: TemplateUtil.prepareTemplate(groupTemplate),
                data: tplOptions
             })
          }
@@ -372,6 +374,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
          _dataSource: undefined,
          _revivePackageParams: {},
          _options: {
+            _getGroupTemplate: getGroupTemplate,
             _groupCollapsing: {},
             _itemsTemplate: ItemsTemplate,
             _propertyValueGetter: getPropertyValue,
@@ -1914,7 +1917,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
        * @returns {*|Boolean}
        */
       isLoading: function(){
-         return this._loader && !this._loader.isReady();
+         return this._loader && !this._loader.isReady(true);
       },
       //TODO Сделать публичным? вроде так всем захочется делать
       /**

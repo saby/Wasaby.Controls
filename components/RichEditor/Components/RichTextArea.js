@@ -1282,7 +1282,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
          /*БЛОК ПРИВАТНЫХ МЕТОДОВ*/
          _updateTextByTiny: function () {
-            this._setTrimmedText(this._getTinyEditorValue());
+            // Только если редактор уже есть и уже готов
+            // 1174825882 https://online.sbis.ru/opendoc.html?guid=f5b2e544-7960-45f3-b32e-082bbe50f52c
+            if (this._tinyEditor && this._tinyEditor.initialized && this.isEnabled()) {
+               this._setTrimmedText(this._getTinyEditorValue());
+            }
          },
 
          _setTrimmedText: function(text) {
@@ -2224,7 +2228,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           * Данный метод это метод getContent TinyMce без предсобытий вызываемых в нём
           * @returns {*} Текущее значение (в формате html-кода)
           */
-         _getTinyEditorValue: function(){
+         _getTinyEditorValue: function () {
             var
                content = this._tinyEditor.getContent({no_events: true}),
                args = this._tinyEditor.fire('PostProcess', {content: content});

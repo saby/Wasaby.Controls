@@ -272,7 +272,11 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
         },
 
         getFrequent: function (self) {
-            var frequentItems = [],
+            var frequentItems = new RecordSet({
+                    adapter: new SbisAdapter(),
+                    idProperty: 'historyId',
+                    format: self._oldItems.getFormat().clone()
+            }),
                 items = [];
 
             items = _private.filterFrequent(self);
@@ -283,7 +287,11 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
         },
 
         getRecent: function (self) {
-            var recentItems = [],
+            var recentItems = new RecordSet({
+                    adapter: new SbisAdapter(),
+                    idProperty: 'historyId',
+                    format: self._oldItems.getFormat().clone()
+                }),
                 items = [];
 
             items = _private.filterRecent(self);
