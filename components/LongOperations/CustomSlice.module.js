@@ -161,7 +161,7 @@ define('js!SBIS3.CONTROLS.LongOperations.CustomSlice',
        * @return {boolean}
        */
       var _isSatisfied = function (condition, value) {
-         var custom = value && value.extra ? value.extra.custom : null;
+         var custom = value ? value.custom : null;
          return !!custom && Object.keys(condition).every(function (name) { return condition[name] === custom[name]; });
       };
 

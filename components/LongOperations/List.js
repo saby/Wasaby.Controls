@@ -200,9 +200,9 @@ define('SBIS3.CONTROLS/LongOperations/List',
             var actions = {};
             if (model) {
                var STATUSES = LongOperationEntry.STATUSES;
-               var extra = model.get('extra');
-               if (extra && extra.custom) {
-                  var inf = extra.custom.actions;
+               var custom = model.get('custom');
+               if (custom) {
+                  var inf = custom.actions;
                   if (inf && typeof inf == 'object') {
                      for (var action in inf) {
                         if (inf[action] && typeof inf[action] === 'string') {
@@ -376,9 +376,9 @@ define('SBIS3.CONTROLS/LongOperations/List',
                   isAllow = model.get('canDelete');
                   break;
                default:
-                  var extra = model.get('extra');
-                  if (extra && extra.custom) {
-                     var inf = extra.custom.actions;
+                  var custom = model.get('custom');
+                  if (custom) {
+                     var inf = custom.actions;
                      if (inf && typeof inf == 'object' && inf[action] && typeof inf[action] === 'string') {
                         customAction = inf[action];
                         isAllow = true;

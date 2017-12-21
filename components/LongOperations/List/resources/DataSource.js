@@ -138,7 +138,7 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
                var items = recordSet.getRawData();
                if (hasCustomConditions && items.length) {
                   items = items.filter(function (operation) {
-                     var custom = operation.extra ? operation.extra.custom : null;
+                     var custom = operation.custom;
                      return !custom || !customConditions.some(function (cond) { return Object.keys(cond).every(function (name) { return cond[name] === custom[name]; }); });
                   });
                   if (0 < limit && !options.offset) {
