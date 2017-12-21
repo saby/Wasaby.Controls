@@ -217,13 +217,12 @@ body {
   }
 }
 body {
+  //todo: переписать окна на important
   .ws-window-titlebar {
     background-color: #39506A !important;
   }
   .ws-window-content {
     background-color: #273749;
-  }
-  .ws-window-content{
     padding: round(11px * @multiplier) round(8px * @multiplier);
     border-width: @default-border-width;
     border-style: solid;
@@ -232,9 +231,21 @@ body {
   }
   .ws-window {
     .box-shadow(@controls-panel-shadow);
-    border: none;
+    border: none !important;
   }
   .ws-window-title {
     color: #FFCC99;
+  }
+}
+//Простите меня за эти строки кода, я не хотел, меня заставили
+.controls__filterButton {
+  .controls__filterButton-button {
+    .close-button-mixin();
+    &:before {
+      content: '';
+    }
+    .icon-size {
+      color: #E4E4E4 !important;
+    }
   }
 }

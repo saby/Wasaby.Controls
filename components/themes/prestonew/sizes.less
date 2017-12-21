@@ -106,7 +106,6 @@
 @controls-SubmitPopup-button-mini-min-width:             150px;//todo: stepin
 //dd-list
 @DropdownList-picker-menu-font-size:                     @default-text-size;//todo: krasilnikov
-@DropdownList-picker-fastdatafilter-offset:              0 0 0 2px;//todo: krasilnikov
 @DropdownList-picker-margin-top:                         0;//todo: krasilnikov
 @DropdownList-picker-border:                             0;//todo: krasilnikov
 @DropdownList-picker-padding:                            0;//todo: krasilnikov
@@ -474,9 +473,8 @@
 @controls-filterButton-button-width:	   @default-height;
 @controls-filterButton-height:            @default-height;
 @controls-filterButton-button-height:		round(84px * @multiplier);
-@controls-filterButton-button-height:		round(84px * @multiplier);
 @controls-Popup-closeButton-top:          8px;
-@controls-filterButton-picker-close-top:  round(8px * @multiplier);
+@controls-filterButton-picker-close-top:  @top_window_button;
 @controls-filterButton-button-margin:     0;
 @controls-filterButton-button-verSide-margin: 0px;
 @controls-filterButton-button-empty-left-margin:   0px;
@@ -490,6 +488,7 @@
 @controls-filterButton-area-content-margin:0 round(8px * @multiplier) round(24px * @multiplier) round(24px * @multiplier);
 @controls-filterButton-line-height:       round(31px * @multiplier);
 @controls-filterButton-filterLine-margin: 0;
+@size_FilterButton_icon:                  @default-icon-size-large;
 //FieldLink
 @fieldLink-linkItem-cross-width:    @default-height;
 @fieldLink-afterField-button-margin:      0;
