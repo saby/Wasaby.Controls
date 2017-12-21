@@ -97,15 +97,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
       InputRender.getDefaultOptions = function() {
          return {
             value: '',
-            selectOnClick: false,
-            viewModel: {
-               prepareData: function(splitValue) {
-                  return {
-                     value: splitValue.before + splitValue.insert + splitValue.after,
-                     position: splitValue.before.length + splitValue.insert.length
-                  }
-               }
-            }
+            selectOnClick: false
          };
       };
 
