@@ -81,39 +81,55 @@ define('js!SBIS3.CONTROLS.LongOperations.CustomSlice',
          /**
           * Подписаться на получение события (только о тех длительных операциях, которые соответствуют условию выборки)
           * @public
-          * @param {string} eventType Тип события
+          * @param {string} eventType Тип события(ий)
           * @param {function} listener Обработчик события
           */
          subscribe: function (eventType, listener) {
-            var list = this._listeners[eventType];
-            (this._listeners[eventType] = list = list || []).push(listener);
-            if (!list) {
-               manager.subscribe(eventType, this._onEvent = this._onEvent || _onEvent.bind(null, this));
+            if (!eventType || typeof eventType !== 'string') {
+               throw new TypeError('None empty "eventType" required');
             }
+            if (typeof listener !== 'function') {
+               throw new TypeError('Function "listener" required');
+            }
+            eventType.split(/[\s]+/gi).forEach(function (evtType) {
+               var list = this._listeners[evtType];
+               (this._listeners[evtType] = list = list || []).push(listener);
+               if (!list) {
+                  manager.subscribe(evtType, this._onEvent = this._onEvent || _onEvent.bind(null, this));
+               }
+            }.bind(this));
          },
 
          /**
           * Отписаться от получения события (только о тех длительных операциях, которые соответствуют условию выборки)
           * @public
-          * @param {string} eventType Тип события
+          * @param {string} eventType Тип события(ий)
           * @param {function} listener Обработчик события
           */
          unsubscribe: function (eventType, listener) {
-            var list = this._listeners[eventType];
-            var i = -1;
-            if (list) {
-               i = list.indexOf(listener);
+            if (!eventType || typeof eventType !== 'string') {
+               throw new TypeError('None empty "eventType" required');
             }
-            if (i === -1) {
-               throw new Error('Unknown listener');
+            if (typeof listener !== 'function') {
+               throw new TypeError('Function "listener" required');
             }
-            if (1 < list.length) {
-               list.splice(listener, 1);
-            }
-            else {
-               delete this._listeners[eventType];
-               manager.unsubscribe(eventType, this._onEvent);
-            }
+            eventType.split(/[\s]+/gi).forEach(function (evtType) {
+               var list = this._listeners[evtType];
+               var i = -1;
+               if (list) {
+                  i = list.indexOf(listener);
+               }
+               if (i === -1) {
+                  throw new Error('Unknown listener');
+               }
+               if (1 < list.length) {
+                  list.splice(listener, 1);
+               }
+               else {
+                  delete this._listeners[evtType];
+                  manager.unsubscribe(evtType, this._onEvent);
+               }
+            }.bind(this));
          },
 
          /**
