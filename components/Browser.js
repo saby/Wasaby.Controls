@@ -74,8 +74,8 @@ define('SBIS3.CONTROLS/Browser', [
       /**
        * @event onColumnsChange Происходит при изменении колонок в табличном представлении.
        * @param {Core/EventObject} eventObject Дескриптор события.
-       * @param {Array} columns Массив измененных колонок.
-       * @returns {onColumnsChangeResult} Позволяет определить, что выполнять после установки колонок - перерисовку или перезагрузку.
+       * @param {Array} columns Массив идентификаторов измененных колонок.
+       * @returns {onColumnsChangeResult} Позволяет управлять тем, что выполнять после установки колонок - перерисовку или перезагрузку.
        */
       /**
        * @typedef {Object} ColumnsConfigObject
@@ -85,9 +85,11 @@ define('SBIS3.CONTROLS/Browser', [
        *    <li><b>id (String)</b> - идентификатор элемента.</li>
        *    <li><b>title (String)</b> - отображаемый текст элемента.</li>
        *    <li><b>fixed (Boolean)</b> - признак "Фиксированный". На панели редактирования колонок элементы с таким признаком выбраны и недоступны для взаимодействия, а колонки элемента, описанные в опции **columnConfig**, всегда отображены в списке.</li>
-       *    <li><b>columnConfig (Array)</b> - массив с конфигурацией колонок (см. {@link SBIS3.CONTROLS/DataGridView#columns columns}).</li>
+       *    <li><b>group (string|number)</b> - идентификатор группы колонок, в которую входит данная колонка (если определён)</li>
+       *    <li><b>columnConfig (object)</b> - объект с конфигурацией данныой колонки (см. {@link SBIS3.CONTROLS/DataGridVie#columns columns}).</li>
        * </ol>
-       * @property {Array.<String|Number>} selectedColumns Массив идентификаторов элементов, которые будут отмечены на панели редактирования колонок. Параметр актуален для элементов с опцией *fixed=false*.
+       * @property {Array.<String|Number>} selectedColumns Список идентификаторов колонок, которые будут отмечены на панели редактирования колонок. Параметр актуален для элементов с опцией *fixed=false*.
+       * @property {object} groupTitles Ассоциированый массив имён групп по их идентификаторам (опционально)
        */
       _dotTplFn : dotTplFn,
       $protected: {
@@ -194,9 +196,10 @@ define('SBIS3.CONTROLS/Browser', [
              *        {
              *           id: 1,
              *           title: 'Базовая группа колонок',
-             *
              *           // Признак "Фиксированный"
              *           fixed: true,
+             *           // Идентификатор группы колонок (если есть)
+             *           group: 'Base1'
              *           columnConfig: [
              *              {
              *                 title: 'Идентификатор',
@@ -208,17 +211,18 @@ define('SBIS3.CONTROLS/Browser', [
              *                 className: 'controls-DataGridView-cell-overflow-ellipsis'
              *              }
              *           ]
-             *       },
-             *       {
-             *          id: 2,
-             *          title: 'Колонка "Дата выпуска"',
-             *          fixed: false,
-             *          columnConfig: [{
+             *        },
+             *        {
+             *           id: 2,
+             *           title: 'Колонка "Дата выпуска"',
+             *           fixed: false,
+             *           group: 'Base1'
+             *           columnConfig: [{
              *              title: 'Дата выпуска',
              *              field: 'Дата_выпуска'
-             *          }]
-             *       },
-             *       ...
+             *           }]
+             *        },
+             *        ...
              *    ];
              *    return new RecordSet({
              *       rawData: data,
@@ -234,9 +238,10 @@ define('SBIS3.CONTROLS/Browser', [
              *       _options : {
              *
              *          // Создана опция для конфигурации опции columnsConfig
-             *          _columnsConfig: {
+             *          columnsConfig: {
              *             columns: myConfig,
-             *             selectedColumns: [2, 3]
+             *             selectedColumns: [2, 3],
+             *             groupTitles: {'Base1':'Основные параметры'}
              *          }
              *       }
              *    }
@@ -245,12 +250,33 @@ define('SBIS3.CONTROLS/Browser', [
              * </pre>
              * 3. В разметке реестра передана конфигурация в опцию columnsConfig:
              * <pre>
-             *     <ws:SBIS3.Engine.ReportBrowser columnsConfig="{{ _columnsConfig }}">
+             *     <ws:SBIS3.Engine.ReportBrowser columnsConfig="{{ columnsConfig }}">
              *         ...
              *     </ws:SBIS3.Engine.ReportBrowser>
              * </pre>
+             * Для редактирования набора колонок (в том числе отличных от набора колонок данного браузера) используется команда showColumnsEditor (из любых подкомпонентов браузера)
+             * <pre>
+             *    this.sendCommand('showColumnsEditor', {
+             *       editorOptions: {
+             *          moveColumns:true
+             *       }
+             *    })
+             *    .addCallbacks(
+             *       function (columnsConfig) {
+             *          // Получена новая конфигурация колонок - сделать с нею то, что требуется
+             *          var columns = columnsConfig.columns;
+             *          var selected = columnsConfig.selectedColumns;
+             *          ...
+             *       },
+             *       function (err) {
+             *          // Обработать ошибку
+             *       }
+             *    );
+             * </pre>
              * @see setColumnsConfig
              * @see getColumnsConfig
+             * @see showColumnsEditor
+             * @see _showColumnsEditor
              */
             columnsConfig: null,
             /**
@@ -279,19 +305,68 @@ define('SBIS3.CONTROLS/Browser', [
          this._bindView();
 
          /**
-          * Показать редактор колонок. Возвращает обещание, которое будет разрешено объектом конфигурации колонок
+          * Показать редактор колонок.
+          *
+          * По этой команде открывется редактор колонок, где пользователь может отредактировать указанный в аргументах команды набор колонок. Команда
+          * используется в любых компонентах, являющихся потомками браузера (или его наследников) по по дереву компонентов. Команда всплывает по
+          * дереву компонентов от родителья к родителю до ближайшего браузера (или его наследника).
+          *
+          * В аргументах комады может быить указан произвольный набор колонок для редактирования. Если никакой набор колонок в аргументах команды не
+          * указан, то будет использован текущий набор колонок браузера. Если у браузера на этот момент не определён допустимый columnsConfig, то
+          * возникнет ошибка.
+          *
+          * Команда возвращает обещание. По окончании редактирования пользователем результирующий набор колонок будет использован
+          * для разрешения обещания, которое было возвращено командой при вызове. Если в аргументах команды указано значение applyToSelf===true,
+          * то результат редактирования будет применён к данному браузеру (при этом значение columnsConfig.columns браузера останется неизменным). В
+          * этом случае никаких доплнительных действий с результирующими колонками не требуется.
+          *
+          * Простой пример использования команды:
+          * <pre>
+          *    this.sendCommand('showColumnsEditor', {
+             *       editorOptions: {
+             *          moveColumns:true
+             *       }
+             *    })
+          *    .addCallbacks(
+          *       function (columnsConfig) {
+             *          // Получена новая конфигурация колонок - сделать с нею то, что требуется
+             *          var columns = columnsConfig.columns;
+             *          var selected = columnsConfig.selectedColumns;
+             *          ...
+             *       },
+          *       function (err) {
+             *          // Обработать ошибку
+             *       }
+          *    );
+          * </pre>
+
           * @command showColumnsEditor
           * @see _showColumnsEditor
+          * @see columnsConfig
+          * @see setColumnsConfig
+          * @see getColumnsConfig
           */
          CommandDispatcher.declareCommand(this, 'showColumnsEditor', this._showColumnsEditor);
       },
 
       /**
-       * Устанавливает параметры для Панели конфигурации колонок списка.
-       * @param config {Object} Конфигурация
+       * Устанавливает параметры конфигурации колонок
+       * @public
+       * @param {object} config Параметры конфигурации колонок
+       * @param {WS.Data/Collection/RecordSet} config.columns Набор колонок (обязательный)
+       * @param {(string|number)[]} config.selectedColumns Список идентификаторов выбранных колонок (обязательный)
+       * @param {object} [config.groupTitles] Ассоциированый массив имён групп по их идентификаторам (опционально)
+       * @param {boolean} [config.usePresets] Разрешает использовать пресеты (опционально)
+       * @param {string} [config.presetsTitle] Заголовок дропдауна пресетов (опционально)
+       * @param {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit[]} [config.staticPresets] Список объектов статически задаваемых пресетов (опционально)
+       * @param {string} [config.presetNamespace] Пространство имён для сохранения пользовательских пресетов (опционально)
+       * @param {string|number} [config.selectedPresetId] Идентификатор первоначально выбранного пресета в дропдауне (опционально)
+       * @param {string} [config.newPresetTitle] Начальное название нового пользовательского пресета (опционально)
        * @command setColumnsConfig
        * @see columnsConfig
        * @see getColumnsConfig
+       * @see showColumnsEditor
+       * @see _showColumnsEditor
        */
       setColumnsConfig: function (config) {
          this._options.columnsConfig = config;
@@ -306,20 +381,35 @@ define('SBIS3.CONTROLS/Browser', [
        * @returns {Object} Конфигурация.
        * @see columnsConfig
        * @see setColumnsConfig
+       * @see showColumnsEditor
+       * @see _showColumnsEditor
        */
       getColumnsConfig: function() {
          return this._options.columnsConfig;
       },
 
       /**
-       * Показать редактор колонок. Возвращает обещание, которое будет разрешено объектом конфигурации колонок
+       * Показать редактор колонок. Возвращает обещание, которое будет разрешено объектом с отредактированой конфигурациеё колонок
        * @protected
        * @param {object} [options] Опции открытия редактора колонок (опционально)
-       * @param {object} [options.columnsConfig] Объект конфигурации колонок (опционально, если нет, будет использован текущий columnsConfig браузера) (опционально)
-       * @param {object} [options.editorOptions] Опции редактора, например moveColumns и т.д. (опционально)
+       * @param {object} [options.columnsConfig] Объект конфигурации колонок (опционально, если нет, будет использован текущий columnsConfig браузера)
+       * @param {object} [options.editorOptions] Опции редактора, отличающиеся или не содержащиеся в columnsConfig. Имеют приоритет перед опциями из columnsConfig (опционально)
+       * @param {string} [options.editorOptions.title] Заголовок редактора колонок (опционально)
+       * @param {string} [options.editorOptions.applyButtonTitle] Название кнопки применения результата редактирования (опционально)
+       * @param {object} [options.editorOptions.groupTitles] Ассоциированый массив имён групп по их идентификаторам (опционально)
+       * @param {boolean} [options.editorOptions.usePresets] Разрешает использовать пресеты (опционально)
+       * @param {string} [options.editorOptions.presetsTitle] Заголовок дропдауна пресетов (опционально)
+       * @param {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit[]} [options.editorOptions.staticPresets] Список объектов статически задаваемых пресетов (опционально)
+       * @param {string} [options.editorOptions.presetNamespace] Пространство имён для сохранения пользовательских пресетов (опционально)
+       * @param {string|number} [options.editorOptions.selectedPresetId] Идентификатор первоначально выбранного пресета в дропдауне (опционально)
+       * @param {string} [options.editorOptions.newPresetTitle] Начальное название нового пользовательского пресета (опционально)
+       * @param {boolean} [options.editorOptions.moveColumns] Указывает на необходимость включить перемещнение пользователем пунктов списка колонок (опционально)
        * @param {boolean} [options.applyToSelf] Применить результат редактирования к этому компоненту (опционально)
        * @return {Deferred<object>}
        * @command showColumnsEditor
+       * @see columnsConfig
+       * @see setColumnsConfig
+       * @see getColumnsConfig
        */
       _showColumnsEditor: function (options) {
          var hasArgs = options && typeof options === 'object';
