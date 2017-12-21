@@ -11,7 +11,7 @@ define('SBIS3.CONTROLS/FormattedTextBox',
 
    /**
     * Можно вводить только значения особого формата.
-    * В поле ввода уже заранее будут введены символы, определяющие формат (например, скобки и тире для телефона)
+    * В поле ввода уже заранее будут введены символы, определяющие формат,
     * и останется ввести только недостающие символы.
     * @class SBIS3.CONTROLS/FormattedTextBox
     * @extends SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase
