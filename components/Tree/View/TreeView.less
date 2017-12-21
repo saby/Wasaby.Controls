@@ -63,13 +63,13 @@
 
    font-family: @icon-font !important;
    font-size: @tree-view-expand-icon-size;
-   color: @tree-view-expand-color;
+   color: @color_TreeDataGridView-expand;
 
    &:hover {
       border-width: @tree-view-expand-hover-border-width;
       border-style: @tree-view-expand-hover-border-style;
       border-color: @tree-view-expand-hover-border-color;
-      color: @tree-view-expand-hover-color;
+      color: @color_TreeDataGridView-expand_hovered;
    }
 
    &.controls-TreeView__expand__open {
@@ -81,7 +81,7 @@
          border-width: @tree-view-expand-open-hover-border-width;
          border-style: @tree-view-expand-open-hover-border-style;
          border-color: @tree-view-expand-open-hover-border-color;
-         color: @tree-view-expand-hover-color;
+         color: @color_TreeDataGridView-expand_hovered;
       }
    }
 
@@ -103,16 +103,16 @@
 }
 .controls-ListView__item-type-hidden {
    .controls-TreeView__expand {
-      color: @tree-view-expand-hidden-color;
+      color: @color_TreeDataGridView-expandHidden;
       &:hover {
-         color: @tree-view-expand-color;
+         color: @color_TreeDataGridView-expandHidden_hovered;
       }
       &:before {
          content: '\e9c2';
       }
       &.controls-TreeView__expand__open {
          &:hover {
-            color: @tree-view-expand-color;
+            color: @color_TreeDataGridView-expandHidden_hovered;
          }
          &:before {
             content: '\e9c1';
