@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.LongOperations.CustomSlice',
           */
          subscribe: function (eventType, listener) {
             var list = this._listeners[eventType];
-            (this._listeners[eventType] = list || []).push(listener);
+            (this._listeners[eventType] = list = list || []).push(listener);
             if (!list) {
                manager.subscribe(eventType, this._onEvent = this._onEvent || _onEvent.bind(null, this));
             }

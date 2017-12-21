@@ -153,12 +153,12 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
             //При клике по записи, открываем журнал операции или ссылку, если она есть
             this.subscribeTo(view, 'onItemActivate', function (e, meta) {
-               self._longOpList.applyResultAction(meta.item);
+               self._longOpList.applyMainAction(meta.item);
             });
 
             this.subscribeTo(this.getChildControlByName('downloadButton'), 'onActivated', function () {
                if (self._activeOperation) {
-                  self._longOpList.applyResultAction(self._activeOperation);
+                  self._longOpList.applyMainAction(self._activeOperation);
                }
             });
 
