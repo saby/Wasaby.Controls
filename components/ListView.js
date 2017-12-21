@@ -956,7 +956,7 @@ define('SBIS3.CONTROLS/ListView',
                 * @remark Внимание! Использовать с осторожностью, операции позиционируются внутри элемента,
                 * на который была наведена мышь, стили элемента могут влиять на стили операций.
                 */
-               itemsActionsInItemContainer: true,
+               itemsActionsInItemContainer: false,
                virtualScrolling: false,
                //это использется для отображения аватарки драгндропа, она должна быть жекорированной ссылкой
                //временное решение пока не будет выпонена задача https://online.sbis.ru/debug/opendoc.html?guid=32162686-eee0-4206-873a-39bc7b4ca7d7&des=
