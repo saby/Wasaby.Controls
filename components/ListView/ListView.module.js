@@ -2528,6 +2528,42 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.editMode.indexOf('autoadd') !== -1;
          },
 
+         _onAfterBeginEdit: function(event, model) {
+            var
+               itemsToolbarContainer = this._itemsToolbar && this._itemsToolbar.getContainer();
+
+            if(this._itemsToolbar) {
+               this._setTouchMode(false);
+            }
+            /*Скрывать emptyData нужно перед показом тулбара, иначе тулбар спозиционируется с учётом emptyData,
+             * а после удаления emptyData, тулбар визуально подскочит вверх*/
+            this._toggleEmptyData(false);
+            this._showToolbar(model);
+            this.setSelectedKey(model.getId());
+            if (model.getState() === Record.RecordState.DETACHED) {
+               this._drawSelectedItem(model.getId(), -1);
+            }
+            // Могут быть операции над записью с тулбаром под записью. В таком случае на ListView вешается класс с padding-bottom.
+            // Этот отступ при скроле тоже должен учитываться.
+            // Поэтому вначале подскролливаем к тулбару и затем скролим к элементу.
+            // Такой порядок выбран исходя из того, что запись имеет бо́льший приоритет при отображении, чем тулбар
+            // https://online.sbis.ru/opendoc.html?guid=0e0b1cad-2d09-45f8-b705-b1756b52ad99
+            if (itemsToolbarContainer && this._isBottomStyleToolbar()) {
+               LayoutManager.scrollToElement(itemsToolbarContainer, true);
+            }
+            this.scrollToItem(model);
+            event.setResult(this._notify('onAfterBeginEdit', model));
+            this._getItemsContainer().on('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
+         },
+
+         _onAfterEndEdit: function(event, model, target, withSaving) {
+            this.setSelectedKey(model.getId());
+            event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
+            this._toggleEmptyData(!this.getItems() || !this.getItems().getCount());
+            this._hideToolbar();
+            this._getItemsContainer().off('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
+         },
+
          _getEditInPlaceConfig: function() {
             /**
              * Объект _savedConfigs содержит конфигурации компонентов, которые описаны
@@ -2568,33 +2604,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      onBeginEdit: function(event, model) {
                         event.setResult(this._notify('onBeginEdit', model));
                      }.bind(this),
-                     onAfterBeginEdit: function(event, model) {
-                        var
-                           itemsToolbarContainer = this._itemsToolbar && this._itemsToolbar.getContainer();
-
-                        if(this._itemsToolbar) {
-                            this._setTouchMode(false);
-                        }
-                        /*Скрывать emptyData нужно перед показом тулбара, иначе тулбар спозиционируется с учётом emptyData,
-                        * а после удаления emptyData, тулбар визуально подскочит вверх*/
-                        this._toggleEmptyData(false);
-                        this._showToolbar(model);
-                        this.setSelectedKey(model.getId());
-                        if (model.getState() === Record.RecordState.DETACHED) {
-                           this._drawSelectedItem(model.getId(), -1);
-                        }
-                        // Могут быть операции над записью с тулбаром под записью. В таком случае на ListView вешается класс с padding-bottom.
-                        // Этот отступ при скроле тоже должен учитываться.
-                        // Поэтому вначале подскролливаем к тулбару и затем скролим к элементу.
-                        // Такой порядок выбран исходя из того, что запись имеет бо́льший приоритет при отображении, чем тулбар
-                        // https://online.sbis.ru/opendoc.html?guid=0e0b1cad-2d09-45f8-b705-b1756b52ad99
-                        if (itemsToolbarContainer && this._isBottomStyleToolbar()) {
-                           LayoutManager.scrollToElement(itemsToolbarContainer, true);
-                        }
-                        this.scrollToItem(model);
-                        event.setResult(this._notify('onAfterBeginEdit', model));
-                        this._getItemsContainer().on('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
-                     }.bind(this),
+                     onAfterBeginEdit: this._onAfterBeginEdit.bind(this),
                      onHeightChange: function(event, model) {
                         if (this._options.editMode.indexOf('toolbar') !== -1 && this._getItemsToolbar().isToolbarLocking()) {
                            this._showItemsToolbar(this._getElementData(this._getElementByModel(model)));
@@ -2607,13 +2617,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      onEndEdit: function(event, model, withSaving) {
                         event.setResult(this._notify('onEndEdit', model, withSaving));
                      }.bind(this),
-                     onAfterEndEdit: function(event, model, target, withSaving) {
-                        this.setSelectedKey(model.getId());
-                        event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
-                        this._toggleEmptyData(!this.getItems() || !this.getItems().getCount());
-                        this._hideToolbar();
-                        this._getItemsContainer().off('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
-                     }.bind(this),
+                     onAfterEndEdit: this._onAfterEndEdit.bind(this),
                      // В момент сохранения записи блокируем весь ListView чтобы побороть закликивание
                      onBeginSave: function() {
                         this._toggleIndicator(true);
