@@ -78,6 +78,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
             this._containerHeight = this._container.height();
             this._containerOuterHeight = this._container.outerHeight(true);
+            this._scrollbarMargin = 2 * parseFloat(getComputedStyle(this._thumb[0]).margin);
             this._browserScrollbarMinHeght = parseFloat(getComputedStyle(this._thumb[0]).minHeight);
 
             this._setViewportRatio();
@@ -174,7 +175,8 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
                this._isConstThumb = false;
             }
             if (this._thumb) {
-               this._thumb.height(this._thumbHeight);
+               // Вычтем из высоты размеры отступов.
+               this._thumb.height(this._thumbHeight - this._scrollbarMargin);
                // Высота ползунка должна учитывать margin.
                this._thumbHeight = this._thumb.outerHeight(true);
             }
