@@ -1,11 +1,11 @@
 define([
-   'js!SBIS3.CONTROLS.RichTextArea'
+   'SBIS3.CONTROLS/RichEditor/Components/RichTextArea'
 ], function (
    RichTextArea
 ) {
    'use strict';
 
-   describe('SBIS3.CONTROLS.RichTextArea', function () {
+   describe('SBIS3.CONTROLS/RichEditor/Components/RichTextArea', function () {
 
       describe('methods', function(){
 
@@ -18,7 +18,7 @@ define([
                   '<div ' +
                   'class="controls-ScrollContainer ws-scrolling-content image-template-left controls-ScrollContainer__flex ws-control-inactive" ' +
                   'hasmarkup="true" ' +
-                  'data-component="SBIS3.CONTROLS.ScrollContainer" ' +
+                  'data-component="SBIS3.CONTROLS/ScrollContainer" ' +
                   'newconfig="cfg-tkp57c8383ahsemi1501664555797">' +
                   'kek</div></div>',
                answ = '<div ' +

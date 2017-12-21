@@ -1,7 +1,7 @@
-define(['js!SBIS3.CONTROLS.ControlsValidators'], function (ControlsValidators) {
+define(['SBIS3.CONTROLS/Utils/ControlsValidators'], function (ControlsValidators) {
    
    'use strict';
-   describe('SBIS3.CONTROLS.ControlsValidators', function () {
+   describe('SBIS3.CONTROLS/Utils/ControlsValidators', function () {
       
       describe('required', function (){
    

@@ -4,7 +4,7 @@
    </ws:if>
    <ws:if data="{{ showSelector }}">
       <ws:if data="{{ menuSelector }}">
-         <ws:SBIS3.CONTROLS.MenuIcon
+         <SBIS3.CONTROLS:Menu:MenuIcon
                name="fieldLinkMenu"
                cssClassName="controls-FieldLink__showSelector controls-FieldLink__button"
                pickerClassName="controls-FieldLink__showSelector__picker"
@@ -18,7 +18,7 @@
          <div class="controls-FieldLink__showSelector controls-FieldLink__showSelector-button controls-FieldLink__button icon-size icon-ListView"></div>
       </ws:else>
    </ws:if>
-    <ws:SBIS3.CONTROLS.Action.SelectorAction
+    <SBIS3.CONTROLS:Action:SelectorAction
        if="{{ useSelectorAction }}"
        name="FieldLinkSelectorAction"
        mode="{{ selectMode }}"

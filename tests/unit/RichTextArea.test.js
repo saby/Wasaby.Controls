@@ -1,13 +1,13 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
-   'js!SBIS3.CONTROLS.RichTextArea',
-   'js!SBIS3.CONTROLS.Utils.RichTextAreaUtil'
+   'SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
+   'SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil'
 ], function (
    RichTextArea,
    RichTextAreaUtil
 ) {
    'use strict';
-   describe('SBIS3.CONTROLS.RichTextArea', function () {
+   describe('SBIS3.CONTROLS/RichEditor/Components/RichTextArea', function () {
       it('_replaceSmilesToCode()', function () {
          var
             question = '😂😄😵😈😉😋😍😎😐😔😘😠😣😩😪😫😭😲😷🙈🙉🙊😊😃',
@@ -21,7 +21,7 @@ define([
          assert.strictEqual(RichTextArea.prototype._replaceCodesToSmile(question), answer);
       })
    });
-   describe('SBIS3.CONTROLS.Utils.RichTextAreaUtil', function () {
+   describe('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil', function () {
       it('unDecorateLinks empty block', function () {
          var
             question = '<div class="LinkDecorator__wrap"><div>',

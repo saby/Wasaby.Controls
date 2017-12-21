@@ -2,7 +2,7 @@
  * Created by am.gerasimov on 21.06.2017.
  */
 define([
-   'js!SBIS3.CONTROLS.ToSourceModel',
+   'SBIS3.CONTROLS/Utils/ToSourceModel',
    'WS.Data/Collection/List',
    'WS.Data/Source/SbisService',
    'WS.Data/Collection/RecordSet',
@@ -32,7 +32,7 @@ define([
    model.set('recordSet', recordSet);
    recordSet._getMediator().addRelationship(model, recordSet, 'customRelationship');
    
-   describe('SBIS3.CONTROLS.ToSourceModel', function () {
+   describe('SBIS3.CONTROLS/Utils/ToSourceModel', function () {
    
       describe('check collections', function() {
          

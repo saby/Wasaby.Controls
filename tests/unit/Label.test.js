@@ -3,8 +3,8 @@
  */
 define(
    [
-      'js!SBIS3.CONTROLS.Label',
-      'js!SBIS3.CONTROLS.TextBox',
+      'SBIS3.CONTROLS/Label',
+      'SBIS3.CONTROLS/TextBox',
       'Core/vdom/Synchronizer/resources/SyntheticEvent'
    ],
    function(Label, TextBox, SyntheticEvent) {
@@ -18,7 +18,7 @@ define(
          isEventClick = null,
          eventClick = null, label, textBox;
 
-      describe('SBIS3.CONTROLS.Label', function() {
+      describe('SBIS3.CONTROLS/Label', function() {
          beforeEach(function () {
             if (typeof $ === 'undefined') {
                this.skip();

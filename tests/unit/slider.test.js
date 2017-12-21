@@ -1,13 +1,13 @@
 define([
-   'js!SBIS3.CONTROLS.Slider',
-   'js!SBIS3.CONTROLS.SliderInput'
+   'SBIS3.CONTROLS/Slider',
+   'SBIS3.CONTROLS/Slider/Input'
 ], function (
    Slider,
    SliderInput
 ) {
    'use strict';
 
-   describe('SBIS3.CONTROLS.Slider', function () {
+   describe('SBIS3.CONTROLS/Slider', function () {
       var cfg, slider;
 
       describe('methods', function(){
@@ -86,7 +86,7 @@ define([
       });
 
    });
-   describe('SBIS3.CONTROLS.SliderInput', function () {
+   describe('SBIS3.CONTROLS/Slider/Input', function () {
       var cfg, slider;
 
       describe('methods', function(){
