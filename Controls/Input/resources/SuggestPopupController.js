@@ -1,16 +1,20 @@
 define('js!Controls/Input/resources/SuggestPopupController',
    [
-      'Core/core-extend',
+      'Core/Abstract',
       'Core/core-merge',
       'js!Controls/List/resources/utils/Search',
-      'Controls/Popup/Manager',
-      'Controls/Popup/Opener/Sticky/Strategy'
+      'js!Controls/Popup/Opener/Sticky',
+      'js!Controls/Input/resources/SuggestView'
+      
    ],
-   function(extend, cMerge, Search, PopupManager, StickyStrategy) {
+   function(Abstract, cMerge, Search, StickyOpener) {
       
       'use strict';
       
       var _private = {
+         /**
+          * Контроллер для запроса за данными
+          */
          getSearchController: function(self) {
             if (!self._search) {
                self._search = new Search({
@@ -20,49 +24,43 @@ define('js!Controls/Input/resources/SuggestPopupController',
             }
    
             return self._search;
+         },
+         
+         getPopupOpener: function(self) {
+            if (!self._suggestOpener) {
+               self._suggestOpener = new StickyOpener();
+               self._suggestOpener.subscribe('onResult', function(event, result) {
+                  self._notify('onSelect', result);
+               });
+            }
+            
+            return self._suggestOpener;
          }
       };
       
-      var SuggestPopupController = extend({
+      var SuggestPopupController = Abstract.extend({
+         
          constructor: function(options) {
+            SuggestPopupController.superclass.constructor.call(this, options);
             this._options = options;
          },
-         search: function(textValue) {
-            var filter = cMerge({}, this._options.filter || {}),
-                self = this;
+         
+         search: function(filter, popupOptions) {
+            var self = this;
             
-            filter[this._options.searchParam] = textValue;
-            requirejs([self._options.popupTemplate]);
-            _private.getSearchController(this).search({filter: filter}).addCallback(function(searchResult) {
-               //TODO Жду правок от Лощинина, чтобы доделать выбор из попапа и отображение
-               PopupManager.show(
-                  {
-                     catchFocus: false,
-                     dialogOptions: {
-                        componentOptions: {
-                           items: searchResult
-                        },
-                        template: self._options.popupTemplate
-                     }
-                  },
-                  self._popupOpener,
-                  new StickyStrategy({
-                     corner: {
-                        vertical: 'bottom',
-                        horizontal: 'left'
-                     },
-                     target: self._options.popupOpener.getContainer()
-                  })
-               );
+            _private.getSearchController(self).search({filter: filter}).addCallback(function(searchResult) {
+               if (!popupOptions.componentOptions) {
+                  popupOptions.componentOptions = {};
+               }
+               popupOptions.componentOptions.items = searchResult;
+               _private.getPopupOpener(self).open(popupOptions);
             });
          },
          
          abort: function() {
-            if (this._search) {
-               this._search.abort();
-            }
+            _private.getSearchController(this).abort();
          },
-         
+   
          _moduleName: 'Controls/Input/resources/SuggestPopupController'
       });
    

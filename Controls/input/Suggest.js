@@ -30,19 +30,33 @@ define('js!Controls/Input/Suggest',
          // <editor-fold desc="LifeCycle">
    
          _afterMount: function() {
-            var suggestController = new SuggestController({
+            var self = this;
+   
+            this._suggestController = new SuggestController({
                suggestTemplate: this._options.suggestTemplate,
                dataSource: this._options.dataSource,
                searchDelay: this._options.searchDelay,
                filter: this._options.filter,
                minSearchLength: this._options.minSearchLength,
                searchParam: this._options.searchParam,
-               textComponent: this._childControls[0]
+               textComponent: this._children.suggestText
             });
-   
-            this.once('onDestroy', function() {
-               suggestController.destroy();
+            
+            this.subscribeTo(this._suggestController, 'onSelect', function(event, item) {
+               self._notify('onChangeValue', item.get(self._options.displayProperty));
             });
+         },
+         
+         _changeValueHandler: function(event, value) {
+            this._suggestController.setValue(value);
+         },
+         
+         destroy: function() {
+            if (this._suggestController) {
+               this._suggestController.destroy();
+               this._suggestController = null;
+            }
+            Suggest.superclass.destroy.call(this);
          }
          
          // </editor-fold>
@@ -56,8 +70,8 @@ define('js!Controls/Input/Suggest',
             searchDelay: types(Number),
             minSearchLength: types(Number),
             filter: types(Object),
-            searchParam: types(String),
-            clearable: types(Boolean)
+            searchParam: types(String).required(),
+            displayProperty: types(String).required()
          };
       };
    
