@@ -3,11 +3,10 @@ define('js!Controls/Input/resources/SuggestPopupController',
       'Core/Abstract',
       'Core/core-merge',
       'js!Controls/List/resources/utils/Search',
-      'js!Controls/Popup/Opener/Sticky',
       'js!Controls/Input/resources/SuggestView'
       
    ],
-   function(Abstract, cMerge, Search, StickyOpener) {
+   function(Abstract, cMerge, Search) {
       
       'use strict';
       
@@ -18,31 +17,37 @@ define('js!Controls/Input/resources/SuggestPopupController',
          getSearchController: function(self) {
             if (!self._search) {
                self._search = new Search({
-                  dataSource: self._options.dataSource,
-                  searchDelay: self._options.searchDelay
+                  dataSource:  self._dataSource,
+                  searchDelay: self._searchDelay
                });
             }
    
             return self._search;
-         },
-         
-         getPopupOpener: function(self) {
-            if (!self._suggestOpener) {
-               self._suggestOpener = new StickyOpener();
-               self._suggestOpener.subscribe('onResult', function(event, result) {
-                  self._notify('onSelect', result);
-               });
-            }
-            
-            return self._suggestOpener;
          }
       };
       
       var SuggestPopupController = Abstract.extend({
          
+         _selectedIndex: 0,
+         
          constructor: function(options) {
             SuggestPopupController.superclass.constructor.call(this, options);
-            this._options = options;
+            
+            this._popupOpener = options.popupOpener;
+            this._dataSource = options.dataSource;
+            this._searchDelay = options.searchDelay;
+         },
+   
+         increaseSelectedIndex: function() {
+            if (this._popupOpener.isOpened()) {
+               this._selectedIndex++;
+            }
+         },
+   
+         decreaseSelectedIndex: function() {
+            if (this._popupOpener.isOpened()) {
+               this._selectedIndex--;
+            }
          },
          
          search: function(filter, popupOptions) {
@@ -53,12 +58,13 @@ define('js!Controls/Input/resources/SuggestPopupController',
                   popupOptions.componentOptions = {};
                }
                popupOptions.componentOptions.items = searchResult;
-               _private.getPopupOpener(self).open(popupOptions);
+               self._popupOpener.open(popupOptions);
             });
          },
          
          abort: function() {
             _private.getSearchController(this).abort();
+            this._popupOpener.close();
          },
    
          _moduleName: 'Controls/Input/resources/SuggestPopupController'

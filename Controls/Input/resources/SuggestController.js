@@ -5,8 +5,9 @@ define('js!Controls/Input/resources/SuggestController',
    [
       'Core/Abstract',
       'Core/moduleStubs',
-      'Core/core-clone'
-   ], function (Abstract, moduleStubs, cClone) {
+      'Core/core-clone',
+      'Core/constants'
+   ], function (Abstract, moduleStubs, cClone, constants) {
    
    'use strict';
    
@@ -36,17 +37,9 @@ define('js!Controls/Input/resources/SuggestController',
       },
       
       getPopupOptions: function(self) {
-         var container = self._options.textComponent.getContainer();
+         var container = self._options.textComponent._container;
          return {
             target: container,
-            autoHide: true,
-            template: 'js!Controls/Input/resources/SuggestView',
-            corner: {
-               vertical: 'bottom'
-            },
-            verticalAlign: {
-               side: 'top'
-            },
             componentOptions: {
                width: container[0].offsetWidth,
                template: self._options.suggestTemplate
@@ -60,12 +53,8 @@ define('js!Controls/Input/resources/SuggestController',
             if (!self._suggestPopupController) {
                self._suggestPopupController = new result[0]({
                   dataSource: self._options.dataSource,
-                  searchDelay: self._options.searchDelay
-               });
-               
-               //Надо подписаться, т.к. событие от контроллера не всплывает.
-               self.subscribeTo(self._suggestPopupController, 'onSelect', function(event, result) {
-                  self._notify('onSelect', result);
+                  searchDelay: self._options.searchDelay,
+                  popupOpener: self._options.suggestOpener
                });
             }
             return self._suggestPopupController;
@@ -82,6 +71,28 @@ define('js!Controls/Input/resources/SuggestController',
       
       setValue: function(value) {
          _private.onChangeValueHandler(this, value);
+      },
+      
+      keyPress: function(event) {
+         if (this._suggestPopupController) {
+            var nativeEventWhich = event.nativeEvent.which;
+   
+            if (nativeEventWhich === constants.key.up) {
+               this._suggestPopupController.increaseSelectedIndex();
+               event.preventDefault();
+            }
+   
+            if (nativeEventWhich === constants.key.down) {
+               this._suggestPopupController.decreaseSelectedIndex();
+               event.preventDefault();
+            }
+         }
+      },
+      
+      select: function() {
+         if (this._suggestPopupController) {
+            this._suggestPopupController.select();
+         }
       },
       
       destroy: function() {
