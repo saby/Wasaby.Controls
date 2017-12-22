@@ -9,6 +9,11 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
             });
          });
 
+         afterEach(function () {
+            SW.destroy();
+            SW = undefined;
+         });
+
          it('without captions', function () {
             var temp = {
                captions: []
@@ -45,14 +50,17 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
                assert(e.message === 'You cannot set more than 2 captions.');
             }
          });
-
-         /*afterEach(function () {
-            SW.destroy();
-            SW = undefined;
-         });*/
       });
 
       describe('checked captions in constructor', function () {
+
+         afterEach(function () {
+            if (SW) {
+               SW.destroy();
+               SW = undefined;
+            }
+         });
+
          it('without captions', function () {
             SW = new Switch({
                captions: []
@@ -84,16 +92,20 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
                assert(e.message === 'You cannot set more than 2 captions.');
             }
          });
-
-         /*afterEach(function () {
-            SW.destroy();
-         });*/
       });
 
       describe('check caption quantity (IsDouble function)', function () {
-         SW = new Switch({
-            captions: []
+         beforeEach(function () {
+            SW = new Switch({
+               captions: []
+            });
          });
+
+         afterEach(function(){
+            SW.destroy();
+            SW = undefined;
+         });
+
          it('constructor without captions', function () {
             var opt = {
                captions: []
@@ -117,10 +129,6 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
             SW.saveOptions(opt);
             assert(SW._isDouble() === true);
          });
-
-         /*afterEach(function () {
-          SW.destroy();
-          });*/
       });
 
       describe('click to Switcher', function () {
@@ -207,6 +215,12 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
             SW.subscribe('changeValue', function () {
                switcherClickedFlag = true;
             });
+         });
+
+         afterEach(function () {
+            SW.destroy();
+            SW = undefined;
+            switcherClickedFlag = undefined;
          });
 
          describe('doubleSwitcherClickHandler', function(){
@@ -313,6 +327,4 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
          });
       });
    });
-   SW = undefined;
-   switcherClickedFlag = undefined;
 });
