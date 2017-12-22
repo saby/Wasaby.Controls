@@ -11,7 +11,6 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
       'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
       'Lib/Control/FloatArea/FloatArea',
-      'css!SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area'
    ],
 
