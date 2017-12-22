@@ -199,15 +199,14 @@
 @fieldLink-showSelector-color:            @default-text-color;
 @fieldLink-picker-show-field-color:       @default-text-color;
 //MonthView
-@month-view-bg:                           #2c3e50;
-@month-view-day-cell-text-color:          #fff;
-@month-view-day-cell-bg:                  transparent;
-@month-view-day-cell-hover-text-color:    @month-view-day-cell-text-color;
-@month-view-day-cell-hover-bg:            #e5ecf4;
-@month-view-day-cell-active-text-color:   @month-view-day-cell-text-color;
-@month-view-day-cell-active-bg:           #ffc37e;
-@month-view-day-cell-active-hover-text-color:@month-view-day-cell-active-text-color;
-@month-view-day-cell-active-hover-bg:     @month-view-day-cell-active-bg;
+@background_MonthView:                    #2c3e50;
+@color_MonthView-item:                    #fff;
+@background_MonthView-item:               #f2f2f2;
+@color_MonthView-item-hover:              @color_MonthView-item;
+@background_MonthView-item-hover:         #e5ecf4;
+@background_MonthView-item-selected:      #ffc37e;
+@background_MonthView-item-selected-hover:@background_MonthView-item-selected;
+//MonthPicker
 @month-picker-left-arrow-bg:              transparent;
 @month-picker-left-arrow-border-color:    transparent @primary-color transparent transparent;
 @month-picker-left-arrow-hover-border-color:transparent darken(@primary-color, 10%) transparent transparent;
