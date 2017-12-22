@@ -34,10 +34,13 @@ define('js!WSTest/Focus/Scenario/14', [
          name: 'WindowScenario14'
       });
       setTimeout(function() {
-         fHelpers.childHasFocus(wnd, 'TextBox3');
-         wnd.destroy();
-         delete window[caseControlName];
-         done();
+         try {
+            fHelpers.childHasFocus(wnd, 'TextBox3');
+         } finally {
+            wnd.destroy();
+            delete window[caseControlName];
+            done();
+         }
       }, 100);
    };
 });
