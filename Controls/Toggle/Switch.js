@@ -43,7 +43,7 @@ define('js!Controls/Toggle/Switch', [
          self._notify('changeValue', !self._options.value);
       },
 
-      checkNumberOfCaptions: function(options){
+      checkCaptions: function(options){
          if (options.captions.length > 2) {
             throw new Error ('You cannot set more than 2 captions.')
          }
@@ -56,7 +56,7 @@ define('js!Controls/Toggle/Switch', [
 
       constructor: function (options) {
          Switch.superclass.constructor.apply(this, arguments);
-         _private.checkNumberOfCaptions(options);
+         _private.checkCaptions(options);
       },
 
       _clickTextHandler: function (e, clickedElement) {
@@ -77,7 +77,7 @@ define('js!Controls/Toggle/Switch', [
       },
 
       _beforeUpdate: function (newOptions) {
-         _private.checkNumberOfCaptions(newOptions);
+         _private.checkCaptions(newOptions);
       }
    });
 

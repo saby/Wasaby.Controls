@@ -283,14 +283,14 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
             });
          });
 
-         describe('checkNumberOfCaptions', function(){
+         describe('checkCaptions', function(){
             it('checked with 3 captions', function () {
                var opt = {
                   captions: ['capt1', 'capt2', 'capt3']
                };
                SW.saveOptions(opt);
                try {
-                  Switch._private.checkNumberOfCaptions(SW._options);
+                  Switch._private.checkCaptions(SW._options);
                   assert(false);
                }
                catch(e) {
@@ -303,7 +303,7 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
                   captions: []
                };
                SW.saveOptions(opt);
-               Switch._private.checkNumberOfCaptions(SW._options);
+               Switch._private.checkCaptions(SW._options);
                assert(true);
             });
 
@@ -312,7 +312,7 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
                   captions: ['capt1']
                };
                SW.saveOptions(opt);
-               Switch._private.checkNumberOfCaptions(SW._options);
+               Switch._private.checkCaptions(SW._options);
                assert(true);
             });
 
@@ -321,7 +321,7 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
                   captions: ['capt1', 'capt2']
                };
                SW.saveOptions(opt);
-               Switch._private.checkNumberOfCaptions(SW._options);
+               Switch._private.checkCaptions(SW._options);
                assert(true);
             });
          });
