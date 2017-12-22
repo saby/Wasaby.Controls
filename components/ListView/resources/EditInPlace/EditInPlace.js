@@ -25,6 +25,7 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace',
 
       var
          CONTEXT_RECORD_FIELD = 'sbis3-controls-edit-in-place',
+         TRACKING_INTERVAL = 150, // https://online.sbis.ru/opendoc.html?guid=d25ff029-5d6c-47c0-a785-aec8b9f0e25f
          EditInPlace = Control.extend([CompoundFocusMixin], /** @lends SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace.prototype */ {
             _dotTplFn: dotTplFn,
             $protected: {
@@ -40,7 +41,6 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace',
                _model: undefined,
                _editing: false,
                _editors: [],
-               _targetTrackingInterval: undefined,
                _lastHeight: 0,
                _lastWidth: 0,
                _lastVerticalPosition: 0,
@@ -167,8 +167,6 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace',
                }
             },
             _beginTargetTracking: function() {
-               var
-                  trackingHorizontalValues = this.getTarget().prop('tagName') !== 'TR';
                // Сбросим все переменные, используемые при пересчёте
                this._lastVerticalPosition = 0;
                this._lastHorizontalPosition = 0;
@@ -176,11 +174,15 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace',
                this._lastWidth = 0;
                // Синхронно пересчитаем позицию, чтобы не было визуальных скачков из-за асинхронного позиционирования
                // Также данный пересчет обязательно нужен, т.к. он синхронно пересчитывает высоту и в каллбеке beginEdit мы получаем элемент с правильной высотой
-               this._targetTracking(trackingHorizontalValues);
-               this._targetTrackingInterval = setInterval(this._targetTracking.bind(this, [trackingHorizontalValues]), 50);
+               this._targetTracking(this.getTarget().prop('tagName') !== 'TR');
+            },
+            _onResizeHandler: function() {
+               EditInPlace.superclass._onResizeHandler.apply(this, arguments);
+               if (this.isEdit()) {
+                  this._targetTracking(this.getTarget().prop('tagName') !== 'TR');
+               }
             },
             _endTargetTracking: function() {
-               clearInterval(this._targetTrackingInterval);
                //Сбросим установленное ранее значение высоты строки
                this.getTarget().height('');
             },
