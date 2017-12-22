@@ -19,6 +19,7 @@ define('js!Controls/Popup/Opener/Base',
             var
                cfg = config || {};
             CoreMerge(cfg, this._options.popupOptions);
+            cfg.opener = opener || this;
             if (this._popupId) {
                this._popupId = Manager.update(this._popupId, cfg);
             }
@@ -28,7 +29,7 @@ define('js!Controls/Popup/Opener/Base',
                      onResult: this._options.onResult
                   }
                });
-               this._popupId = Manager.show(cfg, opener || this, this.getStrategy(), this._controller);
+               this._popupId = Manager.show(cfg, this.getStrategy(), this._controller);
             }
          },
 
