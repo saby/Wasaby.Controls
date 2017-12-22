@@ -9,7 +9,7 @@
         enabled="{{isEnabled()}}"
         tagStyle="{{_options.tagStyle}}"
         placeholder="{{_options.placeholder}}"
-        on:changedValue="_changeValueHandler()"
+        on:valueChanged="_changeValueHandler()"
         on:keydown="_keyPressedHandler()"
     />
     <ws:Controls.Popup.Opener.Sticky name="stickyOpener" onResult="{{_selectHandler}}">

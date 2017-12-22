@@ -3,7 +3,7 @@
         selectOnClick="{{_options.selectOnClick}}"
         viewModel="{{_textViewModel}}"
         tagStyle="{{_options.tagStyle}}"
-        on:onChangeValue="_changeValueHandler()"
+        on:valueChanged="_changeValueHandler()"
         on:onInputCompleted="_inputCompletedHandler()"
         on:onTagHover="_notifyHandler('onTagHover')"
         on:onTagClick="_notifyHandler('onTagClick')">
