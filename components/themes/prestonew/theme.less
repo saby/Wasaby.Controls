@@ -120,33 +120,14 @@ body {
 
    .controls-DateRangeBigChoose {
       // в онлайне в большом выборе периода иконки разного размера, а тут одинаковые 3rem
-      .icon-16, .icon-24 {
+      .icon-16, .icon-24, .icon-small{
          font-size: round(84px * @multiplier) !important;
          line-height: round(84px * @multiplier) !important;
          width: round(84px * @multiplier);
          height: round(84px * @multiplier);
       }
    }
-   // Выпилить как будем делать новые темы.
-   .controls-DateRangeChoose__bodyWrapper {
-      padding-top: round(8px * @multiplier);
-   }
-   .controls-DateRangeChoose {
-      .controls-DateRangeChoose__home .icon-16 {
-         font-size: round(84px * @multiplier) !important;
-         line-height: round(84px * @multiplier) !important;
-         width: round(84px * @multiplier);
-         height: round(84px * @multiplier);
-      }
-      &.controls-DateRangeChoose__showMonths {
-         &.controls-DateRangeChoose__showHalfYears,
-         &.controls-DateRangeChoose__showQuarters {
-            .controls-DateRangeChoose__home {
-               width: round(56px * @multiplier);
-            }
-         }
-      }
-   }
+
     .controls__filter-button__clear-filter {
        font-size: round(32px * @multiplier);
     }
