@@ -22,7 +22,7 @@ define('js!Controls/Toggle/Checkbox', [
     */
 
    /**
-    * @name Controls/Toggle/Checkbox#checked
+    * @name Controls/Toggle/Checkbox#value
     * @cfg {Boolean|null} Состояние переключателя
     */
 
@@ -37,10 +37,10 @@ define('js!Controls/Toggle/Checkbox', [
       }
    };
 
-   var CheckBox = Control.extend({
+   var Checkbox = Control.extend({
       _template: template,
 
-      _clickHandler: function (e) {
+      _clickHandler: function () {
          if(this._options.value && this._options.triState){
             _private.notifyChangeValue(this, null);
          }
@@ -53,7 +53,7 @@ define('js!Controls/Toggle/Checkbox', [
       }
    });
 
-   CheckBox.getOptionTypes = function getOptionTypes() {
+   Checkbox.getOptionTypes = function getOptionTypes() {
       return {
          triState: types(Boolean),
          caption: types(String),
@@ -61,14 +61,14 @@ define('js!Controls/Toggle/Checkbox', [
       };
    };
 
-   CheckBox.getDefaultOptions = function getDefaultOptions (){
+   Checkbox.getDefaultOptions = function getDefaultOptions (){
      return{
         value:false,
         triState: false
      };
    };
 
-   CheckBox._ptivate = _private;
+   Checkbox._ptivate = _private;
 
-   return CheckBox;
+   return Checkbox;
 });
