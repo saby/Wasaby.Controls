@@ -23,7 +23,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
       var _private = {
 
          getSelection: function(self){
-            return self._selection;
+            return self._selection || {};
          },
 
          getTargetPosition: function(target){
@@ -31,7 +31,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
          },
 
          saveSelection: function(self, target){
-            self._selection = self._selection || {};
+            self._selection = _private.getSelection(self);
             self._selection.selectionStart = target.selectionStart;
             self._selection.selectionEnd = target.selectionEnd;
          },
@@ -103,6 +103,28 @@ define('js!Controls/Input/resources/InputRender/InputRender',
 
          _notifyHandler: function(e, value) {
             this._notify(value);
+         },
+
+         /**
+          * Метод вставляет строку replacer вместо текущего выделенного текста в инпуте
+          * Если текст не выделен, то просто вставит replacer на позицию каретки
+          * @param replacer
+          */
+         replaceSelectedText: function(replacer) {
+            var
+               selection = _private.getSelection(this),
+               processedData = this._options.viewModel.prepareData({
+                  before: this._value.slice(0, selection.selectionStart),
+                  insert: replacer,
+                  after: this._value.slice(selection.selectionEnd, this._value.length)
+               }, 'insert');
+
+            if (this._value !== processedData.value) {
+               this._value = processedData.value;
+               this._notify('valueChanged', processedData.value);
+
+               this._forceUpdate();
+            }
          }
       });
 

@@ -97,6 +97,10 @@ define('js!Controls/Input/Number', [
 
       _notifyHandler: function (event, value) {
          this._notify(value);
+      },
+
+      replaceSelectedText: function(replacer) {
+         this._children['inputRender'].replaceSelectedText(replacer);
       }
    });
 

@@ -115,12 +115,15 @@ define('js!Controls/Input/Text', [
             if (this._options.selectOnClick) {
                e.target.select();
             }
+         },
+
+         replaceSelectedText: function(replacer) {
+            this._children['inputRender'].replaceSelectedText(replacer);
          }
       });
 
       TextBox.getDefaultOptions = function() {
          return {
-            value: '',
             trim: false,
             selectOnClick: true
          };

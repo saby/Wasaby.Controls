@@ -225,6 +225,34 @@ define(
                });
             });
          });
+
+         //Тест вставки значекния методом replaceSelectedText
+         it('Insert with replaceSelectedText method', function (done) {
+            var
+               numberControl = Control.createControl(NumberControl, {}, $('<div></div>').appendTo('#mocha'));
+
+            runDelayed(function () {
+               var
+                  inputRender = numberControl._children['inputRender'];
+
+               inputRender._value = '123';
+               inputRender._selection = {
+                  selectionStart: 3,
+                  selectionEnd: 3
+               };
+
+               inputRender.replaceSelectedText('4');
+
+               try {
+                  assert.equal(inputRender._value, '1 234');
+                  done();
+               } catch (err) {
+                  done(err);
+               } finally {
+                  numberControl.destroy();
+               }
+            });
+         });
       });
    }
 );
