@@ -21,18 +21,18 @@ define('js!Controls/Input/resources/InputRender/InputRender',
 
       var _private = {
 
-         getSelection: function(){
-            return this._selection;
+         getSelection: function(self){
+            return self._selection;
          },
 
          getTargetPosition: function(target){
             return target.selectionEnd;
          },
 
-         saveSelection: function(target){
-            this._selection = this._selection || {};
-            this._selection.selectionStart = target.selectionStart;
-            this._selection.selectionEnd = target.selectionEnd;
+         saveSelection: function(self, target){
+            self._selection = self._selection || {};
+            self._selection.selectionStart = target.selectionStart;
+            self._selection.selectionEnd = target.selectionEnd;
          },
 
          setTargetData: function(target, data){
@@ -47,12 +47,22 @@ define('js!Controls/Input/resources/InputRender/InputRender',
          _controlName: 'Controls/Input/resources/InputRender/InputRender',
          _template: template,
 
+         constructor: function (options) {
+            InputRender.superclass.constructor.apply(this, arguments);
+
+            this._value = options.value;
+         },
+
+         _beforeUpdate: function (newOptions) {
+            this._value = newOptions.value;
+         },
+
          _inputHandler: function(e) {
             var
-               value = this._options.value,
+               value = this._value,
                newValue = e.target.value,
-               selection = _private.getSelection.call(this),
-               position = _private.getTargetPosition.call(this, e.target),
+               selection = _private.getSelection(this),
+               position = _private.getTargetPosition(e.target),
                inputType, splitValue, processedData;
 
             inputType = e.nativeEvent.inputType ?
@@ -64,11 +74,12 @@ define('js!Controls/Input/resources/InputRender/InputRender',
             //
             processedData = this._options.viewModel.prepareData(splitValue, inputType);
 
-            _private.setTargetData.call(this, e.target, processedData);
-            _private.saveSelection.call(this, e.target);
+            _private.setTargetData(e.target, processedData);
+            _private.saveSelection(this, e.target);
 
-            if(value !== processedData.value){
-               this._notify('onChangeValue', processedData.value);
+            if(this._value !== processedData.value){
+               this._value = processedData.value;
+               this._notify('valueChanged', processedData.value);
             }
          },
 
@@ -77,16 +88,16 @@ define('js!Controls/Input/resources/InputRender/InputRender',
 
             // При нажатии стрелок происходит смещение курсора.
             if (keyCode > 36 && keyCode < 41) {
-               _private.saveSelection.call(this, e.target);
+               _private.saveSelection(this, e.target);
             }
          },
 
          _clickHandler: function(e) {
-            _private.saveSelection.call(this, e.target);
+            _private.saveSelection(this, e.target);
          },
 
          _selectionHandler: function(e){
-            _private.saveSelection.call(this, e.target);
+            _private.saveSelection(this, e.target);
          },
 
          _notifyHandler: function(e, value) {

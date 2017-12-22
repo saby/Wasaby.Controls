@@ -20,6 +20,7 @@ define('SBIS3.CONTROLS/FieldLink',
        "tmpl!SBIS3.CONTROLS/FieldLink/afterFieldWrapper",
        "tmpl!SBIS3.CONTROLS/FieldLink/beforeFieldWrapper",
        "tmpl!SBIS3.CONTROLS/FieldLink/textFieldWrapper",
+       "tmpl!SBIS3.CONTROLS/FieldLink/resources/showSelectorButton",
        "SBIS3.CONTROLS/Mixins/ITextValue",
        "SBIS3.CONTROLS/Utils/ToSourceModel",
        "WS.Data/Collection/List",
@@ -66,6 +67,7 @@ define('SBIS3.CONTROLS/FieldLink',
         afterFieldWrapper,
         beforeFieldWrapper,
         textFieldWrapper,
+        showSelectorButton,
         /********************************************/
         ITextValue,
         ToSourceModel,
@@ -189,6 +191,7 @@ define('SBIS3.CONTROLS/FieldLink',
                 afterFieldWrapper: afterFieldWrapper,
                 beforeFieldWrapper: beforeFieldWrapper,
                 textFieldWrapper: textFieldWrapper,
+                showSelectorButton: showSelectorButton,
                 /**********************************************************************************************/
                  list: {
                    component: 'SBIS3.CONTROLS/DataGridView',
@@ -593,7 +596,6 @@ define('SBIS3.CONTROLS/FieldLink',
           showSelector: function(template, componentOptions, selectionType) {
              var actionCfg = {
                    selectionType: selectionType,
-                   selectedItems: this.getSelectedItems(),
                    multiselect: this.getMultiselect(),
                    opener: this
                 },
@@ -1113,7 +1115,7 @@ define('SBIS3.CONTROLS/FieldLink',
            * @param show {Boolean} - true - показать иконку, false - скрыть
            */
           toggleShowSelectorButton: function(show) {
-             $('.controls-FieldLink__afterFieldWrapper', this.getContainer()).toggleClass('ws-hidden', !show);
+             show ? this._createShowSelectorButton() : this._destroyShowSelectorButton();
           },
 
           _setEnabled: function() {
@@ -1228,6 +1230,16 @@ define('SBIS3.CONTROLS/FieldLink',
                    case constants.key.tab:
                       this._linkCollection && this._linkCollection.hidePicker();
                 }
+             }
+          },
+          _createShowSelectorButton: function() {
+             if (!$('.controls-FieldLink__showSelector', this.getContainer()).length) {
+                $('.controls-FieldLink__afterFieldWrapper', this.getContainer()).append($(showSelectorButton(this._options)));
+             }
+          },
+          _destroyShowSelectorButton: function() {
+             if ($('.controls-FieldLink__showSelector', this.getContainer()).length) {
+                $('.controls-FieldLink__showSelector', this.getContainer()).remove();
              }
           },
           _prepareShowAllButton: function() {

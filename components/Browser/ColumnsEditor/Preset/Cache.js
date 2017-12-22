@@ -68,7 +68,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Cache',
           * @public
           * @param {string} namespace Пространство имён
           * @param {boolean} force Форсировать запрос
-          * @return {Core/Deferred<SBIS3.CONTROLS.Browser/Browser/ColumnsEditor/Preset/Unit[]>}
+          * @return {Core/Deferred<SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit[]>}
           */
          list: function (namespace, force) {
             if (!namespace || typeof namespace !== 'string') {

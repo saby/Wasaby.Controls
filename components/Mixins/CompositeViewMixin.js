@@ -11,10 +11,13 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
    'tmpl!SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/ListContentTemplate',
    'tmpl!SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/ItemsTemplate',
    'tmpl!SBIS3.CONTROLS/Mixins/CompositeViewMixin/resources/InvisibleItemsTemplate',
+   'tmpl!SBIS3.CONTROLS/ListView/resources/GroupTemplate',
+   'tmpl!SBIS3.CONTROLS/DataGridView/resources/GroupTemplate',
    'Core/core-merge',
    'Core/core-instance',
    'SBIS3.CONTROLS/Link'
-], function(constants, Deferred, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge, cInstance) {
+], function(constants, Deferred, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate,
+            ItemsTemplate, InvisibleItemsTemplate, ListViewGroupTemplate, DataGridGroupTemplate, cMerge, cInstance) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
@@ -96,6 +99,12 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
       var myOptions = cfg._buildTplArgsComposite(cfg);
       cMerge(parentOptions, myOptions);
       return parentOptions;
+   },
+   getGroupTemplate = function(cfg) {
+      if (cfg.viewMode === 'table') {
+         return DataGridGroupTemplate;
+      }
+      return ListViewGroupTemplate;
    };
    var MultiView = /** @lends SBIS3.CONTROLS/Mixins/CompositeViewMixin.prototype */{
        /**
@@ -107,6 +116,9 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
          _tileWidth: null,
          _folderWidth: null,
          _options: {
+            _getGroupTemplate: getGroupTemplate,
+            _ListViewGroupTemplate: ListViewGroupTemplate,
+            _DataGridGroupTemplate: DataGridGroupTemplate,
             _defaultTileContentTemplate: TileContentTemplate,
             _defaultTileTemplate: TileTemplate,
             _defaultListContentTemplate: ListContentTemplate,
