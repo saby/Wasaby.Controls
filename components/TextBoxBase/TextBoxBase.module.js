@@ -278,7 +278,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
 
       _getElementToFocus: function() {
-         return this._inputField;
+         return this._inputField || TextBoxBase.superclass._getElementToFocus.apply(this, arguments);
       },
 
       _drawText: function() {
