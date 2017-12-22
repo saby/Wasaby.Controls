@@ -134,6 +134,12 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
             });
          });
 
+         afterEach(function () {
+            SW.destroy();
+            SW = undefined;
+            switcherClickedFlag = undefined;
+         });
+
          describe('click to toggle(function _clickToggleHandler)', function(){
             it('click', function () {
                SW._clickToggleHandler();
@@ -191,11 +197,6 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
                assert(switcherClickedFlag === false);
             });
          });
-         /*afterEach(function () {
-            SW.destroy();
-            SW = undefined;
-            switcherClickedFlag = undefined;
-         });*/
       });
       describe('private function', function(){
          beforeEach(function() {
