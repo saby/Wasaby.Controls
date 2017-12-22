@@ -482,7 +482,9 @@ define(
          } else {
             mode = modeMap[this._options.serializationMode];
          }
-         if (this._options.date) {
+         if (this._options.date && this._options.date.getSQLSerializationMode() !== mode) {
+            // Дата могла прийти в компонент извне, не изменяем ее.
+            this._options.date = new Date(this._options.date);
             this._options.date.setSQLSerializationMode(mode);
          }
          return this._options.date;

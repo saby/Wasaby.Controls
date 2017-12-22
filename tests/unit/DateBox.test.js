@@ -233,6 +233,31 @@ define(['Core/constants', 'js!SBIS3.CONTROLS.DateBox', 'js!SBIS3.CONTROLS.Contro
             sandbox.restore();
          });
       });
+
+      describe('.setDate + .getDate', function () {
+         beforeEach(function () {
+            this.controlConfig.mask = 'DD.MM.YY HH:II';
+         });
+
+         afterEach(function () {
+            delete this.controlConfig.mask;
+         });
+         controlTestCase();
+         it('should not change date object from setDate if serializationMode is wrong', function () {
+            let date = new Date(), date2;
+            this.testControl.setDate(date);
+            date2 = this.testControl.getDate();
+            assert.equal(date.getTime(), date2.getTime());
+            assert.notEqual(date, date2);
+         });
+         it('should set properly serializationMode', function () {
+            let date = new Date(), date2;
+            this.testControl.setDate(date);
+            date2 = this.testControl.getDate();
+            assert.equal(date.getSQLSerializationMode(), Date.SQL_SERIALIZE_MODE_DATE);
+            assert.equal(date2.getSQLSerializationMode(), Date.SQL_SERIALIZE_MODE_DATETIME);
+         });
+      });
    });
 });
 
