@@ -77,17 +77,22 @@ define('js!Controls/List/ListControl', [
       },
 
       loadToDirection: function(self, direction) {
-         _private.load(self, direction).addCallback(function(list){
+         _private.load(self, direction).addCallback(function(addedItems){
 
             if (self._navigationController) {
-               self._navigationController.calculateState(list, direction);
+               self._navigationController.calculateState(addedItems, direction);
             }
 
             if (direction === 'down') {
-               self._listModel.appendItems(list);
+               self._listModel.appendItems(addedItems);
+               self._virtualScroll.appendItems(addedItems.getCount());
             } else if (direction === 'up') {
-               self._listModel.prependItems(list);
+               self._listModel.prependItems(addedItems);
+               self._virtualScroll.prependItems(addedItems.getCount());
             }
+
+            //обновить начало/конец видимого диапазона записей и высоты распорок
+            _private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
          })
       },
 
@@ -235,17 +240,24 @@ define('js!Controls/List/ListControl', [
       },
 
       /**
+       * Обновить размеры распорок и начало/конец отображаемых элементов
+       * @param virtualWindow результат из virtualScroll контроллера
+       */
+      applyVirtualWindow: function(self, virtualWindow) {
+         self._topPlaceholderHeight = virtualWindow.topPlaceholderHeight;
+         self._bottomPlaceholderHeight = virtualWindow.bottomPlaceholderHeight;
+         self._listModel.updateIndexes(virtualWindow.indexStart, virtualWindow.indexStop);
+         self._forceUpdate();
+      },
+
+      /**
        * Обработать прокрутку списка виртуальным скроллом
        * @param scrollTop
        */
       handleListScroll: function(scrollTop) {
-         var virtualWindow = this._virtualScroll.calcVirtualWindow(scrollTop);
-         //Если нужно, обновляем индексы видимых записей и распорки
-         if (virtualWindow) {
-            this._topPlaceholderHeight = virtualWindow.topPlaceholderHeight;
-            this._bottomPlaceholderHeight = virtualWindow.bottomPlaceholderHeight;
-            this._listModel.updateIndexes(virtualWindow.indexStart, virtualWindow.indexStop);
-            this._forceUpdate();
+         var virtualWindowIsChanged = this._virtualScroll.setScrollTop(scrollTop);
+         if (virtualWindowIsChanged) {
+            _private.applyVirtualWindow(this, this._virtualScroll.getVirtualWindow());
          }
       }
    };
@@ -297,8 +309,8 @@ define('js!Controls/List/ListControl', [
 
          _beforeMount: function(newOptions) {
             this._virtualScroll = new VirtualScroll({
-               maxRows: 75,
-               rowHeight: 25,
+               maxVisibleItems: 60,
+               itemHeight: 18,
                itemsCount: 0
             });
 
