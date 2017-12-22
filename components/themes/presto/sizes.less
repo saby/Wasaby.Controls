@@ -59,7 +59,6 @@
 @suggest-picker-standard-width:        round(700px * @multiplier);
 //treeView
 @tree-view-expand-icon-size:   @default-icon-size;
-@tree-view-expand-width:       @default-icon-size;
 //itemsToolbar
 @list-view-items-toolbar-icon-size:       round(37px * @multiplier);
 @list-view-items-toolbar-menu-icon-size:  @icon-large-size;
@@ -165,9 +164,19 @@
 @DropdownList-footer-select-right:                    round(16px * @multiplier);
 @DropdownList-footer-select-top:                      round(10px * @multiplier);
 @border-width_DropDownList_picker:                    @default-border-width;
+//Marker
+@background-size_Marker:                              round(6px * @multiplier);
 //listView
 @list-view-scroll-height:                             round(148px * @multiplier);
 @background-size_ListView_ScrollIndicator:            round(74px * @multiplier);
+
+@controls-view-padding-DEFAULT:                       round(24px * @multiplier);
+@controls-view-padding-XS:                            0;
+@controls-view-padding-S:                             round(8px * @multiplier);
+@controls-view-padding-M:                             round(12px * @multiplier);
+@controls-view-padding-L:                             round(16px * @multiplier);
+@controls-view-padding-XL:                            round(24px * @multiplier);
+
 //ListView_groupBy
 @height_ListView-GroupBy:                             round(50px * @multiplier);
 @padding_ListView-GroupBy_separator:                  0 round(24px * @multiplier);
@@ -179,7 +188,10 @@
 @font-size_DataGridView-results:                      round(32px * @multiplier);
 //TreeDataGridView
 @font-size_TreeDataGridView-folderTitle:              round(32px * @multiplier);
-
+@width_TreeDataGridView-expand:                       round(42px * @multiplier);
+@margin_TreeDataGridView-expand:                      0 round(4px * @multiplier) 0 round(4px * @multiplier);
+@height_TreeDataGridView-expand:                      @width_TreeDataGridView-expand;
+@width-TreeDataGridView-levelPadding:                 round(50px * @multiplier);
 //waitIndicator
 @wait-indicator-font-size:                            round(32px * @multiplier);
 @wait-indicator-labeled-width:                        round(467px * @multiplier);

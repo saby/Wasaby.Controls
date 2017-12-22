@@ -220,7 +220,7 @@
 
 .controls-TreeDataGridView__levelPadding {
    font-size: 0;
-   width: @tree-view-level-padding;
+   width: @width-TreeDataGridView-levelPadding;
    .flex-shrink(0);
 }
 
@@ -316,6 +316,11 @@
 .controls-IconButton.controls-TreeView__editArrow-container {
    position: absolute;
    z-index: 3;
+   color: @color_TreeDataGridView-editArrow;
+
+   &:hover {
+      color: @color_TreeDataGridView-editArrow_hovered;
+   }
 }
 
 .controls-TreeView__editArrow-background {
