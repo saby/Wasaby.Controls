@@ -47,9 +47,19 @@ define('js!Controls/Input/resources/InputRender/InputRender',
          _controlName: 'Controls/Input/resources/InputRender/InputRender',
          _template: template,
 
+         constructor: function (options) {
+            InputRender.superclass.constructor.apply(this, arguments);
+
+            this._value = options.value;
+         },
+
+         _beforeUpdate: function (newOptions) {
+            this._value = newOptions.value;
+         },
+
          _inputHandler: function(e) {
             var
-               value = this._options.value,
+               value = this._value,
                newValue = e.target.value,
                selection = _private.getSelection(this),
                position = _private.getTargetPosition(e.target),
@@ -67,8 +77,9 @@ define('js!Controls/Input/resources/InputRender/InputRender',
             _private.setTargetData(e.target, processedData);
             _private.saveSelection(this, e.target);
 
-            if(value !== processedData.value){
-               this._notify('onChangeValue', processedData.value);
+            if(this._value !== processedData.value){
+               this._value = processedData.value;
+               this._notify('valueChanged', processedData.value);
             }
          },
 
