@@ -48,7 +48,9 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
          },*/
 
          /**
-          * Открыть редактор колонок. Возвращает обещание, которое будет разрешено новыми параметрами конфигурации колонок
+          * Открыть редактор колонок. Возвращает обещание, которое будет разрешено после завершения редактирования пользователем. В случае, если
+          * пользователь после редактирования нажал кнопку применения результата редактирования, то обещание будет разрешено новыми параметрами
+          * конфигурации колонок. Если же пользователь просто закрыл редактор кнопкой "Закрыть", то обещание будет разрешено значением null
           * @public
           * @param {object} columnsConfig Параметры конфигурации колонок
           * @param {object} [editorOptions] Дополнительные опции редактора, отличающиеся или не содержащиеся в columnsConfig. Имеют приоритет перед опциями из columnsConfig (опционально)
@@ -135,7 +137,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
          },
 
          _sentResult: function (result) {
-            this._result.callback(result || this._columnsConfig);
+            this._result.callback(result);
             this._columnsConfig = null;
             this._result = null;
          }
