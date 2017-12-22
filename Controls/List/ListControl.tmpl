@@ -4,11 +4,12 @@
    <div class="ws-ListControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
 
    <ws:Controls.List.ListControl.ListView
-         listModel="{{_listModel}}"
-         itemTemplate="{{_options.itemTemplate}}"
-         idProperty="{{_options.idProperty}}"
-         displayProperty="{{_options.displayProperty}}"
-         selectedKey="{{_options.selectedKey}}">
+           name="listView"
+           listModel="{{_listModel}}"
+           itemTemplate="{{_options.itemTemplate}}"
+           idProperty="{{_options.idProperty}}"
+           displayProperty="{{_options.displayProperty}}"
+           selectedKey="{{_options.selectedKey}}">
    </ws:Controls.List.ListControl.ListView>
 
    <div class="ws-ListControl__bottomLoadTrigger" name="bottomLoadTrigger" style="top: -{{_loadOffset}}px;"></div>

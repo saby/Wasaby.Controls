@@ -121,6 +121,12 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                 */
                isPaging: false,
                /**
+                * @cfg {String}
+                * @variant none тень отсутствует.
+                * @variant standart.
+                */
+               shadowStyle: 'standart',
+               /**
                 * @cfg {Object}
                 */
                navigationToolbar: {
@@ -319,7 +325,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
          	var maxScrollTop;
 
          	// Не устанавливаем тень у контейнера с 0 высотой.
-         	if (this._getContainerHeight()) {
+         	if (this._getContainerHeight() && this._options.shadowStyle !== 'none') {
                // $elem[0].scrollHeight - integer, $elem.height() - float
                maxScrollTop = this._getScrollHeight() - this._getContainerHeight();
                // maxScrollTop > 1 - погрешность округления на различных браузерах.
@@ -576,7 +582,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                if (cDetection.isIE) {
                   // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
                   // 1px для скроллирования.
-                  this._toggleOverflowHidden((this._getScrollHeight() - Math.floor(this._container.height())) === 1);
+                  this._toggleOverflowHidden((this._getScrollHeight() - Math.floor(this._container.height())) <= 1);
                }
                if (!this._options.takeScrollbarHidden) {
                   this._subscribeTakeScrollbar();

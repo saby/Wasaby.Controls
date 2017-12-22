@@ -58,7 +58,7 @@ define('Controls/Input/Number/ViewModel',
           */
          getCursorPosition: function (splitValue, shift) {
             var
-               beforeNewDelimetersSpacesCnt = _private.concatSplitValue(splitValue).split(' ').length - 1,
+               beforeNewDelimetersSpacesCnt = _private.concatSplitValue(splitValue).trim().split(' ').length - 1,
                afterNewDelimetersSpacesCnt = _private.getValueWithDelimiters(splitValue).split(' ').length - 1,
                spacesCntDiff = afterNewDelimetersSpacesCnt - beforeNewDelimetersSpacesCnt;
 

@@ -45,7 +45,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
                 */
                title: null,//Определено в шаблоне
                /**
-                * @cfg {SBIS3.CONTROLS.Browser/Browser/ColumnsEditor/Preset/Unit[]} Список объектов статически задаваемых пресетов
+                * @cfg {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit[]} Список объектов статически задаваемых пресетов
                 */
                staticPresets: null,
                /**
@@ -137,7 +137,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
          /**
           * Получить список всех отображаемых пресетов редактора колонок
           * @public
-          * @return {SBIS3.CONTROLS.Browser/Browser/ColumnsEditor/Preset/Unit[]}
+          * @return {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit[]}
           */
          getPresets: function () {
             return this._dropdown.getItems().getRawData();

@@ -27,9 +27,11 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
           *    <li><b>id (String)</b> - идентификатор элемента.</li>
           *    <li><b>title (String)</b> - отображаемый текст элемента.</li>
           *    <li><b>fixed (Boolean)</b> - признак "Фиксированный". На панели редактирования колонок элементы с таким признаком выбраны и недоступны для взаимодействия, а колонки элемента, описанные в опции **columnConfig**, всегда отображены в списке.</li>
-          *    <li><b>columnConfig (Array)</b> - массив с конфигурацией колонок (см. {@link SBIS3.CONTROLS/DataGridView#columns columns}).</li>
+          *    <li><b>group (string|number)</b> - идентификатор группы колонок, в которую входит данная колонка (если определён)</li>
+          *    <li><b>columnConfig (object)</b> - объект с конфигурацией данныой колонки (см. {@link SBIS3.CONTROLS/DataGridVie#columns columns}).</li>
           * </ol>
-          * @property {Array.<String|Number>} selectedColumns Массив идентификаторов элементов, которые будут отмечены на панели редактирования колонок. Параметр актуален для элементов с опцией *fixed=false*.
+          * @property {Array.<String|Number>} selectedColumns Список идентификаторов колонок, которые будут отмечены на панели редактирования колонок. Параметр актуален для элементов с опцией *fixed=false*.
+          * @property {object} groupTitles Ассоциированый массив имён групп по их идентификаторам (опционально)
           */
          //_dotTplFn: null,
          $protected: {
@@ -50,14 +52,14 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
           * Открыть редактор колонок. Возвращает обещание, которое будет разрешено новыми параметрами конфигурации колонок
           * @public
           * @param {object} columnsConfig Параметры конфигурации колонок
-          * @param {object} [editorOptions] Дополнительные опции редактора (опционально)
+          * @param {object} [editorOptions] Дополнительные опции редактора, отличающиеся или не содержащиеся в columnsConfig. Имеют приоритет перед опциями из columnsConfig (опционально)
           * @param {string} [editorOptions.title] Заголовок редактора колонок (опционально)
           * @param {string} [editorOptions.applyButtonTitle] Название кнопки применения результата редактирования (опционально)
           * @param {string} [editorOptions.groupTitleTpl] Шаблон имён групп (опционально)
-          * @param {object} [editorOptions.groupTitles] Ассоциированый массив имён групп по идентификаторам (опционально)
-          * @param {boolean} [editorOptions.usePresets] Показывает на обязательность использования пресетов (опционально)
-          * @param {string} [editorOptions.presetsTitle] Заголовок дропдауна (опционально)
-          * @param {SBIS3.CONTROLS.Browser/Browser/ColumnsEditor/Preset/Unit[]} [editorOptions.staticPresets] Список объектов статически задаваемых пресетов (опционально)
+          * @param {object} [editorOptions.groupTitles] Ассоциированый массив имён групп по их идентификаторам (опционально)
+          * @param {boolean} [editorOptions.usePresets] Разрешает использовать пресеты (опционально)
+          * @param {string} [editorOptions.presetsTitle] Заголовок дропдауна пресетов (опционально)
+          * @param {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit[]} [editorOptions.staticPresets] Список объектов статически задаваемых пресетов (опционально)
           * @param {string} [editorOptions.presetNamespace] Пространство имён для сохранения пользовательских пресетов (опционально)
           * @param {string|number} [editorOptions.selectedPresetId] Идентификатор первоначально выбранного пресета в дропдауне (опционально)
           * @param {string} [editorOptions.newPresetTitle] Начальное название нового пользовательского пресета (опционально)
@@ -84,7 +86,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
 
                //title: null,
                parent: this,
-               template: 'js!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
+               template: 'SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                cssClassName: 'controls-Browser-ColumnsEditor-Editor__area',
                closeByExternalClick: true,
                closeButton: true,

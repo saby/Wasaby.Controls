@@ -57,11 +57,14 @@ define('js!WSTest/Focus/Scenario/30', [
       });
       fHelpers.fireClick(button);
       setTimeout(function () {
-         fHelpers.fireEsc(wnd);
-         fHelpers.childHasFocus(control, 'TextBox0');
-         delete window[testControlName];
-         control.destroy();
-         done();
+         try {
+            fHelpers.fireEsc(wnd);
+            fHelpers.childHasFocus(control, 'TextBox0');
+         } finally {
+            delete window[testControlName];
+            control.destroy();
+            done();
+         }
       }, 100);
 
    };
