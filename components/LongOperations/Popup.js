@@ -66,7 +66,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             LongOperationsPopup.superclass.init.call(this);
 
             if (this._options.withAnimation) {
-               this._animationAtStart();
+               this.animationAtStart();
             }
 
             this._longOpList = this.getChildControlByName('operationList');
@@ -484,9 +484,9 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
          _onOperation: function (eventType, data) {
             switch (eventType) {
                case 'onlongoperationstarted':
-                  if (data.isCurrentTab) {
-                     this._animationAtStart();
-                  }
+                  /*if (data.isCurrentTab) {
+                     this.animationAtStart();
+                  }*/
                   this._setProgress(0, data.progress ? data.progress.total : 1, false);
                   break;
 
@@ -530,7 +530,11 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             }
          },
 
-         _animationAtStart: function () {
+         /**
+          * Запустить анимацию старта длительной операции
+          * @param {string} [waitIndicatorText] текст индикатора ожидания (опционально)
+          */
+         animationAtStart: function (waitIndicatorText) {
             /*Время экспозиции индикатора ожидания перед движением вниз*/
             var TIME_EXPOSITION = 600;//1000
             /*Время движения индикатора ожидания вниз*/
@@ -542,16 +546,17 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             }
             this._isInStartAnimation = true;
             var self = this;
+            var text = waitIndicatorText || this._options.waitIndicatorText || DEFAULT_WAITINDICATOR_TEXT;
             var promise = new Deferred();
             if (!this._loadingIndicator) {
                require(['Deprecated/Controls/LoadingIndicator/LoadingIndicator'], function (LoadingIndicator) {
-                  self._loadingIndicator = new LoadingIndicator({message:self._options.waitIndicatorText || DEFAULT_WAITINDICATOR_TEXT});
+                  self._loadingIndicator = new LoadingIndicator({message:text});
                   self._loadingIndicator.show();
                   promise.callback();
                });
             }
             else {
-               this._loadingIndicator.setMessage(this._options.waitIndicatorText || DEFAULT_WAITINDICATOR_TEXT);
+               this._loadingIndicator.setMessage(text);
                this._loadingIndicator.show();
                promise.callback();
             }
