@@ -31,18 +31,24 @@ define('js!Controls/Toggle/Checkbox', [
     * @param {Boolean|null} value Новое состояние
     */
 
+   var _private ={
+      notifyChangeValue: function (self, value) {
+         self._notify('changeValue', value);
+      }
+   };
+
    var CheckBox = Control.extend({
       _template: template,
 
       _clickHandler: function (e) {
-         if(this._options.checked && this._options.triState){
-            this._notify('checkedChanged', null);
+         if(this._options.value && this._options.triState){
+            _private.notifyChangeValue(this, null);
          }
-         else if (this._options.checked===null){
-            this._notify('checkedChanged', false);
+         else if (this._options.value===null){
+            _private.notifyChangeValue(this, false);
          }
          else{
-            this._notify('checkedChanged', !this._options.checked);
+            _private.notifyChangeValue(this, !this._options.value);
          }
       }
    });
@@ -57,10 +63,12 @@ define('js!Controls/Toggle/Checkbox', [
 
    CheckBox.getDefaultOptions = function getDefaultOptions (){
      return{
-        checked:false,
+        value:false,
         triState: false
      };
    };
+
+   CheckBox._ptivate = _private;
 
    return CheckBox;
 });
