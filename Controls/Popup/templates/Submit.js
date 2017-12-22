@@ -1,15 +1,15 @@
-define('js!Controls/Windows/Submit', [
+define('js!Controls/Popup/templates/Submit', [
       'Core/Control',
       'WS.Data/Type/descriptor',
       'Core/constants',
-      'tmpl!Controls/Windows/Submit/body',
-      'tmpl!Controls/Windows/Submit/footer',
-      'tmpl!Controls/Windows/Submit/message',
-      'tmpl!Controls/Windows/Submit/details',
-      'tmpl!Controls/Windows/Submit/Submit',
+      'tmpl!Controls/Popup/templates/Submit/body',
+      'tmpl!Controls/Popup/templates/Submit/footer',
+      'tmpl!Controls/Popup/templates/Submit/message',
+      'tmpl!Controls/Popup/templates/Submit/details',
+      'tmpl!Controls/Popup/templates/Submit/Submit',
 
 
-      'css!Controls/Windows/Submit/Submit',
+      'css!Controls/Popup/templates/Submit/Submit',
       'Controls/Button'
    ], function (Control,
                 types,
@@ -25,7 +25,7 @@ define('js!Controls/Windows/Submit', [
       /**
        * Класс контрола "Окно подтверждения". В зависимости от состояния (см. {@link status}), может быть диалогом подтверждения, с кнопками "Да", "Нет" и "Отмена" (опционально), или диалогом с кнопкой "Ок".
        * Для вызова контрола рекомендуется использовать {@link SBIS3.CONTROLS.Utils.InformationPopupManager}.
-       * @class Controls/Windows/Submit
+       * @class Controls/Popup/templates/Submit
        * @extends Controls/Control
        * @control
        * @public
@@ -61,24 +61,24 @@ define('js!Controls/Windows/Submit', [
        */
 
       /**
-       * @name Controls/Windows/Submit#status
+       * @name Controls/Popup/templates/Submit#status
        * @cfg {SubmitPopupStatus} Устанавливает состояние диалога. От состояния зависит цвет линии в шапке и набор кнопок
        */
 
       /**
-       * @name Controls/Windows/Submit#message
+       * @name Controls/Popup/templates/Submit#message
        * @cfg {String} Устанавливает сообщение
        * @see details
        */
 
       /**
-       * @name Controls/Windows/Submit#details
+       * @name Controls/Popup/templates/Submit#details
        * @cfg {String} Устанавливает детали сообщения
        * @see message
        */
 
       /**
-       * @name Controls/Windows/Submit#positiveButton
+       * @name Controls/Popup/templates/Submit#positiveButton
        * @cfg {ButtonConfig} Устанавливает конфигурацию кнопки "Да". Применяется для диалогов со статусом confirm
        * @see status
        * @see negativeButton
@@ -87,7 +87,7 @@ define('js!Controls/Windows/Submit', [
        */
 
       /**
-       * @name Controls/Windows/Submit#negativeButton
+       * @name Controls/Popup/templates/Submit#negativeButton
        * @cfg {ButtonConfig} Устанавливает конфигурацию кнопки "Нет". Применяется для диалогов со статусом confirm
        * @see status
        * @see positiveButton
@@ -96,7 +96,7 @@ define('js!Controls/Windows/Submit', [
        */
 
       /**
-       * @name Controls/Windows/Submit#cancelButton
+       * @name Controls/Popup/templates/Submit#cancelButton
        * @cfg {ButtonConfig} Устанавливает конфигурацию кнопки "Отмена". Применяется для диалогов со статусом confirm
        * @see status
        * @see positiveButton
@@ -105,7 +105,7 @@ define('js!Controls/Windows/Submit', [
        */
 
       /**
-       * @name Controls/Windows/Submit#submitButton
+       * @name Controls/Popup/templates/Submit#submitButton
        * @cfg {ButtonConfig} Устанавливает конфигурацию кнопки "ОК". Применяется для диалогов со статусом default, success  и error
        * @see status
        * @see positiveButton
@@ -114,59 +114,59 @@ define('js!Controls/Windows/Submit', [
        */
 
       /**
-       * @name Controls/Windows/Submit#hasCancelButton
+       * @name Controls/Popup/templates/Submit#hasCancelButton
        * @cfg {Boolean} Устанавливает использование кнопки "Отмена". Опция актуальна только для диалогов со статусом confirm
        * @see status
        */
 
       /**
-       * @name Controls/Windows/Submit#messageTemplate
+       * @name Controls/Popup/templates/Submit#messageTemplate
        * @cfg {Function} Устанавливает шаблон отображения сообщения (см. {@link message})
        * @see detailsTemplate
        */
 
       /**
-       * @name Controls/Windows/Submit#detailsTemplate
+       * @name Controls/Popup/templates/Submit#detailsTemplate
        * @cfg {Function} Устанавливает шаблон отображения деталей сообщения(см. {@link details})
        * @see messageTemplate
        */
 
       /**
-       * @name Controls/Windows/Submit#messageTemplateOptions
+       * @name Controls/Popup/templates/Submit#messageTemplateOptions
        * @cfg {Object} Устанавливает опции для шаблона отображения сообщения (см. {@link message})
        * @see detailsTemplateOptions
        */
 
       /**
-       * @name Controls/Windows/Submit#detailsTemplateOptions
+       * @name Controls/Popup/templates/Submit#detailsTemplateOptions
        * @cfg {Object} Устанавливает опции для шаблона отображения деталей (см. {@link message})
        * @see messageTemplateOptions
        */
 
       /**
-       * @name Controls/Windows/Submit#messageMaxLength
+       * @name Controls/Popup/templates/Submit#messageMaxLength
        * cfg {Number} Устанавливает максимальный размер сообщения, превышая который, окно увеличит свой размер.
        * @see detailsMaxLength
        */
 
       /**
-       * @name Controls/Windows/Submit#detailsMaxLength
+       * @name Controls/Popup/templates/Submit#detailsMaxLength
        * cfg {Number} Устанавливает максимальный размер описания, превышая который, окно увеличит свой размер.
        * @see messageMaxLength
        */
 
       /**
-       * @name Controls/Windows/Submit#useConfirmButtons
+       * @name Controls/Popup/templates/Submit#useConfirmButtons
        * cfg {Boolean} Использовать ли кнопки подтверждения. Применяется для диалогов со статусом default, success  и error.
        */
 
       /**
-       * @name Controls/Windows/Submit#autoWidth
+       * @name Controls/Popup/templates/Submit#autoWidth
        * cfg {Boolean} Включить автоширину. В таком случае фиксация ширина окна ложитсья на сторону пользователя.
        */
 
       var Submit = Control.extend({
-         _controlName: 'Controls/Windows/Submit',
+         _controlName: 'Controls/Popup/templates/Submit',
          _template: template,
 
          _sendResult: function (e, res) {

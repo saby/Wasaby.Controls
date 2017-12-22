@@ -1,16 +1,16 @@
-define('js!Controls/Popup/InformationPopupOpener',
+define('js!Controls/Utils/PopupOpener',
    [
       'Core/Control',
       'Core/core-merge',
-      'tmpl!Controls/Popup/InformationPopupOpener/InformationPopupOpener',
-      'js!Controls/Windows/Submit'
+      'tmpl!Controls/Utils/PopupOpener/PopupOpener',
+      'js!Controls/Popup/templates/Submit'
    ],
    function (Control, merge, template) {
       'use strict';
 
       /**
        * Хелпер открытия информационных окон
-       * @class Controls/Popup/InformationPopupOpener
+       * @class Controls/Utils/PopupOpener
        * @extends Core/Control
        * @control
        * @public
@@ -19,22 +19,22 @@ define('js!Controls/Popup/InformationPopupOpener',
        */
 
       /**
-       * @function Controls/Popup/InformationPopupOpener#confirmDialog
+       * @function Controls/Utils/PopupOpener#confirmDialog
        * Открыть диалоговое окно подтверждения
        */
 
       /**
-       * @function Controls/Popup/InformationPopupOpener#infoDialog
+       * @function Controls/Utils/PopupOpener#infoDialog
        * Открыть диалоговое окно со статусом "информация"
        */
 
       /**
-       * @function Controls/Popup/InformationPopupOpener#errorDialog
+       * @function Controls/Utils/PopupOpener#errorDialog
        * Открыть диалоговое окно со статусом "ошибка"
        */
 
       /**
-       * @function Controls/Popup/InformationPopupOpener#successDialog
+       * @function Controls/Utils/PopupOpener#successDialog
        * Открыть диалоговое окно со статусом "успех"
        */
 
@@ -68,7 +68,7 @@ define('js!Controls/Popup/InformationPopupOpener',
       };
 
       return Control.extend({
-         _controlName: 'Controls/Popup/InformationPopupOpener',
+         _controlName: 'Controls/Utils/PopupOpener',
          _template: template,
 
          _positiveHandler: null,
