@@ -187,27 +187,36 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
        * @return {Core/Deferred<object[]|WS.Data/Collection/RecordSet>}
        */
       _gatherColumnsInfo: function (data) {
+         var _fromView = function () {
+            var startColumns = this._getView().getColumns();
+            var resultColumns = this._notifyOnApply(startColumns, data);
+            return Array.isArray(resultColumns) && resultColumns.length ? resultColumns : startColumns;
+         }.bind(this);
          if (this._options.useColumnsEditor) {
             var promise = this.sendCommand('showColumnsEditor'/*, {editorOptions:{...}}*/);
             if (promise && (!promise.isReady() || promise.isSuccessful())) {
                return promise.addCallback(function (columnsConfig) {
-                  // Возвратить список объектов со свойствами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView)
-                  var columns = [];
-                  var selected = columnsConfig.selectedColumns;
-                  var notSelected = !(selected && selected.length);
-                  columnsConfig.columns.each(function (column) {
-                     if (notSelected || selected.indexOf(column.getId()) !== -1) {
-                        columns.push(column.get('columnConfig'));
-                     }
-                  });
-                  return columns;
+                  // Если есть результат редактирования (то есть пользователь отредактировал колонки и нажал кнопку применить, а не закрыл редактор крестом)
+                  if (columnsConfig) {
+                     // Возвратить список объектов со свойствами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView)
+                     var columns = [];
+                     var selected = columnsConfig.selectedColumns;
+                     var notSelected = !(selected && selected.length);
+                     columnsConfig.columns.each(function (column) {
+                        if (notSelected || selected.indexOf(column.getId()) !== -1) {
+                           columns.push(column.get('columnConfig'));
+                        }
+                     });
+                     return columns;
+                  }
+                  else {
+                     return _fromView();
+                  }
                }.bind(this));
             }
          }
          // Если не доступен редактор колонок
-         var startColumns = this._getView().getColumns();
-         var resultColumns = this._notifyOnApply(startColumns, data);
-         return Deferred.success(Array.isArray(resultColumns) && resultColumns.length ? resultColumns : startColumns);
+         return Deferred.success(_fromView());
       },
 
       /**
