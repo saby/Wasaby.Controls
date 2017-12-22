@@ -25,7 +25,6 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace',
 
       var
          CONTEXT_RECORD_FIELD = 'sbis3-controls-edit-in-place',
-         TRACKING_INTERVAL = 150, // https://online.sbis.ru/opendoc.html?guid=d25ff029-5d6c-47c0-a785-aec8b9f0e25f
          EditInPlace = Control.extend([CompoundFocusMixin], /** @lends SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace.prototype */ {
             _dotTplFn: dotTplFn,
             $protected: {
