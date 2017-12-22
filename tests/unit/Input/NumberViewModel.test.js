@@ -169,6 +169,23 @@ define(
                assert.equal(inputResult.value, '12 456');
                assert.equal(inputResult.position, 2);
             });
+
+            //Удаление чилса перед пробелом с помощью клавиши "delete" приводит еще и к удалению пробела
+            it('Deleting number before space using "delete" button', function () {
+               var
+                  inputResult;
+               inputResult = new NumberViewModel({
+               }).prepareData(
+                  {
+                     before: '',
+                     insert: '',
+                     after: ' 456',
+                     delete: ''
+                  }
+               );
+               assert.equal(inputResult.value, '456');
+               assert.equal(inputResult.position, 0);
+            });
          });
       });
    }
