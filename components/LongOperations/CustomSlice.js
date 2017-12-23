@@ -1,15 +1,52 @@
 /**
  * Класс, обеспечивающий работу только с теми длительными операциями, которые соответствуют указанному в конструкторе условию выборки
+ * При создании длительных операций через сервис LRS может быть задана опция CustomData с произвольными данными, например:
+ * <pre>
+ *    CustomData = {
+ *       "ПроисхождениеОперации":"сервисАБВГД",
+ *       "ИдентификаторВСервисеАБВГД":"1234567890"
+ *    }
+ * </pre>
+ * Используя эти данные, можно наблюдать за ходом своих операций, получая события и запрашивая списки операций. Для этого нужно создать срез
+ * длительных операций, используя их кастомные данные, например:
+ * <pre>
+ *    require(['SBIS3.CONTROLS/LongOperations/CustomSlice'], function (CustomSlice) {
+ *       // Для наблюдения за одной конкретной операцией
+ *       var customSlice1 = new CustomSlice({
+ *          "ИдентификаторВСервисеАБВГД":"1234567890"
+ *       };
+ *       // Для наблюдения за группой операций
+ *       var customSlice2 = new CustomSlice({
+ *          "ПроисхождениеОперации":"сервисАБВГД",
+ *       };
+ *    });
+ * </pre>
+ * Созданный таким образом срез длительных операций нужно подписать на события и отслеживать ход операции
+ * <pre>
+ *    customSlice.subscribe('onlongoperationstarted', function () {
+ *       // Действия при создании операции
+ *    });
+ *    customSlice.subscribe('onlongoperationchanged', function () {
+ *       // Действия при прогрессе операции или изменении статуса
+ *    });
+ *    customSlice.subscribe('onlongoperationended', function () {
+ *       // Действия при завершении операции (успешном или с ошибкой)
+ *    });
+ *    customSlice.subscribe('onlongoperationdeleted', function () {
+ *       // Действия при удалении операции пользователем
+ *    });
+ * </pre>
+ * Примечание. Также экземпляр среза длительных операций приходит как результат при отпрака события onCustomViewerStarted в канал LongOperations
  *
- * @class SBIS3.CONTROLS.LongOperations.CustomSlice
+ * @class SBIS3.CONTROLS/LongOperations/CustomSlice
  * @extends Core/core-extend
  *
  * @author Спирин Виктор Алексеевич
  */
-define('js!SBIS3.CONTROLS.LongOperations.CustomSlice',
+define('SBIS3.CONTROLS/LongOperations/CustomSlice',
    [
       'Core/core-extend',
-      'js!SBIS3.CONTROLS.LongOperations.Manager',
+      'SBIS3.CONTROLS/LongOperations/Manager',
       'WS.Data/Collection/RecordSet'
    ],
 
@@ -18,29 +55,29 @@ define('js!SBIS3.CONTROLS.LongOperations.CustomSlice',
 
 
 
-      var CustomSlice = CoreExtend.extend(/** @lends SBIS3.CONTROLS.LongOperations.CustomSlice.prototype */{
+      var CustomSlice = CoreExtend.extend(/** @lends SBIS3.CONTROLS/LongOperations/CustomSlice.prototype */{
 
          /**
           * @event onlongoperationstarted Происходит при начале исполнения новой длительной операции
           * @param {Core/EventObject} evtName Дескриптор события
           * @param {object} data Данные события
-          * @see SBIS3.CONTROLS.LongOperations.IProducer
+          * @see SBIS3.CONTROLS/LongOperations/IProducer
           *
           * @event onlongoperationchanged Происходит при изменении свойств длительной операции в процесе исполнения
           * @param {Core/EventObject} evtName Дескриптор события
           * @param {object} data Данные события
-          * @see SBIS3.CONTROLS.LongOperations.IProducer
+          * @see SBIS3.CONTROLS/LongOperations/IProducer
           *
           * @event onlongoperationended Происходит при завершении длительной операции по любой причине. При завершении вследствие ошибки
           * предоставляется информация об ошибке в свойстве data.error
           * @param {Core/EventObject} evtName Дескриптор события
           * @param {object} data Данные события
-          * @see SBIS3.CONTROLS.LongOperations.IProducer
+          * @see SBIS3.CONTROLS/LongOperations/IProducer
           *
           * @event onlongoperationdeleted При удалении длительной операции
           * @param {Core/EventObject} evtName Дескриптор события
           * @param {object} data Данные события
-          * @see SBIS3.CONTROLS.LongOperations.IProducer
+          * @see SBIS3.CONTROLS/LongOperations/IProducer
           *
           * @event ondestroy При уничтожении менеджера
           * @param {Core/EventObject} evtName Дескриптор события
@@ -91,9 +128,9 @@ define('js!SBIS3.CONTROLS.LongOperations.CustomSlice',
             if (typeof listener !== 'function') {
                throw new TypeError('Function "listener" required');
             }
-            eventType.split(/[\s]+/gi).forEach(function (evtType) {
+            eventType.replace(/^\s+|\s+$/gi, '').toLowerCase().split(/[\s]+/gi).forEach(function (evtType) {
                var list = this._listeners[evtType];
-               (this._listeners[evtType] = list = list || []).push(listener);
+               (this._listeners[evtType] = list || []).push(listener);
                if (!list) {
                   manager.subscribe(evtType, this._onEvent = this._onEvent || _onEvent.bind(null, this));
                }
@@ -113,7 +150,7 @@ define('js!SBIS3.CONTROLS.LongOperations.CustomSlice',
             if (typeof listener !== 'function') {
                throw new TypeError('Function "listener" required');
             }
-            eventType.split(/[\s]+/gi).forEach(function (evtType) {
+            eventType.replace(/^\s+|\s+$/gi, '').toLowerCase().split(/[\s]+/gi).forEach(function (evtType) {
                var list = this._listeners[evtType];
                var i = -1;
                if (list) {
@@ -132,20 +169,22 @@ define('js!SBIS3.CONTROLS.LongOperations.CustomSlice',
             }.bind(this));
          },
 
+
          /**
           * Запросить набор последних длительных операций удовлетворяющих условию выборки из всех зарегистрированных продюсеров
           * @public
-          * @param {number} [limit] Максимальное количество возвращаемых элементов (опционально, если не указано, будет определено менеджером длительнеых операций)
-          * @return {Core/Deferred<WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperations.Entry>>}
+          * @param {number} [deep] Максимальное количество последних длительных операций, среди которых будут искаться операции, удовлетворяющие
+          *                        условию выборки (опционально, если не указано, будет определено менеджером длительнеых операций)
+          * @return {Core/Deferred<WS.Data/Collection/RecordSet<SBIS3.CONTROLS/LongOperations/Entry>>}
           */
-         fetch: function (limit) {
-            return manager.fetch({limit:limit}).addCallback(function (recordSet) {
+         fetch: function (deep) {
+            return manager.fetch({limit:deep}).addCallback(function (recordSet) {
                return recordSet && recordSet.getCount() ? new RecordSet({
                   rawData: recordSet.getRawData().filter(_isSatisfied.bind(null, this._condition)),
                   model: recordSet.getModel(),
                   isProperty: recordSet.getIdProperty()
-               }.bind(this)) : recordSet;
-            });
+               }) : recordSet;
+            }.bind(this));
          }
       });
 
@@ -156,7 +195,7 @@ define('js!SBIS3.CONTROLS.LongOperations.CustomSlice',
       /**
        * Обработчик событий
        * @private
-       * @param {SBIS3.CONTROLS.LongOperations.CustomSlice} self Этот объект
+       * @param {SBIS3.CONTROLS/LongOperations/CustomSlice} self Этот объект
        * @param {Core/EventObject} evtName Дескриптор события
        * @param {any} evt Данные события (если есть)
        */

@@ -129,23 +129,23 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
           * @event onlongoperationstarted Происходит при начале исполнения новой длительной операции
           * @param {Core/EventObject} evtName Дескриптор события
           * @param {object} data Данные события
-          * @see SBIS3.CONTROLS.LongOperations.IProducer
+          * @see SBIS3.CONTROLS/LongOperations/IProducer
           *
           * @event onlongoperationchanged Происходит при изменении свойств длительной операции в процесе исполнения
           * @param {Core/EventObject} evtName Дескриптор события
           * @param {object} data Данные события
-          * @see SBIS3.CONTROLS.LongOperations.IProducer
+          * @see SBIS3.CONTROLS/LongOperations/IProducer
           *
           * @event onlongoperationended Происходит при завершении длительной операции по любой причине. При завершении вследствие ошибки
           * предоставляется информация об ошибке в свойстве data.error
           * @param {Core/EventObject} evtName Дескриптор события
           * @param {object} data Данные события
-          * @see SBIS3.CONTROLS.LongOperations.IProducer
+          * @see SBIS3.CONTROLS/LongOperations/IProducer
           *
           * @event onlongoperationdeleted При удалении длительной операции
           * @param {Core/EventObject} evtName Дескриптор события
           * @param {object} data Данные события
-          * @see SBIS3.CONTROLS.LongOperations.IProducer
+          * @see SBIS3.CONTROLS/LongOperations/IProducer
           *
           * @event onproducerregistered При регистрации продюсера длительных операций в менеджере
           * @param {Core/EventObject} evtName Дескриптор события
@@ -479,7 +479,7 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
        * Проверить правильность имени продюсера
        * Указанное имя продюсера должно быть или непосредственно именем модуля, или именем модуля и следующей после него через ":" опциональной инициализирующей строкой
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperations.IProducer} producer Продюсер длительных операций
+       * @param {SBIS3.CONTROLS/LongOperations/IProducer} producer Продюсер длительных операций
        * @return {boolean}
        */
       var _checkProducerName = function (producer) {
