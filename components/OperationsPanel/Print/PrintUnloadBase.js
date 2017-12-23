@@ -208,15 +208,11 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
                   // Если есть результат редактирования (то есть пользователь отредактировал колонки и нажал кнопку применить, а не закрыл редактор крестом)
                   if (columnsConfig) {
                      // Возвратить список объектов со свойствами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView)
-                     var columns = [];
+                     var recordSet = columnsConfig.columns;
                      var selected = columnsConfig.selectedColumns;
-                     var notSelected = !(selected && selected.length);
-                     columnsConfig.columns.each(function (column) {
-                        if (notSelected || selected.indexOf(column.getId()) !== -1) {
-                           columns.push(column.get('columnConfig'));
-                        }
-                     });
-                     return columns;
+                     return selected && selected.length
+                           ? selected.map(function (columnId) { return recordSet.getRecordById(columnId).get('columnConfig'); })
+                           : Chain(recordSet).map(function (model) { return model.get('columnConfig'); }).value();
                   }
                   else {
                      return forced ? _fromView() : null;
