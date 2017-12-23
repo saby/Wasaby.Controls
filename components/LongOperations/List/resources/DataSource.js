@@ -1,7 +1,7 @@
 /**
  * Простая оболочка над SBIS3.CONTROLS/LongOperations/Manager для имплементации интерфейса WS.Data/Source/ISource
  *
- * @class SBIS3.CONTROLS.LongOperationsListDataSource
+ * @class SBIS3.CONTROLS/LongOperations/List/resources/DataSource
  * @implements WS.Data/Source/ISource
  * @public
  */
@@ -35,7 +35,7 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
        * @public
        * @type {WS.Data/Source/ISource}
        */
-      var LongOperationsListDataSource = CoreExtend.extend({}, [ISource, ObservableMixin], /** @lends SBIS3.CONTROLS.LongOperationsListDataSource.prototype */{
+      var LongOperationsListDataSource = CoreExtend.extend({}, [ISource, ObservableMixin], /** @lends SBIS3.CONTROLS/LongOperations/List/resources/DataSource.prototype */{
          _moduleName: 'SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
 
          $protected: {

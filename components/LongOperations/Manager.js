@@ -47,7 +47,7 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
       /**
        * Постзагрузчик методов
        * @protected
-       * @type {object{SBIS3.CONTROLS.LongOperations.Postloader}}
+       * @type {object{SBIS3.CONTROLS/LongOperations/Postloader}}
        */
       var _postloader = new Postloader('SBIS3.CONTROLS/LongOperations/ManagerLib', [protectedOf]);
 
@@ -196,7 +196,7 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
          /**
           * Удалить продюсер длительных операций из списка зарегистрированных. Возвращает значение, показывающее удалось ли раз-регистрировать
           * @public
-          * @param {SBIS3.CONTROLS.LongOperations.IProducer|string} producer Продюсер длительных операций или его имя
+          * @param {SBIS3.CONTROLS/LongOperations/IProducer|string} producer Продюсер длительных операций или его имя
           * @return {boolean}
           */
          unregister: function (producer) {
@@ -208,7 +208,7 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
          /**
           * Выяснить, зарегистрирован ли указанный продюсер длительных операций
           * @public
-          * @param {SBIS3.CONTROLS.LongOperations.IProducer|string} producer Продюсер длительных операций или его имя
+          * @param {SBIS3.CONTROLS/LongOperations/IProducer|string} producer Продюсер длительных операций или его имя
           * @return {boolean}
           */
          isRegistered: function (producer) {
@@ -427,7 +427,7 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
       /**
        * Удалить продюсер длительных операций из списка зарегистрированных
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperations.IProducer|string} producer Продюсер длительных операций или его имя
+       * @param {SBIS3.CONTROLS/LongOperations/IProducer|string} producer Продюсер длительных операций или его имя
        * @return {boolean}
        */
       var _unregister = function (producer) {

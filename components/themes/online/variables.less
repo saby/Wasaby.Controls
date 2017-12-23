@@ -595,26 +595,6 @@
 @calendar-day-cell-active-hover-bg:             @calendar-day-cell-active-bg;
 @calendar-day-fog-cell-text-color:              @gray-color;
 @calendar-day-fog-cell-hover-text-color:        @calendar-day-fog-cell-text-color;
-// --------- //
-// MonthView //
-// --------- //
-@month-view-width:                                @calendar-width;
-@month-view-padding:                              @calendar-padding;
-@month-view-bg:                                   @calendar-bg;
-@month-view-month-picker-width:                   @calendar-month-picker-width;
-@month-view-day-border-spacing:                   @calendar-day-border-spacing;
-@month-view-day-header-font:                      @calendar-day-header-font;
-@month-view-day-table-cell-height:                @calendar-day-table-cell-height;
-@month-view-day-cell-text-color:                  @calendar-day-cell-text-color;
-@month-view-day-cell-bg:                          @calendar-day-cell-bg;
-@month-view-day-cell-hover-text-color:            @calendar-day-cell-hover-text-color;
-@month-view-day-cell-hover-bg:                    @calendar-day-cell-hover-bg;
-@month-view-day-cell-active-text-color:           @calendar-day-cell-active-text-color;
-@month-view-day-cell-active-bg:                   @calendar-day-cell-active-bg;
-@month-view-day-cell-active-hover-text-color:     @calendar-day-cell-active-hover-text-color;
-@month-view-day-cell-active-hover-bg:             @calendar-day-cell-active-hover-bg;
-@month-view-day-fog-cell-text-color:              @calendar-day-fog-cell-text-color;
-@month-view-day-fog-cell-hover-text-color:        @calendar-day-fog-cell-hover-text-color;
 // ------------ //
 // Month picker //
 // ------------ //
@@ -712,6 +692,7 @@
 @date-range-choose-year-font-size:              15px;
 @date-range-choose-year-height:                 @date-range-choose-standart-line-height;
 @date-range-choose-year-margin-bottom:          4px;
+@height_dateRange_choose_year:                  auto;
 @date-range-choose-year-padding-left:           2px;
 @date-range-choose-year-prev-next-btns-width:         32px;
 @date-range-choose-year-prev-next-btns-font-size:     16px;
@@ -929,13 +910,6 @@
 @list-view-small-actions-menu-item-icon-top-offset: @menu-item-icon-top-offset;
 @list-view-small-actions-menu-item-icon-left-offset:@menu-item-icon-left-offset;
 @bottomStyle-small-items-toolbar-margin-top:        4px;
-/*group*/
-@list-view-separator-height:                       18px;
-@list-view-separator-content-padding:              0 12px;
-@list-view-separator-content-color:                @gray-color;
-@list-view-separator-expander-size:                16px;
-@list-view-separator-expander-margin:              6px;
-@list-view-separator-content-hover-color:          @blue-dark-color;
 // -------------------- //
 //  View padding sizes
 // -------------------- //
@@ -971,9 +945,6 @@
 @tree-view-expand-width:                        16px;
 @tree-view-expand-height:                       20px;
 @tree-view-expand-margin:                       0 6px 0 4px;
-@tree-view-expand-color:                        @blue-dark-color;
-@tree-view-expand-hover-color:                  @darkcyan-color;
-@tree-view-expand-hidden-color:                 @gray-lamantin-color;
 @tree-view-padding-left-DEFAULT:                8px;
 @tree-view-level-padding:                       26px;
 @tree-view-level-padding-photo:                 46px;
@@ -1016,7 +987,6 @@
 @data-grid-header-cell-padding:                 4px @data-grid-cell-padding-right;
 @data-grid-header-cell-padding-side:            12px;
 @data-grid-header-cell-font-size:               12px;
-@data-grid-header-cell-icon-size:               @data-grid-header-cell-font-size;
 @data-grid-header-cell-sorting-icon-size:       16px;
 @data-grid-header-cell-text-color:              #8991a9;
 @data-grid-header-cell-bg:                      transparent;
@@ -1214,7 +1184,7 @@
 @controls-filterButton-button-height:             24px;
 @controls-filterButton-button-width:              24px;
 @controls-filterButton-button-empty-left-margin:  8px;
-@controls-filterButton-button-verSide-margin:     12px;
+@controls-filterButton-button-verSide-margin:     8px;
 @controls-filterButton-button-margin:             8px @controls-filterButton-button-verSide-margin 8px 0;
 @controls-filterButton-button-margin-right-align: 8px 0 8px @controls-filterButton-button-verSide-margin;
 @controls-filterButton-line-margin-right-align:   8px 0 8px 8px;
@@ -1623,7 +1593,6 @@
 @padding-ColumnsEditor-Editing-Area__FixedList-CheckBox: 4px;
 @padding-left-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption: 8px;
 @color-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption: @black-color !important;
-@height-ColumnsEditor-Editing-Area__view-item: 32px;
 @left-ColumnsEditor-Editing-Area__view-item__itemCheckBox: 4px;
 @top-ColumnsEditor-Editing-Area__view-item__itemCheckBox: 4px;
 @padding-left-ColumnsEditor-Editing-Area__view-item-text: 36px;

@@ -225,10 +225,64 @@ body {
     }
   }
 }
+
+.controls-ListView {
+  .controls-IconButton {
+    .icon-primary {
+      color: #26B8FF;
+    }
+  }
+}
+
+.ws-is-desktop-platform {
+  .controls-ListView {
+    .controls-IconButton:not(.ws-disabled):not(.controls-Click__active) {
+      &:hover {
+        .controls-Button__icon {
+          &.icon-primary {
+            color: #B9E9FF;
+          }
+        }
+      }
+    }
+  }
+}
+
+.controls-IconButton.controls-TreeView__editArrow-container {
+  @offset: round(10px * @multiplier);
+  margin-top: calc(~"@{default-border-width} - @{offset}");
+  .icon-16 {
+    .icon-size(@icon-medium-size, @icon-font);
+  }
+}
+
 //!IMPORTANT лучше чем увеличение веса селектора через BODY тк возможно собирать тему под селектором
 .ws-window-titlebar {
   background: transparent !important;
 }
 .ws-window-content {
   background-color: @basic-block-bg-color !important;
+}
+//daterange
+body {
+  // Выпилить как будем делать новые темы.
+  .controls-DateRangeChoose__bodyWrapper {
+    padding-top: round(8px * @multiplier);
+  }
+  .controls-DateRangeChoose {
+    .controls-DateRangeChoose__home .icon-small {
+      font-size: round(84px * @multiplier) !important;
+      line-height: round(84px * @multiplier) !important;
+      width: round(84px * @multiplier);
+      height: round(84px * @multiplier);
+    }
+    &.controls-DateRangeChoose__showMonths {
+      &.controls-DateRangeChoose__showHalfYears,
+      &.controls-DateRangeChoose__showQuarters {
+        .controls-DateRangeChoose__home {
+          width: round(56px * @multiplier);
+        }
+      }
+    }
+  }
 }

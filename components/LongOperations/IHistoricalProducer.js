@@ -18,7 +18,7 @@ define('SBIS3.CONTROLS/LongOperations/IHistoricalProducer',
           * @param {string|number} operationId Идентификатор длительной операции
           * @param {number} count Максимальное количество возвращаемых элементов
           * @param {object} [filter] Фильтр для получения не всех элементов истроии
-          * @return {Core/Deferred<SBIS3.CONTROLS.LongOperations.HistoryItem[]>}
+          * @return {Core/Deferred<SBIS3.CONTROLS/LongOperations/HistoryItem[]>}
           */
          history: function (operationId, count, filter) {
             throw new Error('Method must be implemented');

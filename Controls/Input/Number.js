@@ -63,6 +63,8 @@ define('js!Controls/Input/Number', [
       constructor: function (options) {
          NumberInput.superclass.constructor.apply(this, arguments);
 
+         this._value = options.value;
+
          //Вьюмодель для намбера. Нужно связать с конфигом
          this._numberViewModel = new NumberViewModel({
             onlyPositive: options.onlyPositive,
@@ -75,9 +77,8 @@ define('js!Controls/Input/Number', [
          this._value = newOptions.value;
       },
 
-      _changeValueHandler: function (event, value) {
+      _valueChangedHandler: function (event, value) {
          this._value = value;
-         this._notify('onChangeValue', value);
       },
 
       _inputCompletedHandler: function () {
@@ -106,8 +107,6 @@ define('js!Controls/Input/Number', [
          onlyPositive: types(Boolean) //Только положительные значения
       };
    };
-
-   NumberInput._private = _private;
 
    return NumberInput;
 });
