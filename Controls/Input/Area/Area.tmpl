@@ -1,24 +1,21 @@
 <ws:Controls.Input.resources.InputRender.InputRender
-        size="auto"
-        sidePadding="Left"
-        isMultiline="{{ _options.minLines > 1 }}"
         name="inputRender"
         value="{{_value}}"
         selectOnClick="{{_options.selectOnClick}}"
         viewModel="{{_textViewModel}}"
         tagStyle="{{_options.tagStyle}}"
-        attr:class="controls-InputArea"
+        attr:class="controls-TextArea"
         on:onChangeValue="_changeValueHandler()"
         on:onInputCompleted="_inputCompletedHandler()"
         on:onTagHover="_notifyHandler('onTagHover')"
         on:onTagClick="_notifyHandler('onTagClick')">
    <ws:content>
       <!--TODO контейнер убрать https://online.sbis.ru/opendoc.html?guid=25000158-64ff-4db9-9605-a986cbc37b0f-->
-      <div class="controls-InputRender__wrapper">
+      <div>
          <textarea
                  name="realArea"
                  spellcheck="false"
-                 class="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
+                 class="controls-TextArea__field controls-TextArea__realField controls-TextBox__field {{_hasScroll ? 'controls-TextArea__realField_scroll-scroll' : 'controls-TextArea__realField_scroll-hidden'}}"
                  placeholder="{{_options.placeholder}}"
                  readonly="{{!isEnabled() ? 'readonly'}}"
                  on:keydown="_keyDownHandler()"
@@ -30,12 +27,12 @@
             <div class="controls-fakeTextArea__secondWrapper">
                <div
                   name="fakeArea"
-                  class="controls-InputArea__field controls-InputArea__fakeField controls-InputRender__field"
+                  class="controls-TextArea__field controls-TextArea__fakeField controls-TextBox__field"
                   style="{{_options.minLines ? ('min-height: ' + _options.minLines * 100 + '%;')}} {{_options.maxLines ? 'max-height: ' + _options.maxLines * 100 + '%'}}">
                   <span name="fakeAreaValue">{{_value}}</span><br/>
                </div>
             </div>
-            <div class="controls-InputArea__clear"></div>
+            <div style="clear:both;"></div>
          </div>
       </div>
    </ws:content>
