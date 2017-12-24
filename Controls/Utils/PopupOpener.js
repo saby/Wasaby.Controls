@@ -3,7 +3,7 @@ define('js!Controls/Utils/PopupOpener',
       'Core/Control',
       'Core/core-merge',
       'tmpl!Controls/Utils/PopupOpener/PopupOpener',
-      'js!Controls/Popup/templates/Submit'
+      'js!Controls/Popup/Submit'
    ],
    function (Control, merge, template) {
       'use strict';
@@ -19,84 +19,76 @@ define('js!Controls/Utils/PopupOpener',
        */
 
       /**
-       * @function Controls/Utils/PopupOpener#confirmDialog
+       * @function Controls/Utils/PopupOpener#openConfirmDialog
        * Открыть диалоговое окно подтверждения
        */
 
       /**
-       * @function Controls/Utils/PopupOpener#infoDialog
+       * @function Controls/Utils/PopupOpener#openInfoDialog
        * Открыть диалоговое окно со статусом "информация"
        */
 
       /**
-       * @function Controls/Utils/PopupOpener#errorDialog
+       * @function Controls/Utils/PopupOpener#openErrorDialog
        * Открыть диалоговое окно со статусом "ошибка"
        */
 
       /**
-       * @function Controls/Utils/PopupOpener#successDialog
+       * @function Controls/Utils/PopupOpener#openSuccessDialog
        * Открыть диалоговое окно со статусом "успех"
        */
 
       var _private = {
-         openDialog: function(cfg, status, positiveHandler, negativeHandler, cancelHandler){
-            this._children.opener.open({
-               componentOptions: merge(merge({
-                  status: status
-               }, this._options.dialogOptions), cfg)
+         openDialog: function(self, type, handlers){
+            self._children.opener.open({
+               componentOptions: merge({
+                  type: type
+               }, self._options.dialogOptions)
             });
 
-            this._positiveHandler = positiveHandler;
-            this._negativeHandler = negativeHandler;
-            this._cancelHandler = cancelHandler;
+            self._handlers = handlers;
          },
 
-         resultHandler: function(res){
+         resultHandler: function(self, res){
             var handler;
 
             switch(res){
-               case true: handler = this._positiveHandler; break;
-               case false: handler = this._negativeHandler; break;
-               default: handler = this._cancelHandler; break;
+               case true: handler = self._handlers.yes; break;
+               case false: handler = self._handlers.no; break;
+               default: handler = self._handlers.cancel; break;
             }
 
             if(handler && typeof handler === 'function'){
                handler(res);
             }
-            this._notify('onResult', res);
+            self._notify('onResult', res);
          }
       };
 
       return Control.extend({
-         _controlName: 'Controls/Utils/PopupOpener',
          _template: template,
-
-         _positiveHandler: null,
-         _negativeHandler: null,
-         _cancelHandler: null,
+         _handlers: null,
 
          _afterMount: function () {
             var self = this;
 
             self._children.opener.subscribe('onResult', function (e, res) {
-               _private.resultHandler.call(self, res);
+               _private.resultHandler(self, res);
             });
          },
 
-         confirmDialog: function(cfg, positiveHandler, negativeHandler, cancelHandler){
-            _private.openDialog.call(this, cfg, 'confirm', positiveHandler, negativeHandler, cancelHandler);
+         openConfirmDialog: function(yesHandler, noHandler, cancelHandler){
+            _private.openDialog(this, 'confirm', {
+               yes: yesHandler,
+               no: noHandler,
+               cancel: cancelHandler
+            });
          },
 
-         infoDialog: function(cfg, handler){
-            _private.openDialog.call(this, cfg, 'default', null, null, handler);
-         },
-
-         errorDialog: function(cfg, handler){
-            _private.openDialog.call(this, cfg, 'error', null, null, handler);
-         },
-
-         successDialog: function(cfg, handler){
-            _private.openDialog.call(this, cfg, 'success', null, null, handler);
+         openInfoDialog: function(handler){
+            _private.openDialog(this, 'info', {
+               cancel: handler
+            });
          }
 
       });

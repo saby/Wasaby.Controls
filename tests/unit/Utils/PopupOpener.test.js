@@ -24,31 +24,31 @@ define(
          });
 
          it('initialize', function() {
-            assert.equal(popupOpener._positiveHandler, null);
+            assert.equal(popupOpener._handlers.yes, null);
          });
 
          it('confirmDialog', function() {
             var handler = function(){};
-            popupOpener.confirmDialog({},  handler);
-            assert.equal(popupOpener._positiveHandler, handler);
+            popupOpener.openConfirmDialog(handler);
+            assert.equal(popupOpener._handlers.yes, handler);
          });
 
          it('successDialog', function() {
             var handler = function(){};
-            popupOpener.successDialog({},  handler);
-            assert.equal(popupOpener._cancelHandler, handler);
+            popupOpener.openSuccessDialog(handler);
+            assert.equal(popupOpener._handlers.cancel, handler);
          });
 
          it('errorDialog', function() {
             var handler = function(){};
-            popupOpener.errorDialog({},  handler);
-            assert.equal(popupOpener._cancelHandler, handler);
+            popupOpener.openErrorDialog(handler);
+            assert.equal(popupOpener._handlers.cancel, handler);
          });
 
          it('infoDialog', function() {
             var handler = function(){};
-            popupOpener.infoDialog({},  handler);
-            assert.equal(popupOpener._cancelHandler, handler);
+            popupOpener.openInfoDialog(handler);
+            assert.equal(popupOpener._handlers.cancel, handler);
          });
       });
    }
