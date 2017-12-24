@@ -59,7 +59,7 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
          _options: {
             _needShowCompatiblePlaceholder: needShowCompatiblePlaceholder,
             textAlign: 'right',
-            _paddingClass: ' controls-InputRender_paddingBoth controls-TextBox_paddingBoth',
+            _paddingClass: ' controls-TextBox_paddingBoth',
             textFieldWrapper: textFieldWrapper,
             /**
              * @cfg {Number} Количество знаков после запятой
