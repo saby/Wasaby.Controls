@@ -4,7 +4,7 @@
         ws-delegates-tabfocus="true"
         class="controls-InformationPopup controls-InformationPopup__status-{{_options.style}} controls-SubmitPopup_popup">
    <!--Если размер текста сообщения и описания превышает заданные рамки, то увеличиваем размер окна-->
-   <div class="controls-SubmitPopup{{_options.disableStandardWidth ? '' : _options.message.length > _options.messageMaxLength || _options.details.length > _options.detailsMaxLength ? ' controls-SubmitPopup__size-big' : ' controls-SubmitPopup__size-standard'}}">
+   <div class="controls-SubmitPopup{{_options.disableStandardWidth ? '' : _options.message.length > _messageMaxLength || _options.details.length > _detailsMaxLength ? ' controls-SubmitPopup__size-big' : ' controls-SubmitPopup__size-standard'}}">
 
       <ws:partial
               template="{{_options.bodyTemplate}}"
