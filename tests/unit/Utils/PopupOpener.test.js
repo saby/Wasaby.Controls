@@ -33,18 +33,6 @@ define(
             assert.equal(popupOpener._handlers.yes, handler);
          });
 
-         it('successDialog', function() {
-            var handler = function(){};
-            popupOpener.openSuccessDialog(handler);
-            assert.equal(popupOpener._handlers.cancel, handler);
-         });
-
-         it('errorDialog', function() {
-            var handler = function(){};
-            popupOpener.openErrorDialog(handler);
-            assert.equal(popupOpener._handlers.cancel, handler);
-         });
-
          it('infoDialog', function() {
             var handler = function(){};
             popupOpener.openInfoDialog(handler);
