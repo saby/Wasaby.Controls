@@ -20,22 +20,12 @@ define('js!Controls/Utils/PopupOpener',
 
       /**
        * @function Controls/Utils/PopupOpener#openConfirmDialog
-       * Открыть диалоговое окно подтверждения
+       * Открыть диалоговое окно подтверждения с кнопками "Да", "Нет", "Отмена"
        */
 
       /**
        * @function Controls/Utils/PopupOpener#openInfoDialog
-       * Открыть диалоговое окно со статусом "информация"
-       */
-
-      /**
-       * @function Controls/Utils/PopupOpener#openErrorDialog
-       * Открыть диалоговое окно со статусом "ошибка"
-       */
-
-      /**
-       * @function Controls/Utils/PopupOpener#openSuccessDialog
-       * Открыть диалоговое окно со статусом "успех"
+       * Открыть информационное диалоговое окно с кнопкой "ОК"
        */
 
       var _private = {
