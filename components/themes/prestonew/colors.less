@@ -27,7 +27,7 @@
 @combo-box-arrowDown-color-focus:        #26B8FF;
 @combo-box-arrowDown-color-hover:        #B9E9FF;
 //menu
-@menu-button-menu-bg:                    #f0f5fb;
+@background-color_Menu:                    #f0f5fb;
 //date-range
 @date-range-choose-current-value-bg-hover-color:  @date-range-choose-current-value-bg-color;//todo: mironov
 @date-range-choose-year-wrapper-bg-color:         @date-range-choose-item-bg-color;//todo: mironov
@@ -155,20 +155,20 @@
 @switcher-border-color:                   #37536C;
 @switcher-disabled-color:                 #37536C;
 //Menu
-@menu-header-bg-color:                    #26B8FF;
-@menu-border-color:                       @default-border-color-second;
+@background-color_Menu-header:                    #26B8FF;
+@border-color_Menu:                       @default-border-color-second;
 @menu-expand-border-color:                transparent transparent transparent @primary-color;
 @menu-expand-bg:                          transparent;
 @menu-expand-hover-border-color:          transparent transparent transparent @secondary-color;
-@popup-header-caption-color:              @default-text-color;
-@menu-header-icon-color:                  @popup-header-caption-color;
+@color_Menu-header:              @default-text-color;
+@padding_Menu-header-iconcolor:                  @color_Menu-header;
 //Menu item
-@menu-item-text-color:                    #273B4D;
+@color_MenuItem:                    #273B4D;
 @menu-item-bg:                            #f0f5fb;
-@menu-item-hover-bg:                      #E0ECF5;
+@background_MenuItem_hovered:                      #E0ECF5;
 // Menu
 @menu-button-menu-border-color:           #26B8FF;
-@menu-link-header-bg-color:               @menu-header-bg-color;
+@menu-link-header-bg-color:               @background-color_Menu-header;
 //Text box
 @combo-box-picker-show-background-color:  #f0f5fb;
 @combo-box-picker-show-border-color:	  #23b8ff;
@@ -330,7 +330,7 @@
 @scroll-pager-bg:							      transparent;
 @DropdownList-picker-menu-item-color:     #F0F5FB;
 @DropdownList-picker-menu-item-hover:     #E0ECF5;
-@DropdownList-picker-menu-item-base-color: @menu-item-text-color;
+@DropdownList-picker-menu-item-base-color: @color_MenuItem;
 @DropdownList-picker-bg:                  #E1ECF6;
 // ClockPicker
 @clock-picker-tick-hover-background-color:#273B4D;
