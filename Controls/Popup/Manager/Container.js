@@ -30,14 +30,18 @@ define('js!Controls/Popup/Manager/Container',
           * @param id идентификатор попапа.
           */
          _closePopup: function (event, id) {
-            this._notify('closePopup', id);
+            if( this.eventHandlers && this.eventHandlers.onClosePopup){
+               this.eventHandlers.onClosePopup(event, id);
+            }
          },
 
          /**
           * @param id идентификатор попапа.
           */
          _focusInPopup: function(event, id){
-            this._notify('focusInPopup', id);
+            if( this.eventHandlers && this.eventHandlers.onFocusIn){
+               this.eventHandlers.onFocusIn(event, id);
+            }
          },
 
          /**
@@ -45,14 +49,18 @@ define('js!Controls/Popup/Manager/Container',
           * @param {Object} focusedControl контрол, на который кшел фокус.
           */
          _focusOutPopup: function(event, id, focusedControl){
-            this._notify('focusOutPopup', id, focusedControl);
+            if( this.eventHandlers && this.eventHandlers.onFocusOut){
+               this.eventHandlers.onFocusOut(event, id, focusedControl);
+            }
          },
 
          /**
           * @param {Object} popup Инстанс попапа.
           */
          _recalcPosition: function (event, popup) {
-            this._notify('recalcPosition', popup);
+            if( this.eventHandlers && this.eventHandlers.onRecalcPosition){
+               this.eventHandlers.onRecalcPosition(event, popup);
+            }
          },
 
          /**
@@ -66,13 +74,6 @@ define('js!Controls/Popup/Manager/Container',
          }
       });
 
-      // TODO довольно спорный способ встроить контйнер на страницу
-      if( document ){
-         var newDiv = document.createElement('div');
-         newDiv.setAttribute('id', 'popup');
-         document.body.appendChild(newDiv);
-         return Control.createControl(Container, {}, '#popup');
-      }
-      return new Container();
+      return Container;
    }
 );

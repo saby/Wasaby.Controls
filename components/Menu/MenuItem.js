@@ -32,7 +32,6 @@ define('SBIS3.CONTROLS/Menu/MenuItem', [
          // Предотвращаем всплытие focus и mousedown с контейнера меню, т.к. это приводит к потере фокуса
          // при потере фокуса в богатом редакторе теряется текущее выделение текста  в IE8
          this._container.on('mousedown focus', this._blockFocusEvents);
-         this._oldIcon = this._options.icon && this._iconTemplate(this._options);
       },
       _blockFocusEvents: function(event) {
          var eventsChannel = EventBus.channel('WindowChangeChannel');
@@ -56,7 +55,7 @@ define('SBIS3.CONTROLS/Menu/MenuItem', [
       },
 
       setIcon: function(){
-         this._iconContainer && this._iconContainer.removeClass(this._oldIcon);
+         this._iconContainer && this._iconContainer.removeClass(this._options._iconClass);
          MenuItem.superclass.setIcon.apply(this, arguments);
       },
       _drawIcon: function(){
