@@ -117,7 +117,7 @@ define('SBIS3.CONTROLS/LongOperations/IProducer',
           * @param {number} options.offset Количество пропущенных элементов в начале
           * @param {number} options.limit Максимальное количество возвращаемых элементов
           * @param {object} [options.extra] Дополнительные параметры, если есть (опционально)
-          * @return {Core/Deferred<SBIS3.CONTROLS.LongOperations.Entry[]>}
+          * @return {Core/Deferred<SBIS3.CONTROLS/LongOperations/Entry[]>}
           */
          fetch: function (options) {
             throw new Error(NOT_IMPLEMENTED);

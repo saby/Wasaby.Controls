@@ -191,9 +191,16 @@ define(
 
          testCases.forEach(function(item) {
             it(item.testName, function (done) {
+               if (typeof document === 'undefined') {
+                  this.skip();
+               }
+
                var
-                  numberControl = Control.createControl(NumberControl, item.controlConfig, $('<div></div>').appendTo('#mocha')),
+                  container = document.createElement('div'),
+                  numberControl = Control.createControl(NumberControl, item.controlConfig, container),
                   stateItem;
+
+               document.getElementById('mocha').append(container);
 
                //Используем runDelayed, т.к. без него мы не сможем добраться до дочернего inputRender
                runDelayed(function () {

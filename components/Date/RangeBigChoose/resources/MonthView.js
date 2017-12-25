@@ -116,6 +116,16 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView', [
                }
             });
          }
+      },
+      _getItemKeepCssClasses: function () {
+         var classes = MonthView.superclass._getItemKeepCssClasses.apply(this, arguments);
+         classes.push(
+            'controls-DateRangeBigChoose-MonthView__border-top',
+            'controls-DateRangeBigChoose-MonthView__border-bottom',
+            'controls-DateRangeBigChoose-MonthView__beforeToday',
+            'controls-DateRangeBigChoose-MonthView__aboveToday'
+         );
+         return classes;
       }
 
    });
