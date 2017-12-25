@@ -3,8 +3,6 @@
     <ws:if data="{{ _serverRender && _records.length }}">
         <ws:partial template="{{_itemsTemplate}}" records="{{_records}}" tplData="{{_itemData}}" />
     </ws:if>
-    <ws:else>
-        {{ defaultCaption }}
-    </ws:else>
+    <ws:else>{{defaultCaption}}</ws:else>
 </span>
 <i class="controls-SelectorButton__cross js-controls__item-cross icon-16 icon-Close icon-disabled action-hover {{ (!items || !items.getCount() || withoutCross) ? 'ws-hidden' }}"></i>

@@ -94,7 +94,7 @@ define('SBIS3.CONTROLS/Link', [
          }
       },
 
-      _modifyOptions: function (opts) {
+      _modifyOptions: function (opts, parsedOptions, attrToMerge) {
          var
             options = Link.superclass._modifyOptions.apply(this, arguments);
          options.cssClassName += ' controls-Link';
@@ -105,7 +105,7 @@ define('SBIS3.CONTROLS/Link', [
          }else {
             options._textClass = ' controls-Link__field';
          }
-         LinkUtil.preparedClassFromOptions(options);
+         LinkUtil.preparedClassFromOptions(options, attrToMerge);
          return options;
       },
 

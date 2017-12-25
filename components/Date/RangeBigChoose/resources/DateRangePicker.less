@@ -3,13 +3,16 @@
 }
 
 // Стили для календаря
-.controls-DateRangeBigChoose-DateRangePicker__item.controls-MonthView {
-   width: 100%;
-   padding: 0;
-   //margin-bottom: 4px;
-   .box-sizing(border-box);
+.controls-DateRangeBigChoose-DateRangePicker__item {
+   &.controls-MonthView {
+      width: 100%;
+      padding: 0;
+      //margin-bottom: 4px;
+      .box-sizing(border-box);
+      display: inline-block;
+   }
 
-   table {
+   .controls-MonthView__dayTable {
       border-collapse: separate;
       border-spacing: 0;
       table-layout: fixed;
@@ -54,20 +57,6 @@
       //border-bottom: 1px solid @date-range-big-choose-date-range-picker-border-color;
       border: 0 solid @date-range-big-choose-date-range-picker-border-color;
       border-bottom-width: 1px;
-
-      .controls-MonthView__dayTitle {
-         padding-top: @date-range-big-choose-date-range-picker-table-element-title-padding-top;
-      }
-
-      .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
-         left: 7px;
-         right: 7px;
-         padding-top: @date-range-big-choose-date-range-picker-table-element-title-padding-top;
-      }
-
-      &.controls-MonthView__nextMonth {
-         border-bottom-width: 0;
-      }
 
       &.controls-MonthView__prevMonth.controls-MonthView__lastDayOfMonth {
          border-right-width: 1px;
@@ -147,6 +136,20 @@
       &.controls-DateRangeBigChoose-MonthView__beforeToday {
          border-right-color: @date-range-big-choose-date-range-picker-today-border-color;
       }
+   }
+
+   .controls-MonthView__dayTitle {
+      padding-top: @date-range-big-choose-date-range-picker-table-element-title-padding-top;
+   }
+
+   .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
+      left: 7px;
+      right: 7px;
+      padding-top: @date-range-big-choose-date-range-picker-table-element-title-padding-top;
+   }
+
+   .controls-MonthView__nextMonth {
+      border-bottom-width: 0;
    }
 
    .controls-MonthView__tableRow:first-child {

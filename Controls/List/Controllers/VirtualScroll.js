@@ -1,7 +1,6 @@
 define('js!Controls/List/Controllers/VirtualScroll', [
    'Core/core-simpleExtend'
-], function(simpleExtend,
-            throttle
+], function(simpleExtend
    ) {
    'use strict';
 
@@ -12,15 +11,15 @@ define('js!Controls/List/Controllers/VirtualScroll', [
       /**
        * рассчитать начало/конец видимой области и высоты распорок
        * @param topIndex - первый отображаемый индекс
-       * @param rowHeight - средняя высота записи
-       * @param maxVisibleRows - максимальное число видимых записей
+       * @param averageItemHeight - средняя высота записи
+       * @param maxVisibleItems - максимальное число видимых записей
        * @param itemsCount - общее число записей в проекции
        * @private
        */
-      onPageChange: function(topIndex, rowHeight, maxVisibleRows, itemsCount) {
+      calculateVirtualWindow: function(topIndex, averageItemHeight, maxVisibleItems, itemsCount) {
          var
-            newWindow = _private.getRangeToShowByIndex(topIndex, maxVisibleRows, itemsCount),
-            wrapperHeight = _private.calcPlaceholderHeight(newWindow, itemsCount, rowHeight);
+            newWindow = _private.calcVirtualWindowIndexes(topIndex, maxVisibleItems, itemsCount),
+            wrapperHeight = _private.calcPlaceholderHeight(newWindow, itemsCount, averageItemHeight);
 
          return {
             indexStart: newWindow.start,
@@ -33,13 +32,13 @@ define('js!Controls/List/Controllers/VirtualScroll', [
       /**
        * Получить индексы текущей видимой страницы и первой видимой записи
        * @param scrollTop
-       * @param rowHeight средняя высота записей
+       * @param averageItemHeight средняя высота записей
        * @returns {number}
        * @private
        */
-      getPage: function(scrollTop, rowHeight) {
+      getPage: function(scrollTop, averageItemHeight) {
          //Индекс первой видимой записи
-         var topIndex = Math.floor(scrollTop / rowHeight);
+         var topIndex = Math.floor(scrollTop / averageItemHeight);
 
          return {
             topIndex: topIndex,
@@ -51,31 +50,31 @@ define('js!Controls/List/Controllers/VirtualScroll', [
        * рассчитать высоты распорок
        * @param virtualWindow индексы начала/конца видимого промежутка записей
        * @param displayCount общее число записей
-       * @param rowHeight средняя высота записей
+       * @param averageItemHeight средняя высота строки
        * @returns {{top: number, bottom: number}}
        * @private
        */
-      calcPlaceholderHeight: function(virtualWindow, displayCount, rowHeight) {
+      calcPlaceholderHeight: function(virtualWindow, displayCount, averageItemHeight) {
          //Пока считаем просто. Умножить количество на высоту
          return {
-            top: virtualWindow.start * rowHeight,
-            bottom: (displayCount - virtualWindow.stop) * rowHeight
+            top: virtualWindow.start * averageItemHeight,
+            bottom: (displayCount - virtualWindow.stop) * averageItemHeight
          };
       },
 
       /**
        * Индексы отображаемых записей
        * @param firstIndex номер первой видимой записи
-       * @param maxVisibleRows максимальное число отображаемых записей
+       * @param maxVisibleItems максимальное число отображаемых записей
        * @param displayCount общее число записей
        * @returns {{start: number, stop: number}}
        * @private
        */
-      getRangeToShowByIndex: function(firstIndex, maxVisibleRows, displayCount) {
+      calcVirtualWindowIndexes: function(firstIndex, maxVisibleItems, displayCount) {
          var
-            thirdOfRows = Math.ceil(maxVisibleRows / 3),   //Треть от максимального числа записей
-            topIndex = Math.max(firstIndex - thirdOfRows, 0),                    //показываем от (текущая - треть)
-            bottomIndex = Math.min(firstIndex + thirdOfRows * 2, displayCount);  //до (текущая + две трети)
+            thirdOfItems = Math.ceil(maxVisibleItems / 3),   //Треть от максимального числа записей
+            topIndex = Math.max(firstIndex - thirdOfItems, 0),                    //показываем от (текущая - треть)
+            bottomIndex = Math.min(firstIndex + thirdOfItems * 2, displayCount);  //до (текущая + две трети)
 
          return {start: topIndex, stop: bottomIndex};
       }
@@ -85,43 +84,98 @@ define('js!Controls/List/Controllers/VirtualScroll', [
    /**
     *
     * @author Девятов Илья
-    * @public контроллер для работы виртуального скролла. Вычисляет по scrollTop диапазон отображаемых записей
+    * @public контроллер для работы виртуального скролла. Вычисляет по scrollTop диапазон отображаемых записей и высоты распорок
     */
    var VirtualScroll = simpleExtend.extend({
-      _itemsCount: null,      //Число записей в проекции
-      _maxVisibleRows: 75,    //максимальное число одновременно отображаемых записей
-      _rowHeight: 25,         //Средняя высота строки
+      _itemsCount: null,          // Число записей в проекции
+      _maxVisibleItems: 75,       // максимальное число одновременно отображаемых записей
+      _averageItemHeight: null,   // Средняя высота строки
 
       _currentPage: null,
+      _currentTopIndex: null,
+      _virtualWindow: null,
 
       /**
        *
        * @param cfg
-       * @param cfg.maxRows {Number} - максимальное число отображаемых записей
+       * @param cfg.maxVisibleItems {Number} - максимальное число отображаемых записей
        * @param cfg.itemsCount {Number} - общее число записей в проекции
-       * @param cfg.rowHeight {Number} - высота (средняя) однй строки
+       * @param cfg.itemHeight {Number} - высота (средняя) однй строки
        */
       constructor: function(cfg) {
          VirtualScroll.superclass.constructor.apply(this, arguments);
 
-         this._maxVisibleRows = cfg.maxRows || this._maxVisibleRows;
+         this._maxVisibleItems = cfg.maxVisibleItems || this._maxVisibleItems;
          this._itemsCount = cfg.itemsCount;
-         this._rowHeight = cfg.rowHeight;
+         this._averageItemHeight = cfg.itemHeight;
+      },
+
+      getVirtualWindow: function() {
+         return this._virtualWindow;
       },
 
       setItemsCount: function(itemsCount) {
          this._itemsCount = itemsCount;
       },
 
-      calcVirtualWindow: function(scrollTop) {
-         var newPage = _private.getPage(scrollTop, this._rowHeight);
+      /**
+       * Обновление виртуального окна после того, как в проекции добавились элементы
+       * @param index позиция, с которой появились новые элементы
+       * @param countAddedItems количество добавленных элементов
+       */
+      insertItems: function(index, countAddedItems) {
+         if (index < this._virtualWindow.indexStart) {
+            //Если добавили ДО видимого диапазона, сдвинем видимый диапазон и увеличим верхнюю распорку
+            this._virtualWindow.indexStart += countAddedItems;
+            this._virtualWindow.indexStop += countAddedItems;
+            this._virtualWindow.topPlaceholderHeight += (this._averageItemHeight * countAddedItems);
+         } else {
+            //В остальных случаях - просто увеличим нижнюю границу
+            this._virtualWindow.indexStop += countAddedItems;
+         }
+         this._itemsCount += countAddedItems;
+
+         //часть добавленных записей может уйти в нижнюю распорку
+         var range = _private.calcVirtualWindowIndexes(this._currentTopIndex, this._maxVisibleItems, this._itemsCount);
+         if (this._virtualWindow.indexStop > range.stop) {
+            this._virtualWindow.bottomPlaceholderHeight += (this._virtualWindow.indexStop - range.stop) * this._averageItemHeight;
+            this._virtualWindow.indexStop = range.stop;
+         }
+      },
+
+      /**
+       * Добавить новые элементы в конец списка
+       * @param countAddedItems количество добавленных элементов
+       */
+      appendItems: function(countAddedItems) {
+         this.insertItems(this._itemsCount, countAddedItems);
+      },
+
+      /**
+       * Добавить новые элементы в начало списка
+       * @param countAddedItems количество добавленных элементов
+       */
+      prependItems: function(countAddedItems) {
+         this.insertItems(0, countAddedItems);
+      },
+
+      /**
+       * Установить новый scrollTop, на его основе рассчитать индексы отображаемых записей и распорки
+       * @param scrollTop
+       * @returns {boolean} изменились ли индексы/распорки
+       */
+      setScrollTop: function(scrollTop) {
+         var newPage = _private.getPage(scrollTop, this._averageItemHeight);
 
          if (this._currentPage === newPage.page) {
             return false;
          }
 
          this._currentPage = newPage.page;
-         return _private.onPageChange(newPage.topIndex, this._rowHeight, this._maxVisibleRows, this._itemsCount);
+         this._currentTopIndex = newPage.topIndex;
+         this._virtualWindow = _private.calculateVirtualWindow(newPage.topIndex, this._averageItemHeight, this._maxVisibleItems, this._itemsCount);
+
+         return true;
       }
    });
 

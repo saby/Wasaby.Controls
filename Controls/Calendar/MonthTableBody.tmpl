@@ -1,17 +1,18 @@
-<div>{{ itemData.item['calendarTitle'] }}</div>
-<table>
-   <thead>
-   <tr>
-      <td>Пн</td>
-      <td>Вт</td>
-      <td>Ср</td>
-      <td>Чт</td>
-      <td>Пт</td>
-      <td>Сб</td>
-      <td>Вс</td>
-   </tr>
-   </thead>
-   <tbody>
+<div>
+   <div>{{ itemData.item['calendarTitle'] }}</div>
+   <table>
+      <thead>
+      <tr>
+         <td>Пн</td>
+         <td>Вт</td>
+         <td>Ср</td>
+         <td>Чт</td>
+         <td>Пт</td>
+         <td>Сб</td>
+         <td>Вс</td>
+      </tr>
+      </thead>
+      <tbody>
       <ws:for data="week in itemData.item['weeksArray']">
          <tr>
             <ws:for data="day in week">
@@ -24,5 +25,6 @@
             </ws:for>
          </tr>
       </ws:for>
-   </tbody>
-</table>
+      </tbody>
+   </table>
+</div>

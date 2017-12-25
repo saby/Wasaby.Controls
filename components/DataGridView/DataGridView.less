@@ -177,7 +177,7 @@
 .controls-DataGridView__results {
    background: @data-grid-row-bg;
    font-weight: bold;
-   font-size: @default-text-size;;
+   font-size: @font-size_DataGridView-results;
    color: @data-grid-results-color;
 }
 
@@ -188,7 +188,7 @@
    line-height: @data-grid-results-cell-line-height; //По стандарту в строке итогов высота меньше чем в обычной ячейке
 }
 
-.controls-DataGridView__tbody, .controls-DataGridView__thead {
+.controls-DataGridView__tbody, .controls-DataGridView__thead, .controls-DataGridView__tfoot{
    .controls-DataGridView__td__textAlignRight {
       text-align: right;
    }
@@ -389,7 +389,7 @@
       //выписал еще поручение https://online.sbis.ru/opendoc.html?guid=2a2781e5-bc7b-464f-b183-32317e0b85cc
       line-height: @data-grid-header-cell-sorting-icon-size;
       .controls-Button__icon {
-         .icon-size(@data-grid-header-cell-icon-size);
+         .icon-size(@font-size_DataGridView-headerIcon);
       }
    }
 }
