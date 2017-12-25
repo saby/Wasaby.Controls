@@ -106,16 +106,16 @@ define('js!Controls/Input/resources/InputRender/InputRender',
          },
 
          /**
-          * Метод вставляет строку replacer вместо текущего выделенного текста в инпуте
-          * Если текст не выделен, то просто вставит replacer на позицию каретки
-          * @param replacer
+          * Метод вставляет строку text вместо текущего выделенного текста в инпуте
+          * Если текст не выделен, то просто вставит text на позицию каретки
+          * @param text
           */
-         paste: function(replacer) {
+         paste: function(text) {
             var
                selection = _private.getSelection(this),
                processedData = this._options.viewModel.prepareData({
                   before: this._value.slice(0, selection.selectionStart),
-                  insert: replacer,
+                  insert: text,
                   after: this._value.slice(selection.selectionEnd, this._value.length)
                }, 'insert');
 

@@ -99,8 +99,8 @@ define('js!Controls/Input/Number', [
          this._notify(value);
       },
 
-      paste: function(replacer) {
-         this._children['inputRender'].paste(replacer);
+      paste: function(text) {
+         this._children['inputRender'].paste(text);
       }
    });
 
