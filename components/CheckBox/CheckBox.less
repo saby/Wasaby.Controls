@@ -1,5 +1,6 @@
 .controls-CheckBox {
   display: inline-block;
+  position: relative;
   line-height: @height_CheckBox;//todo: при переписывании чекбоксов необходимо учесть что можно сделать на флексах и не задавать данное свойство
 }
 
@@ -10,7 +11,7 @@
 
 .controls-CheckBox__icon {
   display: inline-block;
-  position: relative;
+  position: absolute;
   float: left;
   &:before {
     font-family: @icon-font;
