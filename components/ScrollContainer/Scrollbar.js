@@ -79,10 +79,11 @@ define('SBIS3.CONTROLS/ScrollContainer/Scrollbar', [
             this._containerHeight = this._container.height();
             this._containerOuterHeight = this._container.outerHeight(true);
             /**
-             * Так как отступы сверху и снизу у ползунка одинаковые и при приведении css свойства margin к числу через parseFloat
-             * всегда получаем верхний отступ, то нужно умножить его на 2. Так мы получим сумму отступов сверху и снизу.
+             * Так как отступы сверху и снизу у ползунка одинаковые, то можно умножить верхний отступ на 2.
+             * Так мы получим сумму отступов сверху и снизу.
+             * Не использовать margin, потому что в firefox у getComputedStyle(), такого поля нет.
              */
-            this._scrollbarMargin = 2 * parseFloat(getComputedStyle(this._thumb[0]).margin);
+            this._scrollbarMargin = 2 * parseFloat(getComputedStyle(this._thumb[0]).marginTop);
             this._browserScrollbarMinHeght = parseFloat(getComputedStyle(this._thumb[0]).minHeight);
 
             this._setViewportRatio();
