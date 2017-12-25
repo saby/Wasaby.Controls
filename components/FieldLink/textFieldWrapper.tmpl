@@ -1,15 +1,12 @@
-<div class="controls-FieldLink__fieldWrapper">
-	<input
-		class="controls-TextBox__field js-controls-TextBox__field {{textTransform === 'uppercase' ? 'controls-TextBox__field-uppercase'}} {{textTransform === 'lowercase' ? 'controls-TextBox__field-lowercase'}}"
-		type="text"
-		autocomplete="off"
-		value="{{text}}"
-		placeholder="{{enabled && _drawNativePlaceholder ? placeholder}}"
-		maxlength="{{maxLength ? maxLength}}"
-		required="true"
-		title="{{tooltip ? tooltip : ' '}}"
-	/>
-	<ws:if data="{{ _drawCompatiblePlaceholder }}">
-		<ws:partial template="{{ compatiblePlaceholderTemplate }}" scope="{{...}}"/>
-	</ws:if>
-</div>
+<input
+	class="controls-TextBox__field js-controls-TextBox__field {{textTransform === 'uppercase' ? 'controls-TextBox__field-uppercase'}} {{textTransform === 'lowercase' ? 'controls-TextBox__field-lowercase'}}"
+	type="text"
+	autocomplete="off"
+	value="{{text}}"
+	maxlength="{{maxLength ? maxLength}}"
+	required="true"
+    title="{{tooltip ? tooltip : ' '}}"
+/>
+<ws:if data="{{ enabled && placeholder }}">
+	<ws:partial template="{{ compatiblePlaceholderTemplate }}" scope="{{...}}"/>
+</ws:if>
