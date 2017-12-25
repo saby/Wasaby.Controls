@@ -4,7 +4,8 @@ define('js!Controls/Input/Suggest',
       'tmpl!Controls/Input/Suggest/Suggest',
       'js!WS.Data/Type/descriptor',
       'js!Controls/Input/resources/SuggestController',
-      'js!Controls/Popup/Opener/Sticky'
+      'js!Controls/Popup/Opener/Sticky',
+      'js!Controls/Popup/Opener/Stack'
    ],
    function(Control, template, types, SuggestController) {
    
@@ -16,6 +17,7 @@ define('js!Controls/Input/Suggest',
        * @mixes Controls/interface/IDataSource
        * @mixes Controls/interface/IFilter
        * @mixes Controls/Input/interface/ISuggest
+       * @mixes Controls/interface/INavigation
        * @control
        * @public
        * @category Input
@@ -33,27 +35,30 @@ define('js!Controls/Input/Suggest',
          _afterMount: function() {
             this._suggestController = new SuggestController({
                suggestTemplate: this._options.suggestTemplate,
+               suggestOpener: this._children.suggestPopupOpener,
+               showAllOpener: this._children.showAllOpener,
                dataSource: this._options.dataSource,
-               searchDelay: this._options.searchDelay,
                filter: this._options.filter,
                minSearchLength: this._options.minSearchLength,
+               searchDelay: this._options.searchDelay,
                searchParam: this._options.searchParam,
+               navigation: this._options.navigation,
                textComponent: this._children.suggestText,
-               suggestOpener: this._children.stickyOpener
+               selectCallback: this._selectHandler.bind(this)
             });
          },
          
          _changeValueHandler: function(event, value) {
             this._suggestController.setValue(value);
          },
-   
-         _keyPressedHandler: function(event) {
-            this._suggestController.keyPress(event);
-         },
          
          _selectHandler: function(item) {
             this._notify('onSelect', item);
             this._notify('valueChanged', item.get(this._options.displayProperty));
+         },
+   
+         _keyDownHandler: function(event) {
+            this._suggestController.keyDown(event);
          },
          
          destroy: function() {

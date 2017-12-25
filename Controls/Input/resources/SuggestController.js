@@ -5,18 +5,15 @@ define('js!Controls/Input/resources/SuggestController',
    [
       'Core/Abstract',
       'Core/moduleStubs',
-      'Core/core-clone',
-      'Core/constants'
-   ], function (Abstract, moduleStubs, cClone, constants) {
+      'Core/core-clone'
+   ], function (Abstract, moduleStubs, cClone) {
    
    'use strict';
    
    var _private = {
-      search: function(self, textValue) {
+      search: function(self, fitler) {
          _private.getSearchController(self).addCallback(function(searchController) {
-            var filter = cClone(self._options.filter || {});
-            filter[self._options.searchParam] = textValue;
-            searchController.search(filter, _private.getPopupOptions(self));
+            searchController.search(fitler, _private.getPopupOptions(self));
             return searchController;
          });
       },
@@ -30,7 +27,7 @@ define('js!Controls/Input/resources/SuggestController',
    
       onChangeValueHandler: function(self, text) {
          if (text.length >= self._options.minSearchLength) {
-            _private.search(self, text);
+            _private.search(self, _private.getSearchFilter(self, text));
          } else {
             _private.abortSearch(self);
          }
@@ -42,9 +39,17 @@ define('js!Controls/Input/resources/SuggestController',
             target: container,
             componentOptions: {
                width: container[0].offsetWidth,
-               template: self._options.suggestTemplate
+               template: self._options.suggestTemplate,
+               dataSource: self._options.dataSource,
+               showAllOpener: self._options.showAllOpener
             }
          };
+      },
+      
+      getSearchFilter: function(self, textValue) {
+         var filter = cClone(self._options.filter || {});
+         filter[self._options.searchParam] = textValue;
+         return filter;
       },
    
       getSearchController: function(self) {
@@ -54,7 +59,9 @@ define('js!Controls/Input/resources/SuggestController',
                self._suggestPopupController = new result[0]({
                   dataSource: self._options.dataSource,
                   searchDelay: self._options.searchDelay,
-                  popupOpener: self._options.suggestOpener
+                  popupOpener: self._options.suggestOpener,
+                  navigation: self._options.navigation,
+                  selectCallback: self._options.selectCallback
                });
             }
             return self._suggestPopupController;
@@ -73,25 +80,9 @@ define('js!Controls/Input/resources/SuggestController',
          _private.onChangeValueHandler(this, value);
       },
       
-      keyPress: function(event) {
+      keyDown: function(event) {
          if (this._suggestPopupController) {
-            var nativeEventWhich = event.nativeEvent.which;
-   
-            if (nativeEventWhich === constants.key.up) {
-               this._suggestPopupController.increaseSelectedIndex();
-               event.preventDefault();
-            }
-   
-            if (nativeEventWhich === constants.key.down) {
-               this._suggestPopupController.decreaseSelectedIndex();
-               event.preventDefault();
-            }
-         }
-      },
-      
-      select: function() {
-         if (this._suggestPopupController) {
-            this._suggestPopupController.select();
+            this._suggestPopupController.keyDown(event);
          }
       },
       
