@@ -3,8 +3,10 @@
 	type="{{type || 'text'}}"
 	autocomplete="off"
 	value="{{text}}"
-	placeholder="{{enabled ? placeholder}}"
 	maxlength="{{maxLength ? maxLength}}"
 	required="true"
-    title="{{tooltip ? tooltip : ' '}}"
+	title="{{tooltip ? tooltip : ' '}}"
 />
+<ws:if data="{{ enabled && placeholder }}">
+	<ws:partial template="{{ compatiblePlaceholderTemplate }}" scope="{{...}}"/>
+</ws:if>

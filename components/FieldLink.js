@@ -77,13 +77,6 @@ define('SBIS3.CONTROLS/FieldLink',
     ) {
 
        'use strict';
-       function needShowCompatiblePlaceholder(cfg) {
-          var
-             useNativePlaceholder = _private.isSimplePlaceholder(cfg.placeholder),
-             isEmptySelection = cfg._isEmptySelection(cfg),
-             innerCheckShow = !useNativePlaceholder && (isEmptySelection || (cfg.multiselect && !cfg.alwaysShowTextBox));
-          return cfg._needShowCompatiblePlaceholderST(cfg) && innerCheckShow;
-       }
 
        function _addOptionsFromClass(opts, attrToMerge) {
           var
@@ -99,7 +92,6 @@ define('SBIS3.CONTROLS/FieldLink',
 
        function _addOptionsByState(cfg) {
           /* Чтобы вёрстка сразу строилась с корректным placeholder'ом, в случае, если там лежит ссылка */
-          cfg._drawNativePlaceholder = _private.isSimplePlaceholder(cfg.placeholder) && cfg.enabled;
           cfg._selectedMultipleItems = _private.selectedMultipleItems(cfg);
        }
 
@@ -120,16 +112,6 @@ define('SBIS3.CONTROLS/FieldLink',
           },
           selectedMultipleItems: function(cfg) {
              return cfg.multiselect && cfg.selectedKeys.length > 1;
-          },
-          isSimplePlaceholder: function(placeholder) {
-             /**
-              * Сюда может прилететь rkString
-              * пока что это единственный способ ее идентифицировать
-              */
-             if (placeholder && placeholder.saveProtoM) {
-                placeholder = '' + placeholder;
-             }
-             return typeof placeholder === 'string' && placeholder.indexOf('SBIS3.CONTROLS/FieldLink/Link') === -1;
           }
        };
 
@@ -185,7 +167,6 @@ define('SBIS3.CONTROLS/FieldLink',
              _lastFieldLinkWidth: null,
              _showAllButton: null,
              _options: {
-                _needShowCompatiblePlaceholder: needShowCompatiblePlaceholder,
                 _paddingClass: ' controls-InputRender_paddingLeft controls-TextBox_paddingLeft',
                 /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
                 afterFieldWrapper: afterFieldWrapper,
@@ -494,17 +475,6 @@ define('SBIS3.CONTROLS/FieldLink',
                }
                return this._options.showAllConfig;
            },
-
-          _useNativePlaceHolder: function(text) {
-             /* Если в placeholder положили компонент-ссылку, открывающую справочник,
-                то будем использовать не нативный placeholder */
-             return _private.isSimplePlaceholder(text || this.getProperty('placeholder'));
-          },
-
-          _setPlaceholder: function() {
-             FieldLink.superclass._setPlaceholder.apply(this, arguments);
-             this.reviveComponents();
-          },
           
           _notify: function(eventName) {
              /* Чтобы не запускался поиск в автодополнении, когда есть выбранная запись и включен комментарий */
@@ -1052,6 +1022,12 @@ define('SBIS3.CONTROLS/FieldLink',
              var keysArrLen = this._isEmptySelection() ? 0 : keysArr.length,
                  hasSelectedKeys = keysArrLen > 0;
 
+             if (!this._options.multiselect && keysArrLen) {
+                this._destroyCompatPlaceholder();
+             } else if (!this._compatPlaceholder) {
+                this._createCompatiblePlaceholder();
+             }
+
              /* Если удалили в пикере все записи, и он был открыт, то скроем его */
              if (!hasSelectedKeys) {
                 this._toggleShowAllButton(false);
@@ -1064,8 +1040,6 @@ define('SBIS3.CONTROLS/FieldLink',
              if(!this._options.alwaysShowTextBox && !this.getMultiselect() && hasSelectedKeys) {
                 this.hidePicker();
              }
-
-             this._updateCompatiblePlaceholderState();
 
              if (keysArrLen) {
                 if (!this._linkCollection) {
@@ -1304,7 +1278,7 @@ define('SBIS3.CONTROLS/FieldLink',
 
           _createLinkCollection: function() {
              if (!$('.controls-FieldLink__beforeFieldWrapper', this.getContainer()).length) {
-                $('.controls-FieldLink__fieldWrapper', this.getContainer()).before(beforeFieldWrapper(this._options));
+                $('.controls-TextBox__fieldWrapper', this.getContainer()).before(beforeFieldWrapper(this._options));
                 this.reviveComponents();
                 this._linkCollection = this.getChildControlByName('FieldLinkItemsCollection');
                 this._initLinkCollectionEvents();
