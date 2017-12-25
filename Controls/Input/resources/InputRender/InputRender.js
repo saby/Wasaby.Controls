@@ -110,7 +110,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
           * Если текст не выделен, то просто вставит replacer на позицию каретки
           * @param replacer
           */
-         replaceSelectedText: function(replacer) {
+         paste: function(replacer) {
             var
                selection = _private.getSelection(this),
                processedData = this._options.viewModel.prepareData({

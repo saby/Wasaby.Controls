@@ -117,8 +117,8 @@ define('js!Controls/Input/Text', [
             }
          },
 
-         replaceSelectedText: function(replacer) {
-            this._children['inputRender'].replaceSelectedText(replacer);
+         paste: function(replacer) {
+            this._children['inputRender'].paste(replacer);
          }
       });
 

@@ -226,8 +226,8 @@ define(
             });
          });
 
-         //Тест вставки значекния методом replaceSelectedText
-         it('Insert with replaceSelectedText method', function (done) {
+         //Тест вставки значекния методом paste
+         it('Insert with paste method', function (done) {
             var
                numberControl = Control.createControl(NumberControl, {}, $('<div></div>').appendTo('#mocha'));
 
@@ -241,7 +241,7 @@ define(
                   selectionEnd: 3
                };
 
-               inputRender.replaceSelectedText('4');
+               inputRender.paste('4');
 
                try {
                   assert.equal(inputRender._value, '1 234');
