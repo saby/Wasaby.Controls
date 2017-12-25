@@ -4,7 +4,6 @@ define('js!Controls/Input/Text', [
       /*'WS.Data/Type/descriptor',*/
       'Controls/Input/Text/ViewModel',
 
-      'css!Controls/Input/resources/InputRender/InputRender',
       'css!SBIS3.CONTROLS/TextBox',
       'tmpl!Controls/Input/resources/input'
    ], function(Control,

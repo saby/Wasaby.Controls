@@ -11,7 +11,6 @@ define('SBIS3.CONTROLS/TextBox', [
    'Core/helpers/Function/forAliveOnly',
    'SBIS3.CONTROLS/ControlHierarchyManager',
    'SBIS3.CONTROLS/Button/IconButton',
-   'css!Controls/Input/resources/InputRender/InputRender',
    'css!SBIS3.CONTROLS/TextBox/TextBox'
 
 ], function(
@@ -28,10 +27,6 @@ define('SBIS3.CONTROLS/TextBox', [
     ControlHierarchyManager) {
 
    'use strict';
-
-   function needShowCompatiblePlaceholder(cfg) {
-      return cfg.enabled && !cfg.text;
-   }
 
    /**
     * Однострочное текстовое поле ввода.
@@ -96,8 +91,6 @@ define('SBIS3.CONTROLS/TextBox', [
          _textFieldWrapper: null,
          _informationIcon: null,
          _options: {
-      	   _needShowCompatiblePlaceholder: needShowCompatiblePlaceholder,
-      	   _needShowCompatiblePlaceholderST: needShowCompatiblePlaceholder,
             compatiblePlaceholderTemplate: compatiblePlaceholderTemplate,
             textFieldWrapper: textFieldWrapper,
             beforeFieldWrapper: null,
@@ -280,7 +273,6 @@ define('SBIS3.CONTROLS/TextBox', [
             чтобы у них был __vStorage, для возможности обращаться к опциям по ссылке (ref) */
          cfg.beforeFieldWrapper = TemplateUtil.prepareTemplate(cfg.beforeFieldWrapper);
          cfg.afterFieldWrapper = TemplateUtil.prepareTemplate(cfg.afterFieldWrapper);
-         cfg._drawCompatiblePlaceholder = cfg._needShowCompatiblePlaceholder(cfg);
          return cfg;
       },
 
@@ -315,10 +307,9 @@ define('SBIS3.CONTROLS/TextBox', [
             }
          });
 
-         if (this._options._needShowCompatiblePlaceholder(this._options)) {
-            this._compatPlaceholder = this._container.find('.controls-TextBox__placeholder');
-            this._initPlaceholderEvents(this._compatPlaceholder);
-         }
+         this._compatPlaceholder = this._container.find('.controls-TextBox__placeholder');
+         this._initPlaceholderEvents(this._compatPlaceholder);
+
          /* Надо проверить значение input'a, т.к. при дублировании вкладки там уже может быть что-то написано */
          this._checkInputVal(true);
       },
@@ -381,10 +372,6 @@ define('SBIS3.CONTROLS/TextBox', [
          }).call(this, event);
       },
 
-      _useNativePlaceHolder: function() {
-         return constants.compatibility.placeholder;
-      },
-
       _checkInputVal: function(fromInit) {
          var text = this._getInputValue();
 
@@ -434,16 +421,7 @@ define('SBIS3.CONTROLS/TextBox', [
          TextBox.superclass.setTooltip.apply(this, arguments);
       },
 
-      _updateCompatiblePlaceholderState: function() {
-         if (!this._options._needShowCompatiblePlaceholder(this._options)) {
-            this._destroyCompatPlaceholder();
-         } else if (!this._compatPlaceholder && !this._useNativePlaceHolder()) {
-            this._createCompatiblePlaceholder();
-         }
-      },
-
       _drawText: function(text) {
-         this._updateCompatiblePlaceholderState();
          if (this._getInputValue() != text) {
             this._setInputValue(text || '');
          }
@@ -471,15 +449,8 @@ define('SBIS3.CONTROLS/TextBox', [
       },
 
       _setPlaceholder: function(text){
-         /* В placeholder могут передать шаблон */
-         text = text ? text : text == 0 ? text : '';
-         if (!this._useNativePlaceHolder(text) && this._options._needShowCompatiblePlaceholder(this._options)) {
-            this._destroyCompatPlaceholder();
-            this._createCompatiblePlaceholder();
-         }
-         else {
-            this._inputField.attr('placeholder', text);
-         }
+         this._destroyCompatPlaceholder();
+         this._createCompatiblePlaceholder();
       },
 
       /**
@@ -557,14 +528,10 @@ define('SBIS3.CONTROLS/TextBox', [
          /* Когда дизейблят поле ввода, ставлю placeholder в виде пробела, в старом webkit'e есть баг,
             из-за коготорого, если во flex контейнере лежит input без placeholder'a ломается базовая линия.
             placeholder с пустой строкой и так будет не виден, т.ч. проблем быть не должно */
-         if(this._compatPlaceholder) {
-            if (!enabled){
-               this._compatPlaceholder.addClass("ws-hidden");
-            } else if (this._isEmptyValue(this._options.text)) {
-               this._compatPlaceholder.removeClass("ws-hidden");
-            }
+         if (enabled) {
+            this._createCompatiblePlaceholder();
          } else {
-            this._setPlaceholder(enabled ? this._options.placeholder : ' ');
+            this._destroyCompatPlaceholder();
          }
          // FIXME Шаблонизатор сейчас не позволяет навешивать одиночные атрибуты, у Зуева Димы в планах на сентябрь
          // сделать возможность вешать через префикс attr-
@@ -662,11 +629,12 @@ define('SBIS3.CONTROLS/TextBox', [
       },
 
       _createCompatiblePlaceholder: function() {
-         this._inputField.attr('placeholder', '');
-         this._compatPlaceholder = $(compatiblePlaceholderTemplate(this._options));
-         this._inputField.after(this._compatPlaceholder);
-         this.reviveComponents();
-         this._initPlaceholderEvents(this._compatPlaceholder);
+         if (!this._compatPlaceholder) {
+            this._compatPlaceholder = $(compatiblePlaceholderTemplate(this._options));
+            this._inputField.after(this._compatPlaceholder);
+            this.reviveComponents();
+            this._initPlaceholderEvents(this._compatPlaceholder);
+         }
       },
 
       _getAfterFieldWrapper: function() {

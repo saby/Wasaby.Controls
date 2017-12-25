@@ -8,7 +8,6 @@ define('SBIS3.CONTROLS/NumberTextBox', [
    'SBIS3.CONTROLS/TextBox',
    'SBIS3.CONTROLS/NumberTextBox/resources/FormatText',
    'SBIS3.CONTROLS/Utils/ConfigByClasses',
-   'css!Controls/Input/resources/InputRender/InputRender',
    'css!SBIS3.CONTROLS/NumberTextBox/NumberTextBox'
 ], function ( constants, NumberTextBoxUtil, TextBox, FormatText, ConfigByClasses) {
 
@@ -185,7 +184,7 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          }
 
 	      options.cssClassName += ' controls-NumberTextBox';
-         options._paddingClass = options.enableArrows ? ' controls-InputRender_paddingLeft controls-TextBox_paddingLeft' : ' controls-InputRender_paddingBoth controls-TextBox_paddingBoth';
+         options._paddingClass = options.enableArrows ? ' controls-TextBox_paddingLeft' : ' controls-TextBox_paddingBoth';
          this._addOptionsFromClass(options, attrToMerge);
          return options;
       },
@@ -344,16 +343,6 @@ define('SBIS3.CONTROLS/NumberTextBox', [
        */
       setOnlyInteger: function(onlyInteger){
          this._options.onlyInteger = Boolean(onlyInteger);
-      },
-
-      _updateCompatPlaceholderVisibility: function() {
-         if (this._compatPlaceholder) {
-            if (typeof this._options.numericValue === 'number' && !isNaN(this._options.numericValue)) {
-                this._compatPlaceholder.addClass('ws-hidden');
-            } else {
-               NumberTextBox.superclass._updateCompatPlaceholderVisibility.apply(this, arguments);
-            }
-         }
       },
 
       /**

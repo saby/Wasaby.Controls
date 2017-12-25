@@ -263,10 +263,13 @@ define('SBIS3.CONTROLS/Browser', [
              *    })
              *    .addCallbacks(
              *       function (columnsConfig) {
-             *          // Получена новая конфигурация колонок - сделать с нею то, что требуется
-             *          var columns = columnsConfig.columns;
-             *          var selected = columnsConfig.selectedColumns;
-             *          ...
+             *          // Если есть результат редактирования (то есть пользователь отредактировал колонки и нажал кнопку применить, а не закрыл редактор крестом)
+             *          if (columnsConfig) {
+             *             // Получена новая конфигурация колонок - сделать с нею то, что требуется
+             *             var columns = columnsConfig.columns;
+             *             var selected = columnsConfig.selectedColumns;
+             *             ...
+             *          }
              *       },
              *       function (err) {
              *          // Обработать ошибку
@@ -323,20 +326,23 @@ define('SBIS3.CONTROLS/Browser', [
           * Простой пример использования команды:
           * <pre>
           *    this.sendCommand('showColumnsEditor', {
-             *       editorOptions: {
-             *          moveColumns:true
-             *       }
-             *    })
+          *          editorOptions: {
+          *             moveColumns:true
+          *          }
+          *       })
           *    .addCallbacks(
           *       function (columnsConfig) {
-             *          // Получена новая конфигурация колонок - сделать с нею то, что требуется
-             *          var columns = columnsConfig.columns;
-             *          var selected = columnsConfig.selectedColumns;
-             *          ...
-             *       },
+          *             // Если есть результат редактирования (то есть пользователь отредактировал колонки и нажал кнопку применить, а не закрыл редактор крестом)
+          *             if (columnsConfig) {
+          *                // Получена новая конфигурация колонок - сделать с нею то, что требуется
+          *                var columns = columnsConfig.columns;
+          *                var selected = columnsConfig.selectedColumns;
+          *                ...
+          *             }
+          *          },
           *       function (err) {
-             *          // Обработать ошибку
-             *       }
+          *             // Обработать ошибку
+          *          }
           *    );
           * </pre>
 
@@ -389,7 +395,9 @@ define('SBIS3.CONTROLS/Browser', [
       },
 
       /**
-       * Показать редактор колонок. Возвращает обещание, которое будет разрешено объектом с отредактированой конфигурациеё колонок
+       * Показать редактор колонок. Возвращает обещание, которое будет разрешено после завершения редактирования пользователем. В случае, если
+       * пользователь после редактирования нажал кнопку применения результата редактирования, то обещание будет разрешено новыми параметрами
+       * конфигурации колонок. Если же пользователь просто закрыл редактор кнопкой "Закрыть", то обещание будет разрешено значением null
        * @protected
        * @param {object} [options] Опции открытия редактора колонок (опционально)
        * @param {object} [options.columnsConfig] Объект конфигурации колонок (опционально, если нет, будет использован текущий columnsConfig браузера)
@@ -426,6 +434,7 @@ define('SBIS3.CONTROLS/Browser', [
             promise.dependOn(this._columnsEditor.open(columnsConfig, hasArgs ? options.editorOptions : null));
             if (hasArgs && options.applyToSelf) {
                promise.addCallback(function (resultColumnsConfig) {
+                  // Если есть результат редактирования (то есть пользователь отредактировал колонки и нажал кнопку применить, а не закрыл редактор крестом)
                   if (resultColumnsConfig) {
                      this._changeColumns(resultColumnsConfig.selectedColumns);
                   }
