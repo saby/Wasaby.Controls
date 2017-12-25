@@ -1,2 +1,0 @@
-// ВРЕМЕННО, для обратной совместимости
-define('SBIS3.CONTROLS/LongOperations/GenericProducer/GenericLongOperationsProducer', ['SBIS3.CONTROLS/LongOperations/GenericProducer'], function (arg) { return arg; });

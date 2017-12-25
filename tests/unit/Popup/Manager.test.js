@@ -17,7 +17,7 @@ define(
                controller = new Controller();
             id = Manager.show({
                testOption: 'created'
-            }, null, null, controller);
+            }, null, controller);
             assert.equal(Manager._popupItems.getCount(), 1);
             element = Manager._find(id);
             assert.equal(element.popupOptions.testOption, 'created');
