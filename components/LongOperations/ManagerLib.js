@@ -234,7 +234,7 @@ define('SBIS3.CONTROLS/LongOperations/ManagerLib',
          /**
           * Объект для выполнения методов менеджеров в других вкладках
           * @protected
-          * @type {SBIS3.CONTROLS.LongOperations.TabCalls}
+          * @type {SBIS3.CONTROLS/LongOperations/TabCalls}
           */
          protectedOf(self)._tabCalls = new LongOperationsTabCalls(
             /*tabKey:*/protectedOf(self)._tabKey,
@@ -249,7 +249,7 @@ define('SBIS3.CONTROLS/LongOperations/ManagerLib',
          /**
           * Пул вызовов методов fetch
           * @protected
-          * @type {SBIS3.CONTROLS.LongOperations.CallsPool}
+          * @type {SBIS3.CONTROLS/LongOperations/CallsPool}
           */
          protectedOf(self)._fetchCalls = new LongOperationsCallsPool(
             /*fields:*/['tab', 'producer'],
@@ -257,8 +257,8 @@ define('SBIS3.CONTROLS/LongOperations/ManagerLib',
              * Обработчик одиночного результата вызова метода fetch локального продюсера или продюсера во вкладке
              * @param {object} query Параметры выполнявшегося запроса
              * @param {object} member Объект с идентифицирующими параметрами вызова - tab и producer
-             * @param {SBIS3.CONTROLS.LongOperations.Entry[]|WS.Data/Source/DataSet|WS.Data/Collection/RecordSet} result Полученный результат
-             * @return {SBIS3.CONTROLS.LongOperations.Entry[]}
+             * @param {SBIS3.CONTROLS/LongOperations/Entry[]|WS.Data/Source/DataSet|WS.Data/Collection/RecordSet} result Полученный результат
+             * @return {SBIS3.CONTROLS/LongOperations/Entry[]}
              */
             /*handlePartial:*/function (query, member, result) {
                if (!(result == null || Array.isArray(result) || result instanceof DataSet || result instanceof RecordSet)) {
@@ -309,7 +309,7 @@ define('SBIS3.CONTROLS/LongOperations/ManagerLib',
             /**
              * Обработчик полного результата
              * @param {object} query Параметры выполнявшегося запроса
-             * @param {SBIS3.CONTROLS.LongOperations.Entry[][]} resultList Список результатов обработки одиночных результатов
+             * @param {SBIS3.CONTROLS/LongOperations/Entry[][]} resultList Список результатов обработки одиночных результатов
              * @return {WS.Data/Collection/RecordSet<SBIS3.CONTROLS/LongOperations/Entry>}
              */
             /*handleComplete:*/function (query, resultList) {
@@ -391,7 +391,7 @@ define('SBIS3.CONTROLS/LongOperations/ManagerLib',
          /**
           * Счётчики текщих отступов по продюсерам
           * @protected
-          * @type {SBIS3.CONTROLS.LongOperations.Bunch}
+          * @type {SBIS3.CONTROLS/LongOperations/Bunch}
           */
          protectedOf(self)._offsetBunch = new LongOperationsBunch();
 

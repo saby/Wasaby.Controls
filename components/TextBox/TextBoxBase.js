@@ -262,6 +262,21 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
          return text || ''; // так как есть датабиндинг может прийти undefined
       },
 
+      _onClickHandler: function(event){
+         var elementToFocus = this._getElementToFocus();
+         // т.к. поле ввода находится внутри контейнера, то клик по внешнему контейнеру не ставит курсор в поле
+         // поэтому принудительно проставляем фокус в активное поле
+         // если фокус уже на поле ввода, то повторно проставлять не нужно
+         if (this.isEnabled() && elementToFocus[0] !== document.activeElement && event.target === this.getContainer()[0]) {
+            elementToFocus.focus();
+         }
+         TextBoxBase.superclass._onClickHandler.call(this, event);
+      },
+
+      _getElementToFocus: function() {
+         return this._inputField || TextBoxBase.superclass._getElementToFocus.apply(this, arguments);
+      },
+
       _drawText: function() {
 
       },

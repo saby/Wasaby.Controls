@@ -28,13 +28,17 @@
 @background-color_ComboBox_withPicker:                                                                                  #ffffff;
 @color_ComboBox_withPicker:                                                                                             @default-text-color;
 //menu
-@menu-button-menu-bg:                                                                                                   @default-bg-color;
+@background-color_Menu:                                                                                                   @default-bg-color;
 @menu-button-menu-border-color:                                                                                         #0055BB;
 //back-button
 @border-arrow-fill-blue:                                                                                                transparent;
 @border-arrow-fill-orange:                                                                                              transparent;
 @arrow-fill-blue:                                                                                                       @primary-color;
 @arrow-fill-orange:                                                                                                     @primary-color;
+
+// MonthView
+@background_MonthView:                    @default-bg-color;
+@color_MonthView-day-cell:                @default-text-color;
 
 //неразобранные переменные
 // TODO: Используется только в prestonew, в других темах вместо нее используется @default-bg-color. Выпилить.
@@ -93,9 +97,9 @@
 @switcher-border-color:                   #E4E4E4;
 @switcher-disabled-color:                 @disabled-color;
 // Menu
-@popup-header-caption-color:              #fff;
+@color_Menu-header:              #fff;
 //MenuItem
-@menu-item-hover-bg:                      #F0F5FB;
+@background_MenuItem_hovered:                      #F0F5FB;
 // Text box
 @text-box-focus-bg:                       #fff;
 
@@ -131,9 +135,10 @@
 @list-view-items-toolbar-locked-bg:       @default-hover-color;
 @controls-editInPlace-editor-bg:          #F5F5F5 !important;
 // Tree view
-@tree-view-expand-color:                        @blue-dark-color;
-@tree-view-expand-hover-color:                  #0055BB;
-@tree-view-expand-hidden-color:                 @gray-lamantin-color;
+@color_TreeDataGridView-expand:                 @blue-dark-color;
+@color_TreeDataGridView-expand_hovered:         #0055BB;
+@color_TreeDataGridView-expandHidden:           @gray-lamantin-color;
+@color_TreeDataGridView-expandHidden_hovered:   @blue-dark-color;
 @tree-view-copy-arrow-background:               @white-color;
 // Data grid //
 @data-grid-row-hover-bg:                        @default-hover-color;//Переменную нужно удалить, она дублирует @background-color_DataGridView-item_hovered

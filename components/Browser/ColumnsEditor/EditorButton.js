@@ -31,7 +31,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/EditorButton',
                 */
                presetsTitle: null,
                /**
-                * @cfg {SBIS3.CONTROLS.Browser/Browser/ColumnsEditor/Preset/Unit[]} Список объектов статически задаваемых пресетов
+                * @cfg {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit[]} Список объектов статически задаваемых пресетов
                 */
                staticPresets: null,
                /**
