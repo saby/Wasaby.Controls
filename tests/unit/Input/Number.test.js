@@ -191,6 +191,10 @@ define(
 
          testCases.forEach(function(item) {
             it(item.testName, function (done) {
+               if (typeof document === 'undefined') {
+                  this.skip();
+               }
+
                var
                   container = document.createElement('div'),
                   numberControl = Control.createControl(NumberControl, item.controlConfig, container),
