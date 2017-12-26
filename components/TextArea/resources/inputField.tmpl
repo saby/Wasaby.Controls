@@ -1,14 +1,16 @@
 <textarea
    class="controls-TextArea__field__size__{{!! size ? size : 'm'}}
    controls-TextArea__field
-   controls-InputRender__field
    controls-TextBox__field
    js-controls-TextBox__field
    ws-invisible"
-   placeholder="{{ enabled ? placeholder }}"
    maxLength="{{ maxLength}}"
    rows="{{ minLinesCount ? minLinesCount}}"
+   required="true"
 >{{ text ? text|sanitize }}</textarea>
+<ws:if data="{{ enabled && placeholder }}">
+    <ws:partial template="{{ compatiblePlaceholderTemplate }}" scope="{{...}}"/>
+</ws:if>
 <div class="controls-TextArea__view__size__{{!! size ? size : 'm'}}
             {{ heightclassName ? heightclassName }}
             {{ !text ? 'controls-TextArea__view_empty'}}

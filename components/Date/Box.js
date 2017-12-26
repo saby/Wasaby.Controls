@@ -11,7 +11,6 @@ define(
       'tmpl!SBIS3.CONTROLS/FormattedTextBox/FormattedTextBox',
       'SBIS3.CONTROLS/Utils/ControlsValidators',
       // Разобраться с общими стилями https://inside.tensor.ru/opendoc.html?guid=37032b47-6830-4b96-a4f3-727ea938bf58&des
-      'css!Controls/Input/resources/InputRender/InputRender',
       'css!SBIS3.CONTROLS/TextBox/TextBox',
       'css!SBIS3.CONTROLS/FormattedTextBox/FormattedTextBox',
       'css!SBIS3.CONTROLS/Date/Box/DateBox'

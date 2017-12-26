@@ -1,10 +1,12 @@
-<div class="controls-InputRender controls-TextBox {{ _prepareClassesByConfig(...).container }}" title="{{tooltip}}">
-   <div class="controls-InputRender__wrapper controls-TextBox__wrapper {{ _prepareClassesByConfig(...).wrapper }}"
+<div class="controls-TextBox {{ _prepareClassesByConfig(...).container }}" title="{{tooltip}}">
+   <div class="controls-TextBox__wrapper {{ _prepareClassesByConfig(...).wrapper }}"
         title="{{tooltip}}">
       <ws:if data="{{beforeFieldWrapper}}">
          <ws:partial template="{{beforeFieldWrapper}}" scope="{{...}}"/>
       </ws:if>
-      <ws:partial class="{{ _prepareClassesByConfig(...).field }}" template="{{textFieldWrapper}}" scope="{{...}}"/>
+      <div class="controls-TextBox__fieldWrapper">
+         <ws:partial class="{{ _prepareClassesByConfig(...).field }}" template="{{textFieldWrapper}}" scope="{{...}}"/>
+      </div>
       <ws:if data="{{afterFieldWrapper}}">
          <ws:partial template="{{afterFieldWrapper}}" scope="{{...}}"/>
       </ws:if>
