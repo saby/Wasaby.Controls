@@ -2,12 +2,13 @@ define('SBIS3.CONTROLS/TextArea', [
    "Core/constants",
    "SBIS3.CONTROLS/TextBox",
    'tmpl!SBIS3.CONTROLS/TextArea/resources/inputField',
+   'tmpl!SBIS3.CONTROLS/TextArea/resources/compatiblePlaceholder',
    'Core/helpers/String/escapeHtml',
    'SBIS3.CONTROLS/Utils/LinkWrapUtils',
    "Core/IoC",
    "browser!js!Deprecated/Controls/FieldText/resources/Autosize-plugin",
    'css!SBIS3.CONTROLS/TextArea/TextArea'
-], function( constants,TextBox, inputField, escapeHtml, LinkWrap, IoC) {
+], function( constants,TextBox, inputField, compatiblePlaceholderTemplate, escapeHtml, LinkWrap, IoC) {
 
    'use strict';
 
@@ -66,6 +67,7 @@ define('SBIS3.CONTROLS/TextArea', [
          _options: {
             _isMultiline: true,
             _paddingClass: ' controls-TextArea_padding',
+            compatiblePlaceholderTemplate: compatiblePlaceholderTemplate,
             textFieldWrapper: inputField,
             wrapUrls: LinkWrap.wrapURLs,
             escapeHtml: escapeHtml,
@@ -230,6 +232,13 @@ define('SBIS3.CONTROLS/TextArea', [
             this._cachedH = h;
             this._autosizeTextArea(true);
          }
+      },
+
+      _getCompatiblePlaceholder: function() {
+         if (!this._compatPlaceholder) {
+            this._compatPlaceholder = this._container.find('.controls-TextArea__placeholder');
+         }
+         return this._compatPlaceholder;
       },
 
       _removeAutoSizeDognail: function() {
