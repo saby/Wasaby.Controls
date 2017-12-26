@@ -35,9 +35,6 @@ define('js!Controls/Input/resources/SuggestPopupController',
       
       var SuggestPopupController = extend({
          
-         _selectedIndex: -1,
-         _searchResult: null,
-         
          constructor: function(options) {
             SuggestPopupController.superclass.constructor.call(this, options);
             
