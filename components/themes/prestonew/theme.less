@@ -297,11 +297,11 @@ body {
   background: @controls-editInPlace-editor-bg;
 }
 //todo: отказаться от данного сомнительного решения
-.controls-FormattedTextBox .controls-TextBox__wrapper .controls-TextBox__field .controls-FormattedTextBox__field-symbol {
+.controls-FormattedTextBox .controls-InputRender__wrapper .controls-InputRender__field .controls-FormattedTextBox__field-symbol {
     line-height: round(56px * @multiplier);
 }
   //TODO: придумать решение лучше, возможно на flex
-.controls-ComboBox.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
+.controls-ComboBox.controls-InputRender.controls-ComboBox__editable-false .controls-InputRender__fieldWrapper .controls-InputRender__field.controls-ComboBox__fieldNotEditable {
      vertical-align: top; // чтобы блок располагался аналогично controls-ComboBox__field, но растягивал блок
 }
 .controls-Link__field {
@@ -391,7 +391,7 @@ body .ws-window.ws-LoadingIndicator__window {
       padding: round(32px * @multiplier);
    }
 }
-.controls-ComboBox.controls-Picker__show.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
+.controls-ComboBox.controls-Picker__show.controls-InputRender.controls-ComboBox__editable-false .controls-InputRender__fieldWrapper .controls-InputRender__field.controls-ComboBox__fieldNotEditable {
   color: #324352;
 }
 
@@ -416,7 +416,7 @@ body .ws-window.ws-LoadingIndicator__window {
    box-sizing: border-box;
 }
 
-.controls-FormattedTextBox .controls-TextBox__wrapper {
+.controls-FormattedTextBox .controls-InputRender__wrapper {
   text-align: center;
 }
 
@@ -425,7 +425,7 @@ body .controls-image__button {
       color: #26B8FF !important;
    }
  }
-.controls-ComboBox.controls-TextBox.controls-TextBox .controls-ComboBox__afterFieldWrapper .controls-ComboBox__arrowDown {
+.controls-ComboBox.controls-InputRender.controls-InputRender .controls-ComboBox__afterFieldWrapper .controls-ComboBox__arrowDown {
   font-size: round(84px * @multiplier) !important;
 }
 body .controls-Browser__filterButton .controls__filterButton__filterLine-text {
