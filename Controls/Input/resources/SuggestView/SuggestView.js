@@ -10,7 +10,7 @@ define('js!Controls/Input/resources/SuggestView/SuggestView',
       
       var _private = {
          getSelectedKey: function(items, idProperty, index) {
-            var item = items && items.at(index);
+            var item = items && items.at(index || 0);
             return item ? item.get(idProperty) : null;
          }
       };

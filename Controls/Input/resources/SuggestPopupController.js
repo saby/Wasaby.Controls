@@ -4,10 +4,11 @@ define('js!Controls/Input/resources/SuggestPopupController',
       'Core/core-merge',
       'js!Controls/List/resources/utils/Search',
       'Core/constants',
+      'Core/core-clone',
       'js!Controls/Input/resources/SuggestView/SuggestView'
       
    ],
-   function(extend, cMerge, Search, constants) {
+   function(extend, cMerge, Search, constants, clone) {
       
       'use strict';
       
@@ -27,13 +28,40 @@ define('js!Controls/Input/resources/SuggestPopupController',
             return self._search;
          },
          
+         showPopup: function(self, searchResult, popupOptions) {
+            popupOptions = clone(popupOptions);
+            popupOptions.componentOptions.items = searchResult.result;
+            popupOptions.componentOptions.hasMore = searchResult.hasMore;
+            
+            self._popupOptions = popupOptions;
+            self._popupOpener.open(popupOptions);
+         },
+         
          updatePopupSelectedIndex: function(self, selectedIndex) {
             self._popupOptions.componentOptions.selectedIndex = selectedIndex;
             self._popupOpener.open(self._popupOptions);
+         },
+   
+         increaseSelectedIndex: function(self) {
+            if (self._selectedIndex > 0) {
+               self._selectedIndex--;
+            }
+            _private.updatePopupSelectedIndex(self, self._selectedIndex);
+         },
+   
+         decreaseSelectedIndex: function(self) {
+            if (self._selectedIndex < self._popupOptions.componentOptions.items.getCount() - 1) {
+               self._selectedIndex++;
+            }
+            _private.updatePopupSelectedIndex(self, self._selectedIndex);
          }
+   
+   
       };
       
       var SuggestPopupController = extend({
+         
+         _selectedIndex: 0,
          
          constructor: function(options) {
             SuggestPopupController.superclass.constructor.call(this, options);
@@ -47,15 +75,8 @@ define('js!Controls/Input/resources/SuggestPopupController',
          
          search: function(filter, popupOptions) {
             var self = this;
-            
-            this._selectedIndex = 0;
             _private.getSearchController(self).search({filter: filter}).addCallback(function(searchResult) {
-               popupOptions.componentOptions.items = searchResult.result;
-               popupOptions.componentOptions.hasMore = searchResult.hasMore;
-               popupOptions.componentOptions.selectedIndex = self._selectedIndex;
-               
-               self._popupOptions = popupOptions;
-               self._popupOpener.open(popupOptions);
+               _private.showPopup(self, searchResult, popupOptions);
             });
          },
          
@@ -63,18 +84,12 @@ define('js!Controls/Input/resources/SuggestPopupController',
             if (this._popupOpener.isOpened()) {
                switch (event.nativeEvent.which) {
                   case constants.key.up:
-                     if (this._selectedIndex > 0) {
-                        this._selectedIndex--;
-                     }
-                     _private.updatePopupSelectedIndex(this, this._selectedIndex);
+                     _private.increaseSelectedIndex(this);
                      event.preventDefault();
                      break;
                      
                   case constants.key.down:
-                     if (this._selectedIndex < this._popupOptions.componentOptions.items.getCount() - 1) {
-                        this._selectedIndex++;
-                     }
-                     _private.updatePopupSelectedIndex(this, this._selectedIndex);
+                     _private.decreaseSelectedIndex(this);
                      event.preventDefault();
                      break;
    

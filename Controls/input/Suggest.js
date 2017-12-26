@@ -48,10 +48,23 @@ define('js!Controls/Input/Suggest',
             });
          },
          
+         destroy: function() {
+            if (this._suggestController) {
+               this._suggestController.destroy();
+               this._suggestController = null;
+            }
+            Suggest.superclass.destroy.call(this);
+         },
+         
+         // </editor-fold>
+   
+   
+         // <editor-fold desc="handlers">
+         
          _changeValueHandler: function(event, value) {
             this._suggestController.setValue(value);
          },
-         
+   
          _selectHandler: function(item) {
             this._notify('onSelect', item);
             this._notify('valueChanged', item.get(this._options.displayProperty));
@@ -59,16 +72,8 @@ define('js!Controls/Input/Suggest',
    
          _keyDownHandler: function(event) {
             this._suggestController.keyDown(event);
-         },
-         
-         destroy: function() {
-            if (this._suggestController) {
-               this._suggestController.destroy();
-               this._suggestController = null;
-            }
-            Suggest.superclass.destroy.call(this);
          }
-         
+   
          // </editor-fold>
          
       });

@@ -32,11 +32,7 @@ define(
    
             //Заглушка для тестирования
             selfTest._options.textComponent = {
-               getContainer: function () {
-                  return [{
-                     offsetWidth: 0
-                  }];
-               }
+               _container: [{offsetWidth: 0}]
             };
             
             SuggestController._private.getSearchController(selfTest).addCallback(function(controller) {
@@ -73,6 +69,20 @@ define(
                });
             });
          });
+         
+         it('.getSearchFilter', function() {
+            var selfTest = getTestAbstract();
+            selfTest._options.searchParam = 'test';
+            assert.deepEqual(SuggestController._private.getSearchFilter(selfTest, 'testText'), {test: 'testText'});
+         });
+   
+         it('.getPopupOptions', function() {
+            var selfTest = getTestAbstract();
+            selfTest._options.textComponent = {
+               _container: [{offsetWidth: 0}]
+            };
+            assert.equal(SuggestController._private.getPopupOptions(selfTest).componentOptions.width, 0);
+         });
    
          it('.onChangeValueHandler', function(done) {
             var selfTest = getTestAbstract(),
@@ -83,11 +93,7 @@ define(
             selfTest._options.minSearchLength = 3;
             //Заглушка для тестирования
             selfTest._options.textComponent = {
-               getContainer: function () {
-                  return [{
-                     offsetWidth: 0
-                  }];
-               }
+               _container: [{offsetWidth: 0}]
             };
    
             SuggestController._private.getSearchController(selfTest).addCallback(function(controller) {

@@ -11,6 +11,11 @@ define('js!Controls/Input/resources/SuggestController',
    'use strict';
    
    var _private = {
+      /**
+       * Search and show popup
+       * @param self
+       * @param {Object} fitler
+       */
       search: function(self, fitler) {
          _private.getSearchController(self).addCallback(function(searchController) {
             searchController.search(fitler, _private.getPopupOptions(self));
@@ -18,12 +23,23 @@ define('js!Controls/Input/resources/SuggestController',
          });
       },
    
+      /**
+       * Abort search
+       * @param self
+       */
       abortSearch: function(self) {
          _private.getSearchController(self).addCallback(function (searchController) {
             searchController.abort();
             return searchController;
          });
       },
+      
+      getSearchFilter: function(self, textValue) {
+         var filter = cClone(self._options.filter || {});
+         filter[self._options.searchParam] = textValue;
+         return filter;
+      },
+      
    
       onChangeValueHandler: function(self, text) {
          if (text.length >= self._options.minSearchLength) {
@@ -44,12 +60,6 @@ define('js!Controls/Input/resources/SuggestController',
                showAllOpener: self._options.showAllOpener
             }
          };
-      },
-      
-      getSearchFilter: function(self, textValue) {
-         var filter = cClone(self._options.filter || {});
-         filter[self._options.searchParam] = textValue;
-         return filter;
       },
    
       getSearchController: function(self) {
