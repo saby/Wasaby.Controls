@@ -17,10 +17,10 @@ define('js!Controls/Popup/Opener/Sticky/Strategy',
             var
                target = cfg.popupOptions.target ? cfg.popupOptions.target : $('body'),
                targetCoords = TargetCoords.get(target, cfg.popupOptions.corner);
-            // вертикальное выравнивание
-            cfg.position.top = this._vertical(targetCoords, cfg.popupOptions.verticalAlign, height);
-            // горизонтальное выравнивание
-            cfg.position.left = this._horizontal(targetCoords, cfg.popupOptions.horizontalAlign, width);
+            cfg.position = {
+               top: this._vertical(targetCoords, cfg.popupOptions.verticalAlign, height),
+               left: this._horizontal(targetCoords, cfg.popupOptions.horizontalAlign, width)
+            };
          },
 
          _horizontal: function (targetCoords, horizontalAlign, contWidth) {

@@ -2,10 +2,11 @@ define('js!Controls/Popup/Opener/Base',
    [
       'Core/Control',
       'js!Controls/Popup/Manager',
+      'Core/core-clone',
       'Core/core-merge',
       'js!Controls/Popup/Controller'
    ],
-   function (Control, Manager, CoreMerge, Controller) {
+   function (Control, Manager, CoreClone, CoreMerge, Controller) {
       /**
        * Базовый опенер
        * @category Popup
@@ -26,8 +27,8 @@ define('js!Controls/Popup/Opener/Base',
           */
          open: function (config, strategy) {
             var
-               cfg = config || {};
-            CoreMerge(cfg, this._options.popupOptions);
+               cfg = CoreClone(this._options.popupOptions);
+            CoreMerge(cfg, config || {});
             if (this._popupId) {
                this._popupId = Manager.update(this._popupId, cfg);
             }

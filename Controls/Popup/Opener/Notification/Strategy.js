@@ -13,8 +13,8 @@ define('js!Controls/Popup/Opener/Notification/Strategy',
        * @extends Controls/Control
        */
       var Strategy = BaseStrategy.extend({
-         getPosition: function () {
-            return {
+         getPosition: function (cfg) {
+            cfg.position = {
                right: 16,
                bottom: 16
             };
