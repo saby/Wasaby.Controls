@@ -1,4 +1,4 @@
-define('js!Controls/List/TreeControl', [
+define('js!Controls/Tree', [
    'Core/Control'
 
 ], function (Control
@@ -9,7 +9,7 @@ define('js!Controls/List/TreeControl', [
 
    /**
     * Компонент иерархичесего списка, отображаемого в виде дерева, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
-    * @class Controls/List/TreeControl
+    * @class Controls/Tree
     * @extends Controls/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/ISingleSelectable
