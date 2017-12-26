@@ -7,8 +7,8 @@
    <div class="controls-SubmitPopup{{_options.disableStandardWidth ? '' : _options.message.length > _messageMaxLength || _options.details.length > _detailsMaxLength ? ' controls-SubmitPopup__size-big' : ' controls-SubmitPopup__size-standard'}}">
 
       <ws:partial
-              template="{{_options.bodyTemplate}}"
-              scope="{{_options.bodyTemplateOptions}}"
+              template="{{_options.contentTemplate}}"
+              scope="{{_options.contentTemplateOptions}}"
               message="{{_options.message}}"
               messageTemplate="{{_messageTemplate}}"
               details="{{_options.details}}"
@@ -16,11 +16,10 @@
       ></ws:partial>
 
       <ws:partial
-              template="{{_options.footerTemplate}}"
-              scope="{{_options.footerTemplateOptions}}"
+              template="{{_footerTemplate}}"
               hasCancelButton="{{_options.hasCancelButton}}"
               useConfirmButtons="{{_options.type === 'confirm'}}"
-              buttonLabels="{{_options.buttonLabels}}"
+              buttonConfig="{{_options.buttonConfig}}"
       ></ws:partial>
    </div>
 </div>

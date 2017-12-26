@@ -3,7 +3,7 @@ define('js!Controls/Utils/PopupOpener',
       'Core/Control',
       'Core/core-merge',
       'tmpl!Controls/Utils/PopupOpener/PopupOpener',
-      'js!Controls/Popup/Submit'
+      'js!Controls/Popup/Confirm'
    ],
    function (Control, merge, template) {
       'use strict';
@@ -29,11 +29,9 @@ define('js!Controls/Utils/PopupOpener',
        */
 
       var _private = {
-         openDialog: function(self, type, handlers){
+         openDialog: function(self, componentOptions, handlers){
             self._children.opener.open({
-               componentOptions: merge({
-                  type: type
-               }, self._options.dialogOptions)
+               componentOptions: componentOptions
             });
 
             self._handlers = handlers;
@@ -67,16 +65,20 @@ define('js!Controls/Utils/PopupOpener',
             });
          },
 
-         openConfirmDialog: function(yesHandler, noHandler, cancelHandler){
-            _private.openDialog(this, 'confirm', {
+         openConfirmDialog: function(cfg, yesHandler, noHandler, cancelHandler){
+            _private.openDialog(this, merge(cfg, {
+               type: 'confirm'
+            }), {
                yes: yesHandler,
                no: noHandler,
                cancel: cancelHandler
             });
          },
 
-         openInfoDialog: function(handler){
-            _private.openDialog(this, 'info', {
+         openInfoDialog: function(cfg, handler){
+            _private.openDialog(this, merge(cfg, {
+               type: 'info'
+            }), {
                cancel: handler
             });
          }

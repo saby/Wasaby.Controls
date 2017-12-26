@@ -1,20 +1,20 @@
-define('js!Controls/Popup/Submit', [
+define('js!Controls/Popup/Confirm', [
       'Core/Control',
       'WS.Data/Type/descriptor',
       'Core/constants',
-      'tmpl!Controls/Popup/Submit/body',
-      'tmpl!Controls/Popup/Submit/footer',
-      'tmpl!Controls/Popup/Submit/message',
-      'tmpl!Controls/Popup/Submit/details',
-      'tmpl!Controls/Popup/Submit/Submit',
+      'tmpl!Controls/Popup/Confirm/content',
+      'tmpl!Controls/Popup/Confirm/footer',
+      'tmpl!Controls/Popup/Confirm/message',
+      'tmpl!Controls/Popup/Confirm/details',
+      'tmpl!Controls/Popup/Confirm/Confirm',
 
 
-      'css!Controls/Popup/Submit/Submit',
+      'css!Controls/Popup/Confirm/Confirm',
       'js!Controls/Button'
    ], function (Control,
                 types,
                 constants,
-                bodyTemplate,
+                contentTemplate,
                 footerTemplate,
                 messageTemplate,
                 detailsTemplate,
@@ -24,7 +24,7 @@ define('js!Controls/Popup/Submit', [
 
       /**
        * Класс контрола "Окно подтверждения". В зависимости от типа, может быть диалогом подтверждения, с кнопками "Да", "Нет" и "Отмена" (опционально), или диалогом с кнопкой "Ок".
-       * @class Controls/Popup/Submit
+       * @class Controls/Popup/Confirm
        * @extends Controls/Control
        * @control
        * @public
@@ -32,14 +32,14 @@ define('js!Controls/Popup/Submit', [
        */
 
       /**
-       * @name Controls/Popup/Submit#type
+       * @name Controls/Popup/Confirm#type
        * @cfg {String} Тип диалога
        * @variant confirm Окно подтверждения с кнопками "Да", "Нет" и "Отмена"
        * @variant info Ифнормационное окно с кнопкой "Ок"
        */
 
       /**
-       * @name Controls/Popup/Submit#style
+       * @name Controls/Popup/Confirm#style
        * @cfg {String} Стилевое оформление диалога
        * @variant default По умоланию
        * @variant success Успех
@@ -47,55 +47,37 @@ define('js!Controls/Popup/Submit', [
        */
 
       /**
-       * @name Controls/Popup/Submit#message
+       * @name Controls/Popup/Confirm#message
        * @cfg {String} Устанавливает сообщение
        */
 
       /**
-       * @name Controls/Popup/Submit#details
+       * @name Controls/Popup/Confirm#details
        * @cfg {String} Устанавливает детали сообщения
        */
 
       /**
-       * @typedef {Object} ButtonLabels
-       * @property {String} yes Текст кнопки "Да"
-       * @property {String} no Текст кнопки "Нет"
-       * @property {String} cancel Текст кнопки "Отмена"
-       * @property {String} ok Текст кнопки "Ок"
+       * @name Controls/Popup/Confirm#buttonConfig
+       * @cfg {Object} Устанавливает текст на кнопках
        */
 
       /**
-       * @name Controls/Popup/Submit#buttonLabels
-       * @cfg {ButtonLabels} Устанавливает текст на кнопках
-       */
-
-      /**
-       * @name Controls/Popup/Submit#hasCancelButton
+       * @name Controls/Popup/Confirm#hasCancelButton
        * @cfg {Boolean} Устанавливает использование кнопки "Отмена". Опция актуальна только для диалогов со статусом confirm
        */
 
       /**
-       * @name Controls/Popup/Submit#bodyTemplate
+       * @name Controls/Popup/Confirm#contentTemplate
        * @cfg {Function} Устанавливает шаблон отображения тела диалога
        */
 
       /**
-       * @name Controls/Popup/Submit#footerTemplate
-       * @cfg {Function} Устанавливает шаблон отображения футера диалога
-       */
-
-      /**
-       * @name Controls/Popup/Submit#bodyTemplateOptions
+       * @name Controls/Popup/Confirm#contentTemplateOptions
        * @cfg {Object} Устанавливает опции для шаблона отображения сообщения
        */
 
       /**
-       * @name Controls/Popup/Submit#footerTemplateOptions
-       * @cfg {Object} Устанавливает опции для шаблона отображения деталей
-       */
-
-      /**
-       * @name Controls/Popup/Submit#disableStandardWidth
+       * @name Controls/Popup/Confirm#disableStandardWidth
        * cfg {Boolean} Отключить применение стандартной ширины
        */
 
@@ -107,7 +89,7 @@ define('js!Controls/Popup/Submit', [
        */
 
       /**
-       * @event Controls/Popup/Submit#sendResult Происходит при нажатии на кнопку диалога
+       * @event Controls/Popup/Confirm#sendResult Происходит при нажатии на кнопку диалога
        * @param {Core/EventObject} eventObject Дескриптор события
        * @param {Result} Результат
        */
@@ -118,6 +100,7 @@ define('js!Controls/Popup/Submit', [
          _detailsMaxLength: 160,
          _messageTemplate: messageTemplate,
          _detailsTemplate: detailsTemplate,
+         _footerTemplate: footerTemplate,
 
          _sendResult: function (e, res) {
             this._notify('sendResult', res);
@@ -128,7 +111,7 @@ define('js!Controls/Popup/Submit', [
             e.stopPropagation();
 
             if(e.nativeEvent.keyCode === constants.key.esc){
-               this._options.hasCancelButton && this._sendResult();
+               (this._options.type === 'info' || this._options.hasCancelButton) && this._sendResult();
             }
          }
       });
@@ -137,16 +120,27 @@ define('js!Controls/Popup/Submit', [
          return {
             type: 'confirm',
             style: 'default',
-            buttonLabels: {
-               yes: rk('Да'),
-               no: rk('Нет'),
-               cancel: rk('Отмена'),
-               ok: rk('ОК')
+            buttonConfig: {
+               yes: {
+                  caption: rk('Да'),
+                  isLink: false
+               },
+               no: {
+                  caption: rk('Нет'),
+                  isLink: false
+               },
+               cancel: {
+                  caption: rk('Отмена'),
+                  isLink: false
+               },
+               ok: {
+                  caption: rk('ОК'),
+                  isLink: false
+               }
             },
             hasCancelButton: false,
             disableStandardWidth: false,
-            bodyTemplate: bodyTemplate,
-            footerTemplate: footerTemplate
+            contentTemplate: contentTemplate
          };
       };
 

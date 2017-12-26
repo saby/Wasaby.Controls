@@ -29,13 +29,13 @@ define(
 
          it('confirmDialog', function() {
             var handler = function(){};
-            popupOpener.openConfirmDialog(handler);
+            popupOpener.openConfirmDialog({}, handler);
             assert.equal(popupOpener._handlers.yes, handler);
          });
 
          it('infoDialog', function() {
             var handler = function(){};
-            popupOpener.openInfoDialog(handler);
+            popupOpener.openInfoDialog({}, handler);
             assert.equal(popupOpener._handlers.cancel, handler);
          });
       });
