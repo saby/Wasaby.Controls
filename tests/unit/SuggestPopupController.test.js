@@ -1,5 +1,5 @@
-define(['js!Controls/Input/resources/SuggestPopupController', 'Core/core-instance', 'WS.Data/Source/Memory'],
-   function(SuggestPopupController, cInstance, Memory) {
+define(['js!Controls/Input/resources/SuggestPopupController', 'Core/core-instance', 'WS.Data/Source/Memory','WS.Data/Collection/List'],
+   function(SuggestPopupController, cInstance, Memory, List) {
    
    'use strict';
       
@@ -7,9 +7,7 @@ define(['js!Controls/Input/resources/SuggestPopupController', 'Core/core-instanc
          
          it('.getSearchController', function() {
             var self = {
-               _options: {
-                  dataSource: new Memory()
-               }
+               _dataSource: new Memory()
             };
             
             var searchController = SuggestPopupController._private.getSearchController(self);
@@ -17,11 +15,31 @@ define(['js!Controls/Input/resources/SuggestPopupController', 'Core/core-instanc
             assert.isTrue(cInstance.instanceOfModule(searchController._dataSource, 'WS.Data/Source/Memory'));
          });
    
-         it('.getPopupOpener', function() {
-            var self = {};
-      
-            var popupOpener = SuggestPopupController._private.getPopupOpener(self);
-            assert.isTrue(cInstance.instanceOfModule(popupOpener, 'Controls/Popup/Opener/Sticky'));
+         it('.changeSelectedIndex', function() {
+            var list = new List({items: [1, 2]}),
+                selfTest = {};
+   
+            selfTest._popupOpener = {
+               open: function(){}
+            };
+            selfTest._selectedIndex = 0;
+            selfTest._popupOptions = {
+               componentOptions: {
+                  items: list
+               }
+            };
+   
+            SuggestPopupController._private.increaseSelectedIndex(selfTest);
+            assert.equal(selfTest._selectedIndex, 1);
+   
+            SuggestPopupController._private.increaseSelectedIndex(selfTest);
+            assert.equal(selfTest._selectedIndex, 1);
+   
+            SuggestPopupController._private.decreaseSelectedIndex(selfTest);
+            assert.equal(selfTest._selectedIndex, 0);
+   
+            SuggestPopupController._private.decreaseSelectedIndex(selfTest);
+            assert.equal(selfTest._selectedIndex, 0);
          });
          
       });

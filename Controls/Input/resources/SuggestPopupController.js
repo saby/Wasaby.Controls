@@ -42,14 +42,14 @@ define('js!Controls/Input/resources/SuggestPopupController',
             self._popupOpener.open(self._popupOptions);
          },
    
-         increaseSelectedIndex: function(self) {
+         decreaseSelectedIndex: function(self) {
             if (self._selectedIndex > 0) {
                self._selectedIndex--;
             }
             _private.updatePopupSelectedIndex(self, self._selectedIndex);
          },
-   
-         decreaseSelectedIndex: function(self) {
+         
+         increaseSelectedIndex: function(self) {
             if (self._selectedIndex < self._popupOptions.componentOptions.items.getCount() - 1) {
                self._selectedIndex++;
             }
@@ -84,12 +84,12 @@ define('js!Controls/Input/resources/SuggestPopupController',
             if (this._popupOpener.isOpened()) {
                switch (event.nativeEvent.which) {
                   case constants.key.up:
-                     _private.increaseSelectedIndex(this);
+                     _private.decreaseSelectedIndex(this);
                      event.preventDefault();
                      break;
                      
                   case constants.key.down:
-                     _private.decreaseSelectedIndex(this);
+                     _private.increaseSelectedIndex(this);
                      event.preventDefault();
                      break;
    
