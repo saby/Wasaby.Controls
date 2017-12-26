@@ -1,4 +1,4 @@
-define('js!Controls/List/Explorer', [
+define('js!Controls/Explorer', [
    'Core/Control'
 
 ], function (Control
@@ -9,7 +9,7 @@ define('js!Controls/List/Explorer', [
 
    /**
     * Компонент иерархичесего списка, с возможностью распахивания, а так же проваливания в узлы. Обладает возможностью загрузки/подгрузки данных из источника.
-    * @class Controls/List/Explorer
+    * @class Controls/Explorer
     * @extends Controls/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IPromisedSelectable
