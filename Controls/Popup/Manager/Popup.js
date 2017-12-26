@@ -8,63 +8,76 @@ define('js!Controls/Popup/Manager/Popup',
    function (Control, template, CoreConstants) {
       'use strict';
 
-      var _private = {
-         /**
-          * Обработчик фокусировки элемента.
-          */
-         focusIn: function () {
-            this._notify('focusInPopup', this._options.id);
-         },
-
-         /**
-          * Обработчик потери фокуса.
-          * @param event
-          * @param focusedControl
-          */
-         focusOut: function (event, focusedControl) {
-            this._notify('focusOutPopup', this._options.id, focusedControl);
-         },
-
-         /**
-          * Пересчитать позицию попапа
-          */
-         recalcPosition: function () {
-            this._notify('recalcPosition', this);
-         }
-      };
-
-      /**
-       * Компонент вспывающего окна
-       * @class Controls/Popup/Manager/Popup
-       * @control
-       * @extends Controls/Control
-       * @public
-       * @category Popup
-       */
       var Popup = Control.extend({
+         /**
+          * Компонент "Всплывающее окно"
+          * @class Controls/Popup/Manager/Popup
+          * @extends Core/Control
+          * @control
+          * @private
+          * @category Popup
+          * @author Лощинин Дмитрий
+          */
+
+         /**
+          * @name Controls/Popup/Manager/Popup#autoHide
+          * @cfg {Boolean} закрывать попап в случае ухода фокуса
+          */
+
+         /**
+          * @name Controls/Popup/Manager/Popup#template
+          * @cfg {Content} Шаблон всплывающего окна
+          */
+
+         /**
+          * @name Controls/Popup/Manager/Popup#componentOptions
+          * @cfg {Object} Опции компонента
+          */
+
+         /**
+          * @name Controls/Popup/Manager/Popup#opener
+          * @cfg {Object} Опенер
+          */
+
          _controlName: 'Controls/Popup/Manager/Popup',
          _template: template,
 
          constructor: function (cfg) {
-            Popup.superclass.constructor.apply(this, arguments);
-         },
-
-         _beforeMount: function (options) {
-            this._controller = options.controller;
-            this._opener = options.opener;
+            Popup.superclass.constructor.call(this, cfg);
+            this._opener = cfg.opener;
          },
 
          _afterMount: function () {
-            this.subscribe('onFocusIn', _private.focusIn);
-            this.subscribe('onFocusOut', _private.focusOut);
-            _private.recalcPosition.call(this);
+            var container = this._container;
+            this._notify('popupCreated', this._options.id, container.outerWidth(), container.outerHeight());
          },
 
          /**
           * Закрыть popup
+          * @function Controls/Popup/Manager/Popup#_close
           */
          _close: function () {
             this._notify('closePopup', this._options.id);
+         },
+
+         /**
+          * Обработчик потери фокуса.
+          * @function Controls/Popup/Manager/Popup#_focusOut
+          * @param event
+          * @param focusedControl
+          */
+         _focusOut: function (event, focusedControl) {
+            if (!!this._options.autoHide) {
+               var
+                  parent = focusedControl.to;
+               while (!!parent) {
+                  if (parent._options.id === this._opener._options.id || parent._options.id === this._options.id) {
+                     return;
+                  }
+                  parent = parent.getParent();
+               }
+               this._close();
+            }
          },
 
          /**
@@ -80,11 +93,10 @@ define('js!Controls/Popup/Manager/Popup',
 
          /**
           * Отправить результат
+          * @function Controls/Popup/Manager/Popup#_sendResult
           */
          _sendResult: function () {
-            if (this._controller) {
-               this._controller.notifyOnResult.call(this._controller, Array.prototype.slice.call(arguments, 1));
-            }
+            this._notify('result', this._options.id, Array.prototype.slice.call(arguments, 1));
          }
       });
 

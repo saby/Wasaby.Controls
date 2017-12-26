@@ -1,127 +1,83 @@
 define('js!Controls/Popup/Manager',
    [
       'Core/helpers/random-helpers',
-      'js!Controls/Popup/Manager/Container',
       'WS.Data/Collection/List'
    ],
 
-   function (Random, Container, List) {
+   function (Random, List) {
       'use strict';
 
       var _popupContainer;
 
       var _private = {
          /**
-          * Вернуть следующий z-index
+          * Получить Popup/Container
+          * TODO временное решение, пока непонятно, как Manager должен узнать о контейнере
           */
-         calculateZIndex: function () {
-            if (!Manager._zIndex) {
-               Manager._zIndex = 10;
-            }
-            return Manager._zIndex += 10;
-         },
-
-         focusOut: function (id, focusedControl) {
-            var
-               element = Manager._find(id);
-            if (element) {
-               if (!!element.popupOptions.autoHide) {
-                  var
-                     opener = element.popupOptions.opener,
-                     parent = focusedControl.to;
-                  while (!!parent) {
-                     if (parent._options.id === opener._options.id || parent._options.id === id) {
-                        return;
-                     }
-                     parent = parent.getParent();
-                  }
-                  Manager.remove(id);
-               }
-            }
-         },
-
-         /**
-          * Вытолкнуть окно наверх
-          * @param popup инстанс попапа
-          */
-         pushUp: function (popup) {
-            var
-               element = Manager._find(popup._options.id);
-            if (element) {
-               element.zIndex = _private.calculateZIndex();
-               Manager._setItems();
-            }
-         },
-
-         /**
-          * Пересчитать положение попапа
-          * @param popup инстанс попапа
-          */
-         recalcPosition: function (popup) {
-            var
-               element = Manager._find(popup._options.id);
-            if (element) {
-               if (element.strategy) {
-                  element.position = element.strategy.getPosition(popup);
-                  Manager._setItems();
-               }
-            }
-         },
-
-         getPopupContainer: function(){
-            // временное решение, пока непонятно как Manager должен узнать о контейнере
-            if( document && !_popupContainer){
+         getPopupContainer: function () {
+            if (document && !_popupContainer) {
                var element = document.getElementById('popup');
-               if( element && element.controlNodes && element.controlNodes.length ){
+               if (element && element.controlNodes && element.controlNodes.length) {
                   _popupContainer = element.controlNodes[0].control;
                   _popupContainer.eventHandlers = {
-                     onClosePopup: function(event, id){
+                     onClosePopup: function (event, id) {
                         Manager.remove(id);
                      },
-                     onFocusIn: function (event, id) {
-
+                     onPopupCreated: function (event, id, width, height) {
+                        _private.recalcPosition(id, width, height);
                      },
-                     onFocusOut: function (event, id, focusedControl) {
-                        _private.focusOut(id, focusedControl);
-                     },
-                     onRecalcPosition: function (event, popup) {
-                        _private.recalcPosition(popup);
+                     onResult: function(event, id, args){
+                        _private.sendResult(id, args);
                      }
                   };
                }
             }
             return _popupContainer;
+         },
+
+         recalcPosition: function (id, width, height) {
+            var element = Manager._find(id);
+            if (element) {
+               var strategy = element.strategy;
+               if (strategy) {
+                  strategy.getPosition(element, width, height);
+                  Manager._setItems();
+               }
+            }
+         },
+
+         sendResult: function(id, args){
+            var element = Manager._find(id);
+            if (element) {
+               element.controller.notifyOnResult(args);
+            }
          }
       };
 
-      /**
-       * Менеджер окон
-       * @class Controls/Popup/Manager
-       * @control
-       * @public
-       * @category Popup
-       * @singleton
-       */
       var Manager = {
+         /**
+          * Менеджер окон
+          * @class Controls/Popup/Manager
+          * @private
+          * @singleton
+          * @category Popup
+          * @author Лощинин Дмитрий
+          */
+
          /**
           * Показать всплывающее окно
           * @function Controls/Popup/Manager#show
-          * @param options компонент, который будет показан в окне
-          * @param strategy стратегия позиционирования всплывающего окна
+          * @param options конфигурация попапа
+          * @param strategy стратегия позиционирования попапа
           * @param controller контроллер
           */
          show: function (options, strategy, controller) {
             var element = {};
             element.id = Random.randomId('popup-');
-            options.controller = controller;
-            element.popupOptions = options;
             element.strategy = strategy;
-            // TODO вероятно позиция по умолчанию должна задаваться не здесь
-            element.position = {
-               left: -10000,
-               top: -10000
-            };
-            element.zIndex = _private.calculateZIndex();
+            element.position = strategy.getDefaultPosition();
+            element.controller = controller;
+            element.popupOptions = options;
             this._popupItems.add(element);
             this._setItems();
             return element.id;
@@ -131,13 +87,12 @@ define('js!Controls/Popup/Manager',
           * Обновить опции существующего попапа
           * @function Controls/Popup/Manager#update
           * @param id идентификатор попапа, для которого нужно обновить опции
-          * @param options новые опиции
+          * @param options новые опции
           */
          update: function (id, options) {
             var
                element = this._find(id);
             if (element) {
-               options.controller = element.popupOptions.controller;
                element.popupOptions = options;
                this._setItems();
                return id;
@@ -154,18 +109,17 @@ define('js!Controls/Popup/Manager',
             var
                element = this._find(id);
             if (element) {
+               element.strategy.removeElement(element);
                this._popupItems.remove(element);
                this._setItems();
             }
          },
 
-         _setItems: function(){
-            var container = _private.getPopupContainer();
-            if( container ){
-               container.setPopupItems(this._popupItems);
-            }
-         },
-
+         /**
+          * Найти конфиг попапа
+          * @function Controls/Popup/Manager#_find
+          * @param id идентификатор попапа
+          */
          _find: function (id) {
             var
                element,
@@ -174,6 +128,17 @@ define('js!Controls/Popup/Manager',
                element = this._popupItems.at(index);
             }
             return element;
+         },
+
+         /**
+          * Установить набор попапов
+          * @function Controls/Popup/Manager#_setItems
+          */
+         _setItems: function () {
+            var container = _private.getPopupContainer();
+            if (container) {
+               container.setPopupItems(this._popupItems);
+            }
          }
       };
 

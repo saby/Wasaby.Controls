@@ -1,53 +1,46 @@
 define('js!Controls/Popup/Opener/Sticky/Strategy',
    [
-      'Core/Abstract',
-      'js!Controls/Popup/interface/IStrategy',
+      'js!Controls/Popup/Opener/BaseStrategy',
       'js!Controls/Popup/TargetCoords'
    ],
-   function (Abstract, IStrategy, TargetCoords) {
+   function (BaseStrategy, TargetCoords) {
 
       /**
        * Стратегия позиционирования прилипающего диалога.
        * @class Controls/Popup/Opener/Sticky/Strategy
-       * @mixes Controls/Popup/interface/IStrategy
        * @control
        * @public
        * @category Popup
        */
-      var Strategy = Abstract.extend([IStrategy], {
-         getPosition: function (popup){
-            if( !popup._options.target ){
-               popup._options.target = $('body');
-            }
+      var Strategy = BaseStrategy.extend({
+         getPosition: function (cfg, width, height) {
             var
-               container = popup._container,
-               position = {},
-               targetCoords = TargetCoords.get(popup._options.target, popup._options.corner);
+               target = cfg.popupOptions.target ? cfg.popupOptions.target : $('body'),
+               targetCoords = TargetCoords.get(target, cfg.popupOptions.corner);
             // вертикальное выравнивание
-            position.top = this._vertical(targetCoords, popup._options.verticalAlign, container && container.height());
+            cfg.position.top = this._vertical(targetCoords, cfg.popupOptions.verticalAlign, height);
             // горизонтальное выравнивание
-            position.left = this._horizontal(targetCoords, popup._options.horizontalAlign, container && container.width());
-            return position;
+            cfg.position.left = this._horizontal(targetCoords, cfg.popupOptions.horizontalAlign, width);
          },
-         
-         _horizontal: function(targetCoords, horizontalAlign, contWidth){
+
+         _horizontal: function (targetCoords, horizontalAlign, contWidth) {
             var left = targetCoords.left;
-            if ( horizontalAlign ){
+            if (horizontalAlign) {
                // сможем посчитать только на _afterMount, когда будут известны размеры контейнера
                var offsetLeft = targetCoords.left - (horizontalAlign.side === 'right' ? contWidth || 0 : 0 ) + (horizontalAlign.offset || 0);
-               if( offsetLeft > 0 ){
+               if (offsetLeft > 0) {
                   left = offsetLeft;
                }
             }
             return left;
          },
 
-         _vertical: function(targetCoords, verticalAlign, contHeight){
+         _vertical: function (targetCoords, verticalAlign, contHeight) {
             var top = targetCoords.top;
-            if ( verticalAlign ){
+            if (verticalAlign) {
                // сможем посчитать только на _afterMount, когда будут известны размеры контейнера
                var offsetTop = targetCoords.top - (verticalAlign.side === 'bottom' ? contHeight || 0 : 0) + (verticalAlign.offset || 0);
-               if( offsetTop > 0 ){
+               if (offsetTop > 0) {
                   top = offsetTop;
                }
             }
