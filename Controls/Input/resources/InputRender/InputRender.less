@@ -1,9 +1,11 @@
 /*
    <div class="controls-InputRender">
       <div class="controls-InputRender__wrapper">
-         <input class="controls-InputRender__field" />
-         <div class="controls-InputRender__placeholder">
-             <span class="controls-InputRender__placeholder__overflow"> -placeholder- </span>
+         <div class="controls-InputRender__fieldWrapper>
+            <input class="controls-InputRender__field" />
+            <div class="controls-InputRender__placeholder">
+                <span class="controls-InputRender__placeholder__overflow"> -placeholder- </span>
+            </div>
          </div>
       </div>
       <div class="controls-InputRender__tagStyle"></div>
@@ -47,8 +49,17 @@
    .align-items(baseline);
 }
 
+.controls-TextBox__fieldWrapper { //Этот блок нужен для правильного позиционирования нашего плейсхолдера
+   .inline-flexbox();
+   .align-items(center);
+   .flex-shrink(1);
+   position: relative;
+   height: 100%;
+   width: 100%;
+   min-width: 0;
+}
+
 .controls-InputRender__field {
-   .placeholder(@color_TextBox-placeholder); //В престо другие цвета
    .flex-shrink(1); //В IE10 по умолчанию flex-shrink: 0
    .reset-browser-input-styles();
    text-overflow: ellipsis;
@@ -98,7 +109,7 @@
    1) Для contenteditable управляем видимостью плейсхолдеров через :empty.
    2) Для input нельзя использовать :empty, т.к. он там висит всегда. Поэтому вешаем аттрибут required на input, и тогда
    на него будет вешаться :invalid, если он пустой.
-   https://jsfiddle.net/LoL4Lqq5/
+   https://jsfiddle.net/7oyopngt/
  */
 .controls-InputRender__field:empty:not(input) + .controls-InputRender__placeholder {
    .inline-flexbox();
@@ -138,10 +149,6 @@
 }
 .controls-InputRender__tagStyle-disabled {
    border-right-color: @icon-color-disabled;
-}
-
-.controls-InputRender__hiddenPlaceholder {
-   .hiddenPlaceholder();
 }
 
 //Состояния
