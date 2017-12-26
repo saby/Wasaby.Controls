@@ -235,6 +235,11 @@ define(
 
          //Тест вставки значекния методом paste
          it('Insert with paste method', function (done) {
+            //Пока так. Нужно переписать тесты без работы с DOM
+            if (typeof $ === 'undefined') {
+               this.skip();
+            }
+
             var
                numberControl = Control.createControl(NumberControl, {}, $('<div></div>').appendTo('#mocha'));
 
