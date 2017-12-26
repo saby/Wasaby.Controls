@@ -28,7 +28,7 @@ define('js!Controls/List', [
             idProperty: cfg.idProperty,
             displayProperty: cfg.displayProperty,
             selectedKey: cfg.selectedKey
-         })
+         });
       },
 
       initNavigation: function(navOption, dataSource) {
@@ -375,10 +375,13 @@ define('js!Controls/List', [
                this._filter = newOptions.filter;
             }
 
-            if (newOptions.items && newOptions.items != this._options.items) {
+            if (newOptions.items && (newOptions.items != this._options.items)) {
                this._items = newOptions.items;
                this._listModel = _private.createListModel(this._items, newOptions);
+            } else if (newOptions.selectedKey !== this._options.selectedKey) {
+               this._listModel.setSelectedKey(newOptions.selectedKey);
             }
+            
 
             if (newOptions.dataSource !== this._options.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);

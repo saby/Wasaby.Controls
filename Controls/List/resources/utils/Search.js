@@ -2,49 +2,65 @@ define('js!Controls/List/resources/utils/Search',
    [
       'Core/core-extend',
       'Core/Deferred',
-      'js!Controls/List/resources/utils/DataSourceUtil'
+      'js!Controls/List/resources/utils/DataSourceUtil',
+      'js!Controls/List/Controllers/PageNavigation'
    ],
-   function (extend, Deferred, DataSourceUtil) {
+   function (extend, Deferred, DataSourceUtil, PageNavigation) {
       
       'use strict';
-      
-      /**
-       * Checks required parameters
-       */
-      function checkRequiredParams(params) {
-         if (!params.dataSource) {
-            throw new Error('dataSource is required for search')
-         }
-      }
    
-      /**
-       * Returns arguments for query
-       */
-      function getArgsForQuery(searchConfig) {
-         return [
-            this._dataSource,
-            null, //idProperty, using default
-            searchConfig.filter,
-            searchConfig.sorting,
-            searchConfig.offset,
-            searchConfig.limit
-         ];
-      }
-   
-      function cancelErrorProcess(def) {
-         this._searchDeferred.addErrback(function(error) {
-            if (error.canceled) {
-               def.cancel();
+      var _private = {
+         /**
+          * Checks required parameters
+          */
+         checkRequiredParams: function(params) {
+            if (!params.dataSource) {
+               throw new Error('dataSource is required for search');
             }
-            return error;
-         });
-      }
-   
-      function callSearchQuery(searchConfig) {
-         var searchDef = DataSourceUtil.callQuery.apply(this, getArgsForQuery.call(this, searchConfig));
-         cancelErrorProcess.call(this, searchDef);
-         return searchDef;
-      }
+         },
+      
+         /**
+          * Returns arguments for query
+          */
+         getArgsForQuery: function(self, searchConfig) {
+            var queryParams = {
+               filter: searchConfig.filter,
+               sorting: searchConfig.sorting,
+               limit: searchConfig.limit,
+               offset: searchConfig.offset
+            };
+            
+            if (this._navigation) {
+               var navigParams = this._navigation.prepareQueryParams(null, 'down');
+               queryParams.limit = navigParams.limit;
+               queryParams.offset = navigParams.offset;
+            }
+            
+            return [
+               self._dataSource,
+               null, //idProperty, using default
+               queryParams.filter,
+               queryParams.sorting,
+               queryParams.offset,
+               queryParams.limit
+            ];
+         },
+      
+         cancelErrorProcess: function(self, def) {
+            self._searchDeferred.addErrback(function(error) {
+               if (error.canceled) {
+                  def.cancel();
+               }
+               return error;
+            });
+         },
+      
+         callSearchQuery: function(self, searchConfig) {
+            var searchDef = DataSourceUtil.callQuery.apply(self, _private.getArgsForQuery(self, searchConfig));
+            _private.cancelErrorProcess(self, searchDef);
+            return searchDef;
+         }
+      };
    
       /**
        * @author Герасимов Александр
@@ -66,9 +82,15 @@ define('js!Controls/List/resources/utils/Search',
       var Search  = extend({
          constructor: function(cfg) {
             cfg = cfg || {};
-            checkRequiredParams(cfg);
+            _private.checkRequiredParams(cfg);
             this._searchDelay = cfg.hasOwnProperty('searchDelay') ? cfg.searchDelay : 500;
             this._dataSource = DataSourceUtil.prepareSource(cfg.dataSource);
+            if (cfg.navigation) {
+               //TODO поправить, как будет в контроллере поддержано актуальное API навигации.
+               this._navigation = new PageNavigation(cfg.navigation);
+               this._navigation.prepareSource(this._dataSource);
+               
+            }
             Search.superclass.constructor.apply(this, arguments);
          },
    
@@ -89,16 +111,24 @@ define('js!Controls/List/resources/utils/Search',
                throw new Error('filter is required for search ')
             }
             
-            var self = this;
+            var self = this,
+                hasMore;
             
             //aborting current search
             this.abort();
             this._searchDeferred = new Deferred();
    
             this._searchDelayTimer = setTimeout(function() {
-               callSearchQuery.call(self, searchConfig)
+               _private.callSearchQuery(self, searchConfig)
                   .addCallback(function(result) {
-                     self._searchDeferred.callback(result);
+                     if (self._navigation) {
+                        self._navigation.calculateState(result);
+                        hasMore = self._navigation.hasMoreData('down');
+                     }
+                     self._searchDeferred.callback({
+                        result: result,
+                        hasMore: hasMore
+                     });
                      return result;
                   })
                   .addErrback(function(err) {

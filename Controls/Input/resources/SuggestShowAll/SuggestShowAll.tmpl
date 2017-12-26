@@ -1,0 +1,13 @@
+<div class="ws-suggestShowAll">
+    <ws:Controls.Popup.DialogTemplate>
+        <ws:topArea>
+            <span class="ws-suggestShowAll__title">Все записи</span>
+        </ws:topArea>
+        <ws:contentArea>
+            <ws:partial
+                    template="{{_options.template}}"
+                    dataSource="{{_options.dataSource}}"
+                    on:itemClick="_onItemClickHandler()"/>
+        </ws:contentArea>
+    </ws:Controls.Popup.DialogTemplate>
+</div>

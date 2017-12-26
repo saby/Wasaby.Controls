@@ -1,10 +1,31 @@
-<ws:Controls.Input.Text
-    trim="{{_options.trim}}"
-    selectOnClick="{{_options.selectOnClick}}"
-    inputCharRegExp="{{_options.inputCharRegExp}}"
-    constraint="{{_options.constraint}}"
-    value="{{_options.value}}"
-    enabled="{{isEnabled()}}"
-    tagStyle="{{_options.tagStyle}}"
-    placeholder="{{_options.placeholder}}"
-/>
+<div class="controls-Suggest">
+
+    <ws:Controls.Input.Text
+        name="suggestText"
+        trim="{{_options.trim}}"
+        selectOnClick="{{_options.selectOnClick}}"
+        inputCharRegExp="{{_options.inputCharRegExp}}"
+        constraint="{{_options.constraint}}"
+        value="{{_options.value}}"
+        enabled="{{isEnabled()}}"
+        tagStyle="{{_options.tagStyle}}"
+        placeholder="{{_options.placeholder}}"
+        on:valueChanged="_changeValueHandler()"
+        on:keydown="_keyDownHandler()"
+    />
+
+    <ws:Controls.Popup.Opener.Sticky name="suggestPopupOpener" onResult="{{_selectHandler}}">
+        <ws:popupOptions autoHide="{{true}}" template="js!Controls/Input/resources/SuggestView/SuggestView">
+            <ws:corner vertical="bottom"/>
+            <ws:verticalAlign side="top"/>
+            <ws:componentOptions idProperty="{{_options.idProperty}}"></ws:componentOptions>
+        </ws:popupOptions>
+    </ws:Controls.Popup.Opener.Sticky>
+
+    <ws:Controls.Popup.Opener.Stack name="showAllOpener" onResult="{{_selectHandler}}">
+        <ws:popupOptions template="js!Controls/Input/resources/SuggestShowAll/SuggestShowAll">
+            <ws:componentOptions dataSource="{{_options.dataSource}}" template="{{_options.suggestTemplate}}"></ws:componentOptions>
+        </ws:popupOptions>
+    </ws:Controls.Popup.Opener.Stack>
+
+</div>

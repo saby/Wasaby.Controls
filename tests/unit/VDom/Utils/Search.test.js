@@ -22,6 +22,9 @@ define(
                 {
                    name: 'Dmitry'
                 },
+               {
+                  name: 'Dmitry'
+               },
                 {
                    name: 'Ыфырф'
                 }
@@ -45,8 +48,8 @@ define(
                   },
                   pageSize: 5
                }).addCallback(function(result) {
-                  assert.equal(result.getCount(), 1);
-                  assert.equal(result.at(0).get('name'), 'Sasha');
+                  assert.equal(result.result.getCount(), 1);
+                  assert.equal(result.result.at(0).get('name'), 'Sasha');
                   done();
                   return result;
                });
@@ -101,12 +104,36 @@ define(
                   },
                   pageSize: 5
                }).addCallback(function(result) {
-                  assert.equal(result.getCount(), 1);
-                  assert.equal(result.at(0).get('name'), 'Sasha');
+                  assert.equal(result.result.getCount(), 1);
+                  assert.equal(result.result.at(0).get('name'), 'Sasha');
                   assert.equal(aborted, true);
                   done();
                   return result;
                });
+            });
+   
+            it('check search navigation', function(done) {
+               var search  = new Search(
+                  {
+                     searchParam: 'name',
+                     dataSource: source,
+                     navigation: {
+                        pageSize: 1,
+                        mode: "totalCount"
+                     },
+                     searchDelay: 50
+                  }
+               );
+               search.search({
+                  filter: {
+                     name: 'Dmitry'
+                  }
+               }).addCallback(function(res) {
+                  assert.equal(res.result.getCount(), 2);
+                  assert.equal(res.hasMore, true);
+                  done();
+               });
+      
             });
    
             it('check wrong params', function(done) {
