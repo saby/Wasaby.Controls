@@ -28,9 +28,9 @@ define('js!Controls/Toggle/Switch', [
     * @variant vertical Вертикальная ориентация
     */
    var _private = {
-      doubleSwitcherClickHandler: function (self, clickedElement) {
+      doubleSwitcherClickHandler: function (self, nextValue) {
          //если дабл свитчер и кликнутый заголовок, то не надо переключаться.
-         if (self._options.value !== (clickedElement === "textOn" ? true : false)) {
+         if (self._options.value !== nextValue) {
             this.notifyChangeValue(self);
          }
       },
@@ -61,7 +61,7 @@ define('js!Controls/Toggle/Switch', [
 
       _clickTextHandler: function (e, clickedElement) {
          if (this._isDouble()) {
-            _private.doubleSwitcherClickHandler(this, clickedElement);
+            _private.doubleSwitcherClickHandler(this, (clickedElement === "textOn" ? true : false));
          }
          else{
             _private.singleSwitcherClickHandler(this);

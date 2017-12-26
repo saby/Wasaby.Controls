@@ -230,7 +230,7 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
                   value: false
                };
                SW.saveOptions(opt);
-               Switch._private.doubleSwitcherClickHandler(SW, "textOn");
+               Switch._private.doubleSwitcherClickHandler(SW, true);
                assert(switcherClickedFlag);
             });
 
@@ -240,7 +240,7 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
                   value: true
                };
                SW.saveOptions(opt);
-               Switch._private.doubleSwitcherClickHandler(SW, "textOn");
+               Switch._private.doubleSwitcherClickHandler(SW, true);
                assert(switcherClickedFlag===false);
             });
 
@@ -250,7 +250,7 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
                   value: true
                };
                SW.saveOptions(opt);
-               Switch._private.doubleSwitcherClickHandler(SW, "textOff");
+               Switch._private.doubleSwitcherClickHandler(SW, false);
                assert(switcherClickedFlag);
             });
             it('textOff click and Switch was Off',function(){
@@ -259,7 +259,7 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
                   value: false
                };
                SW.saveOptions(opt);
-               Switch._private.doubleSwitcherClickHandler(SW, "textOff");
+               Switch._private.doubleSwitcherClickHandler(SW, false);
                assert(switcherClickedFlag===false);
             });
          });
