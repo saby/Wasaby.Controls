@@ -31,7 +31,7 @@ define('SBIS3.CONTROLS/Utils/TemplateUtil', ['Core/js-template-doT'], function()
 
          switch (typeof tpl) {
             case 'string' :
-               template = tpl.indexOf('html!') === 0 || tpl.indexOf('tmpl!') === 0 ?
+               template = tpl.indexOf('html!') === 0 || tpl.indexOf('tmpl!') === 0 || global.requirejs.defined(tpl)?
                    global.requirejs(tpl) :
                    doT.template(tpl);
                break;

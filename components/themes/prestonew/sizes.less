@@ -68,7 +68,7 @@
 //popup
 @menu-link-menu-revert-item-container-padding:    0px;//todo romanov
 //menuItem
-@menu-item-text-margin:                           0px;//todo romanov
+@margin_MenuItem-text:                           0px;//todo romanov
 @controls-filterButton-margin-value:              0px;
 //date-range
 @date-range-slider-year-state-width:                                  136px;//todo: mironov
@@ -235,41 +235,41 @@
 //SwitcherDouble
 @switcher-do-text-margin:                 round(16px * @multiplier);
 //Menu
-@popup-font-size:                         @huge-text-size; // откатил размер из-за того, что меню стало меньше чем кнпока т.к. в самих кнопках размер шрифта используется больший
+@font-size_Popup:                         @huge-text-size; // откатил размер из-за того, что меню стало меньше чем кнпока т.к. в самих кнопках размер шрифта используется больший
 @menu-subpopup-margin:                    0;
 @menu-expand-width:                       @icon-large-size;
 @menu-expand-height:                      @icon-large-size;
 @menu-expand-top-offset:                  round(8px * @multiplier);;
 @menu-expand-right-offset:                0;
-@menu-header-height:                      round(100px * @multiplier);
+@height_Menu-header:                      round(100px * @multiplier);
 @menu-expand-icon-font-size:              @icon-large-size;
 @menu-big-header-height:                  round(32px * @multiplier);
-@menu-header-padding:                     round(4px * @multiplier) round(16px * @multiplier);;
-@popup-header-font-weight:                normal;
+@padding_Menu-header:                     round(4px * @multiplier) round(16px * @multiplier);;
+@font-weight_Menu-header:                normal;
 @menu-item-expand-padding-right:          @menu-expand-width;
 //Menu item
-@menu-item-height:                        round(100px * @multiplier);
-@menu-item-font-size:                     @default-text-size;
-@menu-item-icon-16-margin:                round(6px * @multiplier) 0 round(1px * @multiplier) round(6px * @multiplier);
-@menu-item-default-padding:               0 round(16px * @multiplier);
-@menu-item-icon-top-offset:               round(8px * @multiplier);
-@menu-item-icon-left-offset:              0;
-@menu-item-icon24-top-offset:             0;
-@menu-item-icon24-top-offset-big:         0;
-@menu-item-icon24-left-offset:            0;
-@menu-item-line-height:                   round(100px * @multiplier);
-@menu-item-padding-16:                    round(56px * @multiplier);
-@menu-item-padding-24:                    round(70px * @multiplier);
-@menu-item-padding-32:                    round(100px * @multiplier);
+@height_MenuItem:                        round(100px * @multiplier);
+@font-size_MenuItem:                     @default-text-size;
+@margin_MenuItem-icon_small:                round(6px * @multiplier) 0 round(1px * @multiplier) round(6px * @multiplier);
+@padding_MenuItem:               0 round(16px * @multiplier);
+@top_MenuItem-icon:               round(8px * @multiplier);
+@left_MenuItem-icon:              0;
+@top_MenuItem-icon_medium:             0;
+@top_MenuItem-icon_medium-big:         0;
+@left_MenuItem-icon_medium:            0;
+@line-height_MenuItem:                   round(100px * @multiplier);
+@padding_MenuItem-icon_small:                    round(56px * @multiplier);
+@padding_MenuItem-icon_medium:                    round(70px * @multiplier);
+@padding_MenuItem-icon_large:                    round(100px * @multiplier);
 // Menu
 @menu-button-menu-margin:                 -10px 0 0 -2px;
 @menu-icon-menu-margin:                   round(-10px * @multiplier) 0 0 round(-7px * @multiplier);
 @menu-icon-big-menu-margin:               round(-10px * @multiplier) 0 0 round(10px * @multiplier);
 @menu-icon-menu-large-margin:             round(-10px * @multiplier) 0 0 round(-18px * @multiplier);
-@menu-padding:                            0;
+@padding_Menu:                            0;
 //Menu link
-@menu-link-menu-margin:                   round(-11px * @multiplier) 0 0 round(-18px * @multiplier);
-@menu-link-menu-item-container-padding:	  0;
+@menu-link-menu-margin:                   round(-31px * @multiplier) 0 0 round(-18px * @multiplier);
+@padding_Menu-container:	  0;
 @menu-link-header-font-size:              @default-text-size;
 // Search form
 @search-button-wrapper-padding:				0;
@@ -382,14 +382,14 @@
 @list-view-items-toolbar-elements-margin: 0 round(4px * @multiplier);
 @list-view-items-toolbar-line-height:     round(49px * @multiplier);
 @list-view-items-toolbar-vertical-line-height:round(24px * @multiplier);
-@list-view-items-toolbar-icon-size:       round(40px * @multiplier);
+@list-view-items-toolbar-icon-size:       round(56px * @multiplier);;
 @list-view-items-toolbar-menu-icon-size:  @icon-large-size;
 @touch-mode-items-toolbar-icon-margin-top:round(-24px * @multiplier);
 @list-view-actions-menu-icon-width:       @icon-small-size;
-@list-view-actions-menu-close-top:        round(4px * @multiplier);
-@list-view-actions-menu-close-right:      round(4px * @multiplier);
-@list-view-actions-menu-close-height:     round(49px * @multiplier);
-@list-view-actions-menu-close-width:      round(49px * @multiplier);
+@list-view-actions-menu-close-top:        round(40px * @multiplier);
+@list-view-actions-menu-close-right:      round(24px * @multiplier);
+@list-view-actions-menu-close-height:     round(56px * @multiplier);
+@list-view-actions-menu-close-width:      round(56px * @multiplier);
 @listView-empty-data-font-size:           round(28px * @multiplier);
 @list-view-scroll-height:                 round(100px * @multiplier);
 @controls-AjaxLoader-size:                round(100px * @multiplier);
@@ -409,7 +409,7 @@
 @tree-view-hier-wrapper-width:            round(20px * @multiplier);
 @tree-view-hier-wrapper-height:           round(20px * @multiplier);
 //Group
-@list-view-separator-height:              round(50px * @multiplier);
+@height_ListView-GroupBy:                 round(50px * @multiplier);
 //Data grid
 @data-grid-header-cell-height:            round(50px * @multiplier);
 @data-grid-cell-line-height:              round(44px * @multiplier);
@@ -417,14 +417,15 @@
 @data-grid-header-cell-padding:           @data-grid-cell-padding;
 @data-grid-header-cell-padding-side:      round(10px * @multiplier);
 @data-grid-header-cell-font-size:         round(24px * @multiplier);
-@data-grid-header-cell-icon-size:         round(42px * @multiplier);
+@font-size_DataGridView-headerIcon:       round(42px * @multiplier);
 @data-grid-header-cell-sorting-icon-size: round(28px * @multiplier);
 @data-grid-cell-height:                   round(50px * @multiplier);
 @data-grid-cell-padding:                  0 @data-grid-cell-padding-right;
 @data-grid-cell-padding-right:            round(8px * @multiplier);
 @data-grid-check-box-top:                 -@default-border-width;
 @data-grid-money-header-cell-padding:     round(40px * @multiplier);
-@data-grid-money-header-cell-padding-last:round(64px * @multiplier);
+@data-grid-money-header-cell-padding-last:round(56px * @multiplier);
+@data-grid-money-header-cell-padding-last_XL:  round(64px * @multiplier);
 @data-grid-partScroll-arrowLeft-top-shift: round(-24px * @multiplier);
 @data-grid-partScroll-arrowRight-top-shift:round(-24px * @multiplier);
 @data-grid-partScroll-thumb-margin:       round(50px * @multiplier);
@@ -613,9 +614,9 @@
 @controls-toolbar-default-margin:			0;
 @controls-SelectorButton-line-height:		round(40px * @multiplier);
 @controls-SelectorButton-height:				round(40px * @multiplier);
-@menu-item-icon-32-margin:						0 0 0 @default-height;
-@menu-item-icon-24-margin:						0 0 0 round(50px * @multiplier);
-@menu-item-icon-16-margin:						0 0 0 round(37px * @multiplier);
+@margin_MenuItem-icon_large:						0 0 0 @default-height;
+@margin_MenuItem-icon_medium:						0 0 0 round(50px * @multiplier);
+@margin_MenuItem-icon_small:						0 0 0 round(37px * @multiplier);
 @tab-buttons-border-bottom-height:        1px;
 @commands-button-close-icon:              @icon-large-size;
 @commands-button-close-button-size:       @icon-large-size;
@@ -631,7 +632,7 @@
 @tree-view-ellipsis-copyArrow-width:      round(28px * @multiplier);
 @bread-crumbs-menu-padding:               0;
 @back-button-width-before:                round(20px * @multiplier);
-@menu-subpopup-padding:                   @bread-crumbs-menu-padding;
+@padding_Menu-submenu:                   @bread-crumbs-menu-padding;
 //TimeHeader
 @time-header-height:                      round(100px * @multiplier);
 @time-header-font-size:                   round(40px * @multiplier);

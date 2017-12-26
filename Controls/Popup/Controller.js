@@ -13,8 +13,14 @@ define('js!Controls/Popup/Controller',
        * @extends Controls/Control
        */
       var Controller = Abstract.extend({
+         constructor: function(cfg){
+            this._options = cfg;
+         },
+
          notifyOnResult: function (args) {
-            this._notify('onResult', args);
+            if( this._options.eventHandlers && this._options.eventHandlers.onResult ){
+               this._options.eventHandlers.onResult.apply(this, args);
+            }
          }
       });
 

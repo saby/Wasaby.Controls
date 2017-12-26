@@ -1,4 +1,4 @@
-define('js!Controls/List/Explorer', [
+define('js!Controls/Tree', [
    'Core/Control'
 
 ], function (Control
@@ -8,8 +8,8 @@ define('js!Controls/List/Explorer', [
    var _private = {};
 
    /**
-    * Компонент иерархичесего списка, с возможностью распахивания, а так же проваливания в узлы. Обладает возможностью загрузки/подгрузки данных из источника.
-    * @class Controls/List/Explorer
+    * Компонент иерархичесего списка, отображаемого в виде дерева, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
+    * @class Controls/Tree
     * @extends Controls/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/ISingleSelectable
@@ -18,17 +18,17 @@ define('js!Controls/List/Explorer', [
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
+    * @mixes Controls/List/interface/IListControl
     * @mixes Controls/List/interface/IHierarchy
     * @mixes Controls/List/interface/ITreeControl
-    * @mixes Controls/List/interface/IExplorer
     * @control
     * @public
     * @category List
     */
 
-   var Explorer = Control.extend({
-      _controlName: 'Controls/List/Explorer'
+   var TreeControl = Control.extend({
+      _controlName: 'Controls/List/TreeControl'
 
    });
-   return Explorer;
+   return TreeControl;
 });

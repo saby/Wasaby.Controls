@@ -12,7 +12,6 @@ define('SBIS3.CONTROLS/Mixins/IconMixin', ['tmpl!SBIS3.CONTROLS/Mixins/IconMixin
 
    var IconMixin = /**@lends SBIS3.CONTROLS/Mixins/IconMixin.prototype  */{
       $protected: {
-         _oldIcon: '',
          _iconTemplate: IconTemplate,
          _options: {
 
@@ -55,8 +54,8 @@ define('SBIS3.CONTROLS/Mixins/IconMixin', ['tmpl!SBIS3.CONTROLS/Mixins/IconMixin
        * @see getIcon
        */
       setIcon: function(icon) {
+         icon = typeof icon === "undefined" ? icon = "" : icon;
          this._options.icon = icon;
-         this._oldIcon = this._options._iconClass;
          this._options._iconClass = this._iconTemplate(this._options);
          this._drawIcon(icon);
          this._notifyOnPropertyChanged('icon');

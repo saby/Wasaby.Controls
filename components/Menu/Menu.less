@@ -1,12 +1,12 @@
 .controls-Menu__Popup {
    font: @default-font-name;
-   font-size:  @popup-font-size;
-   padding: @menu-padding;
-   margin: @menu-margin;
+   font-size:  @font-size_Popup;
+   padding: @padding_Menu;
+   margin: @margin_Menu;
    .flexbox();
    .flex-direction(column);
-   border: @default-border-width solid @menu-border-color;
-   background-color: @menu-button-menu-bg;
+   border: @default-border-width solid @border-color_Menu;
+   background-color: @background-color_Menu;
    .user-select(none);
 
    &.controls-Menu__breakWord {
@@ -14,7 +14,7 @@
    }
 
    .border-radius(0);
-   .box-shadow(@menu-shadow);
+   .box-shadow(@shadow_Menu);
    .box-sizing(border-box);
 
    .controls-Menu__submenu {
@@ -22,14 +22,11 @@
    }
    .controls-Menu__header{
       box-sizing: border-box;
-      padding: @menu-header-padding;
+      padding: @padding_Menu-header;
       .flex-shrink(0);
-      .icon-16, .icon-small, .icon-24, .icon-medium, .icon-large {
-         padding-right: @menu-header-icon-padding;
-      }
    }
    .controls-MenuItem {
-      min-height: @menu-item-height;
+      min-height: @height_MenuItem;
       height: auto;
    }
    // скрываем дополнительные опции через height: 0,
@@ -43,20 +40,20 @@
    &.controls-Menu-showAdditionalItems {
       .controls-MenuItem-additional {
          .flexbox();
-         min-height: @menu-item-height;
+         min-height: @height_MenuItem;
          height: auto;
          visibility: visible;
       }
    }
    .controls-Menu__itemsContainer {
-      padding: @menu-link-menu-item-container-padding;
+      padding: @padding_Menu-container;
    }
    &.controls-popup-revert-vertical {
       .flex-direction(column-reverse);
       padding: 0;
 
       &.controls-Menu__SubMenuPopup {
-         padding: @menu-subpopup-padding;
+         padding: @padding_Menu-submenu;
       }
 
       .controls-Menu__header + .controls-Menu__itemsContainer {
@@ -100,7 +97,7 @@
 
 .controls-Menu__Popup:not(.controls-MenuPicker__resetIconColor) {
    .controls-Menu__header-icon {
-      color: @menu-header-icon-color !important;
+      color: @padding_Menu-header-iconcolor !important;
    }
 }
 .controls-Menu__submenu {
@@ -108,7 +105,7 @@
 }
 .controls-Menu__SubMenuPopup {
    margin: @menu-subpopup-margin;
-   padding: @menu-subpopup-padding;
+   padding: @padding_Menu-submenu;
    max-height: @DropdownList-picker-max-height;
    overflow: auto;
 }
@@ -117,9 +114,10 @@
    .controls-Menu__header {
       position: relative;
       cursor: pointer;
-      font-size: @popup-font-size;
-      font-weight: @popup-header-font-weight;
-      background-color: @menu-header-bg-color;
+      height: @height_Menu-header;
+      font-size: @font-size_Popup;
+      font-weight: @font-weight_Menu-header;
+      background-color: @background-color_Menu-header;
       overflow: hidden;
       .flexbox();
       .align-items(center);
@@ -129,15 +127,9 @@
          .align-items(center);
       }
       .controls-Menu__header-caption {
-         color: @popup-header-caption-color;
+         color: @color_Menu-header;
          .flex-shrink(0);
       }
-      .controls-Menu__header-icon + .controls-Menu__header-caption{
-         padding-left: 0;
-      }
-   }
-   .controls-Menu__header {
-      height: @menu-header-height;
    }
    &.controls-Menu__hide-menu-header {
       .controls-Menu__header {
@@ -146,18 +138,25 @@
    }
 }
 
+.controls-Menu__header-icon + .controls-Menu__header-caption{
+   padding-left: @padding-left_Menu-header-icon;
+}
+.controls-Menu__header-icon + .controls-Menu__header-caption:empty{
+   padding-left: 0;
+}
+
 .controls-Menu__separator {
    position: relative;
-   height: @menu-separator-height;
+   height: @height_Menu-separator;
 }
 .controls-Menu__separator:before {
    content: '';
    position: absolute;
    display: inline-block;
-   right: @menu-separator-line-offset;
-   left: @menu-separator-line-offset;
-   top: @menu-separator-line-top;
-   height: @menu-separator-line-height;
+   right: @left_Menu-separator-line;
+   left: @left_Menu-separator-line;
+   top: @top_Menu-separator-line;
+   height: @height_Menu-separator-line;
    background-color: @default-border-color-bottom-disabled;
 }
 
@@ -184,10 +183,10 @@
       display: block;
       &.controls-popup-revert-vertical {
          .controls-Menu__header{
-            margin-top: @menu-padding-value;
+            margin-top: @padding-value_Menu;
          }
          &.controls-Menu__hide-menu-header .controls-Menu__itemsContainer {
-            padding-bottom: @menu-padding-value;
+            padding-bottom: @padding-value_Menu;
          }
       }
    }

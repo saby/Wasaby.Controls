@@ -54,7 +54,7 @@
 
 @default-font-name:                       'TensorFont', sans-serif;
 @icon-font:                               'cbuc-icons';
-@popup-font-size:                         15px;
+@font-size_Popup:                         15px;
 @font-folder-size:                        15px;
 @default-font-line-height:                20px;
 
@@ -452,16 +452,17 @@
 // ---- //
 // Menu //
 // ---- //
-@popup-header-font-weight:                bold;
-@popup-header-caption-color:              @blue-dark-color;
-@menu-margin:                             -1px 0 0;
+@font-weight_Menu-header:                bold;
+@color_Menu-header:              @blue-dark-color;
+@margin_Menu:                             -1px 0 0;
 @menu-subpopup-margin:                    -3px 0 0 0px;
-@menu-padding-value:                      2px;
-@menu-subpopup-padding:                   @menu-padding-value 0;
-@menu-padding:                            0 0 @menu-padding-value 0;
+@padding-value_Menu:                      2px;
+@padding_Menu-submenu:                   @padding-value_Menu 0;
+@padding_Menu:                            0 0 @padding-value_Menu 0;
 @menu-border-width:                       @default-border-width;
-@menu-border-color:                       @gray-ccc-color;
-@menu-header-bg-color:                    #f4f4f4;
+@border-color_Menu:                       @gray-ccc-color;
+@menu-border-color:                       @border-color_Menu;
+@background-color_Menu-header:                    #f4f4f4;
 @menu-expand-width:                       16px;
 @menu-expand-height:                      16px;
 @menu-expand-top-offset:                  8px;
@@ -472,53 +473,54 @@
 @menu-expand-content:                     "\e9ab";
 @menu-expand-hover-border-color:          @menu-expand-border-color;
 @menu-expand-hover-bg:                    @menu-expand-bg;
-@menu-header-height:                      32px;
-@menu-header-padding:                     0 12px;
-@menu-header-icon-padding:                6px;
-@menu-header-icon-color:                  @icon-active-color;
-@menu-separator-height:                   9px;
-@menu-separator-line-offset:              12px;
-@menu-separator-line-height:              1px;
-@menu-separator-line-top:                 4px;
+@height_Menu-header:                      32px;
+@padding_Menu-header:                     0 12px;
+@padding-left_Menu-header-icon:                6px;
+@padding_Menu-header-iconcolor:                  @icon-active-color;
+@height_Menu-separator:                   9px;
+@left_Menu-separator-line:              12px;
+@height_Menu-separator-line:              1px;
+@top_Menu-separator-line:                 4px;
+@background-color-Menu-separator-line:    @default-border-color-bottom-disabled;
 // --------- //
 // Menu item //
 // --------- //
-@menu-item-height:                        32px;
-@menu-item-line-height:                   20px;
-@menu-item-default-padding:               0 12px;
+@height_MenuItem:                        32px;
+@line-height_MenuItem:                   20px;
+@padding_MenuItem:               0 12px;
 @menu-item-expand-padding-right:          30px;
-@menu-item-padding-16:                    33px;
-@menu-item-padding-24:                    42px;
-@menu-item-padding-32:                    51px;
-@menu-item-text-color:                    @black-color;
-@menu-item-font-size:                     @popup-font-size;
-@menu-item-disabled-text-color:           #ccc;
-@menu-item-hover-text-color:              @menu-item-text-color;
-@menu-item-hover-bg:                      @default-itemHover-color;
-@menu-item-icon-16-margin:					6px 0 6px 22px;
-@menu-item-icon-top-offset:               8px;
-@menu-item-icon-left-offset:              0px;
-@menu-item-icon24-top-offset:             4px;
-@menu-item-icon24-top-offset-big:         -4px;
-@menu-item-icon24-left-offset:            0;
-@menu-item-text-margin:                   6px 0 6px 0;
-@menu-item-icon-24-margin:                6px 0 6px 30px;
-@menu-item-icon-32-margin:                6px 0 6px 38px;
+@padding_MenuItem-icon_small:                    33px;
+@padding_MenuItem-icon_medium:                    42px;
+@padding_MenuItem-icon_large:                    51px;
+@color_MenuItem:                    @black-color;
+@font-size_MenuItem:                     @font-size_Popup;
+@color_MenuItem_disabled:           #ccc;
+@color_MenuItem_hovered:              @color_MenuItem;
+@background_MenuItem_hovered:                      @default-itemHover-color;
+@margin_MenuItem-icon_small:					6px 0 6px 22px;
+@top_MenuItem-icon:               8px;
+@left_MenuItem-icon:              0px;
+@top_MenuItem-icon_medium:             4px;
+@top_MenuItem-icon_medium-big:         -4px;
+@left_MenuItem-icon_medium:            0;
+@margin_MenuItem-text:                   6px 0 6px 0;
+@margin_MenuItem-icon_medium:                6px 0 6px 30px;
+@margin_MenuItem-icon_large:                6px 0 6px 38px;
 // Menu
 @menu-button-menu-margin:                               -5px 0 0 -1px;;
 @menu-button-menu-border-width:                         @default-border-width;
-@menu-button-menu-border-color:                         @menu-border-color;
-@menu-button-menu-bg:                                   @white-color;
+@menu-button-menu-border-color:                         @border-color_Menu;
+@background-color_Menu:                                   @white-color;
 @menu-link-menu-margin:                   -5px 0 0 -13px;
-@menu-link-menu-item-container-padding:   @menu-padding-value 0 0 0;
-@menu-link-menu-revert-item-container-padding: @menu-padding-value 0 @menu-padding-value 0;
-@menu-link-menu-bg:                       @menu-button-menu-bg;
+@padding_Menu-container:   @padding-value_Menu 0 0 0;
+@menu-link-menu-revert-item-container-padding: @padding-value_Menu 0 @padding-value_Menu 0;
+@menu-link-menu-bg:                       @background-color_Menu;
 @menu-link-header-bg-color:               #F4F4F4;
-@menu-link-header-font-size:              @popup-font-size;
+@menu-link-header-font-size:              @font-size_Popup;
 @menu-icon-menu-margin:                   -9px 0 0 -13px;
 @menu-icon-big-menu-margin:               -5px 0 0 -13px;
 @menu-icon-menu-large-margin:             -5px 0 0 -13px;
-@menu-icon-menu-bg:                       @menu-button-menu-bg;
+@menu-icon-menu-bg:                       @background-color_Menu;
 // -------- //
 // Text box //
 // -------- //
@@ -595,26 +597,6 @@
 @calendar-day-cell-active-hover-bg:             @calendar-day-cell-active-bg;
 @calendar-day-fog-cell-text-color:              @gray-color;
 @calendar-day-fog-cell-hover-text-color:        @calendar-day-fog-cell-text-color;
-// --------- //
-// MonthView //
-// --------- //
-@month-view-width:                                @calendar-width;
-@month-view-padding:                              @calendar-padding;
-@month-view-bg:                                   @calendar-bg;
-@month-view-month-picker-width:                   @calendar-month-picker-width;
-@month-view-day-border-spacing:                   @calendar-day-border-spacing;
-@month-view-day-header-font:                      @calendar-day-header-font;
-@month-view-day-table-cell-height:                @calendar-day-table-cell-height;
-@month-view-day-cell-text-color:                  @calendar-day-cell-text-color;
-@month-view-day-cell-bg:                          @calendar-day-cell-bg;
-@month-view-day-cell-hover-text-color:            @calendar-day-cell-hover-text-color;
-@month-view-day-cell-hover-bg:                    @calendar-day-cell-hover-bg;
-@month-view-day-cell-active-text-color:           @calendar-day-cell-active-text-color;
-@month-view-day-cell-active-bg:                   @calendar-day-cell-active-bg;
-@month-view-day-cell-active-hover-text-color:     @calendar-day-cell-active-hover-text-color;
-@month-view-day-cell-active-hover-bg:             @calendar-day-cell-active-hover-bg;
-@month-view-day-fog-cell-text-color:              @calendar-day-fog-cell-text-color;
-@month-view-day-fog-cell-hover-text-color:        @calendar-day-fog-cell-hover-text-color;
 // ------------ //
 // Month picker //
 // ------------ //
@@ -712,6 +694,7 @@
 @date-range-choose-year-font-size:              15px;
 @date-range-choose-year-height:                 @date-range-choose-standart-line-height;
 @date-range-choose-year-margin-bottom:          4px;
+@height_dateRange_choose_year:                  auto;
 @date-range-choose-year-padding-left:           2px;
 @date-range-choose-year-prev-next-btns-width:         32px;
 @date-range-choose-year-prev-next-btns-font-size:     16px;
@@ -890,11 +873,11 @@
 @list-view-actions-menu-touch-size:             4px 18px;
 @list-view-actions-menu-touch-close-top:        6px;
 @list-view-actions-menu-close-top:              6px;
-@list-view-actions-menu-close-right:            8px;
+@list-view-actions-menu-close-right:            6px;
 @list-view-actions-menu-close-height:           24px;
 @list-view-actions-menu-close-width:            24px;
 @list-view-actions-menu-item-padding-right:     38px;
-@list-view-actions-menu-margin:                 6px 0 0 5px;
+@list-view-actions-menu-margin:                 8px 0 0 5px;
 @list-view-actions-menu-text-margin:            6px 0 6px 30px;
 @list-view-context-menu-close-right:            6px;
 @list-view-context-menu-close-top:              7px;
@@ -926,16 +909,9 @@
 @list-view-small-actions-menu-close-revVert-bottom: 8px;
 @list-view-small-actions-menu-item-padding-right:   24px;
 @list-view-small-actions-menu-text-margin:          0 0 0 22px;
-@list-view-small-actions-menu-item-icon-top-offset: @menu-item-icon-top-offset;
-@list-view-small-actions-menu-item-icon-left-offset:@menu-item-icon-left-offset;
+@list-view-small-actions-menu-item-icon-top-offset: @top_MenuItem-icon;
+@list-view-small-actions-menu-item-icon-left-offset:@left_MenuItem-icon;
 @bottomStyle-small-items-toolbar-margin-top:        4px;
-/*group*/
-@list-view-separator-height:                       18px;
-@list-view-separator-content-padding:              0 12px;
-@list-view-separator-content-color:                @gray-color;
-@list-view-separator-expander-size:                16px;
-@list-view-separator-expander-margin:              6px;
-@list-view-separator-content-hover-color:          @blue-dark-color;
 // -------------------- //
 //  View padding sizes
 // -------------------- //
@@ -971,9 +947,6 @@
 @tree-view-expand-width:                        16px;
 @tree-view-expand-height:                       20px;
 @tree-view-expand-margin:                       0 6px 0 4px;
-@tree-view-expand-color:                        @blue-dark-color;
-@tree-view-expand-hover-color:                  @darkcyan-color;
-@tree-view-expand-hidden-color:                 @gray-lamantin-color;
 @tree-view-padding-left-DEFAULT:                8px;
 @tree-view-level-padding:                       26px;
 @tree-view-level-padding-photo:                 46px;
@@ -1016,7 +989,6 @@
 @data-grid-header-cell-padding:                 4px @data-grid-cell-padding-right;
 @data-grid-header-cell-padding-side:            12px;
 @data-grid-header-cell-font-size:               12px;
-@data-grid-header-cell-icon-size:               @data-grid-header-cell-font-size;
 @data-grid-header-cell-sorting-icon-size:       16px;
 @data-grid-header-cell-text-color:              #8991a9;
 @data-grid-header-cell-bg:                      transparent;
@@ -1038,7 +1010,8 @@
 @data-grid-check-box-left:                      0px;
 @data-grid-table-separator-border-width:        0 0 @default-border-width 0;
 @data-grid-money-header-cell-padding:           22px;
-@data-grid-money-header-cell-padding-last:      24px;
+@data-grid-money-header-cell-padding-last:      28px; //дефолтный отступ увеличился с 8 до 12, поэтому 28 а не 24
+@data-grid-money-header-cell-padding-last_XL:   40px;//todo
 @data-grid-results-color:                       @accent-color;
 @data-grid-results-cell-padding:                0 6px;
 // ---------- //
@@ -1186,7 +1159,7 @@
 @DropdownList-footer-select-icon-container-size:      28px!important;
 @DropdownList-footer-select-icon-size:                26px!important;
 @DropdownList-disabled-text:                          #000;
-@shadow_DropDownList_picker:                          @menu-shadow;
+@shadow_DropDownList_picker:                          @shadow_Menu;
 @border-width_DropDownList_picker:                    0;
 @border-color_DropDownList_picker:                    #CCC;
 //ProgressBar
@@ -1213,7 +1186,7 @@
 @controls-filterButton-button-height:             24px;
 @controls-filterButton-button-width:              24px;
 @controls-filterButton-button-empty-left-margin:  8px;
-@controls-filterButton-button-verSide-margin:     12px;
+@controls-filterButton-button-verSide-margin:     8px;
 @controls-filterButton-button-margin:             8px @controls-filterButton-button-verSide-margin 8px 0;
 @controls-filterButton-button-margin-right-align: 8px 0 8px @controls-filterButton-button-verSide-margin;
 @controls-filterButton-line-margin-right-align:   8px 0 8px 8px;
@@ -1506,12 +1479,17 @@
 
 
 @commands-button-close-icon:                               @icon-medium-size;
+@commands-button-close-icon-font-size:                     @commands-button-close-icon;
 @commands-button-close-font-family:                        @default-icon-medium-font;
 @commands-button-close-icon-color:                         @blue-dark-color;
 @commands-button-close-button-size:                        32px;
 @commands-button-close-button-top:                         4px;
+@commands-button-close-button-glyph-top:                   @commands-button-close-button-top;
+@commands-button-close-button-right:                       0;
+@commands-button-close-hover-color:                        @commands-button-close-icon-color;
 @commands-button-margin:                                   -9px -33px 0 0;
-
+@commands-button-close-content:                            '\e801';
+@commands-button-item-padding-right:                       38px!important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
 
 
 @paging-font-size:                                      18px;
@@ -1622,7 +1600,6 @@
 @padding-ColumnsEditor-Editing-Area__FixedList-CheckBox: 4px;
 @padding-left-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption: 8px;
 @color-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption: @black-color !important;
-@height-ColumnsEditor-Editing-Area__view-item: 32px;
 @left-ColumnsEditor-Editing-Area__view-item__itemCheckBox: 4px;
 @top-ColumnsEditor-Editing-Area__view-item__itemCheckBox: 4px;
 @padding-left-ColumnsEditor-Editing-Area__view-item-text: 36px;

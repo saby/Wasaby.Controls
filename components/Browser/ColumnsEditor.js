@@ -2,10 +2,10 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor', [
       'SBIS3.CONTROLS/Browser/ColumnsEditor/EditorButton',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
-      'SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area/AreaSelectableModel',
+      'SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/AreaSelectableModel',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit',
-      'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Cache/*'/*,
+      'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Cache'/*,
       'SBIS3.CONTROLS/Browser/Columns/Config',
       'SBIS3.CONTROLS/Browser/Columns/Defenition'*/
    ],

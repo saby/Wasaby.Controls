@@ -288,7 +288,12 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
       },
 
       _drawItemsCallback: function() {
-         this._updateEditArrow();
+         var actions = this.getItemsActions();
+         if (actions) {
+            actions.ready(function() {
+               this._updateEditArrow();
+            }.bind(this));
+         }
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
 
@@ -498,6 +503,16 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
          if(!this._touchSupport || !this._hasHoveredItem()) {
             this._updateEditArrow();
          }
+      },
+
+      _onAfterBeginEdit: function() {
+         TreeDataGridView.superclass._onAfterBeginEdit.apply(this, arguments);
+         this._updateEditArrow();
+      },
+
+      _onAfterEndEdit: function() {
+         TreeDataGridView.superclass._onAfterEndEdit.apply(this, arguments);
+         this._updateEditArrow();
       },
 
       _updateEditArrow: function() {

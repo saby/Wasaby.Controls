@@ -124,6 +124,7 @@ define([
                 }
             }
         },
+        frequent,
         self = {
             _options: {
                 additionalProperty: 'additional',
@@ -132,6 +133,7 @@ define([
                 pinned: true,
                 frequent: true
             },
+            _filteredFrequent: null,
             _subContainers: ['2'],
             _oldItems: myRecord,
             _pinned: new RecordSet({
@@ -285,17 +287,21 @@ define([
             });
         });
         describe('fill History', function () {
+            it('check getFrequent without frequent items', function () {
+                self._options.frequent = false;
+                frequent = SbisMenu._private.getFrequent(self);
+                assert.equal(frequent.getCount(), 0);
+            });
+            it('filterFrequent', function () {
+                self._options.frequent = true;
+                self._filteredFrequent = SbisMenu._private.filterFrequent(self);
+                assert.equal(self._filteredFrequent.getCount(), 2);
+            });
             it('filterRecent', function () {
                 var filterRecent;
 
                 filterRecent = SbisMenu._private.filterRecent(self);
-                assert.equal(filterRecent.length, 2);
-            });
-            it('filterFrequent', function () {
-                var filterFrequent;
-
-                filterFrequent = SbisMenu._private.filterFrequent(self);
-                assert.equal(filterFrequent.length, 2);
+                assert.equal(filterRecent.getCount(), 2);
             });
             it('processHistory, check additional', function () {
                 var hiddenByPinItem,

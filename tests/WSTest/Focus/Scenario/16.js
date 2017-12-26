@@ -30,10 +30,13 @@ define('js!WSTest/Focus/Scenario/16', [
       });
 
       setTimeout(function() {
-         fHelpers.hasFocus(wnd);
-         wnd.destroy();
-         delete window[caseControlName]
-         done();
+         try {
+            fHelpers.hasFocus(wnd);
+         } finally {
+            wnd.destroy();
+            delete window[caseControlName]
+            done();
+         }
       }, 100);
 
 
