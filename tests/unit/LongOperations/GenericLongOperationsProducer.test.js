@@ -1175,7 +1175,7 @@ define([
             });*/
 
 
-            it('После разрушения экземпляра возвращается экземпляр Deferred с ошибкой SBIS3.CONTROLS.LongOperations.Const.ERR_UNLOAD', function (done) {
+            it('После разрушения экземпляра возвращается экземпляр Deferred с ошибкой SBIS3.CONTROLS/LongOperations/Const.ERR_UNLOAD', function (done) {
                var destroyed = _makeProducer('Под ликвидацию 1');
                destroyed.destroy();
                destroyed.fetch(null)
@@ -1344,7 +1344,7 @@ define([
                //^^^ Реализовать
             });*/
 
-            it('После разрушения экземпляра возвращается экземпляр Deferred с ошибкой SBIS3.CONTROLS.LongOperations.Const.ERR_UNLOAD', function (done) {
+            it('После разрушения экземпляра возвращается экземпляр Deferred с ошибкой SBIS3.CONTROLS/LongOperations/Const.ERR_UNLOAD', function (done) {
                var destroyed = _makeProducer('Под ликвидацию 1');
                destroyed.destroy();
                destroyed.callAction('suspend', '0')
@@ -1409,7 +1409,7 @@ define([
                return;
             }
 
-            it('При ликвидации экземпляра при наличии незавершённых операций, имеющих функции действий, они будут завершены с ошибкой SBIS3.CONTROLS.LongOperations.Const.ERR_UNLOAD', function () {
+            it('При ликвидации экземпляра при наличии незавершённых операций, имеющих функции действий, они будут завершены с ошибкой SBIS3.CONTROLS/LongOperations/Const.ERR_UNLOAD', function () {
                var titles = ['Длительная операция 1', 'Длительная операция 2', 'Длительная операция 3'];
                var list = _byTitles(_lsTool.search(null), titles);
                assert.lengthOf(list, titles.length);

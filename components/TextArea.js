@@ -272,10 +272,6 @@ define('SBIS3.CONTROLS/TextArea', [
          this._inputField.trigger('autosize.resize');
       },
 
-      _getElementToFocus: function() {
-         return this._inputField;
-      },
-
       _setEnabled: function(state){
          TextArea.superclass._setEnabled.call(this, state);
          this._inputField.toggleClass('ws-invisible', !state);
@@ -292,17 +288,6 @@ define('SBIS3.CONTROLS/TextArea', [
          TextArea.superclass.setText.call(this, text);
          this._updateDisabledWrapper();
       },
-
-       _onClickHandler: function(event){
-         var elementToFocus = this._getElementToFocus();
-         // т.к. поле ввода находится внутри контейнера, то клик по внешнему контейнеру не ставит курсор в поле
-         // поэтому принудительно проставляем фокус в активное поле
-         // если фокус уже на поле ввода, то повторно проставлять не нужно
-          if (this.isEnabled() && elementToFocus[0] !== document.activeElement) {
-             elementToFocus.focus();
-          }
-          TextArea.superclass._onClickHandler.call(this, event);
-       },
 
       _updateDisabledWrapper: function() {
          if (this._disabledWrapper && !this.isEnabled()) {
