@@ -48,6 +48,11 @@ define('js!Controls/Input/Number', [
        * @cfg {Number} Количество знаков до запятой
        */
 
+      /**
+       * @name Controls/Input/Number#showEmptyDecimals
+       * @cfg {Boolean} Показывать нулевую дробную часть
+       */
+
       _template: template,
 
       constructor: function (options) {
