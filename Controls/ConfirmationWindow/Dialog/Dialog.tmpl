@@ -4,10 +4,10 @@
         ws-delegates-tabfocus="true"
         class="controls-InformationPopup controls-InformationPopup__status-{{_options.style}} controls-SubmitPopup_popup">
    <!--Если размер текста сообщения и описания превышает заданные рамки, то увеличиваем размер окна-->
-   <div class="controls-SubmitPopup{{_options.disableStandardWidth ? '' : _options.message.length > _messageMaxLength || _options.details.length > _detailsMaxLength ? ' controls-SubmitPopup__size-big' : ' controls-SubmitPopup__size-standard'}}">
+   <div class="controls-SubmitPopup{{_options.message.length > _messageMaxLength || _options.details.length > _detailsMaxLength ? ' controls-SubmitPopup__size-big' : ' controls-SubmitPopup__size-standard'}}">
 
       <ws:partial
-              template="{{_options.contentTemplate}}"
+              template="{{_contentTemplate}}"
               message="{{_options.message}}"
               messageTemplate="{{_messageTemplate}}"
               details="{{_options.details}}"
@@ -16,9 +16,7 @@
 
       <ws:partial
               template="{{_footerTemplate}}"
-              hasCancelButton="{{_options.hasCancelButton}}"
-              useConfirmButtons="{{_options.type === 'confirm'}}"
-              buttonConfig="{{_options.buttonConfig}}"
+              type="{{_options.type}}"
       ></ws:partial>
    </div>
 </div>

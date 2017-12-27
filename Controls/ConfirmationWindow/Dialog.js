@@ -1,15 +1,14 @@
-define('js!Controls/InformationWindow/Confirm', [
+define('js!Controls/ConfirmationWindow/Dialog', [
       'Core/Control',
       'WS.Data/Type/descriptor',
       'Core/constants',
-      'tmpl!Controls/InformationWindow/Confirm/content',
-      'tmpl!Controls/InformationWindow/Confirm/footer',
-      'tmpl!Controls/InformationWindow/Confirm/message',
-      'tmpl!Controls/InformationWindow/Confirm/details',
-      'tmpl!Controls/InformationWindow/Confirm/Confirm',
+      'tmpl!Controls/ConfirmationWindow/Dialog/content',
+      'tmpl!Controls/ConfirmationWindow/Dialog/footer',
+      'tmpl!Controls/ConfirmationWindow/Dialog/message',
+      'tmpl!Controls/ConfirmationWindow/Dialog/details',
+      'tmpl!Controls/ConfirmationWindow/Dialog/Dialog',
 
-
-      'css!Controls/InformationWindow/Confirm/Confirm',
+      'css!Controls/ConfirmationWindow/Dialog/Dialog',
       'js!Controls/Button'
    ], function (Control,
                 types,
@@ -24,7 +23,7 @@ define('js!Controls/InformationWindow/Confirm', [
 
       /**
        * Класс контрола "Окно подтверждения". В зависимости от типа, может быть диалогом подтверждения, с кнопками "Да", "Нет" и "Отмена" (опционально), или диалогом с кнопкой "Ок".
-       * @class Controls/InformationWindow/Confirm
+       * @class Controls/ConfirmationWindow/Dialog
        * @extends Controls/Control
        * @control
        * @public
@@ -32,14 +31,15 @@ define('js!Controls/InformationWindow/Confirm', [
        */
 
       /**
-       * @name Controls/InformationWindow/Confirm#type
+       * @name Controls/ConfirmationWindow/Dialog#type
        * @cfg {String} Тип диалога
-       * @variant confirm Окно подтверждения с кнопками "Да", "Нет" и "Отмена"
-       * @variant info Ифнормационное окно с кнопкой "Ок"
+       * @variant ok Диалог с кнопкой "Ок"
+       * @variant yesno Диалог с кнопками "Да" и "Нет"
+       * @variant yesnocancel Диалог с кнопками "Да", "Нет" и "Отмена"
        */
 
       /**
-       * @name Controls/InformationWindow/Confirm#style
+       * @name Controls/ConfirmationWindow/Dialog#style
        * @cfg {String} Стилевое оформление диалога
        * @variant default По умоланию
        * @variant success Успех
@@ -47,33 +47,13 @@ define('js!Controls/InformationWindow/Confirm', [
        */
 
       /**
-       * @name Controls/InformationWindow/Confirm#message
+       * @name Controls/ConfirmationWindow/Dialog#message
        * @cfg {String} Устанавливает сообщение
        */
 
       /**
-       * @name Controls/InformationWindow/Confirm#details
+       * @name Controls/ConfirmationWindow/Dialog#details
        * @cfg {String} Устанавливает детали сообщения
-       */
-
-      /**
-       * @name Controls/InformationWindow/Confirm#buttonConfig
-       * @cfg {Object} Устанавливает текст на кнопках
-       */
-
-      /**
-       * @name Controls/InformationWindow/Confirm#hasCancelButton
-       * @cfg {Boolean} Устанавливает использование кнопки "Отмена". Опция актуальна только для диалогов со статусом confirm
-       */
-
-      /**
-       * @name Controls/InformationWindow/Confirm#contentTemplate
-       * @cfg {Function} Устанавливает шаблон отображения тела диалога
-       */
-
-      /**
-       * @name Controls/InformationWindow/Confirm#disableStandardWidth
-       * cfg {Boolean} Отключить применение стандартной ширины
        */
 
       /**
@@ -84,7 +64,7 @@ define('js!Controls/InformationWindow/Confirm', [
        */
 
       /**
-       * @event Controls/InformationWindow/Confirm#sendResult Происходит при нажатии на кнопку диалога
+       * @event Controls/ConfirmationWindow/Dialog#sendResult Происходит при нажатии на кнопку диалога
        * @param {Core/EventObject} eventObject Дескриптор события
        * @param {Result} Результат
        */
@@ -95,6 +75,7 @@ define('js!Controls/InformationWindow/Confirm', [
          _detailsMaxLength: 160,
          _messageTemplate: messageTemplate,
          _detailsTemplate: detailsTemplate,
+         _contentTemplate: contentTemplate,
          _footerTemplate: footerTemplate,
 
          _sendResult: function (e, res) {
@@ -106,14 +87,14 @@ define('js!Controls/InformationWindow/Confirm', [
             e.stopPropagation();
 
             if(e.nativeEvent.keyCode === constants.key.esc){
-               (this._options.type === 'info' || this._options.hasCancelButton) && this._sendResult();
+               (this._options.type === 'ok' || this._options.type === 'yesnocancel') && this._sendResult();
             }
          }
       });
 
       Submit.getDefaultOptions = function () {
          return {
-            type: 'confirm',
+            type: 'yesno',
             style: 'default',
             buttonConfig: {
                yes: {
@@ -132,26 +113,22 @@ define('js!Controls/InformationWindow/Confirm', [
                   caption: rk('ОК'),
                   isLink: false
                }
-            },
-            hasCancelButton: false,
-            disableStandardWidth: false,
-            contentTemplate: contentTemplate
+            }
          };
       };
 
       Submit.getOptionTypes = function () {
          return {
             type: types(String).oneOf([
-               'confirm',
-               'info'
+               'ok',
+               'yesno',
+               'yesnocancel'
             ]),
             style: types(String).oneOf([
                'default',
                'success',
                'error'
-            ]),
-            hasCancelButton: types(Boolean),
-            disableStandardWidth: types(Boolean)
+            ])
          };
       };
 
