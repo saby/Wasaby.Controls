@@ -478,11 +478,12 @@ node('controlsFF57') {
                     echo "Запускаем интеграционные тесты"
                     stage("Инт.тесты"){
                         if ( inte ){
+							//python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS http://test-selenium5:4444/wd/hub -ft 2 ${run_test_fail} -sn ${stream_number}
                             dir("./controls/tests/int"){
                                  sh """
                                  source /home/sbis/selenium3/bin/activate
-                                 python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS http://test-selenium5:4444/wd/hub -ft 2 ${run_test_fail} -sn ${stream_number}
-                                 deactivate
+                                 python start_tests.py --RESTART_AFTER_BUILD_MODE SERVER_ADDRESS = http://tensor-grid.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform
+								 deactivate
                                  """
                             }
                         }
