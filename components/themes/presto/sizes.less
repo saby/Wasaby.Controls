@@ -52,11 +52,12 @@
 @height_Button_l:              @default-height-big;
 @spacing_Button-between-icon-text: 8px;
 //combobox
-@combo-box-icon-size:          @default-icon-size-medium;
-@combo-box-arrow-padding:      0 0 0 @default-padding-small;
-@combo-box-picker-item-padding:round(17px * @multiplier) round(16px * @multiplier) round(18px * @multiplier) round(16px * @multiplier);
-@combo-box-picker-border:      none;
-@padding_ComboBox_item_separator:round(16px * @multiplier);
+@icon-size_ComboBox-Arrow:              @default-icon-size-medium;
+@spacing_ComboBox-Arrow:                @default-padding-small;
+@padding_ComboBox-item:                 round(17px * @multiplier) round(16px * @multiplier) round(18px * @multiplier) round(16px * @multiplier);
+@border_ComboBox-picker:                none;
+@padding_ComboBox_item_separator:       round(16px * @multiplier);
+@border-width_ComboBox-picker:          0px;
 //suggest-text-box
 @suggest-text-box-icon-size:           @default-icon-size-medium;
 @suggest-text-box-icon-cross-padding:  0 0 0 @default-padding;
@@ -154,7 +155,7 @@
 @DropdownList-picker-menu-font-size:                  @large-text-size;
 @DropdownList-picker-menu-item-padding:               round(12px * @multiplier) round(16px * @multiplier)  round(13px * @multiplier) round(16px * @multiplier);
 @DropdownList-picker-head-weight:                     bold;
-@padding_DropDownList_item_child:                     @combo-box-picker-item-padding;
+@padding_DropDownList_item_child:                     @padding_ComboBox-item;
 @padding_DropDownList_item_child_text:                round(16px * @multiplier);
 @font-size_DropDownList:                              @large-text-size;
 @DropdownList-picker-menu-selected-marker-width:      round(11px * @multiplier);
