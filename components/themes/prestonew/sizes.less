@@ -34,9 +34,11 @@
 @padding_TextArea-field:                          0 round(14px * @multiplier) 0 0;
 //NumberTextBox
 @icon-size_NumberTextBox-arrow:                   round(84px * @multiplier);
-//combo-box
-@combo-box-icon-size:                             @default-icon-size-large;
-@combo-box-arrow-padding:                         0px;
+//ComboBox
+@icon-size_ComboBox-Arrow:                        @default-icon-size-large;
+@spacing_ComboBox-Arrow:                          0px;
+@font-size_ComboBox-picker:                       round(32px * @multiplier);
+@padding_ComboBox-item:                           round(32px * @multiplier) round(16px * @multiplier);
 //suggest-text-box
 @suggest-text-box-icon-size:                      @default-icon-size-large;
 //search-form
@@ -57,7 +59,7 @@
 //treeview
 @tree-view-folder-text-size:                      @default-text-size;
 //button
-@border-radius_Button:                            1px;
+@border-radius_Button_m:                            1px;
 //area-blocks
 @spacing_Block:                                   round(8px * @multiplier);
 @border-width_Block:                              1px;
@@ -106,7 +108,6 @@
 @controls-SubmitPopup-button-mini-min-width:             150px;//todo: stepin
 //dd-list
 @DropdownList-picker-menu-font-size:                     @default-text-size;//todo: krasilnikov
-@DropdownList-picker-fastdatafilter-offset:              0 0 0 2px;//todo: krasilnikov
 @DropdownList-picker-margin-top:                         0;//todo: krasilnikov
 @DropdownList-picker-border:                             0;//todo: krasilnikov
 @DropdownList-picker-padding:                            0;//todo: krasilnikov
@@ -150,9 +151,9 @@
 @listView-empty-data-padding-top:         round(54px * @multiplier);
 //Button
 @button-height:                           @default-height;
-@font-size_Button:                        round(40px * @multiplier);
+@font-size_Button_m:                      round(40px * @multiplier);
 @min-width_Button:                        round(24px * @multiplier);
-@padding_Button-wrapper:                  0 round(14px * @multiplier);
+@padding_Button-wrapper_m:                0 round(14px * @multiplier);
 @button-icon-top-offset:                  round(12px * @multiplier);                     // top offset of 16x16 icon
 @spacing_Button-between-icon-text:                         round(4px * @multiplier);                      // gap between icon and text
 @button-icon-text-margin:                 0 round(8px * @multiplier) 0 round(28px * @multiplier);             // margin of text following 16x16 icon
@@ -175,20 +176,20 @@
 @filter-panel-chooser-list-view-title-shadow-height:   round(32px * @multiplier);
 @border-width_Button:                                  2px;
 // Big button
-@padding_Button-wrapper_l:                @padding_Button-wrapper;
+@padding_Button-wrapper_l:                @padding_Button-wrapper_m;
 @button-big-icon-top-offset:              round(20px * @multiplier);                           // top offset of 16x16 icon
 @button-big-icon-left-offset:             round(16px * @multiplier);
 @button-big-icon-text-margin:             @button-icon-text-margin;         // margin of text following 16x16 icon
 @button-big-icon-big-top-offset:          round(15px * @multiplier);
 @height_Button_l:                         @button-height;
 @border-radius_Button_l:                  0;
-@font-size_Button_l:                      @font-size_Button;
+@font-size_Button_l:                      @font-size_Button_m;
 //Button group
 @button-group-horizontal-item-margin:     0 round(49px * @multiplier) 0 0;
 @button-group-vertical-item-margin:       0 0 round(25px * @multiplier) 0;
 // Normal default button
 @button-checked-border-width:             @border-width_Button;
-@button-checked-padding:                  @padding_Button-wrapper;
+@button-checked-padding:                  @padding_Button-wrapper_default;
 // Tab button
 @tab-button-large-secondAddText-font-size:round(13px * @multiplier);
 //Radio button
@@ -273,10 +274,6 @@
 @menu-link-header-font-size:              @default-text-size;
 // Search form
 @search-button-wrapper-padding:				0;
-//  Combo box
-@combo-box-picker-item-font-size:         round(32px * @multiplier);
-@combo-box-picker-item-padding:           round(32px * @multiplier) round(16px * @multiplier);
-@combo-box-picker-item-font-size:         round(32px * @multiplier);
 // Suggest
 @suggest-list-footer-height:              round(88px * @multiplier);
 @suggest-list-footer-padding:             0 round(24px * @multiplier);
@@ -474,9 +471,8 @@
 @controls-filterButton-button-width:	   @default-height;
 @controls-filterButton-height:            @default-height;
 @controls-filterButton-button-height:		round(84px * @multiplier);
-@controls-filterButton-button-height:		round(84px * @multiplier);
 @controls-Popup-closeButton-top:          8px;
-@controls-filterButton-picker-close-top:  round(8px * @multiplier);
+@controls-filterButton-picker-close-top:  @top_window_button;
 @controls-filterButton-button-margin:     0;
 @controls-filterButton-button-verSide-margin: 0px;
 @controls-filterButton-button-empty-left-margin:   0px;
@@ -490,6 +486,7 @@
 @controls-filterButton-area-content-margin:0 round(8px * @multiplier) round(24px * @multiplier) round(24px * @multiplier);
 @controls-filterButton-line-height:       round(31px * @multiplier);
 @controls-filterButton-filterLine-margin: 0;
+@size_FilterButton_icon:                  @default-icon-size-large;
 //FieldLink
 @fieldLink-linkItem-cross-width:    @default-height;
 @fieldLink-afterField-button-margin:      0;

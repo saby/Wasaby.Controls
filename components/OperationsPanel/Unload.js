@@ -161,6 +161,10 @@ define('SBIS3.CONTROLS/OperationsPanel/Unload', [
             return;
          }
          this._gatherExporterConfig().addCallback(function (exporterConfig) {
+            if (!exporterConfig) {
+               // Если конфиг не получен - прекратить обработку
+               return;
+            }
             exporter = new Exporter(exporterConfig);
             fullFilter = exporter.getFullFilter(pageSize, true);
             fullFilter['FileName'] = this._getUnloadFileName();
@@ -217,6 +221,11 @@ define('SBIS3.CONTROLS/OperationsPanel/Unload', [
       _gatherExporterConfig: function (cfg) {
          var promise = new Deferred();
          var done = function (columns) {
+            if (!columns) {
+               // Если колонки не получены - вернуть null
+               promise.callback(null);
+               return;
+            }
             var view = this._getView(),
                cfg = {
                   dataSet: cfg ? cfg.dataSet : view.getDataSet(),
@@ -236,7 +245,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Unload', [
             done(cfg.columns)
          }
          else {
-            this._gatherColumnsInfo().addCallback(done);
+            this._gatherColumnsInfo(null, false).addCallback(done);
          }
          return promise;
       },
@@ -269,6 +278,10 @@ define('SBIS3.CONTROLS/OperationsPanel/Unload', [
          }
          else {
             this._gatherExporterConfig(cfg).addCallback(function (exporterConfig) {
+               if (!exporterConfig) {
+                  // Если конфиг не получен - прекратить обработку
+                  return;
+               }
                exporter = new Exporter(exporterConfig);
                methodName = this._getSaveMethodName(false);
                if (methodName) {

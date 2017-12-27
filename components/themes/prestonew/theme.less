@@ -13,7 +13,7 @@
   -webkit-box-shadow: @box-shadow_Button !important;
   -moz-box-shadow: @box-shadow_Button !important;
   box-shadow: @box-shadow_Button !important;
-  .border-radius(@border-radius_Button);
+  .border-radius(@border-radius_Button_default);
 
   &:before {
     content: "\e66c" @important;
@@ -106,18 +106,6 @@ body {
       .controls-Button .controls-Button__icon.icon-large {
       top: 50%
     }
-
-     .controls-DropdownList {
-        .controls-DropdownList__selectedItem {
-           .controls-DropdownList__afterCaptionWrapper, .controls-DropdownList__crossIcon {
-              font-size: round(84px * @multiplier) !important;
-              height: round(84px * @multiplier) !important;
-              width: round(84px * @multiplier) !important;
-              line-height: round(84px * @multiplier) !important;
-           }
-        }
-     }
-
    .controls-DateRangeBigChoose {
       // в онлайне в большом выборе периода иконки разного размера, а тут одинаковые 3rem
       .icon-16, .icon-24, .icon-small{
@@ -128,9 +116,6 @@ body {
       }
    }
 
-    .controls__filter-button__clear-filter {
-       font-size: round(32px * @multiplier);
-    }
    .controls-ListView__item__selected .controls-DataGridView__td:first-child {
       background-size: round(5px * @multiplier);
    }
@@ -160,10 +145,8 @@ body {
 }
 
 .controls-ComboBox__picker {
-  .controls-ComboBox__itemRow {
-    &.controls-ComboBox__itemRow__selected {
-      font-weight: bold;
-    }
+  .controls-ComboBox__item_selected {
+    font-weight: bold;
   }
   .controls-Scrollbar {
      &.controls-Scrollbar__dragging {
@@ -231,10 +214,6 @@ body {
     color: #2C3E50;
   background: #e4e4e4;
 }
-.controls-Link.controls__filter-button__clear-filter.ws-disabled {
-  color: rgba(102, 170, 221, .2);
-  font-size: round(32px * @multiplier);
-}
 
 .controls-Suggest__picker {
   .controls-ListView__hoveredItem {
@@ -274,22 +253,6 @@ body {
     height: round(84px * @multiplier);
 }
 
-//todo: дулаить это и переделать на еормальные коэфы
-.controls__filterButton {
-   .controls__filterButton__filterLine {
-      .controls__filterButton__filterLine-text{
-         height: auto;
-      }
-   }
-   .controls-Button__icon {
-      &.icon-size {
-         font-size: @default-icon-size-large !important;
-         height: @default-icon-size-large !important;
-         width: @default-icon-size-large !important;
-         line-height: @default-icon-size-large !important;
-      }
-   }
-}
 .controls-editInPlace .controls-editInPlace__editor {
   background: @controls-editInPlace-editor-bg;
 }
@@ -299,10 +262,6 @@ body {
 //todo: отказаться от данного сомнительного решения
 .controls-FormattedTextBox .controls-InputRender__wrapper .controls-InputRender__field .controls-FormattedTextBox__field-symbol {
     line-height: round(56px * @multiplier);
-}
-  //TODO: придумать решение лучше, возможно на flex
-.controls-ComboBox.controls-InputRender.controls-ComboBox__editable-false .controls-InputRender__fieldWrapper .controls-InputRender__field.controls-ComboBox__fieldNotEditable {
-     vertical-align: top; // чтобы блок располагался аналогично controls-ComboBox__field, но растягивал блок
 }
 .controls-Link__field {
   vertical-align: baseline;
@@ -322,21 +281,7 @@ body {
       vertical-align: middle !important;
    }
 }
-.controls__filterButton__area-header {
-   .controls-Link {
-      .controls-Button__text{
-         vertical-align: baseline;
-      }
-   }
-}
-.controls__filter-button__apply-filter {
-    margin-right: @top_window_button;
-}
-.controls__filter-button__clear-filter {
-  .controls-Link__field {
-    vertical-align: baseline;
-  }
-}
+
 .controls-Browser {
    .controls-Browser__topTemplate {
       height: auto;
@@ -412,10 +357,6 @@ body .ws-window.ws-LoadingIndicator__window {
   color: @default-text-color;
 }
 
-.controls-ComboBox__picker {
-   box-sizing: border-box;
-}
-
 .controls-FormattedTextBox .controls-InputRender__wrapper {
   text-align: center;
 }
@@ -425,18 +366,9 @@ body .controls-image__button {
       color: #26B8FF !important;
    }
  }
-.controls-ComboBox.controls-InputRender.controls-InputRender .controls-ComboBox__afterFieldWrapper .controls-ComboBox__arrowDown {
-  font-size: round(84px * @multiplier) !important;
-}
-body .controls-Browser__filterButton .controls__filterButton__filterLine-text {
-    height: round(40px * @multiplier)
-}
-body .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton {
-    top: @top_window_button;
-}
 .controls-PopupMixin__closeButton {
   position: absolute;
-  top: 8px;
+  top: @controls-Popup-closeButton-top;
   right: 0;
   cursor: pointer;
   z-index: 1;
@@ -517,23 +449,6 @@ body .controls-DateRangeBigChoose__years-yearsRange-btn:hover {
     vertical-align: baseline;
 }
 
-body {
-   .controls-DropdownList__picker {
-      .controls-DropdownList__close-picker.icon-24 {
-         font-size: round(84px * @multiplier) !important;
-         height: round(84px * @multiplier) !important;
-         width: round(84px * @multiplier) !important;
-         line-height: round(84px * @multiplier) !important;
-      }
-      .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
-         width: round(64px * @multiplier);
-      }
-      .controls-DropdownList__multiselect.controls-ListView__defaultItem, .controls-DropdownList__multiselect.controls-ListView__defaultItem.controls-DropdownList__item__selected {
-         font-weight: 400;
-      }
-   }
-
-}
 
 .controls-BreadCrumbs .controls-BreadCrumbs {
    &__home, &__arrow {
@@ -666,7 +581,7 @@ body {
 .ws-window-titlebar-action.close {
   .close-button-mixin(~'!important');
 }
-.ws-float-area-title {
+.ws-float-area .ws-float-area-title {
   font-size: round(40px * @multiplier)!important;
   font-weight: normal !important;
   padding-left: round(24px * @multiplier) !important;
@@ -679,7 +594,6 @@ body {
   font-weight: normal !important;
 }
 .ws-window-title {
-  color: @default-text-color !important;
   font-size: round(40px * @multiplier) !important;
   height: round(100px * @multiplier) !important;
   max-height: round(100px * @multiplier) !important;
@@ -744,5 +658,13 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
     display: -ms-flexbox !important;
     display: -ms-inline-flexbox !important;
     display: -webkit-inline-flex !important;
+  }
+}
+
+.controls-ComboBox {
+  &.controls-Picker__show {
+    background-color: @background-color_ComboBox_withPicker;
+    color: @color_ComboBox_withPicker;
+    border: @default-border-width solid @border-color_ComboBox_withPicker;
   }
 }
