@@ -12,6 +12,7 @@
         placeholder="{{_options.placeholder}}"
         on:valueChanged="_changeValueHandler()"
         on:keydown="_keyDownHandler()"
+        attr:class="controls-Suggest__inputRender"
     />
 
     <ws:Controls.Popup.Opener.Sticky name="suggestPopupOpener" onResult="{{_selectHandler}}">

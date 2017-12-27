@@ -5,7 +5,8 @@ define('js!Controls/Input/Suggest',
       'js!WS.Data/Type/descriptor',
       'js!Controls/Input/resources/SuggestController',
       'js!Controls/Popup/Opener/Sticky',
-      'js!Controls/Popup/Opener/Stack'
+      'js!Controls/Popup/Opener/Stack',
+      'css!Controls/Input/Suggest/Suggest'
    ],
    function(Control, template, types, SuggestController) {
    
@@ -31,6 +32,11 @@ define('js!Controls/Input/Suggest',
          _controlName: 'Controls/Input/Suggest',
    
          // <editor-fold desc="LifeCycle">
+         
+         constructor: function(options) {
+            Suggest.superclass.constructor.call(this, options);
+            this._selectHandler = this._selectHandler.bind(this);
+         },
    
          _afterMount: function() {
             this._suggestController = new SuggestController({
@@ -44,7 +50,7 @@ define('js!Controls/Input/Suggest',
                searchParam: this._options.searchParam,
                navigation: this._options.navigation,
                textComponent: this._children.suggestText,
-               selectCallback: this._selectHandler.bind(this)
+               selectCallback: this._selectHandler
             });
          },
          
@@ -66,7 +72,7 @@ define('js!Controls/Input/Suggest',
          },
    
          _selectHandler: function(item) {
-            this._notify('onSelect', item);
+            this._notify('select', item);
             this._notify('valueChanged', item.get(this._options.displayProperty));
          },
    

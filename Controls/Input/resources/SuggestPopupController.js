@@ -28,32 +28,31 @@ define('js!Controls/Input/resources/SuggestPopupController',
             return self._search;
          },
          
-         showPopup: function(self, searchResult, popupOptions) {
-            popupOptions = clone(popupOptions);
-            popupOptions.componentOptions.items = searchResult.result;
-            popupOptions.componentOptions.hasMore = searchResult.hasMore;
-            
-            self._popupOptions = popupOptions;
-            self._popupOpener.open(popupOptions);
+         showPopup: function(self) {
+            self._popupOpener.open(self._popupOptions);
          },
          
-         updatePopupSelectedIndex: function(self, selectedIndex) {
+         setPopupItems: function(self, searchResult) {
+            self._popupOptions.componentOptions.items = searchResult.result;
+            self._popupOptions.componentOptions.hasMore = searchResult.hasMore;
+         },
+         
+         setPopupSelectedIndex: function(self, selectedIndex) {
             self._popupOptions.componentOptions.selectedIndex = selectedIndex;
-            self._popupOpener.open(self._popupOptions);
          },
    
          decreaseSelectedIndex: function(self) {
             if (self._selectedIndex > 0) {
                self._selectedIndex--;
             }
-            _private.updatePopupSelectedIndex(self, self._selectedIndex);
+            _private.setPopupSelectedIndex(self, self._selectedIndex);
          },
          
          increaseSelectedIndex: function(self) {
             if (self._selectedIndex < self._popupOptions.componentOptions.items.getCount() - 1) {
                self._selectedIndex++;
             }
-            _private.updatePopupSelectedIndex(self, self._selectedIndex);
+            _private.setPopupSelectedIndex(self, self._selectedIndex);
          }
    
    
@@ -75,8 +74,12 @@ define('js!Controls/Input/resources/SuggestPopupController',
          
          search: function(filter, popupOptions) {
             var self = this;
+            
+            this._popupOptions = clone(popupOptions);
             _private.getSearchController(self).search({filter: filter}).addCallback(function(searchResult) {
-               _private.showPopup(self, searchResult, popupOptions);
+               _private.setPopupSelectedIndex(self, 0);
+               _private.setPopupItems(self, searchResult);
+               _private.showPopup(self);
             });
          },
          
@@ -85,11 +88,13 @@ define('js!Controls/Input/resources/SuggestPopupController',
                switch (event.nativeEvent.which) {
                   case constants.key.up:
                      _private.decreaseSelectedIndex(this);
+                     _private.showPopup(this);
                      event.preventDefault();
                      break;
                      
                   case constants.key.down:
                      _private.increaseSelectedIndex(this);
+                     _private.showPopup(this);
                      event.preventDefault();
                      break;
    

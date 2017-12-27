@@ -129,7 +129,7 @@ define(
                      name: 'Dmitry'
                   }
                }).addCallback(function(res) {
-                  assert.equal(res.result.getCount(), 2);
+                  assert.equal(res.result.getCount(), 1);
                   assert.equal(res.hasMore, true);
                   done();
                });

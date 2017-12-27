@@ -30,8 +30,8 @@ define('js!Controls/List/resources/utils/Search',
                offset: searchConfig.offset
             };
             
-            if (this._navigation) {
-               var navigParams = this._navigation.prepareQueryParams(null, 'down');
+            if (self._navigation) {
+               var navigParams = self._navigation.prepareQueryParams(null, 'down');
                queryParams.limit = navigParams.limit;
                queryParams.offset = navigParams.offset;
             }
