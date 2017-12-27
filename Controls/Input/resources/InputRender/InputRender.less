@@ -84,17 +84,8 @@
 }
 
 .controls-InputRender__placeholder {
-   .user-select(none);
+   .compatPlaceholder(@color_TextBox-placeholder);
    .align-items(center);
-   display: none;
-   position: absolute;
-   top: 0;
-   left: 0;
-   right: 0;
-   height: 100%;
-   cursor: text;
-   color: @color_TextBox-placeholder;
-   font: inherit;
 }
 
 //На controls-InputRender__placeholder нельзя вешать text-overflow, потому что флексы не обрезаются
@@ -185,6 +176,11 @@
 }
 
 //Размеры
+.controls-InputRender_size_default {
+   height: @height_TextBox_default;
+   font-size: @font-size_TextBox_default;
+}
+
 .controls-InputRender_size_m {
    height: @height_TextBox_m;
    font-size: @font-size_TextBox_m;
