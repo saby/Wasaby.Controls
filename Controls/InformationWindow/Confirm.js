@@ -1,15 +1,15 @@
-define('js!Controls/Popup/Confirm', [
+define('js!Controls/InformationWindow/Confirm', [
       'Core/Control',
       'WS.Data/Type/descriptor',
       'Core/constants',
-      'tmpl!Controls/Popup/Confirm/content',
-      'tmpl!Controls/Popup/Confirm/footer',
-      'tmpl!Controls/Popup/Confirm/message',
-      'tmpl!Controls/Popup/Confirm/details',
-      'tmpl!Controls/Popup/Confirm/Confirm',
+      'tmpl!Controls/InformationWindow/Confirm/content',
+      'tmpl!Controls/InformationWindow/Confirm/footer',
+      'tmpl!Controls/InformationWindow/Confirm/message',
+      'tmpl!Controls/InformationWindow/Confirm/details',
+      'tmpl!Controls/InformationWindow/Confirm/Confirm',
 
 
-      'css!Controls/Popup/Confirm/Confirm',
+      'css!Controls/InformationWindow/Confirm/Confirm',
       'js!Controls/Button'
    ], function (Control,
                 types,
@@ -24,7 +24,7 @@ define('js!Controls/Popup/Confirm', [
 
       /**
        * Класс контрола "Окно подтверждения". В зависимости от типа, может быть диалогом подтверждения, с кнопками "Да", "Нет" и "Отмена" (опционально), или диалогом с кнопкой "Ок".
-       * @class Controls/Popup/Confirm
+       * @class Controls/InformationWindow/Confirm
        * @extends Controls/Control
        * @control
        * @public
@@ -32,14 +32,14 @@ define('js!Controls/Popup/Confirm', [
        */
 
       /**
-       * @name Controls/Popup/Confirm#type
+       * @name Controls/InformationWindow/Confirm#type
        * @cfg {String} Тип диалога
        * @variant confirm Окно подтверждения с кнопками "Да", "Нет" и "Отмена"
        * @variant info Ифнормационное окно с кнопкой "Ок"
        */
 
       /**
-       * @name Controls/Popup/Confirm#style
+       * @name Controls/InformationWindow/Confirm#style
        * @cfg {String} Стилевое оформление диалога
        * @variant default По умоланию
        * @variant success Успех
@@ -47,37 +47,37 @@ define('js!Controls/Popup/Confirm', [
        */
 
       /**
-       * @name Controls/Popup/Confirm#message
+       * @name Controls/InformationWindow/Confirm#message
        * @cfg {String} Устанавливает сообщение
        */
 
       /**
-       * @name Controls/Popup/Confirm#details
+       * @name Controls/InformationWindow/Confirm#details
        * @cfg {String} Устанавливает детали сообщения
        */
 
       /**
-       * @name Controls/Popup/Confirm#buttonConfig
+       * @name Controls/InformationWindow/Confirm#buttonConfig
        * @cfg {Object} Устанавливает текст на кнопках
        */
 
       /**
-       * @name Controls/Popup/Confirm#hasCancelButton
+       * @name Controls/InformationWindow/Confirm#hasCancelButton
        * @cfg {Boolean} Устанавливает использование кнопки "Отмена". Опция актуальна только для диалогов со статусом confirm
        */
 
       /**
-       * @name Controls/Popup/Confirm#contentTemplate
+       * @name Controls/InformationWindow/Confirm#contentTemplate
        * @cfg {Function} Устанавливает шаблон отображения тела диалога
        */
 
       /**
-       * @name Controls/Popup/Confirm#contentTemplateOptions
+       * @name Controls/InformationWindow/Confirm#contentTemplateOptions
        * @cfg {Object} Устанавливает опции для шаблона отображения сообщения
        */
 
       /**
-       * @name Controls/Popup/Confirm#disableStandardWidth
+       * @name Controls/InformationWindow/Confirm#disableStandardWidth
        * cfg {Boolean} Отключить применение стандартной ширины
        */
 
@@ -89,7 +89,7 @@ define('js!Controls/Popup/Confirm', [
        */
 
       /**
-       * @event Controls/Popup/Confirm#sendResult Происходит при нажатии на кнопку диалога
+       * @event Controls/InformationWindow/Confirm#sendResult Происходит при нажатии на кнопку диалога
        * @param {Core/EventObject} eventObject Дескриптор события
        * @param {Result} Результат
        */

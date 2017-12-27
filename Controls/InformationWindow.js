@@ -1,16 +1,16 @@
-define('js!Controls/Utils/PopupOpener',
+define('js!Controls/InformationWindow',
    [
       'Core/Control',
       'Core/core-merge',
-      'tmpl!Controls/Utils/PopupOpener/PopupOpener',
-      'js!Controls/Popup/Confirm'
+      'tmpl!Controls/InformationWindow/InformationWindow',
+      'js!Controls/InformationWindow/Confirm'
    ],
    function (Control, merge, template) {
       'use strict';
 
       /**
        * Хелпер открытия информационных окон
-       * @class Controls/Utils/PopupOpener
+       * @class Controls/InformationWindow
        * @extends Core/Control
        * @control
        * @public
@@ -19,12 +19,12 @@ define('js!Controls/Utils/PopupOpener',
        */
 
       /**
-       * @function Controls/Utils/PopupOpener#openConfirmDialog
+       * @function Controls/InformationWindow#openConfirmDialog
        * Открыть диалоговое окно подтверждения с кнопками "Да", "Нет", "Отмена"
        */
 
       /**
-       * @function Controls/Utils/PopupOpener#openInfoDialog
+       * @function Controls/InformationWindow#openInfoDialog
        * Открыть информационное диалоговое окно с кнопкой "ОК"
        */
 

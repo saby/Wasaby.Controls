@@ -1,6 +1,6 @@
 define(
    [
-      'js!Controls/Utils/PopupOpener'
+      'js!Controls/InformationWindow'
    ],
 
    function (PopupOpener) {
@@ -8,7 +8,7 @@ define(
 
       var popupOpener;
 
-      describe('Controls/Utils/PopupOpener', function () {
+      describe('Controls/InformationWindow', function () {
 
          beforeEach(function(){
             popupOpener = new PopupOpener();
