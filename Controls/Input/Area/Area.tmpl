@@ -5,10 +5,10 @@
         viewModel="{{_textViewModel}}"
         tagStyle="{{_options.tagStyle}}"
         attr:class="controls-TextArea"
-        on:onChangeValue="_changeValueHandler()"
-        on:onInputCompleted="_inputCompletedHandler()"
-        on:onTagHover="_notifyHandler('onTagHover')"
-        on:onTagClick="_notifyHandler('onTagClick')">
+        on:valueChanged="_changeValueHandler()"
+        on:inputCompleted="_inputCompletedHandler()"
+        on:tagHover="_notifyHandler('onTagHover')"
+        on:tagClick="_notifyHandler('onTagClick')">
    <ws:content>
       <!--TODO контейнер убрать https://online.sbis.ru/opendoc.html?guid=25000158-64ff-4db9-9605-a986cbc37b0f-->
       <div>

@@ -95,6 +95,10 @@ define('js!Controls/Input/Number', [
 
       _notifyHandler: function (event, value) {
          this._notify(value);
+      },
+
+      paste: function(text) {
+         this._children['inputRender'].paste(text);
       }
    });
 
