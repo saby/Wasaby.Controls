@@ -419,28 +419,20 @@ define('SBIS3.CONTROLS/ComboBox', [
          return false;
       },
 
-      setText: function (text) {
-         ComboBox.superclass.setText.call(this, text);
-      },
-
       _drawText: function(text) {
          ComboBox.superclass._drawText.apply(this, arguments);
-         var fieldNotEditableContainer = $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0));
-         this._drawNotEditablePlaceholder(text);
-         fieldNotEditableContainer.text(text || this._options.placeholder || '');
+         if (text) {
+            this._setInputValue(text);
+         } else {
+            this.setPlaceholder(this._options.placeholder || '');
+         }
          if (this._options.editable) {
             this._setKeyByText();
          }
       },
 
-      _drawNotEditablePlaceholder: function (text) {
-         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).toggleClass('controls-ComboBox__fieldNotEditable__placeholder', !text);
-      },
-
       _clearSelection: function(){
          ComboBox.superclass.setText.call(this, '');
-         this._drawNotEditablePlaceholder('');
-         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text('');
          if (this._picker) {
             $('.controls-ComboBox__item_selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__item_selected');
          }
@@ -478,8 +470,6 @@ define('SBIS3.CONTROLS/ComboBox', [
             var newText = this._getPropertyValue(item, this._options.displayProperty);
             if (newText != this._options.text) {
                ComboBox.superclass.setText.call(this, newText);
-               this._drawNotEditablePlaceholder(newText);
-               $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(newText);
             }
             this._toggleEmptyValue(key);
          }
@@ -594,11 +584,6 @@ define('SBIS3.CONTROLS/ComboBox', [
          }
       },
 
-      setPlaceholder: function(placeholder) {
-         ComboBox.superclass.setPlaceholder.apply(this, arguments);
-         $('.controls-ComboBox__fieldNotEditable__placeholder', this._container.get(0)).text(placeholder);
-      },
-
       _getItemTemplate: function (projItem) {
          var
             item = projItem.getContents(),
@@ -617,6 +602,7 @@ define('SBIS3.CONTROLS/ComboBox', [
          args.prepareItemClassesByConfig = prepareItemClassesByConfig;
          return args;
       },
+
 
       _keyDownBind: function (e) {
          //TODO: так как нет итератора заккоментим
@@ -641,7 +627,6 @@ define('SBIS3.CONTROLS/ComboBox', [
           this.hidePicker();
           }
           */      },
-
 
       _keyUpBind: function (e) {
          var keys = constants.key;
@@ -801,9 +786,7 @@ define('SBIS3.CONTROLS/ComboBox', [
             this._inputField.attr('readonly', 'readonly');
          }
          else {
-            if (this._options.editable) {
-               this._inputField.removeAttr('readonly');
-            }
+            this._inputField.attr('readonly', !this._options.editable);
          }
          $('.controls-ComboBox__Arrow', this.getContainer()).toggleClass('ws-invisible', !enabled); //TODO: удалять из DOM
       },
@@ -865,10 +848,10 @@ define('SBIS3.CONTROLS/ComboBox', [
          list[0].className = list[0].className.replace(/(^|\s)controls-ComboBox__list_column(\S*)/gi, '');
 
          if (alignment.verticalAlign.side === 'bottom') {
-            this._picker.getContainer().addClass('controls-ComboBox__picker_column_reverse');
+            this._picker.getContainer().addClass('controls-ComboBox__picker_revert_vertical');
             list.addClass('controls-ComboBox__list_column_reverse');
          } else {
-            this._picker.getContainer().removeClass('controls-ComboBox__picker_column_reverse');
+            this._picker.getContainer().removeClass('controls-ComboBox__picker_revert_vertical');
             list.addClass('controls-ComboBox__list_column');
          }
       },
