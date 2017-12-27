@@ -307,7 +307,7 @@ define('SBIS3.CONTROLS/TextBox', [
             }
          });
 
-         this._compatPlaceholder = this._container.find('.controls-TextBox__placeholder');
+         this._compatPlaceholder = this._getCompatiblePlaceholder();
          this._initPlaceholderEvents(this._compatPlaceholder);
 
          /* Надо проверить значение input'a, т.к. при дублировании вкладки там уже может быть что-то написано */
@@ -345,6 +345,13 @@ define('SBIS3.CONTROLS/TextBox', [
       _createInformationIcon: function(color) {
          this._informationIcon = $('<div class="controls-TextBox__informationIcon controls-TextBox__informationIcon-' + color + '"></div>');
          this.getContainer().append(this._informationIcon);
+      },
+
+      _getCompatiblePlaceholder: function() {
+         if (!this._compatPlaceholder) {
+            this._compatPlaceholder = this._container.find('.controls-TextBox__placeholder');
+         }
+         return this._compatPlaceholder;
       },
 
       _destroyInformationIcon: function() {
@@ -630,7 +637,7 @@ define('SBIS3.CONTROLS/TextBox', [
 
       _createCompatiblePlaceholder: function() {
          if (!this._compatPlaceholder) {
-            this._compatPlaceholder = $(compatiblePlaceholderTemplate(this._options));
+            this._compatPlaceholder = $(this._options.compatiblePlaceholderTemplate(this._options));
             this._inputField.after(this._compatPlaceholder);
             this.reviveComponents();
             this._initPlaceholderEvents(this._compatPlaceholder);

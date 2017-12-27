@@ -85,17 +85,8 @@
 }
 
 .controls-TextBox__placeholder {
-   .user-select(none);
+   .compatPlaceholder(@color_TextBox-placeholder);
    .align-items(center);
-   display: none;
-   position: absolute;
-   top: 0;
-   left: 0;
-   right: 0;
-   height: 100%;
-   cursor: text;
-   color: @color_TextBox-placeholder;
-   font: inherit;
 }
 
 //На controls-TextBox__placeholder нельзя вешать text-overflow, потому что флексы не обрезаются
