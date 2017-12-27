@@ -72,11 +72,6 @@ define('js!Controls/InformationWindow/Confirm', [
        */
 
       /**
-       * @name Controls/InformationWindow/Confirm#contentTemplateOptions
-       * @cfg {Object} Устанавливает опции для шаблона отображения сообщения
-       */
-
-      /**
        * @name Controls/InformationWindow/Confirm#disableStandardWidth
        * cfg {Boolean} Отключить применение стандартной ширины
        */
