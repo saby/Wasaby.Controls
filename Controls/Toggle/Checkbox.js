@@ -41,14 +41,21 @@ define('js!Controls/Toggle/Checkbox', [
       _template: template,
 
       _clickHandler: function () {
-         if(this._options.value && this._options.triState){
-            _private.notifyChangeValue(this, null);
-         }
-         else if (this._options.value===null){
-            _private.notifyChangeValue(this, false);
+         if (!this._options.triState){
+            _private.notifyChangeValue(this, !this._options.value);
          }
          else{
-            _private.notifyChangeValue(this, !this._options.value);
+            if (this._options.value === false){
+               _private.notifyChangeValue(this, true);
+            }
+            else{
+               if(this._options.value === true){
+                  _private.notifyChangeValue(this, null);
+               }
+               else{
+                  _private.notifyChangeValue(this, false);
+               }
+            }
          }
       }
    });
