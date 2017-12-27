@@ -22,6 +22,7 @@ define('js!Controls/ConfirmationWindow',
       /**
        * @function Controls/ConfirmationWindow#open
        * Открыть диалоговое окно
+       * @param {Object} Объект конфигурации открываемого диалога - {@link Controls/ConfirmationWindow/Dialog}.
        */
 
       return Control.extend({
