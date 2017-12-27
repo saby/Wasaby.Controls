@@ -57,7 +57,7 @@
 //treeview
 @tree-view-folder-text-size:                      @default-text-size;
 //button
-@border-radius_Button:                            1px;
+@border-radius_Button_m:                            1px;
 //area-blocks
 @spacing_Block:                                   round(8px * @multiplier);
 @border-width_Block:                              1px;
@@ -150,9 +150,9 @@
 @listView-empty-data-padding-top:         round(54px * @multiplier);
 //Button
 @button-height:                           @default-height;
-@font-size_Button:                        round(40px * @multiplier);
+@font-size_Button_m:                      round(40px * @multiplier);
 @min-width_Button:                        round(24px * @multiplier);
-@padding_Button-wrapper:                  0 round(14px * @multiplier);
+@padding_Button-wrapper_m:                0 round(14px * @multiplier);
 @button-icon-top-offset:                  round(12px * @multiplier);                     // top offset of 16x16 icon
 @spacing_Button-between-icon-text:                         round(4px * @multiplier);                      // gap between icon and text
 @button-icon-text-margin:                 0 round(8px * @multiplier) 0 round(28px * @multiplier);             // margin of text following 16x16 icon
@@ -175,20 +175,20 @@
 @filter-panel-chooser-list-view-title-shadow-height:   round(32px * @multiplier);
 @border-width_Button:                                  2px;
 // Big button
-@padding_Button-wrapper_l:                @padding_Button-wrapper;
+@padding_Button-wrapper_l:                @padding_Button-wrapper_m;
 @button-big-icon-top-offset:              round(20px * @multiplier);                           // top offset of 16x16 icon
 @button-big-icon-left-offset:             round(16px * @multiplier);
 @button-big-icon-text-margin:             @button-icon-text-margin;         // margin of text following 16x16 icon
 @button-big-icon-big-top-offset:          round(15px * @multiplier);
 @height_Button_l:                         @button-height;
 @border-radius_Button_l:                  0;
-@font-size_Button_l:                      @font-size_Button;
+@font-size_Button_l:                      @font-size_Button_m;
 //Button group
 @button-group-horizontal-item-margin:     0 round(49px * @multiplier) 0 0;
 @button-group-vertical-item-margin:       0 0 round(25px * @multiplier) 0;
 // Normal default button
 @button-checked-border-width:             @border-width_Button;
-@button-checked-padding:                  @padding_Button-wrapper;
+@button-checked-padding:                  @padding_Button-wrapper_default;
 // Tab button
 @tab-button-large-secondAddText-font-size:round(13px * @multiplier);
 //Radio button

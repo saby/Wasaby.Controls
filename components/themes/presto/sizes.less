@@ -20,8 +20,10 @@
 //textbox
 @height_TextBox_m:                round(58px * @multiplier);
 @height_TextBox_l:                round(78px * @multiplier);
+@height_TextBox_default:          @height_TextBox_l;
 @font-size_TextBox_m:             @large-text-size;
 @font-size_TextBox_l:             @huge-text-size;
+@font-size_TextBox_default:       @font-size_TextBox_l;
 @line-height_TextBox:             round(56px * @multiplier);
 @padding_TextBox-container:       0 round(15px * @multiplier);
 @padding-bottom_TextBox-container_l: round(4px * @multiplier);
@@ -40,10 +42,12 @@
 @search-loop-size:             @default-icon-size-medium;
 @search-border-radius:         round(3px * @multiplier);
 //button
-@font-size_Button:             round(32px * @multiplier);
-@height_Button:                round(58px * @multiplier);
+@font-size_Button_m:           round(32px * @multiplier);
+@font-size_Button_default:     @font-size_Button_l;
+@height_Button_m:              round(58px * @multiplier);
+@height_Button_default:        @height_Button_l;
 @min-width_Button:             round(86px * @multiplier);
-@padding_Button-wrapper:       0 round(16px * @multiplier);
+@padding_Button-wrapper_m:     0 round(16px * @multiplier);
 @font-size_Button_l:           round(40px * @multiplier);
 @height_Button_l:              @default-height-big;
 @spacing_Button-between-icon-text: 8px;
