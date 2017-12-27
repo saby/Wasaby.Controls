@@ -5,7 +5,7 @@ if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !para
         currentBuild.result = 'ABORTED'
         error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
     }
-node('controls') {
+node('controlsFF57') {
     echo "Читаем settings_${version}.props"
     def props = readProperties file: "/home/jenkins/shared_autotest87/settings_${version}.props"
     echo "Генерируем параметры"
@@ -31,9 +31,13 @@ node('controls') {
                 description: '',
                 name: 'branch_engine'),
             string(
-                defaultValue: "",
+                defaultValue: "future/selenium3",
                 description: '',
                 name: 'branch_atf'),
+            string(
+                   defaultValue: '15',
+                   description: '',
+                   name: 'stream_number'),
             choice(
                 choices: "online\npresto\ncarry\ngenie",
                 description: '',
@@ -55,7 +59,8 @@ node('controls') {
 		echo "Назначаем переменные"
         def server_address=props["SERVER_ADDRESS"]
         def ver = version.replaceAll('.','')
-        def python_ver = 'python3'
+		def python_ver = 'python3'
+        def stream_number = params.stream_number
         def SDK = ""
         def items = "controls:${workspace}/controls"
 
@@ -396,7 +401,7 @@ node('controls') {
             DO_NOT_RESTART = True
             SOFT_RESTART = True
             NO_RESOURCES = True
-            STREAMS_NUMBER = 15
+            STREAMS_NUMBER = ${stream_number}
             DELAY_RUN_TESTS = 2
             TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
@@ -415,7 +420,7 @@ node('controls') {
                 DO_NOT_RESTART = True
                 SOFT_RESTART = False
                 NO_RESOURCES = True
-                STREAMS_NUMBER = 15
+                STREAMS_NUMBER = ${stream_number}
                 DELAY_RUN_TESTS = 2
                 TAGS_TO_START = ${params.theme}
                 ELEMENT_OUTPUT_LOG = locator
@@ -437,7 +442,7 @@ node('controls') {
                 DO_NOT_RESTART = True
                 SOFT_RESTART = False
                 NO_RESOURCES = True
-                STREAMS_NUMBER = 15
+                STREAMS_NUMBER = ${stream_number}
                 DELAY_RUN_TESTS = 2
                 TAGS_TO_START = ${params.theme}
                 ELEMENT_OUTPUT_LOG = locator
@@ -473,11 +478,12 @@ node('controls') {
                     echo "Запускаем интеграционные тесты"
                     stage("Инт.тесты"){
                         if ( inte ){
+							//python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS http://test-selenium5:4444/wd/hub -ft 2 ${run_test_fail} -sn ${stream_number}
                             dir("./controls/tests/int"){
                                  sh """
-                                 source /home/sbis/venv_for_test/bin/activate
-                                 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address}
-                                 deactivate
+                                 source /home/sbis/selenium3/bin/activate
+                                 python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform
+								 deactivate
                                  """
                             }
                         }
