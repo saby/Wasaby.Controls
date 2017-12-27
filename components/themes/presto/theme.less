@@ -216,25 +216,26 @@ body {
     }
   }
 }
-body {
-  .ws-window-titlebar {
-    background-color: #39506A !important;
-  }
-  .ws-window-content {
-    background-color: #273749;
-  }
-  .ws-window-content{
-    padding: round(11px * @multiplier) round(8px * @multiplier);
-    border-width: @default-border-width;
-    border-style: solid;
-    border-color: transparent;
-    border-top: none;
-  }
-  .ws-window {
-    .box-shadow(@controls-panel-shadow);
-    border: none;
-  }
-  .ws-window-title {
-    color: #FFCC99;
-  }
+
+//!IMPORTANT лучше чем увеличение веса селектора через BODY тк возможно собирать тему под селектором
+.ws-window-titlebar {
+  background-color: #39506A !important;
+}
+.ws-window-content {
+  background-color: #273749 !important;
+  padding: round(11px * @multiplier) round(8px * @multiplier);
+  border-width: @default-border-width;
+  border-style: solid;
+  border-color: transparent;
+  border-top: none;
+}
+.ws-window {
+  .box-shadow(@controls-panel-shadow);
+  border: none !important;
+}
+.ws-window-title, .ws-float-area-title {
+  color: #FFCC99 !important;
+}
+.ws-float-area-stack-panel-shadow {
+  border-left: none !important;
 }
