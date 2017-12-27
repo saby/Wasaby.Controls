@@ -31,13 +31,9 @@ node('controlsFF57') {
                 description: '',
                 name: 'branch_engine'),
             string(
-                defaultValue: "future/selenium3",
+                defaultValue: "",
                 description: '',
                 name: 'branch_atf'),
-            string(
-                   defaultValue: '15',
-                   description: '',
-                   name: 'stream_number'),
             choice(
                 choices: "online\npresto\ncarry\ngenie",
                 description: '',
@@ -478,11 +474,11 @@ node('controlsFF57') {
                     echo "Запускаем интеграционные тесты"
                     stage("Инт.тесты"){
                         if ( inte ){
-							//python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS http://test-selenium5:4444/wd/hub -ft 2 ${run_test_fail} -sn ${stream_number}
+							// python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform
                             dir("./controls/tests/int"){
                                  sh """
                                  source /home/sbis/selenium3/bin/activate
-                                 python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform
+								 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address}
 								 deactivate
                                  """
                             }
