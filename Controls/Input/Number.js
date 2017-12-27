@@ -34,7 +34,7 @@ define('js!Controls/Input/Number', [
        */
 
       /**
-       * @name Controls/Input/Number#decimals
+       * @name Controls/Input/Number#precision
        * @cfg {Number} Количество знаков после запятой
        */
 
@@ -44,12 +44,7 @@ define('js!Controls/Input/Number', [
        */
 
       /**
-       * @name Controls/Input/Number#onlyInteger
-       * @cfg {Boolean} Ввод только целых чисел
-       */
-
-      /**
-       * @name Controls/Input/Number#integers
+       * @name Controls/Input/Number#integersLength
        * @cfg {Number} Количество знаков до запятой
        */
 
@@ -95,6 +90,10 @@ define('js!Controls/Input/Number', [
 
       _notifyHandler: function (event, value) {
          this._notify(value);
+      },
+
+      paste: function(text) {
+         this._children['inputRender'].paste(text);
       }
    });
 

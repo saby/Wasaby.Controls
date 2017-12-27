@@ -20,8 +20,10 @@
 //textbox
 @height_TextBox_m:                round(58px * @multiplier);
 @height_TextBox_l:                round(78px * @multiplier);
+@height_TextBox_default:          @height_TextBox_l;
 @font-size_TextBox_m:             @large-text-size;
 @font-size_TextBox_l:             @huge-text-size;
+@font-size_TextBox_default:       @font-size_TextBox_l;
 @line-height_TextBox:             round(56px * @multiplier);
 @padding_TextBox-container:       0 round(15px * @multiplier);
 @padding-bottom_TextBox-container_l: round(4px * @multiplier);
@@ -40,19 +42,22 @@
 @search-loop-size:             @default-icon-size-medium;
 @search-border-radius:         round(3px * @multiplier);
 //button
-@font-size_Button:             round(32px * @multiplier);
-@height_Button:                round(58px * @multiplier);
+@font-size_Button_m:           round(32px * @multiplier);
+@font-size_Button_default:     @font-size_Button_l;
+@height_Button_m:              round(58px * @multiplier);
+@height_Button_default:        @height_Button_l;
 @min-width_Button:             round(86px * @multiplier);
-@padding_Button-wrapper:       0 round(16px * @multiplier);
+@padding_Button-wrapper_m:     0 round(16px * @multiplier);
 @font-size_Button_l:           round(40px * @multiplier);
 @height_Button_l:              @default-height-big;
 @spacing_Button-between-icon-text: 8px;
 //combobox
-@combo-box-icon-size:          @default-icon-size-medium;
-@combo-box-arrow-padding:      0 0 0 @default-padding-small;
-@combo-box-picker-item-padding:round(17px * @multiplier) round(16px * @multiplier) round(18px * @multiplier) round(16px * @multiplier);
-@combo-box-picker-border:      none;
-@padding_ComboBox_item_separator:round(16px * @multiplier);
+@icon-size_ComboBox-Arrow:              @default-icon-size-medium;
+@spacing_ComboBox-Arrow:                @default-padding-small;
+@padding_ComboBox-item:                 round(17px * @multiplier) round(16px * @multiplier) round(18px * @multiplier) round(16px * @multiplier);
+@border_ComboBox-picker:                none;
+@padding_ComboBox_item_separator:       round(16px * @multiplier);
+@border-width_ComboBox-picker:          0px;
 //suggest-text-box
 @suggest-text-box-icon-size:           @default-icon-size-medium;
 @suggest-text-box-icon-cross-padding:  0 0 0 @default-padding;
@@ -149,7 +154,7 @@
 @DropdownList-picker-menu-font-size:                  @large-text-size;
 @DropdownList-picker-menu-item-padding:               round(12px * @multiplier) round(16px * @multiplier)  round(13px * @multiplier) round(16px * @multiplier);
 @DropdownList-picker-head-weight:                     bold;
-@padding_DropDownList_item_child:                     @combo-box-picker-item-padding;
+@padding_DropDownList_item_child:                     @padding_ComboBox-item;
 @padding_DropDownList_item_child_text:                round(16px * @multiplier);
 @font-size_DropDownList:                              @large-text-size;
 @DropdownList-picker-menu-selected-marker-width:      round(11px * @multiplier);
@@ -165,6 +170,14 @@
 @DropdownList-footer-select-right:                    round(16px * @multiplier);
 @DropdownList-footer-select-top:                      round(10px * @multiplier);
 @border-width_DropDownList_picker:                    @default-border-width;
+@DropdownList-picker-close-btn-top:                   round(18px * @multiplier);
+@DropdownList-picker-close-btn-right:                 round(16px * @multiplier);
+@DropdownList-picker-menu-item-height:                round(52px * @multiplier);
+@dropdown-list-item-padding:                          round(12px * @multiplier) round(78px * @multiplier)  round(13px * @multiplier) round(16px * @multiplier);
+@DropdownList-picker-fastdatafilter-offset:           0 0 0 round(15px * @multiplier);
+@DropdownList-picker-fdf-left:                        round(-17px * @multiplier);
+@size_DropDownList_filter_cross:                      round(42px * @multiplier);
+@size_DropDownList_arrow:                             round(42px * @multiplier);
 //Marker
 @background-size_Marker:                              round(6px * @multiplier);
 //listView
@@ -263,8 +276,22 @@
 @commands-button-close-button-right:                  round(16px * @multiplier);
 @commands-button-close-button-glyph-top:              0px;
 @commands-button-margin:                              round(-10px * @multiplier) round(-64px * @multiplier) 0 0;
+//FilterButton
+@controls-filterButton-header-vertical-spacing:       round(11px * @multiplier);
+@size_FilterButton_icon:                              round(52px * @multiplier);
+@controls-filterButton-height:                        round(100px * @multiplier);
+@padding_filterBotton_line:                           0 round(16px * @multiplier) 0 0;
+@font-size_filterButton_line:                         round(32px * @multiplier);
+@controls-filterButton-area-header-padding:           round(11px * @multiplier) round(86px * @multiplier)  round(11px * @multiplier) round(24px * @multiplier);
+@controls-filterButton-picker-border-width:           0;
+@margin_filterrButton_picker:                         0;
+@controls-filterButton-area-content-margin:           round(11px * @multiplier) round(8px * @multiplier);
+@controls-filterButton-button-height:                 round(78px * @multiplier);
+@border-width_filterButton_picker_content:            @default-border-width;
+@size_FilterButtom_line_arrow:                        round(42px * @multiplier);
+@size_FilterButtom_line_cross:                        round(42px * @multiplier);
 //dateRangeSlider
 @date-range-choose-short-width:                       round(334px * @multiplier);
 @height_dateRange_choose_year:                        round(100px * @multiplier);
 @date-range-choose-month-height:                      round(50px * @multiplier);
-@date-range-choose-year-margin-bottom:                round(0px * @multiplier);
+@date-range-choose-year-margin-bottom:                0;
