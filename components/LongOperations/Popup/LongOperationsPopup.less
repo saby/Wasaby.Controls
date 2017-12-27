@@ -35,11 +35,40 @@
 
 
 .controls-LongOperationsPopup.controls-InformationPopup.controls-FloatArea .controls-PopupMixin__closeButton {
-    top: 8px;
+    position: absolute;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    -ms-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    -ms-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
     right: 0;
-    width: 36px;
-    height: 24px;
-    background: url('../../themes/@{themeName}/img/areaCloseButton.png') 0 -1px;
+    top: 6px;
+    width: 35px;
+    height: 26px;
+    cursor: pointer;
+    background-color: #f8f8f8;
+    border-width: 1px 0 1px 1px;
+    border-style: solid;
+    border-color: #dbdbdb;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, .12);
+    border-radius: 2px 0 0 2px;
+    z-index: 100;
+    margin-top: 0;
+    &:before {
+        content: "\e66c";
+        font-size: 23px;
+        width: 24px;
+        height: 24px;
+        font-family: 'cbuc-icons';
+        color: #587ab0;
+    }
 }
 
 .controls-LongOperationsPopup.controls-InformationPopup.controls-FloatArea .controls-PopupMixin__closeButton:before {
