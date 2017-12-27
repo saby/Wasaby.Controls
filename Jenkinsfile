@@ -477,7 +477,7 @@ node('controls') {
 							// python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform
                             dir("./controls/tests/int"){
                                  sh """
-                                 source /home/sbis/selenium3/bin/activate
+                                 source /home/sbis/venv_for_test/bin/activate
 								 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address}
 								 deactivate
                                  """
