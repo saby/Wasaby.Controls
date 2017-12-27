@@ -12351,7 +12351,7 @@
                children[name] = element.children;
             });
 
-            // DoubleSwitch these on HTML4
+            // Switch these on HTML4
             if (settings.schema != "html5") {
                each(split('strong/b em/i'), function(item) {
                   item = split(item, '/');
