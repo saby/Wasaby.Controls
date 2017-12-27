@@ -70,7 +70,16 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
                var
                   fieldClasses = [],
                   wrapperClasses = [],
-                  containerClasses = [];
+                  containerClasses = [],
+                  createNewCssClasses = function (item) {
+                     //Метод дублирует классы содержащие в себе 'controls-TextBox_' аналогичными с 'controls-InputRender_'
+                     //Необходимо для обратной совместимости
+                     if (~item.indexOf('controls-TextBox_')) {
+                        item += ' ' + item.replace(/controls-TextBox_/g, 'controls-InputRender_');
+                     }
+
+                     return item;
+                  };
 
                containerClasses.push('controls-TextBox_state_' + (this.enabled ? 'default' : 'disabled'));
                !this.enabled && containerClasses.push('controls-TextBox_state_disabled_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
@@ -83,12 +92,12 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
                wrapperClasses.push('controls-TextBox__wrapper_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
 
                return {
-                  container: containerClasses.join(' '),
-                  field: fieldClasses.join(' '),
-                  wrapper: wrapperClasses.join(' ')
+                  container: containerClasses.map(createNewCssClasses).join(' '),
+                  field: fieldClasses.map(createNewCssClasses).join(' '),
+                  wrapper: wrapperClasses.map(createNewCssClasses).join(' ')
                }
             },
-            _paddingClass: ' controls-TextBox_paddingBoth',
+            _paddingClass: ' controls-InputRender_paddingBoth controls-TextBox_paddingBoth',
             /**
              * @cfg {String} Устанавливает текстовое значение в поле ввода.
              * @remark
@@ -323,6 +332,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
       _toggleState: function() {
          var container = this._getStateToggleContainer()[0];
          container.className = container.className.replace(/(^|\s)controls-TextBox_state_\S+/gi, '');
+         container.className = container.className.replace(/(^|\s)controls-InputRender_state_\S+/gi, '');
          this._getStateToggleContainer().addClass(this._getToggleState());
       },
       _getToggleState: function() {
@@ -332,7 +342,10 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
             marked = this.isMarked();
          return 'controls-TextBox_state_' +
             (marked ? 'error' : !enabled ? 'disabled' +
-            (this._options._isMultiline ? ' controls-TextBox_state_disabled_multiLine' : ' controls-TextBox_state_disabled_singleLine') : active ? 'active' : 'default');
+            (this._options._isMultiline ? ' controls-TextBox_state_disabled_multiLine' : ' controls-TextBox_state_disabled_singleLine') : active ? 'active' : 'default') +
+            ' controls-InputRender_state_' +
+            (marked ? 'error' : !enabled ? 'disabled' +
+               (this._options._isMultiline ? ' controls-InputRender_state_disabled_multiLine' : ' controls-InputRender_state_disabled_singleLine') : active ? 'active' : 'default');
       }
    });
 
