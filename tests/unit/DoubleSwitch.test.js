@@ -1,7 +1,7 @@
 define(['js!Controls/Toggle/DoubleSwitch'], function (Switch) {
    'use strict';
    var SW, switcherClickedFlag;
-   describe('SBIS3.CONTROLS.Switch', function () {
+   describe('SBIS3.CONTROLS.DoubleSwitch', function () {
       describe('update captions (function _beforeUpdate)',function () {
          beforeEach(function(){
             SW = new Switch({

@@ -1,0 +1,8 @@
+<span>
+   <span class="{{isEnabled() ?  'ws-enabled'}} controls-Switcher{{_options.value ? ' controls-Checked__checked' : ''}}" title="{{tooltip}}" on:click="_clickHandler()">
+      &nbsp;
+      <span class="controls-Switcher__line"></span>
+      <span class="controls-Switcher__btn"></span>
+   </span>
+   <span on:click="_clickHandler()" class="controls-Switcher__text {{_options.value ? '' : ' controls-Switcher__unselected'}}" >{{_options.caption}}</span>
+</span>
