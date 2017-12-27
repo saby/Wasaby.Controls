@@ -13,7 +13,7 @@
   -webkit-box-shadow: @box-shadow_Button !important;
   -moz-box-shadow: @box-shadow_Button !important;
   box-shadow: @box-shadow_Button !important;
-  .border-radius(@border-radius_Button);
+  .border-radius(@border-radius_Button_default);
 
   &:before {
     content: "\e66c" @important;
@@ -145,10 +145,8 @@ body {
 }
 
 .controls-ComboBox__picker {
-  .controls-ComboBox__itemRow {
-    &.controls-ComboBox__itemRow__selected {
-      font-weight: bold;
-    }
+  .controls-ComboBox__item_selected {
+    font-weight: bold;
   }
   .controls-Scrollbar {
      &.controls-Scrollbar__dragging {
@@ -265,10 +263,6 @@ body {
 .controls-FormattedTextBox .controls-TextBox__wrapper .controls-TextBox__field .controls-FormattedTextBox__field-symbol {
     line-height: round(56px * @multiplier);
 }
-  //TODO: придумать решение лучше, возможно на flex
-.controls-ComboBox.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
-     vertical-align: top; // чтобы блок располагался аналогично controls-ComboBox__field, но растягивал блок
-}
 .controls-Link__field {
   vertical-align: baseline;
 }
@@ -363,10 +357,6 @@ body .ws-window.ws-LoadingIndicator__window {
   color: @default-text-color;
 }
 
-.controls-ComboBox__picker {
-   box-sizing: border-box;
-}
-
 .controls-FormattedTextBox .controls-TextBox__wrapper {
   text-align: center;
 }
@@ -376,9 +366,6 @@ body .controls-image__button {
       color: #26B8FF !important;
    }
  }
-.controls-ComboBox.controls-TextBox.controls-TextBox .controls-ComboBox__afterFieldWrapper .controls-ComboBox__arrowDown {
-  font-size: round(84px * @multiplier) !important;
-}
 .controls-PopupMixin__closeButton {
   position: absolute;
   top: @controls-Popup-closeButton-top;
@@ -594,7 +581,7 @@ body {
 .ws-window-titlebar-action.close {
   .close-button-mixin(~'!important');
 }
-.ws-float-area-title {
+.ws-float-area .ws-float-area-title {
   font-size: round(40px * @multiplier)!important;
   font-weight: normal !important;
   padding-left: round(24px * @multiplier) !important;
@@ -671,5 +658,13 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
     display: -ms-flexbox !important;
     display: -ms-inline-flexbox !important;
     display: -webkit-inline-flex !important;
+  }
+}
+
+.controls-ComboBox {
+  &.controls-Picker__show {
+    background-color: @background-color_ComboBox_withPicker;
+    color: @color_ComboBox_withPicker;
+    border: @default-border-width solid @border-color_ComboBox_withPicker;
   }
 }

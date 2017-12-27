@@ -20,8 +20,10 @@
 //textbox
 @height_TextBox_m:                round(58px * @multiplier);
 @height_TextBox_l:                round(78px * @multiplier);
+@height_TextBox_default:          @height_TextBox_l;
 @font-size_TextBox_m:             @large-text-size;
 @font-size_TextBox_l:             @huge-text-size;
+@font-size_TextBox_default:       @font-size_TextBox_l;
 @line-height_TextBox:             round(56px * @multiplier);
 @padding_TextBox-container:       0 round(15px * @multiplier);
 @padding-bottom_TextBox-container_l: round(4px * @multiplier);
@@ -40,19 +42,22 @@
 @search-loop-size:             @default-icon-size-medium;
 @search-border-radius:         round(3px * @multiplier);
 //button
-@font-size_Button:             round(32px * @multiplier);
-@height_Button:                round(58px * @multiplier);
+@font-size_Button_m:           round(32px * @multiplier);
+@font-size_Button_default:     @font-size_Button_l;
+@height_Button_m:              round(58px * @multiplier);
+@height_Button_default:        @height_Button_l;
 @min-width_Button:             round(86px * @multiplier);
-@padding_Button-wrapper:       0 round(16px * @multiplier);
+@padding_Button-wrapper_m:     0 round(16px * @multiplier);
 @font-size_Button_l:           round(40px * @multiplier);
 @height_Button_l:              @default-height-big;
 @spacing_Button-between-icon-text: 8px;
 //combobox
-@combo-box-icon-size:          @default-icon-size-medium;
-@combo-box-arrow-padding:      0 0 0 @default-padding-small;
-@combo-box-picker-item-padding:round(17px * @multiplier) round(16px * @multiplier) round(18px * @multiplier) round(16px * @multiplier);
-@combo-box-picker-border:      none;
-@padding_ComboBox_item_separator:round(16px * @multiplier);
+@icon-size_ComboBox-Arrow:              @default-icon-size-medium;
+@spacing_ComboBox-Arrow:                @default-padding-small;
+@padding_ComboBox-item:                 round(17px * @multiplier) round(16px * @multiplier) round(18px * @multiplier) round(16px * @multiplier);
+@border_ComboBox-picker:                none;
+@padding_ComboBox_item_separator:       round(16px * @multiplier);
+@border-width_ComboBox-picker:          0px;
 //suggest-text-box
 @suggest-text-box-icon-size:           @default-icon-size-medium;
 @suggest-text-box-icon-cross-padding:  0 0 0 @default-padding;
@@ -150,7 +155,7 @@
 @DropdownList-picker-menu-font-size:                  @large-text-size;
 @DropdownList-picker-menu-item-padding:               round(12px * @multiplier) round(16px * @multiplier)  round(13px * @multiplier) round(16px * @multiplier);
 @DropdownList-picker-head-weight:                     bold;
-@padding_DropDownList_item_child:                     @combo-box-picker-item-padding;
+@padding_DropDownList_item_child:                     @padding_ComboBox-item;
 @padding_DropDownList_item_child_text:                round(16px * @multiplier);
 @font-size_DropDownList:                              @large-text-size;
 @DropdownList-picker-menu-selected-marker-width:      round(11px * @multiplier);

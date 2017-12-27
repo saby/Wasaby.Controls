@@ -113,9 +113,8 @@
 @button-text-alignment:                   center;
 @min-width_Button:                        48px;
 @button-height:                           24px;
-@padding_Button-wrapper:                          0 11px;
-@button-margin:                           auto;
-@border-radius_Button:                    16px;
+@padding_Button-wrapper_m:                0 11px;
+@padding_Button-wrapper_default:          @padding_Button-wrapper_m;
 @color_Link-icon_hovered:                 @icon-color-primary-hover;
 @button-icon-color:                       @icon-color-primary;
 @button-icon-top-offset:                  4px;                      // top offset of 16x16 icon
@@ -181,12 +180,9 @@
 @filter-panel-chooser-dictionary-button-font-size:                12px;
 
 // Normal default button
-@border-width_Button:                     1px;
-@height_Button:                           @default-height;
 @button-border:                           @border-width_Button solid @border-color_Button;
-@font-size_Button:                        @default-text-size;
-@box-shadow_Button:                           none;
-@background_Button:                         transparent;
+@box-shadow_Button:                       none;
+@background_Button:                       transparent;
 @border-color_Button:                     @default-color;
 
 @button-hover-text-color:                 @default-text-color;
@@ -235,7 +231,7 @@
 @button-big-font:                         @button-big-font-size @default-font-name;
 @button-big-min-width:                    @min-width_Button;
 @button-big-height:                       48px;
-@padding_Button-wrapper_l:                      0 23px;
+@padding_Button-wrapper_l:                0 23px;
 @button-big-border-radius:                24px;
 @button-big-icon-top-offset:              15px;                              // top offset of 16x16 icon
 @button-big-icon-left-offset:             24px;
@@ -529,20 +525,7 @@
 // --------- //
 // Combo box //
 // --------- //
-@combo-box-field-text-color:                    inherit;//todo
-@combo-box-picker-border:                       1px solid @gray-ccc-color;
-@combo-box-picker-border-radius:                0;
-@combo-box-picker-item-font-size:               15px;
-@combo-box-picker-item-padding:                 7px 4px 6px 4px;
-@combo-box-picker-item-text-color:              @combo-box-field-text-color;
-@combo-box-picker-item-bg:                      @white-color;
-@combo-box-picker-item-hover-text-color:        @combo-box-picker-item-text-color;
-@combo-box-picker-item-hover-bg:                @default-itemHover-color;
-@compo-box-picker-show-color:                   @default-text-color;
-@combo-box-picker-show-border-color:            @gray-ccc-color;
-@combo-box-picker-show-background-color:        @text-box-focus-bg;
-@combo-box-arrowDown-color-picker-show:         @accent-color;
-@shadow_ComboBox_picker:                        none;
+@box-shadow_ComboBox_picker:                    none;
 // --------------- //
 // SuggestTextBox //
 // -------------- //
@@ -1426,7 +1409,7 @@
 @link-header-padding-left:                         @header-padding-left;
 @link-header-padding-right:                        @header-padding-right;
 @link-header-height:                               @header-height;
-@link-header-font:                                 700 18px escape('/') @header-height @default-font-name;
+@link-header-font-size:                            18px;
 @link-header-color:                                #D94700;
 @link-header-text-decoration:                      none;
 @link-header-after-content:                        '\E002';
@@ -1443,6 +1426,7 @@
 @toggle-header-padding-right:                      8px;
 @toggle-header-height:                             24px;
 @toggle-header-font:                               700 15px escape('/') @toggle-header-height @default-font-name;
+@toggle-header-font-size:                          15px;
 @toggle-header-color:                              @blue-dark-color;
 @toggle-header-background:                         none;
 @toggle-header-before-content:                     '\E013';
