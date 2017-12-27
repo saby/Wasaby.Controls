@@ -3,10 +3,12 @@ define('js!Controls/Input/Password',
         'Core/Control',
         'tmpl!Controls/Input/Password/Password',
         'WS.Data/Type/descriptor',
+       'Controls/Input/resources/InputRender/SimpleViewModel',
+
         'css!Controls/Input/Password/Password'
     ],
 
-function(Control, template, types) {
+function(Control, template, types, SimpleViewModel) {
 
    /**
     * Поле ввода пароля.
@@ -27,6 +29,11 @@ function(Control, template, types) {
     var PasswordInput = Control.extend({
         _template: template,
         _passwordVisible: false,
+
+        constructor: function (options) {
+           PasswordInput.superclass.constructor.apply(this, arguments);
+           this._simpleViewModel = new SimpleViewModel();
+        },
 
         _toggleVisibilityHandler: function() {
             this._passwordVisible = !this._passwordVisible;

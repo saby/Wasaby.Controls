@@ -1,6 +1,4 @@
-.ws-ListView {
-  position: relative;
-}
+/*group*/
 .ws-ListView__item:hover {
   background-color: lightblue;
 }

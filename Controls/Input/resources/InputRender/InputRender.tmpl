@@ -1,8 +1,8 @@
 <div class="controls-TextBox" title="{{tooltip}}">
    <div class="controls-TextBox__wrapper">
 
-      <ws:if data="{{_beforeFieldWrapper}}">
-         <ws:partial template="{{_beforeFieldWrapper}}"/>
+      <ws:if data="{{_options.beforeFieldWrapper}}">
+         <ws:partial template="{{_options.beforeFieldWrapper}}"/>
       </ws:if>
 
       <div on:input="_inputHandler()"
