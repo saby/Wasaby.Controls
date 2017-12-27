@@ -10,7 +10,7 @@ define('js!Controls/ConfirmationWindow',
       'use strict';
 
       /**
-       * Хелпер открытия информационных окон
+       * Хелпер открытия окна подтверждения
        * @class Controls/ConfirmationWindow
        * @extends Core/Control
        * @control
