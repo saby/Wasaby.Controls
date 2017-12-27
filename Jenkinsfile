@@ -54,6 +54,7 @@ node('controls') {
 
 		echo "Назначаем переменные"
         def server_address=props["SERVER_ADDRESS"]
+		def stream_number=props["stream_number"]
         def ver = version.replaceAll('.','')
 		def python_ver = 'python3'
         def SDK = ""
