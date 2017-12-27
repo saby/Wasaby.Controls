@@ -5,7 +5,7 @@ if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !para
         currentBuild.result = 'ABORTED'
         error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
     }
-node('controlsFF57') {
+node('controls') {
     echo "Читаем settings_${version}.props"
     def props = readProperties file: "/home/jenkins/shared_autotest87/settings_${version}.props"
     echo "Генерируем параметры"
