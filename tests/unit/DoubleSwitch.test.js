@@ -1,11 +1,11 @@
-define(['js!Controls/Toggle/Switch'], function (Switch) {
+define(['js!Controls/Toggle/DoubleSwitch'], function (Switch) {
    'use strict';
    var SW, switcherClickedFlag;
    describe('SBIS3.CONTROLS.Switch', function () {
       describe('update captions (function _beforeUpdate)',function () {
          beforeEach(function(){
             SW = new Switch({
-               captions: ['capt1']
+               captions: ['capt1', 'capt2']
             });
          });
 
@@ -14,25 +14,22 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
             SW = undefined;
          });
 
-         it('without captions', function () {
-            var temp = {
-               captions: []
-            };
-            SW._beforeUpdate(temp);
-            assert(true);
-         });
-
          it('with one captions', function () {
             var temp = {
-               captions: ['capt1']
+               captions: ['newcapt1']
             };
-            SW._beforeUpdate(temp);
-            assert(true);
+            try {
+               SW._beforeUpdate(temp);
+               assert(false);
+            }
+            catch(e) {
+               assert(e.message === 'You must set 2 captions.');
+            }
          });
 
          it('with two captions', function () {
             var temp = {
-               captions: ['capt1','capt2']
+               captions: ['newcapt1','newcapt2']
             };
             SW._beforeUpdate(temp);
             assert(true);
@@ -47,7 +44,7 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
                assert(false);
             }
             catch(e) {
-               assert(e.message === 'You cannot set more than 2 captions.');
+               assert(e.message === 'You must set 2 captions.');
             }
          });
       });
@@ -62,17 +59,25 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
          });
 
          it('without captions', function () {
-            SW = new Switch({
-               captions: []
-            });
-            assert(true);
+            try {
+               SW = new Switch({
+                  captions: []
+               });
+            }
+            catch(e) {
+               assert(e.message === 'You must set 2 captions.');
+            }
          });
 
          it('with one caption', function () {
-            SW = new Switch({
-               captions: ['capt1']
-            });
-            assert(true);
+            try {
+               SW = new Switch({
+                  captions: ['capt1']
+               });
+            }
+            catch(e) {
+               assert(e.message === 'You must set 2 captions.');
+            }
          });
 
          it('with two captions', function () {
@@ -89,52 +94,15 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
                });
             }
             catch(e) {
-               assert(e.message === 'You cannot set more than 2 captions.');
+               assert(e.message === 'You must set 2 captions.');
             }
-         });
-      });
-
-      describe('check caption quantity (IsDouble function)', function () {
-         beforeEach(function () {
-            SW = new Switch({
-               captions: []
-            });
-         });
-
-         afterEach(function(){
-            SW.destroy();
-            SW = undefined;
-         });
-
-         it('constructor without captions', function () {
-            var opt = {
-               captions: []
-            };
-            SW.saveOptions(opt);
-            assert(SW._isDouble() === false);
-         });
-
-         it('constructor with one caption', function () {
-            var opt = {
-               captions: ['capt1']
-            };
-            SW.saveOptions(opt);
-            assert(SW._isDouble() === false);
-         });
-
-         it('constructor with two captions', function () {
-            var opt = {
-               captions: ['capt1', 'capt2']
-            };
-            SW.saveOptions(opt);
-            assert(SW._isDouble() === true);
          });
       });
 
       describe('click to Switcher', function () {
          beforeEach(function() {
             SW = new Switch({
-               captions: []
+               captions: ['capt1','capt2']
             });
             switcherClickedFlag = false;
             SW.subscribe('changeValue', function () {
@@ -156,22 +124,13 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
          });
 
          describe('click to captions(function _clickTextHandler)', function(){
-            it ('click to single Switcher caption', function(){
-               var opt = {
-                  captions: []
-               };
-               SW.saveOptions(opt);
-               SW._clickToggleHandler();
-               assert(switcherClickedFlag);
-            });
-
             it ('click to double Switcher <<On>> caption and <<On>> value', function(){
                var opt = {
                   captions: ['capt1', 'capt2'],
                   value: true
                };
                SW.saveOptions(opt);
-               SW._clickTextHandler(null, "textOn");
+               SW._clickTextHandler(null, true);
                assert(switcherClickedFlag === false);
             });
 
@@ -181,7 +140,7 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
                   value: false
                };
                SW.saveOptions(opt);
-               SW._clickTextHandler(null, "textOn");
+               SW._clickTextHandler(null, true);
                assert(switcherClickedFlag);
             });
 
@@ -191,7 +150,7 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
                   value: true
                };
                SW.saveOptions(opt);
-               SW._clickTextHandler(null, "textOff");
+               SW._clickTextHandler(null, false);
                assert(switcherClickedFlag);
             });
 
@@ -201,7 +160,7 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
                   value: false
                };
                SW.saveOptions(opt);
-               SW._clickTextHandler(null, "textOff");
+               SW._clickTextHandler(null, false);
                assert(switcherClickedFlag === false);
             });
          });
@@ -209,7 +168,7 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
       describe('private function', function(){
          beforeEach(function() {
             SW = new Switch({
-               captions: []
+               captions: ['capt1', 'capt2']
             });
             switcherClickedFlag = false;
             SW.subscribe('changeValue', function () {
@@ -223,66 +182,6 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
             switcherClickedFlag = undefined;
          });
 
-         describe('doubleSwitcherClickHandler', function(){
-            it('textOn click and Switch was Off',function(){
-               var opt = {
-                  captions: ['capt1', 'capt2'],
-                  value: false
-               };
-               SW.saveOptions(opt);
-               Switch._private.doubleSwitcherClickHandler(SW, true);
-               assert(switcherClickedFlag);
-            });
-
-            it('textOn click and Switch was On',function(){
-               var opt = {
-                  captions: ['capt1', 'capt2'],
-                  value: true
-               };
-               SW.saveOptions(opt);
-               Switch._private.doubleSwitcherClickHandler(SW, true);
-               assert(switcherClickedFlag===false);
-            });
-
-            it('textOff click and Switch was On',function(){
-               var opt = {
-                  captions: ['capt1', 'capt2'],
-                  value: true
-               };
-               SW.saveOptions(opt);
-               Switch._private.doubleSwitcherClickHandler(SW, false);
-               assert(switcherClickedFlag);
-            });
-            it('textOff click and Switch was Off',function(){
-               var opt = {
-                  captions: ['capt1', 'capt2'],
-                  value: false
-               };
-               SW.saveOptions(opt);
-               Switch._private.doubleSwitcherClickHandler(SW, false);
-               assert(switcherClickedFlag===false);
-            });
-         });
-
-         describe('singleSwitcherClickHandler', function(){
-            it('click', function(){
-               Switch._private.singleSwitcherClickHandler(SW);
-               assert(switcherClickedFlag);
-            });
-         });
-
-         describe('notifyChangeValue', function() {
-            it('click', function () {
-               var opt = {
-                  captions: [],
-                  value: false
-               };
-               SW.saveOptions(opt);
-               Switch._private.notifyChangeValue(SW);
-               assert(switcherClickedFlag);
-            });
-         });
-
          describe('checkCaptions', function(){
             it('checked with 3 captions', function () {
                var opt = {
@@ -294,26 +193,36 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
                   assert(false);
                }
                catch(e) {
-                  assert(e.message === 'You cannot set more than 2 captions.');
+                  assert(e.message === 'You must set 2 captions.');
                }
             });
 
-            it('checked without captions', function () {
+            it('checked with 3 captions', function () {
                var opt = {
                   captions: []
                };
                SW.saveOptions(opt);
-               Switch._private.checkCaptions(SW._options);
-               assert(true);
+               try {
+                  Switch._private.checkCaptions(SW._options);
+                  assert(false);
+               }
+               catch(e) {
+                  assert(e.message === 'You must set 2 captions.');
+               }
             });
 
-            it('checked with 1 captions', function () {
+            it('checked with 3 captions', function () {
                var opt = {
                   captions: ['capt1']
                };
                SW.saveOptions(opt);
-               Switch._private.checkCaptions(SW._options);
-               assert(true);
+               try {
+                  Switch._private.checkCaptions(SW._options);
+                  assert(false);
+               }
+               catch(e) {
+                  assert(e.message === 'You must set 2 captions.');
+               }
             });
 
             it('checked with 2 captions', function () {

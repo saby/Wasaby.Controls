@@ -1,13 +1,13 @@
-define('js!Controls/Toggle/Switch', [
+define('js!Controls/Toggle/DoubleSwitch', [
    'Core/Control',
-   'tmpl!Controls/Toggle/Switch/Switch',
+   'tmpl!Controls/Toggle/DoubleSwitch/DoubleSwitch',
    'WS.Data/Type/descriptor',
-   'css!Controls/Toggle/Switch/Switch'
+   'css!Controls/Toggle/DoubleSwitch/DoubleSwitch'
 ], function (Control, template, types) {
 
    /**
     * Контрол, отображающий переключатель
-    * @class Controls/Toggle/Switch
+    * @class Controls/Toggle/DoubleSwitch
     * @extends Controls/Control
     * @mixes Controls/Toggle/interface/ICheckable
     * @mixes Controls/interface/ITooltip
@@ -17,35 +17,20 @@ define('js!Controls/Toggle/Switch', [
     */
 
    /**
-    * @name Controls/Toggle/Switch#captions
+    * @name Controls/Toggle/DoubleSwitch#captions
     * @cfg {Array.<String>} Массив заголовков
     */
 
    /**
-    * @name Controls/Toggle/Switch#orientation
+    * @name Controls/Toggle/DoubleSwitch#orientation
     * @cfg {String} Способ отображения
     * @variant horizontal Горизонтальная ориентация
     * @variant vertical Вертикальная ориентация
     */
    var _private = {
-      doubleSwitcherClickHandler: function (self, nextValue) {
-         //если дабл свитчер и кликнутый заголовок, то не надо переключаться.
-         if (self._options.value !== nextValue) {
-            this.notifyChangeValue(self);
-         }
-      },
-
-      singleSwitcherClickHandler: function (self) {
-         this.notifyChangeValue(self);
-      },
-
-      notifyChangeValue: function (self) {
-         self._notify('changeValue', !self._options.value);
-      },
-
       checkCaptions: function(options){
-         if (options.captions.length > 2) {
-            throw new Error ('You cannot set more than 2 captions.')
+         if (options.captions.length !== 2) {
+            throw new Error ('You must set 2 captions.')
          }
       }
    };
@@ -59,21 +44,14 @@ define('js!Controls/Toggle/Switch', [
          _private.checkCaptions(options);
       },
 
-      _clickTextHandler: function (e, clickedElement) {
-         if (this._isDouble()) {
-            _private.doubleSwitcherClickHandler(this, (clickedElement === "textOn" ? true : false));
-         }
-         else{
-            _private.singleSwitcherClickHandler(this);
+      _clickTextHandler: function (e, _nextValue) {
+         if (this._options.value !== _nextValue) {
+            this._notify('changeValue', !this._options.value);
          }
       },
 
       _clickToggleHandler: function (e) {
-         _private.notifyChangeValue(this);
-      },
-
-      _isDouble: function() {
-         return this._options.captions.length === 2;
+         this._notify('changeValue', !this._options.value);
       },
 
       _beforeUpdate: function (newOptions) {
