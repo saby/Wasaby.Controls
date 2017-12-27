@@ -1,11 +1,11 @@
 .controls-EditAtPlace {
-   &.controls-TextBox,
-   &.controls-TextBox:hover {
+   &.controls-InputRender,
+   &.controls-InputRender:hover {
      border: none;
    }
    position: relative;
    &:hover,
-   &.controls-TextBox.ws-disabled {
+   &.controls-InputRender.ws-disabled {
       border: none;
       .controls-EditAtPlace__fieldWrapper {
          .controls-EditAtPlace__textField {
@@ -14,7 +14,7 @@
          }
       }
    }
-   &.controls-TextBox{
+   &.controls-InputRender{
      &.ws-has-focus {
        border: none;
      }
@@ -56,7 +56,7 @@
       border-width: 0;
    }
    //todo
-   .controls-EditAtPlace__textField.controls-TextBox__field {
+   .controls-EditAtPlace__textField.controls-InputRender__field {
       padding: 1px 0;
    }
    .controls-EditAtPlace__fieldWrapper{

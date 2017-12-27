@@ -58,6 +58,8 @@ define('js!Controls/Input/Number', [
       constructor: function (options) {
          NumberInput.superclass.constructor.apply(this, arguments);
 
+         this._value = options.value;
+
          //Вьюмодель для намбера. Нужно связать с конфигом
          this._numberViewModel = new NumberViewModel({
             onlyPositive: options.onlyPositive,
