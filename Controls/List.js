@@ -259,6 +259,19 @@ define('js!Controls/List', [
          if (virtualWindowIsChanged) {
             _private.applyVirtualWindow(this, this._virtualScroll.getVirtualWindow());
          }
+      },
+
+      /**
+       * отдать в VirtualScroll контейнер с отрисованными элементами для расчета средней высоты 1 элемента
+       * Отдаю именно контейнер, а не высоту, чтобы не считать размер, когда высоты уже проинициализированы
+       * @param self
+       */
+      initializeAverageItemsHeight: function(self) {
+         self._virtualScroll.calcAverageItemHeight(
+            self._children.listView.getContainer()[0],
+            function(newVirtualWindow) {
+               _private.applyVirtualWindow(self, newVirtualWindow);
+            });
       }
    };
 
@@ -309,8 +322,7 @@ define('js!Controls/List', [
 
          _beforeMount: function(newOptions) {
             this._virtualScroll = new VirtualScroll({
-               maxVisibleItems: 60,
-               itemHeight: 18,
+               maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
                itemsCount: 0
             });
 
@@ -321,6 +333,7 @@ define('js!Controls/List', [
             if (newOptions.items) {
                this._items = newOptions.items;
                this._listModel = _private.createListModel(this._items, newOptions);
+               this._virtualScroll.setItemsCount(this._items.getCount());
             }
             if (newOptions.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
@@ -365,6 +378,9 @@ define('js!Controls/List', [
                   });
                }
             }
+
+            //Посчитаем среднюю высоту строки и отдадим ее в VirtualScroll
+            _private.initializeAverageItemsHeight(this);
          },
 
          _beforeUpdate: function(newOptions) {
@@ -398,7 +414,7 @@ define('js!Controls/List', [
 
 
          _afterUpdate: function() {
-
+            _private.initializeAverageItemsHeight(this);
          },
 
          __onPagingArrowClick: function(e, arrow) {
