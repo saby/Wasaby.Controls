@@ -267,11 +267,10 @@ define('js!Controls/List', [
        * @param self
        */
       initializeAverageItemsHeight: function(self) {
-         self._virtualScroll.calcAverageItemHeight(
-            self._children.listView.getContainer()[0],
-            function(newVirtualWindow) {
-               _private.applyVirtualWindow(self, newVirtualWindow);
-            });
+         var res = self._virtualScroll.calcAverageItemHeight(self._children.listView.getContainer()[0]);
+         if (res.changed) {
+            _private.applyVirtualWindow(self, res.virtualWindow);
+         }
       }
    };
 

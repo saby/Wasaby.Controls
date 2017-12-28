@@ -132,17 +132,19 @@ define('js!Controls/List/Controllers/VirtualScroll', [
       /**
        * Рассчитать среднюю высоту отображаемого элемента
        * @param itemsContainer контейнер с отрисованными элементами
-       * @param onChangeAverageHeight функция, которую необходимо вызвать, если изменилась средняя высота элемента
        */
-      calcAverageItemHeight: function(itemsContainer, onChangeAverageHeight) {
+      calcAverageItemHeight: function(itemsContainer) {
+         var result = {
+            changed: false
+         };
          //Если средняя высота уже проинициализирована или еще ничего не отрисовали - просто выходим
          if (this._isInitializedHeights) {
-            return;
+            return result;
          }
 
          var itemsHeight = itemsContainer.clientHeight;
          if (!itemsHeight) {
-            return;
+            return result;
          }
 
          //иначе считаем среднюю высоту
@@ -151,8 +153,9 @@ define('js!Controls/List/Controllers/VirtualScroll', [
          this._virtualWindow = _private.calculateVirtualWindow(this._currentTopIndex, this._averageItemHeight, this._maxVisibleItems, this._itemsCount);
          this._isInitializedHeights = true;
 
-         //И вызываем callback-метод, реагирующий на новое виртуальное окно
-         onChangeAverageHeight(this._virtualWindow);
+         result.changed = true;
+         result.virtualWindow = this._virtualWindow;
+         return result;
       },
 
       /**

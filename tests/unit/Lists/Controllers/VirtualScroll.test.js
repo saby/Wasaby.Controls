@@ -132,12 +132,10 @@ define([
          virtualScroll.setScrollTop(0);
 
 
-         virtualScroll.calcAverageItemHeight(
-            {clientHeight: 1500},
-            function(newVirtualWindow) {
-               assert.equal(newVirtualWindow.topPlaceholderHeight, 0);
-               assert.equal(newVirtualWindow.bottomPlaceholderHeight, 13500);
-            });
+         var res = virtualScroll.calcAverageItemHeight({clientHeight: 1500});
+
+         assert.equal(res.virtualWindow.topPlaceholderHeight, 0);
+         assert.equal(res.virtualWindow.bottomPlaceholderHeight, 13500);
          assert.equal(virtualScroll._averageItemHeight, 30);
 
          //Вернем все как было
