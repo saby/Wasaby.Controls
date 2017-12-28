@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/SubmitPopup', [
    "SBIS3.CONTROLS/Button",
    "SBIS3.CONTROLS/Link",
    'css!SBIS3.CONTROLS/SubmitPopup/SubmitPopup',
-   "css!Controls/Windows/Submit/Submit"
+   'css!Controls/ConfirmationWindow/Dialog/Dialog'
 ],
 
    /**
