@@ -26,7 +26,7 @@ define('js!Controls/Input/Number', [
        * @extends Controls/Control
        * @mixes Controls/Input/interface/IInputNumber
        * @mixes Controls/Input/interface/IInputPlaceholder
-       * @mixes Controls/Input/interface/IValidationError
+       * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputTag
        * @control
        * @public
