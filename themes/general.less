@@ -174,23 +174,23 @@ input[type="reset"]::-moz-focus-inner {
   font-size: @link-font-size;
   background-color: transparent ! important;
   font-family: @default-font-name;
-  color: @link-text-color;
+  color: @color_asLink;
   cursor: pointer;
   text-decoration: none;
 }
 .asLink[disabled='disabled'] {
   cursor: default;
-  color: @link-disabled-text-color;
+  color: @color_asLink_disabled;
   text-decoration: none;
 }
 .ws-is-desktop-platform .asLink[disabled='disabled']:hover {
-  color: @link-disabled-text-color;
+  color: @color_asLink_disabled_hovered;
   text-decoration: none;
 }
 
 .ws-is-desktop-platform .asLink:hover, .asLink:active {
   text-decoration: underline;
-  color: @link-hover-text-color;
+  color: @color_asLink_hovered;
 }
 
 .controls-ListView__withoutMarker {
