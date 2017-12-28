@@ -5,7 +5,8 @@ define('SBIS3.CONTROLS/SubmitPopup', [
    "tmpl!SBIS3.CONTROLS/SubmitPopup/resources/template",
    "SBIS3.CONTROLS/Button",
    "SBIS3.CONTROLS/Link",
-   'css!SBIS3.CONTROLS/SubmitPopup/SubmitPopup'
+   'css!SBIS3.CONTROLS/SubmitPopup/SubmitPopup',
+   "css!Controls/Windows/Submit/Submit"
 ],
 
    /**
