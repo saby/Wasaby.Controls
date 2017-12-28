@@ -12,13 +12,19 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
        * @private
        * @category Popup
        */
+      var
+         // минимальная ширина стековой панели
+         MINIMAL_PANEL_WIDTH = 50,
+         // минимальный отступ стековой панели от правого края
+         MINIMAL_PANEL_DISTANCE = 50;
+
       var Strategy = BaseStrategy.extend({
          constructor: function (cfg) {
             Strategy.superclass.constructor.call(this, cfg);
             this._stack = new List();
          },
 
-         addElement: function (element, width) {
+         addElement: function (element) {
             this._stack.add(element, 0);
             this._update();
          },
@@ -31,28 +37,57 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
          _update: function () {
             var
                self = this,
-               previous = null;
+               previous;
             this._stack.each(function (item, index) {
                item.position = self._calcPosition(index, item, previous);
-               previous = item;
+               previous = item.position;
+               if( !previous ){
+                  item.position = self.getDefaultPosition();
+               }
             });
          },
 
          // когда разделим понятие контроллера и стратегии, эта функция уйдет в стратегию
          _calcPosition: function (index, item, previous) {
-            if (index > 2) {
-               return {
-                  right: -10000,
-                  top: -10000
-               };
+            var
+               width = this._calcWidth(item.popupOptions.minWidth || MINIMAL_PANEL_WIDTH, item.popupOptions.maxWidth),
+               right = 0;
+            if (index !== 0) {
+               if( previous ){
+                  right = Math.max(100, 100 - ( width - previous.width - previous.right ));
+                  if (( width + right ) > this._getMaxPanelWidth()) {
+                     return null;
+                  }
+               }
+               else{
+                  return null;
+               }
             }
-            else {
-               return {
-                  right: index * 100,
-                  top: 0,
-                  bottom: 0
-               };
+            return {
+               width: width,
+               right: right,
+               top: 0,
+               bottom: 0
+            };
+         },
+
+         _calcWidth: function (minWidth, maxWidth) {
+            if (!maxWidth) {
+               maxWidth = this._getMaxPanelWidth();
             }
+            var
+               newWidth = Math.min(this._getMaxPanelWidth(), maxWidth);
+            if (newWidth < minWidth) {
+               return Math.max(minWidth, MINIMAL_PANEL_WIDTH);
+            }
+            else if (newWidth < MINIMAL_PANEL_WIDTH) {
+               return MINIMAL_PANEL_WIDTH;
+            }
+            return newWidth;
+         },
+
+         _getMaxPanelWidth: function () {
+            return window.outerWidth - MINIMAL_PANEL_DISTANCE;
          }
       });
 

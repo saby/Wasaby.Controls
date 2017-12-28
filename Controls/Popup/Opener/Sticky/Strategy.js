@@ -30,11 +30,9 @@ define('js!Controls/Popup/Opener/Sticky/Strategy',
                left = targetCoords.left - (side === 'right' ? contWidth || 0 : 0 ) + offset;
             if (( left + contWidth ) > window.outerWidth) {
                left -= contWidth;
-               left += ( side === 'right' ? 1 : -1 ) * targetCoords.width;
             }
             if (left < 0) {
                left += contWidth;
-               left += ( side === 'right' ? 1 : -1 ) * targetCoords.width;
             }
             return left;
          },
@@ -46,17 +44,11 @@ define('js!Controls/Popup/Opener/Sticky/Strategy',
                top = targetCoords.top - (side === 'top' ? contHeight || 0 : 0) + offset;
             if (( top + contHeight ) > window.outerHeight) {
                top -= contHeight;
-               top += ( side === 'bottom' ? 1 : -1 ) * targetCoords.height;
             }
             if (top < 0) {
                top += contHeight;
-               top += ( side === 'bottom' ? 1 : -1 ) * targetCoords.height;
             }
             return top;
-         },
-
-         _oppositeCorners: function () {
-
          }
       });
 
