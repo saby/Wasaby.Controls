@@ -24,33 +24,19 @@ define('Controls/Application',
 
       _private = {
          /**
-          * _tplConfig - внутренний объект, который передается в функцию построения контента
+          * Перекладываем опции или recivedState на инстанс
           * @param self
           * @param cfg
           * @param routesConfig
           */
-         initState: function(self, cfg, routesConfig) {
-            self._routes = routesConfig || {};
-            var url = URLHelpers.getPath();
-            self._tplConfig = self._routes[url.replace(DEFAULT_DEBUG_CATALOG, '')] || cfg.templateConfig;
-         },
-
-         /**
-          * На вход могут передать как строку, так и готовый зарекваереный модуль, или
-          * инлайново сверстаный шаблон
-          * Функция подготавливает массив того, что надо рекваирить
-          * @param config
-          * @param content
-          */
-         prepareModulesList: function(config, content){
-            var modules = [];
-            if (typeof config === "string") {
-               modules.push(config);
-            }
-            if (typeof content === "string") {
-               modules.push(content);
-            }
-            return modules;
+         initState: function(self, cfg) {
+            self.cssLinks = cfg.cssLinks;
+            self.title = cfg.title;
+            self.wsRoot = cfg.wsRoot;
+            self.content = cfg.content;
+            self.resourceRoot = cfg.resourceRoot;
+            self.jsLinks = cfg.jsLinks;
+            self.templateConfig = cfg.templateConfig;
          }
       };
       var Page = Base.extend({
@@ -65,22 +51,15 @@ define('Controls/Application',
 
          _beforeMount: function(cfg, context, receivedState) {
             var self = this,
-               def = new Deferred(),
-               deps,
-               configIsString = false;
+               def = new Deferred();
 
-            if (!receivedState) {
-               receivedState = cfg;
-            }
+            _private.initState(self, receivedState||cfg);
 
-            deps = _private.prepareModulesList(receivedState.templateConfig, receivedState.content);
-            configIsString = typeof receivedState.templateConfig === "string";
-
-            require(deps, function(templateConfig) {
-               _private.initState(self, receivedState, configIsString?templateConfig:undefined);
-               def.callback();
-            });
-
+            /**
+             * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
+             * роутинга и с ним же надо восстанавливаться на клиенте.
+             */
+            def.callback(receivedState||cfg);
             return def;
          }
 
