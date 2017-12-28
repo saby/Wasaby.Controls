@@ -20,7 +20,6 @@ define('Controls/Application',
 
       _private = {
          /**
-          * Функция расчета состояния. Конкретно той части состояния, которая вычисляется динамически.
           * _tplConfig - внутренний объект, который передается в функцию построения контента
           * @param self
           * @param cfg
@@ -62,18 +61,21 @@ define('Controls/Application',
 
          _beforeMount: function(cfg, context, receivedState) {
             var self = this,
-               def = new Deferred();
-            if (receivedState) {
-               require(_private.prepareModulesList(receivedState.templateConfig, receivedState.content), function(templateConfig) {
-                  _private.initState(self, receivedState, typeof cfg.templateConfig === "string"?templateConfig:undefined);
-                  def.callback();
-               });
-            } else {
-               require(_private.prepareModulesList(cfg.templateConfig, cfg.content), function(templateConfig) {
-                  _private.initState(self, cfg, typeof cfg.templateConfig === "string"?templateConfig:undefined);
-                  def.callback(cfg);
-               });
+               def = new Deferred(),
+               deps,
+               configIsString = false;
+
+            if (!receivedState) {
+               receivedState = cfg;
             }
+            
+            deps = _private.prepareModulesList(receivedState.templateConfig, receivedState.content);
+            configIsString = typeof receivedState.templateConfig === "string";
+
+            require(deps, function(templateConfig) {
+               _private.initState(self, receivedState, configIsString?templateConfig:undefined);
+               def.callback();
+            });
 
             return def;
          }
