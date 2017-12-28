@@ -461,6 +461,7 @@
 
 .round-button-hover-mixin() {
   &:hover {
+    background-color: @background-color_EditButton_hovered;
     border-color: @default-color;
     .controls-Button__icon {
       color: @icon-button-round-icon-color-hover;
@@ -478,7 +479,7 @@
       }
     }
     &.controls-IconButton__doneBorder {
-      border-color: @color_IconButton-icon_done;
+      border-color: @border-color_EditButton_hovered;
       .controls-Button__icon {
         color: @color_IconButton-icon_done;
       }
