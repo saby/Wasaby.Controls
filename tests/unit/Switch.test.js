@@ -6,7 +6,7 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
          SW = new Switch({
             captions: ['capt1']
          });
-         SW.subscribe('changeValue', function (e, eventChangeValue) {
+         SW.subscribe('valueChanged', function (e, eventChangeValue) {
             changeValue = eventChangeValue
          });
       });

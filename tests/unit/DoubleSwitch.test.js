@@ -105,7 +105,7 @@ define(['js!Controls/Toggle/DoubleSwitch'], function (Switch) {
                captions: ['capt1','capt2']
             });
             switcherClickedFlag = false;
-            SW.subscribe('changeValue', function () {
+            SW.subscribe('valueChanged', function () {
                switcherClickedFlag = true;
             });
          });
@@ -171,7 +171,7 @@ define(['js!Controls/Toggle/DoubleSwitch'], function (Switch) {
                captions: ['capt1', 'capt2']
             });
             switcherClickedFlag = false;
-            SW.subscribe('changeValue', function () {
+            SW.subscribe('valueChanged', function () {
                switcherClickedFlag = true;
             });
          });
