@@ -28,10 +28,14 @@ define('js!Controls/Toggle/DoubleSwitch', [
     * @variant vertical Вертикальная ориентация
     */
    var _private = {
-      checkCaptions: function(options){
-         if (options.captions.length !== 2) {
+      checkCaptions: function(captions){
+         if (captions.length !== 2) {
             throw new Error ('You must set 2 captions.')
          }
+      },
+
+      notifyChanged: function(self){
+         self._notify('valueChanged', !self._options.value);
       }
    };
 
@@ -41,21 +45,21 @@ define('js!Controls/Toggle/DoubleSwitch', [
 
       constructor: function (options) {
          Switch.superclass.constructor.apply(this, arguments);
-         _private.checkCaptions(options);
+         _private.checkCaptions(options.captions);
       },
 
       _clickTextHandler: function (e, _nextValue) {
          if (this._options.value !== _nextValue) {
-            this._notify('changeValue', !this._options.value);
+            _private.notifyChanged(this);
          }
       },
 
       _clickToggleHandler: function (e) {
-         this._notify('changeValue', !this._options.value);
+         _private.notifyChanged(this);
       },
 
       _beforeUpdate: function (newOptions) {
-         _private.checkCaptions(newOptions);
+         _private.checkCaptions(newOptions.captions);
       }
    });
 
