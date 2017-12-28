@@ -32,12 +32,12 @@ define('js!Controls/Input/resources/SuggestPopupController',
             self._popupOpener.open(self._popupOptions);
          },
          
-         setPopupItems: function(self, searchResult) {
+         setSuggestSearchResult: function(self, searchResult) {
             self._popupOptions.componentOptions.items = searchResult.result;
             self._popupOptions.componentOptions.hasMore = searchResult.hasMore;
          },
          
-         setPopupSelectedIndex: function(self, selectedIndex) {
+         setSuggestSelectedIndex: function(self, selectedIndex) {
             self._popupOptions.componentOptions.selectedIndex = selectedIndex;
          },
    
@@ -45,14 +45,14 @@ define('js!Controls/Input/resources/SuggestPopupController',
             if (self._selectedIndex > 0) {
                self._selectedIndex--;
             }
-            _private.setPopupSelectedIndex(self, self._selectedIndex);
+            _private.setSuggestSelectedIndex(self, self._selectedIndex);
          },
          
          increaseSelectedIndex: function(self) {
             if (self._selectedIndex < self._popupOptions.componentOptions.items.getCount() - 1) {
                self._selectedIndex++;
             }
-            _private.setPopupSelectedIndex(self, self._selectedIndex);
+            _private.setSuggestSelectedIndex(self, self._selectedIndex);
          }
    
    
@@ -77,8 +77,8 @@ define('js!Controls/Input/resources/SuggestPopupController',
             
             this._popupOptions = clone(popupOptions);
             _private.getSearchController(self).search({filter: filter}).addCallback(function(searchResult) {
-               _private.setPopupSelectedIndex(self, 0);
-               _private.setPopupItems(self, searchResult);
+               _private.setSuggestSelectedIndex(self, 0);
+               _private.setSuggestSearchResult(self, searchResult);
                _private.showPopup(self);
             });
          },
