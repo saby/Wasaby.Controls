@@ -189,7 +189,7 @@ define(['js!Controls/Toggle/DoubleSwitch'], function (Switch) {
                };
                SW.saveOptions(opt);
                try {
-                  Switch._private.checkCaptions(SW._options);
+                  Switch._private.checkCaptions(SW._options.captions);
                   assert(false);
                }
                catch(e) {
@@ -197,13 +197,13 @@ define(['js!Controls/Toggle/DoubleSwitch'], function (Switch) {
                }
             });
 
-            it('checked with 3 captions', function () {
+            it('checked with 0 captions', function () {
                var opt = {
                   captions: []
                };
                SW.saveOptions(opt);
                try {
-                  Switch._private.checkCaptions(SW._options);
+                  Switch._private.checkCaptions(SW._options.captions);
                   assert(false);
                }
                catch(e) {
@@ -211,13 +211,13 @@ define(['js!Controls/Toggle/DoubleSwitch'], function (Switch) {
                }
             });
 
-            it('checked with 3 captions', function () {
+            it('checked with 1 captions', function () {
                var opt = {
                   captions: ['capt1']
                };
                SW.saveOptions(opt);
                try {
-                  Switch._private.checkCaptions(SW._options);
+                  Switch._private.checkCaptions(SW._options.captions);
                   assert(false);
                }
                catch(e) {
@@ -230,7 +230,7 @@ define(['js!Controls/Toggle/DoubleSwitch'], function (Switch) {
                   captions: ['capt1', 'capt2']
                };
                SW.saveOptions(opt);
-               Switch._private.checkCaptions(SW._options);
+               Switch._private.checkCaptions(SW._options.captions);
                assert(true);
             });
          });
