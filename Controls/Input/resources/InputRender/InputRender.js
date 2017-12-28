@@ -105,6 +105,21 @@ define('js!Controls/Input/resources/InputRender/InputRender',
             this._notify(value);
          },
 
+         _getInputState: function() {
+            var
+               result;
+
+            if (this._options.validationErrors) {
+               result = 'error';
+            } else if (this.isEnabled()) {
+               result = 'default';
+            } else {
+               result = 'disabled';
+            }
+
+            return result;
+         },
+
          /**
           * Метод вставляет строку text вместо текущего выделенного текста в инпуте
           * Если текст не выделен, то просто вставит text на позицию каретки
