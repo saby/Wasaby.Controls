@@ -20,7 +20,7 @@ define('js!Controls/Input/Text', [
        * @extends Controls/Control
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IInputPlaceholder
-       * @mixes Controls/Input/interface/IValidationError
+       * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputTag
        * @control
        * @public
