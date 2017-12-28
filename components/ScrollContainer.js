@@ -30,14 +30,9 @@ define('SBIS3.CONTROLS/ScrollContainer', [
        * Класс контрола "Контейнер для контента с тонким скроллом". В качестве тонкого скролла применяется класс контрола {@link SBIS3.CONTROLS/ScrollContainer/Scrollbar}.
        *
        * @class SBIS3.CONTROLS/ScrollContainer
-       * @extends Core/core-extend
+       * @extends SBIS3.CONTROLS/CompoundControl
        * @author Журавлев Максим Сергеевич
        *
-       * @mixes Core/Abstract.compatible
-       * @mixes Lib/Control/Control.compatible
-       * @mixes Lib/Control/AreaAbstract/AreaAbstract.compatible
-       * @mixes Lib/Control/BaseCompatible/BaseCompatible
-       * @mixes Lib/Control/BaseCompatible/Mixins/WsCompatibleConstructor
        *
        * @remark
        * Пример 1:
