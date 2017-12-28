@@ -59,7 +59,7 @@ define('Controls/Application',
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
              * роутинга и с ним же надо восстанавливаться на клиенте.
              */
-            def.callback(receivedState||cfg);
+            def.callback(cfg);
             return def;
          }
 

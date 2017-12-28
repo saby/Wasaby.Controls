@@ -13,8 +13,10 @@ define([
                content: Application
             },
             ctrl = new Application(cfg);
-         ctrl._beforeMount(cfg).addCallback(function(){
-            assert.equal(ctrl.templateConfig, cfg.templateConfig, 'Property _tplConfig is incorrect before mounting');
+
+         ctrl._beforeMount(cfg).addCallback(function(conf){
+            assert.equal(ctrl.templateConfig, cfg.templateConfig, 'Property templateConfig is incorrect before mounting');
+            assert.equal(conf, cfg, '_beforeMount return bad value');
             done();
          });
       });
