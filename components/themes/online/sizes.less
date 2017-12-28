@@ -20,8 +20,10 @@
 @default-input-padding:        @default-padding;
 //textbox
 @height_TextBox_m:                24px;
+@height_TextBox_default:          @height_TextBox_m;
 @height_TextBox_l:                24px;
 @font-size_TextBox_m:             14px;
+@font-size_TextBox_default:       @font-size_TextBox_m;
 @font-size_TextBox_l:             18px;
 @line-height_TextBox:             22px;
 @padding_TextBox-container:       0 4px;
@@ -37,10 +39,14 @@
 @padding_TextArea-field:          0 4px 0 0;
 //NumberTextBox
 @font-size_NumberTextBox-mirror:   @font-size_TextBox_m;
-//combo-box
-@combo-box-icon-size:             @default-icon-size;
-@combo-box-arrow-padding:         0 0 0 @default-padding;
-@border-width_ComboBox_pickerShow: @default-border-width;
+//ComboBox
+@icon-size_ComboBox-Arrow:                      @icon-size_default;
+@border-width_ComboBox-picker:                  @default-border-width;
+@spacing_ComboBox-Arrow:                        @default-padding;
+@max-height_ComboBox-picker:                    400px;
+@border-width_ComboBox_pickerShow:              @default-border-width;
+@font-size_ComboBox-picker:                     15px;
+@padding_ComboBox-item:                         7px 4px 6px 4px;
 //MoneyTextBox
 @min-width_MoneyTextBox:          102px;
 @font-size_MoneyTextBox-decimals: 12px;
@@ -84,6 +90,14 @@
 @border-radius_Button_l:      24px;
 @font-size_Button_l:          18px;
 @search-border-radius:                                                                                                  10px;
+@border-width_Button:                     1px;
+@height_Button_m:                         @default-height;
+@height_Button_default:                   @height_Button_m;
+@font-size_Button_m:                      @default-text-size;
+@font-size_Button_default:                @font-size_Button_m;
+@button-margin:                           auto;
+@border-radius_Button_m:                  16px;
+@border-radius_Button_default:            @border-radius_Button_m;
 //area-blocks
 @spacing_Block:                   6px;
 @margin_BlockGroup:               -@spacing_Block / 2;
@@ -135,6 +149,12 @@
 @back-arrow-width-h6:             9px;
 @back-arrow-height-h6:            11px;
 
+
+//VDOM controls
+
 //inputPassword
 @font-size_inputPassword_show-password: @default-icon-size-medium;
 @font_inputPassword_show-password:      @default-icon-medium-font;
+
+//inputRender
+@input-line-height: @default-line-height;

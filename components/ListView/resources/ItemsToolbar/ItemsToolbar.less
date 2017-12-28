@@ -104,7 +104,7 @@
       &.controls-ItemsToolbar__edit {
          background-color: @list-view-items-toolbar-locked-bg;
          &:before {
-            background: @items-toolbar-bottom-style-background no-repeat 0 -30px;
+            border-top-color: @list-view-items-toolbar-locked-bg;
          }
       }
       height: @bottomStyle-items-toolbar-height - @default-border-width;
@@ -112,10 +112,10 @@
       &:before {
          content: '';
          position: absolute;
-         display: block;
-         background: @items-toolbar-bottom-style-background no-repeat 0 0;
-         width: @bottomStyle-items-toolbar-width;
-         height: @bottomStyle-items-toolbar-height;
+         width: 0;
+         height: 0;
+         border-top: @bottomStyle-items-toolbar-height - @default-border-width solid @list-view-items-toolbar-bg;
+         border-left: @bottomStyle-items-toolbar-width solid transparent;
          left: -@bottomStyle-items-toolbar-width;
       }
       .controls-ItemActions .controls-ItemActions__itemsContainer {
