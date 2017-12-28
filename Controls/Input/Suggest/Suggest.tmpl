@@ -25,7 +25,7 @@
 
     <ws:Controls.Popup.Opener.Stack name="showAllOpener" onResult="{{_selectHandler}}">
         <ws:popupOptions template="js!Controls/Input/resources/SuggestShowAll/SuggestShowAll">
-            <ws:componentOptions dataSource="{{_options.dataSource}}" template="{{_options.suggestTemplate}}"></ws:componentOptions>
+            <ws:componentOptions dataSource="{{_options.dataSource}}" template="{{_options.suggestTemplate}}" navigation="{{_options.navigation}}"></ws:componentOptions>
         </ws:popupOptions>
     </ws:Controls.Popup.Opener.Stack>
 

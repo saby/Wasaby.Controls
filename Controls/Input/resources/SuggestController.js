@@ -57,8 +57,7 @@ define('js!Controls/Input/resources/SuggestController',
                width: container[0].offsetWidth,
                template: self._options.suggestTemplate,
                dataSource: self._options.dataSource,
-               showAllOpener: self._options.showAllOpener,
-               navigation: self._options.navigation
+               showAllOpener: self._options.showAllOpener
             }
          };
       },
