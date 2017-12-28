@@ -5,7 +5,6 @@ define('js!Controls/Input/Text', [
       'Controls/Input/Text/ViewModel',
 
       'css!Controls/Input/resources/InputRender/InputRender',
-      'css!SBIS3.CONTROLS/TextBox/TextBox',
       'tmpl!Controls/Input/resources/input'
    ], function(Control,
                template,
