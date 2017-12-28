@@ -9,6 +9,10 @@ define('Controls/Application',
       'Core/Deferred'
    ],
 
+   /**
+    * Компонент приложение. не делает НИЧЕГО. На вход принимает конфиг - на выходе шаблон.
+    * Никакой логики внутри нет.
+    */
    function (Base,
              template,
              URLHelpers,
@@ -68,7 +72,7 @@ define('Controls/Application',
             if (!receivedState) {
                receivedState = cfg;
             }
-            
+
             deps = _private.prepareModulesList(receivedState.templateConfig, receivedState.content);
             configIsString = typeof receivedState.templateConfig === "string";
 
