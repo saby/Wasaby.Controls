@@ -309,7 +309,8 @@ define('js!Controls/List', [
 
          _beforeMount: function(newOptions) {
             this._virtualScroll = new VirtualScroll({
-               maxVisibleItems: 60,
+               //TODO чтобы корректно работал скролл на маленьких данных
+               maxVisibleItems: 500,
                itemHeight: 18,
                itemsCount: 0
             });

@@ -85,9 +85,9 @@ define('js!Controls/List/resources/utils/Search',
             _private.checkRequiredParams(cfg);
             this._searchDelay = cfg.hasOwnProperty('searchDelay') ? cfg.searchDelay : 500;
             this._dataSource = DataSourceUtil.prepareSource(cfg.dataSource);
-            if (cfg.navigation) {
-               //TODO поправить, как будет в контроллере поддержано актуальное API навигации.
-               this._navigation = new PageNavigation(cfg.navigation);
+            if (cfg.navigation && cfg.navigation.source === 'page') {
+               //TODO переписать, как список переведут на актуальное апи навигации
+               this._navigation = new PageNavigation(cfg.navigation.sourceConfig);
                this._navigation.prepareSource(this._dataSource);
                
             }

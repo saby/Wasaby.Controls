@@ -13,6 +13,14 @@ define('js!Controls/Input/resources/SuggestShowAll/SuggestShowAll',
       var SuggestShowAll = Control.extend({
          _template: template,
          
+         constructor: function(options) {
+            SuggestShowAll.superclass.constructor.call(this, options);
+            //TODO переписать, как список переведут на актуальное апи навигации
+            if (options.navigation && options.navigation.sourceConfig) {
+               options.navigation.sourceConfig.pageSize = 10;
+            }
+         },
+         
          _onItemClickHandler: function(event, item) {
             this._notify('sendResult', item);
             this._notify('close');
