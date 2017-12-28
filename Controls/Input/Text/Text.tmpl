@@ -1,6 +1,7 @@
 <ws:Controls.Input.resources.InputRender.InputRender
         name="inputRender"
         value="{{_value}}"
+        placeholder="{{_options.placeholder}}"
         selectOnClick="{{_options.selectOnClick}}"
         viewModel="{{_textViewModel}}"
         tagStyle="{{_options.tagStyle}}"
@@ -15,7 +16,6 @@
          type="text"
          enabled="{{isEnabled()}}"
          value="{{_value}}"
-         placeholder="{{_options.placeholder}}"
       />
 
    </ws:content>
