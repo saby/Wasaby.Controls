@@ -3,6 +3,7 @@
 /components/contents.json
 /components/contents.js
 /components/**/*.css
+/pages/**/*.css
 /CONTROLS/**/*.css
 /components/WS.Data/*
 /WS.Data

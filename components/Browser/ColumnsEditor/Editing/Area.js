@@ -200,7 +200,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                      PresetCache.update(namespace, preset);
                   }
                }
-               this._notify('onComplete', selectedColumns);
+               this._notify('onComplete', this._options.columns, selectedColumns);
             }
             else {
                this._notify('onClose');

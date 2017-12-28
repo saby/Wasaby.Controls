@@ -38,7 +38,7 @@ dirWalker(testResources);
 dirWalker(sandBoxResources);
 dirWalker(vdomCtrlResources);
 dirWalker(wsResources);
-let contents = {
+var contents = {
    jsModules: jsModules
 };
 fs.writeFileSync(path.join(__dirname, 'components/contents.json'), JSON.stringify(contents, null, 3));

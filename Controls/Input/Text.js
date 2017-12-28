@@ -4,6 +4,7 @@ define('js!Controls/Input/Text', [
       /*'WS.Data/Type/descriptor',*/
       'Controls/Input/Text/ViewModel',
 
+      'css!Controls/Input/resources/InputRender/InputRender',
       'css!SBIS3.CONTROLS/TextBox',
       'tmpl!Controls/Input/resources/input'
    ], function(Control,
@@ -19,7 +20,7 @@ define('js!Controls/Input/Text', [
        * @extends Controls/Control
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IInputPlaceholder
-       * @mixes Controls/Input/interface/IValidationError
+       * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputTag
        * @control
        * @public
@@ -90,7 +91,7 @@ define('js!Controls/Input/Text', [
 
          _changeValueHandler: function(event, value) {
             this._setValue(value);
-            this._notify('onChangeValue', value);
+            this._notify('valueChanged', value);
          },
 
          _inputCompletedHandler: function(){
@@ -99,7 +100,7 @@ define('js!Controls/Input/Text', [
                var newValue = this._value.trim();
                if(newValue !== this._value){
                   this._setValue(newValue);
-                  this._notify('onChangeValue', newValue);
+                  this._notify('valueChanged', newValue);
                }
             }
 
@@ -114,12 +115,15 @@ define('js!Controls/Input/Text', [
             if (this._options.selectOnClick) {
                e.target.select();
             }
+         },
+
+         paste: function(text) {
+            this._children['inputRender'].paste(text);
          }
       });
 
       TextBox.getDefaultOptions = function() {
          return {
-            value: '',
             trim: false,
             selectOnClick: true
          };
