@@ -4,6 +4,7 @@
       selectOnClick="{{_options.selectOnClick}}"
       viewModel="{{_numberViewModel}}"
       tagStyle="{{_options.tagStyle}}"
+      placeholder="{{_options.placeholder}}"
       on:valueChanged="_valueChangedHandler()"
       on:inputCompleted="_inputCompletedHandler()"
       on:tagHover="_notifyHandler('onTagHover')"
@@ -14,8 +15,6 @@
             template="tmpl!Controls/Input/resources/input"
             type="text"
             enabled="{{isEnabled()}}"
-            value="{{_value}}"
-            placeholder="{{_options.placeholder}}"
       />
 
    </ws:content>

@@ -832,7 +832,7 @@ define('SBIS3.CONTROLS/DropdownList',
                         var parentId = rec.get(self._options.parentProperty),
                             parentRecord,
                             text;
-                        if (parentId !== undefined){
+                        if (parentId !== undefined && parentId !== null){ //null - рутовый узел
                            parentRecord = self.getItems().getRecordById(parentId);
                            text = RecordSetUtil.getRecordsValue([parentRecord, rec], self._options.displayProperty).join(' ');
                         }
