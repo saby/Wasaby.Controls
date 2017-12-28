@@ -111,12 +111,10 @@ define('js!Controls/Input/resources/InputRender/InputRender',
 
             if (this._options.validationErrors) {
                result = 'error';
+            } else if (this.isEnabled()) {
+               result = 'default';
             } else {
-               if (this.isEnabled()) {
-                  result = 'default';
-               } else {
-                  result = 'disabled';
-               }
+               result = 'disabled';
             }
 
             return result;
