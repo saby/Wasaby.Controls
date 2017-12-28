@@ -18,8 +18,8 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
             this._stack = new List();
          },
 
-         getPosition: function (cfg, width, height) {
-            this._stack.add(cfg, 0);
+         addElement: function (element, width) {
+            this._stack.add(element, 0);
             this._update();
          },
 
@@ -38,8 +38,8 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
             });
          },
 
+         // когда разделим понятие контроллера и стратегии, эта функция уйдет в стратегию
          _calcPosition: function (index, item, previous) {
-            // показываем не больше трех стековых панелей одновременно, остальные уносим за пределы экрана
             if (index > 2) {
                return {
                   right: -10000,

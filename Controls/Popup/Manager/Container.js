@@ -28,6 +28,15 @@ define('js!Controls/Popup/Manager/Container',
          },
 
          /**
+          * Установить индекс попапа, под которым будет отрисован оверлей
+          * @function Controls/Popup/Manager/Container#setPopupItems
+          * @param {Integer} index индекс попапа
+          */
+         setOverlay: function(index){
+            this._overlayId = index;
+         },
+
+         /**
           * Изменить набор окон
           * @function Controls/Popup/Manager/Container#setPopupItems
           * @param {List} popupItems новый набор окон
@@ -65,7 +74,7 @@ define('js!Controls/Popup/Manager/Container',
          },
 
          /**
-          * Обработчик на создание нового попапа
+          * Обработчик на отправку результат с попапа
           * @function Controls/Popup/Manager/Container#_popupCreated
           * @param event
           * @param id идентификатор попапа.

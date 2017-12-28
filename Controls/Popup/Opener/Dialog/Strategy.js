@@ -13,7 +13,7 @@ define('js!Controls/Popup/Opener/Dialog/Strategy',
        * @extends Controls/Control
        */
       var Strategy = BaseStrategy.extend({
-         getPosition: function (cfg, width, height) {
+         addElement: function (cfg, width, height) {
             var
                top = (window.innerHeight - height) / 2,
                left = (window.outerWidth - width) / 2;

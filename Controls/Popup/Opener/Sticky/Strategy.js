@@ -13,7 +13,7 @@ define('js!Controls/Popup/Opener/Sticky/Strategy',
        * @category Popup
        */
       var Strategy = BaseStrategy.extend({
-         getPosition: function (cfg, width, height) {
+         addElement: function (cfg, width, height) {
             var
                target = cfg.popupOptions.target ? cfg.popupOptions.target : $('body'),
                targetCoords = TargetCoords.get(target, cfg.popupOptions.corner);
@@ -24,27 +24,39 @@ define('js!Controls/Popup/Opener/Sticky/Strategy',
          },
 
          _horizontal: function (targetCoords, horizontalAlign, contWidth) {
-            var left = targetCoords.left;
-            if (horizontalAlign) {
-               // сможем посчитать только на _afterMount, когда будут известны размеры контейнера
-               var offsetLeft = targetCoords.left - (horizontalAlign.side === 'right' ? contWidth || 0 : 0 ) + (horizontalAlign.offset || 0);
-               if (offsetLeft > 0) {
-                  left = offsetLeft;
-               }
+            var
+               side = horizontalAlign ? (horizontalAlign.side || 'left') : 'left',
+               offset = horizontalAlign ? (horizontalAlign.offset || 0) : 0,
+               left = targetCoords.left - (side === 'right' ? contWidth || 0 : 0 ) + offset;
+            if (( left + contWidth ) > window.outerWidth) {
+               left -= contWidth;
+               left += ( side === 'right' ? 1 : -1 ) * targetCoords.width;
+            }
+            if (left < 0) {
+               left += contWidth;
+               left += ( side === 'right' ? 1 : -1 ) * targetCoords.width;
             }
             return left;
          },
 
          _vertical: function (targetCoords, verticalAlign, contHeight) {
-            var top = targetCoords.top;
-            if (verticalAlign) {
-               // сможем посчитать только на _afterMount, когда будут известны размеры контейнера
-               var offsetTop = targetCoords.top - (verticalAlign.side === 'bottom' ? contHeight || 0 : 0) + (verticalAlign.offset || 0);
-               if (offsetTop > 0) {
-                  top = offsetTop;
-               }
+            var
+               side = verticalAlign ? (verticalAlign.side || 'bottom') : 'bottom',
+               offset = verticalAlign ? (verticalAlign.offset || 0) : 0,
+               top = targetCoords.top - (side === 'top' ? contHeight || 0 : 0) + offset;
+            if (( top + contHeight ) > window.outerHeight) {
+               top -= contHeight;
+               top += ( side === 'bottom' ? 1 : -1 ) * targetCoords.height;
+            }
+            if (top < 0) {
+               top += contHeight;
+               top += ( side === 'bottom' ? 1 : -1 ) * targetCoords.height;
             }
             return top;
+         },
+
+         _oppositeCorners: function () {
+
          }
       });
 

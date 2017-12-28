@@ -10,6 +10,22 @@ define('js!Controls/Popup/Manager',
       var _popupContainer;
 
       var _private = {
+         addElement: function(element){
+            this._popupItems.add(element);
+            if (element.isModal) {
+               _private.getPopupContainer().setOverlay(this._popupItems.getCount() - 1);
+            }
+         },
+
+         removeElement: function(element){
+            element.strategy.removeElement(element);
+            this._popupItems.remove(element);
+            if (element.isModal) {
+               var indices = this._popupItems.getIndicesByValue('isModal', true);
+               _private.getPopupContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
+            }
+         },
+
          /**
           * Получить Popup/Container
           * TODO временное решение, пока непонятно, как Manager должен узнать о контейнере
@@ -24,9 +40,9 @@ define('js!Controls/Popup/Manager',
                         Manager.remove(id);
                      },
                      onPopupCreated: function (event, id, width, height) {
-                        _private.recalcPosition(id, width, height);
+                        _private.popupCreated(id, width, height);
                      },
-                     onResult: function(event, id, args){
+                     onResult: function (event, id, args) {
                         _private.sendResult(id, args);
                      }
                   };
@@ -35,18 +51,19 @@ define('js!Controls/Popup/Manager',
             return _popupContainer;
          },
 
-         recalcPosition: function (id, width, height) {
+         popupCreated: function (id, width, height) {
             var element = Manager._find(id);
             if (element) {
                var strategy = element.strategy;
                if (strategy) {
-                  strategy.getPosition(element, width, height);
+                  // при создании попапа, зарегистрируем его
+                  strategy.addElement(element, width, height);
                   Manager._setItems();
                }
             }
          },
 
-         sendResult: function(id, args){
+         sendResult: function (id, args) {
             var element = Manager._find(id);
             if (element) {
                element.controller.notifyOnResult(args);
@@ -72,13 +89,15 @@ define('js!Controls/Popup/Manager',
           * @param controller контроллер
           */
          show: function (options, strategy, controller) {
-            var element = {};
-            element.id = Random.randomId('popup-');
-            element.strategy = strategy;
-            element.position = strategy.getDefaultPosition();
-            element.controller = controller;
-            element.popupOptions = options;
-            this._popupItems.add(element);
+            var element = {
+               id: Random.randomId('popup-'),
+               isModal: options.isModal,
+               strategy: strategy,
+               position: strategy.getDefaultPosition(),
+               controller: controller,
+               popupOptions: options
+            };
+            _private.addElement.call(this, element);
             this._setItems();
             return element.id;
          },
@@ -109,8 +128,7 @@ define('js!Controls/Popup/Manager',
             var
                element = this._find(id);
             if (element) {
-               element.strategy.removeElement(element);
-               this._popupItems.remove(element);
+               _private.removeElement.call(this, element);
                this._setItems();
             }
          },
@@ -143,7 +161,6 @@ define('js!Controls/Popup/Manager',
       };
 
       Manager._popupItems = new List();
-
       return Manager;
    }
 );
