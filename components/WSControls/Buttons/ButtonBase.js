@@ -81,15 +81,14 @@ define('js!WSControls/Buttons/ButtonBase', [
               * @see caption
               * @noShow
               */
-            escapeCaptionHtml: true,
-            task1174347539: false
+            escapeCaptionHtml: true
          }
       },
 
       _modifyOptions : function() {
          var opts = WSButtonBase.superclass._modifyOptions.apply(this, arguments);
 
-         if (opts.caption && opts.escapeCaptionHtml && opts.task1174347539){
+         if (opts.caption && opts.escapeCaptionHtml){
             opts.caption = escapeHtml(opts.caption);
          }
          return opts;
