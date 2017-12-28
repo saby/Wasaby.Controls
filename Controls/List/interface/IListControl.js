@@ -88,17 +88,17 @@ define('js!Controls/List/interface/IListControl', [
 
    /**
     * @function Controls/List/interface/IListControl#scrollToTop
-    * Скролит табличное представление в самый вверх
+    * Прокручивает табличное представление в самый вверх
     */
 
    /**
     * @function Controls/List/interface/IListControl#scrollToBottom
-    * Скролит табличное представление в самый низ
+    * Прокручивает табличное представление в самый низ
     */
 
    /**
     * @function Controls/List/interface/IListControl#scrollToItem
-    * Скролит табличное представление к указанному элементу
+    * Прокручивает табличное представление к указанному элементу
     */
 
    /**
