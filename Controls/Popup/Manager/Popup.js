@@ -84,8 +84,8 @@ define('js!Controls/Popup/Manager/Popup',
           * Отправить результат
           * @function Controls/Popup/Manager/Popup#_sendResult
           */
-         _sendResult: function () {
-            this._notify('result', this._options.id, Array.prototype.slice.call(arguments, 1));
+         _sendResult: function (event, result) {
+            this._notify('result', this._options.id, result);
          }
       });
 

@@ -10,24 +10,20 @@ define('js!Controls/Popup/Manager',
       var _popupContainer;
 
       var _private = {
-         addElement: function(element){
+         addElement: function (element) {
             this._popupItems.add(element);
             if (element.isModal) {
                _private.getPopupContainer().setOverlay(this._popupItems.getCount() - 1);
             }
          },
 
-         removeElement: function(element){
+         removeElement: function (element) {
             element.strategy.removeElement(element);
             this._popupItems.remove(element);
             if (element.isModal) {
                var indices = this._popupItems.getIndicesByValue('isModal', true);
                _private.getPopupContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
             }
-         },
-
-         redrawPopup: function(){
-
          },
 
          /**
@@ -46,7 +42,7 @@ define('js!Controls/Popup/Manager',
                      onPopupCreated: function (event, id, width, height) {
                         _private.popupCreated(id, width, height);
                      },
-                     onPopupFocusOut: function(event, id, focusedControl){
+                     onPopupFocusOut: function (event, id, focusedControl) {
                         _private.popupFocusOut(id, focusedControl);
                      },
                      onResult: function (event, id, args) {
@@ -70,7 +66,7 @@ define('js!Controls/Popup/Manager',
             }
          },
 
-         popupFocusOut: function(id, focusedControl){
+         popupFocusOut: function (id, focusedControl) {
             var element = Manager._find(id);
             if (element) {
                if (!!element.popupOptions.autoHide) {
@@ -88,10 +84,10 @@ define('js!Controls/Popup/Manager',
             }
          },
 
-         sendResult: function (id, args) {
+         sendResult: function (id, result) {
             var element = Manager._find(id);
             if (element) {
-               element.controller.notifyOnResult(args);
+               element.controller.notifyOnResult(result);
             }
          }
       };
@@ -154,6 +150,7 @@ define('js!Controls/Popup/Manager',
                element = this._find(id);
             if (element) {
                _private.removeElement.call(this, element);
+               element.controller.notifyOnResult();
                this._redrawItems();
             }
          },

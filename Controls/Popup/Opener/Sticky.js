@@ -20,7 +20,7 @@ define('js!Controls/Popup/Opener/Sticky',
           * @param config конфигурация попапа
           */
          open: function(config){
-            Base.prototype.open.call(this, config, Strategy);
+            return Base.prototype.open.call(this, config, Strategy);
          }
       });
 

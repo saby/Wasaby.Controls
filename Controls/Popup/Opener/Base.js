@@ -43,6 +43,7 @@ define('js!Controls/Popup/Opener/Base',
                });
                this._popupId = Manager.show(cfg, strategy, this._controller);
             }
+            return this._controller.resultDef;
          },
 
          /**

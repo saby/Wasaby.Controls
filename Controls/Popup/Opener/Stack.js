@@ -19,7 +19,7 @@ define('js!Controls/Popup/Opener/Stack',
           * @param config конфигурация попапа
           */
          open: function (config) {
-            Base.prototype.open.call(this, config, Strategy);
+            return Base.prototype.open.call(this, config, Strategy);
          }
       });
 

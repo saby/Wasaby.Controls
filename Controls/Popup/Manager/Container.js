@@ -92,9 +92,9 @@ define('js!Controls/Popup/Manager/Container',
           * @param id идентификатор попапа.
           * @param args аргументы.
           */
-         _result: function(event, id, args){
+         _result: function(event, id, result){
             if (this.eventHandlers && this.eventHandlers.onResult) {
-               this.eventHandlers.onResult(event, id, args);
+               this.eventHandlers.onResult(event, id, result);
             }
          }
       });
