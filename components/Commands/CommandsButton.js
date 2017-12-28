@@ -52,7 +52,7 @@ define('SBIS3.CONTROLS/Commands/CommandsButton', [
       },
       _setPickerContent: function() {
          CommandsButton.superclass._setPickerContent.apply(this, arguments);
-         $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-size icon-ExpandUp icon-primary');
+         $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-size icon-Close icon-primary');
       }
    });
    return CommandsButton;

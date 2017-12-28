@@ -54,8 +54,9 @@ node('controls') {
 
 		echo "Назначаем переменные"
         def server_address=props["SERVER_ADDRESS"]
+		def stream_number=props["stream_number"]
         def ver = version.replaceAll('.','')
-        def python_ver = 'python3'
+		def python_ver = 'python3'
         def SDK = ""
         def items = "controls:${workspace}/controls"
 
@@ -396,7 +397,6 @@ node('controls') {
             DO_NOT_RESTART = True
             SOFT_RESTART = True
             NO_RESOURCES = True
-            STREAMS_NUMBER = 15
             DELAY_RUN_TESTS = 2
             TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
@@ -415,7 +415,6 @@ node('controls') {
                 DO_NOT_RESTART = True
                 SOFT_RESTART = False
                 NO_RESOURCES = True
-                STREAMS_NUMBER = 15
                 DELAY_RUN_TESTS = 2
                 TAGS_TO_START = ${params.theme}
                 ELEMENT_OUTPUT_LOG = locator
@@ -437,7 +436,6 @@ node('controls') {
                 DO_NOT_RESTART = True
                 SOFT_RESTART = False
                 NO_RESOURCES = True
-                STREAMS_NUMBER = 15
                 DELAY_RUN_TESTS = 2
                 TAGS_TO_START = ${params.theme}
                 ELEMENT_OUTPUT_LOG = locator
@@ -473,11 +471,11 @@ node('controls') {
                     echo "Запускаем интеграционные тесты"
                     stage("Инт.тесты"){
                         if ( inte ){
-                            dir("./controls/tests/int"){
+							dir("./controls/tests/int"){
                                  sh """
                                  source /home/sbis/venv_for_test/bin/activate
-                                 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address}
-                                 deactivate
+								 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number}
+								 deactivate
                                  """
                             }
                         }
@@ -491,7 +489,7 @@ node('controls') {
                             dir("./controls/tests/reg"){
                                 sh """
                                     source /home/sbis/venv_for_test/bin/activate
-                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform
+                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform--STREAMS_NUMBER ${stream_number}
                                     deactivate
                                 """
                             }

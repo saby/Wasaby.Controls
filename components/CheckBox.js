@@ -80,7 +80,8 @@ define('SBIS3.CONTROLS/CheckBox', [
              * @translatable
              */
             textValue : '',
-            contentTemplate: null
+            contentTemplate: null,
+            escapeCaptionHtml: false
          }
       },
 
