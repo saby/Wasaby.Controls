@@ -833,6 +833,9 @@
 @list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
 @list-view-items-toolbar-bottom:                     3px;
 @list-view-items-toolbar-right:                      8px;
+@list-view-items-toolbar-padding:                    0;
+@bottomStyle-items-toolbar-iconButton-24-margin-top: 0;
+@bottomStyle-items-toolbar-iconButton-24-margin-bottom: 0;
 @list-view-items-toolbar-line-height:                24px;
 @list-view-items-toolbar-vertical-line-height:       24px;
 @list-view-items-toolbar-bg:                         @data-grid-row-hover-bg;
@@ -844,6 +847,7 @@
 @list-view-items-toolbar-right-tile:                 1px;
 @list-view-items-toolbar-bottom-tile:                2px;
 @list-view-items-toolbar-icon-size:                  24px;
+@margin-right_ListView-itemsToolbar-closeButton:     0;
 @list-view-items-toolbar-menu-icon-size:             @list-view-items-toolbar-icon-size;
 @list-view-items-toolbar-font-family:                @default-icon-medium-font;
 @font-family_closeButton-icon:                       @list-view-items-toolbar-font-family;
@@ -880,6 +884,16 @@
 @listView-servicefooter-fontsize:               12px;
 @listView-loadmorebutton-font-size:             @font-size_Link;
 @scrollPaging-padding:                          32px;
+//EditActions
+@border-radius_EditButton:                      @border-radius;
+@border-width_EditButton:                       @border-width_IconButton-icon;
+@width_EditButton:                              @width_IconButton_round_edit;
+@height_EditButton:                             @height_IconButton_round_edit;
+@line-height_EditButton:                        @line-height_IconButton-icon_round;
+@background-color_EditButton:                   transparent;
+@background-color_EditButton_hovered:           transparent;
+@border-color_EditButton_hovered:               @color_IconButton-icon_done;
+@text-shadow_EditButton:                        transparent;
 // ItemsToolbar small
 @list-view-small-items-toolbar-line-height:         16px;
 @list-view-small-actions-item-height:               16px;
@@ -1678,6 +1692,7 @@
 
 @bottomStyle-items-toolbar-height:                  30px;
 @bottomStyle-items-toolbar-width:                   24px;
+@bottomStyle-items-toolbar-itemsContainer-margin-left: -4px;
 @bottomStyle-padding-bottom:                        @bottomStyle-items-toolbar-height + @bottomStyle-items-toolbar-margin; //высота операций + маржин
 @bottomStyle-items-toolbar-border-color:            #F3F3F3;
 @bottomStyle-items-toolbar-margin:                  4px;
