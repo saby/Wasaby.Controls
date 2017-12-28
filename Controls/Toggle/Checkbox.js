@@ -37,26 +37,15 @@ define('js!Controls/Toggle/Checkbox', [
       }
    };
 
+   var mapTriState = {false: true, true: null, null: false};
+   var mapBoolState = {true: false, false: true};
+
    var Checkbox = Control.extend({
       _template: template,
 
       _clickHandler: function () {
-         if (!this._options.triState){
-            _private.notifyChangeValue(this, !this._options.value);
-         }
-         else{
-            if (this._options.value === false){
-               _private.notifyChangeValue(this, true);
-            }
-            else{
-               if(this._options.value === true){
-                  _private.notifyChangeValue(this, null);
-               }
-               else{
-                  _private.notifyChangeValue(this, false);
-               }
-            }
-         }
+         var map = this._options.triState ? mapTriState : mapBoolState;
+         _private.notifyChangeValue(this, map[this._options.value + '']);
       }
    });
 

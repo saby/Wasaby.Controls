@@ -1,4 +1,4 @@
 <div on:click="_clickHandler()" class="controls-CheckBox{{_options.value ? ' controls-Checked__checked'}}{{_options.value === null && _options.triState ? ' controls-ToggleButton__null'}}" title="{{_options.tooltip}}">
     <div class="controls-CheckBox__icon controls-CheckBox__icon_size controls-CheckBox__iconBox controls-CheckBox__iconBox_size controls-CheckBox__iconBox_color"></div>
-    <div class="js-controls-CheckBox__caption controls-CheckBox__caption controls-CheckBox__caption_size{{_options.caption ? '' : ' controls-CheckBox__caption_empty'}}">{{_options.caption}}</div>
+    <ws:partial template="tmpl!Controls/Toggle/Checkbox/resources/CheckboxCaption" caption="{{_options.caption}}"/>
 </div>
