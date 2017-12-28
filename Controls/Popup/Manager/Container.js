@@ -65,11 +65,23 @@ define('js!Controls/Popup/Manager/Container',
           * @param id идентификатор попапа.
           * @param width ширина попапа.
           * @param height высота попапа.
-          * @param cfg конфиг попапа.
           */
-         _popupCreated: function(event, id, width, height, cfg){
+         _popupCreated: function(event, id, width, height){
             if (this.eventHandlers && this.eventHandlers.onPopupCreated) {
-               this.eventHandlers.onPopupCreated(event, id, width, height, cfg);
+               this.eventHandlers.onPopupCreated(event, id, width, height);
+            }
+         },
+
+         /**
+          * Обработчик потери фокуса.
+          * @function Controls/Popup/Manager/Container#_popupFocusOut
+          * @param event
+          * @param id идентификатор попапа.
+          * @param focusedControl
+          */
+         _popupFocusOut: function(event, id, focusedControl){
+            if (this.eventHandlers && this.eventHandlers.onPopupFocusOut) {
+               this.eventHandlers.onPopupFocusOut(event, id, focusedControl);
             }
          },
 

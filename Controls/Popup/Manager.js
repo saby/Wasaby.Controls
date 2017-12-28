@@ -26,6 +26,10 @@ define('js!Controls/Popup/Manager',
             }
          },
 
+         redrawPopup: function(){
+
+         },
+
          /**
           * Получить Popup/Container
           * TODO временное решение, пока непонятно, как Manager должен узнать о контейнере
@@ -41,6 +45,9 @@ define('js!Controls/Popup/Manager',
                      },
                      onPopupCreated: function (event, id, width, height) {
                         _private.popupCreated(id, width, height);
+                     },
+                     onPopupFocusOut: function(event, id, focusedControl){
+                        _private.popupFocusOut(id, focusedControl);
                      },
                      onResult: function (event, id, args) {
                         _private.sendResult(id, args);
@@ -58,7 +65,25 @@ define('js!Controls/Popup/Manager',
                if (strategy) {
                   // при создании попапа, зарегистрируем его
                   strategy.addElement(element, width, height);
-                  Manager._setItems();
+                  Manager._redrawItems();
+               }
+            }
+         },
+
+         popupFocusOut: function(id, focusedControl){
+            var element = Manager._find(id);
+            if (element) {
+               if (!!element.popupOptions.autoHide) {
+                  var
+                     openerId = element.popupOptions.opener._options.id,
+                     parent = focusedControl.to;
+                  while (!!parent) {
+                     if (parent._options.id === openerId || parent._options.id === id) {
+                        return;
+                     }
+                     parent = parent.getParent();
+                  }
+                  Manager.remove(id);
                }
             }
          },
@@ -98,7 +123,7 @@ define('js!Controls/Popup/Manager',
                popupOptions: options
             };
             _private.addElement.call(this, element);
-            this._setItems();
+            this._redrawItems();
             return element.id;
          },
 
@@ -113,7 +138,7 @@ define('js!Controls/Popup/Manager',
                element = this._find(id);
             if (element) {
                element.popupOptions = options;
-               this._setItems();
+               this._redrawItems();
                return id;
             }
             return null;
@@ -129,7 +154,7 @@ define('js!Controls/Popup/Manager',
                element = this._find(id);
             if (element) {
                _private.removeElement.call(this, element);
-               this._setItems();
+               this._redrawItems();
             }
          },
 
@@ -150,9 +175,9 @@ define('js!Controls/Popup/Manager',
 
          /**
           * Установить набор попапов
-          * @function Controls/Popup/Manager#_setItems
+          * @function Controls/Popup/Manager#_redrawItems
           */
-         _setItems: function () {
+         _redrawItems: function () {
             var container = _private.getPopupContainer();
             if (container) {
                container.setPopupItems(this._popupItems);

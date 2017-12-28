@@ -44,7 +44,6 @@ define('js!Controls/Popup/Manager/Popup',
 
          constructor: function (cfg) {
             Popup.superclass.constructor.call(this, cfg);
-            this._opener = cfg.opener;
          },
 
          _afterMount: function () {
@@ -67,17 +66,7 @@ define('js!Controls/Popup/Manager/Popup',
           * @param focusedControl
           */
          _focusOut: function (event, focusedControl) {
-            if (!!this._options.autoHide) {
-               var
-                  parent = focusedControl.to;
-               while (!!parent) {
-                  if (parent._options.id === this._opener._options.id || parent._options.id === this._options.id) {
-                     return;
-                  }
-                  parent = parent.getParent();
-               }
-               this._close();
-            }
+            this._notify('popupFocusOut', this._options.id, focusedControl);
          },
 
          /**
