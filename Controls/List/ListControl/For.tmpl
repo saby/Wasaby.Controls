@@ -1,8 +1,6 @@
 <ws:for data="listModel.reset(); listModel.isEnd(); listModel.goToNext();">
-      <!--TODO Временно обернем в div для обработки клика https://online.sbis.ru/opendoc.html?guid=da0455c9-aab4-49f1-966b-b0c8adbbe895-->
-      <div on:click="_onItemClick(listModel.getCurrent().dispItem)">
-            <ws:partial
-                    template="{{itemTemplate}}"
-                    itemData="{{listModel.getCurrent()}}"/>
-      </div>
+      <ws:partial
+              on:click="_onItemClick(listModel.getCurrent().dispItem)"
+              template="{{itemTemplate}}"
+              itemData="{{listModel.getCurrent()}}"/>
 </ws:for>
