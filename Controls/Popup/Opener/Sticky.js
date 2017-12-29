@@ -11,11 +11,16 @@ define('js!Controls/Popup/Opener/Sticky',
        * @control
        * @public
        * @category Popup
-       * @extends Controls/Control
+       * @extends Controls/Popup/Opener/Base
        */
       var Sticky = Base.extend({
-         getStrategy: function(){
-            return Strategy;
+         /**
+          * Открыть всплывающее окно
+          * @function Controls/Popup/Opener/Sticky#open
+          * @param config конфигурация попапа
+          */
+         open: function(config){
+            return Base.prototype.open.call(this, config, Strategy);
          }
       });
 
