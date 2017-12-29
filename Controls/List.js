@@ -267,7 +267,8 @@ define('js!Controls/List', [
        * @param self
        */
       initializeAverageItemsHeight: function(self) {
-         var res = self._virtualScroll.calcAverageItemHeight(self._children.listView.getContainer()[0]);
+         //TODO брать _container - плохо. Узнаю у Зуева как сделать хорошо
+         var res = self._virtualScroll.calcAverageItemHeight(self._children.listView._container[0]);
          if (res.changed) {
             _private.applyVirtualWindow(self, res.virtualWindow);
          }
