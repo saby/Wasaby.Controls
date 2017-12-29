@@ -113,9 +113,8 @@
 @button-text-alignment:                   center;
 @min-width_Button:                        48px;
 @button-height:                           24px;
-@padding_Button-wrapper:                          0 11px;
-@button-margin:                           auto;
-@border-radius_Button:                    16px;
+@padding_Button-wrapper_m:                0 11px;
+@padding_Button-wrapper_default:          @padding_Button-wrapper_m;
 @color_Link-icon_hovered:                 @icon-color-primary-hover;
 @button-icon-color:                       @icon-color-primary;
 @button-icon-top-offset:                  4px;                      // top offset of 16x16 icon
@@ -181,12 +180,9 @@
 @filter-panel-chooser-dictionary-button-font-size:                12px;
 
 // Normal default button
-@border-width_Button:                     1px;
-@height_Button:                           @default-height;
 @button-border:                           @border-width_Button solid @border-color_Button;
-@font-size_Button:                        @default-text-size;
-@box-shadow_Button:                           none;
-@background_Button:                         transparent;
+@box-shadow_Button:                       none;
+@background_Button:                       transparent;
 @border-color_Button:                     @default-color;
 
 @button-hover-text-color:                 @default-text-color;
@@ -235,7 +231,7 @@
 @button-big-font:                         @button-big-font-size @default-font-name;
 @button-big-min-width:                    @min-width_Button;
 @button-big-height:                       48px;
-@padding_Button-wrapper_l:                      0 23px;
+@padding_Button-wrapper_l:                0 23px;
 @button-big-border-radius:                24px;
 @button-big-icon-top-offset:              15px;                              // top offset of 16x16 icon
 @button-big-icon-left-offset:             24px;
@@ -529,20 +525,7 @@
 // --------- //
 // Combo box //
 // --------- //
-@combo-box-field-text-color:                    inherit;//todo
-@combo-box-picker-border:                       1px solid @gray-ccc-color;
-@combo-box-picker-border-radius:                0;
-@combo-box-picker-item-font-size:               15px;
-@combo-box-picker-item-padding:                 7px 4px 6px 4px;
-@combo-box-picker-item-text-color:              @combo-box-field-text-color;
-@combo-box-picker-item-bg:                      @white-color;
-@combo-box-picker-item-hover-text-color:        @combo-box-picker-item-text-color;
-@combo-box-picker-item-hover-bg:                @default-itemHover-color;
-@compo-box-picker-show-color:                   @default-text-color;
-@combo-box-picker-show-border-color:            @gray-ccc-color;
-@combo-box-picker-show-background-color:        @text-box-focus-bg;
-@combo-box-arrowDown-color-picker-show:         @accent-color;
-@shadow_ComboBox_picker:                        none;
+@box-shadow_ComboBox_picker:                    none;
 // --------------- //
 // SuggestTextBox //
 // -------------- //
@@ -850,6 +833,9 @@
 @list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
 @list-view-items-toolbar-bottom:                     3px;
 @list-view-items-toolbar-right:                      8px;
+@list-view-items-toolbar-padding:                    0;
+@bottomStyle-items-toolbar-iconButton-24-margin-top: 0;
+@bottomStyle-items-toolbar-iconButton-24-margin-bottom: 0;
 @list-view-items-toolbar-line-height:                24px;
 @list-view-items-toolbar-vertical-line-height:       24px;
 @list-view-items-toolbar-bg:                         @data-grid-row-hover-bg;
@@ -861,6 +847,7 @@
 @list-view-items-toolbar-right-tile:                 1px;
 @list-view-items-toolbar-bottom-tile:                2px;
 @list-view-items-toolbar-icon-size:                  24px;
+@margin-right_ListView-itemsToolbar-closeButton:     0;
 @list-view-items-toolbar-menu-icon-size:             @list-view-items-toolbar-icon-size;
 @list-view-items-toolbar-font-family:                @default-icon-medium-font;
 @font-family_closeButton-icon:                       @list-view-items-toolbar-font-family;
@@ -897,8 +884,17 @@
 @listView-servicefooter-fontsize:               12px;
 @listView-loadmorebutton-font-size:             @font-size_Link;
 @scrollPaging-padding:                          32px;
+//EditActions
+@border-radius_EditButton:                      @border-radius;
+@border-width_EditButton:                       @border-width_IconButton-icon;
+@width_EditButton:                              @width_IconButton_round_edit;
+@height_EditButton:                             @height_IconButton_round_edit;
+@line-height_EditButton:                        @line-height_IconButton-icon_round;
+@background-color_EditButton:                   transparent;
+@background-color_EditButton_hovered:           transparent;
+@border-color_EditButton_hovered:               @color_IconButton-icon_done;
+@text-shadow_EditButton:                        transparent;
 // ItemsToolbar small
-@items-toolbar-bottom-style-background: 			url('img/items-toolbar-bottom-style-background.png');
 @list-view-small-items-toolbar-line-height:         16px;
 @list-view-small-actions-item-height:               16px;
 @list-view-small-actions-verAlign-width:            20px;
@@ -1111,6 +1107,9 @@
 @DropdownList-picker-fdf-left:                        -13px;
 @DropdownList-picker-margin-top:                      -1px;
 @DropdownList-picker-close-btn-top:                   4px;
+@size_dropdownList_picker_close_cross:                @default-icon-size-medium;
+@color_dropdownList_picker_close_cross:               @default-disabled-color;
+@color_dropdownList_picker_close_cross_hover:         #313E78;
 @DropdownList-picker-close-btn-right:                 6px;
 @DropdownList-picker-head-padding:                    4px 12px;
 @DropdownList-picker-head-weight:                     bold;
@@ -1162,6 +1161,8 @@
 @shadow_DropDownList_picker:                          @shadow_Menu;
 @border-width_DropDownList_picker:                    0;
 @border-color_DropDownList_picker:                    #CCC;
+@size_DropDownList_filter_cross:                      @icon-size_default;
+@size_DropDownList_arrow:                             @icon-size_default;
 //ProgressBar
 @ProgressBar-height:                      16px;
 @ProgressBar-width:                       100%;
@@ -1188,6 +1189,9 @@
 @controls-filterButton-button-empty-left-margin:  8px;
 @controls-filterButton-button-verSide-margin:     8px;
 @controls-filterButton-button-margin:             8px @controls-filterButton-button-verSide-margin 8px 0;
+@size_FilterButtom_line_arrow:                    @icon-size_default;
+@size_FilterButtom_line_cross:                    @icon-size_default;
+@size_FilterButton_icon:                          24px;
 @controls-filterButton-button-margin-right-align: 8px 0 8px @controls-filterButton-button-verSide-margin;
 @controls-filterButton-line-margin-right-align:   8px 0 8px 8px;
 @controls-filterButton-height:                    40px;
@@ -1207,6 +1211,13 @@
 @controls-filterButton-margin-value:              8px;
 @controls-filterButton-filterLine-margin:         8px 8px 8px 0;
 @controls-filterButton-history-pin-top:           5px;
+@padding_filterBotton_line:                       0;
+@font-size_filterButton_line:                     @default-text-size;
+@margin_filterrButton_picker:                     -3px 0 0 0;
+@backround-color_filterButton_picker_content:     transparent;
+@background-color_filterButton_picker_header:     transparent;
+@border-color_filterButton_picker_content:        transparent;
+@border-width_filterButton_picker_content:        0;
 //FilterButtonHistory
 @controls-filterButton-history-maxHeight-height:  120px;
 @controls-filterButton-history-actions-left:      -6px !important;
@@ -1411,7 +1422,7 @@
 @link-header-padding-left:                         @header-padding-left;
 @link-header-padding-right:                        @header-padding-right;
 @link-header-height:                               @header-height;
-@link-header-font:                                 700 18px escape('/') @header-height @default-font-name;
+@link-header-font-size:                            18px;
 @link-header-color:                                #D94700;
 @link-header-text-decoration:                      none;
 @link-header-after-content:                        '\E002';
@@ -1428,6 +1439,7 @@
 @toggle-header-padding-right:                      8px;
 @toggle-header-height:                             24px;
 @toggle-header-font:                               700 15px escape('/') @toggle-header-height @default-font-name;
+@toggle-header-font-size:                          15px;
 @toggle-header-color:                              @blue-dark-color;
 @toggle-header-background:                         none;
 @toggle-header-before-content:                     '\E013';
@@ -1481,14 +1493,14 @@
 @commands-button-close-icon:                               @icon-medium-size;
 @commands-button-close-icon-font-size:                     @commands-button-close-icon;
 @commands-button-close-font-family:                        @default-icon-medium-font;
-@commands-button-close-icon-color:                         @blue-dark-color;
-@commands-button-close-button-size:                        32px;
-@commands-button-close-button-top:                         4px;
+@commands-button-close-icon-color:                         @gray-ccc-color;
+@commands-button-close-button-size:                        30px;
+@commands-button-close-button-top:                         2px;
+@commands-button-close-button-glyph-top:                   4px;
 @commands-button-close-button-glyph-top:                   @commands-button-close-button-top;
 @commands-button-close-button-right:                       0;
 @commands-button-close-hover-color:                        @commands-button-close-icon-color;
-@commands-button-margin:                                   -9px -33px 0 0;
-@commands-button-close-content:                            '\e801';
+@commands-button-margin:                                   -6px -34px 0 0;
 @commands-button-item-padding-right:                       38px!important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
 
 
@@ -1680,6 +1692,7 @@
 
 @bottomStyle-items-toolbar-height:                  30px;
 @bottomStyle-items-toolbar-width:                   24px;
+@bottomStyle-items-toolbar-itemsContainer-margin-left: -4px;
 @bottomStyle-padding-bottom:                        @bottomStyle-items-toolbar-height + @bottomStyle-items-toolbar-margin; //высота операций + маржин
 @bottomStyle-items-toolbar-border-color:            #F3F3F3;
 @bottomStyle-items-toolbar-margin:                  4px;

@@ -10,14 +10,16 @@
     display: none;
   }
 
-  &.controls-Click__active {
+  &:active {
     .controls-Button__icon.icon-primary {
       color: @icon-active-color;
     }
     &.controls-IconButton__round-border, &.controls-IconButton__round-border-24, &.controls-IconButton__round-border-32 {
+        box-shadow: none;
+        background-color: @background-color_EditButton_hovered;
         border-color: @default-color;
         .controls-Button__icon {
-          color: @default-color;
+          color: @icon-color-primary;
         }
     }
      &.controls-IconButton__errorBorder {
@@ -27,7 +29,7 @@
         }
      }
      &.controls-IconButton__doneBorder {
-        border-color: @color_IconButton-icon_done;
+       border-color: @border-color_EditButton_hovered;
         .controls-Button__icon {
           color: @color_IconButton-icon_done;
         }
@@ -57,9 +59,12 @@
    }
 
    &.controls-IconButton__round-border-24{
-      .round-button-mixin(@gray-ccc-color, @border-radius, @border-width_IconButton-icon);
+      .round-button-mixin(@gray-ccc-color, @border-radius_EditButton, @border-width_EditButton);
       height: @height_IconButton_round_edit;
       width: @width_IconButton_round_edit;
+      background-color: @background-color_EditButton;
+      .box-shadow(@box-shadow_Button);
+      text-shadow: @text-shadow_EditButton;
    }
    &.controls-IconButton__round-border-32{
       .round-button-mixin(@gray-ccc-color, @border-radius, @border-width_IconButton-icon);
@@ -89,7 +94,7 @@
   }
 }
 .ws-is-desktop-platform {
-  .controls-IconButton:not(.ws-disabled):not(.controls-Click__active) {
+  .controls-IconButton:not(.ws-disabled):not(:active) {
     &:hover {
       .controls-Button__icon {
         &.icon-primary {
