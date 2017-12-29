@@ -28,10 +28,11 @@ define('js!Controls/ConfirmationWindow',
       var ConfirmationWindow = Control.extend({
          _template: template,
          _resultDef: null,
+         _openerResultHandler: null,
 
          constructor: function (options) {
             ConfirmationWindow.superclass.constructor.apply(this, options);
-            this._resultHandler = this._resultHandler.bind(this);
+            this._openerResultHandler = this._resultHandler.bind(this);
          },
 
          _resultHandler: function(res){
