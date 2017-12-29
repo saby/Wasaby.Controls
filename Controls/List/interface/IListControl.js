@@ -41,8 +41,13 @@ define('js!Controls/List/interface/IListControl', [
     */
 
    /**
+    * @typedef {Object} VirtualScrollConfig
+    * @property {Number} maxVisibleItems Максимальное количество отображаемых элементов списка
+    */
+
+   /**
     * @name Controls/List/interface/IListControl#virtualScrollConfig
-    * @cfg {Object} Конфигурация виртуального скролла
+    * @cfg {VirtualScrollConfig} Конфигурация виртуального скролла
     */
 
    /**
