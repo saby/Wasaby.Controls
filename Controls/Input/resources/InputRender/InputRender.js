@@ -4,7 +4,8 @@ define('js!Controls/Input/resources/InputRender/InputRender',
       /*'WS.Data/Type/descriptor',*/
       'tmpl!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
-      'css!SBIS3.CONTROLS/TextBox'
+
+      'css!Controls/Input/resources/InputRender/InputRender'
    ],
    function(Control, /*types,*/ template, RenderHelper) {
 
@@ -102,6 +103,21 @@ define('js!Controls/Input/resources/InputRender/InputRender',
 
          _notifyHandler: function(e, value) {
             this._notify(value);
+         },
+
+         _getInputState: function() {
+            var
+               result;
+
+            if (this._options.validationErrors) {
+               result = 'error';
+            } else if (this.isEnabled()) {
+               result = 'default';
+            } else {
+               result = 'disabled';
+            }
+
+            return result;
          },
 
          /**

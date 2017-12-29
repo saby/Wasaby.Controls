@@ -26,7 +26,7 @@ define('js!Controls/Input/Number', [
        * @extends Controls/Control
        * @mixes Controls/Input/interface/IInputNumber
        * @mixes Controls/Input/interface/IInputPlaceholder
-       * @mixes Controls/Input/interface/IValidationError
+       * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputTag
        * @control
        * @public
@@ -57,6 +57,8 @@ define('js!Controls/Input/Number', [
 
       constructor: function (options) {
          NumberInput.superclass.constructor.apply(this, arguments);
+
+         this._value = options.value;
 
          //Вьюмодель для намбера. Нужно связать с конфигом
          this._numberViewModel = new NumberViewModel({
