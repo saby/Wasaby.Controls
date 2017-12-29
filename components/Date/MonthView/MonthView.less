@@ -20,6 +20,7 @@
    position: relative;
    // TODO: высота должна задаваться через высоту контрола, а ячейки должны растягиваться. Переделать с уходом от таблицы.
    height: @height_MonthView-item;
+   font-size: @font-size_MonthView-item;
 }
 
 .controls-MonthView__weekDayHeader {
@@ -28,20 +29,56 @@
    color: @color_MonthView-weekDayHeader;
 }
 
-.controls-MonthView__backgroundColor-currentMonthDay-weekend-unselected-enabled,
-.controls-MonthView__backgroundColor-currentMonthDay-workday-unselected-enabled {
-   background: @background_MonthView-item;
+.controls-MonthView__hover-selectableItem {
    &:hover {
       background: @background_MonthView-item-hover;
    }
 }
+
+.controls-MonthView__border-currentMonthDay-unselected {
+   &:hover {
+      outline: 1px solid @border-color__MonthView-item-hover;
+   }
+}
+
+.controls-MonthView__item-selectedStart,
+.controls-MonthView__item-selectedEnd,
+.controls-MonthView__item-selectedInner {
+   outline: 1px solid @border-color__MonthView-item-selected;
+}
+
+.controls-MonthView__item-selectedStart,
+.controls-MonthView__item-selectedEnd {
+   font-weight: bold;
+}
+
+.controls-MonthView__item-selectedStart:before {
+   content: "";
+   position: absolute;
+   height: 100%;
+   width: 3px;
+   background-color: @border-color__MonthView-item-selected-startEnd-hover;
+   top: 0;
+   left: -1px;
+}
+
+.controls-MonthView__item-selectedEnd:after {
+   content: "";
+   position: absolute;
+   height: 100%;
+   width: 3px;
+   background-color: @border-color__MonthView-item-selected-startEnd-hover;
+   top: 0;
+   right: -1px;
+}
+
+.controls-MonthView__backgroundColor-currentMonthDay-weekend-unselected-enabled,
+.controls-MonthView__backgroundColor-currentMonthDay-workday-unselected-enabled {
+   background: @background_MonthView-item;
+}
 .controls-MonthView__backgroundColor-currentMonthDay-weekend-selected-enabled,
 .controls-MonthView__backgroundColor-currentMonthDay-workday-selected-enabled {
    background: @background_MonthView-item-selected;
-
-   &:hover {
-      background: @background_MonthView-item-selected-hover;
-   }
 }
 
 .controls-MonthView__backgroundColor-currentMonthDay-weekend-unselected-disabled,
@@ -69,7 +106,7 @@
    color: greyscale(lighten(@color_MonthView-item-weekend, 20%));
 }
 
-.controls-MonthView__cursor-currentMonthDay-enabled {
+.controls-MonthView__cursor-item {
    cursor: pointer;
 }
 
@@ -82,23 +119,10 @@
    }
 }
 
-.controls-MonthView__dayBorder {
-   display: block;
-   height: 100%;
-}
-
 .controls-MonthView__dayTitle {
    display: block;
    .box-sizing(border-box);
    height: 100%;
-}
-.controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
-   position: absolute;
-   top: 0;
-   bottom: 0;
-   left: 7px;
-   right: 7px;
-   padding: 8px 0 0 0;
 }
 
 // В хром на ipad установлен класс ws-is-old-webkit, но не установлен ws-is-webkit. В текущую версию фиксим по месту.
@@ -112,9 +136,5 @@
       bottom: 0;
       left: 0;
       right: 0;
-   }
-   .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
-      left: 7px;
-      right: 7px;
    }
 }

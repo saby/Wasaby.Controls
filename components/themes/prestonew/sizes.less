@@ -86,10 +86,6 @@
 @date-range-choose-home-button-size:                                  40px;//todo: mironov
 @date-range-choose-home-button-font-size:                             32px;//todo: mironov
 @date-range-choose-home-button-line-height:                           40px;//todo: mironov
-@date-range-big-choose-years-panel-toggle-choose-year-button-margin:  0 round(60px * @multiplier);//todo: mironov
-@date-range-big-choose-months-button-first-padding-top:               2px;//todo: mironov
-@date-range-big-choose-months-button-last-padding-bottom:             3px;//todo: mironov
-@date-range-big-choose-years-panel-wrapper-font-size:                 24px;//todo: mironov
 //listview
 @listView-check-box-left:                                3px;//todo: juravlev
 @listView-check-box-top:                                 7px;//todo: juravlev
@@ -296,7 +292,6 @@
 @date-range-button-size:                  @default-height;
 @date-range-button-line-height:           @date-range-button-size;
 @date-range-button-margin:                0;
-@date-range-big-choose-header-date-box-font-size: round(28px * @multiplier);
 //Data Range Slider
 @date-range-slider-margin-top:            round(-32px * @multiplier);
 @date-range-slider-font-size:             round(32px * @multiplier);
@@ -320,46 +315,21 @@
 @date-range-choose-year-prev-next-btns-font-size:round(42px * @multiplier);
 @date-range-choose-home-icon-width:       @default-height;
 @controls-date-range-year-marginleft:     round(11px * @multiplier);
-@date-range-big-choose-months-font-size:                                 round(28px * @multiplier);
-@date-range-big-choose-months-margin:                                    round(8px * @multiplier);
-@date-range-big-choose-months-range-width:                               round(152px * @multiplier);
-@date-range-big-choose-months-button-first-height:                       round(50px * @multiplier);
-@date-range-big-choose-months-button-last-height:                        round(50px * @multiplier);
-@date-range-big-choose-date-range-picker-table-element-height:           round(78px * @multiplier);
-@date-range-big-choose-date-range-picker-left:                           @date-range-big-choose-months-range-width + round(24px * @multiplier);;
-@date-range-big-choose-date-range-picker-caption-height:                 round(68px * @multiplier);
-@date-range-big-choose-years-height:                                     round(100px * @multiplier);
-@date-range-big-choose-header-padding:                                   round(8px * @multiplier) 0 round(8px * @multiplier) 0;
-@date-range-big-choose-header-home-button-size:                          round(84px * @multiplier);
-@date-range-big-choose-header-home-button-font-size:                     round(42px * @multiplier);
-@date-range-big-choose-header-home-button-margin-left:                   0;
-@date-range-big-choose-header-date-pickers-margin-right:                 round(92px * @multiplier);
-@date-range-big-choose-date-range-picker-caption-font-size:              @default-text-size;
-@date-range-big-choose-header-date-picker-margin-top:                    0;
-@date-range-big-choose-header-apply-button-size:                         @default-height;
-@date-range-big-choose-header-apply-button-font-size:                    round(42px * @multiplier);
-@date-range-big-choose-header-apply-button-icon-margin-left:             round(-28px * @multiplier);
-@date-range-big-choose-header-apply-button-margin-left:                  0;
-@date-range-big-choose-header-range-dash-width:                          round(8px * @multiplier);
-@date-range-big-choose-header-range-dash-margin:                         round(42px * @multiplier) round(8px * @multiplier) round(8px * @multiplier);
-@date-range-big-choose-years-panel-top-padding:                          round(8px * @multiplier);
-@date-range-big-choose-years-panel-bottom-padding:                       round(8px * @multiplier);
-@date-range-big-choose-years-panel-toggle-choose-year-button-font-size:  round(40px * @multiplier);
-@date-range-big-choose-years-panel-wrapper-font-weight:                  normal;
-@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:round(84px * @multiplier); // сделать по другому
-@date-range-big-choose-years-panel-current-year-button-line-height:      @default-height;
-@date-range-big-choose-years-panel-back-button-font-size:                @default-height;
-@date-range-big-choose-years-panel-back-button-line-height:              @default-height;
-@date-range-big-choose-years-range-font-size:                            round(28px * @multiplier);
-@date-range-big-choose-body-height:                                      round(600px * @multiplier);
-@date-range-big-choose-months-range-btn-height:                          round(143px * @multiplier);
-@date-range-big-choose-month-range-picker-month-width:                   round(170px * @multiplier);
-@date-range-big-choose-month-range-picker-month-height:                  round(142px * @multiplier);
-@date-range-big-choose-month-range-picker-caption-height:                round(50px * @multiplier);
-@date-range-big-choose-month-range-picker-caption-font-size:             round(32px * @multiplier);
-@date-range-big-choose-month-range-picker-table-element-height:          round(14px * @multiplier);
-@date-range-big-choose-month-range-picker-table-element-font-size:       round(11px * @multiplier);
-@date-range-big-choose-month-range-padding:                              round(8px * @multiplier);
+// Date Range Big Choose
+@padding_DateRangeBigChoose-header:                                      round(8px * @multiplier) 0 round(8px * @multiplier) 0;
+@padding-left_DateRangeBigChoose-header-period:                          round(24px * @multiplier);
+@height_DateRangeBigChoose-years:                                        round(100px * @multiplier);
+@width_DateRangeBigChoose-years-leftRight:                               round(84px * @multiplier);
+@color_DateRangeBigChoose-DateRangePickerItem-months-button:             round(28px * @multiplier);
+@width_DateRangeBigChoose-dates-header-year:                             round(152px * @multiplier);
+@margin-left_DateRangeBigChoose-header-applyButton:                      0;
+@width_DateRangeBigChoose-header-dash:                                   round(8px * @multiplier);
+@margin_DateRangeBigChoose-header-dash:                                  round(42px * @multiplier) round(8px * @multiplier) round(8px * @multiplier);
+@width_DateRangeBigChoose-header-closeButton:                            round(50px * @multiplier);
+@height_DateRangeBigChoose-years-rangeButton:                            @default-height;
+@font-size_DateRangeBigChoose-years-rangeButton:                         round(28px * @multiplier);
+@height_DateRangeBigChoose-body:                                         round(600px * @multiplier);
+@height_DateRangeBigChoose-MonthRangePickerItem-monthWrapper:            round(142px * @multiplier);
 //Edit at place
 @edit-at-place-wrapper-text-area-padding:             round(5px * @multiplier);
 @edit-at-place-wrapper-border-width:                  1px;
@@ -600,12 +570,7 @@
 @scrollpager-bottom:                      round(9px * @multiplier);
 @height_ListView_ScrollPager:             @default-height;
 @closeBigButtonWidth:                     @default-height;
-@date-range-big-choose-width:				   round(722px * @multiplier);
-@date-range-big-choose-left-right-width:  @default-height;
-@date-range-big-choose-years-panel-current-year-button-font-size:round(40px * @multiplier);
-@date-range-big-choose-date-range-picker-right:round(24px * @multiplier);
-@date-range-big-choose-date-range-picker-table-element-width:round(74px * @multiplier);
-@date-range-big-choose-date-range-picker-table-element-title-padding-top: round(17px * @multiplier);
+@width_DateRangeBigChoose:		   		   round(722px * @multiplier);
 @tab-buttons-height:							   round(100px * @multiplier);
 @button-without-caption-min-width:          round(84px * @multiplier);
 @controls-toolbar-default-margin:			0;
@@ -681,7 +646,6 @@
 @image-bar-horizontal-padding:            0;
 @font-size_MoneyTextBox-decimals:         @default-text-size;
 @controls-toolbar-item-vertical-align:    baseline;
-@date-range-big-choose-years-btn:         round(14px * @multiplier);
 @DropdownList-picker-offset:              round(-11px * @multiplier) 0 0 round(-19px * @multiplier);
 @DropdownList-picker-fastdatafilter-offset: round(-11px * @multiplier) 0 0 round(-19px * @multiplier);
 @DropdownList-picker-fdf-left:            round(-20px * @multiplier);

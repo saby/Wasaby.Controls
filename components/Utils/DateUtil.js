@@ -136,6 +136,16 @@ define('SBIS3.CONTROLS/Utils/DateUtil',[
          return date;
       },
       /**
+       * Проверяет однаковые ли даты
+       * @param date1 первая дата
+       * @param date2 вторая дата
+       * @returns {boolean} если даты одинаковые, то возвращает true, иначе false
+       */
+      isDatesEqual: function (date1, date2) {
+         return date1 === date2 || (date1 && date2 && date1.getTime() === date2.getTime());
+      },
+
+      /**
        * Возвращает true если переданное число является началом месяца
        * @param {Core/Date} date
        * @return {Boolean}
@@ -270,6 +280,19 @@ define('SBIS3.CONTROLS/Utils/DateUtil',[
        */
       getEndOfYear: function (date) {
          return new Date(date.getFullYear(), 12, 0);
+      },
+      /**
+       * Возвращает месяц в нормальном виде(с датой 1 и обнуленным временем)
+       * @param month {Date|String} дата на основе которой будет создана новая дата с обнуленными днем, и временем.
+       * @returns {Date} дата с обнуленными днем и временем
+       * @private
+       */
+      normalizeMonth: function (month) {
+         month = DateUtil.valueToDate(month);
+         if(!(month instanceof Date)) {
+            return null;
+         }
+         return new Date(month.getFullYear(), month.getMonth(), 1);
       }
    };
 

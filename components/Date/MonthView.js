@@ -36,7 +36,7 @@ define(
        * @mixes SBIS3.CONTROLS.DateRangeMixin
        *
        */
-      var selectionTypes = {WEEK: 'week', DAY: 'day'};
+      // var selectionTypes = {WEEK: 'week', DAY: 'day'};
 
       // TODO: нужно ли наследование от FormWidgetMixin ??
       var MonthView = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin, DateRangeMixin], /** @lends SBIS3.CONTROLS.MonthView.prototype */{
@@ -51,13 +51,13 @@ define(
                 * Дата игнорируется.
                 * @example
                 * <pre class="brush:xml">
-                *     <option name="date">2015-03-07T21:00:00.000Z</option>
+                *     <option name="month">2015-03-07T21:00:00.000Z</option>
                 * </pre>
                 */
                month: undefined,
 
                /**
-                * @cfg {String} Тип заголовка "text"|"picker"|null
+                * @cfg {String} Тип заголовка "text"|null
                 */
                captionType: undefined,
                /**
@@ -72,21 +72,28 @@ define(
                 */
                showWeekdays: true,
 
+               /**
+                * @cfg {Number} Минимальный период который можно выделить в днях
+                */
+               minPeriod: null,
+
+               /**
+                * @cfg {Array}
+                */
+               periodQuanta: null,
+
                dayTmpl: dayTmpl
             },
 
             _viewValidateTimer: null,
 
-            _selectionType: null,
+            // _selectionType: null,
 
             _MONTH_VIEW_CSS_CLASSES: {
-               CAPTION_TEXT: 'controls-MonthView__caption-text',
                CAPTION: 'controls-MonthView__caption',
                TABLE: 'controls-MonthView__dayTable',
                TABLE_ROW: 'controls-MonthView__tableRow',
                DAY: 'controls-MonthView__tableElement',
-               DAY_TITLE: 'controls-MonthView__dayTitle',
-               DAY_BORDER: 'controls-MonthView__dayBorder',
                WEEK_SELECTED: 'controls-MonthView__weekSelected',
                WEEK_HOVERED: 'controls-MonthView__weekHovered',
                WEEK_ROW: 'controls-MonthView__tableRow',
@@ -97,12 +104,15 @@ define(
          _modifyOptions: function() {
             var opts = MonthView.superclass._modifyOptions.apply(this, arguments),
                days = constants.Date.days;
-
             // локализация может поменяться в рантайме, берем актуальный перевод месяцев при каждой инициализации компонента
             // В массиве дни недели находятся в таком же порядке как возвращаемые значения метода Date.prototype.getDay()
             // Перемещаем воскресение из начала массива в конец
             opts._days = days.slice(1);
             opts._days.push(days[0]);
+
+            opts.month = opts.month || new Date();
+            opts.month = DateUtil.normalizeMonth(opts.month);
+
             return opts;
          },
 
@@ -115,9 +125,6 @@ define(
 
             var self = this;
 
-            // Первоначальная установка даты
-            this._options.month = this._options.month || new Date();
-            this._options.month = this._normalizeMonth(this._options.month);
             if (!this._options.month) {
                throw new Error('MonthView. Неверный формат даты');
             }
@@ -127,7 +134,7 @@ define(
 
             this.getContainer().mouseleave(this._onRangeControlMouseLeave.bind(this));
 
-            this._updateCaption();
+            // this._updateCaption();
             this._attachEvents();
          },
 
@@ -145,23 +152,15 @@ define(
                itemsContainers.on('mouseenter', itemCssClass, function () {
                   self._onDayMouseEnter($(this));
                });
-               //TODO:продумать как правильно выбирать неделю на Ipad
-               if (!constants.browser.isMobileIOS) {
-                  itemsContainers.on('mouseenter', ['.', this._MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
-                     self._onDayBorderMouseEnter($(this), self._getItemDate($(this)));
-                  }).on('mouseleave', ['.', this._MONTH_VIEW_CSS_CLASSES.DAY_BORDER].join(''), function (e) {
-                     self._onDayBorderMouseLeave($(this), self._getItemDate($(this)), e);
-                  }).on('mouseleave', self._onMouseLeave.bind(this));
-               }
             }
          },
 
-         _setSelectionType: function (value) {
-            this._options.selectionType = value;
-         },
-         _getSelectionType: function () {
-            return this._options.selectionType;
-         },
+         // _setSelectionType: function (value) {
+         //    this._options.selectionType = value;
+         // },
+         // _getSelectionType: function () {
+         //    return this._options.selectionType;
+         // },
 
          _onDayMouseClick: function (event) {
             var t = $(event.target),
@@ -170,20 +169,18 @@ define(
             // завершаем выделение независимо от того в какую область дня нажал пользователь.
             if (this.isSelectionProcessing()) {
                date = this._getItemDate(t);
-               if (this._getSelectionType() === selectionTypes.WEEK) {
-                  if (date < this.getStartValue()) {
-                     date = this._getStartOfWeek(date);
-                  } else if (date > this.getEndValue()) {
-                     date = this._getEndOfWeek(date);
-                  }
-               }
+               // if (this._getSelectionType() === selectionTypes.WEEK) {
+               //    if (date < this.getStartValue()) {
+               //       date = this._getStartOfWeek(date);
+               //    } else if (date > this.getEndValue()) {
+               //       date = this._getEndOfWeek(date);
+               //    }
+               // }
                this._onRangeItemElementClick(date);
-               this._setSelectionType(null);
+               // this._setSelectionType(null);
             } else {
-               if (t.hasClass(this._MONTH_VIEW_CSS_CLASSES.DAY_TITLE)) {
+               if (t.hasClass(this._MONTH_VIEW_CSS_CLASSES.DAY)) {
                   this._onDayTitleMouseClick(t, event);
-               } else if (t.hasClass(this._MONTH_VIEW_CSS_CLASSES.DAY_BORDER)) {
-                  this._onDayBorderMouseClick(t, event);
                }
             }
          },
@@ -191,7 +188,7 @@ define(
          _onDayTitleMouseClick: function (element, event) {
             var date;
             if (!this.isSelectionProcessing()) {
-               this._setSelectionType(selectionTypes.DAY);
+               // this._setSelectionType(selectionTypes.DAY);
                date = this._getItemDate(element);
                if (this.isRangeselect()) {
                   this._onRangeItemElementClick(date);
@@ -212,23 +209,23 @@ define(
             if (!constants.browser.isMobileIOS) {
                startDate = this._getStartOfWeek(date);
                endDate = this._getEndOfWeek(date);
-               this._setSelectionType(selectionTypes.WEEK);
+               // this._setSelectionType(selectionTypes.WEEK);
                this._onRangeItemElementClick(startDate, endDate);
             } else {
-               this._setSelectionType(selectionTypes.DAY);
+               // this._setSelectionType(selectionTypes.DAY);
                this._onRangeItemElementClick(date);
             }
          },
 
          _onDayMouseEnter: function (element) {
             var date = this._getItemDate(element);
-            if (this._getSelectionType() === selectionTypes.WEEK) {
-               if (date < this.getStartValue()) {
-                  date = this._getStartOfWeek(date);
-               } else if (date > this.getEndValue()) {
-                  date = this._getEndOfWeek(date);
-               }
-            }
+            // if (this._getSelectionType() === selectionTypes.WEEK) {
+            //    if (date < this.getStartValue()) {
+            //       date = this._getStartOfWeek(date);
+            //    } else if (date > this.getEndValue()) {
+            //       date = this._getEndOfWeek(date);
+            //    }
+            // }
             this._onRangeItemElementMouseEnter(date);
          },
 
@@ -244,21 +241,6 @@ define(
             var day = date.getDay(),
                diff = date.getDate() - day + (day === 0 ? 0:7);
             return new Date(date.setDate(diff));
-         },
-
-         _onDayBorderMouseEnter: function (element, item) {
-            var rowCls;
-            if (!this.isSelectionProcessing()) {
-               rowCls = ['.', this._MONTH_VIEW_CSS_CLASSES.WEEK_ROW].join('');
-               this.getContainer().find(rowCls).removeClass(this._MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED);
-               element.closest(rowCls).addClass(this._MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED);
-            }
-         },
-
-         _onDayBorderMouseLeave: function (element, item, event) {
-            if (!$(event.toElement).hasClass(this._MONTH_VIEW_CSS_CLASSES.DAY)) {
-               element.closest(['.', this._MONTH_VIEW_CSS_CLASSES.WEEK_ROW].join('')).removeClass(this._MONTH_VIEW_CSS_CLASSES.WEEK_HOVERED);
-            }
          },
 
          _onMouseLeave: function () {
@@ -305,12 +287,13 @@ define(
           */
          setMonth: function (month) {
             var oldMonth = this._options.month;
-            month = this._normalizeMonth(month);
+            month = DateUtil.normalizeMonth(month);
             if (month === oldMonth ||
                (month && oldMonth && month.getTime() === this._options.month.getTime())) {
                return false;
             }
             this._options.month = month;
+            this._updateCaption();
             this._drawMonthTable();
             // Обнуляем кэш выделяемых элементов.
             // TODO: переделать https://online.sbis.ru/opendoc.html?guid=0ceb4c76-2d17-40c8-a1fb-93213be84738
@@ -341,7 +324,7 @@ define(
             if (!this._options.captionType) {
                return;
             }
-            this.getContainer().find('.' + this._MONTH_VIEW_CSS_CLASSES.CAPTION_TEXT).text(this._options.month.strftime(this.getCaptionFormat()));
+            this.getContainer().find('.' + this._MONTH_VIEW_CSS_CLASSES.CAPTION).text(this._options.month.strftime(this.getCaptionFormat()));
          },
 
          _getDaysArray: function () {
@@ -467,9 +450,9 @@ define(
 
          cancelSelection: function () {
             var canceled = MonthView.superclass.cancelSelection.call(this);
-            if (canceled) {
-               this._selectionType = null;
-            }
+            // if (canceled) {
+            //    this._selectionType = null;
+            // }
             return canceled;
          },
 
@@ -496,7 +479,10 @@ define(
           */
          _pushDayIntoArray: function (array, date, day, isCalendar, today, month, firstDayOfMonth, lastDayOfMonth) {
             var obj = {},
-               range = this._getUpdatedRange(this.getStartValue(), this.getEndValue(), this._getSelectionRangeEndItem());
+               selectionRangeEndItem = this._getSelectionRangeEndItem(),
+               range = this._getUpdatedRange(this.getStartValue(), this.getEndValue(), selectionRangeEndItem),
+               startDate = range[0],
+               endDate = range[1];
 
             obj.date = date;
             obj.day = day;
@@ -506,10 +492,23 @@ define(
             obj.month = month;
             obj.firstDayOfMonth = firstDayOfMonth;
             obj.lastDayOfMonth = lastDayOfMonth;
-            obj.rangeselect = this.isRangeselect();
+
+            obj.selectionEnabled = this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.range ||
+               this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.single;
+
             obj.weekend = obj.dayOfWeek === 5 || obj.dayOfWeek === 6;
             obj.enabled = this.isEnabled();
-            obj.selected = date >= range[0] && date <= range[1];
+            obj.selected = date >= startDate && date <= endDate;
+            obj.selectedStart = DateUtil.isDatesEqual(date, startDate);
+            obj.selectedEnd = DateUtil.isDatesEqual(date, endDate);
+
+            obj.selectedUnfinishedStart = DateUtil.isDatesEqual(date, startDate) &&
+               DateUtil.isDatesEqual(date, selectionRangeEndItem) && !DateUtil.isDatesEqual(startDate, endDate);
+
+            obj.selectedUnfinishedEnd = DateUtil.isDatesEqual(date, endDate) &&
+               DateUtil.isDatesEqual(date, selectionRangeEndItem) && !DateUtil.isDatesEqual(startDate, endDate);
+
+            obj.selectedInner = (date && startDate && endDate && date.getTime() > startDate.getTime() && date.getTime() < endDate.getTime());
 
             array.push(obj);
          },
@@ -519,17 +518,14 @@ define(
 
             var textColorClass = 'controls-MonthView__textColor',
                backgroundColorClass = 'controls-MonthView__backgroundColor',
-               cursorClass = 'controls-MonthView__cursor',
                css = [];
 
             if (scope.isCalendar) {
                textColorClass += '-currentMonthDay';
                backgroundColorClass += '-currentMonthDay';
-               cursorClass += '-currentMonthDay';
             } else {
                textColorClass += '-otherMonthDay';
                backgroundColorClass += '-otherMonthDay';
-               cursorClass += '-otherMonthDay';
             }
 
             if (scope.weekend) {
@@ -549,18 +545,47 @@ define(
             if (scope.enabled) {
                textColorClass += '-enabled';
                backgroundColorClass += '-enabled';
-               cursorClass += '-enabled';
             } else {
                textColorClass += '-disabled';
                backgroundColorClass += '-disabled';
-               cursorClass += '-disabled';
             }
 
-            css.push(textColorClass, backgroundColorClass, cursorClass);
+            css.push(textColorClass, backgroundColorClass);
 
             // Оставляем старые классы т.к. они используются в большом выборе периода до его редизайна
             if (scope.isCalendar) {
-               css.push('controls-RangeSelectable__item');
+               if (scope.selectionEnabled) {
+                  if (scope.enabled) {
+                     css.push('controls-MonthView__cursor-item');
+                     if (!scope.selected) {
+                        css.push('controls-MonthView__border-currentMonthDay-unselected');
+                     }
+                  }
+                  css.push('controls-RangeSelectable__item', 'controls-MonthView__selectableItem');
+                  if (scope.enabled && scope.selectionEnabled) {
+                     css.push('controls-MonthView__hover-selectableItem');
+                  }
+                  if (scope.selected) {
+                     css.push('controls-MonthView__item-selected');
+                  }
+
+                  if (scope.selectedUnfinishedStart) {
+                     css.push('controls-MonthView__item-selectedStart-unfinished');
+                  }
+                  if (scope.selectedUnfinishedEnd) {
+                     css.push('controls-MonthView__item-selectedEnd-unfinished');
+                  }
+                  if (scope.selected && scope.selectedStart && !scope.selectedUnfinishedStart) {
+                     css.push('controls-MonthView__item-selectedStart');
+                  }
+                  if (scope.selected && scope.selectedEnd && !scope.selectedUnfinishedEnd) {
+                     css.push('controls-MonthView__item-selectedEnd');
+                  }
+                  if (scope.selectedInner) {
+                     css.push('controls-MonthView__item-selectedInner');
+                  }
+               }
+
                if (scope.today) {
                   css.push('controls-MonthView__today');
                }
@@ -610,7 +635,7 @@ define(
                }
             }
             keepClasses.push(classes);
-            $element.removeClass().addClass(keepClasses.join(' '))
+            $element.removeClass().addClass(keepClasses.join(' '));
          },
 
          _getItemKeepCssClasses: function () {
@@ -635,20 +660,6 @@ define(
                return null;
             }
             return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-         },
-
-         /**
-          * Возвращает месяц в нормальном виде(с датой 1 и обнуленным временем)
-          * @param month {Date}
-          * @returns {Date}
-          * @private
-          */
-         _normalizeMonth: function (month) {
-            month = DateUtil.valueToDate(month);
-            if(!(month instanceof Date)) {
-               return null;
-            }
-            return new Date(month.getFullYear(), month.getMonth(), 1);
          },
 
          destroy: function() {

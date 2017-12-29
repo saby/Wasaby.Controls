@@ -12,7 +12,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView', [
    var MonthView = MonthView.extend(/** @lends SBIS3.CONTROLS.DateRangeBig.MonthView.prototype */{
       $protected: {
          _options: {
-            rangeselect: false,
+            // selectionType: 'disable',
             activableByClick: false,
             cssClassName: 'controls-DateRangeBigChoose-MonthView'
          }
@@ -53,7 +53,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView', [
       _setSelectionRangeEndItem: function (date, silent) {
          var changed = MonthView.superclass._setSelectionRangeEndItem.call(this, date);
          if (changed && !silent) {
-            this._notify('onSelectingRangeEndDateChange', this._rangeSelectionEnd, date, this._getSelectionType());
+            this._notify('onSelectingRangeEndDateChange', this._rangeSelectionEnd, date);
          }
          return changed
       },
