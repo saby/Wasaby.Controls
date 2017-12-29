@@ -414,7 +414,7 @@ define('SBIS3.CONTROLS/TextBox', [
             }
             else if (this._options.tooltip) {
                this.setTooltip(this._options.tooltip);
-            } else if (this._container.attr('title')) {
+            } else {
                 this._container.attr('title', '');
                //Ставлю пробел, чтобы скрыть браузерную подсказку "Заполните это поле". Если поставить пробел, то все браузеры,
                //кроме IE, не выводят всплывающую подсказку. Для IE ставлю пустой title, чтобы он не выводил всплывашку.

@@ -5,7 +5,6 @@ define('js!Controls/Input/Text', [
       'Controls/Input/Text/ViewModel',
 
       'css!Controls/Input/resources/InputRender/InputRender',
-      'css!SBIS3.CONTROLS/TextBox',
       'tmpl!Controls/Input/resources/input'
    ], function(Control,
                template,
@@ -91,7 +90,6 @@ define('js!Controls/Input/Text', [
 
          _changeValueHandler: function(event, value) {
             this._setValue(value);
-            this._notify('valueChanged', value);
          },
 
          _inputCompletedHandler: function(){
