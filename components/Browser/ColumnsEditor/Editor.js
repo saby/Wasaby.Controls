@@ -11,7 +11,6 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
       'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
       'Lib/Control/FloatArea/FloatArea',
-      'css!SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area'
    ],
 
@@ -49,7 +48,9 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
          },*/
 
          /**
-          * Открыть редактор колонок. Возвращает обещание, которое будет разрешено новыми параметрами конфигурации колонок
+          * Открыть редактор колонок. Возвращает обещание, которое будет разрешено после завершения редактирования пользователем. В случае, если
+          * пользователь после редактирования нажал кнопку применения результата редактирования, то обещание будет разрешено новыми параметрами
+          * конфигурации колонок. Если же пользователь просто закрыл редактор кнопкой "Закрыть", то обещание будет разрешено значением null
           * @public
           * @param {object} columnsConfig Параметры конфигурации колонок
           * @param {object} [editorOptions] Дополнительные опции редактора, отличающиеся или не содержащиеся в columnsConfig. Имеют приоритет перед опциями из columnsConfig (опционально)
@@ -71,7 +72,6 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
             if (this._result) {
                return Deferred.fail('Allready open');
             }
-            this._columnsConfig = columnsConfig;
             var defaults = this._options;
             var hasEditorOptions = !!editorOptions && !!Object.keys(editorOptions).length;
             var allSources = hasEditorOptions ? [editorOptions, columnsConfig, defaults] : [columnsConfig, defaults];
@@ -119,9 +119,9 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
             return this._result = new Deferred();
          },
 
-         _onAreaComplete: function (evtName, selectedColumns) {
+         _onAreaComplete: function (evtName, columns, selectedColumns) {
             this._areaContainer.close();
-            this._sentResult({columns:this._columnsConfig.columns, selectedColumns:selectedColumns});
+            this._sentResult({columns:columns, selectedColumns:selectedColumns});
             //this._notify('onComplete');
          },
 
@@ -136,8 +136,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
          },
 
          _sentResult: function (result) {
-            this._result.callback(result || this._columnsConfig);
-            this._columnsConfig = null;
+            this._result.callback(result);
             this._result = null;
          }
       });

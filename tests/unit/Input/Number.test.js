@@ -191,9 +191,16 @@ define(
 
          testCases.forEach(function(item) {
             it(item.testName, function (done) {
+               if (typeof document === 'undefined') {
+                  this.skip();
+               }
+
                var
-                  numberControl = Control.createControl(NumberControl, item.controlConfig, $('<div></div>').appendTo('#mocha')),
+                  container = document.createElement('div'),
+                  numberControl = Control.createControl(NumberControl, item.controlConfig, container),
                   stateItem;
+
+               document.getElementById('mocha').append(container);
 
                //Используем runDelayed, т.к. без него мы не сможем добраться до дочернего inputRender
                runDelayed(function () {
@@ -223,6 +230,39 @@ define(
                      numberControl.destroy();
                   }
                });
+            });
+         });
+
+         //Тест вставки значекния методом paste
+         it('Insert with paste method', function (done) {
+            //Пока так. Нужно переписать тесты без работы с DOM
+            if (typeof $ === 'undefined') {
+               this.skip();
+            }
+
+            var
+               numberControl = Control.createControl(NumberControl, {}, $('<div></div>').appendTo('#mocha'));
+
+            runDelayed(function () {
+               var
+                  inputRender = numberControl._children['inputRender'];
+
+               inputRender._value = '123';
+               inputRender._selection = {
+                  selectionStart: 3,
+                  selectionEnd: 3
+               };
+
+               inputRender.paste('4');
+
+               try {
+                  assert.equal(inputRender._value, '1 234');
+                  done();
+               } catch (err) {
+                  done(err);
+               } finally {
+                  numberControl.destroy();
+               }
             });
          });
       });

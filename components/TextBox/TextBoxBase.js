@@ -83,7 +83,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
 
                containerClasses.push('controls-TextBox_state_' + (this.enabled ? 'default' : 'disabled'));
                !this.enabled && containerClasses.push('controls-TextBox_state_disabled_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
-               containerClasses.push('controls-TextBox_size_' + (this.size ? this.size : 'm'));
+               containerClasses.push('controls-TextBox_size_' + (this.size ? this.size : 'default'));
                containerClasses.push('controls-TextBox_text-align_' + this.textAlign);
                containerClasses.push(this._paddingClass);
                if (this.textTransform) {
@@ -283,7 +283,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
       },
 
       _getElementToFocus: function() {
-         return this._inputField;
+         return this._inputField || TextBoxBase.superclass._getElementToFocus.apply(this, arguments);
       },
 
       _drawText: function() {
@@ -312,12 +312,6 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
       },
       _setEnabled: function(enabled) {
          TextBoxBase.superclass._setEnabled.apply(this, arguments);
-         if (this._options.placeholder) {
-            if (this._inputField) {
-               this._inputField.toggleClass('controls-TextBox__hiddenPlaceholder', !enabled);
-               this._inputField.toggleClass('controls-InputRender__hiddenPlaceholder', !enabled);
-            }
-         }
          this._toggleState();
       },
       clearMark: function() {

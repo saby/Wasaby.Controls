@@ -346,16 +346,6 @@ define('SBIS3.CONTROLS/NumberTextBox', [
          this._options.onlyInteger = Boolean(onlyInteger);
       },
 
-      _updateCompatPlaceholderVisibility: function() {
-         if (this._compatPlaceholder) {
-            if (typeof this._options.numericValue === 'number' && !isNaN(this._options.numericValue)) {
-                this._compatPlaceholder.addClass('ws-hidden');
-            } else {
-               NumberTextBox.superclass._updateCompatPlaceholderVisibility.apply(this, arguments);
-            }
-         }
-      },
-
       /**
        * Получить количество знаков после запятой
        */

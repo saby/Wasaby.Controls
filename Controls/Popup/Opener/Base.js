@@ -54,6 +54,14 @@ define('js!Controls/Popup/Opener/Base',
             if (this._popupId) {
                Manager.remove(this._popupId);
             }
+         },
+         
+         isOpened: function() {
+            return !!this._popupId;
+         },
+
+         getStrategy: function(){
+            throw new Error('Method getStrategy must be implemented');
          }
       });
       return Base;

@@ -4,12 +4,14 @@
       <ws:if data="{{beforeFieldWrapper}}">
          <ws:partial template="{{beforeFieldWrapper}}" scope="{{...}}"/>
       </ws:if>
-      <ws:partial class="{{ _prepareClassesByConfig(...).field }}" template="{{textFieldWrapper}}" scope="{{...}}"/>
+      <div class="controls-InputRender__fieldWrapper controls-TextBox__fieldWrapper">
+         <ws:partial class="{{ _prepareClassesByConfig(...).field }}" template="{{textFieldWrapper}}" scope="{{...}}"/>
+      </div>
       <ws:if data="{{afterFieldWrapper}}">
          <ws:partial template="{{afterFieldWrapper}}" scope="{{...}}"/>
       </ws:if>
    </div>
    <ws:if data="{{informationIconColor}}">
-      <div class="controls-TextBox__informationIcon {{' controls-TextBox__informationIcon-' + informationIconColor}}"></div>
+      <div class="controls-InputRender__tagStyle controls-TextBox__informationIcon {{' controls-InputRender__tagStyle-' + informationIconColor}} {{' controls-TextBox__informationIcon-' + informationIconColor}}"></div>
    </ws:if>
 </div>

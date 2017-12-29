@@ -54,7 +54,7 @@
 
 @default-font-name:                       'TensorFont', sans-serif;
 @icon-font:                               'cbuc-icons';
-@popup-font-size:                         15px;
+@font-size_Popup:                         15px;
 @font-folder-size:                        15px;
 @default-font-line-height:                20px;
 
@@ -113,9 +113,8 @@
 @button-text-alignment:                   center;
 @min-width_Button:                        48px;
 @button-height:                           24px;
-@padding_Button-wrapper:                          0 11px;
-@button-margin:                           auto;
-@border-radius_Button:                    16px;
+@padding_Button-wrapper_m:                0 11px;
+@padding_Button-wrapper_default:          @padding_Button-wrapper_m;
 @color_Link-icon_hovered:                 @icon-color-primary-hover;
 @button-icon-color:                       @icon-color-primary;
 @button-icon-top-offset:                  4px;                      // top offset of 16x16 icon
@@ -181,12 +180,9 @@
 @filter-panel-chooser-dictionary-button-font-size:                12px;
 
 // Normal default button
-@border-width_Button:                     1px;
-@height_Button:                           @default-height;
 @button-border:                           @border-width_Button solid @border-color_Button;
-@font-size_Button:                        @default-text-size;
-@box-shadow_Button:                           none;
-@background_Button:                         transparent;
+@box-shadow_Button:                       none;
+@background_Button:                       transparent;
 @border-color_Button:                     @default-color;
 
 @button-hover-text-color:                 @default-text-color;
@@ -235,7 +231,7 @@
 @button-big-font:                         @button-big-font-size @default-font-name;
 @button-big-min-width:                    @min-width_Button;
 @button-big-height:                       48px;
-@padding_Button-wrapper_l:                      0 23px;
+@padding_Button-wrapper_l:                0 23px;
 @button-big-border-radius:                24px;
 @button-big-icon-top-offset:              15px;                              // top offset of 16x16 icon
 @button-big-icon-left-offset:             24px;
@@ -452,16 +448,17 @@
 // ---- //
 // Menu //
 // ---- //
-@popup-header-font-weight:                bold;
-@popup-header-caption-color:              @blue-dark-color;
-@menu-margin:                             -1px 0 0;
+@font-weight_Menu-header:                bold;
+@color_Menu-header:              @blue-dark-color;
+@margin_Menu:                             -1px 0 0;
 @menu-subpopup-margin:                    -3px 0 0 0px;
-@menu-padding-value:                      2px;
-@menu-subpopup-padding:                   @menu-padding-value 0;
-@menu-padding:                            0 0 @menu-padding-value 0;
+@padding-value_Menu:                      2px;
+@padding_Menu-submenu:                   @padding-value_Menu 0;
+@padding_Menu:                            0 0 @padding-value_Menu 0;
 @menu-border-width:                       @default-border-width;
-@menu-border-color:                       @gray-ccc-color;
-@menu-header-bg-color:                    #f4f4f4;
+@border-color_Menu:                       @gray-ccc-color;
+@menu-border-color:                       @border-color_Menu;
+@background-color_Menu-header:                    #f4f4f4;
 @menu-expand-width:                       16px;
 @menu-expand-height:                      16px;
 @menu-expand-top-offset:                  8px;
@@ -472,53 +469,54 @@
 @menu-expand-content:                     "\e9ab";
 @menu-expand-hover-border-color:          @menu-expand-border-color;
 @menu-expand-hover-bg:                    @menu-expand-bg;
-@menu-header-height:                      32px;
-@menu-header-padding:                     0 12px;
-@menu-header-icon-padding:                6px;
-@menu-header-icon-color:                  @icon-active-color;
-@menu-separator-height:                   9px;
-@menu-separator-line-offset:              12px;
-@menu-separator-line-height:              1px;
-@menu-separator-line-top:                 4px;
+@height_Menu-header:                      32px;
+@padding_Menu-header:                     0 12px;
+@padding-left_Menu-header-icon:                6px;
+@padding_Menu-header-iconcolor:                  @icon-active-color;
+@height_Menu-separator:                   9px;
+@left_Menu-separator-line:              12px;
+@height_Menu-separator-line:              1px;
+@top_Menu-separator-line:                 4px;
+@background-color-Menu-separator-line:    @default-border-color-bottom-disabled;
 // --------- //
 // Menu item //
 // --------- //
-@menu-item-height:                        32px;
-@menu-item-line-height:                   20px;
-@menu-item-default-padding:               0 12px;
+@height_MenuItem:                        32px;
+@line-height_MenuItem:                   20px;
+@padding_MenuItem:               0 12px;
 @menu-item-expand-padding-right:          30px;
-@menu-item-padding-16:                    33px;
-@menu-item-padding-24:                    42px;
-@menu-item-padding-32:                    51px;
-@menu-item-text-color:                    @black-color;
-@menu-item-font-size:                     @popup-font-size;
-@menu-item-disabled-text-color:           #ccc;
-@menu-item-hover-text-color:              @menu-item-text-color;
-@menu-item-hover-bg:                      @default-itemHover-color;
-@menu-item-icon-16-margin:					6px 0 6px 22px;
-@menu-item-icon-top-offset:               8px;
-@menu-item-icon-left-offset:              0px;
-@menu-item-icon24-top-offset:             4px;
-@menu-item-icon24-top-offset-big:         -4px;
-@menu-item-icon24-left-offset:            0;
-@menu-item-text-margin:                   6px 0 6px 0;
-@menu-item-icon-24-margin:                6px 0 6px 30px;
-@menu-item-icon-32-margin:                6px 0 6px 38px;
+@padding_MenuItem-icon_small:                    33px;
+@padding_MenuItem-icon_medium:                    42px;
+@padding_MenuItem-icon_large:                    51px;
+@color_MenuItem:                    @black-color;
+@font-size_MenuItem:                     @font-size_Popup;
+@color_MenuItem_disabled:           #ccc;
+@color_MenuItem_hovered:              @color_MenuItem;
+@background_MenuItem_hovered:                      @default-itemHover-color;
+@margin_MenuItem-icon_small:					6px 0 6px 22px;
+@top_MenuItem-icon:               8px;
+@left_MenuItem-icon:              0px;
+@top_MenuItem-icon_medium:             4px;
+@top_MenuItem-icon_medium-big:         -4px;
+@left_MenuItem-icon_medium:            0;
+@margin_MenuItem-text:                   6px 0 6px 0;
+@margin_MenuItem-icon_medium:                6px 0 6px 30px;
+@margin_MenuItem-icon_large:                6px 0 6px 38px;
 // Menu
 @menu-button-menu-margin:                               -5px 0 0 -1px;;
 @menu-button-menu-border-width:                         @default-border-width;
-@menu-button-menu-border-color:                         @menu-border-color;
-@menu-button-menu-bg:                                   @white-color;
+@menu-button-menu-border-color:                         @border-color_Menu;
+@background-color_Menu:                                   @white-color;
 @menu-link-menu-margin:                   -5px 0 0 -13px;
-@menu-link-menu-item-container-padding:   @menu-padding-value 0 0 0;
-@menu-link-menu-revert-item-container-padding: @menu-padding-value 0 @menu-padding-value 0;
-@menu-link-menu-bg:                       @menu-button-menu-bg;
+@padding_Menu-container:   @padding-value_Menu 0 0 0;
+@menu-link-menu-revert-item-container-padding: @padding-value_Menu 0 @padding-value_Menu 0;
+@menu-link-menu-bg:                       @background-color_Menu;
 @menu-link-header-bg-color:               #F4F4F4;
-@menu-link-header-font-size:              @popup-font-size;
+@menu-link-header-font-size:              @font-size_Popup;
 @menu-icon-menu-margin:                   -9px 0 0 -13px;
 @menu-icon-big-menu-margin:               -5px 0 0 -13px;
 @menu-icon-menu-large-margin:             -5px 0 0 -13px;
-@menu-icon-menu-bg:                       @menu-button-menu-bg;
+@menu-icon-menu-bg:                       @background-color_Menu;
 // -------- //
 // Text box //
 // -------- //
@@ -527,20 +525,7 @@
 // --------- //
 // Combo box //
 // --------- //
-@combo-box-field-text-color:                    inherit;//todo
-@combo-box-picker-border:                       1px solid @gray-ccc-color;
-@combo-box-picker-border-radius:                0;
-@combo-box-picker-item-font-size:               15px;
-@combo-box-picker-item-padding:                 7px 4px 6px 4px;
-@combo-box-picker-item-text-color:              @combo-box-field-text-color;
-@combo-box-picker-item-bg:                      @white-color;
-@combo-box-picker-item-hover-text-color:        @combo-box-picker-item-text-color;
-@combo-box-picker-item-hover-bg:                @default-itemHover-color;
-@compo-box-picker-show-color:                   @default-text-color;
-@combo-box-picker-show-border-color:            @gray-ccc-color;
-@combo-box-picker-show-background-color:        @text-box-focus-bg;
-@combo-box-arrowDown-color-picker-show:         @accent-color;
-@shadow_ComboBox_picker:                        none;
+@box-shadow_ComboBox_picker:                    none;
 // --------------- //
 // SuggestTextBox //
 // -------------- //
@@ -848,6 +833,9 @@
 @list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
 @list-view-items-toolbar-bottom:                     3px;
 @list-view-items-toolbar-right:                      8px;
+@list-view-items-toolbar-padding:                    0;
+@bottomStyle-items-toolbar-iconButton-24-margin-top: 0;
+@bottomStyle-items-toolbar-iconButton-24-margin-bottom: 0;
 @list-view-items-toolbar-line-height:                24px;
 @list-view-items-toolbar-vertical-line-height:       24px;
 @list-view-items-toolbar-bg:                         @data-grid-row-hover-bg;
@@ -859,6 +847,7 @@
 @list-view-items-toolbar-right-tile:                 1px;
 @list-view-items-toolbar-bottom-tile:                2px;
 @list-view-items-toolbar-icon-size:                  24px;
+@margin-right_ListView-itemsToolbar-closeButton:     0;
 @list-view-items-toolbar-menu-icon-size:             @list-view-items-toolbar-icon-size;
 @list-view-items-toolbar-font-family:                @default-icon-medium-font;
 @font-family_closeButton-icon:                       @list-view-items-toolbar-font-family;
@@ -895,8 +884,17 @@
 @listView-servicefooter-fontsize:               12px;
 @listView-loadmorebutton-font-size:             @font-size_Link;
 @scrollPaging-padding:                          32px;
+//EditActions
+@border-radius_EditButton:                      @border-radius;
+@border-width_EditButton:                       @border-width_IconButton-icon;
+@width_EditButton:                              @width_IconButton_round_edit;
+@height_EditButton:                             @height_IconButton_round_edit;
+@line-height_EditButton:                        @line-height_IconButton-icon_round;
+@background-color_EditButton:                   transparent;
+@background-color_EditButton_hovered:           transparent;
+@border-color_EditButton_hovered:               @color_IconButton-icon_done;
+@text-shadow_EditButton:                        transparent;
 // ItemsToolbar small
-@items-toolbar-bottom-style-background: 			url('img/items-toolbar-bottom-style-background.png');
 @list-view-small-items-toolbar-line-height:         16px;
 @list-view-small-actions-item-height:               16px;
 @list-view-small-actions-verAlign-width:            20px;
@@ -907,8 +905,8 @@
 @list-view-small-actions-menu-close-revVert-bottom: 8px;
 @list-view-small-actions-menu-item-padding-right:   24px;
 @list-view-small-actions-menu-text-margin:          0 0 0 22px;
-@list-view-small-actions-menu-item-icon-top-offset: @menu-item-icon-top-offset;
-@list-view-small-actions-menu-item-icon-left-offset:@menu-item-icon-left-offset;
+@list-view-small-actions-menu-item-icon-top-offset: @top_MenuItem-icon;
+@list-view-small-actions-menu-item-icon-left-offset:@left_MenuItem-icon;
 @bottomStyle-small-items-toolbar-margin-top:        4px;
 // -------------------- //
 //  View padding sizes
@@ -1109,6 +1107,9 @@
 @DropdownList-picker-fdf-left:                        -13px;
 @DropdownList-picker-margin-top:                      -1px;
 @DropdownList-picker-close-btn-top:                   4px;
+@size_dropdownList_picker_close_cross:                @default-icon-size-medium;
+@color_dropdownList_picker_close_cross:               @default-disabled-color;
+@color_dropdownList_picker_close_cross_hover:         #313E78;
 @DropdownList-picker-close-btn-right:                 6px;
 @DropdownList-picker-head-padding:                    4px 12px;
 @DropdownList-picker-head-weight:                     bold;
@@ -1157,9 +1158,11 @@
 @DropdownList-footer-select-icon-container-size:      28px!important;
 @DropdownList-footer-select-icon-size:                26px!important;
 @DropdownList-disabled-text:                          #000;
-@shadow_DropDownList_picker:                          @menu-shadow;
+@shadow_DropDownList_picker:                          @shadow_Menu;
 @border-width_DropDownList_picker:                    0;
 @border-color_DropDownList_picker:                    #CCC;
+@size_DropDownList_filter_cross:                      @icon-size_default;
+@size_DropDownList_arrow:                             @icon-size_default;
 //ProgressBar
 @ProgressBar-height:                      16px;
 @ProgressBar-width:                       100%;
@@ -1184,8 +1187,11 @@
 @controls-filterButton-button-height:             24px;
 @controls-filterButton-button-width:              24px;
 @controls-filterButton-button-empty-left-margin:  8px;
-@controls-filterButton-button-verSide-margin:     12px;
+@controls-filterButton-button-verSide-margin:     8px;
 @controls-filterButton-button-margin:             8px @controls-filterButton-button-verSide-margin 8px 0;
+@size_FilterButtom_line_arrow:                    @icon-size_default;
+@size_FilterButtom_line_cross:                    @icon-size_default;
+@size_FilterButton_icon:                          24px;
 @controls-filterButton-button-margin-right-align: 8px 0 8px @controls-filterButton-button-verSide-margin;
 @controls-filterButton-line-margin-right-align:   8px 0 8px 8px;
 @controls-filterButton-height:                    40px;
@@ -1205,6 +1211,13 @@
 @controls-filterButton-margin-value:              8px;
 @controls-filterButton-filterLine-margin:         8px 8px 8px 0;
 @controls-filterButton-history-pin-top:           5px;
+@padding_filterBotton_line:                       0;
+@font-size_filterButton_line:                     @default-text-size;
+@margin_filterrButton_picker:                     -3px 0 0 0;
+@backround-color_filterButton_picker_content:     transparent;
+@background-color_filterButton_picker_header:     transparent;
+@border-color_filterButton_picker_content:        transparent;
+@border-width_filterButton_picker_content:        0;
 //FilterButtonHistory
 @controls-filterButton-history-maxHeight-height:  120px;
 @controls-filterButton-history-actions-left:      -6px !important;
@@ -1409,7 +1422,7 @@
 @link-header-padding-left:                         @header-padding-left;
 @link-header-padding-right:                        @header-padding-right;
 @link-header-height:                               @header-height;
-@link-header-font:                                 700 18px escape('/') @header-height @default-font-name;
+@link-header-font-size:                            18px;
 @link-header-color:                                #D94700;
 @link-header-text-decoration:                      none;
 @link-header-after-content:                        '\E002';
@@ -1426,6 +1439,7 @@
 @toggle-header-padding-right:                      8px;
 @toggle-header-height:                             24px;
 @toggle-header-font:                               700 15px escape('/') @toggle-header-height @default-font-name;
+@toggle-header-font-size:                          15px;
 @toggle-header-color:                              @blue-dark-color;
 @toggle-header-background:                         none;
 @toggle-header-before-content:                     '\E013';
@@ -1477,12 +1491,17 @@
 
 
 @commands-button-close-icon:                               @icon-medium-size;
+@commands-button-close-icon-font-size:                     @commands-button-close-icon;
 @commands-button-close-font-family:                        @default-icon-medium-font;
-@commands-button-close-icon-color:                         @blue-dark-color;
-@commands-button-close-button-size:                        32px;
-@commands-button-close-button-top:                         4px;
-@commands-button-margin:                                   -9px -33px 0 0;
-
+@commands-button-close-icon-color:                         @gray-ccc-color;
+@commands-button-close-button-size:                        30px;
+@commands-button-close-button-top:                         2px;
+@commands-button-close-button-glyph-top:                   4px;
+@commands-button-close-button-glyph-top:                   @commands-button-close-button-top;
+@commands-button-close-button-right:                       0;
+@commands-button-close-hover-color:                        @commands-button-close-icon-color;
+@commands-button-margin:                                   -6px -34px 0 0;
+@commands-button-item-padding-right:                       38px!important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
 
 
 @paging-font-size:                                      18px;
@@ -1673,6 +1692,7 @@
 
 @bottomStyle-items-toolbar-height:                  30px;
 @bottomStyle-items-toolbar-width:                   24px;
+@bottomStyle-items-toolbar-itemsContainer-margin-left: -4px;
 @bottomStyle-padding-bottom:                        @bottomStyle-items-toolbar-height + @bottomStyle-items-toolbar-margin; //высота операций + маржин
 @bottomStyle-items-toolbar-border-color:            #F3F3F3;
 @bottomStyle-items-toolbar-margin:                  4px;

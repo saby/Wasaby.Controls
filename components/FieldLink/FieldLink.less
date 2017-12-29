@@ -19,15 +19,6 @@
    height: 100%;
    padding: 0 @default-padding 0 0;
 }
-.controls-FieldLink__fieldWrapper {
-   .inline-flexbox();
-   .flex-shrink(1);
-   position:relative;
-   height: 100%;
-   width: 100%;
-   text-decoration: inherit;
-   margin-right: 0;
-}
 .controls-FieldLink__itemsCollection {
    .inline-flexbox();
    width: 100%;
@@ -173,7 +164,7 @@
    }
    &.controls-Picker__show {
       background: @fieldLink-picker-show-color;
-      .controls-TextBox__field {
+      .controls-InputRender__field {
          color: @fieldLink-picker-show-field-color
       }
    }
@@ -201,7 +192,7 @@
 }
 
 // todo заменить на display: none
-.controls-FieldLink__selected:not(.controls-FieldLink__multiselect):not(.controls-FieldLink__inputMinWidth) .controls-FieldLink__fieldWrapper {
+.controls-FieldLink__selected:not(.controls-FieldLink__multiselect):not(.controls-FieldLink__inputMinWidth) .controls-InputRender__fieldWrapper {
    visibility: hidden;
    width: 0;
 }

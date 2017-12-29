@@ -24,7 +24,7 @@ define('SBIS3.CONTROLS/Radio/Button/RadioButtonBase', ['js!WSControls/Buttons/Bu
    var RadioButtonBase = WSButtonBase.extend([Checkable], /** @lends SBIS3.CONTROLS/Radio/Button/RadioButtonBase.prototype */ {
       $protected: {
          _options: {
-
+             escapeCaptionHtml: false
          }
       },
 
