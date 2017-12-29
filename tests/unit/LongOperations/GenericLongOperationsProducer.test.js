@@ -792,7 +792,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению title &lt; заданного)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению title меньше заданного)', function (done) {
                producer.fetch({where:{title:{condition:'<', value:'Длительная операция 2'}}})
                   .addCallback(function (results) {
                      try {
@@ -808,7 +808,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению title &lt;= заданного)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению title мельше/равен заданного)', function (done) {
                producer.fetch({where:{title:{condition:'<=', value:'Длительная операция 2'}}})
                   .addCallback(function (results) {
                      try {
@@ -826,7 +826,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению title &gt;= заданного)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению title больше/равен заданного)', function (done) {
                producer.fetch({where:{title:{condition:'>=', value:'Длительная операция 2'}}})
                   .addCallback(function (results) {
                      try {
@@ -844,7 +844,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению title &gt; заданного)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению title больше заданного)', function (done) {
                producer.fetch({where:{title:{condition:'>', value:'Длительная операция 2'}}})
                   .addCallback(function (results) {
                      try {
@@ -860,7 +860,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &lt; с сейчас - ' + TIME_GAP + 'мс)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt меньше с сейчас - ' + TIME_GAP + 'мс)', function (done) {
                var time = (new Date()).getTime() - TIME_GAP;
                producer.fetch({where:{startedAt:{condition:'<', value:time}}})
                   .addCallback(function (results) {
@@ -877,7 +877,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &lt; с сейчас + ' + TIME_GAP + 'мс)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt меньше с сейчас + ' + TIME_GAP + 'мс)', function (done) {
                var time = (new Date()).getTime() + TIME_GAP;
                producer.fetch({where:{startedAt:{condition:'<', value:time}}})
                   .addCallback(function (results) {
@@ -896,7 +896,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &gt; с сейчас - ' + (TIME_EARLIER - TIME_GAP) + 'мс)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt больше с сейчас - ' + (TIME_EARLIER - TIME_GAP) + 'мс)', function (done) {
                var time = (new Date()).getTime() - (TIME_EARLIER - TIME_GAP);
                producer.fetch({where:{startedAt:{condition:'>', value:time}}})
                   .addCallback(function (results) {
@@ -915,7 +915,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &gt; с сейчас - ' + (TIME_EARLIER + TIME_GAP) + 'мс)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt больше с сейчас - ' + (TIME_EARLIER + TIME_GAP) + 'мс)', function (done) {
                var time = (new Date()).getTime() - (TIME_EARLIER + TIME_GAP);
                producer.fetch({where:{startedAt:{condition:'>', value:time}}})
                   .addCallback(function (results) {
