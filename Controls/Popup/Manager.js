@@ -150,7 +150,6 @@ define('js!Controls/Popup/Manager',
                element = this._find(id);
             if (element) {
                _private.removeElement.call(this, element);
-               element.controller.notifyOnResult();
                this._redrawItems();
             }
          },

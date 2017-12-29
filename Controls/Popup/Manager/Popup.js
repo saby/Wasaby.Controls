@@ -48,7 +48,7 @@ define('js!Controls/Popup/Manager/Popup',
 
          _afterMount: function () {
             var container = this._container;
-            this._notify('popupCreated', this._options.id, container.outerWidth(), container.outerHeight());
+            this._notify('popupCreated', this._options.id, container.offsetWidth, container.offsetHeight);
          },
 
          /**
