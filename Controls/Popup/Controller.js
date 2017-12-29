@@ -20,7 +20,9 @@ define('js!Controls/Popup/Controller',
          },
 
          notifyOnResult: function (result) {
-            this.resultDef.callback(result);
+            // пока убираем поджег деферреда, непонятно что делать в ситуации, когда с одного попапа несколько раз
+            // кидается on:result
+            // this.resultDef.callback(result);
             if( this._options.eventHandlers && this._options.eventHandlers.onResult ){
                this._options.eventHandlers.onResult(result);
             }
