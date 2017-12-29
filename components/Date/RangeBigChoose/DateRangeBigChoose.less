@@ -21,6 +21,9 @@
 .controls-DateRangeBigChoose__stateButton {
    cursor: pointer;
 }
+.controls-DateRangeBigChoose__stateButton-invisible {
+   visibility: hidden;
+}
 
 .controls-DateRangeBigChoose__header-period {
    .flex-grow(1);
@@ -38,11 +41,12 @@
 }
 
 .controls-DateRangeBigChoose__ApplyButton {
-   margin-left: @margin-left_DateRangeBigChoose-header-applyButton;
+   margin: 0 @margin_DateRangeBigChoose-header-applyButton;
 }
 
-.controls-DateRangeBigChoose__closeButton {
+.controls-DateRangeBigChoose__closeButton.ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
    width: @width_DateRangeBigChoose-header-closeButton;
+   position: initial;
 }
 
 // панель выбора периода через года
