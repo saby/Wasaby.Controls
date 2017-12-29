@@ -38,11 +38,15 @@ define('js!Controls/Popup/Opener/Base',
                Manager.remove(this._popupId);
             }
          },
+         
+         isOpened: function() {
+            return !!this._popupId;
+         },
 
          getStrategy: function(){
             throw new Error('Method getStrategy must be implemented');
          }
       });
-      return Base
+      return Base;
    }
 );
