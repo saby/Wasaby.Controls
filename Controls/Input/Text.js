@@ -90,7 +90,6 @@ define('js!Controls/Input/Text', [
 
          _changeValueHandler: function(event, value) {
             this._setValue(value);
-            this._notify('valueChanged', value);
          },
 
          _inputCompletedHandler: function(){
