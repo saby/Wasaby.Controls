@@ -25,16 +25,20 @@ define('js!Controls/ConfirmationWindow',
        * @param {Object} Объект конфигурации открываемого диалога - {@link Controls/ConfirmationWindow/Dialog}.
        */
 
-      return Control.extend({
+      var ConfirmationWindow = Control.extend({
          _template: template,
          _resultDef: null,
 
-         _afterMount: function () {
-            var self = this;
+         constructor: function (options) {
+            ConfirmationWindow.superclass.constructor.apply(this, options);
+            this._resultHandler = this._resultHandler.bind(this);
+         },
 
-            self._children.opener.subscribe('onResult', function (e, res) {
-               self._resultDef.callback(res);
-            });
+         _resultHandler: function(res){
+            if(this._resultDef){
+               this._resultDef.callback(res);
+               this._resultDef = null;
+            }
          },
 
          open: function(cfg){
@@ -46,5 +50,7 @@ define('js!Controls/ConfirmationWindow',
          }
 
       });
+
+      return ConfirmationWindow;
    }
 );

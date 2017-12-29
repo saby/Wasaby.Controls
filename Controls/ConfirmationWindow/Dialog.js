@@ -84,8 +84,6 @@ define('js!Controls/ConfirmationWindow/Dialog', [
          },
 
          _keyPressed: function (e) {
-            e.stopPropagation();
-
             if(e.nativeEvent.keyCode === constants.key.esc){
                (this._options.type === 'ok' || this._options.type === 'yesnocancel') && this._sendResult();
             }
