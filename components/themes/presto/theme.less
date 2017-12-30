@@ -68,6 +68,13 @@ body {
     &.ws-infobox-has-title .ws-infobox-content {
       padding-right: 0;
     }
+    .ws-infobox-content {
+      color: @default-text-color;
+      font-size: round(28px * @multiplier);
+      ul {
+        padding-left: round(28px * @multiplier);
+      }
+    }
   }
 }
 //Временное решение, пока в панель операций кладутся контролы, удалить при переходе на шаблончики
