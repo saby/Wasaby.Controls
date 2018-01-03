@@ -23,7 +23,18 @@ define('js!Controls/Input/resources/InputRender/InputRender',
       var _private = {
 
          getSelection: function(self){
-            return self._selection || {};
+            var
+               result = self._selection;
+
+            //Если курсор ещё не был поставлен в поле, то поставим его в конец
+            if (!result) {
+               result = {
+                  selectionStart: self._value ? self._value.length : 0,
+                  selectionEnd: self._value ? self._value.length : 0
+               };
+            }
+
+            return result;
          },
 
          getTargetPosition: function(target){

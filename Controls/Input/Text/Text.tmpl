@@ -6,7 +6,8 @@
         selectOnClick="{{_options.selectOnClick}}"
         viewModel="{{_textViewModel}}"
         tagStyle="{{_options.tagStyle}}"
-        validationErrors="{{_options.validationErrors}}"on:valueChanged="_changeValueHandler()"
+        validationErrors="{{_options.validationErrors}}"
+        on:valueChanged="_changeValueHandler()"
         on:inputCompleted="_inputCompletedHandler()"
         on:tagHover="_notifyHandler('onTagHover')"
         on:tagClick="_notifyHandler('onTagClick')">
