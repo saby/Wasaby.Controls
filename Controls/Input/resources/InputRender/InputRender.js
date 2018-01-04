@@ -29,8 +29,8 @@ define('js!Controls/Input/resources/InputRender/InputRender',
             //Если курсор ещё не был поставлен в поле, то поставим его в конец
             if (!result) {
                result = {
-                  selectionStart: self._value ? self._value.length : 0,
-                  selectionEnd: self._value ? self._value.length : 0
+                  selectionStart: self._value.length,
+                  selectionEnd: self._value.length
                };
             }
 
