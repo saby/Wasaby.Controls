@@ -57,7 +57,7 @@ define('js!Controls/Popup/Opener/Base',
          },
          
          isOpened: function() {
-            return !!this._popupId;
+            return !!Manager.find(this._popupId);
          },
 
          getStrategy: function(){

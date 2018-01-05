@@ -55,7 +55,7 @@ define('js!Controls/Popup/Manager',
          },
 
          popupCreated: function (id, width, height) {
-            var element = Manager._find(id);
+            var element = Manager.find(id);
             if (element) {
                var strategy = element.strategy;
                if (strategy) {
@@ -67,7 +67,7 @@ define('js!Controls/Popup/Manager',
          },
 
          popupFocusOut: function (id, focusedControl) {
-            var element = Manager._find(id);
+            var element = Manager.find(id);
             if (element) {
                if (!!element.popupOptions.autoHide) {
                   var
@@ -85,7 +85,7 @@ define('js!Controls/Popup/Manager',
          },
 
          sendResult: function (id, result) {
-            var element = Manager._find(id);
+            var element = Manager.find(id);
             if (element) {
                element.controller.notifyOnResult(result);
             }
@@ -131,7 +131,7 @@ define('js!Controls/Popup/Manager',
           */
          update: function (id, options) {
             var
-               element = this._find(id);
+               element = this.find(id);
             if (element) {
                element.popupOptions = options;
                this._redrawItems();
@@ -147,7 +147,7 @@ define('js!Controls/Popup/Manager',
           */
          remove: function (id) {
             var
-               element = this._find(id);
+               element = this.find(id);
             if (element) {
                _private.removeElement.call(this, element);
                this._redrawItems();
@@ -156,10 +156,10 @@ define('js!Controls/Popup/Manager',
 
          /**
           * Найти конфиг попапа
-          * @function Controls/Popup/Manager#_find
+          * @function Controls/Popup/Manager#find
           * @param id идентификатор попапа
           */
-         _find: function (id) {
+         find: function (id) {
             var
                element,
                index = this._popupItems.getIndexByValue('id', id);
