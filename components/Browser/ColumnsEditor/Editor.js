@@ -53,7 +53,8 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
           * конфигурации колонок. Если же пользователь просто закрыл редактор кнопкой "Закрыть", то обещание будет разрешено значением null
           *
           * Существует возможность использования предустановленных наборов колонок (пресетов). Для этого служат опции usePresets, staticPresets,
-          * presetNamespace и selectedPresetId. Простой пример использования:
+          * presetNamespace и selectedPresetId. При наличии статичечских пресетов пользователь может клонировать любой из них и сохранить его как
+          * собственный. Простой пример использования:
           * <pre>
           *    require(['SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit'], function (PresetUnit) {
           *       var promise = this.sendCommand('showColumnsEditor', {
@@ -78,7 +79,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
           *             ],
           *             // Пользователь будет сохранять свои пресеты в это пространство имён:
           *             presetNamespace: 'catalog-columns-presets',
-          *             // Первоначально буде выбран пресет с таким идентификатором:
+          *             // Первоначально будет выбран пресет с таким идентификатором (опционально):
           *             selectedPresetId: 'preset-2',
           *             ...
           *             другие опции
