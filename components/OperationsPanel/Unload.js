@@ -227,7 +227,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Unload', [
                return;
             }
             var view = this._getView(),
-               cfg = {
+               options = {
                   dataSet: cfg ? cfg.dataSet : view.getDataSet(),
                   columns: columns,
                   dataSource: view.getDataSource(),
@@ -235,11 +235,11 @@ define('SBIS3.CONTROLS/OperationsPanel/Unload', [
                   offset: view._offset
                };
             if (cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS/Mixins/TreeMixin')) {
-               cfg.hierField = view.getParentProperty();
-               cfg.openedPath = view.getOpenedPath();
-               cfg.root = view.getCurrentRoot();
+               options.hierField = view.getParentProperty();
+               options.openedPath = view.getOpenedPath();
+               options.root = view.getCurrentRoot();
             }
-            promise.callback(cfg);
+            promise.callback(options);
          }.bind(this);
          if (cfg && cfg.columns) {
             done(cfg.columns)
