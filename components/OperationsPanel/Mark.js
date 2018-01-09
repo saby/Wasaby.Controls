@@ -188,6 +188,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Mark', [
       _updateMark: forAliveOnly(function() {
          this._updateMarkButton();
          this._updateMarkCheckBox();
+         this._notify('onMarkUpdated');
       }),
       /**
        * Выбрать все элементы.
