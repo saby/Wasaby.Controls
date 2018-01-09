@@ -18,7 +18,7 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
          * @class SBIS3.CONTROLS/Action/List/Sum
          * @public
          * @extends SBIS3.CONTROLS/Action
-         * @author Сухоручкин Андрей Сергеевич
+         * @author Сухоручкин А.С.
          *
          * @mixes SBIS3.CONTROLS/Action/List/Mixin/ListMixin
          * @mixes SBIS3.CONTROLS/Action/Mixin/DialogMixin

@@ -40,7 +40,7 @@ define('SBIS3.CONTROLS/Date/TimePicker/ClockPicker',
        *
        * @control
        * @private
-       * @author Крайнов Дмитрий Олегович
+       * @author Крайнов Д.О.
        */
       var ClockPicker = CompoundControl.extend([DragNDropMixinNew], /** @lends SBIS3.CONTROLS/Date/TimePicker/ClockPicker.prototype */ {
          _dotTplFn: dotTplFn,

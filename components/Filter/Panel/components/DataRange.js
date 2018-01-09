@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/DataRange',
            * @extends SBIS3.CONTROLS/Slider/Input
            * @public
            *
-           * @author Борисов Петр Сергеевич
+           * @author Борисов П.С.
            *
            * @mixes SBIS3.CONTROLS/Filter/Panel/resources/IFilterItem
            */

@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/Action/List/Move', [
        * @class SBIS3.CONTROLS/Action/List/Move
        * @public
        * @extends SBIS3.CONTROLS/Action
-       * @author Ганшин Ярослав Олегович
+       * @author Ганшин Я.О.
        *
        * @mixes SBIS3.CONTROLS/Action/List/Mixin/ListMixin
        *

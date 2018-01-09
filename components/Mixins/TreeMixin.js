@@ -456,7 +456,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
     * На DOM-элементы, отображающие развернутые узлы вешается css-класс "controls-TreeView__item-expanded". Для свернутых узлов используется css-класс "controls-TreeView__item-collapsed".
     * @mixin SBIS3.CONTROLS/Mixins/TreeMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var TreeMixin = /** @lends SBIS3.CONTROLS/Mixins/TreeMixin.prototype */{
 
@@ -605,7 +605,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
              */
             parentProperty: null,
             /**
-             * @cfg {String} Устанавливает поле, по значениям которого определяется <a href='/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>типа записи в иерархии</a>.
+             * @cfg {String} Устанавливает имя поля, по значениям которого определяются <a href='/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>типы записей в иерархии</a>.
              * @see parentProperty
              */
             nodeProperty: null,

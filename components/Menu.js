@@ -33,7 +33,7 @@ define('SBIS3.CONTROLS/Menu', [
     *
     * @public
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @cssModifier controls-MenuPicker__resetIconColor Отменяет перекрашивание иконки в темно-синий цвет в заголовке меню.
     */

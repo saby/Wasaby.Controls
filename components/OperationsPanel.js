@@ -67,7 +67,7 @@ define('SBIS3.CONTROLS/OperationsPanel', [
     *
     * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel Пример 1. Типовые массовые операции над записями.
     *
-    * @author Сухоручкин Андрей Сергеевич
+    * @author Сухоручкин А.С.
     * @ignoreOptions contextRestriction independentContext
     *
     * @ignoreEvents onAfterLoad onChange onStateChange

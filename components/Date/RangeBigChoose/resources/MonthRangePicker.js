@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
    /**
     * @class SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker.YearSource
     * @extends WS.Data/Source/Base
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     */
    var YearSource = Base.extend(/** @lends SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker.YearSource.prototype */{
       _moduleName: 'SBIS3.CONTROLS.DateRangeBigChoose.YearSource',
@@ -73,7 +73,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
     * SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker
     * @class SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker
     * @extends SBIS3.CONTROLS/ListView
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     * @control
     * @mixes SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin
     * @mixes SBIS3.CONTROLS/Mixins/RangeMixin

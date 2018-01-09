@@ -14,7 +14,7 @@ define('SBIS3.CONTROLS/LongOperations/Tools/CallsPool',
        * @class SBIS3.CONTROLS/LongOperations/Tools/CallsPool
        * @extends Core/core-extend
        *
-       * @author Спирин Виктор Алексеевич
+       * @author Спирин В.А.
        *
        * @public
        * @type {SBIS3.CONTROLS/LongOperations/Tools/CallsPool}

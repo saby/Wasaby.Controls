@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/Filter/Button/Dropdown', ['SBIS3.CONTROLS/DropdownList'],
     * Используется на панели {@link SBIS3.CONTROLS/Filter/Button}:
     * @class SBIS3.CONTROLS/Filter/Button/Dropdown
     * @extends SBIS3.CONTROLS/DropdownList
-    * @author Красильников Андрей Сергеевич
+    * @author Красильников А.С.
     * @control
     * @public
     */

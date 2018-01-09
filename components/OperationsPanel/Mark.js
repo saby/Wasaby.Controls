@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Mark', [
     * SBIS3.CONTROLS/OperationsPanel/Mark
     * @class SBIS3.CONTROLS/OperationsPanel/Mark
     * @extends SBIS3.CONTROLS/Menu/MenuLink
-    * @author Сухоручкин Андрей Сергеевич
+    * @author Сухоручкин А.С.
     * @public
     */
    var OperationsMark = CompoundControl.extend(/** @lends SBIS3.CONTROLS/OperationsPanel/Mark.prototype */{

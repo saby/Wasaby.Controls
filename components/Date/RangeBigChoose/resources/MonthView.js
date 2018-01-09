@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView', [
     * SBIS3.CONTROLS.DateRangeBig.MonthView
     * @class SBIS3.CONTROLS.DateRangeBig.MonthView
     * @extends SBIS3.CONTROLS/Date/MonthView
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     * @control
     */
    var MonthView = MonthView.extend(/** @lends SBIS3.CONTROLS.DateRangeBig.MonthView.prototype */{

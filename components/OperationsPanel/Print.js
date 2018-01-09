@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Print', [
     * Класс контрола "Кнопка для печати подготовленных данных". Применяется на "Панели действий" (см. {@link SBIS3.CONTROLS/OperationsPanel}).
     * @class SBIS3.CONTROLS/OperationsPanel/Print
     * @extends SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase
-    * @author Сухоручкин Андрей Сергеевич
+    * @author Сухоручкин А.С.
     * @public
     */
    var OperationPrint = PrintUnloadBase.extend(/** @lends SBIS3.CONTROLS/OperationsPanel/Print.prototype */{

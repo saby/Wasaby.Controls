@@ -35,7 +35,7 @@ define('SBIS3.CONTROLS/Tree/View', [
     * @mixes SBIS3.CONTROLS/Mixins/TreeMixin
     * @mixes SBIS3.CONTROLS/Mixins/TreeViewMixin
     *
-    * @author Авраменко Алексей Сергеевич
+    * @author Авраменко А.С.
     *
     * @cssModifier controls-TreeView__withoutLevelPadding Устанавливает режим отображения дерева без иерархических отступов.
     * @cssModifier controls-TreeView__hideExpands Устанавливает режим отображения дерева без иконок сворачивания/разворачивания узлов.

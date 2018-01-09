@@ -52,7 +52,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
        * @class SBIS3.CONTROLS/LongOperations/List
        * @extends Lib/Control/CompoundControl/CompoundControl
        *
-       * @author Спирин Виктор Алексеевич
+       * @author Спирин В.А.
        *
        * @public
        *

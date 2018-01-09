@@ -48,7 +48,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
     * Миксин, определяющий поведение контролов, которые отображаются с абсолютным позиционированием поверх всех остальных компонентов (диалоговые окна, плавающие панели, подсказки).
     * При подмешивании этого миксина в контрол он вырезается из своего местоположения и вставляется в Body.
     * @mixin SBIS3.CONTROLS/Mixins/PopupMixin
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @public
     */
    var PopupMixin = /** @lends SBIS3.CONTROLS/Mixins/PopupMixin.prototype */ {
