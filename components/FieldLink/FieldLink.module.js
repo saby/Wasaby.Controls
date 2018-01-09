@@ -741,6 +741,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           setItemTpl: function(itemTpl) {
              FieldLink.superclass.setItemTpl.call(this, itemTpl);
+             if (!this._isEmptySelection() && !this._linkCollection) {
+                this._createLinkCollection();
+             }
              this._linkCollection && this._linkCollection.setItemTpl(itemTpl);
           },
 
