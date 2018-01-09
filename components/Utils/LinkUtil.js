@@ -5,14 +5,15 @@ define('SBIS3.CONTROLS/Utils/LinkUtil', [],
      */
     function () /** @lends SBIS3.CONTROLS/Utils/LinkUtil.prototype */{
         return {
-            preparedClassFromOptions: function (opts) {
+            preparedClassFromOptions: function (opts, attrToMerge) {
                 var classes = ['mainLink', 'mainLink__2', 'mainLink__3', 'additionalLink', 'additionalLink__2', 'additionalLink__3', 'additionalLink__4', 'additionalLink__5'],
+                    className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || opts.className || '',
                     color = 'mainLink',
                     colorClass = ' controls-Link_';
 
-                if (opts.className) {
+                if (className) {
                     classes.forEach(function (type) {
-                        if (opts.className.indexOf(type) !== -1) {
+                        if (className.indexOf(type) !== -1) {
                             color = type;
                         }
                     });

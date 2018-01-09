@@ -151,9 +151,9 @@ define('SBIS3.CONTROLS/LongOperations/List',
                         }
                      }
                   }
-                  if (evt) {
+                  /*if (evt) {
                      evt.isCurrentTab = evt.tabKey === longOperationsManager.getTabKey();
-                  }
+                  }*/
                   self._notify(evtName.name, evt);
                   if (!dontReload) {
                      self.reload();
@@ -197,52 +197,46 @@ define('SBIS3.CONTROLS/LongOperations/List',
           * @return {object[]}
           */
          _makeItemsActions: function (model) {
-            var actions = [];
+            var actions = {};
             if (model) {
                var STATUSES = LongOperationEntry.STATUSES;
-               var self = this;
-               if (model.get('canSuspend') && model.get('status') === STATUSES.running) {
-                  // Заголовок зависит от модели
-                  var title = rk(model.get('resumeAsRepeat') ? 'Отменить' : 'Приостановить', 'ДлительныеОперации');
-                  actions.push({
-                     name: 'suspend',
-                     icon: 'sprite:icon-16 icon-Pause icon-primary action-hover',
-                     caption: title,
-                     tooltip: title,
-                     isMainAction: true,
-                     onActivated: function ($item, id, itemModel) {
-                        self.applyUserAction('suspend', itemModel);
+               var DEFAULT_ICO = 'Favourite';
+               var status = model.get('status');
+               var inf = this._getCustomActions(model);
+               if (inf) {
+                  for (var name in inf) {
+                     var action = inf[name];
+                     if (action && typeof action === 'object' && !action.main && this._isCustomActionAllowed(action, status)) {
+                        actions[name] = {title:action.title || name, icon:'sprite:icon-16 icon-' + (action.ico || DEFAULT_ICO) + ' icon-done'};
                      }
-                  });
+                  }
                }
-               if (model.get('canSuspend') && model.get('status') === STATUSES.suspended) {
-                  var title = rk(model.get('resumeAsRepeat') ? 'Повторить' : 'Возобновить');
-                  actions.push({
-                     name: 'resume',
-                     icon: 'sprite:icon-16 icon-DayForward icon-primary action-hover',
-                     caption: title,
-                     tooltip: title,
-                     isMainAction: true,
-                     onActivated: function ($item, id, itemModel) {
-                        self.applyUserAction('resume', itemModel);
-                     }
-                  });
+               // Заголовки могут зависесть от модели
+               if (model.get('canSuspend') && status === STATUSES.running) {
+                  actions['suspend'] = {title:rk(model.get('resumeAsRepeat') ? 'Отменить' : 'Приостановить', 'ДлительныеОперации'), icon:'sprite:icon-16 icon-Pause icon-primary action-hover'};
+               }
+               if (model.get('canSuspend') && status === STATUSES.suspended) {
+                  actions['resume'] = {title:rk(model.get('resumeAsRepeat') ? 'Повторить' : 'Возобновить'), icon:'sprite:icon-16 icon-DayForward icon-primary action-hover'};
                }
                if (model.get('canDelete')) {
-                  var title = rk('Удалить');
-                  actions.push({
-                     name: 'delete',
-                     icon: 'sprite:icon-16 icon-Erase icon-error',
-                     caption: title,
-                     tooltip: title,
-                     isMainAction: true,
-                     onActivated: function ($item, id, itemModel) {
-                        self.applyUserAction('delete', itemModel);
-                     }
-                  });
+                  actions['delete'] = {title:rk('Удалить'), icon:'sprite:icon-16 icon-Erase icon-error'};
                }
             }
-            return actions;
+            return Object.keys(actions).map(function (name) {
+               var action = actions[name];
+               return {
+                  name: name,
+                  icon: action.icon,
+                  caption: action.title,
+                  tooltip: action.title,
+                  isMainAction: true,
+                  onActivated: this._onUserAction.bind(this, name)
+               };
+            }.bind(this));
+         },
+
+         _onUserAction: function (action, $item, id, itemModel) {
+            this.applyUserAction(action, itemModel);
          },
 
          /**
@@ -339,6 +333,21 @@ define('SBIS3.CONTROLS/LongOperations/List',
          },
 
          /**
+          * Установить предусловия для источника данных
+          * @public
+          * @param {object[]} customConditions Список предусловий
+          */
+         setCustomConditions: function (customConditions) {
+            if (!(customConditions && Array.isArray(customConditions) && customConditions.every(function (v) { return !!v && typeof v === 'object' && !!Object.keys(v).length; }))) {
+               throw new Error('Array of objects required');
+            }
+            var dataSource = this._view.getDataSource();
+            var options = dataSource.getOptions();
+            options.customConditions = customConditions;
+            dataSource.setOptions(options);
+         },
+
+         /**
           * Проверить, может ли длительная операция иметь историю
           * @public
           * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
@@ -356,41 +365,127 @@ define('SBIS3.CONTROLS/LongOperations/List',
           * @returns {Core/Deferred}
           */
          applyUserAction: function (action, model) {
-            if (!(action === 'suspend' || action === 'resume' ? model.get('canSuspend') : (action === 'delete' ? model.get('canDelete') : null))) {
+            var isAllow;
+            var customAction;
+            switch (action) {
+               case 'suspend':
+               case 'resume':
+                  isAllow = model.get('canSuspend');
+                  break;
+               case 'delete':
+                  isAllow = model.get('canDelete');
+                  break;
+               default:
+                  var inf = this._getCustomActions(model);
+                  if (inf && inf[action] && typeof inf[action] === 'object') {
+                     customAction = inf[action];
+                     isAllow = true;
+                  }
+                  break;
+            }
+            if (!isAllow) {
                return Deferred.fail('Action not allowed');
             }
-            var promise = longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
-            // Удаление в LRS может занимать много времени, поэтому перезапросить список нужно сразу - удаляемая операция в него уже не войдёт. Для
-            // остальных действий вызывать reload не нужно, это произойдёт по событию, пришедшему в результате выпонения действия
-            if (action === 'delete') {
-               promise.addCallback(this.reload.bind(this));
+            var promise;
+            if (customAction) {
+               promise = this._execHandler(customAction.call, customAction.args);
+            }
+            else {
+               promise = longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
+               // Удаление в LRS может занимать много времени, поэтому перезапросить список нужно сразу - удаляемая операция в него уже не войдёт. Для
+               // остальных действий вызывать reload не нужно, это произойдёт по событию, пришедшему в результате выпонения действия
+               if (action === 'delete') {
+                  promise.addCallback(this.reload.bind(this));
+               }
             }
             return promise;
          },
 
          /**
-          * Выполнить результирующее действие длительной операции
+          * Выполнить основное (результирующее или кастомное основное) действие длительной операции
           * @public
           * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
           */
-         applyResultAction: function (model) {
-            //Только если операция завершена или содержит ошибку
-            if (model && (model.get('status') === LongOperationEntry.STATUSES.ended || model.get('isFailed'))) {
-               if (!model.get('isFailed') || model.get('useResult')) {
-                  // Если операция завершена успешно или ей явно предписано использовать результат - выполнить действие, указанное в качестве результата
-                  if (!this._showResult(model)) {
-                     // Если нет, то если операция может иметь историю и является составной - открыть журнал операции (либо если было предписано
-                     // показать результат, но его не оказалось)
-                     if ((this.canHasHistory(model) && 1 < model.get('progressTotal')) || model.get('useResult')) {
-                        this._showHistory(model);
+         applyMainAction: function (model) {
+            if (model) {
+               var STATUSES = LongOperationEntry.STATUSES;
+               var status = model.get('status');
+               if (status === STATUSES.ended || model.get('isFailed')) {
+                  //Только если операция завершена или содержит ошибку
+                  if (!model.get('isFailed') || model.get('useResult')) {
+                     // Если операция завершена успешно или ей явно предписано использовать результат - выполнить действие, указанное в качестве результата
+                     if (!this._showResult(model)) {
+                        // Если нет, то если операция может иметь историю и является составной - открыть журнал операции (либо если было предписано
+                        // показать результат, но его не оказалось)
+                        if ((this.canHasHistory(model) && 1 < model.get('progressTotal')) || model.get('useResult')) {
+                           this._showHistory(model);
+                        }
                      }
+                  }
+                  else {
+                     // Иначе показать историю
+                     this._showHistory(model, true);
                   }
                }
                else {
-                  // Иначе показать историю
-                  this._showHistory(model, true);
+                  //Или если есть кастомное действие, продекларированное как основное
+                  var inf = this._getCustomActions(model);
+                  if (inf) {
+                     for (var name in inf) {
+                        var action = inf[name];
+                        if (action.main && this._isCustomActionAllowed(action, status)) {
+                           this._execHandler(action.call, action.args);
+                           break;
+                        }
+                     }
+                  }
                }
             }
+         },
+
+         /**
+          * Найти кастомное действие
+          * Набор кастомных действий задаётся в свойстве "custom.actions" длительной операции (соответствует полю "CustomData/actions" в сервисе LRS)
+          * в виде имя действия - описание действия:
+          * <pre>
+          *    {
+          *       actions: {
+          *          "<Имя действия>": {
+          *             when: [0,1],            // Когда применимо - список статусов длительной операции
+          *             call: '<Модуль:метод>', // Обработчик действия в виде строки с именем модули и именем метода, разделёнными двоеточием
+          *             args: '<Аргументы>',    // Аргументы обработчика в виде json-строки с массивом аргументов. Если аргумент один, то симолы "[" и "]"
+          *                                     // в начале и в конце можно опустить. Если единственный аргумент - строка, то можно опустить и ковычки
+          *             main: false,            // Указывает, что действие является основным. Основное действие происходит по клику на названии длительной
+          *                                     // операции в списке. Не основнные действия имеют отдельные кнопки на тулбаре строки
+          *             ico: 'Favourite',       // Имя значка действия (только для не основных)
+          *             title: '<Название>'     // Отображаемое название действия
+          *          },
+          *          ...
+          *       }
+          *    }
+          * </pre>
+          * @protected
+          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
+          * @return {object}
+          */
+         _getCustomActions: function (model) {
+            var custom = model.get('custom');
+            if (custom) {
+               var actions = custom.actions;
+               return actions && typeof actions === 'object' ? actions : null;
+            }
+         },
+
+         /**
+          * Проверить, разрешено ли кастомное действие для указанного статуса длительной операции
+          * @protected
+          * @param {object} model Кастомное действие
+          * @param {number} status Статус длительной операции
+          * @return {boolean}
+          */
+         _isCustomActionAllowed: function (action, status) {
+            var statuses = action.when;
+            return Array.isArray(statuses) && statuses.indexOf(status) !== -1;
          },
 
          /**

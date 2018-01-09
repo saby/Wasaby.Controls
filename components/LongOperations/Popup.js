@@ -39,6 +39,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                footerTemplate: footerTpl,
                caption: '',
                className: 'controls-LongOperations controls-LongOperationsPopup controls-LongOperationsPopup__hidden controls-LongOperationsPopup__hiddenContentMode',
+               customConditions: null,
                withAnimation: null,
                waitIndicatorText: null
             },
@@ -65,13 +66,21 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
          init: function () {
             LongOperationsPopup.superclass.init.call(this);
 
+            this._longOpList = this.getChildControlByName('operationList');
+            var customConditions = this._options.customConditions;
+            // В текущей реализации наличие непустой опции customConditions обязательно
+            if (!customConditions || !Array.isArray(customConditions)) {
+               throw new Error('customConditions required');
+            }
+            this._longOpList.setCustomConditions(customConditions);
+
             if (this._options.withAnimation) {
-               this._animationAtStart();
+               this.animationAtStart();
             }
 
-            this._longOpList = this.getChildControlByName('operationList');
-            this._notificationContainer = this.getContainer().find('.controls-LongOperationsPopup__footer_notification');
-            this._progressContainer = this.getContainer().find('.controls-LongOperationsPopup__footer_progress_container');
+            var container = this.getContainer();
+            this._notificationContainer = container.find('.controls-LongOperationsPopup__footer_notification');
+            this._progressContainer = container.find('.controls-LongOperationsPopup__footer_progress_container');
 
             this._tabChannel = new TabMessage();
 
@@ -144,12 +153,12 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
             //При клике по записи, открываем журнал операции или ссылку, если она есть
             this.subscribeTo(view, 'onItemActivate', function (e, meta) {
-               self._longOpList.applyResultAction(meta.item);
+               self._longOpList.applyMainAction(meta.item);
             });
 
             this.subscribeTo(this.getChildControlByName('downloadButton'), 'onActivated', function () {
                if (self._activeOperation) {
-                  self._longOpList.applyResultAction(self._activeOperation);
+                  self._longOpList.applyMainAction(self._activeOperation);
                }
             });
 
@@ -249,20 +258,12 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
          },
 
          /**
-          * Проверить, активен ли режим с floatArea.
-          * НЕ ИСПОЛЬЗУЕТСЯ
-          */
-         /*###isFloatAreaMode: function () {
-            return !!this._floatAreaMode;
-         },*/
-
-         /**
           * Метод перезагружает список и обновляет состояние
           * @return {Core/Deferred}
           */
-         /*###reload: function () {
+         reload: function () {
             return this._longOpList.reload();
-         },*/
+         },
 
          /**
           * Установливает заголовок нотификационного уведомления.
@@ -484,9 +485,9 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
          _onOperation: function (eventType, data) {
             switch (eventType) {
                case 'onlongoperationstarted':
-                  if (data.isCurrentTab) {
-                     this._animationAtStart();
-                  }
+                  /*if (data.isCurrentTab) {
+                     this.animationAtStart();
+                  }*/
                   this._setProgress(0, data.progress ? data.progress.total : 1, false);
                   break;
 
@@ -530,7 +531,11 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             }
          },
 
-         _animationAtStart: function () {
+         /**
+          * Запустить анимацию старта длительной операции
+          * @param {string} [waitIndicatorText] текст индикатора ожидания (опционально)
+          */
+         animationAtStart: function (waitIndicatorText) {
             /*Время экспозиции индикатора ожидания перед движением вниз*/
             var TIME_EXPOSITION = 600;//1000
             /*Время движения индикатора ожидания вниз*/
@@ -542,16 +547,17 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             }
             this._isInStartAnimation = true;
             var self = this;
+            var text = waitIndicatorText || this._options.waitIndicatorText || DEFAULT_WAITINDICATOR_TEXT;
             var promise = new Deferred();
             if (!this._loadingIndicator) {
                require(['Deprecated/Controls/LoadingIndicator/LoadingIndicator'], function (LoadingIndicator) {
-                  self._loadingIndicator = new LoadingIndicator({message:self._options.waitIndicatorText || DEFAULT_WAITINDICATOR_TEXT});
+                  self._loadingIndicator = new LoadingIndicator({message:text});
                   self._loadingIndicator.show();
                   promise.callback();
                });
             }
             else {
-               this._loadingIndicator.setMessage(this._options.waitIndicatorText || DEFAULT_WAITINDICATOR_TEXT);
+               this._loadingIndicator.setMessage(text);
                this._loadingIndicator.show();
                promise.callback();
             }

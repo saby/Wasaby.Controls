@@ -1,8 +1,9 @@
 define('js!Controls/Popup/Controller',
    [
-      'Core/Control'
+      'Core/Control',
+      'Core/Deferred'
    ],
-   function (Abstract) {
+   function (Abstract, Deferred) {
 
       /**
        *
@@ -13,8 +14,18 @@ define('js!Controls/Popup/Controller',
        * @extends Controls/Control
        */
       var Controller = Abstract.extend({
-         notifyOnResult: function (args) {
-            this._notify('onResult', args);
+         constructor: function(cfg){
+            this.resultDef = new Deferred();
+            this._options = cfg;
+         },
+
+         notifyOnResult: function (result) {
+            // пока убираем поджег деферреда, непонятно что делать в ситуации, когда с одного попапа несколько раз
+            // кидается on:result
+            // this.resultDef.callback(result);
+            if( this._options.eventHandlers && this._options.eventHandlers.onResult ){
+               this._options.eventHandlers.onResult(result);
+            }
          }
       });
 
