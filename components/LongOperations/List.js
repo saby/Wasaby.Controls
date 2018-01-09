@@ -593,6 +593,9 @@ define('SBIS3.CONTROLS/LongOperations/List',
                }
                if (path.length) {
                   var subject = module;
+                  if (path.length === 1) {
+                     args = [args];
+                  }
                   for ( ; path.length; ) {
                      if (!subject || typeof subject !== 'object') {
                         throw new Error('Submethod is or not valid');
