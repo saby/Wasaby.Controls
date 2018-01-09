@@ -91,10 +91,13 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
 
       _prepareOperation: function(title){
          var
+             selectedItems,
              selectedRecordSet,
              view = this._getView(),
-             items = view.getItems(),
-             selectedItems = view.getSelectedItems();
+             items = view.getItems();
+         //Обновим набор выделенных записей перед выгрузкой, т.к. после того как записи попали в selectedItems они могли измениться.
+         view._setSelectedItems();
+         selectedItems = view.getSelectedItems();
          if (!selectedItems || selectedItems.getCount() === 0) {
             this._processMassOperations(title);
          } else {
