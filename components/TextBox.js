@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/TextBox', [
    'Core/helpers/Function/forAliveOnly',
    'SBIS3.CONTROLS/ControlHierarchyManager',
    'SBIS3.CONTROLS/Button/IconButton',
+   'css!Controls/Input/resources/InputRender/InputRender',
    'css!SBIS3.CONTROLS/TextBox/TextBox'
 
 ], function(
@@ -307,7 +308,7 @@ define('SBIS3.CONTROLS/TextBox', [
             }
          });
 
-         this._compatPlaceholder = this._container.find('.controls-TextBox__placeholder');
+         this._compatPlaceholder = this._getCompatiblePlaceholder();
          this._initPlaceholderEvents(this._compatPlaceholder);
 
          /* Надо проверить значение input'a, т.к. при дублировании вкладки там уже может быть что-то написано */
@@ -345,6 +346,13 @@ define('SBIS3.CONTROLS/TextBox', [
       _createInformationIcon: function(color) {
          this._informationIcon = $('<div class="controls-TextBox__informationIcon controls-TextBox__informationIcon-' + color + '"></div>');
          this.getContainer().append(this._informationIcon);
+      },
+
+      _getCompatiblePlaceholder: function() {
+         if (!this._compatPlaceholder) {
+            this._compatPlaceholder = this._container.find('.controls-TextBox__placeholder');
+         }
+         return this._compatPlaceholder;
       },
 
       _destroyInformationIcon: function() {
@@ -406,7 +414,7 @@ define('SBIS3.CONTROLS/TextBox', [
             }
             else if (this._options.tooltip) {
                this.setTooltip(this._options.tooltip);
-            } else if (this._container.attr('title')) {
+            } else {
                 this._container.attr('title', '');
                //Ставлю пробел, чтобы скрыть браузерную подсказку "Заполните это поле". Если поставить пробел, то все браузеры,
                //кроме IE, не выводят всплывающую подсказку. Для IE ставлю пустой title, чтобы он не выводил всплывашку.
@@ -630,7 +638,7 @@ define('SBIS3.CONTROLS/TextBox', [
 
       _createCompatiblePlaceholder: function() {
          if (!this._compatPlaceholder) {
-            this._compatPlaceholder = $(compatiblePlaceholderTemplate(this._options));
+            this._compatPlaceholder = $(this._options.compatiblePlaceholderTemplate(this._options));
             this._inputField.after(this._compatPlaceholder);
             this.reviveComponents();
             this._initPlaceholderEvents(this._compatPlaceholder);

@@ -6,8 +6,8 @@ define('js!Controls/Popup/TargetCoords',
       return {
          get: function (target, corner) {
             var
-               width = target.width() || 0,
-               height = target.height() || 0,
+               width = target.offsetWidth || 0,
+               height = target.offsetHeight || 0,
                top = 0,
                left = 0;
             if (target) {

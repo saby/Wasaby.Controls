@@ -28,7 +28,7 @@ define('js!Controls/List', [
             idProperty: cfg.idProperty,
             displayProperty: cfg.displayProperty,
             selectedKey: cfg.selectedKey
-         })
+         });
       },
 
       initNavigation: function(navOption, dataSource) {
@@ -259,6 +259,19 @@ define('js!Controls/List', [
          if (virtualWindowIsChanged) {
             _private.applyVirtualWindow(this, this._virtualScroll.getVirtualWindow());
          }
+      },
+
+      /**
+       * отдать в VirtualScroll контейнер с отрисованными элементами для расчета средней высоты 1 элемента
+       * Отдаю именно контейнер, а не высоту, чтобы не считать размер, когда высоты уже проинициализированы
+       * @param self
+       */
+      initializeAverageItemsHeight: function(self) {
+         //TODO брать _container - плохо. Узнаю у Зуева как сделать хорошо
+         var res = self._virtualScroll.calcAverageItemHeight(self._children.listView._container[0]);
+         if (res.changed) {
+            _private.applyVirtualWindow(self, res.virtualWindow);
+         }
       }
    };
 
@@ -309,8 +322,7 @@ define('js!Controls/List', [
 
          _beforeMount: function(newOptions) {
             this._virtualScroll = new VirtualScroll({
-               maxVisibleItems: 60,
-               itemHeight: 18,
+               maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
                itemsCount: 0
             });
 
@@ -321,6 +333,7 @@ define('js!Controls/List', [
             if (newOptions.items) {
                this._items = newOptions.items;
                this._listModel = _private.createListModel(this._items, newOptions);
+               this._virtualScroll.setItemsCount(this._items.getCount());
             }
             if (newOptions.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
@@ -365,6 +378,9 @@ define('js!Controls/List', [
                   });
                }
             }
+
+            //Посчитаем среднюю высоту строки и отдадим ее в VirtualScroll
+            _private.initializeAverageItemsHeight(this);
          },
 
          _beforeUpdate: function(newOptions) {
@@ -375,10 +391,13 @@ define('js!Controls/List', [
                this._filter = newOptions.filter;
             }
 
-            if (newOptions.items && newOptions.items != this._options.items) {
+            if (newOptions.items && (newOptions.items != this._options.items)) {
                this._items = newOptions.items;
                this._listModel = _private.createListModel(this._items, newOptions);
+            } else if (newOptions.selectedKey !== this._options.selectedKey) {
+               this._listModel.setSelectedKey(newOptions.selectedKey);
             }
+            
 
             if (newOptions.dataSource !== this._options.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
@@ -398,7 +417,7 @@ define('js!Controls/List', [
 
 
          _afterUpdate: function() {
-
+            _private.initializeAverageItemsHeight(this);
          },
 
          __onPagingArrowClick: function(e, arrow) {
