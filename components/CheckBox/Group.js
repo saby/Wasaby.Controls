@@ -19,7 +19,7 @@ define('SBIS3.CONTROLS/CheckBox/Group',
     * @class SBIS3.CONTROLS/CheckBox/Group
     * @extends SBIS3.CONTROLS/CheckBox/Group/GroupBase
     * @demo SBIS3.CONTROLS.Demo.MyCheckBoxGroup
-    * @author Журавлев Максим Сергеевич
+    * @author Журавлев М.С.
     * @cssModifier controls-ButtonGroup__vertical Задаёт вертикальное расположение элементов в группе.
     *
     * @control

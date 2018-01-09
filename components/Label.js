@@ -22,7 +22,7 @@ define('SBIS3.CONTROLS/Label',
        * @mixes SBIS3.CONTROLS/Mixins/Clickable
        * @mixes SBIS3.CONTROLS/Label/resources/Label.compatibility
        *
-       * @author Журавлев Максим Сергеевич
+       * @author Журавлев М.С.
        *
        * @cssModifier controls-Label_requeredField Модификатор устанавливает отображение символа "*" справа от метки.
        * Такие метки располагают рядом с полями, которые обязательны для заполнения.
