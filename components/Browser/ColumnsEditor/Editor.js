@@ -51,6 +51,43 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
           * Открыть редактор колонок. Возвращает обещание, которое будет разрешено после завершения редактирования пользователем. В случае, если
           * пользователь после редактирования нажал кнопку применения результата редактирования, то обещание будет разрешено новыми параметрами
           * конфигурации колонок. Если же пользователь просто закрыл редактор кнопкой "Закрыть", то обещание будет разрешено значением null
+          *
+          * Существует возможность использования предустановленных наборов колонок (пресетов). Для этого служат опции usePresets, staticPresets,
+          * presetNamespace и selectedPresetId. Простой пример использования:
+          * <pre>
+          *    require(['SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit'], function (PresetUnit) {
+          *       var promise = this.sendCommand('showColumnsEditor', {
+          *          editorOptions: {
+          *             // Будем использовать предустановленные наборы колонок:
+          *             usePresets: true,
+          *             // Определим статически-заданные пресеты:
+          *             staticPresets: [
+          *                new PresetUnit({
+          *                   id: 'preset-1',
+          *                   title: 'Статический пресет 1',
+          *                   selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП']
+          *                }), new PresetUnit({
+          *                   id: 'preset-2',
+          *                   title: 'Статический пресет 2',
+          *                   selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП']
+          *                }), new PresetUnit({
+          *                   id: 'preset-3',
+          *                   title: 'Статический пресет 3',
+          *                   selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП']
+          *                })
+          *             ],
+          *             // Пользователь будет сохранять свои пресеты в это пространство имён:
+          *             presetNamespace: 'catalog-columns-presets',
+          *             // Первоначально буде выбран пресет с таким идентификатором:
+          *             selectedPresetId: 'preset-2',
+          *             ...
+          *             другие опции
+          *             ...
+          *          }
+          *       })
+          *    });
+          * </pre>
+          *
           * @public
           * @param {object} columnsConfig Параметры конфигурации колонок
           * @param {object} [editorOptions] Дополнительные опции редактора, отличающиеся или не содержащиеся в columnsConfig. Имеют приоритет перед опциями из columnsConfig (опционально)
