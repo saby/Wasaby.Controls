@@ -4,6 +4,13 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
       'WS.Data/Collection/List'
    ],
    function (BaseStrategy, List) {
+      'use strict';
+
+      var
+         // минимальная ширина стековой панели
+         MINIMAL_PANEL_WIDTH = 50,
+         // минимальный отступ стековой панели от правого края
+         MINIMAL_PANEL_DISTANCE = 50;
 
       /**
        * Контроллер стековых панелей.
@@ -12,11 +19,6 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
        * @private
        * @category Popup
        */
-      var
-         // минимальная ширина стековой панели
-         MINIMAL_PANEL_WIDTH = 50,
-         // минимальный отступ стековой панели от правого края
-         MINIMAL_PANEL_DISTANCE = 50;
 
       var Strategy = BaseStrategy.extend({
          constructor: function (cfg) {
@@ -39,27 +41,44 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
                self = this,
                previous;
             this._stack.each(function (item, index) {
-               item.position = self._calcPosition(index, item, previous);
+               var
+                  minWidth = item.popupOptions.minWidth,
+                  maxWidth = item.popupOptions.maxWidth,
+                  prevWidth = previous ? previous.width : null,
+                  prevRight = previous ? previous.right : null;
+               item.position = self.getPosition(index, minWidth, maxWidth, window.outerWidth, prevWidth, prevRight);
                previous = item.position;
-               if( !previous ){
+               if (!previous) {
                   item.position = self.getDefaultPosition();
                }
             });
          },
 
-         // когда разделим понятие контроллера и стратегии, эта функция уйдет в стратегию
-         _calcPosition: function (index, item, previous) {
+         /**
+          * Возвращает позицию стек-панели
+          * @function Controls/Popup/Opener/Stack/Strategy#stack
+          * @param index номер панели
+          * @param minWidth минимальная ширина панели
+          * @param maxWidth максимальная ширина панели
+          * @param wWidth ширина окна
+          * @param prevWidth ширина предыдущей панели
+          * @param prevRight отступ справа предыдущей панели
+          */
+         getPosition: function (index, minWidth, maxWidth, wWidth, prevWidth, prevRight) {
             var
-               width = this._calcWidth(item.popupOptions.minWidth || MINIMAL_PANEL_WIDTH, item.popupOptions.maxWidth),
+               width = this.getPanelWidth(minWidth, maxWidth, wWidth),
                right = 0;
             if (index !== 0) {
-               if( previous ){
-                  right = Math.max(100, 100 - ( width - previous.width - previous.right ));
-                  if (( width + right ) > this._getMaxPanelWidth()) {
-                     return null;
+               if (prevWidth) {
+                  var rightCalc = 100 - ( width - prevWidth - prevRight );
+                  if (rightCalc > 0) {
+                     right = Math.max(100, rightCalc);
+                     if (( width + right ) > this.getMaxPanelWidth(wWidth)) {
+                        return null;
+                     }
                   }
                }
-               else{
+               else {
                   return null;
                }
             }
@@ -71,12 +90,22 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
             };
          },
 
-         _calcWidth: function (minWidth, maxWidth) {
+         /**
+          * Расчитываает ширину панели, исходя из ее минимальной и максимальной ширины
+          * @function Controls/Popup/Opener/Stack/Strategy#getPanelWidth
+          * @param minWidth минимальная ширина панели
+          * @param maxWidth максимальная ширина панели
+          * @param wWidth ширина окна
+          */
+         getPanelWidth: function (minWidth, maxWidth, wWidth) {
+            if (!minWidth) {
+               minWidth = MINIMAL_PANEL_WIDTH;
+            }
             if (!maxWidth) {
-               maxWidth = this._getMaxPanelWidth();
+               maxWidth = this.getMaxPanelWidth(wWidth);
             }
             var
-               newWidth = Math.min(this._getMaxPanelWidth(), maxWidth);
+               newWidth = Math.min(this.getMaxPanelWidth(wWidth), maxWidth);
             if (newWidth < minWidth) {
                return Math.max(minWidth, MINIMAL_PANEL_WIDTH);
             }
@@ -86,8 +115,13 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
             return newWidth;
          },
 
-         _getMaxPanelWidth: function () {
-            return window.outerWidth - MINIMAL_PANEL_DISTANCE;
+         /**
+          * Расчитываает максимально возможную ширину панели
+          * @function Controls/Popup/Opener/Stack/Strategy#getMaxPanelWidth
+          * @param wWidth ширина окна
+          */
+         getMaxPanelWidth: function (wWidth) {
+            return wWidth - MINIMAL_PANEL_DISTANCE;
          }
       });
 
