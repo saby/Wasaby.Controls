@@ -124,7 +124,7 @@ define(['js!Controls/Toggle/DoubleSwitch'], function (Switch) {
          });
 
          describe('click to captions(function _clickTextHandler)', function(){
-            it ('click to double Switcher <<On>> caption and <<On>> value', function(){
+            it ('click to double Switcher "On" caption and "On" value', function(){
                var opt = {
                   captions: ['capt1', 'capt2'],
                   value: true
@@ -134,7 +134,7 @@ define(['js!Controls/Toggle/DoubleSwitch'], function (Switch) {
                assert(switcherClickedFlag === false);
             });
 
-            it ('click to double Switcher <<On>> caption and <<Off>> value', function(){
+            it ('click to double Switcher "On" caption and "Off" value', function(){
                var opt = {
                   captions: ['capt1', 'capt2'],
                   value: false
@@ -144,7 +144,7 @@ define(['js!Controls/Toggle/DoubleSwitch'], function (Switch) {
                assert(switcherClickedFlag);
             });
 
-            it ('click to double Switcher <<Off>> caption and <<On>> value', function(){
+            it ('click to double Switcher "Off" caption and "On" value', function(){
                var opt = {
                   captions: ['capt1', 'capt2'],
                   value: true
@@ -154,7 +154,7 @@ define(['js!Controls/Toggle/DoubleSwitch'], function (Switch) {
                assert(switcherClickedFlag);
             });
 
-            it ('click to double Switcher <<Off>> caption and <<Off>> value', function(){
+            it ('click to double Switcher "Off" caption and "Off" value', function(){
                var opt = {
                   captions: ['capt1', 'capt2'],
                   value: false
