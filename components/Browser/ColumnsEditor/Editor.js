@@ -36,7 +36,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
          $protected: {
             _options: {
                moveColumns: true,
-               usePresets: false,// TODO: Включить после переделки дропдауна с пресетами
+               usePresets: false,
                newPresetTitle: rk('Новый пресет'),
                useNumberedTitle: true
             },
@@ -120,8 +120,8 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
          },
 
          _onAreaComplete: function (evtName, columns, selectedColumns) {
-            this._areaContainer.close();
             this._sentResult({columns:columns, selectedColumns:selectedColumns});
+            this._areaContainer.close();
             //this._notify('onComplete');
          },
 
@@ -136,7 +136,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
          },
 
          _sentResult: function (result) {
-            this._result.callback(result);
+            setTimeout(this._result.callback.bind(this._result, result), 1);
             this._result = null;
          }
       });
