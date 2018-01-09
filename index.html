@@ -36,8 +36,15 @@
          height: 100%;
       }
 
+      .header-in-list{
+         font-weight: normal;
+         font-size: 16px;
+         padding: 5px 10px;
+      }
+
       #content {
          padding: 20px;
+         font-weight: bold;
       }
 
       #content table {
@@ -100,11 +107,22 @@
                <li>
                   <div id="ListControlScroll"></div>
                </li>
- <li>
+               <li>
                   <div id="Windows"></div>
-               </li>               <li>
-                  <div id="Toggles"></div>
-               </li>             <h3>Просмотр контролов</h3>
+               </li>
+               <li>
+                  <div class="header-in-list">Toggles</div>
+                  <ul>
+                     <li>
+                        <div id="Switch"></div>
+                     </li>
+                     <li>
+                        <div id="Checkbox"></div>
+                     </li>
+                  </ul>
+               </li>
+            </ul>
+            <h3>Просмотр контролов</h3>
             <ul>
                <li>
                   <div id="TextBoxes"></div>
@@ -184,7 +202,7 @@
                <li>
                   <div id="BrowserTabs"></div>
                </li>
-			   <li>
+			      <li>
                   <div id="FieldLink"></div>
                </li>
                <li>
@@ -323,11 +341,16 @@
                caption: 'ListControlScroll',
                href: '/pages/demo.html?cname=ListControlScroll'
             });
-             new r({
-                 element: "Toggles",
-                 caption: 'Toggles',
-                 href: '/pages/demo.html?cname=Toggles'
-             });
+            new r({
+                element: "Switch",
+                caption: 'Switch',
+                href: '/pages/demo.html?cname=Switch'
+            });
+            new r({
+               element: "Checkbox",
+               caption: 'Checkbox',
+               href: '/pages/demo.html?cname=Checkbox'
+            });
             new r({
                element: "Inputs",
                caption: 'Inputs',
