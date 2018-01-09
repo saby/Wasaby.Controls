@@ -72,7 +72,6 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
             if (this._result) {
                return Deferred.fail('Allready open');
             }
-            this._columnsConfig = columnsConfig;
             var defaults = this._options;
             var hasEditorOptions = !!editorOptions && !!Object.keys(editorOptions).length;
             var allSources = hasEditorOptions ? [editorOptions, columnsConfig, defaults] : [columnsConfig, defaults];
@@ -120,9 +119,9 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
             return this._result = new Deferred();
          },
 
-         _onAreaComplete: function (evtName, selectedColumns) {
+         _onAreaComplete: function (evtName, columns, selectedColumns) {
             this._areaContainer.close();
-            this._sentResult({columns:this._columnsConfig.columns, selectedColumns:selectedColumns});
+            this._sentResult({columns:columns, selectedColumns:selectedColumns});
             //this._notify('onComplete');
          },
 
@@ -138,7 +137,6 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
 
          _sentResult: function (result) {
             this._result.callback(result);
-            this._columnsConfig = null;
             this._result = null;
          }
       });

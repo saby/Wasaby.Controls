@@ -21,13 +21,29 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
    function (CoreExtend, Deferred, ISource, ObservableMixin, DataSet, longOperationsManager, LongOperationEntry, TimeInterval) {
       'use strict';
 
+
+
+      /**
+       * Увеличение лимита при наличии предусловий
+       * @private
+       * @type {number}
+       */
+      var _CUSTOM_CONDITION_EXTENSION = 4;
+
       /**
        * Простая оболочка над SBIS3.CONTROLS/LongOperations/Manager для имплементации интерфейса WS.Data/Source/ISource
        * @public
-       * @type {object}
+       * @type {WS.Data/Source/ISource}
        */
       var LongOperationsListDataSource = CoreExtend.extend({}, [ISource, ObservableMixin], /** @lends SBIS3.CONTROLS/LongOperations/List/resources/DataSource.prototype */{
          _moduleName: 'SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
+
+         $protected: {
+            _options: {
+               customConditions: [],
+               navigationType: 'Page'
+            }
+         },
 
          $constructor: function $LongOperationsListDataSource () {
             this._publish('onBeforeProviderCall');
@@ -38,9 +54,15 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
           * @return {Object}
           */
          getOptions: function () {
-            return {
-               navigationType: 'Page'
-            };
+            return this._options;
+         },
+
+         /**
+          * Возвращает дополнительные настройки источника данных.
+          * @param {Object}
+          */
+         setOptions: function (options) {
+            this._options = options;
          },
 
          /**
@@ -92,6 +114,8 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
                   options.where = where;
                }
             }
+            var customConditions = this._options.customConditions;
+            var hasCustomConditions = !!(customConditions && customConditions.length);
             var sorting = query.getOrderBy();
             if (sorting && sorting.length) {
                options.orderBy = sorting;
@@ -102,7 +126,7 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
             }
             var limit = query.getLimit();
             if (0 < limit) {
-               options.limit = limit;
+               options.limit = hasCustomConditions ? limit + customConditions.length*_CUSTOM_CONDITION_EXTENSION : limit;
             }
             if (filter.needUserInfo) {
                options.extra = {needUserInfo:true};
@@ -111,9 +135,19 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
             var promise = new Deferred();
             longOperationsManager.fetch(Object.keys(options).length ? options : null).addCallbacks(function (recordSet) {
                var meta = recordSet.getMetaData();
+               var items = recordSet.getRawData();
+               if (hasCustomConditions && items.length) {
+                  items = items.filter(function (operation) {
+                     var custom = operation.custom;
+                     return !custom || !customConditions.some(function (cond) { return Object.keys(cond).every(function (name) { return cond[name] === custom[name]; }); });
+                  });
+                  if (0 < limit && !options.offset) {
+                     items = items.slice(0, limit);
+                  }
+               }
                promise.callback(new DataSet({
                   rawData: {
-                     items: recordSet.getRawData(),
+                     items: items,
                      more: meta && meta.more
                   },
                   idProperty: recordSet.getIdProperty(),

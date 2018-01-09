@@ -1,4 +1,4 @@
-<span class="js-MoneyTextBox__input controls-MoneyTextBox__field controls-TextBox__field" contentEditable='true'>
+<span class="js-MoneyTextBox__input controls-MoneyTextBox__field controls-InputRender__field controls-TextBox__field" contentEditable='true'>
     <ws:if data="{{ enabled === true }}">{{text}}</ws:if><ws:else>{{_integersPart}}<span class="controls-MoneyTextBox__decimals">.{{_decimalsPart}}</span></ws:else>
 </span>
 <ws:if data="{{ enabled && placeholder }}">
