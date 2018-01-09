@@ -157,8 +157,10 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
          },
 
          _onAreaComplete: function (evtName, columns, selectedColumns) {
-            this._sentResult({columns:columns, selectedColumns:selectedColumns});
+            var result = this._result;
+            this._result = null;
             this._areaContainer.close();
+            result.callback({columns:columns, selectedColumns:selectedColumns});
             //this._notify('onComplete');
          },
 
@@ -168,13 +170,9 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
                this._areaContainer = null;
             }
             if (this._result) {
-               this._sentResult(null);
+               this._result.callback(null);
+               this._result = null;
             }
-         },
-
-         _sentResult: function (result) {
-            setTimeout(this._result.callback.bind(this._result, result), 1);
-            this._result = null;
          }
       });
 
