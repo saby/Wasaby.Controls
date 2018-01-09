@@ -1,4 +1,5 @@
 .controls-CheckBox {
+  cursor:pointer;
   vertical-align: top;
   display: inline-block;
   line-height: @height_CheckBox;//todo: при переписывании чекбоксов необходимо учесть что можно сделать на флексах и не задавать данное свойство
@@ -38,16 +39,12 @@
   .checkbox-border-size();
 }
 
-.controls-Checked__checked {
-  &>.controls-CheckBox__icon {
+.controls-CheckBox__icon__checked {
     .checkbox-checked-size();
-  }
 }
 
-.controls-ToggleButton__null {
-  &>.controls-CheckBox__icon {
-    .checkbox-null-size();
-  }
+.controls-CheckBox__icon__null {
+  .checkbox-null-size();
 }
 
 .controls-CheckBox__caption_empty {
@@ -55,22 +52,12 @@
   visibility: hidden;
 }
 
-.ws-enabled {
-  &.controls-CheckBox {
-    cursor: pointer;
-    .controls-CheckBox__caption {
-      color: @default-text-color;
-    }
-  }
+.controls-CheckBox__caption-enabled {
+    color: @default-text-color;
 }
 
-.ws-disabled {
-  &.controls-CheckBox {
-    cursor:pointer;
-    .controls-CheckBox__caption {
-      color: @check-box-disabled-color;
-    }
-  }
+.controls-CheckBox__caption-disabled {
+    color: @check-box-disabled-color;
 }
 
 .checkbox-checked-color(@primary-color, @check-box-disabled-color, controls-CheckBox__icon);
