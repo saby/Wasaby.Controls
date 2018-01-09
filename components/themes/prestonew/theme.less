@@ -387,8 +387,8 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-
        line-height: round(84px * @multiplier) !important;
    }
 }
-.controls-DateRangeBigChoose__years-toggleChooseYearBtn {
-   height: round(84px * @multiplier);
+.controls-DateRangeBigChoose__years-toggleChooseYearBtn, .controls-DateRangeBigChoose__years-currentYearBtn, .controls-DateRangeBigChoose__center {
+   height: round(84px * @multiplier) !important;
 }
 
 body .controls-DateRangeBigChoose__header .controls-DateBox {
@@ -433,7 +433,7 @@ body .controls-DateRangeBigChoose__years-yearsRange-btn:hover {
 
 .controls-BreadCrumbs .controls-BreadCrumbs {
    &__home, &__arrow {
-      font-size: round(50px * @multiplier)!important;
+      font-size: round(32px * @multiplier)!important;
       line-height: round(28px * @multiplier)!important;
       width: round(50px * @multiplier);
       top:  1px;
@@ -447,12 +447,12 @@ body .controls-DateRangeBigChoose__years-yearsRange-btn:hover {
 }
 
 .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-   top: round(11px * @multiplier) !important;
+   top:0 !important;
 }
 
 .ws-is-sbis-desktop {
   .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-    top: round(11px * @multiplier) !important;
+    top: 0 !important;
   }
 }
 
