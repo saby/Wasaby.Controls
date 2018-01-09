@@ -72,6 +72,9 @@ define('SBIS3.CONTROLS/Utils/ItemsSelectionUtil', ['Core/core-instance', 'Core/d
       ctrl.subscribeTo(action, 'onExecuted', function(event, meta, result) {
          if(result) {
             ctrl.addSelectedItems(result);
+            if (ctrl._options.historyId && result.at(0)) {
+               ctrl._addItemToHistory(result.at(0));
+            }
          }
          
          if(ctrl.isActive()) {
