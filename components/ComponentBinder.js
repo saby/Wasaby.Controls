@@ -22,7 +22,7 @@ define('SBIS3.CONTROLS/ComponentBinder',
     *
     * @class SBIS3.CONTROLS/ComponentBinder
     * @extends Core/Abstract
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @public
     */
    /*методы для поиска*/
@@ -57,7 +57,7 @@ define('SBIS3.CONTROLS/ComponentBinder',
 
    /**
     * Контроллер, позволяющий связывать компоненты осуществляя базовое взаимодейтсие между ними
-    * @author Герасимов Александр Максимович
+    * @author Герасимов А.М.
     * @class SBIS3.CONTROLS/ComponentBinder
     * @extends Core/Abstract
     * @public

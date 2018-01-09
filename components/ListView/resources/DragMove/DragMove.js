@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/ListView/resources/DragMove/DragMove', [
    /**
     * Реализация перемещения dragndrop'ом у списочных контролов
     * @class SBIS3.CONTROLS/ListView/resources/DragMove/DragMove
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var DRAG_META_INSERT = {
       on: 'on',

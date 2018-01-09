@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/Action/MergeAction', [
     * @class SBIS3.CONTROLS/Action/MergeAction
     * @public
     * @extends SBIS3.CONTROLS/Action/OpenDialog
-    * @author Сухоручкин Андрей Сергеевич
+    * @author Сухоручкин А.С.
     */
    var MergeAction = OpenDialogAction.extend(/** @lends SBIS3.CONTROLS/Action/MergeAction.prototype */{
       $protected: {

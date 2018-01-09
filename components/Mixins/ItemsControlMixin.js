@@ -270,7 +270,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
     *
     * @mixin SBIS3.CONTROLS/Mixins/ItemsControlMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var ItemsControlMixin = /**@lends SBIS3.CONTROLS/Mixins/ItemsControlMixin.prototype  */{
        /**

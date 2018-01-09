@@ -11,7 +11,7 @@ define('SBIS3.CONTROLS/Mixins/Selectable', [
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного.
     * @mixin SBIS3.CONTROLS/Mixins/Selectable
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @public
     */
 

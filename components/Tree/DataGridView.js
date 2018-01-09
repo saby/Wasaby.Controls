@@ -122,7 +122,7 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
     * @cssModifier controls-TreeView__withoutLevelPadding Устанавливает режим отображения дерева без иерархических отступов.
     * @cssModifier controls-TreeView__hideExpands Устанавливает режим отображения дерева без иконок сворачивания/разворачивания узлов.
     *
-    * @author Авраменко Алексей Сергеевич
+    * @author Авраменко А.С.
     *
     * @control
     * @public

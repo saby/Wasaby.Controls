@@ -18,7 +18,7 @@ define(
        * @class SBIS3.CONTROLS/Date/TimeInterval
        * @extends SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase
        * @demo SBIS3.CONTROLS.Demo.MyTimeInterval
-       * @author Крайнов Дмитрий Олегович
+       * @author Крайнов Д.О.
        *
        * @control
        * @public

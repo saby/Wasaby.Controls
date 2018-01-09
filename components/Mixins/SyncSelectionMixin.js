@@ -15,7 +15,7 @@ define('SBIS3.CONTROLS/Mixins/SyncSelectionMixin', [
     * selectedKey всегда смотрит на перывй элемент из selectedKeys
     * @mixin SBIS3.CONTROLS/Mixins/SyncSelectionMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var PROPS_TO_SYNC = {

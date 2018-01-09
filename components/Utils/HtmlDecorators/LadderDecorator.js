@@ -8,7 +8,7 @@ define('SBIS3.CONTROLS/Utils/HtmlDecorators/LadderDecorator', [
     * Декоратор текста, обеспечивающий построение лесенки
     * @class SBIS3.CONTROLS/Utils/HtmlDecorators/LadderDecorator
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @deprecated Используйте {@link WS.Data/Display/Ladder}.
     */
    var LadderDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS/Utils/HtmlDecorators/LadderDecorator.prototype */{

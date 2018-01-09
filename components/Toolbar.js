@@ -166,7 +166,7 @@ define('SBIS3.CONTROLS/Toolbar', [
     * @class SBIS3.CONTROLS/Toolbar
     * @extends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase
     * @demo SBIS3.CONTROLS.Demo.MyToolbar
-    * @author Сухоручкин Андрей Сергеевич
+    * @author Сухоручкин А.С.
     *
     * @control
     * @public

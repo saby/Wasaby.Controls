@@ -68,7 +68,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
     * @class SBIS3.CONTROLS/WaitIndicator
     * @extends Core/core-extend
     *
-    * @author Спирин Виктор Алексеевич
+    * @author Спирин В.А.
     *
     * @public
     *

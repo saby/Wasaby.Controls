@@ -18,7 +18,7 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace',
       /**
        * @class SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace
        * @extends Lib/Control/CompoundControl/CompoundControl
-       * @author Авраменко Алексей Сергеевич
+       * @author Авраменко А.С.
        * @control
        * @public
        */
