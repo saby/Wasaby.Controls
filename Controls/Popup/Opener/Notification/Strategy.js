@@ -14,7 +14,15 @@ define('js!Controls/Popup/Opener/Notification/Strategy',
        */
       var Strategy = BaseStrategy.extend({
          addElement: function (cfg) {
-            cfg.position = {
+            cfg.position = this.getPosition();
+         },
+
+         /**
+          * TODO Возвращает позицию push-уведомления
+          * @function Controls/Popup/Opener/Notification/Strategy#getPosition
+          */
+         getPosition: function () {
+            return {
                right: 16,
                bottom: 16
             };
