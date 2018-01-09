@@ -1,8 +1,9 @@
 define('js!Controls/Popup/Opener/Notification/Strategy',
    [
-      'js!Controls/Popup/Opener/BaseStrategy'
+      'js!Controls/Popup/Opener/BaseStrategy',
+      'Controls/Popup/Opener/PositioningHelpers'
    ],
-   function (BaseStrategy) {
+   function (BaseStrategy, PositioningHelpers) {
 
       /**
        * Стратегия позиционирования нотификационного окна.
@@ -14,10 +15,7 @@ define('js!Controls/Popup/Opener/Notification/Strategy',
        */
       var Strategy = BaseStrategy.extend({
          addElement: function (cfg) {
-            cfg.position = {
-               right: 16,
-               bottom: 16
-            };
+            cfg.position = PositioningHelpers.notification();
          }
       });
 

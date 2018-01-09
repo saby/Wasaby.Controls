@@ -1,9 +1,10 @@
 define('js!Controls/Popup/Opener/Sticky/Strategy',
    [
       'js!Controls/Popup/Opener/BaseStrategy',
+      'Controls/Popup/Opener/PositioningHelpers',
       'js!Controls/Popup/TargetCoords'
    ],
-   function (BaseStrategy, TargetCoords) {
+   function (BaseStrategy, PositioningHelpers, TargetCoords) {
 
       /**
        * Стратегия позиционирования прилипающего диалога.
@@ -15,40 +16,11 @@ define('js!Controls/Popup/Opener/Sticky/Strategy',
       var Strategy = BaseStrategy.extend({
          addElement: function (cfg, width, height) {
             var
-               target = cfg.popupOptions.target ? cfg.popupOptions.target : $('body'),
-               targetCoords = TargetCoords.get(target, cfg.popupOptions.corner);
-            cfg.position = {
-               top: this._vertical(targetCoords, cfg.popupOptions.verticalAlign, height),
-               left: this._horizontal(targetCoords, cfg.popupOptions.horizontalAlign, width)
-            };
-         },
-
-         _horizontal: function (targetCoords, horizontalAlign, contWidth) {
-            var
-               side = horizontalAlign ? (horizontalAlign.side || 'left') : 'left',
-               offset = horizontalAlign ? (horizontalAlign.offset || 0) : 0,
-               left = targetCoords.left - (side === 'right' ? contWidth || 0 : 0 ) + offset;
-            if (( left + contWidth ) > window.outerWidth) {
-               left -= contWidth;
-            }
-            if (left < 0) {
-               left += contWidth;
-            }
-            return left;
-         },
-
-         _vertical: function (targetCoords, verticalAlign, contHeight) {
-            var
-               side = verticalAlign ? (verticalAlign.side || 'bottom') : 'bottom',
-               offset = verticalAlign ? (verticalAlign.offset || 0) : 0,
-               top = targetCoords.top - (side === 'top' ? contHeight || 0 : 0) + offset;
-            if (( top + contHeight ) > window.outerHeight) {
-               top -= contHeight;
-            }
-            if (top < 0) {
-               top += contHeight;
-            }
-            return top;
+               target = cfg.popupOptions.target ? cfg.popupOptions.target : document.body,
+               tCoords = TargetCoords.get(target, cfg.popupOptions.corner),
+               hAlign = cfg.popupOptions.horizontalAlign,
+               vAlign = cfg.popupOptions.verticalAlign;
+            cfg.position = PositioningHelpers.sticky(tCoords, hAlign, vAlign, width, height, window.outerWidth, window.outerHeight);
          }
       });
 
