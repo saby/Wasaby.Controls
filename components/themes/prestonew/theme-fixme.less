@@ -38,6 +38,17 @@
   border: @default-border-width solid @default-border-color-second;
   background: @basic-block-bg-color;
 }
+.controls-Menu{
+  .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
+    &.icon-24, &.icon-medium {
+      top: round(28px * @multiplier);
+      left: round(-6px * @multiplier);
+    }
+    &.icon-16, &.icon-small {
+      top: round(32px * @multiplier);
+    }
+  }
+}
 body .controls-DropdownList__picker {
   .controls-DropdownList__itemCheckBox{
     top: round(17px * @multiplier);
