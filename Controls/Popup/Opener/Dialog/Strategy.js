@@ -1,9 +1,8 @@
 define('js!Controls/Popup/Opener/Dialog/Strategy',
    [
-      'js!Controls/Popup/Opener/BaseStrategy',
-      'Controls/Popup/Opener/PositioningHelpers'
+      'js!Controls/Popup/Opener/BaseStrategy'
    ],
-   function (BaseStrategy, PositioningHelpers) {
+   function (BaseStrategy) {
 
       /**
        * Стратегия позиционирования окна.
@@ -15,7 +14,22 @@ define('js!Controls/Popup/Opener/Dialog/Strategy',
        */
       var Strategy = BaseStrategy.extend({
          addElement: function (cfg, width, height) {
-            cfg.position = PositioningHelpers.dialog(window.outerWidth, window.innerHeight, width, height);
+            cfg.position = this.getPosition(window.outerWidth, window.innerHeight, width, height);
+         },
+
+         /**
+          * Возвращает позицию диалогового окна
+          * @function Controls/Popup/Opener/Dialog/Strategy#getPosition
+          * @param wWidth ширина окна браузера
+          * @param wHeight высота окна браузера
+          * @param cWidth ширина диалогового окна
+          * @param cHeight высота диалогового окна
+          */
+         getPosition: function (wWidth, wHeight, cWidth, cHeight) {
+            return {
+               left: Math.round((wWidth - cWidth) / 2),
+               top: Math.round((wHeight - cHeight) / 2)
+            };
          }
       });
       return new Strategy();

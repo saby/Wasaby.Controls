@@ -12,7 +12,7 @@ define('js!Controls/Popup/TargetCoords',
                left = 0;
             if (target) {
                //
-               var box = target[0].getBoundingClientRect();
+               var box = target.getBoundingClientRect();
                top += box.top || 0;
                left += box.left || 0;
                top += window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;

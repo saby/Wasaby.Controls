@@ -1,11 +1,14 @@
 define(
    [
-      'Controls/Popup/Opener/PositioningHelpers'
+      'js!Controls/Popup/Opener/Stack/Strategy',
+      'js!Controls/Popup/Opener/Sticky/Strategy',
+      'js!Controls/Popup/Opener/Notification/Strategy',
+      'js!Controls/Popup/Opener/Dialog/Strategy'
    ],
 
-   function (PositioningHelpers) {
+   function (Stack, Sticky, Notification, Dialog) {
       'use strict';
-      describe('Controls/Popup/Opener/PositioningHelpers', function () {
+      describe('Controls/Popup/Opener/Strategy', function () {
          describe('Sticky', function () {
             var targetCoords = {
                top: 200,
@@ -14,37 +17,37 @@ define(
                height: 400
             };
             it('sticky positioning', function() {
-               var position = PositioningHelpers.sticky(targetCoords, {}, {}, 300, 300, 1920, 1040);
+               var position = Sticky.getPosition(targetCoords, {}, {}, 300, 300, 1920, 1040);
                assert.isTrue(position.top === 200);
                assert.isTrue(position.left === 300);
             });
 
             it('sticky positioning with offset', function() {
-               var position = PositioningHelpers.sticky(targetCoords, {offset: 200}, {offset: 200}, 300, 300, 1920, 1040);
+               var position = Sticky.getPosition(targetCoords, {offset: 200}, {offset: 200}, 300, 300, 1920, 1040);
                assert.isTrue(position.top === 400);
                assert.isTrue(position.left === 500);
             });
 
             it('sticky positioning vertical align top', function() {
-               var position = PositioningHelpers.sticky(targetCoords, {}, {side: 'top'}, 100, 100, 1920, 1040);
+               var position = Sticky.getPosition(targetCoords, {}, {side: 'top'}, 100, 100, 1920, 1040);
                assert.isTrue(position.top === 100);
                assert.isTrue(position.left === 300);
             });
 
             it('sticky positioning horizontal align right', function() {
-               var position = PositioningHelpers.sticky(targetCoords, {side: 'right'}, {}, 300, 300, 1920, 1040);
+               var position = Sticky.getPosition(targetCoords, {side: 'right'}, {}, 300, 300, 1920, 1040);
                assert.isTrue(position.top === 200);
                assert.isTrue(position.left === 0);
             });
 
             it('sticky positioning vertical align top reversed', function() {
-               var position = PositioningHelpers.sticky(targetCoords, {}, {side: 'top'}, 300, 300, 1920, 1040);
+               var position = Sticky.getPosition(targetCoords, {}, {side: 'top'}, 300, 300, 1920, 1040);
                assert.isTrue(position.top === 200);
                assert.isTrue(position.left === 300);
             });
 
             it('sticky positioning horizontal align right reversed', function() {
-               var position = PositioningHelpers.sticky(targetCoords, {side: 'right'}, {}, 400, 300, 1920, 1040);
+               var position = Sticky.getPosition(targetCoords, {side: 'right'}, {}, 400, 300, 1920, 1040);
                assert.isTrue(position.top === 200);
                assert.isTrue(position.left === 300);
             });
@@ -52,7 +55,7 @@ define(
 
          describe('Dialog', function () {
             it('dialog positioning', function() {
-               var position = PositioningHelpers.dialog(1920, 1080, 200, 300);
+               var position = Dialog.getPosition(1920, 1080, 200, 300);
                assert.isTrue(position.top === 390);
                assert.isTrue(position.left === 860);
             });
@@ -60,35 +63,35 @@ define(
 
          describe('Stack', function () {
             it('first stack positioning', function() {
-               var position = PositioningHelpers.stack(0, 100, 1000, 1920);
+               var position = Stack.getPosition(0, 100, 1000, 1920);
                assert.isTrue(position.width === 1000);
                assert.isTrue(position.top === 0);
                assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
             });
             it('current panel is broader then previous', function() {
-               var position = PositioningHelpers.stack(1, 100, 1200, 1920, 1000, 0);
+               var position = Stack.getPosition(1, 100, 1200, 1920, 1000, 0);
                assert.isTrue(position.width === 1200);
                assert.isTrue(position.top === 0);
                assert.isTrue(position.right === 0);
                assert.isTrue(position.bottom === 0);
             });
             it('previous width is equal current width', function() {
-               var position = PositioningHelpers.stack(1, 100, 1000, 1920, 1000, 0);
+               var position = Stack.getPosition(1, 100, 1000, 1920, 1000, 0);
                assert.isTrue(position.width === 1000);
                assert.isTrue(position.top === 0);
                assert.isTrue(position.right === 100);
                assert.isTrue(position.bottom === 0);
             });
             it('hidden stack positioning', function() {
-               var position = PositioningHelpers.stack(2, 100, 1000, 1920, 1900, 0);
+               var position = Stack.getPosition(2, 100, 1000, 1920, 1900, 0);
                assert.isTrue(position === null);
             });
          });
 
          describe('Notification', function () {
             it('first notification positioning', function() {
-               var position = PositioningHelpers.notification();
+               var position = Notification.getPosition();
                assert.isTrue(position.right === 16);
                assert.isTrue(position.bottom === 16);
             });
