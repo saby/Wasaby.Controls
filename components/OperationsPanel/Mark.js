@@ -159,7 +159,8 @@ define('SBIS3.CONTROLS/OperationsPanel/Mark', [
                this._menuButton.setCaption(caption);
             }
             this._menuButton.setVisible(hasMarkOptions);
-            this._notifyOnSizeChanged(true);
+            //Событие обновления, необходимо в ПМО, для перерисовки кнопки меню с операциями
+            this._notify('onMarkUpdated');
 
          }.bind(this);
 
@@ -188,7 +189,6 @@ define('SBIS3.CONTROLS/OperationsPanel/Mark', [
       _updateMark: forAliveOnly(function() {
          this._updateMarkButton();
          this._updateMarkCheckBox();
-         this._notify('onMarkUpdated');
       }),
       /**
        * Выбрать все элементы.

@@ -239,6 +239,7 @@ define('SBIS3.CONTROLS/OperationsPanel', [
                   buttonItems.push(obj);
                }
 
+               //После обновления операции выделения записей, проверим вместимость
                if(operationType === 'mark'){
                   var markInstance = self.getItemInstance(item.get('name'));
                   self.subscribeTo(markInstance, 'onMarkUpdated', function(){
