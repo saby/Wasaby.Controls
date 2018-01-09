@@ -605,7 +605,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
              */
             parentProperty: null,
             /**
-             * @cfg {String} Устанавливает поле, по значениям которого определяется <a href='/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>типа записи в иерархии</a>.
+             * @cfg {String} Устанавливает имя поля, по значениям которого определяются <a href='/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>типы записей в иерархии</a>.
              * @see parentProperty
              */
             nodeProperty: null,
