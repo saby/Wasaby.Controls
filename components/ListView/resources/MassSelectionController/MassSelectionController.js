@@ -111,6 +111,11 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionC
                 case IBindCollection.ACTION_RESET:
                    this._onProjectionChangeAdd(newItems);
              }
+          },
+
+          destroy: function() {
+             this._selection.destroy();
+             MassSelectionController.superclass.destroy.apply(this, arguments);
           }
        });
 
