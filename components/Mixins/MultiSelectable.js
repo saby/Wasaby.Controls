@@ -234,6 +234,9 @@ define('SBIS3.CONTROLS/Mixins/MultiSelectable', [
             if(this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
                this._loadItemsDeferred.cancel();
             }
+            if (this._selectorController) {
+               this._selectorController.destroy();
+            }
          }
       },
 
