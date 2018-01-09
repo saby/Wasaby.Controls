@@ -565,6 +565,11 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
                    При возниконовении ошибки отключаем отображение автодополнения по приходу фокуса,
                    иначе будет зацикливание и интерфейс заблокируется.*/
                 self.setAutoShow(false);
+
+                if(cInstance.instanceOfMixin(this._list, 'SBIS3.CONTROLS/Mixins/ItemsControlMixin')) {
+                   this._list.setEmptyHtml(rk('Справочник недоступен'));
+                }
+                
              })
              .subscribeTo(this._list, 'onDrawItems', this._onListDrawItems.bind(this))
              .subscribeTo(this._list, 'onItemActivate', (function (eventObject, itemObj) {
