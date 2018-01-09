@@ -5,7 +5,7 @@ define(['js!Controls/Toggle/Checkbox'], function (Checkbox) {
          beforeEach(function () {
             CB = new Checkbox({});
             changeValue = false;
-            CB.subscribe('changeValue', function (e, value) {
+            CB.subscribe('valueChanged', function (e, value) {
                eventValue = value;
                changeValue = true;
             });

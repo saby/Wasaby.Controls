@@ -8,12 +8,12 @@ define('js!Controls/Toggle/interface/ICheckable', [
     */
 
    /**
-    * @name Controls/Toggle/interface/ICheckable#checked
+    * @name Controls/Toggle/interface/ICheckable#value
     * @cfg {Boolean} Состояние переключателя
     */
 
    /**
-    * @event Controls/Toggle/interface/ICheckable#changeChecked Происходит при изменении состояния переключателя.
+    * @event Controls/Toggle/interface/ICheckable#valueChanged Происходит при изменении состояния переключателя.
     * @param {Boolean} value Новое состояние
     */
 

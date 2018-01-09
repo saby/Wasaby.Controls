@@ -27,13 +27,13 @@ define('js!Controls/Toggle/Checkbox', [
     */
 
    /**
-    * @event Controls/Toggle/Checkbox#checkedChanged Происходит при изменении состояния переключателя
+    * @event Controls/Toggle/Checkbox#valueChanged Происходит при изменении состояния переключателя
     * @param {Boolean|null} value Новое состояние
     */
 
    var _private ={
       notifyChangeValue: function (self, value) {
-         self._notify('changeValue', value);
+         self._notify('valueChanged', value);
       }
    };
 
