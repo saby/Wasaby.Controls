@@ -203,7 +203,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
          if (this._options.useColumnsEditor) {
             // Вызвать команду для показа редактора колонок. Опцию columnsConfig не указываем, будем исполшьзовать то, что уже есть у браузера.
             var promise = this.sendCommand('showColumnsEditor'/*, {editorOptions:{...}}*/);
-            if (promise && (!promise.isReady() || promise.isSuccessful())) {
+            if (promise instanceof Deferred && (!promise.isReady() || promise.isSuccessful())) {
                return promise.addCallback(function (columnsConfig) {
                   // Если есть результат редактирования (то есть пользователь отредактировал колонки и нажал кнопку применить, а не закрыл редактор крестом)
                   if (columnsConfig) {
