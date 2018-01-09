@@ -456,7 +456,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
     * На DOM-элементы, отображающие развернутые узлы вешается css-класс "controls-TreeView__item-expanded". Для свернутых узлов используется css-класс "controls-TreeView__item-collapsed".
     * @mixin SBIS3.CONTROLS/Mixins/TreeMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var TreeMixin = /** @lends SBIS3.CONTROLS/Mixins/TreeMixin.prototype */{
 

@@ -123,7 +123,7 @@ define('SBIS3.CONTROLS/FieldLink',
         * @class SBIS3.CONTROLS/FieldLink
         * @extends SBIS3.CONTROLS/Suggest/SuggestTextBox
         *
-        * @author Герасимов Александр Максимович
+        * @author Герасимов А.М.
         *
         * @mixes SBIS3.CONTROLS/Mixins/MultiSelectable
         * @mixes SBIS3.CONTROLS/Mixins/ActiveMultiSelectable

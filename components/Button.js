@@ -21,7 +21,7 @@ define('SBIS3.CONTROLS/Button',
     * @extends WSControls/Buttons/Button
     *
     *
-    * @author Романов Валерий Сергеевич
+    * @author Романов В.С.
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey

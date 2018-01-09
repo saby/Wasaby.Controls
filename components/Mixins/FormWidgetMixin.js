@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/Mixins/FormWidgetMixin', [
     * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/validation/">Валидация вводимых данных</a>.
     * @mixin SBIS3.CONTROLS/Mixins/FormWidgetMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var FormWidgetMixin = /** @lends SBIS3.CONTROLS/Mixins/FormWidgetMixin.prototype */{
        /**

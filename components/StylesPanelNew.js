@@ -27,7 +27,7 @@ define('SBIS3.CONTROLS/StylesPanelNew', [
     * @class SBIS3.CONTROLS/StylesPanelNew
     * @extends Lib/Control/CompoundControl/CompoundControl
     * @control
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @mixes SBIS3.CONTROLS/Mixins/PopupMixin
     * @public
     */

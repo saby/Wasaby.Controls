@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/Browser', [
     *
     * @class SBIS3.CONTROLS/Browser
     * @extends Lib/Control/CompoundControl/CompoundControl
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @demo SBIS3.CONTROLS.Demo.MyBrowser
     *
     * @ignoreEvents onAfterLoad onChange onStateChange

@@ -20,7 +20,7 @@ define('SBIS3.CONTROLS/Menu/MenuLink', [
 	*
     * @demo SBIS3.CONTROLS.Demo.MyMenuLink
     *
-    * @author Романов Валерий Сергеевич
+    * @author Романов В.С.
     *
     * @category Button
     * @public

@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/Menu/MenuIcon', [
     *
     * @demo SBIS3.CONTROLS.Demo.MyMenuIcon
     *
-    * @author Романов Валерий Сергеевич
+    * @author Романов В.С.
     *
     * @category Button
     * @control

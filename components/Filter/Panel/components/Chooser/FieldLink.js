@@ -22,7 +22,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink', [
      *
      * @class SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink
      * @extends SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base
-     * @author Авраменко Алексей Сергеевич
+     * @author Авраменко А.С.
      * @public
      */
 

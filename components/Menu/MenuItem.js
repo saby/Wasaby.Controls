@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/Menu/MenuItem', [
     * @class SBIS3.CONTROLS/Menu/MenuItem
     * @public
     * @extends WSControls/Buttons/ButtonBase
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var MenuItem = WSButtonBase.extend( /** @lends SBIS3.CONTROLS/Menu/MenuItem.prototype */ {
       _dotTplFn : dotTplFn,

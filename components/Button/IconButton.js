@@ -8,13 +8,16 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
    'use strict';
 
    /**
-    * Класс контрола, который предназначен для отображения кнопки в виде иконки.
+    * Класс контрола "Кнопка в виде значка".
+    *
+    * <a href="/doc/platform/developmentapl/interface-development/components/textbox/buttons/button-icon/">Демонстрационные примеры</a>.
+    * <a href="http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html">Спецификация</a>.
     *
     * @class SBIS3.CONTROLS/Button/IconButton
     * @extends WSControls/Buttons/Button
     * @mixes SBIS3.CONTROLS/Mixins/IconMixin
     * @demo SBIS3.CONTROLS.Demo.MyIconButton
-    * @author Борисов Петр Сергеевич
+    * @author Борисов П.С.
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment

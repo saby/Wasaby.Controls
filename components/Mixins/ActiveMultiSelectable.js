@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/Mixins/ActiveMultiSelectable', ['WS.Data/Entity/Model', '
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
     * @mixin SBIS3.CONTROLS/Mixins/ActiveMultiSelectable
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var ActiveMultiSelectable = /**@lends SBIS3.CONTROLS/Mixins/ActiveMultiSelectable.prototype  */{

@@ -14,7 +14,7 @@ define('SBIS3.CONTROLS/Pager/More', [
     * @class SBIS3.CONTROLS/Pager/More
     * @extends Lib/Control/CompoundControl/CompoundControl
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var PagerMore = CompoundControl.extend([], /** @lends SBIS3.CONTROLS/Pager/More.prototype */{

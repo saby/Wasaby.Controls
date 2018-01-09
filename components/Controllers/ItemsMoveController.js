@@ -5,7 +5,7 @@ define('SBIS3.CONTROLS/Controllers/ItemsMoveController', [
     * Контроллер, позволяющий добавить в представление данных возможность перемещения элементов
     * @mixin SBIS3.CONTROLS/Controllers/ItemsMoveController
     * @public
-    * @author Авраменко Алексей Сергеевич
+    * @author Авраменко А.С.
     */
    var ItemsMoveController = cAbstract.extend(/**@lends SBIS3.CONTROLS/Controllers/ItemsMoveController.prototype*/{
       $protected: {

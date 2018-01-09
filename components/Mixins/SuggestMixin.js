@@ -48,7 +48,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
     *
     * @mixin SBIS3.CONTROLS/Mixins/SuggestMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var SuggestMixin = /** @lends SBIS3.CONTROLS/Mixins/SuggestMixin.prototype */{

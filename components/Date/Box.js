@@ -37,7 +37,7 @@ define(
     *
     *
     * @control
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @public
     */
 
