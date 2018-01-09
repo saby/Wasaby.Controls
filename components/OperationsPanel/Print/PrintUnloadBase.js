@@ -202,9 +202,11 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
          }.bind(this);
          if (this._options.useColumnsEditor) {
             // Вызвать команду для показа редактора колонок. Опцию columnsConfig не указываем, будем исполшьзовать то, что уже есть у браузера.
-            var promise = this.sendCommand('showColumnsEditor'/*, {editorOptions:{...}}*/);
-            if (promise instanceof Deferred && (!promise.isReady() || promise.isSuccessful())) {
-               return promise.addCallback(function (columnsConfig) {
+            var value = this.sendCommand('showColumnsEditor'/*, {editorOptions:{...}}*/);
+            // Если ролученное значение действительно является результатом работы обработчика команды (в браузере), то оно будет экземпляром Deferred,
+            // а не просто true или false
+            if (value instanceof Deferred && (!value.isReady() || value.isSuccessful())) {
+               return value.addCallback(function (columnsConfig) {
                   // Если есть результат редактирования (то есть пользователь отредактировал колонки и нажал кнопку применить, а не закрыл редактор крестом)
                   if (columnsConfig) {
                      // Возвратить список объектов со свойствами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView)
