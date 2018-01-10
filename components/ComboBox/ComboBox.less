@@ -1,6 +1,7 @@
 /*
    <div class="controls-ComboBox">
       <div class="controls-TextBox__wrapper">
+         <span class="controls-ComboBox__fieldNotEditable"> текст </span>
          <input class="controls-ComboBox__field" />
          <div class="controls-ComboBox__Arrow">▼</div>
       </div>
@@ -27,14 +28,17 @@
    }
 }
 
-.controls-ComboBox__emptyValue { //цвет текста задаётся в текстбоксе, так что придется делать каскад
-   .controls-InputRender__field {
+.controls-ComboBox__emptyValue { //TODO: цвет текста летит из текстбокса, поэтому чтобы не завязываться на порядок прилёта CSS-ок придется делать каскад
+   .controls-TextBox__field {
       color: @default-placeholder-color;
    }
 }
 
 .controls-ComboBox__Arrow {
-   .flex-shrink(0); //чтобы в IE input не выталкивал стрелку за пределы контрола
+   //inline-flex, align-items и height нужны для центрирования иконки
+   .inline-flexbox();
+   .flex-shrink(0);
+   .align-items(center);
    .icon-size-without-important(@icon-size_ComboBox-Arrow);
    cursor: pointer;
    padding: 0 0 0 @spacing_ComboBox-Arrow;
@@ -43,6 +47,24 @@
 
 .controls-ComboBox__Arrow_active {
    color: @color_ComboBox-Arrow_active;
+}
+
+.controls-ComboBox__fieldNotEditable {
+   display: none;
+   white-space: nowrap;
+   overflow: hidden;
+   .align-self(center);
+}
+.controls-ComboBox__fieldNotEditable__placeholder {
+   color: @color_ComboBox_placeholder;
+}
+.controls-ComboBox__editable-false {
+   .controls-InputRender__field{
+      display: none;
+   }
+   .controls-ComboBox__fieldNotEditable {
+      display: inline-block;
+   }
 }
 
 //Стили пикера
@@ -56,7 +78,7 @@
    box-sizing: border-box;
 }
 
-.controls-ComboBox__picker_revert_vertical {
+.controls-ComboBox__picker_column_reverse {
    //Чтобы не показывать 2 границы (от комбобокса и от пикера) в настройках пикера стоит offset: -1. Для открытия вниз это работает,
    //а для открытия вверх нужен offset: 1. Переключать offset из комбобокса нереально, т.к. он узнает о том, что пикер открывается вверх
    //уже после расчёта всех отступов. Так что смещаем пикер вниз, если он открывается вверх.
