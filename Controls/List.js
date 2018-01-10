@@ -181,7 +181,7 @@ define('js!Controls/List', [
 
       scrollTo: function(offset) {
          //TODO без скролл вотчера пока так
-         this._container.closest('.ws-scrolling-content').get(0).scrollTop = offset;
+         this._container.closest('.ws-scrolling-content').scrollTop = offset;
       },
 
       scrollLoadMore: function(self, direction) {
@@ -352,8 +352,8 @@ define('js!Controls/List', [
             //TODO пока создаем ScrollWatcher всегда, когда есть скроллКонтейнер
             //if ((this._options.navigation && this._options.navigation.source === 'page')) {
                var scrollContainer = this._container.closest('.ws-scrolling-content');
-               if (scrollContainer && scrollContainer.length) {
-                  this._scrollController = _private.createScrollController.call(this, scrollContainer[0]);
+               if (scrollContainer) {
+                  this._scrollController = _private.createScrollController.call(this, scrollContainer);
                }
             //}
 
@@ -361,11 +361,11 @@ define('js!Controls/List', [
                //TODO кривое обращение к DOM
                //убарть когда перейду на скролл вотчер от Ильи Девятова
                scrollContainer = this._container.closest('.ws-scrolling-content');
-               if (scrollContainer.length && this._options.navigation.viewConfig && this._options.navigation.viewConfig.pagingMode) {
+               if (scrollContainer && this._options.navigation.viewConfig && this._options.navigation.viewConfig.pagingMode) {
                   var self = this;
                   require(['js!Controls/List/Controllers/ScrollPaging'], function (ScrollPagingController) {
                      self._scrollPagingCtr = new ScrollPagingController({
-                        scrollContainer: scrollContainer.get(0),
+                        scrollContainer: scrollContainer,
                         mode: self._options.navigation.viewConfig.pagingMode
                      });
 

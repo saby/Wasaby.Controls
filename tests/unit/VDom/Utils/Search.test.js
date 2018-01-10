@@ -118,8 +118,12 @@ define(
                      searchParam: 'name',
                      dataSource: source,
                      navigation: {
-                        pageSize: 1,
-                        mode: "totalCount"
+                        source: 'page',
+                        sourceConfig: {
+                           pageSize: 1,
+                           page: 0,
+                           mode: 'totalCount'
+                        }
                      },
                      searchDelay: 50
                   }
