@@ -627,7 +627,8 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
          var showAllConfig = this._getShowAllConfig(),
             list = this.getList(),
             listConfig;
-         if (Object.isEmpty(showAllConfig)) {
+         
+         if (showAllConfig && showAllConfig.template === DEFAULT_SHOW_ALL_TEMPLATE) {
             listConfig = {
                columns: list.getColumns(),
                filter: list.getFilter(),
