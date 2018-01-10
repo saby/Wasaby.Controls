@@ -419,10 +419,6 @@ define('SBIS3.CONTROLS/ComboBox', [
          return false;
       },
 
-      setText: function (text) {
-         ComboBox.superclass.setText.call(this, text);
-      },
-
       _drawText: function(text) {
          ComboBox.superclass._drawText.apply(this, arguments);
          var fieldNotEditableContainer = $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0));
@@ -801,9 +797,7 @@ define('SBIS3.CONTROLS/ComboBox', [
             this._inputField.attr('readonly', 'readonly');
          }
          else {
-            if (this._options.editable) {
-               this._inputField.removeAttr('readonly');
-            }
+            this._inputField.attr('readonly', !this._options.editable);
          }
          $('.controls-ComboBox__Arrow', this.getContainer()).toggleClass('ws-invisible', !enabled); //TODO: удалять из DOM
       },
