@@ -295,3 +295,13 @@ body {
 body .controls-DropdownList__afterCaptionWrapper {
   .inline-flexbox();
 }
+
+//TODO: в престо отключим замыливание при показе шеврона редактирования папки т.к.
+//в тёмной теме прозрачный цвет ховера и невозможно сделать замыливание.
+//После перехода на flex нужно реализовать троеточие.
+.controls-TreeView__ellipsis-copyArrow {
+  background-color: transparent !important;
+  &:after {
+    display: none !important;
+  }
+}

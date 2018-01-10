@@ -431,7 +431,7 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
          if(!this._editArrow && (this._options.editArrow || this._options.arrowActivatedHandler)) {
             this._editArrow = new IconButton({
                element: this._container.find('> .controls-TreeView__editArrow-container'),
-               icon: 'icon-16 icon-View icon-size',
+               icon: 'icon-View icon-size',
                cssClassName: 'ws-hidden',
                parent: this,
                allowChangeEnable: false,
