@@ -92,9 +92,9 @@
 
 .controls-MonthView__textColor-currentMonthDay-workday-enabled {
    color: @color_MonthView-item;
-   &:hover {
-      color: @color_MonthView-item-hover;
-   }
+   //&:hover {
+   //   color: @color_MonthView-item-hover;
+   //}
 }
 .controls-MonthView__textColor-currentMonthDay-weekend-enabled {
    color: @color_MonthView-item-weekend;
@@ -104,6 +104,26 @@
 }
 .controls-MonthView__textColor-currentMonthDay-weekend-disabled {
    color: greyscale(lighten(@color_MonthView-item-weekend, 20%));
+}
+
+.controls-MonthView__today {
+   color: @color_MonthView-item-today;
+   &:before {
+      content: "";
+      position: absolute;
+      //height: calc(100% - 2px);
+      //width: calc(100% - 2px);
+      top: 1px;
+      bottom: 1px;
+      left: 1px;
+      right: 1px;
+      border-radius: 50%;
+      background-color: @background-color_MonthView-item-today;
+   }
+}
+
+.controls-MonthView__item-title {
+   position: relative;
 }
 
 .controls-MonthView__cursor-item {

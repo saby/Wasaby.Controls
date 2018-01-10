@@ -140,16 +140,13 @@ define(
 
          _attachEvents: function () {
             var self = this,
-               itemsContainerCssClass = ['.', this._MONTH_VIEW_CSS_CLASSES.TABLE].join(''),
-               itemsContainers = this.getContainer().find(itemsContainerCssClass),
+               container = this.getContainer(),
                itemCssClass = ['.', this._SELECTABLE_RANGE_CSS_CLASSES.item].join('');
 
             if (this.isEnabled()) {
-               itemsContainers.click(
-                  'click', this._onDayMouseClick.bind(this)
-               );
+               container.on('click', itemCssClass, this._onDayMouseClick.bind(this));
 
-               itemsContainers.on('mouseenter', itemCssClass, function () {
+               container.on('mouseenter', itemCssClass, function () {
                   self._onDayMouseEnter($(this));
                });
             }
@@ -163,7 +160,7 @@ define(
          // },
 
          _onDayMouseClick: function (event) {
-            var t = $(event.target),
+            var t = $(event.currentTarget),
                date;
             // Начинаем выделение по дням или по месяцам в зависимости от того на какую область дня нажал пользователь,
             // завершаем выделение независимо от того в какую область дня нажал пользователь.
@@ -179,9 +176,7 @@ define(
                this._onRangeItemElementClick(date);
                // this._setSelectionType(null);
             } else {
-               if (t.hasClass(this._MONTH_VIEW_CSS_CLASSES.DAY)) {
-                  this._onDayTitleMouseClick(t, event);
-               }
+               this._onDayTitleMouseClick(t, event);
             }
          },
 
