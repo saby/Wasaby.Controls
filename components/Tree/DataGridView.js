@@ -449,6 +449,7 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
 
       _getEditArrowPosition: function(td, folderTitle, arrowContainer) {
          var  containerCords = this._container[0].getBoundingClientRect(),
+              toolbarContainer = this._getItemsToolbar().getContainer(),
               tdPadding, arrowCords, leftOffset, toolbarLeft, needCorrect;
          
          tdPadding = parseInt(td.css('padding-right'), 10);
@@ -470,12 +471,11 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
          leftOffset = arrowCords.left - containerCords.left;
          
          if(this._isSupportedItemsToolbar() && this._getItemsToolbar().isVisible()) {
-            toolbarLeft = this._getItemsToolbar().getContainer()[0].offsetLeft;
-
+            toolbarLeft = toolbarContainer[0].offsetLeft;
             // когда тулбар находится в строке считать пересечение через offsetLeft не получится
             // т.к. offsetLeft будет считаться от края td в которой лежит тулбар
             if(this._options.itemsActionsInItemContainer){
-                needCorrect = (this.getContainer().width() - (leftOffset + arrowCords.width) - this._getItemsToolbar().getContainer().width()) < 0;
+                needCorrect = (this.getContainer().width() - (leftOffset + arrowCords.width) - toolbarContainer.width()) < 0;
             }else {
                 needCorrect = toolbarLeft && (toolbarLeft < (leftOffset + arrowCords.width)); // Учитываем ширину иконки стрелки при корректировке
             }
