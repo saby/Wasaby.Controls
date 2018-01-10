@@ -36,7 +36,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
          $protected: {
             _options: {
                moveColumns: true,
-               usePresets: false,// TODO: Включить после переделки дропдауна с пресетами
+               usePresets: false,
                newPresetTitle: rk('Новый пресет'),
                useNumberedTitle: true
             },
@@ -51,6 +51,44 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
           * Открыть редактор колонок. Возвращает обещание, которое будет разрешено после завершения редактирования пользователем. В случае, если
           * пользователь после редактирования нажал кнопку применения результата редактирования, то обещание будет разрешено новыми параметрами
           * конфигурации колонок. Если же пользователь просто закрыл редактор кнопкой "Закрыть", то обещание будет разрешено значением null
+          *
+          * Существует возможность использования предустановленных наборов колонок (пресетов). Для этого служат опции usePresets, staticPresets,
+          * presetNamespace и selectedPresetId. При наличии статичечских пресетов пользователь может клонировать любой из них и сохранить его как
+          * собственный. Простой пример использования:
+          * <pre>
+          *    require(['SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit'], function (PresetUnit) {
+          *       var promise = this.sendCommand('showColumnsEditor', {
+          *          editorOptions: {
+          *             // Будем использовать предустановленные наборы колонок:
+          *             usePresets: true,
+          *             // Определим статически-заданные пресеты:
+          *             staticPresets: [
+          *                new PresetUnit({
+          *                   id: 'preset-1',
+          *                   title: 'Статический пресет 1',
+          *                   selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП']
+          *                }), new PresetUnit({
+          *                   id: 'preset-2',
+          *                   title: 'Статический пресет 2',
+          *                   selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП']
+          *                }), new PresetUnit({
+          *                   id: 'preset-3',
+          *                   title: 'Статический пресет 3',
+          *                   selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП']
+          *                })
+          *             ],
+          *             // Пользователь будет сохранять свои пресеты в это пространство имён:
+          *             presetNamespace: 'catalog-columns-presets',
+          *             // Первоначально будет выбран пресет с таким идентификатором (опционально):
+          *             selectedPresetId: 'preset-2',
+          *             ...
+          *             другие опции
+          *             ...
+          *          }
+          *       })
+          *    });
+          * </pre>
+          *
           * @public
           * @param {object} columnsConfig Параметры конфигурации колонок
           * @param {object} [editorOptions] Дополнительные опции редактора, отличающиеся или не содержащиеся в columnsConfig. Имеют приоритет перед опциями из columnsConfig (опционально)
@@ -120,8 +158,10 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
          },
 
          _onAreaComplete: function (evtName, columns, selectedColumns) {
+            var result = this._result;
+            this._result = null;
             this._areaContainer.close();
-            this._sentResult({columns:columns, selectedColumns:selectedColumns});
+            result.callback({columns:columns, selectedColumns:selectedColumns});
             //this._notify('onComplete');
          },
 
@@ -131,13 +171,9 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
                this._areaContainer = null;
             }
             if (this._result) {
-               this._sentResult(null);
+               this._result.callback(null);
+               this._result = null;
             }
-         },
-
-         _sentResult: function (result) {
-            this._result.callback(result);
-            this._result = null;
          }
       });
 
