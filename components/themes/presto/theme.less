@@ -292,6 +292,12 @@ body {
   }
 }
 //todo: удалить временный коствль
-body .controls-DropdownList.controls-DropdownList__type-fastDataFilter .controls-DropdownList__afterCaptionWrapper {
-  .inline-flexbox();
+//это можно будет удалить при переписывании расурывающегося списка
+body {
+  .controls-DropdownList.controls-DropdownList__type-fastDataFilter .controls-DropdownList__afterCaptionWrapper {
+    .inline-flexbox();
+  }
+  .controls-DropdownList.controls-DropdownList__withoutCross .controls-DropdownList__afterCaptionWrapper, .controls-DropdownList.ws-disabled .controls-DropdownList__afterCaptionWrapper {
+    display: none;
+  }
 }
