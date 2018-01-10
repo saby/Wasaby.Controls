@@ -118,7 +118,7 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
        * Класс менеджера длительных операций
        * @public
        *
-       * @author Спирин Виктор Алексеевич
+       * @author Спирин В.А.
        *
        * @type {SBIS3.CONTROLS/LongOperations/Manager}
        */

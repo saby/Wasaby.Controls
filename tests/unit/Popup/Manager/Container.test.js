@@ -15,6 +15,7 @@ define(
             popupContainer = new Container();
          it('initialize', function(){
             assert.equal(popupContainer._popupItems.getCount(), 0);
+            assert.equal(popupContainer._overlayId, null);
          });
 
          it('add popupItem', function(){
@@ -26,6 +27,11 @@ define(
             });
             popupContainer.setPopupItems(items);
             assert.equal(popupContainer._popupItems.getCount(), 1);
+         });
+
+         it('set overlay', function(){
+            popupContainer.setOverlay(3);
+            assert.equal(popupContainer._overlayId, 3);
          });
 
          it('remove popupItem', function(){

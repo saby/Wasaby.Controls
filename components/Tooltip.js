@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/Tooltip', ['Lib/Control/Control'], function(Control) {
     * Всплывающая подсказка.
     * @class SBIS3.CONTROLS/Tooltip
     * @extends Lib/Control/Control
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var Tooltip = Control.Control.extend( /** @lends SBIS3.CONTROLS/Tooltip.prototype*/ {

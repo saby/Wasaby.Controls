@@ -371,7 +371,7 @@ define('SBIS3.CONTROLS/DataGridView',
     *
     * @class SBIS3.CONTROLS/DataGridView
     * @extends SBIS3.CONTROLS/ListView
-    * @author Герасимов Александр Максимович
+    * @author Герасимов А.М.
     * @mixes SBIS3.CONTROLS/Mixins/DragAndDropMixin
     *
     *

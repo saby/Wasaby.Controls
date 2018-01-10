@@ -49,7 +49,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
      *
      * @class SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList
      * @extends SBIS3.CONTROLS/Filter/Panel/components/Chooser/List
-     * @author Сухоручкин Андрей Сергеевич
+     * @author Сухоручкин А.С.
      * @public
      *
      * @demo SBIS3.CONTROLS.Demo.MyFilterView

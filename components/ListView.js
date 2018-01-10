@@ -103,7 +103,7 @@ define('SBIS3.CONTROLS/ListView',
        *
        * @class SBIS3.CONTROLS/ListView
        * @extends Lib/Control/CompoundControl/CompoundControl
-       * @author Герасимов Александр Максимович
+       * @author Герасимов А.М.
        *
        * @mixes SBIS3.CONTROLS/Mixins/DecorableMixin
        * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin

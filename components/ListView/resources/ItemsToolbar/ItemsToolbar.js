@@ -26,7 +26,7 @@ define('SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
        /**
         * @class SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar
         * @extends SBIS3.CONTROLS/CompoundControl
-        * @author Авраменко Алексей Сергеевич
+        * @author Авраменко А.С.
         *
         * @cssModifier controls-ItemsToolbar__small устанавливает размер элементов тулбара равным 16px
         *

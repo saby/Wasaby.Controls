@@ -370,7 +370,7 @@
 //List view
 @controls-view-padding-S:                 round(9px * @multiplier);
 @listView-servicefooter-height:           round(41px * @multiplier);
-@listView-servicefooter-padding:          0 round(22px * @multiplier);
+@padding-ListView-serviceFooter:          round(22px * @multiplier);
 @listView-loadmorebutton-font-size:       round(24px * @multiplier);
 @list-view-actions-item-height:           @icon-small-size;
 @list-view-actions-margin:                0 round(4px * @multiplier);
@@ -395,10 +395,10 @@
 @scrollPaging-padding:                    round(103px * @multiplier);
 //Tree view
 @tree-view-expand-width:                  round(50px * @multiplier);
-@tree-view-expand-height:                 auto;
+@height_TreeDataGridView-expand:          auto;
 @tree-view-expand-icon-size:              round(50px * @multiplier);
-@tree-view-level-padding:                 round(58px * @multiplier);
-@tree-view-expand-margin:                 0 round(8px * @multiplier) 0 0;
+@width-TreeDataGridView-levelPadding:     round(58px * @multiplier);
+@margin_TreeDataGridView-expand:          0 round(8px * @multiplier) 0 0;
 @tree-view-editArrow-top:                 round(5px * @multiplier);
 @tree-view-expand-open-border-width:      round(8px * @multiplier) round(8px * @multiplier) 0 round(8px * @multiplier);
 @tree-view-item-content-margin:           0 0 0 round(20px * @multiplier);
@@ -430,7 +430,7 @@
 // PrintDialog
 //По какой-то причине Firefox берёт font-size не из html, а свой, причем только при расчёте этой ширины
 @controls-printdialog-min-width:          round(756px * @multiplier);
-@controls-printdialog-activate-right:     round(89px * @multiplier);
+@controls-printdialog-activate-right:     round(86px * @multiplier);
 @controls-printdialog-activate-margin-top:8px;
 //MergeDialog
 @controls-MergeDialogTemplate-height:                                       round(588px * @multiplier);
@@ -727,6 +727,9 @@
 @font-weight_Header:              normal;
 //popup,floatarea,window
 @top_window_button:               round(8px * @multiplier);
+
+//Marker
+@background-size_Marker:                          round(5px * @multiplier);
 
 //money
 @money-decorator-integer-basic-registry-font-size: round(28px * @multiplier);

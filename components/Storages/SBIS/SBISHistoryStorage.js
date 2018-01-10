@@ -31,7 +31,7 @@ define('SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage', [
 
    /**
     * Контроллер, который предоставляет базовые механизмы работы с историей.
-    * @author Герасимов Александр Максимович
+    * @author Герасимов А.М.
     * @class SBIS3.CONTROLS/Storages/SBIS/SBISHistoryStorage
     * @public
     */
