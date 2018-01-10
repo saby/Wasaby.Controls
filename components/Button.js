@@ -62,8 +62,8 @@ define('SBIS3.CONTROLS/Button',
          var opts = Button.superclass._modifyOptions.apply(this, arguments);
          opts.cssClassName += ' controls-Button';
          opts.cssClassName += ' controls-Button-size__' + (!!opts.size ? opts.size : 'default');
-         opts.cssClassName += ' controls-Button-color__' + (!!opts.primary ? 'primary' : 'default');
-         opts.cssClassName += (!!opts.primary ? ' controls-Button__primary' : '');
+         opts.cssClassName += ' controls-Button-color__' + ((!!opts.primary || opts.style === 'primary') ? 'primary' : 'default');
+         opts.cssClassName += ((!!opts.primary || opts.style === 'primary') ? ' controls-Button__primary' : '');
          return opts;
       },
       show: function(){
