@@ -5,7 +5,7 @@ module.exports = function(grunt) {
    var fs = require('fs');
    var merge = require('merge');
 
-   var themesDir = 'themes';
+   var themesDir = 'components/themes';
    var themes = fs.readdirSync(themesDir).filter(function(name) {
       return grunt.file.isDir(themesDir + '/' + name);
    });

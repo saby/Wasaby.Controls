@@ -1,0 +1,112 @@
+
+html {
+  color: #000;
+}
+
+body {
+  //Не вырезать!!! Сия костыль возращает уголок для толбара появляющегося при редактирование по месту в таблице,
+  // он отчличаеться от уголка обычного тулбара размером и цветом, вот и приходиться перебивать.
+  .controls-ListView__bottomStyle > .controls-ItemsToolbar.controls-ItemsToolbar__edit:before {
+    background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iMjU1LjAwMDAwMHB4IiBoZWlnaHQ9IjMwMC4wMDAwMDBweCIgdmlld0JveD0iMCAwIDI1NS4wMDAwMDAgMzAwLjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwzMDAuMDAwMDAwKSBzY2FsZSgwLjEwMDAwMCwtMC4xMDAwMDApIgpmaWxsPSIjZjVmNWY1IiBzdHJva2U9Im5vbmUiPgo8cGF0aCBkPSJNMTAgMjk4OSBjMCAtMTEgMTkgLTUxIDI5IC01OSA2IC01IDQ2IC02NCAyMTUgLTMxNSA0NCAtNjYgODMgLTEyMgo4NiAtMTI1IDMgLTMgMzcgLTUyIDc1IC0xMTAgMzkgLTU4IDcyIC0xMDcgNzUgLTExMCA2IC02IDY3IC05NSAyMDQgLTMwMCA1MAotNzQgOTMgLTEzNyA5NiAtMTQwIDMgLTMgMjMgLTMyIDQ1IC02NSAyMiAtMzMgNDIgLTYyIDQ1IC02NSAzIC0zIDQzIC02MSA4OQotMTMwIDQ2IC02OSAxMjEgLTE3OSAxNjYgLTI0NSA0NCAtNjYgMTA2IC0xNTYgMTM1IC0yMDAgMzAgLTQ0IDU3IC04MiA2MCAtODUKNSAtNSA0MSAtNTggMjQ0IC0zNjAgNjEgLTkxIDExMyAtMTY3IDExNiAtMTcwIDMgLTMgMjMgLTMyIDQ1IC02NSA0NyAtNzAgMzgKLTU4IDExNiAtMTY0IDU3IC03NiAxNzkgLTE5MSAyMDMgLTE5MSA2IDAgMjUgLTcgNDEgLTE2IDU4IC0zMiAyODcgLTc0IDQwMAotNzQgbDU1IDAgMCAxNTAwIDAgMTUwMCAtMTI3MCAwIGMtODkyIDAgLTEyNzAgLTMgLTEyNzAgLTExeiIvPgo8L2c+Cjwvc3ZnPgo=') no-repeat 0 0;
+    //это должно быть обязательно после backround иначе масштаб уголка слетает.
+    background-size: round(84px * @multiplier) round(84px * @multiplier);
+  }
+    //Todo: https://online.sbis.ru/opendoc.html?guid=47bdafa8-88ab-4cb2-9383-89ffd7c9dcdd
+    .controls-accent-text {
+      color: #D94700 !important;
+    }
+}
+
+body {
+  .ws-info-box {
+      background: @default-bg-color;
+      .ws-infobox-triangle {
+         background: @default-bg-color;
+      }
+  }
+}
+.controls-FloatArea {
+  background: #fff;
+}
+.controls-FloatArea.controls-InformationPopup.controls-InformationPopup__status-confirm {
+  border-color: #05B;
+}
+
+body .ws-float-area-nostack-panel-shadow-standart {
+    border: 1px solid #0055BB;
+    background: #FFFFFF;
+}
+
+.controls-editInPlace .controls-editInPlace__editor {
+  background: @controls-editInPlace-editor-bg;
+}
+
+
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
+  border-bottom: @default-border-width solid #ccc;
+}
+
+.ws-is-desktop-platform .controls-DateRangeBigChoose .controls-Button:not(.ws-disabled):not(:active).controls-Button-color__default:hover,
+.controls-DateRangeBigChoose .controls-Button.controls-Button-color__default:active:not(.ws-disabled){
+  background: #e0ecf5;
+}
+
+.controls-ListView {
+  .controls-IconButton {
+    .icon-primary {
+      color: #2D68B5;
+    }
+  }
+}
+
+.ws-is-desktop-platform {
+  .controls-ListView {
+    .controls-IconButton:not(.ws-disabled):not(.controls-Click__active) {
+      &:hover {
+        .controls-Button__icon {
+          &.icon-primary {
+            color: rgb(49, 62, 120);
+          }
+        }
+      }
+    }
+  }
+}
+.ws-float-area-stack-panel-shadow {
+  background: @default-bg-color !important;
+}
+.ws-LoadingIndicator__window, .ws-loading {
+   .ws-loadingimg {
+      div:before {
+         background-image: url('img/ajax-loader-indicator-big.gif');
+      }
+   }
+}
+
+.controls-Link.controls__filter-button__clear-filter.ws-disabled {
+  color: #ccc;
+}
+
+
+
+body {
+   .ws-sticky-header__block.ws-sticky-header__fixed,
+   .ws-sticky-header__table-header-copy {
+      // В престо в паре мест используется нестандартные цвета фона, чуть темнее или чуть светлее.
+      // В этих местах прикладники должны сами устанавливать цвет фона у зафиксированных заголовков.
+      // В большинстве реестров используется #2C3E50 - @basic-block-bg-color
+      // TODO: выпилить вместе с @basic-block-bg-color
+      background-color: #ffffff;
+   }
+   // На андроиде между контейнерами на масштабе отличном от 100% всегда есть какая то щель
+   // через которую видно скролируемое содержимое. Стилизация фикса этого бага.
+   // TODO: выпилить после того как перейдем на position: sticky
+   &.ws-is-mobile-android {
+      .ws-sticky-header__block.ws-sticky-header__fixed,
+      .ws-sticky-header__table-header-copy {
+         &:before {
+            background-color: #ffffff;
+         }
+      }
+   }
+}

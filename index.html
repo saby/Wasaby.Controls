@@ -100,7 +100,11 @@
                <li>
                   <div id="ListControlScroll"></div>
                </li>
-            </ul>
+               <li>
+                  <div id="Windows"></div>
+               </li>               <li>
+                  <div id="Toggles"></div>
+               </li>            </ul>
             <h3>Просмотр контролов</h3>
             <ul>
                <li>
@@ -297,7 +301,7 @@
 <script type="text/javascript">
    require(['Core/core-init'],function () {
       $(document).ready(function () {
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "ItemsView",
                caption: 'ItemsView',
@@ -320,14 +324,24 @@
                caption: 'ListControlScroll',
                href: '/pages/demo.html?cname=ListControlScroll'
             });
+             new r({
+                 element: "Toggles",
+                 caption: 'Toggles',
+                 href: '/pages/demo.html?cname=Toggles'
+             });
             new r({
                element: "Inputs",
                caption: 'Inputs',
                href: '/pages/demo.html?cname=VDomInputs'
             });
+            new r({
+               element: "Windows",
+               caption: 'Windows',
+               href: '/pages/demo.html?cname=VDomWindows'
+            });
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "Header",
                caption: 'Header',
@@ -335,7 +349,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "prestoDemo",
                caption: 'presto',
@@ -343,7 +357,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "genieDemo",
                caption: 'genie',
@@ -351,7 +365,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "onlinesbisDemo",
                caption: 'online.sbis',
@@ -359,7 +373,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "presto",
                caption: 'presto',
@@ -367,7 +381,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "genie",
                caption: 'genie',
@@ -375,7 +389,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "demo",
                caption: 'demo',
@@ -383,7 +397,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "onlinesbis",
                caption: 'online.sbis',
@@ -391,7 +405,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "TextBoxes",
                caption: 'TextBoxes',
@@ -399,7 +413,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "FolderFooter",
                caption: 'FolderFooter',
@@ -407,7 +421,7 @@
             })
          });
 
-          require(["js!SBIS3.CONTROLS.Link"], function (r) {
+          require(["SBIS3.CONTROLS/Link"], function (r) {
               new r({
                   element: "TimeInterval",
                   caption: 'TimeInterval',
@@ -415,7 +429,7 @@
               })
           });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "Buttons",
                caption: 'Buttons',
@@ -423,7 +437,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "tabButtons",
                caption: 'TabButtons',
@@ -431,7 +445,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "ButtonsNew",
                caption: 'Buttons new',
@@ -439,7 +453,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "Switchers",
                caption: 'Switchers',
@@ -447,7 +461,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "ButtonGroups",
                caption: 'Button groups',
@@ -455,7 +469,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "FieldFormat",
                caption: 'FieldFormat',
@@ -463,7 +477,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "OP",
                caption: 'OperationsPanel',
@@ -471,7 +485,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
 
             new r({
                element: "ViewsNEWDS",
@@ -480,7 +494,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: 'TreeDataGridView',
                caption: 'TreeDataGridView',
@@ -488,28 +502,28 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "Enum",
                caption: 'Enum',
                href: '/pages/Enum.html'
             })
          });
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "Flags",
                caption: 'Flags',
                href: '/pages/Flags.html'
             })
          });
-          require(["js!SBIS3.CONTROLS.Link"], function (r) {
+          require(["SBIS3.CONTROLS/Link"], function (r) {
               new r({
                   element: "ViewsScroll",
                   caption: 'ViewsScroll',
                   href: '/pages/ViewsScroll.html'
               })
           });
-          require(["js!SBIS3.CONTROLS.Link"], function (r) {
+          require(["SBIS3.CONTROLS/Link"], function (r) {
               new r({
                   element: "ViewsGroup",
                   caption: 'ViewsGroup',
@@ -517,7 +531,7 @@
               })
           });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "Popup",
                caption: 'Popup',
@@ -525,14 +539,14 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "DataBinding",
                caption: 'Data binding',
                href: '/pages/DataBindingPage.html'
             })
          });
-          require(["js!SBIS3.CONTROLS.Link"], function (r) {
+          require(["SBIS3.CONTROLS/Link"], function (r) {
               new r({
                   element: "DropdownList",
                   caption: 'DropdownList',
@@ -540,7 +554,7 @@
               })
           });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "ButtonContent",
                caption: 'Button content',
@@ -548,7 +562,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "EditAtPlace",
                caption: 'Edit At Place',
@@ -556,7 +570,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "MultiView",
                caption: 'MultiView',
@@ -564,7 +578,7 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "Suggest",
                caption: 'Suggest',
@@ -572,14 +586,14 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "Browser",
                caption: 'Browser',
                href: '/pages/browser.html'
             })
          });
-          require(["js!SBIS3.CONTROLS.Link"], function (r) {
+          require(["SBIS3.CONTROLS/Link"], function (r) {
               new r({
                   element: "BrowserEngine",
                   caption: 'BrowserEngine',
@@ -591,98 +605,98 @@
                 href: '/pages/Engine.BrowserTabs.html'
              });
           });
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "FieldLink",
                caption: 'FieldLink',
                href: '/pages/FieldLink.html'
             })
          });
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "FilterButtonHistory",
                caption: 'FilterButtonHistory',
                href: '/pages/FilterButtonHistory.html'
             })
          });
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "InformationWindows",
                caption: 'InformationWindows',
                href: '/pages/informationWindows.html'
             })
          });
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "VD_ListView",
                caption: 'ListView',
                href: '/pages/VD_ListView.html'
             })
          });
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "VD_DataGridView",
                caption: 'DataGridView',
                href: '/pages/VD_DataGridView.html'
             })
          });
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "VD_TreeView",
                caption: 'TreeView',
                href: '/pages/VD_TreeView.html'
             })
          });
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "VD_VirtualScroll",
                caption: 'Virtual Scroll',
                href: '/pages/VD_VirtualScroll.html'
             })
          });
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "VD_TreeViewEnv",
                caption: 'TreeView - environment',
                href: '/pages/VD_TreeViewEnv.html'
             })
          });
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "EditInPlaceViews",
                caption: 'Edit in place - views',
                href: '/pages/EditInPlaceViews.html'
             })
          });
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "EditInPlacePending",
                caption: 'Edit in place - pending',
                href: '/pages/EditInPlacePending.html'
             })
          });
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "Ladder",
                caption: 'Ladder',
                href: '/pages/Ladder.html'
             })
          });
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "SearchForm",
                caption: 'SearchForm',
                href: '/pages/SearchForm.html'
             })
          });
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "themepreview",
                caption: 'Theme preview',
                href: '/theme-preview/preview.html'
             })
          });
-         require(['js!SBIS3.CONTROLS.ProcessStateIndicator'], function(r){
+         require(['SBIS3.CONTROLS/ProcessStateIndicator'], function(r){
             $('.processStateIndicator').each(function(){
                var
                   colors = this.getAttribute('data-colors'),

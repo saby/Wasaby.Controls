@@ -1,12 +1,12 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['js!SBIS3.CONTROLS.MoneyTextBox'], function (NumberTextBox) {
+define(['SBIS3.CONTROLS/MoneyTextBox'], function (NumberTextBox) {
     'use strict';
     var
         MTB,
         inputField,
         formattedValue;
 
-    describe('SBIS3.CONTROLS.MoneyTextBox', function () {
+    describe('SBIS3.CONTROLS/MoneyTextBox', function () {
         beforeEach(function() {
            if (typeof $ === 'undefined') {
               this.skip();

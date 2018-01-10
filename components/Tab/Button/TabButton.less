@@ -1,0 +1,369 @@
+@tab-button-large-inner-font-weight: bold;
+.controls-TabButton {
+   cursor: pointer;
+   height: 100%;
+   box-sizing: border-box;
+   position: relative;
+   color: @tab-button-color;
+   font: @tab-button-font;
+   font-size: @tab-button-font-size; //for ie 10
+   margin-top: 0;
+   z-index: 10;
+   display: inline-block;
+   border-left: none;
+   border-right: none;
+   border-top: 1px solid transparent;
+   border-bottom: @tab-buttons-border-bottom;
+   padding: 0 1px;
+   .flex-shrink(1);
+
+   &:not(.controls-Checked__checked):hover {
+      padding: 0;
+      background: @tab-button-hover-background;
+      border-top: @tab-button-hover-border;
+      border-bottom: @tab-buttons-border-bottom;
+      .controls-TabButton__inner {
+         border-right: @tab-button-hover-border;
+         border-left: @tab-button-hover-border;
+         &:before {
+            display: none;
+         }
+      }
+   }
+
+   &.controls-Checked__checked {
+      border-top: @tab-button-checked-border-top;
+      z-index: 50;
+      cursor: default;
+      font-size: @tab-button-checked-font-size;
+      border-bottom: none;
+      padding: 0;
+      overflow: visible;
+
+
+      .controls-TabButton__inner {
+         font-weight: bold;
+         font-size: @tab-button-checked-inner-font-size;
+         color: @tab-button-checked-inner-color;
+         border-width: 0 @tab-button-checked-inner-border 0 @tab-button-checked-inner-border;
+         border-color: @tab-button-checked-border-color;
+         border-style: solid;
+         background: @tab-button-checked-inner-bg;
+         .controls-TabButton__wrapper {
+            margin-bottom: 1px;
+         }
+         &:before {
+            display: none;
+         }
+      }
+      .controls-tabButton__overlay {
+         display: none;
+      }
+      //стиль для встраиваемых компонентов, чтобы текст был по стандарту
+      .controls-TabButton__mainText,.controls-TabButton__mainText.controls-MenuLink {
+         color: @tab-button-checked-inner-color;
+      }
+   }
+
+   .controls-TabButton__inner {
+      padding: @tab-button-inner-padding;
+      overflow: hidden;
+      height: 100%;
+      max-width: @tab-button-large-inner-max-width;
+      .flexbox();
+      .align-items(center);
+      &:before {
+         content: '';
+         display: block;
+         width: @tab-button-inner-after-width;
+         height: @tab-button-inner-after-height;
+         background-color: @tab-button-inner-after-bg-color;
+         position: absolute;
+         bottom: @tab-button-inner-after-bottom;
+         z-index: 10;
+      }
+      .controls-TabButton__wrapper {
+         .flexbox();
+         .flex-direction(row);
+         .align-items(center);
+         height: @tab-button-inner-wrapper-height;
+         max-width: 100%;
+      }
+      .controls-TabButton__caption {
+         .flexbox();
+         .align-items(baseline);
+         .flex-shrink(0); //for ie
+         overflow: hidden;
+         text-overflow: ellipsis;
+         white-space: nowrap;
+         max-width: ~"calc(100% + 0.2px)"; //в ff и хроме появилась проблема с отрисовкой текста. Если в __caption лежит один(!) блочный элемент с текстом и overflow:hidden,
+         //то браузер считает, что тексту не хватает сотых долей пикселя, чтобы влезть в контейнер (хотя это не так), вследствие чего появляется троеточие
+      }
+      .controls-TabButton__icon {
+         margin-right: @margin-right_TabButton_icon;//6px;
+      }
+   }
+
+   //стиль для встраиваемых компонентов, чтобы текст был по стандарту
+   .controls-TabButton__mainText {
+      color: @tab-button-color;
+      font: @tab-button-font;
+      font-size: @tab-button-font-size;
+      font-weight: @tab-button-large-inner-font-weight;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      font-size: @tab-button-large-inner-font-size;
+      height: @tab-button-inner-wrapper-height;
+      .flex-shrink(1);
+      .inline-flexbox();
+
+      max-width: 100%;
+      > * {
+         max-width: 100%; //защищаемся от рандомной верстки, не даем дочерним элементам вылехти за пределы контейнера
+      }
+
+      .controls-InputRender__field {
+         font-size: 18px;
+      }
+   }
+   &.controls-TabButton__main-item {
+      min-width: 1px; //Нужно, чтобы flex правильно позиционировал ужимаемый контейнер. с 0 в ie11 не работает
+      .controls-EditAtPlace {
+         background: transparent;
+         .controls-InputRender__fieldWrapper {
+            padding: 0; //по стандарту
+         }
+         .controls-EditAtPlace__textField{
+            border-bottom-style: none;
+         }
+      }
+      .controls-TabButton__inner {
+         font-size: @tab-button-large-inner-font-size;
+         font-weight: @tab-button-large-inner-font-weight;
+
+         .controls-TabButton__wrapper {
+            margin-bottom: @margin-bottom_TabButton_checked_tab;
+         }
+      }
+      .controls-TabButton__caption {
+         > * {
+            font-weight: @tab-button-large-inner-font-weight;
+         }
+         &:first-child {
+            min-height: 24px;
+         }
+      }
+      .controls-TabButton__additionalText1, .controls-TabButton__additionalText1 > * {
+         .flex-shrink(0);
+         color: @tab-button-large-firstAddText-color;
+         font-size: @tab-button-large-firstAddText-font-size;
+         font-weight: normal;
+         &:hover {
+            color: @tab-button-large-firstAddText-color-hover;
+         }
+      }
+      .controls-TabButton__additionalText2, .controls-TabButton__additionalText2 > * {
+         .flex-shrink(0);
+         color: @tab-button-large-secondAddText-color;
+         font-size: @tab-button-large-secondAddText-font-size;
+         font-weight: normal;
+      }
+      &.controls-Checked__checked {
+         .controls-TabButton__caption {
+            min-height: 25px; //Для выравнивания в главной вкладки, чтобы центрирование не зависило от высоты внутреннего содержимого
+         }
+      }
+      .controls-MenuLink {
+         font-size: @tab-button-large-inner-font-size;
+         color: @tab-button-large-firstAddText-color-hover;
+         height: 23px;
+      }
+   }
+
+   &.controls-TabButton__right-align {
+      margin-right: @tab-button-right-margin-right;
+      .controls-TabButton__inner:before {
+         left: 0;
+      }
+   }
+
+   &.controls-TabButton__left-align {
+      margin-left: @tab-button-left-margin-left;
+      .controls-TabButton__inner:before {
+         right: 0;
+      }
+   }
+
+   .controls-tabButton__overlay {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: @tab-button-overlay-background;
+      -ms-filter: @tab-button-overlay-ms-filter;
+      opacity: 0;
+   }
+   &.controls-TabButton__counter {
+      &.controls-Checked__checked .controls-TabButton__inner * {
+         color: #D94700;
+      }
+      .controls-tabButton__counter-value {
+         color: #FF7033;
+         display: inline-block;
+      }
+      &.controls-TabButton__counter-success {
+         &.controls-Checked__checked .controls-TabButton__inner * {
+            color: #569034;
+         }
+         .controls-tabButton__counter-value {
+            color: #72BE44;
+         }
+      }
+      &.controls-TabButton__counter-error {
+         &.controls-Checked__checked .controls-TabButton__inner * {
+            color: #EF463A;
+         }
+         .controls-tabButton__counter-value {
+            color: #EF463A;
+         }
+      }
+   }
+   .controls-EditAtPlace {
+      background: transparent; //Фон в редактировании должен быть от вкладки
+   }
+   .controls-EditAtPlace__fieldWrapper {
+      .flexbox(); //Проблемы с выравниванием редактирования по месту, пока решаю на уровне вкладок, потом надо на самом компоненте
+   }
+}
+
+.controls-TabButtons__simple-view {
+   &.controls-TabButtons__simple-view-select {
+      .controls-TabButton.controls-Checked__checked {
+         .controls-TabButton__inner {
+            color: #D94700;
+         }
+      }
+   }
+   //todo - Каскады вызваны тем, что вкладки второго уровня перебивают стили основных вкладок. Удалить все каскады по новому стандарту, в котором останутся только вкладки второго уровня
+   .controls-TabButton {
+      border-color: transparent;
+      border-bottom: @tab-buttons-border-bottom;
+      .controls-TabButton__inner {
+         border-color: transparent;
+         color: @tab-button-simple-inner-color;
+         &:before {
+            display: block;
+         }
+      }
+      &:not(.controls-Checked__checked):hover {
+         border-color: transparent;
+         .controls-TabButton__inner {
+            border-color: transparent;
+            background: transparent;
+            &:before {
+               display: block;
+            }
+         }
+      }
+      &:hover {
+         background: transparent;
+         &:after {
+            background: @tab-button-simple-hover-bottomline-color;
+            display: block;
+         }
+      }
+      &.controls-Checked__checked {
+         z-index: 10; //чтобы не пропадал разделитель
+         .controls-TabButton__inner {
+            color: @tab-button-simple-inner-checked-color;
+            background: transparent;
+         }
+         &:after {
+            display: block;
+            background: @tab-button-simple-checked-bottomline-color;
+         }
+      }
+      &:after {
+         content: '';
+         position: absolute;
+         bottom: -1px;
+         left: 1px;
+         right: 1px;
+         height: @tab-button-simple-inner-bottom-height;
+         display: none;
+      }
+   }
+}
+
+.ws-is-ie, .ws-is-firefox {
+   //Как-то так должно выглядеть редактирование по месту, перебил все что можно
+   .controls-TabButton .controls-EditAtPlace__fieldWrapper {
+      .inline-flexbox();
+      height: 24px;
+      line-height: normal;
+      margin: 0;
+      border: none;
+   }
+   //Костыли, вызванные версткой editAtPlace. нужно переделывать.
+   .controls-TabButton.controls-TabButton__main-item {
+      .controls-TabButton__caption > * {
+         max-height: 26px;
+      }
+   }
+   //Для главной вкладки, внутри которой 1 текстбокс c font-size: 18px. ошибка из-за overflow:hidden на редактировании
+   .controls-EditAtPlace {
+      &.controls-InputRender_size_l {
+         .controls-EditAtPlace__fieldWrapper {
+            position: relative;
+            top: -1px;
+         }
+         .controls-InputRender_size_l.controls-InputRender {
+            .flexbox();
+         }
+      }
+   }
+}
+
+.ws-is-firefox {
+   .controls-TabButton__flex {
+      .controls-TabButton__additionalText2 .controls-EditAtPlace__fieldWrapper {
+         position: relative;
+         top: 1px;
+      }
+   }
+}
+
+.ws-is-ie {
+   .controls-TabButton__flex {
+      > .controls-TabButton__mainText {
+         position: relative;
+         top: -1px;
+      }
+   }
+}
+
+.ws-is-ie12 {
+   //В edge множество багов с рендером элементов у которых дробная ширина или высота https://stackoverflow.com/questions/32313551/microsoft-edge-bug
+   .controls-TabButton.controls-TabButton__main-item .controls-MenuLink {
+      height: 24px;
+   }
+}
+
+.ws-is-desktop-safari, .ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
+   .controls-TabButton .controls-TabButton__mainText {
+      max-width: ~"calc(100% + 2px)"; //опять полупиксели, на сотые доли не влезает текст, появляется троеточие
+      //Нужно переписывать редактирование по месту
+      &.controls-EditAtPlace__ellipsis .controls-EditAtPlace__fieldWrapper {
+         display: inline-block;
+         .controls-EditAtPlace__textField {
+            width: ~"calc(100% + 1px)";
+         }
+      }
+   }
+}
+
+//модификатор, который возвращает дефолтные паддинги в редактирование по месту. Нужно пересмотреть стандарт на компонент.
+.controls-TabButton.controls-TabButton__main-item .controls-TabButton__fixEditAtPlace-padding.controls-EditAtPlace .controls-InputRender__fieldWrapper {
+   padding: 0 4px;
+}

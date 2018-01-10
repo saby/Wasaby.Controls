@@ -4,7 +4,7 @@
 define('js!WSTest/Focus/Scenario/16', [
    'Core/constants',
    'js!WSTest/Focus/TestFocusHelpers',
-   'js!SBIS3.CORE.Window',
+   'Lib/Control/Window/Window',
    'css!' + wsConfig.wsRoot + 'css/core.css',
    'css!' + wsConfig.wsRoot + 'css/themes/wi_scheme.css',
    'js!WSTest/Focus/Case16'
@@ -30,10 +30,13 @@ define('js!WSTest/Focus/Scenario/16', [
       });
 
       setTimeout(function() {
-         fHelpers.hasFocus(wnd);
-         wnd.destroy();
-         delete window[caseControlName]
-         done();
+         try {
+            fHelpers.hasFocus(wnd);
+         } finally {
+            wnd.destroy();
+            delete window[caseControlName]
+            done();
+         }
       }, 100);
 
 

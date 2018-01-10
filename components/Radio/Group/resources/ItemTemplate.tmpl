@@ -1,0 +1,9 @@
+<SBIS3.CONTROLS:Radio:Button
+   className="controls-ListView__item"
+   caption="{{getPropertyValue(item, displayProperty)}}"
+   checked="{{item.getId && item.getId() === selectedKey ? true : false}}"
+   attributes="{{ {
+      'data-hash': projItem.getHash(),
+      'data-id': item.getId && item.getId()
+   } }}"
+/>

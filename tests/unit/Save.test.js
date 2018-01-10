@@ -1,10 +1,10 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
-     ['js!SBIS3.CONTROLS.Action.List.Save',
+     ['SBIS3.CONTROLS/Action/List/Save',
       'WS.Data/Source/Memory',
       'WS.Data/Source/SbisService',
       'WS.Data/Query/Query',
-      'js!SBIS3.CONTROLS.SaveStrategy.Sbis',
+      'SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis',
       'WS.Data/Collection/RecordSet'],
    function (Save, Memory, SbisService, Query, Strategy, RecordSet) {
       'use strict';
@@ -46,7 +46,7 @@ define(
       });
       saveAction.setSaveStrategy(new fakeStrategy());
 
-      describe('SBIS3.CONTROLS.Action.Save', function () {
+      describe('SBIS3.CONTROLS/Action/Save', function () {
          describe('RecordSet in meta', function () {
             before(function() {
                saveAction.execute({

@@ -1,0 +1,120 @@
+.controls-MonthView {
+   text-align: center;
+   width: @width_MontView;
+   background: @background_MonthView;
+}
+
+.controls-MonthView__dayTable {
+   table-layout: fixed;
+   vertical-align: middle;
+   width: 100%;
+   border-spacing: @spacing_MonthView-item;
+}
+
+.controls-MonthView__tableHead {
+   font-size: @font-size_MontView-weekDayHeader;
+   text-align: center;
+}
+
+.controls-MonthView__tableElement {
+   position: relative;
+   // TODO: высота должна задаваться через высоту контрола, а ячейки должны растягиваться. Переделать с уходом от таблицы.
+   height: @height_MonthView-item;
+}
+
+.controls-MonthView__weekDayHeader {
+   position: relative;
+   height: @height_MonthView-item;
+   color: @color_MonthView-weekDayHeader;
+}
+
+.controls-MonthView__backgroundColor-currentMonthDay-weekend-unselected-enabled,
+.controls-MonthView__backgroundColor-currentMonthDay-workday-unselected-enabled {
+   background: @background_MonthView-item;
+   &:hover {
+      background: @background_MonthView-item-hover;
+   }
+}
+.controls-MonthView__backgroundColor-currentMonthDay-weekend-selected-enabled,
+.controls-MonthView__backgroundColor-currentMonthDay-workday-selected-enabled {
+   background: @background_MonthView-item-selected;
+
+   &:hover {
+      background: @background_MonthView-item-selected-hover;
+   }
+}
+
+.controls-MonthView__backgroundColor-currentMonthDay-weekend-unselected-disabled,
+.controls-MonthView__backgroundColor-currentMonthDay-workday-unselected-disabled {
+   background: greyscale(lighten(@background_MonthView-item, 3%));
+}
+.controls-MonthView__backgroundColor-currentMonthDay-weekend-selected-disabled,
+.controls-MonthView__backgroundColor-currentMonthDay-workday-selected-disabled {
+   background: greyscale(lighten(@background_MonthView-item-selected, 15%));
+}
+
+.controls-MonthView__textColor-currentMonthDay-workday-enabled {
+   color: @color_MonthView-item;
+   &:hover {
+      color: @color_MonthView-item-hover;
+   }
+}
+.controls-MonthView__textColor-currentMonthDay-weekend-enabled {
+   color: @color_MonthView-item-weekend;
+}
+.controls-MonthView__textColor-currentMonthDay-workday-disabled {
+   color:  greyscale(lighten(@color_MonthView-item, 30%));
+}
+.controls-MonthView__textColor-currentMonthDay-weekend-disabled {
+   color: greyscale(lighten(@color_MonthView-item-weekend, 20%));
+}
+
+.controls-MonthView__cursor-currentMonthDay-enabled {
+   cursor: pointer;
+}
+
+.controls-MonthView__prevMonth,
+.controls-MonthView__nextMonth {
+   color: @color_MonthView-item-prev-next-month;
+
+   &:hover {
+      color: @color_MonthView-item-prev-next-month-hover;
+   }
+}
+
+.controls-MonthView__dayBorder {
+   display: block;
+   height: 100%;
+}
+
+.controls-MonthView__dayTitle {
+   display: block;
+   .box-sizing(border-box);
+   height: 100%;
+}
+.controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
+   position: absolute;
+   top: 0;
+   bottom: 0;
+   left: 7px;
+   right: 7px;
+   padding: 8px 0 0 0;
+}
+
+// В хром на ipad установлен класс ws-is-old-webkit, но не установлен ws-is-webkit. В текущую версию фиксим по месту.
+.ws-is-old-webkit,
+.ws-is-webkit {
+   // в 3.17.150 вместе с упрощение селекторов сделать везде однотипно(через position: absolute),
+   // а исключение сделать для ie. Либо подумать как свертстать по дургому.
+   .controls-MonthView__dayTitle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+   }
+   .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
+      left: 7px;
+      right: 7px;
+   }
+}

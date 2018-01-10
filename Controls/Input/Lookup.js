@@ -5,10 +5,10 @@ define('js!Controls/Input/Lookup', [
     * Поле выбора из справочника.
     * @class Controls/Input/Lookup
     * @extends Controls/Control
-    * @mixes Controls/interface/IDataSource
+    * @mixes Controls/interface/ISource
     * @mixes SBIS3.SPEC.input.interface.IPlaceholder
-    * @mixes Controls/interface/IItems
-    * @mixes Controls/Input/interface/IValidationError
+    * @mixes Controls/interface/ISource
+    * @mixes Controls/Input/interface/IValidation
     * @mixes Controls/Input/interface/IInputTag
     * @mixes Controls/interface/ISingleSelectable
     * @mixes Controls/interface/IMultiSelectable

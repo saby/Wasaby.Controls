@@ -1,0 +1,96 @@
+.controls-MenuItem {
+   position: relative;
+   .flexbox();
+   align-items: center;
+   .box-sizing(border-box);
+   cursor: pointer;
+   width: auto;
+   height: @height_MenuItem;
+   padding: @padding_MenuItem;
+   color: @color_MenuItem;
+   text-align: left;
+   font-size:  @font-size_MenuItem;
+
+   &.controls-MenuItem__padding-16, &.controls-MenuItem__padding-small{
+      padding-left: @padding_MenuItem-icon_small;
+   }
+
+   &.controls-MenuItem__padding-24, &.controls-ListView__item.controls-MenuItem__padding-24, &.controls-MenuItem__padding-medium{
+      padding-left: @padding_MenuItem-icon_medium;
+   }
+
+   &.controls-MenuItem__padding-32, &.controls-MenuItem__padding-large{
+      padding-left: @padding_MenuItem-icon_large;
+   }
+
+   &:active {
+      color: @color_MenuItem_hovered;
+      background: @background_MenuItem_hovered;
+   }
+
+   .controls-MenuItem__content {
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+      min-height: @height_MenuItem;
+
+      .icon-16 ~ .controls-MenuItem__text, .icon-small ~ .controls-MenuItem__text{
+         margin: @margin_MenuItem-icon_small;
+      }
+
+      .icon-24 ~ .controls-MenuItem__text, .icon-medium ~ .controls-MenuItem__text{
+         margin: @margin_MenuItem-icon_medium;
+      }
+
+      .icon-32 ~ .controls-MenuItem__text, .icon-large ~ .controls-MenuItem__text{
+         margin: @margin_MenuItem-icon_large;
+      }
+
+      .controls-MenuItem__icon {
+         position: absolute;
+         top: @top_MenuItem-icon;
+         left: @left_MenuItem-icon;
+         &.icon-24, &.icon-medium {
+            top: @top_MenuItem-icon_medium;
+            left: @left_MenuItem-icon_medium;
+         }
+      }
+
+      .controls-MenuItem__text {
+         margin: @margin_MenuItem-text;
+         line-height: @line-height_MenuItem;
+         display: block;
+      }
+   }
+}
+
+.icon-offset24 .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__text {
+   margin-left: 40px;
+}
+
+.ws-disabled {
+   &.controls-MenuItem {
+      color: @color_MenuItem_disabled;
+      background: transparent;
+      cursor: default;
+   }
+   .controls-MenuItem__icon {
+      color: @color_MenuItem_disabled !important;
+   }
+}
+
+.ws-is-desktop-platform {
+   .controls-MenuItem:not(.ws-disabled) {
+      &:hover {
+         color: @color_MenuItem_hovered;
+         background: @background_MenuItem_hovered;
+      }
+   }
+}
+.ws-is-ie {
+   .controls-MenuItem {
+      .controls-MenuItem__content {
+         display: block;
+      }
+   }
+}

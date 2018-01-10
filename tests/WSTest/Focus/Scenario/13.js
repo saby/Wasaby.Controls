@@ -3,7 +3,7 @@
  */
 define('js!WSTest/Focus/Scenario/13', [
    'js!WSTest/Focus/TestFocusHelpers',
-   'js!SBIS3.CORE.Window',
+   'Lib/Control/Window/Window',
    'tmpl!WSTest/Focus/Case1',
    'js!WSTest/Focus/Case13',
    'js!WSTest/Focus/CaseControl',
@@ -35,10 +35,13 @@ define('js!WSTest/Focus/Scenario/13', [
          height: '200px'
       });
       setTimeout(function () {
-         fHelpers.childHasFocus(wnd, 'TextBox1');
-         wnd.destroy();
-         delete window[caseControlName];
-         done();
+         try {
+            fHelpers.childHasFocus(wnd, 'TextBox1');
+         } finally {
+            wnd.destroy();
+            delete window[caseControlName];
+            done();
+         }
       }, 100);
    };
 });

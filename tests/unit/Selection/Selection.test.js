@@ -1,6 +1,6 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
-   ['js!SBIS3.CONTROLS.Selection',
+   ['SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Selection',
     'WS.Data/Collection/RecordSet',
     'WS.Data/Display/Display',
     'WS.Data/Display/Collection'
@@ -19,7 +19,7 @@ define(
          idProperty: 'id'
       }));
 
-      describe('SBIS3.CONTROLS.Selection', function () {
+      describe('SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Selection', function () {
          beforeEach(function() {
             selection.unselectAll();
          });

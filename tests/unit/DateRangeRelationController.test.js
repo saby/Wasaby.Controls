@@ -1,10 +1,10 @@
 /* global Array, Object, Date, define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
-   'js!SBIS3.CONTROLS.DateRangeRelationController',
+   'SBIS3.CONTROLS/ComponentBinder/DateRangeRelationController',
    'Core/Abstract',
-   'js!SBIS3.CORE.Control/Control.compatible',
-   'js!SBIS3.CONTROLS.RangeMixin',
-   'js!SBIS3.CONTROLS.DateRangeMixin',
+   'Lib/Control/Control.compatible',
+   'SBIS3.CONTROLS/Mixins/RangeMixin',
+   'SBIS3.CONTROLS/Mixins/DateRangeMixin',
 ], function (DateRangeRelationController, cAbstract, Control, RangeMixin, DateRangeMixin) {
    'use strict';
 
@@ -29,7 +29,7 @@ define([
       isLocked: function () {return this._locked}
    });
 
-   describe('SBIS3.CONTROLS.DateRangeRelationController', function () {
+   describe('SBIS3.CONTROLS/ComponentBinder/DateRangeRelationController', function () {
       let controls, controller;
 
       // this.timeout(1500000);

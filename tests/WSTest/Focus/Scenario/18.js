@@ -4,7 +4,7 @@
 define('js!WSTest/Focus/Scenario/18', [
    'Core/constants',
    'js!WSTest/Focus/TestFocusHelpers',
-   'js!SBIS3.CORE.Window',
+   'Lib/Control/Window/Window',
    'css!' + wsConfig.wsRoot + 'css/core.css',
    'css!' + wsConfig.wsRoot + 'css/themes/wi_scheme.css',
    'js!WSTest/Focus/Case18'
@@ -30,12 +30,15 @@ define('js!WSTest/Focus/Scenario/18', [
       });
 
       setTimeout(function() {
-         fHelpers.childIsNotInFocus(wnd, 'AreaAbstract0');
-         fHelpers.isActive(wnd);
-         fHelpers.hasFocus(wnd);
-         wnd.destroy();
-         delete window[caseControlName];
-         done();
+         try {
+            fHelpers.childIsNotInFocus(wnd, 'AreaAbstract0');
+            fHelpers.isActive(wnd);
+            fHelpers.hasFocus(wnd);
+         } finally {
+            wnd.destroy();
+            delete window[caseControlName];
+            done();
+         }
       }, 100);
 
 

@@ -1,4 +1,4 @@
-define(['Core/constants', 'js!SBIS3.CONTROLS.DateBox', 'js!SBIS3.CONTROLS.ControlsValidators'], function (constants, DateBox, ControlsValidators) {
+define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/ControlsValidators'], function (constants, DateBox, ControlsValidators) {
    'use strict';
 
    let requiredValidator = [{validator: ControlsValidators.required}],
@@ -27,7 +27,7 @@ define(['Core/constants', 'js!SBIS3.CONTROLS.DateBox', 'js!SBIS3.CONTROLS.Contro
    };
 
 
-   describe('SBIS3.CONTROLS.DateBox', function () {
+   describe('SBIS3.CONTROLS/Date/Box', function () {
       beforeEach(function () {
          clock = sinon.useFakeTimers(now.getTime(), 'Date');
       });
@@ -231,6 +231,31 @@ define(['Core/constants', 'js!SBIS3.CONTROLS.DateBox', 'js!SBIS3.CONTROLS.Contro
             assert.strictEqual(this.testControl.getDate(), date);
             assert.strictEqual(this.testControl.getText(), text);
             sandbox.restore();
+         });
+      });
+
+      describe('.setDate + .getDate', function () {
+         beforeEach(function () {
+            this.controlConfig.mask = 'DD.MM.YY HH:II';
+         });
+
+         afterEach(function () {
+            delete this.controlConfig.mask;
+         });
+         controlTestCase();
+         it('should not change date object from setDate if serializationMode is wrong', function () {
+            let date = new Date(), date2;
+            this.testControl.setDate(date);
+            date2 = this.testControl.getDate();
+            assert.equal(date.getTime(), date2.getTime());
+            assert.notEqual(date, date2);
+         });
+         it('should set properly serializationMode', function () {
+            let date = new Date(), date2;
+            this.testControl.setDate(date);
+            date2 = this.testControl.getDate();
+            assert.equal(date.getSQLSerializationMode(), Date.SQL_SERIALIZE_MODE_DATE);
+            assert.equal(date2.getSQLSerializationMode(), Date.SQL_SERIALIZE_MODE_DATETIME);
          });
       });
    });

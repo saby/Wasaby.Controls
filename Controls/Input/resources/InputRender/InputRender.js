@@ -4,7 +4,8 @@ define('js!Controls/Input/resources/InputRender/InputRender',
       /*'WS.Data/Type/descriptor',*/
       'tmpl!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
-      'css!SBIS3.CONTROLS.TextBox'
+
+      'css!Controls/Input/resources/InputRender/InputRender'
    ],
    function(Control, /*types,*/ template, RenderHelper) {
 
@@ -21,18 +22,29 @@ define('js!Controls/Input/resources/InputRender/InputRender',
 
       var _private = {
 
-         getSelection: function(){
-            return this._selection;
+         getSelection: function(self){
+            var
+               result = self._selection;
+
+            //Если курсор ещё не был поставлен в поле, то поставим его в конец
+            if (!result) {
+               result = {
+                  selectionStart: self._value.length,
+                  selectionEnd: self._value.length
+               };
+            }
+
+            return result;
          },
 
          getTargetPosition: function(target){
             return target.selectionEnd;
          },
 
-         saveSelection: function(target){
-            this._selection = this._selection || {};
-            this._selection.selectionStart = target.selectionStart;
-            this._selection.selectionEnd = target.selectionEnd;
+         saveSelection: function(self, target){
+            self._selection = _private.getSelection(self);
+            self._selection.selectionStart = target.selectionStart;
+            self._selection.selectionEnd = target.selectionEnd;
          },
 
          setTargetData: function(target, data){
@@ -47,12 +59,22 @@ define('js!Controls/Input/resources/InputRender/InputRender',
          _controlName: 'Controls/Input/resources/InputRender/InputRender',
          _template: template,
 
+         constructor: function (options) {
+            InputRender.superclass.constructor.apply(this, arguments);
+
+            this._value = options.value;
+         },
+
+         _beforeUpdate: function (newOptions) {
+            this._value = newOptions.value;
+         },
+
          _inputHandler: function(e) {
             var
-               value = this._options.value,
+               value = this._value,
                newValue = e.target.value,
-               selection = _private.getSelection.call(this),
-               position = _private.getTargetPosition.call(this, e.target),
+               selection = _private.getSelection(this),
+               position = _private.getTargetPosition(e.target),
                inputType, splitValue, processedData;
 
             inputType = e.nativeEvent.inputType ?
@@ -64,11 +86,12 @@ define('js!Controls/Input/resources/InputRender/InputRender',
             //
             processedData = this._options.viewModel.prepareData(splitValue, inputType);
 
-            _private.setTargetData.call(this, e.target, processedData);
-            _private.saveSelection.call(this, e.target);
+            _private.setTargetData(e.target, processedData);
+            _private.saveSelection(this, e.target);
 
-            if(value !== processedData.value){
-               this._notify('onChangeValue', processedData.value);
+            if(this._value !== processedData.value){
+               this._value = processedData.value;
+               this._notify('valueChanged', processedData.value);
             }
          },
 
@@ -77,20 +100,57 @@ define('js!Controls/Input/resources/InputRender/InputRender',
 
             // При нажатии стрелок происходит смещение курсора.
             if (keyCode > 36 && keyCode < 41) {
-               _private.saveSelection.call(this, e.target);
+               _private.saveSelection(this, e.target);
             }
          },
 
          _clickHandler: function(e) {
-            _private.saveSelection.call(this, e.target);
+            _private.saveSelection(this, e.target);
          },
 
          _selectionHandler: function(e){
-            _private.saveSelection.call(this, e.target);
+            _private.saveSelection(this, e.target);
          },
 
          _notifyHandler: function(e, value) {
             this._notify(value);
+         },
+
+         _getInputState: function() {
+            var
+               result;
+
+            if (this._options.validationErrors) {
+               result = 'error';
+            } else if (this.isEnabled()) {
+               result = 'default';
+            } else {
+               result = 'disabled';
+            }
+
+            return result;
+         },
+
+         /**
+          * Метод вставляет строку text вместо текущего выделенного текста в инпуте
+          * Если текст не выделен, то просто вставит text на позицию каретки
+          * @param text
+          */
+         paste: function(text) {
+            var
+               selection = _private.getSelection(this),
+               processedData = this._options.viewModel.prepareData({
+                  before: this._value.slice(0, selection.selectionStart),
+                  insert: text,
+                  after: this._value.slice(selection.selectionEnd, this._value.length)
+               }, 'insert');
+
+            if (this._value !== processedData.value) {
+               this._value = processedData.value;
+               this._notify('valueChanged', processedData.value);
+
+               this._forceUpdate();
+            }
          }
       });
 

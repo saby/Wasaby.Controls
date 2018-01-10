@@ -1,12 +1,12 @@
 /* На основе SBIS3.CORE.SwitchableAreaItem */
-define(['js!SBIS3.CORE.CompoundControl', 'Core/helpers/generate-helpers', 'Core/Deferred', 'Core/ParallelDeferred'],
+define(['Lib/Control/CompoundControl/CompoundControl', 'Core/helpers/generate-helpers', 'Core/Deferred', 'Core/ParallelDeferred'],
    function(CompoundControl, genHelpers, Deferred, ParallelDeferred) {
       'use strict';
 
       /**
        * @class SBIS3.CONTROLS.SwitchableAreaItem
-       * @extends SBIS3.CORE.CompoundControl
-       * @author Крайнов Дмитрий Олегович
+       * @extends Lib/Control/CompoundControl/CompoundControl
+       * @author Крайнов Д.О.
        * @public
        * @ignoreOptions name, allowChangeEnable, className, contextRestriction, enabled, independentContext, tabIndex
        */

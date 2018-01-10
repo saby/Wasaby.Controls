@@ -4,11 +4,11 @@
 define('js!WSTest/Focus/Scenario/32', [
    'Core/constants',
    'js!WSTest/Focus/TestFocusHelpers',
-   'js!SBIS3.CORE.Button',
-   'js!SBIS3.CORE.Window',
+   'Deprecated/Controls/Button/Button',
+   'Lib/Control/Window/Window',
    'tmpl!WSTest/Focus/Case32',
-   'js!SBIS3.CORE.CompoundControl',
-   'js!SBIS3.CORE.CompoundActiveFixMixin',
+   'Lib/Control/CompoundControl/CompoundControl',
+   'Lib/Mixins/CompoundActiveFixMixin',
    'js!WSTest/Focus/Case13'
 ], function (cConstants,
              fHelpers,
@@ -58,11 +58,14 @@ define('js!WSTest/Focus/Scenario/32', [
       fHelpers.fireClick(control.getChildControlByName('Button2'));
       fHelpers.fireClick(button);
       setTimeout(function () {
-         fHelpers.fireEsc(wnd);
-         fHelpers.childHasFocus(control, 'Button2');
-         delete window[testControlName];
-         control.destroy();
-         done();
+         try {
+            fHelpers.fireEsc(wnd);
+            fHelpers.childHasFocus(control, 'Button2');
+         } finally {
+            delete window[testControlName];
+            control.destroy();
+            done();
+         }
       }, 100);
 
    };

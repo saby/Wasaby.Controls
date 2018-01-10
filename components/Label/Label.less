@@ -3,7 +3,7 @@
 }
 .controls-Label__text {
   display: inline-block;
-  cursor: @default-hover-cursor;
+  cursor: pointer;
 }
 
 .controls-Label__text_size {
@@ -17,7 +17,7 @@
 }
 
 .ws-enabled {
-  .controls-Label__text_color {
+  &.controls-Label__text_color {
     color: @innacent-color;
   }
   &.controls-Label_requeredField {
@@ -28,7 +28,7 @@
 }
 
 .ws-disabled {
-  .controls-Label__text_color {
+  &.controls-Label__text_color {
     color: @disabled-color;
   }
 }

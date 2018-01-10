@@ -5,22 +5,22 @@ define('js!WSControls/ProgressBars/ProgressBar',
    [
       'Core/Control',
       'tmpl!WSControls/ProgressBars/ProgressBar',
-      'js!WS.Data/Type/descriptor',
-      'css!SBIS3.CONTROLS.ProgressBar'
+      'WS.Data/Type/descriptor',
+      'css!SBIS3.CONTROLS/ProgressBar/ProgressBar'
    ],
    function(Control, template, types) {
       /**
        * Класс контрола "Индикатор прохождения процесса".
-       * @class SBIS3.CONTROLS.ProgressBar
+       * @class SBIS3.CONTROLS/ProgressBar
        * @extends Core/Control
        * @demo SBIS3.CONTROLS.Demo.MyProgressBar
        *
        * @control
-       * @author Журавлев Максим Сергеевич
+       * @author Журавлев М.С.
        *
        * @initial
        * <pre>
-       *    <ws:SBIS3.CONTROLS.ProgressBar
+       *    <ws:SBIS3.CONTROLS/ProgressBar
        *       progress="{{50}}"
        *       minimum="{{-100}}"
        *       maximum="{{100}}"

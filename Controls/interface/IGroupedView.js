@@ -8,26 +8,16 @@ define('js!Controls/interface/IGroupedView', [
     * @public
     */
 
+
+   /**
+    * @typedef {Object} TItemsGroup
+    * @property {Function} method - метод, по которому строится группировка. Для каждого элемента коллекции должен возвращать идентификатор, соотвествующей ему группы
+    * @property {String} template - шаблон группы
+    */
+
    /**
     * @name Controls/interface/IGroupedView#itemsGroup
-    * @cfg {Object} {
-        method: () => void,
-        template: () => void
-    }
+    * @cfg {TItemsGroup} кофигурация группировки записей. Включает в себя метод, возвращающий идентификатор группы для переданной в него записи, а так же шаблон отрисовки группы.
     */
 
 });
-
-
-/*
-import IItemsViewOptions = require("../../ItemsView/resources/ItemsRenderOptions");
-interface IGroupedItemsViewOptions {
-    itemsGroup?: {
-        method: () => void,
-        field: string,
-        template: () => void
-    }
-}
-export = IGroupedItemsViewOptions;
-
-*/

@@ -1,8 +1,8 @@
 /* global:object define:function, beforeEach:function, afterEach:function, describe:function, context:function, it:function, assert:function, $ws:object */
 define([
-      'js!SBIS3.CONTROLS.LongOperations.GenericProducer',
-      'js!SBIS3.CONTROLS.LongOperations.Entry',
-      'js!SBIS3.CONTROLS.LongOperations.Const',
+      'SBIS3.CONTROLS/LongOperations/GenericProducer',
+      'SBIS3.CONTROLS/LongOperations/Entry',
+      'SBIS3.CONTROLS/LongOperations/Const',
       'Core/core-instance',
       'Core/Deferred',
       'Core/UserInfo'
@@ -15,7 +15,7 @@ define([
          mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug', 'sharedBusLog', 'Lib/ServerEventBus/class/logger/ConnectWatchDog', 'Lib/ServerEventBus/class/logger/ConsoleDocviewWatchDog']});
       }
 
-      var MODULE = 'SBIS3.CONTROLS.LongOperations.GenericProducer';
+      var MODULE = 'SBIS3.CONTROLS/LongOperations/GenericProducer';
       var IS_NODEJS = typeof process !== 'undefined';
 
       var userInfo = {
@@ -249,7 +249,7 @@ define([
             });
 
             it('Созданный экземпляр реализует интерфейс ILongOperationsProducer', function () {
-               assert.isOk(CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.LongOperations.IProducer'));
+               assert.isOk(CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS/LongOperations/IProducer'));
             });
 
             it('Метод getInstance и конструктор возвращают один и тот же экземпляр', function () {
@@ -689,7 +689,7 @@ define([
                assert.instanceOf(producer.fetch(null), Deferred);
             });
 
-            it('Возвращаемый обещаный результат разрешается массивом экземпляров класса SBIS3.CONTROLS.LongOperations.Entry', function (done) {
+            it('Возвращаемый обещаный результат разрешается массивом экземпляров класса SBIS3.CONTROLS/LongOperations/Entry', function (done) {
                producer.fetch(null)
                   .addCallback(function (results) {
                      try {
@@ -792,7 +792,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению title &lt; заданного)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению title меньше заданного)', function (done) {
                producer.fetch({where:{title:{condition:'<', value:'Длительная операция 2'}}})
                   .addCallback(function (results) {
                      try {
@@ -808,7 +808,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению title &lt;= заданного)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению title мельше/равен заданного)', function (done) {
                producer.fetch({where:{title:{condition:'<=', value:'Длительная операция 2'}}})
                   .addCallback(function (results) {
                      try {
@@ -826,7 +826,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению title &gt;= заданного)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению title больше/равен заданного)', function (done) {
                producer.fetch({where:{title:{condition:'>=', value:'Длительная операция 2'}}})
                   .addCallback(function (results) {
                      try {
@@ -844,7 +844,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению title &gt; заданного)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению title больше заданного)', function (done) {
                producer.fetch({where:{title:{condition:'>', value:'Длительная операция 2'}}})
                   .addCallback(function (results) {
                      try {
@@ -860,7 +860,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &lt; с сейчас - ' + TIME_GAP + 'мс)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt меньше с сейчас - ' + TIME_GAP + 'мс)', function (done) {
                var time = (new Date()).getTime() - TIME_GAP;
                producer.fetch({where:{startedAt:{condition:'<', value:time}}})
                   .addCallback(function (results) {
@@ -877,7 +877,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &lt; с сейчас + ' + TIME_GAP + 'мс)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt меньше с сейчас + ' + TIME_GAP + 'мс)', function (done) {
                var time = (new Date()).getTime() + TIME_GAP;
                producer.fetch({where:{startedAt:{condition:'<', value:time}}})
                   .addCallback(function (results) {
@@ -896,7 +896,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &gt; с сейчас - ' + (TIME_EARLIER - TIME_GAP) + 'мс)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt больше с сейчас - ' + (TIME_EARLIER - TIME_GAP) + 'мс)', function (done) {
                var time = (new Date()).getTime() - (TIME_EARLIER - TIME_GAP);
                producer.fetch({where:{startedAt:{condition:'>', value:time}}})
                   .addCallback(function (results) {
@@ -915,7 +915,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &gt; с сейчас - ' + (TIME_EARLIER + TIME_GAP) + 'мс)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt больше с сейчас - ' + (TIME_EARLIER + TIME_GAP) + 'мс)', function (done) {
                var time = (new Date()).getTime() - (TIME_EARLIER + TIME_GAP);
                producer.fetch({where:{startedAt:{condition:'>', value:time}}})
                   .addCallback(function (results) {
@@ -1175,7 +1175,7 @@ define([
             });*/
 
 
-            it('После разрушения экземпляра возвращается экземпляр Deferred с ошибкой SBIS3.CONTROLS.LongOperations.Const.ERR_UNLOAD', function (done) {
+            it('После разрушения экземпляра возвращается экземпляр Deferred с ошибкой SBIS3.CONTROLS/LongOperations/Const.ERR_UNLOAD', function (done) {
                var destroyed = _makeProducer('Под ликвидацию 1');
                destroyed.destroy();
                destroyed.fetch(null)
@@ -1344,7 +1344,7 @@ define([
                //^^^ Реализовать
             });*/
 
-            it('После разрушения экземпляра возвращается экземпляр Deferred с ошибкой SBIS3.CONTROLS.LongOperations.Const.ERR_UNLOAD', function (done) {
+            it('После разрушения экземпляра возвращается экземпляр Deferred с ошибкой SBIS3.CONTROLS/LongOperations/Const.ERR_UNLOAD', function (done) {
                var destroyed = _makeProducer('Под ликвидацию 1');
                destroyed.destroy();
                destroyed.callAction('suspend', '0')
@@ -1409,7 +1409,7 @@ define([
                return;
             }
 
-            it('При ликвидации экземпляра при наличии незавершённых операций, имеющих функции действий, они будут завершены с ошибкой SBIS3.CONTROLS.LongOperations.Const.ERR_UNLOAD', function () {
+            it('При ликвидации экземпляра при наличии незавершённых операций, имеющих функции действий, они будут завершены с ошибкой SBIS3.CONTROLS/LongOperations/Const.ERR_UNLOAD', function () {
                var titles = ['Длительная операция 1', 'Длительная операция 2', 'Длительная операция 3'];
                var list = _byTitles(_lsTool.search(null), titles);
                assert.lengthOf(list, titles.length);

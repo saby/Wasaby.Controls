@@ -1,0 +1,36 @@
+.controls-SuggestTextBox {
+  .controls-SuggestTextBox__reset {
+    .icon-size(@suggest-text-box-icon-size, @default-icon-font);
+    height:100%;
+    cursor: pointer;
+    color: @suggest-text-box-icon-cross-color;
+    padding: @suggest-text-box-icon-cross-padding;
+  }
+  
+  &.controls-Picker__show {
+    border-color: @fieldLink-border-color-picker-show;
+    background: @suggest-text-box-bg-show-picker-color;
+  
+    .controls-InputRender__field {
+      color: @suggest-text-box-bg-show-picker-font-color;
+    }
+  }
+
+  &.controls-SuggestTextBox__withoutCross {
+    .controls-SuggestTextBox__afterFieldWrapper {
+      display: none;
+    }
+    .controls-SuggestTextBox__afterFieldWrapper + .controls-InputRender__fieldWrapper {
+      margin: 0;
+    }
+  }
+
+  &.ws-disabled {
+    .controls-SuggestTextBox__afterFieldWrapper {
+      display: none;
+    }
+  }
+}
+.controls-SuggestTextBox__afterFieldWrapper {
+  height: 100%;
+}

@@ -32,6 +32,25 @@
    max-height: 100%;
 }
 
+.controls-TextArea__placeholder {
+   .compatPlaceholder(@color_TextBox-placeholder);
+   .align-items(baseline);
+   overflow-y: auto;
+   overflow-x: hidden;
+   padding: @padding_TextArea-field;
+}
+
+.controls-TextArea__placeholder__overflow {
+   display: inline-block;
+   width: 100%;
+   white-space: pre-wrap;
+   word-wrap: break-word;
+}
+
+.controls-TextBox__field:invalid + .controls-TextArea__placeholder {
+   .inline-flexbox();
+}
+
 .generate-height(controls-TextArea__field);
 
 /*
@@ -51,4 +70,6 @@
 }
 .controls-TextArea__view_init {
    position: absolute;
+   top: 0;
+   left: 0;
 }

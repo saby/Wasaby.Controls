@@ -69,12 +69,20 @@
          }
       }
    }
+   .controls-DropdownList__crossIcon {
+      .icon-size(@size_DropDownList_filter_cross);
+   }
+   .controls-DropdownList__arrowIcon {
+      .icon-size(@size_DropDownList_arrow);
+      color: @color-DropDownList_arrowIcon;
+   }
    &.controls-DropdownList__type-filter {
       .controls-DropdownList__afterCaptionWrapper {
          display: block;
          .controls-DropdownList__crossIcon{
             color: @gray-ccc-color!important;
             cursor: pointer;
+
          }
       }
    }
@@ -193,8 +201,10 @@
             right: @DropdownList-picker-close-btn-right;
             top: @DropdownList-picker-close-btn-top;
             cursor: pointer;
+            color: @color_dropdownList_picker_close_cross;
+            .icon-size(@size_dropdownList_picker_close_cross, @default-icon-medium-font);
             &:hover {
-               color: #313E78!important;
+               color: @color_dropdownList_picker_close_cross_hover !important;;
             }
          }
          .controls-DropdownList__item {
@@ -348,7 +358,7 @@
       margin: @DropdownList-picker-offset;
       .flexbox();
       .flex-direction(column);
-      //.box-shadow(@menu-shadow);
+      //.box-shadow(@shadow_Menu);
       .box-shadow(@shadow_DropDownList_picker);
    }
    .controls-DropdownList__item {
@@ -502,13 +512,6 @@
       top: @DropdownList-after-caption-top;
    }
 }
-
-.ws-is-ie, .ws-is-firefox {
-  .controls-DropdownList .controls-DropdownList__selectedItem{
-     .inline-flexbox();
-  }
-}
-
 .ws-is-mobile-chrome-ios, .ws-is-mobile-safari {
    .controls-DropdownList__picker .controls-DropdownList__item {
       &:hover {
@@ -519,10 +522,14 @@
       }
    }
 }
-
+.ws-is-ie, .ws-is-firefox {
+   .controls-DropdownList .controls-DropdownList__selectedItem{
+      .inline-flexbox();
+   }
+}
 //Пример баги в ios https://jsfiddle.net/zk5755vg/12/
 .ws-is-mobile-chrome-ios, .ws-is-mobile-safari, .ws-is-old-webkit, .ws-is-sbis-desktop{
-   .controls-DropdownList__picker {
+   .controls-DropdownList__picker.controls-FloatArea {
       .controls-DropdownList__body {
          display: block; //С флексовым контейнером в safari не отображается список (height:0). Флекс нужен для правильного обрезания контейнера по высоте, на моб.платформе это не актуально
       }

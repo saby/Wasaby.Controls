@@ -4,7 +4,7 @@
 define('js!WSTest/Focus/Scenario/14', [
    'Core/constants',
    'js!WSTest/Focus/TestFocusHelpers',
-   'js!SBIS3.CORE.Window',
+   'Lib/Control/Window/Window',
    'js!WSTest/Focus/Case14',
    'css!' + wsConfig.wsRoot + 'css/core.css',
    'css!' + wsConfig.wsRoot + 'css/themes/wi_scheme.css'
@@ -34,10 +34,13 @@ define('js!WSTest/Focus/Scenario/14', [
          name: 'WindowScenario14'
       });
       setTimeout(function() {
-         fHelpers.childHasFocus(wnd, 'TextBox3');
-         wnd.destroy();
-         delete window[caseControlName];
-         done();
+         try {
+            fHelpers.childHasFocus(wnd, 'TextBox3');
+         } finally {
+            wnd.destroy();
+            delete window[caseControlName];
+            done();
+         }
       }, 100);
    };
 });

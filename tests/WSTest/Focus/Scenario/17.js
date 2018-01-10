@@ -4,7 +4,7 @@
 define('js!WSTest/Focus/Scenario/17', [
    'Core/constants',
    'js!WSTest/Focus/TestFocusHelpers',
-   'js!SBIS3.CORE.Window',
+   'Lib/Control/Window/Window',
    'css!' + wsConfig.wsRoot + 'css/core.css',
    'css!' + wsConfig.wsRoot + 'css/themes/wi_scheme.css',
    'js!WSTest/Focus/Case17'
@@ -13,12 +13,12 @@ define('js!WSTest/Focus/Scenario/17', [
              W) {
    'use strict';
    /*
-      FloatArea
-         content
-            AreaAbstract0 enabled=true
-               Textbox0 enabled=false
+    FloatArea
+    content
+    AreaAbstract0 enabled=true
+    Textbox0 enabled=false
 
-      открываем панель - фокус уходит на FloatArea
+    открываем панель - фокус уходит на FloatArea
     */
    var caseControlName = 'WSTest/Focus/Case17';
    return function scenario17(done) {//TODO Фокус остается на TextBox1
@@ -29,12 +29,16 @@ define('js!WSTest/Focus/Scenario/17', [
          height: '200px'
       });
 
-      setTimeout(function() {
-         fHelpers.hasFocus(wnd);
-         wnd.destroy();
-         delete window[caseControlName];
-         done();
-      }, 100);
+      setTimeout(function () {
+            try {
+               fHelpers.hasFocus(wnd);
+            } finally {
+               wnd.destroy();
+               delete window[caseControlName];
+               done();
+            }
+         }
+         , 100);
 
 
    };

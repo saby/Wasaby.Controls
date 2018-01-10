@@ -1,6 +1,6 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
-   ['js!SBIS3.CONTROLS.HierarchySelection',
+   ['SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/HierarchySelection',
     'WS.Data/Collection/RecordSet',
     'WS.Data/Display/Tree'
    ],
@@ -36,7 +36,7 @@ define(
       }));
 
 
-      describe('SBIS3.CONTROLS.HierarchySelection', function () {
+      describe('SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/HierarchySelection', function () {
          beforeEach(function() {
             selection.unselectAll();
          });

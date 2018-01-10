@@ -8,56 +8,33 @@ define('js!Controls/Popup/Manager/Container',
    function (Control, template, List) {
       'use strict';
 
-      /**
-       * Контенер для отображения окон
-       * @class Controls/Popup/Manager/Container
-       * @control
-       * @extends Controls/Control
-       * @public
-       * @category Popup
-       * @singleton
-       */
       var Container = Control.extend({
+         /**
+          * Контейнер для отображения окон
+          * @class Controls/Popup/Manager/Container
+          * @extends Core/Control
+          * @control
+          * @private
+          * @category Popup
+          * @author Лощинин Дмитрий
+          */
+
          _controlName: 'Controls/Popup/Manager/Container',
          _template: template,
 
          constructor: function (cfg) {
             Container.superclass.constructor.call(this, cfg);
-         },
-
-         _beforeMount: function (options) {
-            if (!options._popupItems) {
-               options._popupItems = new List();
-            }
+            this._overlayId = null;
+            this._popupItems = new List();
          },
 
          /**
-          * @param id идентификатор попапа.
+          * Установить индекс попапа, под которым будет отрисован оверлей
+          * @function Controls/Popup/Manager/Container#setPopupItems
+          * @param {Integer} index индекс попапа
           */
-         _closePopup: function (event, id) {
-            this._notify('closePopup', id);
-         },
-
-         /**
-          * @param id идентификатор попапа.
-          */
-         _focusInPopup: function(event, id){
-            this._notify('focusInPopup', id);
-         },
-
-         /**
-          * @param id идентификатор попапа.
-          * @param {Object} focusedControl контрол, на который кшел фокус.
-          */
-         _focusOutPopup: function(event, id, focusedControl){
-            this._notify('focusOutPopup', id, focusedControl);
-         },
-
-         /**
-          * @param {Object} popup Инстанс попапа.
-          */
-         _recalcPosition: function (event, popup) {
-            this._notify('recalcPosition', popup);
+         setOverlay: function(index){
+            this._overlayId = index;
          },
 
          /**
@@ -66,15 +43,63 @@ define('js!Controls/Popup/Manager/Container',
           * @param {List} popupItems новый набор окон
           */
          setPopupItems: function (popupItems) {
-            this._options._popupItems = popupItems;
+            this._popupItems = popupItems;
             this._forceUpdate();
+         },
+
+         /**
+          * Закрыть попап
+          * @function Controls/Popup/Manager/Container#_closePopup
+          * @param event
+          * @param id идентификатор попапа.
+          */
+         _closePopup: function (event, id) {
+            if (this.eventHandlers && this.eventHandlers.onClosePopup) {
+               this.eventHandlers.onClosePopup(event, id);
+            }
+         },
+
+         /**
+          * Обработчик на создание нового попапа
+          * @function Controls/Popup/Manager/Container#_popupCreated
+          * @param event
+          * @param id идентификатор попапа.
+          * @param width ширина попапа.
+          * @param height высота попапа.
+          */
+         _popupCreated: function(event, id, width, height){
+            if (this.eventHandlers && this.eventHandlers.onPopupCreated) {
+               this.eventHandlers.onPopupCreated(event, id, width, height);
+            }
+         },
+
+         /**
+          * Обработчик потери фокуса.
+          * @function Controls/Popup/Manager/Container#_popupFocusOut
+          * @param event
+          * @param id идентификатор попапа.
+          * @param focusedControl
+          */
+         _popupFocusOut: function(event, id, focusedControl){
+            if (this.eventHandlers && this.eventHandlers.onPopupFocusOut) {
+               this.eventHandlers.onPopupFocusOut(event, id, focusedControl);
+            }
+         },
+
+         /**
+          * Обработчик на отправку результат с попапа
+          * @function Controls/Popup/Manager/Container#_popupCreated
+          * @param event
+          * @param id идентификатор попапа.
+          * @param result
+          */
+         _result: function(event, id, result){
+            if (this.eventHandlers && this.eventHandlers.onResult) {
+               this.eventHandlers.onResult(event, id, result);
+            }
          }
       });
 
-      // TODO довольно спорный способ встроить контйнер на страницу
-      var newDiv = document.createElement('div');
-      newDiv.setAttribute('id', 'popup');
-      document.body.appendChild(newDiv);
-      return Control.createControl(Container, {}, '#popup');
+      return Container;
    }
 );

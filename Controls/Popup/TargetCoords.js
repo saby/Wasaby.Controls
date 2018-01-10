@@ -6,13 +6,13 @@ define('js!Controls/Popup/TargetCoords',
       return {
          get: function (target, corner) {
             var
-               width = target.width() || 0,
-               height = target.height() || 0,
+               width = target.offsetWidth || 0,
+               height = target.offsetHeight || 0,
                top = 0,
                left = 0;
             if (target) {
                //
-               var box = target[0].getBoundingClientRect();
+               var box = target.getBoundingClientRect();
                top += box.top || 0;
                left += box.left || 0;
                top += window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;

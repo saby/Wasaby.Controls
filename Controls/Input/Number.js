@@ -1,7 +1,7 @@
 define('js!Controls/Input/Number', [
    'Core/Control',
    'tmpl!Controls/Input/Number/Number',
-   'js!WS.Data/Type/descriptor',
+   'WS.Data/Type/descriptor',
    'Controls/Input/Number/ViewModel',
 
    'js!Controls/Input/resources/InputRender/InputRender',
@@ -26,7 +26,7 @@ define('js!Controls/Input/Number', [
        * @extends Controls/Control
        * @mixes Controls/Input/interface/IInputNumber
        * @mixes Controls/Input/interface/IInputPlaceholder
-       * @mixes Controls/Input/interface/IValidationError
+       * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputTag
        * @control
        * @public
@@ -34,7 +34,7 @@ define('js!Controls/Input/Number', [
        */
 
       /**
-       * @name Controls/Input/Number#decimals
+       * @name Controls/Input/Number#precision
        * @cfg {Number} Количество знаков после запятой
        */
 
@@ -44,12 +44,7 @@ define('js!Controls/Input/Number', [
        */
 
       /**
-       * @name Controls/Input/Number#onlyInteger
-       * @cfg {Boolean} Ввод только целых чисел
-       */
-
-      /**
-       * @name Controls/Input/Number#integers
+       * @name Controls/Input/Number#integersLength
        * @cfg {Number} Количество знаков до запятой
        */
 
@@ -63,6 +58,8 @@ define('js!Controls/Input/Number', [
       constructor: function (options) {
          NumberInput.superclass.constructor.apply(this, arguments);
 
+         this._value = options.value;
+
          //Вьюмодель для намбера. Нужно связать с конфигом
          this._numberViewModel = new NumberViewModel({
             onlyPositive: options.onlyPositive,
@@ -75,9 +72,8 @@ define('js!Controls/Input/Number', [
          this._value = newOptions.value;
       },
 
-      _changeValueHandler: function (event, value) {
+      _valueChangedHandler: function (event, value) {
          this._value = value;
-         this._notify('onChangeValue', value);
       },
 
       _inputCompletedHandler: function () {
@@ -96,6 +92,10 @@ define('js!Controls/Input/Number', [
 
       _notifyHandler: function (event, value) {
          this._notify(value);
+      },
+
+      paste: function(text) {
+         this._children['inputRender'].paste(text);
       }
    });
 
@@ -106,8 +106,6 @@ define('js!Controls/Input/Number', [
          onlyPositive: types(Boolean) //Только положительные значения
       };
    };
-
-   NumberInput._private = _private;
 
    return NumberInput;
 });
