@@ -268,7 +268,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
       _modifyOptions: function (options) {
          options = DateRangeBigChoose.superclass._modifyOptions.apply(this, arguments);
-         options.displayedYear = this._options.startValue ? this._options.startValue.getFullYear() : (new Date()).getFullYear();
+         options.displayedYear = options.startValue ? options.startValue.getFullYear() : (new Date()).getFullYear();
          options.yearPanelData = this._getYearsRangeItems(options.displayedYear, options, true);
          options.weekdaysCaptions = DateControlsUtil.getWeekdaysCaptions();
          return options;
@@ -902,17 +902,18 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       },
 
       _getYearsRangeItems: function (lastYear, options, withoutSelection) {
+         options = options || this._options;
+         lastYear = lastYear || options.yearPanelData[buttonsCount - 1].caption;
+
          var items = [],
             buttonsCount = 6,
             currentYear = (new Date()).getFullYear(),
             selectionRangeEndItem = this._getSelectionRangeEndItem(),
-            range = this._getUpdatedRange(this.getStartValue(), this.getEndValue(), selectionRangeEndItem),
+            range = this._getUpdatedRange(options.startValue, options.endValue, selectionRangeEndItem),
             startYear = range[0].getFullYear(),
             endYear = range[1].getFullYear(),
             hoverYear = selectionRangeEndItem && selectionRangeEndItem.getFullYear(),
             item, year;
-         options = options || this._options;
-         lastYear = lastYear || options.yearPanelData[buttonsCount - 1].caption;
 
          for (var i = 0; i < buttonsCount; i++) {
             year = lastYear - buttonsCount + 1 + i;
