@@ -38,6 +38,7 @@ define('js!Controls/Input/resources/SuggestPopupController',
          },
          
          setSuggestSelectedIndex: function(self, selectedIndex) {
+            self._selectedIndex = selectedIndex;
             self._popupOptions.componentOptions.selectedIndex = selectedIndex;
          },
    
