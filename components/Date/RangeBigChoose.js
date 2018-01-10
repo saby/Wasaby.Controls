@@ -215,7 +215,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this.subscribe('onSelectionEnded', this._onSelectionEnded.bind(this));
 
          this._monthRangePicker.subscribe('onMonthActivated', function (e, month) {
-            if (!this._monthRangePicker.isSelectionProcessing() && !this.getRangeSelectionType()) {
+            if (!this._monthRangePicker.isSelectionProcessing()) {
                self.applyMonthState(month);
             }
          }.bind(this));
@@ -523,13 +523,13 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
       applyMonthState: function (month) {
          var container = this.getContainer();
+         container.find('.controls-DateRangeBigChoose__dates').removeClass('ws-hidden');
+         container.find('.controls-DateRangeBigChoose__months').addClass('ws-hidden');
          this.cancelSelection();
          this._options._state = states.month;
          this._dateRangePicker.cancelSelection();
          this._dateRangePicker.setRange(this.getStartValue(), this.getEndValue(), true);
          this._dateRangePicker.setMonth(month);
-         container.find('.controls-DateRangeBigChoose__dates').removeClass('ws-hidden');
-         container.find('.controls-DateRangeBigChoose__months').addClass('ws-hidden');
          this._dateRangePicker._updateMonthsPosition();
          this._setCurrentYear(month.getFullYear(), true);
          this._updateYearsBar(month.getFullYear());
