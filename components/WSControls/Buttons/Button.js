@@ -150,7 +150,7 @@ define('js!WSControls/Buttons/Button', [
       },
        /**
         * Метод установки/замены иконки на кнопке.
-        * @param icon Иконка из набора {@link http://wi.sbis.ru/docs/3.8.0/#icons общих иконок}. Задаётся через sprite.
+        * @param icon Иконка из набора <a href="/docs/js/icons/">общих иконок</a>. Задаётся через sprite.
         * @example
         * <pre>
         *    var btn = this.getChildControlByName('myButton');
