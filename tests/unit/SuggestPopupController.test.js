@@ -40,6 +40,10 @@ define(['js!Controls/Input/resources/SuggestPopupController', 'Core/core-instanc
    
             SuggestPopupController._private.decreaseSelectedIndex(selfTest);
             assert.equal(selfTest._selectedIndex, 0);
+   
+            SuggestPopupController._private.setSuggestSelectedIndex(selfTest, 2);
+            assert.equal(selfTest._selectedIndex, 2);
+            assert.equal(selfTest._popupOptions.componentOptions.selectedIndex, 2);
          });
          
       });
