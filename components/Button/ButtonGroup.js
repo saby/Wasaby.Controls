@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/Button/ButtonGroup', ['SBIS3.CONTROLS/Toolbar/ToolbarBase
     * Контрол, отображающий несколько кнопок рядом.
     * @class SBIS3.CONTROLS/Button/ButtonGroup
     * @extends SBIS3.CONTROLS/Toolbar/ToolbarBase
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var ButtonGroup = ToolbarBase.extend( /** @lends SBIS3.CONTROLS/Button/ButtonGroup.prototype */ {

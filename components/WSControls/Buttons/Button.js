@@ -23,7 +23,7 @@ define('js!WSControls/Buttons/Button', [
     * @extends WSControls/Buttons/ButtonBase
 	* @demo SBIS3.CONTROLS.Demo.MyButton
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
@@ -150,7 +150,7 @@ define('js!WSControls/Buttons/Button', [
       },
        /**
         * Метод установки/замены иконки на кнопке.
-        * @param icon Иконка из набора {@link http://wi.sbis.ru/docs/3.8.0/#icons общих иконок}. Задаётся через sprite.
+        * @param icon Иконка из набора <a href="/docs/js/icons/">общих иконок</a>. Задаётся через sprite.
         * @example
         * <pre>
         *    var btn = this.getChildControlByName('myButton');

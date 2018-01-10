@@ -18,7 +18,7 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
        * @public
        * @extends SBIS3.CONTROLS/Action/List/Move
        * @mixes SBIS3.CONTROLS/Action/Mixin/DialogMixin
-       * @author Ганшин Ярослав Олегович
+       * @author Ганшин Я.О.
        * @example
        * Пример использования InteractiveMove:
        * <pre>

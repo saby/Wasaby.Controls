@@ -12,7 +12,7 @@ define('SBIS3.CONTROLS/Menu/ContextMenu', [
     /**
      * Контрол, отображающий горизонтальное меню.
      * @class SBIS3.CONTROLS/Menu/ContextMenu
-     * @author Крайнов Дмитрий Олегович
+     * @author Крайнов Д.О.
      * @extends SBIS3.CONTROLS/Menu
      * @mixes SBIS3.CONTROLS/Mixins/PopupMixin
      *

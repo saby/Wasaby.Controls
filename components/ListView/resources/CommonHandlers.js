@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/ListView/resources/CommonHandlers',
        * Миксин, добавляющий функционал манипуляций с записями.
        * @mixin SBIS3.CONTROLS/ListView/resources/CommonHandlers
        * @public
-       * @author Герасимов Александр Максимович
+       * @author Герасимов А.М.
        */
       var CommonHandlers = /** @lends SBIS3.CONTROLS/ListView/resources/CommonHandlers.prototype */{
          editItems: function(tr, id) {

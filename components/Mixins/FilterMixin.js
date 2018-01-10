@@ -33,7 +33,7 @@ define('SBIS3.CONTROLS/Mixins/FilterMixin', [
      * Миксин, задающий любому контролу поведение работы с набором фильтров.
      * @mixin SBIS3.CONTROLS/Mixins/FilterMixin
      * @public
-     * @author Крайнов Дмитрий Олегович
+     * @author Крайнов Д.О.
      */
    var FilterMixin = /**@lends SBIS3.CONTROLS/Mixins/FilterMixin.prototype  */{
       /**

@@ -23,7 +23,7 @@ define(
        * Предназначен для задания даты путём выбора.
        * @class SBIS3.CONTROLS/Calendar
        * @extends Lib/Control/CompoundControl/CompoundControl
-       * @author Крайнов Дмитрий Олегович
+       * @author Крайнов Д.О.
        * @demo SBIS3.CONTROLS.Demo.MyCalendar
        *
        * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className

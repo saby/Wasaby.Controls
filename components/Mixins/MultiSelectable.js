@@ -66,7 +66,7 @@ define('SBIS3.CONTROLS/Mixins/MultiSelectable', [
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
     * @mixin SBIS3.CONTROLS/Mixins/MultiSelectable
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var MultiSelectable = /**@lends SBIS3.CONTROLS/Mixins/MultiSelectable.prototype  */{

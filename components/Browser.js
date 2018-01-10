@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/Browser', [
     *
     * @class SBIS3.CONTROLS/Browser
     * @extends Lib/Control/CompoundControl/CompoundControl
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @demo SBIS3.CONTROLS.Demo.MyBrowser
     *
     * @ignoreEvents onAfterLoad onChange onStateChange
@@ -398,6 +398,44 @@ define('SBIS3.CONTROLS/Browser', [
        * Показать редактор колонок. Возвращает обещание, которое будет разрешено после завершения редактирования пользователем. В случае, если
        * пользователь после редактирования нажал кнопку применения результата редактирования, то обещание будет разрешено новыми параметрами
        * конфигурации колонок. Если же пользователь просто закрыл редактор кнопкой "Закрыть", то обещание будет разрешено значением null
+       *
+       * Существует возможность использования предустановленных наборов колонок (пресетов). Для этого служат опции usePresets, staticPresets,
+       * presetNamespace и selectedPresetId. При наличии статичечских пресетов пользователь может клонировать любой из них и сохранить его как
+       * собственный. Простой пример использования:
+       * <pre>
+       *    require(['SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit'], function (PresetUnit) {
+       *       var promise = this.sendCommand('showColumnsEditor', {
+       *          editorOptions: {
+       *             // Будем использовать предустановленные наборы колонок:
+       *             usePresets: true,
+       *             // Определим статически-заданные пресеты:
+       *             staticPresets: [
+       *                new PresetUnit({
+       *                   id: 'preset-1',
+       *                   title: 'Статический пресет 1',
+       *                   selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП']
+       *                }), new PresetUnit({
+       *                   id: 'preset-2',
+       *                   title: 'Статический пресет 2',
+       *                   selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП']
+       *                }), new PresetUnit({
+       *                   id: 'preset-3',
+       *                   title: 'Статический пресет 3',
+       *                   selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП']
+       *                })
+       *             ],
+       *             // Пользователь будет сохранять свои пресеты в это пространство имён:
+       *             presetNamespace: 'catalog-columns-presets',
+       *             // Первоначально будет выбран пресет с таким идентификатором (опционально):
+       *             selectedPresetId: 'preset-2',
+       *             ...
+       *             другие опции
+       *             ...
+       *          }
+       *       })
+       *    });
+       * </pre>
+       *
        * @protected
        * @param {object} [options] Опции открытия редактора колонок (опционально)
        * @param {object} [options.columnsConfig] Объект конфигурации колонок (опционально, если нет, будет использован текущий columnsConfig браузера)
