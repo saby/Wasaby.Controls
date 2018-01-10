@@ -399,18 +399,19 @@ define('SBIS3.CONTROLS/TextBox', [
        * Если текст умещается, то показываем из опции tooltip
        */
       _applyTooltip: function() {
+         var field = this._getFieldForTooltip();
          if (this._tooltipText != this._options.text) {
             var scrollWidth;
             if (constants.browser.isIE) {
                scrollWidth = getTextWidth(this._options.text);
             }
             else {
-               scrollWidth = this._inputField[0].scrollWidth;
+               scrollWidth = field[0].scrollWidth;
             }
             // для случая, когда текст не умещается в поле ввода по ширине, показываем всплывающую подсказку с полным текстом
-            if (scrollWidth > this._inputField[0].clientWidth) {
+            if (scrollWidth > field[0].clientWidth) {
                this._container.attr('title', this._options.text);
-               this._inputField.attr('title', this._options.text);
+               field.attr('title', this._options.text);
             }
             else if (this._options.tooltip) {
                this.setTooltip(this._options.tooltip);
@@ -418,14 +419,18 @@ define('SBIS3.CONTROLS/TextBox', [
                 this._container.attr('title', '');
                //Ставлю пробел, чтобы скрыть браузерную подсказку "Заполните это поле". Если поставить пробел, то все браузеры,
                //кроме IE, не выводят всплывающую подсказку. Для IE ставлю пустой title, чтобы он не выводил всплывашку.
-               this._inputField.attr('title', constants.browser.isIE ? '' : ' ');
+               field.attr('title', constants.browser.isIE ? '' : ' ');
             }
             this._tooltipText = this._options.text;
          }
       },
 
+      _getFieldForTooltip: function () {
+         return this._inputField;
+      },
+
       setTooltip: function(tooltip) {
-         this._inputField.attr('title', tooltip);
+         this._getFieldForTooltip().attr('title', tooltip);
          TextBox.superclass.setTooltip.apply(this, arguments);
       },
 
