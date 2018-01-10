@@ -2,7 +2,7 @@
  * Интерфейс продюсера длительных операций
  * @interface SBIS3.CONTROLS/LongOperations/IProducer
  * @public
- * @author Спирин Виктор Алексеевич
+ * @author Спирин В.А.
  */
 
 define('SBIS3.CONTROLS/LongOperations/IProducer',

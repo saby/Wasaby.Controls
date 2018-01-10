@@ -26,7 +26,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
     *    });
     * </pre>
     * @class SBIS3.CONTROLS/Utils/InformationPopupManager
-    * @author Степин Павел Владимирович
+    * @author Степин П.В.
     * @public
     */
    function( cMerge,

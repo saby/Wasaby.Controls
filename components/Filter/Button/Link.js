@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/Filter/Button/Link', ['SBIS3.CONTROLS/Link'], function(Li
         * Используется на панели {@link SBIS3.CONTROLS/Filter/Button}:
         * @class SBIS3.CONTROLS/Filter/Button/Link
         * @extends SBIS3.CONTROLS/Link
-        * @author Герасимов Александр Максимович
+        * @author Герасимов А.М.
         * @control
         * @public
         */

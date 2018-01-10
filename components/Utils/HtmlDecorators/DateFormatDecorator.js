@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/Utils/HtmlDecorators/DateFormatDecorator', [
     * Декоратор даты, обеспечивающий отметку цветом
     * @class SBIS3.CONTROLS/Utils/HtmlDecorators/DateFormatDecorator
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var DateFormatDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS/Utils/HtmlDecorators/DateFormatDecorator.prototype */{
       $protected: {

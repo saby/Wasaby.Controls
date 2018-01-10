@@ -6,26 +6,22 @@ define('SBIS3.CONTROLS/Button/StateButton', [
    'use strict';
 
    /**
-    * Контрол, отображающий кнопку со сменой состояний
-    * Можно настроить:
-    * <ol>
-    *    <li>{@link Lib/Control/Control#allowChangeEnable возможность изменения доступности кнопки};</li>
-    *    <li>{@link WSControls/Buttons/ButtonBase#caption текст на кнопке};</li>
-    *    <li>{@link Lib/Control/Control#enabled возможность взаимодействия с кнопкой};</li>
-    *    <li>{@link SBIS3.CONTROLS/Mixins/IconMixin#icon иконку на кнопке};</li>
-    *    <li>{@link Lib/Control/Control#visible видимость кнопки};</li>
-    * </ol>
+    * Класс контрола "Кнопка со сменой состояний".
+    *
     * @class SBIS3.CONTROLS/Button/StateButton
     * @extends WSControls/Buttons/ToggleButton
-	* @demo SBIS3.CONTROLS.Demo.MyButton
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @control
-    * @category Button
     * @public
+    *
+    * @category Button
+    *
+    * @demo SBIS3.CONTROLS.Demo.MyButton
+    *
     * @initial
-    * <component data-component='SBIS3.CONTROLS/Button'>
+    * <component data-component='SBIS3.CONTROLS/Button/StateButton'>
     *    <option name='caption' value='Изменить'></option>
     *    <option name='checkedCaption' value='Сохранить'></option>
     *    <option name='icon' value='sprite:icon-24 icon-Author icon-primary'></option>

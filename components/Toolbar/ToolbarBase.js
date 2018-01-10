@@ -12,7 +12,7 @@ define('SBIS3.CONTROLS/Toolbar/ToolbarBase', ['Lib/Control/Control'], function(C
     * Например, несколько кнопок, управляющих одним реестром.
     * @class SBIS3.CONTROLS/Toolbar/ToolbarBase
     * @extends Lib/Control/Control
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @public
     */
 

@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/Utils/HtmlDecorators/HighlightDecorator', [
     * Декоратор текста, обеспечивающий подсветку фразы
     * @class SBIS3.CONTROLS/Utils/HtmlDecorators/HighlightDecorator
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var HighlightDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS/Utils/HtmlDecorators/HighlightDecorator.prototype */{
       $protected: {

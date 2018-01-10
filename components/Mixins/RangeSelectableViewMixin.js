@@ -3,7 +3,7 @@ define('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', ['Core/core-instance'],
     * Миксин, добавляющий поведение выделения интервала из нескольких фиксированных элементов
     * @mixin SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin
     * @public
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     */
 
    var RangeSelectableViewMixin = /**@lends SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin.prototype  */{

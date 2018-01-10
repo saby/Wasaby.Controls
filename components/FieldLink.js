@@ -128,7 +128,7 @@ define('SBIS3.CONTROLS/FieldLink',
         * @class SBIS3.CONTROLS/FieldLink
         * @extends SBIS3.CONTROLS/Suggest/SuggestTextBox
         *
-        * @author Герасимов Александр Максимович
+        * @author Герасимов А.М.
         *
         * @mixes SBIS3.CONTROLS/Mixins/MultiSelectable
         * @mixes SBIS3.CONTROLS/Mixins/ActiveMultiSelectable
@@ -725,6 +725,9 @@ define('SBIS3.CONTROLS/FieldLink',
 
           setItemTpl: function(itemTpl) {
              FieldLink.superclass.setItemTpl.call(this, itemTpl);
+             if (!this._isEmptySelection() && !this._linkCollection) {
+                this._createLinkCollection();
+             }
              this._linkCollection && this._linkCollection.setItemTpl(itemTpl);
           },
 

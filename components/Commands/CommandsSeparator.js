@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/Commands/CommandsSeparator', [
     * Контрол, отображающий разделитель.
     * @class SBIS3.CONTROLS/Commands/CommandsSeparator
     * @extends WSControls/Buttons/ButtonBase
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @mixes SBIS3.CONTROLS/Mixins/Checkable
     *

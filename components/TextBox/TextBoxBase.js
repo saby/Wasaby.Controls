@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
     * @extends Lib/Control/CompoundControl/CompoundControl
     * @mixes SBIS3.CONTROLS/Mixins/FormWidgetMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment

@@ -14,7 +14,7 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
     * Класс, описывающий действие открытия окна с заданным шаблоном. Применяется для работы с <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/">диалогами редактирования списков</a>.
     * @class SBIS3.CONTROLS/Action/List/OpenEditDialog
     * @extends SBIS3.CONTROLS/Action/OpenDialog
-    * @author Красильников Андрей Сергеевич
+    * @author Красильников А.С.
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     * @ignoreOptions visible tooltip tabindex enabled className alwaysShowExtendedTooltip allowChangeEnable

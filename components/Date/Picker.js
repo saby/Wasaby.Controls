@@ -43,7 +43,7 @@ define(
     *
     * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @demo SBIS3.CONTROLS.Demo.MyDatePicker
     *

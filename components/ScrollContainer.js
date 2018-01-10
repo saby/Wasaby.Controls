@@ -31,7 +31,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
        *
        * @class SBIS3.CONTROLS/ScrollContainer
        * @extends SBIS3.CONTROLS/CompoundControl
-       * @author Журавлев Максим Сергеевич
+       * @author Журавлев М.С.
        *
        *
        * @remark

@@ -15,7 +15,7 @@ define('SBIS3.CONTROLS/ColorPicker',
     * Контрол, позволяющий выбрать цвет.
     * Можно задать как шестадцатеричный код в виде текста, так и выбрать из выпадающего блока.
     * @class SBIS3.CONTROLS/ColorPicker
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @extends SBIS3.CONTROLS/TextBox
     * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
     *

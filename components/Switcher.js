@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/Switcher',
     * @extends Lib/Control/Control
     * @mixes SBIS3.CONTROLS/Mixins/Checkable
     * @mixes SBIS3.CONTROLS/Mixins/Clickable
-    * @author Журавлев Максим Сергеевич
+    * @author Журавлев М.С.
     * @demo SBIS3.CONTROLS.Demo.MySwitcher
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers

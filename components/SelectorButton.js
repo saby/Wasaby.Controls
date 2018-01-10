@@ -60,7 +60,7 @@ define('SBIS3.CONTROLS/SelectorButton',
     * @class SBIS3.CONTROLS/SelectorButton
     * @extends WSControls/Buttons/Button
     *
-    * @author Герасимов Александр Максимович
+    * @author Герасимов А.М.
     *
     * @mixes SBIS3.CONTROLS/Mixins/IconMixin
     * @mixes SBIS3.CONTROLS/Mixins/MultiSelectable

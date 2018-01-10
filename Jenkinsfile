@@ -371,15 +371,10 @@ node('controls') {
                 "includeCore":true,
                 "include":[
                 "Core/*",
-                "WS.Data/*",
                 "SBIS3.CONTROLS.ItemsControlMixin"
                 ],
                 "modules" : [
                 "Core/core",
-                "WS.Data/Source/SbisService",
-                "WS.Data/Source/Memory",
-                "WS.Data/Entity/Model",
-                "WS.Data/Collection/RecordSet",
                 "SBIS3.CONTROLS.ItemsControlMixin"
                 ],
                     "output" : "/resources/Core.module.js"

@@ -98,10 +98,6 @@ body {
          height: round(84px * @multiplier);
       }
    }
-
-   .controls-ListView__item__selected .controls-DataGridView__td:first-child {
-      background-size: round(5px * @multiplier);
-   }
 }
 
 // SBIS3.CORE.CloseButton используется в DateRangeSlider. Удалить после того как выпилим SBIS3.CORE.CloseButton
@@ -387,8 +383,8 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-
        line-height: round(84px * @multiplier) !important;
    }
 }
-.controls-DateRangeBigChoose__years-toggleChooseYearBtn {
-   height: round(84px * @multiplier);
+.controls-DateRangeBigChoose__years-toggleChooseYearBtn, .controls-DateRangeBigChoose__years-currentYearBtn {
+   height: round(84px * @multiplier) !important;
 }
 
 body .controls-DateRangeBigChoose__header .controls-DateBox {

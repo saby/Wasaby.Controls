@@ -38,7 +38,7 @@ define('SBIS3.CONTROLS/Spoiler', [
     * @public
     * @category Button
     *
-    * @author Авраменко Алексей Сергеевич
+    * @author Авраменко А.С.
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
