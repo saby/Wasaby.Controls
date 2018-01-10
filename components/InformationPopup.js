@@ -19,7 +19,7 @@ define('SBIS3.CONTROLS/InformationPopup',
     *
     * @control
     * @public
-    * @author Степин Павел Владимирович
+    * @author Степин П.В.
     */
    function(CompoundControl, PopupMixin, LikeWindowMixin, dotTpl){
       'use strict';

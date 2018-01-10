@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/Mixins/ActiveSelectable', [
     * Миксин, добавляющий поведение хранения выбранного элемента
     * @mixin SBIS3.CONTROLS/Mixins/ActiveSelectable
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var ActiveSelectable = /**@lends SBIS3.CONTROLS/Mixins/ActiveSelectable.prototype  */{

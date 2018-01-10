@@ -67,7 +67,7 @@ define('SBIS3.CONTROLS/OperationsPanel', [
     *
     * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel Пример 1. Типовые массовые операции над записями.
     *
-    * @author Сухоручкин Андрей Сергеевич
+    * @author Сухоручкин А.С.
     * @ignoreOptions contextRestriction independentContext
     *
     * @ignoreEvents onAfterLoad onChange onStateChange
@@ -205,7 +205,9 @@ define('SBIS3.CONTROLS/OperationsPanel', [
          //TODO ГОВНОКОДИЩЕ!!! Собираем мета описание операций через инстансы. При первой же возможности выпилить.
          var addItems = function(items, parentKey, instance){
             items.each(function(item){
-               if(parentKey || getItemType(item.get('type')) !== 'mark'){
+               var operationType = getItemType(item.get('type'));
+
+               if(parentKey || operationType !== 'mark'){
                   var obj = {
                      parent: parentKey || null
                   };
@@ -235,6 +237,14 @@ define('SBIS3.CONTROLS/OperationsPanel', [
                   }
 
                   buttonItems.push(obj);
+               }
+
+               //После обновления операции выделения записей, проверим вместимость
+               if(operationType === 'mark'){
+                  var markInstance = self.getItemInstance(item.get('name'));
+                  self.subscribeTo(markInstance, 'onMarkUpdated', function(){
+                     self._checkCapacity();
+                  });
                }
             });
          };

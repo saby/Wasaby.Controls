@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/Mixins/PickerMixin', [
     * Задаётся контент и методы, позволяющие открывать, закрывать блок.
     * @mixin SBIS3.CONTROLS/Mixins/PickerMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var PickerMixin = /** @lends SBIS3.CONTROLS/Mixins/PickerMixin.prototype */{
       /**

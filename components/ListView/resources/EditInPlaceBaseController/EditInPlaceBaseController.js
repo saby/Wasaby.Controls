@@ -29,7 +29,7 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
       /**
        * @class SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController
        * @extends Lib/Control/CompoundControl/CompoundControl
-       * @author Сухоручкин Андрей Сергеевич
+       * @author Сухоручкин А.С.
        * @control
        * @public
        */

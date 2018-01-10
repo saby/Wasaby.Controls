@@ -26,7 +26,7 @@ define('SBIS3.CONTROLS/Date/Range', [
     * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
     * @mixes SBIS3.CONTROLS/Mixins/FormWidgetMixin
     *
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     * @demo SBIS3.CONTROLS.Demo.MyDateRange
     *
     * @ignoreEvents onChange

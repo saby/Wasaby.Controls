@@ -32,7 +32,7 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
        * @class SBIS3.CONTROLS/LongOperations/Registry
        * @extends Lib/Control/CompoundControl/CompoundControl
        *
-       * @author Спирин Виктор Алексеевич
+       * @author Спирин В.А.
        *
        */
       var LongOperationsRegistry = CompoundControl.extend(/** @lends SBIS3.CONTROLS/LongOperations/Registry.prototype */{

@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceClickController/EditInPlace
       /**
        * @class SBIS3.CONTROLS/ListView/resources/EditInPlaceClickController/EditInPlaceClickController
        * @extends SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController
-       * @author Сухоручкин Андрей Сергеевич
+       * @author Сухоручкин А.С.
        * @control
        * @public
        */

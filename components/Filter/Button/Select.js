@@ -29,7 +29,7 @@ define('SBIS3.CONTROLS/Filter/Button/Select',
         * @class SBIS3.CONTROLS/Filter/Button/Select
         * @extends Lib/Control/CompoundControl/CompoundControl
         * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
-        * @author Красильников Андрей Сергеевич
+        * @author Красильников А.С.
         * @control
         * @public
         */

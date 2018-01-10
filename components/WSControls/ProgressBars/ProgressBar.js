@@ -16,7 +16,7 @@ define('js!WSControls/ProgressBars/ProgressBar',
        * @demo SBIS3.CONTROLS.Demo.MyProgressBar
        *
        * @control
-       * @author Журавлев Максим Сергеевич
+       * @author Журавлев М.С.
        *
        * @initial
        * <pre>

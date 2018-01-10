@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/CheckBox/Group/GroupBase', [
     * @public
     * @mixes SBIS3.CONTROLS/Mixins/MultiSelectable
     * @extends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @ignoreOptions contextRestriction independentContext
     *

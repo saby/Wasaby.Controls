@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/OperationsPanel/PanelButton/OperationsPanelButton', [
     * SBIS3.CONTROLS/OperationsPanel/PanelButton/OperationsPanelButton
     * @class SBIS3.CONTROLS/OperationsPanel/PanelButton/OperationsPanelButton
     * @extends Lib/Control/Control
-    * @author Сухоручкин Андрей Сергеевич
+    * @author Сухоручкин А.С.
     *
     * @mixes SBIS3.CONTROLS/Mixins/Clickable
     * @mixes SBIS3.CONTROLS/Mixins/Checkable

@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/Slider/Input',
           * @class SBIS3.CONTROLS/Slider/Input
           * @extends SBIS3.CONTROLS/Slider
           *
-          * @author Борисов Петр Сергеевич
+          * @author Борисов П.С.
           *
           * @demo SBIS3.CONTROLS.Demo.SliderInputDemo
           */

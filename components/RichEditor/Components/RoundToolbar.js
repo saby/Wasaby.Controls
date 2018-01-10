@@ -21,7 +21,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RoundToolbar', [
       /**
        * @class SBIS3.CONTROLS/RichEditor/Components/RoundToolbar
        * @extends SBIS3.CONTROLS/RichEditor/Components/ToolbarBase
-       * @author Спирин Виктор Алексеевич
+       * @author Спирин В.А.
        * @public
        * @control
        */

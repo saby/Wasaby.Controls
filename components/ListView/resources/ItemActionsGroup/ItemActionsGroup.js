@@ -49,7 +49,7 @@ define('SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup',
        * Класс для работы с операциями над записями, которые появляются при наведении курсора мыши.
        * @class SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup
        * @extends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBaseDS
-       * @author Герасимов Александр Максимович
+       * @author Герасимов А.М.
        * @public
        */
       var ItemActionsGroup = ButtonGroupBaseDS.extend( /** @lends SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup.prototype */ {
