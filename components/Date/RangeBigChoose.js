@@ -147,7 +147,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
                css.push(textColorClass);
                return css.join(' ');
-            }
+            },
+            _state: states.year,
          },
           _keysWeHandle: [
              constants.key.tab,
@@ -155,7 +156,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
              constants.key.esc
           ],
          // _currentYear: null,
-         _state: states.year,
          _selectionType: null,
          _toggleStateBtn: null,
          _currentYearBtn: null,
@@ -186,7 +186,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this.getChildControlByName('HomeButton').subscribe('onActivated', this._onHomeButtonClick.bind(this));
 
          this.getChildControlByName('ApplyButton').subscribe('onActivated', this._onApplyButtonClick.bind(this));
-         this.getChildControlByName('CloseButton').subscribe('onActivated', this._onCloseButtonClick.bind(this));
+         container.on('click', '.controls-DateRangeBigChoose__closeButton', this._onCloseButtonClick.bind(this));
 
          this.getChildControlByName('PrevYearButton').subscribe('onActivated', this._onPrevOrNextYearBtnClick.bind(this, -1));
          this.getChildControlByName('NextYearButton').subscribe('onActivated', this._onPrevOrNextYearBtnClick.bind(this, 1));
@@ -264,13 +264,17 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
                self._dateRangePicker.setMonth(new Date(month.getFullYear() + 1, 0));
             }
          });
+
+         this._updateHomeButton();
       },
 
       _modifyOptions: function (options) {
          options = DateRangeBigChoose.superclass._modifyOptions.apply(this, arguments);
          options.displayedYear = options.startValue ? options.startValue.getFullYear() : (new Date()).getFullYear();
+         // options.displayedPeriod = options.startValue ? options.startValue : DateUtil.normalizeMonth(new Date());
          options.yearPanelData = this._getYearsRangeItems(options.displayedYear, options, true);
          options.weekdaysCaptions = DateControlsUtil.getWeekdaysCaptions();
+         // options._state = options.selectionType === RangeSelectableViewMixin.selectionTypes.range ? states.year: states.month;
          return options;
       },
 
@@ -296,17 +300,29 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          }
        },
 
+      _setDisplayedPeriod: function (startDate) {
+         this._options._displayedPeriod = startDate;
+      },
+
+      _isHomeButtonVisible: function (options) {
+         var today = new Date();
+         options = options || this._options;
+         return (options._state === states.year && !DateUtil.isYearsEqual(today, options._displayedPeriod)) ||
+            (options._state === states.month && !DateUtil.isMonthsEqual(today, options._displayedPeriod))
+      },
+
+      _updateHomeButton: function () {
+         this.getChildControlByName('HomeButton').toggle(this._isHomeButtonVisible());
+      },
+
       _onHomeButtonClick: function () {
-         var now = new Date(),
-            newDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-         now.setDate(1);
+         var now = DateUtil.normalizeMonth(new Date());
          this.cancelSelection();
          this._dateRangePicker.cancelSelection();
          this._setCurrentYear(now.getFullYear(), true);
          this._monthRangePicker.setYear(now.getFullYear());
          this._dateRangePicker.setMonth(now);
          this._updateYearsBar(now.getFullYear());
-         this.setRange(newDate, new Date(newDate));
       },
 
       _onApplyButtonClick: function () {
@@ -368,7 +384,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          // Отображаемый год меняем только если начало периода определено, а конец не определен
          if (date && !endDate) {
             this._setCurrentYear(date.getFullYear(), true);
-            if (this._state === states.year) {
+            if (this._options._state === states.year) {
                this._monthRangePicker.setYear(date.getFullYear());
             } else {
                this._dateRangePicker.setMonth(date);
@@ -394,7 +410,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             return;
          }
          this._setCurrentYear(date.getFullYear(), true);
-         if (this._state === states.year) {
+         if (this._options._state === states.year) {
             this._monthRangePicker.setYear(date.getFullYear());
          } else {
             this._dateRangePicker.setMonth(date);
@@ -454,9 +470,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             this._endDatePicker.setDate(endValue);
          }
 
-         if (this._state === states.year) {
+         if (this._options._state === states.year) {
             this._monthRangePicker.setRange(startValue, endValue, true);
-         } else if (this._state === states.month) {
+         } else if (this._options._state === states.month) {
             this._dateRangePicker.setRange(startValue, endValue, true);
          }
 
@@ -500,7 +516,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          // Контрол лежит во флоат арии и можно конечно подписаться на событие 'onShow' родительского компонента..
          // Но лазить к родителям архитектурно не очень правильно. Чисто теоретически большой выбор периода можно
          // открыть не в плавающей панели.
-         if (this._state === states.month) {
+         if (this._options._state === states.month) {
             this._dateRangePicker._updateMonthsPosition();
          }
       },
@@ -508,7 +524,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       applyMonthState: function (month) {
          var container = this.getContainer();
          this.cancelSelection();
-         this._state = states.month;
+         this._options._state = states.month;
          this._dateRangePicker.cancelSelection();
          this._dateRangePicker.setRange(this.getStartValue(), this.getEndValue(), true);
          this._dateRangePicker.setMonth(month);
@@ -523,7 +539,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       applyYearState: function (monthNumber) {
          this.cancelSelection();
          var container = this.getContainer();
-         this._state = states.year;
+         this._options._state = states.year;
          container.find('.controls-DateRangeBigChoose__dates').addClass('ws-hidden');
          container.find('.controls-DateRangeBigChoose__months').removeClass('ws-hidden');
          this._monthRangePicker.setRange(this.getStartValue(), this.getEndValue());
@@ -630,7 +646,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       },
 
       _onStateBtnClick: function () {
-         if (this._state === states.year) {
+         if (this._options._state === states.year) {
             this.applyMonthState(new Date(this._getCurrentYear(), 0));
          } else {
             this.applyYearState();
@@ -651,6 +667,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             this.getChildControlByName('MonthDateRangePicker').setMonth(new Date(value, 0, 1));
          }
          this._updateRangeIndicators();
+         this._setDisplayedPeriod(new Date(value, 0));
+         this._updateHomeButton();
       },
 
       setEndValue: function (end, silent) {
@@ -707,7 +725,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             // if (selectionType !== selectionTypes.years) {
             //    this._setYearBarState(YEAR_CHOOSER_STATE_1YEAR);
             // }
-            if (selectionType === selectionTypes.years && this._state === states.month) {
+            if (selectionType === selectionTypes.years && this._options._state === states.month) {
                this._setCurrentYear(item.getFullYear());
                // this._toggleChooseYear();
                return;
@@ -903,7 +921,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
       _getYearsRangeItems: function (lastYear, options, withoutSelection) {
          options = options || this._options;
-         lastYear = lastYear || options.yearPanelData[buttonsCount - 1].caption;
 
          var items = [],
             buttonsCount = 6,
@@ -914,6 +931,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             endYear = range[1].getFullYear(),
             hoverYear = selectionRangeEndItem && selectionRangeEndItem.getFullYear(),
             item, year;
+
+         lastYear = lastYear || options.yearPanelData[buttonsCount - 1].caption;
 
          for (var i = 0; i < buttonsCount; i++) {
             year = lastYear - buttonsCount + 1 + i;

@@ -9,7 +9,7 @@
          serializationMode="{{endValueSerializationMode}}"
          onTextChangeMode="onTextEnter"
          className="controls-DateRangeBigChoose__datePickerEnd"
-         validators="{{rangeselect ? [
+         validators="{{selectionType === 'range' ? [
                   {
                      'validator': compareExt,
                      'option': 'date',
@@ -51,7 +51,7 @@
       <div class="controls-DateRangeBigChoose__datePickerEnd-wrapper{{ selectionType === 'range' ? '' : ' ws-hidden' }}">
          <div class="controls-DateRangeBigChoose__header-rangeDash"></div>
          <ws:partial template="DateBoxTpl" scope="{{...}}">
-            <ws:compareExt type="function">js!SBIS3.CONTROLS.DateRangeBigChoose.Validators:compareExt</ws:compareExt>
+            <ws:compareExt type="function">SBIS3.CONTROLS/Date/RangeBigChoose/resources/Validators:compareExt</ws:compareExt>
             <ws:errorMessage type="string">{[Дата конца периода должна быть больше даты начала.]}</ws:errorMessage>
          </ws:partial>
       </div>
@@ -64,6 +64,7 @@
       tooltip="{[Поставить текущую дату]}"
       icon="sprite:icon-16 icon-Home3 icon-primary"
       className="controls-DateRangeBigChoose__homeBtn"
+      visible="{{homeButtonVisibility|bind}}"
    />
    <!--<div class="controls-DateRangeBigChoose__header-date-pickers">-->
    <SBIS3.CONTROLS:Button:IconButton
@@ -75,10 +76,5 @@
       className="controls-DateRangeBigChoose__ApplyButton controls-IconButton__round-border"
    />
 
-   <!--</div>-->
-   <ws:SBIS3.CORE.CloseButton
-      tabindex="0"
-      name="CloseButton"
-      className="controls-DateRangeBigChoose__closeButton"
-   />
+   <div class="controls-PopupMixin__closeButton controls-DateRangeBigChoose__closeButton"></div>
 </div>

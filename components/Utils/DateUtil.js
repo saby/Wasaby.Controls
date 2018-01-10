@@ -144,6 +144,24 @@ define('SBIS3.CONTROLS/Utils/DateUtil',[
       isDatesEqual: function (date1, date2) {
          return date1 === date2 || (date1 && date2 && date1.getTime() === date2.getTime());
       },
+      /**
+       * Проверяет однаковые ли года в датах
+       * @param date1 первая дата
+       * @param date2 вторая дата
+       * @returns {boolean} если года одинаковые, то возвращает true, иначе false
+       */
+      isYearsEqual: function (date1, date2) {
+         return date1 === date2 || (date1 && date2 && date1.getYear() === date2.getYear());
+      },
+      /**
+       * Проверяет однаковые ли года и месяцы в датах
+       * @param date1 первая дата
+       * @param date2 вторая дата
+       * @returns {boolean} если месяцы одинаковые, то возвращает true, иначе false
+       */
+      isMonthsEqual: function (date1, date2) {
+         return date1 === date2 || (date1 && date2 && date1.getYear() === date2.getYear() && date1.getMonth() === date2.getMonth());
+      },
 
       /**
        * Возвращает true если переданное число является началом месяца
