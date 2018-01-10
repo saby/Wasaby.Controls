@@ -471,7 +471,14 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
          
          if(this._isSupportedItemsToolbar() && this._getItemsToolbar().isVisible()) {
             toolbarLeft = this._getItemsToolbar().getContainer()[0].offsetLeft;
-            needCorrect = toolbarLeft && (toolbarLeft < (leftOffset + arrowCords.width)); // Учитываем ширину иконки стрелки при корректировке
+
+            // когда тулбар находится в строке считать пересечение через offsetLeft не получится
+            // т.к. offsetLeft будет считаться от края td в которой лежит тулбар
+            if(this._options.itemsActionsInItemContainer){
+                needCorrect = (this.getContainer().width() - (leftOffset + arrowCords.width) - this._getItemsToolbar().getContainer().width()) < 0;
+            }else {
+                needCorrect = toolbarLeft && (toolbarLeft < (leftOffset + arrowCords.width)); // Учитываем ширину иконки стрелки при корректировке
+            }
             /* Если стрелка заползает на операции над записью -> увеличиваем отступ */
             if(needCorrect) {
                leftOffset -= leftOffset - toolbarLeft + this.getEditArrow().getContainer().width(); //Левая граница тулбара + ширина стрелки
