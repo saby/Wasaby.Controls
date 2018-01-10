@@ -2,21 +2,16 @@ define(['js!Controls/Toggle/DoubleSwitch'], function (Switch) {
    'use strict';
    var SW, switcherClickedFlag;
    describe('Controls.Toggle.DoubleSwitch', function () {
-      beforeEach(function(){
-         if (typeof $ === 'undefined') {
-            this.skip();
-         }
+      afterEach(function () {
+         //SW.destroy();
+         SW = undefined;
+         switcherClickedFlag = undefined;
       });
       describe('update captions (function _beforeUpdate)',function () {
          beforeEach(function(){
             SW = new Switch({
                captions: ['capt1', 'capt2']
             });
-         });
-
-         afterEach(function () {
-            SW.destroy();
-            SW = undefined;
          });
 
          it('with one captions', function () {
@@ -55,13 +50,6 @@ define(['js!Controls/Toggle/DoubleSwitch'], function (Switch) {
       });
 
       describe('checked captions in constructor', function () {
-
-         afterEach(function () {
-            if (SW) {
-               SW.destroy();
-               SW = undefined;
-            }
-         });
 
          it('without captions', function () {
             try {
@@ -113,12 +101,6 @@ define(['js!Controls/Toggle/DoubleSwitch'], function (Switch) {
             SW.subscribe('valueChanged', function () {
                switcherClickedFlag = true;
             });
-         });
-
-         afterEach(function () {
-            SW.destroy();
-            SW = undefined;
-            switcherClickedFlag = undefined;
          });
 
          describe('click to toggle(function _clickToggleHandler)', function(){
@@ -179,12 +161,6 @@ define(['js!Controls/Toggle/DoubleSwitch'], function (Switch) {
             SW.subscribe('valueChanged', function () {
                switcherClickedFlag = true;
             });
-         });
-
-         afterEach(function () {
-            SW.destroy();
-            SW = undefined;
-            switcherClickedFlag = undefined;
          });
 
          describe('checkCaptions', function(){

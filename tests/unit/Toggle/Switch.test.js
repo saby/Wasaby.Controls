@@ -15,7 +15,7 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
       });
 
       afterEach(function () {
-         SW.destroy();
+         //SW.destroy();
          SW = undefined;
       });
 
