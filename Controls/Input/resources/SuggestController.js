@@ -54,7 +54,7 @@ define('js!Controls/Input/resources/SuggestController',
          return {
             target: container,
             componentOptions: {
-               width: container[0].offsetWidth,
+               width: container.offsetWidth,
                template: self._options.suggestTemplate,
                dataSource: self._options.dataSource,
                showAllOpener: self._options.showAllOpener
