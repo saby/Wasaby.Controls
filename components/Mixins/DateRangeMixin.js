@@ -15,7 +15,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeMixin', [
     * Используется только совместно с SBIS3.CONTROLS.RangeMixin.
     * @mixin SBIS3.CONTROLS/Mixins/DateRangeMixin
     * @public
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     */
    var DateRangeMixin = /**@lends SBIS3.CONTROLS/Mixins/DateRangeMixin.prototype  */{
       $protected: {

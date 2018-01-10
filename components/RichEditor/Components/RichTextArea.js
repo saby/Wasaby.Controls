@@ -96,7 +96,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           * Поле ввода для богатого текстового редактора. Чтобы связать с ним тулбар {@link SBIS3.CONTROLS/RichEditor/Components/Toolbar}, используйте метод {@link SBIS3.CONTROLS/RichEditor/Components/ToolbarBase#setLinkedEditor}.
           * @class SBIS3.CONTROLS/RichEditor/Components/RichTextArea
           * @extends SBIS3.CONTROLS/TextBox/TextBoxBase
-          * @author Спирин Виктор Алексеевич
+          * @author Спирин В.А.
           * @public
           * @control
           */

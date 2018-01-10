@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/Mixins/DecorableMixin', [
     * Миксин, задающий любому контролу возможность подсветки текста и отметки цветом
     * @mixin SBIS3.CONTROLS/Mixins/DecorableMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var DecorableMixin = /** @lends SBIS3.CONTROLS/Mixins/DecorableMixin.prototype */{

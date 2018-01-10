@@ -20,7 +20,7 @@ define('SBIS3.CONTROLS/Radio/Button',
     * @extends SBIS3.CONTROLS/Radio/Button/RadioButtonBase
     * @cssModifier controls-Radio__primary акцентные кнопки
     * @public
-    * @author Журавлев Максим Сергеевич
+    * @author Журавлев М.С.
     *
     * @css controls-RadioButton__caption Класс для изменения отображения текста подписи у радиокнопки.
     */

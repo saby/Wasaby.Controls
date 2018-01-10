@@ -18,7 +18,7 @@ define(
     * Контрол, отображающий корешок закладки. Работает только в составе группы. В джине не вытаскивается
     * @class SBIS3.CONTROLS/Tab/Button
     * @extends SBIS3.CONTROLS/Radio/Button/RadioButtonBase
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @mixes SBIS3.CONTROLS/Mixins/IconMixin
     */

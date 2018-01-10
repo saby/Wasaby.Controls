@@ -24,6 +24,7 @@ define('js!Controls/Popup/Manager/Container',
 
          constructor: function (cfg) {
             Container.superclass.constructor.call(this, cfg);
+            this._overlayId = null;
             this._popupItems = new List();
          },
 
@@ -90,7 +91,7 @@ define('js!Controls/Popup/Manager/Container',
           * @function Controls/Popup/Manager/Container#_popupCreated
           * @param event
           * @param id идентификатор попапа.
-          * @param args аргументы.
+          * @param result
           */
          _result: function(event, id, result){
             if (this.eventHandlers && this.eventHandlers.onResult) {

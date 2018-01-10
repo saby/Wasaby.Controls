@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row', [
     *
     * @class SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @example
     * Рассмотрим пример, как создать свою Drag'n'drop-сущность:
     * <pre>

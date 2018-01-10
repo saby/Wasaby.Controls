@@ -15,7 +15,7 @@ define('SBIS3.CONTROLS/PasswordTextBox', [
     * Поле ввода пароля.
     * @class SBIS3.CONTROLS/PasswordTextBox
     * @extends SBIS3.CONTROLS/TextBox
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @demo SBIS3.CONTROLS.Demo.MyPasswordTextBox
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol textTransform

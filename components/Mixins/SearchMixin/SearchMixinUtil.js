@@ -8,7 +8,7 @@ define('SBIS3.CONTROLS/Mixins/SearchMixin/SearchMixinUtil', [], function() {
       
       /**
        * Утилита для поиска
-       * @author Герасимов Александр Максимович
+       * @author Герасимов А.М.
        */
 
       var prepText = function (text) {

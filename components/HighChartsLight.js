@@ -20,7 +20,7 @@ function(coreClone, cMerge, constants,BaseControl, dotTpl, trackElement){
     * @cssModifier controls-HighChartsLight__svg-overflow-visible Отменяет обрезание для контенеров в которых лежит график, в том числе и для самого svg контенера графика. Все элементы в том числе и те, которые рисуются внутри svg, не будут обрезаться.
     *
     * @control
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     * @public
     * @category Table
     * @designTime actions /design/design

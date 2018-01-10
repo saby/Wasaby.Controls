@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Mark', [
     * SBIS3.CONTROLS/OperationsPanel/Mark
     * @class SBIS3.CONTROLS/OperationsPanel/Mark
     * @extends SBIS3.CONTROLS/Menu/MenuLink
-    * @author Сухоручкин Андрей Сергеевич
+    * @author Сухоручкин А.С.
     * @public
     */
    var OperationsMark = CompoundControl.extend(/** @lends SBIS3.CONTROLS/OperationsPanel/Mark.prototype */{
@@ -159,7 +159,8 @@ define('SBIS3.CONTROLS/OperationsPanel/Mark', [
                this._menuButton.setCaption(caption);
             }
             this._menuButton.setVisible(hasMarkOptions);
-            this._notifyOnSizeChanged(true);
+            //Событие обновления, необходимо в ПМО, для перерисовки кнопки меню с операциями
+            this._notify('onMarkUpdated');
 
          }.bind(this);
 

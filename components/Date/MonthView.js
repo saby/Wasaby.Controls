@@ -28,7 +28,7 @@ define(
        * @extends SBIS3.CORE.CompoundControl
        * @control
        * @public
-       * @author Миронов Александр Юрьевич
+       * @author Миронов А.Ю.
        * @demo SBIS3.CONTROLS.Demo.MyMonthView
        *
        * @mixes SBIS3.CONTROLS.RangeSelectableViewMixin

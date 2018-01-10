@@ -29,10 +29,10 @@ define('js!Controls/Popup/Opener/Base',
             var
                cfg = CoreClone(this._options.popupOptions);
             CoreMerge(cfg, config || {});
-            if (this._popupId) {
+            if (this.isOpened()) {
                this._popupId = Manager.update(this._popupId, cfg);
             }
-            if (!this._popupId) {
+            else {
                if (!cfg.opener) {
                   cfg.opener = this;
                }
@@ -55,13 +55,14 @@ define('js!Controls/Popup/Opener/Base',
                Manager.remove(this._popupId);
             }
          },
-         
-         isOpened: function() {
-            return !!this._popupId;
-         },
 
-         getStrategy: function(){
-            throw new Error('Method getStrategy must be implemented');
+         /**
+          * Получить признак, открыта или закрыта связанная всплывающая панель
+          * @function Controls/Popup/Opener/Base#isOpened
+          * @returns {Boolean} Признак открыта ли связанная всплывающая панель
+          */
+         isOpened: function () {
+            return !!Manager.find(this._popupId);
          }
       });
       return Base;

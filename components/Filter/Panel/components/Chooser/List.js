@@ -49,7 +49,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/List', [
      *
      * @class SBIS3.CONTROLS/Filter/Panel/components/Chooser/List
      * @extends SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList
-     * @author Сухоручкин Андрей Сергеевич
+     * @author Сухоручкин А.С.
      * @public
      *
      * @demo SBIS3.CONTROLS.Demo.MyFilterView

@@ -19,7 +19,7 @@ var
      *
      * @mixes SBIS3.CONTROLS/Filter/Panel/resources/IFilterItem
      *
-     * @author Авраменко Алексей Сергеевич
+     * @author Авраменко А.С.
      */
    FilterPanelBoolean = CompoundControl.extend([IFilterItem],/** @lends SBIS3.CONTROLS/Filter/Panel/components/Boolean.prototype  */{
         /**

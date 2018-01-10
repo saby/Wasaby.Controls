@@ -31,7 +31,7 @@ define('SBIS3.CONTROLS/CheckBox', [
     *
     *
     * @demo SBIS3.CONTROLS.Demo.MyCheckbox
-    * @author Журавлев Максим Сергеевич
+    * @author Журавлев М.С.
     *
     * @ignoreOptions icon extendedTooltip independentContext contextRestriction isContainerInsideParent stateKey subcontrol
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment owner
