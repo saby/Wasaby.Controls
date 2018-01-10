@@ -625,33 +625,35 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
 
       _showAllButtonHandler: function() {
          var showAllConfig = this._getShowAllConfig(),
-            list = this.getList(),
-            listConfig;
+             list = this.getList(),
+             listConfig;
          
-         if (showAllConfig && showAllConfig.template === DEFAULT_SHOW_ALL_TEMPLATE) {
-            listConfig = {
-               columns: list.getColumns(),
-               filter: list.getFilter(),
-               idProperty: list.getProperty('idProperty'),
-               itemTpl: list.getProperty('itemTpl'),
-               dataSource: list.getDataSource()
-            };
-
-            /* Когда нет записей в списке автодополнения,
-             должен открываться справочник без фильтра, чтобы отобразились все записи */
-            if ((!list.getItems() || !list.getItems().getCount()) && this._options.searchParam) {
-               delete listConfig.filter[this._options.searchParam];
-            }
-
-            if (!showAllConfig.componentOptions) {
-               showAllConfig.componentOptions = {};
-            }
-
-            showAllConfig.componentOptions.listConfig = listConfig;
-            showAllConfig.dialogOptions = {
-               className: 'ws-float-area__block-layout'
-            };
+   
+         listConfig = {
+            filter: list.getFilter(),
+            idProperty: list.getProperty('idProperty'),
+            itemTpl: list.getProperty('itemTpl'),
+            dataSource: list.getDataSource()
+         };
+         
+         if (cInstance.instanceOfModule(list, 'SBIS3.CONTROLS/DataGridView')) {
+            listConfig.columns = list.getColumns();
          }
+   
+         /* Когда нет записей в списке автодополнения,
+          должен открываться справочник без фильтра, чтобы отобразились все записи */
+         if ((!list.getItems() || !list.getItems().getCount()) && this._options.searchParam) {
+            delete listConfig.filter[this._options.searchParam];
+         }
+   
+         if (!showAllConfig.componentOptions) {
+            showAllConfig.componentOptions = {};
+         }
+   
+         showAllConfig.componentOptions.listConfig = listConfig;
+         showAllConfig.dialogOptions = {
+            className: 'ws-float-area__block-layout'
+         };
 
          this.hidePicker();
          this.showSelector(showAllConfig);
