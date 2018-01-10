@@ -1,8 +1,11 @@
 define(['js!Controls/Toggle/Switch'], function (Switch) {
    'use strict';
    var SW, changeValue;
-   describe('SBIS3.CONTROLS.Switch', function () {
+   describe('Controls.Toggle.Switch', function () {
       beforeEach(function(){
+         if (typeof $ === 'undefined') {
+            this.skip();
+         }
          SW = new Switch({
             captions: ['capt1']
          });
