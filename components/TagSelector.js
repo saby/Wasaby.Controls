@@ -12,7 +12,7 @@ define('SBIS3.CONTROLS/TagSelector', ['SBIS3.CONTROLS/TextBox'], function(TextBo
     * если не задать источник данных - коллекцию, то можно добавлять любые значения. Иначе только из списка
     * @class SBIS3.CONTROLS/TagSelector
     * @extends SBIS3.CONTROLS/TextBox
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @public
     */
 

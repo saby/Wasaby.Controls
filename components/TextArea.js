@@ -2,12 +2,13 @@ define('SBIS3.CONTROLS/TextArea', [
    "Core/constants",
    "SBIS3.CONTROLS/TextBox",
    'tmpl!SBIS3.CONTROLS/TextArea/resources/inputField',
+   'tmpl!SBIS3.CONTROLS/TextArea/resources/compatiblePlaceholder',
    'Core/helpers/String/escapeHtml',
    'SBIS3.CONTROLS/Utils/LinkWrapUtils',
    "Core/IoC",
    "browser!js!Deprecated/Controls/FieldText/resources/Autosize-plugin",
    'css!SBIS3.CONTROLS/TextArea/TextArea'
-], function( constants,TextBox, inputField, escapeHtml, LinkWrap, IoC) {
+], function( constants,TextBox, inputField, compatiblePlaceholderTemplate, escapeHtml, LinkWrap, IoC) {
 
    'use strict';
 
@@ -30,7 +31,7 @@ define('SBIS3.CONTROLS/TextArea', [
     * Класс контрола "Многострочное поле ввода". Контрол может автоматически менять высоту в зависимости от количества введённой информации.
     * @class SBIS3.CONTROLS/TextArea
     * @extends SBIS3.CONTROLS/TextBox/TextBoxBase
-    * @author Романов Валерий Сергеевич
+    * @author Романов В.С.
     * @css controls-TextArea Класс для изменения отображения текста в многострочном поле ввода.
     *
     * @ignoreOptions independentContext contextRestriction className
@@ -66,6 +67,7 @@ define('SBIS3.CONTROLS/TextArea', [
          _options: {
             _isMultiline: true,
             _paddingClass: ' controls-TextArea_padding',
+            compatiblePlaceholderTemplate: compatiblePlaceholderTemplate,
             textFieldWrapper: inputField,
             wrapUrls: LinkWrap.wrapURLs,
             escapeHtml: escapeHtml,
@@ -232,6 +234,13 @@ define('SBIS3.CONTROLS/TextArea', [
          }
       },
 
+      _getCompatiblePlaceholder: function() {
+         if (!this._compatPlaceholder) {
+            this._compatPlaceholder = this._container.find('.controls-TextArea__placeholder');
+         }
+         return this._compatPlaceholder;
+      },
+
       _removeAutoSizeDognail: function() {
          //Изначально рассчитываем высоту по view, а на textarea висит position: absolute.
          if (this.isEnabled()) {
@@ -272,10 +281,6 @@ define('SBIS3.CONTROLS/TextArea', [
          this._inputField.trigger('autosize.resize');
       },
 
-      _getElementToFocus: function() {
-         return this._inputField;
-      },
-
       _setEnabled: function(state){
          TextArea.superclass._setEnabled.call(this, state);
          this._inputField.toggleClass('ws-invisible', !state);
@@ -292,17 +297,6 @@ define('SBIS3.CONTROLS/TextArea', [
          TextArea.superclass.setText.call(this, text);
          this._updateDisabledWrapper();
       },
-
-       _onClickHandler: function(event){
-         var elementToFocus = this._getElementToFocus();
-         // т.к. поле ввода находится внутри контейнера, то клик по внешнему контейнеру не ставит курсор в поле
-         // поэтому принудительно проставляем фокус в активное поле
-         // если фокус уже на поле ввода, то повторно проставлять не нужно
-          if (this.isEnabled() && elementToFocus[0] !== document.activeElement) {
-             elementToFocus.focus();
-          }
-          TextArea.superclass._onClickHandler.call(this, event);
-       },
 
       _updateDisabledWrapper: function() {
          if (this._disabledWrapper && !this.isEnabled()) {

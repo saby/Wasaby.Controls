@@ -122,7 +122,7 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
     * @cssModifier controls-TreeView__withoutLevelPadding Устанавливает режим отображения дерева без иерархических отступов.
     * @cssModifier controls-TreeView__hideExpands Устанавливает режим отображения дерева без иконок сворачивания/разворачивания узлов.
     *
-    * @author Авраменко Алексей Сергеевич
+    * @author Авраменко А.С.
     *
     * @control
     * @public
@@ -431,7 +431,7 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
          if(!this._editArrow && (this._options.editArrow || this._options.arrowActivatedHandler)) {
             this._editArrow = new IconButton({
                element: this._container.find('> .controls-TreeView__editArrow-container'),
-               icon: 'icon-16 icon-View icon-primary action-hover icon-size',
+               icon: 'icon-16 icon-View icon-size',
                cssClassName: 'ws-hidden',
                parent: this,
                allowChangeEnable: false,
@@ -503,6 +503,16 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
          if(!this._touchSupport || !this._hasHoveredItem()) {
             this._updateEditArrow();
          }
+      },
+
+      _onAfterBeginEdit: function() {
+         TreeDataGridView.superclass._onAfterBeginEdit.apply(this, arguments);
+         this._updateEditArrow();
+      },
+
+      _onAfterEndEdit: function() {
+         TreeDataGridView.superclass._onAfterEndEdit.apply(this, arguments);
+         this._updateEditArrow();
       },
 
       _updateEditArrow: function() {

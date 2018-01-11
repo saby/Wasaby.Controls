@@ -47,7 +47,7 @@ define('SBIS3.CONTROLS/Filter/Button',
         * Подробнее конфигурирование контрола описано в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/">Панель фильтров</a>.
         * @class SBIS3.CONTROLS/Filter/Button
         * @extends Lib/Control/CompoundControl/CompoundControl
-        * @author Герасимов Александр Максимович
+        * @author Герасимов А.М.
         *
         * @mixes SBIS3.CONTROLS/Mixins/FilterMixin
         * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
@@ -228,7 +228,7 @@ define('SBIS3.CONTROLS/Filter/Button',
                 /* Если шаблон указали как имя компонента (строки которые начинаются с js! или SBIS3.),
                    то перед отображением панели фильтров сначала загрузим компонент. */
                 if(template && typeof template === 'string' && /^js!*|^SBIS3.*/.test(template)) {
-                   self._dTemplatesReady.push(mStubs.require((requirejs.defined(template) ? template : 'js!' + template)).addCallback(function(comp) {
+                   self._dTemplatesReady.push(mStubs.require(((requirejs.defined(template) || /^js!*/.test(template)) ? template : 'js!' + template)).addCallback(function(comp) {
                       /* Запишем, что в качестве шаблона задали компонент */
                       self._filterTemplates[name] = true;
                       return comp;

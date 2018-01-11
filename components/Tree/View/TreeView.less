@@ -53,23 +53,24 @@
    .user-select();
    .flex-shrink(0);
    cursor: pointer;
-   width: @tree-view-expand-width;
-   height: @tree-view-expand-height;
-   margin: @tree-view-expand-margin;
+   width: @width_TreeDataGridView-expand;
+   height: @height_TreeDataGridView-expand;
+   margin: @margin_TreeDataGridView-expand;
    border-width: @tree-view-expand-border-width;
    border-style: @tree-view-expand-border-style;
    border-color: @tree-view-expand-border-color;
    overflow: hidden;
+   text-align: center;
 
    font-family: @icon-font !important;
    font-size: @tree-view-expand-icon-size;
-   color: @tree-view-expand-color;
+   color: @color_TreeDataGridView-expand;
 
    &:hover {
       border-width: @tree-view-expand-hover-border-width;
       border-style: @tree-view-expand-hover-border-style;
       border-color: @tree-view-expand-hover-border-color;
-      color: @tree-view-expand-hover-color;
+      color: @color_TreeDataGridView-expand_hovered;
    }
 
    &.controls-TreeView__expand__open {
@@ -81,7 +82,7 @@
          border-width: @tree-view-expand-open-hover-border-width;
          border-style: @tree-view-expand-open-hover-border-style;
          border-color: @tree-view-expand-open-hover-border-color;
-         color: @tree-view-expand-hover-color;
+         color: @color_TreeDataGridView-expand_hovered;
       }
    }
 
@@ -103,16 +104,16 @@
 }
 .controls-ListView__item-type-hidden {
    .controls-TreeView__expand {
-      color: @tree-view-expand-hidden-color;
+      color: @color_TreeDataGridView-expandHidden;
       &:hover {
-         color: @tree-view-expand-color;
+         color: @color_TreeDataGridView-expandHidden_hovered;
       }
       &:before {
          content: '\e9c2';
       }
       &.controls-TreeView__expand__open {
          &:hover {
-            color: @tree-view-expand-color;
+            color: @color_TreeDataGridView-expandHidden_hovered;
          }
          &:before {
             content: '\e9c1';
@@ -144,7 +145,7 @@
 
 .controls-TreeView__levelPadding {
    font-size: 0;
-   width: @tree-view-level-padding;
+   width: @width-TreeDataGridView-levelPadding;
    .flex-shrink(0);
 }
 

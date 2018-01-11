@@ -50,7 +50,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/resources/config',
                onMenuItemActivate: handlers.list
             },
             idProperty: 'key',
-            order: 20
+            order: 20,
+            pickerConfig: {
+               verticalAlign: {
+                  side: "top",
+                  offset: 2 //border
+               },
+               horizontalAlign: {
+                  side: "left",
+                  offset: 6
+               }
+            }
          },
 
          {

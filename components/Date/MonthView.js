@@ -12,36 +12,37 @@ define(
       'SBIS3.CONTROLS/Utils/DateUtil',
       'tmpl!SBIS3.CONTROLS/Date/MonthView/MonthViewTableBody',
       'tmpl!SBIS3.CONTROLS/Date/MonthView/MonthView',
+      'tmpl!SBIS3.CONTROLS/Date/MonthView/day',
       'SBIS3.CONTROLS/Date/MonthPicker',
       'i18n!SBIS3.CONTROLS/Calendar',
       'css!SBIS3.CONTROLS/Date/MonthView/MonthView'
    ],
-   function (constants, CompoundControl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, MonthViewTableBodyTpl, dotTplFn) {
+   function (constants, CompoundControl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, monthViewTableBodyTpl, dotTplFn, dayTmpl) {
 
       'use strict';
 
       /**
        * Календарь отображающий 1 месяц.
        * Предназначен для задания даты или диапазона дат в рамках одного месяца путём выбора.
-       * @class SBIS3.CONTROLS/Date/MonthView
-       * @extends Lib/Control/CompoundControl/CompoundControl
+       * @class SBIS3.CONTROLS.MonthView
+       * @extends SBIS3.CORE.CompoundControl
        * @control
        * @public
-       * @author Миронов Александр Юрьевич
+       * @author Миронов А.Ю.
        * @demo SBIS3.CONTROLS.Demo.MyMonthView
        *
-       * @mixes SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin
-       * @mixes SBIS3.CONTROLS/Mixins/RangeMixin
-       * @mixes SBIS3.CONTROLS/Mixins/DateRangeMixin
+       * @mixes SBIS3.CONTROLS.RangeSelectableViewMixin
+       * @mixes SBIS3.CONTROLS.RangeMixin
+       * @mixes SBIS3.CONTROLS.DateRangeMixin
        *
        */
       var selectionTypes = {WEEK: 'week', DAY: 'day'};
 
       // TODO: нужно ли наследование от FormWidgetMixin ??
-      var MonthView = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin, DateRangeMixin], /** @lends SBIS3.CONTROLS/Date/MonthView.prototype */{
+      var MonthView = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin, DateRangeMixin], /** @lends SBIS3.CONTROLS.MonthView.prototype */{
          _dotTplFn: dotTplFn,
          $protected: {
-            _monthViewTableBodyTpl: MonthViewTableBodyTpl,
+            _monthViewTableBodyTpl: monthViewTableBodyTpl,
             _options: {
                /**
                 * @cfg {Date|String} Месяц с которого откроется календарь
@@ -69,7 +70,9 @@ define(
                /**
                 *  @cfg {Boolean} Если true, то дни недели отображаются
                 */
-               showWeekdays: true
+               showWeekdays: true,
+
+               dayTmpl: dayTmpl
             },
 
             _viewValidateTimer: null,
@@ -105,7 +108,6 @@ define(
 
          $constructor: function () {
             this._publish('onSelectionChange');
-            
          },
 
          init: function () {
@@ -127,9 +129,6 @@ define(
 
             this._updateCaption();
             this._attachEvents();
-
-            //??? это было в js!SBIS3.CONTROLS/Calendar . Нужно ли оно тут?
-            // ControlHierarchyManager.addNode(this, this.getParent());
          },
 
          _attachEvents: function () {
@@ -363,38 +362,39 @@ define(
 
             // Заполняем нулевые дни вначале таблицы
             workingDate.setDate(1);
-            dayOfWeek = workingDate.getDay() != 0 ? workingDate.getDay() : 7;
+            dayOfWeek = workingDate.getDay() ? workingDate.getDay() : 7;
             days = this._daysInMonth(new Date(workingDate.setMonth(workingDate.getMonth() - 1)));
+            workingDate = new Date(workingDate.getFullYear(), workingDate.getMonth() + 1, 2 - dayOfWeek);
             while( dayOfWeek - 1 > 0 ){
-               this._pushDayIntoArray(week, days - dayOfWeek + 2, false, false, 'prevMonth', false, dayOfWeek === 2);
-               dayOfWeek--
+               this._pushDayIntoArray(week, new Date(workingDate), days - dayOfWeek + 2, false, false, 'prevMonth', false, dayOfWeek === 2);
+               dayOfWeek--;
+               workingDate.setDate(workingDate.getDate() + 1);
             }
             workingDate = new Date(date);
 
             // Заполняем календарные дни
             days = this._daysInMonth(date);
             for ( var i = 1; i <= days; i++ ){
-               this._pushDayIntoArray(week, i, true, isCurrentMonth && today === i, 'currentMonth', i === 1, i === days);
+               this._pushDayIntoArray(week, new Date(workingDate), i, true, isCurrentMonth && today === i, '', i === 1, i === days);
 
                if ( week.length == 7 ) {
                   weeksArray.push(week);
                   week = [];
                }
-
+               workingDate.setDate(workingDate.getDate() + 1);
             }
-            workingDate.setDate(days);
-
+            dayOfWeek = workingDate.getDay();
+            dayOfWeek = dayOfWeek ? dayOfWeek - 1 : 6;
             // Добиваем календарь пустыми ячейками, если нужно (то есть, если последний день был не воскресеньем)
-            if( workingDate.getDay() != 0 ){
-               dayOfWeek = workingDate.getDay();
+            if(dayOfWeek){
                days = 0;
-
                while( dayOfWeek != 7 ){
-                  this._pushDayIntoArray(week, dayOfWeek - workingDate.getDay() + 1, false, false, 'nextMonth', false, days === 0);
+                  this._pushDayIntoArray(week, new Date(workingDate), dayOfWeek - workingDate.getDay() + 1, false, false, 'nextMonth', false, days === 0);
                   dayOfWeek++;
                   days++;
                }
                weeksArray.push(week);
+               workingDate.setDate(workingDate.getDate() + 1);
             }
             return weeksArray;
          },
@@ -418,7 +418,11 @@ define(
             tBody.remove();
 
             // Вставляем тело таблицы в вёрстку;
-            table.append(this._monthViewTableBodyTpl({weeksArray: weeksArray}));
+            table.append(this._monthViewTableBodyTpl({
+               weeksArray: weeksArray,
+               _prepareClass: this._prepareClass,
+               dayTmpl: this._options.dayTmpl
+            }));
          },
 
          _getItemDate: function (jqObj) {
@@ -490,17 +494,133 @@ define(
           * @param today
           * @private
           */
-         _pushDayIntoArray: function (array, day, isCalendar, today, month, firstDayOfMonth, lastDayOfMonth) {
-            var obj = {};
+         _pushDayIntoArray: function (array, date, day, isCalendar, today, month, firstDayOfMonth, lastDayOfMonth) {
+            var obj = {},
+               range = this._getUpdatedRange(this.getStartValue(), this.getEndValue(), this._getSelectionRangeEndItem());
+
+            obj.date = date;
             obj.day = day;
+            obj.dayOfWeek = date.getDay() ? date.getDay() - 1 : 6;
             obj.isCalendar = isCalendar;
             obj.today = today;
             obj.month = month;
             obj.firstDayOfMonth = firstDayOfMonth;
             obj.lastDayOfMonth = lastDayOfMonth;
             obj.rangeselect = this.isRangeselect();
+            obj.weekend = obj.dayOfWeek === 5 || obj.dayOfWeek === 6;
+            obj.enabled = this.isEnabled();
+            obj.selected = date >= range[0] && date <= range[1];
 
             array.push(obj);
+         },
+
+         _prepareClass: function (scope) {
+            scope = scope.value;
+
+            var textColorClass = 'controls-MonthView__textColor',
+               backgroundColorClass = 'controls-MonthView__backgroundColor',
+               cursorClass = 'controls-MonthView__cursor',
+               css = [];
+
+            if (scope.isCalendar) {
+               textColorClass += '-currentMonthDay';
+               backgroundColorClass += '-currentMonthDay';
+               cursorClass += '-currentMonthDay';
+            } else {
+               textColorClass += '-otherMonthDay';
+               backgroundColorClass += '-otherMonthDay';
+               cursorClass += '-otherMonthDay';
+            }
+
+            if (scope.weekend) {
+               textColorClass += '-weekend';
+               backgroundColorClass += '-weekend';
+            } else {
+               textColorClass += '-workday';
+               backgroundColorClass += '-workday';
+            }
+
+            if (scope.selected) {
+               backgroundColorClass += '-selected';
+            } else {
+               backgroundColorClass += '-unselected';
+            }
+
+            if (scope.enabled) {
+               textColorClass += '-enabled';
+               backgroundColorClass += '-enabled';
+               cursorClass += '-enabled';
+            } else {
+               textColorClass += '-disabled';
+               backgroundColorClass += '-disabled';
+               cursorClass += '-disabled';
+            }
+
+            css.push(textColorClass, backgroundColorClass, cursorClass);
+
+            // Оставляем старые классы т.к. они используются в большом выборе периода до его редизайна
+            if (scope.isCalendar) {
+               css.push('controls-RangeSelectable__item');
+               if (scope.today) {
+                  css.push('controls-MonthView__today');
+               }
+               css.push('controls-MonthView__dayNumber' + scope.day);
+            }
+
+            css.push(scope.isCalendar ? 'controls-MonthView__currentMonthDay' : 'controls-MonthView__' + scope.month);
+
+            if (scope.weekend) {
+               css.push('controls-MonthView__weekend');
+            } else {
+               css.push('controls-MonthView__workday');
+            }
+
+            if (scope.firstDayOfMonth) {
+               css.push('controls-MonthView__firstDayOfMonth');
+            }
+
+            if (scope.lastDayOfMonth) {
+               css.push('controls-MonthView__lastDayOfMonth');
+            }
+
+            return css.join(' ')
+         },
+
+         _drawCurrentRangeSelection: function () {
+            var days = this._getDaysArray(),
+               domDays = this.getContainer().find('tbody>tr'),
+               week, domWeek;
+
+            MonthView.superclass._drawCurrentRangeSelection.apply(this, arguments);
+
+            for (var i = 0; i < days.length; i++) {
+               week = days[i];
+               domWeek = domDays.eq(i).find('td');
+               for (var j = 0; j < week.length; j++) {
+                  this._updateCssClasses(domWeek.eq(j), this._prepareClass({value: week[j]}));
+               }
+            }
+         },
+         _updateCssClasses: function ($element, classes) {
+            var keep = this._getItemKeepCssClasses(),
+               keepClasses = [];
+            for (var i = 0; i < keep.length; i++){
+               if ($element.hasClass(keep[i])) {
+                  keepClasses.push(keep[i]);
+               }
+            }
+            keepClasses.push(classes);
+            $element.removeClass().addClass(keepClasses.join(' '))
+         },
+
+         _getItemKeepCssClasses: function () {
+            return [
+                  this._MONTH_VIEW_CSS_CLASSES.DAY,
+                  this._SELECTABLE_RANGE_CSS_CLASSES.item,
+                  this._SELECTABLE_RANGE_CSS_CLASSES.selected,
+                  this._SELECTABLE_RANGE_CSS_CLASSES.selectedStart,
+                  this._SELECTABLE_RANGE_CSS_CLASSES.selectedEnd,
+               ];
          },
 
          /**

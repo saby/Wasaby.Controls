@@ -1,20 +1,20 @@
 <ws:Controls.Input.resources.InputRender.InputRender
+      name="inputRender"
       value="{{_value}}"
       selectOnClick="{{_options.selectOnClick}}"
       viewModel="{{_numberViewModel}}"
       tagStyle="{{_options.tagStyle}}"
-      event:onChangeValue="_changeValueHandler()"
-      event:onInputCompleted="_inputCompletedHandler()"
-      event:onTagHover="_notifyHandler('onTagHover')"
-      event:onTagClick="_notifyHandler('onTagClick')">
+      placeholder="{{_options.placeholder}}"
+      on:valueChanged="_valueChangedHandler()"
+      on:inputCompleted="_inputCompletedHandler()"
+      on:tagHover="_notifyHandler('onTagHover')"
+      on:tagClick="_notifyHandler('onTagClick')">
    <ws:content>
 
       <ws:partial
             template="tmpl!Controls/Input/resources/input"
             type="text"
             enabled="{{isEnabled()}}"
-            value="{{_value}}"
-            placeholder="{{_options.placeholder}}"
       />
 
    </ws:content>

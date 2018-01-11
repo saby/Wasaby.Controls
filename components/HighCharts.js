@@ -46,7 +46,7 @@ function( SbisService, Query, getType, coreClone, constants, Deferred,BaseContro
     * @control
     * @public
     *
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     * @category Table
     * @designTime actions /design/design
     *

@@ -26,7 +26,7 @@ define(
        * @param position позиция замещаемого символа
        * @param character новый символ
        * @private
-       * @author Крайнов Дмитрий Олегович
+       * @author Крайнов Д.О.
        */
       _replaceCharacter = function(container, position, character) {
          var buffer = container.nodeValue.split('');
@@ -201,7 +201,7 @@ define(
    /**
     * Класс для модели форматного поля
     * @class SBIS3.CONTROLS.FormatModel
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var FormatModel = cExtend({}, /** @lends SBIS3.CONTROLS.FormatModel.prototype */{
       $protected: {
@@ -615,7 +615,7 @@ define(
     * @class SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase
     * @extends SBIS3.CONTROLS/TextBox/TextBoxBase
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var FormattedTextBoxBase = TextBoxBase.extend(/** @lends SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase.prototype */ {
@@ -898,13 +898,13 @@ define(
          }
          for (var i = 0, l = newText.length; i < l; i++) {
             if (oldText[i].length !== newText[i].length){
-               //Если ввели одинаковые символы ('111'), то стандартным перебором не поймем, в какую позицию был произведен ввод
-               //В этом случае берем нативную позицию курсора
-               if (newText[i].indexOf(oldText[i]) === 0 && newText[i][newText[i].length - 1] === oldText[i][0]) {
-                  return this._getDiffInfo(oldText, newText, maskGroups, isRemove, i, this._getCursor(true)[1] - 1);
-               }
                for (var j = 0; j < newText[i].length; j++){
                   if (oldText[i][j] !== newText[i][j]){
+                     //Если рядом с введенным символом стоят такие же символы('111'), то стандартным перебором не поймем, в какую позицию был произведен ввод
+                     //В этом случае берем нативную позицию курсора
+                     if (newText[i][j] === newText[i][j-1] || newText[i][j] === newText[i][j+1]) {
+                        return this._getDiffInfo(oldText, newText, maskGroups, isRemove, i, this._getCursor(true)[1] - 1);
+                     }
                      return this._getDiffInfo(oldText, newText, maskGroups, isRemove, i, j);
                   }
                }

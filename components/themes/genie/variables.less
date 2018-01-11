@@ -6,7 +6,7 @@
 @default-color:                           #f1f1f1;
 @primary-color:                           #00c795;
 @default-text-color:                      @black-color;
-@popup-font-size:                         13px;
+@font-size_Popup:                         13px;
 @font-folder-size:                        14px;
 @closeButtonImage:                        url('img/areaCloseButton.png') 0 -1px;
 @closeButtonImageHover:                   url('img/areaCloseButton.png') 0 -25px;
@@ -31,8 +31,8 @@
 // ------ //
 // Normal button
 @button-height:                           30px;
-@padding_Button-wrapper:                          0 8px;
-@border-radius_Button:                    2px;
+@padding_Button-wrapper_m:                0 8px;
+@border-radius_Button_m:                  2px;
 @color_Link-icon_hovered:                 #313E78;
 @button-icon-top-offset:                  7px;                      // top offset of 16x16 icon
 @button-icon-left-offset:                 8px;
@@ -151,35 +151,35 @@
 // ---- //
 // Menu //
 // ---- //
-@menu-subpopup-margin:                    @menu-margin;
-@menu-border-color:                       @gray-light-color;
-@menu-shadow:                             0 0 8px 1px #aaa;
+@menu-subpopup-margin:                    @margin_Menu;
+@border-color_Menu:                       @gray-light-color;
+@shadow_Menu:                             0 0 8px 1px #aaa;
 @menu-expand-top-offset:                  3px;
 @menu-expand-right-offset:                8px;
 @menu-expand-spritesheet:                'img/MenuExpand.png';
 @menu-expand-bg:                          url(@menu-expand-spritesheet) 0 0 no-repeat;
 @menu-expand-content:                     " ";
 @menu-expand-hover-bg:                    url(@menu-expand-spritesheet) 0 -16px no-repeat;
-@menu-header-height:                      24px;
+@height_Menu-header:                      24px;
 @menu-big-header-height:                  32px;
 // --------- //
 // Menu item //
 // --------- //
-@menu-item-height:                        24px;
-@menu-item-hover-text-color:              @white-color;
-@menu-item-hover-bg:                      @primary-color;
-@menu-item-icon-top-offset:               2px;
-@menu-item-icon-left-offset:              -2px;
-@menu-item-icon24-top-offset:             0px;
-@menu-item-icon24-top-offset-big:         0px;
+@height_MenuItem:                        24px;
+@color_MenuItem_hovered:              @white-color;
+@background_MenuItem_hovered:                      @primary-color;
+@top_MenuItem-icon:               2px;
+@left_MenuItem-icon:              -2px;
+@top_MenuItem-icon_medium:             0px;
+@top_MenuItem-icon_medium-big:         0px;
 // --------- //
 // Menu link //
 // --------- //
 @menu-link-menu-margin:                   0 0 0 -10px;
 @menu-link-menu-padding:                  0;
-@menu-link-menu-item-container-padding:   0;
-@menu-link-menu-revert-item-container-padding: @menu-link-menu-item-container-padding;
-@menu-link-header-bg-color:               @menu-button-menu-bg;
+@padding_Menu-container:   0;
+@menu-link-menu-revert-item-container-padding: @padding_Menu-container;
+@menu-link-header-bg-color:               @background-color_Menu;
 @menu-icon-menu-margin:                   -5px 0 0 -5px;
 // -------- //
 // Text box //
@@ -196,11 +196,9 @@
 // --------- //
 // Combo box //
 // --------- //
-@combo-box-picker-border:                       1px solid @primary-color;
-@combo-box-picker-border-radius:                0 0 2px 2px;
-@combo-box-picker-item-hover-text-color:        @white-color;
-@combo-box-picker-item-hover-bg:                @primary-color;
-@combo-box-picker-show-border-color:            @primary-color;
+@border-color_ComboBox-picker:                  @primary-color;
+@background_ComboBox-item_hover:                @primary-color;
+@border-color_ComboBox_withPicker:              @primary-color;
 // -------- //
 // Calendar //
 // -------- //
@@ -252,7 +250,7 @@
 @listView-check-box-top:                        5px;
 @list-view-actions-margin:                      0 4px;
 @list-view-items-toolbar-line-height:                16px;
-@list-view-actions-icon-top:                    @menu-item-icon24-top-offset;
+@list-view-actions-icon-top:                    @top_MenuItem-icon_medium;
 @list-view-actions-menu-close-top:              4px;
 @list-view-actions-menu-close-right:            4px;
 @list-view-actions-menu-close-height:           16px;
@@ -262,9 +260,9 @@
 // --------- //
 // Tree view //
 // --------- //
-@tree-view-expand-width:                        auto;
-@tree-view-expand-height:                       auto;
-@tree-view-expand-margin:                       3px 0 0 3px;
+@width_TreeDataGridView-expand:                 auto;
+@height_TreeDataGridView-expand:                auto;
+@margin_TreeDataGridView-expand:                3px 0 0 3px;
 @tree-view-expand-border-width:                 6px 0 6px 6px;
 @tree-view-expand-border-style:                 solid;
 @tree-view-expand-border-color:                 transparent transparent transparent @black-color;

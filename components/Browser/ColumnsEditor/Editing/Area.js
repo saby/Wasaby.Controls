@@ -76,7 +76,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                 */
                presetsTitle: null,
                /**
-                * @cfg {SBIS3.CONTROLS.Browser/Browser/ColumnsEditor/Preset/Unit[]} Список объектов статически задаваемых пресетов (опционально)
+                * @cfg {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit[]} Список объектов статически задаваемых пресетов (опционально)
                 */
                staticPresets: null,
                /**
@@ -200,7 +200,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                      PresetCache.update(namespace, preset);
                   }
                }
-               this._notify('onComplete', selectedColumns);
+               this._notify('onComplete', this._options.columns, selectedColumns);
             }
             else {
                this._notify('onClose');

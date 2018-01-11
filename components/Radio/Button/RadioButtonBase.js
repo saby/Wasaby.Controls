@@ -18,13 +18,13 @@ define('SBIS3.CONTROLS/Radio/Button/RadioButtonBase', ['js!WSControls/Buttons/Bu
     *
     * @mixes SBIS3.CONTROLS/Mixins/Checkable
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var RadioButtonBase = WSButtonBase.extend([Checkable], /** @lends SBIS3.CONTROLS/Radio/Button/RadioButtonBase.prototype */ {
       $protected: {
          _options: {
-
+             escapeCaptionHtml: false
          }
       },
 

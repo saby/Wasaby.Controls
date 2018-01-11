@@ -11,7 +11,7 @@ define('SBIS3.CONTROLS/SwitchableArea', [
     * Отображаемая область может переключаться при помощи команд.
     * @class SBIS3.CONTROLS/SwitchableArea
     * @extends Deprecated/Controls/SwitchableArea/SwitchableArea
-    * @author Красильников Андрей Сергеевич
+    * @author Красильников А.С.
     * @public
     */
 

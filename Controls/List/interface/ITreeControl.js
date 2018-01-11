@@ -31,7 +31,7 @@ define('js!Controls/List/interface/ITreeControl', [
     */
 
    /**
-    * @name Controls/List/interface/IListControl#nodeFooterTemplate
+    * @name Controls/List/interface/ITreeControl#nodeFooterTemplate
     * @cfg {Function} Устанавливает шаблон футера, рисующегося под содержимым каждого узла
     */
 

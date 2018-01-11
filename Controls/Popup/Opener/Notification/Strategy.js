@@ -1,22 +1,27 @@
 define('js!Controls/Popup/Opener/Notification/Strategy',
    [
-      'Core/Abstract',
-      'js!Controls/Popup/interface/IStrategy'
+      'js!Controls/Popup/Opener/BaseStrategy'
    ],
-   function (Abstract, IStrategy) {
+   function (BaseStrategy) {
 
-   /**
-    * Стратегия позиционирования нотификационного окна.
-    * @class Controls/Popup/Opener/Notification/Strategy
-    * @mixes Controls/Popup/interface/IStrategy
-    * @control
-    * @public
-    * @category Popup
-    * @extends Controls/Control
-    */
-      var Strategy = Abstract.extend([IStrategy], {
+      /**
+       * Стратегия позиционирования нотификационного окна.
+       * @class Controls/Popup/Opener/Notification/Strategy
+       * @control
+       * @public
+       * @category Popup
+       * @extends Controls/Control
+       */
+      var Strategy = BaseStrategy.extend({
+         addElement: function (cfg) {
+            cfg.position = this.getPosition();
+         },
 
-         getPosition: function (popup) {
+         /**
+          * TODO Возвращает позицию push-уведомления
+          * @function Controls/Popup/Opener/Notification/Strategy#getPosition
+          */
+         getPosition: function () {
             return {
                right: 16,
                bottom: 16

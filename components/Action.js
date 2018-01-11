@@ -12,7 +12,7 @@ define('SBIS3.CONTROLS/Action',
        * @class SBIS3.CONTROLS/Action
        * @public
        * @extends Lib/Control/Control
-       * @author Крайнов Дмитрий Олегович
+       * @author Крайнов Д.О.
        *
        * @ignoreOptions validators independentContext contextRestriction extendedTooltip
        * @ignoreOptions visible tooltip tabindex enabled className alwaysShowExtendedTooltip allowChangeEnable

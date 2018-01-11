@@ -296,10 +296,13 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorWrapper', [
       },
 
       _isBranch: function(item) {
-         var linkedObject = this._getLinkedObject();
+         var linkedObject = this._getLinkedObject(),
+             nodePropertyValue;
 
          if(cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS/Mixins/TreeMixin') && item) {
-            return item.get(linkedObject.getNodeProperty());
+            nodePropertyValue = item.get(linkedObject.getNodeProperty());
+            //Возвращает true, если запись является узлом или скрытым узлом
+            return nodePropertyValue || nodePropertyValue === false;
          }
          return false;
 
