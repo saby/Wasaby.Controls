@@ -14,12 +14,13 @@ define('js!Controls/Input/resources/SuggestController',
       /**
        * Search and show popup
        * @param self
-       * @param {Object} fitler
        */
-      search: function(self, fitler) {
-         _private.getSearchController(self).addCallback(function(searchController) {
-            searchController.search(fitler, _private.getPopupOptions(self));
-            return searchController;
+      showPopup: function(self) {
+         _private.getSuggestPopupController(self).addCallback(function(suggestPopupController) {
+            suggestPopupController.setSearchFilter(_private.getSearchFilter(self));
+            suggestPopupController.setPopupOptions(_private.getPopupOptions(self));
+            suggestPopupController.showPopup();
+            return suggestPopupController;
          });
       },
    
@@ -27,25 +28,28 @@ define('js!Controls/Input/resources/SuggestController',
        * Abort search
        * @param self
        */
-      abortSearch: function(self) {
-         _private.getSearchController(self).addCallback(function (searchController) {
-            searchController.abort();
-            return searchController;
+      hidePopup: function(self) {
+         _private.getSuggestPopupController(self).addCallback(function (suggestPopupController) {
+            suggestPopupController.hidePopup();
+            return suggestPopupController;
          });
       },
       
-      getSearchFilter: function(self, textValue) {
+      getSearchFilter: function(self) {
          var filter = cClone(self._options.filter || {});
-         filter[self._options.searchParam] = textValue;
+         filter[self._options.searchParam] = self._value;
          return filter;
       },
       
-   
-      onChangeValueHandler: function(self, text) {
-         if (text.length >= self._options.minSearchLength) {
-            _private.search(self, _private.getSearchFilter(self, text));
+      needShowPopup: function(self) {
+         return self._value.length >= self._options.minSearchLength;
+      },
+      
+      onChangeValueHandler: function(self) {
+         if (_private.needShowPopup(self)) {
+            _private.showPopup(self);
          } else {
-            _private.abortSearch(self);
+            _private.hidePopup(self);
          }
       },
       
@@ -62,7 +66,7 @@ define('js!Controls/Input/resources/SuggestController',
          };
       },
    
-      getSearchController: function(self) {
+      getSuggestPopupController: function(self) {
          /* loading SuggestPopupController and preloading suggest template */
          return moduleStubs.require(['js!Controls/Input/resources/SuggestPopupController', self._options.suggestTemplate]).addCallback(function(result) {
             if (!self._suggestPopupController) {
@@ -81,13 +85,16 @@ define('js!Controls/Input/resources/SuggestController',
    
    var SuggestController = Abstract.extend({
       
+      _value: '',
+      
       constructor: function(options) {
          SuggestController.superclass.constructor.call(this, options);
          this._options = options;
       },
       
       setValue: function(value) {
-         _private.onChangeValueHandler(this, value);
+         this._value = value;
+         _private.onChangeValueHandler(this);
       },
       
       keyDown: function(event) {
