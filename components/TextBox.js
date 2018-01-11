@@ -601,9 +601,7 @@ define('SBIS3.CONTROLS/TextBox', [
       },
       
       _inputClickHandler: function (e) {
-         if (this.isEnabled() && this._compatPlaceholder) {
-            this._getInputField().focus();
-         }
+
       },
 
       _inputFocusInHandler: function(e) {
@@ -635,7 +633,11 @@ define('SBIS3.CONTROLS/TextBox', [
       },
 
       _initPlaceholderEvents: function(placeholder) {
-         placeholder.on('click', this._inputClickHandler.bind(this));
+         var self = this;
+         placeholder.on('click', function() {
+            self._getInputField().focus();
+            self._inputClickHandler();
+         });
       },
 
       _createCompatiblePlaceholder: function() {
