@@ -1,7 +1,9 @@
 define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
    'SBIS3.CONTROLS/Date/RangeBigChoose',
-   'Core/core-instance'
-], function (DateRangeBigChoose, cInstance) {
+   'Core/core-instance',
+   'Core/deprecated',
+   'SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin'
+], function (DateRangeBigChoose, cInstance, deprecated, RangeSelectableViewMixin) {
    /**
     * Миксин, умеющий отображать выпадающий вниз блок содержащий контрол SBIS3.CONTROLS.DateRangeBigChoose.
     * Используется только совместно с SBIS3.CONTROLS.DateRangeMixin(SBIS3.CONTROLS.RangeMixin) и SBIS3.CONTROLS.PickerMixin.
@@ -10,6 +12,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
     * @public
     * @author Миронов А.Ю.
     */
+   var selectionTypes = RangeSelectableViewMixin.selectionTypes;
 
    var DateRangeBigChoosePickerMixin = /**@lends SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin.prototype  */{
       $protected: {
@@ -19,7 +22,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
              * @variant range Режим выбора периода
              * @variant single Режим выбора одной даты
              */
-            selectionType: 'range',
+            selectionType: selectionTypes.range,
 
             pickerConfig: {
                corner: 'tl',
@@ -92,7 +95,12 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
          _modifyOptions: function (parentFunc, opts) {
             opts = parentFunc.call(this, opts);
 
-            if (opts.selectionType === 'single') {
+            if (opts.selectionMode) {
+               opts.selectionType = opts.selectionMode;
+               deprecated.showInfoLog('Опция "selectionMode" помечена как deprecated и будет удалена. Используйте опцию "selectionType"');
+            }
+
+            if (opts.selectionType === selectionTypes.single) {
                if (opts.startValue && !opts.endValue) {
                   opts.endValue = opts.startValue;
                } else if (opts.endValue && !opts.startValue) {
