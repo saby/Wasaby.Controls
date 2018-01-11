@@ -2662,6 +2662,10 @@ define('SBIS3.CONTROLS/ListView',
                toolbar = this._getItemsToolbar(),
                toolbarTarget = toolbar.getCurrentTarget(),
                targetElement = this._getDomElementByItem(item);
+
+            if (toolbarTarget && targetElement && toolbarTarget.container.get(0) === targetElement.get(0)) {
+               toolbar.hide();
+            }
             ListView.superclass._redrawItemInner.apply(this, arguments);
 
             //Если перерисовалась запись, которая является текущим контейнером для тулбара,
