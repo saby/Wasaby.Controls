@@ -4,11 +4,10 @@ define('js!Controls/Input/resources/SuggestPopupController',
       'Core/core-merge',
       'js!Controls/List/resources/utils/Search',
       'Core/constants',
-      'Core/core-clone',
       'js!Controls/Input/resources/SuggestView/SuggestView'
       
    ],
-   function(extend, cMerge, Search, constants, clone) {
+   function(extend, cMerge, Search, constants) {
       
       'use strict';
       
@@ -26,6 +25,13 @@ define('js!Controls/Input/resources/SuggestPopupController',
             }
    
             return self._search;
+         },
+         
+         search: function(self) {
+            return _private.getSearchController(self).search({filter: self._filter}).addCallback(function(searchResult) {
+               _private.setSuggestSelectedIndex(self, 0);
+               _private.setSuggestSearchResult(self, searchResult);
+            });
          },
          
          showPopup: function(self) {
@@ -73,15 +79,21 @@ define('js!Controls/Input/resources/SuggestPopupController',
             this._selectCallback = options.selectCallback;
          },
          
-         search: function(filter, popupOptions) {
-            var self = this;
-            
-            this._popupOptions = clone(popupOptions);
-            _private.getSearchController(self).search({filter: filter}).addCallback(function(searchResult) {
-               _private.setSuggestSelectedIndex(self, 0);
-               _private.setSuggestSearchResult(self, searchResult);
-               _private.showPopup(self);
-            });
+         showPopup: function() {
+            _private.search(this).addCallback(_private.showPopup.bind(this, this));
+         },
+         
+         hidePopup: function() {
+            _private.getSearchController(this).abort();
+            this._popupOpener.close();
+         },
+         
+         setSearchFilter: function(searchFilter) {
+            this._filter = searchFilter;
+         },
+         
+         setPopupOptions: function(options) {
+            this._popupOptions = options;
          },
          
          keyDown: function(event) {
@@ -105,11 +117,6 @@ define('js!Controls/Input/resources/SuggestPopupController',
                      break;
                }
             }
-         },
-         
-         abort: function() {
-            _private.getSearchController(this).abort();
-            this._popupOpener.close();
          },
    
          _moduleName: 'Controls/Input/resources/SuggestPopupController'
