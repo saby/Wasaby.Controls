@@ -11,7 +11,7 @@ define('SBIS3.CONTROLS/Link', [
    /**
     * Класс контрола "Кнопка в виде ссылки".
     *
-    * {@link /doc/platform/developmentapl/interface-development/components/textbox/buttons/button-link/#link Демонстрационные примеры}.
+    * <a href='/doc/platform/developmentapl/interface-development/components/textbox/buttons/button-link/#link'>Демонстрационные примеры</a>.
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
     *
     * @remark
@@ -19,7 +19,7 @@ define('SBIS3.CONTROLS/Link', [
     *
     * @class SBIS3.CONTROLS/Link
     * @extends WSControls/Buttons/ButtonBase
-    * @author Романов Валерий Сергеевич
+    * @author Романов В.С.
     *
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
@@ -94,7 +94,7 @@ define('SBIS3.CONTROLS/Link', [
          }
       },
 
-      _modifyOptions: function (opts) {
+      _modifyOptions: function (opts, parsedOptions, attrToMerge) {
          var
             options = Link.superclass._modifyOptions.apply(this, arguments);
          options.cssClassName += ' controls-Link';
@@ -105,7 +105,7 @@ define('SBIS3.CONTROLS/Link', [
          }else {
             options._textClass = ' controls-Link__field';
          }
-         LinkUtil.preparedClassFromOptions(options);
+         LinkUtil.preparedClassFromOptions(options, attrToMerge);
          return options;
       },
 

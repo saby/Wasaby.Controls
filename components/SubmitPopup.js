@@ -5,7 +5,8 @@ define('SBIS3.CONTROLS/SubmitPopup', [
    "tmpl!SBIS3.CONTROLS/SubmitPopup/resources/template",
    "SBIS3.CONTROLS/Button",
    "SBIS3.CONTROLS/Link",
-   'css!SBIS3.CONTROLS/SubmitPopup/SubmitPopup'
+   'css!SBIS3.CONTROLS/SubmitPopup/SubmitPopup',
+   'css!Controls/ConfirmationWindow/Dialog/Dialog'
 ],
 
    /**
@@ -15,7 +16,7 @@ define('SBIS3.CONTROLS/SubmitPopup', [
     * @extends SBIS3.CONTROLS/InformationPopup
     * @control
     * @public
-    * @author Степин Павел Владимирович
+    * @author Степин П.В.
     */
    function(constants, InformationPopup, runDelayed, template){
       'use strict';

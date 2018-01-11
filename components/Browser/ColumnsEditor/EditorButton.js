@@ -25,13 +25,13 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/EditorButton',
                /**
                 * @cfg {boolean} Показывать дропдаун с выбором пресета рядом с кнопкой
                 */
-               usePresets: false,// TODO: Включить после переделки дропдауна с пресетами
+               usePresets: false,
                /**
                 * @cfg {string} Заголовок дропдауна
                 */
                presetsTitle: null,
                /**
-                * @cfg {SBIS3.CONTROLS.Browser/Browser/ColumnsEditor/Preset/Unit[]} Список объектов статически задаваемых пресетов
+                * @cfg {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit[]} Список объектов статически задаваемых пресетов
                 */
                staticPresets: null,
                /**

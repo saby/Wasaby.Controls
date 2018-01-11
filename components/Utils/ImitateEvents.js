@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/Utils/ImitateEvents', ['Core/detection'], function(CoreDe
     * Модуль, реализующий имитацию различных DOM-событий
     * @class SBIS3.CONTROLS/Utils/ImitateEvents
     * @public
-    * @author Авраменко Алексей Сергеевич
+    * @author Авраменко А.С.
     */
    return /** @lends SBIS3.CONTROLS/Utils/ImitateEvents.prototype */{
       /**

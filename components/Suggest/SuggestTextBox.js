@@ -34,7 +34,7 @@ define('SBIS3.CONTROLS/Suggest/SuggestTextBox', [
     *
     * @demo SBIS3.CONTROLS.Demo.MySuggestTextBox Поле ввода с автодополнением
     *
-    * @author Герасимов Александр Максимович
+    * @author Герасимов А.М.
     *
     * @control
     * @public

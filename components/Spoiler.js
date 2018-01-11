@@ -38,7 +38,7 @@ define('SBIS3.CONTROLS/Spoiler', [
     * @public
     * @category Button
     *
-    * @author Авраменко Алексей Сергеевич
+    * @author Авраменко А.С.
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
@@ -128,15 +128,17 @@ define('SBIS3.CONTROLS/Spoiler', [
       },
       setCaption: function(caption){
          Spoiler.superclass.setCaption.call(this, caption);
-         this._getTextContainer()
-            .toggleClass('controls-Spoiler__emptyCaption', !caption)
-            .text(caption || '');
+         this._getCaptionContainer().toggleClass('controls-Spoiler__emptyCaption', !caption);
+         this._getTextContainer().text(caption || '\xa0'); // \xa0 = &nbsp;
       },
       _getTitleContainer: function() {
          return $('.js-controls-Spoiler__title', this._container.get(0));
       },
-      _getTextContainer: function() {
+      _getCaptionContainer: function() {
          return $('.js-controls-Spoiler__title-caption', this._container.get(0));
+      },
+      _getTextContainer: function() {
+         return $('.js-controls-Spoiler__title-caption-text', this._container.get(0));
       },
       _getContentContainer: function() {
          return $('.js-controls-Spoiler__content', this._container.get(0));

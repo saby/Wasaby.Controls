@@ -32,7 +32,7 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
        * @class SBIS3.CONTROLS/LongOperations/Registry
        * @extends Lib/Control/CompoundControl/CompoundControl
        *
-       * @author Спирин Виктор Алексеевич
+       * @author Спирин В.А.
        *
        */
       var LongOperationsRegistry = CompoundControl.extend(/** @lends SBIS3.CONTROLS/LongOperations/Registry.prototype */{
@@ -94,7 +94,7 @@ define('SBIS3.CONTROLS/LongOperations/Registry',
 
             //Открываем ссылку, если она есть, иначе открываем журнал выполнения операции
             this.subscribeTo(longOperationsBrowser, 'onEdit', function (e, meta) {
-               self._longOpList.applyResultAction(meta.item);
+               self._longOpList.applyMainAction(meta.item);
             });
 
             this.subscribeTo(view, 'onDataLoad'/*'onItemsReady'*/, function (evtName, recordset) {

@@ -3,7 +3,7 @@ define('SBIS3.CONTROLS/Mixins/DataBindMixin', ['Lib/Control/AttributeCfgParser/A
     /**
      * @mixin SBIS3.CONTROLS/Mixins/DataBindMixin
      * @public
-     * @author Крайнов Дмитрий Олегович
+     * @author Крайнов Д.О.
      */
     var DataBindMixin = /**@lends SBIS3.CONTROLS/Mixins/DataBindMixin.prototype  */{
       $protected : {

@@ -14,7 +14,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
       /**
        * @class SBIS3.CONTROLS/RichEditor/Components/ToolbarBase
        * @extends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase
-       * @author Спирин Виктор Алексеевич
+       * @author Спирин В.А.
        * @public
        * @control
        */

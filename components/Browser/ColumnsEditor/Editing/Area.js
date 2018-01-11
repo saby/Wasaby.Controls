@@ -13,6 +13,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       'WS.Data/Functor/Compute',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/AreaSelectableModel',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Cache',
+      'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/Controllers/ItemsMoveController',
       'SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController',
@@ -29,7 +30,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, Deferred, RecordSet, ComputeFunctor, AreaSelectableModel, PresetCache, CompoundControl, ItemsMoveController, EditInPlaceBaseController, dotTplFn) {
+   function (CommandDispatcher, Deferred, RecordSet, ComputeFunctor, AreaSelectableModel, PresetCache, PresetDropdown, CompoundControl, ItemsMoveController, EditInPlaceBaseController, dotTplFn) {
       'use strict';
 
 
@@ -76,7 +77,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                 */
                presetsTitle: null,
                /**
-                * @cfg {SBIS3.CONTROLS.Browser/Browser/ColumnsEditor/Preset/Unit[]} Список объектов статически задаваемых пресетов (опционально)
+                * @cfg {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit[]} Список объектов статически задаваемых пресетов (опционально)
                 */
                staticPresets: null,
                /**
@@ -146,8 +147,9 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                //PresetCache.subscribe(options.presetNamespace, 'onCacheError', function () {});
 
                _getPresets(this).addCallback(function (presets) {
-                  this._currentPreset = _getPreset(presets, options.selectedPresetId);
+                  this._currentPreset = _getPreset(presets, options.selectedPresetId || PresetDropdown.getLastSelected(options.presetNamespace));
                   _updatePresetView(this);
+                  _updateSelectableView(this);
 
                   this.subscribeTo(this._presetView, 'onAfterBeginEdit', this._presetView.setItemsActions.bind(this._presetView, []));
                   this.subscribeTo(this._presetView, 'onEndEdit', function (evtName, model, withSaving) {
@@ -200,7 +202,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                      PresetCache.update(namespace, preset);
                   }
                }
-               this._notify('onComplete', selectedColumns);
+               this._notify('onComplete', this._options.columns, selectedColumns);
             }
             else {
                this._notify('onClose');
@@ -394,17 +396,21 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          _getPresets(self).addCallback(function (presets) {
             self._currentPreset = _getPreset(presets, self._presetDropdown.getSelectedPresetId());
             _updatePresetView(self);
-            var cfg = self._options;
-            var selectedIds = _getSelectedColumns(cfg, self._currentPreset, false);
-            var selectedColumns = [];
-            cfg.columns.each(function (record) {
-               var column = record.getId();
-               if (!record.get('fixed') && selectedIds.indexOf(column) !== -1) {
-                  selectedColumns.push(column);
-               }
-            });
-            self._selectableView.setSelectedKeys(selectedColumns);
+            _updateSelectableView(self);
          });
+      };
+
+      var _updateSelectableView = function (self) {
+         var cfg = self._options;
+         var selectedIds = _getSelectedColumns(cfg, self._currentPreset, false);
+         var selectedColumns = [];
+         cfg.columns.each(function (record) {
+            var column = record.getId();
+            if (!record.get('fixed') && selectedIds.indexOf(column) !== -1) {
+               selectedColumns.push(column);
+            }
+         });
+         self._selectableView.setSelectedKeys(selectedColumns);
       };
 
       var _makePresetItemsActions = function (self, useAllActions) {

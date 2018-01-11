@@ -20,7 +20,7 @@ function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
     *
     * @mixes SBIS3.CONTROLS/Mixins/ITextValue
     *
-    * @author Журавлев Максим Сергеевич
+    * @author Журавлев М.С.
     *
     * @demo SBIS3.CONTROLS.Demo.MyRadioGroup
     *

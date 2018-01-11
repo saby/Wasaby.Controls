@@ -5,7 +5,7 @@
  * @extends SBIS3.CONTROLS/LongOperations/AbstractProducer
  * @implements SBIS3.CONTROLS/LongOperations/IProducer
  *
- * @author Спирин Виктор Алексеевич
+ * @author Спирин В.А.
  *
  * @public
  */
@@ -176,7 +176,7 @@ define('SBIS3.CONTROLS/LongOperations/GenericProducer',
           * @param {number} options.offset Количество пропущенных элементов в начале
           * @param {number} options.limit Максимальное количество возвращаемых элементов
           * @param {object} [options.extra] Дополнительные параметры, если есть (опционально)
-          * @return {Core/Deferred<SBIS3.CONTROLS.LongOperations.Entry[]>}
+          * @return {Core/Deferred<SBIS3.CONTROLS/LongOperations/Entry[]>}
           */
          /*^^^fetch: function (options) {
             return GenericLongOperationsProducer.superclass.fetch.apply(this, arguments).addCallback(function (operations) {

@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/Utils/HtmlDecorators/AbstractDecorator', [
     * Абстрактный декоратор
     * @class SBIS3.CONTROLS/Utils/HtmlDecorators/AbstractDecorator
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var AbstractDecorator = cExtend({}, /** @lends SBIS3.CONTROLS/Utils/HtmlDecorators/AbstractDecorator.prototype */{
       $protected: {

@@ -89,6 +89,19 @@
   &:-ms-input-placeholder {  opacity: 0 }
 }
 
+.compatPlaceholder(@color: @default-placeholder-color) {
+  .user-select(none);
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  cursor: text;
+  color: @color;
+  font: inherit;
+}
+
 .box-sizing(@type: border-box) {
   -webkit-box-sizing: @type;
   -moz-box-sizing: @type;
@@ -141,7 +154,7 @@
   box-sizing: border-box;
 }
 
-.button-default-style(@button-font-size: @font-size_Button, @button-default-shadow: none) {
+.button-default-style(@button-font-size: @font-size_Button_default, @button-default-shadow: none) {
   cursor: pointer;
   display: inline-block;
   outline: none;
@@ -275,6 +288,7 @@
   background-image: url("@{themeName}/img/rowSelect.png");
   background-position: @position;
   background-repeat: repeat-y;
+  background-size: @background-size_Marker;
 }
 
 .inline-flexbox() {
@@ -431,7 +445,7 @@
       color: @textColor;
       .controls-Button__icon {
         &.icon-primary {
-          color: @iconColor !important;
+          color: @iconColor;
         }
       }
     }
@@ -448,6 +462,7 @@
 
 .round-button-hover-mixin() {
   &:hover {
+    background-color: @background-color_EditButton_hovered;
     border-color: @default-color;
     .controls-Button__icon {
       color: @icon-button-round-icon-color-hover;
@@ -465,7 +480,7 @@
       }
     }
     &.controls-IconButton__doneBorder {
-      border-color: @color_IconButton-icon_done;
+      border-color: @border-color_EditButton_hovered;
       .controls-Button__icon {
         color: @color_IconButton-icon_done;
       }

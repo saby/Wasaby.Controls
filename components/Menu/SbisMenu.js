@@ -18,7 +18,7 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
      * Стандарт описан <a href='http://axure.tensor.ru/standarts/v7/#p=контекстное_меню__версия_1_'>здесь</a>.
      *
      * @class SBIS3.CONTROLS/Menu/SbisMenu
-     * @author Крайнов Дмитрий Олегович
+     * @author Крайнов Д.О.
      * @extends SBIS3.CONTROLS/Menu/ContextMenu
      * @control
      * @public

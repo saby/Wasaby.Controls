@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/Action/ActionBase', ['Lib/Control/Control'], function(Con
     * @class SBIS3.CONTROLS/Action/ActionBase
     * @public
     * @extends Lib/Control/Control
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @deprecated Используйте {@link SBIS3.CONTROLS/Action}.
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip

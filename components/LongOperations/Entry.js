@@ -75,6 +75,7 @@ define('SBIS3.CONTROLS/LongOperations/Entry',
          resultHandler: 'string',
          resultHandlerArgs: ['string', 'object'],
          useResult: 'boolean',
+         custom: 'object',
          extra: 'object',
          notification: 'string'//TODO: Поменять на progressMessage
       };
@@ -86,7 +87,7 @@ define('SBIS3.CONTROLS/LongOperations/Entry',
        * @extends Core/core-extend
        * @public
        *
-       * @author Спирин Виктор Алексеевич
+       * @author Спирин В.А.
        */
       var LongOperationEntry = CoreExtend.extend(/** @lends SBIS3.CONTROLS/LongOperations/Entry.prototype */{
          _moduleName: 'SBIS3.CONTROLS/LongOperations/Entry',

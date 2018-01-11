@@ -36,14 +36,6 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
       return value || '';
    }
 
-   function isFalsy(value) {
-      return typeof value !== 'undefined' && value !== null && !isNaN(value) && value !== '';
-   }
-
-   function needShowCompatiblePlaceholder(cfg) {
-      return cfg._needShowCompatiblePlaceholderST(cfg) && !isFalsy(cfg.moneyValue) && !isFalsy(cfg.numericValue);
-   }
-
     /**
      * Класс контрола "Поле ввода денег".
      *
@@ -51,15 +43,14 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
      * @extends SBIS3.CONTROLS/NumberTextBox
      * @public
      * @control
-     * @author Романов Валерий Сергеевич
+     * @author Романов В.С.
      *
      */
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS/MoneyTextBox.prototype */ {
       $protected: {
          _options: {
-            _needShowCompatiblePlaceholder: needShowCompatiblePlaceholder,
             textAlign: 'right',
-            _paddingClass: ' controls-TextBox_paddingBoth',
+            _paddingClass: ' controls-InputRender_paddingBoth controls-TextBox_paddingBoth',
             textFieldWrapper: textFieldWrapper,
             /**
              * @cfg {Number} Количество знаков после запятой
@@ -162,10 +153,6 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
          }
       },
 
-      _useNativePlaceHolder: function () {
-        return false;
-      },
-
       _setNumericValue: function(value) {
          value = (value+ '').replace(/\s+/g,'');
          this._options.numericValue = parseFloat(value);
@@ -187,7 +174,6 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
         * @private
         */
        _drawText: function(text) {
-          this._updateCompatiblePlaceholderState();
           if (this._inputField[0].innerHTML != text) {
              this._setInputValue(text || '');
           }

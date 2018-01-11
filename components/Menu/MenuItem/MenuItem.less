@@ -5,60 +5,64 @@
    .box-sizing(border-box);
    cursor: pointer;
    width: auto;
-   height: @menu-item-height;
-   padding: @menu-item-default-padding;
-   color: @menu-item-text-color;
+   height: @height_MenuItem;
+   padding: @padding_MenuItem;
+   color: @color_MenuItem;
    text-align: left;
-   font-size:  @menu-item-font-size;
+   font-size:  @font-size_MenuItem;
 
    &.controls-MenuItem__padding-16, &.controls-MenuItem__padding-small{
-      padding-left: @menu-item-padding-16;
+      padding-left: @padding_MenuItem-icon_small;
    }
 
    &.controls-MenuItem__padding-24, &.controls-ListView__item.controls-MenuItem__padding-24, &.controls-MenuItem__padding-medium{
-      padding-left: @menu-item-padding-24;
+      padding-left: @padding_MenuItem-icon_medium;
    }
 
    &.controls-MenuItem__padding-32, &.controls-MenuItem__padding-large{
-      padding-left: @menu-item-padding-32;
+      padding-left: @padding_MenuItem-icon_large;
    }
 
    &:active {
-      color: @menu-item-hover-text-color;
-      background: @menu-item-hover-bg;
+      color: @color_MenuItem_hovered;
+      background: @background_MenuItem_hovered;
    }
 
    .controls-MenuItem__content {
       overflow: hidden;
       position: relative;
       width: 100%;
-      min-height: @menu-item-height;
+      min-height: @height_MenuItem;
 
       .icon-16 ~ .controls-MenuItem__text, .icon-small ~ .controls-MenuItem__text{
-         margin: @menu-item-icon-16-margin;
+         margin: @margin_MenuItem-icon_small;
       }
 
       .icon-24 ~ .controls-MenuItem__text, .icon-medium ~ .controls-MenuItem__text{
-         margin: @menu-item-icon-24-margin;
+         margin: @margin_MenuItem-icon_medium;
       }
 
       .icon-32 ~ .controls-MenuItem__text, .icon-large ~ .controls-MenuItem__text{
-         margin: @menu-item-icon-32-margin;
+         margin: @margin_MenuItem-icon_large;
       }
 
       .controls-MenuItem__icon {
          position: absolute;
-         top: @menu-item-icon-top-offset;
-         left: @menu-item-icon-left-offset;
+         top: @top_MenuItem-icon;
+         left: @left_MenuItem-icon;
          &.icon-24, &.icon-medium {
-            top: @menu-item-icon24-top-offset;
-            left: @menu-item-icon24-left-offset;
+            top: @top_MenuItem-icon_medium;
+            left: @left_MenuItem-icon_medium;
+         }
+         &.icon-32, &.icon-large {
+            top: @top_MenuItem-icon_large;
+            left: @left_MenuItem-icon_large;
          }
       }
 
       .controls-MenuItem__text {
-         margin: @menu-item-text-margin;
-         line-height: @menu-item-line-height;
+         margin: @margin_MenuItem-text;
+         line-height: @line-height_MenuItem;
          display: block;
       }
    }
@@ -70,20 +74,20 @@
 
 .ws-disabled {
    &.controls-MenuItem {
-      color: @menu-item-disabled-text-color;
+      color: @color_MenuItem_disabled;
       background: transparent;
       cursor: default;
    }
    .controls-MenuItem__icon {
-      color: @menu-item-disabled-text-color !important;
+      color: @color_MenuItem_disabled !important;
    }
 }
 
 .ws-is-desktop-platform {
    .controls-MenuItem:not(.ws-disabled) {
       &:hover {
-         color: @menu-item-hover-text-color;
-         background: @menu-item-hover-bg;
+         color: @color_MenuItem_hovered;
+         background: @background_MenuItem_hovered;
       }
    }
 }

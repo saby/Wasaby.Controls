@@ -51,7 +51,7 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS/Mixins/TreeViewMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @cssModifier controls-ListView__item-without-child Класс добавляется к визуальному представлению папки, у которой отсутствуют дочерние элементы.
     * @cssModifier controls-ListView__hideCheckBoxes-leaf Скрывает отображение чекбоксов у листьев. Подробнее о данном типе записей списка читайте в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.

@@ -26,7 +26,7 @@ define('SBIS3.CONTROLS/Utils/ControlsValidators', [
     * Подробнее о работе с валидаторами вы можете прочитать в разделе <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/validation/">Валидация вводимых данных</a>.
     * @class SBIS3.CONTROLS/Utils/ControlsValidators
     * @public
-    * @author Красильников Андрей Сергеевич
+    * @author Красильников А.С.
     */
    return /** @lends SBIS3.CONTROLS/Utils/ControlsValidators.prototype */{
       /**

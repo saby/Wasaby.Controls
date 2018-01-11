@@ -24,7 +24,7 @@ define('SBIS3.CONTROLS/Date/RangeSliderBase',[
     * @mixes SBIS3.CONTROLS/Mixins/DateRangeMixin
     * @mixes SBIS3.CONTROLS/Mixins/FormWidgetMixin
     *
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     *
     * @control
     * @public

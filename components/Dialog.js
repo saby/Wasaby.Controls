@@ -11,7 +11,7 @@ define('SBIS3.CONTROLS/Dialog', ['Lib/Control/Control'], function(Control) {
     * Сам компонент не имеет визуального отображения, не рисует крестик или заголовок, эта логика переносится на компоненты, лежащие внутри.
     * @class SBIS3.CONTROLS/Dialog
     * @extends Lib/Control/Control
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var Dialog = Control.Control.extend( /** @lends SBIS3.CONTROLS/Dialog.prototype*/ {

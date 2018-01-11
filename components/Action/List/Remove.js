@@ -12,7 +12,7 @@ define('SBIS3.CONTROLS/Action/List/Remove', [
        * @public
        * @extends SBIS3.CONTROLS/Action
        * @mixes SBIS3.CONTROLS/Action/List/Mixin/ListMixin
-       * @author Ганшин Ярослав Олегович
+       * @author Ганшин Я.О.
        * @example
        * Пример использования
        * <pre>
