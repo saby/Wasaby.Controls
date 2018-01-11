@@ -248,10 +248,8 @@ body {
   border-left: none !important;
 }
 
-.controls-ItemsToolbar-closeButton.controls-Button__closeButton {
+.controls-EditActions__cancelButton {
   position: relative;
-  width: @width_EditButton;
-  height: @height_EditButton;
   background-image: none;
   background-color: @background-color_EditButton;
   font-size: @font-size_Button_m;
@@ -273,6 +271,13 @@ body {
   &:active {
     box-shadow: none;
   }
+}
+.ws-float-close {
+  .close-button-mixin(~'!important');
+  &:before {
+    color: #8991A9 !important;
+  }
+  border: none !important;
 }
 .ws-is-desktop-platform {
   .controls-ItemsToolbar-closeButton.controls-Button__closeButton:hover {
