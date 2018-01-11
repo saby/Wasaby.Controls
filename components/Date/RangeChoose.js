@@ -28,7 +28,7 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
        * @typedef {Object} customPeriod
        * @property {String} label Заголовок который будет отбражаться в контроле.
        * @property {Date} startValue Начальное значение периода
-       * @property {Date} endValue КОнечное значение периода
+       * @property {Date} endValue Конечное значение периода
        */
       /**
        * @typedef {[Date, Date]} Period
