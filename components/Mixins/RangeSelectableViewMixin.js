@@ -136,6 +136,7 @@ define('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', ['Core/core-instance'],
          } else if (this.getSelectionType() === selectionTypes.single) {
             if (this.setRange(item, endItem)) {
                this.validateRangeSelectionItemsView();
+               this._notify('onSelectionEnded');
             }
          }
       },

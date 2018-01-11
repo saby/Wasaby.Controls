@@ -9,8 +9,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
    "Core/core-instance",
    'SBIS3.CONTROLS/Date/RangeBigChoose/resources/CalendarSource',
    'Lib/LayoutManager/LayoutManager',
+   'SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin',
    "SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView"
-], function (constants, Deferred, ListView, ItemTmpl, RangeMixin, Base, DateUtils, cInstance, CalendarSource, LayoutManager) {
+], function (constants, Deferred, ListView, ItemTmpl, RangeMixin, Base, DateUtils, cInstance, CalendarSource, LayoutManager, RangeSelectableViewMixin) {
    'use strict';
 
    var monthSource = new CalendarSource();
@@ -26,7 +27,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
    var Component = ListView.extend([RangeMixin], /** @lends SBIS3.CONTROLS.DateRangeBig.DateRangePicker.prototype */{
       $protected: {
          _options: {
-            rangeselect: false,
+            selectionType: 'single',
             month: null,
             idProperty: 'id',
             itemTpl: ItemTmpl,
@@ -142,10 +143,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
             control.subscribe('onBeforeSelectionStarted', self._onMonthViewBeforeSelectionStarted);
             control.unsubscribe('onSelectingRangeEndDateChange', self._onMonthViewSelectingRangeEndDateChange);
             control.subscribe('onSelectingRangeEndDateChange', self._onMonthViewSelectingRangeEndDateChange);
-            if (self._options.rangeselect) {
-               control.unsubscribe('onActivated', self._onMonthViewCaptionActivated);
-               control.subscribe('onActivated', self._onMonthViewCaptionActivated);
-            }
          });
          this._updateSelectionInInnerComponents();
          this._updateMonthsPosition();
@@ -186,7 +183,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       setRange: function (start, end, silent) {
          var oldStart, oldEnd, month, changed;
 
-         if (this._options.rangeselect) {
+         if (this._options.selectionType === RangeSelectableViewMixin.selectionTypes.range) {
             // oldStart = this.getStartValue();
             // oldEnd = this.getEndValue();
             changed = Component.superclass.setRange.apply(this, arguments);
@@ -207,7 +204,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
 
       _prepareItemData: function () {
          var args = Component.superclass._prepareItemData.apply(this, arguments);
-         args.rangeselect = this._options.rangeselect;
+         args.selectionType = this._options.selectionType;
          return args;
       },
 
