@@ -258,10 +258,13 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
          // Хак, временный скрол в режиме месяца
          container.find('.controls-DateRangeBigChoose__dates-dates-wrapper').scroll(function (event) {
-            var month;
-            if ($('.controls-DateRangeBigChoose__dates-dates').outerHeight() - $(event.target).outerHeight() <= event.target.scrollTop + 10) {
-               month = self._dateRangePicker.getMonth();
+            var month = self._dateRangePicker.getMonth(),
+               scrollContainerHeight = $(event.target).outerHeight(),
+               contentHeight = container.find('.controls-DateRangeBigChoose__dates-dates').outerHeight();
+            if (contentHeight - scrollContainerHeight <= event.target.scrollTop + 10) {
                self._dateRangePicker.setMonth(new Date(month.getFullYear() + 1, 0));
+            } else if (event.target.scrollTop <= 0) {
+               self._dateRangePicker.setMonth(new Date(month.getFullYear(), -1));
             }
          });
 

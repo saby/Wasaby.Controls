@@ -19,7 +19,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
              * @variant range Режим выбора периода
              * @variant single Режим выбора одной даты
              */
-            selectionMode: 'range',
+            selectionType: 'range',
 
             pickerConfig: {
                corner: 'tl',
@@ -52,7 +52,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
          showPicker: function () {
             if (this._chooserControl) {
                this._chooserControl.setRange(this.getStartValue(), this.getEndValue());
-               if (this._options.selectionMode === 'range') {
+               if (this._options.selectionType === 'range') {
                   this._chooserControl.applyYearState();
                }
                this._chooserControl.updateViewAfterShow();
@@ -92,7 +92,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
          _modifyOptions: function (parentFunc, opts) {
             opts = parentFunc.call(this, opts);
 
-            if (opts.selectionMode === 'single') {
+            if (opts.selectionType === 'single') {
                if (opts.startValue && !opts.endValue) {
                   opts.endValue = opts.startValue;
                } else if (opts.endValue && !opts.startValue) {
@@ -103,7 +103,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
          },
          setStartValue: function (parentFunc, value, silent) {
             var changed = parentFunc.call(this, value, silent);
-            if (this._options.selectionMode === 'single' && changed) {
+            if (this._options.selectionType === 'single' && changed) {
                this.setEndValue(value, silent);
             }
             return changed;
@@ -111,7 +111,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
 
          setEndValue: function (parentFunc, value, silent) {
             var changed = parentFunc.call(this, value, silent);
-            if (this._options.selectionMode === 'single' && changed) {
+            if (this._options.selectionType === 'single' && changed) {
                this.setStartValue(value, silent);
             }
             return changed;
@@ -124,12 +124,12 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
             element: element,
             startValue: this.getStartValue(),
             endValue: this.getEndValue(),
-            rangeselect: this._options.selectionMode === 'range'
+            selectionType: this._options.selectionType
          }
       },
 
       _onChooserRangeChange: function (e, start, end) {
-         if (this._options.selectionMode === 'single') {
+         if (this._options.selectionType === 'single') {
             end = start;
          }
          this.setRange(start, end);

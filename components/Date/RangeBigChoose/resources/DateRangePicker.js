@@ -111,11 +111,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
             this.reload();
          }
 
-         displayedMonth = this.getContainer().find('.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_wrapper[data-date="' + month.toSQL() + '"]');
-         LayoutManager.scrollToElement(displayedMonth);
-         this.getContainer().find('.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item-displayed')
-            .removeClass('controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item-displayed');
-         displayedMonth.addClass('controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item-displayed');
+         this._updateMonthsPosition();
          this._notify('onYearChanged');
       },
 
@@ -160,7 +156,15 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
 
       _updateMonthsPosition: function () {
-         // this.getContainer().css('top', 40 - $(this._getItemsContainer().children().get(0)).height());
+         if (!this._options.month) {
+            return;
+         }
+         var displayedMonth = this.getContainer().find('.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_wrapper[data-date="' + this._options.month.toSQL() + '"]');
+         LayoutManager.scrollToElement(displayedMonth);
+
+         this.getContainer().find('.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item-displayed')
+            .removeClass('controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item-displayed');
+         displayedMonth.addClass('controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item-displayed');
       },
 
       setStartValue: function (start, silent) {
