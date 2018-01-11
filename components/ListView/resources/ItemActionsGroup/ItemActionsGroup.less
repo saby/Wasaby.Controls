@@ -75,18 +75,9 @@
       }
       .controls-PopupMixin__closeButton {
          position: absolute;
-         display: -webkit-box;
-         display: -webkit-flex;
-         display: -ms-flexbox;
-         display: flex;
-         -webkit-align-items: center;
-         -ms-flex-align: center;
-         -ms-align-items: center;
-         align-items: center;
-         -webkit-justify-content: center;
-         -ms-justify-content: center;
-         -ms-flex-pack: center;
-         justify-content: center;
+         .flexbox();
+         .align-items(center);
+         .justify-content(center);
          right: 0;
          top: @list-view-actions-menu-touch-close-top;
          width: @closeButtonWidth;
