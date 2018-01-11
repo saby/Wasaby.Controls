@@ -11,7 +11,7 @@
 @large-text-size:              round(32px * @multiplier);
 @huge-text-size:               round(40px * @multiplier);
 @default-icon-size:            round(32px * @multiplier);
-@default-icon-size-medium:     round(42px * @multiplier);
+@default-icon-size-medium:     ceil(42px * @multiplier); //need 32px if @multiplier === 0.74
 @default-icon-size-large:      round(52px * @multiplier);
 @default-line-height:          round(42px * @multiplier); //42px;
 @default-base-line-height:     round(56px * @multiplier);//@default-height - 2 * @default-border-width
