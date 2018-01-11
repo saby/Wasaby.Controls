@@ -60,7 +60,7 @@ define('SBIS3.CONTROLS/SelectorButton',
     * @class SBIS3.CONTROLS/SelectorButton
     * @extends WSControls/Buttons/Button
     *
-    * @author Герасимов Александр Максимович
+    * @author Герасимов А.М.
     *
     * @mixes SBIS3.CONTROLS/Mixins/IconMixin
     * @mixes SBIS3.CONTROLS/Mixins/MultiSelectable
@@ -240,8 +240,10 @@ define('SBIS3.CONTROLS/SelectorButton',
        * @param key
        */
       setSelectedKey: function(key) {
-         this._options.selectedKey = key;
-         this._notifySelectedItem(this._options.selectedKey);
+         if(this._options.selectedKey !== key) {
+            this._options.selectedKey = key;
+            this._notifySelectedItem(this._options.selectedKey);
+         }
       },
 
       setCaption: function(caption) {

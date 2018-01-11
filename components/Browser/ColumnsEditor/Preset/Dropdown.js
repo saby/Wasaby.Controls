@@ -69,7 +69,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
             PresetDropdown.superclass.init.apply(this, arguments);
             this._dropdown = this.getChildControlByName('controls-Browser-ColumnsEditor-Preset-Dropdown__dropdown');
             var namespace = this._options.presetNamespace || '';
-            this._selectedPresetId = _lastSelecteds[namespace] || this._options.selectedPresetId;
+            this._selectedPresetId = this._options.selectedPresetId || _lastSelecteds[namespace];
             if (namespace) {
                this._cacheHandler = this._onCache.bind(this);
                PresetCache.subscribe(namespace, 'onCacheChanged', this._cacheHandler);

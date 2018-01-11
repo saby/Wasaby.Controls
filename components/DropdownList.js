@@ -57,7 +57,7 @@ define('SBIS3.CONTROLS/DropdownList',
        * @class SBIS3.CONTROLS/DropdownList
        * @extends Lib/Control/CompoundControl/CompoundControl
        *
-       * @author Красильников Андрей Сергеевич
+       * @author Красильников А.С.
        *
        * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
        * @mixes SBIS3.CONTROLS/Mixins/MultiSelectable
@@ -181,7 +181,7 @@ define('SBIS3.CONTROLS/DropdownList',
                 * В шаблон запрещено внедрять компоненты или базовые платформенные контролы. Шаблон формируют на основе <b>базового шаблона</b>:
                 * <pre>
                 * <div class="controls-DropdownList__beforeCaptionWrapper" if="{{!!text}}">
-                *     <i class="controls-DropdownList__arrowIcon icon-16 icon-size icon-DayForward icon-primary action-hover"></i>
+                *     <i class="controls-DropdownList__arrowIcon icon-16 icon-size icon-DayForward action-hover"></i>
                 * </div>
                 * <div class="controls-DropdownList__textWrapper">
                 *     <span class="controls-DropdownList__text"><span if="{{_selectedItemIcon}}" class="{{_selectedItemIcon}} controls-DropdownList__icon"></span> <span class="controls-DropdownList__value">{{text}}</span></span>
@@ -213,7 +213,7 @@ define('SBIS3.CONTROLS/DropdownList',
                 * Шаблон, который используется по умолчанию:
                 * <pre>
                 *    <div class="controls-DropdownList__beforeCaptionWrapper">
-                *       <i class="controls-DropdownList__arrowIcon icon-16 icon-size icon-DayForward icon-primary action-hover"></i>
+                *       <i class="controls-DropdownList__arrowIcon icon-16 icon-size icon-DayForward action-hover"></i>
                 *    </div>
                 *    <div class="controls-DropdownList__textWrapper">
                 *       <span class="controls-DropdownList__text">{{=it.text}}</span>

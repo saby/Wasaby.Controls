@@ -28,7 +28,7 @@ define('js!Controls/List', [
             idProperty: cfg.idProperty,
             displayProperty: cfg.displayProperty,
             selectedKey: cfg.selectedKey
-         })
+         });
       },
 
       initNavigation: function(navOption, dataSource) {
@@ -181,7 +181,7 @@ define('js!Controls/List', [
 
       scrollTo: function(offset) {
          //TODO без скролл вотчера пока так
-         this._container.closest('.ws-scrolling-content').get(0).scrollTop = offset;
+         this._container.closest('.ws-scrolling-content').scrollTop = offset;
       },
 
       scrollLoadMore: function(self, direction) {
@@ -259,6 +259,20 @@ define('js!Controls/List', [
          if (virtualWindowIsChanged) {
             _private.applyVirtualWindow(this, this._virtualScroll.getVirtualWindow());
          }
+      },
+
+      /**
+       * отдать в VirtualScroll контейнер с отрисованными элементами для расчета средней высоты 1 элемента
+       * Отдаю именно контейнер, а не высоту, чтобы не считать размер, когда высоты уже проинициализированы
+       * @param self
+       */
+      initializeAverageItemsHeight: function(self) {
+         //TODO брать _container - плохо. Узнаю у Зуева как сделать хорошо
+         //Узнал тут, пока остается _container: https://online.sbis.ru/open_dialog.html?guid=01b6161a-01e7-a11f-d1ff-ec1731d3e21f
+         var res = self._virtualScroll.calcAverageItemHeight(self._children.listView._container);
+         if (res.changed) {
+            _private.applyVirtualWindow(self, res.virtualWindow);
+         }
       }
    };
 
@@ -309,8 +323,7 @@ define('js!Controls/List', [
 
          _beforeMount: function(newOptions) {
             this._virtualScroll = new VirtualScroll({
-               maxVisibleItems: 60,
-               itemHeight: 18,
+               maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
                itemsCount: 0
             });
 
@@ -321,6 +334,7 @@ define('js!Controls/List', [
             if (newOptions.items) {
                this._items = newOptions.items;
                this._listModel = _private.createListModel(this._items, newOptions);
+               this._virtualScroll.setItemsCount(this._items.getCount());
             }
             if (newOptions.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
@@ -339,8 +353,8 @@ define('js!Controls/List', [
             //TODO пока создаем ScrollWatcher всегда, когда есть скроллКонтейнер
             //if ((this._options.navigation && this._options.navigation.source === 'page')) {
                var scrollContainer = this._container.closest('.ws-scrolling-content');
-               if (scrollContainer && scrollContainer.length) {
-                  this._scrollController = _private.createScrollController.call(this, scrollContainer[0]);
+               if (scrollContainer) {
+                  this._scrollController = _private.createScrollController.call(this, scrollContainer);
                }
             //}
 
@@ -348,11 +362,11 @@ define('js!Controls/List', [
                //TODO кривое обращение к DOM
                //убарть когда перейду на скролл вотчер от Ильи Девятова
                scrollContainer = this._container.closest('.ws-scrolling-content');
-               if (scrollContainer.length && this._options.navigation.viewConfig && this._options.navigation.viewConfig.pagingMode) {
+               if (scrollContainer && this._options.navigation.viewConfig && this._options.navigation.viewConfig.pagingMode) {
                   var self = this;
                   require(['js!Controls/List/Controllers/ScrollPaging'], function (ScrollPagingController) {
                      self._scrollPagingCtr = new ScrollPagingController({
-                        scrollContainer: scrollContainer.get(0),
+                        scrollContainer: scrollContainer,
                         mode: self._options.navigation.viewConfig.pagingMode
                      });
 
@@ -365,6 +379,9 @@ define('js!Controls/List', [
                   });
                }
             }
+
+            //Посчитаем среднюю высоту строки и отдадим ее в VirtualScroll
+            _private.initializeAverageItemsHeight(this);
          },
 
          _beforeUpdate: function(newOptions) {
@@ -375,10 +392,13 @@ define('js!Controls/List', [
                this._filter = newOptions.filter;
             }
 
-            if (newOptions.items && newOptions.items != this._options.items) {
+            if (newOptions.items && (newOptions.items != this._options.items)) {
                this._items = newOptions.items;
                this._listModel = _private.createListModel(this._items, newOptions);
+            } else if (newOptions.selectedKey !== this._options.selectedKey) {
+               this._listModel.setSelectedKey(newOptions.selectedKey);
             }
+            
 
             if (newOptions.dataSource !== this._options.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
@@ -398,7 +418,7 @@ define('js!Controls/List', [
 
 
          _afterUpdate: function() {
-
+            _private.initializeAverageItemsHeight(this);
          },
 
          __onPagingArrowClick: function(e, arrow) {

@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/LongOperations/Tools/TabCalls',
        *
        * @class SBIS3.CONTROLS/LongOperations/Tools/TabCalls
        *
-       * @author Спирин Виктор Алексеевич
+       * @author Спирин В.А.
        *
        * @public
        * @type {SBIS3.CONTROLS/LongOperations/Tools/TabCalls}

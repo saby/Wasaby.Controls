@@ -1,0 +1,7 @@
+<span class="controls-SwitcherDouble {{_options.value ? ' controls-Checked__checked' : ''}}{{_options.orientation === 'vertical' ? ' controls-SwitcherDouble_vertical' : ' controls-SwitcherDouble_horizontal'}}" title="{{_options.tooltip}}">
+   <ws:partial template="tmpl!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchToggle" _value="{{_options.value}}"/>
+   <span class="controls-SwitcherDouble__textBlock">
+      <ws:partial template="tmpl!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchText" _nextValue="{{true}}" _value="{{_options.value}}" _caption="{{_options.captions[0]}}"/>
+      <ws:partial template="tmpl!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchText" _nextValue="{{false}}" _value="{{!_options.value}}" _caption="{{_options.captions[1]}}"/>
+   </span>
+</span>

@@ -49,7 +49,7 @@ define('SBIS3.CONTROLS/TextBox', [
     * </ol>
     * @class SBIS3.CONTROLS/TextBox
     * @extends SBIS3.CONTROLS/TextBox/TextBoxBase
-    * @author Романов Валерий Сергеевич
+    * @author Романов В.С.
     * @demo SBIS3.CONTROLS.Demo.MyTextBox
     *
     * @ignoreOptions independentContext contextRestriction className horizontalAlignment
@@ -339,12 +339,14 @@ define('SBIS3.CONTROLS/TextBox', [
          }
 
          this._informationIcon.removeClass('controls-TextBox__informationIcon-' + this._options.informationIconColor);
+         this._informationIcon.removeClass('controls-InputRender__tagStyle-' + this._options.informationIconColor);
          this._options.informationIconColor = color;
          this._informationIcon.addClass('controls-TextBox__informationIcon-' + color);
+         this._informationIcon.addClass('controls-InputRender__tagStyle-' + color);
       },
 
       _createInformationIcon: function(color) {
-         this._informationIcon = $('<div class="controls-TextBox__informationIcon controls-TextBox__informationIcon-' + color + '"></div>');
+         this._informationIcon = $('<div class="controls-InputRender__tagStyle controls-TextBox__informationIcon controls-TextBox__informationIcon-' + color + ' controls-InputRender__tagStyle-' + color + '"></div>');
          this.getContainer().append(this._informationIcon);
       },
 
@@ -414,7 +416,7 @@ define('SBIS3.CONTROLS/TextBox', [
             }
             else if (this._options.tooltip) {
                this.setTooltip(this._options.tooltip);
-            } else if (this._container.attr('title')) {
+            } else {
                 this._container.attr('title', '');
                //Ставлю пробел, чтобы скрыть браузерную подсказку "Заполните это поле". Если поставить пробел, то все браузеры,
                //кроме IE, не выводят всплывающую подсказку. Для IE ставлю пустой title, чтобы он не выводил всплывашку.
@@ -599,9 +601,7 @@ define('SBIS3.CONTROLS/TextBox', [
       },
       
       _inputClickHandler: function (e) {
-         if (this.isEnabled() && this._compatPlaceholder) {
-            this._getInputField().focus();
-         }
+
       },
 
       _inputFocusInHandler: function(e) {
@@ -633,7 +633,11 @@ define('SBIS3.CONTROLS/TextBox', [
       },
 
       _initPlaceholderEvents: function(placeholder) {
-         placeholder.on('click', this._inputClickHandler.bind(this));
+         var self = this;
+         placeholder.on('click', function() {
+            self._getInputField().focus();
+            self._inputClickHandler();
+         });
       },
 
       _createCompatiblePlaceholder: function() {

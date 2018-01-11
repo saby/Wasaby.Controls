@@ -3,7 +3,7 @@
  *
  * @class SBIS3.CONTROLS/LongOperations/Const
  *
- * @author Спирин Виктор Алексеевич
+ * @author Спирин В.А.
  *
  * @public
  */

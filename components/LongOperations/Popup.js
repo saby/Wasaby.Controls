@@ -27,7 +27,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
        * @class SBIS3.CONTROLS/LongOperations/Popup
        * @extends SBIS3.CONTROLS/NotificationPopup
        *
-       * @author Спирин Виктор Алексеевич
+       * @author Спирин В.А.
        */
       var LongOperationsPopup = NotificationPopup.extend(/** @lends SBIS3.CONTROLS/LongOperations/Popup.prototype */{
          $protected: {

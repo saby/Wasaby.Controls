@@ -57,24 +57,7 @@ body {
     width: round(84px * @multiplier) !important;
     height: round(84px * @multiplier) !important;
   }
-  // стандарт должен соотносится с онлайном будет поправлено в новой тематизации
-  // https://online.sbis.ru/opendoc.html?guid=36b0acbc-c8e4-4a57-9c80-7e0c43ed8dbd
-  .controls-ItemsToolbar.controls-ItemsToolbar__edit.controls-ItemsToolbar__withEditActions {
-    right: 0;
-  }
-  .controls-ListView__bottomStyle > .controls-ItemsToolbar {
-    &.controls-ItemsToolbar__edit {
-      right: 0;
-      &:before {
-        top: 0;
-        left: round(-76px * @multiplier);
-        width: round(84px * @multiplier);
-        height: round(84px * @multiplier);
-        background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iMjU1LjAwMDAwMHB4IiBoZWlnaHQ9IjMwMC4wMDAwMDBweCIgdmlld0JveD0iMCAwIDI1NS4wMDAwMDAgMzAwLjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwzMDAuMDAwMDAwKSBzY2FsZSgwLjEwMDAwMCwtMC4xMDAwMDApIgpmaWxsPSIjMzU0YjYyIiBzdHJva2U9Im5vbmUiPgo8cGF0aCBkPSJNMTAgMjk4OSBjMCAtMTEgMTkgLTUxIDI5IC01OSA2IC01IDQ2IC02NCAyMTUgLTMxNSA0NCAtNjYgODMgLTEyMgo4NiAtMTI1IDMgLTMgMzcgLTUyIDc1IC0xMTAgMzkgLTU4IDcyIC0xMDcgNzUgLTExMCA2IC02IDY3IC05NSAyMDQgLTMwMCA1MAotNzQgOTMgLTEzNyA5NiAtMTQwIDMgLTMgMjMgLTMyIDQ1IC02NSAyMiAtMzMgNDIgLTYyIDQ1IC02NSAzIC0zIDQzIC02MSA4OQotMTMwIDQ2IC02OSAxMjEgLTE3OSAxNjYgLTI0NSA0NCAtNjYgMTA2IC0xNTYgMTM1IC0yMDAgMzAgLTQ0IDU3IC04MiA2MCAtODUKNSAtNSA0MSAtNTggMjQ0IC0zNjAgNjEgLTkxIDExMyAtMTY3IDExNiAtMTcwIDMgLTMgMjMgLTMyIDQ1IC02NSA0NyAtNzAgMzgKLTU4IDExNiAtMTY0IDU3IC03NiAxNzkgLTE5MSAyMDMgLTE5MSA2IDAgMjUgLTcgNDEgLTE2IDU4IC0zMiAyODcgLTc0IDQwMAotNzQgbDU1IDAgMCAxNTAwIDAgMTUwMCAtMTI3MCAwIGMtODkyIDAgLTEyNzAgLTMgLTEyNzAgLTExeiIvPgo8L2c+Cjwvc3ZnPgo=') no-repeat 0 0;
-        background-size: round(84px * @multiplier) round(84px * @multiplier);
-      }
-    }
-  }
+
   .engine-Browser__path {
     max-height: round(56px * @multiplier);
     height: auto !important;
@@ -114,10 +97,6 @@ body {
          width: round(84px * @multiplier);
          height: round(84px * @multiplier);
       }
-   }
-
-   .controls-ListView__item__selected .controls-DataGridView__td:first-child {
-      background-size: round(5px * @multiplier);
    }
 }
 
@@ -256,9 +235,7 @@ body {
 .controls-editInPlace .controls-editInPlace__editor {
   background: @controls-editInPlace-editor-bg;
 }
-.controls-ListView .controls-ItemsToolbar__editActions {
-  background: @controls-editInPlace-editor-bg;
-}
+
 //todo: отказаться от данного сомнительного решения
 .controls-FormattedTextBox .controls-InputRender__wrapper .controls-InputRender__field .controls-FormattedTextBox__field-symbol {
     line-height: round(56px * @multiplier);
@@ -286,18 +263,6 @@ body {
    .controls-Browser__topTemplate {
       height: auto;
    }
-}
-
-.controls-Menu{
-  .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
-     &.icon-24, &.icon-medium {
-        top: round(28px * @multiplier);
-        left: round(-6px * @multiplier);
-     }
-     &.icon-16, &.icon-small {
-         top: round(32px * @multiplier);
-     }
-  }
 }
 
 body .ws-window.ws-LoadingIndicator__window {
@@ -400,14 +365,14 @@ body .controls-image__button {
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__left,
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__right {
    .icon-24 {
-       font-size: round(84px * @multiplier) !important;
+       font-size: round(42px * @multiplier) !important;
        height: round(84px * @multiplier) !important;
        width: round(84px * @multiplier) !important;
        line-height: round(84px * @multiplier) !important;
    }
 }
-.controls-DateRangeBigChoose__years-toggleChooseYearBtn {
-   height: round(84px * @multiplier);
+.controls-DateRangeBigChoose__years-toggleChooseYearBtn, .controls-DateRangeBigChoose__years-currentYearBtn {
+   height: round(84px * @multiplier) !important;
 }
 
 body .controls-DateRangeBigChoose__header .controls-DateBox {
@@ -452,7 +417,7 @@ body .controls-DateRangeBigChoose__years-yearsRange-btn:hover {
 
 .controls-BreadCrumbs .controls-BreadCrumbs {
    &__home, &__arrow {
-      font-size: round(50px * @multiplier)!important;
+      font-size: round(32px * @multiplier)!important;
       line-height: round(28px * @multiplier)!important;
       width: round(50px * @multiplier);
       top:  1px;
@@ -466,12 +431,12 @@ body .controls-DateRangeBigChoose__years-yearsRange-btn:hover {
 }
 
 .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-   top: round(11px * @multiplier) !important;
+   top:0 !important;
 }
 
 .ws-is-sbis-desktop {
   .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-    top: round(11px * @multiplier) !important;
+    top: 0 !important;
   }
 }
 
@@ -486,12 +451,6 @@ body .controls-DateRangeBigChoose__years-yearsRange-btn:hover {
 
 .controls-MergeDialogTemplate .controls-TreeDataGridView__levelPadding {
    display: none;
-}
-
-.controls-ListView:not(.controls-ListView__bottomStyle) {
-  .controls-ListView__ItemsToolbar-container.controls-ItemsToolbar__withEditActions {
-    height: round(84px * @multiplier);
-  }
 }
 
 // В темах престо и розницы все сверстано на внутренних скролируемых контенерах.
@@ -566,10 +525,6 @@ body {
    }
 }
 
-//Убрать когда проектировщики сделают одинаковые отступы, обсуждали на этом совещании: https://online.sbis.ru/obj/Meeting/e6b722a9-d339-4016-9fd6-82b763c4e241
-.controls-ItemsToolbar.controls-ItemsToolbar__withEditActions {
-  bottom:@top_window_button
-}
 .controls-Browser__search {
    margin: @top_window_button
 }

@@ -14,17 +14,14 @@ define('SBIS3.CONTROLS/Button',
    /**
     * Класс контрола "Обычная кнопка".
     *
-    * {@link /doc/platform/developmentapl/interface-development/components/textbox/buttons/button-line/#button Демонстрационные примеры}.
+    * <a href='/doc/platform/developmentapl/interface-development/components/textbox/buttons/button-line/#button'>Демонстрационные примеры</a>.
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
     *
     * @class SBIS3.CONTROLS/Button
-    * @extends Core/Control
+    * @extends WSControls/Buttons/Button
     *
-    * @mixes SBIS3.CONTROLS/Button/Button.compatible
-    * @mixes Lib/Control/BaseCompatible/Mixins/WsCompatibleConstructor
-    * @mixes Lib/Control/ControlGoodCode
     *
-    * @author Романов Валерий Сергеевич
+    * @author Романов В.С.
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
@@ -65,8 +62,8 @@ define('SBIS3.CONTROLS/Button',
          var opts = Button.superclass._modifyOptions.apply(this, arguments);
          opts.cssClassName += ' controls-Button';
          opts.cssClassName += ' controls-Button-size__' + (!!opts.size ? opts.size : 'default');
-         opts.cssClassName += ' controls-Button-color__' + (!!opts.primary ? 'primary' : 'default');
-         opts.cssClassName += (!!opts.primary ? ' controls-Button__primary' : '');
+         opts.cssClassName += ' controls-Button-color__' + ((!!opts.primary || opts.style === 'primary') ? 'primary' : 'default');
+         opts.cssClassName += ((!!opts.primary || opts.style === 'primary') ? ' controls-Button__primary' : '');
          return opts;
       },
       show: function(){

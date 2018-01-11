@@ -41,7 +41,7 @@
  * @class SBIS3.CONTROLS/LongOperations/CustomSlice
  * @extends Core/core-extend
  *
- * @author Спирин Виктор Алексеевич
+ * @author Спирин В.А.
  */
 define('SBIS3.CONTROLS/LongOperations/CustomSlice',
    [

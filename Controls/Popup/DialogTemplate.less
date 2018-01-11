@@ -1,64 +1,50 @@
-.ws-DialogTemplate{
-   background-color: #FFFFFF;
+.ws-DialogTemplate {
+   .flexbox();
+   .flex-direction(column);
+   .flex-grow(1);
+   .flex-shrink(1);
+   .box-shadow(@shadow_Popup_stack);
+   height: 100%;
+   background-color: @default-bg-color;
+   position: relative;
+   border-left: 1px solid #BDBDBD;
+   overflow: hidden;
 }
 
-.ws-DialogTemplate__top-area{
-   display: flex;
+.ws-DialogTemplate__top-area {
+   .flexbox();
+   .flex-shrink(0);
    height: 44px;
    padding-right: 48px;
-   /* удалить */
-   background-color: #F4F4F4;
 }
 
-.ws-DialogTemplate__content-area{
-   display: flex;
+.ws-DialogTemplate__content-area {
+   .flexbox();
+   .flex-direction(column);
+   .flex-grow(1);
+   .flex-shrink(1);
+   min-height: 1px;
    padding-bottom: 12px;
 }
 
-.ws-DialogTemplate__close_button{
+.ws-DialogTemplate__close_button {
    position: absolute;
-   display: -webkit-box;
-   display: -webkit-flex;
-   display: -ms-flexbox;
-   display: flex;
-   -webkit-align-items: center;
-   -ms-flex-align: center;
-   -ms-align-items: center;
-   align-items: center;
-   -webkit-justify-content: center;
-   -ms-justify-content: center;
-   -ms-flex-pack: center;
-   justify-content: center;
-   top: 8px;
+   top: 10px;
    right: 0;
-   width: 35px;
-   height: 26px;
+   width: 36px;
+   height: 24px;
    cursor: pointer;
-   background-color: #f8f8f8;
-   border-width: 1px 0 1px 1px;
-   border-style: solid;
-   border-color: #dbdbdb;
-   box-shadow: 0px 1px 3px rgba(0, 0, 0, .12);
-   border-radius: 2px 0 0 2px;
-   z-index: 100;
-   margin-top: 0;
-   &:before {
-      content: "\e66c";
-      font-size: 23px;
-      width: 24px;
-      height: 24px;
-      font-family: 'cbuc-icons';
-      color: #587ab0;
-   }
-   &:hover:before, &:active:before {
-      color: #313E78;
+   background: url('resources/areaCloseButton.png') 0 -1px;
+
+   &:hover {
+      background-position: 0 -25px;
    }
 }
 
-.ws-DialogTemplate__caption{
-   font-family: TensorFont, sans-serif!important;
-   font-size: 18px!important;
-   font-weight: 700!important;
+.ws-DialogTemplate__caption {
+   font-family: TensorFont, sans-serif !important;
+   font-size: 18px !important;
+   font-weight: 700 !important;
    cursor: default;
    text-overflow: ellipsis;
    overflow: hidden;
@@ -67,5 +53,4 @@
    margin-left: 12px;
    max-width: calc(100% - 48px);
    line-height: 44px;
-
 }

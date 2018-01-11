@@ -8,7 +8,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeChoosePickerMixin', [
     * Связывает данные текущего контрола и открываемого в выпадающем блоке.
     * @mixin SBIS3.CONTROLS/Mixins/DateRangeChoosePickerMixin
     * @public
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     */
 
    var DateRangeChoosePickerMixin = /**@lends SBIS3.CONTROLS/Mixins/DateRangeChoosePickerMixin.prototype  */{

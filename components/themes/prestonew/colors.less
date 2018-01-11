@@ -24,6 +24,7 @@
 @search-form-icon-search-hover-color:    #BBE9FF;
 //ComboBox
 @border-color_ComboBox_withPicker:	                   #23b8ff;
+@color_ComboBox-Arrow:                                 #E4E4E4;
 @color_ComboBox-Arrow_hover:                           #B9E9FF;
 @background-color_ComboBox_withPicker:                 #f0f5fb;
 @color_ComboBox_withPicker:                            #324352;
@@ -49,6 +50,7 @@
 //suggest-text-box
 @suggest-text-box-bg-show-picker-color:           #F0F5FB;
 @suggest-text-box-bg-show-picker-font-color:      #273B4D;
+@border-color_SuggestTextBox_withPicker:          @accent-color;
 //--------------------------------------------------------------------------------------------------------------------//
 //button
 @color_Button_primary:                            @color_Button;
@@ -190,10 +192,15 @@
 @calendar-day-cell-active-hover-text-color:@calendar-day-cell-hover-text-color;
 @calendar-day-cell-active-hover-bg:       @calendar-day-cell-hover-bg;
 //fieldlink
-@fieldLink-border-color-focus-hover:      @border-color_TextBox_active;
-@fieldLink-link-color-enabled:            #26B8FF;
-@fieldLink-showSelector-color:            @default-text-color;
-@fieldLink-picker-show-field-color:       @default-text-color;
+@border-color_FieldLink_picker:           #ccc;
+@color_FieldLink-showSelectorButton:      @default-text-color;
+@fieldLink-picker-show-color:		      #F0F5FB; //используется только в prestonew и carrynew
+@fieldLink-picker-show-field-color:       rgb(58, 73, 81); //используется только в prestonew и carrynew
+
+//FieldLink_Link
+@color_FieldLink-Link_enabled:            #26B8FF;
+@color_FieldLink-Link_enabled_hover:      @default-hover-color;
+
 //MonthView
 @background_MonthView:                    #2c3e50;
 @color_MonthView-item:                    #fff;
@@ -286,12 +293,12 @@
 //FilterButton
 @controls-filterButton-picker-bg:         #2C3E50;
 @controls-filterButton-area-text-color:   @default-text-color;
-//FilterLine
-@controls-filterLine-link-color:          #26B8FF;
-//FieldLink
-@fieldLink-border-color-picker-show: @accent-color;
 @fieldLink-FilterButton-color:                           #26B8FF;
 @fieldLink-FilterButton-color-hover:                     @default-hover-color;
+//FilterLine
+@controls-filterLine-link-color:          #26B8FF;
+
+//InformationPopup
 @controls-InformationPopup-bg:                           #2C3E50;
 @controls-InformationPopup-default-status-border-color:  @default-border-color-second;
 @controls-InformationPopup-closeButton-color:            #8991A9;
@@ -321,8 +328,6 @@
 //sundry
 @dropdownlist-item-text-color:            #202835;
 @controls-editInPlace-editor-bg:			   #354B62 !important;
-@fieldLink-picker-show-color:		#F0F5FB;
-@fieldLink-picker-show-field-color:   rgb(58, 73, 81);
 @scroll-pager-bg:							      transparent;
 @DropdownList-picker-menu-item-color:     #F0F5FB;
 @DropdownList-picker-menu-item-hover:     #E0ECF5;
@@ -347,7 +352,6 @@
 @data-grid-row-hover-add-bg:              rgba(41, 58, 75, 0);
 @data-grid-row-selected-add-bg:           @data-grid-row-hover-add-bg;
 @back-button-text-color:                  #FFCC99;
-@fieldLink-link-color-enabled-hover:      @default-hover-color;
 @commands-button-close-icon-color:        @icon-color-primary;
 @controls-SubmitPopup-footer-bg:          inherit;
 //back-button
@@ -365,3 +369,6 @@
 @bg_BlockSeparator:                      rgba(0, 0, 0, .1);
 @border-color_Block:                     #273749;
 @box-shadow_Block:                       0px 2px 6px rgba(0, 0, 0, .5);
+
+@color_asLink:                           @color_Link-text;
+@color_asLink_hovered:                   @color_Link-text_hovered;

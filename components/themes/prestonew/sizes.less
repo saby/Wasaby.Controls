@@ -46,16 +46,15 @@
 @search-button-wrapper-padding:                   0;
 @search-loop-size:                                round(80px * @multiplier);
 @search-form-icon-padding:                        0;
-@padding_SearchForm:                              0 round(14px * @multiplier);
+@padding_SearchForm:                              0 round(15px * @multiplier);
 @top_searchForm_picker_closeButton:               round(8px * @multiplier);
 @margin-left__searchForm_picker:                  -(@default-border-width + @top_searchForm_picker_closeButton);
 @margin-top__searchForm_picker:                   -(@padding-top__searchForm_picker + @default-border-width - @top_searchForm_picker_closeButton);
 @padding-top__searchForm_picker:                  (@top_searchForm_picker_closeButton * 2) + @height_TextBox_m;
 //fieldLink
+@icon-size_FieldLink-button:                      round(80px * @multiplier); //todo: при переходе на cbuc-icons отказаться от этого щита
+@width_FieldLink-item-cross:                      @default-height;
 @fieldLink-showAll-shadow-width:                  round(28px * @multiplier);
-@fieldLink-linkItem-line-height:                  @default-base-line-height;
-@fieldLink-icon-size:                             round(80px * @multiplier); //todo: при переходе на cbuc-icons отказаться от этого щита
-@max-height_FieldLink-beforeFieldWrapper:         @default-line-height;
 //treeview
 @tree-view-folder-text-size:                      @default-text-size;
 //button
@@ -330,14 +329,14 @@
 @date-range-big-choose-date-range-picker-caption-height:                 round(68px * @multiplier);
 @date-range-big-choose-years-height:                                     round(100px * @multiplier);
 @date-range-big-choose-header-padding:                                   round(8px * @multiplier) 0 round(8px * @multiplier) 0;
-@date-range-big-choose-header-home-button-size:                          @default-height;
-@date-range-big-choose-header-home-button-font-size:                     @date-range-big-choose-header-home-button-size;
+@date-range-big-choose-header-home-button-size:                          round(84px * @multiplier);
+@date-range-big-choose-header-home-button-font-size:                     round(42px * @multiplier);
 @date-range-big-choose-header-home-button-margin-left:                   0;
 @date-range-big-choose-header-date-pickers-margin-right:                 round(92px * @multiplier);
 @date-range-big-choose-date-range-picker-caption-font-size:              @default-text-size;
 @date-range-big-choose-header-date-picker-margin-top:                    0;
 @date-range-big-choose-header-apply-button-size:                         @default-height;
-@date-range-big-choose-header-apply-button-font-size:                    @date-range-big-choose-header-apply-button-size;
+@date-range-big-choose-header-apply-button-font-size:                    round(42px * @multiplier);
 @date-range-big-choose-header-apply-button-icon-margin-left:             round(-28px * @multiplier);
 @date-range-big-choose-header-apply-button-margin-left:                  0;
 @date-range-big-choose-header-range-dash-width:                          round(8px * @multiplier);
@@ -370,7 +369,7 @@
 //List view
 @controls-view-padding-S:                 round(9px * @multiplier);
 @listView-servicefooter-height:           round(41px * @multiplier);
-@listView-servicefooter-padding:          0 round(22px * @multiplier);
+@padding-ListView-serviceFooter:          round(22px * @multiplier);
 @listView-loadmorebutton-font-size:       round(24px * @multiplier);
 @list-view-actions-item-height:           @icon-small-size;
 @list-view-actions-margin:                0 round(4px * @multiplier);
@@ -395,11 +394,11 @@
 @scrollPaging-padding:                    round(103px * @multiplier);
 //Tree view
 @tree-view-expand-width:                  round(50px * @multiplier);
-@tree-view-expand-height:                 auto;
-@tree-view-expand-icon-size:              round(50px * @multiplier);
-@tree-view-level-padding:                 round(58px * @multiplier);
-@tree-view-expand-margin:                 0 round(8px * @multiplier) 0 0;
-@tree-view-editArrow-top:                 round(5px * @multiplier);
+@height_TreeDataGridView-expand:          auto;
+@font-size_TreeDataGridView-expand:       round(50px * @multiplier);
+@width-TreeDataGridView-levelPadding:     round(58px * @multiplier);
+@margin_TreeDataGridView-expand:          0 round(8px * @multiplier) 0 0;
+@top_TreeDataGridView-editArrow:          round(5px * @multiplier);
 @tree-view-expand-open-border-width:      round(8px * @multiplier) round(8px * @multiplier) 0 round(8px * @multiplier);
 @tree-view-item-content-margin:           0 0 0 round(20px * @multiplier);
 @tree-view-child-container-padding:       @tree-view-item-content-margin;
@@ -430,7 +429,7 @@
 // PrintDialog
 //По какой-то причине Firefox берёт font-size не из html, а свой, причем только при расчёте этой ширины
 @controls-printdialog-min-width:          round(756px * @multiplier);
-@controls-printdialog-activate-right:     round(89px * @multiplier);
+@controls-printdialog-activate-right:     round(86px * @multiplier);
 @controls-printdialog-activate-margin-top:8px;
 //MergeDialog
 @controls-MergeDialogTemplate-height:                                       round(588px * @multiplier);
@@ -487,9 +486,6 @@
 @controls-filterButton-line-height:       round(31px * @multiplier);
 @controls-filterButton-filterLine-margin: 0;
 @size_FilterButton_icon:                  @default-icon-size-large;
-//FieldLink
-@fieldLink-linkItem-cross-width:    @default-height;
-@fieldLink-afterField-button-margin:      0;
 @controls-filterButton-area-header-width:    round(667px * @multiplier);
 //BackButton
 @back-button-font-size:                   round(40px * @multiplier);
@@ -500,7 +496,6 @@
 @breadcrumbs-arrow-top:                   1px;
 @breadcrumbs-small-items-top:             0;
 // EditDialog
-@editdialog-applybutton-width:            auto;
 @editdialog-applybutton-right:            round(90px * @multiplier); //ширина кнопки закрытия окна 36px +.07rem; на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)
 @editdialog-window-title-margin-right:    round(308px * @multiplier); //ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить +.07rem; на небольшой отступ между ними
 //MoveDialog
@@ -627,7 +622,7 @@
 @DropdownList-picker-menu-item-height:    @default-height;
 @DropdownList-picker-menu-item-height-ff: round(112px * @multiplier);
 @DropdownList-after-caption-top:          0;
-@tree-view-ellipsis-copyArrow-width:      round(28px * @multiplier);
+@width_TreeDataGridView-copyArrow:        round(28px * @multiplier);
 @bread-crumbs-menu-padding:               0;
 @back-button-width-before:                round(20px * @multiplier);
 @padding_Menu-submenu:                   @bread-crumbs-menu-padding;
@@ -727,6 +722,9 @@
 @font-weight_Header:              normal;
 //popup,floatarea,window
 @top_window_button:               round(8px * @multiplier);
+
+//Marker
+@background-size_Marker:                          round(5px * @multiplier);
 
 //money
 @money-decorator-integer-basic-registry-font-size: round(28px * @multiplier);

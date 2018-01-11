@@ -12,7 +12,7 @@ define('SBIS3.CONTROLS/Mixins/DragNDropMixin', [
      * @remark Чтобы можно было перемещать элементы, нужно вызвать метод _initDrag в обработчиках событий mouseDown и touchStart HTML-элементов, которые надо перемещать. Подробнее {@link _initDrag}
      * @mixin SBIS3.CONTROLS/Mixins/DragNDropMixin
      * @public
-     * @author Крайнов Дмитрий Олегович
+     * @author Крайнов Д.О.
      * @see SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragObject
      * @see SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity
      */

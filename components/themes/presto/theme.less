@@ -68,6 +68,13 @@ body {
     &.ws-infobox-has-title .ws-infobox-content {
       padding-right: 0;
     }
+    .ws-infobox-content {
+      color: @default-text-color;
+      font-size: round(28px * @multiplier);
+      ul {
+        padding-left: round(28px * @multiplier);
+      }
+    }
   }
 }
 //Временное решение, пока в панель операций кладутся контролы, удалить при переходе на шаблончики
@@ -240,6 +247,38 @@ body {
 .ws-float-area-stack-panel-shadow {
   border-left: none !important;
 }
+
+.controls-ItemsToolbar-closeButton.controls-Button__closeButton {
+  position: relative;
+  width: @width_EditButton;
+  height: @height_EditButton;
+  background-image: none;
+  background-color: @background-color_EditButton;
+  font-size: @font-size_Button_m;
+  .box-shadow(@box-shadow_Button);
+  color: #8991A9;
+
+  &:before {
+    position: absolute;
+    font-family: 'cbuc-icons';
+    font-size: round(42px * @multiplier);
+    width: round(42px * @multiplier);
+    height: round(42px * @multiplier);
+    content: "\e66c" !important;
+    text-shadow: @text-shadow_Button !important;
+    right: 8px;
+    top: 8px;
+  }
+
+  &:active {
+    box-shadow: none;
+  }
+}
+.ws-is-desktop-platform {
+  .controls-ItemsToolbar-closeButton.controls-Button__closeButton:hover {
+    background-color: @background-color_EditButton_hovered;
+  }
+}
 //Простите меня за эти строки кода, я не хотел, меня заставили
 .controls__filterButton {
   .controls__filterButton-button {
@@ -250,5 +289,25 @@ body {
     .icon-size {
       color: #E4E4E4 !important;
     }
+  }
+}
+//todo: удалить временный коствль
+//это можно будет удалить при переписывании расурывающегося списка
+body {
+  .controls-DropdownList.controls-DropdownList__type-fastDataFilter .controls-DropdownList__afterCaptionWrapper {
+    .inline-flexbox();
+  }
+  .controls-DropdownList.controls-DropdownList__withoutCross .controls-DropdownList__afterCaptionWrapper, .controls-DropdownList.ws-disabled .controls-DropdownList__afterCaptionWrapper {
+    display: none;
+  }
+}
+
+//TODO: в престо отключим замыливание при показе шеврона редактирования папки т.к.
+//в тёмной теме прозрачный цвет ховера и невозможно сделать замыливание.
+//После перехода на flex нужно реализовать троеточие.
+.controls-TreeView__ellipsis-copyArrow {
+  background-color: transparent !important;
+  &:after {
+    display: none !important;
   }
 }

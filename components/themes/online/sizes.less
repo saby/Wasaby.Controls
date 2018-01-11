@@ -53,8 +53,6 @@
 //suggest-text-box
 @suggest-text-box-icon-size:                @default-icon-size;
 @suggest-text-box-icon-cross-padding:       0 0 0 @default-padding;
-//suggest-text-box
-@fieldLink-link-cross-size:       @default-icon-size;
 //search-form
 @search-border-radius:            10px;
 @padding_SearchForm:              0 4px 0 12px;
@@ -67,13 +65,22 @@
 @top_searchForm_picker_closeButton:8px;
 @width_browser_search:             300px;
 @width_browser_search_small:       184px;
-//fieldLink
-@fieldLink-icon-size:             @default-icon-size;
-@fieldLink-picker-icon-size:      @default-icon-size;
-@fieldLink-showAll-shadow-width:  20px;
-@fieldLink-linkItem-line-height:  @default-line-height;
-@padding_FieldLink_item_in_picker:0;
-@max-height_FieldLink-beforeFieldWrapper: @default-line-height;
+//FieldLink
+@icon-size_FieldLink-button:                    @default-icon-size;
+@border-width_FieldLink-picker:                 @default-border-width;
+@spacing_FieldLink-showAllLinks_enabled:        @default-padding;
+@width_FieldLink-item-cross:                    20px;
+@font-size_FieldLink-item-caption_normal:       @default-text-size;
+@font-size_FieldLink-item-caption_big:          @large-text-size;
+@max-height_FieldLink-picker:                   500px;
+@min-height_FieldLink-picker:                   16px;
+@spacing_FieldLink-linkContainer:               4px;
+@spacing_FieldLink-item_inField:                @default-padding;
+@spacing_FieldLink-dropAllLinks:                @default-padding;
+@fieldLink-showAll-shadow-width:                20px;
+
+//FieldLink_Link
+@font-size_FieldLink-Link:                      @default-text-size;
 
 // MonthView
 @width_MontView:                  @calendar-width;
@@ -120,8 +127,11 @@
 @padding_DropDownList_item_child_text: 16px;
 @font-size_DropDownList:               @default-text-size;
 @top_DropdownList_picker_marker:       13px;
+//Marker
+@background-size_Marker:                                  3px;
 //ListView
 @background-size_ListView_ScrollIndicator: auto;
+@padding-ListView-serviceFooter:                          @controls-view-padding-DEFAULT;
 //ListView_groupBy
 @height_ListView-GroupBy:                                 18px;
 @padding_ListView-GroupBy_separator:                      0 12px;
@@ -131,10 +141,20 @@
 //DataGridView
 @font-size_DataGridView-headerIcon:                       @data-grid-header-cell-font-size;
 @font-size_DataGridView-results:                          @default-text-size;
+@right_DataGridView-toolbar_markerRight:                  @background-size_Marker;
 //TreeDataGridView
 @font-size_TreeDataGridView-folderTitle:                  inherit;
-
-//header
+@width_TreeDataGridView-expand:                           16px;
+@margin_TreeDataGridView-expand:                          0 6px 0 4px;
+@height_TreeDataGridView-expand:                          20px;
+@width-TreeDataGridView-levelPadding:                     26px;
+@font-size_TreeDataGridView-expand:                       @icon-small-size;
+@top_TreeDataGridView-editArrow:                          2px;
+@font-size_TreeDataGridView-editArrow:                    16px;
+@margin_TreeDataGridView-editArrow:                       0;
+@width_TreeDataGridView-copyArrow:                        19px;
+@right_TreeDataGridView-copyArrow:                        -1px;
+   //header
 @header-h2-text-size:             20px;
 @header-h3-text-size:             18px;
 

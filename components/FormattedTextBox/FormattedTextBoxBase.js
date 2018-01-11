@@ -26,7 +26,7 @@ define(
        * @param position позиция замещаемого символа
        * @param character новый символ
        * @private
-       * @author Крайнов Дмитрий Олегович
+       * @author Крайнов Д.О.
        */
       _replaceCharacter = function(container, position, character) {
          var buffer = container.nodeValue.split('');
@@ -201,7 +201,7 @@ define(
    /**
     * Класс для модели форматного поля
     * @class SBIS3.CONTROLS.FormatModel
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var FormatModel = cExtend({}, /** @lends SBIS3.CONTROLS.FormatModel.prototype */{
       $protected: {
@@ -615,7 +615,7 @@ define(
     * @class SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase
     * @extends SBIS3.CONTROLS/TextBox/TextBoxBase
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var FormattedTextBoxBase = TextBoxBase.extend(/** @lends SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase.prototype */ {
@@ -1078,9 +1078,18 @@ define(
       },
 
       _updateTextFromModel: function() {
+         var text = this._getTextFromModel();
+         if (this._options.text !== text) {
+            this._options.text = text;
+            //снимаем выделение валидатора на время ввода
+            this.clearMark();
+         }
+      },
+
+      _getTextFromModel: function() {
          var formatModel = this._getFormatModel();
          //Если форматное поле не заполено, то в опцию text не нужно класть пустую маску.
-         this._options.text = (formatModel._settedText !== null && typeof formatModel._settedText !== "undefined" && !formatModel.isEmpty(this._getMaskReplacer())) ? formatModel.getText(this._getMaskReplacer()) : formatModel._settedText;
+         return (formatModel._settedText !== null && typeof formatModel._settedText !== "undefined" && !formatModel.isEmpty(this._getMaskReplacer())) ? formatModel.getText(this._getMaskReplacer()) : formatModel._settedText;
       },
 
       _notifyOnTextChange: function() {

@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceHoverController/EditInPlace
       /**
        * @class SBIS3.CONTROLS/ListView/resources/EditInPlaceHoverController/EditInPlaceHoverController
        * @extends SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController
-       * @author Авраменко Алексей Сергеевич
+       * @author Авраменко А.С.
        * @control
        * @public
        */

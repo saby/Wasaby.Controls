@@ -21,7 +21,7 @@ define('SBIS3.CONTROLS/BreadCrumbs', [
     * @class SBIS3.CONTROLS/BreadCrumbs
     * @extends Lib/Control/CompoundControl/CompoundControl
     *
-    * @author Герасимов Александр Максимович
+    * @author Герасимов А.М.
     *
     * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
     * @mixes SBIS3.CONTROLS/Mixins/PickerMixin

@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/Mixins/ActiveSelectable', [
     * Миксин, добавляющий поведение хранения выбранного элемента
     * @mixin SBIS3.CONTROLS/Mixins/ActiveSelectable
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var ActiveSelectable = /**@lends SBIS3.CONTROLS/Mixins/ActiveSelectable.prototype  */{
@@ -86,6 +86,7 @@ define('SBIS3.CONTROLS/Mixins/ActiveSelectable', [
        */
       setSelectedItem: function(item) {
          var isModel = item instanceof Model,
+             oldKey = this._options.selectedKey,
              key;
 
 
@@ -104,6 +105,8 @@ define('SBIS3.CONTROLS/Mixins/ActiveSelectable', [
          this._options.selectedKey = key;
 
          this._notifyOnPropertyChanged('selectedItem');
+         /* Чтобы корректно работала и синхронищация контекста и стреляло событие */
+         this._options.selectedKey = oldKey;
          this.setSelectedKey(key);
       },
 

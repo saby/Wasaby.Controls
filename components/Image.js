@@ -50,7 +50,7 @@ define('SBIS3.CONTROLS/Image',
           * В качестве источника данных допускается использовать только {@link WS.Data/Source/SbisService}.
           * @class SBIS3.CONTROLS/Image
           * @extends Lib/Control/CompoundControl/CompoundControl
-          * @author Борисов Пётр Сергеевич
+          * @author Борисов П.С.
           *
           * @ignoreOptions validators
           * @ignoreEvents onAfterLoad onChange onStateChange

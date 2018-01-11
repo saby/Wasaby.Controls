@@ -23,7 +23,18 @@ define('js!Controls/Input/resources/InputRender/InputRender',
       var _private = {
 
          getSelection: function(self){
-            return self._selection || {};
+            var
+               result = self._selection;
+
+            //Если курсор ещё не был поставлен в поле, то поставим его в конец
+            if (!result) {
+               result = {
+                  selectionStart: self._value.length,
+                  selectionEnd: self._value.length
+               };
+            }
+
+            return result;
          },
 
          getTargetPosition: function(target){
@@ -103,6 +114,21 @@ define('js!Controls/Input/resources/InputRender/InputRender',
 
          _notifyHandler: function(e, value) {
             this._notify(value);
+         },
+
+         _getInputState: function() {
+            var
+               result;
+
+            if (this._options.validationErrors) {
+               result = 'error';
+            } else if (this.isEnabled()) {
+               result = 'default';
+            } else {
+               result = 'disabled';
+            }
+
+            return result;
          },
 
          /**

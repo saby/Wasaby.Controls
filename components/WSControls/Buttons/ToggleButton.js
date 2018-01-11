@@ -14,7 +14,7 @@ define('js!WSControls/Buttons/ToggleButton', ['js!WSControls/Buttons/Button', 'S
     * @extends WSControls/Buttons/Button
     * @demo SBIS3.CONTROLS.Demo.MyToggleButton
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @mixes SBIS3.CONTROLS/Mixins/Checkable
     *

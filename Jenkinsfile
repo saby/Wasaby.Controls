@@ -54,6 +54,7 @@ node('controls') {
 
 		echo "Назначаем переменные"
         def server_address=props["SERVER_ADDRESS"]
+		def smoke_server_address=props["SMOKE_SERVER_ADDRESS"]
 		def stream_number=props["stream_number"]
         def ver = version.replaceAll('.','')
 		def python_ver = 'python3'
@@ -370,15 +371,10 @@ node('controls') {
                 "includeCore":true,
                 "include":[
                 "Core/*",
-                "WS.Data/*",
                 "SBIS3.CONTROLS.ItemsControlMixin"
                 ],
                 "modules" : [
                 "Core/core",
-                "WS.Data/Source/SbisService",
-                "WS.Data/Source/Memory",
-                "WS.Data/Entity/Model",
-                "WS.Data/Collection/RecordSet",
                 "SBIS3.CONTROLS.ItemsControlMixin"
                 ],
                     "output" : "/resources/Core.module.js"
@@ -455,17 +451,17 @@ node('controls') {
         stage("Запуск тестов интеграционных и верстки"){
             def site = "http://${NODE_NAME}:30001"
             site.trim()
-            //dir("./controls/tests/int"){
-            //    tmp_smoke = sh returnStatus:true, script: """
-            //        source /home/sbis/venv_for_test/bin/activate
-            //        ${python_ver} smoke_test.py --SERVER_ADDRESS ${server_address}
-            //        deactivate
-            //    """
-            //    if ( "${tmp_smoke}" != "0" ) {
-            //        currentBuild.result = 'ABORTED'
-            //        error('Стенд неработоспособен (не прошел smoke test).')
-            //    }
-            //}
+            dir("./controls/tests/int"){
+                tmp_smoke = sh returnStatus:true, script: """
+                    source /home/sbis/venv_for_test/bin/activate
+                    ${python_ver} smoke_test.py --SERVER_ADDRESS ${smoke_server_address}
+                    deactivate
+                """
+                if ( "${tmp_smoke}" != "0" ) {
+                    currentBuild.result = 'ABORTED'
+                    error('Стенд неработоспособен (не прошел smoke test).')
+                }
+            }
             parallel (
                 int_test: {
                     echo "Запускаем интеграционные тесты"

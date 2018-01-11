@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/Date/RangeSliderBig', [
     *
     * @mixes SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin
     *
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     *
     * @control
     * @public

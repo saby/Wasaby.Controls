@@ -27,7 +27,7 @@ define('SBIS3.CONTROLS/FormController', [
     * @class SBIS3.CONTROLS/FormController
     * @extends Lib/Control/CompoundControl/CompoundControl
     * @public
-    * @author Красильников Андрей Сергеевич
+    * @author Красильников А.С.
     *
     * @ignoreEvents onAfterLoad onChange onStateChange
     * @ignoreEvents onDragStop onDragIn onDragOut onDragStart

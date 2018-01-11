@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/LoadingIndicator', ['Lib/Control/Control'], function(Cont
    /**
     * Контрол, представляющий из себя диалоговое окно с рисунком или анимацией, визуально отображающей процесс прохождения какой-либо длительной операции
     * @class SBIS3.CONTROLS/LoadingIndicator
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @extends Lib/Control/Control
     */
 
