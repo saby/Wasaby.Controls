@@ -52,10 +52,9 @@
 @margin-top__searchForm_picker:                   -(@padding-top__searchForm_picker + @default-border-width - @top_searchForm_picker_closeButton);
 @padding-top__searchForm_picker:                  (@top_searchForm_picker_closeButton * 2) + @height_TextBox_m;
 //fieldLink
+@icon-size_FieldLink-button:                      round(80px * @multiplier); //todo: при переходе на cbuc-icons отказаться от этого щита
+@width_FieldLink-item-cross:                      @default-height;
 @fieldLink-showAll-shadow-width:                  round(28px * @multiplier);
-@fieldLink-linkItem-line-height:                  @default-base-line-height;
-@fieldLink-icon-size:                             round(80px * @multiplier); //todo: при переходе на cbuc-icons отказаться от этого щита
-@max-height_FieldLink-beforeFieldWrapper:         @default-line-height;
 //treeview
 @tree-view-folder-text-size:                      @default-text-size;
 //button
@@ -487,9 +486,6 @@
 @controls-filterButton-line-height:       round(31px * @multiplier);
 @controls-filterButton-filterLine-margin: 0;
 @size_FilterButton_icon:                  @default-icon-size-large;
-//FieldLink
-@fieldLink-linkItem-cross-width:    @default-height;
-@fieldLink-afterField-button-margin:      0;
 @controls-filterButton-area-header-width:    round(667px * @multiplier);
 //BackButton
 @back-button-font-size:                   round(40px * @multiplier);

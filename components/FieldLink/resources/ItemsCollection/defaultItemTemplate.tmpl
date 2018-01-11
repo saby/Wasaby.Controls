@@ -1,12 +1,12 @@
-<div class="controls-FieldLink__item js-controls-ListView__item controls-ListView__item {{className|orEmpty}}"
+<div class="controls-FieldLink__item js-controls-ListView__item controls-ListView__item {{className|orEmpty}}{{getItemTemplateData(...).additionalItemClasses}}"
      data-hash="{{ projItem.getHash() }}"
      data-id="{{ item.getId() + '' }}"
      style="{{getItemTemplateData(...).orderStyle}}">
-    <span class="controls-FieldLink__item-caption{{getItemTemplateData(...).additionalItemClasses}}" title="{{ needTitle ? item[displayProperty] }}">
+    <span class="controls-FieldLink__item-caption{{getItemTemplateData(...).additionalItemCaptionClasses}}" title="{{ needTitle ? item[displayProperty] }}">
         <ws:partial template="{{itemContent}}" scope="{{...}}"></ws:partial>
     </span>
     <ws:if data="{{getItemTemplateData(...).drawCross}}">
-        <span class="controls-FieldLink__item-cross controls-FieldLink__button js-controls__item-cross icon-size icon-Close icon-disabled"></span>
+        <span class="controls-FieldLink__item-cross controls-FieldLink__button js-controls__item-cross icon-size icon-CloseNew icon-disabled"></span>
     </ws:if>
     <ws:if data="{{getItemTemplateData(...).drawComma}}">,</ws:if>
 </div>
