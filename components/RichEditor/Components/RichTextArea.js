@@ -328,7 +328,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             var id = this._getYouTubeVideoId(escapeTagsFromStr(link, []));
             if (id) {
                var _byRe = function (re) { var ms = link.match(re); return ms ? ms[1] : null; };
-               var protocol = _byRe(/^(https?:)/i);//^^^/https?:/i.test(link) ? link.replace(/.*(https?:).*/gi, '$1') : '';
+               var protocol = _byRe(/^(https?:)/i) || '';
                var timemark = _byRe(/\?(?:t|start)=([0-9]+)/i);
                this.insertHtml([
                   '<iframe',
