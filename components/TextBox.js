@@ -339,12 +339,14 @@ define('SBIS3.CONTROLS/TextBox', [
          }
 
          this._informationIcon.removeClass('controls-TextBox__informationIcon-' + this._options.informationIconColor);
+         this._informationIcon.removeClass('controls-InputRender__tagStyle-' + this._options.informationIconColor);
          this._options.informationIconColor = color;
          this._informationIcon.addClass('controls-TextBox__informationIcon-' + color);
+         this._informationIcon.addClass('controls-InputRender__tagStyle-' + color);
       },
 
       _createInformationIcon: function(color) {
-         this._informationIcon = $('<div class="controls-TextBox__informationIcon controls-TextBox__informationIcon-' + color + '"></div>');
+         this._informationIcon = $('<div class="controls-InputRender__tagStyle controls-TextBox__informationIcon controls-TextBox__informationIcon-' + color + ' controls-InputRender__tagStyle-' + color + '"></div>');
          this.getContainer().append(this._informationIcon);
       },
 
