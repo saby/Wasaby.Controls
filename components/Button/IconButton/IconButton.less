@@ -81,7 +81,9 @@
    &.ws-disabled {
      cursor: default;
      .controls-Button__icon {
-       color: @default-disabled-color;
+       // important ставлю временно аналогично кнопкам,
+       // избавлюсь в 3.18.0 когда волью доброску по состоянию иконки
+       color: @default-disabled-color !important;
      }
    }
 }
