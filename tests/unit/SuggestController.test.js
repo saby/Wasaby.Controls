@@ -32,7 +32,7 @@ define(
    
             //Заглушка для тестирования
             selfTest._options.textComponent = {
-               _container: [{offsetWidth: 0}]
+               _container: {offsetWidth: 0}
             };
             
             SuggestController._private.getSearchController(selfTest).addCallback(function(controller) {
@@ -49,8 +49,8 @@ define(
          it('.getSearchController', function(done) {
             var selfTest = getTestAbstract();
             SuggestController._private.getSearchController(selfTest).addCallback(function(controller) {
-               assert.isTrue(cInstance.instanceOfModule(controller, 'js!Controls/Input/resources/SuggestPopupController'));
-               assert.isTrue(cInstance.instanceOfModule(selfTest._suggestPopupController, 'js!Controls/Input/resources/SuggestPopupController'));
+               assert.isTrue(cInstance.instanceOfModule(controller, 'Controls/Input/resources/SuggestPopupController'));
+               assert.isTrue(cInstance.instanceOfModule(selfTest._suggestPopupController, 'Controls/Input/resources/SuggestPopupController'));
                done();
             });
          });
@@ -79,7 +79,7 @@ define(
          it('.getPopupOptions', function() {
             var selfTest = getTestAbstract();
             selfTest._options.textComponent = {
-               _container: [{offsetWidth: 0}]
+               _container: {offsetWidth: 0}
             };
             assert.equal(SuggestController._private.getPopupOptions(selfTest).componentOptions.width, 0);
          });
@@ -93,7 +93,7 @@ define(
             selfTest._options.minSearchLength = 3;
             //Заглушка для тестирования
             selfTest._options.textComponent = {
-               _container: [{offsetWidth: 0}]
+               _container: {offsetWidth: 0}
             };
    
             SuggestController._private.getSearchController(selfTest).addCallback(function(controller) {
