@@ -132,11 +132,13 @@
    border: 1px dotted transparent;
    .box-sizing(border-box);
 
-   //border: 1px solid #f4f4f4;
-
    &.controls-MonthView {
       width: 100%;
       background-color: transparent;
+   }
+
+   .controls-MonthView__dayTable {
+      border-collapse: collapse;
    }
 
    .controls-MonthView__tableElement {
@@ -147,9 +149,32 @@
    .controls-MonthView__backgroundColor-currentMonthDay-workday-unselected-enabled {
       background-color: transparent;
    }
+   .controls-MonthView__item-selectedStart,
+   .controls-MonthView__item-selectedEnd,
+   .controls-MonthView__item-selectedInner {
+      outline: none;
+      font-weight: normal;
+   }
+   .controls-MonthView__item-selectedStart:before,
+   .controls-MonthView__item-selectedEnd:after {
+      width: 1px;
+   }
+   .controls-MonthView__item-selectedStart:before {
+      left: 0;
+   }
+}
+
+.controls-DateRangeBigChoose-MonthRangePickerItem__item-selected,
+.controls-DateRangeBigChoose-MonthRangePickerItem__halfYear-selected,
+.controls-DateRangeBigChoose-MonthRangePickerItem__quarter-selected,
+.controls-DateRangeBigChoose-MonthRangePicker__hovered {
    .controls-MonthView__backgroundColor-currentMonthDay-weekend-selected-enabled,
    .controls-MonthView__backgroundColor-currentMonthDay-workday-selected-enabled {
       background-color: transparent;
+   }
+   .controls-MonthView__item-selectedStart:before,
+   .controls-MonthView__item-selectedEnd:after {
+      height: 0;
    }
 }
 

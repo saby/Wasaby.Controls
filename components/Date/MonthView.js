@@ -549,7 +549,7 @@ define(
 
             // Оставляем старые классы т.к. они используются в большом выборе периода до его редизайна
             if (scope.isCalendar) {
-               if (scope.selectionEnabled) {
+               // if (scope.selectionEnabled) {
                   if (scope.enabled) {
                      css.push('controls-MonthView__cursor-item');
                      if (!scope.selected) {
@@ -579,7 +579,7 @@ define(
                   if (scope.selectedInner) {
                      css.push('controls-MonthView__item-selectedInner');
                   }
-               }
+               // }
 
                if (scope.today) {
                   css.push('controls-MonthView__today');
