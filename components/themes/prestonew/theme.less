@@ -78,11 +78,7 @@ body {
      border-color: rgba(96, 170, 221, 0.15);
      border-width: @default-border-width;
   }
-  .controls-BreadCrumbs__crumb {
-     .icon-primary {
-        color: @bread-crumb-title-color !important;
-     }
-  }
+
     .controls-Button .controls-Button__icon.icon-32 {
       top: 20%
     }
@@ -341,14 +337,6 @@ body .controls-image__button {
   .close-button-mixin();
 }
 
-.controls-BreadCrumbs__crumb {
-   top: round(9px * @multiplier)
-}
-.ws-is-sbis-desktop {
-  .controls-BreadCrumbs__crumb {
-    top: -1px;
-  }
-}
 //todo: удалить это нафиг сделать нормально и не лениться
 .controls-image {
    .controls-image__image-bar{
@@ -412,41 +400,6 @@ body .controls-DateRangeBigChoose__years-yearsRange-btn:hover {
 
 .controls-ToolBar .controls-ToolBar__menuIcon {
     vertical-align: baseline;
-}
-
-
-.controls-BreadCrumbs .controls-BreadCrumbs {
-   &__home, &__arrow {
-      font-size: round(32px * @multiplier)!important;
-      line-height: round(28px * @multiplier)!important;
-      width: round(50px * @multiplier);
-      top:  1px;
-   }
-}
-
-.ws-is-webkit, .ws-is-mobile-chrome-ios {
-   .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
-      top:  round(11px * @multiplier);
-   }
-}
-
-.controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-   top:0 !important;
-}
-
-.ws-is-sbis-desktop {
-  .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-    top: 0 !important;
-  }
-}
-
-/* КОСТЫЛЬ. Крошки накостылены через top'ы, margin'ы и тд. Срочно требуется переписать стили.
-   Выписана ошибка. https://online.sbis.ru/opendoc.html?guid=fa89f6fd-3e4a-4925-8de3-9f34c6b11729
- */
-.ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
-   .controls-BreadCrumbs__crumb {
-      top: 0
-   }
 }
 
 .controls-MergeDialogTemplate .controls-TreeDataGridView__levelPadding {
