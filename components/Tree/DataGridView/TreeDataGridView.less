@@ -1,7 +1,7 @@
 .copyArrowGradient() {
    content: '';
-   width: @tree-view-ellipsis-copyArrow-width;
-   left: -@tree-view-ellipsis-copyArrow-width;
+   width: @width_TreeDataGridView-copyArrow;
+   left: -@width_TreeDataGridView-copyArrow;
    top: 0;
    bottom: 0;
    position: absolute;
@@ -36,7 +36,7 @@
     display: inline-block;
     visibility: hidden;
     position: relative;
-    top: @tree-view-editArrow-top;
+    top: @top_TreeDataGridView-editArrow;
     vertical-align: top;
   }
   &:hover {
@@ -177,7 +177,7 @@
          float: right;
          position: relative;
          top: -@tree-view-ellipsis-wrapper-height;
-         right: @tree-view-ellipsis-copyArrow-right;
+         right: @right_TreeDataGridView-copyArrow;
          padding: @tree-view-ellipsis-copyArrow-padding;
          background-color: @tree-view-copy-arrow-background;
 
@@ -187,8 +187,7 @@
          }
 
          .controls-TreeView__editArrow {
-            width: @tree-view-ellipsis-copyArrow-width;
-            display: inline-block;
+            width: @width_TreeDataGridView-copyArrow;
          }
       }
    }
@@ -317,9 +316,15 @@
    position: absolute;
    z-index: 3;
    color: @color_TreeDataGridView-editArrow;
+   margin: @margin_TreeDataGridView-editArrow;
+   background-color: @background-color_TreeDataGridView-editArrow;
 
    &:hover {
       color: @color_TreeDataGridView-editArrow_hovered;
+   }
+
+   .icon-size {
+      .icon-size(@font-size_TreeDataGridView-editArrow);
    }
 }
 
