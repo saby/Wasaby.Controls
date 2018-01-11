@@ -33729,6 +33729,17 @@
 
             editor.on('dragstart', function(e) {
                dragStartRng = selection.getRng();
+               // Если перетаскивание началось с пустым рэнжем, то это ошибка (например в FF при перетаскивании картинки), попробуем восстановить
+               // рэнж, если это возможно
+               // https://online.sbis.ru/opendoc.html?guid=6ca8d265-e804-4794-9301-55d9d357c0fe
+               if (dragStartRng.collapsed) {
+                  var elm = doc.elementFromPoint(e.clientX, e.clientY);
+                  if (elm) {
+                     dragStartRng = doc.createRange();
+                     dragStartRng.setStartBefore(elm);
+                     dragStartRng.setEndAfter(elm);
+                  }
+               }
                setMceInternalContent(e);
             });
 
@@ -34804,6 +34815,7 @@
          // Gecko
          if (isGecko) {
             emptyEditorOnDeleteEverything();
+            cleanupStylesWhenDeleting();
             removeHrOnBackspace();
             focusBody();
             removeStylesWhenDeletingAcrossBlockElements();
