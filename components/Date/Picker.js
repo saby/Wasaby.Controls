@@ -114,12 +114,13 @@ define(
                corner: 'tl',
                cssClassName: 'controls-DateRangeBigChoose__noBorder',
                horizontalAlign: {
-                  side: 'right',
-                  offset: 143
+                  side: 'left',
+                  // TODO: Для поддержки тем переделать на маргины, пока сделано так что бы быстро восстановить тесты
+                  offset: -39
                },
                verticalAlign: {
                   side: 'top',
-                  offset: -9
+                  offset: -13
                },
                bodyBounds: true,
                locationStrategy: 'bodyBounds',
