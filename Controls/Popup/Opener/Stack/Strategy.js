@@ -15,8 +15,8 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
 
       var _private = {
          getStackParentCoords: function(){
-            var element = document.getElementById('stackTargetContainer');
-            return TargetCoords.get(element, {horizontal: 'right'});
+            var elements = document.getElementsByClassName('ws-Popup__stack-target-container');
+            return TargetCoords.get(elements && elements.length ? elements[0] : null, {horizontal: 'right'});
          }
       };
 
