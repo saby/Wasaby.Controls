@@ -848,7 +848,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   var name = names[i];
                   if (name in formats && formats[name] !== previous[name]) {
                      this.execCommand(name);
-                     hasOther = true;
+                     hasOther = formats[name] || hasOther;
                   }
                }
                if (formats.color && formats.color !== previous.color) {
