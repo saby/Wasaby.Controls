@@ -13,6 +13,7 @@ define('SBIS3.CONTROLS/Button/ListAddButton', [
 
       _modifyOptions: function(){
          var cfg = ListAddButton.superclass._modifyOptions.apply(this, arguments);
+         //cfg.icon += 'icon-16 icon-Add';
          cfg.className += ' controls-ListAddButton ' + (cfg.enabled ? 'controls-ListAddButton__enable' : 'controls-ListAddButton__disable');
          cfg._textClass += ' controls-ListAddButtonText';
          return cfg;
