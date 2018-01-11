@@ -13,7 +13,7 @@ define('js!Controls/Popup/Opener/Sticky/Strategy',
        * @category Popup
        */
       var Strategy = BaseStrategy.extend({
-         addElement: function (cfg, width, height) {
+         elementCreated: function (cfg, width, height) {
             var
                target = cfg.popupOptions.target ? cfg.popupOptions.target : document.body,
                tCoords = TargetCoords.get(target, cfg.popupOptions.corner),
