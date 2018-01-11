@@ -147,7 +147,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                //PresetCache.subscribe(options.presetNamespace, 'onCacheError', function () {});
 
                _getPresets(this).addCallback(function (presets) {
-                  this._currentPreset = _getPreset(presets, PresetDropdown.getLastSelected(options.presetNamespace) || options.selectedPresetId);
+                  this._currentPreset = _getPreset(presets, options.selectedPresetId || PresetDropdown.getLastSelected(options.presetNamespace));
                   _updatePresetView(this);
                   _updateSelectableView(this);
 
