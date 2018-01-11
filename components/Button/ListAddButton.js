@@ -7,7 +7,6 @@ define('SBIS3.CONTROLS/Button/ListAddButton', [
    var ListAddButton = WSButton.extend([], /** @lends SBIS3.CONTROLS/Button/ToggleButton.prototype */ {
       $protected: {
          _options: {
-            //icon: 'icon-16 icon-Add'
          }
       },
 
