@@ -1,12 +1,12 @@
 /**
  * Created by kraynovdo on 09.01.2018.
  */
-define('js!Controls/Input/Lookup', [
+define('js!Controls/Input/MultiLookup', [
 ], function() {
 
    /**
     * Поле выбора из справочника с множественным выбором
-    * @class Controls/Input/Lookup
+    * @class Controls/Input/MultiLookup
     * @extends Controls/Control
     * @mixes Controls/Input/interface/ISearch
     * @mixes Controls/interface/ISource
