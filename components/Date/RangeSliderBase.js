@@ -91,8 +91,8 @@ define('SBIS3.CONTROLS/Date/RangeSliderBase',[
          var opts = DateRangeSlider.superclass._modifyOptions.apply(this, arguments);
          opts._caption = this._getCaption(opts);
          opts._isMinWidth = this._isMinWidth(opts);
-         opts._prevNextButtonsEnabledClass = this.isEnabled() ? ' controls-DateRangeSlider__prevNextButtons-enabled' : ' controls-DateRangeSlider__prevNextButtons-disabled';
-         opts._valueEnabledClass = this.isEnabled() ? ' controls-DateRangeSlider__value-enabled' : ' controls-DateRangeSlider__value-disabled';
+         opts._prevNextButtonsEnabledClass = opts.enabled ? ' controls-DateRangeSlider__prevNextButtons-enabled' : ' controls-DateRangeSlider__prevNextButtons-disabled';
+         opts._valueEnabledClass = opts.enabled ? ' controls-DateRangeSlider__value-enabled' : ' controls-DateRangeSlider__value-disabled';
          return opts;
       },
 
