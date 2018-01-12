@@ -31,7 +31,7 @@ define('js!Controls/List/resources/utils/Search',
             };
             
             if (self._navigation) {
-               var navigParams = self._navigation.prepareQueryParams(null, 'down');
+               var navigParams = self._navigation.prepareQueryParams(null);
                queryParams.limit = navigParams.limit;
                queryParams.offset = navigParams.offset;
             }
@@ -161,5 +161,6 @@ define('js!Controls/List/resources/utils/Search',
          
       });
    
+      Search._private = _private;
       return Search;
    });
