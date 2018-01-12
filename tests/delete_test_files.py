@@ -4,6 +4,13 @@ import shutil
 
 # удаление лишних папок со страницами тестов
 root = os.getcwd()
+if os.path.exists('reg'):
+    shutil.rmtree('reg')
+if os.path.exists('unit'):
+    shutil.rmtree('unit')
+if os.path.exists(r'stand/intest/regression'):
+    shutil.rmtree(r'stand/intest/regression')
+
 os.chdir(r'stand/intest/integration')
 root_1 = os.getcwd()
 exclude = ['_VDOM']
