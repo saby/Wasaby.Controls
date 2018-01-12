@@ -308,30 +308,37 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             this.setStatus(statusName);
             this.setIcon(iconClass);
 
-            var butCaption;
-            var model = this._activeOperation;
-            if (model) {
-               var action = this._longOpList.describeMainAction(model);
-               if (action) {
-                  switch (action.type) {
-                     case 'result':
-                        butCaption = model.get('resultWayOfUse') || RESULT_BUTTON_TITLES[model.get('resultHandler') ? 'open' : 'download'];
-                        break;
-                     case 'history':
-                        butCaption = RESULT_BUTTON_TITLES.viewLog;
-                        break;
-                     case 'custom':
-                        butCaption = action.title;
-                        break;
-                  }
-               }
-            }
-
+            var butCaption = this._getResultButtonCaption(this._activeOperation);
             var hasButton = !!butCaption;
             var button = this.getChildControlByName('downloadButton');
             button.setVisible(hasButton);
             if (hasButton) {
                button.setCaption(rk(butCaption));
+            }
+         },
+
+         /**
+          * Получить заголовок для кнопки результата операции
+          * @protected
+          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
+          * @return {string}
+          */
+         _getResultButtonCaption: function (model) {
+            if (model) {
+               var action = this._longOpList.describeMainAction(model);
+               if (action) {
+                  switch (action.type) {
+                     case 'result':
+                        return model.get('resultWayOfUse') || RESULT_BUTTON_TITLES[model.get('resultHandler') ? 'open' : 'download'];
+                        break;
+                     case 'history':
+                        return /*model.get('resultWayOfUse') ||*/ RESULT_BUTTON_TITLES.viewLog;
+                        break;
+                     case 'custom':
+                        return action.title;
+                        break;
+                  }
+               }
             }
          },
 

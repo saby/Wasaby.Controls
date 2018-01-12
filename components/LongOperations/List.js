@@ -431,7 +431,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
                      this._showResult(model);
                      break;
                   case 'history':
-                     this._showHistory(model, mainAction.useResultHandler)
+                     this._showHistory(model, mainAction.allowResultButton);
                      break;
                   case 'custom':
                      this._execHandler(mainAction.action.call, mainAction.action.args);
@@ -467,7 +467,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
                   }
                   else {
                      // Иначе показать историю (с кнопкой частичного результата)
-                     return {type:'history', useResultHandler:true};
+                     return {type:'history', allowResultButton:true};
                   }
                }
                else {
@@ -681,12 +681,12 @@ define('SBIS3.CONTROLS/LongOperations/List',
           * Открыть историю указанной длительной операции
           * @protected
           * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
-          * @param {boolean} useResultHandler Использовать обработчик результата операции
+          * @param {boolean} allowResultButton В истории можно использовать кнопку просмотра (частичного) результата операции
           */
-         _showHistory: function (model, useResultHandler) {
+         _showHistory: function (model, allowResultButton) {
             //Только если операция завершена или содержит ошибку
             if (model && (model.get('status') === LongOperationEntry.STATUSES.ended || model.get('isFailed'))) {
-               var resultHandler = useResultHandler && (model.get('resultHandler') || model.get('resultUrl')) ? this._showResult.bind(this, model) : null;
+               var resultHandler = allowResultButton && (model.get('resultHandler') || model.get('resultUrl')) ? this._showResult.bind(this, model) : null;
                var resultWayOfUse = resultHandler ? model.get('resultWayOfUse') : null;
                var floatArea = new FloatArea({
                   title: rk('Журнал выполнения операции'),
