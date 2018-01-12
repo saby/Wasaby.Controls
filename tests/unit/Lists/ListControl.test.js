@@ -74,10 +74,8 @@ define([
          //Подкладываем объект внутреннего списка, который как бы отрисовался
          //  self._children.listView.getContainer().height(),
          ctrl._children.listView = {
-            getContainer: function() {
-               return [{
-                  clientHeight: 6
-               }]
+            _container: {
+               clientHeight: 6
             }
          };
 

@@ -1395,9 +1395,11 @@ define('SBIS3.CONTROLS/DataGridView',
       _scrollColumns: function(cords) {
          this._setPartScrollShift(cords);
       
-         /* Ячейки двигаем через translateX, т.к. IE не двиагает ячейки через left,
-          если таблица лежит в контейнере с display: flex */
-         var movePosition = 'translateX(' + this._getColumnsScrollPosition() + 'px)';
+         /* 1) Ячейки двигаем через translateX, т.к. IE не двиагает ячейки через left,
+               если таблица лежит в контейнере с display: flex.
+            2) Math.round нужен для решения бага хрома, если делать translateX с дробным значеним,
+               то будет происходить замыливание текста. https://bugs.chromium.org/p/chromium/issues/detail?id=521364 */
+         var movePosition = 'translateX(' + Math.round(this._getColumnsScrollPosition()) + 'px)';
       
          for(var i= 0, len = this._movableElems.length; i < len; i++) {
             this._movableElems[i].style.transform = movePosition;
