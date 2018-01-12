@@ -134,6 +134,20 @@ define('js!Controls/List/Controllers/ScrollController', [
        */
       scrollPageDown: function() {
          this._options.scrollContainer.scrollTop += this._options.scrollContainer.clientHeight;
+      },
+
+      /**
+       * Проверка, достигнут ли низ контейнера
+       */
+      isScrollOnBottom: function() {
+         return this._options.scrollContainer.scrollTop + this._options.scrollContainer.clientHeight >= this._options.scrollContainer.scrollHeight;
+      },
+
+      /**
+       * Проверка, достигнут ли верх контейнера
+       */
+      isScrollOnTop: function() {
+         return this._options.scrollContainer.scrollTop <= 0;
       }
 
    });

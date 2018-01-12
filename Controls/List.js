@@ -419,6 +419,9 @@ define('js!Controls/List', [
 
          _afterUpdate: function() {
             _private.initializeAverageItemsHeight(this);
+            if (this._scrollController.isScrollOnBottom()) {
+               _private.scrollLoadMore(this, 'down');
+            }
          },
 
          __onPagingArrowClick: function(e, arrow) {
