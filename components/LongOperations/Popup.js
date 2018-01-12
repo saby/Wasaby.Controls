@@ -18,9 +18,30 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
    function (UserInfo, cMerge, Deferred, EventBus, /*###strHelpers,*/ TabMessage, /*###WaitIndicator,*/ NotificationPopup, LongOperationEntry, headerTemplate, contentTpl, footerTpl, FloatArea) {
       'use strict';
 
+      /**
+       * Константа (как бы) фильтра для отбора только не приостановленных операций
+       * @private
+       * @type {string}
+       */
       var FILTER_NOT_SUSPENDED = 'not-suspended';
 
+      /**
+       * Константа (как бы) текста по-умолчанию для индикатора ожидания
+       * @private
+       * @type {string}
+       */
       var DEFAULT_WAITINDICATOR_TEXT = rk('Пожалуйста, подождите…');
+
+      /**
+       * Константа (как бы) набора заголовков по-умолчанию для кнопки показа результата (в шапке попапа)
+       * @private
+       * @type {object}
+       */
+      var RESULT_BUTTON_TITLES = {
+         download: 'Скачать',
+         open:     'Открыть',
+         viewLog:  'Журнал'
+      };
 
       /**
        * Класс всплывающего информационное окна длительных операций
@@ -287,26 +308,22 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             this.setStatus(statusName);
             this.setIcon(iconClass);
 
-            var STATUSES = LongOperationEntry.STATUSES;
-            var model = this._activeOperation;
             var butCaption;
-            if (model.get('status') === STATUSES.ended) {
-               var wayOfUse = model.get('resultWayOfUse');
-               if (!model.get('isFailed')) {
-                  if (model.get('resultUrl')) {
-                     butCaption = wayOfUse || 'Скачать';
+            var model = this._activeOperation;
+            if (model) {
+               var action = this._longOpList.describeMainAction(model);
+               if (action) {
+                  switch (action.type) {
+                     case 'result':
+                        butCaption = model.get('resultWayOfUse') || RESULT_BUTTON_TITLES[model.get('resultHandler') ? 'open' : 'download'];
+                        break;
+                     case 'history':
+                        butCaption = RESULT_BUTTON_TITLES.viewLog;
+                        break;
+                     case 'custom':
+                        butCaption = action.title;
+                        break;
                   }
-                  else
-                  if (model.get('resultHandler')) {
-                     butCaption = wayOfUse || 'Открыть';
-                  }
-                  else
-                  if (1 < model.get('progressTotal') && this._longOpList.canHasHistory(model)) {
-                     butCaption = wayOfUse || 'Журнал';
-                  }
-               }
-               else {
-                  butCaption = wayOfUse || 'Журнал';
                }
             }
 

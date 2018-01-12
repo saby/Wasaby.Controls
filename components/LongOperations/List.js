@@ -402,40 +402,82 @@ define('SBIS3.CONTROLS/LongOperations/List',
          },
 
          /**
+          * Получить описание основного (результирующего или кастомного основное) действия длительной операции
+          * @public
+          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
+          * @return {object}
+          */
+         describeMainAction: function (model) {
+            var mainAction = this._getMainAction(model);
+            if (mainAction) {
+               var descr = {type:mainAction.type};
+               if (mainAction.type === 'custom') {
+                  descr.title = mainAction.action.title;
+               }
+               return descr;
+            }
+         },
+
+         /**
           * Выполнить основное (результирующее или кастомное основное) действие длительной операции
           * @public
           * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
           */
          applyMainAction: function (model) {
+            var mainAction = this._getMainAction(model);
+            if (mainAction) {
+               switch (mainAction.type) {
+                  case 'result':
+                     this._showResult(model);
+                     break;
+                  case 'history':
+                     this._showHistory(model, mainAction.useResultHandler)
+                     break;
+                  case 'custom':
+                     this._execHandler(mainAction.action.call, mainAction.action.args);
+                     break;
+               }
+            }
+         },
+
+         /**
+          * Определить основное (результирующее или кастомное основное) действие длительной операции
+          * @protected
+          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
+          * @return {object}
+          */
+         _getMainAction: function (model) {
             if (model) {
                var STATUSES = LongOperationEntry.STATUSES;
                var status = model.get('status');
                if (status === STATUSES.ended || model.get('isFailed')) {
-                  //Только если операция завершена или содержит ошибку
+                  // Только если операция завершена или содержит ошибку
                   if (!model.get('isFailed') || model.get('useResult')) {
                      // Если операция завершена успешно или ей явно предписано использовать результат - выполнить действие, указанное в качестве результата
-                     if (!this._showResult(model)) {
+                     if (model.get('resultHandler') || model.get('resultUrl')) {
+                        return {type:'result'};
+                     }
+                     else {
                         // Если нет, то если операция может иметь историю и является составной - открыть журнал операции (либо если было предписано
                         // показать результат, но его не оказалось)
                         if ((this.canHasHistory(model) && 1 < model.get('progressTotal')) || model.get('useResult')) {
-                           this._showHistory(model);
+                           return {type:'history'};
                         }
                      }
                   }
                   else {
-                     // Иначе показать историю
-                     this._showHistory(model, true);
+                     // Иначе показать историю (с кнопкой частичного результата)
+                     return {type:'history', useResultHandler:true};
                   }
                }
                else {
-                  //Или если есть кастомное действие, продекларированное как основное
+                  // Или если есть кастомное действие, продекларированное как основное
                   var inf = this._getCustomActions(model);
                   if (inf) {
                      for (var name in inf) {
                         var action = inf[name];
                         if (action.main && this._isCustomActionAllowed(action, status)) {
-                           this._execHandler(action.call, action.args);
-                           break;
+                           return {type:'custom', action:action};
                         }
                      }
                   }
