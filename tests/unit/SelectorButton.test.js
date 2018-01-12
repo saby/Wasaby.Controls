@@ -1,10 +1,10 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['js!SBIS3.CONTROLS.SelectorButton', 'WS.Data/Source/Memory'], function (SelectorButton, MemorySource) {
+define(['SBIS3.CONTROLS/SelectorButton', 'WS.Data/Source/Memory'], function (SelectorButton, MemorySource) {
    'use strict';
    var
       SB;
 
-   describe('SBIS3.CONTROLS.SelectorButton', function () {
+   describe('SBIS3.CONTROLS/SelectorButton', function () {
 
       before(function() {
          var solarSystem = new MemorySource({
