@@ -325,9 +325,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (!(link && typeof link === 'string')) {
                return false;
             }
-            var id = this._getYouTubeVideoId(escapeTagsFromStr(link, []));
+            var url = escapeTagsFromStr(link, []);
+            var id = this._getYouTubeVideoId(url);
             if (id) {
-               var _byRe = function (re) { var ms = link.match(re); return ms ? ms[1] : null; };
+               var _byRe = function (re) { var ms = url.match(re); return ms ? ms[1] : null; };
                var protocol = _byRe(/^(https?:)/i) || '';
                var timemark = _byRe(/\?(?:t|start)=([0-9]+)/i);
                this.insertHtml([
@@ -1436,6 +1437,23 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._inputControl.bind('scroll', function(e) {
                   if (this._imageOptionsPanel) {
                      this._imageOptionsPanel.hide();
+                  }
+               }.bind(this));
+
+               // При нажатии клавиши Del - удалить изображение, если оно выделено
+               // 1174801418 https://online.sbis.ru/opendoc.html?guid=1473813c-1617-4a21-9890-cedd1c692bfd
+               this._inputControl.on('keyup', function (evt) {
+                  if (evt.key === 'Delete' || evt.keyCode === 46) {
+                     var imgOptsPanel = this._imageOptionsPanel;
+                     if (imgOptsPanel && imgOptsPanel.isVisible()) {
+                        var $img = imgOptsPanel.getTarget();
+                        if ($img && $img.length) {
+                           var selection = editor.selection;
+                           selection.select($img[0]);
+                           selection.getRng().deleteContents();
+                           imgOptsPanel.hide();
+                        }
+                     }
                   }
                }.bind(this));
 
