@@ -84,6 +84,9 @@
 
 .controls-DateRangeBigChoose__years-yearsRangeItem {
    color: @color_DateRangeBigChoose-years-panel-rangeButton;
+   &:hover {
+      background-color: @background-color_DateRangeBigChoose-years-panel-rangeButton
+   }
 }
 .controls-DateRangeBigChoose__years-yearsRangeItem-displayed {
    color: @color_DateRangeBigChoose-years-panel-displayed-year;
@@ -92,6 +95,9 @@
 }
 .controls-DateRangeBigChoose__years-yearsRangeItem-current {
    color: @color_DateRangeBigChoose-years-panel-current-year;
+   &:hover {
+      background-color: @background-color_DateRangeBigChoose-years-panel-current-year;
+   }
 }
 
 .controls-DateRangeBigChoose__years-yearsRangeItem-selectedInner {
@@ -107,6 +113,7 @@
 }
 
 .controls-DateRangeBigChoose__years-yearsRangeItem-selectedStart {
+   //need color;
    outline: @border-color_DateRangeBigChoose-range-selected-startEnd solid 1px;
    background-color: @background-color_DateRangeBigChoose-range-selected-startEnd;
    &:before {
