@@ -11,15 +11,13 @@
         on:inputCompleted="_inputCompletedHandler()"
         on:tagHover="_notifyHandler('onTagHover')"
         on:tagClick="_notifyHandler('onTagClick')">
-   <ws:content>
-
+      <ws:content>
          <ws:partial
             template="tmpl!Controls/Input/resources/input"
             type="text"
             enabled="{{isEnabled()}}"
             value="{{_value}}"
          />
-
       </ws:content>
    </ws:Controls.Input.resources.InputRender.InputRender>
 </div>
