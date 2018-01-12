@@ -11,7 +11,7 @@
 // Header
 .controls-DateRangeBigChoose__header {
    background-color: @background-color__DateRangeBigChoose-header;
-   border-bottom: 1px solid @border-color_DateRangeBigChoose;
+   border-bottom: @border-width_DateRangeBigChoose solid @border-color_DateRangeBigChoose;
    padding: @padding_DateRangeBigChoose-header;
    .box-sizing(border-box);
    .flexbox();
@@ -52,7 +52,7 @@
 // панель выбора периода через года
 .controls-DateRangeBigChoose__years {
    .flexbox();
-   border-bottom: 1px solid @border-color_DateRangeBigChoose;
+   border-bottom: @border-width-color_DateRangeBigChoose solid @border-color_DateRangeBigChoose;
    height: @height_DateRangeBigChoose-years;
    .align-items(center);
 }
@@ -87,7 +87,7 @@
 }
 .controls-DateRangeBigChoose__years-yearsRangeItem-displayed {
    color: @color_DateRangeBigChoose-years-panel-displayed-year;
-   font-size: 15px;
+   font-size: @font-size_DateRangeBigChoose-years-panel-displayed-year;
    font-weight: bold;
 }
 .controls-DateRangeBigChoose__years-yearsRangeItem-current {
@@ -113,7 +113,7 @@
       content: "";
       position: absolute;
       height: 100%;
-      width: 3px;
+      width: @width_DateRangeBigChoose-range-selected-startEnd-edgeBorder;
       background-color: @border-color_DateRangeBigChoose-range-selected-startEnd-edgeBorder;
       left: -1px;
    }
@@ -126,7 +126,7 @@
       content: "";
       position: absolute;
       height: 100%;
-      width: 3px;
+      width: @width_DateRangeBigChoose-range-selected-startEnd-edgeBorder;
       background-color: @border-color_DateRangeBigChoose-range-selected-startEnd-edgeBorder;
       right: -1px;
    }
@@ -156,7 +156,7 @@
    .flexbox();
    .flex-shrink(0);
    height: @height_DateRangeChoose-dates-header;
-   border-bottom: 1px solid @border-color_DateRangeBigChoose;
+   border-bottom: @border-width_DateRangeBigChoose solid @border-color_DateRangeBigChoose;
    .align-items(center);
    font-size: @font-size_DateRangeBigChoose-dates-header;
 }
