@@ -106,7 +106,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
 
          /**
           * Открывает диалог с сообщением и одной кнопкой "Ок". Диалог может находиться в одном из трёх состояний: "Ошибка" , "Успешно" или "Предупреждение".
-          * @param {Object} Объект конфигурацией открываемого диалога - {@link SBIS3.CONTROLS/SubmitPopup}.
+          * @param {Object} Объект с конфигурацией открываемого диалога - {@link SBIS3.CONTROLS/SubmitPopup}.
           * @param {Function} handler Обработчик нажатия на кнопку "Ок".
           * @returns {SBIS3.CONTROLS/SubmitPopup} Экземпляр класса диалога.
           * @example
