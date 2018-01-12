@@ -26,6 +26,22 @@ define(
       
       describe('Controls.Input.SuggestController', function () {
    
+         it('.destroy', function() {
+            var selfTest = getTestAbstract(),
+                isAborted = false;
+            
+            selfTest._suggestPopupController = {
+               hidePopup: function(){
+                  isAborted = true;
+               }
+            };
+            
+            SuggestController._private.destroy(selfTest);
+            
+            assert.isTrue(isAborted, 'search query is not aborted');
+            assert.equal(selfTest._suggestPopupController, null, 'suggestPopupController is not destroyed');
+         });
+         
          it('.showPopup', function(done) {
             var selfTest = getTestAbstract(),
                 result = false;
