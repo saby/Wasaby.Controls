@@ -1,7 +1,7 @@
 /**
  * Created by dv.zuev on 25.12.2017.
  */
-define('Controls/Application',
+define('js!Controls/Application',
    [
       'Core/Control',
       'tmpl!Controls/Application/Page',
@@ -37,6 +37,7 @@ define('Controls/Application',
             self.resourceRoot = cfg.resourceRoot;
             self.jsLinks = cfg.jsLinks;
             self.templateConfig = cfg.templateConfig;
+            self.jquery = cfg.jquery;
          }
       };
       var Page = Base.extend({
@@ -59,7 +60,16 @@ define('Controls/Application',
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
              * роутинга и с ним же надо восстанавливаться на клиенте.
              */
-            def.callback(cfg);
+            def.callback({
+               jsLinks: self.jsLinks,
+               cssLinks: self.cssLinks,
+               title: self.title,
+               wsRoot: self.wsRoot,
+               content: self.content,
+               resourceRoot: self.resourceRoot,
+               templateConfig: self.templateConfig,
+               jquery: self.jquery
+            });
             return def;
          }
 
