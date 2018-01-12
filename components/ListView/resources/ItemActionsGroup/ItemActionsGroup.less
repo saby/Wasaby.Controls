@@ -78,6 +78,8 @@
          .flexbox();
          .align-items(center);
          .justify-content(center);
+         border: none;
+         box-shadow: none !important;
          right: 0;
          top: @list-view-actions-menu-touch-close-top;
          width: @closeButtonWidth;
@@ -170,13 +172,17 @@
    }
 
    .controls-PopupMixin__closeButton {
+      position: absolute;
+      .flexbox();
+      .align-items(center);
+      .justify-content(center);
+      border: none;
+      top: @list-view-actions-menu-close-top;
+      cursor: pointer;
       height: @list-view-actions-menu-close-height;
       width: @list-view-actions-menu-close-width;
       z-index: 1;
       right: @list-view-actions-menu-close-right;
-      top: @list-view-actions-menu-close-top;
-      position: absolute;
-      cursor: @list-view-actions-cursor;
       color: @list-view-context-menu-close-color !important;
       background: none;
       // используем important т.к. controls-PopupMixin__closeButton используется в старых контролах и стилизована в themes.less
@@ -184,11 +190,6 @@
       box-shadow: none !important;
 
       .icon-size(@list-view-items-toolbar-icon-size, @font-family_closeButton-icon);
-
-      &:before {
-         content: "\e66c";
-         text-shadow: none;
-      }
    }
    &.controls-popup-revert-vertical {
       .controls-Menu__itemsContainer {
