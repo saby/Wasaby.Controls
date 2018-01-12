@@ -325,9 +325,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (!(link && typeof link === 'string')) {
                return false;
             }
-            var id = this._getYouTubeVideoId(escapeTagsFromStr(link, []));
+            var url = escapeTagsFromStr(link, []);
+            var id = this._getYouTubeVideoId(url);
             if (id) {
-               var _byRe = function (re) { var ms = link.match(re); return ms ? ms[1] : null; };
+               var _byRe = function (re) { var ms = url.match(re); return ms ? ms[1] : null; };
                var protocol = _byRe(/^(https?:)/i) || '';
                var timemark = _byRe(/\?(?:t|start)=([0-9]+)/i);
                this.insertHtml([
