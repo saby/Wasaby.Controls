@@ -1239,6 +1239,9 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                   else {
                      this._redrawItem(branches[idx]);
                   }
+                  //Пересоздадим футер для изменившихся папок, так как после перемещения/удаления/добавления записей
+                  //футер может оказаться не там где он должен находиться.
+                  this._createFolderFooter(branches[idx]);
                }
             }
          },
