@@ -76,6 +76,13 @@ define('js!Controls/Input/resources/SuggestController',
             }
             return self._suggestPopupController;
          });
+      },
+      
+      destroy: function(self) {
+         if (self._suggestPopupController) {
+            self._suggestPopupController.abort();
+            self._suggestPopupController = null;
+         }
       }
    };
    
@@ -97,10 +104,7 @@ define('js!Controls/Input/resources/SuggestController',
       },
       
       destroy: function() {
-         if (this._suggestPopupController) {
-            this._suggestPopupController.destroy();
-            this._suggestPopupController = null;
-         }
+         _private.destroy(this);
          SuggestController.superclass.destroy.call(this);
       },
    
