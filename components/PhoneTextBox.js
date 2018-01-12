@@ -154,9 +154,9 @@ define('SBIS3.CONTROLS/PhoneTextBox', [
             .attr('href', 'tel:' + this._options.srcText);
       },
 
-      _updateTextFromModel: function() {
+      _getTextFromModel: function() {
          var formatModel = this._getFormatModel();
-         this._options.text = formatModel.getText(this._getMaskReplacer());
+         return formatModel.getText(this._getMaskReplacer());
       },
 
       _focusHandler: function() {

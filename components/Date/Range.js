@@ -211,11 +211,12 @@ define('SBIS3.CONTROLS/Date/Range', [
             locationStrategy: 'bodyBounds',
             horizontalAlign: {
                side: 'left',
-               offset: -139
+               // TODO: Для поддержки тем переделать на маргины, пока сделано так что бы быстро восстановить тесты
+               offset: -39
             },
             verticalAlign: {
                side: 'top',
-               offset: -9
+               offset: -13
             }
          };
       },

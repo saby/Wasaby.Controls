@@ -301,7 +301,7 @@ body {
 .controls-IconButton.controls-TreeView__editArrow-container {
   @offset: round(10px * @multiplier);
   margin-top: calc(~"@{default-border-width} - @{offset}");
-  .icon-16 {
+  .icon-size {
     .icon-size(@icon-medium-size, @icon-font);
   }
 }
@@ -337,6 +337,17 @@ body {
   }
 }
 
+.controls-FieldLink__withPicker.controls-Picker__show {
+  background: @fieldLink-picker-show-color;
+  color: @fieldLink-picker-show-field-color;
+}
+
+// todo Костыль, возникший из-за собственного шрифта presto. При переходе на стандартный cbuc-icons можно удалить.
+.controls-FieldLink {
+  .controls-FieldLink__dropAllLinks, .controls-FieldLink__showSelector {
+    margin-right: 0;
+  }
+}
 //todo: дулаить это и переделать на еормальные коэфы
 .controls__filterButton {
   .controls__filterButton__filterLine {

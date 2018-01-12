@@ -334,7 +334,7 @@ define('SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
                 return;
              }
    
-             if (this._options.itemsActionsInItemContainer) {
+             if (this._options.itemsActionsInItemContainer && !this._options.touchMode) {
                 this._setToolbarTarget(this._currentTarget.container);
              } else {
                 parentCords = parentContainer.getBoundingClientRect();
@@ -455,7 +455,7 @@ define('SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
 
                    this.getContainer().removeClass('ws-hidden');
                    
-                   if (this._options.itemsActionsInItemContainer) {
+                   if (this._options.itemsActionsInItemContainer && !this._options.touchMode) {
                       this._setToolbarTarget(target.container);
                    } else {
                       this._setPosition(this._getPosition(target));
