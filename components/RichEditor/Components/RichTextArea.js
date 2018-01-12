@@ -1440,6 +1440,23 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                }.bind(this));
 
+               // При нажатии клавиши Del - удалить изображение, если оно выделено
+               // 1174801418 https://online.sbis.ru/opendoc.html?guid=1473813c-1617-4a21-9890-cedd1c692bfd
+               this._inputControl.on('keyup', function (evt) {
+                  if (evt.key === 'Delete' || evt.keyCode === 46) {
+                     var imgOptsPanel = this._imageOptionsPanel;
+                     if (imgOptsPanel && imgOptsPanel.isVisible()) {
+                        var $img = imgOptsPanel.getTarget();
+                        if ($img && $img.length) {
+                           var selection = editor.selection;
+                           selection.select($img[0]);
+                           selection.getRng().deleteContents();
+                           imgOptsPanel.hide();
+                        }
+                     }
+                  }
+               }.bind(this));
+
                this._inputControl.attr('tabindex', 1);
 
                if (!cConstants.browser.firefox) { //в firefox работает нативно
