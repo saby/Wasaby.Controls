@@ -43,6 +43,7 @@ define('js!Controls/Input/Search',
                   this._notify('reset');
                }
             }
+            this._forceUpdate();
          },
 
          _startSearch: function (text) {
