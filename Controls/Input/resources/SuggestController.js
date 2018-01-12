@@ -84,7 +84,7 @@ define('js!Controls/Input/resources/SuggestController',
       
       destroy: function(self) {
          if (self._suggestPopupController) {
-            self._suggestPopupController.abort();
+            self._suggestPopupController.hidePopup();
             self._suggestPopupController = null;
          }
       }
