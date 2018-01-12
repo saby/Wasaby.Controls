@@ -481,7 +481,7 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
             }
             /* Если стрелка заползает на операции над записью -> увеличиваем отступ */
             if(needCorrect) {
-               leftOffset -= leftOffset - toolbarLeft + this.getEditArrow().getContainer().width(); //Левая граница тулбара + ширина стрелки
+               leftOffset -= leftOffset - toolbarLeft + this.getEditArrow().getContainer().outerWidth(true); //Левая граница тулбара + ширина стрелки c учётом margin
             }
             /* backgorund'a у стрелки быть не должно, т.к. она может отображаться на фоне разного цвета,
                но если мы корректрируем положение, то надо навесить background, чтобы она затемняла текст */
