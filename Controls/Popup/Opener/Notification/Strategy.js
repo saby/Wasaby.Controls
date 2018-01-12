@@ -13,7 +13,7 @@ define('js!Controls/Popup/Opener/Notification/Strategy',
        * @extends Controls/Control
        */
       var Strategy = BaseStrategy.extend({
-         addElement: function (cfg) {
+         elementCreated: function (cfg) {
             cfg.position = this.getPosition();
          },
 

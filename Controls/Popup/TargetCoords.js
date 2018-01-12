@@ -5,6 +5,9 @@ define('js!Controls/Popup/TargetCoords',
 
       return {
          get: function (target, corner) {
+            if( !target ){
+               target = document.body;
+            }
             var
                width = target.offsetWidth || 0,
                height = target.offsetHeight || 0,
@@ -31,7 +34,9 @@ define('js!Controls/Popup/TargetCoords',
             }
             return {
                top: Math.round(top),
+               bottom: Math.round(window.outerHeight - top),
                left: Math.round(left),
+               right: Math.round(window.outerWidth - left),
                width: width,
                height: height
             };

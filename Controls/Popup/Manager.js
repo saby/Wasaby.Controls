@@ -18,7 +18,7 @@ define('js!Controls/Popup/Manager',
          },
 
          removeElement: function (element) {
-            element.strategy.removeElement(element);
+            element.strategy.elementDestroyed(element);
             this._popupItems.remove(element);
             if (element.isModal) {
                var indices = this._popupItems.getIndicesByValue('isModal', true);
@@ -60,7 +60,7 @@ define('js!Controls/Popup/Manager',
                var strategy = element.strategy;
                if (strategy) {
                   // при создании попапа, зарегистрируем его
-                  strategy.addElement(element, width, height);
+                  strategy.elementCreated(element, width, height);
                   Manager._redrawItems();
                }
             }

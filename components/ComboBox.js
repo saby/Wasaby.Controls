@@ -433,6 +433,14 @@ define('SBIS3.CONTROLS/ComboBox', [
          $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).toggleClass('controls-ComboBox__fieldNotEditable__placeholder', !text);
       },
 
+      _getFieldForTooltip: function () {
+        if (this.isEditable()) {
+           return ComboBox.superclass._getFieldForTooltip.apply(this, arguments);
+        } else {
+           return $('.js-controls-ComboBox__fieldNotEditable', this._container);
+        }
+      },
+
       _clearSelection: function(){
          ComboBox.superclass.setText.call(this, '');
          this._drawNotEditablePlaceholder('');

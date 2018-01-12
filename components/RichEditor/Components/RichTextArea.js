@@ -328,7 +328,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             var id = this._getYouTubeVideoId(escapeTagsFromStr(link, []));
             if (id) {
                var _byRe = function (re) { var ms = link.match(re); return ms ? ms[1] : null; };
-               var protocol = _byRe(/^(https?:)/i);//^^^/https?:/i.test(link) ? link.replace(/.*(https?:).*/gi, '$1') : '';
+               var protocol = _byRe(/^(https?:)/i) || '';
                var timemark = _byRe(/\?(?:t|start)=([0-9]+)/i);
                this.insertHtml([
                   '<iframe',
@@ -730,17 +730,25 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          },
 
          /**
+          * Почистить выделение от <br data-mce-bogus="1">
+          * @private
+          */
+         _clearBrDataMceBogus: function () {
+            //TinyMCE использует для определения положения каретки(курсора ввода) <br data-mce-bogus="1">.
+            //При смене формата содаётся новый <span class='classFormat'>.
+            //В FF в некторых случаях символ каретки(курсора ввода) не удаляется из предыдущего <span> блока при смене формата
+            //из за-чего происход разрыв строки.
+            $(this._tinyEditor.selection.getNode()).find('br[data-mce-bogus="1"]').remove();
+         },
+
+         /**
           * Установить стиль для выделенного текста
           * @param {Object} style Объект, содержащий устанавливаемый стиль текста
           * @private
           */
          setFontStyle: function(style) {
-            //TinyMCE использует для определения положения каретки(курсора ввода) <br data-mce-bogus="1">.
-            //При смене формата содаётся новый <span class='classFormat'>.
-            //В FF в некторых случаях символ каретки(курсора ввода) не удаляется из предыдущего <span> блока при смене формата
-            //из за-чего происход разрыв строки.
-            if (cConstants.browser.firefox &&  $(this._tinyEditor.selection.getNode()).find('br').attr('data-mce-bogus') == '1') {
-               $(this._tinyEditor.selection.getNode()).find('br').remove();
+            if (cConstants.browser.firefox) {
+               this._clearBrDataMceBogus();
             }
             //Удаление текущего форматирования под курсором перед установкой определенного стиля
             ['fontsize', 'forecolor', 'bold', 'italic', 'underline', 'strikethrough'].forEach(function(stl){
@@ -834,6 +842,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (prop in formats && formats[prop] ==/* Не "==="! */ defaults[prop]) {
                   delete formats[prop];
                }
+            }
+            if (cConstants.browser.firefox) {
+               this._clearBrDataMceBogus();
             }
             // Применить новое форматирование
             if (formats.id) {
