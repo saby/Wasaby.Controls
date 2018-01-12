@@ -22,6 +22,16 @@
   }
 }
 
+.controls-Button__style-default {
+  border-color: @border-color_Button;
+
+  &:active {
+    border-color: @border-color_Button_hovered;
+    background: @background_Button_active;
+    box-shadow: none;
+  }
+}
+
 .controls-Button__style-disabled {
   cursor: default;
   color: @default-disabled-color;
@@ -32,8 +42,7 @@
     color: @icon-color-disabled !important;
   }
 }
-
-.controls-Button__wrapper_style-primary {
+.controls-Button__wrapper_style-primary, .controls-Button__wrapper_style-default {
   padding: @padding_Button-wrapper_default;
   .justify-content(center);
 }
@@ -46,6 +55,12 @@
     &:hover {
       border-color: @border-color_Button_primary_hovered;
       background: @background_Button_primary_hovered;
+    }
+  }
+  .controls-Button__style-default {
+    &:hover {
+      border-color: @border-color_Button_hovered;
+      background: @background_Button_hovered;
     }
   }
 }
