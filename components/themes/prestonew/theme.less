@@ -10,8 +10,6 @@
   height: @default-height @important;
   background-color: #405A77 @important;
   background-image: none @important;
-  -webkit-box-shadow: @box-shadow_Button !important;
-  -moz-box-shadow: @box-shadow_Button !important;
   box-shadow: @box-shadow_Button !important;
   .border-radius(@border-radius_Button_default);
 
@@ -554,7 +552,7 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
   border-left-width: round(3px * @multiplier);
 }
 //!IMPORTANT лучше чем увеличение веса селектора через BODY тк возможно собирать тему под селектором
-.ws-window-titlebar-action {
+.ws-float-close, .ws-window-titlebar-action {
   top: @top_window_button !important;
 }
 //ОКНА И ЭРИИ ИЗ WS`А
