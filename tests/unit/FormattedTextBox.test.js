@@ -33,6 +33,7 @@ define(['SBIS3.CONTROLS/FormattedTextBox'], function (FormattedTextBox) {
 
       context('Android: Get inputted symbol and symbol position', function (){
          it('Not changed', function (){
+            debugger;
             let textGroups = FTB._getTextGroupAndroid();
             assert.equal(FTB._getTextDiff(textGroups.oldText, textGroups.newText, textGroups.maskGroups, false), false);
          });
