@@ -835,7 +835,7 @@
 @controls-view-photo-padding-L:                    0 14px 0 8px;
 @controls-view-photo-padding-DEFAULT:              0 18px 0 12px;
 // Edit in place padding
-@controls-view-eip-padding-DEFAULT:                3px;
+@controls-view-eip-padding-DEFAULT:                7px;
 @controls-view-eip-padding-XS:                     0px;
 @controls-view-eip-padding-S:                      7px;
 @controls-view-eip-padding-M:                      11px;
@@ -1169,7 +1169,8 @@
 @back-button-padding-before:                       0;
 @icon-size:                                        16px;//todo
 @icon-width:                                       16px;//todo
-@back-button-arrow-hover-color:                    @primary-color;
+@back-button-arrow-color:                          @primary-color;
+@back-button-arrow-hover-color:                    @back-button-arrow-color;
 @back-button-arrow-padding-right-1:                2px;
 @back-button-arrow-padding-right-2:                3px;
 // BreadCrumbs
@@ -1180,8 +1181,11 @@
 @breadcrumbs-smallItems-font-size:                 14px;
 @breadcrumbs-arrow-top:                            2px;
 @breadcrumbs-small-items-top:                      @breadcrumbs-top;
+@breadcrumbs-small-arrow-top:                      @breadcrumbs-arrow-top;
 @bread-crumbs-menu-padding:                        4px 0;
 @bread-crumbs-menu-max-width:                      800px;
+@bread-crumb-crumb-margin-left:                    0;
+@bread-crumb-crumb-home-top:                       0;
 // EditDialog
 @editdialog-applybutton-width:                     auto;
 @editdialog-applybutton-right:                     40px; //ширина кнопки закрытия окна 36px + 4px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
@@ -1478,19 +1482,20 @@
 @width-ColumnsEditor-Editing-Area: 388px;
 @height-ColumnsEditor-Editing-Area-head-title: 24px;
 @height-ColumnsEditor-Editing-Area-head-preset: 24px;
-@padding-top-ColumnsEditor-Editing-Area-head: 8px;
-@spacing-ColumnsEditor-Editing-Area-head: 12px;
-@padding-bottom-ColumnsEditor-Editing-Area-head: 4px;
+@padding-ColumnsEditor-Editing-Area-head: 8px 0 4px 12px;
+@spacing-ColumnsEditor-Editing-Area-head: 8px;
 @background-color-ColumnsEditor-Editing-Area-head: #f7f4f0;
 @color-ColumnsEditor-Editing-Area__head-title-left: #313E78;
 @font-size-ColumnsEditor-Editing-Area__head-title-left: 18px;
 @font-weight-ColumnsEditor-Editing-Area__head-title-left: bold;
 @margin-right-ColumnsEditor-Editing-Area__head-title-right: 38px;
+@height-ColumnsEditor-Editing-Area__head-preset: 30px;
 @font-size-ColumnsEditor-Editing-Area__head-preset: 15px;
-@padding-ColumnsEditor-Editing-Area__head-preset-label: 3px 8px 0px 0px;
+@padding-ColumnsEditor-Editing-Area__head-preset-label: 5px 8px 0 0;
 @color-ColumnsEditor-Editing-Area__head-preset-label: rgb(153, 153, 153);
 @padding-left-ColumnsEditor-Editing-Area__Preset-item: 6px;
-@padding-top-ColumnsEditor-Editing-Area__Preset-item-title: 1px;
+@spacing-ColumnsEditor-Editing-Area__Preset-item: 3px;
+@width-ColumnsEditor-Editing-Area__Preset-input: 230px;
 @border-top-ColumnsEditor-Editing-Area__body: 1px solid #CCCCCC;
 @padding-ColumnsEditor-Editing-Area__body: 12px 0;
 @padding-ColumnsEditor-Editing-Area__FixedList-CheckBox: 4px;
