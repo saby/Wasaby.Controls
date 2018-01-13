@@ -135,8 +135,9 @@ define('js!Controls/Input/resources/InputRender/InputRender',
           * Метод вставляет строку text вместо текущего выделенного текста в инпуте
           * Если текст не выделен, то просто вставит text на позицию каретки
           * @param text
+          * @param field поле ввода (dom-элемент)
           */
-         paste: function(text) {
+         paste: function(text, field) {
             var
                selection = _private.getSelection(this),
                processedData = this._options.viewModel.prepareData({
@@ -144,6 +145,9 @@ define('js!Controls/Input/resources/InputRender/InputRender',
                   insert: text,
                   after: this._value.slice(selection.selectionEnd, this._value.length)
                }, 'insert');
+
+            //Вызываем метод setTargetData, чтобы не сбилась позиция каретки
+            _private.setTargetData(field, processedData);
 
             if (this._value !== processedData.value) {
                this._value = processedData.value;

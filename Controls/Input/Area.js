@@ -119,6 +119,10 @@ define('js!Controls/Input/Area', [
 
       _scrollHandler: function(){
          _private.updateScroll.call(this);
+      },
+
+      paste: function(text) {
+         this._children['inputRender'].paste(text, this._children['realArea']);
       }
 
    });

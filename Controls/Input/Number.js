@@ -95,7 +95,7 @@ define('js!Controls/Input/Number', [
       },
 
       paste: function(text) {
-         this._children['inputRender'].paste(text);
+         this._children['inputRender'].paste(text, this._children['input']);
       }
    });
 
