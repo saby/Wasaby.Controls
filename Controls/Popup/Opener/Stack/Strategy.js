@@ -14,9 +14,13 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
          MINIMAL_PANEL_DISTANCE = 50;
 
       var _private = {
-         getStackParentCoords: function(){
+         getStackParentCoords: function () {
             var elements = document.getElementsByClassName('ws-Popup__stack-target-container');
             return TargetCoords.get(elements && elements.length ? elements[0] : null, {horizontal: 'right'});
+         },
+
+         getClassName: function () {
+            return 'ws-Container__stack-panel';
          }
       };
 
@@ -35,6 +39,10 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
          },
 
          elementCreated: function (element) {
+            if (!element.popupOptions) {
+               element.popupOptions = {};
+            }
+            element.popupOptions.className = _private.getClassName();
             this._stack.add(element, 0);
             this._update();
          },
