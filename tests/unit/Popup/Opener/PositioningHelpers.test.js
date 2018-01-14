@@ -47,7 +47,7 @@ define(
                var position = Sticky.getPosition(targetCoords, {
                   'vertical': 'top',
                   'horizontal': 'left'
-               }, {side: 'right'}, {}, 300, 300, 1920, 1040);
+               }, {side: 'left'}, {}, 300, 300, 1920, 1040);
                assert.isTrue(position.top === 200);
                assert.isTrue(position.left === 0);
             });
@@ -65,7 +65,7 @@ define(
                var position = Sticky.getPosition(targetCoords, {
                   'vertical': 'top',
                   'horizontal': 'left'
-               }, {side: 'right'}, {}, 400, 300, 1920, 1040);
+               }, {side: 'left'}, {}, 400, 300, 1920, 1040);
                assert.isTrue(position.top === 200);
                assert.isTrue(position.left === 700);
             });
