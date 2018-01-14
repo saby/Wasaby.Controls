@@ -1099,7 +1099,11 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
             data;
 
          //TODO в 3.7.5 избавиться от проверки на _path
-         if (targetElement.length && !targetElement.hasClass('controls-HierarchyDataGridView__path')) {
+         if (targetElement.length) {
+            if (targetElement.hasClass('controls-HierarchyDataGridView__path')) {
+               this._redrawHierarchyPathItem(item);
+               return needToRevive;
+            }
             data = this._prepareItemData();
             data.projItem = item;
             data.item = item.getContents();
@@ -1157,6 +1161,8 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
          return needToRevive;
       },
 
+      _redrawHierarchyPathItem: function(item) {},
+      
       //TODO надо избавиться от этого метода
       //если в списке есть группировка, при переносе в папку записи, следующей за ней
       //не происходит события move, а только меняется запись
