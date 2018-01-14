@@ -53,8 +53,8 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
                var
                   prevWidth = previous ? previous.width : null,
                   prevRight = previous ? previous.right : null,
-                  width = self.getPanelWidth(item.popupOptions.minWidth, item.popupOptions.maxWidth, window.outerWidth),
-                  maxPanelWidth = self.getMaxPanelWidth(window.outerWidth);
+                  width = self.getPanelWidth(item.popupOptions.minWidth, item.popupOptions.maxWidth, window.innerWidth),
+                  maxPanelWidth = self.getMaxPanelWidth(window.innerWidth);
                item.position = self.getPosition(index, tCoords, width, maxPanelWidth, prevWidth, prevRight);
                previous = item.position;
                if (!previous) {

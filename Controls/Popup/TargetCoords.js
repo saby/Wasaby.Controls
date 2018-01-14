@@ -34,9 +34,9 @@ define('js!Controls/Popup/TargetCoords',
             }
             return {
                top: Math.round(top),
-               bottom: Math.round(window.outerHeight - top),
+               bottom: Math.round(window.innerHeight - top),
                left: Math.round(left),
-               right: Math.round(window.outerWidth - left),
+               right: Math.round(window.innerWidth - left),
                width: width,
                height: height
             };
