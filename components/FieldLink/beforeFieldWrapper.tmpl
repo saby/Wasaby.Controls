@@ -1,4 +1,4 @@
-<ws:if data="{{ selectedKeys.length || selectedItems.length || selectedKey || selectedItem }}">
+<ws:if data="{{ !_isEmptySelection(...) }}">
    <div class="controls-FieldLink__beforeFieldWrapper{{enabled ? ' controls-FieldLink__beforeFieldWrapper-enabled' : ' controls-FieldLink__beforeFieldWrapper-disabled'}}">
       <SBIS3.CONTROLS:FieldLink:resources:ItemsCollection
         cssClassName="controls-FieldLink__linksContainer"
