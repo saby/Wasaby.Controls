@@ -6,8 +6,9 @@ define([
    'SBIS3.CONTROLS/ListView',
    'WS.Data/Collection/RecordSet',
    'Core/core-instance',
-   'WS.Data/Display/Tree'
-], function (DragMove, DragList, DragObject, ListView, RecordSet, cInstance, Tree) {
+   'WS.Data/Display/Tree',
+   'Core/Deferred'
+], function (DragMove, DragList, DragObject, ListView, RecordSet, cInstance, Tree, Deferred) {
    'use strict';
    describe('DragMove', function () {
       var list, element, view, dragMove, event, items;
@@ -416,6 +417,28 @@ define([
             assert.doesNotThrow(function () {
                dragMove.endDrag();
             });
+         });
+         it('should reset selections from the items', function () {
+            dragMove.beginDrag();
+            event.target = view.getContainer().find('[data-id=3]');
+            dragMove.updateTarget();
+            var view1 = new ListView({
+               element: element,
+               items: new RecordSet({
+                  rawData: [{id: 1}, {id: 2}, {id: 3}, {id: 4}],
+                  idProperty: 'id'
+               }),
+               multiselect: true,
+               displayProperty: 'id',
+               idProperty: 'id'
+            });
+            view1.setSelectedKeys([1,2]);
+            DragObject.setOwner(view1);
+            view._getMover().moveFromOutside = function (dragSource, target, ownerItems, move) {
+               return Deferred.success(true);
+            };
+            dragMove.endDrag();
+            assert.equal(view1.getSelectedKeys().length, 0);
          });
       });
       describe('.createAvatar', function () {
