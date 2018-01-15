@@ -3,13 +3,15 @@ define('js!Controls/Input/Number', [
    'tmpl!Controls/Input/Number/Number',
    'WS.Data/Type/descriptor',
    'Controls/Input/Number/ViewModel',
+   'Controls/Input/resources/InputHelper',
 
    'js!Controls/Input/resources/InputRender/InputRender',
    'tmpl!Controls/Input/resources/input'
 ], function (Control,
              template,
              types,
-             NumberViewModel) {
+             NumberViewModel,
+             inputHelper) {
 
    'use strict';
    var
@@ -95,7 +97,7 @@ define('js!Controls/Input/Number', [
       },
 
       paste: function(text) {
-         this._children['inputRender'].paste(text);
+         inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text);
       }
    });
 

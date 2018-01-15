@@ -135,6 +135,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
           * Метод вставляет строку text вместо текущего выделенного текста в инпуте
           * Если текст не выделен, то просто вставит text на позицию каретки
           * @param text
+          * @returns {Number} позиция каретки.
           */
          paste: function(text) {
             var
@@ -151,6 +152,9 @@ define('js!Controls/Input/resources/InputRender/InputRender',
 
                this._forceUpdate();
             }
+
+            //Возвращаем позицию каретки. Она обрабатывается методом pasteHelper
+            return selection.selectionEnd;
          }
       });
 
