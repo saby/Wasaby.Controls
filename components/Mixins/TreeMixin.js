@@ -938,6 +938,18 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             return Deferred.success();
          }
       },
+      _redrawHierarchyPathItem: function(item) {
+         var
+            itemContents = item.getContents(),
+            id = itemContents.getId(),
+            breadCrumbsWithItem = this._container.find('[data-id="'+ id + '"]').parents('.controls-TreeView__searchBreadCrumbs');
+         breadCrumbsWithItem.each(function(idx, elem) {
+            var
+               breadCrumbsInst = elem.wsControl;
+            breadCrumbsInst.getItems().getRecordById(id).merge(itemContents);
+            breadCrumbsInst.redraw();
+         });
+      },
       /**
        * Получить список записей для отрисовки
        * @private
