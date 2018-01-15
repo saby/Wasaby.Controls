@@ -289,7 +289,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                }
             }
             if (cDetection.isIE12) {
-               scrollbarWidth = 12;
+               scrollbarWidth = 16;
             }
             if (cDetection.isIE10 || cDetection.isIE11) {
                scrollbarWidth = 17;
