@@ -324,6 +324,11 @@ body {
     display: none !important;
   }
 }
+//todo: Из-за заданного отступа происходит скачек при переключении вкладок
+//Будет исправлено при переписывании tabButtons на flex
+.controls-TabButton.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__wrapper {
+  margin-bottom: 0px !important;
+}
 
 //todo:
 .controls-DateRangeBigChoose__dates {

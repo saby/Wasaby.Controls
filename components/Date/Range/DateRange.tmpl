@@ -6,6 +6,7 @@
        name="DateRange__DatePickerStart"
        notificationMode="{{notificationMode}}"
        className="controls-DateRange__DatePickerStart"
+       size="{{size ? size : 'default' }}"
     />
     <div class="controls-DateRange__dash"></div>
     <SBIS3.CONTROLS:Date:Box
@@ -16,11 +17,12 @@
        focusOnActivatedOnMobiles="{{true}}"
        notificationMode="{{notificationMode}}"
        className="controls-DateRange__DatePickerEnd"
+       size="{{size ? size : 'default' }}"
     />
     <SBIS3.CONTROLS:Button:IconButton
        tabindex="0"
        name="DateRange__Button"
-       className="controls-DateRange__button"
-       icon="sprite:icon-16 icon-Calendar2 icon-primary"
+       className="controls-DateRange__button controls-DateRange__button_size_{{ size ? size : 'default' }}"
+       icon="icon-size icon-Calendar2 icon-primary"
     />
 </div>
