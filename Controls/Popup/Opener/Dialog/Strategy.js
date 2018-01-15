@@ -14,7 +14,7 @@ define('js!Controls/Popup/Opener/Dialog/Strategy',
        */
       var Strategy = BaseStrategy.extend({
          elementCreated: function (cfg, width, height) {
-            cfg.position = this.getPosition(window.outerWidth, window.innerHeight, width, height);
+            cfg.position = this.getPosition(window.innerWidth, window.innerHeight, width, height);
          },
 
          /**
