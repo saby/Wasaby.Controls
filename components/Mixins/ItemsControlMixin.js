@@ -1098,7 +1098,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
             projection = this._getItemsProjection(),
             data;
 
-         //TODO в 3.7.5 избавиться от проверки на _path
+         //todo В VDOM логика будет правильной и сделаем без подобных проверок.
          if (targetElement.length) {
             if (targetElement.hasClass('controls-HierarchyDataGridView__path')) {
                this._redrawHierarchyPathItem(item);
