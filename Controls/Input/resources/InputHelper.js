@@ -4,28 +4,20 @@ define('Controls/Input/resources/InputHelper',
 
       'use strict';
 
-      var Helper = {
-
-         constraint: function(value, constraint){
+      return {
+         /**
+          * Хелпер для вставки текста в поле ввода. В нём происходит вставка и выставляется позиция каретки dom-элемета
+          * @param inputRender экземпляр контрола InputRender
+          * @param domInputElement инпут (dom-элемент)
+          * @param textToPaste текст для вставки в поле
+          */
+         pasteHelper: function(inputRender, domInputElement, textToPaste) {
             var
-               constraintValue = '',
-               reg = new RegExp(constraint);
+               caretPosition = inputRender.paste(textToPaste);
 
-            for(var i = 0; i < value.length; i++){
-               if(reg.test(value[i])){
-                  constraintValue += value[i];
-               }
-            }
-
-            return constraintValue;
-         },
-
-         maxLength: function(value, splitValue, maxLength){
-            return value.substring(0, maxLength - splitValue.before.length - splitValue.after.length);
+            //Вызываем метод setSelectionRange, чтобы не сбилась позиция каретки
+            domInputElement.setSelectionRange(caretPosition, caretPosition);
          }
-
       };
-
-      return Helper;
    }
 );
