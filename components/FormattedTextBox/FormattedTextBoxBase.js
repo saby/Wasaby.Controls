@@ -1003,7 +1003,7 @@ define(
                   startCharNum = positionIndexesBegin[1];
                }
                for (var j = endCharNum; j >= startCharNum; j--) {
-                  keyInsertInfo = this._getFormatModel().insertCharacter(i, j, this._getMaskReplacer(), true);
+                  keyInsertInfo = this._getFormatModel().insertCharacter(i, j, this._getMaskReplacerForTemplate(), true);
                }
             }
             //модель обновили - обновляем опцию text и html-отображение
