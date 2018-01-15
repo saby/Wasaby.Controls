@@ -641,7 +641,8 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
             dataSource: list.getDataSource()
          };
          
-         if (cInstance.instanceOfModule(list, 'SBIS3.CONTROLS/DataGridView')) {
+         //Делаю такую проверку, т.к. люди кладут свои компоненты в качестве списка, и просто определяют метод getColumns
+         if (list.getColumns) {
             listConfig.columns = list.getColumns();
          }
    
