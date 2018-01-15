@@ -3,6 +3,7 @@
    min-height: @DropdownList-height;
    box-sizing: border-box;
    line-height: @DropdownList-height;
+   position: relative;
    .controls-DropdownList__selectedItem {
       .flexbox();
       width: 100%;
@@ -115,8 +116,7 @@
    }
 
    &.ws-validation-error {
-      outline: 1px solid @red-color;
-      outline-offset: -1px;
+      .border-with-pseudo-element(@border-color_DropDownList_error);
       background-color: @background-color_TextBox_error;
    }
 
