@@ -15,10 +15,11 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
    "Core/IoC",
    "Core/helpers/Object/isEmpty",
    "Core/helpers/Object/isPlainObject",
+   "Core/helpers/Function/runDelayed",
    "SBIS3.CONTROLS/BreadCrumbs",
    "tmpl!SBIS3.CONTROLS/DataGridView/resources/DataGridViewGroupBy",
    "WS.Data/Adapter/Sbis"
-], function (coreClone, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject) {
+], function (coreClone, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject, runDelayed) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -1429,8 +1430,10 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          },
          _dataLoadedCallback: function () {
             var path = this._options._items.getMetaData().path,
-               hierarchy = coreClone(this._hier),
-               item;
+                hierarchy = coreClone(this._hier),
+                self = this,
+                previousRoot = this._previousRoot,
+                item;
             if (this._options.expand) {
                this._applyExpandToItems(this.getItems());
             }
@@ -1447,7 +1450,9 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                   this.setSelectedKey(this._previousRoot);
                   //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
                   if (!this._container.parents('.controls-ListView').length) {
-                     this._scrollToItem(this._previousRoot);
+                     runDelayed(function() {
+                        self._scrollToItem(previousRoot);
+                     });
                   }
                } else {
                   /*иначе вход в папку*/
