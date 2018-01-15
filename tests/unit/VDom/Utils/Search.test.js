@@ -118,8 +118,12 @@ define(
                      searchParam: 'name',
                      dataSource: source,
                      navigation: {
-                        pageSize: 1,
-                        mode: "totalCount"
+                        source: 'page',
+                        sourceConfig: {
+                           pageSize: 1,
+                           page: 0,
+                           mode: 'totalCount'
+                        }
                      },
                      searchDelay: 50
                   }
@@ -142,6 +146,28 @@ define(
                } catch (e) {
                   done();
                }
+            });
+   
+            it('getArgsForQuery', function() {
+               var search  = new Search(
+                  {
+                     searchParam: 'name',
+                     dataSource: source,
+                     navigation: {
+                        source: 'page',
+                        sourceConfig: {
+                           pageSize: 1,
+                           page: 0,
+                           mode: 'totalCount'
+                        }
+                     }
+                  }
+               );
+   
+               var queryArgs = Search._private.getArgsForQuery(search, {});
+               
+               assert.equal(source, queryArgs[0]);
+               assert.equal(0, queryArgs[4]);
             });
          });
       });

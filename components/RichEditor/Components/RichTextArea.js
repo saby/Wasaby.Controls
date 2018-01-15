@@ -322,32 +322,39 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           * </pre>
           */
          addYouTubeVideo: function(link) {
-            var result = false,
-               content,
-               id;
-
-            if (typeof link !== 'string') {
-               return result;
+            if (!(link && typeof link === 'string')) {
+               return false;
             }
-
-            if ((id = this._getYouTubeVideoId(escapeTagsFromStr(link, [])))) {
-               var
-                  protocol = /https?:/.test(link) ? link.replace(/.*(https?:).*/gi, '$1') : '';
-               content = [
+            var url = escapeTagsFromStr(link, []);
+            var id = this._getYouTubeVideoId(url);
+            if (id) {
+               var _byRe = function (re) { var ms = url.match(re); return ms ? ms[1] : null; };
+               var protocol = _byRe(/^(https?:)/i) || '';
+               var timemark = _byRe(/\?(?:t|start)=([0-9]+)/i);
+               this.insertHtml([
                   '<iframe',
                   ' width="' + constants.defaultYoutubeWidth + '"',
                   ' height="' + constants.defaultYoutubeHeight + '"',
                   ' style="min-width:' + constants.minYoutubeWidth + 'px; min-height:' + constants.minYoutubeHeight + 'px;"',
-                  ' src="' + protocol + '//www.youtube.com/embed/' + id + '"',
+                  ' src="' + protocol + '//www.youtube.com/embed/' + id + (timemark ? '?start=' + timemark : '') + '"',
                   ' allowfullscreen',
                   ' frameborder="0" >',
                   '</iframe>'
-               ].join('');
-               this.insertHtml(content);
-               result = true;
+               ].join(''));
+               return true;
             }
+            return false;
+         },
 
-            return result;
+         /**
+          * JavaScript function to match (and return) the video Id
+          * of any valid Youtube URL, given as input string.
+          * @author: Stephan Schmitz <eyecatchup@gmail.com>
+          * @url: http://stackoverflow.com/a/10315969/624466
+          */
+         _getYouTubeVideoId: function(link) {
+            var p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+            return link.match(p) ? RegExp.$1 : false;
          },
 
          /**
@@ -724,17 +731,25 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          },
 
          /**
+          * Почистить выделение от <br data-mce-bogus="1">
+          * @private
+          */
+         _clearBrDataMceBogus: function () {
+            //TinyMCE использует для определения положения каретки(курсора ввода) <br data-mce-bogus="1">.
+            //При смене формата содаётся новый <span class='classFormat'>.
+            //В FF в некторых случаях символ каретки(курсора ввода) не удаляется из предыдущего <span> блока при смене формата
+            //из за-чего происход разрыв строки.
+            $(this._tinyEditor.selection.getNode()).find('br[data-mce-bogus="1"]').remove();
+         },
+
+         /**
           * Установить стиль для выделенного текста
           * @param {Object} style Объект, содержащий устанавливаемый стиль текста
           * @private
           */
          setFontStyle: function(style) {
-            //TinyMCE использует для определения положения каретки(курсора ввода) <br data-mce-bogus="1">.
-            //При смене формата содаётся новый <span class='classFormat'>.
-            //В FF в некторых случаях символ каретки(курсора ввода) не удаляется из предыдущего <span> блока при смене формата
-            //из за-чего происход разрыв строки.
-            if (cConstants.browser.firefox &&  $(this._tinyEditor.selection.getNode()).find('br').attr('data-mce-bogus') == '1') {
-               $(this._tinyEditor.selection.getNode()).find('br').remove();
+            if (cConstants.browser.firefox) {
+               this._clearBrDataMceBogus();
             }
             //Удаление текущего форматирования под курсором перед установкой определенного стиля
             ['fontsize', 'forecolor', 'bold', 'italic', 'underline', 'strikethrough'].forEach(function(stl){
@@ -829,6 +844,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   delete formats[prop];
                }
             }
+            if (cConstants.browser.firefox) {
+               this._clearBrDataMceBogus();
+            }
             // Применить новое форматирование
             if (formats.id) {
                this.setFontStyle(formats.id);
@@ -848,7 +866,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   var name = names[i];
                   if (name in formats && formats[name] !== previous[name]) {
                      this.execCommand(name);
-                     hasOther = true;
+                     hasOther = formats[name] || hasOther;
                   }
                }
                if (formats.color && formats.color !== previous.color) {
@@ -1370,17 +1388,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return '&#' + smile.code + ';';
          },
 
-         /**
-          * JavaScript function to match (and return) the video Id
-          * of any valid Youtube URL, given as input string.
-          * @author: Stephan Schmitz <eyecatchup@gmail.com>
-          * @url: http://stackoverflow.com/a/10315969/624466
-          */
-         _getYouTubeVideoId: function(link) {
-            var p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
-            return link.match(p) ? RegExp.$1 : false;
-         },
-
          _bindEvents: function() {
             var
                self = this,
@@ -1430,6 +1437,23 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._inputControl.bind('scroll', function(e) {
                   if (this._imageOptionsPanel) {
                      this._imageOptionsPanel.hide();
+                  }
+               }.bind(this));
+
+               // При нажатии клавиши Del - удалить изображение, если оно выделено
+               // 1174801418 https://online.sbis.ru/opendoc.html?guid=1473813c-1617-4a21-9890-cedd1c692bfd
+               this._inputControl.on('keyup', function (evt) {
+                  if (evt.key === 'Delete' || evt.keyCode === 46) {
+                     var imgOptsPanel = this._imageOptionsPanel;
+                     if (imgOptsPanel && imgOptsPanel.isVisible()) {
+                        var $img = imgOptsPanel.getTarget();
+                        if ($img && $img.length) {
+                           var selection = editor.selection;
+                           selection.select($img[0]);
+                           selection.getRng().deleteContents();
+                           imgOptsPanel.hide();
+                        }
+                     }
                   }
                }.bind(this));
 

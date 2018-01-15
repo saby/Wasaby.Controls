@@ -1078,9 +1078,18 @@ define(
       },
 
       _updateTextFromModel: function() {
+         var text = this._getTextFromModel();
+         if (this._options.text !== text) {
+            this._options.text = text;
+            //снимаем выделение валидатора на время ввода
+            this.clearMark();
+         }
+      },
+
+      _getTextFromModel: function() {
          var formatModel = this._getFormatModel();
          //Если форматное поле не заполено, то в опцию text не нужно класть пустую маску.
-         this._options.text = (formatModel._settedText !== null && typeof formatModel._settedText !== "undefined" && !formatModel.isEmpty(this._getMaskReplacer())) ? formatModel.getText(this._getMaskReplacer()) : formatModel._settedText;
+         return (formatModel._settedText !== null && typeof formatModel._settedText !== "undefined" && !formatModel.isEmpty(this._getMaskReplacer())) ? formatModel.getText(this._getMaskReplacer()) : formatModel._settedText;
       },
 
       _notifyOnTextChange: function() {

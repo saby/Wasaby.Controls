@@ -53,8 +53,6 @@
 //suggest-text-box
 @suggest-text-box-icon-size:                @default-icon-size;
 @suggest-text-box-icon-cross-padding:       0 0 0 @default-padding;
-//suggest-text-box
-@fieldLink-link-cross-size:       @default-icon-size;
 //search-form
 @search-border-radius:            10px;
 @padding_SearchForm:              0 4px 0 12px;
@@ -67,20 +65,76 @@
 @top_searchForm_picker_closeButton:8px;
 @width_browser_search:             300px;
 @width_browser_search_small:       184px;
-//fieldLink
-@fieldLink-icon-size:             @default-icon-size;
-@fieldLink-picker-icon-size:      @default-icon-size;
-@fieldLink-showAll-shadow-width:  20px;
-@fieldLink-linkItem-line-height:  @default-line-height;
-@padding_FieldLink_item_in_picker:0;
-@max-height_FieldLink-beforeFieldWrapper: @default-line-height;
+//FieldLink
+@icon-size_FieldLink-button:                    @default-icon-size;
+@border-width_FieldLink-picker:                 @default-border-width;
+@spacing_FieldLink-showAllLinks_enabled:        @default-padding;
+@width_FieldLink-item-cross:                    20px;
+@font-size_FieldLink-item-caption_normal:       @default-text-size;
+@font-size_FieldLink-item-caption_big:          @large-text-size;
+@max-height_FieldLink-picker:                   500px;
+@min-height_FieldLink-picker:                   16px;
+@spacing_FieldLink-linkContainer:               4px;
+@spacing_FieldLink-item_inField:                @default-padding;
+@spacing_FieldLink-dropAllLinks:                @default-padding;
+@fieldLink-showAll-shadow-width:                20px;
+
+//FieldLink_Link
+@font-size_FieldLink-Link:                      @default-text-size;
 
 // MonthView
-@width_MontView:                  @calendar-width;
+@width_MontView:                  281px;
 @spacing_MonthView-item:          @calendar-day-border-spacing;
 @font-size_MontView-weekDayHeader:12px;
-@height_MonthView-item:           @calendar-day-table-cell-height;
+@height_MonthView-item:           41px;
+@font-size_MonthView-item:        @large-text-size;
+@height_DateRangeBigChoose-dates-months-button: 30px;
+@border-radius_MonthView-item-today: 50%;
+@width__MonthView-item-selected-startEnd-hover: 3px;
+@width_DateRangeBigChoose-range-selected-startEnd-edgeBorder: 3px;
+@border-width_DateRangeBigChoose-range-selected-startEnd:     1px;
+@size_DateRangeBigChoose__stateButton_icon:                   16px;
+@size_DateRangeBigChoose__homeBtn_icon:                       16px;
+// DateRangeBigChoose
+@width_DateRangeBigChoose:                               364px;
+@padding_DateRangeBigChoose-header:                      10px 0 10px 10px;
+@border-width_DateRangeBigChoose:                        1px;
+@padding-left_DateRangeBigChoose-header-period:          12px;
+@margin_DateRangeBigChoose-header-applyButton:      12px;
+@width_DateRangeBigChoose-header-dash:                   2px;
+@margin_DateRangeBigChoose-header-dash:                  0 3px;
+@width_DateRangeBigChoose-header-closeButton:            40px;
+@height_DateRangeBigChoose-years:                        44px;
+@border-width-color_DateRangeBigChoose:                  1px;
+@width_DateRangeBigChoose-years-leftRight:               33px;
+@height_DateRangeBigChoose-years-rangeButton:            30px;
+@font-size_DateRangeBigChoose-years-rangeButton:         14px;
+@height_DateRangeBigChoose-body:                         446px;
+@height_DateRangeBigChoose-MonthRangePickerItem-monthWrapper:     100px;
+@padding_DateRangeBigChoose-MonthRangePickerItem-monthWrapper:    0 4px;
+@border-width_DateRangeBigChoose-MonthRangePickerItem-monthWrapper:1px;
+@width_DateRangeBigChoose-MonthRangePickerItem-monthWrapper:      99px;
+@height_DateRangeBigChoose-MonthRangePickerItem-month-date:       13px;
+@font-size_DateRangeBigChoose-MonthRangePickerItem-month-date:    8px;
+@height_DateRangeBigChoose-MonthRangePickerItem-month-title:      auto;
+@font-size_DateRangeBigChoose-MonthRangePickerItem-month-title:   14px;
+@font-size_DateRangeBigChoose_quartersPanel:                      14px;
+@border-width_DateRangeBigChoose_quartersPanel:                   1px;
+@border-width_DateRangeBigChoose_quartersPanel-right:             3px;
+@border-width_DateRangeBigChoose_halfYearsPanel:                  2px;
 
+@width_DateRangeBigChoose-dates-header-year:                 82px;
+@size_DateRangeBigChoose-DateRangePickerItem-months-button:  14px;
+@padding-left_DateRangeBigChoose-dates-months-button:        11px;
+@font-size_DateRangeBigChoose-dates-months-nextYearButton:   15px;
+@height_DateRangeBigChoose-DateRangePickerItem-monthsWithDates-title:      36px;
+@font-size_DateRangeBigChoose-DateRangePickerItem-monthsWithDates-title:   18px;
+@height_DateRangeChoose-dates-header:                    44px;
+@font-size_DateRangeBigChoose-dates-header:              15px;
+@padding-left_DateRangeBigChoose-dates-header-year:      11px;
+@font-weight_DateRangeBigChoose-dates-header-year:       bold;
+@height_DateRangeBigChoose-dates-months-nextYearButton:  auto;
+@width_DateRangeBigChoose-item-selectedStart-before:     1px;
 //time-header:
 @time-header-icon-size:           @default-icon-size;
 //treeview
@@ -108,7 +162,7 @@
 @miss-spell-padding:              8px;
 //PrintDialog
 @printDialog-button-margin-top:   8px;
-@printDialog-activate-right:      40px;
+@printDialog-activate-right:      49px;
 //operationsMark
 @controls-OperationsMark-separator-line-height: 30px;
 //engine-browser
@@ -126,7 +180,7 @@
 @background-size_ListView_ScrollIndicator: auto;
 @padding-ListView-serviceFooter:                          @controls-view-padding-DEFAULT;
 //ListView_groupBy
-@height_ListView-GroupBy:                                 18px;
+@height_ListView-GroupBy:                                 24px;
 @padding_ListView-GroupBy_separator:                      0 12px;
 @margin_ListView-GroupBy_separatorCollapse:               0 6px 0 0;
 @font-size_ListView-GroupBy_text:                         @small-text-size;
@@ -161,6 +215,8 @@
 
 @back-arrow-width-h6:             9px;
 @back-arrow-height-h6:            11px;
+
+@bread-crumb-home-font-size:      @icon-size_default;
 
 
 //VDOM controls

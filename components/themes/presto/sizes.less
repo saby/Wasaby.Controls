@@ -11,7 +11,7 @@
 @large-text-size:              round(32px * @multiplier);
 @huge-text-size:               round(40px * @multiplier);
 @default-icon-size:            round(32px * @multiplier);
-@default-icon-size-medium:     round(42px * @multiplier);
+@default-icon-size-medium:     ceil(42px * @multiplier); //need 32px if @multiplier === 0.74
 @default-icon-size-large:      round(52px * @multiplier);
 @default-line-height:          round(42px * @multiplier); //42px;
 @default-base-line-height:     round(56px * @multiplier);//@default-height - 2 * @default-border-width
@@ -67,12 +67,11 @@
 @list-view-items-toolbar-icon-size:       round(42px * @multiplier);
 @list-view-items-toolbar-menu-icon-size:  @icon-large-size;
 //fieldlink
-@fieldLink-icon-size:          @default-icon-size-medium;
-@fieldLink-linkItem-cross-width:     @default-icon-size-medium + @default-padding;
-@fieldLink-linkItem-line-height:     round(77px * @multiplier);
-@padding_FieldLink_item_in_picker:   0 0 0 @default-padding;
-@font-size_FieldLink_itemCaption_normal:@large-text-size;
-@font-size_FieldLink_Link:              @large-text-size;
+@icon-size_FieldLink-button:         @default-icon-size-medium;
+@width_FieldLink-item-cross:         @default-icon-size-medium + @default-padding;
+@spacing_FieldLink-dropAllLinks:     @default-padding-small;
+@font-size_FieldLink_Link:           @large-text-size;
+@font-size_FieldLink-item-caption_normal: @large-text-size;
 //searchForm
 @search-form-icon-padding:     0 0 0 round(8px * @multiplier) ;
 //PrintDialog
@@ -174,7 +173,7 @@
 @DropdownList-picker-close-btn-right:                 round(16px * @multiplier);
 @DropdownList-picker-menu-item-height:                round(52px * @multiplier);
 @dropdown-list-item-padding:                          round(12px * @multiplier) round(78px * @multiplier)  round(13px * @multiplier) round(16px * @multiplier);
-@DropdownList-picker-fastdatafilter-offset:           0 0 0 round(15px * @multiplier);
+@DropdownList-picker-fastdatafilter-offset:           0 0 0 round(25px * @multiplier);
 @DropdownList-picker-fdf-left:                        round(-17px * @multiplier);
 @size_DropDownList_filter_cross:                      round(42px * @multiplier);
 @size_DropDownList_arrow:                             round(42px * @multiplier);
@@ -288,7 +287,7 @@
 @left_MenuItem-icon_large:                            0;
 @margin_MenuItem-icon_large:                          0 0 0 round(60px * @multiplier);
 //MenuLink
-@menu-link-menu-margin:                               round(-14px * @multiplier) 0 0 round(-17px * @multiplier);
+@menu-link-menu-margin:                               floor(-14px * @multiplier) 0 0 round(-17px * @multiplier);
 @menu-link-header-font-size:                          @font-size_Popup;
 @font-weight_Menu-header:                            bold;
 //MenuButton
@@ -341,6 +340,10 @@
 @bottomStyle-items-toolbar-iconButton-24-margin-bottom:round(8px * @multiplier);
 @list-view-actions-menu-icon-width:                    round(42px * @multiplier);
 @list-view-items-toolbar-locked-margin-right:          0;
+@width_EditActions-cancelButton:                       round(58px * @multiplier);
+@height_EditActions-cancelButton:                      round(58px * @multiplier);
+@edit-at-place-cancel-button-width:                    round(58px * @multiplier);
+@edit-at-place-cancel-button-height:                   round(58px * @multiplier);
 //EditActions
 @border-radius_EditButton:                      2px;
 @border-width_EditButton:                       0;
@@ -356,3 +359,58 @@
 @time-header-container-block-padding:           round(11px * @multiplier);
 //Toolbar
 @controls-toolbar-default-margin:               round(24px * @multiplier);
+// Date Range Big Choose
+@padding_DateRangeBigChoose-header:                          round(11px * @multiplier) 0 round(11px * @multiplier) round(16px * @multiplier);
+@font-size_DateRangeBigChoose-years-panel-displayed-year:    @large-text-size;
+@font-size_DateRangeBigChoose-years-rangeButton:             @large-text-size;
+@height_DateRangeBigChoose-body:                             round(700px * @multiplier);
+@width_DateRangeBigChoose:                                   round(712px * @multiplier);
+@border-radius_MonthView-item-today:                         0;
+@width__MonthView-item-selected-startEnd-hover:              round(6px * @multiplier);
+@width_DateRangeBigChoose-range-selected-startEnd-edgeBorder:round(6px * @multiplier);
+@width_DateRangeBigChoose-years-leftRight:                   round(81px * @multiplier);
+@height_DateRangeBigChoose-MonthRangePickerItem-monthWrapper:            round(151px * @multiplier);
+@width_DateRangeBigChoose-MonthRangePickerItem-monthWrapper:             round(184px * @multiplier);
+@height_DateRangeBigChoose-MonthRangePickerItem-month-title:             ceil(40px * @multiplier);
+@font-size_DateRangeBigChoose-MonthRangePickerItem-month-title:          round(24px * @multiplier);
+@font-size_DateRangeBigChoose-MonthRangePickerItem-month-date:           round(12px * @multiplier);
+@height_DateRangeBigChoose-MonthRangePickerItem-month-date:              round(16px * @multiplier);
+@font-size_DateRangeBigChoose_quartersPanel:                             @large-text-size;
+@width_MontView:                                                         round(558px * @multiplier);
+@height_DateRangeBigChoose-dates-months-button:                          round(45px * @multiplier);
+@size_DateRangeBigChoose-DateRangePickerItem-months-button:              round(24px * @multiplier);
+@height_MonthView-item:                                                  round(76px * @multiplier);
+@height_DateRangeBigChoose-DateRangePickerItem-monthsWithDates-title:    round(60px * @multiplier);
+@font-size_DateRangeBigChoose-DateRangePickerItem-monthsWithDates-title: @large-text-size;
+@font-size_DateRangeBigChoose-dates-months-nextYearButton:               @large-text-size;
+@height_DateRangeBigChoose-dates-months-nextYearButton:                  round(60px * @multiplier);
+@width_DateRangeBigChoose-item-selectedStart-before:                     round(2px * @multiplier);
+@border-width_DateRangeBigChoose:                                        0;
+@border-width-color_DateRangeBigChoose:                                  0;
+@height_DateRangeChoose-dates-header:                                    round(100px * @multiplier);
+@font-size_DateRangeBigChoose-dates-header:                              @large-text-size;
+@padding-left_DateRangeBigChoose-dates-months-button:                    round(24px * @multiplier);
+@calendar-day-border-spacing:                                            round(3px * @multiplier);
+@margin_DateRangeBigChoose-header-dash:                                  round(8px * @multiplier);
+@border-width_DateRangeBigChoose-MonthRangePickerItem-monthWrapper:      ceil(4px * @multiplier);
+@border-width_DateRangeBigChoose_quartersPanel:                          ceil(4px * @multiplier);
+@border-width_DateRangeBigChoose_quartersPanel-right:                    ceil(4px * @multiplier);
+@border-width_DateRangeBigChoose_halfYearsPanel:                         0;
+@padding_DateRangeBigChoose-MonthRangePickerItem-monthWrapper:           0 round(13px * @multiplier);
+@border-width_DateRangeBigChoose-range-selected-startEnd:                ceil(4px * @multiplier);
+@padding-left_DateRangeBigChoose-dates-header-year:                      round(24px * @multiplier);
+@size_DateRangeBigChoose__stateButton_icon:                              @default-icon-size-medium;
+@size_DateRangeBigChoose__homeBtn_icon:                                  @default-icon-size-large;
+//BackButton
+@back-button-font-size:                         @large-text-size;
+@back-button-arrow-padding-right-2:             round(16px * @multiplier);
+@back-arrow-width-h3:                           round(15px * @multiplier);
+@back-arrow-height-h3:                          round(38px * @multiplier);
+@back-button-height:                            @height_Link;
+//BreadCrumbs
+@breadcrumbs-top:                               round(8.5px * @multiplier);
+@bread-crumb-crumb-margin-left:                 round(8px * @multiplier);
+@breadcrumbs-arrow-top:                         round(8.5px * @multiplier);
+@bread-crumb-crumb-home-top:                    round(6px * @multiplier);
+@breadcrumbs-small-arrow-top:                   0;
+@bread-crumb-home-font-size:                    @icon-size_default_medium;

@@ -181,7 +181,7 @@ define('js!Controls/List', [
 
       scrollTo: function(offset) {
          //TODO без скролл вотчера пока так
-         this._container.closest('.ws-scrolling-content').get(0).scrollTop = offset;
+         this._container.closest('.ws-scrolling-content').scrollTop = offset;
       },
 
       scrollLoadMore: function(self, direction) {
@@ -268,7 +268,8 @@ define('js!Controls/List', [
        */
       initializeAverageItemsHeight: function(self) {
          //TODO брать _container - плохо. Узнаю у Зуева как сделать хорошо
-         var res = self._virtualScroll.calcAverageItemHeight(self._children.listView._container[0]);
+         //Узнал тут, пока остается _container: https://online.sbis.ru/open_dialog.html?guid=01b6161a-01e7-a11f-d1ff-ec1731d3e21f
+         var res = self._virtualScroll.calcAverageItemHeight(self._children.listView._container);
          if (res.changed) {
             _private.applyVirtualWindow(self, res.virtualWindow);
          }
@@ -352,8 +353,8 @@ define('js!Controls/List', [
             //TODO пока создаем ScrollWatcher всегда, когда есть скроллКонтейнер
             //if ((this._options.navigation && this._options.navigation.source === 'page')) {
                var scrollContainer = this._container.closest('.ws-scrolling-content');
-               if (scrollContainer && scrollContainer.length) {
-                  this._scrollController = _private.createScrollController.call(this, scrollContainer[0]);
+               if (scrollContainer) {
+                  this._scrollController = _private.createScrollController.call(this, scrollContainer);
                }
             //}
 
@@ -361,11 +362,11 @@ define('js!Controls/List', [
                //TODO кривое обращение к DOM
                //убарть когда перейду на скролл вотчер от Ильи Девятова
                scrollContainer = this._container.closest('.ws-scrolling-content');
-               if (scrollContainer.length && this._options.navigation.viewConfig && this._options.navigation.viewConfig.pagingMode) {
+               if (scrollContainer && this._options.navigation.viewConfig && this._options.navigation.viewConfig.pagingMode) {
                   var self = this;
                   require(['js!Controls/List/Controllers/ScrollPaging'], function (ScrollPagingController) {
                      self._scrollPagingCtr = new ScrollPagingController({
-                        scrollContainer: scrollContainer.get(0),
+                        scrollContainer: scrollContainer,
                         mode: self._options.navigation.viewConfig.pagingMode
                      });
 
@@ -418,6 +419,9 @@ define('js!Controls/List', [
 
          _afterUpdate: function() {
             _private.initializeAverageItemsHeight(this);
+
+            //Проверим, не достигли ли границ контейнера. Если достигли, возможно нужна подгрузка соседней страницы
+            this._scrollController.checkBoundaryContainer();
          },
 
          __onPagingArrowClick: function(e, arrow) {

@@ -15,8 +15,6 @@
 
    &:not(.controls-ListView__disableHover) {
       .controls-ListView__hoveredItem:not(.controls-editInPlace) {
-         background: @background-color_DataGridView-item_hovered;
-
          .controls-DataGridView__th {
             background-color: @background-color_DataGridView-item_hovered;
          }
@@ -398,6 +396,13 @@
       color: @color_DataGridView-sorting_hovered;
       .controls-Button__text {
          text-decoration: underline;
+      }
+   }
+}
+.ws-is-mobile-android {
+   .controls-DataGridView__headSorting {
+      .controls-Button__icon {
+         line-height:  @font-size_DataGridView-headerIcon - 1;
       }
    }
 }
