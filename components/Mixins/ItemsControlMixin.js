@@ -1098,7 +1098,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
             projection = this._getItemsProjection(),
             data;
 
-         //todo В VDOM логика будет правильной и сделаем без подобных проверок.
+         //todo В VDOM обновление хлебных крошек будет происходить без использования jquery
          if (targetElement.length) {
             if (targetElement.hasClass('controls-HierarchyDataGridView__path')) {
                this._redrawHierarchyPathItem(item);
