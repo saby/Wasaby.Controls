@@ -319,7 +319,8 @@ body {
     display: none !important;
   }
 }
-//todo: временный костыль пока андрей не перепишет вкладки (будет жить вечно)
+//todo: Из-за заданного отступа происходит скачек при переключении вкладок
+//Будет исправлено при переписывании tabButtons на flex
 .controls-TabButton.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__wrapper {
   margin-bottom: 0px !important;
 }
