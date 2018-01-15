@@ -4,12 +4,15 @@ define('js!Controls/Input/Area', [
    /*'WS.Data/Type/descriptor',*/
    'Core/detection',
    'tmpl!Controls/Input/Area/Area',
+   'Controls/Input/resources/PasteHelper',
+
    'css!Controls/Input/Area/Area'
 ], function(Text,
             constants,
             /*types,*/
             detection,
-            template) {
+            template,
+            pasteHelper) {
 
    'use strict';
 
@@ -122,7 +125,7 @@ define('js!Controls/Input/Area', [
       },
 
       paste: function(text) {
-         this._children['inputRender'].paste(text, this._children['realArea']);
+         pasteHelper(this._children['inputRender'], this._children['realArea'], text);
       }
 
    });
