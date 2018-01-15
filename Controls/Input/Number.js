@@ -3,7 +3,7 @@ define('js!Controls/Input/Number', [
    'tmpl!Controls/Input/Number/Number',
    'WS.Data/Type/descriptor',
    'Controls/Input/Number/ViewModel',
-   'Controls/Input/resources/PasteHelper',
+   'Controls/Input/resources/InputHelper',
 
    'js!Controls/Input/resources/InputRender/InputRender',
    'tmpl!Controls/Input/resources/input'
@@ -11,7 +11,7 @@ define('js!Controls/Input/Number', [
              template,
              types,
              NumberViewModel,
-             pasteHelper) {
+             inputHelper) {
 
    'use strict';
    var
@@ -97,7 +97,7 @@ define('js!Controls/Input/Number', [
       },
 
       paste: function(text) {
-         pasteHelper(this._children['inputRender'], this._children['input'], text);
+         inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text);
       }
    });
 

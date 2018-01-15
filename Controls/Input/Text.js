@@ -3,7 +3,7 @@ define('js!Controls/Input/Text', [
       'tmpl!Controls/Input/Text/Text',
       /*'WS.Data/Type/descriptor',*/
       'Controls/Input/Text/ViewModel',
-      'Controls/Input/resources/PasteHelper',
+      'Controls/Input/resources/InputHelper',
 
       'css!Controls/Input/resources/InputRender/InputRender',
       'tmpl!Controls/Input/resources/input'
@@ -11,7 +11,7 @@ define('js!Controls/Input/Text', [
                template,
                /*types,*/
                TextViewModel,
-               pasteHelper) {
+               inputHelper) {
 
       'use strict';
 
@@ -118,7 +118,7 @@ define('js!Controls/Input/Text', [
          },
 
          paste: function(text) {
-            pasteHelper(this._children['inputRender'], this._children['input'], text);
+            inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text);
          }
       });
 
