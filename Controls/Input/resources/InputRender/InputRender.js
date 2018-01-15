@@ -120,7 +120,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
             var
                result;
 
-            if (this._options.validationErrors) {
+            if (this._options.validationErrors && this._options.validationErrors.length) {
                result = 'error';
             } else if (this.isEnabled()) {
                result = 'default';
