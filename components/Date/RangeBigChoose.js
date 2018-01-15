@@ -41,6 +41,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             // months: 'controls-DateRangeBigChoose__dates-months'
          }
       },
+      headerTypes = {
+         link: 'link',
+         inputField: 'inputField'
+      },
       selectionTypes = {
          years: 'years',
          days: 'days'
@@ -77,6 +81,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
               */
             endValueValidators: [],
 
+            headerType: headerTypes.link,
+
             headerTpl: headerTpl,
             yearsPanelTpl: yearsPanelTpl,
 
@@ -103,9 +109,20 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
             _prepareRangeCssClasses: function (prefix, scope) {
                var textColorClass = prefix,
-                  // backgroundColorClass = 'controls-MonthView__backgroundColor',
+                  backgroundColorClass = 'controls-DateRangeBigChoose__years-yearsRangeItem__backgroundColor',
                   // cursorClass = 'controls-MonthView__cursor',
                   css = [];
+
+               if (scope.year.selected) {
+                  backgroundColorClass += '-selected';
+                  if (scope.year.selectedStart || scope.year.selectedEnd) {
+                     if (scope.year.selectionProcessing) {
+                        backgroundColorClass += '-startend-unfinished';
+                     }
+                  }
+               } else {
+                  backgroundColorClass += '-unselected';
+               }
 
                if (scope.year.displayed) {
                   css.push(css_classes.displayedYear);
@@ -144,8 +161,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
                } else if (scope.year.current) {
                   textColorClass += '-current'
                }
-
-               css.push(textColorClass);
+               css.push(textColorClass, backgroundColorClass);
                return css.join(' ');
             },
             _state: states.year,
@@ -950,6 +966,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             item.displayed = year === options.displayedYear;
             item.current = year === currentYear;
             if (!withoutSelection) {
+               item.selectionProcessing = this._rangeSelection;
                item.selected = (year >= startYear && year <= endYear);
                item.selectedStart = (year === startYear);
                item.selectedEnd = (year === endYear);
@@ -962,5 +979,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          return items;
       }
    });
+
+   DateRangeBigChoose.headerTypes = headerTypes;
+
    return DateRangeBigChoose;
 });

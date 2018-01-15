@@ -496,6 +496,7 @@ define(
             obj.selected = date >= startDate && date <= endDate;
             obj.selectedStart = DateUtil.isDatesEqual(date, startDate);
             obj.selectedEnd = DateUtil.isDatesEqual(date, endDate);
+            obj.selectionProcessing = this.isSelectionProcessing();
 
             obj.selectedUnfinishedStart = DateUtil.isDatesEqual(date, startDate) &&
                DateUtil.isDatesEqual(date, selectionRangeEndItem) && !DateUtil.isDatesEqual(startDate, endDate);
@@ -533,6 +534,11 @@ define(
 
             if (scope.selected) {
                backgroundColorClass += '-selected';
+               if (scope.selectedStart || scope.selectedEnd) {
+                  if (scope.selectionProcessing) {
+                     backgroundColorClass += '-startend-unfinished';
+                  }
+               }
             } else {
                backgroundColorClass += '-unselected';
             }

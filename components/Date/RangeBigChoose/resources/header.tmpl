@@ -36,10 +36,12 @@
       name="DateRangeHeader"
       startValue="{{'startValue'|bind}}"
       endValue="{{'endValue'|bind}}"
-      visible="{{false}}"
+      visible="{{headerType === 'link'}}"
+      showNextArrow="{{false}}"
+      showPrevArrow="{{false}}"
       class="controls-DateRangeBigChoose__header-period controls-DateRangeBigChoose__header-period-text"
    />
-   <div class="controls-DateRangeBigChoose__header-period controls-DateRangeBigChoose__header-period-input">
+   <div class="controls-DateRangeBigChoose__header-period controls-DateRangeBigChoose__header-period-input {{headerType === 'link' ? 'ws-hidden' }}">
       <SBIS3.CONTROLS:Date:Box
          tabindex="1"
          mask="{{mask}}"
