@@ -62,8 +62,8 @@
 
 @closeButtonImage:                        url('img/areaCloseButton.png') 0 -1px;
 @closeButtonImageHover:                   url('img/areaCloseButton.png') 0 -25px;
-@closeButtonWidth:                        36px;
-@closeButtonHeight:                       24px;
+@closeButtonWidth:                        35px;
+@closeButtonHeight:                       26px;
 
 @default-itemHover-color:                 #F0F5FB;//Переменную нужно удалить, она дублирует @default-bg-color-hovered-item
 @default-itemSelected-color:              #F3F3F3;
@@ -560,6 +560,7 @@
 @date-picker-button-vertical-align:             center;
 @date-picker-button-size:                       18px;
 @date-picker-button-line-height:                16px;
+@top_DatePicker-closeButton:                    8px;
 // -------- //
 // Calendar //
 // -------- //
@@ -723,8 +724,8 @@
 @edit-at-place-editor-overlay-border-radius:    4px;
 @edit-at-place-editor-overlay-bg:               #f3f3f3 !important;
 @edit-at-place-control-margin:                  0 0 0 12px;
-@edit-at-place-cancel-button-width:             @closeButtonWidth;
-@edit-at-place-cancel-button-height:            @closeButtonHeight;
+@edit-at-place-cancel-button-width:             36px;
+@edit-at-place-cancel-button-height:            24px;
 @edit-at-place-cancel-button-margin:            0 0 0 12px;
 @edit-at-place-cancel-button-bg:                @closeButtonImage;
 @edit-at-place-cancel-button-hover-bg:          @closeButtonImageHover;
@@ -765,7 +766,7 @@
 @list-view-actions-menu-icon-width:             24px;
 @list-view-actions-icon-top:                    4px;
 @list-view-actions-menu-touch-size:             4px 18px;
-@list-view-actions-menu-touch-close-top:        6px;
+@list-view-actions-menu-touch-close-top:        4px;
 @list-view-actions-menu-close-top:              6px;
 @list-view-actions-menu-close-right:            6px;
 @list-view-actions-menu-close-height:           24px;
@@ -800,6 +801,9 @@
 @background-color_EditButton_hovered:           transparent;
 @border-color_EditButton_hovered:               @color_IconButton-icon_done;
 @text-shadow_EditButton:                        transparent;
+//ItemsToolbar
+@width_EditActions-cancelButton:        36px;
+@height_EditActions-cancelButton:       24px;
 // ItemsToolbar small
 @list-view-small-items-toolbar-line-height:         16px;
 @list-view-small-actions-item-height:               16px;
@@ -1081,8 +1085,8 @@
 @controls-filterButton-picker-bg:                 #F4F4F4;
 @controls-filterButton-picker-border-width:       @default-border-width;
 @controls-filterButton-picker-border-color:       @float-area-border-color;
-@controls-filterButton-picker-close-top:          10px;
-@controls-Popup-closeButton-top:                  10px;
+@controls-filterButton-picker-close-top:          8px;
+@controls-Popup-closeButton-top:                  6px;
 @controls-filterButton-button-height:             24px;
 @controls-filterButton-button-width:              24px;
 @controls-filterButton-button-empty-left-margin:  8px;
@@ -1184,8 +1188,8 @@
 @bread-crumb-crumb-home-top:                       0;
 // EditDialog
 @editdialog-applybutton-width:                     auto;
-@editdialog-applybutton-right:                     38px; //ширина кнопки закрытия окна 36px + 2px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
-@editdialog-window-title-margin-right:             128px; //ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 2px на небольшой отступ между ними */
+@editdialog-applybutton-right:                     40px; //ширина кнопки закрытия окна 36px + 4px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
+@editdialog-window-title-margin-right:             130px; //ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 4px на небольшой отступ между ними */
 @editdialog-template-minwidth:                     auto;
 @editdialog-applybutton-top:                       8px;
 //MoveDialog
@@ -1198,7 +1202,7 @@
 @controls-movedialog-padding:                      0 0 5px 0;
 @controls-movedialog-min-height:                   50px;
 // PrintDialog
-@controls-printdialog-activate-right:              40px;
+@controls-printdialog-activate-right:              49px;
 @controls-printdialog-activate-margin-top:         @controls-movedialog-activate-top;
 @controls-printdialog-min-width:                   @controls-movedialog-min-width;
 //InformationPopup
