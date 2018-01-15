@@ -6,3 +6,23 @@
 	display: inline-block;
 	max-width: 100%;
 }
+
+.ws-Suggest__loader {
+	.flex-shrink(0);
+	background: @background_Suggest-loader;
+	background-size: contain;
+	background-position: center;
+	height: 100%;
+	width: @width_Suggest-loader;
+	margin-right: @spacing_Suggest-loader;
+}
+
+.ws-Suggest__clear {
+	.icon-size-without-important();
+	margin: auto;
+	color: @color_Suggest-clear;
+}
+
+.ws-Suggest__afterFieldWrapper {
+	.inline-flexbox();
+}
