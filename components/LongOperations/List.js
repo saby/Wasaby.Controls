@@ -216,7 +216,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
                   actions['suspend'] = {title:rk(model.get('resumeAsRepeat') ? 'Отменить' : 'Приостановить', 'ДлительныеОперации'), icon:'sprite:icon-16 icon-Pause icon-primary action-hover'};
                }
                if (model.get('canSuspend') && status === STATUSES.suspended) {
-                  actions['resume'] = {title:rk(model.get('resumeAsRepeat') ? 'Повторить' : 'Возобновить'), icon:'sprite:icon-16 icon-DayForward icon-primary action-hover'};
+                  actions['resume'] = {title:rk(model.get('resumeAsRepeat') ? 'Повторить' : 'Возобновить', 'ДлительныеОперации'), icon:'sprite:icon-16 icon-DayForward icon-primary action-hover'};
                }
                if (model.get('canDelete')) {
                   actions['delete'] = {title:rk('Удалить'), icon:'sprite:icon-16 icon-Erase icon-error'};
@@ -554,8 +554,8 @@ define('SBIS3.CONTROLS/LongOperations/List',
           */
          _obsoleteResult: function () {
             InformationPopupManager.showMessageDialog({
-               message:rk('Операция устарела.'),
-               details:rk('Выполните повторно.')
+               message:rk('Операция устарела.', 'ДлительныеОперации'),
+               details:rk('Выполните повторно.', 'ДлительныеОперации')
             });
          },
 
@@ -647,7 +647,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
                var resultHandler = useResultHandler && (model.get('resultHandler') || model.get('resultUrl')) ? this._showResult.bind(this, model) : null;
                var resultWayOfUse = resultHandler ? model.get('resultWayOfUse') : null;
                var floatArea = new FloatArea({
-                  title: rk('Журнал выполнения операции'),
+                  title: rk('Журнал выполнения операции', 'ДлительныеОперации'),
                   template: 'SBIS3.CONTROLS/LongOperations/History',
                   componentOptions: this.canHasHistory(model) ? {
                      tabKey: model.get('tabKey'),
