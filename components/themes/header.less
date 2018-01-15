@@ -36,11 +36,15 @@
 }
 
 .ws-header-accent1-hover() {
-   color: @darkcyan-color;
+   body:not(.ws-is-mobile-platform) & {
+      color: @darkcyan-color;
+   }
 }
 
 .ws-header-accent2-hover() {
-   color: @primary-color;
+   body:not(.ws-is-mobile-platform) & {
+      color: @primary-color;
+   }
 }
 
 .ws-header_size_weight {
