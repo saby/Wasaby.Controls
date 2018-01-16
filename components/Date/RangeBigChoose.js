@@ -202,6 +202,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this.getChildControlByName('HomeButton').subscribe('onActivated', this._onHomeButtonClick.bind(this));
 
          this.getChildControlByName('ApplyButton').subscribe('onActivated', this._onApplyButtonClick.bind(this));
+         container.on('click', '.controls-DateRangeBigChoose__header-period-text', this._onHeaderButtonClick.bind(this));
          container.on('click', '.controls-DateRangeBigChoose__closeButton', this._onCloseButtonClick.bind(this));
 
          this.getChildControlByName('PrevYearButton').subscribe('onActivated', this._onPrevOrNextYearBtnClick.bind(this, -1));
@@ -316,6 +317,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
        _onSelectionEnded: function () {
          if (this._startDatePicker.validate() && this._endDatePicker.validate()) {
             this._notify('onChoose', this.getStartValue(), this.getEndValue());
+            this._updateHeaderInputsVisibility();
          }
        },
 
@@ -349,12 +351,28 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             this.cancelSelection();
             this._dateRangePicker.cancelSelection();
             this._notify('onChoose', this.getStartValue(), this.getEndValue());
+            this._updateHeaderInputsVisibility();
          }
       },
+
+      _onHeaderButtonClick: function () {
+         this._toggleHeaderInputsVisibility(true);
+      },
+
+      _toggleHeaderInputsVisibility: function (isInputVisible) {
+         this.getChildControlByName('DateRangeHeader').toggle(!isInputVisible);
+         this.getContainer().find('.controls-DateRangeBigChoose__header-period-input').toggleClass('ws-hidden', !isInputVisible);
+      } ,
+
+      _updateHeaderInputsVisibility: function () {
+         this._toggleHeaderInputsVisibility(this._options.headerType === headerTypes.inputField);
+      },
+
       _onCloseButtonClick: function () {
          this.cancelSelection();
          this._dateRangePicker.cancelSelection();
          this._notify('onCancel', this.getStartValue(), this.getEndValue());
+         this._updateHeaderInputsVisibility();
       },
 
       _toStartMonth: function () {
