@@ -6,13 +6,22 @@
   height: @default-height;
   min-width: @min-width_Button;
   box-sizing: border-box;
-  border-style: solid;
-  border-width: @border-width_Button;
-  .border-radius(@border-radius_Button_default);
   .user-select();
 }
 
+.controls-Button__style-link {
+  cursor: pointer;
+  color: @color_Link-text;
+  &:hover {
+    color: @color_Link-text_hovered;
+    text-decoration: underline;
+  }
+}
+
 .controls-Button__style-primary {
+  border-style: solid;
+  border-width: @border-width_Button;
+  .border-radius(@border-radius_Button_default);
   border-color: @border-color_Button_primary;
 
   &:active {
@@ -23,6 +32,9 @@
 }
 
 .controls-Button__style-default {
+  border-style: solid;
+  border-width: @border-width_Button;
+  .border-radius(@border-radius_Button_default);
   border-color: @border-color_Button;
 
   &:active {
