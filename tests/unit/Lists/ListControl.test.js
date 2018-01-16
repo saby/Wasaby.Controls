@@ -64,7 +64,7 @@ define([
          ctrl._beforeMount(cfg);
 
          //Идет первый запроос данных из dataSource
-         assert.equal(ctrl._loader.isReady(), false);
+         assert.equal(ctrl._loader.isReady(), false, 'Request data must be async');
 
          //Эмуляция navigationController'a
          ctrl._navigationController = {
@@ -75,23 +75,23 @@ define([
 
          //Грузим следующую страницу (загрузки случиться не должно, еще идет первый запрос)
          ListControl._private.scrollLoadMore(ctrl, 'up');
-         assert.equal(ctrl._loader.isReady(), false);
+         assert.equal(ctrl._loader.isReady(), false, 'Request data must be async');
 
          //После загрузки проверяем, что подгрузилась только 1 страница
          setTimeout(function() {
-            assert.equal(ctrl._loader.isReady(), true);
-            assert.equal(ctrl._listModel.getCount(), 1);
+            assert.equal(ctrl._loader.isReady(), true, 'Request data must be is ready');
+            assert.equal(ctrl._listModel.getCount(), 1, 'Incorrect itemsCount after first load');
 
             //Вызываем несколько раз scrollLoadMore, по факту выполниться должна только одна подгрузка
             ListControl._private.scrollLoadMore(ctrl, 'up');
             ListControl._private.scrollLoadMore(ctrl, 'up');
             ListControl._private.scrollLoadMore(ctrl, 'up');
-            assert.equal(ctrl._loader.isReady(), false);
+            assert.equal(ctrl._loader.isReady(), false, 'Request data must be async');
 
             setTimeout(function() {
                //Проверяем, что подгружилась только 1 страница, всего стало 2 записи
-               assert.equal(ctrl._loader.isReady(), true);
-               assert.equal(ctrl._listModel.getCount(), 2);
+               assert.equal(ctrl._loader.isReady(), true, 'Request data must be is ready');
+               assert.equal(ctrl._listModel.getCount(), 2, 'Incorrect itemsCount after three scrollLoadMore');
                done();
             }, 0);
          }, 0);
