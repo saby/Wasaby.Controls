@@ -1,4 +1,4 @@
-<span attr:class="controls-ButtonBase controls-Button controls-Button__style-{{!!isEnabled() ? _options.style : 'disabled'}}"
+<span attr:class="controls-ButtonBase controls-Button controls-Button__style-{{_options.style}}{{!isEnabled() ? '-disabled'}}"
       attr:title="{{_options.tooltip}}">
     <span attr:class="controls-Button__wrapper controls-Button__wrapper_style-{{_options.style}}">
         <ws:if data="{{!!_options.icon}}">

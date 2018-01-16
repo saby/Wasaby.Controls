@@ -14,7 +14,16 @@
   color: @color_Link-text;
   &:hover {
     color: @color_Link-text_hovered;
-    text-decoration: underline;
+    .controls-Button__text {
+      text-decoration: underline;
+    }
+  }
+}
+
+.controls-Button__style-link-disabled{
+  color: @color_Link-text_disabled;
+  .controls-Button__icon {
+    color: @color_Link-text_disabled !important;
   }
 }
 
@@ -44,10 +53,12 @@
   }
 }
 
-.controls-Button__style-disabled {
+.controls-Button__style-primary-disabled,  .controls-Button__style-default-disabled{
+  border-style: solid;
+  border-width: @border-width_Button;
+  .border-radius(@border-radius_Button_default);
   cursor: default;
   color: @default-disabled-color;
-  border: @border_Button_disabled;
   background: @background_Button_disabled;
 
   .controls-Button__icon {
