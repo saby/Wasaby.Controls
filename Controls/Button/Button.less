@@ -27,10 +27,13 @@
   }
 }
 
-.controls-Button__style-primary {
+.controls-Button__style-default, .controls-Button__style-primary, .controls-Button__style-primary-disabled,  .controls-Button__style-default-disabled {
   border-style: solid;
   border-width: @border-width_Button;
   .border-radius(@border-radius_Button_default);
+}
+
+.controls-Button__style-primary {
   border-color: @border-color_Button_primary;
 
   &:active {
@@ -41,9 +44,6 @@
 }
 
 .controls-Button__style-default {
-  border-style: solid;
-  border-width: @border-width_Button;
-  .border-radius(@border-radius_Button_default);
   border-color: @border-color_Button;
 
   &:active {
@@ -54,9 +54,6 @@
 }
 
 .controls-Button__style-primary-disabled,  .controls-Button__style-default-disabled{
-  border-style: solid;
-  border-width: @border-width_Button;
-  .border-radius(@border-radius_Button_default);
   cursor: default;
   color: @default-disabled-color;
   background: @background_Button_disabled;
