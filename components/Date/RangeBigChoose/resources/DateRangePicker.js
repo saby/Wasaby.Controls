@@ -10,7 +10,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
    'SBIS3.CONTROLS/Date/RangeBigChoose/resources/CalendarSource',
    'Lib/LayoutManager/LayoutManager',
    'SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin',
-   "SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView"
+   "SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView",
+   'SBIS3.CONTROLS/ScrollContainer'
 ], function (constants, Deferred, ListView, ItemTmpl, RangeMixin, Base, DateUtils, cInstance, CalendarSource, LayoutManager, RangeSelectableViewMixin) {
    'use strict';
 
@@ -31,12 +32,25 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
             month: null,
             idProperty: 'id',
             itemTpl: ItemTmpl,
-            // infiniteScroll: 'both',
             pageSize: 1,
-            cssClassName: 'controls-DateRangeBigChoose-DateRangePicker'
+            cssClassName: 'controls-DateRangeBigChoose-DateRangePicker',
+            // infiniteScroll: 'down',
+            infiniteScroll: 'both',
+            infiniteScrollContainer: '.controls-DateRangeBigChoose__dates-dates-wrapper',
+            virtualScrolling: true,
+
+            // showPaging: false
+
+            navigation: {
+               type: 'cursor',
+               config: {
+                  field: 'id',
+                  // position: 40,
+                  direction: 'both'
+              }
+            }
          },
          _lastOverControl: null,
-         _offset: CalendarSource.defaultOffset,
          _innerComponentsValidateTimer: null,
          _selectionRangeEndItem: null,
          // _selectionType: null
@@ -47,8 +61,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
 
       init: function () {
          var self = this,
-            container = this.getContainer(),
-            now = new Date();
+            container = this.getContainer();
 
          this._onMonthViewRageChanged = this._onMonthViewRageChanged.bind(this);
          this._onMonthViewBeforeSelectionStarted = this._onMonthViewBeforeSelectionStarted.bind(this);
@@ -125,15 +138,14 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
 
       _getOffsetByMonth: function (month) {
-         var now = new Date();
-         return CalendarSource.defaultOffset + (month.getFullYear() - now.getFullYear()) * this.getPageSize();
+         return month.getFullYear();
       },
 
       _onDateRangePickerDrawItems: function () {
          var self = this,
             // controls = this.getItemsInstances(),
             control;
-         Component.superclass._drawItemsCallback.apply(this, arguments);
+         // Component.superclass._drawItemsCallback.apply(this, arguments);
          this.forEachMonthView(function(control) {
             control.unsubscribe('onSelectionEnded', self._onSelectionEnded);
             control.subscribe('onSelectionEnded', self._onSelectionEnded);

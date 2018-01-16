@@ -1,12 +1,26 @@
 .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView {
    .box-sizing(border-box);
-   overflow: hidden;
 }
 
 .controls-DateRangeBigChoose-MonthRangePickerItem {
-   .flexbox();
+
    //background-color: #f4f4f4;
 }
+.controls-DateRangeBigChoose-MonthRangePickerItem__header {
+   height: @height_DateRangeBigChoose_monthPicker-header;
+   line-height: @height_DateRangeBigChoose_monthPicker-header;
+   text-align: center;
+   color: @color_DateRangeBigChoose_monthPicker-header;
+   font-size: @font-size_DateRangeBigChoose_monthPicker-header;
+   font-weight: bold;
+   border-top: @border-top-width_DateRangeBigChoose_monthPicker-header solid @border-color_DateRangeBigChoose_monthPicker;
+   border-bottom: @border-bottom-width_DateRangeBigChoose_monthPicker-header solid @border-color_DateRangeBigChoose_monthPicker;
+}
+
+.controls-DateRangeBigChoose-MonthRangePickerItem__body {
+   .flexbox();
+}
+
 .controls-DateRangeBigChoose-MonthRangePickerItem__halfYearsPanel,
 .controls-DateRangeBigChoose-MonthRangePickerItem__quartersPanel {
    .flexbox();

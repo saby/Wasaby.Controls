@@ -1,4 +1,7 @@
-define('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', ['Core/core-instance'], function(cInstance) {
+define('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', [
+   'Core/core-instance',
+   'Core/helpers/Function/runDelayed'
+], function(cInstance, runDelayed) {
    /**
     * Миксин, добавляющий поведение выделения интервала из нескольких фиксированных элементов
     * @mixin SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin
@@ -398,7 +401,8 @@ define('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', ['Core/core-instance'],
       validateRangeSelectionItemsView: function () {
          var self = this;
          if (!this._rangeSelectionViewValidateTimer) {
-            this._rangeSelectionViewValidateTimer = setTimeout(this._validateRangeSelectionItemsView.bind(this), 0);
+            this._rangeSelectionViewValidateTimer = true;
+            runDelayed(this._validateRangeSelectionItemsView.bind(this));
          }
       },
 
@@ -407,7 +411,7 @@ define('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', ['Core/core-instance'],
        * @private
        */
       _validateRangeSelectionItemsView: function () {
-         this._rangeSelectionViewValidateTimer = null;
+         this._rangeSelectionViewValidateTimer = false;
          this._drawCurrentRangeSelection();
       },
 
