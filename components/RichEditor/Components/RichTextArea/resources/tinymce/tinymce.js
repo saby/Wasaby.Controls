@@ -33781,7 +33781,9 @@
                   e.clipboardData.setData('text/html', rng.startOffset === 0 && rng.commonAncestorContainer.nodeType === 3 && rng.endOffset === rng.commonAncestorContainer.nodeValue.length && !sel.dom.isBlock(sel.getNode())
                               ? sel.dom.getOuterHTML(sel.getNode()) : sel.getContent());
                   var text = sel.getContent({format:'text'});
-                  e.clipboardData.setData('text/plain', navigator.userAgent.search(/\bwindows\b/i) !== -1 ? text.replace(/\n/gi, '\r\n') : text);
+                  // В хроме и эксплорере нужно заменить переводы строк на windows-ные
+                  // 32963 https://online.sbis.ru/opendoc.html?guid=853f36e3-4a3a-4e12-988c-53af66d78094
+                  e.clipboardData.setData('text/plain', !Env.gecko && navigator.userAgent.search(/\bwindows\b/i) !== -1 ? text.replace(/\n/gi, '\r\n') : text);
 
                   // Needed delay for https://code.google.com/p/chromium/issues/detail?id=363288#c3
                   // Nested delete/forwardDelete not allowed on execCommand("cut")
