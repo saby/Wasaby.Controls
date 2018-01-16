@@ -84,7 +84,7 @@ define('js!Controls/Input/resources/SuggestPopupController',
          },
          
          hidePopup: function() {
-            _private.getSearchController(this).abort();
+            return _private.getSearchController(this).abort();
             this._popupOpener.close();
          },
          
