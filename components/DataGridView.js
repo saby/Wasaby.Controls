@@ -114,7 +114,7 @@ define('SBIS3.CONTROLS/DataGridView',
             return value;
          },
          getCellValue = function(currentValue, field, item, ladder, ladderColumns){
-            return Array.indexOf(ladderColumns, field) > -1 && !ladder.isPrimary(item, field) ? '' : currentValue;
+            return ladderColumns.indexOf(field) > -1 && !ladder.isPrimary(item, field) ? '' : currentValue;
          },
          buildTplArgsLadder = function(args, cfg) {
             args.ladder = cfg._ladderInstance;
