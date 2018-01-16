@@ -30,11 +30,11 @@ define('js!Controls/Input/resources/SuggestController',
          _private.searchStart(self);
          _private.getSuggestPopupController(self).addCallback(function(suggestPopupController) {
             suggestPopupController.setSearchFilter(_private.getSearchFilter(self));
-            suggestPopupController.setPopupOptions(_private.getPopupOptions(self)).addBoth(function(res) {
+            suggestPopupController.setPopupOptions(_private.getPopupOptions(self));
+            suggestPopupController.showPopup().addBoth(function(res) {
                _private.searchEnd(self);
                return res;
             });
-            suggestPopupController.showPopup();
             return suggestPopupController;
          });
       },
