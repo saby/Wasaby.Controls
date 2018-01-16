@@ -64,6 +64,9 @@ define('Controls/Input/Text/ViewModel',
             }
          });
 
+      //Приходится записывать _private в свойство, для доступа из unit-тестов
+      TextViewModel._private = _private;
+
       return TextViewModel;
    }
 );
