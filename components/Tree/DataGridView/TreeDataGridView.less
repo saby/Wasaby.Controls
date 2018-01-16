@@ -67,12 +67,14 @@
       }
    }
    &.controls-GridView__searchMode {
-      .controls-DataGridView__th, .controls-DataGridView__td {
-         &.controls-DataGridView__firstContentCell {
-            padding-left: @controls-view-padding-DEFAULT;
-         }
-         &:last-child {
-            padding-right: @controls-view-padding-DEFAULT;
+      &:not(.controls-ListView__multiselect) {
+         .controls-DataGridView__th, .controls-DataGridView__td {
+            &.controls-DataGridView__firstContentCell {
+               padding-left: @controls-view-padding-DEFAULT;
+            }
+            &:last-child {
+               padding-right: @controls-view-padding-DEFAULT;
+            }
          }
       }
       .controls-DataGridView__th {
