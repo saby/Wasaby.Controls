@@ -357,6 +357,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
       _onHeaderButtonClick: function () {
          this._toggleHeaderInputsVisibility(true);
+         this._startDatePicker.setActive(true);
       },
 
       _toggleHeaderInputsVisibility: function (isInputVisible) {
