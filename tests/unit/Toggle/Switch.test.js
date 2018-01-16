@@ -3,15 +3,18 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
    var SW, changeValue;
    describe('Controls.Toggle.Switch', function () {
       beforeEach(function(){
-         if (typeof $ === 'undefined') {
-            this.skip();
-         }
          SW = new Switch({
             captions: ['capt1']
          });
-         SW.subscribe('valueChanged', function (e, eventChangeValue) {
-            changeValue = eventChangeValue
-         });
+         //subscribe на vdom компонентах не работает, поэтому мы тут переопределяем _notify
+         //(дефолтный метод для vdom компонент который стреляет событием).
+         //он будет вызван вместо того что стрельнет событием, тем самым мы проверяем что отправили
+         //событие и оно полетит с корректными параметрами.
+         SW._notify = function(event, eventChangeValue){
+            if(event==='valueChanged'){
+               changeValue = eventChangeValue;
+            }
+         };
       });
 
       afterEach(function () {
