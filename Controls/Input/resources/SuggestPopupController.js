@@ -80,7 +80,7 @@ define('js!Controls/Input/resources/SuggestPopupController',
          },
          
          showPopup: function() {
-            _private.search(this).addCallback(_private.showPopup.bind(this, this));
+            return  _private.search(this).addCallback(_private.showPopup.bind(this, this));
          },
          
          hidePopup: function() {

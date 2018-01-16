@@ -138,12 +138,19 @@ define('js!Controls/List', [
                .addErrback(fHelpers.forAliveOnly(function(err){
                   _private.processLoadError(self, err);
                }, self));
-            this._loader = def;
+            self._loader = def;
             return def;
          }
          else {
             throw new Error('Option dataSource is undefined. Can\'t load data');
          }
+      },
+
+      /**
+       * Идет ли загрузка данных с БЛ
+       */
+      isLoading: function(self) {
+         return self._loader && !self._loader.isReady();
       },
 
       processLoadError: function(self, error) {
@@ -187,7 +194,7 @@ define('js!Controls/List', [
       scrollLoadMore: function(self, direction) {
          //TODO нужна компенсация при подгрузке вверх
 
-         if (self._navigationController && self._navigationController.hasMoreData(direction)) {
+         if (self._navigationController && self._navigationController.hasMoreData(direction) && !_private.isLoading(self)) {
             _private.loadToDirection(self, direction);
          }
       },
@@ -419,6 +426,11 @@ define('js!Controls/List', [
 
          _afterUpdate: function() {
             _private.initializeAverageItemsHeight(this);
+
+            //Проверим, не достигли ли границ контейнера. Если достигли, возможно нужна подгрузка соседней страницы
+            if (this._scrollController) {
+               this._scrollController.checkBoundaryContainer();
+            }
          },
 
          __onPagingArrowClick: function(e, arrow) {
@@ -450,6 +462,6 @@ define('js!Controls/List', [
     dataSource: Types(ISource)
     }
     };*/
-
+   ListControl._private = _private;
    return ListControl;
 });

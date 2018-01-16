@@ -54,6 +54,15 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
          },
 
          /**
+          * TODO Временное решение пока не будет найдено другое
+          * https://online.sbis.ru/opendoc.html?guid=9579d6c6-a743-4b35-96ae-0d270d1cada0
+          * @noShow
+          */
+         getZIndex: function(){
+            return this._zIndex;
+         },
+
+         /**
           * Добавить нотификационной окно в стек
           * @param inst Инстанс нотификационного окна
           * @param {Boolean} notHide Не прятать окно по истечению времени жизни

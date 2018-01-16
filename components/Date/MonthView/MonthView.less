@@ -56,7 +56,7 @@
    content: "";
    position: absolute;
    height: 100%;
-   width: 3px;
+   width: @width__MonthView-item-selected-startEnd-hover;
    background-color: @border-color__MonthView-item-selected-startEnd-hover;
    top: 0;
    left: -1px;
@@ -66,7 +66,7 @@
    content: "";
    position: absolute;
    height: 100%;
-   width: 3px;
+   width:  @width__MonthView-item-selected-startEnd-hover;
    background-color: @border-color__MonthView-item-selected-startEnd-hover;
    top: 0;
    right: -1px;
@@ -108,18 +108,17 @@
 
 .controls-MonthView__today {
    color: @color_MonthView-item-today;
-   &:before {
-      content: "";
-      position: absolute;
-      //height: calc(100% - 2px);
-      //width: calc(100% - 2px);
-      top: 1px;
-      bottom: 1px;
-      left: 1px;
-      right: 1px;
-      border-radius: 50%;
-      background-color: @background-color_MonthView-item-today;
-   }
+}
+.controls-MonthView__item-today-background {
+   position: absolute;
+   //height: calc(100% - 2px);
+   //width: calc(100% - 2px);
+   top: 1px;
+   bottom: 1px;
+   left: 1px;
+   right: 1px;
+   border-radius: @border-radius_MonthView-item-today;
+   background-color: @background-color_MonthView-item-today;
 }
 
 .controls-MonthView__item-title {

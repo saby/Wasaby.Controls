@@ -11,15 +11,30 @@ define('js!Controls/Input/resources/SuggestController',
    'use strict';
    
    var _private = {
+      searchStart: function(self) {
+         if (self._options.searchStartCallback) {
+            self._options.searchStartCallback();
+         }
+      },
+      
+      searchEnd: function(self) {
+         if (self._options.searchEndCallback) {
+            self._options.searchEndCallback();
+         }
+      },
       /**
        * Search and show popup
        * @param self
        */
       showPopup: function(self) {
+         _private.searchStart(self);
          _private.getSuggestPopupController(self).addCallback(function(suggestPopupController) {
             suggestPopupController.setSearchFilter(_private.getSearchFilter(self));
             suggestPopupController.setPopupOptions(_private.getPopupOptions(self));
-            suggestPopupController.showPopup();
+            suggestPopupController.showPopup().addBoth(function(res) {
+               _private.searchEnd(self);
+               return res;
+            });
             return suggestPopupController;
          });
       },
@@ -31,6 +46,7 @@ define('js!Controls/Input/resources/SuggestController',
       hidePopup: function(self) {
          _private.getSuggestPopupController(self).addCallback(function (suggestPopupController) {
             suggestPopupController.hidePopup();
+            _private.searchEnd(self);
             return suggestPopupController;
          });
       },
@@ -80,6 +96,13 @@ define('js!Controls/Input/resources/SuggestController',
             }
             return self._suggestPopupController;
          });
+      },
+      
+      destroy: function(self) {
+         if (self._suggestPopupController) {
+            self._suggestPopupController.hidePopup();
+            self._suggestPopupController = null;
+         }
       }
    };
    
@@ -104,10 +127,7 @@ define('js!Controls/Input/resources/SuggestController',
       },
       
       destroy: function() {
-         if (this._suggestPopupController) {
-            this._suggestPopupController.destroy();
-            this._suggestPopupController = null;
-         }
+         _private.destroy(this);
          SuggestController.superclass.destroy.call(this);
       },
    

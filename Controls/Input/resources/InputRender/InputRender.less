@@ -87,6 +87,10 @@
    .align-items(center);
 }
 
+.controls-InputRender__placeholder_simple {
+   pointer-events: none;
+}
+
 //На controls-InputRender__placeholder нельзя вешать text-overflow, потому что флексы не обрезаются
 .controls-InputRender__placeholder__overflow {
    .text-overflow();
@@ -107,10 +111,6 @@
 
 .controls-InputRender__field:invalid + .controls-InputRender__placeholder {
    .inline-flexbox();
-}
-
-.controls-InputRender__field:invalid {
-   color: @color_TextBox-placeholder;
 }
 
 // риусем информационный треугольник через border, чтобы он занимал свои физические размеры

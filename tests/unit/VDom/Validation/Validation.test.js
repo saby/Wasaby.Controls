@@ -54,7 +54,7 @@ define([
                         runDelayed(function () { // ждем синхронизатор
                            runDelayed(function () { // ждем runDelayed из DOMEnvironment который нужен для reviveSuperOldControls
                               runDelayed(function () { // ждем когда пройдет валидация
-                                 assert.deepEqual(testControl._children.textBox._options.validationError, [false]);
+                                 assert.deepEqual(testControl._children.textBox._options.validationErrors, [false]);
 
                                  testControl.setText('ya@ya.ya');
                                  runDelayed(function () { // ждем синхронизатор
@@ -63,7 +63,7 @@ define([
                                        runDelayed(function () { // ждем синхронизатор
                                           runDelayed(function () { // ждем runDelayed из DOMEnvironment который нужен для reviveSuperOldControls
                                              runDelayed(function () { // ждем когда пройдет валидация
-                                                assert.deepEqual(testControl._children.textBox._options.validationError, true);
+                                                assert.deepEqual(testControl._children.textBox._options.validationErrors, null);
                                                 done();
                                              });
                                           });
@@ -92,7 +92,7 @@ define([
                      setTimeout(function () { // ждем когда оживятся дети
                         check(done, testControl, {0: [false] }, function () {
                            testControl._afterUpdate = function () {
-                              check(done, testControl, {0: true }, function () {
+                              check(done, testControl, {0: null }, function () {
                                  done();
                               });
                            };
@@ -120,7 +120,7 @@ define([
                                  testControl._afterUpdate = function () {
                                     check(done, testControl, {0: [false] }, function () {
                                        testControl._afterUpdate = function () {
-                                          check(done, testControl, {0: true }, function () {
+                                          check(done, testControl, {0: null }, function () {
                                              done();
                                           });
                                        };

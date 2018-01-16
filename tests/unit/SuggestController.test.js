@@ -26,6 +26,22 @@ define(
       
       describe('Controls.Input.SuggestController', function () {
    
+         it('.destroy', function() {
+            var selfTest = getTestAbstract(),
+                isAborted = false;
+            
+            selfTest._suggestPopupController = {
+               hidePopup: function(){
+                  isAborted = true;
+               }
+            };
+            
+            SuggestController._private.destroy(selfTest);
+            
+            assert.isTrue(isAborted, 'search query is not aborted');
+            assert.equal(selfTest._suggestPopupController, null, 'suggestPopupController is not destroyed');
+         });
+         
          it('.showPopup', function(done) {
             var selfTest = getTestAbstract(),
                 result = false;
@@ -135,6 +151,34 @@ define(
                   });
                });
             });
+         });
+   
+         it('.searchStart', function() {
+            var selfTest = getTestAbstract(),
+                searching = false;
+      
+            selfTest._options = {};
+   
+            SuggestController._private.searchStart(selfTest);
+            assert.isFalse(searching);
+            
+            selfTest._options.searchStartCallback = function(){searching = true};
+            SuggestController._private.searchStart(selfTest);
+            assert.isTrue(searching);
+         });
+   
+         it('.searchEnd', function() {
+            var selfTest = getTestAbstract(),
+               searching = true;
+   
+            selfTest._options = {};
+   
+            SuggestController._private.searchEnd(selfTest);
+            assert.isTrue(searching);
+   
+            selfTest._options.searchEndCallback = function(){searching = false};
+            SuggestController._private.searchEnd(selfTest);
+            assert.isFalse(searching);
          });
          
       });

@@ -12,11 +12,13 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
    "tmpl!SBIS3.CONTROLS/Tree/DataGridView/resources/ItemContentTemplate",
    "tmpl!SBIS3.CONTROLS/Tree/DataGridView/resources/FooterWrapperTemplate",
    "tmpl!SBIS3.CONTROLS/Tree/DataGridView/resources/searchRender",
+   "Core/helpers/Function/runDelayed",
+   "Core/helpers/Function/forAliveOnly",
    "Core/ConsoleLogger",
    'SBIS3.CONTROLS/Link',
    'css!SBIS3.CONTROLS/Tree/DataGridView/TreeDataGridView',
    'css!SBIS3.CONTROLS/Tree/View/TreeView'
-], function( cMerge, constants, CommandDispatcher, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
+], function( cMerge, constants, CommandDispatcher, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, runDelayed, forAliveOnly) {
 
 
    var
@@ -481,7 +483,7 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
             }
             /* Если стрелка заползает на операции над записью -> увеличиваем отступ */
             if(needCorrect) {
-               leftOffset -= leftOffset - toolbarLeft + this.getEditArrow().getContainer().width(); //Левая граница тулбара + ширина стрелки
+               leftOffset -= leftOffset - toolbarLeft + this.getEditArrow().getContainer().outerWidth(true); //Левая граница тулбара + ширина стрелки c учётом margin
             }
             /* backgorund'a у стрелки быть не должно, т.к. она может отображаться на фоне разного цвета,
                но если мы корректрируем положение, то надо навесить background, чтобы она затемняла текст */
@@ -539,9 +541,7 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
 
       _showEditArrow: function() {
          var hoveredItem = this.getHoveredItem(),
-             hoveredItemContainer = hoveredItem.container,
-             editArrowContainer = this.getEditArrow().getContainer(),
-             folderTitle, titleTd, editArrowMarker, projItem;
+             editArrowContainer, folderTitle, titleTd, editArrowMarker, projItem, hoveredItemContainer;
          
          if(this._hasHoveredItem()) {
             projItem = this._getItemsProjection().getItemBySourceItem(hoveredItem.record);
@@ -553,14 +553,18 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
             3) Режим поиска (по стандарту)
             4) projItem'a может не быть при добавлении по месту */
          if(projItem && projItem.isNode() && this.getEditArrow().isVisible() && !this._isSearchMode()) {
-            folderTitle = hoveredItemContainer.find('.controls-TreeView__folderTitle');
-            titleTd = folderTitle.closest('.controls-DataGridView__td', hoveredItemContainer);
-            editArrowMarker = this._getEditArrowMarker(titleTd);
-
-            if(editArrowMarker.length) {
-               editArrowContainer.removeClass('ws-hidden');
-               editArrowContainer.css(this._getEditArrowPosition(titleTd, folderTitle, editArrowMarker));
-            }
+            runDelayed(forAliveOnly(function() {
+               hoveredItemContainer = hoveredItem.container;
+               folderTitle = hoveredItemContainer.find('.controls-TreeView__folderTitle');
+               titleTd = folderTitle.closest('.controls-DataGridView__td', hoveredItemContainer);
+               editArrowMarker = this._getEditArrowMarker(titleTd);
+      
+               if(editArrowMarker.length) {
+                  editArrowContainer = this.getEditArrow().getContainer();
+                  editArrowContainer.removeClass('ws-hidden');
+                  editArrowContainer.css(this._getEditArrowPosition(titleTd, folderTitle, editArrowMarker));
+               }
+            }, this));
          } else {
             this._hideEditArrow();
          }
