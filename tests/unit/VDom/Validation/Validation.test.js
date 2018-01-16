@@ -54,7 +54,7 @@ define([
                         runDelayed(function () { // ждем синхронизатор
                            runDelayed(function () { // ждем runDelayed из DOMEnvironment который нужен для reviveSuperOldControls
                               runDelayed(function () { // ждем когда пройдет валидация
-                                 assert.deepEqual(testControl._children.textBox._options.validationError, [false]);
+                                 assert.deepEqual(testControl._children.textBox._options.validationErrors, [false]);
 
                                  testControl.setText('ya@ya.ya');
                                  runDelayed(function () { // ждем синхронизатор
@@ -63,7 +63,7 @@ define([
                                        runDelayed(function () { // ждем синхронизатор
                                           runDelayed(function () { // ждем runDelayed из DOMEnvironment который нужен для reviveSuperOldControls
                                              runDelayed(function () { // ждем когда пройдет валидация
-                                                assert.deepEqual(testControl._children.textBox._options.validationError, null);
+                                                assert.deepEqual(testControl._children.textBox._options.validationErrors, null);
                                                 done();
                                              });
                                           });
