@@ -274,11 +274,14 @@ define('js!Controls/List', [
        * @param self
        */
       initializeAverageItemsHeight: function(self) {
-         //TODO брать _container - плохо. Узнаю у Зуева как сделать хорошо
-         //Узнал тут, пока остается _container: https://online.sbis.ru/open_dialog.html?guid=01b6161a-01e7-a11f-d1ff-ec1731d3e21f
-         var res = self._virtualScroll.calcAverageItemHeight(self._children.listView._container);
-         if (res.changed) {
-            _private.applyVirtualWindow(self, res.virtualWindow);
+         //listView не создается, когда записей нет.
+         if (self._children.listView) {
+            //TODO брать _container - плохо. Узнаю у Зуева как сделать хорошо
+            //Узнал тут, пока остается _container: https://online.sbis.ru/open_dialog.html?guid=01b6161a-01e7-a11f-d1ff-ec1731d3e21f
+            var res = self._virtualScroll.calcAverageItemHeight(self._children.listView._container);
+            if (res.changed) {
+               _private.applyVirtualWindow(self, res.virtualWindow);
+            }
          }
       }
    };
