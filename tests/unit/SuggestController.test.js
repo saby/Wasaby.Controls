@@ -157,11 +157,11 @@ define(
    
             selfTest._options = {};
    
-            SuggestController._private.searchStart(selfTest);
+            SuggestController._private.searchEnd(selfTest);
             assert.isTrue(searching);
    
-            selfTest._options.searchStartCallback = function(){searching = true};
-            SuggestController._private.searchStart(selfTest);
+            selfTest._options.searchEndCallback = function(){searching = false};
+            SuggestController._private.searchEnd(selfTest);
             assert.isFalse(searching);
          });
          
