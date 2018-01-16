@@ -462,6 +462,6 @@ define('js!Controls/List', [
     dataSource: Types(ISource)
     }
     };*/
-
+   ListControl._private = _private;
    return ListControl;
 });
