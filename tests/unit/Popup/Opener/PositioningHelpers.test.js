@@ -17,39 +17,57 @@ define(
                height: 400
             };
             it('sticky positioning', function() {
-               var position = Sticky.getPosition(targetCoords, {}, {}, 300, 300, 1920, 1040);
+               var position = Sticky.getPosition(targetCoords, {
+                  'vertical': 'top',
+                  'horizontal': 'left'
+               }, {}, {}, 300, 300, 1920, 1040);
                assert.isTrue(position.top === 200);
                assert.isTrue(position.left === 300);
             });
 
             it('sticky positioning with offset', function() {
-               var position = Sticky.getPosition(targetCoords, {offset: 200}, {offset: 200}, 300, 300, 1920, 1040);
+               var position = Sticky.getPosition(targetCoords, {
+                  'vertical': 'top',
+                  'horizontal': 'left'
+               }, {offset: 200}, {offset: 200}, 300, 300, 1920, 1040);
                assert.isTrue(position.top === 400);
                assert.isTrue(position.left === 500);
             });
 
             it('sticky positioning vertical align top', function() {
-               var position = Sticky.getPosition(targetCoords, {}, {side: 'top'}, 100, 100, 1920, 1040);
+               var position = Sticky.getPosition(targetCoords, {
+                  'vertical': 'top',
+                  'horizontal': 'left'
+               }, {}, {side: 'top'}, 100, 100, 1920, 1040);
                assert.isTrue(position.top === 100);
                assert.isTrue(position.left === 300);
             });
 
             it('sticky positioning horizontal align right', function() {
-               var position = Sticky.getPosition(targetCoords, {side: 'right'}, {}, 300, 300, 1920, 1040);
+               var position = Sticky.getPosition(targetCoords, {
+                  'vertical': 'top',
+                  'horizontal': 'left'
+               }, {side: 'left'}, {}, 300, 300, 1920, 1040);
                assert.isTrue(position.top === 200);
                assert.isTrue(position.left === 0);
             });
 
             it('sticky positioning vertical align top reversed', function() {
-               var position = Sticky.getPosition(targetCoords, {}, {side: 'top'}, 300, 300, 1920, 1040);
-               assert.isTrue(position.top === 200);
+               var position = Sticky.getPosition(targetCoords, {
+                  'vertical': 'top',
+                  'horizontal': 'left'
+               }, {}, {side: 'top'}, 300, 300, 1920, 1040);
+               assert.isTrue(position.top === 600);
                assert.isTrue(position.left === 300);
             });
 
             it('sticky positioning horizontal align right reversed', function() {
-               var position = Sticky.getPosition(targetCoords, {side: 'right'}, {}, 400, 300, 1920, 1040);
+               var position = Sticky.getPosition(targetCoords, {
+                  'vertical': 'top',
+                  'horizontal': 'left'
+               }, {side: 'left'}, {}, 400, 300, 1920, 1040);
                assert.isTrue(position.top === 200);
-               assert.isTrue(position.left === 300);
+               assert.isTrue(position.left === 700);
             });
          });
 

@@ -18,9 +18,30 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
    function (UserInfo, cMerge, Deferred, EventBus, /*###strHelpers,*/ TabMessage, /*###WaitIndicator,*/ NotificationPopup, LongOperationEntry, headerTemplate, contentTpl, footerTpl, FloatArea) {
       'use strict';
 
+      /**
+       * Константа (как бы) фильтра для отбора только не приостановленных операций
+       * @private
+       * @type {string}
+       */
       var FILTER_NOT_SUSPENDED = 'not-suspended';
 
+      /**
+       * Константа (как бы) текста по-умолчанию для индикатора ожидания
+       * @private
+       * @type {string}
+       */
       var DEFAULT_WAITINDICATOR_TEXT = rk('Пожалуйста, подождите…');
+
+      /**
+       * Константа (как бы) набора заголовков по-умолчанию для кнопки показа результата (в шапке попапа)
+       * @private
+       * @type {object}
+       */
+      var RESULT_BUTTON_TITLES = {
+         download: 'Скачать',
+         open:     'Открыть',
+         viewLog:  'Журнал'
+      };
 
       /**
        * Класс всплывающего информационное окна длительных операций
@@ -287,34 +308,37 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             this.setStatus(statusName);
             this.setIcon(iconClass);
 
-            var STATUSES = LongOperationEntry.STATUSES;
-            var model = this._activeOperation;
-            var butCaption;
-            if (model.get('status') === STATUSES.ended) {
-               var wayOfUse = model.get('resultWayOfUse');
-               if (!model.get('isFailed')) {
-                  if (model.get('resultUrl')) {
-                     butCaption = wayOfUse || 'Скачать';
-                  }
-                  else
-                  if (model.get('resultHandler')) {
-                     butCaption = wayOfUse || 'Открыть';
-                  }
-                  else
-                  if (1 < model.get('progressTotal') && this._longOpList.canHasHistory(model)) {
-                     butCaption = wayOfUse || 'Журнал';
-                  }
-               }
-               else {
-                  butCaption = wayOfUse || 'Журнал';
-               }
-            }
-
+            var butCaption = this._getResultButtonCaption(this._activeOperation);
             var hasButton = !!butCaption;
             var button = this.getChildControlByName('downloadButton');
             button.setVisible(hasButton);
             if (hasButton) {
                button.setCaption(rk(butCaption));
+            }
+         },
+
+         /**
+          * Получить заголовок для кнопки результата операции
+          * @protected
+          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
+          * @return {string}
+          */
+         _getResultButtonCaption: function (model) {
+            if (model) {
+               var action = this._longOpList.describeMainAction(model);
+               if (action) {
+                  switch (action.type) {
+                     case 'result':
+                        return model.get('resultWayOfUse') || RESULT_BUTTON_TITLES[model.get('resultHandler') ? 'open' : 'download'];
+                        break;
+                     case 'history':
+                        return /*model.get('resultWayOfUse') ||*/ RESULT_BUTTON_TITLES.viewLog;
+                        break;
+                     case 'custom':
+                        return action.title;
+                        break;
+                  }
+               }
             }
          },
 

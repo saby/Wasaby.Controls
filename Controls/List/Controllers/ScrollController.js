@@ -156,11 +156,11 @@ define('js!Controls/List/Controllers/ScrollController', [
        */
       checkBoundaryContainer: function() {
          if (_private.isScrollOnBottom(this._options.scrollContainer)) {
-            this._options.eventHandlers.onLoadTriggerBottom();
+            this._options.eventHandlers.onLoadTriggerBottom && this._options.eventHandlers.onLoadTriggerBottom();
          }
 
          if (_private.isScrollOnTop(this._options.scrollContainer)) {
-            this._options.eventHandlers.onLoadTriggerTop();
+            this._options.eventHandlers.onLoadTriggerTop && this._options.eventHandlers.onLoadTriggerTop();
          }
       }
 
