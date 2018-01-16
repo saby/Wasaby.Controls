@@ -5,7 +5,7 @@
             <i attr:class="controls-Button__icon {{_options.icon}}"></i>
         </ws:if>
         <ws:if data="{{!!_options.caption}}">
-           <span attr:class="controls-Button__text{{_options.icon ? ' controls-Button__text_gap'}}">{{_options.caption}}</span>
+           <span attr:class="controls-Button__text {{isEnabled() ? 'controls-Button__icon-'+_options.style+'-disabled'}} {{_options.icon ? ' controls-Button__text_gap'}}">{{_options.caption}}</span>
         </ws:if>
     </span>
 </span>

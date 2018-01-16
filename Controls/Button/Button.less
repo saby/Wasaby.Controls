@@ -22,9 +22,6 @@
 
 .controls-Button__style-link-disabled{
   color: @color_Link-text_disabled;
-  .controls-Button__icon {
-    color: @color_Link-text_disabled !important;
-  }
 }
 
 .controls-Button__style-default, .controls-Button__style-primary, .controls-Button__style-primary-disabled,  .controls-Button__style-default-disabled {
@@ -57,11 +54,12 @@
   cursor: default;
   color: @default-disabled-color;
   background: @background_Button_disabled;
-
-  .controls-Button__icon {
-    color: @icon-color-disabled !important;
-  }
 }
+
+.controls-Button__icon-primary-disabled, .controls-Button__icon-default-disabled, .controls-Button__icon-link-disabled{
+  color: @icon-color-disabled !important;
+}
+
 .controls-Button__wrapper_style-primary, .controls-Button__wrapper_style-default {
   padding: @padding_Button-wrapper_default;
   .justify-content(center);
