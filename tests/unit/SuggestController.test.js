@@ -152,6 +152,34 @@ define(
                });
             });
          });
+   
+         it('.searchStart', function() {
+            var selfTest = getTestAbstract(),
+                searching = false;
+      
+            selfTest._options = {};
+   
+            SuggestController._private.searchStart(selfTest);
+            assert.isFalse(searching);
+            
+            selfTest._options.searchStartCallback = function(){searching = true};
+            SuggestController._private.searchStart(selfTest);
+            assert.isTrue(searching);
+         });
+   
+         it('.searchEnd', function() {
+            var selfTest = getTestAbstract(),
+               searching = true;
+   
+            selfTest._options = {};
+   
+            SuggestController._private.searchEnd(selfTest);
+            assert.isTrue(searching);
+   
+            selfTest._options.searchEndCallback = function(){searching = false};
+            SuggestController._private.searchEnd(selfTest);
+            assert.isFalse(searching);
+         });
          
       });
       
