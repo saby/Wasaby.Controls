@@ -477,30 +477,6 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
          },
 
          /**
-          * Проверить, относится ли событие об изменении состояния операции к текущей активной операции
-          * @protected
-          * @param {object} data Данные события об изменении состояния операции
-          * @return {boolean}
-          */
-         _hasMathActiveOperation: function (data) {
-            var active = this._activeOperation;
-            if (active && data && active.get('producer') === data.producer) {
-               var tab = active.get('tabKey');
-               if (!tab || !data.tabKey || tab === data.tabKey) {
-                  if (data.operationId) {
-                     return active.get('id') === data.operationId;
-                  }
-                  else
-                  if (data.workflowId) {
-                     var extra = active.get('extra');
-                     return extra && extra.workflow === data.workflowId;
-                  }
-               }
-            }
-            return false;
-         },
-
-         /**
           * Обработать событие
           * @protected
           * @param {string} eventType Тип события
@@ -517,6 +493,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
                case 'onlongoperationchanged':
                   var active = this._activeOperation;
+                  var longOpList = this._longOpList;
                   switch (data.changed) {
                      case 'status':
                         switch (data.status) {
@@ -527,12 +504,12 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                         }
                         break;
                      case 'progress':
-                        if (this._hasMathActiveOperation(data)) {
+                        if (active && active === longOpList.lookupItem(data)) {
                            this._setProgress(data.progress.value, data.progress.total, false);
                         }
                         break;
                      case 'notification':
-                        if (this._hasMathActiveOperation(data)) {
+                        if (data.notification && active && active === longOpList.lookupItem(data)) {
                            this._setNotification(data.notification);
                         }
                         break;
@@ -541,7 +518,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
                case 'onlongoperationended':
                   this._setProgress(data.progress ? data.progress.value : 1, data.progress ? data.progress.total : 1, true);
-                  var model = this._longOpList.lookupItem(data.tabKey, data.producer, data.operationId);
+                  var model = this._longOpList.lookupItem(data);
                   if (model) {
                      this._activeOperation = model;
                      this._updateState();
