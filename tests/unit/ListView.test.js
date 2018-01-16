@@ -92,6 +92,19 @@ define([
             view.destroy();
          })
       });
+
+      describe('setSelectedItemsAll', function () {
+         it('same keys', function () {
+            var view = new ListView({
+               items: [{id: 1}, {id: 1}],
+               multiselectable: true,
+               idProperty: 'id'
+            });
+            view.setSelectedItemsAll();
+            assert.deepEqual(view.getSelectedKeys(), [1]);
+            view.destroy();
+         });
+      });
    
       describe('change recordset', function () {
          it('change IdProperty', function () {
