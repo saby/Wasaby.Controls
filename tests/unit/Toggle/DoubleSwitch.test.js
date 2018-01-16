@@ -99,6 +99,10 @@ define(['js!Controls/Toggle/DoubleSwitch'], function (Switch) {
                captions: ['capt1','capt2']
             });
             switcherClickedFlag = false;
+            //subscribe на vdom компонентах не работает, поэтому мы тут переопределяем _notify
+            //(дефолтный метод для vdom компонент который стреляет событием).
+            //он будет вызван вместо того что стрельнет событием, тем самым мы проверяем что
+            //событие полетит с корректными параметрами.
             SW._notify = function(event){
                if(event==='valueChanged'){
                   switcherClickedFlag = true;
