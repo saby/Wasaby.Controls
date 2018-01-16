@@ -3,15 +3,14 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
    var SW, changeValue;
    describe('Controls.Toggle.Switch', function () {
       beforeEach(function(){
-         if (typeof $ === 'undefined') {
-            this.skip();
-         }
          SW = new Switch({
             captions: ['capt1']
          });
-         SW.subscribe('valueChanged', function (e, eventChangeValue) {
-            changeValue = eventChangeValue
-         });
+         SW._notify = function(event, eventChangeValue){
+            if(event==='valueChanged'){
+               changeValue = eventChangeValue;
+            }
+         };
       });
 
       afterEach(function () {
