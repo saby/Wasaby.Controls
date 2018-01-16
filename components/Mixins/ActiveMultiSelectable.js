@@ -186,7 +186,9 @@ define('SBIS3.CONTROLS/Mixins/ActiveMultiSelectable', ['WS.Data/Entity/Model', '
                   newItems.push(rec);
                }
             });
-         } else if(!self._isItemSelected(items.at(0))) {
+         } else {
+            /* Если добавляеют запись с идентификатором, который уже есть в наборе,
+               то её надо заменить, т.к. у записи могли поменяться поля */
             newItems.push(items.at(0));
          }
 
