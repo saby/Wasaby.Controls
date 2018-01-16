@@ -275,7 +275,7 @@ define('SBIS3.CONTROLS/TextBox', [
          cfg.beforeFieldWrapper = TemplateUtil.prepareTemplate(cfg.beforeFieldWrapper);
          cfg.afterFieldWrapper = TemplateUtil.prepareTemplate(cfg.afterFieldWrapper);
          if (cfg.placeholder) {
-            cfg._isSimplePlaceholder = typeof cfg.placeholder === 'string';
+            cfg._isSimplePlaceholder = typeof cfg.placeholder === 'string' && cfg.placeholder.indexOf('data-component') === -1;
          }
          return cfg;
       },
@@ -650,7 +650,7 @@ define('SBIS3.CONTROLS/TextBox', [
 
       _createCompatiblePlaceholder: function() {
          if (!this._compatPlaceholder) {
-            this._options._isSimplePlaceholder = typeof this._options.placeholder === 'string';
+            this._options._isSimplePlaceholder = typeof this._options.placeholder === 'string' && this._options.placeholder.indexOf('data-component') === -1;
             this._compatPlaceholder = $(this._options.compatiblePlaceholderTemplate(this._options));
             this._inputField.after(this._compatPlaceholder);
             this.reviveComponents();

@@ -543,6 +543,7 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
             _recent: null,
             _oldItems: null,
             _filteredFrequent: null,
+            _needToRedrawHistory: false,
             _count: 0
         },
 
@@ -576,6 +577,10 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
                 });
             } else {
                 if (this._historyDeffered.isReady()) {
+                    if(this._needToRedrawHistory){
+                        _private.prepareHistory(self);
+                        this._needToRedrawHistory = false;
+                    }
                     SbisMenu.superclass.show.apply(self, arguments);
                 }
             }
@@ -606,7 +611,7 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
                     });
 
                     _private.addToRecent(this, origId, newItem);
-                    _private.prepareHistory(this);
+                    this._needToRedrawHistory = true;
                 }
                 // стрелять нужно старым id
                 _private.addToHistory(this, origId);

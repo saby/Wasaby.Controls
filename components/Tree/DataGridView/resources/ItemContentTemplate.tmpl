@@ -1,7 +1,7 @@
 <ws:for data="index, column in columns">
     <ws:if data="{{(!foldersColspan || !isNode || (isNode && index < 1))}}">
         <td colspan="{{(foldersColspan && isNode) ? columns.length : ''}}"
-            class="controls-DataGridView__td {{column.editor ? 'controls-DataGridView__edited-td' : ''}} {{column.className|orEmpty}} {{hasScroll ? (startScrollColumn <= index ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}} {{index == 0 ? 'controls-DataGridView__firstContentCell' : ''}} {{hoveredColumn.columnIndex === index ? 'controls-DataGridView__hoveredColumn__cell' : ''}}"
+            class="controls-DataGridView__td {{column.editor ? 'controls-DataGridView__edited-td' : ''}} {{column.className|orEmpty}} {{hasScroll ? (startScrollColumn <= index ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}} {{(index + 1 === columns.length) ? 'controls-DataGridView__lastContentCell'}} {{index == 0 ? 'controls-DataGridView__firstContentCell' : ''}} {{hoveredColumn.columnIndex === index ? 'controls-DataGridView__hoveredColumn__cell' : ''}}"
             style="{{ startScrollColumn <= index ? ('transform:translateX(' + columnsShift + 'px);') }}">
             <ws:if data="{{index == 0}}">
                 <div class="controls-TreeDataGridView__levelPaddingWrap">

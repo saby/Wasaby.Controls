@@ -398,7 +398,7 @@ define('SBIS3.CONTROLS/FieldLink',
           _updateTextBoxVisibility: function() {
              var
                 drawHiddenTextBoxField = !this.getMultiselect() && this.getSelectedKeys().length > 0 && !this._options.alwaysShowTextBox;
-             this._container.find('.controls-TextBox__field').toggleClass('ws-hidden', drawHiddenTextBoxField);
+             this._container.find('.controls-TextBox__field').toggleClass('ws-invisible', drawHiddenTextBoxField);
           },
 
           init: function() {
@@ -1072,7 +1072,10 @@ define('SBIS3.CONTROLS/FieldLink',
                                 .toggleClass(classes.SELECTED_SINGLE, keysArrLen === 1);
 
              if(!this._options.alwaysShowTextBox && !this.getMultiselect() && hasSelectedKeys) {
+                $('.controls-InputRender__fieldWrapper', this.getContainer()).addClass('ws-invisible');
                 this.hidePicker();
+             } else {
+                $('.controls-InputRender__fieldWrapper', this.getContainer()).removeClass('ws-invisible');
              }
 
              if (keysArrLen) {

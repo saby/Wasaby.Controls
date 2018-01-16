@@ -10,8 +10,6 @@
   height: @default-height @important;
   background-color: #405A77 @important;
   background-image: none @important;
-  -webkit-box-shadow: @box-shadow_Button !important;
-  -moz-box-shadow: @box-shadow_Button !important;
   box-shadow: @box-shadow_Button !important;
   .border-radius(@border-radius_Button_default);
 
@@ -66,9 +64,9 @@ body {
       height: round(100px * @multiplier);
    }
 
-  .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
+  /*.controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
     font-size: round(32px * @multiplier);
-  }
+  }*/
 
   .controls-DateRangeBigChoose__dates-dates-top-gradient, .controls-DateRangeBigChoose__dates-dates-bottom-gradient {
     display: none;
@@ -85,7 +83,7 @@ body {
       .controls-Button .controls-Button__icon.icon-large {
       top: 50%
     }
-   .controls-DateRangeBigChoose {
+   /*.controls-DateRangeBigChoose {
       // в онлайне в большом выборе периода иконки разного размера, а тут одинаковые 3rem
       .icon-16, .icon-24, .icon-small{
          font-size: round(84px * @multiplier) !important;
@@ -93,15 +91,15 @@ body {
          width: round(84px * @multiplier);
          height: round(84px * @multiplier);
       }
-   }
+   }*/
 }
 
 // SBIS3.CORE.CloseButton используется в DateRangeSlider. Удалить после того как выпилим SBIS3.CORE.CloseButton
-.controls-DateRangeBigChoose .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled.ws-button-classic {
+/*.controls-DateRangeBigChoose .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled.ws-button-classic {
    width: round(84px * @multiplier) !important;
    height: round(84px * @multiplier) !important;
    // Перед тем как править стили для кнопки закрытия прочитай комментарий по .ws-float-close.sbisname-window-title-close
-}
+}*/
 
 //Удалить, как будет темизация для engine.
 .controls-Browser {
@@ -113,10 +111,14 @@ body {
    .controls-Browser__table {
       .controls-Browser__tableCell-filterButton {
          .controls__filterButton {
-            margin-top: 10px;
+         /*   margin-top: 10px;*/
+           margin: 0px;
          }
       }
    }
+  .controls-Browser__filterButton .controls__filterButton__filterLine-text {
+     height: auto;
+  }
 }
 
 .controls-ComboBox__picker {
@@ -214,19 +216,19 @@ body {
    }
 }
 
-body {
+/*body {
    .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
     font-size: round(32px * @multiplier);
   }
-}
+}*/
 
 .controls-DateRangeBigChoose__dates-dates-top-gradient, .controls-DateRangeBigChoose__dates-dates-bottom-gradient {
   display: none;
 }
 
-.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header {
+/*.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header {
     height: round(84px * @multiplier);
-}
+}*/
 
 .controls-editInPlace .controls-editInPlace__editor {
   background: @controls-editInPlace-editor-bg;
@@ -394,9 +396,9 @@ body {
   border: none !important;
 }
 
-body .controls-DateRangeBigChoose__years-yearsRange-btn:hover {
+/*body .controls-DateRangeBigChoose__years-yearsRange-btn:hover {
   color: #fff;
-}
+}*/
 
 .controls-ToolBar .controls-ToolBar__menuIcon {
     vertical-align: baseline;
@@ -554,7 +556,7 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
   border-left-width: round(3px * @multiplier);
 }
 //!IMPORTANT лучше чем увеличение веса селектора через BODY тк возможно собирать тему под селектором
-.ws-window-titlebar-action {
+.ws-float-close, .ws-window-titlebar-action {
   top: @top_window_button !important;
 }
 //ОКНА И ЭРИИ ИЗ WS`А

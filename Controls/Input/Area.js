@@ -4,12 +4,15 @@ define('js!Controls/Input/Area', [
    /*'WS.Data/Type/descriptor',*/
    'Core/detection',
    'tmpl!Controls/Input/Area/Area',
+   'Controls/Input/resources/InputHelper',
+
    'css!Controls/Input/Area/Area'
 ], function(Text,
             constants,
             /*types,*/
             detection,
-            template) {
+            template,
+            inputHelper) {
 
    'use strict';
 
@@ -119,6 +122,10 @@ define('js!Controls/Input/Area', [
 
       _scrollHandler: function(){
          _private.updateScroll.call(this);
+      },
+
+      paste: function(text) {
+         inputHelper.pasteHelper(this._children['inputRender'], this._children['realArea'], text);
       }
 
    });

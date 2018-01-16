@@ -131,7 +131,7 @@
    &.controls-ListView__item__multiSelected:not(.controls-ListView__hoveredItem) {
       .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
          &.controls-DataGridView__notScrolledCell {
-            background-color: @data-grid-multiselect-notScrolledCell-Color;
+            background-color: @background-color_DataGridView-notScrolledCell;
          }
       }
    }
@@ -155,12 +155,12 @@
       }
    }
    &.controls-DataGridView__notScrolledCell {
-      background-color: @data-grid-partScroll-notScrolledCell-Color;
+      background-color: @background-color_DataGridView-notScrolledCell;
       border-left: none;
       border-right: none;
       z-index: 1;
       &.controls-DataGridView__th {
-         background-color: @data-grid-partScroll-notScrolledCell-Color;
+         background-color: @background-color_DataGridView-notScrolledCell;
       }
    }
    &.controls-DataGridView-cell-verticalAlignTop {
@@ -417,7 +417,7 @@
    &.controls-DataGridView__firstContentCell {
       padding-left: @controls-view-padding-DEFAULT;
    }
-   &:last-child {
+   &.controls-DataGridView__lastContentCell {
       padding-right: @controls-view-padding-DEFAULT;
    }
 }

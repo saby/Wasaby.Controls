@@ -8,6 +8,7 @@
            selectOnClick="{{_options.selectOnClick}}"
            viewModel="{{_textViewModel}}"
            tagStyle="{{_options.tagStyle}}"
+           validationErrors="{{_options.validationErrors}}"
            attr:class="controls-InputArea"
            on:valueChanged="_changeValueHandler()"
            on:inputCompleted="_inputCompletedHandler()"
@@ -25,7 +26,8 @@
                     on:keydown="_keyDownHandler()"
                     on:focus="_focusHandler()"
                     on:scroll="_scrollHandler()"
-            >{{_value}}</textarea>
+                    value="{{_value}}"
+            ></textarea>
 
             <div class="controls-fakeTextArea__firstWrapper">
                <div class="controls-fakeTextArea__secondWrapper">

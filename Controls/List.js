@@ -419,6 +419,11 @@ define('js!Controls/List', [
 
          _afterUpdate: function() {
             _private.initializeAverageItemsHeight(this);
+
+            //Проверим, не достигли ли границ контейнера. Если достигли, возможно нужна подгрузка соседней страницы
+            if (this._scrollController) {
+               this._scrollController.checkBoundaryContainer();
+            }
          },
 
          __onPagingArrowClick: function(e, arrow) {

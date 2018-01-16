@@ -216,6 +216,20 @@
    }
 }
 
+.controls-EditActions__cancelButton {
+   width: @width_EditActions-cancelButton;
+   height: @height_EditActions-cancelButton;
+   margin-right:  @margin-right_ListView-itemsToolbar-closeButton;
+   background: @background_EditActions-closeButton;
+   cursor: pointer;
+   &:hover {
+      background: @background_EditActions-closeButton_active;
+   }
+   &:active {
+      background: @background_EditActions-closeButton_active;
+   }
+}
+
 .itemsToolbar-leftSwipeAnimation {
    .animation(itemsToolbar-leftSwipe, @list-view-items-toolbar-animate-duration );
 }
