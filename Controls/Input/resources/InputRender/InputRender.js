@@ -131,6 +131,12 @@ define('js!Controls/Input/resources/InputRender/InputRender',
             return result;
          },
 
+         _focusHandler: function(e) {
+            if (this._options.selectOnClick) {
+               e.target.select();
+            }
+         },
+
          /**
           * Метод вставляет строку text вместо текущего выделенного текста в инпуте
           * Если текст не выделен, то просто вставит text на позицию каретки
