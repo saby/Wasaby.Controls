@@ -487,15 +487,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          },
 
          setActive: function(active) {
-            var
-               args = [].slice.call(arguments),
-               editor, manager;
             this._lastActive = active;
             if (active && this._needFocusOnActivated() && this.isEnabled()) {
                this._performByReady(function() {
                   //Активность могла поменяться пока грузится tinymce.js
                   if (this._lastActive) {
                      this._tinyEditor.focus();
+                     // Если сейчас есть контент - поставить курсор ввода в его конец
+                     // 24823 https://online.sbis.ru/opendoc.html?guid=cd2659d7-0066-4207-bade-b77edb462684
+                     if (this.getText()) {
+                        this.setCursorToTheEnd();
+                     }
                      if (cConstants.browser.isMobileAndroid) {
                         // на android устройствах не происходит подскролла нативного
                         // наш функционал тестируется на планшете фирмы MI на котором клавиатура появляется долго ввиду анимации =>
@@ -516,9 +518,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             }
             else {
                if (!active) {
-                  editor = this._tinyEditor;
+                  var editor = this._tinyEditor;
                   if (editor) {
-                     manager = editor.editorManager;
+                     var manager = editor.editorManager;
                      // Если компонент должен стать неактивным - нужно сбросить фокусированный редактор (Аналогично обработчику 'focusout' в TinyMCE в строке 40891)
                      if (manager && manager.focusedEditor === editor) {
                         manager.focusedEditor = null;
@@ -532,7 +534,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   EventBus.globalChannel().notify('MobileInputFocusOut');
                }
             }
-            RichTextArea.superclass.setActive.apply(this, args);
+            RichTextArea.superclass.setActive.apply(this, arguments);
          },
 
          destroy: function() {
