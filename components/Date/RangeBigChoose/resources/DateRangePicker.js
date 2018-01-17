@@ -136,9 +136,13 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
             if (!DateUtils.isYearsEqual(month, oldMonth)) {
                // TODO: временный хак. Базовый класс не релоудит данные если не установлен showPaging
                this.setOffset(this._getOffsetByMonth(month));
-               this.reload();
+               this.reload().addCallback(function (list) {
+                  this._updateScrollPosition();
+                  return list;
+               }.bind(this));
+            } else {
+               this._updateScrollPosition();
             }
-            this._updateScrollPosition();
          }
       },
 
