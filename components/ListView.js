@@ -3229,7 +3229,7 @@ define('SBIS3.CONTROLS/ListView',
                return isEqual;
             }
 
-            if(toolbar && itemsActions){
+            if(toolbar && toolbarTarget && itemsActions){
                if(checkEqualItem() && (toolbar.isToolbarLocking() || this._options.itemsActionsInItemContainer)){
                    toolbar.unlockToolbar();
                    toolbar.hide();
