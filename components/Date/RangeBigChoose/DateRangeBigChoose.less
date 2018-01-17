@@ -71,11 +71,12 @@
 
 .controls-DateRangeBigChoose__closeButton.controls-PopupMixin__closeButton {
    //width: @width_DateRangeBigChoose-header-closeButton;
-   position: initial;
+   position: static;
 }
 
 // панель выбора периода через года
 .controls-DateRangeBigChoose__years {
+   .flex-shrink(0);
    .flexbox();
    border-bottom: @border-width-color_DateRangeBigChoose solid @border-color_DateRangeBigChoose;
    height: @height_DateRangeBigChoose-years;
@@ -174,12 +175,12 @@
    height: @height_DateRangeBigChoose-body;
    top: 0;
    bottom: 0;
-   overflow: hidden;
+   .flexbox();
+   .flex-direction(column);
 }
 
 .controls-DateRangeBigChoose__months-month {
    height: 100%;
-   overflow: hidden;
 }
 
 .controls-DateRangeBigChoose__dates {
@@ -187,7 +188,6 @@
    .flexbox();
    .flex-direction(column);
    position: relative;
-   overflow: hidden;
 }
 
 .controls-DateRangeBigChoose__dates-header {
@@ -223,13 +223,6 @@
 }
 
 .controls-DateRangeBigChoose__dates-dates-wrapper {
-   overflow-y: scroll;
-   overflow-x: hidden;
    .flex-shrink(1);
    .flex-grow(1);
-}
-
-.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates {
-   // временный хак для скролла
-   margin: 80px 0 270px;
 }
