@@ -1,12 +1,26 @@
 .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView {
    .box-sizing(border-box);
-   overflow: hidden;
 }
 
 .controls-DateRangeBigChoose-MonthRangePickerItem {
-   .flexbox();
+
    //background-color: #f4f4f4;
 }
+.controls-DateRangeBigChoose-MonthRangePickerItem__header {
+   height: @height_DateRangeBigChoose_monthPicker-header;
+   line-height: @height_DateRangeBigChoose_monthPicker-header;
+   text-align: center;
+   color: @color_DateRangeBigChoose_monthPicker-header;
+   font-size: @font-size_DateRangeBigChoose_monthPicker-header;
+   font-weight: bold;
+   border-top: @border-top-width_DateRangeBigChoose_monthPicker-header solid @border-color_DateRangeBigChoose_monthPicker;
+   border-bottom: @border-bottom-width_DateRangeBigChoose_monthPicker-header solid @border-color_DateRangeBigChoose_monthPicker;
+}
+
+.controls-DateRangeBigChoose-MonthRangePickerItem__body {
+   .flexbox();
+}
+
 .controls-DateRangeBigChoose-MonthRangePickerItem__halfYearsPanel,
 .controls-DateRangeBigChoose-MonthRangePickerItem__quartersPanel {
    .flexbox();
@@ -35,13 +49,14 @@
    z-index: 2;
 }
 
-.controls-DateRangeBigChoose-MonthRangePicker__hovered {
-   outline: @border-color_DateRangeBigChoose-range-unselected-hover solid 1px;
-   background-color: @background-color_DateRangeBigChoose-range-selected-unfinishedEdge;
+.controls-DateRangeBigChoose-MonthRangePickerItem__backgroundColor-item-selected,
+.controls-DateRangeBigChoose-MonthRangePickerItem__backgroundColor-item-selected {
+   background-color: @background-color_DateRangeBigChoose-range-selected-inner;
 }
 
-.controls-DateRangeBigChoose-MonthRangePickerItem__item-selected {
-   background-color: @background-color_DateRangeBigChoose-range-selected-inner;
+.controls-DateRangeBigChoose-MonthRangePickerItem__backgroundColor-item-selected-startend-unfinished,
+.controls-DateRangeBigChoose-MonthRangePickerItem__backgroundColor-item-selected-startend-unfinished {
+   background-color: @background-color_DateRangeBigChoose-range-selected-unfinishedEdge;
 }
 
 .controls-DateRangeBigChoose-MonthRangePickerItem__item-selectedStart,
@@ -56,14 +71,9 @@
    margin-bottom: @border-width_DateRangeBigChoose-MonthRangePickerItem-monthWrapper !important;
 }
 
-.controls-DateRangeBigChoose-MonthRangePickerItem__item-selectedUnfinishedEdge {
-   background-color: @background-color_DateRangeBigChoose-range-selected-startEnd;
-}
-
 .controls-DateRangeBigChoose-MonthRangePickerItem__item-selectedStart {
    position: relative;
    outline: @border-color_DateRangeBigChoose-range-selected-startEnd solid 1px;
-   background-color: @background-color_DateRangeBigChoose-range-selected-startEnd;
    &:before {
       content: "";
       position: absolute;
@@ -78,7 +88,6 @@
 .controls-DateRangeBigChoose-MonthRangePickerItem__item-selectedEnd {
    position: relative;
    outline: @border-color_DateRangeBigChoose-range-selected-startEnd solid @border-width_DateRangeBigChoose-range-selected-startEnd;
-   background-color: @background-color_DateRangeBigChoose-range-selected-startEnd;
    &:after {
       content: "";
       position: absolute;
@@ -88,6 +97,11 @@
       top: 0;
       right: -1px;
    }
+}
+
+.controls-DateRangeBigChoose-MonthRangePicker__hovered {
+   outline: @border-color_DateRangeBigChoose-range-unselected-hover solid 1px;
+   background-color: @background-color_DateRangeBigChoose-range-selected-unfinishedEdge;
 }
 
 .controls-DateRangeBigChoose-MonthRangePickerItem__quarter {
@@ -130,6 +144,12 @@
    height: @height_DateRangeBigChoose-MonthRangePickerItem-month-title;
 }
 
+.controls-DateRangeBigChoose-MonthRangePickerItem__halfYear-selected,
+.controls-DateRangeBigChoose-MonthRangePickerItem__quarter-selected {
+   .controls-DateRangeBigChoose-MonthRangePickerItem__item {
+      background-color: transparent;
+   }
+}
 
 .controls-DateRangeBigChoose-MonthRangePickerItem__month {
    cursor: pointer;

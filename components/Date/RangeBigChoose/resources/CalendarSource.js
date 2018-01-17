@@ -20,7 +20,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/CalendarSource', [
       },
 
       query: function (query) {
-         var executor = (function() {
+         var
+            offset = query.getOffset(),
+            limit = query.getLimit() || 1,
+
+            executor = (function() {
                var adapter = this.getAdapter().forTable(),
                   now = (new Date()).getFullYear(),
                   items = [],
@@ -29,11 +33,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/CalendarSource', [
                for (var i = 0; i < limit; i++) {
                   months = [];
                   for (var j = 0; j < 12; j++) {
-                     months.push(new Date(now + offset + i, j, 1));
+                     months.push(new Date(offset + i, j, 1));
                   }
                   items.push({
-                     id: i,
-                     year: new Date(now + offset + i),
+                     id: offset + i,
+                     year: new Date(offset + i),
                      months: months,
                      yearStructure: [
                         {
@@ -61,15 +65,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/CalendarSource', [
                   }
                );
                items = this._prepareQueryResult(
-                  {items: adapter.getData(), total: 10000}
+                  {items: adapter.getData(), total: {before: true, after: true}}
                );
 
                return items;
-            }).bind(this),
-            offset = query.getOffset(),
-            limit = query.getLimit() || 1;
-
-         offset = offset - _defaultOffset;
+            }).bind(this);
 
          if (this._loadAdditionalDependencies) {
             return this._loadAdditionalDependencies().addCallback(executor);

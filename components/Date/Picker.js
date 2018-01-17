@@ -112,15 +112,12 @@ define(
 
             pickerConfig: {
                corner: 'tl',
-               cssClassName: 'controls-DateRangeBigChoose__noBorder',
+               cssClassName: 'controls-DateRangeBigChoose__noBorder controls-DateRangeBigChoose__picker',
                horizontalAlign: {
-                  side: 'left',
-                  // TODO: Для поддержки тем переделать на маргины, пока сделано так что бы быстро восстановить тесты
-                  offset: -39
+                  side: 'left'
                },
                verticalAlign: {
-                  side: 'top',
-                  offset: -13
+                  side: 'top'
                },
                bodyBounds: true,
                locationStrategy: 'bodyBounds',
@@ -283,7 +280,8 @@ define(
             startValue: date,
             startValueSerializationMode: type,
             endValue: date,
-            endValueSerializationMode: type
+            endValueSerializationMode: type,
+            headerType: DateRangeBigChoose.headerTypes.inputField
          });
          // Добавляем в пикер
          this._picker.getContainer().append(element);
