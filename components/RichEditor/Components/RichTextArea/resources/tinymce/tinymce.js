@@ -33301,16 +33301,20 @@
                }
                var isEmptyStart = dom.isEmpty(startBlock);
                var isEmptyEnd = dom.isEmpty(endBlock);
-               if (isEmptyStart) {
-                  _removeWhileEmpty(startBlock);
-               }
                if (!isEmptyStart && !isEmptyEnd) {
                   $(startBlock).append(endBlock.childNodes);
                   isEmptyEnd = true;
                }
-
                if (isEmptyEnd) {
                   _removeWhileEmpty(endBlock);
+               }
+               if (isEmptyStart) {
+                  _removeWhileEmpty(startBlock);
+                  // Если в результате весь контент удалён - нужно вставить начальный "пустой" контент
+                  // 35005 https://online.sbis.ru/opendoc.html?guid=af092933-bb51-4485-be76-b0b6bab52ba7
+                  if (isEmptyEnd && !root.innerHTML) {
+                     editor.setContent('');
+                  }
                }
 
                if (caretNodeBefore) {
