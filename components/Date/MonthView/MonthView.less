@@ -81,6 +81,11 @@
    background: @background_MonthView-item-selected;
 }
 
+.controls-MonthView__backgroundColor-currentMonthDay-weekend-selected-startend-unfinished-enabled,
+.controls-MonthView__backgroundColor-currentMonthDay-workday-selected-startend-unfinished-enabled {
+   background: @background_MonthView-item-hover;
+}
+
 .controls-MonthView__backgroundColor-currentMonthDay-weekend-unselected-disabled,
 .controls-MonthView__backgroundColor-currentMonthDay-workday-unselected-disabled {
    background: greyscale(lighten(@background_MonthView-item, 3%));
@@ -108,18 +113,17 @@
 
 .controls-MonthView__today {
    color: @color_MonthView-item-today;
-   &:before {
-      content: "";
-      position: absolute;
-      //height: calc(100% - 2px);
-      //width: calc(100% - 2px);
-      top: 1px;
-      bottom: 1px;
-      left: 1px;
-      right: 1px;
-      border-radius: @border-radius_MonthView-item-today;
-      background-color: @background-color_MonthView-item-today;
-   }
+}
+.controls-MonthView__item-today-background {
+   position: absolute;
+   //height: calc(100% - 2px);
+   //width: calc(100% - 2px);
+   top: 1px;
+   bottom: 1px;
+   left: 1px;
+   right: 1px;
+   border-radius: @border-radius_MonthView-item-today;
+   background-color: @background-color_MonthView-item-today;
 }
 
 .controls-MonthView__item-title {

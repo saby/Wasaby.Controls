@@ -260,6 +260,7 @@ body {
   font-size: @font-size_Button_m;
   .box-shadow(@box-shadow_Button);
   color: #8991A9;
+  display: inline-block;
 
   &:before {
     position: absolute;
@@ -269,8 +270,8 @@ body {
     height: round(42px * @multiplier);
     content: "\e66c" !important;
     text-shadow: @text-shadow_Button !important;
-    right: 8px;
-    top: 8px;
+    right: round(8px * @multiplier);
+    top: round(8px * @multiplier);
   }
 
   &:active {
@@ -323,6 +324,11 @@ body {
   &:after {
     display: none !important;
   }
+}
+//todo: Из-за заданного отступа происходит скачек при переключении вкладок
+//Будет исправлено при переписывании tabButtons на flex
+.controls-TabButton.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__wrapper {
+  margin-bottom: 0px !important;
 }
 
 //todo:

@@ -909,7 +909,7 @@ define('SBIS3.CONTROLS/DropdownList',
                selectedRecord = this._getItemsProjection().getCurrent();
             }
             else {
-               selectedRecord = this.getItems().getRecordById(id);
+               selectedRecord = this._getItemProjectionByItemId(id);
             }
             return selectedRecord && selectedRecord.getHash();
          },

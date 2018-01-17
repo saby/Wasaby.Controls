@@ -11,14 +11,29 @@ define('js!Controls/Input/resources/SuggestController',
    'use strict';
    
    var _private = {
+      searchStart: function(self) {
+         if (self._options.searchStartCallback) {
+            self._options.searchStartCallback();
+         }
+      },
+      
+      searchEnd: function(self) {
+         if (self._options.searchEndCallback) {
+            self._options.searchEndCallback();
+         }
+      },
       /**
        * Search and show popup
        * @param self
        * @param {Object} fitler
        */
       search: function(self, fitler) {
+         _private.searchStart(self);
          _private.getSearchController(self).addCallback(function(searchController) {
-            searchController.search(fitler, _private.getPopupOptions(self));
+            searchController.search(fitler, _private.getPopupOptions(self)).addBoth(function(res) {
+               _private.searchEnd(self);
+               return res;
+            });
             return searchController;
          });
       },
@@ -30,6 +45,7 @@ define('js!Controls/Input/resources/SuggestController',
       abortSearch: function(self) {
          _private.getSearchController(self).addCallback(function (searchController) {
             searchController.abort();
+            _private.searchEnd(self);
             return searchController;
          });
       },
@@ -42,6 +58,7 @@ define('js!Controls/Input/resources/SuggestController',
       
    
       onChangeValueHandler: function(self, text) {
+         self._value = text;
          if (text.length >= self._options.minSearchLength) {
             _private.search(self, _private.getSearchFilter(self, text));
          } else {
@@ -57,7 +74,8 @@ define('js!Controls/Input/resources/SuggestController',
                width: container.offsetWidth,
                template: self._options.suggestTemplate,
                dataSource: self._options.dataSource,
-               showAllOpener: self._options.showAllOpener
+               showAllOpener: self._options.showAllOpener,
+               filter: _private.getSearchFilter(self, self._value)
             }
          };
       },

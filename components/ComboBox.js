@@ -99,8 +99,8 @@ define('SBIS3.CONTROLS/ComboBox', [
       }
    }
 
-   function prepareItemClassesByConfig(item) {
-      var oldClassName = item.className || item.get && item.get('className') || '';
+   function prepareItemClassesByConfig(item, className) {
+      var oldClassName = item.className || item.get && item.get('className') || className || '';
 
       return ~oldClassName.indexOf('controls-ComboBox__multiline') ? 'controls-ComboBox__item_multiLine' : 'controls-ComboBox__item_singleLine';
    }

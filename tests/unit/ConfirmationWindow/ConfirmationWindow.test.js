@@ -20,10 +20,6 @@ define(
             };
          });
 
-         afterEach(function(){
-            popupOpener.destroy();
-         });
-
          it('initialize', function() {
             assert.equal(popupOpener._resultDef, null);
          });

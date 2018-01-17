@@ -959,17 +959,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           */
          execCommand: function (command) {
             var editor = this._tinyEditor;
-            var needPrepocess;
+            var needPreprocess;
             var execCmd;
             if (command === 'blockquote') {
-               needPrepocess = true;
+               needPreprocess = true;
                execCmd = 'mceBlockQuote';
             }
             else
             if (command === 'InsertOrderedList' || command === 'InsertUnorderedList') {
-               needPrepocess = true;
+               needPreprocess = true;
             }
-            if (needPrepocess && !editor.formatter.match(command)) {
+            if (needPreprocess && !editor.formatter.match(command)) {
                var rng = editor.selection.getRng();
                var node = rng.startContainer;
                if (rng.endContainer === node) {
@@ -984,7 +984,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                   else
                   // FF иногда "поднимает" рэнж выше по дереву
-                  if (cConstants.browser.firefox && node.nodeType === 1 && rng.collapsed && node.childNodes.length) {
+                  // 1174769960 https://online.sbis.ru/opendoc.html?guid=268d5fe6-e038-40d3-b185-eff696796f12
+                  // 1174815941 https://online.sbis.ru/opendoc.html?guid=07157c2e-94d5-4ba3-bb7a-1833708ce0aa
+                  if (cConstants.browser.firefox && node.nodeType === 1 && rng.collapsed && !editor.dom.isEmpty(node)) {
                      var newNode = editor.dom.create(node.nodeName);
                      newNode.innerHTML = '<br data-mce-bogus="1" />';
                      node.parentNode.insertBefore(newNode, node.nextSibling);
@@ -1064,7 +1066,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         });
                         this._titleBar
                            .prepend($('<a href="javascript:void(0)"></a>')
-                              .addClass('ws-window-titlebar-action close')
+                              .addClass('ws-float-close ws-float-close-right')
                               .click(function () {
                                  self.close();
                                  return false;

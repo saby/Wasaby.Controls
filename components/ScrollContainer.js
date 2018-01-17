@@ -289,7 +289,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                }
             }
             if (cDetection.isIE12) {
-               scrollbarWidth = 12;
+               scrollbarWidth = 16;
             }
             if (cDetection.isIE10 || cDetection.isIE11) {
                scrollbarWidth = 17;
@@ -331,18 +331,15 @@ define('SBIS3.CONTROLS/ScrollContainer', [
 
          _initScrollbar: function(){
             if (!this._scrollbar) {
-               this._scrollbar = {
-                  _container: $('> .controls-ScrollContainer__scrollbar', this._container)
-               };
-               this._recalcSizeScrollbar();
                this._scrollbar = new Scrollbar({
-                  element: this._scrollbar._container,
+                  element: $('> .controls-ScrollContainer__scrollbar', this._container),
                   contentHeight: this._getScrollHeight(),
                   position: this._getScrollTop(),
                   parent: this
                });
 
                this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
+               this._resizeInner();
             }
             this._toggleGradient();
          },
