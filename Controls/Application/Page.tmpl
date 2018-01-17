@@ -8,11 +8,13 @@
    <title key="title">{{ title }}</title>
    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 </head>
-<body class="ws-is-chrome" id="body" key="1_2_">
-<ws:if data="{{ content }}">
+<Controls:Container:EventCatcher name="scrollDetect" registr="scroll">
+   <Controls:Container:EventCatcher name="resizeDetect" registr="resize">
+   <body class="ws-is-chrome" id="body" key="1_2_" on:scroll="_scrollPage()" on:resize="_resizePage()">
+   <ws:if data="{{ content }}">
    <ws:partial template="{{ content }}" scope="{{ templateConfig }}" />
-</ws:if>
-<div key="scripts">
+   </ws:if>
+   <div key="scripts">
    <script key="ws-config">
       window.wsConfig = {
          wsRoot: '{{wsRoot}}',
@@ -37,6 +39,8 @@
    <script key="init_script">
       require(['Core/app']);
    </script>
-</div>
-</body>
+   </div>
+   </body>
+   </Controls:Container:EventCatcher>
+</Controls:Container:EventCatcher>
 </html>
