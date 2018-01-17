@@ -12,6 +12,7 @@ define('SBIS3.CONTROLS/ListView',
    'Core/constants',
    'Core/Deferred',
    'Core/IoC',
+   'Core/helpers/String/format',
    'Lib/Control/CompoundControl/CompoundControl',
    'Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager',
    'SBIS3.CONTROLS/Mixins/ItemsControlMixin',
@@ -67,7 +68,7 @@ define('SBIS3.CONTROLS/ListView',
    'css!SBIS3.CONTROLS/ListView/ListView',
    'css!SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
-   function (ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
+   function (ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, format, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, ImitateEvents, LayoutManager, mHelpers,
     ScrollWatcher, IBindCollection, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
@@ -3680,31 +3681,33 @@ define('SBIS3.CONTROLS/ListView',
          },
 
          _setLoadMoreCaption: function(dataSet){
-            var more = dataSet.getMetaData().more,
-               caption, allCount;
+            var
+               count,
+               caption,
+               more = dataSet.getMetaData().more;
             // Если число и больше pageSize то "Еще pageSize"
             if (typeof more === 'number') {
-               allCount = more;
-               $('.controls-ListView__counterValue', this._container.get(0)).text(allCount);
+               $('.controls-ListView__counterValue', this._container.get(0)).text(more);
                $('.controls-ListView__counter', this._container.get(0)).removeClass('ws-hidden');
 
-               var caption = more - (this._scrollOffset.bottom + this._options.pageSize);
-               if (caption <= 0) {
-                  this._loadMoreButton.setVisible(false);
-                  return;
+               count = more - (this._scrollOffset.bottom + this._options.pageSize);
+               if (count > 0) {
+                  caption = format({
+                     count: count
+                  }, rk('Еще $count$s$'));
                }
             } else {
                $('.controls-ListView__counter', this._container.get(0)).addClass('ws-hidden');
-               if (more === false) {
-                  this._loadMoreButton.setVisible(false);
-                  return;
-               } else {
-                  caption = '...';
+               if (more !== false) {
+                  caption = rk('Еще') + '...';
                }
             }
-
-            this._loadMoreButton.setCaption(rk('Еще') + ' ' + caption);
-            this._loadMoreButton.setVisible(true);
+            if (caption) {
+               this._loadMoreButton.setCaption(caption);
+               this._loadMoreButton.setVisible(true);
+            } else {
+               this._loadMoreButton.setVisible(false);
+            }
          },
 
          _onLoadMoreButtonActivated: function(event){
