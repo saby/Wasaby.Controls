@@ -3213,20 +3213,26 @@ define('SBIS3.CONTROLS/ListView',
            * т.к. запись удалена и над ней нельзя проводить действия
            */
          _checkDeletedItems: function (items) {
-            var self = this,
-                itemsActions, target, targetHash;
+            var toolbar = this._getItemsToolbar(),
+                toolbarTarget = toolbar.getCurrentTarget(),
+                itemsActions = this.getItemsActions(),
+                isEqual = false,
+                targetHash;
 
-            if(self._itemsToolbar && self._itemsToolbar.isToolbarLocking()){
-               itemsActions = self.getItemsActions();
-               if(itemsActions) {
-                  target = self.getItemsActions().getTarget();
-                  targetHash = target.container.data('hash');
-                  items.forEach(function(item) {
-                     if (item.getHash() == targetHash) {
-                        self._itemsToolbar.unlockToolbar();
-                        self._itemsToolbar.hide();
-                     }
-                  });
+            function checkEqualItem() {
+               targetHash = toolbarTarget.container.data('hash');
+               items.forEach(function(item) {
+                  if (item.getHash() == targetHash) {
+                     isEqual = true;
+                  }
+               });
+               return isEqual;
+            }
+
+            if(toolbar && itemsActions){
+               if(checkEqualItem() && (toolbar.isToolbarLocking() || this._options.itemsActionsInItemContainer)){
+                   toolbar.unlockToolbar();
+                   toolbar.hide();
                }
             }
          },
