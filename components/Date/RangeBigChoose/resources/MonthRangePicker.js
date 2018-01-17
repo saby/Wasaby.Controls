@@ -138,9 +138,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
       _getItemHeight: function () {
          return this.getContainer().find('.controls-DateRangeBigChoose-MonthRangePickerItem ').first().outerHeight();
       },
-      _getItemHeaderHeight: function () {
-         return this.getContainer().find('.controls-DateRangeBigChoose-MonthRangePickerItem ').first().outerHeight();
-      },
 
       _onHalfyearQuarterClick: function (event) {
          var element = $(event.target),

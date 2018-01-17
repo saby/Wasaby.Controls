@@ -229,7 +229,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this._monthRangePicker.subscribe('onSelectionEnded', this._onSelectionEnded.bind(this));
          this._monthRangePicker.subscribe('onYearChanged', this._onMonthRangePickerYearChanged.bind(this));
          this._dateRangePicker.subscribe('onSelectionEnded', this._onSelectionEnded.bind(this));
-         this._dateRangePicker.subscribe('onYearChanged', this._onDateRangePickerYearChanged.bind(this));
+         this._dateRangePicker.subscribe('onMonthChanged', this._onDateRangePickerYearChanged.bind(this));
 
          this.subscribe('onSelectionEnded', this._onSelectionEnded.bind(this));
 
@@ -552,7 +552,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          // Но лазить к родителям архитектурно не очень правильно. Чисто теоретически большой выбор периода можно
          // открыть не в плавающей панели.
          if (this._options._state === states.month) {
-            this._dateRangePicker._updateMonthsPosition();
+            this._dateRangePicker._updateScrollPosition();
          } else {
             this._monthRangePicker._updateScrollPosition();
          }
@@ -567,7 +567,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this._dateRangePicker.cancelSelection();
          this._dateRangePicker.setRange(this.getStartValue(), this.getEndValue(), true);
          this._dateRangePicker.setMonth(month);
-         this._dateRangePicker._updateMonthsPosition();
+         this._dateRangePicker._updateScrollPosition();
          this._setCurrentYear(month.getFullYear(), true);
          this._updateYearsBar(month.getFullYear());
          this.getChildControlByName('StateButton').setChecked(true);
