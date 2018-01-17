@@ -93,14 +93,13 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                /**
                 * @cfg {string} Начальное название нового пользовательского пресета (опционально)
                 */
-               // TODO: Обратить внимание на связь с useNumberedTitle
+               // TODO: Обратить внимание на связь с useOriginPresetTitle
                newPresetTitle: rk('Новый пресет'),
                /**
-                * @cfg {boolean} При добавлении новых пользовательских пресетов строить название из предыдущего с добавлением следующего порядкового номера (опционально)
+                * @cfg {boolean} При клонировании новых пользовательских пресетов строить название из исходного с добавлением следующего порядкового номера (опционально)
                 */
                // TODO: Обратить внимание на связь с newPresetTitle
-               // TODO: Переименовать в useClonedPresetTitle
-               useNumberedTitle: true,
+               useOriginPresetTitle: true,
                /**
                 * @cfg {boolean} Указывает на необходимость включить перемещнение пользователем пунктов списка колонок (опционально)
                 */
@@ -491,7 +490,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                break;
 
             case 'clone':
-               _fitPresetTitle(self, self._options.useNumberedTitle ? preset.title : self._options.newPresetTitle).addCallback(function (title) {
+               _fitPresetTitle(self, self._options.useOriginPresetTitle ? preset.title : self._options.newPresetTitle).addCallback(function (title) {
                   var newPreset = PresetCache.create(namespace, {
                      title: title,
                      selectedColumns: preset.selectedColumns.slice()
