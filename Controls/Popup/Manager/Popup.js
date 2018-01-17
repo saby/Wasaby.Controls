@@ -20,11 +20,6 @@ define('js!Controls/Popup/Manager/Popup',
           */
 
          /**
-          * @name Controls/Popup/Manager/Popup#autoHide
-          * @cfg {Boolean} закрывать попап в случае ухода фокуса
-          */
-
-         /**
           * @name Controls/Popup/Manager/Popup#template
           * @cfg {Content} Шаблон всплывающего окна
           */
@@ -57,6 +52,15 @@ define('js!Controls/Popup/Manager/Popup',
           */
          _close: function () {
             this._notify('closePopup', this._options.id);
+         },
+
+         /**
+          * Обработчик установки фокуса.
+          * @function Controls/Popup/Manager/Popup#_focusIn
+          * @param event
+          */
+         _focusIn: function (event, focusedControl) {
+            this._notify('popupFocusIn', this._options.id, focusedControl);
          },
 
          /**

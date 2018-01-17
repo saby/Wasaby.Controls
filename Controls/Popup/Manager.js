@@ -42,6 +42,9 @@ define('js!Controls/Popup/Manager',
                      onPopupCreated: function (event, id, width, height) {
                         _private.popupCreated(id, width, height);
                      },
+                     onPopupFocusIn: function (event, id, focusedControl) {
+                        _private.popupFocusIn(id, focusedControl);
+                     },
                      onPopupFocusOut: function (event, id, focusedControl) {
                         _private.popupFocusOut(id, focusedControl);
                      },
@@ -66,21 +69,17 @@ define('js!Controls/Popup/Manager',
             }
          },
 
+         popupFocusIn: function(id, focusedControl){
+            var element = Manager.find(id);
+            if (element && element.popupOptions.eventHandlers && element.popupOptions.eventHandlers.onFocusIn) {
+               element.popupOptions.eventHandlers.onFocusIn(focusedControl);
+            }
+         },
+
          popupFocusOut: function (id, focusedControl) {
             var element = Manager.find(id);
-            if (element) {
-               if (!!element.popupOptions.autoHide) {
-                  var
-                     openerId = element.popupOptions.opener._options.id,
-                     parent = focusedControl.to;
-                  while (!!parent) {
-                     if (parent._options.id === openerId || parent._options.id === id) {
-                        return;
-                     }
-                     parent = parent.getParent();
-                  }
-                  Manager.remove(id);
-               }
+            if (element && element.popupOptions.eventHandlers && element.popupOptions.eventHandlers.onFocusOut) {
+               element.popupOptions.eventHandlers.onFocusOut(focusedControl);
             }
          },
 
