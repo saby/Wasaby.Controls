@@ -87,14 +87,6 @@ define('js!Controls/Input/Number', [
          this._notify(value);
       },
 
-      _valueChangedHandler: function() {
-         //TODO обработчик-заглушка чтобы не падала ошибка. Нужно разобраться и удалить
-      },
-
-      _focusHandler: function() {
-         //TODO обработчик-заглушка чтобы не падала ошибка. Нужно разобраться и удалить
-      },
-
       paste: function(text) {
          inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text);
       }

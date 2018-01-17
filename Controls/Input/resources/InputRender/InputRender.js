@@ -48,7 +48,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
          },
 
          setTargetData: function(target, data){
-            // target.value = data.value;
+            target.value = data.value;
             target.setSelectionRange(data.position, data.position);
          }
 
