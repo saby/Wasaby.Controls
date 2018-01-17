@@ -58,6 +58,7 @@ define('js!Controls/Input/resources/SuggestController',
       
    
       onChangeValueHandler: function(self, text) {
+         self._value = text;
          if (text.length >= self._options.minSearchLength) {
             _private.search(self, _private.getSearchFilter(self, text));
          } else {
@@ -73,7 +74,8 @@ define('js!Controls/Input/resources/SuggestController',
                width: container.offsetWidth,
                template: self._options.suggestTemplate,
                dataSource: self._options.dataSource,
-               showAllOpener: self._options.showAllOpener
+               showAllOpener: self._options.showAllOpener,
+               filter: _private.getSearchFilter(self, self._value)
             }
          };
       },
