@@ -123,6 +123,11 @@ define('js!Controls/Input/Area', [
          _private.updateScroll.call(this);
       },
 
+      //TODO убрать (и подписку из Area.tmpl) после выполнения ошибки https://online.sbis.ru/opendoc.html?guid=04b9c78b-7237-4c5a-9045-887a170d8427
+      _focusHandler: function(e) {
+         this._children.inputRender._focusHandler(e);
+      },
+
       paste: function(text) {
          inputHelper.pasteHelper(this._children['inputRender'], this._children['realArea'], text);
       }

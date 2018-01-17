@@ -14,6 +14,7 @@
                on:select="_selectionHandler()"
                on:keyup="_keyUpHandler()"
                on:change="_notifyHandler('inputCompleted')"
+               on:focus="_focusHandler()"
                value="{{ _options.value }}"
                placeholder="{{_options.placeholder}}"
          />

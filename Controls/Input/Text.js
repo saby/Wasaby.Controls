@@ -96,12 +96,6 @@ define('js!Controls/Input/Text', [
             this._notify(value);
          },
 
-         _focusHandler: function(e) {
-            if (this._options.selectOnClick) {
-               e.target.select();
-            }
-         },
-
          paste: function(text) {
             inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text);
          }
