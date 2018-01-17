@@ -1064,7 +1064,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         });
                         this._titleBar
                            .prepend($('<a href="javascript:void(0)"></a>')
-                              .addClass('ws-window-titlebar-action close')
+                              .addClass('ws-float-close ws-float-close-right')
                               .click(function () {
                                  self.close();
                                  return false;

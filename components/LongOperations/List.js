@@ -119,7 +119,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
                self.subscribeTo(longOperationsManager, evtType, function (evtName, evt) {
                   var dontReload;
                   if (['onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted'].indexOf(evtName.name) !== -1) {
-                     var model = self.lookupItem(evt.tabKey, evt.producer, evt.operationId);
+                     var model = self.lookupItem(evt);
                      dontReload = !model;
                      if (model) {
                         switch (evtName.name) {
@@ -135,7 +135,9 @@ define('SBIS3.CONTROLS/LongOperations/List',
                                        model.set('timeIdle', (new Date()).getTime() - model.get('startedAt').getTime() - model.get('timeSpent'));
                                     }
                                  }
-                                 else {
+                                 else
+                                 if (evt.changed === 'notification' && evt.notification) {
+                                    model.set('notification', evt.notification);
                                     dontReload = true;
                                  }
                                  model.set(evt.changed, evt[evt.changed]);
@@ -715,16 +717,32 @@ define('SBIS3.CONTROLS/LongOperations/List',
          },
 
          /**
-          * Найти модель среди загруженных данных
-          * @param {string} tabKey Ключ вкладки
-          * @param {string} producer Имя продюсера
-          * @param {number|string} operationId Идентификатор длительной операции
+          * Найти модель среди имеющихся элементов данного списка по параметрам (Возвращается первое совпадение)
           * @public
+          * @param {object} options Параметры модели
+          * @param {string} options.producer Имя продюсера
+          * @param {number|string} [options.operationId] Идентификатор длительной операции (опционально)
+          * @param {number|string} [options.workflowId] Идентификатор исполняемого процесса длительной операции (опционально)
+          * @return {WS.Data/Entity/Record}
           */
-         lookupItem: function (tabKey, producer, operationId) {
+         lookupItem: function (options) {
             var items = this._view.getItems();
             if (items && items.getCount()) {
-               return items.getRecordById(Model.getFullId(tabKey, producer, operationId)) || items.getRecordById(Model.getFullId(null, producer, operationId));
+               var producer = options.producer;
+               if (!producer) {
+                  throw new Error('Property "producer" required');
+               }
+               var hasId = !!options.operationId;
+               var id = hasId ? options.operationId : options.workflowId;
+               if (!id) {
+                  throw new Error('Property "operationId" or "workflowId" required');
+               }
+               for (var i = 0, len = items.getCount(); i < len; i++) {
+                  var item = items.at(i);
+                  if (item.get('producer') === producer && (hasId ? item.get('id') === id : item.get('extra') && item.get('extra').workflow === id)) {
+                     return item;
+                  }
+               }
             }
          },
 

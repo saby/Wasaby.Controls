@@ -2,7 +2,7 @@
  * Created by dv.zuev on 27.12.2017.
  */
 define([
-   'Controls/Application'
+   'js!Controls/Application'
 ], function(Application){
    describe('Controls.Application', function () {
 
