@@ -129,7 +129,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             firstYear = this.getContainer().find('.controls-DateRangeBigChoose-MonthRangePickerItem').first().data('date'),
             year = Math.floor(Date.fromSQL(firstYear).getFullYear() + (scrollTop/this._getItemHeight()));
          if (year !== this._options.year) {
-            this._options.year = Math.floor(firstYear + (scrollTop/this._getItemHeight()));
+            this._options.year = year;
+            this._updateDisplayedYearCssClass();
             this._notify('onYearChanged', year);
          }
       },
@@ -207,13 +208,23 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          if (!this._options.year) {
             return;
          }
-         var displayedYear = this.getContainer().find('.controls-DateRangeBigChoose-MonthRangePickerItem[data-date="' + this._options.year + '"]');
+         this._updateDisplayedYearCssClass();
 
-         this.getContainer().find('.controls-DateRangeBigChoose-MonthRangePickerItem__item-displayed')
-            .removeClass('controls-DateRangeBigChoose-MonthRangePickerItem__item-displayed');
-         displayedYear.addClass('controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item-displayed');
+         var displayedYear = this.getContainer().find('.controls-DateRangeBigChoose-MonthRangePickerItem[data-date="' + (new Date(this._options.year, 0)).toSQL() + '"]');
 
          LayoutManager.scrollToElement(displayedYear.find('.controls-DateRangeBigChoose-MonthRangePickerItem__body'));
+      },
+
+      _updateDisplayedYearCssClass: function () {
+         if (!this._options.year) {
+            return;
+         }
+         var container = this.getContainer(),
+            displayedYear = container.find('.controls-DateRangeBigChoose-MonthRangePickerItem[data-date="' + (new Date(this._options.year, 0)).toSQL() + '"]');
+
+         container.find('.controls-DateRangeBigChoose-MonthRangePickerItem__item-displayed')
+            .removeClass('controls-DateRangeBigChoose-MonthRangePickerItem__item-displayed');
+         displayedYear.addClass('controls-DateRangeBigChoose-MonthRangePickerItem__item-displayed');
       },
 
       getYear: function () {
@@ -320,8 +331,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          if (this.isSelectionProcessing()) {
             month = Date.fromSQL($(e.currentTarget).attr(this._selectedRangeItemIdAtr));
             this._onRangeItemElementClick(month, new Date(month.getFullYear(), month.getMonth() + 1, 0));
+            this._updateSelectionInInnerComponents();
          } else {
             if ($(e.target).hasClass('controls-DateRangeBigChoose-MonthRangePickerItem__month_title')) {
+               this._updateSelectionInInnerComponents();
                month = Date.fromSQL($(e.target).attr(this._selectedRangeItemIdAtr));
                this._onRangeItemElementClick(month, new Date(month.getFullYear(), month.getMonth() + 1, 0));
             } else {
@@ -337,8 +350,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
       // },
 
 
-      _updateSelectionInInnerComponents: function () {
-         if (!this._innerComponentsValidateTimer && !this.isSelectionProcessing()) {
+      _updateSelectionInInnerComponents: function (forced) {
+         if (!this._innerComponentsValidateTimer && (forced || !this.isSelectionProcessing())) {
             this._innerComponentsValidateTimer = true;
             runDelayed(this._validateInnerComponents.bind(this));
          }
