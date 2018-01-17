@@ -398,7 +398,7 @@ define('SBIS3.CONTROLS/FieldLink',
           _updateTextBoxVisibility: function() {
              var
                 drawHiddenTextBoxField = !this.getMultiselect() && this.getSelectedKeys().length > 0 && !this._options.alwaysShowTextBox;
-             this._container.find('.controls-TextBox__field').toggleClass('ws-invisible', drawHiddenTextBoxField);
+             $('.controls-InputRender__fieldWrapper', this.getContainer()).toggleClass('ws-invisible', drawHiddenTextBoxField);
           },
 
           init: function() {
