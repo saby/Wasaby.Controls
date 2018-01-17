@@ -50,6 +50,7 @@
    "Еще": "More",
    "Ещё": "More",
    "Ещё...": "More...",
+   "Еще $count$s$": "$count$s$ more",
    "Заголовок": "Title",
    "Загрузить еще": "Load more",
    "Загрузка": "Loading",
