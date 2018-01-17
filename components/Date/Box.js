@@ -246,7 +246,7 @@ define(
          if (options.text) {
             options._formatModel.setText(options.text, options._maskReplacer);
          }
-         options._modelForMaskTpl = this._getItemsForTemplate(options._formatModel, options._maskReplacer);
+         options._modelForMaskTpl = this._getItemsForTemplate(options._formatModel, options._maskReplacerForTemplate);
          return options;
       },
 
