@@ -67,10 +67,12 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                /**
                 * @cfg {(string|number)[]} Список идентификаторов выбранных колонок
                 */
+               // TODO: Обратить внимание на суммирование с пресетами
                selectedColumns: [],
                /**
                 * @cfg {boolean} Показывает на обязательность использования пресетов (опционально)
                 */
+               // TODO: Обратить внимание на суммирование с selectedColumns
                usePresets: true,
                /**
                 * @cfg {string} Заголовок дропдауна (опционально)
@@ -91,10 +93,12 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                /**
                 * @cfg {string} Начальное название нового пользовательского пресета (опционально)
                 */
+               // TODO: Обратить внимание на связь с useNumberedTitle
                newPresetTitle: rk('Новый пресет'),
                /**
                 * @cfg {boolean} При добавлении новых пользовательских пресетов строить название из предыдущего с добавлением следующего порядкового номера (опционально)
                 */
+               // TODO: Обратить внимание на связь с newPresetTitle
                useNumberedTitle: true,
                /**
                 * @cfg {boolean} Указывает на необходимость включить перемещнение пользователем пунктов списка колонок (опционально)
@@ -440,6 +444,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             case 'delete':
                _modifyPresets(self, action);
                _updatePresetView(self);
+               _updateSelectableView(self);
                break;
          }
       };
