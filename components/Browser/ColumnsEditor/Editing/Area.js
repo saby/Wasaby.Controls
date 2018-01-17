@@ -466,6 +466,8 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                });
                self._presetDropdown.setSelectedPresetId(newPreset.id);
                self._currentPreset = newPreset;
+               var presetView = self._presetView;
+               setTimeout(presetView.beginEdit.bind(presetView, presetView.getItems().at(0), false), 1);
                break;
 
             case 'delete':
