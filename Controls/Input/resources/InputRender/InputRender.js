@@ -91,7 +91,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
 
             if(this._value !== processedData.value){
                this._value = processedData.value;
-               this._notify('valueChanged', processedData.value);
+               this._notify('valueChanged', [processedData.value], {bubbling:true});
             }
          },
 
@@ -154,7 +154,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
 
             if (this._value !== processedData.value) {
                this._value = processedData.value;
-               this._notify('valueChanged', processedData.value);
+               this._notify('valueChanged', [processedData.value], {bubbling:true});
 
                this._forceUpdate();
             }
