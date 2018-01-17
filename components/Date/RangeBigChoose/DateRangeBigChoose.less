@@ -8,6 +8,10 @@
    .box-shadow(@float-area-shadow);
 }
 
+.controls-DateRangeBigChoose__picker {
+   margin: @margin_DateRangeBigChoose-picker;
+}
+
 // Header
 .controls-DateRangeBigChoose__header {
    background-color: @background-color__DateRangeBigChoose-header;
@@ -92,7 +96,7 @@
    cursor: pointer;
    height: @height_DateRangeBigChoose-years-rangeButton;
    line-height: @height_DateRangeBigChoose-years-rangeButton;
-   width: 16.66%;
+   width: 14%;
    font-size: @font-size_DateRangeBigChoose-years-rangeButton;
    text-align: center;
    position: relative;
@@ -106,7 +110,7 @@
 .controls-DateRangeBigChoose__years-yearsRangeItem {
    color: @color_DateRangeBigChoose-years-panel-rangeButton;
    &:hover {
-      background-color: @background-color_DateRangeBigChoose-years-panel-rangeButton
+      background-color: @background-color_DateRangeBigChoose-years-panel-rangeButton;
    }
 }
 .controls-DateRangeBigChoose__years-yearsRangeItem-displayed {
@@ -123,20 +127,27 @@
 
 .controls-DateRangeBigChoose__years-yearsRangeItem-selectedInner {
    outline: @border-color_DateRangeBigChoose-range-selected-inner solid 1px;
-   background-color: @background-color_DateRangeBigChoose-range-selected-inner;
 }
 
 .controls-DateRangeBigChoose__years-yearsRangeItem-selectedUnfinishedEdge {
    outline-width: 1px;
    outline-style: solid;
    outline-color: @border-color_DateRangeBigChoose-range-selected-unfinishedEdge;
-   background-color: @background-color_DateRangeBigChoose-range-selected-unfinishedEdge;
+}
+
+.controls-DateRangeBigChoose__years-yearsRangeItem__backgroundColor-selected,
+.controls-DateRangeBigChoose__years-yearsRangeItem__backgroundColor-selected {
+   background: @background-color_DateRangeBigChoose-range-selected-inner;
+}
+
+.controls-DateRangeBigChoose__years-yearsRangeItem__backgroundColor-selected-startend-unfinished,
+.controls-DateRangeBigChoose__years-yearsRangeItem__backgroundColor-selected-startend-unfinished {
+   background: @background-color_DateRangeBigChoose-range-selected-unfinishedEdge;
 }
 
 .controls-DateRangeBigChoose__years-yearsRangeItem-selectedStart {
    //need color;
    outline: @border-color_DateRangeBigChoose-range-selected-startEnd solid 1px;
-   background-color: @background-color_DateRangeBigChoose-range-selected-startEnd;
    &:before {
       content: "";
       position: absolute;
@@ -149,7 +160,6 @@
 
 .controls-DateRangeBigChoose__years-yearsRangeItem-selectedEnd {
    outline: @border-color_DateRangeBigChoose-range-selected-startEnd solid 1px;
-   background-color: @background-color_DateRangeBigChoose-range-selected-startEnd;
    &:after {
       content: "";
       position: absolute;
