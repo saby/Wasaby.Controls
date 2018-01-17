@@ -1054,8 +1054,8 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
+            this.setFilter(coreClone(filter), true);
          }
-         this.setFilter(coreClone(filter), true);
          filter[this._options.parentProperty] = key;
          return filter;
       },
