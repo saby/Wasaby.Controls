@@ -99,6 +99,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                 * @cfg {boolean} При добавлении новых пользовательских пресетов строить название из предыдущего с добавлением следующего порядкового номера (опционально)
                 */
                // TODO: Обратить внимание на связь с newPresetTitle
+               // TODO: Переименовать в useClonedPresetTitle
                useNumberedTitle: true,
                /**
                 * @cfg {boolean} Указывает на необходимость включить перемещнение пользователем пунктов списка колонок (опционально)
@@ -449,6 +450,31 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          }
       };
 
+      var _fitPresetTitle = function (self, title) {
+         var promise = new Deferred();
+         _getPresets(self).addCallback(function (presets) {
+            var reEnd = /\s+\(([0-9]+)\)\s*$/;
+            var pattern = title.replace(reEnd, '');
+            var previous = presets.reduce(function (result, item) {
+               var value = item.title;
+               if (value.indexOf(pattern) === 0) {
+                  if (value.length === pattern.length) {
+                     result.push(1);
+                  }
+                  else {
+                     var ms = value.substring(pattern.length).match(reEnd);
+                     if (ms) {
+                        result.push(parseInt(ms[1]));
+                     }
+                  }
+               };
+               return result;
+            }, []);
+            promise.callback(previous.length ? pattern + ' (' + (Math.max.apply(Math, previous) + 1) + ')' : pattern);
+         });
+         return promise;
+      };
+
       var _modifyPresets = function (self, action, arg) {
          var namespace = self._options.presetNamespace;
          var preset = self._currentPreset;
@@ -465,13 +491,15 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                break;
 
             case 'clone':
-               var newPreset = PresetCache.create(namespace, {
-                  title: self._options.newPresetTitle,// TODO: Возможно, лучше сделать старый заголовок с цифрой в конце - self._options.useNumberedTitle
-                  selectedColumns: preset.selectedColumns.slice()
+               _fitPresetTitle(self, self._options.useNumberedTitle ? preset.title : self._options.newPresetTitle).addCallback(function (title) {
+                  var newPreset = PresetCache.create(namespace, {
+                     title: title,
+                     selectedColumns: preset.selectedColumns.slice()
+                  });
+                  self._presetDropdown.setSelectedPresetId(newPreset.id);
+                  self._currentPreset = newPreset;
+                  setTimeout(function () { self._presetView.beginEdit(self._presetView.getItems().at(0), false); }, 1);
                });
-               self._presetDropdown.setSelectedPresetId(newPreset.id);
-               self._currentPreset = newPreset;
-               setTimeout(function () { self._presetView.beginEdit(self._presetView.getItems().at(0), false); }, 1);
                break;
 
             case 'delete':
