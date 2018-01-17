@@ -36,7 +36,13 @@ define('js!Controls/Button', [
     */
    var Button = Control.extend({
        _controlName: 'Controls/Button',
-       _template: template
+       _template: template,
+
+       _clickHandler: function (e) {
+           if(!this.isEnabled()){
+               e.stopPropagation();
+           }
+       }
    });
 
     return Button;

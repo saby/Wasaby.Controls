@@ -77,7 +77,8 @@ define('js!Controls/Input/resources/SuggestController',
                width: container.offsetWidth,
                template: self._options.suggestTemplate,
                dataSource: self._options.dataSource,
-               showAllOpener: self._options.showAllOpener
+               showAllOpener: self._options.showAllOpener,
+               filter: _private.getSearchFilter(self, self._value)
             }
          };
       },
