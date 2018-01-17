@@ -12,6 +12,14 @@ define('js!Controls/Input/resources/SuggestView/SuggestView',
          getSelectedKey: function(items, idProperty, index) {
             var item = items && items.at(index || 0);
             return item ? item.get(idProperty) : null;
+         },
+         
+         getOptionsForShowAll: function(self) {
+            return {
+               componentOptions: {
+                  filter: self._options.filter
+               }
+            };
          }
       };
       
@@ -33,7 +41,7 @@ define('js!Controls/Input/resources/SuggestView/SuggestView',
             
             //loading showAll templates
             moduleStubs.require(['js!Controls/Input/resources/SuggestShowAll/SuggestShowAll', 'js!Controls/Popup/DialogTemplate']).addCallback(function(res) {
-               self._options.showAllOpener.open();
+               self._options.showAllOpener.open(_private.getOptionsForShowAll(self));
                return res;
             });
             this._notify('close');
@@ -45,5 +53,6 @@ define('js!Controls/Input/resources/SuggestView/SuggestView',
          }
       });
       
+      SuggestView._private = _private;
       return SuggestView;
    });
