@@ -386,8 +386,12 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       };
 
       var _initPresetDropdown = function (self) {
-         self._presetDropdown = _getChildComponent(self._presetView, self._childNames.presetDropdown);
-         self.subscribeTo(self._presetDropdown, 'onChange', function (evtName, selectedPresetId) {
+         var dropdown = self._presetDropdown = _getChildComponent(self._presetView, self._childNames.presetDropdown);
+         var preset = self._currentPreset;
+         if (preset) {
+            dropdown.setSelectedPresetId(preset.id);
+         }
+         self.subscribeTo(dropdown, 'onChange', function (evtName, selectedPresetId) {
             _onPresetDropdownChanged(self);
          });
       };
