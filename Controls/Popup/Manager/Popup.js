@@ -58,6 +58,7 @@ define('js!Controls/Popup/Manager/Popup',
           * Обработчик установки фокуса.
           * @function Controls/Popup/Manager/Popup#_focusIn
           * @param event
+          * @param focusedControl
           */
          _focusIn: function (event, focusedControl) {
             this._notify('popupFocusIn', this._options.id, focusedControl);
