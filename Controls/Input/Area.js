@@ -90,7 +90,6 @@ define('js!Controls/Input/Area', [
       },
 
       _changeValueHandler: function(e, value){
-         Area.superclass._changeValueHandler.apply(this, arguments);
          _private.setFakeAreaValue.call(this, value);
          _private.updateScroll.call(this);
       },

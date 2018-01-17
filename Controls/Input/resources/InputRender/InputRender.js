@@ -29,8 +29,8 @@ define('js!Controls/Input/resources/InputRender/InputRender',
             //Если курсор ещё не был поставлен в поле, то поставим его в конец
             if (!result) {
                result = {
-                  selectionStart: self._value.length,
-                  selectionEnd: self._value.length
+                  selectionStart: self._options.value ? self._options.value.length : 0,
+                  selectionEnd: self._options.value ? self._options.value.length : 0
                };
             }
 
@@ -59,19 +59,9 @@ define('js!Controls/Input/resources/InputRender/InputRender',
          _controlName: 'Controls/Input/resources/InputRender/InputRender',
          _template: template,
 
-         constructor: function (options) {
-            InputRender.superclass.constructor.apply(this, arguments);
-
-            this._value = options.value;
-         },
-
-         _beforeUpdate: function (newOptions) {
-            this._value = newOptions.value;
-         },
-
          _inputHandler: function(e) {
             var
-               value = this._value,
+               value = this._options.value,
                newValue = e.target.value,
                selection = _private.getSelection(this),
                position = _private.getTargetPosition(e.target),
@@ -89,10 +79,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
             _private.setTargetData(e.target, processedData);
             _private.saveSelection(this, e.target);
 
-            if(this._value !== processedData.value){
-               this._value = processedData.value;
-               this._notify('valueChanged', [processedData.value], {bubbling:true});
-            }
+            this._notify('valueChanged', [processedData.value], {bubbling:true});
          },
 
          _keyUpHandler: function(e) {
@@ -147,15 +134,13 @@ define('js!Controls/Input/resources/InputRender/InputRender',
             var
                selection = _private.getSelection(this),
                processedData = this._options.viewModel.prepareData({
-                  before: this._value.slice(0, selection.selectionStart),
+                  before: this._options.value.slice(0, selection.selectionStart),
                   insert: text,
-                  after: this._value.slice(selection.selectionEnd, this._value.length)
+                  after: this._options.value.slice(selection.selectionEnd, this._options.value.length)
                }, 'insert');
 
-            if (this._value !== processedData.value) {
-               this._value = processedData.value;
+            if (this._options.value !== processedData.value) {
                this._notify('valueChanged', [processedData.value], {bubbling:true});
-
                this._forceUpdate();
             }
 
