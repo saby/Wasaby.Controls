@@ -29,7 +29,9 @@
 .controls-BackButton_color-hover_default-backButton:hover {
    .controls-BackButton__caption {
       &, &.controls-Click__active, &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover):hover {
-         color: @back-button-caption-active-color;
+         body:not(.ws-is-mobile-platform) & {
+            color: @back-button-caption-active-color;
+         }
       }
    }
    .ws-backArrow_color_default-backButton:before {
@@ -38,7 +40,9 @@
 }
 .controls-BackButton__orange.controls-BackButton_color-hover_default-backButton:hover .controls-BackButton__caption {
    &, &.controls-Click__active, &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover):hover {
-      color: @primary-color;
+      body:not(.ws-is-mobile-platform) & {
+         color: @primary-color;
+      }
    }
 }
 .controls-BackButton__caption {

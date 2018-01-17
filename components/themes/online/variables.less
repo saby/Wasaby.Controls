@@ -742,8 +742,9 @@
 @listView-check-box-left:                       0;
 @listView-check-box-top:                        0;
 @list-view-actions-item-height:                 24px;
-@list-view-actions-margin:                      0 6px;
-@list-view-actions-margin-action-multiView:     0 2px 4px 5px;
+@margin-right_ListView-actions-item:            6px;
+@list-view-actions-margin:                      0 @margin-right_ListView-actions-item;
+@list-view-actions-margin-action-multiView:     0 2px 4px 1px;
 @list-view-actions-marginLeft-menu-multiView:   -1px;
 @list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
 @list-view-items-toolbar-bottom:                     3px;
@@ -1039,7 +1040,7 @@
 @DropdownList-picker-menu-item-padding-top:           5px;
 @DropdownList-picker-menu-item-padding:               @DropdownList-picker-menu-item-padding-top 12px 3px 12px;
 @DropdownList-picker-menu-item-height:                24px;
-@DropdownList-picker-menu-item-height-ff:             19px;
+@DropdownList-picker-menu-item-height-ff:             @DropdownList-picker-menu-item-height;
 @DropdownList-picker-menu-height-ff:                  25px;
 @DropdownList-picker-menu-item-color:                 @white-color;
 @DropdownList-picker-menu-item-color-blur:            rgba(255, 255, 255, 0);
@@ -1494,7 +1495,7 @@
 @color-ColumnsEditor-Editing-Area__head-title-left: #313E78;
 @font-size-ColumnsEditor-Editing-Area__head-title-left: 18px;
 @font-weight-ColumnsEditor-Editing-Area__head-title-left: bold;
-@margin-right-ColumnsEditor-Editing-Area__head-title-right: 38px;
+@margin-right-ColumnsEditor-Editing-Area__head-title-right: 52px;
 @height-ColumnsEditor-Editing-Area__head-preset: 30px;
 @font-size-ColumnsEditor-Editing-Area__head-preset: 15px;
 @padding-ColumnsEditor-Editing-Area__head-preset-label: 5px 8px 0 0;
@@ -1622,4 +1623,4 @@
 //-----------------//
 //  Popup   //
 //----------------//
-@shadow_Popup_stack:  -4px -8px 12px -4px rgba(0,0,0,0.4);
+@shadow_Popup_stack:  -6px 0px 8px -5px rgba(0, 0, 0, 0.4);

@@ -77,7 +77,7 @@ define('js!Controls/Input/resources/SuggestPopupController',
             var self = this;
             
             this._popupOptions = clone(popupOptions);
-            _private.getSearchController(self).search({filter: filter}).addCallback(function(searchResult) {
+            return _private.getSearchController(self).search({filter: filter}).addCallback(function(searchResult) {
                _private.setSuggestSelectedIndex(self, 0);
                _private.setSuggestSearchResult(self, searchResult);
                _private.showPopup(self);
