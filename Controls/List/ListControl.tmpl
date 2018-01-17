@@ -3,7 +3,7 @@
    <div class="ws-ListControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
    <div class="ws-ListControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
 
-   <ws:if data="{{_listModel.getCount()}}">
+   <ws:if data="{{_listModel && _listModel.getCount()}}">
       <ws:Controls.List.ListControl.ListView
               name="listView"
               listModel="{{_listModel}}"
@@ -14,7 +14,7 @@
       </ws:Controls.List.ListControl.ListView>
    </ws:if>
 
-   <ws:if data="{{_options.emptyTemplate && !_listModel.getCount()}}">
+   <ws:if data="{{_options.emptyTemplate && _listModel && !_listModel.getCount()}}">
       <ws:partial template="{{_options.emptyTemplate}}"/>
    </ws:if>
 

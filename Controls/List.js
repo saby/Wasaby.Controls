@@ -274,14 +274,11 @@ define('js!Controls/List', [
        * @param self
        */
       initializeAverageItemsHeight: function(self) {
-         //listView не создается, когда записей нет.
-         if (self._children.listView) {
-            //TODO брать _container - плохо. Узнаю у Зуева как сделать хорошо
-            //Узнал тут, пока остается _container: https://online.sbis.ru/open_dialog.html?guid=01b6161a-01e7-a11f-d1ff-ec1731d3e21f
-            var res = self._virtualScroll.calcAverageItemHeight(self._children.listView._container);
-            if (res.changed) {
-               _private.applyVirtualWindow(self, res.virtualWindow);
-            }
+         //TODO брать _container - плохо. Узнаю у Зуева как сделать хорошо
+         //Узнал тут, пока остается _container: https://online.sbis.ru/open_dialog.html?guid=01b6161a-01e7-a11f-d1ff-ec1731d3e21f
+         var res = self._virtualScroll.calcAverageItemHeight(self._children.listView._container);
+         if (res.changed) {
+            _private.applyVirtualWindow(self, res.virtualWindow);
          }
       }
    };
@@ -390,8 +387,10 @@ define('js!Controls/List', [
                }
             }
 
-            //Посчитаем среднюю высоту строки и отдадим ее в VirtualScroll
-            _private.initializeAverageItemsHeight(this);
+            if (this._children.listView) {
+               //Посчитаем среднюю высоту строки и отдадим ее в VirtualScroll
+               _private.initializeAverageItemsHeight(this);
+            }
          },
 
          _beforeUpdate: function(newOptions) {
@@ -428,11 +427,13 @@ define('js!Controls/List', [
 
 
          _afterUpdate: function() {
-            _private.initializeAverageItemsHeight(this);
-
-            //Проверим, не достигли ли границ контейнера. Если достигли, возможно нужна подгрузка соседней страницы
-            if (this._scrollController) {
-               this._scrollController.checkBoundaryContainer();
+            if (this._children.listView) {
+               _private.initializeAverageItemsHeight(this);
+   
+               //Проверим, не достигли ли границ контейнера. Если достигли, возможно нужна подгрузка соседней страницы
+               if (this._scrollController) {
+                  this._scrollController.checkBoundaryContainer();
+               }
             }
          },
 
