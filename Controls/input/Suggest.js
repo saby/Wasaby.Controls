@@ -4,12 +4,11 @@ define('js!Controls/Input/Suggest',
       'tmpl!Controls/Input/Suggest/Suggest',
       'js!WS.Data/Type/descriptor',
       'js!Controls/Input/resources/SuggestController',
-      'Controls/Input/resources/InputRender/SimpleViewModel',
       'js!Controls/Popup/Opener/Sticky',
       'js!Controls/Popup/Opener/Stack',
       'css!Controls/Input/Suggest/Suggest'
    ],
-   function(Control, template, types, SuggestController, SimpleViewModel) {
+   function(Control, template, types, SuggestController) {
    
       /**
        * Поле ввода с автодополнением
@@ -26,18 +25,6 @@ define('js!Controls/Input/Suggest',
        */
    
       'use strict';
-   
-      var _private = {
-         onSearchStart: function(self) {
-            self._searching = true;
-            self._forceUpdate();
-         },
-      
-         onSearchEnd: function(self) {
-            self._searching = false;
-            self._forceUpdate();
-         }
-      };
       
       var Suggest = Control.extend({
    
@@ -49,7 +36,6 @@ define('js!Controls/Input/Suggest',
          constructor: function(options) {
             Suggest.superclass.constructor.call(this, options);
             this._selectHandler = this._selectHandler.bind(this);
-            this._simpleViewModel = new SimpleViewModel();
          },
    
          _afterMount: function() {
@@ -64,9 +50,7 @@ define('js!Controls/Input/Suggest',
                searchParam: this._options.searchParam,
                navigation: this._options.navigation,
                textComponent: this._children.suggestText,
-               selectCallback: this._selectHandler,
-               searchStartCallback: _private.onSearchStart.bind(this, this),
-               searchEndCallback: _private.onSearchEnd.bind(this, this)
+               selectCallback: this._selectHandler
             });
          },
          
@@ -90,10 +74,6 @@ define('js!Controls/Input/Suggest',
          _selectHandler: function(item) {
             this._notify('select', item);
             this._notify('valueChanged', item.get(this._options.displayProperty));
-         },
-   
-         _clearClick: function() {
-            this._notify('valueChanged', '');
          },
    
          _keyDownHandler: function(event) {

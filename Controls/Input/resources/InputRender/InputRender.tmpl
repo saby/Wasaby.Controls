@@ -13,8 +13,8 @@
                on:click="_clickHandler()"
                on:select="_selectionHandler()"
                on:keyup="_keyUpHandler()"
-               on:change="_notifyHandler('onInputCompleted')"
-               value="{{ _value }}"
+               on:change="_notifyHandler('inputCompleted')"
+               value="{{ _options.value }}"
                placeholder="{{_options.placeholder}}"
          />
 
