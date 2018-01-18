@@ -1,14 +1,19 @@
-.controls-DateRangeBigChoose__dateRangePickerItem {
+.controls-DateRangeBigChoose-DateRangePickerItem {
    .flexbox()
 }
 
+@height_DateRangeChoose-dates-months: @height_DateRangeBigChoose-body - @height_DateRangeChoose-dates-header - 1px;
+@height_DateRangeChoose-dates-months-year-button: @height_DateRangeChoose-dates-months - @height_DateRangeBigChoose-dates-months-button*12;
+
 .controls-DateRangeBigChoose-DateRangePickerItem__months {
-   height: @height_DateRangeBigChoose-body - @height_DateRangeChoose-dates-header - 1px;
+   height: @height_DateRangeChoose-dates-months;
    .flexbox();
    .flex-direction(column);
    .flex-shrink(1);
    position: sticky;
    top: 0;
+   margin-bottom: -@height_DateRangeChoose-dates-months-year-button;
+   margin-top: @height_DateRangeChoose-dates-months-year-button;
 }
 
 .controls-DateRangeBigChoose-DateRangePickerItem__months-btn {
@@ -43,6 +48,7 @@
    font-size: @font-size_DateRangeBigChoose-dates-months-nextYearButton;
    border: 1px solid transparent;
    border-right-color: @border-color_DateRangePickerItem__months;
+   border-bottom-color: @border-color_DateRangePickerItem__months;
    cursor: pointer;
    height:  @height_DateRangeBigChoose-dates-months-nextYearButton;
    background-color: @background-color_DateRangeBigChoose-dates-months-nextYearButton;
