@@ -17,9 +17,15 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
 ], function ( constants, Deferred, runDelayed, throttle, isEmpty, LayoutManager, ListView, CalendarSource, ItemTmpl, RangeMixin, RangeSelectableViewMixin, Base, cInstance, dateUtils) {
    'use strict';
 
-   var _startingOffset = 1000000;
-
-   var yearSource = new CalendarSource();
+   var yearSource = new CalendarSource(),
+      buildTplArgsMRP = function(cfg) {
+            var tplOptions = cfg._buildTplArgsLV.call(this, cfg);
+            tplOptions.monthsSelectionEnabled = cfg.monthsSelectionEnabled;
+            tplOptions.quarterSelectionEnabled = cfg.quarterSelectionEnabled;
+            tplOptions.halfyearSelectionEnabled = cfg.halfyearSelectionEnabled;
+            tplOptions.yearSelectionEnabled = cfg.yearSelectionEnabled;
+            return tplOptions;
+         };
 
    /**
     * SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker
@@ -64,7 +70,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             // scrollWatcher: ScrollWatcher,
             cssClassName: 'controls-DateRangeBigChoose-MonthRangePicker',
 
-            _isSelectionEnabled: false
+            _isSelectionEnabled: false,
+            _buildTplArgs: buildTplArgsMRP
          },
          _lastOverControl: null,
 
@@ -87,15 +94,15 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
 
       _modifyOptions: function (options) {
          options = MonthRangePicker.superclass._modifyOptions.apply(this, arguments);
-         options.monthsSelectioEnabled = true;
-         options.quarterSelectioEnabled = true;
-         options.halfyearSelectioEnabled = true;
-         options.yearSelectioEnabled = true;
+         options.monthsSelectionEnabled = true;
+         options.quarterSelectionEnabled = true;
+         options.halfyearSelectionEnabled = true;
+         options.yearSelectionEnabled = true;
          if (!isEmpty(options.quantum)) {
-            options.monthsSelectioEnabled = 'months' in options.quantum;
-            options.quarterSelectioEnabled = 'quarters' in options.quantum;
-            options.halfyearSelectioEnabled = 'halfyears' in options.quantum;
-            options.yearSelectioEnabled = 'years' in options.quantum;
+            options.monthsSelectionEnabled = 'months' in options.quantum;
+            options.quarterSelectionEnabled = 'quarters' in options.quantum;
+            options.halfyearSelectionEnabled = 'halfyears' in options.quantum;
+            options.yearSelectionEnabled = 'years' in options.quantum;
          }
          return options;
       },
@@ -126,7 +133,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          container.on('click', '.controls-DateRangeBigChoose-MonthRangePickerItem__item',
             this._onMonthClick.bind(this));
 
-         if (this._options.quarterSelectioEnabled) {
+         if (this._options.quarterSelectionEnabled || this._options.halfyearSelectionEnabled) {
             container.on('mouseenter', '.controls-DateRangeBigChoose-MonthRangePickerItem__item, .controls-DateRangeBigChoose-MonthRangePickerItem__month_title',
                this._onItemCaptionMouseEnter.bind(this));
             container.on('mouseleave', '.controls-DateRangeBigChoose-MonthRangePickerItem__item, .controls-DateRangeBigChoose-MonthRangePickerItem__month_title',

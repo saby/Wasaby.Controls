@@ -3,7 +3,7 @@
    <div class="controls-DateRangeBigChoose-MonthRangePickerItem__body">
       <div class="controls-DateRangeBigChoose-MonthRangePickerItem__quartersPanel">
          <ws:for data="quarterIndex as quarter in ['I', 'II', 'III', 'IV']">
-            <div class="controls-DateRangeBigChoose-MonthRangePickerItem__quartersPanel-button controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button"
+            <div class="controls-DateRangeBigChoose-MonthRangePickerItem__quartersPanel-button controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button{{ quarterSelectionEnabled ? ' controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button-selectable' }}"
                data-id="{{ quarterIndex }}">
                {{ quarter }}
             </div>
@@ -37,7 +37,7 @@
       </div>
       <div class="controls-DateRangeBigChoose-MonthRangePickerItem__halfYearsPanel ">
          <ws:for data="quarterIndex as quarter in ['I', 'II']">
-            <div class="controls-DateRangeBigChoose-MonthRangePickerItem__halfYearsPanel-button controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button"
+            <div class="controls-DateRangeBigChoose-MonthRangePickerItem__halfYearsPanel-button controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button{{ quarterSelectionEnabled ? ' controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button-selectable' }}"
                  data-id="{{ quarterIndex }}">
                {{ quarter }}
             </div>
