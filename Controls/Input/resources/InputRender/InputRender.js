@@ -79,7 +79,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
             _private.setTargetData(e.target, processedData);
             _private.saveSelection(this, e.target);
 
-            this._notify('valueChanged', [processedData.value], {bubbling:true});
+            this._notify('valueChanged', [processedData.value]);
          },
 
          _keyUpHandler: function(e) {
@@ -140,7 +140,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
                }, 'insert');
 
             if (this._options.value !== processedData.value) {
-               this._notify('valueChanged', [processedData.value], {bubbling:true});
+               this._notify('valueChanged', [processedData.value]);
                this._forceUpdate();
             }
 

@@ -37,7 +37,11 @@ function(Control, template, types, SimpleViewModel) {
 
         _toggleVisibilityHandler: function() {
             this._passwordVisible = !this._passwordVisible;
-        }
+        },
+
+       _valueChangedHandler: function(e, value) {
+          this._notify('valueChanged', [value]);
+       }
 
     });
 
