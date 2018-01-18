@@ -555,18 +555,17 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
          if(projItem && this.getEditArrow().isVisible() && !this._isSearchMode()) {
             runDelayed(forAliveOnly(function() {
                hoveredItemContainer = hoveredItem.container;
-               if(this._options.editArrow === 'custom') {
-                  folderTitle = hoveredItemContainer.find('.controls-TreeView__folderTitle');
-                  titleTd = folderTitle.closest('.controls-DataGridView__td', hoveredItemContainer);
-                  editArrowMarker = this._getEditArrowMarker(hoveredItemContainer);
-               } else if(projItem.isNode()) {
-                  this._hideEditArrow();
-                  folderTitle = hoveredItemContainer.find('.controls-TreeView__folderTitle');
-                  titleTd = folderTitle.closest('.controls-DataGridView__td', hoveredItemContainer);
-                  editArrowMarker = this._getEditArrowMarker(titleTd);
-               } else {
+               if(!projItem.isNode() && this._options.editArrow !== 'custom') {
                   this._hideEditArrow();
                   return;
+               }
+               folderTitle = hoveredItemContainer.find('.controls-TreeView__folderTitle');
+               titleTd = folderTitle.closest('.controls-DataGridView__td', hoveredItemContainer);
+               if(this._options.editArrow === 'custom') {
+                  editArrowMarker = this._getEditArrowMarker(hoveredItemContainer);
+               } else {
+                  this._hideEditArrow();
+                  editArrowMarker = this._getEditArrowMarker(titleTd);
                }
                if (editArrowMarker.length) {
                   editArrowContainer = this.getEditArrow().getContainer();
