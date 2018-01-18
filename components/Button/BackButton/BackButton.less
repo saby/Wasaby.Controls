@@ -73,6 +73,13 @@
    &_size_default-backButton.controls-Link {
       .max-width_BackButton_caption(@back-arrow-width-h3, @back-button-arrow-padding-right-2);
       .ws-header-size-mixin(@back-button-font-size, @back-button-height);
+      /**
+       * На iPad, если в качестве caption будут 2 текста с разными font-size, то caption не выравнивается как должен.
+       * Вероятно проблема в стилях Link. Если использовать только классы ws-header, то такой проблемы нет.
+       */
+      body.ws-is-mobile-safari {
+         line-height: normal;
+      }
    }
    &_size_bold.controls-Link {
       .ws-header_size_weight();
