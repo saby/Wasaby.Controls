@@ -12,6 +12,7 @@ define('SBIS3.CONTROLS/ListView',
    'Core/constants',
    'Core/Deferred',
    'Core/IoC',
+   'Core/helpers/String/format',
    'Lib/Control/CompoundControl/CompoundControl',
    'Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager',
    'SBIS3.CONTROLS/Mixins/ItemsControlMixin',
@@ -67,7 +68,7 @@ define('SBIS3.CONTROLS/ListView',
    'css!SBIS3.CONTROLS/ListView/ListView',
    'css!SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
-   function (ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
+   function (ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, format, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, ImitateEvents, LayoutManager, mHelpers,
     ScrollWatcher, IBindCollection, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
@@ -3212,22 +3213,27 @@ define('SBIS3.CONTROLS/ListView',
            * т.к. запись удалена и над ней нельзя проводить действия
            */
          _checkDeletedItems: function (items) {
-            var self = this,
-                itemsActions, target, targetHash;
+            var toolbar = this._getItemsToolbar(),
+                toolbarTarget = toolbar.getCurrentTarget(),
+                itemsActions = this.getItemsActions();
 
-            if(self._itemsToolbar && self._itemsToolbar.isToolbarLocking()){
-               itemsActions = self.getItemsActions();
-               if(itemsActions) {
-                  target = self.getItemsActions().getTarget();
-                  targetHash = target.container.data('hash');
-                  items.forEach(function(item) {
-                     if (item.getHash() == targetHash) {
-                        self._itemsToolbar.unlockToolbar();
-                        self._itemsToolbar.hide();
-                     }
-                  });
+            if(toolbar && toolbarTarget && itemsActions){
+               if(this._checkToolbarTarget(items, toolbarTarget.container.data('hash')) && (toolbar.isToolbarLocking() || this._options.itemsActionsInItemContainer)){
+                   toolbar.unlockToolbar();
+                   toolbar.hide();
                }
             }
+         },
+
+         _checkToolbarTarget: function (items, toolbarTargetHash) {
+           var isEqual = false;
+
+           items.forEach(function(item) {
+               if (item.getHash() == targetHash) {
+                   isEqual = true;
+               }
+           });
+           return isEqual;
          },
 
          //-----------------------------------infiniteScroll------------------------
@@ -3680,31 +3686,33 @@ define('SBIS3.CONTROLS/ListView',
          },
 
          _setLoadMoreCaption: function(dataSet){
-            var more = dataSet.getMetaData().more,
-               caption, allCount;
+            var
+               count,
+               caption,
+               more = dataSet.getMetaData().more;
             // Если число и больше pageSize то "Еще pageSize"
             if (typeof more === 'number') {
-               allCount = more;
-               $('.controls-ListView__counterValue', this._container.get(0)).text(allCount);
+               $('.controls-ListView__counterValue', this._container.get(0)).text(more);
                $('.controls-ListView__counter', this._container.get(0)).removeClass('ws-hidden');
 
-               var caption = more - (this._scrollOffset.bottom + this._options.pageSize);
-               if (caption <= 0) {
-                  this._loadMoreButton.setVisible(false);
-                  return;
+               count = more - (this._scrollOffset.bottom + this._options.pageSize);
+               if (count > 0) {
+                  caption = format({
+                     count: count
+                  }, rk('Еще $count$s$'));
                }
             } else {
                $('.controls-ListView__counter', this._container.get(0)).addClass('ws-hidden');
-               if (more === false) {
-                  this._loadMoreButton.setVisible(false);
-                  return;
-               } else {
-                  caption = '...';
+               if (more !== false) {
+                  caption = rk('Еще') + '...';
                }
             }
-
-            this._loadMoreButton.setCaption(rk('Еще') + ' ' + caption);
-            this._loadMoreButton.setVisible(true);
+            if (caption) {
+               this._loadMoreButton.setCaption(caption);
+               this._loadMoreButton.setVisible(true);
+            } else {
+               this._loadMoreButton.setVisible(false);
+            }
          },
 
          _onLoadMoreButtonActivated: function(event){
@@ -4071,6 +4079,12 @@ define('SBIS3.CONTROLS/ListView',
                .orderBy(sorting)
                .meta({ hasMore: this._options.partialPaging});
             return query;
+         },
+         setPageSize: function(pageSize) {
+            if (this._pager) {
+               this._pager.setPageSize(pageSize);
+            }
+            ListView.superclass.setPageSize.apply(this, arguments);
          },
          /**
           * Метод обработки интеграции с пейджингом

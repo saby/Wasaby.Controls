@@ -1,4 +1,4 @@
-<div class="ws-Suggest">
+<div class="ws-Suggest" on:focusOut="_focusOut()">
 
     <ws:Controls.Input.resources.InputRender.InputRender
         name="suggestText"
@@ -11,6 +11,7 @@
         enabled="{{isEnabled()}}"
         tagStyle="{{_options.tagStyle}}"
         placeholder="{{_options.placeholder}}"
+        validationErrors="{{_options.validationErrors}}"
         on:valueChanged="_changeValueHandler()"
         on:keydown="_keyDownHandler()"
         attr:class="ws-Suggest__inputRender">
@@ -32,7 +33,8 @@
         <ws:popupOptions vAlingTopClass="ws-Suggest__popup-vAlignTop" vAlingBottomClass="ws-Suggest__popup-vAlignBottom" autoHide="{{true}}" template="js!Controls/Input/resources/SuggestView/SuggestView">
             <ws:corner vertical="bottom"/>
             <ws:verticalAlign side="bottom"/>
-            <ws:componentOptions idProperty="{{_options.idProperty}}"></ws:componentOptions>
+            <ws:componentOptions idProperty="{{_options.idProperty}}"/>
+            <ws:eventHandlers onFocusIn="{{_popupFocusIn}}" onFocusOut="{{_popupFocusOut}}"/>
         </ws:popupOptions>
     </ws:Controls.Popup.Opener.Sticky>
 

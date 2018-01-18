@@ -89,10 +89,10 @@ define('js!Controls/Input/Area', [
          _private.updateScroll.call(this);
       },
 
-      _changeValueHandler: function(e, value){
-         Area.superclass._changeValueHandler.apply(this, arguments);
+      _valueChangedHandler: function(e, value){
          _private.setFakeAreaValue.call(this, value);
          _private.updateScroll.call(this);
+         this._notify('valueChanged', [value]);
       },
 
       _setValue: function(value){
@@ -122,6 +122,11 @@ define('js!Controls/Input/Area', [
 
       _scrollHandler: function(){
          _private.updateScroll.call(this);
+      },
+
+      //TODO убрать (и подписку из Area.tmpl) после выполнения ошибки https://online.sbis.ru/opendoc.html?guid=04b9c78b-7237-4c5a-9045-887a170d8427
+      _focusHandler: function(e) {
+         this._children.inputRender._focusHandler(e);
       },
 
       paste: function(text) {
