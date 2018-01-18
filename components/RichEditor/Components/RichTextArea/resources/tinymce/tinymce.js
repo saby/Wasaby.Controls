@@ -33301,16 +33301,20 @@
                }
                var isEmptyStart = dom.isEmpty(startBlock);
                var isEmptyEnd = dom.isEmpty(endBlock);
-               if (isEmptyStart) {
-                  _removeWhileEmpty(startBlock);
-               }
                if (!isEmptyStart && !isEmptyEnd) {
                   $(startBlock).append(endBlock.childNodes);
                   isEmptyEnd = true;
                }
-
                if (isEmptyEnd) {
                   _removeWhileEmpty(endBlock);
+               }
+               if (isEmptyStart) {
+                  _removeWhileEmpty(startBlock);
+                  // Если в результате весь контент удалён - нужно вставить начальный "пустой" контент
+                  // 35005 https://online.sbis.ru/opendoc.html?guid=af092933-bb51-4485-be76-b0b6bab52ba7
+                  if (isEmptyEnd && !root.innerHTML) {
+                     editor.setContent('');
+                  }
                }
 
                if (caretNodeBefore) {
@@ -33729,6 +33733,17 @@
 
             editor.on('dragstart', function(e) {
                dragStartRng = selection.getRng();
+               // Если перетаскивание началось с пустым рэнжем, то это ошибка (например в FF при перетаскивании картинки), попробуем восстановить
+               // рэнж, если это возможно
+               // https://online.sbis.ru/opendoc.html?guid=6ca8d265-e804-4794-9301-55d9d357c0fe
+               if (dragStartRng.collapsed) {
+                  var elm = doc.elementFromPoint(e.clientX, e.clientY);
+                  if (elm) {
+                     dragStartRng = doc.createRange();
+                     dragStartRng.setStartBefore(elm);
+                     dragStartRng.setEndAfter(elm);
+                  }
+               }
                setMceInternalContent(e);
             });
 
@@ -33770,7 +33785,9 @@
                   e.clipboardData.setData('text/html', rng.startOffset === 0 && rng.commonAncestorContainer.nodeType === 3 && rng.endOffset === rng.commonAncestorContainer.nodeValue.length && !sel.dom.isBlock(sel.getNode())
                               ? sel.dom.getOuterHTML(sel.getNode()) : sel.getContent());
                   var text = sel.getContent({format:'text'});
-                  e.clipboardData.setData('text/plain', navigator.userAgent.search(/\bwindows\b/i) !== -1 ? text.replace(/\n/gi, '\r\n') : text);
+                  // В хроме и эксплорере нужно заменить переводы строк на windows-ные
+                  // 32963 https://online.sbis.ru/opendoc.html?guid=853f36e3-4a3a-4e12-988c-53af66d78094
+                  e.clipboardData.setData('text/plain', (Env.webkit || Env.ie) && navigator.userAgent.search(/\bwindows\b/i) !== -1 ? text.replace(/\n/gi, '\r\n') : text);
 
                   // Needed delay for https://code.google.com/p/chromium/issues/detail?id=363288#c3
                   // Nested delete/forwardDelete not allowed on execCommand("cut")
@@ -34804,6 +34821,7 @@
          // Gecko
          if (isGecko) {
             emptyEditorOnDeleteEverything();
+            cleanupStylesWhenDeleting();
             removeHrOnBackspace();
             focusBody();
             removeStylesWhenDeletingAcrossBlockElements();

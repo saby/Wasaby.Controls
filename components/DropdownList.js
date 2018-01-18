@@ -526,8 +526,7 @@ define('SBIS3.CONTROLS/DropdownList',
                  selectedItemIndex,
                  selected;
             if (row.length && (e.button === 0)) {
-               if (this._options.multiselect && itemId != this.getDefaultId() && curSelectionLength !== 0 &&
-                  (curSelectionLength > 1 || this._currentSelection[0] != this.getDefaultId()) || isCheckBoxClick) {
+               if (isCheckBoxClick) {
                   this._buttonChoose.getContainer().removeClass('ws-hidden');
                   selected =  !row.hasClass('controls-DropdownList__item__selected');
                   row.toggleClass('controls-DropdownList__item__selected', selected);
@@ -910,7 +909,7 @@ define('SBIS3.CONTROLS/DropdownList',
                selectedRecord = this._getItemsProjection().getCurrent();
             }
             else {
-               selectedRecord = this.getItems().getRecordById(id);
+               selectedRecord = this._getItemProjectionByItemId(id);
             }
             return selectedRecord && selectedRecord.getHash();
          },

@@ -35,15 +35,24 @@
 
 
 .controls-LongOperationsPopup.controls-InformationPopup.controls-FloatArea .controls-PopupMixin__closeButton {
-    top: 8px;
-    right: 0;
-    width: 36px;
-    height: 24px;
-    background: url('../../themes/@{themeName}/img/areaCloseButton.png') 0 -1px;
-}
+    position: absolute;
+    .flexbox();
+    .align-items(center);
+    .justify-content(center);
+    border: none;
+    top: @top_LongOperationsPopup-closeButton;
+    cursor: pointer;
+    height: @list-view-actions-menu-close-height;
+    width: @list-view-actions-menu-close-width;
+    z-index: 1;
+    right: @list-view-actions-menu-close-right;
+    color: @list-view-context-menu-close-color !important;
+    background: none;
+    // используем important т.к. controls-PopupMixin__closeButton используется в старых контролах и стилизована в themes.less
+    // и по другому сейчас не перебить, пока
+    box-shadow: none !important;
 
-.controls-LongOperationsPopup.controls-InformationPopup.controls-FloatArea .controls-PopupMixin__closeButton:before {
-    content: none;
+    .icon-size(@list-view-items-toolbar-icon-size, @font-family_closeButton-icon);
 }
 
 .controls-LongOperationsPopup.controls-LongOperationsPopup__hidden {

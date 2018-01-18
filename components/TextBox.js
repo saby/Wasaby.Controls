@@ -259,7 +259,6 @@ define('SBIS3.CONTROLS/TextBox', [
                }
             })
             .on('focusin', this._inputFocusInHandler.bind(this))
-            .on('focusout', this._inputFocusOutHandler.bind(this))
             .on('click', this._inputClickHandler.bind(this));
    
          this._container
@@ -275,7 +274,7 @@ define('SBIS3.CONTROLS/TextBox', [
          cfg.beforeFieldWrapper = TemplateUtil.prepareTemplate(cfg.beforeFieldWrapper);
          cfg.afterFieldWrapper = TemplateUtil.prepareTemplate(cfg.afterFieldWrapper);
          if (cfg.placeholder) {
-            cfg._isSimplePlaceholder = typeof cfg.placeholder === 'string';
+            cfg._isSimplePlaceholder = typeof cfg.placeholder === 'string' && cfg.placeholder.indexOf('data-component') === -1;
          }
          return cfg;
       },
@@ -570,13 +569,6 @@ define('SBIS3.CONTROLS/TextBox', [
          return true;
       },
 
-      _inputFocusOutHandler: function(e) {
-         if (this._fromTouch){
-            EventBus.globalChannel().notify('MobileInputFocusOut');
-            this._fromTouch = false;
-         }
-      },
-
        _pasteHandler: function(event) {
            var text = this._getInputValue(),
                inputRegExp = this._options.inputRegExp;
@@ -603,6 +595,11 @@ define('SBIS3.CONTROLS/TextBox', [
       _focusOutHandler: function(event, isDestroyed, focusedControl) {
          if(!isDestroyed  && (!focusedControl || !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) ) {
             this._checkInputVal();
+         }
+
+         if (this._fromTouch){
+            EventBus.globalChannel().notify('MobileInputFocusOut');
+            this._fromTouch = false;
          }
 
          TextBox.superclass._focusOutHandler.apply(this, arguments);
@@ -650,7 +647,7 @@ define('SBIS3.CONTROLS/TextBox', [
 
       _createCompatiblePlaceholder: function() {
          if (!this._compatPlaceholder) {
-            this._options._isSimplePlaceholder = typeof this._options.placeholder === 'string';
+            this._options._isSimplePlaceholder = typeof this._options.placeholder === 'string' && this._options.placeholder.indexOf('data-component') === -1;
             this._compatPlaceholder = $(this._options.compatiblePlaceholderTemplate(this._options));
             this._inputField.after(this._compatPlaceholder);
             this.reviveComponents();

@@ -114,7 +114,7 @@ define('SBIS3.CONTROLS/DataGridView',
             return value;
          },
          getCellValue = function(currentValue, field, item, ladder, ladderColumns){
-            return Array.indexOf(ladderColumns, field) > -1 && !ladder.isPrimary(item, field) ? '' : currentValue;
+            return ladderColumns.indexOf(field) > -1 && !ladder.isPrimary(item, field) ? '' : currentValue;
          },
          buildTplArgsLadder = function(args, cfg) {
             args.ladder = cfg._ladderInstance;
@@ -1187,7 +1187,7 @@ define('SBIS3.CONTROLS/DataGridView',
                      });
 
                      /* При инициализации надо проскрлить редактируемые колонки */
-                     self.updateScrollAndColumns();
+                     self.updateScrollAndColumns(true);
                   }
                }
             }
@@ -1305,10 +1305,10 @@ define('SBIS3.CONTROLS/DataGridView',
          this._scrollingNow = true;
       },
 
-      updateScrollAndColumns: function() {
+      updateScrollAndColumns: function(force) {
          this._updatePartScrollWidth();
          this._findMovableCells();
-         this._moveThumbAndColumns({left: this._currentScrollPosition});
+         this._moveThumbAndColumns({left: this._currentScrollPosition}, force);
       },
 
       _arrowClickHandler: function(isRightArrow) {

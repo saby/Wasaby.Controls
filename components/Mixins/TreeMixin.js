@@ -15,10 +15,11 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
    "Core/IoC",
    "Core/helpers/Object/isEmpty",
    "Core/helpers/Object/isPlainObject",
+   "Core/helpers/Function/runDelayed",
    "SBIS3.CONTROLS/BreadCrumbs",
    "tmpl!SBIS3.CONTROLS/DataGridView/resources/DataGridViewGroupBy",
    "WS.Data/Adapter/Sbis"
-], function (coreClone, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject) {
+], function (coreClone, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject, runDelayed) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -938,6 +939,22 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             return Deferred.success();
          }
       },
+      _redrawHierarchyPathItem: function(item) {
+         var
+            displayProperty = this._options.displayProperty,
+            itemContents = item.getContents(),
+            displayPropertyNewValue = itemContents.get(displayProperty),
+            id = itemContents.getId(),
+            breadCrumbsWithItem = this._container.find('[data-id="'+ id + '"]').parents('.controls-TreeView__searchBreadCrumbs');
+         breadCrumbsWithItem.each(function(idx, elem) {
+            var
+               breadCrumbsInst = elem.wsControl;
+            // Нужно мержить изменения "во все места".
+            breadCrumbsInst.getItems().getRecordById(id).set(displayProperty, displayPropertyNewValue);
+            breadCrumbsInst.getItems().getRecordById(id).get('item').merge(itemContents);
+            breadCrumbsInst.redraw();
+         });
+      },
       /**
        * Получить список записей для отрисовки
        * @private
@@ -1041,8 +1058,8 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
+            this.setFilter(coreClone(filter), true);
          }
-         this.setFilter(coreClone(filter), true);
          filter[this._options.parentProperty] = key;
          return filter;
       },
@@ -1239,6 +1256,9 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                   else {
                      this._redrawItem(branches[idx]);
                   }
+                  //Пересоздадим футер для изменившихся папок, так как после перемещения/удаления/добавления записей
+                  //футер может оказаться не там где он должен находиться.
+                  this._createFolderFooter(branches[idx]);
                }
             }
          },
@@ -1429,8 +1449,10 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          },
          _dataLoadedCallback: function () {
             var path = this._options._items.getMetaData().path,
-               hierarchy = coreClone(this._hier),
-               item;
+                hierarchy = coreClone(this._hier),
+                self = this,
+                previousRoot = this._previousRoot,
+                item;
             if (this._options.expand) {
                this._applyExpandToItems(this.getItems());
             }
@@ -1447,7 +1469,9 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                   this.setSelectedKey(this._previousRoot);
                   //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
                   if (!this._container.parents('.controls-ListView').length) {
-                     this._scrollToItem(this._previousRoot);
+                     runDelayed(function() {
+                        self._scrollToItem(previousRoot);
+                     });
                   }
                } else {
                   /*иначе вход в папку*/

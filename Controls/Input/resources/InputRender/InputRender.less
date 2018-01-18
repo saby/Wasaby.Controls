@@ -82,6 +82,10 @@
    }
 }
 
+.controls-InputRender__field:focus {
+   text-overflow: clip;
+}
+
 .controls-InputRender__placeholder {
    .compatPlaceholder(@color_TextBox-placeholder);
    .align-items(center);
@@ -113,8 +117,11 @@
    .inline-flexbox();
 }
 
-.controls-InputRender__field:invalid {
-   color: @color_TextBox-placeholder;
+//В формах для ввода логина и пароля браузеры игнорируют аттрибут autocomplete="off" и вставляют логин\пароль в любом случае.
+//Также, хром проводит валидацию поля только после того, как пользователь совершит какое-нибудь действие на странице.
+//Так что единственный способ узнать, что произошло автодополнение и нужно скрыть плейсхолдер - проверить :-webkit-autofill.
+.controls-InputRender__field:-webkit-autofill + .controls-InputRender__placeholder {
+   display: none;
 }
 
 // риусем информационный треугольник через border, чтобы он занимал свои физические размеры
