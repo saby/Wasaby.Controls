@@ -364,7 +364,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             this._onRangeItemElementClick(month, new Date(month.getFullYear(), month.getMonth() + 1, 0));
             this._updateSelectionInInnerComponents();
          } else {
-            if ($(e.target).hasClass('controls-DateRangeBigChoose-MonthRangePickerItem__month_title') && this._options.monthsSelectioEnabled) {
+            if ($(e.target).hasClass('controls-DateRangeBigChoose-MonthRangePickerItem__month_title') && this._options.monthsSelectionEnabled) {
                this._updateSelectionInInnerComponents();
                month = Date.fromSQL($(e.target).attr(this._selectedRangeItemIdAtr));
                this._onRangeItemElementClick(month, new Date(month.getFullYear(), month.getMonth() + 1, 0));
