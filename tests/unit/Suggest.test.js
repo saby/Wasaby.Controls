@@ -18,7 +18,7 @@ define(
          it('_popupFocusOut', function() {
             var suggest = new Suggest();
    
-            suggest._popupFocusOut();
+            suggest._popupFocusOut({});
             
             assert.isFalse(suggest._popupFocused);
          });
@@ -29,7 +29,7 @@ define(
             suggest._popupFocusIn();
             assert.isFalse(Suggest._private.needCloseOnFocusOut(suggest));
    
-            suggest._popupFocusOut();
+            suggest._popupFocusOut({});
             assert.isTrue(Suggest._private.needCloseOnFocusOut(suggest));
          });
          
