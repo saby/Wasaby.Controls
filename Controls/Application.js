@@ -33,7 +33,6 @@ define('js!Controls/Application',
             self.cssLinks = cfg.cssLinks;
             self.title = cfg.title;
             self.wsRoot = cfg.wsRoot;
-            self.content = cfg.content;
             self.resourceRoot = cfg.resourceRoot;
             self.jsLinks = cfg.jsLinks;
             self.templateConfig = cfg.templateConfig;
@@ -55,7 +54,7 @@ define('js!Controls/Application',
                def = new Deferred();
 
             _private.initState(self, receivedState||cfg);
-
+            self.content = cfg.content;
             /**
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
              * роутинга и с ним же надо восстанавливаться на клиенте.
@@ -65,7 +64,6 @@ define('js!Controls/Application',
                cssLinks: self.cssLinks,
                title: self.title,
                wsRoot: self.wsRoot,
-               content: self.content,
                resourceRoot: self.resourceRoot,
                templateConfig: self.templateConfig,
                jquery: self.jquery
