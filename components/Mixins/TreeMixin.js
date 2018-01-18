@@ -941,13 +941,17 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
       },
       _redrawHierarchyPathItem: function(item) {
          var
+            displayProperty = this._options.displayProperty,
             itemContents = item.getContents(),
+            displayPropertyNewValue = itemContents.get(displayProperty),
             id = itemContents.getId(),
             breadCrumbsWithItem = this._container.find('[data-id="'+ id + '"]').parents('.controls-TreeView__searchBreadCrumbs');
          breadCrumbsWithItem.each(function(idx, elem) {
             var
                breadCrumbsInst = elem.wsControl;
-            breadCrumbsInst.getItems().getRecordById(id).merge(itemContents);
+            // Нужно мержить изменения "во все места".
+            breadCrumbsInst.getItems().getRecordById(id).set(displayProperty, displayPropertyNewValue);
+            breadCrumbsInst.getItems().getRecordById(id).get('item').merge(itemContents);
             breadCrumbsInst.redraw();
          });
       },
@@ -1054,8 +1058,8 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
+            this.setFilter(coreClone(filter), true);
          }
-         this.setFilter(coreClone(filter), true);
          filter[this._options.parentProperty] = key;
          return filter;
       },

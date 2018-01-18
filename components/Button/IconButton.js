@@ -97,6 +97,7 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
                }
             }
          }
+         options.cssClassName += ' controls-IconButton-size__' + (!!options.size ? options.size : 'default');
          return options;
       },
 

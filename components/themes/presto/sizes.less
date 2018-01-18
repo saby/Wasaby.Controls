@@ -50,6 +50,7 @@
 @padding_Button-wrapper_m:     0 round(16px * @multiplier);
 @font-size_Button_l:           round(40px * @multiplier);
 @height_Button_l:              @default-height-big;
+@line-height_Button_l:         normal;
 @spacing_Button-between-icon-text: 8px;
 //combobox
 @icon-size_ComboBox-Arrow:              @default-icon-size-medium;
@@ -291,6 +292,12 @@
 @menu-link-menu-margin:                               floor(-14px * @multiplier) 0 0 round(-17px * @multiplier);
 @menu-link-header-font-size:                          @font-size_Popup;
 @font-weight_Menu-header:                            bold;
+//MenuIcon
+@margin_MenuIcon-hideHeader-round24:                  round(-17px * @multiplier) 0 0 round(-13px * @multiplier);
+@top_MenuIcon-hideHeader-round24_icon:                round(24px * @multiplier);
+@left_MenuIcon-hideHeader-round24_icon:               round(4px * @multiplier);
+@line-height_MenuIcon-hideHeader-round24_icon:        @icon-size_default_medium;
+@margin_MenuIcon-hideHeader-round24_text:             round(6px * @multiplier) 0 round(6px * @multiplier) round(60px * @multiplier);
 //MenuButton
 @menu-button-menu-margin:                             round(-1px * @multiplier) 0 0 round(0 * @multiplier);
 @menu-button-header-font-size:                        @font-size_Button_default;
@@ -326,6 +333,8 @@
 @list-view-items-toolbar-padding:                      round(4px * @multiplier) round(16px * @multiplier) round(4px * @multiplier) round(16px * @multiplier);
 @height_IconButton_round_edit:                         round(58px * @multiplier);
 @width_IconButton_round_edit:                          round(58px * @multiplier);
+@height_IconButton_round_edit_size-l:                  round(78px * @multiplier);
+@width_IconButton_round_edit_size-l:                   round(78px * @multiplier);
 @icon-button-edit-round-border-line-height:            round(58px * @multiplier);
 @list-view-items-toolbar-line-height:                  round(52px * @multiplier);
 @list-view-items-toolbar-icon-button-border-font-size: round(42px * @multiplier);
@@ -421,3 +430,5 @@
 @height_ToggleButton-square:                    round(58px * @multiplier);
 @left_ToggleButton-square-icon:                 round(2px * @multiplier);
 @margin-top_ToggleButton-square-icon:           round(-24px * @multiplier);
+//SelectorButton
+@font-size_SelectorButton:                      @icon-size_default_medium;
