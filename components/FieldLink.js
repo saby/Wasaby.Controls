@@ -96,9 +96,8 @@ define('SBIS3.CONTROLS/FieldLink',
        function _addOptionsByState(cfg) {
           var
              selectedKeysLength = cfg.selectedKeys.length;
-          /* Чтобы вёрстка сразу строилась с корректным placeholder'ом, в случае, если там лежит ссылка */
           cfg._selectedMultipleItems = _private.selectedMultipleItems(cfg);
-          cfg._drawHiddenTextBoxField = !cfg.multiselect && selectedKeysLength > 0 && !cfg.alwaysShowTextBox;
+          cfg._hideTextBoxField = !cfg.multiselect && selectedKeysLength > 0 && !cfg.alwaysShowTextBox;
        }
 
        var classes = {
