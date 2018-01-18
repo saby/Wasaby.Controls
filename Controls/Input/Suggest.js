@@ -36,6 +36,18 @@ define('js!Controls/Input/Suggest',
          onSearchEnd: function(self) {
             self._searching = false;
             self._forceUpdate();
+         },
+         
+         closePopup: function(self) {
+            self._children.suggestPopupOpener.close();
+         },
+         
+         needCloseOnFocusOutPopup: function(self, focusedControl) {
+            return focusedControl !== self && focusedControl !== self._children.suggestText;
+         },
+   
+         needCloseOnFocusOut: function(self) {
+            return !self._popupFocused;
          }
       };
       
@@ -43,12 +55,15 @@ define('js!Controls/Input/Suggest',
          
          _template: template,
          _controlName: 'Controls/Input/Suggest',
+         _popupFocused: false,
          
          // <editor-fold desc="LifeCycle">
          
          constructor: function(options) {
             Suggest.superclass.constructor.call(this, options);
             this._selectHandler = this._selectHandler.bind(this);
+            this._popupFocusIn = this._popupFocusIn.bind(this);
+            this._popupFocusOut = this._popupFocusOut.bind(this);
             this._simpleViewModel = new SimpleViewModel();
          },
          
@@ -98,6 +113,31 @@ define('js!Controls/Input/Suggest',
          
          _keyDownHandler: function(event) {
             this._suggestController.keyDown(event);
+         },
+   
+         _popupFocusIn: function() {
+            this._popupFocused = true;
+         },
+   
+         _popupFocusOut: function(focusObj) {
+            this._popupFocused = false;
+            
+            /* close, if focus moved outside */
+            if (_private.needCloseOnFocusOutPopup(this, focusObj.to)) {
+               _private.closePopup(this);
+            }
+         },
+         
+         _focusOut: function() {
+            var self = this;
+            
+            /* best way to check focus, because focusOut event is fired first. */
+            requestAnimationFrame(function() {
+               /* close, if focus moved not to popup */
+               if (_private.needCloseOnFocusOut(self)) {
+                  _private.closePopup(self);
+               }
+            });
          }
          
          // </editor-fold>
@@ -123,7 +163,8 @@ define('js!Controls/Input/Suggest',
          };
       };
       // </editor-fold>
-      
+   
+      Suggest._private = _private;
       return Suggest;
    }
 );
