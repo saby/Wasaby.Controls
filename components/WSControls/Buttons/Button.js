@@ -90,7 +90,8 @@ define('js!WSControls/Buttons/Button', [
              * @see isPrimary
              * @see setPrimary
              */
-            primary: false
+            primary: false,
+            _iconDisabledClass: 'icon-disabled'
          },
          _contentContainer: null,
          _iconClass: null,
@@ -212,7 +213,7 @@ define('js!WSControls/Buttons/Button', [
 
           if(iconContainer.length) {
               iconContainer[0].className = iconContainer[0].className.replace(/(^|\s)icon-\S+/g, '');
-              iconContainer.addClass(this._iconClass + (this.isEnabled() ? (' ' + this._iconState || '') : ' icon-disabled'));
+              iconContainer.addClass(this._iconClass + (this.isEnabled() ? (' ' + this._iconState || '') : (' ' + this._options._iconDisabledClass)));
           }
       },
 

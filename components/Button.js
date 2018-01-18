@@ -62,6 +62,7 @@ define('SBIS3.CONTROLS/Button',
       _modifyOptions : function() {
          var opts = Button.superclass._modifyOptions.apply(this, arguments);
          opts.cssClassName += ' controls-Button';
+         opts._iconDisabledClass = 'icon-button-disabled';
          ButtonUtil.preparedClassFromOptions(opts);
          return opts;
       },

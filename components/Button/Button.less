@@ -1,3 +1,11 @@
+/*
+<span class="controls-ButtonBase controls-Button controls-Button_size-m controls-Button_state-standard">
+  <span class="controls-ButtonBase__content controls-Button__content">
+    <i class="controls-Button__icon icon-16 icon-Author icon-done"></i>
+    <span class="controls-Button__text spacing-between-icon-text  ">Text</span>
+  </span>
+</span>
+*/
 .controls-Button {
   .button-default-style(@font-size_Button_default, @box-shadow_Button);
   border-style: solid;
@@ -26,33 +34,33 @@
   .border-radius(@border-radius_Button_l);
 }
 
-.controls-Button_state-default {
+.controls-Button_state-standard {
   color: @color_Button;
   background: @background_Button;
   border-color: @border-color_Button;
-  &:active {
-    border-color: @border-color_Button_hovered;
-    background: @background_Button_active;
-    box-shadow: none;
-  }
+}
+.controls-Button_state-standard:active {
+  border-color: @border-color_Button_hovered;
+  background: @background_Button_active;
+  box-shadow: none;
 }
 
 .controls-Button_state-primary {
   color: @color_Button_primary;
   background: @background_Button_primary;
   border-color: @border-color_Button_primary;
-  &:active {
-    border-color: @border-color_Button_primary_hovered;
-    background: @background_Button_primary_active;
-    box-shadow: none;
-  }
 }
-
+.controls-Button_state-primary:active {
+  border-color: @border-color_Button_primary_hovered;
+  background: @background_Button_primary_active;
+  box-shadow: none;
+}
 .controls-Button_state-disabled {
   cursor: default;
   color: @color_Button_disabled;
   border: @border_Button_disabled;
   background: @background_Button_disabled;
+  text-shadow: none;
 }
 .spacing-between-icon-text {
   margin-left: @spacing_Button-between-icon-text;
@@ -60,22 +68,18 @@
 .controls-Button__text {
   .text-overflow();
 }
-
+.icon-button-disabled {
+  color: @color_Button-icon_disabled;
+}
 // на тач устройствах ховер не нужен, поэтому стили приеменяются, только для десктопных устройств
 .ws-is-desktop-platform {
-  .controls-Button_state- {
-    &default {
-      &:hover {
-        border-color: @border-color_Button_hovered;
-        background: @background_Button_hovered;
-      }
-    }
-    &primary {
-      &:hover {
-        border-color: @border-color_Button_primary_hovered;
-        background: @background_Button_primary_hovered;
-      }
-    }
+  .controls-Button_state-standard:hover {
+      border-color: @border-color_Button_hovered;
+      background: @background_Button_hovered;
+  }
+  .controls-Button_state-primary:hover {
+      border-color: @border-color_Button_primary_hovered;
+      background: @background_Button_primary_hovered;
   }
 }
 .ws-is-mobile-safari {

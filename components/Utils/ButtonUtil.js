@@ -18,7 +18,7 @@ define('SBIS3.CONTROLS/Utils/ButtonUtil', [],
                 if(!opts.enabled){
                     state = 'disabled';
                 }else {
-                    state = (!!opts.primary ? 'primary' : 'default');
+                    state = (!!opts.primary ? 'primary' : 'standard');
                 }
                 classes += ' controls-Button_state-' + state;
                 return classes;
