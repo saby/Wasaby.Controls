@@ -14,11 +14,12 @@
                     height: {{item.position.height === undefined ? 'auto': item.position.height + 'px'}};"
             >
                 <ws:Controls.Popup.Manager.Popup id="{{item.id}}" __key="{{item.id}}"
-                                                 scope="{{item.popupOptions}}"
-                                                 on:closePopup="_closePopup()"
-                                                 on:popupCreated="_popupCreated()"
-                                                 on:popupFocusOut="_popupFocusOut()"
-                                                 on:result="_result()"
+                    scope="{{item.popupOptions}}"
+                    on:closePopup="_closePopup()"
+                    on:popupCreated="_popupCreated()"
+                    on:popupFocusIn="_popupFocusIn()"
+                    on:popupFocusOut="_popupFocusOut()"
+                    on:result="_result()"
                 />
             </div>
         </div>

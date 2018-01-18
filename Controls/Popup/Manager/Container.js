@@ -74,6 +74,19 @@ define('js!Controls/Popup/Manager/Container',
          },
 
          /**
+          * Обработчик установки фокуса.
+          * @function Controls/Popup/Manager/Container#_popupFocusIn
+          * @param event
+          * @param id идентификатор попапа.
+          * @param focusedControl
+          */
+         _popupFocusIn: function(event, id, focusedControl){
+            if (this.eventHandlers && this.eventHandlers.onPopupFocusIn) {
+               this.eventHandlers.onPopupFocusIn(event, id, focusedControl);
+            }
+         },
+
+         /**
           * Обработчик потери фокуса.
           * @function Controls/Popup/Manager/Container#_popupFocusOut
           * @param event
