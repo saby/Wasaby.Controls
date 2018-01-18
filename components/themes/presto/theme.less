@@ -383,3 +383,10 @@ body {
 .controls-DataGridView__headerRow .controls-DataGridView__th {
   line-height: round((75px * @multiplier) / 2);
 }
+//todo: временное решение, пока прикладные модули не умеют в темы
+.controls-Browser {
+  .controls-Browser__table.controls-Browser__table-fullFilterBlock .controls-Browser__tableCell-fastDataFilter {
+    margin-right: @default-padding;
+  }
+
+}
