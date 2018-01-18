@@ -2,23 +2,19 @@
   &.controls-Checked__checked:not(.ws-disabled) {
     border-width: @button-checked-border-width;
 
-    &.controls-Button_state- {
-      &default {
+    &.controls-Button_state-standard {
         background: @button-checked-bg;
         border-color: @button-checked-border-color;
       }
-      &primary {
-        background: @button-primary-checked-bg;
-      }
+    &.controls-Button_state-primary {
+       background: @button-primary-checked-bg;
     }
 
-    &.controls-Button_size- {
-      &m {
-        padding: @button-checked-padding;
-      }
-      &l {
-        padding: @button-big-checked-padding;
-      }
+    &.controls-Button_size-m {
+      padding: @button-checked-padding;
+    }
+    &.controls-Button_size-l {
+      padding: @button-big-checked-padding;
     }
   }
 }
