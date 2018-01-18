@@ -10,6 +10,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    "SBIS3.CONTROLS/Utils/DateUtil",
    'SBIS3.CONTROLS/Utils/DateControls',
    "Core/helpers/event-helpers",
+   'Core/helpers/Object/isEmpty',
    "SBIS3.CONTROLS/Button",
    'js!WSControls/Buttons/Button',
    "SBIS3.CONTROLS/Button/IconButton",
@@ -26,7 +27,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    'css!SBIS3.CONTROLS/Date/RangeBigChoose/DateRangeBigChoose',
    'SBIS3.CONTROLS/ScrollContainer',
 
-], function ( constants, CompoundControl, dotTplFn, headerTpl, yearsPanelTpl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, DateControlsUtil, eHelpers) {
+], function ( constants, CompoundControl, dotTplFn, headerTpl, yearsPanelTpl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, DateControlsUtil, eHelpers, isEmpty) {
    'use strict';
 
    var
@@ -81,6 +82,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
               * @cfg {Array}
               */
             endValueValidators: [],
+
+            quantum: {},
 
             headerType: headerTypes.link,
 
@@ -269,11 +272,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
          this.subscribe('onRangeChange', this._onRangeChange.bind(this));
 
-         if (this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.range) {
+         // if (this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.range) {
             this.applyYearState();
-         } else {
-            this.applyMonthState(this._options.startValue? this._options.startValue: new Date());
-         }
+         // } else {
+         //    this.applyMonthState(this._options.startValue? this._options.startValue: new Date());
+         // }
 
          this._updateHomeButton();
       },
@@ -285,6 +288,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          options.yearPanelData = this._getYearsRangeItems(options.displayedYear, options, true);
          options.weekdaysCaptions = DateControlsUtil.getWeekdaysCaptions();
          // options._state = options.selectionType === RangeSelectableViewMixin.selectionTypes.range ? states.year: states.month;
+         if (isEmpty(options.quantum) && options.selectionType === RangeSelectableViewMixin.selectionTypes.single) {
+            options.quantum.days = [1];
+         }
          return options;
       },
 
