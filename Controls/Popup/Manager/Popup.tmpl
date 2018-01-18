@@ -1,7 +1,8 @@
 <div class="ws-Popup"
      on:close="_close()"
      on:keyup="_keyPressed()"
-     on:vdomFocusOut="_focusOut()"
+     on:focusIn="_focusIn()"
+     on:focusOut="_focusOut()"
      on:sendResult="_sendResult()"
 >
     <ws:partial template="{{_options.template}}" scope="{{_options.componentOptions}}"></ws:partial>
