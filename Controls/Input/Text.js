@@ -96,6 +96,10 @@ define('js!Controls/Input/Text', [
             this._notify(value);
          },
 
+         _valueChangedHandler: function(e, value) {
+            this._notify('valueChanged', [value]);
+         },
+
          paste: function(text) {
             inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text);
          }
