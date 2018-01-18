@@ -101,12 +101,17 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       // },
 
       _onScroll: throttle(function () {
+         // TODO: переделать условие
+         if (!this.getContainer().is(':visible')) {
+            return;
+         }
+
          var scrollContainerTop = this._scrollContainer.offset().top,
             first = false,
             date;
          date = this.getContainer().find('.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_wrapper').filter(function (index, element) {
             element = $(element);
-            if (scrollContainerTop <= (element.offset().top + element.height()) && !first) {
+            if (scrollContainerTop < (element.offset().top + element.height()) && !first) {
                first = true;
                return true;
             }

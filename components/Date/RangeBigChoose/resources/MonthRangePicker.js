@@ -155,6 +155,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
       },
 
       _onScroll: throttle(function () {
+         // TODO: переделать условие
+         if (!this.getContainer().is(':visible')) {
+            return;
+         }
          var scrollTop = this._scrollContainer.scrollTop(),
             firstYear = this.getContainer().find('.controls-DateRangeBigChoose-MonthRangePickerItem').first().data('date'),
             year = Math.floor(Date.fromSQL(firstYear).getFullYear() + (scrollTop/this._getItemHeight()));

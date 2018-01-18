@@ -351,6 +351,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
       _onApplyButtonClick: function () {
          if (this._startDatePicker.validate() && this._endDatePicker.validate()) {
+            if (this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.range && this.isSelectionProcessing()) {
+               this._onRangeItemElementClick(this.getStartValue());
+            }
             this.cancelSelection();
             this._dateRangePicker.cancelSelection();
             this._notify('onChoose', this.getStartValue(), this.getEndValue());
