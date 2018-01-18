@@ -30,10 +30,10 @@ define('js!Controls/Validate/Controller',
             }.bind(this);
          },
          _afterMount: function () {
-            this._notify('validateCreated', this);
+            this._notify('validateCreated', [this], {bubbling:true});
          },
          _beforeUnmount: function () {
-            this._notify('validateDestroyed', this);
+            this._notify('validateDestroyed', [this], {bubbling:true});
          },
          _afterUpdate: function() {
             if (this._shouldValidate) {
