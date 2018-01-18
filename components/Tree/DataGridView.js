@@ -564,7 +564,6 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
                if(this._options.editArrow === 'custom') {
                   editArrowMarker = this._getEditArrowMarker(hoveredItemContainer);
                } else {
-                  this._hideEditArrow();
                   editArrowMarker = this._getEditArrowMarker(titleTd);
                }
                if (editArrowMarker.length) {
