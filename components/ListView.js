@@ -4075,6 +4075,12 @@ define('SBIS3.CONTROLS/ListView',
                .meta({ hasMore: this._options.partialPaging});
             return query;
          },
+         setPageSize: function(pageSize) {
+            if (this._pager) {
+               this._pager.setPageSize(pageSize);
+            }
+            ListView.superclass.setPageSize.apply(this, arguments);
+         },
          /**
           * Метод обработки интеграции с пейджингом
           */
