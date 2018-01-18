@@ -3213,22 +3213,27 @@ define('SBIS3.CONTROLS/ListView',
            * т.к. запись удалена и над ней нельзя проводить действия
            */
          _checkDeletedItems: function (items) {
-            var self = this,
-                itemsActions, target, targetHash;
+            var toolbar = this._getItemsToolbar(),
+                toolbarTarget = toolbar.getCurrentTarget(),
+                itemsActions = this.getItemsActions();
 
-            if(self._itemsToolbar && self._itemsToolbar.isToolbarLocking()){
-               itemsActions = self.getItemsActions();
-               if(itemsActions) {
-                  target = self.getItemsActions().getTarget();
-                  targetHash = target.container.data('hash');
-                  items.forEach(function(item) {
-                     if (item.getHash() == targetHash) {
-                        self._itemsToolbar.unlockToolbar();
-                        self._itemsToolbar.hide();
-                     }
-                  });
+            if(toolbar && toolbarTarget && itemsActions){
+               if(this._checkToolbarTarget(items, toolbarTarget.container.data('hash')) && (toolbar.isToolbarLocking() || this._options.itemsActionsInItemContainer)){
+                   toolbar.unlockToolbar();
+                   toolbar.hide();
                }
             }
+         },
+
+         _checkToolbarTarget: function (items, toolbarTargetHash) {
+           var isEqual = false;
+
+           items.forEach(function(item) {
+               if (item.getHash() == targetHash) {
+                   isEqual = true;
+               }
+           });
+           return isEqual;
          },
 
          //-----------------------------------infiniteScroll------------------------
