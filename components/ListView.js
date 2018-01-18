@@ -3215,26 +3215,25 @@ define('SBIS3.CONTROLS/ListView',
          _checkDeletedItems: function (items) {
             var toolbar = this._getItemsToolbar(),
                 toolbarTarget = toolbar.getCurrentTarget(),
-                itemsActions = this.getItemsActions(),
-                isEqual = false,
-                targetHash;
-
-            function checkEqualItem() {
-               targetHash = toolbarTarget.container.data('hash');
-               items.forEach(function(item) {
-                  if (item.getHash() == targetHash) {
-                     isEqual = true;
-                  }
-               });
-               return isEqual;
-            }
+                itemsActions = this.getItemsActions();
 
             if(toolbar && toolbarTarget && itemsActions){
-               if(checkEqualItem() && (toolbar.isToolbarLocking() || this._options.itemsActionsInItemContainer)){
+               if(this._checkToolbarTarget(items, toolbarTarget.container.data('hash')) && (toolbar.isToolbarLocking() || this._options.itemsActionsInItemContainer)){
                    toolbar.unlockToolbar();
                    toolbar.hide();
                }
             }
+         },
+
+         _checkToolbarTarget: function (items, toolbarTargetHash) {
+           var isEqual = false;
+
+           items.forEach(function(item) {
+               if (item.getHash() == targetHash) {
+                   isEqual = true;
+               }
+           });
+           return isEqual;
          },
 
          //-----------------------------------infiniteScroll------------------------
