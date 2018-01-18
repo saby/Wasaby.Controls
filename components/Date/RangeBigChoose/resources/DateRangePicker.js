@@ -1,6 +1,7 @@
 define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
    "Core/constants",
    "Core/Deferred",
+   'Core/helpers/Function/throttle',
    "SBIS3.CONTROLS/ListView",
    "tmpl!SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePickerItem",
    "SBIS3.CONTROLS/Mixins/RangeMixin",
@@ -12,7 +13,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
    'SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin',
    "SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView",
    'SBIS3.CONTROLS/ScrollContainer'
-], function (constants, Deferred, ListView, ItemTmpl, RangeMixin, Base, DateUtils, cInstance, CalendarSource, LayoutManager, RangeSelectableViewMixin) {
+], function (constants, Deferred, throttle, ListView, ItemTmpl, RangeMixin, Base, DateUtils, cInstance, CalendarSource, LayoutManager, RangeSelectableViewMixin) {
    'use strict';
 
    var monthSource = new CalendarSource();
@@ -99,21 +100,33 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       //    return options;
       // },
 
-      _onScroll: function () {
-         var scrollTop = this._scrollContainer.scrollTop(),
-            date = Date.fromSQL(this.getContainer().find('.controls-DateRangeBigChoose-DateRangePickerItem').first().data('date')),
-            monthDelta = Math.floor((scrollTop/this._getItemHeight()));
-         date.setMonth(date.getMonth() + monthDelta);
+      _onScroll: throttle(function () {
+         // TODO: переделать условие
+         if (!this.getContainer().is(':visible')) {
+            return;
+         }
+
+         var scrollContainerTop = this._scrollContainer.offset().top,
+            first = false,
+            date;
+         date = this.getContainer().find('.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_wrapper').filter(function (index, element) {
+            element = $(element);
+            if (scrollContainerTop < (element.offset().top + element.height()) && !first) {
+               first = true;
+               return true;
+            }
+         }).data('date');
+         date =  Date.fromSQL(date);
          this._setMonth(date);
          this._updateDisplayedYearCssClass();
-      },
+      }, 300, true),
 
       _getItemHeight: function () {
          return this.getContainer().find('.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_wrapper').first().outerHeight();
       },
 
       _onMonthTitleClick: function (event) {
-         var date = new Date.fromSQL($(event.target).data('date'));
+         var date = Date.fromSQL($(event.target).data('date'));
          this.setRange(date, DateUtils.getEndOfMonth(date));
          this._notify('onSelectionEnded');
       },

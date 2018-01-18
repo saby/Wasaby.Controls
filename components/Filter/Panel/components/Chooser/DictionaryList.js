@@ -108,7 +108,6 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
         _showDictionary: function(meta) {
             meta = coreMerge(coreClone(this._options.dictionaryOptions), meta || {});
             meta.multiselect = true;
-            meta.selectedItems = this._getListView().getSelectedItems();
             this._getSelectorAction().execute(meta);
         },
 
@@ -154,11 +153,15 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
         _onExecutedHandler: function(event, meta, result) {
             var
                 listView = this._getListView(),
-                items = listView.getItems();
+                items = listView.getItems(),
+                idProperty = listView._options.idProperty;
             if (cInstance.instanceOfModule(result, 'WS.Data/Collection/List')) {
-                items.clear();
                 if (result.getCount()) {
-                   items.assign(result);
+                    result.forEach(function(item) {
+                        if (!items.getRecordById(item.get(idProperty))) {
+                            items.add(item);
+                        }
+                    });
                 }
                 listView.setSelectedItemsAll();
                 this._updateValue();
