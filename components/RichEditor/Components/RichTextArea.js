@@ -492,10 +492,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._performByReady(function() {
                   //Активность могла поменяться пока грузится tinymce.js
                   if (this._lastActive) {
+                     var noRng = !this._tinyLastRng;
                      this._tinyEditor.focus();
-                     // Если сейчас есть контент - поставить курсор ввода в его конец
+                     // Если сейчас есть контент и не было установлено осмысленного рэнжа - поставить курсор ввода в его конец
                      // 24823 https://online.sbis.ru/opendoc.html?guid=cd2659d7-0066-4207-bade-b77edb462684
-                     if (this.getText()) {
+                     if (noRng && this.getText()) {
                         this.setCursorToTheEnd();
                      }
                      if (cConstants.browser.isMobileAndroid) {
