@@ -423,7 +423,7 @@ define('SBIS3.CONTROLS/TextBox', [
                 this._container.attr('title', '');
                //Ставлю пробел, чтобы скрыть браузерную подсказку "Заполните это поле". Если поставить пробел, то все браузеры,
                //кроме IE, не выводят всплывающую подсказку. Для IE ставлю пустой title, чтобы он не выводил всплывашку.
-               field.attr('title', constants.browser.isIE ? '' : ' ');
+               field.attr('title', constants.browser.isIE || constants.browser.retailOffline ? '' : ' ');
             }
             this._tooltipText = this._options.text;
          }
