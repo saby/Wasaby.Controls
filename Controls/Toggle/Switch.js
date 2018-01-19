@@ -25,7 +25,7 @@ define('js!Controls/Toggle/Switch', [
       _template: template,
 
       _clickHandler: function (e) {
-         this._notify('valueChanged', !this._options.value);
+         this._notify('valueChanged', [!this._options.value]);
       }
    });
 

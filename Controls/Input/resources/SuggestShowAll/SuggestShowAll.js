@@ -22,7 +22,7 @@ define('js!Controls/Input/resources/SuggestShowAll/SuggestShowAll',
          },
          
          _onItemClickHandler: function(event, item) {
-            this._notify('sendResult', item);
+            this._notify('sendResult', [item]);
             this._notify('close');
          }
       });
