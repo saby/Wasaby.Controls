@@ -1189,7 +1189,11 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             this.moveToTop();//пересчитываем, чтобы z-index был выше других панелей
 
             this._notify('onShow');
-
+   
+            if (this._options.target) {
+               this._options.target.trigger('wsSubWindowOpen');
+            }
+            
             if (this._parentFloatArea){
                this._parentFloatArea.setHasPopupInside(true);
             }
@@ -1326,21 +1330,25 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                       }
                       self.getContainer().removeClass('controls-Popup__touchScroll-fix');
                    }
-                };
+                },
+               close = function() {
+                  parentHide.call(self);
+                  clearZIndex();
+                  self._fixedOffset = null;
+                  deactivateWindow.call(self);
+                  if (self._options.target) {
+                     self._options.target.trigger('wsSubWindowClose');
+                  }
+               };
+            
             if (result instanceof Deferred) {
                result.addCallback(function (res) {
                   if (res !== false) {
-                     parentHide.call(self);
-                     clearZIndex();
-                     self._fixedOffset = null;
-                     deactivateWindow.call(this);
+                     close();
                   }
                });
             } else if (result !== false) {
-               parentHide.call(this);
-               clearZIndex();
-               self._fixedOffset = null;
-               deactivateWindow.call(this);
+               close();
             }
          }
       }
