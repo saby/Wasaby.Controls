@@ -226,6 +226,7 @@
                .controls-DropdownList__item-text-shadow {
                   float: right;
                   width: 24px;
+                  margin-left: -24px;
                   display: inline-block;
                   height: @DropdownList-picker-menu-item-height;
                   position: relative;
@@ -497,6 +498,14 @@
       }
       .controls-DropdownList__header .controls-DropdownList {
          line-height: @DropdownList-picker-menu-height-ff;
+      }
+      .controls-DropdownList__body .controls-DropdownList__item .controls-DropdownList__itemTextWrapper {
+         .controls-DropdownList__item-text {
+            float: none;
+         }
+         .controls-DropdownList__item-text-shadow {
+            top: -@DropdownList-picker-menu-item-height-ff;
+         }
       }
    }
    .controls-DropdownList__afterCaptionWrapper {
