@@ -601,7 +601,7 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
       _isHoverControl: function(target) {
          var res = TreeDataGridView.superclass._isHoverControl.apply(this, arguments);
 
-         if(!res && (this._options.editArrow || this._options.arrowActivatedHandler)) {
+         if(!res && (this._options.editArrow || this._options.arrowActivatedHandler) && this._editArrow) {
             return contains(this.getEditArrow().getContainer()[0], target[0]) || this.getEditArrow().getContainer()[0] === target[0];
          }
          return res;

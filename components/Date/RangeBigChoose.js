@@ -10,6 +10,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    "SBIS3.CONTROLS/Utils/DateUtil",
    'SBIS3.CONTROLS/Utils/DateControls',
    "Core/helpers/event-helpers",
+   'Core/helpers/Object/isEmpty',
    "SBIS3.CONTROLS/Button",
    'js!WSControls/Buttons/Button',
    "SBIS3.CONTROLS/Button/IconButton",
@@ -26,7 +27,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    'css!SBIS3.CONTROLS/Date/RangeBigChoose/DateRangeBigChoose',
    'SBIS3.CONTROLS/ScrollContainer',
 
-], function ( constants, CompoundControl, dotTplFn, headerTpl, yearsPanelTpl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, DateControlsUtil, eHelpers) {
+], function ( constants, CompoundControl, dotTplFn, headerTpl, yearsPanelTpl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, DateControlsUtil, eHelpers, isEmpty) {
    'use strict';
 
    var
@@ -81,6 +82,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
               * @cfg {Array}
               */
             endValueValidators: [],
+
+            quantum: {},
 
             headerType: headerTypes.link,
 
@@ -142,15 +145,15 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
                   css.push(prefix + '-selectedInner');
                }
 
-               if (scope.year.selectedStart && !(scope.year.selectedUnfinishedStart || scope.year.selectedUnfinishedEnd)) {
+               if (scope.year.selectedStart && !scope.year.selectedUnfinishedStart) {
                   css.push('controls-RangeSelectable__item-selectedStart');
                   css.push(prefix + '-selectedStart');
                }
-               if (scope.year.selectedEnd && !(scope.year.selectedUnfinishedStart || scope.year.selectedUnfinishedEnd)) {
+               if (scope.year.selectedEnd && (!scope.year.selectionProcessing || (scope.year.selectedEnd !== scope.year.selectedStart))) {
                   css.push('controls-RangeSelectable__item-selectedEnd');
                   css.push(prefix + '-selectedEnd');
                }
-               if (scope.year.selectedUnfinishedstart) {
+               if (scope.year.selectedUnfinishedStart) {
                   css.push(prefix + '-selectedUnfinishedStart');
                }
                if (scope.year.selectedUnfinishedEnd) {
@@ -228,7 +231,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this._dateRangePicker.subscribe('onActivated', this._onDateRangePickerActivated.bind(this));
          this._monthRangePicker.subscribe('onSelectionEnded', this._onSelectionEnded.bind(this));
          this._monthRangePicker.subscribe('onYearChanged', this._onMonthRangePickerYearChanged.bind(this));
-         this._dateRangePicker.subscribe('onSelectionEnded', this._onSelectionEnded.bind(this));
+         this._dateRangePicker.subscribe('onSelectionEnded', this._onDateRangeSelectionEnded.bind(this));
          this._dateRangePicker.subscribe('onMonthChanged', this._onDateRangePickerYearChanged.bind(this));
 
          this.subscribe('onSelectionEnded', this._onSelectionEnded.bind(this));
@@ -269,11 +272,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
          this.subscribe('onRangeChange', this._onRangeChange.bind(this));
 
-         if (this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.range) {
+         // if (this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.range) {
             this.applyYearState();
-         } else {
-            this.applyMonthState(this._options.startValue? this._options.startValue: new Date());
-         }
+         // } else {
+         //    this.applyMonthState(this._options.startValue? this._options.startValue: new Date());
+         // }
 
          this._updateHomeButton();
       },
@@ -285,6 +288,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          options.yearPanelData = this._getYearsRangeItems(options.displayedYear, options, true);
          options.weekdaysCaptions = DateControlsUtil.getWeekdaysCaptions();
          // options._state = options.selectionType === RangeSelectableViewMixin.selectionTypes.range ? states.year: states.month;
+         if (isEmpty(options.quantum) && options.selectionType === RangeSelectableViewMixin.selectionTypes.single) {
+            options.quantum.days = [1];
+         }
          return options;
       },
 
@@ -317,6 +323,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             this._updateHeaderInputsVisibility();
          }
        },
+       _onDateRangeSelectionEnded: function () {
+         this._monthRangePicker._clearMonthSelection();
+         this._onSelectionEnded();
+       },
 
       _setDisplayedPeriod: function (startDate) {
          this._options._displayedPeriod = startDate;
@@ -345,6 +355,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
       _onApplyButtonClick: function () {
          if (this._startDatePicker.validate() && this._endDatePicker.validate()) {
+            if (this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.range && this.isSelectionProcessing()) {
+               this._onRangeItemElementClick(this.getStartValue());
+            }
             this.cancelSelection();
             this._dateRangePicker.cancelSelection();
             this._notify('onChoose', this.getStartValue(), this.getEndValue());
