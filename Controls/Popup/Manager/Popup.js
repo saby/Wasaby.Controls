@@ -29,11 +29,6 @@ define('js!Controls/Popup/Manager/Popup',
           * @cfg {Object} Опции компонента
           */
 
-         /**
-          * @name Controls/Popup/Manager/Popup#opener
-          * @cfg {Object} Опенер
-          */
-
          _controlName: 'Controls/Popup/Manager/Popup',
          _template: template,
 
