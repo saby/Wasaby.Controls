@@ -3229,7 +3229,7 @@ define('SBIS3.CONTROLS/ListView',
            var isEqual = false;
 
            items.forEach(function(item) {
-               if (item.getHash() == targetHash) {
+               if (item.getHash() == toolbarTargetHash) {
                    isEqual = true;
                }
            });
