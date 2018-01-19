@@ -145,6 +145,22 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
             }
         },
 
+       _removeItemsFromDefault: function() {
+          var
+             id, self = this,
+             items = this._getListView().getItems(),
+             defaultItems = this._options.defaultItems,
+             idProperty = defaultItems.getIdProperty();
+
+          defaultItems.each(function(item) {
+             id = item.get(idProperty);
+             item = items.getRecordById(id);
+             if (item && self._options.value.indexOf(id) === -1) {
+                items.remove(item);
+             }
+         });
+       },
+
         _toggleAllButton: function() {
             FilterPanelChooserDictionary.superclass._toggleAllButton.apply(this, arguments);
             this._getAllButton().setCaption('Ещё' + ' ' + (this._getListView().getItems().getCount() - 3));
@@ -156,6 +172,8 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
                 items = listView.getItems(),
                 idProperty = listView._options.idProperty;
             if (cInstance.instanceOfModule(result, 'WS.Data/Collection/List')) {
+                //Удалим из набора все элементы из набора дефолтных элементов
+                this._removeItemsFromDefault();
                 if (result.getCount()) {
                     result.forEach(function(item) {
                         if (!items.getRecordById(item.get(idProperty))) {
@@ -165,6 +183,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
                 }
                 listView.setSelectedItemsAll();
                 this._updateValue();
+                //Дозаполним набор отображаемых элементов из набора дефолтных
                 this._addItemsFromDefault();
                 this._toggleFullState(false);
             }
