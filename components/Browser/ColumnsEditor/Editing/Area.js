@@ -162,7 +162,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                _getPresets(this).addCallback(function (presets) {
                   this._currentPreset = _getPreset(presets, options.selectedPresetId || PresetDropdown.getLastSelected(options.presetNamespace));
                   _updatePresetView(this);
-                  _updateSelectableView(this);
+                  _updateSelectableViewByPreset(this);
 
                   this.subscribeTo(this._presetView, 'onAfterBeginEdit', function () {
                      this._presetView.setItemsActions([]);
@@ -254,15 +254,10 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          return list1 && list1.length ? (list2 && list2.length ? list1.concat(list2).reduce(function (r, v) { if (r.indexOf(v) === -1) { r.push(v); }; return r; }, []) : list1) : (list2 && list2.length ? list2 : []);
       };
 
-      var _getSelectedColumns = function (cfg, preset, concatAll) {
-         var selected = preset ? preset.selectedColumns : null;
-         return concatAll ? _uniqueConcat(selected, cfg.selectedColumns) : (selected || []);
-      };
-
       var _prepareChildItemsAndGroups = function (cfg, preset) {
          var
             columns = cfg.columns,
-            selectedColumns = _getSelectedColumns(cfg, preset, true),
+            selectedColumns = _uniqueConcat(preset ? preset.selectedColumns : null, cfg.selectedColumns),
             moveColumns = cfg.moveColumns;
          var
             preparingItems = [],
@@ -426,20 +421,21 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          _getPresets(self).addCallback(function (presets) {
             self._currentPreset = _getPreset(presets, self._presetDropdown.getSelectedPresetId());
             _updatePresetView(self);
-            _updateSelectableView(self);
+            _updateSelectableViewByPreset(self);
          });
       };
 
-      var _updateSelectableView = function (self) {
-         var cfg = self._options;
-         var selectedIds = _getSelectedColumns(cfg, self._currentPreset, false);
+      var _updateSelectableViewByPreset = function (self) {
+         var selectedIds = self._currentPreset ? self._currentPreset.selectedColumns : [];
          var selectedColumns = [];
-         cfg.columns.each(function (record) {
-            var column = record.getId();
-            if (!record.get('fixed') && selectedIds.indexOf(column) !== -1) {
-               selectedColumns.push(column);
-            }
-         });
+         if (selectedIds.length) {
+            self._options.columns.each(function (record) {
+               var column = record.getId();
+               if (!record.get('fixed') && selectedIds.indexOf(column) !== -1) {
+                  selectedColumns.push(column);
+               }
+            });
+         }
          self._selectableView.setSelectedKeys(selectedColumns);
       };
 
@@ -466,7 +462,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             case 'delete':
                _modifyPresets(self, action);
                _updatePresetView(self);
-               _updateSelectableView(self);
+               _updateSelectableViewByPreset(self);
                break;
          }
       };
