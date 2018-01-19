@@ -302,7 +302,11 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
         },
 
         processHistory: function (self) {
-            var processedItems = new RecordSet({adapter: new SbisAdapter(), idProperty: 'historyId'}),
+            var processedItems = new RecordSet({
+                    adapter: new SbisAdapter(),
+                    idProperty: 'historyId',
+                    model: self._oldItems.getModel()
+                }),
                 needToDrawSeparate = false,
                 itemCount = 0,
                 indexLastHistoryItem = null,
