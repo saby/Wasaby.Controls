@@ -16,8 +16,12 @@ define('js!Controls/Input/resources/SuggestShowAll/SuggestShowAll',
          constructor: function(options) {
             SuggestShowAll.superclass.constructor.call(this, options);
             //TODO переписать, как список переведут на актуальное апи навигации
+            //так задаем дефолтные настройки для навигации в списке
             if (options.navigation && options.navigation.sourceConfig) {
                options.navigation.sourceConfig.pageSize = 20;
+               options.navigation.view = 'infinity';
+               options.navigation.viewConfig = options.navigation.viewConfig || {};
+               options.navigation.viewConfig.pagingMode = true;
             }
          },
          
