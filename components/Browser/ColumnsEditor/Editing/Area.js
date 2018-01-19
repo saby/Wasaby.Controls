@@ -429,12 +429,29 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          var selectedIds = self._currentPreset ? self._currentPreset.selectedColumns : [];
          var selectedColumns = [];
          if (selectedIds.length) {
-            self._options.columns.each(function (record) {
-               var column = record.getId();
-               if (!record.get('fixed') && selectedIds.indexOf(column) !== -1) {
-                  selectedColumns.push(column);
+            var columns = self._options.columns.getRawData();
+            for (var i = 0; i < columns.length; i++) {
+               var column = columns[i];
+               if (!column.fixed && selectedIds.indexOf(column.id) !== -1) {
+                  selectedColumns.push(column.id);
                }
+            }
+            var newColumns = columns.slice();
+            newColumns.sort(function (c1, c2) {
+               var i1 = selectedIds.indexOf(c1.id);
+               var i2 = selectedIds.indexOf(c2.id);
+               if (i1 !== -1) {
+                  return i2 !== -1 ? (i1 < i2 ? -1 : (i1 == i2 ? 0 : +1)) : -1;
+               }
+               else
+               if (i2 !== -1) {
+                  return +1;
+               }
+               i1 = columns.indexOf(c1);
+               i2 = columns.indexOf(c2);
+               return i1 < i2 ? -1 : (i1 == i2 ? 0 : +1);
             });
+            self._selectableView.setItems(new RecordSet({rawData:newColumns, idProperty:'id'}));
          }
          self._selectableView.setSelectedKeys(selectedColumns);
       };
