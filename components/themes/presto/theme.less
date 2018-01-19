@@ -1,5 +1,4 @@
 body {
-  @infobox-border: @default-border-width solid transparent;
   .ws-info-box {
     background: @background-color_infobox !important;
     color: @default-text-color;
@@ -198,7 +197,7 @@ body {
   }
   .controls-Pager-block-amount {display: none}
   .controls-ListView__scrollPager {
-    padding: round(11px * @multiplier);
+    padding: round(11px * @multiplier) round(8px * @multiplier) round(11px * @multiplier) 0;
     .controls-IconButton {
       background: @background_Button;
       padding: 0;
@@ -388,5 +387,7 @@ body {
   .controls-Browser__table.controls-Browser__table-fullFilterBlock .controls-Browser__tableCell-fastDataFilter {
     margin-right: @default-padding;
   }
-
+  .controls-Browser__fastDataFilter .controls-DropdownList {
+    margin-top:  ceil(11px * @multiplier);
+  }
 }

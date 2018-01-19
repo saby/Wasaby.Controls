@@ -89,9 +89,10 @@ define('js!Controls/Input/Area', [
          _private.updateScroll.call(this);
       },
 
-      _changeValueHandler: function(e, value){
+      _valueChangedHandler: function(e, value){
          _private.setFakeAreaValue.call(this, value);
          _private.updateScroll.call(this);
+         this._notify('valueChanged', [value]);
       },
 
       _setValue: function(value){

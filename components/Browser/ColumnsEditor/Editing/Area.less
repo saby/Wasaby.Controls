@@ -91,9 +91,21 @@
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__view-item-text {
+   display: inline-block;
+   box-sizing: border-box;
+   width: 100%;
+   overflow: hidden;
    padding-left: @padding-left-ColumnsEditor-Editing-Area__view-item-text;
+   padding-right: @padding-right-ColumnsEditor-Editing-Area__view-item-text;
    line-height: @line-height-ColumnsEditor-Editing-Area__view-item-text;
+   white-space: nowrap;
+   text-overflow: ellipsis;
    color: @color-ColumnsEditor-Editing-Area__view-item-text;
+}
+.controls-Browser-ColumnsEditor-Editing-Area__SelectableList_movable {
+   .controls-Browser-ColumnsEditor-Editing-Area__view-item-text {
+      padding-right: @padding-right-ColumnsEditor-Editing-Area__view-item-text-2;
+   }
 }
 .controls-ListView__item__multiSelected {
    .controls-Browser-ColumnsEditor-Editing-Area__view-item-text {
