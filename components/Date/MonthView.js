@@ -579,7 +579,7 @@ define(
                   if (scope.selected && scope.selectedStart && !scope.selectedUnfinishedStart) {
                      css.push('controls-MonthView__item-selectedStart');
                   }
-                  if (scope.selected && scope.selectedEnd && !scope.selectedUnfinishedEnd) {
+                  if (scope.selected && scope.selectedEnd && (!scope.selectionProcessing || (scope.selectedEnd !== scope.selectedStart))) {
                      css.push('controls-MonthView__item-selectedEnd');
                   }
                   if (scope.selectedInner) {
