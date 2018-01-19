@@ -485,14 +485,13 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
 
          expandNode: function(parentFunc, key, hash) {
             if(this.getViewMode() === 'table') {
-               parentFunc.call(this, key, hash);
-
+               return parentFunc.call(this, key, hash);
             }
          },
 
          collapseNode: function(parentFunc, key, hash) {
             if(this.getViewMode() === 'table') {
-               parentFunc.call(this, key, hash);
+               return parentFunc.call(this, key, hash);
             }
          },
 
