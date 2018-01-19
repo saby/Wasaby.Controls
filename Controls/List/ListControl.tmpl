@@ -17,7 +17,7 @@
    <div class="ws-ListControl__bottomListTrigger" name="bottomListTrigger"></div>
 
    <ws:if data="{{_pagingCfg}}">
-      <ws:Controls.List.Paging className="ws-ListControl__paging" scope="{{_pagingCfg}}" on:onArrowClick="__onPagingArrowClick()"></ws:Controls.List.Paging>
+      <ws:Controls.List.Paging attr:class="ws-ListControl__paging" scope="{{_pagingCfg}}" on:onArrowClick="__onPagingArrowClick()"></ws:Controls.List.Paging>
    </ws:if>
    <ws:if data="{{_loadingIndicatorState}}">
       <div class="ws-ListControl__loadingIndicator ws-ListControl__loadingIndicator__state-{{_loadingIndicatorState}}">
