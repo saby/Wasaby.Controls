@@ -43,7 +43,7 @@ define('js!Controls/Popup/Manager/Popup',
 
          _afterMount: function () {
             var container = this._container;
-            this._notify('popupCreated', this._options.id, container.offsetWidth, container.offsetHeight);
+            this._notify('popupCreated', [this._options.id, container.offsetWidth, container.offsetHeight]);
          },
 
          /**
@@ -51,7 +51,7 @@ define('js!Controls/Popup/Manager/Popup',
           * @function Controls/Popup/Manager/Popup#_close
           */
          _close: function () {
-            this._notify('closePopup', this._options.id);
+            this._notify('closePopup', [this._options.id]);
          },
 
          /**
@@ -61,7 +61,7 @@ define('js!Controls/Popup/Manager/Popup',
           * @param focusedControl
           */
          _focusIn: function (event, focusedControl) {
-            this._notify('popupFocusIn', this._options.id, focusedControl);
+            this._notify('popupFocusIn', [this._options.id, focusedControl]);
          },
 
          /**
@@ -71,7 +71,7 @@ define('js!Controls/Popup/Manager/Popup',
           * @param focusedControl
           */
          _focusOut: function (event, focusedControl) {
-            this._notify('popupFocusOut', this._options.id, focusedControl);
+            this._notify('popupFocusOut', [this._options.id, focusedControl]);
          },
 
          /**
@@ -90,7 +90,7 @@ define('js!Controls/Popup/Manager/Popup',
           * @function Controls/Popup/Manager/Popup#_sendResult
           */
          _sendResult: function (event, result) {
-            this._notify('result', this._options.id, result);
+            this._notify('result', [this._options.id, result]);
          }
       });
 
