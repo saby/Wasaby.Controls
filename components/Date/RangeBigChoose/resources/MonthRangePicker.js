@@ -428,18 +428,22 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.single;
 
          item.enabled = this.isEnabled();
-         item.selectionProcessing = this._rangeSelection;
-         item.selected = date >= startDate && date <= endDate;
-         item.selectedStart = dateUtils.isDatesEqual(date, startDate);
-         item.selectedEnd = dateUtils.isDatesEqual(date, endDate);
 
-         item.selectedUnfinishedStart = dateUtils.isDatesEqual(date, startDate) &&
-            dateUtils.isDatesEqual(date, selectionRangeEndItem) && !dateUtils.isDatesEqual(startDate, endDate);
+         if (!withoutSelection) {
+            item.selectionProcessing = this._rangeSelection;
+            item.selected = date >= startDate && date <= endDate;
+            item.selectedStart = dateUtils.isDatesEqual(date, startDate);
+            item.selectedEnd = dateUtils.isDatesEqual(date, endDate);
 
-         item.selectedUnfinishedEnd = dateUtils.isDatesEqual(date, endDate) &&
-            dateUtils.isDatesEqual(date, selectionRangeEndItem) && !dateUtils.isDatesEqual(startDate, endDate);
+            item.selectedUnfinishedStart = dateUtils.isDatesEqual(date, startDate) &&
+               dateUtils.isDatesEqual(date, selectionRangeEndItem) && !dateUtils.isDatesEqual(startDate, endDate);
 
-         item.selectedInner = (date && startDate && endDate && date.getTime() > startDate.getTime() && date.getTime() < endDate.getTime());
+            item.selectedUnfinishedEnd = dateUtils.isDatesEqual(date, endDate) &&
+               dateUtils.isDatesEqual(date, selectionRangeEndItem) && !dateUtils.isDatesEqual(startDate, endDate);
+
+            item.selectedInner = (date && startDate && endDate && date.getTime() > startDate.getTime() && date.getTime() < endDate.getTime());
+         }
+
          return item;
       },
 
@@ -470,11 +474,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             css.push(prefix + '-selectedInner');
          }
 
-         if (scope.item.selectedStart && !(scope.item.selectedUnfinishedStart || scope.item.selectedUnfinishedEnd)) {
+         if (scope.item.selectedStart && !scope.item.selectedUnfinishedStart) {
             css.push('controls-RangeSelectable__item-selectedStart');
             css.push(prefix + '-selectedStart');
          }
-         if (scope.item.selectedEnd && !(scope.item.selectedUnfinishedStart || scope.item.selectedUnfinishedEnd)) {
+         if (scope.item.selectedEnd && (!scope.item.selectionProcessing || (scope.item.selectedEnd !== scope.item.selectedStart))) {
             css.push('controls-RangeSelectable__item-selectedEnd');
             css.push(prefix + '-selectedEnd');
          }
@@ -488,7 +492,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          return css.join(' ');
       },
 
-      _drawCurrentRangeSelection: function () {
+      _drawCurrentRangeSelection: function (withoutSelection) {
          var domMonths = this.getContainer().find('.controls-DateRangeBigChoose-MonthRangePickerItem__month-wrapper'),
             week, domWeek;
 
@@ -497,7 +501,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          domMonths.each(function (index, element) {
             var $element = $(element),
                month = Date.fromSQL($element.attr(this._selectedRangeItemIdAtr)),
-               item = this._getMonthsRangeItem(month);
+               item = this._getMonthsRangeItem(month, withoutSelection);
             this._updateCssClasses($element, this._prepareRangeCssClasses({item: item}));
          }.bind(this));
       },
@@ -523,6 +527,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             this._SELECTABLE_RANGE_CSS_CLASSES.selectedStart,
             this._SELECTABLE_RANGE_CSS_CLASSES.selectedEnd,
          ];
+      },
+
+      _clearMonthSelection: function () {
+         this._drawCurrentRangeSelection(true);
       }
 
    });
