@@ -35,7 +35,7 @@ define('js!Controls/Toggle/DoubleSwitch', [
       },
 
       notifyChanged: function(self){
-         self._notify('valueChanged', !self._options.value);
+         self._notify('valueChanged', [!self._options.value]);
       }
    };
 
