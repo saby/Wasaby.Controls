@@ -22,19 +22,7 @@ define('SBIS3.CONTROLS/Controllers/ItemsMoveController', [
          this._publish('onItemMove');
       },
 
-      moveItem: function(item, at) {
-         var
-            linkedView = this._options.linkedView,
-            items = linkedView.getItems(),
-            moveTo = items.at(items.getIndex(item) + (at === 'before' ? -1 : 1));
-         // При перемещении записи необходимо менять её позицию в рекордсете
-         linkedView.move([item], moveTo, at);
-         this._notify('onItemMove', item);
-      },
-
       _prepareItemsActions: function(itemsActions) {
-         var
-            self = this;
          itemsActions.unshift(
             {
                name: 'moveDown',
@@ -42,7 +30,7 @@ define('SBIS3.CONTROLS/Controllers/ItemsMoveController', [
                icon: 'icon-16 icon-ArrowDown icon-primary',
                isMainAction: true,
                onActivated: function(element, id, item) {
-                  self.moveItem(item, 'after');
+                  this.moveRecordDown(item);
                }
             },
             {
@@ -51,7 +39,7 @@ define('SBIS3.CONTROLS/Controllers/ItemsMoveController', [
                icon: 'icon-16 icon-ArrowUp icon-primary',
                isMainAction: true,
                onActivated: function(element, id, item) {
-                  self.moveItem(item, 'before');
+                  this.moveRecordUp(item);
                }
             });
          return itemsActions;
@@ -59,16 +47,19 @@ define('SBIS3.CONTROLS/Controllers/ItemsMoveController', [
 
       _updateItemsActions: function(item) {
          var linkedView = this._options.linkedView,
-            itemsActions = linkedView.getItemsActions();
+            itemsActions = linkedView.getItemsActions(),
+            projection = linkedView._getItemsProjection();
 
          itemsActions.ready().addCallback(function() {
             var
                itemsInstances = itemsActions.getItemsInstances(),
-               items = linkedView.getItems(),
-               nextItem = items.at(items.getIndex(item) + 1),
-               prevItem = items.at(items.getIndex(item) - 1);
-            itemsInstances['moveUp'].toggle(prevItem);
-            itemsInstances['moveDown'].toggle(nextItem);
+               projectionItem = projection.getItemBySourceItem(item),
+               nextItem = projection.getNext(projectionItem),
+               prevItem = projection.getPrevious(projectionItem),
+               showNextItem = nextItem && projection.getGroupByIndex(projection.getIndex(projectionItem)) == projection.getGroupByIndex(projection.getIndex(nextItem)),
+               showPrevItem = prevItem && projection.getGroupByIndex(projection.getIndex(projectionItem)) == projection.getGroupByIndex(projection.getIndex(prevItem));
+            itemsInstances['moveUp'].toggle(showPrevItem);
+            itemsInstances['moveDown'].toggle(showNextItem);
          });
       },
 
