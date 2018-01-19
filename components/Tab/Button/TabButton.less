@@ -96,8 +96,7 @@
          overflow: hidden;
          text-overflow: ellipsis;
          white-space: nowrap;
-         max-width: ~"calc(100% + 0.2px)"; //в ff и хроме появилась проблема с отрисовкой текста. Если в __caption лежит один(!) блочный элемент с текстом и overflow:hidden,
-         //то браузер считает, что тексту не хватает сотых долей пикселя, чтобы влезть в контейнер (хотя это не так), вследствие чего появляется троеточие
+         max-width: 100%;
       }
       .controls-TabButton__icon {
          margin-right: @margin-right_TabButton_icon;//6px;
@@ -330,6 +329,14 @@
       .controls-TabButton__additionalText2 .controls-EditAtPlace__fieldWrapper {
          position: relative;
          top: 1px;
+      }
+   }
+   .controls-TabButton {
+         .controls-TabButton__inner {
+            .controls-TabButton__caption {
+               max-width: ~"calc(100% + 0.2px)"; //в ff и хроме появилась проблема с отрисовкой текста. Если в __caption лежит один(!) блочный элемент с текстом и overflow:hidden,
+               //то браузер считает, что тексту не хватает сотых долей пикселя, чтобы влезть в контейнер (хотя это не так), вследствие чего появляется троеточие
+         }
       }
    }
 }
