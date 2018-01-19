@@ -280,6 +280,10 @@ define('js!Controls/List', [
          if (res.changed) {
             _private.applyVirtualWindow(self, res.virtualWindow);
          }
+      },
+      
+      getItemsCount: function(self) {
+         return self._listModel ? self._listModel.getCount() : 0;
       }
    };
 
@@ -387,7 +391,7 @@ define('js!Controls/List', [
                }
             }
 
-            if (this._children.listView) {
+            if (_private.getItemsCount(this)) {
                //Посчитаем среднюю высоту строки и отдадим ее в VirtualScroll
                _private.initializeAverageItemsHeight(this);
             }
@@ -427,7 +431,7 @@ define('js!Controls/List', [
 
 
          _afterUpdate: function() {
-            if (this._children.listView) {
+            if (_private.getItemsCount(this)) {
                _private.initializeAverageItemsHeight(this);
    
                //Проверим, не достигли ли границ контейнера. Если достигли, возможно нужна подгрузка соседней страницы
