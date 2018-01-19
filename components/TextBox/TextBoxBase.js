@@ -69,6 +69,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
              _prepareClassesByConfig: function() {
                var
                   fieldClasses = [],
+                  fieldWrapperClasses = [],
                   wrapperClasses = [],
                   containerClasses = [],
                   createNewCssClasses = function (item) {
@@ -90,11 +91,13 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
                   fieldClasses.push('controls-TextBox__field-' + this.textTransform);
                }
                wrapperClasses.push('controls-TextBox__wrapper_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
+               fieldWrapperClasses.push('controls-InputRender__fieldWrapper_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
 
                return {
                   container: containerClasses.map(createNewCssClasses).join(' '),
                   field: fieldClasses.map(createNewCssClasses).join(' '),
-                  wrapper: wrapperClasses.map(createNewCssClasses).join(' ')
+                  wrapper: wrapperClasses.map(createNewCssClasses).join(' '),
+                  fieldWrapper: fieldWrapperClasses.join(' ')
                }
             },
             _paddingClass: ' controls-InputRender_paddingBoth controls-TextBox_paddingBoth',
