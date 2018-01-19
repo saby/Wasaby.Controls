@@ -145,15 +145,15 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
                   css.push(prefix + '-selectedInner');
                }
 
-               if (scope.year.selectedStart && !(scope.year.selectedUnfinishedStart || scope.year.selectedUnfinishedEnd)) {
+               if (scope.year.selectedStart && !scope.year.selectedUnfinishedStart) {
                   css.push('controls-RangeSelectable__item-selectedStart');
                   css.push(prefix + '-selectedStart');
                }
-               if (scope.year.selectedEnd && !(scope.year.selectedUnfinishedStart || scope.year.selectedUnfinishedEnd)) {
+               if (scope.year.selectedEnd && (!scope.year.selectionProcessing || (scope.year.selectedEnd !== scope.year.selectedStart))) {
                   css.push('controls-RangeSelectable__item-selectedEnd');
                   css.push(prefix + '-selectedEnd');
                }
-               if (scope.year.selectedUnfinishedstart) {
+               if (scope.year.selectedUnfinishedStart) {
                   css.push(prefix + '-selectedUnfinishedStart');
                }
                if (scope.year.selectedUnfinishedEnd) {
@@ -231,7 +231,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this._dateRangePicker.subscribe('onActivated', this._onDateRangePickerActivated.bind(this));
          this._monthRangePicker.subscribe('onSelectionEnded', this._onSelectionEnded.bind(this));
          this._monthRangePicker.subscribe('onYearChanged', this._onMonthRangePickerYearChanged.bind(this));
-         this._dateRangePicker.subscribe('onSelectionEnded', this._onSelectionEnded.bind(this));
+         this._dateRangePicker.subscribe('onSelectionEnded', this._onDateRangeSelectionEnded.bind(this));
          this._dateRangePicker.subscribe('onMonthChanged', this._onDateRangePickerYearChanged.bind(this));
 
          this.subscribe('onSelectionEnded', this._onSelectionEnded.bind(this));
@@ -322,6 +322,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             this._notify('onChoose', this.getStartValue(), this.getEndValue());
             this._updateHeaderInputsVisibility();
          }
+       },
+       _onDateRangeSelectionEnded: function () {
+         this._monthRangePicker._clearMonthSelection();
+         this._onSelectionEnded();
        },
 
       _setDisplayedPeriod: function (startDate) {
