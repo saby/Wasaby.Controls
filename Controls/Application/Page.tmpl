@@ -13,8 +13,8 @@
    <Controls:Container:EventCatcher name="resizeDetect" registr="resize">
          <ws:content>
          <body class="ws-is-chrome" id="body" key="1_2_" on:scroll="_scrollPage()" on:resize="_resizePage()">
-            <ws:if data="{{ content }}">
-               <ws:partial template="{{ content }}" scope="{{ templateConfig }}" />
+            <ws:if data="{{ content.content }}">
+               <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}" />
             </ws:if>
             <div key="scripts">
                <script key="ws-config">
