@@ -52,12 +52,19 @@
 .controls-InputRender__fieldWrapper { //Этот блок нужен для правильного позиционирования нашего плейсхолдера
    .inline-flexbox();
    .flex-shrink(1);
-   .baseline-fix(); //https://jsfiddle.net/4dr8smhx/
-   .align-items(center);
    position: relative;
    height: 100%;
    width: 100%;
    min-width: 0;
+}
+
+.controls-InputRender__fieldWrapper_singleLine {
+   .baseline-fix(); //https://jsfiddle.net/4dr8smhx/
+   .align-items(center);
+}
+
+.controls-InputRender__fieldWrapper_multiLine {
+   .align-items(baseline);
 }
 
 .controls-InputRender__field {

@@ -54,7 +54,7 @@ define('js!Controls/List/ListControl/ListView', [
             item = dispItem.getContents();
             newKey = ItemsUtil.getPropertyValue(item, this._options.idProperty);
             this._listModel.setSelectedKey(newKey);
-            this._notify('itemClick', item);
+            this._notify('itemClick', [item], {bubbling: true});
          }
       });
 
