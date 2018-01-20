@@ -289,7 +289,7 @@ body {
 .controls-EditActions__cancelButton {
   position: relative;
   background-image: none;
-  background-color: @background-color_EditButton;
+  background-color: @background-color_IconButton_bordered;
   font-size: @font-size_Button_m;
   .box-shadow(@box-shadow_Button);
   color: #8991A9;
@@ -320,7 +320,7 @@ body {
 }
 .ws-is-desktop-platform {
   .controls-ItemsToolbar-closeButton.controls-Button__closeButton:hover {
-    background-color: @background-color_EditButton_hovered;
+    background-color: @background-color_IconButton_bordered_standard;
   }
 }
 //Простите меня за эти строки кода, я не хотел, меня заставили
@@ -332,7 +332,11 @@ body {
     }
     .icon-size {
       color: #E4E4E4 !important;
+      &.icon-IconButton-disabled {
+        color: @color_Link-icon_disabled !important;
+      }
     }
+
   }
 }
 //todo: удалить временный коствль
@@ -434,4 +438,15 @@ body {
 //Todo: необходимо зашить эти стили в окнах
 .controls-NotificationPopup__body, controls-NotificationPopup__footer {
   background-color: @controls-SubmitPopup-footer-bg;
+}
+
+// кнопки онлайна с обводкой переходят в кнопки престо с обводкой
+// в стандарте выбора времени кнопка отличается
+.controls-IconButton.controls-TimeHeader__homeButton {
+  background-color: transparent;
+  box-shadow: none;
+  height: @height_IconButton_bordered_size-m;
+}
+.ws-is-desktop-platform .controls-IconButton.controls-IconButton__standardBorder:hover {
+  background-color: transparent;
 }
