@@ -174,6 +174,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
                 items = listView.getItems(),
                 idProperty = listView._options.idProperty;
             if (cInstance.instanceOfModule(result, 'WS.Data/Collection/List')) {
+                items.setEventRaising(false, true);
                 //Удалим из набора все элементы из набора дефолтных элементов
                 this._removeItemsFromDefault();
                 if (result.getCount()) {
@@ -183,6 +184,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
                         }
                     });
                 }
+                items.setEventRaising(true, true);
                 listView.setSelectedItemsAll();
                 this._updateValue();
                 //Дозаполним набор отображаемых элементов из набора дефолтных
