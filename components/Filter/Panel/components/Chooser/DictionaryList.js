@@ -148,17 +148,19 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
        _removeItemsFromDefault: function() {
           var
              id, self = this,
+             keysForRemove = [],
              items = this._getListView().getItems(),
-             defaultItems = this._options.defaultItems,
-             idProperty = defaultItems.getIdProperty();
+             idProperty = items.getIdProperty();
 
-          defaultItems.each(function(item) {
+          items.each(function(item) {
              id = item.get(idProperty);
-             item = items.getRecordById(id);
-             if (item && self._options.value.indexOf(id) === -1) {
-                items.remove(item);
+             if (self._options.value.indexOf(id) === -1) {
+                keysForRemove.push(id);
              }
-         });
+          });
+          keysForRemove.forEach(function(key) {
+             items.remove(items.getRecordById(key));
+          }, this);
        },
 
         _toggleAllButton: function() {
