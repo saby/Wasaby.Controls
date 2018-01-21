@@ -3,7 +3,6 @@
      on:keyup="_keyPressed()"
      on:focusIn="_focusIn()"
      on:focusOut="_focusOut()"
-     on:sendResult="_sendResult()"
 >
-    <ws:partial template="{{_options.template}}" scope="{{_options.componentOptions}}"></ws:partial>
+    <ws:partial template="{{_options.template}}" scope="{{_options.componentOptions}}" on:sendResult="_sendResult()"></ws:partial>
 </div>
