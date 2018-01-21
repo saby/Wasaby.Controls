@@ -16,7 +16,12 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
 ], function (constants, Deferred, throttle, ListView, ItemTmpl, RangeMixin, Base, DateUtils, cInstance, CalendarSource, LayoutManager, RangeSelectableViewMixin) {
    'use strict';
 
-   var monthSource = new CalendarSource();
+   var monthSource = new CalendarSource(),
+      buildTplArgsDRP = function(cfg) {
+            var tplOptions = cfg._buildTplArgsLV.call(this, cfg);
+            tplOptions.quantum = cfg.quantum;
+            return tplOptions;
+         };
 
    /**
      * SBIS3.CONTROLS.DateRangeBig.DateRangePicker
@@ -49,7 +54,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
                   // position: 40,
                   direction: 'both'
               }
-            }
+            },
+            _buildTplArgs: buildTplArgsDRP
          },
          _lastOverControl: null,
          _innerComponentsValidateTimer: null,
