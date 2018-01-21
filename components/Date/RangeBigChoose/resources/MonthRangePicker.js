@@ -41,7 +41,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          _options: {
             quantum: {},
 
-            liveSelection: true,
+            liveSelection: false,
 
             // x: monthSource,
             // dataSource: monthSource,
@@ -199,6 +199,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          }
          item.find(selectedClass + '[data-id="' + periodId + '"]')
             .addClass(addClass);
+         this._notify('onPeriodMouseEnter');
       },
       _onHalfyearQuarterMouseLeave: function (event) {
          var element = $(event.target),
@@ -212,6 +213,12 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          }
          item.find(selectedClass + '[data-id="' + periodId + '"]')
             .removeClass('controls-DateRangeBigChoose-MonthRangePickerItem__quarter-selected controls-DateRangeBigChoose-MonthRangePickerItem__halfYear-selected');
+         this._notify('onPeriodMouseLeave');
+      },
+
+      _onRangeControlMouseLeave: function () {
+         this._notify('onPeriodMouseLeave');
+         return MonthRangePicker.superclass._onRangeControlMouseLeave.apply(this, arguments);
       },
 
       setYear: function (year) {
@@ -311,13 +318,15 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
 
       _onItemCaptionMouseEnter: function (e) {
          var $target = $(e.currentTarget),
-            month;
+            month = Date.fromSQL($target.attr(this._selectedRangeItemIdAtr));
 
          if (!this.isSelectionProcessing() && ($target.hasClass('controls-DateRangeBigChoose-MonthRangePickerItem__month_title'))) {
             $target = $(e.currentTarget).closest('.' + this._SELECTABLE_RANGE_CSS_CLASSES.item);
             $target.addClass(this._css_classes.hovered);
+            this._notify('onPeriodMouseEnter', month);
+         } else if (this.isSelectionProcessing()) {
+            this._notify('onPeriodMouseEnter', month);
          }
-         month = Date.fromSQL($target.attr(this._selectedRangeItemIdAtr));
          this._onRangeItemElementMouseEnter(dateUtils.getEndOfMonth(month));
       },
 
@@ -326,6 +335,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             target;
          target = $target.closest('.' + this._SELECTABLE_RANGE_CSS_CLASSES.item);
          target.removeClass(this._css_classes.hovered);
+         if (!this.isSelectionProcessing()) {
+            this._notify('onPeriodMouseLeave');
+         }
       },
 
       _getEndValueOnMouseLeave: function () {

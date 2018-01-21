@@ -3,7 +3,7 @@
       <tr class="controls-MonthView__tableRow">
          <ws:for data="indexOfDay, value in week">
             <ws:if data="{{value.isCalendar}}">
-               <td data-selected-range-id="{{value.day}}" class="controls-MonthView__tableElement {{_prepareClass(...)}}">
+               <td data-selected-range-id="{{value.day}}"  data-date="{{value.date.toSQL()}}" class="controls-MonthView__tableElement {{_prepareClass(...)}}">
                   <ws:partial template="{{dayTmpl}}" scope="{{...}}"/>
                </td>
             </ws:if>
