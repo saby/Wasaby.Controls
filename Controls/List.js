@@ -280,6 +280,10 @@ define('js!Controls/List', [
          if (res.changed) {
             _private.applyVirtualWindow(self, res.virtualWindow);
          }
+      },
+      
+      getItemsCount: function(self) {
+         return self._listModel ? self._listModel.getCount() : 0;
       }
    };
 
@@ -387,8 +391,10 @@ define('js!Controls/List', [
                }
             }
 
-            //Посчитаем среднюю высоту строки и отдадим ее в VirtualScroll
-            _private.initializeAverageItemsHeight(this);
+            if (_private.getItemsCount(this)) {
+               //Посчитаем среднюю высоту строки и отдадим ее в VirtualScroll
+               _private.initializeAverageItemsHeight(this);
+            }
          },
 
          _beforeUpdate: function(newOptions) {
@@ -425,11 +431,13 @@ define('js!Controls/List', [
 
 
          _afterUpdate: function() {
-            _private.initializeAverageItemsHeight(this);
-
-            //Проверим, не достигли ли границ контейнера. Если достигли, возможно нужна подгрузка соседней страницы
-            if (this._scrollController) {
-               this._scrollController.checkBoundaryContainer();
+            if (_private.getItemsCount(this)) {
+               _private.initializeAverageItemsHeight(this);
+   
+               //Проверим, не достигли ли границ контейнера. Если достигли, возможно нужна подгрузка соседней страницы
+               if (this._scrollController) {
+                  this._scrollController.checkBoundaryContainer();
+               }
             }
          },
 
