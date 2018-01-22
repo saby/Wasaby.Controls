@@ -297,6 +297,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          if (isEmpty(options.quantum) && options.selectionType === RangeSelectableViewMixin.selectionTypes.single) {
             options.quantum.days = [1];
          }
+         options.yearSelectionEnabled = true;
+         if (!isEmpty(options.quantum)) {
+            options.yearSelectionEnabled = 'years' in options.quantum;
+         }
          return options;
       },
 
@@ -805,7 +809,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          var selectionType = event.data,
             itemId = this._getItemIdByItemContainer($(event.target)),
             item = this._getSelectedRangeItemByItemId(itemId, selectionType);
-         if (this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.range) {
+         if (this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.range && this._options.yearSelectionEnabled) {
             this._selectionToggle(item, selectionType);
          } else if (selectionType === selectionTypes.years) {
             this._setCurrentYear(itemId);
@@ -913,7 +917,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       },
 
       _selectionToggle: function (item, selectionType) {
-         var containerCssClass, start, end;
+         var containerCssClass, start, end, range;
 
          switch(selectionType) {
             case selectionTypes.years:
@@ -930,7 +934,15 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             this._$items =  this.getContainer().find(this._getItemSelector(containerCssClass));
          }
 
-         this._onRangeItemElementClick(item);
+         range = this._updateRange(item, item);
+         if (this._options.quantum && 'years' in this._options.quantum && this._options.quantum.years.length === 1) {
+            this.setRange(range[0], range[1]);
+            this._setRangeSelectionType(selectionTypes.years);
+            this._updateYearsBar();
+            this._onSelectionEnded();
+         } else {
+            this._onRangeItemElementClick(range[0], range[1]);
+         }
          start = this.getStartValue();
          end = this.getEndValue();
          if (this.isSelectionProcessing()) {
@@ -945,6 +957,36 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             if (selectionType !== selectionTypes.years){
                this._cancelRangeBarsSelection();
             }
+         }
+      },
+
+      _updateRange: function (startDate, endDate) {
+         if (isEmpty(this._options.quantum)) {
+            return this._normalizeRange(startDate, endDate);
+         }
+
+         var quantum = this._options.quantum,
+            lastQuantumLength, years;
+
+         for (i = 0; i < quantum.years.length; i++) {
+            lastQuantumLength = quantum.years[i];
+            years = endDate.getFullYear() - startDate.getFullYear() + 1;
+            if (lastQuantumLength >= years) {
+               return this._getYearRange(startDate, endDate, lastQuantumLength);
+            }
+         }
+
+         return this._getYearRange(startDate, endDate, lastQuantumLength);
+      },
+
+      _getYearRange: function (startDate, endDate, quantum) {
+         var date = new Date(startDate);
+         if (startDate <= endDate) {
+            date.setYear(date.getFullYear() + quantum - 1);
+            return [endDate, date]
+         } else {
+            date.setYear(date.getFullYear() - quantum + 1);
+            return [date, endDate]
          }
       },
 
