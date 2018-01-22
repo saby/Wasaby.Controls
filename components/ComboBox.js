@@ -918,7 +918,6 @@ define('SBIS3.CONTROLS/ComboBox', [
             LayoutManager.scrollToElement(itemContainer, true);
             //Устанавливаю скроллбар в нужную позицию
             this._scrollContainer._initScrollbar();
-            this._scrollContainer._scrollbar.setPosition(itemContainer.position().top);
          }
       }
    });
