@@ -11,17 +11,12 @@ define('js!Controls/Validate/Text',
 
       var Validate = Controller.extend({
          _template: template,
-
-         constructor: function(cfg) {
-            Validate.superclass.constructor.call(this, cfg);
-
-            this._focusOutHandler = function() {
-               this._shouldValidate = true;
-               this._forceUpdate();
-            }.bind(this);
-            this._cleanValid = function() {
-               this.setValidationResult(null);
-            }.bind(this);
+         _focusOutHandler: function () {
+            this._shouldValidate = true;
+            this._forceUpdate();
+         },
+         _cleanValid: function () {
+            this.setValidationResult(null);
          },
          _afterUpdate: function() {
             if (this._shouldValidate) {
