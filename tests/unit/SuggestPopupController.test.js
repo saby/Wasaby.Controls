@@ -15,6 +15,27 @@ define(['js!Controls/Input/resources/SuggestPopupController', 'Core/core-instanc
             assert.isTrue(cInstance.instanceOfModule(searchController._dataSource, 'WS.Data/Source/Memory'));
          });
    
+         it('.prepareSuggestFilter', function() {
+            var selfTest = {
+                  _searchParam: 'test'
+               };
+   
+            selfTest._popupOptions = {
+               componentOptions: {
+                  filter: {
+                     test: 123
+                  }
+               }
+            };
+   
+            SuggestPopupController._private.prepareSuggestFilter(selfTest, {hasMore: true});
+            assert.equal(selfTest._popupOptions.componentOptions.filter.test, 123);
+   
+            SuggestPopupController._private.prepareSuggestFilter(selfTest, {hasMore: false});
+            assert.equal(selfTest._popupOptions.componentOptions.filter.test, undefined);
+            
+         });
+   
          it('.changeSelectedIndex', function() {
             var list = new List({items: [1, 2]}),
                 selfTest = {};
