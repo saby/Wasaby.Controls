@@ -79,7 +79,7 @@ define('js!Controls/ConfirmationWindow/Dialog', [
          _footerTemplate: footerTemplate,
 
          _sendResult: function (e, res) {
-            this._notify('sendResult', res);
+            this._notify('sendResult', [res]);
             this._notify('close');
          },
 
