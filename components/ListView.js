@@ -1084,6 +1084,9 @@ define('SBIS3.CONTROLS/ListView',
                   }
                }
                this._addItems(itemsToAdd, config.addPosition);
+               if(this._options.itemsActionsInItemContainer && itemsToRemove.length && this._itemsToolbar && this._itemsToolbar.isVisible()){
+                  this._itemsToolbar.hide();
+               }
                this._removeItemsLight(itemsToRemove);
 
                //После добавления элоементов с помощью виртуального скролла, необходимо добавить на них выделение,
