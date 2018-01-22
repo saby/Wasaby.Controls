@@ -4,7 +4,7 @@
       <ws:if data="{{beforeFieldWrapper}}">
          <ws:partial template="{{beforeFieldWrapper}}" scope="{{...}}"/>
       </ws:if>
-      <div class="controls-InputRender__fieldWrapper controls-TextBox__fieldWrapper">
+      <div class="controls-InputRender__fieldWrapper controls-TextBox__fieldWrapper {{ _prepareClassesByConfig(...).fieldWrapper }}">
          <ws:partial class="{{ _prepareClassesByConfig(...).field }}" template="{{textFieldWrapper}}" scope="{{...}}"/>
       </div>
       <ws:if data="{{afterFieldWrapper}}">

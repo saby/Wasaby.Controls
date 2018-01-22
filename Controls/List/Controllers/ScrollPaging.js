@@ -64,7 +64,7 @@ define('js!Controls/List/Controllers/ScrollPaging',
             scrollTop = e.target.scrollTop;
             pCfg = _private.getPagingConfig(this._viewHeight, this._viewportHeight, scrollTop);
 
-            this._notify('onChangePagingCfg', pCfg);
+            this._notify('onChangePagingCfg', [pCfg]);
          },
 
          startObserve: function() {
@@ -72,18 +72,18 @@ define('js!Controls/List/Controllers/ScrollPaging',
                this._onScrollHdl = this._onScroll.bind(this);
             }
             this._options.scrollContainer.addEventListener('scroll', this._onScrollHdl);
-            this._notify('onChangePagingCfg', _private.getDefaultPagingConfig(this._viewHeight, this._viewportHeight));
+            this._notify('onChangePagingCfg', [_private.getDefaultPagingConfig(this._viewHeight, this._viewportHeight)]);
          },
 
          stopObserve: function() {
             this._options.scrollContainer.removeEventListener('scroll', this._onScrollHdl);
-            this._notify('onChangePagingCfg', {});
+            this._notify('onChangePagingCfg', [{}]);
          },
 
          resetHeights: function() {
             this._cacheHeights(this._options.scrollContainer);
 
-            this._notify('onChangePagingCfg', _private.getPagingConfig(this._viewHeight, this._viewportHeight, this._options.scrollContainer.scrollTop));
+            this._notify('onChangePagingCfg', [_private.getPagingConfig(this._viewHeight, this._viewportHeight, this._options.scrollContainer.scrollTop)]);
          },
 
          scrollView: function(btn) {
