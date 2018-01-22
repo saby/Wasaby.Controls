@@ -164,6 +164,29 @@ define('SBIS3.CONTROLS/Utils/DateUtil',[
       },
 
       /**
+       * Возвращает дату соответсвующую началу недели по переданной дате
+       * @param {Core/Date} date
+       * @return {Core/Date}
+       */
+      getStartOfWeek: function (date) {
+         date = new Date(date);
+         var day = date.getDay(),
+            diff = date.getDate() - day + (day === 0 ? -6:1);
+         return new Date(date.setDate(diff));
+      },
+      /**
+       * Возвращает дату соответсвующую концу недели по переданной дате
+       * @param {Core/Date} date
+       * @return {Core/Date}
+       */
+      getEndOfWeek: function (date) {
+         date = new Date(date);
+         var day = date.getDay(),
+            diff = date.getDate() - day + (day === 0 ? 0:7);
+         return new Date(date.setDate(diff));
+      },
+
+      /**
        * Возвращает true если переданное число является началом месяца
        * @param {Core/Date} date
        * @return {Boolean}
@@ -311,6 +334,11 @@ define('SBIS3.CONTROLS/Utils/DateUtil',[
             return null;
          }
          return new Date(month.getFullYear(), month.getMonth(), 1);
+      },
+
+      getDaysByRange: function (date1, date2) {
+         var oneDay = 24*60*60*1000;
+         return Math.round(Math.abs((date1.getTime() - date2.getTime())/(oneDay)));
       }
    };
 
