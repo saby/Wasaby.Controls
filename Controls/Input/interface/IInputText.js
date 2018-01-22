@@ -1,4 +1,4 @@
-define('js!Controls/Input/interface/IInputText', [
+define('Controls/Input/interface/IInputText', [
 ], function() {
 
    /**

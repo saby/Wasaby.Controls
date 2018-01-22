@@ -29,7 +29,7 @@
     </ws:Controls.Input.resources.InputRender.InputRender>
 
     <ws:Controls.Popup.Opener.Sticky name="suggestPopupOpener">
-        <ws:popupOptions vAlingTopClass="ws-Suggest__popup-vAlignTop" vAlingBottomClass="ws-Suggest__popup-vAlignBottom" autoHide="{{true}}" template="js!Controls/Input/resources/SuggestView/SuggestView">
+        <ws:popupOptions vAlingTopClass="ws-Suggest__popup-vAlignTop" vAlingBottomClass="ws-Suggest__popup-vAlignBottom" autoHide="{{true}}" template="Controls/Input/resources/SuggestView/SuggestView">
             <ws:corner vertical="bottom"/>
             <ws:verticalAlign side="bottom"/>
             <ws:componentOptions idProperty="{{_options.idProperty}}"/>
@@ -38,7 +38,7 @@
     </ws:Controls.Popup.Opener.Sticky>
 
     <ws:Controls.Popup.Opener.Stack name="showAllOpener">
-        <ws:popupOptions template="js!Controls/Input/resources/SuggestShowAll/SuggestShowAll" className="ws-Suggest__showAllPopup">
+        <ws:popupOptions template="Controls/Input/resources/SuggestShowAll/SuggestShowAll className="ws-Suggest__showAllPopup">
             <ws:componentOptions dataSource="{{_options.dataSource}}" template="{{_options.suggestTemplate}}" navigation="{{_options.navigation}}"></ws:componentOptions>
             <ws:eventHandlers onResult="{{_selectHandler}}"/>
         </ws:popupOptions>

@@ -1,7 +1,7 @@
 /**
  * Created by kraynovdo on 13.11.2017.
  */
-define('js!Controls/List/Controllers/ScrollPaging',
+define('Controls/List/Controllers/ScrollPaging',
    [
       'Core/Abstract'
    ],

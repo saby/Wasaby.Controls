@@ -1,4 +1,4 @@
-define('js!Controls/Popup/Manager',
+define('Controls/Popup/Manager',
    [
       'Core/helpers/random-helpers',
       'WS.Data/Collection/List'

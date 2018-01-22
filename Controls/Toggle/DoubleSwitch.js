@@ -1,4 +1,4 @@
-define('js!Controls/Toggle/DoubleSwitch', [
+define('Controls/Toggle/DoubleSwitch', [
    'Core/Control',
    'tmpl!Controls/Toggle/DoubleSwitch/DoubleSwitch',
    'WS.Data/Type/descriptor',

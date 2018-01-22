@@ -1,7 +1,7 @@
 define(
    [
       'Core/Control',
-      'js!Controls/Input/Number',
+      'Controls/Input/Number',
       'Core/helpers/Function/runDelayed',
       'Core/vdom/Synchronizer/resources/SyntheticEvent'
    ],

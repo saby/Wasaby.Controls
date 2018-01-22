@@ -1,4 +1,4 @@
-define('js!Controls/Input/interface/ISuggest', [
+define('Controls/Input/interface/ISuggest', [
 ], function() {
 
    /**
