@@ -48,8 +48,8 @@ define('js!Controls/Popup/Manager',
                      onPopupFocusOut: function (event, id, focusedControl) {
                         _private.popupFocusOut(id, focusedControl);
                      },
-                     onResult: function (event, id, args) {
-                        _private.sendResult(id, args);
+                     onResult: function (event, id, result) {
+                        _private.sendResult(id, result);
                      }
                   };
                }
@@ -85,8 +85,8 @@ define('js!Controls/Popup/Manager',
 
          sendResult: function (id, result) {
             var element = Manager.find(id);
-            if (element) {
-               element.controller.notifyOnResult(result);
+            if (element && element.popupOptions.eventHandlers && element.popupOptions.eventHandlers.onResult) {
+               element.popupOptions.eventHandlers.onResult(result);
             }
          }
       };
@@ -106,15 +106,14 @@ define('js!Controls/Popup/Manager',
           * @function Controls/Popup/Manager#show
           * @param options конфигурация попапа
           * @param strategy стратегия позиционирования попапа
-          * @param controller контроллер
           */
-         show: function (options, strategy, controller) {
+         show: function (options, strategy) {
             var element = {
                id: Random.randomId('popup-'),
                isModal: options.isModal,
                strategy: strategy,
                position: strategy.getDefaultPosition(),
-               controller: controller,
+
                popupOptions: options
             };
             _private.addElement.call(this, element);

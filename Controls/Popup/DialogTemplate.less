@@ -26,17 +26,28 @@
 }
 
 .ws-DialogTemplate__close_button {
+   .flexbox();
+   .align-self(center);
+   .justify-content(center);
    position: absolute;
-   top: 10px;
-   right: 0;
-   width: 36px;
-   height: 24px;
+   top: 6px;
+   width: 35px;
+   height: 26px;
    cursor: pointer;
-   background: url('resources/areaCloseButton.png') 0 -1px;
+   background-color: @bg_Block_style-2;
+   border: 1px solid @border-color_CloseButton;
+   border-right-width: 0;
+   box-shadow: 0 1px 3px rgba(0,0,0,.12);
+   border-radius: 2px 0 0 2px;
+   font-size: 23px;
+   font-family: cbuc-icons;
+   content: "\e66c";
+   font-weight: 400;
+   color: @icon-color-primary;
+}
 
-   &:hover {
-      background-position: 0 -25px;
-   }
+.ws-DialogTemplate__close_button_right{
+   right: 0;
 }
 
 .ws-DialogTemplate__caption {

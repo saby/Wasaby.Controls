@@ -77,9 +77,9 @@ define('js!Controls/Input/Number', [
 
          //Если дробная часть пустая или нулевая, то нужно убрать её
          if (!parseInt(decimals, 10)) {
-            this._notify('inputCompleted', integers);
+            this._notify('inputCompleted', [integers]);
          } else {
-            this._notify('inputCompleted', this._options.value);
+            this._notify('inputCompleted', [this._options.value]);
          }
       },
 

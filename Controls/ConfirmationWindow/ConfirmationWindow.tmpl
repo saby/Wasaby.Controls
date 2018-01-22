@@ -1,3 +1,5 @@
-<ws:Controls.Popup.Opener.Dialog name="opener" onResult="{{_openerResultHandler}}">
-    <ws:popupOptions template="js!Controls/ConfirmationWindow/Dialog" isModal="{{true}}"></ws:popupOptions>
+<ws:Controls.Popup.Opener.Dialog name="opener">
+    <ws:popupOptions template="js!Controls/ConfirmationWindow/Dialog" isModal="{{true}}" className="controls-ConfirmationWindow_popup">
+        <ws:eventHandlers onResult="{{_openerResultHandler}}"/>
+    </ws:popupOptions>
 </ws:Controls.Popup.Opener.Dialog>

@@ -17,20 +17,18 @@
 @default-base-line-height:     round(56px * @multiplier);//@default-height - 2 * @default-border-width
 @default-padding:              round(16px * @multiplier);
 @default-padding-small:        round(8px * @multiplier);
-//textbox
-@height_TextBox_m:                round(58px * @multiplier);
-@height_TextBox_l:                round(78px * @multiplier);
-@height_TextBox_default:          @height_TextBox_l;
-@font-size_TextBox_m:             @large-text-size;
-@font-size_TextBox_l:             @huge-text-size;
-@font-size_TextBox_default:       @font-size_TextBox_l;
-@line-height_TextBox:             round(56px * @multiplier);
-@padding_TextBox-container:       0 round(15px * @multiplier);
-@padding-bottom_TextBox-container_l: round(4px * @multiplier);
-@padding_TextBox-container_left:  0 0 0 round(15px * @multiplier);
-@border-width_TextBox:            @default-border-width;
-@width_TextBox-InformationIcon:   round(20px * @multiplier);
-@height_TextBox-InformationIcon:  @width_TextBox-InformationIcon;
+//InputRender
+@height_InputRender_m:                round(58px * @multiplier);
+@height_InputRender_l:                round(78px * @multiplier);
+@height_InputRender_default:          @height_InputRender_l;
+@font-size_InputRender_m:             @large-text-size;
+@font-size_InputRender_l:             @huge-text-size;
+@font-size_InputRender_default:       @font-size_InputRender_l;
+@padding_InputRender-container:       0 round(15px * @multiplier);
+@padding_InputRender-container_left:  0 0 0 round(15px * @multiplier);
+@border-width_InputRender:            @default-border-width;
+@width_InputRender-InformationIcon:   round(20px * @multiplier);
+@height_InputRender-InformationIcon:  @width_InputRender-InformationIcon;
 //MoneyTextBox
 @font-size_MoneyTextBox-decimals: @small-text-size;
 //NumberTextBox
@@ -179,6 +177,7 @@
 @DropdownList-picker-fdf-left:                        round(-17px * @multiplier);
 @size_DropDownList_filter_cross:                      round(42px * @multiplier);
 @size_DropDownList_arrow:                             round(42px * @multiplier);
+@DropdownList-before-caption-wrapper-top:             round(7px * @multiplier);
 //Marker
 @background-size_Marker:                              round(6px * @multiplier);
 //listView
@@ -231,7 +230,7 @@
 //progressBar
 @ProgressBar-border-radius:                           1px;
 //pager
-@padding_Pager:                                       round(11px * @multiplier) round(3px * @multiplier) round(11px * @multiplier) 0;
+@padding_Pager:                                       round(11px * @multiplier) 0 round(11px * @multiplier) round(8px * @multiplier);
 @controls-Pager-height:                               round(100px * @multiplier);
 @paging-font-size:                                    @default-icon-size-large;
 @controls-Paging-btn-padding:                         0;
