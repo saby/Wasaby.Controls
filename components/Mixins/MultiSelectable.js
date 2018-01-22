@@ -185,7 +185,8 @@ define('SBIS3.CONTROLS/Mixins/MultiSelectable', [
              * @see getSelection
              */
             useSelectAll: false,
-            _isEmptySelection: _private.isEmptySelection
+            _isEmptySelection: _private.isEmptySelection,
+            _convertToKeys: convertToKeys
          },
          _loadItemsDeferred: undefined,
          _selectorController: undefined
