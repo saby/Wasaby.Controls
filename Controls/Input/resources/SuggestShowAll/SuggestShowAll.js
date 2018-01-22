@@ -26,8 +26,8 @@ define('js!Controls/Input/resources/SuggestShowAll/SuggestShowAll',
          },
          
          _onItemClickHandler: function(event, item) {
-            this._notify('sendResult', [item]);
-            this._notify('close');
+            this._notify('sendResult', [item], {bubbling: true});
+            this._notify('close', [], {bubbling: true});
          }
       });
       
