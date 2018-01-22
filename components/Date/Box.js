@@ -684,7 +684,8 @@ define(
          }.bind(this);
 
          // Автокомплитим только если пользователь частично заполнил поле, либо не заполнил, но поле обязательно для заполнения
-         if (isEmpty && !this._isRequired()) {
+         // Не автокомплитим поля в периодах
+         if (isEmpty && (!this._isRequired() || this._options.autocompleteMode === 'start' || this._options.autocompleteMode === 'end')) {
             return null;
          }
 
