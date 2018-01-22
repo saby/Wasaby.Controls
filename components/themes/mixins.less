@@ -51,6 +51,20 @@
   font-family: @fontFamily;
 }
 
+.icon-without-inherited-styles(@size: @default-icon-size, @fontFamily: @default-icon-font) {
+  font-size: @size;
+  width: @size;
+  height: @size;
+  font-family: @fontFamily;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  display: inline-block;
+}
+
 .closedHandCursor() {
    cursor: -moz-grabbing !important;
    cursor: -webkit-grabbing !important;
