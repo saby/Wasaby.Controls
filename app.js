@@ -15,9 +15,10 @@ var resourcesPath = path.join('', 'components');
 require('./test-server');
 
 app.use(bodyParser.json());
-app.use(cookieParser())
+app.use(cookieParser());
 app.use(express.static(path.resolve(__dirname)));
 app.use('/~resources/', serveStatic(resourcesPath));
+app.use('/~ws/', serveStatic('./'));
 
 var port = process.env.PORT || 666;
 var server = app.listen(port);
