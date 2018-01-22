@@ -19,5 +19,10 @@
       &.controls-editInPlace__editorWithOffset {
          margin-left: @controls-editInPlace-editor-without-offset-margin;
       }
+      //При определённых размерах шрифта (например, 15px) line-height получается нечётный, из-за этого текст не может
+      //выровняться по центру и уезжает на 1px. Если задавать line-height явно, то такой проблемы не будет.
+      .controls-InputRender {
+         line-height: @line-height_EditInPlace;
+      }
    }
 }
