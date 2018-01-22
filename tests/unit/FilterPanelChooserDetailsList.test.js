@@ -79,23 +79,6 @@ define(['SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList', 'WS.Data/C
                testComponent._elemClickHandler(imitateEvent, '1');
                assert.deepEqual(testComponent.getValue(), testResult5);
             });
-            it('Move up item "2" | value = [2, 1]', function () {
-               testComponent._elemClickHandler(imitateEvent, '1');
-               testComponent._elemClickHandler(imitateEvent, '2');
-               testComponent._elemClickHandler(imitateEvent, '1');
-               testComponent._elemClickHandler(imitateEvent, '1');
-               testComponent._itemsMoveController.moveItem(testComponent._listView.getItems().getRecordById('2'), 'before');
-               assert.deepEqual(testComponent.getValue(), testResult6);
-            });
-            it('Move down item "2" | value = [1, 2]', function () {
-               testComponent._elemClickHandler(imitateEvent, '1');
-               testComponent._elemClickHandler(imitateEvent, '2');
-               testComponent._elemClickHandler(imitateEvent, '1');
-               testComponent._elemClickHandler(imitateEvent, '1');
-               testComponent._itemsMoveController.moveItem(testComponent._listView.getItems().getRecordById('2'), 'before');
-               testComponent._itemsMoveController.moveItem(testComponent._listView.getItems().getRecordById('2'), 'after');
-               assert.deepEqual(testComponent.getValue(), testResult7);
-            });
          }
       });
    });
