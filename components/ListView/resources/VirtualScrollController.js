@@ -224,6 +224,16 @@ define('SBIS3.CONTROLS/ListView/resources/VirtualScrollController', ['Core/Abstr
             };
          },
 
+         /**
+          * Return distance from the top of the list for the given item.
+          *
+          * @param index
+          * @returns {number|*}
+          */
+         getScrollTopForItem: function(index) {
+            return this._heights.slice(0, index).reduce(function(a, b) { return a + b }, 0);
+         },
+
          /*
           * Первичная инициализация высот элементов 
           */
