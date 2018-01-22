@@ -16,7 +16,12 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
 ], function (constants, Deferred, throttle, ListView, ItemTmpl, RangeMixin, Base, DateUtils, cInstance, CalendarSource, LayoutManager, RangeSelectableViewMixin) {
    'use strict';
 
-   var monthSource = new CalendarSource();
+   var monthSource = new CalendarSource(),
+      buildTplArgsDRP = function(cfg) {
+            var tplOptions = cfg._buildTplArgsLV.call(this, cfg);
+            tplOptions.quantum = cfg.quantum;
+            return tplOptions;
+         };
 
    /**
      * SBIS3.CONTROLS.DateRangeBig.DateRangePicker
@@ -49,7 +54,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
                   // position: 40,
                   direction: 'both'
               }
-            }
+            },
+            _buildTplArgs: buildTplArgsDRP
          },
          _lastOverControl: null,
          _innerComponentsValidateTimer: null,
@@ -87,6 +93,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          container.on('click', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleClick.bind(this));
          container.on('click', '.controls-DateRangeBigChoose-DateRangePickerItem__months-nextyear-btn', this._onNextYearClick.bind(this));
          container.on('click', '.controls-DateRangeBigChoose-DateRangePickerItem__months-btn', this._onMonthClick.bind(this));
+
+         container.on('mouseenter', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleMouseEnter.bind(this));
+         container.on('mouseleave', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleMouseLeave.bind(this));
+         container.on('mouseenter', '.controls-MonthView__currentMonthDay', this._onDayMouseEnter.bind(this));
 
          this._scrollContainer = container.closest('.controls-ScrollContainer__content');
          this._scrollContainer.on('scroll', this._onScroll.bind(this));
@@ -126,9 +136,22 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
 
       _onMonthTitleClick: function (event) {
-         var date = Date.fromSQL($(event.target).data('date'));
+         var date = this._getDateByMonthTitleEvent(event);
          this.setRange(date, DateUtils.getEndOfMonth(date));
          this._notify('onSelectionEnded');
+      },
+      _onMonthTitleMouseEnter: function (event) {
+         this._notify('onMonthTitleMouseEnter', this._getDateByMonthTitleEvent(event));
+      },
+      _onMonthTitleMouseLeave: function (event) {
+         this._notify('onMonthTitleMouseLeave', this._getDateByMonthTitleEvent(event));
+      },
+      _getDateByMonthTitleEvent: function (event) {
+         return Date.fromSQL($(event.currentTarget).data('date'));
+      },
+
+      _onDayMouseEnter: function (event) {
+         this._notify('onDayMouseEnter', Date.fromSQL($(event.currentTarget).data('date')));
       },
 
       _onNextYearClick: function (event) {
@@ -249,28 +272,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          return changed;
       },
 
-      setRange: function (start, end, silent) {
-         var oldStart, oldEnd, month, changed;
-
-         if (this._options.selectionType === RangeSelectableViewMixin.selectionTypes.range) {
-            // oldStart = this.getStartValue();
-            // oldEnd = this.getEndValue();
-            changed = Component.superclass.setRange.apply(this, arguments);
-            // start = this.getStartValue();
-            // end = this.getEndValue();
-            if (changed) {
-               month = this.getMonth();
-               // if (!DateUtils.isDatesEqual(start, oldStart) && !DateUtils.isDatesEqual(end, oldEnd)) {
-               if (month && start && end && (start > new Date(month.getFullYear(), month.getMonth() + 1, 0) || end < month)) {
-                  this.setMonth(start);
-               }
-            }
-         } else {
-            changed = Component.superclass.setRange.apply(this, arguments);
-         }
-         return changed;
-      },
-
       _prepareItemData: function () {
          var args = Component.superclass._prepareItemData.apply(this, arguments);
          args.selectionType = this._options.selectionType;
@@ -301,6 +302,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          // В этом случае обрабочик _onMonthViewSelectingRangeEndDateChange не будет выполнен.
          // this._selectionType = e.getTarget()._getSelectionType();
          this._selectionRangeEndItem = end;
+         this._notify('onDayMouseEnter', start);
       },
 
       // _updateInnerComponents: function (start, end) {
