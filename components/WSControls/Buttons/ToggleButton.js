@@ -53,8 +53,9 @@ define('js!WSControls/Buttons/ToggleButton', ['js!WSControls/Buttons/Button', 'S
 
       _modifyOptions: function () {
          var
-             options = WSButton.superclass._modifyOptions.apply(this, arguments);
+             options = WSToggleButton.superclass._modifyOptions.apply(this, arguments);
 
+         options._iconDisabledClass = 'icon-button-disabled';
          options.cssClassName +=  (options.checked ? ' controls-Checked__checked' : '');
          return options;
       }

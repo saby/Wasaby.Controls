@@ -5,9 +5,10 @@
  */
 define('SBIS3.CONTROLS/Button/ToggleButton', [
    'js!WSControls/Buttons/ToggleButton',
+   'SBIS3.CONTROLS/Utils/ButtonUtil',
    'css!SBIS3.CONTROLS/Button/Button',
    'css!SBIS3.CONTROLS/Button/ToggleButton/ToggleButton'
-], function(WSToggleButton) {
+], function(WSToggleButton, ButtonUtil) {
 
    'use strict';
 
@@ -50,23 +51,23 @@ define('SBIS3.CONTROLS/Button/ToggleButton', [
     */
 
    var ToggleButton = WSToggleButton.extend([], /** @lends SBIS3.CONTROLS/Button/ToggleButton.prototype */ {
-      $protected: {
-         _options: {
-
-         }
-      },
-
       _modifyOptions: function () {
          var
              options = ToggleButton.superclass._modifyOptions.apply(this, arguments);
 
+         ButtonUtil.preparedClassFromOptions(options);
          options.cssClassName +=  ' controls-ToggleButton__normal controls-Button';
-         options.cssClassName += ' controls-Button-size__' + (!!options.size ? options.size : 'default');
-         options.cssClassName += ' controls-Button-color__' + (!!options.primary ? 'primary' : 'default');
          return options;
+      },
+
+      _toggleState: function () {
+          var container = this._container;
+
+          container[0].className = container[0].className.replace(/(^|\s)controls-Button_size-\S+/g, '').replace(/(^|\s)controls-Button_state-\S+/g, '');
+          container.addClass(ButtonUtil.getClassState(this._options));
+          ToggleButton.superclass._toggleState.apply(this, arguments);
       }
    });
 
    return ToggleButton;
-
 });
