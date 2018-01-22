@@ -38,7 +38,7 @@
     </ws:Controls.Popup.Opener.Sticky>
 
     <ws:Controls.Popup.Opener.Stack name="showAllOpener">
-        <ws:popupOptions template="js!Controls/Input/resources/SuggestShowAll/SuggestShowAll">
+        <ws:popupOptions template="js!Controls/Input/resources/SuggestShowAll/SuggestShowAll" className="ws-Suggest__showAllPopup">
             <ws:componentOptions dataSource="{{_options.dataSource}}" template="{{_options.suggestTemplate}}" navigation="{{_options.navigation}}"></ws:componentOptions>
             <ws:eventHandlers onResult="{{_selectHandler}}"/>
         </ws:popupOptions>
