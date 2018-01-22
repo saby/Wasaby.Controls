@@ -1,4 +1,4 @@
-define('js!Controls/Control', [
+define('Controls/Control', [
 ], function() {
 
    /**

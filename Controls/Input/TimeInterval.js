@@ -1,4 +1,4 @@
-define('js!Controls/Input/TimeInterval', [
+define('Controls/Input/TimeInterval', [
 ], function() {
 
    /**

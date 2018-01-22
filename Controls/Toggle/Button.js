@@ -1,4 +1,4 @@
-define('js!Controls/Toggle/Button', [
+define('Controls/Toggle/Button', [
 ], function() {
 
    /**

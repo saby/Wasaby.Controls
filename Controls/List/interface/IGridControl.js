@@ -1,4 +1,4 @@
-define('js!Controls/List/interface/IGridControl', [
+define('Controls/List/interface/IGridControl', [
 ], function() {
 
    /**

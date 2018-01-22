@@ -1,4 +1,4 @@
-define('js!Controls/Input/interface/ISearch', [
+define('Controls/Input/interface/ISearch', [
 ], function() {
 
    /**

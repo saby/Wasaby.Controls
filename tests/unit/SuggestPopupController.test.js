@@ -1,4 +1,4 @@
-define(['js!Controls/Input/resources/SuggestPopupController', 'Core/core-instance', 'WS.Data/Source/Memory','WS.Data/Collection/List'],
+define(['Controls/Input/resources/SuggestPopupController', 'Core/core-instance', 'WS.Data/Source/Memory','WS.Data/Collection/List'],
    function(SuggestPopupController, cInstance, Memory, List) {
    
    'use strict';

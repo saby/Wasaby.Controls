@@ -1,4 +1,4 @@
-define('js!Controls/Popup/TargetCoords',
+define('Controls/Popup/TargetCoords',
    [],
 
    function () {

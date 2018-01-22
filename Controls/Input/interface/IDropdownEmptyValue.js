@@ -1,4 +1,4 @@
-define('js!Controls/Input/interface/IDropdownEmptyValue', [
+define('Controls/Input/interface/IDropdownEmptyValue', [
 ], function() {
 
    /**

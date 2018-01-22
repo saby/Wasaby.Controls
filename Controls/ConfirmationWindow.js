@@ -1,11 +1,11 @@
-define('js!Controls/ConfirmationWindow',
+define('Controls/ConfirmationWindow',
    [
       'Core/Control',
       'Core/core-merge',
       'Core/Deferred',
       'tmpl!Controls/ConfirmationWindow/ConfirmationWindow',
       'css!Controls/ConfirmationWindow/ConfirmationWindow',
-      'js!Controls/ConfirmationWindow/Dialog'
+      'Controls/ConfirmationWindow/Dialog'
    ],
    function (Control, merge, Deferred, template) {
       'use strict';

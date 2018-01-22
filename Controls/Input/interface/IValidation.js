@@ -1,4 +1,4 @@
-define('js!Controls/Input/interface/IValidation', [
+define('Controls/Input/interface/IValidation', [
 ], function() {
 
    /**

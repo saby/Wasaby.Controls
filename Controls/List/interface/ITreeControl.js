@@ -1,4 +1,4 @@
-define('js!Controls/List/interface/ITreeControl', [
+define('Controls/List/interface/ITreeControl', [
 ], function() {
 
    /**

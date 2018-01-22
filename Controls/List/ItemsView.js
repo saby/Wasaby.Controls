@@ -1,10 +1,10 @@
 /**
  * Created by kraynovdo on 22.09.2017.
  */
-define('js!Controls/List/ItemsView', [
+define('Controls/List/ItemsView', [
    'Core/Control',
    'tmpl!Controls/List/ItemsView',
-   'js!Controls/List/ListControl/ItemsViewModel'
+   'Controls/List/ListControl/ItemsViewModel'
 ], function (BaseControl,
              ItemsRenderTpl,
              ItemsViewModel

@@ -1,5 +1,5 @@
-define('js!Controls/List/Controllers/PageNavigation',
-   ['Core/Abstract', 'js!Controls/List/Controllers/INavigation', 'WS.Data/Source/SbisService'],
+define('Controls/List/Controllers/PageNavigation',
+   ['Core/Abstract', 'Controls/List/Controllers/INavigation', 'WS.Data/Source/SbisService'],
    function(Abstract, INavigation, SbisService) {
       /**
        *

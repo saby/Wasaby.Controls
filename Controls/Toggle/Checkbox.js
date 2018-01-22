@@ -1,4 +1,4 @@
-define('js!Controls/Toggle/Checkbox', [
+define('Controls/Toggle/Checkbox', [
 ], function() {
 
    /**

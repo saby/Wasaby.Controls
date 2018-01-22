@@ -1,4 +1,4 @@
-define('js!Controls/interface/ISingleSelectable', [
+define('Controls/interface/ISingleSelectable', [
 ], function() {
 
    /**

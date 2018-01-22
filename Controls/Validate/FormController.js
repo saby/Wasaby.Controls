@@ -1,4 +1,4 @@
-define('js!Controls/Validate/FormController',
+define('Controls/Validate/FormController',
    [
       'Core/Control',
       'tmpl!Controls/Validate/FormController',

@@ -1,4 +1,4 @@
-define('js!Controls/List/interface/IExplorer', [
+define('Controls/List/interface/IExplorer', [
 ], function() {
    /**
     * Интерфейс работы списков в виде иерархия с проваливанием

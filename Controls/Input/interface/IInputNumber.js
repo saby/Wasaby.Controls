@@ -1,4 +1,4 @@
-define('js!Controls/Input/interface/IInputNumber', [
+define('Controls/Input/interface/IInputNumber', [
 ], function() {
 
    /**

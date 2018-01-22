@@ -1,7 +1,7 @@
 define(
    [
       'Core/Control',
-      'js!Controls/Input/Text',
+      'Controls/Input/Text',
       'Core/vdom/Synchronizer/resources/SyntheticEvent'
    ],
    function(Control, Text, SyntheticEvent) {

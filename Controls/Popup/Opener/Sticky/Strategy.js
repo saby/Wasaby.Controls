@@ -1,7 +1,7 @@
-define('js!Controls/Popup/Opener/Sticky/Strategy',
+define('Controls/Popup/Opener/Sticky/Strategy',
    [
-      'js!Controls/Popup/Opener/BaseStrategy',
-      'js!Controls/Popup/TargetCoords'
+      'Controls/Popup/Opener/BaseStrategy',
+      'Controls/Popup/TargetCoords'
    ],
    function (BaseStrategy, TargetCoords) {
 

@@ -1,4 +1,4 @@
-define('js!Controls/interface/IHighlighter', [
+define('Controls/interface/IHighlighter', [
 ], function() {
 
    /**

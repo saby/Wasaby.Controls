@@ -1,4 +1,4 @@
-define('js!Controls/Tree', [
+define('Controls/Tree', [
    'Core/Control'
 
 ], function (Control

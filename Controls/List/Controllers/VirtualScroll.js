@@ -1,4 +1,4 @@
-define('js!Controls/List/Controllers/VirtualScroll', [
+define('Controls/List/Controllers/VirtualScroll', [
    'Core/core-simpleExtend'
 ], function(simpleExtend
    ) {

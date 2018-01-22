@@ -1,4 +1,4 @@
-define('js!Controls/Input/Phone', [
+define('Controls/Input/Phone', [
 ], function() {
 
    /**

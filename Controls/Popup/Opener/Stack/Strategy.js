@@ -1,8 +1,8 @@
-define('js!Controls/Popup/Opener/Stack/Strategy',
+define('Controls/Popup/Opener/Stack/Strategy',
    [
-      'js!Controls/Popup/Opener/BaseStrategy',
+      'Controls/Popup/Opener/BaseStrategy',
       'WS.Data/Collection/List',
-      'js!Controls/Popup/TargetCoords'
+      'Controls/Popup/TargetCoords'
    ],
    function (BaseStrategy, List, TargetCoords) {
       'use strict';

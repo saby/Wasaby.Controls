@@ -1,6 +1,6 @@
 define(
     [
-        'js!Controls/Input/Password',
+        'Controls/Input/Password',
         'Core/vdom/Synchronizer/resources/SyntheticEvent'
     ],
     function(Password, SyntheticEvent) {

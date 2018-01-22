@@ -1,4 +1,4 @@
-define('js!Controls/Button/interface/ICaption', [
+define('Controls/Button/interface/ICaption', [
 ], function() {
 
    /**

@@ -1,4 +1,4 @@
-define('js!Controls/List/resources/utils/CSSGridLayoutUtils', [], function () {
+define('Controls/List/resources/utils/CSSGridLayoutUtils', [], function () {
 
    /**
     * Вспомогательные функции для работы с моделью CSS Grid Layout

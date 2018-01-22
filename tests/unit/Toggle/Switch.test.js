@@ -1,4 +1,4 @@
-define(['js!Controls/Toggle/Switch'], function (Switch) {
+define(['Controls/Toggle/Switch'], function (Switch) {
    'use strict';
    var SW, changeValue;
    describe('Controls.Toggle.Switch', function () {

@@ -3,7 +3,7 @@
  */
 /* global describe, it, assert */
 define([
-   'js!Controls/List/resources/utils/CSSGridLayoutUtils'
+   'Controls/List/resources/utils/CSSGridLayoutUtils'
 ], function (CSSGridLayoutUtils) {
    'use strict';
 

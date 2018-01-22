@@ -1,7 +1,7 @@
 /**
  * Created by dv.zuev on 25.12.2017.
  */
-define('js!Controls/Application',
+define('Controls/Application',
    [
       'Core/Control',
       'tmpl!Controls/Application/Page',

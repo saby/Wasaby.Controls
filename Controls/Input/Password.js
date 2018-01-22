@@ -1,4 +1,4 @@
-define('js!Controls/Input/Password',
+define('Controls/Input/Password',
     [
         'Core/Control',
         'tmpl!Controls/Input/Password/Password',

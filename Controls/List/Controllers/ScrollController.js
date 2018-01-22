@@ -1,4 +1,4 @@
-define('js!Controls/List/Controllers/ScrollController', [
+define('Controls/List/Controllers/ScrollController', [
    'Core/core-simpleExtend',
    'Core/helpers/Function/throttle'
 ], function(simpleExtend,

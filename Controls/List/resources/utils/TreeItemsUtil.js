@@ -1,4 +1,4 @@
-define('js!Controls/List/resources/utils/TreeItemsUtil', [
+define('Controls/List/resources/utils/TreeItemsUtil', [
    'WS.Data/Display/Tree',
    'WS.Data/Entity/Model',
    'Core/helpers/Object/isPlainObject'

@@ -1,5 +1,5 @@
-define('js!Controls/Input/Area', [
-   'js!Controls/Input/Text',
+define('Controls/Input/Area', [
+   'Controls/Input/Text',
    'Core/constants',
    /*'WS.Data/Type/descriptor',*/
    'Core/detection',

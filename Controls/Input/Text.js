@@ -1,4 +1,4 @@
-define('js!Controls/Input/Text', [
+define('Controls/Input/Text', [
       'Core/Control',
       'tmpl!Controls/Input/Text/Text',
       /*'WS.Data/Type/descriptor',*/

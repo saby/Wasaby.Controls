@@ -1,4 +1,4 @@
-define('js!Controls/interface/INavigation', [
+define('Controls/interface/INavigation', [
 ], function() {
 
    /**

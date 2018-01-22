@@ -6,7 +6,7 @@
  */
 define(
    [
-      'js!Controls/Input/resources/SuggestController',
+      'Controls/Input/resources/SuggestController',
       'Core/core-instance',
       'Core/Abstract'
    ],

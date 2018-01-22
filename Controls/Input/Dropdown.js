@@ -1,4 +1,4 @@
-define('js!Controls/Input/Dropdown', [
+define('Controls/Input/Dropdown', [
 ], function() {
 
    /**

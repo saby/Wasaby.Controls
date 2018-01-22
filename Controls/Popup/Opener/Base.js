@@ -1,7 +1,7 @@
-define('js!Controls/Popup/Opener/Base',
+define('Controls/Popup/Opener/Base',
    [
       'Core/Control',
-      'js!Controls/Popup/Manager',
+      'Controls/Popup/Manager',
       'Core/core-clone',
       'Core/core-merge'
    ],

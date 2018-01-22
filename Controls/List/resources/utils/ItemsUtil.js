@@ -1,4 +1,4 @@
-define('js!Controls/List/resources/utils/ItemsUtil', [
+define('Controls/List/resources/utils/ItemsUtil', [
    'WS.Data/Display/Display',
    'Core/core-instance',
    'WS.Data/Utils',

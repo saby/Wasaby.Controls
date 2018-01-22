@@ -1,6 +1,6 @@
 
 define([
-   'js!Controls/Input/resources/SuggestView/SuggestView',
+   'Controls/Input/resources/SuggestView/SuggestView',
    'WS.Data/Collection/List',
    'WS.Data/Entity/Model'
 ], function (SuggestView, List, Model) {

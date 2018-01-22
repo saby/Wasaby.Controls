@@ -1,11 +1,11 @@
 /**
  * Created by kraynovdo on 29.08.2017.
  */
-define('js!Controls/List/Controllers/PositionNavigation',
+define('Controls/List/Controllers/PositionNavigation',
    [
-      'js!Controls/List/Controllers/PageNavigation',
+      'Controls/List/Controllers/PageNavigation',
       'WS.Data/Source/SbisService',
-      'js!Controls/List/Controllers/INavigation'
+      'Controls/List/Controllers/INavigation'
    ],
    function(PageNavigation, SbisService, INavigation) {
       /**

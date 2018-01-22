@@ -1,6 +1,6 @@
 define(
    [
-      'js!Controls/ConfirmationWindow',
+      'Controls/ConfirmationWindow',
       'Core/Deferred'
    ],
 

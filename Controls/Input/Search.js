@@ -1,6 +1,6 @@
-define('js!Controls/Input/Search',
+define('Controls/Input/Search',
    [
-      'js!Controls/Input/Text',
+      'Controls/Input/Text',
       'tmpl!Controls/Input/Search/searchTextBoxButtons'
    ], function(TextBox, searchTextBoxButtons) {
 
