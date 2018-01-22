@@ -441,15 +441,11 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                var i1 = selectedIds.indexOf(c1.id);
                var i2 = selectedIds.indexOf(c2.id);
                if (i1 !== -1) {
-                  return i2 !== -1 ? (i1 < i2 ? -1 : (i1 == i2 ? 0 : +1)) : -1;
+                  return i2 !== -1 ? i1 - i2 : -1;
                }
-               else
-               if (i2 !== -1) {
-                  return +1;
+               else {
+                  return i2 !== -1 ? +1 : columns.indexOf(c1) - columns.indexOf(c2);
                }
-               i1 = columns.indexOf(c1);
-               i2 = columns.indexOf(c2);
-               return i1 < i2 ? -1 : (i1 == i2 ? 0 : +1);
             });
             self._selectableView.setItems(new RecordSet({rawData:newColumns, idProperty:'id'}));
          }
