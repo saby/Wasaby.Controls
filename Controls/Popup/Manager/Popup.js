@@ -71,10 +71,10 @@ define('Controls/Popup/Manager/Popup',
 
          /**
           * Обработчик нажатия на клавиши.
-          * @function Controls/Popup/Manager/Popup#_keyPressed
+          * @function Controls/Popup/Manager/Popup#_keyUp
           * @param event
           */
-         _keyPressed: function (event) {
+         _keyUp: function (event) {
             if (event.nativeEvent.keyCode === CoreConstants.key.esc) {
                this._close();
             }

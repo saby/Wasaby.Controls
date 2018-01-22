@@ -44,7 +44,7 @@ define('Controls/Input/resources/SuggestView/SuggestView',
                self._options.showAllOpener.open(_private.getOptionsForShowAll(self));
                return res;
             });
-            this._notify('close');
+            this._notify('close', [], {bubbling: true});
          },
          
          _beforeUpdate: function(newOptions) {

@@ -1,4 +1,4 @@
-<div class="controls-Browser-ColumnsEditor-Editing-Area">
+<div class="controls-Browser-ColumnsEditor-Editing-Area{{!(usePresets && ((staticPresets && staticPresets.length) || presetNamespace)) ? ' controls-Browser-ColumnsEditor-Editing-Area_low' : ''}}" style="max-height:{{maxHeight}}px">
    <div class="controls-Browser-ColumnsEditor-Editing-Area__head">
       <div class="controls-Browser-ColumnsEditor-Editing-Area__head-title">
          <div class="controls-Browser-ColumnsEditor-Editing-Area__head-title-left">
@@ -54,7 +54,7 @@
       </ws:if>
    </div>
    <SBIS3.CONTROLS:ScrollContainer class="controls-Browser-ColumnsEditor-Editing-Area__body">
-      <ws:content type="string">
+      <ws:content>
          <SBIS3.CONTROLS:CheckBox:Group
             class="controls-Browser-ColumnsEditor-Editing-Area__FixedList"
             name="controls-Browser-ColumnsEditor-Editing-Area__FixedList"
