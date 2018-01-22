@@ -1,145 +1,89 @@
+/*
+<span class="controls-ButtonBase controls-Button controls-Button_size-m controls-Button_state-standard">
+  <span class="controls-ButtonBase__content controls-Button__content">
+    <i class="controls-Button__icon icon-16 icon-Author icon-done"></i>
+    <span class="controls-Button__text spacing-between-icon-text  ">Text</span>
+  </span>
+</span>
+*/
 .controls-Button {
-   .button-default-style(@font-size_Button_default, @box-shadow_Button);
-   background-size: contain;
-   white-space: nowrap;
-   .user-select();
-   border-style: solid;
-   border-width: @border-width_Button;
-   min-width: @min-width_Button;
-   line-height: normal;
-   text-decoration: none;
-   text-shadow: @text-shadow_Button;
-
-   &.controls-Button-color__ {
-      &default {
-         color: @color_Button;
-         background: @background_Button;
-         border-color: @border-color_Button;
-         &:active:not(.ws-disabled) {
-            border-color: @border-color_Button_hovered;
-            background: @background_Button_active;
-            box-shadow: none;
-         }
-      }
-      &primary {
-         color: @color_Button_primary;
-         background: @background_Button_primary;
-         border-color: @border-color_Button_primary;
-         &:active:not(.ws-disabled) {
-            border-color: @border-color_Button_primary_hovered;
-            background: @background_Button_primary_active;
-            box-shadow: none;
-         }
-      }
-   }
-   /* TODO https://online.sbis.ru/opendoc.html?guid=51396ef7-59e1-417a-a74d-a8571cec2f6d
-      на класс controls-Button__primary завязаны прикладники и тесты
-   */
-   &.controls-Button__primary {
-      color: @color_Button_primary;
-      background: @background_Button_primary;
-      border-color: @border-color_Button_primary;
-      &:active:not(.ws-disabled) {
-         border-color: @border-color_Button_primary_hovered;
-         background: @background_Button_primary_active;
-         box-shadow: none;
-      }
-   }
-
-   /* End Button Themes */
-   &.controls-Button-size__ {
-      &default:not(.controls-Button__big) {
-         font-size: @font-size_Button_default;
-         height: @height_Button_default;
-         .border-radius(@border-radius_Button_default);
-         .controls-Button__wrapper {
-            padding: @padding_Button-wrapper_default;
-         }
-      }
-      &l {
-         font-size: @font-size_Button_l;
-         height: @height_Button_l;
-         .border-radius(@border-radius_Button_l);
-         .controls-Button__wrapper {
-            padding: @padding_Button-wrapper_l;
-         }
-      }
-      &m {
-         font-size: @font-size_Button_m;
-         height: @height_Button_m;
-         .border-radius(@border-radius_Button_m);
-         .controls-Button__wrapper {
-            padding: @padding_Button-wrapper_m;
-         }
-      }
-   }
-   &.controls-Button__big {
-      font-size: @font-size_Button_l;
-      height: @height_Button_l;
-      line-height: @line-height_Button_l; //todo: https://online.sbis.ru/opendoc.html?guid=03ffff15-153e-4757-bff5-6c057b06329e
-      .border-radius(@border-radius_Button_l);
-      .controls-Button__wrapper {
-         padding: @padding_Button-wrapper_l;
-      }
-   }
-
-   .controls-Button__wrapper {
-      .justify-content(center);
-   }
-
-   &.ws-disabled {
-      cursor: default;
-      text-shadow: none;
-      color: @color_Button_disabled;
-      border: @border_Button_disabled;
-      background: @background_Button_disabled;
-      .controls-Button__icon {
-         color: @color_Button-icon_disabled !important;
-      }
-   }
-
-   .controls-Button__icon + .controls-Button__text {
-      margin-left: @spacing_Button-between-icon-text;
-   }
-   .controls-Button__text {
-      .text-overflow();
-   }
-
-   &.controls-Button__withoutCaption {
-      .controls-Button__text {
-         display: none;
-      }
-   }
+  .button-default-style(@font-size_Button_default, @box-shadow_Button);
+  border-style: solid;
+  line-height: normal;
+  border-width: @border-width_Button;
+  min-width: @min-width_Button;
+  text-shadow: @text-shadow_Button;
+  .user-select();
 }
 
+.controls-Button__content {
+  .justify-content(center);
+}
+
+.controls-Button_size-m {
+  font-size: @font-size_Button_default;
+  height: @height_Button_default;
+  padding: @padding_Button-wrapper_default;
+  .border-radius(@border-radius_Button_default);
+}
+
+.controls-Button_size-l {
+  font-size: @font-size_Button_l;
+  height: @height_Button_l;
+  padding: @padding_Button-wrapper_l;
+  .border-radius(@border-radius_Button_l);
+}
+
+.controls-Button_state-standard {
+  color: @color_Button;
+  background: @background_Button;
+  border-color: @border-color_Button;
+}
+.controls-Button_state-standard:active {
+  border-color: @border-color_Button_hovered;
+  background: @background_Button_active;
+  box-shadow: none;
+}
+
+.controls-Button_state-primary {
+  color: @color_Button_primary;
+  background: @background_Button_primary;
+  border-color: @border-color_Button_primary;
+}
+.controls-Button_state-primary:active {
+  border-color: @border-color_Button_primary_hovered;
+  background: @background_Button_primary_active;
+  box-shadow: none;
+}
+.controls-Button_state-disabled {
+  cursor: default;
+  color: @color_Button_disabled;
+  border: @border_Button_disabled;
+  background: @background_Button_disabled;
+  text-shadow: none;
+}
+.spacing-between-icon-text {
+  margin-left: @spacing_Button-between-icon-text;
+}
+.controls-Button__text {
+  .text-overflow();
+}
+.icon-button-disabled {
+  color: @color_Button-icon_disabled;
+}
+// на тач устройствах ховер не нужен, поэтому стили приеменяются, только для десктопных устройств
 .ws-is-desktop-platform {
-   .controls-Button:not(.ws-disabled):not(:active) {
-      &.controls-Button-color__ {
-         &default {
-            &:hover {
-               border-color: @border-color_Button_hovered;
-               background: @background_Button_hovered;
-            }
-         }
-         &primary {
-            &:hover {
-               border-color: @border-color_Button_primary_hovered;
-               background: @background_Button_primary_hovered;
-            }
-         }
-      }
-      &.controls-Button__primary {
-         &:hover {
-            border-color: @border-color_Button_primary_hovered;
-            background: @background_Button_primary_hovered;
-         }
-      }
-   }
+  .controls-Button_state-standard:hover {
+      border-color: @border-color_Button_hovered;
+      background: @background_Button_hovered;
+  }
+  .controls-Button_state-primary:hover {
+      border-color: @border-color_Button_primary_hovered;
+      background: @background_Button_primary_hovered;
+  }
 }
-
-// фикс выравнивания кнопок в .120 версию
 .ws-is-mobile-safari {
-   .controls-Button:not(.controls-Button__big) {
-      line-height: @button-ipad-line-height;
-   }
+  .controls-Button {
+    line-height: @button-ipad-line-height;
+  }
 }

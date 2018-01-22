@@ -90,16 +90,49 @@ define('js!WSControls/Buttons/Button', [
              * @see isPrimary
              * @see setPrimary
              */
-            primary: false
+            primary: false,
+            _iconDisabledClass: 'icon-disabled'
          },
-         _contentContainer: null
+         _contentContainer: null,
+         _iconClass: null,
+         _iconState: null
+      },
+
+
+      _parseIconClass: function(icon) {
+          var iconStates = ['icon-primary', 'icon-hover', 'icon-error', 'icon-done', 'icon-disabled', 'icon-attention'],
+              state = '',
+              i = -1,
+              statePos = -1;
+
+          if (icon) {
+              this._iconClass = icon.indexOf('sprite:') === 0 ? icon.substr(7) : icon;
+
+              while(statePos === -1 && i < iconStates.length){
+                  i++;
+                  state = iconStates[i];
+                  statePos = this._iconClass.indexOf(state);
+              }
+              if(statePos !== -1){
+                  this._iconState = state;
+                  this._iconClass = this._iconClass.substring(0, statePos) + this._iconClass.substring(statePos + state.length);
+              }
+          }
+      },
+
+      _modifyOptions: function() {
+          var opts = Button.superclass._modifyOptions.apply(this, arguments),
+              icon = opts.icon || opts._iconClass;
+
+          this._parseIconClass(icon);
+          return opts;
       },
 
       $constructor: function() {
          if (this._options.primary === true) {
             this._registerDefaultButton();
          }
-         this._contentContainer = this._container.find('.controls-Button__wrapper');
+         this._contentContainer = this._container.find('.controls-ButtonBase__content');
       },
 
       setCaption: function(caption){
@@ -124,9 +157,7 @@ define('js!WSControls/Buttons/Button', [
         */
       setPrimary: function(flag){
          this._options.primary = !!flag;
-         this._container.toggleClass('controls-Button-color__primary', this.isPrimary());
-         this._container.toggleClass('controls-Button__primary', this.isPrimary());
-         this._container.toggleClass('controls-Button-color__default', !this.isPrimary());
+         this._toggleState();
       },
       /**
        * Является ли кнопкой по умолчанию.
@@ -158,6 +189,7 @@ define('js!WSControls/Buttons/Button', [
         * </pre>
         */
       _drawIcon: function() {
+          this._parseIconClass(this._options.icon);
           this._redrawButton();
       },
 
@@ -169,8 +201,22 @@ define('js!WSControls/Buttons/Button', [
 
       setEnabled: function(enabled){
           Button.superclass.setEnabled.call(this, enabled);
+
+         this._toggleState();
          this._container.attr('disabled', !this.isEnabled());
       },
+
+      // метод который будет переключать состояния кнопки, пока не перейдем на vDom
+      // https://online.sbis.ru/opendoc.html?guid=aa39901a-7aec-4ebe-ab51-a123c53eac92
+      _toggleState: function() {
+          var  iconContainer = this._container.find('.controls-Button__icon');
+
+          if(iconContainer.length) {
+              iconContainer[0].className = iconContainer[0].className.replace(/(^|\s)icon-\S+/g, '');
+              iconContainer.addClass(this._iconClass + (this.isEnabled() ? (' ' + this._iconState || '') : (' ' + this._options._iconDisabledClass)));
+          }
+      },
+
       _notifyOnActivated: function(originalEvent){
           Button.superclass._notifyOnActivated.apply(this, arguments);
          //preventDefault тоже надо делать, поскольку иначе при нажатии enter на кнопки генерируется click, и onActivated стреляет два раза

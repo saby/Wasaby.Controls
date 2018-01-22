@@ -1,52 +1,20 @@
-.controls-Button {
-  &.controls-ToggleButton__normal {
-    &.controls-Checked__checked:not(.ws-disabled) {
-      border-width: @button-checked-border-width;
+.controls-ToggleButton__normal {
+  &.controls-Checked__checked:not(.ws-disabled) {
+    border-width: @button-checked-border-width;
 
-      &.controls-Button-color__ {
-        &default {
-          background: @button-checked-bg;
-          border-color: @button-checked-border-color;
-        }
-        &primary {
-          background: @button-primary-checked-bg;
-        }
+    &.controls-Button_state-standard {
+        background: @button-checked-bg;
+        border-color: @button-checked-border-color;
       }
-
-      &.controls-Button-size__ {
-        &default:not(.controls-Button__big) {
-          .controls-Button__wrapper {
-            padding: @button-checked-padding;
-          }
-        }
-        &l {
-          .controls-Button__wrapper {
-            padding: @button-big-checked-padding;
-          }
-        }
-      }
-      &.controls-Button__big {
-        .controls-Button__wrapper {
-          padding: @button-big-checked-padding;
-        }
-      }
+    &.controls-Button_state-primary {
+       background: @button-primary-checked-bg;
     }
-  }
-}
 
-.ws-is-desktop-platform {
-  .controls-Button:not(.ws-disabled) {
-    &.controls-ToggleButton__normal {
-      &:hover {
-        &.controls-Checked__checked.controls-Button-color__ {
-          &default {
-             border: @button-checked-border !important;
-          }
-          &primary {
-             border: @button-primary-checked-border !important;
-          }
-        }
-      }
+    &.controls-Button_size-m {
+      padding: @button-checked-padding;
+    }
+    &.controls-Button_size-l {
+      padding: @button-big-checked-padding;
     }
   }
 }
