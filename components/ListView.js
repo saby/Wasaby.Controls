@@ -3728,7 +3728,12 @@ define('SBIS3.CONTROLS/ListView',
           * По умолчанию равен бесконечности.
           */
          scrollToItem: function(item, toBottom, depth){
-            if (item.getId && item.getId instanceof Function){
+            // Item is not in DOM, will need to calculate scrollTop
+            if (this._options.virtualScrolling && this._virtualScrollController) {
+               var scrollTop = this._virtualScrollController.getScrollTopForItem(this._options._items.getIndex(item));
+               this._getScrollWatcher().scrollTo(scrollTop);
+            }
+            else if (item.getId && item.getId instanceof Function) {
                this._scrollToItem(item.getId(), toBottom, depth);
             }
          },
