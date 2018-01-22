@@ -42,7 +42,7 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
             if (!element.popupOptions) {
                element.popupOptions = {};
             }
-            element.popupOptions.className = _private.getClassName();
+            element.popupOptions.className += ' ' + _private.getClassName();
             this._stack.add(element, 0);
             this._update();
          },
