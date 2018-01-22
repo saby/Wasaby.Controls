@@ -597,14 +597,14 @@
   .box-shadow(none);
 }
 
-.generate-height(@className, @i: 1) when (@i =< 10) {
+.generate-height(@className, @line-height, @i: 1) when (@i =< 10) {
   .@{className}_maxheight-@{i} {
-    max-height : @i * @default-line-height;
+    max-height : @i * @line-height;
   }
   .@{className}_minheight-@{i} {
-    min-height: @i * @default-line-height;
+    min-height: @i * @line-height;
   }
-  .generate-height(@className, @i + 1);
+  .generate-height(@className, @line-height, @i + 1);
 }
 
 //---------------Имитация цикла for---------------//
