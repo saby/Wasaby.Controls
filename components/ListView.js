@@ -3126,7 +3126,7 @@ define('SBIS3.CONTROLS/ListView',
             /* при изменении размера таблицы необходимо вызвать перерасчет позиции тулбара
              позиция тулбара может сбиться например при появление пэйджинга */
             if(this._itemsToolbar && this._itemsToolbar.isVisible()){
-               if(this._touchSupport && !this._editInPlace.isVisible()) {
+               if(this._touchSupport && this._editInPlace && !this._editInPlace.isVisible()) {
                    this._itemsToolbar.setHeightInTouchMode();
                }
                this._itemsToolbar.recalculatePosition();
