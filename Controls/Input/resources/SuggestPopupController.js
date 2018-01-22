@@ -27,10 +27,17 @@ define('js!Controls/Input/resources/SuggestPopupController',
             return self._search;
          },
          
+         prepareSuggestFilter: function(self, searchResult) {
+            if (!searchResult.hasMore) {
+               delete self._popupOptions.componentOptions.filter[self._searchParam];
+            }
+         },
+   
          search: function(self) {
             return _private.getSearchController(self).search({filter: self._filter}).addCallback(function(searchResult) {
                _private.setSuggestSelectedIndex(self, 0);
                _private.setSuggestSearchResult(self, searchResult);
+               _private.prepareSuggestFilter(self, searchResult);
             });
          },
          
@@ -40,7 +47,7 @@ define('js!Controls/Input/resources/SuggestPopupController',
          
          setSuggestSearchResult: function(self, searchResult) {
             self._popupOptions.componentOptions.items = searchResult.result;
-            self._popupOptions.componentOptions.hasMore = searchResult.hasMore;
+            self._popupOptions.componentOptions.hasMore = searchResult.hasMore || !searchResult.result.getCount();
          },
          
          setSuggestSelectedIndex: function(self, selectedIndex) {
@@ -77,6 +84,7 @@ define('js!Controls/Input/resources/SuggestPopupController',
             this._searchDelay = options.searchDelay;
             this._navigation = options.navigation;
             this._selectCallback = options.selectCallback;
+            this._searchParam = options.searchParam;
          },
          
          showPopup: function() {

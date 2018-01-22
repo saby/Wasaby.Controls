@@ -92,7 +92,8 @@ define('js!Controls/Input/resources/SuggestController',
                   searchDelay: self._options.searchDelay,
                   popupOpener: self._options.suggestOpener,
                   navigation: self._options.navigation,
-                  selectCallback: self._options.selectCallback
+                  selectCallback: self._options.selectCallback,
+                  searchParam: self._options.searchParam
                });
             }
             return self._suggestPopupController;
