@@ -4,6 +4,7 @@ define('js!Controls/ConfirmationWindow',
       'Core/core-merge',
       'Core/Deferred',
       'tmpl!Controls/ConfirmationWindow/ConfirmationWindow',
+      'css!Controls/ConfirmationWindow/ConfirmationWindow',
       'js!Controls/ConfirmationWindow/Dialog'
    ],
    function (Control, merge, Deferred, template) {
