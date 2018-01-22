@@ -193,10 +193,13 @@
       left: 0;
    }
 }
-.ws-is-webkit .controls-DateRangeBigChoose-MonthRangePickerItem__month .controls-MonthView__item-title{
-   height: @height_DateRangeBigChoose-MonthRangePickerItem-month-date;
-   line-height: @height_DateRangeBigChoose-MonthRangePickerItem-month-date;
-   display: block;
+.ws-is-webkit,
+.ws-is-ie {
+   .controls-DateRangeBigChoose-MonthRangePickerItem__month .controls-MonthView__item-title {
+      height: @height_DateRangeBigChoose-MonthRangePickerItem-month-date;
+      line-height: @height_DateRangeBigChoose-MonthRangePickerItem-month-date;
+      display: block;
+   }
 }
 
 .controls-DateRangeBigChoose-MonthRangePickerItem__item-selected,
