@@ -50,7 +50,9 @@
    .inline-flexbox();
 }
 
-.generate-height(controls-TextArea__field);
+.generate-height(controls-TextArea__field_size_default, @line-height_InputRender_default);
+.generate-height(controls-TextArea__field_size_m, @line-height_InputRender_m);
+.generate-height(controls-TextArea__field_size_l, @line-height_InputRender_l);
 
 /*
    СЛОЙ СОВМЕСТИМОСТИ
@@ -71,9 +73,4 @@
    position: absolute;
    top: 0;
    left: 0;
-}
-.controls-InputRender.controls-TextArea {
-   //При использовании line-height: normal высота строка в FF становится 19px, а в остальных браузерах 18px. Через метрики
-   //шрифта это не исправить, т.к. с другими шрифтами высота строки тоже разная. Так что нужно указывать line-height явно
-   line-height: @line-height_TextArea;
 }
