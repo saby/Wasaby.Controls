@@ -38,7 +38,18 @@ define('js!Controls/Popup/Manager/Popup',
 
          _afterMount: function () {
             var container = this._container;
-            this._notify('popupCreated', [this._options.id, container.offsetWidth, container.offsetHeight]);
+            this._width = container.offsetWidth;
+            this._height = container.offsetHeight;
+            this._notify('popupCreated', [this._options.id, this._width, this._height]);
+         },
+
+         _afterUpdate: function () {
+            var container = this._container;
+            if (container.offsetWidth !== this._width || container.offsetHeight !== this._height) {
+               this._width = container.offsetWidth;
+               this._height = container.offsetHeight;
+               this._notify('popupUpdated', [this._options.id, this._width, this._height]);
+            }
          },
 
          /**

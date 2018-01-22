@@ -22,6 +22,17 @@ define('js!Controls/Popup/Opener/BaseStrategy',
          },
 
          /**
+          * Обновление размеров элемента
+          * @function Controls/Popup/Opener/BaseStrategy#elementUpdated
+          * @param element
+          * @param width
+          * @param height
+          */
+         elementUpdated: function (element, width, height) {
+
+         },
+
+         /**
           * Удаление элемента
           * @function Controls/Popup/Opener/BaseStrategy#elementDestroyed
           * @param element
