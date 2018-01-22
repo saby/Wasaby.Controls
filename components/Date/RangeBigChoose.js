@@ -966,13 +966,15 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          }
 
          var quantum = this._options.quantum,
-            lastQuantumLength, years;
+            lastQuantumLength, years, i;
 
-         for (i = 0; i < quantum.years.length; i++) {
-            lastQuantumLength = quantum.years[i];
-            years = endDate.getFullYear() - startDate.getFullYear() + 1;
-            if (lastQuantumLength >= years) {
-               return this._getYearRange(startDate, endDate, lastQuantumLength);
+         if ('years' in quantum) {
+            for (i = 0; i < quantum.years.length; i++) {
+               lastQuantumLength = quantum.years[i];
+               years = endDate.getFullYear() - startDate.getFullYear() + 1;
+               if (lastQuantumLength >= years) {
+                  return this._getYearRange(startDate, endDate, lastQuantumLength);
+               }
             }
          }
 

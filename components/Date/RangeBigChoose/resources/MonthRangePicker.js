@@ -376,21 +376,60 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
       },
 
       _onMonthClick: function (e) {
-         var month;
+         var month, range;
          if (this.isSelectionProcessing()) {
             month = Date.fromSQL($(e.currentTarget).attr(this._selectedRangeItemIdAtr));
-            this._onRangeItemElementClick(month, new Date(month.getFullYear(), month.getMonth() + 1, 0));
+            range = this._updateRange(month, month);
+            this._onRangeItemElementClick(range[0], new Date(range[1].getFullYear(), range[1].getMonth() + 1, 0));
             this._updateSelectionInInnerComponents();
          } else {
             if ($(e.target).hasClass('controls-DateRangeBigChoose-MonthRangePickerItem__month_title') && this._options.monthsSelectionEnabled) {
                this._updateSelectionInInnerComponents();
                month = Date.fromSQL($(e.target).attr(this._selectedRangeItemIdAtr));
-               this._onRangeItemElementClick(month, new Date(month.getFullYear(), month.getMonth() + 1, 0));
+               range = this._updateRange(month, month);
+               if (this._options.quantum && 'months' in this._options.quantum && this._options.quantum.months.length === 1) {
+                  this.setRange(range[0], new Date(range[1].getFullYear(), range[1].getMonth() + 1, 0));
+               } else {
+                  this._onRangeItemElementClick(range[0], new Date(range[1].getFullYear(), range[1].getMonth() + 1, 0));
+               }
             } else {
                month = Date.fromSQL($(e.currentTarget).attr(this._selectedRangeItemIdAtr));
                this._notify('onMonthActivated', month);
             }
             this._updateSelectionInInnerComponents();
+         }
+      },
+
+      _updateRange: function (startDate, endDate) {
+         if (isEmpty(this._options.quantum)) {
+            return this._normalizeRange(startDate, endDate);
+         }
+
+         var quantum = this._options.quantum,
+            lastQuantumLength, lastQuantumType,
+            months, range, start, end, i, date;
+
+         if ('months' in quantum) {
+            for (i = 0; i < quantum.months.length; i++) {
+               lastQuantumLength = quantum.months[i];
+               months = endDate.getMonth() - startDate.getMonth() + 1;
+               if (lastQuantumLength >= months) {
+                  return this._getMonthRange(startDate, endDate, lastQuantumLength);
+               }
+            }
+         }
+
+         return this._getMonthRange(startDate, endDate, lastQuantumLength);
+      },
+
+      _getMonthRange: function (startDate, endDate, quantum) {
+         var date = new Date(startDate);
+         if (startDate <= endDate) {
+            date.setMonth(date.getMonth() + quantum - 1);
+            return [endDate, date]
+         } else {
+            date.setMonth(date.getMonth() - quantum + 1);
+            return [date, endDate]
          }
       },
 
