@@ -151,7 +151,6 @@ define(
             }
 
             this._drawMonthTable();
-            this._drawCurrentRangeSelection();
 
             // this._updateCaption();
             this._attachEvents();
@@ -736,8 +735,11 @@ define(
          },
 
          _setEnabled: function(enabled) {
+            var oldEnabled = this.isEnabled();
             MonthView.superclass._setEnabled.apply(this, arguments);
-            this._drawMonthTable();
+            if (oldEnabled !== enabled) {
+               this._drawMonthTable();
+            }
          },
 
          destroy: function() {

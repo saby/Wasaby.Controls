@@ -24,6 +24,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             tplOptions.quarterSelectionEnabled = cfg.quarterSelectionEnabled;
             tplOptions.halfyearSelectionEnabled = cfg.halfyearSelectionEnabled;
             tplOptions.yearSelectionEnabled = cfg.yearSelectionEnabled;
+            tplOptions.startValue = cfg.startValue;
+            tplOptions.endValue = cfg.endValue;
             return tplOptions;
          };
 
@@ -302,10 +304,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          return changed;
       },
 
-      _drawItemsCallback: function () {
+      _drawItemsCallbackSync: function () {
          var self = this,
              container;
-         MonthRangePicker.superclass._drawItemsCallback.apply(this, arguments);
+         MonthRangePicker.superclass._drawItemsCallbackSync.apply(this, arguments);
          this._$items = null;
          this.forEachMonthView(function(control) {
             container = control.getContainer();
@@ -490,7 +492,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             css.push('controls-RangeSelectable__item-selectedStart');
             css.push(prefix + '-selectedStart');
          }
-         if (scope.item.selectedEnd && (!scope.item.selectionProcessing || (scope.item.selectedEnd !== scope.item.selectedStart))) {
+         if (scope.item.selectedEnd && (!scope.item.selectionProcessing ||
+               (scope.item.selectedEnd !== scope.item.selectedStart  && !scope.item.selectedUnfinishedEnd))) {
             css.push('controls-RangeSelectable__item-selectedEnd');
             css.push(prefix + '-selectedEnd');
          }

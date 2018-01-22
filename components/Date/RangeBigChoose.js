@@ -149,7 +149,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
                   css.push('controls-RangeSelectable__item-selectedStart');
                   css.push(prefix + '-selectedStart');
                }
-               if (scope.year.selectedEnd && (!scope.year.selectionProcessing || (scope.year.selectedEnd !== scope.year.selectedStart))) {
+               if (scope.year.selectedEnd &&
+                     (!scope.year.selectionProcessing || (scope.year.selectedEnd !== scope.year.selectedStart  && !scope.year.selectedUnfinishedEnd))) {
                   css.push('controls-RangeSelectable__item-selectedEnd');
                   css.push(prefix + '-selectedEnd');
                }
@@ -1044,6 +1045,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       },
 
       _updateYearsBar: function (lastYear, withoutSelection) {
+         if (this.getRangeSelectionType() !== selectionTypes.years) {
+            withoutSelection = true;
+         }
          this._options.yearPanelData = this._getYearsRangeItems(lastYear, this._options, withoutSelection);
          this.getContainer().find('.' + css_classes.range_containers.years).replaceWith(yearsPanelTpl(this._options));
       },
