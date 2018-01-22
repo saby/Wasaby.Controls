@@ -74,9 +74,6 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
             }
          }
          options.cssClassName += ' controls-IconButton-size__' + (!!options.size ? options.size : 'default');
-         // В 3.18.0 выпиливаю эту логику по задаче
-         // https://online.sbis.ru/opendoc.html?guid=241d440c-ed00-4fa3-b2f9-3a5c453b0943
-         options.tooltip =  options.tooltip || options.caption;
          return options;
       },
 
