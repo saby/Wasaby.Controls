@@ -1148,6 +1148,11 @@ define('SBIS3.CONTROLS/ListView',
             if(lvOpts.selectedKey && lvOpts._itemData) {
                lvOpts._itemData.selectedKey = lvOpts.selectedKey;
             }
+            // в IE размещать "операции над записью" внутри строки нельзя
+            // т.к. в IE td не растягивается на высоту строки
+            // поэтому когда первый столбец получается многострочным, то последний занимает изначальную ширину
+            // и визуально получается, что тулбар прибит к верху и смещен
+            lvOpts.itemsActionsInItemContainer = !cDetection.isIE ? lvOpts.itemsActionsInItemContainer : false;
             return lvOpts;
          },
 
