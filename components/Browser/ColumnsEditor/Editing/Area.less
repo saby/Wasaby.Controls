@@ -1,30 +1,26 @@
 .controls-Browser-ColumnsEditor-Editing-Area {
-   box-sizing: border-box;
+   .flexbox();
+   .flex-direction(column);
    width: @width-ColumnsEditor-Editing-Area;
    height: 100%;
-   padding-top: @height-ColumnsEditor-Editing-Area-head;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head {
    box-sizing: border-box;
-   height: @height-ColumnsEditor-Editing-Area-head;
-   margin-top: -@height-ColumnsEditor-Editing-Area-head;
+   .flex-shrink(0);
    border-bottom: @border-bottom-ColumnsEditor-Editing-Area__head;
    padding: @padding-ColumnsEditor-Editing-Area-head;
    background-color: @background-color-ColumnsEditor-Editing-Area-head;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area_low {
-   padding-top: @height-ColumnsEditor-Editing-Area-head-2;
    .controls-Browser-ColumnsEditor-Editing-Area__head {
-      height: @height-ColumnsEditor-Editing-Area-head-2;
-      margin-top: -@height-ColumnsEditor-Editing-Area-head-2;
+      padding: @padding-ColumnsEditor-Editing-Area-head-2;
    }
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head-title {
    height: @height-ColumnsEditor-Editing-Area-head-title;
-   margin-bottom: @spacing-ColumnsEditor-Editing-Area-head;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head-title-left {
@@ -41,6 +37,7 @@
 
 .controls-Browser-ColumnsEditor-Editing-Area__head-preset {
    height: @height-ColumnsEditor-Editing-Area__head-preset;
+   margin-top: @spacing-ColumnsEditor-Editing-Area-head;
    font-size: @font-size-ColumnsEditor-Editing-Area__head-preset;
 }
 
@@ -76,6 +73,7 @@
 
 .controls-Browser-ColumnsEditor-Editing-Area__body {
    box-sizing: border-box;
+   .flex-grow(1);
    height: 100%;
    padding: @padding-ColumnsEditor-Editing-Area__body;
 }
