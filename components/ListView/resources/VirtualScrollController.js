@@ -57,11 +57,14 @@ define('SBIS3.CONTROLS/ListView/resources/VirtualScrollController', ['Core/Abstr
             this._currentVirtualPage = 0;
             this._heights = [];
             this.initHeights();
-            this._currentWindow = this._getRangeToShow(0, PAGES_COUNT);
+            this._currentWindow = [0, this._projection.getCount()];
             clearTimeout(this._scrollTimeout);
 
             // Enable scroll handler after reset
             this.disableScrollHandler(false);
+
+            // Set to first page -> remove extra items
+            this._onVirtualPageChange(0);
          },
 
          _scrollHandler: function (e, scrollTop) {
