@@ -291,6 +291,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          options = DateRangeBigChoose.superclass._modifyOptions.apply(this, arguments);
          options.displayedYear = options.startValue ? options.startValue.getFullYear() : (new Date()).getFullYear();
          // options.displayedPeriod = options.startValue ? options.startValue : DateUtil.normalizeMonth(new Date());
+         options.yearPanelLastYear = options.displayedYear;
          options.yearPanelData = this._getYearsRangeItems(options.displayedYear, options, true);
          options.weekdaysCaptions = DateControlsUtil.getWeekdaysCaptions();
          // options._state = options.selectionType === RangeSelectableViewMixin.selectionTypes.range ? states.year: states.month;
@@ -321,6 +322,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this._options._displayedPeriod = new Date(year, 0);
          this._updateHomeButton();
          this._clearYearsBarSelection();
+         if (year > this._options.yearPanelLastYear) {
+            this._updateYearsBar(year);
+         } else if (year < this._options.yearPanelLastYear - 5) {
+            this._updateYearsBar(year + 5);
+         }
       },
 
       _onMonthRangePickerOnItemMouseEnter: function (event, date) {
@@ -1092,6 +1098,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          if (this.getRangeSelectionType() !== selectionTypes.years) {
             withoutSelection = true;
          }
+         lastYear = lastYear || this._options.yearPanelData[this._options.yearPanelData.length - 1].caption;
+         this._options.yearPanelLastYear = lastYear;
          this._options.yearPanelData = this._getYearsRangeItems(lastYear, this._options, withoutSelection);
          this.getContainer().find('.' + css_classes.range_containers.years).replaceWith(yearsPanelTpl(this._options));
       },
