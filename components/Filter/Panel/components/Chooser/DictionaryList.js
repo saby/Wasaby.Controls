@@ -4,11 +4,12 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
     'Core/core-clone',
     'Core/core-merge',
     'Core/core-instance',
+    'WS.Data/Entity/Record',
     'WS.Data/Collection/RecordSet',
     'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList/resources/FilterPanelChooserDictionaryFooter',
     'SBIS3.CONTROLS/Action/SelectorAction',
     'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList/FilterPanelChooser.DictionaryList'
-], function(FilterPanelChooserList, CommandDispatcher, coreClone, coreMerge, cInstance, RecordSet, footerTpl, SelectorAction) {
+], function(FilterPanelChooserList, CommandDispatcher, coreClone, coreMerge, cInstance, Record, RecordSet, footerTpl, SelectorAction) {
 
     'use strict';
 
@@ -168,6 +169,16 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
             this._getAllButton().setCaption('Ещё' + ' ' + (this._getListView().getItems().getCount() - 3));
         },
 
+        _createRecordWithAdapter: function(sourceRecord, adapter) {
+            var result = new Record({
+               adapter: adapter
+            });
+            sourceRecord.each(function(field, value) {
+               result.set(field, value);
+            });
+            return result;
+        },
+
         _onExecutedHandler: function(event, meta, result) {
             var
                 listView = this._getListView(),
@@ -180,9 +191,9 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
                 if (result.getCount()) {
                     result.forEach(function(item) {
                         if (!items.getRecordById(item.get(idProperty))) {
-                            items.add(item);
+                            items.add(this._createRecordWithAdapter(item, items.getAdapter()));
                         }
-                    });
+                    }, this);
                 }
                 items.setEventRaising(true, true);
                 listView.setSelectedItemsAll();
