@@ -125,6 +125,7 @@ define('SBIS3.CONTROLS/ListView',
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        * @css js-controls-ListView__notEditable Клик по элементу с данным классом не будет приводить к запуску редактирования по месту.
+       * @css controls-ListView__disableHover Скрывает выделение по ховеру.
        *
        *
        * @ignoreOptions _handlers activableByClick alwaysShowExtendedTooltip buildMarkupWithContext className ignoreTabCycles linkedContext modal
