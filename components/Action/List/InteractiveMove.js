@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
       'Core/core-instance',
       'Core/constants',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
-      'css!SBIS3.CONTROLS/Action/List/InteractiveMove/resources/InteractiveMove'
+      'css!SBIS3.CONTROLS/Action/List/resources/InteractiveMove'
    ],
    function (ListMove, DialogMixin, strHelpers, Indicator, cMerge, IoC, cInstance, constants, InformationPopupManager) {
       'use strict';
@@ -18,7 +18,7 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
        * @class SBIS3.CONTROLS/Action/List/InteractiveMove
        * @public
        * @extends SBIS3.CONTROLS/Action/List/Move
-       * @mixes SBIS3.CONTROLS/Action/Mixin/DialogMixin
+       * @mixes SBIS3.CONTROLS/Action/Mixin/DialogMixinл
        * @author Ганшин Я.О.
        * @example
        * Пример использования InteractiveMove:
