@@ -10,6 +10,7 @@
    .flexbox();
    .flex-direction(column);
    .flex-shrink(1);
+   position: -webkit-sticky;
    position: sticky;
    top: 0;
    margin-bottom: -@height_DateRangeChoose-dates-months-year-button;
@@ -81,4 +82,19 @@
 
 body.ws-is-desktop-platform .controls-DateRangeBigChoose__dates-dates-wrapper::-webkit-scrollbar {
     width: 0;
+}
+
+.ws-is-ie {
+   .controls-DateRangeBigChoose-DateRangePickerItem__months {
+      position: fixed;
+      visibility: hidden;
+   }
+   .controls-DateRangeBigChoose-DateRangePickerItem__displayed {
+      .controls-DateRangeBigChoose-DateRangePickerItem__months {
+         visibility: visible;
+      }
+   }
+   .controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates {
+      margin-left: @width_DateRangeBigChoose-dates-header-year;
+   }
 }
