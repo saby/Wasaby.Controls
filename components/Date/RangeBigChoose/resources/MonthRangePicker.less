@@ -197,8 +197,17 @@
 .ws-is-ie {
    .controls-DateRangeBigChoose-MonthRangePickerItem__month .controls-MonthView__item-title {
       height: @height_DateRangeBigChoose-MonthRangePickerItem-month-date;
-      line-height: @height_DateRangeBigChoose-MonthRangePickerItem-month-date;
       display: block;
+   }
+}
+.ws-is-ie {
+   .controls-DateRangeBigChoose-MonthRangePickerItem__month .controls-MonthView__item-title {
+      line-height: @height_DateRangeBigChoose-MonthRangePickerItem-month-date - 2px;
+   }
+}
+.ws-is-webkit {
+   .controls-DateRangeBigChoose-MonthRangePickerItem__month .controls-MonthView__item-title {
+      line-height: @height_DateRangeBigChoose-MonthRangePickerItem-month-date;
    }
 }
 
