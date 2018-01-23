@@ -1,4 +1,4 @@
-<html lang="ru" xml:lang="ru" xmlns="http://www.w3.org/1999/xhtml" key="1_" id="root" component="{{_options.component||'js!Controls/Application'}}">
+<html lang="ru" xml:lang="ru" xmlns="http://www.w3.org/1999/xhtml" key="1_" id="root" component="{{_options.component||'Controls/Application'}}">
 <head key="1_1_">
    <ws:if data="{{ cssLinks }}">
       <ws:for data="index, value in cssLinks">
@@ -24,10 +24,6 @@
                      compatible: false
                   };
                </script>
-               <ws:if data="{{ jquery != 777 }}">
-                  <script key="jquery-s" type="text/javascript" src="/cdn/jquery/3.2.1/jquery-min.js"  data-pack-name="skip"></script>
-                  <script key="cookie-s" type="text/javascript" src="/cdn/jquery-cookie/04-04-2014/jquery-cookie-min.js"  data-pack-name="skip"></script>
-               </ws:if>
                <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/bundles.js"></script>
                <script key="require" type="text/javascript" src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
    <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>

@@ -1,9 +1,9 @@
-define('js!Controls/Container/Scroll',
+define('Controls/Container/Scroll',
    [
       'Core/Control',
       'tmpl!Controls/Container/Scroll/Scroll',
       'Core/detection',
-      'js!Controls/Container/Scrollbar/Scrollbar',
+      'Controls/Container/Scrollbar/Scrollbar',
       'css!Controls/Container/Scroll/Scroll',
    ],
    function(Control, template, detection) {

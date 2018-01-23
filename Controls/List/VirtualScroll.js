@@ -1,4 +1,4 @@
-define('js!Controls/List/VirtualScroll',
+define('Controls/List/VirtualScroll',
    [
       'Core/Abstract'
    ],

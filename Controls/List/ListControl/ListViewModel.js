@@ -1,8 +1,8 @@
 /**
  * Created by kraynovdo on 16.11.2017.
  */
-define('js!Controls/List/ListControl/ListViewModel',
-   ['Core/Abstract', 'js!Controls/List/ListControl/ItemsViewModel'],
+define('Controls/List/ListControl/ListViewModel',
+   ['Core/Abstract', 'Controls/List/ListControl/ItemsViewModel'],
    function(Abstract, ItemsViewModel) {
       /**
        *

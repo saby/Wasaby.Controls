@@ -1,11 +1,11 @@
-define('js!Controls/Input/Number', [
+define('Controls/Input/Number', [
    'Core/Control',
    'tmpl!Controls/Input/Number/Number',
    'WS.Data/Type/descriptor',
    'Controls/Input/Number/ViewModel',
    'Controls/Input/resources/InputHelper',
 
-   'js!Controls/Input/resources/InputRender/InputRender',
+   'Controls/Input/resources/InputRender/InputRender',
    'tmpl!Controls/Input/resources/input'
 ], function (Control,
              template,

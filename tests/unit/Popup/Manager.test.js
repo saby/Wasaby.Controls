@@ -1,7 +1,7 @@
 define(
    [
-      'js!Controls/Popup/Manager',
-      'js!Controls/Popup/Opener/BaseStrategy'
+      'Controls/Popup/Manager',
+      'Controls/Popup/Opener/BaseStrategy'
    ],
 
    function (Manager, BaseStrategy) {

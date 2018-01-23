@@ -1,4 +1,4 @@
-define('js!Controls/Popup/Manager',
+define('Controls/Popup/Manager',
    [
       'Core/helpers/random-helpers',
       'WS.Data/Collection/List'
@@ -42,6 +42,9 @@ define('js!Controls/Popup/Manager',
                      onPopupCreated: function (event, id, width, height) {
                         _private.popupCreated(id, width, height);
                      },
+                     onPopupUpdated: function (event, id, width, height) {
+                        _private.popupUpdated(id, width, height);
+                     },
                      onPopupFocusIn: function (event, id, focusedControl) {
                         _private.popupFocusIn(id, focusedControl);
                      },
@@ -64,6 +67,18 @@ define('js!Controls/Popup/Manager',
                if (strategy) {
                   // при создании попапа, зарегистрируем его
                   strategy.elementCreated(element, width, height);
+                  Manager._redrawItems();
+               }
+            }
+         },
+
+         popupUpdated: function (id, width, height) {
+            var element = Manager.find(id);
+            if (element) {
+               var strategy = element.strategy;
+               if (strategy) {
+                  // при создании попапа, зарегистрируем его
+                  strategy.elementUpdated(element, width, height);
                   Manager._redrawItems();
                }
             }

@@ -1,4 +1,4 @@
-define('js!Controls/Popup/Opener/BaseStrategy',
+define('Controls/Popup/Opener/BaseStrategy',
    [
       'Core/core-extend'
    ],
@@ -18,6 +18,17 @@ define('js!Controls/Popup/Opener/BaseStrategy',
           * @param height
           */
          elementCreated: function (element, width, height) {
+
+         },
+
+         /**
+          * Обновление размеров элемента
+          * @function Controls/Popup/Opener/BaseStrategy#elementUpdated
+          * @param element
+          * @param width
+          * @param height
+          */
+         elementUpdated: function (element, width, height) {
 
          },
 
