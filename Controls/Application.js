@@ -37,6 +37,7 @@ define('js!Controls/Application',
             self.jsLinks = cfg.jsLinks;
             self.templateConfig = cfg.templateConfig;
             self.jquery = cfg.jquery;
+            self.compat = cfg.compat||false;
          }
       };
       var Page = Base.extend({
@@ -66,7 +67,8 @@ define('js!Controls/Application',
                wsRoot: self.wsRoot,
                resourceRoot: self.resourceRoot,
                templateConfig: self.templateConfig,
-               jquery: self.jquery
+               jquery: self.jquery,
+               compat: self.compat
             });
             return def;
          }
