@@ -8,11 +8,20 @@ define('Controls/Controllers/PrimaryAction',
 
       'use strict';
 
+      /**
+       * Контроллер главного действия.
+       * Обрабатывает нажатие ctrl + enter (cmd + enter) и посылает событие onActivated
+       */
+
       return Control.extend({
          _template: template,
 
          onKeyPressed: function() {
-            this._notify('onActivated');
+            if(!(e.altKey || e.shiftKey) && (e.ctrlKey || e.metaKey)) { // Ctrl+Enter, Cmd+Enter, Win+Enter
+               this.validate().addCallback(function(results) {
+                  this._notify('onActivated');
+               });
+            }
          }
       });
    });
