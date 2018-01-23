@@ -1,4 +1,4 @@
-define('js!Controls/Input/Lookup', [
+define('Controls/Input/Lookup', [
 ], function() {
 
    /**

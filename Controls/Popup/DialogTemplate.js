@@ -1,4 +1,4 @@
-define('js!Controls/Popup/DialogTemplate',
+define('Controls/Popup/DialogTemplate',
    [
       'Core/Control',
       'tmpl!Controls/Popup/DialogTemplate',

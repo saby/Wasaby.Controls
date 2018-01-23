@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 25.12.2017.
  */
-define('js!Controls/Input/resources/SuggestShowAll/SuggestShowAll',
+define('Controls/Input/resources/SuggestShowAll/SuggestShowAll',
    [
       'Core/Control',
       'tmpl!Controls/Input/resources/SuggestShowAll/SuggestShowAll',

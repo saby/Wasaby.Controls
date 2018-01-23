@@ -1,4 +1,4 @@
-define('js!Controls/interface/ITooltip', [
+define('Controls/interface/ITooltip', [
 ], function() {
 
    /**

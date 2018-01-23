@@ -1,4 +1,4 @@
-define('js!Controls/Button/interface/IIcon', [
+define('Controls/Button/interface/IIcon', [
 ], function() {
 
    /**

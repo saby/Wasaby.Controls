@@ -1,13 +1,13 @@
-define('js!Controls/List', [
+define('Controls/List', [
    'Core/Control',
    'tmpl!Controls/List/ListControl',
-   'js!Controls/List/ListControl/ListViewModel',
-   'js!Controls/List/resources/utils/DataSourceUtil',
-   'js!Controls/List/Controllers/PageNavigation',
+   'Controls/List/ListControl/ListViewModel',
+   'Controls/List/resources/utils/DataSourceUtil',
+   'Controls/List/Controllers/PageNavigation',
    'Core/helpers/functional-helpers',
    'require',
-   'js!Controls/List/Controllers/ScrollController',
-   'js!Controls/List/Controllers/VirtualScroll',
+   'Controls/List/Controllers/ScrollController',
+   'Controls/List/Controllers/VirtualScroll',
    'css!Controls/List/ListControl/ListControl'
 ], function (Control,
              ListControlTpl,
@@ -375,7 +375,7 @@ define('js!Controls/List', [
                scrollContainer = this._container.closest('.ws-scrolling-content');
                if (scrollContainer && this._options.navigation.viewConfig && this._options.navigation.viewConfig.pagingMode) {
                   var self = this;
-                  require(['js!Controls/List/Controllers/ScrollPaging'], function (ScrollPagingController) {
+                  require(['Controls/List/Controllers/ScrollPaging'], function (ScrollPagingController) {
                      self._scrollPagingCtr = new ScrollPagingController({
                         scrollContainer: scrollContainer,
                         mode: self._options.navigation.viewConfig.pagingMode
