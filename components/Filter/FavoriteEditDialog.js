@@ -4,7 +4,7 @@
 /**
  * Created by am.gerasimov on 23.01.2017.
  */
-define('js!SBIS3.CONTROLS/Filter/FavoriteEditDialog',
+define('SBIS3.CONTROLS/Filter/FavoriteEditDialog',
    [
       'SBIS3.CONTROLS/FormController',
       'tmpl!SBIS3.CONTROLS/Filter/FavoriteEditDialog/FavoriteEditDialog',

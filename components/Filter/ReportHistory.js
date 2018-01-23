@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 23.01.2017.
  */
-define('js!SBIS3.CONTROLS/Filter/ReportHistory',
+define('SBIS3.CONTROLS/Filter/ReportHistory',
    [
       'SBIS3.CONTROLS/CompoundControl',
       'tmpl!SBIS3.CONTROLS/Filter/ReportHistory/ReportHistory',
