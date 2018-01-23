@@ -19,10 +19,10 @@ define('js!Controls/Container/EventCatcher/Controller',
       var EventCatcherController = Control.extend({
          _listner: null,
          _afterMount: function(){
-            this._notify("registr", [this._options.event, this, this.callback], {bubbling:true});
+            this._notify("register", [this._options.event, this, this.callback], {bubbling:true});
          },
          _beforeUnmount: function(){
-            this._notify("unregistr", [this._options.event, this], {bubbling:true});
+            this._notify("unregister", [this._options.event, this], {bubbling:true});
          },
          callback: function(){
             this._notify(this._options.event, arguments);

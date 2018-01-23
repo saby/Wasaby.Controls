@@ -1,10 +1,12 @@
 /**
  * Created by dv.zuev on 17.01.2018.
+ * Компонент слушает события "снизу". События register и сохраняет Emmitterы в списке
+ * то есть, кто-то снизу сможет услышать события верхних компонентов через это отношение
  */
-define('js!Controls/Container/EventCatcher',
+define('Controls/Event/Listener',
    [
       'Core/Control',
-      'tmpl!Controls/Container/EventCatcher/EventCatcher',
+      'tmpl!Controls/Event/Listener',
       'js!WS.Data/Type/descriptor'
    ],
    function(Control, template, types) {
@@ -17,8 +19,8 @@ define('js!Controls/Container/EventCatcher',
          _beforeMount: function(){
             this._listner = {};
          },
-         _registrIt: function(event, registrType, component, callback){
-            if (registrType === this._options.registr) {
+         _registerIt: function(event, registerType, component, callback){
+            if (registerType === this._options.register) {
                this._listner[component.getInstanceId()] = {
                   component: component,
                   callback: callback
@@ -26,8 +28,8 @@ define('js!Controls/Container/EventCatcher',
                event.stopPropagation();
             }
          },
-         _unRegistrIt: function(event, registrType, component){
-            if (registrType === this._options.registr) {
+         _unRegisterIt: function(event, registerType, component){
+            if (registerType === this._options.register) {
                this._listner[component.getInstanceId()] = null;
                event.stopPropagation();
             }
@@ -44,7 +46,7 @@ define('js!Controls/Container/EventCatcher',
 
       EventCatcher.getOptionTypes = function() {
          return {
-            registr: types(String).required()
+            register: types(String).required()
          };
       };
 
