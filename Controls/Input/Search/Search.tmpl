@@ -1,0 +1,28 @@
+<ws:Controls.Input.resources.InputRender.InputRender
+        value="{{_value}}"
+        tagStyle="{{_options.tagStyle}}"
+        readonly="{{_options.readonly}}"
+        viewModel="{{_simpleViewModel}}"
+        placeholder="{{_options.placeholder}}"
+        on:valueChanged="_changeValueHandler()">
+
+    <ws:content>
+        <ws:partial
+                template="tmpl!Controls/Input/resources/input"
+                on:keydown="_keyDownHandler()"
+        />
+    </ws:content>
+
+    <ws:afterFieldWrapper>
+
+        <div class="display-search-input-inline">
+            <span if="{{_value}}"
+                  on:click="_onResetClick()"
+                  class="controls-SearchForm__reset icon-size icon-Close "
+                  title="Очистить результаты поиска"></span>
+            <span on:click="_onSearchClick()"
+                  class="controls-SearchForm__search icon-size icon-primary icon-Search2"></span>
+        </div>
+    </ws:afterFieldWrapper>
+
+</ws:Controls.Input.resources.InputRender.InputRender>
