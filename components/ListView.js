@@ -1323,9 +1323,8 @@ define('SBIS3.CONTROLS/ListView',
          },
 
          _onScrollHandler: function(event, scrollTop){
-            var itemActions;
+            var itemActions = this.getItemsActions();
             if (this.isVisible() && itemActions && itemActions.isItemActionsMenuVisible()){
-               itemActions = this.getItemsActions();
                itemActions.hide();
             }
             if (this._virtualScrollController) {
