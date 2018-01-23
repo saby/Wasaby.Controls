@@ -26,6 +26,10 @@ define('Controls/Popup/Opener/Sticky/Strategy',
             cfg.position = this.getPosition(tCoords, corner, hAlign, vAlign, width, height, window.innerWidth, window.innerHeight);
          },
 
+         elementUpdated: function (cfg, width, height) {
+            this.elementCreated(cfg, width, height);
+         },
+
          /**
           * Возвращает позицию плавающей панели
           * @function Controls/Popup/Opener/Sticky/Strategy#getPosition
