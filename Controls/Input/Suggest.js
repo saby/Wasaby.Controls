@@ -1,12 +1,12 @@
-define('js!Controls/Input/Suggest',
+define('Controls/Input/Suggest',
    [
       'Core/Control',
       'tmpl!Controls/Input/Suggest/Suggest',
       'js!WS.Data/Type/descriptor',
-      'js!Controls/Input/resources/SuggestController',
+      'Controls/Input/resources/SuggestController',
       'Controls/Input/resources/InputRender/SimpleViewModel',
-      'js!Controls/Popup/Opener/Sticky',
-      'js!Controls/Popup/Opener/Stack',
+      'Controls/Popup/Opener/Sticky',
+      'Controls/Popup/Opener/Stack',
       'css!Controls/Input/Suggest/Suggest'
    ],
    function(Control, template, types, SuggestController, SimpleViewModel) {

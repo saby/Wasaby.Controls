@@ -2,7 +2,7 @@
  * Created by kraynovdo on 02.11.2017.
  */
 define([
-   'js!Controls/List/Paging/DigitButtons'
+   'Controls/List/Paging/DigitButtons'
 ], function(DigitButtons){
    describe('Controls.List.Paging.DigitButtons', function () {
       it('getDrawnDigits 10 pages', function () {

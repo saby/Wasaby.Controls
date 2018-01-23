@@ -1,4 +1,4 @@
-define('js!Controls/interface/IHierarchicalItems', [
+define('Controls/interface/IHierarchicalItems', [
 ], function() {
 
    /**

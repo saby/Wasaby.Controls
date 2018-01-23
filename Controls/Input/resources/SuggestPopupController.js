@@ -1,10 +1,15 @@
-define('js!Controls/Input/resources/SuggestPopupController',
+define('Controls/Input/resources/SuggestPopupController',
    [
       'Core/core-extend',
       'Core/core-merge',
-      'js!Controls/List/resources/utils/Search',
+      'Controls/List/resources/utils/Search',
       'Core/constants',
+<<<<<<< HEAD
       'js!Controls/Input/resources/SuggestView/SuggestView'
+=======
+      'Core/core-clone',
+      'Controls/Input/resources/SuggestView/SuggestView'
+>>>>>>> 3.17.350/bugfix/remove-js
       
    ],
    function(extend, cMerge, Search, constants) {

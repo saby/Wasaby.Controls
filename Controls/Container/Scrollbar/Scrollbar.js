@@ -1,4 +1,4 @@
-define('js!Controls/Container/Scrollbar/Scrollbar', [
+define('Controls/Container/Scrollbar/Scrollbar', [
       'Core/Control',
       'tmpl!Controls/Container/Scrollbar/Scrollbar',
       'Core/detection',

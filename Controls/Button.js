@@ -1,4 +1,4 @@
-define('js!Controls/Button', [
+define('Controls/Button', [
     'Core/Control',
     'tmpl!Controls/Button/Button',
     'css!WSControls/Buttons/resources/ButtonBase',

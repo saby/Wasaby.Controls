@@ -1,5 +1,5 @@
 define([
-      'js!Controls/List/VirtualScroll'
+      'Controls/List/VirtualScroll'
    ],
    function(
       VirtualScroll

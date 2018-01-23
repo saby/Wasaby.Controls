@@ -1,4 +1,4 @@
-define('js!Controls/ConfirmationWindow/Dialog', [
+define('Controls/ConfirmationWindow/Dialog', [
       'Core/Control',
       'WS.Data/Type/descriptor',
       'Core/constants',
@@ -9,7 +9,7 @@ define('js!Controls/ConfirmationWindow/Dialog', [
       'tmpl!Controls/ConfirmationWindow/Dialog/Dialog',
 
       'css!Controls/ConfirmationWindow/Dialog/Dialog',
-      'js!Controls/Button'
+      'Controls/Button'
    ], function (Control,
                 types,
                 constants,

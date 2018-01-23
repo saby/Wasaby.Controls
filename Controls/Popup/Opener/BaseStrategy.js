@@ -1,4 +1,4 @@
-define('js!Controls/Popup/Opener/BaseStrategy',
+define('Controls/Popup/Opener/BaseStrategy',
    [
       'Core/core-extend'
    ],
