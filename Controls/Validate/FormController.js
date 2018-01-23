@@ -31,12 +31,8 @@ define('Controls/Validate/FormController',
             e.stopPropagation();
          },
          onKeyPressed: function(e) {
-            var
-               self = this;
             if(!(e.nativeEvent.altKey || e.nativeEvent.shiftKey) && e.nativeEvent.ctrlKey) { // Ctrl+Enter, Cmd+Enter
-               this.validate().addCallback(function(results) {
-                  self._notify('onSubmit', [results]);
-               });
+               this._notify('onSubmit');
             }
          },
          validate: function() {
