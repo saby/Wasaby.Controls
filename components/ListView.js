@@ -442,6 +442,7 @@ define('SBIS3.CONTROLS/ListView',
                top: null,
                bottom: null
             },
+            _virtualScrollShouldReset: false,
             _setScrollPagerPositionThrottled: null,
             _updateScrollIndicatorTopThrottled: null,
             _removedItemsCount: false,
