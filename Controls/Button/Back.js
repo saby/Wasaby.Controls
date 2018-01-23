@@ -1,4 +1,4 @@
-define('js!Controls/Button/Back', [
+define('Controls/Button/Back', [
 ], function() {
 
    /**

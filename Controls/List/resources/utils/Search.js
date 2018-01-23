@@ -1,9 +1,9 @@
-define('js!Controls/List/resources/utils/Search',
+define('Controls/List/resources/utils/Search',
    [
       'Core/core-extend',
       'Core/Deferred',
-      'js!Controls/List/resources/utils/DataSourceUtil',
-      'js!Controls/List/Controllers/PageNavigation'
+      'Controls/List/resources/utils/DataSourceUtil',
+      'Controls/List/Controllers/PageNavigation'
    ],
    function (extend, Deferred, DataSourceUtil, PageNavigation) {
       

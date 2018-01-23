@@ -1,7 +1,7 @@
-define('js!Controls/Popup/Opener/Stack',
+define('Controls/Popup/Opener/Stack',
    [
-      'js!Controls/Popup/Opener/Base',
-      'js!Controls/Popup/Opener/Stack/Strategy'
+      'Controls/Popup/Opener/Base',
+      'Controls/Popup/Opener/Stack/Strategy'
    ],
    function (Base, Strategy) {
       /**

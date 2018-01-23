@@ -1,4 +1,4 @@
-define('js!Controls/Button/interface/IHref', [
+define('Controls/Button/interface/IHref', [
 ], function() {
 
    /**

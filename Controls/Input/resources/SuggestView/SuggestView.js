@@ -1,4 +1,4 @@
-define('js!Controls/Input/resources/SuggestView/SuggestView',
+define('Controls/Input/resources/SuggestView/SuggestView',
    [
       'Core/Control',
       'tmpl!Controls/Input/resources/SuggestView/SuggestView',
@@ -40,7 +40,7 @@ define('js!Controls/Input/resources/SuggestView/SuggestView',
             var self = this;
             
             //loading showAll templates
-            moduleStubs.require(['js!Controls/Input/resources/SuggestShowAll/SuggestShowAll', 'js!Controls/Popup/DialogTemplate']).addCallback(function(res) {
+            moduleStubs.require(['Controls/Input/resources/SuggestShowAll/SuggestShowAll', 'Controls/Popup/DialogTemplate']).addCallback(function(res) {
                self._options.showAllOpener.open(_private.getOptionsForShowAll(self));
                return res;
             });

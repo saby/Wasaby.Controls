@@ -1,9 +1,9 @@
 define(
    [
-      'js!Controls/Popup/Opener/Stack/Strategy',
-      'js!Controls/Popup/Opener/Sticky/Strategy',
-      'js!Controls/Popup/Opener/Notification/Strategy',
-      'js!Controls/Popup/Opener/Dialog/Strategy'
+      'Controls/Popup/Opener/Stack/Strategy',
+      'Controls/Popup/Opener/Sticky/Strategy',
+      'Controls/Popup/Opener/Notification/Strategy',
+      'Controls/Popup/Opener/Dialog/Strategy'
    ],
 
    function (Stack, Sticky, Notification, Dialog) {
