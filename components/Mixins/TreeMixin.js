@@ -6,6 +6,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
    "Core/CommandDispatcher",
    "Core/Deferred",
    "WS.Data/Display/Tree",
+   "WS.Data/Collection/IBind",
    "tmpl!SBIS3.CONTROLS/Mixins/TreeMixin/resources/searchRender",
    "WS.Data/Entity/Model",
    "WS.Data/Relation/Hierarchy",
@@ -19,7 +20,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
    "SBIS3.CONTROLS/BreadCrumbs",
    "tmpl!SBIS3.CONTROLS/DataGridView/resources/DataGridViewGroupBy",
    "WS.Data/Adapter/Sbis"
-], function (coreClone, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject, runDelayed) {
+], function (coreClone, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred, TreeProjection, IBindCollection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject, runDelayed) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -1267,6 +1268,14 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             this._findAndRedrawChangedBranches(newItems, oldItems);
             this._removeFromLoadedRemoteNodes(oldItems);
             this._updateExpanderDisplay();
+            //При перемещении записей в дереве, нет информации из какой папки в какую были перемещены записи.
+            //Поэтом мы не можем перерисовать folderFooters непосредственно у изминившихся папок, и для корректоного
+            //отображения списка, перерисуем все folderFooters. Наверно уже давно пора вынести понятие folderFooter
+            //на уровень проекции, и отризовывать на серверной стороне, вместе со всеми элментами.
+            //Выписал задачу: https://online.sbis.ru/opendoc.html?guid=a8b77646-5dcb-4133-8917-f61ce1a6c63e
+            if (action === IBindCollection.ACTION_MOVE) {
+               this._createAllFolderFooters();
+            }
          },
          _onCollectionReset: function(parentFn) {
             parentFn.call(this);
