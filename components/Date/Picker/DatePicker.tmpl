@@ -2,10 +2,10 @@
    <ws:partial template="{{dateBoxTpl}}" scope="{{...}}"/>
    <ws:if data="{{pickerIconShow}}">
          <SBIS3.CONTROLS:Button:IconButton
-            className="controls-DatePicker__button"
+            className="controls-DatePicker__button controls-DatePicker__button_size_{{ size ? size : 'default' }}"
             name="PickerButton"
             tabindex="1"
-            icon="icon-16 icon-primary {{ {
+            icon="icon-size icon-primary {{ {
                'calendar': 'icon-Calendar2',
                'time': 'icon-Time'
             }[_pickerName] }}"
