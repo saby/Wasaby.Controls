@@ -1,4 +1,4 @@
-define('js!Controls/Input/Mask', [
+define('Controls/Input/Mask', [
 ], function() {
 
    /**

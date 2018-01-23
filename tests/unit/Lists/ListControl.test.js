@@ -2,8 +2,8 @@
  * Created by kraynovdo on 23.10.2017.
  */
 define([
-   'js!Controls/List',
-   'js!Controls/List/resources/utils/ItemsUtil',
+   'Controls/List',
+   'Controls/List/resources/utils/ItemsUtil',
    'WS.Data/Source/Memory',
    'WS.Data/Collection/RecordSet'
 ], function(ListControl, ItemsUtil, MemorySource, RecordSet){
