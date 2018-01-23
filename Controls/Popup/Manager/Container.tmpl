@@ -13,7 +13,7 @@
                     width: {{item.position.width === undefined ? 'auto': item.position.width + 'px'}};
                     height: {{item.position.height === undefined ? 'auto': item.position.height + 'px'}};"
             >
-                <ws:Controls.Popup.Manager.Popup id="{{item.id}}" __key="{{item.id}}"
+                <Controls:Popup:Manager:Popup id="{{item.id}}" __key="{{item.id}}"
                     scope="{{item.popupOptions}}"
                     on:closePopup="_closePopup()"
                     on:popupCreated="_popupCreated()"
