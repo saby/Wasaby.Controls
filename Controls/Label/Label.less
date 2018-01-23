@@ -1,0 +1,17 @@
+.controls-Label {
+   cursor: pointer;
+   padding: @padding_Label;
+   line-height: @default-height;
+}
+.controls-Label_requered:after {
+   content: ' *';
+}
+.controls-Label_enabled {
+   color: @innacent-color;
+   &:after {
+      color: @error-color;
+   }
+}
+.controls-Label_disabled {
+   color: @disabled-color;
+}
