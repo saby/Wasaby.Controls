@@ -442,6 +442,7 @@ define('SBIS3.CONTROLS/ListView',
                top: null,
                bottom: null
             },
+            _virtualScrollShouldReset: false,
             _setScrollPagerPositionThrottled: null,
             _updateScrollIndicatorTopThrottled: null,
             _removedItemsCount: false,
@@ -3109,7 +3110,10 @@ define('SBIS3.CONTROLS/ListView',
                   this.scrollToFirstPage();
                   this._virtualScrollController.disableScrollHandler(false);
                }
-               this._virtualScrollController.initHeights();
+               if (this._virtualScrollShouldReset) {
+                  this._virtualScrollController.reset();
+                  this._virtualScrollShouldReset = false;
+               }
             }
             this._updateHoveredItemAfterRedraw();
          },
@@ -3947,6 +3951,7 @@ define('SBIS3.CONTROLS/ListView',
 
             if (this._options.virtualScrolling && !this._virtualScrollController) {
                this._initVirtualScrolling();
+               this._virtualScrollShouldReset = true;
             }
          },
 
