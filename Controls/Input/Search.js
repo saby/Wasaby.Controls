@@ -1,4 +1,4 @@
-define('js!Controls/Input/Search',
+define('Controls/Input/Search',
    [
       'Core/Control',
       'Core/helpers/Function/forAliveOnly',
@@ -32,8 +32,8 @@ define('js!Controls/Input/Search',
             this._simpleViewModel = new SimpleViewModel();
          },
 
-         _changeValueHandler: function (event, value) {
-            this._value = value;
+         _valueChangedHandler: function (event, value) {
+            this._notify('valueChanged', [value]);
             if (value) {
                if (String(value).length >= this._options.minSearchLength) {
                   this._startSearch(String(value));
@@ -43,7 +43,6 @@ define('js!Controls/Input/Search',
                   this._notify('reset');
                }
             }
-            this._forceUpdate();
          },
 
          _startSearch: function (text) {
@@ -72,7 +71,7 @@ define('js!Controls/Input/Search',
 
          _onResetClick: function () {
             this._clearSearchDelay();
-            this._notify('valueChanged', '');
+            this._notify('valueChanged', ['']);
          },
 
          _onSearchClick: function () {

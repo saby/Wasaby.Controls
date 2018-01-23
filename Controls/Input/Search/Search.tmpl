@@ -1,10 +1,10 @@
-<ws:Controls.Input.resources.InputRender.InputRender
-        value="{{_value}}"
+<Controls:Input:resources:InputRender:InputRender
+        value="{{_options.value}}"
         tagStyle="{{_options.tagStyle}}"
         readonly="{{_options.readonly}}"
         viewModel="{{_simpleViewModel}}"
         placeholder="{{_options.placeholder}}"
-        on:valueChanged="_changeValueHandler()">
+        on:valueChanged="_valueChangedHandler()">
 
     <ws:content>
         <ws:partial
@@ -16,7 +16,7 @@
     <ws:afterFieldWrapper>
 
         <div class="display-search-input-inline">
-            <span if="{{_value}}"
+            <span if="{{_options.value}}"
                   on:click="_onResetClick()"
                   class="controls-SearchForm__reset icon-size icon-Close "
                   title="Очистить результаты поиска"></span>
@@ -25,4 +25,4 @@
         </div>
     </ws:afterFieldWrapper>
 
-</ws:Controls.Input.resources.InputRender.InputRender>
+</Controls:Input:resources:InputRender:InputRender>
