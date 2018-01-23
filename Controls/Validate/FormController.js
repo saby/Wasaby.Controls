@@ -30,7 +30,12 @@ define('Controls/Validate/FormController',
             });
             e.stopPropagation();
          },
-         submit: function() {
+         onKeyPressed: function(e) {
+            if(!(e.nativeEvent.altKey || e.nativeEvent.shiftKey) && e.nativeEvent.ctrlKey) { // Ctrl+Enter, Cmd+Enter
+               this._notify('onSubmit');
+            }
+         },
+         validate: function() {
             var parallelDeferred = new ParallelDeferred();
             this._validates.forEach(function (validate) {
                var def = validate.validate();
