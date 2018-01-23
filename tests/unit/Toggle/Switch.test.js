@@ -12,7 +12,7 @@ define(['Controls/Toggle/Switch'], function (Switch) {
          //событие и оно полетит с корректными параметрами.
          SW._notify = function(event, eventChangeValue){
             if(event==='valueChanged'){
-               changeValue = eventChangeValue;
+               changeValue = eventChangeValue[0];
             }
          };
       });
