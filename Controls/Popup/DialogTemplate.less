@@ -22,32 +22,13 @@
    .flex-grow(1);
    .flex-shrink(1);
    min-height: 1px;
-   padding-bottom: 12px;
 }
 
 .ws-DialogTemplate__close_button {
-   .flexbox();
-   .align-self(center);
-   .justify-content(center);
    position: absolute;
    top: 6px;
-   width: 35px;
-   height: 26px;
-   cursor: pointer;
-   background-color: @bg_Block_style-2;
-   border: 1px solid @border-color_CloseButton;
-   border-right-width: 0;
-   box-shadow: 0 1px 3px rgba(0,0,0,.12);
-   border-radius: 2px 0 0 2px;
-   font-size: 23px;
-   font-family: cbuc-icons;
-   content: "\e66c";
-   font-weight: 400;
-   color: @icon-color-primary;
-}
-
-.ws-DialogTemplate__close_button_right{
    right: 0;
+   .ws-close-button();
 }
 
 .ws-DialogTemplate__caption {
