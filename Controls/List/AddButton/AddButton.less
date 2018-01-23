@@ -1,0 +1,30 @@
+.controls-AddButton{
+   cursor: pointer;
+   display: inline-flex;
+   align-items: center;
+   &:before {
+      content: "\200b";
+   }
+   &:hover{
+      .controls-AddButtonText{
+         text-decoration: underline;
+      }
+   }
+}
+
+.controls-AddButton__enable{
+   color: @color-list-add-button-enable;
+}
+
+.controls-AddButton__disable{
+   color: @disabled-color;
+}
+
+.controls-AddButton__icon{
+   .icon-size-without-important(@icon-size_FieldLink-button);
+   font-style: normal;
+}
+
+.controls-AddButtonText{
+   font-size: @font-size_listAddButton;
+}
