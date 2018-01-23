@@ -16,11 +16,9 @@ define('Controls/Controllers/PrimaryAction',
       return Control.extend({
          _template: template,
 
-         onKeyPressed: function() {
-            if(!(e.altKey || e.shiftKey) && (e.ctrlKey || e.metaKey)) { // Ctrl+Enter, Cmd+Enter, Win+Enter
-               this.validate().addCallback(function(results) {
-                  this._notify('onActivated');
-               });
+         onKeyPressed: function(e) {
+            if(!(e.nativeEvent.altKey || e.nativeEvent.shiftKey) && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey)) { // Ctrl+Enter, Cmd+Enter, Win+Enter
+               this._notify('onActivated');
             }
          }
       });
