@@ -1,7 +1,7 @@
-define('js!Controls/Popup/Opener/Dialog',
+define('Controls/Popup/Opener/Dialog',
    [
-      'js!Controls/Popup/Opener/Base',
-      'js!Controls/Popup/Opener/Dialog/Strategy'
+      'Controls/Popup/Opener/Base',
+      'Controls/Popup/Opener/Dialog/Strategy'
 
    ],
    function (Base, Strategy) {

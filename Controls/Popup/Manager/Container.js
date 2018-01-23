@@ -1,4 +1,4 @@
-define('js!Controls/Popup/Manager/Container',
+define('Controls/Popup/Manager/Container',
    [
       'Core/Control',
       'tmpl!Controls/Popup/Manager/Container',

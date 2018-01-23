@@ -1,4 +1,4 @@
-define('js!Controls/List/interface/IListControl', [
+define('Controls/List/interface/IListControl', [
 ], function() {
 
    /**

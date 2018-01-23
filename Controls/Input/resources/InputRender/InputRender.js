@@ -1,4 +1,4 @@
-define('js!Controls/Input/resources/InputRender/InputRender',
+define('Controls/Input/resources/InputRender/InputRender',
    [
       'Core/Control',
       /*'WS.Data/Type/descriptor',*/

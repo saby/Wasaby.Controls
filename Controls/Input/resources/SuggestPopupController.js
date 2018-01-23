@@ -1,11 +1,11 @@
-define('js!Controls/Input/resources/SuggestPopupController',
+define('Controls/Input/resources/SuggestPopupController',
    [
       'Core/core-extend',
       'Core/core-merge',
-      'js!Controls/List/resources/utils/Search',
+      'Controls/List/resources/utils/Search',
       'Core/constants',
       'Core/core-clone',
-      'js!Controls/Input/resources/SuggestView/SuggestView'
+      'Controls/Input/resources/SuggestView/SuggestView'
       
    ],
    function(extend, cMerge, Search, constants, clone) {

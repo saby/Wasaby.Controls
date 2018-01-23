@@ -1,4 +1,4 @@
-define('js!Controls/interface/IFilter', [
+define('Controls/interface/IFilter', [
 ], function() {
 
    /**

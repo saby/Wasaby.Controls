@@ -1,4 +1,4 @@
-define(['js!Controls/Toggle/Switch'], function (Switch) {
+define(['Controls/Toggle/Switch'], function (Switch) {
    'use strict';
    var SW, changeValue;
    describe('Controls.Toggle.Switch', function () {
@@ -12,7 +12,7 @@ define(['js!Controls/Toggle/Switch'], function (Switch) {
          //событие и оно полетит с корректными параметрами.
          SW._notify = function(event, eventChangeValue){
             if(event==='valueChanged'){
-               changeValue = eventChangeValue;
+               changeValue = eventChangeValue[0];
             }
          };
       });

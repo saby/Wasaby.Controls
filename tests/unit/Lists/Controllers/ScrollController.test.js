@@ -1,5 +1,5 @@
 define([
-   'js!Controls/List/Controllers/ScrollController'
+   'Controls/List/Controllers/ScrollController'
 ], function(ScrollController) {
 
    var currentTriggers, currentScrollTop;
