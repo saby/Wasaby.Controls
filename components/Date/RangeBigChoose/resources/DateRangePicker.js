@@ -243,7 +243,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          }
          var container = this.getContainer(),
             displayedContainer = container.find('.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_wrapper[data-date="' + this._options.month.toSQL() + '"]');
-
+         // При изменеии размера контента если его высота равна 0(а это может быть даже если контент есть, а родитель
+         // ScrollContainer скрыт) ScrollContainer навешивает overflow: hidden. Заза этого scrollToElement
+         // не может найти контейнер в котором происходит скролирование. Сигнализируем скрол контейнеру что
+         // надо пересчитать размеры перед scrollToElement.
+         this.sendCommand('resizeYourself');
          LayoutManager.scrollToElement(displayedContainer);
          this._updateDisplayedYearCssClass();
       },
