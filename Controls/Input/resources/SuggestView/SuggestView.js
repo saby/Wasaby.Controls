@@ -32,8 +32,8 @@ define('js!Controls/Input/resources/SuggestView/SuggestView',
          },
          
          _onItemClickHandler: function(event, item) {
-            this._notify('sendResult', item);
-            this._notify('close');
+            this._notify('sendResult', [item], {bubbling: true});
+            this._notify('close', [], {bubbling: true});
          },
          
          _showAllClick: function() {
@@ -44,7 +44,7 @@ define('js!Controls/Input/resources/SuggestView/SuggestView',
                self._options.showAllOpener.open(_private.getOptionsForShowAll(self));
                return res;
             });
-            this._notify('close');
+            this._notify('close', [], {bubbling: true});
          },
          
          _beforeUpdate: function(newOptions) {

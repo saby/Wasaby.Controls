@@ -24,6 +24,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             tplOptions.quarterSelectionEnabled = cfg.quarterSelectionEnabled;
             tplOptions.halfyearSelectionEnabled = cfg.halfyearSelectionEnabled;
             tplOptions.yearSelectionEnabled = cfg.yearSelectionEnabled;
+            tplOptions.startValue = cfg.startValue;
+            tplOptions.endValue = cfg.endValue;
             return tplOptions;
          };
 
@@ -41,7 +43,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          _options: {
             quantum: {},
 
-            liveSelection: true,
+            liveSelection: false,
 
             // x: monthSource,
             // dataSource: monthSource,
@@ -199,6 +201,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          }
          item.find(selectedClass + '[data-id="' + periodId + '"]')
             .addClass(addClass);
+         this._notify('onPeriodMouseEnter');
       },
       _onHalfyearQuarterMouseLeave: function (event) {
          var element = $(event.target),
@@ -212,6 +215,12 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          }
          item.find(selectedClass + '[data-id="' + periodId + '"]')
             .removeClass('controls-DateRangeBigChoose-MonthRangePickerItem__quarter-selected controls-DateRangeBigChoose-MonthRangePickerItem__halfYear-selected');
+         this._notify('onPeriodMouseLeave');
+      },
+
+      _onRangeControlMouseLeave: function () {
+         this._notify('onPeriodMouseLeave');
+         return MonthRangePicker.superclass._onRangeControlMouseLeave.apply(this, arguments);
       },
 
       setYear: function (year) {
@@ -295,10 +304,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          return changed;
       },
 
-      _drawItemsCallback: function () {
+      _drawItemsCallbackSync: function () {
          var self = this,
              container;
-         MonthRangePicker.superclass._drawItemsCallback.apply(this, arguments);
+         MonthRangePicker.superclass._drawItemsCallbackSync.apply(this, arguments);
          this._$items = null;
          this.forEachMonthView(function(control) {
             container = control.getContainer();
@@ -311,13 +320,15 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
 
       _onItemCaptionMouseEnter: function (e) {
          var $target = $(e.currentTarget),
-            month;
+            month = Date.fromSQL($target.attr(this._selectedRangeItemIdAtr));
 
          if (!this.isSelectionProcessing() && ($target.hasClass('controls-DateRangeBigChoose-MonthRangePickerItem__month_title'))) {
             $target = $(e.currentTarget).closest('.' + this._SELECTABLE_RANGE_CSS_CLASSES.item);
             $target.addClass(this._css_classes.hovered);
+            this._notify('onPeriodMouseEnter', month);
+         } else if (this.isSelectionProcessing()) {
+            this._notify('onPeriodMouseEnter', month);
          }
-         month = Date.fromSQL($target.attr(this._selectedRangeItemIdAtr));
          this._onRangeItemElementMouseEnter(dateUtils.getEndOfMonth(month));
       },
 
@@ -326,6 +337,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             target;
          target = $target.closest('.' + this._SELECTABLE_RANGE_CSS_CLASSES.item);
          target.removeClass(this._css_classes.hovered);
+         if (!this.isSelectionProcessing()) {
+            this._notify('onPeriodMouseLeave');
+         }
       },
 
       _getEndValueOnMouseLeave: function () {
@@ -362,21 +376,60 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
       },
 
       _onMonthClick: function (e) {
-         var month;
+         var month, range;
          if (this.isSelectionProcessing()) {
             month = Date.fromSQL($(e.currentTarget).attr(this._selectedRangeItemIdAtr));
-            this._onRangeItemElementClick(month, new Date(month.getFullYear(), month.getMonth() + 1, 0));
+            range = this._updateRange(month, month);
+            this._onRangeItemElementClick(range[0], new Date(range[1].getFullYear(), range[1].getMonth() + 1, 0));
             this._updateSelectionInInnerComponents();
          } else {
             if ($(e.target).hasClass('controls-DateRangeBigChoose-MonthRangePickerItem__month_title') && this._options.monthsSelectionEnabled) {
                this._updateSelectionInInnerComponents();
                month = Date.fromSQL($(e.target).attr(this._selectedRangeItemIdAtr));
-               this._onRangeItemElementClick(month, new Date(month.getFullYear(), month.getMonth() + 1, 0));
+               range = this._updateRange(month, month);
+               if (this._options.quantum && 'months' in this._options.quantum && this._options.quantum.months.length === 1) {
+                  this.setRange(range[0], new Date(range[1].getFullYear(), range[1].getMonth() + 1, 0));
+               } else {
+                  this._onRangeItemElementClick(range[0], new Date(range[1].getFullYear(), range[1].getMonth() + 1, 0));
+               }
             } else {
                month = Date.fromSQL($(e.currentTarget).attr(this._selectedRangeItemIdAtr));
                this._notify('onMonthActivated', month);
             }
             this._updateSelectionInInnerComponents();
+         }
+      },
+
+      _updateRange: function (startDate, endDate) {
+         if (isEmpty(this._options.quantum)) {
+            return this._normalizeRange(startDate, endDate);
+         }
+
+         var quantum = this._options.quantum,
+            lastQuantumLength, lastQuantumType,
+            months, range, start, end, i, date;
+
+         if ('months' in quantum) {
+            for (i = 0; i < quantum.months.length; i++) {
+               lastQuantumLength = quantum.months[i];
+               months = endDate.getMonth() - startDate.getMonth() + 1;
+               if (lastQuantumLength >= months) {
+                  return this._getMonthRange(startDate, endDate, lastQuantumLength);
+               }
+            }
+         }
+
+         return this._getMonthRange(startDate, endDate, lastQuantumLength);
+      },
+
+      _getMonthRange: function (startDate, endDate, quantum) {
+         var date = new Date(startDate);
+         if (startDate <= endDate) {
+            date.setMonth(date.getMonth() + quantum - 1);
+            return [endDate, date]
+         } else {
+            date.setMonth(date.getMonth() - quantum + 1);
+            return [date, endDate]
          }
       },
 
@@ -478,7 +531,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             css.push('controls-RangeSelectable__item-selectedStart');
             css.push(prefix + '-selectedStart');
          }
-         if (scope.item.selectedEnd && (!scope.item.selectionProcessing || (scope.item.selectedEnd !== scope.item.selectedStart))) {
+         if (scope.item.selectedEnd && (!scope.item.selectionProcessing ||
+               (scope.item.selectedEnd !== scope.item.selectedStart  && !scope.item.selectedUnfinishedEnd))) {
             css.push('controls-RangeSelectable__item-selectedEnd');
             css.push(prefix + '-selectedEnd');
          }

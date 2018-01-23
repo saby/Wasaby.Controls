@@ -1,11 +1,10 @@
 define(
    [
       'js!Controls/Popup/Manager',
-      'js!Controls/Popup/Opener/BaseStrategy',
-      'js!Controls/Popup/Controller'
+      'js!Controls/Popup/Opener/BaseStrategy'
    ],
 
-   function (Manager, BaseStrategy, Controller) {
+   function (Manager, BaseStrategy) {
       'use strict';
       describe('Controls/Popup/Manager', function () {
          var id, element;
@@ -14,11 +13,9 @@ define(
          });
 
          it('append popup', function() {
-            var
-               controller = new Controller();
             id = Manager.show({
                testOption: 'created'
-            }, new BaseStrategy(), controller);
+            }, new BaseStrategy());
             assert.equal(Manager._popupItems.getCount(), 1);
          });
 

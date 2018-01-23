@@ -35,7 +35,8 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
                bodyBounds: true,
                locationStrategy: 'bodyBounds',
                activateAfterShow: true
-            }
+            },
+            quantum: {}
          },
 
          _chooserControl: null
@@ -132,7 +133,8 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
             element: element,
             startValue: this.getStartValue(),
             endValue: this.getEndValue(),
-            selectionType: this._options.selectionType
+            selectionType: this._options.selectionType,
+            quantum: this._options.quantum
          }
       },
 

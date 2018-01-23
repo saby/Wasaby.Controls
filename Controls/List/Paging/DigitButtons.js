@@ -90,7 +90,7 @@ define('js!Controls/List/Paging/DigitButtons', [
       },
 
       __digitClick: function(e, digit) {
-         this._notify('onDigitClick', digit);
+         this._notify('onDigitClick', [digit]);
       }
 
    });

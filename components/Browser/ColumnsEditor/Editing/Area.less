@@ -1,16 +1,26 @@
 .controls-Browser-ColumnsEditor-Editing-Area {
+   .flexbox();
+   .flex-direction(column);
    width: @width-ColumnsEditor-Editing-Area;
    height: 100%;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head {
+   box-sizing: border-box;
+   .flex-shrink(0);
+   border-bottom: @border-bottom-ColumnsEditor-Editing-Area__head;
    padding: @padding-ColumnsEditor-Editing-Area-head;
    background-color: @background-color-ColumnsEditor-Editing-Area-head;
 }
 
+.controls-Browser-ColumnsEditor-Editing-Area_low {
+   .controls-Browser-ColumnsEditor-Editing-Area__head {
+      padding: @padding-ColumnsEditor-Editing-Area-head-2;
+   }
+}
+
 .controls-Browser-ColumnsEditor-Editing-Area__head-title {
    height: @height-ColumnsEditor-Editing-Area-head-title;
-   margin-bottom: @spacing-ColumnsEditor-Editing-Area-head;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head-title-left {
@@ -27,6 +37,7 @@
 
 .controls-Browser-ColumnsEditor-Editing-Area__head-preset {
    height: @height-ColumnsEditor-Editing-Area__head-preset;
+   margin-top: @spacing-ColumnsEditor-Editing-Area-head;
    font-size: @font-size-ColumnsEditor-Editing-Area__head-preset;
 }
 
@@ -61,7 +72,9 @@
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__body {
-   border-top: @border-top-ColumnsEditor-Editing-Area__body;
+   box-sizing: border-box;
+   .flex-grow(1);
+   height: 100%;
    padding: @padding-ColumnsEditor-Editing-Area__body;
 }
 

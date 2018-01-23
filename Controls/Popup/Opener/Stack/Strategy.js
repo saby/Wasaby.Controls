@@ -11,16 +11,13 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
          // минимальная ширина стековой панели
          MINIMAL_PANEL_WIDTH = 50,
          // минимальный отступ стековой панели от правого края
-         MINIMAL_PANEL_DISTANCE = 50;
+         MINIMAL_PANEL_DISTANCE = 50,
+         POPUP_CLASS = 'ws-Container__stack-panel';
 
       var _private = {
          getStackParentCoords: function () {
             var elements = document.getElementsByClassName('ws-Popup__stack-target-container');
             return TargetCoords.get(elements && elements.length ? elements[0] : null, {horizontal: 'right'});
-         },
-
-         getClassName: function () {
-            return 'ws-Container__stack-panel';
          }
       };
 
@@ -42,7 +39,8 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
             if (!element.popupOptions) {
                element.popupOptions = {};
             }
-            element.popupOptions.className = _private.getClassName();
+            //Добавляем стандартный класс
+            element.popupOptions.className += ' ' + POPUP_CLASS;
             this._stack.add(element, 0);
             this._update();
          },

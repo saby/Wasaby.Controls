@@ -17,17 +17,16 @@
 @default-base-line-height:     round(80px * @multiplier);//todo:   @default-height - 2 * @default-border-width
 @default-padding:              round(14px * @multiplier);
 @default-padding-small:        round(7px * @multiplier);
-//textbox
-@height_TextBox_m:                                round(84px * @multiplier);
-@height_TextBox_l:                                round(84px * @multiplier);
-@font-size_TextBox_m:                             round(32px * @multiplier);
-@font-size_TextBox_l:                             round(40px * @multiplier);
-@line-height_TextBox:                             round(80px * @multiplier);
-@padding_TextBox-container:                       0 round(14px * @multiplier);
-@padding_TextBox-container_left:                  0 0 0 round(14px * @multiplier);
-@width_TextBox-InformationIcon:                   round(14px * @multiplier);
-@height_TextBox-InformationIcon:                  round(14px * @multiplier);
-@border-width_TextBox:                            2px;
+//InputRender
+@height_InputRender_m:                                round(84px * @multiplier);
+@height_InputRender_l:                                round(84px * @multiplier);
+@font-size_InputRender_m:                             round(32px * @multiplier);
+@font-size_InputRender_l:                             round(40px * @multiplier);
+@padding_InputRender-container:                       0 round(14px * @multiplier);
+@padding_InputRender-container_left:                  0 0 0 round(14px * @multiplier);
+@width_InputRender-InformationIcon:                   round(14px * @multiplier);
+@height_InputRender-InformationIcon:                  round(14px * @multiplier);
+@border-width_InputRender:                            2px;
 //textarea
 @min-height_TextArea:                             round(42px * @multiplier);
 @padding_TextArea-container:                      round(19px * @multiplier) 0 round(19px * @multiplier) round(14px * @multiplier);
@@ -50,7 +49,7 @@
 @top_searchForm_picker_closeButton:               round(8px * @multiplier);
 @margin-left__searchForm_picker:                  -(@default-border-width + @top_searchForm_picker_closeButton);
 @margin-top__searchForm_picker:                   -(@padding-top__searchForm_picker + @default-border-width - @top_searchForm_picker_closeButton);
-@padding-top__searchForm_picker:                  (@top_searchForm_picker_closeButton * 2) + @height_TextBox_m;
+@padding-top__searchForm_picker:                  (@top_searchForm_picker_closeButton * 2) + @height_InputRender_m;
 //fieldLink
 @icon-size_FieldLink-button:                      round(80px * @multiplier); //todo: при переходе на cbuc-icons отказаться от этого щита
 @width_FieldLink-item-cross:                      @default-height;
@@ -288,10 +287,10 @@
 @date-range-dash-width:                   round(14px * @multiplier);
 @date-range-dash-margin:                  0 round(8px * @multiplier) round(8px * @multiplier) round(8px * @multiplier);
 @date-range-button-vertical-align:        top;
-@date-range-button-size_default:          @default-height;
-@date-range-button-line-height_default:   @date-range-button-size_default;
+@date-range-button-size_default:          @default-icon-size-large;
+@date-range-button-line-height_default:   @default-height;
 @date-range-button-size_m:                @default-icon-size-large;
-@date-range-button-line-height_m:         @height_TextBox_m;
+@date-range-button-line-height_m:         @height_InputRender_m;
 @date-range-button-margin:                0;
 //Data Range Slider
 @date-range-slider-margin-top:            round(-32px * @multiplier);
@@ -392,8 +391,8 @@
 @data-grid-cell-padding-right:            round(8px * @multiplier);
 @data-grid-check-box-top:                 -@default-border-width;
 @data-grid-money-header-cell-padding:     round(40px * @multiplier);
-@data-grid-money-header-cell-padding-last:round(56px * @multiplier);
-@data-grid-money-header-cell-padding-last_XL:  round(64px * @multiplier);
+@data-grid-money-header-cell-padding-last:round(48px * @multiplier);
+@data-grid-money-header-cell-padding-last_XL: round(56px * @multiplier);
 @data-grid-partScroll-arrowLeft-top-shift: round(-24px * @multiplier);
 @data-grid-partScroll-arrowRight-top-shift:round(-24px * @multiplier);
 @data-grid-partScroll-thumb-margin:       round(50px * @multiplier);

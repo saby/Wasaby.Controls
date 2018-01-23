@@ -204,8 +204,9 @@ define('SBIS3.CONTROLS/TextBox', [
              /**
               * @cfg {String} Устанавливает размер поля ввода.
               * @remark
-              * По умолчанию значение опции "m"
-              * Значение "l" устaновит большой рамер поля ввода
+              * По умолчанию значение опции "default" и зависит от темы.
+              * Значение "m" установит средний размер поля ввода.
+              * Значение "l" устaновит большой размер поля ввода.
               * @example
               * Пример 1. Большое поле ввода:
               * фрагмент верстки:
@@ -213,7 +214,7 @@ define('SBIS3.CONTROLS/TextBox', [
               *     <option name="size">l</option>
               * </pre>
               */
-            size: ''
+            size: 'default'
          }
       },
 
@@ -424,7 +425,7 @@ define('SBIS3.CONTROLS/TextBox', [
                 this._container.attr('title', '');
                //Ставлю пробел, чтобы скрыть браузерную подсказку "Заполните это поле". Если поставить пробел, то все браузеры,
                //кроме IE, не выводят всплывающую подсказку. Для IE ставлю пустой title, чтобы он не выводил всплывашку.
-               field.attr('title', constants.browser.isIE ? '' : ' ');
+               field.attr('title', constants.browser.isIE || constants.browser.retailOffline ? '' : ' ');
             }
             this._tooltipText = this._options.text;
          }

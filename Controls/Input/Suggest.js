@@ -100,11 +100,12 @@ define('js!Controls/Input/Suggest',
          
          _changeValueHandler: function(event, value) {
             this._suggestController.setValue(value);
+            this._notify('valueChanged', [value]);
          },
          
          _selectHandler: function(item) {
-            this._notify('select', item);
-            this._notify('valueChanged', item.get(this._options.displayProperty));
+            this._notify('select', [item]);
+            this._notify('valueChanged', [item.get(this._options.displayProperty)]);
          },
          
          _clearClick: function() {

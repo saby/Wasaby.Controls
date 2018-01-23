@@ -85,11 +85,11 @@ define('js!Controls/Input/Text', [
             if(this._options.trim){
                var newValue = this._options.value.trim();
                if(newValue !== this._options.value){
-                  this._notify('valueChanged', newValue);
+                  this._notify('valueChanged', [newValue]);
                }
             }
 
-            this._notify('inputCompleted', this._options.value);
+            this._notify('inputCompleted', [this._options.value]);
          },
 
          _notifyHandler: function(event, value) {

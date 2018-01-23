@@ -348,20 +348,22 @@ define(
        * @see onDateChange
        * @see mask
        */
-      setDate: function (date) {
-         this._setDate(date);
-         this._onTextChanged();
-         this._notifyOnDateChanged();
+      setDate: function (date, silent) {
+         this._setDate(date, silent);
+         if (!silent) {
+            this._onTextChanged();
+            this._notifyOnDateChanged();
+         }
       },
 
       /**
        * Установить дату. Приватный метод
        * @param date новое значение даты, объект типа Date
        */
-      _setDate: function (date) {
+      _setDate: function (date, silent) {
          var oldText   = this._options.text;
          this._updateOptionsByDate(date);
-         if (oldText !== this._options.text) {
+         if (!silent && oldText !== this._options.text) {
             this._notifyOnTextChange();
          }
          this._drawDate();
@@ -682,7 +684,8 @@ define(
          }.bind(this);
 
          // Автокомплитим только если пользователь частично заполнил поле, либо не заполнил, но поле обязательно для заполнения
-         if (isEmpty && !this._isRequired()) {
+         // Не автокомплитим поля в периодах
+         if (isEmpty && (!this._isRequired() || this._options.autocompleteMode === 'start' || this._options.autocompleteMode === 'end')) {
             return null;
          }
 

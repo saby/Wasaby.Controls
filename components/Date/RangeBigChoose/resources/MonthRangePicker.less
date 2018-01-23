@@ -171,6 +171,9 @@
    .controls-MonthView__tableElement {
       height: @height_DateRangeBigChoose-MonthRangePickerItem-month-date;
       font-size: @font-size_DateRangeBigChoose-MonthRangePickerItem-month-date;
+      &:hover {
+         outline: none;
+      }
    }
    .controls-MonthView__backgroundColor-currentMonthDay-weekend-unselected-enabled,
    .controls-MonthView__backgroundColor-currentMonthDay-workday-unselected-enabled {
@@ -188,6 +191,23 @@
    }
    .controls-MonthView__item-selectedStart:before {
       left: 0;
+   }
+}
+.ws-is-webkit,
+.ws-is-ie {
+   .controls-DateRangeBigChoose-MonthRangePickerItem__month .controls-MonthView__item-title {
+      height: @height_DateRangeBigChoose-MonthRangePickerItem-month-date;
+      display: block;
+   }
+}
+.ws-is-ie {
+   .controls-DateRangeBigChoose-MonthRangePickerItem__month .controls-MonthView__item-title {
+      line-height: @height_DateRangeBigChoose-MonthRangePickerItem-month-date - 2px;
+   }
+}
+.ws-is-webkit {
+   .controls-DateRangeBigChoose-MonthRangePickerItem__month .controls-MonthView__item-title {
+      line-height: @height_DateRangeBigChoose-MonthRangePickerItem-month-date;
    }
 }
 

@@ -1,4 +1,4 @@
-<WSControls:Buttons:Button class="controls-DataGridView__headSorting" caption="{{column['title']}}" command="ColumnSorting"
+<ws:WSControls.Buttons.Button class="controls-DataGridView__headSorting" caption="{{column['title']}}" command="ColumnSorting"
                         icon="{{sortingValue == 'DESC' ? 'icon-16 icon-TrendDown' : sortingValue == 'ASC' ? 'icon-16 icon-TrendUp' : 'icon-16'}}">
    <ws:commandArgs>
       <ws:Array>
@@ -6,4 +6,4 @@
          <ws:String>{{column['sorting']}}</ws:String>
       </ws:Array>
    </ws:commandArgs>
-</WSControls:Buttons:Button>
+</ws:WSControls.Buttons.Button>

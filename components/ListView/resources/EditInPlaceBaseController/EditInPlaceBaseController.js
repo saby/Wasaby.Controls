@@ -532,11 +532,16 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
                eip.endEdit();
                this._notify('onAfterEndEdit', eip.getOriginalRecord(), eip.getTarget(), withSaving);
 
-               this._destroyEip();
+               this._destroyEipAfterEndEdit();
                if (!this._savingDeferred.isReady()) {
                   this._savingDeferred.callback();
                }
             },
+
+            _destroyEipAfterEndEdit: function() {
+               this._destroyEip();
+            },
+
             _prepareAdd: function(options) {
                var
                   creatingDeferred,

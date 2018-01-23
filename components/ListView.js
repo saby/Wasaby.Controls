@@ -442,6 +442,7 @@ define('SBIS3.CONTROLS/ListView',
                top: null,
                bottom: null
             },
+            _virtualScrollShouldReset: false,
             _setScrollPagerPositionThrottled: null,
             _updateScrollIndicatorTopThrottled: null,
             _removedItemsCount: false,
@@ -1084,6 +1085,9 @@ define('SBIS3.CONTROLS/ListView',
                   }
                }
                this._addItems(itemsToAdd, config.addPosition);
+               if(this._options.itemsActionsInItemContainer && itemsToRemove.length && this._itemsToolbar && this._itemsToolbar.isVisible()){
+                  this._itemsToolbar.hide();
+               }
                this._removeItemsLight(itemsToRemove);
 
                //После добавления элоементов с помощью виртуального скролла, необходимо добавить на них выделение,
@@ -1148,6 +1152,11 @@ define('SBIS3.CONTROLS/ListView',
             if(lvOpts.selectedKey && lvOpts._itemData) {
                lvOpts._itemData.selectedKey = lvOpts.selectedKey;
             }
+            // в IE размещать "операции над записью" внутри строки нельзя
+            // т.к. в IE td не растягивается на высоту строки
+            // поэтому когда первый столбец получается многострочным, то последний занимает изначальную ширину
+            // и визуально получается, что тулбар прибит к верху и смещен
+            lvOpts.itemsActionsInItemContainer = !cDetection.isIE ? lvOpts.itemsActionsInItemContainer : false;
             return lvOpts;
          },
 
@@ -3101,7 +3110,10 @@ define('SBIS3.CONTROLS/ListView',
                   this.scrollToFirstPage();
                   this._virtualScrollController.disableScrollHandler(false);
                }
-               this._virtualScrollController.initHeights();
+               if (this._virtualScrollShouldReset) {
+                  this._virtualScrollController.reset();
+                  this._virtualScrollShouldReset = false;
+               }
             }
             this._updateHoveredItemAfterRedraw();
          },
@@ -3126,7 +3138,7 @@ define('SBIS3.CONTROLS/ListView',
             /* при изменении размера таблицы необходимо вызвать перерасчет позиции тулбара
              позиция тулбара может сбиться например при появление пэйджинга */
             if(this._itemsToolbar && this._itemsToolbar.isVisible()){
-               if(this._touchSupport && !this._editInPlace.isVisible()) {
+               if(this._touchSupport && this._editInPlace && !this._editInPlace.isVisible()) {
                    this._itemsToolbar.setHeightInTouchMode();
                }
                this._itemsToolbar.recalculatePosition();
@@ -3728,7 +3740,12 @@ define('SBIS3.CONTROLS/ListView',
           * По умолчанию равен бесконечности.
           */
          scrollToItem: function(item, toBottom, depth){
-            if (item.getId && item.getId instanceof Function){
+            // Item is not in DOM, will need to calculate scrollTop
+            if (this._options.virtualScrolling && this._virtualScrollController) {
+               var scrollTop = this._virtualScrollController.getScrollTopForItem(this._options._items.getIndex(item));
+               this._getScrollWatcher().scrollTo(scrollTop);
+            }
+            else if (item.getId && item.getId instanceof Function) {
                this._scrollToItem(item.getId(), toBottom, depth);
             }
          },
@@ -3934,6 +3951,7 @@ define('SBIS3.CONTROLS/ListView',
 
             if (this._options.virtualScrolling && !this._virtualScrollController) {
                this._initVirtualScrolling();
+               this._virtualScrollShouldReset = true;
             }
          },
 

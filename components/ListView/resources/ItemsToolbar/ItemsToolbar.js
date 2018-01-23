@@ -272,6 +272,11 @@ define('SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
              if(!mode) {
                 // height='auto' win10 в режиме планшета растягивает контейнер и перекрывает строчку
                 this.getContainer()[0].style.height = '';
+                if(this._options.itemsActionsInItemContainer){
+                    this.getContainer()[0].style.marginTop = '';
+                    this.getContainer()[0].style.marginBottom = '';
+                    this.getContainer()[0].style.marginRight = '';
+                }
              }else {
                 this.setHeightInTouchMode();
              }

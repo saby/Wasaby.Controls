@@ -17,14 +17,14 @@
 
 .controls-InputRender {
    box-sizing: border-box;
-   background-color: @background-color_TextBox;
+   background-color: @background-color_InputRender;
    cursor: auto;
    line-height: normal;
    display: inline-block;
-   color: @color_TextBox;
+   color: @color_InputRender;
    position: relative; //Для позициониования tagStyle
    //цвет границы задаётся в зависимости от состояния
-   border-width: @border-width_TextBox;
+   border-width: @border-width_InputRender;
    border-style: solid;
    //Сбрасываем white-space в значение по умолчанию, чтобы прикладники не могли случайно перебить
    white-space: normal;
@@ -52,12 +52,19 @@
 .controls-InputRender__fieldWrapper { //Этот блок нужен для правильного позиционирования нашего плейсхолдера
    .inline-flexbox();
    .flex-shrink(1);
-   .baseline-fix(); //https://jsfiddle.net/4dr8smhx/
-   .align-items(center);
    position: relative;
    height: 100%;
    width: 100%;
    min-width: 0;
+}
+
+.controls-InputRender__fieldWrapper_singleLine {
+   .baseline-fix(); //https://jsfiddle.net/4dr8smhx/
+   .align-items(center);
+}
+
+.controls-InputRender__fieldWrapper_multiLine {
+   .align-items(baseline);
 }
 
 .controls-InputRender__field {
@@ -89,7 +96,7 @@
 }
 
 .controls-InputRender__placeholder {
-   .compatPlaceholder(@color_TextBox-placeholder);
+   .compatPlaceholder(@color_InputRender-placeholder);
    .align-items(center);
 }
 
@@ -132,50 +139,50 @@
    position: absolute;
    right: 0;
    top: 0;
-   .top-right-triangle(@height_TextBox-InformationIcon);
-   width: @width_TextBox-InformationIcon;
-   height: @height_TextBox-InformationIcon;
+   .top-right-triangle(@height_InputRender-InformationIcon);
+   width: @width_InputRender-InformationIcon;
+   height: @height_InputRender-InformationIcon;
    cursor: pointer;
    box-sizing: border-box;
 }
 .controls-InputRender__tagStyle-attention {
-   border-right-color: @icon-color-attention;
+   border-right-color: @border-right-color_InputRender-tagStyle_attention;
 }
 .controls-InputRender__tagStyle-done {
-   border-right-color: @icon-color-done;
+   border-right-color: @border-right-color_InputRender-tagStyle_done;
 }
 .controls-InputRender__tagStyle-error {
-   border-right-color: @icon-color-error;
+   border-right-color: @border-right-color_InputRender-tagStyle_error;
 }
 .controls-InputRender__tagStyle-primary {
-   border-right-color: @icon-color-primary;
+   border-right-color: @border-right-color_InputRender-tagStyle_primary;
 }
 .controls-InputRender__tagStyle-disabled {
-   border-right-color: @icon-color-disabled;
+   border-right-color: @border-right-color_InputRender-tagStyle_disabled;
 }
 
 //Состояния
 .controls-InputRender_state_default {
-   border-color: @border-color_TextBox;
+   border-color: @border-color_InputRender;
    &:hover {
-      border-color: @border-color_TextBox_hover;
+      border-color: @border-color_InputRender_hover;
    }
 }
 
 .controls-InputRender_state_active {
-   border-color: @border-color_TextBox_active;
+   border-color: @border-color_InputRender_active;
    &:focus {
       text-overflow: clip;
    }
 }
 
 .controls-InputRender_state_disabled {
-   background-color: @background-color_TextBox_disabled;
+   background-color: @background-color_InputRender_disabled;
    caret-color: transparent;
 }
 
 .controls-InputRender_state_disabled_singleLine {
-   border-color: @border-color_TextBox_disabled;
+   border-color: @border-color_InputRender_disabled;
 }
 
 .controls-InputRender_state_disabled_multiLine {
@@ -183,29 +190,44 @@
 }
 
 .controls-InputRender_state_error {
-   background-color: @background-color_TextBox_error;
-   border-color: @border-color_TextBox_error;
+   background-color: @background-color_InputRender_error;
+   border-color: @border-color_InputRender_error;
 }
 
 //Размеры
-.controls-InputRender_size_default {
-   height: @height_TextBox_default;
-   font-size: @font-size_TextBox_default;
+.controls-InputRender_size_default_singleLine  {
+   height: @height_InputRender_default;
+   font-size: @font-size_InputRender_default;
 }
 
-.controls-InputRender_size_m {
-   height: @height_TextBox_m;
-   font-size: @font-size_TextBox_m;
+.controls-InputRender_size_m_singleLine  {
+   height: @height_InputRender_m;
+   font-size: @font-size_InputRender_m;
 }
 
-.controls-InputRender_size_l {
-   height: @height_TextBox_l;
-   font-size: @font-size_TextBox_l;
+.controls-InputRender_size_l_singleLine  {
+   height: @height_InputRender_l;
+   font-size: @font-size_InputRender_l;
 }
 
-.controls-InputRender_size_auto {
+.controls-InputRender_size_default_multiLine {
    height: auto;
-   font-size: @font-size_TextBox_m;
+   font-size: @font-size_InputRender_default;
+   line-height: @line-height_InputRender_default;
+}
+
+.controls-InputRender_size_m_multiLine {
+   //При использовании line-height: normal высота строка в FF становится 19px, а в остальных браузерах 18px. Через метрики
+   //шрифта это не исправить, т.к. с другими шрифтами высота строки тоже разная. Так что нужно указывать line-height явно
+   height: auto;
+   font-size: @font-size_InputRender_m;
+   line-height: @line-height_InputRender_m;
+}
+
+.controls-InputRender_size_l_multiLine {
+   height: auto;
+   font-size: @font-size_InputRender_l;
+   line-height: @line-height_InputRender_l;
 }
 
 //Модификаторы
@@ -218,9 +240,9 @@
    https://jsfiddle.net/ze4p2fsq/1/
  */
 .controls-InputRender_paddingBoth {
-   padding: @padding_TextBox-container;
+   padding: @padding_InputRender-container;
 }
 
 .controls-InputRender_paddingLeft {
-   padding: @padding_TextBox-container_left;
+   padding: @padding_InputRender-container_left;
 }

@@ -3,21 +3,27 @@
    <div class="ws-ListControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
    <div class="ws-ListControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
 
-   <ws:Controls.List.ListControl.ListView
-           name="listView"
-           listModel="{{_listModel}}"
-           itemTemplate="{{_options.itemTemplate}}"
-           idProperty="{{_options.idProperty}}"
-           displayProperty="{{_options.displayProperty}}"
-           selectedKey="{{_options.selectedKey}}">
-   </ws:Controls.List.ListControl.ListView>
+   <ws:if data="{{_listModel && _listModel.getCount()}}">
+      <ws:Controls.List.ListControl.ListView
+              name="listView"
+              listModel="{{_listModel}}"
+              itemTemplate="{{_options.itemTemplate}}"
+              idProperty="{{_options.idProperty}}"
+              displayProperty="{{_options.displayProperty}}"
+              selectedKey="{{_options.selectedKey}}">
+      </ws:Controls.List.ListControl.ListView>
+   </ws:if>
+
+   <ws:if data="{{_options.emptyTemplate && _listModel && !_listModel.getCount()}}">
+      <ws:partial template="{{_options.emptyTemplate}}"/>
+   </ws:if>
 
    <div class="ws-ListControl__bottomLoadTrigger" name="bottomLoadTrigger" style="top: -{{_loadOffset}}px;"></div>
    <div class="ws-ListControl__bottomPlaceholder" style="height: {{_bottomPlaceholderHeight}}px;"></div>
    <div class="ws-ListControl__bottomListTrigger" name="bottomListTrigger"></div>
 
    <ws:if data="{{_pagingCfg}}">
-      <ws:Controls.List.Paging className="ws-ListControl__paging" scope="{{_pagingCfg}}" on:onArrowClick="__onPagingArrowClick()"></ws:Controls.List.Paging>
+      <ws:Controls.List.Paging attr:class="ws-ListControl__paging" scope="{{_pagingCfg}}" on:onArrowClick="__onPagingArrowClick()"></ws:Controls.List.Paging>
    </ws:if>
    <ws:if data="{{_loadingIndicatorState}}">
       <div class="ws-ListControl__loadingIndicator ws-ListControl__loadingIndicator__state-{{_loadingIndicatorState}}">
