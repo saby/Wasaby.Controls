@@ -130,6 +130,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
                closeButton: true,
                componentOptions: {
                   title: hasEditorOptions ? editorOptions.title : undefined,
+                  maxHeight: $('body').height(),
                   applyButtonTitle: hasEditorOptions ? editorOptions.applyButtonTitle : undefined,
                   columns: columnsConfig.columns,
                   selectedColumns: columnsConfig.selectedColumns,

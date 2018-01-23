@@ -1,4 +1,4 @@
-define('js!Controls/Input/interface/IInputDateTime', [
+define('Controls/Input/interface/IInputDateTime', [
 ], function() {
 
    /**

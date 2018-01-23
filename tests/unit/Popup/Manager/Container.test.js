@@ -1,6 +1,6 @@
 define(
    [
-      'js!Controls/Popup/Manager/Container',
+      'Controls/Popup/Manager/Container',
       'WS.Data/Collection/List',
       'Core/helpers/random-helpers'
    ],

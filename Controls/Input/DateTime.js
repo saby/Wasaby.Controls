@@ -1,4 +1,4 @@
-define('js!Controls/Input/DateTime', [
+define('Controls/Input/DateTime', [
 ], function() {
 
    /**

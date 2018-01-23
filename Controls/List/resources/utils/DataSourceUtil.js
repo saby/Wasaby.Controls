@@ -1,4 +1,4 @@
-define('js!Controls/List/resources/utils/DataSourceUtil', [
+define('Controls/List/resources/utils/DataSourceUtil', [
    'WS.Data/Query/Query',
    'Core/core-instance',
    'Core/Deferred'

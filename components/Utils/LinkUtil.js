@@ -28,7 +28,7 @@ define('SBIS3.CONTROLS/Utils/LinkUtil', [],
                     case 'additionalLink__4': colorClass += 'additional-4'; break;
                     case 'additionalLink__5': colorClass += 'additional-5'; break;
                 }
-                opts.className += colorClass;
+                opts.cssClassName += colorClass;
             }
-        }
+        };
     });

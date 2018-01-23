@@ -1,17 +1,19 @@
 <div class="ws-suggestShowAll">
-    <ws:Controls.Popup.DialogTemplate attr:class="ws-suggestShowAll__dialog">
+    <Controls:Popup:DialogTemplate attr:class="ws-suggestShowAll__dialog">
         <ws:topArea>
             <span class="ws-suggestShowAll__title">Все записи</span>
         </ws:topArea>
         <ws:contentArea>
-            <div class="ws-suggestShowAll__content ws-scrolling-content">
-                <ws:partial
-                        template="{{_options.template}}"
-                        dataSource="{{_options.dataSource}}"
-                        navigation="{{_options.navigation}}"
-                        filter="{{_options.filter}}"
-                        on:itemClick="_onItemClickHandler()"/>
-            </div>
+            <Controls:Container:Scroll attr:class="ws-suggestShowAll__content">
+                <ws:content>
+                    <ws:partial
+                            template="{{_options.template}}"
+                            dataSource="{{_options.dataSource}}"
+                            navigation="{{_options.navigation}}"
+                            filter="{{_options.filter}}"
+                            on:itemClick="_onItemClickHandler()"/>
+                </ws:content>
+            </Controls:Container:Scroll>
         </ws:contentArea>
-    </ws:Controls.Popup.DialogTemplate>
+    </Controls:Popup:DialogTemplate>
 </div>

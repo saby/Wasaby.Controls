@@ -742,7 +742,6 @@ define('SBIS3.CONTROLS/FieldLink',
 
              return {
                 currentValue: selectedKeys,
-                currentSelectedKeys: selectedKeys,
                 selectorFieldLink: true,
                 multiSelect: this._options.multiselect,
                 selectedRecords: []

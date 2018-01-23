@@ -157,6 +157,7 @@ define('SBIS3.CONTROLS/DropdownList',
 
       var DropdownList = Control.extend([PickerMixin, ItemsControlMixin, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS/DropdownList.prototype */{
          _dotTplFn: dotTplFn,
+         _checkBoxSelectionStarted: false,
          /**
           * @event onClickMore Происходит при клике на кнопку "Ещё", которая отображается в выпадающем списке.
           * @param {Core/EventObject} eventObject Дескриптор события.
@@ -526,7 +527,9 @@ define('SBIS3.CONTROLS/DropdownList',
                  selectedItemIndex,
                  selected;
             if (row.length && (e.button === 0)) {
-               if (isCheckBoxClick) {
+               if (this._options.multiselect && itemId != this.getDefaultId() && curSelectionLength !== 0 &&
+                  (this._checkBoxSelectionStarted) || isCheckBoxClick) {
+                  this._checkBoxSelectionStarted = true;
                   this._buttonChoose.getContainer().removeClass('ws-hidden');
                   selected =  !row.hasClass('controls-DropdownList__item__selected');
                   row.toggleClass('controls-DropdownList__item__selected', selected);
@@ -595,6 +598,7 @@ define('SBIS3.CONTROLS/DropdownList',
                this._getPickerContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
                this.getContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
 
+               this._checkBoxSelectionStarted = false;
                DropdownList.superclass.showPicker.apply(this, arguments);
 
                if (this._buttonChoose) {

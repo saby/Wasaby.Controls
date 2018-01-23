@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 25.12.2017.
  */
-define('js!Controls/Input/resources/SuggestShowAll/SuggestShowAll',
+define('Controls/Input/resources/SuggestShowAll/SuggestShowAll',
    [
       'Core/Control',
       'tmpl!Controls/Input/resources/SuggestShowAll/SuggestShowAll',
@@ -26,8 +26,8 @@ define('js!Controls/Input/resources/SuggestShowAll/SuggestShowAll',
          },
          
          _onItemClickHandler: function(event, item) {
-            this._notify('sendResult', [item]);
-            this._notify('close');
+            this._notify('sendResult', [item], {bubbling: true});
+            this._notify('close', [], {bubbling: true});
          }
       });
       

@@ -346,6 +346,10 @@ body .controls-image__button {
 //todo: удалить это нафиг сделать нормально и не лениться
 .controls-image {
    .controls-image__image-bar{
+      .justify-content(space-around);
+     .controls-image__button-upload {
+       margin-right: 0;
+     }
       .icon-16{
          font-size: @default-icon-size-large !important;
          height: @default-icon-size-large !important;
@@ -584,4 +588,8 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
     color: @color_ComboBox_withPicker;
     border: @default-border-width solid @border-color_ComboBox_withPicker;
   }
+}
+
+.ws-float-close {
+   .close-button-mixin();
 }

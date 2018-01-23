@@ -29,6 +29,9 @@
 @border-width_InputRender:            @default-border-width;
 @width_InputRender-InformationIcon:   round(20px * @multiplier);
 @height_InputRender-InformationIcon:  @width_InputRender-InformationIcon;
+@line-height_InputRender_m:           round(42px * @multiplier);
+@line-height_InputRender_l:           round(52px * @multiplier);
+@line-height_InputRender_default:     @line-height_InputRender_l;
 //MoneyTextBox
 @font-size_MoneyTextBox-decimals: @small-text-size;
 //NumberTextBox
@@ -63,12 +66,18 @@
 @suggest-list-footer-height:           round(77px * @multiplier);
 @suggest-picker-standard-width:        round(700px * @multiplier);
 //itemsToolbar
-@list-view-items-toolbar-icon-size:       round(42px * @multiplier);
-@list-view-items-toolbar-menu-icon-size:  @icon-large-size;
+@list-view-actions-menu-margin:             round(-9px * @multiplier) 0 0 round(16px * @multiplier);
+@list-view-items-toolbar-icon-size:         round(42px * @multiplier);
+@list-view-items-toolbar-menu-icon-size:    @icon-size_default_medium;
+@list-view-actions-menu-text-margin:        @margin_MenuItem-icon_medium;
+@list-view-actions-icon-top:                round(19px * @multiplier);
+@list-view-actions-menu-item-padding-right: round(66px * @multiplier);
+@list-view-actions-menu-close-top:          round(21px * @multiplier);
+@list-view-actions-menu-close-right:        round(16px * @multiplier);
 //fieldlink
 @icon-size_FieldLink-button:         @default-icon-size-medium;
 @width_FieldLink-item-cross:         @default-icon-size-medium + @default-padding;
-@spacing_FieldLink-dropAllLinks:     @default-padding-small;
+@spacing_FieldLink-dropAllLinks:     @default-padding;
 @font-size_FieldLink-Link:           @large-text-size;
 @font-size_FieldLink-item-caption_normal: @large-text-size;
 //searchForm

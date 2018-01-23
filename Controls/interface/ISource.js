@@ -1,4 +1,4 @@
-define('js!Controls/interface/ISource', [
+define('Controls/interface/ISource', [
 ], function() {
 
    /**

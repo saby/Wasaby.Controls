@@ -1,7 +1,7 @@
-define('js!Controls/Popup/Opener/Sticky/Strategy',
+define('Controls/Popup/Opener/Sticky/Strategy',
    [
-      'js!Controls/Popup/Opener/BaseStrategy',
-      'js!Controls/Popup/TargetCoords'
+      'Controls/Popup/Opener/BaseStrategy',
+      'Controls/Popup/TargetCoords'
    ],
    function (BaseStrategy, TargetCoords) {
 
@@ -24,6 +24,10 @@ define('js!Controls/Popup/Opener/Sticky/Strategy',
                hAlign = cfg.popupOptions.horizontalAlign,
                vAlign = cfg.popupOptions.verticalAlign;
             cfg.position = this.getPosition(tCoords, corner, hAlign, vAlign, width, height, window.innerWidth, window.innerHeight);
+         },
+
+         elementUpdated: function (cfg, width, height) {
+            this.elementCreated(cfg, width, height);
          },
 
          /**
