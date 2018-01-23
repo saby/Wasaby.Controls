@@ -277,10 +277,19 @@
             padding-right: ~"@{controls-view-padding-@{val}}";
          }
       }
+      .controls-ListView__serviceFooter {
+         padding: 0 ~"@{controls-view-padding-@{val}}";
+      }
    }
    .generate-padding-class-DGV(@i + 1);
 }
 .generate-padding-class-DGV();
+
+.controls-ListView__multiselect .controls-ListView__serviceFooter {
+   margin-left: @width_CheckBox;
+   padding-left: 0;
+}
+
 /*Для строк идущих после группировки не должно быть верхних бордеров*/
 .controls-DataGridView {
    &.controls-DataGridView__hasSeparator {
