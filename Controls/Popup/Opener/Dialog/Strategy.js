@@ -17,6 +17,10 @@ define('Controls/Popup/Opener/Dialog/Strategy',
             cfg.position = this.getPosition(window.innerWidth, window.innerHeight, width, height);
          },
 
+         elementUpdated: function (cfg, width, height) {
+            this.elementCreated(cfg, width, height);
+         },
+
          /**
           * Возвращает позицию диалогового окна
           * @function Controls/Popup/Opener/Dialog/Strategy#getPosition

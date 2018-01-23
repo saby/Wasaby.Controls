@@ -17,6 +17,10 @@ define('Controls/Popup/Opener/Notification/Strategy',
             cfg.position = this.getPosition();
          },
 
+         elementUpdated: function (cfg) {
+            this.elementCreated(cfg);
+         },
+
          /**
           * TODO Возвращает позицию push-уведомления
           * @function Controls/Popup/Opener/Notification/Strategy#getPosition

@@ -74,6 +74,20 @@ define('Controls/Popup/Manager/Container',
          },
 
          /**
+          * Обработчик на обновление попапа
+          * @function Controls/Popup/Manager/Container#_popupUpdated
+          * @param event
+          * @param id идентификатор попапа.
+          * @param width ширина попапа.
+          * @param height высота попапа.
+          */
+         _popupUpdated: function(event, id, width, height){
+            if (this.eventHandlers && this.eventHandlers.onPopupUpdated) {
+               this.eventHandlers.onPopupUpdated(event, id, width, height);
+            }
+         },
+
+         /**
           * Обработчик установки фокуса.
           * @function Controls/Popup/Manager/Container#_popupFocusIn
           * @param event
