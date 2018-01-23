@@ -1,48 +1,64 @@
-define('js!Controls/Popup/Opener/Base',
+define('Controls/Popup/Opener/Base',
    [
       'Core/Control',
-      'js!Controls/Popup/Manager',
-      'Core/core-merge',
-      'js!Controls/Popup/Controller'
+      'Controls/Popup/Manager',
+      'Core/core-clone',
+      'Core/core-merge'
    ],
-   function(Control, Manager, CoreMerge, Controller) {
+   function (Control, Manager, CoreClone, CoreMerge) {
       /**
        * Базовый опенер
        * @category Popup
        * @class Controls/Popup/Opener/Base
        * @control
-       * @public
        * @author Лощинин Дмитрий
        */
       var Base = Control.extend({
-         open: function(config, opener){
-            var
-               cfg = config || {};
-            CoreMerge(cfg, this._options.popupOptions);
-            cfg.opener = opener || this;
-            if (this._popupId) {
-               this._popupId = Manager.update(this._popupId, cfg);
-            }
-            if (!this._popupId) {
-               this._controller = new Controller({
-                  eventHandlers: {
-                     onResult: this._options.onResult
-                  }
-               });
-               this._popupId = Manager.show(cfg, this.getStrategy(), this._controller);
-            }
+         _beforeUnmount: function () {
+            this.close();
          },
 
-         close: function(){
-            if( this._popupId ){
+         /**
+          * Открыть всплывающую панель
+          * @function Controls/Popup/Opener/Base#open
+          * @param config конфигурация попапа
+          * @param strategy стратегия позиционирования попапа
+          */
+         open: function (config, strategy) {
+            var
+               cfg = CoreClone(this._options.popupOptions);
+            CoreMerge(cfg, config || {});
+            if (this.isOpened()) {
+               this._popupId = Manager.update(this._popupId, cfg);
+            }
+            else {
+               if (!cfg.opener) {
+                  cfg.opener = this;
+               }
+               this._popupId = Manager.show(cfg, strategy);
+            }
+            return this._popupId;
+         },
+
+         /**
+          * Закрыть всплывающую панель
+          * @function Controls/Popup/Opener/Base#show
+          */
+         close: function () {
+            if (this._popupId) {
                Manager.remove(this._popupId);
             }
          },
 
-         getStrategy: function(){
-            throw new Error('Method getStrategy must be implemented');
+         /**
+          * Получить признак, открыта или закрыта связанная всплывающая панель
+          * @function Controls/Popup/Opener/Base#isOpened
+          * @returns {Boolean} Признак открыта ли связанная всплывающая панель
+          */
+         isOpened: function () {
+            return !!Manager.find(this._popupId);
          }
       });
-      return Base
+      return Base;
    }
 );

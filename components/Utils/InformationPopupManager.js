@@ -26,7 +26,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
     *    });
     * </pre>
     * @class SBIS3.CONTROLS/Utils/InformationPopupManager
-    * @author Степин Павел Владимирович
+    * @author Степин П.В.
     * @public
     */
    function( cMerge,
@@ -130,7 +130,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
          /**
           * Открывает нотификационное сообщение.
           * @param {Object} Объект конфигурацией открываемого окна - {@link SBIS3.CONTROLS/NotificationPopup}.
-          * @param {Boolean} notHide true - не скрывать окно по истичению времени жизни.
+          * @param {Boolean} notHide true - не скрывать окно по истечению времени жизни.
           * @returns {SBIS3.CONTROLS/NotificationPopup} Экземпляр класса окна нотификационного сообщения.
           * @example
           * <pre>
@@ -161,7 +161,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
          /**
           * Открывает произвольное нотификационное сообщение.
           * @param {SBIS3.CONTROLS.PopupMixin|*} inst Экземпляр класса окна. Это может быть любое окно, созданное на основе указанного миксина.
-          * @param {Boolean} notHide true - не скрывать окно по истичению времени жизни.
+          * @param {Boolean} notHide true - не скрывать окно по истечению времени жизни.
           * @see showNotification
           * @see showConfirmDialog
           * @see showMessageDialog

@@ -1,16 +1,26 @@
 .controls-Browser-ColumnsEditor-Editing-Area {
+   .flexbox();
+   .flex-direction(column);
    width: @width-ColumnsEditor-Editing-Area;
    height: 100%;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head {
-   padding: @padding-top-ColumnsEditor-Editing-Area-head 6px @padding-bottom-ColumnsEditor-Editing-Area-head 12px;
+   box-sizing: border-box;
+   .flex-shrink(0);
+   border-bottom: @border-bottom-ColumnsEditor-Editing-Area__head;
+   padding: @padding-ColumnsEditor-Editing-Area-head;
    background-color: @background-color-ColumnsEditor-Editing-Area-head;
+}
+
+.controls-Browser-ColumnsEditor-Editing-Area_low {
+   .controls-Browser-ColumnsEditor-Editing-Area__head {
+      padding: @padding-ColumnsEditor-Editing-Area-head-2;
+   }
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head-title {
    height: @height-ColumnsEditor-Editing-Area-head-title;
-   margin-bottom: @spacing-ColumnsEditor-Editing-Area-head;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head-title-left {
@@ -26,6 +36,8 @@
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head-preset {
+   height: @height-ColumnsEditor-Editing-Area__head-preset;
+   margin-top: @spacing-ColumnsEditor-Editing-Area-head;
    font-size: @font-size-ColumnsEditor-Editing-Area__head-preset;
 }
 
@@ -37,7 +49,8 @@
 
 .controls-Browser-ColumnsEditor-Editing-Area__head-preset-editor {
    .controls-ItemsToolbar {
-      bottom: 0;
+      top: @spacing-ColumnsEditor-Editing-Area__Preset-item;
+      bottom: auto;
       background-color: transparent;
    }
    .controls-editInPlace__editor {
@@ -47,19 +60,21 @@
 
 .controls-Browser-ColumnsEditor-Editing-Area__Preset-item {
    height: @height-ColumnsEditor-Editing-Area-head-preset;
-   padding: 0 0 0 @padding-left-ColumnsEditor-Editing-Area__Preset-item;
+   padding-left: @padding-left-ColumnsEditor-Editing-Area__Preset-item;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__Preset-item-title {
-   padding: @padding-top-ColumnsEditor-Editing-Area__Preset-item-title 0 0 0;
+   margin-top: @spacing-ColumnsEditor-Editing-Area__Preset-item;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__Preset-input {
-   width: 100%;
+   width: @width-ColumnsEditor-Editing-Area__Preset-input;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__body {
-   border-top: @border-top-ColumnsEditor-Editing-Area__body;
+   box-sizing: border-box;
+   .flex-grow(1);
+   height: 100%;
    padding: @padding-ColumnsEditor-Editing-Area__body;
 }
 
@@ -82,9 +97,21 @@
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__view-item-text {
+   display: inline-block;
+   box-sizing: border-box;
+   width: 100%;
+   overflow: hidden;
    padding-left: @padding-left-ColumnsEditor-Editing-Area__view-item-text;
+   padding-right: @padding-right-ColumnsEditor-Editing-Area__view-item-text;
    line-height: @line-height-ColumnsEditor-Editing-Area__view-item-text;
+   white-space: nowrap;
+   text-overflow: ellipsis;
    color: @color-ColumnsEditor-Editing-Area__view-item-text;
+}
+.controls-Browser-ColumnsEditor-Editing-Area__SelectableList_movable {
+   .controls-Browser-ColumnsEditor-Editing-Area__view-item-text {
+      padding-right: @padding-right-ColumnsEditor-Editing-Area__view-item-text-2;
+   }
 }
 .controls-ListView__item__multiSelected {
    .controls-Browser-ColumnsEditor-Editing-Area__view-item-text {

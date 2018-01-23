@@ -59,7 +59,7 @@
       &.controls-ComboBox {
          margin: 4px;
          width:126px;
-         .controls-TextBox__field {
+         .controls-InputRender__field {
             overflow: hidden;
          }
       }
@@ -144,7 +144,7 @@
 }
 
 .controls-RichEditorToolbar__stylePicker {
-   .controls-ComboBox__itemRow.controls-ListView__item { //2 Для большего веча селектора
+   .controls-ListView__item { //TODO: можно сделать вообще без каскада через className у item'ов
       &.titleText {
          font-size: 18px;
          line-height: 23px;
@@ -178,7 +178,7 @@
 
 .ws-is-firefox {
    .controls-RichEditorToolbar {
-      .controls-RichEditorToolbar__item.controls-ComboBox .controls-TextBox__field {
+      .controls-RichEditorToolbar__item.controls-ComboBox .controls-InputRender__field {
          padding-top: 0;
       }
    }

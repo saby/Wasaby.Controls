@@ -1,38 +1,59 @@
-.ws-DialogTemplate{
-   background-color: #FFFFFF;
+.ws-DialogTemplate {
+   .flexbox();
+   .flex-direction(column);
+   .flex-grow(1);
+   .flex-shrink(1);
+   height: 100%;
+   background-color: @default-bg-color;
+   position: relative;
+   overflow: hidden;
 }
 
-.ws-DialogTemplate__top-area{
-   display: flex;
+.ws-DialogTemplate__top-area {
+   .flexbox();
+   .flex-shrink(0);
    height: 44px;
    padding-right: 48px;
-   /* удалить */
-   background-color: #F4F4F4;
 }
 
-.ws-DialogTemplate__content-area{
-   display: flex;
+.ws-DialogTemplate__content-area {
+   .flexbox();
+   .flex-direction(column);
+   .flex-grow(1);
+   .flex-shrink(1);
+   min-height: 1px;
    padding-bottom: 12px;
 }
 
-.ws-DialogTemplate__close_button{
+.ws-DialogTemplate__close_button {
+   .flexbox();
+   .align-self(center);
+   .justify-content(center);
    position: absolute;
-   top: 10px;
-   right: 0;
-   width: 36px;
-   height: 24px;
+   top: 6px;
+   width: 35px;
+   height: 26px;
    cursor: pointer;
-   background: url('resources/areaCloseButton.png') 0 -1px;
-
-   &:hover{
-      background-position: 0 -25px;
-   }
+   background-color: @bg_Block_style-2;
+   border: 1px solid @border-color_CloseButton;
+   border-right-width: 0;
+   box-shadow: 0 1px 3px rgba(0,0,0,.12);
+   border-radius: 2px 0 0 2px;
+   font-size: 23px;
+   font-family: cbuc-icons;
+   content: "\e66c";
+   font-weight: 400;
+   color: @icon-color-primary;
 }
 
-.ws-DialogTemplate__caption{
-   font-family: TensorFont, sans-serif!important;
-   font-size: 18px!important;
-   font-weight: 700!important;
+.ws-DialogTemplate__close_button_right{
+   right: 0;
+}
+
+.ws-DialogTemplate__caption {
+   font-family: TensorFont, sans-serif !important;
+   font-size: 18px !important;
+   font-weight: 700 !important;
    cursor: default;
    text-overflow: ellipsis;
    overflow: hidden;
@@ -41,5 +62,4 @@
    margin-left: 12px;
    max-width: calc(100% - 48px);
    line-height: 44px;
-
 }

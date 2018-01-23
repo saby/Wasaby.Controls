@@ -1,4 +1,4 @@
-define('js!Controls/Input/Lookup', [
+define('Controls/Input/Lookup', [
 ], function() {
 
    /**
@@ -8,7 +8,7 @@ define('js!Controls/Input/Lookup', [
     * @mixes Controls/interface/ISource
     * @mixes SBIS3.SPEC.input.interface.IPlaceholder
     * @mixes Controls/interface/ISource
-    * @mixes Controls/Input/interface/IValidationError
+    * @mixes Controls/Input/interface/IValidation
     * @mixes Controls/Input/interface/IInputTag
     * @mixes Controls/interface/ISingleSelectable
     * @mixes Controls/interface/IMultiSelectable

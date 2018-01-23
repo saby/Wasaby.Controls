@@ -11,7 +11,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/PanelItem', [
     * Сейчас применяется для конфигурации фильтров на Панели фильтров (см. {@link SBIS3.CONTROLS/Filter/FilterPanel}).
     * @mixin SBIS3.CONTROLS/Filter/Panel/components/PanelItem
     * @public
-    * @author Авраменко Алексей Сергеевич
+    * @author Авраменко А.С.
     */
 
    var

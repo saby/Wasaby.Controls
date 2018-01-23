@@ -243,6 +243,7 @@ define('js!WSControls/Buttons/MenuButton', [
             context: this.getParent() ? this.getParent().getLinkedContext() : {},
             element: targetElement,
             target : this.getContainer(),
+            className: this._options.pickerClassName,
             //items могли задать через опцию или через setItems
             items: this._options.items  ||  this._items,
             corner : 'tl',

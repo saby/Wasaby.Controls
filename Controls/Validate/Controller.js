@@ -1,4 +1,4 @@
-define('js!Controls/Validate/Controller',
+define('Controls/Validate/Controller',
    [
       'Core/Control',
       'tmpl!Controls/Validate/Controller',
@@ -26,14 +26,14 @@ define('js!Controls/Validate/Controller',
                this._forceUpdate();
             }.bind(this);
             this._focusInHandler = function() {
-               this.setValidationResult(true);
+               this.setValidationResult(null);
             }.bind(this);
          },
          _afterMount: function () {
-            this._notify('validateCreated', this);
+            this._notify('validateCreated', [this], {bubbling:true});
          },
          _beforeUnmount: function () {
-            this._notify('validateDestroyed', this);
+            this._notify('validateDestroyed', [this], {bubbling:true});
          },
          _afterUpdate: function() {
             if (this._shouldValidate) {
@@ -45,7 +45,7 @@ define('js!Controls/Validate/Controller',
          _validationResult: undefined,
 
          _callValidators: function callValidators(validators) {
-            var validationResult = true,
+            var validationResult = null,
                errors = [],
                validatorResult, validator, resultDeferred, index;
 
@@ -88,7 +88,7 @@ define('js!Controls/Validate/Controller',
 
             // далее, смотрим что возвращают результаты-деферреды
             parallelDeferred.done().getResult().addCallback(function(results) {
-               var validationResult = true;
+               var validationResult = null;
                if (typeof results === 'object') {
                   for (var resultIndex in results) {
                      // плохие результаты запоминаем в массиве с ошибками
@@ -102,8 +102,6 @@ define('js!Controls/Validate/Controller',
                         } else if (Array.isArray(result)) {
                            errors = result;
                         }
-
-                        validationResult = validationResult && result;
                      }
                   }
                }

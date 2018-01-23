@@ -1,0 +1,18 @@
+<div class="controls-InputRender controls-TextBox {{ _prepareClassesByConfig(...).container }}" title="{{tooltip}}">
+    <div class="controls-InputRender__wrapper controls-TextBox__wrapper {{ _prepareClassesByConfig(...).wrapper }}">
+        <div class="controls-FieldLink__flexWrapper">
+            <ws:if data="{{beforeFieldWrapper}}">
+                <ws:partial template="{{beforeFieldWrapper}}" scope="{{...}}"/>
+            </ws:if>
+            <div class="controls-InputRender__fieldWrapper controls-TextBox__fieldWrapper {{ _prepareClassesByConfig(...).fieldWrapper }} {{ _hideTextBoxField ? 'ws-invisible' }}">
+                <ws:partial class="{{ _prepareClassesByConfig(...).field }}" template="{{textFieldWrapper}}" scope="{{...}}"/>
+            </div>
+            <ws:if data="{{afterFieldWrapper}}">
+                <ws:partial template="{{afterFieldWrapper}}" scope="{{...}}"/>
+            </ws:if>
+        </div>
+    </div>
+    <ws:if data="{{informationIconColor}}">
+        <div class="controls-InputRender__tagStyle controls-TextBox__informationIcon{{' controls-InputRender__tagStyle-' + informationIconColor}}{{' controls-TextBox__informationIcon-' + informationIconColor}}"></div>
+    </ws:if>
+</div>

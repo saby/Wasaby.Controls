@@ -1,120 +1,123 @@
+/*
+   <div class="controls-ComboBox">
+      <div class="controls-TextBox__wrapper">
+         <span class="controls-ComboBox__fieldNotEditable"> текст </span>
+         <input class="controls-ComboBox__field" />
+         <div class="controls-ComboBox__Arrow">▼</div>
+      </div>
+   </div>
+ */
+
+/*
+   <div class="controls-ComboBox__picker">
+      <div class="controls-ComboBox__scrollContainer">
+         <div class="controls-ScrollContainer__content">
+            <div class="controls-ComboBox__list">
+               <div class="controls-ComboBox__item">текст</div>
+            </div>
+         </div>
+      </div>
+   </div>
+ */
+
 .controls-ComboBox {
+   &:hover { //по ховеру на контейнере должен меняться цвет стрелки
+      .controls-ComboBox__Arrow {
+         color: @color_ComboBox-Arrow_hover;
+      }
+   }
+}
+
+.controls-ComboBox__emptyValue { //TODO: цвет текста летит из текстбокса, поэтому чтобы не завязываться на порядок прилёта CSS-ок придется делать каскад
+   .controls-TextBox__field {
+      color: @default-placeholder-color;
+   }
+}
+
+.controls-ComboBox__Arrow {
+   //inline-flex, align-items и height нужны для центрирования иконки
+   .inline-flexbox();
+   .flex-shrink(0);
+   .align-items(center);
+   .icon-size-without-important(@icon-size_ComboBox-Arrow);
    cursor: pointer;
-   &__fieldNotEditable {
+   padding: 0 0 0 @spacing_ComboBox-Arrow;
+   color: @color_ComboBox-Arrow;
+}
+
+.controls-ComboBox__Arrow_active {
+   color: @color_ComboBox-Arrow_active;
+}
+
+.controls-ComboBox__fieldNotEditable {
+   display: none;
+   white-space: nowrap;
+   overflow: hidden;
+   .align-self(center);
+}
+.controls-ComboBox__fieldNotEditable__placeholder {
+   color: @color_ComboBox_placeholder;
+}
+.controls-ComboBox__editable-false {
+   .controls-InputRender__field{
       display: none;
-      line-height: @line-height_TextBox;
-      white-space: nowrap;
-      overflow: hidden;
-      &__placeholder {
-         color: @default-placeholder-color;
-      }
    }
-   &__emptyValue {
-      .controls-ComboBox__fieldNotEditable {
-         color: @default-placeholder-color;
-      }
-   }
-   .controls-ComboBox__afterFieldWrapper {
-      .align-items(center);
-      .icon-size(@combo-box-icon-size, @default-icon-font);
-      .inline-flexbox();//тк icon-size
-      height:100%;//тк icon-size
-      cursor: pointer;
-      padding: @combo-box-arrow-padding;
-      color: @combo-box-arrowDown-color;
-      text-decoration: none;
-   }
-   &.ws-has-focus{
-      .controls-ComboBox__afterFieldWrapper {
-         color: @combo-box-arrowDown-color-focus;
-      }
-   }
-   &:hover {
-      .controls-ComboBox__afterFieldWrapper {
-         color: @combo-box-arrowDown-color-hover;
-      }
-   }
-   &.ws-disabled {
-      cursor: default;
-      .controls-ComboBox__afterFieldWrapper {
-         visibility: hidden;
-      }
-   }
-   &__editable-false {
-      .controls-TextBox__field {
-         display: none;
-      }
-      .controls-ComboBox__fieldNotEditable {
-         display: inline-block;
-      }
-   }
-   &.controls-Picker__show {
-      background-color: @combo-box-picker-show-background-color;
-      color: @compo-box-picker-show-color;
-      border: @border-width_ComboBox_pickerShow solid @combo-box-picker-show-border-color;
-
-      .controls-ComboBox__afterFieldWrapper {
-         color: @combo-box-arrowDown-color-picker-show;
-      }
+   .controls-ComboBox__fieldNotEditable {
+      display: inline-block;
    }
 }
-.controls-ComboBox__picker.controls-FloatArea {
-   overflow-y: hidden !important;
-   border: @combo-box-picker-border;
+
+//Стили пикера
+.controls-ComboBox__picker {
+   .box-shadow(@box-shadow_ComboBox_picker); //todo: тень вокруг пикера, нужно включить её на онлайне
+   background: @background_ComboBox-picker;
+   overflow-y: hidden !important; //Если пикер не вмещается в экран, то он навешивает overflow-y: auto. Тут этот скролл не нужен, так что перебиваем его
+   border: @border-width_ComboBox-picker solid @border-color_ComboBox-picker;
+   color: @color_ComboBox-picker;
+   font-size: @font-size_ComboBox-picker;
    box-sizing: border-box;
-   .box-shadow(@shadow_ComboBox_picker);
-   .controls-ComboBox__multiline.controls-ComboBox__itemRow{
-      .controls-ComboBox__item {
-         white-space: normal;
-         word-wrap: break-word;
-      }
-   }
-   .controls-ComboBox__body {
-     height: 100%;
-     .border-radius(@combo-box-picker-border-radius);
-     .controls-ComboBox__list {
-        .flexbox();
-        .flex-direction(column);
-        position: relative; //Для того, чтобы можно было высчитать scrollTop итема
-     }
-   }
-   .controls-ComboBox__scrollContainer{
-     max-height: 400px;
-     height: inherit;
-     background-color: @background-color_ComboBox_scrollContainer;
-   }
+}
 
-   .controls-ComboBox__itemRow {
-      &.controls-ComboBox__emptyRow, &.controls-ComboBox__emptyRow:hover{
-        color: @color_Combobox_empty_row;
-      }
-      position: relative;
-      font: inherit;
-      font-size: @combo-box-picker-item-font-size;
-      padding: @combo-box-picker-item-padding;
-      cursor: pointer;
-      color: @combo-box-picker-item-text-color;
-      background: @combo-box-picker-item-bg;
-      &:hover {
-         color: @combo-box-picker-item-hover-text-color;
-         background: @combo-box-picker-item-hover-bg;
-      }
-      .controls-ComboBox__item {
-         .text-overflow();
-      }
-   }
-   &.controls-popup-revert-vertical {
-      margin-top: calc(~"1px +"@default-border-width) !important;
-      .controls-ComboBox__body{
-         .controls-ComboBox__list {
-            .flex-direction(column-reverse);
-         }
-      }
+.controls-ComboBox__picker_column_reverse {
+   //Чтобы не показывать 2 границы (от комбобокса и от пикера) в настройках пикера стоит offset: -1. Для открытия вниз это работает,
+   //а для открытия вверх нужен offset: 1. Переключать offset из комбобокса нереально, т.к. он узнает о том, что пикер открывается вверх
+   //уже после расчёта всех отступов. Так что смещаем пикер вниз, если он открывается вверх.
+   margin-top: calc(~"1px +"@default-border-width) !important;
+}
+
+.controls-ComboBox__scrollContainer {
+   max-height: @max-height_ComboBox-picker; //Для работы ScrollContainer высота должна висеть именно на нем, так что задавать высоту на пикере не получится
+}
+
+.controls-ComboBox__list {
+   .flexbox();
+}
+
+.controls-ComboBox__list_column {
+   .flex-direction(column);
+}
+
+.controls-ComboBox__list_column_reverse {
+   .flex-direction(column-reverse);
+}
+
+.controls-ComboBox__item {
+   padding: @padding_ComboBox-item;
+   cursor: pointer;
+   &:hover {
+      background: @background_ComboBox-item_hover;
    }
 }
-//TODO: только после окончательного отказа удалить (падает браузер)
-.ws-is-ie10 {
-   .controls-ComboBox__picker .controls-ComboBox__body{
-      height: 100%; //ie10 падает, если высота рассчитывается через calc. Теперь для ie10 выпадающий список прибит к краю экрана без отступа, если контейнер имеет достаточную высоту.
-   }
+
+.controls-ComboBox__item_empty {
+   color: @color_ComboBox-item_empty;
+}
+
+.controls-ComboBox__item_singleLine {
+   .text-overflow();
+}
+
+.controls-ComboBox__item_multiLine {
+   white-space: normal;
+   word-wrap: break-word;
 }

@@ -1,0 +1,19 @@
+<div class="ws-suggestView" style="width: {{_options.width + 'px'}};">
+
+    <div class="ws-suggestView__body">
+        <ws:partial template="{{_options.template}}"
+                    items="{{_options.items}}"
+                    selectedKey="{{_selectedKey}}"
+                    on:itemClick="_onItemClickHandler()"/>
+    </div>
+
+    <div class="ws-suggestView__footer" if="{{_options.hasMore}}">
+        <ws:if data="{{_options.footerTemplate}}">
+            <ws:partial template="{{_options.footerTemplate}}"></ws:partial>
+        </ws:if>
+        <ws:else>
+            <span class="ws-suggestView__showAllLink" on:click="_showAllClick()">Показать всё</span>
+        </ws:else>
+    </div>
+
+</div>

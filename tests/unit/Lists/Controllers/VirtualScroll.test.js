@@ -1,6 +1,6 @@
 define([
-   'js!Controls/List/Controllers/VirtualScroll',
-   'js!Controls/List/ListControl/ListViewModel',
+   'Controls/List/Controllers/VirtualScroll',
+   'Controls/List/ListControl/ListViewModel',
    'WS.Data/Collection/RecordSet'
 ], function(VirtualScroll, ListViewModel, RecordSet) {
 
@@ -45,10 +45,10 @@ define([
          assert.equal(pageInfo.page, 0);
 
          pageInfo = VirtualScroll._private.getPage(200, 25);
-         assert.equal(pageInfo.page, 1);
+         assert.equal(pageInfo.page, 2);
 
          pageInfo = VirtualScroll._private.getPage(2000, 25);
-         assert.equal(pageInfo.page, 6);
+         assert.equal(pageInfo.page, 16);
       });
 
       //Корректность метода вычисления видимого диапазона
@@ -104,6 +104,42 @@ define([
          assert.equal(res.indexStart, 468);
          assert.equal(res.indexStop, 500);
 
+      });
+
+      it('Check set average ItemHeight', function() {
+         virtualScroll.setItemsCount(500);
+         virtualScroll.setScrollTop(0);
+
+         var res = virtualScroll.getVirtualWindow();
+
+         assert.equal(res.topPlaceholderHeight, 0);
+         assert.equal(res.bottomPlaceholderHeight, 11250);
+         assert.equal(res.indexStart, 0);
+         assert.equal(res.indexStop, 50);
+
+         virtualScroll.setAverageItemHeight(20);
+         var res = virtualScroll.getVirtualWindow();
+
+         assert.equal(res.topPlaceholderHeight, 0);
+         assert.equal(res.bottomPlaceholderHeight, 9000);
+
+         //Вернем все как было
+         virtualScroll.setAverageItemHeight(25);
+      });
+
+      it('Calc average item height', function() {
+         virtualScroll.setItemsCount(500);
+         virtualScroll.setScrollTop(0);
+
+
+         var res = virtualScroll.calcAverageItemHeight({clientHeight: 1500});
+
+         assert.equal(res.virtualWindow.topPlaceholderHeight, 0);
+         assert.equal(res.virtualWindow.bottomPlaceholderHeight, 13500);
+         assert.equal(virtualScroll._averageItemHeight, 30);
+
+         //Вернем все как было
+         virtualScroll.setAverageItemHeight(25);
       });
 
       //Проверка рассчета индексов/распорок после изменяения общего числа записей проекции

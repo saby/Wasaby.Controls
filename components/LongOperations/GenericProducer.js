@@ -5,7 +5,7 @@
  * @extends SBIS3.CONTROLS/LongOperations/AbstractProducer
  * @implements SBIS3.CONTROLS/LongOperations/IProducer
  *
- * @author Спирин Виктор Алексеевич
+ * @author Спирин В.А.
  *
  * @public
  */

@@ -1,7 +1,7 @@
-define('js!Controls/Popup/Opener/Dialog',
+define('Controls/Popup/Opener/Dialog',
    [
-      'js!Controls/Popup/Opener/Base',
-      'js!Controls/Popup/Opener/Dialog/Strategy'
+      'Controls/Popup/Opener/Base',
+      'Controls/Popup/Opener/Dialog/Strategy'
 
    ],
    function (Base, Strategy) {
@@ -11,11 +11,16 @@ define('js!Controls/Popup/Opener/Dialog',
        * @control
        * @public
        * @category Popup
-       * @extends Controls/Control
+       * @extends Controls/Popup/Opener/Base
        */
       var Dialog = Base.extend({
-         getStrategy: function(){
-            return Strategy;
+         /**
+          * Открыть диалоговое окно
+          * @function Controls/Popup/Opener/Dialog#open
+          * @param config конфигурация попапа
+          */
+         open: function(config){
+            return Base.prototype.open.call(this, config, Strategy);
          }
       });
 

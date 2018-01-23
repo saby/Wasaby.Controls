@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/ListView/resources/DragMove/DragMove', [
    /**
     * Реализация перемещения dragndrop'ом у списочных контролов
     * @class SBIS3.CONTROLS/ListView/resources/DragMove/DragMove
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var DRAG_META_INSERT = {
       on: 'on',
@@ -249,8 +249,8 @@ define('SBIS3.CONTROLS/ListView/resources/DragMove/DragMove', [
                   dragOwner.getItems(),
                   useDefaultMove
                ).addCallback(function (result) {
-                  if (result !== false && cInstance.instanceOfMixin(DragObject, 'SBIS3.CONTROLS/Mixins/MultiSelectable')) {
-                     DragObject.removeItemsSelectionAll();//сбросим выделение у контрола с которого перемещаются элементы
+                  if (result !== false && cInstance.instanceOfMixin(dragOwner, 'SBIS3.CONTROLS/Mixins/MultiSelectable')) {
+                     dragOwner.removeItemsSelectionAll();//сбросим выделение у контрола с которого перемещаются элементы
                   }
                })
             }

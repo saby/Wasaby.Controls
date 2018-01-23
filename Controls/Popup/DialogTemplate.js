@@ -1,4 +1,4 @@
-define('js!Controls/Popup/DialogTemplate',
+define('Controls/Popup/DialogTemplate',
    [
       'Core/Control',
       'tmpl!Controls/Popup/DialogTemplate',
@@ -6,20 +6,44 @@ define('js!Controls/Popup/DialogTemplate',
    ],
    function (Control, template) {
       'use strict';
-   /**
-    * Компонент шаблона диалога
-       * @class Controls/Popup/DialogTemplate
-    * @control
-    * @public
-    * @category Popup
-    */
-      return Control.extend({
+
+      var DialogTemplate = Control.extend({
+         /**
+          * Базовый шаблон диалога
+          * @class Controls/Popup/DialogTemplate
+          * @extends Core/Control
+          * @control
+          * @public
+          * @category Popup
+          * @author Лощинин Дмитрий
+          */
+
+         /**
+          * @name Controls/Popup/DialogTemplate#caption
+          * @cfg {String} Заголовок
+          */
+
+         /**
+          * @name Controls/Popup/DialogTemplate#topArea
+          * @cfg {Content} Шаблон шапки диалога
+          */
+
+         /**
+          * @name Controls/Popup/DialogTemplate#contentArea
+          * @cfg {Content} Шаблон контента диалога
+          */
+
          _controlName: 'Controls/Popup/DialogTemplate',
          _template: template,
 
-         closePopup: function (){
-            this._notify('close');
+         /**
+          * Закрыть всплывающее окно
+          * @function Controls/Popup/DialogTemplate#close
+          */
+         close: function () {
+            this._notify('close', [], {bubbling: true});
          }
       });
+      return DialogTemplate;
    }
 );

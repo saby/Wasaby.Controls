@@ -24,7 +24,7 @@ define('SBIS3.CONTROLS/Filter/FastData',
        * @class SBIS3.CONTROLS/Filter/FastData
        * @extends Lib/Control/CompoundControl/CompoundControl
        *
-       * @author Красильников Андрей Сергеевич
+       * @author Красильников А.С.
        *
        * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
        * @mixes SBIS3.CONTROLS/Mixins/FilterMixin

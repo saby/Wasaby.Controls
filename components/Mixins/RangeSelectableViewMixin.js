@@ -1,10 +1,19 @@
-define('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', ['Core/core-instance'], function(cInstance) {
+define('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', [
+   'Core/core-instance',
+   'Core/helpers/Function/runDelayed'
+], function(cInstance, runDelayed) {
    /**
     * Миксин, добавляющий поведение выделения интервала из нескольких фиксированных элементов
     * @mixin SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin
     * @public
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     */
+
+   var selectionTypes = {
+      range: 'range',
+      single: 'single',
+      disable: 'disable'
+   };
 
    var RangeSelectableViewMixin = /**@lends SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin.prototype  */{
       $protected: {
@@ -15,8 +24,17 @@ define('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', ['Core/core-instance'],
              * @cfg {Boolean} Определяет режим выбора диапазона
              * * true Включена возможность выделения диапазона,
              * * false Можно выделить только 1 элемент.
+             * @deprecated Используйте опцию {@link selectionType}.
              */
-            rangeselect: true,
+            rangeselect: null,
+
+            /**
+             * @cfg {String} Определяет режим выделения диапазано
+             * @variant 'range' режим выделения произвольного диапазона
+             * @variant 'single' режим выделения одного элемента
+             * @variant 'disable' режим выбора отключен
+             */
+            selectionType: 'range',
 
             /**
              * @cfg {Boolean} Определяет режим обновления выделяемого диапазона
@@ -43,6 +61,14 @@ define('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', ['Core/core-instance'],
          _rangeSelectionViewValidateTimer: null
       },
 
+      after : {
+         _modifyOptions: function (opts) {
+            if (typeof opts.rangeselect === 'boolean') {
+               opts.selectionType = opts.rangeselect ? 'range' : 'single';
+            }
+         }
+      },
+
       $constructor: function() {
          if(!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin')) {
             throw new Error('RangeSelectableViewMixin mixin is required');
@@ -62,9 +88,18 @@ define('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', ['Core/core-instance'],
       /**
        * Если true, то включен режим выделения диапазона, иначе можно выделить только 1 элемент.
        * @returns {boolean}
+       * @deprecated Используйте опцию {@link selectionType}.
        */
       isRangeselect: function () {
          return this._options.rangeselect;
+      },
+
+      /**
+       * Возвращает тип выделения
+       * @returns {String}
+       */
+      getSelectionType: function () {
+         return this._options.selectionType;
       },
 
       /**
@@ -80,8 +115,9 @@ define('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', ['Core/core-instance'],
             if (this._options.liveSelection) {
                this.setEndValue(item);
             }
-            this._setSelectionRangeEndItem(item);
-            this.validateRangeSelectionItemsView();
+            if (this._setSelectionRangeEndItem(item)) {
+               this.validateRangeSelectionItemsView();
+            }
          }
       },
 
@@ -94,16 +130,17 @@ define('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', ['Core/core-instance'],
        * @private
        */
       _onRangeItemElementClick: function (item, endItem) {
-         if (this.isRangeselect()) {
+         if (this.getSelectionType() === selectionTypes.range) {
             if (this.isSelectionProcessing()) {
                this._stopRangeSelection(item, endItem);
             } else {
                this._startRangeSelection(item, endItem);
             }
-         } else {
+         } else if (this.getSelectionType() === selectionTypes.single) {
             if (this.setRange(item, endItem)) {
                this.validateRangeSelectionItemsView();
             }
+            this._notify('onSelectionEnded');
          }
       },
 
@@ -130,7 +167,7 @@ define('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', ['Core/core-instance'],
        * @private
        */
       _setSelectionRangeEndItem: function (item) {
-         if (item === this._rangeSelectionEnd) {
+         if (item === this._rangeSelectionEnd || (item instanceof Date && this._rangeSelectionEnd instanceof Date && item.equals(this._rangeSelectionEnd))) {
             return false;
          }
          this._rangeSelectionEnd = item;
@@ -364,7 +401,8 @@ define('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', ['Core/core-instance'],
       validateRangeSelectionItemsView: function () {
          var self = this;
          if (!this._rangeSelectionViewValidateTimer) {
-            this._rangeSelectionViewValidateTimer = setTimeout(this._validateRangeSelectionItemsView.bind(this), 0);
+            this._rangeSelectionViewValidateTimer = true;
+            runDelayed(this._validateRangeSelectionItemsView.bind(this));
          }
       },
 
@@ -373,7 +411,7 @@ define('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', ['Core/core-instance'],
        * @private
        */
       _validateRangeSelectionItemsView: function () {
-         this._rangeSelectionViewValidateTimer = null;
+         this._rangeSelectionViewValidateTimer = false;
          this._drawCurrentRangeSelection();
       },
 
@@ -389,8 +427,9 @@ define('SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin', ['Core/core-instance'],
          }
          return false;
       }
-
    };
+
+   RangeSelectableViewMixin.selectionTypes = selectionTypes;
 
    return RangeSelectableViewMixin;
 

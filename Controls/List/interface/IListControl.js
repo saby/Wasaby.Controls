@@ -1,4 +1,4 @@
-define('js!Controls/List/interface/IListControl', [
+define('Controls/List/interface/IListControl', [
 ], function() {
 
    /**
@@ -41,8 +41,13 @@ define('js!Controls/List/interface/IListControl', [
     */
 
    /**
+    * @typedef {Object} VirtualScrollConfig
+    * @property {Number} maxVisibleItems Максимальное количество отображаемых элементов списка
+    */
+
+   /**
     * @name Controls/List/interface/IListControl#virtualScrollConfig
-    * @cfg {Object} Конфигурация виртуального скролла
+    * @cfg {VirtualScrollConfig} Конфигурация виртуального скролла
     */
 
    /**
@@ -88,17 +93,17 @@ define('js!Controls/List/interface/IListControl', [
 
    /**
     * @function Controls/List/interface/IListControl#scrollToTop
-    * Скролит табличное представление в самый вверх
+    * Прокручивает табличное представление в самый вверх
     */
 
    /**
     * @function Controls/List/interface/IListControl#scrollToBottom
-    * Скролит табличное представление в самый низ
+    * Прокручивает табличное представление в самый низ
     */
 
    /**
     * @function Controls/List/interface/IListControl#scrollToItem
-    * Скролит табличное представление к указанному элементу
+    * Прокручивает табличное представление к указанному элементу
     */
 
    /**

@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Unload', [
     * Контрол для экспорта в Excel, PDF  подготовленных данных
     * @class SBIS3.CONTROLS/OperationsPanel/Unload
     * @extends SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase
-    * @author Сухоручкин Андрей Сергеевич
+    * @author Сухоручкин А.С.
     * @control
     * @public
     */
@@ -161,6 +161,10 @@ define('SBIS3.CONTROLS/OperationsPanel/Unload', [
             return;
          }
          this._gatherExporterConfig().addCallback(function (exporterConfig) {
+            if (!exporterConfig) {
+               // Если конфиг не получен - прекратить обработку
+               return;
+            }
             exporter = new Exporter(exporterConfig);
             fullFilter = exporter.getFullFilter(pageSize, true);
             fullFilter['FileName'] = this._getUnloadFileName();
@@ -217,8 +221,13 @@ define('SBIS3.CONTROLS/OperationsPanel/Unload', [
       _gatherExporterConfig: function (cfg) {
          var promise = new Deferred();
          var done = function (columns) {
+            if (!columns) {
+               // Если колонки не получены - вернуть null
+               promise.callback(null);
+               return;
+            }
             var view = this._getView(),
-               cfg = {
+               options = {
                   dataSet: cfg ? cfg.dataSet : view.getDataSet(),
                   columns: columns,
                   dataSource: view.getDataSource(),
@@ -226,17 +235,17 @@ define('SBIS3.CONTROLS/OperationsPanel/Unload', [
                   offset: view._offset
                };
             if (cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS/Mixins/TreeMixin')) {
-               cfg.hierField = view.getParentProperty();
-               cfg.openedPath = view.getOpenedPath();
-               cfg.root = view.getCurrentRoot();
+               options.hierField = view.getParentProperty();
+               options.openedPath = view.getOpenedPath();
+               options.root = view.getCurrentRoot();
             }
-            promise.callback(cfg);
+            promise.callback(options);
          }.bind(this);
          if (cfg && cfg.columns) {
             done(cfg.columns)
          }
          else {
-            this._gatherColumnsInfo().addCallback(done);
+            this._gatherColumnsInfo(null, false).addCallback(done);
          }
          return promise;
       },
@@ -269,6 +278,10 @@ define('SBIS3.CONTROLS/OperationsPanel/Unload', [
          }
          else {
             this._gatherExporterConfig(cfg).addCallback(function (exporterConfig) {
+               if (!exporterConfig) {
+                  // Если конфиг не получен - прекратить обработку
+                  return;
+               }
                exporter = new Exporter(exporterConfig);
                methodName = this._getSaveMethodName(false);
                if (methodName) {

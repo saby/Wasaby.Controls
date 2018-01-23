@@ -176,7 +176,7 @@ define('SBIS3.CONTROLS/Action/SelectorAction',
                 OpenDialogUtil.errorProcess(err);
              }
 
-             Indicator.setMessage('Загрузка...', true);
+             Indicator.setMessage(rk('Загрузка...'), true);
              require([config.template], function(component) {
                 compOptions = OpenDialogUtil.getOptionsFromProto(component, config);
 

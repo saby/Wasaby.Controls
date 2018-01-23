@@ -12,7 +12,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Sum', [
      * @extends SBIS3.CONTROLS/Link
      * @control
      * @public
-     * @author Сухоручкин Андрей Сергеевич
+     * @author Сухоручкин А.С.
      * @initial
      * <component data-component='SBIS3.CONTROLS/OperationsPanel/Sum'>
      *

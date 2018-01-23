@@ -26,7 +26,7 @@ define('SBIS3.CONTROLS/SearchForm', [
     * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
     *
     * @demo SBIS3.CONTROLS.Demo.MySearchForm
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @public
     * @control

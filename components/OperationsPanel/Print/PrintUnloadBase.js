@@ -23,7 +23,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
     * Базовый контрол для работы с ListView. Подготовливает данные для печати и выгрузки
     * @class SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase
     * @extends SBIS3.CONTROLS/Menu/MenuLink
-    * @author Сухоручкин Андрей Сергеевич
+    * @author Сухоручкин А.С.
     * @control
     * @public
     */
@@ -91,10 +91,13 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
 
       _prepareOperation: function(title){
          var
+             selectedItems,
              selectedRecordSet,
              view = this._getView(),
-             items = view.getItems(),
-             selectedItems = view.getSelectedItems();
+             items = view.getItems();
+         //Обновим набор выделенных записей перед выгрузкой, т.к. после того как записи попали в selectedItems они могли измениться.
+         view._setSelectedItems();
+         selectedItems = view.getSelectedItems();
          if (!selectedItems || selectedItems.getCount() === 0) {
             this._processMassOperations(title);
          } else {
@@ -147,11 +150,14 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
       _applyOperation : function(dataSet){
          var self = this;
          this._prepareData(dataSet).addCallback(function (data) {
-            self._gatherColumnsInfo(data).addCallback(function (columns) {
-               self.applyOperation({
-                  dataSet: data,
-                  columns: columns
-               });
+            self._gatherColumnsInfo(data, false).addCallback(function (columns) {
+               // Если колонки получены
+               if (columns) {
+                  self.applyOperation({
+                     dataSet: data,
+                     columns: columns
+                  });
+               }
             });
          });
       },
@@ -181,36 +187,40 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
       },
 
       /*
-       * Собрать данные о колонках (асинхронно). Возвращает обещание, разрешаемое списком объектов со свойствами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView)
+       * Собрать данные о колонках (асинхронно).
+       * Возвращает обещание, разрешаемое списком объектов с параметрами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView). Если опция
+       * useColumnsEditor включена, то будет использован редактор колонок для настройки колонок пользователем. Если ползователь, настроив колонки,
+       * нажмет кнопку "Применить", то обещание будет разрешено отредактированным списком колонок. Если же ползователь закроет редактор кнопкой
+       * "Закрыть", то обещание будет разрешено значением null. Если требуется и в этом случае получить список колонок - используйте аргумент forced
        * @protected
        * @param {object} data Дополнительные данные для вычисления колонок
+       * @param {boolean} forced Вернуть колонки, даже если пользователь закрыл редактор колонок крестом (при включённой опции useColumnsEditor)
        * @return {Core/Deferred<object[]|WS.Data/Collection/RecordSet>}
        */
-      _gatherColumnsInfo: function (data) {
+      _gatherColumnsInfo: function (data, forced) {
          var _fromView = function () {
             var startColumns = this._getView().getColumns();
             var resultColumns = this._notifyOnApply(startColumns, data);
             return Array.isArray(resultColumns) && resultColumns.length ? resultColumns : startColumns;
          }.bind(this);
          if (this._options.useColumnsEditor) {
-            var promise = this.sendCommand('showColumnsEditor'/*, {editorOptions:{...}}*/);
-            if (promise && (!promise.isReady() || promise.isSuccessful())) {
-               return promise.addCallback(function (columnsConfig) {
+            // Вызвать команду для показа редактора колонок. Опцию columnsConfig не указываем, будем исполшьзовать то, что уже есть у браузера.
+            var value = this.sendCommand('showColumnsEditor'/*, {editorOptions:{...}}*/);
+            // Если ролученное значение действительно является результатом работы обработчика команды (в браузере), то оно будет экземпляром Deferred,
+            // а не просто true или false
+            if (value instanceof Deferred && (!value.isReady() || value.isSuccessful())) {
+               return value.addCallback(function (columnsConfig) {
                   // Если есть результат редактирования (то есть пользователь отредактировал колонки и нажал кнопку применить, а не закрыл редактор крестом)
                   if (columnsConfig) {
                      // Возвратить список объектов со свойствами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView)
-                     var columns = [];
+                     var recordSet = columnsConfig.columns;
                      var selected = columnsConfig.selectedColumns;
-                     var notSelected = !(selected && selected.length);
-                     columnsConfig.columns.each(function (column) {
-                        if (notSelected || selected.indexOf(column.getId()) !== -1) {
-                           columns.push(column.get('columnConfig'));
-                        }
-                     });
-                     return columns;
+                     return selected && selected.length
+                           ? selected.map(function (columnId) { return recordSet.getRecordById(columnId).get('columnConfig'); })
+                           : Chain(recordSet).map(function (model) { return model.get('columnConfig'); }).value();
                   }
                   else {
-                     return _fromView();
+                     return forced ? _fromView() : null;
                   }
                }.bind(this));
             }

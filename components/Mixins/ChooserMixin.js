@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/Mixins/ChooserMixin', [
     * Миксин, добавляющий интерфейс для открытия окна выбора.
     * @mixin SBIS3.CONTROLS/Mixins/ChooserMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    function recordConverter(rec) {

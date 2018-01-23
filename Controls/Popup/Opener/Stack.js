@@ -1,8 +1,7 @@
-define('js!Controls/Popup/Opener/Stack',
+define('Controls/Popup/Opener/Stack',
    [
-      'js!Controls/Popup/Opener/Base',
-      'js!Controls/Popup/Opener/Stack/Strategy'
-
+      'Controls/Popup/Opener/Base',
+      'Controls/Popup/Opener/Stack/Strategy'
    ],
    function (Base, Strategy) {
       /**
@@ -11,11 +10,16 @@ define('js!Controls/Popup/Opener/Stack',
        * @control
        * @public
        * @category Popup
-       * @extends Controls/Control
+       * @extends Controls/Popup/Opener/Base
        */
       var Stack = Base.extend({
-         getStrategy: function(){
-            return Strategy;
+         /**
+          * Открыть стек-панель
+          * @function Controls/Popup/Opener/Stack#open
+          * @param config конфигурация попапа
+          */
+         open: function (config) {
+            return Base.prototype.open.call(this, config, Strategy);
          }
       });
 

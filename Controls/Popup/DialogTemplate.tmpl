@@ -6,7 +6,7 @@
         <ws:if data="{{_options.topArea}}">
             <ws:partial template="{{_options.topArea}}"></ws:partial>
         </ws:if>
-        <span class="ws-DialogTemplate__close_button" on:click="closePopup()"></span>
+        <span class="ws-DialogTemplate__close_button ws-DialogTemplate__close_button_right" on:click="close()"></span>
     </div>
     <div class="ws-DialogTemplate__content-area">
         <ws:partial template="{{_options.contentArea}}"></ws:partial>

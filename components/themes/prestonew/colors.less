@@ -12,8 +12,8 @@
 @error-bg-color:                         #472e35;
 //icons
 @icon-color-primary:                     #26B8FF;
-//text-box
-@background-color_TextBox:               transparent;
+//InputRender
+@background-color_InputRender:           transparent;
 //MoneyTextBox
 @color_MoneyTextBox-decimals:            @default-text-color;
 //search-form
@@ -22,10 +22,16 @@
 @search-form-icon-color:                 @default-text-color;
 @search-form-icon-reset-color:           @default-text-color;
 @search-form-icon-search-hover-color:    #BBE9FF;
-//combo-box
-@combo-box-arrowDown-color:              @default-text-color;
-@combo-box-arrowDown-color-focus:        #26B8FF;
-@combo-box-arrowDown-color-hover:        #B9E9FF;
+//ComboBox
+@border-color_ComboBox_withPicker:	                   #23b8ff;
+@color_ComboBox-Arrow:                                 #E4E4E4;
+@color_ComboBox-Arrow_hover:                           #B9E9FF;
+@background-color_ComboBox_withPicker:                 #f0f5fb;
+@color_ComboBox_withPicker:                            #324352;
+@background_ComboBox-picker:                           #f0f5fb;
+@background_ComboBox-item_hover:                       #e0ecf5;
+@color_ComboBox-picker:                                #273B4D;
+@border-color_ComboBox-picker:                         @default-border-color-second;
 //menu
 @background-color_Menu:                    #f0f5fb;
 //date-range
@@ -33,8 +39,7 @@
 @date-range-choose-year-wrapper-bg-color:         @date-range-choose-item-bg-color;//todo: mironov
 @date-range-choose-caption-background-color:      @date-range-choose-item-bg-color;//todo: mironov
 //grid
-@data-grid-multiselect-notScrolledCell-Color:     @data-grid-row-selected-bg;//todo: gerasimov
-@data-grid-multiselect-notScrolledCell-Color:     @data-grid-partScroll-notScrolledCell-Color;
+@background-color_DataGridView-notScrolledCell:   @data-grid-row-selected-bg;//todo: gerasimov
 //filter-line
 @controls-filterLine-link-hover-color:            @controls-filterLine-link-color;//todo: gerasimov
 //dd-list
@@ -44,6 +49,7 @@
 //suggest-text-box
 @suggest-text-box-bg-show-picker-color:           #F0F5FB;
 @suggest-text-box-bg-show-picker-font-color:      #273B4D;
+@border-color_SuggestTextBox_withPicker:          @accent-color;
 //--------------------------------------------------------------------------------------------------------------------//
 //button
 @color_Button_primary:                            @color_Button;
@@ -98,7 +104,6 @@
 @secondary-color:                         #4e5762;
 @back-button-caption-hover-color :         rgb(185, 233, 255);
 @back-button-caption-active-color:        @back-button-caption-hover-color;
-@date-range-big-bg:		                  #2c3e50;
 @blue-dark-color:                         #8991A9;
 @darkcyan-color: 						  #B9E9FF;
 @default-itemHover-color:                 #1b2530;//Переменную нужно удалить, она дублирует @default-bg-color-hovered-item
@@ -170,16 +175,7 @@
 @menu-button-menu-border-color:           #26B8FF;
 @menu-link-header-bg-color:               @background-color_Menu-header;
 //Text box
-@combo-box-picker-show-background-color:  #f0f5fb;
-@combo-box-picker-show-border-color:	  #23b8ff;
-@compo-box-picker-show-color:             #324352;
 @text-box-focus-bg:                       #324352;
-//  Combo box
-@combo-box-field-text-color:              @default-text-color;
-@combo-box-picker-item-bg:                #f0f5fb;
-@combo-box-picker-item-text-color:        #273B4D;
-@combo-box-picker-item-hover-text-color:  #273B4D;
-@combo-box-picker-item-hover-bg:          #e0ecf5;
 // Suggest
 @suggest-picker-color:                    #273B4D;
 @suggest-list-hover-color:                #E0ECF5;
@@ -194,10 +190,15 @@
 @calendar-day-cell-active-hover-text-color:@calendar-day-cell-hover-text-color;
 @calendar-day-cell-active-hover-bg:       @calendar-day-cell-hover-bg;
 //fieldlink
-@fieldLink-border-color-focus-hover:      @border-color_TextBox_active;
-@fieldLink-link-color-enabled:            #26B8FF;
-@fieldLink-showSelector-color:            @default-text-color;
-@fieldLink-picker-show-field-color:       @default-text-color;
+@border-color_FieldLink_picker:           #ccc;
+@color_FieldLink-showSelectorButton:      @default-text-color;
+@fieldLink-picker-show-color:		      #F0F5FB; //используется только в prestonew и carrynew
+@fieldLink-picker-show-field-color:       rgb(58, 73, 81); //используется только в prestonew и carrynew
+
+//FieldLink_Link
+@color_FieldLink-Link_enabled:            #26B8FF;
+@color_FieldLink-Link_enabled_hover:      @default-hover-color;
+
 //MonthView
 @background_MonthView:                    #2c3e50;
 @color_MonthView-item:                    #fff;
@@ -205,7 +206,7 @@
 @color_MonthView-item-hover:              @color_MonthView-item;
 @background_MonthView-item-hover:         #e5ecf4;
 @background_MonthView-item-selected:      #ffc37e;
-@background_MonthView-item-selected-hover:@background_MonthView-item-selected;
+//@background_MonthView-item-selected-hover:@background_MonthView-item-selected;
 //MonthPicker
 @month-picker-left-arrow-bg:              transparent;
 @month-picker-left-arrow-border-color:    transparent @primary-color transparent transparent;
@@ -234,17 +235,10 @@
 @date-range-choose-current-value-color:   #fff;
 @date-range-choose-current-value-bg-color:#26b8ff;
 //Date Range Big
-@date-range-big-choose-bg-hovered-color:                                 #293A4B;
-@date-range-big-choose-bg-selected-color:                                #3f566d;
-@date-range-big-choose-months-color:                                     #26B8FF;
-@date-range-big-choose-date-range-picker-border-color:                   rgba(102, 170, 221, 0.7);
-@date-range-big-choose-date-range-picker-bg-boundary-selected-color:     #26B8FF;
-@date-range-big-choose-date-range-picker-bg-selected-color:              @date-range-big-choose-bg-hovered-color;
-@date-range-big-choose-date-range-picker-bg-hovered-color:               @date-range-big-choose-bg-hovered-color;
-@date-range-big-choose-header-date-box-border-color:                     @border-color_TextBox;
-@date-range-big-choose-header-date-box-border-selected-color:            @border-color_TextBox_active;
-@date-range-big-choose-month-range-picker-bg-selected:                   @date-range-big-choose-bg-selected-color;
-@date-range-big-choose-month-hovered-color:                              #B9E9FF;
+@background-color_DateRangeBigChoose:                                    #2c3e50;
+@border-color_DateRangeBigChoose:	                                     #3f566d;
+@background-color__DateRangeBigChoose-header:                            #2c3e50;
+@color_DateRangeBigChoose-DateRangePickerItem-months-button:             #26B8FF;
 //Edit at place
 @edit-at-place-editor-overlay-bg:         darken(@secondary-color, 5%) !important;
 //List view
@@ -264,7 +258,7 @@
 @data-grid-row-selected-bg:               @data-grid-row-bg;
 @data-grid-edge-cell-separator-color:     rgba(0, 0, 0, 0.1);
 @data-grid-cell-separator-color:          rgba(0, 0, 0, 0.1);
-@data-grid-partScroll-notScrolledCell-Color:@basic-block-bg-color;
+@background-color_DataGridView-notScrolledCell:@basic-block-bg-color;
 @data-grid-results-color:                 #FFCC99;
 //MergeDialog
 @controls-MergeDialogTemplate-hint-font-color:                              @default-text-color;
@@ -290,12 +284,12 @@
 //FilterButton
 @controls-filterButton-picker-bg:         #2C3E50;
 @controls-filterButton-area-text-color:   @default-text-color;
-//FilterLine
-@controls-filterLine-link-color:          #26B8FF;
-//FieldLink
-@fieldLink-border-color-picker-show: @accent-color;
 @fieldLink-FilterButton-color:                           #26B8FF;
 @fieldLink-FilterButton-color-hover:                     @default-hover-color;
+//FilterLine
+@controls-filterLine-link-color:          #26B8FF;
+
+//InformationPopup
 @controls-InformationPopup-bg:                           #2C3E50;
 @controls-InformationPopup-default-status-border-color:  @default-border-color-second;
 @controls-InformationPopup-closeButton-color:            #8991A9;
@@ -320,13 +314,10 @@
 @tab-button-inner-after-bg-color:         rgba(102,170,221, .2);
 @tab-button-checked-inner-bg:             transparent;
 @scrollpager-bg:                          transparent;
-@date-range-big-header-bg:                #2c3e50;
-@date-range-big-choose-border-color:	   #3f566d;
+
 //sundry
 @dropdownlist-item-text-color:            #202835;
 @controls-editInPlace-editor-bg:			   #354B62 !important;
-@fieldLink-picker-show-color:		#F0F5FB;
-@fieldLink-picker-show-field-color:   rgb(58, 73, 81);
 @scroll-pager-bg:							      transparent;
 @DropdownList-picker-menu-item-color:     #F0F5FB;
 @DropdownList-picker-menu-item-hover:     #E0ECF5;
@@ -351,7 +342,6 @@
 @data-grid-row-hover-add-bg:              rgba(41, 58, 75, 0);
 @data-grid-row-selected-add-bg:           @data-grid-row-hover-add-bg;
 @back-button-text-color:                  #FFCC99;
-@fieldLink-link-color-enabled-hover:      @default-hover-color;
 @commands-button-close-icon-color:        @icon-color-primary;
 @controls-SubmitPopup-footer-bg:          inherit;
 //back-button
@@ -369,3 +359,6 @@
 @bg_BlockSeparator:                      rgba(0, 0, 0, .1);
 @border-color_Block:                     #273749;
 @box-shadow_Block:                       0px 2px 6px rgba(0, 0, 0, .5);
+
+@color_asLink:                           @color_Link-text;
+@color_asLink_hovered:                   @color_Link-text_hovered;

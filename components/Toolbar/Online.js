@@ -11,7 +11,7 @@ define('SBIS3.CONTROLS/Toolbar/Online', ['SBIS3.CONTROLS/Toolbar/ToolbarBase'], 
     * Например, некоторые кнопки могут дублироваться в выпадающем списке.
     * @class SBIS3.CONTROLS/Toolbar/Online
     * @extends SBIS3.CONTROLS/Toolbar/ToolbarBase
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @public
     */
 

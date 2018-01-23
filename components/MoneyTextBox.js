@@ -43,14 +43,14 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
      * @extends SBIS3.CONTROLS/NumberTextBox
      * @public
      * @control
-     * @author Романов Валерий Сергеевич
+     * @author Романов В.С.
      *
      */
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS/MoneyTextBox.prototype */ {
       $protected: {
          _options: {
             textAlign: 'right',
-            _paddingClass: ' controls-TextBox_paddingBoth',
+            _paddingClass: ' controls-InputRender_paddingBoth controls-TextBox_paddingBoth',
             textFieldWrapper: textFieldWrapper,
             /**
              * @cfg {Number} Количество знаков после запятой

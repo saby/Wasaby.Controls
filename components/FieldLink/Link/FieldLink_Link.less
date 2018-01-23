@@ -1,17 +1,16 @@
 .controls-FieldLink__Link {
    display: inline-block;
-   line-height: @fieldLink-link-line-height;
-   font-size: @default-text-size;
+   font-size: @font-size_FieldLink-Link;
 }
 .controls-FieldLink__Link_enabled {
    text-decoration: underline;
    cursor: pointer;
-   color: @fieldLink-link-color-enabled;
-   &:hover {
-      text-decoration: underline;
-      color: @fieldLink-link-color-enabled-hover;
-   }
+   color: @color_FieldLink-Link_enabled;
+}
+.controls-FieldLink__Link_enabled:hover {
+   text-decoration: underline;
+   color: @color_FieldLink-Link_enabled_hover;
 }
 .controls-FieldLink__Link_disabled {
-   color: @fieldLink-link-color-disabled;
+   color: @color_FieldLink-Link_disabled;
 }

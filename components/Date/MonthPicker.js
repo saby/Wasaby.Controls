@@ -26,7 +26,7 @@ define(
     * @class SBIS3.CONTROLS/Date/MonthPicker
     * @extends Lib/Control/CompoundControl/CompoundControl
     * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @demo SBIS3.CONTROLS.Demo.MyMonthPicker
     * @deprecated Используйте {@link SBIS3.CONTROLS/Date/RangeSlider}.
     *

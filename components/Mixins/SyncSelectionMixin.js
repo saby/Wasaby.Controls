@@ -3,10 +3,11 @@
  */
 define('SBIS3.CONTROLS/Mixins/SyncSelectionMixin', [
    'WS.Data/Entity/Model',
+   'WS.Data/Collection/List',
    'Core/core-instance',
    'SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil',
    'SBIS3.CONTROLS/Utils/ItemsSelectionUtil'
-], function(Model, cInstace, ArraySimpleValuesUtil, ItemsSelectionUtil) {
+], function(Model, List, cInstace, ArraySimpleValuesUtil, ItemsSelectionUtil) {
 
    /**
     * Миксин, добавляющий синхронизацию выбранных элементов
@@ -15,7 +16,7 @@ define('SBIS3.CONTROLS/Mixins/SyncSelectionMixin', [
     * selectedKey всегда смотрит на перывй элемент из selectedKeys
     * @mixin SBIS3.CONTROLS/Mixins/SyncSelectionMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var PROPS_TO_SYNC = {
@@ -26,21 +27,24 @@ define('SBIS3.CONTROLS/Mixins/SyncSelectionMixin', [
    };
 
    var SyncSelectionMixin = /**@lends SBIS3.CONTROLS/Mixins/SyncSelectionMixin.prototype  */{
+      after: {
+         _modifyOptions: function (options) {
+            /* Если уже в конструкторе есть selectedItem, то синхронизируем с selectedItems */
+            if (options.selectedItem instanceof Model) {
+               options.selectedItems = new List();
+               options.selectedItems.assign([options.selectedItem]);
+               options.selectedKeys = options._convertToKeys(options.selectedItems, options.idProperty);
+            }
+
+            /* Если уже в конструкторе есть selectedKey, то синхронизируем с selectedKeys */
+            if (options.selectedKey) {
+               options.selectedKeys = [options.selectedKey];
+            } else if (options.selectedKeys && options.selectedKeys.length) {
+               options.selectedKey = options.selectedKeys[0];
+            }
+         }
+      },
       $constructor: function() {
-         /* Если уже в конструкторе есть selectedItem, то синхронизируем с selectedItems */
-         if(this._options.selectedItem instanceof Model) {
-            this.initializeSelectedItems();
-            this._options.selectedItems.assign([this._options.selectedItem]);
-            this._options.selectedKeys = this._convertToKeys(this._options.selectedItems);
-         }
-
-         /* Если уже в конструкторе есть selectedKey, то синхронизируем с selectedKeys */
-         if(this._options.selectedKey) {
-            this._options.selectedKeys = [this._options.selectedKey];
-         } else if (this._options.selectedKeys.length) {
-            this._options.selectedKey = this._options.selectedKeys[0];
-         }
-
          /* Почему событие onPropertyChanged: если изменить св-во контрола в событии onPropertyChanged,
             то корректно произойдёт синхронизация с контекстом  */
          this.subscribe('onPropertyChanged', function(e, propName) {

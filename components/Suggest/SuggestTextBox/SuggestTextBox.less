@@ -8,10 +8,10 @@
   }
   
   &.controls-Picker__show {
-    border-color: @fieldLink-border-color-picker-show;
+    border-color: @border-color_SuggestTextBox_withPicker;
     background: @suggest-text-box-bg-show-picker-color;
   
-    .controls-TextBox__field {
+    .controls-InputRender__field {
       color: @suggest-text-box-bg-show-picker-font-color;
     }
   }
@@ -20,7 +20,7 @@
     .controls-SuggestTextBox__afterFieldWrapper {
       display: none;
     }
-    .controls-SuggestTextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
+    .controls-SuggestTextBox__afterFieldWrapper + .controls-InputRender__fieldWrapper {
       margin: 0;
     }
   }

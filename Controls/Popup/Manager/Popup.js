@@ -1,4 +1,4 @@
-define('js!Controls/Popup/Manager/Popup',
+define('Controls/Popup/Manager/Popup',
    [
       'Core/Control',
       'tmpl!Controls/Popup/Manager/Popup',
@@ -8,71 +8,73 @@ define('js!Controls/Popup/Manager/Popup',
    function (Control, template, CoreConstants) {
       'use strict';
 
-      var _private = {
-         /**
-          * Обработчик фокусировки элемента.
-          */
-         focusIn: function () {
-            this._notify('focusInPopup', this._options.id);
-         },
-
-         /**
-          * Обработчик потери фокуса.
-          * @param event
-          * @param focusedControl
-          */
-         focusOut: function (event, focusedControl) {
-            this._notify('focusOutPopup', this._options.id, focusedControl);
-         },
-
-         /**
-          * Пересчитать позицию попапа
-          */
-         recalcPosition: function () {
-            this._notify('recalcPosition', this);
-         }
-      };
-
-      /**
-       * Компонент вспывающего окна
-       * @class Controls/Popup/Manager/Popup
-       * @control
-       * @extends Controls/Control
-       * @public
-       * @category Popup
-       */
       var Popup = Control.extend({
+         /**
+          * Компонент "Всплывающее окно"
+          * @class Controls/Popup/Manager/Popup
+          * @extends Core/Control
+          * @control
+          * @private
+          * @category Popup
+          * @author Лощинин Дмитрий
+          */
+
+         /**
+          * @name Controls/Popup/Manager/Popup#template
+          * @cfg {Content} Шаблон всплывающего окна
+          */
+
+         /**
+          * @name Controls/Popup/Manager/Popup#componentOptions
+          * @cfg {Object} Опции компонента
+          */
+
          _controlName: 'Controls/Popup/Manager/Popup',
          _template: template,
 
          constructor: function (cfg) {
-            Popup.superclass.constructor.apply(this, arguments);
-         },
-
-         _beforeMount: function (options) {
-            this._controller = options.controller;
-            this._opener = options.opener;
+            Popup.superclass.constructor.call(this, cfg);
          },
 
          _afterMount: function () {
-            this.subscribe('onFocusIn', _private.focusIn);
-            this.subscribe('onFocusOut', _private.focusOut);
-            _private.recalcPosition.call(this);
+            var container = this._container;
+            this._notify('popupCreated', [this._options.id, container.offsetWidth, container.offsetHeight]);
          },
 
          /**
           * Закрыть popup
+          * @function Controls/Popup/Manager/Popup#_close
           */
          _close: function () {
-            this._notify('closePopup', this._options.id);
+            this._notify('closePopup', [this._options.id]);
+         },
+
+         /**
+          * Обработчик установки фокуса.
+          * @function Controls/Popup/Manager/Popup#_focusIn
+          * @param event
+          * @param focusedControl
+          */
+         _focusIn: function (event, focusedControl) {
+            this._notify('popupFocusIn', [this._options.id, focusedControl]);
+         },
+
+         /**
+          * Обработчик потери фокуса.
+          * @function Controls/Popup/Manager/Popup#_focusOut
+          * @param event
+          * @param focusedControl
+          */
+         _focusOut: function (event, focusedControl) {
+            this._notify('popupFocusOut', [this._options.id, focusedControl]);
          },
 
          /**
           * Обработчик нажатия на клавиши.
-          * @function Controls/Popup/Manager/Popup#_keyPressed
+          * @function Controls/Popup/Manager/Popup#_keyUp
           * @param event
           */
-         _keyPressed: function (event) {
+         _keyUp: function (event) {
             if (event.nativeEvent.keyCode === CoreConstants.key.esc) {
                this._close();
             }
@@ -80,11 +82,10 @@ define('js!Controls/Popup/Manager/Popup',
 
          /**
           * Отправить результат
+          * @function Controls/Popup/Manager/Popup#_sendResult
           */
-         _sendResult: function () {
-            if (this._controller) {
-               this._controller.notifyOnResult.call(this._controller, Array.prototype.slice.call(arguments, 1));
-            }
+         _sendResult: function (event, result) {
+            this._notify('result', [this._options.id, result]);
          }
       });
 

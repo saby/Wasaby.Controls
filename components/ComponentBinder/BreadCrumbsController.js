@@ -126,18 +126,18 @@ define('SBIS3.CONTROLS/ComponentBinder/BreadCrumbsController', ["Core/constants"
             applyRoot(currentRoot, view.getHierarchy(items.getMetaData().path, currentRoot));
          }
 
-         view.subscribe('onSetRoot', function(event, id, hier){
+         this.subscribeTo(view, 'onSetRoot', function(event, id, hier){
             applyRoot(id, hier);
          });
 
-         view.subscribe('onKeyPressed', function(event, jqEvent) {
+         this.subscribeTo(view, 'onKeyPressed', function(event, jqEvent) {
             if(jqEvent.which === constants.key.backspace) {
                setPreviousRoot();
                jqEvent.preventDefault();
             }
          });
 
-         breadCrumbs.subscribe('onItemClick', function(event, id){
+         this.subscribeTo(breadCrumbs, 'onItemClick', function(event, id){
             self._currentRoot = this.getItems().getRecordById(id);
             self._currentRoot = self._currentRoot ? self._currentRoot.getRawData() : null;
             if (id === null){
@@ -147,7 +147,7 @@ define('SBIS3.CONTROLS/ComponentBinder/BreadCrumbsController', ["Core/constants"
             view.reload();
          });
 
-         backButton.subscribe('onActivated', function(){
+         this.subscribeTo(backButton, 'onActivated', function(){
             setPreviousRoot();
          });
       },

@@ -6,6 +6,7 @@ define('SBIS3.CONTROLS/Date/Range', [
    'SBIS3.CONTROLS/Mixins/FormWidgetMixin',
    'SBIS3.CONTROLS/Mixins/RangeMixin',
    'SBIS3.CONTROLS/Mixins/DateRangeMixin',
+   'SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin',
    'SBIS3.CONTROLS/Date/RangeBigChoose',
    'SBIS3.CONTROLS/Utils/ControlsValidators',
    'i18n!SBIS3.CONTROLS/Date/Range',
@@ -14,7 +15,7 @@ define('SBIS3.CONTROLS/Date/Range', [
    'css!SBIS3.CONTROLS/Date/Range/DateRange',
    'css!SBIS3.CONTROLS/FormattedTextBox/FormattedTextBox',
    'css!SBIS3.CONTROLS/Date/Box/DateBox'
-], function (CompoundControl, PickerMixin, dotTplFn, FormWidgetMixin, RangeMixin, DateRangeMixin, DateRangeBigChoose, ControlsValidators) {
+], function (CompoundControl, PickerMixin, dotTplFn, FormWidgetMixin, RangeMixin, DateRangeMixin, DateRangeBigChoosePickerMixin, DateRangeBigChoose, ControlsValidators) {
    'use strict';
    /**
     * Класс контрола выбора диапазона дат.
@@ -26,7 +27,7 @@ define('SBIS3.CONTROLS/Date/Range', [
     * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
     * @mixes SBIS3.CONTROLS/Mixins/FormWidgetMixin
     *
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     * @demo SBIS3.CONTROLS.Demo.MyDateRange
     *
     * @ignoreEvents onChange
@@ -35,7 +36,7 @@ define('SBIS3.CONTROLS/Date/Range', [
     * @public
     * @category Date/Time
     */
-   var DateRange = CompoundControl.extend([RangeMixin, DateRangeMixin, PickerMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS/Date/Range.prototype */{
+   var DateRange = CompoundControl.extend([RangeMixin, DateRangeMixin, PickerMixin, DateRangeBigChoosePickerMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS/Date/Range.prototype */{
       /**
        * @event onDateRangeChange При изменении диапазона дат как через поле ввода, так и через календарь.
        * @param {Core/EventObject} eventObject Дескриптор события.
@@ -205,20 +206,11 @@ define('SBIS3.CONTROLS/Date/Range', [
       },
 
       _setPickerConfig: function() {
-         return {
-            corner: 'tl',
-            bodyBounds: true,
-            locationStrategy: 'bodyBounds',
-            horizontalAlign: {
-               side: 'left',
-               offset: -139
-            },
-            verticalAlign: {
-               side: 'top',
-               offset: -9
-            }
-         };
+         var config = DateRange.superclass._setPickerConfig.apply(this, arguments);
+         config.className = 'controls-DateRangeBigChoose__picker';
+         return config;
       },
+
       /**
        * Прокидывает валидаторы SBIS3.CONTROLS/Utils/ControlsValidators:required со свойств начала и конца периода
        * на соответствующие поля ввода
@@ -277,53 +269,15 @@ define('SBIS3.CONTROLS/Date/Range', [
          datePicker.setDate(value);
       },
 
-      showPicker: function () {
-         if (this._dateRangeChooseControl) {
-            this._dateRangeChooseControl.applyYearState();
-            this._dateRangeChooseControl.setRange(this.getStartValue(), this.getEndValue());
-         }
-         DateRange.superclass.showPicker.call(this);
-      },
-
-      /**
-       * Определение контента пикера. Переопределённый метод
-       * @private
-       */
-      _setPickerContent: function() {
-         this._createChooseControl();
-
-         this._picker.getContainer().empty();
-         // Добавляем в пикер
-         this._picker.getContainer().append(this._dateRangeChooseControl.getContainer());
-         // Нажатие на календарный день в пикере устанавливает дату
-         this._dateRangeChooseControl.subscribe('onChoose', this._onRangeChooseChange.bind(this));
-         this._dateRangeChooseControl.subscribe('onCancel', this._onRangeChooseClose.bind(this));
-      },
-
-      _createChooseControl: function () {
-         var
-            // Создаем пустой контейнер
-            element = $('<div name= "DateRangeChoose" class="DateRange__choose"></div>');
-         // Преобразуем контейнер в контролл DateRangeBigChoose и запоминаем
-         this._dateRangeChooseControl = new this._chooseControlClass({
-            parent: this._picker,
-            element: element,
-            startValue: this._datePickerStart.getDate(),
-            endValue: this._datePickerEnd.getDate(),
-            mask: this._options.mask
-         });
+      _getDateRangeBigChooseConfig: function (element) {
+         var config = DateRange.superclass._getDateRangeBigChooseConfig.apply(this, arguments);
+         config.mask = this._options.mask;
+         config.headerType = DateRangeBigChoose.headerTypes.inputField;
+         return config
       },
 
       _onDateRangeButtonActivated: function() {
          this.togglePicker();
-      },
-
-      _onRangeChooseChange: function(event, start, end) {
-         this.setRange(start, end);
-         this.hidePicker();
-      },
-      _onRangeChooseClose: function(event) {
-         this.hidePicker();
       },
 
       /**

@@ -114,7 +114,7 @@ define('SBIS3.CONTROLS/DataGridView',
             return value;
          },
          getCellValue = function(currentValue, field, item, ladder, ladderColumns){
-            return Array.indexOf(ladderColumns, field) > -1 && !ladder.isPrimary(item, field) ? '' : currentValue;
+            return ladderColumns.indexOf(field) > -1 && !ladder.isPrimary(item, field) ? '' : currentValue;
          },
          buildTplArgsLadder = function(args, cfg) {
             args.ladder = cfg._ladderInstance;
@@ -371,7 +371,7 @@ define('SBIS3.CONTROLS/DataGridView',
     *
     * @class SBIS3.CONTROLS/DataGridView
     * @extends SBIS3.CONTROLS/ListView
-    * @author Герасимов Александр Максимович
+    * @author Герасимов А.М.
     * @mixes SBIS3.CONTROLS/Mixins/DragAndDropMixin
     *
     *
@@ -1187,7 +1187,7 @@ define('SBIS3.CONTROLS/DataGridView',
                      });
 
                      /* При инициализации надо проскрлить редактируемые колонки */
-                     self.updateScrollAndColumns();
+                     self.updateScrollAndColumns(true);
                   }
                }
             }
@@ -1305,10 +1305,10 @@ define('SBIS3.CONTROLS/DataGridView',
          this._scrollingNow = true;
       },
 
-      updateScrollAndColumns: function() {
+      updateScrollAndColumns: function(force) {
          this._updatePartScrollWidth();
          this._findMovableCells();
-         this._moveThumbAndColumns({left: this._currentScrollPosition});
+         this._moveThumbAndColumns({left: this._currentScrollPosition}, force);
       },
 
       _arrowClickHandler: function(isRightArrow) {
@@ -1395,9 +1395,11 @@ define('SBIS3.CONTROLS/DataGridView',
       _scrollColumns: function(cords) {
          this._setPartScrollShift(cords);
       
-         /* Ячейки двигаем через translateX, т.к. IE не двиагает ячейки через left,
-          если таблица лежит в контейнере с display: flex */
-         var movePosition = 'translateX(' + this._getColumnsScrollPosition() + 'px)';
+         /* 1) Ячейки двигаем через translateX, т.к. IE не двиагает ячейки через left,
+               если таблица лежит в контейнере с display: flex.
+            2) Math.round нужен для решения бага хрома, если делать translateX с дробным значеним,
+               то будет происходить замыливание текста. https://bugs.chromium.org/p/chromium/issues/detail?id=521364 */
+         var movePosition = 'translateX(' + Math.round(this._getColumnsScrollPosition()) + 'px)';
       
          for(var i= 0, len = this._movableElems.length; i < len; i++) {
             this._movableElems[i].style.transform = movePosition;

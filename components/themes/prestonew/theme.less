@@ -10,10 +10,8 @@
   height: @default-height @important;
   background-color: #405A77 @important;
   background-image: none @important;
-  -webkit-box-shadow: @box-shadow_Button !important;
-  -moz-box-shadow: @box-shadow_Button !important;
   box-shadow: @box-shadow_Button !important;
-  .border-radius(@border-radius_Button);
+  .border-radius(@border-radius_Button_default);
 
   &:before {
     content: "\e66c" @important;
@@ -57,24 +55,7 @@ body {
     width: round(84px * @multiplier) !important;
     height: round(84px * @multiplier) !important;
   }
-  // стандарт должен соотносится с онлайном будет поправлено в новой тематизации
-  // https://online.sbis.ru/opendoc.html?guid=36b0acbc-c8e4-4a57-9c80-7e0c43ed8dbd
-  .controls-ItemsToolbar.controls-ItemsToolbar__edit.controls-ItemsToolbar__withEditActions {
-    right: 0;
-  }
-  .controls-ListView__bottomStyle > .controls-ItemsToolbar {
-    &.controls-ItemsToolbar__edit {
-      right: 0;
-      &:before {
-        top: 0;
-        left: round(-76px * @multiplier);
-        width: round(84px * @multiplier);
-        height: round(84px * @multiplier);
-        background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iMjU1LjAwMDAwMHB4IiBoZWlnaHQ9IjMwMC4wMDAwMDBweCIgdmlld0JveD0iMCAwIDI1NS4wMDAwMDAgMzAwLjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwzMDAuMDAwMDAwKSBzY2FsZSgwLjEwMDAwMCwtMC4xMDAwMDApIgpmaWxsPSIjMzU0YjYyIiBzdHJva2U9Im5vbmUiPgo8cGF0aCBkPSJNMTAgMjk4OSBjMCAtMTEgMTkgLTUxIDI5IC01OSA2IC01IDQ2IC02NCAyMTUgLTMxNSA0NCAtNjYgODMgLTEyMgo4NiAtMTI1IDMgLTMgMzcgLTUyIDc1IC0xMTAgMzkgLTU4IDcyIC0xMDcgNzUgLTExMCA2IC02IDY3IC05NSAyMDQgLTMwMCA1MAotNzQgOTMgLTEzNyA5NiAtMTQwIDMgLTMgMjMgLTMyIDQ1IC02NSAyMiAtMzMgNDIgLTYyIDQ1IC02NSAzIC0zIDQzIC02MSA4OQotMTMwIDQ2IC02OSAxMjEgLTE3OSAxNjYgLTI0NSA0NCAtNjYgMTA2IC0xNTYgMTM1IC0yMDAgMzAgLTQ0IDU3IC04MiA2MCAtODUKNSAtNSA0MSAtNTggMjQ0IC0zNjAgNjEgLTkxIDExMyAtMTY3IDExNiAtMTcwIDMgLTMgMjMgLTMyIDQ1IC02NSA0NyAtNzAgMzgKLTU4IDExNiAtMTY0IDU3IC03NiAxNzkgLTE5MSAyMDMgLTE5MSA2IDAgMjUgLTcgNDEgLTE2IDU4IC0zMiAyODcgLTc0IDQwMAotNzQgbDU1IDAgMCAxNTAwIDAgMTUwMCAtMTI3MCAwIGMtODkyIDAgLTEyNzAgLTMgLTEyNzAgLTExeiIvPgo8L2c+Cjwvc3ZnPgo=') no-repeat 0 0;
-        background-size: round(84px * @multiplier) round(84px * @multiplier);
-      }
-    }
-  }
+
   .engine-Browser__path {
     max-height: round(56px * @multiplier);
     height: auto !important;
@@ -83,9 +64,9 @@ body {
       height: round(100px * @multiplier);
    }
 
-  .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
+  /*.controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
     font-size: round(32px * @multiplier);
-  }
+  }*/
 
   .controls-DateRangeBigChoose__dates-dates-top-gradient, .controls-DateRangeBigChoose__dates-dates-bottom-gradient {
     display: none;
@@ -95,30 +76,14 @@ body {
      border-color: rgba(96, 170, 221, 0.15);
      border-width: @default-border-width;
   }
-  .controls-BreadCrumbs__crumb {
-     .icon-primary {
-        color: @bread-crumb-title-color !important;
-     }
-  }
+
     .controls-Button .controls-Button__icon.icon-32 {
       top: 20%
     }
       .controls-Button .controls-Button__icon.icon-large {
       top: 50%
     }
-
-     .controls-DropdownList {
-        .controls-DropdownList__selectedItem {
-           .controls-DropdownList__afterCaptionWrapper, .controls-DropdownList__crossIcon {
-              font-size: round(84px * @multiplier) !important;
-              height: round(84px * @multiplier) !important;
-              width: round(84px * @multiplier) !important;
-              line-height: round(84px * @multiplier) !important;
-           }
-        }
-     }
-
-   .controls-DateRangeBigChoose {
+   /*.controls-DateRangeBigChoose {
       // в онлайне в большом выборе периода иконки разного размера, а тут одинаковые 3rem
       .icon-16, .icon-24, .icon-small{
          font-size: round(84px * @multiplier) !important;
@@ -126,22 +91,15 @@ body {
          width: round(84px * @multiplier);
          height: round(84px * @multiplier);
       }
-   }
-
-    .controls__filter-button__clear-filter {
-       font-size: round(32px * @multiplier);
-    }
-   .controls-ListView__item__selected .controls-DataGridView__td:first-child {
-      background-size: round(5px * @multiplier);
-   }
+   }*/
 }
 
 // SBIS3.CORE.CloseButton используется в DateRangeSlider. Удалить после того как выпилим SBIS3.CORE.CloseButton
-.controls-DateRangeBigChoose .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled.ws-button-classic {
+/*.controls-DateRangeBigChoose .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled.ws-button-classic {
    width: round(84px * @multiplier) !important;
    height: round(84px * @multiplier) !important;
    // Перед тем как править стили для кнопки закрытия прочитай комментарий по .ws-float-close.sbisname-window-title-close
-}
+}*/
 
 //Удалить, как будет темизация для engine.
 .controls-Browser {
@@ -153,17 +111,23 @@ body {
    .controls-Browser__table {
       .controls-Browser__tableCell-filterButton {
          .controls__filterButton {
-            margin-top: 10px;
+         /*   margin-top: 10px;*/
+           margin: 0px;
          }
       }
    }
+  .controls-Browser__filterButton .controls__filterButton__filterLine-text {
+     height: auto;
+  }
+}
+
+.engine-browserTabs__operationsPanelButton.icon-MarkExpandBold:before {
+   margin-top: 0;
 }
 
 .controls-ComboBox__picker {
-  .controls-ComboBox__itemRow {
-    &.controls-ComboBox__itemRow__selected {
-      font-weight: bold;
-    }
+  .controls-ComboBox__item_selected {
+    font-weight: bold;
   }
   .controls-Scrollbar {
      &.controls-Scrollbar__dragging {
@@ -231,10 +195,6 @@ body {
     color: #2C3E50;
   background: #e4e4e4;
 }
-.controls-Link.controls__filter-button__clear-filter.ws-disabled {
-  color: rgba(102, 170, 221, .2);
-  font-size: round(32px * @multiplier);
-}
 
 .controls-Suggest__picker {
   .controls-ListView__hoveredItem {
@@ -260,49 +220,27 @@ body {
    }
 }
 
-body {
+/*body {
    .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
     font-size: round(32px * @multiplier);
   }
-}
+}*/
 
 .controls-DateRangeBigChoose__dates-dates-top-gradient, .controls-DateRangeBigChoose__dates-dates-bottom-gradient {
   display: none;
 }
 
-.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header {
+/*.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header {
     height: round(84px * @multiplier);
-}
+}*/
 
-//todo: дулаить это и переделать на еормальные коэфы
-.controls__filterButton {
-   .controls__filterButton__filterLine {
-      .controls__filterButton__filterLine-text{
-         height: auto;
-      }
-   }
-   .controls-Button__icon {
-      &.icon-size {
-         font-size: @default-icon-size-large !important;
-         height: @default-icon-size-large !important;
-         width: @default-icon-size-large !important;
-         line-height: @default-icon-size-large !important;
-      }
-   }
-}
 .controls-editInPlace .controls-editInPlace__editor {
   background: @controls-editInPlace-editor-bg;
 }
-.controls-ListView .controls-ItemsToolbar__editActions {
-  background: @controls-editInPlace-editor-bg;
-}
+
 //todo: отказаться от данного сомнительного решения
-.controls-FormattedTextBox .controls-TextBox__wrapper .controls-TextBox__field .controls-FormattedTextBox__field-symbol {
+.controls-FormattedTextBox .controls-InputRender__wrapper .controls-InputRender__field .controls-FormattedTextBox__field-symbol {
     line-height: round(56px * @multiplier);
-}
-  //TODO: придумать решение лучше, возможно на flex
-.controls-ComboBox.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
-     vertical-align: top; // чтобы блок располагался аналогично controls-ComboBox__field, но растягивал блок
 }
 .controls-Link__field {
   vertical-align: baseline;
@@ -322,37 +260,11 @@ body {
       vertical-align: middle !important;
    }
 }
-.controls__filterButton__area-header {
-   .controls-Link {
-      .controls-Button__text{
-         vertical-align: baseline;
-      }
-   }
-}
-.controls__filter-button__apply-filter {
-    margin-right: @top_window_button;
-}
-.controls__filter-button__clear-filter {
-  .controls-Link__field {
-    vertical-align: baseline;
-  }
-}
+
 .controls-Browser {
    .controls-Browser__topTemplate {
       height: auto;
    }
-}
-
-.controls-Menu{
-  .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
-     &.icon-24, &.icon-medium {
-        top: round(28px * @multiplier);
-        left: round(-6px * @multiplier);
-     }
-     &.icon-16, &.icon-small {
-         top: round(32px * @multiplier);
-     }
-  }
 }
 
 body .ws-window.ws-LoadingIndicator__window {
@@ -391,7 +303,7 @@ body .ws-window.ws-LoadingIndicator__window {
       padding: round(32px * @multiplier);
    }
 }
-.controls-ComboBox.controls-Picker__show.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
+.controls-ComboBox.controls-Picker__show.controls-InputRender.controls-ComboBox__editable-false .controls-InputRender__fieldWrapper .controls-InputRender__field.controls-ComboBox__fieldNotEditable {
   color: #324352;
 }
 
@@ -412,11 +324,7 @@ body .ws-window.ws-LoadingIndicator__window {
   color: @default-text-color;
 }
 
-.controls-ComboBox__picker {
-   box-sizing: border-box;
-}
-
-.controls-FormattedTextBox .controls-TextBox__wrapper {
+.controls-FormattedTextBox .controls-InputRender__wrapper {
   text-align: center;
 }
 
@@ -425,18 +333,9 @@ body .controls-image__button {
       color: #26B8FF !important;
    }
  }
-.controls-ComboBox.controls-TextBox.controls-TextBox .controls-ComboBox__afterFieldWrapper .controls-ComboBox__arrowDown {
-  font-size: round(84px * @multiplier) !important;
-}
-body .controls-Browser__filterButton .controls__filterButton__filterLine-text {
-    height: round(40px * @multiplier)
-}
-body .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton {
-    top: @top_window_button;
-}
 .controls-PopupMixin__closeButton {
   position: absolute;
-  top: 8px;
+  top: @controls-Popup-closeButton-top;
   right: 0;
   cursor: pointer;
   z-index: 1;
@@ -444,17 +343,13 @@ body .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__cl
   .close-button-mixin();
 }
 
-.controls-BreadCrumbs__crumb {
-   top: round(9px * @multiplier)
-}
-.ws-is-sbis-desktop {
-  .controls-BreadCrumbs__crumb {
-    top: -1px;
-  }
-}
 //todo: удалить это нафиг сделать нормально и не лениться
 .controls-image {
    .controls-image__image-bar{
+      .justify-content(space-around);
+     .controls-image__button-upload {
+       margin-right: 0;
+     }
       .icon-16{
          font-size: @default-icon-size-large !important;
          height: @default-icon-size-large !important;
@@ -468,14 +363,14 @@ body .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__cl
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__left,
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__right {
    .icon-24 {
-       font-size: round(84px * @multiplier) !important;
+       font-size: round(42px * @multiplier) !important;
        height: round(84px * @multiplier) !important;
        width: round(84px * @multiplier) !important;
        line-height: round(84px * @multiplier) !important;
    }
 }
-.controls-DateRangeBigChoose__years-toggleChooseYearBtn {
-   height: round(84px * @multiplier);
+.controls-DateRangeBigChoose__years-toggleChooseYearBtn, .controls-DateRangeBigChoose__years-currentYearBtn {
+   height: round(84px * @multiplier) !important;
 }
 
 body .controls-DateRangeBigChoose__header .controls-DateBox {
@@ -509,74 +404,16 @@ body {
   border: none !important;
 }
 
-body .controls-DateRangeBigChoose__years-yearsRange-btn:hover {
+/*body .controls-DateRangeBigChoose__years-yearsRange-btn:hover {
   color: #fff;
-}
+}*/
 
 .controls-ToolBar .controls-ToolBar__menuIcon {
     vertical-align: baseline;
 }
 
-body {
-   .controls-DropdownList__picker {
-      .controls-DropdownList__close-picker.icon-24 {
-         font-size: round(84px * @multiplier) !important;
-         height: round(84px * @multiplier) !important;
-         width: round(84px * @multiplier) !important;
-         line-height: round(84px * @multiplier) !important;
-      }
-      .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
-         width: round(64px * @multiplier);
-      }
-      .controls-DropdownList__multiselect.controls-ListView__defaultItem, .controls-DropdownList__multiselect.controls-ListView__defaultItem.controls-DropdownList__item__selected {
-         font-weight: 400;
-      }
-   }
-
-}
-
-.controls-BreadCrumbs .controls-BreadCrumbs {
-   &__home, &__arrow {
-      font-size: round(50px * @multiplier)!important;
-      line-height: round(28px * @multiplier)!important;
-      width: round(50px * @multiplier);
-      top:  1px;
-   }
-}
-
-.ws-is-webkit, .ws-is-mobile-chrome-ios {
-   .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
-      top:  round(11px * @multiplier);
-   }
-}
-
-.controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-   top: round(11px * @multiplier) !important;
-}
-
-.ws-is-sbis-desktop {
-  .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-    top: round(11px * @multiplier) !important;
-  }
-}
-
-/* КОСТЫЛЬ. Крошки накостылены через top'ы, margin'ы и тд. Срочно требуется переписать стили.
-   Выписана ошибка. https://online.sbis.ru/opendoc.html?guid=fa89f6fd-3e4a-4925-8de3-9f34c6b11729
- */
-.ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
-   .controls-BreadCrumbs__crumb {
-      top: 0
-   }
-}
-
 .controls-MergeDialogTemplate .controls-TreeDataGridView__levelPadding {
    display: none;
-}
-
-.controls-ListView:not(.controls-ListView__bottomStyle) {
-  .controls-ListView__ItemsToolbar-container.controls-ItemsToolbar__withEditActions {
-    height: round(84px * @multiplier);
-  }
 }
 
 // В темах престо и розницы все сверстано на внутренних скролируемых контенерах.
@@ -651,12 +488,11 @@ body {
    }
 }
 
-//Убрать когда проектировщики сделают одинаковые отступы, обсуждали на этом совещании: https://online.sbis.ru/obj/Meeting/e6b722a9-d339-4016-9fd6-82b763c4e241
-.controls-ItemsToolbar.controls-ItemsToolbar__withEditActions {
-  bottom:@top_window_button
-}
 .controls-Browser__search {
    margin: @top_window_button
+}
+.controls-Browser__tableRow {
+   margin-left: 0;
 }
 .controls-Browser__topTemplate {
    padding: @top_window_button
@@ -666,7 +502,7 @@ body {
 .ws-window-titlebar-action.close {
   .close-button-mixin(~'!important');
 }
-.ws-float-area-title {
+.ws-float-area .ws-float-area-title {
   font-size: round(40px * @multiplier)!important;
   font-weight: normal !important;
   padding-left: round(24px * @multiplier) !important;
@@ -679,7 +515,6 @@ body {
   font-weight: normal !important;
 }
 .ws-window-title {
-  color: @default-text-color !important;
   font-size: round(40px * @multiplier) !important;
   height: round(100px * @multiplier) !important;
   max-height: round(100px * @multiplier) !important;
@@ -699,7 +534,7 @@ body {
   -webkit-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2) !important;
   -moz-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2) !important;
   box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2) !important;
-  background: @basic-block-bg-color !important;
+  background: #273749 !important;
 }
 .ws-float-area-title-generated {
   margin-right: round(84px * @multiplier) !important;
@@ -732,7 +567,7 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
   border-left-width: round(3px * @multiplier);
 }
 //!IMPORTANT лучше чем увеличение веса селектора через BODY тк возможно собирать тему под селектором
-.ws-window-titlebar-action {
+.ws-float-close, .ws-window-titlebar-action {
   top: @top_window_button !important;
 }
 //ОКНА И ЭРИИ ИЗ WS`А
@@ -745,4 +580,16 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
     display: -ms-inline-flexbox !important;
     display: -webkit-inline-flex !important;
   }
+}
+
+.controls-ComboBox {
+  &.controls-Picker__show {
+    background-color: @background-color_ComboBox_withPicker;
+    color: @color_ComboBox_withPicker;
+    border: @default-border-width solid @border-color_ComboBox_withPicker;
+  }
+}
+
+.ws-float-close {
+   .close-button-mixin();
 }

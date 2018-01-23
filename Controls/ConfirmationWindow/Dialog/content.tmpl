@@ -1,0 +1,19 @@
+<div class="controls-SubmitPopup__body">
+
+   <ws:if data="{{message}}">
+      <ws:partial template="{{messageTemplate}}" hasDetails="{{details}}">
+         <ws:content>
+            <div class="controls-SubmitPopup__message-centered">{{message|sanitize}}</div>
+         </ws:content>
+      </ws:partial>
+   </ws:if>
+
+   <ws:if data="{{details}}">
+      <ws:partial template="{{detailsTemplate}}">
+         <ws:content>
+            <div class="controls-SubmitPopup__message-centered">{{details|sanitize}}</div>
+         </ws:content>
+      </ws:partial>
+   </ws:if>
+
+</div>

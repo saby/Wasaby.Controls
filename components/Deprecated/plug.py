@@ -119,7 +119,7 @@ obj ={
   "Deprecated/Source": "Deprecated/Source",
   "SBIS3.CONTROLS.DateRangeBigChoose.Validators": "SBIS3.CONTROLS/Date/RangeBigChoose/resources/Validators",
   "WS.Data/Collection/ArrayEnumerator": "WS.Data/Collection/ArrayEnumerator",
-  "SBIS3.CONTROLS.GenericLongOperationsProducer": "SBIS3.CONTROLS/LongOperations/GenericProducer/GenericLongOperationsProducer",
+  "SBIS3.CONTROLS.GenericLongOperationsProducer": "SBIS3.CONTROLS/LongOperations/GenericProducer",
   "SBIS3.CONTROLS.DateRangeChoosePickerMixin": "SBIS3.CONTROLS/Mixins/DateRangeChoosePickerMixin",
   "SBIS3.CORE.FieldEditAtPlace/design/design": "Deprecated/Controls/FieldEditAtPlace/design/design",
   "SBIS3.CONTROLS.Accordion": "SBIS3.CONTROLS/Accordion",

@@ -1,11 +1,12 @@
 <div class="controls-ItemsToolbar__editActions ws-hidden">
-   <SBIS3.CONTROLS:Button:IconButton class="controls-IconButton__round-border-24 controls-IconButton__round"
+   <SBIS3.CONTROLS:Button:IconButton class="controls-ItemActions-button"
                                  command="commitEdit"
                                  commandArgs="{{[true]}}"
                                  allowChangeEnable="{{false}}"
+                                 className="controls-IconButton__round-border-24"
                                  icon="sprite:icon-size icon-Yes icon-done"
-         tooltip="{[Сохранить]}"></SBIS3.CONTROLS:Button:IconButton>
-   <SBIS3.CONTROLS:Button:IconButton class="controls-Button__closeButton" command="cancelEdit"
+         tooltip="{[Сохранить]}"/>
+   <ws:WSControls.Buttons.Button class="controls-EditActions__cancelButton" command="cancelEdit"
          allowChangeEnable="{{false}}"
-         tooltip="{[Отмена]}"></SBIS3.CONTROLS:Button:IconButton>
+         tooltip="{[Отмена]}"/>
 </div>

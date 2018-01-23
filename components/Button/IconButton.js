@@ -8,13 +8,16 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
    'use strict';
 
    /**
-    * Класс контрола, который предназначен для отображения кнопки в виде иконки.
+    * Класс контрола "Кнопка в виде значка".
+    *
+    * <a href="/doc/platform/developmentapl/interface-development/components/textbox/buttons/button-icon/">Демонстрационные примеры</a>.
+    * <a href="http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html">Спецификация</a>.
     *
     * @class SBIS3.CONTROLS/Button/IconButton
     * @extends WSControls/Buttons/Button
     * @mixes SBIS3.CONTROLS/Mixins/IconMixin
     * @demo SBIS3.CONTROLS.Demo.MyIconButton
-    * @author Борисов Петр Сергеевич
+    * @author Борисов П.С.
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
@@ -38,7 +41,7 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
     *
     * @cssModifier controls-IconButton__round-border Добавляет круглую границу вокруг иконки. Размер границы подстраивается под размеры иконки.
     * По умолчанию граница серого цвета. При наведении курсора цвет границы изменяется в соответствии с цветом иконки, установленной в опции {@link icon}.
-    * @cssModifier controls-IconButton__round-border-24 Устанавливает круглую границу (диаметр в 24 px) вокруг иконки быстрой операции, доступной по наведению курсора. Подробнее о таких типах операций вы можете прочитать <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">здесь</a>.
+    * @cssModifier controls-IconButton__round-border-24 Устанавливает круглую границу (диаметр в 24 px) вокруг иконки быстрой операции, доступной по наведению курсора. Подробнее о таких типах операций вы можете прочитать <a href="/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">здесь</a>.
     * Модификатор применяется совместно с иконками 16 px. Цвет границы соответствует цвету иконки, установленной в опции {@link icon}.
     * @cssModifier controls-IconButton__filter-left Устанавливает внешний вид для кнопки открытия/закрытия фильтров слева.
     * @cssModifier controls-IconButton__filter-right Устанавливает внешний вид  для кнопки открытия/закрытия фильтров справа.
@@ -83,7 +86,6 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
 
          options.className += ' controls-IconButton';
 
-
          if (iconClass) {
             if (((iconClass.indexOf('icon-error') >= 0) || (iconClass.indexOf('icon-done') >= 0))){
                if (iconClass.indexOf('icon-error') >= 0) {
@@ -94,6 +96,10 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
                }
             }
          }
+         options.cssClassName += ' controls-IconButton-size__' + (!!options.size ? options.size : 'default');
+         // В 3.18.0 выпиливаю эту логику по задаче
+         // https://online.sbis.ru/opendoc.html?guid=241d440c-ed00-4fa3-b2f9-3a5c453b0943
+         options.tooltip =  options.tooltip || options.caption;
          return options;
       },
 

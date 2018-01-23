@@ -50,7 +50,7 @@ define('SBIS3.CONTROLS/ComboBox', [
     * @class SBIS3.CONTROLS/ComboBox
     * @extends SBIS3.CONTROLS/TextBox
     *
-    * @author Красильников Андрей Сергеевич
+    * @author Красильников А.С.
     *
     * @demo SBIS3.CONTROLS.Demo.MyComboBox Пример 1. Выпадающий список, для которого установлен набора данных в опции items.
     * @demo SBIS3.CONTROLS.Demo.MyComboBoxDS Пример 2. Выпадающий список, для которого установлен источник данных в опции dataSource.
@@ -97,6 +97,12 @@ define('SBIS3.CONTROLS/ComboBox', [
          IoC.resolve('ILogger').error('SBIS3.CONTROLS/ComboBox', 'Не задана опция displayProperty');
          cfg.displayProperty = 'title';
       }
+   }
+
+   function prepareItemClassesByConfig(item, className) {
+      var oldClassName = item.className || item.get && item.get('className') || className || '';
+
+      return ~oldClassName.indexOf('controls-ComboBox__multiline') ? 'controls-ComboBox__item_multiLine' : 'controls-ComboBox__item_singleLine';
    }
 
    var ComboBox = TextBox.extend([PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS/ComboBox.prototype */{
@@ -158,7 +164,7 @@ define('SBIS3.CONTROLS/ComboBox', [
              * @example
              * <pre class="brush:xml">
              *     <option name="itemTemplate">
-             *         <div data-key="{{=it.item.getId()}}" class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow">
+             *         <div data-key="{{=it.item.getId()}}" class="controls-ComboBox__item js-controls-ComboBox__item">
              *             <div class="genie-colorComboBox__itemTitle">
              *                 {{=it.displayProperty}}
              *             </div>
@@ -233,7 +239,7 @@ define('SBIS3.CONTROLS/ComboBox', [
          this._container.click(function (e) {
             var target = $(e.target),
                isArrow = target.hasClass('js-controls-ComboBox__arrowDown');
-            if (isArrow || ( target[0] === $('.controls-ComboBox__afterFieldWrapper', self.getContainer())[0] ) || self.isEditable() === false) {
+            if (isArrow || ( target[0] === $('.controls-ComboBox__Arrow', self.getContainer())[0] ) || self.isEditable() === false) {
                if (self.isEnabled() && self._getItemsProjection()) {//открывать, если нет данных, нет смысла
                   self.togglePicker();
                   // Что бы не открывалась клавиатура на айпаде при клике на стрелку
@@ -349,7 +355,7 @@ define('SBIS3.CONTROLS/ComboBox', [
             var
                items = $('.controls-ListView__item', this._picker.getContainer().get(0));
 
-            selectedItem = $('.controls-ComboBox__itemRow__selected', this._picker.getContainer());
+            selectedItem = $('.controls-ComboBox__item_selected', this._picker.getContainer());
             //навигация по стрелкам
             if (e.which === constants.key.up) {
                newSelectedItem = selectedKey ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
@@ -413,10 +419,6 @@ define('SBIS3.CONTROLS/ComboBox', [
          return false;
       },
 
-      setText: function (text) {
-         ComboBox.superclass.setText.call(this, text);
-      },
-
       _drawText: function(text) {
          ComboBox.superclass._drawText.apply(this, arguments);
          var fieldNotEditableContainer = $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0));
@@ -431,12 +433,20 @@ define('SBIS3.CONTROLS/ComboBox', [
          $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).toggleClass('controls-ComboBox__fieldNotEditable__placeholder', !text);
       },
 
+      _getFieldForTooltip: function () {
+        if (this.isEditable()) {
+           return ComboBox.superclass._getFieldForTooltip.apply(this, arguments);
+        } else {
+           return $('.js-controls-ComboBox__fieldNotEditable', this._container);
+        }
+      },
+
       _clearSelection: function(){
          ComboBox.superclass.setText.call(this, '');
          this._drawNotEditablePlaceholder('');
          $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text('');
          if (this._picker) {
-            $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
+            $('.controls-ComboBox__item_selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__item_selected');
          }
          this._container.addClass('controls-ComboBox__emptyValue');
       },
@@ -481,8 +491,8 @@ define('SBIS3.CONTROLS/ComboBox', [
             this._clearSelection();
          }
          if (this._picker) {
-            $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
-            $('.controls-ComboBox__itemRow[data-id=\'' + key + '\']', this._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
+            $('.controls-ComboBox__item_selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__item_selected');
+            $('.controls-ComboBox__item[data-id=\'' + key + '\']', this._picker.getContainer().get(0)).addClass('controls-ComboBox__item_selected');
          }
       },
 
@@ -516,7 +526,7 @@ define('SBIS3.CONTROLS/ComboBox', [
 
       _addItemAttributes : function(container, item) {
          ComboBox.superclass._addItemAttributes.call(this, container, item);
-         container.addClass('controls-ComboBox__itemRow').addClass('js-controls-ComboBox__itemRow');
+         container.addClass('controls-ComboBox__item').addClass('js-controls-ComboBox__item');
       },
 
       _setPickerContent: function () {
@@ -531,7 +541,7 @@ define('SBIS3.CONTROLS/ComboBox', [
          //что кто-то может прервать событие touchstart, вследствие чего описанные события не стрельнут.
          //Подписка на платформенное событие более правильное решение, т.к. наше событие будет всегда.
          this._picker.subscribe('onClick', function (eventObject, e) {
-            var row = $(e.target).closest('.js-controls-ComboBox__itemRow');
+            var row = $(e.target).closest('.js-controls-ComboBox__item');
             if (row.length) {
 
                var hash = $(row).attr('data-hash');
@@ -604,6 +614,12 @@ define('SBIS3.CONTROLS/ComboBox', [
          else {
             return '<div>' + title + '</div>';
          }
+      },
+
+      _prepareItemData: function() {
+         var args = ComboBox.superclass._prepareItemData.apply(this, arguments);
+         args.prepareItemClassesByConfig = prepareItemClassesByConfig;
+         return args;
       },
 
       _keyDownBind: function (e) {
@@ -789,10 +805,9 @@ define('SBIS3.CONTROLS/ComboBox', [
             this._inputField.attr('readonly', 'readonly');
          }
          else {
-            if (this._options.editable) {
-               this._inputField.removeAttr('readonly');
-            }
+            this._inputField.attr('readonly', !this._options.editable);
          }
+         $('.controls-ComboBox__Arrow', this.getContainer()).toggleClass('ws-invisible', !enabled); //TODO: удалять из DOM
       },
 
       showPicker: function() {
@@ -828,7 +843,7 @@ define('SBIS3.CONTROLS/ComboBox', [
          if (this._picker) {
             $('.controls-ComboBox__item', this._picker.getContainer()).unbind();
          }
-        ComboBox.superclass.hidePicker.apply(this, arguments);
+         ComboBox.superclass.hidePicker.apply(this, arguments);
       },
 
       _initializePicker: function(){
@@ -842,6 +857,22 @@ define('SBIS3.CONTROLS/ComboBox', [
             self._keyboardHover(event);
          });
          TextBoxUtils.setEqualPickerWidth(this._picker);
+      },
+
+      _onAlignmentChangeHandler: function(alignment){
+         ComboBox.superclass._onAlignmentChangeHandler.apply(this, arguments);
+
+         var list = $('.controls-ComboBox__list', this._picker.getContainer());
+
+         list[0].className = list[0].className.replace(/(^|\s)controls-ComboBox__list_column(\S*)/gi, '');
+
+         if (alignment.verticalAlign.side === 'bottom') {
+            this._picker.getContainer().addClass('controls-ComboBox__picker_column_reverse');
+            list.addClass('controls-ComboBox__list_column_reverse');
+         } else {
+            this._picker.getContainer().removeClass('controls-ComboBox__picker_column_reverse');
+            list.addClass('controls-ComboBox__list_column');
+         }
       },
 
       //TODO заглушка
@@ -876,13 +907,17 @@ define('SBIS3.CONTROLS/ComboBox', [
          ComboBox.superclass.setSelectedKey.apply(this, arguments);
       },
 
+      setActive: function(active) {
+         ComboBox.superclass.setActive.apply(this, arguments);
+         $('.controls-ComboBox__Arrow', this.getContainer()).toggleClass('controls-ComboBox__Arrow_active', active);
+      },
+
       _scrollToItem: function(itemHash) {
          var itemContainer  = $('.controls-ListView__item[data-hash="' + itemHash + '"]', this._getItemsContainer());
          if (itemContainer.length) {
             LayoutManager.scrollToElement(itemContainer, true);
             //Устанавливаю скроллбар в нужную позицию
             this._scrollContainer._initScrollbar();
-            this._scrollContainer._scrollbar.setPosition(itemContainer.position().top);
          }
       }
    });

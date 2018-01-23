@@ -52,7 +52,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
        * @class SBIS3.CONTROLS/LongOperations/List
        * @extends Lib/Control/CompoundControl/CompoundControl
        *
-       * @author Спирин Виктор Алексеевич
+       * @author Спирин В.А.
        *
        * @public
        *
@@ -119,7 +119,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
                self.subscribeTo(longOperationsManager, evtType, function (evtName, evt) {
                   var dontReload;
                   if (['onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted'].indexOf(evtName.name) !== -1) {
-                     var model = self.lookupItem(evt.tabKey, evt.producer, evt.operationId);
+                     var model = self.lookupItem(evt);
                      dontReload = !model;
                      if (model) {
                         switch (evtName.name) {
@@ -135,7 +135,9 @@ define('SBIS3.CONTROLS/LongOperations/List',
                                        model.set('timeIdle', (new Date()).getTime() - model.get('startedAt').getTime() - model.get('timeSpent'));
                                     }
                                  }
-                                 else {
+                                 else
+                                 if (evt.changed === 'notification' && evt.notification) {
+                                    model.set('notification', evt.notification);
                                     dontReload = true;
                                  }
                                  model.set(evt.changed, evt[evt.changed]);
@@ -197,52 +199,46 @@ define('SBIS3.CONTROLS/LongOperations/List',
           * @return {object[]}
           */
          _makeItemsActions: function (model) {
-            var actions = [];
+            var actions = {};
             if (model) {
                var STATUSES = LongOperationEntry.STATUSES;
-               var self = this;
-               if (model.get('canSuspend') && model.get('status') === STATUSES.running) {
-                  // Заголовок зависит от модели
-                  var title = rk(model.get('resumeAsRepeat') ? 'Отменить' : 'Приостановить', 'ДлительныеОперации');
-                  actions.push({
-                     name: 'suspend',
-                     icon: 'sprite:icon-16 icon-Pause icon-primary action-hover',
-                     caption: title,
-                     tooltip: title,
-                     isMainAction: true,
-                     onActivated: function ($item, id, itemModel) {
-                        self.applyUserAction('suspend', itemModel);
+               var DEFAULT_ICO = 'Favourite';
+               var status = model.get('status');
+               var inf = this._getCustomActions(model);
+               if (inf) {
+                  for (var name in inf) {
+                     var action = inf[name];
+                     if (action && typeof action === 'object' && !action.main && this._isCustomActionAllowed(action, status)) {
+                        actions[name] = {title:action.title || name, icon:'sprite:icon-16 icon-' + (action.ico || DEFAULT_ICO) + ' icon-done'};
                      }
-                  });
+                  }
                }
-               if (model.get('canSuspend') && model.get('status') === STATUSES.suspended) {
-                  var title = rk(model.get('resumeAsRepeat') ? 'Повторить' : 'Возобновить');
-                  actions.push({
-                     name: 'resume',
-                     icon: 'sprite:icon-16 icon-DayForward icon-primary action-hover',
-                     caption: title,
-                     tooltip: title,
-                     isMainAction: true,
-                     onActivated: function ($item, id, itemModel) {
-                        self.applyUserAction('resume', itemModel);
-                     }
-                  });
+               // Заголовки могут зависесть от модели
+               if (model.get('canSuspend') && status === STATUSES.running) {
+                  actions['suspend'] = {title:rk(model.get('resumeAsRepeat') ? 'Отменить' : 'Приостановить', 'ДлительныеОперации'), icon:'sprite:icon-16 icon-Pause icon-primary action-hover'};
+               }
+               if (model.get('canSuspend') && status === STATUSES.suspended) {
+                  actions['resume'] = {title:rk(model.get('resumeAsRepeat') ? 'Повторить' : 'Возобновить', 'ДлительныеОперации'), icon:'sprite:icon-16 icon-DayForward icon-primary action-hover'};
                }
                if (model.get('canDelete')) {
-                  var title = rk('Удалить');
-                  actions.push({
-                     name: 'delete',
-                     icon: 'sprite:icon-16 icon-Erase icon-error',
-                     caption: title,
-                     tooltip: title,
-                     isMainAction: true,
-                     onActivated: function ($item, id, itemModel) {
-                        self.applyUserAction('delete', itemModel);
-                     }
-                  });
+                  actions['delete'] = {title:rk('Удалить'), icon:'sprite:icon-16 icon-Erase icon-error'};
                }
             }
-            return actions;
+            return Object.keys(actions).map(function (name) {
+               var action = actions[name];
+               return {
+                  name: name,
+                  icon: action.icon,
+                  caption: action.title,
+                  tooltip: action.title,
+                  isMainAction: true,
+                  onActivated: this._onUserAction.bind(this, name)
+               };
+            }.bind(this));
+         },
+
+         _onUserAction: function (action, $item, id, itemModel) {
+            this.applyUserAction(action, itemModel);
          },
 
          /**
@@ -339,6 +335,21 @@ define('SBIS3.CONTROLS/LongOperations/List',
          },
 
          /**
+          * Установить предусловия для источника данных
+          * @public
+          * @param {object[]} customConditions Список предусловий
+          */
+         setCustomConditions: function (customConditions) {
+            if (!(customConditions && Array.isArray(customConditions) && customConditions.every(function (v) { return !!v && typeof v === 'object' && !!Object.keys(v).length; }))) {
+               throw new Error('Array of objects required');
+            }
+            var dataSource = this._view.getDataSource();
+            var options = dataSource.getOptions();
+            options.customConditions = customConditions;
+            dataSource.setOptions(options);
+         },
+
+         /**
           * Проверить, может ли длительная операция иметь историю
           * @public
           * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
@@ -356,41 +367,169 @@ define('SBIS3.CONTROLS/LongOperations/List',
           * @returns {Core/Deferred}
           */
          applyUserAction: function (action, model) {
-            if (!(action === 'suspend' || action === 'resume' ? model.get('canSuspend') : (action === 'delete' ? model.get('canDelete') : null))) {
+            var isAllow;
+            var customAction;
+            switch (action) {
+               case 'suspend':
+               case 'resume':
+                  isAllow = model.get('canSuspend');
+                  break;
+               case 'delete':
+                  isAllow = model.get('canDelete');
+                  break;
+               default:
+                  var inf = this._getCustomActions(model);
+                  if (inf && inf[action] && typeof inf[action] === 'object') {
+                     customAction = inf[action];
+                     isAllow = true;
+                  }
+                  break;
+            }
+            if (!isAllow) {
                return Deferred.fail('Action not allowed');
             }
-            var promise = longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
-            // Удаление в LRS может занимать много времени, поэтому перезапросить список нужно сразу - удаляемая операция в него уже не войдёт. Для
-            // остальных действий вызывать reload не нужно, это произойдёт по событию, пришедшему в результате выпонения действия
-            if (action === 'delete') {
-               promise.addCallback(this.reload.bind(this));
+            var promise;
+            if (customAction) {
+               promise = this._execHandler(customAction.call, customAction.args);
+            }
+            else {
+               promise = longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
+               // Удаление в LRS может занимать много времени, поэтому перезапросить список нужно сразу - удаляемая операция в него уже не войдёт. Для
+               // остальных действий вызывать reload не нужно, это произойдёт по событию, пришедшему в результате выпонения действия
+               if (action === 'delete') {
+                  promise.addCallback(this.reload.bind(this));
+               }
             }
             return promise;
          },
 
          /**
-          * Выполнить результирующее действие длительной операции
+          * Получить описание основного (результирующего или кастомного основное) действия длительной операции
+          * @public
+          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
+          * @return {object}
+          */
+         describeMainAction: function (model) {
+            var mainAction = this._getMainAction(model);
+            if (mainAction) {
+               var descr = {type:mainAction.type};
+               if (mainAction.type === 'custom') {
+                  descr.title = mainAction.action.title;
+               }
+               return descr;
+            }
+         },
+
+         /**
+          * Выполнить основное (результирующее или кастомное основное) действие длительной операции
           * @public
           * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
           */
-         applyResultAction: function (model) {
-            //Только если операция завершена или содержит ошибку
-            if (model && (model.get('status') === LongOperationEntry.STATUSES.ended || model.get('isFailed'))) {
-               if (!model.get('isFailed') || model.get('useResult')) {
-                  // Если операция завершена успешно или ей явно предписано использовать результат - выполнить действие, указанное в качестве результата
-                  if (!this._showResult(model)) {
-                     // Если нет, то если операция может иметь историю и является составной - открыть журнал операции (либо если было предписано
-                     // показать результат, но его не оказалось)
-                     if ((this.canHasHistory(model) && 1 < model.get('progressTotal')) || model.get('useResult')) {
-                        this._showHistory(model);
+         applyMainAction: function (model) {
+            var mainAction = this._getMainAction(model);
+            if (mainAction) {
+               switch (mainAction.type) {
+                  case 'result':
+                     this._showResult(model);
+                     break;
+                  case 'history':
+                     this._showHistory(model, mainAction.allowResultButton);
+                     break;
+                  case 'custom':
+                     this._execHandler(mainAction.action.call, mainAction.action.args);
+                     break;
+               }
+            }
+         },
+
+         /**
+          * Определить основное (результирующее или кастомное основное) действие длительной операции
+          * @protected
+          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
+          * @return {object}
+          */
+         _getMainAction: function (model) {
+            if (model) {
+               var STATUSES = LongOperationEntry.STATUSES;
+               var status = model.get('status');
+               if (status === STATUSES.ended || model.get('isFailed')) {
+                  // Только если операция завершена или содержит ошибку
+                  if (!model.get('isFailed') || model.get('useResult')) {
+                     // Если операция завершена успешно или ей явно предписано использовать результат - выполнить действие, указанное в качестве результата
+                     if (model.get('resultHandler') || model.get('resultUrl')) {
+                        return {type:'result'};
                      }
+                     else {
+                        // Если нет, то если операция может иметь историю и является составной - открыть журнал операции (либо если было предписано
+                        // показать результат, но его не оказалось)
+                        if ((this.canHasHistory(model) && 1 < model.get('progressTotal')) || model.get('useResult')) {
+                           return {type:'history'};
+                        }
+                     }
+                  }
+                  else {
+                     // Иначе показать историю (с кнопкой частичного результата)
+                     return {type:'history', allowResultButton:true};
                   }
                }
                else {
-                  // Иначе показать историю
-                  this._showHistory(model, true);
+                  // Или если есть кастомное действие, продекларированное как основное
+                  var inf = this._getCustomActions(model);
+                  if (inf) {
+                     for (var name in inf) {
+                        var action = inf[name];
+                        if (action.main && this._isCustomActionAllowed(action, status)) {
+                           return {type:'custom', action:action};
+                        }
+                     }
+                  }
                }
             }
+         },
+
+         /**
+          * Найти кастомное действие
+          * Набор кастомных действий задаётся в свойстве "custom.actions" длительной операции (соответствует полю "CustomData/actions" в сервисе LRS)
+          * в виде имя действия - описание действия:
+          * <pre>
+          *    {
+          *       actions: {
+          *          "<Имя действия>": {
+          *             when: [0,1],            // Когда применимо - список статусов длительной операции
+          *             call: '<Модуль:метод>', // Обработчик действия в виде строки с именем модули и именем метода, разделёнными двоеточием
+          *             args: '<Аргументы>',    // Аргументы обработчика в виде json-строки с массивом аргументов. Если аргумент один, то симолы "[" и "]"
+          *                                     // в начале и в конце можно опустить. Если единственный аргумент - строка, то можно опустить и ковычки
+          *             main: false,            // Указывает, что действие является основным. Основное действие происходит по клику на названии длительной
+          *                                     // операции в списке. Не основнные действия имеют отдельные кнопки на тулбаре строки
+          *             ico: 'Favourite',       // Имя значка действия (только для не основных)
+          *             title: '<Название>'     // Отображаемое название действия
+          *          },
+          *          ...
+          *       }
+          *    }
+          * </pre>
+          * @protected
+          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
+          * @return {object}
+          */
+         _getCustomActions: function (model) {
+            var custom = model.get('custom');
+            if (custom) {
+               var actions = custom.actions;
+               return actions && typeof actions === 'object' ? actions : null;
+            }
+         },
+
+         /**
+          * Проверить, разрешено ли кастомное действие для указанного статуса длительной операции
+          * @protected
+          * @param {object} model Кастомное действие
+          * @param {number} status Статус длительной операции
+          * @return {boolean}
+          */
+         _isCustomActionAllowed: function (action, status) {
+            var statuses = action.when;
+            return Array.isArray(statuses) && statuses.indexOf(status) !== -1;
          },
 
          /**
@@ -459,13 +598,17 @@ define('SBIS3.CONTROLS/LongOperations/List',
           */
          _obsoleteResult: function () {
             InformationPopupManager.showMessageDialog({
-               message:rk('Операция устарела.'),
-               details:rk('Выполните повторно.')
+               message:rk('Операция устарела.', 'ДлительныеОперации'),
+               details:rk('Выполните повторно.', 'ДлительныеОперации')
             });
          },
 
          /**
           * Выполнить (асинхронно) обработчик, заданный строками методов и аргументов, и вернуть результат (если есть)
+          * Строка методов представляет из себя разделённый одинарными двоеточиями список, начинающийся с имени модуля и следующей за ним цепочки имён
+          * последовательно вызываемых методов. Строка аргументов представляет собой сериализованный массив массивов аргументов каждого метода.
+          * Количество элементов массива верхнего уровня должно соответствовать количеству методов в цепочке в строке методов. Для случая, когда метод
+          * только один, можно использовать простой массив аргументов, а не массив массивов.
           * @protected
           * @param {string} method Строка методов
           * @param {string} args Строка аргументов
@@ -498,6 +641,10 @@ define('SBIS3.CONTROLS/LongOperations/List',
                }
                if (path.length) {
                   var subject = module;
+                  if (path.length === 1) {
+                     // Если метод в path только один, то в args не массив массивов, а просто массив - обернуть в массив
+                     args = [args];
+                  }
                   for ( ; path.length; ) {
                      if (!subject || typeof subject !== 'object') {
                         throw new Error('Submethod is or not valid');
@@ -536,15 +683,15 @@ define('SBIS3.CONTROLS/LongOperations/List',
           * Открыть историю указанной длительной операции
           * @protected
           * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
-          * @param {boolean} useResultHandler Использовать обработчик результата операции
+          * @param {boolean} allowResultButton В истории можно использовать кнопку просмотра (частичного) результата операции
           */
-         _showHistory: function (model, useResultHandler) {
+         _showHistory: function (model, allowResultButton) {
             //Только если операция завершена или содержит ошибку
             if (model && (model.get('status') === LongOperationEntry.STATUSES.ended || model.get('isFailed'))) {
-               var resultHandler = useResultHandler && (model.get('resultHandler') || model.get('resultUrl')) ? this._showResult.bind(this, model) : null;
+               var resultHandler = allowResultButton && (model.get('resultHandler') || model.get('resultUrl')) ? this._showResult.bind(this, model) : null;
                var resultWayOfUse = resultHandler ? model.get('resultWayOfUse') : null;
                var floatArea = new FloatArea({
-                  title: rk('Журнал выполнения операции'),
+                  title: rk('Журнал выполнения операции', 'ДлительныеОперации'),
                   template: 'SBIS3.CONTROLS/LongOperations/History',
                   componentOptions: this.canHasHistory(model) ? {
                      tabKey: model.get('tabKey'),
@@ -570,16 +717,32 @@ define('SBIS3.CONTROLS/LongOperations/List',
          },
 
          /**
-          * Найти модель среди загруженных данных
-          * @param {string} tabKey Ключ вкладки
-          * @param {string} producer Имя продюсера
-          * @param {number|string} operationId Идентификатор длительной операции
+          * Найти модель среди имеющихся элементов данного списка по параметрам (Возвращается первое совпадение)
           * @public
+          * @param {object} options Параметры модели
+          * @param {string} options.producer Имя продюсера
+          * @param {number|string} [options.operationId] Идентификатор длительной операции (опционально)
+          * @param {number|string} [options.workflowId] Идентификатор исполняемого процесса длительной операции (опционально)
+          * @return {WS.Data/Entity/Record}
           */
-         lookupItem: function (tabKey, producer, operationId) {
+         lookupItem: function (options) {
             var items = this._view.getItems();
             if (items && items.getCount()) {
-               return items.getRecordById(Model.getFullId(tabKey, producer, operationId)) || items.getRecordById(Model.getFullId(null, producer, operationId));
+               var producer = options.producer;
+               if (!producer) {
+                  throw new Error('Property "producer" required');
+               }
+               var hasId = !!options.operationId;
+               var id = hasId ? options.operationId : options.workflowId;
+               if (!id) {
+                  throw new Error('Property "operationId" or "workflowId" required');
+               }
+               for (var i = 0, len = items.getCount(); i < len; i++) {
+                  var item = items.at(i);
+                  if (item.get('producer') === producer && (hasId ? item.get('id') === id : item.get('extra') && item.get('extra').workflow === id)) {
+                     return item;
+                  }
+               }
             }
          },
 

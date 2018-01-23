@@ -1,5 +1,4 @@
-define('js!Controls/Toggle/interface/ICheckable', [
-], function() {
+define('Controls/Toggle/interface/ICheckable', [], function () {
 
    /**
     * Интерфейс работы двухпозиционного переключетеля
@@ -13,7 +12,7 @@ define('js!Controls/Toggle/interface/ICheckable', [
     */
 
    /**
-    * @event Controls/Toggle/interface/ICheckable#changeChecked Происходит при изменении состояния переключателя.
+    * @event Controls/Toggle/interface/ICheckable#changeValue Происходит при изменении состояния переключателя.
     * @param {Boolean} value Новое состояние
     */
 

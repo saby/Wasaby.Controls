@@ -4,7 +4,7 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
    [
-      'js!Controls/List/resources/utils/Search',
+      'Controls/List/resources/utils/Search',
       'WS.Data/Source/Memory'
    ],
    function (Search, Memory) {
@@ -22,6 +22,9 @@ define(
                 {
                    name: 'Dmitry'
                 },
+               {
+                  name: 'Dmitry'
+               },
                 {
                    name: 'Ыфырф'
                 }
@@ -45,8 +48,8 @@ define(
                   },
                   pageSize: 5
                }).addCallback(function(result) {
-                  assert.equal(result.getCount(), 1);
-                  assert.equal(result.at(0).get('name'), 'Sasha');
+                  assert.equal(result.result.getCount(), 1);
+                  assert.equal(result.result.at(0).get('name'), 'Sasha');
                   done();
                   return result;
                });
@@ -101,12 +104,40 @@ define(
                   },
                   pageSize: 5
                }).addCallback(function(result) {
-                  assert.equal(result.getCount(), 1);
-                  assert.equal(result.at(0).get('name'), 'Sasha');
+                  assert.equal(result.result.getCount(), 1);
+                  assert.equal(result.result.at(0).get('name'), 'Sasha');
                   assert.equal(aborted, true);
                   done();
                   return result;
                });
+            });
+   
+            it('check search navigation', function(done) {
+               var search  = new Search(
+                  {
+                     searchParam: 'name',
+                     dataSource: source,
+                     navigation: {
+                        source: 'page',
+                        sourceConfig: {
+                           pageSize: 1,
+                           page: 0,
+                           mode: 'totalCount'
+                        }
+                     },
+                     searchDelay: 50
+                  }
+               );
+               search.search({
+                  filter: {
+                     name: 'Dmitry'
+                  }
+               }).addCallback(function(res) {
+                  assert.equal(res.result.getCount(), 1);
+                  assert.equal(res.hasMore, true);
+                  done();
+               });
+      
             });
    
             it('check wrong params', function(done) {
@@ -115,6 +146,28 @@ define(
                } catch (e) {
                   done();
                }
+            });
+   
+            it('getArgsForQuery', function() {
+               var search  = new Search(
+                  {
+                     searchParam: 'name',
+                     dataSource: source,
+                     navigation: {
+                        source: 'page',
+                        sourceConfig: {
+                           pageSize: 1,
+                           page: 0,
+                           mode: 'totalCount'
+                        }
+                     }
+                  }
+               );
+   
+               var queryArgs = Search._private.getArgsForQuery(search, {});
+               
+               assert.equal(source, queryArgs[0]);
+               assert.equal(0, queryArgs[4]);
             });
          });
       });

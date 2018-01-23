@@ -1,4 +1,4 @@
-define('js!Controls/Input/TimeInterval', [
+define('Controls/Input/TimeInterval', [
 ], function() {
 
    /**
@@ -7,7 +7,7 @@ define('js!Controls/Input/TimeInterval', [
     * @class Controls/Input/TimeInterval
     * @extends Controls/Control
     * @mixes Controls/Input/interface/IInputText
-    * @mixes Controls/Input/interface/IValidationError
+    * @mixes Controls/Input/interface/IValidation
     * @mixes Controls/Input/interface/IInputTag
     * @control
     * @public

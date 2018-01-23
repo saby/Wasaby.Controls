@@ -1,4 +1,4 @@
-define('js!Controls/interface/IGroupedView', [
+define('Controls/interface/IGroupedView', [
 ], function() {
 
    /**
@@ -17,7 +17,7 @@ define('js!Controls/interface/IGroupedView', [
 
    /**
     * @name Controls/interface/IGroupedView#itemsGroup
-    * @cfg {TItemsGroup}
+    * @cfg {TItemsGroup} кофигурация группировки записей. Включает в себя метод, возвращающий идентификатор группы для переданной в него записи, а так же шаблон отрисовки группы.
     */
 
 });

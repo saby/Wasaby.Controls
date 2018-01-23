@@ -43,7 +43,7 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
          /**
           * Показать нотификационное окно
           * @param inst Инстанс нотификационного окна
-          * @param {Boolean} notHide Не прятать окно по истичению времени жизни
+          * @param {Boolean} notHide Не прятать окно по истечению времени жизни
           */
          showNotification: function(inst, notHide){
             notHide = !!notHide;
@@ -56,7 +56,7 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
          /**
           * Добавить нотификационной окно в стек
           * @param inst Инстанс нотификационного окна
-          * @param {Boolean} notHide Не прятать окно по истичению времени жизни
+          * @param {Boolean} notHide Не прятать окно по истечению времени жизни
           * @private
           */
          _appendNotification: function(inst, notHide){

@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/ListView/resources/Mover', [
    /**
     * Перемещает элементы
     * @class SBIS3.CONTROLS/ListView/resources/Mover
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var Mover = Abstract.extend(/**@lends SBIS3.CONTROLS/ListView/resources/Mover.prototype*/{
       $protected: {

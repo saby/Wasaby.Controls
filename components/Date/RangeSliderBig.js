@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/Date/RangeSliderBig', [
     *
     * @mixes SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin
     *
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     *
     * @control
     * @public
@@ -25,6 +25,12 @@ define('SBIS3.CONTROLS/Date/RangeSliderBig', [
          opts = DateRangeSliderBig.superclass._modifyOptions.apply(this, arguments);
          opts._caption = this._getCaption(opts);
          return opts;
+      },
+
+      _setPickerConfig: function() {
+         var config = DateRangeSliderBig.superclass._setPickerConfig.apply(this, arguments);
+         config.className = 'controls-DateRangeBigChoose__picker';
+         return config;
       },
 
       _getDateRangeBigChooseConfig: function (element) {

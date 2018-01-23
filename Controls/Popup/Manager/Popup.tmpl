@@ -1,7 +1,11 @@
-<div class="ws-Popup"
-     on:keyup="_keyPressed()"
-     on:close="_close()"
-     on:sendResult="_sendResult()"
->
-    <ws:partial template="{{_options.template}}" scope="{{_options.componentOptions}}"></ws:partial>
+<div class="ws-Popup">
+    <ws:partial
+            template="{{_options.template}}"
+            scope="{{_options.componentOptions}}"
+            on:sendResult="_sendResult()"
+            on:close="_close()"
+            on:keyup="_keyUp()"
+            on:focusIn="_focusIn()"
+            on:focusOut="_focusOut()">
+    </ws:partial>
 </div>

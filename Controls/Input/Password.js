@@ -1,4 +1,4 @@
-define('js!Controls/Input/Password',
+define('Controls/Input/Password',
     [
         'Core/Control',
         'tmpl!Controls/Input/Password/Password',
@@ -16,7 +16,7 @@ function(Control, template, types, SimpleViewModel) {
     * @extends Controls/Control
     * @mixes Controls/Input/interface/IInputText
     * @mixes Controls/Input/interface/IInputPlaceholder
-    * @mixes Controls/Input/interface/IValidationError
+    * @mixes Controls/Input/interface/IValidation
     * @mixes Controls/Input/interface/IInputTag
     * @control
     * @public
@@ -37,7 +37,11 @@ function(Control, template, types, SimpleViewModel) {
 
         _toggleVisibilityHandler: function() {
             this._passwordVisible = !this._passwordVisible;
-        }
+        },
+
+       _valueChangedHandler: function(e, value) {
+          this._notify('valueChanged', [value]);
+       }
 
     });
 

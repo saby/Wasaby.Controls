@@ -6,7 +6,7 @@ define(
    [
       'Core/TimeInterval',
       'SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase',
-      'tmpl!SBIS3.CONTROLS/Date/TimeInterval/TimeInterval'
+      'tmpl!SBIS3.CONTROLS/FormattedTextBox/FormattedTextBox'
    ],
    function (cTimeInterval, FormattedTextBoxBase, dotTplFn) {
 
@@ -18,7 +18,7 @@ define(
        * @class SBIS3.CONTROLS/Date/TimeInterval
        * @extends SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase
        * @demo SBIS3.CONTROLS.Demo.MyTimeInterval
-       * @author Крайнов Дмитрий Олегович
+       * @author Крайнов Д.О.
        *
        * @control
        * @public

@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/Action/List/ReorderMove',[
        * @class SBIS3.CONTROLS/Action/List/ReorderMove
        * @public
        * @extends SBIS3.CONTROLS/Action/List/Move
-       * @author Ганшин Ярослав Олегович
+       * @author Ганшин Я.О.
        * @example
        * Пример использования ReorderMove:
        * <pre>

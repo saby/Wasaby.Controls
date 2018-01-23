@@ -1,21 +1,23 @@
-<ws:Controls.Input.resources.InputRender.InputRender
-        value="{{_value}}"
+<div>
+   <Controls:Input:resources:InputRender:InputRender
+        name="inputRender"
+        value="{{ _options.value }}"
+        placeholder="{{_options.placeholder}}"
         selectOnClick="{{_options.selectOnClick}}"
         viewModel="{{_textViewModel}}"
         tagStyle="{{_options.tagStyle}}"
-        on:onChangeValue="_changeValueHandler()"
-        on:onInputCompleted="_inputCompletedHandler()"
-        on:onTagHover="_notifyHandler('onTagHover')"
-        on:onTagClick="_notifyHandler('onTagClick')">
-   <ws:content>
-
-      <ws:partial
-         template="tmpl!Controls/Input/resources/input"
-         type="text"
-         enabled="{{isEnabled()}}"
-         value="{{_value}}"
-         placeholder="{{_options.placeholder}}"
-      />
-
-   </ws:content>
-</ws:Controls.Input.resources.InputRender.InputRender>
+        validationErrors="{{_options.validationErrors}}"
+        on:valueChanged="_valueChangedHandler()"
+        on:inputCompleted="_inputCompletedHandler()"
+        on:tagHover="_notifyHandler('onTagHover')"
+        on:tagClick="_notifyHandler('onTagClick')">
+      <ws:content>
+         <ws:partial
+            template="tmpl!Controls/Input/resources/input"
+            type="text"
+            enabled="{{isEnabled()}}"
+            value="{{_value}}"
+         />
+      </ws:content>
+   </Controls:Input:resources:InputRender:InputRender>
+</div>

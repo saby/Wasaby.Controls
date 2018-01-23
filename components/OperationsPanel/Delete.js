@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Delete', [
     * SBIS3.CONTROLS/OperationsPanel/Delete
     * @class SBIS3.CONTROLS/OperationsPanel/Delete
     * @extends SBIS3.CONTROLS/Button/IconButton
-    * @author Сухоручкин Андрей Сергеевич
+    * @author Сухоручкин А.С.
     * @public
     */
    var OperationDelete = IconButton.extend(/** @lends SBIS3.CONTROLS/OperationsPanel/Delete.prototype */{

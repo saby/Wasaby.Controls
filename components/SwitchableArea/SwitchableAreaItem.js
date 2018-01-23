@@ -6,7 +6,7 @@ define(['Lib/Control/CompoundControl/CompoundControl', 'Core/helpers/generate-he
       /**
        * @class SBIS3.CONTROLS.SwitchableAreaItem
        * @extends Lib/Control/CompoundControl/CompoundControl
-       * @author Крайнов Дмитрий Олегович
+       * @author Крайнов Д.О.
        * @public
        * @ignoreOptions name, allowChangeEnable, className, contextRestriction, enabled, independentContext, tabIndex
        */

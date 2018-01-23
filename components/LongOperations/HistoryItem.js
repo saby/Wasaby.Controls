@@ -34,7 +34,7 @@ define('SBIS3.CONTROLS/LongOperations/HistoryItem',
        *
        * @class SBIS3.CONTROLS/LongOperations/HistoryItem
        * @extends Core/core-extend
-       * @author Спирин Виктор Алексеевич
+       * @author Спирин В.А.
        * @public
        */
       var LongOperationHistoryItem = CoreExtend.extend(/** @lends SBIS3.CONTROLS/LongOperations/HistoryItem.prototype */{

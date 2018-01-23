@@ -1,11 +1,9 @@
 define('Controls/Input/Text/ViewModel',
    [
-      'Core/core-simpleExtend',
-      'Controls/Input/resources/InputHelper'
+      'Core/core-simpleExtend'
    ],
    function (
-      simpleExtend,
-      Helper
+      simpleExtend
    ) {
       'use strict';
       /**
@@ -19,6 +17,23 @@ define('Controls/Input/Text/ViewModel',
          TextViewModel;
 
       _private = {
+         constraint: function(value, constraint){
+            var
+               constraintValue = '',
+               reg = new RegExp(constraint);
+
+            for(var i = 0; i < value.length; i++){
+               if(reg.test(value[i])){
+                  constraintValue += value[i];
+               }
+            }
+
+            return constraintValue;
+         },
+
+         maxLength: function(value, splitValue, maxLength){
+            return value.substring(0, maxLength - splitValue.before.length - splitValue.after.length);
+         }
       };
 
       TextViewModel = simpleExtend.extend({
@@ -35,11 +50,11 @@ define('Controls/Input/Text/ViewModel',
                var insert = splitValue.insert;
 
                if (this._options.constraint) {
-                  insert = Helper.constraint(insert, this._options.constraint);
+                  insert = _private.constraint(insert, this._options.constraint);
                }
 
                if (this._options.maxLength) {
-                  insert = Helper.maxLength(insert, splitValue, this._options.maxLength);
+                  insert = _private.maxLength(insert, splitValue, this._options.maxLength);
                }
 
                return {
@@ -48,6 +63,9 @@ define('Controls/Input/Text/ViewModel',
                };
             }
          });
+
+      //Приходится записывать _private в свойство, для доступа из unit-тестов
+      TextViewModel._private = _private;
 
       return TextViewModel;
    }

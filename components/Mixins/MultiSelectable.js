@@ -66,7 +66,7 @@ define('SBIS3.CONTROLS/Mixins/MultiSelectable', [
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
     * @mixin SBIS3.CONTROLS/Mixins/MultiSelectable
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var MultiSelectable = /**@lends SBIS3.CONTROLS/Mixins/MultiSelectable.prototype  */{
@@ -185,7 +185,8 @@ define('SBIS3.CONTROLS/Mixins/MultiSelectable', [
              * @see getSelection
              */
             useSelectAll: false,
-            _isEmptySelection: _private.isEmptySelection
+            _isEmptySelection: _private.isEmptySelection,
+            _convertToKeys: convertToKeys
          },
          _loadItemsDeferred: undefined,
          _selectorController: undefined
@@ -233,6 +234,9 @@ define('SBIS3.CONTROLS/Mixins/MultiSelectable', [
          destroy: function() {
             if(this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
                this._loadItemsDeferred.cancel();
+            }
+            if (this._selectorController) {
+               this._selectorController.destroy();
             }
          }
       },

@@ -1,10 +1,10 @@
 /**
  * Created by kraynovdo on 22.09.2017.
  */
-define('js!Controls/List/ListControl/ListView', [
+define('Controls/List/ListControl/ListView', [
    'Core/Control',
    'tmpl!Controls/List/ListControl/ListView',
-   'js!Controls/List/resources/utils/ItemsUtil',
+   'Controls/List/resources/utils/ItemsUtil',
    'tmpl!Controls/List/ListControl/ItemTemplate',
    'css!Controls/List/ListControl/ListView'
 ], function (BaseControl,
@@ -54,6 +54,7 @@ define('js!Controls/List/ListControl/ListView', [
             item = dispItem.getContents();
             newKey = ItemsUtil.getPropertyValue(item, this._options.idProperty);
             this._listModel.setSelectedKey(newKey);
+            this._notify('itemClick', [item], {bubbling: true});
          }
       });
 

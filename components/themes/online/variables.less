@@ -62,8 +62,11 @@
 
 @closeButtonImage:                        url('img/areaCloseButton.png') 0 -1px;
 @closeButtonImageHover:                   url('img/areaCloseButton.png') 0 -25px;
-@closeButtonWidth:                        36px;
-@closeButtonHeight:                       24px;
+@closeButtonWidth:                        35px;
+@closeButtonHeight:                       26px;
+
+@background_EditActions-closeButton:        @closeButtonImage;
+@background_EditActions-closeButton_active: @closeButtonImageHover;
 
 @default-itemHover-color:                 #F0F5FB;//Переменную нужно удалить, она дублирует @default-bg-color-hovered-item
 @default-itemSelected-color:              #F3F3F3;
@@ -113,9 +116,8 @@
 @button-text-alignment:                   center;
 @min-width_Button:                        48px;
 @button-height:                           24px;
-@padding_Button-wrapper:                          0 11px;
-@button-margin:                           auto;
-@border-radius_Button:                    16px;
+@padding_Button-wrapper_m:                0 11px;
+@padding_Button-wrapper_default:          @padding_Button-wrapper_m;
 @color_Link-icon_hovered:                 @icon-color-primary-hover;
 @button-icon-color:                       @icon-color-primary;
 @button-icon-top-offset:                  4px;                      // top offset of 16x16 icon
@@ -181,12 +183,9 @@
 @filter-panel-chooser-dictionary-button-font-size:                12px;
 
 // Normal default button
-@border-width_Button:                     1px;
-@height_Button:                           @default-height;
 @button-border:                           @border-width_Button solid @border-color_Button;
-@font-size_Button:                        @default-text-size;
-@box-shadow_Button:                           none;
-@background_Button:                         transparent;
+@box-shadow_Button:                       none;
+@background_Button:                       transparent;
 @border-color_Button:                     @default-color;
 
 @button-hover-text-color:                 @default-text-color;
@@ -235,7 +234,7 @@
 @button-big-font:                         @button-big-font-size @default-font-name;
 @button-big-min-width:                    @min-width_Button;
 @button-big-height:                       48px;
-@padding_Button-wrapper_l:                      0 23px;
+@padding_Button-wrapper_l:                0 23px;
 @button-big-border-radius:                24px;
 @button-big-icon-top-offset:              15px;                              // top offset of 16x16 icon
 @button-big-icon-left-offset:             24px;
@@ -281,6 +280,8 @@
 @list-view-items-toolbar-icon-button-border-font-size:  16px;
 @height_IconButton_round_edit:             @icon-medium-size;
 @width_IconButton_round_edit:              @icon-medium-size;
+@height_IconButton_round_edit_size-l:      38px !important;
+@width_IconButton_round_edit_size-l:       38px !important;
 @icon-button-edit-round-border-line-height:        @icon-medium-size - 2 * @default-border-width;
 @list-view-items-toolbar-animate-duration:         0.35s;
 // Normal default button
@@ -503,6 +504,8 @@
 @top_MenuItem-icon_medium:             4px;
 @top_MenuItem-icon_medium-big:         -4px;
 @left_MenuItem-icon_medium:            0;
+@top_MenuItem-icon_large:              0;
+@left_MenuItem-icon_large:             0;
 @margin_MenuItem-text:                   6px 0 6px 0;
 @margin_MenuItem-icon_medium:                6px 0 6px 30px;
 @margin_MenuItem-icon_large:                6px 0 6px 38px;
@@ -518,6 +521,11 @@
 @menu-link-header-bg-color:               #F4F4F4;
 @menu-link-header-font-size:              @font-size_Popup;
 @menu-icon-menu-margin:                   -9px 0 0 -13px;
+@margin_MenuIcon-hideHeader-round24:      -5px 0 0 -13px;
+@line-height_MenuIcon-hideHeader-round24_icon: 22px;
+@top_MenuIcon-hideHeader-round24_icon:    2px;
+@left_MenuIcon-hideHeader-round24_icon:   0;
+@margin_MenuIcon-hideHeader-round24_text: 6px 0 6px 28px;
 @menu-icon-big-menu-margin:               -5px 0 0 -13px;
 @menu-icon-menu-large-margin:             -5px 0 0 -13px;
 @menu-icon-menu-bg:                       @background-color_Menu;
@@ -525,24 +533,11 @@
 // Text box //
 // -------- //
 //todo
-@text-box-focus-bg:                       @background-color_TextBox;
+@text-box-focus-bg:                       @background-color_InputRender;
 // --------- //
 // Combo box //
 // --------- //
-@combo-box-field-text-color:                    inherit;//todo
-@combo-box-picker-border:                       1px solid @gray-ccc-color;
-@combo-box-picker-border-radius:                0;
-@combo-box-picker-item-font-size:               15px;
-@combo-box-picker-item-padding:                 7px 4px 6px 4px;
-@combo-box-picker-item-text-color:              @combo-box-field-text-color;
-@combo-box-picker-item-bg:                      @white-color;
-@combo-box-picker-item-hover-text-color:        @combo-box-picker-item-text-color;
-@combo-box-picker-item-hover-bg:                @default-itemHover-color;
-@compo-box-picker-show-color:                   @default-text-color;
-@combo-box-picker-show-border-color:            @gray-ccc-color;
-@combo-box-picker-show-background-color:        @text-box-focus-bg;
-@combo-box-arrowDown-color-picker-show:         @accent-color;
-@shadow_ComboBox_picker:                        none;
+@box-shadow_ComboBox_picker:                    none;
 // --------------- //
 // SuggestTextBox //
 // -------------- //
@@ -575,6 +570,7 @@
 @date-picker-button-vertical-align:             center;
 @date-picker-button-size:                       18px;
 @date-picker-button-line-height:                16px;
+@top_DatePicker-closeButton:                    8px;
 // -------- //
 // Calendar //
 // -------- //
@@ -637,9 +633,13 @@
 // ---------- //
 @controls-date-range-year-marginleft:             0;
 @date-range-choose-year-line-height:            @date-range-choose-year-height + 1;
-@date-range-button-vertical-align:              center;
-@date-range-button-size:                        18px;
-@date-range-button-line-height:                 14px;
+@date-range-button-vertical-align:              center;//todo нет значение center есть middle
+@date-range-button-size_default:                18px;
+@date-range-button-line-height_default:         14px;
+@date-range-button-size_m:                      @date-range-button-size_default;
+@date-range-button-line-height_m:               @date-range-button-line-height_default;
+@date-range-button-size_l:                      @date-range-button-size_default;
+@date-range-button-line-height_l:               @date-range-button-line-height_default;
 @date-range-button-margin:                      0 0 0 8px;
 @date-range-button-hover-color:                 @hover-color !important;
 @date-range-dash-width:                         2px;
@@ -662,9 +662,9 @@
 @date-range-slider-prev-next-buttons-font-size: 16px;
 @date-range-slider-lock-margin-right:           6px;
 @date-range-slider-error-border-width:          1px;
-@date-range-slider-error-border-color:          @border-color_TextBox_error;
-@date-range-slider-error-bg:                    @background-color_TextBox_error;
-@date-range-slider-picker-shadow:                  0px 0px 12px 0px rgba(0,0,0,0.25);
+@date-range-slider-error-border-color:          @border-color_InputRender_error;
+@date-range-slider-error-bg:                    @background-color_InputRender_error;
+@date-range-slider-picker-shadow:               0px 0px 12px 0px rgba(0,0,0,0.25);
 // ----------------- //
 // Date Range Choose //
 // ----------------- //
@@ -722,101 +722,6 @@
 @date-range-choose-home-button-font-size:       14px;
 @date-range-choose-home-button-line-height:     26px;
 @date-range-choose-home-button-margin:          0 auto 12px;
-// -------------- //
-// Date Range Big //
-// -------------- //
-@date-range-big-bg-spritesheet:                'img/DateRangeBig-images2.png';
-@date-range-big-choose-font-family:                @default-font-name;
-@date-range-big-choose-width:                      350px;
-@date-range-big-choose-boundary-selected-color:    @white-color;
-@date-range-big-choose-link-text-color:            @darkcyan-color;
-@date-range-big-choose-border-color:               @float-area-border-color;
-@date-range-big-choose-border-hovered-color:       @darkcyan-color;
-@date-range-big-choose-border-selected-color:      @darkcyan-color;
-@date-range-big-choose-bg-hovered-color:           @default-itemHover-color;
-@date-range-big-choose-bg-selected-color:          @default-itemHover-color;
-@date-range-big-choose-bg-boundary-selected-color: @dodgerblue-color;
-@date-range-big-choose-header-padding:                          6px 0 8px 8px;
-@date-range-big-choose-header-home-button-margin:              2px 0 0 0;
-@date-range-big-choose-header-home-button-size:                24px;
-@date-range-big-choose-header-home-button-font-size:           14px;
-@date-range-big-choose-header-home-button-margin-left:         8px;
-@date-range-big-choose-header-home-button-line-height:         22px;
-@date-range-big-choose-header-date-box-border-color:           @gray-light-color;
-@date-range-big-choose-header-date-box-border-selected-color:  @gray-ccc-color;
-@date-range-big-choose-header-date-box-font-size:              14px;
-@date-range-big-choose-header-date-pickers-margin-right:       44px;
-@date-range-big-choose-header-date-picker-margin-top:          2px;
-@date-range-big-choose-header-apply-button-size:               28px;
-@date-range-big-choose-header-apply-button-font-size:          18px;
-@date-range-big-choose-header-apply-button-icon-margin-left:   -9px;
-@date-range-big-choose-header-apply-button-line-height:        26px;
-@date-range-big-choose-header-apply-button-margin-left:        8px;
-@date-range-big-choose-header-range-dash-width:                2px;
-@date-range-big-choose-header-range-dash-margin:               14px 3px 0 3px;
-@date-range-big-choose-years-btn:                              24px;
-@date-range-big-choose-left-right-width:                       33px;
-@date-range-big-choose-years-height:                           40px;
-@date-range-big-choose-years-panel-top-padding:                8px;
-@date-range-big-choose-years-panel-bottom-padding:             8px;
-@date-range-big-choose-years-panel-wrapper-font-size:          18px;
-@date-range-big-choose-years-panel-wrapper-font-weight:        bold;
-@date-range-big-choose-years-panel-toggle-choose-year-button-font-size:     @date-range-big-choose-years-panel-wrapper-font-size;
-@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:   22px;
-@date-range-big-choose-years-panel-toggle-choose-year-button-margin:        0 34px;
-@date-range-big-choose-years-panel-current-year-button-font-size:           @date-range-big-choose-years-panel-wrapper-font-size;
-@date-range-big-choose-years-panel-current-year-button-line-height:         24px;
-@date-range-big-choose-years-panel-back-button-font-size:                   @date-range-big-choose-years-panel-wrapper-font-size;
-@date-range-big-choose-years-panel-back-button-line-height:                 23px;
-@date-range-big-choose-years-range-font-size:                  15px;
-@date-range-big-choose-body-height:                                  403px;
-@date-range-big-choose-months-color:                                 @darkcyan-color;
-@date-range-big-choose-months-font-size:                             16px;
-@date-range-big-choose-months-margin:                                8px;
-@date-range-big-choose-months-range-btn-height:                      97px;
-@date-range-big-choose-months-range-width:                           87px;
-@date-range-big-choose-months-button-first-padding-top:              0px;
-@date-range-big-choose-months-button-first-height:                   37px;
-@date-range-big-choose-months-button-last-padding-bottom:            2px;
-@date-range-big-choose-months-button-last-height:                    36px;
-@date-range-big-choose-months-padding:                               8px;
-@date-range-big-choose-go-to-boundary-button-bg-color:               @dodgerblue-color;
-@date-range-big-choose-month-range-padding:                          8px;
-@date-range-big-choose-month-range-picker-month-width:               84px;
-@date-range-big-choose-month-range-picker-month-height:              96px;
-@date-range-big-choose-month-range-picker-color:                     @default-text-color;
-@date-range-big-choose-month-range-picker-caption-text-hovered-bg:   @date-range-big-choose-bg-hovered-color;
-@date-range-big-choose-month-range-picker-caption-height:            24px;
-@date-range-big-choose-month-range-picker-caption-font-size:         14px;
-@date-range-big-choose-month-range-picker-boundary-selected-color:   @date-range-big-choose-boundary-selected-color;
-@date-range-big-choose-month-range-picker-border-selected-color:     @dodgerblue-color;
-@date-range-big-choose-month-range-picker-bg-selected:               @date-range-big-choose-bg-selected-color;
-@date-range-big-choose-month-range-picker-boundary-selected-bg:      @dodgerblue-color;
-@date-range-big-choose-month-range-picker-month-hovered-border:      1px dotted @gray-ccc-color;
-@date-range-big-choose-month-range-picker-bg-boundary-selected-color: @date-range-big-choose-bg-boundary-selected-color;
-@date-range-big-choose-month-range-picker-table-element-height:      11px;
-@date-range-big-choose-month-range-picker-table-element-font-size:   8px;
-@date-range-big-choose-month-hovered-color:                          @black-color;
-@date-range-big-choose-month-range-picker-today-border-color:         #ff7033;
-@date-range-big-choose-month-range-picker-weekend-color:              #EF463A;
-@date-range-big-choose-date-range-picker-left:                       @date-range-big-choose-months-range-width + 5px;
-@date-range-big-choose-date-range-picker-right:                      5px;
-@date-range-big-choose-date-range-picker-color:                      @default-text-color;
-@date-range-big-choose-date-range-picker-boundary-selected-color:    @white-color;
-@date-range-big-choose-date-range-picker-border-color:               @darkcyan-color;
-@date-range-big-choose-date-range-picker-border:                     1px solid @date-range-big-choose-date-range-picker-border-color;
-@date-range-big-choose-date-range-picker-bg-hovered-color:           @date-range-big-choose-bg-hovered-color;
-@date-range-big-choose-date-range-picker-bg-selected-color:          @date-range-big-choose-bg-selected-color;
-@date-range-big-choose-date-range-picker-bg-boundary-selected-color: @date-range-big-choose-bg-boundary-selected-color;
-@date-range-big-choose-date-range-picker-caption-font-size:          20px;
-@date-range-big-choose-date-range-picker-caption-height:             40px;
-@date-range-big-choose-date-range-picker-table-element-height:       40px;
-@date-range-big-choose-date-range-picker-table-element-font-size:    16px;
-@date-range-big-choose-date-range-picker-table-element-title-padding-top:    8px;
-@date-range-big-choose-date-range-picker-today-border-color:         #ff7033;
-@date-range-big-choose-date-range-picker-weekend-color:              #EF463A;
-@date-range-big-choose-date-range-picker-calendar-top-bg:            url(@date-range-big-bg-spritesheet) 0 0 repeat-x;
-@date-range-big-choose-date-range-picker-calendar-bottom-bg:         url(@date-range-big-bg-spritesheet) 0 -40px repeat-x;
 // ------------- //
 // Edit at place //
 // ------------- //
@@ -833,8 +738,8 @@
 @edit-at-place-editor-overlay-border-radius:    4px;
 @edit-at-place-editor-overlay-bg:               #f3f3f3 !important;
 @edit-at-place-control-margin:                  0 0 0 12px;
-@edit-at-place-cancel-button-width:             @closeButtonWidth;
-@edit-at-place-cancel-button-height:            @closeButtonHeight;
+@edit-at-place-cancel-button-width:             36px;
+@edit-at-place-cancel-button-height:            24px;
 @edit-at-place-cancel-button-margin:            0 0 0 12px;
 @edit-at-place-cancel-button-bg:                @closeButtonImage;
 @edit-at-place-cancel-button-hover-bg:          @closeButtonImageHover;
@@ -844,12 +749,16 @@
 @listView-check-box-left:                       0;
 @listView-check-box-top:                        0;
 @list-view-actions-item-height:                 24px;
-@list-view-actions-margin:                      0 6px;
-@list-view-actions-margin-action-multiView:     0 2px 4px 2px;
+@margin-right_ListView-actions-item:            6px;
+@list-view-actions-margin:                      0 @margin-right_ListView-actions-item;
+@list-view-actions-margin-action-multiView:     0 2px 4px 1px;
 @list-view-actions-marginLeft-menu-multiView:   -1px;
 @list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
 @list-view-items-toolbar-bottom:                     3px;
 @list-view-items-toolbar-right:                      8px;
+@list-view-items-toolbar-padding:                    0;
+@bottomStyle-items-toolbar-iconButton-24-margin-top: 0;
+@bottomStyle-items-toolbar-iconButton-24-margin-bottom: 0;
 @list-view-items-toolbar-line-height:                24px;
 @list-view-items-toolbar-vertical-line-height:       24px;
 @list-view-items-toolbar-bg:                         @data-grid-row-hover-bg;
@@ -861,6 +770,7 @@
 @list-view-items-toolbar-right-tile:                 1px;
 @list-view-items-toolbar-bottom-tile:                2px;
 @list-view-items-toolbar-icon-size:                  24px;
+@margin-right_ListView-itemsToolbar-closeButton:     0;
 @list-view-items-toolbar-menu-icon-size:             @list-view-items-toolbar-icon-size;
 @list-view-items-toolbar-font-family:                @default-icon-medium-font;
 @font-family_closeButton-icon:                       @list-view-items-toolbar-font-family;
@@ -871,7 +781,7 @@
 @list-view-actions-menu-icon-width:             24px;
 @list-view-actions-icon-top:                    4px;
 @list-view-actions-menu-touch-size:             4px 18px;
-@list-view-actions-menu-touch-close-top:        6px;
+@list-view-actions-menu-touch-close-top:        4px;
 @list-view-actions-menu-close-top:              6px;
 @list-view-actions-menu-close-right:            6px;
 @list-view-actions-menu-close-height:           24px;
@@ -892,13 +802,24 @@
 @listView-empty-data-color:                     @black-color;
 @listView-empty-data-font-size:                 15px;
 @listView-empty-data-padding-top:               46px;
-@listView-servicefooter-padding:                0 8px;
 @listView-servicefooter-height:                 32px;
 @listView-servicefooter-fontsize:               12px;
 @listView-loadmorebutton-font-size:             @font-size_Link;
 @scrollPaging-padding:                          32px;
+//EditActions
+@border-radius_EditButton:                      @border-radius;
+@border-width_EditButton:                       @border-width_IconButton-icon;
+@width_EditButton:                              @width_IconButton_round_edit;
+@height_EditButton:                             @height_IconButton_round_edit;
+@line-height_EditButton:                        @line-height_IconButton-icon_round;
+@background-color_EditButton:                   transparent;
+@background-color_EditButton_hovered:           transparent;
+@border-color_EditButton_hovered:               @color_IconButton-icon_done;
+@text-shadow_EditButton:                        transparent;
+//ItemsToolbar
+@width_EditActions-cancelButton:        36px;
+@height_EditActions-cancelButton:       24px;
 // ItemsToolbar small
-@items-toolbar-bottom-style-background: 			url('img/items-toolbar-bottom-style-background.png');
 @list-view-small-items-toolbar-line-height:         16px;
 @list-view-small-actions-item-height:               16px;
 @list-view-small-actions-verAlign-width:            20px;
@@ -929,7 +850,7 @@
 @controls-view-photo-padding-L:                    0 14px 0 8px;
 @controls-view-photo-padding-DEFAULT:              0 18px 0 12px;
 // Edit in place padding
-@controls-view-eip-padding-DEFAULT:                3px;
+@controls-view-eip-padding-DEFAULT:                7px;
 @controls-view-eip-padding-XS:                     0px;
 @controls-view-eip-padding-S:                      7px;
 @controls-view-eip-padding-M:                      11px;
@@ -943,17 +864,11 @@
 // Tree view //
 // --------- //
 
-@tree-view-expand-icon-size:                    @icon-small-size;
-@tree-view-expand-width:                        16px;
-@tree-view-expand-height:                       20px;
-@tree-view-expand-margin:                       0 6px 0 4px;
 @tree-view-padding-left-DEFAULT:                8px;
-@tree-view-level-padding:                       26px;
 @tree-view-level-padding-photo:                 46px;
 @tree-view-level-padding-photo-S:               26px;
 @tree-view-level-padding-photo-M:               30px;
 @tree-view-level-padding-photo-L:               38px;
-@tree-view-editArrow-top:                       2px;
 @tree-view-expand-border-width:                 0;
 @tree-view-expand-border-style:                 none;
 @tree-view-expand-border-color:                 transparent;
@@ -968,8 +883,6 @@
 @tree-view-expand-open-hover-border-color:      @tree-view-expand-open-border-color;
 @tree-view-ellipsis-wrapper-height:             @data-grid-cell-line-height;
 @tree-view-ellipsis-copyArrow-padding:          0 0 0 3px;
-@tree-view-ellipsis-copyArrow-width:            19px;
-@tree-view-ellipsis-copyArrow-right:            -1px;
 @tree-view-item-content-margin:                 0 0 0 15px;
 @tree-view-child-container-padding:             0 0 0 10px;
 @tree-view-hier-wrapper-width:						16px;
@@ -1018,8 +931,7 @@
 // PartScroll //
 // ---------- //
 @data-grid-partScroll-wrapper-height:           1px;
-@data-grid-partScroll-notScrolledCell-Color:    @white-color;
-@data-grid-multiselect-notScrolledCell-Color:   @data-grid-partScroll-notScrolledCell-Color;
+@background-color_DataGridView-notScrolledCell: @white-color;
 @data-grid-partScroll-thumb-height-hover:       6px;
 @data-grid-partScroll-thumb-height:             3px;
 @data-grid-partScroll-thumb-width:              96px;
@@ -1111,6 +1023,9 @@
 @DropdownList-picker-fdf-left:                        -13px;
 @DropdownList-picker-margin-top:                      -1px;
 @DropdownList-picker-close-btn-top:                   4px;
+@size_dropdownList_picker_close_cross:                @default-icon-size-medium;
+@color_dropdownList_picker_close_cross:               @default-disabled-color;
+@color_dropdownList_picker_close_cross_hover:         #313E78;
 @DropdownList-picker-close-btn-right:                 6px;
 @DropdownList-picker-head-padding:                    4px 12px;
 @DropdownList-picker-head-weight:                     bold;
@@ -1132,7 +1047,7 @@
 @DropdownList-picker-menu-item-padding-top:           5px;
 @DropdownList-picker-menu-item-padding:               @DropdownList-picker-menu-item-padding-top 12px 3px 12px;
 @DropdownList-picker-menu-item-height:                24px;
-@DropdownList-picker-menu-item-height-ff:             19px;
+@DropdownList-picker-menu-item-height-ff:             @DropdownList-picker-menu-item-height;
 @DropdownList-picker-menu-height-ff:                  25px;
 @DropdownList-picker-menu-item-color:                 @white-color;
 @DropdownList-picker-menu-item-color-blur:            rgba(255, 255, 255, 0);
@@ -1162,6 +1077,9 @@
 @shadow_DropDownList_picker:                          @shadow_Menu;
 @border-width_DropDownList_picker:                    0;
 @border-color_DropDownList_picker:                    #CCC;
+@size_DropDownList_filter_cross:                      @icon-size_default;
+@size_DropDownList_arrow:                             @icon-size_default;
+@color-DropDownList_arrowIcon:                        @icon-color-primary;
 //ProgressBar
 @ProgressBar-height:                      16px;
 @ProgressBar-width:                       100%;
@@ -1181,13 +1099,17 @@
 @controls-filterButton-picker-bg:                 #F4F4F4;
 @controls-filterButton-picker-border-width:       @default-border-width;
 @controls-filterButton-picker-border-color:       @float-area-border-color;
-@controls-filterButton-picker-close-top:          10px;
-@controls-Popup-closeButton-top:                  10px;
+@controls-filterButton-picker-close-top:          8px;
+@controls-Popup-closeButton-top:                  6px;
 @controls-filterButton-button-height:             24px;
 @controls-filterButton-button-width:              24px;
 @controls-filterButton-button-empty-left-margin:  8px;
 @controls-filterButton-button-verSide-margin:     8px;
 @controls-filterButton-button-margin:             8px @controls-filterButton-button-verSide-margin 8px 0;
+@size_FilterButtom_line_arrow:                    @icon-size_default;
+@size_FilterButtom_line_cross:                    @icon-size_default;
+@color-FilterButtom_line_arrow:                   @icon-color-primary;
+@size_FilterButton_icon:                          24px;
 @controls-filterButton-button-margin-right-align: 8px 0 8px @controls-filterButton-button-verSide-margin;
 @controls-filterButton-line-margin-right-align:   8px 0 8px 8px;
 @controls-filterButton-height:                    40px;
@@ -1207,6 +1129,13 @@
 @controls-filterButton-margin-value:              8px;
 @controls-filterButton-filterLine-margin:         8px 8px 8px 0;
 @controls-filterButton-history-pin-top:           5px;
+@padding_filterBotton_line:                       0;
+@font-size_filterButton_line:                     @default-text-size;
+@margin_filterrButton_picker:                     -3px 0 0 0;
+@backround-color_filterButton_picker_content:     transparent;
+@background-color_filterButton_picker_header:     transparent;
+@border-color_filterButton_picker_content:        transparent;
+@border-width_filterButton_picker_content:        0;
 //FilterButtonHistory
 @controls-filterButton-history-maxHeight-height:  120px;
 @controls-filterButton-history-actions-left:      -6px !important;
@@ -1241,30 +1170,12 @@
 @drag-and-drop-hover-bg:                           @default-itemHover-color !important;
 @drag-and-drop-border-color:                       #8991A9 !important;
 //FieldLink
-@fieldLink-border-color-focus-hover:      @gray-ccc-color;
-@fieldLink-border-color-picker-show:      @fieldLink-border-color-focus-hover;
-@fieldLink-picker-show-color:             @white-color;
-@fieldLink-picker-show-field-color:       initial; //В онлайне цвет никак не перебивается, перебивается в темах
-
-@fieldLink-fieldWrapper-minWidth:         100px;
-@fieldLink-linkContainer-padding:         4px;
-@fieldLink-picker-max-height:             500px;
-@fieldLink-picker-min-height:             16px;
-@fieldLink-linkItem-cross-width:          20px;
-@fieldLink-afterField-button-margin:      0 @default-padding 0 0;
-@fieldLink-link-color-enabled-hover:      #313E78;
-@fieldLink-link-line-height:              24px;
-@fieldLink-showSelector-color:            @icon-color-primary;
-@fieldLink-showSelector-color-hover:      @color_Link-text_hovered;
-@fieldLink-big-fontSize:                  15px;
-@fieldLink-big-height:                    20px;
-@fieldLink-big-fontSize-color:            #313E78;
 @fieldLink-FilterButton-color:            #0055bb;
 @fieldLink-FilterButton-color-hover:      @fieldLink-FilterButton-color;
-@font-size_FieldLink_itemCaption_normal:  @default-text-size;
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
 @controls-SelectorButton-line-height:              24px;
+@font-size_SelectorButton:                         @icon-size_default;
 @controls-SelectorButton-error-outline:            1px solid #ff302b;
 // BackButton
 @back-button-font-size:                            18px;
@@ -1273,7 +1184,8 @@
 @back-button-padding-before:                       0;
 @icon-size:                                        16px;//todo
 @icon-width:                                       16px;//todo
-@back-button-arrow-hover-color:                    @primary-color;
+@back-button-arrow-color:                          @primary-color;
+@back-button-arrow-hover-color:                    @back-button-arrow-color;
 @back-button-arrow-padding-right-1:                2px;
 @back-button-arrow-padding-right-2:                3px;
 // BreadCrumbs
@@ -1284,12 +1196,15 @@
 @breadcrumbs-smallItems-font-size:                 14px;
 @breadcrumbs-arrow-top:                            2px;
 @breadcrumbs-small-items-top:                      @breadcrumbs-top;
+@breadcrumbs-small-arrow-top:                      @breadcrumbs-arrow-top;
 @bread-crumbs-menu-padding:                        4px 0;
 @bread-crumbs-menu-max-width:                      800px;
+@bread-crumb-crumb-margin-left:                    0;
+@bread-crumb-crumb-home-top:                       0;
 // EditDialog
-@editdialog-applybutton-width:                     90px;
-@editdialog-applybutton-right:                     38px; //ширина кнопки закрытия окна 36px + 2px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
-@editdialog-window-title-margin-right:             128px; //ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 2px на небольшой отступ между ними */
+@editdialog-applybutton-width:                     auto;
+@editdialog-applybutton-right:                     40px; //ширина кнопки закрытия окна 36px + 4px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
+@editdialog-window-title-margin-right:             130px; //ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 4px на небольшой отступ между ними */
 @editdialog-template-minwidth:                     auto;
 @editdialog-applybutton-top:                       8px;
 //MoveDialog
@@ -1302,7 +1217,7 @@
 @controls-movedialog-padding:                      0 0 5px 0;
 @controls-movedialog-min-height:                   50px;
 // PrintDialog
-@controls-printdialog-activate-right:              40px;
+@controls-printdialog-activate-right:              49px;
 @controls-printdialog-activate-margin-top:         @controls-movedialog-activate-top;
 @controls-printdialog-min-width:                   @controls-movedialog-min-width;
 //InformationPopup
@@ -1357,6 +1272,7 @@
 @controls-SubmitPopup-border-bottom:               @controls-SubmitPopup-border;
 @controls-SubmitPopup-message-color:               #000;
 @controls-SubmitPopup-details-color:               inherit;
+@controls-ConfirmationWindow-max-width:            calc(~"100% - 16px");
 //ListView AjaxIndicator
 @controls-AjaxLoader-background:                   none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
 @controls-AjaxLoader-size:                         32px;
@@ -1411,7 +1327,7 @@
 @link-header-padding-left:                         @header-padding-left;
 @link-header-padding-right:                        @header-padding-right;
 @link-header-height:                               @header-height;
-@link-header-font:                                 700 18px escape('/') @header-height @default-font-name;
+@link-header-font-size:                            18px;
 @link-header-color:                                #D94700;
 @link-header-text-decoration:                      none;
 @link-header-after-content:                        '\E002';
@@ -1428,6 +1344,7 @@
 @toggle-header-padding-right:                      8px;
 @toggle-header-height:                             24px;
 @toggle-header-font:                               700 15px escape('/') @toggle-header-height @default-font-name;
+@toggle-header-font-size:                          15px;
 @toggle-header-color:                              @blue-dark-color;
 @toggle-header-background:                         none;
 @toggle-header-before-content:                     '\E013';
@@ -1481,14 +1398,14 @@
 @commands-button-close-icon:                               @icon-medium-size;
 @commands-button-close-icon-font-size:                     @commands-button-close-icon;
 @commands-button-close-font-family:                        @default-icon-medium-font;
-@commands-button-close-icon-color:                         @blue-dark-color;
-@commands-button-close-button-size:                        32px;
-@commands-button-close-button-top:                         4px;
+@commands-button-close-icon-color:                         @gray-ccc-color;
+@commands-button-close-button-size:                        30px;
+@commands-button-close-button-top:                         2px;
+@commands-button-close-button-glyph-top:                   4px;
 @commands-button-close-button-glyph-top:                   @commands-button-close-button-top;
 @commands-button-close-button-right:                       0;
 @commands-button-close-hover-color:                        @commands-button-close-icon-color;
-@commands-button-margin:                                   -9px -33px 0 0;
-@commands-button-close-content:                            '\e801';
+@commands-button-margin:                                   -6px -34px 0 0;
 @commands-button-item-padding-right:                       38px!important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
 
 
@@ -1497,8 +1414,6 @@
 @height_ListView_ScrollPager:                            32px;
 @scrollpager-bottom:                                     0px;
 @scrollpager-border:                                     1px solid @default-color;
-@date-range-big-header-bg:								#f9f9f9;
-@date-range-big-bg:										#fff;
 @back-button-linheight-before:                inherit;
 @back-button-width-before:                                  9px;
 @back-button-text-fontweight:               @bold-font-weight;
@@ -1582,30 +1497,35 @@
 @width-ColumnsEditor-Editing-Area: 388px;
 @height-ColumnsEditor-Editing-Area-head-title: 24px;
 @height-ColumnsEditor-Editing-Area-head-preset: 24px;
-@padding-top-ColumnsEditor-Editing-Area-head: 8px;
-@spacing-ColumnsEditor-Editing-Area-head: 12px;
-@padding-bottom-ColumnsEditor-Editing-Area-head: 4px;
+@border-bottom-ColumnsEditor-Editing-Area__head: 1px solid #CCCCCC;
+@padding-ColumnsEditor-Editing-Area-head: 8px 0 2px 12px;
+@padding-ColumnsEditor-Editing-Area-head-2: 8px 0 7px 12px;
+@spacing-ColumnsEditor-Editing-Area-head: 4px;
 @background-color-ColumnsEditor-Editing-Area-head: #f7f4f0;
 @color-ColumnsEditor-Editing-Area__head-title-left: #313E78;
 @font-size-ColumnsEditor-Editing-Area__head-title-left: 18px;
 @font-weight-ColumnsEditor-Editing-Area__head-title-left: bold;
-@margin-right-ColumnsEditor-Editing-Area__head-title-right: 38px;
+@margin-right-ColumnsEditor-Editing-Area__head-title-right: 52px;
+@height-ColumnsEditor-Editing-Area__head-preset: 30px;
 @font-size-ColumnsEditor-Editing-Area__head-preset: 15px;
-@padding-ColumnsEditor-Editing-Area__head-preset-label: 3px 8px 0px 0px;
+@padding-ColumnsEditor-Editing-Area__head-preset-label: 5px 8px 0 0;
 @color-ColumnsEditor-Editing-Area__head-preset-label: rgb(153, 153, 153);
 @padding-left-ColumnsEditor-Editing-Area__Preset-item: 6px;
-@padding-top-ColumnsEditor-Editing-Area__Preset-item-title: 1px;
-@border-top-ColumnsEditor-Editing-Area__body: 1px solid #CCCCCC;
+@spacing-ColumnsEditor-Editing-Area__Preset-item: 3px;
+@width-ColumnsEditor-Editing-Area__Preset-input: 230px;
 @padding-ColumnsEditor-Editing-Area__body: 12px 0;
 @padding-ColumnsEditor-Editing-Area__FixedList-CheckBox: 4px;
 @padding-left-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption: 8px;
 @color-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption: @black-color !important;
 @left-ColumnsEditor-Editing-Area__view-item__itemCheckBox: 4px;
-@top-ColumnsEditor-Editing-Area__view-item__itemCheckBox: 4px;
+@top-ColumnsEditor-Editing-Area__view-item__itemCheckBox: 2px;
 @padding-left-ColumnsEditor-Editing-Area__view-item-text: 36px;
-@line-height-ColumnsEditor-Editing-Area__view-item-text: 32px;
+@padding-right-ColumnsEditor-Editing-Area__view-item-text: 12px;
+@padding-right-ColumnsEditor-Editing-Area__view-item-text-2: 72px;
+@line-height-ColumnsEditor-Editing-Area__view-item-text: 28px;
 @color-ColumnsEditor-Editing-Area__view-item-text: #8991a9;
 @color-ColumnsEditor-Editing-Area__view-item-text__multiSelected: @black-color;
+
 
 //--------------//
 //  TimePicker  //
@@ -1680,6 +1600,7 @@
 
 @bottomStyle-items-toolbar-height:                  30px;
 @bottomStyle-items-toolbar-width:                   24px;
+@bottomStyle-items-toolbar-itemsContainer-margin-left: -4px;
 @bottomStyle-padding-bottom:                        @bottomStyle-items-toolbar-height + @bottomStyle-items-toolbar-margin; //высота операций + маржин
 @bottomStyle-items-toolbar-border-color:            #F3F3F3;
 @bottomStyle-items-toolbar-margin:                  4px;
@@ -1710,3 +1631,8 @@
 //  StylesPanel   //
 //----------------//
 @styles-panel-color-shadow:               0px 0px 0px @default-border-width @default-border-color;
+
+//-----------------//
+//  Popup   //
+//----------------//
+@shadow_Popup_stack:  -6px 0px 8px -5px rgba(0, 0, 0, 0.4);

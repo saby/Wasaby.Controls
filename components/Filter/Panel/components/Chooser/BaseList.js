@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList', [
     * <br/>
     * @class SBIS3.CONTROLS/Filter/Panel/components/Chooser/BaseList
     * @extends SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base
-    * @author Сухоручкин Андрей Сергеевич
+    * @author Сухоручкин А.С.
     * @public
     *
     * @demo SBIS3.CONTROLS.Demo.MyFilterView

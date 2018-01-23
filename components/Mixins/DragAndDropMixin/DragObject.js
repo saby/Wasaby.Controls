@@ -18,7 +18,7 @@ define('SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragObject', [
     * DragObject передается во все события DragNDropMixin. Также его можно получить в любом месте через RequireJS.
     * @class SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragObject
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @see SBIS3.CONTROLS/Mixins/DragNDropMixin
     * @example
     * Получим DragObject через require

@@ -27,7 +27,7 @@ define('SBIS3.CONTROLS/FormController', [
     * @class SBIS3.CONTROLS/FormController
     * @extends Lib/Control/CompoundControl/CompoundControl
     * @public
-    * @author Красильников Андрей Сергеевич
+    * @author Красильников А.С.
     *
     * @ignoreEvents onAfterLoad onChange onStateChange
     * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
@@ -187,7 +187,11 @@ define('SBIS3.CONTROLS/FormController', [
       $constructor: function() {
          this._publish('onFail', 'onReadModel', 'onBeforeUpdateModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onAfterFormLoad');
          this._declareCommands();
-         this._panel = this.getTopParent();
+         // ищем панель как ближайший предок LikeWindowMixin, именно он является панелью, а не getTopParent.
+         // у панели может быть задан parent и getTopParent вернет не то что надо
+         this._panel = this.findParent(function(parent) {
+                 return cInstance.instanceOfMixin(parent, 'Lib/Mixins/LikeWindowMixin');
+             }) || this.getTopParent();
          this._initHandlers();
          this._subscribeToEvents();
 

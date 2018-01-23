@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/LongOperations/Tools/Bunch',
        * @class SBIS3.CONTROLS/LongOperations/Tools/Bunch
        * @extends Core/core-extend
        *
-       * @author Спирин Виктор Алексеевич
+       * @author Спирин В.А.
        *
        * @public
        * @type {SBIS3.CONTROLS/LongOperations/Tools/Bunch}
@@ -259,7 +259,7 @@ define('SBIS3.CONTROLS/LongOperations/Tools/Bunch',
             }
          }
          return values;
-      }
+      };
 
       /**
        * Проверить значение на соответсвие критериям

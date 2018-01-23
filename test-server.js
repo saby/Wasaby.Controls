@@ -9,6 +9,8 @@
 var app = require('ws-unit-testing/server'),
    config = require('./package.json').config;
 
+require('./test-fix-view.js').fix(config);
+
 app.run(process.env.test_server_port || config.test_server_port, {
    root: process.cwd(),
    ws: config.ws,

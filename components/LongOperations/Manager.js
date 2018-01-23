@@ -118,12 +118,44 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
        * Класс менеджера длительных операций
        * @public
        *
-       * @author Спирин Виктор Алексеевич
+       * @author Спирин В.А.
        *
        * @type {SBIS3.CONTROLS/LongOperations/Manager}
        */
       var manager = /*CoreExtend.extend*/(/** @lends SBIS3.CONTROLS/LongOperations/Manager.prototype */{
          _moduleName: 'SBIS3.CONTROLS/LongOperations/Manager',
+
+         /**
+          * @event onlongoperationstarted Происходит при начале исполнения новой длительной операции
+          * @param {Core/EventObject} evtName Дескриптор события
+          * @param {object} data Данные события
+          * @see SBIS3.CONTROLS/LongOperations/IProducer
+          *
+          * @event onlongoperationchanged Происходит при изменении свойств длительной операции в процесе исполнения
+          * @param {Core/EventObject} evtName Дескриптор события
+          * @param {object} data Данные события
+          * @see SBIS3.CONTROLS/LongOperations/IProducer
+          *
+          * @event onlongoperationended Происходит при завершении длительной операции по любой причине. При завершении вследствие ошибки
+          * предоставляется информация об ошибке в свойстве data.error
+          * @param {Core/EventObject} evtName Дескриптор события
+          * @param {object} data Данные события
+          * @see SBIS3.CONTROLS/LongOperations/IProducer
+          *
+          * @event onlongoperationdeleted При удалении длительной операции
+          * @param {Core/EventObject} evtName Дескриптор события
+          * @param {object} data Данные события
+          * @see SBIS3.CONTROLS/LongOperations/IProducer
+          *
+          * @event onproducerregistered При регистрации продюсера длительных операций в менеджере
+          * @param {Core/EventObject} evtName Дескриптор события
+          *
+          * @event onproducerunregistered При снятии с регистрации продюсера длительных операций в менеджере
+          * @param {Core/EventObject} evtName Дескриптор события
+          *
+          * @event ondestroy При уничтожении менеджера
+          * @param {Core/EventObject} evtName Дескриптор события
+          */
 
          /**
           * Получить ключ текущей вкладки
@@ -359,9 +391,7 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
          if (!name) {
             throw new Error('Producer has no name');
          }
-         var inf = _checkProducerName(name);
-         var module = inf && requirejs.defined(inf.module) ? require(inf.module) : null;
-         if (!module || !(typeof module === 'function' ? producer instanceof module : producer === module)) {
+         if (!_checkProducerName(producer)) {
             throw new Error('Producer name is invalid');
          }
          var inner = protectedOf(manager);
@@ -448,18 +478,16 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
       /**
        * Проверить правильность имени продюсера
        * Указанное имя продюсера должно быть или непосредственно именем модуля, или именем модуля и следующей после него через ":" опциональной инициализирующей строкой
-       * Возвращает объект, содержащий имя модуля и строку инициализатора если она есть
        * @protected
-       * @param {string} prodName Имя продюсера длительных операций
-       * @return {object}
+       * @param {SBIS3.CONTROLS/LongOperations/IProducer} producer Продюсер длительных операций
+       * @return {boolean}
        */
-      var _checkProducerName = function (prodName) {
+      var _checkProducerName = function (producer) {
+         var prodName = producer.getName();
          var i = prodName.indexOf(':');
          var modName = i !== -1 ? prodName.substring(0, i) : prodName;
-         //var mods = require('Core/constants').jsModules;
-         //return modName in mods ? {module:'js!' + modName, initer:i !== -1 ? prodName.substring(i + 1) : null} : null;
-         //todo для тестов поправил так выписал задачу на рефакторинг https://online.sbis.ru/opendoc.html?guid=263b54d7-1063-4445-ad78-701cac458cc4
-         return {module: requirejs.defined(modName) ? modName : 'js!' + modName, initer:i !== -1 ? prodName.substring(i + 1) : null}
+         var module = requirejs.defined(modName) ? require(modName) : (modName.substring(0, 3) !== 'js!' && requirejs.defined('js!' + modName) ? require('js!' + modName) : null);
+         return !!module && (typeof module === 'function' ? producer instanceof module : producer === module);
       };
 
       /**
@@ -745,7 +773,7 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
       protectedOf(manager)._tabChannel = new TabMessage();
 
       // Опубликовать свои события
-      _channel.publish('onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted');
+      _channel.publish('onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered', 'ondestroy');
 
       // И подписаться на события во вкладках
       protectedOf(manager)._tabChannel.subscribe('LongOperations:Manager:onActivity', _tabListener);

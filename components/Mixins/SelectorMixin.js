@@ -15,7 +15,7 @@ define('SBIS3.CONTROLS/Mixins/SelectorMixin', [
        * SelectorMixin используется полем связи.
        * @mixin SBIS3.CONTROLS/Mixins/SelectorMixin
        * @public
-       * @author Крайнов Дмитрий Олегович
+       * @author Крайнов Д.О.
        */
       var SelectorMixin = /**@lends SBIS3.CONTROLS/Mixins/SelectorMixin.prototype  */{
          $protected: {

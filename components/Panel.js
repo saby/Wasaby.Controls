@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/Panel', ['Lib/Control/CompoundControl/CompoundControl', '
     * @extends Lib/Control/CompoundControl/CompoundControl
     * @control
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @designTime actions /design/design
     * @designTime plugin /design/DesignPlugin 
     * @initial

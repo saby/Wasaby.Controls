@@ -2,26 +2,31 @@ define('SBIS3.CONTROLS/TextArea', [
    "Core/constants",
    "SBIS3.CONTROLS/TextBox",
    'tmpl!SBIS3.CONTROLS/TextArea/resources/inputField',
+   'tmpl!SBIS3.CONTROLS/TextArea/resources/compatiblePlaceholder',
    'Core/helpers/String/escapeHtml',
    'SBIS3.CONTROLS/Utils/LinkWrapUtils',
    "Core/IoC",
    "browser!js!Deprecated/Controls/FieldText/resources/Autosize-plugin",
    'css!SBIS3.CONTROLS/TextArea/TextArea'
-], function( constants,TextBox, inputField, escapeHtml, LinkWrap, IoC) {
+], function( constants,TextBox, inputField, compatiblePlaceholderTemplate, escapeHtml, LinkWrap, IoC) {
 
    'use strict';
 
-   function generateClassesName(min, max) {
+   function generateClassesName(min, max, size) {
       if (!max || max < min) {
          max = min;
       }
-      return 'controls-TextArea__field_minheight-' + min + ' controls-TextArea__field_maxheight-' + max;
+      return 'controls-TextArea__field_size_' + size + '_minheight-' + min + ' controls-TextArea__field_size_' + size + '_maxheight-' + max;
    }
 
-   function modifyHeightClasses(container, addClasses) {
-      var curClasses = container.className, newClasses = '';
-      newClasses = curClasses.replace(/controls\-TextArea__field_maxheight\-[0-9]*/g, '');
-      newClasses = newClasses.replace(/controls\-TextArea__field_minheight\-[0-9]*/g, '');
+   function modifyHeightClasses(container, addClasses, size) {
+      var
+         curClasses = container.className,
+         maxHeightReg = new RegExp('controls-TextArea__field_size_' + size + '_maxheight-[0-9]*', 'g'),
+         minHeightReg = new RegExp('controls-TextArea__field_size_' + size + '_minheight-[0-9]*', 'g'),
+         newClasses;
+      newClasses = curClasses.replace(maxHeightReg, '');
+      newClasses = newClasses.replace(minHeightReg, '');
       newClasses = newClasses + ' ' + addClasses;
       container.className = newClasses;
    }
@@ -30,7 +35,7 @@ define('SBIS3.CONTROLS/TextArea', [
     * Класс контрола "Многострочное поле ввода". Контрол может автоматически менять высоту в зависимости от количества введённой информации.
     * @class SBIS3.CONTROLS/TextArea
     * @extends SBIS3.CONTROLS/TextBox/TextBoxBase
-    * @author Романов Валерий Сергеевич
+    * @author Романов В.С.
     * @css controls-TextArea Класс для изменения отображения текста в многострочном поле ввода.
     *
     * @ignoreOptions independentContext contextRestriction className
@@ -66,6 +71,7 @@ define('SBIS3.CONTROLS/TextArea', [
          _options: {
             _isMultiline: true,
             _paddingClass: ' controls-TextArea_padding',
+            compatiblePlaceholderTemplate: compatiblePlaceholderTemplate,
             textFieldWrapper: inputField,
             wrapUrls: LinkWrap.wrapURLs,
             escapeHtml: escapeHtml,
@@ -112,8 +118,7 @@ define('SBIS3.CONTROLS/TextArea', [
              * </pre>
              */
             newLineMode: 'enter',
-            breakClickBySelect: false,
-            size: 'auto'
+            breakClickBySelect: false
          }
       },
 
@@ -130,7 +135,7 @@ define('SBIS3.CONTROLS/TextArea', [
          if (cfg.minLinesCount > cfg.maxLinesCount) {
             cfg.maxLinesCount = cfg.minLinesCount;
          }
-         newCfg.heightclassName = generateClassesName(cfg.minLinesCount, cfg.maxLinesCount);
+         newCfg.heightclassName = generateClassesName(cfg.minLinesCount, cfg.maxLinesCount, cfg.size);
          newCfg.cssClassName += ' controls-TextArea';
          return newCfg;
       },
@@ -189,6 +194,10 @@ define('SBIS3.CONTROLS/TextArea', [
          TextArea.superclass.init.call(this);
          var self = this;
 
+         if (this._options.maxLength) {
+            this.setMaxLength(this._options.maxLength);
+         }
+
          if (this._options.maxLinesCount != this._options.minLinesCount) {
 
             this._inputField.data('minLinesCount', this._options.minLinesCount);
@@ -232,6 +241,13 @@ define('SBIS3.CONTROLS/TextArea', [
          }
       },
 
+      _getCompatiblePlaceholder: function() {
+         if (!this._compatPlaceholder) {
+            this._compatPlaceholder = this._container.find('.controls-TextArea__placeholder');
+         }
+         return this._compatPlaceholder;
+      },
+
       _removeAutoSizeDognail: function() {
          //Изначально рассчитываем высоту по view, а на textarea висит position: absolute.
          if (this.isEnabled()) {
@@ -245,8 +261,8 @@ define('SBIS3.CONTROLS/TextArea', [
             this._disabledWrapper.removeClass('controls-TextArea__view_empty');
          }
          //нельзя классы, ограничивающие высоту ставить сразу в шаблоне, потому что из-за них некорректно считается высота, т.к. оин сразу добавляют скролл, а считать высоту надо без скролла
-         var hClasses = generateClassesName(this._options.minLinesCount, this._options.maxLinesCount);
-         modifyHeightClasses(this._inputField.get(0), hClasses);
+         var hClasses = generateClassesName(this._options.minLinesCount, this._options.maxLinesCount, this._options.size);
+         modifyHeightClasses(this._inputField.get(0), hClasses, this._options.size);
          this._disabledWrapper.addClass('controls-TextArea__view_init');
          this._inputField.addClass('controls-TextArea__field_init');
          this._autoHeightInitialized = true;
@@ -338,8 +354,8 @@ define('SBIS3.CONTROLS/TextArea', [
          this._inputField.attr('rows', cnt);
          this._inputField.data('minLinesCount', count);
          this._inputField.trigger('autosize.resize');
-         var hClasses = generateClassesName(cnt, this._options.maxLinesCount);
-         modifyHeightClasses(this._inputField.get(0), hClasses);
+         var hClasses = generateClassesName(cnt, this._options.maxLinesCount, this._options.size);
+         modifyHeightClasses(this._inputField.get(0), hClasses, this._options.size);
       },
 
       _drawText: function(text) {
@@ -351,7 +367,10 @@ define('SBIS3.CONTROLS/TextArea', [
 
       setMaxLength: function(num) {
          TextArea.superclass.setMaxLength.call(this, num);
-         this._inputField.attr('maxlength',num);
+         //IE - единственный браузер, который навешивает :invalid, если через js поставить текст, превышаюший maxLength
+         //Т.к. мы показываем плейсхолдер, если на поле ввода висит :invalid, то он не скрывается.
+         //Поэтому для IE просто не будем навешивать аттрибут maxLength
+         this._inputField.attr('maxlength', constants.browser.isIE ? null : num);
       },
 
 

@@ -1,0 +1,85 @@
+<div class="controls-DateRangeBigChoose__header">
+   <ws:template name="DateBoxTpl">
+      <SBIS3.CONTROLS:Date:Box
+         tabindex="2"
+         mask="{{mask}}"
+         name="DatePickerEnd"
+         autocompleteMode="end"
+         date="{{'endValue'|mutable}}"
+         serializationMode="{{endValueSerializationMode}}"
+         onTextChangeMode="onTextEnter"
+         size="m"
+         className="controls-DateRangeBigChoose__datePickerEnd"
+         validators="{{selectionType === 'range' ? [
+                  {
+                     'validator': compareExt,
+                     'option': 'date',
+                     'errorMessage': errorMessage,
+                     'params': ['DatePickerStart', 'getDate', '>=']
+                  }
+               ] : undefined}}"
+      />
+   </ws:template>
+
+   <SBIS3.CONTROLS:Button:StateButton
+      tabindex="0"
+      name="StateButton"
+      activableByClick="{{false}}"
+      tooltip="{[Смена режима календаря]}"
+      icon="sprite:icon-size icon-ArrangeList icon-primary"
+      checkedIcon="sprite:icon-size icon-ArrangeSmallIconsPreview icon-primary"
+      className="controls-DateRangeBigChoose__stateButton"
+   />
+
+   <SBIS3.CONTROLS:Date:RangeSliderBase
+      tabindex="1"
+      name="DateRangeHeader"
+      startValue="{{'startValue'|bind}}"
+      endValue="{{'endValue'|bind}}"
+      visible="{{headerType === 'link'}}"
+      showNextArrow="{{false}}"
+      showPrevArrow="{{false}}"
+      showUndefined="{{true}}"
+      class="controls-DateRangeBigChoose__header-period controls-DateRangeBigChoose__header-period-text"
+   />
+   <div class="controls-DateRangeBigChoose__header-period controls-DateRangeBigChoose__header-period-input {{headerType === 'link' ? 'ws-hidden' }}">
+      <SBIS3.CONTROLS:Date:Box
+         tabindex="1"
+         mask="{{mask}}"
+         name="DatePickerStart"
+         autocompleteMode="start"
+         onTextChangeMode="onTextEnter"
+         date="{{'startValue'|mutable}}"
+         size="m"
+         className="controls-DateRangeBigChoose__datePickerStart"
+      />
+      <div class="controls-DateRangeBigChoose__datePickerEnd-wrapper{{ selectionType === 'range' ? '' : ' ws-hidden' }}">
+         <div class="controls-DateRangeBigChoose__header-rangeDash"></div>
+         <ws:partial template="DateBoxTpl" scope="{{...}}">
+            <ws:compareExt type="function">SBIS3.CONTROLS/Date/RangeBigChoose/resources/Validators:compareExt</ws:compareExt>
+            <ws:errorMessage type="string">{[Дата конца периода должна быть больше даты начала.]}</ws:errorMessage>
+         </ws:partial>
+      </div>
+   </div>
+
+   <SBIS3.CONTROLS:Button:IconButton
+      tabindex="0"
+      name="HomeButton"
+      activableByClick="{{false}}"
+      tooltip="{[Поставить текущую дату]}"
+      icon="sprite:icon-size icon-Home3 icon-primary"
+      className="controls-DateRangeBigChoose__homeBtn"
+      visible="{{homeButtonVisibility|bind}}"
+   />
+   <!--<div class="controls-DateRangeBigChoose__header-date-pickers">-->
+   <SBIS3.CONTROLS:Button:IconButton
+      tabindex="0"
+      name="ApplyButton"
+      primary="{{true}}"
+      activableByClick="{{false}}"
+      icon="sprite:icon-16 icon-Yes icon-done"
+      className="controls-DateRangeBigChoose__ApplyButton controls-IconButton__round-border"
+   />
+
+   <div class="controls-PopupMixin__closeButton controls-DateRangeBigChoose__closeButton"></div>
+</div>

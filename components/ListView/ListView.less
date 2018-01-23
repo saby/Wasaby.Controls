@@ -172,7 +172,7 @@ controls-ListView__item__withHover:hover {
 }
 
 .controls-ListView__serviceFooter {
-   padding: @listView-servicefooter-padding;
+   padding: 0 @padding-ListView-serviceFooter;
    overflow: hidden;
 }
 
@@ -290,6 +290,11 @@ controls-ListView__item__withHover:hover {
    height: @height_ListView-GroupBy / 2;
    margin-bottom: @height_ListView-GroupBy / 2;
    border-bottom: @default-border-width solid @color_ListView-GroupBy_separator;
+   width: 100%;
+}
+
+.controls-GroupBy__separator__flex {
+   display: flex;
 }
 .controls-GroupBy__separator__center {
    text-align: center;
@@ -301,10 +306,12 @@ controls-ListView__item__withHover:hover {
    line-height: @height_ListView-GroupBy;
    display: inline-block;
    padding: @padding_ListView-GroupBy_separator;
-   background: @default-bg-color;
+   background-color: @background-color_ListView-GroupBy_text;
    color: @color_ListView-GroupBy_text;
    font-size: @font-size_ListView-GroupBy_text;
    white-space: nowrap;
+   text-align: center;
+   flex-shrink: 0;
 }
 .controls-GroupBy__separatorText.controls-GroupBy__separatorCollapse {
    cursor: pointer;

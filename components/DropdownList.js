@@ -57,7 +57,7 @@ define('SBIS3.CONTROLS/DropdownList',
        * @class SBIS3.CONTROLS/DropdownList
        * @extends Lib/Control/CompoundControl/CompoundControl
        *
-       * @author Красильников Андрей Сергеевич
+       * @author Красильников А.С.
        *
        * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
        * @mixes SBIS3.CONTROLS/Mixins/MultiSelectable
@@ -157,6 +157,7 @@ define('SBIS3.CONTROLS/DropdownList',
 
       var DropdownList = Control.extend([PickerMixin, ItemsControlMixin, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS/DropdownList.prototype */{
          _dotTplFn: dotTplFn,
+         _checkBoxSelectionStarted: false,
          /**
           * @event onClickMore Происходит при клике на кнопку "Ещё", которая отображается в выпадающем списке.
           * @param {Core/EventObject} eventObject Дескриптор события.
@@ -181,7 +182,7 @@ define('SBIS3.CONTROLS/DropdownList',
                 * В шаблон запрещено внедрять компоненты или базовые платформенные контролы. Шаблон формируют на основе <b>базового шаблона</b>:
                 * <pre>
                 * <div class="controls-DropdownList__beforeCaptionWrapper" if="{{!!text}}">
-                *     <i class="controls-DropdownList__arrowIcon icon-16 icon-size icon-DayForward icon-primary action-hover"></i>
+                *     <i class="controls-DropdownList__arrowIcon icon-16 icon-size icon-DayForward action-hover"></i>
                 * </div>
                 * <div class="controls-DropdownList__textWrapper">
                 *     <span class="controls-DropdownList__text"><span if="{{_selectedItemIcon}}" class="{{_selectedItemIcon}} controls-DropdownList__icon"></span> <span class="controls-DropdownList__value">{{text}}</span></span>
@@ -213,7 +214,7 @@ define('SBIS3.CONTROLS/DropdownList',
                 * Шаблон, который используется по умолчанию:
                 * <pre>
                 *    <div class="controls-DropdownList__beforeCaptionWrapper">
-                *       <i class="controls-DropdownList__arrowIcon icon-16 icon-size icon-DayForward icon-primary action-hover"></i>
+                *       <i class="controls-DropdownList__arrowIcon icon-16 icon-size icon-DayForward action-hover"></i>
                 *    </div>
                 *    <div class="controls-DropdownList__textWrapper">
                 *       <span class="controls-DropdownList__text">{{=it.text}}</span>
@@ -527,7 +528,8 @@ define('SBIS3.CONTROLS/DropdownList',
                  selected;
             if (row.length && (e.button === 0)) {
                if (this._options.multiselect && itemId != this.getDefaultId() && curSelectionLength !== 0 &&
-                  (curSelectionLength > 1 || this._currentSelection[0] != this.getDefaultId()) || isCheckBoxClick) {
+                  (this._checkBoxSelectionStarted) || isCheckBoxClick) {
+                  this._checkBoxSelectionStarted = true;
                   this._buttonChoose.getContainer().removeClass('ws-hidden');
                   selected =  !row.hasClass('controls-DropdownList__item__selected');
                   row.toggleClass('controls-DropdownList__item__selected', selected);
@@ -596,6 +598,7 @@ define('SBIS3.CONTROLS/DropdownList',
                this._getPickerContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
                this.getContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
 
+               this._checkBoxSelectionStarted = false;
                DropdownList.superclass.showPicker.apply(this, arguments);
 
                if (this._buttonChoose) {
@@ -832,7 +835,7 @@ define('SBIS3.CONTROLS/DropdownList',
                         var parentId = rec.get(self._options.parentProperty),
                             parentRecord,
                             text;
-                        if (parentId !== undefined){
+                        if (parentId !== undefined && parentId !== null){ //null - рутовый узел
                            parentRecord = self.getItems().getRecordById(parentId);
                            text = RecordSetUtil.getRecordsValue([parentRecord, rec], self._options.displayProperty).join(' ');
                         }
@@ -910,7 +913,7 @@ define('SBIS3.CONTROLS/DropdownList',
                selectedRecord = this._getItemsProjection().getCurrent();
             }
             else {
-               selectedRecord = this.getItems().getRecordById(id);
+               selectedRecord = this._getItemProjectionByItemId(id);
             }
             return selectedRecord && selectedRecord.getHash();
          },

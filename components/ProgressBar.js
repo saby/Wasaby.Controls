@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/ProgressBar',
        * @class SBIS3.CONTROLS/ProgressBar
        * @extends SBIS3.CONTROLS/CompoundControl
        * @control
-       * @author Журавлев Максим Сергеевич
+       * @author Журавлев М.С.
        * @initial
        * <component data-component='SBIS3.CONTROLS/ProgressBar'>
        * </component>

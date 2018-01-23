@@ -53,16 +53,17 @@
    .user-select();
    .flex-shrink(0);
    cursor: pointer;
-   width: @tree-view-expand-width;
-   height: @tree-view-expand-height;
-   margin: @tree-view-expand-margin;
+   width: @width_TreeDataGridView-expand;
+   height: @height_TreeDataGridView-expand;
+   margin: @margin_TreeDataGridView-expand;
    border-width: @tree-view-expand-border-width;
    border-style: @tree-view-expand-border-style;
    border-color: @tree-view-expand-border-color;
    overflow: hidden;
+   text-align: center;
 
    font-family: @icon-font !important;
-   font-size: @tree-view-expand-icon-size;
+   font-size: @font-size_TreeDataGridView-expand;
    color: @color_TreeDataGridView-expand;
 
    &:hover {
@@ -144,7 +145,7 @@
 
 .controls-TreeView__levelPadding {
    font-size: 0;
-   width: @tree-view-level-padding;
+   width: @width-TreeDataGridView-levelPadding;
    .flex-shrink(0);
 }
 

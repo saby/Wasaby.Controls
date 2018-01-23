@@ -47,7 +47,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
     * Миксин, задающий любому полю ввода работу с автодополнением.
     * @mixin SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var SuggestTextBoxMixin = /**@lends SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin.prototype  */{
       /**

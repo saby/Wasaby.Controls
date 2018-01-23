@@ -1,4 +1,4 @@
-define('js!Controls/Input/Money', [
+define('Controls/Input/Money', [
 ], function() {
 
    /**
@@ -6,7 +6,7 @@ define('js!Controls/Input/Money', [
     * @class Controls/Input/Money
     * @extends Controls/Control
     * @mixes Controls/Input/interface/IInputText
-    * @mixes Controls/Input/interface/IValidationError
+    * @mixes Controls/Input/interface/IValidation
     * @mixes Controls/Input/interface/IInputTag
     * @control
     * @public

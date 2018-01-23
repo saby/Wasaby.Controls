@@ -25,7 +25,7 @@ define('SBIS3.CONTROLS/Filter/Button/Text',
         *
         * @class SBIS3.CONTROLS/Filter/Button/Text
         * @extends WSControls/Buttons/ButtonBase
-        * @author Герасимов Александр Максимович
+        * @author Герасимов А.М.
         * @control
         * @public
         *

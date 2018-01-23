@@ -30,14 +30,9 @@ define('SBIS3.CONTROLS/ScrollContainer', [
        * Класс контрола "Контейнер для контента с тонким скроллом". В качестве тонкого скролла применяется класс контрола {@link SBIS3.CONTROLS/ScrollContainer/Scrollbar}.
        *
        * @class SBIS3.CONTROLS/ScrollContainer
-       * @extends Core/core-extend
-       * @author Журавлев Максим Сергеевич
+       * @extends SBIS3.CONTROLS/CompoundControl
+       * @author Журавлев М.С.
        *
-       * @mixes Core/Abstract.compatible
-       * @mixes Lib/Control/Control.compatible
-       * @mixes Lib/Control/AreaAbstract/AreaAbstract.compatible
-       * @mixes Lib/Control/BaseCompatible/BaseCompatible
-       * @mixes Lib/Control/BaseCompatible/Mixins/WsCompatibleConstructor
        *
        * @remark
        * Пример 1:
@@ -294,7 +289,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                }
             }
             if (cDetection.isIE12) {
-               scrollbarWidth = 12;
+               scrollbarWidth = 16;
             }
             if (cDetection.isIE10 || cDetection.isIE11) {
                scrollbarWidth = 17;
@@ -336,18 +331,15 @@ define('SBIS3.CONTROLS/ScrollContainer', [
 
          _initScrollbar: function(){
             if (!this._scrollbar) {
-               this._scrollbar = {
-                  _container: $('> .controls-ScrollContainer__scrollbar', this._container)
-               };
-               this._recalcSizeScrollbar();
                this._scrollbar = new Scrollbar({
-                  element: this._scrollbar._container,
+                  element: $('> .controls-ScrollContainer__scrollbar', this._container),
                   contentHeight: this._getScrollHeight(),
                   position: this._getScrollTop(),
                   parent: this
                });
 
                this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
+               this._resizeInner();
             }
             this._toggleGradient();
          },
@@ -521,6 +513,17 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                }
             }
             if (this._page !== page) {
+               
+               /**
+                * Может быть так, что номер страницы, к которой нам нужно проскролить, будет больше, чем
+                * количество страниц.
+                * Например положив ListView и включив подгрузку данных. Если в момент подгрузки,
+                * пока данные ещё не отрисовались и не произошел resize нажать на кнопку paging вперед, то номер страницы
+                * будет больше общего числа страниц, потому что ещё не произошли пересчеты размеров. Поэтому мы возьмем
+                * в качестве текущей страницы минимальное из переданного числа и текущего общего числа страниц.
+                */
+               page = Math.min(page, this._paging.getPagesCount());
+
                this._page = page;
                this._paging.setSelectedKey(page);
             }

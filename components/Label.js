@@ -1,6 +1,6 @@
 define('SBIS3.CONTROLS/Label',
    [
-      'Core/Control',
+      'Lib/Control/CompoundControl/CompoundControl',
       'SBIS3.CONTROLS/Mixins/Clickable',
       'tmpl!SBIS3.CONTROLS/Label/Label',
       'SBIS3.CONTROLS/Label/resources/Label.compatibility',
@@ -22,7 +22,7 @@ define('SBIS3.CONTROLS/Label',
        * @mixes SBIS3.CONTROLS/Mixins/Clickable
        * @mixes SBIS3.CONTROLS/Label/resources/Label.compatibility
        *
-       * @author Журавлев Максим Сергеевич
+       * @author Журавлев М.С.
        *
        * @cssModifier controls-Label_requeredField Модификатор устанавливает отображение символа "*" справа от метки.
        * Такие метки располагают рядом с полями, которые обязательны для заполнения.
@@ -57,9 +57,9 @@ define('SBIS3.CONTROLS/Label',
            */
          _controlName: 'SBIS3.CONTROLS/Label',
 
-         _template: template,
+         _dotTplFn: template,
 
-         _clickCaptionHandler: function() {
+         _onClickHandler: function() {
             var owner = this.getOwner();
             if (this.isEnabled() && owner) {
                owner.setActive(true);

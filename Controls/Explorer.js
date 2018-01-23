@@ -1,4 +1,4 @@
-define('js!Controls/Explorer', [
+define('Controls/Explorer', [
    'Core/Control'
 
 ], function (Control

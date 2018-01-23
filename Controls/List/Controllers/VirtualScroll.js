@@ -1,11 +1,13 @@
-define('js!Controls/List/Controllers/VirtualScroll', [
+define('Controls/List/Controllers/VirtualScroll', [
    'Core/core-simpleExtend'
 ], function(simpleExtend
    ) {
    'use strict';
 
-   //TODO количество записей на 1 видимой странице (для изменения индексов нужно проскроллить на это число)
-   var virtualPageSize = 15;
+   // Количество записей на 1 видимой странице (для изменения индексов нужно проскроллить на это число).
+   // Чем меньше это число, тем меньше вероятность увидеть белую область при быстром скролле.
+   // Но при маленьком значении возможны дерганья при очень разных высотах строк. Оптимальным получилось число 5-10.
+   var virtualPageSize = 5;
 
    var _private = {
       /**
@@ -88,12 +90,13 @@ define('js!Controls/List/Controllers/VirtualScroll', [
     */
    var VirtualScroll = simpleExtend.extend({
       _itemsCount: null,          // Число записей в проекции
-      _maxVisibleItems: 75,       // максимальное число одновременно отображаемых записей
+      _maxVisibleItems: 75,       // максимальное число одновременно отображаемых записей. Если не задано, считаем что шаблон строки не сложный и отображаем по 75 элементов
       _averageItemHeight: null,   // Средняя высота строки
 
       _currentPage: null,
-      _currentTopIndex: null,
+      _currentTopIndex: 0,
       _virtualWindow: null,
+      _isInitializedHeights: false, //флаг, был ли расчет средней высоты строки
 
       /**
        *
@@ -107,7 +110,10 @@ define('js!Controls/List/Controllers/VirtualScroll', [
 
          this._maxVisibleItems = cfg.maxVisibleItems || this._maxVisibleItems;
          this._itemsCount = cfg.itemsCount;
-         this._averageItemHeight = cfg.itemHeight;
+
+         // Если не задали средний размер строки сразу, то берем 18 (это размер строки без стилей).
+         // После перевого рендеринга списка эта высота будет пересчитана.
+         this._averageItemHeight = cfg.itemHeight || 18;
       },
 
       getVirtualWindow: function() {
@@ -116,6 +122,40 @@ define('js!Controls/List/Controllers/VirtualScroll', [
 
       setItemsCount: function(itemsCount) {
          this._itemsCount = itemsCount;
+      },
+
+      setAverageItemHeight: function(averageItemHeight) {
+         this._averageItemHeight = averageItemHeight;
+         this._virtualWindow = _private.calculateVirtualWindow(this._currentTopIndex, this._averageItemHeight, this._maxVisibleItems, this._itemsCount);
+      },
+
+      /**
+       * Рассчитать среднюю высоту отображаемого элемента
+       * @param itemsContainer контейнер с отрисованными элементами
+       */
+      calcAverageItemHeight: function(itemsContainer) {
+         var result = {
+            changed: false
+         };
+         //Если средняя высота уже проинициализирована или еще ничего не отрисовали - просто выходим
+         if (this._isInitializedHeights) {
+            return result;
+         }
+
+         var itemsHeight = itemsContainer.clientHeight;
+         if (!itemsHeight) {
+            return result;
+         }
+
+         //иначе считаем среднюю высоту
+         var visibleCount = this._virtualWindow ? this._virtualWindow.indexStop - this._virtualWindow.indexStart : this._itemsCount;
+         this._averageItemHeight = itemsHeight / visibleCount;
+         this._virtualWindow = _private.calculateVirtualWindow(this._currentTopIndex, this._averageItemHeight, this._maxVisibleItems, this._itemsCount);
+         this._isInitializedHeights = true;
+
+         result.changed = true;
+         result.virtualWindow = this._virtualWindow;
+         return result;
       },
 
       /**

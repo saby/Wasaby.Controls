@@ -1,4 +1,4 @@
-define('js!Controls/Input/Mask', [
+define('Controls/Input/Mask', [
 ], function() {
 
    /**
@@ -7,7 +7,7 @@ define('js!Controls/Input/Mask', [
     * @class Controls/Input/Mask
     * @extends Controls/Control
     * @mixes Controls/Input/interface/IInputText
-    * @mixes Controls/Input/interface/IValidationError
+    * @mixes Controls/Input/interface/IValidation
     * @mixes Controls/Input/interface/IInputTag
     * @control
     * @public

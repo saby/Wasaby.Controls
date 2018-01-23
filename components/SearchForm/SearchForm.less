@@ -1,4 +1,4 @@
-.controls-SearchForm.controls-TextBox {
+.controls-SearchForm.controls-InputRender {
   .border-radius(@search-border-radius);
   border-color: @border-color_SearchForm;
   border-bottom-color: @border-color_SearchForm;
@@ -29,7 +29,7 @@
     .flex-shrink(0);
     padding: @search-button-wrapper-padding;//по стандарту - 8, но 8 - 1(бордер) - 2(паддинг иконки) = 5
   }
-  //данный стили находятся внутри .controls-SearchForm.controls-TextBox чтобы в пакетированном режиме их не перебивали стили иконок icon-size{ display: inline-block }
+  //данный стили находятся внутри .controls-SearchForm.controls-InputRender чтобы в пакетированном режиме их не перебивали стили иконок icon-size{ display: inline-block }
   .controls-SearchForm__search,
   .controls-SearchForm__reset {
     .flexbox();
@@ -55,8 +55,8 @@
 // хак для edge win10 выравнивает input и placeholder
 @supports (-ms-ime-align:auto) {
   .controls-SearchForm {
-    &.controls-TextBox {
-      .controls-TextBox__field {
+    &.controls-InputRender {
+      .controls-InputRender__field {
         line-height: 0 !important;
       }
     }

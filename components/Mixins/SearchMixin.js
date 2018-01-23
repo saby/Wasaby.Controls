@@ -12,7 +12,7 @@ define('SBIS3.CONTROLS/Mixins/SearchMixin',
     * Миксин, добавляющий иконку
     * @mixin SBIS3.CONTROLS/Mixins/SearchMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var SearchMixin = /**@lends SBIS3.CONTROLS/Mixins/SearchMixin.prototype  */{

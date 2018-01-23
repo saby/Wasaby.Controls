@@ -32,7 +32,7 @@
 
 .controls-ItemsToolbar__edit {
    background-color: @list-view-items-toolbar-locked-bg;
-   .controls-IconButton.controls-IconButton__round-border-24 {
+   .controls-IconButton.controls-IconButton__round-border-24,  .controls-IconButton.controls-ItemActions-button {
       line-height: @list-view-items-toolbar-line-height !important;
    }
    .controls-ItemActions__menu-button {
@@ -42,7 +42,7 @@
 .controls-ItemsToolbar__withEditActions {
    .controls-ItemActions__item {
       line-height: @list-view-items-toolbar-line-height !important;
-      &.controls-IconButton__round-border-24 {
+      &.controls-IconButton__round-border-24, .controls-ItemActions-button {
          line-height: @list-view-items-toolbar-line-height !important;
       }
    }
@@ -64,11 +64,12 @@
                & > * {
                   margin: @list-view-actions-margin-action-multiView;
                }
-               margin-right: 0;
+               .flex-direction(column);
             }
 
             .controls-ItemActions__menu-button {
                margin-left: @list-view-actions-marginLeft-menu-multiView;
+               order: -1;
             }
          }
       }
@@ -97,6 +98,7 @@
    padding-bottom: @bottomStyle-padding-bottom;
    > .controls-ItemsToolbar {
       right: 0;
+      padding: 0;
       .controls-ItemActions__itemsContainer {
          margin-right: 0;
       }
@@ -104,7 +106,7 @@
       &.controls-ItemsToolbar__edit {
          background-color: @list-view-items-toolbar-locked-bg;
          &:before {
-            background: @items-toolbar-bottom-style-background no-repeat 0 -30px;
+            border-top-color: @list-view-items-toolbar-locked-bg;
          }
       }
       height: @bottomStyle-items-toolbar-height - @default-border-width;
@@ -112,19 +114,20 @@
       &:before {
          content: '';
          position: absolute;
-         display: block;
-         background: @items-toolbar-bottom-style-background no-repeat 0 0;
-         width: @bottomStyle-items-toolbar-width;
-         height: @bottomStyle-items-toolbar-height;
+         width: 0;
+         height: 0;
+         border-top: @bottomStyle-items-toolbar-height - @default-border-width solid @list-view-items-toolbar-bg;
+         border-left: @bottomStyle-items-toolbar-width solid transparent;
          left: -@bottomStyle-items-toolbar-width;
       }
       .controls-ItemActions .controls-ItemActions__itemsContainer {
-         margin-left: -4px;
+         margin-left: @bottomStyle-items-toolbar-itemsContainer-margin-left;
 
          > * {
             margin-top: @bottomStyle-items-toolbar-margin-top;
             &.controls-IconButton__round-border-24 {
-               margin-top: 0;
+               margin-top: @bottomStyle-items-toolbar-iconButton-24-margin-top;
+               margin-bottom: @bottomStyle-items-toolbar-iconButton-24-margin-bottom;
             }
          }
       }
@@ -132,7 +135,7 @@
          .controls-ItemsToolbar__container {
             .controls-ItemActions__item {
                line-height: @list-view-items-toolbar-line-height !important;
-               &.controls-IconButton__round-border-24 {
+               &.controls-IconButton__round-border-24, .controls-ItemActions-button {
                   line-height: @list-view-items-toolbar-line-height !important;
                }
             }
@@ -166,11 +169,12 @@
    background-color: @list-view-items-toolbar-bg;
    bottom: @list-view-items-toolbar-bottom;
    right: @list-view-items-toolbar-right;
+   padding: @list-view-items-toolbar-padding;
 
    .icon-size {
       .icon-size(@list-view-items-toolbar-icon-size, @list-view-items-toolbar-font-family);
    }
-   .controls-IconButton__round-border-24 {
+   .controls-IconButton__round-border-24, .controls-ItemActions-button {
       border-width: @list-view-items-toolbar-icon-button-border-width;
       border-radius: @list-view-items-toolbar-icon-button-border-radius;
       .controls-Button__icon.icon-size {
@@ -186,6 +190,8 @@
    &.controls-ItemsToolbar__edit {
       background-color: @list-view-items-toolbar-locked-bg;
       right: @list-view-items-toolbar-locked-right;
+      padding: 0;
+
       .controls-ItemActions {
          .controls-ItemActions__itemsContainer {
             margin-right: @list-view-items-toolbar-locked-margin-right;
@@ -195,7 +201,7 @@
 
    .controls-Button__closeButton.controls-IconButton {
       display: inline-block;
-      margin-right: 0;
+      margin-right: @margin-right_ListView-itemsToolbar-closeButton;
    }
    &.controls-ItemsToolbar__small {
       .icon-size {
@@ -206,6 +212,21 @@
 
    &.controls-ItemsToolbar__hidden {
       visibility: hidden;
+   }
+}
+
+.controls-EditActions__cancelButton {
+   width: @width_EditActions-cancelButton;
+   height: @height_EditActions-cancelButton;
+   margin-right:  @margin-right_ListView-itemsToolbar-closeButton;
+   background: @background_EditActions-closeButton;
+   cursor: pointer;
+   display: inline-block;
+   &:hover {
+      background: @background_EditActions-closeButton_active;
+   }
+   &:active {
+      background: @background_EditActions-closeButton_active;
    }
 }
 
@@ -367,4 +388,9 @@
    .controls-ListView__bottomStyle > .controls-ItemsToolbar {
       border: none;
    }
+}
+
+.controls-ItemsToolbar__editActions {
+   .flexbox();
+   .align-items(center);
 }

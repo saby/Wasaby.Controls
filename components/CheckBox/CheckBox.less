@@ -1,17 +1,19 @@
 .controls-CheckBox {
   display: inline-block;
+  position: relative;
   line-height: @height_CheckBox;//todo: при переписывании чекбоксов необходимо учесть что можно сделать на флексах и не задавать данное свойство
 }
 
 .controls-CheckBox__caption {
   word-wrap: break-word;
+  margin-left: @width_CheckBox;//todo: ???
   line-height: @check-box-caption-line-height;
 }
 
 .controls-CheckBox__icon {
   display: inline-block;
-  position: relative;
-  float: left;
+  position: absolute;
+  left: 0;
   &:before {
     font-family: @icon-font;
   }
@@ -19,7 +21,6 @@
 
 .controls-CheckBox__caption_size {
   font-size: @check-box-font-size;
-  margin-left: @width_CheckBox;//todo: ???
   padding: @check-box-caption-padding;
 }
 

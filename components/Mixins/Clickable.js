@@ -12,7 +12,7 @@ define('SBIS3.CONTROLS/Mixins/Clickable', [
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного
     * @mixin SBIS3.CONTROLS/Mixins/Clickable
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var Clickable = /**@lends SBIS3.CONTROLS/Mixins/Clickable.prototype  */{

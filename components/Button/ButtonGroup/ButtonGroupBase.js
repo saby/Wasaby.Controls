@@ -21,7 +21,7 @@ define('SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase', [
     * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     *
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var ButtonGroupBase = CompoundControl.extend([ItemsControlMixin], /** @lends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase.prototype */ {

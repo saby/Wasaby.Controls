@@ -122,7 +122,7 @@
          max-width: 100%; //защищаемся от рандомной верстки, не даем дочерним элементам вылехти за пределы контейнера
       }
 
-      .controls-TextBox__field {
+      .controls-InputRender__field {
          font-size: 18px;
       }
    }
@@ -130,7 +130,7 @@
       min-width: 1px; //Нужно, чтобы flex правильно позиционировал ужимаемый контейнер. с 0 в ie11 не работает
       .controls-EditAtPlace {
          background: transparent;
-         .controls-TextBox__fieldWrapper {
+         .controls-InputRender__fieldWrapper {
             padding: 0; //по стандарту
          }
          .controls-EditAtPlace__textField{
@@ -313,12 +313,12 @@
    }
    //Для главной вкладки, внутри которой 1 текстбокс c font-size: 18px. ошибка из-за overflow:hidden на редактировании
    .controls-EditAtPlace {
-      &.controls-TextBox_size_l {
+      &.controls-InputRender_size_l {
          .controls-EditAtPlace__fieldWrapper {
             position: relative;
             top: -1px;
          }
-         .controls-TextBox_size_l.controls-TextBox {
+         .controls-InputRender_size_l.controls-InputRender {
             .flexbox();
          }
       }
@@ -364,6 +364,6 @@
 }
 
 //модификатор, который возвращает дефолтные паддинги в редактирование по месту. Нужно пересмотреть стандарт на компонент.
-.controls-TabButton.controls-TabButton__main-item .controls-TabButton__fixEditAtPlace-padding.controls-EditAtPlace .controls-TextBox__fieldWrapper {
+.controls-TabButton.controls-TabButton__main-item .controls-TabButton__fixEditAtPlace-padding.controls-EditAtPlace .controls-EditAtPlace__fieldWrapper {
    padding: 0 4px;
 }

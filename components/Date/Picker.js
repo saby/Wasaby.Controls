@@ -43,7 +43,7 @@ define(
     *
     * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @demo SBIS3.CONTROLS.Demo.MyDatePicker
     *
@@ -112,14 +112,12 @@ define(
 
             pickerConfig: {
                corner: 'tl',
-               cssClassName: 'controls-DateRangeBigChoose__noBorder',
+               cssClassName: 'controls-DateRangeBigChoose__noBorder controls-DateRangeBigChoose__picker',
                horizontalAlign: {
-                  side: 'right',
-                  offset: 143
+                  side: 'left'
                },
                verticalAlign: {
-                  side: 'top',
-                  offset: -9
+                  side: 'top'
                },
                bodyBounds: true,
                locationStrategy: 'bodyBounds',
@@ -282,7 +280,8 @@ define(
             startValue: date,
             startValueSerializationMode: type,
             endValue: date,
-            endValueSerializationMode: type
+            endValueSerializationMode: type,
+            headerType: DateRangeBigChoose.headerTypes.inputField
          });
          // Добавляем в пикер
          this._picker.getContainer().append(element);

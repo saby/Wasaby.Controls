@@ -1,29 +1,37 @@
-define('js!Controls/Popup/Opener/Dialog/Strategy',
+define('Controls/Popup/Opener/Dialog/Strategy',
    [
-      'Core/Abstract',
-      'js!Controls/Popup/interface/IStrategy'
+      'Controls/Popup/Opener/BaseStrategy'
    ],
-   function (Abstract, IStrategy) {
+   function (BaseStrategy) {
 
-   /**
-    * Стратегия позиционирования окна.
-    * @class Controls/Popup/Opener/Dialog/Strategy
-    * @mixes Controls/Popup/interface/IStrategy
-    * @control
-    * @public
-    * @category Popup
-    * @extends Controls/Control
-    */
-      var Strategy = Abstract.extend([IStrategy], {
+      /**
+       * Стратегия позиционирования окна.
+       * @class Controls/Popup/Opener/Dialog/Strategy
+       * @control
+       * @public
+       * @category Popup
+       * @extends Controls/Control
+       */
+      var Strategy = BaseStrategy.extend({
+         elementCreated: function (cfg, width, height) {
+            cfg.position = this.getPosition(window.innerWidth, window.innerHeight, width, height);
+         },
 
-         getPosition: function (){
+         /**
+          * Возвращает позицию диалогового окна
+          * @function Controls/Popup/Opener/Dialog/Strategy#getPosition
+          * @param wWidth ширина окна браузера
+          * @param wHeight высота окна браузера
+          * @param cWidth ширина диалогового окна
+          * @param cHeight высота диалогового окна
+          */
+         getPosition: function (wWidth, wHeight, cWidth, cHeight) {
             return {
-               top: 0,
-               left: 0
+               left: Math.round((wWidth - cWidth) / 2),
+               top: Math.round((wHeight - cHeight) / 2)
             };
          }
       });
-
       return new Strategy();
    }
 );

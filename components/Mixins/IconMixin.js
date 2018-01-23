@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/Mixins/IconMixin', ['tmpl!SBIS3.CONTROLS/Mixins/IconMixin
     * Миксин, добавляющий иконку
     * @mixin SBIS3.CONTROLS/Mixins/IconMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var IconMixin = /**@lends SBIS3.CONTROLS/Mixins/IconMixin.prototype  */{

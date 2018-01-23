@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/Controllers/ColumnsController', ['Core/Abstract'], functi
    /**
     * Класс контроллера редакторования колонок.
     *
-    * @author Авраменко Алексей Сергеевич
+    * @author Авраменко А.С.
     * @class SBIS3.CONTROLS/Controllers/ColumnsController
     * @public
     * @extends Core/Abstract

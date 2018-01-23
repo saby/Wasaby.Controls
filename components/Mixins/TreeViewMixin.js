@@ -1,8 +1,9 @@
 define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
    "Core/constants",
    "SBIS3.CONTROLS/Utils/TemplateUtil",
-   "Core/core-instance"
-], function ( constants, TemplateUtil, cInstance) {
+   "Core/core-instance",
+   "Core/helpers/String/format"
+], function ( constants, TemplateUtil, cInstance, format) {
 
 
    var getFolderFooterOptions = function(cfg, item) {
@@ -22,7 +23,8 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
          var
             count,
             result,
-            hasMore;
+            hasMore,
+            caption;
 
          //Проверяем на pageSize, т.к. опция может быть не задана, а в ответе с бл в параметре hasMore может быть число записей в папке.
          if (typeof cfg._folderHasMore[key] === 'number' && cfg.pageSize) {
@@ -35,11 +37,19 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
          }
 
          if (hasMore) {
+            if (typeof hasMore === 'number') {
+               caption = format({
+                  count: hasMore
+               }, rk('Еще $count$s$'));
+            } else {
+               caption = rk('Еще') + '...';
+            }
+
             result = {
-               caption: rk('Ещё') + ' ' + (typeof hasMore === 'number' ? hasMore : '...'),
+               caption: caption,
                command: 'loadNode',
                commandArgs: [key]
-            }
+            };
          }
          return result;
       },
@@ -51,7 +61,7 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS/Mixins/TreeViewMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @cssModifier controls-ListView__item-without-child Класс добавляется к визуальному представлению папки, у которой отсутствуют дочерние элементы.
     * @cssModifier controls-ListView__hideCheckBoxes-leaf Скрывает отображение чекбоксов у листьев. Подробнее о данном типе записей списка читайте в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.

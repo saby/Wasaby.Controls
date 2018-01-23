@@ -9,11 +9,11 @@ define('SBIS3.CONTROLS/Button/BackButton',
     function(CompoundControl, strHelpers, dotTpl) {
    'use strict';
    /**
-    * Кнопка для реализации поведения возврата назад по истории.
-    * Пример использования - иерархические реестры
+    * Класс контрола "Кнопка "Назад".
+    * Применяется для реализации поведения возврата назад по истории переходов. Пример использования - иерархические реестры.
     * @class SBIS3.CONTROLS/Button/BackButton
     * @extends Lib/Control/CompoundControl/CompoundControl
-    * @author Герасимов Александр Максимович
+    * @author Герасимов А.М.
     * @demo SBIS3.CONTROLS.Demo.MyBackButton
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent

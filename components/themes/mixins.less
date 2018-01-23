@@ -89,6 +89,19 @@
   &:-ms-input-placeholder {  opacity: 0 }
 }
 
+.compatPlaceholder(@color: @default-placeholder-color) {
+  .user-select(none);
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  cursor: text;
+  color: @color;
+  font: inherit;
+}
+
 .box-sizing(@type: border-box) {
   -webkit-box-sizing: @type;
   -moz-box-sizing: @type;
@@ -141,7 +154,7 @@
   box-sizing: border-box;
 }
 
-.button-default-style(@button-font-size: @font-size_Button, @button-default-shadow: none) {
+.button-default-style(@button-font-size: @font-size_Button_default, @button-default-shadow: none) {
   cursor: pointer;
   display: inline-block;
   outline: none;
@@ -275,6 +288,7 @@
   background-image: url("@{themeName}/img/rowSelect.png");
   background-position: @position;
   background-repeat: repeat-y;
+  background-size: @background-size_Marker;
 }
 
 .inline-flexbox() {
@@ -431,7 +445,7 @@
       color: @textColor;
       .controls-Button__icon {
         &.icon-primary {
-          color: @iconColor !important;
+          color: @iconColor;
         }
       }
     }
@@ -448,6 +462,7 @@
 
 .round-button-hover-mixin() {
   &:hover {
+    background-color: @background-color_EditButton_hovered;
     border-color: @default-color;
     .controls-Button__icon {
       color: @icon-button-round-icon-color-hover;
@@ -465,7 +480,7 @@
       }
     }
     &.controls-IconButton__doneBorder {
-      border-color: @color_IconButton-icon_done;
+      border-color: @border-color_EditButton_hovered;
       .controls-Button__icon {
         color: @color_IconButton-icon_done;
       }
@@ -549,6 +564,7 @@
 }
 .checkbox-null-size() {
   &:after {
+    left: 0;
     content: '';
     position: absolute;
     height: @check-box-icon-null-size;
@@ -581,14 +597,14 @@
   .box-shadow(none);
 }
 
-.generate-height(@className, @i: 1) when (@i =< 10) {
+.generate-height(@className, @line-height, @i: 1) when (@i =< 10) {
   .@{className}_maxheight-@{i} {
-    max-height : @i * @default-line-height;
+    max-height : @i * @line-height;
   }
   .@{className}_minheight-@{i} {
-    min-height: @i * @default-line-height;
+    min-height: @i * @line-height;
   }
-  .generate-height(@className, @i + 1);
+  .generate-height(@className, @line-height, @i + 1);
 }
 
 //---------------Имитация цикла for---------------//
@@ -623,6 +639,21 @@
   border-bottom-color: transparent;
 }
 
+.border-with-pseudo-element(@color: @default-border-color, @width: @default-border-width, @border-radius: 0) {
+  &:after {
+    content: '\200b';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border: @width solid @color;
+    border-radius: @border-radius;
+    pointer-events: none;
+  }
+}
+
 
 .ws-header-size-mixin(@text-size, @height: @default-height) {
   display: inline-block;
@@ -637,4 +668,32 @@
     width: @width;
     height: @height;
   }
+}
+
+.ws-close-button() {
+   cursor: pointer;
+   border-style: solid;
+   width: @width_CloseButton;
+   height: @height_CloseButton;
+   font-family: @default-icon-font;
+   line-height: @height_CloseButton;
+   font-size: @font-size_CloseButton;
+   box-shadow: @box-shadow_CloseButton;
+   border-width: @border-width_CloseButton;
+   border-color: @border-color_CloseButton;
+   border-radius: @border-radius_CloseButton;
+   background-color: @background-color_CloseButton;
+   .flexbox();
+   .align-items(center);
+   .justify-content(center);
+   &:before {
+      color: @icon-color-primary;
+      content: @content_CloseButton_icon;
+   }
+   body:not(.ws-is-mobile-platform) &:hover, &:active {
+      background-color: @background-color_CloseButton_hover;
+      &:before {
+         color: @icon-color-primary-hover;
+      }
+   }
 }

@@ -1,29 +1,35 @@
-<div class="controls-TextBox" title="{{tooltip}}">
-   <div class="controls-TextBox__wrapper">
+<div class="controls-InputRender controls-InputRender_state_{{ _getInputState() }} {{ !isEnabled() ? 'controls-InputRender_state_disabled_' + (_options.isMultiline ? 'multiLine' : 'singleLine') }} controls-InputRender_size_{{ _options.size ? _options.size : 'default_' + (_options.isMultiline ? 'multiLine' : 'singleLine') }} controls-InputRender_padding{{ _options.sidePadding ? _options.sidePadding : 'Both' }}"
+     title="{{tooltip}}">
+   <div class="controls-InputRender__wrapper">
+      <div class="controls-InputRender__fieldWrapper">
 
-      <ws:if data="{{_options.beforeFieldWrapper}}">
-         <ws:partial template="{{_options.beforeFieldWrapper}}"/>
-      </ws:if>
+         <ws:if data="{{_options.beforeFieldWrapper}}">
+            <ws:partial template="{{_options.beforeFieldWrapper}}"/>
+         </ws:if>
 
-      <div on:input="_inputHandler()"
-           on:click="_clickHandler()"
-           on:select="_selectionHandler()"
-           on:keyup="_keyUpHandler()"
-           on:change="_notifyHandler('onInputCompleted')"
-           attr:style="width: 100%">
-         <ws:partial template="{{_options.content}}"/>
+         <ws:partial
+               template="{{_options.content}}"
+               on:input="_inputHandler()"
+               on:click="_clickHandler()"
+               on:select="_selectionHandler()"
+               on:keyup="_keyUpHandler()"
+               on:change="_notifyHandler('inputCompleted')"
+               on:focus="_focusHandler()"
+               value="{{ _options.value }}"
+               placeholder="{{_options.placeholder}}"
+         />
+
+         <ws:if data="{{_options.afterFieldWrapper}}">
+            <ws:partial template="{{_options.afterFieldWrapper}}"/>
+         </ws:if>
+
       </div>
-
-      <ws:if data="{{_options.afterFieldWrapper}}">
-         <ws:partial template="{{_options.afterFieldWrapper}}"/>
-      </ws:if>
-
    </div>
 
    <ws:if data="{{_options.tagStyle}}">
       <div on:mouseenter="_notifyHandler('onTagHover')"
            on:click="_notifyHandler('onTagClick')"
-           class="controls-TextBox__informationIcon icon-size icon-Listbox controls-informationIcon {{'icon-' + _options.tagStyle}}">
+           class="controls-InputRender__tagStyle controls-InputRender__tagStyle-{{_options.tagStyle}}">
       </div>
    </ws:if>
 </div>

@@ -36,7 +36,7 @@ define('SBIS3.CONTROLS/Suggest/SuggestView',
         * @class SBIS3.CONTROLS/Suggest/SuggestView
         * @extends Lib/Control/CompoundControl/CompoundControl
         *
-        * @author Герасимов Александр Максимович
+        * @author Герасимов А.М.
         *
         * @mixes SBIS3.CONTROLS/Interfaces/IItemsControl
         *

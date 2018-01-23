@@ -12,6 +12,7 @@ define('SBIS3.CONTROLS/ListView',
    'Core/constants',
    'Core/Deferred',
    'Core/IoC',
+   'Core/helpers/String/format',
    'Lib/Control/CompoundControl/CompoundControl',
    'Lib/StickyHeader/StickyHeaderManager/StickyHeaderManager',
    'SBIS3.CONTROLS/Mixins/ItemsControlMixin',
@@ -67,7 +68,7 @@ define('SBIS3.CONTROLS/ListView',
    'css!SBIS3.CONTROLS/ListView/ListView',
    'css!SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
-   function (ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
+   function (ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, format, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, ImitateEvents, LayoutManager, mHelpers,
     ScrollWatcher, IBindCollection, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
@@ -103,7 +104,7 @@ define('SBIS3.CONTROLS/ListView',
        *
        * @class SBIS3.CONTROLS/ListView
        * @extends Lib/Control/CompoundControl/CompoundControl
-       * @author Герасимов Александр Максимович
+       * @author Герасимов А.М.
        *
        * @mixes SBIS3.CONTROLS/Mixins/DecorableMixin
        * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
@@ -441,6 +442,7 @@ define('SBIS3.CONTROLS/ListView',
                top: null,
                bottom: null
             },
+            _virtualScrollShouldReset: false,
             _setScrollPagerPositionThrottled: null,
             _updateScrollIndicatorTopThrottled: null,
             _removedItemsCount: false,
@@ -1083,6 +1085,9 @@ define('SBIS3.CONTROLS/ListView',
                   }
                }
                this._addItems(itemsToAdd, config.addPosition);
+               if(this._options.itemsActionsInItemContainer && itemsToRemove.length && this._itemsToolbar && this._itemsToolbar.isVisible()){
+                  this._itemsToolbar.hide();
+               }
                this._removeItemsLight(itemsToRemove);
 
                //После добавления элоементов с помощью виртуального скролла, необходимо добавить на них выделение,
@@ -1147,6 +1152,11 @@ define('SBIS3.CONTROLS/ListView',
             if(lvOpts.selectedKey && lvOpts._itemData) {
                lvOpts._itemData.selectedKey = lvOpts.selectedKey;
             }
+            // в IE размещать "операции над записью" внутри строки нельзя
+            // т.к. в IE td не растягивается на высоту строки
+            // поэтому когда первый столбец получается многострочным, то последний занимает изначальную ширину
+            // и визуально получается, что тулбар прибит к верху и смещен
+            lvOpts.itemsActionsInItemContainer = !cDetection.isIE ? lvOpts.itemsActionsInItemContainer : false;
             return lvOpts;
          },
 
@@ -2662,6 +2672,10 @@ define('SBIS3.CONTROLS/ListView',
                toolbar = this._getItemsToolbar(),
                toolbarTarget = toolbar.getCurrentTarget(),
                targetElement = this._getDomElementByItem(item);
+
+            if (toolbarTarget && targetElement && toolbarTarget.container.get(0) === targetElement.get(0)) {
+               toolbar.hide();
+            }
             ListView.superclass._redrawItemInner.apply(this, arguments);
 
             //Если перерисовалась запись, которая является текущим контейнером для тулбара,
@@ -3096,7 +3110,10 @@ define('SBIS3.CONTROLS/ListView',
                   this.scrollToFirstPage();
                   this._virtualScrollController.disableScrollHandler(false);
                }
-               this._virtualScrollController.initHeights();
+               if (this._virtualScrollShouldReset) {
+                  this._virtualScrollController.reset();
+                  this._virtualScrollShouldReset = false;
+               }
             }
             this._updateHoveredItemAfterRedraw();
          },
@@ -3121,7 +3138,7 @@ define('SBIS3.CONTROLS/ListView',
             /* при изменении размера таблицы необходимо вызвать перерасчет позиции тулбара
              позиция тулбара может сбиться например при появление пэйджинга */
             if(this._itemsToolbar && this._itemsToolbar.isVisible()){
-               if(this._touchSupport && !this._editInPlace.isVisible()) {
+               if(this._touchSupport && this._editInPlace && !this._editInPlace.isVisible()) {
                    this._itemsToolbar.setHeightInTouchMode();
                }
                this._itemsToolbar.recalculatePosition();
@@ -3208,22 +3225,27 @@ define('SBIS3.CONTROLS/ListView',
            * т.к. запись удалена и над ней нельзя проводить действия
            */
          _checkDeletedItems: function (items) {
-            var self = this,
-                itemsActions, target, targetHash;
+            var toolbar = this._getItemsToolbar(),
+                toolbarTarget = toolbar.getCurrentTarget(),
+                itemsActions = this.getItemsActions();
 
-            if(self._itemsToolbar && self._itemsToolbar.isToolbarLocking()){
-               itemsActions = self.getItemsActions();
-               if(itemsActions) {
-                  target = self.getItemsActions().getTarget();
-                  targetHash = target.container.data('hash');
-                  items.forEach(function(item) {
-                     if (item.getHash() == targetHash) {
-                        self._itemsToolbar.unlockToolbar();
-                        self._itemsToolbar.hide();
-                     }
-                  });
+            if(toolbar && toolbarTarget && itemsActions){
+               if(this._checkToolbarTarget(items, toolbarTarget.container.data('hash')) && (toolbar.isToolbarLocking() || this._options.itemsActionsInItemContainer)){
+                   toolbar.unlockToolbar();
+                   toolbar.hide();
                }
             }
+         },
+
+         _checkToolbarTarget: function (items, toolbarTargetHash) {
+           var isEqual = false;
+
+           items.forEach(function(item) {
+               if (item.getHash() == toolbarTargetHash) {
+                   isEqual = true;
+               }
+           });
+           return isEqual;
          },
 
          //-----------------------------------infiniteScroll------------------------
@@ -3676,31 +3698,33 @@ define('SBIS3.CONTROLS/ListView',
          },
 
          _setLoadMoreCaption: function(dataSet){
-            var more = dataSet.getMetaData().more,
-               caption, allCount;
+            var
+               count,
+               caption,
+               more = dataSet.getMetaData().more;
             // Если число и больше pageSize то "Еще pageSize"
             if (typeof more === 'number') {
-               allCount = more;
-               $('.controls-ListView__counterValue', this._container.get(0)).text(allCount);
+               $('.controls-ListView__counterValue', this._container.get(0)).text(more);
                $('.controls-ListView__counter', this._container.get(0)).removeClass('ws-hidden');
 
-               var caption = more - (this._scrollOffset.bottom + this._options.pageSize);
-               if (caption <= 0) {
-                  this._loadMoreButton.setVisible(false);
-                  return;
+               count = more - (this._scrollOffset.bottom + this._options.pageSize);
+               if (count > 0) {
+                  caption = format({
+                     count: count
+                  }, rk('Еще $count$s$'));
                }
             } else {
                $('.controls-ListView__counter', this._container.get(0)).addClass('ws-hidden');
-               if (more === false) {
-                  this._loadMoreButton.setVisible(false);
-                  return;
-               } else {
-                  caption = '...';
+               if (more !== false) {
+                  caption = rk('Еще') + '...';
                }
             }
-
-            this._loadMoreButton.setCaption(rk('Еще') + ' ' + caption);
-            this._loadMoreButton.setVisible(true);
+            if (caption) {
+               this._loadMoreButton.setCaption(caption);
+               this._loadMoreButton.setVisible(true);
+            } else {
+               this._loadMoreButton.setVisible(false);
+            }
          },
 
          _onLoadMoreButtonActivated: function(event){
@@ -3716,7 +3740,12 @@ define('SBIS3.CONTROLS/ListView',
           * По умолчанию равен бесконечности.
           */
          scrollToItem: function(item, toBottom, depth){
-            if (item.getId && item.getId instanceof Function){
+            // Item is not in DOM, will need to calculate scrollTop
+            if (this._options.virtualScrolling && this._virtualScrollController) {
+               var scrollTop = this._virtualScrollController.getScrollTopForItem(this._options._items.getIndex(item));
+               this._getScrollWatcher().scrollTo(scrollTop);
+            }
+            else if (item.getId && item.getId instanceof Function) {
                this._scrollToItem(item.getId(), toBottom, depth);
             }
          },
@@ -3922,6 +3951,7 @@ define('SBIS3.CONTROLS/ListView',
 
             if (this._options.virtualScrolling && !this._virtualScrollController) {
                this._initVirtualScrolling();
+               this._virtualScrollShouldReset = true;
             }
          },
 
@@ -4067,6 +4097,12 @@ define('SBIS3.CONTROLS/ListView',
                .orderBy(sorting)
                .meta({ hasMore: this._options.partialPaging});
             return query;
+         },
+         setPageSize: function(pageSize) {
+            if (this._pager) {
+               this._pager.setPageSize(pageSize);
+            }
+            ListView.superclass.setPageSize.apply(this, arguments);
          },
          /**
           * Метод обработки интеграции с пейджингом

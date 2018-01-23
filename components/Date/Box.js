@@ -11,6 +11,7 @@ define(
       'tmpl!SBIS3.CONTROLS/FormattedTextBox/FormattedTextBox',
       'SBIS3.CONTROLS/Utils/ControlsValidators',
       // Разобраться с общими стилями https://inside.tensor.ru/opendoc.html?guid=37032b47-6830-4b96-a4f3-727ea938bf58&des
+      'css!Controls/Input/resources/InputRender/InputRender',
       'css!SBIS3.CONTROLS/TextBox/TextBox',
       'css!SBIS3.CONTROLS/FormattedTextBox/FormattedTextBox',
       'css!SBIS3.CONTROLS/Date/Box/DateBox'
@@ -36,7 +37,7 @@ define(
     *
     *
     * @control
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @public
     */
 
@@ -245,7 +246,7 @@ define(
          if (options.text) {
             options._formatModel.setText(options.text, options._maskReplacer);
          }
-         options._modelForMaskTpl = this._getItemsForTemplate(options._formatModel, options._maskReplacer);
+         options._modelForMaskTpl = this._getItemsForTemplate(options._formatModel, options._maskReplacerForTemplate);
          return options;
       },
 
@@ -347,20 +348,22 @@ define(
        * @see onDateChange
        * @see mask
        */
-      setDate: function (date) {
-         this._setDate(date);
-         this._onTextChanged();
-         this._notifyOnDateChanged();
+      setDate: function (date, silent) {
+         this._setDate(date, silent);
+         if (!silent) {
+            this._onTextChanged();
+            this._notifyOnDateChanged();
+         }
       },
 
       /**
        * Установить дату. Приватный метод
        * @param date новое значение даты, объект типа Date
        */
-      _setDate: function (date) {
+      _setDate: function (date, silent) {
          var oldText   = this._options.text;
          this._updateOptionsByDate(date);
-         if (oldText !== this._options.text) {
+         if (!silent && oldText !== this._options.text) {
             this._notifyOnTextChange();
          }
          this._drawDate();
@@ -681,7 +684,8 @@ define(
          }.bind(this);
 
          // Автокомплитим только если пользователь частично заполнил поле, либо не заполнил, но поле обязательно для заполнения
-         if (isEmpty && !this._isRequired()) {
+         // Не автокомплитим поля в периодах
+         if (isEmpty && (!this._isRequired() || this._options.autocompleteMode === 'start' || this._options.autocompleteMode === 'end')) {
             return null;
          }
 

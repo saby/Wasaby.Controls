@@ -36,11 +36,15 @@
 }
 
 .ws-header-accent1-hover() {
-   color: @darkcyan-color;
+   body:not(.ws-is-mobile-platform) & {
+      color: @darkcyan-color;
+   }
 }
 
 .ws-header-accent2-hover() {
-   color: @primary-color;
+   body:not(.ws-is-mobile-platform) & {
+      color: @primary-color;
+   }
 }
 
 .ws-header_size_weight {
@@ -94,7 +98,7 @@
 }
 
 .ws-linkHeader, .controls-Link.ws-linkHeader {
-   .ws-header-mixin(@link-header-padding-left, @link-header-padding-right, @link-header-font, @link-header-color, @header-height);
+   .ws-header-mixin(@link-header-padding-left, @link-header-padding-right, @link-header-font-size, @link-header-color, @header-height);
    text-decoration: @link-header-text-decoration;
 
    .controls-Button__wrapper:after {
@@ -130,7 +134,7 @@
    }
 
    &, &.controls-Checked__checked:not(.ws-disabled) {
-      .ws-header-mixin(0, @toggle-header-padding-right, @toggle-header-font, @toggle-header-color, @toggle-header-height);
+      .ws-header-mixin(0, @toggle-header-padding-right, @toggle-header-font-size, @toggle-header-color, @toggle-header-height);
       border: none;
       background: none;
 
@@ -214,9 +218,11 @@
 
 .controls-Link {
    &.ws-linkHeader, &.ws-header, &.ws-bigSubheader, &.ws-subheader {
-      &.controls-Click__active, &.controls-Click__active .controls-Button__text {
-         text-decoration: @link-header-text-decoration;
-         color: @link-header-hover-color;
+      &:not(.ws-disabled) {
+         &:active, &:active .controls-Button__text {
+            text-decoration: @link-header-text-decoration;
+            color: @link-header-hover-color;
+         }
       }
    }
 }

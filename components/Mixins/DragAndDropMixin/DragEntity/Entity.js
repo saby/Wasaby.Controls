@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity', [
     * И соответствующим образом отреагировать. Например, подсветить элемент интерфейса зеленым цветом или сменить аватар(иконку около курсора мыши).
     * @class SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @see SBIS3.CONTROLS/Mixins/DragNDropMixin#dragEntity
     * @see SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragObject
     * @see SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragObject#getSource

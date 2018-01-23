@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
       /**
        * @mixin SBIS3.CONTROLS/Mixins/EditAtPlaceMixin
        * @public
-       * @author Крайнов Дмитрий Олегович
+       * @author Крайнов Д.О.
        */
       'use strict';
 

@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
     * @extends Lib/Control/CompoundControl/CompoundControl
     * @mixes SBIS3.CONTROLS/Mixins/FormWidgetMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
@@ -69,26 +69,38 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
              _prepareClassesByConfig: function() {
                var
                   fieldClasses = [],
+                  fieldWrapperClasses = [],
                   wrapperClasses = [],
-                  containerClasses = [];
+                  containerClasses = [],
+                  createNewCssClasses = function (item) {
+                     //Метод дублирует классы содержащие в себе 'controls-TextBox_' аналогичными с 'controls-InputRender_'
+                     //Необходимо для обратной совместимости
+                     if (~item.indexOf('controls-TextBox_')) {
+                        item += ' ' + item.replace(/controls-TextBox_/g, 'controls-InputRender_');
+                     }
+
+                     return item;
+                  };
 
                containerClasses.push('controls-TextBox_state_' + (this.enabled ? 'default' : 'disabled'));
                !this.enabled && containerClasses.push('controls-TextBox_state_disabled_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
-               containerClasses.push('controls-TextBox_size_' + (this.size ? this.size : 'm'));
+               containerClasses.push('controls-TextBox_size_' + (this.size ? this.size : 'default') + (this._isMultiline ? '_multiLine' : '_singleLine'));
                containerClasses.push('controls-TextBox_text-align_' + this.textAlign);
                containerClasses.push(this._paddingClass);
                if (this.textTransform) {
                   fieldClasses.push('controls-TextBox__field-' + this.textTransform);
                }
                wrapperClasses.push('controls-TextBox__wrapper_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
+               fieldWrapperClasses.push('controls-InputRender__fieldWrapper_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
 
                return {
-                  container: containerClasses.join(' '),
-                  field: fieldClasses.join(' '),
-                  wrapper: wrapperClasses.join(' ')
+                  container: containerClasses.map(createNewCssClasses).join(' '),
+                  field: fieldClasses.map(createNewCssClasses).join(' '),
+                  wrapper: wrapperClasses.map(createNewCssClasses).join(' '),
+                  fieldWrapper: fieldWrapperClasses.join(' ')
                }
             },
-            _paddingClass: ' controls-TextBox_paddingBoth',
+            _paddingClass: ' controls-InputRender_paddingBoth controls-TextBox_paddingBoth',
             /**
              * @cfg {String} Устанавливает текстовое значение в поле ввода.
              * @remark
@@ -323,6 +335,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
       _toggleState: function() {
          var container = this._getStateToggleContainer()[0];
          container.className = container.className.replace(/(^|\s)controls-TextBox_state_\S+/gi, '');
+         container.className = container.className.replace(/(^|\s)controls-InputRender_state_\S+/gi, '');
          this._getStateToggleContainer().addClass(this._getToggleState());
       },
       _getToggleState: function() {
@@ -332,7 +345,10 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
             marked = this.isMarked();
          return 'controls-TextBox_state_' +
             (marked ? 'error' : !enabled ? 'disabled' +
-            (this._options._isMultiline ? ' controls-TextBox_state_disabled_multiLine' : ' controls-TextBox_state_disabled_singleLine') : active ? 'active' : 'default');
+            (this._options._isMultiline ? ' controls-TextBox_state_disabled_multiLine' : ' controls-TextBox_state_disabled_singleLine') : active ? 'active' : 'default') +
+            ' controls-InputRender_state_' +
+            (marked ? 'error' : !enabled ? 'disabled' +
+               (this._options._isMultiline ? ' controls-InputRender_state_disabled_multiLine' : ' controls-InputRender_state_disabled_singleLine') : active ? 'active' : 'default');
       }
    });
 

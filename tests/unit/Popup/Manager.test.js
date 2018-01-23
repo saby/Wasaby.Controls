@@ -1,10 +1,10 @@
 define(
    [
-      'js!Controls/Popup/Manager',
-      'js!Controls/Popup/Controller'
+      'Controls/Popup/Manager',
+      'Controls/Popup/Opener/BaseStrategy'
    ],
 
-   function (Manager, Controller) {
+   function (Manager, BaseStrategy) {
       'use strict';
       describe('Controls/Popup/Manager', function () {
          var id, element;
@@ -13,13 +13,14 @@ define(
          });
 
          it('append popup', function() {
-            var
-               controller = new Controller();
             id = Manager.show({
                testOption: 'created'
-            }, null, controller);
+            }, new BaseStrategy());
             assert.equal(Manager._popupItems.getCount(), 1);
-            element = Manager._find(id);
+         });
+
+         it('find popup', function() {
+            element = Manager.find(id);
             assert.equal(element.popupOptions.testOption, 'created');
          });
 
@@ -28,7 +29,7 @@ define(
                testOption: 'updated'
             });
             assert.equal(Manager._popupItems.getCount(), 1);
-            element = Manager._find(id);
+            element = Manager.find(id);
             assert.equal(element.popupOptions.testOption, 'updated');
          });
 

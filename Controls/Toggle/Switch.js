@@ -1,5 +1,9 @@
-define('js!Controls/Toggle/Switch', [
-], function() {
+define('Controls/Toggle/Switch', [
+   'Core/Control',
+   'tmpl!Controls/Toggle/Switch/Switch',
+   'WS.Data/Type/descriptor',
+   'css!Controls/Toggle/Switch/Switch'
+], function (Control, template, types) {
 
    /**
     * Контрол, отображающий переключатель
@@ -13,15 +17,30 @@ define('js!Controls/Toggle/Switch', [
     */
 
    /**
-    * @name Controls/Toggle/Switch#captions
-    * @cfg {Array} Набор заголовков
+    * @name Controls/Toggle/Switch#caption
+    * @cfg {String} Заголовок
     */
 
-   /**
-    * @name Controls/Toggle/Switch#orientation
-    * @cfg {String} Способ отображения
-    * @variant horizontal Горизонтальная ориентация
-    * @variant vertical Вертикальная ориентация
-    */
+   var Switch = Control.extend({
+      _template: template,
 
+      _clickHandler: function (e) {
+         this._notify('valueChanged', [!this._options.value]);
+      }
+   });
+
+   Switch.getDefaultOptions = function getDefaultOptions() {
+      return {
+         value: false
+      };
+   };
+
+   Switch.getOptionTypes = function getOptionTypes() {
+      return {
+         value: types(Boolean),
+         captions: types(String)
+      };
+   };
+
+   return Switch;
 });

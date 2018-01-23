@@ -1,11 +1,16 @@
 <div class="controls-FormattedTextBox
+    controls-InputRender
+    controls-InputRender_size_{{!! size ? size : 'default'}}_singleLine
+    controls-InputRender_state_{{ enabled ? 'default': 'disabled'}}
+    {{ !enabled ? 'controls-InputRender_state_disabled_singleLine' }}
+
     controls-TextBox
-    controls-TextBox_size_{{!! size ? size : 'm'}}
+    controls-TextBox_size_{{!! size ? size : 'default'}}_singleLine
     controls-TextBox_state_{{ enabled ? 'default': 'disabled'}}
     {{ !enabled ? 'controls-TextBox_state_disabled_singleLine' }}
     controls-TextBox_text-align-{{ textAlign }}
     {{ _paddingClass}}">
-    <div class="controls-TextBox__wrapper controls-TextBox__wrapper_singleLine">
-        <div autocorrect="off" contenteditable="{{enabled}}" class="js-controls-FormattedTextBox__field controls-TextBox__field controls-FormattedTextBox__field">{{_maskTemplateFn(_modelForMaskTpl)|sanitize}}</div>
+    <div class="controls-InputRender__wrapper controls-InputRender__wrapper_singleLine controls-TextBox__wrapper controls-TextBox__wrapper_singleLine">
+        <div autocorrect="off" contenteditable="{{enabled}}" class="js-controls-FormattedTextBox__field controls-InputRender__field controls-TextBox__field controls-FormattedTextBox__field">{{_maskTemplateFn(_modelForMaskTpl)|sanitize}}</div>
     </div>
 </div>

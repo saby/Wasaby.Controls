@@ -75,17 +75,27 @@
       }
       .controls-PopupMixin__closeButton {
          position: absolute;
-         top: @list-view-actions-menu-touch-close-top;
+         .flexbox();
+         .align-items(center);
+         .justify-content(center);
+         border: none;
+         box-shadow: none !important;
          right: 0;
+         top: @list-view-actions-menu-touch-close-top;
          width: @closeButtonWidth;
          height: @closeButtonHeight;
          cursor: pointer;
-         background: @closeButtonImage;
-         &:active {
-            background: @closeButtonImageHover;
-         }
+         z-index: 100;
          &:before {
-            content: none;
+            content: "\e66c";
+            font-size: 23px;
+            width: 24px;
+            height: 24px;
+            font-family: 'cbuc-icons';
+            color: #587ab0;
+         }
+         &:hover:before, &:active:before {
+            color: #313E78;
          }
       }
       &.controls-popup-revert-vertical {
@@ -106,14 +116,20 @@
          line-height: @list-view-actions-item-height;
          padding: 0;
 
+         &.controls-IconButton__round-border-24 {
+            height: @height_IconButton_round_edit;
+         }
+
          &.controls-ItemActions__menu-button {
             z-index: 11;
             width: @list-view-actions-menu-icon-width;
             float: right;
+            order: 1;
          }
       }
       // обрезает операциями над записью по ширине справа, чтобы контейнер операций над записью не перекрывал скролл
-      margin-right: -4px;
+      margin-right: -@margin-right_ListView-actions-item;
+      .flexbox();
    }
    // Хак выше решает задачу, но вызывает появление горизонтального скрола, из-за отрицательного маржина,
    // поэтому вешаю overflow: hidden, чтобы скрола не было
@@ -155,13 +171,17 @@
    }
 
    .controls-PopupMixin__closeButton {
+      position: absolute;
+      .flexbox();
+      .align-items(center);
+      .justify-content(center);
+      border: none;
+      top: @list-view-actions-menu-close-top;
+      cursor: pointer;
       height: @list-view-actions-menu-close-height;
       width: @list-view-actions-menu-close-width;
       z-index: 1;
       right: @list-view-actions-menu-close-right;
-      top: @list-view-actions-menu-close-top;
-      position: absolute;
-      cursor: @list-view-actions-cursor;
       color: @list-view-context-menu-close-color !important;
       background: none;
       // используем important т.к. controls-PopupMixin__closeButton используется в старых контролах и стилизована в themes.less
@@ -169,11 +189,6 @@
       box-shadow: none !important;
 
       .icon-size(@list-view-items-toolbar-icon-size, @font-family_closeButton-icon);
-
-      &:before {
-         content: "\e66c";
-         text-shadow: none;
-      }
    }
    &.controls-popup-revert-vertical {
       .controls-Menu__itemsContainer {
@@ -200,7 +215,7 @@
       &.controls-ItemActions__menu-touchMode {
          .controls-PopupMixin__closeButton {
             &:hover {
-               background: @closeButtonImageHover;
+               background: none;
                color: @default-color !important;
             }
          }

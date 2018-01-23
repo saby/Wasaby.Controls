@@ -1,4 +1,4 @@
-define('js!Controls/Input/Dropdown', [
+define('Controls/Input/Dropdown', [
 ], function() {
 
    /**
@@ -7,7 +7,7 @@ define('js!Controls/Input/Dropdown', [
     * @extends Controls/Control
     * @mixes Controls/Input/interface/IInputPlaceholder
     * @mixes Controls/interface/ISource
-    * @mixes Controls/Input/interface/IValidationError
+    * @mixes Controls/Input/interface/IValidation
     * @mixes Controls/Input/interface/IInputTag
     * @mixes Controls/interface/ISingleSelectable
     * @mixes Controls/Input/interface/IDropdownEmptyValue

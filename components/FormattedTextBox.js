@@ -3,6 +3,7 @@ define('SBIS3.CONTROLS/FormattedTextBox',
       'SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase',
       'tmpl!SBIS3.CONTROLS/FormattedTextBox/FormattedTextBox',
       'css!SBIS3.CONTROLS/FormattedTextBox/FormattedTextBox',
+      'css!Controls/Input/resources/InputRender/InputRender',
       'css!SBIS3.CONTROLS/TextBox/TextBox'
    ],
    function (FormattedTextBoxBase, dotTplFn) {
@@ -16,7 +17,7 @@ define('SBIS3.CONTROLS/FormattedTextBox',
     * @class SBIS3.CONTROLS/FormattedTextBox
     * @extends SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase
     * @demo SBIS3.CONTROLS.Demo.MyFormattedTextBox
-    * @author Романов Валерий Сергеевич
+    * @author Романов В.С.
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment

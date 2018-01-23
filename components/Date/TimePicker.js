@@ -31,7 +31,7 @@ define('SBIS3.CONTROLS/Date/TimePicker',
        *
        * @control
        * @public
-       * @author Крайнов Дмитрий Олегович
+       * @author Крайнов Д.О.
        */
       var TimePicker = CompoundControl.extend(/** @lends SBIS3.CONTROLS/Date/TimePicker.prototype */{
          _dotTplFn: dotTplFn,

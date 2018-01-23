@@ -61,7 +61,7 @@ define('SBIS3.CONTROLS/EditAtPlace',
        * @mixes SBIS3.CONTROLS/Mixins/EditAtPlaceMixin
        * @mixes SBIS3.CONTROLS/Mixins/FormWidgetMixin
        *
-       * @author Герасимов Александр Максимович
+       * @author Герасимов А.М.
        * @cssModifier controls-EditAtPlace__ellipsis Текстовое поле обрезается троеточием, если не умещается в контейнере
        */
       var EditAtPlace = CompoundControl.extend([PickerMixin, EditAtPlaceMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS/EditAtPlace.prototype */{
@@ -396,6 +396,7 @@ define('SBIS3.CONTROLS/EditAtPlace',
          _toggleState: function() {
             var container = this._getStateToggleContainer()[0];
             container.className = container.className.replace(/(^|\s)controls-TextBox_state_\S+/gi, '');
+            container.className = container.className.replace(/(^|\s)controls-InputRender_state_\S+/gi, '');
             this._getStateToggleContainer().addClass(this._getToggleState());
          },
          _getToggleState: function() {
@@ -403,7 +404,8 @@ define('SBIS3.CONTROLS/EditAtPlace',
                active = this.isActive(),
                enabled = this.isEnabled(),
                marked = this.isMarked();
-            return 'controls-TextBox_state_' + (marked ? 'error' : !enabled ? 'disabled controls-TextBox_state_disabled_singleLine' : active ? 'active' : 'default');
+            return 'controls-TextBox_state_' + (marked ? 'error' : !enabled ? 'disabled controls-TextBox_state_disabled_singleLine' : active ? 'active' : 'default') +
+               'controls-InputRender_state_' + (marked ? 'error' : !enabled ? 'disabled controls-InputRender_state_disabled_singleLine' : active ? 'active' : 'default');
          }
       });
 

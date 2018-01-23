@@ -1,4 +1,4 @@
-define('js!Controls/Input/Phone', [
+define('Controls/Input/Phone', [
 ], function() {
 
    /**
@@ -6,7 +6,7 @@ define('js!Controls/Input/Phone', [
     * @class Controls/Input/Phone
     * @extends Controls/Control
     * @mixes Controls/Input/interface/IInputText
-    * @mixes Controls/Input/interface/IValidationError
+    * @mixes Controls/Input/interface/IValidation
     * @mixes Controls/Input/interface/IInputTag
     * @control
     * @public

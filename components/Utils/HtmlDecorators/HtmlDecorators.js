@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/Utils/HtmlDecorators/HtmlDecorators', [
     * Декораторы для HTML - позволяют внедрять обёртки в разметку
     * @class SBIS3.CONTROLS/Utils/HtmlDecorators/HtmlDecorators
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var HtmlDecorators = cExtend({}, /** @lends SBIS3.CONTROLS/Utils/HtmlDecorators/HtmlDecorators.prototype */{
       $protected: {

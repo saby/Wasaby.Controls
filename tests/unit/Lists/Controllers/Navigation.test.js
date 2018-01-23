@@ -4,9 +4,9 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
    [
-      'js!Controls/List/Controllers/PageNavigation',
-      'js!Controls/List/Controllers/OffsetNavigation',
-      'js!Controls/List/Controllers/PositionNavigation',
+      'Controls/List/Controllers/PageNavigation',
+      'Controls/List/Controllers/OffsetNavigation',
+      'Controls/List/Controllers/PositionNavigation',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Source/SbisService'
    ],

@@ -29,7 +29,7 @@ define(
        * </pre>
        * @class SBIS3.CONTROLS/Tab/Buttons
        * @extends SBIS3.CONTROLS/Radio/Group/RadioGroupBase
-       * @author Крайнов Дмитрий Олегович
+       * @author Крайнов Д.О.
        *
        * @public
        * @demo SBIS3.CONTROLS.Demo.MyTabButtons

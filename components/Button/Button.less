@@ -1,5 +1,5 @@
 .controls-Button {
-   .button-default-style(@font-size_Button, @box-shadow_Button);
+   .button-default-style(@font-size_Button_default, @box-shadow_Button);
    background-size: contain;
    white-space: nowrap;
    .user-select();
@@ -49,11 +49,11 @@
    /* End Button Themes */
    &.controls-Button-size__ {
       &default:not(.controls-Button__big) {
-         font-size: @font-size_Button;
-         height: @height_Button;
-         .border-radius(@border-radius_Button);
+         font-size: @font-size_Button_default;
+         height: @height_Button_default;
+         .border-radius(@border-radius_Button_default);
          .controls-Button__wrapper {
-            padding: @padding_Button-wrapper;
+            padding: @padding_Button-wrapper_default;
          }
       }
       &l {
@@ -64,11 +64,19 @@
             padding: @padding_Button-wrapper_l;
          }
       }
+      &m {
+         font-size: @font-size_Button_m;
+         height: @height_Button_m;
+         .border-radius(@border-radius_Button_m);
+         .controls-Button__wrapper {
+            padding: @padding_Button-wrapper_m;
+         }
+      }
    }
    &.controls-Button__big {
       font-size: @font-size_Button_l;
       height: @height_Button_l;
-      line-height: @default-height;
+      line-height: @line-height_Button_l; //todo: https://online.sbis.ru/opendoc.html?guid=03ffff15-153e-4757-bff5-6c057b06329e
       .border-radius(@border-radius_Button_l);
       .controls-Button__wrapper {
          padding: @padding_Button-wrapper_l;
