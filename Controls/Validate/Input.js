@@ -1,6 +1,6 @@
-define('js!Controls/Validate/Input',
+define('!Controls/Validate/Input',
    [
-      'js!Controls/Validate/Controller',
+      'Controls/Validate/Controller',
       'tmpl!Controls/Validate/Input'
    ],
    function(
