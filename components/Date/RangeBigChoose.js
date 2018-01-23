@@ -277,12 +277,12 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this._endDatePicker.addValidators(this._options.endValueValidators);
 
          this.subscribe('onRangeChange', this._onRangeChange.bind(this));
-
-         // if (this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.range) {
+   
+         if (this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.range) {
             this.applyYearState();
-         // } else {
-         //    this.applyMonthState(this._options.startValue? this._options.startValue: new Date());
-         // }
+         } else {
+            this.applyMonthState(this._options.startValue? this._options.startValue: new Date());
+         }
 
          this._updateHomeButton();
       },
