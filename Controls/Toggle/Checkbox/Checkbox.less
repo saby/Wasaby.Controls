@@ -1,63 +1,37 @@
 .controls-CheckBox {
   cursor:pointer;
-  vertical-align: top;
-  display: inline-block;
-  line-height: @height_CheckBox;//todo: при переписывании чекбоксов необходимо учесть что можно сделать на флексах и не задавать данное свойство
+  display: inline-flex;
+  font-size: @check-box-font-size;
 }
 
 .controls-CheckBox__caption {
   word-wrap: break-word;
-  line-height: @check-box-caption-line-height;
+  padding: @spacing_CheckBox-between-icon-caption;
 }
 
 .controls-CheckBox__icon {
-  display: inline-block;
   position: relative;
-  float: left;
-  &:before {
-    font-family: @icon-font;
+  .checkbox-border-size();
+  .checkbox();
+  &:before{
+    content: '';
   }
 }
 
-.controls-CheckBox__caption_size {
-  font-size: @check-box-font-size;
-  margin-left: @width_CheckBox;//todo: ???
-  padding: @check-box-caption-padding;
-}
-
-.controls-CheckBox__icon_size {
-  .checkbox();
-}
-
-.controls-CheckBox__iconBox:before {
-  content: '';
-  top: 0px;
-  left: 0px;
-}
-
-.controls-CheckBox__iconBox_size {
-  .checkbox-border-size();
-}
-
 .controls-CheckBox__icon__checked {
-    .checkbox-checked-size();
+  .checkbox-checked-size();
 }
 
-.controls-CheckBox__icon__null {
+.controls-CheckBox__icon__tristate {
   .checkbox-null-size();
 }
 
-.controls-CheckBox__caption_empty {
-  width: 0px;
-  visibility: hidden;
-}
-
 .controls-CheckBox__caption-enabled {
-    color: @default-text-color;
+  color: @default-text-color;
 }
 
 .controls-CheckBox__caption-disabled {
-    color: @check-box-disabled-color;
+  color: @check-box-disabled-color;
 }
 
 .checkbox-checked-color(@primary-color, @check-box-disabled-color, controls-CheckBox__icon);
