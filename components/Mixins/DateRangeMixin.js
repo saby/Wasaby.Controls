@@ -115,8 +115,8 @@ define('SBIS3.CONTROLS/Mixins/DateRangeMixin', [
       },
 
       _slidePeriod: function (direction) {
-         var start = this.getStartValue(),
-            end = this.getEndValue(),
+         var start = DateUtil.normalizeDate(this.getStartValue()),
+            end = DateUtil.normalizeDate(this.getEndValue()),
             delta = this._getPeriodLengthInMonth(start, end);
          if (delta) {
             this._slidePeriodByMonth(direction*delta);
