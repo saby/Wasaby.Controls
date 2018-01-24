@@ -769,7 +769,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this._options.displayedYear = value;
          if (!dontUpdatePickers) {
             this.getChildControlByName('MonthRangePicker').setYear(value);
-            this.getChildControlByName('MonthDateRangePicker').setMonth(new Date(value, 0, 1));
          }
          this._updateRangeIndicators();
          this._setDisplayedPeriod(new Date(value, 0));
