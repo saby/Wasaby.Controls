@@ -115,12 +115,15 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
             return;
          }
 
-         var scrollContainerTop = this._scrollContainer.offset().top,
+         // Округляем т.к. в ie offset().top возвращает дробные значения. Причем эти значения у _scrollContainer
+         // и у вложенного элемента, который проскролили в самый верх скролируемой области,
+         // могут отличаться на тысячные доли..
+         var scrollContainerTop = Math.floor(this._scrollContainer.offset().top),
             first = false,
             date;
          date = this.getContainer().find('.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_wrapper').filter(function (index, element) {
             element = $(element);
-            if (scrollContainerTop < (element.offset().top + element.height()) && !first) {
+            if (scrollContainerTop < Math.floor(element.offset().top + element.height()) && !first) {
                first = true;
                return true;
             }
@@ -189,6 +192,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          }
          this._options.month = month;
          this._notify('onMonthChanged');
+         this._fixMonthsBar();
          return true;
       },
 
@@ -205,9 +209,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
 
       _onDateRangePickerDrawItems: function () {
-         var self = this,
-            container, monthContainer,
-            scrollContainerOffset;
+         var self = this;
 
          this.forEachMonthView(function(control) {
             control.unsubscribe('onSelectionEnded', self._onSelectionEnded);
@@ -221,13 +223,20 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          });
          this._updateSelectionInInnerComponents();
          this._updateDisplayedYearCssClass();
-         // Хак для ie\edge. Выпилисть как перестанем поддерживать ie и edge которые не поддерживают position: sticky
+         this._fixMonthsBar();
+      },
+
+      _fixMonthsBar: function () {
+         var container,
+            monthContainer,
+            scrollContainerOffset;
+         // Хак для ie\edge. Выпилисть как перестанем поддерживать ie и edge меньше 16 которые не поддерживают position: sticky
          // Панели с месяцами фиксируем через position: fixed и top, а их видимостью управляем через стили.
          if (detection.isIE) {
             container = this.getContainer();
-            scrollContainerOffset = container.closest('.controls-ScrollContainer__content').offset();
+            scrollContainerOffset = container.closest('.controls-ScrollContainer__content')[0].getBoundingClientRect().top;
             monthContainer = container.find('.controls-DateRangeBigChoose-DateRangePickerItem__months');
-            monthContainer.css({'top': scrollContainerOffset.top - parseInt(monthContainer.css('margin-top'), 10)});
+            monthContainer.css({'top': scrollContainerOffset - parseInt(monthContainer.css('margin-top'), 10)});
          }
       },
 
