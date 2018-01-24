@@ -34,7 +34,8 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
                },
                bodyBounds: true,
                locationStrategy: 'bodyBounds',
-               activateAfterShow: true
+               activateAfterShow: true,
+               _canScroll: true
             },
             quantum: {}
          },

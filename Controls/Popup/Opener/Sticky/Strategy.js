@@ -1,8 +1,8 @@
-define('js!Controls/Popup/Opener/Sticky/Strategy',
+define('Controls/Popup/Opener/Sticky/Strategy',
    [
-      'js!Controls/Popup/Opener/BaseStrategy',
+      'Controls/Popup/Opener/BaseStrategy',
       'Core/core-merge',
-      'js!Controls/Popup/TargetCoords'
+      'Controls/Popup/TargetCoords'
    ],
    function (BaseStrategy, cMerge, TargetCoords) {
 
@@ -159,6 +159,10 @@ define('js!Controls/Popup/Opener/Sticky/Strategy',
 
             cfg.position = this.getPosition(popupCfg, TargetCoords.get(cfg.popupOptions.target ? cfg.popupOptions.target : document.body));
             cfg.popupOptions.className += ' ' + _private.getOrientationClasses(popupCfg);
+         },
+
+         elementUpdated: function (cfg, width, height) {
+            this.elementCreated(cfg, width, height);
          },
 
          /**

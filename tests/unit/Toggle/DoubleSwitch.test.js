@@ -1,4 +1,4 @@
-define(['js!Controls/Toggle/DoubleSwitch'], function (Switch) {
+define(['Controls/Toggle/DoubleSwitch'], function (Switch) {
    'use strict';
    var SW, switcherClickedFlag;
    describe('Controls.Toggle.DoubleSwitch', function () {

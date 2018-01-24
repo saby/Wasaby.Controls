@@ -25,7 +25,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    "browser!js!SBIS3.CONTROLS/ListView/resources/SwipeHandlers",
    'i18n!SBIS3.CONTROLS/Date/RangeBigChoose',
    'css!SBIS3.CONTROLS/Date/RangeBigChoose/DateRangeBigChoose',
-   'SBIS3.CONTROLS/ScrollContainer',
+   'SBIS3.CONTROLS/ScrollContainer'
 
 ], function ( constants, CompoundControl, dotTplFn, headerTpl, yearsPanelTpl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, DateControlsUtil, eHelpers, isEmpty) {
    'use strict';
@@ -38,7 +38,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
          // Ключи должны совпадать с соотыветствующими selectionTypes
          range_containers: {
-            years: 'controls-DateRangeBigChoose__yearsRange',
+            years: 'controls-DateRangeBigChoose__yearsRange'
             // months: 'controls-DateRangeBigChoose__months-month',
             // months: 'controls-DateRangeBigChoose__dates-months'
          }
@@ -169,7 +169,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
                css.push(textColorClass, backgroundColorClass);
                return css.join(' ');
             },
-            _state: states.year,
+            _state: states.year
          },
           _keysWeHandle: [
              constants.key.tab,
@@ -277,12 +277,12 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this._endDatePicker.addValidators(this._options.endValueValidators);
 
          this.subscribe('onRangeChange', this._onRangeChange.bind(this));
-
-         // if (this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.range) {
+   
+         if (this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.range) {
             this.applyYearState();
-         // } else {
-         //    this.applyMonthState(this._options.startValue? this._options.startValue: new Date());
-         // }
+         } else {
+            this.applyMonthState(this._options.startValue? this._options.startValue: new Date());
+         }
 
          this._updateHomeButton();
       },
@@ -291,6 +291,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          options = DateRangeBigChoose.superclass._modifyOptions.apply(this, arguments);
          options.displayedYear = options.startValue ? options.startValue.getFullYear() : (new Date()).getFullYear();
          // options.displayedPeriod = options.startValue ? options.startValue : DateUtil.normalizeMonth(new Date());
+         options.yearPanelLastYear = options.displayedYear;
          options.yearPanelData = this._getYearsRangeItems(options.displayedYear, options, true);
          options.weekdaysCaptions = DateControlsUtil.getWeekdaysCaptions();
          // options._state = options.selectionType === RangeSelectableViewMixin.selectionTypes.range ? states.year: states.month;
@@ -321,6 +322,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this._options._displayedPeriod = new Date(year, 0);
          this._updateHomeButton();
          this._clearYearsBarSelection();
+         if (year > this._options.yearPanelLastYear) {
+            this._updateYearsBar(year);
+         } else if (year < this._options.yearPanelLastYear - 5) {
+            this._updateYearsBar(year + 5);
+         }
       },
 
       _onMonthRangePickerOnItemMouseEnter: function (event, date) {
@@ -1092,6 +1098,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          if (this.getRangeSelectionType() !== selectionTypes.years) {
             withoutSelection = true;
          }
+         lastYear = lastYear || this._options.yearPanelData[this._options.yearPanelData.length - 1].caption;
+         this._options.yearPanelLastYear = lastYear;
          this._options.yearPanelData = this._getYearsRangeItems(lastYear, this._options, withoutSelection);
          this.getContainer().find('.' + css_classes.range_containers.years).replaceWith(yearsPanelTpl(this._options));
       },
@@ -1116,7 +1124,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             item = {
                caption: year,
                isDisplayed: false,
-               isCurrent: false,
+               isCurrent: false
                // selected: false,
                // selectedStart: false,
                // selectedEnd: false

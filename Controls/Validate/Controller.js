@@ -1,4 +1,4 @@
-define('js!Controls/Validate/Controller',
+define('Controls/Validate/Controller',
    [
       'Core/Control',
       'tmpl!Controls/Validate/Controller',
@@ -17,29 +17,11 @@ define('js!Controls/Validate/Controller',
 
       var Validate = Base.extend({
          _template: template,
-
-         constructor: function(cfg) {
-            Validate.superclass.constructor.call(this, cfg);
-
-            this._focusOutHandler = function() {
-               this._shouldValidate = true;
-               this._forceUpdate();
-            }.bind(this);
-            this._focusInHandler = function() {
-               this.setValidationResult(null);
-            }.bind(this);
-         },
          _afterMount: function () {
             this._notify('validateCreated', [this], {bubbling:true});
          },
          _beforeUnmount: function () {
             this._notify('validateDestroyed', [this], {bubbling:true});
-         },
-         _afterUpdate: function() {
-            if (this._shouldValidate) {
-               this._shouldValidate = false;
-               this.validate();
-            }
          },
 
          _validationResult: undefined,

@@ -22,6 +22,8 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/presetEdit',
       'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableGroupContent',
       'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItemContent',
+      'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItem',
+      'tmpl!SBIS3.CONTROLS/ListView/resources/ItemTemplate',
       'css!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       'SBIS3.CONTROLS/Button',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
@@ -162,7 +164,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                _getPresets(this).addCallback(function (presets) {
                   this._currentPreset = _getPreset(presets, options.selectedPresetId || PresetDropdown.getLastSelected(options.presetNamespace));
                   _updatePresetView(this);
-                  _updateSelectableView(this);
+                  _updateSelectableViewByPreset(this);
 
                   this.subscribeTo(this._presetView, 'onAfterBeginEdit', function () {
                      this._presetView.setItemsActions([]);
@@ -254,15 +256,10 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          return list1 && list1.length ? (list2 && list2.length ? list1.concat(list2).reduce(function (r, v) { if (r.indexOf(v) === -1) { r.push(v); }; return r; }, []) : list1) : (list2 && list2.length ? list2 : []);
       };
 
-      var _getSelectedColumns = function (cfg, preset, concatAll) {
-         var selected = preset ? preset.selectedColumns : null;
-         return concatAll ? _uniqueConcat(selected, cfg.selectedColumns) : (selected || []);
-      };
-
       var _prepareChildItemsAndGroups = function (cfg, preset) {
          var
             columns = cfg.columns,
-            selectedColumns = _getSelectedColumns(cfg, preset, true),
+            selectedColumns = _uniqueConcat(preset ? preset.selectedColumns : null, cfg.selectedColumns),
             moveColumns = cfg.moveColumns;
          var
             preparingItems = [],
@@ -426,20 +423,34 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          _getPresets(self).addCallback(function (presets) {
             self._currentPreset = _getPreset(presets, self._presetDropdown.getSelectedPresetId());
             _updatePresetView(self);
-            _updateSelectableView(self);
+            _updateSelectableViewByPreset(self);
          });
       };
 
-      var _updateSelectableView = function (self) {
-         var cfg = self._options;
-         var selectedIds = _getSelectedColumns(cfg, self._currentPreset, false);
+      var _updateSelectableViewByPreset = function (self) {
+         var selectedIds = self._currentPreset ? self._currentPreset.selectedColumns : [];
          var selectedColumns = [];
-         cfg.columns.each(function (record) {
-            var column = record.getId();
-            if (!record.get('fixed') && selectedIds.indexOf(column) !== -1) {
-               selectedColumns.push(column);
+         if (selectedIds.length) {
+            var columns = self._options.columns.getRawData();
+            for (var i = 0; i < columns.length; i++) {
+               var column = columns[i];
+               if (!column.fixed && selectedIds.indexOf(column.id) !== -1) {
+                  selectedColumns.push(column.id);
+               }
             }
-         });
+            var newColumns = columns.slice();
+            newColumns.sort(function (c1, c2) {
+               var i1 = selectedIds.indexOf(c1.id);
+               var i2 = selectedIds.indexOf(c2.id);
+               if (i1 !== -1) {
+                  return i2 !== -1 ? i1 - i2 : -1;
+               }
+               else {
+                  return i2 !== -1 ? +1 : columns.indexOf(c1) - columns.indexOf(c2);
+               }
+            });
+            self._selectableView.setItems(new RecordSet({rawData:newColumns, idProperty:'id'}));
+         }
          self._selectableView.setSelectedKeys(selectedColumns);
       };
 
@@ -466,7 +477,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             case 'delete':
                _modifyPresets(self, action);
                _updatePresetView(self);
-               _updateSelectableView(self);
+               _updateSelectableViewByPreset(self);
                break;
          }
       };

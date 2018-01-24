@@ -39,18 +39,25 @@
     .flexbox();
     .align-items(center);
     .justify-content(center);
-    border: none;
-    top: @top_LongOperationsPopup-closeButton;
-    cursor: pointer;
-    height: @list-view-actions-menu-close-height;
-    width: @list-view-actions-menu-close-width;
-    z-index: 1;
-    right: @list-view-actions-menu-close-right;
-    color: @list-view-context-menu-close-color !important;
-    background: none;
-    // используем important т.к. controls-PopupMixin__closeButton используется в старых контролах и стилизована в themes.less
-    // и по другому сейчас не перебить, пока
-    box-shadow: none !important;
+    right: 0;
+    top: 6px;
+    background-color: #f8f8f8;
+    border-width: 1px 0 1px 1px;
+    border-style: solid;
+    border-color: #dbdbdb;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, .12);
+    border-radius: 2px 0 0 2px;
+    z-index: 100;
+    margin-top: 0;
+    &:before {
+        content: "\e66c";
+        font-size: 23px;
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        font-family: 'cbuc-icons';
+        color: #587ab0;
+    }
 
     .icon-size(@list-view-items-toolbar-icon-size, @font-family_closeButton-icon);
 }

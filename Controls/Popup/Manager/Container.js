@@ -1,4 +1,4 @@
-define('js!Controls/Popup/Manager/Container',
+define('Controls/Popup/Manager/Container',
    [
       'Core/Control',
       'tmpl!Controls/Popup/Manager/Container',
@@ -70,6 +70,20 @@ define('js!Controls/Popup/Manager/Container',
          _popupCreated: function(event, id, width, height){
             if (this.eventHandlers && this.eventHandlers.onPopupCreated) {
                this.eventHandlers.onPopupCreated(event, id, width, height);
+            }
+         },
+
+         /**
+          * Обработчик на обновление попапа
+          * @function Controls/Popup/Manager/Container#_popupUpdated
+          * @param event
+          * @param id идентификатор попапа.
+          * @param width ширина попапа.
+          * @param height высота попапа.
+          */
+         _popupUpdated: function(event, id, width, height){
+            if (this.eventHandlers && this.eventHandlers.onPopupUpdated) {
+               this.eventHandlers.onPopupUpdated(event, id, width, height);
             }
          },
 

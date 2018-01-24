@@ -317,6 +317,9 @@
 .controls-IconButton.controls-TreeView__editArrow-container {
    position: absolute;
    z-index: 3;
+   /* Координата инициализации, необходима,
+      чтобы при создании блок не вызывал скролл, из-за того, что создаётся абсолютом без кординаты */
+   top: 0;
    color: @color_TreeDataGridView-editArrow;
    margin: @margin_TreeDataGridView-editArrow;
    background-color: @background-color_TreeDataGridView-editArrow;

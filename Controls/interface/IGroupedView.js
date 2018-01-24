@@ -1,4 +1,4 @@
-define('js!Controls/interface/IGroupedView', [
+define('Controls/interface/IGroupedView', [
 ], function() {
 
    /**

@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 27.11.2017.
  */
-define('js!Controls/Input/resources/SuggestController',
+define('Controls/Input/resources/SuggestController',
    [
       'Core/Abstract',
       'Core/moduleStubs',
@@ -82,14 +82,15 @@ define('js!Controls/Input/resources/SuggestController',
    
       getSearchController: function(self) {
          /* loading SuggestPopupController and preloading suggest template */
-         return moduleStubs.require(['js!Controls/Input/resources/SuggestPopupController', self._options.suggestTemplate]).addCallback(function(result) {
+         return moduleStubs.require(['Controls/Input/resources/SuggestPopupController', self._options.suggestTemplate]).addCallback(function(result) {
             if (!self._suggestPopupController) {
                self._suggestPopupController = new result[0]({
                   dataSource: self._options.dataSource,
                   searchDelay: self._options.searchDelay,
                   popupOpener: self._options.suggestOpener,
                   navigation: self._options.navigation,
-                  selectCallback: self._options.selectCallback
+                  selectCallback: self._options.selectCallback,
+                  searchParam: self._options.searchParam
                });
             }
             return self._suggestPopupController;

@@ -1,6 +1,6 @@
 define(
    [
-      'js!Controls/Input/Suggest'
+      'Controls/Input/Suggest'
    ],
    function(Suggest) {
       'use strict';
