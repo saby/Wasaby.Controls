@@ -1,7 +1,7 @@
 .copyArrowGradient() {
    content: '';
-   width: @tree-view-ellipsis-copyArrow-width;
-   left: -@tree-view-ellipsis-copyArrow-width;
+   width: @width_TreeDataGridView-copyArrow;
+   left: -@width_TreeDataGridView-copyArrow;
    top: 0;
    bottom: 0;
    position: absolute;
@@ -36,7 +36,7 @@
     display: inline-block;
     visibility: hidden;
     position: relative;
-    top: @tree-view-editArrow-top;
+    top: @top_TreeDataGridView-editArrow;
     vertical-align: top;
   }
   &:hover {
@@ -67,12 +67,14 @@
       }
    }
    &.controls-GridView__searchMode {
-      .controls-DataGridView__th, .controls-DataGridView__td {
-         &.controls-DataGridView__firstContentCell {
-            padding-left: @controls-view-padding-DEFAULT;
-         }
-         &:last-child {
-            padding-right: @controls-view-padding-DEFAULT;
+      &:not(.controls-ListView__multiselect) {
+         .controls-DataGridView__th, .controls-DataGridView__td {
+            &.controls-DataGridView__firstContentCell {
+               padding-left: @controls-view-padding-DEFAULT;
+            }
+            &:last-child {
+               padding-right: @controls-view-padding-DEFAULT;
+            }
          }
       }
       .controls-DataGridView__th {
@@ -177,7 +179,7 @@
          float: right;
          position: relative;
          top: -@tree-view-ellipsis-wrapper-height;
-         right: @tree-view-ellipsis-copyArrow-right;
+         right: @right_TreeDataGridView-copyArrow;
          padding: @tree-view-ellipsis-copyArrow-padding;
          background-color: @tree-view-copy-arrow-background;
 
@@ -187,8 +189,7 @@
          }
 
          .controls-TreeView__editArrow {
-            width: @tree-view-ellipsis-copyArrow-width;
-            display: inline-block;
+            width: @width_TreeDataGridView-copyArrow;
          }
       }
    }
@@ -316,14 +317,23 @@
 .controls-IconButton.controls-TreeView__editArrow-container {
    position: absolute;
    z-index: 3;
+   /* Координата инициализации, необходима,
+      чтобы при создании блок не вызывал скролл, из-за того, что создаётся абсолютом без кординаты */
+   top: 0;
    color: @color_TreeDataGridView-editArrow;
+   margin: @margin_TreeDataGridView-editArrow;
+   background-color: @background-color_TreeDataGridView-editArrow;
 
    &:hover {
       color: @color_TreeDataGridView-editArrow_hovered;
    }
+
+   .icon-size {
+      .icon-size(@font-size_TreeDataGridView-editArrow);
+   }
 }
 
-.controls-TreeView__editArrow-background {
+.controls-TreeView__editArrow-container.controls-TreeView__editArrow-background {
    background-color: @data-grid-row-hover-bg;
    &:after {
       .horizontal-gradient(@data-grid-row-hover-bg, @data-grid-row-hover-add-bg, right);

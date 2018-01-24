@@ -1,4 +1,4 @@
-define('js!Controls/interface/IMultiSelectable', [
+define('Controls/interface/IMultiSelectable', [
 ], function() {
 
    /**

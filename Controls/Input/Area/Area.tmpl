@@ -1,15 +1,16 @@
 <div>
-   <ws:Controls.Input.resources.InputRender.InputRender
+   <Controls:Input:resources:InputRender:InputRender
            size="auto"
            sidePadding="Left"
            isMultiline="{{ _options.minLines > 1 }}"
            name="inputRender"
-           value="{{_value}}"
+           value="{{ _options.value }}"
            selectOnClick="{{_options.selectOnClick}}"
            viewModel="{{_textViewModel}}"
            tagStyle="{{_options.tagStyle}}"
+           validationErrors="{{_options.validationErrors}}"
            attr:class="controls-InputArea"
-           on:valueChanged="_changeValueHandler()"
+           on:valueChanged="_valueChangedHandler()"
            on:inputCompleted="_inputCompletedHandler()"
            on:tagHover="_notifyHandler('onTagHover')"
            on:tagClick="_notifyHandler('onTagClick')">
@@ -25,7 +26,8 @@
                     on:keydown="_keyDownHandler()"
                     on:focus="_focusHandler()"
                     on:scroll="_scrollHandler()"
-            >{{_value}}</textarea>
+                    value="{{ _options.value }}"
+            ></textarea>
 
             <div class="controls-fakeTextArea__firstWrapper">
                <div class="controls-fakeTextArea__secondWrapper">
@@ -33,12 +35,12 @@
                      name="fakeArea"
                      class="controls-InputArea__field controls-InputArea__fakeField controls-InputRender__field"
                      style="{{_options.minLines ? ('min-height: ' + _options.minLines * 100 + '%;')}} {{_options.maxLines ? 'max-height: ' + _options.maxLines * 100 + '%'}}">
-                     <span name="fakeAreaValue">{{_value}}</span><br/>
+                     <span name="fakeAreaValue">{{ _options.value }}</span><br/>
                   </div>
                </div>
                <div class="controls-InputArea__clear"></div>
             </div>
          </div>
       </ws:content>
-   </ws:Controls.Input.resources.InputRender.InputRender>
+   <Controls:Input:resources:InputRender:InputRender>
 </div>

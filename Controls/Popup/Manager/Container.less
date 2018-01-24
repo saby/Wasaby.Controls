@@ -1,5 +1,6 @@
 .ws-Container__popup{
    position: absolute;
+   overflow: hidden;
    transition-property: transform;
    transition-duration: 0.15s;
    background: #FFFFFF;
@@ -16,4 +17,9 @@
       top: -1000%;
       height: 2000%;
    }
+}
+// TODO для стеков наверно нужно завести отдельный less, описать его рядом с контроллером, который использует его стили
+.ws-Container__stack-panel{
+   .box-shadow(@shadow_Popup_stack);
+   border-left: 1px solid #BDBDBD;
 }

@@ -445,7 +445,7 @@
       color: @textColor;
       .controls-Button__icon {
         &.icon-primary {
-          color: @iconColor !important;
+          color: @iconColor;
         }
       }
     }
@@ -564,6 +564,7 @@
 }
 .checkbox-null-size() {
   &:after {
+    left: 0;
     content: '';
     position: absolute;
     height: @check-box-icon-null-size;
@@ -596,14 +597,14 @@
   .box-shadow(none);
 }
 
-.generate-height(@className, @i: 1) when (@i =< 10) {
+.generate-height(@className, @line-height, @i: 1) when (@i =< 10) {
   .@{className}_maxheight-@{i} {
-    max-height : @i * @default-line-height;
+    max-height : @i * @line-height;
   }
   .@{className}_minheight-@{i} {
-    min-height: @i * @default-line-height;
+    min-height: @i * @line-height;
   }
-  .generate-height(@className, @i + 1);
+  .generate-height(@className, @line-height, @i + 1);
 }
 
 //---------------Имитация цикла for---------------//
@@ -638,6 +639,21 @@
   border-bottom-color: transparent;
 }
 
+.border-with-pseudo-element(@color: @default-border-color, @width: @default-border-width, @border-radius: 0) {
+  &:after {
+    content: '\200b';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border: @width solid @color;
+    border-radius: @border-radius;
+    pointer-events: none;
+  }
+}
+
 
 .ws-header-size-mixin(@text-size, @height: @default-height) {
   display: inline-block;
@@ -652,4 +668,32 @@
     width: @width;
     height: @height;
   }
+}
+
+.ws-close-button() {
+   cursor: pointer;
+   border-style: solid;
+   width: @width_CloseButton;
+   height: @height_CloseButton;
+   font-family: @default-icon-font;
+   line-height: @height_CloseButton;
+   font-size: @font-size_CloseButton;
+   box-shadow: @box-shadow_CloseButton;
+   border-width: @border-width_CloseButton;
+   border-color: @border-color_CloseButton;
+   border-radius: @border-radius_CloseButton;
+   background-color: @background-color_CloseButton;
+   .flexbox();
+   .align-items(center);
+   .justify-content(center);
+   &:before {
+      color: @icon-color-primary;
+      content: @content_CloseButton_icon;
+   }
+   body:not(.ws-is-mobile-platform) &:hover, &:active {
+      background-color: @background-color_CloseButton_hover;
+      &:before {
+         color: @icon-color-primary-hover;
+      }
+   }
 }

@@ -1,4 +1,4 @@
-define('js!Controls/Toggle/Switch', [
+define('Controls/Toggle/Switch', [
    'Core/Control',
    'tmpl!Controls/Toggle/Switch/Switch',
    'WS.Data/Type/descriptor',
@@ -25,7 +25,7 @@ define('js!Controls/Toggle/Switch', [
       _template: template,
 
       _clickHandler: function (e) {
-         this._notify('valueChanged', !this._options.value);
+         this._notify('valueChanged', [!this._options.value]);
       }
    });
 

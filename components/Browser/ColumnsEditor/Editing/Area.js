@@ -13,6 +13,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       'WS.Data/Functor/Compute',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/AreaSelectableModel',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Cache',
+      'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/Controllers/ItemsMoveController',
       'SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController',
@@ -21,6 +22,8 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/presetEdit',
       'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableGroupContent',
       'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItemContent',
+      'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItem',
+      'tmpl!SBIS3.CONTROLS/ListView/resources/ItemTemplate',
       'css!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       'SBIS3.CONTROLS/Button',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
@@ -29,7 +32,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, Deferred, RecordSet, ComputeFunctor, AreaSelectableModel, PresetCache, CompoundControl, ItemsMoveController, EditInPlaceBaseController, dotTplFn) {
+   function (CommandDispatcher, Deferred, RecordSet, ComputeFunctor, AreaSelectableModel, PresetCache, PresetDropdown, CompoundControl, ItemsMoveController, EditInPlaceBaseController, dotTplFn) {
       'use strict';
 
 
@@ -44,6 +47,13 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          clone: {title: rk('Дублировать'), icon: 'sprite:icon-16 icon-Copy icon-primary action-hover'},
          'delete': {title: rk('Удалить'), icon: 'sprite:icon-16 icon-Erase icon-error'}
       };
+
+      /**
+       * (Как бы) константа сообщения об ошибке при редактировании
+       * @protected
+       * @type {string}
+       */
+      var _PRESET_TITLE_ERROR = rk('Название пресета не может быть пустым и должно отличаться от названий других пресетов');
 
 
 
@@ -66,10 +76,12 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                /**
                 * @cfg {(string|number)[]} Список идентификаторов выбранных колонок
                 */
+               // TODO: Обратить внимание на суммирование с пресетами
                selectedColumns: [],
                /**
                 * @cfg {boolean} Показывает на обязательность использования пресетов (опционально)
                 */
+               // TODO: Обратить внимание на суммирование с selectedColumns
                usePresets: true,
                /**
                 * @cfg {string} Заголовок дропдауна (опционально)
@@ -90,11 +102,13 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                /**
                 * @cfg {string} Начальное название нового пользовательского пресета (опционально)
                 */
+               // TODO: Обратить внимание на связь с useOriginPresetTitle
                newPresetTitle: rk('Новый пресет'),
                /**
-                * @cfg {boolean} При добавлении новых пользовательских пресетов строить название из предыдущего с добавлением следующего порядкового номера (опционально)
+                * @cfg {boolean} При клонировании новых пользовательских пресетов строить название из исходного с добавлением следующего порядкового номера (опционально)
                 */
-               useNumberedTitle: true,
+               // TODO: Обратить внимание на связь с newPresetTitle
+               useOriginPresetTitle: true,
                /**
                 * @cfg {boolean} Указывает на необходимость включить перемещнение пользователем пунктов списка колонок (опционально)
                 */
@@ -104,13 +118,15 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                presetView: 'controls-Browser-ColumnsEditor-Editing-Area__Preset',
                fixedView: 'controls-Browser-ColumnsEditor-Editing-Area__FixedList',
                selectableView: 'controls-Browser-ColumnsEditor-Editing-Area__SelectableList',
-               presetDropdown: 'controls-Browser-ColumnsEditor-Editing-Area__Preset-item-title'
+               presetDropdown: 'controls-Browser-ColumnsEditor-Editing-Area__Preset-item-title',
+               presetInput: 'controls-Browser-ColumnsEditor-Editing-Area__Preset-input'
             },
             _presetView: null,
             _presetDropdown: null,
             _fixedView: null,
             _selectableView: null,
-            _currentPreset: null
+            _currentPreset: null,
+            _presetValidator: null
          },
 
          _modifyOptions: function () {
@@ -146,19 +162,29 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                //PresetCache.subscribe(options.presetNamespace, 'onCacheError', function () {});
 
                _getPresets(this).addCallback(function (presets) {
-                  this._currentPreset = _getPreset(presets, options.selectedPresetId);
+                  this._currentPreset = _getPreset(presets, options.selectedPresetId || PresetDropdown.getLastSelected(options.presetNamespace));
                   _updatePresetView(this);
+                  _updateSelectableViewByPreset(this);
 
-                  this.subscribeTo(this._presetView, 'onAfterBeginEdit', this._presetView.setItemsActions.bind(this._presetView, []));
+                  this.subscribeTo(this._presetView, 'onAfterBeginEdit', function () {
+                     this._presetView.setItemsActions([]);
+                     this._presetView._editInPlace.getChildControlByName(this._childNames.presetInput).setValidators([this._presetValidator]);
+                  }.bind(this));
                   this.subscribeTo(this._presetView, 'onEndEdit', function (evtName, model, withSaving) {
                      if (withSaving) {
-                        evtName.setResult(EditInPlaceBaseController.EndEditResult.CUSTOM_LOGIC);
-                        this._presetView.getItems().replace(model, 0);
-                        _modifyPresets(this, 'change-title', model.get('title'));
+                        var isValid = this._presetView._editInPlace.isValidChanges();
+                        evtName.setResult(EditInPlaceBaseController.EndEditResult[isValid ? 'CUSTOM_LOGIC' : 'CANCEL']);
+                        if (isValid) {
+                           this._presetView.getItems().replace(model, 0);
+                           _modifyPresets(this, 'change-title', model.get('title'));
+                        }
                      }
                   }.bind(this));
                   this.subscribeTo(this._presetView, 'onAfterEndEdit', function (evtName, model, $target, withSaving) {
-                     _initPresetDropdown(this);
+                     this._presetValidator = null;
+                     if (withSaving) {
+                        _initPresetDropdown(this);
+                     }
                      this._presetView.setItemsActions(_makePresetItemsActions(this, this._currentPreset.isStorable));
                   }.bind(this));
                }.bind(this));
@@ -230,15 +256,10 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          return list1 && list1.length ? (list2 && list2.length ? list1.concat(list2).reduce(function (r, v) { if (r.indexOf(v) === -1) { r.push(v); }; return r; }, []) : list1) : (list2 && list2.length ? list2 : []);
       };
 
-      var _getSelectedColumns = function (cfg, preset, concatAll) {
-         var selected = preset ? preset.selectedColumns : null;
-         return concatAll ? _uniqueConcat(selected, cfg.selectedColumns) : (selected || []);
-      };
-
       var _prepareChildItemsAndGroups = function (cfg, preset) {
          var
             columns = cfg.columns,
-            selectedColumns = _getSelectedColumns(cfg, preset, true),
+            selectedColumns = _uniqueConcat(preset ? preset.selectedColumns : null, cfg.selectedColumns),
             moveColumns = cfg.moveColumns;
          var
             preparingItems = [],
@@ -343,6 +364,10 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          return true;
       };
 
+      var _validatePresetTitle = function (list, value) {
+         return value && list.indexOf(value) === -1;
+      };
+
 
 
       /**
@@ -384,8 +409,12 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       };
 
       var _initPresetDropdown = function (self) {
-         self._presetDropdown = _getChildComponent(self._presetView, self._childNames.presetDropdown);
-         self.subscribeTo(self._presetDropdown, 'onChange', function (evtName, selectedPresetId) {
+         var dropdown = self._presetDropdown = _getChildComponent(self._presetView, self._childNames.presetDropdown);
+         var preset = self._currentPreset;
+         if (preset) {
+            dropdown.setSelectedPresetId(preset.id);
+         }
+         self.subscribeTo(dropdown, 'onChange', function (evtName, selectedPresetId) {
             _onPresetDropdownChanged(self);
          });
       };
@@ -394,17 +423,35 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          _getPresets(self).addCallback(function (presets) {
             self._currentPreset = _getPreset(presets, self._presetDropdown.getSelectedPresetId());
             _updatePresetView(self);
-            var cfg = self._options;
-            var selectedIds = _getSelectedColumns(cfg, self._currentPreset, false);
-            var selectedColumns = [];
-            cfg.columns.each(function (record) {
-               var column = record.getId();
-               if (!record.get('fixed') && selectedIds.indexOf(column) !== -1) {
-                  selectedColumns.push(column);
+            _updateSelectableViewByPreset(self);
+         });
+      };
+
+      var _updateSelectableViewByPreset = function (self) {
+         var selectedIds = self._currentPreset ? self._currentPreset.selectedColumns : [];
+         var selectedColumns = [];
+         if (selectedIds.length) {
+            var columns = self._options.columns.getRawData();
+            for (var i = 0; i < columns.length; i++) {
+               var column = columns[i];
+               if (!column.fixed && selectedIds.indexOf(column.id) !== -1) {
+                  selectedColumns.push(column.id);
+               }
+            }
+            var newColumns = columns.slice();
+            newColumns.sort(function (c1, c2) {
+               var i1 = selectedIds.indexOf(c1.id);
+               var i2 = selectedIds.indexOf(c2.id);
+               if (i1 !== -1) {
+                  return i2 !== -1 ? i1 - i2 : -1;
+               }
+               else {
+                  return i2 !== -1 ? +1 : columns.indexOf(c1) - columns.indexOf(c2);
                }
             });
-            self._selectableView.setSelectedKeys(selectedColumns);
-         });
+            self._selectableView.setItems(new RecordSet({rawData:newColumns, idProperty:'id'}));
+         }
+         self._selectableView.setSelectedKeys(selectedColumns);
       };
 
       var _makePresetItemsActions = function (self, useAllActions) {
@@ -424,14 +471,53 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       var _applyPresetAction = function (self, action, $item, itemId, itemModel) {
          switch (action) {
             case 'edit':
-               self._presetView.beginEdit(itemModel, false);
+               _startPresetEditing(self);
                break;
             case 'clone':
             case 'delete':
                _modifyPresets(self, action);
                _updatePresetView(self);
+               _updateSelectableViewByPreset(self);
                break;
          }
+      };
+
+      var _startPresetEditing = function (self) {
+         _getPresets(self).addCallback(function (presets) {
+            var titles = presets.map(function (v) { return v.title; });
+            titles.splice(titles.indexOf(self._currentPreset.title), 1);
+            self._presetValidator = {
+               option: 'text',
+               validator: _validatePresetTitle.bind(null, titles),
+               errorMessage: _PRESET_TITLE_ERROR
+            };
+            self._presetView.beginEdit(self._presetView.getItems().at(0), false);
+         });
+      };
+
+      var _fitPresetTitle = function (self, title) {
+         var promise = new Deferred();
+         _getPresets(self).addCallback(function (presets) {
+            var reEnd = /\s+\(([0-9]+)\)\s*$/;
+            var pattern = title.replace(reEnd, '');
+            var previous = presets.reduce(function (result, item) {
+               var value = item.title;
+               if (value.indexOf(pattern) === 0) {
+                  if (value.length === pattern.length) {
+                     result.push(1);
+                  }
+                  else {
+                     var ms = value.substring(pattern.length).match(reEnd);
+                     if (ms) {
+                        result.push(parseInt(ms[1]));
+                     }
+                  }
+               };
+               return result;
+            }, []);
+            promise.callback(previous.length ? pattern + ' (' + (Math.max.apply(Math, previous) + 1) + ')' : pattern);
+         });
+         return promise;
       };
 
       var _modifyPresets = function (self, action, arg) {
@@ -450,12 +536,15 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                break;
 
             case 'clone':
-               var newPreset = PresetCache.create(namespace, {
-                  title: self._options.newPresetTitle,// TODO: Возможно, лучше сделать старый заголовок с цифрой в конце - self._options.useNumberedTitle
-                  selectedColumns: preset.selectedColumns.slice()
+               _fitPresetTitle(self, self._options.useOriginPresetTitle ? preset.title : self._options.newPresetTitle).addCallback(function (title) {
+                  var newPreset = PresetCache.create(namespace, {
+                     title: title,
+                     selectedColumns: preset.selectedColumns.slice()
+                  });
+                  self._presetDropdown.setSelectedPresetId(newPreset.id);
+                  self._currentPreset = newPreset;
+                  setTimeout(_startPresetEditing.bind(null, self), 1);
                });
-               self._presetDropdown.setSelectedPresetId(newPreset.id);
-               self._currentPreset = newPreset;
                break;
 
             case 'delete':

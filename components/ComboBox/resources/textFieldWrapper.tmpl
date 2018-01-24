@@ -1,10 +1,11 @@
+<span class="controls-InputRender__field controls-TextBox__field controls-ComboBox__fieldNotEditable js-controls-ComboBox__fieldNotEditable
+   {{!text ? ' controls-ComboBox__fieldNotEditable__placeholder'}}">{{(text || placeholder || '&nbsp;')|sanitize}}</span>
 <input
     class="controls-InputRender__field js-controls-TextBox__field controls-ComboBox__field {{textTransform === 'uppercase' ? 'controls-TextBox__field-uppercase'}} {{textTransform === 'lowercase' ? 'controls-TextBox__field-lowercase'}}"
     type="{{type || 'text'}}"
     autocomplete="off"
     value="{{text}}"
     maxlength="{{maxLength ? maxLength}}"
-    readonly="{{!editable}}"
     required="true"
     title="{{tooltip ? tooltip : ' '}}"
 />

@@ -2,6 +2,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
    [
       'Core/core-extend',
       'Core/Deferred',
+      'Core/WindowManager',
       'Lib/Control/Control',
       'Core/js-template-doT',
       'css!SBIS3.CONTROLS/WaitIndicator/WaitIndicator'
@@ -76,7 +77,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
     * @demo SBIS3.CONTROLS.Demo.MyWaitIndicatorTable
     */
 
-   function (CoreExtend, Deferred, CoreControl, doT) {
+   function (CoreExtend, Deferred, WindowManager, CoreControl, doT) {
       'use strict';
 
       /**
@@ -402,7 +403,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
                   // Сбросить отсчёт времени до принудительного удаления из DOM-а
                   _unclear(poolItem);
                   // Удалить из DOM-а
-                  WaitIndicatorSpinner.remove(poolItem.spinner);
+                  WaitIndicatorSpinner.remove(poolItem.spinner, isGlobal);
                   // Удалить из пула
                   var j = _pool.indexOf(poolItem);
                   if (j !== -1) {
@@ -491,7 +492,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
           * @protected
           * @type {function}
           */
-         _dotTplFn: doT.template('<div class="ws-wait-indicator{{?it.isGlob}} ws-wait-indicator_global{{??}} ws-wait-indicator_local{{?}}{{?it.message}} ws-wait-indicator_text{{?}}{{?it.scroll}} ws-wait-indicator_scroll-{{=it.scroll}}{{?}}{{?it.small}} ws-wait-indicator_small{{=it.small !== \'yes\' ? \'-\' + it.small : \'\'}}{{?}}{{?it.overlay}} ws-wait-indicator_overlay-{{=it.overlay}}{{?}}{{~it.mods :mod:i}} ws-wait-indicator_mod-{{=mod}}{{~}}"{{?it.rect}} style="left: {{=it.rect.x}}px; top: {{=it.rect.y}}px; width: {{=it.rect.w}}px; height: {{=it.rect.h}}px;"{{?}}><div class="ws-wait-indicator-in">{{=it.message}}</div></div>'),
+         _dotTplFn: doT.template('<div class="ws-wait-indicator{{?it.isGlob}} ws-wait-indicator_global{{??}} ws-wait-indicator_local{{?}}{{?it.message}} ws-wait-indicator_text{{?}}{{?it.scroll}} ws-wait-indicator_scroll-{{=it.scroll}}{{?}}{{?it.small}} ws-wait-indicator_small{{=it.small !== \'yes\' ? \'-\' + it.small : \'\'}}{{?}}{{?it.overlay}} ws-wait-indicator_overlay-{{=it.overlay}}{{?}}{{~it.mods :mod:i}} ws-wait-indicator_mod-{{=mod}}{{~}}"{{?it.rect || it.z}} style="{{?it.rect }}left: {{=it.rect.x}}px; top: {{=it.rect.y}}px; width: {{=it.rect.w}}px; height: {{=it.rect.h}}px;{{?}} {{?it.z}}z-index:{{=it.z}};{{?}}"{{?}}><div class="ws-wait-indicator-in">{{=it.message}}</div></div>'),
 
          /**
           * Создать и добавить в DOM элемент индикатора
@@ -516,9 +517,13 @@ define('SBIS3.CONTROLS/WaitIndicator',
           */
          change: function (spinner, container, message, look) {
             var options = this._prepareOptions(container, message, look);
+            var $prev = spinner ? $(spinner) : null;
+            if (container) {
+               options.z = spinner ? +$prev.css('z-index') : WindowManager.acquireZIndex(false, false, false);
+            }
             var $next = $(this._dotTplFn(options));
             if (spinner) {
-               $(spinner).replaceWith($next);
+               $prev.replaceWith($next);
             }
             else {
                $(container || document.body).append($next);
@@ -551,10 +556,14 @@ define('SBIS3.CONTROLS/WaitIndicator',
           * Удалить из DOM элемент индикатора
           * @public
           * @param {HTMLElement} spinner DOM-элемент индикатора
+          * @param {boolean} isGlobal Индикатор является глобальным
           */
-         remove: function (spinner) {
+         remove: function (spinner, isGlobal) {
             var p = spinner.parentNode;
             if (p) {
+               if (!isGlobal) {
+                  WindowManager.releaseZIndex(+$(spinner).css('z-index'));
+               }
                this._unwatchResize(spinner);
                p.removeChild(spinner);
             }

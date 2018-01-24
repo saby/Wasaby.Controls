@@ -1,4 +1,4 @@
-define('js!Controls/Validate/Controller',
+define('Controls/Validate/Controller',
    [
       'Core/Control',
       'tmpl!Controls/Validate/Controller',
@@ -17,35 +17,17 @@ define('js!Controls/Validate/Controller',
 
       var Validate = Base.extend({
          _template: template,
-
-         constructor: function(cfg) {
-            Validate.superclass.constructor.call(this, cfg);
-
-            this._focusOutHandler = function() {
-               this._shouldValidate = true;
-               this._forceUpdate();
-            }.bind(this);
-            this._focusInHandler = function() {
-               this.setValidationResult(true);
-            }.bind(this);
-         },
          _afterMount: function () {
-            this._notify('validateCreated', this);
+            this._notify('validateCreated', [this], {bubbling:true});
          },
          _beforeUnmount: function () {
-            this._notify('validateDestroyed', this);
-         },
-         _afterUpdate: function() {
-            if (this._shouldValidate) {
-               this._shouldValidate = false;
-               this.validate();
-            }
+            this._notify('validateDestroyed', [this], {bubbling:true});
          },
 
          _validationResult: undefined,
 
          _callValidators: function callValidators(validators) {
-            var validationResult = true,
+            var validationResult = null,
                errors = [],
                validatorResult, validator, resultDeferred, index;
 
@@ -88,7 +70,7 @@ define('js!Controls/Validate/Controller',
 
             // далее, смотрим что возвращают результаты-деферреды
             parallelDeferred.done().getResult().addCallback(function(results) {
-               var validationResult = true;
+               var validationResult = null;
                if (typeof results === 'object') {
                   for (var resultIndex in results) {
                      // плохие результаты запоминаем в массиве с ошибками
@@ -102,8 +84,6 @@ define('js!Controls/Validate/Controller',
                         } else if (Array.isArray(result)) {
                            errors = result;
                         }
-
-                        validationResult = validationResult && result;
                      }
                   }
                }

@@ -41,7 +41,7 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
     *
     * @cssModifier controls-IconButton__round-border Добавляет круглую границу вокруг иконки. Размер границы подстраивается под размеры иконки.
     * По умолчанию граница серого цвета. При наведении курсора цвет границы изменяется в соответствии с цветом иконки, установленной в опции {@link icon}.
-    * @cssModifier controls-IconButton__round-border-24 Устанавливает круглую границу (диаметр в 24 px) вокруг иконки быстрой операции, доступной по наведению курсора. Подробнее о таких типах операций вы можете прочитать <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">здесь</a>.
+    * @cssModifier controls-IconButton__round-border-24 Устанавливает круглую границу (диаметр в 24 px) вокруг иконки быстрой операции, доступной по наведению курсора. Подробнее о таких типах операций вы можете прочитать <a href="/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">здесь</a>.
     * Модификатор применяется совместно с иконками 16 px. Цвет границы соответствует цвету иконки, установленной в опции {@link icon}.
     * @cssModifier controls-IconButton__filter-left Устанавливает внешний вид для кнопки открытия/закрытия фильтров слева.
     * @cssModifier controls-IconButton__filter-right Устанавливает внешний вид  для кнопки открытия/закрытия фильтров справа.
@@ -86,7 +86,6 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
 
          options.className += ' controls-IconButton';
 
-
          if (iconClass) {
             if (((iconClass.indexOf('icon-error') >= 0) || (iconClass.indexOf('icon-done') >= 0))){
                if (iconClass.indexOf('icon-error') >= 0) {
@@ -97,6 +96,10 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
                }
             }
          }
+         options.cssClassName += ' controls-IconButton-size__' + (!!options.size ? options.size : 'default');
+         // В 3.18.0 выпиливаю эту логику по задаче
+         // https://online.sbis.ru/opendoc.html?guid=241d440c-ed00-4fa3-b2f9-3a5c453b0943
+         options.tooltip =  options.tooltip || options.caption;
          return options;
       },
 

@@ -1,15 +1,17 @@
-define('js!Controls/Input/Text', [
+define('Controls/Input/Text', [
       'Core/Control',
       'tmpl!Controls/Input/Text/Text',
       /*'WS.Data/Type/descriptor',*/
       'Controls/Input/Text/ViewModel',
+      'Controls/Input/resources/InputHelper',
 
       'css!Controls/Input/resources/InputRender/InputRender',
       'tmpl!Controls/Input/resources/input'
    ], function(Control,
                template,
                /*types,*/
-               TextViewModel) {
+               TextViewModel,
+               inputHelper) {
 
       'use strict';
 
@@ -72,51 +74,34 @@ define('js!Controls/Input/Text', [
          constructor: function(options) {
             TextBox.superclass.constructor.call(this, options);
 
-            this._value = options.value;
-
             this._textViewModel = new TextViewModel({
                constraint: options.constraint,
                maxLength: options.maxLength
             });
          },
 
-         _beforeUpdate: function(newOptions) {
-            this._value = newOptions.value;
-         },
-
-         _setValue: function(value){
-            this._value = value;
-         },
-
-         _changeValueHandler: function(event, value) {
-            this._setValue(value);
-         },
-
          _inputCompletedHandler: function(){
             //Если стоит опция trim, то перед завершением удалим лишние пробелы и ещё раз стрельнем valueChanged
             if(this._options.trim){
-               var newValue = this._value.trim();
-               if(newValue !== this._value){
-                  this._setValue(newValue);
-                  this._notify('valueChanged', newValue);
+               var newValue = this._options.value.trim();
+               if(newValue !== this._options.value){
+                  this._notify('valueChanged', [newValue]);
                }
             }
 
-            this._notify('inputCompleted', this._value);
+            this._notify('inputCompleted', [this._options.value]);
          },
 
          _notifyHandler: function(event, value) {
             this._notify(value);
          },
 
-         _focusHandler: function(e) {
-            if (this._options.selectOnClick) {
-               e.target.select();
-            }
+         _valueChangedHandler: function(e, value) {
+            this._notify('valueChanged', [value]);
          },
 
          paste: function(text) {
-            this._children['inputRender'].paste(text);
+            inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text);
          }
       });
 

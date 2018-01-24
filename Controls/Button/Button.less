@@ -6,13 +6,32 @@
   height: @default-height;
   min-width: @min-width_Button;
   box-sizing: border-box;
-  border-style: solid;
-  border-width: @border-width_Button;
-  .border-radius(@border-radius_Button_default);
   .user-select();
 }
 
+.controls-Button__style-link {
+  cursor: pointer;
+  color: @color_Link-text;
+  &:hover {
+    color: @color_Link-text_hovered;
+    .controls-Button__text {
+      text-decoration: underline;
+    }
+  }
+}
+
+.controls-Button__style-link-disabled{
+  color: @color_Link-text_disabled;
+}
+
+.controls-Button__style-default, .controls-Button__style-primary, .controls-Button__style-primary-disabled,  .controls-Button__style-default-disabled {
+  border-style: solid;
+  border-width: @border-width_Button;
+  .border-radius(@border-radius_Button_default);
+}
+
 .controls-Button__style-primary {
+  cursor: pointer;
   border-color: @border-color_Button_primary;
 
   &:active {
@@ -22,18 +41,28 @@
   }
 }
 
-.controls-Button__style-disabled {
-  cursor: default;
-  color: @default-disabled-color;
-  border: @border_Button_disabled;
-  background: @background_Button_disabled;
+.controls-Button__style-default {
+  cursor: pointer;
+  border-color: @border-color_Button;
 
-  .controls-Button__icon {
-    color: @icon-color-disabled !important;
+  &:active {
+    border-color: @border-color_Button_hovered;
+    background: @background_Button_active;
+    box-shadow: none;
   }
 }
 
-.controls-Button__wrapper_style-primary {
+.controls-Button__style-primary-disabled,  .controls-Button__style-default-disabled{
+  cursor: default;
+  color: @default-disabled-color;
+  background: @background_Button_disabled;
+}
+
+.controls-Button__icon-primary-disabled, .controls-Button__icon-default-disabled, .controls-Button__icon-link-disabled{
+  color: @icon-color-disabled ;
+}
+
+.controls-Button__wrapper_style-primary, .controls-Button__wrapper_style-default {
   padding: @padding_Button-wrapper_default;
   .justify-content(center);
 }
@@ -46,6 +75,12 @@
     &:hover {
       border-color: @border-color_Button_primary_hovered;
       background: @background_Button_primary_hovered;
+    }
+  }
+  .controls-Button__style-default {
+    &:hover {
+      border-color: @border-color_Button_hovered;
+      background: @background_Button_hovered;
     }
   }
 }

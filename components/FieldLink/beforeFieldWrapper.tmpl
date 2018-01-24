@@ -1,21 +1,19 @@
-<ws:if data="{{ selectedKeys.length || selectedItems.length || selectedKey || selectedItem }}">
-    <div class="controls-FieldLink__beforeFieldWrapper">
-        <div class="controls-FieldLink__linksWrapper">
-            <SBIS3.CONTROLS:FieldLink:resources:ItemsCollection
-                cssClassName="controls-FieldLink__linksContainer"
-                name="FieldLinkItemsCollection"
-                tabindex="0"
-                displayProperty="{{ displayProperty }}"
-                idProperty="{{ idProperty }}"
-                itemTpl="{{ itemTpl }}"
-                itemContentTpl="{{ itemContentTpl }}"
-                includedTemplates="{{ includedTemplates }}"
-                items="{{ preRenderItems }}"
-                boldItems="{{ boldItems }}"
-                underlinedItems="{{ underlinedItems }}"
-                bigItems="{{ bigItems }}"
-                itemsSortMethod="{{ itemsSortMethod }}">
-            </SBIS3.CONTROLS:FieldLink:resources:ItemsCollection>
-        </div>
-    </div>
+<ws:if data="{{ !_isEmptySelection(...) }}"><!-- Функция из multiSelectable и работает именно с options компонента -->
+   <div class="controls-FieldLink__beforeFieldWrapper{{enabled ? ' controls-FieldLink__beforeFieldWrapper-enabled' : ' controls-FieldLink__beforeFieldWrapper-disabled'}}">
+      <SBIS3.CONTROLS:FieldLink:resources:ItemsCollection
+        cssClassName="controls-FieldLink__linksContainer"
+        name="FieldLinkItemsCollection"
+        tabindex="0"
+        displayProperty="{{ displayProperty }}"
+        idProperty="{{ idProperty }}"
+        itemTpl="{{ itemTpl }}"
+        itemContentTpl="{{ itemContentTpl }}"
+        includedTemplates="{{ includedTemplates }}"
+        items="{{ preRenderItems }}"
+        boldItems="{{ boldItems }}"
+        underlinedItems="{{ underlinedItems }}"
+        bigItems="{{ bigItems }}"
+        itemsSortMethod="{{ itemsSortMethod }}">
+      </SBIS3.CONTROLS:FieldLink:resources:ItemsCollection>
+   </div>
 </ws:if>

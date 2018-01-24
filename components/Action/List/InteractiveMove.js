@@ -8,7 +8,8 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
       'Core/IoC',
       'Core/core-instance',
       'Core/constants',
-      'SBIS3.CONTROLS/Utils/InformationPopupManager'
+      'SBIS3.CONTROLS/Utils/InformationPopupManager',
+      'css!SBIS3.CONTROLS/Action/List/resources/InteractiveMove'
    ],
    function (ListMove, DialogMixin, strHelpers, Indicator, cMerge, IoC, cInstance, constants, InformationPopupManager) {
       'use strict';
@@ -17,7 +18,7 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
        * @class SBIS3.CONTROLS/Action/List/InteractiveMove
        * @public
        * @extends SBIS3.CONTROLS/Action/List/Move
-       * @mixes SBIS3.CONTROLS/Action/Mixin/DialogMixin
+       * @mixes SBIS3.CONTROLS/Action/Mixin/DialogMixinл
        * @author Ганшин Я.О.
        * @example
        * Пример использования InteractiveMove:
@@ -211,6 +212,7 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
                title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись'), ' ' + rk('записи')) + ' ' + rk('в'),
                opener: this._getListView()
             }, {preferSource: true});
+            config['cssClassName'] = 'InteractiveMove-window';
             return config;
          },
 

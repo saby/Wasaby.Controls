@@ -1,4 +1,4 @@
-define('js!Controls/Popup/Opener/BaseStrategy',
+define('Controls/Popup/Opener/BaseStrategy',
    [
       'Core/core-extend'
    ],
@@ -12,21 +12,32 @@ define('js!Controls/Popup/Opener/BaseStrategy',
       var BaseStrategy = CoreExtend.extend({
          /**
           * Добавление нового элемента
-          * @function Controls/Popup/Opener/BaseStrategy#addElement
+          * @function Controls/Popup/Opener/BaseStrategy#elementCreated
           * @param element
           * @param width
           * @param height
           */
-         addElement: function (element, width, height) {
+         elementCreated: function (element, width, height) {
+
+         },
+
+         /**
+          * Обновление размеров элемента
+          * @function Controls/Popup/Opener/BaseStrategy#elementUpdated
+          * @param element
+          * @param width
+          * @param height
+          */
+         elementUpdated: function (element, width, height) {
 
          },
 
          /**
           * Удаление элемента
-          * @function Controls/Popup/Opener/BaseStrategy#removeElement
+          * @function Controls/Popup/Opener/BaseStrategy#elementDestroyed
           * @param element
           */
-         removeElement: function (element) {
+         elementDestroyed: function (element) {
 
          },
 

@@ -27,6 +27,12 @@ define('SBIS3.CONTROLS/Date/RangeSliderBig', [
          return opts;
       },
 
+      _setPickerConfig: function() {
+         var config = DateRangeSliderBig.superclass._setPickerConfig.apply(this, arguments);
+         config.className = 'controls-DateRangeBigChoose__picker';
+         return config;
+      },
+
       _getDateRangeBigChooseConfig: function (element) {
          var config = DateRangeSliderBig.superclass._getDateRangeBigChooseConfig.apply(this, arguments),
             getValidator = function (validator) {

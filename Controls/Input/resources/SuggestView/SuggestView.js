@@ -1,4 +1,4 @@
-define('js!Controls/Input/resources/SuggestView/SuggestView',
+define('Controls/Input/resources/SuggestView/SuggestView',
    [
       'Core/Control',
       'tmpl!Controls/Input/resources/SuggestView/SuggestView',
@@ -12,6 +12,14 @@ define('js!Controls/Input/resources/SuggestView/SuggestView',
          getSelectedKey: function(items, idProperty, index) {
             var item = items && items.at(index || 0);
             return item ? item.get(idProperty) : null;
+         },
+         
+         getOptionsForShowAll: function(self) {
+            return {
+               componentOptions: {
+                  filter: self._options.filter
+               }
+            };
          }
       };
       
@@ -24,19 +32,19 @@ define('js!Controls/Input/resources/SuggestView/SuggestView',
          },
          
          _onItemClickHandler: function(event, item) {
-            this._notify('sendResult', item);
-            this._notify('close');
+            this._notify('sendResult', [item], {bubbling: true});
+            this._notify('close', [], {bubbling: true});
          },
          
          _showAllClick: function() {
             var self = this;
             
             //loading showAll templates
-            moduleStubs.require(['js!Controls/Input/resources/SuggestShowAll/SuggestShowAll', 'js!Controls/Popup/DialogTemplate']).addCallback(function(res) {
-               self._options.showAllOpener.open();
+            moduleStubs.require(['Controls/Input/resources/SuggestShowAll/SuggestShowAll', 'Controls/Popup/DialogTemplate']).addCallback(function(res) {
+               self._options.showAllOpener.open(_private.getOptionsForShowAll(self));
                return res;
             });
-            this._notify('close');
+            this._notify('close', [], {bubbling: true});
          },
          
          _beforeUpdate: function(newOptions) {
@@ -45,5 +53,6 @@ define('js!Controls/Input/resources/SuggestView/SuggestView',
          }
       });
       
+      SuggestView._private = _private;
       return SuggestView;
    });

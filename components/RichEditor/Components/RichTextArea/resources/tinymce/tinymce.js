@@ -10343,9 +10343,9 @@
       "tinymce/util/Tools",
       "tinymce/dom/TreeWalker",
       "tinymce/dom/NodeType",
-      "tinymce/dom/Range",
-      "tinymce/caret/CaretContainer"
-   ], function(Tools, TreeWalker, NodeType, Range, CaretContainer) {
+      "tinymce/caret/CaretContainer",
+      "tinymce/dom/Range"
+   ], function(Tools, TreeWalker, NodeType, /*Range, предупреждение СТАН*/ CaretContainer) {
       var each = Tools.each,
          isContentEditableTrue = NodeType.isContentEditableTrue,
          isContentEditableFalse = NodeType.isContentEditableFalse,
@@ -14448,12 +14448,12 @@
       "tinymce/html/SaxParser",
       "tinymce/html/Entities",
       "tinymce/html/Serializer",
-      "tinymce/html/Node",
       "tinymce/html/Schema",
       "tinymce/Env",
       "tinymce/util/Tools",
-      "tinymce/text/Zwsp"
-   ], function(DOMUtils, DomParser, SaxParser, Entities, Serializer, Node, Schema, Env, Tools, Zwsp) {
+      "tinymce/text/Zwsp",
+      "tinymce/html/Node"
+   ], function(DOMUtils, DomParser, SaxParser, Entities, Serializer, /*Node, предупреждение СТАН*/ Schema, Env, Tools, Zwsp) {
       var each = Tools.each, trim = Tools.trim;
       var DOM = DOMUtils.DOM;
 
@@ -22165,10 +22165,10 @@
     * @class tinymce.UndoManager
     */
    define("tinymce/UndoManager", [
-      "tinymce/util/VK",
       "tinymce/util/Tools",
-      "tinymce/undo/Levels"
-   ], function(VK, Tools, Levels) {
+      "tinymce/undo/Levels",
+      "tinymce/util/VK"
+   ], function(/*VK, предупреждение СТАН*/ Tools, Levels) {
       return function(editor) {
          var self = this, index = 0, data = [], beforeBookmark, isFirstTypedCharacter, locks = 0;
 
@@ -23384,10 +23384,10 @@
       "tinymce/util/Fun",
       "tinymce/dom/TreeWalker",
       "tinymce/dom/NodeType",
-      "tinymce/caret/CaretPosition",
       "tinymce/caret/CaretContainer",
-      "tinymce/caret/CaretCandidate"
-   ], function(Fun, TreeWalker, NodeType, CaretPosition, CaretContainer, CaretCandidate) {
+      "tinymce/caret/CaretCandidate",
+      "tinymce/caret/CaretPosition"
+   ], function(Fun, TreeWalker, NodeType, /*CaretPosition, предупреждение СТАН*/ CaretContainer, CaretCandidate) {
       var isContentEditableTrue = NodeType.isContentEditableTrue,
          isContentEditableFalse = NodeType.isContentEditableFalse,
          isBlockLike = NodeType.matchStyleValues('display', 'block table table-cell table-caption'),
@@ -33301,16 +33301,20 @@
                }
                var isEmptyStart = dom.isEmpty(startBlock);
                var isEmptyEnd = dom.isEmpty(endBlock);
-               if (isEmptyStart) {
-                  _removeWhileEmpty(startBlock);
-               }
                if (!isEmptyStart && !isEmptyEnd) {
                   $(startBlock).append(endBlock.childNodes);
                   isEmptyEnd = true;
                }
-
                if (isEmptyEnd) {
                   _removeWhileEmpty(endBlock);
+               }
+               if (isEmptyStart) {
+                  _removeWhileEmpty(startBlock);
+                  // Если в результате весь контент удалён - нужно вставить начальный "пустой" контент
+                  // 35005 https://online.sbis.ru/opendoc.html?guid=af092933-bb51-4485-be76-b0b6bab52ba7
+                  if (isEmptyEnd && !root.innerHTML) {
+                     editor.setContent('');
+                  }
                }
 
                if (caretNodeBefore) {
@@ -33729,6 +33733,17 @@
 
             editor.on('dragstart', function(e) {
                dragStartRng = selection.getRng();
+               // Если перетаскивание началось с пустым рэнжем, то это ошибка (например в FF при перетаскивании картинки), попробуем восстановить
+               // рэнж, если это возможно
+               // https://online.sbis.ru/opendoc.html?guid=6ca8d265-e804-4794-9301-55d9d357c0fe
+               if (dragStartRng.collapsed) {
+                  var elm = doc.elementFromPoint(e.clientX, e.clientY);
+                  if (elm) {
+                     dragStartRng = doc.createRange();
+                     dragStartRng.setStartBefore(elm);
+                     dragStartRng.setEndAfter(elm);
+                  }
+               }
                setMceInternalContent(e);
             });
 
@@ -33770,7 +33785,9 @@
                   e.clipboardData.setData('text/html', rng.startOffset === 0 && rng.commonAncestorContainer.nodeType === 3 && rng.endOffset === rng.commonAncestorContainer.nodeValue.length && !sel.dom.isBlock(sel.getNode())
                               ? sel.dom.getOuterHTML(sel.getNode()) : sel.getContent());
                   var text = sel.getContent({format:'text'});
-                  e.clipboardData.setData('text/plain', navigator.userAgent.search(/\bwindows\b/i) !== -1 ? text.replace(/\n/gi, '\r\n') : text);
+                  // В хроме и эксплорере нужно заменить переводы строк на windows-ные
+                  // 32963 https://online.sbis.ru/opendoc.html?guid=853f36e3-4a3a-4e12-988c-53af66d78094
+                  e.clipboardData.setData('text/plain', (Env.webkit || Env.ie) && navigator.userAgent.search(/\bwindows\b/i) !== -1 ? text.replace(/\n/gi, '\r\n') : text);
 
                   // Needed delay for https://code.google.com/p/chromium/issues/detail?id=363288#c3
                   // Nested delete/forwardDelete not allowed on execCommand("cut")
@@ -34804,6 +34821,7 @@
          // Gecko
          if (isGecko) {
             emptyEditorOnDeleteEverything();
+            cleanupStylesWhenDeleting();
             removeHrOnBackspace();
             focusBody();
             removeStylesWhenDeletingAcrossBlockElements();
@@ -36344,13 +36362,13 @@
     */
    define("tinymce/caret/FakeCaret", [
       "tinymce/caret/CaretContainer",
-      "tinymce/caret/CaretPosition",
       "tinymce/dom/NodeType",
-      "tinymce/dom/RangeUtils",
       "tinymce/dom/DomQuery",
       "tinymce/geom/ClientRect",
-      "tinymce/util/Delay"
-   ], function(CaretContainer, CaretPosition, NodeType, RangeUtils, $, ClientRect, Delay) {
+      "tinymce/util/Delay",
+      "tinymce/caret/CaretPosition",
+      "tinymce/dom/RangeUtils"
+   ], function(CaretContainer, /*CaretPosition, предупреждение СТАН*/ NodeType, /*RangeUtils, предупреждение СТАН*/ $, ClientRect, Delay) {
       var isContentEditableFalse = NodeType.isContentEditableFalse;
 
       return function(rootNode, isBlock) {
@@ -41047,14 +41065,14 @@
       "tinymce/dom/DomQuery",
       "tinymce/dom/DOMUtils",
       "tinymce/util/URI",
-      "tinymce/Env",
       "tinymce/util/Tools",
       "tinymce/util/Promise",
       "tinymce/util/Observable",
       "tinymce/util/I18n",
       "tinymce/FocusManager",
-      "tinymce/AddOnManager"
-   ], function(Editor, $, DOMUtils, URI, Env, Tools, Promise, Observable, I18n, FocusManager, AddOnManager) {
+      "tinymce/AddOnManager",
+      "tinymce/Env"
+   ], function(Editor, $, DOMUtils, URI, /*Env, предупреждение СТАН*/ Tools, Promise, Observable, I18n, FocusManager, AddOnManager) {
       var DOM = DOMUtils.DOM;
       var explode = Tools.explode, each = Tools.each, extend = Tools.extend;
       var instanceCounter = 0, beforeUnloadDelegate, EditorManager, boundGlobalEvents = false;
@@ -45052,9 +45070,9 @@
       "tinymce/util/Tools",
       "tinymce/util/Arr",
       "tinymce/util/Fun",
-      "tinymce/util/VK",
-      "tinymce/content/LinkTargets"
-   ], function(ComboBox, Tools, Arr, Fun, VK, LinkTargets) {
+      "tinymce/content/LinkTargets",
+      "tinymce/util/VK"
+   ], function(ComboBox, Tools, Arr, Fun, /*VK, предупреждение СТАН*/ LinkTargets) {
       "use strict";
 
       var history = {};
@@ -47913,10 +47931,10 @@
     */
    define("tinymce/ui/Menu", [
       "tinymce/ui/FloatPanel",
-      "tinymce/ui/MenuItem",
       "tinymce/ui/Throbber",
-      "tinymce/util/Tools"
-   ], function(FloatPanel, MenuItem, Throbber, Tools) {
+      "tinymce/util/Tools",
+      "tinymce/ui/MenuItem"
+   ], function(FloatPanel, /*MenuItem, предупреждение СТАН*/ Throbber, Tools) {
       "use strict";
 
       return FloatPanel.extend({
@@ -49512,11 +49530,11 @@
    define('tinymce.media.core.HtmlToData', [
       'global!tinymce.util.Tools',
       'global!tinymce.html.SaxParser',
-      'global!tinymce.html.Schema',
       'global!tinymce.dom.DOMUtils.DOM',
       'tinymce.media.core.VideoScript',
-      'tinymce.media.core.Size'
-   ], function (Tools, SaxParser, Schema, DOM, VideoScript, Size) {
+      'tinymce.media.core.Size',
+      'global!tinymce.html.Schema'
+   ], function (Tools, SaxParser, /*Schema, предупреждение СТАН*/ DOM, VideoScript, Size) {
       var getEphoxEmbedIri = function (elm) {
          return DOM.getAttrib(elm, 'data-ephox-embed-iri');
       };
@@ -50139,15 +50157,15 @@
       };
    });
    define('tinymce.media.ui.Dialog', [
-      'global!tinymce.util.Delay',
       'tinymce.media.core.HtmlToData',
       'tinymce.media.core.UpdateHtml',
       'tinymce.media.core.Service',
       'tinymce.media.core.Size',
       'global!tinymce.util.Tools',
       'global!tinymce.Env',
-      'tinymce.media.ui.SizeManager'
-   ], function (Delay, HtmlToData, UpdateHtml, Service, Size, Tools, Env, SizeManager) {
+      'tinymce.media.ui.SizeManager',
+      'global!tinymce.util.Delay'
+   ], function (/*Delay, предупреждение СТАН*/ HtmlToData, UpdateHtml, Service, Size, Tools, Env, SizeManager) {
       var embedChange = (Env.ie && Env.ie <= 8) ? 'onChange' : 'onInput';
 
       var handleError = function (editor) {
@@ -50369,11 +50387,11 @@
       };
    });
    define('tinymce.media.core.Sanitize', [
-      'global!tinymce.util.Tools',
       'global!tinymce.html.Writer',
       'global!tinymce.html.SaxParser',
-      'global!tinymce.html.Schema'
-   ], function (Tools, Writer, SaxParser, Schema) {
+      'global!tinymce.html.Schema',
+      'global!tinymce.util.Tools'
+   ], function (/*Tools, предупреждение СТАН*/ Writer, SaxParser, Schema) {
       var sanitize = function (editor, html) {
          if (editor.settings.media_filter_html === false) {
             return html;
@@ -52930,9 +52948,9 @@
 
    define("tinymce.lists.core.Bookmark", [
       "global!tinymce.dom.DOMUtils.DOM",
-      "tinymce.lists.core.NodeType",
-      "tinymce.lists.core.Range"
-   ], function (DOM, NodeType, Range) {
+      "tinymce.lists.core.Range",
+      "tinymce.lists.core.NodeType"
+   ], function (DOM, /*NodeType, предупреждение СТАН*/ Range) {
       /**
        * Returns a range bookmark. This will convert indexed bookmarks into temporary span elements with
        * index 0 so that they can be restored properly after the DOM has been modified. Text bookmarks will not have spans
@@ -55197,7 +55215,6 @@ tinymce.PluginManager.add('noneditable', function(editor) {
     */
 
    define('tinymce.modern.modes.Iframe', [
-      'global!tinymce.util.Tools',
       'global!tinymce.ui.Factory',
       'global!tinymce.DOM',
       'tinymce.modern.ui.Toolbar',
@@ -55205,9 +55222,10 @@ tinymce.PluginManager.add('noneditable', function(editor) {
       'tinymce.modern.ui.ContextToolbars',
       'tinymce.modern.ui.A11y',
       'tinymce.modern.ui.Sidebar',
-      'tinymce.modern.ui.SkinLoaded',
-      'tinymce.modern.ui.Resize'
-   ], function (Tools, Factory, DOM, Toolbar, Menubar, ContextToolbars, A11y, Sidebar, SkinLoaded, Resize) {
+      'tinymce.modern.ui.Resize',
+      'global!tinymce.util.Tools',
+      'tinymce.modern.ui.SkinLoaded'
+   ], function (/*Tools, предупреждение СТАН*/ Factory, DOM, Toolbar, Menubar, ContextToolbars, A11y, Sidebar, /*SkinLoaded, предупреждение СТАН*/ Resize) {
       var switchMode = function (panel) {
          return function(e) {
             panel.find('*').disabled(e.mode === 'readonly');
@@ -55332,7 +55350,6 @@ tinymce.PluginManager.add('noneditable', function(editor) {
     */
 
    define('tinymce.modern.modes.Inline', [
-      'global!tinymce.util.Tools',
       'global!tinymce.ui.Factory',
       'global!tinymce.DOM',
       'global!tinymce.ui.FloatPanel',
@@ -55340,8 +55357,9 @@ tinymce.PluginManager.add('noneditable', function(editor) {
       'tinymce.modern.ui.Menubar',
       'tinymce.modern.ui.ContextToolbars',
       'tinymce.modern.ui.A11y',
+      'global!tinymce.util.Tools',
       'tinymce.modern.ui.SkinLoaded'
-   ], function (Tools, Factory, DOM, FloatPanel, Toolbar, Menubar, ContextToolbars, A11y, SkinLoaded) {
+   ], function (/*Tools, предупреждение СТАН*/ Factory, DOM, FloatPanel, Toolbar, Menubar, ContextToolbars, A11y/*, SkinLoaded предупреждение СТАН*/) {
       var render = function (editor, theme, args) {
          var panel, inlineToolbarContainer, settings = editor.settings;
 
@@ -55510,14 +55528,14 @@ tinymce.PluginManager.add('noneditable', function(editor) {
     */
 
    define('tinymce.modern.Theme', [
-      'global!tinymce.Env',
       'global!tinymce.EditorManager',
       'global!tinymce.ThemeManager',
       'tinymce.modern.modes.Iframe',
       'tinymce.modern.modes.Inline',
       'tinymce.modern.ui.Resize',
-      'tinymce.modern.ui.ProgressState'
-   ], function (Env, EditorManager, ThemeManager, Iframe, Inline, Resize, ProgressState) {
+      'tinymce.modern.ui.ProgressState',
+      'global!tinymce.Env'
+   ], function (/*Env, предупреждение СТАН*/ EditorManager, ThemeManager, Iframe, Inline, Resize, ProgressState) {
       var renderUI = function(editor, theme, args) {
          var settings = editor.settings;
          var skin = settings.skin !== false ? settings.skin || 'lightgray' : false;
@@ -55827,7 +55845,7 @@ tinymce.PluginManager.add('noneditable', function(editor) {
             highlightAll: function(async, callback) {
                var elements = document.querySelectorAll('code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code');
 
-               for (var i=0, element; element = elements[i++];) {
+               for (var i=0, element; !!(element = elements[i++])/* предупреждение СТАН*/;) {
                   _.highlightElement(element, async === true, callback);
                }
             },
@@ -55841,7 +55859,7 @@ tinymce.PluginManager.add('noneditable', function(editor) {
                }
 
                if (parent) {
-                  language = (parent.className.match(lang) || [,''])[1];
+                  language = (parent.className.match(lang) || [undefined/* предупреждение СТАН*/,''])[1];
                   grammar = _.languages[language];
                }
 
@@ -56013,7 +56031,7 @@ tinymce.PluginManager.add('noneditable', function(editor) {
                      return;
                   }
 
-                  for (var i=0, callback; callback = callbacks[i++];) {
+                  for (var i=0, callback; !!(callback = callbacks[i++])/* предупреждение СТАН*/;) {
                      callback(env);
                   }
                }
@@ -56440,7 +56458,7 @@ tinymce.PluginManager.add('noneditable', function(editor) {
                return;
             }
 
-            for (var i = 0, t; t = env.tokenStack[i]; i++) {
+            for (var i = 0, t; !!(t = env.tokenStack[i])/* предупреждение СТАН*/; i++) {
                // The replace prevents $$, $&, $`, $', $n, $nn from being interpreted as special patterns
                env.highlightedCode = env.highlightedCode.replace('{{{PHP' + (i + 1) + '}}}', Prism.highlight(t, env.grammar, 'php').replace(/\$/g, '$$$$'));
             }

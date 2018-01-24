@@ -36,11 +36,15 @@
 }
 
 .ws-header-accent1-hover() {
-   color: @darkcyan-color;
+   body:not(.ws-is-mobile-platform) & {
+      color: @darkcyan-color;
+   }
 }
 
 .ws-header-accent2-hover() {
-   color: @primary-color;
+   body:not(.ws-is-mobile-platform) & {
+      color: @primary-color;
+   }
 }
 
 .ws-header_size_weight {
@@ -214,9 +218,11 @@
 
 .controls-Link {
    &.ws-linkHeader, &.ws-header, &.ws-bigSubheader, &.ws-subheader {
-      &.controls-Click__active, &.controls-Click__active .controls-Button__text {
-         text-decoration: @link-header-text-decoration;
-         color: @link-header-hover-color;
+      &:not(.ws-disabled) {
+         &:active, &:active .controls-Button__text {
+            text-decoration: @link-header-text-decoration;
+            color: @link-header-hover-color;
+         }
       }
    }
 }

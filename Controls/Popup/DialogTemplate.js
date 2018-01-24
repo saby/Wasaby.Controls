@@ -1,4 +1,4 @@
-define('js!Controls/Popup/DialogTemplate',
+define('Controls/Popup/DialogTemplate',
    [
       'Core/Control',
       'tmpl!Controls/Popup/DialogTemplate',
@@ -41,7 +41,7 @@ define('js!Controls/Popup/DialogTemplate',
           * @function Controls/Popup/DialogTemplate#close
           */
          close: function () {
-            this._notify('close');
+            this._notify('close', [], {bubbling: true});
          }
       });
       return DialogTemplate;

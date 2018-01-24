@@ -2,8 +2,8 @@
  * Created by kraynovdo on 23.10.2017.
  */
 define([
-   'js!Controls/List',
-   'js!Controls/List/resources/utils/ItemsUtil',
+   'Controls/List',
+   'Controls/List/resources/utils/ItemsUtil',
    'WS.Data/Source/Memory',
    'WS.Data/Collection/RecordSet'
 ], function(ListControl, ItemsUtil, MemorySource, RecordSet){
@@ -46,6 +46,57 @@ define([
          assert.equal(source, ctrl._dataSource, 'Property _dataSource is incorrect before updating');
       });
 
+      it('Only one data request', function (done) {
+         var source = new MemorySource({
+            idProperty: 'id',
+            data: data
+         });
+         var cfg = {
+            dataSource: source,
+            navigation: {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 1
+               }
+            }
+         };
+         var ctrl = new ListControl(cfg);
+         ctrl._beforeMount(cfg);
+
+         //Идет первый запроос данных из dataSource
+         assert.equal(ctrl._loader.isReady(), false, 'Request data must be async');
+
+         //Эмуляция navigationController'a
+         ctrl._navigationController = {
+            hasMoreData: function() {return true;},
+            calculateState: function() {},
+            prepareQueryParams: function() {return {limit: 1, offset: 1};}
+         };
+
+         //Грузим следующую страницу (загрузки случиться не должно, еще идет первый запрос)
+         ListControl._private.scrollLoadMore(ctrl, 'up');
+         assert.equal(ctrl._loader.isReady(), false, 'Request data must be async');
+
+         //После загрузки проверяем, что подгрузилась только 1 страница
+         setTimeout(function() {
+            assert.equal(ctrl._loader.isReady(), true, 'Request data must be is ready');
+            assert.equal(ctrl._listModel.getCount(), 1, 'Incorrect itemsCount after first load');
+
+            //Вызываем несколько раз scrollLoadMore, по факту выполниться должна только одна подгрузка
+            ListControl._private.scrollLoadMore(ctrl, 'up');
+            ListControl._private.scrollLoadMore(ctrl, 'up');
+            ListControl._private.scrollLoadMore(ctrl, 'up');
+            assert.equal(ctrl._loader.isReady(), false, 'Request data must be async');
+
+            setTimeout(function() {
+               //Проверяем, что подгружилась только 1 страница, всего стало 2 записи
+               assert.equal(ctrl._loader.isReady(), true, 'Request data must be is ready');
+               assert.equal(ctrl._listModel.getCount(), 2, 'Incorrect itemsCount after three scrollLoadMore');
+               done();
+            }, 0);
+         }, 0);
+      });
+
       it('Initialize average items height, check placeholder heights', function () {
          var srcData = [];
          for(var i = 0; i < 6; i++) {
@@ -74,10 +125,8 @@ define([
          //Подкладываем объект внутреннего списка, который как бы отрисовался
          //  self._children.listView.getContainer().height(),
          ctrl._children.listView = {
-            getContainer: function() {
-               return [{
-                  clientHeight: 6
-               }]
+            _container: {
+               clientHeight: 6
             }
          };
 

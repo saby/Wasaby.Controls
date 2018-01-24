@@ -6,3 +6,30 @@
 	display: inline-block;
 	max-width: 100%;
 }
+
+.ws-Suggest__loader {
+	.flex-shrink(0);
+	background: @background_Suggest-loader;
+	background-size: contain;
+	background-position: center;
+	height: 100%;
+	width: @width_Suggest-loader;
+	margin-right: @spacing_Suggest-loader;
+}
+
+.ws-Suggest__clear {
+	.icon-size-without-important();
+	margin: auto;
+	color: @color_Suggest-clear;
+	cursor: pointer;
+}
+
+.ws-Suggest__afterFieldWrapper {
+	.inline-flexbox();
+}
+
+//TODO Пока зададим ширину для новой стековой панели явно. Нужно для Матильды. https://online.sbis.ru/opendoc.html?guid=23717d3b-cb27-4a7e-a7ae-b4d06eb6aa25
+.ws-Suggest__showAllPopup {
+	max-width: 700px;
+	width: calc(~"100% - 64px");
+}

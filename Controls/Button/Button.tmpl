@@ -1,11 +1,12 @@
-<span attr:class="controls-ButtonBase controls-Button controls-Button__style-{{!!isEnabled() ? _options.style : 'disabled'}}"
-      attr:title="{{_options.tooltip}}">
+<span attr:class="controls-ButtonBase controls-Button controls-Button__style-{{_options.style}}{{!isEnabled() ? '-disabled'}}"
+      attr:title="{{_options.tooltip}}"
+      on:click="_clickHandler()">
     <span attr:class="controls-Button__wrapper controls-Button__wrapper_style-{{_options.style}}">
         <ws:if data="{{!!_options.icon}}">
-            <i attr:class="controls-Button__icon {{_options.icon}}"></i>
+            <i attr:class="controls-Button__icon {{!isEnabled() ? 'controls-Button__icon-'+_options.style+'-disabled'}} {{_options.icon}}"></i>
         </ws:if>
         <ws:if data="{{!!_options.caption}}">
-           <span attr:class="controls-Button__text{{_options.icon ? ' controls-Button__text_gap'}}">{{_options.caption}}</span>
+           <span attr:class="controls-Button__text {{_options.icon ? ' controls-Button__text_gap'}}">{{_options.caption}}</span>
         </ws:if>
     </span>
 </span>

@@ -33,10 +33,10 @@ define('Controls/Application',
             self.cssLinks = cfg.cssLinks;
             self.title = cfg.title;
             self.wsRoot = cfg.wsRoot;
-            self.content = cfg.content;
             self.resourceRoot = cfg.resourceRoot;
             self.jsLinks = cfg.jsLinks;
             self.templateConfig = cfg.templateConfig;
+            self.jquery = cfg.jquery;
          }
       };
       var Page = Base.extend({
@@ -49,17 +49,33 @@ define('Controls/Application',
             return 'cfg-pagedata';
          },
 
+         _scrollPage: function(ev){
+            this._children.scrollDetect.start(ev);
+         },
+
+         _resizePage: function(ev){
+            this._children.resizeDetect.start(ev);
+         },
+
          _beforeMount: function(cfg, context, receivedState) {
             var self = this,
                def = new Deferred();
 
             _private.initState(self, receivedState||cfg);
-
+            self.content = cfg.content;
             /**
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
              * роутинга и с ним же надо восстанавливаться на клиенте.
              */
-            def.callback(cfg);
+            def.callback({
+               jsLinks: self.jsLinks,
+               cssLinks: self.cssLinks,
+               title: self.title,
+               wsRoot: self.wsRoot,
+               resourceRoot: self.resourceRoot,
+               templateConfig: self.templateConfig,
+               jquery: self.jquery
+            });
             return def;
          }
 

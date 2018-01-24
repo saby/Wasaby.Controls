@@ -21,6 +21,7 @@
 .controls__filterButton-button {
    margin: @controls-filterButton-button-margin;
    float: right;
+   .flex-shrink(0);
 
    &:active {
       color: @blue-dark-color !important;
@@ -31,8 +32,8 @@
 }
 
 .controls__filterButton-right {
+   .flex-direction(row-reverse);
    .controls__filterButton-button {
-      float: left;
       margin: @controls-filterButton-button-margin-right-align;
    }
    .controls__filterButton__filterLine {
@@ -41,7 +42,9 @@
 }
 
 .controls__filterButton__filterLine {
-   max-width: calc(~"100% - @{controls-filterButton-button-width} - @{controls-filterButton-margin-value} - @{controls-filterButton-button-verSide-margin}");
+   width: 100%;
+   min-width: 0;
+   .flex-shrink();
    height: @controls-filterButton-button-height;
    margin: @controls-filterButton-filterLine-margin;
    cursor: pointer;

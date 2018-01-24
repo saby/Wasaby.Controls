@@ -214,7 +214,7 @@ define('SBIS3.CONTROLS/SelectorButton',
          }
          
          if(empty) {
-            itemsContainer.text(this.getProperty('defaultCaption')).attr('title', '');
+            itemsContainer.text(this.getProperty('defaultCaption')).removeAttr('title');
          } else if(!this._options.itemContentTpl && !this._options.itemTpl) {
             itemsContainer.attr('title', this.getCaption());
          }

@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 27.11.2017.
  */
-define('js!Controls/Input/resources/SuggestController',
+define('Controls/Input/resources/SuggestController',
    [
       'Core/Abstract',
       'Core/moduleStubs',
@@ -11,14 +11,29 @@ define('js!Controls/Input/resources/SuggestController',
    'use strict';
    
    var _private = {
+      searchStart: function(self) {
+         if (self._options.searchStartCallback) {
+            self._options.searchStartCallback();
+         }
+      },
+      
+      searchEnd: function(self) {
+         if (self._options.searchEndCallback) {
+            self._options.searchEndCallback();
+         }
+      },
       /**
        * Search and show popup
        * @param self
        * @param {Object} fitler
        */
       search: function(self, fitler) {
+         _private.searchStart(self);
          _private.getSearchController(self).addCallback(function(searchController) {
-            searchController.search(fitler, _private.getPopupOptions(self));
+            searchController.search(fitler, _private.getPopupOptions(self)).addBoth(function(res) {
+               _private.searchEnd(self);
+               return res;
+            });
             return searchController;
          });
       },
@@ -30,6 +45,7 @@ define('js!Controls/Input/resources/SuggestController',
       abortSearch: function(self) {
          _private.getSearchController(self).addCallback(function (searchController) {
             searchController.abort();
+            _private.searchEnd(self);
             return searchController;
          });
       },
@@ -42,6 +58,7 @@ define('js!Controls/Input/resources/SuggestController',
       
    
       onChangeValueHandler: function(self, text) {
+         self._value = text;
          if (text.length >= self._options.minSearchLength) {
             _private.search(self, _private.getSearchFilter(self, text));
          } else {
@@ -57,25 +74,34 @@ define('js!Controls/Input/resources/SuggestController',
                width: container.offsetWidth,
                template: self._options.suggestTemplate,
                dataSource: self._options.dataSource,
-               showAllOpener: self._options.showAllOpener
+               showAllOpener: self._options.showAllOpener,
+               filter: _private.getSearchFilter(self, self._value)
             }
          };
       },
    
       getSearchController: function(self) {
          /* loading SuggestPopupController and preloading suggest template */
-         return moduleStubs.require(['js!Controls/Input/resources/SuggestPopupController', self._options.suggestTemplate]).addCallback(function(result) {
+         return moduleStubs.require(['Controls/Input/resources/SuggestPopupController', self._options.suggestTemplate]).addCallback(function(result) {
             if (!self._suggestPopupController) {
                self._suggestPopupController = new result[0]({
                   dataSource: self._options.dataSource,
                   searchDelay: self._options.searchDelay,
                   popupOpener: self._options.suggestOpener,
                   navigation: self._options.navigation,
-                  selectCallback: self._options.selectCallback
+                  selectCallback: self._options.selectCallback,
+                  searchParam: self._options.searchParam
                });
             }
             return self._suggestPopupController;
          });
+      },
+      
+      destroy: function(self) {
+         if (self._suggestPopupController) {
+            self._suggestPopupController.abort();
+            self._suggestPopupController = null;
+         }
       }
    };
    
@@ -97,10 +123,7 @@ define('js!Controls/Input/resources/SuggestController',
       },
       
       destroy: function() {
-         if (this._suggestPopupController) {
-            this._suggestPopupController.destroy();
-            this._suggestPopupController = null;
-         }
+         _private.destroy(this);
          SuggestController.superclass.destroy.call(this);
       },
    

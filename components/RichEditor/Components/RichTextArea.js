@@ -4,7 +4,6 @@
 define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    [
    "Core/UserConfig",
-   "Core/pathResolver",
    "Core/Context",
    "Core/Indicator",
    "Core/core-clone",
@@ -29,7 +28,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    'css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextArea'
 ], function (
       UserConfig,
-      cPathResolver,
       cContext,
       cIndicator,
       coreClone,
@@ -322,32 +320,39 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           * </pre>
           */
          addYouTubeVideo: function(link) {
-            var result = false,
-               content,
-               id;
-
-            if (typeof link !== 'string') {
-               return result;
+            if (!(link && typeof link === 'string')) {
+               return false;
             }
-
-            if ((id = this._getYouTubeVideoId(escapeTagsFromStr(link, [])))) {
-               var
-                  protocol = /https?:/.test(link) ? link.replace(/.*(https?:).*/gi, '$1') : '';
-               content = [
+            var url = escapeTagsFromStr(link, []);
+            var id = this._getYouTubeVideoId(url);
+            if (id) {
+               var _byRe = function (re) { var ms = url.match(re); return ms ? ms[1] : null; };
+               var protocol = _byRe(/^(https?:)/i) || '';
+               var timemark = _byRe(/\?(?:t|start)=([0-9]+)/i);
+               this.insertHtml([
                   '<iframe',
                   ' width="' + constants.defaultYoutubeWidth + '"',
                   ' height="' + constants.defaultYoutubeHeight + '"',
                   ' style="min-width:' + constants.minYoutubeWidth + 'px; min-height:' + constants.minYoutubeHeight + 'px;"',
-                  ' src="' + protocol + '//www.youtube.com/embed/' + id + '"',
+                  ' src="' + protocol + '//www.youtube.com/embed/' + id + (timemark ? '?start=' + timemark : '') + '"',
                   ' allowfullscreen',
                   ' frameborder="0" >',
                   '</iframe>'
-               ].join('');
-               this.insertHtml(content);
-               result = true;
+               ].join(''));
+               return true;
             }
+            return false;
+         },
 
-            return result;
+         /**
+          * JavaScript function to match (and return) the video Id
+          * of any valid Youtube URL, given as input string.
+          * @author: Stephan Schmitz <eyecatchup@gmail.com>
+          * @url: http://stackoverflow.com/a/10315969/624466
+          */
+         _getYouTubeVideoId: function(link) {
+            var p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+            return link.match(p) ? RegExp.$1 : false;
          },
 
          /**
@@ -480,15 +485,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          },
 
          setActive: function(active) {
-            var
-               args = [].slice.call(arguments),
-               editor, manager;
             this._lastActive = active;
             if (active && this._needFocusOnActivated() && this.isEnabled()) {
                this._performByReady(function() {
                   //Активность могла поменяться пока грузится tinymce.js
                   if (this._lastActive) {
+                     var noRng = !this._tinyLastRng;
                      this._tinyEditor.focus();
+                     // Если сейчас есть контент и не было установлено осмысленного рэнжа - поставить курсор ввода в его конец
+                     // 24823 https://online.sbis.ru/opendoc.html?guid=cd2659d7-0066-4207-bade-b77edb462684
+                     if (noRng && this.getText()) {
+                        this.setCursorToTheEnd();
+                     }
                      if (cConstants.browser.isMobileAndroid) {
                         // на android устройствах не происходит подскролла нативного
                         // наш функционал тестируется на планшете фирмы MI на котором клавиатура появляется долго ввиду анимации =>
@@ -509,9 +517,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             }
             else {
                if (!active) {
-                  editor = this._tinyEditor;
+                  var editor = this._tinyEditor;
                   if (editor) {
-                     manager = editor.editorManager;
+                     var manager = editor.editorManager;
                      // Если компонент должен стать неактивным - нужно сбросить фокусированный редактор (Аналогично обработчику 'focusout' в TinyMCE в строке 40891)
                      if (manager && manager.focusedEditor === editor) {
                         manager.focusedEditor = null;
@@ -525,7 +533,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   EventBus.globalChannel().notify('MobileInputFocusOut');
                }
             }
-            RichTextArea.superclass.setActive.apply(this, args);
+            RichTextArea.superclass.setActive.apply(this, arguments);
          },
 
          destroy: function() {
@@ -724,17 +732,25 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          },
 
          /**
+          * Почистить выделение от <br data-mce-bogus="1">
+          * @private
+          */
+         _clearBrDataMceBogus: function () {
+            //TinyMCE использует для определения положения каретки(курсора ввода) <br data-mce-bogus="1">.
+            //При смене формата содаётся новый <span class='classFormat'>.
+            //В FF в некторых случаях символ каретки(курсора ввода) не удаляется из предыдущего <span> блока при смене формата
+            //из за-чего происход разрыв строки.
+            $(this._tinyEditor.selection.getNode()).find('br[data-mce-bogus="1"]').remove();
+         },
+
+         /**
           * Установить стиль для выделенного текста
           * @param {Object} style Объект, содержащий устанавливаемый стиль текста
           * @private
           */
          setFontStyle: function(style) {
-            //TinyMCE использует для определения положения каретки(курсора ввода) <br data-mce-bogus="1">.
-            //При смене формата содаётся новый <span class='classFormat'>.
-            //В FF в некторых случаях символ каретки(курсора ввода) не удаляется из предыдущего <span> блока при смене формата
-            //из за-чего происход разрыв строки.
-            if (cConstants.browser.firefox &&  $(this._tinyEditor.selection.getNode()).find('br').attr('data-mce-bogus') == '1') {
-               $(this._tinyEditor.selection.getNode()).find('br').remove();
+            if (cConstants.browser.firefox) {
+               this._clearBrDataMceBogus();
             }
             //Удаление текущего форматирования под курсором перед установкой определенного стиля
             ['fontsize', 'forecolor', 'bold', 'italic', 'underline', 'strikethrough'].forEach(function(stl){
@@ -829,6 +845,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   delete formats[prop];
                }
             }
+            if (cConstants.browser.firefox) {
+               this._clearBrDataMceBogus();
+            }
             // Применить новое форматирование
             if (formats.id) {
                this.setFontStyle(formats.id);
@@ -848,7 +867,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   var name = names[i];
                   if (name in formats && formats[name] !== previous[name]) {
                      this.execCommand(name);
-                     hasOther = true;
+                     hasOther = formats[name] || hasOther;
                   }
                }
                if (formats.color && formats.color !== previous.color) {
@@ -941,17 +960,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           */
          execCommand: function (command) {
             var editor = this._tinyEditor;
-            var needPrepocess;
+            var needPreprocess;
             var execCmd;
             if (command === 'blockquote') {
-               needPrepocess = true;
+               needPreprocess = true;
                execCmd = 'mceBlockQuote';
             }
             else
             if (command === 'InsertOrderedList' || command === 'InsertUnorderedList') {
-               needPrepocess = true;
+               needPreprocess = true;
             }
-            if (needPrepocess && !editor.formatter.match(command)) {
+            if (needPreprocess && !editor.formatter.match(command)) {
                var rng = editor.selection.getRng();
                var node = rng.startContainer;
                if (rng.endContainer === node) {
@@ -966,7 +985,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                   else
                   // FF иногда "поднимает" рэнж выше по дереву
-                  if (cConstants.browser.firefox && node.nodeType === 1 && rng.collapsed && node.childNodes.length) {
+                  // 1174769960 https://online.sbis.ru/opendoc.html?guid=268d5fe6-e038-40d3-b185-eff696796f12
+                  // 1174815941 https://online.sbis.ru/opendoc.html?guid=07157c2e-94d5-4ba3-bb7a-1833708ce0aa
+                  if (cConstants.browser.firefox && node.nodeType === 1 && rng.collapsed && !editor.dom.isEmpty(node)) {
                      var newNode = editor.dom.create(node.nodeName);
                      newNode.innerHTML = '<br data-mce-bogus="1" />';
                      node.parentNode.insertBefore(newNode, node.nextSibling);
@@ -1046,7 +1067,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         });
                         this._titleBar
                            .prepend($('<a href="javascript:void(0)"></a>')
-                              .addClass('ws-window-titlebar-action close')
+                              .addClass('ws-float-close ws-float-close-right')
                               .click(function () {
                                  self.close();
                                  return false;
@@ -1370,17 +1391,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return '&#' + smile.code + ';';
          },
 
-         /**
-          * JavaScript function to match (and return) the video Id
-          * of any valid Youtube URL, given as input string.
-          * @author: Stephan Schmitz <eyecatchup@gmail.com>
-          * @url: http://stackoverflow.com/a/10315969/624466
-          */
-         _getYouTubeVideoId: function(link) {
-            var p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
-            return link.match(p) ? RegExp.$1 : false;
-         },
-
          _bindEvents: function() {
             var
                self = this,
@@ -1430,6 +1440,23 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._inputControl.bind('scroll', function(e) {
                   if (this._imageOptionsPanel) {
                      this._imageOptionsPanel.hide();
+                  }
+               }.bind(this));
+
+               // При нажатии клавиши Del - удалить изображение, если оно выделено
+               // 1174801418 https://online.sbis.ru/opendoc.html?guid=1473813c-1617-4a21-9890-cedd1c692bfd
+               this._inputControl.on('keyup', function (evt) {
+                  if (evt.key === 'Delete' || evt.keyCode === 46) {
+                     var imgOptsPanel = this._imageOptionsPanel;
+                     if (imgOptsPanel && imgOptsPanel.isVisible()) {
+                        var $img = imgOptsPanel.getTarget();
+                        if ($img && $img.length) {
+                           var selection = editor.selection;
+                           selection.select($img[0]);
+                           selection.getRng().deleteContents();
+                           imgOptsPanel.hide();
+                        }
+                     }
                   }
                }.bind(this));
 

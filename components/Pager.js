@@ -85,13 +85,15 @@ define('SBIS3.CONTROLS/Pager', [
             //TODO подписаться на изменение проперти в контексте. Пока Витя не допилил - подписываюсь на комбобокс
             this._dropd.setItems(fddData);
             this._dropd.setSelectedKeys([numPageSize]);
-            this._dropd.subscribe('onSelectedItemsChange', function (event, arr) {
+            this._dropd.subscribe('onSelectedItemsChange', function (event, arr, result) {
                //TODO может менять pageSize модно будет в фильтре?
-               var value = arr[0];
-               self._options.pageSize = value;
-               self.getPaging()._maxPage = self.getPaging().getPage();
-               self.getPaging().setPageSize(value);
-               self.getOpener().setPageSize(value);
+               if (result.added.length || result.removed.length) {
+                  var value = arr[0];
+                  self._options.pageSize = value;
+                  self.getPaging()._maxPage = self.getPaging().getPage();
+                  self.getPaging().setPageSize(value);
+                  self.getOpener().setPageSize(value);
+               }
             });
          }
          this._paging = this.getChildControlByName('controls-Pager_paging');
@@ -152,6 +154,13 @@ define('SBIS3.CONTROLS/Pager', [
        */
       getPaging: function(){
          return this._paging;
+      },
+      setPageSize: function(pageSize) {
+         if (this._dropd && this._dropd.getItems().getRecordById(pageSize)) {
+            this._dropd.setSelectedKeys([pageSize]);
+         } else {
+            this.getPaging().setPageSize(pageSize);
+         }
       },
       destroy: function () {
          if (this._block) {

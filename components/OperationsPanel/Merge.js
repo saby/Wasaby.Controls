@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Merge', [
 ], function(Link) {
     /**
      * Операция панели действий, которая предназначена для объединения записей.
-     * Пример использования операции вы можете найти в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/items-action/panel/basic-operations/merge/ Операция объединения записей реестра}.
+     * Пример использования операции вы можете найти в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/items-action/panel/basic-operations/merge/">Операция объединения записей реестра</a>.
      * @class SBIS3.CONTROLS/OperationsPanel/Merge
      * @extends SBIS3.CONTROLS/Link
      * @author Сухоручкин А.С.

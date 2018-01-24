@@ -1,22 +1,26 @@
 <div
-        on:keyup="_keyPressed()"
-        ws-tab-cycling="true"
-        ws-delegates-tabfocus="true"
-        class="controls-InformationPopup controls-InformationPopup__status-{{_options.style}} controls-SubmitPopup_popup">
+   on:keyup="_keyPressed()"
+   ws-tab-cycling="true"
+   ws-delegates-tabfocus="true"
+   class="controls-InformationPopup controls-InformationPopup__status-{{_options.style}} controls-SubmitPopup_popup">
    <!--Если размер текста сообщения и описания превышает заданные рамки, то увеличиваем размер окна-->
    <div class="controls-SubmitPopup{{_options.message.length > _messageMaxLength || _options.details.length > _detailsMaxLength ? ' controls-SubmitPopup__size-big' : ' controls-SubmitPopup__size-standard'}}">
 
-      <ws:partial
-              template="{{_contentTemplate}}"
-              message="{{_options.message}}"
-              messageTemplate="{{_messageTemplate}}"
-              details="{{_options.details}}"
-              detailsTemplate="{{_detailsTemplate}}"
-      ></ws:partial>
+      <!--TODO https://online.sbis.ru/opendoc.html?guid=67a3d402-ba93-4ea7-bbe2-9530a378183b-->
+      <div>
+         <ws:partial
+            template="{{_contentTemplate}}"
+            message="{{_options.message}}"
+            messageTemplate="{{_messageTemplate}}"
+            details="{{_options.details}}"
+            detailsTemplate="{{_detailsTemplate}}">
+         </ws:partial>
+      </div>
 
       <ws:partial
-              template="{{_footerTemplate}}"
-              type="{{_options.type}}"
-      ></ws:partial>
+         template="{{_footerTemplate}}"
+         type="{{_options.type}}">
+      </ws:partial>
+
    </div>
 </div>

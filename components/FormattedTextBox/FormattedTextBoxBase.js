@@ -517,7 +517,8 @@ define(
          for (var i = 0; i < group.innerMask.length; i++) {
             while (text.length) {
                character = text.splice(0, 1)[0];
-               character = (character === clearChar) ? undefined : this.charIsFitToGroup(group, i, character);
+               //Для обратной совместимости проверяем на символ &ensp;
+               character = (character === clearChar || character === ' ') ? undefined : this.charIsFitToGroup(group, i, character);
                if (character !== false) {
                   value.push(character);
                   break;
@@ -697,7 +698,8 @@ define(
              * нижнего подчёркивания.
              * !Важно: нельзя использовать знак вопроса.
              */
-            _maskReplacer: ' ',//Разделителем служит спецсимвол &ensp;
+            _maskReplacerForTemplate: ' ',//Разделителем в вёрстке служит спецсимвол &ensp;
+            _maskReplacer: ' ',//Пробел
             // ! в файле маски (FormattedTextBoxBase_mask.xhtml) не оставлять пробелы и переносы строк
             _maskTemplateFn: maskTemplateFn,
             //упрощенная модель для вставки в xhtml-шаблон
@@ -811,6 +813,11 @@ define(
       _getMaskReplacer: function(options) {
          options = options || this._options;
          return options._maskReplacer;
+      },
+
+      _getMaskReplacerForTemplate: function(options) {
+         options = options || this._options;
+         return options._maskReplacerForTemplate;
       },
 
       //Тут обрабатываются управляющие команды
@@ -929,12 +936,20 @@ define(
       },
 
       _getTextGroupAndroid: function() {
-         var splitRegExp = this._getSplitterRegExp();
+         var
+            text,
+            splitRegExp = this._getSplitterRegExp(),
+            formatModel = this._getFormatModel();
+
+         if (this._options.text) {
+            text = formatModel.getText(this._getMaskReplacerForTemplate());
+         }
+
          return {
-            oldText: this._options.text ? this._options.text.split(splitRegExp)  : this._getClearText().split(splitRegExp),
+            oldText: text ? text.split(splitRegExp)  : this._getClearText().split(splitRegExp),
             newText: this._inputField.text().split(splitRegExp),
             maskGroups: this._getMask().split(splitRegExp)
-         }
+         };
       },
 
       _getSplitterRegExp: function(){
@@ -942,7 +957,7 @@ define(
       },
 
       _getClearText: function(){
-         return this._getFormatModel().getStrMask(this._getMaskReplacer())
+         return this._getFormatModel().getStrMask(this._getMaskReplacerForTemplate());
       },
 
       _clearCommandHandler: function(type) {
@@ -988,14 +1003,14 @@ define(
                   startCharNum = positionIndexesBegin[1];
                }
                for (var j = endCharNum; j >= startCharNum; j--) {
-                  keyInsertInfo = this._getFormatModel().insertCharacter(i, j, this._getMaskReplacer(), true);
+                  keyInsertInfo = this._getFormatModel().insertCharacter(i, j, this._getMaskReplacerForTemplate(), true);
                }
             }
             //модель обновили - обновляем опцию text и html-отображение
             this._updateText();
             this._inputField.html(this._getHtmlMask());
          } else {
-            keyInsertInfo = this._getFormatModel().insertCharacter(groupNum, position + positionOffset, this._getMaskReplacer(), true);
+            keyInsertInfo = this._getFormatModel().insertCharacter(groupNum, position + positionOffset, this._getMaskReplacerForTemplate(), true);
          }
          this._afterCharacterInsertHandler(keyInsertInfo, positionOffset);
       },
@@ -1036,11 +1051,12 @@ define(
       _modifyOptions: function(options) {
          var formatModel = createModel(options._controlCharactersSet, options.mask, options.regExp);
          if (options.text) {
+            options.text = options.text.replace(/ /g, options._maskReplacer);
             formatModel.setText(options.text, options._maskReplacer);
          }
          options._formatModel = formatModel;
          //записываем модель для шаблона
-         options._modelForMaskTpl = this._getItemsForTemplate(formatModel, options._maskReplacer);
+         options._modelForMaskTpl = this._getItemsForTemplate(formatModel, options._maskReplacerForTemplate);
          return options;
       },
 
@@ -1078,9 +1094,18 @@ define(
       },
 
       _updateTextFromModel: function() {
+         var text = this._getTextFromModel();
+         if (this._options.text !== text) {
+            this._options.text = text;
+            //снимаем выделение валидатора на время ввода
+            this.clearMark();
+         }
+      },
+
+      _getTextFromModel: function() {
          var formatModel = this._getFormatModel();
          //Если форматное поле не заполено, то в опцию text не нужно класть пустую маску.
-         this._options.text = (formatModel._settedText !== null && typeof formatModel._settedText !== "undefined" && !formatModel.isEmpty(this._getMaskReplacer())) ? formatModel.getText(this._getMaskReplacer()) : formatModel._settedText;
+         return (formatModel._settedText !== null && typeof formatModel._settedText !== "undefined" && !formatModel.isEmpty(this._getMaskReplacer())) ? formatModel.getText(this._getMaskReplacer()) : formatModel._settedText;
       },
 
       _notifyOnTextChange: function() {
@@ -1113,7 +1138,7 @@ define(
        */
       _getHtmlMask: function() {
          //передать в шаблон
-         return maskTemplateFn(this._getItemsForTemplate(this._getFormatModel(), this._getMaskReplacer()));
+         return maskTemplateFn(this._getItemsForTemplate(this._getFormatModel(), this._getMaskReplacerForTemplate()));
       },
 
       /**

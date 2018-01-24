@@ -1,6 +1,6 @@
 <div class="controls-MonthView{{rangeselect ? ' controls-RangeSelectable__rangeselect'}}" onmousedown="return false" onselectstart="return false">
-    <div class="controls-MonthView__caption">
-        <div if="{{captionType === 'text'}}" class="controls-MonthView__caption-text"></div>
+    <div class="controls-MonthView__caption" if="{{captionType === 'text'}}">
+        <div class="controls-MonthView__caption-text">{{ month.strftime(captionFormat)}}</div>
     </div>
     <table class="controls-MonthView__dayTable">
         <thead class="controls-MonthView__tableHead">

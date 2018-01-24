@@ -16,7 +16,7 @@
   "config": {
     "ws": "sbis3-ws",
 	"viewFrom": "sbis3-ws/View",
-	"viewTo": "components/View",
+	"viewTo": "View",
     "resources": "components",
     "tests": "tests/unit",
     "test_server_port": 1025,

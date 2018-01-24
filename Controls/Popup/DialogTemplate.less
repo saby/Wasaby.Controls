@@ -1,37 +1,40 @@
-.ws-DialogTemplate{
-   background-color: #FFFFFF;
+.ws-DialogTemplate {
+   .flexbox();
+   .flex-direction(column);
+   .flex-grow(1);
+   .flex-shrink(1);
+   height: 100%;
+   background-color: @default-bg-color;
+   position: relative;
+   overflow: hidden;
 }
 
-.ws-DialogTemplate__top-area{
-   display: flex;
+.ws-DialogTemplate__top-area {
+   .flexbox();
+   .flex-shrink(0);
    height: 44px;
    padding-right: 48px;
 }
 
-.ws-DialogTemplate__content-area{
+.ws-DialogTemplate__content-area {
    .flexbox();
-   height: 100%;
-   padding-bottom: 12px;
+   .flex-direction(column);
+   .flex-grow(1);
+   .flex-shrink(1);
+   min-height: 1px;
 }
 
-.ws-DialogTemplate__close_button{
+.ws-DialogTemplate__close_button {
    position: absolute;
-   top: 10px;
+   top: 6px;
    right: 0;
-   width: 36px;
-   height: 24px;
-   cursor: pointer;
-   background: url('resources/areaCloseButton.png') 0 -1px;
-
-   &:hover{
-      background-position: 0 -25px;
-   }
+   .ws-close-button();
 }
 
-.ws-DialogTemplate__caption{
-   font-family: TensorFont, sans-serif!important;
-   font-size: 18px!important;
-   font-weight: 700!important;
+.ws-DialogTemplate__caption {
+   font-family: TensorFont, sans-serif !important;
+   font-size: 18px !important;
+   font-weight: 700 !important;
    cursor: default;
    text-overflow: ellipsis;
    overflow: hidden;
@@ -40,5 +43,4 @@
    margin-left: 12px;
    max-width: calc(100% - 48px);
    line-height: 44px;
-
 }

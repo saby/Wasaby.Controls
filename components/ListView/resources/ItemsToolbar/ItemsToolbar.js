@@ -272,6 +272,11 @@ define('SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
              if(!mode) {
                 // height='auto' win10 в режиме планшета растягивает контейнер и перекрывает строчку
                 this.getContainer()[0].style.height = '';
+                if(this._options.itemsActionsInItemContainer){
+                    this.getContainer()[0].style.marginTop = '';
+                    this.getContainer()[0].style.marginBottom = '';
+                    this.getContainer()[0].style.marginRight = '';
+                }
              }else {
                 this.setHeightInTouchMode();
              }
@@ -334,7 +339,7 @@ define('SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
                 return;
              }
    
-             if (this._options.itemsActionsInItemContainer) {
+             if (this._options.itemsActionsInItemContainer && !this._options.touchMode) {
                 this._setToolbarTarget(this._currentTarget.container);
              } else {
                 parentCords = parentContainer.getBoundingClientRect();
@@ -455,7 +460,7 @@ define('SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
 
                    this.getContainer().removeClass('ws-hidden');
                    
-                   if (this._options.itemsActionsInItemContainer) {
+                   if (this._options.itemsActionsInItemContainer && !this._options.touchMode) {
                       this._setToolbarTarget(target.container);
                    } else {
                       this._setPosition(this._getPosition(target));

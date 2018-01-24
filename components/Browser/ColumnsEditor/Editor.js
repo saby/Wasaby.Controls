@@ -7,14 +7,13 @@
  */
 define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
    [
-      'Core/core-merge',
       'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
       'Lib/Control/FloatArea/FloatArea',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area'
    ],
 
-   function (coreMerge, Deferred, CompoundControl, FloatArea) {
+   function (Deferred, CompoundControl, FloatArea) {
       'use strict';
 
       var Editor = CompoundControl.extend([], /**@lends SBIS3.CONTROLS/Browser/ColumnsEditor/Editor.prototype*/ {
@@ -38,7 +37,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
                moveColumns: true,
                usePresets: false,
                newPresetTitle: rk('Новый пресет'),
-               useNumberedTitle: true
+               useOriginPresetTitle: true
             },
             _result: null
          },
@@ -102,7 +101,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
           * @param {string} [editorOptions.presetNamespace] Пространство имён для сохранения пользовательских пресетов (опционально)
           * @param {string|number} [editorOptions.selectedPresetId] Идентификатор первоначально выбранного пресета в дропдауне (опционально)
           * @param {string} [editorOptions.newPresetTitle] Начальное название нового пользовательского пресета (опционально)
-          * @param {boolean} [editorOptions.useNumberedTitle] При добавлении новых пользовательских пресетов строить название из предыдущего с добавлением следующего порядкового номера (опционально)
+          * @param {boolean} [editorOptions.useOriginPresetTitle] При клонировании новых пользовательских пресетов строить название из исходного с добавлением следующего порядкового номера (опционально)
           * @param {boolean} [editorOptions.moveColumns] Указывает на необходимость включить перемещнение пользователем пунктов списка колонок (опционально)
           * @return {Deferred<object>}
           */
@@ -130,6 +129,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
                closeButton: true,
                componentOptions: {
                   title: hasEditorOptions ? editorOptions.title : undefined,
+                  maxHeight: $('body').height(),
                   applyButtonTitle: hasEditorOptions ? editorOptions.applyButtonTitle : undefined,
                   columns: columnsConfig.columns,
                   selectedColumns: columnsConfig.selectedColumns,
@@ -141,7 +141,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
                   presetNamespace: _selectValue('presetNamespace', edColfSources),
                   selectedPresetId: _selectValue('selectedPresetId', edColfSources),
                   newPresetTitle: _selectValue('newPresetTitle', allSources),
-                  useNumberedTitle: _selectValue('useNumberedTitle', allSources, 'boolean'),
+                  useOriginPresetTitle: _selectValue('useOriginPresetTitle', allSources, 'boolean'),
                   moveColumns: _selectValue('moveColumns', edDefSources, 'boolean'),
                   handlers: {
                      onComplete: this._onAreaComplete.bind(this)

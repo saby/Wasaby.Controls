@@ -1,6 +1,6 @@
-define('js!Controls/Popup/Opener/Dialog/Strategy',
+define('Controls/Popup/Opener/Dialog/Strategy',
    [
-      'js!Controls/Popup/Opener/BaseStrategy'
+      'Controls/Popup/Opener/BaseStrategy'
    ],
    function (BaseStrategy) {
 
@@ -13,8 +13,12 @@ define('js!Controls/Popup/Opener/Dialog/Strategy',
        * @extends Controls/Control
        */
       var Strategy = BaseStrategy.extend({
-         addElement: function (cfg, width, height) {
-            cfg.position = this.getPosition(window.outerWidth, window.innerHeight, width, height);
+         elementCreated: function (cfg, width, height) {
+            cfg.position = this.getPosition(window.innerWidth, window.innerHeight, width, height);
+         },
+
+         elementUpdated: function (cfg, width, height) {
+            this.elementCreated(cfg, width, height);
          },
 
          /**

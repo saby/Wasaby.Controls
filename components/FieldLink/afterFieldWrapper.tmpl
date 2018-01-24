@@ -1,6 +1,6 @@
-<div class="controls-FieldLink__afterFieldWrapper{{ !enabled ? ' controls-FieldLink__afterFieldWrapper-disabled' }}">
+<div class="controls-FieldLink__afterFieldWrapper{{ !enabled ? ' ws-hidden' }}">
    <ws:if data="{{_selectedMultipleItems}}">
-      <div class="controls-FieldLink__dropAllLinks controls-FieldLink__button icon-size icon-Close" title="Очистить все"></div>
+      <div class="controls-FieldLink__dropAllLinks controls-FieldLink__button icon-size icon-CloseNew" title="Очистить все"></div>
    </ws:if>
    <ws:if data="{{ showSelector }}">
       <ws:partial template="{{ showSelectorButton }}" scope="{{...}}" />

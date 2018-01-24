@@ -1,4 +1,4 @@
-define('js!Controls/Input/Money', [
+define('Controls/Input/Money', [
 ], function() {
 
    /**

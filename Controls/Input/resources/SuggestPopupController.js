@@ -1,11 +1,11 @@
-define('js!Controls/Input/resources/SuggestPopupController',
+define('Controls/Input/resources/SuggestPopupController',
    [
       'Core/core-extend',
       'Core/core-merge',
-      'js!Controls/List/resources/utils/Search',
+      'Controls/List/resources/utils/Search',
       'Core/constants',
       'Core/core-clone',
-      'js!Controls/Input/resources/SuggestView/SuggestView'
+      'Controls/Input/resources/SuggestView/SuggestView'
       
    ],
    function(extend, cMerge, Search, constants, clone) {
@@ -28,13 +28,19 @@ define('js!Controls/Input/resources/SuggestPopupController',
             return self._search;
          },
          
+         prepareSuggestFilter: function(self, searchResult) {
+            if (!searchResult.hasMore) {
+               delete self._popupOptions.componentOptions.filter[self._searchParam];
+            }
+         },
+         
          showPopup: function(self) {
             self._popupOpener.open(self._popupOptions);
          },
          
          setSuggestSearchResult: function(self, searchResult) {
             self._popupOptions.componentOptions.items = searchResult.result;
-            self._popupOptions.componentOptions.hasMore = searchResult.hasMore;
+            self._popupOptions.componentOptions.hasMore = searchResult.hasMore || !searchResult.result.getCount();
          },
          
          setSuggestSelectedIndex: function(self, selectedIndex) {
@@ -71,15 +77,17 @@ define('js!Controls/Input/resources/SuggestPopupController',
             this._searchDelay = options.searchDelay;
             this._navigation = options.navigation;
             this._selectCallback = options.selectCallback;
+            this._searchParam = options.searchParam;
          },
          
          search: function(filter, popupOptions) {
             var self = this;
             
             this._popupOptions = clone(popupOptions);
-            _private.getSearchController(self).search({filter: filter}).addCallback(function(searchResult) {
+            return _private.getSearchController(self).search({filter: filter}).addCallback(function(searchResult) {
                _private.setSuggestSelectedIndex(self, 0);
                _private.setSuggestSearchResult(self, searchResult);
+               _private.prepareSuggestFilter(self, searchResult);
                _private.showPopup(self);
             });
          },

@@ -1,16 +1,25 @@
-define('js!Controls/Popup/Opener/Stack/Strategy',
+define('Controls/Popup/Opener/Stack/Strategy',
    [
-      'js!Controls/Popup/Opener/BaseStrategy',
-      'WS.Data/Collection/List'
+      'Controls/Popup/Opener/BaseStrategy',
+      'WS.Data/Collection/List',
+      'Controls/Popup/TargetCoords'
    ],
-   function (BaseStrategy, List) {
+   function (BaseStrategy, List, TargetCoords) {
       'use strict';
 
       var
          // минимальная ширина стековой панели
          MINIMAL_PANEL_WIDTH = 50,
          // минимальный отступ стековой панели от правого края
-         MINIMAL_PANEL_DISTANCE = 50;
+         MINIMAL_PANEL_DISTANCE = 50,
+         POPUP_CLASS = 'ws-Container__stack-panel';
+
+      var _private = {
+         getStackParentCoords: function () {
+            var elements = document.getElementsByClassName('ws-Popup__stack-target-container');
+            return TargetCoords.get(elements && elements.length ? elements[0] : null, {horizontal: 'right'});
+         }
+      };
 
       /**
        * Контроллер стековых панелей.
@@ -26,12 +35,17 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
             this._stack = new List();
          },
 
-         addElement: function (element) {
+         elementCreated: function (element) {
+            if (!element.popupOptions) {
+               element.popupOptions = {};
+            }
+            //Добавляем стандартный класс
+            element.popupOptions.className += ' ' + POPUP_CLASS;
             this._stack.add(element, 0);
             this._update();
          },
 
-         removeElement: function (element) {
+         elementDestroyed: function (element) {
             this._stack.remove(element);
             this._update();
          },
@@ -39,14 +53,15 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
          _update: function () {
             var
                self = this,
+               tCoords = _private.getStackParentCoords(),
                previous;
             this._stack.each(function (item, index) {
                var
-                  minWidth = item.popupOptions.minWidth,
-                  maxWidth = item.popupOptions.maxWidth,
                   prevWidth = previous ? previous.width : null,
-                  prevRight = previous ? previous.right : null;
-               item.position = self.getPosition(index, minWidth, maxWidth, window.outerWidth, prevWidth, prevRight);
+                  prevRight = previous ? previous.right : null,
+                  width = self.getPanelWidth(item.popupOptions.minWidth, item.popupOptions.maxWidth, window.innerWidth),
+                  maxPanelWidth = self.getMaxPanelWidth(window.innerWidth);
+               item.position = self.getPosition(index, tCoords, width, maxPanelWidth, prevWidth, prevRight);
                previous = item.position;
                if (!previous) {
                   item.position = self.getDefaultPosition();
@@ -58,22 +73,22 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
           * Возвращает позицию стек-панели
           * @function Controls/Popup/Opener/Stack/Strategy#stack
           * @param index номер панели
-          * @param minWidth минимальная ширина панели
-          * @param maxWidth максимальная ширина панели
-          * @param wWidth ширина окна
+          * @param tCoords точка, относительно которой будет вылезать панель
+          * @param width ширина панели
+          * @param maxWidth максимально возможная ширина панели
           * @param prevWidth ширина предыдущей панели
           * @param prevRight отступ справа предыдущей панели
           */
-         getPosition: function (index, minWidth, maxWidth, wWidth, prevWidth, prevRight) {
+         getPosition: function (index, tCoords, width, maxWidth, prevWidth, prevRight) {
             var
-               width = this.getPanelWidth(minWidth, maxWidth, wWidth),
-               right = 0;
+               top = tCoords.top,
+               right = tCoords.right;
             if (index !== 0) {
                if (prevWidth) {
                   var rightCalc = 100 - ( width - prevWidth - prevRight );
                   if (rightCalc > 0) {
                      right = Math.max(100, rightCalc);
-                     if (( width + right ) > this.getMaxPanelWidth(wWidth)) {
+                     if (( width + right ) > maxWidth) {
                         return null;
                      }
                   }
@@ -85,7 +100,7 @@ define('js!Controls/Popup/Opener/Stack/Strategy',
             return {
                width: width,
                right: right,
-               top: 0,
+               top: top,
                bottom: 0
             };
          },

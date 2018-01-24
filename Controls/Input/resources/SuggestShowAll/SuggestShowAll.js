@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 25.12.2017.
  */
-define('js!Controls/Input/resources/SuggestShowAll/SuggestShowAll',
+define('Controls/Input/resources/SuggestShowAll/SuggestShowAll',
    [
       'Core/Control',
       'tmpl!Controls/Input/resources/SuggestShowAll/SuggestShowAll',
@@ -16,14 +16,18 @@ define('js!Controls/Input/resources/SuggestShowAll/SuggestShowAll',
          constructor: function(options) {
             SuggestShowAll.superclass.constructor.call(this, options);
             //TODO переписать, как список переведут на актуальное апи навигации
+            //так задаем дефолтные настройки для навигации в списке
             if (options.navigation && options.navigation.sourceConfig) {
                options.navigation.sourceConfig.pageSize = 20;
+               options.navigation.view = 'infinity';
+               options.navigation.viewConfig = options.navigation.viewConfig || {};
+               options.navigation.viewConfig.pagingMode = true;
             }
          },
          
          _onItemClickHandler: function(event, item) {
-            this._notify('sendResult', item);
-            this._notify('close');
+            this._notify('sendResult', [item], {bubbling: true});
+            this._notify('close', [], {bubbling: true});
          }
       });
       

@@ -204,8 +204,9 @@ define('SBIS3.CONTROLS/TextBox', [
              /**
               * @cfg {String} Устанавливает размер поля ввода.
               * @remark
-              * По умолчанию значение опции "m"
-              * Значение "l" устaновит большой рамер поля ввода
+              * По умолчанию значение опции "default" и зависит от темы.
+              * Значение "m" установит средний размер поля ввода.
+              * Значение "l" устaновит большой размер поля ввода.
               * @example
               * Пример 1. Большое поле ввода:
               * фрагмент верстки:
@@ -213,7 +214,7 @@ define('SBIS3.CONTROLS/TextBox', [
               *     <option name="size">l</option>
               * </pre>
               */
-            size: ''
+            size: 'default'
          }
       },
 
@@ -274,6 +275,9 @@ define('SBIS3.CONTROLS/TextBox', [
             чтобы у них был __vStorage, для возможности обращаться к опциям по ссылке (ref) */
          cfg.beforeFieldWrapper = TemplateUtil.prepareTemplate(cfg.beforeFieldWrapper);
          cfg.afterFieldWrapper = TemplateUtil.prepareTemplate(cfg.afterFieldWrapper);
+         if (cfg.placeholder) {
+            cfg._isSimplePlaceholder = typeof cfg.placeholder === 'string' && cfg.placeholder.indexOf('data-component') === -1;
+         }
          return cfg;
       },
 
@@ -339,12 +343,14 @@ define('SBIS3.CONTROLS/TextBox', [
          }
 
          this._informationIcon.removeClass('controls-TextBox__informationIcon-' + this._options.informationIconColor);
+         this._informationIcon.removeClass('controls-InputRender__tagStyle-' + this._options.informationIconColor);
          this._options.informationIconColor = color;
          this._informationIcon.addClass('controls-TextBox__informationIcon-' + color);
+         this._informationIcon.addClass('controls-InputRender__tagStyle-' + color);
       },
 
       _createInformationIcon: function(color) {
-         this._informationIcon = $('<div class="controls-TextBox__informationIcon controls-TextBox__informationIcon-' + color + '"></div>');
+         this._informationIcon = $('<div class="controls-InputRender__tagStyle controls-TextBox__informationIcon controls-TextBox__informationIcon-' + color + ' controls-InputRender__tagStyle-' + color + '"></div>');
          this.getContainer().append(this._informationIcon);
       },
 
@@ -399,18 +405,19 @@ define('SBIS3.CONTROLS/TextBox', [
        * Если текст умещается, то показываем из опции tooltip
        */
       _applyTooltip: function() {
+         var field = this._getFieldForTooltip();
          if (this._tooltipText != this._options.text) {
             var scrollWidth;
             if (constants.browser.isIE) {
                scrollWidth = getTextWidth(this._options.text);
             }
             else {
-               scrollWidth = this._inputField[0].scrollWidth;
+               scrollWidth = field[0].scrollWidth;
             }
             // для случая, когда текст не умещается в поле ввода по ширине, показываем всплывающую подсказку с полным текстом
-            if (scrollWidth > this._inputField[0].clientWidth) {
+            if (scrollWidth > field[0].clientWidth) {
                this._container.attr('title', this._options.text);
-               this._inputField.attr('title', this._options.text);
+               field.attr('title', this._options.text);
             }
             else if (this._options.tooltip) {
                this.setTooltip(this._options.tooltip);
@@ -418,14 +425,18 @@ define('SBIS3.CONTROLS/TextBox', [
                 this._container.attr('title', '');
                //Ставлю пробел, чтобы скрыть браузерную подсказку "Заполните это поле". Если поставить пробел, то все браузеры,
                //кроме IE, не выводят всплывающую подсказку. Для IE ставлю пустой title, чтобы он не выводил всплывашку.
-               this._inputField.attr('title', constants.browser.isIE ? '' : ' ');
+               field.attr('title', constants.browser.isIE || constants.browser.retailOffline ? '' : ' ');
             }
             this._tooltipText = this._options.text;
          }
       },
 
+      _getFieldForTooltip: function () {
+         return this._inputField;
+      },
+
       setTooltip: function(tooltip) {
-         this._inputField.attr('title', tooltip);
+         this._getFieldForTooltip().attr('title', tooltip);
          TextBox.superclass.setTooltip.apply(this, arguments);
       },
 
@@ -599,9 +610,7 @@ define('SBIS3.CONTROLS/TextBox', [
       },
       
       _inputClickHandler: function (e) {
-         if (this.isEnabled() && this._compatPlaceholder) {
-            this._getInputField().focus();
-         }
+
       },
 
       _inputFocusInHandler: function(e) {
@@ -633,11 +642,16 @@ define('SBIS3.CONTROLS/TextBox', [
       },
 
       _initPlaceholderEvents: function(placeholder) {
-         placeholder.on('click', this._inputClickHandler.bind(this));
+         var self = this;
+         placeholder.on('click', function() {
+            self._getInputField().focus();
+            self._inputClickHandler();
+         });
       },
 
       _createCompatiblePlaceholder: function() {
          if (!this._compatPlaceholder) {
+            this._options._isSimplePlaceholder = typeof this._options.placeholder === 'string' && this._options.placeholder.indexOf('data-component') === -1;
             this._compatPlaceholder = $(this._options.compatiblePlaceholderTemplate(this._options));
             this._inputField.after(this._compatPlaceholder);
             this.reviveComponents();

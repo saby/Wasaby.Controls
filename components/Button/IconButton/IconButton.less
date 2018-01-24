@@ -14,7 +14,7 @@
     .controls-Button__icon.icon-primary {
       color: @icon-active-color;
     }
-    &.controls-IconButton__round-border, &.controls-IconButton__round-border-24, &.controls-IconButton__round-border-32 {
+    &.controls-IconButton__border, &.controls-IconButton__round-border, &.controls-IconButton__round-border-24, &.controls-IconButton__round-border-32 {
         box-shadow: none;
         background-color: @background-color_EditButton_hovered;
         border-color: @default-color;
@@ -36,11 +36,6 @@
      }
   }
 
-   &.controls-Button {
-      padding: 0;
-      cursor: pointer;
-   }
-
    &.controls-IconButton__doneBorder {
      .controls-Button__icon {
        color: @color_IconButton-icon_done;
@@ -58,7 +53,7 @@
       line-height: @line-height_IconButton-icon_round !important;
    }
 
-   &.controls-IconButton__round-border-24{
+   &.controls-IconButton__round-border-24, &.controls-IconButton__border {
       .round-button-mixin(@gray-ccc-color, @border-radius_EditButton, @border-width_EditButton);
       height: @height_IconButton_round_edit;
       width: @width_IconButton_round_edit;
@@ -74,6 +69,10 @@
       line-height: 38px !important;
    }
 
+   &.controls-IconButton__border.controls-IconButton-size__l {
+     height: @height_IconButton_round_edit_size-l;
+     width: @width_IconButton_round_edit_size-l;
+   }
    .controls-Button__wrapper {
      .justify-content(center);
    }
@@ -81,13 +80,15 @@
    &.ws-disabled {
      cursor: default;
      .controls-Button__icon {
-       color: @default-disabled-color;
+       // important ставлю временно аналогично кнопкам,
+       // избавлюсь в 3.18.0 когда волью доброску по состоянию иконки
+       color: @default-disabled-color !important;
      }
    }
 }
 .ws-is-desktop-safari, .ws-is-mobile-safari {
   .controls-IconButton {
-    &.controls-IconButton__round-border, &.controls-IconButton__round-border-24, &.controls-IconButton__round-border-32 {
+    &.controls-IconButton__border, &.controls-IconButton__round-border, &.controls-IconButton__round-border-24, &.controls-IconButton__round-border-32 {
       // https://stackoverflow.com/questions/17202128/rounded-cornes-border-radius-safari-issue
       -webkit-transform: translateZ(0);
     }
@@ -102,7 +103,7 @@
         }
       }
     }
-    &.controls-IconButton__round-border, &.controls-IconButton__round-border-24, &.controls-IconButton__round-border-32{
+    &.controls-IconButton__border, &.controls-IconButton__round-border, &.controls-IconButton__round-border-24, &.controls-IconButton__round-border-32{
       .round-button-hover-mixin();
     }
   }

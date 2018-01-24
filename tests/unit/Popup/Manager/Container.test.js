@@ -1,12 +1,11 @@
 define(
    [
-      'js!Controls/Popup/Manager/Container',
-      'js!Controls/Popup/Controller',
+      'Controls/Popup/Manager/Container',
       'WS.Data/Collection/List',
       'Core/helpers/random-helpers'
    ],
 
-   function (Container, Controller, List, Random) {
+   function (Container, List, Random) {
       'use strict';
       describe('Controls/Popup/Manager/Container', function () {
          var
@@ -22,7 +21,6 @@ define(
             id = Random.randomId('popup-');
             items.add({
                id: id,
-               controller: new Controller(),
                popupOptions: {}
             });
             popupContainer.setPopupItems(items);

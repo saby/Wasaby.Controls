@@ -5,25 +5,38 @@
 }
 
 .controls-PopupMixin__closeButton {
+   .flexbox();
+   .align-items(center);
+   .justify-content(center);
    position: absolute;
    top: @controls-Popup-closeButton-top;
    right: 0;
    width: @closeButtonWidth;
    height: @closeButtonHeight;
+   line-height: @closeButtonHeight;
    cursor: pointer;
-   background: @closeButtonImage;
-   &:hover {
-      background: @closeButtonImageHover;
-   }
-   &:active {
-      background: @closeButtonImageHover;
-   }
    z-index: 1;
+   background-color: #f8f8f8;
+   border-width: 1px 0 1px 1px;
+   border-style: solid;
+   border-color: #dbdbdb;
+   box-shadow: 0px 1px 3px rgba(0, 0, 0, .12);
+   border-radius: 2px 0 0 2px;
+   font-size: 23px;
+   font-family: @default-icon-font;
+   color: #587ab0;
+   &:before {
+      content: "\e66c";
+      font-weight: normal;
+   }
+   &:hover, &:active {
+      color: #313E78;
+   }
 }
 
 .controls-Button__closeButton.controls-IconButton {
-   width: @closeButtonWidth;
-   height: @closeButtonHeight;
+   width: 36px;
+   height: 24px;
    background: @closeButtonImage;
    &:hover {
       background: @closeButtonImageHover;
