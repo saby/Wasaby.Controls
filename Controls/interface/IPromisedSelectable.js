@@ -1,4 +1,4 @@
-define('js!Controls/interface/IPromisedSelectable', [
+define('Controls/interface/IPromisedSelectable', [
 ], function() {
 
    /**

@@ -1,16 +1,26 @@
 .controls-Browser-ColumnsEditor-Editing-Area {
+   .flexbox();
+   .flex-direction(column);
    width: @width-ColumnsEditor-Editing-Area;
    height: 100%;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head {
+   box-sizing: border-box;
+   .flex-shrink(0);
+   border-bottom: @border-bottom-ColumnsEditor-Editing-Area__head;
    padding: @padding-ColumnsEditor-Editing-Area-head;
    background-color: @background-color-ColumnsEditor-Editing-Area-head;
 }
 
+.controls-Browser-ColumnsEditor-Editing-Area_low {
+   .controls-Browser-ColumnsEditor-Editing-Area__head {
+      padding: @padding-ColumnsEditor-Editing-Area-head-2;
+   }
+}
+
 .controls-Browser-ColumnsEditor-Editing-Area__head-title {
    height: @height-ColumnsEditor-Editing-Area-head-title;
-   margin-bottom: @spacing-ColumnsEditor-Editing-Area-head;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head-title-left {
@@ -26,24 +36,30 @@
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head-preset {
+   .inline-flexbox();
+   .align-items(baseline);
+   width: 100%;
    height: @height-ColumnsEditor-Editing-Area__head-preset;
+   padding-top: @spacing-ColumnsEditor-Editing-Area-head;
    font-size: @font-size-ColumnsEditor-Editing-Area__head-preset;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head-preset-label {
-   float: left;
    padding: @padding-ColumnsEditor-Editing-Area__head-preset-label;
    color: @color-ColumnsEditor-Editing-Area__head-preset-label;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head-preset-editor {
+   width: 100%;
    .controls-ItemsToolbar {
-      top: @spacing-ColumnsEditor-Editing-Area__Preset-item;
-      bottom: auto;
+      top: 0;
       background-color: transparent;
    }
-   .controls-editInPlace__editor {
-      padding: 0;
+   .controls-editInPlace .controls-editInPlace__editor {
+      padding-top: 0;
+   }
+   .controls-ListView__item.controls-editInPlace__editing {
+      background-color: transparent !important;
    }
 }
 
@@ -52,24 +68,19 @@
    padding-left: @padding-left-ColumnsEditor-Editing-Area__Preset-item;
 }
 
-.controls-Browser-ColumnsEditor-Editing-Area__Preset-item-title {
-   margin-top: @spacing-ColumnsEditor-Editing-Area__Preset-item;
-}
-
 .controls-Browser-ColumnsEditor-Editing-Area__Preset-input {
    width: @width-ColumnsEditor-Editing-Area__Preset-input;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__body {
-   border-top: @border-top-ColumnsEditor-Editing-Area__body;
+   box-sizing: border-box;
+   .flex-grow(1);
+   height: 100%;
    padding: @padding-ColumnsEditor-Editing-Area__body;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__FixedList {
-   .controls-CheckBox {
-      display: block;
-      padding: @padding-ColumnsEditor-Editing-Area__FixedList-CheckBox;
-   }
+   padding: @padding-ColumnsEditor-Editing-Area__FixedList-CheckBox;
    .controls-CheckBox__caption {
       padding-left: @padding-left-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption;
       color: @color-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption;

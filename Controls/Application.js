@@ -1,7 +1,7 @@
 /**
  * Created by dv.zuev on 25.12.2017.
  */
-define('js!Controls/Application',
+define('Controls/Application',
    [
       'Core/Control',
       'tmpl!Controls/Application/Page',
@@ -47,6 +47,14 @@ define('js!Controls/Application',
 
          getDataId: function(){
             return 'cfg-pagedata';
+         },
+
+         _scrollPage: function(ev){
+            this._children.scrollDetect.start(ev);
+         },
+
+         _resizePage: function(ev){
+            this._children.resizeDetect.start(ev);
          },
 
          _beforeMount: function(cfg, context, receivedState) {

@@ -2,8 +2,8 @@
  * Created by kraynovdo on 17.11.2017.
  */
 define([
-   'js!Controls/List/ListControl/ListViewModel',
-   'js!Controls/List/resources/utils/ItemsUtil'
+   'Controls/List/ListControl/ListViewModel',
+   'Controls/List/resources/utils/ItemsUtil'
 ], function(ListViewModel, ItemsUtil){
    describe('Controls.List.ListControl.ListViewModel', function () {
       var data, display;

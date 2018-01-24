@@ -98,6 +98,7 @@
 .controls-InputRender__placeholder {
    .compatPlaceholder(@color_InputRender-placeholder);
    .align-items(center);
+   padding-left: 1px;
 }
 
 .controls-InputRender__placeholder_simple {
@@ -195,24 +196,39 @@
 }
 
 //Размеры
-.controls-InputRender_size_default {
+.controls-InputRender_size_default_singleLine  {
    height: @height_InputRender_default;
    font-size: @font-size_InputRender_default;
 }
 
-.controls-InputRender_size_m {
+.controls-InputRender_size_m_singleLine  {
    height: @height_InputRender_m;
    font-size: @font-size_InputRender_m;
 }
 
-.controls-InputRender_size_l {
+.controls-InputRender_size_l_singleLine  {
    height: @height_InputRender_l;
    font-size: @font-size_InputRender_l;
 }
 
-.controls-InputRender_size_auto {
+.controls-InputRender_size_default_multiLine {
+   height: auto;
+   font-size: @font-size_InputRender_default;
+   line-height: @line-height_InputRender_default;
+}
+
+.controls-InputRender_size_m_multiLine {
+   //При использовании line-height: normal высота строка в FF становится 19px, а в остальных браузерах 18px. Через метрики
+   //шрифта это не исправить, т.к. с другими шрифтами высота строки тоже разная. Так что нужно указывать line-height явно
    height: auto;
    font-size: @font-size_InputRender_m;
+   line-height: @line-height_InputRender_m;
+}
+
+.controls-InputRender_size_l_multiLine {
+   height: auto;
+   font-size: @font-size_InputRender_l;
+   line-height: @line-height_InputRender_l;
 }
 
 //Модификаторы
@@ -231,3 +247,8 @@
 .controls-InputRender_paddingLeft {
    padding: @padding_InputRender-container_left;
 }
+
+//Временный костыль для стилизации placeholder https://online.sbis.ru/opendoc.html?guid=ab0778df-4fa4-4c5c-8515-192661c5003c
+.controls-InputRender ::-webkit-input-placeholder {color:#ccc;}
+.controls-InputRender  ::-moz-placeholder         {color:#ccc;}
+.controls-InputRender  :-ms-input-placeholder     {color:#ccc;}

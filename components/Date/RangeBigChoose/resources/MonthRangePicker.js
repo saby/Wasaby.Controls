@@ -1,6 +1,5 @@
 define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
    "Core/constants",
-   "Core/Deferred",
    'Core/helpers/Function/runDelayed',
    'Core/helpers/Function/throttle',
    'Core/helpers/Object/isEmpty',
@@ -10,12 +9,13 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
    "tmpl!SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePickerItem",
    "SBIS3.CONTROLS/Mixins/RangeMixin",
    "SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin",
-   "WS.Data/Source/Base",
    "Core/core-instance",
    "SBIS3.CONTROLS/Utils/DateUtil",
    "SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView"
-], function ( constants, Deferred, runDelayed, throttle, isEmpty, LayoutManager, ListView, CalendarSource, ItemTmpl, RangeMixin, RangeSelectableViewMixin, Base, cInstance, dateUtils) {
+], function ( constants, runDelayed, throttle, isEmpty, LayoutManager, ListView, CalendarSource, ItemTmpl, RangeMixin, RangeSelectableViewMixin, cInstance, dateUtils) {
    'use strict';
+
+   var cConst = constants; //константы нужны для работы дат, не уверен что можно отключать из зависимостей (стан ругается)
 
    var yearSource = new CalendarSource(),
       buildTplArgsMRP = function(cfg) {
@@ -54,7 +54,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             year: null,
 
             itemTpl: ItemTmpl,
-            pageSize: 1,
+            pageSize: 2,
 
             infiniteScroll: 'both',
             infiniteScrollContainer: '.controls-DateRangeBigChoose__months-month',
@@ -90,7 +90,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             selectedStart: 'controls-RangeSelectable__item-selectedStart',
             selectedEnd: 'controls-RangeSelectable__item-selectedEnd',
             selecting: 'controls-RangeSelectable__selecting'
-         },
+         }
       },
       _scrollContainer: null,
 
@@ -256,6 +256,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
 
          var displayedYear = this.getContainer().find('.controls-DateRangeBigChoose-MonthRangePickerItem[data-date="' + (new Date(this._options.year, 0)).toSQL() + '"]');
 
+         // При изменеии размера контента если его высота равна 0(а это может быть даже если контент есть, а родитель
+         // ScrollContainer скрыт) ScrollContainer навешивает overflow: hidden. Заза этого scrollToElement
+         // не может найти контейнер в котором происходит скролирование. Сигнализируем скрол контейнеру что
+         // надо пересчитать размеры перед scrollToElement.
+         this.sendCommand('resizeYourself');
          LayoutManager.scrollToElement(displayedYear.find('.controls-DateRangeBigChoose-MonthRangePickerItem__body'));
       },
 
@@ -579,7 +584,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             this._SELECTABLE_RANGE_CSS_CLASSES.item,
             this._SELECTABLE_RANGE_CSS_CLASSES.selected,
             this._SELECTABLE_RANGE_CSS_CLASSES.selectedStart,
-            this._SELECTABLE_RANGE_CSS_CLASSES.selectedEnd,
+            this._SELECTABLE_RANGE_CSS_CLASSES.selectedEnd
          ];
       },
 
