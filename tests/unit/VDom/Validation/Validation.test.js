@@ -14,6 +14,8 @@ define([
    describe('Validation-tests', function () {
       var testControl;
       beforeEach(function () {
+         this.skip();
+         return;
          if (typeof $ === 'undefined') {//Проверка того, что тесты выполняются в браузере
             this.skip();
          }
