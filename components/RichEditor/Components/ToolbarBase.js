@@ -166,9 +166,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
                   }
                }
             }
-            for (var i in deleteIdexes) {
-               if (items.hasOwnProperty(i)) {
-                  items.splice(deleteIdexes[i] - i, 1);
+            // Элементы массива удаляем с конца
+            // 63463 https://online.sbis.ru/opendoc.html?guid=14da3423-c2b8-43c0-875d-ac421b7124c1
+            for (var i = deleteIdexes.length - 1; 0 <= i; i--) {
+               if (items.hasOwnProperty(deleteIdexes[i])) {
+                  items.splice(deleteIdexes[i], 1);
                }
             }
             items.sort(function(item1,item2){
