@@ -97,4 +97,8 @@ body.ws-is-desktop-platform .controls-DateRangeBigChoose__dates-dates-wrapper::-
    .controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates {
       margin-left: @width_DateRangeBigChoose-dates-header-year;
    }
+   .controls-ScrollContainer.controls-DateRangeBigChoose__dates-dates-wrapper .controls-ScrollContainer__content {
+      // Иначе ломается position: fixed; в edge
+      transform: none;
+   }
 }
