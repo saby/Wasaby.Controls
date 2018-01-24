@@ -3,7 +3,6 @@ define('SBIS3.CONTROLS/LongOperations/List',
       'Core/Deferred',
       'Lib/Control/CompoundControl/CompoundControl',
       'SBIS3.CONTROLS/LongOperations/Entry',
-      'SBIS3.CONTROLS/LongOperations/List/resources/model',
       'SBIS3.CONTROLS/LongOperations/Manager',
       'SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
@@ -15,10 +14,11 @@ define('SBIS3.CONTROLS/LongOperations/List',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListExecuteTimeTemplate',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListUserPhotoTemplate',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListNameTemplate',
+      'SBIS3.CONTROLS/LongOperations/List/resources/model',
       'SBIS3.CONTROLS/DataGridView'
    ],
 
-   function (Deferred, CompoundControl, LongOperationEntry, Model, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, FloatArea, dotTplFn) {
+   function (Deferred, CompoundControl, LongOperationEntry, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, FloatArea, dotTplFn) {
       'use strict';
 
       /**
