@@ -49,12 +49,8 @@ define('SBIS3.CONTROLS/Link', [
     * @css ws-linkHeader Устанавливает для кнопки стилевое оформление в виде "Заголовок-разделитель" (см. <a href="http://axure.tensor.ru/standarts/v7/#p=разделители__заголовки___версия_05_">Стандарты</a>).
     * @css ws-linkHeader&#32;ws-splitter Устанавливает для кнопки стилевое оформление в виде "Заголовок-разделитель с вертикальной линией" (см. <a href="http://axure.tensor.ru/standarts/v7/#p=разделители__заголовки___версия_05_">Стандарты</a>).
     *
-    *
-    * @cssModifier controls-Button__ellipsis Устанавливает отображение многоточия в тексте кнопки при нехватке ширины.
-    * !Важно: при добавлении этого модификатора сломается "Базовая линия".
-    * @cssModifier controls-Link__disabledHover Отключает изменение цвета текста кнопки, которое происходит по наведению курсора.
-    * @cssModifier controls-Link__underline Устанавливает постоянное подчеркивание текста кнопки.
     * @cssModifier mainLink__2 Устанавливает для кнопки стилевое оформление "Основная ссылка 2" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
+    * @cssModifier mainLink__3 Устанавливает для кнопки стилевое оформление "Основная ссылка 3" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
     * @cssModifier additionalLink Устанавливает для кнопки стилевое оформление "Дополнительная ссылка" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
     * @cssModifier additionalLink__2 Устанавливает для кнопки стилевое оформление "Дополнительная ссылка 2" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
     * @cssModifier additionalLink__3 Устанавливает для кнопки стилевое оформление "Дополнительная ссылка 3" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
@@ -98,14 +94,18 @@ define('SBIS3.CONTROLS/Link', [
          var
             options = Link.superclass._modifyOptions.apply(this, arguments);
          options.cssClassName += ' controls-Link';
+         options._type = 'Link';
+         options._iconDisabledClass = 'icon-link-disabled';
 
          // в случае когда задана ссылка передаем отдельный шаблон
          if(options.href) {
             options.contentTemplate = hrefTemplate;
          }else {
-            options._textClass = ' controls-Link__field';
+            options._textClass = ' controls-Link__text';
          }
-         LinkUtil.preparedClassFromOptions(options, attrToMerge);
+
+         options.style = !!options.style ? options.style : LinkUtil.getStyleByConfig(options, attrToMerge);
+         options.className += ' controls-Link_state-' + (options.enabled ? options.style : 'disabled');
          return options;
       },
 
@@ -137,6 +137,17 @@ define('SBIS3.CONTROLS/Link', [
          if(this._options.href) {
             this._contentContainer[0].innerHTML = hrefTemplate(this._options);
          }
+      },
+      _toggleState: function() {
+          var  container = this._container;
+          container[0].className = container[0].className.replace(/(^|\s)controls-Link_state-\S+/g, '');
+
+          container.addClass('controls-Link_state-' + (this._options.enabled ? this._options.style : 'disabled'));
+          Link.superclass._toggleState.apply(this, arguments);
+      },
+      setClassName: function () {
+          Link.superclass.setClassName.apply(this, arguments);
+          this._toggleState();
       },
       /**
        * Установить ссылку.

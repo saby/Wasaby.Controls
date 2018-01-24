@@ -1,6 +1,7 @@
 define('SBIS3.CONTROLS/Menu/MenuLink', [
    'js!WSControls/Buttons/MenuButton',
-   'SBIS3.CONTROLS/Utils/LinkUtil', 'css!SBIS3.CONTROLS/Link/Link',
+   'SBIS3.CONTROLS/Utils/LinkUtil',
+   'css!SBIS3.CONTROLS/Link/Link',
    'css!SBIS3.CONTROLS/Menu/MenuLink/MenuLink'
 ], function(WSMenuButton, LinkUtil) {
 
@@ -67,11 +68,21 @@ define('SBIS3.CONTROLS/Menu/MenuLink', [
          var opts = MenuLink.superclass._modifyOptions.apply(this, arguments);
          opts.pickerClassName += ' controls-MenuLink__Menu';
          opts.cssClassName += ' controls-MenuLink controls-Link';
-         opts._textClass = ' controls-Link__field';
+         opts._textClass = ' controls-Link__text';
+         opts._iconDisabledClass = 'icon-link-disabled';
 
-          LinkUtil.preparedClassFromOptions(opts);
+         opts.style = !!opts.style ? opts.style : LinkUtil.getStyleByConfig(opts);
+         opts.className += ' controls-Link_state-' + opts.style;
 
          return opts;
+      },
+
+      _toggleState: function() {
+          var  container = this._container;
+          container[0].className = container[0].className.replace(/(^|\s)controls-Link_state-\S+/g, '');
+
+          container.addClass('controls-Link_state-' + (this._options.enabled ? this._options.style : 'disabled'));
+          MenuLink.superclass._toggleState.apply(this, arguments);
       }
    });
 

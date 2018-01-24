@@ -61,7 +61,9 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
              options = IconButton.superclass._modifyOptions.apply(this, arguments),
              iconClass = options._iconClass;
 
+
          options.className += ' controls-IconButton';
+         options._type = 'IconButton';
 
          if (iconClass) {
             if (((iconClass.indexOf('icon-error') >= 0) || (iconClass.indexOf('icon-done') >= 0))){
