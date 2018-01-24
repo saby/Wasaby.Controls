@@ -564,8 +564,12 @@ define(
 
             obj.weekend = obj.dayOfWeek === 5 || obj.dayOfWeek === 6;
             obj.enabled = this.isEnabled();
-            obj.selected = date >= startDate && date <= endDate;
-            obj.selectedStart = DateUtil.isDatesEqual(date, startDate);
+
+            obj.selected = (startDate && endDate && date >= startDate && date <= endDate) ||
+               (startDate && DateUtil.isDatesEqual(date, startDate) && !endDate) ||
+               (!startDate && endDate && DateUtil.isDatesEqual(date, endDate));
+
+            obj.selectedStart = DateUtil.isDatesEqual(date, startDate || endDate);
             obj.selectedEnd = DateUtil.isDatesEqual(date, endDate);
             obj.selectionProcessing = this.isSelectionProcessing();
 
