@@ -88,6 +88,10 @@ define('SBIS3.CONTROLS/Menu/MenuIcon', [
                 }
              });
          }
+         opts.cssClassName += ' controls-IconButton-size__' + (!!opts.size ? opts.size : 'default');
+         if(!!opts.size) {
+             opts.pickerClassName += ' controls-Menu__offset-' + opts.size;
+         }
 
          if (opts.icon && (opts.icon.indexOf('icon-24') !== -1 || opts.icon.indexOf('icon-large') !== -1) && opts.className.indexOf('controls-Menu__hide-menu-header') === -1){
             opts.pickerClassName += ' controls-Menu__big-header';
