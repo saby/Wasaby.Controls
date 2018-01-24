@@ -1,4 +1,4 @@
-define('js!Controls/InfoBox',
+define('Controls/InfoBox',
    [
       'Core/Control',
       'WS.Data/Type/descriptor',
