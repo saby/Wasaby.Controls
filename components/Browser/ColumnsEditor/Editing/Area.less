@@ -36,35 +36,36 @@
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head-preset {
+   .inline-flexbox();
+   .align-items(baseline);
+   width: 100%;
    height: @height-ColumnsEditor-Editing-Area__head-preset;
-   margin-top: @spacing-ColumnsEditor-Editing-Area-head;
+   padding-top: @spacing-ColumnsEditor-Editing-Area-head;
    font-size: @font-size-ColumnsEditor-Editing-Area__head-preset;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head-preset-label {
-   float: left;
    padding: @padding-ColumnsEditor-Editing-Area__head-preset-label;
    color: @color-ColumnsEditor-Editing-Area__head-preset-label;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__head-preset-editor {
+   width: 100%;
    .controls-ItemsToolbar {
-      top: @spacing-ColumnsEditor-Editing-Area__Preset-item;
-      bottom: auto;
+      top: 0;
       background-color: transparent;
    }
-   .controls-editInPlace__editor {
-      padding: 0;
+   .controls-editInPlace .controls-editInPlace__editor {
+      padding-top: 0;
+   }
+   .controls-ListView__item.controls-editInPlace__editing {
+      background-color: transparent !important;
    }
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__Preset-item {
    height: @height-ColumnsEditor-Editing-Area-head-preset;
    padding-left: @padding-left-ColumnsEditor-Editing-Area__Preset-item;
-}
-
-.controls-Browser-ColumnsEditor-Editing-Area__Preset-item-title {
-   margin-top: @spacing-ColumnsEditor-Editing-Area__Preset-item;
 }
 
 .controls-Browser-ColumnsEditor-Editing-Area__Preset-input {
