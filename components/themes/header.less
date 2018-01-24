@@ -36,11 +36,15 @@
 }
 
 .ws-header-accent1-hover() {
-   color: @darkcyan-color;
+   body:not(.ws-is-mobile-platform) & {
+      color: @darkcyan-color;
+   }
 }
 
 .ws-header-accent2-hover() {
-   color: @primary-color;
+   body:not(.ws-is-mobile-platform) & {
+      color: @primary-color;
+   }
 }
 
 .ws-header_size_weight {
@@ -114,14 +118,14 @@
 
 .ws-toggleHeader {
    text-align: center;
-   & .controls-Button__wrapper:before {
+   & .controls-Button__content:before {
       display: inline-block;
       .ws-header-content-mixin(@toggle-header-before-content, @toggle-header-before-font, @toggle-header-before-color);
       width: @toggle-header-before-width;
       float: left;
    }
 
-   &.controls-ToggleButton__normal.controls-Button-size__default.controls-Checked__checked .controls-Button__wrapper:before {
+   &.controls-ToggleButton__normal.controls-Button_size-m.controls-Checked__checked .controls-Button__content:before {
       content: @toggle-header-checked-before-content;
    }
 
@@ -188,7 +192,7 @@
       }
    }
 
-   .controls-Button:not(.ws-disabled):not(.controls-Click__active):hover.ws-toggleHeader.controls-ToggleButton__normal.controls-Button-size__default {
+   .controls-Button:not(.ws-disabled):not(.controls-Click__active):hover.ws-toggleHeader.controls-ToggleButton__normal.controls-Button_size-m {
       border: none;
       background: none;
       font: @toggle-header-font;
@@ -196,7 +200,7 @@
    }
    // сейчас нельзя использовать абстрактную кнопку в новом шаблонизаторе из-за слешей в название компонента
    // поэтому временно усиливаю селекторыыы
-   .controls-Button:not(.ws-disabled).ws-toggleHeader.controls-ToggleButton__normal.controls-Button-size__default {
+   .controls-Button:not(.ws-disabled).ws-toggleHeader.controls-ToggleButton__normal.controls-Button_size-m {
       &, &.controls-Checked__checked {
          &:hover {
             border: none;
@@ -214,14 +218,16 @@
 
 .controls-Link {
    &.ws-linkHeader, &.ws-header, &.ws-bigSubheader, &.ws-subheader {
-      &.controls-Click__active, &.controls-Click__active .controls-Button__text {
-         text-decoration: @link-header-text-decoration;
-         color: @link-header-hover-color;
+      &:not(.ws-disabled) {
+         &:active, &:active .controls-Button__text {
+            text-decoration: @link-header-text-decoration;
+            color: @link-header-hover-color;
+         }
       }
    }
 }
 
-.controls-Button.ws-toggleHeader.controls-ToggleButton__normal.controls-Button-size__default {
+.controls-Button.ws-toggleHeader.controls-ToggleButton__normal.controls-Button_size-m {
    &, &.controls-Checked__checked:not(.ws-disabled) {
       &, &.controls-Click__active {
          border: none;

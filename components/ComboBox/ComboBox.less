@@ -1,7 +1,7 @@
 /*
    <div class="controls-ComboBox">
       <div class="controls-TextBox__wrapper">
-         <span class="controls-ComboBox__fieldNotEditable"> текст </span> //todo: зачем это, если можно просто вешать readonly на input?
+         <span class="controls-ComboBox__fieldNotEditable"> текст </span>
          <input class="controls-ComboBox__field" />
          <div class="controls-ComboBox__Arrow">▼</div>
       </div>
@@ -37,6 +37,7 @@
 .controls-ComboBox__Arrow {
    //inline-flex, align-items и height нужны для центрирования иконки
    .inline-flexbox();
+   .flex-shrink(0);
    .align-items(center);
    .icon-size-without-important(@icon-size_ComboBox-Arrow);
    cursor: pointer;
@@ -48,17 +49,16 @@
    color: @color_ComboBox-Arrow_active;
 }
 
-//TODO: по-хорошему этого блока не будет, поэтому пока не трогаю его
 .controls-ComboBox__fieldNotEditable {
    display: none;
-   line-height: @line-height_TextBox;
    white-space: nowrap;
    overflow: hidden;
-   &__placeholder {
-      color: @default-placeholder-color;
-   }
+   .align-self(center);
 }
-.controls-ComboBox__editable-false { //TODO: и вот этого
+.controls-ComboBox__fieldNotEditable__placeholder {
+   color: @color_ComboBox_placeholder;
+}
+.controls-ComboBox__editable-false {
    .controls-InputRender__field{
       display: none;
    }

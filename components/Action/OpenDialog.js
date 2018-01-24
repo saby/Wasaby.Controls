@@ -15,7 +15,7 @@ define('SBIS3.CONTROLS/Action/OpenDialog', [
     * @mixes SBIS3.CONTROLS/Action/Mixin/DialogMixin
     *
     * @public
-    * @author Красильников Андрей Сергеевич
+    * @author Красильников А.С.
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     * @ignoreOptions visible tooltip tabindex enabled className alwaysShowExtendedTooltip allowChangeEnable

@@ -38,6 +38,17 @@
   border: @default-border-width solid @default-border-color-second;
   background: @basic-block-bg-color;
 }
+.controls-Menu{
+  .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
+    &.icon-24, &.icon-medium {
+      top: round(28px * @multiplier);
+      left: round(-6px * @multiplier);
+    }
+    &.icon-16, &.icon-small {
+      top: round(32px * @multiplier);
+    }
+  }
+}
 body .controls-DropdownList__picker {
   .controls-DropdownList__itemCheckBox{
     top: round(17px * @multiplier);
@@ -62,6 +73,12 @@ body {
     }
   }
 
+  .controls-BreadCrumbs__crumb {
+    .icon-primary {
+      color: @bread-crumb-title-color !important;
+    }
+  }
+
   // стандарт должен соотносится с онлайном будет поправлено в новой тематизации
   // https://online.sbis.ru/opendoc.html?guid=36b0acbc-c8e4-4a57-9c80-7e0c43ed8dbd
   .controls-ItemsToolbar.controls-ItemsToolbar__edit.controls-ItemsToolbar__withEditActions {
@@ -79,6 +96,46 @@ body {
         background-size: round(84px * @multiplier) round(84px * @multiplier);
       }
     }
+  }
+}
+.controls-BreadCrumbs__crumb {
+  top: round(9px * @multiplier)
+}
+.ws-is-sbis-desktop {
+  .controls-BreadCrumbs__crumb {
+    top: -1px;
+  }
+}
+.controls-BreadCrumbs .controls-BreadCrumbs {
+  &__home, &__arrow {
+    font-size: round(32px * @multiplier)!important;
+    line-height: round(28px * @multiplier)!important;
+    width: round(50px * @multiplier);
+    top:  1px;
+  }
+}
+.ws-is-webkit, .ws-is-mobile-chrome-ios {
+  .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
+    top:  round(11px * @multiplier);
+  }
+}
+
+.controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
+  top:0 !important;
+}
+
+.ws-is-sbis-desktop {
+  .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
+    top: 0 !important;
+  }
+}
+
+/* КОСТЫЛЬ. Крошки накостылены через top'ы, margin'ы и тд. Срочно требуется переписать стили.
+   Выписана ошибка. https://online.sbis.ru/opendoc.html?guid=fa89f6fd-3e4a-4925-8de3-9f34c6b11729
+ */
+.ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
+  .controls-BreadCrumbs__crumb {
+    top: 0
   }
 }
 
@@ -259,6 +316,10 @@ body {
       }
     }
   }
+
+  .controls-ListView__item__selected .controls-DataGridView__td:first-child {
+    background-size: round(5px * @multiplier);
+  }
 }
 
 .controls-ListView {
@@ -286,7 +347,7 @@ body {
 .controls-IconButton.controls-TreeView__editArrow-container {
   @offset: round(10px * @multiplier);
   margin-top: calc(~"@{default-border-width} - @{offset}");
-  .icon-16 {
+  .icon-size {
     .icon-size(@icon-medium-size, @icon-font);
   }
 }
@@ -322,6 +383,17 @@ body {
   }
 }
 
+.controls-FieldLink__withPicker.controls-Picker__show {
+  background: @fieldLink-picker-show-color;
+  color: @fieldLink-picker-show-field-color;
+}
+
+// todo Костыль, возникший из-за собственного шрифта presto. При переходе на стандартный cbuc-icons можно удалить.
+.controls-FieldLink {
+  .controls-FieldLink__dropAllLinks, .controls-FieldLink__showSelector {
+    margin-right: 0;
+  }
+}
 //todo: дулаить это и переделать на еормальные коэфы
 .controls__filterButton {
   .controls__filterButton__filterLine {

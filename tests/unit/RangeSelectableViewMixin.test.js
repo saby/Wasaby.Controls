@@ -13,7 +13,7 @@ define([
          rangeControl;
 
       beforeEach(function () {
-         rangeControl = new RangeControlClass({rangeselect: false});
+         rangeControl = new RangeControlClass({selectionType: 'single'});
       });
 
       afterEach(function () {

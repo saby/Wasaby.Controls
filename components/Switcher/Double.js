@@ -29,7 +29,7 @@ define('SBIS3.CONTROLS/Switcher/Double',
     *
     * @demo SBIS3.Demo.MySwitcherDouble
     *
-    * @author Журавлев Максим Сергеевич
+    * @author Журавлев М.С.
     *
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers

@@ -1,15 +1,18 @@
 define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
    'SBIS3.CONTROLS/Date/RangeBigChoose',
-   'Core/core-instance'
-], function (DateRangeBigChoose, cInstance) {
+   'Core/core-instance',
+   'Core/deprecated',
+   'SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin'
+], function (DateRangeBigChoose, cInstance, deprecated, RangeSelectableViewMixin) {
    /**
     * Миксин, умеющий отображать выпадающий вниз блок содержащий контрол SBIS3.CONTROLS.DateRangeBigChoose.
     * Используется только совместно с SBIS3.CONTROLS.DateRangeMixin(SBIS3.CONTROLS.RangeMixin) и SBIS3.CONTROLS.PickerMixin.
     * Связывает данные текущего контрола и открываемого в выпадающем блоке.
     * @mixin SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin
     * @public
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     */
+   var selectionTypes = RangeSelectableViewMixin.selectionTypes;
 
    var DateRangeBigChoosePickerMixin = /**@lends SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin.prototype  */{
       $protected: {
@@ -19,7 +22,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
              * @variant range Режим выбора периода
              * @variant single Режим выбора одной даты
              */
-            selectionMode: 'range',
+            selectionType: selectionTypes.range,
 
             pickerConfig: {
                corner: 'tl',
@@ -31,8 +34,10 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
                },
                bodyBounds: true,
                locationStrategy: 'bodyBounds',
-               activateAfterShow: true
-            }
+               activateAfterShow: true,
+               _canScroll: true
+            },
+            quantum: {}
          },
 
          _chooserControl: null
@@ -52,7 +57,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
          showPicker: function () {
             if (this._chooserControl) {
                this._chooserControl.setRange(this.getStartValue(), this.getEndValue());
-               if (this._options.selectionMode === 'range') {
+               if (this._options.selectionType === 'range') {
                   this._chooserControl.applyYearState();
                }
                this._chooserControl.updateViewAfterShow();
@@ -92,7 +97,12 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
          _modifyOptions: function (parentFunc, opts) {
             opts = parentFunc.call(this, opts);
 
-            if (opts.selectionMode === 'single') {
+            if (opts.selectionMode) {
+               opts.selectionType = opts.selectionMode;
+               deprecated.showInfoLog('Опция "selectionMode" помечена как deprecated и будет удалена. Используйте опцию "selectionType"');
+            }
+
+            if (opts.selectionType === selectionTypes.single) {
                if (opts.startValue && !opts.endValue) {
                   opts.endValue = opts.startValue;
                } else if (opts.endValue && !opts.startValue) {
@@ -103,7 +113,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
          },
          setStartValue: function (parentFunc, value, silent) {
             var changed = parentFunc.call(this, value, silent);
-            if (this._options.selectionMode === 'single' && changed) {
+            if (this._options.selectionType === 'single' && changed) {
                this.setEndValue(value, silent);
             }
             return changed;
@@ -111,7 +121,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
 
          setEndValue: function (parentFunc, value, silent) {
             var changed = parentFunc.call(this, value, silent);
-            if (this._options.selectionMode === 'single' && changed) {
+            if (this._options.selectionType === 'single' && changed) {
                this.setStartValue(value, silent);
             }
             return changed;
@@ -124,12 +134,13 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
             element: element,
             startValue: this.getStartValue(),
             endValue: this.getEndValue(),
-            rangeselect: this._options.selectionMode === 'range'
+            selectionType: this._options.selectionType,
+            quantum: this._options.quantum
          }
       },
 
       _onChooserRangeChange: function (e, start, end) {
-         if (this._options.selectionMode === 'single') {
+         if (this._options.selectionType === 'single') {
             end = start;
          }
          this.setRange(start, end);

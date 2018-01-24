@@ -33,10 +33,9 @@
 }
 
 .controls-TextArea__placeholder {
-   .compatPlaceholder(@color_TextBox-placeholder);
+   .compatPlaceholder(@color_InputRender-placeholder);
    .align-items(baseline);
-   overflow-y: auto;
-   overflow-x: hidden;
+   overflow: hidden;
    padding: @padding_TextArea-field;
 }
 
@@ -47,11 +46,13 @@
    word-wrap: break-word;
 }
 
-.controls-TextBox__field:invalid + .controls-TextArea__placeholder {
+.controls-InputRender__field:invalid + .controls-TextArea__placeholder {
    .inline-flexbox();
 }
 
-.generate-height(controls-TextArea__field);
+.generate-height(controls-TextArea__field_size_default, @line-height_InputRender_default);
+.generate-height(controls-TextArea__field_size_m, @line-height_InputRender_m);
+.generate-height(controls-TextArea__field_size_l, @line-height_InputRender_l);
 
 /*
    СЛОЙ СОВМЕСТИМОСТИ
@@ -62,7 +63,7 @@
    left: 0;
 }
 .controls-TextArea__view_empty {
-   color: @color_TextBox-placeholder; //Т.к. до инициализации textarea скрыта, то плейсхолдер находится в div'e и он должен иметь корректный цвет
+   color: @color_InputRender-placeholder; //Т.к. до инициализации textarea скрыта, то плейсхолдер находится в div'e и он должен иметь корректный цвет
    .baseline-fix(); //Пустой блок увеличивает размеры родительского и ломает базовую линию
 }
 .controls-TextArea__field_init {

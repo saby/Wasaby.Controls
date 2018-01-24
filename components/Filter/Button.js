@@ -47,7 +47,7 @@ define('SBIS3.CONTROLS/Filter/Button',
         * Подробнее конфигурирование контрола описано в разделе <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/">Панель фильтров</a>.
         * @class SBIS3.CONTROLS/Filter/Button
         * @extends Lib/Control/CompoundControl/CompoundControl
-        * @author Герасимов Александр Максимович
+        * @author Герасимов А.М.
         *
         * @mixes SBIS3.CONTROLS/Mixins/FilterMixin
         * @mixes SBIS3.CONTROLS/Mixins/PickerMixin

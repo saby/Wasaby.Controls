@@ -49,7 +49,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                 *    <li>italic - курсив;</li>
                 *    <li>underLine - подчеркнутый;</li>
                 *    <li>strike - зачеркнутый;</li>
-                *    <li>mceBlockQuote - цитата;</li>
+                *    <li>blockquote - цитата;</li>
                 *    <li>align - выравнивание текста;</li>
                 *    <li>color - цвет текста;</li>
                 *    <li>list - вставить/Удалить список;</li>

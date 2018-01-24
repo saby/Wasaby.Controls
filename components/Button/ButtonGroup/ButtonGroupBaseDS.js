@@ -24,7 +24,7 @@ define('SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBaseDS', [
     *
     * @public
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var ButtonGroupBase = CompoundControl.extend([DSMixin, DataBindMixin], /** @lends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBaseDS.prototype */ {

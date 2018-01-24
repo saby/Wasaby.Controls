@@ -18,27 +18,28 @@
 @default-padding:              4px;
 @default-padding-small:        2px;
 @default-input-padding:        @default-padding;
-//textbox
-@height_TextBox_m:                24px;
-@height_TextBox_default:          @height_TextBox_m;
-@height_TextBox_l:                24px;
-@font-size_TextBox_m:             14px;
-@font-size_TextBox_default:       @font-size_TextBox_m;
-@font-size_TextBox_l:             18px;
-@line-height_TextBox:             22px;
-@padding_TextBox-container:       0 4px;
-@padding-bottom_TextBox-container_l:     0;
-@padding_TextBox-container_left:  0 0 0 4px;
-@border-radius_TextBox:           0px;
-@border-width_TextBox:            1px;
-@width_TextBox-InformationIcon:   16px;
-@height_TextBox-InformationIcon:  8px;
+//InputRender
+@height_InputRender_m:                       24px;
+@height_InputRender_default:                 @height_InputRender_m;
+@height_InputRender_l:                       24px;
+@font-size_InputRender_m:                    14px;
+@font-size_InputRender_default:              @font-size_InputRender_m;
+@font-size_InputRender_l:                    18px;
+@padding_InputRender-container:              0 4px;
+@padding-bottom_InputRender-container_l:     0;
+@padding_InputRender-container_left:         0 0 0 4px;
+@border-width_InputRender:                   1px;
+@width_InputRender-InformationIcon:          16px;
+@height_InputRender-InformationIcon:         8px;
 //textarea
 @min-height_TextArea:             18px;
 @padding_TextArea-container:      2px 0 2px 4px;
 @padding_TextArea-field:          0 4px 0 0;
+@line-height_InputRender_m:       @default-line-height;
+@line-height_InputRender_l:       23px;
+@line-height_InputRender_default: @line-height_InputRender_m;
 //NumberTextBox
-@font-size_NumberTextBox-mirror:   @font-size_TextBox_m;
+@font-size_NumberTextBox-mirror:   @font-size_InputRender_m;
 //ComboBox
 @icon-size_ComboBox-Arrow:                      @icon-size_default;
 @border-width_ComboBox-picker:                  @default-border-width;
@@ -53,8 +54,6 @@
 //suggest-text-box
 @suggest-text-box-icon-size:                @default-icon-size;
 @suggest-text-box-icon-cross-padding:       0 0 0 @default-padding;
-//suggest-text-box
-@fieldLink-link-cross-size:       @default-icon-size;
 //search-form
 @search-border-radius:            10px;
 @padding_SearchForm:              0 4px 0 12px;
@@ -67,26 +66,88 @@
 @top_searchForm_picker_closeButton:8px;
 @width_browser_search:             300px;
 @width_browser_search_small:       184px;
-//fieldLink
-@fieldLink-icon-size:             @default-icon-size;
-@fieldLink-picker-icon-size:      @default-icon-size;
-@fieldLink-showAll-shadow-width:  20px;
-@fieldLink-linkItem-line-height:  @default-line-height;
-@padding_FieldLink_item_in_picker:0;
-@max-height_FieldLink-beforeFieldWrapper: @default-line-height;
+//FieldLink
+@icon-size_FieldLink-button:                    @default-icon-size;
+@border-width_FieldLink-picker:                 @default-border-width;
+@spacing_FieldLink-showAllLinks_enabled:        @default-padding;
+@width_FieldLink-item-cross:                    20px;
+@font-size_FieldLink-item-caption_normal:       @default-text-size;
+@font-size_FieldLink-item-caption_big:          @large-text-size;
+@max-height_FieldLink-picker:                   500px;
+@min-height_FieldLink-picker:                   16px;
+@spacing_FieldLink-linkContainer:               4px;
+@spacing_FieldLink-item_inField:                @default-padding;
+@spacing_FieldLink-dropAllLinks:                @default-padding;
+@fieldLink-showAll-shadow-width:                20px;
+
+//FieldLink_Link
+@font-size_FieldLink-Link:                      @default-text-size;
 
 // MonthView
-@width_MontView:                  @calendar-width;
+@width_MontView:                  281px;
 @spacing_MonthView-item:          @calendar-day-border-spacing;
 @font-size_MontView-weekDayHeader:12px;
-@height_MonthView-item:           @calendar-day-table-cell-height;
+@height_MonthView-item:           39px;
+@font-size_MonthView-item:        @large-text-size;
+@height_DateRangeBigChoose-dates-months-button: 30px;
+@border-radius_MonthView-item-today: 50%;
+@width__MonthView-item-selected-startEnd-hover: 3px;
+@width_DateRangeBigChoose-range-selected-startEnd-edgeBorder: 3px;
+@border-width_DateRangeBigChoose-range-selected-startEnd:     1px;
+@size_DateRangeBigChoose__stateButton_icon:                   16px;
+@size_DateRangeBigChoose__homeBtn_icon:                       16px;
+// DateRangeBigChoose
+@width_DateRangeBigChoose:                               364px;
+@padding_DateRangeBigChoose-header:                      10px 0 10px 10px;
+@border-width_DateRangeBigChoose:                        1px;
+@padding-left_DateRangeBigChoose-header-period:          12px;
+@margin_DateRangeBigChoose-header-applyButton:      12px;
+@width_DateRangeBigChoose-header-dash:                   2px;
+@margin_DateRangeBigChoose-header-dash:                  0 3px;
+@width_DateRangeBigChoose-header-closeButton:            40px;
+@height_DateRangeBigChoose-years:                        44px;
+@border-width-color_DateRangeBigChoose:                  1px;
+@width_DateRangeBigChoose-years-leftRight:               33px;
+@height_DateRangeBigChoose-years-rangeButton:            30px;
+@font-size_DateRangeBigChoose-years-rangeButton:         14px;
+@height_DateRangeBigChoose-body:                         446px;
+@height_DateRangeBigChoose-MonthRangePickerItem-monthWrapper:     100px;
+@padding_DateRangeBigChoose-MonthRangePickerItem-monthWrapper:    0 4px;
+@border-width_DateRangeBigChoose-MonthRangePickerItem-monthWrapper:1px;
+@width_DateRangeBigChoose-MonthRangePickerItem-monthWrapper:      99px;
+@height_DateRangeBigChoose-MonthRangePickerItem-month-date:       13px;
+@font-size_DateRangeBigChoose-MonthRangePickerItem-month-date:    8px;
+@height_DateRangeBigChoose-MonthRangePickerItem-month-title:      auto;
+@font-size_DateRangeBigChoose-MonthRangePickerItem-month-title:   14px;
+@height_DateRangeBigChoose_monthPicker-header:                    32px;
+@font-size_DateRangeBigChoose_monthPicker-header:                 15px;
+@border-top-width_DateRangeBigChoose_monthPicker-header:          4px;
+@border-bottom-width_DateRangeBigChoose_monthPicker-header:       4px;
+@font-size_DateRangeBigChoose_quartersPanel:                      14px;
+@border-width_DateRangeBigChoose_quartersPanel:                   1px;
+@border-width_DateRangeBigChoose_quartersPanel-right:             3px;
+@border-width_DateRangeBigChoose_halfYearsPanel:                  2px;
 
+@width_DateRangeBigChoose-dates-header-year:                 82px;
+@size_DateRangeBigChoose-DateRangePickerItem-months-button:  14px;
+@padding-left_DateRangeBigChoose-dates-months-button:        11px;
+@font-size_DateRangeBigChoose-dates-months-nextYearButton:   15px;
+@height_DateRangeBigChoose-DateRangePickerItem-monthsWithDates-title:      36px;
+@font-size_DateRangeBigChoose-DateRangePickerItem-monthsWithDates-title:   18px;
+@height_DateRangeChoose-dates-header:                    44px;
+@font-size_DateRangeBigChoose-dates-header:              15px;
+@padding-left_DateRangeBigChoose-dates-header-year:      11px;
+@font-weight_DateRangeBigChoose-dates-header-year:       bold;
+@height_DateRangeBigChoose-dates-months-nextYearButton:  auto;
+@width_DateRangeBigChoose-item-selectedStart-before:     1px;
+@margin_DateRangeBigChoose-picker:                       -13px 0 0 -39px;
 //time-header:
 @time-header-icon-size:           @default-icon-size;
 //treeview
 @tree-view-folder-text-size:      16px;
 //button
 @height_Button_l:             @default-height-big;
+@line-height_Button_l:        @default-height;
 @border-radius_Button_l:      24px;
 @font-size_Button_l:          18px;
 @search-border-radius:                                                                                                  10px;
@@ -108,11 +169,12 @@
 @miss-spell-padding:              8px;
 //PrintDialog
 @printDialog-button-margin-top:   8px;
-@printDialog-activate-right:      40px;
+@printDialog-activate-right:      49px;
 //operationsMark
 @controls-OperationsMark-separator-line-height: 30px;
 //engine-browser
-@browser-search-margin:           10px 0 10px 12px;
+@browser-search-margin:           10px 0px 10px 12px;
+@margin-left_Browser_tableRow:    12px;
 @browser-top-template-padding:    10px 8px;
 @padding-left_Browser-backButton: 0px;
 //DropDownList
@@ -120,10 +182,13 @@
 @padding_DropDownList_item_child_text: 16px;
 @font-size_DropDownList:               @default-text-size;
 @top_DropdownList_picker_marker:       13px;
+//Marker
+@background-size_Marker:                                  3px;
 //ListView
 @background-size_ListView_ScrollIndicator: auto;
+@padding-ListView-serviceFooter:                          @controls-view-padding-DEFAULT;
 //ListView_groupBy
-@height_ListView-GroupBy:                                 18px;
+@height_ListView-GroupBy:                                 24px;
 @padding_ListView-GroupBy_separator:                      0 12px;
 @margin_ListView-GroupBy_separatorCollapse:               0 6px 0 0;
 @font-size_ListView-GroupBy_text:                         @small-text-size;
@@ -131,10 +196,20 @@
 //DataGridView
 @font-size_DataGridView-headerIcon:                       @data-grid-header-cell-font-size;
 @font-size_DataGridView-results:                          @default-text-size;
+@right_DataGridView-toolbar_markerRight:                  @background-size_Marker;
 //TreeDataGridView
 @font-size_TreeDataGridView-folderTitle:                  inherit;
-
-//header
+@width_TreeDataGridView-expand:                           16px;
+@margin_TreeDataGridView-expand:                          0 6px 0 4px;
+@height_TreeDataGridView-expand:                          20px;
+@width-TreeDataGridView-levelPadding:                     26px;
+@font-size_TreeDataGridView-expand:                       @icon-small-size;
+@top_TreeDataGridView-editArrow:                          2px;
+@font-size_TreeDataGridView-editArrow:                    16px;
+@margin_TreeDataGridView-editArrow:                       0;
+@width_TreeDataGridView-copyArrow:                        19px;
+@right_TreeDataGridView-copyArrow:                        -1px;
+   //header
 @header-h2-text-size:             20px;
 @header-h3-text-size:             18px;
 
@@ -148,6 +223,24 @@
 
 @back-arrow-width-h6:             9px;
 @back-arrow-height-h6:            11px;
+//MenuButton
+@menu-button-header-font-size:    @font-size_Popup;
+
+@bread-crumb-home-font-size:      @icon-size_default;
+
+//ToggleButton_square
+@border-width_ToggleButton-square:    1px;
+@height_ToggleButton-square:          32px;
+@width_ToggleButton-square:           @height_ToggleButton-square;
+@line-height_ToggleButton-square:     @height_ToggleButton-square;
+@border-radius_ToggleButton-square:   2px;
+@left_ToggleButton-square-icon:       3px;
+@margin-top_ToggleButton-square-icon: -12px;
+@background-color_ToggleButton-square:#F3F3F3;
+@border-color_ToggleButton-square:    #587AB0;
+
+//LongOperationsPopup
+@top_LongOperationsPopup-closeButton:      8px;
 
 
 //VDOM controls
@@ -158,3 +251,14 @@
 
 //inputRender
 @input-line-height: @default-line-height;
+
+//Suggest
+@width_Suggest-loader:                          16px;
+@spacing_Suggest-loader:                        3px;
+//CloseButton
+@border-width_CloseButton:               1px 0 1px 1px;
+@border-radius_CloseButton:              2px 0 0 2px;
+@width_CloseButton:                      36px - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
+@height_CloseButton:                     28px - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
+@font-size_CloseButton:                  23px;
+

@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/Radio/Group/RadioGroupBase',
     * @mixes SBIS3.CONTROLS/Mixins/Selectable
     * @extends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var buildTplArgs = function(cfg) {

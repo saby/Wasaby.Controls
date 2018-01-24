@@ -28,5 +28,17 @@
 
   &:last-child {
     border-right: 1px solid white;
+    // Будет удалено в 3.18: https://online.sbis.ru/opendoc.html?guid=dc945545-09fa-4fa6-8dbd-a25673c2832d
+    box-shadow: 1px 0 #fff;
+  }
+}
+
+// Чтобы при ховере оставался справа border
+// Будет удалено в 3.18: https://online.sbis.ru/opendoc.html?guid=dc945545-09fa-4fa6-8dbd-a25673c2832d
+.controls-MasterDetail__masterContainer .controls-ListView__hoveredItem td {
+  border: none;
+
+  &:last-child {
+    box-shadow: @shadow-params;
   }
 }

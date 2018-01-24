@@ -76,7 +76,6 @@
 
    </style>
    <script type="text/javascript" id="ws-include-css"></script>
-   <link rel="stylesheet" type="text/css" href="sprites.css"/>
 </head>
 <body class="view-main">
 <div id="content">
@@ -102,9 +101,14 @@
                </li>
                <li>
                   <div id="Windows"></div>
-               </li>               <li>
+               </li>
+               <li>
                   <div id="Toggles"></div>
-               </li>            </ul>
+               </li>
+               <li>
+                  <div id="ButtonsVdom"></div>
+               </li>
+            </ul>
             <h3>Просмотр контролов</h3>
             <ul>
                <li>
@@ -329,6 +333,12 @@
                  caption: 'Toggles',
                  href: '/pages/demo.html?cname=Toggles'
              });
+            new r({
+               element: "ButtonsVdom",
+               caption: 'ButtonsVdom',
+               href: '/pages/demo.html?cname=ButtonsVdom'
+
+            });
             new r({
                element: "Inputs",
                caption: 'Inputs',

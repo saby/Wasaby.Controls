@@ -18,7 +18,7 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
      * Стандарт описан <a href='http://axure.tensor.ru/standarts/v7/#p=контекстное_меню__версия_1_'>здесь</a>.
      *
      * @class SBIS3.CONTROLS/Menu/SbisMenu
-     * @author Крайнов Дмитрий Олегович
+     * @author Крайнов Д.О.
      * @extends SBIS3.CONTROLS/Menu/ContextMenu
      * @control
      * @public
@@ -302,7 +302,11 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
         },
 
         processHistory: function (self) {
-            var processedItems = new RecordSet({adapter: new SbisAdapter(), idProperty: 'historyId'}),
+            var processedItems = new RecordSet({
+                    adapter: new SbisAdapter(),
+                    idProperty: 'historyId',
+                    model: self._oldItems.getModel()
+                }),
                 needToDrawSeparate = false,
                 itemCount = 0,
                 indexLastHistoryItem = null,
@@ -543,6 +547,7 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
             _recent: null,
             _oldItems: null,
             _filteredFrequent: null,
+            _needToRedrawHistory: false,
             _count: 0
         },
 
@@ -576,6 +581,10 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
                 });
             } else {
                 if (this._historyDeffered.isReady()) {
+                    if(this._needToRedrawHistory){
+                        _private.prepareHistory(self);
+                        this._needToRedrawHistory = false;
+                    }
                     SbisMenu.superclass.show.apply(self, arguments);
                 }
             }
@@ -606,7 +615,7 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
                     });
 
                     _private.addToRecent(this, origId, newItem);
-                    _private.prepareHistory(this);
+                    this._needToRedrawHistory = true;
                 }
                 // стрелять нужно старым id
                 _private.addToHistory(this, origId);

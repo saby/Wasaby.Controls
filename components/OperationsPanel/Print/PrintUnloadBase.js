@@ -23,7 +23,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
     * Базовый контрол для работы с ListView. Подготовливает данные для печати и выгрузки
     * @class SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase
     * @extends SBIS3.CONTROLS/Menu/MenuLink
-    * @author Сухоручкин Андрей Сергеевич
+    * @author Сухоручкин А.С.
     * @control
     * @public
     */

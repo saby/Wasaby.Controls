@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/Mixins/hierarchyMixin', [
    /**
     * Миксин, добавляющий только работу с иерархией и методы для отображения.
     * @mixin SBIS3.CONTROLS/Mixins/hierarchyMixin
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @public
     */
    var hierarchyMixin = /** @lends SBIS3.CONTROLS/Mixins/hierarchyMixin.prototype */{

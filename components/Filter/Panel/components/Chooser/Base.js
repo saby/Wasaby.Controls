@@ -29,7 +29,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base', [
      *
      * @class SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base
      * @extends Lib/Control/CompoundControl/CompoundControl
-     * @author Сухоручкин Андрей Сергеевич
+     * @author Сухоручкин А.С.
      *
      * @mixes SBIS3.CONTROLS/Filter/Panel/resources/IFilterItem
      */

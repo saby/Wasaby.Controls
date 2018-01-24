@@ -1,4 +1,4 @@
-define('js!Controls/Popup/Manager/Popup',
+define('Controls/Popup/Manager/Popup',
    [
       'Core/Control',
       'tmpl!Controls/Popup/Manager/Popup',
@@ -20,11 +20,6 @@ define('js!Controls/Popup/Manager/Popup',
           */
 
          /**
-          * @name Controls/Popup/Manager/Popup#autoHide
-          * @cfg {Boolean} закрывать попап в случае ухода фокуса
-          */
-
-         /**
           * @name Controls/Popup/Manager/Popup#template
           * @cfg {Content} Шаблон всплывающего окна
           */
@@ -32,11 +27,6 @@ define('js!Controls/Popup/Manager/Popup',
          /**
           * @name Controls/Popup/Manager/Popup#componentOptions
           * @cfg {Object} Опции компонента
-          */
-
-         /**
-          * @name Controls/Popup/Manager/Popup#opener
-          * @cfg {Object} Опенер
           */
 
          _controlName: 'Controls/Popup/Manager/Popup',
@@ -48,7 +38,18 @@ define('js!Controls/Popup/Manager/Popup',
 
          _afterMount: function () {
             var container = this._container;
-            this._notify('popupCreated', this._options.id, container.offsetWidth, container.offsetHeight);
+            this._width = container.offsetWidth;
+            this._height = container.offsetHeight;
+            this._notify('popupCreated', [this._options.id, this._width, this._height]);
+         },
+
+         _afterUpdate: function () {
+            var container = this._container;
+            if (container.offsetWidth !== this._width || container.offsetHeight !== this._height) {
+               this._width = container.offsetWidth;
+               this._height = container.offsetHeight;
+               this._notify('popupUpdated', [this._options.id, this._width, this._height]);
+            }
          },
 
          /**
@@ -56,7 +57,17 @@ define('js!Controls/Popup/Manager/Popup',
           * @function Controls/Popup/Manager/Popup#_close
           */
          _close: function () {
-            this._notify('closePopup', this._options.id);
+            this._notify('closePopup', [this._options.id]);
+         },
+
+         /**
+          * Обработчик установки фокуса.
+          * @function Controls/Popup/Manager/Popup#_focusIn
+          * @param event
+          * @param focusedControl
+          */
+         _focusIn: function (event, focusedControl) {
+            this._notify('popupFocusIn', [this._options.id, focusedControl]);
          },
 
          /**
@@ -66,15 +77,15 @@ define('js!Controls/Popup/Manager/Popup',
           * @param focusedControl
           */
          _focusOut: function (event, focusedControl) {
-            this._notify('popupFocusOut', this._options.id, focusedControl);
+            this._notify('popupFocusOut', [this._options.id, focusedControl]);
          },
 
          /**
           * Обработчик нажатия на клавиши.
-          * @function Controls/Popup/Manager/Popup#_keyPressed
+          * @function Controls/Popup/Manager/Popup#_keyUp
           * @param event
           */
-         _keyPressed: function (event) {
+         _keyUp: function (event) {
             if (event.nativeEvent.keyCode === CoreConstants.key.esc) {
                this._close();
             }
@@ -85,7 +96,7 @@ define('js!Controls/Popup/Manager/Popup',
           * @function Controls/Popup/Manager/Popup#_sendResult
           */
          _sendResult: function (event, result) {
-            this._notify('result', this._options.id, result);
+            this._notify('result', [this._options.id, result]);
          }
       });
 

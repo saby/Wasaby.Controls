@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/Utils/ScrollWatcher', [
    /**
     * @class SBIS3.CONTROLS/Utils/ScrollWatcher
     * @extends SBIS3.CORE.Abstract
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @public
     */
    var ScrollWatcher = cAbstract.extend(/** @lends SBIS3.CONTROLS/Utils/ScrollWatcher.prototype */{

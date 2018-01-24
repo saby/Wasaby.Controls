@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/Validators', [
    /**
     * SBIS3.CONTROLS/Date/RangeBigChoose/resources/Validators
     * @class SBIS3.CONTROLS/Date/RangeBigChoose/resources/Validators
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     */
    return /** @lends SBIS3.CONTROLS/Date/RangeBigChoose/resources/Validators.prototype */{
       //TODO: Доработать и вынести в общие валидаторы

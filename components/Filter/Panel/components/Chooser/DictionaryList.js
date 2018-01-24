@@ -4,11 +4,12 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
     'Core/core-clone',
     'Core/core-merge',
     'Core/core-instance',
+    'WS.Data/Entity/Record',
     'WS.Data/Collection/RecordSet',
     'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList/resources/FilterPanelChooserDictionaryFooter',
     'SBIS3.CONTROLS/Action/SelectorAction',
     'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList/FilterPanelChooser.DictionaryList'
-], function(FilterPanelChooserList, CommandDispatcher, coreClone, coreMerge, cInstance, RecordSet, footerTpl, SelectorAction) {
+], function(FilterPanelChooserList, CommandDispatcher, coreClone, coreMerge, cInstance, Record, RecordSet, footerTpl, SelectorAction) {
 
     'use strict';
 
@@ -49,7 +50,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
      *
      * @class SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList
      * @extends SBIS3.CONTROLS/Filter/Panel/components/Chooser/List
-     * @author Сухоручкин Андрей Сергеевич
+     * @author Сухоручкин А.С.
      * @public
      *
      * @demo SBIS3.CONTROLS.Demo.MyFilterView
@@ -108,7 +109,6 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
         _showDictionary: function(meta) {
             meta = coreMerge(coreClone(this._options.dictionaryOptions), meta || {});
             meta.multiselect = true;
-            meta.selectedItems = this._getListView().getSelectedItems();
             this._getSelectorAction().execute(meta);
         },
 
@@ -146,22 +146,59 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
             }
         },
 
+       _removeItemsFromDefault: function() {
+          var
+             id, self = this,
+             keysForRemove = [],
+             items = this._getListView().getItems(),
+             idProperty = items.getIdProperty();
+
+          items.each(function(item) {
+             id = item.get(idProperty);
+             if (self._options.value.indexOf(id) === -1) {
+                keysForRemove.push(id);
+             }
+          });
+          keysForRemove.forEach(function(key) {
+             items.remove(items.getRecordById(key));
+          }, this);
+       },
+
         _toggleAllButton: function() {
             FilterPanelChooserDictionary.superclass._toggleAllButton.apply(this, arguments);
             this._getAllButton().setCaption('Ещё' + ' ' + (this._getListView().getItems().getCount() - 3));
         },
 
+        _createRecordWithAdapter: function(sourceRecord, adapter) {
+            var result = new Record({
+               adapter: adapter
+            });
+            sourceRecord.each(function(field, value) {
+               result.set(field, value);
+            });
+            return result;
+        },
+
         _onExecutedHandler: function(event, meta, result) {
             var
                 listView = this._getListView(),
-                items = listView.getItems();
+                items = listView.getItems(),
+                idProperty = listView._options.idProperty;
             if (cInstance.instanceOfModule(result, 'WS.Data/Collection/List')) {
-                items.clear();
+                items.setEventRaising(false, true);
+                //Удалим из набора все элементы из набора дефолтных элементов
+                this._removeItemsFromDefault();
                 if (result.getCount()) {
-                   items.assign(result);
+                    result.forEach(function(item) {
+                        if (!items.getRecordById(item.get(idProperty))) {
+                            items.add(this._createRecordWithAdapter(item, items.getAdapter()));
+                        }
+                    }, this);
                 }
+                items.setEventRaising(true, true);
                 listView.setSelectedItemsAll();
                 this._updateValue();
+                //Дозаполним набор отображаемых элементов из набора дефолтных
                 this._addItemsFromDefault();
                 this._toggleFullState(false);
             }

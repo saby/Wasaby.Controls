@@ -1,9 +1,9 @@
-define('js!Controls/List/resources/utils/Search',
+define('Controls/List/resources/utils/Search',
    [
       'Core/core-extend',
       'Core/Deferred',
-      'js!Controls/List/resources/utils/DataSourceUtil',
-      'js!Controls/List/Controllers/PageNavigation'
+      'Controls/List/resources/utils/DataSourceUtil',
+      'Controls/List/Controllers/PageNavigation'
    ],
    function (extend, Deferred, DataSourceUtil, PageNavigation) {
       
@@ -31,7 +31,7 @@ define('js!Controls/List/resources/utils/Search',
             };
             
             if (self._navigation) {
-               var navigParams = self._navigation.prepareQueryParams(null, 'down');
+               var navigParams = self._navigation.prepareQueryParams(null);
                queryParams.limit = navigParams.limit;
                queryParams.offset = navigParams.offset;
             }
@@ -161,5 +161,6 @@ define('js!Controls/List/resources/utils/Search',
          
       });
    
+      Search._private = _private;
       return Search;
    });

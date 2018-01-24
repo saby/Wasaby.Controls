@@ -22,7 +22,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
     *    <li>Подготовить либо данные, либо просто фильтр для списочного метода и отправить на сервер, где будет происходить обработка данных и их преобразование в Excel или PDF. В данном случае будет использован сервис file-transfer.</li>
     * </ul>
     * @class SBIS3.CONTROLS/Utils/DataProcessor
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @public
     */
    return cExtend({},/** @lends SBIS3.CONTROLS/Utils/DataProcessor.prototype */ {

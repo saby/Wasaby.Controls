@@ -8,7 +8,7 @@ define('SBIS3.CONTROLS/TitleManager', [
     * он устанавливает предыдущий заголовок из стека.
     * @class SBIS3.CONTROLS/TitleManager
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @singleton
     */
    var TitleManager = cAbstract.extend(/**@lends SBIS3.CONTROLS/TitleManager.prototype*/{

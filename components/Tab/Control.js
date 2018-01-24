@@ -21,7 +21,7 @@ define('SBIS3.CONTROLS/Tab/Control', [
     * @mixes Lib/Mixins/HasItemsMixin
     *
     * @control
-    * @author Красильников Андрей Сергеевич
+    * @author Красильников А.С.
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyTabControl
     */

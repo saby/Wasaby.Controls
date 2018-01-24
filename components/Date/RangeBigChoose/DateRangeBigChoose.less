@@ -1,580 +1,240 @@
 @import "resources/MonthRangePicker";
 @import "resources/DateRangePicker";
 
-// В новой спецификации кнопки на панелях выбора кварталов и полугодий имеют на много более простые стили.
-// Эти миксины будут удалены или сильно упрощены.
-.buttonbar-selected-button () {
-   background-color: @date-range-big-choose-bg-selected-color;
-   border: 1px solid @date-range-big-choose-border-selected-color;
-   &:hover {
-      border-left-color: @date-range-big-choose-border-hovered-color;
-      border-right-color: @date-range-big-choose-border-hovered-color;
-   }
-}
-
-.buttonbar-selected-boundary-button () {
-   color: @date-range-big-choose-boundary-selected-color;
-   background-color: @date-range-big-choose-bg-boundary-selected-color;
-}
-
-.range-button-bar-mixin () {
-   .controls-ButtonBase {
-      cursor: pointer;
-      .border-radius(0);
-      &.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
-         .buttonbar-selected-button();
-         &.controls-RangeSelectable__item-selectedStart,
-         &.controls-RangeSelectable__item-selectedEnd {
-            .buttonbar-selected-boundary-button();
-         }
-      }
-   }
-
-   .controls-Button__text {
-      width: 100%;
-   }
-
-   .controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
-      .controls-ButtonBase {
-         .buttonbar-selected-button();
-      }
-
-      &.controls-RangeSelectable__item-selectedStart,
-      &.controls-RangeSelectable__item-selectedEnd {
-         .controls-ButtonBase{
-            .buttonbar-selected-boundary-button();
-         }
-      }
-   }
-}
-
-.range-vertical-button-bar-mixin() {
-   .range-button-bar-mixin();
-   .controls-ButtonBase {
-      border: 1px solid @date-range-big-choose-border-color;
-      border-bottom: none;
-      .controls-Button__text {
-         margin: 0;
-         overflow: visible;
-      }
-   }
-   :first-child {
-      .controls-ButtonBase {
-         border-top: none;
-      }
-   }
-   .controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
-      .controls-ButtonBase {
-         border-bottom: none;
-      }
-   }
-}
-
 .controls-DateRangeBigChoose {
-
-   background-color: @date-range-big-bg;
-   border: 1px solid @date-range-big-choose-border-color;
-   border-radius: 0;
-   width: @date-range-big-choose-width;
-   font-family: @date-range-big-choose-font-family;
+   background-color: @background-color_DateRangeBigChoose;
+   width: @width_DateRangeBigChoose;
+   border: 1px solid @border-color_DateRangeBigChoose;
    .box-shadow(@float-area-shadow);
-   height: auto;
-   position: relative;
-
-   .controls-DateRangeBigChoose__years-prevYearBtn,
-   .controls-DateRangeBigChoose__years-nextYearBtn {
-      //margin: 0 auto;
-      //display: block;
-      height: @date-range-big-choose-years-btn;
-   }
-   // TODO: переделать вчесте с новым дизайном MonthView
-   &.controls-DateRangeBigChoose__selectionProcessing {
-      .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView {
-         .controls-DateRangeBigChoose-MonthView.controls-MonthView {
-            .controls-MonthView__dayTable {
-               td {
-                  cursor: default;
-               }
-               &:hover {
-                  border-color: transparent;
-               }
-            }
-         }
-      }
-   }
 }
 
+.controls-DateRangeBigChoose__picker {
+   margin: @margin_DateRangeBigChoose-picker;
+}
+
+// Header
 .controls-DateRangeBigChoose__header {
-   background-color: @date-range-big-header-bg;
-   border-bottom: 1px solid @date-range-big-choose-border-color;
-   padding: @date-range-big-choose-header-padding;
-
-   // Нестандартный внешний вид у поля ввода, после редизайна будет стандартным
-   .controls-DateBox {
-      border-style: solid;
-      border-width: 1px;
-      border-color: @date-range-big-choose-header-date-box-border-color;
-      border-radius: 3px;
-      font-size: @date-range-big-choose-header-date-box-font-size;
-      &:hover,
-      &.ws-has-focus {
-         border-color: @date-range-big-choose-header-date-box-border-selected-color;
-      }
-   }
-}
-// Нестандартный размер, в новой спецификации будет стандартным и эти стили будут удалены
-.controls-DateRangeBigChoose__homeBtn.controls-IconButton.controls-IconButton__round-border {
-   height: @date-range-big-choose-header-home-button-size;
-   width: @date-range-big-choose-header-home-button-size;
-   margin: @date-range-big-choose-header-home-button-margin;
-   border-radius: @date-range-big-choose-header-home-button-size/2;
-   line-height: @date-range-big-choose-header-home-button-line-height !important;
-   .controls-Button__icon.icon-16 {
-      font-size: @date-range-big-choose-header-home-button-font-size !important;
-   }
-}
-
-.controls-DateRangeBigChoose__header-date-pickers {
-   float: right;
-   margin-right: @date-range-big-choose-header-date-pickers-margin-right;
-}
-.controls-DateRangeBigChoose__ApplyButton {
-   margin-left: @date-range-big-choose-header-apply-button-margin-left;
-   float: right;
-   // Не стандартный размер иконок. После редизайна будет стандартным
-   &.controls-IconButton.controls-IconButton__round-border {
-      height: @date-range-big-choose-header-apply-button-size;
-      width: @date-range-big-choose-header-apply-button-size;
-      border-radius: @border-radius_DateRange_applyButton; //14px;
-      line-height: @date-range-big-choose-header-apply-button-line-height !important;
-   }
-   .controls-Button__icon.icon-16 {
-      font-size: @date-range-big-choose-header-apply-button-font-size !important;
-      width: @date-range-big-choose-header-apply-button-font-size;
-   }
-}
-.controls-DateRangeBigChoose__header-rangeDash {
-   float: right;
-   width: @date-range-big-choose-header-range-dash-width;
-   border-bottom: 1px solid black;
-   margin: @date-range-big-choose-header-range-dash-margin;
-}
-.controls-DateRangeBigChoose__datePickerEnd,
-.controls-DateRangeBigChoose__datePickerStart {
-   float: right;
-   margin-top: @date-range-big-choose-header-date-picker-margin-top;
-   //height: @date-range-big-choose-header-date-picker-height;
-}
-
-.controls-DateRangeBigChoose__datePickerEnd-wrapper {
-   float: right;
-}
-
-.controls-DateRangeBigChoose__left {
-   position: absolute;
-   left: 0;
-}
-
-.controls-DateRangeBigChoose__center {
-   position: absolute;
-   left: @date-range-big-choose-left-right-width;
-   right: @date-range-big-choose-left-right-width;
-}
-
-// В новом дизайне нет выделения года, будет выпилено
-.controls-DateRangeBigChoose__yearHovered {
-   .controls-DateRangeBigChoose__center {
-      background-color: @date-range-big-choose-bg-hovered-color;
-   }
-   .controls-DateRangeBigChoose__years {
-      .controls-DateRangeBigChoose__left {
-         border-right: 1px solid @date-range-big-choose-border-color;
-      }
-      .controls-DateRangeBigChoose__right {
-         border-left: 1px solid @date-range-big-choose-border-color;
-      }
-   }
-}
-
-.controls-DateRangeBigChoose__right {
-   position: absolute;
-   right: 0;
-}
-
-.controls-DateRangeBigChoose__years {
-   border-bottom: 1px solid @date-range-big-choose-border-color;
-   height: @date-range-big-choose-years-height;
-   vertical-align: middle;
+   background-color: @background-color__DateRangeBigChoose-header;
+   border-bottom: @border-width_DateRangeBigChoose solid @border-color_DateRangeBigChoose;
+   padding: @padding_DateRangeBigChoose-header;
    .box-sizing(border-box);
-
-   .controls-DateRangeBigChoose__left,
-   .controls-DateRangeBigChoose__center,
-   .controls-DateRangeBigChoose__right {
-      padding: @date-range-big-choose-years-panel-top-padding 0 @date-range-big-choose-years-panel-bottom-padding 0;
-      .box-sizing(border-box);
+   .flexbox();
+   .align-items(center);
+}
+//todo
+.controls-DateRangeBigChoose__stateButton {
+   cursor: pointer;
+   .icon-size {
+      .icon-size(@size_DateRangeBigChoose__stateButton_icon);
+      color: @color_DateRangeBigChoose__stateButton_icon;
    }
-   .controls-DateRangeBigChoose__left,
-   .controls-DateRangeBigChoose__right {
-      width: @date-range-big-choose-left-right-width;
-      text-align: center;
-      height: @date-range-big-choose-years-height;
-      vertical-align: middle;
-      line-height: ~"calc("@date-range-big-choose-years-height~" - "@date-range-big-choose-years-panel-top-padding~" - "@date-range-big-choose-years-panel-bottom-padding~" - 1px)";
-   }
-   .controls-DateRangeBigChoose__left {
-      border-right: 1px solid transparent;
-   }
-   .controls-DateRangeBigChoose__right {
-      border-left: 1px solid transparent;
+   &:hover {
+      .icon-size {
+         color: @color_DateRangeBigChoose__stateButton_icon_hover;
+      }
    }
 }
-
-.controls-DateRangeBigChoose__years-panel-wrapper {
-   width: 33%;
-   float: left;
+//todo
+.controls-DateRangeBigChoose__homeBtn {
+   .icon-size {
+      .icon-size(@size_DateRangeBigChoose__homeBtn_icon);
+      color: @color_DateRangeBigChoose__homeBtn_icon;
+   }
+   &:hover {
+      .icon-size {
+         color: @color_DateRangeBigChoose__homeBtn_icon_hover;
+      }
+   }
 }
-// В новом стандарте эти кнопки будут другими
-.controls-Link.controls-DateRangeBigChoose__years-toggleChooseYearBtn,
-.controls-Link.controls-DateRangeBigChoose__years-currentYearBtn,
-.controls-DateRangeBigChoose__years-back {
-   font-size: @date-range-big-choose-years-panel-wrapper-font-size;
-   font-weight: @date-range-big-choose-years-panel-wrapper-font-weight;
-   font-style: normal;
-   display: block;
-   margin: 0 20px;
+.controls-DateRangeBigChoose__stateButton-invisible {
+   visibility: hidden;
+}
+
+.controls-DateRangeBigChoose__header-period {
+   .flex-grow(1);
+   .flexbox();
+   padding-left: @padding-left_DateRangeBigChoose-header-period;
+}
+
+.controls-InputRender.controls-DateRangeBigChoose__header-period-active {
+   border-color: #0055BB;
+}
+
+.controls-DateRangeBigChoose__header-rangeDash {
+   width: @width_DateRangeBigChoose-header-dash;
+   border-bottom: 1px solid black;
+   margin: @margin_DateRangeBigChoose-header-dash;
+}
+.controls-DateRangeBigChoose__datePickerEnd-wrapper {
+   .flexbox();
+   align-items: center;
+}
+
+.controls-DateRangeBigChoose__ApplyButton {
+   margin: 0 @margin_DateRangeBigChoose-header-applyButton;
+}
+
+.controls-DateRangeBigChoose__closeButton.controls-PopupMixin__closeButton {
+   //width: @width_DateRangeBigChoose-header-closeButton;
+   position: static;
+}
+
+// панель выбора периода через года
+.controls-DateRangeBigChoose__years {
+   .flex-shrink(0);
+   .flexbox();
+   border-bottom: @border-width-color_DateRangeBigChoose solid @border-color_DateRangeBigChoose;
+   height: @height_DateRangeBigChoose-years;
+   .align-items(center);
+}
+
+.controls-DateRangeBigChoose__years-prevYearBtn,
+.controls-DateRangeBigChoose__years-nextYearBtn {
+   width: @width_DateRangeBigChoose-years-leftRight;
 }
 
 .controls-DateRangeBigChoose__yearsRange {
    .flexbox();
-   .range-button-bar-mixin();
+   .flex-grow(1);
+   .justify-content(space-between);
 }
 .controls-DateRangeBigChoose__years-yearsRange-btn {
-   .flex-grow(1);
-   .flexbox();
-   .justify-content(center);
-   .align-items(center);
-   line-height: normal;
-   border: none;
-   //float: left;
-   width: 16.6666%;
-   min-width: 16.6666%;
-   font-size: @date-range-big-choose-years-range-font-size;
+   cursor: pointer;
+   height: @height_DateRangeBigChoose-years-rangeButton;
+   line-height: @height_DateRangeBigChoose-years-rangeButton;
+   width: 14%;
+   font-size: @font-size_DateRangeBigChoose-years-rangeButton;
    text-align: center;
-   //background-color: transparent;
-   height: @height_Button_default;
-   .box-sizing(border-box);
-
+   position: relative;
+}
+.controls-DateRangeBigChoose__years-yearsRangeItem-unselected {
    &:hover {
-      color: #000000;
-      font-weight: bold;
-      background-color: @background_Button_hovered;
-   }
-   &.controls-RangeSelectable__item.controls-RangeSelectable__item-selected:not(.controls-RangeSelectable__item-selectedStart) {
-      border-left: none;
-   }
-   &.controls-DateRangeBigChoose__currentYear {
-      color: @date-range-big-choose-link-text-color;
+      outline: @border-color_DateRangeBigChoose-range-unselected-hover solid 1px;
    }
 }
-// В новом стандарте нет такой кнопки, стили будут убраны
-.controls-DateRangeBigChoose__years-panel-wrapper {
-  .controls-DateRangeBigChoose__years-currentYearBtn.controls-Link {
-    &:hover {
-       .controls-Link__field.controls-Button__text {
-          text-decoration: none!important;
-       }
-    }
-  }
-}
-// В новом стандарте нет такой кнопки, стили будут убраны
-.controls-DateRangeBigChoose__years-currentYearBtn.controls-Link {
-   margin: 0 18px 0 14px;
-   font-size: @date-range-big-choose-years-panel-current-year-button-font-size !important;
-   line-height: @date-range-big-choose-years-panel-current-year-button-line-height !important;
-   .controls-Button__wrapper {
-      .justify-content(center);
-   }
 
-   &:active {
-      .box-sizing(border-box);
-      color: @date-range-big-choose-boundary-selected-color;
-      background-color: @date-range-big-choose-bg-boundary-selected-color;
-      border: 1px solid @date-range-big-choose-border-selected-color;
+.controls-DateRangeBigChoose__years-yearsRangeItem {
+   color: @color_DateRangeBigChoose-years-panel-rangeButton;
+   &:hover {
+      background-color: @background-color_DateRangeBigChoose-years-panel-rangeButton;
    }
 }
-// В новом стандарте нет такой кнопки
-.controls-DateRangeBigChoose__years-toggleChooseYearBtn.controls-Link {
-   .box-sizing(border-box);
-   margin: @date-range-big-choose-years-panel-toggle-choose-year-button-margin;
-   border: 1px dotted transparent;
-   font-size: @date-range-big-choose-years-panel-toggle-choose-year-button-font-size !important;
-   line-height: @date-range-big-choose-years-panel-toggle-choose-year-button-line-height;
-   .controls-Button__wrapper {
-      .justify-content(center);
+.controls-DateRangeBigChoose__years-yearsRangeItem-displayed {
+   color: @color_DateRangeBigChoose-years-panel-displayed-year;
+   font-size: @font-size_DateRangeBigChoose-years-panel-displayed-year;
+   font-weight: bold;
+}
+.controls-DateRangeBigChoose__years-yearsRangeItem-current {
+   color: @color_DateRangeBigChoose-years-panel-current-year;
+   &:hover {
+      background-color: @background-color_DateRangeBigChoose-years-panel-current-year;
    }
+}
 
-         &:hover {
-            border: 1px dotted @gray-color;
-            color: @date-range-big-choose-link-text-color;
-            .controls-Link__field {
-               text-decoration: none !important;
-            }
-         }
-      }
-// В новом стандарте нет такой кнопки
-      .controls-DateRangeBigChoose__years-back {
-         display: inline-flex;
-         border: 1px dotted transparent;
-         margin: 0 20px 0 20px;
-         text-align: center;width: ~"calc("@date-range-big-choose-years-panel-back-button-line-height~" + 2px)";
-         height: ~"calc("@date-range-big-choose-years-panel-back-button-line-height~" + 2px)";
-         .box-sizing(border-box);
-         &.controls-IconButton {
-            .controls-Button__icon {
-               font-weight: normal;
-               font-size: @date-range-big-choose-years-panel-back-button-font-size !important;
-               line-height: @date-range-big-choose-years-panel-back-button-line-height !important;
-               &.icon-primary.action-hover:hover {
-                  border: 1px dotted @gray-color;
-                  color: @date-range-big-choose-link-text-color !important;
-               }
-            }
-         }
-      }
+.controls-DateRangeBigChoose__years-yearsRangeItem-selectedInner {
+   outline: @border-color_DateRangeBigChoose-range-selected-inner solid 1px;
+}
 
+.controls-DateRangeBigChoose__years-yearsRangeItem-selectedUnfinishedEdge {
+   outline-width: 1px;
+   outline-style: solid;
+   outline-color: @border-color_DateRangeBigChoose-range-selected-unfinishedEdge;
+   font-weight: bold;
+}
+
+.controls-DateRangeBigChoose__years-yearsRangeItem__backgroundColor-selected,
+.controls-DateRangeBigChoose__years-yearsRangeItem__backgroundColor-selected {
+   background: @background-color_DateRangeBigChoose-range-selected-inner;
+}
+
+.controls-DateRangeBigChoose__years-yearsRangeItem__backgroundColor-selected-startend-unfinished {
+   background: @background-color_DateRangeBigChoose-range-selected-unfinishedEdge;
+}
+
+.controls-DateRangeBigChoose__years-yearsRangeItem-selectedStart {
+   //need color;
+   outline: @border-color_DateRangeBigChoose-range-selected-startEnd solid 1px;
+   font-weight: bold;
+   &:before {
+      content: "";
+      position: absolute;
+      height: 100%;
+      width: @width_DateRangeBigChoose-range-selected-startEnd-edgeBorder;
+      background-color: @border-color_DateRangeBigChoose-range-selected-startEnd-edgeBorder;
+      left: -1px;
+   }
+}
+
+.controls-DateRangeBigChoose__years-yearsRangeItem-selectedEnd {
+   outline: @border-color_DateRangeBigChoose-range-selected-startEnd solid 1px;
+   font-weight: bold;
+   &:after {
+      content: "";
+      position: absolute;
+      height: 100%;
+      width: @width_DateRangeBigChoose-range-selected-startEnd-edgeBorder;
+      background-color: @border-color_DateRangeBigChoose-range-selected-startEnd-edgeBorder;
+      right: -1px;
+   }
+}
 
 .controls-DateRangeBigChoose__months {
-   position: relative;
-   height: @date-range-big-choose-body-height;
+   height: @height_DateRangeBigChoose-body;
    top: 0;
    bottom: 0;
-   overflow: hidden;
-}
-
-.controls-DateRangeBigChoose__months-quarterRange,
-.controls-DateRangeBigChoose__months-halfyearRange {
-   .range-vertical-button-bar-mixin();
-   // Буде не актуально в новой спецификации
-   .controls-DateRangeBigChoose__months-range-btn-wrapper:not(.controls-RangeSelectable__item-selected) {
-      .controls-DateRangeBigChoose__months-halfyear-btn,
-      .controls-DateRangeBigChoose__months-quarter-btn {
-         &:hover {
-            border-right-color:  @date-range-big-choose-bg-hovered-color;
-            border-left-color:  @date-range-big-choose-bg-hovered-color;
-         }
-      }
-   }
-}
-
-.controls-DateRangeBigChoose__months-range-btn-wrapper {
-   .box-sizing(border-box);
-   width: 100%;
-   // В новой спецификации сильно упростили стили у панелей выбора кварталов и полугодий. Эти стили будут не нужны.
-   &.controls-RangeSelectable__item-selected {
-      background-color: @date-range-big-choose-bg-selected-color;
-   }
-   &.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
-      border-top: none;
-      + .controls-DateRangeBigChoose__months-range-btn-wrapper:not(.controls-RangeSelectable__item-selected) {
-         border-top: 1px solid @date-range-big-choose-border-color;
-         > span {
-            border-top: none;
-         }
-      }
-   }
-   &:not(.controls-RangeSelectable__item-selected) + .controls-RangeSelectable__item-selected {
-      border-top: 1px solid @date-range-big-choose-border-color;
-   }
-   &:not(.controls-RangeSelectable__item-selected) {
-      &:hover {
-         background-color: @date-range-big-choose-bg-hovered-color;
-         > .controls-DateRangeBigChoose__months-halfyear-btn,
-         > .controls-DateRangeBigChoose__months-quarter-btn {
-            border-top: none;
-         }
-         + .controls-DateRangeBigChoose__months-range-btn-wrapper {
-            border-top: 1px solid @date-range-big-choose-border-color;
-            .controls-DateRangeBigChoose__months-halfyear-btn,
-            .controls-DateRangeBigChoose__months-quarter-btn {
-               border-top: none;
-            }
-         }
-      }
-      + .controls-DateRangeBigChoose__months-range-btn-wrapper:hover {
-         border-top: 1px solid @date-range-big-choose-border-color;
-      }
-   }
-}
-
-.controls-DateRangeBigChoose__months-quarterRange {
-   right: @date-range-big-choose-left-right-width;
-   // В новом дизайне стили панелей выбора полугодий и кварталов проще, этот стиль будет удален.
-   .controls-ButtonBase.controls-DateRangeBigChoose__months-quarter-btn {
-      border-left-color: transparent;
-   }
-}
-.controls-DateRangeBigChoose__months-quarterRange-btn-wrapper0,
-.controls-DateRangeBigChoose__months-quarterRange-btn-wrapper3 {
-   height: ~"calc("@date-range-big-choose-months-range-btn-height~" + "@date-range-big-choose-months-margin~" - 1px)";
-}
-.controls-DateRangeBigChoose__months-quarterRange-btn-wrapper1,
-.controls-DateRangeBigChoose__months-quarterRange-btn-wrapper2 {
-   height: @date-range-big-choose-months-range-btn-height;
-}
-.controls-DateRangeBigChoose__months-quarter-btn,
-.controls-DateRangeBigChoose__months-halfyear-btn {
-   text-align: center;
-   width: @date-range-big-choose-left-right-width;
-   min-width: @date-range-big-choose-left-right-width;
-   height: 100%;
-   font-size: inherit;
-   border-bottom: none;
-   .box-sizing(border-box);
    .flexbox();
-   .justify-content(center);
-   .align-items(center);
-   :hover {
-      font-weight: bold;
-      border-bottom: none;
-   }
-}
-
-.controls-DateRangeBigChoose__months-halfyearRange {
-   left: @date-range-big-choose-left-right-width;
-   // В новом дизайне стили панелей выбора полугодий и кварталов проще, этот стиль будет удален.
-   .controls-ButtonBase.controls-DateRangeBigChoose__months-halfyear-btn {
-      border-right-color: transparent;
-   }
-}
-
-.controls-DateRangeBigChoose__months-halfyearRange-btn-wrapper0 {
-   height: ~"calc("@date-range-big-choose-months-range-btn-height~"*2 + "@date-range-big-choose-months-margin~" - 1px)";
-}
-.controls-DateRangeBigChoose__months-halfyearRange-btn-wrapper1 {
-   height: ~"calc("@date-range-big-choose-months-range-btn-height~"*2 + "@date-range-big-choose-months-margin~")";
-}
-
-.controls-DateRangeBigChoose__months-halfyear-btn {
-   float: right;
-   &:after {
-       content: "";
-       display: block;
-       clear: both;
-   }
+   .flex-direction(column);
 }
 
 .controls-DateRangeBigChoose__months-month {
    height: 100%;
-   overflow: hidden;
 }
-.controls-DateRangeBigChoose__months-toStart {
-   position: absolute;
-   cursor: pointer;
-   top: 0;
-   left: 0;
-   width: 0;
-   height: 0;
-   border-top: 8px solid @date-range-big-choose-go-to-boundary-button-bg-color;
-   border-right: 8px solid transparent;
-}
-.controls-DateRangeBigChoose__months-toEnd {
-   position: absolute;
-   cursor: pointer;
-   bottom: 0;
-   right: 0;
-   width: 0;
-   height: 0;
-   border-bottom: 8px solid @date-range-big-choose-go-to-boundary-button-bg-color;
-   border-left: 8px solid transparent;
-}
-
 
 .controls-DateRangeBigChoose__dates {
-   height: @date-range-big-choose-body-height;
-   position: relative;
-   overflow: hidden;
-}
-
-.controls-DateRangeBigChoose__dates-months {
-   width: @date-range-big-choose-months-range-width;
-   position: absolute;
-   height: 100%;
+   height: @height_DateRangeBigChoose-body;
    .flexbox();
    .flex-direction(column);
-
-   // Будет выпелено после перехода на новый стандарт, там нет выделения по месяцам.
-   .range-vertical-button-bar-mixin();
-   .controls-ButtonBase {
-      border-top: none;
-      border-bottom: none;
-      border-left-color: transparent;
-      background-color: transparent;
-      &.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
-         border-top: none;
-         border-bottom: none;
-      }
-      &:not(.controls-RangeSelectable__item-selected) {
-         &:hover {
-            border-left-color: @date-range-big-choose-bg-hovered-color;
-            background: @date-range-big-choose-bg-hovered-color;
-         }
-      }
-      &:hover {
-         color: @date-range-big-choose-month-hovered-color;
-      }
-   }
+   position: relative;
 }
 
-.controls-DateRangeBigChoose__dates-month-btn {
+.controls-DateRangeBigChoose__dates-header {
    .flexbox();
    .flex-shrink(0);
-   .flex-grow(1);
+   height: @height_DateRangeChoose-dates-header;
+   border-bottom: @border-width_DateRangeBigChoose solid @border-color_DateRangeBigChoose;
    .align-items(center);
+   font-size: @font-size_DateRangeBigChoose-dates-header;
+}
 
-   color: @date-range-big-choose-months-color;
-   font-size: @date-range-big-choose-months-font-size;
-   text-align: left;
-   padding-left: @date-range-big-choose-months-padding;
+.controls-DateRangeBigChoose__dates-header-year {
+   .flex-shrink(0);
+   width: @width_DateRangeBigChoose-dates-header-year;
+   padding-left: @padding-left_DateRangeBigChoose-dates-header-year;
+   color: @color_DateRangeBigChoose-dates-header-year;
+   font-weight: @font-weight_DateRangeBigChoose-dates-header-year;
+   .box-sizing(border-box);
+}
 
-   // После перехода на новый стандарт будет выпилено. Сейчас размеры первой и последней кнопки разные.
-   &:first-child {
-      height: @date-range-big-choose-months-button-first-height;
-      .flex-grow(0);
-      padding-top: @date-range-big-choose-months-button-first-padding-top;
-   }
-   &:last-child {
-      height: @date-range-big-choose-months-button-last-height;
-      .flex-grow(0);
-      padding-bottom: @date-range-big-choose-months-button-last-padding-bottom;
-   }
+.controls-DateRangeBigChoose__dates-header-weekdays {
+   .flexbox();
+   .flex-shrink(1);
+   .flex-grow(1);
+}
+.controls-DateRangeBigChoose__dates-header-weekdays-workday,
+.controls-DateRangeBigChoose__dates-header-weekdays-weekend {
+   .flex-grow(1);
+   text-align: center;
+}
+
+.controls-DateRangeBigChoose__dates-header-weekdays-workday {
+   color: @color_DateRangeBigChoose-dates-header-weekdays-workday;
+}
+.controls-DateRangeBigChoose__dates-header-weekdays-weekend {
+   color: @color_DateRangeBigChoose-dates-header-weekdays-weekend;
 }
 
 .controls-DateRangeBigChoose__dates-dates-wrapper {
-//.controls-DateRangeBigChoose__dates-dates {
-   position: absolute;
-   left: @date-range-big-choose-date-range-picker-left;
-   right: @date-range-big-choose-date-range-picker-right;
-   top: 0;
-   bottom: 0;
-   overflow: hidden;
+   .flex-shrink(1);
+   .flex-grow(1);
 }
-.controls-DateRangeBigChoose__dates-dates {
-   top: -262px;
-   position: absolute;
-}
-.controls-DateRangeBigChoose__dates-dates-top-gradient {
-   position: absolute;
-   top: 0;
-   left: 0;
-   right: 0;
-   height: 40px;
-   background: @date-range-big-choose-date-range-picker-calendar-top-bg;
-}
-.controls-DateRangeBigChoose__dates-dates-bottom-gradient {
-   position: absolute;
-   left: 0;
-   right: 0;
-   bottom: 0;
-   height: 40px;
-   background: @date-range-big-choose-date-range-picker-calendar-bottom-bg;
-}
+

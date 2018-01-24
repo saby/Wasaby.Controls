@@ -1,10 +1,11 @@
 @import (reference) "../../themes/header";
+
 .max-width_BackButton_caption(@back-arrow-width, @back-button-arrow-padding-right) {
    .ws-is-mobile-safari &, .ws-is-desktop-safari &, .ws-is-mobile-chrome-ios & {
-   /**
-    * 1px прибавляем для компенсирования погрешности расчетов calc.
-    * В safari значение calc(...) округляется в меньшую сторону, из-за чего всегда происходит обрезание текста.
-    */
+      /**
+       * 1px прибавляем для компенсирования погрешности расчетов calc.
+       * В safari значение calc(...) округляется в меньшую сторону, из-за чего всегда происходит обрезание текста.
+       */
       max-width: calc(~"100% - @{back-arrow-width} - @{back-button-arrow-padding-right} + 1px");
    }
    max-width: calc(~"100% - @{back-arrow-width} - @{back-button-arrow-padding-right}");
@@ -16,26 +17,38 @@
    display: inline-block;
    height: @back-button-height;
 }
+
 .controls-BackButton_color-hover_accent1:hover .controls-BackButton__caption {
    &, &.controls-Click__active, &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover):hover {
       .ws-header-accent1-hover();
    }
 }
+
 .controls-BackButton_color-hover_accent2:hover .controls-BackButton__caption {
    &, &.controls-Click__active, &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover):hover {
       .ws-header-accent2-hover();
    }
 }
-.controls-BackButton_color-hover_default-backButton:hover .controls-BackButton__caption {
-   &, &.controls-Click__active, &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover):hover {
-      color: @back-button-caption-active-color;
+
+.controls-BackButton_color-hover_default-backButton:hover {
+   .controls-BackButton__caption {
+      body:not(.ws-is-mobile-platform) &,
+      &.controls-Click__active {
+         color: @back-button-caption-active-color !important;
+      }
+   }
+   .ws-backArrow_color_default-backButton:before {
+      color: @back-button-arrow-hover-color;
    }
 }
+
 .controls-BackButton__orange.controls-BackButton_color-hover_default-backButton:hover .controls-BackButton__caption {
-   &, &.controls-Click__active, &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover):hover {
-      color: @primary-color;
+   body:not(.ws-is-mobile-platform) &,
+   &.controls-Click__active {
+      color: @primary-color !important;
    }
 }
+
 .controls-BackButton__caption {
    &_color_accent1.controls-Link {
       .ws-header_color_accent1();
@@ -64,6 +77,13 @@
    &_size_default-backButton.controls-Link {
       .max-width_BackButton_caption(@back-arrow-width-h3, @back-button-arrow-padding-right-2);
       .ws-header-size-mixin(@back-button-font-size, @back-button-height);
+      /**
+       * На iPad, если в качестве caption будут 2 текста с разными font-size, то caption не выравнивается как должен.
+       * Вероятно проблема в стилях Link. Если использовать только классы ws-header, то такой проблемы нет.
+       */
+      body.ws-is-mobile-safari & {
+         line-height: normal;
+      }
    }
    &_size_bold.controls-Link {
       .ws-header_size_weight();
@@ -74,33 +94,38 @@
    &Arrow_size_2 {
       padding-right: @back-button-arrow-padding-right-2;
    }
-   .ws-is-desktop-platform &.controls-Link:not(.ws-disabled):not(.controls-Click__active):hover .controls-Button__text,
-   &.controls-Link.controls-Click__active .controls-Button__text {
-      text-decoration: none;
+   & .controls-Button__text {
+      text-decoration: none !important;
    }
 }
+
 .controls-BackButton__arrow.controls-Link {
    display: none;
 }
+
 .controls-BackButton__show-arrow:hover .controls-BackButton__arrow {
    display: inline-block;
    margin-right: -@icon-width;
 }
+
 .ws-backArrow_color_default-backButton {
    .ws-backArrow_color_accent1();
    &:before {
-      color: @primary-color;
+      color: @back-button-arrow-color;
    }
 }
+
 .controls-BackButton__orange .ws-backArrow_color_default-backButton {
    .ws-backArrow_color_accent2();
 }
+
 .ws-backArrow_size_default-backButton {
    .ws-backArrow_size_h3();
    &:before {
       font-size: @back-button-font-size;
    }
 }
+
 .controls-BackButton__empty {
    visibility: hidden;
    width: 0;

@@ -15,8 +15,6 @@
 
    &:not(.controls-ListView__disableHover) {
       .controls-ListView__hoveredItem:not(.controls-editInPlace) {
-         background: @background-color_DataGridView-item_hovered;
-
          .controls-DataGridView__th {
             background-color: @background-color_DataGridView-item_hovered;
          }
@@ -84,7 +82,7 @@
          }
       }
       .controls-ItemsToolbar {
-         right: 3px;
+         right: @right_DataGridView-toolbar_markerRight;
       }
    }
 
@@ -133,7 +131,7 @@
    &.controls-ListView__item__multiSelected:not(.controls-ListView__hoveredItem) {
       .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
          &.controls-DataGridView__notScrolledCell {
-            background-color: @data-grid-multiselect-notScrolledCell-Color;
+            background-color: @background-color_DataGridView-notScrolledCell;
          }
       }
    }
@@ -157,12 +155,12 @@
       }
    }
    &.controls-DataGridView__notScrolledCell {
-      background-color: @data-grid-partScroll-notScrolledCell-Color;
+      background-color: @background-color_DataGridView-notScrolledCell;
       border-left: none;
       border-right: none;
       z-index: 1;
       &.controls-DataGridView__th {
-         background-color: @data-grid-partScroll-notScrolledCell-Color;
+         background-color: @background-color_DataGridView-notScrolledCell;
       }
    }
    &.controls-DataGridView-cell-verticalAlignTop {
@@ -381,15 +379,31 @@
 
 //TODO костыль по месту. Стандарт должен быть поправлен https://online.sbis.ru/opendoc.html?guid=95b1ae2e-d43f-4b41-a373-ceecc6b01fb8&des=
 .controls-DataGridView__headSorting {
-   &.controls-Link {
-      .controls-Button__icon + .controls-Link__field {
-         margin-left: 0;
+   .controls-Button__icon + .controls-Link__field {
+      margin-left: 0;
+   }
+   display: inline-block;
+   font-size: @data-grid-header-cell-font-size;
+   //выписал еще поручение https://online.sbis.ru/opendoc.html?guid=2a2781e5-bc7b-464f-b183-32317e0b85cc
+   line-height: @data-grid-header-cell-sorting-icon-size;
+   .controls-Button__icon {
+      .icon-size(@font-size_DataGridView-headerIcon);
+   }
+
+   color: @color_DataGridView-sorting;
+   cursor: pointer;
+
+   &:hover {
+      color: @color_DataGridView-sorting_hovered;
+      .controls-Button__text {
+         text-decoration: underline;
       }
-      font-size: @data-grid-header-cell-font-size;
-      //выписал еще поручение https://online.sbis.ru/opendoc.html?guid=2a2781e5-bc7b-464f-b183-32317e0b85cc
-      line-height: @data-grid-header-cell-sorting-icon-size;
+   }
+}
+.ws-is-mobile-android {
+   .controls-DataGridView__headSorting {
       .controls-Button__icon {
-         .icon-size(@font-size_DataGridView-headerIcon);
+         line-height:  @font-size_DataGridView-headerIcon - 1;
       }
    }
 }
@@ -404,7 +418,7 @@
    &.controls-DataGridView__firstContentCell {
       padding-left: @controls-view-padding-DEFAULT;
    }
-   &:last-child {
+   &.controls-DataGridView__lastContentCell {
       padding-right: @controls-view-padding-DEFAULT;
    }
 }

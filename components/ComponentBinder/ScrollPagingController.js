@@ -6,11 +6,50 @@ define('SBIS3.CONTROLS/ComponentBinder/ScrollPagingController',
       'Core/helpers/Function/throttle',
       'Core/helpers/Hcontrol/isElementVisible',
       'Core/detection',
+      'Core/helpers/Function/runDelayed',
+      'Core/helpers/Function/forAliveOnly',
       'css!SBIS3.CONTROLS/ComponentBinder/ScrollPagingController'
    ],
-   function(cAbstract, cInstance, WindowManager, throttle, isElementVisible, detection) {
+   function(cAbstract, cInstance, WindowManager, throttle, isElementVisible, detection, runDelayed, forAliveOnly) {
 
    var SCROLL_THROTTLE_DELAY = 200;
+   
+   var _private = {
+      updatePaging: function() {
+         var view = this._options.view, pagingVisibility;
+   
+         if (isElementVisible(view.getContainer())) {
+            this._updateCachedSizes();
+      
+            var pagesCount = this._viewportHeight ? Math.ceil(this._viewHeight / this._viewportHeight) : 0,
+               infiniteScroll = view._getOption('infiniteScroll');
+            /* Пэйджинг не показываем при загрузке вверх и в обе стороны, он работает некорректно.
+             Сейчас пэйджинг заточен на загрузку вниз. Код необходимо переписать. */
+            pagingVisibility = pagesCount > 1 && infiniteScroll !== 'up' && infiniteScroll !== 'both';
+      
+            /* Если пэйджинг скрыт - паддинг не нужен */
+            view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagingVisibility);
+            if (this._options.paging.getSelectedKey() > pagesCount) {
+               this._options.paging.setSelectedKey(pagesCount);
+            }
+         }
+         else {
+            pagingVisibility= false;
+         }
+         /* Для пэйджинга считаем, что кол-во страниц это:
+          текущее кол-во загруженных страниц + 1, если в метаинформации рекордсета есть данные о том, что на бл есть ещё записи.
+          Необходимо для того, чтобы в пэйджинге не моргала кнопка перехода к следующей странице, пока грузятся данные. */
+         if (pagingVisibility) {
+            this._options.paging.setPagesCount(pagesCount + (view._hasNextPage(view.getItems().getMetaData().more, view._scrollOffset.bottom, 'after') ? 1 : 0));
+         }
+         else {
+            this._options.paging.setPagesCount(1);
+         }
+   
+         //Если есть страницы - покажем paging
+         this._options.paging.setVisible(pagingVisibility && !this._options.hiddenPager);
+      }
+   };
    
    var ScrollPagingController = cAbstract.extend({
       $protected: {
@@ -145,42 +184,11 @@ define('SBIS3.CONTROLS/ComponentBinder/ScrollPagingController',
       },
 
       getPagesCount: function() {
-         return this._options.paging.getPagesCount()
+         return this._options.paging.getPagesCount();
       },
 
       updatePaging: function() {
-         var view = this._options.view, pagingVisibility;
-
-         if (isElementVisible(view.getContainer())) {
-            this._updateCachedSizes();
-
-            var pagesCount = this._viewportHeight ? Math.ceil(this._viewHeight / this._viewportHeight) : 0,
-               infiniteScroll = view._getOption('infiniteScroll');
-            /* Пэйджинг не показываем при загрузке вверх и в обе стороны, он работает некорректно.
-             Сейчас пэйджинг заточен на загрузку вниз. Код необходимо переписать. */
-            pagingVisibility = pagesCount > 1 && infiniteScroll !== 'up' && infiniteScroll !== 'both';
-
-            /* Если пэйджинг скрыт - паддинг не нужен */
-            view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagingVisibility);
-            if (this._options.paging.getSelectedKey() > pagesCount) {
-               this._options.paging.setSelectedKey(pagesCount);
-            }
-         }
-         else {
-            pagingVisibility= false;
-         }
-         /* Для пэйджинга считаем, что кол-во страниц это:
-            текущее кол-во загруженных страниц + 1, если в метаинформации рекордсета есть данные о том, что на бл есть ещё записи.
-            Необходимо для того, чтобы в пэйджинге не моргала кнопка перехода к следующей странице, пока грузятся данные. */
-         if (pagingVisibility) {
-            this._options.paging.setPagesCount(pagesCount + (view._hasNextPage(view.getItems().getMetaData().more, view._scrollOffset.bottom, 'after') ? 1 : 0));
-         }
-         else {
-            this._options.paging.setPagesCount(1);
-         }
-         
-         //Если есть страницы - покажем paging
-         this._options.paging.setVisible(pagingVisibility && !this._options.hiddenPager);
+         runDelayed(forAliveOnly(_private.updatePaging, this));
       },
 
       //когда ListView скрыт следить за скроллом и переключать пэйджинг не надо вообще

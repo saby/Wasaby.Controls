@@ -273,7 +273,8 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
                MethodName: meta.dataSource.getEndpoint().contract + '.' + meta.dataSource.getBinding().query,
                PageOrientation: meta.pageOrientation,
                Filter: Record.fromObject(meta.query.getWhere(), meta.dataSource.getAdapter()),
-               Sorting: meta.query.getOrderBy() ? Record.fromObject(meta.query.getOrderBy(), meta.dataSource.getAdapter()) : null
+               //Сортировка при выгрузке никогда не поддерживалась, есть задача https://online.sbis.ru/opendoc.html?guid=8f8e5a7d-1716-40b6-b542-ae81b0a5a440
+               Sorting: null
             };
          }
     });

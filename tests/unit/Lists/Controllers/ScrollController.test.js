@@ -1,5 +1,5 @@
 define([
-   'js!Controls/List/Controllers/ScrollController'
+   'Controls/List/Controllers/ScrollController'
 ], function(ScrollController) {
 
    var currentTriggers, currentScrollTop;
@@ -161,6 +161,29 @@ define([
 
          scrollController.scrollPageDown();
          assert.equal(scrollController._options.scrollContainer.scrollTop, 1000, 'Incorrect current scrollTop after scrollPageDown');
+      });
+
+      it('checkBoundaryContainer', function() {
+         //достигнут и верх, и низ
+         scrollController._options.scrollContainer.clientHeight = 1200;
+         currentTriggers = [1, 2];
+         scrollController.checkBoundaryContainer();
+
+         //ничего не достигнуто
+         scrollController._options.scrollContainer.clientHeight = 900;
+         scrollController._options.scrollContainer.scrollTop = 50;
+         currentTriggers = [];
+         scrollController.checkBoundaryContainer();
+
+         //досигнут низ
+         scrollController._options.scrollContainer.scrollTop = 100;
+         currentTriggers = [2];
+         scrollController.checkBoundaryContainer();
+
+         //досигнут верх
+         scrollController._options.scrollContainer.scrollTop = 0;
+         currentTriggers = [1];
+         scrollController.checkBoundaryContainer();
       });
 
       afterEach(function() {

@@ -52,7 +52,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
        * @class SBIS3.CONTROLS/LongOperations/List
        * @extends Lib/Control/CompoundControl/CompoundControl
        *
-       * @author Спирин Виктор Алексеевич
+       * @author Спирин В.А.
        *
        * @public
        *
@@ -119,7 +119,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
                self.subscribeTo(longOperationsManager, evtType, function (evtName, evt) {
                   var dontReload;
                   if (['onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted'].indexOf(evtName.name) !== -1) {
-                     var model = self.lookupItem(evt.tabKey, evt.producer, evt.operationId);
+                     var model = self.lookupItem(evt);
                      dontReload = !model;
                      if (model) {
                         switch (evtName.name) {
@@ -135,7 +135,9 @@ define('SBIS3.CONTROLS/LongOperations/List',
                                        model.set('timeIdle', (new Date()).getTime() - model.get('startedAt').getTime() - model.get('timeSpent'));
                                     }
                                  }
-                                 else {
+                                 else
+                                 if (evt.changed === 'notification' && evt.notification) {
+                                    model.set('notification', evt.notification);
                                     dontReload = true;
                                  }
                                  model.set(evt.changed, evt[evt.changed]);
@@ -216,7 +218,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
                   actions['suspend'] = {title:rk(model.get('resumeAsRepeat') ? 'Отменить' : 'Приостановить', 'ДлительныеОперации'), icon:'sprite:icon-16 icon-Pause icon-primary action-hover'};
                }
                if (model.get('canSuspend') && status === STATUSES.suspended) {
-                  actions['resume'] = {title:rk(model.get('resumeAsRepeat') ? 'Повторить' : 'Возобновить'), icon:'sprite:icon-16 icon-DayForward icon-primary action-hover'};
+                  actions['resume'] = {title:rk(model.get('resumeAsRepeat') ? 'Повторить' : 'Возобновить', 'ДлительныеОперации'), icon:'sprite:icon-16 icon-DayForward icon-primary action-hover'};
                }
                if (model.get('canDelete')) {
                   actions['delete'] = {title:rk('Удалить'), icon:'sprite:icon-16 icon-Erase icon-error'};
@@ -402,40 +404,82 @@ define('SBIS3.CONTROLS/LongOperations/List',
          },
 
          /**
+          * Получить описание основного (результирующего или кастомного основное) действия длительной операции
+          * @public
+          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
+          * @return {object}
+          */
+         describeMainAction: function (model) {
+            var mainAction = this._getMainAction(model);
+            if (mainAction) {
+               var descr = {type:mainAction.type};
+               if (mainAction.type === 'custom') {
+                  descr.title = mainAction.action.title;
+               }
+               return descr;
+            }
+         },
+
+         /**
           * Выполнить основное (результирующее или кастомное основное) действие длительной операции
           * @public
           * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
           */
          applyMainAction: function (model) {
+            var mainAction = this._getMainAction(model);
+            if (mainAction) {
+               switch (mainAction.type) {
+                  case 'result':
+                     this._showResult(model);
+                     break;
+                  case 'history':
+                     this._showHistory(model, mainAction.allowResultButton);
+                     break;
+                  case 'custom':
+                     this._execHandler(mainAction.action.call, mainAction.action.args);
+                     break;
+               }
+            }
+         },
+
+         /**
+          * Определить основное (результирующее или кастомное основное) действие длительной операции
+          * @protected
+          * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
+          * @return {object}
+          */
+         _getMainAction: function (model) {
             if (model) {
                var STATUSES = LongOperationEntry.STATUSES;
                var status = model.get('status');
                if (status === STATUSES.ended || model.get('isFailed')) {
-                  //Только если операция завершена или содержит ошибку
+                  // Только если операция завершена или содержит ошибку
                   if (!model.get('isFailed') || model.get('useResult')) {
                      // Если операция завершена успешно или ей явно предписано использовать результат - выполнить действие, указанное в качестве результата
-                     if (!this._showResult(model)) {
+                     if (model.get('resultHandler') || model.get('resultUrl')) {
+                        return {type:'result'};
+                     }
+                     else {
                         // Если нет, то если операция может иметь историю и является составной - открыть журнал операции (либо если было предписано
                         // показать результат, но его не оказалось)
                         if ((this.canHasHistory(model) && 1 < model.get('progressTotal')) || model.get('useResult')) {
-                           this._showHistory(model);
+                           return {type:'history'};
                         }
                      }
                   }
                   else {
-                     // Иначе показать историю
-                     this._showHistory(model, true);
+                     // Иначе показать историю (с кнопкой частичного результата)
+                     return {type:'history', allowResultButton:true};
                   }
                }
                else {
-                  //Или если есть кастомное действие, продекларированное как основное
+                  // Или если есть кастомное действие, продекларированное как основное
                   var inf = this._getCustomActions(model);
                   if (inf) {
                      for (var name in inf) {
                         var action = inf[name];
                         if (action.main && this._isCustomActionAllowed(action, status)) {
-                           this._execHandler(action.call, action.args);
-                           break;
+                           return {type:'custom', action:action};
                         }
                      }
                   }
@@ -554,13 +598,17 @@ define('SBIS3.CONTROLS/LongOperations/List',
           */
          _obsoleteResult: function () {
             InformationPopupManager.showMessageDialog({
-               message:rk('Операция устарела.'),
-               details:rk('Выполните повторно.')
+               message:rk('Операция устарела.', 'ДлительныеОперации'),
+               details:rk('Выполните повторно.', 'ДлительныеОперации')
             });
          },
 
          /**
           * Выполнить (асинхронно) обработчик, заданный строками методов и аргументов, и вернуть результат (если есть)
+          * Строка методов представляет из себя разделённый одинарными двоеточиями список, начинающийся с имени модуля и следующей за ним цепочки имён
+          * последовательно вызываемых методов. Строка аргументов представляет собой сериализованный массив массивов аргументов каждого метода.
+          * Количество элементов массива верхнего уровня должно соответствовать количеству методов в цепочке в строке методов. Для случая, когда метод
+          * только один, можно использовать простой массив аргументов, а не массив массивов.
           * @protected
           * @param {string} method Строка методов
           * @param {string} args Строка аргументов
@@ -593,6 +641,10 @@ define('SBIS3.CONTROLS/LongOperations/List',
                }
                if (path.length) {
                   var subject = module;
+                  if (path.length === 1) {
+                     // Если метод в path только один, то в args не массив массивов, а просто массив - обернуть в массив
+                     args = [args];
+                  }
                   for ( ; path.length; ) {
                      if (!subject || typeof subject !== 'object') {
                         throw new Error('Submethod is or not valid');
@@ -631,15 +683,15 @@ define('SBIS3.CONTROLS/LongOperations/List',
           * Открыть историю указанной длительной операции
           * @protected
           * @param {SBIS3.CONTROLS/LongOperations/List/resources/model} model Модель длительной операции
-          * @param {boolean} useResultHandler Использовать обработчик результата операции
+          * @param {boolean} allowResultButton В истории можно использовать кнопку просмотра (частичного) результата операции
           */
-         _showHistory: function (model, useResultHandler) {
+         _showHistory: function (model, allowResultButton) {
             //Только если операция завершена или содержит ошибку
             if (model && (model.get('status') === LongOperationEntry.STATUSES.ended || model.get('isFailed'))) {
-               var resultHandler = useResultHandler && (model.get('resultHandler') || model.get('resultUrl')) ? this._showResult.bind(this, model) : null;
+               var resultHandler = allowResultButton && (model.get('resultHandler') || model.get('resultUrl')) ? this._showResult.bind(this, model) : null;
                var resultWayOfUse = resultHandler ? model.get('resultWayOfUse') : null;
                var floatArea = new FloatArea({
-                  title: rk('Журнал выполнения операции'),
+                  title: rk('Журнал выполнения операции', 'ДлительныеОперации'),
                   template: 'SBIS3.CONTROLS/LongOperations/History',
                   componentOptions: this.canHasHistory(model) ? {
                      tabKey: model.get('tabKey'),
@@ -665,16 +717,32 @@ define('SBIS3.CONTROLS/LongOperations/List',
          },
 
          /**
-          * Найти модель среди загруженных данных
-          * @param {string} tabKey Ключ вкладки
-          * @param {string} producer Имя продюсера
-          * @param {number|string} operationId Идентификатор длительной операции
+          * Найти модель среди имеющихся элементов данного списка по параметрам (Возвращается первое совпадение)
           * @public
+          * @param {object} options Параметры модели
+          * @param {string} options.producer Имя продюсера
+          * @param {number|string} [options.operationId] Идентификатор длительной операции (опционально)
+          * @param {number|string} [options.workflowId] Идентификатор исполняемого процесса длительной операции (опционально)
+          * @return {WS.Data/Entity/Record}
           */
-         lookupItem: function (tabKey, producer, operationId) {
+         lookupItem: function (options) {
             var items = this._view.getItems();
             if (items && items.getCount()) {
-               return items.getRecordById(Model.getFullId(tabKey, producer, operationId)) || items.getRecordById(Model.getFullId(null, producer, operationId));
+               var producer = options.producer;
+               if (!producer) {
+                  throw new Error('Property "producer" required');
+               }
+               var hasId = !!options.operationId;
+               var id = hasId ? options.operationId : options.workflowId;
+               if (!id) {
+                  throw new Error('Property "operationId" or "workflowId" required');
+               }
+               for (var i = 0, len = items.getCount(); i < len; i++) {
+                  var item = items.at(i);
+                  if (item.get('producer') === producer && (hasId ? item.get('id') === id : item.get('extra') && item.get('extra').workflow === id)) {
+                     return item;
+                  }
+               }
             }
          },
 

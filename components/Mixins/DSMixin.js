@@ -18,7 +18,7 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
     * @mixin SBIS3.CONTROLS/Mixins/DSMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    function propertyUpdateWrapper(func) {

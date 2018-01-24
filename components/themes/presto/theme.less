@@ -1,5 +1,4 @@
 body {
-  @infobox-border: @default-border-width solid transparent;
   .ws-info-box {
     background: @background-color_infobox !important;
     color: @default-text-color;
@@ -198,7 +197,7 @@ body {
   }
   .controls-Pager-block-amount {display: none}
   .controls-ListView__scrollPager {
-    padding: round(11px * @multiplier);
+    padding: round(11px * @multiplier) round(8px * @multiplier) round(11px * @multiplier) 0;
     .controls-IconButton {
       background: @background_Button;
       padding: 0;
@@ -237,6 +236,13 @@ body {
   border-color: transparent;
   border-top: none;
 }
+//нет нормального инструмента чтобы сделать через переменные
+//будет жить пока стили floatArea в ws`e
+.ws-window-content, .ws-float-area-stack-panel-shadow {
+  .ws-sticky-header__table-header-copy {
+    background-color: #273749 !important;
+  }
+}
 .ws-window {
   .box-shadow(@controls-panel-shadow);
   border: none !important;
@@ -248,15 +254,14 @@ body {
   border-left: none !important;
 }
 
-.controls-ItemsToolbar-closeButton.controls-Button__closeButton {
+.controls-EditActions__cancelButton {
   position: relative;
-  width: @width_EditButton;
-  height: @height_EditButton;
   background-image: none;
   background-color: @background-color_EditButton;
   font-size: @font-size_Button_m;
   .box-shadow(@box-shadow_Button);
   color: #8991A9;
+  display: inline-block;
 
   &:before {
     position: absolute;
@@ -266,13 +271,20 @@ body {
     height: round(42px * @multiplier);
     content: "\e66c" !important;
     text-shadow: @text-shadow_Button !important;
-    right: 8px;
-    top: 8px;
+    right: round(8px * @multiplier);
+    top: round(8px * @multiplier);
   }
 
   &:active {
     box-shadow: none;
   }
+}
+.ws-float-close {
+  .close-button-mixin(~'!important');
+  &:before {
+    color: #8991A9 !important;
+  }
+  border: none !important;
 }
 .ws-is-desktop-platform {
   .controls-ItemsToolbar-closeButton.controls-Button__closeButton:hover {
@@ -292,6 +304,98 @@ body {
   }
 }
 //todo: удалить временный коствль
-body .controls-DropdownList__afterCaptionWrapper {
-  .inline-flexbox();
+//это можно будет удалить при переписывании расурывающегося списка
+body {
+  .controls-DropdownList.controls-DropdownList__type-fastDataFilter .controls-DropdownList__afterCaptionWrapper {
+    .inline-flexbox();
+  }
+  .controls-DropdownList.controls-DropdownList__withoutCross .controls-DropdownList__afterCaptionWrapper, .controls-DropdownList.ws-disabled .controls-DropdownList__afterCaptionWrapper {
+    display: none;
+  }
+}
+
+//TODO: в престо отключим замыливание при показе шеврона редактирования папки т.к.
+//в тёмной теме прозрачный цвет ховера и невозможно сделать замыливание.
+//После перехода на flex нужно реализовать троеточие.
+.controls-TreeView__editArrow-background:after {
+  display: none;
+}
+.controls-TreeView__ellipsis-copyArrow {
+  background-color: transparent !important;
+  &:after {
+    display: none !important;
+  }
+}
+//todo: Из-за заданного отступа происходит скачек при переключении вкладок
+//Будет исправлено при переписывании tabButtons на flex
+.controls-TabButton.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__wrapper {
+  margin-bottom: 0px !important;
+}
+
+//todo:
+.controls-DateRangeBigChoose__dates {
+  position: relative;
+}
+.controls-DateRangeBigChoose__months-month-picker:before, .controls-DateRangeBigChoose__dates:before {
+  background: linear-gradient(to bottom, @controls-ScrollContainer-gradient-background);
+}
+.controls-DateRangeBigChoose__months-month-picker:before {
+  top:0;
+}
+.controls-DateRangeBigChoose__dates:before {
+  top: @height_DateRangeChoose-dates-header;
+}
+.controls-DateRangeBigChoose__months-month-picker:after, .controls-DateRangeBigChoose__dates:after {
+  bottom: 0;
+  background: linear-gradient(to top, @controls-ScrollContainer-gradient-background);
+}
+.controls-DateRangeBigChoose__months-month-picker:before, .controls-DateRangeBigChoose__months-month-picker:after,
+.controls-DateRangeBigChoose__dates:before, .controls-DateRangeBigChoose__dates:after {
+  content: '';
+  position: absolute;
+  display: block;
+  z-index: 1;
+  height: @controls-ScrollContainer-top-gradient-height;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+.controls-DateRangeBigChoose
+{
+  .controls-DateRangeBigChoose__homeBtn {
+    padding-right:  round(24px * @multiplier);
+  }
+  .controls-DateRangeBigChoose__ApplyButton {
+    //Простите меня за эти строки кода, я не хотел, меня заставили
+    margin-right:  round(12px * @multiplier);
+    .close-button-mixin(~'!important');
+    &:before {
+      content: '' !important;;
+    }
+    .icon-size {
+      color: #72BE44 !important;
+    }
+    .controls-Button__icon {
+      .icon-size(@default-icon-size-large);
+    }
+  }
+}
+
+.controls-DataGridView__headerRow .controls-DataGridView__th {
+  line-height: round((75px * @multiplier) / 2);
+}
+//todo: временное решение, пока прикладные модули не умеют в темы
+.controls-Browser {
+  .controls-Browser__table.controls-Browser__table-fullFilterBlock .controls-Browser__tableCell-fastDataFilter {
+    margin-right: @default-padding;
+  }
+  .controls-Browser__fastDataFilter .controls-DropdownList {
+    margin-top:  ceil(11px * @multiplier);
+  }
+}
+//необходимо переписать быстрый выбор периода, временное решение в 350 версию
+.controls-DateRangeChoose__home {
+  .controls-Button__icon{
+    font-size: @default-icon-size-medium;
+  }
 }

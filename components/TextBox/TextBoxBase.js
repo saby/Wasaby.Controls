@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
     * @extends Lib/Control/CompoundControl/CompoundControl
     * @mixes SBIS3.CONTROLS/Mixins/FormWidgetMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
@@ -69,6 +69,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
              _prepareClassesByConfig: function() {
                var
                   fieldClasses = [],
+                  fieldWrapperClasses = [],
                   wrapperClasses = [],
                   containerClasses = [],
                   createNewCssClasses = function (item) {
@@ -83,18 +84,20 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
 
                containerClasses.push('controls-TextBox_state_' + (this.enabled ? 'default' : 'disabled'));
                !this.enabled && containerClasses.push('controls-TextBox_state_disabled_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
-               containerClasses.push('controls-TextBox_size_' + (this.size ? this.size : 'default'));
+               containerClasses.push('controls-TextBox_size_' + (this.size ? this.size : 'default') + (this._isMultiline ? '_multiLine' : '_singleLine'));
                containerClasses.push('controls-TextBox_text-align_' + this.textAlign);
                containerClasses.push(this._paddingClass);
                if (this.textTransform) {
                   fieldClasses.push('controls-TextBox__field-' + this.textTransform);
                }
                wrapperClasses.push('controls-TextBox__wrapper_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
+               fieldWrapperClasses.push('controls-InputRender__fieldWrapper_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
 
                return {
                   container: containerClasses.map(createNewCssClasses).join(' '),
                   field: fieldClasses.map(createNewCssClasses).join(' '),
-                  wrapper: wrapperClasses.map(createNewCssClasses).join(' ')
+                  wrapper: wrapperClasses.map(createNewCssClasses).join(' '),
+                  fieldWrapper: fieldWrapperClasses.join(' ')
                }
             },
             _paddingClass: ' controls-InputRender_paddingBoth controls-TextBox_paddingBoth',

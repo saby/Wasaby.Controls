@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/Mixins/Expandable', ['Core/CommandDispatcher'], function(
     * Миксин, добавляющий поведение хранения состояния развернутости
     * @mixin SBIS3.CONTROLS/Mixins/Expandable
     * @public
-    * @author Авраменко Алексей Сергеевич
+    * @author Авраменко А.С.
     */
 
    var Expandable = /**@lends SBIS3.CONTROLS/Mixins/Expandable.prototype  */{

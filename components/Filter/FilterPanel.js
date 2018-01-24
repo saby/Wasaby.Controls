@@ -73,7 +73,7 @@ define('SBIS3.CONTROLS/Filter/FilterPanel', [
     *
     * Структуру полей фильтра устанавливают в опции {@link items}.
     *
-    * @author Авраменко Алексей Сергеевич
+    * @author Авраменко А.С.
     * @class SBIS3.CONTROLS/Filter/FilterPanel
     * @public
     * @extends SBIS3.CONTROLS/CompoundControl

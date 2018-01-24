@@ -26,7 +26,7 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorController', [
         * @class SBIS3.CONTROLS/Action/Selector/SelectorController
         * @extends Lib/Control/CompoundControl/CompoundControl
         * @public
-        * @author Герасимов Александр Максимович
+        * @author Герасимов А.М.
         * @control
         */
        var SelectorController = CompoundControl.extend([], /**@lends SBIS3.CONTROLS/Action/Selector/SelectorController.prototype  */{

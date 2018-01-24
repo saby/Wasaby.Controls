@@ -50,7 +50,7 @@ define('SBIS3.CONTROLS/ComboBox', [
     * @class SBIS3.CONTROLS/ComboBox
     * @extends SBIS3.CONTROLS/TextBox
     *
-    * @author Красильников Андрей Сергеевич
+    * @author Красильников А.С.
     *
     * @demo SBIS3.CONTROLS.Demo.MyComboBox Пример 1. Выпадающий список, для которого установлен набора данных в опции items.
     * @demo SBIS3.CONTROLS.Demo.MyComboBoxDS Пример 2. Выпадающий список, для которого установлен источник данных в опции dataSource.
@@ -99,8 +99,8 @@ define('SBIS3.CONTROLS/ComboBox', [
       }
    }
 
-   function prepareItemClassesByConfig(item) {
-      var oldClassName = item.className || item.get && item.get('className') || '';
+   function prepareItemClassesByConfig(item, className) {
+      var oldClassName = item.className || item.get && item.get('className') || className || '';
 
       return ~oldClassName.indexOf('controls-ComboBox__multiline') ? 'controls-ComboBox__item_multiLine' : 'controls-ComboBox__item_singleLine';
    }
@@ -419,10 +419,6 @@ define('SBIS3.CONTROLS/ComboBox', [
          return false;
       },
 
-      setText: function (text) {
-         ComboBox.superclass.setText.call(this, text);
-      },
-
       _drawText: function(text) {
          ComboBox.superclass._drawText.apply(this, arguments);
          var fieldNotEditableContainer = $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0));
@@ -435,6 +431,14 @@ define('SBIS3.CONTROLS/ComboBox', [
 
       _drawNotEditablePlaceholder: function (text) {
          $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).toggleClass('controls-ComboBox__fieldNotEditable__placeholder', !text);
+      },
+
+      _getFieldForTooltip: function () {
+        if (this.isEditable()) {
+           return ComboBox.superclass._getFieldForTooltip.apply(this, arguments);
+        } else {
+           return $('.js-controls-ComboBox__fieldNotEditable', this._container);
+        }
       },
 
       _clearSelection: function(){
@@ -801,9 +805,7 @@ define('SBIS3.CONTROLS/ComboBox', [
             this._inputField.attr('readonly', 'readonly');
          }
          else {
-            if (this._options.editable) {
-               this._inputField.removeAttr('readonly');
-            }
+            this._inputField.attr('readonly', !this._options.editable);
          }
          $('.controls-ComboBox__Arrow', this.getContainer()).toggleClass('ws-invisible', !enabled); //TODO: удалять из DOM
       },
@@ -916,7 +918,6 @@ define('SBIS3.CONTROLS/ComboBox', [
             LayoutManager.scrollToElement(itemContainer, true);
             //Устанавливаю скроллбар в нужную позицию
             this._scrollContainer._initScrollbar();
-            this._scrollContainer._scrollbar.setPosition(itemContainer.position().top);
          }
       }
    });

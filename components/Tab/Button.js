@@ -18,7 +18,7 @@ define(
     * Контрол, отображающий корешок закладки. Работает только в составе группы. В джине не вытаскивается
     * @class SBIS3.CONTROLS/Tab/Button
     * @extends SBIS3.CONTROLS/Radio/Button/RadioButtonBase
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @mixes SBIS3.CONTROLS/Mixins/IconMixin
     */
@@ -54,7 +54,8 @@ define(
          //TODO костыль какой-то
          var opts = TabButton.superclass._modifyOptions.apply(this, arguments);
          opts.sanitize = function(markup) {
-            return Sanitize (markup.caption, {validNodes: {component: true, input: true, form: true, textarea: true}, validAttributes : {config: true} })
+            return Sanitize (markup.caption, {validNodes: {component: true, input: true, form: true, textarea: true},
+               validAttributes : {config: true, maxlength: true, autocomplete: true, value: true, required: true, 'ws-creates-context': true, 'ws-delegates-tabfocus': true} })
          };
          opts._order = opts._prepareOrder(opts._order);
          return opts;

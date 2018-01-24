@@ -11,7 +11,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Move', [
     * SBIS3.CONTROLS/OperationsPanel/Move
     * @class SBIS3.CONTROLS/OperationsPanel/Move
     * @extends SBIS3.CONTROLS/Link
-    * @author Сухоручкин Андрей Сергеевич
+    * @author Сухоручкин А.С.
     * @public
     */
    var OperationMove = Link.extend(/** @lends SBIS3.CONTROLS/OperationsPanel/Move.prototype */{

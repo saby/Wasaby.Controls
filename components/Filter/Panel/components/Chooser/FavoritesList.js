@@ -68,7 +68,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/FavoritesList', [
      *
      * @class SBIS3.CONTROLS/Filter/Panel/components/Chooser/FavoritesList
      * @extends SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList
-     * @author Сухоручкин Андрей Сергеевич
+     * @author Сухоручкин А.С.
      * @public
      *
      * @demo SBIS3.CONTROLS.Demo.MyFilterView

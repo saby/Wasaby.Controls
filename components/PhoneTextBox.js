@@ -23,7 +23,7 @@ define('SBIS3.CONTROLS/PhoneTextBox', [
     * @extends SBIS3.CONTROLS/FormattedTextBox
     * @demo SBIS3.CONTROLS.Demo.PagePhoneTextBox
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
@@ -154,9 +154,9 @@ define('SBIS3.CONTROLS/PhoneTextBox', [
             .attr('href', 'tel:' + this._options.srcText);
       },
 
-      _updateTextFromModel: function() {
+      _getTextFromModel: function() {
          var formatModel = this._getFormatModel();
-         this._options.text = formatModel.getText(this._getMaskReplacer());
+         return formatModel.getText(this._getMaskReplacer());
       },
 
       _focusHandler: function() {

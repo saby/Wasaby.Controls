@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/NotificationPopup', [
     * @extends SBIS3.CONTROLS/InformationPopup
     * @control
     * @public
-    * @author Степин Павел Владимирович
+    * @author Степин П.В.
     */
    function(InformationPopup, template, headerTpl, detection){
       'use strict';

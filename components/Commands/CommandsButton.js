@@ -21,7 +21,7 @@ define('SBIS3.CONTROLS/Commands/CommandsButton', [
      * @class SBIS3.CONTROLS/Commands/CommandsButton
      * @extends SBIS3.CONTROLS/Menu/MenuIcon
      *
-     * @author Крайнов Дмитрий Олегович
+     * @author Крайнов Д.О.
      *
      * @demo SBIS3.CONTROLS.Demo.CommandsButton
      *

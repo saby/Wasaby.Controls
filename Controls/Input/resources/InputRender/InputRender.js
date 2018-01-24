@@ -1,4 +1,4 @@
-define('js!Controls/Input/resources/InputRender/InputRender',
+define('Controls/Input/resources/InputRender/InputRender',
    [
       'Core/Control',
       /*'WS.Data/Type/descriptor',*/
@@ -29,8 +29,8 @@ define('js!Controls/Input/resources/InputRender/InputRender',
             //Если курсор ещё не был поставлен в поле, то поставим его в конец
             if (!result) {
                result = {
-                  selectionStart: self._value.length,
-                  selectionEnd: self._value.length
+                  selectionStart: self._options.value ? self._options.value.length : 0,
+                  selectionEnd: self._options.value ? self._options.value.length : 0
                };
             }
 
@@ -59,19 +59,9 @@ define('js!Controls/Input/resources/InputRender/InputRender',
          _controlName: 'Controls/Input/resources/InputRender/InputRender',
          _template: template,
 
-         constructor: function (options) {
-            InputRender.superclass.constructor.apply(this, arguments);
-
-            this._value = options.value;
-         },
-
-         _beforeUpdate: function (newOptions) {
-            this._value = newOptions.value;
-         },
-
          _inputHandler: function(e) {
             var
-               value = this._value,
+               value = this._options.value,
                newValue = e.target.value,
                selection = _private.getSelection(this),
                position = _private.getTargetPosition(e.target),
@@ -89,10 +79,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
             _private.setTargetData(e.target, processedData);
             _private.saveSelection(this, e.target);
 
-            if(this._value !== processedData.value){
-               this._value = processedData.value;
-               this._notify('valueChanged', processedData.value);
-            }
+            this._notify('valueChanged', [processedData.value]);
          },
 
          _keyUpHandler: function(e) {
@@ -120,7 +107,7 @@ define('js!Controls/Input/resources/InputRender/InputRender',
             var
                result;
 
-            if (this._options.validationErrors) {
+            if (this._options.validationErrors && this._options.validationErrors.length) {
                result = 'error';
             } else if (this.isEnabled()) {
                result = 'default';
@@ -131,26 +118,34 @@ define('js!Controls/Input/resources/InputRender/InputRender',
             return result;
          },
 
+         _focusHandler: function(e) {
+            if (this._options.selectOnClick) {
+               e.target.select();
+            }
+         },
+
          /**
           * Метод вставляет строку text вместо текущего выделенного текста в инпуте
           * Если текст не выделен, то просто вставит text на позицию каретки
           * @param text
+          * @returns {Number} позиция каретки.
           */
          paste: function(text) {
             var
                selection = _private.getSelection(this),
                processedData = this._options.viewModel.prepareData({
-                  before: this._value.slice(0, selection.selectionStart),
+                  before: this._options.value.slice(0, selection.selectionStart),
                   insert: text,
-                  after: this._value.slice(selection.selectionEnd, this._value.length)
+                  after: this._options.value.slice(selection.selectionEnd, this._options.value.length)
                }, 'insert');
 
-            if (this._value !== processedData.value) {
-               this._value = processedData.value;
-               this._notify('valueChanged', processedData.value);
-
+            if (this._options.value !== processedData.value) {
+               this._notify('valueChanged', [processedData.value]);
                this._forceUpdate();
             }
+
+            //Возвращаем позицию каретки. Она обрабатывается методом pasteHelper
+            return selection.selectionEnd;
          }
       });
 

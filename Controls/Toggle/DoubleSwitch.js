@@ -1,4 +1,4 @@
-define('js!Controls/Toggle/DoubleSwitch', [
+define('Controls/Toggle/DoubleSwitch', [
    'Core/Control',
    'tmpl!Controls/Toggle/DoubleSwitch/DoubleSwitch',
    'WS.Data/Type/descriptor',
@@ -35,7 +35,7 @@ define('js!Controls/Toggle/DoubleSwitch', [
       },
 
       notifyChanged: function(self){
-         self._notify('valueChanged', !self._options.value);
+         self._notify('valueChanged', [!self._options.value]);
       }
    };
 

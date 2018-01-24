@@ -1,4 +1,4 @@
-define(['js!Controls/Input/resources/SuggestPopupController', 'Core/core-instance', 'WS.Data/Source/Memory','WS.Data/Collection/List'],
+define(['Controls/Input/resources/SuggestPopupController', 'Core/core-instance', 'WS.Data/Source/Memory','WS.Data/Collection/List'],
    function(SuggestPopupController, cInstance, Memory, List) {
    
    'use strict';
@@ -13,6 +13,27 @@ define(['js!Controls/Input/resources/SuggestPopupController', 'Core/core-instanc
             var searchController = SuggestPopupController._private.getSearchController(self);
             assert.isTrue(cInstance.instanceOfModule(searchController, 'Controls/List/resources/utils/Search'));
             assert.isTrue(cInstance.instanceOfModule(searchController._dataSource, 'WS.Data/Source/Memory'));
+         });
+   
+         it('.prepareSuggestFilter', function() {
+            var selfTest = {
+                  _searchParam: 'test'
+               };
+   
+            selfTest._popupOptions = {
+               componentOptions: {
+                  filter: {
+                     test: 123
+                  }
+               }
+            };
+   
+            SuggestPopupController._private.prepareSuggestFilter(selfTest, {hasMore: true});
+            assert.equal(selfTest._popupOptions.componentOptions.filter.test, 123);
+   
+            SuggestPopupController._private.prepareSuggestFilter(selfTest, {hasMore: false});
+            assert.equal(selfTest._popupOptions.componentOptions.filter.test, undefined);
+            
          });
    
          it('.changeSelectedIndex', function() {
@@ -40,6 +61,10 @@ define(['js!Controls/Input/resources/SuggestPopupController', 'Core/core-instanc
    
             SuggestPopupController._private.decreaseSelectedIndex(selfTest);
             assert.equal(selfTest._selectedIndex, 0);
+   
+            SuggestPopupController._private.setSuggestSelectedIndex(selfTest, 2);
+            assert.equal(selfTest._selectedIndex, 2);
+            assert.equal(selfTest._popupOptions.componentOptions.selectedIndex, 2);
          });
          
       });

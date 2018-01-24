@@ -1,198 +1,67 @@
 <div class="controls-DateRangeBigChoose controls-DateRangeBigChoose__noBorder">
-   <ws:template name="DateBoxTpl">
-      <SBIS3.CONTROLS:Date:Box
-         tabindex="2"
-         mask="{{mask}}"
-         name="DatePickerEnd"
-         autocompleteMode="end"
-         date="{{'endValue'|mutable}}"
-         serializationMode="{{endValueSerializationMode}}"
-         onTextChangeMode="onTextEnter"
-         className="controls-DateRangeBigChoose__datePickerEnd"
-         validators="{{rangeselect ? [
-                  {
-                     'validator': compareExt,
-                     'option': 'date',
-                     'errorMessage': errorMessage,
-                     'params': ['DatePickerStart', 'getDate', '>=']
-                  }
-               ] : undefined}}"
-      />
-   </ws:template>
-   <div class="controls-DateRangeBigChoose__header">
-      <SBIS3.CONTROLS:Button:IconButton
-         tabindex="0"
-         name="HomeButton"
-         activableByClick="{{false}}"
-         tooltip="{[Поставить текущую дату]}"
-         icon="sprite:icon-16 icon-Home2 icon-primary"
-         className="controls-IconButton__round-border controls-DateRangeBigChoose__homeBtn"
-      />
-      <div class="controls-DateRangeBigChoose__header-date-pickers">
-         <SBIS3.CONTROLS:Button:IconButton
-            tabindex="0"
-            name="ApplyButton"
-            primary="{{true}}"
-            activableByClick="{{false}}"
-            icon="sprite:icon-16 icon-Yes icon-done"
-            className="controls-DateRangeBigChoose__ApplyButton controls-IconButton__round-border"
-         />
-         <div class="controls-DateRangeBigChoose__datePickerEnd-wrapper{{rangeselect ? '' : ' ws-hidden'}}">
-            <ws:partial template="DateBoxTpl" scope="{{...}}">
-               <ws:compareExt type="function">SBIS3.CONTROLS/Date/RangeBigChoose/resources/Validators:compareExt</ws:compareExt>
-               <ws:errorMessage type="string">{[Дата конца периода должна быть больше даты начала.]}</ws:errorMessage>
-            </ws:partial>
-            <div class="controls-DateRangeBigChoose__header-rangeDash"></div>
-         </div>
-         <SBIS3.CONTROLS:Date:Box
-            tabindex="1"
-            mask="{{mask}}"
-            name="DatePickerStart"
-            autocompleteMode="start"
-            onTextChangeMode="onTextEnter"
-            date="{{'startValue'|mutable}}"
-            className="controls-DateRangeBigChoose__datePickerStart"
-         />
-      </div>
-      <Deprecated:Controls:CloseButton:CloseButton
-         tabindex="0"
-         name="CloseButton"
-         className="controls-DateRangeBigChoose__closeButton"
-      />
-   </div>
-   <div class="controls-DateRangeBigChoose__years">
-      <div class="controls-DateRangeBigChoose__left">
+   <ws:partial template="{{headerTpl}}" scope="{{...}}"></ws:partial>
+
+   <div class="controls-DateRangeBigChoose__months">
+      <div class="controls-DateRangeBigChoose__years">
          <SBIS3.CONTROLS:Button:IconButton
             tabindex="0"
             name="PrevYearButton"
             activableByClick="{{false}}"
-            icon="sprite:icon-24 icon-ArrowTimeBackward icon-primary"
+            icon="sprite:icon-24 icon-MarkLeftBold icon-primary"
             className="controls-DateRangeBigChoose__years-prevYearBtn"
          />
-      </div>
-      <div  class="controls-DateRangeBigChoose__center">
-         <div class="controls-DateRangeBigChoose__years-year">
-            <div class="controls-DateRangeBigChoose__years-panel-wrapper">
-               <SBIS3.CONTROLS:Link
-                  tabindex="0"
-                  caption="..."
-                  activableByClick="{{false}}"
-                  name="ToggleChooseYearButton"
-                  tooltip="{[Выбор нескольких лет]}"
-                  className="controls-DateRangeBigChoose__years-toggleChooseYearBtn"
-               />
-            </div>
-            <div class="controls-DateRangeBigChoose__years-panel-wrapper">
-               <SBIS3.CONTROLS:Link
-                  tabindex="0"
-                  name="CurrentYearButton"
-                  activableByClick="{{false}}"
-                  caption="{{'currentYear'|mutable}}"
-                  className="controls-DateRangeBigChoose__years-currentYearBtn"
-               />
-            </div>
-            <div class="controls-DateRangeBigChoose__years-panel-wrapper{{rangeselect ? '' : ' ws-hidden'}}">
-               <SBIS3.CONTROLS:Button:IconButton
-                  tabindex="0"
-                  visible="{{false}}"
-                  name="BackToYearButton"
-                  activableByClick="{{false}}"
-                  tooltip="{[Смена режима календаря на годовой]}"
-                  icon="sprite:icon-24 icon-Calendar2 icon-primary"
-                  className="controls-DateRangeBigChoose__years-back"
-               />
-            </div>
-         </div>
-         <div class="controls-DateRangeBigChoose__rangeContainer controls-DateRangeBigChoose__yearsRange ws-hidden">
-            <ws:for data="yearIndex in 6">
-               <ws:WSControls.Buttons.Button
-                  tabindex="0"
-                  command="resetFilter"
-                  activableByClick="{{false}}"
-                  name="YearsRangeBtn{{yearIndex}}"
-                  className="controls-DateRangeBigChoose__years-yearsRange-btn controls-RangeSelectable__item"
-                  attributes="{{ {
-                     'data-selected-range-id': yearIndex
-                  } }}"
-               />
-            </ws:for>
-         </div>
-      </div>
-      <div class="controls-DateRangeBigChoose__right">
+         <ws:partial template="{{yearsPanelTpl}}" scope="{{...}}"></ws:partial>
          <SBIS3.CONTROLS:Button:IconButton
             tabindex="0"
             name="NextYearButton"
             activableByClick="{{false}}"
-            icon="sprite:icon-24 icon-ArrowTimeForward icon-primary"
+            icon="sprite:icon-24 icon-MarkRightBold icon-primary"
             className="controls-DateRangeBigChoose__years-nextYearBtn"
          />
       </div>
-   </div>
-   <div class="controls-DateRangeBigChoose__months ws-hidden">
-      <div class="controls-DateRangeBigChoose__months-quarterRange controls-DateRangeBigChoose__left">
-         <ws:for data="quarterIndex, quarterCaption in ['I', 'II', 'III', 'IV']">
-            <div class="controls-DateRangeBigChoose__months-range-btn-wrapper controls-DateRangeBigChoose__months-quarterRange-btn-wrapper{{quarterIndex}} controls-RangeSelectable__item" data-selected-range-id="{{quarterIndex + 1}}">
-               <ws:WSControls.Buttons.Button
-                  tabindex="0"
-                  caption="{{quarterCaption}}"
-                  activableByClick="{{false}}"
-                  name="QuarterRangeBtn{{quarterIndex}}"
-                  className="controls-DateRangeBigChoose__months-quarter-btn"
-               />
-            </div>
-         </ws:for>
-      </div>
-      <div class="controls-DateRangeBigChoose__months-halfyearRange controls-DateRangeBigChoose__right">
-         <ws:for data="halfyearIndex, halfyearCaption in ['I', 'II']">
-            <div class="controls-DateRangeBigChoose__months-range-btn-wrapper controls-DateRangeBigChoose__months-halfyearRange-btn-wrapper{{halfyearIndex}} controls-RangeSelectable__item" data-selected-range-id="{{halfyearIndex + 1}}">
-               <ws:WSControls.Buttons.Button
-                  tabindex="0"
-                  activableByClick="{{false}}"
-                  caption="{{halfyearCaption}}"
-                  name="HalfyearRangeBtn{{halfyearIndex}}"
-                  className="controls-DateRangeBigChoose__months-halfyear-btn"
-               />
-            </div>
-         </ws:for>
-      </div>
-      <div class="controls-DateRangeBigChoose__months-month controls-DateRangeBigChoose__center">
-         <SBIS3.CONTROLS:Date:RangeBigChoose:resources:MonthRangePicker
-            tabindex="0"
-            name="MonthRangePicker"
-            activableByClick="{{false}}"
-            className="controls-DateRangeBigChoose__months-month-picker"
-            infiniteScrollContainer="controls-DateRangeBigChoose__months-month"
-         />
-         <div class="controls-DateRangeBigChoose__months-toStart ws-hidden"></div>
-         <div class="controls-DateRangeBigChoose__months-toEnd ws-hidden"></div>
-      </div>
+      <SBIS3.CONTROLS:ScrollContainer
+         name="ScrollContainer"
+         class="controls-DateRangeBigChoose__months-month-wrapper  controls-ScrollContainer__flex controls-ScrollContainer__hiddenScrollbar">
+         <ws:content>
+            <SBIS3.CONTROLS:Date:RangeBigChoose:resources:MonthRangePicker
+               tabindex="0"
+               name="MonthRangePicker"
+               activableByClick="{{false}}"
+               className="controls-DateRangeBigChoose__months-month-picker"
+               infiniteScrollContainer="controls-DateRangeBigChoose__months-month"
+               quantum="{{quantum}}"
+            />
+         </ws:content>
+      </SBIS3.CONTROLS:ScrollContainer>
+
    </div>
 
    <div class="controls-DateRangeBigChoose__dates ws-hidden">
-      <div class="controls-DateRangeBigChoose__dates-months">
-         <ws:for data="monthIndex, monthCaption in _monthsNames">
-            <ws:WSControls.Buttons.Button
+      <div class="controls-DateRangeBigChoose__dates-header">
+         <div class="controls-DateRangeBigChoose__dates-header-year">2018</div>
+         <div class="controls-DateRangeBigChoose__dates-header-weekdays">
+            <div for="weekday in weekdaysCaptions"
+                 class="{{ _prepareCssClass(
+                              'controls-DateRangeBigChoose__dates-header-weekdays', null,
+                              [[weekday.weekend, 'weekend', 'workday']])
+                        }}">
+               {{weekday.caption}}
+            </div>
+         </div>
+      </div>
+      <SBIS3.CONTROLS:ScrollContainer
+         name="ScrollContainer"
+         class="controls-DateRangeBigChoose__dates-dates-wrapper  controls-ScrollContainer__flex controls-ScrollContainer__hiddenScrollbar">
+         <ws:content>
+            <SBIS3.CONTROLS:Date:RangeBigChoose:resources:DateRangePicker
                tabindex="0"
-               caption="{{monthCaption}}"
+               name="MonthDateRangePicker"
                activableByClick="{{false}}"
-               name="MonthRangeBtn{{monthIndex}}"
-               class="controls-DateRangeBigChoose__dates-month-btn controls-RangeSelectable__item"
-               attributes="{{ {
-                  'data-selected-range-id': monthIndex
-               } }}"
+               selectionType="{{selectionType}}"
+               className="controls-DateRangeBigChoose__dates-dates"
+               quantum="{{quantum}}"
             />
-         </ws:for>
-      </div>
-      <div class="controls-DateRangeBigChoose__dates-dates-wrapper">
-         <SBIS3.CONTROLS:Date:RangeBigChoose:resources:DateRangePicker
-            tabindex="0"
-            name="MonthDateRangePicker"
-            activableByClick="{{false}}"
-            rangeselect="{{rangeselect}}"
-            className="controls-DateRangeBigChoose__dates-dates"
-         />
-         <div class="controls-DateRangeBigChoose__dates-dates-top-gradient"></div>
-         <div class="controls-DateRangeBigChoose__dates-dates-bottom-gradient"></div>
-      </div>
+         </ws:content>
+      </SBIS3.CONTROLS:ScrollContainer>
    </div>
 </div>

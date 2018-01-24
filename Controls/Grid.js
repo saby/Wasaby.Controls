@@ -1,4 +1,4 @@
-define('js!Controls/Grid', [
+define('Controls/Grid', [
    'Core/Control'
 ], function (Control) {
 

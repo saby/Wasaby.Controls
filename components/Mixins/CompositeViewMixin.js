@@ -23,7 +23,7 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
     * @mixin SBIS3.CONTROLS/Mixins/CompositeViewMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var
        TILE_MODE = { // Возможные результаты режима отображения плитки
@@ -485,14 +485,13 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
 
          expandNode: function(parentFunc, key, hash) {
             if(this.getViewMode() === 'table') {
-               parentFunc.call(this, key, hash);
-
+               return parentFunc.call(this, key, hash);
             }
          },
 
          collapseNode: function(parentFunc, key, hash) {
             if(this.getViewMode() === 'table') {
-               parentFunc.call(this, key, hash);
+               return parentFunc.call(this, key, hash);
             }
          },
 

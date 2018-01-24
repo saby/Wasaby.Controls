@@ -22,7 +22,7 @@ define('SBIS3.CONTROLS/Date/RangeSlider',[
     *
     * @mixes SBIS3.CONTROLS/Mixins/DateRangeChoosePickerMixin
     *
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     * @demo SBIS3.CONTROLS.Demo.MyDateRangeSlider
     *
     * @control

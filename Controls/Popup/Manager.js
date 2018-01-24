@@ -1,4 +1,4 @@
-define('js!Controls/Popup/Manager',
+define('Controls/Popup/Manager',
    [
       'Core/helpers/random-helpers',
       'WS.Data/Collection/List'
@@ -18,7 +18,7 @@ define('js!Controls/Popup/Manager',
          },
 
          removeElement: function (element) {
-            element.strategy.removeElement(element);
+            element.strategy.elementDestroyed(element);
             this._popupItems.remove(element);
             if (element.isModal) {
                var indices = this._popupItems.getIndicesByValue('isModal', true);
@@ -42,11 +42,17 @@ define('js!Controls/Popup/Manager',
                      onPopupCreated: function (event, id, width, height) {
                         _private.popupCreated(id, width, height);
                      },
+                     onPopupUpdated: function (event, id, width, height) {
+                        _private.popupUpdated(id, width, height);
+                     },
+                     onPopupFocusIn: function (event, id, focusedControl) {
+                        _private.popupFocusIn(id, focusedControl);
+                     },
                      onPopupFocusOut: function (event, id, focusedControl) {
                         _private.popupFocusOut(id, focusedControl);
                      },
-                     onResult: function (event, id, args) {
-                        _private.sendResult(id, args);
+                     onResult: function (event, id, result) {
+                        _private.sendResult(id, result);
                      }
                   };
                }
@@ -60,34 +66,42 @@ define('js!Controls/Popup/Manager',
                var strategy = element.strategy;
                if (strategy) {
                   // при создании попапа, зарегистрируем его
-                  strategy.addElement(element, width, height);
+                  strategy.elementCreated(element, width, height);
                   Manager._redrawItems();
                }
             }
          },
 
-         popupFocusOut: function (id, focusedControl) {
+         popupUpdated: function (id, width, height) {
             var element = Manager.find(id);
             if (element) {
-               if (!!element.popupOptions.autoHide) {
-                  var
-                     openerId = element.popupOptions.opener._options.id,
-                     parent = focusedControl.to;
-                  while (!!parent) {
-                     if (parent._options.id === openerId || parent._options.id === id) {
-                        return;
-                     }
-                     parent = parent.getParent();
-                  }
-                  Manager.remove(id);
+               var strategy = element.strategy;
+               if (strategy) {
+                  // при создании попапа, зарегистрируем его
+                  strategy.elementUpdated(element, width, height);
+                  Manager._redrawItems();
                }
+            }
+         },
+
+         popupFocusIn: function(id, focusedControl){
+            var element = Manager.find(id);
+            if (element && element.popupOptions.eventHandlers && element.popupOptions.eventHandlers.onFocusIn) {
+               element.popupOptions.eventHandlers.onFocusIn(focusedControl);
+            }
+         },
+
+         popupFocusOut: function (id, focusedControl) {
+            var element = Manager.find(id);
+            if (element && element.popupOptions.eventHandlers && element.popupOptions.eventHandlers.onFocusOut) {
+               element.popupOptions.eventHandlers.onFocusOut(focusedControl);
             }
          },
 
          sendResult: function (id, result) {
             var element = Manager.find(id);
-            if (element) {
-               element.controller.notifyOnResult(result);
+            if (element && element.popupOptions.eventHandlers && element.popupOptions.eventHandlers.onResult) {
+               element.popupOptions.eventHandlers.onResult(result);
             }
          }
       };
@@ -107,15 +121,14 @@ define('js!Controls/Popup/Manager',
           * @function Controls/Popup/Manager#show
           * @param options конфигурация попапа
           * @param strategy стратегия позиционирования попапа
-          * @param controller контроллер
           */
-         show: function (options, strategy, controller) {
+         show: function (options, strategy) {
             var element = {
                id: Random.randomId('popup-'),
                isModal: options.isModal,
                strategy: strategy,
                position: strategy.getDefaultPosition(),
-               controller: controller,
+
                popupOptions: options
             };
             _private.addElement.call(this, element);

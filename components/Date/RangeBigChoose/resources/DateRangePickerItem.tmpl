@@ -1,8 +1,31 @@
-<SBIS3.CONTROLS:Date:RangeBigChoose:resources:MonthView
-   className="controls-DateRangeBigChoose-DateRangePicker__item"
-   captionType="text"
-   captionFormat="%B"
-   showWeekdays="{{false}}"
-   rangeselect="{{rangeselect}}"
-   month="{{item.get('date').toSQL()}}"
-/>
+<div class="controls-DateRangeBigChoose-DateRangePickerItem" data-date="{{ item.get('months')[0].toSQL() }}">
+   <div class="controls-DateRangeBigChoose-DateRangePickerItem__months">
+      <ws:for data="monthIndex, month in item.get('months')">
+         <div class="controls-DateRangeBigChoose-DateRangePickerItem__months-btn"
+              data-date="{{ month.toSQL() }}">
+            {{ month | strftime: "%B" }}
+         </div>
+      </ws:for>
+      <div class="controls-DateRangeBigChoose-DateRangePickerItem__months-nextyear-btn"
+            data-date="{{ item.get('months')[0].toSQL() }}">
+         {{ item.get("months")[0].getFullYear() + 1 }}
+      </div>
+   </div>
+   <div class="controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates">
+      <ws:for data="monthIndex, month in item.get('months')">
+         <div class="controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_wrapper" data-date="{{ month.toSQL() }}">
+            <div class="controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title"
+              data-date="{{ month.toSQL() }}">
+               {{ month | strftime: "%B" }}
+            </div>
+            <SBIS3.CONTROLS:Date:RangeBigChoose:resources:MonthView
+               className="controls-DateRangeBigChoose-DateRangePicker__item"
+               showWeekdays="{{false}}"
+               selectionType="{{selectionType}}"
+               month="{{month}}"
+               quantum="{{quantum}}"
+            />
+         </div>
+      </ws:for>
+   </div>
+</div>

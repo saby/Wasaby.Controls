@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/CompoundControl', ['Lib/Control/CompoundControl/CompoundC
     * Базовый класс для всех контролов. Включает в себя объединенные старые классы Control и CompoundControl.
     * Объединение помогает однозначно понимать от какого класса должны наследоваться все остальные контролы.
     * @class SBIS3.CONTROLS/CompoundControl
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     * @extends Lib/Control/CompoundControl/CompoundControl
     * @public
     */

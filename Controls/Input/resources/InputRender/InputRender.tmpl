@@ -1,4 +1,4 @@
-<div class="controls-InputRender controls-InputRender_state_{{ _getInputState() }} {{ !isEnabled() ? 'controls-InputRender_state_disabled_' + (_options.isMultiline ? 'multiLine' : 'singleLine') }} controls-InputRender_size_{{ _options.size ? _options.size : 'default' }} controls-InputRender_padding{{ _options.sidePadding ? _options.sidePadding : 'Both' }}"
+<div class="controls-InputRender controls-InputRender_state_{{ _getInputState() }} {{ !isEnabled() ? 'controls-InputRender_state_disabled_' + (_options.isMultiline ? 'multiLine' : 'singleLine') }} controls-InputRender_size_{{ _options.size ? _options.size : 'default_' + (_options.isMultiline ? 'multiLine' : 'singleLine') }} controls-InputRender_padding{{ _options.sidePadding ? _options.sidePadding : 'Both' }}"
      title="{{tooltip}}">
    <div class="controls-InputRender__wrapper">
       <div class="controls-InputRender__fieldWrapper">
@@ -13,8 +13,9 @@
                on:click="_clickHandler()"
                on:select="_selectionHandler()"
                on:keyup="_keyUpHandler()"
-               on:change="_notifyHandler('onInputCompleted')"
-               value="{{ _value }}"
+               on:change="_notifyHandler('inputCompleted')"
+               on:focus="_focusHandler()"
+               value="{{ _options.value }}"
                placeholder="{{_options.placeholder}}"
          />
 

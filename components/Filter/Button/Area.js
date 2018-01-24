@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/Filter/Button/Area',
       /**
        * @class SBIS3.CONTROLS/Filter/Button/Area
        * @extends SBIS3.CONTROLS/CompoundControl
-       * @author Герасимов Александр Максимович
+       * @author Герасимов А.М.
        * @control
        * @public
        */

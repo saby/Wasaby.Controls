@@ -23,7 +23,7 @@ define('js!WSControls/Buttons/ButtonBase', [
     * @mixes SBIS3.CONTROLS/Mixins/DataBindMixin
     * @mixes SBIS3.CONTROLS/Mixins/IconMixin
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     *

@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/Date/RangeBig', [
     * @class SBIS3.CONTROLS/Date/RangeBig
     * @extends SBIS3.CONTROLS/Date/Range
     *
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     *
     * @control
     * @public

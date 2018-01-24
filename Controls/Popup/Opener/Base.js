@@ -1,12 +1,11 @@
-define('js!Controls/Popup/Opener/Base',
+define('Controls/Popup/Opener/Base',
    [
       'Core/Control',
-      'js!Controls/Popup/Manager',
+      'Controls/Popup/Manager',
       'Core/core-clone',
-      'Core/core-merge',
-      'js!Controls/Popup/Controller'
+      'Core/core-merge'
    ],
-   function (Control, Manager, CoreClone, CoreMerge, Controller) {
+   function (Control, Manager, CoreClone, CoreMerge) {
       /**
        * Базовый опенер
        * @category Popup
@@ -36,14 +35,9 @@ define('js!Controls/Popup/Opener/Base',
                if (!cfg.opener) {
                   cfg.opener = this;
                }
-               this._controller = new Controller({
-                  eventHandlers: {
-                     onResult: this._options.onResult
-                  }
-               });
-               this._popupId = Manager.show(cfg, strategy, this._controller);
+               this._popupId = Manager.show(cfg, strategy);
             }
-            return this._controller.resultDef;
+            return this._popupId;
          },
 
          /**

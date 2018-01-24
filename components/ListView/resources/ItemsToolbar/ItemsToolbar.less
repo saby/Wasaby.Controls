@@ -64,11 +64,12 @@
                & > * {
                   margin: @list-view-actions-margin-action-multiView;
                }
-               margin-right: 0;
+               .flex-direction(column);
             }
 
             .controls-ItemActions__menu-button {
                margin-left: @list-view-actions-marginLeft-menu-multiView;
+               order: -1;
             }
          }
       }
@@ -214,6 +215,21 @@
    }
 }
 
+.controls-EditActions__cancelButton {
+   width: @width_EditActions-cancelButton;
+   height: @height_EditActions-cancelButton;
+   margin-right:  @margin-right_ListView-itemsToolbar-closeButton;
+   background: @background_EditActions-closeButton;
+   cursor: pointer;
+   display: inline-block;
+   &:hover {
+      background: @background_EditActions-closeButton_active;
+   }
+   &:active {
+      background: @background_EditActions-closeButton_active;
+   }
+}
+
 .itemsToolbar-leftSwipeAnimation {
    .animation(itemsToolbar-leftSwipe, @list-view-items-toolbar-animate-duration );
 }
@@ -255,7 +271,7 @@
          right: 0;
          background-color: transparent;
 
-         .controls-Button__wrapper {
+         .controls-ButtonBase__content {
             .flex-direction(column);
             .justify-content(center);
             &:before {

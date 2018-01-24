@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/Mixins/FormWidgetMixin', [
     * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/validation/">Валидация вводимых данных</a>.
     * @mixin SBIS3.CONTROLS/Mixins/FormWidgetMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
    var FormWidgetMixin = /** @lends SBIS3.CONTROLS/Mixins/FormWidgetMixin.prototype */{
        /**
@@ -51,7 +51,7 @@ define('SBIS3.CONTROLS/Mixins/FormWidgetMixin', [
              */
             /**
              * @cfg {Validator[]} Устанавливает валидаторы контрола.
-             * Подробнее о валидации можно прочитать в {@link /doc/platform/developmentapl/interface-development/forms-and-validation/validation/ руководстве разработчика}.
+             * Подробнее о валидации можно прочитать в <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/validation/">руководстве разработчика</a>.
              * @example
              * Пример массива, описывающего валидацию значения из опции text. Такой валидатор, например, можно использовать в контроле {@link SBIS3.CONTROLS/TextBox}.
              * <pre class="brush: xml">

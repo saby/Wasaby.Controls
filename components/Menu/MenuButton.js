@@ -1,15 +1,16 @@
 define('SBIS3.CONTROLS/Menu/MenuButton', [
    'js!WSControls/Buttons/MenuButton',
+   'SBIS3.CONTROLS/Utils/ButtonUtil',
    'css!SBIS3.CONTROLS/Button/Button',
    'css!SBIS3.CONTROLS/Menu/MenuButton/MenuButton'
-], function(WSMenuButton) {
+], function(WSMenuButton, ButtonUtil) {
 
    'use strict';
 
    /**
     * Класс контрола "Кнопка-меню".
     *
-    * {@link /doc/platform/developmentapl/interface-development/components/textbox/buttons/button-line/#menu-button Демонстрационные примеры}.
+    * <a href='/doc/platform/developmentapl/interface-development/components/textbox/buttons/button-line/#menu-button'>Демонстрационные примеры</a>.
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
     *
     * @remark
@@ -18,7 +19,7 @@ define('SBIS3.CONTROLS/Menu/MenuButton', [
     * @class SBIS3.CONTROLS/Menu/MenuButton
     * @extends WSControls/Buttons/MenuButton
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
@@ -58,12 +59,18 @@ define('SBIS3.CONTROLS/Menu/MenuButton', [
       _modifyOptions : function() {
          var opts = MenuButton.superclass._modifyOptions.apply(this, arguments);
          opts.cssClassName += ' controls-Button';
-         opts.cssClassName += ' controls-Button-size__' + (!!opts.size ? opts.size : 'default');
-         opts.cssClassName += ' controls-Button-color__' + (!!opts.primary ? 'primary' : 'default');
-         opts.cssClassName += (!!opts.primary ? ' controls-Button__primary' : '');
+          ButtonUtil.preparedClassFromOptions(opts);
          opts.pickerClassName += ' controls-MenuButton__Menu';
          return opts;
-      }
+      },
+
+      _toggleState: function () {
+          var container = this._container;
+
+          container[0].className = container[0].className.replace(/(^|\s)controls-Button_size-\S+/g, '').replace(/(^|\s)controls-Button_state-\S+/g, '');
+          container.addClass(ButtonUtil.getClassState(this._options));
+          MenuButton.superclass._toggleState.apply(this, arguments);
+       }
    });
 
    return MenuButton;

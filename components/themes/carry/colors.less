@@ -6,8 +6,11 @@
 @basic-block-bg-color:                   #FCFCFC;
 @default-bg-color-hovered-item:          #F0F5FB;
 @default-disabled-color:                 #CCCCCC;
-//textbox
-@background-color_TextBox:               #FFFFFF;
+//icons
+@icon-color-primary:                     #587AB0;
+//InputRender
+@background-color_InputRender:           #FFFFFF;
+//MoneyTextBox
 @color_MoneyTextBox-decimals:            #8991A9;
 //infobox
 @Infobox-cross-color:                    #8991A9;
@@ -20,6 +23,8 @@
 @suggest-picker-border-color:            #BDBDBD;
 @suggest-picker-bg-color:                #F8F8F8;
 @suggest-list-hover-color:               #F0F5FB;
+@border-color_SuggestTextBox_withPicker:     @border-color_InputRender_active;
+
 //@highlight
 @highlight-text-bg:                      #FFFECE;
 //operation panel
@@ -37,14 +42,15 @@
 @search-form-icon-reset-color:           #8991A9;
 @color_searchForm_icon_disabled:         #CCCCCC;
 //FieldLink
-@fieldLink-link-color-enabled:           #8991A9;
-@fieldLink-showSelector-color:           #587AB0;
-@fieldLink-showSelector-color-hover:     #313E78;
-@fieldLink-link-color-hover:             #313E78;
-@color_FieldLink_show_all:               #587AB0;
-@color_FieldLink_show_all_hover:         #313E78;
+@color_FieldLink-showSelectorButton:             #587AB0;
+@color_FieldLink-showSelectorButton_hovered:     #313E78;
+@color_FieldLink-showAllLinks:                   #587AB0;
+@color_FieldLink-showAllLinks_hovered:           #313E78;
 @color_FieldLink_dropAllLinks:           #8991A9;
-@fieldLink-border-color-picker-show:     @border-color_TextBox_active;
+
+//FieldLink_Link
+@color_FieldLink-Link_enabled:                   #8991A9;
+
 //DropDownList
 @DropdownList-picker-bg:                 #F8F8F8;
 @DropdownList-picker-menu-item-hover:    #F0F5FB;
@@ -58,6 +64,7 @@
 @border-color_DropDownList_picker:        #BDBDBD;
 @color_dropdownList_picker_close_cross:           #8991A9;
 @color_dropdownList_picker_close_cross_hover:     #313E78;
+@color-DropDownList_arrowIcon:                    #2D68B5;
 //Combobox
 @color_ComboBox_item_separator:                #F0F5FB;
 @color_ComboBox-Arrow:                         #587AB0;
@@ -80,14 +87,20 @@
 @color_ListView-GroupBy_text:                        #8991A9;
 @color_ListView-GroupBy_text_hovered:                #313E78;
 @color_ListView-GroupBy_separator:                   #EAEAEA;
+@background-color_ListView-GroupBy_text:             transparent;
+@background-color_DataGridView-notScrolledCell:      #ffffff;
+//DataGridView
+@color_DataGridView-sorting:                         #2D68B5;
+@color_DataGridView-sorting_hovered:                 @color_DataGridView-sorting;
 //TreeDataGridView
 @color_TreeDataGridView-expand:                      #313E78;
 @color_TreeDataGridView-expand_hovered:              #2D68B5;
 @color_TreeDataGridView-expandHidden:                #8991A9;
 @color_TreeDataGridView-expandHidden_hovered:        #2D68B5;
-//datagrid
+@background-color_TreeDataGridView-editArrow:        #F0F5FB;
 //DatagridView
-@data-grid-partScroll-notScrolledCell-Color:          #ffffff;
+@color_TreeDataGridView-editArrow:                   #587AB0;
+@color_TreeDataGridView-editArrow_hovered:           #313E78;
 //Link
 @color_Link-text_disabled:                #CCCCCC;
 @color_Link-additional:                   #313E78;
@@ -130,3 +143,62 @@
 @backround-color_filterButton_picker_content:     #F8F8F8;
 @controls-filterButton-area-text-color:           #FFFFFF;
 @border-color_filterButton_picker_content:        #BDBDBD;
+@color-FilterButtom_line_arrow:                   #2D68B5;
+@controls-filterLine-link-hover-color:            #313E78;
+// Date Range Big Choose
+@background-color_DateRangeBigChoose:                                 #ffffff;
+@background-color__DateRangeBigChoose-header:                         #39506A;
+@color_DateRangeBigChoose-years-panel-displayed-year:                 #D94700;
+@background-color_MonthView-item-today:                               #ff7033;
+@border-color__MonthView-item-selected-startEnd-hover:                #2D68B5;
+@border-color_DateRangeBigChoose-range-selected-startEnd-edgeBorder:  #2D68B5;
+@color_DateRangeBigChoose-MonthRangePickerItem-month-title:           #313E78;
+@background-color_DateRangeBigChoose-range-selected-startEnd:         #F0F5FB;
+@color_MonthView-item-weekend:                                        #D94700;
+@border-color_DateRangeBigChoose-MonthRangePickerItem-month:          #CCCCCC;
+@background-color_DateRangeBigChoose-range-selected-unfinishedEdge:   #E6ECFA;
+@background-color_DateRangeBigChoose-range-selected-inner:            #F0F5FB;
+@background-color_DateRangeBigChoose-dates-months-period-hover:       #E6ECFA;
+@background-color_DateRangeBigChoose_quartersPanel:                   #FFFFFF;
+@color_MonthView-item:                                                #000000;
+@color_DateRangeBigChoose-DateRangePickerItem-months-button:          #000000;
+@background-color_DateRangeBigChoose-DateRangePickerItem-months-button:#FFFFF;
+@background-color_DateRangeBigChoose-DateRangePickerItem-months-button-hover: #F0F5FB;
+@color_DateRangeBigChoose-DateRangePickerItem-monthsWithDates-title:  #313E78;
+@backgroun-color_DateRangeBigChoose-DateRangePickerItem-monthsWithDates-title-hover:#F0F5FB;
+@color_DateRangeBigChoose-dates-months-nextYearButton:                #D94700;
+@background-color_DateRangeBigChoose-dates-months-nextYearButton:     #FFFFFF;
+@background-color_DateRangeBigChoose-dates-months-nextYearButton-hover:#F0F5FB;
+@background_MonthView:                                                #FFFFFF;
+@background_MonthView-item-hover:                                     #E6ECFA;
+@background_MonthView-item:                                           #F5F5F5;
+@color_MonthView-item:                                                #000000;
+@background_MonthView-item-selected:                                  #F0F5FB;
+@color_DateRangeBigChoose-dates-header-weekdays-weekend:              #D94700;
+@color_DateRangeBigChoose-dates-header-year:                          #D94700;
+@border-color_DateRangeBigChoose-range-selected-startEnd:             #f5f5f5;
+@border-color_DateRangeBigChoose-range-selected-inner:                #f5f5f5;
+@border-color_DateRangeBigChoose-MonthRangePickerItem-monthWrapper:   #f5f5f5;
+@border-color_DateRangeBigChoose_quartersPanel:                       #f5f5f5;
+@border-color_DateRangeBigChoose_halfYearsPanel:                      #f5f5f5;
+@color_DateRangeBigChoose-years-panel-rangeButton:                    #CCCCCC;
+@background-color_DateRangeBigChoose-years-panel-rangeButton:         #E6ECFA;
+@color_DateRangeBigChoose-years-panel-current-year:                   #2D68B5;
+@background-color_DateRangeBigChoose-years-panel-current-year:        #E6ECFA;
+@border-color_DateRangePickerItem__months:                            #EAEAEA;
+//DateRangeChoose
+@date-range-choose-current-value-bg-color:                            #F2F2F2;
+@date-range-choose-year-wrapper-bg-color:                             #F8F8F8;
+@date-range-choose-bg-color:                                          #F8F8F8;
+@date-range-choose-item-bg-color:                                     #F8F8F8;
+@date-range-choose-bg-hover-color:                                    #F0F5FB;
+@date-range-choose-current-value-color:                               #313E78;
+@color_dateRangeChoose__year_prev_next:                               #587AB0;
+@color_DateRangeChoose_year:                                          #587AB0;
+@color_dateRangeChoose__year_prev_next_hover:                         #313E78;
+//BackButton
+@back-button-arrow-color:                         #FF7033;
+@back-button-arrow-hover-color:                   #FF7033;
+//BreadCrumbs
+@bread-crumb-title-color:                         #2D68B5;
+@bread-crumb-title-hover-color:                   #313E78;

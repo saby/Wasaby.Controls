@@ -5,21 +5,22 @@
  */
 define('SBIS3.CONTROLS/Button/ToggleButton', [
    'js!WSControls/Buttons/ToggleButton',
+   'SBIS3.CONTROLS/Utils/ButtonUtil',
    'css!SBIS3.CONTROLS/Button/Button',
    'css!SBIS3.CONTROLS/Button/ToggleButton/ToggleButton'
-], function(WSToggleButton) {
+], function(WSToggleButton, ButtonUtil) {
 
    'use strict';
 
    /**
     * Класс контрола "Кнопка с фиксацией".
     *
-    * {@link /doc/platform/developmentapl/interface-development/components/textbox/buttons/button-line/#toggle-button Демонстрационные примеры}.
+    * <a href='/doc/platform/developmentapl/interface-development/components/textbox/buttons/button-line/#toggle-button'>Демонстрационные примеры</a>.
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
     *
     * @class SBIS3.CONTROLS/Button/ToggleButton
     * @extends WSControls/Buttons/ToggleButton
-    * @author Романов Валерий Сергеевич
+    * @author Романов В.С.
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     *
@@ -50,23 +51,23 @@ define('SBIS3.CONTROLS/Button/ToggleButton', [
     */
 
    var ToggleButton = WSToggleButton.extend([], /** @lends SBIS3.CONTROLS/Button/ToggleButton.prototype */ {
-      $protected: {
-         _options: {
-
-         }
-      },
-
       _modifyOptions: function () {
          var
              options = ToggleButton.superclass._modifyOptions.apply(this, arguments);
 
+         ButtonUtil.preparedClassFromOptions(options);
          options.cssClassName +=  ' controls-ToggleButton__normal controls-Button';
-         options.cssClassName += ' controls-Button-size__' + (!!options.size ? options.size : 'default');
-         options.cssClassName += ' controls-Button-color__' + (!!options.primary ? 'primary' : 'default');
          return options;
+      },
+
+      _toggleState: function () {
+          var container = this._container;
+
+          container[0].className = container[0].className.replace(/(^|\s)controls-Button_size-\S+/g, '').replace(/(^|\s)controls-Button_state-\S+/g, '');
+          container.addClass(ButtonUtil.getClassState(this._options));
+          ToggleButton.superclass._toggleState.apply(this, arguments);
       }
    });
 
    return ToggleButton;
-
 });

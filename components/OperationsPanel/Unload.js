@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Unload', [
     * Контрол для экспорта в Excel, PDF  подготовленных данных
     * @class SBIS3.CONTROLS/OperationsPanel/Unload
     * @extends SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase
-    * @author Сухоручкин Андрей Сергеевич
+    * @author Сухоручкин А.С.
     * @control
     * @public
     */

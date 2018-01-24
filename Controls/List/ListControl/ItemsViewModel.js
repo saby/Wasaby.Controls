@@ -1,8 +1,8 @@
 /**
  * Created by kraynovdo on 16.11.2017.
  */
-define('js!Controls/List/ListControl/ItemsViewModel',
-   ['Core/Abstract', 'js!Controls/List/resources/utils/ItemsUtil', 'Core/core-instance'],
+define('Controls/List/ListControl/ItemsViewModel',
+   ['Core/Abstract', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance'],
    function(Abstract, ItemsUtil, cInstance) {
 
       /**

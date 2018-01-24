@@ -1,10 +1,17 @@
-define('js!Controls/Button', [
+define('Controls/Button', [
     'Core/Control',
     'tmpl!Controls/Button/Button',
     'css!WSControls/Buttons/resources/ButtonBase',
     'css!Controls/Button/Button'
 ], function(Control, template) {
     'use strict';
+
+   /**
+	* Набор базовых компонентов VDOM.
+	* @namespace Controls
+	* @public
+	* @author Крайнов Д.
+	*/
 
    /**
     * Кнопка
@@ -29,7 +36,13 @@ define('js!Controls/Button', [
     */
    var Button = Control.extend({
        _controlName: 'Controls/Button',
-       _template: template
+       _template: template,
+
+       _clickHandler: function (e) {
+           if(!this.isEnabled()){
+               e.stopPropagation();
+           }
+       }
    });
 
     return Button;

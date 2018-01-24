@@ -3,6 +3,7 @@
  */
 define('SBIS3.CONTROLS/FieldLink/resources/ItemsCollection', [
       'Lib/Control/CompoundControl/CompoundControl',
+      'Core/detection',
       'SBIS3.CONTROLS/Mixins/ItemsControlMixin',
       'SBIS3.CONTROLS/Mixins/PickerMixin',
       'tmpl!SBIS3.CONTROLS/FieldLink/resources/ItemsCollection/FieldLinkItemsCollection',
@@ -12,7 +13,7 @@ define('SBIS3.CONTROLS/FieldLink/resources/ItemsCollection', [
       'Core/detection',
       'Core/helpers/Hcontrol/getScrollWidth',
       'SBIS3.CONTROLS/Utils/ItemsSelectionUtil'
-   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, cInstance, detection, getScrollWidth, ItemsSelection) {
+   ], function(CompoundControl, cDetection, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, cInstance, detection, getScrollWidth, ItemsSelection) {
 
       'use strict';
 
@@ -25,27 +26,33 @@ define('SBIS3.CONTROLS/FieldLink/resources/ItemsCollection', [
       function buildTplArgsFL(cfg) {
          var
             tplOptions = cfg._buildTplArgsSt.call(this, cfg),
-            additionalItemClasses = '';
+            additionalItemClasses = '',
+            additionalItemCaptionClasses = '';
          tplOptions.itemsCount = cfg._itemsProjection.getCount();
-         /* При отображении выбранных элементов в выпадающем списке надо их сортировать,
-          чтобы визуально казалось, что последние выбранные будут вверху,
-          делается это с помощью аттрибута order (на css), чтобы ускорить отрисовку,
-          order навешивается в шаблоне. Для отображения в самом поле связи это не требуется,
-          поэтому добавляю проверку на видимость выпадающего списка */
-         tplOptions.needSort = cfg._isPickerVisible || !cfg.enabled;
+         /* Нужно вручную сортировать элементы в двух случаях:
+          1. Отображаем элементы в FieldLink и браузер - IE. В таком случае flex-end не работает полноценно.
+          Единственный способ отображать последние выбранные - это реверсировать их вывод и использовать сортировку.
+          2. Отображаем элементы в выпадающем списке. Последние выбранные элементы должны быть вверху списка. */
+         tplOptions.needSort = cfg._isPickerVisible || cDetection.isIE;
          /* Надо рисовать подсказку для поля связи, если используется дефолтный шаблон,
           в случае прикладного, там может быть вёрстка, и в подсказку её класть нельзя */
          tplOptions.needTitle = !cfg.itemContentTpl;
+         // Формируем список классов для item
+         additionalItemClasses = cfg._isPickerVisible ? ' controls-FieldLink__item-inPicker' : ' controls-FieldLink__item-inField';
+         if (tplOptions.itemsCount === 1) {
+            additionalItemClasses += ' controls-FieldLink__item-single'
+         }
+         // Формируем список классов для item-caption
          if (cfg.underlinedItems) {
-            additionalItemClasses += ' controls-FieldLink__item-caption__underlined';
+            additionalItemCaptionClasses += ' controls-FieldLink__item-caption__underlined';
          }
          if (cfg.boldItems) {
-            additionalItemClasses += ' controls-FieldLink__item-caption__bold';
+            additionalItemCaptionClasses += ' controls-FieldLink__item-caption__bold';
          }
          if (cfg.bigItems) {
-            additionalItemClasses += ' controls-FieldLink__item-caption__big';
+            additionalItemCaptionClasses += ' controls-FieldLink__item-caption__big';
          } else {
-            additionalItemClasses += ' controls-FieldLink__item-caption__normal';
+            additionalItemCaptionClasses += ' controls-FieldLink__item-caption__normal';
          }
          tplOptions.getItemTemplateData = function(templateCfg) {
             var
@@ -57,6 +64,7 @@ define('SBIS3.CONTROLS/FieldLink/resources/ItemsCollection', [
                orderStyle = 'order: ' + order + '; -ms-flex-order: ' + order + ';';
             }
             return {
+               additionalItemCaptionClasses: additionalItemCaptionClasses,
                additionalItemClasses: additionalItemClasses,
                orderStyle: orderStyle,
                drawCross: cfg.enabled,
@@ -83,14 +91,6 @@ define('SBIS3.CONTROLS/FieldLink/resources/ItemsCollection', [
                _isPickerVisible: false
             },
             _parentFieldLink: undefined
-         },
-
-         _modifyOptions: function() {
-            var
-               cfg = FieldLinkItemsCollection.superclass._modifyOptions.apply(this, arguments),
-               items = cfg.items;
-            cfg.reverseOrder = !cfg.enabled && items && items.getCount && items.getCount() > 1;
-            return cfg;
          },
 
          $constructor: function() {
@@ -128,15 +128,6 @@ define('SBIS3.CONTROLS/FieldLink/resources/ItemsCollection', [
             return this._options._defaultItemTemplate;
          },
 
-         _updateOrderClass: function() {
-            var
-               items = this.getItems(),
-               reverseOrder = !this.isEnabled() && items && items.getCount && items.getCount() > 1;
-            this._container
-               .toggleClass('controls-FieldLink__itemsCollection-normalOrder', !reverseOrder)
-               .toggleClass('controls-FieldLink__itemsCollection-reverseOrder', reverseOrder);
-         },
-
          _setEnabled: function () {
             var
                items = this.getItems();
@@ -144,7 +135,6 @@ define('SBIS3.CONTROLS/FieldLink/resources/ItemsCollection', [
                то надо вызывать перерисовку элементов, чтобы правильно проставилась ширина */
             this._clearItems();
             FieldLinkItemsCollection.superclass._setEnabled.apply(this, arguments);
-            this._updateOrderClass();
             if (items && items.getCount()) {
                this.redraw();
             }
@@ -166,7 +156,6 @@ define('SBIS3.CONTROLS/FieldLink/resources/ItemsCollection', [
             } else {
                list = [];
             }
-            this._updateOrderClass();
             FieldLinkItemsCollection.superclass.setItems.call(this, list);
          },
 
@@ -226,18 +215,7 @@ define('SBIS3.CONTROLS/FieldLink/resources/ItemsCollection', [
          _setPickerConfig: function () {
             var self = this,
                 fieldLinkContainer = this._parentFieldLink.getContainer(),
-                pickerClasses = ['controls-FieldLink__picker'],
-                cssModifiers = [
-                   'controls-FieldLink__itemsEdited',
-                   'controls-FieldLink__itemsBold',
-                   'controls-FieldLink__big-fontSize'
-                ];
-
-            cssModifiers.forEach(function(value) {
-               if (fieldLinkContainer.hasClass(value)) {
-                  pickerClasses.push(value);
-               }
-            });
+                pickerClasses = ['controls-FieldLink__picker'];
 
             return {
                corner: 'bl',
@@ -265,6 +243,16 @@ define('SBIS3.CONTROLS/FieldLink/resources/ItemsCollection', [
                   }
                }
             };
+         },
+
+         _onAlignmentChangeHandler: function(alignment) {
+            FieldLinkItemsCollection.superclass._onAlignmentChangeHandler.apply(this, arguments);
+
+            if (alignment.verticalAlign.side === 'bottom') {
+               this._picker.getContainer().addClass('controls-FieldLink__picker_revert_vertical');
+            } else {
+               this._picker.getContainer().removeClass('controls-FieldLink__picker_revert_vertical');
+            }
          },
 
          destroy: function() {

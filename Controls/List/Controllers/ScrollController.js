@@ -1,4 +1,4 @@
-define('js!Controls/List/Controllers/ScrollController', [
+define('Controls/List/Controllers/ScrollController', [
    'Core/core-simpleExtend',
    'Core/helpers/Function/throttle'
 ], function(simpleExtend,
@@ -66,6 +66,20 @@ define('js!Controls/List/Controllers/ScrollController', [
          additionalHandler && additionalHandler(e, scrollTop, this._options.loadOffset, this._options.eventHandlers);
 
          this._options.eventHandlers.onListScroll && this._options.eventHandlers.onListScroll(scrollTop);
+      },
+
+      /**
+       * Проверка, достигнут ли низ контейнера
+       */
+      isScrollOnBottom: function(scrollContainer) {
+         return scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight;
+      },
+
+      /**
+       * Проверка, достигнут ли верх контейнера
+       */
+      isScrollOnTop: function(scrollContainer) {
+         return scrollContainer.scrollTop <= 0;
       }
    };
 
@@ -134,6 +148,20 @@ define('js!Controls/List/Controllers/ScrollController', [
        */
       scrollPageDown: function() {
          this._options.scrollContainer.scrollTop += this._options.scrollContainer.clientHeight;
+      },
+
+      /**
+       * Проверить, достигнуты ли границы контейнера
+       * Если да, то вызовет соответствующие обработчики событий для подгрузки данных
+       */
+      checkBoundaryContainer: function() {
+         if (_private.isScrollOnBottom(this._options.scrollContainer)) {
+            this._options.eventHandlers.onLoadTriggerBottom && this._options.eventHandlers.onLoadTriggerBottom();
+         }
+
+         if (_private.isScrollOnTop(this._options.scrollContainer)) {
+            this._options.eventHandlers.onLoadTriggerTop && this._options.eventHandlers.onLoadTriggerTop();
+         }
       }
 
    });

@@ -27,7 +27,7 @@ define('SBIS3.CONTROLS/Paging', [
     * @category Decorate
     * @public
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var getRecordForRedraw = function(projection, cfg) {

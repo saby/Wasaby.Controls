@@ -8,7 +8,7 @@ define('SBIS3.CONTROLS/Mixins/DropdownListMixin', [
         /**
          * @mixin SBIS3.CONTROLS/Mixins/DropdownListMixin
          * @public
-         * @author Крайнов Дмитрий Олегович
+         * @author Крайнов Д.О.
          */
         'use strict';
 

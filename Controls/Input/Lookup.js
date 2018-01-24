@@ -1,25 +1,22 @@
-define('js!Controls/Input/Lookup', [
+define('Controls/Input/Lookup', [
 ], function() {
 
    /**
-    * Поле выбора из справочника.
+    * Поле выбора из справочника с единичным выбором.
     * @class Controls/Input/Lookup
     * @extends Controls/Control
+    * @mixes Controls/Input/interface/ISearch
     * @mixes Controls/interface/ISource
-    * @mixes SBIS3.SPEC.input.interface.IPlaceholder
-    * @mixes Controls/interface/ISource
-    * @mixes Controls/Input/interface/IValidation
-    * @mixes Controls/Input/interface/IInputTag
-    * @mixes Controls/interface/ISingleSelectable
+    * @mixes Controls/interface/IFilter
+    * @mixes Controls/Input/interface/ISuggest
+    * @mixes Controls/Input/interface/ILookup
+    * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IMultiSelectable
+    * @mixes Controls/Input/interface/IInputPlaceholder
+    * @mixes Controls/Input/interface/IInputText
+    * @mixes Controls/Input/interface/IValidation
     * @control
     * @public
     * @category Input
     */
-
-   /**
-    * @name Controls/Input/Lookup#multiselect
-    * @cfg {Boolean} Разрешен ли множественный выбор.
-    */
-
 });

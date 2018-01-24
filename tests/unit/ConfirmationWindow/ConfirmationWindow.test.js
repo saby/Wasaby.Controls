@@ -1,6 +1,6 @@
 define(
    [
-      'js!Controls/ConfirmationWindow',
+      'Controls/ConfirmationWindow',
       'Core/Deferred'
    ],
 
@@ -18,10 +18,6 @@ define(
 
                }
             };
-         });
-
-         afterEach(function(){
-            popupOpener.destroy();
          });
 
          it('initialize', function() {

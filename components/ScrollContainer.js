@@ -31,7 +31,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
        *
        * @class SBIS3.CONTROLS/ScrollContainer
        * @extends SBIS3.CONTROLS/CompoundControl
-       * @author Журавлев Максим Сергеевич
+       * @author Журавлев М.С.
        *
        *
        * @remark
@@ -289,7 +289,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                }
             }
             if (cDetection.isIE12) {
-               scrollbarWidth = 12;
+               scrollbarWidth = 16;
             }
             if (cDetection.isIE10 || cDetection.isIE11) {
                scrollbarWidth = 17;
@@ -331,18 +331,15 @@ define('SBIS3.CONTROLS/ScrollContainer', [
 
          _initScrollbar: function(){
             if (!this._scrollbar) {
-               this._scrollbar = {
-                  _container: $('> .controls-ScrollContainer__scrollbar', this._container)
-               };
-               this._recalcSizeScrollbar();
                this._scrollbar = new Scrollbar({
-                  element: this._scrollbar._container,
+                  element: $('> .controls-ScrollContainer__scrollbar', this._container),
                   contentHeight: this._getScrollHeight(),
                   position: this._getScrollTop(),
                   parent: this
                });
 
                this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
+               this._resizeInner();
             }
             this._toggleGradient();
          },
@@ -516,6 +513,17 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                }
             }
             if (this._page !== page) {
+               
+               /**
+                * Может быть так, что номер страницы, к которой нам нужно проскролить, будет больше, чем
+                * количество страниц.
+                * Например положив ListView и включив подгрузку данных. Если в момент подгрузки,
+                * пока данные ещё не отрисовались и не произошел resize нажать на кнопку paging вперед, то номер страницы
+                * будет больше общего числа страниц, потому что ещё не произошли пересчеты размеров. Поэтому мы возьмем
+                * в качестве текущей страницы минимальное из переданного числа и текущего общего числа страниц.
+                */
+               page = Math.min(page, this._paging.getPagesCount());
+
                this._page = page;
                this._paging.setSelectedKey(page);
             }
@@ -696,15 +704,6 @@ define('SBIS3.CONTROLS/ScrollContainer', [
          },
 
          _setPagesCount: function(count) {
-            /**
-             * Может быть так, что номер страницы, к которой нам нужно проскролить, будет больше, чем
-             * количество страниц.
-             * Например положив ListView и включив подгрузку данных. Если в момент подгрузки,
-             * пока данные ещё не отрисовались и не произошел resize нажать на кнопку paging вперед, то номер страницы
-             * будет больше общего числа страниц, потому что ещё не произошли пересчеты размеров. Поэтому мы возьмем
-             * в качестве текущей страницы минимальное из переданного числа и текущего общего числа страниц.
-             */
-            count = Math.min(count, this._paging.getPagesCount());
             this._paging.setPagesCount(count);
             if (count === 1) {
                this._paging.hide();

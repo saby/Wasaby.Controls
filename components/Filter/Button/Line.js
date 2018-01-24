@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/Filter/Button/Line',
        * Умеет отображать строку по определенному шаблону. Работает исключительно через контекст.
        * @class SBIS3.CONTROLS/Filter/Button/Line
        * @extends Lib/Control/CompoundControl/CompoundControl
-       * @author Крайнов Дмитрий Олегович
+       * @author Крайнов Д.О.
        * @control
        * @public
        */

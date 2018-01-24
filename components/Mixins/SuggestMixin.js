@@ -48,7 +48,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
     *
     * @mixin SBIS3.CONTROLS/Mixins/SuggestMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Крайнов Д.О.
     */
 
    var SuggestMixin = /** @lends SBIS3.CONTROLS/Mixins/SuggestMixin.prototype */{
@@ -565,6 +565,11 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
                    При возниконовении ошибки отключаем отображение автодополнения по приходу фокуса,
                    иначе будет зацикливание и интерфейс заблокируется.*/
                 self.setAutoShow(false);
+
+                if(cInstance.instanceOfMixin(this._list, 'SBIS3.CONTROLS/Mixins/ItemsControlMixin')) {
+                   this._list.setEmptyHtml(rk('Справочник недоступен'));
+                }
+                
              })
              .subscribeTo(this._list, 'onDrawItems', this._onListDrawItems.bind(this))
              .subscribeTo(this._list, 'onItemActivate', (function (eventObject, itemObj) {
@@ -627,30 +632,35 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
          var showAllConfig = this._getShowAllConfig(),
              list = this.getList(),
              listConfig;
+         
    
          listConfig = {
-            columns: list.getColumns(),
             filter: list.getFilter(),
             idProperty: list.getProperty('idProperty'),
             itemTpl: list.getProperty('itemTpl'),
             dataSource: list.getDataSource()
          };
+         
+         //Делаю такую проверку, т.к. люди кладут свои компоненты в качестве списка, и просто определяют метод getColumns
+         if (list.getColumns) {
+            listConfig.columns = list.getColumns();
+         }
    
          /* Когда нет записей в списке автодополнения,
           должен открываться справочник без фильтра, чтобы отобразились все записи */
-         if((!list.getItems() || !list.getItems().getCount()) && this._options.searchParam) {
+         if ((!list.getItems() || !list.getItems().getCount()) && this._options.searchParam) {
             delete listConfig.filter[this._options.searchParam];
          }
-         
-         if(!showAllConfig.componentOptions) {
+   
+         if (!showAllConfig.componentOptions) {
             showAllConfig.componentOptions = {};
          }
    
          showAllConfig.componentOptions.listConfig = listConfig;
-         showAllConfig.dialogOptions  = {
+         showAllConfig.dialogOptions = {
             className: 'ws-float-area__block-layout'
          };
-   
+
          this.hidePicker();
          this.showSelector(showAllConfig);
       },

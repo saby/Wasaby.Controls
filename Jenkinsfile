@@ -59,7 +59,7 @@ node('controls') {
         def ver = version.replaceAll('.','')
 		def python_ver = 'python3'
         def SDK = ""
-        def items = "controls:${workspace}/controls"
+        def items = "controls:${workspace}/controls, controls_new:${workspace}/controls"
 
 		def branch_atf
 		if (params.branch_atf) {
@@ -371,15 +371,10 @@ node('controls') {
                 "includeCore":true,
                 "include":[
                 "Core/*",
-                "WS.Data/*",
                 "SBIS3.CONTROLS.ItemsControlMixin"
                 ],
                 "modules" : [
                 "Core/core",
-                "WS.Data/Source/SbisService",
-                "WS.Data/Source/Memory",
-                "WS.Data/Entity/Model",
-                "WS.Data/Collection/RecordSet",
                 "SBIS3.CONTROLS.ItemsControlMixin"
                 ],
                     "output" : "/resources/Core.module.js"
@@ -490,7 +485,7 @@ node('controls') {
                             dir("./controls/tests/reg"){
                                 sh """
                                     source /home/sbis/venv_for_test/bin/activate
-                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform--STREAMS_NUMBER ${stream_number}
+                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS http://test-selenium39-unix.unix.tensor.ru:4444/wd/hub --DISPATCHER_RUN_MODE --STAND platform --STREAMS_NUMBER ${stream_number}
                                     deactivate
                                 """
                             }

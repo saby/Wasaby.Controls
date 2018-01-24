@@ -1,10 +1,11 @@
 define('SBIS3.CONTROLS/Button',
    [
       'js!WSControls/Buttons/Button',
+      'SBIS3.CONTROLS/Utils/ButtonUtil',
       'css!SBIS3.CONTROLS/Button/Button'
          ],
 
-   function (Base) {
+   function (Base, ButtonUtil) {
 
    'use strict';
 
@@ -14,14 +15,14 @@ define('SBIS3.CONTROLS/Button',
    /**
     * Класс контрола "Обычная кнопка".
     *
-    * {@link /doc/platform/developmentapl/interface-development/components/textbox/buttons/button-line/#button Демонстрационные примеры}.
+    * <a href='/doc/platform/developmentapl/interface-development/components/textbox/buttons/button-line/#button'>Демонстрационные примеры</a>.
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
     *
     * @class SBIS3.CONTROLS/Button
     * @extends WSControls/Buttons/Button
     *
     *
-    * @author Романов Валерий Сергеевич
+    * @author Романов В.С.
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
@@ -61,9 +62,8 @@ define('SBIS3.CONTROLS/Button',
       _modifyOptions : function() {
          var opts = Button.superclass._modifyOptions.apply(this, arguments);
          opts.cssClassName += ' controls-Button';
-         opts.cssClassName += ' controls-Button-size__' + (!!opts.size ? opts.size : 'default');
-         opts.cssClassName += ' controls-Button-color__' + (!!opts.primary ? 'primary' : 'default');
-         opts.cssClassName += (!!opts.primary ? ' controls-Button__primary' : '');
+         opts._iconDisabledClass = 'icon-button-disabled';
+         ButtonUtil.preparedClassFromOptions(opts);
          return opts;
       },
       show: function(){
@@ -75,6 +75,13 @@ define('SBIS3.CONTROLS/Button',
          if (!oldVisible && this.isPrimary()) {
             this.setDefaultButton(true);
          }
+      },
+      _toggleState: function() {
+        var  container = this._container;
+
+        container[0].className = container[0].className.replace(/(^|\s)controls-Button_size-\S+/g, '').replace(/(^|\s)controls-Button_state-\S+/g, '');
+        container.addClass(ButtonUtil.getClassState(this._options));
+        Button.superclass._toggleState.apply(this, arguments);
       }
    });
 

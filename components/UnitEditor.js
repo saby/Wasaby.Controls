@@ -19,7 +19,7 @@ define('SBIS3.CONTROLS/UnitEditor',
        * @extends SBIS3.CONTROLS/NumberTextBox
        * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
        * @control
-       * @author Крайнов Дмитрий Олегович
+       * @author Крайнов Д.О.
        * @public
        */
 

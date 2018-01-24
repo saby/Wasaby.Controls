@@ -87,7 +87,7 @@ define('SBIS3.CONTROLS/LongOperations/Entry',
        * @extends Core/core-extend
        * @public
        *
-       * @author Спирин Виктор Алексеевич
+       * @author Спирин В.А.
        */
       var LongOperationEntry = CoreExtend.extend(/** @lends SBIS3.CONTROLS/LongOperations/Entry.prototype */{
          _moduleName: 'SBIS3.CONTROLS/LongOperations/Entry',

@@ -102,7 +102,7 @@ define('SBIS3.CONTROLS/Toolbar', [
             if (!options.idProperty) {
                options['idProperty'] = idProperty;
             }
-            ['commandArgs', 'className', 'icon', 'name', 'caption', 'command', 'enabled'].forEach(function(optName) {
+            ['commandArgs', 'className', 'icon', 'name', 'caption', 'command', 'enabled', 'tooltip'].forEach(function(optName) {
                optionValue = item.get(optName);
                if (optionValue !== undefined) {
                   options[optName] = optionValue;
@@ -166,7 +166,7 @@ define('SBIS3.CONTROLS/Toolbar', [
     * @class SBIS3.CONTROLS/Toolbar
     * @extends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase
     * @demo SBIS3.CONTROLS.Demo.MyToolbar
-    * @author Сухоручкин Андрей Сергеевич
+    * @author Сухоручкин А.С.
     *
     * @control
     * @public

@@ -17,17 +17,16 @@
 @default-base-line-height:     round(80px * @multiplier);//todo:   @default-height - 2 * @default-border-width
 @default-padding:              round(14px * @multiplier);
 @default-padding-small:        round(7px * @multiplier);
-//textbox
-@height_TextBox_m:                                round(84px * @multiplier);
-@height_TextBox_l:                                round(84px * @multiplier);
-@font-size_TextBox_m:                             round(32px * @multiplier);
-@font-size_TextBox_l:                             round(40px * @multiplier);
-@line-height_TextBox:                             round(80px * @multiplier);
-@padding_TextBox-container:                       0 round(14px * @multiplier);
-@padding_TextBox-container_left:                  0 0 0 round(14px * @multiplier);
-@width_TextBox-InformationIcon:                   round(14px * @multiplier);
-@height_TextBox-InformationIcon:                  round(14px * @multiplier);
-@border-width_TextBox:                            2px;
+//InputRender
+@height_InputRender_m:                                round(84px * @multiplier);
+@height_InputRender_l:                                round(84px * @multiplier);
+@font-size_InputRender_m:                             round(32px * @multiplier);
+@font-size_InputRender_l:                             round(40px * @multiplier);
+@padding_InputRender-container:                       0 round(14px * @multiplier);
+@padding_InputRender-container_left:                  0 0 0 round(14px * @multiplier);
+@width_InputRender-InformationIcon:                   round(14px * @multiplier);
+@height_InputRender-InformationIcon:                  round(14px * @multiplier);
+@border-width_InputRender:                            2px;
 //textarea
 @min-height_TextArea:                             round(42px * @multiplier);
 @padding_TextArea-container:                      round(19px * @multiplier) 0 round(19px * @multiplier) round(14px * @multiplier);
@@ -46,16 +45,15 @@
 @search-button-wrapper-padding:                   0;
 @search-loop-size:                                round(80px * @multiplier);
 @search-form-icon-padding:                        0;
-@padding_SearchForm:                              0 round(14px * @multiplier);
+@padding_SearchForm:                              0 round(15px * @multiplier);
 @top_searchForm_picker_closeButton:               round(8px * @multiplier);
 @margin-left__searchForm_picker:                  -(@default-border-width + @top_searchForm_picker_closeButton);
 @margin-top__searchForm_picker:                   -(@padding-top__searchForm_picker + @default-border-width - @top_searchForm_picker_closeButton);
-@padding-top__searchForm_picker:                  (@top_searchForm_picker_closeButton * 2) + @height_TextBox_m;
+@padding-top__searchForm_picker:                  (@top_searchForm_picker_closeButton * 2) + @height_InputRender_m;
 //fieldLink
+@icon-size_FieldLink-button:                      round(80px * @multiplier); //todo: при переходе на cbuc-icons отказаться от этого щита
+@width_FieldLink-item-cross:                      @default-height;
 @fieldLink-showAll-shadow-width:                  round(28px * @multiplier);
-@fieldLink-linkItem-line-height:                  @default-base-line-height;
-@fieldLink-icon-size:                             round(80px * @multiplier); //todo: при переходе на cbuc-icons отказаться от этого щита
-@max-height_FieldLink-beforeFieldWrapper:         @default-line-height;
 //treeview
 @tree-view-folder-text-size:                      @default-text-size;
 //button
@@ -86,10 +84,6 @@
 @date-range-choose-home-button-size:                                  40px;//todo: mironov
 @date-range-choose-home-button-font-size:                             32px;//todo: mironov
 @date-range-choose-home-button-line-height:                           40px;//todo: mironov
-@date-range-big-choose-years-panel-toggle-choose-year-button-margin:  0 round(60px * @multiplier);//todo: mironov
-@date-range-big-choose-months-button-first-padding-top:               2px;//todo: mironov
-@date-range-big-choose-months-button-last-padding-bottom:             3px;//todo: mironov
-@date-range-big-choose-years-panel-wrapper-font-size:                 24px;//todo: mironov
 //listview
 @listView-check-box-left:                                3px;//todo: juravlev
 @listView-check-box-top:                                 7px;//todo: juravlev
@@ -280,8 +274,6 @@
 //Date picker
 @date-picker-button-margin-left:          0;
 @date-picker-button-vertical-align:       top;
-@date-picker-button-size:                 @default-height;
-@date-picker-button-line-height:          @default-height;
 //Calendar
 @calendar-width:                          auto;
 //Month picker
@@ -289,15 +281,16 @@
 @month-picker-left-arrow-border-width:    round(8px * @multiplier) round(8px * @multiplier) round(8px * @multiplier) 0;
 @month-picker-field-height:               round(24px * @multiplier);
 @month-picker-right-arrow-border-width:   round(8px * @multiplier) round(8px * @multiplier) round(8px * @multiplier) 0;
-//Data Range
+//Date Range
 @date-range-dash-width:                   round(14px * @multiplier);
 @date-range-dash-margin:                  0 round(8px * @multiplier) round(8px * @multiplier) round(8px * @multiplier);
 @date-range-button-vertical-align:        top;
-@date-range-button-size:                  @default-height;
-@date-range-button-line-height:           @date-range-button-size;
+@date-range-button-size_default:          @default-icon-size-large;
+@date-range-button-line-height_default:   @default-height;
+@date-range-button-size_m:                @default-icon-size-large;
+@date-range-button-line-height_m:         @height_InputRender_m;
 @date-range-button-margin:                0;
-@date-range-big-choose-header-date-box-font-size: round(28px * @multiplier);
-//Data Range Slider
+//Date Range Slider
 @date-range-slider-margin-top:            round(-32px * @multiplier);
 @date-range-slider-font-size:             round(32px * @multiplier);
 @date-range-slider-value-font-weight:     normal;
@@ -320,46 +313,21 @@
 @date-range-choose-year-prev-next-btns-font-size:round(42px * @multiplier);
 @date-range-choose-home-icon-width:       @default-height;
 @controls-date-range-year-marginleft:     round(11px * @multiplier);
-@date-range-big-choose-months-font-size:                                 round(28px * @multiplier);
-@date-range-big-choose-months-margin:                                    round(8px * @multiplier);
-@date-range-big-choose-months-range-width:                               round(152px * @multiplier);
-@date-range-big-choose-months-button-first-height:                       round(50px * @multiplier);
-@date-range-big-choose-months-button-last-height:                        round(50px * @multiplier);
-@date-range-big-choose-date-range-picker-table-element-height:           round(78px * @multiplier);
-@date-range-big-choose-date-range-picker-left:                           @date-range-big-choose-months-range-width + round(24px * @multiplier);;
-@date-range-big-choose-date-range-picker-caption-height:                 round(68px * @multiplier);
-@date-range-big-choose-years-height:                                     round(100px * @multiplier);
-@date-range-big-choose-header-padding:                                   round(8px * @multiplier) 0 round(8px * @multiplier) 0;
-@date-range-big-choose-header-home-button-size:                          round(84px * @multiplier);
-@date-range-big-choose-header-home-button-font-size:                     round(42px * @multiplier);
-@date-range-big-choose-header-home-button-margin-left:                   0;
-@date-range-big-choose-header-date-pickers-margin-right:                 round(92px * @multiplier);
-@date-range-big-choose-date-range-picker-caption-font-size:              @default-text-size;
-@date-range-big-choose-header-date-picker-margin-top:                    0;
-@date-range-big-choose-header-apply-button-size:                         @default-height;
-@date-range-big-choose-header-apply-button-font-size:                    round(42px * @multiplier);
-@date-range-big-choose-header-apply-button-icon-margin-left:             round(-28px * @multiplier);
-@date-range-big-choose-header-apply-button-margin-left:                  0;
-@date-range-big-choose-header-range-dash-width:                          round(8px * @multiplier);
-@date-range-big-choose-header-range-dash-margin:                         round(42px * @multiplier) round(8px * @multiplier) round(8px * @multiplier);
-@date-range-big-choose-years-panel-top-padding:                          round(8px * @multiplier);
-@date-range-big-choose-years-panel-bottom-padding:                       round(8px * @multiplier);
-@date-range-big-choose-years-panel-toggle-choose-year-button-font-size:  round(40px * @multiplier);
-@date-range-big-choose-years-panel-wrapper-font-weight:                  normal;
-@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:round(84px * @multiplier); // сделать по другому
-@date-range-big-choose-years-panel-current-year-button-line-height:      @default-height;
-@date-range-big-choose-years-panel-back-button-font-size:                @default-height;
-@date-range-big-choose-years-panel-back-button-line-height:              @default-height;
-@date-range-big-choose-years-range-font-size:                            round(28px * @multiplier);
-@date-range-big-choose-body-height:                                      round(600px * @multiplier);
-@date-range-big-choose-months-range-btn-height:                          round(143px * @multiplier);
-@date-range-big-choose-month-range-picker-month-width:                   round(170px * @multiplier);
-@date-range-big-choose-month-range-picker-month-height:                  round(142px * @multiplier);
-@date-range-big-choose-month-range-picker-caption-height:                round(50px * @multiplier);
-@date-range-big-choose-month-range-picker-caption-font-size:             round(32px * @multiplier);
-@date-range-big-choose-month-range-picker-table-element-height:          round(14px * @multiplier);
-@date-range-big-choose-month-range-picker-table-element-font-size:       round(11px * @multiplier);
-@date-range-big-choose-month-range-padding:                              round(8px * @multiplier);
+// Date Range Big Choose
+@padding_DateRangeBigChoose-header:                                      round(8px * @multiplier) 0 round(8px * @multiplier) 0;
+@padding-left_DateRangeBigChoose-header-period:                          round(24px * @multiplier);
+@height_DateRangeBigChoose-years:                                        round(100px * @multiplier);
+@width_DateRangeBigChoose-years-leftRight:                               round(84px * @multiplier);
+@color_DateRangeBigChoose-DateRangePickerItem-months-button:             round(28px * @multiplier);
+@width_DateRangeBigChoose-dates-header-year:                             round(152px * @multiplier);
+@margin_DateRangeBigChoose-header-applyButton:                      0;
+@width_DateRangeBigChoose-header-dash:                                   round(8px * @multiplier);
+@margin_DateRangeBigChoose-header-dash:                                  round(42px * @multiplier) round(8px * @multiplier) round(8px * @multiplier);
+@width_DateRangeBigChoose-header-closeButton:                            round(50px * @multiplier);
+@height_DateRangeBigChoose-years-rangeButton:                            @default-height;
+@font-size_DateRangeBigChoose-years-rangeButton:                         round(28px * @multiplier);
+@height_DateRangeBigChoose-body:                                         round(600px * @multiplier);
+@height_DateRangeBigChoose-MonthRangePickerItem-monthWrapper:            round(142px * @multiplier);
 //Edit at place
 @edit-at-place-wrapper-text-area-padding:             round(5px * @multiplier);
 @edit-at-place-wrapper-border-width:                  1px;
@@ -370,7 +338,7 @@
 //List view
 @controls-view-padding-S:                 round(9px * @multiplier);
 @listView-servicefooter-height:           round(41px * @multiplier);
-@listView-servicefooter-padding:          0 round(22px * @multiplier);
+@padding-ListView-serviceFooter:          round(22px * @multiplier);
 @listView-loadmorebutton-font-size:       round(24px * @multiplier);
 @list-view-actions-item-height:           @icon-small-size;
 @list-view-actions-margin:                0 round(4px * @multiplier);
@@ -395,11 +363,11 @@
 @scrollPaging-padding:                    round(103px * @multiplier);
 //Tree view
 @tree-view-expand-width:                  round(50px * @multiplier);
-@tree-view-expand-height:                 auto;
-@tree-view-expand-icon-size:              round(50px * @multiplier);
-@tree-view-level-padding:                 round(58px * @multiplier);
-@tree-view-expand-margin:                 0 round(8px * @multiplier) 0 0;
-@tree-view-editArrow-top:                 round(5px * @multiplier);
+@height_TreeDataGridView-expand:          auto;
+@font-size_TreeDataGridView-expand:       round(50px * @multiplier);
+@width-TreeDataGridView-levelPadding:     round(58px * @multiplier);
+@margin_TreeDataGridView-expand:          0 round(8px * @multiplier) 0 0;
+@top_TreeDataGridView-editArrow:          round(5px * @multiplier);
 @tree-view-expand-open-border-width:      round(8px * @multiplier) round(8px * @multiplier) 0 round(8px * @multiplier);
 @tree-view-item-content-margin:           0 0 0 round(20px * @multiplier);
 @tree-view-child-container-padding:       @tree-view-item-content-margin;
@@ -421,8 +389,8 @@
 @data-grid-cell-padding-right:            round(8px * @multiplier);
 @data-grid-check-box-top:                 -@default-border-width;
 @data-grid-money-header-cell-padding:     round(40px * @multiplier);
-@data-grid-money-header-cell-padding-last:round(56px * @multiplier);
-@data-grid-money-header-cell-padding-last_XL:  round(64px * @multiplier);
+@data-grid-money-header-cell-padding-last:round(48px * @multiplier);
+@data-grid-money-header-cell-padding-last_XL: round(56px * @multiplier);
 @data-grid-partScroll-arrowLeft-top-shift: round(-24px * @multiplier);
 @data-grid-partScroll-arrowRight-top-shift:round(-24px * @multiplier);
 @data-grid-partScroll-thumb-margin:       round(50px * @multiplier);
@@ -430,7 +398,7 @@
 // PrintDialog
 //По какой-то причине Firefox берёт font-size не из html, а свой, причем только при расчёте этой ширины
 @controls-printdialog-min-width:          round(756px * @multiplier);
-@controls-printdialog-activate-right:     round(89px * @multiplier);
+@controls-printdialog-activate-right:     round(86px * @multiplier);
 @controls-printdialog-activate-margin-top:8px;
 //MergeDialog
 @controls-MergeDialogTemplate-height:                                       round(588px * @multiplier);
@@ -487,9 +455,6 @@
 @controls-filterButton-line-height:       round(31px * @multiplier);
 @controls-filterButton-filterLine-margin: 0;
 @size_FilterButton_icon:                  @default-icon-size-large;
-//FieldLink
-@fieldLink-linkItem-cross-width:    @default-height;
-@fieldLink-afterField-button-margin:      0;
 @controls-filterButton-area-header-width:    round(667px * @multiplier);
 //BackButton
 @back-button-font-size:                   round(40px * @multiplier);
@@ -500,7 +465,6 @@
 @breadcrumbs-arrow-top:                   1px;
 @breadcrumbs-small-items-top:             0;
 // EditDialog
-@editdialog-applybutton-width:            auto;
 @editdialog-applybutton-right:            round(90px * @multiplier); //ширина кнопки закрытия окна 36px +.07rem; на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)
 @editdialog-window-title-margin-right:    round(308px * @multiplier); //ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить +.07rem; на небольшой отступ между ними
 //MoveDialog
@@ -600,12 +564,7 @@
 @scrollpager-bottom:                      round(9px * @multiplier);
 @height_ListView_ScrollPager:             @default-height;
 @closeBigButtonWidth:                     @default-height;
-@date-range-big-choose-width:				   round(722px * @multiplier);
-@date-range-big-choose-left-right-width:  @default-height;
-@date-range-big-choose-years-panel-current-year-button-font-size:round(40px * @multiplier);
-@date-range-big-choose-date-range-picker-right:round(24px * @multiplier);
-@date-range-big-choose-date-range-picker-table-element-width:round(74px * @multiplier);
-@date-range-big-choose-date-range-picker-table-element-title-padding-top: round(17px * @multiplier);
+@width_DateRangeBigChoose:		   		   round(722px * @multiplier);
 @tab-buttons-height:							   round(100px * @multiplier);
 @button-without-caption-min-width:          round(84px * @multiplier);
 @controls-toolbar-default-margin:			0;
@@ -627,7 +586,7 @@
 @DropdownList-picker-menu-item-height:    @default-height;
 @DropdownList-picker-menu-item-height-ff: round(112px * @multiplier);
 @DropdownList-after-caption-top:          0;
-@tree-view-ellipsis-copyArrow-width:      round(28px * @multiplier);
+@width_TreeDataGridView-copyArrow:        round(28px * @multiplier);
 @bread-crumbs-menu-padding:               0;
 @back-button-width-before:                round(20px * @multiplier);
 @padding_Menu-submenu:                   @bread-crumbs-menu-padding;
@@ -681,7 +640,6 @@
 @image-bar-horizontal-padding:            0;
 @font-size_MoneyTextBox-decimals:         @default-text-size;
 @controls-toolbar-item-vertical-align:    baseline;
-@date-range-big-choose-years-btn:         round(14px * @multiplier);
 @DropdownList-picker-offset:              round(-11px * @multiplier) 0 0 round(-19px * @multiplier);
 @DropdownList-picker-fastdatafilter-offset: round(-11px * @multiplier) 0 0 round(-19px * @multiplier);
 @DropdownList-picker-fdf-left:            round(-20px * @multiplier);
@@ -727,6 +685,9 @@
 @font-weight_Header:              normal;
 //popup,floatarea,window
 @top_window_button:               round(8px * @multiplier);
+
+//Marker
+@background-size_Marker:                          round(5px * @multiplier);
 
 //money
 @money-decorator-integer-basic-registry-font-size: round(28px * @multiplier);

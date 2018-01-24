@@ -4,11 +4,16 @@
   background-color: transparent;
   border-radius: 2px;
   border-style: solid;
-  border-width: 1px;
+  border-width: @border-width_ToggleButton-square;
   width: 24px;
   height: 24px;
   line-height: 24px;
   user-select: none;
+  position: relative;
+
+  .controls-ButtonBase__content {
+    padding: 0;
+  }
 
   .controls-Button__text {
     display: none;
@@ -22,8 +27,8 @@
     margin-left: 0;
   }
   &.controls-Checked__checked {
-    background-color: #F3F3F3;
-    border-color: #587AB0;
+    background-color: @background-color_ToggleButton-square;
+    border-color: @border-color_ToggleButton-square;
   }
 
   &.controls-ToggleButton-square__medium {
@@ -37,13 +42,13 @@
     }
   }
   &.controls-ToggleButton-square__big {
-    height: 32px;
-    width: 32px;
-    line-height: 32px;
-    border-radius: 2px;
+    height: @height_ToggleButton-square;
+    width: @width_ToggleButton-square;
+    line-height: @line-height_ToggleButton-square;
+    border-radius: @border-radius_ToggleButton-square;
     .controls-Button__icon {
-      left: 3px;
-      margin-top: -12px;
+      left: @left_ToggleButton-square-icon;
+      margin-top: @margin-top_ToggleButton-square-icon;
     }
   }
 
@@ -67,7 +72,10 @@
         background-color: #F0F5FB;
         border-color: transparent;
         .controls-Button__icon {
-          color: #313E78 !important;
+          color: @color_ToggleButton-square-icon_hovered;
+        }
+        &.controls-ToggleButton-square__big {
+          background-color: transparent;
         }
       }
     }
