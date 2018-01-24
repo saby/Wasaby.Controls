@@ -9,13 +9,13 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
    [
       'Core/EventBus',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Cache',
-      'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit',
       'SBIS3.CONTROLS/CompoundControl',
       'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
-      'css!SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown'
+      'css!SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
+      'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit'
    ],
 
-   function (EventBus, PresetCache, PresetUnit, CompoundControl, dotTplFn) {
+   function (EventBus, PresetCache, CompoundControl, dotTplFn) {
       'use strict';
 
 
