@@ -716,7 +716,7 @@ define(
                   this._SELECTABLE_RANGE_CSS_CLASSES.item,
                   this._SELECTABLE_RANGE_CSS_CLASSES.selected,
                   this._SELECTABLE_RANGE_CSS_CLASSES.selectedStart,
-                  this._SELECTABLE_RANGE_CSS_CLASSES.selectedEnd,
+                  this._SELECTABLE_RANGE_CSS_CLASSES.selectedEnd
                ];
          },
 
