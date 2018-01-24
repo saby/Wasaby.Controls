@@ -3,7 +3,7 @@
    <div class="controls-DateRangeBigChoose-MonthRangePickerItem__body">
       <div class="controls-DateRangeBigChoose-MonthRangePickerItem__quartersPanel">
          <ws:for data="quarterIndex as quarter in ['I', 'II', 'III', 'IV']">
-            <div class="controls-DateRangeBigChoose-MonthRangePickerItem__quartersPanel-button controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button{{ quarterSelectionEnabled ? ' controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button-selectable' }}"
+            <div class="controls-DateRangeBigChoose-MonthRangePickerItem__quartersPanel-button controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button{{ quarterSelectionEnabled ? ' controls-DateRangeBigChoose__cursor-pointer' }}"
                data-id="{{ quarterIndex }}">
                {{ quarter }}
             </div>
@@ -17,7 +17,7 @@
                      <ws:for data="monthIndex as month in quarter.months">
                         <div class="controls-DateRangeBigChoose-MonthRangePickerItem__month-wrapper controls-DateRangeBigChoose-MonthRangePickerItem__item"
                              data-selected-range-id="{{ month.toSQL() }}">
-                           <div class="controls-DateRangeBigChoose-MonthRangePickerItem__month_title"
+                           <div class="controls-DateRangeBigChoose-MonthRangePickerItem__month_title{{ monthsSelectionEnabled ? ' controls-DateRangeBigChoose__cursor-pointer' }}"
                                 data-selected-range-id="{{ month.toSQL() }}">
                               {{ month | strftime: "%B" }}
                            </div>
@@ -39,7 +39,7 @@
       </div>
       <div class="controls-DateRangeBigChoose-MonthRangePickerItem__halfYearsPanel ">
          <ws:for data="quarterIndex as quarter in ['I', 'II']">
-            <div class="controls-DateRangeBigChoose-MonthRangePickerItem__halfYearsPanel-button controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button{{ quarterSelectionEnabled ? ' controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button-selectable' }}"
+            <div class="controls-DateRangeBigChoose-MonthRangePickerItem__halfYearsPanel-button controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button{{ quarterSelectionEnabled ? ' controls-DateRangeBigChoose__cursor-pointer' }}"
                  data-id="{{ quarterIndex }}">
                {{ quarter }}
             </div>
