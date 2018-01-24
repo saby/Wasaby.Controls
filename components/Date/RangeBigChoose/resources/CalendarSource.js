@@ -5,7 +5,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/CalendarSource', [
 ], function (constants, Deferred, Base) {
    'use strict';
 
-   var _defaultOffset = 1000000;
+   var _defaultOffset = 1000000, cConst = constants; //константы нужны для работы дат, не уверен что можно отключать из зависимостей  (стан ругается)
 
    /**
     * @class SBIS3.CONTROLS.DateRangeBigChoose.CalendarSource

@@ -163,6 +163,11 @@ define([
       }
 
       describe('VDom API for Control', function(){
+         beforeEach(function () {
+            if (typeof $ === 'undefined') {
+               this.skip();
+            }
+         });
          it('propertiesInit', function(done) {
             var testBase = new Base({});
             assertInitProperties.call(testBase);

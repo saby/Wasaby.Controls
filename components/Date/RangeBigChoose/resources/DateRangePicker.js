@@ -1,21 +1,19 @@
 define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
    "Core/constants",
-   "Core/Deferred",
    'Core/detection',
    'Core/helpers/Function/throttle',
    "SBIS3.CONTROLS/ListView",
    "tmpl!SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePickerItem",
    "SBIS3.CONTROLS/Mixins/RangeMixin",
-   "WS.Data/Source/Base",
    "SBIS3.CONTROLS/Utils/DateUtil",
    "Core/core-instance",
    'SBIS3.CONTROLS/Date/RangeBigChoose/resources/CalendarSource',
    'Lib/LayoutManager/LayoutManager',
-   'SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin',
    "SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView",
    'SBIS3.CONTROLS/ScrollContainer'
-], function (constants, Deferred, detection, throttle, ListView, ItemTmpl, RangeMixin, Base, DateUtils, cInstance, CalendarSource, LayoutManager, RangeSelectableViewMixin) {
+], function (constants, detection, throttle, ListView, ItemTmpl, RangeMixin, DateUtils, cInstance, CalendarSource, LayoutManager) {
    'use strict';
+   var cConst = constants; //константы нужны для работы дат, не уверен что можно отключать из зависимостей (стан ругается)
 
    var monthSource = new CalendarSource(),
       buildTplArgsDRP = function(cfg) {
@@ -60,7 +58,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          },
          _lastOverControl: null,
          _innerComponentsValidateTimer: null,
-         _selectionRangeEndItem: null,
+         _selectionRangeEndItem: null
          // _selectionType: null
       },
       $constructor: function () {
@@ -243,7 +241,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          }
          var container = this.getContainer(),
             displayedContainer = container.find('.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_wrapper[data-date="' + this._options.month.toSQL() + '"]');
-
+         // При изменеии размера контента если его высота равна 0(а это может быть даже если контент есть, а родитель
+         // ScrollContainer скрыт) ScrollContainer навешивает overflow: hidden. Заза этого scrollToElement
+         // не может найти контейнер в котором происходит скролирование. Сигнализируем скрол контейнеру что
+         // надо пересчитать размеры перед scrollToElement.
+         this.sendCommand('resizeYourself');
          LayoutManager.scrollToElement(displayedContainer);
          this._updateDisplayedYearCssClass();
       },

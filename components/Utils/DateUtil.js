@@ -336,6 +336,14 @@ define('SBIS3.CONTROLS/Utils/DateUtil',[
          return new Date(month.getFullYear(), month.getMonth(), 1);
       },
 
+      normalizeDate: function (month) {
+         month = DateUtil.valueToDate(month);
+         if(!(month instanceof Date)) {
+            return null;
+         }
+         return new Date(month.getFullYear(), month.getMonth(), month.getDate());
+      },
+
       getDaysByRange: function (date1, date2) {
          var oneDay = 24*60*60*1000;
          return Math.round(Math.abs((date1.getTime() - date2.getTime())/(oneDay)));
