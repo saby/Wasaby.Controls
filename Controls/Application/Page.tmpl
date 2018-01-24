@@ -8,9 +8,9 @@
    <title key="title">{{ title }}</title>
    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 </head>
-<Controls:Event:Listner name="scrollDetect" register="scroll">
+<Controls:Event:Listener name="scrollDetect" register="scroll">
    <ws:content>
-   <Controls:Event:Listner name="resizeDetect" register="resize">
+   <Controls:Event:Listener name="resizeDetect" register="resize">
          <ws:content>
          <body class="ws-is-chrome" id="body" key="1_2_" on:scroll="_scrollPage()" on:resize="_resizePage()">
             <ws:if data="{{ content.content }}">
@@ -40,7 +40,7 @@
             </div>
          </body>
          </ws:content>
-   </Controls:Event:Listner>
+   </Controls:Event:Listener>
    </ws:content>
-</Controls:Event:Listner>
+</Controls:Event:Listener>
 </html>
