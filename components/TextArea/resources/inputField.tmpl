@@ -6,6 +6,7 @@
    js-controls-TextBox__field
    ws-invisible"
    rows="{{ minLinesCount ? minLinesCount}}"
+   title="{{tooltip ? tooltip : ' '}}"
    required="true"
 >{{ text ? text|sanitize }}</textarea>
 <ws:if data="{{ enabled && placeholder }}">
