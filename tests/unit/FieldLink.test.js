@@ -30,6 +30,7 @@ define(['SBIS3.CONTROLS/FieldLink'], function (FieldLink) {
                      element: getContainer(),
                      displayProperty: 'title',
                      idProperty: 'id',
+                     showSelector: false,
                      selectedItem: {id: 123, title: 'title'},
                      alwaysShowTextBox: true,
                      multiselect: false
@@ -46,6 +47,10 @@ define(['SBIS3.CONTROLS/FieldLink'], function (FieldLink) {
             
             it('_getElementToFocus( multiselect: false, alwaysShowTextBox: true )', function() {
                assert.isTrue(fieldLink._getElementToFocus()[0] === fieldLink._getInputField()[0]);
+            });
+
+            it('option showSelector', function() {
+               assert.isTrue($('.controls-FieldLink__showSelector', fieldLink.getContainer()).length === 0);
             });
             
          });
