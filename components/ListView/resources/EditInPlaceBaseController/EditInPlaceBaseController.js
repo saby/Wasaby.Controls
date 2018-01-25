@@ -444,7 +444,12 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
                      d2 = $ws.proto.Deferred.success();
                   d1.addCallback(function(){ return res; });
                   d2.addCallback(function(){ return res; }); */
-               return this._savingDeferred.isReady() ? Deferred.success() : this._savingDeferred;
+               /**
+                * Как код упал, так его и чиним. Никогда нельзя было делать addCallback к дефереду, который уже отстрелили.
+                * 2 года код ниже не менялся и код, в пендингах и в deferred
+                * Еще одна причина убрать Deferred
+                */
+               return (this._savingDeferred.isReady() || this._savingDeferred.isCallbacksLocked()) ? Deferred.success() : this._savingDeferred;
             },
             _endEdit: function(eip, withSaving, endEditResult) {
                var
