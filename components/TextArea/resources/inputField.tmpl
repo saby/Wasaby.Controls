@@ -7,6 +7,7 @@
    ws-invisible"
    rows="{{ minLinesCount ? minLinesCount}}"
    required="true"
+   placeholder="{{' '}}"
 >{{ text ? text|sanitize }}</textarea>
 <ws:if data="{{ enabled && placeholder }}">
     <ws:partial template="{{ compatiblePlaceholderTemplate }}" scope="{{...}}"/>
