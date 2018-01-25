@@ -1,15 +1,15 @@
 .controls-CheckBox {
   cursor:pointer;
   display: inline-flex;
-  font-size: @check-box-font-size; //font-size-check-box
+  font-size: @font-size-check-box;
 }
 
 .controls-CheckBox__icon-border-color__enabled {
-  color: @check-box-icon-box-color;
+  color: @color-check-box-icon-box;
 }
 
 .controls-CheckBox__icon-border-color__disabled {
-  color: @check-box-disabled-color;
+  color: @color-check-box-disabled;
 }
 
 .controls-CheckBox__caption-color__enabled{
@@ -17,7 +17,7 @@
 }
 
 .controls-CheckBox__caption-color__disabled{
-  color: @check-box-disabled-color;
+  color: @color-check-box-disabled;
 }
 
 .controls-CheckBox__caption {
@@ -44,7 +44,7 @@
 
 .controls-CheckBox__icon-tristate-color__disabled{
   &:after{
-    background-color: @check-box-disabled-color;
+    background-color: @color-check-box-disabled;
   }
 }
 
@@ -62,9 +62,6 @@
 
 .controls-CheckBox__icon-checked-color__disabled{
   &:after{
-    color: @check-box-disabled-color;
+    color: @color-check-box-disabled;
   }
 }
-//.checkbox-checked-color(@primary-color, @check-box-disabled-color, controls-CheckBox__icon);
-//.checkbox-null-color(@primary-color, @check-box-disabled-color, controls-CheckBox__icon);
-//.checkbox-border-color(@check-box-icon-box-color, @check-box-disabled-color, controls-CheckBox__iconBox_color);
