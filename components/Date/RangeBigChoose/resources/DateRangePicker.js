@@ -94,14 +94,18 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
 
          if (this._options.monthSelectionEnabled) {
             container.on('click', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleClick.bind(this));
-            container.on('mouseenter', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleMouseEnter.bind(this));
-            container.on('mouseleave', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleMouseLeave.bind(this));
+            if (!detection.isMobileIOS) {
+               container.on('mouseenter', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleMouseEnter.bind(this));
+               container.on('mouseleave', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleMouseLeave.bind(this));
+            }
          }
 
          container.on('click', '.controls-DateRangeBigChoose-DateRangePickerItem__months-nextyear-btn', this._onNextYearClick.bind(this));
          container.on('click', '.controls-DateRangeBigChoose-DateRangePickerItem__months-btn', this._onMonthClick.bind(this));
 
-         container.on('mouseenter', '.controls-MonthView__currentMonthDay', this._onDayMouseEnter.bind(this));
+         if (!detection.isMobileIOS) {
+            container.on('mouseenter', '.controls-MonthView__currentMonthDay', this._onDayMouseEnter.bind(this));
+         }
 
          this._scrollContainer = container.closest('.controls-ScrollContainer__content');
          this._scrollContainer.on('scroll', this._onScroll.bind(this));
