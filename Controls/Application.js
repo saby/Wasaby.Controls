@@ -36,7 +36,6 @@ define('Controls/Application',
             self.resourceRoot = cfg.resourceRoot;
             self.jsLinks = cfg.jsLinks;
             self.templateConfig = cfg.templateConfig;
-            self.jquery = cfg.jquery;
             self.compat = cfg.compat||false;
          }
       };
