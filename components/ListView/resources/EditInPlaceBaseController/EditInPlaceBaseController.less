@@ -1,9 +1,12 @@
 .controls-ListView__item {
    &.controls-editInPlace__editing {
-      background-color: @controls-editInPlace-editor-bg;
+      /*Сейчас вес селектора, который навешивает background-color на элементы таблицы по ховеру, настолько большой, что его не перебить.
+        А в момент редактирования, строка должна быть одного цвета, и не меняться по ховеру, поэтом пока что important. =(
+      */
+      background-color: @controls-editInPlace-editor-bg !important;
 
       .controls-DataGridView__td {
-         background-color: @controls-editInPlace-editor-bg;
+         background-color: @controls-editInPlace-editor-bg !important;
       }
    }
 }
