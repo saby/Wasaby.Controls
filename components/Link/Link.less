@@ -1,21 +1,26 @@
-.link-mixin(@icon-width) {
-  & + .controls-Button__text {
-    margin-left: @icon-width + @spacing_Button-between-icon-text;
-  }
+//<span class="controls-ButtonBase controls-Link controls-Link_state-main">
+//  <span class="controls-ButtonBase__content controls-Button__content controls-Link__content">
+//    <i class="controls-Button__icon"></i>
+//    <span class="controls-Button__text spacing-between-icon-text  controls-Link__text ">This is Link</span>
+//  </span>
+//</span>
+.controls-Link {
+  .button-default-style(@font-size_Link);
+  height: @height_Link;
 }
-// Модификаторы цвета ссылки
-.controls-Link_main {
+
+// состояния ссылки
+.controls-Link_state-main {
   color: @color_Link-text;
 }
 // оставил старые модификаторы, чтобы сохранить обратную совместимость до версии 3.18.0
-.controls-Link_main-2, .mainLink__2 {
-  color: @gray-lamantin-color;
-  &:hover {
-    color: @gray-lamantin-color;
-  }
+.controls-Link_state-main-2, .mainLink__2 {
+  color: @color_Link-main-2;
 }
-.controls-Link_main-3 {
-  color: @gray-lamantin-color;
+.controls-Link_state-main-3 {
+  color: @color_Link-main-2;
+  // Если навесить text-decoration на ссылку, то будет подчеркивать иконка
+  // используем каскад, чтобы подчеркивать только текст.
   .controls-Button__text {
     text-decoration: underline;
   }
@@ -23,147 +28,60 @@
 .controls-Link_additional, .additionalLink {
   color: @color_Link-additional;
 }
-.controls-Link_additional-2, .additionalLink__2 {
+.controls-Link_state-additional-2, .additionalLink__2 {
   color: @color_Link-additional-2;
 }
-.controls-Link_additional-3, .additionalLink__3 {
+.controls-Link_state-additional-3, .additionalLink__3 {
   color: @color_Link-additional-3;
 }
-.controls-Link_additional-4, .additionalLink__4 {
-  color: @green-color;
+.controls-Link_state-additional-4, .additionalLink__4 {
+  color: @color_Link-additional-4;
 }
-.controls-Link_additional-5, .additionalLink__5 {
-  color: @purple-color;
+.controls-Link_state-additional-5, .additionalLink__5 {
+  color: @color_Link-additional-5;
 }
 
-.controls-Link {
-  .button-default-style(@font-size_Link);
-  text-decoration: @text-decoration_Link;
-  line-height: normal;
-  height: @height_Link;
-  padding: @padding_Link;
-  background: transparent;
-
-
-  &.controls-Link_main, &.controls-Link_main-3 {
-    &:active:not(.ws-disabled) {
-      cursor: pointer;
-      color: @color_Link-text_active;
-      .controls-Button__icon {
-        &.icon-primary {
-          color: @color_Link-text_active !important;
-        }
-      }
-    }
-  }
-
-  &:active:not(.ws-disabled) {
-    .controls-Button__text {
-      text-decoration: underline;
-    }
-  }
-
-  &.controls-Link__underline {
-    .controls-Button__text {
-      text-decoration: underline;
-    }
-  }
-
-  // Button's icon
-  .controls-Button__icon {
-    left: 0;
-    & + .controls-Button__text {
-      margin-left: @spacing_Button-between-icon-text;
-    }
-  }
-  &.ws-disabled {
-    color: @color_Link-text_disabled;
-    cursor: default;
-    text-decoration: none;
-    .controls-Button__icon{
-      color: @color_Link-text_disabled !important;
-    }
-    &.controls-Link__underline {
-      text-decoration: none;
-    }
-  }
-
-  .controls-Button__text {
-    .text-overflow();
-  }
-
-  .controls-Link-link {
-     width: 100%;
-     height: 100%;
-     color: inherit;
-     text-decoration: inherit;
-     cursor: inherit;
-     &:hover {
-       .controls-Link__icon {
-         text-decoration: none;
-       }
-     }
-  }
-  .controls-Button__wrapper {
-    .justify-content(flex-start);
-  }
-
-  .controls-Button__text.controls-Button__emptyCaption {
-    display: none;
-  }
+.controls-Link_state-disabled {
+  color: @color_Link-text_disabled;
+  cursor: default;
 }
-.ws-is-ie10 {
-  .controls-Link {
-    &.controls-Click__active {
-      .controls-Link-link {
-        background-color: transparent;
-      }
-    }
+
+.controls-Link_state-main:active, .controls-Link_state-main-3:active {
+  color: @color_Link-text_active;
+  // нужно по нажатию перекрашивать primary иконку, поэтому используем каскад
+  // иконки других значений icon-done, icon-error etc. перекрашивать не нужно
+  .controls-Button__icon.icon-primary {
+    color: @color_Link-text_active;
   }
 }
 
-/* По мотивам ошибки https://online.sbis.ru/opendoc.html?guid=76042823-1fd7-430f-96dc-f8131496f100
-	чтобы избежать всевозможных проблем с исчезающими кнопками/бордерами.
-	В edge множество багов с рендером элементов у которых дробная ширина или высота
-	https://stackoverflow.com/questions/32313551/microsoft-edge-bug */
-.ws-is-ie12 {
-  .controls-Link {
-    outline: 1px solid transparent;
-  }
+.controls-Link__content {
+  .justify-content(flex-start);
 }
-
-.ws-is-mobile-platform {
-  .controls-Link__withoutCaptionOnMobile {
-    .controls-Link__field {
-      display: none;
-    }
-  }
-}
-
 
 .controls-Link-link {
   .inline-flexbox();
   .align-items(center);
-}
-
-.staff-CardButtons__right{
-   .controls-Link{
-      line-height: 24px;
-   }
+  width: 100%;
 }
 
 .ws-is-desktop-platform {
-  .controls-Link_main, .controls-Link_main-3 {
+  .controls-Link_state-main, .controls-Link_state-main-3 {
     .link-hover-mixin(@color_Link-text_hovered, @color_Link-icon_hovered, controls-Button__text);
   }
-  .controls-Link {
-    &:not(.ws-disabled):not(.controls-Click__active) {
-      &:hover {
-        .controls-Button__text {
-          cursor: pointer;
-          text-decoration: underline;
-        }
-      }
+  .controls-Link_state-main-2:hover, .controls-Link_state-additional:hover, .controls-Link_state-additional-2:hover,
+  .controls-Link_state-additional-3:hover, .controls-Link_state-additional-4:hover, .controls-Link_state-additional-5:hover {
+    // аналогично нажатию. по ховеру нужно только текст подчеркивать
+    .controls-Button__text {
+      text-decoration: underline;
     }
   }
+}
+
+// слой совместимости. т.к. ссылка может быть одна на странице
+.spacing-between-icon-text {
+  margin-left: @spacing_Button-between-icon-text;
+}
+.controls-Button__text {
+  .text-overflow();
 }

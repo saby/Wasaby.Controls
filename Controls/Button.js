@@ -7,6 +7,13 @@ define('Controls/Button', [
     'use strict';
 
    /**
+	* Набор базовых компонентов VDOM.
+	* @namespace Controls
+	* @public
+	* @author Крайнов Д.
+	*/
+
+   /**
     * Кнопка
     * @class Controls/Button
     * @extends Controls/Control

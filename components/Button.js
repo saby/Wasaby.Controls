@@ -1,10 +1,11 @@
 define('SBIS3.CONTROLS/Button',
    [
       'js!WSControls/Buttons/Button',
+      'SBIS3.CONTROLS/Utils/ButtonUtil',
       'css!SBIS3.CONTROLS/Button/Button'
          ],
 
-   function (Base) {
+   function (Base, ButtonUtil) {
 
    'use strict';
 
@@ -60,10 +61,10 @@ define('SBIS3.CONTROLS/Button',
    var Button = Base.extend( [], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
       _modifyOptions : function() {
          var opts = Button.superclass._modifyOptions.apply(this, arguments);
+         opts._type = 'Button';
          opts.cssClassName += ' controls-Button';
-         opts.cssClassName += ' controls-Button-size__' + (!!opts.size ? opts.size : 'default');
-         opts.cssClassName += ' controls-Button-color__' + ((!!opts.primary || opts.style === 'primary') ? 'primary' : 'default');
-         opts.cssClassName += ((!!opts.primary || opts.style === 'primary') ? ' controls-Button__primary' : '');
+         opts._iconDisabledClass = 'icon-button-disabled';
+         ButtonUtil.preparedClassFromOptions(opts);
          return opts;
       },
       show: function(){
@@ -75,6 +76,13 @@ define('SBIS3.CONTROLS/Button',
          if (!oldVisible && this.isPrimary()) {
             this.setDefaultButton(true);
          }
+      },
+      _toggleState: function() {
+        var  container = this._container;
+
+        container[0].className = container[0].className.replace(/(^|\s)controls-Button_size-\S+/g, '').replace(/(^|\s)controls-Button_state-\S+/g, '');
+        container.addClass(ButtonUtil.getClassState(this._options));
+        Button.superclass._toggleState.apply(this, arguments);
       }
    });
 

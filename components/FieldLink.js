@@ -801,8 +801,9 @@ define('SBIS3.CONTROLS/FieldLink',
              var fieldWrapper = this.getContainer().find('.controls-TextBox__wrapper'),
                  afterFieldWrapper = this._getAfterFieldWrapper();
 
-             /* По стандарту минимальная ширина поля ввода - 33% */
-             return (fieldWrapper[0].offsetWidth - afterFieldWrapper[0].offsetWidth)/100*33;
+             /* По стандарту минимальная ширина поля ввода - 33%, но не более 100 */
+              var minWidthFieldWrapper = (fieldWrapper[0].offsetWidth - afterFieldWrapper[0].offsetWidth)/100*33;
+              return (minWidthFieldWrapper < 100) ? minWidthFieldWrapper : 100;
           },
 
           /** Обработчики событий контрола отрисовки элементов **/

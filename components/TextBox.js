@@ -260,7 +260,6 @@ define('SBIS3.CONTROLS/TextBox', [
                }
             })
             .on('focusin', this._inputFocusInHandler.bind(this))
-            .on('focusout', this._inputFocusOutHandler.bind(this))
             .on('click', this._inputClickHandler.bind(this));
    
          this._container
@@ -571,13 +570,6 @@ define('SBIS3.CONTROLS/TextBox', [
          return true;
       },
 
-      _inputFocusOutHandler: function(e) {
-         if (this._fromTouch){
-            EventBus.globalChannel().notify('MobileInputFocusOut');
-            this._fromTouch = false;
-         }
-      },
-
        _pasteHandler: function(event) {
            var text = this._getInputValue(),
                inputRegExp = this._options.inputRegExp;
@@ -604,6 +596,11 @@ define('SBIS3.CONTROLS/TextBox', [
       _focusOutHandler: function(event, isDestroyed, focusedControl) {
          if(!isDestroyed  && (!focusedControl || !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) ) {
             this._checkInputVal();
+         }
+
+         if (this._fromTouch){
+            EventBus.globalChannel().notify('MobileInputFocusOut');
+            this._fromTouch = false;
          }
 
          TextBox.superclass._focusOutHandler.apply(this, arguments);

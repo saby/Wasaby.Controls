@@ -4,11 +4,9 @@ define('Controls/Input/resources/SuggestPopupController',
       'Core/core-merge',
       'Controls/List/resources/utils/Search',
       'Core/constants',
-      'Core/core-clone',
       'Controls/Input/resources/SuggestView/SuggestView'
-      
    ],
-   function(extend, cMerge, Search, constants, clone) {
+   function(extend, cMerge, Search, constants) {
       
       'use strict';
       
@@ -32,6 +30,14 @@ define('Controls/Input/resources/SuggestPopupController',
             if (!searchResult.hasMore) {
                delete self._popupOptions.componentOptions.filter[self._searchParam];
             }
+         },
+   
+         search: function(self) {
+            return _private.getSearchController(self).search({filter: self._filter}).addCallback(function(searchResult) {
+               _private.setSuggestSelectedIndex(self, 0);
+               _private.setSuggestSearchResult(self, searchResult);
+               _private.prepareSuggestFilter(self, searchResult);
+            });
          },
          
          showPopup: function(self) {
@@ -80,16 +86,21 @@ define('Controls/Input/resources/SuggestPopupController',
             this._searchParam = options.searchParam;
          },
          
-         search: function(filter, popupOptions) {
-            var self = this;
-            
-            this._popupOptions = clone(popupOptions);
-            return _private.getSearchController(self).search({filter: filter}).addCallback(function(searchResult) {
-               _private.setSuggestSelectedIndex(self, 0);
-               _private.setSuggestSearchResult(self, searchResult);
-               _private.prepareSuggestFilter(self, searchResult);
-               _private.showPopup(self);
-            });
+         showPopup: function() {
+            return  _private.search(this).addCallback(_private.showPopup.bind(this, this));
+         },
+         
+         hidePopup: function() {
+            _private.getSearchController(this).abort();
+            this._popupOpener.close();
+         },
+         
+         setSearchFilter: function(searchFilter) {
+            this._filter = searchFilter;
+         },
+         
+         setPopupOptions: function(options) {
+            this._popupOptions = options;
          },
          
          keyDown: function(event) {
@@ -113,11 +124,6 @@ define('Controls/Input/resources/SuggestPopupController',
                      break;
                }
             }
-         },
-         
-         abort: function() {
-            _private.getSearchController(this).abort();
-            this._popupOpener.close();
          },
    
          _moduleName: 'Controls/Input/resources/SuggestPopupController'

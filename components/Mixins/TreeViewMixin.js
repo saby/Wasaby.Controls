@@ -243,7 +243,9 @@ define('SBIS3.CONTROLS/Mixins/TreeViewMixin', [
 
       _createAllFolderFooters: function() {
          this._getItemsProjection().each(function(item) {
-            this._createFolderFooter(item);
+            if (this._needCreateFolderFooter(item)) {
+               this._createFolderFooter(item);
+            }
          }.bind(this));
       },
 

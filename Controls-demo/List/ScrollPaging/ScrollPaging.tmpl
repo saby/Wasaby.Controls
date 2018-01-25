@@ -1,0 +1,19 @@
+<div class="123">
+   <Controls:Container:Scroll className="cDemo-ScrollContainer">
+      <ws:content>
+         <Controls:List
+               dataSource = "{{_viewSource}}"
+               selectedKey="{{3}}"
+               displayProperty="title"
+               allowEmptySelection="{{false}}"
+               multiSelect="{{true}}"
+               name="psina"
+               idProperty="id">
+            <ws:navigation source="page" view="infinity">
+               <ws:sourceConfig pageSize="{{9}}" page="{{0}}" mode="totalCount"></ws:sourceConfig>
+               <ws:viewConfig pagingMode="direct"></ws:viewConfig>
+            </ws:navigation>
+         </Controls:List>
+      </ws:content>
+   </Controls:Container:Scroll>
+</div>
