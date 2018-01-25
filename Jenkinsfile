@@ -389,7 +389,9 @@ node('controls') {
             [general]
             browser = ${params.browser_type}
             SITE = http://${NODE_NAME}:30001
-            fail_test_repeat_times = 0
+            SERVER = test-autotest-db1
+            BASE_VERSION = css_${NODE_NAME}${ver}1"""
+            TAGS_NOT_TO_START = todomvc, tabmessage
             DO_NOT_RESTART = True
             SOFT_RESTART = True
             NO_RESOURCES = True
@@ -398,8 +400,7 @@ node('controls') {
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
             HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/
-            SERVER = test-autotest-db1
-            BASE_VERSION = css_${NODE_NAME}${ver}1"""
+
         if ( "${params.theme}" != "online" ) {
             writeFile file: "./controls/tests/reg/config.ini",
             text:
@@ -407,7 +408,6 @@ node('controls') {
                 [general]
                 browser = ${params.browser_type}
                 SITE = http://${NODE_NAME}:30001
-                fail_test_repeat_times = 0
                 DO_NOT_RESTART = True
                 SOFT_RESTART = False
                 NO_RESOURCES = True
@@ -428,7 +428,6 @@ node('controls') {
                 [general]
                 browser = ${params.browser_type}
                 SITE = http://${NODE_NAME}:30001
-                fail_test_repeat_times = 0
                 DO_NOT_RESTART = True
                 SOFT_RESTART = False
                 NO_RESOURCES = True
