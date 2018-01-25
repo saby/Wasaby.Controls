@@ -111,6 +111,7 @@ define('Controls/Input/Suggest',
          },
          
          _selectHandler: function(item) {
+            this.focus();
             this._notify('select', [item]);
             this._notify('valueChanged', [item.get(this._options.displayProperty)]);
          },

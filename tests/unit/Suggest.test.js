@@ -1,8 +1,9 @@
 define(
    [
-      'Controls/Input/Suggest'
+      'Controls/Input/Suggest',
+      'WS.Data/Entity/Model'
    ],
-   function(Suggest) {
+   function(Suggest, Model) {
       'use strict';
 
       describe('Controls/Input/Suggest', function () {
@@ -31,6 +32,20 @@ define(
    
             suggest._popupFocusOut({});
             assert.isTrue(Suggest._private.needCloseOnFocusOut(suggest));
+         });
+   
+         it('selectHandler', function() {
+            var suggest = new Suggest(),
+                focused = false;
+            
+            /* Т.к. реально проверить, есть ли фокус в саггесте мы не можем (нет DOM элемента),
+               просто проверим вызов функции метода() */
+            suggest.focus = function() {
+               focused = true;
+            };
+            suggest._selectHandler(new Model());
+            
+            assert.isTrue(focused, 'Suggest is not focused after select');
          });
          
       });
