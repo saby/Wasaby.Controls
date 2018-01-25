@@ -69,6 +69,13 @@ define('Controls/Input/Number', [
          });
       },
 
+      _afterUpdate: function(oldOptions) {
+         if ((oldOptions.value !== this._options.value) && this._caretPosition) {
+            this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
+            delete this._caretPosition;
+         }
+      },
+
       _inputCompletedHandler: function () {
          var
             tmp = this._options.value.split('.'),
@@ -92,7 +99,7 @@ define('Controls/Input/Number', [
       },
 
       paste: function(text) {
-         inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text);
+         this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['realArea'], text) + text.length;
       }
    });
 

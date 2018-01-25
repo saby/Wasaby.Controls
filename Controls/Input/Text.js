@@ -80,6 +80,13 @@ define('Controls/Input/Text', [
             });
          },
 
+         _afterUpdate: function(oldOptions) {
+            if ((oldOptions.value !== this._options.value) && this._caretPosition) {
+               this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
+               delete this._caretPosition;
+            }
+         },
+
          _inputCompletedHandler: function(){
             //Если стоит опция trim, то перед завершением удалим лишние пробелы и ещё раз стрельнем valueChanged
             if(this._options.trim){
@@ -101,7 +108,7 @@ define('Controls/Input/Text', [
          },
 
          paste: function(text) {
-            inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text);
+            this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text) + text.length;
          }
       });
 

@@ -89,6 +89,13 @@ define('Controls/Input/Area', [
          _private.updateScroll.call(this);
       },
 
+      _afterUpdate: function(oldOptions) {
+         if ((oldOptions.value !== this._options.value) && this._caretPosition) {
+            this._children['realArea'].setSelectionRange(this._caretPosition, this._caretPosition);
+            delete this._caretPosition;
+         }
+      },
+
       _valueChangedHandler: function(e, value){
          _private.setFakeAreaValue.call(this, value);
          _private.updateScroll.call(this);
@@ -130,7 +137,7 @@ define('Controls/Input/Area', [
       },
 
       paste: function(text) {
-         inputHelper.pasteHelper(this._children['inputRender'], this._children['realArea'], text);
+         this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['realArea'], text) + text.length;
       }
 
    });
