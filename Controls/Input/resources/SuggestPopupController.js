@@ -1,12 +1,11 @@
 define('Controls/Input/resources/SuggestPopupController',
    [
       'Core/core-extend',
-      'Core/core-merge',
       'Controls/List/resources/utils/Search',
       'Core/constants',
       'Controls/Input/resources/SuggestView/SuggestView'
    ],
-   function(extend, cMerge, Search, constants) {
+   function(extend, Search, constants) {
       
       'use strict';
       
