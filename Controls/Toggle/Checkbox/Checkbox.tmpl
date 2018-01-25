@@ -1,4 +1,4 @@
-<div on:click="_clickHandler()" class="controls-CheckBox{{_options.value ? ' controls-Checked__checked'}}{{_options.value === null && _options.triState ? ' controls-ToggleButton__null'}}" title="{{_options.tooltip}}">
-    <div class="{{_options.value === null && _options.triState ? ' controls-CheckBox__icon__tristate'}} {{_options.value ? ' controls-CheckBox__icon__checked'}} controls-CheckBox__icon"></div>
+<div on:click="_clickHandler()" class="controls-CheckBox {{isEnabled() ? 'controls-CheckBox__enabled' : 'controls-CheckBox__disabled'}} {{_options.value ? ' controls-Checked__checked'}}{{_options.value === null && _options.triState ? ' controls-ToggleButton__null'}}" enabled="isEnabled()" title="{{_options.tooltip}}">
+    <div class="{{_options.value === null && _options.triState ? 'controls-CheckBox__icon-tristate controls-CheckBox__icon-tristate-color__' + (isEnabled() ? 'enabled':'disabled')}} {{_options.value ? 'controls-CheckBox__icon-checked controls-CheckBox__icon-checked-color__'+ (isEnabled() ? 'enabled':'disabled')}} controls-CheckBox__icon-border-color__{{isEnabled() ? 'enabled': 'disabled'}} controls-CheckBox__icon"></div>
     <ws:partial template="tmpl!Controls/Toggle/Checkbox/resources/CheckboxCaption" enabled="{{isEnabled()}}" caption="{{_options.caption}}"/>
 </div>
