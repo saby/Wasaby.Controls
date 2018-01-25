@@ -234,10 +234,6 @@ body {
     height: round(84px * @multiplier);
 }*/
 
-.controls-editInPlace .controls-editInPlace__editor {
-  background: @controls-editInPlace-editor-bg;
-}
-
 //todo: отказаться от данного сомнительного решения
 .controls-FormattedTextBox .controls-InputRender__wrapper .controls-InputRender__field .controls-FormattedTextBox__field-symbol {
     line-height: round(56px * @multiplier);
@@ -487,9 +483,10 @@ body {
       padding-left: round(16px * @multiplier)
    }
 }
-
-.controls-Browser__search {
-   margin: @top_window_button
+.controls-Browser {
+  .controls-Browser__search {
+    margin: @top_window_button 0 @top_window_button round(12px * @multiplier);
+  }
 }
 .controls-Browser__tableRow {
    margin-left: 0;
@@ -506,7 +503,7 @@ body {
   font-size: round(40px * @multiplier)!important;
   font-weight: normal !important;
   padding-left: round(24px * @multiplier) !important;
-  width: calc(100% ~'-' round(84px * @multiplier)) !important;
+  width: calc(100% ~'-' round(86px * @multiplier)) !important; //78 - close button width + 8 - padding
 }
 .ws-window-titlebar {
   color: @default-text-color !important;
@@ -579,14 +576,6 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
     display: -ms-flexbox !important;
     display: -ms-inline-flexbox !important;
     display: -webkit-inline-flex !important;
-  }
-}
-
-.controls-ComboBox {
-  &.controls-Picker__show {
-    background-color: @background-color_ComboBox_withPicker;
-    color: @color_ComboBox_withPicker;
-    border: @default-border-width solid @border-color_ComboBox_withPicker;
   }
 }
 

@@ -11,35 +11,39 @@
    <title key="title">{{ title }}</title>
    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 </head>
-<body class="ws-is-chrome" id="body" key="1_2_">
-<ws:if data="{{ content }}">
-   <ws:partial template="{{ content }}" scope="{{ templateConfig }}" />
-</ws:if>
-<div key="scripts">
-   <script key="ws-config">
-      window.wsConfig = {
-         wsRoot: '{{wsRoot}}',
-         resourceRoot: '{{resourceRoot}}',
-         compatible: {{compat}}
-      };
-   </script>
-   <ws:if data="{{ jquery != 777 }}">
-      <script key="jquery-s" type="text/javascript" src="/cdn/jquery/3.2.1/jquery-min.js"  data-pack-name="skip"></script>
-      <script key="cookie-s" type="text/javascript" src="/cdn/jquery-cookie/04-04-2014/jquery-cookie-min.js"  data-pack-name="skip"></script>
-   </ws:if>
-   <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/bundles.js"></script>
-   <script key="require" type="text/javascript" src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
-   <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
-   <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/config.js"></script>
+<Controls:Event:Listener name="scrollDetect" register="scroll">
+   <ws:content>
+   <Controls:Event:Listener name="resizeDetect" register="resize">
+         <ws:content>
+         <body class="ws-is-chrome" id="body" key="1_2_" on:scroll="_scrollPage()" on:resize="_resizePage()">
+            <ws:if data="{{ content.content }}">
+               <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}" />
+            </ws:if>
+            <div key="scripts">
+               <script key="ws-config">
+                  window.wsConfig = {
+                     wsRoot: '{{wsRoot}}',
+                     resourceRoot: '{{resourceRoot}}',
+                     compatible: false
+                  };
+               </script>
+               <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/bundles.js"></script>
+               <script key="require" type="text/javascript" src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
+               <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
+               <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/config.js"></script>
 
-   <ws:if data="{{ jsLinks }}">
-      <ws:for data="index, value in jsLinks">
-         <script type="text/javascript" src="{{ value }}" defer="defer" key="{{ 'scripts_' + index }}"></script>
-      </ws:for>
-   </ws:if>
-   <script key="init_script">
-      require(['Core/app']);
-   </script>
-</div>
-</body>
+               <ws:if data="{{ jsLinks }}">
+                  <ws:for data="index, value in jsLinks">
+                     <script type="text/javascript" src="{{ value }}" defer="defer" key="{{ 'scripts_' + index }}"></script>
+                  </ws:for>
+               </ws:if>
+               <script key="init_script">
+                  require(['Core/app']);
+               </script>
+            </div>
+         </body>
+         </ws:content>
+   </Controls:Event:Listener>
+   </ws:content>
+</Controls:Event:Listener>
 </html>

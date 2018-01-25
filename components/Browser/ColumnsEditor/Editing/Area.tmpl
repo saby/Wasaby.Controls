@@ -53,7 +53,7 @@
          </div>
       </ws:if>
    </div>
-   <SBIS3.CONTROLS:ScrollContainer class="controls-Browser-ColumnsEditor-Editing-Area__body">
+   <SBIS3.CONTROLS:ScrollContainer class="controls-Browser-ColumnsEditor-Editing-Area__body controls-ScrollContainer__flex">
       <ws:content>
          <SBIS3.CONTROLS:CheckBox:Group
             class="controls-Browser-ColumnsEditor-Editing-Area__FixedList"
@@ -76,6 +76,7 @@
             displayProperty="title"
             itemsSortMethod="{{_optsSelectable.itemsSortMethod}}"
             selectedKeys="{{_optsSelectable.markedKeys}}"
+            itemTpl="tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItem"
             itemContentTpl="tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItemContent"
             multiselect="{{ true }}"
             >

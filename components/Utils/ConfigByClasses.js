@@ -20,7 +20,7 @@ define('SBIS3.CONTROLS/Utils/ConfigByClasses', [], function () {
          if (hasClass(classes, elem.class)) {
             opts[elem.optionName] = elem.value;
          } else {
-            if (!opts[elem.optionName]) {
+            if (opts[elem.optionName] === undefined) {
                opts[elem.optionName] = elem.defaultValue;
             }
          }

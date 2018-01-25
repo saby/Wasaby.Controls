@@ -50,6 +50,14 @@ define('Controls/Application',
             return 'cfg-pagedata';
          },
 
+         _scrollPage: function(ev){
+            this._children.scrollDetect.start(ev);
+         },
+
+         _resizePage: function(ev){
+            this._children.resizeDetect.start(ev);
+         },
+
          _beforeMount: function(cfg, context, receivedState) {
             var self = this,
                def = new Deferred();

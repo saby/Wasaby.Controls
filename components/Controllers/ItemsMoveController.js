@@ -19,7 +19,6 @@ define('SBIS3.CONTROLS/Controllers/ItemsMoveController', [
             linkedView = this._options.linkedView;
          linkedView.setItemsActions(this._prepareItemsActions(linkedView._options.itemsActions));
          linkedView.subscribe('onChangeHoveredItem', this._onChangeHoveredItem.bind(this));
-         this._publish('onItemMove');
       },
 
       _prepareItemsActions: function(itemsActions) {

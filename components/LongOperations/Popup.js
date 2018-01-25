@@ -330,13 +330,10 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                   switch (action.type) {
                      case 'result':
                         return model.get('resultWayOfUse') || RESULT_BUTTON_TITLES[model.get('resultHandler') ? 'open' : 'download'];
-                        break;
                      case 'history':
                         return /*model.get('resultWayOfUse') ||*/ RESULT_BUTTON_TITLES.viewLog;
-                        break;
                      case 'custom':
                         return action.title;
-                        break;
                   }
                }
             }

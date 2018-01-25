@@ -6,6 +6,7 @@ define('Controls/ConfirmationWindow/Dialog', [
       'tmpl!Controls/ConfirmationWindow/Dialog/footer',
       'tmpl!Controls/ConfirmationWindow/Dialog/message',
       'tmpl!Controls/ConfirmationWindow/Dialog/details',
+      'Core/tmpl/js/helpers/decorators',
       'tmpl!Controls/ConfirmationWindow/Dialog/Dialog',
 
       'css!Controls/ConfirmationWindow/Dialog/Dialog',
@@ -17,6 +18,7 @@ define('Controls/ConfirmationWindow/Dialog', [
                 footerTemplate,
                 messageTemplate,
                 detailsTemplate,
+                decorators,
                 template) {
 
       'use strict';
@@ -77,6 +79,7 @@ define('Controls/ConfirmationWindow/Dialog', [
          _detailsTemplate: detailsTemplate,
          _contentTemplate: contentTemplate,
          _footerTemplate: footerTemplate,
+         _sanitize: decorators.sanitize,
 
          _sendResult: function (e, res) {
             this._notify('sendResult', [res]);
