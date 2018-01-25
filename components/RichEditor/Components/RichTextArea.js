@@ -4,7 +4,6 @@
 define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    [
    "Core/UserConfig",
-   "Core/pathResolver",
    "Core/Context",
    "Core/Indicator",
    "Core/core-clone",
@@ -29,7 +28,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    'css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextArea'
 ], function (
       UserConfig,
-      cPathResolver,
       cContext,
       cIndicator,
       coreClone,

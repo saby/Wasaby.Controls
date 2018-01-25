@@ -1,5 +1,6 @@
 define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
    "Core/constants",
+   'Core/detection',
    'Core/helpers/Function/runDelayed',
    'Core/helpers/Function/throttle',
    'Core/helpers/Object/isEmpty',
@@ -12,7 +13,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
    "Core/core-instance",
    "SBIS3.CONTROLS/Utils/DateUtil",
    "SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView"
-], function ( constants, runDelayed, throttle, isEmpty, LayoutManager, ListView, CalendarSource, ItemTmpl, RangeMixin, RangeSelectableViewMixin, cInstance, dateUtils) {
+], function ( constants, detection, runDelayed, throttle, isEmpty, LayoutManager, ListView, CalendarSource, ItemTmpl, RangeMixin, RangeSelectableViewMixin, cInstance, dateUtils) {
    'use strict';
 
    var cConst = constants; //константы нужны для работы дат, не уверен что можно отключать из зависимостей (стан ругается)
@@ -135,19 +136,25 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          container.on('click', '.controls-DateRangeBigChoose-MonthRangePickerItem__item',
             this._onMonthClick.bind(this));
 
-         if (this._options.quarterSelectionEnabled || this._options.halfyearSelectionEnabled) {
-            container.on('mouseenter', '.controls-DateRangeBigChoose-MonthRangePickerItem__item, .controls-DateRangeBigChoose-MonthRangePickerItem__month_title',
-               this._onItemCaptionMouseEnter.bind(this));
-            container.on('mouseleave', '.controls-DateRangeBigChoose-MonthRangePickerItem__item, .controls-DateRangeBigChoose-MonthRangePickerItem__month_title',
-               this._onItemCaptionMouseLeave.bind(this));
-            container.on('mouseleave', this._onRangeControlMouseLeave.bind(this));
+         if (this._options.monthsSelectionEnabled) {
+            if (!detection.isMobileIOS) {
+               container.on('mouseenter.monthRangePicker', '.controls-DateRangeBigChoose-MonthRangePickerItem__item, .controls-DateRangeBigChoose-MonthRangePickerItem__month_title',
+               this._onItemMouseEnter.bind(this));
+               container.on('mouseleave.monthRangePicker', '.controls-DateRangeBigChoose-MonthRangePickerItem__item, .controls-DateRangeBigChoose-MonthRangePickerItem__month_title',
+                  this.onItemMouseLeave.bind(this));
+               container.on('mouseleave.monthRangePicker', this._onRangeControlMouseLeave.bind(this));
+            }
+         }
 
-            container.on('click', '.controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button',
+         if (this._options.quarterSelectionEnabled || this._options.halfyearSelectionEnabled) {
+            container.on('click.monthRangePicker', '.controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button',
             this._onHalfyearQuarterClick.bind(this));
-            container.on('mouseenter', '.controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button',
-            this._onHalfyearQuarterMouseEnter.bind(this));
-            container.on('mouseleave', '.controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button',
-               this._onHalfyearQuarterMouseLeave.bind(this));
+            if (this._options.monthsSelectionEnabled) {
+               container.on('mouseenter.monthRangePicker', '.controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button',
+                  this._onHalfyearQuarterMouseEnter.bind(this));
+               container.on('mouseleave.monthRangePicker', '.controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button',
+                  this._onHalfyearQuarterMouseLeave.bind(this));
+            }
          }
 
          // TODO: сделать что бы компонет наследовался от compoundControl и содержал внутри ScrollContainer,
@@ -323,7 +330,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          }
       },
 
-      _onItemCaptionMouseEnter: function (e) {
+      _onItemMouseEnter: function (e) {
          var $target = $(e.currentTarget),
             month = Date.fromSQL($target.attr(this._selectedRangeItemIdAtr));
 
@@ -337,7 +344,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          this._onRangeItemElementMouseEnter(dateUtils.getEndOfMonth(month));
       },
 
-      _onItemCaptionMouseLeave: function (e) {
+      onItemMouseLeave: function (e) {
          var $target = $(e.currentTarget),
             target;
          target = $target.closest('.' + this._SELECTABLE_RANGE_CSS_CLASSES.item);
@@ -394,10 +401,15 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
                range = this._updateRange(month, month);
                if (this._options.quantum && 'months' in this._options.quantum && this._options.quantum.months.length === 1) {
                   this.setRange(range[0], new Date(range[1].getFullYear(), range[1].getMonth() + 1, 0));
+                  this.validateRangeSelectionItemsView();
+                  this._notify('onSelectionEnded');
                } else {
                   this._onRangeItemElementClick(range[0], new Date(range[1].getFullYear(), range[1].getMonth() + 1, 0));
                }
             } else {
+               if (!this._options.monthsSelectionEnabled && $(e.target).hasClass('controls-DateRangeBigChoose-MonthRangePickerItem__month_title')) {
+                  return;
+               }
                month = Date.fromSQL($(e.currentTarget).attr(this._selectedRangeItemIdAtr));
                this._notify('onMonthActivated', month);
             }
@@ -590,6 +602,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
 
       _clearMonthSelection: function () {
          this._drawCurrentRangeSelection(true);
+      },
+
+      destroy: function() {
+         this.getContainer().off('.monthRangePicker');
+         MonthRangePicker.superclass.destroy.apply(this, arguments);
       }
 
    });

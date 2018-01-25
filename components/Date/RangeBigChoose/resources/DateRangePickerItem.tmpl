@@ -14,7 +14,7 @@
    <div class="controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates">
       <ws:for data="monthIndex, month in item.get('months')">
          <div class="controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_wrapper" data-date="{{ month.toSQL() }}">
-            <div class="controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title"
+            <div class="controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title{{ monthSelectionEnabled ? ' controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title_selectable' }}"
               data-date="{{ month.toSQL() }}">
                {{ month | strftime: "%B" }}
             </div>

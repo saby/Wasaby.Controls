@@ -14,6 +14,8 @@ define([
    describe('Validation-tests', function () {
       var testControl;
       beforeEach(function () {
+         this.skip();//TODO Вернуть в 3.17.400. В 3.17.350 функционал не используется. https://online.sbis.ru/opendoc.html?guid=a6a96221-b031-47fa-a4d5-b07059a17a70
+         return;
          if (typeof $ === 'undefined') {//Проверка того, что тесты выполняются в браузере
             this.skip();
          }
