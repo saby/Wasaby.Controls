@@ -4,7 +4,7 @@ define('Controls/Container/Scroll',
       'tmpl!Controls/Container/Scroll/Scroll',
       'Core/detection',
       'Controls/Container/Scrollbar/Scrollbar',
-      'css!Controls/Container/Scroll/Scroll',
+      'css!Controls/Container/Scroll/Scroll'
    ],
    function(Control, template, detection) {
 
