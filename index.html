@@ -36,8 +36,16 @@
          height: 100%;
       }
 
+      .header-in-list{
+         font-weight: normal;
+         font-size: 16px;
+         padding: 5px 10px;
+         position: relative;
+      }
+
       #content {
          padding: 20px;
+         font-weight: bold;
       }
 
       #content table {
@@ -76,6 +84,7 @@
 
    </style>
    <script type="text/javascript" id="ws-include-css"></script>
+   <link rel="stylesheet" type="text/css" href="sprites.css"/>
 </head>
 <body class="view-main">
 <div id="content">
@@ -103,11 +112,16 @@
                   <div id="Windows"></div>
                </li>
                <li>
-                  <div id="Toggles"></div>
+                  <div class="header-in-list">Toggles</div>
                </li>
-               <li>
-                  <div id="ButtonsVdom"></div>
-               </li>
+               <ul>
+                  <li>
+                     <div id="Switch"></div>
+                  </li>
+                  <li>
+                     <div id="Checkbox"></div>
+                  </li>
+               </ul>
             </ul>
             <h3>Просмотр контролов</h3>
             <ul>
@@ -189,7 +203,7 @@
                <li>
                   <div id="BrowserTabs"></div>
                </li>
-			   <li>
+			      <li>
                   <div id="FieldLink"></div>
                </li>
                <li>
@@ -328,16 +342,15 @@
                caption: 'ListControlScroll',
                href: '/pages/demo.html?cname=ListControlScroll'
             });
-             new r({
-                 element: "Toggles",
-                 caption: 'Toggles',
-                 href: '/pages/demo.html?cname=Toggles'
-             });
             new r({
-               element: "ButtonsVdom",
-               caption: 'ButtonsVdom',
-               href: '/pages/demo.html?cname=ButtonsVdom'
-
+                element: "Switch",
+                caption: 'Switch',
+                href: '/pages/demo.html?cname=Switch'
+            });
+            new r({
+               element: "Checkbox",
+               caption: 'Checkbox',
+               href: '/pages/demo.html?cname=Checkbox'
             });
             new r({
                element: "Inputs",
