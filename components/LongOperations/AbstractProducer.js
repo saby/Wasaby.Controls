@@ -189,6 +189,24 @@ define('SBIS3.CONTROLS/LongOperations/AbstractProducer',
          },
 
          /**
+          * Получить упаковщик сннимков
+          * @protected
+          * return {function}
+          */
+         _getStoragePacker: function () {
+            // Реализовать в потомках если необходимо
+         },
+
+         /**
+          * Получить распаковщик сннимков
+          * @protected
+          * return {function}
+          */
+         _getStorageUnpacker: function () {
+            // Реализовать в потомках если необходимо
+         },
+
+         /**
           * Добавить новую длительную операцию. Метод принимает либо экземпляр класса SBIS3.CONTROLS/LongOperations/Entry, либо набор опций,
           * принимаемых его конструктором. Возвращает идентификатор операции
           * @protected
@@ -214,7 +232,12 @@ define('SBIS3.CONTROLS/LongOperations/AbstractProducer',
                }
                operation = new LongOperationEntry(options);
             }
-            LOStorage.put(storageNS, operation.id, _toSnapshot(operation));
+            var snapshot = _toSnapshot(operation);
+            var packer = this._getStoragePacker();
+            if (packer) {
+               snapshot = packer(snapshot);
+            }
+            LOStorage.put(storageNS, operation.id, snapshot);
             return operation.id;
          },
 
@@ -233,6 +256,12 @@ define('SBIS3.CONTROLS/LongOperations/AbstractProducer',
                throw new TypeError('Argument "operationId" must be number or string');
             }
             var snapshot = LOStorage.get(this._getStorageNS(), operationId);
+            if (snapshot) {
+               var unpacker = this._getStorageUnpacker();
+               if (unpacker) {
+                  snapshot = unpacker(snapshot);
+               }
+            }
             return snapshot ? (asOperation ? _fromSnapshot(snapshot, this.getName()) : snapshot) : null;
          },
 
@@ -267,6 +296,10 @@ define('SBIS3.CONTROLS/LongOperations/AbstractProducer',
                return snapshots;
             }
             var DEFAULTS = LongOperationEntry.DEFAULTS;
+            var unpacker = this._getStorageUnpacker();
+            if (unpacker) {
+               snapshots = snapshots.map(unpacker);
+            }
             if (where) {
                snapshots = snapshots.filter(function (snapshot) {
                   for (var p in where) {

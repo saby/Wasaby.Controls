@@ -967,7 +967,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
          this._options._groupCollapsing[groupId] = flag;
          var containers = this._getGroupContainers(groupId);
          containers.toggleClass('ws-hidden', flag);
-         $('.controls-GroupBy[data-group="' + groupId + '"] .controls-GroupBy__separatorCollapse', this._container).toggleClass('controls-GroupBy__separatorCollapse__collapsed', flag);
+         $('.controls-GroupBy[data-group=\'' + groupId + '\'] .controls-GroupBy__separatorCollapse', this._container).toggleClass('controls-GroupBy__separatorCollapse__collapsed', flag);
          this._drawItemsCallbackDebounce();
       },
 

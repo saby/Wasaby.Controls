@@ -53,6 +53,13 @@ define('SBIS3.CONTROLS/ListView/resources/VirtualScrollController', ['Core/Abstr
             this._scrollHandlerDisabled = !!toggle;
          },
 
+         /**
+          * Check if item is currently shown
+          */
+         isItemVisible: function (itemIndex) {
+            return itemIndex >= this._currentWindow[0] && itemIndex < this._currentWindow[1];
+         },
+
          reset: function(){
             this._currentVirtualPage = 0;
             this._heights = [];
@@ -259,8 +266,21 @@ define('SBIS3.CONTROLS/ListView/resources/VirtualScrollController', ['Core/Abstr
             }
          },
 
+         _getAverageItemHeight: function() {
+            if (!this._heights.length) {
+               return 0;
+            }
+            var sum = this._heights.reduce(function(a, b) { return a + b; }, 0);
+            return Math.ceil(sum / this._heights.length);
+         },
+
          _getItemHeight: function(item){
-            return $('[data-hash="' + item.getHash() + '"]', this._options.viewContainer).height();
+            var itemHeight = $('[data-hash="' + item.getHash() + '"]', this._options.viewContainer).height();
+            // Если записи нет в видимой области, не получится посчитать ее высоту.
+            if (!itemHeight) {
+               return this._getAverageItemHeight();
+            }
+            return itemHeight;
          },
 
          addItems: function (items, at) {

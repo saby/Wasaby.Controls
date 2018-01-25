@@ -196,7 +196,7 @@ define(
                   lastQuantumLength = quantum.days[i];
                   days = DateUtil.getDaysByRange(startDate, endDate) + 1;
                   if (quantum.days[i] >= days) {
-                     return this._getDayRange(startDate, endDate, quantum.days[i]);
+                     return this._getDayRange(startDate, endDate, lastQuantumLength);
                   }
                }
             }
@@ -207,10 +207,10 @@ define(
                   if (startDate <= endDate) {
                      start = DateUtil.getStartOfWeek(startDate);
                      end = DateUtil.getEndOfWeek(startDate);
-                     end.setDate(end.getDate() + (quantum.weeks[i] - 1) * 7);
+                     end.setDate(end.getDate() + (lastQuantumLength - 1) * 7);
                   } else {
                      start = DateUtil.getStartOfWeek(startDate);
-                     start.setDate(start.getDate() - (quantum.weeks[i] - 1) * 7);
+                     start.setDate(start.getDate() - (lastQuantumLength - 1) * 7);
                      end = DateUtil.getEndOfWeek(startDate);
                   }
                   if (endDate >= start && endDate <= end) {
@@ -225,10 +225,10 @@ define(
                   if (startDate <= endDate) {
                      start = DateUtil.getStartOfMonth(startDate);
                      end = DateUtil.getEndOfMonth(startDate);
-                     end.setMonth(end.getMonth() + quantum.months[i] - 1);
+                     end.setMonth(end.getMonth() + (lastQuantumLength - 1));
                   } else {
                      start = DateUtil.getStartOfMonth(startDate);
-                     start.setMonth(start.getMonth() - quantum.months[i] - 1);
+                     start.setMonth(start.getMonth() - (lastQuantumLength - 1));
                      end = DateUtil.getEndOfMonth(startDate);
                   }
                   if (endDate >= start && endDate <= end) {
@@ -246,6 +246,14 @@ define(
                   return [DateUtil.getStartOfWeek(startDate), DateUtil.getEndOfWeek(date)];
                } else {
                   return [DateUtil.getStartOfWeek(date), DateUtil.getEndOfWeek(startDate)];
+               }
+            } else if (lastQuantumType === 'months') {
+               date = new Date(startDate);
+               date.setMonth(date.getMonth() + lastQuantumLength - 1);
+               if (startDate <= endDate) {
+                  return [DateUtil.getStartOfMonth(startDate), DateUtil.getEndOfMonth(date)];
+               } else {
+                  return [DateUtil.getStartOfMonth(date), DateUtil.getEndOfMonth(startDate)];
                }
             }
          },
@@ -564,8 +572,12 @@ define(
 
             obj.weekend = obj.dayOfWeek === 5 || obj.dayOfWeek === 6;
             obj.enabled = this.isEnabled();
-            obj.selected = date >= startDate && date <= endDate;
-            obj.selectedStart = DateUtil.isDatesEqual(date, startDate);
+
+            obj.selected = (startDate && endDate && date >= startDate && date <= endDate) ||
+               (startDate && DateUtil.isDatesEqual(date, startDate) && !endDate) ||
+               (!startDate && endDate && DateUtil.isDatesEqual(date, endDate));
+
+            obj.selectedStart = DateUtil.isDatesEqual(date, startDate || endDate);
             obj.selectedEnd = DateUtil.isDatesEqual(date, endDate);
             obj.selectionProcessing = this.isSelectionProcessing();
 

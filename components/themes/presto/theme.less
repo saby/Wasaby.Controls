@@ -77,17 +77,22 @@ body {
   }
 }
 //Временное решение, пока в панель операций кладутся контролы, удалить при переходе на шаблончики
-.controls-operationsPanel__actions * {
-  color: #839EBC !important;
-  .icon-error {
-    color: @error-color !important;
+//перекрашиваю только контролы которые обычно кладут в панель операций: кнопки, выпадающий список, комбобокс и метка
+.controls-operationsPanel__actions {
+  .controls-ButtonBase, .controls-DropdownList__textWrapper, .controls-ComboBox, .controls-Label__text_color {
+    color: #839EBC !important;
+    .icon-error {
+      color: @error-color !important;
+    }
   }
 }
 
-.controls-operationsPanel__actions *:hover {
-  color: #B9E9FF !important;
-  .icon-error {
-    color: @error-color !important;
+.controls-operationsPanel__actions {
+  .controls-ButtonBase:hover, .controls-DropdownList__textWrapper:hover, .controls-ComboBox:hover {
+    color: #B9E9FF !important;
+    .icon-error {
+      color: @error-color !important;
+    }
   }
 }
 
@@ -239,6 +244,8 @@ body {
 //нет нормального инструмента чтобы сделать через переменные
 //будет жить пока стили floatArea в ws`e
 .ws-window-content, .ws-float-area-stack-panel-shadow {
+  .ws-sticky-header__table-header-copy,
+  .ws-sticky-header__block.ws-sticky-header__fixed,
   .ws-sticky-header__table-header-copy {
     background-color: #273749 !important;
   }

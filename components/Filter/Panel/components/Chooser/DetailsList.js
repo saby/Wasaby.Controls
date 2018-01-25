@@ -58,12 +58,8 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList', [
          FilterPanelChooserDetailsList.superclass.init.apply(this, arguments);
          this._itemsMoveController = new ItemsMoveController({
             linkedView: this._getListView(),
-            handlers: {
-               onItemMove: function() {
-                  self._updateValue();
-               }
-            }
          });
+         this._getListView().subscribe('onEndMove', self._updateValue.bind(this));
          this._getListView().subscribe('onChangeHoveredItem', this._onChangeHoveredItem.bind(this));
       },
 
