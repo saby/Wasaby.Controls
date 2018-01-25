@@ -48,6 +48,13 @@ define('Controls/Input/Suggest',
    
          needCloseOnFocusOut: function(self) {
             return !self._popupFocused;
+         },
+         
+         onFocusOutHandler: function(self) {
+            _private.closePopup(self);
+            //FIXME Для правильной работы валидации. костыль. сейчас событие focusOut стреляет, когда фокус уходит на саггест,
+            //из-за этого некорректно запускается валидация.
+            self._notify('componentFocusOut');
          }
       };
       
@@ -125,7 +132,7 @@ define('Controls/Input/Suggest',
             
             /* close, if focus moved outside */
             if (_private.needCloseOnFocusOutPopup(this, focusObj.to)) {
-               _private.closePopup(this);
+               _private.onFocusOutHandler(this);
             }
          },
          
@@ -136,7 +143,7 @@ define('Controls/Input/Suggest',
             requestAnimationFrame(function() {
                /* close, if focus moved not to popup */
                if (_private.needCloseOnFocusOut(self)) {
-                  _private.closePopup(self);
+                  _private.onFocusOutHandler(self);
                }
             });
          }
