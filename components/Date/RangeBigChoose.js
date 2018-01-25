@@ -1,5 +1,6 @@
 define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    "Core/constants",
+   "Core/detection",
    "Lib/Control/CompoundControl/CompoundControl",
    "tmpl!SBIS3.CONTROLS/Date/RangeBigChoose/DateRangeBigChoose",
    "tmpl!SBIS3.CONTROLS/Date/RangeBigChoose/resources/header",
@@ -27,7 +28,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    'css!SBIS3.CONTROLS/Date/RangeBigChoose/DateRangeBigChoose',
    'SBIS3.CONTROLS/ScrollContainer'
 
-], function ( constants, CompoundControl, dotTplFn, headerTpl, yearsPanelTpl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, DateControlsUtil, eHelpers, isEmpty) {
+], function ( constants, detection, CompoundControl, dotTplFn, headerTpl, yearsPanelTpl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, DateControlsUtil, eHelpers, isEmpty) {
    'use strict';
 
    var
@@ -221,9 +222,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
          // this._initRangeButtonControl(selectionTypes.months, 'MonthRangeBtn', 12);
          this._initRangeContainers();
-
-         container.find('.' + this.yearsRangeContainer + ' .' + this._SELECTABLE_RANGE_CSS_CLASSES.item)
-            .mouseenter(rangeButtonHandlerWrapper.bind(null, this._onYearsRangeBtnEnter));
 
          this._monthRangePicker = this.getChildControlByName('MonthRangePicker');
          this._dateRangePicker = this.getChildControlByName('MonthDateRangePicker');
@@ -653,19 +651,15 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       },
 
       _initRangeButtonControl: function (selectionType, baseButtonName, buttonsCount) {
-         var control, container;
+         var container = this.getContainer(),
+            control;
          if (selectionType === selectionTypes.years) {
-            this.getContainer().on(
-               'click',
-               '.controls-DateRangeBigChoose__years-yearsRange-btn',
-               selectionType,
-               this._onRangeBtnContainerClick.bind(this)
-            ).on(
-               'mouseenter',
-               '.controls-DateRangeBigChoose__years-yearsRange-btn',
-               selectionType,
-               this._onRangeBtnContainerEnter.bind(this)
-            );
+            container.on('click', '.controls-DateRangeBigChoose__years-yearsRange-btn', selectionType,
+               this._onRangeBtnContainerClick.bind(this));
+            if (!detection.isMobileIOS) {
+               container.on('mouseenter', '.controls-DateRangeBigChoose__years-yearsRange-btn', selectionType,
+                  this._onRangeBtnContainerEnter.bind(this));
+            }
          } else {
             for (var i = 0; i < buttonsCount; i++) {
                control = this.getChildControlByName(baseButtonName + i);
