@@ -1369,8 +1369,8 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                }
                self._updateItemsToolbar();
                self._dataLoadedCallback();
-               self._createFolderFooter(id);
             }
+            self._createFolderFooter(id);
             self._toggleIndicator(false);
 
          }, self)).addErrback(function (error) {
