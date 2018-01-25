@@ -606,7 +606,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
 
       destroy: function() {
          this.getContainer().off('.monthRangePicker');
-         ImagePanel.superclass.destroy.apply(this, arguments);
+         MonthRangePicker.superclass.destroy.apply(this, arguments);
       }
 
    });
