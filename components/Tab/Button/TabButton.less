@@ -230,9 +230,12 @@
    }
    .controls-EditAtPlace {
       background: transparent; //Фон в редактировании должен быть от вкладки
-   }
-   .controls-EditAtPlace__fieldWrapper {
-      .flexbox(); //Проблемы с выравниванием редактирования по месту, пока решаю на уровне вкладок, потом надо на самом компоненте
+      .controls-EditAtPlace__fieldWrapper {
+         .flexbox(); //Проблемы с выравниванием редактирования по месту, пока решаю на уровне вкладок, потом надо на самом компоненте
+         .controls-EditAtPlace__textField {
+            border-width: 0;
+         }
+      }
    }
 }
 
