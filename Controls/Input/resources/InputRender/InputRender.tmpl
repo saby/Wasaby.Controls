@@ -16,8 +16,13 @@
                on:change="_notifyHandler('inputCompleted')"
                on:focus="_focusHandler()"
                value="{{ _options.value }}"
-               placeholder="{{_options.placeholder}}"
          />
+
+         <div class="controls-InputRender__placeholder controls-TextBox__placeholder{{ _options.isSimplePlaceholder ? ' controls-InputRender__placeholder_simple' }}">
+            <span class="controls-InputRender__placeholder__overflow controls-TextBox__placeholder__overflow">
+               {{_options.placeholder}}
+            </span>
+         </div>
 
          <ws:if data="{{_options.afterFieldWrapper}}">
             <ws:partial template="{{_options.afterFieldWrapper}}"/>
