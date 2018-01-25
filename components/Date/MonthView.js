@@ -5,6 +5,7 @@ define(
    'SBIS3.CONTROLS/Date/MonthView',
    [
       'Core/constants',
+      'Core/detection',
       'Core/helpers/Object/isEmpty',
       'Lib/Control/CompoundControl/CompoundControl',
       'SBIS3.CONTROLS/Mixins/RangeMixin',
@@ -19,7 +20,7 @@ define(
       'i18n!SBIS3.CONTROLS/Calendar',
       'css!SBIS3.CONTROLS/Date/MonthView/MonthView'
    ],
-   function (constants, isEmpty, CompoundControl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, ifEnabled, monthViewTableBodyTpl, dotTplFn, dayTmpl) {
+   function (constants, detection, isEmpty, CompoundControl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, ifEnabled, monthViewTableBodyTpl, dotTplFn, dayTmpl) {
 
       'use strict';
 
@@ -163,10 +164,12 @@ define(
 
             container.on('click.monthView', itemCssClass, this._onDayMouseClick.bind(this));
 
-            container.on('mouseenter.monthView', itemCssClass, function () {
-               self._onDayMouseEnter($(this));
-            });
-            container.on('mouseleave.monthView', this._onRangeControlMouseLeave.bind(this));
+            if (!detection.isMobileIOS) {
+               container.on('mouseenter.monthView', itemCssClass, function () {
+                  self._onDayMouseEnter($(this));
+               });
+               container.on('mouseleave.monthView', this._onRangeControlMouseLeave.bind(this));
+            }
          },
 
          _detachEvents: function () {
