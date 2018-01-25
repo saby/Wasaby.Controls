@@ -1,10 +1,9 @@
 define('Controls/Container/Scrollbar/Scrollbar', [
       'Core/Control',
       'tmpl!Controls/Container/Scrollbar/Scrollbar',
-      'Core/detection',
       'css!Controls/Container/Scrollbar/Scrollbar'
    ],
-   function (Control, template, detection) {
+   function (Control, template) {
 
       'use strict';
 

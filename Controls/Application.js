@@ -5,7 +5,7 @@ define('Controls/Application',
    [
       'Core/Control',
       'tmpl!Controls/Application/Page',
-      'Core/helpers/URLHelpers',
+      //'Core/helpers/URLHelpers', /*TODO:: это будет нужно для роутинга, но пока роутинг не нужен, просто оставим
       'Core/Deferred'
    ],
 
@@ -15,7 +15,7 @@ define('Controls/Application',
     */
    function (Base,
              template,
-             URLHelpers,
+             //URLHelpers,
              Deferred) {
       'use strict';
 
