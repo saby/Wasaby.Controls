@@ -493,7 +493,7 @@ define(
           * @private
           */
          _updateText: function(){
-            var text = this._getFormatModel().getText(this._getMaskReplacer()),
+            var text = this._getTextFromModel(),
                 oldText = this._options.text,
                 oldDate = this.timeInterval.toString();
 
