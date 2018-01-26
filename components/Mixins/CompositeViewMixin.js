@@ -325,6 +325,11 @@ define('SBIS3.CONTROLS/Mixins/CompositeViewMixin', [
       _updateHeadAfterInit: function() {
          if (this._options.viewMode == 'table') {
             this._redrawTheadAndTfoot();
+            //В плиточных представлениях шапка перерисовывается дополнительно, в ней надо оживить компоненты
+            //if проверка - для перестраховки
+            if (this._thead) {
+               this.reviveComponents(this._thead);
+            }
          }
       },
       /**
