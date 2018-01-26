@@ -1,4 +1,4 @@
-define('js!Controls/Toggle/Checkbox', [
+define('Controls/Toggle/Checkbox', [
    'Core/Control',
    'tmpl!Controls/Toggle/Checkbox/Checkbox',
    'WS.Data/Type/descriptor',
@@ -33,7 +33,7 @@ define('js!Controls/Toggle/Checkbox', [
 
    var _private ={
       notifyChangeValue: function (self, value) {
-         self._notify('valueChanged', value);
+         self._notify('valueChanged', [value]);
       }
    };
 
