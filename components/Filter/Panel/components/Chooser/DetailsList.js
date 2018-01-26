@@ -20,7 +20,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList', [
     * @author Авраменко А.С.
     * @public
     *
-    * @demo SBIS3.CONTROLS.Demo.MyFilterView
+    * @demo SBIS3.Demo.FilterPanel.FilterPanelSimple
     */
 
    var FilterPanelChooserDetailsList = FilterPanelChooserBaseList.extend(/** @lends SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList.prototype */ {
