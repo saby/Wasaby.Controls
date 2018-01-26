@@ -7,7 +7,10 @@
    ws-invisible"
    rows="{{ minLinesCount ? minLinesCount}}"
    required="true"
+   placeholder="{{' '}}"
 >{{ text ? text|sanitize }}</textarea>
+<!-- В Safari и на iOS если во flex-контейнере лежит пустая textarea или input, то базовая линия высчитывается неправильно,
+но если задать пробел в качестве плейсхолдера, то она встаёт на место https://jsfiddle.net/5mk21u7L/-->
 <ws:if data="{{ enabled && placeholder }}">
     <ws:partial template="{{ compatiblePlaceholderTemplate }}" scope="{{...}}"/>
 </ws:if>

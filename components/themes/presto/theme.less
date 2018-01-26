@@ -85,6 +85,9 @@ body {
       color: @error-color !important;
     }
   }
+  .controls-Button__icon {
+    color: #839EBC !important;
+  }
 }
 
 .controls-operationsPanel__actions {
@@ -92,6 +95,16 @@ body {
     color: #B9E9FF !important;
     .icon-error {
       color: @error-color !important;
+    }
+  }
+  .controls-Link.controls-Link_main:hover:not(.ws-disabled) .controls-Button__icon.icon-primary {
+    color: #B9E9FF !important;
+  }
+
+  .controls-Link.controls-Link_main:active:not(.ws-disabled) {
+    color: #B9E9FF !important;
+    .controls-Button__icon.icon-primary {
+      color: #B9E9FF !important;
     }
   }
 }
@@ -405,4 +418,8 @@ body {
   .controls-Button__icon{
     font-size: @default-icon-size-medium;
   }
+}
+//Todo: необходимо зашить эти стили в окнах
+.controls-NotificationPopup__body, controls-NotificationPopup__footer {
+  background-color: @controls-SubmitPopup-footer-bg;
 }
