@@ -333,7 +333,8 @@ define('SBIS3.CONTROLS/Filter/Button',
 
              this._pickerContext = FilterPanelUtils.createFilterContext(this.getLinkedContext(),
                 this._options.internalContextFilterName,
-                this._filterStructure);
+                this._filterStructure,
+                self);
 
              return FilterPanelUtils.getPanelConfig({
                 corner: isRightAlign ? 'tl' : 'tr',
