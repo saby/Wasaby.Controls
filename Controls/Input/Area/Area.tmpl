@@ -30,9 +30,9 @@
             ></textarea>
 
             <ws:partial
+               attr:class="{{ _options.minLines > 1 ? 'controls-InputArea__placeholder--multiline' }}"
                template="tmpl!Controls/Input/resources/CustomPlaceholder"
                placeholder="{{ _options.placeholder }}"
-               isMultiline="{{ _options.minLines > 1 }}"
             />
 
             <div class="controls-fakeTextArea__firstWrapper">
