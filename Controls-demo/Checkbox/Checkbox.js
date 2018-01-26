@@ -1,7 +1,7 @@
 define('Controls-demo/Checkbox/Checkbox', [
    'Core/Control',
    'tmpl!Controls-demo/Checkbox/Checkbox',
-   'js!WS.Data/Source/Memory',
+   'WS.Data/Source/Memory',
    'Controls/Toggle/Checkbox'
 ], function (Control,
              template) {
