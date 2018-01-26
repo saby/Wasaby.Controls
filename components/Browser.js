@@ -319,10 +319,13 @@ define('SBIS3.CONTROLS/Browser', [
           * возникнет ошибка.
           *
           * Команда возвращает обещание. По окончании редактирования пользователем результирующий набор колонок будет использован
-          * для разрешения обещания, которое было возвращено командой при вызове. Если в аргументах команды указано значение applyToSelf===true,
-          * то результат редактирования будет применён к данному браузеру (при этом значение columnsConfig.columns браузера останется неизменным). В
-          * этом случае никаких доплнительных действий с результирующими колонками не требуется.
+          * для разрешения обещания, которое было возвращено командой при вызове. В случае, если пользователь после редактирования нажал кнопку
+          * применения результата редактирования, то обещание будет разрешено новыми параметрами конфигурации колонок. Если же пользователь просто
+          * закрыл редактор кнопкой "Закрыть", то обещание будет разрешено значением null Если в аргументах команды указано значение
+          * applyToSelf===true, то результат редактирования будет применён к данному браузеру (при этом значение columnsConfig.columns браузера
+          * останется неизменным). В этом случае никаких доплнительных действий с результирующими колонками не требуется.
           *
+          * @example
           * Простой пример использования команды:
           * <pre>
           *    this.sendCommand('showColumnsEditor', {
@@ -345,12 +348,72 @@ define('SBIS3.CONTROLS/Browser', [
           *          }
           *    );
           * </pre>
-
+          *
+          * @example
+          * Существует возможность использования предустановленных наборов колонок (пресетов). Для этого служат опции usePresets, staticPresets,
+          * presetNamespace и selectedPresetId. При наличии статичечских пресетов пользователь может клонировать любой из них и сохранить его как
+          * собственный. Простой пример использования:
+          * <pre>
+          *    require(['SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit'], function (PresetUnit) {
+          *       var promise = this.sendCommand('showColumnsEditor', {
+          *          editorOptions: {
+          *             // Будем использовать предустановленные наборы колонок:
+          *             usePresets: true,
+          *             // Определим статически-заданные пресеты:
+          *             staticPresets: [
+          *                new PresetUnit({
+          *                   id: 'preset-1',
+          *                   title: 'Статический пресет 1',
+          *                   selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП']
+          *                }), new PresetUnit({
+          *                   id: 'preset-2',
+          *                   title: 'Статический пресет 2',
+          *                   selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП']
+          *                }), new PresetUnit({
+          *                   id: 'preset-3',
+          *                   title: 'Статический пресет 3',
+          *                   selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП']
+          *                })
+          *             ],
+          *             // Пользователь будет сохранять свои пресеты в это пространство имён:
+          *             presetNamespace: 'catalog-columns-presets',
+          *             // Первоначально будет выбран пресет с таким идентификатором (опционально):
+          *             selectedPresetId: 'preset-2',
+          *             ...
+          *             другие опции
+          *             ...
+          *          }
+          *       })
+          *    });
+          * </pre>
+          *
           * @command showColumnsEditor
+          * @ublic
+          * @param {object} [options] Опции открытия редактора колонок (опционально)
+          * @param {object} [options.columnsConfig] Объект конфигурации колонок (опционально, если нет, будет использован текущий columnsConfig браузера)
+          * @param {object} [options.editorOptions] Опции редактора, отличающиеся или не содержащиеся в columnsConfig. Имеют приоритет перед опциями из columnsConfig (опционально)
+          * @param {string} [options.editorOptions.title] Заголовок редактора колонок (опционально)
+          * @param {string} [options.editorOptions.applyButtonTitle] Название кнопки применения результата редактирования (опционально)
+          * @param {object} [options.editorOptions.groupTitles] Ассоциированый массив имён групп по их идентификаторам (опционально)
+          * @param {boolean} [options.editorOptions.usePresets] Разрешает использовать пресеты (опционально)
+          * @param {string} [options.editorOptions.presetsTitle] Заголовок дропдауна пресетов (опционально)
+          * @param {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit[]} [options.editorOptions.staticPresets] Список объектов статически задаваемых пресетов (опционально)
+          * @param {string} [options.editorOptions.presetNamespace] Пространство имён для сохранения пользовательских пресетов (опционально)
+          * @param {string|number} [options.editorOptions.selectedPresetId] Идентификатор первоначально выбранного пресета в дропдауне (опционально)
+          * @param {string} [options.editorOptions.newPresetTitle] Начальное название нового пользовательского пресета (опционально)
+          * @param {boolean} [options.editorOptions.moveColumns] Указывает на необходимость включить перемещнение пользователем пунктов списка колонок (опционально)
+          * @param {boolean} [options.applyToSelf] Применить результат редактирования к этому компоненту (опционально)
+          * @return {Deferred<object>}
+          *
           * @see _showColumnsEditor
           * @see columnsConfig
           * @see setColumnsConfig
           * @see getColumnsConfig
+          *
+          * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
+          * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
+          * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndCustomButton Пример браузера с собственной кнопкой, открывающией редактор колонок
+          * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
           */
          CommandDispatcher.declareCommand(this, 'showColumnsEditor', this._showColumnsEditor);
       },
@@ -368,7 +431,6 @@ define('SBIS3.CONTROLS/Browser', [
        * @param {string} [config.presetNamespace] Пространство имён для сохранения пользовательских пресетов (опционально)
        * @param {string|number} [config.selectedPresetId] Идентификатор первоначально выбранного пресета в дропдауне (опционально)
        * @param {string} [config.newPresetTitle] Начальное название нового пользовательского пресета (опционально)
-       * @command setColumnsConfig
        * @see columnsConfig
        * @see getColumnsConfig
        * @see showColumnsEditor
@@ -395,10 +457,13 @@ define('SBIS3.CONTROLS/Browser', [
       },
 
       /**
-       * Показать редактор колонок. Возвращает обещание, которое будет разрешено после завершения редактирования пользователем. В случае, если
+       * Показать редактор колонок.
+       *
+       * Возвращает обещание, которое будет разрешено после завершения редактирования пользователем. В случае, если
        * пользователь после редактирования нажал кнопку применения результата редактирования, то обещание будет разрешено новыми параметрами
        * конфигурации колонок. Если же пользователь просто закрыл редактор кнопкой "Закрыть", то обещание будет разрешено значением null
        *
+       * @example
        * Существует возможность использования предустановленных наборов колонок (пресетов). Для этого служат опции usePresets, staticPresets,
        * presetNamespace и selectedPresetId. При наличии статичечских пресетов пользователь может клонировать любой из них и сохранить его как
        * собственный. Простой пример использования:
@@ -452,10 +517,16 @@ define('SBIS3.CONTROLS/Browser', [
        * @param {boolean} [options.editorOptions.moveColumns] Указывает на необходимость включить перемещнение пользователем пунктов списка колонок (опционально)
        * @param {boolean} [options.applyToSelf] Применить результат редактирования к этому компоненту (опционально)
        * @return {Deferred<object>}
-       * @command showColumnsEditor
+       *
+       * @see showColumnsEditor
        * @see columnsConfig
        * @see setColumnsConfig
        * @see getColumnsConfig
+       *
+       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
+       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
+       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndCustomButton Пример браузера с собственной кнопкой, открывающией редактор колонок
+       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
        */
       _showColumnsEditor: function (options) {
          var hasArgs = options && typeof options === 'object';
