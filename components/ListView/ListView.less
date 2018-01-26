@@ -164,6 +164,15 @@ controls-ListView__item__withHover:hover {
    }
 }
 
+// Баг рендера элементов в хроме, которые передвигаются по странице с position: absolute или c position: fixed
+// Хром может оставлять артефакты, даже после скрытия таких элементов
+// https://stackoverflow.com/questions/16598052/chrome-27-fixed-element-leaves-artifacts-behind-after-jquery-animation
+.ws-is-chrome {
+   .controls-ListView-scrollIndicator {
+      -webkit-transform: translateZ(0);
+   }
+}
+
 .controls-ListView__indicatorVisible:not(.ws-sticky-header__table-header-copy) {
     min-height: @list-view-scroll-height;
     > .controls-ListView-scrollIndicator {
