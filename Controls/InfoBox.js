@@ -19,29 +19,51 @@ define('Controls/InfoBox',
        */
 
       /**
-       * @function Controls/InfoBox#open
        * Открыть инфобокс
+       * @function Controls/InfoBox#open
+       * @param message Сообщение отображаемое внутри инфобокса
+       * @param target Элемент, относительно которого будет показываться инфобокс
+       */
+
+      /**
+       * Спрятать инфобокс
+       * @function Controls/InfoBox#close
        */
 
       var InfoBox = Control.extend({
          _template: template,
 
-         _close: function(){
+         close: function(){
             this._children.opener.close();
          },
 
-         open: function(cfg){
+         open: function(message, target){
             this._children.opener.open({
-               target: cfg.target,
+               target: target,
                componentOptions: {
-                  message: cfg.message,
-                  style: cfg.style
+                  message: message
                }
             });
-
          }
 
       });
+
+      InfoBox.getDefaultOptions = function() {
+         return {
+            style: 'default'
+         };
+      };
+
+      InfoBox.getOptionTypes = function() {
+         return {
+            style: types(String).oneOf([
+               'default',
+               'lite',
+               'help',
+               'error'
+            ])
+         };
+      };
 
       return InfoBox;
    }

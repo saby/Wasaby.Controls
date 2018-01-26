@@ -5,8 +5,9 @@ define('Controls/Popup/TargetCoords',
 
       return {
          get: function (target) {
-            if( !target ){
-               target = document.body;
+
+            if(!target){
+               throw new Error('Target parameter is required');
             }
 
             var
