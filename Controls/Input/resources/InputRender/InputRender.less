@@ -119,12 +119,18 @@
    на него будет вешаться :invalid, если он пустой.
    https://jsfiddle.net/7oyopngt/
  */
-.controls-InputRender__field:empty:not(input) + .controls-InputRender__placeholder {
+.controls-InputRender__field:empty:not(input, area) + .controls-InputRender__placeholder {
    .inline-flexbox();
 }
 
 .controls-InputRender__field:invalid + .controls-InputRender__placeholder {
    .inline-flexbox();
+}
+
+.controls-InputRender__placeholder--multiline {
+   .align-items(baseline);
+   box-sizing: border-box;
+   padding-top: 3px;
 }
 
 //В формах для ввода логина и пароля браузеры игнорируют аттрибут autocomplete="off" и вставляют логин\пароль в любом случае.

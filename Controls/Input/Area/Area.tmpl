@@ -21,13 +21,19 @@
                     name="realArea"
                     spellcheck="false"
                     class="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
-                    placeholder="{{_options.placeholder}}"
                     readonly="{{!isEnabled() ? 'readonly'}}"
                     on:keydown="_keyDownHandler()"
                     on:focus="_focusHandler()"
                     on:scroll="_scrollHandler()"
                     value="{{ _options.value }}"
+                    required="true"
             ></textarea>
+
+            <ws:partial
+               template="tmpl!Controls/Input/resources/CustomPlaceholder"
+               placeholder="{{ _options.placeholder }}"
+               isMultiline="{{ _options.minLines > 1 }}"
+            />
 
             <div class="controls-fakeTextArea__firstWrapper">
                <div class="controls-fakeTextArea__secondWrapper">
