@@ -70,6 +70,7 @@ define('Controls/Input/Text', [
       var TextBox = Control.extend({
          _controlName: 'Controls/Input/Text',
          _template: template,
+         _caretPosition: null,
 
          constructor: function(options) {
             TextBox.superclass.constructor.call(this, options);
@@ -83,7 +84,7 @@ define('Controls/Input/Text', [
          _afterUpdate: function(oldOptions) {
             if ((oldOptions.value !== this._options.value) && this._caretPosition) {
                this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
-               delete this._caretPosition;
+               this._caretPosition = null;
             }
          },
 
@@ -108,7 +109,7 @@ define('Controls/Input/Text', [
          },
 
          paste: function(text) {
-            this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text) + text.length;
+            this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text);
          }
       });
 

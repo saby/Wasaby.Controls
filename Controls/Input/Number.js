@@ -57,6 +57,8 @@ define('Controls/Input/Number', [
 
       _template: template,
 
+      _caretPosition: null,
+
       constructor: function (options) {
          NumberInput.superclass.constructor.apply(this, arguments);
 
@@ -72,7 +74,7 @@ define('Controls/Input/Number', [
       _afterUpdate: function(oldOptions) {
          if ((oldOptions.value !== this._options.value) && this._caretPosition) {
             this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
-            delete this._caretPosition;
+            this._caretPosition = null;
          }
       },
 
@@ -99,7 +101,7 @@ define('Controls/Input/Number', [
       },
 
       paste: function(text) {
-         this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['realArea'], text) + text.length;
+         this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['realArea'], text);
       }
    });
 
