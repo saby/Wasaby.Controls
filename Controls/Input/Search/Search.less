@@ -1,3 +1,25 @@
-.display-search-input-inline {
-   display: flex;
+.ws-Search__afterFieldWrapper {
+   .inline-flexbox();
 }
+
+.controls-SearchForm__search,
+.controls-SearchForm__reset {
+   .flexbox();
+   .align-items(center) ;
+   .icon-size(@font-size_Search-icon);
+   .flex-shrink(0);
+   cursor: pointer;
+   height: 100%;
+   overflow: hidden;
+   color: @color_Search-icon;
+   padding: @padding_Search-icon;
+}
+.controls-SearchForm__reset {
+   color: @color_Search-iconReset;
+}
+.controls-SearchForm__search {
+   &:hover {
+      color: @color_Search-iconSearch-hovered;
+   }
+}
+

@@ -50,7 +50,7 @@ define('Controls/Input/Search',
             this._searchDelay = setTimeout(forAliveOnly(function () {
                this._applySearch(text);
             }, this), this._options.searchDelay);
-            this._notify('search');
+            //this._notify('search');
          },
 
          //Сбросить таймер
@@ -71,7 +71,8 @@ define('Controls/Input/Search',
 
          _onResetClick: function () {
             this._clearSearchDelay();
-            this._notify('valueChanged', ['']);
+            this._notify('valueChanged', '');
+            this._notify('reset');
          },
 
          _onSearchClick: function () {
@@ -97,7 +98,8 @@ define('Controls/Input/Search',
       Search.getDefaultOptions = function getDefaultOptions() {
          return {
             minSearchLength: 3,
-            searchDelay: 500
+            searchDelay: 500,
+            //placeholder: rk('Найти')+'...'
          };
       };
 

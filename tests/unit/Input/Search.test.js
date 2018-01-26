@@ -49,12 +49,12 @@ define(
          describe('search', function () {
             it('1 or 2 character', function () {
                isSearched = false;
-               search._changeValueHandler(new SyntheticEvent('onchange', {
+               search._valueChangedHandler(new SyntheticEvent('onchange', {
                   target: {}
                }), 'n');
                assert.isFalse(isSearched);
 
-               search._changeValueHandler(new SyntheticEvent('onchange', {
+               search._valueChangedHandler(new SyntheticEvent('onchange', {
                   target: {}
                }), 'no');
                assert.isFalse(isSearched);
@@ -62,7 +62,7 @@ define(
 
             it('3 character', function () {
                isSearched = false;
-               search._changeValueHandler(new SyntheticEvent('onchange', {
+               search._valueChangedHandler(new SyntheticEvent('onchange', {
                   target: {}
                }), 'noo');
                assert.isTrue(isSearched);
@@ -70,7 +70,7 @@ define(
 
             it('2 character', function () {
                isSearched = false;
-               search._changeValueHandler(new SyntheticEvent('onchange', {
+               search._valueChangedHandler(new SyntheticEvent('onchange', {
                   target: {}
                }), 'no');
                assert.isFalse(isSearched);
@@ -78,6 +78,7 @@ define(
 
             it('Click on reset', function () {
                isSearched = false;
+               isReseted = false;
                search._onResetClick();
                assert.isTrue(isReseted);
                assert.isFalse(isSearched);
@@ -85,8 +86,10 @@ define(
 
             it('Click on search', function () {
                isSearched = false;
+               isReseted = false;
                search._onSearchClick();
                assert.isTrue(isSearched);
+               assert.isFalse(isReseted);
             });
 
          });

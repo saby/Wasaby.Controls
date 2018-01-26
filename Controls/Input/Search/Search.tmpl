@@ -15,13 +15,13 @@
 
     <ws:afterFieldWrapper>
 
-        <div class="display-search-input-inline">
-            <span if="{{_options.value}}"
-                  on:click="_onResetClick()"
-                  class="controls-SearchForm__reset icon-size icon-Close "
-                  title="Очистить результаты поиска"></span>
-            <span on:click="_onSearchClick()"
-                  class="controls-SearchForm__search icon-size icon-primary icon-Search2"></span>
+        <div class="ws-Search__afterFieldWrapper">
+            <div if="{{_options.value}}"
+                 class="controls-SearchForm__reset icon-Close"
+                 title="{{rk('Очистить результаты поиска')}}"
+                 on:click="_onResetClick()"></div>
+            <div class="controls-SearchForm__search icon-Search2"
+                 on:click="_onSearchClick()"></div>
         </div>
     </ws:afterFieldWrapper>
 
