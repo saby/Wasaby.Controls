@@ -126,9 +126,6 @@ body {
 }
 
 .controls-ComboBox__picker {
-  .controls-ComboBox__item_selected {
-    font-weight: bold;
-  }
   .controls-Scrollbar {
      &.controls-Scrollbar__dragging {
         .controls-Scrollbar__thumb {
@@ -303,10 +300,6 @@ body .ws-window.ws-LoadingIndicator__window {
       padding: round(32px * @multiplier);
    }
 }
-.controls-ComboBox.controls-Picker__show.controls-InputRender.controls-ComboBox__editable-false .controls-InputRender__fieldWrapper .controls-InputRender__field.controls-ComboBox__fieldNotEditable {
-  color: #324352;
-}
-
 // В теме онлайна фон у кнопки при наведении по умолчанию совпадает с цветом кнопок в панели выбора периода,
 // а тут не совпадает. Когда будем переделывать компонент под новую спецификацию, избавится от кнопок в пользу div.
 .ws-is-desktop-platform .controls-Button:not(.ws-disabled):not(.controls-Click__active).controls-Button__default {
