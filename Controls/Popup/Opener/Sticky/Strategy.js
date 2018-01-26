@@ -1,9 +1,155 @@
 define('Controls/Popup/Opener/Sticky/Strategy',
    [
       'Controls/Popup/Opener/BaseStrategy',
+      'Core/core-merge',
       'Controls/Popup/TargetCoords'
    ],
-   function (BaseStrategy, TargetCoords) {
+   function (BaseStrategy, cMerge, TargetCoords) {
+
+      var DEFAULT_OPTIONS = {
+         horizontalAlign: {
+            side: 'right',
+            offset: 0
+         },
+         verticalAlign: {
+            side: 'bottom',
+            offset: 0
+         },
+         corner: {
+            vertical: 'top',
+            horizontal: 'left'
+         }
+      };
+
+      var INVERTING_CONST = {
+         top: 'bottom',
+         bottom: 'top',
+         left: 'right',
+         right: 'left',
+         center: 'center'
+      };
+
+      var COORDINATE_MULTIPLIERS = {
+         left: -1,
+         right: 0,
+         top: -1,
+         bottom: 0,
+         center: -1/2
+      };
+
+
+      var _private = {
+         /*
+         * Возвращает точку таргета, относительно которой нужно спозиционироваться окну
+         * */
+         getTargetPoint: function(popupCfg, targetInfo){
+            var offsetMultipliers = {
+               top: 0,
+               left: 0,
+               center: 0.5,
+               bottom: 1,
+               right: 1
+            };
+
+            return {
+               top: targetInfo.top + targetInfo.height * offsetMultipliers[popupCfg.corner.vertical],
+               left: targetInfo.left + targetInfo.width * offsetMultipliers[popupCfg.corner.horizontal]
+            }
+         },
+
+         /*
+         * Инвертировать положение окна
+         * В случае если окно не влезает в доступную область, может потребоваться его инвертировать
+         * */
+         invert: function(cfg, direction){
+            cfg.corner[direction] = INVERTING_CONST[cfg.corner[direction]];
+            cfg.align[direction].side = INVERTING_CONST[cfg.align[direction].side];
+            cfg.align[direction].offset = cfg.align[direction].offset * (-1);
+         },
+
+         /*
+         * Получить горизонтальную или вертикальную координату позиционирования окна
+         * */
+         getCoordinate: function(targetPoint, cfg, direction){
+            return targetPoint[direction === 'horizontal' ? 'left' : 'top'] + cfg.align[direction].offset + 
+               cfg.sizes[direction === 'horizontal' ? 'width' : 'height'] * COORDINATE_MULTIPLIERS[cfg.align[direction].side];
+         },
+
+         /*
+         * Получить новую ширину окна, используется в случае, когда окно не влезает в доступную область
+         * */
+         getNewWidth: function(popupCfg, targetPoint, direction){
+            return Math.max(targetPoint[[direction === 'horizontal' ? 'left' : 'top']] - popupCfg.align[direction].offset,
+               _private.getWindowSizes()[direction === 'horizontal' ? 'width' : 'height'] - targetPoint[[direction === 'horizontal' ? 'left' : 'top']] - popupCfg.align[direction].offset);
+         },
+
+         /*
+         * Проверить насколько не влезает окно с обеих сторон относительно переданной координаты и вернуть максимальное значение
+         * */
+         getMaxOverflowValue: function(coordinate, popupCfg, direction){
+            return Math.max(-coordinate, -(_private.getWindowSizes()[direction === 'horizontal' ? 'width' : 'height'] - coordinate - popupCfg.sizes[direction === 'horizontal' ? 'width' : 'height']));
+         },
+
+         getPosition: function(popupCfg, targetCoords, targetPoint, direction){
+
+            var
+               coordinate,
+               newWidth;
+
+            var checkOverflow = function(callback){
+               coordinate = _private.getCoordinate(targetPoint, popupCfg, direction);
+               var maxOverflowValue = _private.getMaxOverflowValue(coordinate, popupCfg, direction);
+               //Если окно не влезает, то передаем управление дальше
+               if(maxOverflowValue > 0){
+                  callback(maxOverflowValue);
+               }
+            };
+
+            //Проверим, возможно окну достаточно места
+            checkOverflow(function(firstOverflowValue){
+               //Попробуем инвертировать окно и проверим снова
+               _private.invert(popupCfg, direction);
+               targetPoint = _private.getTargetPoint(popupCfg, targetCoords);
+
+               checkOverflow(function(secondOverflowValue){
+                  //Если и на этот раз окно не поместилось, отобразим окно в ту сторону, где места было больше
+                  if(firstOverflowValue < secondOverflowValue){
+                     _private.invert(popupCfg, direction);
+                     targetPoint = _private.getTargetPoint(popupCfg, targetCoords);
+                  }
+
+                  if(coordinate < 0){
+                     coordinate = 0;
+                  }
+
+                  newWidth = _private.getNewWidth(popupCfg, targetPoint, direction);
+               });
+            });
+
+            return {
+               coordinate: coordinate,
+               newWidth: newWidth
+            }
+         },
+
+         getOrientationClasses: function(cfg){
+            var className = '';
+
+            className = 'controls-Popup-corner-vertical-' + cfg.corner.vertical;
+            className += ' controls-Popup-corner-horizontal-' + cfg.corner.horizontal;
+            className += ' controls-Popup-align-horizontal-' + cfg.align.horizontal.side;
+            className += ' controls-Popup-align-vertical-' + cfg.align.vertical.side;
+
+            return className;
+         },
+
+         getWindowSizes: function(){
+            return {
+               width: window.innerWidth,
+               height: window.innerHeight
+            }
+         }
+      };
 
       /**
        * Стратегия позиционирования прилипающего диалога.
@@ -14,16 +160,24 @@ define('Controls/Popup/Opener/Sticky/Strategy',
        */
       var Strategy = BaseStrategy.extend({
          elementCreated: function (cfg, width, height) {
-            var
-               target = cfg.popupOptions.target ? cfg.popupOptions.target : document.body,
-               corner = cfg.popupOptions.corner || {
-                     'vertical': 'top',
-                     'horizontal': 'left'
-                  },
-               tCoords = TargetCoords.get(target, corner),
-               hAlign = cfg.popupOptions.horizontalAlign,
-               vAlign = cfg.popupOptions.verticalAlign;
-            cfg.position = this.getPosition(tCoords, corner, hAlign, vAlign, width, height, window.innerWidth, window.innerHeight);
+            var popupCfg = {
+               corner: cMerge(DEFAULT_OPTIONS['corner'], cfg.popupOptions.corner),
+               align: {
+                  horizontal: cMerge(DEFAULT_OPTIONS['horizontalAlign'], cfg.popupOptions.horizontalAlign),
+                  vertical: cMerge(DEFAULT_OPTIONS['verticalAlign'], cfg.popupOptions.verticalAlign)
+               },
+               sizes: {
+                  width: width,
+                  height: height
+               }
+            };
+
+            cfg.position = this.getPosition(popupCfg, TargetCoords.get(cfg.popupOptions.target ? cfg.popupOptions.target : document.body));
+
+            //Удаляем предыдущие классы характеризующие направление
+            cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup-align\S*/g, '').trim();
+            //Добавляем новые
+            cfg.popupOptions.className += ' ' + _private.getOrientationClasses(popupCfg);
          },
 
          elementUpdated: function (cfg, width, height) {
@@ -33,96 +187,26 @@ define('Controls/Popup/Opener/Sticky/Strategy',
          /**
           * Возвращает позицию плавающей панели
           * @function Controls/Popup/Opener/Sticky/Strategy#getPosition
+          * @param popupCfg конфигурация попапа
           * @param targetCoords координаты таргета
-          * @param corner угол таргета, от которого открывается popup
-          * @param hAlign горизонтальное выравнивание
-          * @param vAlign вертикальное выравнивание
-          * @param contWidth ширина плавающей панели
-          * @param contHeight высота плавающей панели
-          * @param wWidth ширина окна
-          * @param wHeight высота окна
           */
-         getPosition: function (targetCoords, corner, hAlign, vAlign, contWidth, contHeight, wWidth, wHeight) {
-            // расчет горизонтальной координаты
-            var
-               width,
-               hSide = hAlign ? (hAlign.side || 'right') : 'right',
-               hOffset = hAlign ? (hAlign.offset || 0) : 0,
-               indentLeft = targetCoords.left,
-               indentRight = wWidth - indentLeft,
-               left = targetCoords.left + hOffset;
-            // если попап не умещается в видимую область экрана, направление выпадания нужно изменить
-            // на противоположное, а угол от которого открывать попап заменить на противоположный
-            if (hSide === 'left') {
-               if (left - contWidth >= 0) {
-                  left -= contWidth;
-               }
-               else{
-                  if (( left + (corner.horizontal === 'right' ? -1 : 1) * targetCoords.width + contWidth ) <= wWidth) {
-                     left += (corner.horizontal === 'right' ? -1 : 1) * targetCoords.width;
-                  }
-                  else {
-                     left = indentLeft > indentRight ? 0 : left;
-                     width = Math.max(indentLeft, indentRight);
-                  }
-               }
-            }
-            else{
-               if (( left + contWidth ) > wWidth) {
-                  if (left - ((corner.horizontal === 'right' ? 1 : -1) * targetCoords.width + contWidth) >= 0) {
-                     left -= ((corner.horizontal === 'right' ? 1 : -1) * targetCoords.width + contWidth);
-                  }
-                  else {
-                     left = indentLeft > indentRight ? 0 : left;
-                     width = Math.max(indentLeft, indentRight);
-                  }
-               }
-            }
+         getPosition: function (popupCfg, targetCoords) {
 
-            // расчет вертикальной координаты
-            var
-               height,
-               vSide = vAlign ? (vAlign.side || 'bottom') : 'bottom',
-               vOffset = vAlign ? (vAlign.offset || 0) : 0,
-               indentTop = targetCoords.top,
-               indentBottom = wHeight - targetCoords.top,
-               top = targetCoords.top + vOffset;
-            // если попап не умещается в видимую область экрана, направление выпадания нужно изменить
-            // на противоположное, а угол от которого открывать попап заменить на противоположный
-            if (vSide === 'top') {
-               if (top - contHeight >= 0) {
-                  top -= contHeight;
-               }
-               else{
-                  if (( top + (corner.vertical === 'bottom' ? -1 : 1) * targetCoords.height + contHeight ) <= wHeight) {
-                     top += (corner.vertical === 'bottom' ? -1 : 1) * targetCoords.height;
-                  }
-                  else {
-                     top = indentTop > indentBottom ? 0 : top;
-                     height = Math.max(indentTop, indentBottom);
-                  }
-               }
-            }
-            else{
-               if (( top + contHeight ) > wHeight) {
-                  if (top - ((corner.vertical === 'bottom' ? 1 : -1) * targetCoords.height + contHeight) >= 0) {
-                     top -= (corner.vertical === 'bottom' ? 1 : -1) * targetCoords.height + contHeight;
-                  }
-                  else {
-                     top = indentTop > indentBottom ? 0 : top;
-                     height = Math.max(indentTop, indentBottom);
-                  }
-               }
-            }
+            var targetPoint = _private.getTargetPoint(popupCfg, targetCoords);
+            var horizontalPosition = _private.getPosition(popupCfg, targetCoords, targetPoint, 'horizontal');
+            var verticalPosition = _private.getPosition(popupCfg, targetCoords, targetPoint, 'vertical');
 
             return {
-               left: left,
-               top: top,
-               width: width,
-               height: height
+               left: horizontalPosition.coordinate,
+               top: verticalPosition.coordinate,
+               width: horizontalPosition.newWidth,
+               height: verticalPosition.newWidth
             };
          }
+
       });
+
+      Strategy._private = _private;
 
       return new Strategy();
    }

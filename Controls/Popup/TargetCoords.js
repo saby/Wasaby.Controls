@@ -4,27 +4,32 @@ define('Controls/Popup/TargetCoords',
    function () {
 
       return {
-         get: function (target, corner) {
-            if( !target ){
-               target = document.body;
+         get: function (target) {
+
+            if(!target){
+               throw new Error('Target parameter is required');
             }
+
             var
-               top = 0,
-               left = 0;
-            if (target) {
-               var box = target.getBoundingClientRect();
-               top += (corner && corner.vertical === 'bottom' ? box.bottom : box.top) || 0;
-               left += (corner && corner.horizontal === 'right' ? box.right : box.left) || 0;
-               top += window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-               top -= document.documentElement.clientTop || document.body.clientTop || 0;
-               left += window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0;
-               left -= document.documentElement.clientLeft || document.body.clientLeft || 0;
-            }
+               box = target.getBoundingClientRect(),
+               top = box.top,
+               left = box.left,
+               bottom = box.bottom,
+               right = box.right;
+
+            var fullTopOffset =
+               window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0 -
+               document.documentElement.clientTop || document.body.clientTop || 0;
+
+            var fullLeftOffset =
+               window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0 -
+               document.documentElement.clientLeft || document.body.clientLeft || 0;
+
             return {
-               top: Math.round(top),
-               bottom: Math.round(window.innerHeight - top),
-               left: Math.round(left),
-               right: Math.round(window.innerWidth - left),
+               top: Math.round(top + fullTopOffset),
+               bottom: Math.round(bottom + fullTopOffset),
+               left: Math.round(left + fullLeftOffset),
+               right: Math.round(right + fullLeftOffset),
                width: box.width,
                height: box.height
             };

@@ -1,9 +1,11 @@
 .ws-Container__popup{
    position: absolute;
-   overflow: hidden;
    transition-property: transform;
    transition-duration: 0.15s;
    background: #FFFFFF;
+   .box-sizing(border-box);
+   //Чтобы растянуть содержимое внутри на 100%
+   .flexbox();
 }
 .ws-Container__overlay {
    position: fixed;
