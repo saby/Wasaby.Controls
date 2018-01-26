@@ -15,7 +15,7 @@ define('Controls/Popup/Manager/Popup',
          * Вернуть размеры контента
          * */
          getContentSizes: function(self){
-            var content = self._container[0].querySelector(CONTENT_SELECTOR) || self._container[0].firstChild;
+            var content = self._container.querySelector(CONTENT_SELECTOR) || self._container.firstChild;
 
             return {
                width: content.offsetWidth,
