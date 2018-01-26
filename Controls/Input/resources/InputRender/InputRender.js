@@ -20,11 +20,6 @@ define('Controls/Input/resources/InputRender/InputRender',
        * @author Баранов М.А.
        */
 
-      /**
-       * @name Controls/Input/resources/InputRender/InputRender#isSimplePlaceholder
-       * @cfg {Boolean} Если true, то позволяет отлавливать клик по placeholder. По умолчанию - false
-       */
-
       var _private = {
 
          getSelection: function(self){
@@ -157,8 +152,7 @@ define('Controls/Input/resources/InputRender/InputRender',
       InputRender.getDefaultOptions = function() {
          return {
             value: '',
-            selectOnClick: false,
-            isSimplePlaceholder: true
+            selectOnClick: false
          };
       };
 
