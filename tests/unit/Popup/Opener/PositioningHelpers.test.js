@@ -12,63 +12,120 @@ define(
          describe('Sticky', function () {
             var targetCoords = {
                top: 200,
-               left: 300,
-               width: 400,
-               height: 400
+               left: 200,
+               bottom: 400,
+               right: 400,
+               width: 200,
+               height: 200
             };
-            it('sticky positioning', function() {
-               var position = Sticky.getPosition(targetCoords, {
-                  'vertical': 'top',
-                  'horizontal': 'left'
-               }, {}, {}, 300, 300, 1920, 1040);
-               assert.isTrue(position.top === 200);
-               assert.isTrue(position.left === 300);
-            });
 
-            it('sticky positioning with offset', function() {
-               var position = Sticky.getPosition(targetCoords, {
-                  'vertical': 'top',
-                  'horizontal': 'left'
-               }, {offset: 200}, {offset: 200}, 300, 300, 1920, 1040);
+            Sticky.constructor._private.getWindowSizes = function(){
+              return {
+                 width: 1920,
+                 height: 1040
+              }
+            };
+
+            it('Simple sticky', function() {
+               var position = Sticky.getPosition({
+                  corner: {
+                     vertical: 'bottom',
+                     horizontal: 'right'
+                  },
+                  align: {
+                     vertical: {
+                        side: 'bottom',
+                        offset: 0
+                     },
+                     horizontal: {
+                        side: 'right',
+                        offset: 0
+                     }
+                  },
+                  sizes: {
+                     width: 100,
+                     height: 100
+                  }
+               }, targetCoords);
                assert.isTrue(position.top === 400);
-               assert.isTrue(position.left === 500);
+               assert.isTrue(position.left === 400);
             });
 
-            it('sticky positioning vertical align top', function() {
-               var position = Sticky.getPosition(targetCoords, {
-                  'vertical': 'top',
-                  'horizontal': 'left'
-               }, {}, {side: 'top'}, 100, 100, 1920, 1040);
-               assert.isTrue(position.top === 100);
-               assert.isTrue(position.left === 300);
+            it('Centered sticky', function() {
+               var position = Sticky.getPosition({
+                  corner: {
+                     vertical: 'bottom',
+                     horizontal: 'center'
+                  },
+                  align: {
+                     vertical: {
+                        side: 'bottom',
+                        offset: 0
+                     },
+                     horizontal: {
+                        side: 'center',
+                        offset: 0
+                     }
+                  },
+                  sizes: {
+                     width: 200,
+                     height: 200
+                  }
+               }, targetCoords);
+               assert.isTrue(position.top === 400);
+               assert.isTrue(position.left === 200);
             });
 
-            it('sticky positioning horizontal align right', function() {
-               var position = Sticky.getPosition(targetCoords, {
-                  'vertical': 'top',
-                  'horizontal': 'left'
-               }, {side: 'left'}, {}, 300, 300, 1920, 1040);
-               assert.isTrue(position.top === 200);
-               assert.isTrue(position.left === 0);
+            it('Sticky with offset', function() {
+               var position = Sticky.getPosition({
+                  corner: {
+                     vertical: 'top',
+                     horizontal: 'left'
+                  },
+                  align: {
+                     vertical: {
+                        side: 'top',
+                        offset: 10
+                     },
+                     horizontal: {
+                        side: 'left',
+                        offset: -10
+                     }
+                  },
+                  sizes: {
+                     width: 100,
+                     height: 100
+                  }
+               }, targetCoords);
+               assert.isTrue(position.top === 110);
+               assert.isTrue(position.left === 90);
             });
 
-            it('sticky positioning vertical align top reversed', function() {
-               var position = Sticky.getPosition(targetCoords, {
-                  'vertical': 'top',
-                  'horizontal': 'left'
-               }, {}, {side: 'top'}, 300, 300, 1920, 1040);
-               assert.isTrue(position.top === 600);
-               assert.isTrue(position.left === 300);
+            it('Sticky with inverting', function() {
+               var position = Sticky.getPosition({
+                  corner: {
+                     vertical: 'bottom',
+                     horizontal: 'left'
+                  },
+                  align: {
+                     vertical: {
+                        side: 'bottom',
+                        offset: 0
+                     },
+                     horizontal: {
+                        side: 'left',
+                        offset: 0
+                     }
+                  },
+                  sizes: {
+                     width: 400,
+                     height: 200
+                  }
+               }, targetCoords);
+               assert.isTrue(position.top === 400);
+               assert.isTrue(position.left === 400);
             });
 
-            it('sticky positioning horizontal align right reversed', function() {
-               var position = Sticky.getPosition(targetCoords, {
-                  'vertical': 'top',
-                  'horizontal': 'left'
-               }, {side: 'left'}, {}, 400, 300, 1920, 1040);
-               assert.isTrue(position.top === 200);
-               assert.isTrue(position.left === 700);
-            });
          });
 
          describe('Dialog', function () {
