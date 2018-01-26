@@ -1,0 +1,24 @@
+define('Controls/Tabs', [
+   'Core/Control'
+
+], function (Control
+) {
+   'use strict';
+
+   var _private = {};
+
+   /**
+    * Временная заглушка, чтоб заработал раздел Tabs
+    * @class Controls/Tabs
+    * @extends Controls/Control
+    * @control
+    * @public
+    * @category List
+    */
+
+   var Tabs = Control.extend({
+      _controlName: 'Controls/Tabs'
+
+   });
+   return Tabs;
+});
