@@ -113,10 +113,12 @@ define('Controls/List', [
             }
 
             //позволяем модифицировать параметры юзеру
+            /*TODO Событие решили пока убрать, сомнительна вообще его необходимость. Во всяком случае в beforeMount стрелять событием нельзя
             var userParams = self._notify('onBeforeDataLoad', queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit);
             if (userParams) {
                queryParams = _private.paramsWithUserEvent(queryParams, userParams);
             }
+            */
 
             _private.showIndicator(self, direction);
             def = DataSourceUtil.callQuery(self._dataSource, self._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)

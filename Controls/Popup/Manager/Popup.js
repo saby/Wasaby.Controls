@@ -8,6 +8,30 @@ define('Controls/Popup/Manager/Popup',
    function (Control, template, CoreConstants) {
       'use strict';
 
+      var CONTENT_SELECTOR = '.ws-Container__popup-scrolling-content';
+
+      var _private = {
+         /*
+         * Вернуть размеры контента
+         * */
+         getContentSizes: function(self){
+            var content = self._container[0].querySelector(CONTENT_SELECTOR) || self._container[0].firstChild;
+
+            return {
+               width: content.offsetWidth,
+               height: content.offsetHeight
+            }
+         },
+
+         /*
+         * Сохранить размеры, которые требуются чтобы отобразить контент полностью
+         * */
+         setNeededSizes: function(self, sizes){
+            self._neededHeight = sizes.height;
+            self._neededWidth = sizes.width;
+         }
+      };
+
       var Popup = Control.extend({
          /**
           * Компонент "Всплывающее окно"
@@ -32,23 +56,20 @@ define('Controls/Popup/Manager/Popup',
          _controlName: 'Controls/Popup/Manager/Popup',
          _template: template,
 
-         constructor: function (cfg) {
-            Popup.superclass.constructor.call(this, cfg);
-         },
-
          _afterMount: function () {
-            var container = this._container;
-            this._width = container.offsetWidth;
-            this._height = container.offsetHeight;
-            this._notify('popupCreated', [this._options.id, this._width, this._height]);
+            var contentSizes = _private.getContentSizes(this);
+            _private.setNeededSizes(this, contentSizes);
+
+            this._notify('popupCreated', [this._options.id, this._neededWidth, this._neededHeight]);
          },
 
          _afterUpdate: function () {
-            var container = this._container;
-            if (container.offsetWidth !== this._width || container.offsetHeight !== this._height) {
-               this._width = container.offsetWidth;
-               this._height = container.offsetHeight;
-               this._notify('popupUpdated', [this._options.id, this._width, this._height]);
+            var contentSizes = _private.getContentSizes(this);
+
+            //Если размеры контента изменились, пересчитаем размеры окна
+            if (contentSizes.width !== this._neededWidth || contentSizes.height !== this._neededHeight) {
+               _private.setNeededSizes(this, contentSizes);
+               this._notify('popupUpdated', [this._options.id, this._neededWidth, this._neededHeight]);
             }
          },
 
