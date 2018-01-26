@@ -163,8 +163,8 @@ define('Controls/Popup/Opener/Sticky/Strategy',
             var popupCfg = {
                corner: cMerge(DEFAULT_OPTIONS['corner'], cfg.popupOptions.corner),
                align: {
-                  horizontal: cMerge(DEFAULT_OPTIONS['horizontalAlign'], cfg.popupOptions.horizontalAlign),
-                  vertical: cMerge(DEFAULT_OPTIONS['verticalAlign'], cfg.popupOptions.verticalAlign)
+                  horizontal: cMerge(DEFAULT_OPTIONS['horizontalAlign'], cfg.popupOptions.horizontalAlign || {}),
+                  vertical: cMerge(DEFAULT_OPTIONS['verticalAlign'], cfg.popupOptions.verticalAlign || {})
                },
                sizes: {
                   width: width,
