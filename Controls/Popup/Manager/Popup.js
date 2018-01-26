@@ -8,6 +8,30 @@ define('Controls/Popup/Manager/Popup',
    function (Control, template, CoreConstants) {
       'use strict';
 
+      var CONTENT_SELECTOR = '.ws-Container__popup-scrolling-content';
+
+      var _private = {
+         /*
+         * Вернуть размеры контента
+         * */
+         getContentSizes: function(self){
+            var content = self._container[0].querySelector(CONTENT_SELECTOR) || self._container[0].firstChild;
+
+            return {
+               width: content.offsetWidth,
+               height: content.offsetHeight
+            }
+         },
+
+         /*
+         * Сохранить размеры, которые требуются чтобы отобразить контент полностью
+         * */
+         setNeededSizes: function(self, sizes){
+            self._neededHeight = sizes.height;
+            self._neededWidth = sizes.width;
+         }
+      };
+
       var Popup = Control.extend({
          /**
           * Компонент "Всплывающее окно"
@@ -32,13 +56,21 @@ define('Controls/Popup/Manager/Popup',
          _controlName: 'Controls/Popup/Manager/Popup',
          _template: template,
 
-         constructor: function (cfg) {
-            Popup.superclass.constructor.call(this, cfg);
+         _afterMount: function () {
+            var contentSizes = _private.getContentSizes(this);
+            _private.setNeededSizes(this, contentSizes);
+
+            this._notify('popupCreated', [this._options.id, this._neededWidth, this._neededHeight]);
          },
 
-         _afterMount: function () {
-            var container = this._container;
-            this._notify('popupCreated', [this._options.id, container.offsetWidth, container.offsetHeight]);
+         _afterUpdate: function () {
+            var contentSizes = _private.getContentSizes(this);
+
+            //Если размеры контента изменились, пересчитаем размеры окна
+            if (contentSizes.width !== this._neededWidth || contentSizes.height !== this._neededHeight) {
+               _private.setNeededSizes(this, contentSizes);
+               this._notify('popupUpdated', [this._options.id, this._neededWidth, this._neededHeight]);
+            }
          },
 
          /**

@@ -25,7 +25,7 @@
         </tbody>
         <ws:partial template="{{_footTpl}}" scope="{{...}}" />
     </table>
-    <div class="controls-ListView__EmptyData {{(!_serverRender || _records.length || !emptyHTML) ? 'ws-hidden' : ''}}">
+    <div class="controls-ListView__EmptyData controls-ListView__{{isSmall ? 'small__EmptyData' : ' normal__EmptyData'}} {{(!_serverRender || _records.length || !emptyHTML) ? 'ws-hidden' : ''}}">
         <ws:partial template="{{ _sanitize(emptyHTML) }}"/>
     </div>
     <ws:if data="{{footerTpl}}">

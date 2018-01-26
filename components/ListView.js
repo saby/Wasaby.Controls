@@ -125,6 +125,7 @@ define('SBIS3.CONTROLS/ListView',
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        * @css js-controls-ListView__notEditable Клик по элементу с данным классом не будет приводить к запуску редактирования по месту.
+       * @css controls-ListView__disableHover Скрывает выделение по ховеру.
        *
        *
        * @ignoreOptions _handlers activableByClick alwaysShowExtendedTooltip buildMarkupWithContext className ignoreTabCycles linkedContext modal
@@ -443,6 +444,7 @@ define('SBIS3.CONTROLS/ListView',
                bottom: null
             },
             _virtualScrollShouldReset: false,
+            _virtualScrollResetStickyHead: false,
             _setScrollPagerPositionThrottled: null,
             _updateScrollIndicatorTopThrottled: null,
             _removedItemsCount: false,
@@ -1034,7 +1036,7 @@ define('SBIS3.CONTROLS/ListView',
                this._pagingZIndex = WindowManager.acquireZIndex();
                WindowManager.setVisible(this._pagingZIndex);
             }
-            if (this._options.virtualScrolling || this._options.scrollPaging) {
+            if (this._options.virtualScrolling || this._options.scrollPaging || this.isInfiniteScroll()) {
                this._getScrollWatcher().subscribe('onScroll', this._onScrollHandler);
             }
             if(this.isInfiniteScroll()) {
@@ -1096,7 +1098,10 @@ define('SBIS3.CONTROLS/ListView',
 
                this._topWrapper.get(0).style.height = config.topWrapperHeight + 'px';
                this._bottomWrapper.get(0).style.height = config.bottomWrapperHeight + 'px';
-
+               if (this._virtualScrollResetStickyHead) {
+                  this._notifyOnSizeChanged();
+                  this._virtualScrollResetStickyHead = false;
+               }
             }.bind(this));
          },
 
@@ -1322,9 +1327,8 @@ define('SBIS3.CONTROLS/ListView',
          },
 
          _onScrollHandler: function(event, scrollTop){
-            var itemActions;
+            var itemActions = this.getItemsActions();
             if (this.isVisible() && itemActions && itemActions.isItemActionsMenuVisible()){
-               itemActions = this.getItemsActions();
                itemActions.hide();
             }
             if (this._virtualScrollController) {
@@ -3741,8 +3745,13 @@ define('SBIS3.CONTROLS/ListView',
           */
          scrollToItem: function(item, toBottom, depth){
             // Item is not in DOM, will need to calculate scrollTop
-            if (this._options.virtualScrolling && this._virtualScrollController) {
-               var scrollTop = this._virtualScrollController.getScrollTopForItem(this._options._items.getIndex(item));
+            var itemIndex = this._options._items.getIndexByValue(item.getIdProperty(), item.getId())
+            if (this._options.virtualScrolling && this._virtualScrollController && !this._virtualScrollController.isItemVisible(itemIndex)) {
+               var scrollTop = this._virtualScrollController.getScrollTopForItem(itemIndex);
+               // Если есть sticky header, надо его пересчитать после отрисовки записей виртуальным скролом
+               if (this._options.stickyHeader) {
+                  this._virtualScrollResetStickyHead = true;
+               }
                this._getScrollWatcher().scrollTo(scrollTop);
             }
             else if (item.getId && item.getId instanceof Function) {

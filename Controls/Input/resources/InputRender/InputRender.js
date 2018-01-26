@@ -141,7 +141,6 @@ define('Controls/Input/resources/InputRender/InputRender',
 
             if (this._options.value !== processedData.value) {
                this._notify('valueChanged', [processedData.value]);
-               this._forceUpdate();
             }
 
             //Возвращаем позицию каретки. Она обрабатывается методом pasteHelper

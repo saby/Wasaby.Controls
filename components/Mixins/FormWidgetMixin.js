@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/Mixins/FormWidgetMixin', [
 ], function ( constants, IoC, coreClone, Deferred, escapeHtml) {
    /**
     * Миксин, который добавляет функционал валидаторов.
-    * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/validation/">Валидация вводимых данных</a>.
+    * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/validation/index/">Валидация вводимых данных</a>.
     * @mixin SBIS3.CONTROLS/Mixins/FormWidgetMixin
     * @public
     * @author Крайнов Д.О.

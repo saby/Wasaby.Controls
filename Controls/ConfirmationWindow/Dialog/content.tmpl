@@ -3,7 +3,7 @@
    <ws:if data="{{message}}">
       <ws:partial template="{{messageTemplate}}" hasDetails="{{details}}">
          <ws:content>
-            <div class="controls-SubmitPopup__message-centered">{{message|sanitize}}</div>
+            <div class="controls-SubmitPopup__message-centered">{{message}}</div>
          </ws:content>
       </ws:partial>
    </ws:if>
@@ -11,7 +11,7 @@
    <ws:if data="{{details}}">
       <ws:partial template="{{detailsTemplate}}">
          <ws:content>
-            <div class="controls-SubmitPopup__message-centered">{{details|sanitize}}</div>
+            <div class="controls-SubmitPopup__message-centered">{{details}}</div>
          </ws:content>
       </ws:partial>
    </ws:if>

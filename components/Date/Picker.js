@@ -121,7 +121,8 @@ define(
                },
                bodyBounds: true,
                locationStrategy: 'bodyBounds',
-               activateAfterShow: true
+               activateAfterShow: true,
+               _canScroll: true
             }
          },
          _onFocusInHandler: undefined

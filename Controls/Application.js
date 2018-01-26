@@ -5,7 +5,7 @@ define('Controls/Application',
    [
       'Core/Control',
       'tmpl!Controls/Application/Page',
-      'Core/helpers/URLHelpers',
+      //'Core/helpers/URLHelpers', /*TODO:: это будет нужно для роутинга, но пока роутинг не нужен, просто оставим
       'Core/Deferred'
    ],
 
@@ -15,7 +15,7 @@ define('Controls/Application',
     */
    function (Base,
              template,
-             URLHelpers,
+             //URLHelpers,
              Deferred) {
       'use strict';
 
@@ -36,7 +36,7 @@ define('Controls/Application',
             self.resourceRoot = cfg.resourceRoot;
             self.jsLinks = cfg.jsLinks;
             self.templateConfig = cfg.templateConfig;
-            self.jquery = cfg.jquery;
+            self.compat = cfg.compat||false;
          }
       };
       var Page = Base.extend({
@@ -47,6 +47,14 @@ define('Controls/Application',
 
          getDataId: function(){
             return 'cfg-pagedata';
+         },
+
+         _scrollPage: function(ev){
+            this._children.scrollDetect.start(ev);
+         },
+
+         _resizePage: function(ev){
+            this._children.resizeDetect.start(ev);
          },
 
          _beforeMount: function(cfg, context, receivedState) {
@@ -66,7 +74,8 @@ define('Controls/Application',
                wsRoot: self.wsRoot,
                resourceRoot: self.resourceRoot,
                templateConfig: self.templateConfig,
-               jquery: self.jquery
+               jquery: self.jquery,
+               compat: self.compat
             });
             return def;
          }

@@ -215,6 +215,10 @@ define('SBIS3.CONTROLS/Date/RangeSliderBase',[
       markControl: function () {
          DateRangeSlider.superclass.markControl.apply(this, arguments);
          this.getContainer().toggleClass('controls-DateRangeSlider__validation-error', this.isMarked());
+      },
+      clearMark: function() {
+         DateRangeSlider.superclass.clearMark.apply(this, arguments);
+         this.getContainer().toggleClass('controls-DateRangeSlider__validation-error', this.isMarked());
       }
    });
 
