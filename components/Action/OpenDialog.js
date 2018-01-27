@@ -54,6 +54,7 @@ define('SBIS3.CONTROLS/Action/OpenDialog', [
        * @param {Object} meta.dialogOptions Объект с пользовательскими опциями, которые передаются в диалог редактирования в <a href='/doc/platform/developmentapl/interface-development/core/oop/#configuration-class-parameters'>секцию _options</a>.
        * @param {Object} meta.componentOptions Объект с конфигурацией контрола, на основе которого создаётся диалог редактирования (см. {@link mode}).
        * @param {Boolean} meta.isNewRecord Установив этот флаг, при закрытии диалога будет отображено диалоговое окно для подтверждения действия. Если в диалоге выбран ответ "Нет", то запись будет удалена из БД при выполнении условий: на диалоге открыта новая запись (создана в БД и ей присвоен ID) и для записи не были изменены поля.
+       * @returns {Core/Deferred}
        * @example
        * <pre>
        * // myButton - экземпляр класса кнопки
