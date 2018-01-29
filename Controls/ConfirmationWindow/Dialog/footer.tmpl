@@ -4,7 +4,7 @@
          <ws:partial
                  ws-autofocus="{{true}}"
                  style="primary"
-                 caption="ОК"
+                 caption="{{buttonConfig.ok.caption}}"
                  template="Controls/Button"
                  attr:class="controls-SubmitPopup__button controls-Button__ellipsis"
                  on:click="_sendResult()"
@@ -14,20 +14,20 @@
          <ws:partial
                  ws-autofocus="{{true}}"
                  style="primary"
-                 caption="Да"
+                 caption="{{buttonConfig.yes.caption}}"
                  template="Controls/Button"
                  attr:class="controls-SubmitPopup__button{{type === 'yesnocancel' ? ' controls-SubmitPopup__button-mini'}} controls-Button__ellipsis"
                  on:click="_sendResult(true)"
          />
          <ws:partial
-                 caption="Нет"
+                 caption="{{buttonConfig.no.caption}}"
                  template="Controls/Button"
                  attr:class="controls-SubmitPopup__button{{type === 'yesnocancel' ? ' controls-SubmitPopup__button-mini'}} controls-Button__ellipsis"
                  on:click="_sendResult(false)"
          />
          <ws:if data="{{type === 'yesnocancel'}}">
             <ws:partial
-                    caption="Отмена"
+                    caption="{{buttonConfig.cancel.caption}}"
                     template="Controls/Button"
                     attr:class="controls-SubmitPopup__button controls-SubmitPopup__button-mini controls-Button__ellipsis"
                     on:click="_sendResult()"
