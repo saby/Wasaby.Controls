@@ -3,7 +3,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
    "Core/core-merge",
    "SBIS3.CONTROLS/SubmitPopup",
    "SBIS3.CONTROLS/NotificationPopup",
-   "browser!js!SBIS3.CONTROLS/Utils/NotificationStackManager",
+   "browser!SBIS3.CONTROLS/Utils/NotificationStackManager",
    "Core/constants",
    "Core/helpers/Function/runDelayed"
 ],

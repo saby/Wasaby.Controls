@@ -174,10 +174,14 @@ define('Controls/Popup/Opener/Sticky/Strategy',
 
             cfg.position = this.getPosition(popupCfg, TargetCoords.get(cfg.popupOptions.target ? cfg.popupOptions.target : document.body));
 
-            //Удаляем предыдущие классы характеризующие направление
-            cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup-align\S*/g, '').trim();
-            //Добавляем новые
-            cfg.popupOptions.className += ' ' + _private.getOrientationClasses(popupCfg);
+            // Удаляем предыдущие классы характеризующие направление и добавляем новые
+            if( cfg.popupOptions.className ){
+               cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup-align\S*/g, '').trim();
+               cfg.popupOptions.className += ' ' + _private.getOrientationClasses(popupCfg);
+            }
+            else{
+               cfg.popupOptions.className = _private.getOrientationClasses(popupCfg);
+            }
          },
 
          elementUpdated: function (cfg, width, height) {
