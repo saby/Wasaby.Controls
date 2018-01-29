@@ -68,7 +68,10 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
             allowChangeEnable: false,
 
             /**
-             * @cfg {boolean} Использовать редактор колонок при определении списка колонок тогда, когда это возможно
+             * @cfg {boolean} Использовать редактор колонок при определении списка колонок
+             * Для того, чтобы эта опция имела эффект, необходимо, чтобы в вышележащем (по дереву компонентов) экземпляре
+             * {@link SBIS3.CONTROLS/Browser браузера} была корректно установлена {@link SBIS3.CONTROLS/Browser#columnsConfig конфигурация колонок},
+             * чтобы браузер мог обработать команду {@link SBIS3.CONTROLS/Browser#showColumnsEditor}.
              *
              * @see _gatherColumnsInfo
              * @see SBIS3.CONTROLS/Browser#showColumnsEditor
