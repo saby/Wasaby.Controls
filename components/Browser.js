@@ -89,7 +89,19 @@ define('SBIS3.CONTROLS/Browser', [
        *    <li><b>columnConfig (object)</b> - объект с конфигурацией данныой колонки (см. {@link SBIS3.CONTROLS/DataGridVie#columns columns}).</li>
        * </ol>
        * @property {Array.<String|Number>} selectedColumns Список идентификаторов колонок, которые будут отмечены на панели редактирования колонок. Параметр актуален для элементов с опцией *fixed=false*.
-       * @property {object} groupTitles Ассоциированый массив имён групп по их идентификаторам (опционально)
+       * @property {object} [groupTitles] Ассоциированый массив имён групп по их идентификаторам (используется редактором колонок) (опционально)
+       * @property {boolean} [usePresets] Разрешает использовать пресеты (используется редактором колонок) (опционально)
+       * @property {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit[]} [staticPresets] Список объектов статически задаваемых пресетов (используется редактором колонок) (опционально)
+       * @property {string} [presetNamespace] Пространство имён для сохранения пользовательских пресетов (используется редактором колонок) (опционально)
+       * @property {string|number} [selectedPresetId] Идентификатор первоначально выбранного пресета в дропдауне (используется редактором колонок) (опционально)
+       * @property {string} [newPresetTitle] Начальное название нового пользовательского пресета (используется редактором колонок) (опционально)
+       * @property {boolean} [useOriginPresetTitle] При клонировании новых пользовательских пресетов строить название из исходного с добавлением следующего порядкового номера (используется редактором колонок) (опционально)
+       * @see columnsConfig
+       * @see setColumnsConfig
+       * @see getColumnsConfig
+       * @see showColumnsEditor
+       * @see _showColumnsEditor
+       * @see SBIS3.CONTROLS/Browser/ColumnsEditor/Editor#open
        */
       _dotTplFn : dotTplFn,
       $protected: {
@@ -280,6 +292,8 @@ define('SBIS3.CONTROLS/Browser', [
              * @see getColumnsConfig
              * @see showColumnsEditor
              * @see _showColumnsEditor
+             * @see ColumnsConfigObject
+             * @see SBIS3.CONTROLS/Browser/ColumnsEditor/Editor#open
              */
             columnsConfig: null,
             /**
@@ -388,7 +402,7 @@ define('SBIS3.CONTROLS/Browser', [
           * </pre>
           *
           * @command showColumnsEditor
-          * @ublic
+          * @public
           * @param {object} [options] Опции открытия редактора колонок (опционально)
           * @param {object} [options.columnsConfig] Объект конфигурации колонок (опционально, если нет, будет использован текущий columnsConfig браузера)
           * @param {object} [options.editorOptions] Опции редактора, отличающиеся или не содержащиеся в columnsConfig. Имеют приоритет перед опциями из columnsConfig (опционально)
@@ -409,6 +423,8 @@ define('SBIS3.CONTROLS/Browser', [
           * @see columnsConfig
           * @see setColumnsConfig
           * @see getColumnsConfig
+          * @see ColumnsConfigObject
+          * @see SBIS3.CONTROLS/Browser/ColumnsEditor/Editor#open
           *
           * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
           * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
@@ -433,8 +449,10 @@ define('SBIS3.CONTROLS/Browser', [
        * @param {string} [config.newPresetTitle] Начальное название нового пользовательского пресета (опционально)
        * @see columnsConfig
        * @see getColumnsConfig
+       * @see ColumnsConfigObject
        * @see showColumnsEditor
        * @see _showColumnsEditor
+       * @see SBIS3.CONTROLS/Browser/ColumnsEditor/Editor#open
        */
       setColumnsConfig: function (config) {
          this._options.columnsConfig = config;
@@ -449,8 +467,10 @@ define('SBIS3.CONTROLS/Browser', [
        * @returns {Object} Конфигурация.
        * @see columnsConfig
        * @see setColumnsConfig
+       * @see ColumnsConfigObject
        * @see showColumnsEditor
        * @see _showColumnsEditor
+       * @see SBIS3.CONTROLS/Browser/ColumnsEditor/Editor#open
        */
       getColumnsConfig: function() {
          return this._options.columnsConfig;
@@ -522,6 +542,8 @@ define('SBIS3.CONTROLS/Browser', [
        * @see columnsConfig
        * @see setColumnsConfig
        * @see getColumnsConfig
+       * @see ColumnsConfigObject
+       * @see SBIS3.CONTROLS/Browser/ColumnsEditor/Editor#open
        *
        * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
        * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок

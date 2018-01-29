@@ -6,6 +6,9 @@
  * @see SBIS3.CONTROLS/Browser#columnsConfig
  * @see SBIS3.CONTROLS/Browser#setColumnsConfig
  * @see SBIS3.CONTROLS/Browser#getColumnsConfig
+ * @see SBIS3.CONTROLS/Browser#ColumnsConfigObject
+ * @see SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase#_gatherColumnsInfo
+ * @see SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase#useColumnsEditor
  *
  * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
  * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
@@ -122,6 +125,9 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
           * @see SBIS3.CONTROLS/Browser#columnsConfig
           * @see SBIS3.CONTROLS/Browser#setColumnsConfig
           * @see SBIS3.CONTROLS/Browser#getColumnsConfig
+          * @see SBIS3.CONTROLS/Browser#ColumnsConfigObject
+          * @see SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase#_gatherColumnsInfo
+          * @see SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase#useColumnsEditor
           *
           * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
           * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
