@@ -52,6 +52,8 @@ define('SBIS3.CONTROLS/Button',
     * @css controls-Button__icon Класс для изменения отображения иконки кнопки.
     * @css controls-Button__text Класс для изменения отображения текста на кнопке.
     *
+    * @mixes SBIS3.CONTROLS/Button/ButtonDocs
+    *
     * @control
     * @category Button
     * @public
