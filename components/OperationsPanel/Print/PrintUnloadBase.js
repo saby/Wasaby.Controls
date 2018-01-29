@@ -69,6 +69,20 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
 
             /**
              * @cfg {boolean} Использовать редактор колонок при определении списка колонок тогда, когда это возможно
+             *
+             * @see _gatherColumnsInfo
+             * @see SBIS3.CONTROLS/Browser#showColumnsEditor
+             * @see SBIS3.CONTROLS/Browser#_showColumnsEditor
+             * @see SBIS3.CONTROLS/Browser#columnsConfig
+             * @see SBIS3.CONTROLS/Browser#setColumnsConfig
+             * @see SBIS3.CONTROLS/Browser#getColumnsConfig
+             * @see SBIS3.CONTROLS/Browser#ColumnsConfigObject
+             * @see SBIS3.CONTROLS/Browser/ColumnsEditor/Editor#open
+             *
+             * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
+             * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
+             * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndCustomButton Пример браузера с собственной кнопкой, открывающией редактор колонок
+             * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
              */
             useColumnsEditor: true
          },
@@ -189,13 +203,29 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
       /*
        * Собрать данные о колонках (асинхронно).
        * Возвращает обещание, разрешаемое списком объектов с параметрами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView). Если опция
-       * useColumnsEditor включена, то будет использован редактор колонок для настройки колонок пользователем. Если ползователь, настроив колонки,
-       * нажмет кнопку "Применить", то обещание будет разрешено отредактированным списком колонок. Если же ползователь закроет редактор кнопкой
-       * "Закрыть", то обещание будет разрешено значением null. Если требуется и в этом случае получить список колонок - используйте аргумент forced
+       * useColumnsEditor включена, то будет использован редактор колонок для настройки колонок пользователем. (Для открытия редактора колонок
+       * используется команда браузера {@link SBIS3.CONTROLS/Browser#showColumnsEditor}) Если ползователь, настроив колонки, нажмет кнопку
+       * "Применить", то обещание будет разрешено отредактированным списком колонок. Если же ползователь закроет редактор кнопкой "Закрыть", то
+       * обещание будет разрешено значением null. Если требуется и в этом случае получить список колонок - используйте аргумент forced
+       *
        * @protected
        * @param {object} data Дополнительные данные для вычисления колонок
        * @param {boolean} forced Вернуть колонки, даже если пользователь закрыл редактор колонок крестом (при включённой опции useColumnsEditor)
        * @return {Core/Deferred<object[]|WS.Data/Collection/RecordSet>}
+       *
+       * @see useColumnsEditor
+       * @see SBIS3.CONTROLS/Browser#showColumnsEditor
+       * @see SBIS3.CONTROLS/Browser#_showColumnsEditor
+       * @see SBIS3.CONTROLS/Browser#columnsConfig
+       * @see SBIS3.CONTROLS/Browser#setColumnsConfig
+       * @see SBIS3.CONTROLS/Browser#getColumnsConfig
+       * @see SBIS3.CONTROLS/Browser#ColumnsConfigObject
+       * @see SBIS3.CONTROLS/Browser/ColumnsEditor/Editor#open
+       *
+       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
+       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
+       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndCustomButton Пример браузера с собственной кнопкой, открывающией редактор колонок
+       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
        */
       _gatherColumnsInfo: function (data, forced) {
          var _fromView = function () {
