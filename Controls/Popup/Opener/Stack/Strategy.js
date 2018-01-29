@@ -50,6 +50,10 @@ define('Controls/Popup/Opener/Stack/Strategy',
             this._update();
          },
 
+         elementUpdated: function(){
+            this._update();
+         },
+
          elementDestroyed: function (element) {
             this._stack.remove(element);
             this._update();

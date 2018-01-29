@@ -118,6 +118,14 @@ define('Controls/Popup/Manager/Popup',
           */
          _sendResult: function (event, result) {
             this._notify('result', [this._options.id, result]);
+         },
+
+         _onResize: function(){
+            this._notify('popupUpdated', [this._options.id, this._neededWidth, this._neededHeight]);
+         },
+
+         _onScroll: function(){
+            this._notify('popupUpdated', [this._options.id, this._neededWidth, this._neededHeight]);
          }
       });
 
