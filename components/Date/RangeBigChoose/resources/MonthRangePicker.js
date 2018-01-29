@@ -573,6 +573,12 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             var $element = $(element),
                month = Date.fromSQL($element.attr(this._selectedRangeItemIdAtr)),
                item = this._getMonthsRangeItem(month, withoutSelection);
+            if (withoutSelection) {
+               $element.removeClass([
+                  this._SELECTABLE_RANGE_CSS_CLASSES.selected,
+                  this._SELECTABLE_RANGE_CSS_CLASSES.selectedStart,
+                  this._SELECTABLE_RANGE_CSS_CLASSES.selectedEnd].join(' '));
+            }
             this._updateCssClasses($element, this._prepareRangeCssClasses({item: item}));
          }.bind(this));
       },
