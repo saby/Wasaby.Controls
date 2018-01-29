@@ -1,4 +1,4 @@
-define('js!Controls/List/AddButton', [
+define('Controls/List/AddButton', [
    'Core/Control',
    'tmpl!Controls/List/AddButton/AddButton',
    'WS.Data/Type/descriptor',

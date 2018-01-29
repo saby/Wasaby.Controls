@@ -1,6 +1,11 @@
 .controls-AddButton{
    cursor: pointer;
    display: inline-block;
+   &:hover{
+      .controls-AddButtonText {
+         text-decoration: underline;
+      }
+   }
 }
 
 .controls-AddButton__enable{
@@ -14,7 +19,5 @@
 .controls-AddButtonText{
    font-family: TensorFont;
    font-size: 12px;
-   &:hover{
-      text-decoration: underline;
-   }
+   margin-left: 0px;
 }
