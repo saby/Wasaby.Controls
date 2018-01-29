@@ -208,7 +208,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          }
          item.find(selectedClass + '[data-id="' + periodId + '"]')
             .addClass(addClass);
-         this._notify('onPeriodMouseEnter');
+         this._notify('onPeriodMouseEnter', Date.fromSQL(item.data('date')));
       },
       _onHalfyearQuarterMouseLeave: function (event) {
          var element = $(event.target),

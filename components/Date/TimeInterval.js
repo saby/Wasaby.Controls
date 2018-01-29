@@ -169,7 +169,6 @@ define(
             var self = this;
             this._publish('onChangeInterval');
 
-            this._options.text = this._getFormatModel().getStrMask(this._getMaskReplacer());
             this.timeInterval = new cTimeInterval;
             if (this._options.interval){
                this.setInterval(this._options.interval);
@@ -185,9 +184,6 @@ define(
             this._updateText();
          },
 
-         getText: function() {
-            return this._options.text;
-         },
 
          /**
           * Устанавливаем количество дней.
@@ -293,7 +289,7 @@ define(
           */
          setInterval: function ( interval ) {
             if (interval == undefined) {
-               this._setText(this._getEmptyText());
+               this._setText(this._getTextFromModel());
             }
             //cTimeInterval при преобразовании к строке всегда вернет значение своего формата, даже если туда положили null (в этом случае значение 0 дней, минут, часов)
             //Если устанавливают интервал 0 дней, часов, минут, проверка на неравенство не пройдет, поэтому смотрим, что если раньше был null, то нужно сеттить
@@ -302,9 +298,6 @@ define(
                this._updateTextByTimeInterval(true);
             }
             this._options.interval = interval;
-         },
-         _getEmptyText: function(){
-            return this._getFormatModel().getStrMask(this._getMaskReplacer());
          },
          /**
           * Метод получения интервала, заданного либо опцией {@link interval}, либо методом {@link setInterval} возвращает
@@ -364,7 +357,7 @@ define(
             var isEmptyText = false,
                 lackMaskLength;
             if (!text) {
-               text = this._getFormatModel().getStrMask(this._getMaskReplacer());
+               text = this._getTextFromModel();
                isEmptyText = true;
             }
             lackMaskLength = text.length - this._options.mask.length;
@@ -382,7 +375,7 @@ define(
          _getCorrectText: function(text, isEmptyText){
             this._getFormatModel().setText(text, this._getMaskReplacer());
             this._updateIntervalByText();
-            return this._getTextByTimeInterval(isEmptyText);
+            return isEmptyText ? '' : this._getTextByTimeInterval();
          },
          /**
           * Получить текст по текущему значению timeInterval.
@@ -483,8 +476,8 @@ define(
          _updateTextByTimeInterval: function(needUpdate){
             var
                textByTimeInterval = this._getTextByTimeInterval(),
-               currentText = this._getFormatModel().getText(this._getMaskReplacer());
-            if ((needUpdate === true || currentText !== this._getEmptyText()) && currentText !== textByTimeInterval){
+               currentText = this._getTextFromModel();
+            if ((needUpdate === true || currentText !== this._getTextFromModel()) && currentText !== textByTimeInterval){
                this._setText(textByTimeInterval);
             }
          },

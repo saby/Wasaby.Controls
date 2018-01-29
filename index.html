@@ -36,16 +36,8 @@
          height: 100%;
       }
 
-      .header-in-list{
-         font-weight: normal;
-         font-size: 16px;
-         padding: 5px 10px;
-         position: relative;
-      }
-
       #content {
          padding: 20px;
-         font-weight: bold;
       }
 
       #content table {
@@ -84,7 +76,6 @@
 
    </style>
    <script type="text/javascript" id="ws-include-css"></script>
-   <link rel="stylesheet" type="text/css" href="sprites.css"/>
 </head>
 <body class="view-main">
 <div id="content">
@@ -112,16 +103,11 @@
                   <div id="Windows"></div>
                </li>
                <li>
-                  <div class="header-in-list">Toggles</div>
+                  <div id="Switch"></div>
                </li>
-               <ul>
-                  <li>
-                     <div id="Switch"></div>
-                  </li>
-                  <li>
-                     <div id="Checkbox"></div>
-                  </li>
-               </ul>
+               <li>
+                  <div id="ButtonsVdom"></div>
+               </li>
             </ul>
             <h3>Просмотр контролов</h3>
             <ul>
@@ -203,7 +189,10 @@
                <li>
                   <div id="BrowserTabs"></div>
                </li>
-			      <li>
+               <li>
+                  <div id="ColumnsEditor"></div>
+               </li>
+			   <li>
                   <div id="FieldLink"></div>
                </li>
                <li>
@@ -348,9 +337,10 @@
                 href: '/pages/demo.html?cname=Switch'
             });
             new r({
-               element: "Checkbox",
-               caption: 'Checkbox',
-               href: '/pages/demo.html?cname=Checkbox'
+               element: "ButtonsVdom",
+               caption: 'ButtonsVdom',
+               href: '/pages/demo.html?cname=ButtonsVdom'
+
             });
             new r({
                element: "Inputs",
@@ -628,6 +618,13 @@
                 href: '/pages/Engine.BrowserTabs.html'
              });
           });
+         require(["SBIS3.CONTROLS/Link"], function (r) {
+            new r({
+               element: "ColumnsEditor",
+               caption: 'Browser ColumnsEditor',
+               href: '/pages/ColumnsEditor.html'
+            })
+         });
          require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "FieldLink",

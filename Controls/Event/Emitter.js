@@ -5,18 +5,20 @@
  * Created by dv.zuev on 17.01.2018.
  *
  * Вставляем в tmpl:
- * <Controls:Container:EventCatcher:Controller event="scroll" on:scroll="myScrollCallback()" />
+ * <Controls:Event:Emitter event="scroll" callback="myScrollCallback()" />
  */
-define('js!Controls/Container/EventCatcher/Controller',
+define('Controls/Event/Emitter',
    [
       'Core/Control',
+      'tmpl!Controls/Event/Emitter',
       'js!WS.Data/Type/descriptor'
    ],
-   function(Control, types) {
+   function(Control, template, types) {
 
       'use strict';
 
       var EventCatcherController = Control.extend({
+         _template: template,
          _listner: null,
          _afterMount: function(){
             this._notify("register", [this._options.event, this, this.callback], {bubbling:true});
@@ -25,7 +27,7 @@ define('js!Controls/Container/EventCatcher/Controller',
             this._notify("unregister", [this._options.event, this], {bubbling:true});
          },
          callback: function(){
-            this._notify(this._options.event, arguments);
+            this._notify(this._options.event, Array.prototype.slice.call(arguments));
          }
       });
 
