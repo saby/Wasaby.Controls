@@ -351,14 +351,20 @@
 }
 
 .ws-is-desktop-safari, .ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
-   .controls-TabButton .controls-TabButton__mainText {
-      max-width: ~"calc(100% + 2px)"; //опять полупиксели, на сотые доли не влезает текст, появляется троеточие
-      //Нужно переписывать редактирование по месту
-      &.controls-EditAtPlace__ellipsis .controls-EditAtPlace__fieldWrapper {
-         display: inline-block;
-         .controls-EditAtPlace__textField {
-            width: ~"calc(100% + 1px)";
+   .controls-TabButton {
+      .controls-TabButton__mainText {
+         max-width: ~"calc(100% + 2px)"; //опять полупиксели, на сотые доли не влезает текст, появляется троеточие
+         //Нужно переписывать редактирование по месту
+         &.controls-EditAtPlace__ellipsis .controls-EditAtPlace__fieldWrapper {
+            display: inline-block;
+            .controls-EditAtPlace__textField {
+               width: ~"calc(100% + 1px)";
+            }
          }
+      }
+      //Бесконечные правки: сделали правки в полях ввода -> поехало выравание во вкладках. Тестеры заметили только в хотфикс -> правки максимально безопасные, чтобы ничего не разломать.
+      &.controls-TabButton__main-flex .controls-TabButton__additionalText {
+         top: 1px;
       }
    }
 }
