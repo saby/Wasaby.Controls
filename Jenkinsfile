@@ -390,7 +390,7 @@ node('controls') {
             browser = ${params.browser_type}
             SITE = http://${NODE_NAME}:30001
             SERVER = test-autotest-db1
-            BASE_VERSION = css_${NODE_NAME}${ver}1"""
+            BASE_VERSION = css_${NODE_NAME}${ver}1
             DO_NOT_RESTART = True
             SOFT_RESTART = True
             NO_RESOURCES = True
@@ -398,8 +398,7 @@ node('controls') {
             TAGS_NOT_TO_START = iOSOnly, todomvc, tabmessage
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
-            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/
-
+            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
         if ( "${params.theme}" != "online" ) {
             writeFile file: "./controls/tests/reg/config.ini",
             text:
