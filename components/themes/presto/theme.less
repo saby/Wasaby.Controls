@@ -237,18 +237,19 @@ body {
       }
     }
   }
+  .ws-window-title {
+    margin: 0 !important;
+    width: ~"calc(100% - "round(86px * @multiplier)~")" !important;
+    padding-left: round(24px * @multiplier) !important;
+    box-sizing: border-box !important;
+  }
 }
 
 //!IMPORTANT лучше чем увеличение веса селектора через BODY тк возможно собирать тему под селектором
 .ws-window-titlebar {
   background-color: #39506A !important;
 }
-.ws-window-title {
-  margin: 0 !important;
-  width: ~"calc(100% - "round(86px * @multiplier)~")" !important;
-  padding-left: round(24px * @multiplier) !important;
-  box-sizing: border-box !important;
-}
+
 .ws-window-content {
   background-color: #273749 !important;
   padding: round(11px * @multiplier) round(8px * @multiplier);
