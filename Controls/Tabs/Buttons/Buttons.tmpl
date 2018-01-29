@@ -1,0 +1,17 @@
+<div class="controls-Tabs">
+    <ws:for data="item in items">
+        <div attr:class="{{_prepareItemClass(item)}}"
+             attr:style="order:{{item._order}}"
+             on:click="_onItemClick(item[_options.keyProperty])">
+             <ws:partial
+                    template="{{ _options.itemTemplateProperty ? item[_options.itemTemplateProperty] ? item[_options.itemTemplateProperty] : _options.itemTemplate : _options.itemTemplate}}"
+                    selected="{{item[_options.keyProperty] === selectedKey ? true : false}}"
+                    itemData="{{item}}"/>
+        </div>
+    </ws:for>
+    <div class="controls-Tabs__space">
+        <ws:if data="{{ _options.tabSpaceTemplate }}">
+            <ws:partial template="{{_options.tabSpaceTemplate}}" scope="{{...}}"/>
+        </ws:if>
+    </div>
+</div>
