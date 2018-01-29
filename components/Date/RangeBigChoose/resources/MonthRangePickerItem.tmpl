@@ -1,47 +1,42 @@
 <div class="controls-DateRangeBigChoose-MonthRangePickerItem" data-date="{{ item.months[0].toSQL() }}">
    <div class="controls-DateRangeBigChoose-MonthRangePickerItem__header">{{ item.months[0].getFullYear() }}</div>
    <div class="controls-DateRangeBigChoose-MonthRangePickerItem__body">
-      <div class="controls-DateRangeBigChoose-MonthRangePickerItem__quartersPanel">
-         <ws:for data="quarterIndex as quarter in ['I', 'II', 'III', 'IV']">
-            <div class="controls-DateRangeBigChoose-MonthRangePickerItem__quartersPanel-button controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button{{ quarterSelectionEnabled ? ' controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button-selectable' }}"
-               data-id="{{ quarterIndex }}">
-               {{ quarter }}
-            </div>
-         </ws:for>
-      </div>
       <div class="controls-DateRangeBigChoose-MonthRangePickerItem__halfYears">
          <ws:for data="halfYearIndex as halfYear in item.yearStructure">
             <div class="controls-DateRangeBigChoose-MonthRangePickerItem__halfYear" data-id="{{ halfYearIndex }}">
-               <ws:for data="quarterIndex as quarter in halfYear.quarters">
-                  <div class="controls-DateRangeBigChoose-MonthRangePickerItem__quarter" data-id="{{ halfYearIndex*2 + quarterIndex}}">
-                     <ws:for data="monthIndex as month in quarter.months">
-                        <div class="controls-DateRangeBigChoose-MonthRangePickerItem__month-wrapper controls-DateRangeBigChoose-MonthRangePickerItem__item"
-                             data-selected-range-id="{{ month.toSQL() }}">
-                           <div class="controls-DateRangeBigChoose-MonthRangePickerItem__month_title"
-                                data-selected-range-id="{{ month.toSQL() }}">
-                              {{ month | strftime: "%B" }}
-                           </div>
-                           <SBIS3.CONTROLS:Date:RangeBigChoose:resources:MonthView
-                              className="controls-DateRangeBigChoose-MonthRangePickerItem__month"
-                              captionFormat="%B"
-                              selectionType="disable"
-                              showWeekdays="{{false}}"
-                              month="{{month}}"
-                              startValue="{{startValue}}"
-                              endValue="{{endValue}}"
-                           />
+
+               <div class="controls-DateRangeBigChoose-MonthRangePickerItem__halfYear-wrapper">
+                  <ws:for data="quarterIndex as quarter in halfYear.quarters">
+                     <div class="controls-DateRangeBigChoose-MonthRangePickerItem__quarter" data-id="{{ halfYearIndex*2 + quarterIndex}}">
+                        <div class="controls-DateRangeBigChoose-MonthRangePickerItem__quartersPanel-button controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button{{ quarterSelectionEnabled ? ' controls-DateRangeBigChoose__cursor-pointer' }}"
+                        data-id="{{ halfYearIndex*2 + quarterIndex }}">
+                           {{ quarter.name }}
                         </div>
-                     </ws:for>
-                  </div>
-               </ws:for>
-            </div>
-         </ws:for>
-      </div>
-      <div class="controls-DateRangeBigChoose-MonthRangePickerItem__halfYearsPanel ">
-         <ws:for data="quarterIndex as quarter in ['I', 'II']">
-            <div class="controls-DateRangeBigChoose-MonthRangePickerItem__halfYearsPanel-button controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button{{ quarterSelectionEnabled ? ' controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button-selectable' }}"
-                 data-id="{{ quarterIndex }}">
-               {{ quarter }}
+                        <ws:for data="monthIndex as month in quarter.months">
+                           <div class="controls-DateRangeBigChoose-MonthRangePickerItem__month-wrapper controls-DateRangeBigChoose-MonthRangePickerItem__item"
+                                data-selected-range-id="{{ month.toSQL() }}">
+                              <div class="controls-DateRangeBigChoose-MonthRangePickerItem__month_title{{ monthsSelectionEnabled ? ' controls-DateRangeBigChoose__cursor-pointer' }}"
+                                   data-selected-range-id="{{ month.toSQL() }}">
+                                 {{ month | strftime: "%B" }}
+                              </div>
+                              <SBIS3.CONTROLS:Date:RangeBigChoose:resources:MonthView
+                                 className="controls-DateRangeBigChoose-MonthRangePickerItem__month"
+                                 captionFormat="%B"
+                                 selectionType="disable"
+                                 showWeekdays="{{false}}"
+                                 month="{{month}}"
+                                 startValue="{{startValue}}"
+                                 endValue="{{endValue}}"
+                              />
+                           </div>
+                        </ws:for>
+                     </div>
+                  </ws:for>
+               </div>
+               <div class="controls-DateRangeBigChoose-MonthRangePickerItem__halfYearsPanel-button controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button{{ quarterSelectionEnabled ? ' controls-DateRangeBigChoose__cursor-pointer' }}"
+                 data-id="{{ halfYearIndex }}">
+               {{ halfYear.name }}
+               </div>
             </div>
          </ws:for>
       </div>

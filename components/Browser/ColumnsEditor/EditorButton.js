@@ -8,14 +8,14 @@
 define('SBIS3.CONTROLS/Browser/ColumnsEditor/EditorButton',
    [
       'Core/core-merge',
-      'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
       'SBIS3.CONTROLS/CompoundControl',
       'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/EditorButton',
       'css!SBIS3.CONTROLS/Browser/ColumnsEditor/EditorButton',
+      'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
       'SBIS3.CONTROLS/Button/IconButton'
    ],
 
-   function (coreMerge, PresetDropdown, CompoundControl, dotTplFn) {
+   function (coreMerge, CompoundControl, dotTplFn) {
       'use strict';
 
       var EditorButton = CompoundControl.extend([], /**@lends SBIS3.CONTROLS/Browser/ColumnsEditor/EditorButton.prototype*/ {

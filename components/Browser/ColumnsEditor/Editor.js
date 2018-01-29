@@ -7,14 +7,13 @@
  */
 define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
    [
-      'Core/core-merge',
       'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
       'Lib/Control/FloatArea/FloatArea',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area'
    ],
 
-   function (coreMerge, Deferred, CompoundControl, FloatArea) {
+   function (Deferred, CompoundControl, FloatArea) {
       'use strict';
 
       var Editor = CompoundControl.extend([], /**@lends SBIS3.CONTROLS/Browser/ColumnsEditor/Editor.prototype*/ {
@@ -125,7 +124,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
                //title: null,
                parent: this,
                template: 'SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
-               cssClassName: 'controls-Browser-ColumnsEditor-Editor__area',
+               className: 'ws-float-area__block-layout controls-Browser-ColumnsEditor-Editor__area',
                closeByExternalClick: true,
                closeButton: true,
                componentOptions: {

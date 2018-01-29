@@ -443,6 +443,7 @@ define('SBIS3.CONTROLS/ListView',
                bottom: null
             },
             _virtualScrollShouldReset: false,
+            _virtualScrollResetStickyHead: false,
             _setScrollPagerPositionThrottled: null,
             _updateScrollIndicatorTopThrottled: null,
             _removedItemsCount: false,
@@ -1034,7 +1035,7 @@ define('SBIS3.CONTROLS/ListView',
                this._pagingZIndex = WindowManager.acquireZIndex();
                WindowManager.setVisible(this._pagingZIndex);
             }
-            if (this._options.virtualScrolling || this._options.scrollPaging) {
+            if (this._options.virtualScrolling || this._options.scrollPaging || this.isInfiniteScroll()) {
                this._getScrollWatcher().subscribe('onScroll', this._onScrollHandler);
             }
             if(this.isInfiniteScroll()) {
@@ -1096,7 +1097,10 @@ define('SBIS3.CONTROLS/ListView',
 
                this._topWrapper.get(0).style.height = config.topWrapperHeight + 'px';
                this._bottomWrapper.get(0).style.height = config.bottomWrapperHeight + 'px';
-
+               if (this._virtualScrollResetStickyHead) {
+                  this._notifyOnSizeChanged();
+                  this._virtualScrollResetStickyHead = false;
+               }
             }.bind(this));
          },
 
