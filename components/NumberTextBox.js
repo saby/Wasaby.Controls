@@ -205,9 +205,9 @@ define('SBIS3.CONTROLS/NumberTextBox', [
 
       _createMirrorInput: function() {
          var mirrorContainer = $('.controls-NumberTextBox__mirror');
-         if(mirrorContainer.length){
+         if (mirrorContainer.length) {
             this._inputMirror = mirrorContainer;
-         }else {
+         } else {
             this._inputMirror = $('<span class="controls-NumberTextBox__mirror"></span>');
             $('body').append(this._inputMirror);
          }

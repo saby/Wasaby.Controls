@@ -53,7 +53,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
      * @author Сухоручкин А.С.
      * @public
      *
-     * @demo SBIS3.CONTROLS.Demo.MyFilterView
+     * @demo SBIS3.Demo.FilterPanel.FilterPanelSimple
      */
 
     var FilterPanelChooserDictionary = FilterPanelChooserList.extend(/** @lends SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList.prototype */ {

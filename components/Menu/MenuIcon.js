@@ -94,7 +94,7 @@ define('SBIS3.CONTROLS/Menu/MenuIcon', [
              opts.pickerClassName += ' controls-Menu__offset-' + opts.size;
          }
 
-         if (opts.icon && (opts.icon.indexOf('icon-24') !== -1 || opts.icon.indexOf('icon-large') !== -1) && className('controls-Menu__hide-menu-header') === -1){
+         if (opts.icon && (opts.icon.indexOf('icon-24') !== -1 || opts.icon.indexOf('icon-large') !== -1) && className.indexOf('controls-Menu__hide-menu-header') === -1){
             opts.pickerClassName += ' controls-Menu__big-header';
          }
          return opts;

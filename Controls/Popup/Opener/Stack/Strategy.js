@@ -17,7 +17,12 @@ define('Controls/Popup/Opener/Stack/Strategy',
       var _private = {
          getStackParentCoords: function () {
             var elements = document.getElementsByClassName('ws-Popup__stack-target-container');
-            return TargetCoords.get(elements && elements.length ? elements[0] : null, {horizontal: 'right'});
+            var targetCoords = TargetCoords.get(elements && elements.length ? elements[0] : document.body);
+
+            return {
+               top: targetCoords.top,
+               right: window.innerWidth - targetCoords.right
+            }
          }
       };
 
@@ -42,6 +47,10 @@ define('Controls/Popup/Opener/Stack/Strategy',
             //Добавляем стандартный класс
             element.popupOptions.className += ' ' + POPUP_CLASS;
             this._stack.add(element, 0);
+            this._update();
+         },
+
+         elementUpdated: function(){
             this._update();
          },
 

@@ -1,6 +1,17 @@
 /**
  * Класс контрола "Редактор колонок"
  *
+ * @see SBIS3.CONTROLS/Browser#showColumnsEditor
+ * @see SBIS3.CONTROLS/Browser#_showColumnsEditor
+ * @see SBIS3.CONTROLS/Browser#columnsConfig
+ * @see SBIS3.CONTROLS/Browser#setColumnsConfig
+ * @see SBIS3.CONTROLS/Browser#getColumnsConfig
+ *
+ * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
+ * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
+ * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndCustomButton Пример браузера с собственной кнопкой, открывающией редактор колонок
+ * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
+ *
  * @class SBIS3.CONTROLS/Browser/ColumnsEditor/Editor
  * @public
  * @extends SBIS3.CONTROLS/CompoundControl
@@ -51,6 +62,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
           * пользователь после редактирования нажал кнопку применения результата редактирования, то обещание будет разрешено новыми параметрами
           * конфигурации колонок. Если же пользователь просто закрыл редактор кнопкой "Закрыть", то обещание будет разрешено значением null
           *
+          * @example
           * Существует возможность использования предустановленных наборов колонок (пресетов). Для этого служат опции usePresets, staticPresets,
           * presetNamespace и selectedPresetId. При наличии статичечских пресетов пользователь может клонировать любой из них и сохранить его как
           * собственный. Простой пример использования:
@@ -104,6 +116,17 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
           * @param {boolean} [editorOptions.useOriginPresetTitle] При клонировании новых пользовательских пресетов строить название из исходного с добавлением следующего порядкового номера (опционально)
           * @param {boolean} [editorOptions.moveColumns] Указывает на необходимость включить перемещнение пользователем пунктов списка колонок (опционально)
           * @return {Deferred<object>}
+          *
+          * @see SBIS3.CONTROLS/Browser#showColumnsEditor
+          * @see SBIS3.CONTROLS/Browser#_showColumnsEditor
+          * @see SBIS3.CONTROLS/Browser#columnsConfig
+          * @see SBIS3.CONTROLS/Browser#setColumnsConfig
+          * @see SBIS3.CONTROLS/Browser#getColumnsConfig
+          *
+          * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
+          * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
+          * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndCustomButton Пример браузера с собственной кнопкой, открывающией редактор колонок
+          * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
           */
          open: function (columnsConfig, editorOptions) {
             if (this._result) {
@@ -124,7 +147,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
                //title: null,
                parent: this,
                template: 'SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
-               cssClassName: 'controls-Browser-ColumnsEditor-Editor__area',
+               className: 'ws-float-area__block-layout controls-Browser-ColumnsEditor-Editor__area',
                closeByExternalClick: true,
                closeButton: true,
                componentOptions: {

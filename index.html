@@ -189,6 +189,9 @@
                <li>
                   <div id="BrowserTabs"></div>
                </li>
+               <li>
+                  <div id="ColumnsEditor"></div>
+               </li>
 			   <li>
                   <div id="FieldLink"></div>
                </li>
@@ -615,6 +618,13 @@
                 href: '/pages/Engine.BrowserTabs.html'
              });
           });
+         require(["SBIS3.CONTROLS/Link"], function (r) {
+            new r({
+               element: "ColumnsEditor",
+               caption: 'Browser ColumnsEditor',
+               href: '/pages/ColumnsEditor.html'
+            })
+         });
          require(["SBIS3.CONTROLS/Link"], function (r) {
             new r({
                element: "FieldLink",

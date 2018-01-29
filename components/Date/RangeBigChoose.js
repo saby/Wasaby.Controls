@@ -423,9 +423,13 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       },
 
       _toggleHeaderInputsVisibility: function (isInputVisible) {
-         this.getChildControlByName('DateRangeHeader').toggle(!isInputVisible);
-         this.getContainer().find('.controls-DateRangeBigChoose__header-period-input').toggleClass('ws-hidden', !isInputVisible);
-      } ,
+         if (isEmpty(this._options.quantum) || ('days' in this._options.quantum && Object.keys(this._options.quantum).length === 1)) {
+            this.getChildControlByName('DateRangeHeader').toggle(!isInputVisible);
+            this.getContainer().find('.controls-DateRangeBigChoose__header-period-input').toggleClass('ws-hidden', !isInputVisible);
+         } else {
+            this._notify('onCancel', this.getStartValue(), this.getEndValue());
+         }
+      },
 
       _updateHeaderInputsVisibility: function () {
          this._toggleHeaderInputsVisibility(this._options.headerType === headerTypes.inputField);

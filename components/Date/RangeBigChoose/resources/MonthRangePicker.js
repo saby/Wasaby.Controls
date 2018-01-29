@@ -208,7 +208,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          }
          item.find(selectedClass + '[data-id="' + periodId + '"]')
             .addClass(addClass);
-         this._notify('onPeriodMouseEnter');
+         this._notify('onPeriodMouseEnter', Date.fromSQL(item.data('date')));
       },
       _onHalfyearQuarterMouseLeave: function (event) {
          var element = $(event.target),
@@ -606,7 +606,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
 
       destroy: function() {
          this.getContainer().off('.monthRangePicker');
-         ImagePanel.superclass.destroy.apply(this, arguments);
+         MonthRangePicker.superclass.destroy.apply(this, arguments);
       }
 
    });
