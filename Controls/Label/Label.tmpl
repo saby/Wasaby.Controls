@@ -1,3 +1,5 @@
-<div
-   attr:class="controls-Label controls-Label_{{isEnabled ? 'enabled' : 'disabled'}}{{_options.requered ? ' controls-Label_requered'}}"
-   on:click="_clickHandler()">{{_options.caption}}</div>
+<div class="controls-Label ws-flexbox ws-align-items-center">
+   <div attr:class="controls-Label__caption_{{isEnabled ? 'enabled' : 'disabled'}}
+                    {{_options.requered ? ' controls-Label__caption_requered'}}"
+        on:click="_clickHandler()">{{_options.caption}}</div>
+</div>
