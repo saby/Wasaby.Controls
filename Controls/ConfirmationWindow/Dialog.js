@@ -57,6 +57,26 @@ define('Controls/ConfirmationWindow/Dialog', [
        */
 
       /**
+       * @name Controls/ConfirmationWindow/Dialog#yesCaption
+       * @cfg {String} Устанавливает текст кнопки yes
+       */
+
+      /**
+       * @name Controls/ConfirmationWindow/Dialog#noCaption
+       * @cfg {String} Устанавливает текст кнопки no
+       */
+
+      /**
+       * @name Controls/ConfirmationWindow/Dialog#cancelCaption
+       * @cfg {String} Устанавливает текст кнопки cancel
+       */
+
+      /**
+       * @name Controls/ConfirmationWindow/Dialog#okCaption
+       * @cfg {String} Устанавливает текст кнопки ok
+       */
+
+      /**
        * @typedef {Boolean|undefined} Result
        * @variant true Нажата кнопка "Да"
        * @variant false Нажата кнопка "Нет"
