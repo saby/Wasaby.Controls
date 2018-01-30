@@ -1,7 +1,7 @@
 
 define('SBIS3.CONTROLS/ListView/resources/AddButton', [
    'js!WSControls/Buttons/Button',
-   'css!SBIS3.CONTROLS/ListView/resources/AddButton/AddButton'
+   'css!Controls/List/AddButton/AddButton'
 ], function(WSButton) {
 
    var AddButton = WSButton.extend([], /** @lends SBIS3.CONTROLS/Button/ToggleButton.prototype */ {
