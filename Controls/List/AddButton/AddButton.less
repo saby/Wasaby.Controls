@@ -9,8 +9,19 @@
 .controls-AddButton__enable{
    color: @color_listAddButton_enabled;
    cursor: pointer;
-   &:hover{
-      .controls-AddButtonText{
+}
+
+.controls-AddButton__enable:active{
+   .controls-AddButtonText {
+      text-decoration: underline;
+   }
+}
+
+@noTouchDevice: ~"(hover: hover)";
+@media @noTouchDevice
+{
+   .controls-AddButton__enable:hover {
+      .controls-AddButtonText {
          text-decoration: underline;
       }
    }

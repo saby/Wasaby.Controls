@@ -1,7 +1,18 @@
 .controls-AddButton{
    cursor: pointer;
    display: inline-block;
-   &:hover{
+}
+
+.controls-AddButton:active{
+   .controls-AddButtonText {
+      text-decoration: underline;
+   }
+}
+
+@noTouchDevice: ~"(hover: hover)";
+@media @noTouchDevice
+{
+   .controls-AddButton:hover {
       .controls-AddButtonText {
          text-decoration: underline;
       }
