@@ -60,15 +60,14 @@
    }
 }
 
-@noTouchDevices: ~"(hover: hover)";
-
-@media @noTouchDevices {
-   .controls-ListView__item:hover {
-      .controls-ListView__itemCheckBox__showByHover {
-         .checkbox-border-size();
-      }
+/* Делаем через hoveredItem, так как media не работает в firefox и ie
+    https://bugzilla.mozilla.org/show_bug.cgi?id=1035774 */
+.controls-ListView__hoveredItem {
+   .controls-ListView__itemCheckBox__showByHover {
+      .checkbox-border-size();
    }
 }
+
 .controls-ListView__itemCheckBox__showAlways {
    .checkbox-border-size();
 }
