@@ -422,7 +422,9 @@ define('SBIS3.CONTROLS/ListView',
                constants.key.left,
                constants.key.m,
                constants.key.o,
-               constants.key.del
+               constants.key.del,
+               constants.key.pageUp,
+               constants.key.pageDown
             ],
             _itemsToolbar: null,
             _notEndEditClassName: 'controls-ListView__onFocusNotEndEdit',
@@ -1351,6 +1353,7 @@ define('SBIS3.CONTROLS/ListView',
             var
                selectedKeys,
                selectedKey = this.getSelectedKey(),
+               scrollPager = this._scrollPager,
                newSelectedKey,
                newSelectedItem;
             switch (e.which) {
@@ -1386,6 +1389,17 @@ define('SBIS3.CONTROLS/ListView',
                       this.deleteRecords(selectedKeys);
                    }
                   break;
+               case constants.key.pageUp:
+                  if (scrollPager) {
+                     scrollPager._goToPrev();
+                  }
+                  break;
+               case constants.key.pageDown:
+                  if (scrollPager && scrollPager.getPagesCount() > scrollPager.getSelectedKey()) {
+                     scrollPager._goToNext();
+                  }
+                  break;
+
             }
             if (newSelectedItem && newSelectedItem.length) {
                newSelectedKey = newSelectedItem.data('id');
