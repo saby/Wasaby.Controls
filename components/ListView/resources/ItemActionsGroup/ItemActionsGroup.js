@@ -339,6 +339,8 @@ define('SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup',
                CommandDispatcher.sendCommand(this, actionCommand, this._activeItem);
             }
             else {
+               this._notify('onActionActivated', this._activeItem.key);
+
                actionHandler = this._itemActionsButtons[item]['handler'];
                if (actionHandler) {
                   actionHandler.call(this._options.linkedControl,
@@ -346,10 +348,6 @@ define('SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup',
                       this._activeItem.key,
                       this._activeItem.record,
                       item);
-               }
-               /* В обработчике могут вызвать destroy */
-               if (!this.isDestroyed()) {
-                  this._notify('onActionActivated', this._activeItem.key);
                }
             }
          },

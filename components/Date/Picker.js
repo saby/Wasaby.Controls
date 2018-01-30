@@ -121,7 +121,8 @@ define(
                },
                bodyBounds: true,
                locationStrategy: 'bodyBounds',
-               activateAfterShow: true
+               activateAfterShow: true,
+               _canScroll: true
             }
          },
          _onFocusInHandler: undefined
@@ -278,9 +279,8 @@ define(
             element: element,
             rangeselect: false,
             startValue: date,
-            startValueSerializationMode: type,
             endValue: date,
-            endValueSerializationMode: type,
+            serializationMode: type,
             headerType: DateRangeBigChoose.headerTypes.inputField
          });
          // Добавляем в пикер

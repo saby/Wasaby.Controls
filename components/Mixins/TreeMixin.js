@@ -215,7 +215,11 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          }
          return itemParent !== undefined ? itemParent === null ? '@' : itemParent.get(cfg.idProperty) + calcGroupId(itemParent) : '';
       }
-      return calcGroupId(item) + groupId;
+      if (cfg.groupBy.groupNodes) {
+         return calcGroupId(item) + groupId;
+      } else {
+         return groupId;
+      }
    },
    getRecordsForRedraw = function(projection, cfg) {
       var
@@ -1265,7 +1269,13 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          },
          _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
             parentFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
-            this._findAndRedrawChangedBranches(newItems, oldItems);
+            // В режиме поиска не требуется реагирование на изменение дочерних элементов
+            // https://online.sbis.ru/opendoc.html?guid=a1b14edd-6135-40ed-b937-e11df3e6752f
+            // Чтобы сделать по хорошему - необходимо убрать _findAndRedrawChangedBranches и просто отлавливать на
+            // событие onCollectionChange, которое теперь должно стрелять в нужное время
+            if (!this._isSearchMode || !this._isSearchMode()) {
+               this._findAndRedrawChangedBranches(newItems, oldItems);
+            }
             this._removeFromLoadedRemoteNodes(oldItems);
             this._updateExpanderDisplay();
             //При перемещении записей в дереве, нет информации из какой папки в какую были перемещены записи.
@@ -1363,8 +1373,8 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                }
                self._updateItemsToolbar();
                self._dataLoadedCallback();
-               self._createFolderFooter(id);
             }
+            self._createFolderFooter(id);
             self._toggleIndicator(false);
 
          }, self)).addErrback(function (error) {

@@ -1,1 +1,12 @@
-<ws:partial template="{{ _options.content }}" validationErrors="{{isValid()}}" on:focusOut="_focusOutHandler()" on:valueChanged="_cleanValid()"/>
+<div>
+   <ws:template name="tpl">
+      <ws:partial template="{{ _options.content }}" validationErrors="{{isValid()}}" on:valueChanged="_cleanValid()"/>
+   </ws:template>
+
+   <ws:if data="{{_options.hasComponentFocusOut}}">
+      <ws:partial template="tpl" on:componentFocusOut="_focusOutHandler()" scope="{{...}}"/>
+   </ws:if>
+   <ws:else>
+      <ws:partial template="tpl" on:focusOut="_focusOutHandler()" scope="{{...}}"/>
+   </ws:else>
+</div>

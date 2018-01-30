@@ -4,11 +4,12 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
     'Core/core-clone',
     'Core/core-merge',
     'Core/core-instance',
+    'WS.Data/Entity/Model',
     'WS.Data/Collection/RecordSet',
     'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList/resources/FilterPanelChooserDictionaryFooter',
     'SBIS3.CONTROLS/Action/SelectorAction',
     'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList/FilterPanelChooser.DictionaryList'
-], function(FilterPanelChooserList, CommandDispatcher, coreClone, coreMerge, cInstance, RecordSet, footerTpl, SelectorAction) {
+], function(FilterPanelChooserList, CommandDispatcher, coreClone, coreMerge, cInstance, Model, RecordSet, footerTpl, SelectorAction) {
 
     'use strict';
 
@@ -52,7 +53,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
      * @author Сухоручкин А.С.
      * @public
      *
-     * @demo SBIS3.CONTROLS.Demo.MyFilterView
+     * @demo SBIS3.Demo.FilterPanel.FilterPanelSimple
      */
 
     var FilterPanelChooserDictionary = FilterPanelChooserList.extend(/** @lends SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList.prototype */ {
@@ -168,6 +169,22 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
             this._getAllButton().setCaption('Ещё' + ' ' + (this._getListView().getItems().getCount() - 3));
         },
 
+       _createRecordWithAdapter: function(sourceRecord, adapter) {
+          var
+             format = sourceRecord.getFormat(),
+             result = new Model({
+                adapter: adapter,
+                format: format
+             }),
+             name;
+          format.each(function(field) {
+             name = field.getName();
+             result.set(name, sourceRecord.get(name));
+          });
+
+          return result;
+       },
+
         _onExecutedHandler: function(event, meta, result) {
             var
                 listView = this._getListView(),
@@ -180,9 +197,9 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
                 if (result.getCount()) {
                     result.forEach(function(item) {
                         if (!items.getRecordById(item.get(idProperty))) {
-                            items.add(item);
+                            items.add(this._createRecordWithAdapter(item, items.getAdapter()));
                         }
-                    });
+                    }, this);
                 }
                 items.setEventRaising(true, true);
                 listView.setSelectedItemsAll();

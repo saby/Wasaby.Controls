@@ -32,6 +32,7 @@
 @line-height_InputRender_m:           round(42px * @multiplier);
 @line-height_InputRender_l:           round(52px * @multiplier);
 @line-height_InputRender_default:     @line-height_InputRender_l;
+@font-size_InputRender_style_header:  round(40px * @multiplier);
 //MoneyTextBox
 @font-size_MoneyTextBox-decimals: @small-text-size;
 //NumberTextBox
@@ -187,6 +188,7 @@
 @size_DropDownList_filter_cross:                      round(42px * @multiplier);
 @size_DropDownList_arrow:                             round(42px * @multiplier);
 @DropdownList-before-caption-wrapper-top:             round(7px * @multiplier);
+@DropdownList-footer-hasMore-top-multiselect:         round(13px * @multiplier); //(78-52)/2
 //Marker
 @background-size_Marker:                              round(6px * @multiplier);
 //listView
@@ -305,6 +307,7 @@
 @left_MenuIcon-hideHeader-round24_icon:               round(4px * @multiplier);
 @line-height_MenuIcon-hideHeader-round24_icon:        @icon-size_default_medium;
 @margin_MenuIcon-hideHeader-round24_text:             round(6px * @multiplier) 0 round(6px * @multiplier) round(60px * @multiplier);
+@margin_MenuIcon_size-l:                              round(-1px * @multiplier) 0 0 round(-4px * @multiplier);
 //MenuButton
 @menu-button-menu-margin:                             round(-1px * @multiplier) 0 0 round(0 * @multiplier);
 @menu-button-header-font-size:                        @font-size_Button_default;
@@ -379,7 +382,7 @@
 //timePicker
 @time-header-container-block-padding:           round(11px * @multiplier);
 //Toolbar
-@controls-toolbar-default-margin:               round(24px * @multiplier);
+@controls-toolbar-default-margin:               round(8px * @multiplier);
 // Date Range Big Choose
 @padding_DateRangeBigChoose-header:                          round(11px * @multiplier) 0 round(11px * @multiplier) round(16px * @multiplier);
 @font-size_DateRangeBigChoose-years-panel-displayed-year:    @large-text-size;
@@ -447,3 +450,12 @@
 @margin-top_ToggleButton-square-icon:           floor(-24px * @multiplier);
 //SelectorButton
 @font-size_SelectorButton:                      @icon-size_default_medium;
+// Tab button
+@tab-button-large-secondAddText-font-size:      @default-text-size;
+@tab-button-large-inner-font-size:              @large-text-size;
+@height_tabbutton_mainItem_menuLink:            auto;
+@tab-button-large-firstAddText-font-size:       @large-text-size;
+//editAtPlace
+@line-height_editAtPlace_fieldWrapper:          normal;
+//image
+@editdialog-template-minwidth:                  round(718px * @multiplier);

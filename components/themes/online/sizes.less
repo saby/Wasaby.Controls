@@ -31,6 +31,7 @@
 @border-width_InputRender:                   1px;
 @width_InputRender-InformationIcon:          16px;
 @height_InputRender-InformationIcon:         8px;
+@font-size_InputRender_style_header:         18px;
 //textarea
 @min-height_TextArea:             18px;
 @padding_TextArea-container:      2px 0 2px 4px;
@@ -186,6 +187,8 @@
 @background-size_Marker:                                  3px;
 //ListView
 @background-size_ListView_ScrollIndicator: auto;
+//EditInPlace
+@line-height_EditInPlace:                                 @default-line-height;
 //ListView_groupBy
 @height_ListView-GroupBy:                                 24px;
 @padding_ListView-GroupBy_separator:                      0 12px;
@@ -251,6 +254,9 @@
 //inputRender
 @input-line-height: @default-line-height;
 
+//Area
+@padding_InputArea: 2px;
+
 //Suggest
 @width_Suggest-loader:                          16px;
 @spacing_Suggest-loader:                        3px;
@@ -260,6 +266,12 @@
 @width_CloseButton:                      36px - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
 @height_CloseButton:                     28px - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
 @font-size_CloseButton:                  23px;
+//tabButton
+@height_tabbutton_mainItem_menuLink:     23px;
+//editAtPlace
+@line-height_editAtPlace_fieldWrapper:   20px;
 
-//Label
+//list add button
+@font-size_listAddButton: @small-text-size;
+@icon-size_FieldLink-button: @icon-size_default;//Label
 @padding_Label:                          0 8px 0 0;

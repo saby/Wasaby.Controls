@@ -279,7 +279,13 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
                    equalFilter.viewFilter = this.prepareViewFilter();
                    /* Если есть такой-же фильтр, обновим его структуру на свежую */
                    equalFilter.filter = filterObject.filter;
-	               this.saveToUserParams()
+	               this.saveToUserParams();
+                }
+                /* Если вдруг применяют фильтр без текстового представления(такое может быть, если какой-то параметр в историю не хотят сохранять,
+                   но фильтровать по нему можно или этот фильтр выставлен "по-умолчанию" ), то активный фильтр в истории надо сбросить,
+                   иначе после перезагрузки, будет применён прошлый фильтр */
+                if (!filterObject.linkText && activeFilter) {
+                   this.saveToUserParams();
                 }
                 return;
              }

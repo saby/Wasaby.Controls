@@ -1,4 +1,4 @@
-define('!Controls/Validate/Input',
+define('Controls/Validate/Input',
    [
       'Controls/Validate/Controller',
       'tmpl!Controls/Validate/Input'
@@ -23,7 +23,7 @@ define('!Controls/Validate/Input',
                this._shouldValidate = false;
                this.validate();
             }
-         },
+         }
       });
       return Validate;
    }

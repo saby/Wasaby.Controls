@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ws="ws-component">
+<head>
+   <title>Demo: Views</title>
+   <script type="text/javascript">
+      window.wsConfig = {
+         WSRootPath: '/sbis3-ws/ws/',
+         wsRoot: '/sbis3-ws/ws/',
+         WSTheme: 'wi_scheme',
+         resourceRoot: '/components',
+         nostyle: true,
+         globalConfigSupport: false,
+         compat: true
+      };
+      window.WSTheme = 'wi_scheme';
+   </script>
+   <script type="text/javascript" id="dev-style-enable">
+      (function () {
+         window.wsConfig.nostyle = false;
+      })();
+   </script>
+   <script type="text/javascript" data-pack-name="contents" src="/components/contents.js"></script>
+
+   <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/require.js"></script>
+   <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/config.js"></script>
+   <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-min.js"></script>
+   <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-cookie-min.js"></script>
+   <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-notouch.js"></script>
+   <script type="text/javascript" src="/sbis3-ws/ws/lib/core.js"></script>
+   <link rel="stylesheet" type="text/css" href="/sbis3-ws/ws/css/core.css"/>
+   <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/res/js/bootup.js"></script>
+   <style>
+      html, body {
+         font-family: 'TensorFont Regular', 'TensorFont'!important;
+         font-size: 14px!important;
+      }
+   </style>
+
+   <link rel="stylesheet" type="text/css" href="/sbis3-ws/ws/css/themes/webfonts/fonts.css"/>
+   <link rel="stylesheet" type="text/css" href="../components/themes/online/online.css"/>
+</head>
+<body class="view-main">
+<div id="Back"></div>
+<div id="popup"></div>
+
+<div id="newListView"></div>
+
+
+
+
+<script type="text/javascript">
+require(['Core/core-init'],function () {
+   $(document).ready(function () {
+      var cname = document.location.search.substring(document.location.search.indexOf('cname=') + 6);
+      var reqname;
+      if (cname) {
+         reqname = 'Controls-demo/' + cname;
+      }
+      else {
+         reqname = 'Controls-demo/Index';
+      }
+      require([reqname, 'Controls/Popup/Manager/Container'], function (Component, Container) {
+            var cfg = {};
+            var cInstance = new Component(cfg);
+            cInstance.mountToDom( $("#newListView"), cfg );
+            var container = new Container();
+            container.mountToDom( $("#popup"), {});
+         }, function(err){
+         var msg = 'Error while loading module ' + cname;
+         require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager){
+            InformationPopupManager.showMessageDialog(
+                  {
+                     message: msg,
+                     status: 'error'
+                  }
+            );
+         }, function(){
+            alert(msg)
+         })
+
+      });
+   });
+})
+</script>
+</body>
+</html>

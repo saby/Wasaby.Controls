@@ -96,8 +96,7 @@
          overflow: hidden;
          text-overflow: ellipsis;
          white-space: nowrap;
-         max-width: ~"calc(100% + 0.2px)"; //в ff и хроме появилась проблема с отрисовкой текста. Если в __caption лежит один(!) блочный элемент с текстом и overflow:hidden,
-         //то браузер считает, что тексту не хватает сотых долей пикселя, чтобы влезть в контейнер (хотя это не так), вследствие чего появляется троеточие
+         max-width: 100%;
       }
       .controls-TabButton__icon {
          margin-right: @margin-right_TabButton_icon;//6px;
@@ -108,7 +107,6 @@
    .controls-TabButton__mainText {
       color: @tab-button-color;
       font: @tab-button-font;
-      font-size: @tab-button-font-size;
       font-weight: @tab-button-large-inner-font-weight;
       text-overflow: ellipsis;
       overflow: hidden;
@@ -176,7 +174,7 @@
       .controls-MenuLink {
          font-size: @tab-button-large-inner-font-size;
          color: @tab-button-large-firstAddText-color-hover;
-         height: 23px;
+         height: @height_tabbutton_mainItem_menuLink;
       }
    }
 
@@ -231,9 +229,12 @@
    }
    .controls-EditAtPlace {
       background: transparent; //Фон в редактировании должен быть от вкладки
-   }
-   .controls-EditAtPlace__fieldWrapper {
-      .flexbox(); //Проблемы с выравниванием редактирования по месту, пока решаю на уровне вкладок, потом надо на самом компоненте
+      .controls-EditAtPlace__fieldWrapper {
+         .flexbox(); //Проблемы с выравниванием редактирования по месту, пока решаю на уровне вкладок, потом надо на самом компоненте
+         .controls-EditAtPlace__textField {
+            border-width: 0;
+         }
+      }
    }
 }
 
@@ -332,6 +333,14 @@
          top: 1px;
       }
    }
+   .controls-TabButton {
+         .controls-TabButton__inner {
+            .controls-TabButton__caption {
+               max-width: ~"calc(100% + 0.2px)"; //в ff и хроме появилась проблема с отрисовкой текста. Если в __caption лежит один(!) блочный элемент с текстом и overflow:hidden,
+               //то браузер считает, что тексту не хватает сотых долей пикселя, чтобы влезть в контейнер (хотя это не так), вследствие чего появляется троеточие
+         }
+      }
+   }
 }
 
 .ws-is-ie {
@@ -351,14 +360,20 @@
 }
 
 .ws-is-desktop-safari, .ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
-   .controls-TabButton .controls-TabButton__mainText {
-      max-width: ~"calc(100% + 2px)"; //опять полупиксели, на сотые доли не влезает текст, появляется троеточие
-      //Нужно переписывать редактирование по месту
-      &.controls-EditAtPlace__ellipsis .controls-EditAtPlace__fieldWrapper {
-         display: inline-block;
-         .controls-EditAtPlace__textField {
-            width: ~"calc(100% + 1px)";
+   .controls-TabButton {
+      .controls-TabButton__mainText {
+         max-width: ~"calc(100% + 2px)"; //опять полупиксели, на сотые доли не влезает текст, появляется троеточие
+         //Нужно переписывать редактирование по месту
+         &.controls-EditAtPlace__ellipsis .controls-EditAtPlace__fieldWrapper {
+            display: inline-block;
+            .controls-EditAtPlace__textField {
+               width: ~"calc(100% + 1px)";
+            }
          }
+      }
+      //Бесконечные правки: сделали правки в полях ввода -> поехало выравание во вкладках. Тестеры заметили только в хотфикс -> правки максимально безопасные, чтобы ничего не разломать.
+      &.controls-TabButton__main-flex .controls-TabButton__additionalText {
+         top: 1px;
       }
    }
 }

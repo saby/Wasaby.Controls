@@ -26,6 +26,8 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/RadioGroup', [
     * @extends SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base
     * @author Борисов П.С.
     * @public
+    *
+    * @demo SBIS3.Demo.FilterPanel.FilterPanelSimple
     */
    var FilterPanelChooserRadioGroup = FilterPanelChooserBase.extend( /** @lends SBIS3.CONTROLS/Filter/Panel/components/Chooser/RadioGroup.prototype */ {
       $protected: {

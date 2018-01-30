@@ -4,12 +4,13 @@
 @default-border-color-hover:             rgba(109,141,176, 1);
 @default-border-color-active:            rgba(109,141,176, 1);
 @default-border-color-bottom-disabled:   rgba(109,141,176, .4);
-@icon-color-primary:                     #839EBC;
+@color_primary:                     #839EBC;
 @default-disabled-color:                 #4B688B;
 @basic-block-bg-color:                   #1D2834;
 @default-bg-color-hovered-item:          #2D3F54;
 //InputRender
 @background-color_InputRender:           rgba(109,141,176, .005);
+@color_InputRender_style_header:         @default-text-color;
 //MoneyTextBox
 @color_MoneyTextBox-decimals:            #8991A9;
 //infobox
@@ -48,17 +49,17 @@
 @controls-OperationsPanelButton-bg-color-active: rgba(58,81,107, 0.35);
 @controls-OperationsPanelButton-bg-color-hover:  rgba(58,81,107, 0.53);
 //DropDownList
-@DropdownList-picker-head-color:         @default-text-color;
+@DropdownList-picker-head-color:         #FFFFFF;
 @DropdownList-picker-bg:                 #405A77;
 @DropdownList-picker-menu-item-hover:    rgba(92,122,163,.2);
 @DropdownList-picker-menu-item-color:    #405A77;
-@DropdownList-picker-menu-item-base-color:@default-text-color;
+@DropdownList-picker-menu-item-base-color:#FFFFFF;
 @DropdownList-picker-title-type-header-bg:  rgba(96, 128, 164, 1);
-@DropdownList-disabled-text:              @default-text-color;
+@DropdownList-disabled-text:              #FFFFFF;
 @DropdownList-picker-default-item-color:  #8991A9;
 @DropdownList-default-item-color:         #8991A9;
 @border-color_DropDownList_picker:        transparent;
-@dropdownlist-item-text-color:            @default-text-color;
+@dropdownlist-item-text-color:            #FFFFFF;
 @color_dropdownList_picker_close_cross:           #8991A9;
 @color_dropdownList_picker_close_cross_hover:     #B9E9FF;
 @color-DropDownList_arrowIcon:                    #26B8FF;
@@ -111,6 +112,7 @@
 @background-color_TreeDataGridView-editArrow:        #2D3F54;
 //Link
 @color_Link-text_disabled:                #4B688B;
+@color_Link-icon_disabled:                @color_Link-text_disabled;
 @color_Link-additional:                   #FFCC99;
 @color_Link-additional-2:                 #839EBC;
 @color_Link-additional-3:                 #FFFFFF;
@@ -149,15 +151,17 @@
 @list-view-items-toolbar-locked-bg:       #2D3F54;
 @controls-editInPlace-editor-bg:          #2D3F54;
 @list-view-items-toolbar-bg:              @list-view-items-toolbar-locked-bg;
-@icon-button-round-icon-color-hover:      @icon-color-primary;
+@icon-button-round-icon-color-hover:      @color_primary;
 //checkbox
 @check-box-icon-box-color:                rgba(109,141,176, .6);
 //filterbutton
 @backround-color_filterButton_picker_content:     #273749;
 @background-color_filterButton_picker_header:     #39506A;
-@controls-filterButton-area-text-color:           #FFFFFF;
+@controls-filterButton-area-text-color:           #FFCC99;
 @color-FilterButtom_line_arrow:                   #26B8FF;
 @controls-filterLine-link-hover-color:            #B9E9FF;
+//filterButtonArea
+@color_filterButton_area_header_link_hover:             #B9E9FF;
 // Date Range Big Choose
 @background-color_DateRangeBigChoose:                                 #273749;
 @background-color__DateRangeBigChoose-header:                         #39506A;
@@ -199,6 +203,7 @@
 @border-color_DateRangeBigChoose-MonthRangePickerItem-monthWrapper:   #23303e;
 @border-color_DateRangeBigChoose_quartersPanel:                       #23303e;
 @border-color_DateRangeBigChoose_halfYearsPanel:                      #23303e;
+@border-color_DateRangeBigChoose-quarters-halhyears-selected:         #23303e;
 @color_DateRangeBigChoose-years-panel-rangeButton:                    #4B688B;
 @background-color_DateRangeBigChoose-years-panel-rangeButton:         #39506A;
 @color_DateRangeBigChoose-years-panel-current-year:                   #26B8FF;
@@ -213,7 +218,7 @@
 @date-range-choose-year-wrapper-bg-color:                             #405A77;
 @date-range-choose-bg-color:                                          #405A77;
 @date-range-choose-item-bg-color:                                     #405A77;
-@date-range-choose-bg-hover-color:                                    #2D3F54;
+@date-range-choose-bg-hover-color:                                    rgba(92,122,163, .2);
 @date-range-choose-current-value-color:                               #ffffff;
 @color_dateRangeChoose__year_prev_next:                               #839EBC;
 @color_DateRangeChoose_year:                                          #839EBC;
@@ -227,3 +232,6 @@
 @color_ToggleButton-square-icon_hovered:          #B9E9FF;
 @background-color_ToggleButton-square:            transparent;
 @border-color_ToggleButton-square:                #26B8FF;
+
+//FloatArea
+@background-color_FloatArea:                      @basic-block-bg-color;

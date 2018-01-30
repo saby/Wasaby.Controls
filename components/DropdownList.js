@@ -10,6 +10,7 @@ define('SBIS3.CONTROLS/DropdownList',
    "Core/core-instance",
    "Core/helpers/String/format",
    'Core/helpers/Function/shallowClone',
+   'Core/helpers/Object/isEqual',
    "Lib/Control/CompoundControl/CompoundControl",
    'SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil',
    "SBIS3.CONTROLS/Mixins/PickerMixin",
@@ -33,7 +34,7 @@ define('SBIS3.CONTROLS/DropdownList',
    'css!SBIS3.CONTROLS/DropdownList/DropdownList'
 ],
 
-   function (EventBus, IoC, constants, cMerge, cInstance, format, shallowClone, Control, ArraySimpleValuesUtil, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
+   function (EventBus, IoC, constants, cMerge, cInstance, format, shallowClone, isEqual, Control, ArraySimpleValuesUtil, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -167,6 +168,17 @@ define('SBIS3.CONTROLS/DropdownList',
                _getRecordsForRedraw: getRecordsForRedrawDDL,
                _defaultItemContentTemplate: ItemContentTemplate,
                _defaultItemTemplate: dotTplFnForItem,
+               /**
+                * @name SBIS3.CONTROLS/DropdownList#allowEmptyMultiSelection
+                * @cfg {Boolean} Устанавливает конфигурацию для режима множественного выбора, при которой разрешается/запрещается отсутствие выбранных элементов коллекции.
+                * * true Отсутствие выбранных элементов коллекции разрешено.
+                * * false Отсутствие выбранных элементов коллекции запрещено.
+                * @remark
+                * Настройка режима множественного выбора, при которой запрещено отсутствие выбранных элементов коллекции
+                * гарантирует, что среди элементов коллекции всегда остаётся хотя бы один выбранный элемент.
+                * Также пользователь не сможет сбросить последнее выбранное значение через пользовательский интерфейс приложения.
+                * @default false
+                */
                /**
                 * @cfg {String} Устанавливает шаблон отображения шапки.
                 * @remark
@@ -530,7 +542,6 @@ define('SBIS3.CONTROLS/DropdownList',
                if (this._options.multiselect && itemId != this.getDefaultId() && curSelectionLength !== 0 &&
                   (this._checkBoxSelectionStarted) || isCheckBoxClick) {
                   this._checkBoxSelectionStarted = true;
-                  this._buttonChoose.getContainer().removeClass('ws-hidden');
                   selected =  !row.hasClass('controls-DropdownList__item__selected');
                   row.toggleClass('controls-DropdownList__item__selected', selected);
 
@@ -542,6 +553,7 @@ define('SBIS3.CONTROLS/DropdownList',
                   else if (!selected && selectedItemIndex > -1) {
                      this._currentSelection.splice(selectedItemIndex, 1);
                   }
+                  this._buttonChoose.getContainer().toggleClass('ws-hidden', isEqual(this.getSelectedKeys(), this._currentSelection));
                } else {
                   this.setSelectedKeys([itemId]);
                   this.hidePicker();

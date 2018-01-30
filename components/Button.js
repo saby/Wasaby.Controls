@@ -61,6 +61,7 @@ define('SBIS3.CONTROLS/Button',
    var Button = Base.extend( [], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
       _modifyOptions : function() {
          var opts = Button.superclass._modifyOptions.apply(this, arguments);
+         opts._type = 'Button';
          opts.cssClassName += ' controls-Button';
          opts._iconDisabledClass = 'icon-button-disabled';
          ButtonUtil.preparedClassFromOptions(opts);

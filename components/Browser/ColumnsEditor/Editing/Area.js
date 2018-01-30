@@ -22,6 +22,8 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/presetEdit',
       'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableGroupContent',
       'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItemContent',
+      'tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItem',
+      'tmpl!SBIS3.CONTROLS/ListView/resources/ItemTemplate',
       'css!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       'SBIS3.CONTROLS/Button',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
@@ -436,7 +438,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                   selectedColumns.push(column.id);
                }
             }
-            var newColumns = columns.slice();
+            var newColumns = columns.reduce(function (r, v) { if (!v.fixed) { r.push(v); } return r; }, []);
             newColumns.sort(function (c1, c2) {
                var i1 = selectedIds.indexOf(c1.id);
                var i2 = selectedIds.indexOf(c2.id);

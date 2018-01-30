@@ -126,9 +126,6 @@ body {
 }
 
 .controls-ComboBox__picker {
-  .controls-ComboBox__item_selected {
-    font-weight: bold;
-  }
   .controls-Scrollbar {
      &.controls-Scrollbar__dragging {
         .controls-Scrollbar__thumb {
@@ -234,15 +231,11 @@ body {
     height: round(84px * @multiplier);
 }*/
 
-.controls-editInPlace .controls-editInPlace__editor {
-  background: @controls-editInPlace-editor-bg;
-}
-
 //todo: отказаться от данного сомнительного решения
 .controls-FormattedTextBox .controls-InputRender__wrapper .controls-InputRender__field .controls-FormattedTextBox__field-symbol {
     line-height: round(56px * @multiplier);
 }
-.controls-Link__field {
+.controls-Link__text {
   vertical-align: baseline;
 }
 .controls-DropdownList__picker .controls-DropdownList__multiselect.controls-DropdownList__item * {
@@ -303,10 +296,6 @@ body .ws-window.ws-LoadingIndicator__window {
       padding: round(32px * @multiplier);
    }
 }
-.controls-ComboBox.controls-Picker__show.controls-InputRender.controls-ComboBox__editable-false .controls-InputRender__fieldWrapper .controls-InputRender__field.controls-ComboBox__fieldNotEditable {
-  color: #324352;
-}
-
 // В теме онлайна фон у кнопки при наведении по умолчанию совпадает с цветом кнопок в панели выбора периода,
 // а тут не совпадает. Когда будем переделывать компонент под новую спецификацию, избавится от кнопок в пользу div.
 .ws-is-desktop-platform .controls-Button:not(.ws-disabled):not(.controls-Click__active).controls-Button__default {
@@ -487,9 +476,10 @@ body {
       padding-left: round(16px * @multiplier)
    }
 }
-
-.controls-Browser__search {
-   margin: @top_window_button
+.controls-Browser {
+  .controls-Browser__search {
+    margin: @top_window_button 0 @top_window_button round(12px * @multiplier);
+  }
 }
 .controls-Browser__tableRow {
    margin-left: 0;
@@ -579,14 +569,6 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
     display: -ms-flexbox !important;
     display: -ms-inline-flexbox !important;
     display: -webkit-inline-flex !important;
-  }
-}
-
-.controls-ComboBox {
-  &.controls-Picker__show {
-    background-color: @background-color_ComboBox_withPicker;
-    color: @color_ComboBox_withPicker;
-    border: @default-border-width solid @border-color_ComboBox_withPicker;
   }
 }
 

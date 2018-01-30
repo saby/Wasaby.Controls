@@ -1,26 +1,27 @@
 define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
    "Core/constants",
-   "Core/Deferred",
    'Core/detection',
    'Core/helpers/Function/throttle',
+   'Core/helpers/Object/isEmpty',
    "SBIS3.CONTROLS/ListView",
    "tmpl!SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePickerItem",
    "SBIS3.CONTROLS/Mixins/RangeMixin",
-   "WS.Data/Source/Base",
    "SBIS3.CONTROLS/Utils/DateUtil",
    "Core/core-instance",
    'SBIS3.CONTROLS/Date/RangeBigChoose/resources/CalendarSource',
    'Lib/LayoutManager/LayoutManager',
-   'SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin',
    "SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView",
    'SBIS3.CONTROLS/ScrollContainer'
-], function (constants, Deferred, detection, throttle, ListView, ItemTmpl, RangeMixin, Base, DateUtils, cInstance, CalendarSource, LayoutManager, RangeSelectableViewMixin) {
+], function (constants, detection, throttle, isEmpty, ListView, ItemTmpl, RangeMixin, DateUtils, cInstance, CalendarSource, LayoutManager) {
    'use strict';
+   var cConst = constants; //константы нужны для работы дат, не уверен что можно отключать из зависимостей (стан ругается)
 
    var monthSource = new CalendarSource(),
       buildTplArgsDRP = function(cfg) {
             var tplOptions = cfg._buildTplArgsLV.call(this, cfg);
             tplOptions.quantum = cfg.quantum;
+            tplOptions.monthSelectionEnabled = cfg.monthSelectionEnabled;
+            tplOptions.serializationMode = cfg.serializationMode;
             return tplOptions;
          };
 
@@ -60,7 +61,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          },
          _lastOverControl: null,
          _innerComponentsValidateTimer: null,
-         _selectionRangeEndItem: null,
+         _selectionRangeEndItem: null
          // _selectionType: null
       },
       $constructor: function () {
@@ -91,13 +92,21 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
 
          this.setDataSource(monthSource, true);
          setTimeout(this._updateScrollPosition.bind(this), 0);
-         container.on('click', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleClick.bind(this));
+
+         if (this._options.monthSelectionEnabled) {
+            container.on('click', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleClick.bind(this));
+            if (!detection.isMobileIOS) {
+               container.on('mouseenter', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleMouseEnter.bind(this));
+               container.on('mouseleave', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleMouseLeave.bind(this));
+            }
+         }
+
          container.on('click', '.controls-DateRangeBigChoose-DateRangePickerItem__months-nextyear-btn', this._onNextYearClick.bind(this));
          container.on('click', '.controls-DateRangeBigChoose-DateRangePickerItem__months-btn', this._onMonthClick.bind(this));
 
-         container.on('mouseenter', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleMouseEnter.bind(this));
-         container.on('mouseleave', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleMouseLeave.bind(this));
-         container.on('mouseenter', '.controls-MonthView__currentMonthDay', this._onDayMouseEnter.bind(this));
+         if (!detection.isMobileIOS) {
+            container.on('mouseenter', '.controls-MonthView__currentMonthDay', this._onDayMouseEnter.bind(this));
+         }
 
          this._scrollContainer = container.closest('.controls-ScrollContainer__content');
          this._scrollContainer.on('scroll', this._onScroll.bind(this));
@@ -105,11 +114,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          this._yearTitleContainer = container.find('.controls-DateRangeBigChoose__dates-header-year');
       },
 
-      // _modifyOptions: function (options) {
-      //    options = Component.superclass._modifyOptions.apply(this, arguments);
-      //    options._monthsNames = constants.Date.longMonths;
-      //    return options;
-      // },
+      _modifyOptions: function (options) {
+         options = Component.superclass._modifyOptions.apply(this, arguments);
+         options.monthSelectionEnabled = isEmpty(options.quantum) || ('months' in options.quantum && options.quantum.months.indexOf(1) !== -1);
+         return options;
+      },
 
       _onScroll: throttle(function () {
          // TODO: переделать условие
@@ -117,12 +126,15 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
             return;
          }
 
-         var scrollContainerTop = this._scrollContainer.offset().top,
+         // Округляем т.к. в ie offset().top возвращает дробные значения. Причем эти значения у _scrollContainer
+         // и у вложенного элемента, который проскролили в самый верх скролируемой области,
+         // могут отличаться на тысячные доли..
+         var scrollContainerTop = Math.floor(this._scrollContainer.offset().top),
             first = false,
             date;
          date = this.getContainer().find('.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_wrapper').filter(function (index, element) {
             element = $(element);
-            if (scrollContainerTop < (element.offset().top + element.height()) && !first) {
+            if (scrollContainerTop < Math.floor(element.offset().top + element.height()) && !first) {
                first = true;
                return true;
             }
@@ -191,6 +203,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          }
          this._options.month = month;
          this._notify('onMonthChanged');
+         this._fixMonthsBar();
          return true;
       },
 
@@ -207,9 +220,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
 
       _onDateRangePickerDrawItems: function () {
-         var self = this,
-            container, monthContainer,
-            scrollContainerOffset;
+         var self = this;
 
          this.forEachMonthView(function(control) {
             control.unsubscribe('onSelectionEnded', self._onSelectionEnded);
@@ -223,13 +234,20 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          });
          this._updateSelectionInInnerComponents();
          this._updateDisplayedYearCssClass();
-         // Хак для ie\edge. Выпилисть как перестанем поддерживать ie и edge которые не поддерживают position: sticky
+         this._fixMonthsBar();
+      },
+
+      _fixMonthsBar: function () {
+         var container,
+            monthContainer,
+            scrollContainerOffset;
+         // Хак для ie\edge. Выпилисть как перестанем поддерживать ie и edge меньше 16 которые не поддерживают position: sticky
          // Панели с месяцами фиксируем через position: fixed и top, а их видимостью управляем через стили.
          if (detection.isIE) {
             container = this.getContainer();
-            scrollContainerOffset = container.closest('.controls-ScrollContainer__content').offset();
+            scrollContainerOffset = container.closest('.controls-ScrollContainer__content')[0].getBoundingClientRect().top;
             monthContainer = container.find('.controls-DateRangeBigChoose-DateRangePickerItem__months');
-            monthContainer.css({'top': scrollContainerOffset.top - parseInt(monthContainer.css('margin-top'), 10)});
+            monthContainer.css({'top': scrollContainerOffset - parseInt(monthContainer.css('margin-top'), 10)});
          }
       },
 
@@ -248,6 +266,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          // не может найти контейнер в котором происходит скролирование. Сигнализируем скрол контейнеру что
          // надо пересчитать размеры перед scrollToElement.
          this.sendCommand('resizeYourself');
+         this._fixMonthsBar();
          LayoutManager.scrollToElement(displayedContainer);
          this._updateDisplayedYearCssClass();
       },

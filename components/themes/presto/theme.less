@@ -77,17 +77,35 @@ body {
   }
 }
 //Временное решение, пока в панель операций кладутся контролы, удалить при переходе на шаблончики
-.controls-operationsPanel__actions * {
-  color: #839EBC !important;
-  .icon-error {
-    color: @error-color !important;
+//перекрашиваю только контролы которые обычно кладут в панель операций: кнопки, выпадающий список, комбобокс и метка
+.controls-operationsPanel__actions {
+  .controls-ButtonBase, .controls-DropdownList__textWrapper, .controls-ComboBox, .controls-Label__text_color {
+    color: #839EBC !important;
+    .icon-error {
+      color: @error-color !important;
+    }
+  }
+  .controls-Button__icon {
+    color: #839EBC !important;
   }
 }
 
-.controls-operationsPanel__actions *:hover {
-  color: #B9E9FF !important;
-  .icon-error {
-    color: @error-color !important;
+.controls-operationsPanel__actions {
+  .controls-ButtonBase:hover, .controls-DropdownList__textWrapper:hover, .controls-ComboBox:hover {
+    color: #B9E9FF !important;
+    .icon-error {
+      color: @error-color !important;
+    }
+  }
+  .controls-Link.controls-Link_main:hover:not(.ws-disabled) .controls-Button__icon.icon-primary {
+    color: #B9E9FF !important;
+  }
+
+  .controls-Link.controls-Link_main:active:not(.ws-disabled) {
+    color: #B9E9FF !important;
+    .controls-Button__icon.icon-primary {
+      color: #B9E9FF !important;
+    }
   }
 }
 
@@ -133,9 +151,6 @@ body .ws-window.ws-LoadingIndicator__window {
       left: @padding_DropDownList_item_child_text;
     }
   }
-}
-.controls-FloatArea {
-  background: @basic-block-bg-color;
 }
 //todo: поддержать в компоненте
 .controls-ComboBox {
@@ -239,6 +254,8 @@ body {
 //нет нормального инструмента чтобы сделать через переменные
 //будет жить пока стили floatArea в ws`e
 .ws-window-content, .ws-float-area-stack-panel-shadow {
+  .ws-sticky-header__table-header-copy,
+  .ws-sticky-header__block.ws-sticky-header__fixed,
   .ws-sticky-header__table-header-copy {
     background-color: #273749 !important;
   }
@@ -398,4 +415,8 @@ body {
   .controls-Button__icon{
     font-size: @default-icon-size-medium;
   }
+}
+//Todo: необходимо зашить эти стили в окнах
+.controls-NotificationPopup__body, controls-NotificationPopup__footer {
+  background-color: @controls-SubmitPopup-footer-bg;
 }

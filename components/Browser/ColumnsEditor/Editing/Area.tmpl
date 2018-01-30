@@ -1,4 +1,4 @@
-<div class="controls-Browser-ColumnsEditor-Editing-Area{{!(usePresets && ((staticPresets && staticPresets.length) || presetNamespace)) ? ' controls-Browser-ColumnsEditor-Editing-Area_low' : ''}}" style="max-height:{{maxHeight}}px">
+<div class="controls-Browser-ColumnsEditor-Editing-Area{{!(usePresets && ((staticPresets && staticPresets.length) || presetNamespace)) ? ' controls-Browser-ColumnsEditor-Editing-Area_low' : ''}}">
    <div class="controls-Browser-ColumnsEditor-Editing-Area__head">
       <div class="controls-Browser-ColumnsEditor-Editing-Area__head-title">
          <div class="controls-Browser-ColumnsEditor-Editing-Area__head-title-left">
@@ -32,12 +32,6 @@
                   editMode="single|toolbar"
                   editingTemplate="tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/presetEdit"
                   >
-                  <!--^^^
-                  itemsActions="{{_optsPreset.itemsActions}}"
-                  itemContentTpl="tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/preset"
-                  editMode="click|single"
-                  <ws:handlers onItemClick="{{_optsPreset.onItemClick}}"/>
-                  -->
                   <ws:itemContentTpl>
                      <ws:partial
                         template="tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/preset"
@@ -53,10 +47,10 @@
          </div>
       </ws:if>
    </div>
-   <SBIS3.CONTROLS:ScrollContainer class="controls-Browser-ColumnsEditor-Editing-Area__body">
+   <SBIS3.CONTROLS:ScrollContainer class="controls-Browser-ColumnsEditor-Editing-Area__body controls-ScrollContainer__flex">
       <ws:content>
          <SBIS3.CONTROLS:CheckBox:Group
-            class="controls-Browser-ColumnsEditor-Editing-Area__FixedList"
+            class="controls-ButtonGroup__vertical controls-Browser-ColumnsEditor-Editing-Area__FixedList"
             name="controls-Browser-ColumnsEditor-Editing-Area__FixedList"
             items="{{ _optsFixed.items }}"
             idProperty="id"
@@ -76,6 +70,7 @@
             displayProperty="title"
             itemsSortMethod="{{_optsSelectable.itemsSortMethod}}"
             selectedKeys="{{_optsSelectable.markedKeys}}"
+            itemTpl="tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItem"
             itemContentTpl="tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItemContent"
             multiselect="{{ true }}"
             >

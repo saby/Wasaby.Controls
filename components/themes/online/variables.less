@@ -83,15 +83,15 @@
 // ---- //
 
 @link-font:                               @default-text-size @default-font-name;
+@text-decoration_Link:                    none;
 @color_Link-text:                         @darkcyan-color;
 @color_Link-text_disabled:                @gray-ccc-color;
-@text-decoration_Link:                    none;
 @link-text-alignment:                     center;
 @height_Link:                             24px;
 @link-line-height:                        @height_Link;
-@padding_Link:                            0;
 @font-size_Link:                          @default-text-size;
 @link-cursor:                             pointer;
+@color_Link-icon_disabled:                @icon-color-disabled;
 
 @color_Link-text_hovered:                   @icon-color-primary-hover;
 
@@ -102,9 +102,12 @@
 
 @link-icon-field-margin:                  0 0 0 6px;
 
+@color_Link-main-2:                       @gray-lamantin-color;
 @color_Link-additional:                   @gray-color;
 @color_Link-additional-2:                 @default-text-color;
 @color_Link-additional-3:                 @red-color;
+@color_Link-additional-4:                 @green-color;
+@color_Link-additional-5:                 @purple-color;
 
 // ------ //
 // Button //
@@ -119,7 +122,7 @@
 @padding_Button-wrapper_m:                0 11px;
 @padding_Button-wrapper_default:          @padding_Button-wrapper_m;
 @color_Link-icon_hovered:                 @icon-color-primary-hover;
-@button-icon-color:                       @icon-color-primary;
+@button-icon-color:                       @color_primary;
 @button-icon-top-offset:                  4px;                      // top offset of 16x16 icon
 @button-icon-left-offset:                 12px;
 @button-icon-medium-left-offset:          @button-icon-left-offset;
@@ -200,6 +203,7 @@
 @button-active-shadow:                    @box-shadow_Button;
 @background_Button_active:                        #E1ECF6;
 
+@color_Button-icon:                       @color_primary;
 // Normal primary button
 @color_Button_primary:               @default-text-color;
 @button-primary-border:                   1px solid @border-color_Button_primary;
@@ -218,12 +222,15 @@
 @button-primary-active-shadow:            @button-primary-shadow;
 @background_Button_primary_active:                #fdd2c0;
 
+@color_Button-icon_primary:               @color_hover;
+
 // Normal disabled button
 @color_Button_disabled:              @default-disabled-color;
 @border_Button_disabled:                  1px solid @default-disabled-color;
 @button-disabled-shadow:                  @box-shadow_Button;
 @background_Button_disabled:                      @background_Button;
 @color_Button-icon_disabled:              @default-disabled-color;
+
 
 @button-ipad-line-height:                 20px;
 
@@ -528,10 +535,13 @@
 @margin_MenuIcon-hideHeader-round24_text: 6px 0 6px 28px;
 @menu-icon-big-menu-margin:               -5px 0 0 -13px;
 @menu-icon-menu-large-margin:             -5px 0 0 -13px;
+@margin_MenuIcon_size-l:                  -10px 0 0 7px;
+@margin_MenuIcon_border-24:               -5px 0 0 -9px;
 @menu-icon-menu-bg:                       @background-color_Menu;
-// -------- //
-// Text box //
-// -------- //
+// ----------- //
+// InputRender //
+// ----------- //
+@font-weight_InputRender_style_header:     bold;
 //todo
 @text-box-focus-bg:                       @background-color_InputRender;
 // --------- //
@@ -568,12 +578,12 @@
 // ----------- //
 @date-picker-button-margin-left:                7px;
 @date-picker-button-vertical-align:             center;
-@date-picker-button-size_default:               18px;
-@date-picker-button-line-height_default:        16px;
-@date-picker-button-size_m:                      @date-picker-button-size_default;
-@date-picker-button-line-height_m:               @date-picker-button-line-height_default;
-@date-picker-button-size_l:                      @date-picker-button-size_default;
-@date-picker-button-line-height_l:               @date-picker-button-line-height_default;
+@date-picker-button-size_default:               16px;
+@date-picker-button-line-height_default:        14px;
+@date-picker-button-size_m:                     @date-picker-button-size_default;
+@date-picker-button-line-height_m:              @date-picker-button-line-height_default;
+@date-picker-button-size_l:                     @date-picker-button-size_default;
+@date-picker-button-line-height_l:              @date-picker-button-line-height_default;
 @top_DatePicker-closeButton:                    8px;
 // -------- //
 // Calendar //
@@ -638,7 +648,7 @@
 @controls-date-range-year-marginleft:             0;
 @date-range-choose-year-line-height:            @date-range-choose-year-height + 1;
 @date-range-button-vertical-align:              center;//todo нет значение center есть middle
-@date-range-button-size_default:                18px;
+@date-range-button-size_default:                16px;
 @date-range-button-line-height_default:         14px;
 @date-range-button-size_m:                      @date-range-button-size_default;
 @date-range-button-line-height_m:               @date-range-button-line-height_default;
@@ -997,7 +1007,7 @@
 //      EditInPlace        //
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
-@controls-editInPlace-editor-bg:                    #f3f3f3 !important;
+@controls-editInPlace-editor-bg:                    #f3f3f3;
 @controls-editInPlace-editor-without-offset-margin: -6px;
 // --------------- //
 //    MultiView    //
@@ -1083,7 +1093,7 @@
 @border-color_DropDownList_picker:                    #CCC;
 @size_DropDownList_filter_cross:                      @icon-size_default;
 @size_DropDownList_arrow:                             @icon-size_default;
-@color-DropDownList_arrowIcon:                        @icon-color-primary;
+@color-DropDownList_arrowIcon:                        @color_primary;
 //ProgressBar
 @ProgressBar-height:                      16px;
 @ProgressBar-width:                       100%;
@@ -1112,7 +1122,7 @@
 @controls-filterButton-button-margin:             8px @controls-filterButton-button-verSide-margin 8px 0;
 @size_FilterButtom_line_arrow:                    @icon-size_default;
 @size_FilterButtom_line_cross:                    @icon-size_default;
-@color-FilterButtom_line_arrow:                   @icon-color-primary;
+@color-FilterButtom_line_arrow:                   @color_primary;
 @size_FilterButton_icon:                          24px;
 @controls-filterButton-button-margin-right-align: 8px 0 8px @controls-filterButton-button-verSide-margin;
 @controls-filterButton-line-margin-right-align:   8px 0 8px 8px;
@@ -1341,6 +1351,7 @@
 @link-header-after-color:                          @blue-dark-color;
 @link-header-after-margin-left:                    4px;
 @link-header-hover-color:                          @primary-color;
+@link-subheader-hover-color:                       #0055BB;
 @link-header-hover-after-color:                    @link-header-hover-color;
 @link-header-separator-color:                      #F4F4F4;
 @link-header-separator-margin:                     0 0 0 8px;
@@ -1506,7 +1517,7 @@
 @border-bottom-ColumnsEditor-Editing-Area__head: 1px solid #CCCCCC;
 @padding-ColumnsEditor-Editing-Area-head: 8px 0 2px 12px;
 @padding-ColumnsEditor-Editing-Area-head-2: 8px 0 7px 12px;
-@spacing-ColumnsEditor-Editing-Area-head: 4px;
+@spacing-ColumnsEditor-Editing-Area-head: 18px;
 @background-color-ColumnsEditor-Editing-Area-head: #f7f4f0;
 @color-ColumnsEditor-Editing-Area__head-title-left: #313E78;
 @font-size-ColumnsEditor-Editing-Area__head-title-left: 18px;
@@ -1514,21 +1525,18 @@
 @margin-right-ColumnsEditor-Editing-Area__head-title-right: 52px;
 @height-ColumnsEditor-Editing-Area__head-preset: 30px;
 @font-size-ColumnsEditor-Editing-Area__head-preset: 15px;
-@padding-ColumnsEditor-Editing-Area__head-preset-label: 5px 8px 0 0;
+@padding-ColumnsEditor-Editing-Area__head-preset-label: 0 8px 0 0;
 @color-ColumnsEditor-Editing-Area__head-preset-label: rgb(153, 153, 153);
 @padding-left-ColumnsEditor-Editing-Area__Preset-item: 6px;
-@spacing-ColumnsEditor-Editing-Area__Preset-item: 3px;
-@width-ColumnsEditor-Editing-Area__Preset-input: 230px;
+@width-ColumnsEditor-Editing-Area__Preset-input: 222px;
 @padding-ColumnsEditor-Editing-Area__body: 12px 0;
-@padding-ColumnsEditor-Editing-Area__FixedList-CheckBox: 4px;
-@padding-left-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption: 4px;
+@padding-ColumnsEditor-Editing-Area__FixedList: 4px;
 @color-ColumnsEditor-Editing-Area__FixedList-CheckBox__caption: @black-color !important;
 @left-ColumnsEditor-Editing-Area__view-item__itemCheckBox: 4px;
-@top-ColumnsEditor-Editing-Area__view-item__itemCheckBox: 2px;
-@padding-left-ColumnsEditor-Editing-Area__view-item-text: 36px;
-@padding-right-ColumnsEditor-Editing-Area__view-item-text: 12px;
+@top-ColumnsEditor-Editing-Area__view-item__itemCheckBox: 4px;
+@padding-ColumnsEditor-Editing-Area__view-item-text: 4px 12px 0 28px;
 @padding-right-ColumnsEditor-Editing-Area__view-item-text-2: 72px;
-@line-height-ColumnsEditor-Editing-Area__view-item-text: 28px;
+@line-height-ColumnsEditor-Editing-Area__view-item-text: 24px;
 @color-ColumnsEditor-Editing-Area__view-item-text: #8991a9;
 @color-ColumnsEditor-Editing-Area__view-item-text__multiSelected: @black-color;
 
@@ -1642,3 +1650,27 @@
 //  Popup   //
 //----------------//
 @shadow_Popup_stack:  -6px 0px 8px -5px rgba(0, 0, 0, 0.4);
+
+//-----------------//
+//  InfoBox   //
+//----------------//
+@infobox-bg-style-default: #FFFFFF;
+@infobox-bg-style-lite: #F4F9FD;
+@infobox-bg-style-help: #FFF9F3;
+@infobox-bg-style-error: @infobox-bg-style-default;
+
+@infobox-border-color-style-default: #BDBDBD;
+@infobox-border-color-style-lite: #BDBDBD;
+@infobox-border-color-style-help: #BDBDBD;
+@infobox-border-color-style-error: #EF463A;
+
+@infobox-shadow-color-style-default: rgba(0, 0, 0, 0.4);
+@infobox-shadow-color-style-lite: rgba(0, 0, 0, 0.4);
+@infobox-shadow-color-style-help: rgba(0, 0, 0, 0.4);
+@infobox-shadow-color-style-error: rgba(239, 70, 58, 0.4);
+
+@infobox-shadow-position: 0 0 12px;
+@infobox-max-width: 300px;
+
+@infobox-close-button-color:        #CCCCCC;
+@infobox-close-button-hover-color:  #313E78;

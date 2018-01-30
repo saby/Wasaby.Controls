@@ -525,19 +525,6 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
                  * @cfg {Boolean} Показывать ли наиболее частые
                  */
                 frequent: false,
-                /**
-                 * @cfg {Object} Опции БЛ
-                 */
-                blParams: {
-                    blEndpoint: {
-                        contract: null
-                    },
-                    binding: {
-                        query: null,
-                        read: null
-                    },
-                    displayField: null
-                },
                 additionalProperty: 'additional'
             },
             _historyDataSource: null,
