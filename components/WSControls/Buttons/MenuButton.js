@@ -121,20 +121,7 @@ define('js!WSControls/Buttons/MenuButton', [
              /**
               * @cfg {Boolean} Показывать ли наиболее частые
               */
-             frequent: false,
-             /**
-              * @cfg {Object} Опции БЛ
-              */
-             blParams: {
-                 blEndpoint: {
-                     contract: null
-                 },
-                 binding: {
-                     query: null,
-                     read: null
-                 },
-                 displayField: null
-             }
+             frequent: false
          }
       },
 
@@ -274,16 +261,6 @@ define('js!WSControls/Buttons/MenuButton', [
              menuconfig['pinned'] = this._options.pinned;
              menuconfig['frequent'] = this._options.frequent;
              menuconfig['recent'] = this._options.recent;
-             menuconfig['blParams'] = {
-                 blEndpoint: {
-                     contract: this._options.blParams.blEndpoint.contract
-                 },
-                 binding: {
-                     query: this._options.blParams.binding.query,
-                     read: this._options.blParams.binding.read
-                 },
-                 displayField: this._options.blParams.displayField
-             };
 
          }
          if (this._options.pickerConfig){
