@@ -6,6 +6,9 @@
  * @see SBIS3.CONTROLS/Browser#columnsConfig
  * @see SBIS3.CONTROLS/Browser#setColumnsConfig
  * @see SBIS3.CONTROLS/Browser#getColumnsConfig
+ * @see SBIS3.CONTROLS/Browser#ColumnsConfigObject
+ * @see SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase#_gatherColumnsInfo
+ * @see SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase#useColumnsEditor
  *
  * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
  * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
@@ -60,7 +63,9 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
          /**
           * Открыть редактор колонок. Возвращает обещание, которое будет разрешено после завершения редактирования пользователем. В случае, если
           * пользователь после редактирования нажал кнопку применения результата редактирования, то обещание будет разрешено новыми параметрами
-          * конфигурации колонок. Если же пользователь просто закрыл редактор кнопкой "Закрыть", то обещание будет разрешено значением null
+          * конфигурации колонок. Если же пользователь просто закрыл редактор кнопкой "Закрыть", то обещание будет разрешено значением null. Следует
+          * иметь ввиду, что в возвращённом списке выбранных пользователем колонок присутствуют все колонки, в том числе и те, что были помечены как
+          * фиксированные(обязательные) в исходных данных.
           *
           * @example
           * Существует возможность использования предустановленных наборов колонок (пресетов). Для этого служат опции usePresets, staticPresets,
@@ -122,6 +127,9 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
           * @see SBIS3.CONTROLS/Browser#columnsConfig
           * @see SBIS3.CONTROLS/Browser#setColumnsConfig
           * @see SBIS3.CONTROLS/Browser#getColumnsConfig
+          * @see SBIS3.CONTROLS/Browser#ColumnsConfigObject
+          * @see SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase#_gatherColumnsInfo
+          * @see SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase#useColumnsEditor
           *
           * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
           * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
