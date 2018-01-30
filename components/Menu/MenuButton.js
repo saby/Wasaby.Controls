@@ -56,10 +56,11 @@ define('SBIS3.CONTROLS/Menu/MenuButton', [
     */
 
    var MenuButton = WSMenuButton.extend( [], /** @lends SBIS3.CONTROLS/Menu/MenuButton.prototype */ {
-      _modifyOptions : function() {
+      _modifyOptions : function(options, parsedOptions, attrToMerge) {
          var opts = MenuButton.superclass._modifyOptions.apply(this, arguments);
          opts.cssClassName += ' controls-Button';
-          ButtonUtil.preparedClassFromOptions(opts);
+         ButtonUtil.getStyleByConfig(opts, attrToMerge);
+         ButtonUtil.preparedClassFromOptions(opts);
          opts.pickerClassName += ' controls-MenuButton__Menu';
          return opts;
       },

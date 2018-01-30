@@ -57,7 +57,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList', [
             self = this;
          FilterPanelChooserDetailsList.superclass.init.apply(this, arguments);
          this._itemsMoveController = new ItemsMoveController({
-            linkedView: this._getListView(),
+            linkedView: this._getListView()
          });
          this._getListView().subscribe('onEndMove', self._updateValue.bind(this));
          this._getListView().subscribe('onChangeHoveredItem', this._onChangeHoveredItem.bind(this));
