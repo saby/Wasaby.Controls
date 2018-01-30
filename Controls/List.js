@@ -127,7 +127,7 @@ define('Controls/List', [
 
                   //TODO это кривой способ заставить пэйджинг пересчитаться. Передалть, когда будут готовы команды от Зуева
                   //убираю, когда будет готов реквест от Зуева
-                  window.setTimeout(function(){
+                  setTimeout(function(){
                      if (self._scrollPagingCtr) {
                         self._scrollPagingCtr.resetHeights();
                      }
