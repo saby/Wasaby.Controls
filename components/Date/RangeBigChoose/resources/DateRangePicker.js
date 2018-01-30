@@ -21,6 +21,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
             var tplOptions = cfg._buildTplArgsLV.call(this, cfg);
             tplOptions.quantum = cfg.quantum;
             tplOptions.monthSelectionEnabled = cfg.monthSelectionEnabled;
+            tplOptions.serializationMode = cfg.serializationMode;
             return tplOptions;
          };
 
@@ -265,6 +266,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          // не может найти контейнер в котором происходит скролирование. Сигнализируем скрол контейнеру что
          // надо пересчитать размеры перед scrollToElement.
          this.sendCommand('resizeYourself');
+         this._fixMonthsBar();
          LayoutManager.scrollToElement(displayedContainer);
          this._updateDisplayedYearCssClass();
       },

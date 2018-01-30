@@ -7,7 +7,7 @@ import logging
 def build():
     """Build interface modules"""
 
-    list_dirs = ['lang']
+    list_dirs = ['lang', 'less-blacklist.json']
 
     def _copy(source, target):
         """Copy from 'source' to 'target' with replace"""
