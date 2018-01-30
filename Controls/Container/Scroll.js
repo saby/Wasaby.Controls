@@ -10,6 +10,14 @@ define('Controls/Container/Scroll',
 
       'use strict';
 
+      var _private = {
+         doInitScrollbar: function(self){
+            self.showScrollbar = !(detection.isMobileIOS || detection.isMobileAndroid) && (self._getContainerHeight() !== self._getScrollHeight());
+            self.contentHeight = self._getScrollHeight();
+            self.scrollBarPosition = self._getScrollTop();
+         }
+      };
+
       /**
        * Компонент - контейнер с узкой стилизованной полосой скролла.
        * @class Controls/Container/Scroll
@@ -44,6 +52,7 @@ define('Controls/Container/Scroll',
          contentHeight: 1,
          scrollBarPosition: 0,
          showScrollbar: false,
+         goodIntervalForSilentSizeChanged: null,
          _getScrollHeight: function(){
             return this._children.content.scrollHeight;
          },
@@ -60,12 +69,19 @@ define('Controls/Container/Scroll',
             return this._children.content.scrollTop;
          },
          _initScrollbar: function initScrollbar() {
-            this.showScrollbar = !(detection.isMobileIOS || detection.isMobileAndroid);
-            this.contentHeight = this._getScrollHeight();
-            this.scrollBarPosition = this._getScrollTop();
+            var self = this;
+            _private.doInitScrollbar(self);
+            if (!self.goodIntervalForSilentSizeChanged) {
+               self.goodIntervalForSilentSizeChanged = setInterval(function () {
+                  _private.doInitScrollbar(self);
+                  self._forceUpdate();
+               }, 100);
+            }
          },
          _hideScrollbar: function hideScrollbar() {
             this.showScrollbar = false;
+            clearInterval(this.goodIntervalForSilentSizeChanged);
+            this.goodIntervalForSilentSizeChanged = null;
          },
          _onScroll: function onScroll() {
             var scrollTop = this._getScrollTop();
