@@ -414,6 +414,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             this._updateHeaderInputsVisibility();
             this._startDatePickerResetActive();
             this._endDatePickerResetActive();
+            if (this._options._state === states.month) {
+               this._monthRangePicker._clearMonthSelection();
+            }
          }
       },
 

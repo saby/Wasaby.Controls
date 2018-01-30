@@ -3744,9 +3744,13 @@ define('SBIS3.CONTROLS/ListView',
           * По умолчанию равен бесконечности.
           */
          scrollToItem: function(item, toBottom, depth){
-            // Item is not in DOM, will need to calculate scrollTop
-            var itemIndex = this._options._items.getIndexByValue(item.getIdProperty(), item.getId())
-            if (this._options.virtualScrolling && this._virtualScrollController && !this._virtualScrollController.isItemVisible(itemIndex)) {
+            var itemIndex;
+            if (this.getItems()) {
+               itemIndex = this.getItems().getIndexByValue(item.getIdProperty(), item.getId());
+            }
+            // Если item есть в DOM, то работаем будто нет виртуального скрола.
+            // Если item удален из DOM, то считаем scrollTop через виртуальный скрол.
+            if (this._options.virtualScrolling && this._virtualScrollController && itemIndex && !this._virtualScrollController.isItemVisible(itemIndex)) {
                var scrollTop = this._virtualScrollController.getScrollTopForItem(itemIndex);
                // Если есть sticky header, надо его пересчитать после отрисовки записей виртуальным скролом
                if (this._options.stickyHeader) {
