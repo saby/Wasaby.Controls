@@ -13,8 +13,10 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
    'Core/helpers/Hcontrol/doAutofocus',
    'Core/helpers/Hcontrol/trackElement',
    "Core/detection",
-   "Core/constants"
-], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, cInstance, doAutofocus, trackElement, detection, constants) {
+   "Core/constants",
+   "Core/IoC",
+   'css!SBIS3.CONTROLS/Mixins/PopupMixin/PopupMixin'
+], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, cInstance, doAutofocus, trackElement, detection, constants, IoC) {
    'use strict';
    if (typeof window !== 'undefined') {
       var
@@ -152,9 +154,11 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
              */
             closeOnTargetMove: false,
             /**
-             * @cfg {Boolean} отображать кнопку закрытия
+             * @cfg {String} кнопка закрытия
+             * @variant standart
+             * @variant withBorder
              */
-            closeButton: false,
+            closeButton: '',
             /**
              * @cfg {Boolean} при клике мышки на таргет или перемещении по нему панель не закрывается
              */
@@ -228,8 +232,10 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
 
          EventBus.globalChannel().subscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
 
+         this._compatibilityCloseButton();
+
          if (this._options.closeButton) {
-            container.append('<div class="controls-PopupMixin__closeButton"></div>');
+            container.append('<div class="controls-PopupMixin__closeButton controls-PopupMixin__closeButton_' + this._options.closeButton + '"></div>');
             $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {
                //Нужно вызвать активироваться перед hide, чтобы закрылись плав. панели, у которых опенером был этот контрол
                //TODO: унифицировать код закрытия с Lib/Control/FloatArea/FloatArea: хранить коллекцию дочерних панелей, и закрывать их тут
@@ -253,6 +259,14 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             // на iPad при появлении всплывахи над FloatArea при проведении пальцем над всплывахой - скроллится FloatArea (бажное поведение iPad с инетным скроллом)
             // приходится отключать инертный скролл в момент показа всплывахи и включать обратно при скрытии
             this._parentFloatArea = topParent;
+         }
+      },
+
+      _compatibilityCloseButton: function() {
+         if (typeof this._options.closeButton === 'boolean') {
+            this._options.closeButton = this._options.closeButton ? 'withBorder' : '';
+            IoC.resolve('ILogger').log('PopupMixin', 'У опция closeButton поменялся тип с boolean на string. ' +
+               'Вместо true используйте "withBorder"');
          }
       },
 

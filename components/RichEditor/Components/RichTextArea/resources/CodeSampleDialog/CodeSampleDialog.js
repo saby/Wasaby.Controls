@@ -25,7 +25,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/CodeSampleDi
                   {key: 'php', title: 'PHP'}
                ],
                windowTitle: 'Вставка кода',
-               closeButton: true,
+               closeButton: 'withBorder',
                closeByExternalClick: true
             }
          },

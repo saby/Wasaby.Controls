@@ -75,28 +75,9 @@
       }
       .controls-PopupMixin__closeButton {
          position: absolute;
-         .flexbox();
-         .align-items(center);
-         .justify-content(center);
-         border: none;
-         box-shadow: none !important;
          right: 0;
          top: @list-view-actions-menu-touch-close-top;
-         width: @closeButtonWidth;
-         height: @closeButtonHeight;
-         cursor: pointer;
          z-index: 100;
-         &:before {
-            content: "\e66c";
-            font-size: 23px;
-            width: 24px;
-            height: 24px;
-            font-family: 'cbuc-icons';
-            color: #587ab0;
-         }
-         &:hover:before, &:active:before {
-            color: #313E78;
-         }
       }
       &.controls-popup-revert-vertical {
          .controls-PopupMixin__closeButton {
@@ -172,53 +153,13 @@
 
    .controls-PopupMixin__closeButton {
       position: absolute;
-      .flexbox();
-      .align-items(center);
-      .justify-content(center);
-      border: none;
       top: @list-view-actions-menu-close-top;
-      cursor: pointer;
-      height: @list-view-actions-menu-close-height;
-      width: @list-view-actions-menu-close-width;
       z-index: 1;
       right: @list-view-actions-menu-close-right;
-      color: @list-view-context-menu-close-color !important;
-      background: none;
-      // используем important т.к. controls-PopupMixin__closeButton используется в старых контролах и стилизована в themes.less
-      // и по другому сейчас не перебить, пока
-      box-shadow: none !important;
-
-      .icon-size(@list-view-items-toolbar-icon-size, @font-family_closeButton-icon);
    }
    &.controls-popup-revert-vertical {
       .controls-Menu__itemsContainer {
          padding: @padding_Menu-submenu;
-      }
-   }
-}
-.ws-is-desktop-platform {
-   .controls-ItemActions__menu-container {
-      .controls-PopupMixin__closeButton {
-         &:hover {
-            color: @list-view-context-menu-close-hover-color !important;
-            background: none;
-         }
-      }
-      &.controls-ItemActions__contextMenu {
-         .controls-PopupMixin__closeButton {
-            &:hover {
-               color: @list-view-context-menu-close-hover-color !important;
-               background: none;
-            }
-         }
-      }
-      &.controls-ItemActions__menu-touchMode {
-         .controls-PopupMixin__closeButton {
-            &:hover {
-               background: none;
-               color: @default-color !important;
-            }
-         }
       }
    }
 }
@@ -256,8 +197,6 @@
       margin: -1px 0 0;
    }
    .controls-PopupMixin__closeButton {
-      height: @list-view-small-actions-menu-close-height;
-      width: @list-view-small-actions-menu-close-width;
       right: @list-view-small-actions-menu-close-right;
       top: 12px;
    }
