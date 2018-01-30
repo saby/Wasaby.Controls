@@ -9,7 +9,8 @@
     <div
         name="content"
         class="controls-ScrollContainer__content ws-scrolling-content"
-        on:scroll="_onScroll()">
+        on:scroll="_onScroll()"
+        on:resize="_initScrollbar()">
         <ws:partial template="{{_options.content}}"/>
     </div>
     <Controls:Container:Scrollbar:Scrollbar
