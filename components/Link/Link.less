@@ -63,6 +63,8 @@
   .inline-flexbox();
   .align-items(center);
   width: 100%;
+  // сбрасываю стили браузера для тега a
+  text-decoration: none;
 }
 
 .ws-is-desktop-platform {
@@ -75,6 +77,10 @@
     .controls-Button__text {
       text-decoration: underline;
     }
+  }
+  // перебиваю глобальные стили на a:hover
+  .controls-Link-link:hover {
+    text-decoration: none;
   }
 }
 
