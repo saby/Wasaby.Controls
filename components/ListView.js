@@ -1505,7 +1505,8 @@ define('SBIS3.CONTROLS/ListView',
                }
             }
             if (!isEmpty(this._options.groupBy) && this._options.easyGroup && $(e.target).hasClass('controls-GroupBy__separatorCollapse')) {
-               var idGroup = $(e.target).closest('.controls-GroupBy').attr('data-group');
+               var hashGroup = $(e.target).closest('.controls-GroupBy').attr('data-group-hash');
+               var idGroup = this._getItemsProjection().getByHash(hashGroup).getContents();
                this.toggleGroup(idGroup);
                if ($target.closest('.controls-ListView').parent().hasClass('ws-sticky-header__header-container')) {
                   $group = this._getItemsContainer().find('.controls-GroupBy[data-group="' + idGroup + '"]');
@@ -3744,9 +3745,13 @@ define('SBIS3.CONTROLS/ListView',
           * По умолчанию равен бесконечности.
           */
          scrollToItem: function(item, toBottom, depth){
-            // Item is not in DOM, will need to calculate scrollTop
-            var itemIndex = this._options._items.getIndexByValue(item.getIdProperty(), item.getId())
-            if (this._options.virtualScrolling && this._virtualScrollController && !this._virtualScrollController.isItemVisible(itemIndex)) {
+            var itemIndex;
+            if (this.getItems()) {
+               itemIndex = this.getItems().getIndexByValue(item.getIdProperty(), item.getId());
+            }
+            // Если item есть в DOM, то работаем будто нет виртуального скрола.
+            // Если item удален из DOM, то считаем scrollTop через виртуальный скрол.
+            if (this._options.virtualScrolling && this._virtualScrollController && itemIndex && !this._virtualScrollController.isItemVisible(itemIndex)) {
                var scrollTop = this._virtualScrollController.getScrollTopForItem(itemIndex);
                // Если есть sticky header, надо его пересчитать после отрисовки записей виртуальным скролом
                if (this._options.stickyHeader) {

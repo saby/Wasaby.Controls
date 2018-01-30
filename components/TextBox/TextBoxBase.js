@@ -66,7 +66,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
          _textChanged: false,
           _options: {
              _isMultiline: false,
-             _prepareClassesByConfig: function() {
+             _prepareClassesByConfig: function(cfg) {
                var
                   fieldClasses = [],
                   fieldWrapperClasses = [],
@@ -82,16 +82,17 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
                      return item;
                   };
 
-               containerClasses.push('controls-TextBox_state_' + (this.enabled ? 'default' : 'disabled'));
-               !this.enabled && containerClasses.push('controls-TextBox_state_disabled_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
-               containerClasses.push('controls-TextBox_size_' + (this.size ? this.size : 'default') + (this._isMultiline ? '_multiLine' : '_singleLine'));
-               containerClasses.push('controls-TextBox_text-align_' + this.textAlign);
-               containerClasses.push(this._paddingClass);
-               if (this.textTransform) {
-                  fieldClasses.push('controls-TextBox__field-' + this.textTransform);
+               containerClasses.push('controls-TextBox_state_' + (cfg.enabled ? 'default' : 'disabled'));
+               !cfg.enabled && containerClasses.push('controls-TextBox_state_disabled_' + (cfg._isMultiline ? 'multiLine' : 'singleLine'));
+               containerClasses.push('controls-TextBox_size_' + (cfg.size ? cfg.size : 'default') + (cfg._isMultiline ? '_multiLine' : '_singleLine'));
+               containerClasses.push('controls-TextBox_text-align_' + cfg.textAlign);
+               containerClasses.push(cfg._paddingClass);
+               cfg.style && containerClasses.push('controls-InputRender_style_' + cfg.style);
+               if (cfg.textTransform) {
+                  fieldClasses.push('controls-TextBox__field-' + cfg.textTransform);
                }
-               wrapperClasses.push('controls-TextBox__wrapper_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
-               fieldWrapperClasses.push('controls-InputRender__fieldWrapper_' + (this._isMultiline ? 'multiLine' : 'singleLine'));
+               wrapperClasses.push('controls-TextBox__wrapper_' + (cfg._isMultiline ? 'multiLine' : 'singleLine'));
+               fieldWrapperClasses.push('controls-InputRender__fieldWrapper_' + (cfg._isMultiline ? 'multiLine' : 'singleLine'));
 
                return {
                   container: containerClasses.map(createNewCssClasses).join(' '),
@@ -188,7 +189,8 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
              * @see Lib/Control/Control#setActive
              */
             focusOnActivatedOnMobiles: false,
-            textAlign: 'left'
+            textAlign: 'left',
+            style: ''
          }
       },
 
