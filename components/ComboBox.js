@@ -212,7 +212,7 @@ define('SBIS3.CONTROLS/ComboBox', [
              * @noShow
              */
             valueFormat: '',
-            /*
+            /**
              @cfg {Boolean} Автоматически фильтровать пункты выпадающего списка по введеной строке
              */
             autocomplete: false
