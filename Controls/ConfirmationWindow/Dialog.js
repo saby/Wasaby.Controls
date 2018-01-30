@@ -94,24 +94,10 @@ define('Controls/ConfirmationWindow/Dialog', [
          return {
             type: 'yesno',
             style: 'default',
-            buttonConfig: {
-               yes: {
-                  caption: rk('Да'),
-                  isLink: false
-               },
-               no: {
-                  caption: rk('Нет'),
-                  isLink: false
-               },
-               cancel: {
-                  caption: rk('Отмена'),
-                  isLink: false
-               },
-               ok: {
-                  caption: rk('ОК'),
-                  isLink: false
-               }
-            }
+            yesCaption: rk('Да'),
+            noCaption: rk('Нет'),
+            cancelCaption: rk('Отмена'),
+            okCaption: rk('ОК')
          };
       };
 
