@@ -4,7 +4,7 @@ define('SBIS3.CONTROLS/FieldLink/LinkDocs',
    ],
    function() {
       /**
-       * @class SBIS3.CONTROLS/FieldLink/LinkDocs
+       * @mixin SBIS3.CONTROLS/FieldLink/LinkDocs
        * @css @font-size_FieldLink-Link Размер шрифта метки поля связи.
        * @css @color_FieldLink-Link_enabled Цвет метки поля связи.
        * @css @color_FieldLink-Link_enabled_hover Цвет метки поля связи при наведении (состояние hover).

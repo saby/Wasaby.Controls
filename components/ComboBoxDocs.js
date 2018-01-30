@@ -4,7 +4,7 @@ define('SBIS3.CONTROLS/ComboBoxDocs',
    ],
    function() {
       /**
-       * @class SBIS3.CONTROLS/ComboBoxDocs
+       * @mixin SBIS3.CONTROLS/ComboBoxDocs
        * @css @icon-size_ComboBox-Arrow Размер иконки открытия выпадающего списка.
        * @css @spacing_ComboBox-Arrow Отступ между текстом и иконкой открытия выпадающего списка.
        * @css @max-height_ComboBox-picker Максимальная высота выпадающего списка.

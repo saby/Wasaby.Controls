@@ -4,7 +4,7 @@ define('SBIS3.CONTROLS/FieldLinkDocs',
    ],
    function() {
       /**
-       * @class SBIS3.CONTROLS/FieldLinkDocs
+       * @mixin SBIS3.CONTROLS/FieldLinkDocs
        * @css @icon-size_FieldLink-button Размер иконки открытия справочника и крестика в поле связи.
        * @css @spacing_FieldLink-showAllLinks_enabled Отступ между кнопкой показа полного списка значений и выбранными элементами.
        * @css @font-size_FieldLink-item-caption_normal Размер шрифта выбранных элементов.
