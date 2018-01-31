@@ -16,6 +16,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
     * @class SBIS3.CONTROLS/TextBox/TextBoxBase
     * @extends Lib/Control/CompoundControl/CompoundControl
     * @mixes SBIS3.CONTROLS/Mixins/FormWidgetMixin
+    * @mixes Controls/Input/resources/InputRender/InputRenderDocs
     * @public
     * @author Крайнов Д.О.
     *

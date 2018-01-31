@@ -41,6 +41,7 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
      *
      * @class SBIS3.CONTROLS/MoneyTextBox
      * @extends SBIS3.CONTROLS/NumberTextBox
+     * @mixes SBIS3.CONTROLS/MoneyTextBoxDocs
      * @public
      * @control
      * @author Романов В.С.
