@@ -67,6 +67,7 @@
 
 @background_EditActions-closeButton:        @closeButtonImage;
 @background_EditActions-closeButton_active: @closeButtonImageHover;
+@background_EditActions-closeButton_hovered:@closeButtonImageHover;
 
 @default-itemHover-color:                 #F0F5FB;//Переменную нужно удалить, она дублирует @default-bg-color-hovered-item
 @default-itemSelected-color:              #F3F3F3;
@@ -538,9 +539,10 @@
 @margin_MenuIcon_size-l:                  -10px 0 0 7px;
 @margin_MenuIcon_border-24:               -5px 0 0 -9px;
 @menu-icon-menu-bg:                       @background-color_Menu;
-// -------- //
-// Text box //
-// -------- //
+// ----------- //
+// InputRender //
+// ----------- //
+@font-weight_InputRender_style_header:     bold;
 //todo
 @text-box-focus-bg:                       @background-color_InputRender;
 // --------- //
@@ -577,12 +579,12 @@
 // ----------- //
 @date-picker-button-margin-left:                7px;
 @date-picker-button-vertical-align:             center;
-@date-picker-button-size_default:               18px;
-@date-picker-button-line-height_default:        16px;
-@date-picker-button-size_m:                      @date-picker-button-size_default;
-@date-picker-button-line-height_m:               @date-picker-button-line-height_default;
-@date-picker-button-size_l:                      @date-picker-button-size_default;
-@date-picker-button-line-height_l:               @date-picker-button-line-height_default;
+@date-picker-button-size_default:               16px;
+@date-picker-button-line-height_default:        14px;
+@date-picker-button-size_m:                     @date-picker-button-size_default;
+@date-picker-button-line-height_m:              @date-picker-button-line-height_default;
+@date-picker-button-size_l:                     @date-picker-button-size_default;
+@date-picker-button-line-height_l:              @date-picker-button-line-height_default;
 @top_DatePicker-closeButton:                    8px;
 // -------- //
 // Calendar //
@@ -647,7 +649,7 @@
 @controls-date-range-year-marginleft:             0;
 @date-range-choose-year-line-height:            @date-range-choose-year-height + 1;
 @date-range-button-vertical-align:              center;//todo нет значение center есть middle
-@date-range-button-size_default:                18px;
+@date-range-button-size_default:                16px;
 @date-range-button-line-height_default:         14px;
 @date-range-button-size_m:                      @date-range-button-size_default;
 @date-range-button-line-height_m:               @date-range-button-line-height_default;

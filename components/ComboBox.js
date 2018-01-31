@@ -60,6 +60,7 @@ define('SBIS3.CONTROLS/ComboBox', [
     * @mixes SBIS3.CONTROLS/Mixins/Selectable
     * @mixes SBIS3.CONTROLS/Mixins/DataBindMixin
     * @mixes SBIS3.CONTROLS/Mixins/SearchMixin
+    * @mixes SBIS3.CONTROLS/ComboBoxDocs
     *
     * <b>Важно:</b> при добавлении этого класса сломается "Базовая линия".
     *
@@ -211,7 +212,7 @@ define('SBIS3.CONTROLS/ComboBox', [
              * @noShow
              */
             valueFormat: '',
-            /*
+            /**
              @cfg {Boolean} Автоматически фильтровать пункты выпадающего списка по введеной строке
              */
             autocomplete: false

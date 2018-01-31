@@ -91,7 +91,7 @@ body {
 }
 
 .controls-operationsPanel__actions {
-  .controls-ButtonBase:hover, .controls-DropdownList__textWrapper:hover, .controls-ComboBox:hover {
+  .controls-ButtonBase:hover, .controls-DropdownList__value:hover, .controls-ComboBox:hover {
     color: #B9E9FF !important;
     .icon-error {
       color: @error-color !important;
@@ -108,7 +108,16 @@ body {
     }
   }
 }
-
+.controls-operationsPanel__itemsMenu {
+  .controls-Button__icon {
+    color: #839EBC !important;
+  }
+  &:hover {
+    .controls-Button__icon {
+      color: #B9E9FF !important;
+    }
+  }
+}
 .ws-LoadingIndicator__window, .ws-loading {
     img, .ws-loadingimg > div:before{
       width: round(74px * @multiplier);
@@ -236,6 +245,12 @@ body {
         }
       }
     }
+  }
+  .ws-window-title { // аналогично шапке панели, контентная область начинается слева от крестика
+    margin: 0 !important;
+    width: calc(100% ~'-' round(86px * @multiplier)) !important; //78 - close button width + 8 - padding
+    padding-left: round(24px * @multiplier) !important;
+    box-sizing: border-box !important;
   }
 }
 

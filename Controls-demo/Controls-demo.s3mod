@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui_module id="0641abed-e0fb-4f42-990c-4c24bdbd7bd0" name="Controls-demo" responsible="Бегунов А.В." version="1.00">
+
+  <description/>
+
+  <depends>
+        <bl_module id="f6fdf353-3ab3-4dbb-8671-01c2b418bf0a" name="Controls"/>
+  </depends>
+
+  <load_after/>
+
+  <parameters/>
+
+  <resources/>
+
+  <preload/>
+
+</ui_module>

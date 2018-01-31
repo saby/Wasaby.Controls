@@ -51,6 +51,20 @@
   font-family: @fontFamily;
 }
 
+.icon(@size: @default-icon-size, @fontFamily: @default-icon-font) {
+  font-size: @size;
+  width: @size;
+  height: @size;
+  font-family: @fontFamily;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  display: inline-block;
+}
+
 .closedHandCursor() {
    cursor: -moz-grabbing !important;
    cursor: -webkit-grabbing !important;
@@ -667,8 +681,8 @@
 .ws-close-button() {
    cursor: pointer;
    border-style: solid;
-   width: @width_CloseButton;
-   height: @height_CloseButton;
+   width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
+   height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
    font-family: @default-icon-font;
    line-height: @height_CloseButton;
    font-size: @font-size_CloseButton;
@@ -681,13 +695,14 @@
    .align-items(center);
    .justify-content(center);
    &:before {
-      color: @color_primary;
+      color: @color_CloseButton-icon;
+      text-shadow: @text-shadow_Button;
       content: @content_CloseButton_icon;
    }
    body:not(.ws-is-mobile-platform) &:hover, &:active {
       background-color: @background-color_CloseButton_hover;
       &:before {
-         color: @icon-color-primary-hover;
+         color: @color_CloseButton-icon_hover;
       }
    }
 }

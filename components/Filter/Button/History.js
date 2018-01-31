@@ -10,6 +10,7 @@ define('SBIS3.CONTROLS/Filter/Button/History',
    "SBIS3.CONTROLS/Commands/CommandsSeparator",
    "SBIS3.CONTROLS/ListView",
    'css!SBIS3.CONTROLS/Commands/CommandsSeparator',
+   'css!SBIS3.CONTROLS/Filter/Button/History/FilterButtonHistory',
    "i18n!SBIS3.CONTROLS/Filter/Button"
 ],
     function( CommandDispatcher,CompoundControl, dotTpl) {
@@ -64,7 +65,7 @@ define('SBIS3.CONTROLS/Filter/Button/History',
          /* Установка операции отметки записи маркером */
          self._historyView.setItemsActions([{
             name: 'pin',
-            icon: 'icon-16 icon-Pin',
+            icon: 'icon-16 icon-Pin icon-disabled',
             tooltip: rk('Отметить'),
             isMainAction: true,
             onActivated: function(target, key) {
@@ -127,8 +128,7 @@ define('SBIS3.CONTROLS/Filter/Button/History',
 
          for(var action in actions) {
             if(actions.hasOwnProperty(action)) {
-               actions[action].getContainer().toggleClass('icon-primary', isMarked)
-                                             .toggleClass('icon-disabled',!isMarked);
+               actions[action].getContainer().toggleClass('controls-filterButton__historyView-hiddenMarker', isMarked);
             }
          }
       }

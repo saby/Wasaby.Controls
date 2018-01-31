@@ -18,8 +18,8 @@ define('Controls/Popup/Manager/Popup',
             var content = self._container.querySelector(CONTENT_SELECTOR) || self._container.firstChild;
 
             return {
-               width: content.offsetWidth,
-               height: content.offsetHeight
+               width: content.scrollWidth,
+               height: content.scrollHeight
             }
          },
 
@@ -64,6 +64,7 @@ define('Controls/Popup/Manager/Popup',
          },
 
          _afterUpdate: function () {
+
             var contentSizes = _private.getContentSizes(this);
 
             //Если размеры контента изменились, пересчитаем размеры окна
