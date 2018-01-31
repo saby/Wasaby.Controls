@@ -23,7 +23,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    "SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker",
    "Deprecated/Controls/CloseButton/CloseButton",
    "SBIS3.CONTROLS/Date/RangeBigChoose/resources/Validators",
-   "browser!js!SBIS3.CONTROLS/ListView/resources/SwipeHandlers",
+   "browser!SBIS3.CONTROLS/ListView/resources/SwipeHandlers",
    'i18n!SBIS3.CONTROLS/Date/RangeBigChoose',
    'css!SBIS3.CONTROLS/Date/RangeBigChoose/DateRangeBigChoose',
    'SBIS3.CONTROLS/ScrollContainer'
