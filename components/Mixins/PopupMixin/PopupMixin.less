@@ -10,8 +10,8 @@
 
 .controls-PopupMixin__closeButton_withBorder {
    border-style: solid;
-   width: @width_CloseButton;
-   height: @height_CloseButton;
+   width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
+   height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
    font-family: @default-icon-font;
    line-height: @height_CloseButton;
    font-size: @font-size_CloseButton;
@@ -21,7 +21,8 @@
    border-radius: @border-radius_CloseButton;
    background-color: @background-color_CloseButton;
    &:before {
-      color: @color_primary;
+      color: @color_CloseButton-icon;
+      text-shadow: @text-shadow_Button;
    }
 }
 
@@ -32,7 +33,7 @@
    font-family: @default-icon-medium-font;
    line-height: @icon-size_default_medium;
    &:before {
-      color: @icon-color-disabled;
+      color: @color_CloseButton-standart-icon;
    }
 }
 
@@ -41,14 +42,17 @@ body:not(.ws-is-mobile-platform) {
       &:hover, &:active {
          background-color: @background-color_CloseButton_hover;
          &:before {
-            color: @icon-color-primary-hover;
+            color: @color_CloseButton-icon_hover;
          }
+      }
+      &:active {
+         box-shadow: @box-shadow_CloseButton_active;
       }
    }
    .controls-PopupMixin__closeButton_standart {
       &:hover, &:active {
          &:before {
-            color: @icon-color-primary-hover;
+            color: @color_CloseButton-standart-icon_hover;
          }
       }
    }
