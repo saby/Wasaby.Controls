@@ -26,6 +26,10 @@
   border-bottom: @border-params;
   border-top: @border-params;
 
+  // Исчезает нижняя рамка в 150% 4к
+  // https://online.sbis.ru/opendoc.html?guid=95d7a236-67f5-4b4e-9f79-c5db6eb41b27
+  position: static;
+
   &:last-child {
     border-right: 1px solid white;
     // Будет удалено в 3.18: https://online.sbis.ru/opendoc.html?guid=dc945545-09fa-4fa6-8dbd-a25673c2832d
