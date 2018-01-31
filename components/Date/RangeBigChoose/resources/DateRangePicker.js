@@ -199,7 +199,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          scrollContainer.finish().animate({
             scrollTop: scrollContainer.scrollTop() + element.offset().top -  scrollContainer.offset().top
          }, {
-            duration: 500,
+            duration: 750,
             done: this._scrollAnimationComplete
          });
       },
