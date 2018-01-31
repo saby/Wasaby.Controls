@@ -9,9 +9,8 @@ define('Controls/List/AddButton', [
       _template: template,
 
       clickHandler: function (e) {
-         e.stopPropagation();
-         if(this.isEnabled()){
-            this._notify('click');
+         if(!this.isEnabled()){
+            e.stopPropagation();
          }
       }
    });
