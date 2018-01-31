@@ -1160,12 +1160,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                editor.selection.select(nodeForSelect, true);
                editor.selection.collapse(false);
+               // Убран фрагмент кода ниже ввиду ошибки
+               // 93052 https://online.sbis.ru/opendoc.html?guid=05634433-2fda-4960-b75c-f252d3df4d28
                //code from tinyMCE.init method
-               try {
+               /*try {
                   editor.lastRng = editor.selection.getRng();
                } catch (ex) {
                   // IE throws "Unexcpected call to method or property access" some times so lets ignore it
-               }
+               }*/
             }
          },
 
