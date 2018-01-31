@@ -200,7 +200,8 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             эта опция нужна для того, чтобы понять, надо ли отключать плавный скролл на мобильных устройствах на остальных панелях
             */
             _canScroll: false,
-            _fixJqueryPositionBug: false //https://online.sbis.ru/opendoc.html?guid=e99ac72c-93d7-493f-a23e-ad09d45e908b
+            _fixJqueryPositionBug: false, //https://online.sbis.ru/opendoc.html?guid=e99ac72c-93d7-493f-a23e-ad09d45e908b
+            _fixPopupRevertCorner: false //Логика поиска противоположного угла для меню. Скорее всего такая логика должна быть по умолчанию
          }
       },
 
@@ -1038,6 +1039,12 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                               offset.top = this._windowSizes.height - this._container.get(0).scrollHeight - this._containerSizes.border * 2;
                            } else {
                               this._isMovedV = !this._isMovedV;
+                              if (this._options._fixPopupRevertCorner) {
+                                 var revertPositionData = {t: 'l', l: 't'};
+                                 //Логика должна быть всенда такая: при развороте вниз - позиционирование от верхней границы таргета, вверх - от нижней.
+                                 //Сейчас куча лишних расчетов которые косячат, пока не известно нужно ли где-то текущее поведение
+                                 this._options.corner = (this._isMovedV ? revertPositionData[this._defaultCorner[0]] : this._defaultCorner[0]) + this._options.corner[1];
+                              }
                               oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
                               spaces = this._getSpaces(this._options.corner);
                               height = spaces.bottom - vOffset - this._margins.top + this._margins.bottom;
