@@ -9,11 +9,26 @@ define('Controls/Validate/Input',
    ){
       'use strict';
 
-      var Validate = Controller.extend({
+      var
+         Validate,
+         _private;
+
+      _private = {
+         focusOut: function(self) {
+            self._shouldValidate = true;
+            self._forceUpdate();
+         }
+      };
+
+      Validate = Controller.extend({
          _template: template,
          _focusOutHandler: function () {
-            this._shouldValidate = true;
-            this._forceUpdate();
+            if (!this._options.hasComponentFocusOut) {
+               _private.focusOut(this);
+            }
+         },
+         _componentFocusOutHandler: function () {
+            _private.focusOut(this);
          },
          _cleanValid: function () {
             this.setValidationResult(null);
