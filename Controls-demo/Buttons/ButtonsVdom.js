@@ -9,7 +9,11 @@ define('Controls-demo/Buttons/ButtonsVdom', [
 
    var ModuleClass = Control.extend(
       {
-         _template: template
+         _template: template,
+
+         clickHandler: function () {
+            console.log('click to button');
+         }
       });
    return ModuleClass;
 });

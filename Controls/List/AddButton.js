@@ -6,7 +6,14 @@ define('Controls/List/AddButton', [
 ], function (Control, template, types) {
 
    var AddButton = Control.extend({
-      _template: template
+      _template: template,
+
+      clickHandler: function (e) {
+         e.stopPropagation();
+         if(this.isEnabled()){
+            this._notify('click');
+         }
+      }
    });
 
    AddButton.getOptionTypes = function getOptionTypes() {
