@@ -1156,8 +1156,7 @@ define(
             startContainer = _getContainerByIndex.call(this, child),
             startPosition = position || 0;
 
-               _moveCursor(startContainer, startPosition);
-
+         _moveCursor(startContainer, startPosition);
       },
 
       _setEnabled: function(enabled) {
