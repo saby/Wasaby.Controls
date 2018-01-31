@@ -56,29 +56,6 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
     */
 
    var IconButton = WSButton.extend([], /** @lends SBIS3.CONTROLS/Button/IconButton.prototype */ {
-      $protected: {
-         _options: {
-         }
-      },
-
-      setIcon: function(icon) {
-         if (icon) {
-            if (((icon.indexOf('icon-error') >= 0) || (icon.indexOf('icon-done') >= 0))){
-               if (icon.indexOf('icon-error') >= 0) {
-                  this.getContainer().removeClass('controls-IconButton__doneBorder').addClass('controls-IconButton__errorBorder');
-               }
-               else {
-                  this.getContainer().addClass('controls-IconButton__doneBorder').removeClass('controls-IconButton__errorBorder');
-               }
-            } else {
-               this.getContainer().removeClass('controls-IconButton__doneBorder').removeClass('controls-IconButton__errorBorder');
-            }
-         } else {
-            this.getContainer().removeClass('controls-IconButton__doneBorder').removeClass('controls-IconButton__errorBorder');
-         }
-         IconButton.superclass.setIcon.call(this, icon);
-      },
-
       _modifyOptions: function () {
          var
              options = IconButton.superclass._modifyOptions.apply(this, arguments),
@@ -97,9 +74,6 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
             }
          }
          options.cssClassName += ' controls-IconButton-size__' + (!!options.size ? options.size : 'default');
-         // В 3.18.0 выпиливаю эту логику по задаче
-         // https://online.sbis.ru/opendoc.html?guid=241d440c-ed00-4fa3-b2f9-3a5c453b0943
-         options.tooltip =  options.tooltip || options.caption;
          return options;
       },
 
@@ -111,6 +85,24 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
          if (className && className.indexOf('controls-IconButton__round-border') >= 0) {
             this._container.removeClass('action-hover');
          }
+      },
+
+      setIcon: function(icon) {
+          if (icon) {
+              if (((icon.indexOf('icon-error') >= 0) || (icon.indexOf('icon-done') >= 0))){
+                  if (icon.indexOf('icon-error') >= 0) {
+                      this.getContainer().removeClass('controls-IconButton__doneBorder').addClass('controls-IconButton__errorBorder');
+                  }
+                  else {
+                      this.getContainer().addClass('controls-IconButton__doneBorder').removeClass('controls-IconButton__errorBorder');
+                  }
+              } else {
+                  this.getContainer().removeClass('controls-IconButton__doneBorder').removeClass('controls-IconButton__errorBorder');
+              }
+          } else {
+              this.getContainer().removeClass('controls-IconButton__doneBorder').removeClass('controls-IconButton__errorBorder');
+          }
+          IconButton.superclass.setIcon.call(this, icon);
       }
    });
 

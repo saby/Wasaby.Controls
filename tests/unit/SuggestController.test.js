@@ -31,7 +31,7 @@ define(
                 isAborted = false;
             
             selfTest._suggestPopupController = {
-               abort: function(){
+               hidePopup: function(){
                   isAborted = true;
                }
             };
@@ -42,7 +42,7 @@ define(
             assert.equal(selfTest._suggestPopupController, null, 'suggestPopupController is not destroyed');
          });
          
-         it('.search', function(done) {
+         it('.showPopup', function(done) {
             var selfTest = getTestAbstract(),
                 result = false;
    
@@ -51,35 +51,35 @@ define(
                _container: {offsetWidth: 0}
             };
             
-            SuggestController._private.getSearchController(selfTest).addCallback(function(controller) {
-               controller.search = function() {result = true};
-               SuggestController._private.search(selfTest);
+            SuggestController._private.getSuggestPopupController(selfTest).addCallback(function(controller) {
+               controller.showPopup = function() {result = true};
+               SuggestController._private.showPopup(selfTest);
    
-               SuggestController._private.getSearchController(selfTest).addCallback(function() {
+               SuggestController._private.getSuggestPopupController(selfTest).addCallback(function() {
                   assert.isTrue(result);
                   done();
                });
             });
          });
    
-         it('.getSearchController', function(done) {
+         it('.getSuggestPopupController', function(done) {
             var selfTest = getTestAbstract();
-            SuggestController._private.getSearchController(selfTest).addCallback(function(controller) {
+            SuggestController._private.getSuggestPopupController(selfTest).addCallback(function(controller) {
                assert.isTrue(cInstance.instanceOfModule(controller, 'Controls/Input/resources/SuggestPopupController'));
                assert.isTrue(cInstance.instanceOfModule(selfTest._suggestPopupController, 'Controls/Input/resources/SuggestPopupController'));
                done();
             });
          });
          
-         it('.abortSearch', function(done) {
+         it('.hidePopup', function(done) {
             var selfTest = getTestAbstract(),
                 result = false;
             
-            SuggestController._private.getSearchController(selfTest).addCallback(function(controller) {
-               controller.abort = function() {result = true};
-               SuggestController._private.abortSearch(selfTest);
+            SuggestController._private.getSuggestPopupController(selfTest).addCallback(function(controller) {
+               controller.hidePopup = function() {result = true};
+               SuggestController._private.hidePopup(selfTest);
                
-               SuggestController._private.getSearchController(selfTest).addCallback(function() {
+               SuggestController._private.getSuggestPopupController(selfTest).addCallback(function() {
                   assert.isTrue(result);
                   done();
                });
@@ -89,7 +89,8 @@ define(
          it('.getSearchFilter', function() {
             var selfTest = getTestAbstract();
             selfTest._options.searchParam = 'test';
-            assert.deepEqual(SuggestController._private.getSearchFilter(selfTest, 'testText'), {test: 'testText'});
+            selfTest._value = 'testText';
+            assert.deepEqual(SuggestController._private.getSearchFilter(selfTest), {test: 'testText'});
          });
    
          it('.getPopupOptions', function() {
@@ -98,6 +99,18 @@ define(
                _container: {offsetWidth: 0}
             };
             assert.equal(SuggestController._private.getPopupOptions(selfTest).componentOptions.width, 0);
+         });
+   
+         it('.needShowPopup', function() {
+            var selfTest = getTestAbstract();
+            selfTest._options.minSearchLength = 3;
+            
+            selfTest._value = '';
+            assert.isFalse(SuggestController._private.needShowPopup(selfTest));
+   
+            selfTest._value = 'test';
+            assert.isTrue(SuggestController._private.needShowPopup(selfTest));
+            
          });
    
          it('.onChangeValueHandler', function(done) {
@@ -112,22 +125,25 @@ define(
                _container: {offsetWidth: 0}
             };
    
-            SuggestController._private.getSearchController(selfTest).addCallback(function(controller) {
-               controller.abort = function() {abortResult = true};
-               controller.search = function() {searchResult = true;};
-               
-               SuggestController._private.onChangeValueHandler(selfTest, '');
-               SuggestController._private.getSearchController(selfTest).addCallback(function() {
+            SuggestController._private.getSuggestPopupController(selfTest).addCallback(function(controller) {
+               controller.hidePopup = function() {abortResult = true};
+               controller.showPopup = function() {searchResult = true;};
+   
+               selfTest._value = '';
+               SuggestController._private.onChangeValueHandler(selfTest);
+               SuggestController._private.getSuggestPopupController(selfTest).addCallback(function() {
                   assert.isFalse(searchResult);
                   assert.isTrue(abortResult);
-      
-                  SuggestController._private.onChangeValueHandler(selfTest, 'te');
-                  SuggestController._private.getSearchController(selfTest).addCallback(function() {
+   
+                  selfTest._value = 'te';
+                  SuggestController._private.onChangeValueHandler(selfTest);
+                  SuggestController._private.getSuggestPopupController(selfTest).addCallback(function() {
                      assert.isFalse(searchResult);
                      assert.isTrue(abortResult);
    
-                     SuggestController._private.onChangeValueHandler(selfTest, 'test');
-                     SuggestController._private.getSearchController(selfTest).addCallback(function() {
+                     selfTest._value = 'test';
+                     SuggestController._private.onChangeValueHandler(selfTest);
+                     SuggestController._private.getSuggestPopupController(selfTest).addCallback(function() {
                         assert.isTrue(searchResult);
    
                         done();

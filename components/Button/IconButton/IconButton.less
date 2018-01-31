@@ -3,11 +3,12 @@
   vertical-align: middle;
   .button-default-style(0);
 
-  .controls-Button__icon {
-    position: relative;
-  }
   .controls-Button__text {
     display: none;
+  }
+
+  .controls-Button__content {
+    .justify-content(center);
   }
 
   &:active {
@@ -72,9 +73,6 @@
    &.controls-IconButton__border.controls-IconButton-size__l {
      height: @height_IconButton_round_edit_size-l;
      width: @width_IconButton_round_edit_size-l;
-   }
-   .controls-Button__wrapper {
-     .justify-content(center);
    }
 
    &.ws-disabled {
