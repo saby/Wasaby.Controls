@@ -343,7 +343,7 @@
    }
 }
 
-.ws-is-ie {
+.ws-is-ie10, .ws-is-ie11 {
    .controls-TabButton__flex {
       > .controls-TabButton__mainText {
          position: relative;
@@ -356,6 +356,9 @@
    //В edge множество багов с рендером элементов у которых дробная ширина или высота https://stackoverflow.com/questions/32313551/microsoft-edge-bug
    .controls-TabButton.controls-TabButton__main-item .controls-MenuLink {
       height: 24px;
+   }
+   .controls-TabButtons__simple-view .controls-TabButton.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__wrapper {
+      margin-bottom: 0;
    }
 }
 
