@@ -403,7 +403,7 @@ define('SBIS3.CONTROLS/Filter/Button',
                 verticalAlign: {
                    side: 'top'
                 },
-                closeButton: true,
+                closeButton: 'withBorder',
                 locationStrategy: detection.isMobilePlatform ? 'dontMove' : null,
                 closeByExternalClick: true,
                 closeOnTargetMove: !detection.isMobilePlatform,
