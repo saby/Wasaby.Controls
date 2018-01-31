@@ -94,7 +94,31 @@ define('Controls/Container/Scroll',
             if (this.showScrollbar) {
                this._toggleGradient();
             }
+         },
+
+         /**
+          * Осуществить скролл на заданную величину в пикселях
+          * @param {Number} offset
+          */
+         scrollTo: function(offset) {
+            return this._children.content.scrollTop = offset;
+         },
+
+         /**
+          * Осуществить скролл к верху области
+          */
+         scrollToTop: function() {
+            this.scrollTo(0);
+         },
+
+         /**
+          * Осуществить скролл к низу области
+          */
+         scrollToBottom: function() {
+            var containerHeight = this._getContainerHeight();
+            this.scrollTo(containerHeight);
          }
+
       });
 
       return ScrollContainer;
