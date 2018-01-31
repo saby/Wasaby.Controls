@@ -61,8 +61,8 @@ define('Controls/InfoBox',
                },
                horizontalAlign: {
                   side: this._options.horizontalAlignSide,
-                  //Если таргет по ширине меньше, чем 12 (расстояние до стрелки) + 26 (ширина стрелки), то сдвинем инфобокс, чтобы стрелка указывала точно на точку.
-                  offset: target.offsetWidth < 38 ? HORIZONTAL_OFFSETS[this._options.horizontalAlignSide] : 0
+                  //TODO Если таргет по ширине меньше, чем 12 (расстояние до стрелки) + 16 (ширина стрелки), то сдвинем инфобокс, чтобы стрелка указывала точно на точку.
+                  offset: target.offsetWidth < 28 ? HORIZONTAL_OFFSETS[this._options.horizontalAlignSide] : 0
                }
             });
          }
