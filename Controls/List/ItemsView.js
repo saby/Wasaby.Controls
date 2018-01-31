@@ -55,7 +55,11 @@ define('Controls/List/ItemsView', [
             if (this._listModel) {
                this._listModel.destroy();
             }
-         }
+         },
+
+         // Пустой обработчик, т.к. переиспользуется шаблон из ListControl
+         _onItemClick: function () {}
+
       });
 
    //TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757
