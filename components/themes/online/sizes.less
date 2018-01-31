@@ -25,20 +25,19 @@
 @font-size_InputRender_m:                    14px;
 @font-size_InputRender_default:              @font-size_InputRender_m;
 @font-size_InputRender_l:                    18px;
-@padding_InputRender-container:              0 4px;
-@padding-bottom_InputRender-container_l:     0;
-@padding_InputRender-container_left:         0 0 0 4px;
+@padding_InputRender:                        0 4px;
+@padding_InputRender_left:                   0 0 0 4px;
 @border-width_InputRender:                   1px;
-@width_InputRender-InformationIcon:          16px;
-@height_InputRender-InformationIcon:         8px;
+@width_InputRender-tagStyle:                 16px;
+@height_InputRender-tagStyle:                8px;
+@line-height_InputRender_m:                  @default-line-height;
+@line-height_InputRender_l:                  23px;
+@line-height_InputRender_default:            @line-height_InputRender_m;
 @font-size_InputRender_style_header:         18px;
 //textarea
 @min-height_TextArea:             18px;
 @padding_TextArea-container:      2px 0 2px 4px;
 @padding_TextArea-field:          0 4px 0 0;
-@line-height_InputRender_m:       @default-line-height;
-@line-height_InputRender_l:       23px;
-@line-height_InputRender_default: @line-height_InputRender_m;
 //NumberTextBox
 @font-size_NumberTextBox-mirror:   @font-size_InputRender_m;
 //ComboBox
@@ -97,6 +96,10 @@
 @border-width_DateRangeBigChoose-range-selected-startEnd:     1px;
 @size_DateRangeBigChoose__stateButton_icon:                   16px;
 @size_DateRangeBigChoose__homeBtn_icon:                       16px;
+
+// DateRangeSlider
+@margin-top_DateRangeSlider_years-only:                  @date-range-slider-margin-top - @date-range-choose-year-height;
+
 // DateRangeBigChoose
 @width_DateRangeBigChoose:                               364px;
 @padding_DateRangeBigChoose-header:                      10px 0 10px 10px;
@@ -247,9 +250,9 @@
 
 //VDOM controls
 
-//inputPassword
-@font-size_inputPassword_show-password: @default-icon-size-medium;
-@font_inputPassword_show-password:      @default-icon-medium-font;
+//PasswordInput
+@font-size_PasswordInput-showPassword:         @default-icon-size-medium;
+@font-family_PasswordInput-showPassword:       @default-icon-medium-font;
 
 //inputRender
 @input-line-height: @default-line-height;
@@ -263,8 +266,8 @@
 //CloseButton
 @border-width_CloseButton:               1px 0 1px 1px;
 @border-radius_CloseButton:              2px 0 0 2px;
-@width_CloseButton:                      36px - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
-@height_CloseButton:                     28px - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
+@width_CloseButton:                      36px;
+@height_CloseButton:                     28px;
 @font-size_CloseButton:                  23px;
 //tabButton
 @height_tabbutton_mainItem_menuLink:     23px;

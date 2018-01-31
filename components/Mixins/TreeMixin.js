@@ -216,9 +216,9 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          return itemParent !== undefined ? itemParent === null ? '@' : itemParent.get(cfg.idProperty) + calcGroupId(itemParent) : '';
       }
       if (cfg.groupBy.groupNodes) {
-         return calcGroupId(item) + groupId;
-      } else {
          return groupId;
+      } else {
+         return calcGroupId(item) + groupId;
       }
    },
    getRecordsForRedraw = function(projection, cfg) {

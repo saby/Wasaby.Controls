@@ -167,6 +167,10 @@ define('Controls/Container/Scrollbar/Scrollbar', [
          },
          _afterUpdate: function afterMount(options) {
             this.setPosition(options.position);
+            this._setViewportRatio();
+            this._setThumbHeight();
+            this._setScrollRatio();
+            this._setThumbPosition();
          }
       });
 
