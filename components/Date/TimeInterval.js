@@ -76,7 +76,6 @@ define(
              * Опции создаваемого контролла
              */
             _options: {
-               fixTextGetter: false, //опция в 17.350, которая поддерживает текущее поведение форматных полей. в TimeInterval исторически было другое поведение. в 18.10 удаляю опцию
                /**
                 * Допустимые управляющие символы в маске.
                 * Условные обозначения:
@@ -290,7 +289,7 @@ define(
           */
          setInterval: function ( interval ) {
             if (interval == undefined) {
-               this._setText(this._getFixedText());
+               this._setText(this._getTextFromModel());
             }
             //cTimeInterval при преобразовании к строке всегда вернет значение своего формата, даже если туда положили null (в этом случае значение 0 дней, минут, часов)
             //Если устанавливают интервал 0 дней, часов, минут, проверка на неравенство не пройдет, поэтому смотрим, что если раньше был null, то нужно сеттить
@@ -358,7 +357,7 @@ define(
             var isEmptyText = false,
                 lackMaskLength;
             if (!text) {
-               text = this._getFixedText();
+               text = this._getTextFromModel();
                isEmptyText = true;
             }
             lackMaskLength = text.length - this._options.mask.length;
@@ -373,19 +372,10 @@ define(
             text = this._getCorrectText(text, !text || this._getFormatModel().getStrMask(this._getMaskReplacer()) === text);
             TimeInterval.superclass._setText.call(this, text);
          },
-         _getFixedText: function() {
-           if (this._options.fixTextGetter) {
-              return this._getTextFromModel();
-           }
-           return this._getFormatModel().getStrMask(this._getMaskReplacer());
-         },
          _getCorrectText: function(text, isEmptyText){
             this._getFormatModel().setText(text, this._getMaskReplacer());
             this._updateIntervalByText();
-            if (this._options.fixTextGetter) {
-               return isEmptyText ? '' : this._getTextByTimeInterval();
-            }
-            return this._getTextByTimeInterval(isEmptyText);
+            return isEmptyText ? '' : this._getTextByTimeInterval();
          },
          /**
           * Получить текст по текущему значению timeInterval.
@@ -486,8 +476,8 @@ define(
          _updateTextByTimeInterval: function(needUpdate){
             var
                textByTimeInterval = this._getTextByTimeInterval(),
-               currentText = this._options.fixTextGetter ? this._getFixedText() : this._getFormatModel().getText(this._getMaskReplacer());
-            if ((needUpdate === true || currentText !== this._getFixedText()) && currentText !== textByTimeInterval){
+               currentText = this._getTextFromModel();
+            if ((needUpdate === true || currentText !== this._getTextFromModel()) && currentText !== textByTimeInterval){
                this._setText(textByTimeInterval);
             }
          },

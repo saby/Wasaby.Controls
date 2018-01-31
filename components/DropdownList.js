@@ -169,6 +169,17 @@ define('SBIS3.CONTROLS/DropdownList',
                _defaultItemContentTemplate: ItemContentTemplate,
                _defaultItemTemplate: dotTplFnForItem,
                /**
+                * @name SBIS3.CONTROLS/DropdownList#allowEmptyMultiSelection
+                * @cfg {Boolean} Устанавливает конфигурацию для режима множественного выбора, при которой разрешается/запрещается отсутствие выбранных элементов коллекции.
+                * * true Отсутствие выбранных элементов коллекции разрешено.
+                * * false Отсутствие выбранных элементов коллекции запрещено.
+                * @remark
+                * Настройка режима множественного выбора, при которой запрещено отсутствие выбранных элементов коллекции
+                * гарантирует, что среди элементов коллекции всегда остаётся хотя бы один выбранный элемент.
+                * Также пользователь не сможет сбросить последнее выбранное значение через пользовательский интерфейс приложения.
+                * @default false
+                */
+               /**
                 * @cfg {String} Устанавливает шаблон отображения шапки.
                 * @remark
                 * Шаблон может быть создан с использованием <a href="/doc/platform/developmentapl/interface-development/component-infrastructure/logicless-template/">logicless-шаблонизатора</a> и doT.js-шаблонизатора.<br/>

@@ -1,6 +1,6 @@
 #!groovy
 echo "Задаем параметры сборки"
-def version = "3.18.0"
+def version = "3.18.10"
 if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
         currentBuild.result = 'ABORTED'
         error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
@@ -354,6 +354,7 @@ node('controls') {
                 Адрес=http://${env.NODE_NAME}:10001"""
             // Копируем шаблоны
             sh """cp -f ./controls/tests/stand/intest/pageTemplates/branch/* ./controls/tests/stand/intest/pageTemplates"""
+            sh """cp -fr ./controls/demo/ ./controls/tests/stand/intest/demo/"""
             sh """
                 cd "${workspace}/controls/tests/stand/intest/"
                 sudo python3 "change_theme.py" ${params.theme}

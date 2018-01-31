@@ -24,8 +24,8 @@ define('Controls/interface/ISource', [
     */
 
    /**
-    * @name Controls/interface/ISource#displayProperty
-    * @cfg {String} Имя свойства элемента, которое используется для отображения значения в шаблоне строки по умолчанию, когда не задана опция itemTemplate.
+    * @name Controls/interface/ISource#itemTemplateProperty
+    * @cfg {String} Имя свойства элемента, в котором содержится шаблон отображения этого элемента. При отсутствии шаблона в поле используется шаблон из опции itemTemplate
     */
 
 });

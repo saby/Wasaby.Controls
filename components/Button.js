@@ -59,10 +59,43 @@ define('SBIS3.CONTROLS/Button',
     * <ws:SBIS3.CONTROLS/Button caption="Кнопка" />
     */
    var Button = Base.extend( [], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
-      _modifyOptions : function() {
+       $protected: {
+           _options: {
+               /**
+                * @cfg {String} Устанавливает размер кнопки.
+                * @remark
+                * Значение "m" установит средний размер поля ввода.
+                * Значение "l" устaновит большой размер поля ввода.
+                * @example
+                * Пример 1. Большая кнопка:
+                * фрагмент верстки:
+                * <pre class="brush:xml">
+                *     <option name="size">l</option>
+                * </pre>
+                */
+               size: '',
+               /**
+                * @cfg {String} Устанавливает стилевое оформление кнопки.
+                * @remark
+                * По умолчанию значение опции "standard".
+                * Значение "standard" установит стандартный стиль кнопки.
+                * Значение "primary" устaновит акцентный стиль кнопки.
+                * @example
+                * Пример 1. Акцентное стилевое оформление кнопки:
+                * фрагмент верстки:
+                * <pre class="brush:xml">
+                *     <option name="style">primary</option>
+                * </pre>
+                */
+               style: 'standard'
+           }
+       },
+      _modifyOptions : function(options, parsedOptions, attrToMerge) {
          var opts = Button.superclass._modifyOptions.apply(this, arguments);
+         opts._type = 'Button';
          opts.cssClassName += ' controls-Button';
          opts._iconDisabledClass = 'icon-button-disabled';
+         ButtonUtil.getStyleByConfig(opts, attrToMerge);
          ButtonUtil.preparedClassFromOptions(opts);
          return opts;
       },

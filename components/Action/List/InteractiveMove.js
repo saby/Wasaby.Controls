@@ -44,6 +44,10 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
        *       }
        *    })
        * </pre>
+       * Через метод execute так же можно переопредлять любые опции экшена например, передадим фильтр в список диалога.
+       * <pre>
+       *     move.execute({movedItems: movedItems, componentOptions: {filter: {demo:'only'}}});
+       * </pre>
        * В xhtml навесим обработчик:
        * <pre>
        *    <div class="MyListView">
@@ -66,14 +70,6 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
        *       </options>
        *    </component>
        *    </div>
-       * </pre>
-       * Когда для списка установлена прикладная стратегия (см. {@link WS.Data/MoveStrategy/Base}) перемещения, тогда ее необходимо передать в action:
-       * <pre>
-       *    ...
-       *    move = new InteractiveMove({
-       *       linkedObject: this.getChildControlByName('MyListView')
-       *    });
-       *    ...
        * </pre>
        * @see WS.Data/MoveStrategy/Base
        * @ignoreOptions validators independentContext contextRestriction extendedTooltip
@@ -101,6 +97,7 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
              * @property {String} displayField Поле элемента коллекции, из которого отображать данные.
              * @property {Object} filter Фильтр данных.
              * @property {Boolean} partialyReload Устанавливает поведение загрузки дочерних данных для записей типа "Узел" (папка) и "Скрытый узел".
+             * @property {Number} pageSize Размер страницы, списка в диалоге выбора, по умолчанию пейджинг выключен
              */
             _options : {
                 /**
@@ -117,6 +114,7 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
                nodeProperty: undefined,
                /**
                 * @cfg {componentOptions} Набор опций, передаваемых в компонент, отображающий список.
+                *
                 */
                componentOptions: null
             }

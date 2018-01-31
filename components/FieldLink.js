@@ -134,6 +134,7 @@ define('SBIS3.CONTROLS/FieldLink',
         * @mixes SBIS3.CONTROLS/Mixins/SyncSelectionMixin
         * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
         * @mixes SBIS3.CONTROLS/Mixins/ITextValue
+        * @mixes SBIS3.CONTROLS/FieldLinkDocs
         *
         * @cssModifier controls-FieldLink__hiddenIfEmpty Скрывает отображение (устанавливает CSS-свойство "display:none") контрола "Поле связи", если выполнены два условия: опция {@link enabled}=false и отсутствуют выбранные записи.
         *

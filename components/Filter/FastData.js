@@ -41,6 +41,10 @@ define('SBIS3.CONTROLS/Filter/FastData',
        * @category Filtering
        */
       var FastDataFilter = CompoundControl.extend([FilterMixin, ItemsControlMixin],/** @lends SBIS3.CONTROLS/Filter/FastData.prototype */{
+         /**
+          * @event onClickMore Происходит при клике на кнопку "Ещё", которая отображается в выпадающем списке.
+          * @param {Core/EventObject} eventObject Дескриптор события.
+          */
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {

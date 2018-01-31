@@ -1,0 +1,43 @@
+<div class="controls-ReportBrowser__history">
+    <div class="controls-ReportBrowser__history-favorite">
+        <div class="controls-ReportBrowser__history-title">Избранное</div>
+        <SBIS3.CONTROLS:Filter:HistoryView name="ReportFavoriteView" historyId="{{ (historyId + '-favorite') }}" className="controls-ReportBrowser__history-view" itemContentTpl="{{ _favoriteItemTpl }}" itemsSortMethod="{{ _favoriteSortMethod }}">
+            <ws:itemsActions>
+                <ws:Array>
+                    <ws:Object onActivated="{{ _itemActionHandler }}">
+                        <ws:name>
+                            <ws:String>favorite</ws:String>
+                        </ws:name>
+                        <ws:icon>
+                            <ws:String>icon-24 icon-Favourite icon-primary action-hover</ws:String>
+                        </ws:icon>
+                        <ws:isMainAction>
+                            <ws:Boolean>true</ws:Boolean>
+                        </ws:isMainAction>
+                    </ws:Object>
+                </ws:Array>
+            </ws:itemsActions>
+        </SBIS3.CONTROLS:Filter:HistoryView>
+    </div>
+    <div class="controls-ReportBrowser__history-list">
+        <div class="controls-ReportBrowser__history-title">Ранее отбирались</div>
+        <SBIS3.CONTROLS:Filter:HistoryView name="ReportHistoryView" historyId="{{ historyId }}" className="controls-ReportBrowser__history-view">
+            <ws:itemsActions>
+                <ws:Array>
+                    <ws:Object onActivated="{{ _itemActionHandler }}">
+                        <ws:name>
+                            <ws:String>favorite</ws:String>
+                        </ws:name>
+                        <ws:icon>
+                            <ws:String>icon-24 icon-Unfavourite icon-primary action-hover</ws:String>
+                        </ws:icon>
+                        <ws:isMainAction>
+                            <ws:Boolean>true</ws:Boolean>
+                        </ws:isMainAction>
+                    </ws:Object>
+                </ws:Array>
+            </ws:itemsActions>
+        </SBIS3.CONTROLS:Filter:HistoryView>
+    </div>
+    <SBIS3.CONTROLS:Action:OpenDialogAction name="editFavorite" initializingWay="local" dialogComponent="SBIS3.CONTROLS/Filter/FavoriteEditDialog"/>
+</div>

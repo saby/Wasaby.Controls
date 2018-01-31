@@ -420,8 +420,9 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                offset.left = this._calculateOverflow(offset, 'horizontal');
 
                var containerScrollWidth = this._container[0].offsetWidth - this._container[0].clientWidth - this._containerSizes.border * 2;
+               var hasStyleWidth = !!this._container[0].style.width; //Если мы уже задали width, то ширинка контейнера известна и позиционирование произведено с учетом скролла
                //Если позиционирование слева от таргета, то смещаемся на ширину скролла
-               if (containerScrollWidth && this._options.horizontalAlign.side === 'right') {
+               if (containerScrollWidth && !hasStyleWidth && this._options.horizontalAlign.side === 'right') {
                   offset.left -= containerScrollWidth;
                }
 

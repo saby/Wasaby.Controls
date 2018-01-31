@@ -1,0 +1,30 @@
+<div class="controls-FavoriteEditDialog">
+    <div class="ws-window-titlebar-custom controls-FavoriteEditDialog__title">
+        <span class="ws-float-area-title">Добавить в избранное</span>
+        <SBIS3.CONTROLS:Button className="controls-FavoriteEditDialog__addButton" caption="Сохранить" primary="{{ true }}" command="update">
+            <ws:commandArgs>
+                <ws:Array>
+                    <ws:Object closePanelAfterSubmit="{{ true }}"/>
+                </ws:Array>
+            </ws:commandArgs>
+        </SBIS3.CONTROLS:Button>
+    </div>
+    <SBIS3.CONTROLS:TextBox selectOnClick="{{ true }}" placeholder="{{ textValue }}" text="{{ 'record/editedTextValue'|mutable:'' }}" className="controls-FavoriteEditDialog__textValue-editor"/>
+    <SBIS3.CONTROLS:CheckBox
+            checked="{{ 'record/globalParams'|mutable:false }}"
+            caption="опубликовать для всех сотрудников"
+            cssClassName="controls-FavoriteEditDialog__editor"
+    />
+    <ws:if data="{{_hasEditableItems}}">
+        <div class="gray-color">Укажите параметры, которые хотите сохранить:</div>
+        <ws:for data="key, value in record.filterPanelItems">
+            <ws:if data="{{ !(_isEqual(value.value, value.resetValue)) && value.textValue }}">
+                <SBIS3.CONTROLS:CheckBox
+                        checked="{{ ('record/toSaveFields/' + value.id)|mutable:true }}"
+                        caption="<span class='gray-color'>{{ value.caption }}: </span>{{ value.textValue }}"
+                        cssClassName="controls-FavoriteEditDialog__editor"
+                />
+            </ws:if>
+        </ws:for>
+    </ws:if>
+</div>

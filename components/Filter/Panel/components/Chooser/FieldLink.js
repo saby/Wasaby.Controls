@@ -24,6 +24,8 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink', [
      * @extends SBIS3.CONTROLS/Filter/Panel/components/Chooser/Base
      * @author Авраменко А.С.
      * @public
+     *
+     * @demo SBIS3.Demo.FilterPanel.FilterPanelSimple
      */
 
     var FilterPanelChooserFieldLink = FilterPanelChooserBase.extend(/** @lends SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink.prototype */ {

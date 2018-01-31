@@ -51,6 +51,20 @@
   font-family: @fontFamily;
 }
 
+.icon(@size: @default-icon-size, @fontFamily: @default-icon-font) {
+  font-size: @size;
+  width: @size;
+  height: @size;
+  font-family: @fontFamily;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  display: inline-block;
+}
+
 .closedHandCursor() {
    cursor: -moz-grabbing !important;
    cursor: -webkit-grabbing !important;
@@ -158,6 +172,7 @@
   cursor: pointer;
   display: inline-block;
   outline: none;
+  line-height: normal;
   .box-sizing(border-box);
   font-family: @default-font-name;
   font-size: @button-font-size;
@@ -440,24 +455,17 @@
   color: @color;
 }
 .link-hover-mixin(@textColor, @iconColor, @textSelector) {
-  &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover) {
     &:hover {
       color: @textColor;
-      .controls-Button__icon {
-        &.icon-primary {
-          color: @iconColor;
-        }
+      // по ховеру нужно перекрашивать primary иконку, поэтому используем каскад
+      // иконки других значений icon-done, icon-error etc. перекрашивать не нужно
+      .icon-primary.controls-Button__icon {
+        color: @iconColor;
       }
-    }
-  }
-  &:not(.ws-disabled):not(.controls-Click__active) {
-    &:hover {
       .@{textSelector} {
-        cursor: pointer;
         text-decoration: underline;
       }
     }
-  }
 }
 
 .round-button-hover-mixin() {

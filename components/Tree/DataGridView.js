@@ -552,14 +552,21 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
             2) Не папка
             3) Режим поиска (по стандарту)
             4) projItem'a может не быть при добавлении по месту */
-         if(projItem && projItem.isNode() && this.getEditArrow().isVisible() && !this._isSearchMode()) {
+         if(projItem && this.getEditArrow().isVisible() && !this._isSearchMode()) {
             runDelayed(forAliveOnly(function() {
                hoveredItemContainer = hoveredItem.container;
+               if(!projItem.isNode() && this._options.editArrow !== 'custom') {
+                  this._hideEditArrow();
+                  return;
+               }
                folderTitle = hoveredItemContainer.find('.controls-TreeView__folderTitle');
                titleTd = folderTitle.closest('.controls-DataGridView__td', hoveredItemContainer);
-               editArrowMarker = this._getEditArrowMarker(titleTd);
-      
-               if(editArrowMarker.length) {
+               if(this._options.editArrow === 'custom') {
+                  editArrowMarker = this._getEditArrowMarker(hoveredItemContainer);
+               } else {
+                  editArrowMarker = this._getEditArrowMarker(titleTd);
+               }
+               if (editArrowMarker.length) {
                   editArrowContainer = this.getEditArrow().getContainer();
                   editArrowContainer.removeClass('ws-hidden');
                   editArrowContainer.css(this._getEditArrowPosition(titleTd, folderTitle, editArrowMarker));

@@ -211,6 +211,9 @@ define('SBIS3.CONTROLS/Date/RangeSlider',[
       },
 
       _setPickerConfig: function() {
+         var ops = this._options,
+            yearsOnly = ops.showYears && !ops.showMonths && !ops.showQuarters && !ops.showHalfyears,
+            pickerCss = yearsOnly ? 'controls-DateRangeSlider__picker-years-only' : 'controls-DateRangeSlider__picker-normal';
          return {
             corner: 'tl',
             bodyBounds: true,
@@ -222,7 +225,7 @@ define('SBIS3.CONTROLS/Date/RangeSlider',[
                side: 'top'
             },
             closeByExternalClick: true,
-            className: 'controls-DateRangeSlider__picker'
+            className: 'controls-DateRangeSlider__picker-shadow ' +  pickerCss
          };
       },
 

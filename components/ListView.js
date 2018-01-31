@@ -125,6 +125,7 @@ define('SBIS3.CONTROLS/ListView',
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        * @css js-controls-ListView__notEditable Клик по элементу с данным классом не будет приводить к запуску редактирования по месту.
+       * @css controls-ListView__disableHover Скрывает выделение по ховеру.
        *
        *
        * @ignoreOptions _handlers activableByClick alwaysShowExtendedTooltip buildMarkupWithContext className ignoreTabCycles linkedContext modal
@@ -1504,7 +1505,8 @@ define('SBIS3.CONTROLS/ListView',
                }
             }
             if (!isEmpty(this._options.groupBy) && this._options.easyGroup && $(e.target).hasClass('controls-GroupBy__separatorCollapse')) {
-               var idGroup = $(e.target).closest('.controls-GroupBy').attr('data-group');
+               var hashGroup = $(e.target).closest('.controls-GroupBy').attr('data-group-hash');
+               var idGroup = this._getItemsProjection().getByHash(hashGroup).getContents();
                this.toggleGroup(idGroup);
                if ($target.closest('.controls-ListView').parent().hasClass('ws-sticky-header__header-container')) {
                   $group = this._getItemsContainer().find('.controls-GroupBy[data-group="' + idGroup + '"]');

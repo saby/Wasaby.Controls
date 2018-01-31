@@ -20,15 +20,14 @@
      }
    }
    .controls-EditAtPlace__fieldWrapper {
-      height: auto;
-      width: 100%;
+      padding: 0 @default-padding;
       box-sizing: border-box;
       margin: @edit-at-place-wrapper-margin;
       border-width: @edit-at-place-wrapper-border-width;
       border-style: solid;
       border-color: transparent;
       //todo:
-      line-height: 20px;
+      line-height: @line-height_editAtPlace_fieldWrapper;
       &.controls-EditAtPlace__textAreaWrapper {
          display: block;
          padding: @edit-at-place-wrapper-text-area-padding;
@@ -43,7 +42,6 @@
          border-width: @edit-at-place-field-border-width;
          border-style: dashed;
          border-color: @edit-at-place-field-border-color;
-         height: 100%;
          white-space: nowrap;
          //todo: каскад
          &.controls-EditAtPlace__multiline {
@@ -58,9 +56,6 @@
    //todo
    .controls-EditAtPlace__textField.controls-InputRender__field {
       padding: 1px 0;
-   }
-   .controls-EditAtPlace__fieldWrapper{
-      padding: 0 4px;
    }
    .controls-EditAtPlace__placeholder {
       color: @default-placeholder-color;

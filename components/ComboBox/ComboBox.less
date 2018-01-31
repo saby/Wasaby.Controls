@@ -87,6 +87,7 @@
 
 .controls-ComboBox__scrollContainer {
    max-height: @max-height_ComboBox-picker; //Для работы ScrollContainer высота должна висеть именно на нем, так что задавать высоту на пикере не получится
+   height: 100%; //Нужно в случае, если пикер ограничен высотой окна браузера и на нем висит height, высота скролл-контейнера должна быть не больше высоты родителя
 }
 
 .controls-ComboBox__list {

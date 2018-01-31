@@ -60,7 +60,9 @@
    }
 }
 
-.controls-ListView__item:hover {
+/* Делаем через hoveredItem, так как media не работает в firefox и ie
+    https://bugzilla.mozilla.org/show_bug.cgi?id=1035774 */
+.controls-ListView__hoveredItem {
    .controls-ListView__itemCheckBox__showByHover {
       .checkbox-border-size();
    }
@@ -181,7 +183,7 @@ controls-ListView__item__withHover:hover {
 }
 
 .controls-ListView__serviceFooter {
-   padding: 0 @padding-ListView-serviceFooter;
+   padding: 0 @controls-view-padding-DEFAULT;
    overflow: hidden;
 }
 
