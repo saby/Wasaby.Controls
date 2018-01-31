@@ -1,6 +1,7 @@
 define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
    "Core/constants",
    'Core/detection',
+   'Core/helpers/event-helpers',
    'Core/helpers/Function/throttle',
    'Core/helpers/Object/isEmpty',
    "SBIS3.CONTROLS/ListView",
@@ -11,8 +12,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
    'SBIS3.CONTROLS/Date/RangeBigChoose/resources/CalendarSource',
    'Lib/LayoutManager/LayoutManager',
    "SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView",
-   'SBIS3.CONTROLS/ScrollContainer'
-], function (constants, detection, throttle, isEmpty, ListView, ItemTmpl, RangeMixin, DateUtils, cInstance, CalendarSource, LayoutManager) {
+   'SBIS3.CONTROLS/ScrollContainer',
+   'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
+], function (constants, detection, eventHelpers, throttle, isEmpty, ListView, ItemTmpl, RangeMixin, DateUtils, cInstance, CalendarSource, LayoutManager) {
    'use strict';
    var cConst = constants; //константы нужны для работы дат, не уверен что можно отключать из зависимостей (стан ругается)
 
@@ -48,6 +50,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
 
             // showPaging: false
 
+            infiniteScrollPreloadOffset: 3000,
+
             navigation: {
                type: 'cursor',
                config: {
@@ -63,6 +67,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          _selectionRangeEndItem: null
          // _selectionType: null
       },
+      _isAnimationProcessing: false,
+
       $constructor: function () {
          this._publish('onMonthActivated');
       },
@@ -76,6 +82,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          this._onMonthViewSelectingRangeEndDateChange = this._onMonthViewSelectingRangeEndDateChange.bind(this);
          this._onMonthViewCaptionActivated = this._onMonthViewCaptionActivated.bind(this);
          this._onSelectionEnded = this._onSelectionEnded.bind(this);
+         this._scrollAnimationComplete = this._scrollAnimationComplete.bind(this);
 
          // Представление обновляется только в setMonth и в любом случае будет использоваться месяц установленный в  setMonth
          // TODO: Сделать, что бы компонент рендерился при построении если чузер открыт в режиме месяца. Тоже самое для режима года и для MonthPicker
@@ -107,8 +114,13 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
             container.on('mouseenter', '.controls-MonthView__currentMonthDay', this._onDayMouseEnter.bind(this));
          }
 
-         this._scrollContainer = container.closest('.controls-ScrollContainer__content');
-         this._scrollContainer.on('scroll', this._onScroll.bind(this));
+         this._getScrollContainer().on('scroll', this._onScroll.bind(this));
+
+         container.on(constants.compatibility.wheel, '.controls-DateRangeBigChoose-DateRangePickerItem__months', this._onWheel.bind(this));
+         if (detection.isMobileIOS) {
+            container.on('touchmove', '.controls-DateRangeBigChoose-DateRangePickerItem__months', function(event){event.preventDefault()});
+            container.on('swipeVertical', this._onSwipe.bind(this));
+         }
 
          this._yearTitleContainer = container.find('.controls-DateRangeBigChoose__dates-header-year');
       },
@@ -120,6 +132,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
 
       _onScroll: throttle(function () {
+         if (this._isAnimationProcessing) {
+            return;
+         }
          // TODO: переделать условие
          if (!this.getContainer().is(':visible')) {
             return;
@@ -128,7 +143,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          // Округляем т.к. в ie offset().top возвращает дробные значения. Причем эти значения у _scrollContainer
          // и у вложенного элемента, который проскролили в самый верх скролируемой области,
          // могут отличаться на тысячные доли..
-         var scrollContainerTop = Math.floor(this._scrollContainer.offset().top),
+         var scrollContainerTop = Math.floor(this._getScrollContainer().offset().top),
             first = false,
             date;
          date = this.getContainer().find('.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_wrapper').filter(function (index, element) {
@@ -145,6 +160,55 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
 
       _getItemHeight: function () {
          return this.getContainer().find('.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_wrapper').first().outerHeight();
+      },
+
+      _onWheel: function (event) {
+         var originalEvent = event.originalEvent,
+            direction;
+
+         if (originalEvent.wheelDelta !== undefined) {
+            direction = originalEvent.wheelDelta > 0 ? -1 : 1;
+         } else {
+            direction = originalEvent.deltaY < 0 ? 1 : -1;
+         }
+         event.preventDefault();
+         this._onScrollOverMonths(direction)
+      },
+
+      _onSwipe: function (event) {
+         if ($(event.target).closest('.controls-DateRangeBigChoose-DateRangePickerItem__months').length === 0) {
+            return;
+         }
+         event.preventDefault();
+         this._onScrollOverMonths(event.direction === 'bottom' ? -1 : 1);
+      },
+
+      _onScrollOverMonths: function (direction) {
+         var element = $(event.target).closest('.controls-DateRangeBigChoose-DateRangePickerItem'),
+            scrollContainer = this._getScrollContainer();
+
+         element = direction > 0 ? element.next() : element.prev();
+
+         // Следующий месяц мог еще не отрисоваться, в этом случае не обрабатываем скролирование
+         if (element.length === 0) {
+            return;
+         }
+
+         this._isAnimationProcessing = true;
+
+         scrollContainer.finish().animate({
+            scrollTop: scrollContainer.scrollTop() + element.offset().top -  scrollContainer.offset().top
+         }, {
+            duration: 750,
+            done: this._scrollAnimationComplete
+         });
+      },
+
+      _scrollAnimationComplete: function (animation, jumpedToEnd) {
+          if (!jumpedToEnd) {
+             this._isAnimationProcessing = false;
+             this._onScroll();
+          }
       },
 
       _onMonthTitleClick: function (event) {
