@@ -246,6 +246,12 @@ body {
       }
     }
   }
+  .ws-window-title { // аналогично шапке панели, контентная область начинается слева от крестика
+    margin: 0 !important;
+    width: calc(100% ~'-' round(86px * @multiplier)) !important; //78 - close button width + 8 - padding
+    padding-left: round(24px * @multiplier) !important;
+    box-sizing: border-box !important;
+  }
 }
 
 //!IMPORTANT лучше чем увеличение веса селектора через BODY тк возможно собирать тему под селектором
