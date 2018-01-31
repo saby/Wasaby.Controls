@@ -1,0 +1,34 @@
+<div class="controls-SourceControl">
+    <div class="ws-SourceControl__topListTrigger" name="topListTrigger"></div>
+    <div class="ws-SourceControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
+    <div class="ws-SourceControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
+
+    <ws:if data="{{_model && _model.getCount()}}">
+        <ws:partial
+              template="{{_viewName}}"
+              name="listView"
+              listModel="{{_model}}"
+              itemTemplate="{{_options.itemTemplate}}"
+              idProperty="{{_options.idProperty}}"
+              displayProperty="{{_options.displayProperty}}"
+              selectedKey="{{_options.selectedKey}}">
+        </ws:partial>
+    </ws:if>
+
+    <ws:if data="{{_options.emptyTemplate && _model && !_model.getCount()}}">
+        <ws:partial template="{{_options.emptyTemplate}}"/>
+    </ws:if>
+
+    <div class="ws-SourceControl__bottomLoadTrigger" name="bottomLoadTrigger" style="top: -{{_loadOffset}}px;"></div>
+    <div class="ws-SourceControl__bottomPlaceholder" style="height: {{_bottomPlaceholderHeight}}px;"></div>
+    <div class="ws-SourceControl__bottomListTrigger" name="bottomListTrigger"></div>
+
+    <ws:if data="{{_pagingCfg}}">
+        <Controls:List:Paging attr:class="ws-SourceControl__scrollPaging" scope="{{_pagingCfg}}" on:onArrowClick="__onPagingArrowClick()"></Controls:List:Paging>
+    </ws:if>
+    <ws:if data="{{_loadingIndicatorState}}">
+        <div class="ws-SourceControl__loadingIndicator ws-SourceControl__loadingIndicator__state-{{_loadingIndicatorState}}">
+            <div class="ws-SourceControl__loadingIndicatorImg"></div>
+        </div>
+    </ws:if>
+</div>

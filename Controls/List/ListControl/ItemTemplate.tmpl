@@ -1,6 +1,5 @@
 <div attr:class="ws-ListView__item {{marker != false && itemData.isSelected ? 'ws-ListView__item__selected'}}"
      attr:key="{{itemData.dispItem.getHash()}}">
-   {{debug()}}
    <ws:if data="{{contentTemplate}}">
       <ws:partial
             template="{{contentTemplate}}"
