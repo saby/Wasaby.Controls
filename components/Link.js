@@ -49,14 +49,6 @@ define('SBIS3.CONTROLS/Link', [
     * @css ws-linkHeader Устанавливает для кнопки стилевое оформление в виде "Заголовок-разделитель" (см. <a href="http://axure.tensor.ru/standarts/v7/#p=разделители__заголовки___версия_05_">Стандарты</a>).
     * @css ws-linkHeader&#32;ws-splitter Устанавливает для кнопки стилевое оформление в виде "Заголовок-разделитель с вертикальной линией" (см. <a href="http://axure.tensor.ru/standarts/v7/#p=разделители__заголовки___версия_05_">Стандарты</a>).
     *
-    * @cssModifier mainLink__2 Устанавливает для кнопки стилевое оформление "Основная ссылка 2" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
-    * @cssModifier mainLink__3 Устанавливает для кнопки стилевое оформление "Основная ссылка 3" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
-    * @cssModifier additionalLink Устанавливает для кнопки стилевое оформление "Дополнительная ссылка" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
-    * @cssModifier additionalLink__2 Устанавливает для кнопки стилевое оформление "Дополнительная ссылка 2" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
-    * @cssModifier additionalLink__3 Устанавливает для кнопки стилевое оформление "Дополнительная ссылка 3" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
-    * @cssModifier additionalLink__4 Устанавливает для кнопки стилевое оформление "Дополнительная ссылка 4" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
-    * @cssModifier additionalLink__5 Устанавливает для кнопки стилевое оформление "Дополнительная ссылка 5" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
-    *
     * @control
     * @public
     * @category Button
@@ -86,7 +78,28 @@ define('SBIS3.CONTROLS/Link', [
              * </pre>
              * @see href
              */
-            inNewTab: false
+            inNewTab: false,
+            /**
+            * @cfg {String} Устанавливает стилевое оформление кнопки (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>)
+            * @remark
+            * По умолчанию значение опции "main"
+            * Значение "main" установит  стиль кнопки.
+            * main-2 Устанавливает для кнопки стилевое оформление "Основная ссылка 2".
+            * main-3 Устанавливает для кнопки стилевое оформление "Основная ссылка 3".
+            * additional Устанавливает для кнопки стилевое оформление "Дополнительная ссылка".
+            * additional-2 Устанавливает для кнопки стилевое оформление "Дополнительная ссылка 2".
+            * additional-3 Устанавливает для кнопки стилевое оформление "Дополнительная ссылка 3".
+            * additional-4 Устанавливает для кнопки стилевое оформление "Дополнительная ссылка 4".
+            * additional-5 Устанавливает для кнопки стилевое оформление "Дополнительная ссылка 5".
+            * @example
+            * Пример 1. Акцентное стилевое оформление кнопки:
+            * фрагмент верстки:
+            * <pre class="brush:xml">
+            *     <option name="style">primary</option>
+            * </pre>
+            * @see setStyle
+            */
+            style: ''
          }
       },
 
