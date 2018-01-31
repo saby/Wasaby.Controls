@@ -468,6 +468,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             oldStartDate = this.getStartValue(),
             endDate = this._endDatePicker.getDate();
 
+         this.cancelSelection();
+
          if ((!date && text !== '') || this._isDatesEqual(date, oldStartDate)) {
             return;
          }
@@ -503,6 +505,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          var date = this._endDatePicker.getDate(),
             startDate = this._startDatePicker.getDate(),
             oldEndDate = this.getEndValue();
+
+         this.cancelSelection();
 
          if ((!date && text !== '') || this._isDatesEqual(date, oldEndDate)) {
             return;
@@ -570,11 +574,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
          if ((start != startValue) ||
             (start && startValue && (start.toSQL() !==  startValue.toSQL()))) {
-            this._startDatePicker.setDate(startValue);
+            this._startDatePicker.setDate(startValue, true);
          }
          if ((end != endValue) ||
             (end && endValue && (end.toSQL() !==  endValue.toSQL()))) {
-            this._endDatePicker.setDate(endValue);
+            this._endDatePicker.setDate(endValue, true);
          }
 
          if (this._options._state === states.year) {
