@@ -36,6 +36,7 @@ define('Controls/InfoBox',
          'bottom': 14
       };
 
+      //TODO Отступы, необходимые для того чтобы стрелка указывала точно в нужную точку таргета
       var HORIZONTAL_OFFSETS = {
          'right': -18,
          'left': 18,
