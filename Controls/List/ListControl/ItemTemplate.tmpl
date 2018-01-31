@@ -1,4 +1,4 @@
-<div attr:class="ws-ListView__item {{itemData.isSelected ? 'ws-ListView__item__selected'}}"
+<div attr:class="ws-ListView__item {{marker != false && itemData.isSelected ? 'ws-ListView__item__selected'}}"
      attr:key="{{itemData.dispItem.getHash()}}">
    <ws:if data="{{contentTemplate}}">
       <ws:partial
@@ -6,6 +6,6 @@
             itemData="{{itemData}}"></ws:partial>
       </ws:if>
    <ws:else>
-      <div>{{itemData.getPropValue(itemData.item, itemData.displayProperty)}}</div>
+      <div>{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
    </ws:else>
 </div>

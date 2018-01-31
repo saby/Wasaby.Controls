@@ -1,0 +1,22 @@
+<div class="123">
+    <h2>Default</h2>
+    <Controls:List
+            dataSource = "{{_viewSource}}"
+            selectedKey="{{2}}"
+            allowEmptySelection="{{false}}"
+            idProperty="id">
+    </Controls:List>
+    <h2>Without marker</h2>
+    <Controls:List
+            dataSource = "{{_viewSource}}"
+            selectedKey="{{2}}"
+            allowEmptySelection="{{false}}"
+            idProperty="id">
+        <ws:itemTemplate>
+            <ws:partial template="tmpl!Controls/List/ListControl/ItemTemplate"
+                        itemData="{{itemTemplate.itemData}}"
+                        marker="{{false}}"
+            ></ws:partial>
+        </ws:itemTemplate>
+    </Controls:List>
+</div>
