@@ -355,6 +355,7 @@ define('SBIS3.CONTROLS/Menu', [
          config.opener = typeof parent.getOpener == 'function' ? parent.getOpener() : parent;
          config.target = target;
          config._fixJqueryPositionBug = true;
+         config._fixPopupRevertCorner = true;
 
          subMenu = new FloatArea(config);
          return subMenu;
