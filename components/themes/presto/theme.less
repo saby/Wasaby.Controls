@@ -85,17 +85,39 @@ body {
       color: @error-color !important;
     }
   }
+  .controls-Button__icon {
+    color: #839EBC !important;
+  }
 }
 
 .controls-operationsPanel__actions {
-  .controls-ButtonBase:hover, .controls-DropdownList__textWrapper:hover, .controls-ComboBox:hover {
+  .controls-ButtonBase:hover, .controls-DropdownList__value:hover, .controls-ComboBox:hover {
     color: #B9E9FF !important;
     .icon-error {
       color: @error-color !important;
     }
   }
-}
+  .controls-Link.controls-Link_main:hover:not(.ws-disabled) .controls-Button__icon.icon-primary {
+    color: #B9E9FF !important;
+  }
 
+  .controls-Link.controls-Link_main:active:not(.ws-disabled) {
+    color: #B9E9FF !important;
+    .controls-Button__icon.icon-primary {
+      color: #B9E9FF !important;
+    }
+  }
+}
+.controls-operationsPanel__itemsMenu {
+  .controls-Button__icon {
+    color: #839EBC !important;
+  }
+  &:hover {
+    .controls-Button__icon {
+      color: #B9E9FF !important;
+    }
+  }
+}
 .ws-LoadingIndicator__window, .ws-loading {
     img, .ws-loadingimg > div:before{
       width: round(74px * @multiplier);
@@ -406,7 +428,7 @@ body {
     font-size: @default-icon-size-medium;
   }
 }
-
-.ws-float-close {
-  .ws-close-button();
+//Todo: необходимо зашить эти стили в окнах
+.controls-NotificationPopup__body, controls-NotificationPopup__footer {
+  background-color: @controls-SubmitPopup-footer-bg;
 }
