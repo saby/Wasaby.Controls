@@ -15,15 +15,19 @@ define('Controls-demo/List/Base', [
    var srcData = [
       {
          id: 1,
-         title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1'
+         title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
+         description: 'Другое название 1'
       },
       {
          id: 2,
-         title: 'Notebooks 2'
+         title: 'Notebooks 2',
+         description: 'Описание вот такое'
       },
       {
          id: 3,
-         title: 'Smartphones 3 '
+         title: 'Smartphones 3 ',
+         description: 'Хватит страдать'
+
       }
    ];
 
