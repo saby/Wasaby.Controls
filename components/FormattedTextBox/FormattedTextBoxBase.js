@@ -1008,7 +1008,7 @@ define(
             }
             //модель обновили - обновляем опцию text и html-отображение
             this._updateText();
-            this._inputField.html(this._getHtmlMask());
+            this._setHtml(this._getHtmlMask());
          } else {
             keyInsertInfo = this._getFormatModel().insertCharacter(groupNum, position + positionOffset, this._getMaskReplacerForTemplate(), true);
          }
@@ -1156,7 +1156,8 @@ define(
             startContainer = _getContainerByIndex.call(this, child),
             startPosition = position || 0;
 
-         _moveCursor(startContainer, startPosition);
+               _moveCursor(startContainer, startPosition);
+
       },
 
       _setEnabled: function(enabled) {
@@ -1264,7 +1265,7 @@ define(
          //снимаем выделение валидатора на время ввода
          this.clearMark();
          //обновить html
-         this._inputField.html(this._getHtmlMask());
+         this._setHtml(this._getHtmlMask());
          if (model.isFilled()) {
             this._notify('onInputFinished');
          }
@@ -1285,7 +1286,7 @@ define(
             formatModel = this._getFormatModel();
          this._options.mask = mask;
          formatModel.setMask(mask);
-         this._inputField.html(this._getHtmlMask());
+         this._setHtml(this._getHtmlMask());
          // Перемещаем курсор в модели в начало т.к каретка становится вначале поля ввода.
          formatModel.setCursor(0, 0);
          //TODO исправить выставление курсора
@@ -1298,6 +1299,14 @@ define(
                IoC.resolve('ILogger').log('FormattedTextBox', ex.message);
             }
          }, self), 0);
+      },
+      _setHtml: function(html) {
+         this._inputField.html(html);
+         //IE при смене html ставит курсор в конец блока (все остальные браузеры ставят в начало)
+         //Сделаем поведение одинаковым, и в IE сами переместим курсор в начало.
+         if (constants.browser.isIE) {
+            this._moveCursor();
+         }
       }
 
    });
