@@ -1,8 +1,5 @@
 <ws:Controls.Popup.Opener.Sticky name="opener">
-    <ws:popupOptions autoHide="{{true}}" className="controls-InfoBox__popup controls-InfoBox-style-{{_options.style}}">
-        <ws:verticalAlign side="top" offset="{{-14}}"/>
-        <ws:horizontalAlign side="right"/>
-        <ws:corner vertical="top" horizontal="left"/>
+    <ws:popupOptions autoHide="{{true}}" className="controls-InfoBox__popup controls-InfoBox-style-{{_options.style}}" corner="{{_options.targetCorner}}">
         <ws:template>
             <Controls:Container:Scroll attr:class="controls-InfoBox__scrollContainer">
                 <ws:content>
