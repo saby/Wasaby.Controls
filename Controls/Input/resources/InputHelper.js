@@ -12,7 +12,7 @@ define('Controls/Input/resources/InputHelper',
           * @param textToPaste текст для вставки в поле
           */
          pasteHelper: function(inputRender, domInputElement, textToPaste) {
-            return inputRender.paste(textToPaste) + textToPaste.length;
+            return inputRender.paste(textToPaste, domInputElement.selectionStart, domInputElement.selectionStart);
          }
       };
    }
