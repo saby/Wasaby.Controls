@@ -157,19 +157,9 @@
 .round-button-mixin(@border-color, @border-radius, @border-width_IconButton-icon) {
   border: @border-width_IconButton-icon solid @border-color;
   border-radius: @border-radius;
-  text-align: center;
-
-  &.ws-disabled {
-    border-color: @gray-ccc-color;
-    .controls-Button__icon {
-      color: @gray-ccc-color;
-    }
-  }
-  box-sizing: border-box;
 }
 
 .button-default-style(@button-font-size: @font-size_Button_default, @button-default-shadow: none) {
-  cursor: pointer;
   display: inline-block;
   outline: none;
   line-height: normal;
@@ -455,49 +445,15 @@
   color: @color;
 }
 .link-hover-mixin(@textColor, @iconColor, @textSelector) {
-    &:hover {
-      color: @textColor;
-      // по ховеру нужно перекрашивать primary иконку, поэтому используем каскад
-      // иконки других значений icon-done, icon-error etc. перекрашивать не нужно
-      .icon-primary.controls-Button__icon {
-        color: @iconColor;
-      }
-      .@{textSelector} {
-        text-decoration: underline;
-      }
-    }
-}
-
-.round-button-hover-mixin() {
   &:hover {
-    background-color: @background-color_EditButton_hovered;
-    border-color: @default-color;
-    .controls-Button__icon {
-      color: @icon-button-round-icon-color-hover;
+    color: @textColor;
+    // по ховеру нужно перекрашивать primary иконку, поэтому используем каскад
+    // иконки других значений icon-done, icon-error etc. перекрашивать не нужно
+    .icon-primary.controls-Button__icon {
+      color: @iconColor;
     }
-    &.controls-IconButton__errorBorder {
-      border-color: @color_IconButton-icon_error;
-      .controls-Button__icon {
-        color: @color_IconButton-icon_error;
-      }
-      &.ws-disabled {
-        border-color: @gray-ccc-color;
-        .controls-Button__icon {
-          color: @gray-ccc-color;
-        }
-      }
-    }
-    &.controls-IconButton__doneBorder {
-      border-color: @border-color_EditButton_hovered;
-      .controls-Button__icon {
-        color: @color_IconButton-icon_done;
-      }
-      &.ws-disabled {
-        border-color: @gray-ccc-color;
-        .controls-Button__icon {
-          color: @gray-ccc-color;
-        }
-      }
+    .@{textSelector} {
+      text-decoration: underline;
     }
   }
 }

@@ -136,8 +136,6 @@ define('js!WSControls/Buttons/MenuButton', [
 
          var opts = MenuButton.superclass._modifyOptions.apply(this, arguments);
 
-         opts._iconDisabledClass = 'icon-button-disabled';
-
          opts.caption = Sanitize(opts.caption, {validNodes: {component: true}});
          opts.menuCaption = Sanitize(opts.menuCaption, {validNodes: {component: true}});
 

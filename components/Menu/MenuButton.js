@@ -61,6 +61,7 @@ define('SBIS3.CONTROLS/Menu/MenuButton', [
          opts.cssClassName += ' controls-Button';
          ButtonUtil.getStyleByConfig(opts, attrToMerge);
          ButtonUtil.preparedClassFromOptions(opts);
+         opts._iconDisabledClass = 'icon-button-disabled';
          opts.pickerClassName += ' controls-MenuButton__Menu';
          return opts;
       },
