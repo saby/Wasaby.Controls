@@ -477,7 +477,7 @@ define(
             var
                textByTimeInterval = this._getTextByTimeInterval(),
                currentText = this._getTextFromModel();
-            if ((needUpdate === true || currentText !== this._getEmptyText()) && currentText !== textByTimeInterval){
+            if ((needUpdate === true || currentText !== '') && currentText !== textByTimeInterval){
                this._setText(textByTimeInterval);
             }
          },
