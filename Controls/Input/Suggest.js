@@ -118,7 +118,10 @@ define('Controls/Input/Suggest',
          },
          
          _clearClick: function() {
-            this._notify('valueChanged', '');
+            /* move focus to input after clear text, because focus will be lost after hiding cross  */
+            this.focus();
+            this._suggestController.setValue('');
+            this._notify('valueChanged', ['']);
          },
          
          _keyDownHandler: function(event) {
