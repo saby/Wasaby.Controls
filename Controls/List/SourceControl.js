@@ -1,14 +1,14 @@
 define('Controls/List/SourceControl', [
    'Core/Control',
    'tmpl!Controls/List/SourceControl/SourceControl',
-   'Controls/List/ListControl/ListViewModel',
+   'Controls/List/SimpleList/ListViewModel',
    'Controls/List/resources/utils/DataSourceUtil',
    'Controls/List/Controllers/PageNavigation',
    'Core/helpers/functional-helpers',
    'require',
    'Controls/List/Controllers/ScrollController',
    'Controls/List/Controllers/VirtualScroll',
-   'css!Controls/List/ListControl/ListControl'
+   'css!Controls/List/SourceControl/SourceControl'
 ], function (Control,
              ListControlTpl,
              ListViewModel,
