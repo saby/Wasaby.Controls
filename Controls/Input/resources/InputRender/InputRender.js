@@ -128,23 +128,29 @@ define('Controls/Input/resources/InputRender/InputRender',
           * Метод вставляет строку text вместо текущего выделенного текста в инпуте
           * Если текст не выделен, то просто вставит text на позицию каретки
           * @param text
+          * @param selectionStart
+          * @param selectionEnd
           * @returns {Number} позиция каретки.
           */
-         paste: function(text) {
+         paste: function(text, selectionStart, selectionEnd) {
             var
-               selection = _private.getSelection(this),
                processedData = this._options.viewModel.prepareData({
-                  before: this._options.value.slice(0, selection.selectionStart),
+                  before: this._options.value.slice(0, selectionStart),
                   insert: text,
-                  after: this._options.value.slice(selection.selectionEnd, this._options.value.length)
+                  after: this._options.value.slice(selectionEnd, this._options.value.length)
                }, 'insert');
 
             if (this._options.value !== processedData.value) {
                this._notify('valueChanged', [processedData.value]);
             }
 
+            this._selection = {
+               selectionStart: selectionStart + text.length,
+               selectionEnd: selectionStart + text.length
+            };
+
             //Возвращаем позицию каретки. Она обрабатывается методом pasteHelper
-            return selection.selectionEnd;
+            return processedData.position;
          }
       });
 
