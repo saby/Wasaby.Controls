@@ -1,4 +1,4 @@
-define('js!Controls/List/AddButton', [
+define('Controls/List/AddButton', [
    'Core/Control',
    'tmpl!Controls/List/AddButton/AddButton',
    'WS.Data/Type/descriptor',
@@ -6,7 +6,13 @@ define('js!Controls/List/AddButton', [
 ], function (Control, template, types) {
 
    var AddButton = Control.extend({
-      _template: template
+      _template: template,
+
+      clickHandler: function (e) {
+         if(!this.isEnabled()){
+            e.stopPropagation();
+         }
+      }
    });
 
    AddButton.getOptionTypes = function getOptionTypes() {
