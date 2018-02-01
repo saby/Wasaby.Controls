@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
    'Lib/LayoutManager/LayoutManager',
    "SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView",
    'SBIS3.CONTROLS/ScrollContainer',
-   'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
+   'browser!SBIS3.CONTROLS/ListView/resources/SwipeHandlers'
 ], function (constants, detection, eventHelpers, throttle, isEmpty, ListView, ItemTmpl, RangeMixin, DateUtils, cInstance, CalendarSource, LayoutManager) {
    'use strict';
    var cConst = constants; //константы нужны для работы дат, не уверен что можно отключать из зависимостей (стан ругается)
