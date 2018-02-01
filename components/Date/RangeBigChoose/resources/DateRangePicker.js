@@ -69,6 +69,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          // _selectionType: null
       },
       _isAnimationProcessing: false,
+      _scrollToElement: null,
 
       $constructor: function () {
          this._publish('onMonthActivated');
@@ -196,6 +197,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          }
 
          this._isAnimationProcessing = true;
+         this._scrollToElement = element;
 
          scrollContainer.finish().animate({
             scrollTop: scrollContainer.scrollTop() + element.offset().top -  scrollContainer.offset().top
@@ -205,11 +207,36 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          });
       },
 
+      _getScrollTopByElement: function (element) {
+         var scrollContainer = this._getScrollContainer();
+         return scrollContainer.scrollTop() + element.offset().top -  scrollContainer.offset().top;
+      },
+
       _scrollAnimationComplete: function (animation, jumpedToEnd) {
           if (!jumpedToEnd) {
              this._isAnimationProcessing = false;
+             this._scrollToElement = null;
              this._onScroll();
           }
+      },
+
+      _moveTopScroll: function () {
+         var scrollContainer = this._getScrollContainer();
+
+         if (this._isAnimationProcessing) {
+            // Если идет предыдущая анимация и догрузились данные, то переходим на середину предыдущего года
+            // и продолжаем анимацию с этого положения.
+            scrollContainer.stop(true);
+            scrollContainer.scrollTop(this._getScrollTopByElement(this._scrollToElement.next()) - 1000);
+            scrollContainer.animate({
+               scrollTop: this._getScrollTopByElement(this._scrollToElement)
+            }, {
+               duration: 400,
+               done: this._scrollAnimationComplete
+            });
+            return;
+         }
+         Component.superclass._moveTopScroll.apply(this, arguments);
       },
 
       _onMonthTitleClick: function (event) {
