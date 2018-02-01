@@ -200,7 +200,11 @@ define('js!WSControls/Buttons/Button', [
          // а при перерисовке кнопка скрывается, что приводит к закрытию пикера
          this._contentContainer[0].innerHTML = contentTemplate(this._options);
       },
-
+      /**
+       * Установить стилевое оформление кнопки
+       * @param style стилевое оформление.
+       * @see style
+       */
       setStyle: function(style) {
           this._options.style = style;
           this._toggleState();

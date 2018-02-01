@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/TextArea', [
    'Core/helpers/String/escapeHtml',
    'SBIS3.CONTROLS/Utils/LinkWrapUtils',
    "Core/IoC",
-   "browser!js!Deprecated/Controls/FieldText/resources/Autosize-plugin",
+   "browser!Deprecated/Controls/FieldText/resources/Autosize-plugin",
    'css!SBIS3.CONTROLS/TextArea/TextArea'
 ], function( constants,TextBox, inputField, compatiblePlaceholderTemplate, escapeHtml, LinkWrap, IoC) {
 
