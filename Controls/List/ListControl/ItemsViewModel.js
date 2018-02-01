@@ -61,11 +61,11 @@ define('Controls/List/ListControl/ItemsViewModel',
          },
 
          getItemById: function(id, idProperty) {
-            return ItemsUtil.getDisplayItemById(this._display, id, idProperty)
+            return this._display ? ItemsUtil.getDisplayItemById(this._display, id, idProperty) : undefined;
          },
 
          getCount: function() {
-            return this._display.getCount();
+            return this._display ? this._display.getCount() : 0;
          },
 
          _onCollectionChange: function() {

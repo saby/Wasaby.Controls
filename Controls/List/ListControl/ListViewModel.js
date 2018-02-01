@@ -34,7 +34,7 @@ define('Controls/List/ListControl/ListViewModel',
             }
 
             this._startIndex = 0;
-            this._stopIndex = this._itemsModel._display.getCount();
+            this._stopIndex = this._itemsModel.getCount();
          },
 
          destroy: function() {

@@ -3,11 +3,11 @@
     <div class="ws-SourceControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
     <div class="ws-SourceControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
 
-    <ws:if data="{{_model && _model.getCount()}}">
+    <ws:if data="{{_listViewModel && _listViewModel.getCount()}}">
         <ws:partial
-              template="{{_viewName}}"
+              template="{{_options.viewName}}"
               name="listView"
-              listModel="{{_model}}"
+              listModel="{{_listViewModel}}"
               itemTemplate="{{_options.itemTemplate}}"
               idProperty="{{_options.idProperty}}"
               displayProperty="{{_options.displayProperty}}"

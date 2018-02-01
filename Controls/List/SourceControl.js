@@ -1,6 +1,6 @@
 define('Controls/List/SourceControl', [
    'Core/Control',
-   'tmpl!Controls/List/SourceControl',
+   'tmpl!Controls/List/SourceControl/SourceControl',
    'Controls/List/ListControl/ListViewModel',
    'Controls/List/resources/utils/DataSourceUtil',
    'Controls/List/Controllers/PageNavigation',
@@ -22,14 +22,6 @@ define('Controls/List/SourceControl', [
    'use strict';
 
    var _private = {
-      createListModel: function(items, cfg) {
-         return new ListViewModel ({
-            items : items,
-            idProperty: cfg.idProperty,
-            displayProperty: cfg.displayProperty,
-            selectedKey: cfg.selectedKey
-         });
-      },
 
       initNavigation: function(navOption, dataSource) {
          var navController;
@@ -63,15 +55,11 @@ define('Controls/List/SourceControl', [
                self._navigationController.calculateState(list);
             }
 
-            if (!self._listModel) {
-               self._listModel = _private.createListModel(list, self._options);
-               self._forceUpdate();
-            }
-            else {
-               self._listModel.setItems(list);
+            if (self._listViewModel) {
+               self._listViewModel.setItems(list);
             }
 
-            self._virtualScroll.setItemsCount(self._listModel.getCount());
+            self._virtualScroll.setItemsCount(self._listViewModel.getCount());
             _private.handleListScroll.call(self, 0);
          })
       },
@@ -84,10 +72,10 @@ define('Controls/List/SourceControl', [
             }
 
             if (direction === 'down') {
-               self._listModel.appendItems(addedItems);
+               self._listViewModel.appendItems(addedItems);
                self._virtualScroll.appendItems(addedItems.getCount());
             } else if (direction === 'up') {
-               self._listModel.prependItems(addedItems);
+               self._listViewModel.prependItems(addedItems);
                self._virtualScroll.prependItems(addedItems.getCount());
             }
 
@@ -250,12 +238,11 @@ define('Controls/List/SourceControl', [
 
       /**
        * Обновить размеры распорок и начало/конец отображаемых элементов
-       * @param virtualWindow результат из virtualScroll контроллера
        */
       applyVirtualWindow: function(self, virtualWindow) {
          self._topPlaceholderHeight = virtualWindow.topPlaceholderHeight;
          self._bottomPlaceholderHeight = virtualWindow.bottomPlaceholderHeight;
-         self._listModel.updateIndexes(virtualWindow.indexStart, virtualWindow.indexStop);
+         self._listViewModel.updateIndexes(virtualWindow.indexStart, virtualWindow.indexStop);
          self._forceUpdate();
       },
 
@@ -285,7 +272,7 @@ define('Controls/List/SourceControl', [
       },
 
       getItemsCount: function(self) {
-         return self._listModel ? self._listModel.getCount() : 0;
+         return self._listViewModel ? self._listViewModel.getCount() : 0;
       }
    };
 
@@ -311,8 +298,7 @@ define('Controls/List/SourceControl', [
       iWantVDOM: true,
       _isActiveByClick: false,
 
-      _items: null,
-      _itemsChanged: true,
+      _listViewModel: null,
 
       _dataSource: null,
       _loader: null,
@@ -344,10 +330,9 @@ define('Controls/List/SourceControl', [
           TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
           */
          this._filter = newOptions.filter;
-         if (newOptions.items) {
-            this._items = newOptions.items;
-            this._listModel = _private.createListModel(this._items, newOptions);
-            this._virtualScroll.setItemsCount(this._items.getCount());
+         if (newOptions.listViewModel) {
+            this._listViewModel = newOptions.listViewModel;
+            this._virtualScroll.setItemsCount(this._listViewModel.getCount());
          }
          if (newOptions.dataSource) {
             this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
@@ -407,12 +392,13 @@ define('Controls/List/SourceControl', [
             this._filter = newOptions.filter;
          }
 
-         if (newOptions.items && (newOptions.items != this._options.items)) {
-            this._items = newOptions.items;
-            this._listModel = _private.createListModel(this._items, newOptions);
-         } else if (newOptions.selectedKey !== this._options.selectedKey) {
-            this._listModel.setSelectedKey(newOptions.selectedKey);
-         }
+         if (newOptions.listViewModel && (newOptions.listViewModel != this._options.listViewModel)) {
+            this._listViewModel = newOptions.listViewModel;
+            this._virtualScroll.setItemsCount(this._listViewModel.getCount());
+         } else
+            if (newOptions.selectedKey !== this._options.selectedKey) {
+               this._listViewModel.setSelectedKey(newOptions.selectedKey);
+            }
 
 
          if (newOptions.dataSource !== this._options.dataSource) {
