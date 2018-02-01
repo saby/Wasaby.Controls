@@ -17,7 +17,7 @@
 
 .controls-IconButton_bordered:active {
   box-shadow: none;
-  background-color: @background-color_IconButton_bordered_standard;
+  background-color: @background-color_IconButton_bordered_standard_hovered;
 }
 .controls-IconButton_bordered_size_s {
   border-radius: @border-radius_IconButton_bordered_size-s;
@@ -44,14 +44,14 @@
 
 .ws-is-desktop-platform {
   .controls-IconButton__standardBorder:hover {
-    background-color: @background-color_IconButton_bordered_standard;
-    border-color: @border-color_IconButton_bordered_standard;
+    background-color: @background-color_IconButton_bordered_standard_hovered;
+    border-color: @border-color_IconButton_bordered_standard_hovered;
   }
   .controls-IconButton__errorBorder:hover {
-    border-color: @border-color_IconButton_bordered_error;
+    border-color: @border-color_IconButton_bordered_error_hovered;
   }
   .controls-IconButton__doneBorder:hover {
-    border-color: @border-color_IconButton_bordered_done;
+    border-color: @border-color_IconButton_bordered_done_hovered;
   }
 }
 // слой совместимости
@@ -83,11 +83,11 @@
 }
 
 .controls-IconButton__errorBorder:active {
-  border-color: @border-color_IconButton_bordered_error;
+  border-color: @border-color_IconButton_bordered_error_hovered;
 }
 
 .controls-IconButton__doneBorder:active {
-  border-color: @border-color_IconButton_bordered_done;
+  border-color: @border-color_IconButton_bordered_done_hovered;
 }
 
 .icon-IconButton-disabled {
