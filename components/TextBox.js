@@ -9,6 +9,7 @@ define('SBIS3.CONTROLS/TextBox', [
    'SBIS3.CONTROLS/TextBox/resources/TextBoxUtils',
    'SBIS3.CONTROLS/Utils/GetTextWidth',
    'Core/helpers/Function/forAliveOnly',
+   'Core/i18n',
    'SBIS3.CONTROLS/ControlHierarchyManager',
    'SBIS3.CONTROLS/Button/IconButton',
    'css!Controls/Input/resources/InputRender/InputRender',
@@ -25,6 +26,7 @@ define('SBIS3.CONTROLS/TextBox', [
     TextBoxUtils,
     getTextWidth,
     forAliveOnly,
+    i18n,
     ControlHierarchyManager) {
 
    'use strict';
@@ -275,7 +277,7 @@ define('SBIS3.CONTROLS/TextBox', [
          cfg.beforeFieldWrapper = TemplateUtil.prepareTemplate(cfg.beforeFieldWrapper);
          cfg.afterFieldWrapper = TemplateUtil.prepareTemplate(cfg.afterFieldWrapper);
          if (cfg.placeholder) {
-            cfg._isSimplePlaceholder = typeof cfg.placeholder === 'string' && cfg.placeholder.indexOf('data-component') === -1;
+            cfg._isSimplePlaceholder = cfg.placeholder instanceof i18n._rkString || (typeof cfg.placeholder === 'string' && cfg.placeholder.indexOf('data-component') === -1);
          }
          return cfg;
       },

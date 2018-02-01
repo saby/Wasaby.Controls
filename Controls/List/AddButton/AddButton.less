@@ -1,4 +1,4 @@
-.controls-AddButton{
+.controls-AddButton-wrapper{
    display: inline-flex;
    align-items: center;
    &:before {
@@ -7,24 +7,34 @@
 }
 
 .controls-AddButton__enable{
-   color: @color-list-add-button-enable;
+   color: @color_listAddButton_enabled;
    cursor: pointer;
-   &:hover{
-      .controls-AddButtonText{
+}
+
+.controls-AddButton__enable:active{
+   .controls-AddButtonText {
+      text-decoration: underline;
+   }
+}
+
+
+.ws-is-desktop-platform {
+   .controls-AddButton__enable:hover {
+      .controls-AddButtonText {
          text-decoration: underline;
       }
    }
 }
 
 .controls-AddButton__disable{
-   color: @disabled-color;
+   color: @color_listAddButton_disabled;
 }
 
 .controls-AddButton__icon{
-   .icon-size-without-important(@icon-size_FieldLink-button);
+   .icon-size-without-important(@icon-size_ListAddButton);
    font-style: normal;
 }
 
-.controls-AddButtonText{
+.controls-AddButton{
    font-size: @font-size_listAddButton;
 }

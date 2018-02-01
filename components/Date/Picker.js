@@ -112,7 +112,7 @@ define(
 
             pickerConfig: {
                corner: 'tl',
-               cssClassName: 'controls-DateRangeBigChoose__noBorder controls-DateRangeBigChoose__picker',
+               cssClassName: 'controls-DateRangeBigChoose__noBorder controls-DateRangeBigChoose__picker-month-only',
                horizontalAlign: {
                   side: 'left'
                },
@@ -279,9 +279,8 @@ define(
             element: element,
             rangeselect: false,
             startValue: date,
-            startValueSerializationMode: type,
             endValue: date,
-            endValueSerializationMode: type,
+            serializationMode: type,
             headerType: DateRangeBigChoose.headerTypes.inputField
          });
          // Добавляем в пикер

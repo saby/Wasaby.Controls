@@ -6,7 +6,7 @@
          name="DatePickerEnd"
          autocompleteMode="end"
          date="{{'endValue'|mutable}}"
-         serializationMode="{{endValueSerializationMode}}"
+         serializationMode="{{serializationMode}}"
          onTextChangeMode="onTextEnter"
          size="m"
          className="controls-DateRangeBigChoose__datePickerEnd"
@@ -22,6 +22,7 @@
    </ws:template>
 
    <SBIS3.CONTROLS:Button:StateButton
+      if="{{yearSelectionEnabled}}"
       tabindex="0"
       name="StateButton"
       activableByClick="{{false}}"
@@ -41,6 +42,7 @@
       showPrevArrow="{{false}}"
       showUndefined="{{true}}"
       class="controls-DateRangeBigChoose__header-period controls-DateRangeBigChoose__header-period-text"
+      serializationMode="{{serializationMode}}"
    />
    <div class="controls-DateRangeBigChoose__header-period controls-DateRangeBigChoose__header-period-input {{headerType === 'link' ? 'ws-hidden' }}">
       <SBIS3.CONTROLS:Date:Box
@@ -52,6 +54,7 @@
          date="{{'startValue'|mutable}}"
          size="m"
          className="controls-DateRangeBigChoose__datePickerStart"
+         serializationMode="{{serializationMode}}"
       />
       <div class="controls-DateRangeBigChoose__datePickerEnd-wrapper{{ selectionType === 'range' ? '' : ' ws-hidden' }}">
          <div class="controls-DateRangeBigChoose__header-rangeDash"></div>

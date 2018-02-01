@@ -37,6 +37,15 @@ define('Controls/Validate/FormController',
                parallelDeferred.push(def);
             });
             return parallelDeferred.done().getResult().addCallback(function(results) {
+               var
+                  key;
+               //Проходимся по объекту с ошибками и ставим фокус в первое невалидное поле
+               for(key in results) {
+                  if (results[key]) {
+                     this._validates[key].focus();
+                     break;
+                  }
+               }
                return results;
             }.bind(this)).addErrback(function (e) {
                IoC.resolve('ILogger').error('Form', 'Submit error', e);

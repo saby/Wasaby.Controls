@@ -18,6 +18,7 @@ function(Control, template, types, SimpleViewModel) {
     * @mixes Controls/Input/interface/IInputPlaceholder
     * @mixes Controls/Input/interface/IValidation
     * @mixes Controls/Input/interface/IInputTag
+    * @mixes Controls/Input/PasswordDocs
     * @control
     * @public
     * @category Input

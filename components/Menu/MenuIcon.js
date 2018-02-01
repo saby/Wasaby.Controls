@@ -70,27 +70,27 @@ define('SBIS3.CONTROLS/Menu/MenuIcon', [
 
          opts.cssClassName += opts.caption ? '' : ' controls-Button__withoutCaption';
 
-         if(!opts.tooltip && opts.caption){
+         if (!opts.tooltip && opts.caption) {
             opts.tooltip = opts.caption;
          }
 
-         if(className && className.indexOf('controls-IconButton__round-border') !== -1){
-            if(className.indexOf('controls-IconButton__round-border-24') !== -1){
+         if (className && className.indexOf('controls-IconButton__round-border') !== -1) {
+            if (className.indexOf('controls-IconButton__round-border-24') !== -1) {
                 opts.pickerClassName += ' controls-IconButton__round-border-24';
             }else {
                 opts.pickerClassName += ' controls-IconButton__round-border';
             }
          }
 
-         if(opts.icon){
-             sizes.forEach(function(size){
+         if (opts.icon) {
+             sizes.forEach(function(size) {
                 if(opts.icon.indexOf('icon-' + size) !== -1) {
                     opts.pickerClassName += ' controls-Menu_offset_icon-' + size;
                 }
              });
          }
          opts.cssClassName += ' controls-IconButton-size__' + (!!opts.size ? opts.size : 'default');
-         if(!!opts.size) {
+         if (!!opts.size) {
              opts.pickerClassName += ' controls-Menu__offset-' + opts.size;
          }
 

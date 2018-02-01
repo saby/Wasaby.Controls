@@ -30,6 +30,19 @@ define('Controls/InfoBox',
        * @function Controls/InfoBox#close
        */
 
+      //Оступы, зависят от стороны, в которую открывается инфобокс
+      var VERTICAL_OFFSETS = {
+         'top': -14,
+         'bottom': 14
+      };
+
+      //TODO Отступы, необходимые для того чтобы стрелка указывала точно в нужную точку таргета
+      var HORIZONTAL_OFFSETS = {
+         'right': -18,
+         'left': 18,
+         'center': 0
+      };
+
       var InfoBox = Control.extend({
          _template: template,
 
@@ -42,6 +55,15 @@ define('Controls/InfoBox',
                target: target,
                componentOptions: {
                   message: message
+               },
+               verticalAlign: {
+                  side: this._options.verticalAlignSide,
+                  offset: VERTICAL_OFFSETS[this._options.verticalAlignSide]
+               },
+               horizontalAlign: {
+                  side: this._options.horizontalAlignSide,
+                  //TODO Если таргет по ширине меньше, чем 12 (расстояние до стрелки) + 16 (ширина стрелки), то сдвинем инфобокс, чтобы стрелка указывала точно на точку.
+                  offset: target.offsetWidth < 28 ? HORIZONTAL_OFFSETS[this._options.horizontalAlignSide] : 0
                }
             });
          }
@@ -50,7 +72,13 @@ define('Controls/InfoBox',
 
       InfoBox.getDefaultOptions = function() {
          return {
-            style: 'default'
+            style: 'default',
+            targetCorner: {
+               vertical: 'top',
+               horizontal: 'left'
+            },
+            horizontalAlignSide: 'right',
+            verticalAlignSide: 'top'
          };
       };
 

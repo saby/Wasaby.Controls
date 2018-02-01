@@ -60,7 +60,9 @@
    }
 }
 
-.controls-ListView__item:hover {
+/* Делаем через hoveredItem, так как media не работает в firefox и ie
+    https://bugzilla.mozilla.org/show_bug.cgi?id=1035774 */
+.controls-ListView__hoveredItem {
    .controls-ListView__itemCheckBox__showByHover {
       .checkbox-border-size();
    }
@@ -161,6 +163,15 @@ controls-ListView__item__withHover:hover {
    &.controls-ListView-scrollIndicator__up{
       top: 0;
       background: @list-view-loading-indicator-gradient-bg-up;
+   }
+}
+
+// Баг рендера элементов в хроме, которые передвигаются по странице с position: absolute или c position: fixed
+// Хром может оставлять артефакты, даже после скрытия таких элементов
+// https://stackoverflow.com/questions/16598052/chrome-27-fixed-element-leaves-artifacts-behind-after-jquery-animation
+.ws-is-chrome {
+   .controls-ListView-scrollIndicator {
+      -webkit-transform: translateZ(0);
    }
 }
 

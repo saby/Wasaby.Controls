@@ -58,10 +58,11 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorWrapper', [
              * <ul>
              *     <li>all - для выбора доступны любые типы элементов;<li>
              *     <li>allBySelectAction - для выбора доступны любые типы элементов; Выбор происходит при нажатии на кнопку "Выбрать".<li>
-             *     <li>node - для выбора доступны только элементы типа "Узел" и "Скрытый узел";<li>
-             *     <li>leaf - для выбора доступны только элементы типа "Лист".<li>
+             *     <li>node - для выбора доступны только элементы типа "Узел";<li>
+             *     <li>leaf - для выбора доступны только элементы типа "Лист" и "Скрытый узел".<li>
              * </ul>
              * Подробнее о каждом типе элементов читайте в разделе <a href='/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
+             *
              */
             selectionType: 'all'
 

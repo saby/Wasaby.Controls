@@ -1,4 +1,4 @@
-<html lang="ru" xml:lang="ru" xmlns="http://www.w3.org/1999/xhtml" key="1_" id="root" component="{{_options.component||'Controls/Application'}}">
+<html attr:lang="ru" attr:xml:lang="ru" attr:xmlns="http://www.w3.org/1999/xhtml" attr:key="1_" attr:id="root" attr:component="Controls/Application">
 <head key="1_1_">
    <ws:if data="{{ _options.head }}">
       <ws:partial template="{{ _options.head }}" />
@@ -41,6 +41,7 @@
                   require(['Core/app']);
                </script>
             </div>
+            <Controls:Popup:Manager:Container attr:id="popup"/>
          </body>
          </ws:content>
    </Controls:Event:Listener>
