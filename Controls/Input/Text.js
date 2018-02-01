@@ -3,13 +3,15 @@ define('Controls/Input/Text', [
       'tmpl!Controls/Input/Text/Text',
       /*'WS.Data/Type/descriptor',*/
       'Controls/Input/Text/ViewModel',
+      'Controls/Input/resources/InputHelper',
 
       'css!Controls/Input/resources/InputRender/InputRender',
       'tmpl!Controls/Input/resources/input'
    ], function(Control,
                template,
                /*types,*/
-               TextViewModel) {
+               TextViewModel,
+               inputHelper) {
 
       'use strict';
 
@@ -107,7 +109,7 @@ define('Controls/Input/Text', [
          },
 
          paste: function(text) {
-            this._caretPosition = this._children['inputRender'].paste(text);
+            this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['input'], text);
          }
       });
 

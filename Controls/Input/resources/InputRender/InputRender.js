@@ -143,13 +143,8 @@ define('Controls/Input/resources/InputRender/InputRender',
                this._notify('valueChanged', [processedData.value]);
             }
 
-            this._selection = {
-               selectionStart: processedData.position,
-               selectionEnd: processedData.position
-            };
-
             //Возвращаем позицию каретки. Она обрабатывается методом pasteHelper
-            return processedData.position;
+            return selection.selectionEnd;
          }
       });
 

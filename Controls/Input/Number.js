@@ -3,13 +3,15 @@ define('Controls/Input/Number', [
    'tmpl!Controls/Input/Number/Number',
    'WS.Data/Type/descriptor',
    'Controls/Input/Number/ViewModel',
+   'Controls/Input/resources/InputHelper',
 
    'Controls/Input/resources/InputRender/InputRender',
    'tmpl!Controls/Input/resources/input'
 ], function (Control,
              template,
              types,
-             NumberViewModel) {
+             NumberViewModel,
+             inputHelper) {
 
    'use strict';
    var
@@ -99,7 +101,7 @@ define('Controls/Input/Number', [
       },
 
       paste: function(text) {
-         this._caretPosition = this._children['inputRender'].paste(text);
+         this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['realArea'], text);
       }
    });
 
