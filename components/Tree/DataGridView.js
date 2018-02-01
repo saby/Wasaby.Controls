@@ -561,11 +561,7 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
                }
                folderTitle = hoveredItemContainer.find('.controls-TreeView__folderTitle');
                titleTd = folderTitle.closest('.controls-DataGridView__td', hoveredItemContainer);
-               if(this._options.editArrow === 'custom') {
-                  editArrowMarker = this._getEditArrowMarker(hoveredItemContainer);
-               } else {
-                  editArrowMarker = this._getEditArrowMarker(titleTd);
-               }
+               editArrowMarker = this._getEditArrowMarker(hoveredItemContainer);
                if (editArrowMarker.length) {
                   editArrowContainer = this.getEditArrow().getContainer();
                   editArrowContainer.removeClass('ws-hidden');
