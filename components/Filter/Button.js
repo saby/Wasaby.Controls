@@ -198,8 +198,14 @@ define('SBIS3.CONTROLS/Filter/Button',
    
              /* Не показываем кнопку фильтров, если она выключена */
              if(!this.isEnabled()) return;
-   
-             this._initTemplates().addCallback(function() {
+
+             if (!this._dTemplatesReady) {
+                this._dTemplatesReady = FilterPanelUtils.initTemplates(self, TEMPLATES, function(name) {
+                   self._filterTemplates[name] = true;
+                });
+             }
+
+             this._dTemplatesReady.done().getResult().addCallback(function() {
                 FilterButton.superclass.showPicker.call(self);
              });
           },

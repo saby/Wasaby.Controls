@@ -12,8 +12,9 @@ define('SBIS3.CONTROLS/Utils/FilterPanelUtils',
       'Core/detection',
       "Core/constants",
       "Core/core-clone",
-      "Core/helpers/Object/find"
-   ], function (Deferred, ParallelDeferred, cContext, TemplateUtil, cInstance, FilterToStringUtil, detection, constants, coreClone, objectFind) {
+      "Core/helpers/Object/find",
+      'Core/moduleStubs'
+   ], function (Deferred, ParallelDeferred, cContext, TemplateUtil, cInstance, FilterToStringUtil, detection, constants, coreClone, objectFind, mStubs) {
 
       "use strict";
 
@@ -215,8 +216,41 @@ define('SBIS3.CONTROLS/Utils/FilterPanelUtils',
          });
       }
 
+      /**
+       * Предварительная загрузка компонентов
+       * @param options {Object} - набор опций, среди которых ожидаем увидеть необходимые шаблоны
+       * @param templates {Array} - массив шаблонов
+       * @param defCallback {Function} - обработчик вызываемый в каждом дефереде, при загрузке шаблона
+       * @returns {ParallelDeferred}
+       * @private
+       */
+      function initTemplates(options, templates, defCallback) {
+         var dTemplatesReady = new ParallelDeferred();
+
+         function processTemplate(template, name) {
+            /* Если шаблон указали как имя компонента (строки которые начинаются с js! или SBIS3.),
+             то перед отображением панели фильтров сначала загрузим компонент. */
+            if(template && typeof template === 'string' && /^js!*|^SBIS3.*/.test(template)) {
+               dTemplatesReady.push(mStubs.require(((requirejs.defined(template) || /^js!*/.test(template)) ? template : 'js!' + template)).addCallback(function(comp) {
+                  /* Запишем, что в качестве шаблона задали компонент */
+                  defCallback(name);
+                  return comp;
+               }));
+            }
+         }
+
+         for (var key in templates) {
+            if (templates.hasOwnProperty(key)) {
+               processTemplate(options.getProperty(templates[key]), templates[key]);
+            }
+         }
+
+         return dTemplatesReady;
+      }
+
       return {
          createFilterContext: createFilterContext,
-         getPanelConfig: getPanelConfig
+         getPanelConfig: getPanelConfig,
+         initTemplates: initTemplates
       };
    });
