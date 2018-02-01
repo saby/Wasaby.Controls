@@ -65,7 +65,8 @@ define(
                search._valueChangedHandler(new SyntheticEvent('onchange', {
                   target: {}
                }), 'noo');
-               assert.isTrue(isSearched);
+               setTimeout(function(){assert.isTrue(isSearched);}, search._options.searchDelay);
+
             });
 
             it('2 character', function () {
@@ -82,6 +83,10 @@ define(
                search._onResetClick();
                assert.isTrue(isReseted);
                assert.isFalse(isSearched);
+
+               //Проверяем, что поиск с задержкой не запустился
+               isSearched = false;
+               setTimeout(function(){assert.isFalse(isSearched);}, search._options.searchDelay);
             });
 
             it('Click on search', function () {
@@ -90,6 +95,10 @@ define(
                search._onSearchClick();
                assert.isTrue(isSearched);
                assert.isFalse(isReseted);
+
+               //Проверяем, что поиск с задержкой не запустился
+               isSearched = false;
+               setTimeout(function(){assert.isFalse(isSearched);}, search._options.searchDelay);
             });
 
          });
