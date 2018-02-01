@@ -1077,6 +1077,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             this._cancelRangeBarsSelection();
          }
 
+         this._setRangeSelectionType(null);
          this._monthRangePicker.cancelSelection();
          // this._dateRangePicker.cancelSelection();
       },
