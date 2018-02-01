@@ -134,9 +134,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
 
       _onScroll: throttle(function () {
-         if (this._isAnimationProcessing) {
-            return;
-         }
          // TODO: переделать условие
          if (!this.getContainer().is(':visible')) {
             return;
@@ -171,10 +168,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          if (originalEvent.wheelDelta !== undefined) {
             direction = originalEvent.wheelDelta > 0 ? -1 : 1;
          } else {
-            direction = originalEvent.deltaY < 0 ? 1 : -1;
+            direction = originalEvent.deltaY < 0 ? -1 : 1;
          }
          event.preventDefault();
-         this._onScrollOverMonths(direction)
+         this._onScrollOverMonths(direction, $(event.target).closest('.controls-DateRangeBigChoose-DateRangePickerItem'))
       },
 
       _onSwipe: function (event) {
@@ -182,12 +179,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
             return;
          }
          event.preventDefault();
-         this._onScrollOverMonths(event.direction === 'bottom' ? -1 : 1);
+         this._onScrollOverMonths(event.direction === 'bottom' ? -1 : 1, $(event.target).closest('.controls-DateRangeBigChoose-DateRangePickerItem'));
       },
 
-      _onScrollOverMonths: function (direction) {
-         var element = $(event.target).closest('.controls-DateRangeBigChoose-DateRangePickerItem'),
-            scrollContainer = this._getScrollContainer();
+      _onScrollOverMonths: function (direction, element) {
+         var scrollContainer = this._getScrollContainer();
 
          element = direction > 0 ? element.next() : element.prev();
 
