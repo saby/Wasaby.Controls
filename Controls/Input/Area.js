@@ -4,15 +4,13 @@ define('Controls/Input/Area', [
    /*'WS.Data/Type/descriptor',*/
    'Core/detection',
    'tmpl!Controls/Input/Area/Area',
-   'Controls/Input/resources/InputHelper',
 
    'css!Controls/Input/Area/Area'
 ], function(Text,
             constants,
             /*types,*/
             detection,
-            template,
-            inputHelper) {
+            template) {
 
    'use strict';
 
@@ -139,7 +137,7 @@ define('Controls/Input/Area', [
       },
 
       paste: function(text) {
-         this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['realArea'], text);
+         this._caretPosition = this._children['inputRender'].paste(text);
       }
 
    });
