@@ -109,7 +109,6 @@ define('SBIS3.CONTROLS/Link', [
          options.cssClassName += ' controls-Link';
          options._type = 'Link';
          options._iconDisabledClass = 'icon-link-disabled';
-
          // в случае когда задана ссылка передаем отдельный шаблон
          if(options.href) {
             options.contentTemplate = hrefTemplate;
