@@ -1,8 +1,10 @@
 define('Controls/Validate/Validators/IsEmail', [], function() {
    'use strict';
 
-   var emailRegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+   var
+      emailEnRegExp = /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/,
+      emailRuRegExp = /^([а-я0-9_-]+\.)*[а-я0-9_-]+@[а-я0-9_-]+(\.[а-я0-9_-]+)*\.[а-я]{2,6}$/;
    return function(args) {
-      return emailRegExp.test(args.text) || rk('В поле требуется ввести адрес электронной почты');
+      return emailEnRegExp.test(args.text) || emailRuRegExp.test(args.text) || rk('В поле требуется ввести адрес электронной почты');
    };
 });

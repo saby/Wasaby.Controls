@@ -7,37 +7,52 @@ define(
 
       'use strict';
 
-      //Скипнем тесты до выполнения задачи: https://online.sbis.ru/opendoc.html?guid=d74685f2-a152-4e4a-8b77-040bee5e4c27
+      var
+         emails = [
+            {
+               value: 'email@email.ru',
+               valid: true
+            },
+            {
+               value: 'email@em.ail.ru',
+               valid: true
+            },
+            {
+               value: 'тест@тест.рф',
+               valid: true
+            },
+            {
+               value: 'email',
+               valid: false
+            },
+            {
+               value: 'email@email',
+               valid: false
+            },
+            {
+               value: 'email@ema@il.ru',
+               valid: false
+            },
+            {
+               value: 'тест@test.рф',
+               valid: false
+            }
+         ];
+
       describe('Controls.Validators', function () {
          describe('IsEmail', function () {
-            it('Valid "email@email.ru"', function () {
-               assert.equal(isEmail({
-                  text: 'email@email.ru'
-               }), true);
-            });
-
-            it('Invalid "email"', function () {
-               assert.equal(typeof isEmail({
-                  text: 'email'
-               }), 'string');
-            });
-
-            it('Invalid "email@email"', function () {
-               assert.equal(typeof isEmail({
-                  text: 'email'
-               }), 'string');
-            });
-
-            it('Invalid "email@ema@il.ru"', function () {
-               assert.equal(typeof isEmail({
-                  text: 'email'
-               }), 'string');
-            });
-
-            it('Invalid "email@em.ail.ru"', function () {
-               assert.equal(typeof isEmail({
-                  text: 'email'
-               }), 'string');
+            emails.forEach(function(item) {
+               it((item.valid ? 'Valid' : 'Invalid') + ' "' + item.value + '"', function () {
+                  if (item.valid) {
+                     assert.equal(isEmail({
+                        text: item.value
+                     }), true);
+                  } else {
+                     assert.equal(typeof isEmail({
+                        text: item.value
+                     }), 'string');
+                  }
+               });
             });
          });
 
