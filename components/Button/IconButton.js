@@ -20,7 +20,7 @@ function(WSButton, IconButtonUtil) {
     *
     * @class SBIS3.CONTROLS/Button/IconButton
     * @extends WSControls/Buttons/Button
-    * @mixes SBIS3.CONTROLS/Mixins/IconMixin
+    * @mixes SBIS3.CONTROLS/Button/IconButton/IconButtonDocs
     * @demo SBIS3.CONTROLS.Demo.MyIconButton
     * @author Борисов П.С.
     *
@@ -44,13 +44,6 @@ function(WSButton, IconButtonUtil) {
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     *
-    * @cssModifier controls-IconButton__round-border Добавляет круглую границу вокруг иконки. Размер границы подстраивается под размеры иконки.
-    * По умолчанию граница серого цвета. При наведении курсора цвет границы изменяется в соответствии с цветом иконки, установленной в опции {@link icon}.
-    * @cssModifier controls-IconButton__round-border-24 Устанавливает круглую границу (диаметр в 24 px) вокруг иконки быстрой операции, доступной по наведению курсора. Подробнее о таких типах операций вы можете прочитать <a href="/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">здесь</a>.
-    * Модификатор применяется совместно с иконками 16 px. Цвет границы соответствует цвету иконки, установленной в опции {@link icon}.
-    * @cssModifier controls-IconButton__filter-left Устанавливает внешний вид для кнопки открытия/закрытия фильтров слева.
-    * @cssModifier controls-IconButton__filter-right Устанавливает внешний вид  для кнопки открытия/закрытия фильтров справа.
-    *
     * @category Buttons
     * @control
     * @public
@@ -61,6 +54,40 @@ function(WSButton, IconButtonUtil) {
     */
 
    var IconButton = WSButton.extend([], /** @lends SBIS3.CONTROLS/Button/IconButton.prototype */ {
+        $protected: {
+           _options: {
+               /**
+                * @cfg {String} Устанавливает размер кнопки.
+                * @remark
+                * Сейчас опция size будет работать только в сочетании style в значении 'bordered'
+                * Значение "s" установит средний размер кнопки.
+                * Значение "m" установит средний размер кнопки.
+                * Значение "l" устaновит большой размер кнопки.
+                * @example
+                * Пример 1. Большая кнопка:
+                * фрагмент верстки:
+                * <pre class="brush:xml">
+                *     <option name="size">l</option>
+                * </pre>
+                */
+               size: '',
+               /**
+                * @cfg {String} Устанавливает стилевое оформление кнопки.
+                * @remark
+                * По умолчанию значение опции "standard".
+                * Значение "standard" установит стандартный стиль кнопки.
+                * Значение "bordered" устaновит обводку кнопки.
+                * @example
+                * Пример 1. Кнопка иконка с обводкой:
+                * фрагмент верстки:
+                * <pre class="brush:xml">
+                *     <option name="style">bordered</option>
+                * </pre>
+                */
+               style: ''
+           }
+        },
+
       _modifyOptions: function (opts, parsedOptions, attrToMerge) {
          var
              options = IconButton.superclass._modifyOptions.apply(this, arguments);
