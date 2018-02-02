@@ -42,7 +42,6 @@
 
 .controls-Link_state-disabled {
   color: @color_Link-text_disabled;
-  cursor: default;
 }
 
 .controls-Link_state-main:active, .controls-Link_state-main-3:active {
@@ -62,6 +61,8 @@
   .inline-flexbox();
   .align-items(center);
   width: 100%;
+  // сбрасываю стили браузера для тега a
+  text-decoration: none;
 }
 
 .ws-is-desktop-platform {
@@ -74,6 +75,10 @@
     .controls-Button__text {
       text-decoration: underline;
     }
+  }
+  // перебиваю глобальные стили на a:hover
+  .controls-Link-link:hover {
+    text-decoration: none;
   }
 }
 

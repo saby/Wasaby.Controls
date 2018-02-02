@@ -541,6 +541,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
                this._setCurrentYear(start.getFullYear(), true);
                this._updateYearsBar(start.getFullYear());
             }
+            this.getChildControlByName('DateRangeHeader').setStartValue(start);
          }
          return changed;
       },
@@ -561,7 +562,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          } else {
             changed = DateRangeBigChoose.superclass.setRange.apply(this, arguments);
          }
-         if (this.isSelectionProcessing())
          return changed;
       },
 
@@ -799,7 +799,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
                   break;
             }
          }
-
+         this.getChildControlByName('DateRangeHeader').setEndValue(end);
          return DateRangeBigChoose.superclass.setEndValue.call(this, end, silent);
       },
 
@@ -1077,6 +1077,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             this._cancelRangeBarsSelection();
          }
 
+         this._setRangeSelectionType(null);
          this._monthRangePicker.cancelSelection();
          // this._dateRangePicker.cancelSelection();
       },

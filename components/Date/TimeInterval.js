@@ -289,7 +289,7 @@ define(
           */
          setInterval: function ( interval ) {
             if (interval == undefined) {
-               this._setText(this._getTextFromModel());
+               this._setText(this._getEmptyText());
             }
             //cTimeInterval при преобразовании к строке всегда вернет значение своего формата, даже если туда положили null (в этом случае значение 0 дней, минут, часов)
             //Если устанавливают интервал 0 дней, часов, минут, проверка на неравенство не пройдет, поэтому смотрим, что если раньше был null, то нужно сеттить
@@ -477,9 +477,12 @@ define(
             var
                textByTimeInterval = this._getTextByTimeInterval(),
                currentText = this._getTextFromModel();
-            if ((needUpdate === true || currentText !== this._getTextFromModel()) && currentText !== textByTimeInterval){
+            if ((needUpdate === true || currentText !== '') && currentText !== textByTimeInterval){
                this._setText(textByTimeInterval);
             }
+         },
+         _getEmptyText: function() {
+           return this._getFormatModel().getStrMask(this._getMaskReplacer());
          },
          /**
           * Обновляяет значения this._options.text и interval (вызывается в _replaceCharacter из FormattedTextBoxBase). Переопределённый метод.

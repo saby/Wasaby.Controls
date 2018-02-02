@@ -627,7 +627,8 @@ define('SBIS3.CONTROLS/ScrollContainer', [
          },
 
          _getScrollTop: function(){
-            return this._content[0].scrollTop;
+            // Округляем в большую сторону, чтобы при маштабировании работать в целых числах.
+            return Math.ceil(this._content[0].scrollTop);
          },
 
          _scrollTo: function(value){

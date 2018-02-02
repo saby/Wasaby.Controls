@@ -275,23 +275,34 @@
 //  Icon Button //
 // ------------ //
 @color_IconButton-icon_done: #72BE44;
-@color_IconButton-icon_error: #EF463A;
+@border-color_IconButton_bordered_error_hovered: #EF463A;
 @icon-button-round-border-position:     absolute;
-@width_IconButton-icon_round:        28px;
-@height_IconButton-icon_round:       28px;
-@line-height_IconButton-icon_round:  26px;
 @icon-button-round-icon-color-hover:    @default-color;
 @border-radius:                         14px;
-@border-width_IconButton-icon:              1px;
-@list-view-items-toolbar-icon-button-border-width:      @border-width_IconButton-icon;
+@border-width_IconButton_bordered:              1px;
+@list-view-items-toolbar-icon-button-border-width:      @border-width_IconButton_bordered;
 @list-view-items-toolbar-icon-button-border-radius:     @border-radius;
 @list-view-items-toolbar-icon-button-border-font-size:  16px;
-@height_IconButton_round_edit:             @icon-medium-size;
-@width_IconButton_round_edit:              @icon-medium-size;
-@height_IconButton_round_edit_size-l:      38px !important;
-@width_IconButton_round_edit_size-l:       38px !important;
+
 @icon-button-edit-round-border-line-height:        @icon-medium-size - 2 * @default-border-width;
 @list-view-items-toolbar-animate-duration:         0.35s;
+@border-color_IconButton_bordered:                  @gray-ccc-color;
+
+@height_IconButton_bordered_size-s:                 @icon-medium-size;
+@width_IconButton_bordered_size-s:                  @icon-medium-size;
+@border-radius_IconButton_bordered_size-s:          @border-radius_EditButton;
+
+@height_IconButton_bordered_size-m:                 28px;
+@width_IconButton_bordered_size-m:                  28px;
+@border-radius_IconButton_bordered_size-m:          @border-radius;
+@line-height_IconButton_bordered_size-m:            26px;
+
+@height_IconButton_bordered_size-l:                 38px;
+@width_IconButton_bordered_size-l:                  38px;
+@border-radius_IconButton_bordered_size-l:          20px;
+@line-height_IconButton_bordered_size-l:            @height_IconButton_bordered_size-l;
+
+@border-color_IconButton_bordered_standard_hovered:      @default-color;
 // Normal default button
 @button-checked-border-width:             2px;
 @button-checked-border:                   @button-checked-border-width solid @default-color;
@@ -823,14 +834,14 @@
 @scrollPaging-padding:                          32px;
 //EditActions
 @border-radius_EditButton:                      @border-radius;
-@border-width_EditButton:                       @border-width_IconButton-icon;
-@width_EditButton:                              @width_IconButton_round_edit;
-@height_EditButton:                             @height_IconButton_round_edit;
-@line-height_EditButton:                        @line-height_IconButton-icon_round;
-@background-color_EditButton:                   transparent;
-@background-color_EditButton_hovered:           transparent;
-@border-color_EditButton_hovered:               @color_IconButton-icon_done;
-@text-shadow_EditButton:                        transparent;
+@border-width_EditButton:                       @border-width_IconButton_bordered;
+@width_EditButton:                              @width_IconButton_bordered_size-s;
+@height_EditButton:                             @height_IconButton_bordered_size-s;
+@line-height_EditButton:                        @line-height_IconButton_bordered_size-m;
+@background-color_IconButton_bordered:                   transparent;
+@background-color_IconButton_bordered_standard_hovered:           transparent;
+@border-color_IconButton_bordered_done_hovered:               @color_IconButton-icon_done;
+@text-shadow_IconButton_bordered:                        transparent;
 //ItemsToolbar
 @width_EditActions-cancelButton:        36px;
 @height_EditActions-cancelButton:       24px;
@@ -1004,6 +1015,7 @@
 @controls-OperationsPanelButton-bg-color-active:   transparent;
 @controls-OperationsPanelButton-bg-color-hover:    transparent;
 @shadow_operationsPanelButton:                     none;
+@width_OperationsPanelButton-separator:            1px;
 // ----------------------- //
 //      EditInPlace        //
 // ----------------------- //

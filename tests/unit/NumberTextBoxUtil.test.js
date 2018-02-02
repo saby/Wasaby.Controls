@@ -77,7 +77,7 @@ define(['SBIS3.CONTROLS/Utils/NumberTextBoxUtil'], function (NumberTextBoxUtil) 
          it('|1 234.12 => |234.12', function (){
             newState = NumberTextBoxUtil.deletPressed(0, 0, '1 234.12', true, 2);
             assert.equal(newState.value, '234.12');
-            assert.equal(newState.caretPosition, -1);
+            assert.equal(newState.caretPosition, 0);
          });
          it('1.2|34 => 1.2|4', function (){
             newState = NumberTextBoxUtil.deletPressed(3, 3, '1.234', true, 3);
