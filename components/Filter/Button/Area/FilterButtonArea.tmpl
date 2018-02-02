@@ -25,7 +25,7 @@
                     <div class="controls__filterButton__area-content">
                         <ws:partial if="{{ template }}" template="{{ template }}" scope="{{ componentOptions }}" class="controls__filterButton__area-content"/>
                     </div>
-                    <div class="controls__filterButton__area-footer {{ ((!historyController || !historyController.getHistory()) && !additionalFilterParamsTemplate) ? 'ws-hidden' }}">
+                    <div class="controls__filterButton__area-footer {{ !hasHistory && !additionalFilterParamsTemplate ? 'ws-hidden' }}">
                         <SBIS3.CONTROLS:Filter:Button:AdditionalParams
                                 if="{{ additionalFilterParamsTemplate }}"
                                 template="{{ additionalFilterParamsTemplate }}"
@@ -35,11 +35,9 @@
                         <SBIS3.CONTROLS:Filter:Button:History if="{{ viewMode === 'oneColumn' && historyController }}" name="filterHistory" tabindex="0" />
                     </div>
                 </div>
-                <ws:if data="{{ viewMode === 'twoColumns' }}">
-                    <div class="controls__filterButton__area-secondColumn">
-                        <SBIS3.CONTROLS:Filter:Button:History if="{{ viewMode === 'twoColumns' && historyController }}" name="filterHistory" tabindex="0"/>
-                    </div>
-                </ws:if>
+                <div if="{{ viewMode === 'twoColumns' }}" class="controls__filterButton__area-secondColumn {{ !hasHistory ? 'ws-hidden' }}">
+                    <SBIS3.CONTROLS:Filter:Button:History if="{{ historyController }}" name="filterHistory" tabindex="0"/>
+                </div>
             </div>
         </ws:content>
     </SBIS3.CONTROLS:ScrollContainer>

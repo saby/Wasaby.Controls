@@ -294,6 +294,18 @@ define('SBIS3.CONTROLS/Filter/Button',
              }
           },
 
+          _hasHistory: function() {
+             var
+                history,
+                result = false;
+             if (this._historyController) {
+                history = this._historyController.getHistory();
+                result = history && !!history.length;
+             }
+
+             return result;
+          },
+
           _getAreaOptions: function() {
              var prepTpl = TemplateUtil.prepareTemplate,
                  components = this._filterTemplates,
@@ -301,6 +313,7 @@ define('SBIS3.CONTROLS/Filter/Button',
                     historyController: this._historyController,
                     viewMode: this._options.viewMode,
                     areaCaption: this._options.areaCaption,
+                    hasHistory: this._hasHistory(),
                     internalContextFilterName: this._options.internalContextFilterName,
                     componentOptions: this._options.componentOptions
                  },
