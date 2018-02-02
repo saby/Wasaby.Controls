@@ -1,6 +1,6 @@
 <div class="controls__filterButton__area">
     <div class="controls__filterButton__area-header ws-flexbox ws-align-items-baseline">
-        <span class="controls__filterButton__area-text">{[Отбираются]}</span>
+        <span class="controls__filterButton__area-text controls__filterButton__area-text{{ areaCaption ? 'Custom' : 'Default'}}">{{ areaCaption ? areaCaption : ['Отбираются'] }}</span>
         <SBIS3.CONTROLS:Link
             className="controls__filter-button__clear-filter"
             caption="{[По умолчанию]}"
@@ -20,17 +20,26 @@
     </div>
     <SBIS3.CONTROLS:ScrollContainer className="controls__filterButton__area-scrollContainer">
         <ws:content>
-            <div class="controls__filterButton__area-content">
-                <ws:partial if="{{ template }}" template="{{ template }}" scope="{{ componentOptions }}"/>
-            </div>
-            <div class="controls__filterButton__area-footer {{ ((!historyController || !historyController.getHistory()) && !additionalFilterParamsTemplate) ? 'ws-hidden' }}">
-                <SBIS3.CONTROLS:Filter:Button:AdditionalParams
-                        if="{{ additionalFilterParamsTemplate }}"
-                        template="{{ additionalFilterParamsTemplate }}"
-                        visible="{{ 'additionalFilterVisible'|bind:true }}"
-                        tabindex="0"
-                />
-                <SBIS3.CONTROLS:Filter:Button:History if="{{ historyController }}" name="filterHistory" tabindex="0" />
+            <div class="controls__filterButton__area-wrapper controls__filterButton__area-{{viewMode}}">
+                <div class="controls__filterButton__area-firstColumn">
+                    <div class="controls__filterButton__area-content">
+                        <ws:partial if="{{ template }}" template="{{ template }}" scope="{{ componentOptions }}" class="controls__filterButton__area-content"/>
+                    </div>
+                    <div class="controls__filterButton__area-footer {{ ((!historyController || !historyController.getHistory()) && !additionalFilterParamsTemplate) ? 'ws-hidden' }}">
+                        <SBIS3.CONTROLS:Filter:Button:AdditionalParams
+                                if="{{ additionalFilterParamsTemplate }}"
+                                template="{{ additionalFilterParamsTemplate }}"
+                                visible="{{ 'additionalFilterVisible'|bind:true }}"
+                                tabindex="0"
+                        />
+                        <SBIS3.CONTROLS:Filter:Button:History if="{{ viewMode === 'oneColumn' && historyController }}" name="filterHistory" tabindex="0" />
+                    </div>
+                </div>
+                <ws:if data="{{ viewMode === 'twoColumns' }}">
+                    <div class="controls__filterButton__area-secondColumn">
+                        <SBIS3.CONTROLS:Filter:Button:History if="{{ viewMode === 'twoColumns' && historyController }}" name="filterHistory" tabindex="0"/>
+                    </div>
+                </ws:if>
             </div>
         </ws:content>
     </SBIS3.CONTROLS:ScrollContainer>
