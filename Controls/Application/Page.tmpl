@@ -12,39 +12,35 @@
    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 </head>
 <Controls:Event:Listener name="scrollDetect" register="scroll">
-   <ws:content>
    <Controls:Event:Listener name="resizeDetect" register="resize">
-         <ws:content>
-         <body class="ws-is-chrome" id="body" key="1_2_" on:scroll="_scrollPage()" on:resize="_resizePage()">
-            <ws:if data="{{ content.content }}">
-               <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}" />
-            </ws:if>
-            <div key="scripts">
-               <script key="ws-config">
-                  window.wsConfig = {
-                     wsRoot: '{{wsRoot}}',
-                     resourceRoot: '{{resourceRoot}}',
-                     compatible: {{compat}}
-                  };
-               </script>
-               <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/bundles.js"></script>
-               <script key="require" type="text/javascript" src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
-               <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
-               <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/config.js"></script>
+      <body class="ws-is-chrome" id="body" key="1_2_" on:scroll="_scrollPage()" on:resize="_resizePage()">
+         <ws:if data="{{ content.content }}">
+            <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}" />
+         </ws:if>
+         <div key="scripts">
+            <script key="ws-config">
+               window.wsConfig = {
+                  wsRoot: '{{wsRoot}}',
+                  resourceRoot: '{{resourceRoot}}',
+                  compatible: {{compat}}
+               };
+            </script>
+            <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/bundles.js"></script>
+            <script key="require" type="text/javascript" src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
+            <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
+            <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/config.js"></script>
 
-               <ws:if data="{{ jsLinks }}">
-                  <ws:for data="index, value in jsLinks">
-                     <script type="text/javascript" src="{{ value }}" defer="defer" key="{{ 'scripts_' + index }}"></script>
-                  </ws:for>
-               </ws:if>
-               <script key="init_script">
-                  require(['Core/app']);
-               </script>
-            </div>
-            <Controls:Popup:Manager:Container attr:id="popup"/>
-         </body>
-         </ws:content>
+            <ws:if data="{{ jsLinks }}">
+               <ws:for data="index, value in jsLinks">
+                  <script type="text/javascript" src="{{ value }}" defer="defer" key="{{ 'scripts_' + index }}"></script>
+               </ws:for>
+            </ws:if>
+            <script key="init_script">
+               require(['Core/app']);
+            </script>
+         </div>
+         <Controls:Popup:Manager:Container attr:id="popup"/>
+      </body>
    </Controls:Event:Listener>
-   </ws:content>
 </Controls:Event:Listener>
 </html>
