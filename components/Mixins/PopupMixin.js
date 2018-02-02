@@ -384,7 +384,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                   scrollHeight = this._container.get(0).scrollHeight,
                   maxWidth = parseFloat(this._container.css('max-width'), 10) || scrollWidth,
                   maxHeight = parseFloat(this._container.css('max-height'), 10) || scrollHeight,
-                  border = (this._container.outerWidth() - this._container.innerWidth());
+                  border = this._container.outerWidth() - this._container.innerWidth();
 
                if (!saveSide) {
                   this._resetToDefault();
@@ -394,6 +394,12 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
 
                this._containerSizes.originWidth = scrollWidth > maxWidth ? maxWidth : scrollWidth + border ;
                this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight + border;
+
+               if (this._container.css('box-sizing') !== 'border-box') {
+                  this._containerSizes.originWidth -= border ;
+                  this._containerSizes.originHeight -= border;
+               }
+
             }
             if (this._fixed === undefined){
                this._checkFixed(this._options.target);
