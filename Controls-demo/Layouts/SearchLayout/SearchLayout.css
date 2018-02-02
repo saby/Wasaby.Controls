@@ -1,0 +1,32 @@
+.controls-demo__searchLayout {
+    display: flex;
+}
+
+.controls-demo__searchLayout-contentBlock {
+    margin: 200px auto 0 auto;
+}
+
+.controls-demo__searchLayout-layout {
+    padding: 20px;
+    outline: 1px solid red;
+}
+
+.controls-demo__searchLayout-optionsBlock {
+    padding-left: 8px;
+}
+.controls-demo__searchLayout-optionsBlock.list,
+.controls-demo__searchLayout-optionsBlock.search {
+    padding-top: 30px;
+}
+
+.controls-demo__searchLayout-wrapper {
+    display: flex;
+}
+
+.controls-demo__searchLayout-secondList {
+    margin-top: 24px;
+}
+
+.controls-searchResult {
+    width: 200px;
+}

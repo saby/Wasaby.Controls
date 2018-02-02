@@ -105,7 +105,7 @@ define('Controls/Input/Text', [
          },
 
          _valueChangedHandler: function(e, value) {
-            this._notify('valueChanged', [value]);
+            this._notify('valueChanged', [value], {bubbling: true});
          },
 
          paste: function(text) {

@@ -1,7 +1,7 @@
 define('Controls/Input/resources/SuggestPopupController',
    [
       'Core/core-extend',
-      'Controls/List/resources/utils/Search',
+      'Controls/Search/Search',
       'Core/constants',
       'Controls/Input/resources/SuggestView/SuggestView'
    ],

@@ -1,0 +1,47 @@
+<div class="controls-demo__searchLayout">
+    <div class="controls-demo__searchLayout-contentBlock">
+        <h1>SearchLayout</h1>
+        <div class="controls-demo__searchLayout-wrapper">
+            <div>
+                <ws:Controls.Search.SearchLayout
+                        attr:class="controls-demo__searchLayout-layout"
+                        searchParam="title">
+                    <ws:content>
+                        <div class="controls-demo__searchLayout-wrapper">
+                            <div>
+                                <ws:Controls.Input.Text/>
+                                <ws:Controls.Search.SearchResult dataSource="{{_dataSource}}" searchParam="title">
+                                    <ws:content>
+                                        <div>
+                                            <ws:Controls.List idProperty="id" name="list">
+                                                <ws:emptyTemplate>
+                                                    Не найдено
+                                                </ws:emptyTemplate>
+                                            </ws:Controls.List>
+                                        </div>
+                                    </ws:content>
+                                </ws:Controls.Search.SearchResult>
+                            </div>
+                            <div class="controls-demo__searchLayout-secondList">
+                                <ws:Controls.Search.SearchResult dataSource="{{_dataSource}}" searchParam="title">
+                                    <ws:content>
+                                        <div>
+                                            <ws:Controls.List idProperty="id" name="list">
+                                                <ws:emptyTemplate>
+                                                    Не найдено
+                                                </ws:emptyTemplate>
+                                            </ws:Controls.List>
+                                        </div>
+                                    </ws:content>
+                                </ws:Controls.Search.SearchResult>
+                            </div>
+                        </div>
+                    </ws:content>
+                    <ws:searchDelay>
+                        <ws:Number>500</ws:Number>
+                    </ws:searchDelay>
+                </ws:Controls.Search.SearchLayout>
+            </div>
+        </div>
+    </div>
+</div>
