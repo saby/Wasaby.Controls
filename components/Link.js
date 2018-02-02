@@ -49,6 +49,7 @@ define('SBIS3.CONTROLS/Link', [
     * @css ws-linkHeader Устанавливает для кнопки стилевое оформление в виде "Заголовок-разделитель" (см. <a href="http://axure.tensor.ru/standarts/v7/#p=разделители__заголовки___версия_05_">Стандарты</a>).
     * @css ws-linkHeader&#32;ws-splitter Устанавливает для кнопки стилевое оформление в виде "Заголовок-разделитель с вертикальной линией" (см. <a href="http://axure.tensor.ru/standarts/v7/#p=разделители__заголовки___версия_05_">Стандарты</a>).
     *
+    * @mixes SBIS3.CONTROLS/Link/LinkDocs
     * @control
     * @public
     * @category Button
