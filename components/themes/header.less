@@ -37,12 +37,14 @@
 
 .ws-header-accent1-hover() {
    body:not(.ws-is-mobile-platform) & {
+      cursor: pointer;
       color: @darkcyan-color;
    }
 }
 
 .ws-header-accent2-hover() {
    body:not(.ws-is-mobile-platform) & {
+      cursor: pointer;
       color: @primary-color;
    }
 }
@@ -60,6 +62,13 @@
 .ws-backArrow_color_accent2 {
    &:before {
       content: @back-arrow-blue;
+   }
+}
+
+.ws-forwardArrow {
+   &:after {
+      content: @content_forwardArrow;
+      padding-left: @padding-left_forwardArrow;
    }
 }
 
@@ -101,11 +110,8 @@
    .ws-header-mixin(@link-header-padding-left, @link-header-padding-right, @link-header-font-size, @link-header-color, @header-height);
    text-decoration: @link-header-text-decoration;
 
-   .controls-Button__wrapper:after {
-      display: inline-block;
-      width: 8px;
-      .ws-header-content-mixin(@link-header-after-content, @link-header-after-font, @link-header-after-color);
-      margin-left: @link-header-after-margin-left;
+   .controls-Button__wrapper {
+      .ws-forwardArrow();
    }
 
    &:hover {
@@ -113,6 +119,18 @@
       &:after {
          color: @link-header-hover-after-color;
       }
+   }
+}
+
+.ws-linkHeader-h6, .controls-Link.ws-linkHeader-h6 {
+   text-decoration: @link-header-text-decoration;
+   .ws-header_size_h6();
+   .ws-header_color_accent1();
+   .ws-header_size_weight();
+   .ws-header_color-hover_accent1();
+
+   .controls-Button__wrapper {
+      .ws-forwardArrow();
    }
 }
 
@@ -175,7 +193,7 @@
 
 .ws-is-desktop-platform {
    .controls-Link:not(.ws-disabled):not(.controls-Click__active) {
-      &.ws-linkHeader, &.ws-header, &.ws-bigSubheader, &.ws-subheader {
+      &.ws-linkHeader, &.ws-header, &.ws-bigSubheader, &.ws-subheader, &.ws-linkHeader-h6 {
          &:hover .controls-Link-link, &:hover .controls-Link__text {
             text-decoration: @link-header-text-decoration;
          }
@@ -184,6 +202,10 @@
          &:hover {
             color: @link-header-hover-color;
          }
+      }
+      &.ws-linkHeader-h6:not(.controls-Link__disabledHover):hover {
+         cursor: pointer;
+         color: @darkcyan-color;
       }
       &.ws-header, &.ws-bigSubheader {
          &:not(.controls-Link__disabledHover):hover {
@@ -237,6 +259,10 @@
             }
          }
       }
+   }
+   &.ws-linkHeader-h6 {
+      .ws-header_color_accent1();
+      .ws-header_size_weight();
    }
 }
 

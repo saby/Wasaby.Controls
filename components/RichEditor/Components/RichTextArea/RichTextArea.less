@@ -244,10 +244,14 @@
       }
    }
 
+   /* Кроме MSIE 12
+    * 1174787393 https://online.sbis.ru/opendoc.html?guid=37d3adf2-546a-4c4e-b5a4-010b237ddcb4
+   */
+   &:not(.ws-is-ie12) .controls-RichEditor br[data-mce-bogus] {
+      display: none;
+   }
+
    .controls-RichEditor {
-      br[data-mce-bogus] {
-         display: none;
-      }
       /* Без ненулевого пэддинга (и при жирном или курсивном шрифте) у последнего элемента неправильно считаются размеры,
        * разсогласуется offsetHeight и scrollHeight, появляется мерцающая прокрутка в родительском элементе
        */

@@ -162,7 +162,7 @@ define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
          _addControlPanel: function (container) {
             if (this._options.enableControlPanel) {
                var self = this,
-                  $ok = $('<span class="controls-EditAtPlace__okButton controls-IconButton__round-border-24"></span>'),
+                  $ok = $('<span class="controls-EditAtPlace__okButton controls-IconButton__round-border-24 controls-IconButton_bordered_size_s controls-IconButton_bordered"></span>'),
                   $cancelCross = $('<span class="controls-EditAtPlace__cancel"></span>');
                this._cntrlPanel = $('<span class="controls-EditAtPlace__controlPanel"></span>').append($ok).append($cancelCross);
 

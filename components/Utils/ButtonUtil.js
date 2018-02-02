@@ -14,6 +14,9 @@ define('SBIS3.CONTROLS/Utils/ButtonUtil', [],
                 if(className.indexOf('controls-Button__primary') !== -1){
                     opts.style = 'primary';
                 }
+                if(className.indexOf('controls-Button__withoutCaption') !== -1){
+                    opts.withoutCaption = true;
+                }
             },
 
             preparedClassFromOptions: function (opts) {

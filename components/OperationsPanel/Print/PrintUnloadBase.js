@@ -265,7 +265,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
        *    });
        * </pre>
        *
-       * @protected
+       * @private
        * @param {object} data Дополнительные данные для вычисления колонок
        * @param {boolean} forced Вернуть колонки, даже если пользователь закрыл редактор колонок крестом (при включённой опции useColumnsEditor)
        * @return {Core/Deferred<object[]|WS.Data/Collection/RecordSet>}
