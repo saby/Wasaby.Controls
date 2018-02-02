@@ -35,42 +35,14 @@ define('Controls/Input/Search',
 
          _valueChangedHandler: function (event, value) {
             this._notify('valueChanged', [value]);
-            if (value) {
-               if (String(value).length >= this._options.minSearchLength) {
-                  this._startSearch(String(value));
-               }
-               else {
-                  this._clearSearchDelay();
-                  this._notify('reset');
-               }
-            }
-         },
-
-         _startSearch: function (text) {
-            this._clearSearchDelay();
-            this._searchDelay = setTimeout(forAliveOnly(function () {
-               this._applySearch(text);
-            }, this), this._options.searchDelay);
-         },
-
-         //Сбросить таймер
-         _clearSearchDelay: function () {
-            if (this._searchDelay) {
-               clearTimeout(this._searchDelay);
-               this._searchDelay = null;
-            }
          },
 
          //Собственно поиск
          _applySearch: function () {
-
-            /* Если поиск запущен, то надо отменить поиск с задержкой */
-            this._clearSearchDelay();
             this._notify('search');
          },
 
          _onResetClick: function () {
-            this._clearSearchDelay();
             this._notify('valueChanged', '');
             this._notify('reset');
          },
@@ -90,16 +62,12 @@ define('Controls/Input/Search',
 
       Search.getOptionTypes = function getOptionsTypes() {
          return {
-            minSearchLength: types(Number),
-            searchDelay: types(Number),
             placeholder: types(String)
          };
       };
 
       Search.getDefaultOptions = function getDefaultOptions() {
          return {
-            minSearchLength: 3,
-            searchDelay: 500,
             placeholder: rk('Найти')+'...'
          };
       };

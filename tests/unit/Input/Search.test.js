@@ -1,10 +1,9 @@
 define(
    [
       'Core/Control',
-      'js!Controls/Input/Search',
-      'Core/vdom/Synchronizer/resources/SyntheticEvent'
+      'js!Controls/Input/Search'
    ],
-   function (Control, Search, SyntheticEvent) {
+   function (Control, Search) {
       'use strict';
 
       var
@@ -21,10 +20,6 @@ define(
             var container = $('<div></div>');
             $('#mocha').append(container);
 
-            if (typeof $ !== 'undefined') {
-               container = $('<div></div>');
-               $('#mocha').append(container);
-            }
             search = Control.createControl(Search, {element: container}, container);
             search.subscribe('search', function () {
                isSearched = true;
@@ -47,35 +42,6 @@ define(
          });
 
          describe('search', function () {
-            it('1 or 2 character', function () {
-               isSearched = false;
-               search._valueChangedHandler(new SyntheticEvent('onchange', {
-                  target: {}
-               }), 'n');
-               assert.isFalse(isSearched);
-
-               search._valueChangedHandler(new SyntheticEvent('onchange', {
-                  target: {}
-               }), 'no');
-               assert.isFalse(isSearched);
-            });
-
-            it('3 character', function () {
-               isSearched = false;
-               search._valueChangedHandler(new SyntheticEvent('onchange', {
-                  target: {}
-               }), 'noo');
-               setTimeout(function(){assert.isTrue(isSearched);}, search._options.searchDelay);
-
-            });
-
-            it('2 character', function () {
-               isSearched = false;
-               search._valueChangedHandler(new SyntheticEvent('onchange', {
-                  target: {}
-               }), 'no');
-               assert.isFalse(isSearched);
-            });
 
             it('Click on reset', function () {
                isSearched = false;
@@ -83,10 +49,6 @@ define(
                search._onResetClick();
                assert.isTrue(isReseted);
                assert.isFalse(isSearched);
-
-               //Проверяем, что поиск с задержкой не запустился
-               isSearched = false;
-               setTimeout(function(){assert.isFalse(isSearched);}, search._options.searchDelay);
             });
 
             it('Click on search', function () {
@@ -95,10 +57,6 @@ define(
                search._onSearchClick();
                assert.isTrue(isSearched);
                assert.isFalse(isReseted);
-
-               //Проверяем, что поиск с задержкой не запустился
-               isSearched = false;
-               setTimeout(function(){assert.isFalse(isSearched);}, search._options.searchDelay);
             });
          });
       });
