@@ -365,7 +365,10 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       };
 
       var _validatePresetTitle = function (list, value) {
-         return value && list.indexOf(value) === -1;
+         if (value) {
+            var v = value.trim();
+            return !!v && list.indexOf(v) === -1;
+         }
       };
 
 
@@ -531,7 +534,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          }
          switch (action) {
             case 'change-title':
-               preset.title = arg;
+               preset.title = arg.trim();
                PresetCache.update(namespace, preset);
                break;
 
