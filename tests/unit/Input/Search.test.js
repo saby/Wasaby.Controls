@@ -5,7 +5,7 @@ define(
       'Core/vdom/Synchronizer/resources/SyntheticEvent'
    ],
    function (Control, Search, SyntheticEvent) {
-      'use strict'
+      'use strict';
 
       var
          isSearched = false,
@@ -100,7 +100,6 @@ define(
                isSearched = false;
                setTimeout(function(){assert.isFalse(isSearched);}, search._options.searchDelay);
             });
-
          });
       });
    });

@@ -19,6 +19,7 @@ define('Controls/Input/Search',
        * @control
        * @public
        * @category Input
+       * @author Золотова Э.Е.
        */
 
       /**
@@ -50,7 +51,6 @@ define('Controls/Input/Search',
             this._searchDelay = setTimeout(forAliveOnly(function () {
                this._applySearch(text);
             }, this), this._options.searchDelay);
-            //this._notify('search');
          },
 
          //Сбросить таймер
@@ -91,7 +91,8 @@ define('Controls/Input/Search',
       Search.getOptionTypes = function getOptionsTypes() {
          return {
             minSearchLength: types(Number),
-            searchDelay: types(Number)
+            searchDelay: types(Number),
+            placeholder: types(String)
          };
       };
 
@@ -99,7 +100,7 @@ define('Controls/Input/Search',
          return {
             minSearchLength: 3,
             searchDelay: 500,
-            //placeholder: rk('Найти')+'...'
+            placeholder: rk('Найти')+'...'
          };
       };
 
