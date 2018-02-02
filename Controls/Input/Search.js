@@ -1,8 +1,15 @@
 define('Controls/Input/Search',
    [
-      'Controls/Input/Text',
-      'tmpl!Controls/Input/Search/searchTextBoxButtons'
-   ], function(TextBox, searchTextBoxButtons) {
+      'Core/Control',
+      'Core/helpers/Function/forAliveOnly',
+      'WS.Data/Type/descriptor',
+      'tmpl!Controls/Input/Search/Search',
+      'Controls/Input/resources/InputRender/SimpleViewModel',
+      'css!Controls/Input/Search/Search'
+   ],
+
+   function (Control, forAliveOnly, types, template, SimpleViewModel) {
+      'use strict';
 
       /**
        * Строка поиска с кнопкой
@@ -12,31 +19,58 @@ define('Controls/Input/Search',
        * @control
        * @public
        * @category Input
+       * @author Золотова Э.Е.
        */
 
       /**
        * @event Controls/Input/Search#search Происходит при нажатии на кнопку поиска
        */
 
-      var SearchTextBox = TextBox.extend({
-         _afterFieldWrapper: searchTextBoxButtons,
-         _searchText: '',
-         //Чтобы событие onReset не отправлялось непрерывно
-         _onResetIsFired: false,
-         //TODO: Зуев обещал в сентябре сделать нормально
-         _classes: 'controls-SearchForm',
+      var Search = Control.extend({
 
-         _onResetClick: function(e) {
-            if(!this._onResetIsFired) {
-               this._notify('onReset');
-               this._onResetIsFired = true;
+         constructor: function (options) {
+            Search.superclass.constructor.apply(this, arguments);
+            this._simpleViewModel = new SimpleViewModel();
+         },
+
+         _valueChangedHandler: function (event, value) {
+            this._notify('valueChanged', [value]);
+         },
+
+         //Собственно поиск
+         _applySearch: function () {
+            this._notify('search');
+         },
+
+         _onResetClick: function () {
+            this._notify('valueChanged', '');
+            this._notify('reset');
+         },
+
+         _onSearchClick: function () {
+            this._applySearch();
+         },
+
+         _keyDownHandler: function (event) {
+            if (event.nativeEvent.keyCode == 13) {
+               this._applySearch();
             }
          },
 
-         _onSearchClick: function(e) {
-
-         }
+         _template: template
       });
 
-      return SearchTextBox;
+      Search.getOptionTypes = function getOptionsTypes() {
+         return {
+            placeholder: types(String)
+         };
+      };
+
+      Search.getDefaultOptions = function getDefaultOptions() {
+         return {
+            placeholder: rk('Найти')+'...'
+         };
+      };
+
+      return Search;
    });
