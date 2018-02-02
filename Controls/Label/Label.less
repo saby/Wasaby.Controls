@@ -1,15 +1,19 @@
 .controls-Label {
    cursor: pointer;
    padding: @padding_Label;
+   height: @default-height;
+}
+.controls-Label__caption {
+   height: 100%;
 }
 .controls-Label__caption_required:after {
    content: ' *';
 }
 .controls-Label__caption_enabled {
-   color: @innacent-color;
-   &:after {
-      color: @error-color;
-   }
+   color: @color_Label-caption_enabled;
+}
+.controls-Label__caption_enabled:after {
+   color: @error-color;
 }
 .controls-Label__caption_disabled {
    color: @disabled-color;
