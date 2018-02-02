@@ -15,6 +15,7 @@ define('SBIS3.CONTROLS/PasswordTextBox', [
     * Поле ввода пароля.
     * @class SBIS3.CONTROLS/PasswordTextBox
     * @extends SBIS3.CONTROLS/TextBox
+    * @mixes Controls/Input/PasswordDocs
     * @author Крайнов Д.О.
     * @demo SBIS3.CONTROLS.Demo.MyPasswordTextBox
     *

@@ -91,7 +91,7 @@ body {
 }
 
 .controls-operationsPanel__actions {
-  .controls-ButtonBase:hover, .controls-DropdownList__textWrapper:hover, .controls-ComboBox:hover {
+  .controls-ButtonBase:hover, .controls-DropdownList__value:hover, .controls-ComboBox:hover {
     color: #B9E9FF !important;
     .icon-error {
       color: @error-color !important;
@@ -108,7 +108,16 @@ body {
     }
   }
 }
-
+.controls-operationsPanel__itemsMenu {
+  .controls-Button__icon {
+    color: #839EBC !important;
+  }
+  &:hover {
+    .controls-Button__icon {
+      color: #B9E9FF !important;
+    }
+  }
+}
 .ws-LoadingIndicator__window, .ws-loading {
     img, .ws-loadingimg > div:before{
       width: round(74px * @multiplier);
@@ -133,6 +142,7 @@ body .ws-window.ws-LoadingIndicator__window {
   background-color: #1D2834;
 }
 .controls-ComboBox__item, .controls-DropdownList__item {
+  position: relative;
   &:after {
     content: ' ';
     position:absolute;
@@ -237,6 +247,12 @@ body {
       }
     }
   }
+  .ws-window-title { // аналогично шапке панели, контентная область начинается слева от крестика
+    margin: 0 !important;
+    width: calc(100% ~'-' round(86px * @multiplier)) !important; //78 - close button width + 8 - padding
+    padding-left: round(24px * @multiplier) !important;
+    box-sizing: border-box !important;
+  }
 }
 
 //!IMPORTANT лучше чем увеличение веса селектора через BODY тк возможно собирать тему под селектором
@@ -274,7 +290,7 @@ body {
 .controls-EditActions__cancelButton {
   position: relative;
   background-image: none;
-  background-color: @background-color_EditButton;
+  background-color: @background-color_IconButton_bordered;
   font-size: @font-size_Button_m;
   .box-shadow(@box-shadow_Button);
   color: #8991A9;
@@ -305,7 +321,7 @@ body {
 }
 .ws-is-desktop-platform {
   .controls-ItemsToolbar-closeButton.controls-Button__closeButton:hover {
-    background-color: @background-color_EditButton_hovered;
+    background-color: @background-color_IconButton_bordered_standard_hovered;
   }
 }
 //Простите меня за эти строки кода, я не хотел, меня заставили
@@ -317,7 +333,11 @@ body {
     }
     .icon-size {
       color: #E4E4E4 !important;
+      &.icon-IconButton-disabled {
+        color: @color_Link-icon_disabled !important;
+      }
     }
+
   }
 }
 //todo: удалить временный коствль
@@ -419,4 +439,20 @@ body {
 //Todo: необходимо зашить эти стили в окнах
 .controls-NotificationPopup__body, controls-NotificationPopup__footer {
   background-color: @controls-SubmitPopup-footer-bg;
+}
+
+// кнопки онлайна с обводкой переходят в кнопки престо с обводкой
+// в стандарте выбора времени кнопка отличается
+.controls-IconButton.controls-TimeHeader__homeButton {
+  background-color: transparent;
+  box-shadow: none;
+  height: @height_IconButton_bordered_size-m;
+}
+.ws-is-desktop-platform .controls-IconButton.controls-IconButton__standardBorder:hover {
+  background-color: transparent;
+}
+// перетащил фикс из prestonew
+// TODO: чтобы не писать такие каскады нужно упростить стили MenuIcon и навешивать только нужные отступы
+.controls-operationsPanel__itemsMenu_picker.controls-MenuIcon__Menu.controls-MenuIcon__Menu.controls-Menu.controls-Menu__hide-menu-header {
+  margin: round(-17px * @multiplier) 0 0 round(16px * @multiplier);
 }

@@ -1,4 +1,4 @@
-.controls-Button {
+.controls-BaseButton {
   display: inline-block;
   font-size: @font-size_Link;
   text-decoration: none;
@@ -14,10 +14,14 @@
   color: @color_Link-text;
   &:hover {
     color: @color_Link-text_hovered;
-    .controls-Button__text {
+    .controls-BaseButton__text {
       text-decoration: underline;
     }
   }
+}
+
+.controls-Button__wrapper_style-link {
+  .justify-content(flex-start);
 }
 
 .controls-Button__style-link-disabled{
@@ -61,9 +65,16 @@
 .controls-Button__icon-default {
   color: @color_Button-icon;
 }
+.controls-Button__text_style-default {
+  .text-overflow();
+}
 
 .controls-Button__icon-primary {
   color: @color_Button-icon_primary;
+}
+
+.controls-Button__text_style-primary {
+  .text-overflow();
 }
 
 .controls-Button__icon-primary-disabled, .controls-Button__icon-default-disabled, .controls-Button__icon-link-disabled{

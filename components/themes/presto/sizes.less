@@ -24,11 +24,11 @@
 @font-size_InputRender_m:             @large-text-size;
 @font-size_InputRender_l:             @huge-text-size;
 @font-size_InputRender_default:       @font-size_InputRender_l;
-@padding_InputRender-container:       0 round(15px * @multiplier);
-@padding_InputRender-container_left:  0 0 0 round(15px * @multiplier);
+@padding_InputRender:                 0 round(15px * @multiplier);
+@padding_InputRender_left:            0 0 0 round(15px * @multiplier);
 @border-width_InputRender:            @default-border-width;
-@width_InputRender-InformationIcon:   round(20px * @multiplier);
-@height_InputRender-InformationIcon:  @width_InputRender-InformationIcon;
+@width_InputRender-tagStyle:          round(20px * @multiplier);
+@height_InputRender-tagStyle:         @width_InputRender-tagStyle;
 @line-height_InputRender_m:           round(42px * @multiplier);
 @line-height_InputRender_l:           round(52px * @multiplier);
 @line-height_InputRender_default:     @line-height_InputRender_l;
@@ -85,6 +85,7 @@
 @search-form-icon-padding:     0 0 0 round(8px * @multiplier) ;
 //PrintDialog
 @printDialog-activate-right:                          round(92px * @multiplier); //ширина кнопки 84px+8px отступ
+@printDialog-button-margin-top:                       @top_window_button;
 //todo:
 @fieldLink-afterField-button-margin:             0 @default-padding-small 0 0;
 @margin-left__searchForm_picker:  round(-8px * @multiplier);
@@ -94,8 +95,10 @@
 //commandsButton
 @commands-button-close-icon:   @default-icon-size-large;
 //operationPanel
-@controls-OperationsPanelButton-font-size:  @icon-large-size;
 @controls-OperationsPanel-actions-margin:   0 round(16px * @multiplier);
+@controls-OperationsPanel-menu-icon-size:   @default-icon-size-medium;
+@right_OperationsPanel-menu-closeButton:    round(16px * @multiplier);
+@top_OperationsPanel-menu-closeButton:      round(18px * @multiplier);
 //grid
 @controls-view-padding-DEFAULT:             round(24px * @multiplier);
 
@@ -139,6 +142,7 @@
 @controls-OperationsPanelButton-width:                          @default-height;
 @controls-OperationsPanelButton-icon-left:                      0;
 @controls-OperationsPanelButton-vert-border-radius:             1px;
+@width_OperationsPanelButton-separator:                         0;
 //CheckBox
 @height_CheckBox:                               round(48px * @multiplier);
 @width_CheckBox:                                round(64px * @multiplier);
@@ -341,10 +345,11 @@
 //ItemsToolbar
 @list-view-items-toolbar-right:                        0;
 @list-view-items-toolbar-padding:                      round(4px * @multiplier) round(16px * @multiplier) round(4px * @multiplier) round(16px * @multiplier);
-@height_IconButton_round_edit:                         round(58px * @multiplier);
-@width_IconButton_round_edit:                          round(58px * @multiplier);
-@height_IconButton_round_edit_size-l:                  round(78px * @multiplier);
-@width_IconButton_round_edit_size-l:                   round(78px * @multiplier);
+@height_IconButton_bordered_size-s:                         round(58px * @multiplier);
+@width_IconButton_bordered_size-s:                          round(58px * @multiplier);
+@height_IconButton_bordered_size-l:                    round(78px * @multiplier);
+@width_IconButton_bordered_size-l:                     round(78px * @multiplier);
+@border-radius_IconButton_bordered_size-l:             2px;
 @icon-button-edit-round-border-line-height:            round(58px * @multiplier);
 @list-view-items-toolbar-line-height:                  round(52px * @multiplier);
 @list-view-items-toolbar-icon-button-border-font-size: round(42px * @multiplier);
@@ -429,7 +434,7 @@
 //DateRangeChoose
 @date-range-choose-current-value-height:                                 @default-height;
 @date-range-choose-current-value-font-weight:                            700;
-@date-range-slider-margin-top:                                           round(-16px * @multiplier);
+@date-range-slider-margin-top:                                           (@date-range-slider-height - @date-range-choose-current-value-height)/2;
 //BackButton
 @back-button-font-size:                         @large-text-size;
 @back-button-arrow-padding-right-2:             round(16px * @multiplier);
@@ -459,3 +464,12 @@
 @line-height_editAtPlace_fieldWrapper:          normal;
 //image
 @editdialog-template-minwidth:                  round(718px * @multiplier);
+//CloseButton
+@border-width_CloseButton:                      0 0 0 0;
+@border-radius_CloseButton:                     1px;
+@width_CloseButton:                             round(86px * @multiplier);
+@height_CloseButton:                            round(78px * @multiplier);
+@font-size_CloseButton:                         round(52px * @multiplier);
+//ListAddButton
+@icon-size_ListAddButton:                       @default-icon-size-medium;
+@font-size_listAddButton:                       @small-text-size;

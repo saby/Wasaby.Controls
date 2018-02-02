@@ -2,9 +2,10 @@ define('Controls/Popup/Opener/Sticky/Strategy',
    [
       'Controls/Popup/Opener/BaseStrategy',
       'Core/core-merge',
+      'Core/core-clone',
       'Controls/Popup/TargetCoords'
    ],
-   function (BaseStrategy, cMerge, TargetCoords) {
+   function (BaseStrategy, cMerge, cClone, TargetCoords) {
 
       var DEFAULT_OPTIONS = {
          horizontalAlign: {
@@ -161,10 +162,10 @@ define('Controls/Popup/Opener/Sticky/Strategy',
       var Strategy = BaseStrategy.extend({
          elementCreated: function (cfg, width, height) {
             var popupCfg = {
-               corner: cMerge(DEFAULT_OPTIONS['corner'], cfg.popupOptions.corner),
+               corner: cMerge(cClone(DEFAULT_OPTIONS['corner']), cfg.popupOptions.corner || {}),
                align: {
-                  horizontal: cMerge(DEFAULT_OPTIONS['horizontalAlign'], cfg.popupOptions.horizontalAlign || {}),
-                  vertical: cMerge(DEFAULT_OPTIONS['verticalAlign'], cfg.popupOptions.verticalAlign || {})
+                  horizontal: cMerge(cClone(DEFAULT_OPTIONS['horizontalAlign']), cfg.popupOptions.horizontalAlign || {}),
+                  vertical: cMerge(cClone(DEFAULT_OPTIONS['verticalAlign']), cfg.popupOptions.verticalAlign || {})
                },
                sizes: {
                   width: width,

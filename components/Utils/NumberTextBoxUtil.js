@@ -136,8 +136,12 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
                 }
                 currentVal = currentVal.replace(/\s/g, '');
 
-                if (newCaretPosition == -1 && this._getIntegersCount(currentVal) == 0){ // если первый 0 перемещаем через него каретку
-                    newCaretPosition += 2;
+                if (newCaretPosition == -1){
+                   if (this._getIntegersCount(currentVal) == 0) { // если первый 0 перемещаем через него каретку
+                      newCaretPosition += 2;
+                   } else {
+                      newCaretPosition += 1;
+                   }
                 }
                 return {value: currentVal, caretPosition: newCaretPosition, step: step};
             },

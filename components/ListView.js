@@ -1750,7 +1750,7 @@ define('SBIS3.CONTROLS/ListView',
                if (target.container){
                   if (!this._touchSupport) {
                      this._showItemsToolbar(target);
-                      if(this._itemsToolbar.getTouchMode()) {
+                      if(this._itemsToolbar && this._itemsToolbar.getTouchMode()) {
                           // ситуация, когда при смене выделенного элемента тулбар находится в тач режиме может возникнуть на планшетах и устройствах с zinFrame
                           // необходимо выставить высотку тулбара, т.к. высота строки может измениться
                           this._itemsToolbar.setHeightInTouchMode();

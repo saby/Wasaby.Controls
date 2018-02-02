@@ -178,12 +178,8 @@
       border-width: @list-view-items-toolbar-icon-button-border-width;
       border-radius: @list-view-items-toolbar-icon-button-border-radius;
       .controls-Button__icon.icon-size {
-         font-size: @list-view-items-toolbar-icon-button-border-font-size !important;
-         box-sizing: content-box;
-         height: @height_IconButton_round_edit - 2 * @list-view-items-toolbar-icon-button-border-width !important;
-         width: @width_IconButton_round_edit - 2 * @list-view-items-toolbar-icon-button-border-width !important;
-         line-height: @icon-button-edit-round-border-line-height - 2 * @list-view-items-toolbar-icon-button-border-width !important;
-         font-family: @default-icon-font !important;
+         .icon-size(@list-view-items-toolbar-icon-button-border-font-size);
+         line-height: @list-view-items-toolbar-icon-button-border-font-size - 2 * @list-view-items-toolbar-icon-button-border-width !important;
       }
    }
 
@@ -223,7 +219,7 @@
    cursor: pointer;
    display: inline-block;
    &:hover {
-      background: @background_EditActions-closeButton_active;
+      background: @background_EditActions-closeButton_hovered;
    }
    &:active {
       background: @background_EditActions-closeButton_active;
