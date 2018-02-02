@@ -12,7 +12,7 @@
         <ws:partial if="{{ topTemplate }}" template="{{ topTemplate }}" />
         <SBIS3.CONTROLS:Button
                 className="controls__filter-button__apply-filter"
-                caption="{[Отобрать]}"
+                caption="{{ viewMode === 'twoColumns' ? ['Построить'] : ['Отобрать'] }}"
                 command="apply-filter"
                 primary="{{ true }}"
                 tabindex="0"
