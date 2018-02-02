@@ -451,3 +451,8 @@ body {
 .ws-is-desktop-platform .controls-IconButton.controls-IconButton__standardBorder:hover {
   background-color: transparent;
 }
+// перетащил фикс из prestonew
+// TODO: чтобы не писать такие каскады нужно упростить стили MenuIcon и навешивать только нужные отступы
+.controls-operationsPanel__itemsMenu_picker.controls-MenuIcon__Menu.controls-MenuIcon__Menu.controls-Menu.controls-Menu__hide-menu-header {
+  margin: round(-17px * @multiplier) 0 0 round(16px * @multiplier);
+}
