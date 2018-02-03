@@ -7,7 +7,7 @@ define([
    describe('Controls.Application', function () {
 
       beforeEach(function () {
-         /* Пока не ясно, как мокать тесты */
+         /* Пока не ясно, как мокать контексты */
          this.skip();
       });
       it('_tplConfig init', function (done) {
