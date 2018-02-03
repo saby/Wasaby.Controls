@@ -1,7 +1,7 @@
 /**
  * Created by kraynovdo on 16.11.2017.
  */
-define('Controls/List/ListControl/ListViewModel',
+define('Controls/List/SimpleList/ListViewModel',
    ['Core/Abstract', 'Controls/List/ListControl/ItemsViewModel'],
    function(Abstract, ItemsViewModel) {
       /**

@@ -1,7 +1,7 @@
 /**
  * Created by kraynovdo on 16.11.2017.
  */
-define('Controls/List/ListControl/ItemsViewModel',
+define('Controls/List/SimpleList/ItemsViewModel',
    ['Core/Abstract', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance'],
    function(Abstract, ItemsUtil, cInstance) {
 

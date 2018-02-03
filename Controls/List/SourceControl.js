@@ -10,7 +10,7 @@ define('Controls/List/SourceControl', [
    'Controls/List/Controllers/VirtualScroll',
    'css!Controls/List/SourceControl/SourceControl'
 ], function (Control,
-             ListControlTpl,
+             SourceControlTpl,
              ListViewModel,
              DataSourceUtil,
              PageNavigation,
@@ -292,9 +292,9 @@ define('Controls/List/SourceControl', [
     * @category List
     */
 
-   var ListControl = Control.extend({
-      _controlName: 'Controls/List/ListControl',
-      _template: ListControlTpl,
+   var SourceControl = Control.extend({
+      _controlName: 'Controls/List/SourceControl',
+      _template: SourceControlTpl,
       iWantVDOM: true,
       _isActiveByClick: false,
 
@@ -316,7 +316,7 @@ define('Controls/List/SourceControl', [
       _bottomPlaceholderHeight: 0,
 
       constructor: function (cfg) {
-         ListControl.superclass.constructor.apply(this, arguments);
+         SourceControl.superclass.constructor.apply(this, arguments);
          this._publish('onDataLoad');
       },
 
@@ -344,7 +344,7 @@ define('Controls/List/SourceControl', [
       },
 
       _afterMount: function() {
-         ListControl.superclass._afterMount.apply(this, arguments);
+         SourceControl.superclass._afterMount.apply(this, arguments);
 
          //Если есть подгрузка по скроллу и список обернут в скроллКонтейнер, то создаем ScrollWatcher
          //TODO вместо проверки на навигацию - позже будет аналогичная проверка на наличие виртуального скролла.
@@ -414,7 +414,7 @@ define('Controls/List/SourceControl', [
             this._scrollController.destroy();
          }
 
-         ListControl.superclass._beforeUnmount.apply(this, arguments);
+         SourceControl.superclass._beforeUnmount.apply(this, arguments);
       },
 
 
@@ -448,7 +448,7 @@ define('Controls/List/SourceControl', [
          if (this._scrollPagingCtr) {
             this._scrollPagingCtr.destroy()
          }
-         ListControl.superclass.destroy.apply(this, arguments);
+         SourceControl.superclass.destroy.apply(this, arguments);
       }
    });
 
@@ -458,6 +458,6 @@ define('Controls/List/SourceControl', [
     dataSource: Types(ISource)
     }
     };*/
-   ListControl._private = _private;
-   return ListControl;
+   SourceControl._private = _private;
+   return SourceControl;
 });

@@ -1,7 +1,7 @@
 /**
  * Created by kraynovdo on 22.09.2017.
  */
-define('Controls/List/ListControl/ListView', [
+define('Controls/List/SimpleList/ListView', [
    'Core/Control',
    'tmpl!Controls/List/ListControl/ListView',
    'Controls/List/resources/utils/ItemsUtil',
