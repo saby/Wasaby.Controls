@@ -69,6 +69,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          // _selectionType: null
       },
       _isAnimationProcessing: false,
+      _scrollToElement: null,
 
       $constructor: function () {
          this._publish('onMonthActivated');
@@ -133,9 +134,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
 
       _onScroll: throttle(function () {
-         if (this._isAnimationProcessing) {
-            return;
-         }
          // TODO: переделать условие
          if (!this.getContainer().is(':visible')) {
             return;
@@ -170,10 +168,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          if (originalEvent.wheelDelta !== undefined) {
             direction = originalEvent.wheelDelta > 0 ? -1 : 1;
          } else {
-            direction = originalEvent.deltaY < 0 ? 1 : -1;
+            direction = originalEvent.deltaY < 0 ? -1 : 1;
          }
          event.preventDefault();
-         this._onScrollOverMonths(direction)
+         this._onScrollOverMonths(direction, $(event.target).closest('.controls-DateRangeBigChoose-DateRangePickerItem'))
       },
 
       _onSwipe: function (event) {
@@ -181,12 +179,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
             return;
          }
          event.preventDefault();
-         this._onScrollOverMonths(event.direction === 'bottom' ? -1 : 1);
+         this._onScrollOverMonths(event.direction === 'bottom' ? -1 : 1, $(event.target).closest('.controls-DateRangeBigChoose-DateRangePickerItem'));
       },
 
-      _onScrollOverMonths: function (direction) {
-         var element = $(event.target).closest('.controls-DateRangeBigChoose-DateRangePickerItem'),
-            scrollContainer = this._getScrollContainer();
+      _onScrollOverMonths: function (direction, element) {
+         var scrollContainer = this._getScrollContainer();
 
          element = direction > 0 ? element.next() : element.prev();
 
@@ -196,6 +193,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          }
 
          this._isAnimationProcessing = true;
+         this._scrollToElement = element;
 
          scrollContainer.finish().animate({
             scrollTop: scrollContainer.scrollTop() + element.offset().top -  scrollContainer.offset().top
@@ -205,11 +203,36 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          });
       },
 
+      _getScrollTopByElement: function (element) {
+         var scrollContainer = this._getScrollContainer();
+         return scrollContainer.scrollTop() + element.offset().top -  scrollContainer.offset().top;
+      },
+
       _scrollAnimationComplete: function (animation, jumpedToEnd) {
           if (!jumpedToEnd) {
              this._isAnimationProcessing = false;
+             this._scrollToElement = null;
              this._onScroll();
           }
+      },
+
+      _moveTopScroll: function () {
+         var scrollContainer = this._getScrollContainer();
+
+         if (this._isAnimationProcessing) {
+            // Если идет предыдущая анимация и догрузились данные, то переходим на середину предыдущего года
+            // и продолжаем анимацию с этого положения.
+            scrollContainer.stop(true);
+            scrollContainer.scrollTop(this._getScrollTopByElement(this._scrollToElement.next()) - 1000);
+            scrollContainer.animate({
+               scrollTop: this._getScrollTopByElement(this._scrollToElement)
+            }, {
+               duration: 400,
+               done: this._scrollAnimationComplete
+            });
+            return;
+         }
+         Component.superclass._moveTopScroll.apply(this, arguments);
       },
 
       _onMonthTitleClick: function (event) {

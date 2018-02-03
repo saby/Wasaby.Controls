@@ -3,7 +3,12 @@
  *
  * @description
  */
-define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'css!SBIS3.CONTROLS/Button/IconButton/IconButton'], function(WSButton) {
+define('SBIS3.CONTROLS/Button/IconButton', [
+    'js!WSControls/Buttons/Button',
+    'SBIS3.CONTROLS/Utils/IconButtonUtil',
+    'css!SBIS3.CONTROLS/Button/IconButton/IconButton'
+],
+function(WSButton, IconButtonUtil) {
 
    'use strict';
 
@@ -56,26 +61,18 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
     */
 
    var IconButton = WSButton.extend([], /** @lends SBIS3.CONTROLS/Button/IconButton.prototype */ {
-      _modifyOptions: function () {
+      _modifyOptions: function (opts, parsedOptions, attrToMerge) {
          var
-             options = IconButton.superclass._modifyOptions.apply(this, arguments),
-             iconClass = options._iconClass;
+             options = IconButton.superclass._modifyOptions.apply(this, arguments);
 
-
-         options.className += ' controls-IconButton';
          options._type = 'IconButton';
+         options.className += ' controls-IconButton';
+         options._textClass = ' controls-IconButton__text';
+         opts._iconDisabledClass = 'icon-IconButton-disabled';
 
-         if (iconClass) {
-            if (((iconClass.indexOf('icon-error') >= 0) || (iconClass.indexOf('icon-done') >= 0))){
-               if (iconClass.indexOf('icon-error') >= 0) {
-                  options.className += ' controls-IconButton__errorBorder';
-               }
-               else {
-                  options.className += ' controls-IconButton__doneBorder';
-               }
-            }
-         }
-         options.cssClassName += ' controls-IconButton-size__' + (!!options.size ? options.size : 'default');
+         IconButtonUtil.setStyleByConfig(options, attrToMerge);
+         options.cssClassName += IconButtonUtil.getClassState(options);
+
          return options;
       },
 
@@ -105,7 +102,14 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
               this.getContainer().removeClass('controls-IconButton__doneBorder').removeClass('controls-IconButton__errorBorder');
           }
           IconButton.superclass.setIcon.call(this, icon);
-      }
+      },
+      _toggleState: function() {
+          var  container = this._container;
+
+          container[0].className = container[0].className.replace(/(^|\s)controls-IconButton_\S+/g, '').replace(/(^|\s)controls-IconButton__\S+/g, '');
+          container.addClass(IconButtonUtil.getClassState(this._options));
+          IconButton.superclass._toggleState.apply(this, arguments);
+       }
    });
 
    return IconButton;

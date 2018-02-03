@@ -3,6 +3,7 @@ define([
 ], function(ScrollController) {
 
    var currentTriggers, currentScrollTop;
+   var global = (function() { return this || (0,eval)('this') })();
 
    function createScrollContainer() {
       return {

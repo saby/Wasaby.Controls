@@ -370,7 +370,7 @@ define('SBIS3.CONTROLS/TextArea', [
          //IE - единственный браузер, который навешивает :invalid, если через js поставить текст, превышаюший maxLength
          //Т.к. мы показываем плейсхолдер, если на поле ввода висит :invalid, то он не скрывается.
          //Поэтому для IE просто не будем навешивать аттрибут maxLength
-         this._inputField.attr('maxlength', constants.browser.isIE ? null : num);
+         this._inputField.attr('maxlength', constants.browser.isIE && !constants.browser.isIE12 ? null : num);
       },
 
 
