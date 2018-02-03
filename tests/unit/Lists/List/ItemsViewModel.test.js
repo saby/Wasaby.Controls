@@ -2,7 +2,7 @@
  * Created by kraynovdo on 17.11.2017.
  */
 define([
-   'Controls/List/ListControl/ItemsViewModel',
+   'Controls/List/SimpleList/ItemsViewModel',
    'Controls/List/resources/utils/ItemsUtil'
 ], function(ItemsViewModel, ItemsUtil){
    describe('Controls.List.ListControl.ItemsViewModel', function () {

@@ -2,11 +2,13 @@
  * Created by kraynovdo on 23.10.2017.
  */
 define([
-   'Controls/List',
+   'Controls/List/SourceControl',
    'Controls/List/resources/utils/ItemsUtil',
    'WS.Data/Source/Memory',
-   'WS.Data/Collection/RecordSet'
-], function(ListControl, ItemsUtil, MemorySource, RecordSet){
+   'WS.Data/Collection/RecordSet',
+   'Controls/List/SimpleList/ListViewModel',
+   'Controls/List/SimpleList/ListView'
+], function(SourceControl, ItemsUtil, MemorySource, RecordSet, ListViewModel){
    describe('Controls.List', function () {
       var data, display;
       beforeEach(function() {
@@ -33,17 +35,21 @@ define([
             idProperty: 'id',
             data: data
          });
+         var listViewModel = new ListViewModel ({
+            items : [],
+            idProperty: 'id'
+         });
          var cfg = {
-            dataSource: source
+            viewName : 'Controls/List/SimpleList/ListView',
+            source: source,
+            listViewModel: listViewModel
+
          };
-         var ctrl = new ListControl(cfg);
+         var ctrl = new SourceControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
-         assert.equal(source, ctrl._dataSource, 'Property _dataSource is incorrect before mounting');
+         assert.isTrue(!!ctrl._dataSourceController, 'Property _dataSourceController is incorrect before mounting');
 
-         ctrl = new ListControl({});
-         ctrl._beforeUpdate(cfg);
-         assert.equal(source, ctrl._dataSource, 'Property _dataSource is incorrect before updating');
       });
 
       it('Only one data request', function (done) {

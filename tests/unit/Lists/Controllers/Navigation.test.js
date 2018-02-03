@@ -111,10 +111,10 @@ define(
                params = pNav.prepareQueryParams();
                assert.deepEqual({limit: 4, offset: 4}, params, 'Method prepareQueryParams returns incorrect parameters before reload');
 
-               params = pNav.prepareQueryParams(undefined, 'down');
+               params = pNav.prepareQueryParams('down');
                assert.deepEqual({limit: 4, offset: 8}, params, 'Method prepareQueryParams returns incorrect parameters before load down');
 
-               params = pNav.prepareQueryParams(undefined, 'up');
+               params = pNav.prepareQueryParams('up');
                assert.deepEqual({limit: 4, offset: 0}, params, 'Method prepareQueryParams returns incorrect parameters before load up');
             })
 

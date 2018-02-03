@@ -2,8 +2,8 @@
  * Created by kraynovdo on 23.10.2017.
  */
 define([
-   'Controls/List/ListControl/ListView',
-   'Controls/List/ListControl/ListViewModel'
+   'Controls/List/SimpleList/ListView',
+   'Controls/List/SimpleList/ListViewModel'
 ], function(ListView, ListViewModel){
    describe('Controls.List.ListView', function () {
       var data, display;
