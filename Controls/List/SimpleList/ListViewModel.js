@@ -2,7 +2,7 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/SimpleList/ListViewModel',
-   ['Core/Abstract', 'Controls/List/ListControl/ItemsViewModel'],
+   ['Core/Abstract', 'Controls/List/SimpleList/ItemsViewModel'],
    function(Abstract, ItemsViewModel) {
       /**
        *

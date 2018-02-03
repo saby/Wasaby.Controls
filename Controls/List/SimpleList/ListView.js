@@ -3,10 +3,10 @@
  */
 define('Controls/List/SimpleList/ListView', [
    'Core/Control',
-   'tmpl!Controls/List/ListControl/ListView',
+   'tmpl!Controls/List/SimpleList/ListView/ListView',
    'Controls/List/resources/utils/ItemsUtil',
-   'tmpl!Controls/List/ListControl/ItemTemplate',
-   'css!Controls/List/ListControl/ListView'
+   'tmpl!Controls/List/SimpleList/ItemTemplate',
+   'css!Controls/List/SimpleList/ListView/ListView'
 ], function (BaseControl,
              ListViewTpl,
              ItemsUtil,

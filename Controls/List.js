@@ -1,27 +1,14 @@
 /**
  * Created by kraynovdo on 31.01.2018.
  */
-define('Controls/List2', [
+define('Controls/List', [
    'Core/Control',
-   'tmpl!Controls/List/ListControl2',
-   'Controls/List/ListControl/ListViewModel',
-   'Controls/List/resources/utils/DataSourceUtil',
-   'Controls/List/Controllers/PageNavigation',
-   'Core/helpers/functional-helpers',
-   'require',
-   'Controls/List/Controllers/ScrollController',
-   'Controls/List/Controllers/VirtualScroll',
-   'css!Controls/List/ListControl/ListControl',
-   'Controls/List/SourceControl'
+   'tmpl!Controls/List/SimpleList',
+   'Controls/List/SimpleList/ListViewModel',
+   'Controls/List/SimpleList/ListView'
 ], function (Control,
              ListControlTpl,
-             ListViewModel,
-             DataSourceUtil,
-             PageNavigation,
-             fHelpers,
-             require,
-             ScrollController,
-             VirtualScroll
+             ListViewModel
 ) {
    'use strict';
 

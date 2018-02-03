@@ -1,11 +1,11 @@
 <div class="123">
     <h2>Default</h2>
-    <Controls:List2
+    <Controls:List
             dataSource = "{{_viewSource}}"
             selectedKey="{{2}}"
             allowEmptySelection="{{false}}"
             idProperty="id">
-    </Controls:List2>
+    </Controls:List>
 
     <h2>Display property</h2>
     <Controls:List
@@ -14,7 +14,7 @@
             allowEmptySelection="{{false}}"
             idProperty="id">
         <ws:itemTemplate>
-            <ws:partial template="tmpl!Controls/List/ListControl/ItemTemplate"
+            <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
                         itemData="{{itemTemplate.itemData}}"
                         displayProperty="description"
             ></ws:partial>
@@ -28,7 +28,7 @@
             allowEmptySelection="{{false}}"
             idProperty="id">
         <ws:itemTemplate>
-            <ws:partial template="tmpl!Controls/List/ListControl/ItemTemplate"
+            <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
                         itemData="{{itemTemplate.itemData}}"
                         marker="{{false}}"
             ></ws:partial>
@@ -42,7 +42,7 @@
             allowEmptySelection="{{false}}"
             idProperty="id">
         <ws:itemTemplate>
-            <ws:partial template="tmpl!Controls/List/ListControl/ItemTemplate"
+            <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
                         itemData="{{itemTemplate.itemData}}"
             >
                 <ws:contentTemplate>
