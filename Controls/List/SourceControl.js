@@ -1,22 +1,22 @@
 define('Controls/List/SourceControl', [
    'Core/Control',
+   'Core/IoC',
    'tmpl!Controls/List/SourceControl/SourceControl',
-   'Controls/List/SimpleList/ListViewModel',
-   'Controls/List/resources/utils/DataSourceUtil',
    'Controls/List/Controllers/PageNavigation',
    'Core/helpers/functional-helpers',
    'require',
    'Controls/List/Controllers/ScrollController',
+   'Controls/List/Controllers/SourceController',
    'Controls/List/Controllers/VirtualScroll',
    'css!Controls/List/SourceControl/SourceControl'
 ], function (Control,
+             IoC,
              SourceControlTpl,
-             ListViewModel,
-             DataSourceUtil,
              PageNavigation,
              fHelpers,
              require,
              ScrollController,
+             SourceController,
              VirtualScroll
 ) {
    'use strict';
@@ -40,48 +40,60 @@ define('Controls/List/SourceControl', [
          return params;
       },
 
+      /*
       paramsWithUserEvent: function(params, userParams) {
          params.filter = userParams['filter'] || params.filter;
          params.sorting = userParams['sorting'] || params.sorting;
          params.offset = userParams['offset'] || params.offset;
          params.limit = userParams['limit'] || params.limit;
          return params;
-      },
+      },*/
 
       reload: function(self) {
-         _private.load(self).addCallback(function(list){
+         if (self._sourceController) {
+            _private.showIndicator(self);
+            self._sourceController.load(self._filter, self._sorting).addCallback(function (list) {
+               if (self._navigationController) {
+                  self._navigationController.calculateState(list);
+               }
 
-            if (self._navigationController) {
-               self._navigationController.calculateState(list);
-            }
+               if (self._listViewModel) {
+                  self._listViewModel.setItems(list);
+               }
 
-            if (self._listViewModel) {
-               self._listViewModel.setItems(list);
-            }
-
-            self._virtualScroll.setItemsCount(self._listViewModel.getCount());
-            _private.handleListScroll.call(self, 0);
-         })
+               self._virtualScroll.setItemsCount(self._listViewModel.getCount());
+               _private.handleListScroll.call(self, 0);
+            })
+         }
+         else {
+            IoC.resolve('ILogger').error('SourceControl', 'Source option is undefined. Can\'t load data');
+         }
       },
 
       loadToDirection: function(self, direction) {
-         _private.load(self, direction).addCallback(function(addedItems){
+         _private.showIndicator(self, direction);
+         if (self._sourceController) {
+            _private.load(self._filter, self._sorting, direction).addCallback(function(addedItems){
 
-            if (self._navigationController) {
-               self._navigationController.calculateState(addedItems, direction);
-            }
+               if (self._navigationController) {
+                  self._navigationController.calculateState(addedItems, direction);
+               }
 
-            if (direction === 'down') {
-               self._listViewModel.appendItems(addedItems);
-               self._virtualScroll.appendItems(addedItems.getCount());
-            } else if (direction === 'up') {
-               self._listViewModel.prependItems(addedItems);
-               self._virtualScroll.prependItems(addedItems.getCount());
-            }
+               if (direction === 'down') {
+                  self._listViewModel.appendItems(addedItems);
+                  self._virtualScroll.appendItems(addedItems.getCount());
+               } else if (direction === 'up') {
+                  self._listViewModel.prependItems(addedItems);
+                  self._virtualScroll.prependItems(addedItems.getCount());
+               }
 
-            //обновить начало/конец видимого диапазона записей и высоты распорок
-            _private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
-         })
+               //обновить начало/конец видимого диапазона записей и высоты распорок
+               _private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
+            })
+         }
+         else {
+            IoC.resolve('ILogger').error('SourceControl', 'Source option is undefined. Can\'t load data');
+         }
       },
 
 
@@ -330,13 +342,17 @@ define('Controls/List/SourceControl', [
           TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
           */
          this._filter = newOptions.filter;
+
          if (newOptions.listViewModel) {
             this._listViewModel = newOptions.listViewModel;
             this._virtualScroll.setItemsCount(this._listViewModel.getCount());
          }
-         if (newOptions.dataSource) {
-            this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
-            this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
+
+         if (newOptions.source) {
+            this._sourceController = new SourceController({
+               source : newOptions.source,
+               navigation: newOptions.navigation
+            });
             if (!this._items) {
                _private.reload(this);
             }

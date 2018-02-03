@@ -24,7 +24,7 @@ define('Controls/List/Controllers/PageNavigation',
             }
          },
 
-         prepareQueryParams: function(projection, direction) {
+         prepareQueryParams: function(direction) {
             var addParams = {}, neededPage;
             if (direction == 'down') {
                neededPage = this._nextPage;
