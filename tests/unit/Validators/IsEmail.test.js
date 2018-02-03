@@ -7,128 +7,55 @@ define(
       'use strict';
 
       var
-         emails = [
-            //valid:
-            {
-               value: 'email@example.com',
-               valid: true
-            },
-            {
-               value: 'firstname.lastname@example.com',
-               valid: true
-            },
-            {
-               value: 'email@subdomain.example.com',
-               valid: true
-            },
-            {
-               value: 'firstname+lastname@example.com',
-               valid: true
-            },
-            {
-               value: '1234567890@example.com',
-               valid: true
-            },
-            {
-               value: 'email@example-one.com',
-               valid: true
-            },
-            {
-               value: '_______@example.com',
-               valid: true
-            },
-            {
-               value: 'email@example.name',
-               valid: true
-            },
-            {
-               value: 'email@example.museum',
-               valid: true
-            },
-            {
-               value: 'email@example.co.jp',
-               valid: true
-            },
-            {
-               value: 'firstname-lastname@example.com',
-               valid: true
-            },
-            //invalid:
-            {
-               value: 'plainaddress',
-               valid: false
-            },
-            {
-               value: '#@%^%#$@#$@#.com',
-               valid: false
-            },
-            {
-               value: '@example.com',
-               valid: false
-            },
-            {
-               value: 'Joe Smith <email@example.com>',
-               valid: false
-            },
-            {
-               value: 'email.example.com',
-               valid: false
-            },
-            {
-               value: 'email@example@example.com',
-               valid: false
-            },
-            {
-               value: '.email@example.com',
-               valid: false
-            },
-            {
-               value: 'email.@example.com',
-               valid: false
-            },
-            {
-               value: 'email..email@example.com',
-               valid: false
-            },
-            {
-               value: 'あいうえお@example.com',
-               valid: false
-            },
-            {
-               value: 'email@example.com (Joe Smith)',
-               valid: false
-            },
-            {
-               value: 'email@example',
-               valid: false
-            },
-            {
-               value: 'email@111.222.333.44444',
-               valid: false
-            },
-            {
-               value: 'email@example..com',
-               valid: false
-            },
-            {
-               value: 'Abc..123@example.com',
-               valid: false
-            }
+         validEmails = [
+            'email@example.com',
+            'firstname.lastname@example.com',
+            'email@subdomain.example.com',
+            'firstname+lastname@example.com',
+            '1234567890@example.com',
+            'email@example-one.com',
+            '_______@example.com',
+            'email@example.name',
+            'email@example.museum',
+            'email@example.co.jp',
+            'firstname-lastname@example.com',
+            'тест@тест.рф',
+            'тест@тест.йцу.рф'
+         ],
+         invalidEmails = [
+            'plainaddress',
+            '#@%^%#$@#$@#.com',
+            '@example.com',
+            'Joe Smith <email@example.com>',
+            'email.example.com',
+            'email@example@example.com',
+            '.email@example.com',
+            'email.@example.com',
+            'email..email@example.com',
+            'あいうえお@example.com',
+            'email@example.com (Joe Smith)',
+            'email@example',
+            'email@111.222.333.44444',
+            'email@example..com',
+            'Abc..123@example.com',
+            'тест@example.com',
+            'example@тест.com'
          ];
 
       describe('Controls.Validators', function () {
          describe('IsEmail', function () {
-            emails.forEach(function(item) {
-               it((item.valid ? 'Valid' : 'Invalid') + ' "' + item.value + '"', function () {
-                  if (item.valid) {
-                     assert.equal(isEmail({
-                        text: item.value
-                     }), true);
-                  } else {
-                     assert.equal(typeof isEmail({
-                        text: item.value
-                     }), 'string');
-                  }
+            validEmails.forEach(function(item) {
+               it('Valid "' + item + '"', function () {
+                  assert.equal(isEmail({
+                     text: item
+                  }), true);
+               });
+            });
+            invalidEmails.forEach(function(item) {
+               it('Invalid "' + item + '"', function () {
+                  assert.equal(typeof isEmail({
+                     text: item
+                  }), 'string');
                });
             });
          });
