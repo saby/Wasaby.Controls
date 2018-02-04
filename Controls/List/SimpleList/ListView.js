@@ -53,7 +53,7 @@ define('Controls/List/SimpleList/ListView', [
             var item, newKey;
             item = dispItem.getContents();
             newKey = ItemsUtil.getPropertyValue(item, this._options.idProperty);
-            this._listModel.setSelectedKey(newKey);
+            this._listModel.setMarkedKey(newKey);
             this._notify('itemClick', [item], {bubbling: true});
          }
       });

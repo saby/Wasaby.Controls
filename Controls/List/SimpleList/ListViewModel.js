@@ -12,7 +12,7 @@ define('Controls/List/SimpleList/ListViewModel',
       var ListViewModel = Abstract.extend({
 
          _itemsModel: null,
-         _selectedItem: null,
+         _markedItem: null,
 
          constructor: function(cfg) {
             this._options = cfg;
@@ -25,12 +25,12 @@ define('Controls/List/SimpleList/ListViewModel',
             var self = this;
             this._itemsModel.subscribe('onListChange', function() {
                //т.к. при действиях с рекордсетом рекорд может потерять владельца, надо обновить ссылку на актуальный рекорд из текущего набора
-               self._selectedItem = self.getItemById(self._options.selectedKey, self._options.idProperty);
+               self._markedItem = self.getItemById(self._options.markedKey, self._options.idProperty);
                self._notify('onListChange');
             });
 
-            if (cfg.selectedKey !== undefined) {
-               this._selectedItem = this.getItemById(cfg.selectedKey, cfg.idProperty);
+            if (cfg.markedKey !== undefined) {
+               this._markedItem = this.getItemById(cfg.markedKey, cfg.idProperty);
             }
 
             this._startIndex = 0;
@@ -59,7 +59,7 @@ define('Controls/List/SimpleList/ListViewModel',
 
          getCurrent: function() {
             var itemsModelCurrent = this._itemsModel.getCurrent();
-            itemsModelCurrent.isSelected = itemsModelCurrent.dispItem == this._selectedItem;
+            itemsModelCurrent.isSelected = itemsModelCurrent.dispItem == this._markedItem;
             return itemsModelCurrent;
          },
 
@@ -67,8 +67,8 @@ define('Controls/List/SimpleList/ListViewModel',
             return this._itemsModel.getItemById(id, idProperty)
          },
 
-         setSelectedKey: function(key) {
-            this._selectedItem = this.getItemById(key, this._options.idProperty);
+         setMarkedKey: function(key) {
+            this._markedItem = this.getItemById(key, this._options.idProperty);
             this._notify('onListChange');
          },
 
@@ -97,14 +97,14 @@ define('Controls/List/SimpleList/ListViewModel',
          __calcSelectedItem: function(display, selKey, idProperty) {
 
             //TODO надо вычислить индекс
-            /*if(!this._selectedItem) {
+            /*if(!this._markedItem) {
              if (!this._selectedIndex) {
              this._selectedIndex = 0;//переводим на первый элемент
              }
              else {
              this._selectedIndex++;//условно ищем ближайший элемент, рядом с удаленным
              }
-             this._selectedItem = this._display.at(this._selectedIndex);
+             this._markedItem = this._display.at(this._selectedIndex);
              }*/
          }
       });

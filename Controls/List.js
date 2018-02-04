@@ -18,7 +18,7 @@ define('Controls/List', [
             items : cfg.items,
             idProperty: cfg.idProperty,
             displayProperty: cfg.displayProperty,
-            selectedKey: cfg.selectedKey
+            markedKey: cfg.markedKey
          });
       }
    };
