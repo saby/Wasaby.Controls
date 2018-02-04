@@ -3,7 +3,7 @@ define('Controls/List/resources/utils/Search',
       'Core/core-extend',
       'Core/Deferred',
       'Controls/List/resources/utils/DataSourceUtil',
-      'Controls/List/Controllers/PageNavigation'
+      'Controls/Controllers/PageNavigation'
    ],
    function (extend, Deferred, DataSourceUtil, PageNavigation) {
       

@@ -1,8 +1,8 @@
-define('Controls/List/Controllers/QueryParamsController',
+define('Controls/Controllers/QueryParamsController',
    [
       'Core/core-simpleExtend',
       'WS.Data/Source/SbisService',
-      'Controls/List/Controllers/PageNavigation'
+      'Controls/Controllers/PageNavigation'
    ],
    function(cExtend, SbisService, PageNavigation) {
       var _private = {

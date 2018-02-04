@@ -3,7 +3,7 @@
  */
 define('Controls/List/Controllers/PositionNavigation',
    [
-      'Controls/List/Controllers/PageNavigation',
+      'Controls/Controllers/PageNavigation',
       'WS.Data/Source/SbisService',
       'Controls/List/Controllers/INavigation'
    ],

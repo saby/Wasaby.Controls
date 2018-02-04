@@ -1,9 +1,9 @@
-define('Controls/List/Controllers/SourceController',
+define('Controls/Controllers/SourceController',
    [
       'Core/core-simpleExtend',
       'Core/core-instance',
       'Core/IoC',
-      'Controls/List/Controllers/QueryParamsController',
+      'Controls/Controllers/QueryParamsController',
       'WS.Data/Query/Query',
       'Core/Deferred',
       'Core/helpers/Function/forAliveOnly'

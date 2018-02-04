@@ -4,7 +4,7 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
    [
-      'Controls/List/Controllers/PageNavigation',
+      'Controls/Controllers/PageNavigation',
       'Controls/List/Controllers/OffsetNavigation',
       'Controls/List/Controllers/PositionNavigation',
       'WS.Data/Collection/RecordSet',
