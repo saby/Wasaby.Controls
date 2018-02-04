@@ -28,6 +28,12 @@ define('Controls/List/Controllers/QueryParamsController',
             params.offset = navigParams.offset;
             //TODO фильтр и сортировка не забыть приделать
             return params;
+         },
+
+         destroy: function() {
+            if (this._paramsInst) {
+               this._paramsInst.destroy();
+            }
          }
       });
       return QueryParamsController;

@@ -3,8 +3,12 @@ define('Controls/List/Controllers/SourceController',
       'Core/core-simpleExtend',
       'Core/core-instance',
       'Core/IoC',
-      'Controls/List/Controllers/QueryParamsController'],
-   function(cExtend, cInstance, IoC, QueryParamsController) {
+      'Controls/List/Controllers/QueryParamsController',
+      'WS.Data/Query/Query',
+      'Core/Deferred',
+      'Core/helpers/Function/forAliveOnly'
+   ],
+   function(cExtend, cInstance, IoC, QueryParamsController, Query, cDeferred, forAliveOnly) {
       var _private = {
          prepareSource: function(sourceOpt) {
             var result = sourceOpt;
@@ -18,18 +22,47 @@ define('Controls/List/Controllers/SourceController',
             return result;
 
          },
-         initNavigation: function(navOption, dataSource) {
-            var navController;
-            if (navOption && navOption.source === 'page') {
-               navController = new PageNavigation(navOption.sourceConfig);
-               navController.prepareSource(dataSource);
+
+         getQueryInstance: function (filter, sorting, offset, limit) {
+            var query = new Query();
+            query.where(filter)
+               .offset(offset)
+               .limit(limit)
+               .orderBy(sorting);
+            return query;
+         },
+
+         callQuery: function (dataSource, idProperty, filter, sorting, offset, limit) {
+            var queryDef, queryIns;
+
+            queryIns = _private.getQueryInstance(filter, sorting, offset, limit);
+
+            queryDef = dataSource.query(queryIns).addCallback((function(dataSet) {
+               if (idProperty && idProperty !== dataSet.getIdProperty()) {
+                  dataSet.setIdProperty(idProperty);
+               }
+               return dataSet.getAll();
+            }));
+
+            if (cInstance.instanceOfModule(dataSource, 'WS.Data/Source/Memory')) {
+
+               /*Проблема в том что деферред с синхронным кодом статического источника выполняется сихронно.
+                в итоге в коолбэк релоада мы приходим в тот момент, когда еще не отработал _beforeMount и заполнение опций, и не можем обратиться к this._options*/
+               var queryDefAsync = cDeferred.fromTimer(0);
+               queryDefAsync.addCallback(function(){
+                  return queryDef;
+               });
+               return queryDefAsync;
             }
-            return navController;
+            else {
+               return queryDef;
+            }
          }
       };
       var SourceController = cExtend.extend({
          _source: null,
          _queryParamsController: null,
+         _loader: null,
          constructor: function (cfg) {
             this._options = cfg;
             SourceController.superclass.constructor.apply(this, arguments);
@@ -59,33 +92,25 @@ define('Controls/List/Controllers/SourceController',
 
             //позволяем модифицировать параметры юзеру
             /*TODO Событие решили пока убрать, сомнительна вообще его необходимость. Во всяком случае в beforeMount стрелять событием нельзя
-             var userParams = self._notify('onBeforeDataLoad', queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit);
-             if (userParams) {
-             queryParams = _private.paramsWithUserEvent(queryParams, userParams);
-             }
-             */
+            var userParams = self._notify('onBeforeDataLoad', queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit);
+            if (userParams) {
+               queryParams = _private.paramsWithUserEvent(queryParams, userParams);
+            }
+            */
 
-            def = DataSourceUtil.callQuery(self._dataSource, self._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
-               .addCallback(fHelpers.forAliveOnly(function (list) {
-                  self._notify('onDataLoad', list);
-
-                  //TODO это кривой способ заставить пэйджинг пересчитаться. Передалть, когда будут готовы команды от Зуева
-                  //убираю, когда будет готов реквест от Зуева
-                  setTimeout(function(){
-                     if (self._scrollPagingCtr) {
-                        self._scrollPagingCtr.resetHeights();
-                     }
-                  }, 100);
-
-                  _private.hideIndicator(self);
-
-                  return list;
-               }, self))
-               .addErrback(fHelpers.forAliveOnly(function(err){
-                  _private.processLoadError(self, err);
-               }, self));
-            self._loader = def;
+            def = _private.callQuery(this._source, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
+            this._loader = def;
             return def;
+         },
+
+         isLoading: function() {
+            return this._loader && !this._loader.isReady();
+         },
+
+         destroy: function() {
+            if (this._queryParamsController) {
+               this._queryParamsController.destroy();
+            }
          }
       });
       return SourceController;

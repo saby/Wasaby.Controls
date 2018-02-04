@@ -23,36 +23,23 @@ define('Controls/List/SourceControl', [
 
    var _private = {
 
-      initNavigation: function(navOption, dataSource) {
-         var navController;
-         if (navOption && navOption.source === 'page') {
-            navController = new PageNavigation(navOption.sourceConfig);
-            navController.prepareSource(dataSource);
-         }
-         return navController;
-      },
-
-      paramsWithNavigation: function(params, navigCtrl, display, direction) {
-         var navigParams = navigCtrl.prepareQueryParams(display, direction);
-         params.limit = navigParams.limit;
-         params.offset = navigParams.offset;
-         //TODO фильтр и сортировка не забыть приделать
-         return params;
-      },
-
-      /*
-      paramsWithUserEvent: function(params, userParams) {
-         params.filter = userParams['filter'] || params.filter;
-         params.sorting = userParams['sorting'] || params.sorting;
-         params.offset = userParams['offset'] || params.offset;
-         params.limit = userParams['limit'] || params.limit;
-         return params;
-      },*/
-
       reload: function(self) {
          if (self._sourceController) {
             _private.showIndicator(self);
             self._sourceController.load(self._filter, self._sorting).addCallback(function (list) {
+
+               self._notify('onDataLoad', list);
+
+               //TODO это кривой способ заставить пэйджинг пересчитаться. Передалть, когда будут готовы команды от Зуева
+               //убираю, когда будет готов реквест от Зуева
+               setTimeout(function(){
+                  if (self._scrollPagingCtr) {
+                     self._scrollPagingCtr.resetHeights();
+                  }
+               }, 100);
+
+               _private.hideIndicator(self);
+
                if (self._navigationController) {
                   self._navigationController.calculateState(list);
                }
@@ -63,6 +50,8 @@ define('Controls/List/SourceControl', [
 
                self._virtualScroll.setItemsCount(self._listViewModel.getCount());
                _private.handleListScroll.call(self, 0);
+            }).addErrback(function(error){
+               _private.processLoadError(self, error)
             })
          }
          else {
@@ -74,6 +63,18 @@ define('Controls/List/SourceControl', [
          _private.showIndicator(self, direction);
          if (self._sourceController) {
             _private.load(self._filter, self._sorting, direction).addCallback(function(addedItems){
+
+               self._notify('onDataLoad', list);
+
+               //TODO это кривой способ заставить пэйджинг пересчитаться. Передалть, когда будут готовы команды от Зуева
+               //убираю, когда будет готов реквест от Зуева
+               setTimeout(function(){
+                  if (self._scrollPagingCtr) {
+                     self._scrollPagingCtr.resetHeights();
+                  }
+               }, 100);
+
+               _private.hideIndicator(self);
 
                if (self._navigationController) {
                   self._navigationController.calculateState(addedItems, direction);
@@ -89,6 +90,8 @@ define('Controls/List/SourceControl', [
 
                //обновить начало/конец видимого диапазона записей и высоты распорок
                _private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
+            }).addErrback(function(error){
+               _private.processLoadError(self, error)
             })
          }
          else {
@@ -96,64 +99,6 @@ define('Controls/List/SourceControl', [
          }
       },
 
-
-      load: function(self, direction) {
-         if (self._dataSource) {
-            var def, queryParams;
-
-            queryParams = {
-               filter: self._filter,
-               sorting: self._sorting,
-               limit: undefined,
-               offset: undefined
-            };
-            //модифицируем параметры через навигацию
-            if (self._navigationController) {
-               queryParams = _private.paramsWithNavigation(queryParams, self._navigationController, self._display, direction);
-            }
-
-            //позволяем модифицировать параметры юзеру
-            /*TODO Событие решили пока убрать, сомнительна вообще его необходимость. Во всяком случае в beforeMount стрелять событием нельзя
-             var userParams = self._notify('onBeforeDataLoad', queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit);
-             if (userParams) {
-             queryParams = _private.paramsWithUserEvent(queryParams, userParams);
-             }
-             */
-
-            _private.showIndicator(self, direction);
-            def = DataSourceUtil.callQuery(self._dataSource, self._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
-               .addCallback(fHelpers.forAliveOnly(function (list) {
-                  self._notify('onDataLoad', list);
-
-                  //TODO это кривой способ заставить пэйджинг пересчитаться. Передалть, когда будут готовы команды от Зуева
-                  //убираю, когда будет готов реквест от Зуева
-                  setTimeout(function(){
-                     if (self._scrollPagingCtr) {
-                        self._scrollPagingCtr.resetHeights();
-                     }
-                  }, 100);
-
-                  _private.hideIndicator(self);
-
-                  return list;
-               }, self))
-               .addErrback(fHelpers.forAliveOnly(function(err){
-                  _private.processLoadError(self, err);
-               }, self));
-            self._loader = def;
-            return def;
-         }
-         else {
-            throw new Error('Option dataSource is undefined. Can\'t load data');
-         }
-      },
-
-      /**
-       * Идет ли загрузка данных с БЛ
-       */
-      isLoading: function(self) {
-         return self._loader && !self._loader.isReady();
-      },
 
       processLoadError: function(self, error) {
          if (!error.canceled) {
@@ -353,6 +298,7 @@ define('Controls/List/SourceControl', [
                source : newOptions.source,
                navigation: newOptions.navigation
             });
+
             if (!this._items) {
                _private.reload(this);
             }
@@ -404,11 +350,11 @@ define('Controls/List/SourceControl', [
 
          //TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
 
-         if (newOptions.filter != this._options.filter) {
+         if (newOptions.filter !== this._options.filter) {
             this._filter = newOptions.filter;
          }
 
-         if (newOptions.listViewModel && (newOptions.listViewModel != this._options.listViewModel)) {
+         if (newOptions.listViewModel && (newOptions.listViewModel !== this._options.listViewModel)) {
             this._listViewModel = newOptions.listViewModel;
             this._virtualScroll.setItemsCount(this._listViewModel.getCount());
          } else
@@ -418,16 +364,32 @@ define('Controls/List/SourceControl', [
 
 
          if (newOptions.dataSource !== this._options.dataSource) {
-            this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
-            this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
+            if (this._sourceController) {
+               this._sourceController.destroy();
+            }
+            //TODO обработать смену фильтров и т.д. позвать релоад если надо
+
+            this._sourceController = new SourceController({
+               source : newOptions.source,
+               navigation: newOptions.navigation
+            });
+
             _private.reload(this);
          }
-         //TODO обработать смену фильтров и т.д. позвать релоад если надо
+
       },
 
       _beforeUnmount: function() {
          if (this._scrollController) {
             this._scrollController.destroy();
+         }
+
+         if (this._sourceController) {
+            this._sourceController.destroy();
+         }
+
+         if (this._scrollPagingCtr) {
+            this._scrollPagingCtr.destroy()
          }
 
          SourceControl.superclass._beforeUnmount.apply(this, arguments);
@@ -455,17 +417,11 @@ define('Controls/List/SourceControl', [
             }
          }
       },
-      //<editor-fold desc='DataSourceMethods'>
+
       reload: function() {
          _private.reload(this);
-      },
-
-      destroy: function() {
-         if (this._scrollPagingCtr) {
-            this._scrollPagingCtr.destroy()
-         }
-         SourceControl.superclass.destroy.apply(this, arguments);
       }
+
    });
 
    //TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757
