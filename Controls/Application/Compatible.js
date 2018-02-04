@@ -34,8 +34,11 @@ define('Controls/Application/Compatible', [
       _shouldUpdate: function(){
 
          var self = this,
-            cont = this._container[0] || this._container;
+            cont = document.getElementsByTagName('html')[0];
+
+         self._container = document.getElementsByTagName('html')[0];
          if (self.bootup) {
+
             cont.removeAttribute('config');
             cont.removeAttribute('data-component');
 
