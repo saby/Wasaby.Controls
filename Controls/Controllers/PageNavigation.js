@@ -1,12 +1,12 @@
 define('Controls/Controllers/PageNavigation',
-   ['Core/Abstract', 'Controls/List/Controllers/INavigation', 'WS.Data/Source/SbisService'],
-   function(Abstract, INavigation, SbisService) {
+   ['Core/Abstract', 'WS.Data/Source/SbisService'],
+   function(Abstract, SbisService) {
       /**
        *
        * @author Крайнов Дмитрий
        * @public
        */
-      var PageNavigation = Abstract.extend([INavigation], {
+      var PageNavigation = Abstract.extend({
          _nextPage: 1,
          _prevPage: -1,
          _more: null,

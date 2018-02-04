@@ -17,9 +17,7 @@ define('Controls/Controllers/QueryParamsController',
          },
 
          prepareSource: function(source) {
-            var options = source.getOptions();
-            options.navigationType = SbisService.prototype.NAVIGATION_TYPE.PAGE; //TODO разный тип
-            source.setOptions(options);
+            this._paramsInst.prepareSource(source);
          },
 
          paramsWithNavigation: function(params, direction) {
@@ -28,6 +26,14 @@ define('Controls/Controllers/QueryParamsController',
             params.offset = navigParams.offset;
             //TODO фильтр и сортировка не забыть приделать
             return params;
+         },
+
+         calculateState: function(list, direction) {
+            this._paramsInst.calculateState(list, direction);
+         },
+
+         hasMoreData: function(direction) {
+            return this._paramsInst.hasMoreData(direction);
          },
 
          destroy: function() {

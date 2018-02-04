@@ -78,7 +78,7 @@ define('Controls/Controllers/SourceController',
          },
 
          load: function(filter, sorting, direction) {
-            var def, queryParams;
+            var def, queryParams, self;
 
             queryParams = {
                filter: filter,
@@ -98,10 +98,25 @@ define('Controls/Controllers/SourceController',
                queryParams = _private.paramsWithUserEvent(queryParams, userParams);
             }
             */
-
-            def = _private.callQuery(this._source, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
+            self = this;
+            def = _private.callQuery(this._source, this._options.idProperty,
+                                    queryParams.filter,
+                                    queryParams.sorting,
+                                    queryParams.offset,
+                                    queryParams.limit).addCallback(function(list){
+               if (self._queryParamsController) {
+                  self._queryParamsController.calculateState(list, direction);
+                  return list;
+               }
+            }).addErrback(function(error){
+               return error;
+            });
             this._loader = def;
             return def;
+         },
+
+         hasMoreData: function(direction) {
+            return this._queryParamsController.hasMoreData(direction);
          },
 
          isLoading: function() {

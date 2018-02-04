@@ -4,16 +4,18 @@ define('Controls/List/SourceControl', [
    'tmpl!Controls/List/SourceControl/SourceControl',
    'require',
    'Controls/List/Controllers/ScrollController',
-   'Controls/Controllers/SourceController',
    'Controls/List/Controllers/VirtualScroll',
+   'Controls/Controllers/SourceController',
+   'Controls/List/Controllers/Navigation',
    'css!Controls/List/SourceControl/SourceControl'
 ], function (Control,
              IoC,
              SourceControlTpl,
              require,
              ScrollController,
+             VirtualScroll,
              SourceController,
-             VirtualScroll
+             Navigation
 ) {
    'use strict';
 
@@ -36,10 +38,6 @@ define('Controls/List/SourceControl', [
 
                _private.hideIndicator(self);
 
-               if (self._navigationController) {
-                  self._navigationController.calculateState(list);
-               }
-
                if (self._listViewModel) {
                   self._listViewModel.setItems(list);
                }
@@ -58,9 +56,9 @@ define('Controls/List/SourceControl', [
       loadToDirection: function(self, direction) {
          _private.showIndicator(self, direction);
          if (self._sourceController) {
-            _private.load(self._filter, self._sorting, direction).addCallback(function(addedItems){
+            self._sourceController.load(self._filter, self._sorting, direction).addCallback(function(addedItems){
 
-               self._notify('onDataLoad', list);
+               self._notify('onDataLoad', addedItems);
 
                //TODO это кривой способ заставить пэйджинг пересчитаться. Передалть, когда будут готовы команды от Зуева
                //убираю, когда будет готов реквест от Зуева
@@ -71,10 +69,6 @@ define('Controls/List/SourceControl', [
                }, 100);
 
                _private.hideIndicator(self);
-
-               if (self._navigationController) {
-                  self._navigationController.calculateState(addedItems, direction);
-               }
 
                if (direction === 'down') {
                   self._listViewModel.appendItems(addedItems);
@@ -134,14 +128,6 @@ define('Controls/List/SourceControl', [
          this._container.closest('.ws-scrolling-content').scrollTop = offset;
       },
 
-      scrollLoadMore: function(self, direction) {
-         //TODO нужна компенсация при подгрузке вверх
-
-         if (self._navigationController && self._navigationController.hasMoreData(direction) && !_private.isLoading(self)) {
-            _private.loadToDirection(self, direction);
-         }
-      },
-
       createScrollController: function(scrollContainer) {
          var
             self = this,
@@ -154,10 +140,14 @@ define('Controls/List/SourceControl', [
             },
             eventHandlers = {
                onLoadTriggerTop: function() {
-                  _private.scrollLoadMore(self, 'up');
+                  if (self._navigationController) {
+                     self._navigationController.handleScrollTop();
+                  }
                },
                onLoadTriggerBottom: function() {
-                  _private.scrollLoadMore(self, 'down');
+                  if (self._navigationController) {
+                     self._navigationController.handleScrollBottom();
+                  }
                },
                onListTop: function() {
                },
@@ -274,6 +264,7 @@ define('Controls/List/SourceControl', [
       },
 
       _beforeMount: function(newOptions) {
+         var self = this;
          this._virtualScroll = new VirtualScroll({
             maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
             itemsCount: 0
@@ -292,7 +283,18 @@ define('Controls/List/SourceControl', [
          if (newOptions.source) {
             this._sourceController = new SourceController({
                source : newOptions.source,
-               navigation: newOptions.navigation
+               navigation : newOptions.navigation  //TODO возможно не всю навигацию надо передавать а только то, что касается source
+            });
+
+            this._navigationController = new Navigation({
+               sourceController : this._sourceController,
+               navigation : newOptions.navigation,  //TODO возможно не всю навигацию надо передавать а только то, что касается view
+               topLoadTrigger: function() {
+                  _private.loadToDirection(self, 'up')
+               },
+               bottomLoadTrigger: function() {
+                  _private.loadToDirection(self, 'down')
+               }
             });
 
             if (!this._items) {
@@ -304,37 +306,15 @@ define('Controls/List/SourceControl', [
       _afterMount: function() {
          SourceControl.superclass._afterMount.apply(this, arguments);
 
-         //Если есть подгрузка по скроллу и список обернут в скроллКонтейнер, то создаем ScrollWatcher
-         //TODO вместо проверки на навигацию - позже будет аналогичная проверка на наличие виртуального скролла.
-         //TODO пока создаем ScrollWatcher всегда, когда есть скроллКонтейнер
-         //if ((this._options.navigation && this._options.navigation.source === 'page')) {
+
+         //TODO кривое обращение к DOM
          var scrollContainer = this._container.closest('.ws-scrolling-content');
          if (scrollContainer) {
             this._scrollController = _private.createScrollController.call(this, scrollContainer);
          }
-         //}
 
-         if (this._options.navigation && this._options.navigation.view == 'infinity') {
-            //TODO кривое обращение к DOM
-            //убарть когда перейду на скролл вотчер от Ильи Девятова
-            scrollContainer = this._container.closest('.ws-scrolling-content');
-            if (scrollContainer && this._options.navigation.viewConfig && this._options.navigation.viewConfig.pagingMode) {
-               var self = this;
-               require(['Controls/List/Controllers/ScrollPaging'], function (ScrollPagingController) {
-                  self._scrollPagingCtr = new ScrollPagingController({
-                     scrollContainer: scrollContainer,
-                     mode: self._options.navigation.viewConfig.pagingMode
-                  });
 
-                  self._scrollPagingCtr.subscribe('onChangePagingCfg', function(e, pCfg){
-                     self._pagingCfg = pCfg;
-                     self._forceUpdate();
-                  });
 
-                  self._scrollPagingCtr.startObserve();
-               });
-            }
-         }
 
          if (_private.getItemsCount(this)) {
             //Посчитаем среднюю высоту строки и отдадим ее в VirtualScroll
@@ -355,7 +335,7 @@ define('Controls/List/SourceControl', [
             this._virtualScroll.setItemsCount(this._listViewModel.getCount());
          } else
             if (newOptions.selectedKey !== this._options.selectedKey) {
-               this._listViewModel.setSelectedKey(newOptions.selectedKey);
+               this._listViewModel.setMarkedKey(newOptions.selectedKey);
             }
 
 

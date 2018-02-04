@@ -77,10 +77,11 @@ define('Controls/List/SimpleList/ItemsViewModel',
                this._items.assign(items);
             }
             else {
+               this._items = items;
                if (this._display) {
                   this._display.destroy();
                }
-               this._display = ItemsUtil.getDefaultDisplayFlat(items, this._options);
+               this._display = ItemsUtil.getDefaultDisplayFlat(this._items, this._options);
                this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
                this._notify('onListChange');
             }
