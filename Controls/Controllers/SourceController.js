@@ -70,7 +70,8 @@ define('Controls/Controllers/SourceController',
 
             if (this._options.navigation && this._options.navigation.source) {
                this._queryParamsController = new QueryParamsController({
-                  sourceType: this._options.navigation.source
+                  sourceType: this._options.navigation.source,
+                  sourceConfig: this._options.navigation.sourceConfig
                });
                this._queryParamsController.prepareSource(this._source);
             }

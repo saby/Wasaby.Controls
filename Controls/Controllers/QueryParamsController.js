@@ -13,7 +13,7 @@ define('Controls/Controllers/QueryParamsController',
          constructor: function (cfg) {
             this._options = cfg;
             QueryParamsController.superclass.constructor.apply(this, arguments);
-            this._paramsInst = new PageNavigation(navOption.sourceConfig); //TODO разный тип
+            this._paramsInst = new PageNavigation(this._options.sourceConfig); //TODO разный тип
          },
 
          prepareSource: function(source) {

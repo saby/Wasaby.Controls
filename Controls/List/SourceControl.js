@@ -309,7 +309,7 @@ define('Controls/List/SourceControl', [
          //TODO пока создаем ScrollWatcher всегда, когда есть скроллКонтейнер
          //if ((this._options.navigation && this._options.navigation.source === 'page')) {
          var scrollContainer = this._container.closest('.ws-scrolling-content');
-         if (scrollContainer.length) {
+         if (scrollContainer) {
             this._scrollController = _private.createScrollController.call(this, scrollContainer);
          }
          //}
