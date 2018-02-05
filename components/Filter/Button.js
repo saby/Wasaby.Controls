@@ -229,7 +229,7 @@ define('SBIS3.CONTROLS/Filter/Button',
                    то перед отображением панели фильтров сначала загрузим компонент. */
                 if(template && typeof template === 'string' && /^js!*|^SBIS3.*/.test(template)) {
                    
-                   if (!constants.modules.hasOwnProperty(template.split('/')[0]) && !requirejs.defined(template)) {
+                   if (constants.jsModules.hasOwnProperty(template)) {
                       template = 'js!' + template;
                    }
                    
