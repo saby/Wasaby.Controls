@@ -396,7 +396,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight + border;
 
                if (this._container.css('box-sizing') !== 'border-box') {
-                  this._containerSizes.originWidth -= border ;
+                  // this._containerSizes.originWidth -= border ; Чтобы правильно работало, нужно учесть направление позции справа->налево, т.к. в этом случае нужно учитывать ширину границы
                   this._containerSizes.originHeight -= border;
                }
 
