@@ -108,7 +108,10 @@
    width: 350px;
    border-left: 1px solid #E4E4E4;
    margin-bottom: 8px;
-   padding: 0 12px;
+}
+
+.controls__filterButton__area-secondColumn .controls-filterButton__secondary-title {
+   margin-left: 12px;
 }
 
 .controls__filterButton__area-twoColumns {
@@ -117,38 +120,6 @@
 
 .controls-filterButton__history-area .controls-filterButton__footerAreas-wrapper {
 	margin-left: 0;
-}
-
-.controls-filterButton__historyView .controls-ItemsToolbar {
-	background-color: transparent;
-	box-shadow: none;
-	right: auto !important;
-	left: @controls-filterButton-history-actions-left;
-	bottom: @controls-filterButton-history-actions-bottom;
-	
-	.icon-size {
-		.icon-16();
-	}
-
-}
-
-.controls-filterButton__historyView .controls-ListView__hoveredItem {
-	background-color: transparent !important;
-	
-	.controls-filterButton__historyView-item-title {
-		text-decoration: underline;
-	}
-}
-
-.controls-filterButton__historyView-item {
-	cursor: pointer;
-	min-height: @controls-filterButton-history-item-min-height;
-}
-
-.controls-filterButton__historyView-pin {
-	float: left;
-	position: relative;
-	top: @controls-filterButton-history-pin-top;
 }
 
 .controls-filterButton__footerAreas-maxHeight {
@@ -163,22 +134,6 @@
 
 .controls-filterButton__additionalFilterParams-area {
 	margin-bottom: 6px;
-}
-
-.controls-filterButton__historyView-titleContainer {
-	position: absolute;
-	right: @controls-filterButton-history-titleCont-right;
-	left: @controls-filterButton-history-titleCont-left;
-	top: 4px;
-}
-
-.controls-filterButton__historyView-item-title {
-	display: inline-block;
-	.text-overflow();
-	max-height: @controls-filterButton-history-title-height;
-	vertical-align: top;
-	color: @controls-filterButton-history-title-color;
-	width: 100%;
 }
 
 .controls__filterButton__area-header {

@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <div if="{{ viewMode === 'twoColumns' }}" class="controls__filterButton__area-secondColumn {{ !hasHistory ? 'ws-hidden' }}">
-                    <SBIS3.CONTROLS:Filter:Button:History if="{{ historyController }}" name="filterHistory" tabindex="0"/>
+                    <SBIS3.CONTROLS:Filter:Button:History if="{{ historyController }}" viewMode="favoritesMode" name="filterHistory" tabindex="0"/>
                 </div>
             </div>
         </ws:content>
