@@ -1029,7 +1029,10 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                                  var revertPositionData = {t: 'l', l: 't'};
                                  //Логика должна быть всенда такая: при развороте вниз - позиционирование от верхней границы таргета, вверх - от нижней.
                                  //Сейчас куча лишних расчетов которые косячат, пока не известно нужно ли где-то текущее поведение
-                                 this._options.corner = (this._isMovedV ? revertPositionData[this._defaultCorner[0]] : this._defaultCorner[0]) + this._options.corner[1];
+                                 // this._options.corner = (this._isMovedV ? revertPositionData[this._defaultCorner[0]] : this._defaultCorner[0]) + this._options.corner[1];
+                                 if (this._options.corner === 'bl') {
+                                    this._options.corner = 'tl';
+                                 }
                               }
                               oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
                               spaces = this._getSpaces(this._options.corner);
