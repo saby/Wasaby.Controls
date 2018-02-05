@@ -726,12 +726,18 @@ define('SBIS3.CONTROLS/FieldLink',
              if (!this._isEmptySelection() && !this._linkCollection) {
                 this._createLinkCollection();
              }
-             this._linkCollection && this._linkCollection.setItemTpl(itemTpl);
+             if (this._linkCollection) {
+                this._linkCollection.setItemTpl(itemTpl);
+                this._linkCollection.redraw();
+             }
           },
 
           setItemContentTpl: function(itemTpl) {
              FieldLink.superclass.setItemContentTpl.call(this, itemTpl);
-             this._linkCollection && this._linkCollection.setItemContentTpl(itemTpl);
+             if (this._linkCollection) {
+                this._linkCollection.setItemContentTpl(itemTpl);
+                this._linkCollection.redraw();
+             }
           },
 
           /**********************************************************************************************/
