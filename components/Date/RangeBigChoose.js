@@ -88,6 +88,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
             headerType: headerTypes.link,
 
+            emptyCaption:  rk('Период не указан'),
+
             headerTpl: headerTpl,
             yearsPanelTpl: yearsPanelTpl,
 
@@ -163,9 +165,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
                }
 
                if (scope.year.displayed) {
-                  textColorClass += '-displayed'
+                  textColorClass += '-displayed';
                } else if (scope.year.current) {
-                  textColorClass += '-current'
+                  textColorClass += '-current';
                }
                css.push(textColorClass, backgroundColorClass);
                return css.join(' ');
@@ -356,10 +358,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          if (this._dateRangePicker.isSelectionProcessing()) {
             if (this.getStartValue() > date) {
                this._endDatePickerResetActive();
-               this._datePickerSetActive(this._startDatePicker, DateUtil.getStartOfMonth(date));
+               this._datePickerSetActive(this._startDatePicker, date);
             } else {
                this._startDatePickerResetActive();
-               this._datePickerSetActive(this._endDatePicker, DateUtil.getEndOfMonth(date));
+               this._datePickerSetActive(this._endDatePicker, date);
             }
          } else {
             this._datePickerSetActive(this._startDatePicker);
@@ -391,7 +393,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          var today = new Date();
          options = options || this._options;
          return (options._state === states.year && !DateUtil.isYearsEqual(today, options._displayedPeriod)) ||
-            (options._state === states.month && !DateUtil.isMonthsEqual(today, options._displayedPeriod))
+            (options._state === states.month && !DateUtil.isMonthsEqual(today, options._displayedPeriod));
       },
 
       _updateHomeButton: function () {
@@ -593,7 +595,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          }
 
          if (this.getRangeSelectionType() === selectionTypes.years) {
-            year = parseInt(endValue.getFullYear(), 10)
+            year = parseInt(endValue.getFullYear(), 10);
             this._setCurrentYear(year);
          }
          this._updateRangeIndicators();
@@ -804,7 +806,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       },
 
       _onDateRangePickerActivated: function (e, month) {
-         this.setRange(new Date(month.getFullYear(), month.getMonth(), 1), new Date(month.getFullYear(), month.getMonth() + 1, 0))
+         this.setRange(new Date(month.getFullYear(), month.getMonth(), 1), new Date(month.getFullYear(), month.getMonth() + 1, 0));
       },
 
       // Логика связанная с панелями выбора диапазонов
@@ -889,22 +891,28 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       },
 
       _datePickerSetActive: function (picker, date) {
+         var range;
          if (date) {
              picker.setDate(date, true);
+             range = this._getUpdatedRange(date, this.getStartValue(), this.getEndValue());
+             this.getChildControlByName('DateRangeHeader').setRange(range[0], range[1]);
          }
          picker.getContainer().addClass('controls-DateRangeBigChoose__header-period-active');
       },
       _startDatePickerResetActive: function () {
          this._startDatePicker.setDate(this.getStartValue(), true);
          this._startDatePicker.getContainer().removeClass('controls-DateRangeBigChoose__header-period-active');
+         this.getChildControlByName('DateRangeHeader').setRange(this.getStartValue(), this.getEndValue());
       },
       _endDatePickerResetActive: function () {
          this._endDatePicker.setDate(this.getEndValue(), true);
          this._endDatePicker.getContainer().removeClass('controls-DateRangeBigChoose__header-period-active');
+         this.getChildControlByName('DateRangeHeader').setRange(this.getStartValue(), this.getEndValue());
       },
       _datePickersResetActive: function () {
          this._startDatePickerResetActive();
          this._endDatePickerResetActive();
+         this.getChildControlByName('DateRangeHeader').setRange(this.getStartValue(), this.getEndValue());
       },
 
       _getItemIdByItemContainer: function (container) {
