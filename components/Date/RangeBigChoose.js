@@ -358,10 +358,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          if (this._dateRangePicker.isSelectionProcessing()) {
             if (this.getStartValue() > date) {
                this._endDatePickerResetActive();
-               this._datePickerSetActive(this._startDatePicker, DateUtil.getStartOfMonth(date));
+               this._datePickerSetActive(this._startDatePicker, date);
             } else {
                this._startDatePickerResetActive();
-               this._datePickerSetActive(this._endDatePicker, DateUtil.getEndOfMonth(date));
+               this._datePickerSetActive(this._endDatePicker, date);
             }
          } else {
             this._datePickerSetActive(this._startDatePicker);
@@ -891,22 +891,28 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       },
 
       _datePickerSetActive: function (picker, date) {
+         var range;
          if (date) {
              picker.setDate(date, true);
+             range = this._getUpdatedRange(date, this.getStartValue(), this.getEndValue());
+             this.getChildControlByName('DateRangeHeader').setRange(range[0], range[1]);
          }
          picker.getContainer().addClass('controls-DateRangeBigChoose__header-period-active');
       },
       _startDatePickerResetActive: function () {
          this._startDatePicker.setDate(this.getStartValue(), true);
          this._startDatePicker.getContainer().removeClass('controls-DateRangeBigChoose__header-period-active');
+         this.getChildControlByName('DateRangeHeader').setRange(this.getStartValue(), this.getEndValue());
       },
       _endDatePickerResetActive: function () {
          this._endDatePicker.setDate(this.getEndValue(), true);
          this._endDatePicker.getContainer().removeClass('controls-DateRangeBigChoose__header-period-active');
+         this.getChildControlByName('DateRangeHeader').setRange(this.getStartValue(), this.getEndValue());
       },
       _datePickersResetActive: function () {
          this._startDatePickerResetActive();
          this._endDatePickerResetActive();
+         this.getChildControlByName('DateRangeHeader').setRange(this.getStartValue(), this.getEndValue());
       },
 
       _getItemIdByItemContainer: function (container) {
