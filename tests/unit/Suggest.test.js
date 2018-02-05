@@ -47,6 +47,17 @@ define(
             
             assert.isTrue(focused, 'Suggest is not focused after select');
          });
+   
+         it('_clearClick', function() {
+            var suggest = new Suggest(),
+                focused = false;
+   
+            suggest.focus = function() {
+               focused = true;
+            };
+      
+            assert.isTrue(focused, 'Suggest is not focused after select');
+         });
          
       });
       
