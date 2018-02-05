@@ -1152,18 +1152,11 @@ define(
 
       _moveCursor: function(group, position) {
          var
-            self = this,
             child = group || (this._getFormatModel().model[0].isGroup ? 0 : 1),
             startContainer = _getContainerByIndex.call(this, child),
             startPosition = position || 0;
-         //В IE если ставить курсор синхронно по событию focusin, то он не устанавливается.
-         if (constants.browser.isIE) {
-            setTimeout(forAliveOnly(function() {
-               _moveCursor(startContainer, startPosition);
-            }, self), 0);
-         } else {
-            _moveCursor(startContainer, startPosition);
-         }
+
+         _moveCursor(startContainer, startPosition);
       },
 
       _setEnabled: function(enabled) {

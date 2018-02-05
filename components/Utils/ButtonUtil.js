@@ -5,6 +5,20 @@ define('SBIS3.CONTROLS/Utils/ButtonUtil', [],
      */
     function () /** @lends SBIS3.CONTROLS/Utils/ButtonUtil.prototype */{
         return {
+            getStyleByConfig: function(opts, attrToMerge) {
+                var className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || opts.className || '';
+
+                if(className.indexOf('controls-Button__big') !== -1){
+                    opts.size = 'l';
+                }
+                if(className.indexOf('controls-Button__primary') !== -1){
+                    opts.style = 'primary';
+                }
+                if(className.indexOf('controls-Button__withoutCaption') !== -1){
+                    opts.withoutCaption = true;
+                }
+            },
+
             preparedClassFromOptions: function (opts) {
                 opts.cssClassName += ' controls-Button';
                 opts.cssClassName += this.getClassState(opts);
@@ -23,5 +37,5 @@ define('SBIS3.CONTROLS/Utils/ButtonUtil', [],
                 classes += ' controls-Button_state-' + state;
                 return classes;
             }
-        }
+        };
     });

@@ -1,8 +1,9 @@
 define('SBIS3.CONTROLS/Menu/MenuIcon', [
    'js!WSControls/Buttons/MenuButton',
+   'SBIS3.CONTROLS/Utils/IconButtonUtil',
    'css!SBIS3.CONTROLS/Button/IconButton/IconButton',
    'css!SBIS3.CONTROLS/Menu/MenuIcon/MenuIcon'
-], function(WSMenuButton) {
+], function(WSMenuButton, IconButtonUtil) {
 
    'use strict';
 
@@ -65,31 +66,30 @@ define('SBIS3.CONTROLS/Menu/MenuIcon', [
          var opts = MenuIcon.superclass._modifyOptions.apply(this, arguments),
              className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || opts.className || '',
              sizes = ['16', '24', '32', 'small', 'medium', 'large'];
+         opts._type = 'IconButton';
          opts.pickerClassName += ' controls-MenuIcon__Menu';
          opts.cssClassName += ' controls-MenuIcon controls-IconButton';
+         opts._textClass = ' controls-IconButton__text';
+         opts._iconDisabledClass = 'icon-IconButton-disabled';
 
-         opts.cssClassName += opts.caption ? '' : ' controls-Button__withoutCaption';
+         IconButtonUtil.setStyleByConfig(opts, attrToMerge);
+         opts.cssClassName += IconButtonUtil.getClassState(opts);
 
-         if(!opts.tooltip && opts.caption){
-            opts.tooltip = opts.caption;
-         }
-
-         if(className && className.indexOf('controls-IconButton__round-border') !== -1){
-            if(className.indexOf('controls-IconButton__round-border-24') !== -1){
+         if (className && className.indexOf('controls-IconButton__round-border') !== -1) {
+            if (className.indexOf('controls-IconButton__round-border-24') !== -1) {
                 opts.pickerClassName += ' controls-IconButton__round-border-24';
             }else {
                 opts.pickerClassName += ' controls-IconButton__round-border';
             }
          }
 
-         if(opts.icon){
-             sizes.forEach(function(size){
+         if (opts.icon) {
+             sizes.forEach(function(size) {
                 if(opts.icon.indexOf('icon-' + size) !== -1) {
                     opts.pickerClassName += ' controls-Menu_offset_icon-' + size;
                 }
              });
          }
-         opts.cssClassName += ' controls-IconButton-size__' + (!!opts.size ? opts.size : 'default');
          if(!!opts.size) {
              opts.pickerClassName += ' controls-Menu__offset-' + opts.size;
          }
@@ -103,6 +103,13 @@ define('SBIS3.CONTROLS/Menu/MenuIcon', [
       init: function(){
          this.reload();
          MenuIcon.superclass.init.call(this);
+      },
+      _toggleState: function() {
+          var  container = this._container;
+
+          container[0].className = container[0].className.replace(/(^|\s)controls-IconButton_\S+/g, '').replace(/(^|\s)controls-IconButton__\S+/g, '');
+          container.addClass(IconButtonUtil.getClassState(this._options));
+          MenuIcon.superclass._toggleState.apply(this, arguments);
       }
    });
 

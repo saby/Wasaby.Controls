@@ -6,6 +6,8 @@ define('Controls/List/Controllers/ScrollController', [
    ) {
    'use strict';
 
+   var global = (function() { return this || (0,eval)('this') })();
+
    var _private = {
       /**
        * Подписка на появление элементов в видимой области (через IntersectionObserver)

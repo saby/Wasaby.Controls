@@ -1,6 +1,9 @@
 <!doctype html>
-<ws:partial template="{{template}}" scope="{{_options}}"
-            cssLinks="{{ cssLinks }}"
-            wsRoot="{{wsRoot}}"
-            resourceRoot="{{resourceRoot}}"
-            jsLinks="{{ jsLinks }}"  />
+<Controls:Application:Core
+   application="{{application}}"
+   scope="{{_options}}"
+   attr:component="{{application}}"
+   cssLinks="{{ cssLinks }}"
+   wsRoot="{{wsRoot}}"
+   resourceRoot="{{resourceRoot}}"
+   jsLinks="{{ jsLinks }}"/>

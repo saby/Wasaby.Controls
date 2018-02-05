@@ -58,6 +58,39 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
        *  });
        * </pre>
        */
+      /**
+       * @event onBeforeShowColumnsEditor Перед показом редактора колонок
+       * @remark
+       * Событие происходит перед показом редактора колонок и даёт возможность использования произвольой конфигурации колонок, а не только той, что
+       * есть в браузере.
+       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {object} data Исходные данные
+       * @return {object} Альтернативные опции конфигурации колонок
+       *
+       * @example
+       * <pre>
+       *    this.subscribeTo(printUnloadButton, 'onBeforeShowColumnsEditor', function (evtDescriptor, data) {
+       *       ...
+       *       evtDescriptor.setResult({columnsConfig:{...}, editorOptions:{...}});
+       *       ...
+       *    });
+       * </pre>
+       *
+       * @see _gatherColumnsInfo
+       * @see useColumnsEditor
+       * @see SBIS3.CONTROLS/Browser#showColumnsEditor
+       * @see SBIS3.CONTROLS/Browser#_showColumnsEditor
+       * @see SBIS3.CONTROLS/Browser#columnsConfig
+       * @see SBIS3.CONTROLS/Browser#setColumnsConfig
+       * @see SBIS3.CONTROLS/Browser#getColumnsConfig
+       * @see SBIS3.CONTROLS/Browser#ColumnsConfigObject
+       * @see SBIS3.CONTROLS/Browser/ColumnsEditor/Editor#open
+       *
+       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
+       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
+       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndCustomButton Пример браузера с собственной кнопкой, открывающией редактор колонок
+       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
+       */
 
       $protected: {
          _options: {
@@ -68,7 +101,29 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
             allowChangeEnable: false,
 
             /**
-             * @cfg {boolean} Использовать редактор колонок при определении списка колонок тогда, когда это возможно
+             * @cfg {boolean} Использовать редактор колонок при определении списка колонок
+             *
+             * Для того, чтобы эта опция имела эффект, необходимо, чтобы в вышележащем (по дереву компонентов) экземпляре
+             * {@link SBIS3.CONTROLS/Browser браузера} была корректно установлена {@link SBIS3.CONTROLS/Browser#columnsConfig конфигурация колонок},
+             * чтобы браузер мог обработать команду {@link SBIS3.CONTROLS/Browser#showColumnsEditor}.
+             *
+             * Также возможно использование произвольой конфигурации колонок, а не только той, что есть в браузере. Для
+             * этого следует подписаться на событие "onBeforeShowColumnsEditor" и передать необходимую конфигурацию колонок как результат обработки события.
+             *
+             * @see onBeforeShowColumnsEditor
+             * @see _gatherColumnsInfo
+             * @see SBIS3.CONTROLS/Browser#showColumnsEditor
+             * @see SBIS3.CONTROLS/Browser#_showColumnsEditor
+             * @see SBIS3.CONTROLS/Browser#columnsConfig
+             * @see SBIS3.CONTROLS/Browser#setColumnsConfig
+             * @see SBIS3.CONTROLS/Browser#getColumnsConfig
+             * @see SBIS3.CONTROLS/Browser#ColumnsConfigObject
+             * @see SBIS3.CONTROLS/Browser/ColumnsEditor/Editor#open
+             *
+             * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
+             * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
+             * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndCustomButton Пример браузера с собственной кнопкой, открывающией редактор колонок
+             * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
              */
             useColumnsEditor: true
          },
@@ -188,14 +243,48 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
 
       /*
        * Собрать данные о колонках (асинхронно).
-       * Возвращает обещание, разрешаемое списком объектов с параметрами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView). Если опция
-       * useColumnsEditor включена, то будет использован редактор колонок для настройки колонок пользователем. Если ползователь, настроив колонки,
-       * нажмет кнопку "Применить", то обещание будет разрешено отредактированным списком колонок. Если же ползователь закроет редактор кнопкой
-       * "Закрыть", то обещание будет разрешено значением null. Если требуется и в этом случае получить список колонок - используйте аргумент forced
-       * @protected
+       * Возвращает обещание, разрешаемое списком объектов с параметрами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView).
+       *
+       * Для того, чтобы при этом был использован редактор колонок, необходимо включить опцию useColumnsEditor для этой кнопки, а также в вышележащем
+       * (по дереву компонентов) экземпляре {@link SBIS3.CONTROLS/Browser браузера} должна быть корректно установлена
+       * {@link SBIS3.CONTROLS/Browser#columnsConfig конфигурация колонок}. Если эти условия соблюдены, то браузером будет открыт редактор колонок (по
+       * полученной им команде {@link SBIS3.CONTROLS/Browser#showColumnsEditor}). Если ползователь, настроив колонки, нажмет кнопку
+       * "Применить", то обещание будет разрешено отредактированным списком колонок. Если же ползователь закроет редактор кнопкой "Закрыть", то
+       * обещание будет разрешено значением null. Если требуется и в этом случае получить список колонок - используйте аргумент forced. Следует
+       * иметь ввиду, что в возвращённом списке выбранных пользователем колонок присутствуют все колонки, в том числе и те, что были помечены как
+       * фиксированные(обязательные) в исходных данных.
+       *
+       * При использовании редактора колонок также возможно использование произвольой конфигурации колонок, а не только той, что есть в браузере. Для
+       * этого следует подписаться на событие "onBeforeShowColumnsEditor" и передать необходимую конфигурацию колонок как результат обработки события.
+       *
+       * @example
+       * <pre>
+       *    this.subscribeTo(printUnloadButton, 'onBeforeShowColumnsEditor', function (evtDescriptor, data) {
+       *       ...
+       *       evtDescriptor.setResult({columnsConfig:{...}, editorOptions:{...}});
+       *       ...
+       *    });
+       * </pre>
+       *
+       * @private
        * @param {object} data Дополнительные данные для вычисления колонок
        * @param {boolean} forced Вернуть колонки, даже если пользователь закрыл редактор колонок крестом (при включённой опции useColumnsEditor)
        * @return {Core/Deferred<object[]|WS.Data/Collection/RecordSet>}
+       *
+       * @see useColumnsEditor
+       * @see SBIS3.CONTROLS/Browser#showColumnsEditor
+       * @see SBIS3.CONTROLS/Browser#_showColumnsEditor
+       * @see SBIS3.CONTROLS/Browser#columnsConfig
+       * @see SBIS3.CONTROLS/Browser#setColumnsConfig
+       * @see SBIS3.CONTROLS/Browser#getColumnsConfig
+       * @see SBIS3.CONTROLS/Browser#ColumnsConfigObject
+       * @see SBIS3.CONTROLS/Browser/ColumnsEditor/Editor#open
+       * @see onBeforeShowColumnsEditor
+       *
+       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
+       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
+       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndCustomButton Пример браузера с собственной кнопкой, открывающией редактор колонок
+       * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
        */
       _gatherColumnsInfo: function (data, forced) {
          var _fromView = function () {
@@ -204,8 +293,15 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
             return Array.isArray(resultColumns) && resultColumns.length ? resultColumns : startColumns;
          }.bind(this);
          if (this._options.useColumnsEditor) {
-            // Вызвать команду для показа редактора колонок. Опцию columnsConfig не указываем, будем исполшьзовать то, что уже есть у браузера.
-            var value = this.sendCommand('showColumnsEditor'/*, {editorOptions:{...}}*/);
+            // Перед показом редактора колонок сгенерируем событие на тот случай, если нужно использовать конфигурацию колонок, отличную от той, что
+            // есть в вышележащем (по дереву компонентов) браузере
+            var options = this._notify('onBeforeShowColumnsEditor', data);
+            // Вызвать команду для показа редактора колонок. Используем либо опции, полученные как результат обработки события, либо те, что уже есть
+            // в вышележащем (по дереву компонентов) браузере
+            var value = this.sendCommand('showColumnsEditor', {
+               columnsConfig: options ? options.columnsConfig : null,
+               editorOptions: options ? options.editorOptions : null
+            });
             // Если ролученное значение действительно является результатом работы обработчика команды (в браузере), то оно будет экземпляром Deferred,
             // а не просто true или false
             if (value instanceof Deferred && (!value.isReady() || value.isSuccessful())) {

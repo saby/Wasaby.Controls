@@ -22,10 +22,10 @@
 @height_InputRender_l:                                round(84px * @multiplier);
 @font-size_InputRender_m:                             round(32px * @multiplier);
 @font-size_InputRender_l:                             round(40px * @multiplier);
-@padding_InputRender-container:                       0 round(14px * @multiplier);
-@padding_InputRender-container_left:                  0 0 0 round(14px * @multiplier);
-@width_InputRender-InformationIcon:                   round(14px * @multiplier);
-@height_InputRender-InformationIcon:                  round(14px * @multiplier);
+@padding_InputRender:                                 0 round(14px * @multiplier);
+@padding_InputRender_left:                            0 0 0 round(14px * @multiplier);
+@width_InputRender-tagStyle:                          round(14px * @multiplier);
+@height_InputRender-tagStyle:                         round(14px * @multiplier);
 @border-width_InputRender:                            2px;
 //textarea
 @min-height_TextArea:                             round(42px * @multiplier);
@@ -130,17 +130,17 @@
 @height_Link:                             auto;
 @font-size_Link:                          @default-text-size;
 @link-icon-field-margin:                  0 0 0 round(4px * @multiplier);
-@width_IconButton-icon_round:          auto;
-@height_IconButton-icon_round:         round(64px * @multiplier);
-@line-height_IconButton-icon_round:    round(62px * @multiplier);
+@width_IconButton_bordered_size-m:          auto;
+@height_IconButton_bordered_size-m:         round(64px * @multiplier);
+@line-height_IconButton_bordered_size-m:    round(62px * @multiplier);
 @border-radius:                           0;
-@border-width_IconButton-icon:                0px;
+@border-width_IconButton_bordered:                0px;
 //ListView
 @list-view-items-toolbar-icon-button-border-width:0;
 @list-view-items-toolbar-icon-button-border-radius:0;
 @list-view-items-toolbar-icon-button-border-font-size:@icon-large-size;
-@height_IconButton_round_edit:    @icon-large-size;
-@width_IconButton_round_edit:     @icon-large-size;
+@height_IconButton_bordered_size-s:    @icon-large-size;
+@width_IconButton_bordered_size-s:     @icon-large-size;
 @icon-button-edit-round-border-line-height:@icon-large-size;
 @listView-empty-data-padding-top:         round(54px * @multiplier);
 //Button
@@ -317,7 +317,7 @@
 @controls-date-range-year-marginleft:     round(11px * @multiplier);
 // Date Range Big Choose
 @padding_DateRangeBigChoose-header:                                      round(8px * @multiplier) 0 round(8px * @multiplier) 0;
-@padding-left_DateRangeBigChoose-header-period:                          round(24px * @multiplier);
+@padding-right_DateRangeBigChoose-state-button:                          round(24px * @multiplier);
 @height_DateRangeBigChoose-years:                                        round(100px * @multiplier);
 @width_DateRangeBigChoose-years-leftRight:                               round(84px * @multiplier);
 @color_DateRangeBigChoose-DateRangePickerItem-months-button:             round(28px * @multiplier);
@@ -414,7 +414,7 @@
 @controls-OperationsPanel-separator-width:                              2px;
 @controls-OperationsPanel-separator-height:                             round(54px * @multiplier);
 @controls-OperationsMark-separator-line-height:                         round(70px * @multiplier);
-@controls-OperationsPanel-menu-close-button-right:                      0px;
+@right_OperationsPanel-menu-closeButton:                      0px;
 //OperationsPanelButton
 @controls-OperationsPanelButton-vert-height:round(100px * @multiplier);
 @controls-OperationsPanelButton-font-size: @icon-large-size;

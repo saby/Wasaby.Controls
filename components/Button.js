@@ -44,13 +44,10 @@ define('SBIS3.CONTROLS/Button',
     * @ignoreEvents onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     *
-    * @cssModifier controls-Button__filled непрозрачный фон кнопки
-    * @cssModifier controls-Button__big Большая кнопка.
-    * @cssModifier controls-Button__ellipsis Кнопка, на которой в тексте появляется многоточие при нехватке ширины.
-    * @cssModifier controls-Button__withoutCaption Кнопка, без заголовка !Важно: при добавлении этого класса сломается "Базовая линия".
-    *
     * @css controls-Button__icon Класс для изменения отображения иконки кнопки.
     * @css controls-Button__text Класс для изменения отображения текста на кнопке.
+    *
+    * @mixes SBIS3.CONTROLS/Button/ButtonDocs
     *
     * @control
     * @category Button
@@ -59,11 +56,43 @@ define('SBIS3.CONTROLS/Button',
     * <ws:SBIS3.CONTROLS/Button caption="Кнопка" />
     */
    var Button = Base.extend( [], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
-      _modifyOptions : function() {
+       $protected: {
+           _options: {
+               /**
+                * @cfg {String} Устанавливает размер кнопки.
+                * @remark
+                * Значение "m" установит средний размер кнопки.
+                * Значение "l" устaновит большой размер кнопки.
+                * @example
+                * Пример 1. Большая кнопка:
+                * фрагмент верстки:
+                * <pre class="brush:xml">
+                *     <option name="size">l</option>
+                * </pre>
+                */
+               size: '',
+               /**
+                * @cfg {String} Устанавливает стилевое оформление кнопки.
+                * @remark
+                * По умолчанию значение опции "standard".
+                * Значение "standard" установит стандартный стиль кнопки.
+                * Значение "primary" устaновит акцентный стиль кнопки.
+                * @example
+                * Пример 1. Акцентное стилевое оформление кнопки:
+                * фрагмент верстки:
+                * <pre class="brush:xml">
+                *     <option name="style">primary</option>
+                * </pre>
+                */
+               style: 'standard'
+           }
+       },
+      _modifyOptions : function(options, parsedOptions, attrToMerge) {
          var opts = Button.superclass._modifyOptions.apply(this, arguments);
          opts._type = 'Button';
          opts.cssClassName += ' controls-Button';
          opts._iconDisabledClass = 'icon-button-disabled';
+         ButtonUtil.getStyleByConfig(opts, attrToMerge);
          ButtonUtil.preparedClassFromOptions(opts);
          return opts;
       },

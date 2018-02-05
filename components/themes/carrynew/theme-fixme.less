@@ -16,6 +16,20 @@
   background: @controls-editInPlace-editor-bg;
 }
 
+.ws-is-desktop-platform {
+  .controls-ListView {
+    .controls-IconButton:not(.ws-disabled):not(.controls-Click__active) {
+      &:hover {
+        .controls-Button__icon {
+          &.icon-primary {
+            color: rgb(49, 62, 120);
+          }
+        }
+      }
+    }
+  }
+}
+
 .controls-FieldLink .icon-size {
   &:hover {
     color: @color_Link-icon_hovered !important;

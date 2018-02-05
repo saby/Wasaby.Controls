@@ -40,13 +40,13 @@ define('SBIS3.CONTROLS/Action/SelectorAction',
             * @param {Object} meta Метаданные, с которыми было выполнено действие (см. {@link execute}).
             * @param {Boolean} [meta.multiselect] Признак: множественный выбор записей из списка.
             * @param {Array.<WS.Data/Entity/Record>} [meta.selectedItems] Записи, которые будут выбраны по умолчанию.
-            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический списком.
+            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический список.
             * Возможные значения:
             * <ul>
             *     <li>all - для выбора доступны любые типы записей;<li>
             *     <li>allBySelectAction - для выбора доступны любые типы записей; выбор происходит при нажатии на кнопку "Выбрать".<li>
-            *     <li>node - для выбора доступны только записи типа "Узел" и "Скрытый узел";<li>
-            *     <li>leaf - для выбора доступны только записи типа "Лист".<li>
+            *     <li>node - для выбора доступны только записи типа "Узел";<li>
+            *     <li>leaf - для выбора доступны только записи типа "Лист" и "Скрытый узел".<li>
             * </ul>
             * Подробнее о каждом типе записей читайте в разделе <a href='/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
             * @param {Object} [meta.componentOptions] Объект с пользовательскими опциями, которые передаются в диалог в секцию _options.
@@ -61,13 +61,13 @@ define('SBIS3.CONTROLS/Action/SelectorAction',
             * @param {Object} meta Метаданные, с которыми выполнялось действие (см. {@link execute}).
             * @param {Boolean} [meta.multiselect] Признак: множественный выбор записей из списка.
             * @param {Array.<WS.Data/Entity/Record>} [meta.selectedItems] Записи, которые будут выбраны по умолчанию.
-            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический списком.
+            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический список.
             * Возможные значения:
             * <ul>
             *     <li>all - для выбора доступны любые типы записей;<li>
             *     <li>allBySelectAction - для выбора доступны любые типы записей; выбор происходит при нажатии на кнопку "Выбрать".<li>
-            *     <li>node - для выбора доступны только записи типа "Узел" и "Скрытый узел";<li>
-            *     <li>leaf - для выбора доступны только записи типа "Лист".<li>
+            *     <li>node - для выбора доступны только записи типа "Узел";<li>
+            *     <li>leaf - для выбора доступны только записи типа "Лист" и "Скрытый узел".<li>
             * </ul>
             * Подробнее о каждом типе записей читайте в разделе <a href='/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
             * @param {Object} [meta.componentOptions] Объект с пользовательскими опциями, которые передаются в диалог в секцию _options.
@@ -87,13 +87,13 @@ define('SBIS3.CONTROLS/Action/SelectorAction',
             * @param {Object} meta Метаданные, переданные при вызове метода (см. {@link execute}).
             * @param {Boolean} [meta.multiselect] Признак: множественный выбор записей из списка.
             * @param {Array.<WS.Data/Entity/Record>} [meta.selectedItems] Записи, которые будут выбраны по умолчанию.
-            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический списком.
+            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический список.
             * Возможные значения:
             * <ul>
             *     <li>all - для выбора доступны любые типы записей;<li>
             *     <li>allBySelectAction - для выбора доступны любые типы записей; выбор происходит при нажатии на кнопку "Выбрать".<li>
-            *     <li>node - для выбора доступны только записи типа "Узел" и "Скрытый узел";<li>
-            *     <li>leaf - для выбора доступны только записи типа "Лист".<li>
+            *     <li>node - для выбора доступны только записи типа "Узел";<li>
+            *     <li>leaf - для выбора доступны только записи типа "Лист" и "Скрытый узел".<li>
             * </ul>
             * Подробнее о каждом типе записей читайте в разделе <a href='/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
             * @param {Object} [meta.componentOptions] Объект с пользовательскими опциями, которые передаются в диалог в секцию _options.
@@ -111,13 +111,13 @@ define('SBIS3.CONTROLS/Action/SelectorAction',
             * @param {Object} meta Метаданные. Дополняют сведения о контексте выполнения действия, а также о свойствах сущностей, с которыми происходит взаимодействие. Для каждого класса существует собственный набор метаданных.
             * @param {Boolean} [meta.multiselect] Признак: множественный выбор записей из списка.
             * @param {Array.<WS.Data/Entity/Record>} [meta.selectedItems] Записи, которые будут выбраны по умолчанию.
-            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический списком.
+            * @param {String} [meta.selectionType] Тип доступных для выбора записей. Опция актуальна для использования, когда в <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/">Окне выбора из справочника</a> используется иерархический список.
             * Возможные значения:
             * <ul>
             *     <li>all - для выбора доступны любые типы записей;<li>
             *     <li>allBySelectAction - для выбора доступны любые типы записей; выбор происходит при нажатии на кнопку "Выбрать".<li>
-            *     <li>node - для выбора доступны только записи типа "Узел" и "Скрытый узел";<li>
-            *     <li>leaf - для выбора доступны только записи типа "Лист".<li>
+            *     <li>node - для выбора доступны только записи типа "Узел";<li>
+            *     <li>leaf - для выбора доступны только записи типа "Лист" и "Скрытый узел".<li>
             * </ul>
             * Подробнее о каждом типе записей читайте в разделе <a href='/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
             * @param {Object} [meta.componentOptions] Объект с пользовательскими опциями, которые передаются в диалог в секцию _options.

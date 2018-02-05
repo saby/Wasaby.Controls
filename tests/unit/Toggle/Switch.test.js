@@ -18,8 +18,7 @@ define(['Controls/Toggle/Switch'], function (Switch) {
       });
 
       afterEach(function () {
-         //SW.destroy();
-         //TODO: раскомментить дестрой когда будет сделана задача https://online.sbis.ru/opendoc.html?guid=4675dcd2-309b-402a-9c78-0bb4b3b2e644
+         SW.destroy();
          SW = undefined;
       });
 

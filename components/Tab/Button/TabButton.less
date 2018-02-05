@@ -326,7 +326,7 @@
    }
 }
 
-.ws-is-firefox {
+.ws-is-firefox, .ws-is-chrome.ws-is-windows-xp { //В хроме на xp тоже что-то с полупикселями шрифтов, нужен calc и там
    .controls-TabButton__flex {
       .controls-TabButton__additionalText2 .controls-EditAtPlace__fieldWrapper {
          position: relative;
@@ -343,7 +343,7 @@
    }
 }
 
-.ws-is-ie {
+.ws-is-ie10, .ws-is-ie11 {
    .controls-TabButton__flex {
       > .controls-TabButton__mainText {
          position: relative;
@@ -357,16 +357,21 @@
    .controls-TabButton.controls-TabButton__main-item .controls-MenuLink {
       height: 24px;
    }
+   .controls-TabButtons__simple-view .controls-TabButton.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__wrapper {
+      margin-bottom: 0;
+   }
 }
 
 .ws-is-desktop-safari, .ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
-   .controls-TabButton .controls-TabButton__mainText {
-      max-width: ~"calc(100% + 2px)"; //опять полупиксели, на сотые доли не влезает текст, появляется троеточие
-      //Нужно переписывать редактирование по месту
-      &.controls-EditAtPlace__ellipsis .controls-EditAtPlace__fieldWrapper {
-         display: inline-block;
-         .controls-EditAtPlace__textField {
-            width: ~"calc(100% + 1px)";
+   .controls-TabButton {
+      .controls-TabButton__mainText {
+         max-width: ~"calc(100% + 2px)"; //опять полупиксели, на сотые доли не влезает текст, появляется троеточие
+         //Нужно переписывать редактирование по месту
+         &.controls-EditAtPlace__ellipsis .controls-EditAtPlace__fieldWrapper {
+            display: inline-block;
+            .controls-EditAtPlace__textField {
+               width: ~"calc(100% + 1px)";
+            }
          }
       }
    }

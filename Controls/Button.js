@@ -45,5 +45,11 @@ define('Controls/Button', [
        }
    });
 
+   Button.getDefaultOptions = function() {
+      return {
+         style: 'default'
+      };
+   };
+
     return Button;
 });

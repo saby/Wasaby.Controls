@@ -200,7 +200,11 @@ define('js!WSControls/Buttons/Button', [
          // а при перерисовке кнопка скрывается, что приводит к закрытию пикера
          this._contentContainer[0].innerHTML = contentTemplate(this._options);
       },
-
+      /**
+       * Установить стилевое оформление кнопки
+       * @param style стилевое оформление.
+       * @see style
+       */
       setStyle: function(style) {
           this._options.style = style;
           this._toggleState();
@@ -215,7 +219,11 @@ define('js!WSControls/Buttons/Button', [
       // метод который будет переключать состояния кнопки, пока не перейдем на vDom
       // https://online.sbis.ru/opendoc.html?guid=aa39901a-7aec-4ebe-ab51-a123c53eac92
       _toggleState: function() {
-          var  iconContainer = this._container.find('.controls-Button__icon');
+          var  container = this._container,
+               iconContainer = container.find('.controls-Button__icon');
+
+          container[0].className = container[0].className.replace(/(^|\s).controls-ButtonBase_state-\S+/g, '');
+          container.addClass('controls-ButtonBase_state-' + (this.isEnabled() ? 'enabled' : 'disabled'));
 
           if(iconContainer.length) {
               iconContainer[0].className = iconContainer[0].className.replace(/(^|\s)icon-\S+/g, '');

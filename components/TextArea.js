@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/TextArea', [
    'Core/helpers/String/escapeHtml',
    'SBIS3.CONTROLS/Utils/LinkWrapUtils',
    "Core/IoC",
-   "browser!js!Deprecated/Controls/FieldText/resources/Autosize-plugin",
+   "browser!Deprecated/Controls/FieldText/resources/Autosize-plugin",
    'css!SBIS3.CONTROLS/TextArea/TextArea'
 ], function( constants,TextBox, inputField, compatiblePlaceholderTemplate, escapeHtml, LinkWrap, IoC) {
 
@@ -370,7 +370,7 @@ define('SBIS3.CONTROLS/TextArea', [
          //IE - единственный браузер, который навешивает :invalid, если через js поставить текст, превышаюший maxLength
          //Т.к. мы показываем плейсхолдер, если на поле ввода висит :invalid, то он не скрывается.
          //Поэтому для IE просто не будем навешивать аттрибут maxLength
-         this._inputField.attr('maxlength', constants.browser.isIE ? null : num);
+         this._inputField.attr('maxlength', constants.browser.isIE && !constants.browser.isIE12 ? null : num);
       },
 
 
