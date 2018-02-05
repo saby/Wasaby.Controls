@@ -134,6 +134,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
             element: element,
             startValue: this.getStartValue(),
             endValue: this.getEndValue(),
+            emptyCaption: this._options.emptyCaption,
             selectionType: this._options.selectionType,
             quantum: this._options.quantum,
             serializationMode: this._options.serializationMode
