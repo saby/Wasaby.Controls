@@ -3,7 +3,7 @@
       <div class="controls-Browser-ColumnsEditor-Editing-Area__head-title">
          <div class="controls-Browser-ColumnsEditor-Editing-Area__head-title-left">
             <ws:if data="{{title}}">{{title}}</ws:if>
-            <ws:else>{[Отображение колонок]}</ws:else>
+            <ws:else>{[РедакторКолонок@@Отображение колонок]}</ws:else>
          </div>
          <div class="controls-Browser-ColumnsEditor-Editing-Area__head-title-right">
             <SBIS3.CONTROLS:Button
@@ -12,14 +12,14 @@
                >
                <ws:caption>
                   <ws:if data="{{applyButtonTitle}}">{{applyButtonTitle}}</ws:if>
-                  <ws:else>{[Применить]}</ws:else>
+                  <ws:else>{[РедакторКолонок@@Применить]}</ws:else>
                </ws:caption>
             </SBIS3.CONTROLS:Button>
          </div>
       </div>
       <ws:if data="{{usePresets && ((staticPresets && staticPresets.length) || presetNamespace)}}">
          <div class="controls-Browser-ColumnsEditor-Editing-Area__head-preset">
-            <div class="controls-Browser-ColumnsEditor-Editing-Area__head-preset-label">{[Шаблон]}</div>
+            <div class="controls-Browser-ColumnsEditor-Editing-Area__head-preset-label">{[РедакторКолонок@@Пресет]}</div>
             <div class="controls-Browser-ColumnsEditor-Editing-Area__head-preset-editor">
                <SBIS3.CONTROLS:ListView
                   class="controls-Browser-ColumnsEditor-Editing-Area__Preset controls-ListView__disableHover"
@@ -60,7 +60,7 @@
             multiselect="{{ true }}"
          />
          <SBIS3.CONTROLS:ListView
-            class="controls-Browser-ColumnsEditor-Editing-Area__SelectableList controls-Browser-ColumnsEditor-Editing-Area__SelectableList_movable"
+            class="controls-Browser-ColumnsEditor-Editing-Area__SelectableList{{moveColumns ? ' controls-Browser-ColumnsEditor-Editing-Area__SelectableList_movable' : ''}}"
             name="controls-Browser-ColumnsEditor-Editing-Area__SelectableList"
             items="{{ _optsSelectable.items }}"
             easyGroup="{{ true }}"
