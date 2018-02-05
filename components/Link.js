@@ -118,7 +118,7 @@ define('SBIS3.CONTROLS/Link', [
          }
 
          options.style = !!options.style ? options.style : LinkUtil.getStyleByConfig(options, attrToMerge);
-         options.className += ' controls-Link_state-' + (options.enabled ? options.style : 'disabled');
+         options.cssClassName += ' controls-Link_state-' + (options.enabled ? options.style : 'disabled');
          return options;
       },
 

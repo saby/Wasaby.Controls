@@ -127,7 +127,7 @@ define('js!WSControls/Buttons/Button', [
               icon = opts.icon || opts._iconClass;
 
           this._parseIconClass(icon);
-          opts.cssClassName += ('controls-ButtonBase_state-' + (opts.enabled ? 'enabled' : 'disabled'));
+          opts.cssClassName += (' controls-ButtonBase_state-' + (opts.enabled ? 'enabled' : 'disabled'));
           return opts;
       },
 
@@ -213,8 +213,12 @@ define('js!WSControls/Buttons/Button', [
 
       setEnabled: function(enabled){
           Button.superclass.setEnabled.call(this, enabled);
-          this._toggleState();
           this._container.attr('disabled', !this.isEnabled());
+      },
+
+      _setEnabled: function(enabled) {
+          Button.superclass._setEnabled.apply(this, arguments);
+         this._toggleState();
       },
 
       // метод который будет переключать состояния кнопки, пока не перейдем на vDom
