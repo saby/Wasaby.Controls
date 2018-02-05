@@ -29,9 +29,10 @@
   position: relative;
   .checkbox-border-size();
   .checkbox();
-  &:before{
-    content: '';
-  }
+}
+
+.controls-CheckBox__icon:before {
+  content: '';
 }
 
 .controls-CheckBox__icon-checked {
@@ -42,26 +43,18 @@
   .checkbox-null-size();
 }
 
-.controls-CheckBox__icon-tristate-color__disabled{
-  &:after{
+.controls-CheckBox__icon-tristate-color__disabled:after{
     background-color: @color_checkBox_disabled;
-  }
 }
 
-.controls-CheckBox__icon-tristate-color__enabled{
-  &:after{
+.controls-CheckBox__icon-tristate-color__enabled:after{
     background-color: @color_checkBox-icon_enabled;
-  }
 }
 
-.controls-CheckBox__icon-checked-color__enabled{
-  &:after{
+.controls-CheckBox__icon-checked-color__enabled:after{
     color: @color_checkBox-icon_enabled;
-  }
 }
 
-.controls-CheckBox__icon-checked-color__disabled{
-  &:after{
+.controls-CheckBox__icon-checked-color__disabled:after{
     color: @color_checkBox_disabled;
-  }
 }
