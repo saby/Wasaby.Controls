@@ -127,6 +127,7 @@ define('js!WSControls/Buttons/Button', [
               icon = opts.icon || opts._iconClass;
 
           this._parseIconClass(icon);
+          opts.cssClassName += ('controls-ButtonBase_state-' + (opts.enabled ? 'enabled' : 'disabled'));
           return opts;
       },
 
@@ -222,7 +223,7 @@ define('js!WSControls/Buttons/Button', [
           var  container = this._container,
                iconContainer = container.find('.controls-Button__icon');
 
-          container[0].className = container[0].className.replace(/(^|\s).controls-ButtonBase_state-\S+/g, '');
+          container[0].className = container[0].className.replace(/(^|\s)controls-ButtonBase_state-\S+/g, '');
           container.addClass('controls-ButtonBase_state-' + (this.isEnabled() ? 'enabled' : 'disabled'));
 
           if(iconContainer.length) {
