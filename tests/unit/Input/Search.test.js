@@ -1,7 +1,7 @@
 define(
    [
       'Core/Control',
-      'js!Controls/Input/Search'
+      'Controls/Input/Search'
    ],
    function (Control, Search) {
       'use strict';

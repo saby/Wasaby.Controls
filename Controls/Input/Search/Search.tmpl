@@ -3,7 +3,8 @@
         tagStyle="{{_options.tagStyle}}"
         readonly="{{_options.readonly}}"
         viewModel="{{_simpleViewModel}}"
-        placeholder="{{_options.placeholder}}">
+        placeholder="{{_options.placeholder}}"
+        attr:class="control-Search">
 
     <ws:content>
         <ws:partial
@@ -16,10 +17,10 @@
 
         <div class="ws-Search__afterFieldWrapper">
             <div if="{{_options.value}}"
-                 class="controls-SearchForm__reset icon-Close"
+                 class="controls-Search__reset icon-Close"
                  title="{{rk('Очистить результаты поиска')}}"
                  on:click="_onResetClick()"></div>
-            <div class="controls-SearchForm__search icon-Search2"
+            <div class="controls-Search__search icon-Search2"
                  on:click="_onSearchClick()"></div>
         </div>
     </ws:afterFieldWrapper>
