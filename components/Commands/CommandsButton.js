@@ -34,7 +34,8 @@ define('SBIS3.CONTROLS/Commands/CommandsButton', [
          opts.cssClassName += ' controls-Menu__hide-menu-header controls-IconButton controls-CommandsButton';
          opts.icon = 'sprite:icon-size icon-ExpandDown icon-primary';
          opts.pickerClassName += ' controls-CommandsButton__picker';
-         opts.className += ' '
+         opts.className += ' controls-IconButton_standard';
+         opts._iconDisabledClass = 'icon-IconButton-disabled';
          if (opts.pickerConfig) {
             opts.pickerConfig.locationStrategy = 'bodyBounds';
          }

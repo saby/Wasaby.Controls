@@ -1,9 +1,20 @@
-.controls-DateRangeBigChoose-DateRangePickerItem {
-   .flexbox()
-}
-
 @height_DateRangeChoose-dates-months: @height_DateRangeBigChoose-body - @height_DateRangeChoose-dates-header - 1px;
 @height_DateRangeChoose-dates-months-year-button: @height_DateRangeChoose-dates-months - @height_DateRangeBigChoose-dates-months-button*12;
+
+.controls-DateRangeBigChoose-DateRangePickerItem {
+   .flexbox();
+   margin-bottom: @height_DateRangeChoose-dates-months-year-button;
+   position: relative;
+
+   &:after {
+      content: '';
+      position: absolute;
+      bottom: -@height_DateRangeChoose-dates-months-year-button/2;
+      left: @width_DateRangeBigChoose-dates-header-year + @width_MontView/14;
+      right: @width_MontView/14;
+      border-top: 1px solid @border-color_DateRangePickerItem__months;
+   }
+}
 
 .controls-DateRangeBigChoose-DateRangePickerItem__months {
    height: @height_DateRangeChoose-dates-months;
@@ -14,7 +25,6 @@
    position: sticky;
    top: 0;
    margin-bottom: -@height_DateRangeChoose-dates-months-year-button;
-   margin-top: @height_DateRangeChoose-dates-months-year-button;
 }
 
 .controls-DateRangeBigChoose-DateRangePickerItem__months-btn {

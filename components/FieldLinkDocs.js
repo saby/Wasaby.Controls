@@ -20,6 +20,7 @@ define('SBIS3.CONTROLS/FieldLinkDocs',
        * @css @border-color_FieldLink_picker Цвет границы выпадающего списка.
        * @css @color_FieldLink-item-caption_big Цвет выбранных элементов при опции bigItems в значении "true".
        * @css @color_FieldLink_dropAllLinks Цвет крестика очистки.
+       * @public
        * @author Зайцев Александр Сергеевич
        */
    }

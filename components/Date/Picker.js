@@ -112,7 +112,7 @@ define(
 
             pickerConfig: {
                corner: 'tl',
-               cssClassName: 'controls-DateRangeBigChoose__noBorder controls-DateRangeBigChoose__picker',
+               cssClassName: 'controls-DateRangeBigChoose__noBorder controls-DateRangeBigChoose__picker-month-only',
                horizontalAlign: {
                   side: 'left'
                },

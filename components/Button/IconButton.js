@@ -3,7 +3,12 @@
  *
  * @description
  */
-define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'css!SBIS3.CONTROLS/Button/IconButton/IconButton'], function(WSButton) {
+define('SBIS3.CONTROLS/Button/IconButton', [
+    'js!WSControls/Buttons/Button',
+    'SBIS3.CONTROLS/Utils/IconButtonUtil',
+    'css!SBIS3.CONTROLS/Button/IconButton/IconButton'
+],
+function(WSButton, IconButtonUtil) {
 
    'use strict';
 
@@ -15,7 +20,7 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
     *
     * @class SBIS3.CONTROLS/Button/IconButton
     * @extends WSControls/Buttons/Button
-    * @mixes SBIS3.CONTROLS/Mixins/IconMixin
+    * @mixes SBIS3.CONTROLS/Button/IconButton/IconButtonDocs
     * @demo SBIS3.CONTROLS.Demo.MyIconButton
     * @author Борисов П.С.
     *
@@ -39,13 +44,6 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     *
-    * @cssModifier controls-IconButton__round-border Добавляет круглую границу вокруг иконки. Размер границы подстраивается под размеры иконки.
-    * По умолчанию граница серого цвета. При наведении курсора цвет границы изменяется в соответствии с цветом иконки, установленной в опции {@link icon}.
-    * @cssModifier controls-IconButton__round-border-24 Устанавливает круглую границу (диаметр в 24 px) вокруг иконки быстрой операции, доступной по наведению курсора. Подробнее о таких типах операций вы можете прочитать <a href="/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">здесь</a>.
-    * Модификатор применяется совместно с иконками 16 px. Цвет границы соответствует цвету иконки, установленной в опции {@link icon}.
-    * @cssModifier controls-IconButton__filter-left Устанавливает внешний вид для кнопки открытия/закрытия фильтров слева.
-    * @cssModifier controls-IconButton__filter-right Устанавливает внешний вид  для кнопки открытия/закрытия фильтров справа.
-    *
     * @category Buttons
     * @control
     * @public
@@ -56,26 +54,52 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
     */
 
    var IconButton = WSButton.extend([], /** @lends SBIS3.CONTROLS/Button/IconButton.prototype */ {
-      _modifyOptions: function () {
+        $protected: {
+           _options: {
+               /**
+                * @cfg {String} Устанавливает размер кнопки.
+                * @remark
+                * Сейчас опция size будет работать только в сочетании style в значении 'bordered'
+                * Значение "s" установит средний размер кнопки.
+                * Значение "m" установит средний размер кнопки.
+                * Значение "l" устaновит большой размер кнопки.
+                * @example
+                * Пример 1. Большая кнопка:
+                * фрагмент верстки:
+                * <pre class="brush:xml">
+                *     <option name="size">l</option>
+                * </pre>
+                */
+               size: '',
+               /**
+                * @cfg {String} Устанавливает стилевое оформление кнопки.
+                * @remark
+                * По умолчанию значение опции "standard".
+                * Значение "standard" установит стандартный стиль кнопки.
+                * Значение "bordered" устaновит обводку кнопки.
+                * @example
+                * Пример 1. Кнопка иконка с обводкой:
+                * фрагмент верстки:
+                * <pre class="brush:xml">
+                *     <option name="style">bordered</option>
+                * </pre>
+                */
+               style: ''
+           }
+        },
+
+      _modifyOptions: function (opts, parsedOptions, attrToMerge) {
          var
-             options = IconButton.superclass._modifyOptions.apply(this, arguments),
-             iconClass = options._iconClass;
+             options = IconButton.superclass._modifyOptions.apply(this, arguments);
 
-
-         options.className += ' controls-IconButton';
          options._type = 'IconButton';
+         options.className += ' controls-IconButton';
+         options._textClass = ' controls-IconButton__text';
+         opts._iconDisabledClass = 'icon-IconButton-disabled';
 
-         if (iconClass) {
-            if (((iconClass.indexOf('icon-error') >= 0) || (iconClass.indexOf('icon-done') >= 0))){
-               if (iconClass.indexOf('icon-error') >= 0) {
-                  options.className += ' controls-IconButton__errorBorder';
-               }
-               else {
-                  options.className += ' controls-IconButton__doneBorder';
-               }
-            }
-         }
-         options.cssClassName += ' controls-IconButton-size__' + (!!options.size ? options.size : 'default');
+         IconButtonUtil.setStyleByConfig(options, attrToMerge);
+         options.cssClassName += IconButtonUtil.getClassState(options);
+
          return options;
       },
 
@@ -105,7 +129,15 @@ define('SBIS3.CONTROLS/Button/IconButton', [ 'js!WSControls/Buttons/Button', 'cs
               this.getContainer().removeClass('controls-IconButton__doneBorder').removeClass('controls-IconButton__errorBorder');
           }
           IconButton.superclass.setIcon.call(this, icon);
-      }
+      },
+      _toggleState: function() {
+          var  container = this._container;
+          // селекторы с filter стирать не надо т.к. есть FilterPanel которая использует точно такие же селекторы controls-IconButton__filter
+          // на них завязаны прикладники поэтому просто поменять имя селектора не получится
+          container[0].className = container[0].className.replace(/(^|\s)controls-IconButton_(?!(_filter))\S+/g, '').replace(/(^|\s)controls-IconButton__(?!(filter))\S+/g, '');
+          container.addClass(IconButtonUtil.getClassState(this._options));
+          IconButton.superclass._toggleState.apply(this, arguments);
+       }
    });
 
    return IconButton;

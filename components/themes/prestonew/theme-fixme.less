@@ -97,6 +97,15 @@ body {
       }
     }
   }
+  // т.к. в редизайне используется одна кнопка без заголовка, то напишем для неё фикс выравнивания
+  // в онлайне такие кнопки завязаны на жесткие стили controls-IconButton__round-border-24, что неправильно
+  // для редизайна нужно перейти на относительные названия
+  .controls-MenuIcon__Menu.controls-Menu.controls-Menu__Popup.controls-Menu__hide-menu-header {
+    margin: round(-9px * @multiplier) 0 0 round(-17px * @multiplier);
+  }
+  .controls-operationsPanel__itemsMenu_picker.controls-MenuIcon__Menu.controls-Menu.controls-Menu__hide-menu-header {
+    margin: round(-9px * @multiplier) 0 0 round(40px * @multiplier);
+  }
 }
 .controls-BreadCrumbs__crumb {
   top: round(9px * @multiplier)

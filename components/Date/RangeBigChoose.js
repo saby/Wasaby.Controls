@@ -88,6 +88,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
             headerType: headerTypes.link,
 
+            emptyCaption:  rk('Период не указан'),
+
             headerTpl: headerTpl,
             yearsPanelTpl: yearsPanelTpl,
 
@@ -163,9 +165,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
                }
 
                if (scope.year.displayed) {
-                  textColorClass += '-displayed'
+                  textColorClass += '-displayed';
                } else if (scope.year.current) {
-                  textColorClass += '-current'
+                  textColorClass += '-current';
                }
                css.push(textColorClass, backgroundColorClass);
                return css.join(' ');
@@ -213,7 +215,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
          this.getChildControlByName('PrevYearButton').subscribe('onActivated', this._onPrevOrNextYearBtnClick.bind(this, -1));
          this.getChildControlByName('NextYearButton').subscribe('onActivated', this._onPrevOrNextYearBtnClick.bind(this, 1));
-         this.getChildControlByName('StateButton').subscribe('onActivated', this._onStateBtnClick.bind(this));
+         if (this._options.yearStateEnabled) {
+            this.getChildControlByName('StateButton').subscribe('onActivated', this._onStateBtnClick.bind(this));
+         }
 
          container.find('.controls-DateRangeBigChoose__months-toStart').click(this._toStartMonth.bind(this));
          container.find('.controls-DateRangeBigChoose__months-toEnd').click(this._toEndMonth.bind(this));
@@ -276,7 +280,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
          this.subscribe('onRangeChange', this._onRangeChange.bind(this));
    
-         if (this.getSelectionType() === RangeSelectableViewMixin.selectionTypes.range) {
+         if (this._options.yearStateEnabled) {
             this.applyYearState();
          } else {
             this.applyMonthState(this._options.startValue? this._options.startValue: new Date());
@@ -297,8 +301,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             options.quantum.days = [1];
          }
          options.yearSelectionEnabled = true;
+         options.yearStateEnabled = true;
          if (!isEmpty(options.quantum)) {
             options.yearSelectionEnabled = 'years' in options.quantum;
+            options.yearStateEnabled = !(('days' in options.quantum || 'weeks' in options.quantum) &&
+               !('months' in options.quantum && 'quarters' in options.quantum && 'halfyears' in options.quantum && 'years' in options.quantum));
          }
          return options;
       },
@@ -351,10 +358,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          if (this._dateRangePicker.isSelectionProcessing()) {
             if (this.getStartValue() > date) {
                this._endDatePickerResetActive();
-               this._datePickerSetActive(this._startDatePicker, DateUtil.getStartOfMonth(date));
+               this._datePickerSetActive(this._startDatePicker, date);
             } else {
                this._startDatePickerResetActive();
-               this._datePickerSetActive(this._endDatePicker, DateUtil.getEndOfMonth(date));
+               this._datePickerSetActive(this._endDatePicker, date);
             }
          } else {
             this._datePickerSetActive(this._startDatePicker);
@@ -386,7 +393,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          var today = new Date();
          options = options || this._options;
          return (options._state === states.year && !DateUtil.isYearsEqual(today, options._displayedPeriod)) ||
-            (options._state === states.month && !DateUtil.isMonthsEqual(today, options._displayedPeriod))
+            (options._state === states.month && !DateUtil.isMonthsEqual(today, options._displayedPeriod));
       },
 
       _updateHomeButton: function () {
@@ -468,6 +475,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             oldStartDate = this.getStartValue(),
             endDate = this._endDatePicker.getDate();
 
+         this.cancelSelection();
+
          if ((!date && text !== '') || this._isDatesEqual(date, oldStartDate)) {
             return;
          }
@@ -504,6 +513,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             startDate = this._startDatePicker.getDate(),
             oldEndDate = this.getEndValue();
 
+         this.cancelSelection();
+
          if ((!date && text !== '') || this._isDatesEqual(date, oldEndDate)) {
             return;
          }
@@ -532,6 +543,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
                this._setCurrentYear(start.getFullYear(), true);
                this._updateYearsBar(start.getFullYear());
             }
+            this.getChildControlByName('DateRangeHeader').setStartValue(start);
          }
          return changed;
       },
@@ -552,7 +564,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          } else {
             changed = DateRangeBigChoose.superclass.setRange.apply(this, arguments);
          }
-         if (this.isSelectionProcessing())
          return changed;
       },
 
@@ -570,11 +581,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
          if ((start != startValue) ||
             (start && startValue && (start.toSQL() !==  startValue.toSQL()))) {
-            this._startDatePicker.setDate(startValue);
+            this._startDatePicker.setDate(startValue, true);
          }
          if ((end != endValue) ||
             (end && endValue && (end.toSQL() !==  endValue.toSQL()))) {
-            this._endDatePicker.setDate(endValue);
+            this._endDatePicker.setDate(endValue, true);
          }
 
          if (this._options._state === states.year) {
@@ -584,7 +595,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          }
 
          if (this.getRangeSelectionType() === selectionTypes.years) {
-            year = parseInt(endValue.getFullYear(), 10)
+            year = parseInt(endValue.getFullYear(), 10);
             this._setCurrentYear(year);
          }
          this._updateRangeIndicators();
@@ -642,7 +653,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this._dateRangePicker._updateScrollPosition();
          this._setCurrentYear(month.getFullYear(), true);
          this._updateYearsBar(month.getFullYear());
-         this.getChildControlByName('StateButton').setChecked(true);
+         if (this._options.yearStateEnabled) {
+            this.getChildControlByName('StateButton').setChecked(true);
+         }
       },
 
       applyYearState: function (monthNumber) {
@@ -654,7 +667,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          container.find('.controls-DateRangeBigChoose__months').removeClass('ws-hidden');
          this._monthRangePicker.setRange(this.getStartValue(), this.getEndValue());
          this.getChildControlByName('MonthRangePicker').setYear(this._getCurrentYear());
-         this.getChildControlByName('StateButton').setChecked(false);
+         if (this._options.yearStateEnabled) {
+            this.getChildControlByName('StateButton').setChecked(false);
+         }
       },
 
       _initRangeButtonControl: function (selectionType, baseButtonName, buttonsCount) {
@@ -786,12 +801,12 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
                   break;
             }
          }
-
+         this.getChildControlByName('DateRangeHeader').setEndValue(end);
          return DateRangeBigChoose.superclass.setEndValue.call(this, end, silent);
       },
 
       _onDateRangePickerActivated: function (e, month) {
-         this.setRange(new Date(month.getFullYear(), month.getMonth(), 1), new Date(month.getFullYear(), month.getMonth() + 1, 0))
+         this.setRange(new Date(month.getFullYear(), month.getMonth(), 1), new Date(month.getFullYear(), month.getMonth() + 1, 0));
       },
 
       // Логика связанная с панелями выбора диапазонов
@@ -876,22 +891,28 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
       },
 
       _datePickerSetActive: function (picker, date) {
+         var range;
          if (date) {
              picker.setDate(date, true);
+             range = this._getUpdatedRange(date, this.getStartValue(), this.getEndValue());
+             this.getChildControlByName('DateRangeHeader').setRange(range[0], range[1]);
          }
          picker.getContainer().addClass('controls-DateRangeBigChoose__header-period-active');
       },
       _startDatePickerResetActive: function () {
          this._startDatePicker.setDate(this.getStartValue(), true);
          this._startDatePicker.getContainer().removeClass('controls-DateRangeBigChoose__header-period-active');
+         this.getChildControlByName('DateRangeHeader').setRange(this.getStartValue(), this.getEndValue());
       },
       _endDatePickerResetActive: function () {
          this._endDatePicker.setDate(this.getEndValue(), true);
          this._endDatePicker.getContainer().removeClass('controls-DateRangeBigChoose__header-period-active');
+         this.getChildControlByName('DateRangeHeader').setRange(this.getStartValue(), this.getEndValue());
       },
       _datePickersResetActive: function () {
          this._startDatePickerResetActive();
          this._endDatePickerResetActive();
+         this.getChildControlByName('DateRangeHeader').setRange(this.getStartValue(), this.getEndValue());
       },
 
       _getItemIdByItemContainer: function (container) {
@@ -1064,6 +1085,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             this._cancelRangeBarsSelection();
          }
 
+         this._setRangeSelectionType(null);
          this._monthRangePicker.cancelSelection();
          // this._dateRangePicker.cancelSelection();
       },
