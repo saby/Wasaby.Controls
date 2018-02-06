@@ -24,6 +24,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
             tplOptions.quantum = cfg.quantum;
             tplOptions.monthSelectionEnabled = cfg.monthSelectionEnabled;
             tplOptions.serializationMode = cfg.serializationMode;
+            tplOptions.dayFormatter = cfg.dayFormatter;
             return tplOptions;
          };
 
