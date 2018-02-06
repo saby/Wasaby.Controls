@@ -156,6 +156,11 @@ body .ws-window.ws-LoadingIndicator__window {
   }
 }
 .controls-DropdownList__multiselect {
+  .controls-DropdownListFooter_select {
+    //Пока нет стандартных размеров для средних кнопок в темах оформления, задаю вручную
+    width: round(58px * @multiplier);
+    height: round(58px * @multiplier);
+  }
   &.controls-DropdownList__item {
     &:after {
       left: @padding_DropDownList_item_child_text;
