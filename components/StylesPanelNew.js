@@ -36,7 +36,7 @@ define('SBIS3.CONTROLS/StylesPanelNew', [
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
-            closeButton: 'withBorder',
+            closeButton: true,
             closeByExternalClick: true,
             /**
              * @cfg {Array.Object} Устанавливает набор цветов отображаемых в панели

@@ -18,7 +18,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImageP
             $protected: {
                _options: {
                   windowTitle: rk('Выберите шаблон вставки изображения:'),
-                  closeButton: 'withBorder',
+                  closeButton: true,
                   canMultiSelect: false,
                   corner: 'tr',
                   closeByExternalClick: true,
