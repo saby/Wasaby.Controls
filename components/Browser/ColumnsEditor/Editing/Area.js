@@ -4,6 +4,7 @@
  * @public
  * @class SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area
  * @extends SBIS3.CONTROLS/CompoundControl
+ * @author Спирин В.А.
  */
 define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
    [
