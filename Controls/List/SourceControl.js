@@ -24,7 +24,7 @@ define('Controls/List/SourceControl', [
       reload: function(self) {
          if (self._sourceController) {
             _private.showIndicator(self);
-            self._sourceController.load(self._filter, self._sorting).addCallback(function (list) {
+            return self._sourceController.load(self._filter, self._sorting).addCallback(function (list) {
 
                self._notify('onDataLoad', list);
 
@@ -56,7 +56,7 @@ define('Controls/List/SourceControl', [
       loadToDirection: function(self, direction) {
          _private.showIndicator(self, direction);
          if (self._sourceController) {
-            self._sourceController.load(self._filter, self._sorting, direction).addCallback(function(addedItems){
+            return self._sourceController.load(self._filter, self._sorting, direction).addCallback(function(addedItems){
 
                self._notify('onDataLoad', addedItems);
 
