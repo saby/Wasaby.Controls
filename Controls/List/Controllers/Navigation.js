@@ -48,6 +48,8 @@ define('Controls/List/Controllers/Navigation',
 
          },
 
+
+         //TODO временный метод
          resetScroll: function() {
             var self = this;
             if (this._options.navigation

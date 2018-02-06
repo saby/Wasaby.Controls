@@ -124,6 +124,10 @@ define('Controls/Controllers/SourceController',
             return this._loader && !this._loader.isReady();
          },
 
+         setEdgeState: function(direction) {
+            this._queryParamsController.setEdgeState(direction)
+         },
+
          destroy: function() {
             if (this._queryParamsController) {
                this._queryParamsController.destroy();

@@ -71,18 +71,6 @@ define('Controls/List/Controllers/ScrollPaging',
             }
          },
 
-         scrollForward: function() {
-            this._options.scrollContainer.scrollTop += this._viewportHeight;
-         },
-
-         scrollBackward: function() {
-            this._options.scrollContainer.scrollTop -= this._viewportHeight;
-         },
-
-         _cacheHeights: function(viewportCnt) {
-            this._viewHeight = viewportCnt.scrollHeight;
-            this._viewportHeight = viewportCnt.offsetHeight;
-         },
 
          destroy: function() {
             this.stopObserve();

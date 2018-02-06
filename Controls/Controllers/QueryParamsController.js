@@ -36,6 +36,10 @@ define('Controls/Controllers/QueryParamsController',
             return this._paramsInst.hasMoreData(direction);
          },
 
+         setEdgeState: function(direction) {
+            this._paramsInst.setEdgeState(direction);
+         },
+
          destroy: function() {
             if (this._paramsInst) {
                this._paramsInst.destroy();

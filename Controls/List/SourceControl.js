@@ -108,18 +108,25 @@ define('Controls/List/SourceControl', [
          return error;
       },
 
-      scrollToEdge: function(direction) {
-         var self = this;
-         if (this._navigationController && this._navigationController.hasMoreData(direction)) {
-            this._navigationController.setEdgeState(direction);
-            _private.reload(this).addCallback(function(){
-
-               //TODO Убрать перейдя на методы из ScrollWatcher
-               _private.scrollTo.call(self, direction == 'up' ? 0 : 100000000)
+      scrollToEdge: function(self, direction) {
+         if (self._sourceController && self._sourceController.hasMoreData(direction)) {
+            self._sourceController.setEdgeState(direction);
+            _private.reload(self).addCallback(function(){
+               if (direction === 'up') {
+                  self._scrollController.scrollToTop();
+               }
+               else {
+                  self._scrollController.scrollToBottom();
+               }
             });
          }
          else {
-            _private.scrollTo.call(self, direction == 'up' ? 0 : 100000000)
+            if (direction === 'up') {
+               self._scrollController.scrollToTop();
+            }
+            else {
+               self._scrollController.scrollToBottom();
+            }
          }
       },
 
@@ -168,15 +175,19 @@ define('Controls/List/SourceControl', [
       showIndicator: function(self, direction) {
          self._loadingState = direction ? direction : 'all';
          setTimeout(function() {
-            self._loadingIndicatorState = self._loadingState || null;
-            self._forceUpdate();
+            if (self._loadingIndicatorState !== self._loadingState) {
+               self._loadingIndicatorState = self._loadingState;
+               self._forceUpdate();
+            }
          }, 2000)
       },
 
       hideIndicator: function(self) {
          self._loadingState = null;
-         self._loadingIndicatorState = null;
-         self._forceUpdate();
+         if (self._loadingIndicatorState !== null) {
+            self._loadingIndicatorState = self._loadingState;
+            self._forceUpdate();
+         }
       },
 
       /**
@@ -395,12 +406,12 @@ define('Controls/List/SourceControl', [
       },
 
       __onPagingArrowClick: function(e, arrow) {
-         if (this._scrollPagingCtr) {
+         if (this._scrollController) {
             switch (arrow) {
-               case 'Next': this._scrollPagingCtr.scrollForward(); break;
-               case 'Prev': this._scrollPagingCtr.scrollBackward(); break;
-               case 'Begin': _private.scrollToEdge.call(this, 'up'); break;
-               case 'End': _private.scrollToEdge.call(this, 'down'); break;
+               case 'Next': this._scrollController.scrollPageDown(); break;
+               case 'Prev': this._scrollController.scrollPageUp(); break;
+               case 'Begin': _private.scrollToEdge(this, 'up'); break;
+               case 'End': _private.scrollToEdge(this, 'down'); break;
             }
          }
       },
