@@ -131,7 +131,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
             _options: {
                moveColumns: true,
                usePresets: false,
-               newPresetTitle: rk('Новый пресет', 'РедакторКолонок'),
+               newPresetTitle: rk('Новый шаблон', 'РедакторКолонок'),
                useOriginPresetTitle: true
             },
             _result: null
