@@ -42,14 +42,16 @@
             </ws:if>
             <ws:else>
                <script key="init_script">
-                  require(['bootup-min',
-                     'js!SBIS3.Engine.ServiceUpdateNotifier',
-                     'Core/nativeExtensions',
-                     'Lib/Control/BaseCompatible/BaseCompatible'], function(bootup){
-                     var cont = document.getElementsByTagName('html')[0];
-                     cont.removeAttribute('config');
-                     cont.removeAttribute('data-component');
-                     bootup();
+                  require(['Core/app-init'], function(appinit){
+                     appinit();
+                     require(['bootup-min',
+                        'Core/nativeExtensions',
+                        'Lib/Control/BaseCompatible/BaseCompatible'], function(bootup){
+                        var cont = document.getElementsByTagName('html')[0];
+                        cont.removeAttribute('config');
+                        cont.removeAttribute('data-component');
+                        bootup();
+                     });
                   });
                </script>
             </ws:else>
