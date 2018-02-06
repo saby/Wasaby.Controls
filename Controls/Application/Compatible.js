@@ -16,19 +16,7 @@ define('Controls/Application/Compatible', [
       _template: template,
       bootup: null,
       _beforeMount:function(){
-         var def = new Deferred(),
-            self = this;
 
-         require(['bootup-min',
-            'js!SBIS3.Engine.ServiceUpdateNotifier',
-            'Core/nativeExtensions',
-            'Lib/Control/BaseCompatible/BaseCompatible'], function(bootup){
-            self._mounted = true;
-            self.bootup = bootup;
-            def.callback();
-         });
-
-         return def;
       },
 
       _shouldUpdate: function(){
