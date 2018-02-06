@@ -1,11 +1,11 @@
-define('SBIS3.CONTROLS/Button/ButtonDocs',
+define('SBIS3.CONTROLS/Button/IconButton/IconButtonDocs',
     [
     ],
     function() {
     }
     /**
+     * @mixin SBIS3.CONTROLS/Button/IconButton/IconButtonDocs
      * @public
-     * @mixes SBIS3.CONTROLS/Button/IconButton/IconButtonDocs
      * @css @border-width_IconButton_bordered Ширина границ кнопки-иконки с обводкой
      * @css @border-color_IconButton_bordered Цвет границ кнопки-иконки с обводкой по-умолчанию
      * @css @background-color_IconButton_bordered Цвет фона кнопки-иконки с обводкой по-умолчанию

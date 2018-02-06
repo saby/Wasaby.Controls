@@ -4,7 +4,7 @@ define('SBIS3.CONTROLS/Button/ButtonDocs',
     function() {
     }
     /**
-     * @mixes SBIS3.CONTROLS/Button/ButtonDocs
+     * @mixin SBIS3.CONTROLS/Button/ButtonDocs
      * @public
      * @css @box-shadow_Button Тень контейнера кнопки
      * @css @border-width_Button Ширина границ кнопки
