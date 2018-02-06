@@ -438,7 +438,7 @@ define('SBIS3.CONTROLS/OperationsPanel', [
                });
 
                self._itemsMenu._setPickerContent = function() {
-                  $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-size icon-ExpandUp icon-primary action-hover');
+                  $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-size icon-Close icon-primary action-hover');
                };
 
                self.subscribeTo(self._itemsMenu, 'onMenuItemActivate', function(e, id, event){

@@ -22,6 +22,7 @@
    </ws:template>
 
    <SBIS3.CONTROLS:Button:StateButton
+      if="{{yearSelectionEnabled}}"
       tabindex="0"
       name="StateButton"
       activableByClick="{{false}}"
@@ -36,6 +37,7 @@
       name="DateRangeHeader"
       startValue="{{'startValue'|bind}}"
       endValue="{{'endValue'|bind}}"
+      emptyCaption="{{emptyCaption}}"
       visible="{{headerType === 'link'}}"
       showNextArrow="{{false}}"
       showPrevArrow="{{false}}"
@@ -68,7 +70,7 @@
       tabindex="0"
       name="HomeButton"
       activableByClick="{{false}}"
-      tooltip="{[Поставить текущую дату]}"
+      tooltip="{[Текущий период]}"
       icon="sprite:icon-size icon-Home3 icon-primary"
       className="controls-DateRangeBigChoose__homeBtn"
       visible="{{homeButtonVisibility|bind}}"

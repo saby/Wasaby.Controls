@@ -1,6 +1,75 @@
 /**
  * Класс контрола "Редактор колонок"
  *
+ * Редактор позволяет дать пользователю возможность выбрать необходимые ему колонки для отображения табличных данных, при операциях экспорта данных,
+ * а также в других случаях. Редактор открывается методом {@link open} и возвращает обещание, которое будет разрешено после завершения редактирования
+ * пользователем. В случае, если пользователь после редактирования нажал кнопку применения результата редактирования, то обещание будет разрешено
+ * новыми параметрами конфигурации колонок. Если же пользователь просто закрыл редактор кнопкой "Закрыть", то обещание будет разрешено значением null.
+ * Следует иметь ввиду, что в возвращённом списке выбранных пользователем колонок присутствуют все колонки, в том числе и те, что были помечены как
+ * фиксированные(обязательные) в исходных данных.
+ *
+ * @example
+ * Простой пример использования команды браузера "showColumnsEditor" для открытия редактора колонок:
+ * <pre>
+ *    this.sendCommand('showColumnsEditor', {
+ *          editorOptions: {
+ *             moveColumns:true
+ *          }
+ *       })
+ *    .addCallbacks(
+ *       function (columnsConfig) {
+ *             // Если есть результат редактирования (то есть пользователь отредактировал колонки и нажал кнопку применить, а не закрыл редактор крестом)
+ *             if (columnsConfig) {
+ *                // Получена новая конфигурация колонок - сделать с нею то, что требуется
+ *                var columns = columnsConfig.columns;
+ *                var selected = columnsConfig.selectedColumns;
+ *                ...
+ *             }
+ *          },
+ *       function (err) {
+ *             // Обработать ошибку
+ *          }
+ *    );
+ * </pre>
+ *
+ * @example
+ * Существует возможность использования предустановленных наборов колонок (пресетов). Для этого служат опции usePresets, staticPresets,
+ * presetNamespace и selectedPresetId. При наличии статичечских пресетов пользователь может клонировать любой из них и сохранить его как
+ * собственный. Простой пример использования:
+ * <pre>
+ *    require(['SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit'], function (PresetUnit) {
+ *       var promise = this.sendCommand('showColumnsEditor', {
+ *          editorOptions: {
+ *             // Будем использовать предустановленные наборы колонок:
+ *             usePresets: true,
+ *             // Определим статически-заданные пресеты:
+ *             staticPresets: [
+ *                new PresetUnit({
+ *                   id: 'preset-1',
+ *                   title: 'Статический пресет 1',
+ *                   selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП']
+ *                }), new PresetUnit({
+ *                   id: 'preset-2',
+ *                   title: 'Статический пресет 2',
+ *                   selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП']
+ *                }), new PresetUnit({
+ *                   id: 'preset-3',
+ *                   title: 'Статический пресет 3',
+ *                   selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП']
+ *                })
+ *             ],
+ *             // Пользователь будет сохранять свои пресеты в это пространство имён:
+ *             presetNamespace: 'catalog-columns-presets',
+ *             // Первоначально будет выбран пресет с таким идентификатором (опционально):
+ *             selectedPresetId: 'preset-2',
+ *             ...
+ *             другие опции
+ *             ...
+ *          }
+ *       })
+ *    });
+ * </pre>
+ *
  * @see SBIS3.CONTROLS/Browser#showColumnsEditor
  * @see SBIS3.CONTROLS/Browser#_showColumnsEditor
  * @see SBIS3.CONTROLS/Browser#columnsConfig
@@ -43,7 +112,19 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
           *    <li><b>columnConfig (object)</b> - объект с конфигурацией данныой колонки (см. {@link SBIS3.CONTROLS/DataGridVie#columns columns}).</li>
           * </ol>
           * @property {Array.<String|Number>} selectedColumns Список идентификаторов колонок, которые будут отмечены на панели редактирования колонок. Параметр актуален для элементов с опцией *fixed=false*.
-          * @property {object} groupTitles Ассоциированый массив имён групп по их идентификаторам (опционально)
+          * @property {object} [groupTitles] Ассоциированый массив имён групп по их идентификаторам (используется редактором колонок) (опционально)
+          * @property {boolean} [usePresets] Разрешает использовать пресеты (используется редактором колонок) (опционально)
+          * @property {SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit[]} [staticPresets] Список объектов статически задаваемых пресетов (используется редактором колонок) (опционально)
+          * @property {string} [presetNamespace] Пространство имён для сохранения пользовательских пресетов (используется редактором колонок) (опционально)
+          * @property {string|number} [selectedPresetId] Идентификатор первоначально выбранного пресета в дропдауне (используется редактором колонок) (опционально)
+          * @property {string} [newPresetTitle] Начальное название нового пользовательского пресета (используется редактором колонок) (опционально)
+          * @property {boolean} [useOriginPresetTitle] При клонировании новых пользовательских пресетов строить название из исходного с добавлением следующего порядкового номера (используется редактором колонок) (опционально)
+          * @see SBIS3.CONTROLS/Browser#columnsConfig
+          * @see SBIS3.CONTROLS/Browser#setColumnsConfig
+          * @see SBIS3.CONTROLS/Browser#getColumnsConfig
+          * @see SBIS3.CONTROLS/Browser#showColumnsEditor
+          * @see SBIS3.CONTROLS/Browser#_showColumnsEditor
+          * @see open
           */
          //_dotTplFn: null,
          $protected: {

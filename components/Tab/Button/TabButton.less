@@ -326,7 +326,7 @@
    }
 }
 
-.ws-is-firefox {
+.ws-is-firefox, .ws-is-chrome.ws-is-windows-xp { //В хроме на xp тоже что-то с полупикселями шрифтов, нужен calc и там
    .controls-TabButton__flex {
       .controls-TabButton__additionalText2 .controls-EditAtPlace__fieldWrapper {
          position: relative;
@@ -373,10 +373,6 @@
                width: ~"calc(100% + 1px)";
             }
          }
-      }
-      //Бесконечные правки: сделали правки в полях ввода -> поехало выравание во вкладках. Тестеры заметили только в хотфикс -> правки максимально безопасные, чтобы ничего не разломать.
-      &.controls-TabButton__main-flex .controls-TabButton__additionalText {
-         top: 1px;
       }
    }
 }

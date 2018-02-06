@@ -59,8 +59,10 @@ define('SBIS3.CONTROLS/Menu/MenuButton', [
       _modifyOptions : function(options, parsedOptions, attrToMerge) {
          var opts = MenuButton.superclass._modifyOptions.apply(this, arguments);
          opts.cssClassName += ' controls-Button';
+         opts._type = 'Button';
          ButtonUtil.getStyleByConfig(opts, attrToMerge);
          ButtonUtil.preparedClassFromOptions(opts);
+         opts._iconDisabledClass = 'icon-button-disabled';
          opts.pickerClassName += ' controls-MenuButton__Menu';
          return opts;
       },

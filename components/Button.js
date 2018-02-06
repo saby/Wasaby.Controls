@@ -44,13 +44,10 @@ define('SBIS3.CONTROLS/Button',
     * @ignoreEvents onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     *
-    * @cssModifier controls-Button__filled непрозрачный фон кнопки
-    * @cssModifier controls-Button__big Большая кнопка.
-    * @cssModifier controls-Button__ellipsis Кнопка, на которой в тексте появляется многоточие при нехватке ширины.
-    * @cssModifier controls-Button__withoutCaption Кнопка, без заголовка !Важно: при добавлении этого класса сломается "Базовая линия".
-    *
     * @css controls-Button__icon Класс для изменения отображения иконки кнопки.
     * @css controls-Button__text Класс для изменения отображения текста на кнопке.
+    *
+    * @mixes SBIS3.CONTROLS/Button/ButtonDocs
     *
     * @control
     * @category Button
@@ -64,8 +61,8 @@ define('SBIS3.CONTROLS/Button',
                /**
                 * @cfg {String} Устанавливает размер кнопки.
                 * @remark
-                * Значение "m" установит средний размер поля ввода.
-                * Значение "l" устaновит большой размер поля ввода.
+                * Значение "m" установит средний размер кнопки.
+                * Значение "l" устaновит большой размер кнопки.
                 * @example
                 * Пример 1. Большая кнопка:
                 * фрагмент верстки:
