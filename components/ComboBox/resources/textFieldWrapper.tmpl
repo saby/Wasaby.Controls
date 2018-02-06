@@ -8,6 +8,7 @@
     maxlength="{{maxLength ? maxLength}}"
     required="true"
     title="{{tooltip ? tooltip : ' '}}"
+    readonly="{{ (!enabled || !editable) ? 'readonly' }}"
 />
 <ws:if data="{{ enabled && placeholder }}">
     <ws:partial template="{{ compatiblePlaceholderTemplate }}" scope="{{...}}"/>
