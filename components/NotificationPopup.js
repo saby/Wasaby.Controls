@@ -82,7 +82,7 @@ define('SBIS3.CONTROLS/NotificationPopup', [
                 * @noShow
                 */
                additionalClass: 'controls-NotificationPopup_popup',
-               closeButton: 'standart'
+               closeButton: 'light'
             },
 
             _customIcon: false

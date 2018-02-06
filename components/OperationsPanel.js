@@ -425,7 +425,7 @@ define('SBIS3.CONTROLS/OperationsPanel', [
                   displayProperty: 'caption',
                   icon: 'sprite:icon-size icon-ExpandDown icon-primary action-hover',
                   pickerConfig: {
-                     closeButton: 'standart',
+                     closeButton: 'light',
                      className: 'controls-operationsPanel__itemsMenu_picker' +
                         (massMode ? ' controls-operationsPanel__massMode' : '') +
                         (selectionMode ? ' controls-operationsPanel__selectionMode' : ''),

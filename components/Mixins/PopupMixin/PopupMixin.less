@@ -8,7 +8,7 @@
    }
 }
 
-.controls-PopupMixin__closeButton_withBorder {
+.controls-PopupMixin__closeButton_standart {
    border-style: solid;
    width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
    height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
@@ -26,19 +26,19 @@
    }
 }
 
-.controls-PopupMixin__closeButton_standart {
+.controls-PopupMixin__closeButton_light {
    width: @icon-size_default_medium;
    height: @icon-size_default_medium;
    font-size: @icon-size_default_medium;
    font-family: @default-icon-medium-font;
    line-height: @icon-size_default_medium;
    &:before {
-      color: @color_CloseButton-standart-icon;
+      color: @color_CloseButton-light-icon;
    }
 }
 
 body:not(.ws-is-mobile-platform) {
-   .controls-PopupMixin__closeButton_withBorder {
+   .controls-PopupMixin__closeButton_standart {
       &:hover, &:active {
          background-color: @background-color_CloseButton_hover;
          &:before {
@@ -49,10 +49,10 @@ body:not(.ws-is-mobile-platform) {
          box-shadow: @box-shadow_CloseButton_active;
       }
    }
-   .controls-PopupMixin__closeButton_standart {
+   .controls-PopupMixin__closeButton_light {
       &:hover, &:active {
          &:before {
-            color: @color_CloseButton-standart-icon_hover;
+            color: @color_CloseButton-light-icon_hover;
          }
       }
    }
