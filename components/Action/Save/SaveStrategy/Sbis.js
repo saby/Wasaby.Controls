@@ -19,6 +19,20 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
     * @extends SBIS3.CONTROLS/Action/Save/SaveStrategy/Base
     * @author Сухоручкин А.С.
     */
+   var METHODS_NAME = {
+      Excel: {
+         SaveHTML: ['SaveHTML', 'СохранитьПоHTMLDWC'],
+         SaveList: ['SaveList', 'СохранитьListDWC'],
+         SaveRecordSet: ['SaveRecordSet', 'СохранитьRSDWC'],
+         SaveMarked: ['SaveMarked', 'СохранитьMarkedDWC']
+      },
+      PDF: {
+         SaveHTML: ['', 'SaveHTML'],
+         SaveList: ['SaveListLRS', 'SaveList'],
+         SaveRecordSet: ['SaveRecordSetLRS', 'SaveRecordSet'],
+         SaveMarked: ['SaveMarked', '']
+      }
+   };
 
     var SaveStrategySbis = SaveStrategyBase.extend(/** @lends SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis.prototype */{
 
@@ -197,7 +211,14 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
                 source = new SbisService({ endpoint: meta.endpoint }),
                 useLongOperations = this._useLongOperations(meta, methodName),
                 def;
-
+            //TODO: Костыль из-за того что у объектов Excel и PDF методы называются по разному и разные сигнатуры
+            //Выписал 2 задачи, на PDF и на Excel чтобы сделали одинковые имена методв и одинаковые сигнатуры
+            //https://online.sbis.ru/opendoc.html?guid=16767046-ed28-4f8c-a577-6caa7481a67f
+            //https://online.sbis.ru/opendoc.html?guid=3bf0c82e-430e-4a19-929c-71cf2387bcb7
+            if (METHODS_NAME[meta.endpoint]) {
+               methodName = METHODS_NAME[meta.endpoint][methodName][useLongOperations ? 0 : 1];
+            }
+            cfg = this._normalizeMethodData(cfg, methodName, meta.endpoint);
             def = source.call(methodName, cfg).addCallback(function(result) {
                //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
                //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем endpoint
@@ -227,6 +248,14 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
             }
 
             return def;
+        },
+
+        _normalizeMethodData: function(data, methodName, endpoint) {
+            if (methodName === 'СохранитьПоHTMLDWC' && endpoint === 'Excel') {
+               data.name = data.FileName;
+               delete data.FileName;
+            }
+            return data;
         },
 
         /**
