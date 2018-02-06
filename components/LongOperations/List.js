@@ -123,7 +123,12 @@ define('SBIS3.CONTROLS/LongOperations/List',
                      if (customConditions && customConditions.length) {
                         // Если событие об операции, перехваченой внешним просмотрщиком - игнорировать её
                         // 1174822763 https://online.sbis.ru/opendoc.html?guid=65e542a1-fb10-40a3-a677-f03214f871a1
-                        if (customConditions.some(function (cond) { return Object.keys(cond).every(function (name) { return cond[name] === custom[name]; }); })) {
+                        var needIgnore = customConditions.some(function (cond) {
+                           return Object.keys(cond).every(function (name) {
+                              return cond[name] === custom[name];
+                           });
+                        });
+                        if (needIgnore) {
                            return;
                         }
                      }
