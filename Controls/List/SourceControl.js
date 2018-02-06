@@ -31,8 +31,8 @@ define('Controls/List/SourceControl', [
                //TODO это кривой способ заставить пэйджинг пересчитаться. Передалть, когда будут готовы команды от Зуева
                //убираю, когда будет готов реквест от Зуева
                setTimeout(function(){
-                  if (self._scrollPagingCtr) {
-                     self._scrollPagingCtr.resetHeights();
+                  if (self._navigationController) {
+                     self._navigationController.resetScroll();
                   }
                }, 100);
 
@@ -63,8 +63,8 @@ define('Controls/List/SourceControl', [
                //TODO это кривой способ заставить пэйджинг пересчитаться. Передалть, когда будут готовы команды от Зуева
                //убираю, когда будет готов реквест от Зуева
                setTimeout(function(){
-                  if (self._scrollPagingCtr) {
-                     self._scrollPagingCtr.resetHeights();
+                  if (self._navigationController) {
+                     self._navigationController.resetScroll();
                   }
                }, 100);
 
@@ -198,6 +198,9 @@ define('Controls/List/SourceControl', [
          if (virtualWindowIsChanged) {
             _private.applyVirtualWindow(this, this._virtualScroll.getVirtualWindow());
          }
+         if (this._navigationController) {
+            this._navigationController.handleScroll(scrollTop)
+         }
       },
 
       /**
@@ -286,16 +289,7 @@ define('Controls/List/SourceControl', [
                navigation : newOptions.navigation  //TODO возможно не всю навигацию надо передавать а только то, что касается source
             });
 
-            this._navigationController = new Navigation({
-               sourceController : this._sourceController,
-               navigation : newOptions.navigation,  //TODO возможно не всю навигацию надо передавать а только то, что касается view
-               topLoadTrigger: function() {
-                  _private.loadToDirection(self, 'up')
-               },
-               bottomLoadTrigger: function() {
-                  _private.loadToDirection(self, 'down')
-               }
-            });
+
 
             if (!this._items) {
                _private.reload(this);
@@ -304,6 +298,7 @@ define('Controls/List/SourceControl', [
       },
 
       _afterMount: function() {
+         var self = this;
          SourceControl.superclass._afterMount.apply(this, arguments);
 
 
@@ -311,7 +306,23 @@ define('Controls/List/SourceControl', [
          var scrollContainer = this._container.closest('.ws-scrolling-content');
          if (scrollContainer) {
             this._scrollController = _private.createScrollController.call(this, scrollContainer);
+            this._navigationController = new Navigation({
+               sourceController : this._sourceController,
+               scrollController: this._scrollController,
+               navigation : this._options.navigation,  //TODO возможно не всю навигацию надо передавать а только то, что касается view
+               topLoadTrigger: function() {
+                  _private.loadToDirection(self, 'up')
+               },
+               bottomLoadTrigger: function() {
+                  _private.loadToDirection(self, 'down')
+               },
+               scrollPagingCfgTrigger: function(cfg) {
+                  self._pagingCfg = cfg;
+                  self._forceUpdate();
+               }
+            });
          }
+
 
 
 

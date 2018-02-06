@@ -68,20 +68,6 @@ define('Controls/List/Controllers/ScrollController', [
          additionalHandler && additionalHandler(e, scrollTop, this._options.loadOffset, this._options.eventHandlers);
 
          this._options.eventHandlers.onListScroll && this._options.eventHandlers.onListScroll(scrollTop);
-      },
-
-      /**
-       * Проверка, достигнут ли низ контейнера
-       */
-      isScrollOnBottom: function(scrollContainer) {
-         return scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight;
-      },
-
-      /**
-       * Проверка, достигнут ли верх контейнера
-       */
-      isScrollOnTop: function(scrollContainer) {
-         return scrollContainer.scrollTop <= 0;
       }
    };
 
@@ -153,15 +139,39 @@ define('Controls/List/Controllers/ScrollController', [
       },
 
       /**
+       * Проверка, достигнут ли низ контейнера
+       */
+      isScrollOnBottom: function() {
+         var scrollContainer = this._options.scrollContainer;
+         return scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight;
+      },
+
+      /**
+       * Проверка, достигнут ли верх контейнера
+       */
+      isScrollOnTop: function() {
+         var scrollContainer = this._options.scrollContainer;
+         return scrollContainer.scrollTop <= 0;
+      },
+
+      /**
+       * Проверка, достигнут ли верх контейнера
+       */
+      hasScroll: function() {
+         var scrollContainer = this._options.scrollContainer;
+         return scrollContainer.clientHeight < scrollContainer.scrollHeight
+      },
+
+      /**
        * Проверить, достигнуты ли границы контейнера
        * Если да, то вызовет соответствующие обработчики событий для подгрузки данных
        */
       checkBoundaryContainer: function() {
-         if (_private.isScrollOnBottom(this._options.scrollContainer)) {
+         if (this.isScrollOnBottom()) {
             this._options.eventHandlers.onLoadTriggerBottom && this._options.eventHandlers.onLoadTriggerBottom();
          }
 
-         if (_private.isScrollOnTop(this._options.scrollContainer)) {
+         if (this.isScrollOnTop()) {
             this._options.eventHandlers.onLoadTriggerTop && this._options.eventHandlers.onLoadTriggerTop();
          }
       }

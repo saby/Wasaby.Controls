@@ -103,11 +103,12 @@ define('Controls/Controllers/SourceController',
                                     queryParams.filter,
                                     queryParams.sorting,
                                     queryParams.offset,
-                                    queryParams.limit).addCallback(function(list){
+                                    queryParams.limit)
+            .addCallback(function(list){
                if (self._queryParamsController) {
                   self._queryParamsController.calculateState(list, direction);
-                  return list;
                }
+               return list;
             }).addErrback(function(error){
                return error;
             });
