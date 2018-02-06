@@ -48,7 +48,8 @@ define('SBIS3.CONTROLS/Commands/CommandsButton', [
       },
       _modifyPickerOptions: function(opts) {
          opts.horizontalAlign.side = 'right';
-         opts.closeButton = 'light';
+         opts.closeButton = true;
+         opts.crossStyle = 'light';
          return opts;
       }
    });
