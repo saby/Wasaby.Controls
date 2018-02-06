@@ -2,6 +2,11 @@ define('Controls/Validate/Validators/IsRequired', [], function() {
    'use strict';
 
    return function(args) {
+      //Если передали в аргументах doNotValidate, значит возвращаем true (параметр нужен для опционального включения/отключения валидатора)
+      if (args.doNotValidate) {
+         return true;
+      }
+
       var isEmpty = false;
 
       switch (typeof args.value) {

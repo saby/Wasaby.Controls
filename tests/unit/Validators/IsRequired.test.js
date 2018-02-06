@@ -10,19 +10,19 @@ define(
          describe('IsRequired', function () {
             it('Valid "qwe"', function () {
                assert.equal(IsRequired({
-                  text: 'qwe'
+                  value: 'qwe'
                }), true);
             });
 
             it('Invalid ""', function () {
                assert.equal(typeof IsRequired({
-                  text: ''
+                  value: ''
                }), 'string');
             });
 
             it('Valid "" if doNotValidate', function () {
                assert.equal(IsRequired({
-                  text: '',
+                  value: '',
                   doNotValidate: true
                }), true);
             });

@@ -47,14 +47,14 @@ define(
             validEmails.forEach(function(item) {
                it('Valid "' + item + '"', function () {
                   assert.equal(isEmail({
-                     text: item
+                     value: item
                   }), true);
                });
             });
             invalidEmails.forEach(function(item) {
                it('Invalid "' + item + '"', function () {
                   assert.equal(typeof isEmail({
-                     text: item
+                     value: item
                   }), 'string');
                });
             });
