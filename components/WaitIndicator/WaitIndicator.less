@@ -33,6 +33,8 @@ x{}
 
 .ws-wait-indicator {
     .flexbox();
+    .align-items(center);
+    .justify-content(center);
     background-color: @wait-indicator-overlay-default;
     cursor: default !important;
     -webkit-user-select: none;
@@ -123,7 +125,6 @@ x{}
     height: @wait-indicator-size + 2*@wait-indicator-gap;
     overflow: hidden;
     border-radius: @border-radius_WaitIndicator;
-    margin: auto;
     background: @background-color_WaitIndicator @background_url_WaitIndicator 50% 50% no-repeat;
     background-size: @wait-indicator-size;
     cursor: default !important;
