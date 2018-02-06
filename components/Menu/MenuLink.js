@@ -72,7 +72,7 @@ define('SBIS3.CONTROLS/Menu/MenuLink', [
          opts._iconDisabledClass = 'icon-link-disabled';
 
          opts.style = !!opts.style ? opts.style : LinkUtil.getStyleByConfig(opts);
-         opts.className += ' controls-Link_state-' + opts.style;
+         opts.cssClassName += ' controls-Link_state-' + (opts.enabled ? opts.style : 'disabled');
 
          return opts;
       },
