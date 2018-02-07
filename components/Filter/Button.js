@@ -225,11 +225,12 @@ define('SBIS3.CONTROLS/Filter/Button',
              var self = this;
 
              function processTemplate(template, name) {
+                var jsModule = constants.jsModules.hasOwnProperty(template);
                 /* Если шаблон указали как имя компонента (строки которые начинаются с js! или SBIS3.),
                    то перед отображением панели фильтров сначала загрузим компонент. */
-                if(template && typeof template === 'string' && /^js!*|^SBIS3.*/.test(template)) {
+                if(template && typeof template === 'string' && (jsModule || constants.modules.hasOwnProperty(template.split('/')[0]) || template.indexOf('js!') === 0)) {
                    
-                   if (constants.jsModules.hasOwnProperty(template)) {
+                   if (jsModule) {
                       template = 'js!' + template;
                    }
                    
