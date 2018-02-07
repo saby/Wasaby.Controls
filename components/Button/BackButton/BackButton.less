@@ -43,8 +43,8 @@
 }
 
 .controls-BackButton__orange.controls-BackButton_color-hover_default-backButton:hover .controls-BackButton__caption {
-   body:not(.ws-is-mobile-platform) &,
-   &.controls-Click__active {
+   body:not(.ws-is-mobile-platform) & .controls-Link__field,
+   &.controls-Click__active .controls-Link__field {
       color: @primary-color !important;
    }
 }
@@ -59,7 +59,7 @@
    &_color_default-backButton.controls-Link {
       color: @back-button-text-color;
    }
-   .controls-BackButton__orange &_color_default-backButton.controls-Link {
+   .controls-BackButton__orange &_color_default-backButton .controls-Link__field {
       color: @header-color;
    }
    &_size_h2.controls-Link {
