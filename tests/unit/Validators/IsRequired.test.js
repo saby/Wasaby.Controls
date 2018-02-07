@@ -15,9 +15,17 @@ define(
             });
 
             it('Invalid ""', function () {
-               assert.equal(typeof IsRequired({
-                  value: ''
-               }), 'string');
+               var
+                  res = IsRequired({
+                     value: ''
+                  });
+
+               //IsRequired при ошибке валидации возвращает результат функции rk, который может быть типа object, когда нет window
+               if (typeof res === 'string' || typeof res === 'object') {
+                  assert.ok(true);
+               } else {
+                  assert.ok(false);
+               }
             });
 
             it('Valid "" if doNotValidate', function () {
