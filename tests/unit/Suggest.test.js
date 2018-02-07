@@ -81,6 +81,8 @@ define(
             Suggest._private.initSuggestController(suggest, {});
             suggest._clearClick();
    
+   
+            assert.equal(suggest._suggestController._value, '', 'Wrong value after clear');
             assert.equal(suggestValue, '', 'Wrong value after clear');
             assert.isTrue(focused, 'Suggest is not focused after clear');
          });
