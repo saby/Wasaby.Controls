@@ -93,7 +93,8 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
                //Флаг отвечает за блокировку при добавлении записей. Если несколько раз подряд будет отправлена команда добавления, то уйдёт несколько запросов на бл
                _addLock: false,
                _addTarget: undefined,
-               _isAdd: false
+               _isAdd: false,
+               _isEditNextTarget: false
             },
             $constructor: function () {
                this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace', 'onHeightChange', 'onBeginSave', 'onEndSave');
@@ -233,8 +234,11 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
                   fromAdd = this._isAdd,
                   nextTarget = this._getNextTarget(this._getCurrentTarget(), editNextRow);
 
+               this._isEditNextTarget = true;
                this.commitEdit(true).addCallback(function() {
                   self._editNextTarget(nextTarget, editNextRow, fromAdd);
+               }).addBoth(function() {
+                  self._isEditNextTarget = false;
                });
             },
 
@@ -544,7 +548,12 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
             },
 
             _destroyEipAfterEndEdit: function() {
-               this._destroyEip();
+               //Нельзя разрушать редактировние, если автоматически запускается новое редактирование, т.к. при разрушении
+               //фокус уходит на таблицу. И если в момент когда фокус находится на таблице, нажать клавиши, которые обрабатываются
+               //таблицей(например по enter открывается карточка), то мы получим неправильное поведение.
+               if (!this._isEditNextTarget) {
+                  this._destroyEip();
+               }
             },
 
             _prepareAdd: function(options) {
