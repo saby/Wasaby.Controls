@@ -58,6 +58,36 @@ define('Controls/Input/Suggest',
             //FIXME Для правильной работы валидации. костыль. сейчас событие focusOut стреляет, когда фокус уходит на саггест,
             //из-за этого некорректно запускается валидация.
             self._notify('componentFocusOut');
+         },
+         
+         bindHandlers: function(self) {
+            self._selectHandler = self._selectHandler.bind(self);
+            self._popupFocusIn = self._popupFocusIn.bind(self);
+            self._popupFocusOut = self._popupFocusOut.bind(self);
+         },
+         
+         initViewModel: function(self) {
+            self._simpleViewModel = new SimpleViewModel();
+         },
+         
+         initSuggestController: function(self, options) {
+            self._suggestController = new SuggestController({
+               suggestOpener:       self._children.suggestPopupOpener,
+               showAllOpener:       self._children.showAllOpener,
+               textComponent:       self._children.suggestText,
+               
+               suggestTemplate:     options.suggestTemplate,
+               dataSource:          options.dataSource,
+               filter:              options.filter,
+               minSearchLength:     options.minSearchLength,
+               searchDelay:         options.searchDelay,
+               searchParam:         options.searchParam,
+               navigation:          options.navigation,
+               
+               selectCallback:      self._selectHandler,
+               searchStartCallback: _private.onSearchStart.bind(self, self),
+               searchEndCallback:   _private.onSearchEnd.bind(self, self)
+            });
          }
       };
       
@@ -71,28 +101,13 @@ define('Controls/Input/Suggest',
          
          constructor: function(options) {
             Suggest.superclass.constructor.call(this, options);
-            this._selectHandler = this._selectHandler.bind(this);
-            this._popupFocusIn = this._popupFocusIn.bind(this);
-            this._popupFocusOut = this._popupFocusOut.bind(this);
-            this._simpleViewModel = new SimpleViewModel();
+            
+            _private.bindHandlers(this);
+            _private.initViewModel(this);
          },
-         
-         _afterMount: function() {
-            this._suggestController = new SuggestController({
-               suggestTemplate: this._options.suggestTemplate,
-               suggestOpener: this._children.suggestPopupOpener,
-               showAllOpener: this._children.showAllOpener,
-               dataSource: this._options.dataSource,
-               filter: this._options.filter,
-               minSearchLength: this._options.minSearchLength,
-               searchDelay: this._options.searchDelay,
-               searchParam: this._options.searchParam,
-               navigation: this._options.navigation,
-               textComponent: this._children.suggestText,
-               selectCallback: this._selectHandler,
-               searchStartCallback: _private.onSearchStart.bind(this, this),
-               searchEndCallback: _private.onSearchEnd.bind(this, this)
-            });
+   
+         _afterMount: function () {
+            _private.initSuggestController(this, this._options);
          },
          
          destroy: function() {
@@ -121,7 +136,10 @@ define('Controls/Input/Suggest',
          },
          
          _clearClick: function() {
-            this._notify('valueChanged', '');
+            /* move focus to input after clear text, because focus will be lost after hiding cross  */
+            this.focus();
+            this._suggestController.setValue('');
+            this._notify('valueChanged', ['']);
          },
          
          _keyDownHandler: function(event) {
