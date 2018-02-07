@@ -57,7 +57,7 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorController', [
                  *     <li>node - для выбора доступны только элементы типа "Узел";<li>
                  *     <li>leaf - для выбора доступны только элементы типа "Лист" и "Скрытый узел".<li>
                  * </ul>
-                 * Подробнее о каждом типе элементов читайте в разделе <a href='/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
+                 * Подробнее о каждом типе элементов читайте в разделе <a href='/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
                  */
                 selectionType: 'all',
                 /**
