@@ -3,12 +3,14 @@ define('Controls/Controllers/SourceController',
       'Core/core-simpleExtend',
       'Core/core-instance',
       'Core/IoC',
-      'Controls/Controllers/QueryParamsController',
+      'Controls/Controllers/QueryParamsController/Page',
+      'Controls/Controllers/QueryParamsController/Offset',
+      'Controls/Controllers/QueryParamsController/Position',
       'WS.Data/Query/Query',
       'Core/Deferred',
-      'Core/helpers/Function/forAliveOnly'
+      'require'
    ],
-   function(cExtend, cInstance, IoC, QueryParamsController, Query, cDeferred, forAliveOnly) {
+   function(cExtend, cInstance, IoC, Page, Offset, Position, Query, cDeferred) {
       var _private = {
          prepareSource: function(sourceOpt) {
             var result = sourceOpt;
@@ -57,6 +59,33 @@ define('Controls/Controllers/SourceController',
             else {
                return queryDef;
             }
+         },
+
+         createQueryParamsController: function(type, cfg) {
+            var cntCtr, cntInstance;
+
+            switch (type) {
+               case 'page':
+                  cntCtr = Page;
+                  break;
+               case 'offset':
+                  cntCtr = Offset;
+                  break;
+               case 'position':
+                  cntCtr = Position;
+                  break;
+               default:
+                  IoC.resolve('ILogger').error('SourceController', 'Undefined navigation source type "' + type + '"');
+            }
+            if (cntCtr) {
+               cntInstance = new cntCtr(cfg);
+            }
+            return cntInstance;
+         },
+
+         paramsWithNavigation: function(params, direction) {
+
+
          }
       };
       var SourceController = cExtend.extend({
@@ -69,10 +98,7 @@ define('Controls/Controllers/SourceController',
             this._source = _private.prepareSource(this._options.source);
 
             if (this._options.navigation && this._options.navigation.source) {
-               this._queryParamsController = new QueryParamsController({
-                  sourceType: this._options.navigation.source,
-                  sourceConfig: this._options.navigation.sourceConfig
-               });
+               this._queryParamsController = _private.createQueryParamsController(this._options.navigation.source, this._options.navigation.sourceConfig);
                this._queryParamsController.prepareSource(this._source);
             }
          },
@@ -88,7 +114,10 @@ define('Controls/Controllers/SourceController',
             };
             //модифицируем параметры через навигацию
             if (this._queryParamsController) {
-               queryParams = this._queryParamsController.paramsWithNavigation(queryParams, direction);
+               var navigParams = this._queryParamsController.prepareQueryParams(direction);
+               queryParams.limit = navigParams.limit;
+               queryParams.offset = navigParams.offset;
+               //TODO фильтр и сортировка не забыть приделать
             }
 
             //позволяем модифицировать параметры юзеру

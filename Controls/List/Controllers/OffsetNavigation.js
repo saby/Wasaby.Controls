@@ -1,6 +1,6 @@
 define('Controls/List/Controllers/OffsetNavigation',
    [
-      'Controls/Controllers/PageNavigation',
+      'Controls/Controllers/QueryParamsController/Page',
       'WS.Data/Source/SbisService'
    ],
 function(PageNavigation, SbisService) {
