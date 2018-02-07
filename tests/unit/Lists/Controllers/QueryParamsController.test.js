@@ -4,7 +4,7 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
    [
-      'Controls/Controllers/PageNavigation',
+      'Controls/Controllers/QueryParamsController/Page',
       'Controls/List/Controllers/OffsetNavigation',
       'Controls/List/Controllers/PositionNavigation',
       'WS.Data/Collection/RecordSet',
@@ -16,7 +16,7 @@ define(
 
       'use strict';
 
-      describe('Controls.Controllers.Navigation', function () {
+      describe('Controls.Controllers.QueryParamsController', function () {
          var data, dataDown, dataRs, dataRsDown;
 
          beforeEach(function() {
@@ -44,7 +44,7 @@ define(
 
          });
 
-         describe('PageNavigation', function () {
+         describe('Page', function () {
             it('init', function () {
                var pNav = new PageNavigation({
                   page: 1,

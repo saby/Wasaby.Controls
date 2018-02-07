@@ -4,16 +4,15 @@
 define('Controls/List/Controllers/PositionNavigation',
    [
       'Controls/Controllers/QueryParamsController/Page',
-      'WS.Data/Source/SbisService',
-      'Controls/List/Controllers/INavigation'
+      'WS.Data/Source/SbisService'
    ],
-   function(PageNavigation, SbisService, INavigation) {
+   function(PageNavigation, SbisService) {
       /**
        *
        * @author Крайнов Дмитрий
        * @public
        */
-      var OffsetNavigation = PageNavigation.extend([INavigation], {
+      var OffsetNavigation = PageNavigation.extend({
          prepareSource: function(source) {
             var options = source.getOptions();
             options.navigationType = SbisService.prototype.NAVIGATION_TYPE.POSITION;

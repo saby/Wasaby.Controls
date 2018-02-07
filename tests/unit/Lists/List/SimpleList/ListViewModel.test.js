@@ -60,7 +60,7 @@ define([
             items: data,
             idProperty: 'id',
             displayProperty: 'title',
-            selectedKey: 1
+            markedKey: 1
          };
 
          var iv = new ListViewModel(cfg);
@@ -80,17 +80,17 @@ define([
             items: data,
             idProperty: 'id',
             displayProperty: 'title',
-            selectedKey: 2
+            markedKey: 2
          };
 
          var iv = new ListViewModel(cfg);
-         var selItem = iv._selectedItem;
-         assert.equal(iv._itemsModel._display.at(1), selItem, 'Incorrect selectedItem');
+         var marItem = iv._markedItem;
+         assert.equal(iv._itemsModel._display.at(1), marItem, 'Incorrect selectedItem');
 
 
-         iv.setSelectedKey(3);
-         selItem = iv._selectedItem;
-         assert.equal(iv._itemsModel._display.at(2), selItem, 'Incorrect selectedItem');
+         iv.setMarkedKey(3);
+         marItem = iv._markedItem;
+         assert.equal(iv._itemsModel._display.at(2), marItem, 'Incorrect selectedItem');
       });
    })
 });

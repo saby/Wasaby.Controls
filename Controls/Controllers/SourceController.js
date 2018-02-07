@@ -81,11 +81,6 @@ define('Controls/Controllers/SourceController',
                cntInstance = new cntCtr(cfg);
             }
             return cntInstance;
-         },
-
-         paramsWithNavigation: function(params, direction) {
-
-
          }
       };
       var SourceController = cExtend.extend({
@@ -163,5 +158,9 @@ define('Controls/Controllers/SourceController',
             }
          }
       });
+
+      //для тестов
+      SourceController._private = _private;
+
       return SourceController;
    });
