@@ -92,7 +92,7 @@ define('SBIS3.CONTROLS/ColorPicker',
       _keyUpBind: function(){
          var self = this;
          self._byKeyUp = true;
-         ColorPicker.superclass._keyUpBind.call(self);
+         ColorPicker.superclass._keyUpBind.apply(self, arguments);
          if(!self._picker){
             self._initializePicker(self.getText());
             return;
