@@ -2001,11 +2001,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   });
                });
-               this._imageOptionsPanel.subscribe('onImageDelete', function(){
-                  var
-                     $image = this.getTarget(),
-                     nodeForSelect = $image.parent()[0];
-                  $image.remove();
+               this._imageOptionsPanel.subscribe('onImageDelete', function () {
+                  var nodeForDelete = this.getTarget()[0];
+                  var nodeForSelect = nodeForDelete.parentNode;
+                  // Если изображение обёрнуто - удалить и обёртку
+                  // 1174832762 https://online.sbis.ru/opendoc.html?guid=0e560e83-6ebe-40a2-862f-18bd0563bbf6
+                  if (nodeForSelect.classList.contains('image-template-center')) {
+                     nodeForDelete = nodeForSelect;
+                     nodeForSelect = nodeForDelete.parentNode;
+                  }
+                  $(nodeForDelete).remove();
                   //Проблема:
                   //          После удаления изображения необходимо вернуть фокус в редактор,
                   //          но тк выделение было на изображении при фокусе оно пытаетсыя восстановиться.
