@@ -165,7 +165,7 @@ define('SBIS3.CONTROLS/Utils/ControlsValidators', [
             regExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Zа-яА-Я\-0-9]+\.)+[a-zA-Zа-яА-Я]{2,}))$/,
             isGoodValue = value ? regExp.test(value) : true;
 
-         return isGoodValue ? 
+         return isGoodValue ?
             true :
             rk('В поле требуется ввести адрес электронной почты');
       },
