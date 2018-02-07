@@ -254,21 +254,9 @@ define('SBIS3.CONTROLS/Action/List/Save', [
               editorOptions: meta.editorOptions
            });
            if (editorResult instanceof Deferred) {
-              editorResult.addCallback(function (columnsConfig) {
-                 if (columnsConfig) {
-                    var
-                       columns,
-                       recordSet = columnsConfig.columns,
-                       selected = columnsConfig.selectedColumns;
-
-                    columns = selected && selected.length ?
-                       selected.map(function (columnId) {
-                          return recordSet.getRecordById(columnId).get('columnConfig');
-                       }) : Chain(recordSet).map(function (model) {
-                          return model.get('columnConfig');
-                       }).value();
-
-                    result.callback(columns);
+              editorResult.addCallback(function (config) {
+                 if (config) {
+                    result.callback(config.resultColumns);
                  } else {
                     //Сюда мы попадаем если команда showColumnsEditor была обработана, но диалог закрыли.
                     //В таком случае нам не надо продолжать сохранение.
