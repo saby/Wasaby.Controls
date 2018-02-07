@@ -132,8 +132,9 @@ function(WSButton, IconButtonUtil) {
       },
       _toggleState: function() {
           var  container = this._container;
-
-          container[0].className = container[0].className.replace(/(^|\s)controls-IconButton_\S+/g, '').replace(/(^|\s)controls-IconButton__\S+/g, '');
+          // селекторы с filter стирать не надо т.к. есть FilterPanel которая использует точно такие же селекторы controls-IconButton__filter
+          // на них завязаны прикладники поэтому просто поменять имя селектора не получится
+          container[0].className = container[0].className.replace(/(^|\s)controls-IconButton_(?!(_filter))\S+/g, '').replace(/(^|\s)controls-IconButton__(?!(filter))\S+/g, '');
           container.addClass(IconButtonUtil.getClassState(this._options));
           IconButton.superclass._toggleState.apply(this, arguments);
        }
