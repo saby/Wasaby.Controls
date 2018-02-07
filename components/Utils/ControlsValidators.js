@@ -5,8 +5,11 @@ define('SBIS3.CONTROLS/Utils/ControlsValidators', [
    'Lib/CoreValidators/CoreValidators',
    'Core/core-instance',
    'Core/IoC',
+   'Controls/Validate/Validators/IsEmail',
+   'Controls/Validate/Validators/IsRequired',
+
    'i18n!SBIS3.CONTROLS/Utils/ControlsValidators'
-],function(CoreValidators, cInstace, IoC) {
+],function(CoreValidators, cInstace, IoC, IsEmail, IsRequired) {
 
    'use strict';
 
@@ -39,37 +42,17 @@ define('SBIS3.CONTROLS/Utils/ControlsValidators', [
        * </ol>
        */
       required: function(option) {
-         var isEmpty = false;
-
-         switch (typeof option) {
-            case 'string' :
-               isEmpty = !Boolean(option);
-               break;
-            case 'number' :
-               isEmpty = isNaN(option);
-               break;
-            case 'object' :
-               if(cInstace.instanceOfModule(option, 'Deprecated/Enum')) {
-                  IoC.resolve('ILogger').error('SBIS3.CONTROLS/Utils/ControlsValidators', 'использует устаревший модуль Deprecated/Enum. Выпишите ошибку на Интерфейсный фреймворк со скриншотом.');
-                  isEmpty = option.getCurrentValue() === null;
-               } else if(cInstace.instanceOfModule(option, 'WS.Data/Collection/List')) {
-                  isEmpty = !Boolean(option.getCount());
-               } else if(option instanceof Array) {
-                  isEmpty = !Boolean(option.length);
-               } else if(option instanceof Object) {
-                  isEmpty = Object.isEmpty(option)
-               } else if(option === null) {
-                  isEmpty = true;
-               }
-               break;
-            case 'undefined' :
-               isEmpty = true;
-               break;
+         if (typeof option === 'object' && cInstace.instanceOfModule(option, 'Deprecated/Enum')) {
+            IoC.resolve('ILogger').error('SBIS3.CONTROLS/Utils/ControlsValidators', 'использует устаревший модуль Deprecated/Enum. Выпишите ошибку на Интерфейсный фреймворк со скриншотом.');
+            return option.getCurrentValue() === null || rk('Поле обязательно для заполнения');
+         }
+         if (typeof option === 'object' && cInstace.instanceOfModule(option, 'WS.Data/Collection/List')) {
+            return !Boolean(option.getCount()) || rk('Поле обязательно для заполнения');
          }
 
-         return isEmpty ?
-             rk('Поле обязательно для заполнения') :
-             true;
+         return IsRequired({
+            value: option
+         });
       },
 
       /**
@@ -160,14 +143,9 @@ define('SBIS3.CONTROLS/Utils/ControlsValidators', [
        * </ol>
        */
       email: function(value) {
-         //Регулярное выражение для проверки email отсюда http://stackoverflow.com/a/46181/6729520
-         var
-            regExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Zа-яА-Я\-0-9]+\.)+[a-zA-Zа-яА-Я]{2,}))$/,
-            isGoodValue = value ? regExp.test(value) : true;
-
-         return isGoodValue ? 
-            true :
-            rk('В поле требуется ввести адрес электронной почты');
+         return IsEmail({
+            value: value
+         });
       },
       /**
        * Проверяет строку на соответствие формату страхового номера индивидуального лицевого счета (СНИЛС).
