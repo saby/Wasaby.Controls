@@ -16,11 +16,12 @@ define(
       'tmpl!SBIS3.CONTROLS/Date/MonthView/MonthViewTableBody',
       'tmpl!SBIS3.CONTROLS/Date/MonthView/MonthView',
       'tmpl!SBIS3.CONTROLS/Date/MonthView/day',
+      'Core/core-merge',
       'SBIS3.CONTROLS/Date/MonthPicker',
       'i18n!SBIS3.CONTROLS/Calendar',
       'css!SBIS3.CONTROLS/Date/MonthView/MonthView'
    ],
-   function (constants, detection, isEmpty, CompoundControl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, ifEnabled, monthViewTableBodyTpl, dotTplFn, dayTmpl) {
+   function (constants, detection, isEmpty, CompoundControl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, ifEnabled, monthViewTableBodyTpl, dotTplFn, dayTmpl, merge) {
 
       'use strict';
 
@@ -88,7 +89,11 @@ define(
                 * @cfg {Object} Кванты. Если заданы кванты, то нельзя выделить вроизвольный период, можно только выделить заданные периоды.
                 */
                quantum: {},
-
+   
+               /**
+                * @cfg {Function} Возможность поменять конфигурацию для дня. В функцию приходит объект даты. Опция необходима для производственных каледнадрей.
+                */
+               dayFormatter: null,
                dayTmpl: dayTmpl
             },
 
@@ -591,7 +596,11 @@ define(
                isSelectionForvard && !DateUtil.isDatesEqual(startDate, endDate);
 
             obj.selectedInner = (date && startDate && endDate && date.getTime() > startDate.getTime() && date.getTime() < endDate.getTime());
-
+            
+            if (this._options.dayFormatter) {
+               merge(obj, this._options.dayFormatter(date) || {});
+            }
+            
             array.push(obj);
          },
 

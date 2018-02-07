@@ -28,6 +28,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             tplOptions.startValue = cfg.startValue;
             tplOptions.endValue = cfg.endValue;
             tplOptions.serializationMode = cfg.serializationMode;
+            tplOptions.dayFormatter = cfg.dayFormatter;
             return tplOptions;
          };
 
