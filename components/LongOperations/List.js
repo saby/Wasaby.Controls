@@ -119,7 +119,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
 
             ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered'].forEach(function (evtType) {
                self.subscribeTo(longOperationsManager, evtType, function (evtName, evt) {
-                  var custom = evt.custom;
+                  var custom = evt ? evt.custom : null;
                   if (custom) {
                      var customConditions = self._view.getDataSource().getOptions().customConditions;
                      if (customConditions && customConditions.length) {
