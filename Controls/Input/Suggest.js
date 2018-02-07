@@ -34,6 +34,9 @@ define('Controls/Input/Suggest',
          },
          
          onSearchEnd: function(self) {
+            if (!self.hasFocus()) {
+               _private.closePopup(self);
+            }
             self._searching = false;
             self._forceUpdate();
          },
