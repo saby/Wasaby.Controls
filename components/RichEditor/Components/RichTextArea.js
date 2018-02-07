@@ -1909,9 +1909,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          },
 
          _showImageOptionsPanel: function(target) {
-            var
-               imageOptionsPanel = this._getImageOptionsPanel(target);
-            imageOptionsPanel.show();
+            this._getImageOptionsPanel(target).show();
          },
 
          _changeImageTemplate: function ($img, template) {
@@ -1944,6 +1942,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                case '6':
                   break;
             };
+            // Вызвать recalcPosition напрямую во избежании ощутимых задержек
+            // 49132 https://online.sbis.ru/opendoc.html?guid=f6ceccf6-2001-494d-90c1-d44a6255ad1e
+            this._imageOptionsPanel.recalcPosition();
             this._updateTextByTiny();
          },
 
