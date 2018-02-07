@@ -355,10 +355,21 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
             container = this.getContainer(),
             parentProj = this._getItemProjectionByItemId(model.get(this._options.parentProperty)),
             // Без режима поиска и при наличии родителя - необходимо учесть отступ иерархии
-            levelOffset = !this._isSearchMode() && parentProj ? parentProj.getLevel() * this._getLevelPaddingWidth() : 0,
+            levelOffset = 0,
             hasCheckbox = container.hasClass('controls-ListView__multiselect'),
             checkboxOffset = 0,
             result;
+         // В режиме поиска если запись лежит в узле, то у неё есть один (единственный) отступ, учитываем это
+         if (this._isSearchMode()) {
+            if (parentProj) {
+               levelOffset = this._getLevelPaddingWidth();
+            }
+         } else {
+            // Вне режима поиска считаем отступ, исходя из уровня вложенности
+            if (parentProj) {
+               levelOffset = parentProj.getLevel() * this._getLevelPaddingWidth();
+            }
+         }
          if (this._options.editingTemplate && hasCheckbox) {
             checkboxOffset = container.hasClass('controls-ListView__hideCheckBoxes') ? DEFAULT_ROW_SELECT_WIDTH : DEFAULT_SELECT_CHECKBOX_WIDTH;
          }
