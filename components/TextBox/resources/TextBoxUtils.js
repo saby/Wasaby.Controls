@@ -1,14 +1,14 @@
-define('SBIS3.CONTROLS/TextBox/resources/TextBoxUtils', ['Core/constants'], function(constants){
+define('SBIS3.CONTROLS/TextBox/resources/TextBoxUtils', ['Core/constants'], function (constants) {
    return {
-      getTextFromDropEvent: function(event) {
+      getTextFromDropEvent: function (event) {
          return event.originalEvent.dataTransfer.getData('text');
       },
-      getTextFromPasteEvent: function(event) {
+      getTextFromPasteEvent: function (event) {
          return event.originalEvent.clipboardData ? event.originalEvent.clipboardData.getData('text') : window.clipboardData.getData('text');
       },
 
       // методы getCaretPosition и setCaretPosition понадобятся при переводе всех Полей ввода на использование одного механизма получения каретки
-      getCaretPosition : function(element){
+      getCaretPosition: function (element) {
          var caretOffset = 0;
          if (typeof window.getSelection != "undefined") {
             var range = window.getSelection().getRangeAt(0);
@@ -24,17 +24,17 @@ define('SBIS3.CONTROLS/TextBox/resources/TextBoxUtils', ['Core/constants'], func
             caretOffset = preCaretTextRange.text.length;
          }
 
-         return [caretOffset,caretOffset];
+         return [caretOffset, caretOffset];
       },
 
-      setCaretPosition : function(field, pos, pos2){
+      setCaretPosition: function (field, pos, pos2) {
          pos2 = pos2 || pos;
          var charCount = 0,
-             selTextNode = 0,
-             posInNode = pos,
-             textNodeLengh;
+            selTextNode = 0,
+            posInNode = pos,
+            textNodeLengh;
 
-         if (constants.browser.isIE  &&  constants.browser.IEVersion < 12) { //в Edge (ie12) не работает createTextRange
+         if (constants.browser.isIE && constants.browser.IEVersion < 12) { //в Edge (ie12) не работает createTextRange
             var rng = document.body.createTextRange();
             rng.moveToElementText(field.parentNode);
             rng.move('character', pos);
@@ -46,16 +46,16 @@ define('SBIS3.CONTROLS/TextBox/resources/TextBoxUtils', ['Core/constants'], func
                // при установке каретки в contentEditable блок необходимо найти текстовый узел в который поставится каретка
                // и рассчитать позицию каретки относительно найденного узла
                do {
-                  if(field.childNodes[selTextNode].nodeType === 3){
+                  if (field.childNodes[selTextNode].nodeType === 3) {
                      textNodeLengh = field.childNodes[selTextNode].length;
                      charCount += textNodeLengh;
-                     if(charCount < pos) {
+                     if (charCount < pos) {
                         posInNode -= textNodeLengh;
                      }
                   }
                   i++
                }
-               while(charCount < pos && field.childNodes[selTextNode]);
+               while (charCount < pos && field.childNodes[selTextNode]);
 
                selection.collapse(field.childNodes[i - 1], posInNode);
             } catch (e) {
@@ -63,40 +63,44 @@ define('SBIS3.CONTROLS/TextBox/resources/TextBoxUtils', ['Core/constants'], func
          }
       },
 
-       setEqualPickerWidth: function(picker) {
-           var textBoxWidth = picker.getTarget()[0].getBoundingClientRect().width,
-               pickerContainer = picker.getContainer()[0],
-               /* Необходимо восстанавливать scrollTop после перерасчётов пикера */
-               currentScrollTop = pickerContainer.scrollTop,
-               minWidth;
+      setEqualPickerWidth: function (picker) {
+         var textBoxWidth = picker.getTarget()[0].getBoundingClientRect().width,
+            pickerContainer = picker.getContainer()[0],
+            pickerStyles = getComputedStyle(pickerContainer),
+            currentScrollTop = pickerContainer.scrollTop, //Необходимо восстанавливать scrollTop после перерасчётов пикера
+            minWidth;
 
-           if (picker && textBoxWidth !== pickerContainer.clientWidth) {
-              /* Почему установлен maxWidth и width ?
-               popup в текущей реализации не понимает, что ему размер кто-то установил извне и
-               при пересчётах может спокойно перетирать эти размеры. Поэтому, для того чтобы зафиксировать ширину,
-               устанавливаем maxWidth (maxWidth не стирается при пересчётах popup'a).
-               Но учитываем, что maxWidth не будет учитываться, если автодополнение меньше поля ввода, и поэтому после
-               расчётов позиции устанавливаем width - чтобы гаррантировать одинаковую ширину поля ввода и автодополнения.
-               Прикладной программист может увеличить ширину автодополнения установив min-width.
-               Для правильного позиционирования popup необходимо чтобы в момент расчета размеры соотвествовали конечным
-               поэтому устанавливаем min-width, а после его затираем, чтобы не перебивать прикладные стили
-               */
-               minWidth = parseInt(picker.getContainer().css('min-width'));
+         if (pickerStyles.boxSizing !== 'border-box') { //Вычитаю ширину бордеров, т.к. она не входит в общую ширину
+            textBoxWidth -= parseInt(pickerStyles.borderLeftWidth) + parseInt(pickerStyles.borderRightWidth);
+         }
 
-               /* Если для пикера установлен min-width, который больше ширины поля ввода,
-                  то берём этот min-width в качестве ширины для пикера */
-               if (minWidth && (minWidth > textBoxWidth)) {
-                  textBoxWidth = minWidth;
-               }
-               pickerContainer.style.minWidth = textBoxWidth + 'px';
-               pickerContainer.style.maxWidth = textBoxWidth + 'px';
+         if (picker && textBoxWidth !== pickerContainer.clientWidth) {
+            /* Почему установлен maxWidth и width ?
+             popup в текущей реализации не понимает, что ему размер кто-то установил извне и
+             при пересчётах может спокойно перетирать эти размеры. Поэтому, для того чтобы зафиксировать ширину,
+             устанавливаем maxWidth (maxWidth не стирается при пересчётах popup'a).
+             Но учитываем, что maxWidth не будет учитываться, если автодополнение меньше поля ввода, и поэтому после
+             расчётов позиции устанавливаем width - чтобы гаррантировать одинаковую ширину поля ввода и автодополнения.
+             Прикладной программист может увеличить ширину автодополнения установив min-width.
+             Для правильного позиционирования popup необходимо чтобы в момент расчета размеры соотвествовали конечным
+             поэтому устанавливаем min-width, а после его затираем, чтобы не перебивать прикладные стили
+             */
+            minWidth = parseInt(picker.getContainer().css('min-width'));
 
-               picker.recalcPosition(true, true);
+            /* Если для пикера установлен min-width, который больше ширины поля ввода,
+             то берём этот min-width в качестве ширины для пикера */
+            if (minWidth && (minWidth > textBoxWidth)) {
+               textBoxWidth = minWidth;
+            }
+            pickerContainer.style.minWidth = textBoxWidth + 'px';
+            pickerContainer.style.maxWidth = textBoxWidth + 'px';
 
-               pickerContainer.style.width = textBoxWidth + 'px';
-               pickerContainer.style.minWidth = '';
-               pickerContainer.scrollTop = currentScrollTop;
-           }
-       }
+            picker.recalcPosition(true, true);
+
+            pickerContainer.style.width = textBoxWidth + 'px';
+            pickerContainer.style.minWidth = '';
+            pickerContainer.scrollTop = currentScrollTop;
+         }
+      }
    }
 });
