@@ -167,7 +167,6 @@ define('SBIS3.CONTROLS/Utils/ControlsValidators', [
 
          return isGoodValue ?
             true :
-
             rk('В поле требуется ввести адрес электронной почты');
       },
       /**
