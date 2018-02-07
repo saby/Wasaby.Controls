@@ -301,17 +301,16 @@ define('SBIS3.CONTROLS/ComboBox', [
          }
       },
 
-      _searchFilter: function(model){
+      _searchFilter: function(text, model){
          //TODO: Обобщить поиск с автодополнением и строкой поиска
          //Сделать общую точку входа для поиска, для понимания где искать на источнике или на проекции
-         var itemText = model.get(this._options.displayProperty).toLowerCase(),
-            text = this.getText().toLowerCase();
+         var itemText = model.get(this._options.displayProperty).toLowerCase();
          return itemText.indexOf(text) > -1;
       },
 
       _onSearch: function(){
          this.setSelectedIndex(-1);
-         this._getItemsProjection().setFilter(this._searchFilter.bind(this));
+         this._getItemsProjection().setFilter(this._searchFilter.bind(this, this.getText().toLowerCase()));
          this.redraw();
          if (this._getItemsProjection().getCount()) {
             if (!this.getPicker().isVisible()) {
@@ -815,6 +814,11 @@ define('SBIS3.CONTROLS/ComboBox', [
          var projection = this._getItemsProjection(),
             item = projection.at(this.getSelectedIndex()),
             hash = item && item.getHash();
+
+         //При открытии пикера, если по текущему фильтру не нашли записей - покажем весь список
+         if (!projection.getCount()) {
+            projection.setFilter(this._searchFilter.bind(this, ''));
+         }
 
          if (!this._picker || this._picker.isDestroyed()) {
             this._initializePicker();
