@@ -115,8 +115,24 @@ define('SBIS3.CONTROLS/LongOperations/List',
             var self = this;
             var STATUSES = LongOperationEntry.STATUSES;
 
-            ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered'/*, 'ondestroy'*/].forEach(function (evtType) {
+            ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered'].forEach(function (evtType) {
                self.subscribeTo(longOperationsManager, evtType, function (evtName, evt) {
+                  var custom = evt.custom;
+                  if (custom) {
+                     var customConditions = self._view.getDataSource().getOptions().customConditions;
+                     if (customConditions && customConditions.length) {
+                        // Если событие об операции, перехваченой внешним просмотрщиком - игнорировать её
+                        // 1174822763 https://online.sbis.ru/opendoc.html?guid=65e542a1-fb10-40a3-a677-f03214f871a1
+                        var needIgnore = customConditions.some(function (cond) {
+                           return Object.keys(cond).every(function (name) {
+                              return cond[name] === custom[name];
+                           });
+                        });
+                        if (needIgnore) {
+                           return;
+                        }
+                     }
+                  }
                   var dontReload;
                   if (['onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted'].indexOf(evtName.name) !== -1) {
                      var model = self.lookupItem(evt);
