@@ -53,16 +53,9 @@ define(
             });
             invalidEmails.forEach(function(item) {
                it('Invalid "' + item + '"', function () {
-                  var
-                     res = isEmail({
-                        value: item
-                     });
-                  //IsEmail при ошибке валидации возвращает результат функции rk, который может быть типа object, когда нет window
-                  if (typeof res === 'string' || typeof res === 'object') {
-                     assert.ok(true);
-                  } else {
-                     assert.ok(false);
-                  }
+                  assert.notEqual(typeof isEmail({
+                     value: item
+                  }), true);
                });
             });
          });
