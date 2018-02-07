@@ -1348,7 +1348,9 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             self = this,
             filter;
          this._toggleIndicator(true);
-         this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit);
+         if (this._isCursorNavigation()) { //https://online.sbis.ru/opendoc.html?guid=7117f61d-ab58-434b-99b1-fc6528ffe641
+            this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit);
+         }
          this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit).addCallback(forAliveOnly(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
