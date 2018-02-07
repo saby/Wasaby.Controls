@@ -38226,7 +38226,9 @@
                   '<div data-mce-bogus="all" class="mce-offscreen-selection"></div>'
                ).attr('id', realSelectionId);
 
-               $realSelectionContainer.appendTo(editor.getBody());
+               // Если добавлять в конец, то селекторы вида :last-child при этом перестают действовать, текст скачет, так что добавляем в начало
+               // 70770 https://online.sbis.ru/opendoc.html?guid=70144329-6678-444a-ad7d-1065d53ef3f5
+               $realSelectionContainer.prependTo(editor.getBody());
             }
 
             range = editor.dom.createRng();
