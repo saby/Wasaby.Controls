@@ -7,6 +7,24 @@ define(
       'use strict';
 
       describe('Controls/Input/Suggest', function () {
+   
+         it('_onSearchEnd', function() {
+            var suggest = new Suggest(),
+                closed = false;
+            
+            suggest._children = {
+               suggestPopupOpener: {
+                  close: function() {
+                     closed = true;
+                  }
+               }
+            };
+            
+            suggest._focused = false;
+            Suggest._private.onSearchEnd(suggest);
+      
+            assert.isTrue(closed, 'Popup is not closed after focusout and searching');
+         });
          
          it('_popupFocusIn', function() {
             var suggest = new Suggest();
