@@ -5,7 +5,6 @@ define('SBIS3.CONTROLS/Utils/ControlsValidators', [
    'Lib/CoreValidators/CoreValidators',
    'Core/core-instance',
    'Core/IoC',
-
    'i18n!SBIS3.CONTROLS/Utils/ControlsValidators'
 ],function(CoreValidators, cInstace, IoC) {
 
@@ -50,18 +49,17 @@ define('SBIS3.CONTROLS/Utils/ControlsValidators', [
                isEmpty = isNaN(option);
                break;
             case 'object' :
-               if (cInstace.instanceOfModule(option, 'Deprecated/Enum')) {
+               if(cInstace.instanceOfModule(option, 'Deprecated/Enum')) {
                   IoC.resolve('ILogger').error('SBIS3.CONTROLS/Utils/ControlsValidators', 'использует устаревший модуль Deprecated/Enum. Выпишите ошибку на Интерфейсный фреймворк со скриншотом.');
                   isEmpty = option.getCurrentValue() === null;
-               } else if (cInstace.instanceOfModule(option, 'WS.Data/Collection/List')) {
+               } else if(cInstace.instanceOfModule(option, 'WS.Data/Collection/List')) {
                   isEmpty = !Boolean(option.getCount());
-               } else if (option instanceof Array) {
+               } else if(option instanceof Array) {
                   isEmpty = !Boolean(option.length);
-               } else if (option instanceof Object) {
+               } else if(option instanceof Object) {
                   isEmpty = Object.isEmpty(option)
-               } else if (option === null) {
+               } else if(option === null) {
                   isEmpty = true;
-
                }
                break;
             case 'undefined' :
@@ -70,8 +68,8 @@ define('SBIS3.CONTROLS/Utils/ControlsValidators', [
          }
 
          return isEmpty ?
-            rk('Поле обязательно для заполнения') :
-            true;
+             rk('Поле обязательно для заполнения') :
+             true;
       },
 
       /**
