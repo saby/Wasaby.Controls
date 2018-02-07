@@ -1,5 +1,7 @@
 define('SBIS3.CONTROLS/LongOperations/List',
    [
+      'Core/core-merge',
+      'Core/helpers/Object/isEqual',
       'Core/Deferred',
       'Lib/Control/CompoundControl/CompoundControl',
       'SBIS3.CONTROLS/LongOperations/Entry',
@@ -18,7 +20,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
       'SBIS3.CONTROLS/DataGridView'
    ],
 
-   function (Deferred, CompoundControl, LongOperationEntry, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, FloatArea, dotTplFn) {
+   function (cMerge, cObjectIsEqual, Deferred, CompoundControl, LongOperationEntry, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, FloatArea, dotTplFn) {
       'use strict';
 
       /**
@@ -705,30 +707,50 @@ define('SBIS3.CONTROLS/LongOperations/List',
             //Только если операция завершена или содержит ошибку
             if (model && (model.get('status') === LongOperationEntry.STATUSES.ended || model.get('isFailed'))) {
                var resultHandler = allowResultButton && (model.get('resultHandler') || model.get('resultUrl')) ? this._showResult.bind(this, model) : null;
-               var resultWayOfUse = resultHandler ? model.get('resultWayOfUse') : null;
-               var floatArea = new FloatArea({
-                  title: rk('Журнал выполнения операции', 'ДлительныеОперации'),
-                  template: 'SBIS3.CONTROLS/LongOperations/History',
-                  componentOptions: this.canHasHistory(model) ? {
-                     tabKey: model.get('tabKey'),
-                     producer: model.get('producer'),
-                     operationId: model.get('id'),
-                     isFailed: model.get('isFailed'),
-                     resultHandler: resultHandler,
-                     resultWayOfUse: resultWayOfUse
-                  } : {
-                     failedOperation: model,
-                     resultHandler: resultHandler
-                  },
-                  opener: this,
-                  direction: 'left',
-                  animation: 'slide',
-                  isStack: true,
-                  autoCloseOnHide: true,
-                  maxWidth: 680
-               });
-               this._notify('onSizeChange');
-               this.subscribeOnceTo(floatArea, 'onAfterClose', this._notify.bind(this, 'onSizeChange'));
+               var componentModule = 'SBIS3.CONTROLS/LongOperations/History';
+               var componentOptions = this.canHasHistory(model) ? {
+                  tabKey: model.get('tabKey'),
+                  producer: model.get('producer'),
+                  operationId: model.get('id'),
+                  isFailed: model.get('isFailed'),
+                  resultHandler: resultHandler,
+                  resultWayOfUse: resultHandler ? model.get('resultWayOfUse') : null
+               } : {
+                  failedOperation: model,
+                  resultHandler: resultHandler
+               };
+               if (this._floatArea) {
+                  var noUpdate;
+                  var prevOptions = this._floatArea.getProperty('componentOptions');
+                  if (prevOptions) {
+                     prevOptions = cMerge({}, prevOptions);
+                     delete prevOptions.resultHandler;
+                     var nextOptions = cMerge({}, componentOptions);
+                     delete nextOptions.resultHandler;
+                     noUpdate = cObjectIsEqual(prevOptions, nextOptions);
+                  }
+                  if (!noUpdate) {
+                     this._floatArea.setProperty('componentOptions', componentOptions);
+                     this._floatArea.setTemplate(componentModule, componentOptions);
+                  }
+               }
+               else {
+                  this._floatArea = new FloatArea({
+                     title: rk('Журнал выполнения операции', 'ДлительныеОперации'),
+                     template: componentModule,
+                     componentOptions: componentOptions,
+                     opener: this,
+                     direction: 'left',
+                     animation: 'slide',
+                     isStack: true,
+                     autoCloseOnHide: true,
+                     maxWidth: 680
+                  });
+                  this._floatArea.setProperty('componentOptions', componentOptions);
+                  this.subscribeOnceTo(this._floatArea, 'onClose', function () {
+                     this._floatArea = null;
+                  }.bind(this));
+               }
             }
          },
 
