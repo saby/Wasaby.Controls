@@ -4,6 +4,7 @@
  * @public
  * @class SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area
  * @extends SBIS3.CONTROLS/CompoundControl
+ * @author Спирин В.А.
  */
 define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
    [
@@ -44,7 +45,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
        */
       var _PRESET_ACTIONS = {
          edit: {title: rk('Редактировать'), icon: 'sprite:icon-16 icon-Edit icon-primary action-hover'},
-         clone: {title: rk('Дублировать'), icon: 'sprite:icon-16 icon-Copy icon-primary action-hover'},
+         clone: {title: rk('Дублировать', 'РедакторКолонок'), icon: 'sprite:icon-16 icon-Copy icon-primary action-hover'},
          'delete': {title: rk('Удалить'), icon: 'sprite:icon-16 icon-Erase icon-error'}
       };
 
@@ -53,7 +54,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
        * @protected
        * @type {string}
        */
-      var _PRESET_TITLE_ERROR = rk('Название пресета не может быть пустым и должно отличаться от названий других пресетов');
+      var _PRESET_TITLE_ERROR = rk('Название шаблона не может быть пустым и должно отличаться от названий других шаблонов', 'РедакторКолонок');
 
 
 
@@ -103,7 +104,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                 * @cfg {string} Начальное название нового пользовательского пресета (опционально)
                 */
                // TODO: Обратить внимание на связь с useOriginPresetTitle
-               newPresetTitle: rk('Новый пресет'),
+               newPresetTitle: rk('Новый шаблон', 'РедакторКолонок'),
                /**
                 * @cfg {boolean} При клонировании новых пользовательских пресетов строить название из исходного с добавлением следующего порядкового номера (опционально)
                 */
