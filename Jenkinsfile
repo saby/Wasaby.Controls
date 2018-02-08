@@ -217,7 +217,7 @@ node('controls') {
         stage("Сборка компонент"){
             echo " Определяем SDK"
             dir("./constructor/Constructor/SDK") {
-                SDK = sh returnStdout: true, script: "${python_ver} getSDK.py ${version} --conf linux_x86_64 -b"
+                SDK = sh returnStdout: true, script: "export PLATFORM_version=${version} && source ${workspace}/constructor/Constructor/SDK/setToSDK.sh linux_x86_64"
                 SDK = SDK.trim()
                 echo SDK
             }
