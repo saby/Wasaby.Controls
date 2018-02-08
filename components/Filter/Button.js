@@ -419,15 +419,6 @@ define('SBIS3.CONTROLS/Filter/Button',
                 _canScroll: true,
                 activateAfterShow: true,
                 handlers: {
-                   onClose: function() {
-                      /* Разрушаем панель при закрытии,
-                         надо для: сбрасывания валидации, удаления ненужных значений из контролов */
-                      if(self._picker) {
-                         self._picker.destroy();
-                         self._picker = null;
-                      }
-                   },
-
                    onKeyPressed: function(event, e) {
                       if(e.which === constants.key.esc) {
                          this.hide();
