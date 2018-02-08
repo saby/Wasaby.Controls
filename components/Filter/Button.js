@@ -128,6 +128,16 @@ define('SBIS3.CONTROLS/Filter/Button',
                  */
                 resetLinkText: '',
                 /**
+                 * @cfg {String} Устанавливает отображение кнопки фильтров.
+                 * @variant oneColumn Панель строится в одну колонку.
+                 * @variant twoColumns Панель строится в две колонки.
+                 */
+                viewMode: 'oneColumn',
+                /**
+                 * @cfg {String} Заголовок панели фильтров.
+                 */
+                areaCaption: '',
+                /**
                  * @noshow
                  */
                 historyController: undefined,
@@ -298,11 +308,26 @@ define('SBIS3.CONTROLS/Filter/Button',
              }
           },
 
+          _hasHistory: function() {
+             var
+                history,
+                result = false;
+             if (this._historyController) {
+                history = this._historyController.getHistory();
+                result = history && !!history.length;
+             }
+
+             return result;
+          },
+
           _getAreaOptions: function() {
              var prepTpl = TemplateUtil.prepareTemplate,
                  components = this._filterTemplates,
                  config = {
                     historyController: this._historyController,
+                    viewMode: this._options.viewMode,
+                    areaCaption: this._options.areaCaption,
+                    hasHistory: this._hasHistory(),
                     internalContextFilterName: this._options.internalContextFilterName,
                     componentOptions: this._options.componentOptions
                  },
