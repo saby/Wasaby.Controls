@@ -8,32 +8,62 @@
   .user-select();
 }
 
-.controls-Button__style-link {
+.controls-Button__style-link-main {
   font-size: @font-size_Link;
   cursor: pointer;
-  color: @color_Link-text;
+  color: @color_Link-main-text;
 }
 
-.controls-Button__style-link:hover{
-  color: @color_Link-text_hovered;
+.controls-Button__style-link-main:hover{
+  color: @color_Link-main-text_hovered;
   .controls-BaseButton__text {
     text-decoration: underline;
   }
 }
 
-.controls-Button__style-link-disabled{
+.controls-Button__style-link-main2 {
+  font-size: @font-size_Link;
+  cursor: pointer;
+  color: @color_Link-main2-text;
+}
+
+.controls-Button__style-link-main2:hover{
+  .controls-BaseButton__text {
+    text-decoration: underline;
+  }
+}
+
+.controls-Button__style-link-main3 {
+  font-size: @font-size_Link;
+  cursor: pointer;
+  color: @color_Link-main3-text;
+  .controls-BaseButton__text {
+    text-decoration: underline;
+  }
+}
+
+.controls-Button__style-link-main3:hover{
+  color: @color_Link-main3-text_hovered;
+}
+
+.controls-Button__style-link-main-disabled, .controls-Button__style-link-main2-disabled, .controls-Button__style-link-main3-disabled{
   color: @color_Link-text_disabled;
 }
 
-.controls-Button__wrapper_style-link {
+.controls-Button__wrapper_style-link-main, .controls-Button__wrapper_style-link-main2, .controls-Button__wrapper_style-link-main3 {
   .justify-content(flex-start);
 }
 
-.controls-Button__style-default, .controls-Button__style-primary, .controls-Button__style-primary-disabled,  .controls-Button__style-default-disabled,
-.controls-Button__style-default-big, .controls-Button__style-primary-big, .controls-Button__style-primary-big-disabled,  .controls-Button__style-default-big-disabled {
+.controls-Button__style-default, .controls-Button__style-primary, .controls-Button__style-primary-disabled,  .controls-Button__style-default-disabled {
   border-style: solid;
   border-width: @border-width_Button;
   .border-radius(@border-radius_Button_default);
+}
+.controls-Button__style-default-big, .controls-Button__style-primary-big, .controls-Button__style-primary-big-disabled,  .controls-Button__style-default-big-disabled {
+  border-style: solid;
+  height: @height_Button_l;
+  border-width: @border-width_Button;
+  .border-radius(@border-radius_Button_l);
 }
 
 .controls-Button__style-default, .controls-Button__style-primary, .controls-Button__style-primary-disabled,  .controls-Button__style-default-disabled {
@@ -87,7 +117,8 @@
   .text-overflow();
 }
 
-.controls-Button__icon-primary-disabled, .controls-Button__icon-default-disabled, .controls-Button__icon-link-disabled{
+.controls-Button__icon-primary-disabled, .controls-Button__icon-default-disabled, .controls-Button__icon-link-main-disabled, .controls-Button__icon-link-main2-disabled,
+.controls-Button__icon-primary-big-disabled, .controls-Button__icon-default-big-disabled, .controls-Button__icon-link-main3-disabled {
   color: @icon-color-disabled ;
 }
 
@@ -95,24 +126,30 @@
   padding: @padding_Button-wrapper_default;
   .justify-content(center);
 }
+
+.controls-Button__wrapper_style-primary-big, .controls-Button__wrapper_style-default-big {
+  padding: @padding_Button-wrapper_l;
+  .justify-content(center);
+}
+
 .controls-Button__text_gap {
   margin-left: @spacing_Button-between-icon-text;
 }
 
 .ws-is-desktop-platform {
-  .controls-Button__style-primary:hover {
+  .controls-Button__style-primary:hover, .controls-Button__style-primary-big:hover {
     border-color: @border-color_Button_primary_hovered;
     background: @background_Button_primary_hovered;
   }
 
-  .controls-Button__style-primary:active {
+  .controls-Button__style-primary:active, .controls-Button__style-primary-big:active {
     background: @background_Button_primary_active;
   }
-  .controls-Button__style-default:hover {
+  .controls-Button__style-default:hover, .controls-Button__style-default-big:hover {
     border-color: @border-color_Button_hovered;
     background: @background_Button_hovered;
   }
-  .controls-Button__style-default:active{
+  .controls-Button__style-default:active, .controls-Button__style-default-big:active{
     background: @background_Button_active;
   }
 }
