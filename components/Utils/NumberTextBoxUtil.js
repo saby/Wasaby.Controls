@@ -37,7 +37,10 @@ define('SBIS3.CONTROLS/Utils/NumberTextBoxUtil', [],
                     integerCount =  this._getIntegersCount(currentVal),
                     checkMaxLengthResult = this.checkMaxLength(currentVal, maxLength),
                     newCaretPosition = b,
-                    isFull = this._getValueLength(currentVal) === parseInt(maxLength, 10) || integerCount === integers || integerCount === 15,
+                    //В связи с проблемой с функцией toFixed(), integers было ограничено до 14
+                    //111111111111111.12.toFixed(2) === "111111111111111.13"
+                    //11111111111111.12.toFixed(2) === "11111111111111.12"
+                    isFull = this._getValueLength(currentVal) === parseInt(maxLength, 10) || integerCount === integers || integerCount === 14,
                     replaceFirstZero = false;
 
                 if (((currentVal[0] == 0 && b == 1) || (currentVal[0] == '-' && currentVal[1] == 0 && b == 2)) && b == e ){ // заменяем первый ноль если курсор после него

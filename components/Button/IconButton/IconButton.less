@@ -58,6 +58,11 @@
 .controls-IconButton__text {
   display: none;
 }
+// почему каскад? потому что в IE из-за бага с флексами проставлям принудительно display: inline-block; , который перебивает скрытие текста.
+// почему просто не убрать из верстки текст? потому что это приведет к ещё большим костылям т.к. сейчас на тач-устройствах в операциях над записью выводим текст
+.ws-is-ie10 .controls-Button__text.controls-IconButton__text {
+  display: none;
+}
 // по хорошему использоваться будут только синие иконки, при переносе прописать правильные стили без заточки на icon-primary
 // .controls-IconButton_standard:active {
 //  .controls-Button__icon {

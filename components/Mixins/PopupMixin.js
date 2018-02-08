@@ -390,7 +390,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                   scrollHeight = this._container.get(0).scrollHeight,
                   maxWidth = parseFloat(this._container.css('max-width'), 10) || scrollWidth,
                   maxHeight = parseFloat(this._container.css('max-height'), 10) || scrollHeight,
-                  border = (this._container.outerWidth() - this._container.innerWidth());
+                  border = this._container.outerWidth() - this._container.innerWidth();
 
                if (!saveSide) {
                   this._resetToDefault();
@@ -400,6 +400,12 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
 
                this._containerSizes.originWidth = scrollWidth > maxWidth ? maxWidth : scrollWidth + border ;
                this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight + border;
+
+               if (this._container.css('box-sizing') !== 'border-box') {
+                  // this._containerSizes.originWidth -= border ; Чтобы правильно работало, нужно учесть направление позции справа->налево, т.к. в этом случае нужно учитывать ширину границы
+                  this._containerSizes.originHeight -= border;
+               }
+
             }
             if (this._fixed === undefined){
                this._checkFixed(this._options.target);
@@ -1035,7 +1041,10 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                                  var revertPositionData = {t: 'l', l: 't'};
                                  //Логика должна быть всенда такая: при развороте вниз - позиционирование от верхней границы таргета, вверх - от нижней.
                                  //Сейчас куча лишних расчетов которые косячат, пока не известно нужно ли где-то текущее поведение
-                                 this._options.corner = (this._isMovedV ? revertPositionData[this._defaultCorner[0]] : this._defaultCorner[0]) + this._options.corner[1];
+                                 // this._options.corner = (this._isMovedV ? revertPositionData[this._defaultCorner[0]] : this._defaultCorner[0]) + this._options.corner[1];
+                                 if (this._options.corner === 'bl') {
+                                    this._options.corner = 'tl';
+                                 }
                               }
                               oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
                               spaces = this._getSpaces(this._options.corner);

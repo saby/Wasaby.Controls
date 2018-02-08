@@ -85,7 +85,7 @@ body {
       color: @error-color !important;
     }
   }
-  .controls-Button__icon {
+  .controls-Button__icon.icon-primary {
     color: #839EBC !important;
   }
 }
@@ -455,6 +455,10 @@ body {
 }
 .ws-is-desktop-platform .controls-IconButton.controls-IconButton__standardBorder:hover {
   background-color: transparent;
+}
+//т.к. в presto прозрачные поля ввода, то зададим фон редакторам, чтобы текст под редактированием не просвечивал
+.controls-editInPlace .controls-editInPlace__editor {
+  background: @controls-editInPlace-editor-bg;
 }
 // перетащил фикс из prestonew
 // TODO: чтобы не писать такие каскады нужно упростить стили MenuIcon и навешивать только нужные отступы
