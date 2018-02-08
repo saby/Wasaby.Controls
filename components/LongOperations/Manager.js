@@ -586,19 +586,23 @@ define('SBIS3.CONTROLS/LongOperations/Manager',
             if (!producer) {
                throw new Error('Unknown event');
             }
-            // Если произошло событие в продюсере и есть выполняющиеся fetch запросы - выполнить запросы к этому продюсеру повторно
-            // (все - и завершённые, и даже не завершённые, так как не завершённые уже могут быть "на подходе" со старыми данными)
-            // TODO: ### Для уменьшения количества запросов можно попробовать рассмотреть компромисный вариант - переспрашивать только если уже прошло достаточно много времени
-            var member = {tab:inner._tabKey, producer:data.producer};
+            var eventType = typeof evtName === 'object' ? evtName.name : evtName;
             if (inner._fetchCalls) {
-               var queries = inner._fetchCalls.listPools(member/*, true*/);
-               for (var i = 0; i < queries.length; i++) {
-                  var query = queries[i];
-                  inner._fetchCalls.replace(query, member, producer.fetch(query));
+               var isFullDataEvent = eventType === 'onlongoperationchanged' && data.changed === 'progress';
+               if (!isFullDataEvent) {
+                  // Если произошло событие в продюсере, которое не несёт полной информации о состоянии операции, и есть выполняющиеся fetch запросы -
+                  // выполнить запросы к этому продюсеру повторно (все - и завершённые, и даже не завершённые, так как не завершённые уже могут быть
+                  // "на подходе" со старыми данными)
+                  // TODO: ### Для уменьшения количества запросов можно попробовать рассмотреть компромисный вариант - переспрашивать только если уже прошло достаточно много времени
+                  var member = {tab:inner._tabKey, producer:data.producer};
+                  var queries = inner._fetchCalls.listPools(member/*, true*/);
+                  for (var i = 0; i < queries.length; i++) {
+                     var query = queries[i];
+                     inner._fetchCalls.replace(query, member, producer.fetch(query));
+                  }
                }
             }
          }
-         var eventType = typeof evtName === 'object' ? evtName.name : evtName;
          _channel.notifyWithTarget(eventType, manager, !dontCrossTab ? (data ? ObjectAssign({tabKey:inner._tabKey}, data) : {tabKey:inner._tabKey}) : data);
          if (!dontCrossTab && !producer.hasCrossTabEvents()) {
             inner._tabChannel.notify('LongOperations:Manager:onActivity', {type:eventType, tab:inner._tabKey, isCrossTab:producer.hasCrossTabData(), hasHistory:inner._canHasHistory(producer), data:data});
