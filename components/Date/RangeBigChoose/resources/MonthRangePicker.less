@@ -94,7 +94,6 @@
 
 .controls-DateRangeBigChoose-MonthRangePickerItem__item-selectedStart {
    position: relative;
-   outline: @border-color_DateRangeBigChoose-range-selected-startEnd solid 1px;
    &:before {
       content: "";
       position: absolute;
@@ -159,13 +158,14 @@
    .controls-DateRangeBigChoose-MonthRangePickerItem__item {
       background-color: transparent;
       border-right-color: transparent;
+      border-bottom-color: transparent;
    }
 }
 .controls-DateRangeBigChoose-MonthRangePickerItem__halfYear-selected {
    &:before {
       content: '';
       position: absolute;
-      top: 0;
+      top: -@border-width_DateRangeBigChoose_quartersPanel;
       bottom: 0;
       left: @width_DateRangeBigChoose-years-leftRight - @border-width_DateRangeBigChoose_quartersPanel;
       right: -@border-width_DateRangeBigChoose_quartersPanel;
@@ -181,9 +181,9 @@
    &:before {
       content: '';
       position: absolute;
-      top: 0;
+      top: -@border-width_DateRangeBigChoose_quartersPanel;
       bottom: 0;
-      right: -@border-width_DateRangeBigChoose_quartersPanel;
+      right: 0;
       left: -@border-width_DateRangeBigChoose_quartersPanel;
       border: solid @border-width_DateRangeBigChoose_quartersPanel @border-color_DateRangeBigChoose-quarters-halhyears-selected;
       z-index: 3;

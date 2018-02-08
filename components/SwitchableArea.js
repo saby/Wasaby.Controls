@@ -13,7 +13,6 @@ define('SBIS3.CONTROLS/SwitchableArea', [
     * @extends Deprecated/Controls/SwitchableArea/SwitchableArea
     * @author Красильников А.С.
     * @public
-    * @deprecated Используйте класс SBIS3.CONTROLS/SwitchableArea.
     */
 
    var SwitchableAreaOld = CoreSwitchableArea.extend(/** @lends SBIS3.CONTROLS/SwitchableArea.prototype */ {

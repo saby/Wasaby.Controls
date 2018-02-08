@@ -64,14 +64,14 @@ define('SBIS3.CONTROLS/ColorPicker',
          }
       },
 
-      _initializePicker: function(color){
+      _initializePicker: function(){
          var self = this;
          ColorPicker.superclass._initializePicker.call(self);
          if (!self._wasCreated) {
             self._picker.getContainer().colpick({
                flat: true,
                layout: 'hex',
-               color: color,
+               color: self._options.text || '000000',
                onSubmit: function (col, hex) {
                   self.hidePicker();
                   ColorPicker.superclass.setText.call(self, hex);
@@ -92,7 +92,7 @@ define('SBIS3.CONTROLS/ColorPicker',
       _keyUpBind: function(){
          var self = this;
          self._byKeyUp = true;
-         ColorPicker.superclass._keyUpBind.call(self);
+         ColorPicker.superclass._keyUpBind.apply(self, arguments);
          if(!self._picker){
             self._initializePicker(self.getText());
             return;

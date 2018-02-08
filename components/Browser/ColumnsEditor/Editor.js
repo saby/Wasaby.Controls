@@ -87,6 +87,7 @@
  * @class SBIS3.CONTROLS/Browser/ColumnsEditor/Editor
  * @public
  * @extends SBIS3.CONTROLS/CompoundControl
+ * @author Спирин В.А.
  */
 define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
    [
@@ -131,7 +132,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
             _options: {
                moveColumns: true,
                usePresets: false,
-               newPresetTitle: rk('Новый пресет'),
+               newPresetTitle: rk('Новый шаблон', 'РедакторКолонок'),
                useOriginPresetTitle: true
             },
             _result: null

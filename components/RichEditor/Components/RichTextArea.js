@@ -1554,34 +1554,47 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             });
 
             editor.on('PastePostProcess', function(event){
-               var
-                  content = event.node,
-                  $content = $(content),
-                  $images = $content.find('img:not(.ws-fre__smile)');
+               var content = event.node;
+               var isPlainUrl = content.innerHTML.search(/^https?:\/\/[a-z0-9:=&%#_\-\.\/\?]+$/gi) !== -1;
+               var $content = $(content);
                $content.find('[unselectable ="on"]').attr('data-mce-resize', 'false');
-               if ($images.length) {
-                  if (/data:image/gi.test(content.innerHTML)) {
-                     return false;
-                  }
-                  var
-                     maximalWidth,
-                     width,
-                     currentWidth,
-                     naturalSizes;
-                  maximalWidth = this._inputControl.width() - constants.imageOffset;
-                  for (var i = 0; i < $images.length; i++) {
-                     naturalSizes = ImageUtil.getNaturalSizes($images[i]);
-                     currentWidth = $($images[i]).width();
-                     width = currentWidth > maximalWidth ? maximalWidth : currentWidth === 0 ? naturalSizes.width > maximalWidth ? maximalWidth : naturalSizes.width : currentWidth;
-                     if (!$images[i].style || ((!$images[i].style.width || $images[i].style.width.indexOf('%') < 0)) && (naturalSizes.width > naturalSizes.height) ) {
-                        $($images[i]).css({
-                           'width': width,
-                           'height': 'auto'
-                        });
+               if (!isPlainUrl) {
+                  var $images = $content.find('img:not(.ws-fre__smile)');
+                  if ($images.length) {
+                     if (/data:image/gi.test(content.innerHTML)) {
+                        return false;
+                     }
+                     var
+                        maximalWidth,
+                        width,
+                        currentWidth,
+                        naturalSizes;
+                     maximalWidth = this._inputControl.width() - constants.imageOffset;
+                     for (var i = 0; i < $images.length; i++) {
+                        naturalSizes = ImageUtil.getNaturalSizes($images[i]);
+                        currentWidth = $($images[i]).width();
+                        width = currentWidth > maximalWidth ? maximalWidth : currentWidth === 0 ? naturalSizes.width > maximalWidth ? maximalWidth : naturalSizes.width : currentWidth;
+                        if (!$images[i].style || ((!$images[i].style.width || $images[i].style.width.indexOf('%') < 0)) && (naturalSizes.width > naturalSizes.height) ) {
+                           $($images[i]).css({
+                              'width': width,
+                              'height': 'auto'
+                           });
+                        }
                      }
                   }
                }
                var html = content.innerHTML;
+               if (isPlainUrl) {
+                  var rng = editor.selection.getRng();
+                  var node = rng.endContainer;
+                  var text = node.nodeType === 1 ? node.innerHTML : node.nodeValue;
+                  if (text && text.substring(rng.endOffset, rng.endOffset + 1).search(/[<\s]/gi) === -1) {
+                     // Имеем вставку урла внутрь текста, с которым он сольётся - отделить его пробелом в конце
+                     // Было бы лучше (намного) сделать этот урл сразу ссылкой, но тогда сервис декораторов не подхватит его
+                     // 93358 https://online.sbis.ru/opendoc.html?guid=6e7ccbf1-001c-43fb-afc1-7887baa96d7c
+                     html += ' ';
+                  }
+               }
                //Замена переносов строк на <br>
                html = html.replace(/([^>])\n(?!<)/gi, '$1<br />');
                // Замена отступов после переноса строки и в первой строке
@@ -1909,9 +1922,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          },
 
          _showImageOptionsPanel: function(target) {
-            var
-               imageOptionsPanel = this._getImageOptionsPanel(target);
-            imageOptionsPanel.show();
+            this._getImageOptionsPanel(target).show();
          },
 
          _changeImageTemplate: function ($img, template) {
@@ -1944,6 +1955,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                case '6':
                   break;
             };
+            // Вызвать recalcPosition напрямую во избежании ощутимых задержек
+            // 49132 https://online.sbis.ru/opendoc.html?guid=f6ceccf6-2001-494d-90c1-d44a6255ad1e
+            this._imageOptionsPanel.recalcPosition();
             this._updateTextByTiny();
          },
 
@@ -1987,11 +2001,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   });
                });
-               this._imageOptionsPanel.subscribe('onImageDelete', function(){
-                  var
-                     $image = this.getTarget(),
-                     nodeForSelect = $image.parent()[0];
-                  $image.remove();
+               this._imageOptionsPanel.subscribe('onImageDelete', function () {
+                  var nodeForDelete = this.getTarget()[0];
+                  var nodeForSelect = nodeForDelete.parentNode;
+                  // Если изображение обёрнуто - удалить и обёртку
+                  // 1174832762 https://online.sbis.ru/opendoc.html?guid=0e560e83-6ebe-40a2-862f-18bd0563bbf6
+                  if (nodeForSelect.classList.contains('image-template-center')) {
+                     nodeForDelete = nodeForSelect;
+                     nodeForSelect = nodeForDelete.parentNode;
+                  }
+                  $(nodeForDelete).remove();
                   //Проблема:
                   //          После удаления изображения необходимо вернуть фокус в редактор,
                   //          но тк выделение было на изображении при фокусе оно пытаетсыя восстановиться.
@@ -2638,9 +2657,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             //             a)Подготовка текста
             //             b)Вставка текста
             //          использовать метод подготовки текста - _tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste
-            var
-               text = this._tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste(this._clipboardText);
-            return text;
+            return this._tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste(this._clipboardText);
          },
          _fillImages: function(state) {
             var

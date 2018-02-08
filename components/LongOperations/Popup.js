@@ -1,12 +1,9 @@
 define('SBIS3.CONTROLS/LongOperations/Popup',
    [
       "Core/UserInfo",
-      "Core/core-merge",
       'Core/Deferred',
       'Core/EventBus',
-      /*###"Core/helpers/string-helpers",*/
       'Lib/TabMessage/TabMessage',
-      /*###'SBIS3.CONTROLS/WaitIndicator',*/
       "SBIS3.CONTROLS/NotificationPopup",
       'SBIS3.CONTROLS/LongOperations/Entry',
       "tmpl!SBIS3.CONTROLS/LongOperations/Popup/resources/headerTemplate",
@@ -15,7 +12,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
       "Lib/Control/FloatArea/FloatArea",
       "css!SBIS3.CONTROLS/LongOperations/Popup/LongOperationsPopup"
    ],
-   function (UserInfo, cMerge, Deferred, EventBus, /*###strHelpers,*/ TabMessage, /*###WaitIndicator,*/ NotificationPopup, LongOperationEntry, headerTemplate, contentTpl, footerTpl, FloatArea) {
+   function (UserInfo, Deferred, EventBus, TabMessage, NotificationPopup, LongOperationEntry, headerTemplate, contentTpl, footerTpl, FloatArea) {
       'use strict';
 
       /**
@@ -185,16 +182,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
             //Открытие реестра операций
             this.subscribeTo(this.getChildControlByName('registryOperationButton'), 'onActivated', function () {
-               self._showFloatArea({
-                  title: rk('Все операции'),
-                  template: 'SBIS3.CONTROLS/LongOperations/Registry',
-                  componentOptions: {
-                     columns: {
-                        userPic: false
-                     },
-                     userId: self._options.userId
-                  }
-               });
+               self._showRegistry();
             });
 
             var container = this.getContainer();
@@ -244,29 +232,34 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
          /**
           * Метод показывает floatArea.
-          * @param params Уникальные параметры.
           */
-         _showFloatArea: function (params) {
-            var self = this;
-
-            var floatArea = new FloatArea(cMerge({
-               opener: self,
+         _showRegistry: function () {
+            var floatArea = new FloatArea({
+               title: rk('Все операции'),
+               template: 'SBIS3.CONTROLS/LongOperations/Registry',
+               componentOptions: {
+                  columns: {
+                     userPic: false
+                  },
+                  userId: this._options.userId
+               },
+               opener: this,
                direction: 'left',
                animation: 'slide',
                isStack: true,
                autoCloseOnHide: true,
                maxWidth: 1000
-            }, params));
+            });
 
             //Скрываем нашу панель, во время работы с floatArea, она не нужна
-            self._toggleFloatAreaMode(true);
+            this._toggleFloatAreaMode(true);
 
-            self._notify('onSizeChange');
+            this._notify('onSizeChange');
 
-            self.subscribeOnceTo(floatArea, 'onAfterClose', function () {
-               self._toggleFloatAreaMode(false);
-               self._notify('onSizeChange');
-            });
+            this.subscribeOnceTo(floatArea, 'onAfterClose', function () {
+               this._toggleFloatAreaMode(false);
+               this._notify('onSizeChange');
+            }.bind(this));
          },
 
          /**
