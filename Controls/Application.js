@@ -7,7 +7,7 @@ define('Controls/Application',
       'tmpl!Controls/Application/Page',
       'Core/helpers/URLHelpers',
       'Core/Deferred',
-      'Controls/Application/BodyClasses'
+      'Core/BodyClasses'
    ],
 
    /**
