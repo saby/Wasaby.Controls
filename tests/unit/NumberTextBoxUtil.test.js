@@ -62,9 +62,9 @@ define(['SBIS3.CONTROLS/Utils/NumberTextBoxUtil'], function (NumberTextBoxUtil) 
             assert.equal(newState.value, '7.');
             assert.equal(newState.caretPosition, 1);
          });
-         it('|123 456 789 123 456.0 => 7|23 456 789 123 456.0', function (){
-            newState = NumberTextBoxUtil.numberPress(0, 0, '123 456 789 123 456.0', true, 16, -1, 55, 20); // press digit 7
-            assert.equal(newState.value, '723456789123456.0');
+         it('|123 456 789 123 45.0 => 6|23 456 789 123 45.0', function (){
+            newState = NumberTextBoxUtil.numberPress(0, 0, '123 456 789 123 45.0', true, 14, -1, 54, 20); // press digit 6
+            assert.equal(newState.value, '62345678912345.0');
             assert.equal(newState.caretPosition, 1);
          });
       });
