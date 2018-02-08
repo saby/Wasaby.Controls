@@ -96,7 +96,7 @@
          overflow: hidden;
          text-overflow: ellipsis;
          white-space: nowrap;
-         max-width: 100%;
+         max-width: ~"calc(100% + 1px)";
       }
       .controls-TabButton__icon {
          margin-right: @margin-right_TabButton_icon;//6px;
@@ -115,7 +115,7 @@
       .flex-shrink(1);
       .inline-flexbox();
 
-      max-width: 100%;
+      max-width: ~"calc(100% + 2px)";
       > * {
          max-width: 100%; //защищаемся от рандомной верстки, не даем дочерним элементам вылехти за пределы контейнера
       }
