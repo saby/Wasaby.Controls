@@ -7,6 +7,24 @@ define(
       'use strict';
 
       describe('Controls/Input/Suggest', function () {
+   
+         it('_onSearchEnd', function() {
+            var suggest = new Suggest(),
+                closed = false;
+            
+            suggest._children = {
+               suggestPopupOpener: {
+                  close: function() {
+                     closed = true;
+                  }
+               }
+            };
+            
+            suggest._focused = false;
+            Suggest._private.onSearchEnd(suggest);
+      
+            assert.isTrue(closed, 'Popup is not closed after focusout and searching');
+         });
          
          it('_popupFocusIn', function() {
             var suggest = new Suggest();
@@ -36,16 +54,55 @@ define(
    
          it('selectHandler', function() {
             var suggest = new Suggest(),
-                focused = false;
+                focused = false,
+                selectedValue;
+            
+            suggest.saveOptions({
+               displayProperty: 'title'
+            });
             
             /* Т.к. реально проверить, есть ли фокус в саггесте мы не можем (нет DOM элемента),
                просто проверим вызов focus() */
             suggest.focus = function() {
                focused = true;
             };
-            suggest._selectHandler(new Model());
-            
+            suggest.once('valueChanged', function(event, value) {
+               selectedValue = value;
+            });
+   
+            suggest._selectHandler(
+               new Model(
+                  {
+                     rawData: {
+                        title: 'test'
+                     }
+                  })
+            );
+   
             assert.isTrue(focused, 'Suggest is not focused after select');
+            assert.equal(selectedValue, 'test',  'Wrong value after select');
+         });
+   
+         it('_clearClick', function() {
+            var suggest = new Suggest(),
+                focused = false,
+                suggestValue;
+   
+            suggest.focus = function() {
+               focused = true;
+            };
+   
+            suggest.once('valueChanged', function(event, value) {
+               suggestValue = value;
+            });
+   
+            Suggest._private.initSuggestController(suggest, {});
+            suggest._clearClick();
+   
+   
+            assert.equal(suggest._suggestController._value, '', 'Wrong value after clear');
+            assert.equal(suggestValue, '', 'Wrong value after clear');
+            assert.isTrue(focused, 'Suggest is not focused after clear');
          });
          
       });
