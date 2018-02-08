@@ -52,7 +52,7 @@ define('SBIS3.CONTROLS/Mixins/hierarchyMixin', [
              * @cfg {String} Устанавливает поле иерархии.
              * @remark
              * Полем иерархии называют поле записи, по значениям которой устанавливаются иерархические отношения между записями набора данных.
-             * Для таблиц БД, для которых установлен <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">тип отношений Иерархия</a>, по умолчанию поле иерархии называется "Раздел".
+             * Для таблиц БД, для которых установлен <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">тип отношений Иерархия</a>, по умолчанию поле иерархии называется "Раздел".
              * @see setParentProperty
              * @see getParentProperty
              */
@@ -81,7 +81,7 @@ define('SBIS3.CONTROLS/Mixins/hierarchyMixin', [
              *    <li>all - будут отображаться узлы (папки) и их содержимое - элементы коллекции, сгруппированные по этим узлам.</li>
              * </ul>
              *
-             * Подробное описание иерархической структуры приведено в документе {@link /doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy Типы отношений в таблицах БД}.
+             * Подробное описание иерархической структуры приведено в документе {@link /doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy Типы отношений в таблицах БД}.
              * @example
              * Устанавливаем режим полного отображения данных: будут отображены элементы коллекции и папки, по которым сгруппированы эти элементы.
              * <pre class="brush:xml">
@@ -264,7 +264,7 @@ define('SBIS3.CONTROLS/Mixins/hierarchyMixin', [
        * Устанавливает текущий корень иерархии.
        * @remark
        * Метод производит изменение набора данных: он будет соответствовать содержимому узла, идентификатор которого был установлен в качестве корня иерархии.
-       * В иерархических списках существует три типа записей: лист, узел и скрытый узел. Подробнее о различиях между ними читайте в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Типы отношений в БД</a>.
+       * В иерархических списках существует три типа записей: лист, узел и скрытый узел. Подробнее о различиях между ними читайте в разделе <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">Типы отношений в БД</a>.
        * При выполнении метода происходит событие {@link onBeforeSetRoot}.
        * @param {String|Number|Null} key Идентификатор узла иерархии, который нужно установить. Null - это вершина иерархии, в наборе данных отображены только те записи, которые являются родительскими для других.
        * @see getCurrentRoot
