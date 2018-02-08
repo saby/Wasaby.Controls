@@ -128,16 +128,21 @@ define('Controls/Input/Number/ViewModel',
             /**
              * Валидирует и подготавливает новое значение по splitValue
              * @param splitValue
+             * @param inputType
              * @returns {{value: (*|String), position: (*|Integer)}}
              */
-            prepareData: function (splitValue) {
+            prepareData: function (splitValue, inputType) {
                var
                   shift = 0;
 
                //Если был удалён пробел, то нужно удалить цифру слева от него и сдвинуть курсор на единицу влево
                if (splitValue.delete === ' ') {
-                  splitValue.before = splitValue.before.substr(0, splitValue.before.length - 1);
-                  shift = -1;
+                  if (inputType === 'deleteForward') {
+                     splitValue.after = splitValue.after.substr(1, splitValue.after.length);
+                  } else if (inputType === 'deleteBackward') {
+                     splitValue.before = splitValue.before.substr(0, splitValue.before.length - 1);
+                     shift = -1;
+                  }
                }
 
                //Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
