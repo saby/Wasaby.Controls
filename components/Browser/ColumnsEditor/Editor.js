@@ -240,6 +240,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
                className: 'ws-float-area__block-layout controls-Browser-ColumnsEditor-Editor__area',
                closeByExternalClick: true,
                closeButton: true,
+               crossStyle: 'light',
                componentOptions: {
                   title: hasEditorOptions ? editorOptions.title : undefined,
                   maxHeight: $('body').height(),
