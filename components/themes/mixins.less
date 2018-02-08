@@ -569,7 +569,6 @@
   }
   .generate-height(@className, @line-height, @i + 1);
 }
-
 //---------------Имитация цикла for---------------//
 .for(@_i, @_n, @callback) when not (@_i = (@_n + 1)){
   @callback();
@@ -633,6 +632,12 @@
     width: @width;
     height: @height;
   }
+}
+
+//Position: sticky for grid in Safari and other browsers
+.position-sticky() {
+   position: sticky;
+   position: -webkit-sticky;
 }
 
 .closeButton() {

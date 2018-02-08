@@ -47,7 +47,7 @@ define('Controls/List/SimpleList/ListViewModel',
                selectedKeys : cfg.selectedKeys,
                excludedKeys : cfg.excludedKeys
             });
-   
+
             _private.updateIndexes(self);
          },
 
@@ -68,6 +68,10 @@ define('Controls/List/SimpleList/ListViewModel',
             return this._itemsModel.isEnd();
          },
 
+         isLast: function() {
+            return this._itemsModel.isLast();
+         },
+
          goToNext: function() {
             //TODO убрать this._itemsModel._curIndex ?
             //this._itemsModel._curIndex++;
@@ -82,6 +86,10 @@ define('Controls/List/SimpleList/ListViewModel',
             itemsModelCurrent.showActions = !this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive);
             itemsModelCurrent.multiSelectStatus = this._multiselection.getSelectionStatus(itemsModelCurrent.key);
             return itemsModelCurrent;
+         },
+
+         getNext: function() {
+            return this._itemsModel.getNext();
          },
 
          getCurrentIndex: function() {
