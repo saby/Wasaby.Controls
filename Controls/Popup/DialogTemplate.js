@@ -2,7 +2,8 @@ define('Controls/Popup/DialogTemplate',
    [
       'Core/Control',
       'tmpl!Controls/Popup/DialogTemplate',
-      'css!Controls/Popup/DialogTemplate'
+      'css!Controls/Popup/DialogTemplate',
+      'css!SBIS3.CONTROLS/Mixins/PopupMixin/PopupMixin'
    ],
    function (Control, template) {
       'use strict';

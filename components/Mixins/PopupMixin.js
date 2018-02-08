@@ -13,7 +13,8 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
    'Core/helpers/Hcontrol/doAutofocus',
    'Core/helpers/Hcontrol/trackElement',
    "Core/detection",
-   "Core/constants"
+   "Core/constants",
+   'css!SBIS3.CONTROLS/Mixins/PopupMixin/PopupMixin'
 ], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, cInstance, doAutofocus, trackElement, detection, constants) {
    'use strict';
    if (typeof window !== 'undefined') {
@@ -156,6 +157,11 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
              */
             closeButton: false,
             /**
+             * @variant standart
+             * @variant light
+             */
+            crossStyle : 'standart',
+            /**
              * @cfg {Boolean} при клике мышки на таргет или перемещении по нему панель не закрывается
              */
             targetPart: false,
@@ -230,7 +236,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
          EventBus.globalChannel().subscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
 
          if (this._options.closeButton) {
-            container.append('<div class="controls-PopupMixin__closeButton"></div>');
+            container.append('<div class="controls-PopupMixin__closeButton controls-PopupMixin__closeButton_' + this._options.crossStyle + '"></div>');
             $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {
                //Нужно вызвать активироваться перед hide, чтобы закрылись плав. панели, у которых опенером был этот контрол
                //TODO: унифицировать код закрытия с Lib/Control/FloatArea/FloatArea: хранить коллекцию дочерних панелей, и закрывать их тут
