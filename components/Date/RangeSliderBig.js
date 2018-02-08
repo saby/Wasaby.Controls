@@ -1,9 +1,11 @@
 /*global define*/
 define('SBIS3.CONTROLS/Date/RangeSliderBig', [
    'SBIS3.CONTROLS/Date/RangeSliderBase',
+   'SBIS3.CONTROLS/Date/RangeBigChoose/resources/Utils',
    'SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin',
-   'SBIS3.CONTROLS/Utils/ControlsValidators'
-], function (DateRangeSliderBase, DateRangeBigChoosePickerMixin, ControlsValidators) {
+   'SBIS3.CONTROLS/Utils/ControlsValidators',
+   'css!SBIS3.CONTROLS/Date/RangeSliderBig/RangeSliderBig'
+], function (DateRangeSliderBase, rangeBigChooseUtils, DateRangeBigChoosePickerMixin, ControlsValidators) {
    'use strict';
    /**
     * Контрол позволяющий выбирать произвольный диапазон дат.
@@ -28,8 +30,13 @@ define('SBIS3.CONTROLS/Date/RangeSliderBig', [
       },
 
       _setPickerConfig: function() {
-         var config = DateRangeSliderBig.superclass._setPickerConfig.apply(this, arguments);
-         config.className = 'controls-DateRangeBigChoose__picker';
+         var config = DateRangeSliderBig.superclass._setPickerConfig.apply(this, arguments),
+            cssClass = 'controls-DateRangeSliderBig__picker';
+
+         cssClass += this._options.showPrevArrow ? '-withPrevButton' : '-withoutPrevButton';
+         cssClass += rangeBigChooseUtils.isStateButtonDisplayed(this._options.quantum) ? '-withStateButton' : '-withoutStateButton';
+
+         config.className = cssClass;
          return config;
       },
 
