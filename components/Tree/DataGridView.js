@@ -554,7 +554,12 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
             4) projItem'a может не быть при добавлении по месту */
          if(projItem && this.getEditArrow().isVisible() && !this._isSearchMode()) {
             runDelayed(forAliveOnly(function() {
-               hoveredItemContainer = hoveredItem.container;
+               //Из-за ассинхронной задержки runDelayed(), hoveredItemContainer может обратиться в null
+               var
+                   hoveredItem = this.getHoveredItem(),
+                   hoveredItemContainer = hoveredItem.container;
+               if(hoveredItemContainer === null)
+                  return;
                if(!projItem.isNode() && this._options.editArrow !== 'custom') {
                   this._hideEditArrow();
                   return;
