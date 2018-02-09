@@ -1,7 +1,7 @@
 /**
  * Created by kraynovdo on 16.11.2017.
  */
-define('Controls/List/ListControl/ItemsViewModel',
+define('Controls/List/SimpleList/ItemsViewModel',
    ['Core/Abstract', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance'],
    function(Abstract, ItemsUtil, cInstance) {
 
@@ -61,11 +61,11 @@ define('Controls/List/ListControl/ItemsViewModel',
          },
 
          getItemById: function(id, idProperty) {
-            return ItemsUtil.getDisplayItemById(this._display, id, idProperty)
+            return this._display ? ItemsUtil.getDisplayItemById(this._display, id, idProperty) : undefined;
          },
 
          getCount: function() {
-            return this._display.getCount();
+            return this._display ? this._display.getCount() : 0;
          },
 
          _onCollectionChange: function() {
@@ -77,10 +77,11 @@ define('Controls/List/ListControl/ItemsViewModel',
                this._items.assign(items);
             }
             else {
+               this._items = items;
                if (this._display) {
                   this._display.destroy();
                }
-               this._display = ItemsUtil.getDefaultDisplayFlat(items, this._options);
+               this._display = ItemsUtil.getDefaultDisplayFlat(this._items, this._options);
                this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
                this._notify('onListChange');
             }

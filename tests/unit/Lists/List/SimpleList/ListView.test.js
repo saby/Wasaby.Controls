@@ -2,8 +2,8 @@
  * Created by kraynovdo on 23.10.2017.
  */
 define([
-   'Controls/List/ListControl/ListView',
-   'Controls/List/ListControl/ListViewModel'
+   'Controls/List/SimpleList/ListView',
+   'Controls/List/SimpleList/ListViewModel'
 ], function(ListView, ListViewModel){
    describe('Controls.List.ListView', function () {
       var data, display;
@@ -36,7 +36,7 @@ define([
          var cfg = {
             listModel: model,
             idProperty: 'id',
-            selectedKey: 2
+            markedKey: 2
          };
          var lv = new ListView(cfg);
          lv.saveOptions(cfg);
@@ -44,7 +44,7 @@ define([
 
          var dispItem = lv._listModel._itemsModel._display.at(2);
          lv._onItemClick({}, dispItem);
-         assert.equal(dispItem, lv._listModel._selectedItem, 'Incorrect selected item before updating');
+         assert.equal(dispItem, lv._listModel._markedItem, 'Incorrect selected item before updating');
       })
    })
 });

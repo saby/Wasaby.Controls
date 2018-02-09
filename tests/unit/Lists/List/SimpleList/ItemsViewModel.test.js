@@ -2,10 +2,10 @@
  * Created by kraynovdo on 17.11.2017.
  */
 define([
-   'Controls/List/ListControl/ListViewModel',
+   'Controls/List/SimpleList/ItemsViewModel',
    'Controls/List/resources/utils/ItemsUtil'
-], function(ListViewModel, ItemsUtil){
-   describe('Controls.List.ListControl.ListViewModel', function () {
+], function(ItemsViewModel, ItemsUtil){
+   describe('Controls.List.ListControl.ItemsViewModel', function () {
       var data, display;
       beforeEach(function() {
          data = [
@@ -27,6 +27,17 @@ define([
          ];
 
       });
+      it('Display', function () {
+         var cfg = {
+            items: data,
+            idProperty: 'id'
+         };
+         var iv = new ItemsViewModel(cfg);
+
+         var disp = iv._display;
+         assert.equal(data.length, disp.getCount(), 'Incorrect display\'s creating before mounting');
+
+      });
 
       it('Enumeration', function () {
          var cfg = {
@@ -34,19 +45,19 @@ define([
             idProperty: 'id'
          };
 
-         var iv = new ListViewModel(cfg);
+         var iv = new ItemsViewModel(cfg);
 
 
 
-         assert.equal(0, iv._itemsModel._curIndex, 'Incorrect start enumeration index after constructor');
+         assert.equal(0, iv._curIndex, 'Incorrect start enumeration index after constructor');
 
-         iv._itemsModel._curIndex = 3;
+         iv._curIndex = 3;
          iv.reset();
-         assert.equal(0, iv._itemsModel._curIndex, 'Incorrect current enumeration index after reset()');
+         assert.equal(0, iv._curIndex, 'Incorrect current enumeration index after reset()');
 
          iv.goToNext();
          iv.goToNext();
-         assert.equal(2, iv._itemsModel._curIndex, 'Incorrect current enumeration index after 2x_goToNext');
+         assert.equal(2, iv._curIndex, 'Incorrect current enumeration index after 2x_goToNext');
 
          var condResult = iv.isEnd();
          assert.isTrue(condResult, 'Incorrect condition value enumeration index after 2x_goToNext');
@@ -59,38 +70,18 @@ define([
          var cfg = {
             items: data,
             idProperty: 'id',
-            displayProperty: 'title',
-            selectedKey: 1
+            displayProperty: 'title'
          };
 
-         var iv = new ListViewModel(cfg);
+         var iv = new ItemsViewModel(cfg);
 
          var cur = iv.getCurrent();
          assert.equal('id', cur.idProperty, 'Incorrect field set on getCurrent()');
          assert.equal('title', cur.displayProperty, 'Incorrect field set on getCurrent()');
          assert.equal(0, cur.index, 'Incorrect field set on getCurrent()');
          assert.deepEqual(data[0], cur.item, 'Incorrect field set on getCurrent()');
-         assert.isTrue(cur.isSelected, 'Incorrect field set on getCurrent()');
-
-      });
 
 
-      it('Selection', function () {
-         var cfg = {
-            items: data,
-            idProperty: 'id',
-            displayProperty: 'title',
-            selectedKey: 2
-         };
-
-         var iv = new ListViewModel(cfg);
-         var selItem = iv._selectedItem;
-         assert.equal(iv._itemsModel._display.at(1), selItem, 'Incorrect selectedItem');
-
-
-         iv.setSelectedKey(3);
-         selItem = iv._selectedItem;
-         assert.equal(iv._itemsModel._display.at(2), selItem, 'Incorrect selectedItem');
       });
    })
 });

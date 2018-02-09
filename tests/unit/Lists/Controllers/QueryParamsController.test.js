@@ -4,9 +4,9 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
    [
-      'Controls/List/Controllers/PageNavigation',
-      'Controls/List/Controllers/OffsetNavigation',
-      'Controls/List/Controllers/PositionNavigation',
+      'Controls/Controllers/QueryParamsController/Page',
+      'Controls/Controllers/QueryParamsController/Offset',
+      'Controls/Controllers/QueryParamsController/Position',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Source/SbisService'
    ],
@@ -16,7 +16,7 @@ define(
 
       'use strict';
 
-      describe('Controls.Controllers.Navigation', function () {
+      describe('Controls.Controllers.QueryParamsController', function () {
          var data, dataDown, dataRs, dataRsDown;
 
          beforeEach(function() {
@@ -44,7 +44,7 @@ define(
 
          });
 
-         describe('PageNavigation', function () {
+         describe('Page', function () {
             it('init', function () {
                var pNav = new PageNavigation({
                   page: 1,
@@ -111,10 +111,10 @@ define(
                params = pNav.prepareQueryParams();
                assert.deepEqual({limit: 4, offset: 4}, params, 'Method prepareQueryParams returns incorrect parameters before reload');
 
-               params = pNav.prepareQueryParams(undefined, 'down');
+               params = pNav.prepareQueryParams('down');
                assert.deepEqual({limit: 4, offset: 8}, params, 'Method prepareQueryParams returns incorrect parameters before load down');
 
-               params = pNav.prepareQueryParams(undefined, 'up');
+               params = pNav.prepareQueryParams('up');
                assert.deepEqual({limit: 4, offset: 0}, params, 'Method prepareQueryParams returns incorrect parameters before load up');
             })
 
