@@ -71,6 +71,10 @@
    }
 }
 // специфичное отображение MenuIcon в БТР. Оригинальная иконка кнопки отображаться не должна.
+.fre-list .controls-MenuIcon-header,
 .controls-RichEditorToolbar__smilesPicker .controls-MenuIcon-header {
     display: none;
+}
+.fre-list.controls-MenuIcon_hideHeader .controls-ListView__item:first-child .controls-MenuItem__icon {
+    display: inline-block;
 }
