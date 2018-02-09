@@ -284,34 +284,40 @@ define('SBIS3.CONTROLS/ListView/resources/VirtualScrollController', ['Core/Abstr
          },
 
          addItems: function (items, at) {
-            for (var i = 0; i < items.length; i++) {
-               this._heights.splice(at + i, 0, this._getItemHeight(items[i]));
-               if (i + at < this._currentWindow[0]) { // Добавили до видимого окна - надо сдвинуть индексы
-                  this._currentWindow[0] += 1;
-                  this._currentWindow[1] += 1;
-               } else if (i + at - 1 <= this._currentWindow[1] + 1) { // Добавили в видимом окне
-                  this._currentWindow[1] += 1;
+            // Игнорируем если виртуальный скрол отключен (к примеру, после поиска в реестре)
+            if (!this._scrollHandlerDisabled) {
+               for (var i = 0; i < items.length; i++) {
+                  this._heights.splice(at + i, 0, this._getItemHeight(items[i]));
+                  if (i + at < this._currentWindow[0]) { // Добавили до видимого окна - надо сдвинуть индексы
+                     this._currentWindow[0] += 1;
+                     this._currentWindow[1] += 1;
+                  } else if (i + at - 1 <= this._currentWindow[1] + 1) { // Добавили в видимом окне
+                     this._currentWindow[1] += 1;
+                  }
                }
+
+               // текущее окно поменялось - пересчитаем отображаемые записи
+               this._onVirtualPageChange(this._currentVirtualPage);
             }
-            
-            // текущее окно поменялось - пересчитаем отображаемые записи
-            this._onVirtualPageChange(this._currentVirtualPage);
          },
 
          removeItems: function(items, at) {
-            this._heights.splice(at, items.length);
+            // Игнорируем если виртуальный скрол отключен (к примеру, после поиска в реестре)
+            if (!this._scrollHandlerDisabled) {
+               this._heights.splice(at, items.length);
 
-            for (i = 0; i < items.length; i++) {
-               if (i + at < this._currentWindow[0]) { // Удалили до видимого окна - надо сдвинуть индексы
-                  this._currentWindow[0] -= 1;
-                  this._currentWindow[1] -= 1;
-               } else if (i + at <= this._currentWindow[1]) { // Удалили в видимом окне
-                  this._currentWindow[1] -= 1;
-               } 
+               for (i = 0; i < items.length; i++) {
+                  if (i + at < this._currentWindow[0]) { // Удалили до видимого окна - надо сдвинуть индексы
+                     this._currentWindow[0] -= 1;
+                     this._currentWindow[1] -= 1;
+                  } else if (i + at <= this._currentWindow[1]) { // Удалили в видимом окне
+                     this._currentWindow[1] -= 1;
+                  }
+               }
+
+               // текущее окно поменялось - пересчитаем отображаемые записи
+               this._onVirtualPageChange(this._currentVirtualPage);
             }
-            
-            // текущее окно поменялось - пересчитаем отображаемые записи
-            this._onVirtualPageChange(this._currentVirtualPage);
          },
 
          /**

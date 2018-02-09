@@ -24,7 +24,7 @@
 .controls-DateRangeBigChoose__header {
    background-color: @background-color__DateRangeBigChoose-header;
    border-bottom: @border-width_DateRangeBigChoose solid @border-color_DateRangeBigChoose;
-   padding: @padding_DateRangeBigChoose-header;
+   padding-left: @padding-left_DateRangeBigChoose-header;
    .box-sizing(border-box);
    .flexbox();
    .align-items(center);
@@ -37,11 +37,6 @@
       .icon-size(@size_DateRangeBigChoose__stateButton_icon);
       color: @color_DateRangeBigChoose__stateButton_icon;
    }
-   &:hover {
-      .icon-size {
-         color: @color_DateRangeBigChoose__stateButton_icon_hover;
-      }
-   }
    padding-right: @padding-right_DateRangeBigChoose-state-button;
 }
 //todo
@@ -50,9 +45,20 @@
       .icon-size(@size_DateRangeBigChoose__homeBtn_icon);
       color: @color_DateRangeBigChoose__homeBtn_icon;
    }
-   &:hover {
-      .icon-size {
-         color: @color_DateRangeBigChoose__homeBtn_icon_hover;
+}
+.ws-is-desktop-platform {
+   .controls-DateRangeBigChoose__stateButton {
+      &:hover {
+         .icon-size {
+            color: @color_DateRangeBigChoose__stateButton_icon_hover;
+         }
+      }
+   }
+   .controls-DateRangeBigChoose__homeBtn {
+      &:hover {
+         .icon-size {
+            color: @color_DateRangeBigChoose__homeBtn_icon_hover;
+         }
       }
    }
 }
@@ -116,17 +122,9 @@
    text-align: center;
    position: relative;
 }
-.controls-DateRangeBigChoose__years-yearsRangeItem-unselected {
-   &:hover {
-      outline: @border-color_DateRangeBigChoose-range-unselected-hover solid 1px;
-   }
-}
 
 .controls-DateRangeBigChoose__years-yearsRangeItem {
    color: @color_DateRangeBigChoose-years-panel-rangeButton;
-   &:hover {
-      background-color: @background-color_DateRangeBigChoose-years-panel-rangeButton;
-   }
 }
 .controls-DateRangeBigChoose__years-yearsRangeItem-displayed {
    color: @color_DateRangeBigChoose-years-panel-displayed-year;
@@ -135,11 +133,25 @@
 }
 .controls-DateRangeBigChoose__years-yearsRangeItem-current {
    color: @color_DateRangeBigChoose-years-panel-current-year;
-   &:hover {
-      background-color: @background-color_DateRangeBigChoose-years-panel-current-year;
-   }
 }
 
+.ws-is-desktop-platform {
+   .controls-DateRangeBigChoose__years-yearsRangeItem-unselected {
+      &:hover {
+         outline: @border-color_DateRangeBigChoose-range-unselected-hover solid 1px;
+      }
+   }
+   .controls-DateRangeBigChoose__years-yearsRangeItem {
+      &:hover {
+         background-color: @background-color_DateRangeBigChoose-years-panel-rangeButton;
+      }
+   }
+   .controls-DateRangeBigChoose__years-yearsRangeItem-current {
+      &:hover {
+         background-color: @background-color_DateRangeBigChoose-years-panel-current-year;
+      }
+   }
+}
 .controls-DateRangeBigChoose__years-yearsRangeItem-selectedInner {
    outline: @border-color_DateRangeBigChoose-range-selected-inner solid 1px;
 }

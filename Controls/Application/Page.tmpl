@@ -37,7 +37,11 @@
             </ws:if>
             <ws:if data="{{!compat}}">
                <script key="init_script">
-                  require(['Core/app']);
+                  require(['Controls/Application/AppData'], function(AppData){
+                     window.startContextData = {AppData: new AppData({})};
+                     require(['Core/app']);
+                  });
+
                </script>
             </ws:if>
             <ws:else>

@@ -4,6 +4,7 @@
  * @public
  * @class SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area
  * @extends SBIS3.CONTROLS/CompoundControl
+ * @author Спирин В.А.
  */
 define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
    [
@@ -44,7 +45,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
        */
       var _PRESET_ACTIONS = {
          edit: {title: rk('Редактировать'), icon: 'sprite:icon-16 icon-Edit icon-primary action-hover'},
-         clone: {title: rk('Дублировать'), icon: 'sprite:icon-16 icon-Copy icon-primary action-hover'},
+         clone: {title: rk('Дублировать', 'РедакторКолонок'), icon: 'sprite:icon-16 icon-Copy icon-primary action-hover'},
          'delete': {title: rk('Удалить'), icon: 'sprite:icon-16 icon-Erase icon-error'}
       };
 
@@ -53,7 +54,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
        * @protected
        * @type {string}
        */
-      var _PRESET_TITLE_ERROR = rk('Название пресета не может быть пустым и должно отличаться от названий других пресетов');
+      var _PRESET_TITLE_ERROR = rk('Название шаблона не может быть пустым и должно отличаться от названий других шаблонов', 'РедакторКолонок');
 
 
 
@@ -103,7 +104,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                 * @cfg {string} Начальное название нового пользовательского пресета (опционально)
                 */
                // TODO: Обратить внимание на связь с useOriginPresetTitle
-               newPresetTitle: rk('Новый пресет'),
+               newPresetTitle: rk('Новый шаблон', 'РедакторКолонок'),
                /**
                 * @cfg {boolean} При клонировании новых пользовательских пресетов строить название из исходного с добавлением следующего порядкового номера (опционально)
                 */
@@ -140,7 +141,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             cfg._optsSelectable.onItemClick = _onItemClick;
             if (!cfg.moveColumns) {
                // Добавляем автосортировку отмеченных элементов - они должны отображаться перед неотмеченными
-               cfg._optsSelectable.itemsSortMethod = _getItemsSortMethod();
+               //cfg._optsSelectable.itemsSortMethod = _getItemsSortMethod();
                cfg._optsSelectable.onSelectedItemsChange = _onSelectedItemsChange;
             }
             return cfg;
@@ -262,7 +263,6 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             selectedColumns = _uniqueConcat(preset ? preset.selectedColumns : null, cfg.selectedColumns),
             moveColumns = cfg.moveColumns;
          var
-            preparingItems = [],
             fixed = {
                items: [],
                markedKeys: []
@@ -280,14 +280,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                fixed.markedKeys.push(columnId);
             }
             else {
-               if (moveColumns) {
-                  selectable.items.push(colData)
-               }
-               else {
-                  // При отключенном перемещении необходимо сформировать рекордсет с собственной моделью.
-                  // Подготавливаем для него исходные данные.
-                  preparingItems.push(colData);
-               }
+               selectable.items.push(colData);
                if (selectedColumns.indexOf(columnId) !== -1) {
                   selectable.markedKeys.push(columnId);
                }
@@ -297,41 +290,40 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                }
             }
          });
-         if (moveColumns) {
-            // При включенном перемещении сортируем записи, согласно переданному состоянию массива отмеченных записей
-            selectable.items.sort(function (el1, el2) {
-               var
-                  idx1 = selectedColumns.indexOf(el1.id),
-                  idx2 = selectedColumns.indexOf(el2.id);
-               if (idx1 !== -1) {
-                  return idx2 !== -1 ? idx1 - idx2 : -1;
-               }
-               return idx2 !== -1 ? 1 : -1;
-            });
-         }
-         else {
-            // При отключенном перемещении будем использовать рекордсет с собственной моделью
-            // для осуществления автосортировки отмеченных записей
+         // Сортируем записи, согласно переданному состоянию массива отмеченных записей
+         selectable.items.sort(function (c1, c2) {
+            var i1 = selectedColumns.indexOf(c1.id);
+            var i2 = selectedColumns.indexOf(c2.id);
+            if (i1 !== -1) {
+               return i2 !== -1 ? i1 - i2 : -1;
+            }
+            else {
+               return i2 !== -1 ? 1 : -1;
+            }
+         });
+         selectable.items = new RecordSet({rawData:selectable.items, idProperty:'id'});
+         /*if (!moveColumns) {
+            // При отключенном перемещении будем использовать рекордсет с собственной моделью для осуществления автосортировки отмеченных записей
             selectable.items = new RecordSet({
-               rawData: preparingItems,
+               rawData: selectable.items,
                idProperty: 'id',
                model: AreaSelectableModel
             });
             _applySelectedToItems(selectable.markedKeys, selectable.items);
-         }
+         }*/
          groups.sort();
          cfg._optsFixed = fixed;
          cfg._optsSelectable = selectable;
          cfg._groups = 1 < groups.length || (groups.length && groups[0] != null) ? groups : null;
       };
 
-      var _applySelectedToItems = function (selectedArray, items) {
+      /*var _applySelectedToItems = function (selectedArray, items) {
          selectedArray.forEach(function (id) {
             items.getRecordById(id).set('selected', true);
          });
-      };
+      };*/
 
-      var _getItemsSortMethod = function () {
+      /*var _getItemsSortMethod = function () {
          return new ComputeFunctor(function (el1, el2) {
             // Смещаем отмеченные элементы в начало списка (учитывая их начальный index)
             if (el1.collectionItem.get('selected')) {
@@ -345,7 +337,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             }
             return el1.index - el2.index;
          }, ['selected']);
-      };
+      };*/
 
       var _makePresetViewItems = function (preset) {
          return new RecordSet({idProperty:'id', rawData:preset ? [{id:preset.id, title:preset.title}] : []});
@@ -365,7 +357,10 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       };
 
       var _validatePresetTitle = function (list, value) {
-         return value && list.indexOf(value) === -1;
+         if (value) {
+            var v = value.trim();
+            return !!v && list.indexOf(v) === -1;
+         }
       };
 
 
@@ -531,7 +526,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          }
          switch (action) {
             case 'change-title':
-               preset.title = arg;
+               preset.title = arg.trim();
                PresetCache.update(namespace, preset);
                break;
 

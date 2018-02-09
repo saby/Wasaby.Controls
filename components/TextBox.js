@@ -88,7 +88,8 @@ define('SBIS3.CONTROLS/TextBox', [
          _pasteProcessing : 0,
          _inputField : null,
          _compatPlaceholder: null,
-         _tooltipText: null,
+         //Сделаем значение по умолчанию undefined, т.к. это отсутствие значение, а null может прилететь из контекста.
+         _tooltipText: undefined,
          _beforeFieldWrapper: null,
          _afterFieldWrapper: null,
          _textFieldWrapper: null,
@@ -407,7 +408,7 @@ define('SBIS3.CONTROLS/TextBox', [
        */
       _applyTooltip: function() {
          var field = this._getFieldForTooltip();
-         if (this._tooltipText != this._options.text) {
+         if (this._tooltipText !== this._options.text) {
             var scrollWidth;
             if (constants.browser.isIE) {
                scrollWidth = getTextWidth(this._options.text);
