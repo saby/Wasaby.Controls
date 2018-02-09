@@ -20,7 +20,11 @@ define(
                }
             };
             
-            suggest._focused = false;
+            suggest.hasFocus = function() {
+               return false;
+            };
+   
+   
             Suggest._private.onSearchEnd(suggest);
       
             assert.isTrue(closed, 'Popup is not closed after focusout and searching');

@@ -34,7 +34,7 @@ define('Controls/Input/Suggest',
          },
          
          onSearchEnd: function(self) {
-            if (!self._focused) {
+            if (!self.hasFocus()) {
                _private.closePopup(self);
             }
             self._searching = false;
@@ -151,11 +151,6 @@ define('Controls/Input/Suggest',
                   _private.onFocusOutHandler(self);
                }
             });
-            this._focused = false;
-         },
-   
-         _focusIn: function() {
-            this._focused = true;
          },
    
          /* По стандарту все выпадающие списки закрываются при скроле.
