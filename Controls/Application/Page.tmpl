@@ -22,7 +22,7 @@
                window.wsConfig = {
                   wsRoot: '{{wsRoot}}',
                   resourceRoot: '{{resourceRoot}}',
-                  compatible: '{{compat}}'
+                  compatible: {{compat}}
                };
             </script>
             <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/bundles.js"></script>
@@ -41,7 +41,7 @@
                </script>
             </ws:if>
             <ws:else>
-               <Controls:Application:CompatibleScripts/>
+			   <ws:partial template="tmpl!Controls/Application/CompatibleScripts" />
             </ws:else>
          </div>
          <Controls:Popup:Manager:Container attr:id="popup"/>
