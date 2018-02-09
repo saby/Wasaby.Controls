@@ -126,13 +126,15 @@
             </div>
          </div>
          <SBIS3.CONTROLS:ScrollContainer class="controls-Browser__scrollContainer controls-Browser__view controls-LongOperationsRegistry__view">
-            <SBIS3.CONTROLS:LongOperations:List
-               name="operationList"
-               columns="{{columns}}"
-               userId="{{userId}}"
-               narrowTmpl="{{false}}"
-               useGroupByEasyGroup="{{useGroupByEasyGroup}}"
-            />
+            <ws:content>
+               <SBIS3.CONTROLS:LongOperations:List
+                  name="operationList"
+                  columns="{{columns}}"
+                  userId="{{userId}}"
+                  narrowTmpl="{{false}}"
+                  useGroupByEasyGroup="{{useGroupByEasyGroup}}"
+               />
+            </ws:content>
          </SBIS3.CONTROLS:ScrollContainer>
       </ws:content>
    </SBIS3.CONTROLS:Browser>
