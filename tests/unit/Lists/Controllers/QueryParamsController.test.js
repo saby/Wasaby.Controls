@@ -5,8 +5,8 @@
 define(
    [
       'Controls/Controllers/QueryParamsController/Page',
-      'Controls/List/Controllers/OffsetNavigation',
-      'Controls/List/Controllers/PositionNavigation',
+      'Controls/Controllers/QueryParamsController/Offset',
+      'Controls/Controllers/QueryParamsController/Position',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Source/SbisService'
    ],

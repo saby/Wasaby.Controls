@@ -313,7 +313,7 @@ define('Controls/List/SourceControl', [
          SourceControl.superclass._afterMount.apply(this, arguments);
 
 
-         //TODO кривое обращение к DOM
+         //TODO кривое обращение к DOM бцдет переделано на схему с Listner-Catcher
          var scrollContainer = this._container.closest('.ws-scrolling-content');
          if (scrollContainer) {
             this._scrollController = _private.createScrollController.call(this, scrollContainer);
@@ -333,9 +333,6 @@ define('Controls/List/SourceControl', [
                }
             });
          }
-
-
-
 
 
          if (_private.getItemsCount(this)) {
