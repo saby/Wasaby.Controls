@@ -965,9 +965,18 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
 
       _toggleGroup: function(groupId, flag) {
          this._options._groupCollapsing[groupId] = flag;
-         var containers = this._getGroupContainers(groupId);
+         var containers = this._getGroupContainers(groupId),
+            groupSelector = '.controls-GroupBy[data-group=\'' + groupId + '\']',
+            groupContainer;
          containers.toggleClass('ws-hidden', flag);
-         $('.controls-GroupBy[data-group=\'' + groupId + '\'] .controls-GroupBy__separatorCollapse', this._container).toggleClass('controls-GroupBy__separatorCollapse__collapsed', flag);
+         groupContainer = $(groupSelector, this._container);
+         groupContainer.find('.controls-GroupBy__separatorCollapse').toggleClass('controls-GroupBy__separatorCollapse__collapsed', flag);
+         // Если строка группы зафиксирована в заголвоке, то обновляем не только ее копию, но и оригинал в заголовке.
+         if (groupContainer.hasClass('ws-sticky-header__tr-copy')) {
+            this._container.closest('.ws-sticky-header__wrapper')
+               .find('>.ws-sticky-header__header-container ' + groupSelector + ' .controls-GroupBy__separatorCollapse')
+               .toggleClass('controls-GroupBy__separatorCollapse__collapsed', flag);
+         }
          this._drawItemsCallbackDebounce();
       },
 
