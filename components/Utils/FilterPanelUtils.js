@@ -6,7 +6,6 @@ define('SBIS3.CONTROLS/Utils/FilterPanelUtils',
       'Core/Deferred',
       'Core/ParallelDeferred',
       'Core/Context',
-      'SBIS3.CONTROLS/Utils/TemplateUtil',
       'Core/core-instance',
       'SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil',
       'Core/detection',
@@ -14,7 +13,7 @@ define('SBIS3.CONTROLS/Utils/FilterPanelUtils',
       "Core/core-clone",
       "Core/helpers/Object/find",
       'Core/moduleStubs'
-   ], function (Deferred, ParallelDeferred, cContext, TemplateUtil, cInstance, FilterToStringUtil, detection, constants, coreClone, objectFind, mStubs) {
+   ], function (Deferred, ParallelDeferred, cContext, cInstance, FilterToStringUtil, detection, constants, coreClone, objectFind, mStubs) {
 
       "use strict";
 
