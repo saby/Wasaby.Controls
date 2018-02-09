@@ -277,6 +277,7 @@
 //ToggleButton
 @button-checked-border-width:                         2px;
 @button-checked-padding:                              0 round(15px * @multiplier);
+
 //Link
 @height_Link:                                         round(52px * @multiplier);
 @font-size_Link:                                      round(32px * @multiplier);
@@ -314,6 +315,7 @@
 @line-height_MenuIcon-hideHeader-round24_icon:        @icon-size_default_medium;
 @margin_MenuIcon-hideHeader-round24_text:             round(6px * @multiplier) 0 round(6px * @multiplier) round(60px * @multiplier);
 @margin_MenuIcon_size-l:                              round(-1px * @multiplier) 0 0 round(-4px * @multiplier);
+@top_MenuIcon_bordered_offset_s:                      round(16px * @multiplier);
 //MenuButton
 @menu-button-menu-margin:                             round(-1px * @multiplier) 0 0 round(0 * @multiplier);
 @menu-button-header-font-size:                        @font-size_Button_default;
@@ -331,7 +333,7 @@
 @controls-filterButton-height:                        round(100px * @multiplier);
 @padding_filterBotton_line:                           0 round(16px * @multiplier) 0 0;
 @font-size_filterButton_line:                         round(32px * @multiplier);
-@controls-filterButton-area-header-padding:           round(11px * @multiplier) round(86px * @multiplier)  round(11px * @multiplier) round(24px * @multiplier);
+@controls-filterButton-area-header-padding:           round(11px * @multiplier) @width_CloseButton + round(8px * @multiplier)  round(11px * @multiplier) round(24px * @multiplier);
 @controls-filterButton-picker-border-width:           0;
 @margin_filterrButton_picker:                         0;
 @controls-filterButton-area-content-margin:           round(11px * @multiplier) round(8px * @multiplier);
@@ -375,6 +377,7 @@
 //IconButton
 @width_IconButton_bordered_size-m:                     @width_IconButton_bordered_size-s;
 @height_IconButton_bordered_size-m:                    @height_IconButton_bordered_size-s;
+@line-height_IconButton_bordered_size-m:               round(58px * @multiplier);
 //EditActions
 @border-radius_EditButton:                      2px;
 @border-width_EditButton:                       0;
@@ -395,7 +398,7 @@
 @controls-toolbar-default-margin:               round(8px * @multiplier);
 // Date Range Big Choose
 @height_DateRangeBigChoose-header:                           round(100px * @multiplier);
-@padding_DateRangeBigChoose-header:                          0 0 0 round(16px * @multiplier);
+@padding-left_DateRangeBigChoose-header:                     round(16px * @multiplier);
 @font-size_DateRangeBigChoose-years-panel-displayed-year:    @large-text-size;
 @font-size_DateRangeBigChoose-years-rangeButton:             @large-text-size;
 @height_DateRangeBigChoose-body:                             round(700px * @multiplier);

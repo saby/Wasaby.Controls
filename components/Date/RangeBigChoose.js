@@ -12,6 +12,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    'SBIS3.CONTROLS/Utils/DateControls',
    "Core/helpers/event-helpers",
    'Core/helpers/Object/isEmpty',
+   'SBIS3.CONTROLS/Date/RangeBigChoose/resources/Utils',
    "SBIS3.CONTROLS/Button",
    'js!WSControls/Buttons/Button',
    "SBIS3.CONTROLS/Button/IconButton",
@@ -28,7 +29,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
    'css!SBIS3.CONTROLS/Date/RangeBigChoose/DateRangeBigChoose',
    'SBIS3.CONTROLS/ScrollContainer'
 
-], function ( constants, detection, CompoundControl, dotTplFn, headerTpl, yearsPanelTpl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, DateControlsUtil, eHelpers, isEmpty) {
+], function ( constants, detection, CompoundControl, dotTplFn, headerTpl, yearsPanelTpl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, DateControlsUtil, eHelpers, isEmpty, rangeBigChooseUtils) {
    'use strict';
 
    var
@@ -215,7 +216,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
          this.getChildControlByName('PrevYearButton').subscribe('onActivated', this._onPrevOrNextYearBtnClick.bind(this, -1));
          this.getChildControlByName('NextYearButton').subscribe('onActivated', this._onPrevOrNextYearBtnClick.bind(this, 1));
-         if (this._options.yearStateEnabled && this._options.monthStateEnabled) {
+         if (rangeBigChooseUtils.isStateButtonDisplayed(this._options.quantum)) {
             this.getChildControlByName('StateButton').subscribe('onActivated', this._onStateBtnClick.bind(this));
          }
 
@@ -266,8 +267,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          // }
          this._startDatePicker = this.getChildControlByName('DatePickerStart');
          this._endDatePicker = this.getChildControlByName('DatePickerEnd');
-         this._startDatePicker.setDate(self.getStartValue());
-         this._endDatePicker.setDate(self.getEndValue());
          this._startDatePicker.subscribe('onTextChange', this._onDatePickerStartDateChanged.bind(this));
          this._endDatePicker.subscribe('onTextChange', this._onDatePickerEndDateChanged.bind(this));
 
@@ -305,9 +304,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          options.monthStateEnabled = true;
          if (!isEmpty(options.quantum)) {
             options.yearSelectionEnabled = 'years' in options.quantum;
-            options.yearStateEnabled = 'months' in options.quantum ||'quarters' in options.quantum ||
-               'halfyears' in options.quantum || 'years' in options.quantum;
-            options.monthStateEnabled = 'days' in options.quantum || 'weeks' in options.quantum;
+            options.yearStateEnabled = rangeBigChooseUtils.isYearStateEnabled(options.quantum);
+            options.monthStateEnabled = rangeBigChooseUtils.isMonthStateEnabled(options.quantum);
          }
          return options;
       },
@@ -655,7 +653,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this._dateRangePicker._updateScrollPosition();
          this._setCurrentYear(month.getFullYear(), true);
          this._updateYearsBar(month.getFullYear());
-         if (this._options.yearStateEnabled && this._options.monthStateEnabled) {
+         if (rangeBigChooseUtils.isStateButtonDisplayed(this._options.quantum)) {
             this.getChildControlByName('StateButton').setChecked(true);
          }
       },
@@ -669,7 +667,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          container.find('.controls-DateRangeBigChoose__months').removeClass('ws-hidden');
          this._monthRangePicker.setRange(this.getStartValue(), this.getEndValue());
          this.getChildControlByName('MonthRangePicker').setYear(this._getCurrentYear());
-         if (this._options.yearStateEnabled && this._options.monthStateEnabled) {
+         if (rangeBigChooseUtils.isStateButtonDisplayed(this._options.quantum)) {
             this.getChildControlByName('StateButton').setChecked(false);
          }
       },

@@ -421,9 +421,15 @@ define('js!WSControls/Buttons/MenuButton', [
       },
 
        _dataLoadedCallback : function() {
+         var items = this.getItems();
+
          if (this._picker){
             this.hidePicker();
-            this._picker.setItems(this.getItems());
+            this._picker.setItems(items);
+         }
+         // если в меню один пункт, то состояние доступности кнопки определяется по этому пункту
+         if(items.getCount() === 1 && items.at(0).has('enabled')){
+            this.setEnabled(items.at(0).get('enabled'));
          }
        },
 

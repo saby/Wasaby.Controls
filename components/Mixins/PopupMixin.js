@@ -756,7 +756,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
       _initWindowSizes: function () {
          this._windowSizes = {
             height: $(window).height() - TouchKeyboardHelper.getKeyboardHeight(),
-            width: $(window).width()
+            width: window.innerWidth
          };
       },
 

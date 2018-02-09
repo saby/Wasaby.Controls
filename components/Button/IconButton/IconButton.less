@@ -98,3 +98,15 @@
 .icon-IconButton-disabled {
   color: @color_Link-icon_disabled;
 }
+// баг iPad, видимо связанный с неправильным расчетом размеров флексового контейнера
+// хаки "спасающие" от этого бага не помогли
+// https://stackoverflow.com/questions/17202128/rounded-cornes-border-radius-safari-issue
+.controls-IconButton_bordered_size_m {
+  .controls-IconButton__content {
+    display: inline-block;
+    text-align: center;
+    .controls-Button__icon {
+      line-height: @line-height_IconButton_bordered_size-m !important;
+    }
+  }
+}

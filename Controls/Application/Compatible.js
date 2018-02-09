@@ -7,7 +7,6 @@ define('Controls/Application/Compatible', [
    'tmpl!Controls/Application/Compatible',
    'tmpl!Controls/Application/CompatibleScripts'
 ], function(Base, 
-            runDelayed, 
             template) {
    'use strict';
 
