@@ -110,7 +110,7 @@
    .ws-header-mixin(@link-header-padding-left, @link-header-padding-right, @link-header-font-size, @link-header-color, @header-height);
    text-decoration: @link-header-text-decoration;
 
-   .controls-Button__wrapper {
+   .controls-ButtonBase__content {
       .ws-forwardArrow();
    }
 
@@ -129,7 +129,7 @@
    .ws-header_size_weight();
    .ws-header_color-hover_accent1();
 
-   .controls-Button__wrapper {
+   .controls-ButtonBase__content {
       .ws-forwardArrow();
    }
 }
@@ -143,7 +143,7 @@
       float: left;
    }
 
-   &.controls-ToggleButton__normal.controls-Button_size-m.controls-Checked__checked .controls-Button__content:before {
+   &.controls-ToggleButton__normal.controls-Button_size-default.controls-Checked__checked .controls-Button__content:before {
       content: @toggle-header-checked-before-content;
    }
 
@@ -219,7 +219,7 @@
       }
    }
 
-   .controls-Button:not(.ws-disabled):not(.controls-Click__active):hover.ws-toggleHeader.controls-ToggleButton__normal.controls-Button_size-m {
+   .controls-Button:not(.ws-disabled):not(.controls-Click__active):hover.ws-toggleHeader.controls-ToggleButton__normal.controls-Button_size-default {
       border: none;
       background: none;
       font: @toggle-header-font;
@@ -227,7 +227,7 @@
    }
    // сейчас нельзя использовать абстрактную кнопку в новом шаблонизаторе из-за слешей в название компонента
    // поэтому временно усиливаю селекторыыы
-   .controls-Button:not(.ws-disabled).ws-toggleHeader.controls-ToggleButton__normal.controls-Button_size-m {
+   .controls-Button:not(.ws-disabled).ws-toggleHeader.controls-ToggleButton__normal.controls-Button_size-default {
       &, &.controls-Checked__checked {
          &:hover {
             border: none;
@@ -266,7 +266,7 @@
    }
 }
 
-.controls-Button.ws-toggleHeader.controls-ToggleButton__normal.controls-Button_size-m {
+.controls-Button.ws-toggleHeader.controls-ToggleButton__normal.controls-Button_size-default {
    &, &.controls-Checked__checked:not(.ws-disabled) {
       &, &.controls-Click__active {
          border: none;

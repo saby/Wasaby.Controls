@@ -426,6 +426,7 @@ define('SBIS3.CONTROLS/OperationsPanel', [
                   icon: 'sprite:icon-size icon-ExpandDown icon-primary action-hover',
                   pickerConfig: {
                      closeButton: true,
+                     crossStyle: 'light',
                      className: 'controls-operationsPanel__itemsMenu_picker' +
                         (massMode ? ' controls-operationsPanel__massMode' : '') +
                         (selectionMode ? ' controls-operationsPanel__selectionMode' : ''),
@@ -438,7 +439,7 @@ define('SBIS3.CONTROLS/OperationsPanel', [
                });
 
                self._itemsMenu._setPickerContent = function() {
-                  $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-size icon-ExpandUp icon-primary action-hover');
+                  $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-size icon-Close icon-primary action-hover');
                };
 
                self.subscribeTo(self._itemsMenu, 'onMenuItemActivate', function(e, id, event){

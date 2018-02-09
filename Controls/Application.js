@@ -5,8 +5,8 @@ define('Controls/Application',
    [
       'Core/Control',
       'tmpl!Controls/Application/Page',
-      //'Core/helpers/URLHelpers', /*TODO:: это будет нужно для роутинга, но пока роутинг не нужен, просто оставим
-      'Core/Deferred'
+      'Core/Deferred',
+      'Controls/Application/AppData'
    ],
 
    /**
@@ -15,8 +15,8 @@ define('Controls/Application',
     */
    function (Base,
              template,
-             //URLHelpers,
-             Deferred) {
+             Deferred,
+             AppData) {
       'use strict';
 
       var _private,
@@ -30,11 +30,7 @@ define('Controls/Application',
           * @param routesConfig
           */
          initState: function(self, cfg) {
-            self.cssLinks = cfg.cssLinks;
             self.title = cfg.title;
-            self.wsRoot = cfg.wsRoot;
-            self.resourceRoot = cfg.resourceRoot;
-            self.jsLinks = cfg.jsLinks;
             self.templateConfig = cfg.templateConfig;
             self.compat = cfg.compat||false;
          }
@@ -63,6 +59,15 @@ define('Controls/Application',
 
             _private.initState(self, receivedState||cfg);
             self.content = cfg.content;
+
+            if (!receivedState) {
+               receivedState = {};
+            }
+            self.cssLinks = receivedState.cssLinks || context.AppData?context.AppData.cssLinks:cfg.cssLinks;
+            self.wsRoot = receivedState.wsRoot || context.AppData?context.AppData.wsRoot:cfg.wsRoot;
+            self.resourceRoot = receivedState.resourceRoot || context.AppData?context.AppData.resourceRoot:cfg.resourceRoot;
+            self.jsLinks = receivedState.jsLinks || context.AppData?context.AppData.jsLinks:cfg.jsLinks;
+
             /**
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
              * роутинга и с ним же надо восстанавливаться на клиенте.
@@ -74,28 +79,17 @@ define('Controls/Application',
                wsRoot: self.wsRoot,
                resourceRoot: self.resourceRoot,
                templateConfig: self.templateConfig,
-               jquery: self.jquery,
                compat: self.compat
             });
             return def;
          }
-
-
-         /*TODO:: это будет нужно для роутинга, но пока роутинг не нужен, просто оставим
-         _afterMount: function() {
-            var
-               navigation = EventBus.channel('navigation'),
-               self = this;
-            navigation.subscribe('onNavigate', function(e, location) {
-               self._setLocation.apply(self, arguments);
-            });
-         },
-
-         _setLocation: function(e, path) {
-            this._tplConfig = this._routes[path];
-            history.pushState(history.state, '', path + '?' + URLHelpers.getQuery());
-         }*/
       });
+
+      Page.contextTypes =  function contextTypes() {
+         return {
+            AppData: AppData
+         };
+      };
 
       return Page;
    }

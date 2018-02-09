@@ -80,7 +80,7 @@ define('SBIS3.CONTROLS/Filter/FilterPanel', [
     *
     * @mixes SBIS3.CONTROLS/Mixins/Expandable
     *
-    * @demo SBIS3.CONTROLS.Demo.MyFilterPanel Временный демонстрационный пример без возможности редактировать исходный код компонента. Чтобы получить доступ к исходного коду компонента, скачайте архив демо-примера.
+    * @demo SBIS3.Demo.FilterPanel.FilterPanelSimple Чтобы получить доступ к исходного коду компонента, скачайте архив демо-примера.
     */
    var
       ITEM_FILTER_ID          = 'id',
@@ -132,7 +132,7 @@ define('SBIS3.CONTROLS/Filter/FilterPanel', [
              *     <li>details - использовать редактор {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList}.</li>
              * </ul>
              * @property {Object} properties.properties Объект, в который передают опции для конфигурации контрола {@link SBIS3.CONTROLS/FieldLink}, на основе которого создан редактор {@link SBIS3.CONTROLS/Filter/Panel/components/Chooser/FieldLink}.
-             * Описание контрола и список его опций вы можете найти <a href='/docs/js/SBIS3/CONTROLS/FieldLink/'>здесь</a> и <a href='/doc/platform/developmentapl/interface-development/components/textbox/field-link/selector-action//'>здесь</a>.
+             * Описание контрола и список его опций вы можете найти <a href='/docs/js/SBIS3/CONTROLS/FieldLink/'>здесь</a> и <a href='/doc/platform/developmentapl/interface-development/components/textbox/field-link/selector-action/'>здесь</a>.
              * @property {Object} properties.items Набор данных, по которому будет построен список значений. Актуально для редакторов типа "SBIS3.CONTROLS.FilterPanelChooser.*".
              */
             /**

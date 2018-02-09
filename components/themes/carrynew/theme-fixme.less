@@ -12,8 +12,30 @@
   background-color: @default-bg-color !important;
 }
 
+.controls-ListView {
+  .controls-IconButton {
+    .icon-primary {
+      color: #2D68B5;
+    }
+  }
+}
+
 .controls-ListView .controls-ItemsToolbar__editActions {
   background: @controls-editInPlace-editor-bg;
+}
+
+.ws-is-desktop-platform {
+  .controls-ListView {
+    .controls-IconButton:not(.ws-disabled):not(.controls-Click__active) {
+      &:hover {
+        .controls-Button__icon {
+          &.icon-primary {
+            color: rgb(49, 62, 120);
+          }
+        }
+      }
+    }
+  }
 }
 
 .controls-FieldLink .icon-size {

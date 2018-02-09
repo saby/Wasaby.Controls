@@ -5,7 +5,7 @@
          mask="{{mask}}"
          name="DatePickerEnd"
          autocompleteMode="end"
-         date="{{'endValue'|mutable}}"
+         date="{{endValue}}"
          serializationMode="{{serializationMode}}"
          onTextChangeMode="onTextEnter"
          size="m"
@@ -22,7 +22,7 @@
    </ws:template>
 
    <SBIS3.CONTROLS:Button:StateButton
-      if="{{yearSelectionEnabled}}"
+      if="{{yearStateEnabled && monthStateEnabled}}"
       tabindex="0"
       name="StateButton"
       activableByClick="{{false}}"
@@ -35,8 +35,9 @@
    <SBIS3.CONTROLS:Date:RangeSliderBase
       tabindex="1"
       name="DateRangeHeader"
-      startValue="{{'startValue'|bind}}"
-      endValue="{{'endValue'|bind}}"
+      startValue="{{startValue}}"
+      endValue="{{endValue}}"
+      emptyCaption="{{emptyCaption}}"
       visible="{{headerType === 'link'}}"
       showNextArrow="{{false}}"
       showPrevArrow="{{false}}"
@@ -51,7 +52,7 @@
          name="DatePickerStart"
          autocompleteMode="start"
          onTextChangeMode="onTextEnter"
-         date="{{'startValue'|mutable}}"
+         date="{{startValue}}"
          size="m"
          className="controls-DateRangeBigChoose__datePickerStart"
          serializationMode="{{serializationMode}}"
@@ -69,7 +70,7 @@
       tabindex="0"
       name="HomeButton"
       activableByClick="{{false}}"
-      tooltip="{[Поставить текущую дату]}"
+      tooltip="{[Текущий период]}"
       icon="sprite:icon-size icon-Home3 icon-primary"
       className="controls-DateRangeBigChoose__homeBtn"
       visible="{{homeButtonVisibility|bind}}"
@@ -84,5 +85,5 @@
       className="controls-DateRangeBigChoose__ApplyButton controls-IconButton__round-border"
    />
 
-   <div class="controls-PopupMixin__closeButton controls-DateRangeBigChoose__closeButton"></div>
+   <div class="controls-PopupMixin__closeButton controls-DateRangeBigChoose__closeButton controls-PopupMixin__closeButton_standart"></div>
 </div>

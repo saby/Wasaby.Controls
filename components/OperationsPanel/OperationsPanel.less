@@ -58,19 +58,14 @@
       }
    }
 
-   .controls-PopupMixin__closeButton, .controls-PopupMixin__closeButton:hover {
-      background: none;
-      box-shadow: none !important;
-      border: none;
-      top: 8px;
-      right: @controls-OperationsPanel-menu-close-button-right;
-      &:before {
-         content: "\e801";
-      }
+   .controls-PopupMixin__closeButton {
+      top: @top_OperationsPanel-menu-closeButton;
+      right: @right_OperationsPanel-menu-closeButton;
    }
 }
 
-.controls-operationsPanel__itemsMenu .icon-size, .controls-operationsPanel__itemsMenu_picker .controls-PopupMixin__closeButton.icon-size{
+
+.controls-operationsPanel__itemsMenu .icon-size {
    .icon-size(@controls-OperationsPanel-menu-icon-size);
 }
 

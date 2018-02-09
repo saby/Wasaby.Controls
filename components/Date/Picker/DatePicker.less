@@ -27,11 +27,13 @@
       }
    }
 }
-.controls-DatePicker__timePicker-border.controls-FloatArea {
+.controls-DatePicker__timePicker-border {
    border: @float-area-border;
    .box-shadow(@float-area-shadow);
 
    .controls-PopupMixin__closeButton {
+      position: absolute;
+      right: 0;
       top: @top_DatePicker-closeButton;
    }
 }

@@ -47,6 +47,8 @@ define('SBIS3.CONTROLS/Button',
     * @css controls-Button__icon Класс для изменения отображения иконки кнопки.
     * @css controls-Button__text Класс для изменения отображения текста на кнопке.
     *
+    * @mixes SBIS3.CONTROLS/Button/ButtonDocs
+    *
     * @control
     * @category Button
     * @public
@@ -59,8 +61,8 @@ define('SBIS3.CONTROLS/Button',
                /**
                 * @cfg {String} Устанавливает размер кнопки.
                 * @remark
-                * Значение "m" установит средний размер поля ввода.
-                * Значение "l" устaновит большой размер поля ввода.
+                * Значение "m" установит средний размер кнопки.
+                * Значение "l" устaновит большой размер кнопки.
                 * @example
                 * Пример 1. Большая кнопка:
                 * фрагмент верстки:
@@ -68,7 +70,7 @@ define('SBIS3.CONTROLS/Button',
                 *     <option name="size">l</option>
                 * </pre>
                 */
-               size: '',
+               size: 'default',
                /**
                 * @cfg {String} Устанавливает стилевое оформление кнопки.
                 * @remark
