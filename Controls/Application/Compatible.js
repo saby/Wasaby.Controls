@@ -3,10 +3,8 @@
  */
 define('Controls/Application/Compatible', [
    'Core/Control',
-   'Core/helpers/Function/runDelayed',
    'tmpl!Controls/Application/Compatible'
 ], function(Base, 
-            runDelayed, 
             template) {
    'use strict';
 

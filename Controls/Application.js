@@ -63,10 +63,10 @@ define('Controls/Application',
             if (!receivedState) {
                receivedState = {};
             }
-            self.cssLinks = receivedState.cssLinks || context.AppData.cssLinks;
-            self.wsRoot = receivedState.wsRoot || context.AppData.wsRoot;
-            self.resourceRoot = receivedState.resourceRoot || context.AppData.resourceRoot;
-            self.jsLinks = receivedState.jsLinks || context.AppData.jsLinks;
+            self.cssLinks = receivedState.cssLinks || context.AppData?context.AppData.cssLinks:cfg.cssLinks;
+            self.wsRoot = receivedState.wsRoot || context.AppData?context.AppData.wsRoot:cfg.wsRoot;
+            self.resourceRoot = receivedState.resourceRoot || context.AppData?context.AppData.resourceRoot:cfg.resourceRoot;
+            self.jsLinks = receivedState.jsLinks || context.AppData?context.AppData.jsLinks:cfg.jsLinks;
 
             /**
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла

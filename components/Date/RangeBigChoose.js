@@ -267,8 +267,6 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          // }
          this._startDatePicker = this.getChildControlByName('DatePickerStart');
          this._endDatePicker = this.getChildControlByName('DatePickerEnd');
-         this._startDatePicker.setDate(self.getStartValue());
-         this._endDatePicker.setDate(self.getEndValue());
          this._startDatePicker.subscribe('onTextChange', this._onDatePickerStartDateChanged.bind(this));
          this._endDatePicker.subscribe('onTextChange', this._onDatePickerEndDateChanged.bind(this));
 

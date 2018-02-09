@@ -53,6 +53,10 @@ define(
          });
    
          it('selectHandler', function() {
+            //тестирует фокусы, проверяем только на клиенте
+            if (typeof document === 'undefined') {
+               this.skip();
+            }
             var suggest = new Suggest(),
                 focused = false,
                 selectedValue;
@@ -84,6 +88,10 @@ define(
          });
    
          it('_clearClick', function() {
+            //тестирует клик, проверяем только на клиенте
+            if (typeof document === 'undefined') {
+               this.skip();
+            }
             var suggest = new Suggest(),
                 focused = false,
                 suggestValue;
