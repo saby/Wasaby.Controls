@@ -1473,7 +1473,14 @@ define('SBIS3.CONTROLS/ListView',
                recordIndex = recordItems.getIndexByValue(recordItems.getIdProperty(), id),
                itemsProjection = this._getItemsProjection(),
                index = recordIndex !== -1 ? items.index(this._getDomElementByItem(itemsProjection.getItemBySourceIndex(recordIndex))) : -1,
+               isRootId = function(id) {
+                  //корень может отображаться даже если его нет в рекордсете
+                  return itemsProjection.getRoot && itemsProjection.getRoot() && itemsProjection.getRoot().getContents().get(recordItems.getIdProperty()) == id;
+               },
                siblingItem;
+            if (index === -1 && isRootId(id)) {
+               index = 0;
+            }
             if (isNext) {
                if (index + 1 < items.length) {
                   siblingItem = items.eq(index + 1);
@@ -1486,8 +1493,9 @@ define('SBIS3.CONTROLS/ListView',
             } else {
                siblingItem = items.eq(index);
             }
+
             if (siblingItem) {
-               return this.getItems().getRecordById(siblingItem.data('id')) ? siblingItem : this._getHtmlItemByDOM(siblingItem.data('id'), isNext);
+               return this.getItems().getRecordById(siblingItem.data('id')) || isRootId(siblingItem.data('id')) ? siblingItem : this._getHtmlItemByDOM(siblingItem.data('id'), isNext);
             }
          },
 
