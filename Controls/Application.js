@@ -5,7 +5,6 @@ define('Controls/Application',
    [
       'Core/Control',
       'tmpl!Controls/Application/Page',
-      'Core/helpers/URLHelpers',
       'Core/Deferred',
       'Core/BodyClasses'
    ],
@@ -16,7 +15,6 @@ define('Controls/Application',
     */
    function (Base,
              template,
-             URLHelpers,
              Deferred,
              BodyClasses) {
       'use strict';
@@ -69,6 +67,7 @@ define('Controls/Application',
             self.resourceRoot = receivedState.resourceRoot || context.AppData?context.AppData.resourceRoot:cfg.resourceRoot;
             self.jsLinks = receivedState.jsLinks || context.AppData?context.AppData.jsLinks:cfg.jsLinks;
             self.BodyClasses = BodyClasses;
+
             /**
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
              * роутинга и с ним же надо восстанавливаться на клиенте.
