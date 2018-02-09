@@ -42,12 +42,17 @@ define('Controls/Button', [
            if(!this.isEnabled()){
                e.stopPropagation();
            }
-       }
+       },
+
+      buttonType: function (style) {
+         return style.split('-')[0];
+      }
    });
 
    Button.getDefaultOptions = function() {
       return {
-         style: 'default'
+         style: 'default',
+         size: 'm'
       };
    };
 

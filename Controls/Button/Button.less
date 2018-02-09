@@ -8,51 +8,81 @@
   .user-select();
 }
 
-.controls-Button__style-link-main {
-  font-size: @font-size_Link;
+.controls-Button__type-link {
   cursor: pointer;
+}
+
+.controls-Button__type-link__size-s{
+  font-size: @font-size_Link-s;
+}
+
+.controls-Button__type-link__size-m{
+  font-size: @font-size_Link-m;
+}
+
+.controls-Button__type-link__size-l{
+  font-size: @font-size_Link-l;
+}
+
+.controls-Button__type-link__size-xl{
+  font-size: @font-size_Link-xl;
+}
+
+.controls-Button__style-link-main {
   color: @color_Link-main-text;
 }
 
-.controls-Button__style-link-main:hover{
-  color: @color_Link-main-text_hovered;
-  .controls-BaseButton__text {
-    text-decoration: underline;
-  }
-}
-
 .controls-Button__style-link-main2 {
-  font-size: @font-size_Link;
-  cursor: pointer;
   color: @color_Link-main2-text;
 }
 
-.controls-Button__style-link-main2:hover{
-  .controls-BaseButton__text {
-    text-decoration: underline;
-  }
-}
-
 .controls-Button__style-link-main3 {
-  font-size: @font-size_Link;
-  cursor: pointer;
   color: @color_Link-main3-text;
   .controls-BaseButton__text {
     text-decoration: underline;
   }
 }
 
-.controls-Button__style-link-main3:hover{
-  color: @color_Link-main3-text_hovered;
+.controls-Button__style-link-additional {
+  color: @color_Link-additional-text;
 }
 
-.controls-Button__style-link-main-disabled, .controls-Button__style-link-main2-disabled, .controls-Button__style-link-main3-disabled{
+.controls-Button__style-link-additional2 {
+  color: @color_Link-additional2-text;
+}
+
+.controls-Button__style-link-additional3 {
+  color: @color_Link-additional3-text;
+}
+
+.controls-Button__style-link-additional4 {
+  color: @color_Link-additional4-text;
+}
+
+.controls-Button__style-link-additional5 {
+  color: @color_Link-additional5-text;
+}
+
+.ws-is-desktop-platform {
+  .controls-Button__style-link-main:hover {
+    color: @color_Link-main-text_hovered;
+  }
+
+  .controls-Button__style-link-main3:hover {
+    color: @color_Link-main3-text_hovered;
+  }
+
+  .controls-Button__type-link:hover{
+    .controls-BaseButton__text {
+      text-decoration: underline;
+    }
+  }
+}
+
+.controls-Button__type-link-disabled {
   color: @color_Link-text_disabled;
 }
 
-.controls-Button__wrapper_style-link-main, .controls-Button__wrapper_style-link-main2, .controls-Button__wrapper_style-link-main3 {
-  .justify-content(flex-start);
-}
 
 .controls-Button__style-default, .controls-Button__style-primary, .controls-Button__style-primary-disabled,  .controls-Button__style-default-disabled {
   border-style: solid;
