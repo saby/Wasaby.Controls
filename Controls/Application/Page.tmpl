@@ -13,7 +13,7 @@
 </head>
 <Controls:Event:Listener name="scrollDetect" register="scroll">
    <Controls:Event:Listener name="resizeDetect" register="resize">
-      <body class="ws-is-chrome" id="body" key="1_2_" on:scroll="_scrollPage()" on:resize="_resizePage()">
+      <body class="{{BodyClasses()}}" id="body" key="1_2_" on:scroll="_scrollPage()" on:resize="_resizePage()">
          <ws:if data="{{ content.content }}">
             <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}" />
          </ws:if>

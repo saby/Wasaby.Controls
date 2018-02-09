@@ -5,8 +5,9 @@ define('Controls/Application',
    [
       'Core/Control',
       'tmpl!Controls/Application/Page',
+      'Core/helpers/URLHelpers',
       'Core/Deferred',
-      'Controls/Application/AppData'
+      'Core/BodyClasses'
    ],
 
    /**
@@ -15,8 +16,9 @@ define('Controls/Application',
     */
    function (Base,
              template,
+             URLHelpers,
              Deferred,
-             AppData) {
+             BodyClasses) {
       'use strict';
 
       var _private,
@@ -59,7 +61,6 @@ define('Controls/Application',
 
             _private.initState(self, receivedState||cfg);
             self.content = cfg.content;
-
             if (!receivedState) {
                receivedState = {};
             }
@@ -67,7 +68,7 @@ define('Controls/Application',
             self.wsRoot = receivedState.wsRoot || context.AppData?context.AppData.wsRoot:cfg.wsRoot;
             self.resourceRoot = receivedState.resourceRoot || context.AppData?context.AppData.resourceRoot:cfg.resourceRoot;
             self.jsLinks = receivedState.jsLinks || context.AppData?context.AppData.jsLinks:cfg.jsLinks;
-
+            self.BodyClasses = BodyClasses;
             /**
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
              * роутинга и с ним же надо восстанавливаться на клиенте.
