@@ -57,7 +57,7 @@ define('Controls/List', [
       },
 
       reload: function(self) {
-         _private.load(self).addCallback(function(list){
+         return _private.load(self).addCallback(function(list){
 
             if (self._navigationController) {
                self._navigationController.calculateState(list);
@@ -73,6 +73,7 @@ define('Controls/List', [
 
             self._virtualScroll.setItemsCount(self._listModel.getCount());
             _private.handleListScroll.call(self, 0);
+            return list;
          })
       },
 
@@ -334,7 +335,7 @@ define('Controls/List', [
             this._publish('onDataLoad');
          },
 
-         _beforeMount: function(newOptions) {
+         _beforeMount: function(newOptions, ctx, receivedState) {
             this._virtualScroll = new VirtualScroll({
                maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
                itemsCount: 0
@@ -344,8 +345,8 @@ define('Controls/List', [
             TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
           */
             this._filter = newOptions.filter;
-            if (newOptions.items) {
-               this._items = newOptions.items;
+            if (newOptions.items || receivedState) {
+               this._items = newOptions.items || receivedState;
                this._listModel = _private.createListModel(this._items, newOptions);
                this._virtualScroll.setItemsCount(this._items.getCount());
             }
@@ -353,7 +354,7 @@ define('Controls/List', [
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
                if (!this._items) {
-                  _private.reload(this);
+                  return _private.reload(this);
                }
             }
          },
