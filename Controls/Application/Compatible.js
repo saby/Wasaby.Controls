@@ -4,53 +4,14 @@
 define('Controls/Application/Compatible', [
    'Core/Control',
    'Core/helpers/Function/runDelayed',
-   'tmpl!Controls/Application/Compatible',
-   'Core/Deferred'
+   'tmpl!Controls/Application/Compatible'
 ], function(Base, 
             runDelayed, 
-            template, 
-            Deferred) {
+            template) {
    'use strict';
 
    var ViewTemplate = Base.extend({
-      _template: template,
-      bootup: null,
-      _beforeMount:function(){
-         var def = new Deferred(),
-            self = this;
-
-         require(['bootup-min',
-            'js!SBIS3.Engine.ServiceUpdateNotifier',
-            'Core/nativeExtensions',
-            'Lib/Control/BaseCompatible/BaseCompatible'], function(bootup){
-            self._mounted = true;
-            self.bootup = bootup;
-            def.callback();
-         });
-
-         return def;
-      },
-
-      _shouldUpdate: function(){
-
-         var self = this,
-            cont = this._container[0] || this._container;
-         if (self.bootup) {
-            cont.removeAttribute('config');
-            cont.removeAttribute('data-component');
-
-            runDelayed(function () {
-               self.bootup();
-               self.bootup = null;
-            });
-         }
-
-         return false;
-      },
-
-      _afterMount: function(){
-
-      }
+      _template: template
    });
 
    return ViewTemplate;

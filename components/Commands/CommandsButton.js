@@ -49,11 +49,8 @@ define('SBIS3.CONTROLS/Commands/CommandsButton', [
       _modifyPickerOptions: function(opts) {
          opts.horizontalAlign.side = 'right';
          opts.closeButton = true;
+         opts.crossStyle = 'light';
          return opts;
-      },
-      _setPickerContent: function() {
-         CommandsButton.superclass._setPickerContent.apply(this, arguments);
-         $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-size icon-Close icon-primary');
       }
    });
    return CommandsButton;

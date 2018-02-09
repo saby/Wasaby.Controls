@@ -3,7 +3,7 @@ define('SBIS3.CONTROLS/Link/LinkDocs',
     ],
     function() {
         /**
-         * @mixes SBIS3.CONTROLS/Link/LinkDocs
+         * @mixin SBIS3.CONTROLS/Link/LinkDocs
          * @public
          * @css @font-size_Link Размер шрифта текста кнопки-ссылки.
          * @css @height_Link Высота контейнера кнопки-ссылки.

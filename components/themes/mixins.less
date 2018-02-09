@@ -633,32 +633,3 @@
     height: @height;
   }
 }
-
-.ws-close-button() {
-   cursor: pointer;
-   border-style: solid;
-   width: @width_CloseButton - extract(@border-width_CloseButton, 2) - extract(@border-width_CloseButton, 4);
-   height: @height_CloseButton - extract(@border-width_CloseButton, 1) - extract(@border-width_CloseButton, 3);
-   font-family: @default-icon-font;
-   line-height: @height_CloseButton;
-   font-size: @font-size_CloseButton;
-   box-shadow: @box-shadow_CloseButton;
-   border-width: @border-width_CloseButton;
-   border-color: @border-color_CloseButton;
-   border-radius: @border-radius_CloseButton;
-   background-color: @background-color_CloseButton;
-   .flexbox();
-   .align-items(center);
-   .justify-content(center);
-   &:before {
-      color: @color_CloseButton-icon;
-      text-shadow: @text-shadow_Button;
-      content: @content_CloseButton_icon;
-   }
-   body:not(.ws-is-mobile-platform) &:hover, &:active {
-      background-color: @background-color_CloseButton_hover;
-      &:before {
-         color: @color_CloseButton-icon_hover;
-      }
-   }
-}
