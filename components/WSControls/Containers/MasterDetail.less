@@ -22,9 +22,14 @@
   box-shadow: @shadow-params;
 }
 
-.controls-MasterDetail__masterContainer .controls-ListView__item__selected td {
+.controls-MasterDetail__masterContainer .controls-ListView__item__selected .controls-DataGridView__td {
   border-bottom: @border-params;
   border-top: @border-params;
+
+  // Не показывается рамка нижняя рамка с маштабом 125%
+  // Будет переделано при переходе на новый стандарт
+  // https://online.sbis.ru/opendoc.html?guid=95d7a236-67f5-4b4e-9f79-c5db6eb41b27
+  overflow: visible;
 
   &:last-child {
     border-right: 1px solid white;
