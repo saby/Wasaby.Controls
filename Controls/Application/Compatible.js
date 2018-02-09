@@ -3,7 +3,8 @@
  */
 define('Controls/Application/Compatible', [
    'Core/Control',
-   'tmpl!Controls/Application/Compatible'
+   'tmpl!Controls/Application/Compatible',
+   'tmpl!Controls/Application/CompatibleScripts'
 ], function(Base, 
             template) {
    'use strict';

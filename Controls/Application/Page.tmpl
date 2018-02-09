@@ -45,19 +45,7 @@
                </script>
             </ws:if>
             <ws:else>
-               <script key="init_script">
-                  require(['Core/app-init'], function(appinit){
-                     appinit();
-                     require(['bootup-min',
-                        'Core/nativeExtensions',
-                        'Lib/Control/BaseCompatible/BaseCompatible'], function(bootup){
-                        var cont = document.getElementsByTagName('html')[0];
-                        cont.removeAttribute('config');
-                        cont.removeAttribute('data-component');
-                        bootup();
-                     });
-                  });
-               </script>
+			   <ws:partial template="tmpl!Controls/Application/CompatibleScripts" />
             </ws:else>
          </div>
          <Controls:Popup:Manager:Container attr:id="popup"/>
