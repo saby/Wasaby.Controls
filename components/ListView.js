@@ -1527,8 +1527,7 @@ define('SBIS3.CONTROLS/ListView',
                }
             }
             if (!isEmpty(this._options.groupBy) && this._options.easyGroup && $(e.target).hasClass('controls-GroupBy__separatorCollapse')) {
-               var hashGroup = $(e.target).closest('.controls-GroupBy').attr('data-group-hash');
-               var idGroup = this._getItemsProjection().getByHash(hashGroup).getContents();
+               var idGroup = $(e.target).closest('.controls-GroupBy').attr('data-group');
                this.toggleGroup(idGroup);
                if ($target.closest('.controls-ListView').parent().hasClass('ws-sticky-header__header-container')) {
                   $group = this._getItemsContainer().find('.controls-GroupBy[data-group="' + idGroup + '"]');
