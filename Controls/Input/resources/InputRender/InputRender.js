@@ -68,7 +68,12 @@ define('Controls/Input/resources/InputRender/InputRender',
                position = _private.getTargetPosition(e.target),
                inputType, splitValue, processedData;
 
-            inputType = e.nativeEvent.inputType ?
+            /**
+             * У android есть баг/фича: при включённом spellcheck удаление последнего символа в textarea возвращает
+             * inputType == 'insertCompositionText', вместо 'deleteContentBackward'.
+             * Соответственно доверять ему мы не можем и нужно вызвать метод RenderHelper.getInputType
+             */
+            inputType = e.nativeEvent.inputType && e.nativeEvent.inputType !== 'insertCompositionText' ?
                   RenderHelper.getAdaptiveInputType(e.nativeEvent.inputType, selection) :
                   RenderHelper.getInputType(value, newValue, position, selection);
             //Подготавливаем объект с разобранным значением
