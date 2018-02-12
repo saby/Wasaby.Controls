@@ -227,10 +227,16 @@ define('SBIS3.CONTROLS/Utils/FilterPanelUtils',
          var dTemplatesReady = new ParallelDeferred();
 
          function processTemplate(template, name) {
+            var jsModule = constants.jsModules.hasOwnProperty(template);
             /* Если шаблон указали как имя компонента (строки которые начинаются с js! или SBIS3.),
              то перед отображением панели фильтров сначала загрузим компонент. */
-            if(template && typeof template === 'string' && /^js!*|^SBIS3.*/.test(template)) {
-               dTemplatesReady.push(mStubs.require(((requirejs.defined(template) || /^js!*/.test(template)) ? template : 'js!' + template)).addCallback(function(comp) {
+            if (template && typeof template === 'string' && (jsModule || constants.modules.hasOwnProperty(template.split('/')[0]) || template.indexOf('js!') === 0)) {
+
+               if (jsModule) {
+                  template = 'js!' + template;
+               }
+
+               dTemplatesReady.push(mStubs.require(template).addCallback(function(comp) {
                   /* Запишем, что в качестве шаблона задали компонент */
                   defCallback(name);
                   return comp;
