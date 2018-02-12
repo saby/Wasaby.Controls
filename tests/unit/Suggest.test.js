@@ -7,24 +7,6 @@ define(
       'use strict';
 
       describe('Controls/Input/Suggest', function () {
-   
-         it('_onSearchEnd', function() {
-            var suggest = new Suggest(),
-                closed = false;
-            
-            suggest._children = {
-               suggestPopupOpener: {
-                  close: function() {
-                     closed = true;
-                  }
-               }
-            };
-            
-            suggest._focused = false;
-            Suggest._private.onSearchEnd(suggest);
-      
-            assert.isTrue(closed, 'Popup is not closed after focusout and searching');
-         });
          
          it('_popupFocusIn', function() {
             var suggest = new Suggest();
@@ -53,6 +35,10 @@ define(
          });
    
          it('selectHandler', function() {
+            //тестирует фокусы, проверяем только на клиенте
+            if (typeof document === 'undefined') {
+               this.skip();
+            }
             var suggest = new Suggest(),
                 focused = false,
                 selectedValue;
@@ -84,6 +70,10 @@ define(
          });
    
          it('_clearClick', function() {
+            //тестирует клик, проверяем только на клиенте
+            if (typeof document === 'undefined') {
+               this.skip();
+            }
             var suggest = new Suggest(),
                 focused = false,
                 suggestValue;
