@@ -2218,6 +2218,7 @@ define('SBIS3.CONTROLS/ListView',
             ListView.superclass._redrawItems.apply(this, arguments);
             // После полной перерисовки нужно заново инициализировать вирутальный скролинг
             if (this._options.virtualScrolling && this._virtualScrollController) {
+               this.scrollToFirstPage();
                this._virtualScrollController.updateProjection(this._getItemsProjection());
                this._virtualScrollController.reset();
             }
