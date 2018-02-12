@@ -1,7 +1,6 @@
 <Controls:Input:resources:InputRender:InputRender
                 value="{{_options.value}}"
                 tagStyle="{{_options.tagStyle}}"
-                readonly="{{_options.readonly}}"
                 viewModel="{{_simpleViewModel}}"
                 placeholder="{{_options.placeholder}}"
                 attr:class="control-Search">
@@ -15,7 +14,7 @@
 
    <ws:afterFieldWrapper>
 
-      <div class="ws-Search__afterFieldWrapper">
+      <div class="control-Search__afterFieldWrapper">
          <div if="{{_options.value}}"
               class="controls-Search__reset icon-Close"
               title="{{rk('Очистить результаты поиска')}}"

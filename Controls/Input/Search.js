@@ -1,14 +1,13 @@
 define('Controls/Input/Search',
    [
       'Core/Control',
-      'Core/helpers/Function/forAliveOnly',
       'WS.Data/Type/descriptor',
       'tmpl!Controls/Input/Search/Search',
       'Controls/Input/resources/InputRender/SimpleViewModel',
       'css!Controls/Input/Search/Search'
    ],
 
-   function (Control, forAliveOnly, types, template, SimpleViewModel) {
+   function (Control, types, template, SimpleViewModel) {
       'use strict';
 
       /**
@@ -24,9 +23,11 @@ define('Controls/Input/Search',
 
       /**
        * @event Controls/Input/Search#search Происходит при нажатии на кнопку поиска
+       * @event Controls/Input/Search#reset Происходит при нажатии на кнопку отмена (крестик)
        */
 
       var Search = Control.extend({
+         _template: template,
 
          constructor: function (options) {
             Search.superclass.constructor.apply(this, arguments);
@@ -51,9 +52,7 @@ define('Controls/Input/Search',
             if (event.nativeEvent.keyCode == 13) {
                this._applySearch();
             }
-         },
-
-         _template: template
+         }
       });
 
       Search.getOptionTypes = function getOptionsTypes() {
