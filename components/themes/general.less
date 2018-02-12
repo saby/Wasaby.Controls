@@ -15,6 +15,17 @@ input[type="reset"]::-moz-focus-inner {
   border: 0 none !important;
 }
 
+/*Кроссбраузерность
+Скрытие иконки автозаполнения в полях ввода в браузере Safari на MacOS
+ */
+input::-webkit-contacts-auto-fill-button {
+  visibility: hidden;
+  display: none !important;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+}
+
 .line-overflow-blur {
   position: relative;
   float: right;

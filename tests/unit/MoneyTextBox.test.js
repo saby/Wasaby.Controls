@@ -37,7 +37,7 @@ define(['SBIS3.CONTROLS/MoneyTextBox'], function (NumberTextBox) {
           it('check value outside', function() {
              MTB.setProperty('text', '1234.56');
              formattedValue = MTB._formatText('9999999999999999.99');
-             assert.equal(formattedValue, '1 234.56');
+             assert.equal(formattedValue, '99 999 999 999 999.99');
           });
        });
 
