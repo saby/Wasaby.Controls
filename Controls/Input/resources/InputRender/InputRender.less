@@ -259,11 +259,3 @@
 .controls-InputRender ::-webkit-input-placeholder {color:#ccc;}
 .controls-InputRender  ::-moz-placeholder         {color:#ccc;}
 .controls-InputRender  :-ms-input-placeholder     {color:#ccc;}
-
-//В ie есть баг с :invalid из-за которого не пропадает placeholder, поэтому скрываем его по :focus
-//Демка: https://jsfiddle.net/kdgj4veo/
-.ws-is-ie {
-   .controls-InputRender__field:focus + .controls-InputRender__placeholder {
-      display: none;
-   }
-}
