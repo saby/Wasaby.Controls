@@ -40924,7 +40924,11 @@
                if (editor.selection.lastFocusBookmark) {
                   lastRng = bookmarkToRng(editor, editor.selection.lastFocusBookmark);
                   editor.selection.lastFocusBookmark = null;
-                  editor.selection.setRng(lastRng);
+                  // Только если полученный рэнж содержится внутри редактора
+                  // 1174874046 https://online.sbis.ru/opendoc.html?guid=3ab37bfa-9014-404d-8b35-46f029fa2799
+                  if (editor.getBody().contains(lastRng.commonAncestorContainer)) {
+                     editor.selection.setRng(lastRng);
+                  }
                }
 
                if (focusedEditor != editor) {
