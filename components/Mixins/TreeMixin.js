@@ -1610,7 +1610,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          }
          this.setFilter(filter, true);
          //узел грузим с 0-ой страницы
-         this.setPage(0, true);
+         this.setPage(0, true, true);
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
          this._options.currentRoot = (isFakeRoot || (key !== undefined && key !== null)) ? key : this._options.root;
