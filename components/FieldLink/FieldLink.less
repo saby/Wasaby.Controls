@@ -177,3 +177,17 @@
    width: 50%;
    height: auto;
 }
+
+/*
+   СЛОЙ СОВМЕСТИМОСТИ
+ */
+.controls-IconButton.controls-FieldLink__button {
+   //Сейчас в поле связи лежит компонент IconButton, по которому отрывается меню с выбором словаря.
+   //В зависимости от порядка, в котором прилетают стили, возникает конфликт между классом controls-IconButton
+   //и controls-FieldLink__button, они начинают перебивать font-size у друг друга. В controls-IconButton font-size
+   //равен 0, для того, чтобы не наследовать родительский font-size и иконка позиционировалась правильно.
+   //У controls-FieldLink__button font-size имеет явное значение, для того, чтобы элемент правильно позиционировался
+   //относительно базовой линии. Дозвращаем миксин icon-size, иа после отказа использования компонентов внутри поля
+   //связи, можно будет вернуть icon-size-without-important.
+   font-size: @icon-size_FieldLink-button;
+}

@@ -15,9 +15,11 @@
       width: 100%;
       z-index: 1;
       box-sizing: border-box;
-      // Фикс для IE, чтобы ховер не "проваливался" под редактирование по месту. Если задать просто "transparent" - не помогает.
+      // background-color решает сразу две проблемы:
+      // 1. Фикс для IE, чтобы ховер не "проваливался" под редактирование по месту. Если задать просто "transparent" - не помогает.
       // https://online.sbis.ru/opendoc.html?guid=f0836272-9ad5-48df-8df3-0d77462e67a8
-      background-color: rgba(0, 0, 0, 0);
+      // 2. Т.к. в presto прозрачные поля ввода, то зададим фон редакторам, чтобы текст под редактированием не просвечивал
+      background-color: @controls-editInPlace-editor-bg;
       padding: @controls-editInPlace-editor-padding;
       &.controls-editInPlace__editorWithOffset {
          margin-left: @controls-editInPlace-editor-without-offset-margin;
