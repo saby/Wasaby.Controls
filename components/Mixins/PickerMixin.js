@@ -71,6 +71,13 @@ define('SBIS3.CONTROLS/Mixins/PickerMixin', [
          this.subscribeTo(this._picker, 'onClose', function(){
                 container.removeClass('controls-Picker__show');
                 self._notify('onPickerClose');
+
+                /* Разрушаем панель при закрытии,
+                 надо для: сбрасывания валидации, удаления ненужных значений из контролов */
+                if(self._picker) {
+                   self._picker.destroy();
+                   self._picker = null;
+                }
              });
 
          container
