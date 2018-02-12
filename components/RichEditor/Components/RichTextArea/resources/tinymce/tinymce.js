@@ -40926,7 +40926,7 @@
                   editor.selection.lastFocusBookmark = null;
                   // Только если полученный рэнж содержится внутри редактора
                   // 1174874046 https://online.sbis.ru/opendoc.html?guid=3ab37bfa-9014-404d-8b35-46f029fa2799
-                  if (editor.getBody().contains(lastRng.commonAncestorContainer)) {
+                  if (lastRng && editor.getBody().contains(lastRng.commonAncestorContainer)) {
                      editor.selection.setRng(lastRng);
                   }
                }
