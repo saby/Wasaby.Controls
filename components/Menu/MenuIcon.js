@@ -59,9 +59,10 @@ define('SBIS3.CONTROLS/Menu/MenuIcon', [
    var MenuIcon = WSMenuButton.extend( [], /** @lends SBIS3.CONTROLS/Menu/MenuIcon.prototype */ {
       _hasHeader: false,
       $protected: {
-         _zIndex: ''
+         _zIndex: '',
+         _hideHeader: null
       },
-      _hideHeader: null,
+
 
       _modifyOptions : function(options, parsedOptions, attrToMerge) {
          var opts = MenuIcon.superclass._modifyOptions.apply(this, arguments),
