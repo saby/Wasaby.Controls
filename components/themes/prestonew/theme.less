@@ -1,4 +1,4 @@
-.close-button-mixin(@important: ~'') {
+.close-button-mixin(@important: ~'', @width: @width_CloseButton, @height: @height_CloseButton) {
   .inline-flexbox();
   .align-items(center);
   .justify-content(center);
@@ -6,8 +6,8 @@
   font-size: round(56px * @multiplier) @important;
   line-height: round(56px * @multiplier) @important;
   font-family: 'cbuc-icons' @important;
-  width: @width_CloseButton @important;
-  height: @height_CloseButton @important;
+  width: @width @important;
+  height: @height @important;
   background-color: #405A77 @important;
   background-image: none @important;
   box-shadow: @box-shadow_Button !important;
