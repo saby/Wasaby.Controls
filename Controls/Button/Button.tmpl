@@ -3,7 +3,7 @@
                  controls-Button__type-{{buttonType(_options.style)}}__size-{{_options.size}}"
       attr:title="{{_options.tooltip}}"
       on:click="_clickHandler()">
-    <span attr:class="controls-ButtonBase__content controls-Button__wrapper_style-{{_options.style}}">
+    <span attr:class="controls-ButtonBase__content controls-Button__wrapper_style-{{_options.style}} controls-Button__wrapper-type-{{buttonType(_options.style)}}__size-{{_options.size}}">
         <ws:if data="{{!!_options.icon}}">
             <i attr:class="controls-Button__icon {{_options.icon}} controls-Button__icon-{{_options.style}}{{!isEnabled() ? '-disabled'}}"></i>
         </ws:if>

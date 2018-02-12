@@ -16,7 +16,7 @@
   font-size: @font-size_Link-s;
 }
 
-.controls-Button__type-link__size-m{
+.controls-Button__type-link__size-default{
   font-size: @font-size_Link-m;
 }
 
@@ -83,81 +83,75 @@
   color: @color_Link-text_disabled;
 }
 
+.controls-Button__style-standart-primary, .controls-Button__style-standart-primary-big {
+  cursor: pointer;
+  border-color: @border-color_Button_primary;
+}
 
-.controls-Button__style-default, .controls-Button__style-primary, .controls-Button__style-primary-disabled,  .controls-Button__style-default-disabled {
+.controls-Button__style-standart-primary:active, .controls-Button__style-standart-primary-big:active {
+  border-color: @border-color_Button_primary_hovered;
+  background: @background_Button_primary_active;
+  box-shadow: none;
+}
+
+.controls-Button__style-standart-default, .controls-Button__style-standart-default-big {
+  cursor: pointer;
+  border-color: @border-color_Button;
+}
+
+.controls-Button__style-standart-default:active, .controls-Button__style-standart-default-big:active {
+  border-color: @border-color_Button_hovered;
+  background: @background_Button_active;
+  box-shadow: none;
+}
+
+.controls-Button__type-standart-disabled{
+  cursor: default;
+  color: @default-disabled-color;
+  background: @background_Button_disabled;
+}
+
+.controls-Button__type-standart__size-default{
+  font-size: @font-size_Button_m;
   border-style: solid;
   border-width: @border-width_Button;
   .border-radius(@border-radius_Button_default);
 }
-.controls-Button__style-default-big, .controls-Button__style-primary-big, .controls-Button__style-primary-big-disabled,  .controls-Button__style-default-big-disabled {
+
+.controls-Button__type-standart__size-big{
+  font-size: @font-size_Button_l;
   border-style: solid;
   height: @height_Button_l;
   border-width: @border-width_Button;
   .border-radius(@border-radius_Button_l);
 }
 
-.controls-Button__style-default, .controls-Button__style-primary, .controls-Button__style-primary-disabled,  .controls-Button__style-default-disabled {
-  font-size: @font-size_Button_m;
-}
-
-.controls-Button__style-default-big, .controls-Button__style-primary-big, .controls-Button__style-primary-big-disabled,  .controls-Button__style-default-big-disabled{
-  font-size: @font-size_Button_l;
-}
-
-.controls-Button__style-primary, .controls-Button__style-primary-big {
-  cursor: pointer;
-  border-color: @border-color_Button_primary;
-}
-
-.controls-Button__style-primary:active, .controls-Button__style-primary-big:active {
-  border-color: @border-color_Button_primary_hovered;
-  background: @background_Button_primary_active;
-  box-shadow: none;
-}
-
-.controls-Button__style-default, .controls-Button__style-default-big {
-  cursor: pointer;
-  border-color: @border-color_Button;
-}
-
-.controls-Button__style-default:active, .controls-Button__style-default-big:active {
-  border-color: @border-color_Button_hovered;
-  background: @background_Button_active;
-  box-shadow: none;
-}
-
-.controls-Button__style-primary-disabled,  .controls-Button__style-default-disabled, .controls-Button__style-primary-big-disabled,  .controls-Button__style-default-big-disabled {
-  cursor: default;
-  color: @default-disabled-color;
-  background: @background_Button_disabled;
-}
-
-.controls-Button__icon-default {
+.controls-Button__icon-standart-default, .controls-Button__text_style-standart-default-big {
   color: @color_Button-icon;
 }
-.controls-Button__text_style-default {
+.controls-Button__text_style-standart-default {
   .text-overflow();
 }
 
-.controls-Button__icon-primary {
+.controls-Button__icon-standart-primary, .controls-Button__icon-standart-primary-big {
   color: @color_Button-icon_primary;
 }
 
-.controls-Button__text_style-primary {
+.controls-Button__text_style-standart-primary {
   .text-overflow();
 }
 
-.controls-Button__icon-primary-disabled, .controls-Button__icon-default-disabled, .controls-Button__icon-link-main-disabled, .controls-Button__icon-link-main2-disabled,
-.controls-Button__icon-primary-big-disabled, .controls-Button__icon-default-big-disabled, .controls-Button__icon-link-main3-disabled {
+.controls-Button__icon-standart-primary-disabled, .controls-Button__icon-standar-default-disabled, .controls-Button__icon-link-main-disabled, .controls-Button__icon-link-main2-disabled,
+.controls-Button__icon-standart-primary-big-disabled, .controls-Button__icon-standart-default-big-disabled, .controls-Button__icon-link-main3-disabled {
   color: @icon-color-disabled ;
 }
 
-.controls-Button__wrapper_style-primary, .controls-Button__wrapper_style-default {
+.controls-Button__wrapper-type-standart__size-default {
   padding: @padding_Button-wrapper_default;
   .justify-content(center);
 }
 
-.controls-Button__wrapper_style-primary-big, .controls-Button__wrapper_style-default-big {
+.controls-Button__wrapper-type-standart__size-big {
   padding: @padding_Button-wrapper_l;
   .justify-content(center);
 }
@@ -167,19 +161,19 @@
 }
 
 .ws-is-desktop-platform {
-  .controls-Button__style-primary:hover, .controls-Button__style-primary-big:hover {
+  .controls-Button__style-standart-primary:hover, .controls-Button__style-standart-primary-big:hover {
     border-color: @border-color_Button_primary_hovered;
     background: @background_Button_primary_hovered;
   }
 
-  .controls-Button__style-primary:active, .controls-Button__style-primary-big:active {
+  .controls-Button__style-standart-primary:active, .controls-Button__style-standart-primary-big:active {
     background: @background_Button_primary_active;
   }
-  .controls-Button__style-default:hover, .controls-Button__style-default-big:hover {
+  .controls-Button__style-standart-default:hover, .controls-Button__style-standart-default-big:hover {
     border-color: @border-color_Button_hovered;
     background: @background_Button_hovered;
   }
-  .controls-Button__style-default:active, .controls-Button__style-default-big:active{
+  .controls-Button__style-standart-default:active, .controls-Button__style-standart-default-big:active{
     background: @background_Button_active;
   }
 }
