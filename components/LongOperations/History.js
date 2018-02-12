@@ -35,6 +35,8 @@ define('SBIS3.CONTROLS/LongOperations/History',
                producer: null,
                operationId: null,
                isFailed: null,
+               resultHandler: null,
+               resultWayOfUse: null,
                failedOperation: null
             },
 

@@ -70,7 +70,7 @@ define('SBIS3.CONTROLS/Button',
                 *     <option name="size">l</option>
                 * </pre>
                 */
-               size: '',
+               size: 'default',
                /**
                 * @cfg {String} Устанавливает стилевое оформление кнопки.
                 * @remark

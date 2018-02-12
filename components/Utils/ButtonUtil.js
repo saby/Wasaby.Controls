@@ -28,7 +28,7 @@ define('SBIS3.CONTROLS/Utils/ButtonUtil', [],
                 var classes = '',
                     state;
 
-                classes += ' controls-Button_size-' + (!!opts.size ? opts.size : 'm');
+                classes += ' controls-Button_size-' + (!!opts.size ? opts.size : 'default');
                 if(!opts.enabled){
                     state = 'disabled';
                 }else {

@@ -506,7 +506,7 @@ define(
          var newText = this._options.date == null ? '' : this._getTextByDate( this._options.date );
          //записываем текст в модель
          this._getFormatModel().setText(newText, this._getMaskReplacer());
-         this._inputField.html( this._getHtmlMask() );
+         this._setHtml( this._getHtmlMask() );
       },
 
       /**

@@ -1,3 +1,73 @@
 .controls-filterButton__historyView-hiddenMarker {
    opacity: 0;
 }
+
+.controls-filterButton__historyView-titleContainer {
+   position: absolute;
+   right: @controls-filterButton-history-titleCont-right;
+   left: @controls-filterButton-history-titleCont-left;
+   top: 4px;
+}
+
+.controls-filterButton__historyViewFavorites-titleContainer {
+   margin: 6px 34px;
+   max-height: 18px;
+   overflow: hidden;
+}
+
+.controls-filterButton__historyView-item-title, .controls-filterButton__historyViewFavorites-item-title {
+   display: inline-block;
+   width: 100%;
+}
+
+.controls-filterButton__historyView-item-title {
+   .text-overflow();
+   max-height: @controls-filterButton-history-title-height;
+   vertical-align: top;
+   color: @controls-filterButton-history-title-color;
+}
+
+.controls-filterButton__historyViewFavorites-item-title {
+   color: #999;
+}
+
+.controls-filterButton__historyView .controls-ItemsToolbar {
+   background-color: transparent;
+   box-shadow: none;
+}
+
+.controls-filterButton__historyView-pinMode .controls-ItemsToolbar {
+   bottom: @controls-filterButton-history-actions-bottom;
+   right: auto !important;
+   left: @controls-filterButton-history-actions-left;
+
+   .icon-size {
+      .icon-16();
+   }
+}
+
+.controls-filterButton__historyView-pinMode .controls-ListView__hoveredItem {
+   background-color: transparent;
+
+   .controls-filterButton__historyView-item-title {
+      text-decoration: underline;
+   }
+}
+
+.controls-filterButton__historyView-favoritesMode .controls-ListView__hoveredItem {
+   background-color: #EAECEE;
+}
+
+.controls-filterButton__historyView-item, .controls-filterButton__historyViewFavorites-item {
+   cursor: pointer;
+}
+
+.controls-filterButton__historyView-item {
+   min-height: @controls-filterButton-history-item-min-height;
+}
+
+.controls-filterButton__historyView-pin {
+   float: left;
+   position: relative;
+   top: @controls-filterButton-history-pin-top;
+}

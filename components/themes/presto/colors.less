@@ -136,7 +136,8 @@
 @border-color_Menu:                       transparent;
 @background-color-Menu-separator-line:    #476485;
 //menuItem
-@color_MenuItem:                    @default-text-color;
+@color_MenuItem:                          @white-color;
+@color_MenuItem_hovered:                  @color_MenuItem;
 @background_MenuItem_hovered:                      rgba(92, 122, 163, 0.2);
 //menuButton
 @menu-button-menu-border-color:           @border-color_Menu;
@@ -155,7 +156,8 @@
 @icon-button-round-icon-color-hover:      @color_primary;
 //checkbox
 @check-box-icon-box-color:                rgba(109,141,176, .6);
-//filterbutton
+@color_checkBox-iconBox:                rgba(109,141,176, .6);
+   //filterbutton
 @backround-color_filterButton_picker_content:     #273749;
 @background-color_filterButton_picker_header:     #39506A;
 @controls-filterButton-area-text-color:           #FFCC99;
@@ -166,6 +168,7 @@
 // Date Range Big Choose
 @background-color_DateRangeBigChoose:                                 #273749;
 @background-color__DateRangeBigChoose-header:                         #39506A;
+@border-color_DateRangeBigChoose-header-dateInput_active:             #26b8ff;
 @color_DateRangeBigChoose-years-panel-displayed-year:                 #FFCC99;
 @background-color_MonthView-item-today:                               #4B688B;
 @border-color__MonthView-item-selected-startEnd-hover:                #26B8FF;
@@ -205,6 +208,7 @@
 @border-color_DateRangeBigChoose_quartersPanel:                       #23303e;
 @border-color_DateRangeBigChoose_halfYearsPanel:                      #23303e;
 @border-color_DateRangeBigChoose-quarters-halhyears-selected:         #23303e;
+@border-color_DateRangeBigChoose_monthPicker:                         #23303e;
 @color_DateRangeBigChoose-years-panel-rangeButton:                    #4B688B;
 @background-color_DateRangeBigChoose-years-panel-rangeButton:         #39506A;
 @color_DateRangeBigChoose-years-panel-current-year:                   #26B8FF;
@@ -240,9 +244,14 @@
 @background-color_CloseButton:           #405A77;
 @border-color_CloseButton:               transparent;
 @box-shadow_CloseButton:                 0 1px 4px rgba(0, 0, 0, .5);
+@box-shadow_CloseButton_active:          none;
 @background-color_CloseButton_hover:     #3D5571;
 
 @color_CloseButton-icon:                 #8991A9;
+@color_CloseButton-icon_hover:           @color_CloseButton-icon;
+
+@color_CloseButton-light-icon:           #8991A9;
+@color_CloseButton-light-icon_hover:     #B9E9FF;
 @color_CloseButton-icon_hover:           @color_CloseButton-icon;
 
 //ListAddButton

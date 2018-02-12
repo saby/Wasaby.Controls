@@ -310,6 +310,7 @@
 @button-checked-shadow:                   @button-active-shadow;
 @button-checked-bg:                       @background_Button_hovered;
 @button-checked-padding:                  0 10px;
+@padding_ToggleButton_checked:            @button-checked-padding;
 // Normal primary button
 @button-primary-checked-border:           2px solid @primary-color;
 @button-primary-checked-bg:               @background_Button_primary_hovered;
@@ -427,6 +428,12 @@
 @check-box-disabled-color:                      @disabled-color;
 @check-box-icon-successful-top-ie:              0;
 @check-box-caption-line-height:                 18px;
+@spacing_CheckBox-between-icon-caption:         3px 0;
+@font-size__checkBox:                           @default-text-size;
+@color_checkBox-iconBox:                        @innacent-color2;
+@color_checkBox_disabled:                       @disabled-color;
+@color_checkBox-caption_enabled:                @default-text-color;
+@color_checkBox-icon_enabled:                   @primary-color;
 // -------------- //
 // Checkbox group //
 // -------------- //
@@ -502,6 +509,8 @@
 @height_Menu-separator-line:              1px;
 @top_Menu-separator-line:                 4px;
 @background-color-Menu-separator-line:    @default-border-color-bottom-disabled;
+
+
 // --------- //
 // Menu item //
 // --------- //
@@ -514,7 +523,7 @@
 @padding_MenuItem-icon_large:                    51px;
 @color_MenuItem:                    @black-color;
 @font-size_MenuItem:                     @font-size_Popup;
-@color_MenuItem_disabled:           #ccc;
+@color_MenuItem_disabled:           @default-disabled-color;
 @color_MenuItem_hovered:              @color_MenuItem;
 @background_MenuItem_hovered:                      @default-itemHover-color;
 @margin_MenuItem-icon_small:					6px 0 6px 22px;
@@ -550,6 +559,13 @@
 @margin_MenuIcon_size-l:                  -10px 0 0 7px;
 @margin_MenuIcon_border-24:               -5px 0 0 -9px;
 @menu-icon-menu-bg:                       @background-color_Menu;
+@left_MenuIcon_standard_offset_default:   12px;
+@top_MenuIcon_standard_offset_default:    6px;
+@left_MenuIcon_bordered_offset_s:         12px;
+@top_MenuIcon_bordered_offset_s:          4px;
+@left_MenuIcon_bordered_offset_m:         6px;
+@top_MenuIcon_bordered_offset_m:          2px;
+
 // ----------- //
 // InputRender //
 // ----------- //
@@ -1021,7 +1037,8 @@
 //      EditInPlace        //
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
-@controls-editInPlace-editor-bg:                    #f3f3f3;
+@controls-editInPlace-editor-bg:                    rgba(0, 0, 0, 0);
+@controls-editInPlace-editing-item-bg:              #f3f3f3;
 @controls-editInPlace-editor-without-offset-margin: -6px;
 // --------------- //
 //    MultiView    //
@@ -1148,6 +1165,7 @@
 @controls-filterButton-area-text-size:            18px;
 @controls-filterButton-area-text-weight:          bold;
 @controls-filterButton-area-text-color:           @blue-dark-color;
+@controls-filterButton-area-text-color-custom:    @header-color;
 @controls-filterButton-area-text-margin:          0 12px 0 0;
 @controls-filterButton-clear-margin-right:        0;
 @controls-filterButton-title-fontSize:            15px;
@@ -1255,7 +1273,7 @@
 @controls-InformationPopup-error-status-border-color:         #EF463A;
 @controls-InformationPopup-warning-status-border-color:       @warning-color;
 @controls-InformationPopup-border-width:                      3px 0 0 0;
-@controls-InformationPopup-closeButton-top:                   5px;
+@controls-InformationPopup-closeButton-top:                   6px;
 @controls-InformationPopup-closeButton-right:                 5px;
 @controls-InformationPopup-closeButton-width:                 24px;
 @controls-InformationPopup-closeButton-height:                24px;
@@ -1431,10 +1449,10 @@
 @commands-button-close-font-family:                        @default-icon-medium-font;
 @commands-button-close-icon-color:                         @gray-ccc-color;
 @commands-button-close-button-size:                        30px;
-@commands-button-close-button-top:                         2px;
+@commands-button-close-button-top:                         4px;
 @commands-button-close-button-glyph-top:                   4px;
 @commands-button-close-button-glyph-top:                   @commands-button-close-button-top;
-@commands-button-close-button-right:                       0;
+@commands-button-close-button-right:                       6px;
 @commands-button-close-hover-color:                        @commands-button-close-icon-color;
 @commands-button-margin:                                   -6px -34px 0 0;
 @commands-button-item-padding-right:                       38px!important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)

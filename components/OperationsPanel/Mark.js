@@ -94,6 +94,10 @@ define('SBIS3.CONTROLS/OperationsPanel/Mark', [
          var self = this;
          if (linkedView && cInstance.instanceOfMixin(linkedView, 'SBIS3.CONTROLS/Mixins/MultiSelectable')) {
             this._options.linkedView = linkedView;
+            //Если включен режим массового выделения, отлючим режим выделения 1000 записей.
+            if (linkedView._options.useSelectAll) {
+               this._options.useSelectAll = false;
+            }
             this._menuButton.once('onPickerOpen', function() {
                //Если есть бесконечный скролл то показываем кнопку "Все", иначе показываем кнопку "Всю страницу"
                self._menuButton.getItemInstance('selectCurrentPage').toggle(!linkedView._options.infiniteScroll);

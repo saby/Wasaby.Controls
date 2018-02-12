@@ -15,16 +15,14 @@
             caption="опубликовать для всех сотрудников"
             cssClassName="controls-FavoriteEditDialog__editor"
     />
-    <ws:if data="{{_hasEditableItems}}">
+    <ws:if data="{{_items.length}}">
         <div class="gray-color">Укажите параметры, которые хотите сохранить:</div>
-        <ws:for data="key, value in record.filterPanelItems">
-            <ws:if data="{{ !(_isEqual(value.value, value.resetValue)) && value.textValue }}">
-                <SBIS3.CONTROLS:CheckBox
-                        checked="{{ ('record/toSaveFields/' + value.id)|mutable:true }}"
-                        caption="<span class='gray-color'>{{ value.caption }}: </span>{{ value.textValue }}"
-                        cssClassName="controls-FavoriteEditDialog__editor"
-                />
-            </ws:if>
+        <ws:for data="key, value in _items">
+            <SBIS3.CONTROLS:CheckBox
+                    checked="{{ ('record/toSaveFields/' + value.id)|mutable:true }}"
+                    caption="<span class='gray-color {{ !value.checkBoxCaption ? ' ws-hidden' }}'>{{ value.checkBoxCaption }}: </span>{{ value.value }}"
+                    cssClassName="controls-FavoriteEditDialog__editor"
+            />
         </ws:for>
     </ws:if>
 </div>

@@ -1,7 +1,6 @@
 define('SBIS3.CONTROLS/Filter/Button',
     [
    "Core/moduleStubs",
-   "Core/Context",
    "Core/CommandDispatcher",
    "Core/constants",
    "Lib/Control/CompoundControl/CompoundControl",
@@ -15,7 +14,7 @@ define('SBIS3.CONTROLS/Filter/Button',
    "Core/ParallelDeferred",
    "Core/IoC",
    "Core/helpers/Function/once",
-   "Core/detection",
+   "SBIS3.CONTROLS/Utils/FilterPanelUtils",
    "SBIS3.CONTROLS/Button/IconButton",
    "SBIS3.CONTROLS/Filter/Button/Line",
    "i18n!SBIS3.CONTROLS/Filter/Button",
@@ -23,7 +22,6 @@ define('SBIS3.CONTROLS/Filter/Button',
 ],
     function(
         mStubs,
-        cContext,
         CommandDispatcher,
         constants,
         CompoundControl,
@@ -37,7 +35,7 @@ define('SBIS3.CONTROLS/Filter/Button',
         ParallelDeferred,
         IoC,
         once,
-        detection
+        FilterPanelUtils
     ) {
 
        'use strict';
@@ -126,6 +124,16 @@ define('SBIS3.CONTROLS/Filter/Button',
                  */
                 resetLinkText: '',
                 /**
+                 * @cfg {String} Устанавливает отображение кнопки фильтров.
+                 * @variant oneColumn Панель строится в одну колонку.
+                 * @variant twoColumns Панель строится в две колонки.
+                 */
+                viewMode: 'oneColumn',
+                /**
+                 * @cfg {String} Заголовок панели фильтров.
+                 */
+                areaCaption: '',
+                /**
                  * @noshow
                  */
                 historyController: undefined,
@@ -196,8 +204,14 @@ define('SBIS3.CONTROLS/Filter/Button',
    
              /* Не показываем кнопку фильтров, если она выключена */
              if(!this.isEnabled()) return;
-   
-             this._initTemplates().addCallback(function() {
+
+             if (!this._dTemplatesReady) {
+                this._dTemplatesReady = FilterPanelUtils.initTemplates(self, TEMPLATES, function(name) {
+                   self._filterTemplates[name] = true;
+                });
+             }
+
+             this._dTemplatesReady.done().getResult().addCallback(function() {
                 FilterButton.superclass.showPicker.call(self);
              });
           },
@@ -225,11 +239,12 @@ define('SBIS3.CONTROLS/Filter/Button',
              var self = this;
 
              function processTemplate(template, name) {
+                var jsModule = constants.jsModules.hasOwnProperty(template);
                 /* Если шаблон указали как имя компонента (строки которые начинаются с js! или SBIS3.),
                    то перед отображением панели фильтров сначала загрузим компонент. */
-                if(template && typeof template === 'string' && /^js!*|^SBIS3.*/.test(template)) {
+                if(template && typeof template === 'string' && (jsModule || constants.modules.hasOwnProperty(template.split('/')[0]) || template.indexOf('js!') === 0)) {
                    
-                   if (constants.jsModules.hasOwnProperty(template)) {
+                   if (jsModule) {
                       template = 'js!' + template;
                    }
                    
@@ -289,11 +304,26 @@ define('SBIS3.CONTROLS/Filter/Button',
              }
           },
 
+          _hasHistory: function() {
+             var
+                history,
+                result = false;
+             if (this._historyController) {
+                history = this._historyController.getHistory();
+                result = history && !!history.length;
+             }
+
+             return result;
+          },
+
           _getAreaOptions: function() {
              var prepTpl = TemplateUtil.prepareTemplate,
                  components = this._filterTemplates,
                  config = {
                     historyController: this._historyController,
+                    viewMode: this._options.viewMode,
+                    areaCaption: this._options.areaCaption,
+                    hasHistory: this._hasHistory(),
                     internalContextFilterName: this._options.internalContextFilterName,
                     componentOptions: this._options.componentOptions
                  },
@@ -331,115 +361,35 @@ define('SBIS3.CONTROLS/Filter/Button',
           },
    
           _setPickerConfig: function () {
-             var context = cContext.createContext(this, {restriction: 'set'}),
-                 rootName = this._options.internalContextFilterName,
-                 isRightAlign = this._options.filterAlign === 'right',
-                 self = this,
-                 byFilter, byCaption, byVisibility;
+             var isRightAlign = this._options.filterAlign === 'right',
+               self = this;
 
-             function updatePickerContext() {
-                context.setValue(rootName, {
-                   filterChanged: self.getLinkedContext().getValue('filterChanged'),
-                   filter: self._getFilter(true),
-                   caption: self._mapFilterStructureByProp('caption'),
-                   visibility: self._mapFilterStructureByVisibilityField('visibilityValue')
-                });
-             }
+             this._pickerContext = FilterPanelUtils.createFilterContext(this.getLinkedContext(),
+                this._options.internalContextFilterName,
+                this._filterStructure,
+                self);
 
-             function updatePickerVisibility() {
-                var visibility = context.getValue(rootName + '/visibility');
-
-                if(!Object.isEmpty(visibility)) {
-                   var showAdditionalBlock = Object.keys(visibility).reduce(function(result, element) {
-                      return result || visibility[element] === false;
-                   }, false);
-
-                   context.setValue('additionalFilterVisible', showAdditionalBlock);
-                }
-             }
-
-             this._pickerContext = context;
-             updatePickerContext();
-             updatePickerVisibility();
-
-             context.subscribe('onFieldNameResolution', function(event, fieldName) {
-                byFilter = self._findFilterStructureElement(function(element) {
-                   return element.internalValueField === fieldName;
-                });
-                byCaption = !byFilter && self._findFilterStructureElement(function(element) {
-                   return element.internalCaptionField === fieldName;
-                });
-                byVisibility = !byFilter && !byCaption && self._findFilterStructureElement(function(element) {
-                   return element.internalVisibilityField === fieldName;
-                });
-
-                if (byFilter) {
-                   event.setResult(rootName + '/filter/' + byFilter.internalValueField);
-                }
-
-                if (byCaption) {
-                   event.setResult(rootName + '/caption/' + byCaption.internalValueField);
-                }
-
-                if(byVisibility) {
-                   event.setResult(rootName + '/visibility/' + byVisibility.internalVisibilityField);
-                }
-             });
-
-             context.subscribe('onFieldChange', function(ev, fieldChanged, value) {
-                /* Скрытие/отображние блока дополнительных параметров по состоянию видимости, которое пишется в контекст */
-                updatePickerVisibility();
-             });
-
-             context.subscribe('onFieldsChanged', function() {
-                var changed = self._filterStructure.reduce(function(result, element) {
-                       return result || !isFieldResetValue(element, element.internalValueField, context.getValue(rootName + '/filter'));
-                    }, false);
-                self._changeFieldInternal(rootName + '/filterChanged', changed);
-             });
-
-             return {
+             return FilterPanelUtils.getPanelConfig({
                 corner: isRightAlign ? 'tl' : 'tr',
                 opener: this,
                 parent: this,
                 horizontalAlign: {
                    side: isRightAlign ? 'left' : 'right'
                 },
-                verticalAlign: {
-                   side: 'top'
-                },
-                closeButton: true,
-                locationStrategy: detection.isMobilePlatform ? 'dontMove' : null,
-                closeByExternalClick: true,
-                closeOnTargetMove: !detection.isMobilePlatform,
-                context: context,
-                cssClassName: 'controls__filterButton__picker',
+                context: this._pickerContext,
                 template: 'SBIS3.CONTROLS/Filter/Button/Area',
                 componentOptions: this._getAreaOptions(),
-                _canScroll: true,
-                activateAfterShow: true,
                 handlers: {
-                   onKeyPressed: function(event, e) {
-                      if(e.which === constants.key.esc) {
-                         this.hide();
+                   onClose: function() {
+                      /* Разрушаем панель при закрытии,
+                       надо для: сбрасывания валидации, удаления ненужных значений из контролов */
+                      if (self._picker) {
+                         self._picker.destroy();
+                         self._picker = null;
                       }
-                   },
-                   
-                   onResize: function() {
-                      /*  В текущем состоянии пикер не пересчитывает свои размеры при изменении внутреннего контента.
-                          Для этого есть причины:
-                          1) Пикер не знает, что именно в нём изменился контент.
-                          2) Если принудительно считать, то все пикеры начнут часто прыгать.
-                          Вызвать пересчёт - ответственность того, кто вызвал это изменение.
-                          Но в кнопке фильтров контент постоянно меняется динамически (фильтры показываются / скрываются / раскрывается история),
-                          и эти изменения вызываются стандартыми средствани (show/hide контролов), которые так же не сообщают,
-                          где произошли изменения, а просто вызывают onResize. Для этого пишу обработчик, который замеряет высоту пикера,
-                          и при её изменении вызывает необходимые расчеты.
-                       */
-                      this.recalcPosition(true);
                    }
                 }
-             };
+             });
           },
 
           _getCurrentContext : function(){

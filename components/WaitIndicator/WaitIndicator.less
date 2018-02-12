@@ -32,6 +32,9 @@ x{}
 
 
 .ws-wait-indicator {
+    .flexbox();
+    .align-items(center);
+    .justify-content(center);
     background-color: @wait-indicator-overlay-default;
     cursor: default !important;
     -webkit-user-select: none;
@@ -115,24 +118,6 @@ x{}
 
 
 
-.ws-wait-indicator_global .ws-wait-indicator-in {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-}
-
-.ws-wait-indicator_local .ws-wait-indicator-in {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-}
-
 .ws-wait-indicator-in {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -151,7 +136,8 @@ x{}
 }
 
 .ws-wait-indicator_text .ws-wait-indicator-in {
-    width: @wait-indicator-labeled-width;
+    max-width: @wait-indicator-labeled-width;
+    width: auto;
     padding: (@wait-indicator-size + 2*@wait-indicator-gap - @wait-indicator-line-height)/2 @wait-indicator-gap 0 (@wait-indicator-size + 2*@wait-indicator-gap);
     background-position: @wait-indicator-gap 50%;
     white-space: nowrap;

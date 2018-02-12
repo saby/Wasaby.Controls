@@ -19,11 +19,17 @@
   .justify-content(center);
 }
 
-.controls-Button_size-m {
+.controls-Button_size-default {
   font-size: @font-size_Button_default;
   height: @height_Button_default;
   padding: @padding_Button-wrapper_default;
   .border-radius(@border-radius_Button_default);
+}
+.controls-Button_size-m {
+  font-size: @font-size_Button_m;
+  height: @height_Button_m;
+  padding: @padding_Button-wrapper_m;
+  .border-radius(@border-radius_Button_m);
 }
 
 .controls-Button_size-l {
@@ -75,9 +81,15 @@
       border-color: @border-color_Button_hovered;
       background: @background_Button_hovered;
   }
+  .controls-Button_state-standard:active {
+    background: @background_Button_active;
+  }
   .controls-Button_state-primary:hover {
       border-color: @border-color_Button_primary_hovered;
       background: @background_Button_primary_hovered;
+  }
+  .controls-Button_state-primary:active {
+    background: @background_Button_primary_active;
   }
 }
 // этот костыль для того, чтобы решить выравнивание текста в кнопках на iPad

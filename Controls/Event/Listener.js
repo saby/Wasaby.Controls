@@ -7,7 +7,8 @@ define('Controls/Event/Listener',
    [
       'Core/Control',
       'tmpl!Controls/Event/Listener',
-      'js!WS.Data/Type/descriptor'
+      'WS.Data/Type/descriptor',
+      'tmpl!Controls/Application/CompatibleScripts'
    ],
    function(Control, template, types) {
 

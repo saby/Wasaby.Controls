@@ -422,7 +422,9 @@ define('SBIS3.CONTROLS/ListView',
                constants.key.left,
                constants.key.m,
                constants.key.o,
-               constants.key.del
+               constants.key.del,
+               constants.key.pageUp,
+               constants.key.pageDown
             ],
             _itemsToolbar: null,
             _notEndEditClassName: 'controls-ListView__onFocusNotEndEdit',
@@ -1351,6 +1353,7 @@ define('SBIS3.CONTROLS/ListView',
             var
                selectedKeys,
                selectedKey = this.getSelectedKey(),
+               scrollPager = this._scrollPager,
                newSelectedKey,
                newSelectedItem;
             switch (e.which) {
@@ -1386,6 +1389,17 @@ define('SBIS3.CONTROLS/ListView',
                       this.deleteRecords(selectedKeys);
                    }
                   break;
+               case constants.key.pageUp:
+                  if (scrollPager) {
+                     scrollPager._goToPrev();
+                  }
+                  break;
+               case constants.key.pageDown:
+                  if (scrollPager && scrollPager.getPagesCount() > scrollPager.getSelectedKey()) {
+                     scrollPager._goToNext();
+                  }
+                  break;
+
             }
             if (newSelectedItem && newSelectedItem.length) {
                newSelectedKey = newSelectedItem.data('id');
@@ -1459,7 +1473,14 @@ define('SBIS3.CONTROLS/ListView',
                recordIndex = recordItems.getIndexByValue(recordItems.getIdProperty(), id),
                itemsProjection = this._getItemsProjection(),
                index = recordIndex !== -1 ? items.index(this._getDomElementByItem(itemsProjection.getItemBySourceIndex(recordIndex))) : -1,
+               isRootId = function(id) {
+                  //корень может отображаться даже если его нет в рекордсете
+                  return itemsProjection.getRoot && itemsProjection.getRoot() && itemsProjection.getRoot().getContents().get(recordItems.getIdProperty()) == id;
+               },
                siblingItem;
+            if (index === -1 && isRootId(id)) {
+               index = 0;
+            }
             if (isNext) {
                if (index + 1 < items.length) {
                   siblingItem = items.eq(index + 1);
@@ -1472,8 +1493,9 @@ define('SBIS3.CONTROLS/ListView',
             } else {
                siblingItem = items.eq(index);
             }
+
             if (siblingItem) {
-               return this.getItems().getRecordById(siblingItem.data('id')) ? siblingItem : this._getHtmlItemByDOM(siblingItem.data('id'), isNext);
+               return this.getItems().getRecordById(siblingItem.data('id')) || isRootId(siblingItem.data('id')) ? siblingItem : this._getHtmlItemByDOM(siblingItem.data('id'), isNext);
             }
          },
 
@@ -1505,8 +1527,7 @@ define('SBIS3.CONTROLS/ListView',
                }
             }
             if (!isEmpty(this._options.groupBy) && this._options.easyGroup && $(e.target).hasClass('controls-GroupBy__separatorCollapse')) {
-               var hashGroup = $(e.target).closest('.controls-GroupBy').attr('data-group-hash');
-               var idGroup = this._getItemsProjection().getByHash(hashGroup).getContents();
+               var idGroup = $(e.target).closest('.controls-GroupBy').attr('data-group');
                this.toggleGroup(idGroup);
                if ($target.closest('.controls-ListView').parent().hasClass('ws-sticky-header__header-container')) {
                   $group = this._getItemsContainer().find('.controls-GroupBy[data-group="' + idGroup + '"]');
