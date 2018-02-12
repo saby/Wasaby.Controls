@@ -1149,8 +1149,9 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
             } else {
                /**
                 * Если фокус стоит внутри строки - мы его потеряем
+                * Также мы потеряем фокус если он НА строке.
                 */
-               if (targetElement.find($(document.activeElement)).length > 0){
+               if (targetElement.get(0) === document.activeElement || targetElement.find($(document.activeElement)).length > 0){
                   this._getElementToFocus().focus();
                }
                targetElement.get(0).outerHTML = markup;
