@@ -1,7 +1,6 @@
 define('SBIS3.CONTROLS/Filter/Button',
     [
    "Core/moduleStubs",
-   "Core/Context",
    "Core/CommandDispatcher",
    "Core/constants",
    "Lib/Control/CompoundControl/CompoundControl",
@@ -15,7 +14,6 @@ define('SBIS3.CONTROLS/Filter/Button',
    "Core/ParallelDeferred",
    "Core/IoC",
    "Core/helpers/Function/once",
-   "Core/detection",
    "SBIS3.CONTROLS/Utils/FilterPanelUtils",
    "SBIS3.CONTROLS/Button/IconButton",
    "SBIS3.CONTROLS/Filter/Button/Line",
@@ -24,7 +22,6 @@ define('SBIS3.CONTROLS/Filter/Button',
 ],
     function(
         mStubs,
-        cContext,
         CommandDispatcher,
         constants,
         CompoundControl,
@@ -38,7 +35,6 @@ define('SBIS3.CONTROLS/Filter/Button',
         ParallelDeferred,
         IoC,
         once,
-        detection,
         FilterPanelUtils
     ) {
 
