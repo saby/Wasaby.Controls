@@ -381,3 +381,25 @@
 .controls-TabButton.controls-TabButton__main-item .controls-TabButton__fixEditAtPlace-padding.controls-EditAtPlace .controls-EditAtPlace__fieldWrapper {
    padding: 0 4px;
 }
+
+.ws-is-firefox {
+   .controls-TabButton {
+      &:not(.controls-Checked__checked) .controls-TabButton__flex > .controls-TabButton__mainText {
+         position: relative;
+         top: 1px;
+      }
+      .controls-TabButton__additionalText2 .controls-TextBox__field {
+         position: relative;
+         top: -1px;
+      }
+   }
+}
+
+.ws-is-ie10 {
+   .controls-TabButton {
+      &:not(.controls-Checked__checked) .controls-TabButton__flex > .controls-TabButton__mainText {
+         position: relative;
+         top: 0;
+      }
+   }
+}
