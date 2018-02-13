@@ -2,7 +2,7 @@
   display: inline-flex;
   /*font-size: @font-size_Link;*/
   /*text-decoration: none;*/
-  height: @default-height;
+  height: @height_Button_m;
   min-width: @min-width_Button;
   box-sizing: border-box;
   .user-select();
@@ -86,23 +86,26 @@
 .controls-Button__style-standart-primary, .controls-Button__style-standart-primary-big {
   cursor: pointer;
   border-color: @border-color_Button_primary;
+  background: @background_Button_primary;
+  box-shadow: @box-shadow_Button;
 }
 
 .controls-Button__style-standart-primary:active, .controls-Button__style-standart-primary-big:active {
   border-color: @border-color_Button_primary_hovered;
-  background: @background_Button_primary_active;
-  box-shadow: none;
+  background: @background_Button_primary_active;//no
+  box-shadow: @box-shadow_Button_active;
 }
 
 .controls-Button__style-standart-default, .controls-Button__style-standart-default-big {
   cursor: pointer;
   border-color: @border-color_Button;
+  box-shadow: @box-shadow_Button;
 }
 
 .controls-Button__style-standart-default:active, .controls-Button__style-standart-default-big:active {
   border-color: @border-color_Button_hovered;
-  background: @background_Button_active;
-  box-shadow: none;
+  background: @background_Button_default_active;//no
+  box-shadow: @box-shadow_Button_active;
 }
 
 .controls-Button__type-standart-disabled{
