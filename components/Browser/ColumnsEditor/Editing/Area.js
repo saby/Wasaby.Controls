@@ -207,12 +207,22 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                }
                if (this._selectableView) {
                   var view = this._selectableView;
-                  var list = [].concat(view.getSelectedKeys());
+                  var list = view.getSelectedKeys();
                   if (list.length) {
+                     list = list.slice();
                      var items = view.getItems();
-                     // Сортируем выделенные записи согласно их положению в рекордсете
+                     // Сортируем выделенные записи согласно их положению в рекордсете и c учётом их групп
                      list.sort(function (e1, e2) {
-                        return items.getIndex(items.getRecordById(e1)) - items.getIndex(items.getRecordById(e2));
+                        var v1 = items.getRecordById(e1);
+                        var v2 = items.getRecordById(e2);
+                        var g1 = v1.get('group');
+                        var g2 = v2.get('group');
+                        if (g1 !== g2) {
+                           return g1 < g2 ? -1 : +1;
+                        }
+                        else {
+                           return items.getIndex(v1) - items.getIndex(v2);
+                        }
                      });
                      selectedColumns.push.apply(selectedColumns, list);
                   }

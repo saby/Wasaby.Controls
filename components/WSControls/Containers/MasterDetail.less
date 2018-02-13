@@ -22,12 +22,25 @@
   box-shadow: @shadow-params;
 }
 
-.controls-MasterDetail__masterContainer .controls-ListView__item__selected td {
+// Остаются псевдорамки на предыдущих выбранных записях (исчезают при обнвовлении стилей)
+// в масштабе 150% (https://online.sbis.ru/opendoc.html?guid=95d7a236-67f5-4b4e-9f79-c5db6eb41b27)
+.controls-MasterDetail__masterContainer .controls-DataGridView__td {
+  border: none;
+}
+
+.controls-MasterDetail__masterContainer .controls-ListView__item__selected .controls-DataGridView__td {
   border-bottom: @border-params;
   border-top: @border-params;
 
+  // Не показывается рамка нижняя рамка с маштабом 125%
+  // Будет переделано при переходе на новый стандарт
+  // https://online.sbis.ru/opendoc.html?guid=95d7a236-67f5-4b4e-9f79-c5db6eb41b27
+  overflow: visible;
+
   &:last-child {
-    border-right: 1px solid white;
+    // На масштабе 150% остается кусок рамки, поэтому сделаем перекрытие "с запасом"
+    // https://online.sbis.ru/opendoc.html?guid=95d7a236-67f5-4b4e-9f79-c5db6eb41b27
+    border-right: 2px solid white;
     // Будет удалено в 3.18: https://online.sbis.ru/opendoc.html?guid=dc945545-09fa-4fa6-8dbd-a25673c2832d
     box-shadow: 1px 0 #fff;
   }

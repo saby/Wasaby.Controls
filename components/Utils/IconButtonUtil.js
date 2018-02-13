@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/Utils/IconButtonUtil', [],
                     className = (attrToMerge && attrToMerge.class || '') + (opts.element && opts.element.className || '') + (opts.className || ''),
                     style  = '',
                     type = '',
-                    size = 'default';
+                    size;
 
                 if (className) {
                     types.forEach(function (rawType) {
@@ -27,7 +27,7 @@ define('SBIS3.CONTROLS/Utils/IconButtonUtil', [],
                     default: style = 'standard'; break;
                 }
                 opts.style = !!opts.style ? opts.style : style;
-                opts.size = !!opts.size ? opts.size : size;
+                opts.size = !size ? opts.size : size;
             },
 
             getBorderColorState: function(style, opts) {

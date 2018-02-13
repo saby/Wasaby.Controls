@@ -13,7 +13,7 @@
 </head>
 <Controls:Event:Listener name="scrollDetect" register="scroll">
    <Controls:Event:Listener name="resizeDetect" register="resize">
-      <body class="ws-is-chrome" id="body" key="1_2_" on:scroll="_scrollPage()" on:resize="_resizePage()">
+      <body class="{{BodyClasses()}}" id="body" key="1_2_" on:scroll="_scrollPage()" on:resize="_resizePage()">
          <ws:if data="{{ content.content }}">
             <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}" />
          </ws:if>
@@ -45,19 +45,7 @@
                </script>
             </ws:if>
             <ws:else>
-               <script key="init_script">
-                  require(['Core/app-init'], function(appinit){
-                     appinit();
-                     require(['bootup-min',
-                        'Core/nativeExtensions',
-                        'Lib/Control/BaseCompatible/BaseCompatible'], function(bootup){
-                        var cont = document.getElementsByTagName('html')[0];
-                        cont.removeAttribute('config');
-                        cont.removeAttribute('data-component');
-                        bootup();
-                     });
-                  });
-               </script>
+			   <ws:partial template="tmpl!Controls/Application/CompatibleScripts" />
             </ws:else>
          </div>
          <Controls:Popup:Manager:Container attr:id="popup"/>
