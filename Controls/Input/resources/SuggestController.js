@@ -117,9 +117,13 @@ define('Controls/Input/resources/SuggestController',
          this._options = options;
       },
       
-      setValue: function(value) {
-         this._value = value;
+      search: function(searchValue) {
+         this._value = searchValue;
          _private.onChangeValueHandler(this);
+      },
+      
+      abort: function() {
+         _private.hidePopup(this);
       },
       
       keyDown: function(event) {
