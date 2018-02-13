@@ -109,7 +109,14 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
          },
 
          _updateZIndex: function(zIndex){
-            this._zIndex = Math.max(zIndex, cWindowManager.getMaxZIndex()) + 1;
+            var self = this;
+            var maxWindow = cWindowManager.getMaxZWindow(function(win){
+               //Не учитываем в поиске окна из стека
+               return !self._items.some(function(item){
+                  return item === win;
+               })
+            });
+            this._zIndex = Math.max(zIndex, maxWindow.getZIndex()) + 1;
             this._updatePositions();
          },
 
