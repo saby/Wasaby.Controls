@@ -1075,6 +1075,8 @@ define('SBIS3.CONTROLS/ListView',
             this.subscribeTo(this._virtualScrollController, 'onWindowChange', function(event, config){
                var itemsToAdd = [],
                   itemsToRemove = [],
+                  addPosition = config.addPosition,
+                  prevDomNode,
                   item;
                for (var i = config.add[0]; i <= config.add[1]; i++) {
                   item = this._getItemsProjection().at(i);
@@ -1088,7 +1090,15 @@ define('SBIS3.CONTROLS/ListView',
                      itemsToRemove.push(item);
                   }
                }
-               this._addItems(itemsToAdd, config.addPosition);
+
+               // Если есть добавление по месту в начале списка, то надо добавлять записи после него,
+               // а не самом начале контейнера
+               var editingTr = this._isAddAtTop();
+               if (editingTr && addPosition === 0) {
+                  addPosition += 1;
+                  prevDomNode = editingTr;
+               }
+               this._addItems(itemsToAdd, addPosition, prevDomNode);
                if(this._options.itemsActionsInItemContainer && itemsToRemove.length && this._itemsToolbar && this._itemsToolbar.isVisible()){
                   this._itemsToolbar.hide();
                }
@@ -3762,6 +3772,24 @@ define('SBIS3.CONTROLS/ListView',
          },
 
          /**
+          * Проверяет происходит ли в данный момент добавление по месту в начале списка.
+          * Если происходит, вовзращает последнюю DOM ноду редактирования по месту.
+          *
+          * @returns {boolean}
+          * @private
+          */
+         _isAddAtTop: function() {
+            try {
+               if (this._isAdd() && this._getItemsContainer().children().first().hasClass('controls-editInPlace')) {
+                  var editingTr = this._getItemsContainer().children().eq(1);
+                  return editingTr.hasClass('controls-editInPlace__editing') ? editingTr : false;
+               }
+            } catch(e) {}
+
+            return false;
+         },
+
+         /**
           * Скролит табличное представление к указанному элементу
           * @param item Элемент, к которому осуществляется скролл
           * @param {Boolean} toBottom скроллить к нижней границе элемента, по умолчанию скролит к верхней
@@ -3772,17 +3800,23 @@ define('SBIS3.CONTROLS/ListView',
          scrollToItem: function(item, toBottom, depth){
             var itemIndex;
             if (this.getItems()) {
-               itemIndex = this.getItems().getIndexByValue(item.getIdProperty(), item.getId());
+               itemIndex = parseInt(this.getItems().getIndexByValue(item.getIdProperty(), item.getId()));
             }
             // Если item есть в DOM, то работаем будто нет виртуального скрола.
             // Если item удален из DOM, то считаем scrollTop через виртуальный скрол.
-            if (this._options.virtualScrolling && this._virtualScrollController && itemIndex && !this._virtualScrollController.isItemVisible(itemIndex)) {
-               var scrollTop = this._virtualScrollController.getScrollTopForItem(itemIndex);
-               // Если есть sticky header, надо его пересчитать после отрисовки записей виртуальным скролом
-               if (this._options.stickyHeader) {
-                  this._virtualScrollResetStickyHead = true;
+            if (this._options.virtualScrolling && this._virtualScrollController && itemIndex >= -1 && !this._virtualScrollController.isItemVisible(itemIndex)) {
+               // Если происходит добавление по месту в начале списка, проскролим туда
+               if (itemIndex === -1 && this._isAddAtTop()) {
+                  this.scrollToFirstPage();
                }
-               this._getScrollWatcher().scrollTo(scrollTop);
+               else if (itemIndex !== -1) {
+                  var scrollTop = this._virtualScrollController.getScrollTopForItem(itemIndex);
+                  // Если есть sticky header, надо его пересчитать после отрисовки записей виртуальным скролом
+                  if (this._options.stickyHeader) {
+                     this._virtualScrollResetStickyHead = true;
+                  }
+                  this._getScrollWatcher().scrollTo(scrollTop);
+               }
             }
             else if (item.getId && item.getId instanceof Function) {
                this._scrollToItem(item.getId(), toBottom, depth);
