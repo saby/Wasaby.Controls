@@ -113,6 +113,10 @@ define(
             }
          },
 
+         _displayedStartValue: null,
+         _displayedEndValue: null,
+         _displayedRangeSelectionEnd: null,
+
          _modifyOptions: function() {
             var opts = MonthView.superclass._modifyOptions.apply(this, arguments),
                days = constants.Date.days,
@@ -705,6 +709,28 @@ define(
             }
 
             return css.join(' ')
+         },
+
+         validateRangeSelectionItemsView: function() {
+            var currentMonthStart = DateUtil.getStartOfMonth(this.getMonth()),
+               currentMontEnd = DateUtil.getEndOfMonth(this.getMonth()),
+               range = this._getUpdatedRange(this._displayedStartValue, this._displayedEndValue, this._displayedRangeSelectionEnd),
+               newRange = this._getUpdatedRange(this.getStartValue(), this.getEndValue(), this._getSelectionRangeEndItem());
+
+            if ((DateUtil.isRangesOverlaps(currentMonthStart, currentMontEnd, range[0], range[1]) || // обновляем если старый выбранный или новый период пересеваются с отображаемым месяцем
+                  DateUtil.isRangesOverlaps(currentMonthStart, currentMontEnd, newRange[0], newRange[1])) &&
+                  // не обновляем если отображаемый месяц полностью входит в старый и новый периоды
+                  !(range[0] < currentMonthStart && newRange[0] < currentMonthStart && range[1] > currentMontEnd && newRange[1] > currentMontEnd)
+               ) {
+                MonthView.superclass.validateRangeSelectionItemsView.apply(this, arguments);
+            }
+         },
+
+         _validateRangeSelectionItemsView: function() {
+            this._displayedStartValue = this.getStartValue();
+            this._displayedEndValue = this.getEndValue();
+            this._displayedRangeSelectionEnd = this._rangeSelectionEnd;
+            MonthView.superclass._validateRangeSelectionItemsView.apply(this, arguments);
          },
 
          _drawCurrentRangeSelection: function () {
