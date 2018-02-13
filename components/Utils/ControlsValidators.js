@@ -144,7 +144,8 @@ define('SBIS3.CONTROLS/Utils/ControlsValidators', [
        */
       email: function(value) {
          return IsEmail({
-            value: value
+          value :value
+
          });
       },
       /**

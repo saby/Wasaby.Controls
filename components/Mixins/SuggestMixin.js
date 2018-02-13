@@ -80,52 +80,20 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
       $protected: {
          _options: {
             /**
-             * @cfg {Number} Устанавливает время задержки перед выполнением поиска. Значение задаётся в миллисекундах.
-             * @remark
-             * Временная пауза перед началом поиска дается на формирование пользователем корректного запроса к списку
-             * значений для автодополнения. Это позволяет предотвратить выполнение лишних запросов к источнику данных.
-             * Ввод или удаление символа вновь активирует режим задержки перед началом поиска.
-             *
-             * Чтобы настроить минимальное количество символов, с ввода которых начинается поиск результатов,
-             * используйте опцию {@link startChar}.
-             *
-             * Подробнее о функционале автодополнения вы можете прочитать в описании к классу {@link SBIS3.CONTROLS/Mixins/SuggestMixin}.
-             * @example
-             * <pre class="brush: xml">
-             *     <!-- Установлена задержка в одну секунду -->
-             *     <option name="delay">1000</option>
-             * </pre>
-             * @see startChar
-             * @deprecated Используйте опцию {@link searchDelay}.
+             * @cfg {Number} Временная задержка между запросами к бизнес-логике. Используется функционалом автодополнения.
+             * @deprecated Используйте опцию {@link BIS3.CONTROLS/Mixins/SearchMixin#searchDelay}.
              */
             delay: 500,
 
             /**
-             * @cfg {Number} Устанавливает минимальное количество введенных символов, которые необходимы для начала поиска результатов автодополнения.
-             * @remark
-             * После ввода минимального количества символов происходит временная задержка перед началом поиска,
-             * которая устанавливается через опцию {@link delay}.
-             * Подробнее о функционале автодополнения вы можете прочитать в описании к классу {@link SBIS3.CONTROLS/Mixins/SuggestMixin}.
-             * @example
-             * <pre class="brush: xml">
-             *     <option name="startChar">1</option>
-             * </pre>
-             * @see delay
-             * @deprecated Используйте опцию {@link startCharacter}.
+             * @cfg {Number|null} Минимальное количество символов, с ввода которых отображается автодополнение.
+             * @deprecated Используйте опцию {@link BIS3.CONTROLS/Mixins/SearchMixin#startCharacter}.
              */
             startChar: 3,
             /**
-             * @cfg {Boolean} Устанавливает режим работы автодополнения, в котором выводится список всех возможных значений при переходе фокуса на контрол.
-             * * true Режим включен.
-             * * false Режим выключен.
-             * @remark file SuggestMixin-autoShow.md
-             * @example
-             * <pre class="brush: xml">
-             *     <option name="autoShow">true</option>
-             * </pre>
+             * @cfg {Boolean} Режим работы (значение true) автодополнения, когда при переходе фокуса на контрол выводится список всех возможных значений.
              * @see list
              * @see listFilter
-             * @see startChar
              * @see SBIS3.CONTROLS/ListView#showPaging
              * @see SBIS3.CONTROLS/Mixins/DSMixin#pageSize
              * @see SBIS3.CONTROLS/DataGridView#showHead
@@ -163,71 +131,116 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
             observableControls: [],
 
             /**
-             * @typedef {Object} ListControl
-             * @property {String} component Класс контрола, который будет использоваться для отображения списка сущностей.
-             * По умолчанию используется {@link SBIS3.CONTROLS/ListView}. Однако можно указать любой другой контрол, который
-             * наследует функционал {@link SBIS3.CONTROLS/Mixins/DSMixin}, {@link SBIS3.CONTROLS/Mixins/Selectable} и {@link SBIS3.CONTROLS/Mixins/MultiSelectable}.
-             * @property {Object} options Опции контрола, которые будут использованы при его построении.
-             */
-            /**
-             * @cfg {ListControl} Устанавливает конфигурацию выпадающего блока, отображающего список значений для автодополнения.
+             * @cfg {Object} Конфигурация контрола, который отображает выпадающий список автодополнения.
              * @remark file SuggestMixin-list.md
              * @example
+             * В следующем примере показана настройка контрола SBIS3.CONTROLS/FieldLink, для которого задана конфигурация автодополнения.
              * <pre class="brush:xml">
-             *     <options name="list">
-             *        <option name="component" value="SBIS3.CONTROLS/DataGridView"></option> <!-- Указываем класс контрола, на его основе строятся результаты автодополнения -->
-             *        <options name="options">
-             *           <option name="idProperty" value="@Пользователь"></option> <!-- Указываем ключевое поле -->
-             *           <options name="columns" type="array"> <!-- Производим настройку колонок -->
-             *              <options>
-             *                 <option name="title">№</option>
-             *                 <option name="field">@Пользователь</option>
-             *              </options>
-             *              <options>
-             *                 <option name="title">Фамилия</option>
-             *                 <option name="field">Фамилия</option>
-             *              </options>
-             *           </options>
-             *        </options>
-             *     </options>
+             * <SBIS3.CONTROLS:FieldLink
+             *    name="showAllButtonField"
+             *    class="docs-ShowAllButton"
+             *    text="{{ myTextField|mutable }}"
+             *    placeholder="Введите имя сотрудника"
+             *    displayProperty="Фамилия"
+             *    multiselect="{{ false }}"
+             *    idProperty="@ТелефонныйСправочник3"
+             *    chooserMode="dialog"
+             *    pickerClassName="docs-ShowAllButton__myPicker">
+             *    <ws:dictionaries>
+             *        <ws:options template="js!SBIS3.DOCS.ShowAllDictionary">
+             *           <ws:componentOptions showSelectButton="{{false}}"/>
+             *        </ws:options>
+             *    </ws:dictionaries>
+             *    <ws:list component="SBIS3.CONTROLS/DataGridView">
+             *        <ws:options
+             *           itemsActions=""
+             *           idProperty="@ТелефонныйСправочник3"
+             *           pageSize="5"
+             *           showHead="{{true}}"
+             *           footerTpl="tmpl!SBIS3.DOCS.ShowAllButton/resources/myFooterTpl">
+             *              <ws:columns>
+             *                 <ws:Array>
+             *                    <ws:Object field="@ТелефонныйСправочник3" title="№" width="50" />
+             *                    <ws:Object field="Фамилия" title="Фамилия" width="150" />
+             *                    <ws:Object field="Имя" title="Имя" width="100" />
+             *                 </ws:Array>
+             *              </ws:columns>
+             *        </ws:options>
+             *    </ws:list>
+             *    <ws:listFilter Имя="{{ myTextField|bind }}" />
+             * </SBIS3.CONTROLS:FieldLink>
              * </pre>
              * @group Data
              * @see autoShow
              * @see listFilter
              * @see getList
-             * @see startChar
              * @see SBIS3.CONTROLS/Mixins/DSMixin#idProperty
              * @see Deprecated/Controls/FieldLink/Columns.typedef
              * @see SBIS3.CONTROLS/DataGridView#showHead
              */
             list: {
+               /**
+                * @cfg {String} Имя класса контрола, который используется для построения списка автодополнения.
+                * @remark
+                * Класс контрола должен быть расширен функционалом миксинов {@link SBIS3.CONTROLS/Mixins/DSMixin}, {@link SBIS3.CONTROLS/Mixins/Selectable} и {@link SBIS3.CONTROLS/Mixins/MultiSelectable}.
+                *
+                * Для класса {@link SBIS3.CONTROLS/FieldLink} по умолчанию установлен класс {@link SBIS3.CONTROLS/DataGridView}.
+                */
                component: 'SBIS3.CONTROLS/ListView',
+               /**
+                * @cfg {Object} Конфигурация контрола, который установлен в опции component.
+                */
                options: {}
             },
 
             /**
-             * @cfg {Object} Устанавливает параметры фильтрации для списка значений автодополнения.
+             * @cfg {Object} Параметры фильтрации, используемые автодополнением при запросе к бизнес-логике.
              * @remark
-             * Опция используется как дополнение опции {@link list} - настройки выпадающего блока.
-             * С помощью опции определяют поле источника данных, по значениям которого будет произведена фильтрация.
-             * Параметры фильтрации не делают статическими, их значения устанавливаются динамически с помощью привязки к полю контекста.
-             * Значение в поле контекста изменяется со стороны какого-либо поля ввода.
-             * Пример фильтрации списка значений:
-             * ![](/SuggestMixin03.png)
-             * Значение поля ввода привязывается к полю контекста опцией {@link SBIS3.CONTROLS/TextBox/TextBoxBase#text}, с помощью атрибута bind.
-             * Минимальное количество введенных символов, необходимое для начала поиска результатов автодополнения, определяется опцией {@link startChar}.
-             * Установить фильтр для списка значений можно с помощью метода {@link setListFilter}
-             * Подробнее о функционале автодополнения вы можете прочитать в описании к классу {@link SBIS3.CONTROLS/Mixins/SuggestMixin}.
+             * Параметры фильтрации передаются в <a href="/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/">списочный метод</a> (который вызывается автодополнением) в параметр Фильтр.
+             * Использование опции актуально совместно с опцией {@link list}.
              * @example
+             * В следующем примере установлено, что автодополнение будет вызывать списочный метод с параметром Фильтр.Имя.
+             * В параметр передается значение, хранимое в контексте в поле myTextField.
+             * Значение поля изменяется через опцию text - значения, вводимые в поле связи.
              * <pre class="brush:xml">
-             *     <option name="text" bind="myTextField" value=""></option> <!-- Привязываем значения поля связи к полю myTextField в контексте -->
-             *     <options name="listFilter">
-             *        <option name="ФИО" bind="myTextField" oneWay="true"></option> <!-- Односторонняя привязка к полю myTextField по значениям из поля "ФИО" -->
-             *     </options>
+             * <!-- Значения в опции text связаны с полем контекста myTextField. -->
+             * <SBIS3.CONTROLS:FieldLink
+             *    name="showAllButtonField"
+             *    class="docs-ShowAllButton"
+             *    text="{{ myTextField|mutable }}"
+             *    placeholder="Введите имя сотрудника"
+             *    displayProperty="Фамилия"
+             *    multiselect="{{ false }}"
+             *    idProperty="@ТелефонныйСправочник3"
+             *    chooserMode="dialog"
+             *    pickerClassName="docs-ShowAllButton__myPicker">
+             *    <ws:dictionaries>
+             *        <ws:options template="js!SBIS3.DOCS.ShowAllDictionary">
+             *           <ws:componentOptions showSelectButton="{{false}}"/>
+             *        </ws:options>
+             *    </ws:dictionaries>
+             *    <ws:list component="SBIS3.CONTROLS/DataGridView">
+             *        <ws:options
+             *           itemsActions=""
+             *           idProperty="@ТелефонныйСправочник3"
+             *           pageSize="5"
+             *           showHead="{{true}}"
+             *           footerTpl="tmpl!SBIS3.DOCS.ShowAllButton/resources/myFooterTpl">
+             *              <ws:columns>
+             *                 <ws:Array>
+             *                    <ws:Object field="@ТелефонныйСправочник3" title="№" width="50" />
+             *                    <ws:Object field="Фамилия" title="Фамилия" width="150" />
+             *                    <ws:Object field="Имя" title="Имя" width="100" />
+             *                 </ws:Array>
+             *              </ws:columns>
+             *        </ws:options>
+             *    </ws:list>
+             *    <!-- Значение параметра фильтрации "Имя" связано с полем контекста myTextField. -->
+             *    <ws:listFilter Имя="{{ myTextField|bind }}" />
+             * </SBIS3.CONTROLS:FieldLink>
              * </pre>
              * @see setListFilter
              * @see list
-             * @see startChar
              * @see SBIS3.CONTROLS/TextBox/TextBoxBase#text
              */
 	        listFilter: {},
@@ -447,7 +460,10 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
             var holder = this._getLoadingContainer() || this.getContainer();
             this._loadingIndicator = $('<div class="controls-Suggest__loadingIndicator">').appendTo(holder.addClass('controls-Suggest__loadingContainer'));
          }
-         this._loadingIndicator.removeClass('ws-hidden');
+         //показываем ромашку, только когда пикер скрыт. В противном случае будет две ромашки: эта и ромашка в списке
+         if (this._picker && !this._picker.isVisible()) {
+            this._loadingIndicator.removeClass('ws-hidden');
+         }
       },
 
       /**
@@ -566,7 +582,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
                    иначе будет зацикливание и интерфейс заблокируется.*/
                 self.setAutoShow(false);
 
-                if(cInstance.instanceOfMixin(this._list, 'SBIS3.CONTROLS/Mixins/ItemsControlMixin')) {
+                if (cInstance.instanceOfMixin(this._list, 'SBIS3.CONTROLS/Mixins/ItemsControlMixin')) {
                    this._list.setEmptyHtml(rk('Справочник недоступен'));
                 }
                 

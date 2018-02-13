@@ -85,7 +85,7 @@ body {
       color: @error-color !important;
     }
   }
-  .controls-Button__icon {
+  .controls-Button__icon.icon-primary {
     color: #839EBC !important;
   }
 }
@@ -156,6 +156,11 @@ body .ws-window.ws-LoadingIndicator__window {
   }
 }
 .controls-DropdownList__multiselect {
+  .controls-DropdownListFooter_select {
+    //Пока нет стандартных размеров для средних кнопок в темах оформления, задаю вручную
+    width: round(58px * @multiplier);
+    height: round(58px * @multiplier);
+  }
   &.controls-DropdownList__item {
     &:after {
       left: @padding_DropDownList_item_child_text;
@@ -327,7 +332,7 @@ body {
 //Простите меня за эти строки кода, я не хотел, меня заставили
 .controls__filterButton {
   .controls__filterButton-button {
-    .close-button-mixin();
+    .close-button-mixin(~'', @default-height, @default-height);
     &:before {
       content: '';
     }
@@ -405,13 +410,6 @@ body {
   .controls-DateRangeBigChoose__ApplyButton {
     //Простите меня за эти строки кода, я не хотел, меня заставили
     margin-right:  round(12px * @multiplier);
-    .close-button-mixin(~'!important');
-    &:before {
-      content: '' !important;;
-    }
-    .icon-size {
-      color: #72BE44 !important;
-    }
     .controls-Button__icon {
       .icon-size(@default-icon-size-large);
     }
@@ -448,11 +446,19 @@ body {
   box-shadow: none;
   height: @height_IconButton_bordered_size-m;
 }
-.ws-is-desktop-platform .controls-IconButton.controls-IconButton__standardBorder:hover {
-  background-color: transparent;
-}
 // перетащил фикс из prestonew
 // TODO: чтобы не писать такие каскады нужно упростить стили MenuIcon и навешивать только нужные отступы
 .controls-operationsPanel__itemsMenu_picker.controls-MenuIcon__Menu.controls-MenuIcon__Menu.controls-Menu.controls-Menu__hide-menu-header {
   margin: round(-17px * @multiplier) 0 0 round(16px * @multiplier);
+}
+// в онлайне стили вызывающего элемента и иконки в меню не отличаются, в престо же отображается только иконка,
+// а т.к. копируем все селекторы, то для престо придется перебить часть свойств
+.controls-MenuIcon-header.controls-IconButton_bordered {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+// В presto крестик закрытия в информационных окнах имеют другие размеры.
+.controls-InformationPopup .controls-PopupMixin__closeButton_light {
+  .icon-size(@icon-size_default_large);
 }

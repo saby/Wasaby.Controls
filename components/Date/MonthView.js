@@ -16,11 +16,12 @@ define(
       'tmpl!SBIS3.CONTROLS/Date/MonthView/MonthViewTableBody',
       'tmpl!SBIS3.CONTROLS/Date/MonthView/MonthView',
       'tmpl!SBIS3.CONTROLS/Date/MonthView/day',
+      'Core/core-merge',
       'SBIS3.CONTROLS/Date/MonthPicker',
       'i18n!SBIS3.CONTROLS/Calendar',
       'css!SBIS3.CONTROLS/Date/MonthView/MonthView'
    ],
-   function (constants, detection, isEmpty, CompoundControl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, ifEnabled, monthViewTableBodyTpl, dotTplFn, dayTmpl) {
+   function (constants, detection, isEmpty, CompoundControl, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, ifEnabled, monthViewTableBodyTpl, dotTplFn, dayTmpl, merge) {
 
       'use strict';
 
@@ -88,7 +89,11 @@ define(
                 * @cfg {Object} Кванты. Если заданы кванты, то нельзя выделить вроизвольный период, можно только выделить заданные периоды.
                 */
                quantum: {},
-
+   
+               /**
+                * @cfg {Function} Возможность поменять конфигурацию для дня. В функцию приходит объект даты. Опция необходима для производственных каледнадрей.
+                */
+               dayFormatter: null,
                dayTmpl: dayTmpl
             },
 
@@ -107,6 +112,10 @@ define(
                TODAY: 'controls-MonthView__today'
             }
          },
+
+         _displayedStartValue: null,
+         _displayedEndValue: null,
+         _displayedRangeSelectionEnd: null,
 
          _modifyOptions: function() {
             var opts = MonthView.superclass._modifyOptions.apply(this, arguments),
@@ -591,7 +600,11 @@ define(
                isSelectionForvard && !DateUtil.isDatesEqual(startDate, endDate);
 
             obj.selectedInner = (date && startDate && endDate && date.getTime() > startDate.getTime() && date.getTime() < endDate.getTime());
-
+            
+            if (this._options.dayFormatter) {
+               merge(obj, this._options.dayFormatter(date) || {});
+            }
+            
             array.push(obj);
          },
 
@@ -696,6 +709,28 @@ define(
             }
 
             return css.join(' ')
+         },
+
+         validateRangeSelectionItemsView: function() {
+            var currentMonthStart = DateUtil.getStartOfMonth(this.getMonth()),
+               currentMontEnd = DateUtil.getEndOfMonth(this.getMonth()),
+               range = this._getUpdatedRange(this._displayedStartValue, this._displayedEndValue, this._displayedRangeSelectionEnd),
+               newRange = this._getUpdatedRange(this.getStartValue(), this.getEndValue(), this._getSelectionRangeEndItem());
+
+            if ((DateUtil.isRangesOverlaps(currentMonthStart, currentMontEnd, range[0], range[1]) || // обновляем если старый выбранный или новый период пересеваются с отображаемым месяцем
+                  DateUtil.isRangesOverlaps(currentMonthStart, currentMontEnd, newRange[0], newRange[1])) &&
+                  // не обновляем если отображаемый месяц полностью входит в старый и новый периоды
+                  !(range[0] < currentMonthStart && newRange[0] < currentMonthStart && range[1] > currentMontEnd && newRange[1] > currentMontEnd)
+               ) {
+                MonthView.superclass.validateRangeSelectionItemsView.apply(this, arguments);
+            }
+         },
+
+         _validateRangeSelectionItemsView: function() {
+            this._displayedStartValue = this.getStartValue();
+            this._displayedEndValue = this.getEndValue();
+            this._displayedRangeSelectionEnd = this._rangeSelectionEnd;
+            MonthView.superclass._validateRangeSelectionItemsView.apply(this, arguments);
          },
 
          _drawCurrentRangeSelection: function () {

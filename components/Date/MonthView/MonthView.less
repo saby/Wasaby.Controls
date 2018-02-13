@@ -29,15 +29,17 @@
    color: @color_MonthView-weekDayHeader;
 }
 
-.controls-MonthView__hover-selectableItem {
-   &:hover {
-      background: @background_MonthView-item-hover;
+.ws-is-desktop-platform {
+   .controls-MonthView__hover-selectableItem {
+      &:hover {
+         background: @background_MonthView-item-hover;
+      }
    }
-}
 
-.controls-MonthView__border-currentMonthDay-unselected {
-   &:hover {
-      outline: 1px solid @border-color__MonthView-item-hover;
+   .controls-MonthView__border-currentMonthDay-unselected {
+      &:hover {
+         outline: 1px solid @border-color__MonthView-item-hover;
+      }
    }
 }
 
@@ -118,10 +120,10 @@
    position: absolute;
    //height: calc(100% - 2px);
    //width: calc(100% - 2px);
-   top: 7.7%;
-   bottom: 7.7%;
-   left: 7.7%;
-   right: 7.7%;
+   top: @background-spacing_MonthView-item-today;
+   bottom: @background-spacing_MonthView-item-today;
+   left: @background-spacing_MonthView-item-today;
+   right: @background-spacing_MonthView-item-today;
    border-radius: @border-radius_MonthView-item-today;
    background-color: @background-color_MonthView-item-today;
 }
@@ -150,6 +152,14 @@
 
    &:hover {
       color: @color_MonthView-item-prev-next-month-hover;
+   }
+}
+.ws-is-desktop-platform {
+   .controls-MonthView__prevMonth,
+   .controls-MonthView__nextMonth {
+      &:hover {
+         color: @color_MonthView-item-prev-next-month-hover;
+      }
    }
 }
 

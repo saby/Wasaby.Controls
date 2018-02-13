@@ -13,7 +13,7 @@
 </head>
 <Controls:Event:Listener name="scrollDetect" register="scroll">
    <Controls:Event:Listener name="resizeDetect" register="resize">
-      <body class="ws-is-chrome" id="body" key="1_2_" on:scroll="_scrollPage()" on:resize="_resizePage()">
+      <body class="{{BodyClasses()}}" id="body" key="1_2_" on:scroll="_scrollPage()" on:resize="_resizePage()">
          <ws:if data="{{ content.content }}">
             <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}" />
          </ws:if>
@@ -35,9 +35,18 @@
                   <script type="text/javascript" src="{{ value }}" defer="defer" key="{{ 'scripts_' + index }}"></script>
                </ws:for>
             </ws:if>
-            <script key="init_script">
-               require(['Core/app']);
-            </script>
+            <ws:if data="{{!compat}}">
+               <script key="init_script">
+                  require(['Controls/Application/AppData'], function(AppData){
+                     window.startContextData = {AppData: new AppData({})};
+                     require(['Core/app']);
+                  });
+
+               </script>
+            </ws:if>
+            <ws:else>
+			   <ws:partial template="tmpl!Controls/Application/CompatibleScripts" />
+            </ws:else>
          </div>
          <Controls:Popup:Manager:Container attr:id="popup"/>
       </body>

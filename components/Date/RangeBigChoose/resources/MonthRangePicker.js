@@ -28,6 +28,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             tplOptions.startValue = cfg.startValue;
             tplOptions.endValue = cfg.endValue;
             tplOptions.serializationMode = cfg.serializationMode;
+            tplOptions.dayFormatter = cfg.dayFormatter;
             return tplOptions;
          };
 
@@ -149,8 +150,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
 
          if (this._options.quarterSelectionEnabled || this._options.halfyearSelectionEnabled) {
             container.on('click.monthRangePicker', '.controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button',
-            this._onHalfyearQuarterClick.bind(this));
-            if (this._options.monthsSelectionEnabled) {
+               this._onHalfyearQuarterClick.bind(this));
+            if (!detection.isMobileIOS) {
                container.on('mouseenter.monthRangePicker', '.controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button',
                   this._onHalfyearQuarterMouseEnter.bind(this));
                container.on('mouseleave.monthRangePicker', '.controls-DateRangeBigChoose-MonthRangePickerItem__halfyear-quarter-button',

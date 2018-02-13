@@ -5,15 +5,17 @@ define('SBIS3.CONTROLS/Filter/Button/History',
     [
    "Core/CommandDispatcher",
    "Lib/Control/CompoundControl/CompoundControl",
+   "SBIS3.CONTROLS/Filter/FavoriteEditDialog",
    "tmpl!SBIS3.CONTROLS/Filter/Button/History/FilterHistory",
    "tmpl!SBIS3.CONTROLS/Filter/Button/History/ItemContentTpl",
+   "tmpl!SBIS3.CONTROLS/Filter/Button/History/ItemContentTplFM",
    "SBIS3.CONTROLS/Commands/CommandsSeparator",
    "SBIS3.CONTROLS/ListView",
    'css!SBIS3.CONTROLS/Commands/CommandsSeparator',
    'css!SBIS3.CONTROLS/Filter/Button/History/FilterButtonHistory',
    "i18n!SBIS3.CONTROLS/Filter/Button"
 ],
-    function( CommandDispatcher,CompoundControl, dotTpl) {
+    function( CommandDispatcher, CompoundControl, FavoriteEditDialog, dotTpl, ItemContentTpl, ItemContentTplFM) {
 
    'use strict';
 
@@ -29,6 +31,12 @@ define('SBIS3.CONTROLS/Filter/Button/History',
       _dotTplFn : dotTpl,
       $protected: {
          _options: {
+            /**
+             * @cfg {String} Устанавливает режим отображения истории.
+             * @variant pinMode Режим отображения с закрепелнием.
+             * @variant favoritesMode Режим отображения с добавлением в избранное.
+             */
+            viewMode: 'pinMode'
          },
          _historyView: undefined,
          _historyController: undefined,
@@ -38,6 +46,12 @@ define('SBIS3.CONTROLS/Filter/Button/History',
       $constructor: function() {
 
          CommandDispatcher.declareCommand(this, 'toggleHistory', this.toggleHistoryBlock);
+      },
+
+      _modifyOptions: function() {
+         var opts = FilterHistory.superclass._modifyOptions.apply(this, arguments);
+         opts._itemContentTpl = opts.viewMode === 'favoritesMode' ? ItemContentTplFM : ItemContentTpl;
+         return opts;
       },
 
       init: function() {
@@ -60,19 +74,28 @@ define('SBIS3.CONTROLS/Filter/Button/History',
       },
 
       _initHistoryView: function() {
-         var self = this;
+         var
+            self = this,
+            itemsActions = this._options.viewMode === 'favoritesMode' ? [/*{
+               name: 'favourite',
+               icon: 'icon-24 icon-Unfavourite icon-disabled',
+               isMainAction: true,
+               onActivated: function(target, key, item) {
+                  self._addToFavorites(item);
+               }
+            }*/] : [{
+               name: 'pin',
+               icon: 'icon-16 icon-Pin icon-disabled',
+               tooltip: rk('Отметить'),
+               isMainAction: true,
+               onActivated: function(target, key) {
+                  self._historyController.toggleMarkFilter(key);
+                  self.updateHistoryViewItems();
+               }
+            }];
 
          /* Установка операции отметки записи маркером */
-         self._historyView.setItemsActions([{
-            name: 'pin',
-            icon: 'icon-16 icon-Pin icon-disabled',
-            tooltip: rk('Отметить'),
-            isMainAction: true,
-            onActivated: function(target, key) {
-               self._historyController.toggleMarkFilter(key);
-               self.updateHistoryViewItems();
-            }
-         }]);
+         self._historyView.setItemsActions(itemsActions);
 
          /* При клике по строке списка фильтров - применим фильтр из истории */
          self.subscribeTo(self._historyView,'onItemActivate', function(e, itemObj) {
@@ -87,6 +110,41 @@ define('SBIS3.CONTROLS/Filter/Button/History',
             /* Если записей < 3, то выключим кнопку разворота истории */
             self._toggleHistoryButton[dsCount > MAX_MINIMIZE_HISTORY_ITEMS ? 'show' : 'hide']();
          });
+
+         if (self._options.viewMode === 'pinMode') {
+            self.subscribeTo(self._historyView, 'onChangeHoveredItem', self._onChangeHoverHistoryItem);
+         }
+      },
+
+      _addToFavorites: function(item) {
+         var
+            toEditItem = item.clone(),
+            action = this._getEditFavoriteAction();
+
+         /* Подготавливаем запись к редктированию */
+         toEditItem.set('toSaveFields', {});
+         toEditItem.set('editedTextValue', '');
+
+         action.execute({
+            item: toEditItem,
+            componentOptions: {
+               textValue: toEditItem.get('linkText'),
+               handlers: {
+                  onBeforeUpdateModel: function (event, record) {
+
+                  }
+               }
+            },
+            dialogOptions: { resizable : false }
+         });
+
+      },
+
+      _getEditFavoriteAction: function () {
+         if (!this._editFavoriteAction) {
+            this._editFavoriteAction = this.getChildControlByName('editFavorite');
+         }
+         return this._editFavoriteAction;
       },
 
       /**

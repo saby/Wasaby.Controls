@@ -1,7 +1,6 @@
 define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
    "Core/constants",
    'Core/detection',
-   'Core/helpers/event-helpers',
    'Core/helpers/Function/throttle',
    'Core/helpers/Object/isEmpty',
    "SBIS3.CONTROLS/ListView",
@@ -14,7 +13,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
    "SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView",
    'SBIS3.CONTROLS/ScrollContainer',
    'browser!SBIS3.CONTROLS/ListView/resources/SwipeHandlers'
-], function (constants, detection, eventHelpers, throttle, isEmpty, ListView, ItemTmpl, RangeMixin, DateUtils, cInstance, CalendarSource, LayoutManager) {
+], function (constants, detection, throttle, isEmpty, ListView, ItemTmpl, RangeMixin, DateUtils, cInstance, CalendarSource, LayoutManager) {
    'use strict';
    var cConst = constants; //константы нужны для работы дат, не уверен что можно отключать из зависимостей (стан ругается)
 
@@ -24,6 +23,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
             tplOptions.quantum = cfg.quantum;
             tplOptions.monthSelectionEnabled = cfg.monthSelectionEnabled;
             tplOptions.serializationMode = cfg.serializationMode;
+            tplOptions.dayFormatter = cfg.dayFormatter;
             return tplOptions;
          };
 

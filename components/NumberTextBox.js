@@ -117,7 +117,7 @@ define('SBIS3.CONTROLS/NumberTextBox', [
              * </pre>
              * @see decimals
              */
-            integers: 16,
+            integers: 14,
             /**
              * @cfg {Boolean} Прятать нулевую дробную часть
              * Опция позволяет скрыть нулевую дробную часть.

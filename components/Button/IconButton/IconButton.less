@@ -19,6 +19,12 @@
   box-shadow: none;
   background-color: @background-color_IconButton_bordered_standard_hovered;
 }
+
+.controls-IconButton_bordered_size_default {
+  border-radius: @border-radius_IconButton_bordered_size-default;
+  height: @height_IconButton_bordered_size-default;
+  width: @width_IconButton_bordered_size-default;
+}
 .controls-IconButton_bordered_size_s {
   border-radius: @border-radius_IconButton_bordered_size-s;
   height: @height_IconButton_bordered_size-s;
@@ -58,6 +64,11 @@
 .controls-IconButton__text {
   display: none;
 }
+// почему каскад? потому что в IE из-за бага с флексами проставлям принудительно display: inline-block; , который перебивает скрытие текста.
+// почему просто не убрать из верстки текст? потому что это приведет к ещё большим костылям т.к. сейчас на тач-устройствах в операциях над записью выводим текст
+.ws-is-ie10 .controls-Button__text.controls-IconButton__text {
+  display: none;
+}
 // по хорошему использоваться будут только синие иконки, при переносе прописать правильные стили без заточки на icon-primary
 // .controls-IconButton_standard:active {
 //  .controls-Button__icon {
@@ -92,4 +103,16 @@
 
 .icon-IconButton-disabled {
   color: @color_Link-icon_disabled;
+}
+// баг iPad, видимо связанный с неправильным расчетом размеров флексового контейнера
+// хаки "спасающие" от этого бага не помогли
+// https://stackoverflow.com/questions/17202128/rounded-cornes-border-radius-safari-issue
+.controls-IconButton_bordered_size_m {
+  .controls-IconButton__content {
+    display: inline-block;
+    text-align: center;
+    .controls-Button__icon {
+      line-height: @line-height_IconButton_bordered_size-m !important;
+    }
+  }
 }

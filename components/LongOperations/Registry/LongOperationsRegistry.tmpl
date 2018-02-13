@@ -1,7 +1,7 @@
 <div class="controls-LongOperations controls-LongOperationsRegistry">
    <SBIS3.CONTROLS:Browser
       name="longOperationsBrowser"
-      className="controls-Browser__view controls-LongOperationsRegistry__view"
+      class="controls-LongOperationsRegistry__browser"
       >
       <ws:content>
          <div class="controls-Browser__table controls-LongOperationsRegistry__table controls-Browser__table-fullFilterBlock controls-LongOperationsRegistry__table-fullFilterBlock">
@@ -11,7 +11,7 @@
                   name="browserSearch"
                   allowChangeEnable="{{false}}"
                   placeholder="{[искать@@найти...]}"
-                  className="controls-Browser__search controls-LongOperationsRegistry__search ws-bootup-autofocus"
+                  className="controls-Browser__search controls-LongOperationsRegistry__search ws-autofocus"
                />
             </div>
             <div class="controls-Browser__tableRow controls-LongOperationsRegistry__tableRow">
@@ -125,15 +125,17 @@
                </div>
             </div>
          </div>
-         <div class="controls-Browser__view controls-LongOperationsRegistry__view">
-            <SBIS3.CONTROLS:LongOperations:List
-               name="operationList"
-               columns="{{columns}}"
-               userId="{{userId}}"
-               narrowTmpl="{{false}}"
-               useGroupByEasyGroup="{{useGroupByEasyGroup}}"
-            />
-         </div>
+         <SBIS3.CONTROLS:ScrollContainer class="controls-Browser__scrollContainer controls-Browser__view controls-LongOperationsRegistry__view">
+            <ws:content>
+               <SBIS3.CONTROLS:LongOperations:List
+                  name="operationList"
+                  columns="{{columns}}"
+                  userId="{{userId}}"
+                  narrowTmpl="{{false}}"
+                  useGroupByEasyGroup="{{useGroupByEasyGroup}}"
+               />
+            </ws:content>
+         </SBIS3.CONTROLS:ScrollContainer>
       </ws:content>
    </SBIS3.CONTROLS:Browser>
 </div>
