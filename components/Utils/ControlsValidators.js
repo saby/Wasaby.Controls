@@ -44,10 +44,9 @@ define('SBIS3.CONTROLS/Utils/ControlsValidators', [
       required: function(option) {
          if (typeof option === 'object' && cInstace.instanceOfModule(option, 'Deprecated/Enum')) {
             IoC.resolve('ILogger').error('SBIS3.CONTROLS/Utils/ControlsValidators', 'использует устаревший модуль Deprecated/Enum. Выпишите ошибку на Интерфейсный фреймворк со скриншотом.');
-            return option.getCurrentValue() === null || rk('Поле обязательно для заполнения');
-         }
-         if (typeof option === 'object' && cInstace.instanceOfModule(option, 'WS.Data/Collection/List')) {
-            return !Boolean(option.getCount()) || rk('Поле обязательно для заполнения');
+            return IsRequired({
+               value: option.getCurrentValue()
+            });
          }
 
          return IsRequired({
