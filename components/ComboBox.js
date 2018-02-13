@@ -555,6 +555,7 @@ define('SBIS3.CONTROLS/ComboBox', [
                   self.setActive(true);
                }
                self.hidePicker();
+               self._onItemClickHandler(projItem.getContents());
                self.setSelectedIndex(index);
                if (self._options.autocomplete){
                   self._getItemsProjection().setFilter(null);
@@ -593,6 +594,9 @@ define('SBIS3.CONTROLS/ComboBox', [
          } else {
             return null;
          }
+      },
+      // переопределен в SbisComboBox
+      _onItemClickHandler: function () {
       },
 
       setPlaceholder: function(placeholder) {
