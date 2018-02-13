@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/Mixins/DSMixin', [
    "WS.Data/Collection/IBind",
    "SBIS3.CONTROLS/Utils/TemplateUtil",
    "Core/core-instance",
-   "Core/helpers/Function/forAliveOnly",
+   "Core/helpers/Function/forAliveDeferred",
    "Core/helpers/Object/isEmpty",
    "WS.Data/Display/Collection"
 ], function (coreClone, Deferred, IoC, MemorySource, Query, ObservableList, Projection, IBindCollection, TemplateUtil, cInstance, forAliveOnly, isEmptyObject) {
