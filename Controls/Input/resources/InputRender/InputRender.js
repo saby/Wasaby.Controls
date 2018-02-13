@@ -86,8 +86,8 @@ define('Controls/Input/resources/InputRender/InputRender',
             //В IE не корректно работает конструкция input:invalid + .something (не вызывается repaint, так что спровоцируем вручную)
             //https://jsfiddle.net/5p2nnqzz/1/
             if (detection.isIE) {
-               this._container.getElementsByClassName('controls-InputRender__placeholder')[0].style.display = 'none';
-               this._container.getElementsByClassName('controls-InputRender__placeholder')[0].style.display = '';
+               this._container.style.opacity = '0.9999';
+               this._container.style.opacity = '';
             }
          },
 
