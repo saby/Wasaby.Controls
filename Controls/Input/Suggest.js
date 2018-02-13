@@ -51,7 +51,7 @@ define('Controls/Input/Suggest',
          },
          
          onFocusOutHandler: function(self) {
-            _private.closePopup(self);
+            self._suggestController.abort();
             //FIXME Для правильной работы валидации. костыль. сейчас событие focusOut стреляет, когда фокус уходит на саггест,
             //из-за этого некорректно запускается валидация.
             self._notify('componentFocusOut');
@@ -121,7 +121,7 @@ define('Controls/Input/Suggest',
          // <editor-fold desc="handlers">
          
          _changeValueHandler: function(event, value) {
-            this._suggestController.setValue(value);
+            this._suggestController.search(value);
             this._notify('valueChanged', [value]);
          },
          
@@ -135,7 +135,7 @@ define('Controls/Input/Suggest',
          _clearClick: function() {
             /* move focus to input after clear text, because focus will be lost after hiding cross  */
             this.focus();
-            this._suggestController.setValue('');
+            this._suggestController.search('');
             this._notify('valueChanged', ['']);
          },
          
