@@ -6,7 +6,8 @@ define('Controls/Application',
       'Core/Control',
       'tmpl!Controls/Application/Page',
       'Core/Deferred',
-      'Core/BodyClasses'
+      'Core/BodyClasses',
+      'Controls/Application/AppData'
    ],
 
    /**
@@ -16,7 +17,8 @@ define('Controls/Application',
    function (Base,
              template,
              Deferred,
-             BodyClasses) {
+             BodyClasses,
+             AppData) {
       'use strict';
 
       var _private,
