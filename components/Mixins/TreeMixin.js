@@ -1609,7 +1609,8 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             delete(filter[this._options.parentProperty]);
          }
          this.setFilter(filter, true);
-         //узел грузим с 0-ой страницы
+         /* При смене узла, данные надо грузить с 0-ой страницы,
+            при этом скролить к 0 странице не надо, т.к. после перерисовки мы и так окажемся вверху списка. */
          this.setPage(0, true, true);
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
