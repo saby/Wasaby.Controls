@@ -3,10 +3,11 @@ define('Controls/Container/Scroll',
       'Core/Control',
       'tmpl!Controls/Container/Scroll/Scroll',
       'Core/detection',
+      'View/Runner/common',
       'Controls/Container/Scrollbar/Scrollbar',
       'css!Controls/Container/Scroll/Scroll'
    ],
-   function(Control, template, detection) {
+   function(Control, template, detection, utils) {
 
       'use strict';
 
@@ -109,6 +110,10 @@ define('Controls/Container/Scroll',
           */
          scrollToTop: function() {
             this.scrollTo(0);
+         },
+
+         _beforeMount: function(newOptions) {
+            this.scrollsize = utils.getBrowserScrollbarWidth();
          },
 
          /**
