@@ -1194,7 +1194,8 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
 
          //Показываемся под overlay'ем, если он не относится к окну, в котором лежит таргет
          if (!this.isModal() && targetWindowControl) {
-            if (isOverlayVisible && targetWindowControl.getZIndex() - 1 !== parseInt(ModalOverlay.getZIndex(), 10)) {
+            //Если панель, где лежит таргет, находится под overlay, то и попап должен быть под ним
+            if (isOverlayVisible && targetWindowControl.getZIndex() < parseInt(ModalOverlay.getZIndex(), 10)) {
                return ModalOverlay.getZIndex() - 1;
             }
          }
