@@ -23,13 +23,17 @@ define('SBIS3.CONTROLS/Filter/HistoryView',
                 historyId: '',
                 itemsActions: [],
                 itemsDragNDrop: false,
-                itemContentTpl: itemTpl
+                itemContentTpl: itemTpl,
+                idProperty: 'id',
+                useToggle: false
              }
           },
 
           $constructor: function() {
              this.subscribe('onDrawItems', function() {
-                this.getChildControlByName('toggle').toggle(Boolean(this.getItems().getCount() > 5));
+                if (this._options.useToggle) {
+                   this.getChildControlByName('toggle').toggle(Boolean(this.getItems().getCount() > 5));
+                }
              });
 
              CommandDispatcher.declareCommand(this, 'toggle', function() {
@@ -39,9 +43,8 @@ define('SBIS3.CONTROLS/Filter/HistoryView',
 
           _modifyOptions: function() {
              var opts = FilterHistoryView.superclass._modifyOptions.apply(this, arguments);
-             opts.footerTpl = footerTpl;
-             opts.idProperty = 'id';
              opts.cssClassName += ' controls-HistoryView';
+             opts.footerTpl = opts.useToggle ? footerTpl : null;
              return opts;
           },
 
