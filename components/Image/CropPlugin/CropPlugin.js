@@ -8,8 +8,8 @@ define('SBIS3.CONTROLS/Image/CropPlugin/CropPlugin',
    "Core/constants",
    "WS.Data/Source/SbisService",
    "SBIS3.CONTROLS/Utils/ImageUtil",
-   "browser!js!Deprecated/Controls/FieldImage/resources/ext/jcrop/jquery.Jcrop.min",
-   "css!Deprecated/Controls/FieldImage/resources/ext/jcrop/jquery.Jcrop.min"
+   "browser!Deprecated/Controls/FieldImage/resources/ext/jcrop/jquery.Jcrop",
+   "css!Deprecated/Controls/FieldImage/resources/ext/jcrop/jquery.Jcrop"
 ], function( cAbstract, BLObject, constants, SbisService, ImageUtil) {
       'use strict';
       /**
