@@ -4,10 +4,11 @@ define('Controls/Input/resources/InputRender/InputRender',
       /*'WS.Data/Type/descriptor',*/
       'tmpl!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
+      'Core/detection',
 
       'css!Controls/Input/resources/InputRender/InputRender'
    ],
-   function(Control, /*types,*/ template, RenderHelper) {
+   function(Control, /*types,*/ template, RenderHelper, detection) {
 
       'use strict';
 
@@ -86,6 +87,13 @@ define('Controls/Input/resources/InputRender/InputRender',
             _private.saveSelection(this, e.target);
 
             this._notify('valueChanged', [processedData.value]);
+
+            //В IE не корректно работает конструкция input:invalid + .something (не вызывается repaint, так что спровоцируем вручную)
+            //https://jsfiddle.net/5p2nnqzz/1/
+            if (detection.isIE) {
+               this._container.style.opacity = '0.9999';
+               this._container.style.opacity = '';
+            }
          },
 
          _keyUpHandler: function(e) {
