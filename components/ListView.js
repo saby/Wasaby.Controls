@@ -4176,6 +4176,8 @@ define('SBIS3.CONTROLS/ListView',
           * Метод установки номера страницы, с которой нужно открыть представление данных.
           * Работает при использовании постраничной навигации.
           * @param pageNumber Номер страницы.
+          * @param noLoad Не загружать переданную страницу.
+          * @param noScrollToPage Не скролить к переданной странице.
           * @example
           * <pre>
           *    if(DataGridView.getPage() > 0)
@@ -4183,7 +4185,7 @@ define('SBIS3.CONTROLS/ListView',
           * </pre>
           * @see getPage
           */
-         setPage: function (pageNumber, noLoad) {
+         setPage: function (pageNumber, noLoad, noScrollToPage) {
             pageNumber = parseInt(pageNumber, 10);
             var offset = this._offset;
             if (pageNumber == -1) {
@@ -4194,7 +4196,7 @@ define('SBIS3.CONTROLS/ListView',
                }
             } else {
                if (this.isInfiniteScroll() && this._isPageLoaded(pageNumber)){
-                  if (this._getItemsProjection() && this._getItemsProjection().getCount()){
+                  if (this._getItemsProjection() && this._getItemsProjection().getCount() && !noScrollToPage){
                      var itemIndex, projItem,  itemId, item;
                      itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top;
                      projItem = this._getItemsProjection().at(itemIndex);
