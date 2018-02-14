@@ -581,8 +581,9 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
 
       // ListView event handlers:
 
-      var _onItemClick = function (e, id) {
+      var _onItemClick = function (e, id, model, itemContent) {
          this.toggleItemsSelection([id]);
+         itemContent.title = rk(this.getSelectedKeys().indexOf(id) !== -1 ? 'Скрыть колонку' : 'Показать колонку', 'РедакторКолонок') + ' "' + model.get('title') + '"';
       };
 
       var _onSelectedItemsChange = function (e, ids, changes) {
