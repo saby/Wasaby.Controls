@@ -15,45 +15,8 @@ define('Controls/Container/Scroll',
             self.showScrollbar = !(detection.isMobileIOS || detection.isMobileAndroid) && (self._getContainerHeight() !== self._getScrollHeight());
             self.contentHeight = self._getScrollHeight();
             self.scrollBarPosition = self._getScrollTop();
-         },
-         getBrowserScrollbarWidth: function() {
-            if(typeof window === 'undefined') {
-               return;
-            }
-            var scrollbarWidth = null,
-               outer,
-               outerStyle;
-            /**
-             * В браузерах с поддержкой ::-webkit-scrollbar установлена ширина 0.
-             * Определяем не с помощью Core/detection, потому что в нем считается, что chrome не на WebKit.
-             */
-            if (/AppleWebKit/.test(navigator.userAgent)) {
-               scrollbarWidth = 0;
-            } else if (detection.isMac) {
-               scrollbarWidth = 15;
-            } else if (detection.isIE12) {
-               scrollbarWidth = 16;
-            } else if (detection.isIE10 || detection.isIE11) {
-               scrollbarWidth = 17;
-            } else if (scrollbarWidth === null) {
-               outer = document.createElement('div');
-               outerStyle = outer.style;
-               outerStyle.position = 'absolute';
-               outerStyle.width = '100px';
-               outerStyle.height = '100px';
-               outerStyle.overflow = 'scroll';
-               outerStyle.top = '-9999px';
-               document.body.appendChild(outer);
-               scrollbarWidth = outer.offsetWidth - outer.clientWidth;
-               document.body.removeChild(outer);
-            }
-
-            return scrollbarWidth;
-         },
-         browserScrollSize: 0
+         }
       };
-
-      _private.browserScrollSize = _private.getBrowserScrollbarWidth();
 
       /**
        * Компонент - контейнер с узкой стилизованной полосой скролла.
@@ -148,10 +111,6 @@ define('Controls/Container/Scroll',
             this.scrollTo(0);
          },
 
-         _beforeMount: function(newOptions) {
-            this.scrollsize = _private.browserScrollSize;
-         },
-
          /**
           * Осуществить скролл к низу области
           */
@@ -161,6 +120,41 @@ define('Controls/Container/Scroll',
          }
 
       });
+
+      ScrollContainer.prototype.browserScrollSize = (function() {
+         if(typeof window === 'undefined') {
+            return;
+         }
+         var scrollbarWidth = null,
+            outer,
+            outerStyle;
+         /**
+          * В браузерах с поддержкой ::-webkit-scrollbar установлена ширина 0.
+          * Определяем не с помощью Core/detection, потому что в нем считается, что chrome не на WebKit.
+          */
+         if (/AppleWebKit/.test(navigator.userAgent)) {
+            scrollbarWidth = 0;
+         } else if (detection.isMac) {
+            scrollbarWidth = 15;
+         } else if (detection.isIE12) {
+            scrollbarWidth = 16;
+         } else if (detection.isIE10 || detection.isIE11) {
+            scrollbarWidth = 17;
+         } else if (scrollbarWidth === null) {
+            outer = document.createElement('div');
+            outerStyle = outer.style;
+            outerStyle.position = 'absolute';
+            outerStyle.width = '100px';
+            outerStyle.height = '100px';
+            outerStyle.overflow = 'scroll';
+            outerStyle.top = '-9999px';
+            document.body.appendChild(outer);
+            scrollbarWidth = outer.offsetWidth - outer.clientWidth;
+            document.body.removeChild(outer);
+         }
+
+         return scrollbarWidth;
+      })();
 
       return ScrollContainer;
    }
