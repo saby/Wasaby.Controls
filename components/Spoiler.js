@@ -64,6 +64,7 @@ define('SBIS3.CONTROLS/Spoiler', [
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {
+            escapeCaptionHtml: false,
             /**
              * @noShow
              */
