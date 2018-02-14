@@ -3,7 +3,6 @@ define('Controls/Container/Scroll',
       'Core/Control',
       'tmpl!Controls/Container/Scroll/Scroll',
       'Core/detection',
-      'View/Runner/common',
       'Controls/Container/Scrollbar/Scrollbar',
       'css!Controls/Container/Scroll/Scroll'
    ],
