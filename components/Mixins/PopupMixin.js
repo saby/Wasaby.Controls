@@ -548,10 +548,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
       moveToTop: function(){
          if (this.isVisible()) {
             cWindowManager.releaseZIndex(this._zIndex);
-
-            this._getZIndex();
-            this._container.css('z-index', this._zIndex);
-
+            this._container.css('z-index', this._getZIndex());
             ModalOverlay.adjust();
          }
       },
@@ -1189,6 +1186,21 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
       _getZIndex: function(){
          this._zIndex = cWindowManager.acquireZIndex(this._options.isModal, false, this._options.isHint);
          cWindowManager.setVisible(this._zIndex);
+
+         var target = $(this.getTarget());
+         var targetWindow = target.closest('.ws-window, .ws-float-area');
+         var targetWindowControl = targetWindow[0] && targetWindow[0].wsControl;
+         var isOverlayVisible = ModalOverlay.getZIndex() > 0 && ModalOverlay._overlay.is(':visible');
+
+         //Показываемся под overlay'ем, если он не относится к окну, в котором лежит таргет
+         if (!this.isModal() && targetWindowControl) {
+            //Если панель, где лежит таргет, находится под overlay, то и попап должен быть под ним
+            if (isOverlayVisible && targetWindowControl.getZIndex() < parseInt(ModalOverlay.getZIndex(), 10)) {
+               return ModalOverlay.getZIndex() - 1;
+            }
+         }
+
+         return this._zIndex;
       },
 
       /**

@@ -30,7 +30,7 @@ define('SBIS3.CONTROLS/Tree/CompositeView', [
     *
     * @mixes SBIS3.CONTROLS/Mixins/CompositeViewMixin
     *
-    * @author
+    * @author Сухоручкин А.С.
     *
     * @demo SBIS3.DOCS.TreeCompositeView
     *

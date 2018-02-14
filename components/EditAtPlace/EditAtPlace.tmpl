@@ -12,7 +12,7 @@
       <div class="controls-EditAtPlace__textField controls-InputRender__field controls-TextBox__field  {{ multiline ? 'controls-EditAtPlace__multiline' }}{{placeholder && !text ? ' controls-EditAtPlace__placeholder'}}">
          <ws:if data="{{ text }}">{{ formattedText() }}</ws:if>
          <ws:else>
-            <ws:if data="{{ placeholder }}">{{placeholder}}</ws:if>
+            {{(placeholder || '&nbsp')|sanitize}}
          </ws:else>
       </div>
    </div>

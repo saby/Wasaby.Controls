@@ -2180,16 +2180,30 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          },
 
          _applyEnabledState: function(enabled) {
-            var
-               container = this._tinyEditor ? this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl : this._inputControl;
+            var container = this._tinyEditor ? this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl : this._inputControl;
             if (this._dataReview) {
-               if (this._options.autoHeight) {
-                  this._dataReview.css({
-                     'max-height': this._options.maximalHeight ? this._options.maximalHeight : '',
-                     'min-height': this._options.minimalHeight
-                  });
-               } else {
-                  this._dataReview.height(this._container.height()  - constants.dataReviewPaddings);//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
+               var css;
+               var opts = this._options;
+               if (opts.autoHeight) {
+                  var hasMin = 0 < parseFloat(opts.minimalHeight);
+                  var hasMax = 0 < parseFloat(opts.maximalHeight);
+                  if (hasMin || hasMax) {
+                     css = {};
+                     if (hasMin) {
+                        css['min-height'] = opts.minimalHeight;
+                     }
+                     if (hasMax) {
+                        css['max-height'] = opts.maximalHeight;
+                     }
+                  }
+               }
+               else {
+                  css = {
+                     height: this._container.height() - constants.dataReviewPaddings//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
+                  };
+               }
+               if (css) {
+                  this._dataReview.css(css);
                }
                this._updateDataReview(this.getText() || '');
                this._dataReview.toggleClass('ws-hidden', enabled);

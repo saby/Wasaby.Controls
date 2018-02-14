@@ -1,4 +1,4 @@
-define(['SBIS3.CONTROLS/Tree/DataGridView'], function (TreeDataGridView) {
+define(['SBIS3.CONTROLS/Tree/DataGridView', 'WS.Data/Collection/RecordSet',], function (TreeDataGridView, RecordSet) {
 
    'use strict';
 
@@ -21,7 +21,10 @@ define(['SBIS3.CONTROLS/Tree/DataGridView'], function (TreeDataGridView) {
                hierField: 'par',
                items: data
             });
+         } else {
+            this.skip();
          }
+
       });
 
       afterEach(function() {
@@ -75,5 +78,46 @@ define(['SBIS3.CONTROLS/Tree/DataGridView'], function (TreeDataGridView) {
             });
          }
       });
+
+      describe('getHtmlItemByDOM', function () {
+         it('should return next for the root items', function () {
+            var target = $('<div><div></div></div>'),
+               rs = new RecordSet({
+                  rawData: [{id: 1, par:0, 'par$': false},{id:2, par:0, 'par$': false}],
+                  idProperty: 'id'
+               });
+            var root = {};
+            root['id'] = 0;
+            root['par$'] = true;
+            TestTDGV.setRoot(root);
+            TestTDGV.setItems(rs);
+            assert.equal(TestTDGV._getHtmlItemByDOM(0, true).data('id'), 1);
+         });
+         it('should return the root item', function () {
+            var target = $('<div><div></div></div>'),
+               rs = new RecordSet({
+                  rawData: [{id: 1, par:0, 'par$': false},{id:2, par:0, 'par$': false}],
+                  idProperty: 'id'
+               });
+            var root = {};
+            root['id'] = 0;
+            root['par$'] = true;
+            TestTDGV.setRoot(root);
+            TestTDGV.setItems(rs);
+            assert.equal(TestTDGV._getHtmlItemByDOM(1, false).data('id'), 0);
+         });
+         it('should not throw error when root is null', function () {
+            var target = $('<div><div></div></div>'),
+               rs = new RecordSet({
+                  rawData: [{id: 1, par:null, 'par$': false},{id:2, par:null, 'par$': false}],
+                  idProperty: 'id'
+               });
+            TestTDGV.setRoot(null);
+            TestTDGV.setItems(rs);
+            assert.doesNotThrow(function () {
+               TestTDGV._getHtmlItemByDOM(5, true);
+            });
+         });
+      })
    });
 });

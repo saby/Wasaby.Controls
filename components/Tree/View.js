@@ -37,8 +37,10 @@ define('SBIS3.CONTROLS/Tree/View', [
     *
     * @author Авраменко А.С.
     *
-    * @cssModifier controls-TreeView__withoutLevelPadding Устанавливает режим отображения дерева без иерархических отступов.
-    * @cssModifier controls-TreeView__hideExpands Устанавливает режим отображения дерева без иконок сворачивания/разворачивания узлов.
+    * @cssModifier controls-TreeView__withoutLevelPadding Устанавливает отображение дерева, при котором вложенные в узлы записи отображаются без иерархических отступов.
+    * @cssModifier controls-TreeView__hideExpands Скрывает отображение треугольника для всех типов записей в дереве.
+    * @cssModifier controls-TreeView__emptyIconInEmptyNode Изменяет отображение для всех записей с типом "Узел": если нет вложенных записей, треугольник по умолчанию скрыт и отображается только по ховеру. Демо-пример можно найти <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/list-hierarchy/triangle/#_3">здесь</a>.
+    * @cssModifier controls-TreeDataGridView__hideExpandsOnHiddenNodes Скрывает отображение треугольника в дереве для всех записей с типом "Скрытый узел". При этом раскрытие содержимого таких элементов из пользовательского интерфейса становится невозможным.
     *
     * @control
     * @public

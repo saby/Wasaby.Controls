@@ -6,12 +6,13 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
    "SBIS3.CONTROLS/Action/Mixin/DialogMixin",
    "WS.Data/Source/SbisService",
    "WS.Data/Entity/Model",
+   "WS.Data/Entity/Record",
    "Core/core-merge",
    "Core/core-clone",
    "Core/core-instance",
    "WS.Data/Adapter/Sbis"
 ],
-    function ( Deferred,ActionBase, ListMixin, DialogMixin, SbisService, Model, cMerge, cClone, cInstance) {
+    function ( Deferred,ActionBase, ListMixin, DialogMixin, SbisService, Model, Record, cMerge, cClone, cInstance) {
         'use strict';
         /**
          * Класс, описывающий действие суммирования полей в списке.
@@ -128,29 +129,53 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
             },
             _sum: function() {
                 var
-                    source,
-                    filter,
+                    result,
+                    selectedItems,
                     object = this.getLinkedObject(),
-                    selectedItems = object.getSelectedItems(),
-                    isSelected = selectedItems && selectedItems.getCount();
-                if (isSelected) {
-                    //При суммировании выбранных элементов, не вызываем платформенный метод бизнес логики 'Сумма.ПоВыборке',
-                    //из-за того, что могут выделить 1000 записей и нам эти 1000 записей придётся отправить на бл.
-                    //1000 записей весят примерно 8 мегабайт. Получается не рационально перегонять 8 мб ради лёгкой операции,ъ
-                    //которая на клиенте выполняется меньше секунды.
-                    return this._sumField(selectedItems);
+                    selection = object.getSelection();
+                if (selection) {
+                   result = this._sumBySelection(selection);
                 } else {
-                    source = this.getDataSource();
-                    filter = cMerge(cClone(object.getFilter()), this._options.filter);
-                    return this._getSumSource().call('ПоМетоду', {
-                        'Поля': Object.keys(this._options.fields),
-                        'ИмяМетода': source.getEndpoint().contract + '.' + source.getBinding().query,
-                        'Фильтр': Model.fromObject(filter, 'adapter.sbis')
-                    });
+                    selectedItems = object.getSelectedItems();
+                    if (selectedItems && selectedItems.getCount()) {
+                       //При суммировании выбранных элементов, не вызываем платформенный метод бизнес логики 'Сумма.ПоВыборке',
+                       //из-за того, что могут выделить 1000 записей и нам эти 1000 записей придётся отправить на бл.
+                       //1000 записей весят примерно 8 мегабайт. Получается не рационально перегонять 8 мб ради лёгкой операции,ъ
+                       //которая на клиенте выполняется меньше секунды.
+                       result = this._sumByRecordSet(selectedItems);
+                    } else {
+                       result = this._sumByFilter(this._getFilterForSum());
+                    }
                 }
+
+                return result;
             },
 
-            _sumField: function(items) {
+            _getFilterForSum: function() {
+               var object = this.getLinkedObject();
+               return cMerge(cClone(object.getFilter()), this._options.filter);
+            },
+
+            _sumBySelection: function(selection) {
+               var
+                  source = this.getDataSource(),
+                  filter = this._getFilterForSum();
+
+               filter.selection = Record.fromObject(selection, source.getAdapter());
+
+               return this._sumByFilter(filter);
+            },
+
+            _sumByFilter: function(filter) {
+               var source = this.getDataSource();
+               return this._getSumSource().call('ПоМетоду', {
+                  'Поля': Object.keys(this._options.fields),
+                  'ИмяМетода': source.getEndpoint().contract + '.' + source.getBinding().query,
+                  'Фильтр': Model.fromObject(filter, 'adapter.sbis')
+               });
+            },
+
+            _sumByRecordSet: function(items) {
                 var
                     i,
                     itemsCount = 0,
