@@ -17,27 +17,25 @@ define('Controls/Container/Scroll',
             self.scrollBarPosition = self._getScrollTop();
          },
          getBrowserScrollbarWidth: function() {
-            var scrollbarWidth = null, outer, outerStyle;
-
+            if(typeof window === 'undefined') {
+               return;
+            }
+            var scrollbarWidth = null,
+               outer,
+               outerStyle;
             /**
              * В браузерах с поддержкой ::-webkit-scrollbar установлена ширина 0.
              * Определяем не с помощью Core/detection, потому что в нем считается, что chrome не на WebKit.
              */
             if (/AppleWebKit/.test(navigator.userAgent)) {
                scrollbarWidth = 0;
-            } else {
-               // На Mac ширина всегда 15, за исключением браузеров с поддержкой ::-webkit-scrollbar.
-               if (detection.isMac) {
-                  scrollbarWidth = 15;
-               }
-            }
-            if (detection.isIE12) {
+            } else if (detection.isMac) {
+               scrollbarWidth = 15;
+            } else if (detection.isIE12) {
                scrollbarWidth = 16;
-            }
-            if (detection.isIE10 || detection.isIE11) {
+            } else if (detection.isIE10 || detection.isIE11) {
                scrollbarWidth = 17;
-            }
-            if (scrollbarWidth === null) {
+            } else if (scrollbarWidth === null) {
                outer = document.createElement('div');
                outerStyle = outer.style;
                outerStyle.position = 'absolute';
@@ -52,7 +50,10 @@ define('Controls/Container/Scroll',
 
             return scrollbarWidth;
          },
+         browserScrollSize: 0
       };
+
+      _private.browserScrollSize = _private.getBrowserScrollbarWidth();
 
       /**
        * Компонент - контейнер с узкой стилизованной полосой скролла.
@@ -148,7 +149,7 @@ define('Controls/Container/Scroll',
          },
 
          _beforeMount: function(newOptions) {
-            this.scrollsize = _private.getBrowserScrollbarWidth();
+            this.scrollsize = _private.browserScrollSize;
          },
 
          /**
