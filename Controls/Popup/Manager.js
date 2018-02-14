@@ -37,7 +37,7 @@ define('Controls/Popup/Manager',
                   _popupContainer = element.controlNodes[0].control;
                   _popupContainer.eventHandlers = {
                      onClosePopup: function (event, id) {
-                        Manager.remove(id);
+                        _private.popupClose(id);
                      },
                      onPopupCreated: function (event, id, width, height) {
                         _private.popupCreated(id, width, height);
@@ -83,26 +83,30 @@ define('Controls/Popup/Manager',
                }
             }
          },
-
-         popupFocusIn: function(id, focusedControl){
+         
+         fireEventHandler: function(id, event, eventArg) {
             var element = Manager.find(id);
-            if (element && element.popupOptions.eventHandlers && element.popupOptions.eventHandlers.onFocusIn) {
-               element.popupOptions.eventHandlers.onFocusIn(focusedControl);
+   
+            if (element && element.popupOptions.eventHandlers && element.popupOptions.eventHandlers.hasOwnProperty(event)) {
+               element.popupOptions.eventHandlers[event](eventArg);
             }
+         },
+         
+         popupFocusIn: function(id, focusedControl){
+            _private.fireEventHandler(id, 'onFocusIn', focusedControl);
          },
 
          popupFocusOut: function (id, focusedControl) {
-            var element = Manager.find(id);
-            if (element && element.popupOptions.eventHandlers && element.popupOptions.eventHandlers.onFocusOut) {
-               element.popupOptions.eventHandlers.onFocusOut(focusedControl);
-            }
+            _private.fireEventHandler(id, 'onFocusOut', focusedControl);
          },
 
          sendResult: function (id, result) {
-            var element = Manager.find(id);
-            if (element && element.popupOptions.eventHandlers && element.popupOptions.eventHandlers.onResult) {
-               element.popupOptions.eventHandlers.onResult(result);
-            }
+            _private.fireEventHandler(id, 'onResult', result);
+         },
+         
+         popupClose: function(id) {
+            _private.fireEventHandler(id, 'onClose');
+            Manager.remove(id);
          }
       };
 
