@@ -1,5 +1,5 @@
 .controls-InfoBox {
-   padding: 8px 30px 8px 12px;
+   padding: 8px 12px 8px 12px;
    box-sizing: border-box;
    max-width: @infobox-max-width;
    overflow: auto;
@@ -34,6 +34,10 @@
    &.controls-Popup-align-horizontal-left:before {
       right: 12px;
    }
+
+   &.controls-Popup-align-horizontal-center:before {
+      right: calc(~"50% - 7px");
+   }
 }
 
 .controls-InfoBox__closeButton {
@@ -49,10 +53,11 @@
 }
 
 .controls-InfoBox__message {
-    font-size: 14px;
-    color: #000;
-    text-overflow: ellipsis;
-    overflow-x: hidden;
+   font-size: 14px;
+   color: #000;
+   text-overflow: ellipsis;
+   overflow-x: hidden;
+   margin-right: 18px;
 }
 
 .controls-InfoBox__scrollContainer {
@@ -61,9 +66,9 @@
 }
 
 .controls-InfoBox-style-default {
-    background: @infobox-bg-style-default;
-    border-color: @infobox-border-color-style-default;
-    box-shadow: @infobox-shadow-color-style-default @infobox-shadow-position;
+   background: @infobox-bg-style-default;
+   border-color: @infobox-border-color-style-default;
+   box-shadow: @infobox-shadow-color-style-default @infobox-shadow-position;
 
    &.controls-InfoBox__popup:before {
       background: @infobox-bg-style-default;
@@ -72,9 +77,9 @@
 }
 
 .controls-InfoBox-style-lite {
-    background: @infobox-bg-style-lite;
-    border-color: @infobox-border-color-style-lite;
-    box-shadow: @infobox-shadow-color-style-lite @infobox-shadow-position;
+   background: @infobox-bg-style-lite;
+   border-color: @infobox-border-color-style-lite;
+   box-shadow: @infobox-shadow-color-style-lite @infobox-shadow-position;
 
    &.controls-InfoBox__popup:before {
       background: @infobox-bg-style-lite;
@@ -83,9 +88,9 @@
 }
 
 .controls-InfoBox-style-help {
-    background: @infobox-bg-style-help;
-    border-color: @infobox-border-color-style-help;
-    box-shadow: @infobox-shadow-color-style-help @infobox-shadow-position;
+   background: @infobox-bg-style-help;
+   border-color: @infobox-border-color-style-help;
+   box-shadow: @infobox-shadow-color-style-help @infobox-shadow-position;
 
    &.controls-InfoBox__popup:before {
       background: @infobox-bg-style-help;
@@ -94,9 +99,9 @@
 }
 
 .controls-InfoBox-style-error {
-    background: @infobox-bg-style-error;
-    border-color: @infobox-border-color-style-error;
-    box-shadow: @infobox-shadow-color-style-error @infobox-shadow-position;
+   background: @infobox-bg-style-error;
+   border-color: @infobox-border-color-style-error;
+   box-shadow: @infobox-shadow-color-style-error @infobox-shadow-position;
 
    &.controls-InfoBox__popup:before {
       background: @infobox-bg-style-error;

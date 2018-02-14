@@ -1,14 +1,14 @@
 <ws:Controls.Popup.Opener.Sticky name="opener">
-    <ws:popupOptions autoHide="{{true}}" className="controls-InfoBox__popup controls-InfoBox-style-{{_options.style}}" corner="{{_options.targetCorner}}">
+    <ws:popupOptions autoHide="{{true}}">
         <ws:template>
             <Controls:Container:Scroll attr:class="controls-InfoBox__scrollContainer">
                 <ws:content>
                     <div class="controls-InfoBox ws-Container__popup-scrolling-content">
+                        <ws:partial template="{{template.contentTemplate}}" message="{{template.message}}"></ws:partial>
                         <div
-                            class="controls-InfoBox__closeButton icon-24 icon-Close"
-                            on:click="close()">
+                           class="controls-InfoBox__closeButton icon-24 icon-Close"
+                           on:click="close()">
                         </div>
-                        <div class="controls-InfoBox__message">{{template.message}}</div>
                     </div>
                 </ws:content>
             </Controls:Container:Scroll>
