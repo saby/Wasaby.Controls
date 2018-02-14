@@ -583,7 +583,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
 
       var _onItemClick = function (e, id, model, itemContent) {
          this.toggleItemsSelection([id]);
-         itemContent.title = rk(this.getSelectedKeys().indexOf(id) !== -1 ? 'Скрыть колонку' : 'Показать колонку', 'РедакторКолонок') + ' "' + model.get('title') + '"';
+         itemContent.title = (this.getSelectedKeys().indexOf(id) !== -1 ? rk('Скрыть колонку', 'РедакторКолонок') : rk('Показать колонку', 'РедакторКолонок')) + ' "' + model.get('title') + '"';
       };
 
       var _onSelectedItemsChange = function (e, ids, changes) {
