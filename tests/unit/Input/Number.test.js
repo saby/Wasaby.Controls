@@ -1,11 +1,9 @@
 define(
    [
       'Core/Control',
-      'Controls/Input/Number/ViewModel',
-      'Core/helpers/Function/runDelayed',
-      'Core/vdom/Synchronizer/resources/SyntheticEvent'
+      'Controls/Input/Number/ViewModel'
    ],
-   function (Control, NumberViewModel, runDelayed, SyntheticEvent) {
+   function (Control, NumberViewModel) {
 
       'use strict';
 
@@ -180,11 +178,6 @@ define(
 
                assert.equal(result.value, item.result.value);
             });
-         });
-
-         //Тест вставки значекния методом paste
-         it.skip('Insert with paste method', function () {
-           //Придумать
          });
       });
    }
