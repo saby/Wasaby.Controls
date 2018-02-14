@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/Utils/LinkUtil', [],
         return {
             getStyleByConfig: function(opts, attrToMerge){
                 var classes = ['mainLink', 'mainLink__2', 'mainLink__3', 'additionalLink', 'additionalLink__2', 'additionalLink__3', 'additionalLink__4', 'additionalLink__5'],
-                    className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || opts.className || '',
+                    className = (attrToMerge && attrToMerge.class || '') + (opts.element && opts.element.className || '') + (opts.className || ''),
                     color = 'mainLink',
                     state = 'mainLink';
 
