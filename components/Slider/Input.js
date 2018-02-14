@@ -20,6 +20,8 @@ define('SBIS3.CONTROLS/Slider/Input',
           * @author Борисов П.С.
           *
           * @demo SBIS3.CONTROLS.Demo.SliderInputDemo
+          *
+          * @public
           */
          SliderInput = Slider.extend(/** @lends SBIS3.CONTROLS/Slider/Input.prototype */{
             _dotTplFn : dotTplFn,
