@@ -7,9 +7,7 @@ define('Controls/ConfirmationWindow/Dialog', [
       'tmpl!Controls/ConfirmationWindow/Dialog/message',
       'tmpl!Controls/ConfirmationWindow/Dialog/details',
       'tmpl!Controls/ConfirmationWindow/Dialog/Dialog',
-
-      'css!Controls/ConfirmationWindow/Dialog/Dialog',
-      'Controls/Button'
+      'css!Controls/ConfirmationWindow/Dialog/Dialog'
    ], function (Control,
                 types,
                 constants,
