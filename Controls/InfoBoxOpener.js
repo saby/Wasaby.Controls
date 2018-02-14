@@ -34,7 +34,7 @@ define('Controls/InfoBoxOpener',
       /**
        * @typedef {Object} InfoBoxCfg
        * @property {String} message Сообщение, отображаемое в инфобоксе
-       * @property {StyleCfg} style Горизонтальное выравнивание инфобокса
+       * @property {Style} style Горизонтальное выравнивание инфобокса
        * @property {Object} target Таргет, относительно которого неообходимо показать инфобокс
        * @property {AlignCfg} align Объект с конфигурацией выравнивания
        * @property {CornerCfg} corner Объект с конфигурацией угла таргета, от которого будет строиться инфобокс
@@ -42,7 +42,7 @@ define('Controls/InfoBoxOpener',
        */
 
       /**
-       * @typedef {String} StyleCfg
+       * @typedef {String} Style
        * @variant default
        * @variant lite
        * @variant help
