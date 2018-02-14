@@ -24,6 +24,12 @@ define('SBIS3.CONTROLS/WaitIndicator',
     * </ul>
     * Во всех случаях, когда объект привязки не указан или эквивалентен объектам window, document или document.body - создаётся глобальный индикатор.
     * <br/>
+    * Следует осмотритель выбирать объекты привязки для локальных индикаторов. Если размер объекта привязки будет меньше размера индикатора (или вовсе
+    * нулевой), то визуально это может выглядеть не так, как вам хотелось бы. Кроме того, если объект привязки имеет ccs-свойство position равное
+    * "static", то начало отсчёта координат будет определяться каким-то из вышележащих элементов с position "relative", "fixed" или "absolute". Если в
+    * какой-то момент жизни индикатора этот родительский элемент изменит своё свойство position - изменится и начало отсчёта, что отразится на
+    * индикаторе. В таких случаях нужно приемлемым образом перераспределить свойство position у объекта привязки и/или у его родительских элементов.
+    * <br/>
     * Индикатор может иметь стандартный или уменьшеный размер
     * <br/>
     * Индикатор может отображаться с оверлэем или без. Оверлэй может быть прозрачным (по умолчанию) или с затенением. Маленькие индикаторы всегда
@@ -542,13 +548,20 @@ define('SBIS3.CONTROLS/WaitIndicator',
           * @param {HTMLElement} spinner DOM-элемент индикатора
           */
          _place: function (spinner) {
-            var p = spinner.parentNode;
-            if (p) {
-               var s = spinner.style;
-               s.left = p.offsetLeft + 'px';
-               s.top = p.offsetTop + 'px';
-               s.width = p.offsetWidth + 'px';
-               s.height = p.offsetHeight + 'px';
+            var parent = spinner.parentNode;
+            if (parent) {
+               var child = spinner.firstElementChild;
+               var w = child.offsetWidth;
+               var h = child.offsetHeight;
+               var w0 = parent.offsetWidth;
+               var h0 = parent.offsetHeight;
+               var x = parent.offsetLeft;
+               var y = parent.offsetTop;
+               var style = spinner.style;
+               style.left = (w < w0 ? x : x - Math.floor((w - w0)/2)) + 'px';
+               style.top = (h < h0 ? y : y - Math.floor((h - h0)/2)) + 'px';
+               style.width = w < w0 ? w0 + 'px' : 'auto';
+               style.height = h < h0 ? w0 + 'px' : 'auto';
             }
          },
 
