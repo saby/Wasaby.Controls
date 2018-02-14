@@ -6,7 +6,7 @@ define('Controls/List/SourceControl', [
    'Controls/List/Controllers/ScrollController',
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
-   'Controls/List/Controllers/Navigation',
+   'Core/Deferred',
    'css!Controls/List/SourceControl/SourceControl'
 ], function (Control,
              IoC,
@@ -15,7 +15,7 @@ define('Controls/List/SourceControl', [
              ScrollController,
              VirtualScroll,
              SourceController,
-             Navigation
+             Deferred
 ) {
    'use strict';
 
@@ -31,8 +31,8 @@ define('Controls/List/SourceControl', [
                //TODO это кривой способ заставить пэйджинг пересчитаться. Передалть, когда будут готовы команды от Зуева
                //убираю, когда будет готов реквест от Зуева
                setTimeout(function(){
-                  if (self._navigationController) {
-                     self._navigationController.resetScroll();
+                  if (self._scrollController.hasScroll()) {
+                     self._scrollPagingCtr.setEnabled(true);
                   }
                }, 100);
 
@@ -63,8 +63,8 @@ define('Controls/List/SourceControl', [
                //TODO это кривой способ заставить пэйджинг пересчитаться. Передалть, когда будут готовы команды от Зуева
                //убираю, когда будет готов реквест от Зуева
                setTimeout(function(){
-                  if (self._navigationController) {
-                     self._navigationController.resetScroll();
+                  if (self._scrollController.hasScroll()) {
+                     self._scrollPagingCtr.setEnabled(true);
                   }
                }, 100);
 
@@ -135,10 +135,9 @@ define('Controls/List/SourceControl', [
          this._container.closest('.ws-scrolling-content').scrollTop = offset;
       },
 
-      createScrollController: function(scrollContainer) {
+      createScrollController: function(self, scrollContainer) {
          var
-            self = this,
-            children = this._children,
+            children = self._children,
             triggers = {
                topListTrigger: children.topListTrigger,
                bottomListTrigger: children.bottomListTrigger,
@@ -147,13 +146,23 @@ define('Controls/List/SourceControl', [
             },
             eventHandlers = {
                onLoadTriggerTop: function() {
-                  if (self._navigationController) {
-                     self._navigationController.handleScrollTop();
+                  if (self._options.navigation && self._options.navigation.view === 'infinity') {
+                     if (self._sourceController.hasMoreData('up') && !self._sourceController.isLoading()) {
+                        _private.loadToDirection(self, 'up')
+                     }
+                     if (self._scrollPagingCtr) {
+                        self._scrollPagingCtr.handleScrollTop();
+                     }
                   }
                },
                onLoadTriggerBottom: function() {
-                  if (self._navigationController) {
-                     self._navigationController.handleScrollBottom();
+                  if (self._options.navigation && self._options.navigation.view === 'infinity') {
+                     if (self._sourceController.hasMoreData('down') && !self._sourceController.isLoading()) {
+                        _private.loadToDirection(self, 'down')
+                     }
+                     if (self._scrollPagingCtr) {
+                        self._scrollPagingCtr.handleScrollBottom();
+                     }
                   }
                },
                onListTop: function() {
@@ -172,6 +181,31 @@ define('Controls/List/SourceControl', [
             eventHandlers: eventHandlers
          });
       },
+
+      createScrollPagingController: function(self) {
+         var def = new Deferred();
+         require(['Controls/List/Controllers/ScrollPaging'], function (ScrollPagingController) {
+            var scrollPagingCtr;
+            scrollPagingCtr = new ScrollPagingController({
+               //scrollContainer: scrollContainer,
+               mode: self._options.navigation.viewConfig.pagingMode,
+               enabled: self._scrollController.hasScroll(),
+               pagingCfgTrigger: function(cfg) {
+                  self._pagingCfg = cfg;
+                  self._forceUpdate();
+               }
+            });
+
+            def.callback(scrollPagingCtr);
+
+
+         }, function(error){
+            def.errback(error);
+         });
+
+         return def;
+      },
+
       showIndicator: function(self, direction) {
          self._loadingState = direction ? direction : 'all';
          setTimeout(function() {
@@ -209,8 +243,8 @@ define('Controls/List/SourceControl', [
          if (virtualWindowIsChanged) {
             _private.applyVirtualWindow(this, this._virtualScroll.getVirtualWindow());
          }
-         if (this._navigationController) {
-            this._navigationController.handleScroll(scrollTop)
+         if (this._scrollPagingCtr) {
+            this._scrollPagingCtr.handleScroll(scrollTop)
          }
       },
 
@@ -316,22 +350,17 @@ define('Controls/List/SourceControl', [
          //TODO кривое обращение к DOM бцдет переделано на схему с Listner-Catcher
          var scrollContainer = this._container.closest('.ws-scrolling-content');
          if (scrollContainer) {
-            this._scrollController = _private.createScrollController.call(this, scrollContainer);
-            this._navigationController = new Navigation({
-               sourceController : this._sourceController,
-               scrollController: this._scrollController,
-               navigation : this._options.navigation,  //TODO возможно не всю навигацию надо передавать а только то, что касается view
-               topLoadTrigger: function() {
-                  _private.loadToDirection(self, 'up')
-               },
-               bottomLoadTrigger: function() {
-                  _private.loadToDirection(self, 'down')
-               },
-               scrollPagingCfgTrigger: function(cfg) {
-                  self._pagingCfg = cfg;
-                  self._forceUpdate();
-               }
-            });
+            this._scrollController = _private.createScrollController(this, scrollContainer);
+
+            if (this._options.navigation
+               && this._options.navigation.view === 'infinity'
+               && this._options.navigation.viewConfig
+               && this._options.navigation.viewConfig.pagingMode
+            ) {
+               _private.createScrollPagingController(this).addCallback(function(scrollPagingCtr){
+                  self._scrollPagingCtr = scrollPagingCtr
+               });
+            }
          }
 
 
