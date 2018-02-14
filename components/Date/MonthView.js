@@ -154,15 +154,13 @@ define(
          init: function () {
             MonthView.superclass.init.call(this);
 
-            var self = this;
-
             if (!this._options.month) {
                throw new Error('MonthView. Неверный формат даты');
             }
 
             this._drawMonthTable();
 
-            // this._updateCaption();
+            this._updateDisplayedValues();
             this._attachEvents();
          },
 
@@ -734,10 +732,14 @@ define(
          },
 
          _validateRangeSelectionItemsView: function() {
+            this._updateDisplayedValues();
+            MonthView.superclass._validateRangeSelectionItemsView.apply(this, arguments);
+         },
+
+         _updateDisplayedValues: function() {
             this._displayedStartValue = this.getStartValue();
             this._displayedEndValue = this.getEndValue();
             this._displayedRangeSelectionEnd = this._rangeSelectionEnd;
-            MonthView.superclass._validateRangeSelectionItemsView.apply(this, arguments);
          },
 
          _drawCurrentRangeSelection: function () {
