@@ -717,7 +717,14 @@ define(
                range = this._getUpdatedRange(this._displayedStartValue, this._displayedEndValue, this._displayedRangeSelectionEnd),
                newRange = this._getUpdatedRange(this.getStartValue(), this.getEndValue(), this._getSelectionRangeEndItem());
 
-            if ((DateUtil.isRangesOverlaps(currentMonthStart, currentMontEnd, range[0], range[1]) || // обновляем если старый выбранный или новый период пересеваются с отображаемым месяцем
+            // Если задана только одна граница периода, то считаем что длинна периода 1 день и,
+            // соответсвенно, другая граница равна противоположной.
+            range[0] = range[0] || range[1];
+            range[1] = range[1] || range[0];
+            newRange[0] = newRange[0] || newRange[1];
+            newRange[1] = newRange[1] || newRange[0];
+
+            if ((DateUtil.isRangesOverlaps(currentMonthStart, currentMontEnd, range[0], range[1]) || // обновляем если старый выбранный или новый период пересекаются с отображаемым месяцем
                   DateUtil.isRangesOverlaps(currentMonthStart, currentMontEnd, newRange[0], newRange[1])) &&
                   // не обновляем если отображаемый месяц полностью входит в старый и новый периоды
                   !(range[0] < currentMonthStart && newRange[0] < currentMonthStart && range[1] > currentMontEnd && newRange[1] > currentMontEnd)
