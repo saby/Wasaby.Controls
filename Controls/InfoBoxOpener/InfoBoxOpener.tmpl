@@ -5,6 +5,10 @@
                 <ws:content>
                     <div class="controls-InfoBox ws-Container__popup-scrolling-content">
                         <ws:partial template="{{template.contentTemplate}}" message="{{template.message}}"></ws:partial>
+                        <div
+                           class="controls-InfoBox__closeButton icon-24 icon-Close"
+                           on:click="close()">
+                        </div>
                     </div>
                 </ws:content>
             </Controls:Container:Scroll>

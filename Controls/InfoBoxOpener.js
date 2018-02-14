@@ -27,7 +27,7 @@ define('Controls/InfoBoxOpener',
        */
 
       /**
-       * Спрятать инфобокс
+       * Закрыть инфобокс
        * @function Controls/InfoBoxOpener#close
        */
 
@@ -36,8 +36,8 @@ define('Controls/InfoBoxOpener',
        * @property {String} message Сообщение, отображаемое в инфобоксе
        * @property {StyleCfg} style Горизонтальное выравнивание инфобокса
        * @property {Object} target Таргет, относительно которого неообходимо показать инфобокс
-       * @property {AlignCfg} align Объект с конфигерацией горизонтального и вертикального выравнивания
-       * @property {CornerCfg} corner Объект с конфигерацией точки таргета, от которого будет строиться инфобокс
+       * @property {AlignCfg} align Объект с конфигурацией выравнивания
+       * @property {CornerCfg} corner Объект с конфигурацией угла таргета, от которого будет строиться инфобокс
        * @property {Function} contentTemplate Шаблон отображения внутреннего содержимого
        */
 
