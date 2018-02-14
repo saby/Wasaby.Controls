@@ -295,7 +295,7 @@ define('SBIS3.CONTROLS/SelectorButton',
                cfg.opener = this; //Т.к. selectorAction создаётся из кода, и ему не назначается parent (так надо, см. коммент. ниже)
                if(this._notify('onSelectorClick', cfg) !== false) {this._getSelectorAction().execute(cfg)}
             } else {
-               this._showChooser(cfg.template, cfg.componentOptions);
+               this._showChooser(cfg.template, cfg.componentOptions, cfg.dialogOptions);
             
          }
       },

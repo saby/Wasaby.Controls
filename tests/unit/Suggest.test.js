@@ -17,10 +17,20 @@ define(
          });
    
          it('_popupFocusOut', function() {
-            var suggest = new Suggest();
-   
-            suggest._popupFocusOut({});
+            var suggest = new Suggest(),
+                aborted = false;
             
+            suggest._suggestController = {};
+            suggest._suggestController.abort = function() {
+               aborted = true;
+            };
+            
+            suggest._popupFocusOut({to: suggest});
+            assert.isFalse(aborted);
+            assert.isFalse(suggest._popupFocused);
+            
+            suggest._popupFocusOut({to: {}});
+            assert.isTrue(aborted);
             assert.isFalse(suggest._popupFocused);
          });
    
@@ -52,9 +62,11 @@ define(
             suggest.focus = function() {
                focused = true;
             };
-            suggest.once('valueChanged', function(event, value) {
-               selectedValue = value;
-            });
+            suggest._notify = function(eventName, value) {
+               if (eventName === 'valueChanged') {
+                  selectedValue = value;
+               }
+            };
    
             suggest._selectHandler(
                new Model(
@@ -82,9 +94,11 @@ define(
                focused = true;
             };
    
-            suggest.once('valueChanged', function(event, value) {
-               suggestValue = value;
-            });
+            suggest._notify = function(eventName, value) {
+               if (eventName === 'valueChanged') {
+                  suggestValue = value;
+               }
+            };
    
             Suggest._private.initSuggestController(suggest, {});
             suggest._clearClick();
