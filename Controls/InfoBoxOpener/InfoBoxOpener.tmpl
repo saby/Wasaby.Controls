@@ -1,0 +1,13 @@
+<ws:Controls.Popup.Opener.Sticky name="opener">
+    <ws:popupOptions autoHide="{{true}}">
+        <ws:template>
+            <Controls:Container:Scroll attr:class="controls-InfoBox__scrollContainer">
+                <ws:content>
+                    <div class="controls-InfoBox ws-Container__popup-scrolling-content">
+                        <ws:partial template="{{template.contentTemplate}}" message="{{template.message}}"></ws:partial>
+                    </div>
+                </ws:content>
+            </Controls:Container:Scroll>
+        </ws:template>
+    </ws:popupOptions>
+</ws:Controls.Popup.Opener.Sticky>
