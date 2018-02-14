@@ -154,7 +154,14 @@ define('SBIS3.CONTROLS/Toolbar', [
             if (projection) {
                projection.each(function (item) {
                   model = item.getContents();
-                  if ((model.get('showType') === showType.MENU_TOOLBAR || model.get('showType') === showType.TOOLBAR) && model.get('visible') !== false) {
+                  /*Нужно отрисовывать кнопки в утлбаре, если:
+                  1) Указан верный showType
+                  2) Элемент является видимым
+                  3) У элемента указан componentType, по которому он будет строиться
+                  */
+                  if ((model.get('showType') === showType.MENU_TOOLBAR || model.get('showType') === showType.TOOLBAR) &&
+                     model.get('visible') !== false &&
+                     model.get('componentType')) {
                      records.push(item);
                   }
                });
