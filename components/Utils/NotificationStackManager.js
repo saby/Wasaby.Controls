@@ -160,7 +160,7 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
                      bottom: getIntCss(container, 'margin-bottom'),
                      right: getIntCss(container, 'margin-right')
                   };
-                   //Обнуляем margin, при позиционировании они не нужны
+                   //Обнуляем margin, при позиционировании он не нужен
                    container.css('margin', 0);
                }
                /*Самозакрывающиеся окна показываем выше всех модальных*/
