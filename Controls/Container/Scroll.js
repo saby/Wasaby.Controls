@@ -7,7 +7,7 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scrollbar/Scrollbar',
       'css!Controls/Container/Scroll/Scroll'
    ],
-   function(Control, template, detection, utils) {
+   function(Control, template, detection) {
 
       'use strict';
 
@@ -16,7 +16,43 @@ define('Controls/Container/Scroll',
             self.showScrollbar = !(detection.isMobileIOS || detection.isMobileAndroid) && (self._getContainerHeight() !== self._getScrollHeight());
             self.contentHeight = self._getScrollHeight();
             self.scrollBarPosition = self._getScrollTop();
-         }
+         },
+         getBrowserScrollbarWidth: function() {
+            var scrollbarWidth = null, outer, outerStyle;
+
+            /**
+             * В браузерах с поддержкой ::-webkit-scrollbar установлена ширина 0.
+             * Определяем не с помощью Core/detection, потому что в нем считается, что chrome не на WebKit.
+             */
+            if (/AppleWebKit/.test(navigator.userAgent)) {
+               scrollbarWidth = 0;
+            } else {
+               // На Mac ширина всегда 15, за исключением браузеров с поддержкой ::-webkit-scrollbar.
+               if (detection.isMac) {
+                  scrollbarWidth = 15;
+               }
+            }
+            if (detection.isIE12) {
+               scrollbarWidth = 16;
+            }
+            if (detection.isIE10 || detection.isIE11) {
+               scrollbarWidth = 17;
+            }
+            if (scrollbarWidth === null) {
+               outer = document.createElement('div');
+               outerStyle = outer.style;
+               outerStyle.position = 'absolute';
+               outerStyle.width = '100px';
+               outerStyle.height = '100px';
+               outerStyle.overflow = 'scroll';
+               outerStyle.top = '-9999px';
+               document.body.appendChild(outer);
+               scrollbarWidth = outer.offsetWidth - outer.clientWidth;
+               document.body.removeChild(outer);
+            }
+
+            return scrollbarWidth;
+         },
       };
 
       /**
@@ -113,7 +149,7 @@ define('Controls/Container/Scroll',
          },
 
          _beforeMount: function(newOptions) {
-            this.scrollsize = utils.getBrowserScrollbarWidth();
+            this.scrollsize = _private.getBrowserScrollbarWidth();
          },
 
          /**
