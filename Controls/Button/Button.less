@@ -3,7 +3,7 @@
   /*font-size: @font-size_Link;*/
   /*text-decoration: none;*/
   height: @height_Button_m;
-  min-width: @min-width_Button;
+  min-width: @min-width_Button_Vdom;
   box-sizing: border-box;
   .user-select();
 }
@@ -92,7 +92,7 @@
 
 .controls-Button__style-standart-primary:active, .controls-Button__style-standart-primary-big:active {
   border-color: @border-color_Button_primary_hovered;
-  background: @background_Button_primary_active;//no
+  background: @background_Button_primary_active;
   box-shadow: @box-shadow_Button_active;
 }
 
@@ -100,11 +100,12 @@
   cursor: pointer;
   border-color: @border-color_Button;
   box-shadow: @box-shadow_Button;
+  background: @background_Button_default;
 }
 
 .controls-Button__style-standart-default:active, .controls-Button__style-standart-default-big:active {
   border-color: @border-color_Button_hovered;
-  background: @background_Button_default_active;//no
+  background: @background_Button_default_active;
   box-shadow: @box-shadow_Button_active;
 }
 
@@ -115,17 +116,17 @@
 }
 
 .controls-Button__type-standart__size-default{
-  font-size: @font-size_Button_m;
+  font-size: @font-size_Button-Vdom_m;
   border-style: solid;
-  border-width: @border-width_Button;
+  border-width: @border-width_Button-Vdom;
   .border-radius(@border-radius_Button_default);
 }
 
 .controls-Button__type-standart__size-big{
-  font-size: @font-size_Button_l;
+  font-size: @font-size_Button-Vdom_l;
   border-style: solid;
-  height: @height_Button_l;
-  border-width: @border-width_Button;
+  height: @height_Button-Vdom_l;
+  border-width: @border-width_Button-Vdom;
   .border-radius(@border-radius_Button_l);
 }
 
@@ -155,7 +156,7 @@
 }
 
 .controls-Button__wrapper-type-standart__size-big {
-  padding: @padding_Button-wrapper_l;
+  padding: @padding_Button-Vdom-wrapper_l;
   .justify-content(center);
 }
 
