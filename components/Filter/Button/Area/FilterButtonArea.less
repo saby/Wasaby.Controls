@@ -207,3 +207,11 @@
 .ws-is-ie .controls-filterButton__additionalFilterParams-content .controls-Link {
 	height: @default-height;
 }
+
+.ws-is-ff {
+	.controls__filterButton__picker {
+		/* overflow-y scroll висит на попапе в ff, из-за того, что ff показывает скролл,
+			не увеличивая ширину контента, а занимает пр-во внутри. Для кнопки фильтров скролл нативный не нужен совсем. */
+		overflow-y: visible !important;
+	}
+}

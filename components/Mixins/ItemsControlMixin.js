@@ -593,8 +593,19 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
              */
             /**
              * @cfg {GroupBy} Устанавливает группировку элементов коллекции.
-             * @remark file ItemsControlMixin-groupBy.md
              * @remark
+             * Данный механизм позволяет группировать элементы коллекции в списках любых типов.
+             * Подробнее о группировках вы можете прочитать в {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/groups/ этой статье}.
+             * Для правильной работы группировки данные от источника должны поступить {@link sorting отсортированными} по полю группировки (см. подопцию *field*}.
+             * Изменить группировку элементов коллекции можно с помощью метода {@link setGroupBy}.
+             *
+             * Поле для группировки не должно быть булевым. Если требуется группировка по такому полю,
+             * предлагается отдать в настройки groupBy метод вида:
+             * <pre>
+             *    _recentGroupMethod: function(item) {
+             *       return '' + item.get('IsFavorite');
+             *    },
+             * </pre>
              * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/'>здесь</a>.
              * @example
              * 1. Подключение шаблона группировки:
@@ -1271,7 +1282,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
          }
       },
 
-      _addItems: function(newItems, newItemsIndex) {
+      _addItems: function(newItems, newItemsIndex, prevDomNode) {
          var
             i, groupId,
             projection = this._getItemsProjection();
@@ -1310,7 +1321,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
                   data.tplData.drawHiddenGroup = !!this._options._groupCollapsing[groupId];
                   markupExt = extendedMarkupCalculate(this._getItemsTemplateForAdd()(data), this._options);
                   markup = markupExt.markup;
-                  this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems));
+                  this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, prevDomNode));
                   this._revivePackageParams.revive = this._revivePackageParams.revive || markupExt.hasComponents;
                   this._revivePackageParams.light = false;
                }
@@ -1324,11 +1335,11 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
       //Выделяем отдельный метод _getInsertMarkupConfigICM т.к. в TreeView метод _getInsertMarkupConfig переопределяется,
       //а в TreeCompositeView в зависимости от вида отображения нужно звать разные методы, в режиме плитки нужно звать
       //стандартный метод _getInsertMarkupConfigICM а в режиме таблицы переопределённый метод из TreeView
-      _getInsertMarkupConfig: function(newItemsIndex, newItems) {
+      _getInsertMarkupConfig: function(newItemsIndex, newItems, prevDomNode) {
          return this._getInsertMarkupConfigICM.apply(this, arguments);
       },
 
-      _getInsertMarkupConfigICM: function(newItemsIndex, newItems) {
+      _getInsertMarkupConfigICM: function(newItemsIndex, newItems, prevDomNode) {
          var
              inside = true,
              prepend = false,
@@ -1352,7 +1363,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
             prepend = newItemsIndex == 1;
          } else {
             inside = false;
-            container = this._getDomElementByItem(prevItem);
+            container = prevDomNode || this._getDomElementByItem(prevItem);
          }
          return {
             inside: inside,
