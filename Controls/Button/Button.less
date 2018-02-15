@@ -1,8 +1,5 @@
 .controls-BaseButton {
   display: inline-flex;
-  /*font-size: @font-size_Link;*/
-  /*text-decoration: none;*/
-  /*height: @height_Button_m;*/
   box-sizing: border-box;
   .user-select();
 }
@@ -82,7 +79,7 @@
   color: @color_Link-Vdom-text_disabled;
 }
 
-.controls-Button__style-primary, .controls-Button__style-primary-big {
+.controls-Button__type-primary{
   cursor: pointer;
   color: @color_ButtonVdom-text_primary;
   border-color: @border-color_Button_primary;
@@ -91,7 +88,7 @@
   min-width: @min-width_Button_Vdom;
 }
 
-.controls-Button__style-primary:active, .controls-Button__style-primary-big:active {
+.controls-Button__type-primary:active{
   border-color: @border-color_Button_primary_hovered;
   background: @background_Button_primary_active;
   box-shadow: @box-shadow_Button_active;
@@ -143,7 +140,11 @@
   .border-radius(@border-radius_Button_l);
 }
 
-.controls-Button__icon-default, .controls-Button__text_style-default-big {
+.controls-Button__icon-primary-add{
+   color: @color_Button_style-addButton_icon;
+}
+
+.controls-Button__icon-default, .controls-Button__icon-default-big {
   color: @color_Button-icon;
 }
 .controls-Button__text_style-default {
@@ -178,19 +179,30 @@
 }
 
 .ws-is-desktop-platform {
-  .controls-Button__style-primary:hover, .controls-Button__style-primary-big:hover {
+   .controls-Button__style-primary-add:active{
+      .controls-Button__icon-primary-add {
+         color: @color_Button_style-addButton_icon_hovered;
+      }
+   }
+
+   .controls-Button__style-primary-add:hover{
+      .controls-Button__icon-primary-add {
+         color: @color_Button_style-addButton_icon_hovered;
+      }
+   }
+  .controls-Button__type-primary:hover {
     border-color: @border-color_Button_primary_hovered;
     background: @background_Button_primary_hovered;
   }
 
-  .controls-Button__style-primary:active, .controls-Button__style-primary-big:active {
+  .controls-Button__type-primary:active {
     background: @background_Button_primary_active;
   }
-  .controls-Button__style-default:hover, .controls-Button__style-default-big:hover {
+  .controls-Button__type-default:hover {
     border-color: @border-color_Button_hovered;
     background: @background_Button_hovered;
   }
-  .controls-Button__style-default:active, .controls-Button__style-default-big:active{
+  .controls-Button__type-default:active {
     background: @background_Button_active;
   }
 }
