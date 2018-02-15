@@ -12,10 +12,11 @@ define('SBIS3.CONTROLS/Suggest/SuggestShowAll',
 
        var optionsToSet = ['columns', 'itemTpl', 'idProperty', 'filter', 'dataSource'];
        /**
-        * SBIS3.CORE.SuggestShowAll
+        * @class SBIS3.CONTROLS/Suggest/SuggestShowAll
         * @extends Lib/Control/CompoundControl/CompoundControl
+        * @public
         */
-       var SuggestShowAllDialog = CompoundControl.extend({
+       var SuggestShowAllDialog = CompoundControl.extend(/** @lends SBIS3.CONTROLS/Suggest/SuggestShowAll.prototype */{
           _dotTplFn: dotTplFn,
           $protected: {
              _options: {
