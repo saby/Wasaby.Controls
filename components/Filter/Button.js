@@ -342,7 +342,18 @@ define('SBIS3.CONTROLS/Filter/Button',
                 },
                 context: this._pickerContext,
                 template: 'SBIS3.CONTROLS/Filter/Button/Area',
-                componentOptions: this._getAreaOptions()
+                componentOptions: this._getAreaOptions(),
+                handlers: {
+                   onClose: function() {
+                      /* Разрушаем панель при закрытии,
+                       надо для: сбрасывания валидации, удаления ненужных значений из контролов */
+                      if (self._picker) {
+                         self._notify('onPickerClose');
+                         self._picker.destroy();
+                         self._picker = null;
+                      }
+                   }
+                }
              });
           },
 
