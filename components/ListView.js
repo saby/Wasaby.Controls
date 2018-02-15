@@ -971,8 +971,7 @@ define('SBIS3.CONTROLS/ListView',
                //опция будет удалена при реализации перемещения по новому стандарту
                useDragPlaceHolder: false,
                //TODO коммент ниже
-               task1173941879: false,
-               fix1174886464: false
+               task1173941879: false
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
@@ -4137,7 +4136,7 @@ define('SBIS3.CONTROLS/ListView',
                                  pageNumber = self._pager._lastPageReached ? maxPage : (maxPage + 1);
                               }
                               //К комментарию выше. При полной навигации переходим на последнюю страницу, а не на последнюю доступную
-                              if (self._options.fix1174886464 && typeof more === 'boolean' && !self._options.partialPaging) {
+                              if (typeof more === 'boolean' && !self._options.partialPaging) {
                                  pageNumber = 0;
                               }
                            }
