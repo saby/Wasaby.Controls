@@ -7,13 +7,12 @@ define(
 
       'use strict';
 
-      //Скипнем тесты до выполнения задачи: https://online.sbis.ru/opendoc.html?guid=d74685f2-a152-4e4a-8b77-040bee5e4c27
       describe('Controls.Input.Number', function () {
          var
             testCases = [
                //Проверим что нельзя вставить букву в целую часть
                {
-                  testName: 'Only numbers in integers check',
+                  testName: 'Only digits allowed in integer part',
                   controlConfig: {
                   },
                   splitValue: {
@@ -30,7 +29,7 @@ define(
 
                //Проверим что нельзя вставить букву в дробную часть
                {
-                  testName: 'Only numbers in decimals check',
+                  testName: 'Only numbers allowed in decimal part',
                   controlConfig: {
                   },
                   splitValue: {
@@ -47,7 +46,7 @@ define(
 
                //Проверим что в начало стоки нельзя вставить минус при onlyPositive: true
                {
-                  testName: 'Only positive values check',
+                  testName: 'onlyPositive doesn\'t allow entering negative numbers',
                   controlConfig: {
                      onlyPositive: true
                   },
@@ -65,7 +64,7 @@ define(
 
                //Проверим что нельзя ввести больше указанного числа символов целой части
                {
-                  testName: 'Max integers length check',
+                  testName: 'Max length integer part',
                   controlConfig: {
                      integersLength: 5
                   },
@@ -83,7 +82,7 @@ define(
 
                //Проверим что нельзя ввести больше указанного числа символов дробной части
                {
-                  testName: 'Max decimals length check',
+                  testName: 'Max length decimal part',
                   controlConfig: {
                      precision: 5
                   },
@@ -101,7 +100,7 @@ define(
 
                //Проверим что нельзя ввести точку, если precision: 0
                {
-                  testName: 'Forbid dot if zero precision',
+                  testName: 'No decimal part if precision is 0',
                   controlConfig: {
                      precision: 0
                   },
@@ -154,7 +153,7 @@ define(
                //Проверим что при вводе вместо точки запятой или буквы "б" или буквы "ю" - они будут заменены
                //Достаточно проверить что один символ из набора заменяется на точку. Проверка остальных символов будет излишней
                {
-                  testName: 'Symbols ",", "б", "ю", "Б", "Ю" are replacing by dot',
+                  testName: 'Symbols ",", "б", "ю", "Б", "Ю" are replaced by dot',
                   controlConfig: {
                   },
                   splitValue: {
@@ -166,6 +165,23 @@ define(
                   result: {
                      value: '123.',
                      position: 4
+                  }
+               },
+
+               //Проверим что нельзя вставить вторую точку
+               {
+                  testName: 'Second dot is not allowed',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '123.456',
+                     insert: '.',
+                     after: '789',
+                     delete: ''
+                  },
+                  result: {
+                     value: '123.456789',
+                     position: 7
                   }
                }
             ];
