@@ -11,7 +11,7 @@
          resourceRoot: '/components',
          nostyle: true,
          globalConfigSupport: false,
-         compat: false
+         compat: true // если в демках используются не vdom контролы
       };
       window.WSTheme = 'wi_scheme';
    </script>
@@ -50,7 +50,7 @@
 
 
 <script type="text/javascript">
-require(['Core/core-init', 'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible'],function () { // если в демках используются не vdom контролы
+require(['Core/core-init'],function () {
    $(document).ready(function () {
       var parseUrlQuery = function() {
          var data = {};
