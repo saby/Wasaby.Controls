@@ -116,6 +116,12 @@ define(
                assert.equal(result.value, item.result.value);
             });
          });
+
+         it('Trim test', function () {
+            var
+               textViewModel = new TextViewModel();
+            assert.equal(textViewModel.trim('  qwe  '), 'qwe');
+         });
       });
    }
 );
