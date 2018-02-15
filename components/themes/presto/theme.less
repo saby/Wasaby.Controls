@@ -254,7 +254,7 @@ body {
   }
   .ws-window-title { // аналогично шапке панели, контентная область начинается слева от крестика
     margin: 0 !important;
-    width: calc(100% ~'-' round(86px * @multiplier)) !important; //78 - close button width + 8 - padding
+    width: calc(~"100% - @{width_CloseButton} - @{padding-right_floatArea-title}") !important; //86 - close button width + 8 - padding
     padding-left: round(24px * @multiplier) !important;
     box-sizing: border-box !important;
   }
@@ -280,6 +280,12 @@ body {
   .ws-sticky-header__table-header-copy {
     background-color: #273749 !important;
   }
+}
+.ws-float-area .ws-float-area-title {
+  font-size: round(40px * @multiplier)!important;
+  font-weight: normal !important;
+  padding-left: round(24px * @multiplier) !important;
+  width: calc(~"100% - @{width_CloseButton} - @{padding-right_floatArea-title}") !important; //86 - close button width + 8 - padding
 }
 .ws-window {
   .box-shadow(@controls-panel-shadow);
@@ -332,7 +338,7 @@ body {
 //Простите меня за эти строки кода, я не хотел, меня заставили
 .controls__filterButton {
   .controls__filterButton-button {
-    .close-button-mixin();
+    .close-button-mixin(~'', @default-height, @default-height);
     &:before {
       content: '';
     }
@@ -410,13 +416,6 @@ body {
   .controls-DateRangeBigChoose__ApplyButton {
     //Простите меня за эти строки кода, я не хотел, меня заставили
     margin-right:  round(12px * @multiplier);
-    .close-button-mixin(~'!important');
-    &:before {
-      content: '' !important;;
-    }
-    .icon-size {
-      color: #72BE44 !important;
-    }
     .controls-Button__icon {
       .icon-size(@default-icon-size-large);
     }

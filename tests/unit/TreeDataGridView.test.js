@@ -106,6 +106,18 @@ define(['SBIS3.CONTROLS/Tree/DataGridView', 'WS.Data/Collection/RecordSet',], fu
             TestTDGV.setItems(rs);
             assert.equal(TestTDGV._getHtmlItemByDOM(1, false).data('id'), 0);
          });
+         it('should not throw error when root is null', function () {
+            var target = $('<div><div></div></div>'),
+               rs = new RecordSet({
+                  rawData: [{id: 1, par:null, 'par$': false},{id:2, par:null, 'par$': false}],
+                  idProperty: 'id'
+               });
+            TestTDGV.setRoot(null);
+            TestTDGV.setItems(rs);
+            assert.doesNotThrow(function () {
+               TestTDGV._getHtmlItemByDOM(5, true);
+            });
+         });
       })
    });
 });

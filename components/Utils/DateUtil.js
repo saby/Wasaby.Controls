@@ -347,6 +347,13 @@ define('SBIS3.CONTROLS/Utils/DateUtil',[
       getDaysByRange: function (date1, date2) {
          var oneDay = 24*60*60*1000;
          return Math.round(Math.abs((date1.getTime() - date2.getTime())/(oneDay)));
+      },
+
+      isRangesOverlaps: function (startDate1, endDate1, startDate2, endDate2) {
+         if (!startDate1 || !endDate1 || !startDate2 || !endDate2) {
+            return false;
+         }
+         return Math.max(startDate1.getTime(), startDate2.getTime()) <= Math.min(endDate1.getTime(), endDate2.getTime())
       }
    };
 

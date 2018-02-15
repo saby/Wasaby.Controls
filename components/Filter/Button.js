@@ -231,42 +231,6 @@ define('SBIS3.CONTROLS/Filter/Button',
              }
           },
 
-          _initTemplates: function() {
-             if(this._dTemplatesReady) {
-                return this._dTemplatesReady.getResult();
-             }
-
-             var self = this;
-
-             function processTemplate(template, name) {
-                var jsModule = constants.jsModules.hasOwnProperty(template);
-                /* Если шаблон указали как имя компонента (строки которые начинаются с js! или SBIS3.),
-                   то перед отображением панели фильтров сначала загрузим компонент. */
-                if(template && typeof template === 'string' && (jsModule || constants.modules.hasOwnProperty(template.split('/')[0]) || template.indexOf('js!') === 0)) {
-                   
-                   if (jsModule) {
-                      template = 'js!' + template;
-                   }
-                   
-                   self._dTemplatesReady.push(mStubs.require(template).addCallback(function(comp) {
-                      /* Запишем, что в качестве шаблона задали компонент */
-                      self._filterTemplates[name] = true;
-                      return comp;
-                   }));
-                }
-             }
-
-             this._dTemplatesReady = new ParallelDeferred();
-
-             for (var key in TEMPLATES) {
-                if (TEMPLATES.hasOwnProperty(key)) {
-                   processTemplate(self.getProperty(TEMPLATES[key]), TEMPLATES[key]);
-                }
-             }
-
-             return this._dTemplatesReady.done().getResult();
-          },
-
           applyFilter: function() {
              if(this._picker && !this._picker.validate()) {
                 return false;
@@ -384,6 +348,7 @@ define('SBIS3.CONTROLS/Filter/Button',
                       /* Разрушаем панель при закрытии,
                        надо для: сбрасывания валидации, удаления ненужных значений из контролов */
                       if (self._picker) {
+                         self._notify('onPickerClose');
                          self._picker.destroy();
                          self._picker = null;
                       }

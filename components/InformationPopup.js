@@ -58,6 +58,14 @@ define('SBIS3.CONTROLS/InformationPopup',
          setStatus: function(status){
             this.getContainer().removeClass('controls-InformationPopup__status-' + this._options.status).addClass('controls-InformationPopup__status-' + status);
             this._options.status = status;
+         },
+
+         _modifyOptions: function(options) {
+            InformationPopup.superclass._modifyOptions.call(this, options);
+
+            options.crossStyle = 'light';
+
+            return options;
          }
       });
 

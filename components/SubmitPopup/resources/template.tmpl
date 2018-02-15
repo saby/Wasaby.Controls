@@ -34,14 +34,14 @@
                allowChangeEnable="{{false}}"
                caption="{{positiveButton.caption}}"
                template="{{(positiveButton.isLink ? 'SBIS3.CONTROLS/Link' : 'SBIS3.CONTROLS/Button')}}"
-               class="controls-SubmitPopup__button{{hasCancelButton ? ' controls-SubmitPopup__button-mini'}} controls-Button__ellipsis"
+               class="controls-SubmitPopup__button{{hasCancelButton ? ' controls-SubmitPopup__button-mini' : ' controls-SubmitPopup__button-standard'}} controls-Button__ellipsis"
             />
             <ws:partial
                name="negativeButton"
                allowChangeEnable="{{false}}"
                caption="{{negativeButton.caption}}"
                template="{{(negativeButton.isLink ? 'SBIS3.CONTROLS/Link' : 'SBIS3.CONTROLS/Button')}}"
-               class="controls-SubmitPopup__button{{hasCancelButton ? ' controls-SubmitPopup__button-mini'}} controls-Button__ellipsis"
+               class="controls-SubmitPopup__button{{hasCancelButton ? ' controls-SubmitPopup__button-mini' : ' controls-SubmitPopup__button-standard'}} controls-Button__ellipsis"
             />
             <ws:if data="{{hasCancelButton}}">
                <ws:partial
@@ -59,7 +59,7 @@
                primary="{{true}}"
                allowChangeEnable="{{false}}"
                caption="{{submitButton.caption}}"
-               class="controls-SubmitPopup__button controls-Button__ellipsis"
+               class="controls-SubmitPopup__button controls-SubmitPopup__button-standard controls-Button__ellipsis"
                template="{{(submitButton.isLink ? 'SBIS3.CONTROLS/Link' : 'SBIS3.CONTROLS/Button')}}"
             />
          </ws:else>

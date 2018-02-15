@@ -3,6 +3,8 @@ define('SBIS3.CONTROLS/Action/List/Save', [
     'SBIS3.CONTROLS/Action/List/Mixin/ListMixin',
     'Core/helpers/fast-control-helpers',
     'Core/Deferred',
+    'WS.Data/Chain',
+    'Core/core-merge',
     'Core/core-instance',
     'Core/core-clone',
     'WS.Data/Collection/RecordSet',
@@ -10,7 +12,7 @@ define('SBIS3.CONTROLS/Action/List/Save', [
     'WS.Data/Query/Query',
     'WS.Data/Entity/Record',
     'Core/moduleStubs'
-], function (Save, ListMixin, fcHelpers, Deferred, cInstance, coreClone, RecordSet, Dialog, Query, Record, moduleStubs) {
+], function (Save, ListMixin, fcHelpers, Deferred, Chain, cMerge, cInstance, coreClone, RecordSet, Dialog, Query, Record, moduleStubs) {
     var MAX_RECORDS_COUNT = 20000;
 
     /**
@@ -50,19 +52,20 @@ define('SBIS3.CONTROLS/Action/List/Save', [
             var
                 dataForSave,
                 self = this;
-            meta = this._prepareMeta(meta);
-            dataForSave = this._getDataForSave(meta);
-            dataForSave = dataForSave instanceof Deferred ? dataForSave : Deferred.success(dataForSave);
-            dataForSave.addCallback(function(data) {
-                if (cInstance.instanceOfModule(data, 'WS.Data/Collection/RecordSet')) {
-                    meta.recordSet = data;
-                } else if (cInstance.instanceOfModule(data, 'WS.Data/Query/Query')) {
-                    meta.query = data;
-                }
-                self.getSaveStrategy().addCallback(function(strategy) {
-                   strategy.saveAs(meta);
-                   return strategy;
-                });
+            this._prepareMeta(meta).addCallback(function(meta) {
+               dataForSave = self._getDataForSave(meta);
+               dataForSave = dataForSave instanceof Deferred ? dataForSave : Deferred.success(dataForSave);
+               dataForSave.addCallback(function(data) {
+                  if (cInstance.instanceOfModule(data, 'WS.Data/Collection/RecordSet')) {
+                     meta.recordSet = data;
+                  } else if (cInstance.instanceOfModule(data, 'WS.Data/Query/Query')) {
+                     meta.query = data;
+                  }
+                  self.getSaveStrategy().addCallback(function(strategy) {
+                     strategy.saveAs(meta);
+                     return strategy;
+                  });
+               });
             });
         },
 
@@ -81,13 +84,15 @@ define('SBIS3.CONTROLS/Action/List/Save', [
         _computeDataForSave: function(meta) {
             var
                result,
-               selection = this.getLinkedObject().getSelection();
+               selectedIds,
+               linkedObject = this.getLinkedObject(),
+               selection = linkedObject.getSelection();
             if (selection && selection.marked) {
-               result = this._getDataFromSelection(meta.dataSource, meta.serverSideExport, selection);
+               result = this._getDataFromSelection(meta, selection);
             } else {
-               result = this._getSelectedRecordSet();
-               if (result.getCount()) {
-                   result = Deferred.success(result);
+               selectedIds = linkedObject.getSelectedKeys();
+               if (selectedIds.length) {
+                   result = this._getDataFromSelectedIds(meta, selectedIds);
                } else {
                    result = this._getDataFromSelector(meta);
                }
@@ -95,51 +100,84 @@ define('SBIS3.CONTROLS/Action/List/Save', [
             return result;
         },
 
-        _getDataFromSelection: function(dataSource, serverSideExport, selection) {
-           var query = this._createQueryForSelection(dataSource, selection);
-           return this._getDataFromQuery(dataSource, query, serverSideExport);
+        _getDataFromSelectedIds: function(meta, selectedIds) {
+           var
+              query,
+              result;
+           if (meta.alwaysLoadData) {
+              query = this._createQuery({
+                 selectedIds: selectedIds.map(function(key) { return String(key); }),
+                 columns: this._formatColumnsForFilter(meta.columns)
+              });
+              result = this._getDataFromQuery(meta.dataSource, query, meta.serverSideExport);
+           } else {
+              result = this._getSelectedRecordSet();
+           }
+           return result;
+        },
+
+        _getDataFromSelection: function(meta, selection) {
+           var query = this._createQuery({
+                 selection: Record.fromObject(selection, meta.dataSource.getAdapter()),
+                 columns: this._formatColumnsForFilter(meta.columns)
+              });
+           return this._getDataFromQuery(meta.dataSource, query, meta.serverSideExport);
         },
 
         _getDataFromSelector: function(meta) {
             var linkedObject = this.getLinkedObject();
-            return this._showAmountSelector(this._getTitleForSelector(meta.endpoint), linkedObject.getItems().getCount()).addCallback(function(count) {
-                var query = this._createQueryForList(meta.parentProperty, count || MAX_RECORDS_COUNT);
+            return this._showAmountSelector(this._getTitleForSelector(meta.endpoint), linkedObject.getItems().getCount()).addCallback(function(limit) {
+                var
+                   query,
+                   filter = this._getOpenedPath(meta.parentProperty);
+                filter.columns = this._formatColumnsForFilter(meta.columns);
+                query = this._createQuery(filter, limit);
                 return this._getDataFromQuery(meta.dataSource, query, meta.serverSideExport);
             }.bind(this));
         },
 
-        _createQueryForSelection: function(dataSource, selection, limit) {
+       _getOpenedPath: function(parentProperty) {
+          var
+             openedPath, filter = {},
+             linkedObject = this.getLinkedObject();
+          if (parentProperty) {
+             filter[parentProperty] = filter[parentProperty] === undefined ? [linkedObject.getCurrentRoot()] : filter[parentProperty];
+             filter[parentProperty] = filter[parentProperty] instanceof Array ? filter[parentProperty] : [filter[parentProperty]];
+             openedPath = linkedObject.getOpenedPath();
+             for (var key in openedPath) {
+                if (openedPath.hasOwnProperty(key)) {
+                   if (filter[parentProperty].indexOf(key) === -1) {
+                      filter[parentProperty].push(key);
+                   }
+                }
+             }
+          }
+
+          return filter;
+       },
+
+        _createQuery: function(filter, limit) {
            var
               query = new Query(),
               linkedObject = this.getLinkedObject(),
-              filter = coreClone(linkedObject.getFilter());
-           filter.selection = Record.fromObject(selection, dataSource.getAdapter());
+              viewFilter = coreClone(linkedObject.getFilter());
 
-           query.where(filter).orderBy(linkedObject.getSorting()).offset(linkedObject.getOffset()).limit(limit);
+           query.where(cMerge(viewFilter, filter))
+                .orderBy(linkedObject.getSorting())
+                .offset(linkedObject.getOffset())
+                .limit(limit || MAX_RECORDS_COUNT);
+
            return query;
         },
 
-        _createQueryForList: function(parentProperty, limit) {
-            var
-                query = new Query(),
-                linkedObject = this.getLinkedObject(),
-                filter = coreClone(linkedObject.getFilter()),
-                openedPath;
-            if (parentProperty) {
-                filter[parentProperty] = filter[parentProperty] === undefined ? [linkedObject.getCurrentRoot()] : filter[parentProperty];
-                filter[parentProperty] = filter[parentProperty] instanceof Array ? filter[parentProperty] : [filter[parentProperty]];
-                openedPath = linkedObject.getOpenedPath();
-                for (var key in openedPath) {
-                    if (openedPath.hasOwnProperty(key)) {
-                       if (filter[parentProperty].indexOf(key) === -1) {
-                          filter[parentProperty].push(key);
-                       }
-                    }
-                }
-            }
-
-            query.where(filter).orderBy(linkedObject.getSorting()).offset(linkedObject.getOffset()).limit(limit);
-            return query;
+        _formatColumnsForFilter: function(columns) {
+           var result = [];
+           columns.forEach(function(column) {
+              if (column.field) {
+                 result.push(column.field);
+              }
+           });
+           return result;
         },
 
         _getDataFromQuery: function(dataSource, query, serverSideExport) {
@@ -200,11 +238,37 @@ define('SBIS3.CONTROLS/Action/List/Save', [
             if (cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS/Mixins/TreeMixin')) {
                 meta.parentProperty = linkedObject.getParentProperty();
             }
-            if (!meta.columns) {
-               meta.columns = linkedObject.getColumns();
-            }
 
-            return meta;
+            return this._prepareColumns(meta).addCallback(function(columns) {
+               meta.columns = columns || linkedObject.getColumns();
+               return meta;
+            });
+        },
+
+        _prepareColumns: function(meta) {
+           var
+              editorResult,
+              result = new Deferred();
+           editorResult = this.sendCommand('showColumnsEditor', {
+              columnsConfig: meta.columnsConfig,
+              editorOptions: meta.editorOptions
+           });
+           if (editorResult instanceof Deferred) {
+              editorResult.addCallback(function (config) {
+                 if (config) {
+                    result.callback(config.resultColumns);
+                 } else {
+                    //Сюда мы попадаем если команда showColumnsEditor была обработана, но диалог закрыли.
+                    //В таком случае нам не надо продолжать сохранение.
+                    result.errback();
+                 }
+              });
+           } else {
+              //Сюда мы попадаем если команда showColumnsEditor не была обработана.
+              //В таком случае будем использовать колонки, переданные в метод execute экшена.
+              result.callback(meta.columns);
+           }
+           return result;
         },
 
         _loadData: function(dataSource, query) {

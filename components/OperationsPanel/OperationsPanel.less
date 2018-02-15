@@ -74,6 +74,11 @@
       margin: -3px 0 0 -10px;
    }
 }
+// в панели массовых операций необходимо использовать CommandsButton в качестве меню
+// стандарт меню ПМО совпадает с CommandsButton, но отличается от MenuIcon отсюда и костыль
+.controls-operationsPanel__itemsMenu_picker.controls-MenuIcon_hideHeader .controls-ListView__item:first-child .controls-MenuItem__icon {
+   display: block;
+}
 
 .ws-is-mobile-platform {
    .controls-Link__withoutCaptionOnMobile {

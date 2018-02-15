@@ -123,6 +123,9 @@
       .controls-InputRender__field {
          font-size: 18px;
       }
+      &.controls-TextBox_size_l_singleLine {
+         min-height: 26px;
+      }
    }
    &.controls-TabButton__main-item {
       min-width: 1px; //Нужно, чтобы flex правильно позиционировал ужимаемый контейнер. с 0 в ie11 не работает
@@ -388,7 +391,7 @@
          position: relative;
          top: 1px;
       }
-      .controls-TabButton__additionalText2 .controls-TextBox__field {
+      .controls-TabButton__flex .controls-TabButton__additionalText2 .controls-TextBox__field {
          position: relative;
          top: -1px;
       }

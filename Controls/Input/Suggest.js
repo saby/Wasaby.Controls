@@ -51,7 +51,7 @@ define('Controls/Input/Suggest',
          },
          
          onFocusOutHandler: function(self) {
-            _private.closePopup(self);
+            self._suggestController.abort();
             //FIXME Для правильной работы валидации. костыль. сейчас событие focusOut стреляет, когда фокус уходит на саггест,
             //из-за этого некорректно запускается валидация.
             self._notify('componentFocusOut');
@@ -61,6 +61,7 @@ define('Controls/Input/Suggest',
             self._selectHandler = self._selectHandler.bind(self);
             self._popupFocusIn = self._popupFocusIn.bind(self);
             self._popupFocusOut = self._popupFocusOut.bind(self);
+            self._popupClose = self._popupClose.bind(self);
          },
          
          initViewModel: function(self) {
@@ -121,7 +122,7 @@ define('Controls/Input/Suggest',
          // <editor-fold desc="handlers">
          
          _changeValueHandler: function(event, value) {
-            this._suggestController.setValue(value);
+            this._suggestController.search(value);
             this._notify('valueChanged', [value]);
          },
          
@@ -135,7 +136,7 @@ define('Controls/Input/Suggest',
          _clearClick: function() {
             /* move focus to input after clear text, because focus will be lost after hiding cross  */
             this.focus();
-            this._suggestController.setValue('');
+            this._suggestController.search('');
             this._notify('valueChanged', ['']);
          },
          
@@ -154,6 +155,11 @@ define('Controls/Input/Suggest',
             if (_private.needCloseOnFocusOutPopup(this, focusObj.to)) {
                _private.onFocusOutHandler(this);
             }
+         },
+   
+         _popupClose: function() {
+            /* FIXME До решения ошибок по фокусам https://online.sbis.ru/opendoc.html?guid=85911eb8-a6e7-4a0d-b454-c3e3a6d10acc */
+            this._popupFocused = false;
          },
          
          _focusOut: function() {

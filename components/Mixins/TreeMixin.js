@@ -648,14 +648,10 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
              */
             singleExpand: false,
             /**
-             * @cfg {Boolean} Устанавливает режим отображения содержимого записей типа "Узел" (папка) при первой загрузке контрола.
+             * @cfg {Boolean} Раскрыть содержимое папок (запись с типом "Узел") при первой загрузке контрола.
              * @remark
-             * true - содержимое узлов раскрыто, false - содержимое узлов скрыто.
-             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
-             * @example
-             * <pre>
-             *    <option name="expand">true</option>
-             * </pre>
+             * Когда опция expand установлена в значение true, опцию {@link partialyReload} необходимо установить в значение false, чтобы обеспечить корректную работу контрола.
+             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @see setExpand
              * @see getExpand
              */
@@ -1489,10 +1485,17 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                if (this.getItems().getRecordById(this._previousRoot)) {
                   this.setSelectedKey(this._previousRoot);
                   //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
-                  if (!this._container.parents('.controls-ListView').length) {
-                     runDelayed(function() {
+                  // В режиме поиска скролить к предыдущей записи не нужно: https://online.sbis.ru/opendoc.html?guid=3f384ac7-a935-4af4-aa56-91b2e44f4d7e
+                  if (!self._isSearchMode() && !this._container.parents('.controls-ListView').length) {
+                     /* requestAnimationFrame в ie не пакетирует скролы, только перерисовки,
+                        поэтому при использовании requestAnimationFrame будет дергаться страница. */
+                     if (constants.browser.isIE) {
                         self._scrollToItem(previousRoot);
-                     });
+                     } else {
+                        runDelayed(function () {
+                           self._scrollToItem(previousRoot);
+                        });
+                     }
                   }
                } else {
                   /*иначе вход в папку*/
@@ -1609,8 +1612,9 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             delete(filter[this._options.parentProperty]);
          }
          this.setFilter(filter, true);
-         //узел грузим с 0-ой страницы
-         this.setPage(0, true);
+         /* При смене узла, данные надо грузить с 0-ой страницы,
+            при этом скролить к 0 странице не надо, т.к. после перерисовки мы и так окажемся вверху списка. */
+         this.setPage(0, true, true);
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
          this._options.currentRoot = (isFakeRoot || (key !== undefined && key !== null)) ? key : this._options.root;
