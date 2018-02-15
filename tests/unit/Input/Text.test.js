@@ -41,13 +41,62 @@ define(
                }
             },
             {
-               testName: 'Max length test',
+               testName: 'Max length test. Insert character at the end of the string',
                controlConfig: {
                   maxLength: '5'
                },
                splitValue: {
                   before: '12345',
                   insert: '6',
+                  after: '',
+                  delete: ''
+               },
+               result: {
+                  value: '12345',
+                  position: 5
+               }
+            },
+            {
+               testName: 'Max length test. Insert character at the beginning of the string',
+               controlConfig: {
+                  maxLength: '5'
+               },
+               splitValue: {
+                  before: '',
+                  insert: '1',
+                  after: '23456',
+                  delete: ''
+               },
+               result: {
+                  value: '23456',
+                  position: 0
+               }
+            },
+            {
+               testName: 'Max length test. Insert character at the middle of the string',
+               controlConfig: {
+                  maxLength: '5'
+               },
+               splitValue: {
+                  before: '12',
+                  insert: '3',
+                  after: '456',
+                  delete: ''
+               },
+               result: {
+                  value: '12456',
+                  position: 2
+               }
+            },
+            {
+               testName: 'Constraint and max length test',
+               controlConfig: {
+                  constraint: '[0-9]',
+                  maxLength: '5'
+               },
+               splitValue: {
+                  before: '12345',
+                  insert: 'a',
                   after: '',
                   delete: ''
                },
