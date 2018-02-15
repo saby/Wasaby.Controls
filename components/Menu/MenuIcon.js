@@ -59,6 +59,10 @@ define('SBIS3.CONTROLS/Menu/MenuIcon', [
    var MenuIcon = WSMenuButton.extend( [], /** @lends SBIS3.CONTROLS/Menu/MenuIcon.prototype */ {
       _hasHeader: false,
       $protected: {
+          _options: {
+              size: 'default',
+              style: ''
+          },
          _zIndex: '',
          _hideHeader: null
       },
