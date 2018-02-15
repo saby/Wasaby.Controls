@@ -442,6 +442,10 @@ define('Controls/List/SourceControl', [
          }
       },
 
+      _onEmScroll: function() {
+         
+      },
+
       reload: function() {
          _private.reload(this);
       }
