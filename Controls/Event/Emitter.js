@@ -19,7 +19,6 @@ define('Controls/Event/Emitter',
 
       var EventCatcherController = Control.extend({
          _template: template,
-         _listner: null,
          _afterMount: function(){
             this._notify("register", [this._options.event, this, this.callback], {bubbling:true});
          },
