@@ -35,17 +35,17 @@ define('Controls/Input/Search',
          },
 
          _valueChangedHandler: function (event, value) {
-            this._notify('valueChanged', [value], {bubling: true});
+            this._notify('valueChanged', [value], {bubbling: true});
          },
 
          //Собственно поиск
          _applySearch: function () {
-            this._notify('search', {bubling: true});
+            this._notify('search', {bubbling: true});
          },
 
          _onResetClick: function () {
             this._notify('valueChanged', ['']);
-            this._notify('reset', {bubling: true});
+            this._notify('reset', {bubbling: true});
          },
 
          _onSearchClick: function () {
