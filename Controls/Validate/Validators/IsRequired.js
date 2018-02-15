@@ -1,4 +1,4 @@
-define('Controls/Validate/Validators/IsRequired', ['Core/core-instance'], function(cInstace) {
+define('Controls/Validate/Validators/IsRequired', ['Core/core-instance'], function(cInstance) {
    'use strict';
 
    return function(args) {
@@ -17,7 +17,7 @@ define('Controls/Validate/Validators/IsRequired', ['Core/core-instance'], functi
             isEmpty = isNaN(args.value);
             break;
          case 'object':
-            if (cInstace.instanceOfModule(args.value, 'WS.Data/Collection/List')) {
+            if (cInstance.instanceOfModule(args.value, 'WS.Data/Collection/List')) {
                isEmpty = !Boolean(args.value.getCount());
             } else if(args.value instanceof Array) {
                isEmpty = !Boolean(args.value.length);

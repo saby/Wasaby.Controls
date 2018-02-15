@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/Utils/ControlsValidators', [
    'Controls/Validate/Validators/IsRequired',
 
    'i18n!SBIS3.CONTROLS/Utils/ControlsValidators'
-],function(CoreValidators, cInstace, IoC, IsEmail, IsRequired) {
+],function(CoreValidators, cInstance, IoC, IsEmail, IsRequired) {
 
    'use strict';
 
@@ -42,7 +42,7 @@ define('SBIS3.CONTROLS/Utils/ControlsValidators', [
        * </ol>
        */
       required: function(option) {
-         if (typeof option === 'object' && cInstace.instanceOfModule(option, 'Deprecated/Enum')) {
+         if (typeof option === 'object' && cInstance.instanceOfModule(option, 'Deprecated/Enum')) {
             IoC.resolve('ILogger').error('SBIS3.CONTROLS/Utils/ControlsValidators', 'использует устаревший модуль Deprecated/Enum. Выпишите ошибку на Интерфейсный фреймворк со скриншотом.');
             return IsRequired({
                value: option.getCurrentValue()
