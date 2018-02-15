@@ -53,7 +53,7 @@ define('Controls/Button', [
       return {
          style: 'default',
          size: 'default'
-   };
+      };
    };
 
     return Button;
