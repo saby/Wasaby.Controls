@@ -20,15 +20,40 @@ define('Controls-demo/Tabs/Buttons', [
              cssButtons
 ) {
     'use strict';
-
-    var TabButtons = Control.extend(
+    var srcData = [
         {
+            id: "1",
+            content: 'Настолько длинное название папки что оно не влезет в максимальный размер 1'
+        },
+        {
+            id: "2",
+            content: 'Notebooks 2',
+            align: "left"
+        },
+        {
+            id: "3",
+            content: 'Smartphones 3 '
+        }
+    ];
+
+    var TabButtonsDemo = Control.extend({
+            SelectedKey1: "1",
+            SelectedKey2: "2",
+            SelectedKey3: "4",
+            SelectedKey4: "2",
+            SelectedKey5: "2",
+            SelectedKey6: "1",
             _template: template,
             _spaceTemplate: spaceTemplate,
             _itemTemplate: itemTemplate,
             _mainTemplate: mainTemplate,
-            _selectedKey: 1
-
+            _selectedKey: 1,
+            _setSource: function() {
+                this._lazySource = new MemorySource({
+                    idProperty: 'id',
+                    data: srcData
+                })
+            }
         });
-    return TabButtons;
+    return TabButtonsDemo;
 });

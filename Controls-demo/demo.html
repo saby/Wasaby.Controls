@@ -11,7 +11,7 @@
          resourceRoot: '/components',
          nostyle: true,
          globalConfigSupport: false,
-         compat: true // если в демках используются не vdom контролы
+         compat: ~document.location.search.indexOf('compat=true') // если в демках используются не vdom контролы
       };
       window.WSTheme = 'wi_scheme';
    </script>

@@ -15,7 +15,29 @@ define('Controls/Tabs/Buttons', [
 ) {
     'use strict';
 
-    var _private = {};
+    var _private = {
+        initSource: function(instance, options) {
+            return instance._sourceController = new SourceController({
+                source: options.source
+            }).load().addCallback(function(items){
+                var
+                    leftOrder = 1,
+                    rightOrder = 30;
+                items.each(function (item) {
+                    if (item.get('align') === 'left') {
+                        item.set('_order', leftOrder++);
+                    } else {
+                        item.set('_order', rightOrder++);
+                    }
+                });
+                //save last right order
+                rightOrder--;
+                instance._lastRightOrder = rightOrder;
+                instance._items = items;
+                return instance._items;
+            })
+        }
+    };
 
     /**
      * Компонент - корешки закладок
@@ -37,42 +59,28 @@ define('Controls/Tabs/Buttons', [
         _controlName: 'Controls/Tabs/Buttons',
         _template: TabButtonsTpl,
         items: [],
-        _beforeMount: function(options, context, receivedState) {
-            var
-                self = this;
-            this._selectedKey = options.selectedKey;
-            if (receivedState) {
-                this._items = receivedState;
-            }
-            if (options.source) {
-                return this._sourceController = new SourceController({
-                    source: options.source
-                }).load().addCallback(function(items){
-                    var
-                        leftOrder = 1,
-                        rightOrder = 30;
-                    items.each(function (item) {
-                        if (item.get('align') === 'left') {
-                            item.set('_order', leftOrder++);
-                        } else {
-                            item.set('_order', rightOrder++);
-                        }
-                    });
-                    //save last right order
-                    rightOrder--;
-                    self._lastRightOrder = rightOrder;
-                    self._items = items;
-                    return self._items;
-
-                })
-            }
-        },
         constructor: function (cfg) {
             TabsButtons.superclass.constructor.apply(this, arguments);
             this._publish('selectedKeyChanged');
         },
+        _beforeMount: function(options, context, receivedState) {
+            if (receivedState) {
+                this._items = receivedState;
+            }
+            if (options.source) {
+                return _private.initSource(this, options)
+            }
+        },
+        _beforeUpdate: function(newOptions) {
+            var
+                self = this;
+            if (newOptions.source && !this._sourceController) {
+                return _private.initSource(this, newOptions).addCallback(function(){
+                    self._forceUpdate()
+                })
+            }
+        },
         _onItemClick: function(event, key) {
-            this._selectedKey = key;
             this._notify('selectedKeyChanged', key)
         },
         _prepareItemClass: function(item) {
@@ -82,7 +90,7 @@ define('Controls/Tabs/Buttons', [
             if (item.get('order') === 1 || item.get('order') === this._lastRightOrder ) {
                 classes.push('controls-Tabs__item_extreme');
             }
-            if (item.get(this._options.keyProperty) === this._selectedKey) {
+            if (item.get(this._options.keyProperty) === this._options.selectedKey) {
                 classes.push('controls-Tabs_style_' + this._options.style + '__item_state_selected');
                 classes.push('controls-Tabs__item_state_selected');
             } else {
