@@ -251,14 +251,16 @@
 .controls-Link {
    &.ws-linkHeader, &.ws-header, &.ws-bigSubheader {
       &:not(.ws-disabled) {
-         &:active, &:active .controls-Button__text {
+         &:active, &:active .controls-Button__text,
+         body:not(.ws-is-mobile-platform) &:hover, body:not(.ws-is-mobile-platform) &:hover .controls-Button__text {
             text-decoration: @link-header-text-decoration;
             color: @link-header-hover-color;
          }
       }
       &.ws-subheader {
          &:not(.ws-disabled) {
-            &:active, &:active .controls-Button__text {
+            &:active, &:active .controls-Button__text,
+            body:not(.ws-is-mobile-platform) &:hover, body:not(.ws-is-mobile-platform) &:hover .controls-Button__text {
                text-decoration: @link-header-text-decoration;
                color: @link-subheader-hover-color;
             }
