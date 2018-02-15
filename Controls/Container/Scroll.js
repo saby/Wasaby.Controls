@@ -142,12 +142,7 @@ define('Controls/Container/Scroll',
             scrollbarWidth = 17;
          } else if (scrollbarWidth === null) {
             outer = document.createElement('div');
-            outerStyle = outer.style;
-            outerStyle.position = 'absolute';
-            outerStyle.width = '100px';
-            outerStyle.height = '100px';
-            outerStyle.overflow = 'scroll';
-            outerStyle.top = '-9999px';
+            outer.className = 'forScrollBarMeasurement';
             document.body.appendChild(outer);
             scrollbarWidth = outer.offsetWidth - outer.clientWidth;
             document.body.removeChild(outer);
