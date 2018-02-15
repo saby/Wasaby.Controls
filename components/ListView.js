@@ -4136,7 +4136,7 @@ define('SBIS3.CONTROLS/ListView',
                               if (self._pager._options.pagingOptions.onlyLeftSide && !lastPage) {
                                  pageNumber = self._pager._lastPageReached ? maxPage : (maxPage + 1);
                               }
-                              
+                              //К комментарию выше. При полной навигации переходим на последнюю страницу, а не на последнюю доступную
                               if (self._options.fix1174886464 && typeof more === 'boolean' && !self._options.partialPaging) {
                                  pageNumber = 0;
                               }
