@@ -46,29 +46,6 @@
             </ws:source>
         </Controls:Tabs:Buttons>
     </div>
-    <div class="separator">Style="accent"</div>
-    <div class="">
-        <Controls:Tabs:Buttons
-                      selectedKey="3"
-                      keyProperty="id"
-                      style="accent"
-        >
-            <ws:source module="WS.Data/Source/Memory" >
-                <ws:options idProperty="id">
-                <ws:data>
-                    <ws:Array>
-                        <ws:Object id="1" content="Выполненные" align="left"/>
-                        <ws:Object id="2" content="слишком"/>
-                        <ws:Object id="3" content="тяжело"/>
-                        <ws:Object id="4" content="придумывать"/>
-                        <ws:Object id="5" content="названия"/>
-                        <ws:Object id="6" content="вкладок"/>
-                    </ws:Array>
-                </ws:data>
-                </ws:options>
-            </ws:source>
-        </Controls:Tabs:Buttons>
-    </div>
     <div class="separator">Style="additional"</div>
     <div class="">
         <Controls:Tabs:Buttons
@@ -92,11 +69,12 @@
             </ws:source>
         </Controls:Tabs:Buttons>
     </div>
-    <div class="separator">Style="default", with space template</div>
+    <div class="separator">Style="additional", with space template</div>
     <div class="">
         <Controls:Tabs:Buttons
                       selectedKey="2"
                       keyProperty="id"
+                      style="additional"
                       tabSpaceTemplate="{{_spaceTemplate}}"
         >
             <ws:source module="WS.Data/Source/Memory" >
