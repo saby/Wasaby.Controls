@@ -88,6 +88,14 @@
 .controls-Button__text_gap {
   margin-left: @spacing_Button-between-icon-text;
 }
+// перенес в vDom, чтобы не было пересечения со старыми кнопками
+// изменено имя в остальном стили аналогичны
+.controls-BaseButton__content {
+  .button-wrapper-default-style();
+  &:before {
+    content: "\200b";
+  }
+}
 
 .ws-is-desktop-platform {
   .controls-Button__style-primary {
@@ -107,5 +115,14 @@
     &:active {
       background: @background_Button_active;
     }
+  }
+}
+
+// баг ие10, дочерний элемент контейнера с флексом неправильно рассчитывает свои размеры
+// вследствии чего обрезание текста происходит неверно
+.ws-is-ie10 {
+  .controls-Button__text {
+    display: inline-block;
+    -ms-flex-negative: 1;
   }
 }
