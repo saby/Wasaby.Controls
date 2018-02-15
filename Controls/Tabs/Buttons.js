@@ -52,9 +52,7 @@ define('Controls/Tabs/Buttons', [
                         leftOrder = 1,
                         rightOrder = 30;
                     items.each(function (item) {
-                       // item.set('_order', baseOrder + order++);
                         if (item.get('align') === 'left') {
-                            //item.set('_extreme' = leftOrder === 1 ? true : false;
                             item.set('_order', leftOrder++);
                         } else {
                             item.set('_order', rightOrder++);
