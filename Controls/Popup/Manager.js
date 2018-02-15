@@ -199,6 +199,7 @@ define('Controls/Popup/Manager',
       };
 
       Manager._popupItems = new List();
+      Manager._private = _private;
       return Manager;
    }
 );
