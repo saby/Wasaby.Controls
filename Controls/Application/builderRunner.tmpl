@@ -1,0 +1,11 @@
+<div>
+   <script>
+      var templateFn = {{_options.builder}};
+      require(['Core/Control'], function(control){
+         var cnt = control.extend({
+            _template: templateFn
+         });
+         control.createControl(cnt, {}, document.getElementById('root'));
+      });
+   </script>
+</div>

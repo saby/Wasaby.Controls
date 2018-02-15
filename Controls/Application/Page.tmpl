@@ -24,33 +24,22 @@
          <ws:if data="{{ content.content }}">
             <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}" />
          </ws:if>
-         <div key="scripts">
 
-            <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/bundles.js"></script>
-            <script key="require" type="text/javascript" src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
-            <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
-            <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/config.js"></script>
+         <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/bundles.js"></script>
+         <script key="require" type="text/javascript" src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
+         <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
+         <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/config.js"></script>
 
-            <ws:if data="{{ jsLinks }}">
-               <ws:for data="index, value in jsLinks">
-                  <script type="text/javascript" src="{{ value }}" defer="defer" key="{{ 'scripts_' + index }}"></script>
-               </ws:for>
-            </ws:if>
-            <ws:if data="{{!compat}}">
-               <script key="init_script">
-                  require(['Controls/Application/AppData'], function(AppData){
-                     window.startContextData = {AppData: new AppData({})};
-                     require(['Core/app']);
-                  });
-               </script>
-            </ws:if>
-            <ws:else>
-			      <ws:partial template="tmpl!Controls/Application/CompatibleScripts" />
-            </ws:else>
-            <ws:if data="{{ _options.scripts }}">
-               <ws:partial template="{{ _options.scripts }}" />
-            </ws:if>
-         </div>
+
+         <ws:if data="{{_options.builder}}">
+            <ws:partial template="tmpl!Controls/Application/builderRunner"
+                        _options="{{_options}}" />
+         </ws:if>
+         <ws:else>
+            <ws:partial template="tmpl!Controls/Application/startApplicationScript" compat="{{compat}}"
+                     jsLinks ="{{jsLinks}}"
+                     _options="{{_options}}" />
+         </ws:else>
          <Controls:Popup:Manager:Container attr:id="popup"/>
       </body>
    </Controls:Event:Listener>
