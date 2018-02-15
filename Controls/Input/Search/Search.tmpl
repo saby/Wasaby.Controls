@@ -3,7 +3,8 @@
                 tagStyle="{{_options.tagStyle}}"
                 viewModel="{{_simpleViewModel}}"
                 placeholder="{{_options.placeholder}}"
-                attr:class="control-Search">
+                attr:class="control-Search"
+               on:valueChanged="_valueChangedHandler()">
 
    <ws:content>
       <ws:partial

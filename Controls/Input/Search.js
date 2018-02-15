@@ -34,14 +34,18 @@ define('Controls/Input/Search',
             this._simpleViewModel = new SimpleViewModel();
          },
 
+         _valueChangedHandler: function (event, value) {
+            this._notify('valueChanged', [value], {bubling: true});
+         },
+
          //Собственно поиск
          _applySearch: function () {
-            this._notify('search');
+            this._notify('search', {bubling: true});
          },
 
          _onResetClick: function () {
             this._notify('valueChanged', ['']);
-            this._notify('reset');
+            this._notify('reset', {bubling: true});
          },
 
          _onSearchClick: function () {
