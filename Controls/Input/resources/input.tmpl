@@ -1,14 +1,17 @@
-<input
-   name="input"
-   type="{{ type }}"
-   value="{{value}}"
-   class="controls-InputRender__field"
-   readonly="{{enabled ? '' : 'readonly'}}"
-   autocomplete="off"
-   required="true"
-/>
-<ws:partial
-   template="tmpl!Controls/Input/resources/CustomPlaceholder"
-   placeholder="{{ placeholder }}"
-   attr:tabindex="{{-1}}"
-/>
+<!-- Div будет убран в 18.100 https://online.sbis.ru/opendoc.html?guid=963a1d5b-7c5e-46be-b23b-f8edf63824f8 -->
+<div class="controls-InputRender__fieldWrapper">
+    <input
+       name="input"
+       type="{{ type }}"
+       value="{{value}}"
+       class="controls-InputRender__field"
+       readonly="{{enabled ? '' : 'readonly'}}"
+       autocomplete="off"
+       required="true"
+    />
+    <ws:partial
+       template="tmpl!Controls/Input/resources/CustomPlaceholder"
+       placeholder="{{ placeholder }}"
+       attr:tabindex="{{-1}}"
+    />
+</div>
