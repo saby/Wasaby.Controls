@@ -80,7 +80,7 @@ define('Controls/Tabs/Buttons', [
         _prepareItemClass: function(item) {
             var
                 classes =['controls-Tabs__item'];
-            classes.push('controls-Tabs__item_align_' + item.get('align') ? item.get('align') : 'right');
+            classes.push('controls-Tabs__item_align_' + ( item.get('align') ? item.get('align') : 'right' ));
             if (item.get('order') === 1 || item.get('order') === this._lastRightOrder ) {
                 classes.push('controls-Tabs__item_extreme');
             }
