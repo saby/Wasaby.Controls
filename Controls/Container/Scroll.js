@@ -121,6 +121,35 @@ define('Controls/Container/Scroll',
 
       });
 
+      ScrollContainer.prototype.browserScrollSize = (function() {
+         if(typeof window === 'undefined') {
+            return;
+         }
+         var scrollbarWidth = null,
+            outer;
+         /**
+          * В браузерах с поддержкой ::-webkit-scrollbar установлена ширина 0.
+          * Определяем не с помощью Core/detection, потому что в нем считается, что chrome не на WebKit.
+          */
+         if (/AppleWebKit/.test(navigator.userAgent)) {
+            scrollbarWidth = 0;
+         } else if (detection.isMac) {
+            scrollbarWidth = 15;
+         } else if (detection.isIE12) {
+            scrollbarWidth = 16;
+         } else if (detection.isIE10 || detection.isIE11) {
+            scrollbarWidth = 17;
+         } else {
+            outer = document.createElement('div');
+            outer.className = 'forScrollBarMeasurement';
+            document.body.appendChild(outer);
+            scrollbarWidth = outer.offsetWidth - outer.clientWidth;
+            document.body.removeChild(outer);
+         }
+
+         return scrollbarWidth;
+      })();
+
       return ScrollContainer;
    }
 );
