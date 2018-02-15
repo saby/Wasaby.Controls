@@ -3,11 +3,13 @@
  */
 define('Controls/Tabs/Buttons', [
     'Core/Control',
+    'Controls/Controllers/SourceController',
     'tmpl!Controls/Tabs/Buttons/Buttons',
     'tmpl!Controls/Tabs/Buttons/ItemTemplate',
     'css!Controls/Tabs/Buttons/Buttons'
 
 ], function (Control,
+             SourceController,
              TabButtonsTpl,
              ItemTemplate
 ) {
@@ -37,24 +39,34 @@ define('Controls/Tabs/Buttons', [
         items: [],
         _beforeMount: function(options, context, receivedState) {
             var
-                leftOrder = 1,
-                rightOrder = 30,
-                lastRightItem;
-            this.selectedKey = options.selectedKey;
-            this.items =  options.source; //todo: волт тут нужно внедрить модель или я хз что
-            for (var index in this.items) {
-                var item = this.items[index];
-                if (item.align === 'left') {
-                    item._extreme = leftOrder === 1 ? true : false;
-                    item._order = leftOrder++;
-                } else {
-                    lastRightItem = item;
-                    item.align= 'right';
-                    item._order = rightOrder++;
-                }
+                self = this;
+            this._selectedKey = options.selectedKey;
+            if (receivedState) {
+                this._items = receivedState;
             }
-            if (lastRightItem) {
-                lastRightItem._extreme = true;
+            if (options.source) {
+                return this._sourceController = new SourceController({
+                    source: options.source
+                }).load().addCallback(function(items){
+                    var
+                        leftOrder = 1,
+                        rightOrder = 30;
+                    items.each(function (item) {
+                       // item.set('_order', baseOrder + order++);
+                        if (item.get('align') === 'left') {
+                            //item.set('_extreme' = leftOrder === 1 ? true : false;
+                            item.set('_order', leftOrder++);
+                        } else {
+                            item.set('_order', rightOrder++);
+                        }
+                    });
+                    //save last right order
+                    rightOrder--;
+                    self._lastRightOrder = rightOrder;
+                    self._items = items;
+                    return self._items;
+
+                })
             }
         },
         constructor: function (cfg) {
@@ -62,17 +74,17 @@ define('Controls/Tabs/Buttons', [
             this._publish('selectedKeyChanged');
         },
         _onItemClick: function(event, key) {
-            this.selectedKey = key;
+            this._selectedKey = key;
             this._notify('selectedKeyChanged', key)
         },
         _prepareItemClass: function(item) {
             var
                 classes =['controls-Tabs__item'];
-            classes.push('controls-Tabs__item_align_' + item.align);
-            if (item._extreme) {
+            classes.push('controls-Tabs__item_align_' + item.get('align') ? item.get('align') : 'right');
+            if (item.get('order') === 1 || item.get('order') === this._lastRightOrder ) {
                 classes.push('controls-Tabs__item_extreme');
             }
-            if (item[this._options.keyProperty] === this.selectedKey) {
+            if (item.get(this._options.keyProperty) === this._selectedKey) {
                 classes.push('controls-Tabs_style_' + this._options.style + '__item_state_selected');
                 classes.push('controls-Tabs__item_state_selected');
             } else {

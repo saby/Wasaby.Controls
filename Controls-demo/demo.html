@@ -50,7 +50,7 @@
 
 
 <script type="text/javascript">
-require(['Core/core-init'],function () {
+require(['Core/core-init', 'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible'],function () { // если в демках используются не vdom контролы
    $(document).ready(function () {
       var parseUrlQuery = function() {
          var data = {};

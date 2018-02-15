@@ -5,17 +5,21 @@
                       selectedKey="1"
                       keyProperty="id"
         >
-            <ws:source >
-                <ws:Array>
-                    <ws:Object id="1" content="выполненные" align="left"/>
-                    <ws:Object id="2" content="от меня" align="left"/>
-                    <ws:Object id="3" content="заброшенные" align="left"/>
-                    <ws:Object id="4" content="слишком"/>
-                    <ws:Object id="5" content="тяжело"/>
-                    <ws:Object id="6" content="придумывать"/>
-                    <ws:Object id="7" content="названия"/>
-                    <ws:Object id="8" content="вкладок"/>
-                </ws:Array>
+            <ws:source module="WS.Data/Source/Memory" >
+                <ws:options idProperty="id">
+                <ws:data>
+                    <ws:Array>
+                        <ws:Object id="1" content="выполненные" align="left"/>
+                        <ws:Object id="2" content="от меня" align="left"/>
+                        <ws:Object id="3" content="заброшенные" align="left"/>
+                        <ws:Object id="4" content="слишком"/>
+                        <ws:Object id="5" content="тяжело"/>
+                        <ws:Object id="6" content="придумывать"/>
+                        <ws:Object id="7" content="названия"/>
+                        <ws:Object id="8" content="вкладок"/>
+                    </ws:Array>
+                </ws:data>
+                </ws:options>
             </ws:source>
         </Controls:Tabs:Buttons>
     </div>
@@ -26,15 +30,19 @@
                       keyProperty="id"
                       itemTemplateProperty="itemTemplate"
         >
-            <ws:source >
-                <ws:Array>
-                    <ws:Object id="1" content="Главная" align="left"  itemTemplate="{{_mainTemplate}}"/>
-                    <ws:Object id="2" content="слишком"/>
-                    <ws:Object id="3" content="тяжело"/>
-                    <ws:Object id="4" content="придумывать"/>
-                    <ws:Object id="5" content="названия"/>
-                    <ws:Object id="6" content="вкладок"/>
-                </ws:Array>
+            <ws:source module="WS.Data/Source/Memory" >
+                <ws:options idProperty="id">
+                <ws:data>
+                    <ws:Array>
+                        <ws:Object id="1" content="Главная" align="left"  itemTemplate="{{_mainTemplate}}"/>
+                        <ws:Object id="2" content="слишком"/>
+                        <ws:Object id="3" content="тяжело"/>
+                        <ws:Object id="4" content="придумывать"/>
+                        <ws:Object id="5" content="названия"/>
+                        <ws:Object id="6" content="вкладок"/>
+                    </ws:Array>
+                </ws:data>
+                </ws:options>
             </ws:source>
         </Controls:Tabs:Buttons>
     </div>
@@ -45,15 +53,19 @@
                       keyProperty="id"
                       style="accent"
         >
-            <ws:source >
-                <ws:Array>
-                    <ws:Object id="1" content="Выполненные" align="left"/>
-                    <ws:Object id="2" content="слишком"/>
-                    <ws:Object id="3" content="тяжело"/>
-                    <ws:Object id="4" content="придумывать"/>
-                    <ws:Object id="5" content="названия"/>
-                    <ws:Object id="6" content="вкладок"/>
-                </ws:Array>
+            <ws:source module="WS.Data/Source/Memory" >
+                <ws:options idProperty="id">
+                <ws:data>
+                    <ws:Array>
+                        <ws:Object id="1" content="Выполненные" align="left"/>
+                        <ws:Object id="2" content="слишком"/>
+                        <ws:Object id="3" content="тяжело"/>
+                        <ws:Object id="4" content="придумывать"/>
+                        <ws:Object id="5" content="названия"/>
+                        <ws:Object id="6" content="вкладок"/>
+                    </ws:Array>
+                </ws:data>
+                </ws:options>
             </ws:source>
         </Controls:Tabs:Buttons>
     </div>
@@ -64,15 +76,19 @@
                       keyProperty="id"
                       style="additional"
         >
-            <ws:source >
-                <ws:Array>
-                    <ws:Object id="1" content="первая" align="left"/>
-                    <ws:Object id="2" content="слишком"/>
-                    <ws:Object id="3" content="тяжело"/>
-                    <ws:Object id="4" content="придумывать"/>
-                    <ws:Object id="5" content="названия"/>
-                    <ws:Object id="6" content="вкладок"/>
-                </ws:Array>
+            <ws:source module="WS.Data/Source/Memory" >
+                <ws:options idProperty="id">
+                <ws:data>
+                    <ws:Array>
+                        <ws:Object id="1" content="первая" align="left"/>
+                        <ws:Object id="2" content="слишком"/>
+                        <ws:Object id="3" content="тяжело"/>
+                        <ws:Object id="4" content="придумывать"/>
+                        <ws:Object id="5" content="названия"/>
+                        <ws:Object id="6" content="вкладок"/>
+                    </ws:Array>
+                </ws:data>
+                </ws:options>
             </ws:source>
         </Controls:Tabs:Buttons>
     </div>
@@ -83,12 +99,16 @@
                       keyProperty="id"
                       tabSpaceTemplate="{{_spaceTemplate}}"
         >
-            <ws:source >
-                <ws:Array>
-                    <ws:Object id="1" content="Первая" align="left" />
-                    <ws:Object id="2" content="названия"/>
-                    <ws:Object id="3" content="вкладок"/>
-                </ws:Array>
+            <ws:source module="WS.Data/Source/Memory" >
+                <ws:options idProperty="id">
+                <ws:data>
+                    <ws:Array>
+                        <ws:Object id="1" content="Первая" align="left" />
+                        <ws:Object id="2" content="названия"/>
+                        <ws:Object id="3" content="вкладок"/>
+                    </ws:Array>
+                </ws:data>
+                </ws:options>
             </ws:source>
         </Controls:Tabs:Buttons>
     </div>
@@ -99,16 +119,20 @@
                       keyProperty="id"
                       itemTemplateProperty="itemTemplate"
         >
-            <ws:source >
-                <ws:Array>
-                    <ws:Object id="1"
-                               content="Первая"
-                               align="left"
-                               style="main"
-                               itemTemplate="{{_itemTemplate}}"
-                    />
-                    <ws:Object id="2" content="вкладок"/>
-                </ws:Array>
+            <ws:source module="WS.Data/Source/Memory" >
+                <ws:options idProperty="id">
+                <ws:data>
+                    <ws:Array>
+                        <ws:Object id="1"
+                                   content="Первая"
+                                   align="left"
+                                   style="main"
+                                   itemTemplate="{{_itemTemplate}}"
+                        />
+                        <ws:Object id="2" content="вкладок"/>
+                    </ws:Array>
+                </ws:data>
+                </ws:options>
             </ws:source>
         </Controls:Tabs:Buttons>
     </div>
