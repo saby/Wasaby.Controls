@@ -28,14 +28,6 @@ define('Controls/List/SourceControl', [
 
                self._notify('onDataLoad', list);
 
-               //TODO это кривой способ заставить пэйджинг пересчитаться. Передалть, когда будут готовы команды от Зуева
-               //убираю, когда будет готов реквест от Зуева
-               setTimeout(function(){
-                  if (self._scrollController.hasScroll()) {
-                     self._scrollPagingCtr.setEnabled(true);
-                  }
-               }, 100);
-
                _private.hideIndicator(self);
 
                if (self._listViewModel) {
@@ -59,14 +51,6 @@ define('Controls/List/SourceControl', [
             return self._sourceController.load(self._filter, self._sorting, direction).addCallback(function(addedItems){
 
                self._notify('onDataLoad', addedItems);
-
-               //TODO это кривой способ заставить пэйджинг пересчитаться. Передалть, когда будут готовы команды от Зуева
-               //убираю, когда будет готов реквест от Зуева
-               setTimeout(function(){
-                  if (self._scrollController.hasScroll()) {
-                     self._scrollPagingCtr.setEnabled(true);
-                  }
-               }, 100);
 
                _private.hideIndicator(self);
 
@@ -108,6 +92,17 @@ define('Controls/List/SourceControl', [
          return error;
       },
 
+      onLoadEdge: function(self, direction) {
+         if (self._options.navigation && self._options.navigation.view === 'infinity') {
+            if (self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading()) {
+               _private.loadToDirection(self, direction)
+            }
+            if (self._scrollPagingCtr) {
+               self._scrollPagingCtr.handleScrollTop();
+            }
+         }
+      },
+
       scrollToEdge: function(self, direction) {
          if (self._sourceController && self._sourceController.hasMoreData(direction)) {
             self._sourceController.setEdgeState(direction);
@@ -135,7 +130,8 @@ define('Controls/List/SourceControl', [
          this._container.closest('.ws-scrolling-content').scrollTop = offset;
       },
 
-      createScrollController: function(self, scrollContainer) {
+      startScrollEmitter: function(self) {
+
          var
             children = self._children,
             triggers = {
@@ -143,43 +139,11 @@ define('Controls/List/SourceControl', [
                bottomListTrigger: children.bottomListTrigger,
                topLoadTrigger: children.topLoadTrigger,
                bottomLoadTrigger: children.bottomLoadTrigger
-            },
-            eventHandlers = {
-               onLoadTriggerTop: function() {
-                  if (self._options.navigation && self._options.navigation.view === 'infinity') {
-                     if (self._sourceController.hasMoreData('up') && !self._sourceController.isLoading()) {
-                        _private.loadToDirection(self, 'up')
-                     }
-                     if (self._scrollPagingCtr) {
-                        self._scrollPagingCtr.handleScrollTop();
-                     }
-                  }
-               },
-               onLoadTriggerBottom: function() {
-                  if (self._options.navigation && self._options.navigation.view === 'infinity') {
-                     if (self._sourceController.hasMoreData('down') && !self._sourceController.isLoading()) {
-                        _private.loadToDirection(self, 'down')
-                     }
-                     if (self._scrollPagingCtr) {
-                        self._scrollPagingCtr.handleScrollBottom();
-                     }
-                  }
-               },
-               onListTop: function() {
-               },
-               onListBottom: function() {
-               },
-               onListScroll: function(scrollTop) {
-                  _private.handleListScroll.call(self, scrollTop);
-               }
             };
 
-         return new ScrollController ({
-            triggers : triggers,
-            scrollContainer: scrollContainer,
-            loadOffset: this._loadOffset,
-            eventHandlers: eventHandlers
-         });
+
+         self._children.ScrollEmitter.startRegister(triggers);
+
       },
 
       createScrollPagingController: function(self) {
@@ -346,24 +310,18 @@ define('Controls/List/SourceControl', [
          var self = this;
          SourceControl.superclass._afterMount.apply(this, arguments);
 
+         _private.startScrollEmitter(this);
 
-         //TODO кривое обращение к DOM бцдет переделано на схему с Listner-Catcher
-         var scrollContainer = this._container.closest('.ws-scrolling-content');
-         if (scrollContainer) {
-            this._scrollController = _private.createScrollController(this, scrollContainer);
-
-            if (this._options.navigation
-               && this._options.navigation.view === 'infinity'
-               && this._options.navigation.viewConfig
-               && this._options.navigation.viewConfig.pagingMode
-            ) {
-               _private.createScrollPagingController(this).addCallback(function(scrollPagingCtr){
-                  self._scrollPagingCtr = scrollPagingCtr
-               });
-            }
+         if (false && this._options.navigation
+            && this._options.navigation.view === 'infinity'
+            && this._options.navigation.viewConfig
+            && this._options.navigation.viewConfig.pagingMode
+         ) {
+            _private.createScrollPagingController(this).addCallback(function(scrollPagingCtr){
+               self._scrollPagingCtr = scrollPagingCtr
+            });
          }
-
-
+         
          if (_private.getItemsCount(this)) {
             //Посчитаем среднюю высоту строки и отдадим ее в VirtualScroll
             _private.initializeAverageItemsHeight(this);
@@ -440,6 +398,16 @@ define('Controls/List/SourceControl', [
                case 'End': _private.scrollToEdge(this, 'down'); break;
             }
          }
+      },
+
+      _onEmitScroll: function(e, type, scrollTop) {
+         var self = this;
+         switch (type) {
+            case 'loadTop': _private.onLoadEdge(self, 'up'); break;
+            case 'loadBottom': _private.onLoadEdge(self, 'down'); break;
+            case 'middle': _private.handleListScroll.call(self, scrollTop);
+         }
+
       },
 
       reload: function() {

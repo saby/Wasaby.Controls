@@ -19,29 +19,16 @@ define('Controls/Event/Listener',
          _listner: null,
          _beforeMount: function(){
             this._listner = {};
+            this._registrar = new Registrar({register: this._options.register});
          },
          _registerIt: function(event, registerType, component, callback){
-            if (registerType === this._options.register) {
-               this._listner[component.getInstanceId()] = {
-                  component: component,
-                  callback: callback
-               };
-               event.stopPropagation();
-            }
+            this._registrar.register(event, registerType, component, callback);
          },
          _unRegisterIt: function(event, registerType, component){
-            if (registerType === this._options.register) {
-               this._listner[component.getInstanceId()] = null;
-               event.stopPropagation();
-            }
+            this._registrar.unregister(event, registerType, component, callback);
          },
          start: function(){
-            if (!this._listner)
-               return;
-            for(var i in this._listner){
-               var obj = this._listner[i];
-               obj && obj.callback.apply(obj.component, arguments);
-            }
+            this._registrar.start.apply(this._registrar, arguments);
          }
       });
 
