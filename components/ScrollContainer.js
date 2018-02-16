@@ -24,7 +24,109 @@ define('SBIS3.CONTROLS/ScrollContainer', [
    ) {
       'use strict';
 
-      var widthBrowserScrollbar = null;
+      /**
+       * Синглтон для вычисления и обновления ширины нативного скролбара
+       * @class
+       */
+      var BrowserScrollbarWidthController = {
+         /** Ширина нативного скролбара
+          * @type {?number}
+          */
+         width: null,
+         /**
+          * Количество ссылок на синглтон
+          * @type {number}
+          * @private
+          */
+         _count: 0,
+         /**
+          * Флаг обозначающий, что ширину нужно перевычисчитывать при зуме
+          */
+         needHandle: false,
+         /**
+          * Добавляем обработчик. Обязательно прописываем в init-е экземпляра класса использующий этот контролер
+          * @param {Function} handler Обработчик изменения ширины скрола
+          */
+         add: function(handler) {
+            if (this.width === null) {
+               this.update();
+            }
+            if (this.needHandle) {
+               if (this._count++ === 0) {
+                  $(window).on('resize', this.update);
+               }
+               $(window).on('resize', handler);
+            }
+         },
+         /**
+          * Удалям обработчик. Обязательно прописываем в destroy-е экземпляра класса использующий этот контролер
+          * @param {Function} handler Обработчик изменения ширины скрола
+          */
+         remove: function(handler) {
+            if (this.needHandle) {
+               if (--this._count === 0) {
+                  $(window).off('resize', this.update);
+               }
+               $(window).off('resize', handler);
+            }
+         },
+         /**
+          * Обновление значения ширины
+          */
+         update: function() {
+            BrowserScrollbarWidthController._update();
+         },
+         /**
+          * Обновление значения ширины
+          * @private
+          */
+         _update: function() {
+            this.width = this._getBrowserScrollbarWidth();
+         },
+         /**
+          * Получение значения ширины
+          * @returns {number}
+          * @private
+          */
+         _getBrowserScrollbarWidth: function() {
+            var scrollbarWidth = null, outer, outerStyle;
+            /**
+             * В браузерах с поддержкой ::-webkit-scrollbar установлена ширини 0.
+             * Определяем не с помощью Core/detection, потому что в нем считается, что chrome не на WebKit.
+             */
+            if (/AppleWebKit/.test(navigator.userAgent)) {
+               scrollbarWidth = 0;
+            } else {
+               // На Mac ширина всегда 15, за исключением браузеров с поддержкой ::-webkit-scrollbar.
+               if (cDetection.isMac) {
+                  scrollbarWidth = 15;
+               }
+            }
+            if (cDetection.isIE12) {
+               scrollbarWidth = 16;
+            }
+            if (cDetection.isIE10 || cDetection.isIE11) {
+               scrollbarWidth = 17;
+            }
+            if (scrollbarWidth === null) {
+               outer = document.createElement('div');
+               outerStyle = outer.style;
+               outerStyle.position = 'absolute';
+               outerStyle.width = '100px';
+               outerStyle.height = '100px';
+               outerStyle.overflow = 'scroll';
+               outerStyle.top = '-9999px';
+               document.body.appendChild(outer);
+               scrollbarWidth = outer.offsetWidth - outer.clientWidth;
+               document.body.removeChild(outer);
+
+               // значение ширины валидно только при текущем зуме и его нужно перерасчитывать
+               this.needHandle = true;
+            }
+
+            return scrollbarWidth;
+         }
+      };
 
       /**
        * Класс контрола "Контейнер для контента с тонким скроллом". В качестве тонкого скролла применяется класс контрола {@link SBIS3.CONTROLS/ScrollContainer/Scrollbar}.
@@ -243,8 +345,11 @@ define('SBIS3.CONTROLS/ScrollContainer', [
 
                // Что бы до инициализации не было видно никаких скроллов
                this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
+
                // Скрываем нативный скролл.
                this._hideBrowserScrollbar();
+               this._hideBrowserScrollbar = this._hideBrowserScrollbar.bind(this);
+               BrowserScrollbarWidthController.add(this._hideBrowserScrollbar);
 
                // task: 1173330288
                // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
@@ -255,59 +360,17 @@ define('SBIS3.CONTROLS/ScrollContainer', [
          },
 
          _hideBrowserScrollbar: function(){
-            var style;
-
-            if (widthBrowserScrollbar === null) {
-               widthBrowserScrollbar = this._getBrowserScrollbarWidth();
-            }
-
-            style = {
-               marginRight: -widthBrowserScrollbar
-            };
+            var width = BrowserScrollbarWidthController.width,
+               style = {
+                  marginRight: -width
+               };
 
             // На планшете c OS Windown 10 для скрытия нативного скролла, кроме margin требуется padding.
             if (compatibility.touch && cDetection.isIE) {
-               style.paddingRight = widthBrowserScrollbar;
+               style.paddingRight = width;
             }
 
             this._content.css(style);
-         },
-
-         _getBrowserScrollbarWidth: function() {
-            var scrollbarWidth = null, outer, outerStyle;
-
-            /**
-             * В браузерах с поддержкой ::-webkit-scrollbar установлена ширини 0.
-             * Определяем не с помощью Core/detection, потому что в нем считается, что chrome не на WebKit.
-             */
-            if (/AppleWebKit/.test(navigator.userAgent)) {
-               scrollbarWidth = 0;
-            } else {
-               // На Mac ширина всегда 15, за исключением браузеров с поддержкой ::-webkit-scrollbar.
-               if (cDetection.isMac) {
-                  scrollbarWidth = 15;
-               }
-            }
-            if (cDetection.isIE12) {
-               scrollbarWidth = 16;
-            }
-            if (cDetection.isIE10 || cDetection.isIE11) {
-               scrollbarWidth = 17;
-            }
-            if (scrollbarWidth === null) {
-               outer = document.createElement('div');
-               outerStyle = outer.style;
-               outerStyle.position = 'absolute';
-               outerStyle.width = '100px';
-               outerStyle.height = '100px';
-               outerStyle.overflow = 'scroll';
-               outerStyle.top = '-9999px';
-               document.body.appendChild(outer);
-               scrollbarWidth = outer.offsetWidth - outer.clientWidth;
-               document.body.removeChild(outer);
-            }
-
-            return scrollbarWidth;
          },
 
          _stickyHeadersChangedHandler: function() {
@@ -657,6 +720,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                this._content.off('scroll', this._onScroll);
             }
             this._container.off('mousemove', this._initScrollbar);
+            BrowserScrollbarWidthController.remove(this._hideBrowserScrollbar);
             this._unsubscribeMouseEnterLeave();
             this._getScrollContainerChannel()
                .unsubscribe('onReturnTakeScrollbar', this._returnTakeScrollbarHandler)
