@@ -5,6 +5,7 @@ define('Controls-demo/Tabs/Buttons', [
     'tmpl!Controls-demo/Tabs/Buttons/resources/spaceTemplate',
     'tmpl!Controls-demo/Tabs/Buttons/resources/itemTemplate',
     'tmpl!Controls-demo/Tabs/Buttons/resources/mainTemplate',
+    'tmpl!Controls-demo/Tabs/Buttons/resources/photoContent',
     'SBIS3.CONTROLS/TextBox',
     'SBIS3.CONTROLS/Date/Range',
     'WS.Data/Source/Memory',
@@ -14,6 +15,7 @@ define('Controls-demo/Tabs/Buttons', [
              spaceTemplate,
              itemTemplate,
              mainTemplate,
+             photoContent,
              TextBox,
              DateRange,
              MemorySource,
@@ -23,7 +25,7 @@ define('Controls-demo/Tabs/Buttons', [
     var srcData = [
         {
             id: "1",
-            content: 'Настолько длинное название папки что оно не влезет в максимальный размер 1'
+            content: 'Настолько длинное название папки что оно не влезет в максимальный размер 1 Настолько длинное название папки что оно не влезет в максимальный размер'
         },
         {
             id: "2",
@@ -43,11 +45,12 @@ define('Controls-demo/Tabs/Buttons', [
             SelectedKey4: "2",
             SelectedKey5: "2",
             SelectedKey6: "1",
+            SelectedKey7: "1",
             _template: template,
             _spaceTemplate: spaceTemplate,
             _itemTemplate: itemTemplate,
             _mainTemplate: mainTemplate,
-            _selectedKey: 1,
+           _photoContent: photoContent,
             _setSource: function() {
                 this._lazySource = new MemorySource({
                     idProperty: 'id',

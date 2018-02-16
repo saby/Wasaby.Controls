@@ -127,4 +127,32 @@
         />
 
     </div>
+    <div class="separator">Style="default", with Photo item template</div>
+    <div class="photo_before_bg"></div>
+    <div class="">
+        <Controls:Tabs:Buttons
+                      bind:selectedKey='SelectedKey7'
+                      keyProperty="id"
+                      style="additional"
+        >
+            <ws:source module="WS.Data/Source/Memory" >
+                <ws:options idProperty="id">
+                    <ws:data>
+                        <ws:Array>
+                            <ws:Object id="1"
+                                       content="{{_photoContent}}"
+                                       align="left"
+                                       type="photo"
+                            />
+                            <ws:Object id="2" content="слишком"   align="left"/>
+                            <ws:Object id="3" content="тяжело"   align="left"/>
+                            <ws:Object id="4" content="придумывать"   align="left"/>
+                            <ws:Object id="5" content="названия"   align="left"/>
+                            <ws:Object id="6" content="вкладок"/>
+                        </ws:Array>
+                    </ws:data>
+                </ws:options>
+            </ws:source>
+        </Controls:Tabs:Buttons>
+    </div>
 </div>

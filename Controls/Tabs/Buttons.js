@@ -58,6 +58,9 @@ define('Controls/Tabs/Buttons', [
             } else {
                 classes.push('controls-Tabs__item_state_default');
             }
+            if (item.get('type') === 'photo') {
+                classes.push('controls-Tabs__item_type_photo');
+            }
             return classes.join(' ');
         }
     };
