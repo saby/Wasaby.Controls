@@ -1,50 +1,52 @@
-.control-Search__afterFieldWrapper {
+.controls-Search__afterFieldWrapper {
    .inline-flexbox();
+   .flex-shrink(0);
 }
 
-.control-Search.controls-InputRender{
+.controls-Search {
    .border-radius(@border-radius_Search);
    background: @background-color_Search;
    padding: @padding_Search;
    border-color: @border-color_Search;
-
-   &:hover,
-   &.ws-has-focus {
-      border-color: @border-color_Search-active;
-   }
-
-   &.ws-disabled {
-      border-color:@border-color_SearchForm_disabled;
-      .controls-Search__search {
-         cursor: default;
-         color: @color_Search-icon-disabled;
-         &:hover {
-            color: @color_Search-icon-disabled;
-         }
-      }
-   }
-
-   .controls-Search__search,
-   .controls-Search__reset {
-      .flexbox();
-      .align-items(center);
-      .icon-size(@icon-size_Search);
-      .flex-shrink(0);
-      cursor: pointer;
-      height: 100%;
-      overflow: hidden;
-      color: @color_Search-icon;
-      padding: @padding_Search-icon;
-   }
-   .controls-Search__reset {
-      color: @color_Search-iconReset;
-   }
-   .controls-Search__search {
-      &:hover {
-         color: @color_Search-iconSearch-hovered;
-      }
-   }
 }
 
+.controls-Search:hover {
+   border-color: @border-color_Search-active;
+}
 
+.controls-Search__style-disabled {
+   border-color: @border-color_SearchForm_disabled;
+}
 
+.controls-Search__style-focused {
+   border-color: @border-color_Search-active;
+}
+
+.controls-Search__search__style-disabled {
+   cursor: default;
+   color: @color_Search-icon-disabled;
+}
+
+.controls-Search__search__style-disabled:hover {
+   color: @color_Search-icon-disabled;
+}
+
+.controls-Search__search,
+.controls-Search__reset {
+   .flexbox();
+   .align-items(center);
+   .icon-size(@icon-size_Search);
+   .flex-shrink(0);
+   cursor: pointer;
+   height: 100%;
+   color: @color_Search-icon;
+   padding: @spacing-Search-between-icon-text;
+}
+
+.controls-Search__reset {
+   color: @color_Search-iconReset;
+}
+
+.controls-Search__search:hover {
+   color: @color_Search-iconSearch-hovered;
+}
