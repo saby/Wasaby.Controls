@@ -80,7 +80,11 @@ define('Controls/Popup/Opener/Sticky/Strategy',
          * Проверить насколько не влезает окно с обеих сторон относительно переданной координаты и вернуть максимальное значение
          * */
          getMaxOverflowValue: function(coordinate, popupCfg, direction, targetCoords){
-            return Math.max(popupCfg.sizes[direction === 'horizontal' ? 'width' : 'height'] - (_private.getWindowSizes()[direction === 'horizontal' ? 'width' : 'height'] - (coordinate - targetCoords[direction === 'horizontal' ? 'leftScroll' : 'topScroll'])), targetCoords[direction === 'horizontal' ? 'leftScroll' : 'topScroll'] - coordinate);
+            return Math.max(
+               popupCfg.sizes[direction === 'horizontal' ? 'width' : 'height']
+                  - (_private.getWindowSizes()[direction === 'horizontal' ? 'width' : 'height']
+                  - (coordinate - targetCoords[direction === 'horizontal' ? 'leftScroll' : 'topScroll'])),
+               targetCoords[direction === 'horizontal' ? 'leftScroll' : 'topScroll'] - coordinate);
          },
 
          getPosition: function(popupCfg, targetCoords, targetPoint, direction){

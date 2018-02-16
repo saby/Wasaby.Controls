@@ -21,17 +21,6 @@ define('Controls/InfoBoxOpener',
        */
 
       /**
-       * Открыть инфобокс
-       * @function Controls/InfoBoxOpener#open
-       * @param {InfoBoxCfg} cfg Объект с настройками инфобокса
-       */
-
-      /**
-       * Закрыть инфобокс
-       * @function Controls/InfoBoxOpener#close
-       */
-
-      /**
        * @typedef {Object} InfoBoxCfg
        * @property {String} message Сообщение, отображаемое в инфобоксе
        * @property {Style} style Горизонтальное выравнивание инфобокса
@@ -156,11 +145,22 @@ define('Controls/InfoBoxOpener',
          _template: template,
          _infoBoxOpened: false,
 
+         /**
+          * Закрыть инфобокс
+          * @function Controls/InfoBoxOpener#close
+          */
          close: function(){
-            this._children.opener.close();
-            this._infoBoxOpened = false;
+            if(this._infoBoxOpened){
+               this._children.opener.close();
+               this._infoBoxOpened = false;
+            }
          },
 
+         /**
+          * Открыть инфобокс
+          * @function Controls/InfoBoxOpener#open
+          * @param {InfoBoxCfg} cfg Объект с настройками инфобокса
+          */
          open: function(cfg){
 
             if(this._infoBoxOpened){
