@@ -23,7 +23,6 @@ define('Controls/Input/Search',
 
       /**
        * @event Controls/Input/Search#search Происходит при нажатии на кнопку поиска
-       * @event Controls/Input/Search#reset Происходит при нажатии на кнопку отмена (крестик)
        */
 
       var Search = Control.extend({
@@ -34,27 +33,31 @@ define('Controls/Input/Search',
             this._simpleViewModel = new SimpleViewModel();
          },
 
+         _notifyOnValueChanged: function(value) {
+            this._notify('valueChanged', [value]);
+            this._applySearch(value);
+         },
+
          _valueChangedHandler: function (event, value) {
-            this._notify('valueChanged', [value], {bubbling: true});
+            this._notifyOnValueChanged(value);
          },
 
          //Собственно поиск
-         _applySearch: function () {
-            this._notify('search', {bubbling: true});
+         _applySearch: function (value) {
+            this._notify('search', [value], {bubbling: true});
          },
 
          _onResetClick: function () {
-            this._notify('valueChanged', ['']);
-            this._notify('reset', {bubbling: true});
+            this._notifyOnValueChanged('');
          },
 
          _onSearchClick: function () {
-            this._applySearch();
+            this._applySearch(this._options.value);
          },
 
          _keyDownHandler: function (event) {
             if (event.nativeEvent.keyCode == 13) {
-               this._applySearch();
+               this._applySearch(this._options.value);
             }
          }
       });
