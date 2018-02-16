@@ -541,17 +541,18 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
                eip.endEdit();
                this._notify('onAfterEndEdit', eip.getOriginalRecord(), eip.getTarget(), withSaving);
 
-               this._destroyEipAfterEndEdit();
+               this._destroyEipAfterEndEdit(isAdd);
                if (!this._savingDeferred.isReady()) {
                   this._savingDeferred.callback();
                }
             },
 
-            _destroyEipAfterEndEdit: function() {
+            _destroyEipAfterEndEdit: function(isAdd) {
                //Нельзя разрушать редактировние, если автоматически запускается новое редактирование, т.к. при разрушении
                //фокус уходит на таблицу. И если в момент когда фокус находится на таблице, нажать клавиши, которые обрабатываются
-               //таблицей(например по enter открывается карточка), то мы получим неправильное поведение.
-               if (!this._isEditNextTarget) {
+               //таблицей(например по enter открывается карточка), то мы получим неправильное поведение(откроется карточка и
+               //отменится запуск редактирования следующей строки).
+               if (!this._isEditNextTarget || isAdd) {
                   this._destroyEip();
                }
             },
