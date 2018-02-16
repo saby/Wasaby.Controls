@@ -3,11 +3,11 @@
     <ws:if data="{{icon}}">
          <i class="controls-Link__icon controls-Button__icon {{_iconClass}}"></i>
     </ws:if>
-    <span class="controls-Link__field controls-Button__text js-controls-Button__text {{!!icon ? ' spacing-between-icon-text '}}">{{caption|sanitize}}</span>
+    <span class="controls-Link__text controls-Button__text js-controls-Button__text {{!!icon ? ' spacing-between-icon-text '}}">{{caption|sanitize}}</span>
 </ws:if>
 <ws:else>
    <span class="controls-Link-link "><ws:if data="{{icon}}">
-         <i class="controls-Link__icon controls-Button__icon {{_iconClass}}"></i><span class="controls-Link__field controls-Button__text js-controls-Button__text {{!!icon ? ' spacing-between-icon-text '}}">{{caption|sanitize}}</span>
+         <i class="controls-Link__icon controls-Button__icon {{_iconClass}}"></i><span class="controls-Link__text controls-Button__text js-controls-Button__text {{!!icon ? ' spacing-between-icon-text '}}">{{caption|sanitize}}</span>
       </ws:if>
       <ws:else>{{caption|sanitize}}</ws:else></span>
 </ws:else>

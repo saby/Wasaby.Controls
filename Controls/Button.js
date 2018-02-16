@@ -1,7 +1,6 @@
 define('Controls/Button', [
     'Core/Control',
     'tmpl!Controls/Button/Button',
-    'css!WSControls/Buttons/resources/ButtonBase',
     'css!Controls/Button/Button'
 ], function(Control, template) {
     'use strict';

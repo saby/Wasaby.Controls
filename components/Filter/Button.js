@@ -1,7 +1,6 @@
 define('SBIS3.CONTROLS/Filter/Button',
     [
    "Core/moduleStubs",
-   "Core/Context",
    "Core/CommandDispatcher",
    "Core/constants",
    "Lib/Control/CompoundControl/CompoundControl",
@@ -15,7 +14,6 @@ define('SBIS3.CONTROLS/Filter/Button',
    "Core/ParallelDeferred",
    "Core/IoC",
    "Core/helpers/Function/once",
-   "Core/detection",
    "SBIS3.CONTROLS/Utils/FilterPanelUtils",
    "SBIS3.CONTROLS/Button/IconButton",
    "SBIS3.CONTROLS/Filter/Button/Line",
@@ -24,7 +22,6 @@ define('SBIS3.CONTROLS/Filter/Button',
 ],
     function(
         mStubs,
-        cContext,
         CommandDispatcher,
         constants,
         CompoundControl,
@@ -38,7 +35,6 @@ define('SBIS3.CONTROLS/Filter/Button',
         ParallelDeferred,
         IoC,
         once,
-        detection,
         FilterPanelUtils
     ) {
 
@@ -127,6 +123,16 @@ define('SBIS3.CONTROLS/Filter/Button',
                  * @translatable
                  */
                 resetLinkText: '',
+                /**
+                 * @cfg {String} Устанавливает отображение кнопки фильтров.
+                 * @variant oneColumn Панель строится в одну колонку.
+                 * @variant twoColumns Панель строится в две колонки.
+                 */
+                viewMode: 'oneColumn',
+                /**
+                 * @cfg {String} Заголовок панели фильтров.
+                 */
+                areaCaption: '',
                 /**
                  * @noshow
                  */
@@ -225,41 +231,6 @@ define('SBIS3.CONTROLS/Filter/Button',
              }
           },
 
-          _initTemplates: function() {
-             if(this._dTemplatesReady) {
-                return this._dTemplatesReady.getResult();
-             }
-
-             var self = this;
-
-             function processTemplate(template, name) {
-                /* Если шаблон указали как имя компонента (строки которые начинаются с js! или SBIS3.),
-                   то перед отображением панели фильтров сначала загрузим компонент. */
-                if(template && typeof template === 'string' && /^js!*|^SBIS3.*/.test(template)) {
-                   
-                   if (constants.jsModules.hasOwnProperty(template)) {
-                      template = 'js!' + template;
-                   }
-                   
-                   self._dTemplatesReady.push(mStubs.require(template).addCallback(function(comp) {
-                      /* Запишем, что в качестве шаблона задали компонент */
-                      self._filterTemplates[name] = true;
-                      return comp;
-                   }));
-                }
-             }
-
-             this._dTemplatesReady = new ParallelDeferred();
-
-             for (var key in TEMPLATES) {
-                if (TEMPLATES.hasOwnProperty(key)) {
-                   processTemplate(self.getProperty(TEMPLATES[key]), TEMPLATES[key]);
-                }
-             }
-
-             return this._dTemplatesReady.done().getResult();
-          },
-
           applyFilter: function() {
              if(this._picker && !this._picker.validate()) {
                 return false;
@@ -297,11 +268,26 @@ define('SBIS3.CONTROLS/Filter/Button',
              }
           },
 
+          _hasHistory: function() {
+             var
+                history,
+                result = false;
+             if (this._historyController) {
+                history = this._historyController.getHistory();
+                result = history && !!history.length;
+             }
+
+             return result;
+          },
+
           _getAreaOptions: function() {
              var prepTpl = TemplateUtil.prepareTemplate,
                  components = this._filterTemplates,
                  config = {
                     historyController: this._historyController,
+                    viewMode: this._options.viewMode,
+                    areaCaption: this._options.areaCaption,
+                    hasHistory: this._hasHistory(),
                     internalContextFilterName: this._options.internalContextFilterName,
                     componentOptions: this._options.componentOptions
                  },
@@ -362,6 +348,7 @@ define('SBIS3.CONTROLS/Filter/Button',
                       /* Разрушаем панель при закрытии,
                        надо для: сбрасывания валидации, удаления ненужных значений из контролов */
                       if (self._picker) {
+                         self._notify('onPickerClose');
                          self._picker.destroy();
                          self._picker = null;
                       }

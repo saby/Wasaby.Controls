@@ -141,7 +141,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             cfg._optsSelectable.onItemClick = _onItemClick;
             if (!cfg.moveColumns) {
                // Добавляем автосортировку отмеченных элементов - они должны отображаться перед неотмеченными
-               cfg._optsSelectable.itemsSortMethod = _getItemsSortMethod();
+               //cfg._optsSelectable.itemsSortMethod = _getItemsSortMethod();
                cfg._optsSelectable.onSelectedItemsChange = _onSelectedItemsChange;
             }
             return cfg;
@@ -207,12 +207,22 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                }
                if (this._selectableView) {
                   var view = this._selectableView;
-                  var list = [].concat(view.getSelectedKeys());
+                  var list = view.getSelectedKeys();
                   if (list.length) {
+                     list = list.slice();
                      var items = view.getItems();
-                     // Сортируем выделенные записи согласно их положению в рекордсете
+                     // Сортируем выделенные записи согласно их положению в рекордсете и c учётом их групп
                      list.sort(function (e1, e2) {
-                        return items.getIndex(items.getRecordById(e1)) - items.getIndex(items.getRecordById(e2));
+                        var v1 = items.getRecordById(e1);
+                        var v2 = items.getRecordById(e2);
+                        var g1 = v1.get('group');
+                        var g2 = v2.get('group');
+                        if (g1 !== g2) {
+                           return g1 < g2 ? -1 : +1;
+                        }
+                        else {
+                           return items.getIndex(v1) - items.getIndex(v2);
+                        }
                      });
                      selectedColumns.push.apply(selectedColumns, list);
                   }
@@ -263,7 +273,6 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             selectedColumns = _uniqueConcat(preset ? preset.selectedColumns : null, cfg.selectedColumns),
             moveColumns = cfg.moveColumns;
          var
-            preparingItems = [],
             fixed = {
                items: [],
                markedKeys: []
@@ -281,14 +290,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                fixed.markedKeys.push(columnId);
             }
             else {
-               if (moveColumns) {
-                  selectable.items.push(colData)
-               }
-               else {
-                  // При отключенном перемещении необходимо сформировать рекордсет с собственной моделью.
-                  // Подготавливаем для него исходные данные.
-                  preparingItems.push(colData);
-               }
+               selectable.items.push(colData);
                if (selectedColumns.indexOf(columnId) !== -1) {
                   selectable.markedKeys.push(columnId);
                }
@@ -298,41 +300,40 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                }
             }
          });
-         if (moveColumns) {
-            // При включенном перемещении сортируем записи, согласно переданному состоянию массива отмеченных записей
-            selectable.items.sort(function (el1, el2) {
-               var
-                  idx1 = selectedColumns.indexOf(el1.id),
-                  idx2 = selectedColumns.indexOf(el2.id);
-               if (idx1 !== -1) {
-                  return idx2 !== -1 ? idx1 - idx2 : -1;
-               }
-               return idx2 !== -1 ? 1 : -1;
-            });
-         }
-         else {
-            // При отключенном перемещении будем использовать рекордсет с собственной моделью
-            // для осуществления автосортировки отмеченных записей
+         // Сортируем записи, согласно переданному состоянию массива отмеченных записей
+         selectable.items.sort(function (c1, c2) {
+            var i1 = selectedColumns.indexOf(c1.id);
+            var i2 = selectedColumns.indexOf(c2.id);
+            if (i1 !== -1) {
+               return i2 !== -1 ? i1 - i2 : -1;
+            }
+            else {
+               return i2 !== -1 ? 1 : -1;
+            }
+         });
+         selectable.items = new RecordSet({rawData:selectable.items, idProperty:'id'});
+         /*if (!moveColumns) {
+            // При отключенном перемещении будем использовать рекордсет с собственной моделью для осуществления автосортировки отмеченных записей
             selectable.items = new RecordSet({
-               rawData: preparingItems,
+               rawData: selectable.items,
                idProperty: 'id',
                model: AreaSelectableModel
             });
             _applySelectedToItems(selectable.markedKeys, selectable.items);
-         }
+         }*/
          groups.sort();
          cfg._optsFixed = fixed;
          cfg._optsSelectable = selectable;
          cfg._groups = 1 < groups.length || (groups.length && groups[0] != null) ? groups : null;
       };
 
-      var _applySelectedToItems = function (selectedArray, items) {
+      /*var _applySelectedToItems = function (selectedArray, items) {
          selectedArray.forEach(function (id) {
             items.getRecordById(id).set('selected', true);
          });
-      };
+      };*/
 
-      var _getItemsSortMethod = function () {
+      /*var _getItemsSortMethod = function () {
          return new ComputeFunctor(function (el1, el2) {
             // Смещаем отмеченные элементы в начало списка (учитывая их начальный index)
             if (el1.collectionItem.get('selected')) {
@@ -346,7 +347,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             }
             return el1.index - el2.index;
          }, ['selected']);
-      };
+      };*/
 
       var _makePresetViewItems = function (preset) {
          return new RecordSet({idProperty:'id', rawData:preset ? [{id:preset.id, title:preset.title}] : []});
@@ -571,8 +572,9 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
 
       // ListView event handlers:
 
-      var _onItemClick = function (e, id) {
+      var _onItemClick = function (e, id, model, itemContent) {
          this.toggleItemsSelection([id]);
+         itemContent.title = (this.getSelectedKeys().indexOf(id) !== -1 ? rk('Скрыть колонку', 'РедакторКолонок') : rk('Показать колонку', 'РедакторКолонок')) + ' "' + model.get('title') + '"';
       };
 
       var _onSelectedItemsChange = function (e, ids, changes) {

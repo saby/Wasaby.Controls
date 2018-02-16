@@ -13,7 +13,8 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
    'Core/helpers/Hcontrol/doAutofocus',
    'Core/helpers/Hcontrol/trackElement',
    "Core/detection",
-   "Core/constants"
+   "Core/constants",
+   'css!SBIS3.CONTROLS/Mixins/PopupMixin/PopupMixin'
 ], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, cInstance, doAutofocus, trackElement, detection, constants) {
    'use strict';
    if (typeof window !== 'undefined') {
@@ -156,6 +157,11 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
              */
             closeButton: false,
             /**
+             * @variant standart
+             * @variant light
+             */
+            crossStyle : 'standart',
+            /**
              * @cfg {Boolean} при клике мышки на таргет или перемещении по нему панель не закрывается
              */
             targetPart: false,
@@ -230,7 +236,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
          EventBus.globalChannel().subscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
 
          if (this._options.closeButton) {
-            container.append('<div class="controls-PopupMixin__closeButton"></div>');
+            container.append('<div class="controls-PopupMixin__closeButton controls-PopupMixin__closeButton_' + this._options.crossStyle + '"></div>');
             $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {
                //Нужно вызвать активироваться перед hide, чтобы закрылись плав. панели, у которых опенером был этот контрол
                //TODO: унифицировать код закрытия с Lib/Control/FloatArea/FloatArea: хранить коллекцию дочерних панелей, и закрывать их тут
@@ -542,10 +548,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
       moveToTop: function(){
          if (this.isVisible()) {
             cWindowManager.releaseZIndex(this._zIndex);
-
-            this._getZIndex();
-            this._container.css('z-index', this._zIndex);
-
+            this._container.css('z-index', this._getZIndex());
             ModalOverlay.adjust();
          }
       },
@@ -750,7 +753,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
       _initWindowSizes: function () {
          this._windowSizes = {
             height: $(window).height() - TouchKeyboardHelper.getKeyboardHeight(),
-            width: $(window).width()
+            width: window.innerWidth
          };
       },
 
@@ -1183,6 +1186,21 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
       _getZIndex: function(){
          this._zIndex = cWindowManager.acquireZIndex(this._options.isModal, false, this._options.isHint);
          cWindowManager.setVisible(this._zIndex);
+
+         var target = $(this.getTarget());
+         var targetWindow = target.closest('.ws-window, .ws-float-area');
+         var targetWindowControl = targetWindow[0] && targetWindow[0].wsControl;
+         var isOverlayVisible = ModalOverlay.getZIndex() > 0 && ModalOverlay._overlay.is(':visible');
+
+         //Показываемся под overlay'ем, если он не относится к окну, в котором лежит таргет
+         if (!this.isModal() && targetWindowControl) {
+            //Если панель, где лежит таргет, находится под overlay, то и попап должен быть под ним
+            if (isOverlayVisible && targetWindowControl.getZIndex() < parseInt(ModalOverlay.getZIndex(), 10)) {
+               return ModalOverlay.getZIndex() - 1;
+            }
+         }
+
+         return this._zIndex;
       },
 
       /**

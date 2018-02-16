@@ -76,9 +76,12 @@ define('SBIS3.CONTROLS/Mixins/TreeMixinDS', [
             singleExpand: false,
 
             /**
-             * @cfg {Boolean} Устанавливает режим отображения содержимого узлов (папок) в иерархии при построении контрола
-             * @variant true Содержимое узлов раскрыто.
-             * @variant false Содержимое узлов скрыто.
+             * @cfg {Boolean} Раскрыть содержимое папок (запись с типом "Узел") при первой загрузке контрола.
+             * @remark
+             * Когда опция expand установлена в значение true, опцию {@link partialyReload} необходимо установить в значение false, чтобы обеспечить корректную работу контрола.
+             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+             * @see setExpand
+             * @see getExpand
              */
             expand: false,
             /**

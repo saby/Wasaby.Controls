@@ -132,15 +132,15 @@ define('SBIS3.CONTROLS/BreadCrumbs', [
 
       _onClickHandler: function(e, fromDropdown) {
          var
-            crumbId, crumbPath, items, item, idx;
-         if (this.isEnabled()){
+            crumbId, crumbPath, items, item, idx, target, crumb;
+         target = $(e.target);
+         crumb = target.closest('.js-controls-BreadCrumbs__crumb');
+         if (crumb.hasClass('controls-BreadCrumbs__dots')) {
+            this._dotsClickHandler();
+            e.stopPropagation();
             BreadCrumbs.superclass._onClickHandler.apply(this, arguments);
-            var target = $(e.target),
-               crumb = target.closest('.js-controls-BreadCrumbs__crumb');
-            if (crumb.hasClass('controls-BreadCrumbs__dots')) {
-               this._dotsClickHandler();
-               e.stopPropagation();
-            } else {
+         } else {
+            if (this.isEnabled()){
                if (crumb.length) {
                   crumbId = crumb.data('id');
                   crumbPath = [];
@@ -158,6 +158,7 @@ define('SBIS3.CONTROLS/BreadCrumbs', [
                   }
                   e.stopPropagation();
                }
+               BreadCrumbs.superclass._onClickHandler.apply(this, arguments);
             }
             if (this._picker && this._picker.isVisible() && fromDropdown){
                this._picker.hide();

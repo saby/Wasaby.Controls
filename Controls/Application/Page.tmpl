@@ -1,5 +1,12 @@
 <html attr:lang="ru" attr:xml:lang="ru" attr:xmlns="http://www.w3.org/1999/xhtml" attr:key="1_" attr:id="root" attr:component="Controls/Application">
 <head key="1_1_">
+   <script key="ws-config">
+      window.wsConfig = {
+         wsRoot: '{{wsRoot}}',
+         resourceRoot: '{{resourceRoot}}',
+         compatible: {{compat}}
+      };
+   </script>
    <ws:if data="{{ _options.head }}">
       <ws:partial template="{{ _options.head }}" />
    </ws:if>
@@ -13,18 +20,12 @@
 </head>
 <Controls:Event:Listener name="scrollDetect" register="scroll">
    <Controls:Event:Listener name="resizeDetect" register="resize">
-      <body class="ws-is-chrome" id="body" key="1_2_" on:scroll="_scrollPage()" on:resize="_resizePage()">
+      <body class="{{BodyClasses()}} {{bodyClass}}" id="body" key="1_2_" on:scroll="_scrollPage()" on:resize="_resizePage()">
          <ws:if data="{{ content.content }}">
             <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}" />
          </ws:if>
          <div key="scripts">
-            <script key="ws-config">
-               window.wsConfig = {
-                  wsRoot: '{{wsRoot}}',
-                  resourceRoot: '{{resourceRoot}}',
-                  compatible: {{compat}}
-               };
-            </script>
+
             <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/bundles.js"></script>
             <script key="require" type="text/javascript" src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
             <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
@@ -37,24 +38,18 @@
             </ws:if>
             <ws:if data="{{!compat}}">
                <script key="init_script">
-                  require(['Core/app']);
+                  require(['Controls/Application/AppData'], function(AppData){
+                     window.startContextData = {AppData: new AppData({})};
+                     require(['Core/app']);
+                  });
                </script>
             </ws:if>
             <ws:else>
-               <script key="init_script">
-                  require(['Core/app-init'], function(appinit){
-                     appinit();
-                     require(['bootup-min',
-                        'Core/nativeExtensions',
-                        'Lib/Control/BaseCompatible/BaseCompatible'], function(bootup){
-                        var cont = document.getElementsByTagName('html')[0];
-                        cont.removeAttribute('config');
-                        cont.removeAttribute('data-component');
-                        bootup();
-                     });
-                  });
-               </script>
+			      <ws:partial template="tmpl!Controls/Application/CompatibleScripts" />
             </ws:else>
+            <ws:if data="{{ _options.scripts }}">
+               <ws:partial template="{{ _options.scripts }}" />
+            </ws:if>
          </div>
          <Controls:Popup:Manager:Container attr:id="popup"/>
       </body>

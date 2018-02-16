@@ -22,7 +22,6 @@ define('SBIS3.CONTROLS/Filter/FavoriteEditDialog',
          _dotTplFn: template,
          $protected: {
             _options: {
-               _isEqual: isEqual,
                width: '400px'
             }
          },
@@ -33,14 +32,37 @@ define('SBIS3.CONTROLS/Filter/FavoriteEditDialog',
          },
          
          _modifyOptions: function() {
-            var options = FavoriteEditDialog.superclass._modifyOptions.apply(this, arguments);
-   
-            options.record.get('filterPanelItems').forEach(function(item) {
-               if (!isEqual(item.value, item.resetValue) && item.textValue) {
-                  options._hasEditableItems = true;
-               }
-            });
-            
+            var
+               items = [],
+               options = FavoriteEditDialog.superclass._modifyOptions.apply(this, arguments),
+               filterPanelItems = options.record.get('filterPanelItems'),
+               filter = options.record.get('filter');
+
+            if (filterPanelItems) {
+               //Набираем содержимое диалога по новыому формату фильтра
+               filterPanelItems.forEach(function (item) {
+                  if (!isEqual(item.value, item.resetValue) && item.textValue) {
+                     items.push({
+                        id: item.id,
+                        checkBoxCaption: item.caption,
+                        value: item.textValue
+                     });
+                  }
+               });
+            } else if (filter) {
+               //Набираем содержимое диалога по старому формату фильтра
+               filter.forEach(function (item) {
+                  if (!isEqual(item.value, item.resetValue) && item.caption) {
+                     items.push({
+                        id: item.internalValueField,
+                        checkBoxCaption: item.title,
+                        value: item.caption
+                     });
+                  }
+               });
+            }
+
+            options._items = items;
             return options;
          }
       });

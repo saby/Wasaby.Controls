@@ -117,7 +117,7 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
     * @mixes SBIS3.CONTROLS/Mixins/TreeMixin
     * @mixes SBIS3.CONTROLS/Mixins/TreeViewMixin
     *
-    * @cssModifier controls-TreeDataGridView__hideExpandsOnHiddenNodes Скрывает треугольник рядом с записью типа "Скрытый узел" (см. <a href='/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>). Для контрола SBIS3.CONTROLS/Tree/CompositeView модификатор актуален только для режима отображения "Таблица" (см. {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#viewMode viewMode}=table).
+    * @cssModifier controls-TreeDataGridView__hideExpandsOnHiddenNodes Скрывает треугольник рядом с записью типа "Скрытый узел" (см. <a href='/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>). Для контрола SBIS3.CONTROLS/Tree/CompositeView модификатор актуален только для режима отображения "Таблица" (см. {@link SBIS3.CONTROLS/Mixins/CompositeViewMixin#viewMode viewMode}=table).
     * @cssModifier controls-TreeDataGridView__withPhoto-S Устанавливает отступы с учетом расположения в верстке изображения, размера S.
     * @cssModifier controls-TreeDataGridView__withPhoto-M Устанавливает отступы с учетом расположения в верстке изображения, размера M.
     * @cssModifier controls-TreeDataGridView__withPhoto-L Устанавливает отступы с учетом расположения в верстке изображения, размера L.
@@ -175,7 +175,7 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
              *    <li> false - стрелка не отображается;</li>
              *    <li> custom - стрелка показывается платформенным механизмом, но место расположения определяет прикладной программист, сделать это можно расположив "маркер" c классом js-controls-TreeView__editArrow;</li>
              * </ul>
-             * Папкой в контексте иерархического списка может быть запись типа "Узел" и "Скрытый узел". Подробнее о различиях между типами записей вы можете прочитать в разделе <a href='/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
+             * Папкой в контексте иерархического списка может быть запись типа "Узел" и "Скрытый узел". Подробнее о различиях между типами записей вы можете прочитать в разделе <a href='/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
              * <br/>
              * Кнопка отображается в виде иконки с классом icon-16 icon-View icon-primary (синяя двойная стрелочка). Изменение иконки не поддерживается.
              * <br/>
@@ -355,10 +355,21 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
             container = this.getContainer(),
             parentProj = this._getItemProjectionByItemId(model.get(this._options.parentProperty)),
             // Без режима поиска и при наличии родителя - необходимо учесть отступ иерархии
-            levelOffset = !this._isSearchMode() && parentProj ? parentProj.getLevel() * this._getLevelPaddingWidth() : 0,
+            levelOffset = 0,
             hasCheckbox = container.hasClass('controls-ListView__multiselect'),
             checkboxOffset = 0,
             result;
+         // В режиме поиска если запись лежит в узле, то у неё есть один (единственный) отступ, учитываем это
+         if (this._isSearchMode()) {
+            if (parentProj) {
+               levelOffset = this._getLevelPaddingWidth();
+            }
+         } else {
+            // Вне режима поиска считаем отступ, исходя из уровня вложенности
+            if (parentProj) {
+               levelOffset = parentProj.getLevel() * this._getLevelPaddingWidth();
+            }
+         }
          if (this._options.editingTemplate && hasCheckbox) {
             checkboxOffset = container.hasClass('controls-ListView__hideCheckBoxes') ? DEFAULT_ROW_SELECT_WIDTH : DEFAULT_SELECT_CHECKBOX_WIDTH;
          }
@@ -554,7 +565,12 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
             4) projItem'a может не быть при добавлении по месту */
          if(projItem && this.getEditArrow().isVisible() && !this._isSearchMode()) {
             runDelayed(forAliveOnly(function() {
-               hoveredItemContainer = hoveredItem.container;
+               //Из-за ассинхронной задержки runDelayed(), hoveredItemContainer может обратиться в null
+               var
+                   hoveredItem = this.getHoveredItem(),
+                   hoveredItemContainer = hoveredItem.container;
+               if(hoveredItemContainer === null)
+                  return;
                if(!projItem.isNode() && this._options.editArrow !== 'custom') {
                   this._hideEditArrow();
                   return;

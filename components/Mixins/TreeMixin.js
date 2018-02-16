@@ -623,13 +623,13 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             /**
              * @cfg {String} Устанавливает режим отображения записей: отображать только записи типа "Узел" (папка) или любые типы записей.
              * @remark
-             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * В режиме развернутого списка будут отображены узлы группировки данных (папки) и данные, сгруппированные по этим узлам.
              * В режиме свернутого списка будет отображен только список узлов (папок).
              * @variant folders Отображать только записи типа "Узел".
              * @variant all Отображать записи всех типов иерархии.
              *
-             * Подробное описание иерархической структуры приведено в документе {@link /doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy "Типы отношений в таблицах БД"}
+             * Подробное описание иерархической структуры приведено в документе <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">Типы отношений в таблицах БД</a>.
              * @example
              * Устанавливаем режим полного отображения данных: будут отображены элементы коллекции и папки, по которым сгруппированы эти элементы.
              * <pre class="brush:xml">
@@ -640,7 +640,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             /**
              * @cfg {Boolean} Устанавливает поведение, при котором единовременно может быть раскрыт только одна запись типа "Узел" или "Скрытый узел" на одном структурном уровне.
              * @remark
-             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
              *    <option name="singleExpand">true</option>
@@ -648,14 +648,10 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
              */
             singleExpand: false,
             /**
-             * @cfg {Boolean} Устанавливает режим отображения содержимого записей типа "Узел" (папка) при первой загрузке контрола.
+             * @cfg {Boolean} Раскрыть содержимое папок (запись с типом "Узел") при первой загрузке контрола.
              * @remark
-             * true - содержимое узлов раскрыто, false - содержимое узлов скрыто.
+             * Когда опция expand установлена в значение true, опцию {@link partialyReload} необходимо установить в значение false, чтобы обеспечить корректную работу контрола.
              * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
-             * @example
-             * <pre>
-             *    <option name="expand">true</option>
-             * </pre>
              * @see setExpand
              * @see getExpand
              */
@@ -667,7 +663,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
              *    <li>В значении true данные подгружаются только при раскрытии или проваливании внутрь.</li>
              *    <li>В значении false данные подгружается сразу при загрузке контролов.</li>
              * </ul>
-             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
              *    <option name="partialyReload">false</option>
@@ -682,7 +678,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             /**
              * @cfg {Object} Устанавливает список записей типа "Узел" (папка) и "Скрытый узел", содержимое которых будет раскрыто.
              * @remark
-             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
              *    <options name="openedPath">
@@ -697,7 +693,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
              * @cfg {Boolean} Устанавливает признак, при котором клик по записи типа "Узел" (папка) не производит проваливание внутрь иерархии, а раскрывает её содержимое.
              * @remark
              * При клике по записи типа "Скрытый узел" проваливание внутрь иерархии запрещено по умолчанию и не подлежит изменению.
-             * Подробнее о типах иерархических записей читайте в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+             * Подробнее о типах иерархических записей читайте в разделе <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
              *    <option name="allowEnterToFolder">false</option>
@@ -1348,7 +1344,9 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             self = this,
             filter;
          this._toggleIndicator(true);
-         this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit);
+         if (this._isCursorNavigation()) { //https://online.sbis.ru/opendoc.html?guid=7117f61d-ab58-434b-99b1-fc6528ffe641
+            this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit);
+         }
          this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit).addCallback(forAliveOnly(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
@@ -1487,10 +1485,17 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                if (this.getItems().getRecordById(this._previousRoot)) {
                   this.setSelectedKey(this._previousRoot);
                   //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
-                  if (!this._container.parents('.controls-ListView').length) {
-                     runDelayed(function() {
+                  // В режиме поиска скролить к предыдущей записи не нужно: https://online.sbis.ru/opendoc.html?guid=3f384ac7-a935-4af4-aa56-91b2e44f4d7e
+                  if (!self._isSearchMode() && !this._container.parents('.controls-ListView').length) {
+                     /* requestAnimationFrame в ie не пакетирует скролы, только перерисовки,
+                        поэтому при использовании requestAnimationFrame будет дергаться страница. */
+                     if (constants.browser.isIE) {
                         self._scrollToItem(previousRoot);
-                     });
+                     } else {
+                        runDelayed(function () {
+                           self._scrollToItem(previousRoot);
+                        });
+                     }
                   }
                } else {
                   /*иначе вход в папку*/
@@ -1607,8 +1612,9 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             delete(filter[this._options.parentProperty]);
          }
          this.setFilter(filter, true);
-         //узел грузим с 0-ой страницы
-         this.setPage(0, true);
+         /* При смене узла, данные надо грузить с 0-ой страницы,
+            при этом скролить к 0 странице не надо, т.к. после перерисовки мы и так окажемся вверху списка. */
+         this.setPage(0, true, true);
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
          this._options.currentRoot = (isFakeRoot || (key !== undefined && key !== null)) ? key : this._options.root;
@@ -1658,7 +1664,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
       /**
        * Устанавливает режим отображения содержимого записей типа "Узел" (папка) при первой загрузке контрола.
        * @remark
-       * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+       * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
        * @param {Boolena} expand true - содержимое узлов раскрыто, false - содержимое узлов скрыто.
        * @see expand
        * @see getExpand
@@ -1669,7 +1675,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
       /**
        * Возвращает признак установленного режима отображения содержимого записей типа "Узел" (папка) при первой загрузке контрола.
        * @remark
-       * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+       * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
        * @returns {Boolean} true - содержимое узлов раскрыто, false - содержимое узлов скрыто.
        * @see expand
        * @see setExpand

@@ -58,19 +58,14 @@
       }
    }
 
-   .controls-PopupMixin__closeButton, .controls-PopupMixin__closeButton:hover {
-      background: none;
-      box-shadow: none !important;
-      border: none;
+   .controls-PopupMixin__closeButton {
       top: @top_OperationsPanel-menu-closeButton;
       right: @right_OperationsPanel-menu-closeButton;
-      &:before {
-         content: "\e66c";
-      }
    }
 }
 
-.controls-operationsPanel__itemsMenu .icon-size, .controls-operationsPanel__itemsMenu_picker .controls-PopupMixin__closeButton.icon-size{
+
+.controls-operationsPanel__itemsMenu .icon-size {
    .icon-size(@controls-OperationsPanel-menu-icon-size);
 }
 
@@ -78,6 +73,11 @@
    &.controls-Menu {
       margin: -3px 0 0 -10px;
    }
+}
+// в панели массовых операций необходимо использовать CommandsButton в качестве меню
+// стандарт меню ПМО совпадает с CommandsButton, но отличается от MenuIcon отсюда и костыль
+.controls-operationsPanel__itemsMenu_picker.controls-MenuIcon_hideHeader .controls-ListView__item:first-child .controls-MenuItem__icon {
+   display: block;
 }
 
 .ws-is-mobile-platform {

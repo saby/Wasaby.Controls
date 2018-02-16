@@ -38226,9 +38226,7 @@
                   '<div data-mce-bogus="all" class="mce-offscreen-selection"></div>'
                ).attr('id', realSelectionId);
 
-               // Если добавлять в конец, то селекторы вида :last-child при этом перестают действовать, текст скачет, так что добавляем в начало
-               // 70770 https://online.sbis.ru/opendoc.html?guid=70144329-6678-444a-ad7d-1065d53ef3f5
-               $realSelectionContainer.prependTo(editor.getBody());
+               $realSelectionContainer.appendTo(editor.getBody());
             }
 
             range = editor.dom.createRng();
@@ -40926,7 +40924,11 @@
                if (editor.selection.lastFocusBookmark) {
                   lastRng = bookmarkToRng(editor, editor.selection.lastFocusBookmark);
                   editor.selection.lastFocusBookmark = null;
-                  editor.selection.setRng(lastRng);
+                  // Только если полученный рэнж содержится внутри редактора
+                  // 1174874046 https://online.sbis.ru/opendoc.html?guid=3ab37bfa-9014-404d-8b35-46f029fa2799
+                  if (lastRng && editor.getBody().contains(lastRng.commonAncestorContainer)) {
+                     editor.selection.setRng(lastRng);
+                  }
                }
 
                if (focusedEditor != editor) {

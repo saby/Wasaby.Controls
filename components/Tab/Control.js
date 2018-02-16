@@ -40,13 +40,13 @@ define('SBIS3.CONTROLS/Tab/Control', [
          _options: {
             /**
              * @typedef {object} Item
-             * @property {String} align Устанавливает выравнивание вкладки. Доступные значения:
+             * @property {String} align Выравнивание вкладки. Доступные значения:
              * <ul>
              *     <li>'' - выравнивание вкладки справа (значение по умолчанию);</li>
              *     <li>left - выравнивание вкладки слева;</li>
              * </ul>
-             * @property {Content} content Устанавливает xhtml-вёрстку заголовка вкладки при редактировании по месту.
-             * @property {Content} title Устанавливает подпись вкладки.
+             * @property {Content} content Вёрстка контента, отображаемая при переключении на вкладку.
+             * @property {Content} title Вёрстка заголовка вкладки.
              * @translatable title
              */
             /**

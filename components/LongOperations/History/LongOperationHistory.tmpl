@@ -1,7 +1,7 @@
 <div class="controls-LongOperations controls-LongOperationHistory">
    <SBIS3.CONTROLS:Browser
       name="brows"
-      className="controls-Browser__view"
+      className="controls-LongOperationHistory__browser"
       >
       <ws:content>
          <ws:if data="{{resultHandler}}">
@@ -39,43 +39,45 @@
                </div>
             </div>
          </div>
-         <div class="controls-Browser__view">
-            <SBIS3.CONTROLS:DataGridView
-               idProperty="id"
-               name="browserView"
-               pageSize="2000"
-               infiniteScroll="down"
-               itemsActions="{{ [] }}"
-               displayProperty="title"
-               itemsDragNDrop="{{false}}"
-               filter="{{'filter'|mutable}}"
-               className="controls-Browser__view controls-DataGridView__hasSeparator controls-DataGridView__overflow-ellipsis"
-               ladder="{{ ['Date'] }}"
-               >
-               <ws:columns>
-                  <ws:Array>
-                     <ws:Object
-                        title="{[Дата]}"
-                        cellTemplate="tmpl!SBIS3.CONTROLS/LongOperations/History/resources/LongOperationHistoryDateTemplate"
-                        width="60"
-                     />
-                     <ws:Object
-                        title="{[Время]}"
-                        cellTemplate="tmpl!SBIS3.CONTROLS/LongOperations/History/resources/LongOperationHistoryTimeTemplate"
-                        width="60"
-                     />
-                     <ws:Object
-                        title="{[ОперацииНадЗаписями@@Наименование]}"
-                        field="title"
-                     />
-                     <ws:Object
-                        title="{[Статус]}"
-                        cellTemplate="tmpl!SBIS3.CONTROLS/LongOperations/History/resources/LongOperationHistoryStatusTemplate"
-                     />
-                  </ws:Array>
-               </ws:columns>
-            </SBIS3.CONTROLS:DataGridView>
-         </div>
+         <SBIS3.CONTROLS:ScrollContainer class="controls-Browser__scrollContainer controls-Browser__view controls-LongOperationsHistory__view">
+            <ws:content>
+               <SBIS3.CONTROLS:DataGridView
+                  idProperty="id"
+                  name="browserView"
+                  pageSize="2000"
+                  infiniteScroll="down"
+                  itemsActions="{{ [] }}"
+                  displayProperty="title"
+                  itemsDragNDrop="{{false}}"
+                  filter="{{'filter'|mutable}}"
+                  className="controls-DataGridView__hasSeparator controls-DataGridView__overflow-ellipsis"
+                  ladder="{{ ['Date'] }}"
+                  >
+                  <ws:columns>
+                     <ws:Array>
+                        <ws:Object
+                           title="{[Дата]}"
+                           cellTemplate="tmpl!SBIS3.CONTROLS/LongOperations/History/resources/LongOperationHistoryDateTemplate"
+                           width="60"
+                        />
+                        <ws:Object
+                           title="{[Время]}"
+                           cellTemplate="tmpl!SBIS3.CONTROLS/LongOperations/History/resources/LongOperationHistoryTimeTemplate"
+                           width="60"
+                        />
+                        <ws:Object
+                           title="{[ОперацииНадЗаписями@@Наименование]}"
+                           field="title"
+                        />
+                        <ws:Object
+                           title="{[Статус]}"
+                           cellTemplate="tmpl!SBIS3.CONTROLS/LongOperations/History/resources/LongOperationHistoryStatusTemplate"
+                        />
+                     </ws:Array>
+                  </ws:columns>
+               </SBIS3.CONTROLS:DataGridView>
+            </ws:content>
+         </SBIS3.CONTROLS:ScrollContainer>
       </ws:content>
    </SBIS3.CONTROLS:Browser>
 </div>

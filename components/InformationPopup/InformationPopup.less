@@ -6,25 +6,9 @@
 
    /* Переопределим кнопку закрытия */
    .controls-PopupMixin__closeButton {
+      position: absolute;
       top: @controls-InformationPopup-closeButton-top;
       right: @controls-InformationPopup-closeButton-right;
-      background: none;
-      width: @controls-InformationPopup-closeButton-width;
-      height: @controls-InformationPopup-closeButton-height;
-      line-height: normal;
-      box-shadow: none !important;
-      border: none;
-      &:before {
-         content: '';
-         font-size: @controls-InformationPopup-closeButton-font-size;
-         font-family: @controls-InformationPopup-closeButton-font-family;
-         color: @controls-InformationPopup-closeButton-color;
-      }
-      &:hover {
-         &:before {
-            color: @controls-InformationPopup-closeButton-hover-color;
-         }
-      }
    }
 
 

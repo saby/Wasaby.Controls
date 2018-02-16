@@ -17,10 +17,20 @@ define(
          });
    
          it('_popupFocusOut', function() {
-            var suggest = new Suggest();
-   
-            suggest._popupFocusOut({});
+            var suggest = new Suggest(),
+                aborted = false;
             
+            suggest._suggestController = {};
+            suggest._suggestController.abort = function() {
+               aborted = true;
+            };
+            
+            suggest._popupFocusOut({to: suggest});
+            assert.isFalse(aborted);
+            assert.isFalse(suggest._popupFocused);
+            
+            suggest._popupFocusOut({to: {}});
+            assert.isTrue(aborted);
             assert.isFalse(suggest._popupFocused);
          });
    
@@ -35,17 +45,68 @@ define(
          });
    
          it('selectHandler', function() {
+            //тестирует фокусы, проверяем только на клиенте
+            if (typeof document === 'undefined') {
+               this.skip();
+            }
             var suggest = new Suggest(),
-                focused = false;
+                focused = false,
+                selectedValue;
+            
+            suggest.saveOptions({
+               displayProperty: 'title'
+            });
             
             /* Т.к. реально проверить, есть ли фокус в саггесте мы не можем (нет DOM элемента),
                просто проверим вызов focus() */
             suggest.focus = function() {
                focused = true;
             };
-            suggest._selectHandler(new Model());
-            
+            suggest._notify = function(eventName, value) {
+               if (eventName === 'valueChanged') {
+                  selectedValue = value;
+               }
+            };
+   
+            suggest._selectHandler(
+               new Model(
+                  {
+                     rawData: {
+                        title: 'test'
+                     }
+                  })
+            );
+   
             assert.isTrue(focused, 'Suggest is not focused after select');
+            assert.equal(selectedValue, 'test',  'Wrong value after select');
+         });
+   
+         it('_clearClick', function() {
+            //тестирует клик, проверяем только на клиенте
+            if (typeof document === 'undefined') {
+               this.skip();
+            }
+            var suggest = new Suggest(),
+                focused = false,
+                suggestValue;
+   
+            suggest.focus = function() {
+               focused = true;
+            };
+   
+            suggest._notify = function(eventName, value) {
+               if (eventName === 'valueChanged') {
+                  suggestValue = value;
+               }
+            };
+   
+            Suggest._private.initSuggestController(suggest, {});
+            suggest._clearClick();
+   
+   
+            assert.equal(suggest._suggestController._value, '', 'Wrong value after clear');
+            assert.equal(suggestValue, '', 'Wrong value after clear');
+            assert.isTrue(focused, 'Suggest is not focused after clear');
          });
          
       });

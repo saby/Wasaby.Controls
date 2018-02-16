@@ -1,4 +1,4 @@
-.close-button-mixin(@important: ~'') {
+.close-button-mixin(@important: ~'', @width: @width_CloseButton, @height: @height_CloseButton) {
   .inline-flexbox();
   .align-items(center);
   .justify-content(center);
@@ -6,8 +6,8 @@
   font-size: round(56px * @multiplier) @important;
   line-height: round(56px * @multiplier) @important;
   font-family: 'cbuc-icons' @important;
-  width: @default-height @important;
-  height: @default-height @important;
+  width: @width @important;
+  height: @height @important;
   background-color: #405A77 @important;
   background-image: none @important;
   box-shadow: @box-shadow_Button !important;
@@ -313,15 +313,6 @@ body .controls-image__button {
       color: #26B8FF !important;
    }
  }
-.controls-PopupMixin__closeButton {
-  position: absolute;
-  top: @controls-Popup-closeButton-top;
-  right: 0;
-  cursor: pointer;
-  z-index: 1;
-
-  .close-button-mixin();
-}
 
 //todo: удалить это нафиг сделать нормально и не лениться
 .controls-image {
@@ -482,12 +473,6 @@ body {
 //!IMPORTANT лучше чем увеличение веса селектора через BODY тк возможно собирать тему под селектором
 .ws-window-titlebar-action.close {
   .close-button-mixin(~'!important');
-}
-.ws-float-area .ws-float-area-title {
-  font-size: round(40px * @multiplier)!important;
-  font-weight: normal !important;
-  padding-left: round(24px * @multiplier) !important;
-  width: calc(100% ~'-' round(86px * @multiplier)) !important; //78 - close button width + 8 - padding
 }
 .ws-window-titlebar {
   color: @default-text-color !important;
