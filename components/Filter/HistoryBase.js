@@ -54,11 +54,13 @@ define('SBIS3.CONTROLS/Filter/HistoryBase',
                _structureProperty: 'filter',
                _favoriteAction: {
                   command: 'favorite',
+                  name: 'favorite',
                   icon: 'icon-24 icon-Unfavourite icon-disabled action-hover',
                   isMainAction: true
                },
                _unFavoriteAction: {
                   command: 'unfavorite',
+                  name: 'unfavorite',
                   icon: 'icon-24 icon-Favourite icon-disabled action-hover',
                   isMainAction: true
                },

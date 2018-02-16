@@ -22,11 +22,13 @@ define('SBIS3.CONTROLS/Filter/ReportHistory',
                _structureProperty: 'filterPanelItems',
                _favoriteAction: {
                   command: 'favorite',
+                  name: 'favorite',
                   icon: 'icon-24 icon-Unfavourite icon-primary action-hover',
                   isMainAction: true
                },
                _unFavoriteAction: {
                   command: 'unfavorite',
+                  name: 'unfavorite',
                   icon: 'icon-24 icon-Favourite icon-primary action-hover',
                   isMainAction: true
                },
