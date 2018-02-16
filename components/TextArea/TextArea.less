@@ -74,29 +74,3 @@
    top: 0;
    left: 0;
 }
-//В старых компонентах нужно скрывать placeholder по умолчанию
-.controls-TextArea__placeholder {
-   display: none;
-}
-
-/*
-   По умолчанию скрываем плейсхолдер, а дальше 2 ситуации:
-   1) Для contenteditable управляем видимостью плейсхолдеров через :empty.
-   2) Для input нельзя использовать :empty, т.к. он там висит всегда. Поэтому вешаем аттрибут required на input, и тогда
-   на него будет вешаться :invalid, если он пустой.
-   https://jsfiddle.net/7oyopngt/
- */
-.controls-TextArea__field:empty:not(input):not(textarea) + .controls-TextArea__placeholder {
-   .inline-flexbox();
-}
-
-.controls-TextArea__field:invalid + .controls-TextArea__placeholder {
-   .inline-flexbox();
-}
-
-//В формах для ввода логина и пароля браузеры игнорируют аттрибут autocomplete="off" и вставляют логин\пароль в любом случае.
-//Также, хром проводит валидацию поля только после того, как пользователь совершит какое-нибудь действие на странице.
-//Так что единственный способ узнать, что произошло автодополнение и нужно скрыть плейсхолдер - проверить :-webkit-autofill.
-.controls-TextArea__field:-webkit-autofill + .controls-TextArea__placeholder {
-   display: none;
-}
