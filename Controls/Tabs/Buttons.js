@@ -16,6 +16,13 @@ define('Controls/Tabs/Buttons', [
     'use strict';
 
     var _private = {
+        prepareOrder: function(order) {
+            return '-webkit-box-ordinal-group:' +  order +
+                '; -moz-box-ordinal-group:' + order +
+                '; -ms-flex-order:' +  order +
+                '; -webkit-order:' + order +
+                '; order:' + order;
+        },
         initSource: function(instance, options) {
             return instance._sourceController = new SourceController({
                 source: options.source
@@ -35,7 +42,22 @@ define('Controls/Tabs/Buttons', [
                 instance._lastRightOrder = rightOrder;
                 instance._items = items;
                 return instance._items;
-            })
+            });
+        },
+        prepareItemClass : function(item, options) {
+            var
+                classes =['controls-Tabs__item'];
+            classes.push('controls-Tabs__item_align_' + ( item.get('align') ? item.get('align') : 'right' ));
+            if (item.get('order') === 1 || item.get('order') === this._lastRightOrder ) {
+                classes.push('controls-Tabs__item_extreme');
+            }
+            if (item.get(options.keyProperty) === options.selectedKey) {
+                classes.push('controls-Tabs_style_' + options.style + '__item_state_selected');
+                classes.push('controls-Tabs__item_state_selected');
+            } else {
+                classes.push('controls-Tabs__item_state_default');
+            }
+            return classes.join(' ');
         }
     };
 
@@ -68,7 +90,7 @@ define('Controls/Tabs/Buttons', [
                 this._items = receivedState;
             }
             if (options.source) {
-                return _private.initSource(this, options)
+                return _private.initSource(this, options);
             }
         },
         _beforeUpdate: function(newOptions) {
@@ -76,7 +98,7 @@ define('Controls/Tabs/Buttons', [
                 self = this;
             if (newOptions.source && !this._sourceController) {
                 return _private.initSource(this, newOptions).addCallback(function(){
-                    self._forceUpdate()
+                    self._forceUpdate();
                 })
             }
         },
@@ -84,20 +106,10 @@ define('Controls/Tabs/Buttons', [
             this._notify('selectedKeyChanged', key)
         },
         _prepareItemClass: function(item) {
-            var
-                classes =['controls-Tabs__item'];
-            classes.push('controls-Tabs__item_align_' + ( item.get('align') ? item.get('align') : 'right' ));
-            if (item.get('order') === 1 || item.get('order') === this._lastRightOrder ) {
-                classes.push('controls-Tabs__item_extreme');
-            }
-            if (item.get(this._options.keyProperty) === this._options.selectedKey) {
-                classes.push('controls-Tabs_style_' + this._options.style + '__item_state_selected');
-                classes.push('controls-Tabs__item_state_selected');
-            } else {
-                classes.push('controls-Tabs__item_state_default');
-            }
-
-            return classes.join(' ');
+            return _private.prepareItemClass(item, this._options);
+        },
+        _prepareOrder: function(order) {
+          return _private.prepareOrder(order);
         }
     });
 
@@ -107,5 +119,7 @@ define('Controls/Tabs/Buttons', [
             style: 'default'
         };
     };
+    //необходимо для тестов
+    TabsButtons._private = _private;
     return TabsButtons;
 });
