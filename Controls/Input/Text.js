@@ -86,6 +86,11 @@ define('Controls/Input/Text', [
                this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
                this._caretPosition = null;
             }
+
+            this._textViewModel = new TextViewModel({
+               constraint: this._options.constraint,
+               maxLength: this._options.maxLength
+            });
          },
 
          _inputCompletedHandler: function(){
