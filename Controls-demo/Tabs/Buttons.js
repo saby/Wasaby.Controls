@@ -25,16 +25,16 @@ define('Controls-demo/Tabs/Buttons', [
     var srcData = [
         {
             id: "1",
-            content: 'Настолько длинное название папки что оно не влезет в максимальный размер 1 Настолько длинное название папки что оно не влезет в максимальный размер'
+            title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1 Настолько длинное название папки что оно не влезет в максимальный размер'
         },
         {
             id: "2",
-            content: 'Notebooks 2',
+            title: 'Notebooks 2',
             align: "left"
         },
         {
             id: "3",
-            content: 'Smartphones 3 '
+            title: 'Smartphones 3 '
         }
     ];
 
@@ -45,7 +45,7 @@ define('Controls-demo/Tabs/Buttons', [
             SelectedKey4: "2",
             SelectedKey5: "2",
             SelectedKey6: "1",
-            SelectedKey7: "1",
+            SelectedKey7: "3",
             _template: template,
             _spaceTemplate: spaceTemplate,
             _itemTemplate: itemTemplate,

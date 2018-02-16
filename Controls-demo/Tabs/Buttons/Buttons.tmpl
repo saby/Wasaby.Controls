@@ -9,14 +9,14 @@
                 <ws:options idProperty="id">
                 <ws:data>
                     <ws:Array>
-                        <ws:Object id="1" content="выполненные" align="left"/>
-                        <ws:Object id="2" content="от меня" align="left"/>
-                        <ws:Object id="3" content="заброшенные" align="left"/>
-                        <ws:Object id="4" content="слишком"/>
-                        <ws:Object id="5" content="тяжело"/>
-                        <ws:Object id="6" content="придумывать"/>
-                        <ws:Object id="7" content="названия"/>
-                        <ws:Object id="8" content="вкладок"/>
+                        <ws:Object id="1" title="выполненные" align="left"/>
+                        <ws:Object id="2" title="от меня" align="left"/>
+                        <ws:Object id="3" title="заброшенные" align="left"/>
+                        <ws:Object id="4" title="слишком"/>
+                        <ws:Object id="5" title="тяжело"/>
+                        <ws:Object id="6" title="придумывать"/>
+                        <ws:Object id="7" title="названия"/>
+                        <ws:Object id="8" title="вкладок"/>
                     </ws:Array>
                 </ws:data>
                 </ws:options>
@@ -34,35 +34,36 @@
                 <ws:options idProperty="id">
                 <ws:data>
                     <ws:Array>
-                        <ws:Object id="1" content="Главная" align="left"  itemTemplate="{{_mainTemplate}}"/>
-                        <ws:Object id="2" content="слишком"/>
-                        <ws:Object id="3" content="тяжело"/>
-                        <ws:Object id="4" content="придумывать"/>
-                        <ws:Object id="5" content="названия"/>
-                        <ws:Object id="6" content="вкладок"/>
+                        <ws:Object id="1" title="Главная" align="left"  itemTemplate="{{_mainTemplate}}"/>
+                        <ws:Object id="2" title="слишком"/>
+                        <ws:Object id="3" title="тяжело"/>
+                        <ws:Object id="4" title="придумывать"/>
+                        <ws:Object id="5" title="названия"/>
+                        <ws:Object id="6" title="вкладок"/>
                     </ws:Array>
                 </ws:data>
                 </ws:options>
             </ws:source>
         </Controls:Tabs:Buttons>
     </div>
-    <div class="separator">Style="additional"</div>
+    <div class="separator">Style="additional", displayProperty = 'carambola'</div>
     <div class="">
         <Controls:Tabs:Buttons
                       bind:selectedKey='SelectedKey3'
                       keyProperty="id"
                       style="additional"
+                      displayProperty="carambola"
         >
             <ws:source module="WS.Data/Source/Memory" >
                 <ws:options idProperty="id">
                 <ws:data>
                     <ws:Array>
-                        <ws:Object id="1" content="первая" align="left"/>
-                        <ws:Object id="2" content="слишком"/>
-                        <ws:Object id="3" content="тяжело"/>
-                        <ws:Object id="4" content="придумывать"/>
-                        <ws:Object id="5" content="названия"/>
-                        <ws:Object id="6" content="вкладок"/>
+                        <ws:Object id="1" carambola="первая" align="left"/>
+                        <ws:Object id="2" carambola="слишком"/>
+                        <ws:Object id="3" carambola="тяжело"/>
+                        <ws:Object id="4" carambola="придумывать"/>
+                        <ws:Object id="5" carambola="названия"/>
+                        <ws:Object id="6" carambola="вкладок"/>
                     </ws:Array>
                 </ws:data>
                 </ws:options>
@@ -81,9 +82,9 @@
                 <ws:options idProperty="id">
                 <ws:data>
                     <ws:Array>
-                        <ws:Object id="1" content="Первая" align="left" />
-                        <ws:Object id="2" content="названия"/>
-                        <ws:Object id="3" content="вкладок"/>
+                        <ws:Object id="1" title="Первая" align="left" />
+                        <ws:Object id="2" title="названия"/>
+                        <ws:Object id="3" title="вкладок"/>
                     </ws:Array>
                 </ws:data>
                 </ws:options>
@@ -102,12 +103,12 @@
                 <ws:data>
                     <ws:Array>
                         <ws:Object id="1"
-                                   content="Первая"
+                                   title="Первая"
                                    align="left"
                                    style="main"
                                    itemTemplate="{{_itemTemplate}}"
                         />
-                        <ws:Object id="2" content="вкладок"/>
+                        <ws:Object id="2" title="вкладок"/>
                     </ws:Array>
                 </ws:data>
                 </ws:options>
@@ -134,21 +135,23 @@
                       bind:selectedKey='SelectedKey7'
                       keyProperty="id"
                       style="additional"
+                      itemTemplateProperty="carambola"
         >
             <ws:source module="WS.Data/Source/Memory" >
                 <ws:options idProperty="id">
                     <ws:data>
                         <ws:Array>
                             <ws:Object id="1"
-                                       content="{{_photoContent}}"
+                                       title=""
+                                       carambola="{{_photoContent}}"
                                        align="left"
                                        type="photo"
                             />
-                            <ws:Object id="2" content="слишком"   align="left"/>
-                            <ws:Object id="3" content="тяжело"   align="left"/>
-                            <ws:Object id="4" content="придумывать"   align="left"/>
-                            <ws:Object id="5" content="названия"   align="left"/>
-                            <ws:Object id="6" content="вкладок"/>
+                            <ws:Object id="2" title="слишком"   align="left"/>
+                            <ws:Object id="3" title="тяжело"   align="left"/>
+                            <ws:Object id="4" title="придумывать"   align="left"/>
+                            <ws:Object id="5" title="названия"   align="left"/>
+                            <ws:Object id="6" title="вкладок"/>
                         </ws:Array>
                     </ws:data>
                 </ws:options>

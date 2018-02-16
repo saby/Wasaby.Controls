@@ -120,7 +120,8 @@ define('Controls/Tabs/Buttons', [
     TabsButtons.getDefaultOptions = function() {
         return {
             itemTemplate: ItemTemplate,
-            style: 'default'
+            style: 'default',
+            displayProperty: 'title'
         };
     };
     //необходимо для тестов
