@@ -159,6 +159,13 @@ define('SBIS3.CONTROLS/PhoneTextBox', [
          return formatModel.getText(this._getMaskReplacer());
       },
 
+      _onPasteValue: function(pasteValue) {
+         //При вставке телефона из буфера, вырежем все пробелы, чтобы они не воспринимались как незаполенные части маски.
+         //Номер телефона могут скопировать откуда угодно, и отформатирован номер может быть как угодно.
+         pasteValue = pasteValue.replace(/ /g, '');
+         PhoneTextBox.superclass._onPasteValue.call(this, pasteValue);
+      },
+
       _focusHandler: function() {
          var
             self = this,
