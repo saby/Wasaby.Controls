@@ -1,0 +1,18 @@
+<div class="ControlsDemo-Mask ws-flexbox ws-flex-column" xmlns:ws="http://www.w3.org/1999/html">
+   <header>
+      <h1>Форматные поля</h1>
+   </header>
+   <article>
+      <ws:for data="example in _examples">
+         <h3>{{example.title}}</h3>
+         <div class="ws-inline-flexbox ws-flex-column">
+            <ws:for data="key, item in example.items">
+               <ws:Controls.Input.Mask
+                  attr:class="{{key ? 'ControlsDemo-Mask__item_topOffset'}}"
+                  scope="{{item}}"
+               />
+            </ws:for>
+         </div>
+      </ws:for>
+   </article>
+</div>
