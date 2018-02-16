@@ -39,11 +39,7 @@ define('Controls/Tabs/Buttons', [
             });
         },
         prepareItemOrder: function(order) {
-            return '-webkit-box-ordinal-group:' +  order +
-                '; -moz-box-ordinal-group:' + order +
-                '; -ms-flex-order:' +  order +
-                '; -webkit-order:' + order +
-                '; order:' + order;
+            return '-ms-flex-order:' + order +'; order:' + order;
         },
         prepareItemClass : function(item, options, lastRightOrder) {
             var

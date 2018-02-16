@@ -10,7 +10,7 @@ define([
     describe('Controls.Tabs.Buttons', function () {
         it('prepareItemOrder', function () {
             var
-                expected =  '-webkit-box-ordinal-group:2; -moz-box-ordinal-group:2; -ms-flex-order:2; -webkit-order:2; order:2';
+                expected =  '-ms-flex-order:2; order:2';
             assert.equal(expected, TabsButtons._private.prepareItemOrder(2), 'wrong order cross-brwoser styles');
         });
         it('initItems', function (done) {
