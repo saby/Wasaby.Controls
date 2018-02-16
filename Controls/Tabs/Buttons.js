@@ -16,17 +16,11 @@ define('Controls/Tabs/Buttons', [
     'use strict';
 
     var _private = {
-        prepareOrder: function(order) {
-            return '-webkit-box-ordinal-group:' +  order +
-                '; -moz-box-ordinal-group:' + order +
-                '; -ms-flex-order:' +  order +
-                '; -webkit-order:' + order +
-                '; order:' + order;
-        },
-        initSource: function(instance, options) {
-            return instance._sourceController = new SourceController({
-                source: options.source
-            }).load().addCallback(function(items){
+        initItems: function(source, instance) {
+            instance._sourceController = new SourceController({
+                source: source
+            });
+            return instance._sourceController.load().addCallback(function(items){
                 var
                     leftOrder = 1,
                     rightOrder = 30;
@@ -44,11 +38,18 @@ define('Controls/Tabs/Buttons', [
                 return instance._items;
             });
         },
-        prepareItemClass : function(item, options) {
+        prepareItemOrder: function(order) {
+            return '-webkit-box-ordinal-group:' +  order +
+                '; -moz-box-ordinal-group:' + order +
+                '; -ms-flex-order:' +  order +
+                '; -webkit-order:' + order +
+                '; order:' + order;
+        },
+        prepareItemClass : function(item, options, lastRightOrder) {
             var
                 classes =['controls-Tabs__item'];
             classes.push('controls-Tabs__item_align_' + ( item.get('align') ? item.get('align') : 'right' ));
-            if (item.get('order') === 1 || item.get('order') === this._lastRightOrder ) {
+            if (item.get('_order') === 1 || item.get('_order') === lastRightOrder ) {
                 classes.push('controls-Tabs__item_extreme');
             }
             if (item.get(options.keyProperty) === options.selectedKey) {
@@ -90,14 +91,14 @@ define('Controls/Tabs/Buttons', [
                 this._items = receivedState;
             }
             if (options.source) {
-                return _private.initSource(this, options);
+                return _private.initItems(options.source, this);
             }
         },
         _beforeUpdate: function(newOptions) {
             var
                 self = this;
             if (newOptions.source && !this._sourceController) {
-                return _private.initSource(this, newOptions).addCallback(function(){
+                return _private.initItems(newOptions.source, this).addCallback(function(){
                     self._forceUpdate();
                 })
             }
@@ -106,10 +107,10 @@ define('Controls/Tabs/Buttons', [
             this._notify('selectedKeyChanged', key)
         },
         _prepareItemClass: function(item) {
-            return _private.prepareItemClass(item, this._options);
+            return _private.prepareItemClass(item, this._options, this._lastRightOrder);
         },
-        _prepareOrder: function(order) {
-          return _private.prepareOrder(order);
+        _prepareItemOrder: function(order) {
+          return _private.prepareItemOrder(order);
         }
     });
 

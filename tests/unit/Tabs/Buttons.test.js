@@ -4,55 +4,68 @@
 define([
     'Controls/Tabs/Buttons',
     'WS.Data/Source/Memory',
-    'Core/core-instance'
-], function(TabsButtons, MemorySource, cInstance){
+    'WS.Data/Entity/Record'
+], function(TabsButtons, MemorySource, Record){
 
     describe('Controls.Tabs.Buttons', function () {
-        var data, source;
-        /*beforeEach(function() {
-            data = [
-                {
-                    id : 1,
-                    title : 'Первый',
-                    type: 1
-                },
-                {
-                    id : 2,
-                    title : 'Второй',
-                    type: 2
-                },
-                {
-                    id : 3,
-                    title : 'Третий',
-                    type: 2
-                }
-            ];
-            source = new MemorySource({
-                data: data,
-                idProperty: 'id'
-            });
-
-        });*/
-
-        it('prepareOrder', function () {
-            assert.equal('id', 123, 'find me');
-            /*var resSource;
-
-            resSource = SourceController._private.prepareSource(source);
-            assert.equal(source, resSource, 'prepareSource doesn\'t returns initial datasource');
-
-            resSource = SourceController._private.prepareSource({
-                module: 'WS.Data/Source/Memory',
-                options: {
+        it('prepareItemOrder', function () {
+            var
+                expected =  '-webkit-box-ordinal-group:2; -moz-box-ordinal-group:2; -ms-flex-order:2; -webkit-order:2; order:2';
+            assert.equal(expected, TabsButtons._private.prepareItemOrder(2), 'wrong order cross-brwoser styles');
+        });
+        it('initItems', function (done) {
+            var
+                tabInstance =  new TabsButtons(),
+                data = [
+                    {
+                        id : 1,
+                        title : 'Первый',
+                        align: 'left'
+                    },
+                    {
+                        id : 2,
+                        title : 'Второй',
+                    },
+                    {
+                        id : 3,
+                        title : 'Третий',
+                    }
+                ],
+                source = new MemorySource({
                     data: data,
                     idProperty: 'id'
-                }
-            });
+                });
 
-            assert.isTrue(cInstance.instanceOfModule(resSource, 'WS.Data/Source/Memory'), 'prepareSource doesn\'t returns datasource by config');
-            assert.equal('id', resSource.getIdProperty(), 'prepareSource doesn\'t returns datasource by config');*/
+            TabsButtons._private.initItems(source, tabInstance).addCallback(function(items) {
+                assert(1, items.getRecordById('1'), 'incorrect  left order');
+                assert(30, items.getRecordById('2'), 'incorrect right order');
+                done();
+            })
         });
-
-
+        it('prepareItemClass', function () {
+            var
+                item = new Record({
+                    rawData: {
+                        align: 'left',
+                        karambola: '15',
+                        _order: '144'
+                    }
+                }),
+                item2 = new Record({
+                    rawData: {
+                        karambola: '10',
+                        _order: '2'
+                    }
+                }),
+                options = {
+                    style: "additional",
+                    selectedKey: '15',
+                    keyProperty: 'karambola'
+                },
+                expected =  'controls-Tabs__item controls-Tabs__item_align_left controls-Tabs_style_additional__item_state_selected controls-Tabs__item_state_selected',
+                expected2 = 'controls-Tabs__item controls-Tabs__item_align_right controls-Tabs__item_state_default';
+            assert.equal(expected, TabsButtons._private.prepareItemClass(item, options, 144), 'wrong order cross-brwoser styles');
+            assert.equal(expected2, TabsButtons._private.prepareItemClass(item2, options, 144), 'wrong order cross-brwoser styles');
+        });
     })
 });

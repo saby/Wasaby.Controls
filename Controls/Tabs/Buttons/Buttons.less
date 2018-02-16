@@ -71,10 +71,6 @@
   font-size: @font-size_Tabs_item_selected;
   z-index: 2;
 }
-.controls-Tabs__item_extreme {
-  margin-right:0;
-  margin-left: 0;
-}
 .controls-Tabs__item_align_left {
   .tabs-separator();
   margin-left: -@border-width_Tabs;
@@ -89,7 +85,10 @@
     left: 0;
   }
 }
-
+.controls-Tabs__item_extreme {
+  margin-right:0;
+  margin-left: 0;
+}
 /* style = default */
 .controls-Tabs_style_default__item_state_selected {
   box-shadow: inset 0 -@shadow-offset-y_tabs_item_hover_selected 0 0 @border-color_Tabs_item_selected_default;
