@@ -92,14 +92,17 @@ define('Controls/List/SourceControl', [
          return error;
       },
 
-      onLoadEdge: function(self, direction) {
+      onScrollLoadEdge: function(self, direction) {
          if (self._options.navigation && self._options.navigation.view === 'infinity') {
             if (self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading()) {
                _private.loadToDirection(self, direction)
             }
-            if (self._scrollPagingCtr) {
-               self._scrollPagingCtr.handleScrollEdge(direction);
-            }
+         }
+      },
+
+      onScrollListEdge: function(self, direction) {
+         if (self._scrollPagingCtr) {
+            self._scrollPagingCtr.handleScrollEdge(direction);
          }
       },
 
@@ -123,11 +126,6 @@ define('Controls/List/SourceControl', [
                self._notify('doScroll', ['bottom'], {bubbling: true});
             }
          }
-      },
-
-      scrollTo: function(offset) {
-         //TODO без скролл вотчера пока так
-         this._container.closest('.ws-scrolling-content').scrollTop = offset;
       },
 
       startScrollEmitter: function(self) {
@@ -411,8 +409,10 @@ define('Controls/List/SourceControl', [
       __onEmitScroll: function(e, type, params) {
          var self = this;
          switch (type) {
-            case 'loadTop': _private.onLoadEdge(self, 'up'); break;
-            case 'loadBottom': _private.onLoadEdge(self, 'down'); break;
+            case 'loadTop': _private.onScrollLoadEdge(self, 'up'); break;
+            case 'loadBottom': _private.onScrollLoadEdge(self, 'down'); break;
+            case 'listTop': _private.onScrollListEdge(self, 'up'); break;
+            case 'listBottom': _private.onScrollListEdge(self, 'down'); break;
             case 'scrollMove': _private.handleListScroll(self, params.scrollTop); break;
             case 'canScroll': _private.onScrollShow(self); break;
             case 'cantScroll': _private.onScrollHide(self); break;

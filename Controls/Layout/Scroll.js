@@ -68,7 +68,7 @@ define('Controls/Layout/Scroll',
             scrollHeight = container.scrollHeight;
 
             _private.sendCanScroll(self, clientHeight, scrollHeight);
-            _private.sendCanScroll(self, clientHeight, scrollHeight, scrollTop);
+            _private.sendEdgePositions(self, clientHeight, scrollHeight, scrollTop);
          },
 
          initIntersectionObserver: function(self, elements) {
@@ -142,10 +142,10 @@ define('Controls/Layout/Scroll',
             // подписка на скролл через throttle. Нужно подобрать оптимальное значение,
             // как часто кидать внутреннее событие скролла. На простом списке - раз в 100мс достаточно.
             throttle(function(){
+               _private.start(self, 'scrollMove', {scrollTop: e.target.scrollTop});
                if (!self._observer) {
                   _private.onChangeScroll(self, e.target);
                }
-               _private.start(self, 'scrollMove', {scrollTop: e.target.scrollTop});
             }, 100, true)();
          },
 

@@ -1,7 +1,7 @@
 <div class="controls-SourceControl">
-    <div class="controls-SourceControl__topListTrigger" name="topListTrigger"></div>
+    <div class="controls-SourceControl__trigger controls-SourceControl__topListTrigger" name="topListTrigger"></div>
     <div class="controls-SourceControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
-    <div class="controls-SourceControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
+    <div class="controls-SourceControl__trigger controls-SourceControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
 
     <ws:if data="{{_listViewModel && _listViewModel.getCount()}}">
         <ws:partial
@@ -19,9 +19,9 @@
         <ws:partial template="{{_options.emptyTemplate}}"/>
     </ws:if>
 
-    <div class="controls-SourceControl__bottomLoadTrigger" name="bottomLoadTrigger" style="top: -{{_loadOffset}}px;"></div>
+    <div class="controls-SourceControl__trigger controls-SourceControl__bottomLoadTrigger" name="bottomLoadTrigger" style="top: -{{_loadOffset}}px;"></div>
     <div class="controls-SourceControl__bottomPlaceholder" style="height: {{_bottomPlaceholderHeight}}px;"></div>
-    <div class="controls-SourceControl__bottomListTrigger" name="bottomListTrigger"></div>
+    <div class="controls-SourceControl__trigger controls-SourceControl__bottomListTrigger" name="bottomListTrigger"></div>
 
     <Controls:List:SourceControl:Scroll:Emitter on:emitListScroll="__onEmitScroll()" name="ScrollEmitter"/>
 
