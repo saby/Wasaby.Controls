@@ -39,6 +39,7 @@ define([
             TabsButtons._private.initItems(source, tabInstance).addCallback(function(items) {
                 assert(1, items.getRecordById('1'), 'incorrect  left order');
                 assert(30, items.getRecordById('2'), 'incorrect right order');
+                tabInstance.destroy();
                 done();
             })
         });
@@ -54,7 +55,8 @@ define([
                 item2 = new Record({
                     rawData: {
                         karambola: '10',
-                        _order: '2'
+                        _order: '2',
+                        type: "photo"
                     }
                 }),
                 options = {
@@ -63,7 +65,7 @@ define([
                     keyProperty: 'karambola'
                 },
                 expected =  'controls-Tabs__item controls-Tabs__item_align_left controls-Tabs_style_additional__item_state_selected controls-Tabs__item_state_selected',
-                expected2 = 'controls-Tabs__item controls-Tabs__item_align_right controls-Tabs__item_state_default';
+                expected2 = 'controls-Tabs__item controls-Tabs__item_align_right controls-Tabs__item_state_default controls-Tabs__item_type_photo';
             assert.equal(expected, TabsButtons._private.prepareItemClass(item, options, 144), 'wrong order cross-brwoser styles');
             assert.equal(expected2, TabsButtons._private.prepareItemClass(item2, options, 144), 'wrong order cross-brwoser styles');
         });
