@@ -25,7 +25,7 @@ define('Controls-demo/Tabs/Buttons', [
     var srcData = [
         {
             id: "1",
-            title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1 Настолько длинное название папки что оно не влезет в максимальный размер'
+            title: 'So long folder name that it will not fit into the maximum size So long folder name that it will not fit into the maximum size'
         },
         {
             id: "2",
