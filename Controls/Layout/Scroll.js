@@ -100,6 +100,28 @@ define('Controls/Layout/Scroll',
             self._observer.observe(elements.bottomListTrigger);
          },
 
+         doScroll: function(self, scrollParam, container) {
+            if (scrollParam === 'top') {
+               self._container.scrollTop = 0;
+            }
+            else {
+               var clientHeight, scrollHeight;
+               if (scrollParam === 'bottom') {
+                  scrollHeight = container.scrollHeight;
+                  self._container.scrollTop = scrollHeight;
+               }
+               else {
+                  clientHeight = container.clientHeight;
+                  if (scrollParam === 'pageUp') {
+                     self._container.scrollTop -= clientHeight;
+                  }
+                  else {
+                     self._container.scrollTop += clientHeight;
+                  }
+               }
+            }
+         },
+
          start: function(self, eventType, scrollTop) {
             self._registrar.start(eventType, scrollTop);
          }
@@ -144,6 +166,10 @@ define('Controls/Layout/Scroll',
             }
 
 
+         },
+
+         _doScrollHandler: function(e, scrollParam) {
+            _private.doScroll(this, scrollParam, this._container);
          },
 
 

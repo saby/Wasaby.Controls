@@ -53,6 +53,10 @@ define('Controls/List/SimpleList/ListView', [
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
          },
 
+         _afterMount: function() {
+            this._notify('resize', [], {bubbling: true})
+         },
+
          _onItemClick: function(e, dispItem) {
             var item, newKey;
             item = dispItem.getContents();

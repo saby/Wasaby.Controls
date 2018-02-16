@@ -98,7 +98,7 @@ define('Controls/List/SourceControl', [
                _private.loadToDirection(self, direction)
             }
             if (self._scrollPagingCtr) {
-               self._scrollPagingCtr.handleScrollTop();
+               self._scrollPagingCtr.handleScrollEdge(direction);
             }
          }
       },
@@ -108,19 +108,19 @@ define('Controls/List/SourceControl', [
             self._sourceController.setEdgeState(direction);
             _private.reload(self).addCallback(function(){
                if (direction === 'up') {
-                  self._scrollController.scrollToTop();
+                  self._notify('doScroll', ['top'], {bubbling: true});
                }
                else {
-                  self._scrollController.scrollToBottom();
+                  self._notify('doScroll', ['bottom'], {bubbling: true});
                }
             });
          }
          else {
             if (direction === 'up') {
-               self._scrollController.scrollToTop();
+               self._notify('doScroll', ['top'], {bubbling: true});
             }
             else {
-               self._scrollController.scrollToBottom();
+               self._notify('doScroll', ['bottom'], {bubbling: true});
             }
          }
       },
@@ -380,9 +380,6 @@ define('Controls/List/SourceControl', [
       },
 
       _beforeUnmount: function() {
-         if (this._scrollController) {
-            this._scrollController.destroy();
-         }
 
          if (this._sourceController) {
             this._sourceController.destroy();
@@ -403,13 +400,11 @@ define('Controls/List/SourceControl', [
       },
 
       __onPagingArrowClick: function(e, arrow) {
-         if (this._scrollController) {
-            switch (arrow) {
-               case 'Next': this._scrollController.scrollPageDown(); break;
-               case 'Prev': this._scrollController.scrollPageUp(); break;
-               case 'Begin': _private.scrollToEdge(this, 'up'); break;
-               case 'End': _private.scrollToEdge(this, 'down'); break;
-            }
+         switch (arrow) {
+            case 'Next': this._notify('doScroll', ['pageDown'], {bubbling: true}); break;
+            case 'Prev': this._notify('doScroll', ['pageUp'], {bubbling: true}); break;
+            case 'Begin': _private.scrollToEdge(this, 'up'); break;
+            case 'End': _private.scrollToEdge(this, 'down'); break;
          }
       },
 
