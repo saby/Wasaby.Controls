@@ -7,10 +7,11 @@ define('Controls/Event/Listener',
    [
       'Core/Control',
       'tmpl!Controls/Event/Listener',
+      'Controls/Event/Registrar',
       'WS.Data/Type/descriptor',
       'tmpl!Controls/Application/CompatibleScripts'
    ],
-   function(Control, template, types) {
+   function(Control, template, Registrar, types) {
 
       'use strict';
 
