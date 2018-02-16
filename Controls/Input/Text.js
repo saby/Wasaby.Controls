@@ -91,7 +91,7 @@ define('Controls/Input/Text', [
          _inputCompletedHandler: function(){
             //Если стоит опция trim, то перед завершением удалим лишние пробелы и ещё раз стрельнем valueChanged
             if(this._options.trim){
-               var newValue = this._textViewModel.trim(this._options.value);
+               var newValue = this._options.value.trim();
                if(newValue !== this._options.value){
                   this._notify('valueChanged', [newValue]);
                }

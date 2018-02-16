@@ -61,15 +61,6 @@ define('Controls/Input/Text/ViewModel',
                   value: splitValue.before + insert + splitValue.after,
                   position: splitValue.before.length + insert.length
                };
-            },
-
-            /**
-             * Обрезает пробелы
-             * @param value
-             * @returns {String}
-             */
-            trim: function(value) {
-               return value.trim();
             }
          });
 
