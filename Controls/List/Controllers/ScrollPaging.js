@@ -19,15 +19,12 @@ define('Controls/List/Controllers/ScrollPaging',
             this._options = cfg;
             Paging.superclass.constructor.apply(this, arguments);
 
-            //изначально пэйджинг в положении прокручено сверху
-            if (this._options.enabled) {
-               this.handleScrollTop();
-            }
+            this.handleScrollTop();
          },
 
 
          handleScroll: function() {
-            if (this._options.enabled && !(this._curState === 'middle')) {
+            if (!(this._curState === 'middle')) {
                this._options.pagingCfgTrigger({
                   stateBegin: 'normal',
                   statePrev: 'normal',
@@ -39,7 +36,7 @@ define('Controls/List/Controllers/ScrollPaging',
          },
 
          handleScrollTop: function() {
-            if (this._options.enabled && !(this._curState === 'top')) {
+            if (!(this._curState === 'top')) {
                this._options.pagingCfgTrigger({
                   stateBegin: 'disabled',
                   statePrev: 'disabled',
@@ -51,7 +48,7 @@ define('Controls/List/Controllers/ScrollPaging',
          },
 
          handleScrollBottom: function() {
-            if (this._options.enabled && !(this._curState === 'bottom')) {
+            if (!(this._curState === 'bottom')) {
                this._options.pagingCfgTrigger({
                   stateBegin: 'normal',
                   statePrev: 'normal',
@@ -70,13 +67,6 @@ define('Controls/List/Controllers/ScrollPaging',
             switch (btn) {
                case 'Begin': this._options.scrollContainer.scrollTop = 0; break;
                case 'End': this._options.scrollContainer.scrollTop = this._viewHeight - this._viewportHeight; break;
-            }
-         },
-
-         setEnabled: function(enabled) {
-            this._options.enabled = enabled;
-            if (this._options.enabled) {
-               this.handleScrollTop();
             }
          },
 

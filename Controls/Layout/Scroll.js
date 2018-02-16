@@ -22,13 +22,17 @@ define('Controls/Layout/Scroll',
       var global = (function() { return this || (0,eval)('this') })();
 
       var _private = {
-         onScroll: function(self, container) {
-            var scrollTop, clientHeight, scrollHeight;
 
-            scrollTop = container.scrollTop;
-            clientHeight = container.clientHeight;
-            scrollHeight = container.scrollHeight;
+         sendCanScroll: function(self, clientHeight, scrollHeight) {
+            if (clientHeight < scrollHeight) {
+               _private.start(self, 'canScroll');
+            }
+            else {
+               _private.start(self, 'cantScroll');
+            }
+         },
 
+         sendEdgePositions: function(self, clientHeight, scrollHeight, scrollTop) {
             //Проверка на триггеры начала/конца блока
             if (scrollTop <= 0) {
                _private.start(self, 'listTop', scrollTop);
@@ -44,6 +48,27 @@ define('Controls/Layout/Scroll',
             if (scrollTop + clientHeight >= scrollHeight - SCROLL_LOAD_OFFSET) {
                _private.start(self, 'loadBottom', scrollTop);
             }
+         },
+
+         onInitScroll: function(self, container) {
+            var scrollTop, clientHeight, scrollHeight;
+
+            scrollTop = container.scrollTop;
+            clientHeight = container.clientHeight;
+            scrollHeight = container.scrollHeight;
+
+            _private.sendCanScroll(self, clientHeight, scrollHeight, scrollTop);
+         },
+
+         onChangeScroll: function(self, container) {
+            var scrollTop, clientHeight, scrollHeight;
+
+            scrollTop = container.scrollTop;
+            clientHeight = container.clientHeight;
+            scrollHeight = container.scrollHeight;
+
+            _private.sendCanScroll(self, clientHeight, scrollHeight);
+            _private.sendCanScroll(self, clientHeight, scrollHeight, scrollTop);
          },
 
          initIntersectionObserver: function(self, elements) {
@@ -96,23 +121,31 @@ define('Controls/Layout/Scroll',
             // как часто кидать внутреннее событие скролла. На простом списке - раз в 100мс достаточно.
             throttle(function(){
                if (!self._observer) {
-                  _private.onScroll(self, e.target);
+                  _private.onChangeScroll(self, e.target);
                }
-               _private.start(self, 'middle', e.target.scrollTop);
+               _private.start(self, 'scrollMove', {scrollTop: e.target.scrollTop});
             }, 100, true)();
+         },
+
+         _resizeHandler: function() {
+            _private.onChangeScroll(this, this._container);
          },
 
          _registerIt: function(event, registerType, component, callback, triggers){
             this._registrar.register(event, registerType, component, callback);
 
+            _private.onInitScroll(this, this._container);
+
             if (global && global.IntersectionObserver && triggers) {
                _private.initIntersectionObserver(this, triggers);
             }
             else {
-               _private.onScroll(this, this._container);
+               _private.onChangeScroll(this, this._container);
             }
 
+
          },
+
 
 
 

@@ -73,9 +73,11 @@ define('Controls/List/SimpleList/ListViewModel',
          },
 
          updateIndexes: function(startIndex, stopIndex) {
-            this._startIndex = startIndex;
-            this._stopIndex = stopIndex;
-            this._notify('onListChange');
+            if ((this._startIndex !== startIndex) || (this._stopIndex !== stopIndex)){
+               this._startIndex = startIndex;
+               this._stopIndex = stopIndex;
+               this._notify('onListChange');
+            }
          },
 
          setItems: function(items) {

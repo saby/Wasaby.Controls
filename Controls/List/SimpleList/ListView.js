@@ -15,8 +15,9 @@ define('Controls/List/SimpleList/ListView', [
    'use strict';
 
    var _private = {
-      onListChange: function() {
-         this._forceUpdate();
+      onListChange: function(self) {
+         self._forceUpdate();
+         self._notify('resize', [], {bubbling: true})
       }
    };
 
@@ -30,7 +31,10 @@ define('Controls/List/SimpleList/ListView', [
 
          constructor: function (cfg) {
             ListView.superclass.constructor.apply(this, arguments);
-            this._onListChangeFnc = _private.onListChange.bind(this);
+            var self = this;
+            this._onListChangeFnc = function() {
+               _private.onListChange(self);
+            }
          },
 
          _beforeMount: function(newOptions) {

@@ -35,7 +35,7 @@ define('Controls/List/SourceControl', [
                }
 
                self._virtualScroll.setItemsCount(self._listViewModel.getCount());
-               _private.handleListScroll.call(self, 0);
+               _private.handleListScroll(self, 0);
             }).addErrback(function(error){
                _private.processLoadError(self, error)
             })
@@ -131,7 +131,6 @@ define('Controls/List/SourceControl', [
       },
 
       startScrollEmitter: function(self) {
-
          var
             children = self._children,
             triggers = {
@@ -141,9 +140,30 @@ define('Controls/List/SourceControl', [
                bottomLoadTrigger: children.bottomLoadTrigger
             };
 
-
          self._children.ScrollEmitter.startRegister(triggers);
 
+      },
+
+      onScrollShow: function(self) {
+         if (!self._scrollPagingCtr) {
+            if (self._options.navigation
+               && self._options.navigation.view === 'infinity'
+               && self._options.navigation.viewConfig
+               && self._options.navigation.viewConfig.pagingMode
+            ) {
+               _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr){
+                  self._scrollPagingCtr = scrollPagingCtr;
+               })
+            }
+         }
+         else {
+
+         }
+      },
+
+      onScrollHide: function(self) {
+         self._pagingCfg = null;
+         self._forceUpdate();
       },
 
       createScrollPagingController: function(self) {
@@ -151,9 +171,7 @@ define('Controls/List/SourceControl', [
          require(['Controls/List/Controllers/ScrollPaging'], function (ScrollPagingController) {
             var scrollPagingCtr;
             scrollPagingCtr = new ScrollPagingController({
-               //scrollContainer: scrollContainer,
                mode: self._options.navigation.viewConfig.pagingMode,
-               enabled: self._scrollController.hasScroll(),
                pagingCfgTrigger: function(cfg) {
                   self._pagingCfg = cfg;
                   self._forceUpdate();
@@ -202,13 +220,13 @@ define('Controls/List/SourceControl', [
        * Обработать прокрутку списка виртуальным скроллом
        * @param scrollTop
        */
-      handleListScroll: function(scrollTop) {
-         var virtualWindowIsChanged = this._virtualScroll.setScrollTop(scrollTop);
+      handleListScroll: function(self, scrollTop) {
+         var virtualWindowIsChanged = self._virtualScroll.setScrollTop(scrollTop);
          if (virtualWindowIsChanged) {
-            _private.applyVirtualWindow(this, this._virtualScroll.getVirtualWindow());
+            _private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
          }
-         if (this._scrollPagingCtr) {
-            this._scrollPagingCtr.handleScroll(scrollTop)
+         if (self._scrollPagingCtr) {
+            self._scrollPagingCtr.handleScroll(scrollTop)
          }
       },
 
@@ -381,11 +399,6 @@ define('Controls/List/SourceControl', [
       _afterUpdate: function() {
          if (_private.getItemsCount(this)) {
             _private.initializeAverageItemsHeight(this);
-
-            //Проверим, не достигли ли границ контейнера. Если достигли, возможно нужна подгрузка соседней страницы
-            if (this._scrollController) {
-               this._scrollController.checkBoundaryContainer();
-            }
          }
       },
 
@@ -400,12 +413,14 @@ define('Controls/List/SourceControl', [
          }
       },
 
-      _onEmitScroll: function(e, type, scrollTop) {
+      __onEmitScroll: function(e, type, params) {
          var self = this;
          switch (type) {
             case 'loadTop': _private.onLoadEdge(self, 'up'); break;
             case 'loadBottom': _private.onLoadEdge(self, 'down'); break;
-            case 'middle': _private.handleListScroll.call(self, scrollTop);
+            case 'scrollMove': _private.handleListScroll(self, params.scrollTop); break;
+            case 'canScroll': _private.onScrollShow(self); break;
+            case 'cantScroll': _private.onScrollHide(self); break;
          }
 
       },
