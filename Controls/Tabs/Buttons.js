@@ -96,7 +96,7 @@ define('Controls/Tabs/Buttons', [
         _beforeUpdate: function(newOptions) {
             var
                 self = this;
-            if (newOptions.source && !this._sourceController) {
+            if (newOptions.source && newOptions.source !== this._options.source) {
                 return _private.initItems(newOptions.source, this).addCallback(function(){
                     self._forceUpdate();
                 })

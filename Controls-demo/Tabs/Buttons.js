@@ -22,7 +22,7 @@ define('Controls-demo/Tabs/Buttons', [
              cssButtons
 ) {
     'use strict';
-    var srcData = [
+    var srcData7 = [
         {
             id: "1",
             title: 'So long folder name that it will not fit into the maximum size So long folder name that it will not fit into the maximum size'
@@ -36,7 +36,30 @@ define('Controls-demo/Tabs/Buttons', [
             id: "3",
             title: 'Smartphones 3 '
         }
-    ];
+    ],
+    newSrcData7 = [
+        {
+            id: "1",
+            title: 'So1t into the maxi1at it will no1the maximum size'
+        },
+        {
+            id: "2",
+            title: 'N1ks 2',
+            align: "left"
+        },
+        {
+            id: "3",
+            title: 'Smartphones 3 '
+        }
+    ],
+    source7 = new MemorySource({
+        idProperty: 'id',
+        data: srcData7
+    }),
+    newSource7 =  new MemorySource({
+        idProperty: 'id',
+        data: newSrcData7
+    });
 
     var TabButtonsDemo = Control.extend({
             SelectedKey1: "1",
@@ -50,12 +73,10 @@ define('Controls-demo/Tabs/Buttons', [
             _spaceTemplate: spaceTemplate,
             _itemTemplate: itemTemplate,
             _mainTemplate: mainTemplate,
-           _photoContent: photoContent,
+            _photoContent: photoContent,
+            _source7: source7,
             _setSource: function() {
-                this._lazySource = new MemorySource({
-                    idProperty: 'id',
-                    data: srcData
-                })
+                this._source7 = newSource7;
             }
         });
     return TabButtonsDemo;
