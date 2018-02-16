@@ -32,6 +32,22 @@ define(
             element = Manager.find(id);
             assert.equal(element.popupOptions.testOption, 'updated');
          });
+   
+         it('fireEventHandler', function() {
+            var eventCloseFired = false;
+   
+            Manager.update(id, {
+               eventHandlers: {
+                  onClose: function() {
+                     eventCloseFired = true;
+                  }
+               }
+            });
+            
+            Manager._private.fireEventHandler(id, 'onClose');
+            
+            assert.isTrue(eventCloseFired, 'event is not fired.');
+         });
 
          it('remove popup', function() {
             Manager.remove(id);

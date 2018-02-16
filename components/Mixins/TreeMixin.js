@@ -1491,9 +1491,15 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                   //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
                   // В режиме поиска скролить к предыдущей записи не нужно: https://online.sbis.ru/opendoc.html?guid=3f384ac7-a935-4af4-aa56-91b2e44f4d7e
                   if (!self._isSearchMode() && !this._container.parents('.controls-ListView').length) {
-                     runDelayed(function() {
+                     /* requestAnimationFrame в ie не пакетирует скролы, только перерисовки,
+                        поэтому при использовании requestAnimationFrame будет дергаться страница. */
+                     if (constants.browser.isIE) {
                         self._scrollToItem(previousRoot);
-                     });
+                     } else {
+                        runDelayed(function () {
+                           self._scrollToItem(previousRoot);
+                        });
+                     }
                   }
                } else {
                   /*иначе вход в папку*/

@@ -64,6 +64,7 @@ define('Controls/Application',
             if (!receivedState) {
                receivedState = {};
             }
+
             self.cssLinks = receivedState.cssLinks || (context.AppData ? context.AppData.cssLinks : cfg.cssLinks);
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
