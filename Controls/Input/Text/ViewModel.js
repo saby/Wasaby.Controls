@@ -61,6 +61,11 @@ define('Controls/Input/Text/ViewModel',
                   value: splitValue.before + insert + splitValue.after,
                   position: splitValue.before.length + insert.length
                };
+            },
+
+            updateOptions: function(constraint, maxLength) {
+               this._options.constraint = constraint;
+               this._options.maxLength = maxLength;
             }
          });
 
