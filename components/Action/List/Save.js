@@ -210,21 +210,12 @@ define('SBIS3.CONTROLS/Action/List/Save', [
         _loadData: function(dataSource, query) {
             var result = new Deferred();
 
-           moduleStubs.require(['SBIS3.CONTROLS/Utils/InformationPopupManager']).addCallback(function(manager) {
-              manager[0].showConfirmDialog({message: 'Операция займет продолжительное время. Провести операцию?'},
-                 function (){
-                    fcHelpers.toggleIndicator(true);
-                    dataSource.query(query).addCallback(function (recordSet) {
-                       result.callback(recordSet.getAll())
-                    }).addBoth(function() {
-                       fcHelpers.toggleIndicator(false);
-                    });
-                 },
-                 function(){
-                    result.errback();
-                 }
-              )
-           });
+            fcHelpers.toggleIndicator(true);
+            dataSource.query(query).addCallback(function (recordSet) {
+               result.callback(recordSet.getAll());
+            }).addBoth(function() {
+               fcHelpers.toggleIndicator(false);
+            });
 
            return result;
         }
