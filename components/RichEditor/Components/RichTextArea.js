@@ -528,9 +528,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   // Убрать FakeCarret в редакторе при переходе в не активное состояние
                   // 1174789437 https://online.sbis.ru/opendoc.html?guid=e21b8722-3ffa-4a47-a499-c8bd01af0985
                   this._removeTinyFakeCaret();
-               }
-               if (cConstants.browser.isMobilePlatform) {
-                  EventBus.globalChannel().notify('MobileInputFocusOut');
+                  if (cConstants.browser.isMobilePlatform) {
+                     EventBus.globalChannel().notify('MobileInputFocusOut');
+                  }
                }
             }
             RichTextArea.superclass.setActive.apply(this, arguments);
