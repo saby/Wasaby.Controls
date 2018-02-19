@@ -97,6 +97,7 @@
 
 .controls-InputRender__placeholder {
    .compatPlaceholder(@color_InputRender-placeholder);
+   .inline-flexbox();
    .align-items(center);
    padding-left: 1px;
 }
@@ -110,28 +111,6 @@
    .text-overflow();
    display: inline-block;
    width: 100%;
-}
-
-/*
-   По умолчанию скрываем плейсхолдер, а дальше 2 ситуации:
-   1) Для contenteditable управляем видимостью плейсхолдеров через :empty.
-   2) Для input нельзя использовать :empty, т.к. он там висит всегда. Поэтому вешаем аттрибут required на input, и тогда
-   на него будет вешаться :invalid, если он пустой.
-   https://jsfiddle.net/7oyopngt/
- */
-.controls-InputRender__field:empty:not(input):not(textarea) + .controls-InputRender__placeholder {
-   .inline-flexbox();
-}
-
-.controls-InputRender__field:invalid + .controls-InputRender__placeholder {
-   .inline-flexbox();
-}
-
-//В формах для ввода логина и пароля браузеры игнорируют аттрибут autocomplete="off" и вставляют логин\пароль в любом случае.
-//Также, хром проводит валидацию поля только после того, как пользователь совершит какое-нибудь действие на странице.
-//Так что единственный способ узнать, что произошло автодополнение и нужно скрыть плейсхолдер - проверить :-webkit-autofill.
-.controls-InputRender__field:-webkit-autofill + .controls-InputRender__placeholder {
-   display: none;
 }
 
 // риусем информационный треугольник через border, чтобы он занимал свои физические размеры
