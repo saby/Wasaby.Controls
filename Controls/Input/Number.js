@@ -62,11 +62,25 @@ define('Controls/Input/Number', [
       constructor: function (options) {
          NumberInput.superclass.constructor.apply(this, arguments);
 
+         this._value = options.value;
+
          this._numberViewModel = new NumberViewModel({
             onlyPositive: options.onlyPositive,
             integersLength: options.integersLength,
             precision: options.precision
          });
+      },
+
+      _beforeMount: function(options) {
+         if (!this._numberViewModel.validate(options.value.replace(/ /g, ''))) {
+            this._value = '';
+         }
+      },
+
+      _beforeUpdate: function(newOptions) {
+         if (this._options.value !== newOptions.value) {
+            this._value = newOptions.value;
+         }
       },
 
       _afterUpdate: function(oldOptions) {
@@ -80,15 +94,16 @@ define('Controls/Input/Number', [
 
       _inputCompletedHandler: function () {
          var
-            tmp = this._options.value.split('.'),
+            clearValue = this._value.replace(/ /g, ''),
+            tmp = clearValue.split('.'),
             integers = tmp[0],
             decimals = tmp[1];
 
          //Если дробная часть пустая или нулевая, то нужно убрать её
          if (!parseInt(decimals, 10)) {
-            this._notify('inputCompleted', [integers]);
+            this._notify('inputCompleted', [parseInt(integers, 10)]);
          } else {
-            this._notify('inputCompleted', [this._options.value]);
+            this._notify('inputCompleted', [parseFloat(clearValue)]);
          }
       },
 
