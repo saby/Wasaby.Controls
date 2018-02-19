@@ -11,11 +11,12 @@ define('SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
        'Core/Deferred',
        'Core/helpers/Hcontrol/trackElement',
        'SBIS3.CONTROLS/Utils/Contains',
+       'Lib/Mixins/LikeWindowMixin',
        'SBIS3.CONTROLS/Button/IconButton',
        'i18n!SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
        'css!SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar'
     ],
-    function(CompoundControl, ItemActionsGroup, dotTplFn, editActionsTpl, Deferred, trackElement, contains) {
+    function(CompoundControl, ItemActionsGroup, dotTplFn, editActionsTpl, Deferred, trackElement, contains, LikeWindowMixin) {
 
        'use strict';
 
@@ -32,7 +33,7 @@ define('SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar',
         *
         * @public
         */
-       var ItemsToolbar = CompoundControl.extend( /** @lends SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar.prototype */ {
+       var ItemsToolbar = CompoundControl.extend([LikeWindowMixin], /** @lends SBIS3.CONTROLS/ListView/resources/ItemsToolbar/ItemsToolbar.prototype */ {
           _dotTplFn: dotTplFn,
           $protected: {
              _options: {
