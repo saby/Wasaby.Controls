@@ -32,7 +32,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
          /** Ширина нативного скролбара
           * @type {?number}
           */
-         width: null,
+         _width: null,
          /**
           * Количество ссылок на синглтон
           * @type {number}
@@ -43,6 +43,17 @@ define('SBIS3.CONTROLS/ScrollContainer', [
           * Флаг обозначающий, что ширину нужно перевычисчитывать при зуме
           */
          needHandle: false,
+         /**
+          * Получение ширины скрола
+          * @param {?boolean} force Принудительное обновление значения
+          * @return {number}
+          */
+         width: function(force) {
+            if (this._width === null || force) {
+               this._update();
+            }
+            return this._width;
+         },
          /**
           * Добавляем обработчик. Обязательно прописываем в init-е экземпляра класса использующий этот контролер
           * @param {Function} handler Обработчик изменения ширины скрола
@@ -81,7 +92,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
           * @private
           */
          _update: function() {
-            this.width = this._getBrowserScrollbarWidth();
+            this._width = this._getBrowserScrollbarWidth();
          },
          /**
           * Получение значения ширины
@@ -360,7 +371,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
          },
 
          _hideBrowserScrollbar: function(){
-            var width = BrowserScrollbarWidthController.width,
+            var width = BrowserScrollbarWidthController.width(),
                style = {
                   marginRight: -width
                };
