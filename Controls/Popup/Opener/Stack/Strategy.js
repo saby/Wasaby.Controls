@@ -3,9 +3,10 @@ define('Controls/Popup/Opener/Stack/Strategy',
       'Controls/Popup/Opener/BaseStrategy',
       'WS.Data/Collection/List',
       'Controls/Popup/TargetCoords',
-      'Core/Deferred'
+      'Core/Deferred',
+      'Core/constants'
    ],
-   function (BaseStrategy, List, TargetCoords, cDeferred) {
+   function (BaseStrategy, List, TargetCoords, cDeferred, cConstants) {
       'use strict';
 
       var
@@ -55,16 +56,23 @@ define('Controls/Popup/Opener/Stack/Strategy',
             this._update();
          },
 
-         elementDestroyed: function (element) {
+         elementDestroyed: function (element, container) {
             var
                self = this,
                def = new cDeferred();
-            // для стеков нужно подождать завершения анимации
-            setTimeout(function(){
+            if( cConstants.browser.chrome && !cConstants.browser.isMobilePlatform ){
+               container.addEventListener('transitionend', function(){
+                  self._stack.remove(element);
+                  self._update();
+                  def.callback();
+               });
+               container.style.width = '0';
+            }
+            else{
                self._stack.remove(element);
                self._update();
                def.callback();
-            }, 200);
+            }
             return def;
          },
 
@@ -155,6 +163,14 @@ define('Controls/Popup/Opener/Stack/Strategy',
           */
          getMaxPanelWidth: function (wWidth) {
             return wWidth - MINIMAL_PANEL_DISTANCE;
+         },
+
+         getDefaultPosition: function () {
+            return {
+               top: -10000,
+               left: -10000,
+               width: 0
+            };
          }
       });
 

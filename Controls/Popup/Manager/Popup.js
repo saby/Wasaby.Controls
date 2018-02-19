@@ -76,8 +76,7 @@ define('Controls/Popup/Manager/Popup',
           * @function Controls/Popup/Manager/Popup#_close
           */
          _close: function () {
-            this._container.style.width = '0';
-            this._notify('closePopup', [this._options.id]);
+            this._notify('closePopup', [this._options.id, this._container]);
          },
 
          /**
