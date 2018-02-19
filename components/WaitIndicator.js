@@ -561,7 +561,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
                style.left = (w <= w0 ? x : x - Math.floor((w - w0)/2)) + 'px';
                style.top = (h <= h0 ? y : y - Math.floor((h - h0)/2)) + 'px';
                style.width = w < w0 ? w0 + 'px' : 'auto';
-               style.height = h < h0 ? w0 + 'px' : 'auto';
+               style.height = h < h0 ? h0 + 'px' : 'auto';
             }
          },
 
