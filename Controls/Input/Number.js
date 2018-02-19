@@ -62,8 +62,6 @@ define('Controls/Input/Number', [
       constructor: function (options) {
          NumberInput.superclass.constructor.apply(this, arguments);
 
-
-         //Вьюмодель для намбера. Нужно связать с конфигом
          this._numberViewModel = new NumberViewModel({
             onlyPositive: options.onlyPositive,
             integersLength: options.integersLength,
@@ -76,6 +74,8 @@ define('Controls/Input/Number', [
             this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
             this._caretPosition = null;
          }
+
+         this._numberViewModel.updateOptions(this._options.onlyPositive, this._options.integersLength, this._options.precision);
       },
 
       _inputCompletedHandler: function () {

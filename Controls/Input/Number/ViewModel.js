@@ -163,6 +163,12 @@ define('Controls/Input/Number/ViewModel',
                   value: _private.getValueWithDelimiters(splitValue),
                   position: _private.getCursorPosition(splitValue, shift)
                };
+            },
+
+            updateOptions: function(onlyPositive, integersLength, precision) {
+               this._options.onlyPositive = onlyPositive;
+               this._options.integersLength = integersLength;
+               this._options.precision = precision;
             }
          });
 
