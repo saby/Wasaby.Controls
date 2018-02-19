@@ -2,11 +2,12 @@
    value="{{_options.value}}"
    viewModel="{{_viewModel}}"
    tagStyle="{{_options.tagStyle}}"
+   placeholder="{{_options.placeholder}}"
 >
    <ws:content>
       <ws:partial
          template="tmpl!Controls/Input/resources/input"
-         enabled="{{_options.enabled}}"
+         enabled="{{isEnabled()}}"
          value="{{_options.value}}"
       />
    </ws:content>

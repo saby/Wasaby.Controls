@@ -15,9 +15,10 @@ define('Controls/Input/Mask',
        * В поле уже заранее будут введены символы, определяющие формат, и останется ввести только недостающие символы.
        * @class Controls/Input/Mask
        * @extends Controls/Control
+       * @mixes Controls/Input/interface/IInputTag
        * @mixes Controls/Input/interface/IInputText
        * @mixes Controls/Input/interface/IValidation
-       * @mixes Controls/Input/interface/IInputTag
+       * @mixes Controls/Input/interface/IInputPlaceholder
        * @control
        * @public
        * @category Input
@@ -64,11 +65,25 @@ define('Controls/Input/Mask',
          constructor: function(options) {
             Mask.superclass.constructor.call(this, options);
 
-            this._viewModel = new ViewModel({});
+            this._viewModel = new ViewModel({
+               mask: options.mask,
+               replacer: options.replacer,
+               formatMaskChars: {
+                  'L': '[А-ЯA-ZЁ]',
+                  'l': '[а-яa-zё]',
+                  'd': '[0-9]',
+                  'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
+               }
+            });
          },
 
          _beforeUpdate: function(newOptions) {
-            this._viewModel.updateOptions({});
+            if (!(newOptions.mask === this._options.mask && newOptions.replacer === this._options.replacer)) {
+               this._viewModel.updateOptions({
+                  mask: newOptions.mask,
+                  replacer: newOptions.replacer
+               });
+            }
          }
       });
 
