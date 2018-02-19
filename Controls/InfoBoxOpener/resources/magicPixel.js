@@ -9,7 +9,7 @@ define('Controls/InfoBoxOpener/resources/magicPixel', [],
          document.body.appendChild(div);
 
          var computedStyles = getComputedStyle(div);
-         for(key in hashMap){
+         for(var key in hashMap){
             obj[key] = parseInt(computedStyles[hashMap[key]]);
          }
 
