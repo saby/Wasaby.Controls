@@ -1690,23 +1690,45 @@
 //-----------------//
 //  InfoBox   //
 //----------------//
-@infobox-bg-style-default: #FFFFFF;
-@infobox-bg-style-lite: #F4F9FD;
-@infobox-bg-style-help: #FFF9F3;
-@infobox-bg-style-error: @infobox-bg-style-default;
+@infobox-bg-style-default:  #FFFFFF;
+@infobox-bg-style-lite:     #F4F9FD;
+@infobox-bg-style-help:     #FFF9F3;
+@infobox-bg-style-error:    @infobox-bg-style-default;
 
+@infobox-border-size:                1px;
 @infobox-border-color-style-default: #BDBDBD;
-@infobox-border-color-style-lite: #BDBDBD;
-@infobox-border-color-style-help: #BDBDBD;
-@infobox-border-color-style-error: #EF463A;
+@infobox-border-color-style-lite:    #BDBDBD;
+@infobox-border-color-style-help:    #BDBDBD;
+@infobox-border-color-style-error:   #EF463A;
 
 @infobox-shadow-color-style-default: rgba(0, 0, 0, 0.4);
-@infobox-shadow-color-style-lite: rgba(0, 0, 0, 0.4);
-@infobox-shadow-color-style-help: rgba(0, 0, 0, 0.4);
-@infobox-shadow-color-style-error: rgba(239, 70, 58, 0.4);
+@infobox-shadow-color-style-lite:    rgba(0, 0, 0, 0.4);
+@infobox-shadow-color-style-help:    rgba(0, 0, 0, 0.4);
+@infobox-shadow-color-style-error:   rgba(239, 70, 58, 0.4);
 
-@infobox-shadow-position: 0 0 12px;
-@infobox-max-width: 300px;
+@infobox-padding-top:    8px;
+@infobox-padding-bottom: 8px;
+@infobox-padding-left:   12px;
+@infobox-padding-right:  12px;
 
+@infobox-arrow-size:                12px;
+@infobox-arrow-diagonal-length:     16px; //~ sqrt(@infobox-arrow-size^2 + @infobox-arrow-size^2)
+@infobox-arrow-horizontal-offset:   14px;
+@infobox-arrow-vertical-offset:     11px;
+
+@infobox-shadow-position:      0 0 12px;
+@infobox-max-width:            300px;
+@infobox-float-element-size:   18px;
+
+@infobox-message-font-size:      14px;
+@infobox-message-color:          #000;
+@infobox-message-margin-right:   18px;
+
+@infobox-close-button-top:          4px;
+@infobox-close-button-right:        6px;
 @infobox-close-button-color:        #CCCCCC;
 @infobox-close-button-hover-color:  #313E78;
+
+@infobox-js-const-arrow-horizontal-offset:     12px;
+@infobox-js-const-arrow-vertical-offset:       9px;
+@infobox-js-const-target-offset:               14px;

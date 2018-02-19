@@ -4,11 +4,18 @@
             <Controls:Container:Scroll attr:class="controls-InfoBox__scrollContainer">
                 <ws:content>
                     <div class="controls-InfoBox ws-Container__popup-scrolling-content">
-                        <ws:partial template="{{template.contentTemplate}}" message="{{template.message}}"></ws:partial>
                         <div
                            class="controls-InfoBox__closeButton icon-24 icon-Close"
                            on:click="close()">
                         </div>
+                        <ws:if data="{{template.float}}">
+                            <div class="controls-InfoBox_floatElement"></div>
+                        </ws:if>
+                        <ws:partial
+                           template="{{template.template}}"
+                           message="{{template.message}}"
+                           class="{{!template.float ? 'controls-InfoBox__message_margin'}}">
+                        </ws:partial>
                     </div>
                 </ws:content>
             </Controls:Container:Scroll>

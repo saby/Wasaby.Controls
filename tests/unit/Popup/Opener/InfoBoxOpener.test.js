@@ -7,86 +7,39 @@ define(
       'use strict';
       describe('Controls/InfoBoxOpener', function () {
 
-         var getHorizontalOffset = InfoBoxOpener._private.getHorizontalOffset;
-         var align, corner;
+         var getOffset = InfoBoxOpener._private.getOffset;
+         var arrowOffset = 12;
+         var arrowWidth = 16;
 
          var tests = [{
-            align: { horizontal: 'left', vertical: 'top' },
-            corner: { vertical: 'top', horizontal: 'left' },
-            value: 28
+            cfg: {
+               targetWidth: 10,
+               alignSide: 'l'
+            },
+            value: -15
          }, {
-            align: { horizontal: 'center', vertical: 'top' },
-            corner: { vertical: 'top', horizontal: 'left' },
-            value: 9
-         }, {
-            align: { horizontal: 'right', vertical: 'top' },
-            corner: { vertical: 'top', horizontal: 'left' },
+            cfg: {
+               targetWidth: 10,
+               alignSide: 'c'
+            },
             value: 0
          }, {
-            align: { horizontal: 'left', vertical: 'top' },
-            corner: { vertical: 'top', horizontal: 'right' },
+            cfg: {
+               targetWidth: 10,
+               alignSide: 'r'
+            },
+            value: 15
+         }, {
+            cfg: {
+               targetWidth: 100,
+               alignSide: 'r'
+            },
             value: 0
-         }, {
-            align: { horizontal: 'center', vertical: 'top' },
-            corner: { vertical: 'top', horizontal: 'right' },
-            value: -9
-         }, {
-            align: { horizontal: 'right', vertical: 'top' },
-            corner: { vertical: 'top', horizontal: 'right' },
-            value: -28
-         }, {
-            align: { horizontal: 'left', vertical: 'top' },
-            corner: { vertical: 'top', horizontal: 'center' },
-            value: 19
-         }, {
-            align: { horizontal: 'center', vertical: 'top' },
-            corner: { vertical: 'top', horizontal: 'center' },
-            value: 0
-         }, {
-            align: { horizontal: 'right', vertical: 'top' },
-            corner: { vertical: 'top', horizontal: 'center' },
-            value: -19
-         }, {
-            align: { horizontal: 'left', vertical: 'bottom' },
-            corner: { vertical: 'bottom', horizontal: 'left' },
-            value: 28
-         }, {
-            align: { horizontal: 'center', vertical: 'bottom' },
-            corner: { vertical: 'bottom', horizontal: 'left' },
-            value: 9
-         }, {
-            align: { horizontal: 'right', vertical: 'bottom' },
-            corner: { vertical: 'bottom', horizontal: 'left' },
-            value: 0
-         }, {
-            align: { horizontal: 'left', vertical: 'bottom' },
-            corner: { vertical: 'bottom', horizontal: 'right' },
-            value: 0
-         }, {
-            align: { horizontal: 'center', vertical: 'bottom' },
-            corner: { vertical: 'bottom', horizontal: 'right' },
-            value: -9
-         }, {
-            align: { horizontal: 'right', vertical: 'bottom' },
-            corner: { vertical: 'bottom', horizontal: 'right' },
-            value: -28
-         }, {
-            align: { horizontal: 'left', vertical: 'bottom' },
-            corner: { vertical: 'bottom', horizontal: 'center' },
-            value: 19
-         }, {
-            align: { horizontal: 'center', vertical: 'bottom' },
-            corner: { vertical: 'bottom', horizontal: 'center' },
-            value: 0
-         }, {
-            align: { horizontal: 'right', vertical: 'bottom' },
-            corner: { vertical: 'bottom', horizontal: 'center' },
-            value: -19
          }];
 
-         tests.forEach(function(cfg){
-            it('align: ' + JSON.stringify(cfg.align) + ', corner: ' + JSON.stringify(cfg.corner), function(){
-               assert.isTrue(getHorizontalOffset(400, cfg.corner, cfg.align) === cfg.value);
+         tests.forEach(function(test){
+            it('align: ' + JSON.stringify(test.cfg), function(){
+               assert.isTrue(getOffset(test.cfg.targetWidth, test.cfg.alignSide, arrowOffset, arrowWidth) === test.value);
             });
          });
 

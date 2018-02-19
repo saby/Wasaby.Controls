@@ -8,313 +8,143 @@ define('Controls-demo/InfoBox/InfoBox',
 
       'use strict';
 
-      var items = [{
-         text: 'LEFT', //1
-         top: 0,
-         left: 0,
-         cfg: {
-            message: 'MESSAGE',
-            align: {
-               horizontal: 'left',
-               vertical: 'top'
-            },
-            corner: {
-               vertical: 'top',
-               horizontal: 'left'
+      var message = 'MESSAGE';
+
+      var blocks = [{
+         header: 'POSITION',
+         items: [{
+            text: 'TL',
+            cfg: {
+               message: message,
+               position: 'tl'
             }
-         }
-      }, {
-         text: 'CENTER',
-         top: 0,
-         left: 0,
-         cfg: {
-            message: 'MESSAGE',
-            align: {
-               horizontal: 'center',
-               vertical: 'top'
-            },
-            corner: {
-               vertical: 'top',
-               horizontal: 'left'
+         }, {
+            text: 'TC',
+            cfg: {
+               message: message,
+               position: 'tc'
             }
-         }
-      }, {
-         text: 'RIGHT',
-         top: 0,
-         left: 0,
-         cfg: {
-            message: 'MESSAGE',
-            align: {
-               horizontal: 'right',
-               vertical: 'top'
-            },
-            corner: {
-               vertical: 'top',
-               horizontal: 'left'
+         }, {
+            text: 'TR',
+            cfg: {
+               message: message,
+               position: 'tr'
             }
-         }
-      }, {
-         text: 'LEFT', //2
-         top: 0,
-         right: 0,
-         cfg: {
-            message: 'MESSAGE',
-            align: {
-               horizontal: 'left',
-               vertical: 'top'
-            },
-            corner: {
-               vertical: 'top',
-               horizontal: 'right'
+         }, {
+            text: 'BL',
+            cfg: {
+               message: message,
+               position: 'bl'
             }
-         }
-      }, {
-         text: 'CENTER',
-         top: 0,
-         right: 0,
-         cfg: {
-            message: 'MESSAGE',
-            align: {
-               horizontal: 'center',
-               vertical: 'top'
-            },
-            corner: {
-               vertical: 'top',
-               horizontal: 'right'
+         }, {
+            text: 'BC',
+            cfg: {
+               message: message,
+               position: 'bc'
             }
-         }
-      }, {
-         text: 'RIGHT',
-         top: 0,
-         right: 0,
-         cfg: {
-            message: 'MESSAGE',
-            align: {
-               horizontal: 'right',
-               vertical: 'top'
-            },
-            corner: {
-               vertical: 'top',
-               horizontal: 'right'
+         }, {
+            text: 'BR',
+            cfg: {
+               message: message,
+               position: 'br'
             }
-         }
-      }, {
-         text: 'LEFT', //3
-         top: 0,
-         right: 'calc(50% - 10px)',
-         cfg: {
-            message: 'MESSAGE',
-            align: {
-               horizontal: 'left',
-               vertical: 'top'
-            },
-            corner: {
-               vertical: 'top',
-               horizontal: 'center'
+         }, {
+            text: 'LT',
+            cfg: {
+               message: message,
+               position: 'lt'
             }
-         }
-      }, {
-         text: 'CENTER',
-         top: 0,
-         right: 'calc(50% - 10px)',
-         cfg: {
-            message: 'MESSAGE',
-            align: {
-               horizontal: 'center',
-               vertical: 'top'
-            },
-            corner: {
-               vertical: 'top',
-               horizontal: 'center'
+         }, {
+            text: 'LC',
+            cfg: {
+               message: message,
+               position: 'lc'
             }
-         }
-      }, {
-         text: 'RIGHT',
-         top: 0,
-         right: 'calc(50% - 10px)',
-         cfg: {
-            message: 'MESSAGE',
-            align: {
-               horizontal: 'right',
-               vertical: 'top'
-            },
-            corner: {
-               vertical: 'top',
-               horizontal: 'center'
+         }, {
+            text: 'LB',
+            cfg: {
+               message: message,
+               position: 'lb'
             }
-         }
-      }, {
-         text: 'LEFT', //4
-         bottom: 0,
-         left: 0,
-         cfg: {
-            message: 'MESSAGE',
-            align: {
-               horizontal: 'left',
-               vertical: 'bottom'
-            },
-            corner: {
-               vertical: 'bottom',
-               horizontal: 'left'
+         }, {
+            text: 'RT',
+            cfg: {
+               message: message,
+               position: 'rt'
             }
-         }
-      }, {
-         text: 'CENTER',
-         bottom: 0,
-         left: 0,
-         cfg: {
-            message: 'MESSAGE',
-            align: {
-               horizontal: 'center',
-               vertical: 'bottom'
-            },
-            corner: {
-               vertical: 'bottom',
-               horizontal: 'left'
+         }, {
+            text: 'RC',
+            cfg: {
+               message: message,
+               position: 'rc'
             }
-         }
-      }, {
-         text: 'RIGHT',
-         bottom: 0,
-         left: 0,
-         cfg: {
-            message: 'MESSAGE',
-            align: {
-               horizontal: 'right',
-               vertical: 'bottom'
-            },
-            corner: {
-               vertical: 'bottom',
-               horizontal: 'left'
+         }, {
+            text: 'RB',
+            cfg: {
+               message: message,
+               position: 'rb'
             }
-         }
+         }]
       }, {
-         text: 'LEFT', //5
-         bottom: 0,
-         right: 0,
-         cfg: {
-            message: 'MESSAGE',
-            align: {
-               horizontal: 'left',
-               vertical: 'bottom'
-            },
-            corner: {
-               vertical: 'bottom',
-               horizontal: 'right'
+         header: 'STYLE',
+         items: [{
+            text: 'DEFAULT',
+            cfg: {
+               message: message,
+               style: 'default'
             }
-         }
-      }, {
-         text: 'CENTER',
-         bottom: 0,
-         right: 0,
-         cfg: {
-            message: 'MESSAGE',
-            align: {
-               horizontal: 'center',
-               vertical: 'bottom'
-            },
-            corner: {
-               vertical: 'bottom',
-               horizontal: 'right'
+         }, {
+            text: 'LITE',
+            cfg: {
+               message: message,
+               style: 'lite'
             }
-         }
-      }, {
-         text: 'RIGHT',
-         bottom: 0,
-         right: 0,
-         cfg: {
-            message: 'MESSAGE',
-            align: {
-               horizontal: 'right',
-               vertical: 'bottom'
-            },
-            corner: {
-               vertical: 'bottom',
-               horizontal: 'right'
+         }, {
+            text: 'HELP',
+            cfg: {
+               message: message,
+               style: 'help'
             }
-         }
-      }, {
-         text: 'LEFT', //6
-         bottom: 0,
-         right: 'calc(50% - 10px)',
-         cfg: {
-            message: 'MESSAGE',
-            align: {
-               horizontal: 'left',
-               vertical: 'bottom'
-            },
-            corner: {
-               vertical: 'bottom',
-               horizontal: 'center'
+         }, {
+            text: 'ERROR',
+            cfg: {
+               message: message,
+               style: 'error'
             }
-         }
+         }]
       }, {
-         text: 'CENTER',
-         bottom: 0,
-         right: 'calc(50% - 10px)',
-         cfg: {
-            message: 'MESSAGE',
-            align: {
-               horizontal: 'center',
-               vertical: 'bottom'
-            },
-            corner: {
-               vertical: 'bottom',
-               horizontal: 'center'
+         header: 'FLOAT',
+         items: [{
+            text: 'TRUE',
+            cfg: {
+               message: 'i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i ' +
+               'i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i ' +
+               'i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i',
+               float: true
             }
-         }
-      }, {
-         text: 'RIGHT',
-         bottom: 0,
-         right: 'calc(50% - 10px)',
-         cfg: {
-            message: 'MESSAGE',
-            align: {
-               horizontal: 'right',
-               vertical: 'bottom'
-            },
-            corner: {
-               vertical: 'bottom',
-               horizontal: 'center'
+         }, {
+            text: 'FALSE',
+            cfg: {
+               message: 'i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i ' +
+               'i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i ' +
+               'i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i',
+               float: false
             }
-         }
+         }]
       }, {
-         text: 'LITE',
-         top: 0,
-         left: 0,
-         cfg: {
-            message: 'MESSAGE',
-            style: 'lite'
-         }
-      }, {
-         text: 'HELP',
-         top: 0,
-         left: 0,
-         cfg: {
-            message: 'MESSAGE',
-            style: 'help'
-         }
-      }, {
-         text: 'ERROR',
-         top: 0,
-         left: 0,
-         cfg: {
-            message: 'MESSAGE',
-            style: 'error'
-         }
-      }, {
-         text: 'CUSTOM TEMPLATE',
-         top: 0,
-         left: 0,
-         cfg: {
-            message: 'MESSAGE',
-            contentTemplate: contentTpl
-         }
+         header: 'CONTENT',
+         items: [{
+            text: 'CUSTOM',
+            cfg: {
+               message: message,
+               template: contentTpl
+            }
+         }]
       }];
 
       var InfoBox = Control.extend({
          _template: template,
-         _items: items,
+         _blocks: blocks,
 
          _open: function(e, cfg){
             cfg.target = e.target;

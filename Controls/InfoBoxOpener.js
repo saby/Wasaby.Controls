@@ -3,11 +3,12 @@ define('Controls/InfoBoxOpener',
       'Core/Control',
       'Core/core-merge',
       'Core/core-clone',
-      'tmpl!Controls/InfoBoxOpener/resources/contentTemplate',
+      'tmpl!Controls/InfoBoxOpener/resources/template',
       'tmpl!Controls/InfoBoxOpener/InfoBoxOpener',
+      'Controls/InfoBoxOpener/resources/magicPixel',
       'css!Controls/InfoBoxOpener/InfoBoxOpener'
    ],
-   function (Control, cMerge, cClone, contentTemplate, template) {
+   function (Control, cMerge, cClone, contentTpl, template, magicPixel) {
       'use strict';
 
       /**
@@ -24,10 +25,10 @@ define('Controls/InfoBoxOpener',
        * @typedef {Object} InfoBoxCfg
        * @property {String} message Сообщение, отображаемое в инфобоксе
        * @property {Style} style Горизонтальное выравнивание инфобокса
+       * @property {Boolean} float Должно ли содержимое обтекать крестик закрытия
        * @property {Object} target Таргет, относительно которого неообходимо показать инфобокс
-       * @property {AlignCfg} align Объект с конфигурацией выравнивания
-       * @property {CornerCfg} corner Объект с конфигурацией угла таргета, от которого будет строиться инфобокс
-       * @property {Function} contentTemplate Шаблон отображения внутреннего содержимого
+       * @property {Position} position Точка позиционировая инфобокса относительно таргета
+       * @property {Function} template Шаблон отображения внутреннего содержимого
        */
 
       /**
@@ -39,122 +40,92 @@ define('Controls/InfoBoxOpener',
        */
 
       /**
-       * @typedef {Object} AlignCfg
-       * @property {VerticalAlignEnum} vertical Вертикальное выравнивание инфобокса
-       * @property {HorizontalAlignEnum} horizontal Горизонтальное выравнивание инфобокса
-       */
-
-      /**
-       * @typedef {String} VerticalAlignEnum
-       * @variant top Инфобокс отобразится вверх относительно точки построения
-       * @variant bottom Инфобокс отобразится вниз относительно точки построения
-       */
-
-      /**
-       * @typedef {String} HorizontalAlignEnum
-       * @variant left Инфобокс отобразится слева относительно точки построения
-       * @variant center Инфобокс отобразится по центру относительно точки построения
-       * @variant right Инфобокс отобразится справа относительно точки построения
-       */
-
-      /**
-       * @typedef {Object} CornerCfg
-       * @property {VerticalCornerEnum} vertical Вертикальное положение точки
-       * @property {HorizontalCornerEnum} horizontal Горизонтальное положение точки
-       */
-
-      /**
-       * @typedef {String} VerticalCornerEnum
-       * @variant top Инфобокс отобразится относительно верхней точки таргета
-       * @variant bottom Инфобокс отобразится относительно нижней точки таргета
-       */
-
-      /**
-       * @typedef {String} HorizontalCornerEnum
-       * @variant left Инфобокс отобразится относительно левой точки таргета
-       * @variant center Инфобокс отобразится относительно центральной точки таргета
-       * @variant right Инфобокс отобразится относительно правой точки таргета
+       * @typedef {String} Position
+       * @variant tl Всплывающее окно отображается сверху относительно точки построения, выравнивается по левому краю
+       * @variant tc Всплывающее окно отображается сверху относительно точки построения, выравнивается по центру
+       * @variant tr Всплывающее окно отображается сверху относительно точки построения, выравнивается по правому краю
+       * @variant bl Всплывающее окно отображается снизу относительно точки построения, выравнивается по левому краю
+       * @variant bc Всплывающее окно отображается снизу относительно точки построения, выравнивается по центру
+       * @variant br Всплывающее окно отображается снизу относительно точки построения, выравнивается по правому краю
+       * @variant rt Всплывающее окно отображается справа относительно точки построения, выравнивается по верхнему краю
+       * @variant rc Всплывающее окно отображается справа относительно точки построения, выравнивается по центру
+       * @variant rb Всплывающее окно отображается справа относительно точки построения, выравнивается по нижнему краю
+       * @variant lt Всплывающее окно отображается слева относительно точки построения, выравнивается по верхнему краю
+       * @variant lc Всплывающее окно отображается слева относительно точки построения, выравнивается по центру
+       * @variant lb Всплывающее окно отображается слева относительно точки построения, выравнивается по нижнему краю
        */
 
 
-      //Ширина стрелки
-      var ARROW_WIDTH = 18;
-      //Смещение стрелки от края
-      var ARROW_OFFSET = 10;
-      //Вертикальное смещение инфобокса с учетом стрелки
-      var VERTICAL_OFFSETS = {
-         'top': -14,
-         'bottom': 14
+      //Получание констант из темы. Эксперементальный способ
+      var constants = magicPixel('controls-InfoBox__magicPixel', {
+         ARROW_WIDTH: 'marginLeft',
+         ARROW_H_OFFSET: 'marginRight',
+         ARROW_V_OFFSET: 'marginBottom',
+         TARGET_OFFSET: 'marginTop'
+      });
+
+      //Конфигурация инфобокса по умолчанию
+      var DEFAULT_CONFIG = {
+         position: 'tl',
+         style: 'default',
+         template: contentTpl,
+         float: false
       };
 
-      var DEFAULT_CONFIG = {
-         align: {
-            horizontal: 'right',
-            vertical: 'top'
-         },
-         corner: {
-            horizontal: 'left',
-            vertical: 'top'
-         },
-         style: 'default',
-         contentTemplate: contentTemplate
+      var SIDES = {
+         't': 'top',
+         'r': 'right',
+         'b': 'bottom',
+         'l': 'left',
+         'c': 'center'
+      };
+
+      var INVERTED_SIDES = {
+         't': 'bottom',
+         'r': 'left',
+         'b': 'top',
+         'l': 'right',
+         'c': 'center'
       };
 
       var _private = {
 
-         //Вычисляет горизонтальный offset с учетом стрелки
-        getHorizontalOffset: function(targetWidth, corner, align){
+         getOffset: function(targetSize, alignSide, arrowOffset, arrowWidth){
+            var align = INVERTED_SIDES[alignSide];
 
-           //Если ширина таргета меньше, чем требуется для корректного позиционирования стрелки, то просто будем указывать на центр таргета
-           if(targetWidth < ARROW_WIDTH + ARROW_OFFSET){
-              return {
-                 'right': -(ARROW_WIDTH + ARROW_OFFSET),
-                 'left': ARROW_WIDTH + ARROW_OFFSET,
-                 'center': 0
-              }[align.horizontal] + targetWidth/2 * (corner.horizontal === 'left' ? 1 : -1);
-           }
+            /*
+            * Проверяем, хватает ли нам ширины таргета для правильного позиционирования стрелки, если нет, то просто
+            * сдвигаем стрелку инфобокса на центр таргета
+            * */
+            if(align !== 'center' && targetSize < arrowWidth + arrowOffset){
+               switch(align){
+                  case 'top':
+                  case 'left':
+                     return arrowWidth/2 + arrowOffset - targetSize/2;
+                  case 'bottom':
+                  case 'right':
+                     return -arrowWidth/2 + -arrowOffset + targetSize/2;
+               }
+            }
 
-           switch(corner.horizontal){
-              case 'center':
-                 switch(align.horizontal){
-                    case 'left': return ARROW_OFFSET + ARROW_WIDTH/2;
-                    case 'right': return -(ARROW_OFFSET + ARROW_WIDTH/2);
-                    case 'center': return 0;
-                 }
-                 break;
-              case 'left':
-                 switch(align.horizontal){
-                    case 'left': return ARROW_WIDTH + ARROW_OFFSET;
-                    case 'right': return 0;
-                    case 'center': return ARROW_WIDTH/2;
-                 }
-                 break;
-              case 'right':
-                 switch(align.horizontal){
-                    case 'left': return 0;
-                    case 'right': return -(ARROW_WIDTH + ARROW_OFFSET);
-                    case 'center': return -ARROW_WIDTH/2;
-                 }
-           }
+            return 0;
+         },
 
-           return 0;
-        }
+         getVerticalOffset: function(target, alignSide){
+            return _private.getOffset(target.offsetHeight, alignSide,
+               constants.ARROW_V_OFFSET, constants.ARROW_WIDTH)
+         },
+
+         getHorizontalOffset: function(target, alignSide){
+            return _private.getOffset(target.offsetWidth, alignSide,
+               constants.ARROW_H_OFFSET, constants.ARROW_WIDTH)
+         }
+
       };
 
-      var InfoBox = Control.extend({
+      var InfoBoxOpener = Control.extend({
          _template: template,
          _infoBoxOpened: false,
-
-         /**
-          * Закрыть инфобокс
-          * @function Controls/InfoBoxOpener#close
-          */
-         close: function(){
-            if(this._infoBoxOpened){
-               this._children.opener.close();
-               this._infoBoxOpened = false;
-            }
-         },
 
          /**
           * Открыть инфобокс
@@ -169,31 +140,54 @@ define('Controls/InfoBoxOpener',
 
             cfg = cMerge(cClone(DEFAULT_CONFIG), cfg);
 
+            var side = cfg.position[0];
+            var alignSide = cfg.position[1];
+            var topOrBottomSide = side === 't' || side === 'b';
+
             this._children.opener.open({
                target: cfg.target,
                componentOptions: {
-                  contentTemplate: cfg.contentTemplate,
-                  message: cfg.message
+                  template: cfg.template,
+                  message: cfg.message,
+                  float: cfg.float
                },
                verticalAlign: {
-                  side: cfg.align.vertical,
-                  offset: VERTICAL_OFFSETS[cfg.align.vertical]
+                  side: topOrBottomSide ? SIDES[side] : INVERTED_SIDES[alignSide],
+                  offset: topOrBottomSide ?
+                     (side === 't' ? -constants.TARGET_OFFSET : constants.TARGET_OFFSET) :
+                     _private.getVerticalOffset(cfg.target, alignSide)
                },
                horizontalAlign: {
-                  side: cfg.align.horizontal,
-                  offset: _private.getHorizontalOffset(cfg.target.offsetWidth, cfg.corner, cfg.align)
+                  side: topOrBottomSide ? INVERTED_SIDES[alignSide] : SIDES[side],
+                  offset: topOrBottomSide ?
+                     _private.getHorizontalOffset(cfg.target, alignSide) :
+                     (side === 'l' ? -constants.TARGET_OFFSET : constants.TARGET_OFFSET)
                },
-               corner: cfg.corner,
+               corner: {
+                  vertical: topOrBottomSide ? SIDES[side] : SIDES[alignSide],
+                  horizontal: topOrBottomSide ? SIDES[alignSide] : SIDES[side]
+               },
                className: 'controls-InfoBox__popup controls-InfoBox-style-' + cfg.style
             });
 
             this._infoBoxOpened = true;
+         },
+
+         /**
+          * Закрыть инфобокс
+          * @function Controls/InfoBoxOpener#close
+          */
+         close: function(){
+            if(this._infoBoxOpened){
+               this._children.opener.close();
+               this._infoBoxOpened = false;
+            }
          }
 
       });
 
-      InfoBox._private = _private;
+      InfoBoxOpener._private = _private;
 
-      return InfoBox;
+      return InfoBoxOpener;
    }
 );

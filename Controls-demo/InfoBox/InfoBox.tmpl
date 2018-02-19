@@ -1,11 +1,19 @@
-<div class="controls-controls-InfoBoxDemo" style="display: flex;">
+<div class="controls-controls-InfoBoxDemo">
 
    <style>
+      .controls-controls-InfoBoxDemo {
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+      }
+      .controls-InfoBoxDemo-block {
+         margin-top: 32px;
+         text-align: center;
+      }
       .controls-InfoBoxDemo-targets {
          display: flex;
          flex-wrap: wrap;
-         margin: 40px 80px;
-         width: 325px;
+         max-width: 626px;
       }
       .controls-InfoBoxDemo-target {
          width: 64px;
@@ -22,25 +30,21 @@
       .controls-InfoBoxDemo-target:hover {
          background: #489dfc;
       }
-      .controls-InfoBoxDemo-square {
-         position: absolute;
-         width: 17px;
-         height: 17px;
-         background: #bd0000;
-      }
    </style>
 
    <Controls:InfoBoxOpener name="IBOpener" style="error"></Controls:InfoBoxOpener>
 
-   <div class="controls-InfoBoxDemo-targets">
-
-      <ws:for data="item in _items">
-         <div class="controls-InfoBoxDemo-target" on:mouseenter="_open(item.cfg)" on:mouseleave="_close()">
-            <div class="controls-InfoBoxDemo-square" style="top: {{item.top}}; left: {{item.left}}; right: {{item.right}}; bottom: {{item.bottom}}"></div>
-            {{item.text}}
-         </div>
-      </ws:for>
-
-   </div>
+   <ws:for data="block in _blocks">
+      <div class="controls-InfoBoxDemo-block">
+         <div class="controls-InfoBoxDemo-header">{{block.header}}</div>
+      </div>
+      <div class="controls-InfoBoxDemo-targets">
+         <ws:for data="item in block.items">
+            <div class="controls-InfoBoxDemo-target" on:mouseenter="_open(item.cfg)" on:mouseleave="_close()">
+               {{item.text}}
+            </div>
+         </ws:for>
+      </div>
+   </ws:for>
 
 </div>
