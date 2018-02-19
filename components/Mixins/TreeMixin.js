@@ -1504,7 +1504,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                } else {
                   /*иначе вход в папку*/
                   for (var i = 0; i < this._getItemsProjection().getCount(); i++) {
-                     item = this._getItemsProjection() && this._getItemsProjection().at(0);
+                     item = this._getItemsProjection() && this._getItemsProjection().at(i);
                      if (item && !cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
                         this.setSelectedKey(item.getContents().getId());
                         if (!this._container.parents('.controls-ListView').length) {
