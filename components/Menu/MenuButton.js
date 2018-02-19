@@ -56,6 +56,11 @@ define('SBIS3.CONTROLS/Menu/MenuButton', [
     */
 
    var MenuButton = WSMenuButton.extend( [], /** @lends SBIS3.CONTROLS/Menu/MenuButton.prototype */ {
+       $protected: {
+           _options: {
+               style: 'standard'
+           }
+       },
       _modifyOptions : function(options, parsedOptions, attrToMerge) {
          var opts = MenuButton.superclass._modifyOptions.apply(this, arguments);
          opts.cssClassName += ' controls-Button';
