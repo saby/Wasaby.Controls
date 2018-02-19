@@ -157,10 +157,10 @@ define('Controls/Input/Number/ViewModel',
                return true;
             },
 
-            updateOptions: function(onlyPositive, integersLength, precision) {
-               this._options.onlyPositive = onlyPositive;
-               this._options.integersLength = integersLength;
-               this._options.precision = precision;
+            updateOptions: function(options) {
+               this._options.onlyPositive = options.onlyPositive;
+               this._options.integersLength = options.integersLength;
+               this._options.precision = options.precision;
             }
          });
 
