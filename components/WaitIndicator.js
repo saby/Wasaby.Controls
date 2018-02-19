@@ -300,11 +300,11 @@ define('SBIS3.CONTROLS/WaitIndicator',
                options,
                options && typeof options.delay === 'number' && 0 <= options.delay ? options.delay : WaitIndicator.DEFAULT_DELAY
             );
-            stopper[method](function (delay) {
-               indicator.remove(delay);
-            }, function (err) {
+            var callback = function (value) {
                indicator.remove();
-            });
+               return value;
+            };
+            stopper[method](callback, callback);
          }
       };
 
