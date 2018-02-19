@@ -1,5 +1,4 @@
-<div>
-   <Controls:Input:resources:InputRender:InputRender
+<Controls:Input:resources:InputRender:InputRender
            size="auto"
            sidePadding="Left"
            isMultiline="{{ _options.minLines > 1 }}"
@@ -9,8 +8,7 @@
            viewModel="{{_textViewModel}}"
            tagStyle="{{_options.tagStyle}}"
            validationErrors="{{_options.validationErrors}}"
-           placeholder="{{ _options.placeholder }}"
-           attr:class="controls-InputArea"
+           placeholder="{{ _options.placeholder }}"attr:class="controls-InputArea"
            on:valueChanged="_valueChangedHandler()"
            on:inputCompleted="_inputCompletedHandler()"
            on:tagHover="_notifyHandler('onTagHover')"
@@ -44,4 +42,3 @@
          </div>
       </ws:content>
    </Controls:Input:resources:InputRender:InputRender>
-</div>
