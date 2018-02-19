@@ -921,11 +921,14 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             case 'bodyBounds':
                var scrollY = this._fixed ? 0 : $(window).scrollTop(),
                   scrollX = this._fixed ? 0 : $(window).scrollLeft();
+
+               //вычитаение 1px обусловлено полупикселями в размерах контейнера. В расчетах они не учитываются, но некоторые браузеры
+               //округляют значение в большую сторону при отрисовке, из-за чего контейнер может не поместиться в экран
                if (this._isHorizontalOverflow()) {
-                  offset.left = this._windowSizes.width + scrollX - this._containerSizes.originWidth;
+                  offset.left = this._windowSizes.width + scrollX - this._containerSizes.originWidth - 1;
                }
                if (this._isVerticalOverflow()) {
-                  offset.top = this._windowSizes.height + scrollY - this._containerSizes.originHeight;
+                  offset.top = this._windowSizes.height + scrollY - this._containerSizes.originHeight - 1;
                }
                if (offset.top < 0){
                   offset.top = 0;
