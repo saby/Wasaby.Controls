@@ -4105,7 +4105,7 @@ define('SBIS3.CONTROLS/ListView',
                         currentPage: 1,
                         recordsCount: more || 0,
                         pagesLeftRight: 1,
-                        onlyLeftSide: self._options.fix1174886464 ? self._options.partialPaging : typeof more === 'boolean', // (this._options.display.usePaging === 'parts')
+                        onlyLeftSide: self._options.partialPaging, // (this._options.display.usePaging === 'parts')
                         rightArrow: hasNextPage
                      },
                      pagerContainer = self.getContainer().find('.controls-Pager-container').append('<div/>');
@@ -4136,7 +4136,7 @@ define('SBIS3.CONTROLS/ListView',
                                  pageNumber = self._pager._lastPageReached ? maxPage : (maxPage + 1);
                               }
                               //К комментарию выше. При полной навигации переходим на последнюю страницу, а не на последнюю доступную
-                              if (self._options.fix1174886464 && typeof more === 'boolean' && self._options.partialPaging) {
+                              if (typeof more === 'boolean' && self._options.partialPaging) {
                                  pageNumber = 0;
                               }
                            }
