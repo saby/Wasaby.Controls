@@ -3,7 +3,7 @@
                 tagStyle="{{_options.tagStyle}}"
                 viewModel="{{_simpleViewModel}}"
                 placeholder="{{_options.placeholder}}"
-                attr:class="controls-Search controls-Search__style{{!isEnabled() ? '-disabled'}} controls-Search__style{{isFocused() ? '-focused'}}"
+                attr:class="controls-Search controls-Search__style{{!isEnabled() ? '-disabled'}} controls-Search__style_{{_options.style}}"
                on:valueChanged="_valueChangedHandler()">
 
    <ws:content>

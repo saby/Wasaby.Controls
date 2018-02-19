@@ -5,9 +5,16 @@
 
 .controls-Search {
    .border-radius(@border-radius_Search);
-   background: @background-color_Search;
    padding: @padding_Search;
    border-color: @border-color_Search;
+}
+
+.controls-Search__style_default {
+   background: @background-color_Search;
+}
+
+.controls-Search__style_header {
+   background: @background-color_Search_header;
 }
 
 .controls-Search:hover {
@@ -15,10 +22,10 @@
 }
 
 .controls-Search__style-disabled {
-   border-color: @border-color_SearchForm_disabled;
+   border-color: @border-color_Search_disabled;
 }
 
-.controls-Search__style-focused {
+.controls-Search:focus-within {
    border-color: @border-color_Search-active;
 }
 

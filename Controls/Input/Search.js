@@ -25,8 +25,16 @@ define('Controls/Input/Search',
        * @event Controls/Input/Search#search Происходит при нажатии на кнопку поиска
        */
 
+      /**
+       * @name Controls/Input/Search#style
+       * @cfg {String} Цвет поля поиска
+       * @variant default Серое поле поиска
+       * @variant header Белое поле поиска
+       */
+
       var Search = Control.extend({
          _template: template,
+         _isFocused: false,
 
          constructor: function (options) {
             Search.superclass.constructor.apply(this, arguments);
@@ -70,7 +78,8 @@ define('Controls/Input/Search',
 
       Search.getDefaultOptions = function getDefaultOptions() {
          return {
-            placeholder: rk('Найти')+'...'
+            placeholder: rk('Найти')+'...',
+            style: 'default'
          };
       };
 

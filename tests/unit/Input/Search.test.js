@@ -8,7 +8,7 @@ define(
 
       var
          isSearched = false,
-         isReseted = false,
+         isValueChanged = false,
          search;
 
       describe('Controls/Input/Search', function () {
@@ -24,8 +24,8 @@ define(
             search.subscribe('search', function () {
                isSearched = true;
             });
-            search.subscribe('reset', function () {
-               isReseted = true;
+            search.subscribe('valueChanged', function () {
+               isValueChanged = true;
             });
          });
 
@@ -45,18 +45,18 @@ define(
 
             it('Click on reset', function () {
                isSearched = false;
-               isReseted = false;
+               isValueChanged = false;
                search._onResetClick();
-               assert.isTrue(isReseted);
-               assert.isFalse(isSearched);
+               assert.isTrue(isValueChanged);
+               assert.isTrue(isSearched);
             });
 
             it('Click on search', function () {
                isSearched = false;
-               isReseted = false;
+               isValueChanged = false;
                search._onSearchClick();
                assert.isTrue(isSearched);
-               assert.isFalse(isReseted);
+               assert.isFalse(isValueChanged);
             });
          });
       });
