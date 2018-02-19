@@ -26,7 +26,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/Utils',[
         */
       isStateButtonDisplayed: function(quantum) {
          return this.isYearStateEnabled(quantum) && this.isMonthStateEnabled(quantum);
-      },
+      }
    };
 
    return Utils;
