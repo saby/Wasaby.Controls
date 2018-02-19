@@ -921,12 +921,10 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
             case 'bodyBounds':
                var scrollY = this._fixed ? 0 : $(window).scrollTop(),
                   scrollX = this._fixed ? 0 : $(window).scrollLeft();
-               //Проверяем убираемся ли в экран справа. Если позиционируем правой стороной, не нужно менять положение если не влезаем справа
-               if (this._isHorizontalOverflow() && this._options.horizontalAlign.side !== 'right') {
+               if (this._isHorizontalOverflow()) {
                   offset.left = this._windowSizes.width + scrollX - this._containerSizes.originWidth;
                }
-               //Проверяем убираемся ли в экран снизу. Если позиционируем нижней стороной, не нужно менять положение если не влезаем снизу
-               if (this._isVerticalOverflow() && this._options.verticalAlign.side !== 'bottom') {
+               if (this._isVerticalOverflow()) {
                   offset.top = this._windowSizes.height + scrollY - this._containerSizes.originHeight;
                }
                if (offset.top < 0){
