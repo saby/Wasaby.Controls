@@ -1556,7 +1556,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             editor.on('PastePostProcess', function(event){
                var content = event.node;
-               var isPlainUrl = content.innerHTML.search(/^https?:\/\/[a-z0-9:=&%#_\-\.\/\?]+$/gi) !== -1;
+               var reUrlOnly = /^https?:\/\/[a-z0-9:=&%#_\-\.\/\?]+$/gi;
+               var reUrl = /https?:\/\/[a-z0-9:=&%#_\-\.\/\?]+/i;
+               var isPlainUrl = content.innerHTML.search(reUrlOnly) !== -1;
                var $content = $(content);
                $content.find('[unselectable ="on"]').attr('data-mce-resize', 'false');
                if (!isPlainUrl) {
@@ -1585,16 +1587,40 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                }
                var html = content.innerHTML;
+               var rng = editor.selection.getRng();
                if (isPlainUrl) {
-                  var rng = editor.selection.getRng();
                   if (rng.collapsed) {
-                     var node = rng.endContainer;
-                     var text = node.nodeType === 1 ? node.innerHTML : node.nodeValue;
+                     var endNode = rng.endContainer;
+                     var text = endNode.nodeType === 1 ? endNode.innerHTML : endNode.nodeValue;
                      if (text && text.substring(rng.endOffset, rng.endOffset + 1).search(/[<\s]/gi) === -1) {
                         // Имеем вставку урла внутрь текста, с которым он сольётся - отделить его пробелом в конце
                         // Было бы лучше (намного) сделать этот урл сразу ссылкой, но тогда сервис декораторов не подхватит его
                         // 93358 https://online.sbis.ru/opendoc.html?guid=6e7ccbf1-001c-43fb-afc1-7887baa96d7c
                         html += ' ';
+                     }
+                  }
+               }
+               else {
+                  var startNode = rng.startContainer;
+                  var value = startNode.nodeType === 1 ? startNode.innerHTML : startNode.nodeValue;
+                  var offset = rng.startOffset;
+                  if (startNode.nodeType == 3) {
+                     // Нужно слить текст со всеми соседними текстовыми узлами (нормализовать родитьский узел здесь нельзя, так как слетит рэнж)
+                     for (var n = startNode.previousSibling; n && n.nodeType == 3; n = n.previousSibling) {
+                        value = n.nodeValue + value;
+                        offset += n.nodeValue.length;
+                     }
+                     for (var n = startNode.nextSibling; n && n.nodeType == 3; n = n.nextSibling) {
+                        value += n.nodeValue;
+                     }
+                  }
+                  if (value.length && offset) {
+                     var m = value.match(reUrl);
+                     if (m && m.index + m[0].length === offset) {
+                        // Имеем вставку текста сразу после урла, с которым он сольётся - отделить его пробелом в началее
+                        // Было бы лучше (намного) если бы этот урл был сразу ссылкой, но тогда сервис декораторов не подхватит его
+                        // 93358 https://online.sbis.ru/opendoc.html?guid=6e7ccbf1-001c-43fb-afc1-7887baa96d7c
+                        html = ' ' + html;
                      }
                   }
                }
