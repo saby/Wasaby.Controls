@@ -31,6 +31,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
       var BrowserScrollbarWidthController = {
          /** Ширина нативного скролбара
           * @type {?number}
+          * @private
           */
          _width: null,
          /**
