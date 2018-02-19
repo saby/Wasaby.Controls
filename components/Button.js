@@ -55,7 +55,7 @@ define('SBIS3.CONTROLS/Button',
     * @initial
     * <ws:SBIS3.CONTROLS/Button caption="Кнопка" />
     */
-   var Button = Base.extend( [], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
+   var Button = Base.extend( [], /** @lends SBIS3.CONTROLS/Button.prototype */ {
        $protected: {
            _options: {
                /**
