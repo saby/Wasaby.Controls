@@ -1,10 +1,11 @@
 define('Controls/Popup/Manager',
    [
       'Core/helpers/random-helpers',
-      'WS.Data/Collection/List'
+      'WS.Data/Collection/List',
+      'Core/Deferred'
    ],
 
-   function (Random, List) {
+   function (Random, List, cDeferred) {
       'use strict';
 
       var _popupContainer;
@@ -18,12 +19,14 @@ define('Controls/Popup/Manager',
          },
 
          removeElement: function (element) {
-            element.strategy.elementDestroyed(element);
-            this._popupItems.remove(element);
-            if (element.isModal) {
-               var indices = this._popupItems.getIndicesByValue('isModal', true);
-               _private.getPopupContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
-            }
+            var self = this;
+            return cDeferred.callbackWrapper( element.strategy.elementDestroyed(element), function(){
+               self._popupItems.remove(element);
+               if (element.isModal) {
+                  var indices = self._popupItems.getIndicesByValue('isModal', true);
+                  _private.getPopupContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
+               }
+            });
          },
 
          /**
@@ -166,8 +169,9 @@ define('Controls/Popup/Manager',
             var
                element = this.find(id);
             if (element) {
-               _private.removeElement.call(this, element);
-               this._redrawItems();
+               cDeferred.callbackWrapper(_private.removeElement.call(this, element), function(){
+                  Manager._redrawItems();
+               });
             }
          },
 

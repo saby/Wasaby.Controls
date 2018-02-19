@@ -59,14 +59,11 @@ define('Controls/Popup/Manager/Popup',
          _afterMount: function () {
             var contentSizes = _private.getContentSizes(this);
             _private.setNeededSizes(this, contentSizes);
-
             this._notify('popupCreated', [this._options.id, this._neededWidth, this._neededHeight]);
          },
 
          _afterUpdate: function () {
-
             var contentSizes = _private.getContentSizes(this);
-
             //Если размеры контента изменились, пересчитаем размеры окна
             if (contentSizes.width !== this._neededWidth || contentSizes.height !== this._neededHeight) {
                _private.setNeededSizes(this, contentSizes);
@@ -79,6 +76,7 @@ define('Controls/Popup/Manager/Popup',
           * @function Controls/Popup/Manager/Popup#_close
           */
          _close: function () {
+            this._container.style.width = '0';
             this._notify('closePopup', [this._options.id]);
          },
 

@@ -2,9 +2,10 @@ define('Controls/Popup/Opener/Stack/Strategy',
    [
       'Controls/Popup/Opener/BaseStrategy',
       'WS.Data/Collection/List',
-      'Controls/Popup/TargetCoords'
+      'Controls/Popup/TargetCoords',
+      'Core/Deferred'
    ],
-   function (BaseStrategy, List, TargetCoords) {
+   function (BaseStrategy, List, TargetCoords, cDeferred) {
       'use strict';
 
       var
@@ -55,8 +56,16 @@ define('Controls/Popup/Opener/Stack/Strategy',
          },
 
          elementDestroyed: function (element) {
-            this._stack.remove(element);
-            this._update();
+            var
+               self = this,
+               def = new cDeferred();
+            // для стеков нужно подождать завершения анимации
+            setTimeout(function(){
+               self._stack.remove(element);
+               self._update();
+               def.callback();
+            }, 200);
+            return def;
          },
 
          _update: function () {
