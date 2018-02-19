@@ -528,9 +528,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   // Убрать FakeCarret в редакторе при переходе в не активное состояние
                   // 1174789437 https://online.sbis.ru/opendoc.html?guid=e21b8722-3ffa-4a47-a499-c8bd01af0985
                   this._removeTinyFakeCaret();
-               }
-               if (cConstants.browser.isMobilePlatform) {
-                  EventBus.globalChannel().notify('MobileInputFocusOut');
+                  if (cConstants.browser.isMobilePlatform) {
+                     EventBus.globalChannel().notify('MobileInputFocusOut');
+                  }
                }
             }
             RichTextArea.superclass.setActive.apply(this, arguments);
@@ -1230,7 +1230,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
          insertImageTemplate: function(key, fileobj) {
             //необходимо вставлять каретку(курсор ввода), чтобы пользователь понимал куда будет производиться ввод
-            var CARET = cConstants.browser.chrome /*|| cConstants.browser.firefox*/ ? '&#xFEFF;{$caret}' : '{$caret}';
+            var browser = cConstants.browser;
+            var CARET = browser.chrome || browser.isIE || browser.safari || browser.isMobileIOS /*|| browser.firefox*/ ? '&#xFEFF;{$caret}' : '{$caret}';
             var className, before, after;
             switch (key) {
                case '1':
