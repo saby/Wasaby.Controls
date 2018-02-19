@@ -16,8 +16,8 @@ define('Controls/List/SimpleList/ListView', [
 
    var _private = {
       onListChange: function(self) {
+         self._listChanged = true;
          self._forceUpdate();
-         self._notify('resize', [], {bubbling: true})
       }
    };
 
@@ -25,9 +25,11 @@ define('Controls/List/SimpleList/ListView', [
       {
          _controlName: 'Controls/List/ListControl/ListView',
 
+
          _listModel: null,
          _template: ListViewTpl,
          _defaultItemTemplate: defaultItemTemplate,
+         _listChanged: false,
 
          constructor: function (cfg) {
             ListView.superclass.constructor.apply(this, arguments);
@@ -54,7 +56,15 @@ define('Controls/List/SimpleList/ListView', [
          },
 
          _afterMount: function() {
-            this._notify('resize', [], {bubbling: true})
+            if (this._listChanged) {
+               this._notify('resize', [], {bubbling: true})
+            }
+         },
+
+         _afterUpdate: function() {
+            if (this._listChanged) {
+               this._notify('resize', [], {bubbling: true})
+            }
          },
 
          _onItemClick: function(e, dispItem) {

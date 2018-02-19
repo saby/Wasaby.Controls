@@ -34,7 +34,7 @@ define('Controls/List/SourceControl', [
                   self._listViewModel.setItems(list);
                }
 
-               self._virtualScroll.setItemsCount(self._listViewModel.getCount());
+               //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
                _private.handleListScroll(self, 0);
             }).addErrback(function(error){
                _private.processLoadError(self, error)
@@ -63,7 +63,7 @@ define('Controls/List/SourceControl', [
                }
 
                //обновить начало/конец видимого диапазона записей и высоты распорок
-               _private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
+               //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
             }).addErrback(function(error){
                _private.processLoadError(self, error)
             })
@@ -221,7 +221,7 @@ define('Controls/List/SourceControl', [
       handleListScroll: function(self, scrollTop) {
          var virtualWindowIsChanged = self._virtualScroll.setScrollTop(scrollTop);
          if (virtualWindowIsChanged) {
-            _private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
+            //_private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
          }
          if (self._scrollPagingCtr) {
             self._scrollPagingCtr.handleScroll(scrollTop)
@@ -238,7 +238,7 @@ define('Controls/List/SourceControl', [
          //Узнал тут, пока остается _container: https://online.sbis.ru/open_dialog.html?guid=01b6161a-01e7-a11f-d1ff-ec1731d3e21f
          var res = self._virtualScroll.calcAverageItemHeight(self._children.listView._container);
          if (res.changed) {
-            _private.applyVirtualWindow(self, res.virtualWindow);
+            //_private.applyVirtualWindow(self, res.virtualWindow);
          }
       },
 
@@ -354,14 +354,14 @@ define('Controls/List/SourceControl', [
 
          if (newOptions.listViewModel && (newOptions.listViewModel !== this._options.listViewModel)) {
             this._listViewModel = newOptions.listViewModel;
-            this._virtualScroll.setItemsCount(this._listViewModel.getCount());
+            //this._virtualScroll.setItemsCount(this._listViewModel.getCount());
          } else
             if (newOptions.selectedKey !== this._options.selectedKey) {
                this._listViewModel.setMarkedKey(newOptions.selectedKey);
             }
 
 
-         if (newOptions.dataSource !== this._options.dataSource) {
+         if (newOptions.source !== this._options.source) {
             if (this._sourceController) {
                this._sourceController.destroy();
             }

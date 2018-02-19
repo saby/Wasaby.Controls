@@ -44,17 +44,20 @@ define('Controls/List/SimpleList/ListViewModel',
 
          reset: function() {
             //TODO убрать this._itemsModel._curIndex ?
-            this._itemsModel._curIndex = this._startIndex;
+            //this._itemsModel._curIndex = this._startIndex;
+            return this._itemsModel.reset();
          },
 
          isEnd: function() {
             //TODO убрать this._itemsModel._curIndex ?
-            return this._itemsModel._curIndex < this._stopIndex;
+            //return this._itemsModel._curIndex < this._stopIndex;
+            return this._itemsModel.isEnd();
          },
 
          goToNext: function() {
             //TODO убрать this._itemsModel._curIndex ?
-            this._itemsModel._curIndex++;
+            //this._itemsModel._curIndex++;
+            return this._itemsModel.goToNext();
          },
 
          getCurrent: function() {
