@@ -51,6 +51,11 @@ define('SBIS3.CONTROLS/Button/ToggleButton', [
     */
 
    var ToggleButton = WSToggleButton.extend([], /** @lends SBIS3.CONTROLS/Button/ToggleButton.prototype */ {
+       $protected: {
+           _options: {
+               style: 'standard'
+           }
+       },
       _modifyOptions: function () {
          var
              options = ToggleButton.superclass._modifyOptions.apply(this, arguments);
