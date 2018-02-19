@@ -18,9 +18,8 @@ define('Controls/Event/Listener',
       var EventCatcher = Control.extend({
          _template: template,
          _listner: null,
-         _beforeMount: function(){
-            this._listner = {};
-            this._registrar = new Registrar({register: this._options.register});
+         _beforeMount: function(newOptions){
+            this._registrar = new Registrar({register: newOptions.register});
          },
          _registerIt: function(event, registerType, component, callback){
             this._registrar.register(event, registerType, component, callback);
