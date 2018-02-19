@@ -87,7 +87,10 @@ define('Controls/Input/Text', [
                this._caretPosition = null;
             }
 
-            this._textViewModel.updateOptions(this._options.constraint, this._options.maxLength);
+            this._textViewModel.updateOptions({
+               constraint: this._options.constraint,
+               maxLength: this._options.maxLength
+            });
          },
 
          _inputCompletedHandler: function(){

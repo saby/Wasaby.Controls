@@ -89,7 +89,11 @@ define('Controls/Input/Number', [
             this._caretPosition = null;
          }
 
-         this._numberViewModel.updateOptions(this._options.onlyPositive, this._options.integersLength, this._options.precision);
+         this._numberViewModel.updateOptions({
+            onlyPositive: this._options.onlyPositive,
+            integersLength: this._options.integersLength,
+            precision: this._options.precision
+         });
       },
 
       _inputCompletedHandler: function () {

@@ -63,9 +63,9 @@ define('Controls/Input/Text/ViewModel',
                };
             },
 
-            updateOptions: function(constraint, maxLength) {
-               this._options.constraint = constraint;
-               this._options.maxLength = maxLength;
+            updateOptions: function(options) {
+               this._options.constraint = options.constraint;
+               this._options.maxLength = options.maxLength;
             }
          });
 
