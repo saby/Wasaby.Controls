@@ -1,6 +1,6 @@
 define([
    'Controls/List/Controllers/VirtualScroll',
-   'Controls/List/ListControl/ListViewModel',
+   'Controls/List/SimpleList/ListViewModel',
    'WS.Data/Collection/RecordSet'
 ], function(VirtualScroll, ListViewModel, RecordSet) {
 
