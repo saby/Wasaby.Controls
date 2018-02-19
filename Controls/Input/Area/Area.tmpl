@@ -9,6 +9,7 @@
            viewModel="{{_textViewModel}}"
            tagStyle="{{_options.tagStyle}}"
            validationErrors="{{_options.validationErrors}}"
+           placeholder="{{ _options.placeholder }}"
            attr:class="controls-InputArea"
            on:valueChanged="_valueChangedHandler()"
            on:inputCompleted="_inputCompletedHandler()"
@@ -28,12 +29,6 @@
                     value="{{ _options.value }}"
                     required="true"
             ></textarea>
-
-            <ws:partial
-               attr:class="{{ _options.minLines > 1 ? 'controls-InputArea__placeholder_multiline' }}"
-               template="tmpl!Controls/Input/resources/CustomPlaceholder"
-               placeholder="{{ _options.placeholder }}"
-            />
 
             <div class="controls-fakeTextArea__firstWrapper">
                <div class="controls-fakeTextArea__secondWrapper">
