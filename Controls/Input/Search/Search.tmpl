@@ -3,7 +3,7 @@
                 tagStyle="{{_options.tagStyle}}"
                 viewModel="{{_simpleViewModel}}"
                 placeholder="{{_options.placeholder}}"
-                attr:class="controls-Search controls-Search__style{{!isEnabled() ? '-disabled'}} controls-Search__style_{{_options.style}}"
+                attr:class="controls-Search controls-Search_style{{!isEnabled() ? '_disabled'}} controls-Search_style_{{_options.style}}"
                on:valueChanged="_valueChangedHandler()">
 
    <ws:content>
@@ -20,7 +20,7 @@
               class="controls-Search__reset icon-Close"
               title="{{rk('Очистить результаты поиска')}}"
               on:click="_onResetClick()"></div>
-         <div class="controls-Search__search controls-Search__search__style{{!isEnabled() ? '-disabled'}} icon-Search2"
+         <div class="controls-Search__search controls-Search__search_style{{!isEnabled() ? '_disabled'}} icon-Search2"
               on:click="_onSearchClick()"></div>
       </div>
    </ws:afterFieldWrapper>
