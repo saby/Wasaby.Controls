@@ -154,18 +154,18 @@ define('Controls/Layout/Scroll',
          },
 
          _registerIt: function(event, registerType, component, callback, triggers){
-            this._registrar.register(event, registerType, component, callback);
+            if (registerType === 'listScroll') {
+               this._registrar.register(event, component, callback);
 
-            _private.onInitScroll(this, this._container);
+               _private.onInitScroll(this, this._container);
 
-            if (global && global.IntersectionObserver && triggers) {
-               _private.initIntersectionObserver(this, triggers);
+               if (global && global.IntersectionObserver && triggers) {
+                  _private.initIntersectionObserver(this, triggers);
+               }
+               else {
+                  _private.onChangeScroll(this, this._container);
+               }
             }
-            else {
-               _private.onChangeScroll(this, this._container);
-            }
-
-
          },
 
          _doScrollHandler: function(e, scrollParam) {
@@ -176,7 +176,9 @@ define('Controls/Layout/Scroll',
 
 
          _unRegisterIt: function(event, registerType, component){
-            this._registrar.unregister(event, registerType, component, callback);
+            if (registerType === 'listScroll') {
+               this._registrar.unregister(event, component, callback);
+            }
          },
 
 

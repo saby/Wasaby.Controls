@@ -22,20 +22,16 @@ define('Controls/Event/Registrar',
 
          },
 
-         register: function(event, registerType, component, callback){
-            if (registerType === this._options.register) {
-               this._registry[component.getInstanceId()] = {
-                  component: component,
-                  callback: callback
-               };
-               event.stopPropagation();
-            }
+         register: function(event, component, callback){
+            this._registry[component.getInstanceId()] = {
+               component: component,
+               callback: callback
+            };
+            event.stopPropagation();
          },
-         unregister: function(event, registerType, component){
-            if (registerType === this._options.register) {
-               this._registry[component.getInstanceId()] = null;
-               event.stopPropagation();
-            }
+         unregister: function(event, component){
+            this._registry[component.getInstanceId()] = null;
+            event.stopPropagation();
          },
          start: function(){
             if (!this._registry)

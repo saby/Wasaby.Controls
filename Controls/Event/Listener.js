@@ -22,10 +22,14 @@ define('Controls/Event/Listener',
             this._registrar = new Registrar({register: newOptions.register});
          },
          _registerIt: function(event, registerType, component, callback){
-            this._registrar.register(event, registerType, component, callback);
+            if (registerType === this._options.register) {
+               this._registrar.register(event, registerType, component, callback);
+            }
          },
          _unRegisterIt: function(event, registerType, component){
-            this._registrar.unregister(event, registerType, component, callback);
+            if (registerType === this._options.register) {
+               this._registrar.unregister(event, registerType, component, callback);
+            }
          },
          start: function(){
             this._registrar.start.apply(this._registrar, arguments);
