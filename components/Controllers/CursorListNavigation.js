@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/Controllers/CursorListNavigation',
    function (Abstract, IListNavigation) {
       /**
        * Контроллер, позволяющий связывать компоненты осуществляя базовое взаимодейтсие между ними
-       * @author Крайнов Дмитрий
+       * @author Крайнов Д.О.
        * @class SBIS3.CONTROLS/Controllers/CursorListNavigation
        * @extends Core/Abstract
        * @mixes SBIS3.CONTROLS/Controllers/IListNavigation

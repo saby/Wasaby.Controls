@@ -10,9 +10,8 @@ define('SBIS3.CONTROLS/Action/List/Save', [
     'WS.Data/Collection/RecordSet',
     'Deprecated/Controls/DialogSelector/DialogSelector',
     'WS.Data/Query/Query',
-    'WS.Data/Entity/Record',
-    'Core/moduleStubs'
-], function (Save, ListMixin, fcHelpers, Deferred, Chain, cMerge, cInstance, coreClone, RecordSet, Dialog, Query, Record, moduleStubs) {
+    'WS.Data/Entity/Record'
+], function (Save, ListMixin, fcHelpers, Deferred, Chain, cMerge, cInstance, coreClone, RecordSet, Dialog, Query, Record) {
     var MAX_RECORDS_COUNT = 20000;
 
     /**
@@ -274,21 +273,12 @@ define('SBIS3.CONTROLS/Action/List/Save', [
         _loadData: function(dataSource, query) {
             var result = new Deferred();
 
-           moduleStubs.require(['SBIS3.CONTROLS/Utils/InformationPopupManager']).addCallback(function(manager) {
-              manager[0].showConfirmDialog({message: 'Операция займет продолжительное время. Провести операцию?'},
-                 function (){
-                    fcHelpers.toggleIndicator(true);
-                    dataSource.query(query).addCallback(function (recordSet) {
-                       result.callback(recordSet.getAll())
-                    }).addBoth(function() {
-                       fcHelpers.toggleIndicator(false);
-                    });
-                 },
-                 function(){
-                    result.errback();
-                 }
-              )
-           });
+            fcHelpers.toggleIndicator(true);
+            dataSource.query(query).addCallback(function (recordSet) {
+               result.callback(recordSet.getAll());
+            }).addBoth(function() {
+               fcHelpers.toggleIndicator(false);
+            });
 
            return result;
         }

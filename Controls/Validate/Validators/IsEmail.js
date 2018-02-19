@@ -10,6 +10,9 @@ define('Controls/Validate/Validators/IsEmail', [], function() {
          return true;
       }
 
-      return emailEnRegExp.test(args.value) || emailRuRegExp.test(args.value) || rk('В поле требуется ввести адрес электронной почты');
+      var
+         lowerCaseValue = args.value.toLowerCase();
+
+      return emailEnRegExp.test(lowerCaseValue) || emailRuRegExp.test(lowerCaseValue) || rk('В поле требуется ввести адрес электронной почты');
    };
 });

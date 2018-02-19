@@ -149,8 +149,8 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
             for (var i = 0, l = this._items.length; i < l; i++){
                var
                   container = this._items[i].getContainer(),
-                  cashedMargin = container.css('margin'),
                   zIndex = this._zIndex;
+
                //Для первого окна запоминаем отступы
                if (!i) {
                    //Popupmixin при инициализации проставляет Margin, сбрасываем его чтобы получить margin из стилей
@@ -160,8 +160,8 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
                      bottom: getIntCss(container, 'margin-bottom'),
                      right: getIntCss(container, 'margin-right')
                   };
-                   //Восстанавливаем margin установленный popupmixin`om
-                   container.css('margin', cashedMargin);
+                   //Обнуляем margin, при позиционировании он не нужен
+                   container.css('margin', 0);
                }
                /*Самозакрывающиеся окна показываем выше всех модальных*/
                if(this._windowsIdWithLifeTime.indexOf(this._items[i].getId()) !== -1){
