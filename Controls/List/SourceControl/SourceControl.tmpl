@@ -3,7 +3,7 @@
     <div class="controls-SourceControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
     <div class="controls-SourceControl__trigger controls-SourceControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
 
-    <ws:if data="{{_listViewModel && _listViewModel.getCount()}}">
+    <ws:if data="{{_listViewModel}}">
         <ws:partial
               template="{{_options.viewName}}"
               name="listView"
