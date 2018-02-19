@@ -2,99 +2,44 @@ define('Controls/Search/Search',
    [
       'Core/core-extend',
       'Core/Deferred',
-      'Controls/List/resources/utils/DataSourceUtil',
-      'Controls/List/Controllers/PageNavigation'
+      'Controls/Controllers/SourceController'
    ],
-   function (extend, Deferred, DataSourceUtil, PageNavigation) {
+   function (extend, Deferred, SourceController) {
       
       'use strict';
    
       var _private = {
-         /**
-          * Checks required parameters
-          * @param {Object} params
-          */
-         checkRequiredParams: function(params) {
-            if (!params.dataSource) {
+
+         checkRequiredOptions: function(options) {
+            if (!options.dataSource) {
                throw new Error('dataSource is required for search');
             }
          },
    
-         /**
-          * Defines base properties passed from constructor.
-          * @param {Object} self
-          * @param {Object} options
-          */
-         resolveOptions: function (self, options) {
-            self._searchDelay = options.hasOwnProperty('searchDelay') ? options.searchDelay : 500;
-            self._dataSource = DataSourceUtil.prepareSource(options.dataSource);
-            
-            if (options.navigation && options.navigation.source === 'page') {
-               //TODO переписать, как список переведут на актуальное апи навигации
-               self._navigation = new PageNavigation(options.navigation.sourceConfig);
-               self._navigation.prepareSource(options._dataSource);
-      
-            }
-         },
-      
-         /**
-          * Returns arguments for query
-          */
-         getArgsForQuery: function(self, searchConfig) {
-            var queryParams = {
-               filter: searchConfig.filter,
-               sorting: searchConfig.sorting,
-               limit: searchConfig.limit,
-               offset: searchConfig.offset
-            };
-            
-            if (self._navigation) {
-               var navigParams = self._navigation.prepareQueryParams(null);
-               queryParams.limit = navigParams.limit;
-               queryParams.offset = navigParams.offset;
-            }
-            
-            return [
-               self._dataSource,
-               null, //idProperty, using default
-               queryParams.filter,
-               queryParams.sorting,
-               queryParams.offset,
-               queryParams.limit
-            ];
-         },
-      
-         cancelErrorProcess: function(self, def) {
-            self._searchDeferred.addErrback(function(error) {
-               if (error.canceled) {
-                  def.cancel();
-               }
-               return error;
+         initSourceController: function(self, options) {
+            self._sourceController = new SourceController({
+               source: options.dataSource,
+               navigation: options.navigation
             });
          },
-      
-         callSearchQuery: function(self, searchConfig) {
-            var searchDef = DataSourceUtil.callQuery.apply(self, _private.getArgsForQuery(self, searchConfig));
-            _private.cancelErrorProcess(self, searchDef);
-            return searchDef;
+         
+         resolveOptions: function(self, options) {
+            self._searchDelay = options.searchDelay;
+         },
+         
+         callSearchQuery: function(self, filter) {
+            return self._sourceController.load(filter);
          },
          
          searchCallback: function(self, result) {
-            var hasMore;
-            
-            if (self._navigation) {
-               self._navigation.calculateState(result);
-               hasMore = self._navigation.hasMoreData('down');
-            }
-            
             self._searchDeferred.callback({
                result: result,
-               hasMore: hasMore
+               hasMore: self._sourceController.hasMoreData('down')
             });
          },
          
-         searchErrback: function(self) {
-            self._searchDeferred.errback(err);
+         searchErrback: function(self, error) {
+            self._searchDeferred.errback(error);
          }
       };
    
@@ -116,31 +61,23 @@ define('Controls/Search/Search',
        * @cfg {WS.Data/Source/ISource} dataSource
        */
       var Search  = extend({
+   
+         _searchDeferred: null,
+         _searchDelay: null,
+         
          constructor: function(options) {
             Search.superclass.constructor.apply(this, arguments);
             
-            options = options || {};
-            _private.checkRequiredParams(options);
             _private.resolveOptions(this, options);
+            _private.checkRequiredOptions(options);
+            _private.initSourceController(this, options);
          },
-   
+         
          /**
-          * @typedef {Object} searchConfig
-          * @property {Object} filter Filter parameters.
-          * @property {Number} offset
-          * @property {Number} limit
-          * @property {String|Array.<Object.<String,Boolean>>} sorting
-          * @property {Number} pageSize
-          */
-         /**
-          * @cfg {searchConfig} Search configuration
+          * @cfg {Object} filter
           * @returns {Core/Deferred}
           */
-         search: function (searchConfig) {
-            if (!searchConfig.filter) {
-               throw new Error('filter is required for search ');
-            }
-            
+         search: function (filter) {
             var self = this;
             
             //aborting current query
@@ -148,7 +85,7 @@ define('Controls/Search/Search',
             this._searchDeferred = new Deferred();
    
             this._searchDelayTimer = setTimeout(function() {
-               _private.callSearchQuery(self, searchConfig)
+               _private.callSearchQuery(self, filter)
                   .addCallback(function(result) {
                      _private.searchCallback(self, result);
                      return result;
@@ -176,10 +113,7 @@ define('Controls/Search/Search',
                clearTimeout(this._searchDelayTimer);
                this._searchDelayTimer = null;
             }
-            if (this._searchDeferred && !this._searchDeferred.isReady()) {
-               this._searchDeferred.cancel();
-               this._searchDeferred = null;
-            }
+            this._sourceController.cancelLoading();
          }
          
       });

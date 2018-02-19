@@ -1,47 +1,59 @@
 <div class="controls-demo__searchLayout">
     <div class="controls-demo__searchLayout-contentBlock">
-        <h1>SearchLayout</h1>
         <div class="controls-demo__searchLayout-wrapper">
-            <div>
-                <ws:Controls.Search.SearchLayout
-                        attr:class="controls-demo__searchLayout-layout"
-                        searchParam="title">
+                <ws:Controls.Layouts.FilterLayout attr:class="controls-demo__FilterLayout">
                     <ws:content>
-                        <div class="controls-demo__searchLayout-wrapper">
-                            <div>
-                                <ws:Controls.Input.Text/>
-                                <ws:Controls.Search.SearchResult dataSource="{{_dataSource}}" searchParam="title">
-                                    <ws:content>
-                                        <div>
-                                            <ws:Controls.List idProperty="id" name="list">
-                                                <ws:emptyTemplate>
-                                                    Не найдено
-                                                </ws:emptyTemplate>
-                                            </ws:Controls.List>
+                        <div>
+                        <h1>FilterLayout</h1>
+                            <ws:Controls.Layouts.SearchLayout
+                                    attr:class="controls-demo__SearchLayout"
+                                    searchParam="title">
+                                <ws:content>
+                                    <div>
+                                        <h1>SearchLayout</h1>
+                                        <div class="controls-demo__searchLayout-wrapper">
+                                            <div>
+                                                <ws:Controls.Input.Text/>
+                                                <ws:Controls.Layouts.LayoutInner dataSource="{{_dataSource}}" searchParam="title">
+                                                    <ws:content>
+                                                        <ws:Controls.List idProperty="id" name="list">
+                                                            <ws:emptyTemplate>
+                                                                Не найдено
+                                                            </ws:emptyTemplate>
+                                                        </ws:Controls.List>
+                                                    </ws:content>
+                                                    <ws:navigation source="page" view="page">
+                                                        <ws:sourceConfig pageSize="{{10}}" page="{{0}}" mode="totalCount"/>
+                                                    </ws:navigation>
+                                                </ws:Controls.Layouts.LayoutInner>
+                                            </div>
+                                            <div class="controls-demo__searchLayout-secondList">
+                                                <ws:Controls-demo.Layouts.LayoutFilterComponent/>
+                                                <ws:Controls.Layouts.LayoutInner dataSource="{{_dataSource}}" searchParam="title">
+                                                    <ws:content>
+                                                        <div>
+                                                            <ws:Controls.List idProperty="id" name="list">
+                                                                <ws:emptyTemplate>
+                                                                    Не найдено
+                                                                </ws:emptyTemplate>
+                                                            </ws:Controls.List>
+                                                        </div>
+                                                    </ws:content>
+                                                    <ws:navigation source="page" view="page">
+                                                        <ws:sourceConfig pageSize="{{10}}" page="{{0}}" mode="totalCount"/>
+                                                    </ws:navigation>
+                                                </ws:Controls.Layouts.LayoutInner>
+                                            </div>
                                         </div>
-                                    </ws:content>
-                                </ws:Controls.Search.SearchResult>
-                            </div>
-                            <div class="controls-demo__searchLayout-secondList">
-                                <ws:Controls.Search.SearchResult dataSource="{{_dataSource}}" searchParam="title">
-                                    <ws:content>
-                                        <div>
-                                            <ws:Controls.List idProperty="id" name="list">
-                                                <ws:emptyTemplate>
-                                                    Не найдено
-                                                </ws:emptyTemplate>
-                                            </ws:Controls.List>
-                                        </div>
-                                    </ws:content>
-                                </ws:Controls.Search.SearchResult>
-                            </div>
+                                    </div>
+                                </ws:content>
+                                <ws:searchDelay>
+                                    <ws:Number>500</ws:Number>
+                                </ws:searchDelay>
+                            </ws:Controls.Layouts.SearchLayout>
                         </div>
                     </ws:content>
-                    <ws:searchDelay>
-                        <ws:Number>500</ws:Number>
-                    </ws:searchDelay>
-                </ws:Controls.Search.SearchLayout>
-            </div>
+                </ws:Controls.Layouts.FilterLayout>
         </div>
     </div>
 </div>

@@ -10,7 +10,8 @@ define('Controls-demo/Layouts/SearchLayout', [
    'WS.Data/Source/Memory',
    'Controls/List',
    'css!Controls-demo/Layouts/SearchLayout/SearchLayout',
-   'Controls/Input/Text'
+   'Controls/Input/Text',
+   'Controls-demo/Layouts/LayoutFilterComponent'
 ], function (BaseControl,
              template,
              MemorySource
@@ -48,7 +49,8 @@ define('Controls-demo/Layouts/SearchLayout', [
          _dataSource: new MemorySource({
             idProperty: 'id',
             data: sourceData
-         })
+         }),
+         _switchValue: false
          
       });
    return ModuleClass;

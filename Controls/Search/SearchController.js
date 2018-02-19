@@ -19,6 +19,7 @@ define('Controls/Search/SearchController',
             self._filter          = options.filter;
             self._searchParam     = options.searchParam;
             self._dataSource      = options.dataSource;
+            self._navigation      = options.navigation;
          },
          
          getSearch: function(self) {
@@ -33,7 +34,7 @@ define('Controls/Search/SearchController',
             _private.getSearch(self).addCallback(function(search) {
                self._filter[self._searchParam] = value;
                
-               search.search({filter: self._filter}).addCallback(function(result) {
+               search.search(self._filter).addCallback(function(result) {
                   self._searchCallback(result, self._filter);
                   return result;
                });
@@ -60,7 +61,7 @@ define('Controls/Search/SearchController',
             _private.resolveOptions(this, options);
          },
          
-         setValue: function(value) {
+         search: function(value) {
             if (value.length >= this._minSearchLength) {
                _private.search(this, value);
             } else {
