@@ -34,8 +34,7 @@ define('Controls/Tabs/Buttons', [
                 //save last right order
                 rightOrder--;
                 instance._lastRightOrder = rightOrder;
-                instance._items = items;
-                return instance._items;
+                return items;
             });
         },
         prepareItemOrder: function(order) {
@@ -90,16 +89,19 @@ define('Controls/Tabs/Buttons', [
                 this._items = receivedState;
             }
             if (options.source) {
-                return _private.initItems(options.source, this);
+                return _private.initItems(options.source, this).addCallback(function(items){
+                    this._items = items;
+                }.bind(this))
             }
         },
         _beforeUpdate: function(newOptions) {
             var
                 self = this;
             if (newOptions.source && newOptions.source !== this._options.source) {
-                return _private.initItems(newOptions.source, this).addCallback(function(){
+                return _private.initItems(newOptions.source, this).addCallback(function(items){
+                    this._items = items;
                     self._forceUpdate();
-                })
+                }.bind(this))
             }
         },
         _onItemClick: function(event, key) {
