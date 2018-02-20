@@ -61,6 +61,12 @@ define('Controls/Input/resources/InputRender/InputRender',
          _controlName: 'Controls/Input/resources/InputRender/InputRender',
          _template: template,
 
+         _beforeUpdate: function(newOptions) {
+            if (this._options.viewModel.getValueForRender) {
+               newOptions.value = this._options.viewModel.getValueForRender(newOptions.value);
+            }
+         },
+
          _inputHandler: function(e) {
             var
                value = this._options.value,
@@ -86,7 +92,7 @@ define('Controls/Input/resources/InputRender/InputRender',
             _private.setTargetData(e.target, processedData);
             _private.saveSelection(this, e.target);
 
-            this._notify('valueChanged', [processedData.value]);
+            this._notify('valueChanged', [this._options.viewModel.getValueForNotify(processedData.value)]);
          },
 
          _keyUpHandler: function(e) {
@@ -104,6 +110,10 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _selectionHandler: function(e){
             _private.saveSelection(this, e.target);
+         },
+
+         _inputCompletedHandler: function(e) {
+            this._notify('inputCompleted', [this._options.viewModel.getValueForNotify(e.target.value)]);
          },
 
          _notifyHandler: function(e, value) {
@@ -148,7 +158,7 @@ define('Controls/Input/resources/InputRender/InputRender',
                }, 'insert');
 
             if (this._options.value !== processedData.value) {
-               this._notify('valueChanged', [processedData.value]);
+               this._notify('valueChanged', [this._options.viewModel.getValueForNotify(processedData.value)]);
             }
 
             this._selection = {
