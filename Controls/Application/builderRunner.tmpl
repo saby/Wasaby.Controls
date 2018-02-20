@@ -1,0 +1,13 @@
+<div>
+   <script>
+      require(['Controls/Application/AppData', 'Core/app-start', 'Core/Control', 'View/Runner/tclosure', {{_options.dependencies | unescape}}], function(AppData, AppStart, control, tclosure) {
+         window.startContextData = {AppData: new AppData({})};
+         var templateFn = {{_options.builder | unescape}};
+         var cnt = control.extend({
+            _template: templateFn
+         });
+         AppStart._shouldStart = false;
+         AppStart.createControl(cnt, {}, document.getElementById('root'));
+      });
+   </script>
+</div>

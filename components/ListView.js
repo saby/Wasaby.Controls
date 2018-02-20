@@ -3517,7 +3517,7 @@ define('SBIS3.CONTROLS/ListView',
             return this.getContainer().hasClass('controls-ListView__indicatorVisible') ? this._loadingIndicator.height() : 0;
          },
          /**
-          * Обновлет положение ромашки что бы ее не перекрывал фиксированный заголовок
+          * Обновляет положение ромашки, чтобы её не перекрывал фиксированный заголовок
           * @private
           */
          _updateScrollIndicatorTop: function () {
@@ -4105,7 +4105,7 @@ define('SBIS3.CONTROLS/ListView',
                         currentPage: 1,
                         recordsCount: more || 0,
                         pagesLeftRight: 1,
-                        onlyLeftSide: typeof more === 'boolean', // (this._options.display.usePaging === 'parts')
+                        onlyLeftSide: self._options.partialPaging, // (this._options.display.usePaging === 'parts')
                         rightArrow: hasNextPage
                      },
                      pagerContainer = self.getContainer().find('.controls-Pager-container').append('<div/>');
@@ -4136,7 +4136,7 @@ define('SBIS3.CONTROLS/ListView',
                                  pageNumber = self._pager._lastPageReached ? maxPage : (maxPage + 1);
                               }
                               //К комментарию выше. При полной навигации переходим на последнюю страницу, а не на последнюю доступную
-                              if (typeof more === 'boolean' && !self._options.partialPaging) {
+                              if (typeof more === 'boolean' && self._options.partialPaging) {
                                  pageNumber = 0;
                               }
                            }

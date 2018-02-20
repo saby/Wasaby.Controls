@@ -21,7 +21,8 @@ define(
             'firstname-lastname@example.com',
             'тест@тест.рф',
             'тест@тест.йцу.рф',
-            ''
+            '',
+            'NotCaseSensitive@test.com'
          ],
          invalidEmails = [
             'plainaddress',
