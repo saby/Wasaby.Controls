@@ -162,6 +162,18 @@ define('Controls/Input/Number/ViewModel',
                return true;
             },
 
+            getValueForRender: function (value) {
+               return _private.getValueWithDelimiters({
+                  before: '',
+                  insert: value,
+                  after: ''
+               });
+            },
+
+            getValueForNotify: function (value) {
+               return value.replace(/ /g, '');
+            },
+
             updateOptions: function(options) {
                this._options.onlyPositive = options.onlyPositive;
                this._options.integersLength = options.integersLength;
