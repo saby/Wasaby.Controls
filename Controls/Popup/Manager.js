@@ -18,7 +18,6 @@ define('Controls/Popup/Manager',
          },
 
          removeElement: function (element) {
-            element.strategy.elementDestroyed(element);
             this._popupItems.remove(element);
             if (element.isModal) {
                var indices = this._popupItems.getIndicesByValue('isModal', true);
@@ -66,7 +65,8 @@ define('Controls/Popup/Manager',
                var strategy = element.strategy;
                if (strategy) {
                   // при создании попапа, зарегистрируем его
-                  strategy.elementCreated(element, width, height);
+                  // TODO id передавать плохо, сделано пока не перешли на контроллеры
+                  strategy.elementCreated(element, width, height, id);
                   Manager._redrawItems();
                }
             }
@@ -166,6 +166,7 @@ define('Controls/Popup/Manager',
             var
                element = this.find(id);
             if (element) {
+               element.strategy.elementDestroyed(element, id);
                _private.removeElement.call(this, element);
                this._redrawItems();
             }

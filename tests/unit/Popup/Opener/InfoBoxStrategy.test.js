@@ -1,13 +1,13 @@
 define(
    [
-      'Controls/Popup/Opener/InfoBox'
+      'Controls/Popup/Opener/InfoBox/Strategy'
    ],
 
-   function (InfoBoxOpener) {
+   function (InfoBoxStrategy) {
       'use strict';
-      describe('Controls/Popup/Opener/InfoBox', function () {
+      describe('Controls/Popup/Opener/InfoBox/Strategy', function () {
 
-         var getOffset = InfoBoxOpener._private.getOffset;
+         var getOffset = InfoBoxStrategy.constructor._private.getOffset;
          var arrowOffset = 12;
          var arrowWidth = 16;
 
