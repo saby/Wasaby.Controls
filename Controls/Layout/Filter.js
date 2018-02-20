@@ -1,7 +1,7 @@
-define('Controls/Layouts/FilterLayout',
+define('Controls/Layout/Filter',
    [
       'Core/Control',
-      'tmpl!Controls/Layouts/FilterLayout/FilterLayout',
+      'tmpl!Controls/Layout/Filter/Filter',
       'Controls/Event/Listener'
    ],
    
@@ -16,7 +16,7 @@ define('Controls/Layouts/FilterLayout',
       
       'use strict';
       
-      var FilterLayout = Control.extend({
+      return Control.extend({
          
          _template: template,
    
@@ -25,6 +25,4 @@ define('Controls/Layouts/FilterLayout',
          }
          
       });
-      
-      return FilterLayout;
    });

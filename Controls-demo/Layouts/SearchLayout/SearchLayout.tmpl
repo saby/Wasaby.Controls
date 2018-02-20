@@ -1,8 +1,8 @@
-<ws:Controls.Layouts.FilterLayout attr:class="controls-demo__FilterLayout">
+<ws:Controls.Layout.Filter attr:class="controls-demo__FilterLayout">
     <ws:content>
         <div>
             <h1>FilterLayout</h1>
-            <ws:Controls.Layouts.SearchLayout
+            <ws:Controls.Layout.Search
                     attr:class="controls-demo__SearchLayout"
                     searchParam="title">
                 <ws:content>
@@ -16,7 +16,7 @@
                             </div>
                             <div class="controls-demo__LayoutInner">
                                 <h1>LayoutInner</h1>
-                                <ws:Controls.Layouts.LayoutInner dataSource="{{_dataSource}}" searchParam="title">
+                                <ws:Controls.Layout.List dataSource="{{_dataSource}}" searchParam="title">
                                     <ws:content>
                                         <div>
                                             <ws:Controls.List idProperty="id" name="list">
@@ -29,7 +29,7 @@
                                     <ws:navigation source="page" view="page">
                                         <ws:sourceConfig pageSize="{{10}}" page="{{0}}" mode="totalCount"/>
                                     </ws:navigation>
-                                </ws:Controls.Layouts.LayoutInner>
+                                </ws:Controls.Layout.List>
                             </div>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
                 <ws:searchDelay>
                     <ws:Number>500</ws:Number>
                 </ws:searchDelay>
-            </ws:Controls.Layouts.SearchLayout>
+            </ws:Controls.Layout.Search>
         </div>
     </ws:content>
-</ws:Controls.Layouts.FilterLayout>
+</ws:Controls.Layout.Filter>

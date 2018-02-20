@@ -1,14 +1,14 @@
-define('Controls/Layouts/SearchLayout',
+define('Controls/Layout/Search',
    [
       'Core/Control',
-      'tmpl!Controls/Layouts/SearchLayout/SearchLayout',
+      'tmpl!Controls/Layout/Search/Search',
       'Controls/Event/Listener'
    ],
    
    function(Control, template) {
       
       /**
-       * @class Controls/Layout/SearchLayout
+       * @class Controls/Layout/Search
        * @extends Controls/Control
        * @control
        * @public
@@ -16,7 +16,7 @@ define('Controls/Layouts/SearchLayout',
       
       'use strict';
       
-      var SearchLayout = Control.extend({
+      return Control.extend({
          
          _template: template,
    
@@ -25,6 +25,4 @@ define('Controls/Layouts/SearchLayout',
          }
          
       });
-      
-      return SearchLayout;
    });

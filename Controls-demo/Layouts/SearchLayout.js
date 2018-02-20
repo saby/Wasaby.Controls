@@ -11,7 +11,9 @@ define('Controls-demo/Layouts/SearchLayout', [
    'Controls/List',
    'css!Controls-demo/Layouts/SearchLayout/SearchLayout',
    'Controls/Input/Text',
-   'Controls-demo/Layouts/LayoutFilterComponent'
+   'Controls-demo/Layouts/LayoutFilterComponent',
+   'Controls/Layout/Filter',
+   'Controls/Layout/Search'
 ], function (BaseControl,
              template,
              MemorySource

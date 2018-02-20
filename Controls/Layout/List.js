@@ -1,10 +1,10 @@
 /**
  * Created by am.gerasimov on 02.02.2018.
  */
-define('Controls/Layouts/LayoutInner',
+define('Controls/Layout/List',
    [
       'Core/Control',
-      'tmpl!Controls/Layouts/LayoutInner/LayoutInner',
+      'tmpl!Controls/Layout/List/List',
       'WS.Data/Source/Memory',
       'Controls/Search/SearchController',
       'Core/core-merge',
@@ -44,7 +44,7 @@ define('Controls/Layouts/LayoutInner',
          
          updateFilter: function(self, resultFilter) {
             var filterClone = merge({}, self._options.filter);
-            this._filter = merge(filterClone, resultFilter);
+            self._filter = merge(filterClone, resultFilter);
          },
       
          abortCallback: function(self, filter) {
