@@ -1607,13 +1607,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   var offset = rng.startOffset;
                   if (startNode.nodeType == 3) {
                      // Нужно слить текст со всеми соседними текстовыми узлами (нормализовать родитьский узел здесь нельзя, так как слетит рэнж)
-                     for (var n = startNode.previousSibling; n && n.nodeType == 3; n = n.previousSibling) {
-                        value = n.nodeValue + value;
-                        offset += n.nodeValue.length;
-                     }
-                     for (var n = startNode.nextSibling; n && n.nodeType == 3; n = n.nextSibling) {
-                        value += n.nodeValue;
-                     }
+                     offset -= value.length;
+                     value = this._getAdjacentTextNodesValue(startNode, false) + value;
+                     offset += value.length;
+                     value += this._getAdjacentTextNodesValue(startNode, true);
                   }
                   if (value.length && offset) {
                      var m = value.match(reUrl);
@@ -1945,6 +1942,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             editor.on('touchstart', function(e) {
                self._fromTouch = true;
             });
+         },
+
+         _getAdjacentTextNodesValue: function (node, toEnd) {
+            var prop = toEnd ? 'nextSibling' : 'previousSibling';
+            var value = '';
+            for (var n = node[prop]; n && n.nodeType == 3; n = n[prop]) {
+               value = toEnd ? value + n.nodeValue : n.nodeValue + value;
+            }
+            return value;
          },
 
          _notifyMobileInputFocus: function () {
