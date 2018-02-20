@@ -60,12 +60,12 @@ define('Controls/Layouts/LayoutInner',
          }
       };
    
-      var SearchResult = Control.extend({
+      var LayoutInner = Control.extend({
          
          _template: template,
          
          constructor: function(options) {
-            SearchResult.superclass.constructor.call(this, options);
+            LayoutInner.superclass.constructor.call(this, options);
             
             _private.resolveOptions(this, options);
             _private.initSearchController(this, options);
@@ -82,7 +82,7 @@ define('Controls/Layouts/LayoutInner',
          
       });
    
-      SearchResult.getDefaultOptions = function() {
+      LayoutInner.getDefaultOptions = function() {
          return {
             searchDelay: 500,
             minSearchLength: 3,
@@ -90,6 +90,6 @@ define('Controls/Layouts/LayoutInner',
          };
       };
       
-      return SearchResult;
+      return LayoutInner;
       
    });
