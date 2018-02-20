@@ -59,7 +59,7 @@
       />
       <div class="controls-DateRangeBigChoose__datePickerEnd-wrapper{{ selectionType === 'range' ? '' : ' ws-hidden' }}">
          <div class="controls-DateRangeBigChoose__header-rangeDash"></div>
-         <ws:partial template="DateBoxTpl" scope="{{...}}">
+         <ws:partial template="DateBoxTpl" scope="{{...}}" activableByClick="{{ false }}">
             <ws:compareExt type="function">SBIS3.CONTROLS/Date/RangeBigChoose/resources/Validators:compareExt</ws:compareExt>
             <ws:errorMessage type="string">{[Дата конца периода должна быть больше даты начала.]}</ws:errorMessage>
          </ws:partial>
