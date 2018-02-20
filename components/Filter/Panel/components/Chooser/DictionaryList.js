@@ -3,13 +3,15 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
     'Core/CommandDispatcher',
     'Core/core-clone',
     'Core/core-merge',
+    'WS.Data/Format/Format',
+    'WS.Data/Format/Field',
     'Core/core-instance',
     'WS.Data/Entity/Model',
     'WS.Data/Collection/RecordSet',
     'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList/resources/FilterPanelChooserDictionaryFooter',
     'SBIS3.CONTROLS/Action/SelectorAction',
     'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList/FilterPanelChooser.DictionaryList'
-], function(FilterPanelChooserList, CommandDispatcher, coreClone, coreMerge, cInstance, Model, RecordSet, footerTpl, SelectorAction) {
+], function(FilterPanelChooserList, CommandDispatcher, coreClone, coreMerge, Format, FormatField, cInstance, Model, RecordSet, footerTpl, SelectorAction) {
 
     'use strict';
 
@@ -171,7 +173,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
 
        _createRecordWithAdapter: function(sourceRecord, adapter) {
           var
-             format = sourceRecord.getFormat(),
+             format = this._getRecordFormat(),
              result = new Model({
                 adapter: adapter,
                 format: format
@@ -183,6 +185,18 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
           });
 
           return result;
+       },
+
+       _getRecordFormat: function() {
+          //Для отображения записей в панеле фильтров, нужны только эти 3 поля, нет смысла тянуть все поля, которые
+          //возвращаются из SelectorAction.
+          return new Format({
+             items: [
+                new FormatField({name: this._options.properties.idProperty}),
+                new FormatField({name: this._options.properties.displayProperty}),
+                new FormatField({name: this._options.countField})
+             ]
+          });
        },
 
         _onExecutedHandler: function(event, meta, result) {
