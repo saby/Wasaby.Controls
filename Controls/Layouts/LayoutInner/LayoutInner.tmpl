@@ -1,4 +1,4 @@
-<div class="controls-searchResult">
+<div class="controls-LayoutInner">
     <ws:partial tempalte="{{_options.content}}" source="{{_dataSource}}" filter="{{_filter}}" navigation="{{_options.navigation}}" displayProperty="title" idProperty="id"/>
     <ws:Controls.Event.Emitter event="searchValueChanged" on:searchValueChanged="_searchValueChanged()" attr:tabindex="{{-1}}"/>
     <ws:Controls.Event.Emitter event="filterChanged" on:filterChanged="_filterChanged()" attr:tabindex="{{-1}}"/>

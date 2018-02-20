@@ -13,7 +13,7 @@ define('Controls/List/SimpleList/ListViewModel',
       var _private = {
          updateIndexes: function(self) {
             self._startIndex = 0;
-            self._stopIndex = self._itemsModel._display.getCount();
+            self._stopIndex = self._itemsModel.getCount();
          }
       };
       
