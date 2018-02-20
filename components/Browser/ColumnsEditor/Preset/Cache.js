@@ -1,8 +1,9 @@
 /**
  * Класс, кэширующий пресеты редактора колонок
  *
- * @public
  * @class SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Cache
+ * @author Спирин В.А.
+ * @public
  */
 define('SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Cache',
    [
