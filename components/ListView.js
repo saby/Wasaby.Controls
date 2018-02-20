@@ -4176,7 +4176,7 @@ define('SBIS3.CONTROLS/ListView',
                .offset(offset)
                .limit(limit)
                .orderBy(sorting)
-               .meta({ hasMore: this._options.partialPaging});
+               .meta({ hasMore: offset === -1 ? false : this._options.partialPaging});
             return query;
          },
          setPageSize: function(pageSize) {
