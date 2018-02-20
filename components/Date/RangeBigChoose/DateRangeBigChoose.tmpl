@@ -1,5 +1,5 @@
 <div class="controls-DateRangeBigChoose controls-DateRangeBigChoose__noBorder">
-   <ws:partial template="{{headerTpl}}" scope="{{...}}"></ws:partial>
+   <ws:partial template="{{headerTpl}}" scope="{{...}}" activableByClick="{{ false }}"></ws:partial>
 
    <div class="controls-DateRangeBigChoose__months">
       <div class="controls-DateRangeBigChoose__years">
@@ -10,7 +10,7 @@
             icon="sprite:icon-24 icon-MarkLeftBold icon-primary"
             className="controls-DateRangeBigChoose__years-prevYearBtn"
          />
-         <ws:partial template="{{yearsPanelTpl}}" scope="{{...}}"></ws:partial>
+         <ws:partial template="{{yearsPanelTpl}}" scope="{{...}}" activableByClick="{{ false }}"></ws:partial>
          <SBIS3.CONTROLS:Button:IconButton
             tabindex="0"
             name="NextYearButton"
