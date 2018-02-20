@@ -2,6 +2,7 @@
  * Менеджер длительных операций
  *
  * @class SBIS3.CONTROLS/LongOperations/Manager
+ * @author Спирин В.А.
  * @public
  *
  * @description file LongOperations.md

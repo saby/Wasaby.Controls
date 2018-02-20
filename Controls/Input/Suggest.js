@@ -2,7 +2,7 @@ define('Controls/Input/Suggest',
    [
       'Core/Control',
       'tmpl!Controls/Input/Suggest/Suggest',
-      'js!WS.Data/Type/descriptor',
+      'WS.Data/Type/descriptor',
       'Controls/Input/resources/SuggestController',
       'Controls/Input/resources/InputRender/SimpleViewModel',
       'Controls/Popup/Opener/Sticky',
@@ -61,6 +61,7 @@ define('Controls/Input/Suggest',
             self._selectHandler = self._selectHandler.bind(self);
             self._popupFocusIn = self._popupFocusIn.bind(self);
             self._popupFocusOut = self._popupFocusOut.bind(self);
+            self._popupClose = self._popupClose.bind(self);
          },
          
          initViewModel: function(self) {
@@ -154,6 +155,11 @@ define('Controls/Input/Suggest',
             if (_private.needCloseOnFocusOutPopup(this, focusObj.to)) {
                _private.onFocusOutHandler(this);
             }
+         },
+   
+         _popupClose: function() {
+            /* FIXME До решения ошибок по фокусам https://online.sbis.ru/opendoc.html?guid=85911eb8-a6e7-4a0d-b454-c3e3a6d10acc */
+            this._popupFocused = false;
          },
          
          _focusOut: function() {

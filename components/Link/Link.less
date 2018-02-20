@@ -61,8 +61,10 @@
   .inline-flexbox();
   .align-items(center);
   width: 100%;
-  // сбрасываю стили браузера для тега a
-  text-decoration: none;
+  // берем значения от родителя, чтобы перебить стандартные стили ссылке с href установленные браузером
+  text-decoration: inherit;
+  color: inherit;
+  cursor: inherit;
 }
 
 .ws-is-desktop-platform {
@@ -88,4 +90,15 @@
 }
 .controls-Button__text {
   .text-overflow();
+}
+
+.controls-Link__underline {
+  .controls-Button__text {
+    text-decoration: underline;
+  }
+}
+.controls-Link_state-disabled.controls-Link__underline {
+  .controls-Button__text {
+    text-decoration: none;
+  }
 }

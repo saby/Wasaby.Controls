@@ -1,8 +1,6 @@
 define('SBIS3.CONTROLS/Filter/Button',
     [
-   "Core/moduleStubs",
    "Core/CommandDispatcher",
-   "Core/constants",
    "Lib/Control/CompoundControl/CompoundControl",
    "tmpl!SBIS3.CONTROLS/Filter/Button/FilterButton",
    "tmpl!SBIS3.CONTROLS/Filter/Button/FilterComponentTemplate",
@@ -11,7 +9,6 @@ define('SBIS3.CONTROLS/Filter/Button',
    "SBIS3.CONTROLS/Mixins/PickerMixin",
    "SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil",
    "SBIS3.CONTROLS/Utils/TemplateUtil",
-   "Core/ParallelDeferred",
    "Core/IoC",
    "Core/helpers/Function/once",
    "SBIS3.CONTROLS/Utils/FilterPanelUtils",
@@ -21,9 +18,7 @@ define('SBIS3.CONTROLS/Filter/Button',
    'css!SBIS3.CONTROLS/Filter/Button/FilterButton'
 ],
     function(
-        mStubs,
         CommandDispatcher,
-        constants,
         CompoundControl,
         dotTplFn,
         dotTplForComp,
@@ -32,7 +27,6 @@ define('SBIS3.CONTROLS/Filter/Button',
         PickerMixin,
         FilterToStringUtil,
         TemplateUtil,
-        ParallelDeferred,
         IoC,
         once,
         FilterPanelUtils
@@ -342,7 +336,18 @@ define('SBIS3.CONTROLS/Filter/Button',
                 },
                 context: this._pickerContext,
                 template: 'SBIS3.CONTROLS/Filter/Button/Area',
-                componentOptions: this._getAreaOptions()
+                componentOptions: this._getAreaOptions(),
+                handlers: {
+                   onClose: function() {
+                      /* Разрушаем панель при закрытии,
+                       надо для: сбрасывания валидации, удаления ненужных значений из контролов */
+                      if (self._picker) {
+                         self._notify('onPickerClose');
+                         self._picker.destroy();
+                         self._picker = null;
+                      }
+                   }
+                }
              });
           },
 

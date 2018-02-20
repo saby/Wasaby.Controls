@@ -45,7 +45,7 @@ define('SBIS3.CONTROLS/ListView',
    'SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil',
    'Core/core-instance',
    'Core/LocalStorageNative',
-   'Core/helpers/Function/forAliveOnly',
+   'Core/helpers/Function/forAliveDeferred',
    'Core/helpers/Function/memoize',
    'Core/helpers/Hcontrol/isElementVisible',
    'SBIS3.CONTROLS/Utils/Contains',
@@ -2716,7 +2716,7 @@ define('SBIS3.CONTROLS/ListView',
             if (toolbarTarget && targetElement && toolbarTarget.container.get(0) === targetElement.get(0)) {
                toolbar.hide();
             }
-            ListView.superclass._redrawItemInner.apply(this, arguments);
+            var redrawResult = ListView.superclass._redrawItemInner.apply(this, arguments);
 
             //Если перерисовалась запись, которая является текущим контейнером для тулбара,
             //то перезаписшем в тулбар, новую ссылку на дом элемент, для того, чтобы тулбар смог
@@ -2725,6 +2725,7 @@ define('SBIS3.CONTROLS/ListView',
                toolbarTarget.container = this._getDomElementByItem(item);
                toolbar.setCurrentTarget(toolbarTarget);
             }
+            return redrawResult
          },
 
          _showToolbar: function(model) {
@@ -3517,7 +3518,7 @@ define('SBIS3.CONTROLS/ListView',
             return this.getContainer().hasClass('controls-ListView__indicatorVisible') ? this._loadingIndicator.height() : 0;
          },
          /**
-          * Обновлет положение ромашки что бы ее не перекрывал фиксированный заголовок
+          * Обновляет положение ромашки, чтобы её не перекрывал фиксированный заголовок
           * @private
           */
          _updateScrollIndicatorTop: function () {
@@ -4105,7 +4106,7 @@ define('SBIS3.CONTROLS/ListView',
                         currentPage: 1,
                         recordsCount: more || 0,
                         pagesLeftRight: 1,
-                        onlyLeftSide: typeof more === 'boolean', // (this._options.display.usePaging === 'parts')
+                        onlyLeftSide: self._options.partialPaging, // (this._options.display.usePaging === 'parts')
                         rightArrow: hasNextPage
                      },
                      pagerContainer = self.getContainer().find('.controls-Pager-container').append('<div/>');
@@ -4123,18 +4124,26 @@ define('SBIS3.CONTROLS/ListView',
                            var more = self.getItems().getMetaData().more,
                               hasNextPage = self._hasNextPage(more, self._scrollOffset.bottom),
                               maxPage = self._pager.getPaging()._maxPage,
-                              lastPage = self._options.navigation && self._options.navigation.lastPage;
+                              lastPage = self._options.navigation && self._options.navigation.lastPage,
+                              pageNumber = pageNum;
+                           
                            self._pager._lastPageReached = self._pager._lastPageReached || !hasNextPage;
                            //Старый Paging при включенной частичной навигации по нажатию кнопки "Перейти к последней странице" возвращает pageNum = 0 (у него индексы страниц начинаются с 1)
                            //В новом Pager'e индексация страниц начинается с 0 и такое поведение здесь не подходит
                            //Так же в режиме частичной навигации нет возможности высчитать номер последней страницы, поэтому
                            //при переходе к последней странице делаем так, чтобы мы переключились на последнюю доступную страницу.
-                           if (pageNum === 0 && self._pager._options.pagingOptions.onlyLeftSide && !lastPage) { 
-                              pageNum = self._pager._lastPageReached ? maxPage : (maxPage + 1);
+                           if (pageNum === 0) {
+                              if (self._pager._options.pagingOptions.onlyLeftSide && !lastPage) {
+                                 pageNumber = self._pager._lastPageReached ? maxPage : (maxPage + 1);
+                              }
+                              //К комментарию выше. При полной навигации переходим на последнюю страницу, а не на последнюю доступную
+                              if (typeof more === 'boolean' && self._options.partialPaging) {
+                                 pageNumber = 0;
+                              }
                            }
 
-                           self._setPageSave(pageNum);
-                           self.setPage(pageNum - 1);
+                           self._setPageSave(pageNumber);
+                           self.setPage(pageNumber - 1);
                            self._pageChangeDeferred = deferred;
                         }
                      }
@@ -4168,7 +4177,7 @@ define('SBIS3.CONTROLS/ListView',
                .offset(offset)
                .limit(limit)
                .orderBy(sorting)
-               .meta({ hasMore: this._options.partialPaging});
+               .meta({ hasMore: offset === -1 ? false : this._options.partialPaging});
             return query;
          },
          setPageSize: function(pageSize) {

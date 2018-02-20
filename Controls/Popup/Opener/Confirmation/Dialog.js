@@ -1,4 +1,4 @@
-define('Controls/Popup/Opener/Confirmation/Dialog', [
+define('Controls/ConfirmationWindow/Dialog', [
       'Core/Control',
       'WS.Data/Type/descriptor',
       'Core/constants',
@@ -7,9 +7,7 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
       'tmpl!Controls/Popup/Opener/Confirmation/Dialog/message',
       'tmpl!Controls/Popup/Opener/Confirmation/Dialog/details',
       'tmpl!Controls/Popup/Opener/Confirmation/Dialog/Dialog',
-
-      'css!Controls/Popup/Opener/Confirmation/Dialog/Dialog',
-      'Controls/Button'
+      'css!Controls/Popup/Opener/Confirmation/Dialog/Dialog'
    ], function (Control,
                 types,
                 constants,
@@ -23,7 +21,7 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
 
       /**
        * Класс контрола "Окно подтверждения". В зависимости от типа, может быть диалогом подтверждения, с кнопками "Да", "Нет" и "Отмена" (опционально), или диалогом с кнопкой "Ок".
-       * @class Controls/Popup/Opener/Confirmation/Dialog
+       * @class Controls/ConfirmationWindow/Dialog
        * @extends Controls/Control
        * @control
        * @public
@@ -31,7 +29,7 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
        */
 
       /**
-       * @name Controls/Popup/Opener/Confirmation/Dialog#type
+       * @name Controls/ConfirmationWindow/Dialog#type
        * @cfg {String} Тип диалога
        * @variant ok Диалог с кнопкой "Ок"
        * @variant yesno Диалог с кнопками "Да" и "Нет"
@@ -39,7 +37,7 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
        */
 
       /**
-       * @name Controls/Popup/Opener/Confirmation/Dialog#style
+       * @name Controls/ConfirmationWindow/Dialog#style
        * @cfg {String} Стилевое оформление диалога
        * @variant default По умоланию
        * @variant success Успех
@@ -47,32 +45,32 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
        */
 
       /**
-       * @name Controls/Popup/Opener/Confirmation/Dialog#message
+       * @name Controls/ConfirmationWindow/Dialog#message
        * @cfg {String} Устанавливает сообщение
        */
 
       /**
-       * @name Controls/Popup/Opener/Confirmation/Dialog#details
+       * @name Controls/ConfirmationWindow/Dialog#details
        * @cfg {String} Устанавливает детали сообщения
        */
 
       /**
-       * @name Controls/Popup/Opener/Confirmation/Dialog#yesCaption
+       * @name Controls/ConfirmationWindow/Dialog#yesCaption
        * @cfg {String} Устанавливает текст кнопки yes
        */
 
       /**
-       * @name Controls/Popup/Opener/Confirmation/Dialog#noCaption
+       * @name Controls/ConfirmationWindow/Dialog#noCaption
        * @cfg {String} Устанавливает текст кнопки no
        */
 
       /**
-       * @name Controls/Popup/Opener/Confirmation/Dialog#cancelCaption
+       * @name Controls/ConfirmationWindow/Dialog#cancelCaption
        * @cfg {String} Устанавливает текст кнопки cancel
        */
 
       /**
-       * @name Controls/Popup/Opener/Confirmation/Dialog#okCaption
+       * @name Controls/ConfirmationWindow/Dialog#okCaption
        * @cfg {String} Устанавливает текст кнопки ok
        */
 
@@ -84,7 +82,7 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
        */
 
       /**
-       * @event Controls/Popup/Opener/Confirmation/Dialog#sendResult Происходит при нажатии на кнопку диалога
+       * @event Controls/ConfirmationWindow/Dialog#sendResult Происходит при нажатии на кнопку диалога
        * @param {Core/EventObject} eventObject Дескриптор события
        * @param {Result} Результат
        */

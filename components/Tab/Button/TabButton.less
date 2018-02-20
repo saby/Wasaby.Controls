@@ -129,6 +129,9 @@
    }
    &.controls-TabButton__main-item {
       min-width: 1px; //Нужно, чтобы flex правильно позиционировал ужимаемый контейнер. с 0 в ie11 не работает
+      .controls-TabButton__flex .controls-InputRender__fieldWrapper_singleLine {
+         .align-items(baseline); //Поправили inputrender -> поехало выравнивание в эдо. вернул как было на уровне вкладок
+      }
       .controls-EditAtPlace {
          background: transparent;
          .controls-InputRender__fieldWrapper {

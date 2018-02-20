@@ -4,10 +4,11 @@ define('SBIS3.CONTROLS/Paging', [
    'tmpl!SBIS3.CONTROLS/Paging/Paging',
    'SBIS3.CONTROLS/Mixins/ItemsControlMixin',
    'SBIS3.CONTROLS/Mixins/Selectable',
+   'Core/constants',
    'tmpl!SBIS3.CONTROLS/Paging/resources/ItemsTemplate',
    'SBIS3.CONTROLS/Button/IconButton',
    'css!SBIS3.CONTROLS/Paging/Paging'
-], function(CompoundControl, dotTplFn, ItemsControlMixin, Selectable, ItemsTemplate) {
+], function(CompoundControl, dotTplFn, ItemsControlMixin, Selectable, constants, ItemsTemplate) {
 
    'use strict';
 
@@ -203,6 +204,7 @@ define('SBIS3.CONTROLS/Paging', [
          if (!this._prevBtn) {
             this._bindControls();
          }
+         this._container.on('keydown', this._keydownHandler.bind(this));
       },
        /**
         * Возвращает значение, соответствующее установленному режиму работы постраничной навигации.
@@ -307,6 +309,8 @@ define('SBIS3.CONTROLS/Paging', [
          this._nextBtn = null;
          this._beginBtn = null;
          this._endBtn = null;
+
+         this._container.off('keydown');
       },
       _bindControls: function() {
          this._prevBtn = this.getChildControlByName('PagingPrev');
@@ -341,6 +345,19 @@ define('SBIS3.CONTROLS/Paging', [
       _goToEnd: function() {
          this._notify('onLastPageSet');
          this.setSelectedKey(this.getItems().getCount());
+      },
+      _keydownHandler: function(e) {
+         switch(e.which) {
+            case constants.key.pageUp:
+               this._goToPrev();
+               break;
+            case constants.key.pageDown:
+               if (this.getPagesCount() > this.getSelectedKey()) {
+                  this._goToNext();
+               }
+               break;
+         }
+         return false;
       }
    });
 

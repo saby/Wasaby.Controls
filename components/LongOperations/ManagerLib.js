@@ -2,6 +2,7 @@
  * Библиотека постзагружаемых методов для менеджера длительных операций
  *
  * @class SBIS3.CONTROLS/LongOperations/ManagerLib
+ * @author Спирин В.А.
  * @public
  */
 define('SBIS3.CONTROLS/LongOperations/ManagerLib',

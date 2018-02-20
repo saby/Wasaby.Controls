@@ -1,10 +1,10 @@
 /**
  * Контрол "Область редактирования редактора колонок"
  *
- * @public
  * @class SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area
  * @extends SBIS3.CONTROLS/CompoundControl
  * @author Спирин В.А.
+ * @public
  */
 define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
    [
@@ -572,8 +572,9 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
 
       // ListView event handlers:
 
-      var _onItemClick = function (e, id) {
+      var _onItemClick = function (e, id, model, itemContent) {
          this.toggleItemsSelection([id]);
+         itemContent.title = (this.getSelectedKeys().indexOf(id) !== -1 ? rk('Скрыть колонку', 'РедакторКолонок') : rk('Показать колонку', 'РедакторКолонок')) + ' "' + model.get('title') + '"';
       };
 
       var _onSelectedItemsChange = function (e, ids, changes) {

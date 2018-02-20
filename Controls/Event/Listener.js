@@ -7,41 +7,32 @@ define('Controls/Event/Listener',
    [
       'Core/Control',
       'tmpl!Controls/Event/Listener',
+      'Controls/Event/Registrar',
       'WS.Data/Type/descriptor',
       'tmpl!Controls/Application/CompatibleScripts'
    ],
-   function(Control, template, types) {
+   function(Control, template, Registrar, types) {
 
       'use strict';
 
       var EventCatcher = Control.extend({
          _template: template,
          _listner: null,
-         _beforeMount: function(){
-            this._listner = {};
+         _beforeMount: function(newOptions){
+            this._registrar = new Registrar({register: newOptions.register});
          },
          _registerIt: function(event, registerType, component, callback){
             if (registerType === this._options.register) {
-               this._listner[component.getInstanceId()] = {
-                  component: component,
-                  callback: callback
-               };
-               event.stopPropagation();
+               this._registrar.register(event, component, callback);
             }
          },
          _unRegisterIt: function(event, registerType, component){
             if (registerType === this._options.register) {
-               this._listner[component.getInstanceId()] = null;
-               event.stopPropagation();
+               this._registrar.unregister(event, component, callback);
             }
          },
          start: function(){
-            if (!this._listner)
-               return;
-            for(var i in this._listner){
-               var obj = this._listner[i];
-               obj && obj.callback.apply(obj.component, arguments);
-            }
+            this._registrar.start.apply(this._registrar, arguments);
          }
       });
 

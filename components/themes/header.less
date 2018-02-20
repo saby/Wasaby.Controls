@@ -78,6 +78,13 @@
 } });
 
 // --------------------------- //
+
+/**
+Каскады ниже норма. Связано с неправильной реализацией заголовков. Одни класс не должен менять вид разных контролов.
+Контролы должны вешать нужные на себя классы.
+На новых контролах будут сделаны одноуровневые селекторы, которые будут использоваться теми контролами, которые должны
+иметь вид заголовков.
+ */
 .ws-header, .controls-Link.ws-header {
    .ws-header-mixin(@header-padding-left, @header-padding-right, @header-font-size, @header-color, @header-height, @header-color-hover);
 }
@@ -251,14 +258,18 @@
 .controls-Link {
    &.ws-linkHeader, &.ws-header, &.ws-bigSubheader {
       &:not(.ws-disabled) {
-         &:active, &:active .controls-Button__text {
+         &:active, &:active .controls-Button__text,
+         // active у ссылки перебивается, но в ie active работает специфически и не перебивается, поэтому сделаем перебивание по hover.
+         body:not(.ws-is-mobile-platform) &:hover, body:not(.ws-is-mobile-platform) &:hover .controls-Button__text {
             text-decoration: @link-header-text-decoration;
             color: @link-header-hover-color;
          }
       }
       &.ws-subheader {
          &:not(.ws-disabled) {
-            &:active, &:active .controls-Button__text {
+            &:active, &:active .controls-Button__text,
+               // active у ссылки перебивается, но в ie active работает специфически и не перебивается, поэтому сделаем перебивание по hover.
+            body:not(.ws-is-mobile-platform) &:hover, body:not(.ws-is-mobile-platform) &:hover .controls-Button__text {
                text-decoration: @link-header-text-decoration;
                color: @link-subheader-hover-color;
             }

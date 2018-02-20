@@ -1,4 +1,4 @@
-<div class="controls-InputRender controls-InputRender_state_{{ _getInputState() }} {{ !isEnabled() ? 'controls-InputRender_state_disabled_' + (_options.isMultiline ? 'multiLine' : 'singleLine') }} controls-InputRender_size_{{ _options.size ? _options.size : 'default_' + (_options.isMultiline ? 'multiLine' : 'singleLine') }} controls-InputRender_padding{{ _options.sidePadding ? _options.sidePadding : 'Both' }}"
+<div class="controls-InputRender controls-InputRender_state_{{ _getInputState() }} {{ !isEnabled() ? 'controls-InputRender_state_disabled_' + (_options.multiline ? 'multiLine' : 'singleLine') }} controls-InputRender_size_{{ _options.size ? _options.size : 'default_' + (_options.multiline ? 'multiLine' : 'singleLine') }} controls-InputRender_padding{{ _options.sidePadding ? _options.sidePadding : 'Both' }}"
      title="{{tooltip}}">
    <div class="controls-InputRender__wrapper">
       <div class="controls-InputRender__fieldWrapper">
@@ -18,6 +18,15 @@
                value="{{ _options.value }}"
                placeholder="{{ _options.placeholder }}"
          />
+
+         <ws:if data="{{ !_options.value }}">
+            <ws:partial
+               attr:class="{{ _options.isMultiline ? 'controls-InputArea__placeholder_multiline' }}"
+               template="tmpl!Controls/Input/resources/CustomPlaceholder"
+               placeholder="{{ _options.placeholder }}"
+               attr:tabindex="{{-1}}"
+            />
+         </ws:if>
 
          <ws:if data="{{_options.afterFieldWrapper}}">
             <ws:partial template="{{_options.afterFieldWrapper}}"/>
