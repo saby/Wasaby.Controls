@@ -2716,7 +2716,7 @@ define('SBIS3.CONTROLS/ListView',
             if (toolbarTarget && targetElement && toolbarTarget.container.get(0) === targetElement.get(0)) {
                toolbar.hide();
             }
-            ListView.superclass._redrawItemInner.apply(this, arguments);
+            var redrawResult = ListView.superclass._redrawItemInner.apply(this, arguments);
 
             //Если перерисовалась запись, которая является текущим контейнером для тулбара,
             //то перезаписшем в тулбар, новую ссылку на дом элемент, для того, чтобы тулбар смог
@@ -2725,6 +2725,7 @@ define('SBIS3.CONTROLS/ListView',
                toolbarTarget.container = this._getDomElementByItem(item);
                toolbar.setCurrentTarget(toolbarTarget);
             }
+            return redrawResult
          },
 
          _showToolbar: function(model) {

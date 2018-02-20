@@ -2079,6 +2079,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
             if (projItem) {
                this._redrawItem(projItem);
                this._notifyOnDrawItems();
+               this._reviveItems(item.getId() != this._options.selectedKey);
             }
          }
          else {
