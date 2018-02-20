@@ -105,8 +105,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          if (this._options.monthSelectionEnabled) {
             container.on('click', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleClick.bind(this));
             if (!detection.isMobileIOS) {
-               container.on('mouseenter', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleMouseEnter.bind(this));
-               container.on('mouseleave', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleMouseLeave.bind(this));
+               container.on('mouseenter.dateRangePicker', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleMouseEnter.bind(this));
+               container.on('mouseleave.dateRangePicker', '.controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates_item_title', this._onMonthTitleMouseLeave.bind(this));
             }
          }
 
@@ -114,7 +114,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          container.on('click', '.controls-DateRangeBigChoose-DateRangePickerItem__months-btn', this._onMonthClick.bind(this));
 
          if (!detection.isMobileIOS) {
-            container.on('mouseenter', '.controls-MonthView__currentMonthDay', this._onDayMouseEnter.bind(this));
+            container.on('mouseenter.dateRangePicker', '.controls-MonthView__currentMonthDay', this._onDayMouseEnter.bind(this));
+            container.on('mouseleave.dateRangePicker', this._onRangeControlMouseLeave.bind(this));
          }
 
          this._getScrollContainer().on('scroll', this._onScroll.bind(this));
@@ -132,6 +133,13 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          options = Component.superclass._modifyOptions.apply(this, arguments);
          options.monthSelectionEnabled = isEmpty(options.quantum) || ('months' in options.quantum && options.quantum.months.indexOf(1) !== -1);
          return options;
+      },
+
+      _onRangeControlMouseLeave: function() {
+         this.forEachMonthView(function(control) {
+            control._onRangeControlMouseLeave.call(control, null, true);
+         });
+         this._notify('onPeriodMouseLeave')
       },
 
       _onScroll: throttle(function () {
@@ -242,7 +250,16 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          this._notify('onSelectionEnded');
       },
       _onMonthTitleMouseEnter: function (event) {
-         this._notify('onMonthTitleMouseEnter', this._getDateByMonthTitleEvent(event));
+         var date = this._getDateByMonthTitleEvent(event),
+            startDate = this.getStartValue();
+         if (this.isSelectionProcessing()) {
+            if (date >= startDate) {
+               this._onMonthViewSelectingRangeEndDateChange(null, new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1));
+            } else {
+               this._onMonthViewSelectingRangeEndDateChange(null, date);
+            }
+         }
+         this._notify('onMonthTitleMouseEnter', date);
       },
       _onMonthTitleMouseLeave: function (event) {
          this._notify('onMonthTitleMouseLeave', this._getDateByMonthTitleEvent(event));
@@ -410,7 +427,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          // this._selectionType = selectionType;
          this._selectionRangeEndItem = date;
          this.forEachMonthView(function(control) {
-            if (e.getTarget() !== control) {
+            if (!e || e.getTarget() !== control) {
                control._setSelectionRangeEndItem(date, true);
             }
          });
@@ -474,6 +491,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          this.forEachMonthView(function (control) {
             control.cancelSelection();
          });
+      },
+
+      destroy: function() {
+         this.getContainer().off('.dateRangePicker');
+         Component.superclass.destroy.apply(this, arguments);
       }
 
    });
