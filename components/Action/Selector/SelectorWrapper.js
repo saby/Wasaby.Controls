@@ -12,7 +12,7 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorWrapper', [
     * Интерфейс открывателя диалога/всплывающей панели
     * @class SBIS3.CONTROLS/Action/Selector/SelectorWrapper
     * @extends Lib/Control/CompoundControl/CompoundControl
-    * @author Крайнов Дмитрий
+    * @author Крайнов Д.О.
     * @public
     * @control
     *

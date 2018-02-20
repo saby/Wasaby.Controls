@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/HighCharts', [
    "Core/Deferred",
    "Lib/Control/Control",
    "tmpl!SBIS3.CONTROLS/HighCharts/HighCharts",
-   'Core/helpers/Function/forAliveOnly',
+   'Core/helpers/Function/forAliveDeferred',
    'Core/helpers/Hcontrol/trackElement',
    "browser!/cdn/highcharts/4.2.7/highcharts-more.js",
    "css!SBIS3.CONTROLS/HighCharts/HighCharts",

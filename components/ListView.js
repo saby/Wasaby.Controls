@@ -45,7 +45,7 @@ define('SBIS3.CONTROLS/ListView',
    'SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil',
    'Core/core-instance',
    'Core/LocalStorageNative',
-   'Core/helpers/Function/forAliveOnly',
+   'Core/helpers/Function/forAliveDeferred',
    'Core/helpers/Function/memoize',
    'Core/helpers/Hcontrol/isElementVisible',
    'SBIS3.CONTROLS/Utils/Contains',
@@ -3517,7 +3517,7 @@ define('SBIS3.CONTROLS/ListView',
             return this.getContainer().hasClass('controls-ListView__indicatorVisible') ? this._loadingIndicator.height() : 0;
          },
          /**
-          * Обновлет положение ромашки что бы ее не перекрывал фиксированный заголовок
+          * Обновляет положение ромашки, чтобы её не перекрывал фиксированный заголовок
           * @private
           */
          _updateScrollIndicatorTop: function () {
