@@ -33,21 +33,83 @@ define('Controls/Button', [
     * @variant link Кнопка ссылка
     * @variant flat Кнопка без контура
     */
+   var classesOfButton = {
+      linkMain: {
+         style: 'link-main',
+         type: 'link'
+      },
+      linkMain2: {
+         style: 'link-main2',
+         type: 'link'
+      },
+      linkMain3: {
+         style: 'link-main3',
+         type: 'link'
+      },
+      linkAdditional: {
+         style: 'link-additional',
+         type: 'link'
+      },
+      linkAdditional2: {
+         style: 'link-additional2',
+         type: 'link'
+      },
+
+      linkAdditional3: {
+         style: 'link-additional3',
+         type: 'link'
+      },
+
+      linkAdditional4: {
+         style: 'link-additional4',
+         type: 'link'
+      },
+
+      linkAdditional5: {
+         style: 'link-additional5',
+         type: 'link'
+      },
+
+      buttonPrimary: {
+         style: 'primary',
+         type: 'primary'
+      },
+
+      buttonDefault: {
+         style: 'default',
+         type: 'default'
+      },
+
+      buttonAdd: {
+         style: 'primary-add',
+         type: 'primary'
+      }
+   };
+
+   var _private = {
+     cssStyleGeneration: function (self, options) {
+        if (classesOfButton.hasOwnProperty(options.style)) {
+           var currentButtonClass = classesOfButton[options.style];
+           self._style = currentButtonClass.style + (options.enabled ? '':'-disabled');
+           self._type = currentButtonClass.type + (options.enabled ? '':'-disabled');
+           self._typeWithSize = currentButtonClass.type + '__size-' + options.size;
+        }else {
+           throw new Error('Вызванный стиль кнопки не существует');
+        }
+     }
+   };
+
    var Button = Control.extend({
        _controlName: 'Controls/Button',
        _template: template,
 
        constructor: function (options) {
           Button.superclass.constructor.apply(this, arguments);
-          this._style = options.style + (options.enabled ? '':'-disabled');
-          this._type = options.style.split('-')[0] + (options.enabled ? '':'-disabled');
-          this._typeWithSize = options.style.split('-')[0] + '__size-' + options.size;
+          _private.cssStyleGeneration(this, options);
        },
 
        _beforeUpdate: function (newOptions) {
-          this._style = newOptions.style + (newOptions.enabled ? '':'-disabled');
-          this._type = newOptions.style.split('-')[0] + (newOptions.enabled ? '':'-disabled');
-          this._typeWithSize = newOptions.style.split('-')[0] + '__size-' + newOptions.size;
+          _private.cssStyleGeneration(this, newOptions);
        },
 
        _clickHandler: function (e) {
@@ -59,10 +121,12 @@ define('Controls/Button', [
 
    Button.getDefaultOptions = function() {
       return {
-         style: 'default',
+         style: 'buttonDefault',
          size: 'default'
       };
    };
+
+   Button._private = _private;
 
     return Button;
 });
