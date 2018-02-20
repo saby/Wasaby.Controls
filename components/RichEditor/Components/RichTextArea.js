@@ -1592,7 +1592,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (rng.collapsed) {
                      var endNode = rng.endContainer;
                      var text = endNode.nodeType === 1 ? endNode.innerHTML : endNode.nodeValue;
-                     if (text && text.substring(rng.endOffset, rng.endOffset + 1).search(/[<\s]/gi) === -1) {
+                     var offset = rng.endOffset;
+                     if (text && offset < text.length && text.substring(offset, offset + 1).search(/[<\s]/gi) === -1) {
                         // Имеем вставку урла внутрь текста, с которым он сольётся - отделить его пробелом в конце
                         // Было бы лучше (намного) сделать этот урл сразу ссылкой, но тогда сервис декораторов не подхватит его
                         // 93358 https://online.sbis.ru/opendoc.html?guid=6e7ccbf1-001c-43fb-afc1-7887baa96d7c
