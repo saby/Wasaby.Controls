@@ -4,10 +4,10 @@
 define('Controls/Search/SearchController',
    [
       'Core/core-extend',
-      'Controls/Search/SearchUtil'
+      'Core/moduleStubs'
    ],
    
-   function(extend, SearchUtil) {
+   function(extend, moduleStubs) {
       
       'use strict';
       
@@ -23,10 +23,15 @@ define('Controls/Search/SearchController',
          },
          
          getSearch: function(self) {
-            return SearchUtil.getSearch(self, {
-               dataSource: self._dataSource,
-               filter: self._filter,
-               navigation: self._navigation
+            return moduleStubs.require('Controls/Search/Search').addCallback(function(requireRes) {
+               if (!self._search) {
+                  self._search = new requireRes[0]({
+                     dataSource: self._dataSource,
+                     filter: self._filter,
+                     navigation: self._navigation
+                  });
+               }
+               return self._search;
             });
          },
          
