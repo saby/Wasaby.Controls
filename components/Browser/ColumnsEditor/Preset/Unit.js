@@ -1,8 +1,9 @@
 /**
  * Класс пресета редактора колонок
  *
- * @public
  * @class SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit
+ * @author Спирин В.А.
+ * @public
  */
 define('SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit',
    [],
