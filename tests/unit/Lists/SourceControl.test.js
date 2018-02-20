@@ -48,7 +48,7 @@ define([
          var ctrl = new SourceControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
-         assert.isTrue(!!ctrl._dataSourceController, 'Property _dataSourceController is incorrect before mounting');
+         assert.isTrue(!!ctrl._sourceController, 'Property _dataSourceController is incorrect before mounting');
 
       });
 
