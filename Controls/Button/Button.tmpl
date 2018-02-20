@@ -5,7 +5,7 @@
       on:click="_clickHandler()">
     <span attr:class="controls-BaseButton__content controls-Button__wrapper-type-{{_typeWithSize}}">
         <ws:if data="{{!!_options.icon}}">
-            <i attr:class="controls-Button__icon {{_options.icon}} controls-Button__icon-{{_style}}"></i>
+            <i attr:class="controls-Button__icon {{_options.icon}} controls-Button__icon-{{_type}}"></i>
         </ws:if>
         <ws:if data="{{!!_options.caption}}">
            <span attr:class="controls-BaseButton__text controls-Button__text_style-{{_style}} {{_options.icon ? ' controls-Button__text_gap'}}">{{_options.caption}}</span>

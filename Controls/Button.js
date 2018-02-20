@@ -113,7 +113,7 @@ define('Controls/Button', [
        },
 
        _clickHandler: function (e) {
-           if(!this.isEnabled()){
+           if(!this.isEnabled()) {
                e.stopPropagation();
            }
        }
