@@ -161,6 +161,34 @@ define('Controls/Popup/Opener/Sticky/Strategy',
        */
       var Strategy = BaseStrategy.extend({
          elementCreated: function (cfg, width, height) {
+            this.modifyCfg(cfg, width, height);
+         },
+
+         elementUpdated: function (cfg, width, height) {
+            this.modifyCfg(cfg, width, height);
+         },
+
+         /**
+          * Возвращает позицию плавающей панели
+          * @function Controls/Popup/Opener/Sticky/Strategy#getPosition
+          * @param popupCfg конфигурация попапа
+          * @param targetCoords координаты таргета
+          */
+         getPosition: function (popupCfg, targetCoords) {
+
+            var targetPoint = _private.getTargetPoint(popupCfg, targetCoords);
+            var horizontalPosition = _private.getPosition(popupCfg, targetCoords, targetPoint, 'horizontal');
+            var verticalPosition = _private.getPosition(popupCfg, targetCoords, targetPoint, 'vertical');
+
+            return {
+               left: horizontalPosition.coordinate,
+               top: verticalPosition.coordinate,
+               width: horizontalPosition.newWidth,
+               height: verticalPosition.newWidth
+            };
+         },
+
+         modifyCfg: function(cfg, width, height){
             var popupCfg = {
                corner: cMerge(cClone(DEFAULT_OPTIONS['corner']), cfg.popupOptions.corner || {}),
                align: {
@@ -183,30 +211,6 @@ define('Controls/Popup/Opener/Sticky/Strategy',
             else{
                cfg.popupOptions.className = _private.getOrientationClasses(popupCfg);
             }
-         },
-
-         elementUpdated: function (cfg, width, height) {
-            this.elementCreated(cfg, width, height);
-         },
-
-         /**
-          * Возвращает позицию плавающей панели
-          * @function Controls/Popup/Opener/Sticky/Strategy#getPosition
-          * @param popupCfg конфигурация попапа
-          * @param targetCoords координаты таргета
-          */
-         getPosition: function (popupCfg, targetCoords) {
-
-            var targetPoint = _private.getTargetPoint(popupCfg, targetCoords);
-            var horizontalPosition = _private.getPosition(popupCfg, targetCoords, targetPoint, 'horizontal');
-            var verticalPosition = _private.getPosition(popupCfg, targetCoords, targetPoint, 'vertical');
-
-            return {
-               left: horizontalPosition.coordinate,
-               top: verticalPosition.coordinate,
-               width: horizontalPosition.newWidth,
-               height: verticalPosition.newWidth
-            };
          }
 
       });

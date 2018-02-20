@@ -1,12 +1,11 @@
 define('Controls/Popup/Opener/InfoBox/Strategy',
    [
-      'Controls/Popup/Opener/BaseStrategy',
-      'Core/core-merge',
       'Controls/Popup/Opener/Sticky/Strategy',
+      'Core/core-merge',
       'Controls/Popup/Opener/InfoBox/resources/themeConstantsGetter',
       'Controls/Popup/Manager'
    ],
-   function (BaseStrategy, cMerge, StickyStrategy, themeConstantsGetter, Manager) {
+   function (StickyStrategy, cMerge, themeConstantsGetter, Manager) {
 
       // Получание констант из темы. Эксперементальный способ
       var constants = themeConstantsGetter('controls-InfoBox__themeConstants', {
@@ -102,7 +101,7 @@ define('Controls/Popup/Opener/InfoBox/Strategy',
        * @public
        * @category Popup
        */
-      var Strategy = BaseStrategy.extend({
+      var Strategy = StickyStrategy.constructor.extend({
 
          _openedInfoBoxId: null,
 
@@ -117,10 +116,6 @@ define('Controls/Popup/Opener/InfoBox/Strategy',
             this.modifyCfg(cfg, width, height);
          },
 
-         elementUpdated: function (cfg, width, height) {
-            this.modifyCfg(cfg, width, height);
-         },
-
          elementDestroyed: function(element, container, id){
             if (id === this._openedInfoBoxId){
                this._openedInfoBoxId = null;
@@ -130,7 +125,7 @@ define('Controls/Popup/Opener/InfoBox/Strategy',
 
          modifyCfg: function(cfg, width, height){
             cMerge(cfg.popupOptions, _private.getStickyParams(cfg.popupOptions.position, cfg.popupOptions.target));
-            StickyStrategy.elementCreated(cfg, width, height);
+            Strategy.superclass.modifyCfg.apply(this, arguments);
          }
 
       });
