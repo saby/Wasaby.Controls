@@ -10,21 +10,11 @@ define('Controls-demo/Confirmation/Confirmation',
       var InfoBox = Control.extend({
          _template: template,
 
-         _confirm: function(){
+         _open: function(e, type){
             this._children.popupOpener.open({
                message: 'message',
                details: 'details',
-               type: 'yesnocancel'
-            }).addCallback(function(res){
-               alert(res);
-            });
-         },
-
-         _message: function(){
-            this._children.popupOpener.open({
-               message: 'message',
-               details: 'details',
-               type: 'ok'
+               type: type
             }).addCallback(function(res){
                alert(res);
             });
