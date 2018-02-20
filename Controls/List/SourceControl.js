@@ -3,7 +3,6 @@ define('Controls/List/SourceControl', [
    'Core/IoC',
    'tmpl!Controls/List/SourceControl/SourceControl',
    'require',
-   'Controls/List/Controllers/ScrollController',
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
    'Core/Deferred',
@@ -12,7 +11,6 @@ define('Controls/List/SourceControl', [
              IoC,
              SourceControlTpl,
              require,
-             ScrollController,
              VirtualScroll,
              SourceController,
              Deferred
