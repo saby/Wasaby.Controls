@@ -1,17 +1,17 @@
-define('Controls/ConfirmationWindow',
+define('Controls/Popup/Opener/Confirmation',
    [
       'Core/Control',
       'Core/Deferred',
-      'tmpl!Controls/ConfirmationWindow/ConfirmationWindow',
-      'css!Controls/ConfirmationWindow/ConfirmationWindow',
-      'Controls/ConfirmationWindow/Dialog'
+      'tmpl!Controls/Popup/Opener/Confirmation/Confirmation',
+      'css!Controls/Popup/Opener/Confirmation/Confirmation',
+      'Controls/Popup/Opener/Confirmation/Dialog'
    ],
    function (Control, Deferred, template) {
       'use strict';
 
       /**
        * Хелпер открытия окна подтверждения
-       * @class Controls/ConfirmationWindow
+       * @class Controls/Popup/Opener/Confirmation
        * @extends Core/Control
        * @control
        * @public
@@ -20,18 +20,18 @@ define('Controls/ConfirmationWindow',
        */
 
       /**
-       * @function Controls/ConfirmationWindow#open
+       * @function Controls/Popup/Opener/Confirmation#open
        * Открыть диалоговое окно
-       * @param {Object} Объект конфигурации открываемого диалога - {@link Controls/ConfirmationWindow/Dialog}.
+       * @param {Object} Объект конфигурации открываемого диалога - {@link Controls/Popup/Opener/Confirmation/Dialog}.
        */
 
-      var ConfirmationWindow = Control.extend({
+      var Confirmation = Control.extend({
          _template: template,
          _resultDef: null,
          _openerResultHandler: null,
 
          constructor: function (options) {
-            ConfirmationWindow.superclass.constructor.apply(this, options);
+            Confirmation.superclass.constructor.apply(this, options);
             this._openerResultHandler = this._resultHandler.bind(this);
          },
 
@@ -52,6 +52,6 @@ define('Controls/ConfirmationWindow',
 
       });
 
-      return ConfirmationWindow;
+      return Confirmation;
    }
 );

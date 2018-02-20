@@ -1,19 +1,19 @@
-define('Controls/InfoBoxOpener',
+define('Controls/Popup/Opener/InfoBox',
    [
       'Core/Control',
       'Core/core-merge',
       'Core/core-clone',
-      'tmpl!Controls/InfoBoxOpener/resources/template',
-      'tmpl!Controls/InfoBoxOpener/InfoBoxOpener',
-      'Controls/InfoBoxOpener/resources/magicPixel',
-      'css!Controls/InfoBoxOpener/InfoBoxOpener'
+      'tmpl!Controls/Popup/Opener/InfoBox/resources/template',
+      'tmpl!Controls/Popup/Opener/InfoBox/InfoBox',
+      'Controls/Popup/Opener/InfoBox/resources/themeConstantsGetter',
+      'css!Controls/Popup/Opener/InfoBox/InfoBox'
    ],
-   function (Control, cMerge, cClone, contentTpl, template, magicPixel) {
+   function (Control, cMerge, cClone, contentTpl, template, themeConstantsGetter) {
       'use strict';
 
       /**
        * Класс открытия всплывающей подсказки с расширенными возможностями
-       * @class Controls/InfoBoxOpener
+       * @class Controls/Popup/Opener/InfoBox
        * @extends Core/Control
        * @control
        * @public
@@ -57,7 +57,7 @@ define('Controls/InfoBoxOpener',
 
 
       //Получание констант из темы. Эксперементальный способ
-      var constants = magicPixel('controls-InfoBox__magicPixel', {
+      var constants = themeConstantsGetter('controls-InfoBox__themeConstants', {
          ARROW_WIDTH: 'marginLeft',
          ARROW_H_OFFSET: 'marginRight',
          ARROW_V_OFFSET: 'marginBottom',
@@ -123,19 +123,20 @@ define('Controls/InfoBoxOpener',
 
       };
 
-      var InfoBoxOpener = Control.extend({
+      var InfoBox = Control.extend({
          _template: template,
          _infoBoxOpened: false,
 
          /**
           * Открыть инфобокс
-          * @function Controls/InfoBoxOpener#open
+          * @function Controls/Popup/Opener/InfoBox#open
           * @param {InfoBoxCfg} cfg Объект с настройками инфобокса
           */
          open: function(cfg){
 
-            if(this._infoBoxOpened){
-               return;
+            // Если до этого был открыт инфобокс, закроем его
+            if (this._infoBoxOpened) {
+               this.close();
             }
 
             cfg = cMerge(cClone(DEFAULT_CONFIG), cfg);
@@ -175,7 +176,7 @@ define('Controls/InfoBoxOpener',
 
          /**
           * Закрыть инфобокс
-          * @function Controls/InfoBoxOpener#close
+          * @function Controls/Popup/Opener/InfoBox#close
           */
          close: function(){
             if(this._infoBoxOpened){
@@ -186,8 +187,8 @@ define('Controls/InfoBoxOpener',
 
       });
 
-      InfoBoxOpener._private = _private;
+      InfoBox._private = _private;
 
-      return InfoBoxOpener;
+      return InfoBox;
    }
 );

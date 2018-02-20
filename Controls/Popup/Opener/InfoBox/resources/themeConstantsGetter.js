@@ -1,4 +1,4 @@
-define('Controls/InfoBoxOpener/resources/magicPixel', [],
+define('Controls/Popup/Opener/InfoBox/resources/themeConstantsGetter', [],
    function () {
       return function(className, hashMap){
          var obj = {};

@@ -1,11 +1,11 @@
 define(
    [
-      'Controls/InfoBoxOpener'
+      'Controls/Popup/Opener/InfoBox'
    ],
 
    function (InfoBoxOpener) {
       'use strict';
-      describe('Controls/InfoBoxOpener', function () {
+      describe('Controls/Popup/Opener/InfoBox', function () {
 
          var getOffset = InfoBoxOpener._private.getOffset;
          var arrowOffset = 12;
