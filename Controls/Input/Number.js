@@ -79,7 +79,11 @@ define('Controls/Input/Number', [
 
       _beforeUpdate: function(newOptions) {
          if (this._options.value !== newOptions.value) {
-            this._value = newOptions.value;
+            if (!this._numberViewModel.validate(options.value.replace(/ /g, ''))) {
+               this._value = '';
+            } else {
+               this._value = newOptions.value;
+            }
          }
       },
 
