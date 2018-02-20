@@ -106,12 +106,9 @@ define('Controls/Popup/Opener/InfoBox/Strategy',
 
          _openedInfoBoxId: null,
 
-         elementBeforeCreated: function(id){
-         },
-
          elementCreated: function (cfg, width, height, id) {
 
-            // Открыто может быть только одно окно
+            // Открыто может быть только одно окно. Логика контроллера!
             if (this._openedInfoBoxId) {
                Manager.remove(this._openedInfoBoxId);
             }
@@ -124,10 +121,11 @@ define('Controls/Popup/Opener/InfoBox/Strategy',
             this.modifyCfg(cfg, width, height);
          },
 
-         elementDestroyed: function(element, id){
+         elementDestroyed: function(element, container, id){
             if (id === this._openedInfoBoxId){
                this._openedInfoBoxId = null;
             }
+            return Strategy.superclass.elementDestroyed.apply(this, arguments);
          },
 
          modifyCfg: function(cfg, width, height){

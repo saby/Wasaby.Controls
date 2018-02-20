@@ -17,9 +17,9 @@ define('Controls/Popup/Manager',
             }
          },
 
-         removeElement: function (element, container) {
+         removeElement: function (element, container, id) {
             var self = this;
-            return element.strategy.elementDestroyed(element, container).addCallback( function(){
+            return element.strategy.elementDestroyed(element, container, id).addCallback( function(){
                self._popupItems.remove(element);
                if (element.isModal) {
                   var indices = self._popupItems.getIndicesByValue('isModal', true);
@@ -39,8 +39,8 @@ define('Controls/Popup/Manager',
                if (element && element.controlNodes && element.controlNodes.length) {
                   _popupContainer = element.controlNodes[0].control;
                   _popupContainer.eventHandlers = {
-                     onClosePopup: function (event, id) {
-                        _private.popupClose(id);
+                     onClosePopup: function (event, id, container) {
+                        _private.popupClose(id, container);
                      },
                      onPopupCreated: function (event, id, width, height) {
                         _private.popupCreated(id, width, height);
@@ -89,7 +89,6 @@ define('Controls/Popup/Manager',
          
          fireEventHandler: function(id, event, eventArg) {
             var element = Manager.find(id);
-   
             if (element && element.popupOptions.eventHandlers && element.popupOptions.eventHandlers.hasOwnProperty(event)) {
                element.popupOptions.eventHandlers[event](eventArg);
             }
@@ -107,9 +106,9 @@ define('Controls/Popup/Manager',
             _private.fireEventHandler(id, 'onResult', result);
          },
          
-         popupClose: function(id) {
+         popupClose: function(id, container) {
             _private.fireEventHandler(id, 'onClose');
-            Manager.remove(id);
+            Manager.remove(id, container);
          }
       };
 
@@ -164,13 +163,16 @@ define('Controls/Popup/Manager',
           * Удалить окно
           * @function Controls/Popup/Manager#remove
           * @param id идентификатор попапа
+          * @param container контейнер
           */
-         remove: function (id) {
+         remove: function (id, container) {
             var
                element = this.find(id);
             if (element) {
-               _private.removeElement.call(this, element);
-               this._redrawItems();
+               _private.removeElement.call(this, element, container, id).addCallback( function(){
+                  Manager._redrawItems();
+                  return element;
+               });
             }
          },
 
