@@ -1,10 +1,10 @@
 /**
  * Интерфейс продюсера длительных операций
+ *
  * @interface SBIS3.CONTROLS/LongOperations/IProducer
- * @public
  * @author Спирин В.А.
+ * @public
  */
-
 define('SBIS3.CONTROLS/LongOperations/IProducer',
    [],
 

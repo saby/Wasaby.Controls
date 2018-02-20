@@ -3,9 +3,9 @@
  *
  * @class SBIS3.CONTROLS/LongOperations/List/resources/DataSource
  * @implements WS.Data/Source/ISource
+ * @author Спирин В.А.
  * @public
  */
-
 define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
    [
       'Core/core-extend',

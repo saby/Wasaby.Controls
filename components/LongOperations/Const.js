@@ -2,9 +2,7 @@
  * Константы длительных операций
  *
  * @class SBIS3.CONTROLS/LongOperations/Const
- *
  * @author Спирин В.А.
- *
  * @public
  */
 define('SBIS3.CONTROLS/LongOperations/Const',
