@@ -24,6 +24,8 @@ define('Controls/Tabs/Buttons', [
                 var
                     leftOrder = 1,
                     rightOrder = 30;
+                // Необходимо обратить внимание на set/get методы тк возможно item будет enumerable
+                // и нужно будет делать через обёртку
                 items.each(function (item) {
                     if (item.get('align') === 'left') {
                         item.set('_order', leftOrder++);

@@ -22,9 +22,15 @@
                       bind:selectedKey='SelectedKey3'
                       keyProperty="id"
                       style="additional"
-                      displayProperty="carambola"
                       source="{{_source3}}"
-        />
+        >
+            <ws:itemTemplate>
+                <ws:partial template="tmpl!Controls/Tabs/Buttons/ItemTemplate"
+                            item="{{itemTemplate.item}}"
+                            displayProperty="carambola"
+                ></ws:partial>
+            </ws:itemTemplate>
+        </Controls:Tabs:Buttons>
     </div>
     <div class="separator">Style="additional", with space template</div>
     <div class="">
