@@ -2,6 +2,7 @@
  * Класс, содержащий различные сведения о ходе выполнения длительной операции
  *
  * @class SBIS3.CONTROLS/LongOperations/Entry
+ * @author Спирин В.А.
  * @public
  */
 define('SBIS3.CONTROLS/LongOperations/Entry',
