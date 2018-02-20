@@ -61,6 +61,12 @@ define('Controls/Input/resources/InputRender/InputRender',
          _controlName: 'Controls/Input/resources/InputRender/InputRender',
          _template: template,
 
+         _beforeMount: function(options) {
+            if (options.viewModel.getValueForRender) {
+               options.value = options.viewModel.getValueForRender(options.value);
+            }
+         },
+
          _beforeUpdate: function(newOptions) {
             if (this._options.viewModel.getValueForRender) {
                newOptions.value = this._options.viewModel.getValueForRender(newOptions.value);
@@ -92,7 +98,9 @@ define('Controls/Input/resources/InputRender/InputRender',
             _private.setTargetData(e.target, processedData);
             _private.saveSelection(this, e.target);
 
-            this._notify('valueChanged', [this._options.viewModel.getValueForNotify(processedData.value)]);
+            if (this._options.viewModel.getValueForNotify) {
+               this._notify('valueChanged', [this._options.viewModel.getValueForNotify(processedData.value)]);
+            }
          },
 
          _keyUpHandler: function(e) {
