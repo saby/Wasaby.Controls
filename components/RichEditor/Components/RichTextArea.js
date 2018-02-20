@@ -1024,8 +1024,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                href = anchor ? editor.dom.getAttrib(anchor, 'href') : '',
                fre = this,
                context = cContext.createContext(this),
-               dom = editor.dom,
-               protocol = /(https?|ftp|file):\/\//gi,
                dialogWidth = 440;
             require(['Lib/Control/Dialog/Dialog', 'Deprecated/Controls/FieldString/FieldString', 'SBIS3.CONTROLS/Button'], function(Dialog, FieldString, Button) {
                new Dialog({
@@ -1085,10 +1083,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            parent: this,
                            handlers: {
                               onActivated: function () {
-                                 href = this.getParent()._fieldHref.getValue();
+                                 var href = this.getParent()._fieldHref.getValue();
+                                 var protocol = /(?:https?|ftp|file):\/\//gi;
                                  if (href && href.search(protocol) === -1) {
                                     href = 'http://' + href;
                                  }
+                                 var dom = editor.dom;
                                  if (element && element.nodeName === 'A' && element.className.indexOf('ws-focus-out') < 0) {
                                     if (href) {
                                        dom.setAttribs(element, {
@@ -1101,11 +1101,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                     editor.undoManager.add();
                                  } else if (href) {
                                     linkAttrs.href = href;
-                                    editor.selection.setRng(range);
-                                    if (editor.selection.getContent() === '' || (fre._isOnlyTextSelected()) && cConstants.browser.firefox) {
-                                       var
-                                          linkText = selection.getContent({format: 'text'}) || href;
-                                       editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(linkText)));
+                                    selection.setRng(range);
+                                    if (selection.getContent() === '' || (fre._isOnlyTextSelected() && cConstants.browser.firefox)) {
+                                       var linkText = selection.getContent({format:'text'}) || href;
+                                       var linkHtml = dom.createHTML('a', linkAttrs, dom.encode(linkText));
+                                       editor.insertContent(linkHtml);
                                     } else {
                                        editor.execCommand('mceInsertLink', false, linkAttrs);
                                        if (cConstants.browser.firefox) {
