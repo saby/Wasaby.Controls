@@ -414,8 +414,6 @@ body {
     padding-right:  round(24px * @multiplier);
   }
   .controls-DateRangeBigChoose__ApplyButton {
-    //Простите меня за эти строки кода, я не хотел, меня заставили
-    margin-right:  round(12px * @multiplier);
     .controls-Button__icon {
       .icon-size(@default-icon-size-large);
     }
@@ -432,6 +430,12 @@ body {
   }
   .controls-Browser__fastDataFilter .controls-DropdownList {
     margin-top:  ceil(11px * @multiplier);
+  }
+  .controls-Browser__tableRow {
+    margin-left: 0;
+  }
+  .controls-Browser__topTemplate {
+    padding: @top_window_button round(8px * @multiplier);
   }
 }
 //необходимо переписать быстрый выбор периода, временное решение в 350 версию

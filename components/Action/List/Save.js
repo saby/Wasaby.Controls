@@ -10,9 +10,8 @@ define('SBIS3.CONTROLS/Action/List/Save', [
     'WS.Data/Collection/RecordSet',
     'Deprecated/Controls/DialogSelector/DialogSelector',
     'WS.Data/Query/Query',
-    'WS.Data/Entity/Record',
-    'Core/moduleStubs'
-], function (Save, ListMixin, fcHelpers, Deferred, Chain, cMerge, cInstance, coreClone, RecordSet, Dialog, Query, Record, moduleStubs) {
+    'WS.Data/Entity/Record'
+], function (Save, ListMixin, fcHelpers, Deferred, Chain, cMerge, cInstance, coreClone, RecordSet, Dialog, Query, Record) {
     var MAX_RECORDS_COUNT = 20000;
 
     /**
