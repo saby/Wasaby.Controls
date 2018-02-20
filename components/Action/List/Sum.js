@@ -43,6 +43,9 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
          * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
          * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
          */
+        //Множитель необходим для суммирования дробных чисел, подробнее о проблеме тут https://habrahabr.ru/post/159313/
+        var FLOAT_MULTIPLIER = 10;
+
         var Sum = ActionBase.extend([ListMixin, DialogMixin], /** @lends SBIS3.CONTROLS/Action/List/Sum.prototype */{
             $protected: {
                 _options: {
@@ -193,14 +196,14 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
                 items.each(function(model) {
                     if (this._needToSum(model, nodeProperty)) {
                        for (i = 0; i < fields.length; i++) {
-                          resultFields[fields[i]] += model.get(fields[i]) || 0;
+                          resultFields[fields[i]] += model.get(fields[i]) * FLOAT_MULTIPLIER || 0;
                        }
                        itemsCount++;
                     }
                 }, this);
                 resultRecord.addField({name: rk('Число записей'), type: 'integer'}, 0, itemsCount);
                 for (i = 0; i < fields.length; i++) {
-                    resultRecord.addField(format.at(format.getFieldIndex(fields[i])), i + 1, resultFields[fields[i]]);
+                    resultRecord.addField(format.at(format.getFieldIndex(fields[i])), i + 1, resultFields[fields[i]] / FLOAT_MULTIPLIER);
                 }
                 return Deferred.success(resultRecord);
             },
