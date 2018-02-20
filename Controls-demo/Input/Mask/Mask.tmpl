@@ -1,18 +1,80 @@
-<div class="ControlsDemo-Mask ws-flexbox ws-flex-column" xmlns:ws="http://www.w3.org/1999/html">
+<div class="ControlsDemo-Mask ws-flexbox ws-flex-column">
+   <ws:template name="descriptionTpl">
+      <div class="ws-header_size_h3 ws-header_color_accent1">{{exampleName}}</div>
+   </ws:template>
    <header>
-      <h1>Форматные поля</h1>
+      <div class="ws-header_size_h2 ws-header_color_accent2 ws-header_size_weight">Форматные поля ❤ ❤ ❤</div>
    </header>
-   <article>
-      <ws:for data="example in _examples">
-         <h3>{{example.title}}</h3>
-         <div class="ws-inline-flexbox ws-flex-column">
-            <ws:for data="key, item in example.items">
-               <ws:Controls.Input.Mask
-                  attr:class="{{key ? 'ControlsDemo-Mask__item_topOffset'}}"
-                  scope="{{item}}"
-               />
-            </ws:for>
+   <article class="ws-flexbox">
+      <div class="ws-flexbox ws-flex-column">
+         <ws:partial template="descriptionTpl" exampleName="example1"/>
+         <ws:Controls.Input.Mask
+            name="example1"
+            replacer=" "
+            mask="dd.dd"
+            bind:value="_values.example1"
+         />
+         <ws:partial template="descriptionTpl" exampleName="example2"
+                     class="ControlsDemo-Mask__item_topOffset"/>
+         <ws:Controls.Input.Mask
+            name="example2"
+            replacer=" "
+            mask="dd.dd.dd"
+            bind:value="_values.example2"
+         />
+         <ws:partial template="descriptionTpl" exampleName="example3"
+                     class="ControlsDemo-Mask__item_topOffset"/>
+         <ws:Controls.Input.Mask
+            name="example3"
+            replacer=""
+            mask="+7(ddd)ddd-dd-dd"
+            bind:value="_values.example3"
+         />
+         <ws:partial template="descriptionTpl" exampleName="example4"
+                     class="ControlsDemo-Mask__item_topOffset"/>
+         <ws:Controls.Input.Mask
+            name="example4"
+            replacer=""
+            mask="(ddd(ddd)ddd)"
+            bind:value="_values.example4"
+         />
+         <ws:partial template="descriptionTpl" exampleName="example5"
+                     class="ControlsDemo-Mask__item_topOffset"/>
+         <ws:Controls.Input.Mask
+            name="example5"
+            replacer=""
+            mask="\(?:(d\*l\*)\)"
+            bind:value="_values.example5"
+         />
+      </div>
+      <div class="ws-flexbox ws-flex-column ws-flex-grow-1 ws-align-items-center">
+         <div
+            class="ws-forwardArrow ws-header_size_h3 ws-header_color_accent2 ws-header_color-hover_accent1 ws-header_size_weight"
+            on:click="_toggleDebug()"
+         >DEBUG
          </div>
-      </ws:for>
+         <ws:Controls.Input.Mask
+            if="{{_debug}}"
+            name="exampleName"
+            mask="exampled"
+            formatMaskChars="{{
+                  {
+                     'd': '[1-9]'
+                  }
+               }}"
+            bind:value="_exampleDebug"
+         />
+         <div if="{{_debug}}">
+            <div>mask={{_stringify(_children[_exampleDebug]._options.mask)}}</div>
+            <div>value={{_stringify(_values[_exampleDebug])}}</div>
+            <div>clearValue={{_stringify(_getClearData(_children[_exampleDebug]._viewModel._maskData, _values[_exampleDebug]).value)}}</div>
+            <div>regExpMask={{_stringify(_children[_exampleDebug]._viewModel._maskData.searchingGroups)}}</div>
+            <div>delimiterGroups:</div>
+            <ws:for data="position, group in _children[_exampleDebug]._viewModel._maskData.delimiterGroups">
+               <div class="ControlsDemo-Mask__itemDelimiterGroups">{{position}}={{_stringify(group)}}</div>
+            </ws:for>
+            <div>{{test}}</div>
+         </div>
+      </div>
    </article>
 </div>

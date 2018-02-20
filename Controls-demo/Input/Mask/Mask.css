@@ -7,3 +7,9 @@ article {
 .ControlsDemo-Mask__item_topOffset {
    margin-top: 15px;
 }
+.ControlsDemo-Mask__debug {
+   margin-left: 15px;
+}
+.ControlsDemo-Mask__itemDelimiterGroups {
+   margin-left: 25px;
+}

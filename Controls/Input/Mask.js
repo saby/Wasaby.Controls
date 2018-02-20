@@ -1,12 +1,13 @@
 define('Controls/Input/Mask',
    [
       'Core/Control',
+      'Core/helpers/Object/isEqual',
       'Controls/Input/Mask/ViewModel',
       'tmpl!Controls/Input/Mask/Mask',
       'Controls/Input/resources/InputRender/InputRender',
       'tmpl!Controls/Input/resources/input'
    ],
-   function(Control, ViewModel, MaskTpl) {
+   function(Control, isEqual, ViewModel, MaskTpl) {
 
       'use strict';
 
@@ -68,24 +69,37 @@ define('Controls/Input/Mask',
             this._viewModel = new ViewModel({
                mask: options.mask,
                replacer: options.replacer,
-               formatMaskChars: {
-                  'L': '[А-ЯA-ZЁ]',
-                  'l': '[а-яa-zё]',
-                  'd': '[0-9]',
-                  'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
-               }
+               formatMaskChars: options.formatMaskChars
             });
          },
 
          _beforeUpdate: function(newOptions) {
-            if (!(newOptions.mask === this._options.mask && newOptions.replacer === this._options.replacer)) {
+            if (!(
+               newOptions.mask === this._options.mask &&
+               newOptions.replacer === this._options.replacer &&
+               isEqual(newOptions.formatMaskChars, this._options.formatMaskChars))
+            ) {
                this._viewModel.updateOptions({
                   mask: newOptions.mask,
-                  replacer: newOptions.replacer
+                  replacer: newOptions.replacer,
+                  formatMaskChars: newOptions.formatMaskChars
                });
             }
          }
       });
+
+      Mask.getDefaultOptions = function() {
+         return {
+            value: '',
+            replacer: '',
+            formatMaskChars: {
+               'L': '[А-ЯA-ZЁ]',
+               'l': '[а-яa-zё]',
+               'd': '[0-9]',
+               'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
+            }
+         }
+      };
 
       return Mask;
    });
