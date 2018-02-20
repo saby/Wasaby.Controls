@@ -52,10 +52,11 @@ define('Controls/Popup/Manager/Container',
           * @function Controls/Popup/Manager/Container#_closePopup
           * @param event
           * @param id идентификатор попапа.
+          * @param container контейнер
           */
-         _closePopup: function (event, id) {
+         _closePopup: function (event, id, container) {
             if (this.eventHandlers && this.eventHandlers.onClosePopup) {
-               this.eventHandlers.onClosePopup(event, id);
+               this.eventHandlers.onClosePopup(event, id, container);
             }
          },
 
