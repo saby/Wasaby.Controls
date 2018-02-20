@@ -103,22 +103,22 @@ define('Controls/Popup/Opener/InfoBox/Strategy',
        */
       var Strategy = StickyStrategy.constructor.extend({
 
-         _openedInfoBoxId: null,
+         _openedPopupId: null,
 
          elementCreated: function (cfg, width, height, id) {
 
             // Открыто может быть только одно окно. Логика контроллера!
-            if (this._openedInfoBoxId) {
-               Manager.remove(this._openedInfoBoxId);
+            if (this._openedPopupId) {
+               Manager.remove(this._openedPopupId);
             }
-            this._openedInfoBoxId = id;
+            this._openedPopupId = id;
 
             this.modifyCfg(cfg, width, height);
          },
 
          elementDestroyed: function(element, container, id){
-            if (id === this._openedInfoBoxId){
-               this._openedInfoBoxId = null;
+            if (id === this._openedPopupId){
+               this._openedPopupId = null;
             }
             return Strategy.superclass.elementDestroyed.apply(this, arguments);
          },
