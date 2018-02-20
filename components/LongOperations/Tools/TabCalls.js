@@ -15,11 +15,8 @@ define('SBIS3.CONTROLS/LongOperations/Tools/TabCalls',
        * Класс межвкладочных вызовов методов
        *
        * @class SBIS3.CONTROLS/LongOperations/Tools/TabCalls
-       *
        * @author Спирин В.А.
-       *
        * @public
-       * @type {SBIS3.CONTROLS/LongOperations/Tools/TabCalls}
        */
       var LongOperationsTabCalls = CoreExtend.extend(/** @lends SBIS3.CONTROLS/LongOperations/Tools/TabCalls.prototype */{
          _moduleName: 'SBIS3.CONTROLS/LongOperations/Tools/TabCalls',
