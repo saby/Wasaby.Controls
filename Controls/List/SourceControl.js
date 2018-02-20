@@ -5,8 +5,9 @@ define('Controls/List/SourceControl', [
    'require',
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
-   'Core/Deferred',
-   'css!Controls/List/SourceControl/SourceControl'
+   'Core/ParallelDeferred',
+   'css!Controls/List/SourceControl/SourceControl',
+   'Controls/List/ItemActions/ItemActionsController'
 ], function (Control,
              IoC,
              SourceControlTpl,
@@ -18,7 +19,6 @@ define('Controls/List/SourceControl', [
    'use strict';
 
    var _private = {
-
       reload: function(self) {
          if (self._sourceController) {
             _private.showIndicator(self);
@@ -311,8 +311,6 @@ define('Controls/List/SourceControl', [
                navigation : newOptions.navigation  //TODO возможно не всю навигацию надо передавать а только то, что касается source
             });
 
-
-
             if (!this._items) {
                _private.reload(this);
             }
@@ -329,6 +327,7 @@ define('Controls/List/SourceControl', [
       },
 
       _beforeUpdate: function(newOptions) {
+         var self = this;
          var filterChanged = newOptions.filter !== this._options.filter;
          var sourceChanged = newOptions.source !== this._options.source;
 
@@ -411,8 +410,8 @@ define('Controls/List/SourceControl', [
       reload: function() {
          _private.reload(this);
       }
-
    });
+
 
    //TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757
    /*ListView.getOptionTypes = function getOptionTypes(){

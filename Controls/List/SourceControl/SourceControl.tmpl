@@ -5,14 +5,19 @@
 
     <ws:if data="{{_listViewModel}}">
         <ws:partial
-              template="{{_options.viewName}}"
-              name="listView"
-              listModel="{{_listViewModel}}"
-              itemTemplate="{{_options.itemTemplate}}"
-              idProperty="{{_options.idProperty}}"
-              displayProperty="{{_options.displayProperty}}"
-              markedKey="{{_options.markedKey}}">
+            template="{{_options.viewName}}"
+            name="listView"
+            itemTemplate="{{_options.itemTemplate}}"
+            idProperty="{{_options.idProperty}}"
+            displayProperty="{{_options.displayProperty}}"
+            markedKey="{{_options.markedKey}}">
         </ws:partial>
+        <Controls.List.ItemActions.ItemActionsController
+            ws:content="listView"
+            listModel="{{_listViewModel}}"
+            itemActions="{{_options.itemActions}}"
+            showAction="{{_options.showAction}}"
+            itemActionsType="{{_options.itemActionsType}}"/>
     </ws:if>
 
     <ws:if data="{{_options.emptyTemplate && _listViewModel && !_listViewModel.getCount()}}">

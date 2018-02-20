@@ -19,7 +19,7 @@ define('Controls/List/SimpleList/ListView', [
          self._listChanged = true;
          self._forceUpdate();
       },
-      
+
       resizeNotifyOnListChanged: function (self) {
          if (self._listChanged) {
             self._listChanged = false;
@@ -30,8 +30,6 @@ define('Controls/List/SimpleList/ListView', [
 
    var ListView = BaseControl.extend(
       {
-
-
          _listModel: null,
          _template: ListViewTpl,
          _defaultItemTemplate: defaultItemTemplate,
@@ -75,10 +73,13 @@ define('Controls/List/SimpleList/ListView', [
             newKey = ItemsUtil.getPropertyValue(item, this._options.idProperty);
             this._listModel.setMarkedKey(newKey);
             this._notify('itemClick', [item], {bubbling: true});
+         },
+         _onItemContextMenu: function(event, itemData) {
+            this._notify('itemContextMenu', [itemData, event]);
          }
+
       });
-   
-   
+
    ListView._private = _private;
    return ListView;
 });
