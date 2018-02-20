@@ -118,11 +118,9 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceHoverController/EditInPlace
                }.bind(this));
             },
 
-            _destroyEipAfterEndEdit: function() {
+            _needDestroyEip: function() {
                //Разрушаем редакторы после редактирования, только если один из них не используется для показа редакторов по ховеру.
-               if (!this._hoveredEip) {
-                  EditInPlaceHoverController.superclass._destroyEipAfterEndEdit.apply(this, arguments);
-               }
+               return !this._hoveredEip && EditInPlaceHoverController.superclass._needDestroyEip.apply(this, arguments);
             },
 
             _getEditingEip: function() {
