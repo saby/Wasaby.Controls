@@ -322,7 +322,6 @@
    top: 0;
    color: @color_TreeDataGridView-editArrow;
    margin: @margin_TreeDataGridView-editArrow;
-   background-color: @background-color_TreeDataGridView-editArrow;
 
    &:hover {
       color: @color_TreeDataGridView-editArrow_hovered;
@@ -336,7 +335,7 @@
 .controls-TreeView__editArrow-container.controls-TreeView__editArrow-background {
    background-color: @background-color_DataGridView-item_hovered;
    &:after {
-      .horizontal-gradient(@background-color_DataGridView-item_hovered, fade(@background-color_DataGridView-item_hovered, 100%), right);
+      .horizontal-gradient(@background-color_DataGridView-item_hovered, fade(@background-color_DataGridView-item_hovered, 0%), right);
       .copyArrowGradient();
    }
 }
