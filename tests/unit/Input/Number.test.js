@@ -214,6 +214,22 @@ define(
                assert.equal(result.value, item.result.value);
             });
          });
+
+         it('getValueForRender', function () {
+            var
+               numberViewModel = new NumberViewModel(),
+               result = numberViewModel.getValueForRender('123456.78');
+
+            assert.equal(result, '123 456.78');
+         });
+
+         it('getValueForNotify', function () {
+            var
+               numberViewModel = new NumberViewModel(),
+               result = numberViewModel.getValueForNotify('123 456.78');
+
+            assert.equal(result, '123456.78');
+         });
       });
    }
 );

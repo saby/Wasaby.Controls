@@ -162,6 +162,11 @@ define('Controls/Input/Number/ViewModel',
                return true;
             },
 
+         /**
+          * Метод получает на вход строку с числом, а на выходе отдаёт это же число, разделенное на триады
+          * @param value
+          * @return {*|String}
+          */
             getValueForRender: function (value) {
                return _private.getValueWithDelimiters({
                   before: '',
@@ -170,6 +175,10 @@ define('Controls/Input/Number/ViewModel',
                });
             },
 
+         /**
+          * Метод получает на вход строку с числом, разбитым на триады, а на выход отдаёт строку с числом без пробелов
+          * @param value
+          */
             getValueForNotify: function (value) {
                return value.replace(/ /g, '');
             },
