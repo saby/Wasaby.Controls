@@ -256,9 +256,6 @@ define('SBIS3.CONTROLS/LongOperations/List',
          },
 
          _onUserAction: function (action, $item, id, itemModel) {
-            //////////////////////////////////////////////////
-            console.log('DBG: LO_List._onUserAction: action=', action, '; id=', id, ';');//^^^, (new Date()).getTime()
-            //////////////////////////////////////////////////
             this.applyUserAction(action, itemModel);
          },
 
