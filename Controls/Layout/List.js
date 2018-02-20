@@ -6,7 +6,7 @@ define('Controls/Layout/List',
       'Core/Control',
       'tmpl!Controls/Layout/List/List',
       'WS.Data/Source/Memory',
-      'Controls/Search/SearchController',
+      'Controls/Controllers/SearchController',
       'Core/core-merge',
       'Controls/Event/Emitter',
       'Controls/List'

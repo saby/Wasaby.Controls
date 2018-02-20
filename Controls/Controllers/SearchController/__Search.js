@@ -1,4 +1,4 @@
-define('Controls/Search/Search',
+define('Controls/Controllers/SearchController/__Search',
    [
       'Core/core-extend',
       'Core/Deferred',
@@ -46,7 +46,6 @@ define('Controls/Search/Search',
       /**
        * @author Герасимов Александр
        * @class WSControls/Lists/Controllers/Search
-       * @extends Core/Abstract
        * @public
        */
    

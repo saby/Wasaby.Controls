@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 01.02.2018.
  */
-define('Controls/Search/SearchController',
+define('Controls/Controllers/SearchController',
    [
       'Core/core-extend',
       'Core/moduleStubs'
@@ -23,7 +23,7 @@ define('Controls/Search/SearchController',
          },
          
          getSearch: function(self) {
-            return moduleStubs.require('Controls/Search/Search').addCallback(function(requireRes) {
+            return moduleStubs.require('Controls/Controllers/SearchController/__Search').addCallback(function(requireRes) {
                if (!self._search) {
                   self._search = new requireRes[0]({
                      dataSource: self._dataSource,
