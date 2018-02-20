@@ -17,12 +17,16 @@ define('Controls/Popup/Manager',
             }
          },
 
-         removeElement: function (element) {
-            this._popupItems.remove(element);
-            if (element.isModal) {
-               var indices = this._popupItems.getIndicesByValue('isModal', true);
-               _private.getPopupContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
-            }
+         removeElement: function (element, container) {
+            var self = this;
+            return element.strategy.elementDestroyed(element, container).addCallback( function(){
+               self._popupItems.remove(element);
+               if (element.isModal) {
+                  var indices = self._popupItems.getIndicesByValue('isModal', true);
+                  _private.getPopupContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
+                  return element;
+               }
+            });
          },
 
          /**
@@ -65,8 +69,7 @@ define('Controls/Popup/Manager',
                var strategy = element.strategy;
                if (strategy) {
                   // при создании попапа, зарегистрируем его
-                  // TODO id передавать плохо, сделано пока не перешли на контроллеры
-                  strategy.elementCreated(element, width, height, id);
+                  strategy.elementCreated(element, width, height);
                   Manager._redrawItems();
                }
             }
@@ -166,7 +169,6 @@ define('Controls/Popup/Manager',
             var
                element = this.find(id);
             if (element) {
-               element.strategy.elementDestroyed(element, id);
                _private.removeElement.call(this, element);
                this._redrawItems();
             }
