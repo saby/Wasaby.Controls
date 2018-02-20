@@ -1,6 +1,8 @@
 /**
  * Защищённая область для хранения защищённых членов классов
+ *
  * @class SBIS3.CONTROLS/LongOperations/Tools/ProtectedScope
+ * @author Спирин В.А.
  * @public
  *
  * @example
@@ -20,7 +22,6 @@
  *    protectedOf.clear(this);
  * </pre>
  */
-
 define('SBIS3.CONTROLS/LongOperations/Tools/ProtectedScope',
    [],
 
