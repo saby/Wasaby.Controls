@@ -4,11 +4,10 @@ define('Controls/Input/resources/InputRender/InputRender',
       /*'WS.Data/Type/descriptor',*/
       'tmpl!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
-      'Core/detection',
 
       'css!Controls/Input/resources/InputRender/InputRender'
    ],
-   function(Control, /*types,*/ template, RenderHelper, detection) {
+   function(Control, /*types,*/ template, RenderHelper) {
 
       'use strict';
 
@@ -61,21 +60,25 @@ define('Controls/Input/resources/InputRender/InputRender',
          _controlName: 'Controls/Input/resources/InputRender/InputRender',
          _template: template,
 
-         _beforeMount: function(options) {
+         constructor: function (options) {
+            InputRender.superclass.constructor.apply(this, arguments);
+
             if (options.viewModel.getValueForRender) {
-               options.value = options.viewModel.getValueForRender(options.value);
+               this._value = options.viewModel.getValueForRender(options.value);
             }
          },
 
          _beforeUpdate: function(newOptions) {
-            if (this._options.viewModel.getValueForRender) {
-               newOptions.value = this._options.viewModel.getValueForRender(newOptions.value);
+            if (newOptions.value !== this._options.value) {
+               if (this._options.viewModel.getValueForRender) {
+                  this._value = this._options.viewModel.getValueForRender(newOptions.value);
+               }
             }
          },
 
          _inputHandler: function(e) {
             var
-               value = this._options.value,
+               value = this._value,
                newValue = e.target.value,
                selection = _private.getSelection(this),
                position = _private.getTargetPosition(e.target),
@@ -160,12 +163,12 @@ define('Controls/Input/resources/InputRender/InputRender',
          paste: function(text, selectionStart, selectionEnd) {
             var
                processedData = this._options.viewModel.prepareData({
-                  before: this._options.value.slice(0, selectionStart),
+                  before: this._value.slice(0, selectionStart),
                   insert: text,
-                  after: this._options.value.slice(selectionEnd, this._options.value.length)
+                  after: this._value.slice(selectionEnd, this._value.length)
                }, 'insert');
 
-            if (this._options.value !== processedData.value) {
+            if (this._value !== processedData.value) {
                this._notify('valueChanged', [this._options.viewModel.getValueForNotify(processedData.value)]);
             }
 
