@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 01.02.2018.
  */
-define('Controls/Controllers/SearchController',
+define('Controls/Controllers/_SearchController',
    [
       'Core/core-extend',
       'Core/moduleStubs'
@@ -13,7 +13,7 @@ define('Controls/Controllers/SearchController',
       
       var _private = {
          getSearch: function(self) {
-            return moduleStubs.require('Controls/Controllers/SearchController/Search').addCallback(function(requireRes) {
+            return moduleStubs.require('Controls/Controllers/_Search').addCallback(function(requireRes) {
                if (!self._search) {
                   self._search = new requireRes[0]({
                      source: self._options.source,
@@ -50,8 +50,23 @@ define('Controls/Controllers/SearchController',
             });
          }
       };
-      
-      
+   
+      /**
+       * Отслеживает изменение value.
+       * При необходимости загружает Controls/Controllers/_Search и делает запрос за данными.
+       * @author Герасимов Александр
+       * @class Controls/Controllers/_SearchController
+       * @mixes Controls/Input/interface/ISearch
+       * @mixes Controls/interface/ISource
+       */
+      /**
+       * @name searchCallback
+       * @cfg {Function} callback, который будет вызван при положительном результате поиска
+       */
+      /**
+       * @name abortCallback
+       * @cfg {Function} callback, который будет вызван при сбросе поиска, ошибке запроса
+       */
       var SearchController = extend({
    
          constructor: function(options) {

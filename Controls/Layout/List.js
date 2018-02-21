@@ -1,18 +1,16 @@
-/**
- * Created by am.gerasimov on 02.02.2018.
- */
 define('Controls/Layout/List',
    [
       'Core/Control',
       'tmpl!Controls/Layout/List/List',
       'WS.Data/Source/Memory',
-      'Controls/Controllers/SearchController',
+      'Controls/Controllers/_SearchController',
       'Core/core-merge',
-      'Controls/Event/Emitter',
-      'Controls/List'
+      'Core/helpers/Object/isEqual',
+      'Controls/Layout/Search/SearchContextField',
+      'Controls/Layout/Filter/FilterContextField'
    ],
    
-   function(Control, template, Memory, SearchController, merge) {
+   function(Control, template, Memory, SearchController, merge, isEqual, SearchContextField, FilterContextField) {
       
       'use strict';
    
@@ -48,6 +46,7 @@ define('Controls/Layout/List',
          },
          
          updateFilter: function(self, resultFilter) {
+            /* Копируем объект, чтобы порвать ссылку и опция у списка изменилась*/
             var filterClone = merge({}, self._options.filter);
             self._filter = merge(filterClone, resultFilter);
          },
@@ -59,12 +58,29 @@ define('Controls/Layout/List',
          },
       
          searchCallback: function(self, result, filter) {
-            _private.updateSource(self, result);
             _private.updateFilter(self, filter);
+            _private.updateSource(self, result);
             self._forceUpdate();
          }
       };
    
+      /**
+       * Компонент-обёртка для списка.
+       * Принимает значения из контекста и фильтрует данные для списка.
+       * @author Герасимов Александр
+       * @class Controls/Layout/List
+       * @mixes Controls/Input/interface/ISearch
+       */
+      
+      /**
+       * @name Controls/Layout/List#source
+       * @cfg {WS.Data/Source/ISource} source
+       */
+   
+      /**
+       * @name Controls/Layout/List#navigation
+       * @cfg 'Controls/interface/INavigation} source
+       */
       var List = Control.extend({
          
          _template: template,
@@ -73,18 +89,35 @@ define('Controls/Layout/List',
             List.superclass.constructor.call(this, options);
             _private.resolveOptions(this, options);
          },
+         
+         _beforeUpdate: function (options, context) {
+            if (!isEqual(this.context.get('searchLayoutField').searchValue, context.searchLayoutField.searchValue)) {
+               this._searchValueChanged(context.searchLayoutField.searchValue);
+            }
+            
+            if (!isEqual(this.context.get('filterLayoutField').filter, context.filterLayoutField.filter)) {
+               this._filterChanged(context.filterLayoutField.filter);
+            }
+         },
    
-         _searchValueChanged: function(event, value) {
+         _searchValueChanged: function (value) {
             _private.initSearchController(this);
             this._searchController.search(value);
          },
          
-         _filterChanged: function(event, resultFilter) {
-            _private.updateFilter(this, resultFilter);
+         _filterChanged: function (filter) {
+            _private.updateFilter(this, filter);
             this._forceUpdate();
          }
          
       });
+   
+      List.contextTypes = function() {
+         return {
+            searchLayoutField: SearchContextField,
+            filterLayoutField: FilterContextField
+         };
+      };
    
       List.getDefaultOptions = function() {
          return {

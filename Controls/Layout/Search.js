@@ -2,14 +2,15 @@ define('Controls/Layout/Search',
    [
       'Core/Control',
       'tmpl!Controls/Layout/Search/Search',
-      'Controls/Event/Listener'
+      'Controls/Layout/Search/SearchContextField'
    ],
    
-   function(Control, template) {
+   function(Control, template, SearchContextField) {
       
       /**
        * @class Controls/Layout/Search
        * @extends Controls/Control
+       * @author Герасимов Александр
        * @control
        * @public
        */
@@ -18,10 +19,17 @@ define('Controls/Layout/Search',
       
       return Control.extend({
          
+         _searchValue: null,
          _template: template,
    
          _changeValueHandler: function(event, value) {
-            this._children.searchChangeDetect.start(value);
+            this._searchValue = value;
+         },
+   
+         _getChildContext: function() {
+            return {
+               searchLayoutField: new SearchContextField(this._searchValue)
+            };
          }
          
       });

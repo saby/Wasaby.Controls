@@ -2,10 +2,10 @@ define('Controls/Layout/Filter',
    [
       'Core/Control',
       'tmpl!Controls/Layout/Filter/Filter',
-      'Controls/Event/Listener'
+      'Controls/Layout/Filter/FilterContextField'
    ],
    
-   function(Control, template) {
+   function(Control, template, FilterContextField) {
       
       /**
        * @class Controls/Filter/FilterLayout
@@ -19,9 +19,15 @@ define('Controls/Layout/Filter',
       return Control.extend({
          
          _template: template,
+         
+         _changeFilterHandler: function(event, filter) {
+            this._filter = filter;
+         },
    
-         _filterChangeHandler: function(event, filter) {
-            this._children.changeFilterDetect.start(filter);
+         _getChildContext: function() {
+            return {
+               filterLayoutField: new FilterContextField(this._filter)
+            };
          }
          
       });

@@ -11,7 +11,7 @@ define(['Controls/Input/resources/SuggestPopupController', 'Core/core-instance',
             };
             
             var searchController = SuggestPopupController._private.getSearchController(self);
-            assert.isTrue(cInstance.instanceOfModule(searchController, 'Controls/Controllers/SearchController/Search'));
+            assert.isTrue(cInstance.instanceOfModule(searchController, 'Controls/Controllers/_Search'));
             assert.isTrue(cInstance.instanceOfModule(searchController._dataSource, 'WS.Data/Source/Memory'));
          });
    

@@ -1,3 +1,1 @@
-<div class="controls-SearchLayout" on:search="_changeValueHandler()">
-    <ws:Controls.Event.Listener name="searchChangeDetect" register="searchValueChanged" content="{{_options.content}}"/>
-</div>
+<ws:partial template="{{_options.content}}" on:search="_changeValueHandler()"/>

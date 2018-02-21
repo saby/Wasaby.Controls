@@ -4,7 +4,7 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
    [
-      'Controls/Controllers/SearchController/Search',
+      'Controls/Controllers/_Search',
       'WS.Data/Source/Memory'
    ],
    function (Search, Memory) {

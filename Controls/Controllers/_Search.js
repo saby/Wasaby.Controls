@@ -1,4 +1,4 @@
-define('Controls/Controllers/SearchController/Search',
+define('Controls/Controllers/_Search',
    [
       'Core/core-extend',
       'Core/Deferred',
@@ -50,15 +50,21 @@ define('Controls/Controllers/SearchController/Search',
        */
    
       /**
-       * @name WSControls/Lists/Controllers/Search#searchDelay
+       * @name Controls/Controllers/_Search#searchDelay
        * @cfg {Number} The delay in milliseconds between when a keystroke occurs and when a search is performed.
        * A zero-delay makes sense for local data.
        */
       
       /**
-       * @name WSControls/Lists/Controllers/Search#dataSource
-       * @cfg {WS.Data/Source/ISource} dataSource
+       * @name Controls/Controllers/_Search#source
+       * @cfg {WS.Data/Source/ISource} source
        */
+      
+      /**
+       * @name Controls/Controllers/_Search#navigation
+       * @cfg 'Controls/interface/INavigation} source
+       */
+      
       var Search  = extend({
    
          _searchDeferred: null,
