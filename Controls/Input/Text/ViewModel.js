@@ -46,7 +46,7 @@ define('Controls/Input/Text/ViewModel',
              * @param splitValue
              * @returns {{value: (*|String), position: (*|Integer)}}
              */
-            prepareData: function (splitValue) {
+            inputHandler: function (splitValue) {
                var insert = splitValue.insert;
 
                if (this._options.constraint) {

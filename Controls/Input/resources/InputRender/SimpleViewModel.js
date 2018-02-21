@@ -18,7 +18,7 @@ define('Controls/Input/resources/InputRender/SimpleViewModel',
           * @param splitValue
           * @returns {{value: (*|String), position: (*|Integer)}}
           */
-         prepareData: function (splitValue) {
+         inputHandler: function (splitValue) {
             return {
                value: splitValue.before + splitValue.insert + splitValue.after,
                position: splitValue.before.length + splitValue.insert.length
