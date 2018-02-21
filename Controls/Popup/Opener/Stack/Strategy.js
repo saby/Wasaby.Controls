@@ -2,9 +2,11 @@ define('Controls/Popup/Opener/Stack/Strategy',
    [
       'Controls/Popup/Opener/BaseStrategy',
       'WS.Data/Collection/List',
-      'Controls/Popup/TargetCoords'
+      'Controls/Popup/TargetCoords',
+      'Core/Deferred',
+      'Core/constants'
    ],
-   function (BaseStrategy, List, TargetCoords) {
+   function (BaseStrategy, List, TargetCoords, cDeferred, cConstants) {
       'use strict';
 
       var
@@ -54,9 +56,24 @@ define('Controls/Popup/Opener/Stack/Strategy',
             this._update();
          },
 
-         elementDestroyed: function (element) {
-            this._stack.remove(element);
-            this._update();
+         elementDestroyed: function (element, container) {
+            var
+               self = this,
+               def = new cDeferred();
+            if( cConstants.browser.chrome && !cConstants.browser.isMobilePlatform ){
+               container.addEventListener('transitionend', function(){
+                  self._stack.remove(element);
+                  self._update();
+                  def.callback();
+               });
+               container.style.width = '0';
+            }
+            else{
+               self._stack.remove(element);
+               self._update();
+               def.callback();
+            }
+            return def;
          },
 
          _update: function () {
@@ -146,6 +163,14 @@ define('Controls/Popup/Opener/Stack/Strategy',
           */
          getMaxPanelWidth: function (wWidth) {
             return wWidth - MINIMAL_PANEL_DISTANCE;
+         },
+
+         getDefaultPosition: function () {
+            return {
+               top: -10000,
+               left: -10000,
+               width: 0
+            };
          }
       });
 

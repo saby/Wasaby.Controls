@@ -11,13 +11,11 @@ define('SBIS3.CONTROLS/LongOperations/Tools/CallsPool',
        * Класс, позволяющий выполнять группу из нескольких параллельных (асинхронных) вызовов и объединять их результаты. Уже в ходе выполнения к
        * группе могут быть произвольно добавлены новые запросы либо удалено любые выполняющиеся. После выполнения всех запросов буден возвращён
        * результат, включающий в себя все непустые и не ошибочные результаты по всем выполненным запросам
+       *
        * @class SBIS3.CONTROLS/LongOperations/Tools/CallsPool
        * @extends Core/core-extend
-       *
        * @author Спирин В.А.
-       *
        * @public
-       * @type {SBIS3.CONTROLS/LongOperations/Tools/CallsPool}
        */
       var LongOperationsCallsPool = CoreExtend.extend(/** @lends SBIS3.CONTROLS/LongOperations/Tools/CallsPool.prototype */{
          _moduleName: 'SBIS3.CONTROLS/LongOperations/Tools/CallsPool',

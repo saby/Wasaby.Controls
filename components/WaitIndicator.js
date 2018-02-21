@@ -300,11 +300,11 @@ define('SBIS3.CONTROLS/WaitIndicator',
                options,
                options && typeof options.delay === 'number' && 0 <= options.delay ? options.delay : WaitIndicator.DEFAULT_DELAY
             );
-            stopper[method](function (delay) {
-               indicator.remove(delay);
-            }, function (err) {
+            var callback = function (value) {
                indicator.remove();
-            });
+               return value;
+            };
+            stopper[method](callback, callback);
          }
       };
 
@@ -561,7 +561,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
                style.left = (w <= w0 ? x : x - Math.floor((w - w0)/2)) + 'px';
                style.top = (h <= h0 ? y : y - Math.floor((h - h0)/2)) + 'px';
                style.width = w < w0 ? w0 + 'px' : 'auto';
-               style.height = h < h0 ? w0 + 'px' : 'auto';
+               style.height = h < h0 ? h0 + 'px' : 'auto';
             }
          },
 

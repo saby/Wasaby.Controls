@@ -2,6 +2,7 @@
  * Идентификатор текущей вкладки
  *
  * @class SBIS3.CONTROLS/LongOperations/TabKey
+ * @author Спирин В.А.
  * @public
  */
 define('SBIS3.CONTROLS/LongOperations/TabKey',
