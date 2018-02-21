@@ -216,7 +216,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             _beforeFocusOutRng: undefined,
             _images: {},
             _lastActive: undefined,
-            _lastSavedText: undefined
+            _lastSavedText: undefined,
+            //МЕГАкостыль, т.к. один человек, очень быстро нажимает ctr + Enter и отпускаение Enter происходит уже без нажатия ctr
+            //Получаем что TextArea думает, что просто отпустили Enter и не пропускает событие. Ошибка обусловлена тем что
+            //исторически сложилось так, редактирование по месту обрабатывает нажатия на keyup и от этого нужно уходить.
+            //Выписал задачу https://online.sbis.ru/opendoc.html?guid=41cf6afb-ddd1-46b6-9ebf-09dd62e798b5 и надеюсь что
+            //в VDOM это заработет само и ни какие костыли с keyup больше не понадобятся.
+            _ctrlKeyUpTimestamp: undefined,
          },
 
          _modifyOptions: function(options) {
@@ -528,9 +534,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   // Убрать FakeCarret в редакторе при переходе в не активное состояние
                   // 1174789437 https://online.sbis.ru/opendoc.html?guid=e21b8722-3ffa-4a47-a499-c8bd01af0985
                   this._removeTinyFakeCaret();
-               }
-               if (cConstants.browser.isMobilePlatform) {
-                  EventBus.globalChannel().notify('MobileInputFocusOut');
+                  if (cConstants.browser.isMobilePlatform) {
+                     EventBus.globalChannel().notify('MobileInputFocusOut');
+                  }
                }
             }
             RichTextArea.superclass.setActive.apply(this, arguments);
@@ -1230,7 +1236,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
          insertImageTemplate: function(key, fileobj) {
             //необходимо вставлять каретку(курсор ввода), чтобы пользователь понимал куда будет производиться ввод
-            var CARET = cConstants.browser.chrome /*|| cConstants.browser.firefox*/ ? '&#xFEFF;{$caret}' : '{$caret}';
+            var browser = cConstants.browser;
+            var CARET = browser.chrome || browser.isIE || browser.safari || browser.isMobileIOS /*|| browser.firefox*/ ? '&#xFEFF;{$caret}' : '{$caret}';
             var className, before, after;
             switch (key) {
                case '1':
@@ -1678,7 +1685,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             //Запрещаем всплытие Enter, Up и Down
             this._container.bind('keyup', function(e) {
-               if ((e.which === cConstants.key.enter && !e.ctrlKey)|| e.which === cConstants.key.up || e.which === cConstants.key.down) {
+               var ctrlKey = e.ctrlKey;
+
+               if (e.which === cConstants.key.enter && !ctrlKey && self._ctrlKeyUpTimestamp) {
+                  ctrlKey = (new Date() - self._ctrlKeyUpTimestamp) < 100;
+               }
+               if (e.which === cConstants.key.ctrl) {
+                  self._ctrlKeyUpTimestamp = new Date();
+               }
+
+               if ((e.which === cConstants.key.enter && !ctrlKey)|| e.which === cConstants.key.up || e.which === cConstants.key.down) {
                   e.stopPropagation();
                   e.preventDefault();
                }

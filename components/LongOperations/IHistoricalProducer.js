@@ -1,9 +1,10 @@
 /**
  * Интерфейс продюсера истории длительной операции
+ *
  * @interface SBIS3.CONTROLS/LongOperations/IHistoricalProducer
+ * @author Спирин В.А.
  * @public
  */
-
 define('SBIS3.CONTROLS/LongOperations/IHistoricalProducer',
    [],
 

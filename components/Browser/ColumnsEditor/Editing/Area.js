@@ -1,10 +1,10 @@
 /**
  * Контрол "Область редактирования редактора колонок"
  *
- * @public
  * @class SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area
  * @extends SBIS3.CONTROLS/CompoundControl
  * @author Спирин В.А.
+ * @public
  */
 define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
    [

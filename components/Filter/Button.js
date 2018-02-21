@@ -1,8 +1,6 @@
 define('SBIS3.CONTROLS/Filter/Button',
     [
-   "Core/moduleStubs",
    "Core/CommandDispatcher",
-   "Core/constants",
    "Lib/Control/CompoundControl/CompoundControl",
    "tmpl!SBIS3.CONTROLS/Filter/Button/FilterButton",
    "tmpl!SBIS3.CONTROLS/Filter/Button/FilterComponentTemplate",
@@ -11,7 +9,6 @@ define('SBIS3.CONTROLS/Filter/Button',
    "SBIS3.CONTROLS/Mixins/PickerMixin",
    "SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil",
    "SBIS3.CONTROLS/Utils/TemplateUtil",
-   "Core/ParallelDeferred",
    "Core/IoC",
    "Core/helpers/Function/once",
    "SBIS3.CONTROLS/Utils/FilterPanelUtils",
@@ -21,9 +18,7 @@ define('SBIS3.CONTROLS/Filter/Button',
    'css!SBIS3.CONTROLS/Filter/Button/FilterButton'
 ],
     function(
-        mStubs,
         CommandDispatcher,
-        constants,
         CompoundControl,
         dotTplFn,
         dotTplForComp,
@@ -32,7 +27,6 @@ define('SBIS3.CONTROLS/Filter/Button',
         PickerMixin,
         FilterToStringUtil,
         TemplateUtil,
-        ParallelDeferred,
         IoC,
         once,
         FilterPanelUtils
@@ -226,6 +220,7 @@ define('SBIS3.CONTROLS/Filter/Button',
              FilterButton.superclass._recalcInternalContext.call(this);
              if(!this._options._filterLineInitialized && this.getLinkedContext().getValue('filterChanged')) {
                 this.getContainer().prepend(this._options._filterLineTpl(this._options));
+                this.getContainer().removeClass('controls__filterButton_withoutLine');
                 this.reviveComponents();
                 this._options._filterLineInitialized = true;
              }

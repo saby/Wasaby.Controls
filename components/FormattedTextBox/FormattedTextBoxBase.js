@@ -735,16 +735,10 @@ define(
          this._inputField.keydown(this._onKeyDown.bind(this));
          this._inputField.bind('paste', function(e) {
             var
-                formatModel = self._getFormatModel(),
-                maskReplacer = self._getMaskReplacer(),
                 //Единственный способ понять, что мы пытаемся вставить это посмотреть в буфере.
                 //Берём из буфера только текст, так-как возможно там присутствует и разметка, которая нас не интересует.
                 pasteValue = e.originalEvent.clipboardData ? e.originalEvent.clipboardData.getData('text') : window.clipboardData.getData('text');
-            //Пропустим вставляемый текст через модель. Если setText модели вернет true - значит
-            //вставляемый текст соответствует маске и мы его можем проставить в значение текстового поля
-            if (self.isEnabled() && formatModel.setText(pasteValue, maskReplacer)) {
-               self.setText(formatModel.getText(maskReplacer));
-            }
+            self._onPasteValue(pasteValue);
             e.preventDefault();
          });
          //предотвращаем вырезание маски
@@ -753,6 +747,17 @@ define(
          });
          this._chromeCaretBugFix();
       },
+
+      _onPasteValue: function(pasteValue) {
+         var
+            formatModel = this._getFormatModel(),
+            maskReplacer = this._getMaskReplacer();
+
+         if (this.isEnabled() && formatModel.setText(pasteValue, maskReplacer)) {
+            this.setText(formatModel.getText(maskReplacer));
+         }
+      },
+
       _onKeyPress: ifEnabled(function (event) {
          if (!this._isFirefoxKeypressBug(event)) {
             this._keyPressBind(event);
@@ -1254,7 +1259,9 @@ define(
        * @see setCursor
        */
       setText: function(text) {
-         this._setText(text);
+         if (this._options.text !== text) {
+            this._setText(text);
+         }
       },
       _setText: function(text){
          var model = this._getFormatModel();

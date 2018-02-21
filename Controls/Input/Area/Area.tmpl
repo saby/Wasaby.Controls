@@ -1,15 +1,14 @@
-<div>
-   <Controls:Input:resources:InputRender:InputRender
+<Controls:Input:resources:InputRender:InputRender
            size="auto"
            sidePadding="Left"
-           isMultiline="{{ _options.minLines > 1 }}"
+           multiline="{{ _options.minLines > 1 }}"
            name="inputRender"
            value="{{ _options.value }}"
            selectOnClick="{{_options.selectOnClick}}"
            viewModel="{{_textViewModel}}"
            tagStyle="{{_options.tagStyle}}"
            validationErrors="{{_options.validationErrors}}"
-           attr:class="controls-InputArea"
+           placeholder="{{ _options.placeholder }}"attr:class="controls-InputArea"
            on:valueChanged="_valueChangedHandler()"
            on:inputCompleted="_inputCompletedHandler()"
            on:tagHover="_notifyHandler('onTagHover')"
@@ -29,12 +28,6 @@
                     required="true"
             ></textarea>
 
-            <ws:partial
-               attr:class="{{ _options.minLines > 1 ? 'controls-InputArea__placeholder_multiline' }}"
-               template="tmpl!Controls/Input/resources/CustomPlaceholder"
-               placeholder="{{ _options.placeholder }}"
-            />
-
             <div class="controls-fakeTextArea__firstWrapper">
                <div class="controls-fakeTextArea__secondWrapper">
                   <div
@@ -49,4 +42,3 @@
          </div>
       </ws:content>
    </Controls:Input:resources:InputRender:InputRender>
-</div>
