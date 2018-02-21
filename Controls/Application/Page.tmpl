@@ -26,8 +26,8 @@
               key="1_2_"
               on:scroll="_scrollPage()"
               on:resize="_resizePage()"
-              on:touchstart="_touchstartPage()"
-              on:mousemove="_mouseMouvePage()">
+              on:mousemove="_mousemovePage()"
+              on:touchstart="_touchstartPage()">
          <ws:if data="{{ content.content }}">
             <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}" />
          </ws:if>

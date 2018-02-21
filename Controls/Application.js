@@ -25,6 +25,7 @@ define('Controls/Application',
          DEFAULT_DEBUG_CATALOG = 'debug/';
 
       _private = {
+          moveInRow: 1,
          /**
           * Перекладываем опции или recivedState на инстанс
           * @param self
@@ -55,17 +56,16 @@ define('Controls/Application',
             this._children.resizeDetect.start(ev);
          },
 
-         _touchstartPage: function(ev){
-             this.touchclass = 'ws-is-touch'
+         _touchstartPage: function(ev) {
+            this.touchclass = 'ws-is-touch';
+            _private.moveInRow = 0;
          },
-
-         _mouseMouvePage: function(ev){
-             this.touchclass = 'ws-is-no-touch';
+         _mousemovePage: function(ev){
+            if (_private.moveInRow > 0) {
+               this.touchclass = 'ws-is-no-touch';
+            }
+            _private.moveInRow++;
          },
-
-          //При инициализации необходимо корректно проставить класс, далее класс определяется в зависимости от событий
-         touchclass: document && (navigator.msMaxTouchPoints || navigator.maxTouchPoints || 'ontouchstart' in document.documentElement) ?
-             'ws-is-touch' : 'ws-is-no-touch',
 
          _beforeMount: function(cfg, context, receivedState) {
             var self = this,
@@ -76,7 +76,9 @@ define('Controls/Application',
             if (!receivedState) {
                receivedState = {};
             }
-
+            //При инициализации необходимо корректно проставить класс, далее класс определяется в зависимости от событий
+            this.touchclass = document && (navigator.msMaxTouchPoints || navigator.maxTouchPoints || 'ontouchstart' in document.documentElement) ?
+                 'ws-is-touch' : 'ws-is-no-touch';
             self.cssLinks = receivedState.cssLinks || (context.AppData ? context.AppData.cssLinks : cfg.cssLinks);
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
