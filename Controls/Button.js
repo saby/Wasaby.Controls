@@ -1,8 +1,9 @@
 define('Controls/Button', [
     'Core/Control',
+    'Core/IoC',
     'tmpl!Controls/Button/Button',
     'css!Controls/Button/Button'
-], function(Control, template) {
+], function(Control, IoC, template) {
     'use strict';
 
    /**
@@ -88,14 +89,15 @@ define('Controls/Button', [
 
    var _private = {
      cssStyleGeneration: function (self, options) {
-        if (classesOfButton.hasOwnProperty(options.style)) {
-           var currentButtonClass = classesOfButton[options.style];
-           self._style = currentButtonClass.style + (options.enabled ? '':'-disabled');
-           self._type = currentButtonClass.type + (options.enabled ? '':'-disabled');
-           self._typeWithSize = currentButtonClass.type + '__size-' + options.size;
+        if (!classesOfButton.hasOwnProperty(options.style)) {
+           IoC.resolve('ILogger').error("Button", "Для кнопки задан несуществующий стиль");
+           currentButtonClass = classesOfButton.buttonDefault;
         }else {
-           throw new Error('Вызванный стиль кнопки не существует');
+           var currentButtonClass = classesOfButton[options.style];
         }
+        self._style = currentButtonClass.style + (options.enabled ? '':'-disabled');
+        self._type = currentButtonClass.type + (options.enabled ? '':'-disabled');
+        self._typeWithSize = currentButtonClass.type + '__size-' + options.size;
      }
    };
 
