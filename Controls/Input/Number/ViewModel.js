@@ -162,23 +162,27 @@ define('Controls/Input/Number/ViewModel',
                return true;
             },
 
-         /**
-          * Метод получает на вход строку с числом, а на выходе отдаёт это же число, разделенное на триады
-          * @param value
-          * @return {*|String}
-          */
+            /**
+             * Метод получает на вход строку с числом, а на выходе отдаёт это же число, разделенное на триады
+             * @param value
+             * @return {*|String}
+             */
             getValueForRender: function (value) {
-               return _private.getValueWithDelimiters({
-                  before: '',
-                  insert: value,
-                  after: ''
-               });
+               if (this.validate(value, this._options.onlyPositive, this._options.integersLength, this._options.precision)){
+                  return _private.getValueWithDelimiters({
+                     before: '',
+                     insert: value,
+                     after: ''
+                  });
+               } else {
+                  return '';
+               }
             },
 
-         /**
-          * Метод получает на вход строку с числом, разбитым на триады, а на выход отдаёт строку с числом без пробелов
-          * @param value
-          */
+            /**
+             * Метод получает на вход строку с числом, разбитым на триады, а на выход отдаёт строку с числом без пробелов
+             * @param value
+             */
             getValueForNotify: function (value) {
                return value.replace(/ /g, '');
             },

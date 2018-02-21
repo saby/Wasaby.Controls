@@ -63,16 +63,12 @@ define('Controls/Input/resources/InputRender/InputRender',
          constructor: function (options) {
             InputRender.superclass.constructor.apply(this, arguments);
 
-            if (options.viewModel.getValueForRender) {
-               this._value = options.viewModel.getValueForRender(options.value);
-            }
+            this._value = options.value;
          },
 
          _beforeUpdate: function(newOptions) {
             if (newOptions.value !== this._options.value) {
-               if (this._options.viewModel.getValueForRender) {
-                  this._value = this._options.viewModel.getValueForRender(newOptions.value);
-               }
+               this._value = newOptions.value;
             }
          },
 
