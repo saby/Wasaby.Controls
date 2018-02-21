@@ -65,6 +65,27 @@ define('Controls/Input/Number/ViewModel',
             return splitValue.before.length + splitValue.insert.length + spacesCntDiff + shift;
          },
 
+         /**
+          * Валидирует значение splitValue
+          * @param clearValue
+          * @param onlyPositive
+          * @param integersLength
+          * @param precision
+          * @returns {boolean}
+          */
+         validate: function (clearValue, onlyPositive, integersLength, precision) {
+            if (
+               !_private.validators.isNumber(clearValue) ||
+               typeof onlyPositive !== 'undefined' && !_private.validators.onlyPositive(clearValue) ||
+               typeof integersLength !== 'undefined' && !_private.validators.maxIntegersLength(clearValue, integersLength) ||
+               typeof precision !== 'undefined' && !_private.validators.maxDecimalsLength(clearValue, precision)
+            ) {
+               return false;
+            }
+
+            return true;
+         },
+
          //Набор валидаторов для числа
          validators: {
             //Проверяет что строка является числом и не содержит недопустимых символов
@@ -130,7 +151,7 @@ define('Controls/Input/Number/ViewModel',
                }
 
                //Если валидация не прошла, то не даем ничего ввести
-               if (!this.validate(_private.getClearValue(splitValue), this._options.onlyPositive, this._options.integersLength, this._options.precision)) {
+               if (!_private.validate(_private.getClearValue(splitValue), this._options.onlyPositive, this._options.integersLength, this._options.precision)) {
                   splitValue.insert = '';
                }
 
@@ -139,27 +160,6 @@ define('Controls/Input/Number/ViewModel',
                   value: _private.getValueWithDelimiters(splitValue),
                   position: _private.getCursorPosition(splitValue, shift)
                };
-            },
-
-            /**
-             * Валидирует значение splitValue
-             * @param clearValue
-             * @param onlyPositive
-             * @param integersLength
-             * @param precision
-             * @returns {boolean}
-             */
-            validate: function (clearValue, onlyPositive, integersLength, precision) {
-               if (
-                  !_private.validators.isNumber(clearValue) ||
-                  typeof onlyPositive !== 'undefined' && !_private.validators.onlyPositive(clearValue) ||
-                  typeof integersLength !== 'undefined' && !_private.validators.maxIntegersLength(clearValue, integersLength) ||
-                  typeof precision !== 'undefined' && !_private.validators.maxDecimalsLength(clearValue, precision)
-               ) {
-                  return false;
-               }
-
-               return true;
             },
 
             /**
