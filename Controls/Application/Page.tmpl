@@ -20,11 +20,17 @@
 </head>
 <Controls:Event:Listener name="scrollDetect" register="scroll">
    <Controls:Event:Listener name="resizeDetect" register="resize">
-      <body class="{{BodyClasses()}} {{bodyClass}}" id="body" key="1_2_" on:scroll="_scrollPage()" on:resize="_resizePage()">
+      <body
+              class="{{BodyClasses()}} {{bodyClass}} {{touchclass}}"
+              id="body"
+              key="1_2_"
+              on:scroll="_scrollPage()"
+              on:resize="_resizePage()"
+              on:touchstart="_touchstartPage()"
+              on:mousemove="_mouseMouvePage()">
          <ws:if data="{{ content.content }}">
             <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}" />
          </ws:if>
-
          <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/bundles.js"></script>
          <script key="require" type="text/javascript" src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
          <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>

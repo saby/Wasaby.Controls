@@ -55,6 +55,18 @@ define('Controls/Application',
             this._children.resizeDetect.start(ev);
          },
 
+         _touchstartPage: function(ev){
+             this.touchclass = 'ws-is-touch'
+         },
+
+         _mouseMouvePage: function(ev){
+             this.touchclass = 'ws-is-no-touch';
+         },
+
+          //При инициализации необходимо корректно проставить класс, далее класс определяется в зависимости от событий
+         touchclass: document && (navigator.msMaxTouchPoints || navigator.maxTouchPoints || 'ontouchstart' in document.documentElement) ?
+             'ws-is-touch' : 'ws-is-no-touch',
+
          _beforeMount: function(cfg, context, receivedState) {
             var self = this,
                def = new Deferred();
