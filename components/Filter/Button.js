@@ -210,6 +210,7 @@ define('SBIS3.CONTROLS/Filter/Button',
              FilterButton.superclass._recalcInternalContext.call(this);
              if(!this._options._filterLineInitialized && this.getLinkedContext().getValue('filterChanged')) {
                 this.getContainer().prepend(this._options._filterLineTpl(this._options));
+                this.getContainer().removeClass('controls__filterButton_withoutLine');
                 this.reviveComponents();
                 this._options._filterLineInitialized = true;
              }
