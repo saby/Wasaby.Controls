@@ -95,8 +95,8 @@ define('Controls/Button', [
         }else {
            var currentButtonClass = classesOfButton[options.style];
         }
-        self._style = currentButtonClass.style + (options.enabled ? '':'-disabled');
-        self._type = currentButtonClass.type + (options.enabled ? '':'-disabled');
+        self._style = currentButtonClass.style;
+        self._type = currentButtonClass.type;
         self._typeWithSize = currentButtonClass.type + '__size-' + options.size;
      }
    };
