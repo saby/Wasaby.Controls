@@ -61,6 +61,16 @@ define('Controls/Layout/List',
             _private.updateFilter(self, filter);
             _private.updateSource(self, result);
             self._forceUpdate();
+         },
+   
+         searchValueChanged: function (self, value) {
+            _private.initSearchController(self);
+            self._searchController.search(value);
+         },
+   
+         filterChanged: function (self, filter) {
+            _private.updateFilter(self, filter);
+            self._forceUpdate();
          }
       };
    
@@ -92,22 +102,12 @@ define('Controls/Layout/List',
          
          _beforeUpdate: function (options, context) {
             if (!isEqual(this.context.get('searchLayoutField').searchValue, context.searchLayoutField.searchValue)) {
-               this._searchValueChanged(context.searchLayoutField.searchValue);
+               _private.searchValueChanged(this, context.searchLayoutField.searchValue);
             }
             
             if (!isEqual(this.context.get('filterLayoutField').filter, context.filterLayoutField.filter)) {
-               this._filterChanged(context.filterLayoutField.filter);
+               _private.filterChanged(this, context.filterLayoutField.filter);
             }
-         },
-   
-         _searchValueChanged: function (value) {
-            _private.initSearchController(this);
-            this._searchController.search(value);
-         },
-         
-         _filterChanged: function (filter) {
-            _private.updateFilter(this, filter);
-            this._forceUpdate();
          }
          
       });
