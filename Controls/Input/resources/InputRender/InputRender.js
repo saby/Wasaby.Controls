@@ -59,16 +59,21 @@ define('Controls/Input/resources/InputRender/InputRender',
          
          _controlName: 'Controls/Input/resources/InputRender/InputRender',
          _template: template,
+         _value: '',
 
          constructor: function (options) {
             InputRender.superclass.constructor.apply(this, arguments);
 
-            this._value = options.value;
+            if (options.viewModel.getValueForRender) {
+               this._value = options.viewModel.getValueForRender(options.value);
+            }
          },
 
          _beforeUpdate: function(newOptions) {
             if (newOptions.value !== this._options.value) {
-               this._value = newOptions.value;
+               if (this._options.viewModel.getValueForRender) {
+                  this._options.viewModel.getValueForRender(newOptions.value);
+               }
             }
          },
 
