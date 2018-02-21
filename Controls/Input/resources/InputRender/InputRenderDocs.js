@@ -36,7 +36,7 @@ define('Controls/Input/resources/InputRender/InputRenderDocs',
        * @css @border-right-color_InputRender-tagStyle_primary Цвет информационной иконки.
        * @css @border-right-color_InputRender-tagStyle_disabled Цвет информационной иконки.
        * @public
-       * @author Зайцев Александр Сергеевич
+       * @author Зайцев А.С.
        */
    }
 );
