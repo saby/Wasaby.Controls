@@ -99,9 +99,17 @@ define('SBIS3.CONTROLS/OperationsPanel/Mark', [
                this._options.useSelectAll = false;
             }
             this._menuButton.once('onPickerOpen', function() {
+               var
+                  infiniteScroll = linkedView._options.infiniteScroll,
+                  selectAll = self._menuButton.getItemInstance('selectAll'),
+                  selectCurrentPage = self._menuButton.getItemInstance('selectCurrentPage');
                //Если есть бесконечный скролл то показываем кнопку "Все", иначе показываем кнопку "Всю страницу"
-               self._menuButton.getItemInstance('selectCurrentPage').toggle(!linkedView._options.infiniteScroll);
-               self._menuButton.getItemInstance('selectAll').toggle(linkedView._options.infiniteScroll);
+               if (selectCurrentPage) {
+                  selectCurrentPage.toggle(!infiniteScroll);
+               }
+               if (selectAll) {
+                  selectAll.toggle(infiniteScroll);
+               }
                self._menuButton.getPicker().getContainer().find('.controls-MenuLink__header').toggleClass('ws-hidden', !self._options.caption);
             });
             //Обычно ПМО сама прокидывает onSelectedItemsChange, но люди используют OperationsMark вне ПМО

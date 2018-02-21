@@ -30,7 +30,8 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
       'SBIS3.CONTROLS/CheckBox/Group',
       'SBIS3.CONTROLS/ListView',
-      'SBIS3.CONTROLS/ScrollContainer'
+      'SBIS3.CONTROLS/ScrollContainer',
+      'SBIS3.CONTROLS/OperationsPanel/Mark'
    ],
 
    function (CommandDispatcher, Deferred, RecordSet, ComputeFunctor, AreaSelectableModel, PresetCache, PresetDropdown, CompoundControl, ItemsMoveController, EditInPlaceBaseController, dotTplFn) {
@@ -120,13 +121,15 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                fixedView: 'controls-Browser-ColumnsEditor-Editing-Area__FixedList',
                selectableView: 'controls-Browser-ColumnsEditor-Editing-Area__SelectableList',
                presetDropdown: 'controls-Browser-ColumnsEditor-Editing-Area__Preset-item-title',
-               presetInput: 'controls-Browser-ColumnsEditor-Editing-Area__Preset-input'
+               presetInput: 'controls-Browser-ColumnsEditor-Editing-Area__Preset-input',
+               operationsMark: 'controls-Browser-ColumnsEditor-Editing-Area__OperationsMark'
             },
             _presetView: null,
             _presetDropdown: null,
             _fixedView: null,
             _selectableView: null,
             _currentPreset: null,
+            _operationsMark: null,
             _presetValidator: null
          },
 
@@ -156,8 +159,11 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             Area.superclass.init.apply(this, arguments);
             var options = this._options;
             this._presetView = options.usePresets ? _getChildComponent(this, this._childNames.presetView) : null;
-            this._fixedView = this.getChildControlByName(this._childNames.fixedView);
+            this._fixedView = _getChildComponent(this, this._childNames.fixedView);
             this._selectableView = this.getChildControlByName(this._childNames.selectableView);
+            this._operationsMark = this.getChildControlByName(this._childNames.operationsMark);
+
+            this._operationsMark.setLinkedView(this._selectableView);
 
             if (this._presetView) {
                //PresetCache.subscribe(options.presetNamespace, 'onCacheError', function () {});
