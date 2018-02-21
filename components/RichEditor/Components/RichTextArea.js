@@ -222,7 +222,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             //исторически сложилось так, редактирование по месту обрабатывает нажатия на keyup и от этого нужно уходить.
             //Выписал задачу https://online.sbis.ru/opendoc.html?guid=41cf6afb-ddd1-46b6-9ebf-09dd62e798b5 и надеюсь что
             //в VDOM это заработет само и ни какие костыли с keyup больше не понадобятся.
-            _ctrlKeyUpTimestamp: undefined,
+            _ctrlKeyUpTimestamp: undefined
          },
 
          _modifyOptions: function(options) {

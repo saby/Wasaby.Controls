@@ -1,9 +1,7 @@
 /**
  * Created by is.protasov on 06.04.2015.
  */
-define('SBIS3.CONTROLS/Utils/DateUtil',[
-   "Core/constants"
-], function( constants) {
+define('SBIS3.CONTROLS/Utils/DateUtil',[], function() {
    'use strict';
    /**
     * @class SBIS3.CONTROLS/Utils/DateUtil
