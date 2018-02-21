@@ -61,9 +61,6 @@ define('SBIS3.CONTROLS/ComboBox', [
     * @mixes SBIS3.CONTROLS/Mixins/DataBindMixin
     * @mixes SBIS3.CONTROLS/Mixins/SearchMixin
     * @mixes SBIS3.CONTROLS/ComboBoxDocs
-    *
-    * <b>Важно:</b> при добавлении этого класса сломается "Базовая линия".
-    *
     * @public
     * @control
     * @category Input
