@@ -184,7 +184,7 @@ define('Controls/Input/Number/ViewModel',
              * @param value
              */
             getValueForNotify: function (value) {
-               return value.replace(/ /g, '');
+               return parseFloat(value.replace(/ /g, ''));
             },
 
             updateOptions: function(options) {
