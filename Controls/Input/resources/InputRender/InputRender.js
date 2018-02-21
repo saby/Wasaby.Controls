@@ -101,7 +101,7 @@ define('Controls/Input/resources/InputRender/InputRender',
             splitValue = RenderHelper.getSplitInputValue(value, newValue, position, selection, inputType);
 
             //
-            processedData = this._options.viewModel.prepareData(splitValue, inputType);
+            processedData = this._options.viewModel.inputHandler(splitValue, inputType);
 
             _private.setTargetData(e.target, processedData);
             _private.saveSelection(this, e.target);
@@ -173,7 +173,7 @@ define('Controls/Input/resources/InputRender/InputRender',
           */
          paste: function(text, selectionStart, selectionEnd) {
             var
-               processedData = this._options.viewModel.prepareData({
+               processedData = this._options.viewModel.inputHandler({
                   before: this._value.slice(0, selectionStart),
                   insert: text,
                   after: this._value.slice(selectionEnd, this._value.length)

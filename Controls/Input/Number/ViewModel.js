@@ -128,7 +128,7 @@ define('Controls/Input/Number/ViewModel',
              * @param inputType
              * @returns {{value: (*|String), position: (*|Integer)}}
              */
-            prepareData: function (splitValue, inputType) {
+            inputHandler: function (splitValue, inputType) {
                var
                   shift = 0;
 
