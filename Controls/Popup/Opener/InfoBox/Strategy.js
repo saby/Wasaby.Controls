@@ -33,6 +33,7 @@ define('Controls/Popup/Opener/InfoBox/Strategy',
 
       var _private = {
 
+         // Возвращаем конфигурацию подготовленную для stickyStrategy
          getStickyParams: function(position, target){
             var side = position[0];
             var alignSide = position[1];
@@ -60,6 +61,8 @@ define('Controls/Popup/Opener/InfoBox/Strategy',
             }
          },
 
+         // Проверяет хватает ли ширины таргета для корректного позиционирования стрелки.
+         // Возвращает offset на который нужно сдвинуть инфобокс.
          getOffset: function(targetSize, alignSide, arrowOffset, arrowWidth){
             var align = INVERTED_SIDES[alignSide];
 
@@ -81,11 +84,13 @@ define('Controls/Popup/Opener/InfoBox/Strategy',
             return 0;
          },
 
+         // Возвращает вертикальный offset с учетом ширины таргета
          getVerticalOffset: function(target, alignSide){
             return _private.getOffset(target.offsetHeight, alignSide,
                constants.ARROW_V_OFFSET, constants.ARROW_WIDTH)
          },
 
+         // Возвращает горизонтальный offset с учетом ширины таргета
          getHorizontalOffset: function(target, alignSide){
             return _private.getOffset(target.offsetWidth, alignSide,
                constants.ARROW_H_OFFSET, constants.ARROW_WIDTH)

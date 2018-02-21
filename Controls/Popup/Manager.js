@@ -69,7 +69,7 @@ define('Controls/Popup/Manager',
                var strategy = element.strategy;
                if (strategy) {
                   // при создании попапа, зарегистрируем его
-                  strategy.elementCreated(element, width, height);
+                  strategy.elementCreated(element, width, height, id);
                   Manager._redrawItems();
                }
             }
