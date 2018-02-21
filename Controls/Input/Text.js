@@ -105,7 +105,7 @@ define('Controls/Input/Text', [
          },
 
          _valueChangedHandler: function(e, value) {
-            this._notify('search', [value], {bubbling: true});
+            this._notify('valueChanged', [value]);
          },
 
          paste: function(text) {
