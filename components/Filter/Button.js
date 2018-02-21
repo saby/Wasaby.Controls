@@ -283,6 +283,7 @@ define('SBIS3.CONTROLS/Filter/Button',
                     viewMode: this._options.viewMode,
                     areaCaption: this._options.areaCaption,
                     hasHistory: this._hasHistory(),
+                    historyId: this._options.historyId,
                     internalContextFilterName: this._options.internalContextFilterName,
                     componentOptions: this._options.componentOptions
                  },
