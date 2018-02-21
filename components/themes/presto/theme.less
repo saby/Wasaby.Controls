@@ -91,10 +91,13 @@ body {
 }
 
 .controls-operationsPanel__actions {
-  .controls-ButtonBase:hover, .controls-DropdownList__value:hover, .controls-ComboBox:hover {
+  .controls-ButtonBase:hover:not(.ws-disabled), .controls-DropdownList__value:hover:not(.ws-disabled), .controls-ComboBox:hover:not(.ws-disabled) {
     color: #B9E9FF !important;
     .icon-error {
       color: @error-color !important;
+    }
+    .controls-Button__icon.icon-primary {
+      color: #B9E9FF !important;
     }
   }
   .controls-Link.controls-Link_main:hover:not(.ws-disabled) .controls-Button__icon.icon-primary {
