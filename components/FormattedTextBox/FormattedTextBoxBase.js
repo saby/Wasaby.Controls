@@ -1259,7 +1259,9 @@ define(
        * @see setCursor
        */
       setText: function(text) {
-         this._setText(text);
+         if (this._options.text !== text) {
+            this._setText(text);
+         }
       },
       _setText: function(text){
          var model = this._getFormatModel();
