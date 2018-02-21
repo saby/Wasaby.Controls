@@ -217,6 +217,8 @@ define('SBIS3.CONTROLS/OperationsPanel', [
                      obj.caption = item.get('title');
                      obj.instance = instance;
                      obj.visible = instance.isVisible();
+                     obj.command = item.get('command');
+                     obj.commandArgs = item.get('commandArgs');
                   }
                   else {
                      var name = item.get('name');
