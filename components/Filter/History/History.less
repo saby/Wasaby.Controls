@@ -9,28 +9,36 @@
    margin: 8px 8px 0 16px;
 }
 
-.controls-History-view .controls-ListView__item:not(.controls-ItemActions__item) > div {
+.controls-History .controls-HistoryView__itemContent {
    overflow: hidden;
+   line-height: 14px;
+   max-height: 28px;
+   margin: 8px 0;
    text-overflow: ellipsis;
-   white-space: nowrap
+   white-space: nowrap;
 }
 
-.controls-History-view .controls-ListView__item:not(.controls-ItemActions__item) {
+.ws-is-webkit, .ws-is-chrome {
+   .controls-History .controls-HistoryView__itemContent {
+      white-space: normal;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+   }
+}
+
+.controls-History .controls-ListView__item:not(.controls-ItemActions__item) {
    font-size: 14px;
-   height: 32px;
-   line-height: 32px;
    padding: 0 40px;
-   white-space: nowrap;
-   text-overflow: ellipsis;
    cursor: pointer;
    color: #999;
 }
 
-.controls-History-view .controls-ItemsToolbar {
+.controls-History .controls-ItemsToolbar {
    background-color: transparent;
 }
 
-.controls-History-view .controls-ListView__hoveredItem {
+.controls-History .controls-ListView__hoveredItem {
    background-color: #EAECEE;
 }
 
