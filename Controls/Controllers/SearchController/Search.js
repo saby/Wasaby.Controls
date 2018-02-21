@@ -1,4 +1,4 @@
-define('Controls/Controllers/SearchController/__Search',
+define('Controls/Controllers/SearchController/Search',
    [
       'Core/core-extend',
       'Core/Deferred',
@@ -11,14 +11,14 @@ define('Controls/Controllers/SearchController/__Search',
       var _private = {
 
          checkRequiredOptions: function(options) {
-            if (!options.dataSource) {
-               throw new Error('dataSource is required for search');
+            if (!options.source) {
+               throw new Error('source is required for search');
             }
          },
    
          initSourceController: function(self, options) {
             self._sourceController = new SourceController({
-               source: options.dataSource,
+               source: options.source,
                navigation: options.navigation
             });
          },
