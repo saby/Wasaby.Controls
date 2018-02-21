@@ -16,8 +16,6 @@
          max-width: 626px;
       }
       .controls-InfoBoxDemo-target {
-         width: 64px;
-         height: 64px;
          background: #69b0ff;
          color: #fff;
          display: flex;
@@ -27,8 +25,26 @@
          cursor: pointer;
          position: relative;
       }
+      .controls-InfoBoxDemo-target-standard {
+         width: 64px;
+         height: 64px;
+      }
+      .controls-InfoBoxDemo-target-mini {
+         width: 18px;
+         height: 18px;
+      }
       .controls-InfoBoxDemo-target:hover {
          background: #489dfc;
+      }
+      .controls-InfoBoxDemo-min-targets-mode {
+         position: absolute;
+         top: 64px;
+         right: 64px;
+      }
+      .controls-InfoBoxDemo-min-targets-mode-button {
+         padding: 4px;
+         background: #76d676;
+         cursor:pointer;
       }
    </style>
 
@@ -40,11 +56,17 @@
       </div>
       <div class="controls-InfoBoxDemo-targets">
          <ws:for data="item in block.items">
-            <div class="controls-InfoBoxDemo-target" on:mouseenter="_open(item.cfg)" on:mouseleave="_close()">
+            <div class="controls-InfoBoxDemo-target {{_minTargetMode ? 'controls-InfoBoxDemo-target-mini' : 'controls-InfoBoxDemo-target-standard'}}" on:mouseenter="_open(item.cfg)" on:mouseleave="_close()">
                {{item.text}}
             </div>
          </ws:for>
       </div>
    </ws:for>
+
+   <div class="controls-InfoBoxDemo-min-targets-mode">Режим маленьких таргетов:
+      <span class="controls-InfoBoxDemo-min-targets-mode-button" on:click="_toggleMinTargetMode()">
+         {{_minTargetMode ? 'ВЫКЛ' : 'ВКЛ'}}
+      </span>
+   </div>
 
 </div>

@@ -145,6 +145,7 @@ define('Controls-demo/InfoBox/InfoBox',
       var InfoBox = Control.extend({
          _template: template,
          _blocks: blocks,
+         _minTargetMode: false,
 
          _open: function(e, cfg){
             cfg.target = e.target;
@@ -153,6 +154,10 @@ define('Controls-demo/InfoBox/InfoBox',
 
          _close: function(){
             this._children.IBOpener.close();
+         },
+
+         _toggleMinTargetMode: function(){
+            this._minTargetMode = !this._minTargetMode;
          }
       });
 
