@@ -11,7 +11,7 @@
          resourceRoot: '/components',
          nostyle: true,
          globalConfigSupport: false,
-         compat: false
+         compat: ~document.location.search.indexOf('compat=true') // если в демках используются не vdom контролы
       };
       window.WSTheme = 'wi_scheme';
    </script>
@@ -43,53 +43,53 @@
 <div id="popup"></div>
 <div id="newListView"></div>
 <script type="text/javascript">
-   require(['Core/core-init'],function () {
-      $(document).ready(function () {
-         var parseUrlQuery = function() {
-            var data = {};
-            if (document.location.search) {
-               var pair = (document.location.search.substr(1)).split('&');
-               for (var i = 0; i < pair.length; i ++) {
-                  var param = pair[i].split('=');
-                  data[param[0]] = param[1];
-               }
+require(['Core/core-init'],function () {
+   $(document).ready(function () {
+      var parseUrlQuery = function() {
+         var data = {};
+         if (document.location.search) {
+            var pair = (document.location.search.substr(1)).split('&');
+            for (var i = 0; i < pair.length; i ++) {
+               var param = pair[i].split('=');
+               data[param[0]] = param[1];
             }
-            return data;
-         };
-         var addThemeSwitcher = function(themeName) {
-            var  jsLink = document.createElement('script');
-            var loadHandler = function(){
-               jsLink.removeEventListener('load',loadHandler);
-               window.setBodyModifiers(themeName, '');
-            };
-            jsLink.id = 'themeSwitcher';
-            jsLink.src = '../pages/presto/themeSwitcher.js';
-            jsLink.type='text/javascript';
-            jsLink.addEventListener('load',loadHandler);
-            document.getElementsByTagName('head')[0].appendChild(jsLink);
-         };
-         var UrlParams = parseUrlQuery();
-         var cname = UrlParams.cname;
-         var reqname;
-         if (UrlParams['theme']) {
-            addThemeSwitcher(UrlParams['theme']);
          }
-         if (cname) {
-            reqname = 'Controls-demo/' + cname;
-         }
-         else {
-            reqname = 'Controls-demo/Index';
-         }
-         require([reqname, 'Controls/Popup/Manager/Container'], function (Component, Container) {
+         return data;
+      };
+      var addThemeSwitcher = function(themeName) {
+          var  jsLink = document.createElement('script');
+          var loadHandler = function(){
+              jsLink.removeEventListener('load',loadHandler);
+              window.setBodyModifiers(themeName, '');
+          };
+          jsLink.id = 'themeSwitcher';
+          jsLink.src = '../pages/presto/themeSwitcher.js';
+          jsLink.type='text/javascript';
+          jsLink.addEventListener('load',loadHandler);
+          document.getElementsByTagName('head')[0].appendChild(jsLink);
+      };
+      var UrlParams = parseUrlQuery();
+      var cname = UrlParams.cname;
+      var reqname;
+      if (UrlParams['theme']) {
+          addThemeSwitcher(UrlParams['theme']);
+      }
+      if (cname) {
+         reqname = 'Controls-demo/' + cname;
+      }
+      else {
+         reqname = 'Controls-demo/Index';
+      }
+      require([reqname, 'Controls/Popup/Manager/Container'], function (Component, Container) {
             var cfg = {};
             var cInstance = new Component(cfg);
             cInstance.mountToDom( $("#newListView"), cfg );
             var container = new Container();
             container.mountToDom( $("#popup"), {});
          }, function(err){
-            var msg = 'Error while loading module ' + cname;
-            require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager){
-               InformationPopupManager.showMessageDialog(
+         var msg = 'Error while loading module ' + cname;
+         require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function(InformationPopupManager){
+            InformationPopupManager.showMessageDialog(
                   {
                      message: msg,
                      status: 'error'
