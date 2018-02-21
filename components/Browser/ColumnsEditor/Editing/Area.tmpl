@@ -47,9 +47,21 @@
          </div>
       </ws:if>
    </div>
+   <div class="controls-Browser-ColumnsEditor-Editing-Area__OperationsMark">
+      <SBIS3.CONTROLS:OperationsPanel:Mark name="controls-Browser-ColumnsEditor-Editing-Area__OperationsMark">
+         <ws:items>
+            <ws:Array>
+               <ws:Object name="selectCurrentPage" title="{[Все]}"/>
+               <ws:Object name="removeSelection" title="{[Снять]}"/>
+               <ws:Object name="invertSelection" title="{[Инвертировать]}"/>
+            </ws:Array>
+         </ws:items>
+      </SBIS3.CONTROLS:OperationsPanel:Mark>
+   </div>
    <SBIS3.CONTROLS:ScrollContainer class="controls-Browser-ColumnsEditor-Editing-Area__body controls-ScrollContainer__flex">
       <ws:content>
          <SBIS3.CONTROLS:CheckBox:Group
+            if="{{ _optsFixed.items && _optsFixed.items.length }}"
             class="controls-ButtonGroup__vertical controls-Browser-ColumnsEditor-Editing-Area__FixedList"
             name="controls-Browser-ColumnsEditor-Editing-Area__FixedList"
             items="{{ _optsFixed.items }}"
