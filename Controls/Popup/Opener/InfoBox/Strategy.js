@@ -86,21 +86,19 @@ define('Controls/Popup/Opener/InfoBox/Strategy',
 
          // Возвращает вертикальный offset с учетом ширины таргета
          getVerticalOffset: function(target, alignSide){
-            return _private.getOffset(target.offsetHeight, alignSide,
-               constants.ARROW_V_OFFSET, constants.ARROW_WIDTH)
+            return _private.getOffset(target.offsetHeight, alignSide, constants.ARROW_V_OFFSET, constants.ARROW_WIDTH);
          },
 
          // Возвращает горизонтальный offset с учетом ширины таргета
          getHorizontalOffset: function(target, alignSide){
-            return _private.getOffset(target.offsetWidth, alignSide,
-               constants.ARROW_H_OFFSET, constants.ARROW_WIDTH)
+            return _private.getOffset(target.offsetWidth, alignSide, constants.ARROW_H_OFFSET, constants.ARROW_WIDTH);
          }
 
       };
 
       /**
        * Стратегия позиционирования инфобокса
-       * //TODO На половину стратегия, на половину контроллер
+       * TODO На половину стратегия, на половину контроллер
        * @class Controls/Popup/Opener/InfoBox/Strategy
        * @control
        * @public
@@ -118,19 +116,21 @@ define('Controls/Popup/Opener/InfoBox/Strategy',
             }
             this._openedPopupId = id;
 
-            this.modifyCfg(cfg, width, height);
+            return Strategy.superclass.elementCreated.apply(this, arguments);
          },
 
          elementDestroyed: function(element, container, id){
             if (id === this._openedPopupId){
                this._openedPopupId = null;
             }
+
             return Strategy.superclass.elementDestroyed.apply(this, arguments);
          },
 
          modifyCfg: function(cfg, width, height){
             cMerge(cfg.popupOptions, _private.getStickyParams(cfg.popupOptions.position, cfg.popupOptions.target));
-            Strategy.superclass.modifyCfg.apply(this, arguments);
+
+            return Strategy.superclass.modifyCfg.apply(this, arguments);
          }
 
       });
