@@ -794,7 +794,7 @@ define(
          },
 
          _setEnabled: function(enabled) {
-            var oldEnabled = this.isEnabled();
+            var oldEnabled = this._enabledApplied;
             MonthView.superclass._setEnabled.apply(this, arguments);
             if (oldEnabled !== enabled) {
                this._drawMonthTable();
