@@ -72,18 +72,12 @@ define('Controls/Input/Number', [
       },
 
       _beforeMount: function(options) {
-         if (!this._numberViewModel.validate(options.value.replace(/ /g, ''))) {
-            this._value = '';
-         }
+         this._value = this._numberViewModel.getValueForRender(options.value);
       },
 
       _beforeUpdate: function(newOptions) {
          if (this._options.value !== newOptions.value) {
-            if (!this._numberViewModel.validate(newOptions.value.replace(/ /g, ''))) {
-               this._value = '';
-            } else {
-               this._value = newOptions.value;
-            }
+            this._value = this._numberViewModel.getValueForRender(newOptions.value);
          }
       },
 
@@ -100,19 +94,8 @@ define('Controls/Input/Number', [
          });
       },
 
-      _inputCompletedHandler: function () {
-         var
-            clearValue = this._value.replace(/ /g, ''),
-            tmp = clearValue.split('.'),
-            integers = tmp[0],
-            decimals = tmp[1];
-
-         //Если дробная часть пустая или нулевая, то нужно убрать её
-         if (!parseInt(decimals, 10)) {
-            this._notify('inputCompleted', [parseInt(integers, 10)]);
-         } else {
-            this._notify('inputCompleted', [parseFloat(clearValue)]);
-         }
+      _inputCompletedHandler: function (event, value) {
+         this._notify('inputCompleted', [value]);
       },
 
       _notifyHandler: function (event, value) {

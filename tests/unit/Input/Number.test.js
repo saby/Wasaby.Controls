@@ -215,17 +215,33 @@ define(
             });
          });
 
-         it('getValueForRender', function () {
+         it('getValueForRender: only inegers', function () {
             var
-               numberViewModel = new NumberViewModel(),
+               numberViewModel = new NumberViewModel({}),
+               result = numberViewModel.getValueForRender('123456');
+
+            assert.equal(result, '123 456');
+         });
+
+         it('getValueForRender: inegers and decimals', function () {
+            var
+               numberViewModel = new NumberViewModel({}),
                result = numberViewModel.getValueForRender('123456.78');
 
             assert.equal(result, '123 456.78');
          });
 
-         it('getValueForNotify', function () {
+         it('getValueForNotify: only inegers', function () {
             var
-               numberViewModel = new NumberViewModel(),
+               numberViewModel = new NumberViewModel({}),
+               result = numberViewModel.getValueForNotify('123 456');
+
+            assert.equal(result, '123456');
+         });
+
+         it('getValueForNotify: inegers and decimals', function () {
+            var
+               numberViewModel = new NumberViewModel({}),
                result = numberViewModel.getValueForNotify('123 456.78');
 
             assert.equal(result, '123456.78');
