@@ -1,4 +1,4 @@
-<div class="controls__filterButton {{ 'controls__filterButton-' + filterAlign }}">
+<div class="controls__filterButton {{ 'controls__filterButton-' + filterAlign }} {{ !_filterLineInitialized ? 'controls__filterButton_withoutLine'}}">
     <ws:if data="{{ resetLinkText || !_fastFilterButton}}">
         <ws:partial template="{{ _filterLineTpl }}" scope="{{...}}"/>
     </ws:if>

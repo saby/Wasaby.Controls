@@ -1,9 +1,10 @@
 /**
  * Постзагрузчик методов класса
+ *
  * @class SBIS3.CONTROLS/LongOperations/Tools/Postloader
+ * @author Спирин В.А.
  * @public
  */
-
 define('SBIS3.CONTROLS/LongOperations/Tools/Postloader',
    [
       'Core/Deferred'
