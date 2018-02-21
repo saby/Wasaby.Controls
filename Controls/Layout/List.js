@@ -20,15 +20,18 @@ define('Controls/Layout/List',
       var _private = {
          initSearchController: function(self) {
             var options = self._options;
-            self._searchController = new SearchController({
-               filter: options.filter,
-               searchParam: options.searchParam,
-               minSearchLength: options.minSearchLength,
-               source: options.source,
-               navigation: options.navigation,
-               searchCallback: _private.searchCallback.bind(self, self),
-               abortCallback: _private.abortCallback.bind(self, self)
-            });
+   
+            if(!self._searchController) {
+               self._searchController = new SearchController({
+                  filter: options.filter,
+                  searchParam: options.searchParam,
+                  minSearchLength: options.minSearchLength,
+                  source: options.source,
+                  navigation: options.navigation,
+                  searchCallback: _private.searchCallback.bind(self, self),
+                  abortCallback: _private.abortCallback.bind(self, self)
+               });
+            }
          },
          
          resolveOptions: function(self, options) {
