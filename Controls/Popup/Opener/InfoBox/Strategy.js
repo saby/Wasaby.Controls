@@ -44,13 +44,13 @@ define('Controls/Popup/Opener/InfoBox/Strategy',
                   side: topOrBottomSide ? SIDES[side] : INVERTED_SIDES[alignSide],
                   offset: topOrBottomSide ?
                      (side === 't' ? -constants.TARGET_OFFSET : constants.TARGET_OFFSET) :
-                     _private.getVerticalOffset(target, alignSide)
+                     _private.getOffset(target.offsetHeight, alignSide, constants.ARROW_V_OFFSET, constants.ARROW_WIDTH)
                },
 
                horizontalAlign: {
                   side: topOrBottomSide ? INVERTED_SIDES[alignSide] : SIDES[side],
                   offset: topOrBottomSide ?
-                     _private.getHorizontalOffset(target, alignSide) :
+                     _private.getOffset(target.offsetWidth, alignSide, constants.ARROW_H_OFFSET, constants.ARROW_WIDTH) :
                      (side === 'l' ? -constants.TARGET_OFFSET : constants.TARGET_OFFSET)
                },
 
@@ -82,16 +82,6 @@ define('Controls/Popup/Opener/InfoBox/Strategy',
             }
 
             return 0;
-         },
-
-         // Возвращает вертикальный offset с учетом ширины таргета
-         getVerticalOffset: function(target, alignSide){
-            return _private.getOffset(target.offsetHeight, alignSide, constants.ARROW_V_OFFSET, constants.ARROW_WIDTH);
-         },
-
-         // Возвращает горизонтальный offset с учетом ширины таргета
-         getHorizontalOffset: function(target, alignSide){
-            return _private.getOffset(target.offsetWidth, alignSide, constants.ARROW_H_OFFSET, constants.ARROW_WIDTH);
          }
 
       };
