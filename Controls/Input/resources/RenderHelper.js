@@ -87,12 +87,15 @@ define('Controls/Input/resources/RenderHelper',
           */
          getAdaptiveInputType: function(nativeInputType, selection) {
             var
-               selectionLength = selection.selectionEnd - selection.selectionStart,
-               execType = /^(insert|delete|).*?(Backward|Forward|)$/.exec(nativeInputType);
+               selectionLength,
+               execType;
 
             if (nativeInputType === 'insertFromDrop') {
                return nativeInputType;
             }
+
+            selectionLength = selection.selectionEnd - selection.selectionStart;
+            execType = /^(insert|delete|).*?(Backward|Forward|)$/.exec(nativeInputType);
 
             return selectionLength ? execType[1] : execType[1] + execType[2];
          }
