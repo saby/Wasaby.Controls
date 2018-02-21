@@ -62,12 +62,12 @@ define('Controls/Layout/List',
          }
       };
    
-      var LayoutInner = Control.extend({
+      var List = Control.extend({
          
          _template: template,
          
          constructor: function(options) {
-            LayoutInner.superclass.constructor.call(this, options);
+            List.superclass.constructor.call(this, options);
             _private.resolveOptions(this, options);
          },
    
@@ -83,7 +83,7 @@ define('Controls/Layout/List',
          
       });
    
-      LayoutInner.getDefaultOptions = function() {
+      List.getDefaultOptions = function() {
          return {
             searchDelay: 500,
             minSearchLength: 3,
@@ -91,6 +91,6 @@ define('Controls/Layout/List',
          };
       };
       
-      return LayoutInner;
+      return List;
       
    });
