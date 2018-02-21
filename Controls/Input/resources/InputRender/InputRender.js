@@ -66,13 +66,17 @@ define('Controls/Input/resources/InputRender/InputRender',
 
             if (options.viewModel.getValueForRender) {
                this._value = options.viewModel.getValueForRender(options.value);
+            } else {
+               this._value = options.value;
             }
          },
 
          _beforeUpdate: function(newOptions) {
             if (newOptions.value !== this._options.value) {
                if (this._options.viewModel.getValueForRender) {
-                  this._options.viewModel.getValueForRender(newOptions.value);
+                  this._value = this._options.viewModel.getValueForRender(newOptions.value);
+               } else {
+                  this._value = newOptions.value;
                }
             }
          },
@@ -104,6 +108,8 @@ define('Controls/Input/resources/InputRender/InputRender',
 
             if (this._options.viewModel.getValueForNotify) {
                this._notify('valueChanged', [this._options.viewModel.getValueForNotify(processedData.value)]);
+            } else {
+               this._notify('valueChanged', [processedData.value]);
             }
          },
 
@@ -125,7 +131,11 @@ define('Controls/Input/resources/InputRender/InputRender',
          },
 
          _inputCompletedHandler: function(e) {
-            this._notify('inputCompleted', [this._options.viewModel.getValueForNotify(e.target.value)]);
+            if (this._options.viewModel.getValueForNotify) {
+               this._notify('inputCompleted', [this._options.viewModel.getValueForNotify(e.target.value)]);
+            } else {
+               this._notify('inputCompleted', [e.target.value]);
+            }
          },
 
          _notifyHandler: function(e, value) {
