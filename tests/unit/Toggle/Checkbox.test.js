@@ -1,6 +1,6 @@
 define(['js!Controls/Toggle/Checkbox'], function (Checkbox) {
    var CB, changeValue, eventValue;
-   describe('SBIS3.CONTROLS/Checkbox', function () {
+   describe('Controls/Toggle/Checkbox', function () {
       describe('click to checkbox', function () {
          beforeEach(function () {
             CB = new Checkbox({});
