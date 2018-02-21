@@ -1,4 +1,4 @@
-<div class="controls-ReportHistory__text-wrapper" title="{{ (item.data.fullTextValue ||  item.data.textValue) + ''}}">
-    <span class="controls-ReportHistory__text">{{ item.data.textValue|sanitize }}</span>
+<div class="controls-ReportHistory__text-wrapper" title="{{ (item.data.fullTextValue ||  item.data[displayProperty]) + ''}}">
+    <span class="controls-ReportHistory__text">{{ item.data[displayProperty]|sanitize }}</span>
     <i if="{{ item.data.globalParams }}" class="controls-ReportHistory__icon icon-16 icon-Profile2 icon-primary"></i>
 </div>
