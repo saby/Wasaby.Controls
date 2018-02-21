@@ -168,10 +168,12 @@ define('Controls/Input/Number/ViewModel',
              * @return {*|String}
              */
             getValueForRender: function (value) {
-               if (this.validate(value, this._options.onlyPositive, this._options.integersLength, this._options.precision)){
+               var
+                  _value = String(value);
+               if (this.validate(_value, this._options.onlyPositive, this._options.integersLength, this._options.precision)){
                   return _private.getValueWithDelimiters({
                      before: '',
-                     insert: value,
+                     insert: _value,
                      after: ''
                   });
                } else {
