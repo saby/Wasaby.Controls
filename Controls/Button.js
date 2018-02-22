@@ -89,11 +89,11 @@ define('Controls/Button', [
 
    var _private = {
      cssStyleGeneration: function (self, options) {
-        if (!classesOfButton.hasOwnProperty(options.style)) {
+        if (classesOfButton.hasOwnProperty(options.style)) {
+           var currentButtonClass = classesOfButton[options.style];
+        }else {
            IoC.resolve('ILogger').error("Button", "Для кнопки задан несуществующий стиль");
            currentButtonClass = classesOfButton.buttonDefault;
-        }else {
-           var currentButtonClass = classesOfButton[options.style];
         }
         self._style = currentButtonClass.style;
         self._type = currentButtonClass.type;
