@@ -59,24 +59,14 @@ define('Controls/Input/Number', [
 
       _caretPosition: null,
 
-      _value: '',
-
       constructor: function (options) {
          NumberInput.superclass.constructor.apply(this, arguments);
-
-         this._value = options.value;
 
          this._numberViewModel = new NumberViewModel({
             onlyPositive: options.onlyPositive,
             integersLength: options.integersLength,
             precision: options.precision
          });
-      },
-
-      _beforeUpdate: function(newOptions) {
-         if (this._options.value !== newOptions.value) {
-            this._value = newOptions.value;
-         }
       },
 
       _afterUpdate: function(oldOptions) {
