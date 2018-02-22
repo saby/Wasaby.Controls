@@ -396,7 +396,7 @@ define('SBIS3.CONTROLS/EditAtPlace',
          _toggleState: function() {
             var container = this._getStateToggleContainer()[0];
             container.className = container.className.replace(/(^|\s)controls-TextBox_state_\S+/gi, '');
-            container.className = container.className.replace(/(^|\s)controls-InputRender_state_\S+/gi, '');
+            container.className = container.className.replace(new RegExp('(^|\\\s)controls-' + this._options.inputType + '-InputRender_state_\\\S+', 'gi'), '');
             this._getStateToggleContainer().addClass(this._getToggleState());
          },
          _getToggleState: function() {
@@ -405,7 +405,7 @@ define('SBIS3.CONTROLS/EditAtPlace',
                enabled = this.isEnabled(),
                marked = this.isMarked();
             return 'controls-TextBox_state_' + (marked ? 'error' : !enabled ? 'disabled controls-TextBox_state_disabled_singleLine' : active ? 'active' : 'default') +
-               'controls-InputRender_state_' + (marked ? 'error' : !enabled ? 'disabled controls-InputRender_state_disabled_singleLine' : active ? 'active' : 'default');
+               'controls-' + this._options.inputType + '-InputRender_state_' + (marked ? 'error' : !enabled ? 'disabled controls-' + this._options.inputType + '-InputRender_state_disabled_singleLine' : active ? 'active' : 'default');
          }
       });
 
