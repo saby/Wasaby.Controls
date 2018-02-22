@@ -1,90 +1,188 @@
 .controls-BaseButton {
-  display: inline-block;
-  font-size: @font-size_Link;
-  text-decoration: none;
-  line-height: normal;
-  height: @default-height;
-  min-width: @min-width_Button;
+  display: inline-flex;
   box-sizing: border-box;
   .user-select();
 }
 
-.controls-Button__style-link {
+.controls-Button__type-link {
   cursor: pointer;
-  color: @color_Link-text;
-  &:hover {
-    color: @color_Link-text_hovered;
+}
+
+.controls-Button__type-link__size-s{
+  font-size: @font-size_Link-s;
+}
+
+.controls-Button__type-link__size-default{
+  font-size: @font-size_Link-m;
+}
+
+.controls-Button__type-link__size-l{
+  font-size: @font-size_Link-l;
+}
+
+.controls-Button__type-link__size-xl{
+  font-size: @font-size_Link-xl;
+}
+
+.controls-Button__style-link-main {
+  color: @color_Link-main-text;
+}
+
+.controls-Button__style-link-main2 {
+  color: @color_Link-main2-text;
+}
+
+.controls-Button__style-link-main3 {
+  color: @color_Link-main3-text;
+  .controls-BaseButton__text {
+    text-decoration: underline;
+  }
+}
+
+.controls-Button__style-link-additional {
+  color: @color_Link-additional-text;
+}
+
+.controls-Button__style-link-additional2 {
+  color: @color_Link-additional2-text;
+}
+
+.controls-Button__style-link-additional3 {
+  color: @color_Link-additional3-text;
+}
+
+.controls-Button__style-link-additional4 {
+  color: @color_Link-additional4-text;
+}
+
+.controls-Button__style-link-additional5 {
+  color: @color_Link-additional5-text;
+}
+
+.ws-is-desktop-platform {
+  .controls-Button__style-link-main:hover {
+    .controls-Button__icon-link-main {
+      color: @color_Link-main-text_hovered;
+    }
+    color: @color_Link-main-text_hovered;
+  }
+
+  .controls-Button__style-link-main3:hover {
+    color: @color_Link-main3-text_hovered;
+  }
+
+  .controls-Button__type-link:hover{
     .controls-BaseButton__text {
       text-decoration: underline;
     }
   }
 }
 
-.controls-Button__wrapper_style-link {
-  .justify-content(flex-start);
+.controls-Button__type-link-disabled {
+  color: @color_Link-Vdom-text_disabled;
 }
 
-.controls-Button__style-link-disabled{
-  color: @color_Link-text_disabled;
-}
-
-.controls-Button__style-default, .controls-Button__style-primary, .controls-Button__style-primary-disabled,  .controls-Button__style-default-disabled {
-  border-style: solid;
-  border-width: @border-width_Button;
-  .border-radius(@border-radius_Button_default);
-}
-
-.controls-Button__style-primary {
+.controls-Button__type-button {
   cursor: pointer;
-  border-color: @border-color_Button_primary;
+  min-width: @min-width_Button-Vdom;
+  box-shadow: @box-shadow_Button;
+}
 
-  &:active {
-    border-color: @border-color_Button_primary_hovered;
-    background: @background_Button_primary_active;
-    box-shadow: none;
-  }
+.controls-Button__type-button:active {
+  box-shadow: @box-shadow_Button_active;
+}
+
+.controls-Button__type-button-disabled{
+  min-width: @min-width_Button-Vdom;
+  cursor: default;
+  color: @color_Button-Vdom-disabled;
+  border-color: @border-color_Button-Vdom_disabled;
+}
+
+.controls-Button__style-primary, .controls-Button__style-primary-add {
+  color: @color_Button-Vdom-text_primary;
+  border-color: @border-color_Button_primary;
+  background: @background_Button_primary;
+}
+
+.controls-Button__style-primary:active, .controls-Button__style-primary-add:active {
+  border-color: @border-color_Button_primary_hovered;
+  background: @background_Button_primary_active;
 }
 
 .controls-Button__style-default {
-  cursor: pointer;
+  color: @color_Button-Vdom-text_default;
   border-color: @border-color_Button;
-
-  &:active {
-    border-color: @border-color_Button_hovered;
-    background: @background_Button_active;
-    box-shadow: none;
-  }
+  background: @background_Button_default;
 }
 
-.controls-Button__style-primary-disabled,  .controls-Button__style-default-disabled{
-  cursor: default;
-  color: @default-disabled-color;
-  background: @background_Button_disabled;
+.controls-Button__style-default:active {
+  border-color: @border-color_Button_hovered;
+  background: @background_Button_default_active;
 }
 
-.controls-Button__icon-default {
+.controls-Button__style-default-disabled {
+   background: @background_Button-default_disabled;
+}
+
+.controls-Button__style-primary-disabled, .controls-Button__style-primary-add-disabled {
+   background: @background_Button-primary_disabled;
+}
+
+.controls-Button__type-button__size-default {
+  height: @height_Button_m;
+  font-size: @font-size_Button-Vdom_m;
+  border-style: solid;
+  border-width: @border-width_Button-Vdom;
+  .border-radius(@border-radius_Button_default);
+}
+
+.controls-Button__type-button__size-big {
+  font-size: @font-size_Button-Vdom_l;
+  border-style: solid;
+  height: @height_Button-Vdom_l;
+  border-width: @border-width_Button-Vdom;
+  .border-radius(@border-radius_Button_l);
+}
+
+.controls-Button__icon-primary-add{
+   color: @color_Button-style-addButton-icon;
+}
+
+.controls-Button__icon-default, .controls-Button__icon-default-big {
   color: @color_Button-icon;
 }
 .controls-Button__text_style-default {
   .text-overflow();
 }
 
-.controls-Button__icon-primary {
+.controls-Button__icon-primary, .controls-Button__icon-primary-big {
   color: @color_Button-icon_primary;
+}
+
+.controls-Button__icon-link-main {
+  color: @color_Link-main-icon;
 }
 
 .controls-Button__text_style-primary {
   .text-overflow();
 }
 
-.controls-Button__icon-primary-disabled, .controls-Button__icon-default-disabled, .controls-Button__icon-link-disabled{
-  color: @icon-color-disabled ;
+.controls-Button__icon-primary-disabled, .controls-Button__icon-default-disabled, .controls-Button__icon-primary-add-disabled,
+.controls-Button__icon-primary-big-disabled, .controls-Button__icon-default-big-disabled {
+  color: @color_Button-Vdom-icon_disabled;
 }
 
-.controls-Button__wrapper_style-primary, .controls-Button__wrapper_style-default {
+.controls-Button__wrapper-type-button__size-default {
   padding: @padding_Button-wrapper_default;
   .justify-content(center);
 }
+
+.controls-Button__wrapper-type-button__size-big {
+  padding: @padding_Button-Vdom-wrapper_l;
+  .justify-content(center);
+}
+
 .controls-Button__text_gap {
   margin-left: @spacing_Button-between-icon-text;
 }
@@ -98,23 +196,31 @@
 }
 
 .ws-is-desktop-platform {
-  .controls-Button__style-primary {
-    &:hover {
-      border-color: @border-color_Button_primary_hovered;
-      background: @background_Button_primary_hovered;
-    }
-    &:active {
-      background: @background_Button_primary_active;
-    }
+   .controls-Button__style-primary-add:active{
+      .controls-Button__icon-primary-add {
+         color: @color_Button-style-addButton-icon_hovered;
+      }
+   }
+
+   .controls-Button__style-primary-add:hover{
+      .controls-Button__icon-primary-add {
+         color: @color_Button-style-addButton-icon_hovered;
+      }
+   }
+  .controls-Button__style-primary:hover, .controls-Button__style-primary-add:hover {
+    border-color: @border-color_Button_primary_hovered;
+    background: @background_Button_primary_hovered;
   }
-  .controls-Button__style-default {
-    &:hover {
-      border-color: @border-color_Button_hovered;
-      background: @background_Button_hovered;
-    }
-    &:active {
-      background: @background_Button_active;
-    }
+
+  .controls-Button__style-primary:active, .controls-Button__style-primary-add:active {
+    background: @background_Button_primary_active;
+  }
+  .controls-Button__style-default:hover {
+    border-color: @border-color_Button_hovered;
+    background: @background_Button_hovered;
+  }
+  .controls-Button__style-default:active {
+    background: @background_Button_active;
   }
 }
 
