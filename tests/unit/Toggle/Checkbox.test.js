@@ -1,21 +1,27 @@
 define(['js!Controls/Toggle/Checkbox'], function (Checkbox) {
    var CB, changeValue, eventValue;
-   describe('SBIS3.CONTROLS/Checkbox', function () {
+   describe('Controls/Toggle/Checkbox', function () {
       describe('click to checkbox', function () {
          beforeEach(function () {
             CB = new Checkbox({});
-            changeValue = false;
-            CB.subscribe('valueChanged', function (e, value) {
-               eventValue = value;
-               changeValue = true;
-            });
+            //subscribe на vdom компонентах не работает, поэтому мы тут переопределяем _notify
+            //(дефолтный метод для vdom компонент который стреляет событием).
+            //он будет вызван вместо того что стрельнет событием, тем самым мы проверяем что отправили
+            //событие и оно полетит с корректными параметрами.
+            CB._notify = function (e, value) {
+               eventValue = value[0];
+               changeValue = false;
+               if (e === 'valueChanged') {
+                  changeValue = true;
+               }
+            };
             var opt= {
                value: false
             };
          });
 
          afterEach(function () {
-            CB.destroy();
+            CB = undefined;
             changeValue = undefined;
             eventValue = undefined;
          });
