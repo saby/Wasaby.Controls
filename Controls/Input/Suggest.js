@@ -4,12 +4,12 @@ define('Controls/Input/Suggest',
       'tmpl!Controls/Input/Suggest/Suggest',
       'WS.Data/Type/descriptor',
       'Controls/Input/resources/SuggestController',
-      'Controls/Input/resources/InputRender/SimpleViewModel',
+      'Controls/Input/resources/InputRender/BaseViewModel',
       'Controls/Popup/Opener/Sticky',
       'Controls/Popup/Opener/Stack',
       'css!Controls/Input/Suggest/Suggest'
    ],
-   function(Control, template, types, SuggestController, SimpleViewModel) {
+   function(Control, template, types, SuggestController, BaseViewModel) {
       
       /**
        * Поле ввода с автодополнением
@@ -65,7 +65,7 @@ define('Controls/Input/Suggest',
          },
          
          initViewModel: function(self) {
-            self._simpleViewModel = new SimpleViewModel();
+            self._simpleViewModel = new BaseViewModel();
          },
          
          initSuggestController: function(self, options) {

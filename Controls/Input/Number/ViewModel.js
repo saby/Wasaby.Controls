@@ -1,9 +1,9 @@
 define('Controls/Input/Number/ViewModel',
    [
-      'Core/core-simpleExtend'
+      'Controls/Input/resources/InputRender/BaseViewModel'
    ],
    function (
-      simpleExtend
+      BaseViewModel
    ) {
       'use strict';
       /**
@@ -117,7 +117,7 @@ define('Controls/Input/Number/ViewModel',
          }
       };
 
-      NumberViewModel = simpleExtend.extend({
+      NumberViewModel = BaseViewModel.extend({
             constructor: function (options) {
                this._options = options;
             },

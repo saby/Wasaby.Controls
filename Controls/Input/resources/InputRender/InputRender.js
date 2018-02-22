@@ -64,12 +64,12 @@ define('Controls/Input/resources/InputRender/InputRender',
          constructor: function (options) {
             InputRender.superclass.constructor.apply(this, arguments);
 
-            this._value = this._applyGetterFromViewModel('getValueForRender', options.viewModel, options.value);
+            this._value = options.viewModel.getValueForRender(options.value);
          },
 
          _beforeUpdate: function(newOptions) {
             if (newOptions.value !== this._options.value) {
-               this._value = this._applyGetterFromViewModel('getValueForRender', newOptions.viewModel, newOptions.value);
+               this._value = newOptions.viewModel.getValueForRender(newOptions.value);
             }
          },
 
@@ -98,7 +98,7 @@ define('Controls/Input/resources/InputRender/InputRender',
             _private.setTargetData(e.target, processedData);
             _private.saveSelection(this, e.target);
 
-            this._notify('valueChanged', [this._applyGetterFromViewModel('getValueForNotify', this._options.viewModel, processedData.value)]);
+            this._notify('valueChanged', [this._options.viewModel.getValueForNotify(processedData.value)]);
          },
 
          _keyUpHandler: function(e) {
@@ -119,7 +119,7 @@ define('Controls/Input/resources/InputRender/InputRender',
          },
 
          _inputCompletedHandler: function(e) {
-            this._notify('inputCompleted', [this._applyGetterFromViewModel('getValueForNotify', this._options.viewModel, e.target.value)]);
+            this._notify('inputCompleted', [this._options.viewModel.getValueForNotify(e.target.value)]);
          },
 
          _notifyHandler: function(e, value) {
@@ -164,7 +164,7 @@ define('Controls/Input/resources/InputRender/InputRender',
                }, 'insert');
 
             if (this._value !== processedData.value) {
-               this._notify('valueChanged', [this._applyGetterFromViewModel('getValueForNotify', this._options.viewModel, processedData.value)]);
+               this._notify('valueChanged', [this._options.viewModel.getValueForNotify(processedData.value)]);
             }
 
             this._selection = {
@@ -174,18 +174,6 @@ define('Controls/Input/resources/InputRender/InputRender',
 
             //Возвращаем позицию каретки. Она обрабатывается методом pasteHelper
             return processedData.position;
-         },
-
-         /**
-          * Вызывает указанный геттер из viewModel при условии его существования
-          * @param methodName один из getValueForNotify или getValueForRender
-          * @param viewModel
-          * @param value
-          * @return {*}
-          * @private
-          */
-         _applyGetterFromViewModel: function(methodName, viewModel, value) {
-            return viewModel[methodName] ? viewModel[methodName](value) : value;
          }
       });
 
