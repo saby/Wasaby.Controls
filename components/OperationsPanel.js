@@ -217,6 +217,8 @@ define('SBIS3.CONTROLS/OperationsPanel', [
                      obj.caption = item.get('title');
                      obj.instance = instance;
                      obj.visible = instance.isVisible();
+                     obj.command = item.get('command');
+                     obj.commandArgs = item.get('commandArgs');
                   }
                   else {
                      var name = item.get('name');
@@ -230,7 +232,7 @@ define('SBIS3.CONTROLS/OperationsPanel', [
 
                      if(typeof instance.getItems === 'function'){
                         var childItems = instance.getItems();
-                        if(childItems.getCount() > 1){
+                        if(childItems && childItems.getCount() > 1){
                            addItems(childItems, name, instance);
                         }
                      }
@@ -446,7 +448,8 @@ define('SBIS3.CONTROLS/OperationsPanel', [
                   var item = this.getItems().getRecordById(id);
                   if (item) {
                      var instance = item.get('instance');
-                     if(cInstance.instanceOfModule(instance, 'SBIS3.CONTROLS/Menu/MenuLink') && instance.getItems().getCount() > 1){
+                     var menuItems;
+                     if(cInstance.instanceOfModule(instance, 'SBIS3.CONTROLS/Menu/MenuLink') && (menuItems = instance.getItems()) && menuItems.getCount() > 1){
                         instance._notify('onMenuItemActivate', id);
                      }
                      else if(cInstance.instanceOfMixin(instance, 'SBIS3.CONTROLS/Mixins/Clickable')) {

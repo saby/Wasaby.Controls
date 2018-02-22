@@ -216,7 +216,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             _beforeFocusOutRng: undefined,
             _images: {},
             _lastActive: undefined,
-            _lastSavedText: undefined
+            _lastSavedText: undefined,
+            //МЕГАкостыль, т.к. один человек, очень быстро нажимает ctr + Enter и отпускаение Enter происходит уже без нажатия ctr
+            //Получаем что TextArea думает, что просто отпустили Enter и не пропускает событие. Ошибка обусловлена тем что
+            //исторически сложилось так, редактирование по месту обрабатывает нажатия на keyup и от этого нужно уходить.
+            //Выписал задачу https://online.sbis.ru/opendoc.html?guid=41cf6afb-ddd1-46b6-9ebf-09dd62e798b5 и надеюсь что
+            //в VDOM это заработет само и ни какие костыли с keyup больше не понадобятся.
+            _ctrlKeyUpTimestamp: undefined
          },
 
          _modifyOptions: function(options) {
@@ -528,9 +534,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   // Убрать FakeCarret в редакторе при переходе в не активное состояние
                   // 1174789437 https://online.sbis.ru/opendoc.html?guid=e21b8722-3ffa-4a47-a499-c8bd01af0985
                   this._removeTinyFakeCaret();
-               }
-               if (cConstants.browser.isMobilePlatform) {
-                  EventBus.globalChannel().notify('MobileInputFocusOut');
+                  if (cConstants.browser.isMobilePlatform) {
+                     EventBus.globalChannel().notify('MobileInputFocusOut');
+                  }
                }
             }
             RichTextArea.superclass.setActive.apply(this, arguments);
@@ -1018,8 +1024,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                href = anchor ? editor.dom.getAttrib(anchor, 'href') : '',
                fre = this,
                context = cContext.createContext(this),
-               dom = editor.dom,
-               protocol = /(https?|ftp|file):\/\//gi,
                dialogWidth = 440;
             require(['Lib/Control/Dialog/Dialog', 'Deprecated/Controls/FieldString/FieldString', 'SBIS3.CONTROLS/Button'], function(Dialog, FieldString, Button) {
                new Dialog({
@@ -1079,10 +1083,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            parent: this,
                            handlers: {
                               onActivated: function () {
-                                 href = this.getParent()._fieldHref.getValue();
+                                 var href = this.getParent()._fieldHref.getValue();
+                                 var protocol = /(?:https?|ftp|file):\/\//gi;
                                  if (href && href.search(protocol) === -1) {
                                     href = 'http://' + href;
                                  }
+                                 var dom = editor.dom;
                                  if (element && element.nodeName === 'A' && element.className.indexOf('ws-focus-out') < 0) {
                                     if (href) {
                                        dom.setAttribs(element, {
@@ -1095,11 +1101,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                     editor.undoManager.add();
                                  } else if (href) {
                                     linkAttrs.href = href;
-                                    editor.selection.setRng(range);
-                                    if (editor.selection.getContent() === '' || (fre._isOnlyTextSelected()) && cConstants.browser.firefox) {
-                                       var
-                                          linkText = selection.getContent({format: 'text'}) || href;
-                                       editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(linkText)));
+                                    selection.setRng(range);
+                                    if (selection.getContent() === '' || (fre._isOnlyTextSelected() && cConstants.browser.firefox)) {
+                                       var linkText = selection.getContent({format:'text'}) || href;
+                                       var linkHtml = dom.createHTML('a', linkAttrs, dom.encode(linkText));
+                                       // Для MSIE принудительно смещаем курсор ввода после вставленной ссылки
+                                       // 1174853380 https://online.sbis.ru/opendoc.html?guid=77405679-2b2b-42d3-8bc0-d2eee745ea23
+                                       editor.insertContent(cConstants.browser.isIE ? linkHtml + '&#65279;&#8203;' : linkHtml);
                                     } else {
                                        editor.execCommand('mceInsertLink', false, linkAttrs);
                                        if (cConstants.browser.firefox) {
@@ -1230,7 +1238,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
          insertImageTemplate: function(key, fileobj) {
             //необходимо вставлять каретку(курсор ввода), чтобы пользователь понимал куда будет производиться ввод
-            var CARET = cConstants.browser.chrome /*|| cConstants.browser.firefox*/ ? '&#xFEFF;{$caret}' : '{$caret}';
+            var browser = cConstants.browser;
+            var CARET = browser.chrome || browser.isIE || browser.safari || browser.isMobileIOS /*|| browser.firefox*/ ? '&#xFEFF;{$caret}' : '{$caret}';
             var className, before, after;
             switch (key) {
                case '1':
@@ -1555,7 +1564,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             editor.on('PastePostProcess', function(event){
                var content = event.node;
-               var isPlainUrl = content.innerHTML.search(/^https?:\/\/[a-z0-9:=&%#_\-\.\/\?]+$/gi) !== -1;
+               var reUrlOnly = /^https?:\/\/[a-z0-9:=&%#_\-\.\/\?]+$/gi;
+               var reUrl = /https?:\/\/[a-z0-9:=&%#_\-\.\/\?]+/i;
+               var isPlainUrl = content.innerHTML.search(reUrlOnly) !== -1;
                var $content = $(content);
                $content.find('[unselectable ="on"]').attr('data-mce-resize', 'false');
                if (!isPlainUrl) {
@@ -1584,16 +1595,38 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                }
                var html = content.innerHTML;
+               var rng = editor.selection.getRng();
                if (isPlainUrl) {
-                  var rng = editor.selection.getRng();
                   if (rng.collapsed) {
-                     var node = rng.endContainer;
-                     var text = node.nodeType === 1 ? node.innerHTML : node.nodeValue;
-                     if (text && text.substring(rng.endOffset, rng.endOffset + 1).search(/[<\s]/gi) === -1) {
+                     var endNode = rng.endContainer;
+                     var text = endNode.nodeType === 1 ? endNode.innerHTML : endNode.nodeValue;
+                     var offset = rng.endOffset;
+                     if (text && offset < text.length && text.substring(offset, offset + 1).search(/[<\s]/gi) === -1) {
                         // Имеем вставку урла внутрь текста, с которым он сольётся - отделить его пробелом в конце
                         // Было бы лучше (намного) сделать этот урл сразу ссылкой, но тогда сервис декораторов не подхватит его
                         // 93358 https://online.sbis.ru/opendoc.html?guid=6e7ccbf1-001c-43fb-afc1-7887baa96d7c
                         html += ' ';
+                     }
+                  }
+               }
+               else {
+                  var startNode = rng.startContainer;
+                  var value = startNode.nodeType === 1 ? startNode.innerHTML : startNode.nodeValue;
+                  var offset = rng.startOffset;
+                  if (startNode.nodeType == 3) {
+                     // Нужно слить текст со всеми соседними текстовыми узлами (нормализовать родитьский узел здесь нельзя, так как слетит рэнж)
+                     offset -= value.length;
+                     value = this._getAdjacentTextNodesValue(startNode, false) + value;
+                     offset += value.length;
+                     value += this._getAdjacentTextNodesValue(startNode, true);
+                  }
+                  if (value.length && offset) {
+                     var m = value.match(reUrl);
+                     if (m && m.index + m[0].length === offset) {
+                        // Имеем вставку текста сразу после урла, с которым он сольётся - отделить его пробелом в началее
+                        // Было бы лучше (намного) если бы этот урл был сразу ссылкой, но тогда сервис декораторов не подхватит его
+                        // 93358 https://online.sbis.ru/opendoc.html?guid=6e7ccbf1-001c-43fb-afc1-7887baa96d7c
+                        html = ' ' + html;
                      }
                   }
                }
@@ -1678,7 +1711,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             //Запрещаем всплытие Enter, Up и Down
             this._container.bind('keyup', function(e) {
-               if ((e.which === cConstants.key.enter && !e.ctrlKey)|| e.which === cConstants.key.up || e.which === cConstants.key.down) {
+               var ctrlKey = e.ctrlKey;
+
+               if (e.which === cConstants.key.enter && !ctrlKey && self._ctrlKeyUpTimestamp) {
+                  ctrlKey = (new Date() - self._ctrlKeyUpTimestamp) < 100;
+               }
+               if (e.which === cConstants.key.ctrl) {
+                  self._ctrlKeyUpTimestamp = new Date();
+               }
+
+               if ((e.which === cConstants.key.enter && !ctrlKey)|| e.which === cConstants.key.up || e.which === cConstants.key.down) {
                   e.stopPropagation();
                   e.preventDefault();
                }
@@ -1917,6 +1959,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             editor.on('touchstart', function(e) {
                self._fromTouch = true;
             });
+         },
+
+         _getAdjacentTextNodesValue: function (node, toEnd) {
+            var prop = toEnd ? 'nextSibling' : 'previousSibling';
+            var value = '';
+            for (var n = node[prop]; n && n.nodeType == 3; n = n[prop]) {
+               value = toEnd ? value + n.nodeValue : n.nodeValue + value;
+            }
+            return value;
          },
 
          _notifyMobileInputFocus: function () {

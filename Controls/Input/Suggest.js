@@ -2,7 +2,7 @@ define('Controls/Input/Suggest',
    [
       'Core/Control',
       'tmpl!Controls/Input/Suggest/Suggest',
-      'js!WS.Data/Type/descriptor',
+      'WS.Data/Type/descriptor',
       'Controls/Input/resources/SuggestController',
       'Controls/Input/resources/InputRender/SimpleViewModel',
       'Controls/Popup/Opener/Sticky',

@@ -96,6 +96,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          }
       },
       _scrollContainer: null,
+      _drawMonthSelection: false,
 
       _modifyOptions: function (options) {
          options = MonthRangePicker.superclass._modifyOptions.apply(this, arguments);
@@ -188,6 +189,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
          var element = $(event.target),
             year = Date.fromSQL(element.closest('.controls-DateRangeBigChoose-MonthRangePickerItem').data('date')),
             rangeId = element.data('id');
+         this._drawMonthSelection = true;
          if (element.hasClass('controls-DateRangeBigChoose-MonthRangePickerItem__quartersPanel-button')) {
             this.setRange(new Date(year.getFullYear(), rangeId*3), new Date(year.getFullYear(), 3 + rangeId*3, 0));
          } else {
@@ -217,6 +219,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
             item = element.closest('.controls-DateRangeBigChoose-MonthRangePickerItem'),
             periodId = element.data('id'),
             selectedClass;
+         this._drawMonthSelection = true;
          if (element.hasClass('controls-DateRangeBigChoose-MonthRangePickerItem__quartersPanel-button')) {
             selectedClass = '.controls-DateRangeBigChoose-MonthRangePickerItem__quarter';
          } else {
@@ -391,6 +394,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
 
       _onMonthClick: function (e) {
          var month, range;
+         this._drawMonthSelection = true;
          if (this.isSelectionProcessing()) {
             month = Date.fromSQL($(e.currentTarget).attr(this._selectedRangeItemIdAtr));
             range = this._updateRange(month, month);
@@ -501,7 +505,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
 
          item.enabled = this.isEnabled();
 
-         if (!withoutSelection) {
+         if (!withoutSelection && this._drawMonthSelection) {
             item.selectionProcessing = this._rangeSelection;
             item.selected = date >= startDate && date <= endDate;
             item.selectedStart = dateUtils.isDatesEqual(date, startDate);
@@ -609,6 +613,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthRangePicker', [
       },
 
       _clearMonthSelection: function () {
+         this._drawMonthSelection = false;
          this._drawCurrentRangeSelection(true);
       },
 

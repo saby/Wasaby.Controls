@@ -21,7 +21,7 @@ define('SBIS3.CONTROLS/FieldLinkDocs',
        * @css @color_FieldLink-item-caption_big Цвет выбранных элементов при опции bigItems в значении "true".
        * @css @color_FieldLink_dropAllLinks Цвет крестика очистки.
        * @public
-       * @author Зайцев Александр Сергеевич
+       * @author Зайцев А.С.
        */
    }
 );

@@ -115,8 +115,9 @@ define('js!WSControls/Buttons/Button', [
                   state = iconStates[i];
                   statePos = this._iconClass.indexOf(state);
               }
+              this._iconState = statePos !== -1 ? state : null;
+
               if(statePos !== -1){
-                  this._iconState = state;
                   this._iconClass = this._iconClass.substring(0, statePos) + this._iconClass.substring(statePos + state.length);
               }
           }

@@ -38,7 +38,7 @@
 }
 
 .controls-Link_state-filter {
-	color: @darkcyan-color;
+	color: @color_filterButton_area_header_link;
 }
 
 .controls__filterButton__filterSelect {
@@ -106,8 +106,12 @@
 	margin: 0 12px 12px 12px;
 }
 
+.controls__filterButton__area-firstColumn, .controls__filterButton__area-secondColumn {
+   .flex-grow(1);
+}
+
 .controls__filterButton__area-secondColumn {
-   width: 350px;
+   width: 400px;
    border-left: 1px solid #E4E4E4;
    margin-bottom: 8px;
 }

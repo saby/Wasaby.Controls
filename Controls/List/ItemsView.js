@@ -4,7 +4,7 @@
 define('Controls/List/ItemsView', [
    'Core/Control',
    'tmpl!Controls/List/ItemsView',
-   'Controls/List/ListControl/ItemsViewModel'
+   'Controls/List/SimpleList/ItemsViewModel'
 ], function (BaseControl,
              ItemsRenderTpl,
              ItemsViewModel

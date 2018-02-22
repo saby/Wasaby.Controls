@@ -3,7 +3,7 @@ define('SBIS3.CONTROLS/Controllers/IListNavigation',
    function () {
       /**
        * Контроллер, позволяющий связывать компоненты осуществляя базовое взаимодейтсие между ними
-       * @author Крайнов Дмитрий
+       * @author Крайнов Д.О.
        * @mixin SBIS3.CONTROLS/Controllers/IListNavigation
        * @public
        */
