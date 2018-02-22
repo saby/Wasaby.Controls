@@ -73,17 +73,17 @@ define('Controls/Button', [
 
       buttonPrimary: {
          style: 'primary',
-         type: 'primary'
+         type: 'button'
       },
 
       buttonDefault: {
          style: 'default',
-         type: 'default'
+         type: 'button'
       },
 
       buttonAdd: {
          style: 'primary-add',
-         type: 'primary'
+         type: 'button'
       }
    };
 
