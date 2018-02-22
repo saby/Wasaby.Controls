@@ -4071,8 +4071,14 @@ define('SBIS3.CONTROLS/ListView',
             }
          },
          _showIndicator: function () {
+            var ajaxLoader = this._getAjaxLoaderContainer();
             this._loadingIndicatorTimer = undefined;
-            this._getAjaxLoaderContainer().addClass('controls-AjaxLoader__showIndication');
+            ajaxLoader.addClass('controls-AjaxLoader__showIndication');
+            if (constants.browser.isWinXP) {
+               //В старых браузерах не работает top: 50%, если у родительского элемента высота задана через min-height,
+               //из-за этого обрезается ромашка.
+               ajaxLoader.height(ajaxLoader.height());
+            }
          },
          _hideLoadingOverlayAndIndicator: function() {
             this._getAjaxLoaderContainer().addClass('ws-hidden').removeClass('controls-AjaxLoader__showIndication');
