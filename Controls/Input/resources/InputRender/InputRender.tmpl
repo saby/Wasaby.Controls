@@ -1,6 +1,6 @@
 <div class="controls-InputRender
    controls-{{ _options.inputType }}-InputRender
-   controls-InputRender_style_{{ _options.style }}
+   controls-{{ _options.inputType }}-InputRender_style_{{ _options.style }}
    controls-{{ _options.inputType }}-InputRender_state_{{ _getInputState() }}
    {{ !isEnabled() ? 'controls-' + _options.inputType + '-InputRender_state_disabled_' + (_options.multiline ? 'multiLine' : 'singleLine') }}_style_{{ _options.style }}
    controls-InputRender_size_{{ _options.size ? _options.size : 'default_' + (_options.multiline ? 'multiLine' : 'singleLine') }}
