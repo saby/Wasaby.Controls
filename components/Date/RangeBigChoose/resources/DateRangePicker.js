@@ -70,6 +70,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
       _isAnimationProcessing: false,
       _scrollToElement: null,
+      _isMouseEnterEventActive: true,
 
       $constructor: function () {
          this._publish('onMonthActivated');
@@ -284,7 +285,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
 
       _onDayMouseEnter: function (event) {
-         this._notify('onDayMouseEnter', Date.fromSQL($(event.currentTarget).data('date')));
+         if (this._isMouseEnterEventActive) {
+            this._notify('onDayMouseEnter', Date.fromSQL($(event.currentTarget).data('date')));
+         }
+         this._isMouseEnterEventActive = true;
       },
 
       _onNextYearClick: function (event) {
@@ -298,6 +302,15 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
 
       setMonth: function (month) {
+         // Не генерируем событие onDayMouseEnter сразу же после после прокрутки. Это событие стреляет
+         // по ховеру, а ховер срабатывает сразу после прорутки. Получается что если мы вводим
+         // во второе поле воле воода дату и этот ввод приводит к прокручиванию списка месяцев,
+         // срабатывает onDayMouseEnter и фокус переходит в первое поле.
+         this._isMouseEnterEventActive = false;
+         setTimeout(function () {
+            this._isMouseEnterEventActive = true;
+         }.bind(this), 200);
+
          var oldMonth = this._options.month,
             changed = this._setMonth(month);
 
