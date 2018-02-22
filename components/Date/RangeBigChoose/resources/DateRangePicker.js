@@ -81,6 +81,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
 
          this._onMonthViewRageChanged = this._onMonthViewRageChanged.bind(this);
          this._onMonthViewBeforeSelectionStarted = this._onMonthViewBeforeSelectionStarted.bind(this);
+         this._onMonthViewSelectionStarted = this._onMonthViewSelectionStarted.bind(this);
          this._onMonthViewSelectingRangeEndDateChange = this._onMonthViewSelectingRangeEndDateChange.bind(this);
          this._onMonthViewCaptionActivated = this._onMonthViewCaptionActivated.bind(this);
          this._onSelectionEnded = this._onSelectionEnded.bind(this);
@@ -244,8 +245,23 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
 
       _onMonthTitleClick: function (event) {
-         var date = this._getDateByMonthTitleEvent(event);
-         this.setRange(date, DateUtils.getEndOfMonth(date));
+         var date = this._getDateByMonthTitleEvent(event),
+            tmpStart = this.getStartValue(),
+            start, end;
+         if (this.isSelectionProcessing()) {
+            if (tmpStart > date) {
+               start = date;
+               end = tmpStart;
+            } else {
+               start = tmpStart;
+               end = new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1);
+            }
+            this.setRange(date, DateUtils.getEndOfMonth(date));
+         } else {
+            start = date;
+            end = DateUtils.getEndOfMonth(date);
+         }
+         this.setRange(start, end);
          this._notify('onSelectionEnded');
       },
       _onMonthTitleMouseEnter: function (event) {
@@ -333,6 +349,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
             control.subscribe('onRangeChange', self._onMonthViewRageChanged);
             control.unsubscribe('onBeforeSelectionStarted', self._onMonthViewBeforeSelectionStarted);
             control.subscribe('onBeforeSelectionStarted', self._onMonthViewBeforeSelectionStarted);
+            control.unsubscribe('onSelectionStarted', self._onMonthViewSelectionStarted);
+            control.subscribe('onSelectionStarted', self._onMonthViewSelectionStarted);
             control.unsubscribe('onSelectingRangeEndDateChange', self._onMonthViewSelectingRangeEndDateChange);
             control.subscribe('onSelectingRangeEndDateChange', self._onMonthViewSelectingRangeEndDateChange);
          });
@@ -439,6 +457,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          // this._selectionType = e.getTarget()._getSelectionType();
          this._selectionRangeEndItem = end;
          this._notify('onDayMouseEnter', start);
+      },
+
+      _onMonthViewSelectionStarted: function (event) {
+         this._notify('onSelectionStarted');
       },
 
       // _updateInnerComponents: function (start, end) {
