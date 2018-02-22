@@ -1,0 +1,131 @@
+<div class="controls-VDomInputs" style="margin: 32px; display: flex; flex-direction: column;">
+
+   <h2>Text</h2>
+
+   <div>По умолчанию</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Text bind:value="_text1" placeholder="qweasd"/>
+   </div>
+
+   <div>C вводом только чисел</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Text constraint="[0-9]" bind:value="_text2"/>
+   </div>
+
+   <div>C вводом только букв</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Text constraint="[A-zА-яЁё]" bind:value="_text3"/>
+   </div>
+
+   <div>C ошибкой</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Text validationErrors="{{ ['Some error', 'Another error'] }}" bind:value="_text4"/>
+   </div>
+
+   <h2>Area</h2>
+
+   <div>constraint="[0-9]"</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Area constraint="[0-9]" bind:value="_area1"/>
+   </div>
+
+   <div>maxLength="{{8}}"</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Area maxLength="{{8}}" bind:value="_area2"/>
+   </div>
+
+   <div>minLines="{{2}}"</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Area minLines="{{2}}" bind:value="_area3"/>
+   </div>
+
+   <div>maxLines="{{4}}"</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Area maxLines="{{4}}" bind:value="_area4" placeholder="placeholder"/>
+   </div>
+
+   <div>minLines="{{2}}" maxLines="{{4}}"</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Area minLines="{{2}}" maxLines="{{4}}" bind:value="_area5" placeholder="Длинный placeholder Длинный placeholder Длинный placeholder"/>
+   </div>
+
+   <div>trim="{{true}}"</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Area trim="{{true}}" bind:value="_area6"/>
+   </div>
+
+   <div>Disabled single line</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Area trim="{{true}}" attr:style="width: 200px" enabled="{{ false }}" bind:value="_area7"/>
+   </div>
+
+   <div>Disabled multi lines</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Area trim="{{true}}" attr:style="width: 200px" minLines="{{2}}" enabled="{{ false }}"
+                           bind:value="_area8"/>
+   </div>
+
+   <h2 class="controls-VDomInputs__row">Number</h2>
+
+   <div>По умолчанию</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Number tagStyle="attention" bind:value="_number1"/>
+   </div>
+
+   <div>Максимум 7 цифры до точки</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Number integersLength="{{ 7 }}" tagStyle="done" bind:value="_number2"/>
+   </div>
+
+   <div>Максимум 3 цифры после точки</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Number precision="{{ 3 }}" tagStyle="error" bind:value="_number3"/>
+   </div>
+
+   <div>Только целые числа</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Number precision="{{ 0 }}" tagStyle="primary" bind:value="_number4"/>
+   </div>
+
+   <div>Только положительные числа</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Number onlyPositive="{{ true }}" tagStyle="disabled" bind:value="_number5"/>
+   </div>
+
+   <div>Disabled</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Number onlyPositive="{{ true }}" enabled="{{ false }}" bind:value="_number6"/>
+   </div>
+
+
+   <h2 class="controls-VDomInputs__row">Password</h2>
+
+   <div>По умолчанию</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Password bind:value="_pass1"/>
+   </div>
+   <div>С placeholder</div>
+   <div class="ws-flexbox">
+      <Controls:Label name="myLabel1" caption="Метка"/>
+      <Controls:Input:Password placeholder="Поиск" bind:value="_pass2"/>
+   </div>
+</div>
