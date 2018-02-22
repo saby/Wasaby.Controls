@@ -56,20 +56,17 @@ define('Controls/Input/Area', [
       * Обновляет наличие скролла, в зависимости от того, есть ли скролл на фейковой текст арии
       */
       updateScroll: function(){
-         //Когда компонент в состоянии disabled скролл обновлять не надо (внутри компонента нет fakeArea)
-         if (this.isEnabled()) {
-            var fakeArea = this._children.fakeArea;
-            var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
+         var fakeArea = this._children.fakeArea;
+         var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
 
-            //Для IE, текст мы показываем из fakeArea, поэтому сдвинем скролл.
-            if(needScroll && detection.isIE){
-               fakeArea.scrollTop = this._children.realArea.scrollTop;
-            }
+         //Для IE, текст мы показываем из fakeArea, поэтому сдвинем скролл.
+         if(needScroll && detection.isIE){
+            fakeArea.scrollTop = this._children.realArea.scrollTop;
+         }
 
-            if(needScroll !== this._hasScroll){
-               this._hasScroll = needScroll;
-               this._forceUpdate();
-            }
+         if(needScroll !== this._hasScroll){
+            this._hasScroll = needScroll;
+            this._forceUpdate();
          }
       }
    };
