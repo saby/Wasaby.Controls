@@ -24,6 +24,7 @@ define('Controls/Input/resources/RenderHelper',
                return {
                   before: newValue.substring(0, caretPosition),
                   insert: '',
+                  delete: '',
                   after: newValue.substring(caretPosition)
                }
             }
