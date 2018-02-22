@@ -64,12 +64,12 @@ define('Controls/Input/resources/InputRender/InputRender',
          constructor: function (options) {
             InputRender.superclass.constructor.apply(this, arguments);
 
-            this._value = options.formatter.getValueForRender(options.value);
+            this._value = options.viewModel.getValueForRender(options.value);
          },
 
          _beforeUpdate: function(newOptions) {
             if (newOptions.value !== this._options.value) {
-               this._value = newOptions.formatter.getValueForRender(newOptions.value);
+               this._value = newOptions.viewModel.getValueForRender(newOptions.value);
             }
          },
 
@@ -93,12 +93,12 @@ define('Controls/Input/resources/InputRender/InputRender',
             splitValue = RenderHelper.getSplitInputValue(value, newValue, position, selection, inputType);
 
             //
-            processedData = this._options.formatter.inputHandler(splitValue, inputType);
+            processedData = this._options.viewModel.inputHandler(splitValue, inputType);
 
             _private.setTargetData(e.target, processedData);
             _private.saveSelection(this, e.target);
 
-            this._notify('valueChanged', [this._options.formatter.getValueForNotify(processedData.value)]);
+            this._notify('valueChanged', [this._options.viewModel.getValueForNotify(processedData.value)]);
          },
 
          _keyUpHandler: function(e) {
@@ -119,7 +119,7 @@ define('Controls/Input/resources/InputRender/InputRender',
          },
 
          _inputCompletedHandler: function(e) {
-            this._notify('inputCompleted', [this._options.formatter.getValueForNotify(e.target.value)]);
+            this._notify('inputCompleted', [this._options.viewModel.getValueForNotify(e.target.value)]);
          },
 
          _notifyHandler: function(e, value) {
@@ -157,14 +157,14 @@ define('Controls/Input/resources/InputRender/InputRender',
           */
          paste: function(text, selectionStart, selectionEnd) {
             var
-               processedData = this._options.formatter.inputHandler({
+               processedData = this._options.viewModel.inputHandler({
                   before: this._value.slice(0, selectionStart),
                   insert: text,
                   after: this._value.slice(selectionEnd, this._value.length)
                }, 'insert');
 
             if (this._value !== processedData.value) {
-               this._notify('valueChanged', [this._options.formatter.getValueForNotify(processedData.value)]);
+               this._notify('valueChanged', [this._options.viewModel.getValueForNotify(processedData.value)]);
             }
 
             this._selection = {
