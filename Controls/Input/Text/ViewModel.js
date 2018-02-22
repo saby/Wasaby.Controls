@@ -46,7 +46,7 @@ define('Controls/Input/Text/ViewModel',
              * @param splitValue
              * @returns {{value: (*|String), position: (*|Integer)}}
              */
-            inputHandler: function (splitValue) {
+            handleInput: function (splitValue) {
                var insert = splitValue.insert;
 
                if (this._options.constraint) {
@@ -57,6 +57,8 @@ define('Controls/Input/Text/ViewModel',
                   insert = _private.maxLength(insert, splitValue, this._options.maxLength);
                }
 
+               this._options.value = splitValue.before + insert + splitValue.after;
+
                return {
                   value: splitValue.before + insert + splitValue.after,
                   position: splitValue.before.length + insert.length
@@ -66,6 +68,7 @@ define('Controls/Input/Text/ViewModel',
             updateOptions: function(options) {
                this._options.constraint = options.constraint;
                this._options.maxLength = options.maxLength;
+               this._options.value = options.value;
             }
          });
 

@@ -65,7 +65,17 @@ define('Controls/Input/Number', [
          this._numberViewModel = new NumberViewModel({
             onlyPositive: options.onlyPositive,
             integersLength: options.integersLength,
-            precision: options.precision
+            precision: options.precision,
+            value: options.value
+         });
+      },
+
+      _beforeUpdate: function(newOptions) {
+         this._numberViewModel.updateOptions({
+            onlyPositive: newOptions.onlyPositive,
+            integersLength: newOptions.integersLength,
+            precision: newOptions.precision,
+            value: newOptions.value
          });
       },
 
@@ -74,12 +84,6 @@ define('Controls/Input/Number', [
             this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
             this._caretPosition = null;
          }
-
-         this._numberViewModel.updateOptions({
-            onlyPositive: this._options.onlyPositive,
-            integersLength: this._options.integersLength,
-            precision: this._options.precision
-         });
       },
 
       _inputCompletedHandler: function (event, value) {

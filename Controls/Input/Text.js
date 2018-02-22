@@ -77,7 +77,16 @@ define('Controls/Input/Text', [
 
             this._textViewModel = new TextViewModel({
                constraint: options.constraint,
-               maxLength: options.maxLength
+               maxLength: options.maxLength,
+               value: options.value
+            });
+         },
+
+         _beforeUpdate: function() {
+            this._textViewModel.updateOptions({
+               constraint: this._options.constraint,
+               maxLength: this._options.maxLength,
+               value: this._options.value
             });
          },
 
@@ -86,11 +95,6 @@ define('Controls/Input/Text', [
                this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
                this._caretPosition = null;
             }
-
-            this._textViewModel.updateOptions({
-               constraint: this._options.constraint,
-               maxLength: this._options.maxLength
-            });
          },
 
          _inputCompletedHandler: function(){

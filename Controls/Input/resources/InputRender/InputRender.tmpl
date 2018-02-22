@@ -15,11 +15,11 @@
                on:keyup="_keyUpHandler()"
                on:change="_inputCompletedHandler()"
                on:focus="_focusHandler()"
-               value="{{ _value }}"
+               value="{{ _options.viewModel.getDisplayValue() }}"
                placeholder="{{ _options.placeholder }}"
          />
 
-         <ws:if data="{{ !_value }}">
+         <ws:if data="{{ !_options.viewModel.getDisplayValue() }}">
             <ws:partial
                attr:class="{{ _options.isMultiline ? 'controls-InputArea__placeholder_multiline' }}"
                template="tmpl!Controls/Input/resources/CustomPlaceholder"
