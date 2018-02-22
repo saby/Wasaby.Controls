@@ -16,7 +16,7 @@ define('Controls/Layout/List',
    
    
       var _private = {
-         initSearchController: function(self) {
+         getSearchController: function(self) {
             var options = self._options;
    
             if(!self._searchController) {
@@ -30,6 +30,8 @@ define('Controls/Layout/List',
                   abortCallback: _private.abortCallback.bind(self, self)
                });
             }
+            
+            return self._searchController;
          },
          
          resolveOptions: function(self, options) {
@@ -41,7 +43,7 @@ define('Controls/Layout/List',
          updateSource: function(self, data) {
             /* TODO will be a cached source */
             self._source = new Memory({
-               data: data.result.getRawData()
+               data: data.getRawData()
             });
          },
          
@@ -59,13 +61,12 @@ define('Controls/Layout/List',
       
          searchCallback: function(self, result, filter) {
             _private.updateFilter(self, filter);
-            _private.updateSource(self, result);
+            _private.updateSource(self, result.data);
             self._forceUpdate();
          },
    
          searchValueChanged: function (self, value) {
-            _private.initSearchController(self);
-            self._searchController.search(value);
+            _private.getSearchController(self).search(value);
          },
    
          filterChanged: function (self, filter) {
@@ -108,6 +109,10 @@ define('Controls/Layout/List',
             if (!isEqual(this.context.get('filterLayoutField').filter, context.filterLayoutField.filter)) {
                _private.filterChanged(this, context.filterLayoutField.filter);
             }
+         },
+         
+         _beforeUnmount: function () {
+            _private.getSearchController(this).abort();
          }
          
       });
@@ -126,7 +131,9 @@ define('Controls/Layout/List',
             filter: {}
          };
       };
-      
+   
+      /* For tests */
+      List._private = _private;
       return List;
       
    });

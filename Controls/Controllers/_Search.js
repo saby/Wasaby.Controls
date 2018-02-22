@@ -33,7 +33,7 @@ define('Controls/Controllers/_Search',
          
          searchCallback: function(self, result) {
             self._searchDeferred.callback({
-               result: result,
+               data: result,
                hasMore: self._sourceController.hasMoreData('down')
             });
          },
@@ -117,6 +117,9 @@ define('Controls/Controllers/_Search',
             if (this._searchDelayTimer) {
                clearTimeout(this._searchDelayTimer);
                this._searchDelayTimer = null;
+            }
+            if (this._searchDeferred && !this._searchDeferred.isReady()) {
+               this._searchDeferred.cancel();
             }
             this._sourceController.cancelLoading();
          }

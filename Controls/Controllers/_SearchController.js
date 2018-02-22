@@ -80,6 +80,10 @@ define('Controls/Controllers/_SearchController',
             } else {
                _private.abort(this);
             }
+         },
+         
+         abort: function () {
+            _private.abort(this);
          }
          
       });
