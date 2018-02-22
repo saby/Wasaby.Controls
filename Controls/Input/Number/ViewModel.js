@@ -118,17 +118,13 @@ define('Controls/Input/Number/ViewModel',
       };
 
       NumberViewModel = BaseViewModel.extend({
-            constructor: function (options) {
-               this._options = options;
-            },
-
             /**
              * Валидирует и подготавливает новое значение по splitValue
              * @param splitValue
              * @param inputType
              * @returns {{value: (*|String), position: (*|Integer)}}
              */
-            inputHandler: function (splitValue, inputType) {
+            handleInput: function (splitValue, inputType) {
                var
                   shift = 0;
 
@@ -155,6 +151,8 @@ define('Controls/Input/Number/ViewModel',
                   splitValue.insert = '';
                }
 
+               this._options.value = _private.getValueWithDelimiters(splitValue);
+
                //Запишет значение в input и поставит курсор в указанное место
                return {
                   value: _private.getValueWithDelimiters(splitValue),
@@ -162,31 +160,23 @@ define('Controls/Input/Number/ViewModel',
                };
             },
 
-            /**
-             * Метод получает на вход строку с числом, а на выходе отдаёт это же число, разделенное на триады
-             * @param value
-             * @return {*|String}
-             */
-            getValueForRender: function (value) {
+            getDisplayValue: function () {
                return _private.getValueWithDelimiters({
                   before: '',
-                  insert: value,
+                  insert: this._options.value,
                   after: ''
                });
             },
 
-            /**
-             * Метод получает на вход строку с числом, разбитым на триады, а на выход отдаёт строку с числом без пробелов
-             * @param value
-             */
-            getValueForNotify: function (value) {
-               return parseFloat(value.replace(/ /g, '')) || '';
+            getValue: function () {
+               return parseFloat(this._options.value.replace(/ /g, '')) || '';
             },
 
             updateOptions: function(options) {
                this._options.onlyPositive = options.onlyPositive;
                this._options.integersLength = options.integersLength;
                this._options.precision = options.precision;
+               this._options.value = options.value;
             }
          });
 

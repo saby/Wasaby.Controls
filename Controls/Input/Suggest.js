@@ -64,8 +64,10 @@ define('Controls/Input/Suggest',
             self._popupClose = self._popupClose.bind(self);
          },
          
-         initViewModel: function(self) {
-            self._simpleViewModel = new BaseViewModel();
+         initViewModel: function(self, options) {
+            self._simpleViewModel = new BaseViewModel({
+               value: options.value
+            });
          },
          
          initSuggestController: function(self, options) {
@@ -101,11 +103,17 @@ define('Controls/Input/Suggest',
             Suggest.superclass.constructor.call(this, options);
             
             _private.bindHandlers(this);
-            _private.initViewModel(this);
+            _private.initViewModel(this, options);
          },
    
          _afterMount: function () {
             _private.initSuggestController(this, this._options);
+         },
+
+         _beforeUpdate: function() {
+            this._simpleViewModel.updateOptions({
+               value: this._options.value
+            });
          },
          
          destroy: function() {

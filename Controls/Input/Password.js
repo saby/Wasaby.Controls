@@ -33,7 +33,15 @@ function(Control, template, types, BaseViewModel) {
 
         constructor: function (options) {
            PasswordInput.superclass.constructor.apply(this, arguments);
-           this._simpleViewModel = new BaseViewModel();
+           this._simpleViewModel = new BaseViewModel({
+              value: options.value
+           });
+        },
+
+        _beforeUpdate: function() {
+           this._simpleViewModel.updateOptions({
+              value: this._options.value
+           });
         },
 
         _toggleVisibilityHandler: function() {

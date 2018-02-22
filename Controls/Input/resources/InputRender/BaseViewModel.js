@@ -14,23 +14,36 @@ define('Controls/Input/resources/InputRender/BaseViewModel',
        */
 
       return simpleExtend.extend({
+         constructor: function (options) {
+            this._options = options;
+         },
+
          /**
           * @param splitValue
           * @returns {{value: (*|String), position: (*|Integer)}}
           */
-         inputHandler: function (splitValue) {
+         handleInput: function (splitValue) {
+            var
+               value = splitValue.before + splitValue.insert + splitValue.after;
+
+            this._options.value = value;
+
             return {
-               value: splitValue.before + splitValue.insert + splitValue.after,
+               value: value,
                position: splitValue.before.length + splitValue.insert.length
             }
          },
 
-         getValueForRender: function(value) {
-            return value;
+         getDisplayValue: function () {
+            return this._options.value;
          },
 
-         getValueForNotify: function(value) {
-            return value;
+         getValue: function () {
+            return this._options.value;
+         },
+
+         updateOptions: function(options) {
+            this._options.value = options.value;
          }
       });
    }
