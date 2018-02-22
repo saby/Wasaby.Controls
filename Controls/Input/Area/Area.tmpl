@@ -1,3 +1,22 @@
+<ws:template name="enabledArea">
+   <textarea
+      name="realArea"
+      spellcheck="false"
+      class="{{ className }}"
+      on:keydown="_keyDownHandler()"
+      on:focus="_focusHandler()"
+      on:scroll="_scrollHandler()"
+      value="{{ value }}"
+      required="true"
+   ></textarea>
+</ws:template>
+
+<ws:template name="disabledArea">
+   <div
+      class="{{ className }}"
+   >{{ value }}</div>
+</ws:template>
+
 <Controls:Input:resources:InputRender:InputRender
            size="auto"
            sidePadding="Left"
@@ -16,23 +35,23 @@
       <ws:content>
             <!--TODO контейнер убрать https://online.sbis.ru/opendoc.html?guid=25000158-64ff-4db9-9605-a986cbc37b0f-->
             <div class="controls-InputRender__wrapper">
+               <!--TODO нужно использовать тернарный оператор внутри template у partial, жду правки https://online.sbis.ru/opendoc.html?guid=5f420fae-2ae0-48e1-b1f3-0145ad70a1f1-->
                <ws:if data="{{ isEnabled() }}">
-                  <textarea
-                          name="realArea"
-                          spellcheck="false"
-                          class="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
-                          readonly="{{!isEnabled() ? 'readonly'}}"
-                          on:keydown="_keyDownHandler()"
-                          on:focus="_focusHandler()"
-                          on:scroll="_scrollHandler()"
-                          value="{{ _options.value }}"
-                          required="true"
-                  ></textarea>
+                  <ws:partial
+                     template="enabledArea"
+                     className="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
+                     value="{{ _options.value }}"
+                     _keyDownHandler="{{ _keyDownHandler }}"
+                     _focusHandler="{{ _focusHandler }}"
+                     _scrollHandler="{{ _scrollHandler }}"
+                  />
                </ws:if>
                <ws:else>
-                  <div
-                     class="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
-                  >{{ _options.value }}</div>
+                  <ws:partial
+                     template="disabledArea"
+                     className="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
+                     value="{{ _options.value }}"
+                  />
                </ws:else>
 
                <div class="controls-fakeTextArea__firstWrapper">
