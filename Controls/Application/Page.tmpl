@@ -21,7 +21,7 @@
 <Controls:Event:Listener name="scrollDetect" register="scroll">
    <Controls:Event:Listener name="resizeDetect" register="resize">
       <body
-              class="{{BodyClasses()}} {{bodyClass}} {{touchclass}}"
+              class="{{BodyClasses()}} {{bodyClass}} {{_touchclass()}}"
               id="body"
               key="1_2_"
               on:scroll="_scrollPage()"

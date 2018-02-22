@@ -7,6 +7,7 @@ define('Controls/Application',
       'tmpl!Controls/Application/Page',
       'Core/Deferred',
       'Core/BodyClasses',
+      'Controls/Application/TouchDetector',
       'Controls/Application/AppData'
    ],
 
@@ -18,6 +19,7 @@ define('Controls/Application',
              template,
              Deferred,
              BodyClasses,
+             TouchDetector,
              AppData) {
       'use strict';
 
@@ -25,7 +27,6 @@ define('Controls/Application',
          DEFAULT_DEBUG_CATALOG = 'debug/';
 
       _private = {
-          moveInRow: 1,
          /**
           * Перекладываем опции или recivedState на инстанс
           * @param self
@@ -56,15 +57,14 @@ define('Controls/Application',
             this._children.resizeDetect.start(ev);
          },
 
-         _touchstartPage: function(ev) {
-            this.touchclass = 'ws-is-touch';
-            _private.moveInRow = 0;
+         _touchstartPage: function() {
+             TouchDetector.touchHandler()
          },
-         _mousemovePage: function(ev){
-            if (_private.moveInRow > 0) {
-               this.touchclass = 'ws-is-no-touch';
-            }
-            _private.moveInRow++;
+         _mousemovePage: function(){
+             TouchDetector.moveHandler();
+         },
+         _touchclass: function() {
+            return TouchDetector.getClass();
          },
 
          _beforeMount: function(cfg, context, receivedState) {
@@ -76,9 +76,7 @@ define('Controls/Application',
             if (!receivedState) {
                receivedState = {};
             }
-            //При инициализации необходимо корректно проставить класс, далее класс определяется в зависимости от событий
-            this.touchclass = document && (navigator.msMaxTouchPoints || navigator.maxTouchPoints || 'ontouchstart' in document.documentElement) ?
-                 'ws-is-touch' : 'ws-is-no-touch';
+            this.touchclass = TouchDetector.getClass();
             self.cssLinks = receivedState.cssLinks || (context.AppData ? context.AppData.cssLinks : cfg.cssLinks);
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
