@@ -34,7 +34,8 @@
   height:100%;
   order: 20;
   -ms-flex-order:20;
-  .box-shadow(inset 0 -@border-width_Tabs 0 0 @border-color_Tabs)
+  transform: translate3d(0, 0, 0); //ipad shadow inset bugfix https://jsfiddle.net/54Lztbxg/
+  .box-shadow(inset 0 -@border-width_Tabs 0 0 @border-color_Tabs);
 }
 .controls-Tabs__item {
   .inline-flexbox();
@@ -50,6 +51,7 @@
   cursor: pointer;
   max-width: @max-width_Tabs_item;
   white-space: nowrap;
+  transform: translate3d(0, 0, 0); //ipad shadow inset bugfix https://jsfiddle.net/54Lztbxg/
   .box-shadow(inset 0 -@border-width_Tabs 0 0 @border-color_Tabs)
 }
 .controls-Tabs__item_state_default {
