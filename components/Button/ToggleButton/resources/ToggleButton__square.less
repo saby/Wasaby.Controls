@@ -7,25 +7,18 @@
   border-width: @border-width_ToggleButton-square;
   width: 24px;
   height: 24px;
-  line-height: 24px;
   user-select: none;
   position: relative;
 
   .controls-ButtonBase__content {
     padding: 0;
+    .justify-content(center);
   }
 
   .controls-Button__text {
     display: none;
   }
 
-  .controls-Button__icon {
-    position: absolute;
-    left: 3px;
-    top: 50%;
-    margin-top: -8px;
-    margin-left: 0;
-  }
   &.controls-Checked__checked {
     background-color: @background-color_ToggleButton-square;
     border-color: @border-color_ToggleButton-square;
@@ -34,28 +27,12 @@
   &.controls-ToggleButton-square__medium {
     height: 28px;
     width: 28px;
-    line-height: 28px;
     border-radius: 2px;
-    .controls-Button__icon {
-      left: 1px;
-      margin-top: -12px;
-    }
   }
   &.controls-ToggleButton-square__big {
     height: @height_ToggleButton-square;
     width: @width_ToggleButton-square;
-    line-height: @line-height_ToggleButton-square;
     border-radius: @border-radius_ToggleButton-square;
-    .controls-Button__icon {
-      left: @left_ToggleButton-square-icon;
-      margin-top: @margin-top_ToggleButton-square-icon;
-    }
-  }
-
-  &.ws-disabled {
-    .controls-Button__icon {
-      color: @icon-color-disabled;
-    }
   }
 
   &.ws-disabled {
