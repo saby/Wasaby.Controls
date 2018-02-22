@@ -4,12 +4,12 @@ define('Controls/Input/Suggest',
       'tmpl!Controls/Input/Suggest/Suggest',
       'WS.Data/Type/descriptor',
       'Controls/Input/resources/SuggestController',
-      'Controls/Input/resources/InputRender/BaseViewModel',
+      'Controls/Input/resources/InputRender/BaseFormatter',
       'Controls/Popup/Opener/Sticky',
       'Controls/Popup/Opener/Stack',
       'css!Controls/Input/Suggest/Suggest'
    ],
-   function(Control, template, types, SuggestController, BaseViewModel) {
+   function(Control, template, types, SuggestController, BaseFormatter) {
       
       /**
        * Поле ввода с автодополнением
@@ -64,8 +64,8 @@ define('Controls/Input/Suggest',
             self._popupClose = self._popupClose.bind(self);
          },
          
-         initViewModel: function(self) {
-            self._simpleViewModel = new BaseViewModel();
+         initFormatter: function(self) {
+            self._baseFormatter = new BaseFormatter();
          },
          
          initSuggestController: function(self, options) {
@@ -101,7 +101,7 @@ define('Controls/Input/Suggest',
             Suggest.superclass.constructor.call(this, options);
             
             _private.bindHandlers(this);
-            _private.initViewModel(this);
+            _private.initFormatter(this);
          },
    
          _afterMount: function () {

@@ -1,20 +1,20 @@
-define('Controls/Input/Number/ViewModel',
+define('Controls/Input/Number/Formatter',
    [
-      'Controls/Input/resources/InputRender/BaseViewModel'
+      'Controls/Input/resources/InputRender/BaseFormatter'
    ],
    function (
-      BaseViewModel
+      BaseFormatter
    ) {
       'use strict';
       /**
-       * @class Controls/Input/Number/ViewModel
+       * @class Controls/Input/Number/Formatter
        * @private
        * @author Баранов М.А.
        */
 
       var
          _private,
-         NumberViewModel;
+         NumberFormatter;
 
       _private = {
          /**
@@ -117,7 +117,7 @@ define('Controls/Input/Number/ViewModel',
          }
       };
 
-      NumberViewModel = BaseViewModel.extend({
+      NumberFormatter = BaseFormatter.extend({
             constructor: function (options) {
                this._options = options;
             },
@@ -190,6 +190,6 @@ define('Controls/Input/Number/ViewModel',
             }
          });
 
-      return NumberViewModel;
+      return NumberFormatter;
    }
 );
