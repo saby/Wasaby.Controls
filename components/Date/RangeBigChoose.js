@@ -490,6 +490,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             endDate = this._endDatePicker.getDate();
 
          this.cancelSelection();
+         this._dateRangePicker.cancelSelection();
          this._monthRangePicker._clearMonthSelection();
 
          if ((!date && text !== '') || this._isDatesEqual(date, oldStartDate)) {
@@ -529,6 +530,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             oldEndDate = this.getEndValue();
 
          this.cancelSelection();
+         this._dateRangePicker.cancelSelection();
          this._monthRangePicker._clearMonthSelection();
 
          if ((!date && text !== '') || this._isDatesEqual(date, oldEndDate)) {
