@@ -145,7 +145,7 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
                        //из-за того, что могут выделить 1000 записей и нам эти 1000 записей придётся отправить на бл.
                        //1000 записей весят примерно 8 мегабайт. Получается не рационально перегонять 8 мб ради лёгкой операции,ъ
                        //которая на клиенте выполняется меньше секунды.
-                       result = this._sumByRecordSet(selectedItems);
+                       result = this._sumByRecordSet(selectedItems, object.getItems().getFormat(), object._options.nodeProperty);
                     } else {
                        result = this._sumByFilter(this._getFilterForSum());
                     }
@@ -178,18 +178,15 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
                });
             },
 
-            _sumByRecordSet: function(items) {
+            _sumByRecordSet: function(items, format, nodeProperty) {
                 var
                     i,
                     itemsCount = 0,
                     resultFields = {},
                     fields = Object.keys(this._options.fields),
-                    linkedObject = this.getLinkedObject(),
-                    format = linkedObject.getItems().getFormat(),
                     resultRecord = new Model({
                         adapter: 'adapter.sbis'
-                    }),
-                    nodeProperty = cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS/Mixins/TreeMixin') ? linkedObject.getNodeProperty() : undefined;
+                    });
                 for (i = 0; i < fields.length; i++) {
                     resultFields[fields[i]] = 0;
                 }
