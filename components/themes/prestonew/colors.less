@@ -36,7 +36,7 @@
 @date-range-choose-year-wrapper-bg-color:         @date-range-choose-item-bg-color;//todo: mironov
 @date-range-choose-caption-background-color:      @date-range-choose-item-bg-color;//todo: mironov
 //grid
-@background-color_DataGridView-notScrolledCell:   @data-grid-row-selected-bg;//todo: gerasimov
+@background-color_DataGridView-notScrolledCell:   @background-color_DataGridView-item_multiselected;//todo: gerasimov
 //filter-line
 @controls-filterLine-link-hover-color:            @controls-filterLine-link-color;//todo: gerasimov
 //dd-list
@@ -254,10 +254,9 @@
 @color_TreeDataGridView-expand_hovered:             @darkcyan-color;
 @color_TreeDataGridView-expandHidden:               @gray-lamantin-color;
 @color_TreeDataGridView-expandHidden_hovered:       @gray-lamantin-color;
-@tree-view-copy-arrow-background:         @basic-block-bg-color;
 //Data grid
 @data-grid-row-hover-bg:                  #2A3C4D;//Переменную нужно удалить, она дублирует @background-color_DataGridView-item_hovered
-@data-grid-row-selected-bg:               @data-grid-row-bg;
+@background-color_DataGridView-item_multiselected: @data-grid-row-bg;
 @data-grid-edge-cell-separator-color:     rgba(0, 0, 0, 0.1);
 @data-grid-cell-separator-color:          rgba(0, 0, 0, 0.1);
 @background-color_DataGridView-notScrolledCell:@basic-block-bg-color;
@@ -338,11 +337,6 @@
 @image-bar-bg-color:                      rgba(102,170,221, .5);
 @header-color:                            #FC9;
 @header-color-hover:                      @default-hover-color;
-@data-grid-row-selected-main-bg:          @basic-block-bg-color;
-@data-grid-row-selected-addit-bg:         rgba(44, 62, 80, 0);
-@tree-view-copy-arrow-add-background:     @data-grid-row-selected-addit-bg;
-@data-grid-row-hover-add-bg:              rgba(41, 58, 75, 0);
-@data-grid-row-selected-add-bg:           @data-grid-row-hover-add-bg;
 @back-button-text-color:                  #FFCC99;
 @commands-button-close-icon-color:        @color_primary;
 @controls-SubmitPopup-footer-bg:          inherit;
