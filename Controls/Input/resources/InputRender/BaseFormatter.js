@@ -1,4 +1,4 @@
-define('Controls/Input/resources/InputRender/BaseViewModel',
+define('Controls/Input/resources/InputRender/BaseFormatter',
    [
       'Core/core-simpleExtend'
    ],
@@ -7,8 +7,8 @@ define('Controls/Input/resources/InputRender/BaseViewModel',
    ) {
       'use strict';
       /**
-       * Базовый класс ViewModel для InputRender
-       * @class Controls/Input/resources/InputRender/BaseViewModel
+       * Базовый класс formatter для InputRender
+       * @class Controls/Input/resources/InputRender/BaseFormatter
        * @private
        * @author Баранов М.А.
        */

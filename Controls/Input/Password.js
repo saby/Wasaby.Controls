@@ -3,12 +3,12 @@ define('Controls/Input/Password',
         'Core/Control',
         'tmpl!Controls/Input/Password/Password',
         'WS.Data/Type/descriptor',
-       'Controls/Input/resources/InputRender/BaseViewModel',
+       'Controls/Input/resources/InputRender/BaseFormatter',
 
         'css!Controls/Input/Password/Password'
     ],
 
-function(Control, template, types, BaseViewModel) {
+function(Control, template, types, BaseFormatter) {
 
    /**
     * Поле ввода пароля.
@@ -33,7 +33,7 @@ function(Control, template, types, BaseViewModel) {
 
         constructor: function (options) {
            PasswordInput.superclass.constructor.apply(this, arguments);
-           this._simpleViewModel = new BaseViewModel();
+           this._baseFormatter = new BaseFormatter();
         },
 
         _toggleVisibilityHandler: function() {

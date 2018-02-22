@@ -1,20 +1,20 @@
-define('Controls/Input/Text/ViewModel',
+define('Controls/Input/Text/Formatter',
    [
-      'Controls/Input/resources/InputRender/BaseViewModel'
+      'Controls/Input/resources/InputRender/BaseFormatter'
    ],
    function (
-      BaseViewModel
+      BaseFormatter
    ) {
       'use strict';
       /**
-       * @class Controls/Input/Text/ViewModel
+       * @class Controls/Input/Text/Formatter
        * @private
        * @author Баранов М.А.
        */
 
       var
          _private,
-         TextViewModel;
+         TextFormatter;
 
       _private = {
          constraint: function(value, constraint){
@@ -36,7 +36,7 @@ define('Controls/Input/Text/ViewModel',
          }
       };
 
-      TextViewModel = BaseViewModel.extend({
+      TextFormatter = BaseFormatter.extend({
             constructor: function (options) {
                this._options = options;
             },
@@ -70,8 +70,8 @@ define('Controls/Input/Text/ViewModel',
          });
 
       //Приходится записывать _private в свойство, для доступа из unit-тестов
-      TextViewModel._private = _private;
+      TextFormatter._private = _private;
 
-      return TextViewModel;
+      return TextFormatter;
    }
 );
