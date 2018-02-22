@@ -2,7 +2,7 @@ define('Controls/Input/Number', [
    'Core/Control',
    'tmpl!Controls/Input/Number/Number',
    'WS.Data/Type/descriptor',
-   'Controls/Input/Number/Formatter',
+   'Controls/Input/Number/ViewModel',
    'Controls/Input/resources/InputHelper',
 
    'Controls/Input/resources/InputRender/InputRender',
@@ -10,7 +10,7 @@ define('Controls/Input/Number', [
 ], function (Control,
              template,
              types,
-             NumberFormatter,
+             NumberViewModel,
              inputHelper) {
 
    'use strict';
@@ -62,7 +62,7 @@ define('Controls/Input/Number', [
       constructor: function (options) {
          NumberInput.superclass.constructor.apply(this, arguments);
 
-         this._numberFormatter = new NumberFormatter({
+         this._numberViewModel = new NumberViewModel({
             onlyPositive: options.onlyPositive,
             integersLength: options.integersLength,
             precision: options.precision
@@ -75,7 +75,7 @@ define('Controls/Input/Number', [
             this._caretPosition = null;
          }
 
-         this._numberFormatter.updateOptions({
+         this._numberViewModel.updateOptions({
             onlyPositive: this._options.onlyPositive,
             integersLength: this._options.integersLength,
             precision: this._options.precision

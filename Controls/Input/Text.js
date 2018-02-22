@@ -2,7 +2,7 @@ define('Controls/Input/Text', [
       'Core/Control',
       'tmpl!Controls/Input/Text/Text',
       /*'WS.Data/Type/descriptor',*/
-      'Controls/Input/Text/Formatter',
+      'Controls/Input/Text/ViewModel',
       'Controls/Input/resources/InputHelper',
 
       'css!Controls/Input/resources/InputRender/InputRender',
@@ -10,7 +10,7 @@ define('Controls/Input/Text', [
    ], function(Control,
                template,
                /*types,*/
-               TextFormatter,
+               TextViewModel,
                inputHelper) {
 
       'use strict';
@@ -75,7 +75,7 @@ define('Controls/Input/Text', [
          constructor: function(options) {
             TextBox.superclass.constructor.call(this, options);
 
-            this._textFormatter = new TextFormatter({
+            this._textViewModel = new TextViewModel({
                constraint: options.constraint,
                maxLength: options.maxLength
             });
@@ -87,7 +87,7 @@ define('Controls/Input/Text', [
                this._caretPosition = null;
             }
 
-            this._textFormatter.updateOptions({
+            this._textViewModel.updateOptions({
                constraint: this._options.constraint,
                maxLength: this._options.maxLength
             });
