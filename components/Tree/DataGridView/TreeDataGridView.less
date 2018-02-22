@@ -128,10 +128,10 @@
    &.controls-ListView__item__selected {
       .controls-DataGridView__td {
          .controls-TreeView__ellipsis-copyArrow {
-            background-color: @data-grid-row-selected-main-bg;
+            background-color: @background-color_DataGridView-item_selected;
 
             &:after {
-               .horizontal-gradient(@data-grid-row-selected-main-bg, @data-grid-row-selected-addit-bg, right);
+               .horizontal-gradient(@background-color_DataGridView-item_selected, fade(@background-color_DataGridView-item_selected, 0%), right);
                .copyArrowGradient();
             }
          }
@@ -141,10 +141,10 @@
    &.controls-ListView__item__multiSelected {
       .controls-DataGridView__td {
          .controls-TreeView__ellipsis-copyArrow {
-            background-color: @data-grid-row-selected-bg;
+            background-color: @background-color_DataGridView-item_multiselected;
 
             &:after {
-               .horizontal-gradient(@data-grid-row-selected-bg, @data-grid-row-selected-add-bg, right);
+               .horizontal-gradient(@background-color_DataGridView-item_multiselected, fade(@background-color_DataGridView-item_multiselected, 0%), right);
                .copyArrowGradient();
             }
          }
@@ -154,10 +154,10 @@
    &.controls-ListView__hoveredItem {
       .controls-DataGridView__td {
          .controls-TreeView__ellipsis-copyArrow {
-            background-color: @data-grid-row-hover-bg;
+            background-color: @background-color_DataGridView-item_hovered;
 
             &:after {
-               .horizontal-gradient(@data-grid-row-hover-bg, @data-grid-row-hover-add-bg, right);
+               .horizontal-gradient(@background-color_DataGridView-item_hovered, fade(@background-color_DataGridView-item_hovered, 0%), right);
                .copyArrowGradient();
             }
          }
@@ -181,10 +181,10 @@
          top: -@tree-view-ellipsis-wrapper-height;
          right: @right_TreeDataGridView-copyArrow;
          padding: @tree-view-ellipsis-copyArrow-padding;
-         background-color: @tree-view-copy-arrow-background;
+         background-color: @background-color_TreeDataGridView-copyArrow;
 
          &:after {
-            .horizontal-gradient(@tree-view-copy-arrow-background, @tree-view-copy-arrow-add-background, right);
+            .horizontal-gradient(@background-color_TreeDataGridView-copyArrow, fade(@background-color_TreeDataGridView-copyArrow, 0%), right);
             .copyArrowGradient();
          }
 
@@ -322,7 +322,6 @@
    top: 0;
    color: @color_TreeDataGridView-editArrow;
    margin: @margin_TreeDataGridView-editArrow;
-   background-color: @background-color_TreeDataGridView-editArrow;
 
    &:hover {
       color: @color_TreeDataGridView-editArrow_hovered;
@@ -334,9 +333,9 @@
 }
 
 .controls-TreeView__editArrow-container.controls-TreeView__editArrow-background {
-   background-color: @data-grid-row-hover-bg;
+   background-color: @background-color_DataGridView-item_hovered;
    &:after {
-      .horizontal-gradient(@data-grid-row-hover-bg, @data-grid-row-hover-add-bg, right);
+      .horizontal-gradient(@background-color_DataGridView-item_hovered, fade(@background-color_DataGridView-item_hovered, 0%), right);
       .copyArrowGradient();
    }
 }

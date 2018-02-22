@@ -5,13 +5,15 @@ define('SBIS3.CONTROLS/Filter/Button/Area',
    [
       'SBIS3.CONTROLS/CompoundControl',
       'tmpl!SBIS3.CONTROLS/Filter/Button/Area/FilterButtonArea',
+      'SBIS3.CONTROLS/Filter/History',
+      'SBIS3.CONTROLS/History/HistoryListUtils',
       'SBIS3.CONTROLS/Link',
       'SBIS3.CONTROLS/Button',
       'SBIS3.CONTROLS/ScrollContainer',
       'SBIS3.CONTROLS/Filter/Button/AdditionalParams',
       'SBIS3.CONTROLS/Filter/Button/History',
       'css!SBIS3.CONTROLS/Filter/Button/Area/FilterButtonArea'
-   ], function(CompoundControl, dotTplFn) {
+   ], function(CompoundControl, dotTplFn, History, HistoryListUtils) {
       'use strict';
       
       /**
@@ -22,7 +24,30 @@ define('SBIS3.CONTROLS/Filter/Button/Area',
        * @public
        */
       
-      return CompoundControl.extend([], /** @lends SBIS3.CONTROLS/Filter/Button/Area.prototype */ {
-         _dotTplFn: dotTplFn
+      var FilterButtonArea = CompoundControl.extend([], /** @lends SBIS3.CONTROLS/Filter/Button/Area.prototype */ {
+         _dotTplFn: dotTplFn,
+
+         _modifyOptions: function() {
+            var opts = FilterButtonArea.superclass._modifyOptions.apply(this, arguments);
+            if (opts.historyId && opts.viewMode === 'twoColumns') {
+               opts._hasHistory = HistoryListUtils.hasHistory(opts.historyId);
+            }
+
+            return opts;
+         },
+
+         init: function() {
+            FilterButtonArea.superclass.init.apply(this, arguments);
+            if (this._options.historyId && this._options.viewMode === 'twoColumns') {
+               this.subscribeTo(this.getChildControlByName('filterHistory'), 'onItemActivate', this._applyFromHistory.bind(this))
+            }
+         },
+
+         _applyFromHistory: function(event, historyItem, isFavorite, isGlobal) {
+            this.sendCommand('applyHistoryFilter', historyItem, isFavorite, isGlobal);
+         }
+
       });
+
+      return FilterButtonArea;
    });
