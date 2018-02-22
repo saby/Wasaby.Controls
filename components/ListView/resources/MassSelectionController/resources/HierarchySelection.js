@@ -50,9 +50,28 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Hier
       },
 
       unselect: function (ids) {
-         ArraySimpleValuesUtil.addSubArray(this._options.excludedKeys, ids);
+         var
+            self = this,
+            exclude = [];
+
+         //В excludedKeys добавляем, только если родительский узел выбран.
+         ids.forEach(function(id) {
+            if (self._parentIsMarked(id)) {
+               exclude.push(id);
+            }
+         });
+
+         ArraySimpleValuesUtil.addSubArray(this._options.excludedKeys, exclude);
          this._changeTree(ids, false);
          ArraySimpleValuesUtil.removeSubArray(this._options.selectedKeys, ids);
+      },
+
+      _parentIsMarked: function(key) {
+         var
+            parentFromTree = this._markedTree.getRecordById(this._getParentIdById(key)),
+            parentStatus = parentFromTree ? parentFromTree.get(STATUS_FILED) : STATUS.NOT_SELECTED;
+
+         return parentStatus === STATUS.SELECTED || parentStatus === STATUS.PARTIALLY_FULL;
       },
 
       selectAll: function () {
