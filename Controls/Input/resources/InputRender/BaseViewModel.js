@@ -1,4 +1,4 @@
-define('Controls/Input/resources/InputRender/SimpleViewModel',
+define('Controls/Input/resources/InputRender/BaseViewModel',
    [
       'Core/core-simpleExtend'
    ],
@@ -7,8 +7,8 @@ define('Controls/Input/resources/InputRender/SimpleViewModel',
    ) {
       'use strict';
       /**
-       * Простейшая ViewModel для использования в InputRender когда не требуется производить обработку данных после ввода
-       * @class Controls/Input/resources/InputRender/SimpleViewModel
+       * Базовый класс ViewModel для InputRender
+       * @class Controls/Input/resources/InputRender/BaseViewModel
        * @private
        * @author Баранов М.А.
        */
@@ -23,6 +23,14 @@ define('Controls/Input/resources/InputRender/SimpleViewModel',
                value: splitValue.before + splitValue.insert + splitValue.after,
                position: splitValue.before.length + splitValue.insert.length
             }
+         },
+
+         getValueForRender: function(value) {
+            return value;
+         },
+
+         getValueForNotify: function(value) {
+            return value;
          }
       });
    }
