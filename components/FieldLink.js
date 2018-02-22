@@ -171,7 +171,7 @@ define('SBIS3.CONTROLS/FieldLink',
              _lastFieldLinkWidth: null,
              _showAllButton: null,
              _options: {
-                _paddingClass: ' controls-InputRender_paddingLeft',
+                _paddingClass: ' controls-Text-InputRender_paddingLeft',
                 /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
                 afterFieldWrapper: afterFieldWrapper,
                 beforeFieldWrapper: beforeFieldWrapper,
