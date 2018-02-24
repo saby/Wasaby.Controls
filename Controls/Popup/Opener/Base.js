@@ -25,8 +25,7 @@ define('Controls/Popup/Opener/Base',
           * @param strategy стратегия позиционирования попапа
           */
          open: function (config, strategy) {
-            var
-               cfg = CoreClone(this._options.popupOptions);
+            var cfg = this._options.popupOptions ? CoreClone(this._options.popupOptions) : {};
             CoreMerge(cfg, config || {});
             if (this.isOpened()) {
                this._popupId = Manager.update(this._popupId, cfg);
