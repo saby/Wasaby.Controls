@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/ConfirmationWindow',
+      'Controls/Popup/Opener/Confirmation',
       'Core/Deferred'
    ],
 
@@ -9,7 +9,7 @@ define(
 
       var popupOpener;
 
-      describe('Controls/ConfirmationWindow', function () {
+      describe('Controls/Popup/Opener/Confirmation', function () {
 
          beforeEach(function(){
             popupOpener = new PopupOpener();
