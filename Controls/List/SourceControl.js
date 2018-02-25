@@ -345,10 +345,12 @@ define('Controls/List/SourceControl', [
       },
 
       _beforeUpdate: function(newOptions) {
+         var filterChanged = newOptions.filter !== this._options.filter;
+         var sourceChanged = newOptions.source !== this._options.source;
 
          //TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
 
-         if (newOptions.filter !== this._options.filter) {
+         if (filterChanged) {
             this._filter = newOptions.filter;
          }
 
@@ -361,7 +363,7 @@ define('Controls/List/SourceControl', [
             }
 
 
-         if (newOptions.source !== this._options.source) {
+         if (sourceChanged) {
             if (this._sourceController) {
                this._sourceController.destroy();
             }
@@ -371,7 +373,9 @@ define('Controls/List/SourceControl', [
                source : newOptions.source,
                navigation: newOptions.navigation
             });
-
+         }
+         
+         if (filterChanged || sourceChanged) {
             _private.reload(this);
          }
 
@@ -384,7 +388,7 @@ define('Controls/List/SourceControl', [
          }
 
          if (this._scrollPagingCtr) {
-            this._scrollPagingCtr.destroy()
+            this._scrollPagingCtr.destroy();
          }
 
          SourceControl.superclass._beforeUnmount.apply(this, arguments);
