@@ -35,7 +35,9 @@ define('Controls/Toggle/DoubleSwitch', [
       },
 
       notifyChanged: function(self){
-         self._notify('valueChanged', [!self._options.value]);
+         if (self.isEnabled()) {
+            self._notify('valueChanged', [!self._options.value]);
+         }
       }
    };
 
@@ -49,7 +51,7 @@ define('Controls/Toggle/DoubleSwitch', [
       },
 
       _clickTextHandler: function (e, _nextValue) {
-         if (this._options.value !== _nextValue) {
+         if (this._options.value !== _nextValue && this.isEnabled()) {
             _private.notifyChanged(this);
          }
       },

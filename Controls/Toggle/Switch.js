@@ -25,7 +25,25 @@ define('Controls/Toggle/Switch', [
       _template: template,
 
       _clickHandler: function (e) {
-         this._notify('valueChanged', [!this._options.value]);
+         if (this.isEnabled()) {
+            this._notify('valueChanged', [!this._options.value]);
+         }
+      },
+
+      _getMarkerState: function() {
+         if (this.isEnabled()) {
+            if (this._options.value) {
+               return 'controls-Switch__marker_enabled_checked';
+            } else {
+               return 'controls-Switch__marker_enabled_unchecked'
+            }
+         } else {
+            if (this._options.value) {
+               return 'controls-Switch__marker_disabled_checked';
+            } else {
+               return 'controls-Switch__marker_disabled_unchecked'
+            }
+         }
       }
    });
 
@@ -38,7 +56,7 @@ define('Controls/Toggle/Switch', [
    Switch.getOptionTypes = function getOptionTypes() {
       return {
          value: types(Boolean),
-         captions: types(String)
+         caption: types(String)
       };
    };
 
