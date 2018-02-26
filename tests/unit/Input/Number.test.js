@@ -209,40 +209,40 @@ define(
             it(item.testName, function () {
                var
                   numberViewModel = new NumberViewModel(item.controlConfig),
-                  result = numberViewModel.prepareData(item.splitValue, item.inputType);
+                  result = numberViewModel.handleInput(item.splitValue, item.inputType);
 
                assert.equal(result.value, item.result.value);
             });
          });
 
-         it('getValueForRender: only inegers', function () {
+         it('getDisplayValue: only integers', function () {
             var
                numberViewModel = new NumberViewModel({}),
-               result = numberViewModel.getValueForRender('123456');
+               result = numberViewModel.getDisplayValue('123456');
 
             assert.equal(result, '123 456');
          });
 
-         it('getValueForRender: inegers and decimals', function () {
+         it('getDisplayValue: integers and decimals', function () {
             var
                numberViewModel = new NumberViewModel({}),
-               result = numberViewModel.getValueForRender('123456.78');
+               result = numberViewModel.getDisplayValue('123456.78');
 
             assert.equal(result, '123 456.78');
          });
 
-         it('getValueForNotify: only inegers', function () {
+         it('getValue: only integers', function () {
             var
                numberViewModel = new NumberViewModel({}),
-               result = numberViewModel.getValueForNotify('123 456');
+               result = numberViewModel.getValue('123 456');
 
             assert.equal(result, '123456');
          });
 
-         it('getValueForNotify: inegers and decimals', function () {
+         it('getValue: integers and decimals', function () {
             var
                numberViewModel = new NumberViewModel({}),
-               result = numberViewModel.getValueForNotify('123 456.78');
+               result = numberViewModel.getValue('123 456.78');
 
             assert.equal(result, '123456.78');
          });
