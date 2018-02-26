@@ -97,7 +97,7 @@ define('Controls/Button', [
         }
         self._style = currentButtonClass.style;
         self._type = currentButtonClass.type;
-        self._typeWithSize = currentButtonClass.type + '__size-' + options.size;
+        self._typeWithSize = currentButtonClass.type + '_size-' + options.size;
      }
    };
 
