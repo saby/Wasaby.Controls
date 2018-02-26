@@ -321,21 +321,8 @@ define('Controls/List/SourceControl', [
       },
 
       _afterMount: function() {
-         var self = this;
-         SourceControl.superclass._afterMount.apply(this, arguments);
-
          _private.startScrollEmitter(this);
 
-         if (false && this._options.navigation
-            && this._options.navigation.view === 'infinity'
-            && this._options.navigation.viewConfig
-            && this._options.navigation.viewConfig.pagingMode
-         ) {
-            _private.createScrollPagingController(this).addCallback(function(scrollPagingCtr){
-               self._scrollPagingCtr = scrollPagingCtr
-            });
-         }
-         
          if (_private.getItemsCount(this)) {
             //Посчитаем среднюю высоту строки и отдадим ее в VirtualScroll
             _private.initializeAverageItemsHeight(this);
