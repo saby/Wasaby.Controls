@@ -5,15 +5,16 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
    "Core/core-extend",
    "Core/core-clone",
    "Core/EventBus",
+   "Core/Deferred",
    "WS.Data/Entity/Record",
    "SBIS3.CONTROLS/Utils/DataSetToXmlSerializer",
-   "Deprecated/Controls/LoadingIndicator/LoadingIndicator",
+   "SBIS3.CONTROLS/WaitIndicator",
    "WS.Data/Source/SbisService",
    "Core/helpers/transport-helpers",
    "SBIS3.CONTROLS/Utils/PrintDialogHTMLView",
    "SBIS3.CONTROLS/Utils/InformationPopupManager",
    "i18n!SBIS3.CONTROLS/Utils/DataProcessor"
-], function( cExtend, coreClone, EventBus, Record, Serializer, LoadingIndicator, SbisService, transHelpers, PrintDialogHTMLView, InformationPopupManager) {
+], function( cExtend, coreClone, EventBus, Deferred, Record, Serializer, WaitIndicator, SbisService, transHelpers, PrintDialogHTMLView, InformationPopupManager) {
    /**
     * Обработчик данных для печати и выгрузки(экспорта) в Excel, PDF. Печать осуществляется по готову XSL-шаблону через XSLT-преобразование.
     * Экспорт в Excel и PDF можно выполнить несколькими способами:
@@ -84,15 +85,17 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
        * Отправить на печать готовый dataSet
        */
       print: function () {
-         var self = this;
-         this._createLoadIndicator(rk('Печать записей...'));
+         var
+            self = this,
+            deferred = new Deferred();
+         this._createLoadIndicator(rk('Печать записей...'), deferred);
          this._prepareSerializer().addCallback(function(reportText){
             return PrintDialogHTMLView({
                htmlText: reportText,
                minWidth: self._options.minWidth
             });
          }).addBoth(function() {
-            self._destroyLoadIndicator();
+            deferred.callback();
          });
       },
       /**
@@ -106,10 +109,11 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
          var
             self = this,
             methodName = 'SaveHTML',
-            newCfg;
-         this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + fileType);
-         this._prepareSerializer().addCallback(function(reportText){
-            self._destroyLoadIndicator();
+            newCfg,
+            deferred = new Deferred();
+         this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + fileType, deferred);
+         this._prepareSerializer().addCallback(function(reportText) {
+            deferred.callback();
             //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
             //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем fileType
             if (!self._isLongOperationsEnabled() && fileType === 'Excel') {
@@ -229,11 +233,9 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
           //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
           //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем fileType
          if (object !== "Excel" || !this._isLongOperationsEnabled()) {
-            this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + object);
+            this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + object, exportDeferred);
             exportDeferred.addCallback(function(ds) {
                self.downloadFile(ds.getScalar(), object === "Excel" || isExcel);
-            }).addBoth(function() {
-               self._destroyLoadIndicator();
             });
          }
          else {
@@ -348,18 +350,11 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
                });
          return serializer.prepareReport(this._options.xsl, this._options.dataSet);
       },
-      _createLoadIndicator: function (message) {
-         this._loadIndicator = new LoadingIndicator({
+      _createLoadIndicator: function (message, deferred) {
+         WaitIndicator.make({
             'message': message,
-            'name': 'ws-load-indicator'
-         });
-      },
-      _destroyLoadIndicator: function ( ) {
-         if (this._loadIndicator) {
-            this._loadIndicator.hide();
-            this._loadIndicator.destroy();
-            this._loadIndicator = undefined;
-         }
+            delay: 100
+         }, deferred);
       },
       _isLongOperationsEnabled: function() {
          return requirejs.defined('js!SBIS3.Engine.LongOperationsInformer');
