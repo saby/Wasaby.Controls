@@ -2,19 +2,13 @@
    <textarea
       name="realArea"
       spellcheck="false"
-      class="{{ className }}"
-      on:keydown="_keyDownHandler()"
-      on:focus="_focusHandler()"
-      on:scroll="_scrollHandler()"
       value="{{ value }}"
       required="true"
    ></textarea>
 </ws:template>
 
 <ws:template name="disabledArea">
-   <div
-      class="{{ className }}"
-   >{{ value }}</div>
+   <div>{{ value }}</div>
 </ws:template>
 
 <Controls:Input:resources:InputRender:InputRender
@@ -39,17 +33,17 @@
                <ws:if data="{{ isEnabled() }}">
                   <ws:partial
                      template="enabledArea"
-                     className="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
+                     attr:class="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
                      value="{{ _options.value }}"
-                     _keyDownHandler="{{ _keyDownHandler }}"
-                     _focusHandler="{{ _focusHandler }}"
-                     _scrollHandler="{{ _scrollHandler }}"
+                     on:keydown="_keyDownHandler()"
+                     on:focus="_focusHandler()"
+                     on:scroll="_scrollHandler()"
                   />
                </ws:if>
                <ws:else>
                   <ws:partial
                      template="disabledArea"
-                     className="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
+                     attr:class="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
                      value="{{ _options.value }}"
                   />
                </ws:else>
