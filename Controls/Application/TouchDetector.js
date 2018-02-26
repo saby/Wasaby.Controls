@@ -19,9 +19,6 @@ define('Controls/Application/TouchDetector', [], function() {
       isTouch: function() {
          return _private.state;
       },
-      setState: function(state) {
-        _private.state = state;
-      },
       getClass: function() {
           return _private.state ? 'ws-is-touch' : 'ws-is-no-touch';
       }
