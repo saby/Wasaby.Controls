@@ -57,9 +57,6 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
          showPicker: function () {
             if (this._chooserControl) {
                this._chooserControl.setRange(this.getStartValue(), this.getEndValue());
-               if (this._options.selectionType === 'range') {
-                  this._chooserControl.applyYearState();
-               }
                this._chooserControl.updateViewAfterShow();
             }
          }
