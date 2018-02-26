@@ -4151,6 +4151,7 @@ define('SBIS3.CONTROLS/ListView',
                   self._updateHoveredItemAfterRedraw();
                   self._pagerContainer = self.getContainer().find('.controls-Pager-container');
                   self._updatePaging();
+                  self.sendCommand('resizeYourself');
                });
             } else {
                this._updatePaging();
