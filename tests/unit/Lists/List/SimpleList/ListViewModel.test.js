@@ -3,10 +3,11 @@
  */
 define([
    'Controls/List/SimpleList/ListViewModel',
-   'Controls/List/resources/utils/ItemsUtil'
-], function(ListViewModel, ItemsUtil){
+   'Controls/List/resources/utils/ItemsUtil',
+   'WS.Data/Collection/RecordSet'
+], function(ListViewModel, ItemsUtil, RecordSet){
    describe('Controls.List.ListControl.ListViewModel', function () {
-      var data, display;
+      var data, data2, display;
       beforeEach(function() {
          data = [
             {
@@ -22,6 +23,22 @@ define([
             {
                id : 3,
                title : 'Третий',
+               type: 2
+            }
+         ]; data2 = [
+            {
+               id : 4,
+               title : 'Четвертый',
+               type: 1
+            },
+            {
+               id : 5,
+               title : 'Пятый',
+               type: 2
+            },
+            {
+               id : 6,
+               title : 'Шестой',
                type: 2
             }
          ];
@@ -91,6 +108,87 @@ define([
          iv.setMarkedKey(3);
          marItem = iv._markedItem;
          assert.equal(iv._itemsModel._display.at(2), marItem, 'Incorrect selectedItem');
+      });
+
+      it('setItems', function () {
+         var rs1 = new RecordSet({
+            rawData: data,
+            idProperty : 'id'
+         });
+         var rs2 = new RecordSet({
+            rawData: data2,
+            idProperty : 'id'
+         });
+
+         var cfg1 = {
+            items: data,
+            idProperty: 'id',
+            displayProperty: 'title'
+         };
+
+         var cfg2 = {
+            items: rs1,
+            idProperty: 'id',
+            displayProperty: 'title'
+         };
+
+         //первый кейс - были items - массив, а ставим рекордсет. Должен полностью смениться инстанс
+         var iv = new ListViewModel(cfg1);
+         iv.setItems(rs2);
+         assert.equal(rs2, iv._itemsModel._items, 'Incorrect items after setItems');
+
+         //второй кейс - были items - рекордсет, и ставим рекордсет. Должен остаться инстанс старого, но данные новые
+         iv = new ListViewModel(cfg2);
+         iv.setItems(rs2);
+         assert.equal(rs1, iv._itemsModel._items, 'Incorrect items after setItems');
+         assert.equal(4, iv._itemsModel._items.at(0).get('id'), 'Incorrect items after setItems');
+
+      });
+
+      it('Append', function () {
+         var rs1 = new RecordSet({
+            rawData: data,
+            idProperty : 'id'
+         });
+         var rs2 = new RecordSet({
+            rawData: data2,
+            idProperty : 'id'
+         });
+         var cfg1 = {
+            items: rs1,
+            idProperty: 'id',
+            displayProperty: 'title'
+         };
+
+         var iv = new ListViewModel(cfg1);
+         iv.appendItems(rs2);
+
+         assert.equal(6, iv._itemsModel._items.getCount(), 'Incorrect items count after appendItems');
+         assert.equal(4, iv._itemsModel._items.at(3).get('id'), 'Incorrect items after appendItems');
+
+      });
+
+      it('Prepend', function () {
+         var rs1 = new RecordSet({
+            rawData: data,
+            idProperty : 'id'
+         });
+         var rs2 = new RecordSet({
+            rawData: data2,
+            idProperty : 'id'
+         });
+         var cfg1 = {
+            items: rs1,
+            idProperty: 'id',
+            displayProperty: 'title'
+         };
+
+         var iv = new ListViewModel(cfg1);
+         iv.prependItems(rs2);
+
+         assert.equal(6, iv._itemsModel._items.getCount(), 'Incorrect items count after prependItems');
+         assert.equal(1, iv._itemsModel._items.at(3).get('id'), 'Incorrect items after prependItems');
+
       });
    })
 });
