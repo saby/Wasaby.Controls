@@ -107,7 +107,6 @@ define('Controls/Controllers/SourceController',
                limit: undefined,
                offset: undefined
             };
-            this.cancelLoading();
             //модифицируем параметры через навигацию
             if (this._queryParamsController) {
                var navigParams = this._queryParamsController.prepareQueryParams(direction);
@@ -139,13 +138,6 @@ define('Controls/Controllers/SourceController',
             });
             this._loader = def;
             return def;
-         },
-         
-         cancelLoading: function() {
-            if (this._loader && !this._loader.isReady()) {
-               this._loader.cancel();
-               this._loader = null;
-            }
          },
 
          hasMoreData: function(direction) {

@@ -9,14 +9,6 @@ define('Controls/List/SimpleList/ListViewModel',
        * @author Крайнов Дмитрий
        * @public
        */
-
-      var _private = {
-         updateIndexes: function(self) {
-            self._startIndex = 0;
-            self._stopIndex = self._itemsModel.getCount();
-         }
-      };
-      
       var ListViewModel = Abstract.extend({
 
          _itemsModel: null,
@@ -40,8 +32,9 @@ define('Controls/List/SimpleList/ListViewModel',
             if (cfg.markedKey !== undefined) {
                this._markedItem = this.getItemById(cfg.markedKey, cfg.idProperty);
             }
-   
-            _private.updateIndexes(self);
+
+            this._startIndex = 0;
+            this._stopIndex = this._itemsModel.getCount();
          },
 
          destroy: function() {
@@ -74,7 +67,7 @@ define('Controls/List/SimpleList/ListViewModel',
          },
 
          getItemById: function(id, idProperty) {
-            return this._itemsModel.getItemById(id, idProperty);
+            return this._itemsModel.getItemById(id, idProperty)
          },
 
          setMarkedKey: function(key) {
@@ -91,8 +84,7 @@ define('Controls/List/SimpleList/ListViewModel',
          },
 
          setItems: function(items) {
-            this._itemsModel.setItems(items);
-            _private.updateIndexes(this);
+            this._itemsModel.setItems(items)
          },
 
          appendItems: function(items) {

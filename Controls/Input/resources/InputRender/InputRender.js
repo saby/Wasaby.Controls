@@ -4,10 +4,11 @@ define('Controls/Input/resources/InputRender/InputRender',
       /*'WS.Data/Type/descriptor',*/
       'tmpl!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
+      'Core/detection',
 
       'css!Controls/Input/resources/InputRender/InputRender'
    ],
-   function(Control, /*types,*/ template, RenderHelper) {
+   function(Control, /*types,*/ template, RenderHelper, detection) {
 
       'use strict';
 
@@ -60,14 +61,9 @@ define('Controls/Input/resources/InputRender/InputRender',
          _controlName: 'Controls/Input/resources/InputRender/InputRender',
          _template: template,
 
-         constructor: function (options) {
-            InputRender.superclass.constructor.apply(this, arguments);
-
-         },
-
          _inputHandler: function(e) {
             var
-               value = this._options.viewModel.getDisplayValue(),
+               value = this._options.value,
                newValue = e.target.value,
                selection = _private.getSelection(this),
                position = _private.getTargetPosition(e.target),
@@ -85,12 +81,12 @@ define('Controls/Input/resources/InputRender/InputRender',
             splitValue = RenderHelper.getSplitInputValue(value, newValue, position, selection, inputType);
 
             //
-            processedData = this._options.viewModel.handleInput(splitValue, inputType);
+            processedData = this._options.viewModel.prepareData(splitValue, inputType);
 
             _private.setTargetData(e.target, processedData);
             _private.saveSelection(this, e.target);
 
-            this._notify('valueChanged', [this._options.viewModel.getValue()]);
+            this._notify('valueChanged', [processedData.value]);
          },
 
          _keyUpHandler: function(e) {
@@ -108,10 +104,6 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _selectionHandler: function(e){
             _private.saveSelection(this, e.target);
-         },
-
-         _inputCompletedHandler: function(e) {
-            this._notify('inputCompleted', [this._options.viewModel.getValue()]);
          },
 
          _notifyHandler: function(e, value) {
@@ -149,15 +141,14 @@ define('Controls/Input/resources/InputRender/InputRender',
           */
          paste: function(text, selectionStart, selectionEnd) {
             var
-               displayValue = this._options.viewModel.getDisplayValue(),
-               processedData = this._options.viewModel.handleInput({
-                  before: displayValue.slice(0, selectionStart),
+               processedData = this._options.viewModel.prepareData({
+                  before: this._options.value.slice(0, selectionStart),
                   insert: text,
-                  after: displayValue.slice(selectionEnd, displayValue.length)
+                  after: this._options.value.slice(selectionEnd, this._options.value.length)
                }, 'insert');
 
-            if (displayValue !== processedData.value) {
-               this._notify('valueChanged', [this._options.viewModel.getValue()]);
+            if (this._options.value !== processedData.value) {
+               this._notify('valueChanged', [processedData.value]);
             }
 
             this._selection = {
@@ -173,9 +164,7 @@ define('Controls/Input/resources/InputRender/InputRender',
       InputRender.getDefaultOptions = function() {
          return {
             value: '',
-            selectOnClick: false,
-            style: 'default',
-            inputType: 'Text'
+            selectOnClick: false
          };
       };
 

@@ -1,30 +1,30 @@
 .controls-MassAmountSelector {
-   min-width: @min-width_MassAmountSelector;
+   min-width: @controls-printdialog-min-width;
 }
 .controls-PrintMassDialog {
    margin-left: 12px;
    position: relative;
 
    .controls-RadioGroup, .controls-MassAmountSelector__numberTextBox {
-      margin: @margin_MassAmountSelector-blocks;
+      margin-bottom: 14px;
    }
 
    .controls-NumberTextBox {
-      width: @width_MassAmountSelector-numberTextBox;
+      width: 80px;
    }
 
    .controls-PrintMassDialog__label{
       display: inline-block;
       color: #999999;
-      padding: @padding_MassAmountSelector-label;
-      font-size: @font-size_MassAmountSelector-label;
+      padding-left: 6px;
+      padding-right: 8px;
    }
 }
 .ws-window-titlebar-custom {
    .controls-Button__activatePrintMass {
-      margin: @margin_MassAmountSelector-activate;
+      margin-top: @controls-printdialog-activate-margin-top;
       position: absolute;
-      right: @right_MassAmountSelector-activate;
+      right: @controls-printdialog-activate-right;
    }
 }
 

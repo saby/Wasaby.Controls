@@ -602,18 +602,16 @@
   border-bottom-color: transparent;
 }
 
-.border-with-pseudo-element(@color: @default-border-color, @width: @default-border-width, @border-radius: 0, @block-height: 100%) {
+.border-with-pseudo-element(@color: @default-border-color, @width: @default-border-width, @border-radius: 0) {
   &:after {
     content: '\200b';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: @block-height;
+    height: 100%;
     box-sizing: border-box;
-    border-style: solid;
-    border-width: @width;
-    border-color: @color;
+    border: @width solid @color;
     border-radius: @border-radius;
     pointer-events: none;
   }

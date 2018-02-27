@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ws="ws-component">
 <head>
-   <title>Demo: </title>
+   <title>Demo: Views</title>
    <script type="text/javascript">
       window.wsConfig = {
          WSRootPath: '/sbis3-ws/ws/',
@@ -11,7 +11,7 @@
          resourceRoot: '/components',
          nostyle: true,
          globalConfigSupport: false,
-         compat: ~document.location.search.indexOf('compat=true') // если в демках используются не vdom контролы
+         compat: false
       };
       window.WSTheme = 'wi_scheme';
    </script>
@@ -52,35 +52,8 @@
 <script type="text/javascript">
 require(['Core/core-init'],function () {
    $(document).ready(function () {
-      var parseUrlQuery = function() {
-         var data = {};
-         if (document.location.search) {
-            var pair = (document.location.search.substr(1)).split('&');
-            for (var i = 0; i < pair.length; i ++) {
-               var param = pair[i].split('=');
-               data[param[0]] = param[1];
-            }
-         }
-         return data;
-      };
-      var addThemeSwitcher = function(themeName) {
-          var  jsLink = document.createElement('script');
-          var loadHandler = function(){
-              jsLink.removeEventListener('load',loadHandler);
-              window.setBodyModifiers(themeName, '');
-          };
-          jsLink.id = 'themeSwitcher';
-          jsLink.src = '../pages/presto/themeSwitcher.js';
-          jsLink.type='text/javascript';
-          jsLink.addEventListener('load',loadHandler);
-          document.getElementsByTagName('head')[0].appendChild(jsLink);
-      };
-      var UrlParams = parseUrlQuery();
-      var cname = UrlParams.cname;
+      var cname = document.location.search.substring(document.location.search.indexOf('cname=') + 6);
       var reqname;
-      if (UrlParams['theme']) {
-          addThemeSwitcher(UrlParams['theme']);
-      }
       if (cname) {
          reqname = 'Controls-demo/' + cname;
       }

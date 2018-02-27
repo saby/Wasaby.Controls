@@ -51,7 +51,7 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
       $protected: {
          _options: {
             textAlign: 'right',
-            _paddingClass: ' controls-Text-InputRender_paddingBoth controls-TextBox_paddingBoth',
+            _paddingClass: ' controls-InputRender_paddingBoth controls-TextBox_paddingBoth',
             textFieldWrapper: textFieldWrapper,
             /**
              * @cfg {Number} Количество знаков после запятой

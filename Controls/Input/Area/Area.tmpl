@@ -14,36 +14,31 @@
            on:tagHover="_notifyHandler('onTagHover')"
            on:tagClick="_notifyHandler('onTagClick')">
       <ws:content>
-         <ws:if data="{{ isEnabled() }}">
-            <!--TODO контейнер убрать https://online.sbis.ru/opendoc.html?guid=25000158-64ff-4db9-9605-a986cbc37b0f-->
-            <div class="controls-InputRender__wrapper">
-               <textarea
-                       name="realArea"
-                       spellcheck="false"
-                       class="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
-                       readonly="{{!isEnabled() ? 'readonly'}}"
-                       on:keydown="_keyDownHandler()"
-                       on:focus="_focusHandler()"
-                       on:scroll="_scrollHandler()"
-                       value="{{ _options.value }}"
-                       required="true"
-               ></textarea>
+         <!--TODO контейнер убрать https://online.sbis.ru/opendoc.html?guid=25000158-64ff-4db9-9605-a986cbc37b0f-->
+         <div class="controls-InputRender__wrapper">
+            <textarea
+                    name="realArea"
+                    spellcheck="false"
+                    class="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
+                    readonly="{{!isEnabled() ? 'readonly'}}"
+                    on:keydown="_keyDownHandler()"
+                    on:focus="_focusHandler()"
+                    on:scroll="_scrollHandler()"
+                    value="{{ _options.value }}"
+                    required="true"
+            ></textarea>
 
-               <div class="controls-fakeTextArea__firstWrapper">
-                  <div class="controls-fakeTextArea__secondWrapper">
-                     <div
-                        name="fakeArea"
-                        class="controls-InputArea__field controls-InputArea__fakeField controls-InputRender__field"
-                        style="{{_options.minLines ? ('min-height: ' + _options.minLines * 100 + '%;')}} {{_options.maxLines ? 'max-height: ' + _options.maxLines * 100 + '%'}}">
-                        <span name="fakeAreaValue">{{ _options.value }}</span><br/>
-                     </div>
+            <div class="controls-fakeTextArea__firstWrapper">
+               <div class="controls-fakeTextArea__secondWrapper">
+                  <div
+                     name="fakeArea"
+                     class="controls-InputArea__field controls-InputArea__fakeField controls-InputRender__field"
+                     style="{{_options.minLines ? ('min-height: ' + _options.minLines * 100 + '%;')}} {{_options.maxLines ? 'max-height: ' + _options.maxLines * 100 + '%'}}">
+                     <span name="fakeAreaValue">{{ _options.value }}</span><br/>
                   </div>
-                  <div class="controls-InputArea__clear"></div>
                </div>
+               <div class="controls-InputArea__clear"></div>
             </div>
-         </ws:if>
-         <ws:else>
-            <div class="controls-InputArea__field">{{ _options.value }}</div>
-         </ws:else>
+         </div>
       </ws:content>
    </Controls:Input:resources:InputRender:InputRender>

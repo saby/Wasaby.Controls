@@ -1,9 +1,9 @@
 define('Controls/Input/Number/ViewModel',
    [
-      'Controls/Input/resources/InputRender/BaseViewModel'
+      'Core/core-simpleExtend'
    ],
    function (
-      BaseViewModel
+      simpleExtend
    ) {
       'use strict';
       /**
@@ -67,18 +67,21 @@ define('Controls/Input/Number/ViewModel',
 
          /**
           * Валидирует значение splitValue
-          * @param clearValue
+          * @param splitValue
           * @param onlyPositive
           * @param integersLength
           * @param precision
           * @returns {boolean}
           */
-         validate: function (clearValue, onlyPositive, integersLength, precision) {
+         validate: function (splitValue, onlyPositive, integersLength, precision) {
+            var
+               clearVal = this.getClearValue(splitValue);
+
             if (
-               !_private.validators.isNumber(clearValue) ||
-               typeof onlyPositive !== 'undefined' && !_private.validators.onlyPositive(clearValue) ||
-               typeof integersLength !== 'undefined' && !_private.validators.maxIntegersLength(clearValue, integersLength) ||
-               typeof precision !== 'undefined' && !_private.validators.maxDecimalsLength(clearValue, precision)
+               !this.validators.isNumber(clearVal) ||
+               typeof onlyPositive !== 'undefined' && !this.validators.onlyPositive(clearVal) ||
+               typeof integersLength !== 'undefined' && !this.validators.maxIntegersLength(clearVal, integersLength) ||
+               typeof precision !== 'undefined' && !this.validators.maxDecimalsLength(clearVal, precision)
             ) {
                return false;
             }
@@ -117,14 +120,18 @@ define('Controls/Input/Number/ViewModel',
          }
       };
 
-      NumberViewModel = BaseViewModel.extend({
+      NumberViewModel = simpleExtend.extend({
+            constructor: function (options) {
+               this._options = options;
+            },
+
             /**
              * Валидирует и подготавливает новое значение по splitValue
              * @param splitValue
              * @param inputType
              * @returns {{value: (*|String), position: (*|Integer)}}
              */
-            handleInput: function (splitValue, inputType) {
+            prepareData: function (splitValue, inputType) {
                var
                   shift = 0;
 
@@ -147,36 +154,15 @@ define('Controls/Input/Number/ViewModel',
                }
 
                //Если валидация не прошла, то не даем ничего ввести
-               if (!_private.validate(_private.getClearValue(splitValue), this._options.onlyPositive, this._options.integersLength, this._options.precision)) {
+               if (!_private.validate(splitValue, this._options.onlyPositive, this._options.integersLength, this._options.precision)) {
                   splitValue.insert = '';
                }
-
-               this._options.value = _private.getValueWithDelimiters(splitValue);
 
                //Запишет значение в input и поставит курсор в указанное место
                return {
                   value: _private.getValueWithDelimiters(splitValue),
                   position: _private.getCursorPosition(splitValue, shift)
                };
-            },
-
-            getDisplayValue: function () {
-               return _private.getValueWithDelimiters({
-                  before: '',
-                  insert: this._options.value,
-                  after: ''
-               });
-            },
-
-            getValue: function () {
-               return parseFloat(this._options.value.replace(/ /g, '')) || '';
-            },
-
-            updateOptions: function(options) {
-               this._options.onlyPositive = options.onlyPositive;
-               this._options.integersLength = options.integersLength;
-               this._options.precision = options.precision;
-               this._options.value = options.value;
             }
          });
 

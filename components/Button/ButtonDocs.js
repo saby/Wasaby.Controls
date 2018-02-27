@@ -4,7 +4,6 @@ define('SBIS3.CONTROLS/Button/ButtonDocs',
     function() {
     }
     /**
-     * @author Романов В.С.
      * @mixin SBIS3.CONTROLS/Button/ButtonDocs
      * @public
      * @css @box-shadow_Button Тень контейнера кнопки
