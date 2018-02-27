@@ -1,6 +1,6 @@
 verbose: false
 instrumentation:
-    root: ./Controls
+    root: ./components
     extensions:
         - .js
     default-excludes: true

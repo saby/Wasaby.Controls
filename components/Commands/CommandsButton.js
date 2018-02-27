@@ -36,7 +36,6 @@ define('SBIS3.CONTROLS/Commands/CommandsButton', [
          opts.pickerClassName += ' controls-CommandsButton__picker';
          opts.className += ' controls-IconButton_standard';
          opts._iconDisabledClass = 'icon-IconButton-disabled';
-         opts._type = 'CommandsButton';
          if (opts.pickerConfig) {
             opts.pickerConfig.locationStrategy = 'bodyBounds';
          }

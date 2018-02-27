@@ -17,21 +17,18 @@
 
 .controls-InputRender {
    box-sizing: border-box;
+   background-color: @background-color_InputRender;
    cursor: auto;
    line-height: normal;
    display: inline-block;
+   color: @color_InputRender;
    position: relative; //Для позициониования tagStyle
+   //цвет границы задаётся в зависимости от состояния
+   border-width: @border-width_InputRender;
+   border-style: solid;
    //Сбрасываем white-space в значение по умолчанию, чтобы прикладники не могли случайно перебить
    white-space: normal;
    max-width: 100%; //Чтобы в IE текстбокс не выходил за пределы родителя
-   border-style: solid;
-}
-
-.controls-Text-InputRender {
-   background-color: @background-color_InputRender;
-   //цвет границы задаётся в зависимости от состояния
-   border-width: @border-width_InputRender;
-   color: @color_InputRender;
 }
 
 .controls-InputRender__wrapper {
@@ -102,7 +99,7 @@
    .compatPlaceholder(@color_InputRender-placeholder);
    .inline-flexbox();
    .align-items(center);
-   padding-left: 1px; //Отступ в 1px нужен, чтобы плейсхолдер не наезжал на курсор
+   padding-left: 1px;
 }
 
 .controls-InputRender__placeholder_simple {
@@ -145,36 +142,36 @@
 }
 
 //Состояния
-.controls-Text-InputRender_state_default {
+.controls-InputRender_state_default {
    border-color: @border-color_InputRender;
 }
 
-.controls-Text-InputRender_state_default:hover {
+.controls-InputRender_state_default:hover {
    border-color: @border-color_InputRender_hover;
 }
 
-.controls-Text-InputRender_state_active {
+.controls-InputRender_state_active {
    border-color: @border-color_InputRender_active;
 }
 
-.controls-Text-InputRender_state_active:focus {
+.controls-InputRender_state_active:focus {
    text-overflow: clip;
 }
 
-.controls-Text-InputRender_state_disabled {
+.controls-InputRender_state_disabled {
    background-color: @background-color_InputRender_disabled;
    caret-color: transparent;
 }
 
-.controls-Text-InputRender_state_disabled_singleLine {
+.controls-InputRender_state_disabled_singleLine {
    border-color: @border-color_InputRender_disabled;
 }
 
-.controls-Text-InputRender_state_disabled_multiLine {
+.controls-InputRender_state_disabled_multiLine {
    border-color: transparent;
 }
 
-.controls-Text-InputRender_state_error {
+.controls-InputRender_state_error {
    background-color: @background-color_InputRender_error;
    border-color: @border-color_InputRender_error;
 }
@@ -224,16 +221,16 @@
 
    https://jsfiddle.net/ze4p2fsq/1/
  */
-.controls-Text-InputRender_paddingBoth {
+.controls-InputRender_paddingBoth {
    padding: @padding_InputRender;
 }
 
-.controls-Text-InputRender_paddingLeft {
+.controls-InputRender_paddingLeft {
    padding: @padding_InputRender_left;
 }
 
 //Style
-.controls-Text-InputRender_style_header {
+.controls-InputRender_style_header {
    font-size: @font-size_InputRender_style_header;
    font-weight: @font-weight_InputRender_style_header;
    color: @color_InputRender_style_header;

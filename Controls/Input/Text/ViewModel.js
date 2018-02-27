@@ -1,9 +1,9 @@
 define('Controls/Input/Text/ViewModel',
    [
-      'Controls/Input/resources/InputRender/BaseViewModel'
+      'Core/core-simpleExtend'
    ],
    function (
-      BaseViewModel
+      simpleExtend
    ) {
       'use strict';
       /**
@@ -36,7 +36,7 @@ define('Controls/Input/Text/ViewModel',
          }
       };
 
-      TextViewModel = BaseViewModel.extend({
+      TextViewModel = simpleExtend.extend({
             constructor: function (options) {
                this._options = options;
             },
@@ -46,7 +46,7 @@ define('Controls/Input/Text/ViewModel',
              * @param splitValue
              * @returns {{value: (*|String), position: (*|Integer)}}
              */
-            handleInput: function (splitValue) {
+            prepareData: function (splitValue) {
                var insert = splitValue.insert;
 
                if (this._options.constraint) {
@@ -57,18 +57,10 @@ define('Controls/Input/Text/ViewModel',
                   insert = _private.maxLength(insert, splitValue, this._options.maxLength);
                }
 
-               this._options.value = splitValue.before + insert + splitValue.after;
-
                return {
                   value: splitValue.before + insert + splitValue.after,
                   position: splitValue.before.length + insert.length
                };
-            },
-
-            updateOptions: function(options) {
-               this._options.constraint = options.constraint;
-               this._options.maxLength = options.maxLength;
-               this._options.value = options.value;
             }
          });
 
