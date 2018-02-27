@@ -18,7 +18,7 @@
  */
 
 .controls-InputArea {
-   width: 200px;
+   width: @width_InputArea;
 }
 
 .controls-InputArea__field {
@@ -26,6 +26,8 @@
    white-space: pre-wrap;
    word-wrap: break-word;
    line-height: @line-height_InputArea;
+   box-sizing: border-box;
+   padding-right: @padding-right_InputArea-field;
 }
 
 .controls-InputArea__realField {

@@ -2,8 +2,8 @@
    controls-{{ _options.inputType }}-InputRender
    controls-{{ _options.inputType }}-InputRender_style_{{ _options.style }}
    controls-{{ _options.inputType }}-InputRender_state_{{ _getInputState() }}
-   {{ !isEnabled() ? 'controls-' + _options.inputType + '-InputRender_state_disabled_' + (_options.multiline ? 'multiLine' : 'singleLine') }}_style_{{ _options.style }}
-   controls-InputRender_size_{{ _options.size ? _options.size : 'default_' + (_options.multiline ? 'multiLine' : 'singleLine') }}
+   {{ !isEnabled() ? 'controls-' + _options.inputType + '-InputRender_state_disabled_' + (_options.multiline ? 'multiLine' : 'singleLine') + '_style_' +  _options.style }}
+   controls-InputRender_size_{{ (_options.size ? _options.size : 'default') + (_options.multiline ? '_multiLine' : '_singleLine') }}
    controls-{{ _options.inputType }}-InputRender_padding{{ _options.sidePadding ? _options.sidePadding : 'Both' }}"
      title="{{tooltip}}">
    <div class="controls-InputRender__wrapper">
