@@ -262,6 +262,11 @@ body {
     box-sizing: border-box !important;
   }
 }
+.controls-ListView__touchMode {
+  .controls-ListView__ItemsToolbar-container {
+    padding: 0;
+  }
+}
 
 //!IMPORTANT лучше чем увеличение веса селектора через BODY тк возможно собирать тему под селектором
 .ws-window-titlebar {
@@ -462,4 +467,9 @@ body {
 // В presto крестик закрытия в информационных окнах имеют другие размеры.
 .controls-InformationPopup .controls-PopupMixin__closeButton_light {
   .icon-size(@icon-size_default_large);
+}
+// Размер не согласуется с размерами кнопок-иконок. необходимо только в тулбаре
+.controls-ToolBar .controls-IconButton {
+  width: @default-height;
+  height: @default-height;
 }
