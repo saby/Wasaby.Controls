@@ -1,4 +1,4 @@
-define('Controls/Input/Mask/InputProcessed',
+define('Controls/Input/Mask/InputProcessor',
    [
       'Controls/Input/Mask/Formatter'
    ],
@@ -26,7 +26,7 @@ define('Controls/Input/Mask/InputProcessed',
                });
             }
          },
-         InputProcessed = {
+         InputProcessor = {
             /**
              * Получить разбиение чистого значения.
              * @param splitValue разбиение исходного значения.
@@ -183,20 +183,20 @@ define('Controls/Input/Mask/InputProcessed',
                var
                   value = splitValue.before + splitValue.delete + splitValue.after,
                   clearData = Formatter.getClearData(maskData, value),
-                  clearSplitValue = InputProcessed.getClearSplitValue(splitValue, clearData), result;
+                  clearSplitValue = InputProcessor.getClearSplitValue(splitValue, clearData), result;
 
                switch(inputType) {
                   case 'insert':
-                     result = InputProcessed.insert(maskData, clearSplitValue, replacer);
+                     result = InputProcessor.insert(maskData, clearSplitValue, replacer);
                      break;
                   case 'delete':
-                     result = InputProcessed.delete(maskData, clearSplitValue, replacer);
+                     result = InputProcessor.delete(maskData, clearSplitValue, replacer);
                      break;
                   case 'deleteForward':
-                     result = InputProcessed.deleteForward(maskData, clearSplitValue, replacer);
+                     result = InputProcessor.deleteForward(maskData, clearSplitValue, replacer);
                      break;
                   case 'deleteBackward':
-                     result = InputProcessed.deleteBackward(maskData, clearSplitValue, replacer);
+                     result = InputProcessor.deleteBackward(maskData, clearSplitValue, replacer);
                      break;
                }
 
@@ -208,8 +208,8 @@ define('Controls/Input/Mask/InputProcessed',
             }
          };
 
-      InputProcessed._private = _private;
+      InputProcessor._private = _private;
 
-      return InputProcessed;
+      return InputProcessor;
    }
 );

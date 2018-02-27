@@ -1,10 +1,10 @@
 define('Controls/Input/Mask/ViewModel',
    [
       'Controls/Input/Mask/FormatBuilder',
-      'Controls/Input/Mask/InputProcessed',
+      'Controls/Input/Mask/InputProcessor',
       'Controls/Input/resources/InputRender/BaseViewModel'
    ],
-   function(FormatBuilder, InputProcessed, BaseViewModel) {
+   function(FormatBuilder, InputProcessor, BaseViewModel) {
 
       'use strict';
 
@@ -39,7 +39,7 @@ define('Controls/Input/Mask/ViewModel',
           * @returns {{value: (String), position: (Integer)}}
           */
          handleInput: function(splitValue, inputType) {
-            var result = InputProcessed.input(splitValue, inputType, this._replacer, this._maskData);
+            var result = InputProcessor.input(splitValue, inputType, this._replacer, this._maskData);
 
             this._options.value = result.value;
 
