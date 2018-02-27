@@ -35,11 +35,11 @@ define('Controls/Input/resources/InputRender/BaseViewModel',
          },
 
          getDisplayValue: function () {
-            return this._options.value;
+            return this.getValue();
          },
 
          getValue: function () {
-            return this._options.value;
+            return this._options.value || '';
          },
 
          updateOptions: function(options) {
