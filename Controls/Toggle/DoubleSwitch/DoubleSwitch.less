@@ -85,6 +85,10 @@
    .controls-DoubleSwitch_enabled:hover {
       .controls-DoubleSwitch__marker { //Здесь вложенность не избежать, т.к. по ховеру на контейнере должен меняться размер кнопки
          border-width: @border-width_Switch-marker_hover;
+         &:before {
+            top: @border-width_Switch-marker - @border-width_Switch-marker_hover;
+            left: @border-width_Switch-marker - @border-width_Switch-marker_hover;
+         }
       }
    }
 
