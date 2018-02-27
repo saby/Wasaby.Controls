@@ -1,8 +1,9 @@
 define('Controls/Popup/Opener/BaseStrategy',
    [
-      'Core/core-extend'
+      'Core/core-extend',
+      'Core/Deferred'
    ],
-   function (CoreExtend) {
+   function (CoreExtend, cDeferred) {
       /**
        * Базовая стратегия
        * @category Popup
@@ -38,7 +39,7 @@ define('Controls/Popup/Opener/BaseStrategy',
           * @param element
           */
          elementDestroyed: function (element) {
-
+            return new cDeferred().callback();
          },
 
          /**

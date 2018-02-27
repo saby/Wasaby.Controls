@@ -40,7 +40,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/MonthView', [
        * Перекрываем базовый функционал. Нам не надо что бы сбрасывалось выделение, когда пользователь убирает мышку с контрола.
        * @private
        */
-      _onRangeControlMouseLeave: function () {
+      _onRangeControlMouseLeave: function (event, force) {
+         if (force) {
+            MonthView.superclass._onRangeControlMouseLeave.call(this);
+         }
       },
 
       startSelection: function (start, end, silent) {

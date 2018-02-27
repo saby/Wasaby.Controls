@@ -1,0 +1,16 @@
+<div style="display: flex;margin: 50px;">
+
+   <style>
+      .controls-ConfirmationDemo__button {
+         padding: 8px;
+         background: #00c000;
+         margin: 4px;
+         cursor:pointer;
+      }
+   </style>
+
+   <Controls:Popup:Opener:Confirmation name="popupOpener"/>
+
+   <div on:click="_open('ok')" class="controls-ConfirmationDemo__button">Message</div>
+   <div on:click="_open('yesnocancel')" class="controls-ConfirmationDemo__button">Confirm</div>
+</div>

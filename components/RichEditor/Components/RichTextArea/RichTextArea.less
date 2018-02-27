@@ -41,9 +41,6 @@
             margin-left: 0;
             margin-right: 16px;
          }
-         & > :last-child {
-            margin-bottom: 0;
-         }
          .mce-visual-caret {
             margin: 0px;
          }
@@ -197,6 +194,12 @@
 .controls-RichEditor__insertLinkButton.controls-Button {
    font-weight: normal;
    position: absolute;
+}
+
+// При выделении может появится элемент с классом "mce-offscreen-selection", отступ же нужно сбрасывать именно у последнего параграфа
+// https://online.sbis.ru/opendoc.html?guid=0f043ceb-354f-4c38-9cf6-8bc6cdbfb402
+.controls-RichEditor .controls-RichEditor__editorFrame.ws-basic-style > p:last-of-type {
+   margin-bottom: 0;
 }
 
 .controls-RichEditor__insertLinkHrefLabel{

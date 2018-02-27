@@ -83,8 +83,9 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
                      return item;
                   };
 
-               containerClasses.push('controls-TextBox_state_' + (cfg.enabled ? 'default' : 'disabled'));
-               !cfg.enabled && containerClasses.push('controls-TextBox_state_disabled_' + (cfg._isMultiline ? 'multiLine' : 'singleLine'));
+               containerClasses.push('controls-' + cfg.inputType + '-InputRender');
+               containerClasses.push('controls-' + cfg.inputType + '-TextBox_state_' + (cfg.enabled ? 'default' : 'disabled'));
+               !cfg.enabled && containerClasses.push('controls-' + cfg.inputType + '-TextBox_state_disabled_' + (cfg._isMultiline ? 'multiLine' : 'singleLine'));
                containerClasses.push('controls-TextBox_size_' + (cfg.size ? cfg.size : 'default') + (cfg._isMultiline ? '_multiLine' : '_singleLine'));
                containerClasses.push('controls-TextBox_text-align_' + cfg.textAlign);
                containerClasses.push(cfg._paddingClass);
@@ -102,7 +103,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
                   fieldWrapper: fieldWrapperClasses.join(' ')
                }
             },
-            _paddingClass: ' controls-InputRender_paddingBoth controls-TextBox_paddingBoth',
+            _paddingClass: ' controls-Text-InputRender_paddingBoth controls-TextBox_paddingBoth',
             /**
              * @cfg {String} Устанавливает текстовое значение в поле ввода.
              * @remark
@@ -191,7 +192,8 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
              */
             focusOnActivatedOnMobiles: false,
             textAlign: 'left',
-            style: ''
+            style: 'default',
+            inputType: 'Text'
          }
       },
 
@@ -282,7 +284,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
          // т.к. поле ввода находится внутри контейнера, то клик по внешнему контейнеру не ставит курсор в поле
          // поэтому принудительно проставляем фокус в активное поле
          // если фокус уже на поле ввода, то повторно проставлять не нужно
-         if (this.isEnabled() && elementToFocus[0] !== document.activeElement && event.target === this.getContainer()[0]) {
+         if (this.isEnabled() && elementToFocus[0] !== document.activeElement) {
             elementToFocus.focus();
          }
          TextBoxBase.superclass._onClickHandler.call(this, event);
@@ -338,7 +340,7 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
       _toggleState: function() {
          var container = this._getStateToggleContainer()[0];
          container.className = container.className.replace(/(^|\s)controls-TextBox_state_\S+/gi, '');
-         container.className = container.className.replace(/(^|\s)controls-InputRender_state_\S+/gi, '');
+         container.className = container.className.replace(new RegExp('(^|\\\s)controls-' + this._options.inputType + '-InputRender_state_\\\S+', 'gi'), '');
          this._getStateToggleContainer().addClass(this._getToggleState());
       },
       _getToggleState: function() {
@@ -349,9 +351,9 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
          return 'controls-TextBox_state_' +
             (marked ? 'error' : !enabled ? 'disabled' +
             (this._options._isMultiline ? ' controls-TextBox_state_disabled_multiLine' : ' controls-TextBox_state_disabled_singleLine') : active ? 'active' : 'default') +
-            ' controls-InputRender_state_' +
+            ' controls-' + this._options.inputType + '-InputRender_state_' +
             (marked ? 'error' : !enabled ? 'disabled' +
-               (this._options._isMultiline ? ' controls-InputRender_state_disabled_multiLine' : ' controls-InputRender_state_disabled_singleLine') : active ? 'active' : 'default');
+               (this._options._isMultiline ? ' controls-' + this._options.inputType + '-InputRender_state_disabled_multiLine' : ' controls-' + this._options.inputType + '-InputRender_state_disabled_singleLine') : active ? 'active' : 'default');
       }
    });
 

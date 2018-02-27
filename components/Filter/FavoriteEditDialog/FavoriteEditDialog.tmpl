@@ -1,22 +1,37 @@
 <div class="controls-FavoriteEditDialog">
     <div class="ws-window-titlebar-custom controls-FavoriteEditDialog__title">
-        <span class="ws-float-area-title">Добавить в избранное</span>
-        <SBIS3.CONTROLS:Button className="controls-FavoriteEditDialog__addButton" caption="Сохранить" primary="{{ true }}" command="update">
-            <ws:commandArgs>
-                <ws:Array>
-                    <ws:Object closePanelAfterSubmit="{{ true }}"/>
-                </ws:Array>
-            </ws:commandArgs>
-        </SBIS3.CONTROLS:Button>
+        <span class="ws-float-area-title">{[Параметры]}</span>
+        <div class="controls-FavoriteEditDialog__titleButtons">
+            <SBIS3.CONTROLS:DropdownList
+                    multiselect="{{false}}"
+                    idProperty="id"
+                    displayProperty="title">
+                <ws:itemContentTpl>
+                    <ws:String>tmpl!SBIS3.CONTROLS/Filter/FavoriteEditDialog/itemTpl</ws:String>
+                </ws:itemContentTpl>
+                <ws:items>
+                    <ws:Array>
+                        <ws:Object id="{{ 0 }}" title="{[Для меня]}"/>
+                        <ws:Object id="{{ 1 }}" title="{[Для всех]}"/>
+                    </ws:Array>
+                </ws:items>
+                <ws:selectedKeys>
+                    <ws:Array>
+                        <ws:Object><ws:Number>{{'record/globalParams'|mutable:0}}</ws:Number></ws:Object>
+                    </ws:Array>
+                </ws:selectedKeys>
+            </SBIS3.CONTROLS:DropdownList>
+            <SBIS3.CONTROLS:Button className="controls-FavoriteEditDialog__addButton" caption="Сохранить" primary="{{ true }}" command="update">
+                <ws:commandArgs>
+                    <ws:Array>
+                        <ws:Object closePanelAfterSubmit="{{ true }}"/>
+                    </ws:Array>
+                </ws:commandArgs>
+            </SBIS3.CONTROLS:Button>
+        </div>
     </div>
     <SBIS3.CONTROLS:TextBox selectOnClick="{{ true }}" placeholder="{{ textValue }}" text="{{ 'record/editedTextValue'|mutable:'' }}" className="controls-FavoriteEditDialog__textValue-editor"/>
-    <SBIS3.CONTROLS:CheckBox
-            checked="{{ 'record/globalParams'|mutable:false }}"
-            caption="опубликовать для всех сотрудников"
-            cssClassName="controls-FavoriteEditDialog__editor"
-    />
     <ws:if data="{{_items.length}}">
-        <div class="gray-color">Укажите параметры, которые хотите сохранить:</div>
         <ws:for data="key, value in _items">
             <SBIS3.CONTROLS:CheckBox
                     checked="{{ ('record/toSaveFields/' + value.id)|mutable:true }}"
