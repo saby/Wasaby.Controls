@@ -173,7 +173,9 @@ define('Controls/Input/resources/InputRender/InputRender',
       InputRender.getDefaultOptions = function() {
          return {
             value: '',
-            selectOnClick: false
+            selectOnClick: false,
+            style: 'default',
+            inputType: 'Text'
          };
       };
 

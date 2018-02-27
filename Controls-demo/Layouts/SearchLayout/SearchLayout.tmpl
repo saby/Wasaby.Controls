@@ -1,0 +1,43 @@
+<ws:Controls.Layout.Filter attr:class="controls-demo__FilterLayout">
+    <ws:content>
+        <div>
+            <h1>FilterLayout</h1>
+            <ws:Controls.Layout.Search
+                    attr:class="controls-demo__SearchLayout"
+                    searchParam="title">
+                <ws:content>
+                    <div class="controls-demo__SearchLayout_content">
+                        <h1>SearchLayout</h1>
+                        <div class="controls-demo__Layouts_content">
+                            <h1>Content</h1>
+                            <div class="controls-demo__Layouts_filterComponents">
+                                <ws:Controls.Input.Search bind:value="_searchValue"/>
+                                <ws:Controls-demo.Layouts.LayoutFilterComponent/>
+                            </div>
+                            <div class="controls-demo__LayoutInner">
+                                <h1>ListLayout</h1>
+                                <ws:Controls.Layout.List source="{{_dataSource}}" searchParam="title">
+                                    <ws:content>
+                                        <div>
+                                            <ws:Controls.List idProperty="id" name="list">
+                                                <ws:emptyTemplate>
+                                                    Не найдено
+                                                </ws:emptyTemplate>
+                                            </ws:Controls.List>
+                                        </div>
+                                    </ws:content>
+                                    <ws:navigation source="page" view="page">
+                                        <ws:sourceConfig pageSize="{{20}}" page="{{0}}" mode="totalCount"/>
+                                    </ws:navigation>
+                                </ws:Controls.Layout.List>
+                            </div>
+                        </div>
+                    </div>
+                </ws:content>
+                <ws:searchDelay>
+                    <ws:Number>500</ws:Number>
+                </ws:searchDelay>
+            </ws:Controls.Layout.Search>
+        </div>
+    </ws:content>
+</ws:Controls.Layout.Filter>
