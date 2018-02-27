@@ -1,12 +1,13 @@
 <div style="margin: 32px; display: flex; flex-direction: column;">
     <div>
         <Controls:Label name="myLabel1" caption="Пример"/>
-        <Controls:Input:Text bind:value="_text1"
-                       tagStyle="{{_tagStyle}}"
+        <Controls:Input:Number bind:value="_text1"
                        integersLength="{{_integersLength}}"
+                       tagStyle="{{_tagStyle}}"
                        precision="{{_precision}}"
-                       onlyPositive="{{onlyPositive}}"
-                       enabled="_enabled"/>
+                       onlyPositive="{{_onlyPositive}}"
+                       enabled="{{_enabled}}"/>
+
     </div>
     <div>
         <h3>Опции</h3>
