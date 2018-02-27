@@ -3,11 +3,11 @@ define('Controls/Input/Search',
       'Core/Control',
       'WS.Data/Type/descriptor',
       'tmpl!Controls/Input/Search/Search',
-      'Controls/Input/resources/InputRender/SimpleViewModel',
+      'Controls/Input/resources/InputRender/BaseViewModel',
       'css!Controls/Input/Search/Search'
    ],
 
-   function (Control, types, template, SimpleViewModel) {
+   function (Control, types, template, BaseViewModel) {
       'use strict';
 
       /**
@@ -38,7 +38,7 @@ define('Controls/Input/Search',
 
          constructor: function (options) {
             Search.superclass.constructor.apply(this, arguments);
-            this._simpleViewModel = new SimpleViewModel();
+            this._baseViewModel = new BaseViewModel();
          },
 
          _notifyOnValueChanged: function(value) {
