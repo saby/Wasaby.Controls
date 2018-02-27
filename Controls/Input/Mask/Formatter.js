@@ -1,8 +1,7 @@
-define('Controls/Input/resources/MaskHelper',
+define('Controls/Input/Mask/Formatter',
    [
-      'Controls/Input/resources/MaskDataHelper'
    ],
-   function(MaskDataHelper) {
+   function() {
 
       'use strict';
 
@@ -25,7 +24,7 @@ define('Controls/Input/resources/MaskHelper',
          }
       };
 
-      var MaskHelper = {
+      var Formatter = {
          /**
           * Получить чистые данные.
           * Чистыми данными будем называть: значение без разделителей(чистое) и массив для сопоставления
@@ -75,7 +74,7 @@ define('Controls/Input/resources/MaskHelper',
           *    }|undefined
           * }
           */
-         getData: function(maskData, clearData) {
+         getFormatterData: function(maskData, clearData) {
             var
                value = '',
                pairs = {},
@@ -151,8 +150,8 @@ define('Controls/Input/resources/MaskHelper',
          }
       };
 
-      MaskHelper._private = _private;
+      Formatter._private = _private;
 
-      return MaskHelper;
+      return Formatter;
    }
 );

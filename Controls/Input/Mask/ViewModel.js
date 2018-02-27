@@ -1,10 +1,10 @@
 define('Controls/Input/Mask/ViewModel',
    [
-      'Core/core-simpleExtend',
-      'Controls/Input/resources/MaskDataHelper',
-      'Controls/Input/resources/MaskInputHelper'
+      'Controls/Input/Mask/FormatBuilder',
+      'Controls/Input/Mask/InputProcessed',
+      'Controls/Input/resources/InputRender/BaseViewModel'
    ],
-   function(simpleExtend, MaskDataHelper, MaskInputHelper) {
+   function(FormatBuilder, InputProcessed, BaseViewModel) {
 
       'use strict';
 
@@ -13,10 +13,13 @@ define('Controls/Input/Mask/ViewModel',
        * @private
        * @author Журавлев Максим Сергеевич
        */
-      var ViewModel = simpleExtend.extend({
+      var ViewModel = BaseViewModel.extend({
          constructor: function(options) {
+            this._options = {
+               value: options.value
+            };
             this._replacer = options.replacer;
-            this._maskData = MaskDataHelper.getMaskData(options.mask, options.formatMaskChars, options.replacer);
+            this._maskData = FormatBuilder.getFormat(options.mask, options.formatMaskChars, options.replacer);
          },
 
          /**
@@ -24,8 +27,9 @@ define('Controls/Input/Mask/ViewModel',
           * @param newOptions Новые опции(replacer, mask).
           */
          updateOptions: function(newOptions) {
+            this._options.value = newOptions.value;
             this._replacer = newOptions.replacer;
-            this._maskData = MaskDataHelper.getMaskData(newOptions.mask, newOptions.formatMaskChars, newOptions.replacer);
+            this._maskData = FormatBuilder.getFormat(newOptions.mask, newOptions.formatMaskChars, newOptions.replacer);
          },
 
          /**
@@ -34,8 +38,12 @@ define('Controls/Input/Mask/ViewModel',
           * @param inputType тип ввода.
           * @returns {{value: (String), position: (Integer)}}
           */
-         prepareData: function(splitValue, inputType) {
-            return MaskInputHelper.input(splitValue, inputType, this._replacer, this._maskData);
+         handleInput: function(splitValue, inputType) {
+            var result = InputProcessed.input(splitValue, inputType, this._replacer, this._maskData);
+
+            this._options.value = result.value;
+
+            return result;
          }
       });
 

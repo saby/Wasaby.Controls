@@ -1,4 +1,4 @@
-define('Controls/Input/resources/MaskDataHelper',
+define('Controls/Input/Mask/FormatBuilder',
    [],
    function() {
 
@@ -135,7 +135,7 @@ define('Controls/Input/resources/MaskDataHelper',
              * @param getReplacingKey
              * @return {{searchingGroups: String регулрное выражение для поиска групп, delimiterGroups: Object.<String> значение групп разделителей}}
              */
-            getMaskData: function(mask, searchingGroupChar, getReplacingKey) {
+            getFormat: function(mask, searchingGroupChar, getReplacingKey) {
                var
                   keysGroup = '',
                   searchingGroups = '',
@@ -219,7 +219,7 @@ define('Controls/Input/resources/MaskDataHelper',
                }
             }
          },
-         MaskDataHelper = {
+         FormatBuilder = {
             pairingDelimiters: '(){}[]⟨⟩<>\'\'""«»„“‘’””',
             /**
              * Получить данные о маске.
@@ -228,8 +228,8 @@ define('Controls/Input/resources/MaskDataHelper',
              * @param {String} replacer заменитель {@link Controls/Input/Mask#replacer}.
              * @return {{searchingGroups: String регулрное выражение для поиска групп, delimiterGroups: Object.<String> значение групп разделителей}}
              */
-            getMaskData: function(mask, formatMaskChars, replacer) {
-               return _private.getMaskData(
+            getFormat: function(mask, formatMaskChars, replacer) {
+               return _private.getFormat(
                   mask,
                   _private.getRegExpSearchingMaskChar(
                      _private.getMaskKeysString(formatMaskChars),
@@ -241,8 +241,8 @@ define('Controls/Input/resources/MaskDataHelper',
             }
          };
 
-      MaskDataHelper._private = _private;
+      FormatBuilder._private = _private;
 
-      return MaskDataHelper;
+      return FormatBuilder;
    }
 );

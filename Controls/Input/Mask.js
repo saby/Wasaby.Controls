@@ -35,10 +35,9 @@ define('Controls/Input/Mask',
        *    <li>l - строчная буква.</li>
        *    <li>x - буква или цифра.</li>
        * </ol>
-       * разделителей, кванторов +, *, ?, {n[, m]} и специальных конструкций |, (?:...).
-       * Перед квантором и специальной конструкцией нужно поставить \.
-       * Исключением является (?:...). В таком случае нужно писать \(?:...\).
-       * Кванторы и специальные конструкции должны применяться к ключам.
+       * разделителей, кванторов +, *, ?, {n[, m]}.
+       * Перед квантором нужно поставить \.
+       * Кванторы должны применяться к ключам.
        * Задается в формате схожем с регулярным выражением.
        * В случае регулярного выражения отличие состоит в том, что в качестве обычных символов используются ключи маски и разделители.
        * @example
@@ -67,6 +66,7 @@ define('Controls/Input/Mask',
             Mask.superclass.constructor.call(this, options);
 
             this._viewModel = new ViewModel({
+               value: options.value,
                mask: options.mask,
                replacer: options.replacer,
                formatMaskChars: options.formatMaskChars
@@ -75,11 +75,13 @@ define('Controls/Input/Mask',
 
          _beforeUpdate: function(newOptions) {
             if (!(
+               newOptions.value === this._options.value &&
                newOptions.mask === this._options.mask &&
                newOptions.replacer === this._options.replacer &&
                isEqual(newOptions.formatMaskChars, this._options.formatMaskChars))
             ) {
                this._viewModel.updateOptions({
+                  value: newOptions.value,
                   mask: newOptions.mask,
                   replacer: newOptions.replacer,
                   formatMaskChars: newOptions.formatMaskChars

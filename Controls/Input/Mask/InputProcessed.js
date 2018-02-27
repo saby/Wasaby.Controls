@@ -1,8 +1,8 @@
-define('Controls/Input/resources/MaskInputHelper',
+define('Controls/Input/Mask/InputProcessed',
    [
-      'Controls/Input/resources/MaskHelper'
+      'Controls/Input/Mask/Formatter'
    ],
-   function(MaskHelper) {
+   function(Formatter) {
 
       'use strict';
 
@@ -20,13 +20,13 @@ define('Controls/Input/resources/MaskInputHelper',
              * }
              */
             getDataBySplitValue: function(maskData, splitValue) {
-               return MaskHelper.getData(maskData, {
+               return Formatter.getFormatterData(maskData, {
                   value: splitValue.before + splitValue.after,
                   position: splitValue.before.length
                });
             }
          },
-         MaskInputHelper = {
+         InputProcessed = {
             /**
              * Получить разбиение чистого значения.
              * @param splitValue разбиение исходного значения.
@@ -182,21 +182,21 @@ define('Controls/Input/resources/MaskInputHelper',
             input: function(splitValue, inputType, replacer, maskData) {
                var
                   value = splitValue.before + splitValue.delete + splitValue.after,
-                  clearData = MaskHelper.getClearData(maskData, value),
-                  clearSplitValue = MaskInputHelper.getClearSplitValue(splitValue, clearData), result;
+                  clearData = Formatter.getClearData(maskData, value),
+                  clearSplitValue = InputProcessed.getClearSplitValue(splitValue, clearData), result;
 
                switch(inputType) {
                   case 'insert':
-                     result = MaskInputHelper.insert(maskData, clearSplitValue, replacer);
+                     result = InputProcessed.insert(maskData, clearSplitValue, replacer);
                      break;
                   case 'delete':
-                     result = MaskInputHelper.delete(maskData, clearSplitValue, replacer);
+                     result = InputProcessed.delete(maskData, clearSplitValue, replacer);
                      break;
                   case 'deleteForward':
-                     result = MaskInputHelper.deleteForward(maskData, clearSplitValue, replacer);
+                     result = InputProcessed.deleteForward(maskData, clearSplitValue, replacer);
                      break;
                   case 'deleteBackward':
-                     result = MaskInputHelper.deleteBackward(maskData, clearSplitValue, replacer);
+                     result = InputProcessed.deleteBackward(maskData, clearSplitValue, replacer);
                      break;
                }
 
@@ -208,8 +208,8 @@ define('Controls/Input/resources/MaskInputHelper',
             }
          };
 
-      MaskInputHelper._private = _private;
+      InputProcessed._private = _private;
 
-      return MaskInputHelper;
+      return InputProcessed;
    }
 );

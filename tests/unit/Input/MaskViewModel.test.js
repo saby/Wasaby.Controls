@@ -26,9 +26,9 @@ define(
                assert.deepEqual(result, {
                   replacer: options.replacer,
                   maskData: {
-                     "searchingGroups": "((?:[0-9]| ))((?:[0-9]| ))(\\.)?((?:[0-9]| ))((?:[0-9]| ))",
+                     "searchingGroups": "((?:[0-9]| )(?:[0-9]| ))(\\.)?((?:[0-9]| )(?:[0-9]| ))",
                      "delimiterGroups": {
-                        "2": {
+                        "1": {
                            "value": ".",
                            "type": "single"
                         }

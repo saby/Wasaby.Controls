@@ -2,11 +2,11 @@ define('Controls-demo/Input/Mask/Mask',
    [
       'Core/Control',
       'tmpl!Controls-demo/Input/Mask/Mask',
-      'Controls/Input/resources/MaskHelper',
+      'Controls/Input/Mask/Formatter',
       'Controls/Input/Mask',
       'css!Controls-demo/Input/Mask/Mask'
    ],
-   function(Control, template, MaskHelper) {
+   function(Control, template, Formatter) {
 
       'use strict';
 
@@ -36,7 +36,7 @@ define('Controls-demo/Input/Mask/Mask',
          },
 
          _afterMount: function() {
-            this._getClearData = MaskHelper.getClearData;
+            this._getClearData = Formatter.getClearData;
             this._forceUpdate();
          },
 
