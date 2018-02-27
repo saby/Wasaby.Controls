@@ -70,6 +70,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
       _isAnimationProcessing: false,
       _scrollToElement: null,
+      _isMouseEnterEventActive: true,
 
       $constructor: function () {
          this._publish('onMonthActivated');
@@ -81,6 +82,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
 
          this._onMonthViewRageChanged = this._onMonthViewRageChanged.bind(this);
          this._onMonthViewBeforeSelectionStarted = this._onMonthViewBeforeSelectionStarted.bind(this);
+         this._onMonthViewSelectionStarted = this._onMonthViewSelectionStarted.bind(this);
          this._onMonthViewSelectingRangeEndDateChange = this._onMonthViewSelectingRangeEndDateChange.bind(this);
          this._onMonthViewCaptionActivated = this._onMonthViewCaptionActivated.bind(this);
          this._onSelectionEnded = this._onSelectionEnded.bind(this);
@@ -244,8 +246,23 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
 
       _onMonthTitleClick: function (event) {
-         var date = this._getDateByMonthTitleEvent(event);
-         this.setRange(date, DateUtils.getEndOfMonth(date));
+         var date = this._getDateByMonthTitleEvent(event),
+            tmpStart = this.getStartValue(),
+            start, end;
+         if (this.isSelectionProcessing()) {
+            if (tmpStart > date) {
+               start = date;
+               end = tmpStart;
+            } else {
+               start = tmpStart;
+               end = new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1);
+            }
+            this.setRange(date, DateUtils.getEndOfMonth(date));
+         } else {
+            start = date;
+            end = DateUtils.getEndOfMonth(date);
+         }
+         this.setRange(start, end);
          this._notify('onSelectionEnded');
       },
       _onMonthTitleMouseEnter: function (event) {
@@ -268,7 +285,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
 
       _onDayMouseEnter: function (event) {
-         this._notify('onDayMouseEnter', Date.fromSQL($(event.currentTarget).data('date')));
+         if (this._isMouseEnterEventActive) {
+            this._notify('onDayMouseEnter', Date.fromSQL($(event.currentTarget).data('date')));
+         }
+         this._isMouseEnterEventActive = true;
       },
 
       _onNextYearClick: function (event) {
@@ -282,6 +302,15 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
 
       setMonth: function (month) {
+         // Не генерируем событие onDayMouseEnter сразу же после после прокрутки. Это событие стреляет
+         // по ховеру, а ховер срабатывает сразу после прорутки. Получается что если мы вводим
+         // во второе поле воле воода дату и этот ввод приводит к прокручиванию списка месяцев,
+         // срабатывает onDayMouseEnter и фокус переходит в первое поле.
+         this._isMouseEnterEventActive = false;
+         setTimeout(function () {
+            this._isMouseEnterEventActive = true;
+         }.bind(this), 200);
+
          var oldMonth = this._options.month,
             changed = this._setMonth(month);
 
@@ -333,6 +362,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
             control.subscribe('onRangeChange', self._onMonthViewRageChanged);
             control.unsubscribe('onBeforeSelectionStarted', self._onMonthViewBeforeSelectionStarted);
             control.subscribe('onBeforeSelectionStarted', self._onMonthViewBeforeSelectionStarted);
+            control.unsubscribe('onSelectionStarted', self._onMonthViewSelectionStarted);
+            control.subscribe('onSelectionStarted', self._onMonthViewSelectionStarted);
             control.unsubscribe('onSelectingRangeEndDateChange', self._onMonthViewSelectingRangeEndDateChange);
             control.subscribe('onSelectingRangeEndDateChange', self._onMonthViewSelectingRangeEndDateChange);
          });
@@ -439,6 +470,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
          // this._selectionType = e.getTarget()._getSelectionType();
          this._selectionRangeEndItem = end;
          this._notify('onDayMouseEnter', start);
+      },
+
+      _onMonthViewSelectionStarted: function (event) {
+         this._notify('onSelectionStarted');
       },
 
       // _updateInnerComponents: function (start, end) {

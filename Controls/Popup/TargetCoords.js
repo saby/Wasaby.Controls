@@ -31,7 +31,9 @@ define('Controls/Popup/TargetCoords',
                left: Math.round(left + fullLeftOffset),
                right: Math.round(right + fullLeftOffset),
                width: box.width,
-               height: box.height
+               height: box.height,
+               topScroll: fullTopOffset,
+               leftScroll: fullLeftOffset
             };
          }
       };

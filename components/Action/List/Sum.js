@@ -43,6 +43,9 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
          * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
          * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
          */
+        //Множитель необходим для суммирования дробных чисел, подробнее о проблеме тут https://habrahabr.ru/post/159313/
+        var FLOAT_MULTIPLIER = 10;
+
         var Sum = ActionBase.extend([ListMixin, DialogMixin], /** @lends SBIS3.CONTROLS/Action/List/Sum.prototype */{
             $protected: {
                 _options: {
@@ -142,7 +145,7 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
                        //из-за того, что могут выделить 1000 записей и нам эти 1000 записей придётся отправить на бл.
                        //1000 записей весят примерно 8 мегабайт. Получается не рационально перегонять 8 мб ради лёгкой операции,ъ
                        //которая на клиенте выполняется меньше секунды.
-                       result = this._sumByRecordSet(selectedItems);
+                       result = this._sumByRecordSet(selectedItems, object.getItems().getFormat(), object._options.nodeProperty);
                     } else {
                        result = this._sumByFilter(this._getFilterForSum());
                     }
@@ -175,32 +178,29 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
                });
             },
 
-            _sumByRecordSet: function(items) {
+            _sumByRecordSet: function(items, format, nodeProperty) {
                 var
                     i,
                     itemsCount = 0,
                     resultFields = {},
                     fields = Object.keys(this._options.fields),
-                    linkedObject = this.getLinkedObject(),
-                    format = linkedObject.getItems().getFormat(),
                     resultRecord = new Model({
                         adapter: 'adapter.sbis'
-                    }),
-                    nodeProperty = cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS/Mixins/TreeMixin') ? linkedObject.getNodeProperty() : undefined;
+                    });
                 for (i = 0; i < fields.length; i++) {
                     resultFields[fields[i]] = 0;
                 }
                 items.each(function(model) {
                     if (this._needToSum(model, nodeProperty)) {
                        for (i = 0; i < fields.length; i++) {
-                          resultFields[fields[i]] += model.get(fields[i]) || 0;
+                          resultFields[fields[i]] += model.get(fields[i]) * FLOAT_MULTIPLIER || 0;
                        }
                        itemsCount++;
                     }
                 }, this);
                 resultRecord.addField({name: rk('Число записей'), type: 'integer'}, 0, itemsCount);
                 for (i = 0; i < fields.length; i++) {
-                    resultRecord.addField(format.at(format.getFieldIndex(fields[i])), i + 1, resultFields[fields[i]]);
+                    resultRecord.addField(format.at(format.getFieldIndex(fields[i])), i + 1, resultFields[fields[i]] / FLOAT_MULTIPLIER);
                 }
                 return Deferred.success(resultRecord);
             },
