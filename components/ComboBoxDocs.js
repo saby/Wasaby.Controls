@@ -20,7 +20,7 @@ define('SBIS3.CONTROLS/ComboBoxDocs',
        * @css @border-color_ComboBox-picker Цвет границы выпадающего списка.
        * @css @box-shadow_ComboBox_picker Тень у выпадающего списка.
        * @public
-       * @author Зайцев Александр Сергеевич
+       * @author Зайцев А.С.
        */
    }
 );

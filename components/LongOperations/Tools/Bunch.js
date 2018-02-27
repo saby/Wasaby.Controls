@@ -10,13 +10,11 @@ define('SBIS3.CONTROLS/LongOperations/Tools/Bunch',
       /**
        * Класс для хранения значений по объектным ключам. Обеспечивает манипуляции несколькими значениями по критериям, а также двойной доступ к
        * хранящимся значениям - по объектному клюбчу и по идентификатору. Объектные ключи всегда используются не по ссылке, а по значению
+       *
        * @class SBIS3.CONTROLS/LongOperations/Tools/Bunch
        * @extends Core/core-extend
-       *
        * @author Спирин В.А.
-       *
        * @public
-       * @type {SBIS3.CONTROLS/LongOperations/Tools/Bunch}
        */
       var LongOperationsBunch = CoreExtend.extend(/** @lends SBIS3.CONTROLS/LongOperations/Tools/Bunch.prototype */{
          _moduleName: 'SBIS3.CONTROLS/LongOperations/Tools/Bunch',

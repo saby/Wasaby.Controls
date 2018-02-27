@@ -88,21 +88,21 @@ define(
             selection.unselect([2]);
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, []);
-            //assert.deepEqual(sel.excluded, []);
+            assert.deepEqual(sel.excluded, []);
          });
-         it('remove leaf first lvl', function () {
+         it('remove folder first lvl', function () {
             selection.select([1]);
             selection.unselect([1]);
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, []);
-            //assert.deepEqual(sel.excluded, []);
+            assert.deepEqual(sel.excluded, []);
          });
          it('remove leaf second lvl', function () {
             selection.select([11]);
             selection.unselect([11]);
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, []);
-            //assert.deepEqual(sel.excluded, []);
+            assert.deepEqual(sel.excluded, []);
          });
          it('add folder and remove leaf', function () {
             selection.select([1]);

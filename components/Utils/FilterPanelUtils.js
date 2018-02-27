@@ -115,6 +115,7 @@ define('SBIS3.CONTROLS/Utils/FilterPanelUtils',
             verticalAlign: {
                side: 'top'
             },
+            handlers: {},
             closeButton: true,
             locationStrategy: detection.isMobilePlatform ? 'dontMove' : null,
             closeByExternalClick: true,

@@ -107,7 +107,7 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
       cursor: pointer; //??
    }
    &.controls-Checked__checked .controls-Switcher__btn:before {
-      background: @switcher-disabled-color;
+      background: @switcher-disabled-color_checked;
    }
    &.controls-Checked__checked .controls-Switcher__line {
       .controls-Switcher__line_disabled-checked();
@@ -117,6 +117,11 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
    }
    .controls-Switcher__btn {
       border-color: @switcher-disabled-color;
+   }
+   &.controls-Checked__checked {
+      .controls-Switcher__btn {
+         border-color: @switcher-disabled-color_checked;
+      }
    }
 }
 

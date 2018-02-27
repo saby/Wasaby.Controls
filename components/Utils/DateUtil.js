@@ -1,9 +1,7 @@
 /**
  * Created by is.protasov on 06.04.2015.
  */
-define('SBIS3.CONTROLS/Utils/DateUtil',[
-   "Core/constants"
-], function( constants) {
+define('SBIS3.CONTROLS/Utils/DateUtil',[], function() {
    'use strict';
    /**
     * @class SBIS3.CONTROLS/Utils/DateUtil
@@ -15,20 +13,8 @@ define('SBIS3.CONTROLS/Utils/DateUtil',[
         * @returns {Core/Date}
         */
       dateFromIsoString: function (isoDate) {
-         if (
-            // ie не поддерживает миллисекунды '2016-07-31 22:10:01.123+03'
-            constants.browser.isIE
-            // не поддерживает даты с часовым пояслм вида '2016-07-31 22:10:01+03'
-            || constants.browser.firefox
-            // не поддерживает даты с часовым поясом и разделитель в виде пробела '2016-07-31 22:10:01+03'
-            || constants.browser.safari
-            // на ios все браузеры работают через Apple UIWebView и ведут себя так же как safari
-            || constants.browser.isMobileIOS
-         ) {
-            return this._isoStringToDate(isoDate); //IE8 only
-         } else {
-            return new Date(isoDate);              //don't work in IE8
-         }
+         // Ни один браузер не поддерживает даты в конструкторе Date в iso8601 только со временем без года, месяца и даты
+         return this._isoStringToDate(isoDate);
       },
       /**
        * Получение строки из даты в ISO-формате.
@@ -77,8 +63,9 @@ define('SBIS3.CONTROLS/Utils/DateUtil',[
        * @see date
        */
       _isoStringToDate: function (isoDate) {
-         //              1 YYYY     2 MM       3 DD           4 HH    5 mm       6 ss        7 msec        8 Z 9 ±    10 tzHH    11 tzmm
-         var dateRE = /^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?(?:[T ](\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{3}))?)?(?:(Z)|([+\-])(\d{2})(?::(\d{2}))?)?)?$/,
+         //              1 YYYY        2 MM       3 DD                 4 HH    5 mm       6 ss        7 msec       8 Z   9 ±   10 tzHH    11 tzmm
+         var dateRE = /^(?:(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?)?(?:[T ]?(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{3}))?)?(?:(Z)|([+\-])(\d{2})(?::(\d{2}))?)?)?$/,
+
             nums = isoDate.match(dateRE),
             minutesOffset = 0,
             numericKeys = [1, 4, 5, 6, 7, 10, 11];

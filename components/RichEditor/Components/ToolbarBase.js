@@ -121,12 +121,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
 
          _formatChangeHandler : function() {},
 
-         _blockFocusEvents: function(event) {
-            var eventsChannel = EventBus.channel('WindowChangeChannel');
-            event.preventDefault();
-            event.stopPropagation();
+         _blockFocusEvents: function (event) {
+            var isMouseDown = event.type === 'mousedown';
+            // Остановить распространение события с тулбара, но только если это не событие от инпута (от поиска и подобных инструментов тулбара)
+            // 1174872392 https://online.sbis.ru/opendoc.html?guid=e4962972-49ac-4ad7-80bf-52688b90f51a
+            if (!(isMouseDown && event.target.nodeName == 'INPUT')) {
+               event.preventDefault();
+               event.stopPropagation();
+            }
             //Если случился mousedown то нужно нотифицировать о клике, перебив дефолтное событие перехода фокуса
-            if(event.type === 'mousedown') {
+            if (isMouseDown) {
+               var eventsChannel = EventBus.channel('WindowChangeChannel');
                eventsChannel.notify('onDocumentClick', event);
             }
          },

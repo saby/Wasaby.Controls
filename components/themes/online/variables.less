@@ -392,6 +392,7 @@
 @radio-button-checked-text-color:               @black-color;
 @radio-button-checked-hover-text-color:         @black-color;
 @radio-button-disabled-text-color:              @gray-light-color;
+@radio-button-disabled-text-color_checked:      @radio-button-disabled-text-color;
 @radio-button-disabled-hover-text-color:        @gray-light-color;
 @radio-button-icon-width:                       10px;
 @radio-button-icon-height:                      10px;
@@ -404,6 +405,7 @@
 @radio-button-icon-border-color-checked:        @radio-button-hover-text-color;
 @radio-button-hover-icon-border-color:          @radio-button-icon-border-color;
 @radio-button-icon-border-color-disabled:       @gray-light-color;
+@radio-button-icon-border-color-disabled_checked:@radio-button-icon-border-color-disabled;
 @radio-button-icon-border-width:                1px;
 @radio-button-icon-border-radius:               5px;
 @radio-button-text-font-size:                   0;
@@ -459,6 +461,7 @@
 @switcher-dot-size:                             4px;
 @switcher-border-color:                         @gray-light-color;
 @switcher-disabled-color:                       @gray-light-color;
+@switcher-disabled-color_checked:               @switcher-disabled-color;
 @color_switcher_line:                           @innacent-color2;
 @switcher-line-color-disabled:                  @gray-light-color;
 @switcher-btn-bg-color:                         @white-color;
@@ -478,6 +481,7 @@
 @switcher-do-unselected-text-color:             @gray-color;
 @color_switcher_text_unselected_hover:          @switcher-do-unselected-text-color;
 @color_SwitherDouble_text_disabled:             @disabled-color;
+@color_SwitherDouble_text_disabled_checked:     @color_SwitherDouble_text_disabled;
 @text-decoration_switcher_text_unselected_hover: underline;
 @switcher-do-disabled-text-color:               @gray-light-color;
 // ---- //
@@ -936,14 +940,12 @@
 @tree-view-folder-title-display:                inline-block; //todo
 @tree-view-big-node-font-size:                  16px;
 @tree-view-big-leaf-font-size:                  15px;
-@tree-view-copy-arrow-background:               @white-color;
 // --------- //
 // Data grid //
 // --------- //
 @data-grid-bg:                                  transparent;
 @data-grid-row-bg:                              transparent;
 @data-grid-row-hover-bg:                        @default-itemHover-color;//Переменную нужно удалить, она дублирует @background-color_DataGridView-item_hovered
-@data-grid-row-selected-bg:                     transparent;
 @data-grid-header-cell-height:                  14px;
 @data-grid-header-cell-padding:                 4px @data-grid-cell-padding-right;
 @data-grid-header-cell-padding-side:            12px;
@@ -996,6 +998,7 @@
 @controls-OperationsPanel-bg:                       #E5ECF5;
 @controls-OperationsPanel-actions-margin:           0 6px;
 @controls-OperationsPanel-menu-icon-size:           @icon-medium-size;
+@controls-OperationsPanel-menu-icon-font-family:    @default-icon-medium-font;
 @right_OperationsPanel-menu-closeButton:            6px;
 @top_OperationsPanel-menu-closeButton:              6px;
 @controls-OperationsPanel-menu-padding-right:       36px;
@@ -1068,7 +1071,7 @@
 @DropdownList-picker-bg:                              @white-color;
 @DropdownList-header-bg:                              @DropdownList-picker-bg;
 @DropdownList-picker-offset:                          -8px 0 0 -13px;
-@DropdownList-picker-fastdatafilter-offset:           -6px 0 0 3px;
+@DropdownList-picker-fastdatafilter-offset:           -7px 0 0 3px;
 @DropdownList-picker-fdf-left:                        -13px;
 @DropdownList-picker-margin-top:                      -1px;
 @DropdownList-picker-close-btn-top:                   4px;
@@ -1253,8 +1256,8 @@
 @bread-crumb-crumb-home-top:                       0;
 // EditDialog
 @editdialog-applybutton-width:                     auto;
-@editdialog-applybutton-right:                     40px; //ширина кнопки закрытия окна 36px + 4px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
-@editdialog-window-title-margin-right:             130px; //ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 4px на небольшой отступ между ними */
+@editdialog-applybutton-right:                     48px; //ширина кнопки закрытия окна 36px + 12px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
+@editdialog-window-title-margin-right:             138px; //ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 12px на небольшой отступ между ними */
 @editdialog-template-minwidth:                     auto;
 @editdialog-applybutton-top:                       8px;
 //MoveDialog
@@ -1266,10 +1269,6 @@
 @controls-movedialog-width:                        400px;
 @controls-movedialog-padding:                      0 0 5px 0;
 @controls-movedialog-min-height:                   50px;
-// PrintDialog
-@controls-printdialog-activate-right:              49px;
-@controls-printdialog-activate-margin-top:         @controls-movedialog-activate-top;
-@controls-printdialog-min-width:                   @controls-movedialog-min-width;
 //InformationPopup
 @controls-InformationPopup-bg:                                white;
 @controls-InformationPopup-default-status-border-color:       #0055BB;
@@ -1322,7 +1321,7 @@
 @controls-SubmitPopup-border-bottom:               @controls-SubmitPopup-border;
 @controls-SubmitPopup-message-color:               #000;
 @controls-SubmitPopup-details-color:               inherit;
-@controls-ConfirmationWindow-max-width:            calc(~"100% - 16px");
+@controls-Confirmation-max-width:                  calc(~"100% - 16px");
 //ListView AjaxIndicator
 @controls-AjaxLoader-background:                   none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
 @controls-AjaxLoader-size:                         32px;
@@ -1453,7 +1452,7 @@
 @commands-button-close-font-family:                        @default-icon-medium-font;
 @commands-button-close-icon-color:                         @gray-ccc-color;
 @commands-button-close-button-size:                        30px;
-@commands-button-close-button-top:                         4px;
+@commands-button-close-button-top:                         5px;
 @commands-button-close-button-glyph-top:                   4px;
 @commands-button-close-button-glyph-top:                   @commands-button-close-button-top;
 @commands-button-close-button-right:                       6px;
@@ -1551,6 +1550,7 @@
 @height-ColumnsEditor-Editing-Area-head-title: 24px;
 @height-ColumnsEditor-Editing-Area-head-preset: 24px;
 @border-bottom-ColumnsEditor-Editing-Area__head: 1px solid #CCCCCC;
+@padding-ColumnsEditor-Editing-Area__mark: 8px 4px;
 @padding-ColumnsEditor-Editing-Area-head: 8px 0 2px 12px;
 @padding-ColumnsEditor-Editing-Area-head-2: 8px 0 7px 12px;
 @spacing-ColumnsEditor-Editing-Area-head: 18px;
@@ -1665,11 +1665,6 @@
 @label-text-margin:                                        0 8px 0 0;
 @dropdown-list-item-padding:               5px 38px 3px 12px;
 
-@data-grid-row-selected-main-bg:          @white-color;
-@data-grid-row-selected-addit-bg:         rgba(255,255,255,0);
-@data-grid-row-selected-add-bg:           @data-grid-row-selected-addit-bg;
-@data-grid-row-hover-add-bg:              @data-grid-row-selected-addit-bg;
-@tree-view-copy-arrow-add-background:     @data-grid-row-selected-addit-bg;
 @back-button-text-color:                  @blue-dark-color;
 
 //-----------------//
@@ -1681,32 +1676,53 @@
 //  StylesPanel   //
 //----------------//
 @styles-panel-color-shadow:               0px 0px 0px @default-border-width @default-border-color;
+@margin_StylesPanel-button:               0 0 0 4px;
 
 //-----------------//
 //  Popup   //
 //----------------//
-@shadow_Popup_stack:  -6px 0px 8px -5px rgba(0, 0, 0, 0.4);
+@controls-Popup-animate-duration:         0.2s;
+@controls-Popup-stack-shadow:             -6px 0px 8px -5px rgba(0, 0, 0, 0.4);
 
 //-----------------//
 //  InfoBox   //
 //----------------//
-@infobox-bg-style-default: #FFFFFF;
-@infobox-bg-style-lite: #F4F9FD;
-@infobox-bg-style-help: #FFF9F3;
-@infobox-bg-style-error: @infobox-bg-style-default;
+@infobox-bg-style-default:           #FFFFFF;
+@infobox-bg-style-lite:              #F4F9FD;
+@infobox-bg-style-help:              #FFF9F3;
+@infobox-bg-style-error:             @infobox-bg-style-default;
 
+@infobox-border-size:                1px;
 @infobox-border-color-style-default: #BDBDBD;
-@infobox-border-color-style-lite: #BDBDBD;
-@infobox-border-color-style-help: #BDBDBD;
-@infobox-border-color-style-error: #EF463A;
+@infobox-border-color-style-lite:    @infobox-border-color-style-default;
+@infobox-border-color-style-help:    @infobox-border-color-style-default;
+@infobox-border-color-style-error:   #EF463A;
 
 @infobox-shadow-color-style-default: rgba(0, 0, 0, 0.4);
-@infobox-shadow-color-style-lite: rgba(0, 0, 0, 0.4);
-@infobox-shadow-color-style-help: rgba(0, 0, 0, 0.4);
-@infobox-shadow-color-style-error: rgba(239, 70, 58, 0.4);
+@infobox-shadow-color-style-lite:    @infobox-shadow-color-style-default;
+@infobox-shadow-color-style-help:    @infobox-shadow-color-style-default;
+@infobox-shadow-color-style-error:   rgba(239, 70, 58, 0.4);
 
-@infobox-shadow-position: 0 0 12px;
-@infobox-max-width: 300px;
+@infobox-padding-top:                8px;
+@infobox-padding-bottom:             8px;
+@infobox-padding-left:               12px;
+@infobox-padding-right:              12px;
 
-@infobox-close-button-color:        #CCCCCC;
-@infobox-close-button-hover-color:  #313E78;
+@infobox-arrow-size:                 12px;
+@infobox-arrow-diagonal-length:      16px; //~ sqrt(@infobox-arrow-size^2 + @infobox-arrow-size^2)
+@infobox-arrow-horizontal-offset:    12px;
+@infobox-arrow-vertical-offset:      9px;
+
+@infobox-message-font-size:          14px;
+@infobox-message-color:              #000;
+@infobox-message-margin-right:       18px;
+
+@infobox-close-button-top:           4px;
+@infobox-close-button-right:         6px;
+@infobox-close-button-color:         #CCCCCC;
+@infobox-close-button-hover-color:   #313E78;
+
+@infobox-shadow-position:            0 0 12px;
+@infobox-max-width:                  300px;
+@infobox-float-element-size:         18px;
+@infobox-distance-to-target:         14px;

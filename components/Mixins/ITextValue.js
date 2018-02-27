@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/Mixins/ITextValue', [], function () {
     * Интерфейс контрола, который может отдавать выбранное в нем значение в виде текста
     * @mixin SBIS3.CONTROLS/Mixins/ITextValue
     * @public
-    * @author Крайнов Дмитрий
+    * @author Крайнов Д.О.
     */
 
    var ITextValue = /** @lends SBIS3.CONTROLS/Mixins/ITextValue.prototype */{

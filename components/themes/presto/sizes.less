@@ -86,6 +86,14 @@
 //PrintDialog
 @printDialog-activate-right:                          round(92px * @multiplier); //ширина кнопки 84px+8px отступ
 @printDialog-button-margin-top:                       @top_window_button;
+//MassAmountSelector
+@min-width_MassAmountSelector:                     round(756px * @multiplier);
+@margin_MassAmountSelector-activate:               round(11px * @multiplier) 0 0 0;
+@right_MassAmountSelector-activate:                round(94px * @multiplier);
+@width_MassAmountSelector-numberTextBox:           round(150px * @multiplier);
+@font-size_MassAmountSelector-label:               round(32px * @multiplier);
+@padding_MassAmountSelector-label:                 0 round(16px * @multiplier) 0 round(24px * @multiplier);
+@margin_MassAmountSelector-blocks:                 round(16px * @multiplier) 0 round(16px * @multiplier) 0;
 //todo:
 @fieldLink-afterField-button-margin:             0 @default-padding-small 0 0;
 @margin-left__searchForm_picker:  round(-8px * @multiplier);
@@ -104,7 +112,7 @@
 
 //information-popup
 @controls-InformationPopup-border-width:                        round(8px * @multiplier) 0 0 0;
-@controls-SubmitPopup-footer-padding:                           round(32px * @multiplier);
+@controls-SubmitPopup-footer-padding:                           round(11px * @multiplier) round(32px * @multiplier);
 @controls-SubmitPopup-button-margin:                            0 round(4px * @multiplier);
 @controls-SubmitPopup-size-standard-width:                      round(700px * @multiplier);
 @controls-SubmitPopup-size-big-width:                           round(800px * @multiplier);
@@ -228,7 +236,7 @@
 @top_TreeDataGridView-editArrow:                      1px;
 @margin_TreeDataGridView-editArrow:                   0 0 0 round(8px * @multiplier);
 @width_TreeDataGridView-copyArrow:                    round(42px * @multiplier);
-@right_TreeDataGridView-copyArrow:                    round(8px * @multiplier);
+@right_TreeDataGridView-copyArrow:                    0;
 //TreeDataGridView_Padding with photo
 @controls-view-photo-padding-S:                       0 round(4px * @multiplier) 0 round(4px * @multiplier);
 @controls-view-photo-padding-M:                       0 round(16px * @multiplier) 0 round(10px * @multiplier);
@@ -256,7 +264,6 @@
 //popup,floatarea,window
 @top_window_button:                                   round(11px * @multiplier);
 @controls-Popup-closeButton-top:                      round(11px * @multiplier);
-@controls-printdialog-activate-margin-top:            round(11px * @multiplier);
 @padding-right_floatArea-title:                       round(8px * @multiplier);
 //switcher
 @switcher-dot-size:                                   ceil(14px * @multiplier);
@@ -492,3 +499,12 @@
 @font-size_listAddButton:                       @small-text-size;
 //ReportBrowser
 @height_ReportBrowser-top-content:              @default-height-big;
+//Tabs/Buttons
+@height_Tabs-separator:                  round(54px * @multiplier);
+@line-height_Tabs-baselineFix:           round(96px * @multiplier);
+@height_Tabs:                            round(100px * @multiplier);
+@padding_Tabs-item:                      0 round(24px * @multiplier);
+@font-size_Tabs-item:                    @huge-text-size;
+@font-size_Tabs-item_selected:           @huge-text-size;
+@max-width_Tabs_item:                    round(1500px * @multiplier);
+@border-width_Tabs-item_hover_selected:  round(8px * @multiplier);

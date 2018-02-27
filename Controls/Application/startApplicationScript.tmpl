@@ -1,0 +1,18 @@
+<div key="scripts">
+   <ws:if data="{{ jsLinks }}">
+      <ws:for data="index, value in jsLinks">
+         <script type="text/javascript" src="{{ value }}" defer="defer" key="{{ 'scripts_' + index }}"></script>
+      </ws:for>
+   </ws:if>
+   <ws:if data="{{!compat}}">
+      <script key="init_script">
+         require(['Controls/Application/AppData'], function(AppData){
+            window.startContextData = {AppData: new AppData({})};
+            require(['Core/app']);
+         });
+      </script>
+   </ws:if>
+   <ws:else>
+      <ws:partial template="tmpl!Controls/Application/CompatibleScripts" />
+   </ws:else>
+</div>

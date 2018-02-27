@@ -98,10 +98,17 @@
 @color_ListView-GroupBy_text_hovered:                #B9E9FF;
 @color_ListView-GroupBy_separator:                   rgba(137,145,169,.3);
 @background-color_ListView-GroupBy_text:             transparent;
+@border-color_itemsActions_touchMode:                #2d3f54;
+@outline-color_itemsActions_touchMode:               #2d3f54;
+@background-color__itemsToolbar_touchmode:           #2d3f54;
+@border-color__itemsToolbar_touchmode:               #2d3f54;
+@color__itemsToolbar_buttonText_touchmode:           @default-text-color;
 //DataGridView
 @color_DataGridView-sorting:                         #8991A9;
 @color_DataGridView-sorting_hovered:                 @color_DataGridView-sorting;
 @background-color_DataGridView-notScrolledCell:      #1D2834;
+@background-color_DataGridView-item_multiselected:   #1D2834;
+@background-color_DataGridView-item_selected:        #1D2834;
 //TreeDataGridView
 @color_TreeDataGridView-expand:                      #839EBC;
 @color_TreeDataGridView-expand_hovered:              #B9E9FF;
@@ -109,7 +116,7 @@
 @color_TreeDataGridView-expandHidden_hovered:        #B9E9FF;
 @color_TreeDataGridView-editArrow:                   #839EBC;
 @color_TreeDataGridView-editArrow_hovered:           #B9E9FF;
-@background-color_TreeDataGridView-editArrow:        #2D3F54;
+@background-color_TreeDataGridView-copyArrow:        #1D2834;
 //Link
 @color_Link-text_disabled:                #4B688B;
 @color_Link-icon_disabled:                @color_Link-text_disabled;
@@ -119,15 +126,19 @@
 //Switcher
 @color_switcher_line:                     #839EBC;
 @switcher-disabled-color:                 #4B688B;
+@switcher-disabled-color_checked:         #FF7033;
 @switcher-border-color:                   rgba(109,141,176, .4);
 @color_switcher_text_unselected_hover:    #B9E9FF;
 @color_SwitherDouble_text_disabled:       #4B688B;
+@color_SwitherDouble_text_disabled_checked:#e4e4e4;
 //RadioButton
 @radio-button-icon-border-color:          rgba(109,141,176, .4);
 @radio-button-hover-text-color:           #B9E9FF;
 @radio-button-disabled-text-color:        #4B688B;
 @radio-button-icon-border-color-disabled: #4B688B;
 @radio-button-disabled-hover-text-color:  #4B688B;
+@radio-button-icon-border-color-disabled_checked: #FF7033;
+@radio-button-disabled-text-color_checked:#e4e4e4;
 //menu
 @background-color_Menu-header:                    #6080A4;
 @color_Menu-header:              @default-text-color;
@@ -165,10 +176,10 @@
 @controls-filterLine-link-hover-color:            #B9E9FF;
 //filterButtonArea
 @color_filterButton_area_header_link_hover:             #B9E9FF;
+@color_filterButton_area_header_link:                   #26B8FF;
 // Date Range Big Choose
 @background-color_DateRangeBigChoose:                                 #273749;
 @background-color__DateRangeBigChoose-header:                         #39506A;
-@border-color_DateRangeBigChoose-header-dateInput_active:             #26b8ff;
 @color_DateRangeBigChoose-years-panel-displayed-year:                 #FFCC99;
 @background-color_MonthView-item-today:                               #4B688B;
 @border-color__MonthView-item-selected-startEnd-hover:                #26B8FF;
@@ -257,3 +268,12 @@
 //ListAddButton
 @color_listAddButton_enabled:                     @color_primary;
 @color_listAddButton_disabled:                    @default-disabled-color;
+//Tabs/Buttons
+@border-color_Tabs:                          rgba(109,141,176,.3);
+@background-color_Tabs-separator:            rgba(109,141,176,.3);
+@text-color_Tabs:                            #8991A9;
+@border-color_Tabs-item_hover:               #8991A9;
+@text-color_Tabs-item_selected_default:      #FFCC99;
+@border-color_Tabs-item_selected_default:    #FF7033;
+@text-color_Tabs-item_selected_additional:   @text-color_Tabs-item_selected_default;
+@border-color_Tabs-item_selected_additional: @border-color_Tabs-item_selected_default;

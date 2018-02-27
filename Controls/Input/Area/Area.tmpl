@@ -1,52 +1,49 @@
-<div>
-   <Controls:Input:resources:InputRender:InputRender
+<Controls:Input:resources:InputRender:InputRender
            size="auto"
            sidePadding="Left"
-           isMultiline="{{ _options.minLines > 1 }}"
+           multiline="{{ _options.minLines > 1 }}"
            name="inputRender"
            value="{{ _options.value }}"
            selectOnClick="{{_options.selectOnClick}}"
            viewModel="{{_textViewModel}}"
            tagStyle="{{_options.tagStyle}}"
            validationErrors="{{_options.validationErrors}}"
-           attr:class="controls-InputArea"
+           placeholder="{{ _options.placeholder }}"attr:class="controls-InputArea"
            on:valueChanged="_valueChangedHandler()"
            on:inputCompleted="_inputCompletedHandler()"
            on:tagHover="_notifyHandler('onTagHover')"
            on:tagClick="_notifyHandler('onTagClick')">
       <ws:content>
-         <!--TODO контейнер убрать https://online.sbis.ru/opendoc.html?guid=25000158-64ff-4db9-9605-a986cbc37b0f-->
-         <div class="controls-InputRender__wrapper">
-            <textarea
-                    name="realArea"
-                    spellcheck="false"
-                    class="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
-                    readonly="{{!isEnabled() ? 'readonly'}}"
-                    on:keydown="_keyDownHandler()"
-                    on:focus="_focusHandler()"
-                    on:scroll="_scrollHandler()"
-                    value="{{ _options.value }}"
-                    required="true"
-            ></textarea>
+         <ws:if data="{{ isEnabled() }}">
+            <!--TODO контейнер убрать https://online.sbis.ru/opendoc.html?guid=25000158-64ff-4db9-9605-a986cbc37b0f-->
+            <div class="controls-InputRender__wrapper">
+               <textarea
+                       name="realArea"
+                       spellcheck="false"
+                       class="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
+                       readonly="{{!isEnabled() ? 'readonly'}}"
+                       on:keydown="_keyDownHandler()"
+                       on:focus="_focusHandler()"
+                       on:scroll="_scrollHandler()"
+                       value="{{ _options.value }}"
+                       required="true"
+               ></textarea>
 
-            <ws:partial
-               attr:class="{{ _options.minLines > 1 ? 'controls-InputArea__placeholder_multiline' }}"
-               template="tmpl!Controls/Input/resources/CustomPlaceholder"
-               placeholder="{{ _options.placeholder }}"
-            />
-
-            <div class="controls-fakeTextArea__firstWrapper">
-               <div class="controls-fakeTextArea__secondWrapper">
-                  <div
-                     name="fakeArea"
-                     class="controls-InputArea__field controls-InputArea__fakeField controls-InputRender__field"
-                     style="{{_options.minLines ? ('min-height: ' + _options.minLines * 100 + '%;')}} {{_options.maxLines ? 'max-height: ' + _options.maxLines * 100 + '%'}}">
-                     <span name="fakeAreaValue">{{ _options.value }}</span><br/>
+               <div class="controls-fakeTextArea__firstWrapper">
+                  <div class="controls-fakeTextArea__secondWrapper">
+                     <div
+                        name="fakeArea"
+                        class="controls-InputArea__field controls-InputArea__fakeField controls-InputRender__field"
+                        style="{{_options.minLines ? ('min-height: ' + _options.minLines * 100 + '%;')}} {{_options.maxLines ? 'max-height: ' + _options.maxLines * 100 + '%'}}">
+                        <span name="fakeAreaValue">{{ _options.value }}</span><br/>
+                     </div>
                   </div>
+                  <div class="controls-InputArea__clear"></div>
                </div>
-               <div class="controls-InputArea__clear"></div>
             </div>
-         </div>
+         </ws:if>
+         <ws:else>
+            <div class="controls-InputArea__field">{{ _options.value }}</div>
+         </ws:else>
       </ws:content>
    </Controls:Input:resources:InputRender:InputRender>
-</div>

@@ -1,9 +1,9 @@
 define('Controls/Input/Number/ViewModel',
    [
-      'Core/core-simpleExtend'
+      'Controls/Input/resources/InputRender/BaseViewModel'
    ],
    function (
-      simpleExtend
+      BaseViewModel
    ) {
       'use strict';
       /**
@@ -67,21 +67,18 @@ define('Controls/Input/Number/ViewModel',
 
          /**
           * Валидирует значение splitValue
-          * @param splitValue
+          * @param clearValue
           * @param onlyPositive
           * @param integersLength
           * @param precision
           * @returns {boolean}
           */
-         validate: function (splitValue, onlyPositive, integersLength, precision) {
-            var
-               clearVal = this.getClearValue(splitValue);
-
+         validate: function (clearValue, onlyPositive, integersLength, precision) {
             if (
-               !this.validators.isNumber(clearVal) ||
-               typeof onlyPositive !== 'undefined' && !this.validators.onlyPositive(clearVal) ||
-               typeof integersLength !== 'undefined' && !this.validators.maxIntegersLength(clearVal, integersLength) ||
-               typeof precision !== 'undefined' && !this.validators.maxDecimalsLength(clearVal, precision)
+               !_private.validators.isNumber(clearValue) ||
+               typeof onlyPositive !== 'undefined' && !_private.validators.onlyPositive(clearValue) ||
+               typeof integersLength !== 'undefined' && !_private.validators.maxIntegersLength(clearValue, integersLength) ||
+               typeof precision !== 'undefined' && !_private.validators.maxDecimalsLength(clearValue, precision)
             ) {
                return false;
             }
@@ -120,24 +117,25 @@ define('Controls/Input/Number/ViewModel',
          }
       };
 
-      NumberViewModel = simpleExtend.extend({
-            constructor: function (options) {
-               this._options = options;
-            },
-
+      NumberViewModel = BaseViewModel.extend({
             /**
              * Валидирует и подготавливает новое значение по splitValue
              * @param splitValue
+             * @param inputType
              * @returns {{value: (*|String), position: (*|Integer)}}
              */
-            prepareData: function (splitValue) {
+            handleInput: function (splitValue, inputType) {
                var
                   shift = 0;
 
                //Если был удалён пробел, то нужно удалить цифру слева от него и сдвинуть курсор на единицу влево
                if (splitValue.delete === ' ') {
-                  splitValue.before = splitValue.before.substr(0, splitValue.before.length - 1);
-                  shift = -1;
+                  if (inputType === 'deleteForward') {
+                     splitValue.after = splitValue.after.substr(1, splitValue.after.length);
+                  } else if (inputType === 'deleteBackward') {
+                     splitValue.before = splitValue.before.substr(0, splitValue.before.length - 1);
+                     shift = -1;
+                  }
                }
 
                //Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
@@ -149,15 +147,36 @@ define('Controls/Input/Number/ViewModel',
                }
 
                //Если валидация не прошла, то не даем ничего ввести
-               if (!_private.validate(splitValue, this._options.onlyPositive, this._options.integersLength, this._options.precision)) {
+               if (!_private.validate(_private.getClearValue(splitValue), this._options.onlyPositive, this._options.integersLength, this._options.precision)) {
                   splitValue.insert = '';
                }
+
+               this._options.value = _private.getValueWithDelimiters(splitValue);
 
                //Запишет значение в input и поставит курсор в указанное место
                return {
                   value: _private.getValueWithDelimiters(splitValue),
                   position: _private.getCursorPosition(splitValue, shift)
                };
+            },
+
+            getDisplayValue: function () {
+               return _private.getValueWithDelimiters({
+                  before: '',
+                  insert: this._options.value,
+                  after: ''
+               });
+            },
+
+            getValue: function () {
+               return parseFloat(this._options.value.replace(/ /g, '')) || '';
+            },
+
+            updateOptions: function(options) {
+               this._options.onlyPositive = options.onlyPositive;
+               this._options.integersLength = options.integersLength;
+               this._options.precision = options.precision;
+               this._options.value = options.value;
             }
          });
 
