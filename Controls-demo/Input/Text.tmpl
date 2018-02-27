@@ -1,7 +1,12 @@
 <div style="margin: 32px; display: flex; flex-direction: column;">
    <div>
       <Controls:Label name="myLabel1" caption="Пример"/>
-      <Controls:Input:Text bind:value="_text1" placeholder="{{_placeholder}}" constraint="{{_constraint}}" validationErrors="{{_validationErrors}}" trim="{{_trim}}" maxLength="{{_maxLength}}"/>
+      <Controls:Input:Text bind:value="_text1"
+                     placeholder="{{_placeholder}}"
+                     constraint="{{_constraint}}"
+                     validationErrors="{{_validationErrors}}"
+                     trim="{{_trim}}"
+                     maxLength="{{_maxLength}}"/>
    </div>
    <div>
       <h3>Опции</h3>

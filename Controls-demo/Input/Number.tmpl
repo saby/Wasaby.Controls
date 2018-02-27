@@ -1,0 +1,25 @@
+<div style="margin: 32px; display: flex; flex-direction: column;">
+    <div>
+        <Controls:Label name="myLabel1" caption="Пример"/>
+        <Controls:Input:Text bind:value="_text1"
+                       tagStyle="{{_tagStyle}}"
+                       integersLength="{{_integersLength}}"
+                       precision="{{_precision}}"
+                       onlyPositive="{{onlyPositive}}"
+                       enabled="_enabled"/>
+    </div>
+    <div>
+        <h3>Опции</h3>
+        <Controls:Label name="myLabel1" caption="tagStyle"/>
+        <Controls:Input:Text bind:value="_tagStyle"/>
+        <Controls:Label name="myLabel1" caption="integersLength"/>
+        <Controls:Input:Text bind:value="_integersLength"/>
+        <Controls:Label name="myLabel1" caption="precision"/>
+        <Controls:Input:Text bind:value="_precision"/>
+        <Controls:Label name="myLabel1" caption="onlyPositive"/>
+        <Controls:Input:Text bind:value="onlyPositive"/>
+        <div>
+            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_enabled" caption="enabled"/>
+        </div>
+    </div>
+</div>
