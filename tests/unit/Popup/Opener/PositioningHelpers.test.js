@@ -16,7 +16,9 @@ define(
                bottom: 400,
                right: 400,
                width: 200,
-               height: 200
+               height: 200,
+               leftScroll: 0,
+               topScroll: 0
             };
 
             Sticky.constructor._private.getWindowSizes = function(){
