@@ -13,13 +13,13 @@
                on:click="_clickHandler()"
                on:select="_selectionHandler()"
                on:keyup="_keyUpHandler()"
-               on:change="_notifyHandler('inputCompleted')"
+               on:change="_inputCompletedHandler()"
                on:focus="_focusHandler()"
-               value="{{ _options.value }}"
+               value="{{ _options.viewModel.getDisplayValue() }}"
                placeholder="{{ _options.placeholder }}"
          />
 
-         <ws:if data="{{ !_options.value }}">
+         <ws:if data="{{ !_options.viewModel.getDisplayValue() }}">
             <ws:partial
                attr:class="{{ _options.isMultiline ? 'controls-InputArea__placeholder_multiline' }}"
                template="tmpl!Controls/Input/resources/CustomPlaceholder"
