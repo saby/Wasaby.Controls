@@ -10,7 +10,7 @@ define([
    'Controls/List/SimpleList/ListView'
 ], function(SourceControl, ItemsUtil, MemorySource, RecordSet, ListViewModel){
    describe('Controls.List.SourceControl', function () {
-      var data, display;
+      var data, data2, display;
       beforeEach(function() {
          data = [
             {
@@ -26,6 +26,22 @@ define([
             {
                id : 3,
                title : 'Третий',
+               type: 2
+            }
+         ]; data2 = [
+            {
+               id : 4,
+               title : 'Четвертый',
+               type: 1
+            },
+            {
+               id : 5,
+               title : 'Пятый',
+               type: 2
+            },
+            {
+               id : 6,
+               title : 'Шестой',
                type: 2
             }
          ];
@@ -45,7 +61,6 @@ define([
             source: source,
             listViewModel: listViewModel,
             filter: filter
-
          };
          var ctrl = new SourceControl(cfg);
          ctrl.saveOptions(cfg);
@@ -73,7 +88,30 @@ define([
          ctrl._beforeUpdate(cfg);
          assert.isTrue(ctrl._sourceController !== oldSourceCtrl, '_dataSourceController wasn\'t changed before updating');
          assert.deepEqual(filter2, ctrl._filter, 'incorrect filter before updating');
+
+         ctrl._beforeUnmount();
       });
 
+      it('loadToDirection', function () {
+         var listViewModel = new ListViewModel ({
+            items : data,
+            idProperty: 'id'
+         });
+
+         var source = new MemorySource({
+            idProperty: 'id',
+            data: data
+         });
+
+         var cfg = {
+            viewName : 'Controls/List/SimpleList/ListView',
+            source: source,
+            listViewModel: listViewModel
+         };
+         var ctrl = new SourceControl(cfg);
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+
+      })
    })
 });
