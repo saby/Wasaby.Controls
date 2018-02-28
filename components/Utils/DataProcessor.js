@@ -111,7 +111,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
             methodName = 'SaveHTML',
             newCfg,
             deferred = new Deferred();
-         this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + fileType, deferred);
+         this._createLoadIndicator(rk('Подождите, идет выгрузка данных'), deferred);
          this._prepareSerializer().addCallback(function(reportText) {
             deferred.callback();
             //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
@@ -233,7 +233,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
           //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
           //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем fileType
          if (object !== "Excel" || !this._isLongOperationsEnabled()) {
-            this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + object, exportDeferred);
+            this._createLoadIndicator(rk('Подождите, идет выгрузка данных'), exportDeferred);
             exportDeferred.addCallback(function(ds) {
                self.downloadFile(ds.getScalar(), object === "Excel" || isExcel);
             });
