@@ -65,12 +65,11 @@ define('Controls/Popup/Manager/Container',
           * @function Controls/Popup/Manager/Container#_popupCreated
           * @param event
           * @param id идентификатор попапа.
-          * @param width ширина попапа.
-          * @param height высота попапа.
+          * @param sizes размеры попапа
           */
-         _popupCreated: function(event, id, width, height){
+         _popupCreated: function(event, id, sizes){
             if (this.eventHandlers && this.eventHandlers.onPopupCreated) {
-               this.eventHandlers.onPopupCreated(event, id, width, height);
+               this.eventHandlers.onPopupCreated(event, id, sizes);
             }
          },
 
@@ -79,12 +78,11 @@ define('Controls/Popup/Manager/Container',
           * @function Controls/Popup/Manager/Container#_popupUpdated
           * @param event
           * @param id идентификатор попапа.
-          * @param width ширина попапа.
-          * @param height высота попапа.
+          * @param sizes размеры попапа
           */
-         _popupUpdated: function(event, id, width, height){
+         _popupUpdated: function(event, id, sizes){
             if (this.eventHandlers && this.eventHandlers.onPopupUpdated) {
-               this.eventHandlers.onPopupUpdated(event, id, width, height);
+               this.eventHandlers.onPopupUpdated(event, id, sizes);
             }
          },
 

@@ -4052,13 +4052,17 @@ define('SBIS3.CONTROLS/ListView',
             }
          },
          _showLoadingOverlay: function() {
-            var container = this.getContainer(),
-               ajaxLoader = this._getAjaxLoaderContainer(),
+            this._getAjaxLoaderContainer().removeClass('ws-hidden');
+         },
+         _showIndicator: function () {
+            var ajaxLoader = this._getAjaxLoaderContainer(),
+               container = this.getContainer(),
                scrollContainer = this._getScrollContainer()[0],
                indicator, centerCord;
 
+            this._loadingIndicatorTimer = undefined;
+            ajaxLoader.addClass('controls-AjaxLoader__showIndication');
             indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
-            ajaxLoader.removeClass('ws-hidden');
             if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
                /* Ищем кординату, которая находится по середине отображаемой области грида */
                centerCord =
@@ -4069,11 +4073,6 @@ define('SBIS3.CONTROLS/ListView',
                /* Если скрола нет, то сбросим кординату, чтобы индикатор сам расположился по середине */
                indicator[0].style.top = '';
             }
-         },
-         _showIndicator: function () {
-            var ajaxLoader = this._getAjaxLoaderContainer();
-            this._loadingIndicatorTimer = undefined;
-            ajaxLoader.addClass('controls-AjaxLoader__showIndication');
             if (constants.browser.isWinXP) {
                //В старых браузерах не работает top: 50%, если у родительского элемента высота задана через min-height,
                //из-за этого обрезается ромашка.
@@ -4404,28 +4403,38 @@ define('SBIS3.CONTROLS/ListView',
           * При создании элемента коллекции происходит событие {@link onBeginAdd}.
           * @param {Object} [options] Параметры вызова команды.
           * @param {String|Number} [options.parentId] Идентификатор узла, в который добавляют элемент коллекции. Параметр актуален для <a href='/doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/#_4'>ирерахических списков</a>.
+          * @param {WS.Data/Entity/Model|Object} [options.preparedModel] Модель, используемая, чтобы предустановить значения полей созданного элемента коллекции.
           * @param {String} [options.addPosition=bottom] Расположение созданного элемента коллекции в режиме редактирования.
           * <ul>
           *     <li>top - отображается в начале списка;</li>
           *     <li>bottom - отображается в конце списка.</li>
           * </ul>
-          * @param {WS.Data/Entity/Model|Object} [options.preparedModel] Модель, используемая, чтобы предустановить значения полей созданного элемента коллекции.
           * @param {Boolean} [withoutActivateEditor=false] В значении true в режиме редактирования созданного элемента коллекции фокус не установлен ни на один из редакторов (см. {@link SBIS3.CONTROLS/Columns.typedef editor}).
           * @example
-          * Производится создание элемента коллекции внутри узла иерархии, в который установлено проваливание. Предустановлено значение для поля "Наименование". Отображение созданного элемента коллекции в режиме редактирования происходит в начале списка.
+          * Пример 1.
+          * <pre>
+          * myView.sendCommand('beginAdd', {
+          *    parentId: folderID,
+          *    model: modelConfig,
+          *    addPosition: 'top'
+          * });
+          * </pre>
+          *
+          * Пример 2.
+          * Производится создание элемента коллекции внутри узла иерархии, в который установлено проваливание.
+          * Предустановлено значение для поля "Наименование". Отображение созданного элемента коллекции в режиме редактирования происходит в начале списка.
           * <pre>
           * var commandParams = {
-          *     options: {
-          *         parentId: myView.getCurrentRoot(),
-          *         addPosition: 'top',
-          *         preparedModel: {
-          *             'Наименование': 'ООО "Тензор"',
-          *         },
-          *     },
+          *    parentId: myView.getCurrentRoot(),
+          *    preparedModel: {
+          *       'Наименование': 'ООО "Тензор"',
+          *    },
+          *     addPosition: 'top',
           *     withoutActivateEditor: true
           * };
           * myView.sendCommand('beginAdd', commandParams);
           * </pre>
+          *
           * @returns {*|Deferred} В случае ошибки, вернёт Deferred с текстом ошибки.
           * @command beginAdd
           * @see onBeginAdd

@@ -34,7 +34,7 @@ define(
             
             //Перемещение.
             inputType = RenderHelper.getAdaptiveInputType('insertFromDrop', emptySelection);
-            assert.equal(inputType, 'insert');
+            assert.equal(inputType, 'insertFromDrop');
             
             //Удаление с помощью клавиши backspace.
             inputType = RenderHelper.getAdaptiveInputType('deleteContentBackward', emptySelection);
@@ -276,6 +276,20 @@ define(
                   insert: '',
                   delete: '-101',
                   after: '23'
+               });
+            });
+
+            it('Проверка перемещения текста перетаскиванием. Тип insertFromDrop', function() {
+               splitInputValue = RenderHelper.getSplitInputValue('12345', '51234', 1, {
+                  selectionStart: 4,
+                  selectionEnd: 4
+               }, 'insertFromDrop');
+
+               assert.deepEqual(splitInputValue, {
+                  before: '5',
+                  insert: '',
+                  delete: '',
+                  after: '1234'
                });
             });
 

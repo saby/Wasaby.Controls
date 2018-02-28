@@ -1,0 +1,60 @@
+.controls-Search__afterFieldWrapper {
+   .inline-flexbox();
+   .flex-shrink(0);
+}
+
+.controls-Search-InputRender {
+   .border-radius(@border-radius_Search);
+   padding: @padding_Search;
+   border-color: @border-color_Search;
+   border-width: 1px;
+}
+
+.controls-Search-InputRender_state_default {
+   background: @background-color_Search;
+}
+
+.controls-Search-InputRender_style_header {
+   background: @background-color_Search_style_header;
+}
+
+.controls-Search-InputRender_state_default:hover {
+   border-color: @border-color_Search_active;
+}
+
+.controls-Search-InputRender_state_disabled {
+   border-color: @border-color_Search_disabled;
+}
+
+.controls-Search-InputRender_state_default:focus-within {
+   border-color: @border-color_Search_active;
+}
+
+.controls-Search__search_state_disabled {
+   cursor: default;
+   color: @color_Search-icon_disabled;
+}
+
+.controls-Search__search,
+.controls-Search__reset {
+   .flexbox();
+   .align-items(center);
+   .icon-size(@icon-size_Search);
+   .flex-shrink(0);
+   height: 100%;
+   padding: @spacing-Search-between-icon-text;
+}
+
+.controls-Search__search_state_default {
+   cursor: pointer;
+   color: @color_Search-icon;
+}
+
+.controls-Search__reset {
+   cursor: pointer;
+   color: @color_Search-iconReset;
+}
+
+.controls-Search__search_state_default:hover {
+   color: @color_Search-iconSearch_hovered;
+}
