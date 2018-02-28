@@ -1,9 +1,10 @@
 .controls-DropdownOpener {
    .flexbox();
    .flex-direction(column);
-   max-height: 400px;
-   border: 1px solid #ccc;
-   .box-shadow(0px 0px 12px 0px rgba(0, 0, 0, 0.25));
+   max-height: @max-height_DropdownOpener;
+   border: 1px solid @border-color_DropdownOpener;
+   background: @background_DropdownOpener ;
+   .box-shadow(@shadow_DropdownOpener)
 }
 .controls-DropdownOpener__scroll {
    max-height: 100%;
@@ -12,45 +13,38 @@
 .controls-DropdownOpener__item {
    cursor: pointer;
    position: relative;
-   min-height: 32px;
+   color: @color_DropdownOpener-item;
+   min-height: @height_DropdownOpener;
    .flexbox();
    .align-items(center);
-   padding: 5px 12px;
-   font-size: 15px;
+   padding: @padding_DropdownOpener-item;
+   font-size: @font-size_DropdownOpener;
    box-sizing: border-box;
    &:hover {
-      background: #F0F5FB;
+      background: @background_DropdownOpener-item_hover;
    }
+}
+
+.controls-DropdownOpener__text {
+   font-size: @font-size_Link;
 }
 
 .controls-DropdownOpener__selected:after {
    content: '';
-   background: #D94700;
-   width: 6px;
-   height: 8px;
+   background: @background_DropdownOpener-marker;
+   width: @width_DropdownOpener-marker;
+   height: @height_DropdownOpener-marker;
    position: absolute;
    left: 0;
-   top: 13px;
+   top: ~"calc(50% - "@height_DropdownOpener-marker/2~")";
 }
 
 .controls-DropdownOpener__icon {
-   margin-right: 6px;
-}
-
-.controls-DropdownOpener__arrow {
-   font-family: 'cbuc-icons' !important;
-   font-size: 16px;
-   width: 16px;
-   height: 16px;
-   color: #587ab0;
-   border-width: 0;
-   &:after {
-      content: "\e9ab";
-   }
+   margin-right: @margin_DropdownOpener-icon;
 }
 
 .controls-DropdownOpener__header {
-   font-size: 15px;
+   font-size: @font-size_DropdownOpener;
    font-weight:bold;
    background: #f4f4f4;
    color: #313E78;
@@ -59,4 +53,13 @@
    .align-items(center);
    .justify-content(center);
    .flex-shrink(0);
+}
+
+.controls-DropdownOpener__margin {
+   margin-top: @margin-top_DropdownOpener;
+   margin-left: @margin-left_DropdownOpener;
+}
+
+.controls-DropdownOpener__subMenu_margin {
+   margin-top: -1px;
 }

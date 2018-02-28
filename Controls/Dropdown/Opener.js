@@ -6,10 +6,6 @@ define('Controls/Dropdown/Opener',
       'Controls/Dropdown/resources/template/OpenerTemplate'
    ],
    function (Control, Template, types) {
-      var DEFAULT_OFFSET = { //TODO после доработки в попапе, которая будет учитывать смещение на margin'ах, этого кода не будет
-         horizontal: -13,
-         vertical: -6
-      };
       /**
        * Действие открытия прилипающего окна
        * @class Controls/Dropdown/Opener
@@ -22,9 +18,7 @@ define('Controls/Dropdown/Opener',
          _controlName: 'Controls/Dropdown/Opener',
          _itemTemplateDeferred: undefined,
          _beforeMount: function (newOptions) {
-            //TODO после доработки в попапе, которая будет учитывать смещение на margin'ах, этого кода не будет
-            this._horizontalOffset = newOptions.horizontalOffset !== undefined ? newOptions.horizontalOffset : DEFAULT_OFFSET.horizontal;
-            this._verticalOffset = newOptions.verticalOffset !== undefined ? newOptions.verticalOffset : DEFAULT_OFFSET.vertical;
+            this._className = newOptions.className || 'controls-DropdownOpener__margin';
          },
 
          open: function (config, opener) {
