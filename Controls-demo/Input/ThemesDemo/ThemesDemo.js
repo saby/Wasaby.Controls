@@ -10,8 +10,8 @@ define('Controls-demo/Input/ThemesDemo/ThemesDemo', [
 
 		_text1: 'Поле ввода текста',
 		_number1: '123456',
-		_area1: 'Многострочное поле ввода',
-		_area2: 'Многострочное поле ввода size m'
+		_area1: 'Многострочное поле ввода size m',
+		_area2: 'Многострочное поле ввода size l'
 	});
 
 	return moduleClass;
