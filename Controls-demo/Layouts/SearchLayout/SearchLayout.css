@@ -1,0 +1,16 @@
+.controls-demo__FilterLayout {
+    margin: 20px;
+    outline: 1px solid red;
+    padding: 10px;
+}
+
+.controls-demo__SearchLayout, .controls-demo__Layouts_content, .controls-demo__LayoutInner {
+    padding: 10px;
+    outline: 1px solid red;
+}
+
+.controls-demo__Layouts_filterComponents {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+}

@@ -16,7 +16,9 @@ define(
                bottom: 400,
                right: 400,
                width: 200,
-               height: 200
+               height: 200,
+               leftScroll: 0,
+               topScroll: 0
             };
 
             Sticky.constructor._private.getWindowSizes = function(){
@@ -44,7 +46,11 @@ define(
                   },
                   sizes: {
                      width: 100,
-                     height: 100
+                     height: 100,
+                     margins: {
+                        top: 0,
+                        left: 0
+                     }
                   }
                }, targetCoords);
                assert.isTrue(position.top === 400);
@@ -69,7 +75,11 @@ define(
                   },
                   sizes: {
                      width: 200,
-                     height: 200
+                     height: 200,
+                     margins: {
+                        top: 0,
+                        left: 0
+                     }
                   }
                }, targetCoords);
                assert.isTrue(position.top === 400);
@@ -94,7 +104,40 @@ define(
                   },
                   sizes: {
                      width: 100,
-                     height: 100
+                     height: 100,
+                     margins: {
+                        top: 0,
+                        left: 0
+                     }
+                  }
+               }, targetCoords);
+               assert.isTrue(position.top === 110);
+               assert.isTrue(position.left === 90);
+            });
+
+            it('Sticky with offset on margins', function() {
+               var position = Sticky.getPosition({
+                  corner: {
+                     vertical: 'top',
+                     horizontal: 'left'
+                  },
+                  align: {
+                     vertical: {
+                        side: 'top',
+                        offset: 0
+                     },
+                     horizontal: {
+                        side: 'left',
+                        offset: 0
+                     }
+                  },
+                  sizes: {
+                     width: 100,
+                     height: 100,
+                     margins: {
+                        top: 10,
+                        left: -10
+                     }
                   }
                }, targetCoords);
                assert.isTrue(position.top === 110);
@@ -119,7 +162,11 @@ define(
                   },
                   sizes: {
                      width: 400,
-                     height: 200
+                     height: 200,
+                     margins: {
+                        top: 0,
+                        left: 0
+                     }
                   }
                }, targetCoords);
                assert.isTrue(position.top === 400);
@@ -130,7 +177,11 @@ define(
 
          describe('Dialog', function () {
             it('dialog positioning', function() {
-               var position = Dialog.getPosition(1920, 1080, 200, 300);
+               var sizes = {
+                  width: 200,
+                  height: 300
+               };
+               var position = Dialog.getPosition(1920, 1080, sizes);
                assert.isTrue(position.top === 390);
                assert.isTrue(position.left === 860);
             });

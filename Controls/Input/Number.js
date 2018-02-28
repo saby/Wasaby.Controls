@@ -62,12 +62,20 @@ define('Controls/Input/Number', [
       constructor: function (options) {
          NumberInput.superclass.constructor.apply(this, arguments);
 
-
-         //Вьюмодель для намбера. Нужно связать с конфигом
          this._numberViewModel = new NumberViewModel({
             onlyPositive: options.onlyPositive,
             integersLength: options.integersLength,
-            precision: options.precision
+            precision: options.precision,
+            value: options.value
+         });
+      },
+
+      _beforeUpdate: function(newOptions) {
+         this._numberViewModel.updateOptions({
+            onlyPositive: newOptions.onlyPositive,
+            integersLength: newOptions.integersLength,
+            precision: newOptions.precision,
+            value: newOptions.value
          });
       },
 
@@ -78,18 +86,8 @@ define('Controls/Input/Number', [
          }
       },
 
-      _inputCompletedHandler: function () {
-         var
-            tmp = this._options.value.split('.'),
-            integers = tmp[0],
-            decimals = tmp[1];
-
-         //Если дробная часть пустая или нулевая, то нужно убрать её
-         if (!parseInt(decimals, 10)) {
-            this._notify('inputCompleted', [integers]);
-         } else {
-            this._notify('inputCompleted', [this._options.value]);
-         }
+      _inputCompletedHandler: function (event, value) {
+         this._notify('inputCompleted', [value]);
       },
 
       _notifyHandler: function (event, value) {

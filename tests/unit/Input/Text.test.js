@@ -112,7 +112,7 @@ define(
             it(item.testName, function () {
                var
                   textViewModel = new TextViewModel(item.controlConfig),
-                  result = textViewModel.prepareData(item.splitValue);
+                  result = textViewModel.handleInput(item.splitValue);
                assert.equal(result.value, item.result.value);
             });
          });

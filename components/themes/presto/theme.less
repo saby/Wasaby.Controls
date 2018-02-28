@@ -202,10 +202,10 @@ body {
       cursor: default;
       &.ws-paging-prev, &.ws-paging-first, &.ws-paging-next, &.ws-paging-end {
         background: @background_Button !important;
-        .box-shadow(0 1px 4px rgba(0, 0, 0, 1));
+        .box-shadow(0 1px 4px rgba(0, 0, 0, .5));
       }
       &.ws-paging-active {
-        .box-shadow(0 1px 4px rgba(0, 0, 0, 1));
+        .box-shadow(0 1px 4px rgba(0, 0, 0, .5));
         color: #FFFFFF !important;
         background: #567395 !important;
         cursor: pointer;
@@ -237,7 +237,7 @@ body {
       border-style: solid;
       border-width: @border-width_Button;
       border-color: @background_Button;
-      .box-shadow(0 1px 4px rgba(0, 0, 0, 1));
+      .box-shadow(0 1px 4px rgba(0, 0, 0, .5));
       .controls-Button__icon {
         height: @default-icon-size-large!important;
         width: @default-icon-size-large!important;
@@ -260,6 +260,11 @@ body {
     width: calc(~"100% - @{width_CloseButton} - @{padding-right_floatArea-title}") !important; //86 - close button width + 8 - padding
     padding-left: round(24px * @multiplier) !important;
     box-sizing: border-box !important;
+  }
+}
+.controls-ListView__touchMode {
+  .controls-ListView__ItemsToolbar-container {
+    padding: 0;
   }
 }
 
@@ -462,4 +467,9 @@ body {
 // В presto крестик закрытия в информационных окнах имеют другие размеры.
 .controls-InformationPopup .controls-PopupMixin__closeButton_light {
   .icon-size(@icon-size_default_large);
+}
+// Размер не согласуется с размерами кнопок-иконок. необходимо только в тулбаре
+.controls-ToolBar .controls-IconButton {
+  width: @default-height;
+  height: @default-height;
 }

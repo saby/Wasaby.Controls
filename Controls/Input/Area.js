@@ -92,6 +92,7 @@ define('Controls/Input/Area', [
       },
 
       _afterUpdate: function(oldOptions) {
+         Area.superclass._afterUpdate.apply(this, arguments);
          if ((oldOptions.value !== this._options.value) && this._caretPosition) {
             this._children['realArea'].setSelectionRange(this._caretPosition, this._caretPosition);
             this._caretPosition = null;
@@ -150,7 +151,7 @@ define('Controls/Input/Area', [
       };
    };
 
-   //TODO раскомментировать этот блок + зависимость types когда полечат https://online.sbis.ru/opendoc.html?guid=e53e46a0-9478-4026-b7d1-75cc5ac0398b
+   //TODO раскомментировать этот блок + зависимость types когда полечат https://online.sbis.ru/opendoc.html?guid=1416c4da-b0e0-402b-9e02-a3885dc6cdb8
    /*Area.getOptionTypes = function() {
       return {
          minLines: types(Number),

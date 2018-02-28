@@ -17,9 +17,9 @@ define('Controls/Popup/Manager',
             }
          },
 
-         removeElement: function (element, container) {
+         removeElement: function (element, container, id) {
             var self = this;
-            return element.strategy.elementDestroyed(element, container).addCallback( function(){
+            return element.strategy.elementDestroyed(element, container, id).addCallback( function(){
                self._popupItems.remove(element);
                if (element.isModal) {
                   var indices = self._popupItems.getIndicesByValue('isModal', true);
@@ -42,11 +42,11 @@ define('Controls/Popup/Manager',
                      onClosePopup: function (event, id, container) {
                         _private.popupClose(id, container);
                      },
-                     onPopupCreated: function (event, id, width, height) {
-                        _private.popupCreated(id, width, height);
+                     onPopupCreated: function (event, id, sizes) {
+                        _private.popupCreated(id, sizes);
                      },
-                     onPopupUpdated: function (event, id, width, height) {
-                        _private.popupUpdated(id, width, height);
+                     onPopupUpdated: function (event, id, sizes) {
+                        _private.popupUpdated(id, sizes);
                      },
                      onPopupFocusIn: function (event, id, focusedControl) {
                         _private.popupFocusIn(id, focusedControl);
@@ -63,25 +63,25 @@ define('Controls/Popup/Manager',
             return _popupContainer;
          },
 
-         popupCreated: function (id, width, height) {
+         popupCreated: function (id, sizes) {
             var element = Manager.find(id);
             if (element) {
                var strategy = element.strategy;
                if (strategy) {
                   // при создании попапа, зарегистрируем его
-                  strategy.elementCreated(element, width, height);
+                  strategy.elementCreated(element, sizes, id);
                   Manager._redrawItems();
                }
             }
          },
 
-         popupUpdated: function (id, width, height) {
+         popupUpdated: function (id, sizes) {
             var element = Manager.find(id);
             if (element) {
                var strategy = element.strategy;
                if (strategy) {
                   // при создании попапа, зарегистрируем его
-                  strategy.elementUpdated(element, width, height);
+                  strategy.elementUpdated(element, sizes);
                   Manager._redrawItems();
                }
             }
@@ -169,7 +169,7 @@ define('Controls/Popup/Manager',
             var
                element = this.find(id);
             if (element) {
-               _private.removeElement.call(this, element, container).addCallback( function(){
+               _private.removeElement.call(this, element, container, id).addCallback( function(){
                   Manager._redrawItems();
                   return element;
                });
