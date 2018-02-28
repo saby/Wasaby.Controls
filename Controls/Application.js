@@ -42,9 +42,6 @@ define('Controls/Application',
       var Page = Base.extend({
          _template: template,
 
-         /*Небольшой фикс, для блокировки слоя совместимости*/
-         fixBaseCompatible: true,
-
          getDataId: function(){
             return 'cfg-pagedata';
          },
