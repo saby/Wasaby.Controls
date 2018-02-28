@@ -3,7 +3,7 @@
                {{isEnabled() ? 'controls-Switch_enabled'}}
                {{_options.value ? ' controls-Switch_checked'}}"
          title="{{tooltip}}">
-      <span class="controls-Switch__marker {{_getMarkerState()}}"/>
+      <span class="controls-Switch__marker {{_markerState}}"/>
       <span class="controls-Switch__line{{isEnabled() ? ' controls-Switch__line_enabled' : ' controls-Switch__line_disabled'}}"/>
    </span>
    <span class="controls-Switch__text{{!_options.value ? ' controls-Switch__text_unselected'}}" >{{_options.caption}}</span>

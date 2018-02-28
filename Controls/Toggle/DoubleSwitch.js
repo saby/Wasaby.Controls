@@ -1,9 +1,11 @@
 define('Controls/Toggle/DoubleSwitch', [
    'Core/Control',
    'tmpl!Controls/Toggle/DoubleSwitch/DoubleSwitch',
+   'tmpl!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchToggle',
+   'tmpl!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchText',
    'WS.Data/Type/descriptor',
    'css!Controls/Toggle/DoubleSwitch/DoubleSwitch'
-], function (Control, template, types) {
+], function (Control, template, toggleTemplate, textTemplate, types) {
 
    /**
     * Контрол, отображающий переключатель
@@ -35,15 +37,15 @@ define('Controls/Toggle/DoubleSwitch', [
       },
 
       notifyChanged: function(self){
-         if (self.isEnabled()) {
-            self._notify('valueChanged', [!self._options.value]);
-         }
+         self._notify('valueChanged', [!self._options.value]);
       }
    };
 
 
    var Switch = Control.extend({
       _template: template,
+      _toggleTemplate: toggleTemplate,
+      _textTemplate: textTemplate,
 
       constructor: function (options) {
          Switch.superclass.constructor.apply(this, arguments);
@@ -57,7 +59,9 @@ define('Controls/Toggle/DoubleSwitch', [
       },
 
       _clickToggleHandler: function (e) {
-         _private.notifyChanged(this);
+         if (this.isEnabled()) {
+            _private.notifyChanged(this);
+         }
       },
 
       _beforeUpdate: function (newOptions) {
