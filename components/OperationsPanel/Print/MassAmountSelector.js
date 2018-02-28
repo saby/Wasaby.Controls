@@ -40,11 +40,9 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector', [
          this._numberTextBox = this.getChildControlByName('controls-numberTextBox');
          this.getChildControlByName('controls-buttonPrint').subscribe('onActivated', function(){
             var
-               parent = this.getTopParent(),
                numericValue = self._numberTextBox.getNumericValue();
             if (numericValue || self._radioButtons.getSelectedKey() === 'all') {
-               parent.setResult(numericValue);
-               parent.ok();
+               this.sendCommand('close', numericValue);
             } else {
                InformationPopupManager.showMessageDialog({
                   message: rk('Для завершения обработки команды вам необходимо указать количество записей'),
