@@ -2182,7 +2182,7 @@ define('SBIS3.CONTROLS/ListView',
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             // При перезагрузке нужно также почистить hoveredItem, иначе следующее отображение тулбара будет для элемента, которого уже нет (ведь именно из-за этого ниже скрывается тулбар).
-            this._hoveredItem = {};
+            this._clearHoveredItem();
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
             this._destroyEditInPlace();
