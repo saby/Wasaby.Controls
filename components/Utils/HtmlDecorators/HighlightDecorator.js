@@ -2,11 +2,11 @@ define('SBIS3.CONTROLS/Utils/HtmlDecorators/HighlightDecorator', [
    'SBIS3.CONTROLS/Utils/HtmlDecorators/AbstractDecorator',
    'Core/markup/ParserUtilities',
    'Core/core-instance',
-   'Core/helpers/String/escapeHtml'
+   'View/decorators'
 ], function (AbstractDecorator,
             Parser,
             cInst,
-            escapeHtml) {
+            decorators) {
    'use strict';
 
    /**
@@ -89,30 +89,10 @@ define('SBIS3.CONTROLS/Utils/HtmlDecorators/HighlightDecorator', [
          if (cInst.instanceOfModule(text, 'WS.Data/Type/Enum')) {
             text = text.toString();
          }
-         text = Parser.parse(text);
-         highlight = escapeHtml('' + highlight)
-            .replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
 
-         highlighted(text, new RegExp(highlight, 'gi'), cssClass);
-         return text.innerHTML();
+         return decorators.highlight(text, highlight, cssClass);
       }
    });
-
-   function highlighted(content, highlight, cssClass) {
-      var
-         idx = 0;
-      if (content.childNodes) {
-         for (var i = content.childNodes.length-1; i >= 0; i--) {
-             highlighted(content.childNodes[i], highlight, cssClass );
-         }
-      }
-      if (content.text) {
-         content.text = content.text.replace(
-            highlight,
-            '<span class="' + cssClass + '">$&</span>'
-         );
-      }
-   }
 
    return HighlightDecorator;
 });
