@@ -3,8 +3,6 @@ rem Run unit testing via browser
 node -v
 call npm install
 
-@del .istanbul.yml
-
 node node_modules/istanbul/lib/cli instrument --complete-copy --output components-covered components
 node node_modules/istanbul/lib/cli instrument --complete-copy --output Controls-covered Controls
 
@@ -22,4 +20,7 @@ node node_modules/ws-unit-testing/queue test-server test-browser-coverage
 @rmdir /S /Q Controls
 @rename Controls-origin Controls
 
-node node_modules/istanbul/lib/cli report --include "**\coverage.json" --verbose html
+node coverageUnusedFiles
+
+node node_modules/istanbul/lib/cli report --dir "coverage-report" --include "**\coverage.json" html
+node node_modules/istanbul/lib/cli report --dir "cobertura" --include "**\coverage.json" cobertura
