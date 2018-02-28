@@ -4052,13 +4052,17 @@ define('SBIS3.CONTROLS/ListView',
             }
          },
          _showLoadingOverlay: function() {
-            var container = this.getContainer(),
-               ajaxLoader = this._getAjaxLoaderContainer(),
+            this._getAjaxLoaderContainer().removeClass('ws-hidden');
+         },
+         _showIndicator: function () {
+            var ajaxLoader = this._getAjaxLoaderContainer(),
+               container = this.getContainer(),
                scrollContainer = this._getScrollContainer()[0],
                indicator, centerCord;
 
+            this._loadingIndicatorTimer = undefined;
+            ajaxLoader.addClass('controls-AjaxLoader__showIndication');
             indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
-            ajaxLoader.removeClass('ws-hidden');
             if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
                /* Ищем кординату, которая находится по середине отображаемой области грида */
                centerCord =
@@ -4069,11 +4073,6 @@ define('SBIS3.CONTROLS/ListView',
                /* Если скрола нет, то сбросим кординату, чтобы индикатор сам расположился по середине */
                indicator[0].style.top = '';
             }
-         },
-         _showIndicator: function () {
-            var ajaxLoader = this._getAjaxLoaderContainer();
-            this._loadingIndicatorTimer = undefined;
-            ajaxLoader.addClass('controls-AjaxLoader__showIndication');
             if (constants.browser.isWinXP) {
                //В старых браузерах не работает top: 50%, если у родительского элемента высота задана через min-height,
                //из-за этого обрезается ромашка.
