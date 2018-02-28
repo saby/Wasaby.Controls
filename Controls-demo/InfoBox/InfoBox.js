@@ -152,10 +152,6 @@ define('Controls-demo/InfoBox/InfoBox',
             this._children.IBOpener.open(cfg);
          },
 
-         _close: function(){
-            this._children.IBOpener.close();
-         },
-
          _toggleMinTargetMode: function(){
             this._minTargetMode = !this._minTargetMode;
          }

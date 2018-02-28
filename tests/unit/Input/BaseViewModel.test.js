@@ -1,17 +1,17 @@
 define(
    [
-      'Controls/Input/resources/InputRender/SimpleViewModel'
+      'Controls/Input/resources/InputRender/BaseViewModel'
    ],
-   function(SimpleViewModel) {
+   function(BaseViewModel) {
 
       'use strict';
 
       describe('Controls.Input.SimpleViewModel', function() {
-         it('Simle test', function () {
+         it('handleInput', function () {
             var
                inputResult;
-            inputResult = new SimpleViewModel({
-            }).prepareData(
+            inputResult = new BaseViewModel({
+            }).handleInput(
                {
                   before: '12',
                   insert: 'a',

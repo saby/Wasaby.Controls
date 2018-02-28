@@ -318,8 +318,8 @@
 
          .controls-ItemsToolbar__container {
             position: relative;
-            background-color: #E7EFF8;
-            border-left: 1px solid #D0D8E0;
+            background-color: @background-color__itemsToolbar_touchmode;
+            border-left: 1px solid @border-color__itemsToolbar_touchmode;
             overflow: hidden;
             height: 100%;
 
@@ -331,7 +331,7 @@
                }
                .controls-Button__text {
                   display: block;
-                  color: @hover-color;
+                  color: @color__itemsToolbar_buttonText_touchmode;
                   font-size: 12px;
                   line-height: 12px;
                }
