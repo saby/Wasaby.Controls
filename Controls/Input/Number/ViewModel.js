@@ -169,7 +169,7 @@ define('Controls/Input/Number/ViewModel',
             },
 
             getValue: function () {
-               return this._options.value ? parseFloat(this._options.value.replace(/ /g, '')) : '';
+               return this._options.value ? parseFloat(this._options.value.replace(/ /g, '')) : undefined;
             },
 
             updateOptions: function(options) {
