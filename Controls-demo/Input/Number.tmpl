@@ -1,5 +1,6 @@
 <div style="margin: 32px; display: flex; flex-direction: column;">
-    <div>
+    <div style="padding: 3em; background-color: rgba(38,59,74,0.22)">
+        <h2>Number</h2>
         <Controls:Label name="myLabel1" caption="Пример"/>
         <Controls:Input:Number bind:value="_text1"
                        integersLength="{{_integersLength}}"
@@ -9,18 +10,17 @@
                        enabled="{{_enabled}}"/>
 
     </div>
-    <div>
-        <h3>Опции</h3>
+    <div style="padding: 3em; background-color: rgba(81,81,81,0.08)">
+        <h3>Задайте опции:</h3>
         <Controls:Label name="myLabel1" caption="tagStyle"/>
         <Controls:Input:Text bind:value="_tagStyle"/>
         <Controls:Label name="myLabel1" caption="integersLength"/>
         <Controls:Input:Number bind:value="_integersLength"/>
         <Controls:Label name="myLabel1" caption="precision"/>
         <Controls:Input:Number bind:value="_precision"/>
-        <Controls:Label name="myLabel1" caption="onlyPositive"/>
-        <Controls:Input:Text bind:value="onlyPositive"/>
         <div>
             <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_enabled" caption="enabled"/>
+            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_onlyPositive" caption="onlyPositive"/>
         </div>
     </div>
 </div>

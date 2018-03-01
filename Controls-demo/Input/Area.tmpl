@@ -1,5 +1,6 @@
 <div style="margin: 32px; display: flex; flex-direction: column;">
-    <div>
+    <div style="padding: 3em; background-color: rgba(38,59,74,0.22)">
+        <h2>Area</h2>
         <Controls:Label name="myLabel1" caption="Пример"/>
         <Controls:Input:Area bind:value="_text1"
                        placeholder="{{_placeholder}}"
@@ -12,8 +13,8 @@
                        enabled="{{_enabled}}"
                        multiline="{{_multiline}}"/>
     </div>
-    <div>
-        <h3>Опции</h3>
+    <div style="padding: 3em; background-color: rgba(81,81,81,0.11) ">
+        <h3>Задайте опции:</h3>
         <Controls:Label name="myLabel1" caption="placeholder"/>
         <Controls:Input:Text bind:value="_placeholder"/>
         <Controls:Label name="myLabel1" caption="constraint"/>
