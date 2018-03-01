@@ -6,7 +6,7 @@ define(
 
       'use strict';
 
-      describe('Controls.Input.SimpleViewModel', function() {
+      describe('Controls.Input.BaseViewModel', function() {
          it('handleInput', function () {
             var
                inputResult;
