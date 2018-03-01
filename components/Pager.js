@@ -113,28 +113,33 @@ define('SBIS3.CONTROLS/Pager', [
         * @param {Number} hasNextPage
         * @param {Number} selectedCount
         */
-      updateAmount : function(numRecords, hasNextPage, selectedCount){
+      updateAmount : function(numRecords, more, selectedCount){
          if(!this._options.noPagerAmount) {
             var pagerStr = '';
             this._lastNumRecords = numRecords;
-            this._lastNextPage = hasNextPage;
+            this._lastNextPage = more;
             selectedCount = selectedCount || 0;
-            if (typeof hasNextPage === 'boolean') {
-               var strEnd = '',//typeof hasNextPage !== 'boolean' && hasNextPage ? (' из ' + hasNextPage) : '',
-                  page = this.getPaging().getPage() - 1,
-                  startRecord = page * this._dropd.getSelectedKeys()[0] + 1;
-               if (numRecords === 0) {
-                  pagerStr = '';
-               }
-               else if (numRecords === 1 && page === 0) {
-                  pagerStr = '1 ' + rk('запись');
+
+            var strEnd = '',//typeof hasNextPage !== 'boolean' && hasNextPage ? (' из ' + hasNextPage) : '',
+               page = this.getPaging().getPage() - 1,
+               startRecord = page * this._dropd.getSelectedKeys()[0] + 1;
+            if (numRecords === 0) {
+               pagerStr = '';
+            }
+            else if (numRecords === 1 && page === 0) {
+               pagerStr = '1 ' + rk('запись');
+            }
+            else {
+               pagerStr = startRecord + ' - ' + (startRecord + numRecords - 1) + strEnd;
+            }
+
+            if (typeof more === 'number') {
+               if (pagerStr) {
+                  pagerStr += ' ' + rk('из') + ' ' + more;
                }
                else {
-                  pagerStr = startRecord + ' - ' + (startRecord + numRecords - 1) + strEnd;
+                  pagerStr = rk('Всего') + ': ' + more;
                }
-            } else {
-               pagerStr += pagerStr === '' ? rk('Всего') + ' : ' : '. ' + rk('Всего') + ' : ';
-               pagerStr += numRecords;
             }
 
             if (selectedCount > 0) {
