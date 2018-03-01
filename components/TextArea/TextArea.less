@@ -64,7 +64,7 @@
    left: 0;
 }
 .controls-TextArea__view_empty {
-   color: @color_InputRender-placeholder; //Т.к. до инициализации textarea скрыта, то плейсхолдер находится в div'e и он должен иметь корректный цвет
+   visibility: hidden;
    .baseline-fix(); //Пустой блок увеличивает размеры родительского и ломает базовую линию
 }
 .controls-TextArea__field_init {
