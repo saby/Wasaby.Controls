@@ -163,13 +163,13 @@ define('Controls/Input/Number/ViewModel',
             getDisplayValue: function () {
                return _private.getValueWithDelimiters({
                   before: '',
-                  insert: this._options.value,
+                  insert: this._options.value || '',
                   after: ''
                });
             },
 
             getValue: function () {
-               return parseFloat(this._options.value.replace(/ /g, '')) || '';
+               return this._options.value ? parseFloat(this._options.value.replace(/ /g, '')) : undefined;
             },
 
             updateOptions: function(options) {
