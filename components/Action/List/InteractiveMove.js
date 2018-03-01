@@ -2,7 +2,7 @@
 define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
       'SBIS3.CONTROLS/Action/List/Move',
       'SBIS3.CONTROLS/Action/Mixin/DialogMixin',
-      'Core/helpers/string-helpers',
+      'Core/helpers/i18n/wordCaseByNumber',
       'Core/Indicator',
       'Core/core-merge',
       'Core/IoC',
@@ -11,7 +11,7 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'css!SBIS3.CONTROLS/Action/List/resources/InteractiveMove'
    ],
-   function (ListMove, DialogMixin, strHelpers, Indicator, cMerge, IoC, cInstance, constants, InformationPopupManager) {
+   function (ListMove, DialogMixin, wordCaseByNumber, Indicator, cMerge, IoC, cInstance, constants, InformationPopupManager) {
       'use strict';
       /**
        * Класс, описывающий действие перемещения записей по иерархии с возможностью выбора позиции перемещения через диалог. По умолчанию переносит выделенные записи.
@@ -207,7 +207,7 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
             var config = InteractiveMove.superclass._getDialogConfig.call(this, meta),
                movedItems = meta.movedItems;
             cMerge(config, {
-               title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись'), ' ' + rk('записи')) + ' ' + rk('в'),
+               title: rk('Перенести') + ' ' + movedItems.length + wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись'), ' ' + rk('записи')) + ' ' + rk('в'),
                opener: this._getListView()
             }, {preferSource: true});
             config['cssClassName'] = 'InteractiveMove-window';
