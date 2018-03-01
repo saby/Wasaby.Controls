@@ -151,7 +151,7 @@ define('Controls/Input/Number/ViewModel',
                   splitValue.insert = '';
                }
 
-               this._options.value = parseFloat(_private.getClearValue(splitValue));
+               this._options.value = _private.getClearValue(splitValue);
 
                //Запишет значение в input и поставит курсор в указанное место
                return {
@@ -163,20 +163,22 @@ define('Controls/Input/Number/ViewModel',
             getDisplayValue: function () {
                return _private.getValueWithDelimiters({
                   before: '',
-                  insert: String(this._options.value) || '',
+                  insert: this._options.value,
                   after: ''
                });
             },
 
             getValue: function () {
-               return this._options.value || undefined;
+               return parseFloat(this._options.value) || undefined;
             },
 
             updateOptions: function(options) {
                this._options.onlyPositive = options.onlyPositive;
                this._options.integersLength = options.integersLength;
                this._options.precision = options.precision;
-               this._options.value = options.value;
+               if (parseFloat(this._options.value) !== options.value) {
+                  this._options.value = options.value !== undefined ? String(options.value) : '';
+               }
             }
          });
 
