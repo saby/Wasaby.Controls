@@ -217,32 +217,40 @@ define(
 
          it('getDisplayValue: only integers', function () {
             var
-               numberViewModel = new NumberViewModel({}),
-               result = numberViewModel.getDisplayValue('123456');
+               numberViewModel = new NumberViewModel({
+                  value: '123456'
+               }),
+               result = numberViewModel.getDisplayValue();
 
             assert.equal(result, '123 456');
          });
 
          it('getDisplayValue: integers and decimals', function () {
             var
-               numberViewModel = new NumberViewModel({}),
-               result = numberViewModel.getDisplayValue('123456.78');
+               numberViewModel = new NumberViewModel({
+                  value: '123456.78'
+               }),
+               result = numberViewModel.getDisplayValue();
 
             assert.equal(result, '123 456.78');
          });
 
          it('getValue: only integers', function () {
             var
-               numberViewModel = new NumberViewModel({}),
-               result = numberViewModel.getValue('123 456');
+               numberViewModel = new NumberViewModel({
+                  value: '123 456'
+               }),
+               result = numberViewModel.getValue();
 
             assert.equal(result, '123456');
          });
 
          it('getValue: integers and decimals', function () {
             var
-               numberViewModel = new NumberViewModel({}),
-               result = numberViewModel.getValue('123 456.78');
+               numberViewModel = new NumberViewModel({
+                  value: '123 456.78'
+               }),
+               result = numberViewModel.getValue();
 
             assert.equal(result, '123456.78');
          });

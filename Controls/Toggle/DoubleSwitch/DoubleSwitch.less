@@ -76,9 +76,13 @@
    line-height: @width_Switch / 2;
 }
 
-.controls-DoubleSwitch__text_unselected {
-   color: @color_Switch-text_unselected;
+.controls-DoubleSwitch__text_enabled_unselected {
+   color: @color_Switch-text_enabled_unselected;
    cursor: pointer;
+}
+
+.controls-DoubleSwitch__text_disabled_unselected {
+   color: @color_Switch-text_disabled_unselected;
 }
 
 .ws-is-desktop-platform {
@@ -92,7 +96,7 @@
       }
    }
 
-   .controls-DoubleSwitch__text_unselected:hover {
+   .controls-DoubleSwitch__text_enabled_unselected:hover {
       text-decoration: underline;
    }
 }

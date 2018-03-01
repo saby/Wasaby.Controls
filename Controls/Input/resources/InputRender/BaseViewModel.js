@@ -15,7 +15,7 @@ define('Controls/Input/resources/InputRender/BaseViewModel',
 
       return simpleExtend.extend({
          constructor: function (options) {
-            this._options = options;
+            this._options = options || {};
          },
 
          /**

@@ -67,6 +67,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
      *
      * @public
      * @control
+     *
+     * @author Миронов Александр Юрьевич
      */
    var DateRangeBigChoose = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin, DateRangeMixin], /** @lends SBIS3.CONTROLS/Date/RangeBigChoose.prototype */{
       _dotTplFn: dotTplFn,

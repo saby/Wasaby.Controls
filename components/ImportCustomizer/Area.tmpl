@@ -1,0 +1,69 @@
+<div class="controls-ImportCustomizer-Area">
+   <div class="controls-ImportCustomizer-Area__head">
+      <div class="controls-ImportCustomizer-Area__head-title">
+         <div class="controls-ImportCustomizer-Area__head-title-left">
+            <ws:if data="{{title}}">{{title}}</ws:if><ws:else>{[НастройщикИмпорта@@Настройка импорта]}</ws:else>:
+            <SBIS3.CONTROLS:Link
+               class="controls-ImportCustomizer-Area__head-title-link"
+               href="{{file.url}}"
+               caption="{{file.name}}"
+               inNewTab="{{true}}"
+            />
+         </div>
+         <div class="controls-ImportCustomizer-Area__head-title-right">
+            <SBIS3.CONTROLS:Button
+               class="controls-ImportCustomizer-Area__applyButton"
+               command="complete" primary="true"
+               >
+               <ws:caption>
+                  <ws:if data="{{applyButtonTitle}}">{{applyButtonTitle}}</ws:if>
+                  <ws:else>{[НастройщикИмпорта@@Импортировать]}</ws:else>
+               </ws:caption>
+            </SBIS3.CONTROLS:Button>
+         </div>
+      </div>
+   </div>
+   <SBIS3.CONTROLS:ScrollContainer class="controls-ImportCustomizer-Area__body controls-ScrollContainer__flex">
+      <ws:content>
+         <ws:if data="{{sheets && sheets.length}}">
+            <SBIS3.CONTROLS:ImportCustomizer:Sheet:View
+               class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-sheet"
+               name="controls-ImportCustomizer-Area__sheet"
+               allSheetsTitle="{{allSheetsTitle}}"
+               sheetTitles="{{_sheetsTitles}}"
+               sheetIndex="{{sheetIndex}}"
+            />
+         </ws:if>
+         <ws:partial
+            template="{{baseParamsComponent}}"
+            scope="{{baseParams}}"
+            class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-baseParams"
+            name="controls-ImportCustomizer-Area__baseParams"
+         />
+         <SBIS3.CONTROLS:ImportCustomizer:Provider:View
+            class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-provider"
+            name="controls-ImportCustomizer-Area__provider"
+            parsers="{{_parserItems}}"
+            parser="{{parser}}"
+            skippedRows="{{undefined}}" {{/*^^^*/}}
+            separator="{{undefined}}" {{/*^^^*/}}
+         />
+         <Lib:Control:TemplatedArea:TemplatedArea
+            template="{{_providerArgsComponent}}"
+            class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-providerArgs"
+            name="controls-ImportCustomizer-Area__providerArgs"
+            visible="{{!!_providerArgsComponent}}"
+            componentOptions="{{_providerArgsOptions}}"
+         />
+         <SBIS3.CONTROLS:ImportCustomizer:ColumnBinding:View
+            class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-columnBinding"
+            name="controls-ImportCustomizer-Area__columnBinding"
+            columnCaption="{{bindingColumnCaption}}"
+            columnTitle="{{bindingColumnTitle}}"
+            rows="{{_columnsBindingRows}}"
+            fields="{{_columnsBindingFields}}"
+            skippedRows="{{undefined}}" {{/*^^^*/}}
+         />
+      </ws:content>
+   </SBIS3.CONTROLS:ScrollContainer>
+</div>
