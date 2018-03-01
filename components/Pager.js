@@ -9,12 +9,12 @@ define('SBIS3.CONTROLS/Pager', [
    'Lib/Control/CompoundControl/CompoundControl',
    'tmpl!SBIS3.CONTROLS/Pager/Pager',
    'Core/core-instance',
-   'Core/helpers/string-helpers',
+   'Core/helpers/i18n/wordCaseByNumber',
    'SBIS3.CONTROLS/DropdownList',
    'Lib/Control/Paging/Paging',
    'i18n!SBIS3.CONTROLS/Pager',
    'css!SBIS3.CONTROLS/Pager/Pager'
-], function(CompoundControl, dotTplFn, cInstance, strHelpers) {
+], function(CompoundControl, dotTplFn, cInstance, wordCaseByNumber) {
 
    'use strict';
 
@@ -141,8 +141,8 @@ define('SBIS3.CONTROLS/Pager', [
                if (numRecords == 1) {
                   pagerStr = rk('Выбрана') + ' 1 ' + rk('запись');
                } else {
-                  pagerStr = strHelpers.wordCaseByNumber(selectedCount, rk('Выбрано'), rk('Выбрана'), rk('Выбраны')) +
-                     ' ' + selectedCount + strHelpers.wordCaseByNumber(selectedCount, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + '. ' + pagerStr;
+                  pagerStr = wordCaseByNumber(selectedCount, rk('Выбрано'), rk('Выбрана'), rk('Выбраны')) +
+                     ' ' + selectedCount + wordCaseByNumber(selectedCount, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + '. ' + pagerStr;
                }
             }
             this.getContainer().find('.controls-Amount-text_js').text(pagerStr + ',');
