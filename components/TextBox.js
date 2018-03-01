@@ -51,7 +51,7 @@ define('SBIS3.CONTROLS/TextBox', [
     * </ol>
     * @class SBIS3.CONTROLS/TextBox
     * @extends SBIS3.CONTROLS/TextBox/TextBoxBase
-    * @author Романов В.С.
+    * @author Зайцев А.С.
     * @demo SBIS3.CONTROLS.Demo.MyTextBox
     *
     * @ignoreOptions independentContext contextRestriction className horizontalAlignment
