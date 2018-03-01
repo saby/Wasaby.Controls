@@ -1,13 +1,56 @@
-<div on:click="clickHandler()">
-    <span>ничего  </span>
-    <Controls:Button enabled="{{true}}" caption="MyLink" style="link"/>
+<div>
     <span>   не поехало</span>
-    <Controls:Button enabled="{{true}}" icon="icon-16 icon-Add icon-primary" caption="{{123}}" style="default"/>
+    <Controls:Button enabled="{{true}}" icon="icon-16 icon-Add" caption="{{123}}" style="buttonAdd"/>
+    <span> ничего  не поехало</span>
+    <Controls:Button enabled="{{true}}" icon="icon-16 icon-Add" caption="{{123}}"/>
     <span>   не поехало</span>
-    <Controls:Button enabled="{{true}}" icon="icon-16 icon-Add icon-primary" caption="{{123}}" style="primary"/>
+    <Controls:Button enabled="{{true}}" icon="icon-16 icon-Add" caption="{{123}}" style="buttonPrimary"/>
+    <span>выключенная </span>
+    <Controls:Button enabled="{{false}}" icon="icon-16 icon-Add" caption="{{123}}" style="buttonPrimary"/>
+    <span> большая конпка</span>
+    <Controls:Button enabled="{{true}}" icon="icon-16 icon-Add" caption="{{123}}" size="big" style="buttonPrimary"/>
     <span>   не поехало</span>
+    <Controls:Button enabled="{{true}}" icon="icon-24 icon-Add" caption="{{123}}" size="big" style="buttonDefault"/>
+    <span>   выключенная</span>
+    <Controls:Button enabled="{{false}}" icon="icon-24 icon-Add" caption="{{123}}" size="big" style="buttonDefault"/>
     <span>ничего</span>
     <ws:Controls.List.AddButton enabled="{{true}}" caption="AddButton"/>
     <span> не поехало</span>
     <ws:Controls.List.AddButton enabled="{{false}}" caption="AddButton"/>
+    <span>     кнопка иконка     </span>
+    <Controls:Button enabled="{{true}}" icon="icon-24 icon-Send"/>
+    <span>      кнопка иконка       </span>
+    <Controls:Button enabled="{{true}}" icon="icon-24 icon-Send" style="buttonPrimary"/>
+    <span>выключенная</span>
+    <Controls:Button enabled="{{false}}" icon="icon-24 icon-Send" style="buttonPrimary"/>
+    <span> ссылка основная 12px  </span>
+    <Controls:Button enabled="{{true}}" caption="MyLink" style="linkMain" size="s"/>
+    <span> ссылка основная 14px </span>
+    <Controls:Button enabled="{{true}}" caption="MyLink" style="linkMain" size="default"/>
+    <span> ссылка основная 15px </span>
+    <Controls:Button enabled="{{true}}" caption="MyLink" style="linkMain" size="l"/>
+    <span> ссылка основная 18px </span>
+    <Controls:Button enabled="{{true}}" caption="MyLink" style="linkMain" size="xl"/>
+    <span> ссылка основная 2 </span>
+    <Controls:Button enabled="{{true}}" caption="MyLink" style="linkMain2" size="default"/>
+    <span> ссылка основная 3 </span>
+    <Controls:Button enabled="{{true}}" caption="MyLink" style="linkMain3" size="xl"/>
+    <span> ссылка дополнительная </span>
+    <Controls:Button enabled="{{true}}" caption="MyLink" style="linkAdditional" size="s"/>
+    <span> ссылка дополнительная 2 </span>
+    <Controls:Button enabled="{{true}}" caption="MyLink" style="linkAdditional2" size="l"/>
+    <span> ссылка дополнительная 3 </span>
+    <Controls:Button enabled="{{true}}" caption="MyLink" style="linkAdditional3" size="default"/>
+    <span> ссылка дополнительная 4 </span>
+    <Controls:Button enabled="{{true}}" caption="MyLink" style="linkAdditional4" size="xl"/>
+    <span> ссылка дополнительная 5 </span>
+    <Controls:Button enabled="{{true}}" caption="MyLink" style="linkAdditional5" size="l"/>
+    <span> выключенная ссылка </span>
+    <Controls:Button enabled="{{false}}" caption="MyLink" style="linkMain" size="xl"/>
+    <span> ссылка основная с иконкой </span>
+    <Controls:Button enabled="{{true}}" icon="icon-16 icon-Send" caption="MyLink" style="linkMain" size="m"/>
+    <span> ссылка основная с иконкой </span>
+    <Controls:Button enabled="{{true}}" icon="icon-16 icon-Erase" style="linkMain"/>
+    <span> ссылка основная с иконкой </span>
+    <Controls:Button enabled="{{true}}" icon="icon-16 icon-Save" style="linkMain"/>
 </div>
