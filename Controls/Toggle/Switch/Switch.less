@@ -68,9 +68,13 @@
    margin-left: @margin_Switch-text;
 }
 
-.controls-Switch__text_unselected {
-   color: @color_Switch-text_unselected;
+.controls-Switch__text_enabled_unselected {
+   color: @color_Switch-text_enabled_unselected;
    cursor: pointer;
+}
+
+.controls-Switch__text_disabled_unselected {
+   color: @color_Switch-text_disabled_unselected;
 }
 
 .ws-is-desktop-platform {
@@ -84,7 +88,7 @@
       }
    }
 
-   .controls-Switch__text_unselected:hover {
+   .controls-Switch__text_enabled_unselected:hover {
       text-decoration: underline;
    }
 }
