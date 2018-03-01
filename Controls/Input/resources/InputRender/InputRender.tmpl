@@ -1,4 +1,10 @@
-<div class="controls-InputRender controls-InputRender_state_{{ _getInputState() }} {{ !isEnabled() ? 'controls-InputRender_state_disabled_' + (_options.multiline ? 'multiLine' : 'singleLine') }} controls-InputRender_size_{{ _options.size ? _options.size : 'default_' + (_options.multiline ? 'multiLine' : 'singleLine') }} controls-InputRender_padding{{ _options.sidePadding ? _options.sidePadding : 'Both' }}"
+<div class="controls-InputRender
+   controls-{{ _options.inputType }}-InputRender
+   controls-{{ _options.inputType }}-InputRender_style_{{ _options.style }}
+   controls-{{ _options.inputType }}-InputRender_state_{{ _getInputState() }}
+   {{ !isEnabled() ? 'controls-' + _options.inputType + '-InputRender_state_disabled_' + (_options.multiline ? 'multiLine' : 'singleLine') }}_style_{{ _options.style }}
+   controls-InputRender_size_{{ _options.size ? _options.size : 'default_' + (_options.multiline ? 'multiLine' : 'singleLine') }}
+   controls-{{ _options.inputType }}-InputRender_padding{{ _options.sidePadding ? _options.sidePadding : 'Both' }}"
      title="{{tooltip}}">
    <div class="controls-InputRender__wrapper">
       <div class="controls-InputRender__fieldWrapper">
@@ -13,13 +19,13 @@
                on:click="_clickHandler()"
                on:select="_selectionHandler()"
                on:keyup="_keyUpHandler()"
-               on:change="_notifyHandler('inputCompleted')"
+               on:change="_inputCompletedHandler()"
                on:focus="_focusHandler()"
-               value="{{ _options.value }}"
+               value="{{ _options.viewModel.getDisplayValue() }}"
                placeholder="{{ _options.placeholder }}"
          />
 
-         <ws:if data="{{ !_options.value }}">
+         <ws:if data="{{ !_options.viewModel.getDisplayValue() }}">
             <ws:partial
                attr:class="{{ _options.isMultiline ? 'controls-InputArea__placeholder_multiline' }}"
                template="tmpl!Controls/Input/resources/CustomPlaceholder"

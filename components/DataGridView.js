@@ -902,6 +902,25 @@ define('SBIS3.CONTROLS/DataGridView',
          return parseInt(this._getAjaxLoaderContainer().css('min-height'), 10);
       }, '_getAjaxLoaderMinHeight'),
 
+
+      _showLoadingIndicator: function () {
+         var tHeadHeight = 0;
+
+         DataGridView.superclass._showLoadingIndicator.apply(this, arguments);
+
+         if (this._thead) {
+            tHeadHeight = this._thead.outerHeight();
+         }
+         this._setMinHeight(tHeadHeight + this._getLoadingIndicatorHeight() + 'px');
+      },
+      _hideLoadingIndicator: function () {
+         DataGridView.superclass._hideLoadingIndicator.apply(this, arguments);
+         this._setMinHeight('');
+      },
+      _getLoadingIndicatorHeight: memoize(function () {
+         return parseInt(this.getContainer().children('.controls-ListView-scrollIndicator').css('height'), 10);
+      }, '_getLoadingIndicatorHeight'),
+
       _redrawHead : function() {
          var
             headData,
