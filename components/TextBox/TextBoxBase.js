@@ -84,8 +84,8 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
                   };
 
                containerClasses.push('controls-' + cfg.inputType + '-InputRender');
-               containerClasses.push('controls-' + cfg.inputType + '-TextBox_state_' + (cfg.enabled ? 'default' : 'disabled'));
-               !cfg.enabled && containerClasses.push('controls-' + cfg.inputType + '-TextBox_state_disabled_' + (cfg._isMultiline ? 'multiLine' : 'singleLine'));
+               containerClasses.push('controls-' + cfg.inputType + '-InputRender_state_' + (cfg.enabled ? 'default' : 'disabled'));
+               !cfg.enabled && containerClasses.push('controls-' + cfg.inputType + '-InputRender_state_disabled_' + (cfg._isMultiline ? 'multiLine' : 'singleLine'));
                containerClasses.push('controls-TextBox_size_' + (cfg.size ? cfg.size : 'default') + (cfg._isMultiline ? '_multiLine' : '_singleLine'));
                containerClasses.push('controls-TextBox_text-align_' + cfg.textAlign);
                containerClasses.push(cfg._paddingClass);

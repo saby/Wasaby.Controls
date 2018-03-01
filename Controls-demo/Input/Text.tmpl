@@ -1,0 +1,24 @@
+<div style="margin: 32px; display: flex; flex-direction: column;">
+   <div>
+      <Controls:Label name="myLabel1" caption="Пример"/>
+      <Controls:Input:Text bind:value="_text1"
+                     placeholder="{{_placeholder}}"
+                     constraint="{{_constraint}}"
+                     validationErrors="{{_validationErrors}}"
+                     trim="{{_trim}}"
+                     maxLength="{{_maxLength}}"/>
+   </div>
+   <div>
+      <h3>Опции</h3>
+      <Controls:Label name="myLabel1" caption="placeholder"/>
+      <Controls:Input:Text bind:value="_placeholder"/>
+      <Controls:Label name="myLabel1" caption="constraint"/>
+      <Controls:Input:Text bind:value="_constraint"/>
+      <Controls:Label name="myLabel1" caption="maxLength"/>
+      <Controls:Input:Text bind:value="_maxLength"/>
+      <div>
+         <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_trim" caption="trim"/>
+         <ws:Controls.Toggle.Checkbox on:valueChanged="valueChangedHandler()" enabled="{{true}}" bind:value="_validationErrorsValue" caption="validationErrors"/>
+      </div>
+   </div>
+</div>

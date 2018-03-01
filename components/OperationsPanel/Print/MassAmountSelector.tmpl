@@ -14,20 +14,7 @@
       allowEmptySelection="{{false}}"
       class="controls-ButtonGroup__vertical"
       selectedKey="{{'controls-RadioButtons'|mutable}}"
-      items="{{ [
-         {
-            'id': 'current',
-            'title': 'Текущую страницу'
-         },
-         {
-            'id': 'all',
-            'title': 'Все записи'
-         },
-         {
-            'id': 'pickNum',
-            'title': 'Количество записей'
-         }
-      ] }}"
+      items="{{ itemsRadioGroup }}"
    />
    <div class="controls-MassAmountSelector__numberTextBox ws-hidden" id="numberTextBox">
       <div class="ws-label controls-PrintMassDialog__label">Количество записей</div>

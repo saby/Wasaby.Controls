@@ -22,6 +22,8 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
      *
      * @public
      * @control
+     *
+     * @author Миронов Александр Юрьевич
      */
    var DateRangeChoose = CompoundControl.extend([RangeMixin, DateRangeMixin], /** @lends SBIS3.CONTROLS/Date/RangeChoose.prototype */{
       /**

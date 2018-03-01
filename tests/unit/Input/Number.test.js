@@ -209,10 +209,50 @@ define(
             it(item.testName, function () {
                var
                   numberViewModel = new NumberViewModel(item.controlConfig),
-                  result = numberViewModel.prepareData(item.splitValue, item.inputType);
+                  result = numberViewModel.handleInput(item.splitValue, item.inputType);
 
                assert.equal(result.value, item.result.value);
             });
+         });
+
+         it('getDisplayValue: only integers', function () {
+            var
+               numberViewModel = new NumberViewModel({
+                  value: '123456'
+               }),
+               result = numberViewModel.getDisplayValue();
+
+            assert.equal(result, '123 456');
+         });
+
+         it('getDisplayValue: integers and decimals', function () {
+            var
+               numberViewModel = new NumberViewModel({
+                  value: '123456.78'
+               }),
+               result = numberViewModel.getDisplayValue();
+
+            assert.equal(result, '123 456.78');
+         });
+
+         it('getValue: only integers', function () {
+            var
+               numberViewModel = new NumberViewModel({
+                  value: '123 456'
+               }),
+               result = numberViewModel.getValue();
+
+            assert.equal(result, '123456');
+         });
+
+         it('getValue: integers and decimals', function () {
+            var
+               numberViewModel = new NumberViewModel({
+                  value: '123 456.78'
+               }),
+               result = numberViewModel.getValue();
+
+            assert.equal(result, '123456.78');
          });
       });
    }

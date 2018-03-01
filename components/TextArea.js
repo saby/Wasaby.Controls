@@ -118,7 +118,13 @@ define('SBIS3.CONTROLS/TextArea', [
              * </pre>
              */
             newLineMode: 'enter',
-            breakClickBySelect: false
+            breakClickBySelect: false,
+            //МЕГАкостыль, т.к. один человек, очень быстро нажимает ctr + Enter и отпускаение Enter происходит уже без нажатия ctr
+            //Получаем что TextArea думает, что просто отпустили Enter и не пропускает событие. Ошибка обусловлена тем что
+            //исторически сложилось так, редактирование по месту обрабатывает нажатия на keyup и от этого нужно уходить.
+            //Выписал задачу https://online.sbis.ru/opendoc.html?guid=41cf6afb-ddd1-46b6-9ebf-09dd62e798b5 и надеюсь что
+            //в VDOM это заработет само и ни какие костыли с keyup больше не понадобятся.
+            _ctrlKeyUpTimestamp: undefined
          }
       },
 
@@ -326,13 +332,22 @@ define('SBIS3.CONTROLS/TextArea', [
 
       _keyUpBind: function(event) {
          var
+            ctrlKey = event.ctrlKey,
             newText = this._inputField.val(),
             key = event.which || event.keyCode,
             textsEmpty = this._isEmptyValue(this._options.text) && this._isEmptyValue(newText);
          if (newText != this._options.text && !textsEmpty) {
             this.setText.call(this, newText);
          }
-         if (!this._processNewLine(event) && ((key === constants.key.enter && !event.ctrlKey) ||
+
+         if (event.which === constants.key.enter && !ctrlKey && this._ctrlKeyUpTimestamp) {
+            ctrlKey = (new Date() - this._ctrlKeyUpTimestamp) < 100;
+         }
+         if (event.which === constants.key.ctrl) {
+            this._ctrlKeyUpTimestamp = new Date();
+         }
+
+         if (!this._processNewLine(event) && ((key === constants.key.enter && !ctrlKey) ||
             Array.indexOf([constants.key.up, constants.key.down], key) >= 0)) {
             event.stopPropagation();
          }

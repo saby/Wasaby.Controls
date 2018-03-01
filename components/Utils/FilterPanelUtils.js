@@ -228,10 +228,18 @@ define('SBIS3.CONTROLS/Utils/FilterPanelUtils',
          var dTemplatesReady = new ParallelDeferred();
 
          function processTemplate(template, name) {
-            var jsModule = constants.jsModules.hasOwnProperty(template);
+            var isStringTemplate = typeof template === 'string',
+                jsModule;
+            
+            if (isStringTemplate) {
+               /* Без проверки на строку упадёт ошибка, если template - это tmpl шаблон,
+                  т.к. hasOwnProperty вызывает toString, если туда передать объект, а tmpl шаблон кидает исключение,
+                  если у него звать toString. */
+               jsModule = constants.jsModules.hasOwnProperty(template);
+            }
             /* Если шаблон указали как имя компонента (строки которые начинаются с js! или SBIS3.),
              то перед отображением панели фильтров сначала загрузим компонент. */
-            if (template && typeof template === 'string' && (jsModule || constants.modules.hasOwnProperty(template.split('/')[0]) || template.indexOf('js!') === 0)) {
+            if (template && isStringTemplate && (jsModule || constants.modules.hasOwnProperty(template.split('/')[0]) || template.indexOf('js!') === 0)) {
 
                if (jsModule) {
                   template = 'js!' + template;

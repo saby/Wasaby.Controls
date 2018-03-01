@@ -98,6 +98,11 @@
 @color_ListView-GroupBy_text_hovered:                #B9E9FF;
 @color_ListView-GroupBy_separator:                   rgba(137,145,169,.3);
 @background-color_ListView-GroupBy_text:             transparent;
+@border-color_itemsActions_touchMode:                #2d3f54;
+@outline-color_itemsActions_touchMode:               #2d3f54;
+@background-color__itemsToolbar_touchmode:           #2d3f54;
+@border-color__itemsToolbar_touchmode:               #2d3f54;
+@color__itemsToolbar_buttonText_touchmode:           @default-text-color;
 //DataGridView
 @color_DataGridView-sorting:                         #8991A9;
 @color_DataGridView-sorting_hovered:                 @color_DataGridView-sorting;
@@ -113,11 +118,24 @@
 @color_TreeDataGridView-editArrow_hovered:           #B9E9FF;
 @background-color_TreeDataGridView-copyArrow:        #1D2834;
 //Link
+@color_Link-main-text:                    #26B8FF;
+@color_Link-main-text_hovered:            #B9E9FF;
+@color_Link-main2-text:                   #8991A9;
+@color_Link-main3-text:                   #8991A9;
+@color_Link-main3-text_hovered:           #B9E9FF;
 @color_Link-text_disabled:                #4B688B;
 @color_Link-icon_disabled:                @color_Link-text_disabled;
 @color_Link-additional:                   #FFCC99;
 @color_Link-additional-2:                 #839EBC;
 @color_Link-additional-3:                 #FFFFFF;
+@border-color_Button_primary:             transparent;
+@border-color_Button_primary_hovered:     transparent;
+@background_Button_primary:               #FF7033;
+@box-shadow_Button:                       0, 1, 4px, rgba(0,0,0, .5);
+@box-shadow_Button_active:                transparent;
+@background_Button_primary_active:        #FA6019;
+@background_Button_default_active:        #516B8C;
+@background_Button_disabled:              rgba(255,255,255, .15);
 //Switcher
 @color_switcher_line:                     #839EBC;
 @switcher-disabled-color:                 #4B688B;
@@ -126,6 +144,16 @@
 @color_switcher_text_unselected_hover:    #B9E9FF;
 @color_SwitherDouble_text_disabled:       #4B688B;
 @color_SwitherDouble_text_disabled_checked:#e4e4e4;
+
+//VDOM Switcher
+@border-color_Switch:                                   rgba(109,141,176, .4);
+@background-color_Switch-line_enabled:                  #839EBC;
+@background-color_Switch-line_disabled:                 #4B688B;
+@border-color_Switch-marker_unchecked_enabled:          #839EBC;
+@border-color_Switch-marker_unchecked_disabled:         #4B688B;
+@color_Switch-text_enabled_unselected:                  #8991A9;
+@color_Switch-text_disabled_unselected:                 #4B688B;
+
 //RadioButton
 @radio-button-icon-border-color:          rgba(109,141,176, .4);
 @radio-button-hover-text-color:           #B9E9FF;
@@ -260,6 +288,16 @@
 @color_CloseButton-light-icon_hover:     #B9E9FF;
 @color_CloseButton-icon_hover:           @color_CloseButton-icon;
 
+//Search
+@color_Search-icon:                      @color_primary;
+@color_Search-iconSearch_hovered:        #B9E9FF;
+@color_Search-iconReset:                 #8991A9;
+@color_Search-icon_disabled:             #4B688B;
+@border-color_Search:                    rgba(109,141,176,.6);
+@border-color_Search_active:             #6D8DB0;
+@border-color_Search_disabled:           rgba(109,141,176,.25);
+@background-color_Search:                transparent;
+@background-color_Search_style_header:         transparent;
 //ListAddButton
 @color_listAddButton_enabled:                     @color_primary;
 @color_listAddButton_disabled:                    @default-disabled-color;

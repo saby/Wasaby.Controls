@@ -45,6 +45,7 @@
 @search-border-radius:         round(3px * @multiplier);
 //button
 @font-size_Button_m:           round(32px * @multiplier);
+@font-size_Button_Vdom_m:           round(32px * @multiplier);
 @font-size_Button_default:     @font-size_Button_l;
 @height_Button_m:              round(58px * @multiplier);
 @height_Button_default:        @height_Button_l;
@@ -86,6 +87,14 @@
 //PrintDialog
 @printDialog-activate-right:                          round(92px * @multiplier); //ширина кнопки 84px+8px отступ
 @printDialog-button-margin-top:                       @top_window_button;
+//MassAmountSelector
+@min-width_MassAmountSelector:                     round(756px * @multiplier);
+@margin_MassAmountSelector-activate:               round(11px * @multiplier) 0 0 0;
+@right_MassAmountSelector-activate:                round(94px * @multiplier);
+@width_MassAmountSelector-numberTextBox:           round(150px * @multiplier);
+@font-size_MassAmountSelector-label:               round(32px * @multiplier);
+@padding_MassAmountSelector-label:                 0 round(16px * @multiplier) 0 round(24px * @multiplier);
+@margin_MassAmountSelector-blocks:                 round(16px * @multiplier) 0 round(16px * @multiplier) 0;
 //todo:
 @fieldLink-afterField-button-margin:             0 @default-padding-small 0 0;
 @margin-left__searchForm_picker:  round(-8px * @multiplier);
@@ -220,7 +229,7 @@
 //TreeDataGridView
 @font-size_TreeDataGridView-folderTitle:              round(32px * @multiplier);
 @width_TreeDataGridView-expand:                       round(42px * @multiplier);
-@margin_TreeDataGridView-expand:                      0 round(4px * @multiplier) 0 round(4px * @multiplier);
+@padding_TreeDataGridView-expand:                     0 round(4px * @multiplier) 0 round(4px * @multiplier);
 @height_TreeDataGridView-expand:                      @width_TreeDataGridView-expand;
 @width-TreeDataGridView-levelPadding:                 round(50px * @multiplier);
 @font-size_TreeDataGridView-expand:                   round(30px * @multiplier);
@@ -256,7 +265,6 @@
 //popup,floatarea,window
 @top_window_button:                                   round(11px * @multiplier);
 @controls-Popup-closeButton-top:                      round(11px * @multiplier);
-@controls-printdialog-activate-margin-top:            round(11px * @multiplier);
 @padding-right_floatArea-title:                       round(8px * @multiplier);
 //switcher
 @switcher-dot-size:                                   ceil(14px * @multiplier);
@@ -264,6 +272,19 @@
 @switcherline-width:                                  round(76px * @multiplier);
 @font-size_Switcher_text:                             @large-text-size;
 @text-decoration_switcher_text_unselected_hover:      none;
+
+//VDOM Switcher
+@width_Switch:                                      round(100px * @multiplier);
+@height_Switch:                                     round(50px * @multiplier);
+@border-radius_Switch:                              round(28px * @multiplier);
+@size_Switch-marker:                                round(26px * @multiplier);
+@border-width_Switch-marker:                        round(3px * @multiplier);
+@border-width_Switch-marker_hover:                  round(3px * @multiplier);
+@size_Switch-dot:                                   ceil(14px * @multiplier);
+@margin_Switch-text:                                round(16px * @multiplier);
+@height_Switch-line:                                round(4px * @multiplier);
+@width_Switch-line:                                 round(76px * @multiplier);
+
 //RadioButton
 @radio-button-dot-size:                               ceil(14px * @multiplier);
 @radio-button-dot-margin:                             round(3px * @multiplier)  0 0 round(3px * @multiplier);
@@ -282,6 +303,10 @@
 //Link
 @height_Link:                                         round(52px * @multiplier);
 @font-size_Link:                                      round(32px * @multiplier);
+@font-size_Link-s:                                    round(21px * @multiplier);
+@font-size_Link-m:                                    round(24px * @multiplier);
+@font-size_Link-l:                                    round(28px * @multiplier);
+@font-size_Link-xl:                                   round(32px * @multiplier);
 //Menu
 @height_Menu-header:                                  round(78px * @multiplier);
 @font-size_Popup:                                     round(32px * @multiplier);
@@ -487,6 +512,11 @@
 @width_CloseButton:                             round(86px * @multiplier);
 @height_CloseButton:                            round(78px * @multiplier);
 @font-size_CloseButton:                         round(52px * @multiplier);
+//Search
+@icon-size_Search:                              @default-icon-size-medium;
+@spacing-Search-between-icon-text:              0 4px;
+@padding_Search:                                0 round(12px * @multiplier) 0 round(16px * @multiplier);
+@border-radius_Search:                          3px;
 //ListAddButton
 @icon-size_ListAddButton:                       @default-icon-size-medium;
 @font-size_listAddButton:                       @small-text-size;

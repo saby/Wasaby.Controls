@@ -8,7 +8,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
    "Core/Deferred",
    'Core/deprecated',
    "SBIS3.CONTROLS/Menu/MenuLink",
-   "Deprecated/Controls/DialogSelector/DialogSelector",
+   "Lib/Control/Dialog/Dialog",
    "WS.Data/Chain",
    "WS.Data/Collection/Factory/RecordSet",
    "WS.Data/Collection/RecordSet",
@@ -183,7 +183,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
                   //TODO Но пришлось сделать так:
                   this.getChildControlByName('controls-MassAmountSelector').getContext().setValue('NumOfRecords', numOfRecords);
                },
-               onChange: function(event, pageSize){
+               onAfterClose: function(event, pageSize){
                   self.processSelectedPageSize(pageSize);
                }
             }
