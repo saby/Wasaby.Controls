@@ -9,10 +9,10 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace',
    "tmpl!SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace",
    "Core/constants",
    "SBIS3.CONTROLS/Mixins/CompoundFocusMixin",
-   "Core/helpers/fast-control-helpers",
+   "Core/Indicator",
    'css!SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace'
 ],
-   function(Deferred, Control, dotTplFn, constants, CompoundFocusMixin, fcHelpers) {
+   function(Deferred, Control, dotTplFn, constants, CompoundFocusMixin, Indicator) {
       'use strict';
 
       /**
@@ -80,12 +80,12 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlace/EditInPlace',
                      //Результат может быть деферредом (потребуется обработка на бизнес логике)
                      if (result instanceof Deferred) {
                         loadingIndicator = setTimeout(function () { //Если обработка изменения значения поля длится более 100мс, то показываем индикатор
-                           fcHelpers.toggleIndicator(true);
+                           Indicator.setMessage(rk('Пожалуйста, подождите…'));
                         }, 100);
                         this._editingDeferred = result.addBoth(function () {
                            clearTimeout(loadingIndicator);
                            this._previousModelState = this._editingModel.clone();
-                           fcHelpers.toggleIndicator(false);
+                           Indicator.hide();
                         }.bind(this));
                      } else {
                         this._previousModelState = this._editingModel.clone();

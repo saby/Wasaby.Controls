@@ -4,7 +4,7 @@ define('SBIS3.CONTROLS/StylesPanelNew', [
    'SBIS3.CONTROLS/Mixins/PopupMixin',
    'SBIS3.CONTROLS/History/HistoryController',
    'Core/helpers/Object/find',
-   'Core/helpers/generate-helpers',
+   'Core/helpers/random-helpers',
    'tmpl!SBIS3.CONTROLS/StylesPanelNew/StylesPanelNew',
    'Core/EventBus',
    'tmpl!SBIS3.CONTROLS/StylesPanelNew/resources/presetItemTemplate',
@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/StylesPanelNew', [
    'SBIS3.CONTROLS/CheckBox',
    'css!SBIS3.CONTROLS/StylesPanelNew/StylesPanelNew',
    'css!SBIS3.CONTROLS/Menu/MenuItem/MenuItem'
-], function(CommandDispatcher, CompoundControl, PopupMixin, HistoryController, objectFind, genHelpers, dotTplFn, EventBus) {
+], function(CommandDispatcher, CompoundControl, PopupMixin, HistoryController, objectFind, randHelpers, dotTplFn, EventBus) {
 
 
    'use strict';
@@ -319,7 +319,7 @@ define('SBIS3.CONTROLS/StylesPanelNew', [
          for (var style in presets) {
             if (presets.hasOwnProperty(style)) {
                preparedItem = {
-                  id: genHelpers.randomId(),
+                  id: randHelpers.randomId(),
                   json: presets[style]
                };
                if (presets[style].name) {
@@ -489,7 +489,7 @@ define('SBIS3.CONTROLS/StylesPanelNew', [
          this._history.length > 4 && this._history.pop();
 
          historyFormat = {
-            id: genHelpers.randomId(),
+            id: randHelpers.randomId(),
             json: this._currentStyle
          };
 

@@ -1,7 +1,7 @@
 define('SBIS3.CONTROLS/Action/List/Save', [
     'SBIS3.CONTROLS/Action/Save',
     'SBIS3.CONTROLS/Action/List/Mixin/ListMixin',
-    'Core/helpers/fast-control-helpers',
+    'Core/Indicator',
     'Core/Deferred',
     'WS.Data/Chain',
     'Core/core-merge',
@@ -11,7 +11,7 @@ define('SBIS3.CONTROLS/Action/List/Save', [
     'Lib/Control/Dialog/Dialog',
     'WS.Data/Query/Query',
     'WS.Data/Entity/Record'
-], function (Save, ListMixin, fcHelpers, Deferred, Chain, cMerge, cInstance, coreClone, RecordSet, Dialog, Query, Record) {
+], function (Save, ListMixin, Indicator, Deferred, Chain, cMerge, cInstance, coreClone, RecordSet, Dialog, Query, Record) {
     var MAX_RECORDS_COUNT = 20000;
 
     /**
@@ -273,11 +273,11 @@ define('SBIS3.CONTROLS/Action/List/Save', [
         _loadData: function(dataSource, query) {
             var result = new Deferred();
 
-            fcHelpers.toggleIndicator(true);
+            Indicator.setMessage(rk('Пожалуйста, подождите…'));
             dataSource.query(query).addCallback(function (recordSet) {
                result.callback(recordSet.getAll());
             }).addBoth(function() {
-               fcHelpers.toggleIndicator(false);
+               Indicator.hide();
             });
 
            return result;

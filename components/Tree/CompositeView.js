@@ -12,13 +12,13 @@ define('SBIS3.CONTROLS/Tree/CompositeView', [
    'tmpl!SBIS3.CONTROLS/Tree/CompositeView/resources/ListFolderTemplate',
    'tmpl!SBIS3.CONTROLS/Tree/CompositeView/resources/FolderContentTemplate',
    'tmpl!SBIS3.CONTROLS/Tree/CompositeView/resources/StaticFolderContentTemplate',
-   "Core/helpers/fast-control-helpers",
+   "Core/Indicator",
    'SBIS3.CONTROLS/Utils/TemplateUtil',
    'Core/core-merge',
    'Core/core-instance',
    'css!SBIS3.CONTROLS/CompositeView/CompositeView',
    'css!SBIS3.CONTROLS/Tree/CompositeView/TreeCompositeView'
-], function(coreClone, constants, Deferred, ParallelDeferred, isEmpty, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, StaticFolderContentTemplate, fcHelpers, TemplateUtil, cMerge, cInstance) {
+], function(coreClone, constants, Deferred, ParallelDeferred, isEmpty, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, StaticFolderContentTemplate, Indicator, TemplateUtil, cMerge, cInstance) {
 
    'use strict';
 
@@ -657,7 +657,7 @@ define('SBIS3.CONTROLS/Tree/CompositeView', [
                }
             };
          if (!this._showedLoading) {
-            fcHelpers.toggleIndicator(true);
+            Indicator.setMessage(rk('Пожалуйста, подождите…'));
          }
          if (items) {
             currentDataSet = this.getItems();
@@ -677,7 +677,7 @@ define('SBIS3.CONTROLS/Tree/CompositeView', [
             }, this);
             if (Object.isEmpty(recordsGroup)) {
                if (!this._showedLoading) {
-                  fcHelpers.toggleIndicator(false);
+                  Indicator.hide();
                }
             } else {
                deferred = new ParallelDeferred();
@@ -699,7 +699,7 @@ define('SBIS3.CONTROLS/Tree/CompositeView', [
                      })
                      .addBoth(function() {
                         if (!self._showedLoading) {
-                           fcHelpers.toggleIndicator(false);
+                           Indicator.hide();
                         }
                      }));
                });

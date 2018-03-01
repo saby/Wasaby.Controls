@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/Menu', [
    'SBIS3.CONTROLS/Mixins/TreeMixinDS',
    'SBIS3.CONTROLS/FloatArea',
    'WS.Data/Relation/Hierarchy',
-   'Core/helpers/markup-helpers',
+   'Core/helpers/Hcontrol/configStorage',
    'Core/Sanitize',
    'Core/helpers/String/escapeHtml',
    'Core/IoC',
@@ -19,7 +19,7 @@ define('SBIS3.CONTROLS/Menu', [
    'SBIS3.CONTROLS/Menu/MenuItem',
    'css!SBIS3.CONTROLS/Menu/Menu'
 
-], function(CommandDispatcher, ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, Hierarchy, mkpHelpers, Sanitize, escapeHtml, IoC, cMerge) {
+], function(CommandDispatcher, ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, Hierarchy, configStorage, Sanitize, escapeHtml, IoC, cMerge) {
 
    'use strict';
 
@@ -164,7 +164,7 @@ define('SBIS3.CONTROLS/Menu', [
             options.className = (options.className ? options.className : '') + ' controls-MenuItem-additional';
             this._needShowToggleButton = true;
          }
-         return '<component data-component="SBIS3.CONTROLS/Menu/MenuItem" config="' + mkpHelpers.encodeCfgAttr(options) + '">' +
+         return '<component data-component="SBIS3.CONTROLS/Menu/MenuItem" config="' + configStorage.pushValue(options) + '">' +
                '<option name="caption" type="string">' + caption + '</option>' +
              '</component>';
       },

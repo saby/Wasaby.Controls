@@ -13,8 +13,8 @@ define('SBIS3.CONTROLS/Image',
    "WS.Data/Source/SbisService",
    "tmpl!SBIS3.CONTROLS/Image/Image",
    "Lib/Control/FileLoader/FileLoader",
-   "Core/helpers/fast-control-helpers",
-   "Core/helpers/transport-helpers",
+   "Core/helpers/Hcontrol/toggleLocalIndicator",
+   "Transport/prepareGetRPCInvocationURL",
    "SBIS3.CONTROLS/Utils/SourceUtil",
    'SBIS3.CONTROLS/ControlHierarchyManager',
    'SBIS3.CONTROLS/Utils/InformationPopupManager',
@@ -33,8 +33,8 @@ define('SBIS3.CONTROLS/Image',
    SbisService,
    dotTplFn,
    FileLoader,
-   fcHelpers,
-   transHelpers,
+   toggleLocalIndicator,
+   prepareGetRPCInvocationURL,
    SourceUtil,
    ControlHierarchyManager,
    InformationPopupManager,
@@ -461,7 +461,7 @@ define('SBIS3.CONTROLS/Image',
             _getSourceUrl: function(options) {
                options = options ? options : this._options;
                if (options.dataSource) {
-                  return transHelpers.prepareGetRPCInvocationURL(options.dataSource.getEndpoint().contract,
+                  return prepareGetRPCInvocationURL(options.dataSource.getEndpoint().contract,
                      options.dataSource.getBinding().read, options.filter);
                } else {
                   return options.defaultImage;
@@ -482,14 +482,14 @@ define('SBIS3.CONTROLS/Image',
                this._showIndicator();
                event.setResult(result);
                if (result !== false) {
-                  fcHelpers.toggleLocalIndicator(imageInstance._container, true);
+                  toggleLocalIndicator(imageInstance._container, true);
                }
             },
             _onEndLoad: function(event, response) {
                var imageInstance = this.getParent();
                var error = response instanceof Error? response: response.error;
                if (error) {
-                  fcHelpers.toggleLocalIndicator(imageInstance._container, false);
+                  toggleLocalIndicator(imageInstance._container, false);
                   this._hideIndicator();
                   // игнорируем HTTPError офлайна, если они обработаны
                   if (!(error._isOfflineMode && error.processed)){
@@ -512,7 +512,7 @@ define('SBIS3.CONTROLS/Image',
                   imageInstance._showEditDialog('new');
                } else {
                   imageInstance._setImage(imageInstance._getSourceUrl());
-                  fcHelpers.toggleLocalIndicator(imageInstance._container, false);
+                  toggleLocalIndicator(imageInstance._container, false);
                   this._hideIndicator();
                }
             },
@@ -636,7 +636,7 @@ define('SBIS3.CONTROLS/Image',
                               self._setImage(self._getSourceUrl());
                            },
                            onOpenError: function(event){
-                              fcHelpers.toggleLocalIndicator(self._container, false);
+                              toggleLocalIndicator(self._container, false);
                               cIndicator.hide();
                               InformationPopupManager.showMessageDialog({
                                  status: 'error',
@@ -648,7 +648,7 @@ define('SBIS3.CONTROLS/Image',
                      }, self._options.editConfig),
                      handlers: {
                         onAfterClose: function() {
-                           fcHelpers.toggleLocalIndicator(self._container, false);
+                           toggleLocalIndicator(self._container, false);
                         },
                         onBeforeControlsLoad: function() {
                            cIndicator.setMessage('Открытие диалога редактирования...');
@@ -728,7 +728,7 @@ define('SBIS3.CONTROLS/Image',
               * @see resetImage
               */
             _editImage: function() {
-               fcHelpers.toggleLocalIndicator(this.getContainer(), true);
+               toggleLocalIndicator(this.getContainer(), true);
                this._showEditDialog('current');
             },
              /**
