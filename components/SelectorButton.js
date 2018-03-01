@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/SelectorButton',
    "SBIS3.CONTROLS/Mixins/ChooserMixin",
    "SBIS3.CONTROLS/Mixins/IconMixin",
    "Core/core-instance",
-   'Core/helpers/string-helpers',
+   'Core/helpers/String/escapeTagsFromStr',
    'SBIS3.CONTROLS/Utils/ToSourceModel',
    'SBIS3.CONTROLS/Utils/ItemsSelectionUtil',
    'WS.Data/Collection/List',
@@ -39,7 +39,7 @@ define('SBIS3.CONTROLS/SelectorButton',
        ChooserMixin,
        IconMixin,
        cInstance,
-       strHelpers,
+       escapeTagsFromStr,
        ToSourceModel,
        ItemsSelectionUtil,
        List,
@@ -257,7 +257,11 @@ define('SBIS3.CONTROLS/SelectorButton',
    
          if(selectedItems) {
             selectedItems.each(function(rec) {
-               displayText.push(strHelpers.htmlToText(rec.get(self._options.displayProperty) || ''));
+               displayText.push(
+                  // Чтобы не тянуть в зависимости htmlToText из Deprecated/helpers/string-helpers,
+                  // выполним replace из него прямо тут
+                  escapeTagsFromStr((rec.get(self._options.displayProperty) || '').replace(/<br>/g, '\n'), '\\w+')
+               );
             });
          }
    
