@@ -8,7 +8,9 @@ define('Controls-demo/Switch/SwitchDemo', [
 
    var ModuleClass = Control.extend(
       {
-         _template: template
+         _template: template,
+         value: false,
+         value1: true
       });
    return ModuleClass;
 });
