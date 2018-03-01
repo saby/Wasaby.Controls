@@ -43,11 +43,13 @@ define('Controls/Toggle/Switch', [
       _template: template,
 
       _beforeMount: function(options) {
+         //Мы ждем прокси опции от Димы Зуева, сейчас isEnabled() может работать неправильно
          var enabled = options.enabled === undefined ? this.isEnabled() : options.enabled;
          this._markerState = _private._getMarkerState(enabled, options.value);
       },
 
       _beforeUpdate: function(options) {
+         //Мы ждем прокси опции от Димы Зуева, сейчас isEnabled() может работать неправильно
          var enabled = options.enabled === undefined ? this.isEnabled() : options.enabled;
          this._markerState = _private._getMarkerState(enabled, options.value);
       },
