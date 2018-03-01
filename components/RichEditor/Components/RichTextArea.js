@@ -1359,13 +1359,25 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      onBeforeShow: function () {
                         CommandDispatcher.declareCommand(this, 'saveImage', function () {
                            var promise = self._changeImgSize($image, this.getChildControlByName('imageWidth').getValue(), this.getChildControlByName('imageHeight').getValue(), this.getChildControlByName('valueType').getValue() !== 'per');
-                           if (scrollTop) {
-                              promise.addCallback(function () {
-                                 setTimeout(function () {
-                                    self._inputControl.scrollTop(scrollTop)
-                                 }, 1);
-                              });
-                           }
+                           promise.addCallback(function () {
+                              setTimeout(function () {
+                                 // После изменения размера слетает выделение - установить курсор ввода сразу после изображения
+                                 // 1174814497 https://online.sbis.ru/opendoc.html?guid=8089187f-3917-4ae4-97ab-9dcd6a30b5ef
+                                 var node = $image[0];
+                                 if (node.parentNode.classList.contains('image-template-center')) {
+                                    node = node.parentNode;
+                                 }
+                                 var next = node.nextSibling;
+                                 var index = next && next.nodeType === 3 && next.nodeValue.length && next.nodeValue.charCodeAt(0) === 65279 ? 1 : 0;
+                                 var newRng = editor.dom.createRng();
+                                 newRng.setStart(next, index);
+                                 newRng.setEnd(next, index);
+                                 editor.selection.setRng(newRng);
+                                 if (scrollTop) {
+                                    self._inputControl.scrollTop(scrollTop);
+                                 }
+                              }, 1);
+                           });
                            editor.undoManager.add();
                         }.bind(this));
                      }
