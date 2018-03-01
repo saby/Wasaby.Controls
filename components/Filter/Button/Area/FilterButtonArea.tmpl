@@ -1,6 +1,6 @@
 <div class="controls__filterButton__area">
     <div class="controls__filterButton__area-header ws-flexbox ws-align-items-baseline">
-        <span class="controls__filterButton__area-text controls__filterButton__area-text{{ areaCaption ? 'Custom' : 'Default'}}">{{ areaCaption ? areaCaption : ['Отбираются'] }}</span>
+        <span class="controls__filterButton__area-text controls__filterButton__area-text{{ areaCaption ? 'Custom' : 'Default'}}">{{ areaCaption ? areaCaption : rk('Отбираются') }}</span>
         <SBIS3.CONTROLS:Link
             className="controls__filter-button__clear-filter"
             caption="{[По умолчанию]}"
@@ -12,7 +12,7 @@
         <ws:partial if="{{ topTemplate }}" template="{{ topTemplate }}" />
         <SBIS3.CONTROLS:Button
                 className="controls__filter-button__apply-filter"
-                caption="{{ viewMode === 'twoColumns' ? ['Построить'] : ['Отобрать'] }}"
+                caption="{{ viewMode === 'twoColumns' ? rk('Построить') : rk('Отобрать') }}"
                 command="apply-filter"
                 primary="{{ true }}"
                 tabindex="0"
