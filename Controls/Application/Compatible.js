@@ -10,7 +10,18 @@ define('Controls/Application/Compatible', [
    'use strict';
 
    var ViewTemplate = Base.extend({
-      _template: template
+      _template: template,
+      _wasPatched: false,
+      _afterMount: function(){
+         for (var i in this._children){
+            this._children[i]._shouldUpdate = function(){
+               return false;
+            }
+         }
+      },
+      _shouldUpdate: function(){
+         return false;
+      }
    });
 
    return ViewTemplate;
