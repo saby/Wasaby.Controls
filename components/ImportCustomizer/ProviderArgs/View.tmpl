@@ -1,0 +1,21 @@
+{{/* Настройка параметров провайдера парсинга - прикладной компонент */}}
+<div class="controls-ImportCustomizer-ProviderArgs-View">
+   <div class="controls-ImportCustomizer-ProviderArgs-View__title">{[НастройщикИмпорта@@Настройка раздела]}</div>
+   <div class="controls-ImportCustomizer-ProviderArgs-View__columns">
+      <ws:for data="i in columnCount">
+         <div class="controls-ImportCustomizer-ProviderArgs-View__column">
+            <SBIS3.CONTROLS:DropdownList
+               class="controls-ImportCustomizer-ProviderArgs-View__column__dropdown"
+               name="controls-ImportCustomizer-ProviderArgs-View__column__dropdown__c{{i + 1}}"
+               multiselect="{{false}}"
+               mode="click"
+               type="simple"
+               idProperty="id"
+               displayProperty="title"
+               items="{{_items}}"
+               selectedKeys="{{_selectedIds[i]}}"
+            />
+         </div>
+      </ws:for>
+   </div>
+</div>
