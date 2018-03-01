@@ -103,7 +103,7 @@ define('Controls/Input/Suggest',
             Suggest.superclass.constructor.call(this, options);
             
             _private.bindHandlers(this);
-            _private.initViewModel(this, options);
+            _private.initViewModel(this, options || {});
          },
    
          _afterMount: function () {
