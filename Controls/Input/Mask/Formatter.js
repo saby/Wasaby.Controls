@@ -9,12 +9,12 @@ define('Controls/Input/Mask/Formatter',
          /**
           * Получить разбиение исходного значения, на группы.
           * Разбиение будет найденно, только в том случае, если значение полностью подходит маске.
-          * @param maskData данные маски, которой подходит исходное значение.
+          * @param format данные маски, которой подходит исходное значение.
           * @param value исходное значение.
           * @return Array.<String|undefined> группы.
           */
-         getValueGroups: function(maskData, value) {
-            var match = value.match(maskData.searchingGroups);
+         getValueGroups: function(format, value) {
+            var match = value.match(format.searchingGroups);
 
             if (match && match[0].length === match.input.length) {
                return match.filter(function(item, index) {
@@ -29,21 +29,21 @@ define('Controls/Input/Mask/Formatter',
           * Получить чистые данные.
           * Чистыми данными будем называть: значение без разделителей(чистое) и массив для сопоставления
           * позиций символов исходного значения и символов чистого значение.
-          * @param {Object} maskData данные о маске.
+          * @param {Object} format данные о маске.
           * @param {String} value значение с разделителями.
           * @return {{value: String чистое значение, positions: Array позиция символов исходного значения в чистом значении}}.
           */
-         getClearData: function(maskData, value) {
+         getClearData: function(format, value) {
             var
                position = 0,
                positions = [],
                clearValue = '',
-               groups = _private.getValueGroups(maskData, value),
+               groups = _private.getValueGroups(format, value),
                charIterator;
 
             groups.forEach(function(group, groupIndex) {
                if (group) {
-                  if (groupIndex in maskData.delimiterGroups) {
+                  if (groupIndex in format.delimiterGroups) {
                      for (charIterator = 0; charIterator < group.length; charIterator++) {
                         positions.push(position);
                      }
@@ -65,7 +65,7 @@ define('Controls/Input/Mask/Formatter',
 
          /**
           * Получить данные путем приведения исходного значения к маске.
-          * @param maskData данные о маске.
+          * @param format данные о маске.
           * @param clearData чистые данные. Значение без разделителей и позиция курсора.
           * @return {
           *    {
@@ -74,7 +74,7 @@ define('Controls/Input/Mask/Formatter',
           *    }|undefined
           * }
           */
-         getFormatterData: function(maskData, clearData) {
+         getFormatterData: function(format, clearData) {
             var
                value = '',
                pairs = {},
@@ -82,7 +82,7 @@ define('Controls/Input/Mask/Formatter',
                delimiters = '',
                stopConcatenation = false,
                clearPosition = clearData.position,
-               groups = _private.getValueGroups(maskData, clearData.value),
+               groups = _private.getValueGroups(format, clearData.value),
                pairPosition, every;
 
             // Определяем значение и позицию с разделителями, через сцепление групп.
@@ -91,16 +91,16 @@ define('Controls/Input/Mask/Formatter',
                   return true;
                }
 
-               if (groupIndex in maskData.delimiterGroups) {
+               if (groupIndex in format.delimiterGroups) {
                   // Если в очищенные данные попал разделитель, то ничего не получилось.
                   if (group) {
                      return false;
                   }
 
                   // Группа разделителей.
-                  group = maskData.delimiterGroups[groupIndex].value;
+                  group = format.delimiterGroups[groupIndex].value;
 
-                  switch(maskData.delimiterGroups[groupIndex].type) {
+                  switch(format.delimiterGroups[groupIndex].type) {
                      case 'single':
                         // Первая группа одиночных разделителей в маске должна быть добавлена к данным.
                         if (groupIndex === 0) {
@@ -111,15 +111,15 @@ define('Controls/Input/Mask/Formatter',
                         }
                         break;
                      case 'pair':
-                        if (maskData.delimiterGroups[groupIndex].subtype === 'open') {
-                           if (!pairs[maskData.delimiterGroups[groupIndex].pair]) {
-                              pairs[maskData.delimiterGroups[groupIndex].pair] = [];
+                        if (format.delimiterGroups[groupIndex].subtype === 'open') {
+                           if (!pairs[format.delimiterGroups[groupIndex].pair]) {
+                              pairs[format.delimiterGroups[groupIndex].pair] = [];
                            }
-                           pairs[maskData.delimiterGroups[groupIndex].pair].push(value.length + delimiters.length);
+                           pairs[format.delimiterGroups[groupIndex].pair].push(value.length + delimiters.length);
                         } else {
                            pairPosition = pairs[group].pop();
                            // Добавляем открывающий разделитель.
-                           value = value.substring(0, pairPosition) + maskData.delimiterGroups[groupIndex].pair + value.substring(pairPosition);
+                           value = value.substring(0, pairPosition) + format.delimiterGroups[groupIndex].pair + value.substring(pairPosition);
                            position += pairPosition <= position;
                            // Добавляем закрывающий разделитель.
                            value += group;

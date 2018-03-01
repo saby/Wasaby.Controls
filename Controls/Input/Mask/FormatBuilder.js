@@ -13,12 +13,11 @@ define('Controls/Input/Mask/FormatBuilder',
 
             maskCharType: {
                1: 'end',
-               2: 'specialDesign',
-               3: 'key',
-               5: 'pairingDelimiter',
-               6: 'open',
-               7: 'close',
-               8: 'singlingDelimiter'
+               2: 'key',
+               4: 'pairingDelimiter',
+               5: 'open',
+               6: 'close',
+               7: 'singlingDelimiter'
             },
             /**
              * Экранирование специальных символов регулярного выражения.
@@ -84,8 +83,6 @@ define('Controls/Input/Mask/FormatBuilder',
 
                // Конец маски
                expression += '(;$)';
-               // Cпециальные конструкции |, (?:...)
-               expression += '|\\\\(\\(\\?:|\\||\\))';
                // Ключи
                expression += '|([' + maskKeys + '])';
                // Кванторы +, *, ?, {n[, m]}
@@ -173,11 +170,6 @@ define('Controls/Input/Mask/FormatBuilder',
                      (maskCharData.type === 'key' && !keysGroup) ||
                      (maskCharData.type === 'singlingDelimiter' && !singlingDelimitersGroup)) {
                      searchingGroups += '(';
-                  }
-
-                  // Найденый символ специальная конструкция.
-                  if (maskCharData.type === 'specialDesign') {
-                     searchingGroups += maskCharData.value;
                   }
 
                   // Найденый символ ключ.

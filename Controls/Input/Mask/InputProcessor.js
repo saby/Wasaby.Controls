@@ -10,7 +10,7 @@ define('Controls/Input/Mask/InputProcessor',
          _private = {
             /**
              * Получить данные путем приведения исходного значения в виде разбиения к маске.
-             * @param maskData данные о маске.
+             * @param format данные о маске.
              * @param splitValue значения в виде разбиения.
              * @return {
              *    {
@@ -19,8 +19,8 @@ define('Controls/Input/Mask/InputProcessor',
              *    }|undefined
              * }
              */
-            getDataBySplitValue: function(maskData, splitValue) {
-               return Formatter.getFormatterData(maskData, {
+            getDataBySplitValue: function(format, splitValue) {
+               return Formatter.getFormatterData(format, {
                   value: splitValue.before + splitValue.after,
                   position: splitValue.before.length
                });
@@ -54,12 +54,12 @@ define('Controls/Input/Mask/InputProcessor',
             },
             /**
              * Вставка.
-             * @param maskData данные маски.
+             * @param format данные маски.
              * @param clearSplitValue разбиение чистого значения.
              * @param replacer заменитель.
              * @returns {{value: (String) новая строка, position: (Integer) позиция курсора}}
              */
-            insert: function(maskData, clearSplitValue, replacer) {
+            insert: function(format, clearSplitValue, replacer) {
                var char, oldClearSplitValue, newClearSplitValue, data, result;
 
                oldClearSplitValue = {
@@ -79,7 +79,7 @@ define('Controls/Input/Mask/InputProcessor',
                         after: oldClearSplitValue.after.slice(0, -1)
                      };
 
-                     data = _private.getDataBySplitValue(maskData, newClearSplitValue);
+                     data = _private.getDataBySplitValue(format, newClearSplitValue);
                   } else {
                      // Добавляем символ без замены следующего.
                      newClearSplitValue = {
@@ -87,7 +87,7 @@ define('Controls/Input/Mask/InputProcessor',
                         after: oldClearSplitValue.after
                      };
 
-                     data = _private.getDataBySplitValue(maskData, newClearSplitValue);
+                     data = _private.getDataBySplitValue(format, newClearSplitValue);
                      // Если не получилось, то поробуем заменить.
                      if (!data) {
                         newClearSplitValue = {
@@ -95,7 +95,7 @@ define('Controls/Input/Mask/InputProcessor',
                            after: oldClearSplitValue.after.substring(1)
                         };
 
-                        data = _private.getDataBySplitValue(maskData, newClearSplitValue);
+                        data = _private.getDataBySplitValue(format, newClearSplitValue);
                      }
                   }
 
@@ -110,13 +110,13 @@ define('Controls/Input/Mask/InputProcessor',
             },
             /**
              * Удаление.
-             * @param maskData данные маски.
+             * @param format данные маски.
              * @param clearSplitValue разбиение чистого значения.
              * @param replacer заменитель.
              * @returns {{value: (String) новая строка, position: (Integer) позиция курсора}}
              */
-            delete: function(maskData, clearSplitValue, replacer) {
-               return _private.getDataBySplitValue(maskData, {
+            delete: function(format, clearSplitValue, replacer) {
+               return _private.getDataBySplitValue(format, {
                   before: clearSplitValue.before,
                   after: clearSplitValue.delete.replace(/./g, replacer) + clearSplitValue.after
                });
@@ -124,12 +124,12 @@ define('Controls/Input/Mask/InputProcessor',
 
             /**
              * Удаление через delete.
-             * @param maskData данные маски.
+             * @param format данные маски.
              * @param clearSplitValue разбиение чистого значения.
              * @param replacer заменитель.
              * @returns {{value: (String) новая строка, position: (Integer) позиция курсора}}
              */
-            deleteForward: function(maskData, clearSplitValue, replacer) {
+            deleteForward: function(format, clearSplitValue, replacer) {
                var newClearSplitValue;
 
                if (clearSplitValue.delete) {
@@ -140,21 +140,21 @@ define('Controls/Input/Mask/InputProcessor',
                } else {
                   newClearSplitValue = {
                      before: clearSplitValue.before + replacer,
-                     after: clearSplitValue.after.subscribe(1)
+                     after: clearSplitValue.after.substring(1)
                   }
                }
 
-               return _private.getDataBySplitValue(maskData, newClearSplitValue);
+               return _private.getDataBySplitValue(format, newClearSplitValue);
             },
 
             /**
              * Удаление через backspace.
-             * @param maskData данные маски.
+             * @param format данные маски.
              * @param clearSplitValue разбиение чистого значения.
              * @param replacer заменитель.
              * @returns {{value: (String) новая строка, position: (Integer) позиция курсора}}
              */
-            deleteBackward: function(maskData, clearSplitValue, replacer) {
+            deleteBackward: function(format, clearSplitValue, replacer) {
                var newClearSplitValue;
 
                if (clearSplitValue.delete) {
@@ -169,34 +169,34 @@ define('Controls/Input/Mask/InputProcessor',
                   }
                }
 
-               return _private.getDataBySplitValue(maskData, newClearSplitValue);
+               return _private.getDataBySplitValue(format, newClearSplitValue);
             },
             /**
              * Ввод.
              * @param splitValue значение разбитое на части before, insert, after, delete.
              * @param inputType тип ввода.
              * @param replacer заменитель.
-             * @param maskData данные маски, на которую будет проецироваться разбитое значение.
+             * @param format данные маски, на которую будет проецироваться разбитое значение.
              * @return {{value: (String) новая строка, position: (Integer) позиция курсора}}
              */
-            input: function(splitValue, inputType, replacer, maskData) {
+            input: function(splitValue, inputType, replacer, format) {
                var
                   value = splitValue.before + splitValue.delete + splitValue.after,
-                  clearData = Formatter.getClearData(maskData, value),
+                  clearData = Formatter.getClearData(format, value),
                   clearSplitValue = InputProcessor.getClearSplitValue(splitValue, clearData), result;
 
                switch(inputType) {
                   case 'insert':
-                     result = InputProcessor.insert(maskData, clearSplitValue, replacer);
+                     result = InputProcessor.insert(format, clearSplitValue, replacer);
                      break;
                   case 'delete':
-                     result = InputProcessor.delete(maskData, clearSplitValue, replacer);
+                     result = InputProcessor.delete(format, clearSplitValue, replacer);
                      break;
                   case 'deleteForward':
-                     result = InputProcessor.deleteForward(maskData, clearSplitValue, replacer);
+                     result = InputProcessor.deleteForward(format, clearSplitValue, replacer);
                      break;
                   case 'deleteBackward':
-                     result = InputProcessor.deleteBackward(maskData, clearSplitValue, replacer);
+                     result = InputProcessor.deleteBackward(format, clearSplitValue, replacer);
                      break;
                }
 

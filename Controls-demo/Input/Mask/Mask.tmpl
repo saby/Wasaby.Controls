@@ -3,18 +3,18 @@
       <div class="ws-header_size_h3 ws-header_color_accent1">{{exampleName}}</div>
    </ws:template>
    <header>
-      <div class="ws-header_size_h2 ws-header_color_accent2 ws-header_size_weight">Форматные поля ❤ ❤ ❤</div>
+      <div class="ws-header_size_h2 ws-header_color_accent2 ws-header_size_weight">Форматные поля</div>
    </header>
    <article class="ws-flexbox">
       <div class="ws-flexbox ws-flex-column">
-         <ws:partial template="descriptionTpl" exampleName="example1"/>
+         <ws:partial template="descriptionTpl" exampleName="dd.dd"/>
          <ws:Controls.Input.Mask
             name="example1"
             replacer=" "
             mask="dd.dd"
             bind:value="_values.example1"
          />
-         <ws:partial template="descriptionTpl" exampleName="example2"
+         <ws:partial template="descriptionTpl" exampleName="dd.dd.dd"
                      class="ControlsDemo-Mask__item_topOffset"/>
          <ws:Controls.Input.Mask
             name="example2"
@@ -22,7 +22,7 @@
             mask="dd.dd.dd"
             bind:value="_values.example2"
          />
-         <ws:partial template="descriptionTpl" exampleName="example3"
+         <ws:partial template="descriptionTpl" exampleName="+7(ddd)ddd-dd-dd"
                      class="ControlsDemo-Mask__item_topOffset"/>
          <ws:Controls.Input.Mask
             name="example3"
@@ -30,7 +30,7 @@
             mask="+7(ddd)ddd-dd-dd"
             bind:value="_values.example3"
          />
-         <ws:partial template="descriptionTpl" exampleName="example4"
+         <ws:partial template="descriptionTpl" exampleName="(ddd(ddd)ddd)"
                      class="ControlsDemo-Mask__item_topOffset"/>
          <ws:Controls.Input.Mask
             name="example4"
@@ -38,19 +38,18 @@
             mask="(ddd(ddd)ddd)"
             bind:value="_values.example4"
          />
-         <ws:partial template="descriptionTpl" exampleName="example5"
+         <ws:partial template="descriptionTpl" exampleName="(d\*l\{0,3})(d\{0,3}l\*)"
                      class="ControlsDemo-Mask__item_topOffset"/>
          <ws:Controls.Input.Mask
             name="example5"
             replacer=""
-            mask="\(?:(d\*l\*)\)"
+            mask="(d\*l\{0,3})(d\{0,3}l\*)"
             bind:value="_values.example5"
          />
       </div>
-      <div class="ws-flexbox ws-flex-column ws-flex-grow-1 ws-align-items-center">
+      <div class="ws-flexbox ws-flex-column ws-flex-grow-1 ws-align-items-center" if="{{_debug}}">
          <div
-            class="ws-forwardArrow ws-header_size_h3 ws-header_color_accent2 ws-header_color-hover_accent1 ws-header_size_weight"
-            on:click="_toggleDebug()"
+            class="ws-header_size_h3 ws-header_color_accent2 ws-header_color-hover_accent1 ws-header_size_weight"
          >DEBUG
          </div>
          <ws:Controls.Input.Mask
@@ -64,7 +63,7 @@
                }}"
             bind:value="_exampleDebug"
          />
-         <div if="{{_debug}}">
+         <div>
             <div>mask={{_stringify(_children[_exampleDebug]._options.mask)}}</div>
             <div>value={{_stringify(_values[_exampleDebug])}}</div>
             <div>clearValue={{_stringify(_getClearData(_children[_exampleDebug]._viewModel._maskData, _values[_exampleDebug]).value)}}</div>

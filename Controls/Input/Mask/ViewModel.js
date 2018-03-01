@@ -19,7 +19,7 @@ define('Controls/Input/Mask/ViewModel',
                value: options.value
             };
             this._replacer = options.replacer;
-            this._maskData = FormatBuilder.getFormat(options.mask, options.formatMaskChars, options.replacer);
+            this._format = FormatBuilder.getFormat(options.mask, options.formatMaskChars, options.replacer);
          },
 
          /**
@@ -29,7 +29,7 @@ define('Controls/Input/Mask/ViewModel',
          updateOptions: function(newOptions) {
             this._options.value = newOptions.value;
             this._replacer = newOptions.replacer;
-            this._maskData = FormatBuilder.getFormat(newOptions.mask, newOptions.formatMaskChars, newOptions.replacer);
+            this._format = FormatBuilder.getFormat(newOptions.mask, newOptions.formatMaskChars, newOptions.replacer);
          },
 
          /**
@@ -39,7 +39,7 @@ define('Controls/Input/Mask/ViewModel',
           * @returns {{value: (String), position: (Integer)}}
           */
          handleInput: function(splitValue, inputType) {
-            var result = InputProcessor.input(splitValue, inputType, this._replacer, this._maskData);
+            var result = InputProcessor.input(splitValue, inputType, this._replacer, this._format);
 
             this._options.value = result.value;
 

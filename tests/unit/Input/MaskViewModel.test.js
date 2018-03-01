@@ -21,11 +21,11 @@ define(
                viewModel.updateOptions(options);
                result = {
                   replacer: viewModel._replacer,
-                  maskData: viewModel._maskData
+                  format: viewModel._format
                };
                assert.deepEqual(result, {
                   replacer: options.replacer,
-                  maskData: {
+                  format: {
                      "searchingGroups": "((?:[0-9]| )(?:[0-9]| ))(\\.)?((?:[0-9]| )(?:[0-9]| ))",
                      "delimiterGroups": {
                         "1": {
@@ -35,6 +35,28 @@ define(
                      }
                   }
                });
+            });
+         });
+         describe('handleInput', function() {
+            beforeEach(function() {
+               viewModel.updateOptions({
+                  value: '',
+                  replacer: ' ',
+                  mask: 'dd.dd',
+                  formatMaskChars: {
+                     'd': '[0-9]'
+                  }
+               });
+            });
+            it('test_changeValue', function() {
+               viewModel.handleInput({
+                  before: '12.34',
+                  after: '',
+                  insert: 'a',
+                  delete: ''
+               });
+               result = viewModel._options.value;
+               assert.equal(result, '12.34');
             });
          });
       });

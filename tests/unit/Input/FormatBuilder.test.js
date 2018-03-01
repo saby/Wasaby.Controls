@@ -61,23 +61,67 @@ define(
          describe('_private.getRegExpSearchingMaskChar', function() {
             it('Test_01', function() {
                result = FormatBuilder._private.getRegExpSearchingMaskChar('', '', '');
-               assert.deepEqual(result, /(;$)|\\(\(\?:|\||\))|([])(?:\\({.*?}|.))?|(([])|([]))|(.)/g);
+               assert.deepEqual(result, /(;$)|([])(?:\\({.*?}|.))?|(([])|([]))|(.)/g);
             });
             it('Test_02', function() {
                result = FormatBuilder._private.getRegExpSearchingMaskChar('d', '(', ')');
-               assert.deepEqual(result, /(;$)|\\(\(\?:|\||\))|([d])(?:\\({.*?}|.))?|(([\(])|([\)]))|(.)/g);
+               assert.deepEqual(result, /(;$)|([d])(?:\\({.*?}|.))?|(([\(])|([\)]))|(.)/g);
             });
             it('Test_03', function() {
                result = FormatBuilder._private.getRegExpSearchingMaskChar('Lldx', '', '');
-               assert.deepEqual(result, /(;$)|\\(\(\?:|\||\))|([Lldx])(?:\\({.*?}|.))?|(([])|([]))|(.)/g);
+               assert.deepEqual(result, /(;$)|([Lldx])(?:\\({.*?}|.))?|(([])|([]))|(.)/g);
             });
             it('Test_04', function() {
                result = FormatBuilder._private.getRegExpSearchingMaskChar('', '(', ')');
-               assert.deepEqual(result, /(;$)|\\(\(\?:|\||\))|([])(?:\\({.*?}|.))?|(([\(])|([\)]))|(.)/g);
+               assert.deepEqual(result, /(;$)|([])(?:\\({.*?}|.))?|(([\(])|([\)]))|(.)/g);
             });
          });
 
-         describe.skip('getFormat', function() {
+         describe('getMaskCharData', function() {
+            var
+               regExp = FormatBuilder._private.getRegExpSearchingMaskChar('dl', '(', ')'),
+               mask = 'dl\\*().';
+
+            beforeEach(function() {
+               result = FormatBuilder._private.getMaskCharData(regExp.exec(mask));
+            });
+            it('Test_key', function() {
+               assert.deepEqual(result, {
+                  value: 'd',
+                  type: 'key',
+                  quantifier: ''
+               });
+            });
+            it('Test_keyWithQuantifier', function() {
+               assert.deepEqual(result, {
+                  value: 'l',
+                  type: 'key',
+                  quantifier: '*'
+               });
+            });
+            it('Test_openPairingDelimiter', function() {
+               assert.deepEqual(result, {
+                  value: '(',
+                  type: 'pairingDelimiter',
+                  subtype: 'open'
+               });
+            });
+            it('Test_closePairingDelimiter', function() {
+               assert.deepEqual(result, {
+                  value: ')',
+                  type: 'pairingDelimiter',
+                  subtype: 'close'
+               });
+            });
+            it('Test_singlingDelimiter', function() {
+               assert.deepEqual(result, {
+                  value: '.',
+                  type: 'singlingDelimiter'
+               });
+            });
+         });
+
+         describe('getFormat', function() {
             var
                masks = [
                   'dd.dd.dd',
@@ -93,13 +137,13 @@ define(
             it('Test_01', function() {
                result = FormatBuilder.getFormat(masks[0], formatMaskChars, replacers[0]);
                assert.deepEqual(result, {
-                  searchingGroups: '([0-9])?([0-9])?(\\.)?([0-9])?([0-9])?(\\.)?([0-9])?([0-9])?',
+                  searchingGroups: '([0-9]?[0-9]?)(\\.)?([0-9]?[0-9]?)(\\.)?([0-9]?[0-9]?)',
                   delimiterGroups: {
-                     2: {
+                     1: {
                         value: '.',
                         type: 'single'
                      },
-                     5: {
+                     3: {
                         value: '.',
                         type: 'single'
                      }
@@ -109,13 +153,13 @@ define(
             it('Test_02', function() {
                result = FormatBuilder.getFormat(masks[0], formatMaskChars, replacers[1]);
                assert.deepEqual(result, {
-                  searchingGroups: '((?:[0-9]| ))((?:[0-9]| ))(\\.)?((?:[0-9]| ))((?:[0-9]| ))(\\.)?((?:[0-9]| ))((?:[0-9]| ))',
+                  searchingGroups: '((?:[0-9]| )(?:[0-9]| ))(\\.)?((?:[0-9]| )(?:[0-9]| ))(\\.)?((?:[0-9]| )(?:[0-9]| ))',
                   delimiterGroups: {
-                     2: {
+                     1: {
                         value: '.',
                         type: 'single'
                      },
-                     5: {
+                     3: {
                         value: '.',
                         type: 'single'
                      }
@@ -125,7 +169,7 @@ define(
             it('Test_03', function() {
                result = FormatBuilder.getFormat(masks[1], formatMaskChars, replacers[0]);
                assert.deepEqual(result, {
-                  searchingGroups: '(\\+7)?(\\()?([0-9])?([0-9])?([0-9])?(\\))?([0-9])?([0-9])?([0-9])?(-)?([0-9])?([0-9])?(-)?([0-9])?([0-9])?',
+                  searchingGroups: '(\\+7)?(\\()?([0-9]?)([0-9]?)([0-9]?)(\\))?([0-9]?[0-9]?[0-9]?)(-)?([0-9]?[0-9]?)(-)?([0-9]?[0-9]?)',
                   delimiterGroups: {
                      0: {
                         value: '+7',
@@ -133,17 +177,21 @@ define(
                      },
                      1: {
                         value: '(',
-                        type: 'pair'
+                        type: 'pair',
+                        subtype: 'open',
+                        pair: ')'
                      },
                      5: {
                         value: ')',
-                        type: 'pair'
+                        type: 'pair',
+                        subtype: 'close',
+                        pair: '('
                      },
-                     9: {
+                     7: {
                         value: '-',
                         type: 'single'
                      },
-                     12: {
+                     9: {
                         value: '-',
                         type: 'single'
                      }
@@ -153,7 +201,7 @@ define(
             it('Test_04', function() {
                result = FormatBuilder.getFormat(masks[1], formatMaskChars, replacers[1]);
                assert.deepEqual(result, {
-                  searchingGroups: '(\\+7)?(\\()?((?:[0-9]| ))((?:[0-9]| ))((?:[0-9]| ))(\\))?((?:[0-9]| ))((?:[0-9]| ))((?:[0-9]| ))(-)?((?:[0-9]| ))((?:[0-9]| ))(-)?((?:[0-9]| ))((?:[0-9]| ))',
+                  searchingGroups: '(\\+7)?(\\()?((?:[0-9]| ))((?:[0-9]| ))((?:[0-9]| ))(\\))?((?:[0-9]| )(?:[0-9]| )(?:[0-9]| ))(-)?((?:[0-9]| )(?:[0-9]| ))(-)?((?:[0-9]| )(?:[0-9]| ))',
                   delimiterGroups: {
                      0: {
                         value: '+7',
@@ -161,17 +209,21 @@ define(
                      },
                      1: {
                         value: '(',
-                        type: 'pair'
+                        type: 'pair',
+                        subtype: 'open',
+                        pair: ')'
                      },
                      5: {
                         value: ')',
-                        type: 'pair'
+                        type: 'pair',
+                        subtype: 'close',
+                        pair: '('
                      },
-                     9: {
+                     7: {
                         value: '-',
                         type: 'single'
                      },
-                     12: {
+                     9: {
                         value: '-',
                         type: 'single'
                      }

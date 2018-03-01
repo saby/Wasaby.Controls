@@ -27,7 +27,7 @@ define('Controls-demo/Input/Mask/Mask',
 
          _exampleDebug: 'example5',
 
-         _debug: true,
+         _debug: false,
 
          _stringify: JSON.stringify,
 
