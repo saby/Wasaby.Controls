@@ -8,6 +8,7 @@ define('SBIS3.CONTROLS/Mixins/DragAndDropMixin', [
    var isMobile = constants.browser.isMobilePlatform;
     /**
      * @mixin SBIS3.CONTROLS/Mixins/DragAndDropMixin
+     * @author Крайнов Д.О.
      * @public
      */
    var DragAndDropMixin = /** @lends SBIS3.CONTROLS/Mixins/DragAndDropMixin.prototype */{

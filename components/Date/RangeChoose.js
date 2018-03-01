@@ -16,6 +16,7 @@ define('SBIS3.CONTROLS/Date/RangeChoose',[
     /**
      * @class SBIS3.CONTROLS/Date/RangeChoose
      * @extends Lib/Control/CompoundControl/CompoundControl
+     * @author Миронов А.Ю.
      *
      * @mixes SBIS3.CONTROLS/Mixins/RangeMixin
      * @mixes SBIS3.CONTROLS/Mixins/DateRangeMixin
