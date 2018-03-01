@@ -1,156 +1,90 @@
-@crossing-line-btn: @switcherline-width - @switcher-btn-size;
-.get-size(@prop, @var1, @var2, @border) {
-   @{prop}: calc(~"(@{var1} + @{var2}) / 2 - @{border}");
-}
-
-.switcherBorder(@border) {
-   &.controls-Checked__checked .controls-Switcher__btn {
-      .get-size(right, @switcher-width, -@switcherline-width, @border);
-   }
-   &:not(.controls-Checked__checked) .controls-Switcher__btn {
-      .get-size(left, @switcher-width, -@switcherline-width, @border);
-   }
-   & .controls-Switcher__line {
-      .get-size(top, @switcher-height, -@switcherline-height, @border);
-      .get-size(left, @switcher-width, -@switcherline-width, @border);
-   }
-   & .controls-Switcher__btn {
-      .get-size(top, @switcher-height, -@switcher-btn-size, @border);
-   }
-}
-
-.controls-Switcher__text{
-   margin-left: @switcher-do-text-margin;
+.controls-Switch {
+   .inline-flexbox();
+   .align-items(center);
+   .justify-content(center);
+   .baseline-fix();
+   width: @width_Switch;
+   height: @height_Switch;
+   border-width: @border-width_Switch;
+   border-color: @border-color_Switch;
+   border-radius: @border-radius_Switch;
+   border-style: solid;
+   box-sizing: border-box;
    cursor: pointer;
 }
 
-.controls-Switcher__unselected{
-   color: @switcher-do-unselected-text-color;
-   &:hover {
-      text-decoration: underline;
-   }
+.controls-Switch_checked {
+   .flex-direction(row-reverse);
 }
 
-.controls-Switcher {
+.controls-Switch__line {
+   height: @height_Switch-line;
+   width: @width_Switch-line - @size_Switch-marker;
+}
+
+.controls-Switch__line_enabled {
+   background-color: @background-color_Switch-line_enabled;
+}
+
+.controls-Switch__line_disabled {
+   background-color: @background-color_Switch-line_disabled;
+}
+
+.controls-Switch__marker {
+   width: @size_Switch-marker;
+   height: @size_Switch-marker;
+   border-style: solid;
+   border-width: @border-width_Switch-marker;
+   border-radius: 100%;
+   box-sizing: border-box;
    position: relative;
-   display: inline-block;
-   width: @switcher-width;
-   height: @switcher-height;
-   border-color: @switcher-border-color;
-   border-style: solid;
-   border-radius: @switcher-border-radius;
-   .box-sizing();
-   &.controls-Checked__checked .controls-Switcher__btn:before {
+}
+
+.controls-Switch__marker_enabled_checked,
+.controls-Switch__marker_disabled_checked {
+   border-color: @border-color_Switch-marker_checked;
+   &:before {
+      background: @background_Switch-dot;
       content: '';
+      width: @size_Switch-dot;
+      height: @size_Switch-dot;
+      border-radius: 100%;
+      display: inline-block; //Для псевдоэлементов в IE нужно высталять хоть какой-нибудь display, иначе они не отображаются
+      //Не получится выровнять с помощью флексов, т.к. IE ставит не по центру, а вообще случайным образом: https://jsfiddle.net/n1gyq4to/
       position: absolute;
-      width: @switcher-dot-size;
-      height: @switcher-dot-size;
-      margin: (@switcher-btn-size - @switcher-dot-size) / 2 - @switcher-btn-border-width;
-      .border-radius(100%);
+      margin: (@size_Switch-marker - @size_Switch-dot) / 2 - @border-width_Switch-marker;
    }
 }
 
-.controls-Switcher__line {
-   position: absolute;
-   height: @switcherline-height;
-   width: @switcherline-width;
+.controls-Switch__marker_enabled_unchecked {
+   border-color: @border-color_Switch-marker_unchecked_enabled;
 }
 
-.controls-Switcher__line_disabled-checked() {
-   .horizontal-gradient(@switcher-disabled-color @crossing-line-btn, transparent @crossing-line-btn);
+.controls-Switch__marker_disabled_unchecked {
+   border-color: @border-color_Switch-marker_unchecked_disabled;
 }
 
-.controls-Switcher__line_disabled-unchecked() {
-   .horizontal-gradient(transparent @switcher-btn-size, @switcher-disabled-color @switcher-btn-size);
+.controls-Switch__text {
+   margin-left: @margin_Switch-text;
 }
 
-.controls-Switcher__line_enabled-checked() {
-   .horizontal-gradient(@color_switcher_line @crossing-line-btn, transparent @crossing-line-btn);
-}
-
-.controls-Switcher__line_enabled-unchecked() {
-   .horizontal-gradient(transparent @switcher-btn-size, @color_switcher_line @switcher-btn-size);
-}
-
-.controls-Switcher__btn {
-   display: block;
-   position: absolute;
-   width: @switcher-btn-size;
-   height: @switcher-btn-size;
-   border-style: solid;
-   border-width: @switcher-btn-border-width;
-   .border-radius(100%);
-   .box-sizing();
-}
-
-body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
+.controls-Switch__text_unselected {
+   color: @color_Switch-text_unselected;
    cursor: pointer;
-   .controls-Switcher__btn {
-      border-color: @primary-color;
-      border-width: @switcher-btn-hover-border-width;
-   }
-   &.controls-Checked__checked .controls-Switcher__btn:before when not (@switcher-btn-border-width = @switcher-btn-hover-border-width) {
-      @dot-offset: @switcher-btn-border-width - @switcher-btn-hover-border-width;
-      top: @dot-offset;
-      left: @dot-offset;
-   }
 }
 
-.ws-enabled.controls-Switcher {
-   &.controls-Checked__checked .controls-Switcher__btn {
-      border-color: @primary-color;
-      &:before {
-         background: @primary-color;
+.ws-is-desktop-platform {
+   .controls-Switch_enabled:hover {
+      .controls-Switch__marker { //Здесь вложенность не избежать, т.к. по ховеру на контейнере должен меняться размер кнопки
+         border-width: @border-width_Switch-marker_hover;
+         &:before {
+            top: @border-width_Switch-marker - @border-width_Switch-marker_hover;
+            left: @border-width_Switch-marker - @border-width_Switch-marker_hover;
+         }
       }
    }
-   &.controls-Checked__checked .controls-Switcher__line {
-      .controls-Switcher__line_enabled-checked();
-   }
-   &:not(.controls-Checked__checked) .controls-Switcher__line {
-      .controls-Switcher__line_enabled-unchecked();
-   }
-   &:not(.controls-Checked__checked) .controls-Switcher__btn {
-      border-color: @color_switcher_line;
-   }
-}
 
-.ws-disabled.controls-Switcher {
-   &:hover {
-      cursor: pointer; //??
-   }
-   &.controls-Checked__checked .controls-Switcher__btn:before {
-      background: @switcher-disabled-color;
-   }
-   &.controls-Checked__checked .controls-Switcher__line {
-      .controls-Switcher__line_disabled-checked();
-   }
-   &:not(.controls-Checked__checked) .controls-Switcher__line {
-      .controls-Switcher__line_disabled-unchecked();
-   }
-   .controls-Switcher__btn {
-      border-color: @switcher-disabled-color;
-   }
-}
-
-& when (@switcher-hover-border-width = @default-border-width) {
-   .controls-Switcher {
-      border-width: @default-border-width;
-      line-height: calc(~"@{switcher-height} - 2 * @{default-border-width}");
-      .switcherBorder(@default-border-width);
-   }
-}
-
-& when not (@switcher-hover-border-width = @default-border-width) {
-   .controls-Switcher {
-      &:not(:hover), .ws-disabled&:hover {
-         border-width: @default-border-width;
-         line-height: calc(~"@{switcher-height} - 2 * @{default-border-width}");
-         .switcherBorder(@default-border-width);
-      }
-      .ws-enabled&:hover {
-         border-width: @switcher-hover-border-width;
-         line-height: calc(~"@{switcher-height} - 2 * @{switcher-hover-border-width}");
-         .switcherBorder(@switcher-hover-border-width);
-      }
+   .controls-Switch__text_unselected:hover {
+      text-decoration: underline;
    }
 }
