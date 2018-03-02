@@ -4216,7 +4216,7 @@ define('SBIS3.CONTROLS/ListView',
                if (this._options.multiselect) {
                   numSelected = this.getSelectedKeys().length;
                }
-               this._pager.updateAmount(this.getItems().getCount(), nextPage, numSelected);
+               this._pager.updateAmount(this.getItems().getCount(), more, numSelected);
             }
          },
          /**
