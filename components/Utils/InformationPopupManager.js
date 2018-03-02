@@ -160,7 +160,7 @@ define('SBIS3.CONTROLS/Utils/InformationPopupManager',
 
          /**
           * Открывает произвольное нотификационное сообщение.
-          * @param {SBIS3.CONTROLS.PopupMixin|*} inst Экземпляр класса окна. Это может быть любое окно, созданное на основе указанного миксина.
+          * @param {SBIS3.CONTROLS/Mixins/PopupMixin|*} inst Экземпляр класса окна. Это может быть любое окно, созданное на основе указанного миксина.
           * @param {Boolean} notHide true - не скрывать окно по истечению времени жизни.
           * @see showNotification
           * @see showConfirmDialog

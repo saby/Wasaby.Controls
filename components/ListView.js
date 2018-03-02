@@ -1349,7 +1349,7 @@ define('SBIS3.CONTROLS/ListView',
          },
          _setScrollPagerPosition: function(){
             var right;
-            // Если таблица находится в SBIS3.CONTROLS.ScrollContainer, то пейджер находится в его скролируемом
+            // Если таблица находится в SBIS3.CONTROLS/ScrollContainer, то пейджер находится в его скролируемом
             // контенере и спозиционирован абсолютно и пересчет позиции не требуется.
             if (!this._inScrollContainerControl) {
                // На ios на маленьком зуме все нормально. На большом - элементы немного смещаются,
