@@ -29,7 +29,7 @@ define('SBIS3.CONTROLS/Commands/CommandsSeparator', [
     * </component>
     */
 
-   var CommandsSeparator = WSButtonBase.extend([Checkable], /** @lends SBIS3.CONTROLS.ToggleButton.prototype */ {
+   var CommandsSeparator = WSButtonBase.extend([Checkable], /** @lends SBIS3.CONTROLS/Button/ToggleButton.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
       }

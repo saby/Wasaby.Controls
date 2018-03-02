@@ -50,7 +50,7 @@ define('SBIS3.CONTROLS/SubmitPopup', [
             _options: {
                /**
                 * @name SBIS3.CONTROLS/SubmitPopup#opener
-                * @cfg {undefined|SBIS3.CORE.Control} Устанавливает контрол, который будет считаться инициатором открытия диалога.
+                * @cfg {undefined|Lib/Control/Control} Устанавливает контрол, который будет считаться инициатором открытия диалога.
                 */
                /**
                 * @cfg {SubmitPopupStatus} Устанавливает состояние диалога. От состояния зависит цвет линии в шапке и набор кнопок.

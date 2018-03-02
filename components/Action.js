@@ -106,7 +106,7 @@ define('SBIS3.CONTROLS/Action',
           * @returns {Deferred}
           * @example
           * <pre>
-          * // myOpenEditDialog - это экземпляр класса SBIS3.CONTROLS.Action.OpenEditDialog,
+          * // myOpenEditDialog - это экземпляр класса SBIS3.CONTROLS/Action/List/OpenEditDialog,
           * // который описывает действие открытие диалога редактирования.
           * myOpenEditDialog.execute({
           *

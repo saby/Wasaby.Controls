@@ -25,7 +25,7 @@ define('SBIS3.CONTROLS/Utils/FilterPanelUtils',
        */
       function createFilterContext(linkedContext, internalContextFilterName, filterStructure, opener) {
          var defNoOpener = new Deferred();
-         var context = cContext.createContext(cInstance.instanceOfModule(opener, 'SBIS3.CORE.CompoundControl') ? opener : defNoOpener, {restriction: 'set'}),
+         var context = cContext.createContext(cInstance.instanceOfModule(opener, 'Lib/Control/CompoundControl/CompoundControl') ? opener : defNoOpener, {restriction: 'set'}),
             rootName =  internalContextFilterName,
             byFilter, byCaption, byVisibility;
 

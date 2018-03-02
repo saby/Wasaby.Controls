@@ -272,7 +272,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
          _resultBindings: {},                   /* {Object} Соответствие полей для подстановки в контекст */
          _delayTimer: null,                     /* {Object|null} Таймер задержки загрузки picker-а */
          _loadingIndicator: undefined,          /* {Object} Индикатор загрузки */
-         _list: undefined,                      /* {SBIS3.CONTROLS/Mixins/DSMixin}{SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable} Контрол списка сущностей */
+         _list: undefined,                      /* {SBIS3.CONTROLS/Mixins/DSMixin}{SBIS3.CONTROLS/Mixins/Selectable|SBIS3.CONTROLS/Mixins/MultiSelectable} Контрол списка сущностей */
          _listContainer: undefined,             /* {jQuery} Контейнер для контрола списка сущностей */
          _loadDeferred: null,                   /* {Deferred|null} Деферред загрузки данных для контрола списка сущностей */
          _showAllButton: undefined,              /* {Lib/Control/Control} Кнопка открытия всех записей */

@@ -45,7 +45,7 @@ define('SBIS3.CONTROLS/Link/LinkFieldController', [
    /**
     * Контроллер, который умеет обновлять поля связной записи при изменении идентификатора свзяи.
     * @class SBIS3.CONTROLS/Link/LinkFieldController
-    * @extends SBIS3.CORE.Abstract
+    * @extends Core/Abstract
     * @author Герасимов А.М.
     * @public
     */

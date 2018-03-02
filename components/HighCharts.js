@@ -59,7 +59,7 @@ function( SbisService, Query, getType, coreClone, constants, Deferred,BaseContro
        * @event onBeforeReload перед перерисовкой диаграммы
        * может использоваться для задания специфических опций при отрисовке диаграммы, например, когда надо сделать подпись в зависимости от условий
        * <wiTag group='Управление">
-       * @param {Object} eventObject описание в классе SBIS3.CORE.Abstract
+       * @param {Object} eventObject описание в классе Core/Abstract
        * @param {Object} highChartOptions Объект опций который будет передан в HighChart
        * @param {Object} объект HighChart
        * @param {Array} данные по которым отрисуется диаграмма

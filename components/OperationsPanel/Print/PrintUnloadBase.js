@@ -243,7 +243,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
 
       /*
        * Собрать данные о колонках (асинхронно).
-       * Возвращает обещание, разрешаемое списком объектов с параметрами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView).
+       * Возвращает обещание, разрешаемое списком объектов с параметрами колонок (в форме, используемой SBIS3.CONTROLS/DataGridView).
        *
        * Для того, чтобы при этом был использован редактор колонок, необходимо включить опцию useColumnsEditor для этой кнопки, а также в вышележащем
        * (по дереву компонентов) экземпляре {@link SBIS3.CONTROLS/Browser браузера} должна быть корректно установлена
@@ -308,7 +308,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
                return value.addCallback(function (columnsConfig) {
                   // Если есть результат редактирования (то есть пользователь отредактировал колонки и нажал кнопку применить, а не закрыл редактор крестом)
                   if (columnsConfig) {
-                     // Возвратить список объектов со свойствами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView)
+                     // Возвратить список объектов со свойствами колонок (в форме, используемой SBIS3.CONTROLS/DataGridView)
                      var recordSet = columnsConfig.columns;
                      var selected = columnsConfig.selectedColumns;
                      return selected && selected.length
