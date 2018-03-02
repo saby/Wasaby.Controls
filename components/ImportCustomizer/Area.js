@@ -128,6 +128,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             options._parserItems = parserItems;
             options._defaultParserName = parserItems[0].id;
             var sheetIndex = options.sheetIndex;
+            if (sheetIndex ==/*Не ===*/ null) {
+               options.sheetIndex = sheetIndex = -1;
+            }
             var sheet = sheets[0 < sheetIndex ? sheetIndex : 0];
             var parserName = sheet.parser;
             if (!parserName) {
@@ -167,7 +170,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   results[i + 1] = {
                      provider: {parser:parserName, skippedRows:skippedRows, separator:sheet.separator || ''},
                      providerArgs: this._getProviderArgsOptions(options, parserName),
-                     columnBinding: {accordances:[], skippedRows:skippedRows},
+                     columnBinding: {accordances:{}, skippedRows:skippedRows},
                   };
                }
                results[''] = cMerge({}, results[1]);
@@ -183,13 +186,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                var views = this._views;
                var results = this._results;
                var sheetIndex = options.sheetIndex;
-               var prevResult = results[0 < sheetIndex ? sheetIndex + 1 : ''];
-               prevResult.provider =  views.provider.getValues();
-               prevResult.providerArgs = this._getProviderArgsValues();
-               prevResult.columnBinding = views.columnBinding.getValues();
+               var prevResult = results[0 <= sheetIndex ? sheetIndex + 1 : ''];
+               prevResult.provider =  cMerge({}, views.provider.getValues());
+               prevResult.providerArgs = cMerge({}, this._getProviderArgsValues());
+               prevResult.columnBinding = cMerge({}, views.columnBinding.getValues());
                sheetIndex = values.sheetIndex;
                options.sheetIndex = sheetIndex;
-               var nextResult = results[0 < sheetIndex ? sheetIndex + 1 : ''];
+               var nextResult = results[0 <= sheetIndex ? sheetIndex + 1 : ''];
                views.provider.setValues(nextResult.provider);
                this._updateProviderArgsView(nextResult.provider.parser);
                var sheets = options.sheets;
@@ -201,26 +204,29 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             this.subscribeTo(this._views.provider, 'change', function (evtName, values) {
                // Изменился выбор провайдера парсинга
                var sheetIndex = this._options.sheetIndex;
-               var result = this._results[0 < sheetIndex ? sheetIndex + 1 : ''];
+               var result = this._results[0 <= sheetIndex ? sheetIndex + 1 : ''];
                var parserName = values.parser;
                var skippedRows = values.skippedRows;
                if (parserName !== result.provider.parser) {
                   this._updateProviderArgsView(parserName);
                }
-               result.provider = values;
+               result.provider = cMerge({}, values);
                result.columnBinding.skippedRows = skippedRows;
                this._views.columnBinding.setValues({skippedRows:skippedRows});
             }.bind(this));
             this.subscribeTo(this._views.providerArgs, 'change', function (evtName, values) {
                // Изменились параметры провайдера парсинга
                var sheetIndex = this._options.sheetIndex;
-               this._results[0 < sheetIndex ? sheetIndex + 1 : ''].providerArgs = values;
+               this._results[0 <= sheetIndex ? sheetIndex + 1 : ''].providerArgs = cMerge({}, values);
             }.bind(this));
             this.subscribeTo(this._views.columnBinding, 'change', function (evtName, values) {
                // Изменилась привязка данных к полям базы
                var sheetIndex = this._options.sheetIndex;
+               var result = this._results[0 <= sheetIndex ? sheetIndex + 1 : ''];
                var skippedRows = values.skippedRows;
-               this._results[0 < sheetIndex ? sheetIndex + 1 : ''].provider.skippedRows = skippedRows;
+               result.provider.skippedRows = skippedRows;
+               result.columnBinding = cMerge({}, values);
+               result.columnBinding123 = cMerge({}, values);
                this._views.provider.setValues({skippedRows:skippedRows});
             }.bind(this));
          },
@@ -236,7 +242,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             var views = this._views;
             var results = this._results;
             var sheetIndex = options.sheetIndex;
-            var useAllSheets = sheetIndex !=/*Не !==*/ null && 0 <= sheetIndex;
+            var useAllSheets = 0 <= sheetIndex;
             var sheets;
             if (useAllSheets) {
                sheets = options.sheets.reduce(function (r, v, i) { r.push(this._combineResultSheet(results[i + 1], v, i)); return r; }.bind(this), []);
