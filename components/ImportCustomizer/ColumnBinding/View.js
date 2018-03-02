@@ -145,6 +145,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
           * @param {any[][]} [values.rows] Данные таблицы, массив массивов равной длины (по количеству столбцов) (опционально)
           * @param {ImportTargetFields} [values.fields] Полный список полей, к которым должны быть привязаны импортируемые данные (опционально)
           * @param {number} [values.skippedRows] Количество пропускаемых строк в начале (опционально)
+          * @param {object} [values.accordances] Перечень соответствий идентификатор поля - индекс колонки (опционально)
           */
          setValues: function (values) {
             if (!values || typeof values !== 'object') {
@@ -157,6 +158,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                   case 'rows':
                   case 'fields':
                   case 'skippedRows':
+                  case 'accordances':
                      break;
                   default:
                      continue;
@@ -171,7 +173,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                var inf = this._makeUpdateInfo(options);
                this._grid.setColumns(inf.columns);
                this._grid.setItems(inf.items);
-               this._accordances = {};
+               this._accordances = {};//^^^
             }
             else
             if (has.skippedRows) {

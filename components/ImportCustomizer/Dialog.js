@@ -46,6 +46,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/Dialog',
           * @typedef {object} ImportSheet Тип, содержащий информацию об области импортируемых данных (например, лист excel)
           * @property {string} name Отображаемое наименование области данных
           * @property {any[][]} sampleRows Образец данных в области, массив массивов равной длины
+          * @property {string} [parser] Провайдер парсинга импортируемых данных
+          * @property {number} [skippedRows] Количество пропускаемых строк в начале
+          * @property {string} [separator] Символы-разделители
           */
 
          //_dotTplFn: null,
@@ -58,11 +61,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Dialog',
                   'InColumsHierarchyParser': {title:rk('в отдельной колонке', 'НастройщикИмпорта'), component:'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View', order:10},
                   'InLineGroupsHierarchyParser': {title:rk('в группировке строк', 'НастройщикИмпорта'), order:20},
                   'InSeparateLineHierarchyParser': {title:rk('в отдельной строке', 'НастройщикИмпорта'), order:30}
-               },
-               /**
-                * @cfg {string} Выбранный провайдер парсинга импортируемых данных
-                */
-               parser: null
+               }
             },
             _result: null,
             _resultHandler: null
@@ -84,7 +83,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Dialog',
           * @param {string} [options.baseParamsComponent] Класс компонента для настройки параметров импортирования (опционально)
           * @param {object} [options.baseParams] Опции компонента для настройки параметров импортирования (опционально)
           * @param {object<ImportParser>} options.parsers Список доступных провайдеров парсинга импортируемых данных
-          * @param {string} options.parser Выбранный провайдер парсинга импортируемых данных
           * @param {object} options.fields ^^^
           * @param {ImportSheet[]} options.sheets Список объектов, представляющих имеющиеся области данных
           * @param {number} [options.sheetIndex] Индекс выбранной области данных (опционально)
@@ -213,7 +211,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Dialog',
             var parsers = options.parsers;
             // Если есть свойство "parsers"
             if (parsers) {
-               // То свойство "parsers" должно быть объектом
+               // То оно должно быть объектом
                if (typeof parsers !== 'object') {
                   throw new Error('Wrong parsers');
                }
@@ -229,11 +227,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Dialog',
                      throw new Error('Wrong parsers items');
                   }
                }
-            }
-            var parser = options.parser;
-            // Если есть свойство "parser", то оно должно быть строкой
-            if (parser && typeof parser !== 'string') {
-               throw new Error('Wrong parser');
             }
             var fields = options.fields;
             // Должно быть свойство "fields" и быть объектом
@@ -272,7 +265,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Dialog',
                file: file,
                baseParams: baseParamsOptions,
                parsers: parsers ? cMerge(cMerge({}, defaults.parsers), parsers) : defaults.parsers,
-               parser: parser || defaults.parser,
                fields: fields,
                sheets: sheets,
                sheetIndex: sheetIndex,
