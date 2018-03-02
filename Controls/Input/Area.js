@@ -105,6 +105,10 @@ define('Controls/Input/Area', [
          this._notify('valueChanged', [value]);
       },
 
+      _inputCompletedHandler: function(){
+         Area.superclass._inputCompletedHandler.apply(this, arguments);
+      },
+
       _setValue: function(value){
          Area.superclass._setValue.apply(this, arguments);
          _private.setFakeAreaValue.call(this, value);
