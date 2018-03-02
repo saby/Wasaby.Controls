@@ -140,7 +140,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             options._skippedRows = 0 < sheet.skippedRows ? sheet.skippedRows : 0;
             options._parserSeparator = sheet.separator || '';
             options._providerArgsComponent = parsers[parserName].component || undefined;
-            options._providerArgsOptions = this._getProviderArgsOptions(options, parserName);
+            options._providerArgsOptions = this._getProviderArgsOptions(options, parserName, true);
             options._columnsBindingRows = hasSheets ? sheet.sampleRows : [];
             options._columnsBindingFields = options.fields;//^^^
             return options;
@@ -169,7 +169,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   var skippedRows = 0 < sheet.skippedRows ? sheet.skippedRows : 0;
                   results[i + 1] = {
                      provider: {parser:parserName, skippedRows:skippedRows, separator:sheet.separator || ''},
-                     providerArgs: this._getProviderArgsOptions(options, parserName),
+                     providerArgs: this._getProviderArgsOptions(options, parserName, false),
                      columnBinding: {accordances:{}, skippedRows:skippedRows},
                   };
                }
@@ -214,11 +214,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                result.columnBinding.skippedRows = skippedRows;
                this._views.columnBinding.setValues({skippedRows:skippedRows});
             }.bind(this));
-            this.subscribeTo(this._views.providerArgs, 'change', function (evtName, values) {
-               // Изменились параметры провайдера парсинга
-               var sheetIndex = this._options.sheetIndex;
-               this._results[0 <= sheetIndex ? sheetIndex + 1 : ''].providerArgs = cMerge({}, values);
-            }.bind(this));
+            // Для компонента this._views.providerArgs подисываеися отдельно через обработчик в опциях
             this.subscribeTo(this._views.columnBinding, 'change', function (evtName, values) {
                // Изменилась привязка данных к полям базы
                var sheetIndex = this._options.sheetIndex;
@@ -229,6 +225,17 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                result.columnBinding123 = cMerge({}, values);
                this._views.provider.setValues({skippedRows:skippedRows});
             }.bind(this));
+         },
+
+         /*
+          * Обработчик события "change" для компонента this._views.providerArgs
+          *
+          * @protected
+          */
+         _onChangeProviderArgs: function (evtName, values) {
+            // Изменились параметры провайдера парсинга
+            var sheetIndex = this._options.sheetIndex;
+            this._results[0 <= sheetIndex ? sheetIndex + 1 : ''].providerArgs = cMerge({}, values);
          },
 
          /*
@@ -318,7 +325,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             var component = options.parsers[parserName].component;
             var view = this._views.providerArgs;
             if (component) {
-               view.setTemplate(component, this._getProviderArgsOptions(options, parserName));
+               view.setTemplate(component, this._getProviderArgsOptions(options, parserName, true));
             }
             else {
                view.clearTemplate();
@@ -332,14 +339,18 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @protected
           * @param {object} options Опции
           * @param {string} parser Имя выбранного парсера
+          * @param {boolean} withHandler Вместе с обработчиками событий
           * @return {object}
           */
-         _getProviderArgsOptions: function (options, parserName) {
+         _getProviderArgsOptions: function (options, parserName, withHandler) {
             var parser = options.parsers[parserName];
             if (parser && parser.component) {
                var sheets = options.sheets;
                var sheetIndex = options.sheetIndex;
-               var values = {columnCount:sheets && sheets.length ? sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows[0].length : 0};
+               var values = {
+                  columnCount:sheets && sheets.length ? sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows[0].length : 0,
+                  handlers: {change:this._onChangeProviderArgs.bind(this)}
+               };
                var args = parser.args;
                return args ? cMerge(values, args) : values;
             }
