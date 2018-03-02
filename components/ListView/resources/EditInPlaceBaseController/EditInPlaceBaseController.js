@@ -17,12 +17,12 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
    "WS.Data/Entity/Model",
    "WS.Data/Entity/Record",
    "Core/core-instance",
-   "Core/helpers/fast-control-helpers",
+   "Core/Indicator",
    'SBIS3.CONTROLS/Utils/InformationPopupManager',
    'css!SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceBaseController'
 
 ],
-   function (cContext, constants, Deferred, IoC, CompoundControl, CommandDispatcher, PendingOperationProducerMixin, AddRowTpl, EditInPlace, ControlHierarchyManager, Model, Record, cInstance, fcHelpers, InformationPopupManager) {
+   function (cContext, constants, Deferred, IoC, CompoundControl, CommandDispatcher, PendingOperationProducerMixin, AddRowTpl, EditInPlace, ControlHierarchyManager, Model, Record, cInstance, Indicator, InformationPopupManager) {
 
       'use strict';
 
@@ -329,14 +329,14 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
                beginEditResult = this._notify('onBeginEdit', record, this._isAdd);
                if (beginEditResult instanceof Deferred) {
                   loadingIndicator = setTimeout(function () {
-                     fcHelpers.toggleIndicator(true);
+                     Indicator.setMessage(rk('Пожалуйста, подождите…'));
                   }, 100);
                   return beginEditResult.addCallback(function(readRecord) {
                      self._editingRecord = record;
                      return readRecord;
                   }).addBoth(function (result) {
                      clearTimeout(loadingIndicator);
-                     fcHelpers.toggleIndicator(false);
+                     Indicator.hide();
                      return result;
                   });
                } else {
