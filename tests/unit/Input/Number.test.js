@@ -254,6 +254,25 @@ define(
 
             assert.equal(result, '123456.78');
          });
+
+         it('\'0.\' wouldn\'t update if value is 0', function () {
+            var
+               numberViewModel = new NumberViewModel({}),
+               result;
+
+            numberViewModel.handleInput({
+               before: '',
+               insert: '.',
+               after: '',
+               delete: ' '
+            });
+
+            numberViewModel.updateOptions({
+               value: 0
+            });
+
+            assert.equal(numberViewModel._options.value, '0.');
+         });
       });
    }
 );
