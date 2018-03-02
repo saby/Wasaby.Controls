@@ -44,9 +44,9 @@
             class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-provider"
             name="controls-ImportCustomizer-Area__provider"
             parsers="{{_parserItems}}"
-            parser="{{parser}}"
-            skippedRows="{{undefined}}" {{/*^^^*/}}
-            separator="{{undefined}}" {{/*^^^*/}}
+            parser="{{_parserName}}"
+            skippedRows="{{_skippedRows}}"
+            separator="{{_parserSeparator }}"
          />
          <Lib:Control:TemplatedArea:TemplatedArea
             template="{{_providerArgsComponent}}"
@@ -62,7 +62,7 @@
             columnTitle="{{bindingColumnTitle}}"
             rows="{{_columnsBindingRows}}"
             fields="{{_columnsBindingFields}}"
-            skippedRows="{{undefined}}" {{/*^^^*/}}
+            skippedRows="{{_skippedRows}}"
          />
       </ws:content>
    </SBIS3.CONTROLS:ScrollContainer>
