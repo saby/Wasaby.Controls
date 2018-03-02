@@ -34,9 +34,11 @@ define('Controls/Input/Phone',
          },
 
          _beforeUpdate: function(newOptions) {
-            this._viewModel.updateOptions({
-               value: newOptions.value
-            });
+            if (this._options.value !== newOptions.value) {
+               this._viewModel.updateOptions({
+                  value: newOptions.value
+               });
+            }
          }
       });
 
