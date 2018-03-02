@@ -42,6 +42,7 @@ define('SBIS3.CONTROLS/Link', [
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     *
+    * @css controls-Link__underline Устанавливает постоянное подчеркивание текста кнопки.
     * @css controls-Link__icon Класс для изменения отображения иконки кнопки.
     * @css ws-header Устанавливает для кнопки стилевое оформление в виде "Заголовок без маркера", 18px с цветом #D94700 (см. <a href="http://axure.tensor.ru/standarts/v7/#p=разделители__заголовки___версия_05_">Стандарты</a>). Класс применяется для создания кликабельного заголовка.
     * @css ws-subheader Устанавливает для кнопки стилевое оформление в виде "Заголовок без маркера", 18px с цветом #313E78 (см. <a href="http://axure.tensor.ru/standarts/v7/#p=разделители__заголовки___версия_05_">Стандарты</a>). Класс применяется для создания кликабельного заголовка.

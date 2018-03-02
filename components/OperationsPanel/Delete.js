@@ -26,7 +26,11 @@ define('SBIS3.CONTROLS/OperationsPanel/Delete', [
              * @editor icon ImageEditor
              */
             icon: 'sprite:icon-24 icon-Erase icon-error',
-            caption: rk('Удалить')
+            caption: rk('Удалить'),
+            /**
+             * @cfg {string|function} Текст отображаемый при удалении записей.
+             */
+            confirmText: undefined
          }
       },
 
@@ -36,7 +40,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Delete', [
          var view = this._options.linkedView,
             selectedKeys = view.getSelectedKeys(),
             keys = selectedKeys.length ? selectedKeys : this._getAllKeys();
-         view.deleteRecords(keys);
+         view.deleteRecords(keys, this._options.confirmText);
       },
       _getAllKeys: function() {
          //Элементы могут иметь одинаковые ключи, поэтому сначала добавляем их в объект и возвращаем массив, сделанный из этого объекта

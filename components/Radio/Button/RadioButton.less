@@ -83,15 +83,18 @@
       }
       &.controls-Checked__checked {
          .controls-RadioButton__icon {
-            border-color: @radio-button-icon-border-color-disabled;
+            border-color: @radio-button-icon-border-color-disabled_checked;
             &:before {
-               background: @radio-button-icon-border-color-disabled;
+               background: @radio-button-icon-border-color-disabled_checked;
             }
          }
          &:hover {
             .controls-RadioButton__caption {
                color: @radio-button-disabled-hover-text-color;
             }
+         }
+         .controls-RadioButton__caption {
+            color: @radio-button-disabled-text-color_checked;
          }
       }
 

@@ -17,6 +17,7 @@
    resize: none; //по умолчанию both
    white-space: pre-wrap; //https://bugzilla.mozilla.org/show_bug.cgi?id=1137650
    overflow-x: hidden; //https://bugzilla.mozilla.org/show_bug.cgi?id=33654 https://jsfiddle.net/aowv52p6/
+   overflow-y: auto; //В IE по умолчанию у textarea overflow-y: visible
 }
 
 .controls-TextArea__view {
@@ -63,7 +64,7 @@
    left: 0;
 }
 .controls-TextArea__view_empty {
-   color: @color_InputRender-placeholder; //Т.к. до инициализации textarea скрыта, то плейсхолдер находится в div'e и он должен иметь корректный цвет
+   visibility: hidden;
    .baseline-fix(); //Пустой блок увеличивает размеры родительского и ломает базовую линию
 }
 .controls-TextArea__field_init {

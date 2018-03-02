@@ -3,9 +3,9 @@
  *
  * @class SBIS3.CONTROLS/LongOperations/AbstractProducer
  * @implements SBIS3.CONTROLS/LongOperations/IProducer
+ * @author Спирин В.А.
  * @public
  */
-
 define('SBIS3.CONTROLS/LongOperations/AbstractProducer',
    [
       'Core/core-extend',

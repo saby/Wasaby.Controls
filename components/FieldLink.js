@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/FieldLink',
        "Core/core-instance",
        'Core/helpers/Function/memoize',
        'SBIS3.CONTROLS/Utils/Contains',
-       "Core/helpers/string-helpers",
+       "Core/helpers/String/escapeTagsFromStr",
        'SBIS3.CONTROLS/ControlHierarchyManager',
        "SBIS3.CONTROLS/Suggest/SuggestTextBox",
        "SBIS3.CONTROLS/Mixins/ItemsControlMixin",
@@ -45,7 +45,7 @@ define('SBIS3.CONTROLS/FieldLink',
         cInstance,
         memoize,
         contains,
-        strHelpers,
+        escapeTagsFromStr,
         ControlHierarchyManager,
         SuggestTextBox,
         ItemsControlMixin,
@@ -171,7 +171,7 @@ define('SBIS3.CONTROLS/FieldLink',
              _lastFieldLinkWidth: null,
              _showAllButton: null,
              _options: {
-                _paddingClass: ' controls-InputRender_paddingLeft',
+                _paddingClass: ' controls-Text-InputRender_paddingLeft',
                 /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
                 afterFieldWrapper: afterFieldWrapper,
                 beforeFieldWrapper: beforeFieldWrapper,
@@ -965,8 +965,9 @@ define('SBIS3.CONTROLS/FieldLink',
                     displayFields.push(rec.get(self._options.displayProperty) || '');
                  });
               }
-
-              return strHelpers.htmlToText(displayFields.join(', '));
+              // Чтобы не тянуть в зависимости htmlToText из Deprecated/helpers/string-helpers,
+              // выполним replace из него прямо тут
+              return escapeTagsFromStr(displayFields.join(', ').replace(/<br>/g, '\n'), '\\w+');
           },
 
           _onResizeHandler: function() {

@@ -1,6 +1,7 @@
 define('SBIS3.CONTROLS/Mixins/CompoundFocusMixin', ['Core/EventBus'], function(EventBus) {
    /**
     * @class SBIS3.CONTROLS/Mixins/CompoundFocusMixin
+    * @author Крайнов Д.О.
     * @public
     */
    var CompoundFocusMixin = /** @lends SBIS3.CONTROLS/Mixins/CompoundFocusMixin.prototype */{

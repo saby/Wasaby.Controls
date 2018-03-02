@@ -309,30 +309,9 @@ define('SBIS3.CONTROLS/Filter/HistoryController',
 	          this.saveToUserParams();
           },
 
-          prepareViewFilter: function(filter) {
-             var view = this._options.view,
-                /* View может не быть, если кнопку фильтров используют отдельно (например в торгах,
-                   там по кнопке фильтров фильтруется набор из несколькх view */
-                 viewFilter = coreClone(filter || (view ? view.getFilter() : {}));
-
-             this._options.noSaveFilters.forEach(function(filter) {
-                if(viewFilter[filter]) {
-                   delete viewFilter[filter];
-                }
-             });
-
-             /* Т.к. в реестре задач (возможно где-то ещё)
-                в поле фильтра с типом "Дата" ожидают строку даты со сдвигом(чтобы её обработать),
-                а не стандартный ISO формат, то использую наш специальный метод для приведения даты в строку */
-             for (var key in viewFilter) {
-                if(viewFilter.hasOwnProperty(key)) {
-                   if(viewFilter[key] instanceof Date) {
-                      viewFilter[key] = viewFilter[key].toSQL(Date.SQL_SERIALIZE_MODE_AUTO);
-                   }
-                }
-             }
-             var hashFilter = this._getFiltersFormHash();
-             return cMerge(viewFilter, hashFilter);
+          prepareViewFilter: function() {
+             var viewFilter = FilterHistoryControllerUntil.prepareViewFilter(this._options.view, this._options.noSaveFilters);
+             return cMerge(viewFilter, this._getFiltersFormHash());
           },
 
 	       /**

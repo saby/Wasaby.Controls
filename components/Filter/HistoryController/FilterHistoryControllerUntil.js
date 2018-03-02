@@ -6,7 +6,8 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
        'Core/core-clone',
        'Core/helpers/Object/isEqual',
        'Core/helpers/Object/find',
-       'Core/helpers/String/ucFirst'
+       'Core/helpers/String/ucFirst',
+       'Core/Date'
     ], function(coreClone, isEqualObject, objectFind, ucFirst) {
 
    'use strict';
@@ -30,6 +31,33 @@ define('SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil',
    }
 
    return {
+      prepareViewFilter: function(view, noSaveFilters) {
+         var
+            /* View может не быть, если кнопку фильтров используют отдельно (например в торгах,
+             там по кнопке фильтров фильтруется набор из несколькх view */
+            viewFilter = coreClone(view ? view.getFilter() : {});
+
+         if (noSaveFilters) {
+            noSaveFilters.forEach(function (filter) {
+               if (viewFilter[filter]) {
+                  delete viewFilter[filter];
+               }
+            });
+         }
+
+         /* Т.к. в реестре задач (возможно где-то ещё)
+          в поле фильтра с типом "Дата" ожидают строку даты со сдвигом(чтобы её обработать),
+          а не стандартный ISO формат, то использую наш специальный метод для приведения даты в строку */
+         for (var key in viewFilter) {
+            if(viewFilter.hasOwnProperty(key)) {
+               if(viewFilter[key] instanceof Date) {
+                  viewFilter[key] = viewFilter[key].toSQL(Date.SQL_SERIALIZE_MODE_AUTO);
+               }
+            }
+         }
+
+         return viewFilter;
+      },
       prepareStructureToSave: function(structure) {
          /* Все правки надо делать с копией, чтобы не портить оригинальную структуру */
          var structureCopy = coreClone(structure);

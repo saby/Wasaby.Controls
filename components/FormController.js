@@ -9,6 +9,7 @@ define('SBIS3.CONTROLS/FormController', [
    'Core/core-instance',
    'Core/helpers/Function/forAliveOnly',
    'Core/helpers/Hcontrol/doAutofocus',
+   'Core/helpers/Object/isEmpty',
    'Lib/Control/CompoundControl/CompoundControl',
    'Core/Indicator',
    'WS.Data/Entity/Record',
@@ -19,7 +20,7 @@ define('SBIS3.CONTROLS/FormController', [
    'i18n!SBIS3.CONTROLS/FormController',
    'css!SBIS3.CONTROLS/FormController/FormController'
 ],
-   function( cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC, cInstance, forAliveOnly, doAutofocus, CompoundControl, cIndicator, Record, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
+   function( cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC, cInstance, forAliveOnly, doAutofocus, isEmpty, CompoundControl, cIndicator, Record, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
    /**
     * Компонент, на основе которого создают диалог, данные которого инициализируются по записи.
     * В частном случае компонент применяется для создания <a href='/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/'>диалогов редактирования записи</a>.
@@ -401,7 +402,7 @@ define('SBIS3.CONTROLS/FormController', [
       _onRecordChange: function(event, fields) {
          //Если изменился title - обновим заголовок вкладки браузера
          //Если fields пустой, значит установили новые сырые данные (вызывали setRawData)
-         if (fields.title || Object.isEmpty(fields)) {
+         if (fields.title || isEmpty(fields)) {
             this._updateDocumentTitle();
          }
       },
@@ -919,7 +920,7 @@ define('SBIS3.CONTROLS/FormController', [
              result;
 
          //TODO в рамках совместимости
-         if (Object.isEmpty(options.dataSource) && !options.source){
+         if (isEmpty(options.dataSource) && !options.source){
             IoC.resolve('ILogger').error('SBIS3.CONTROLS/FormController', 'Необходимо задать опцию dataSource');
             return false;
          }

@@ -147,7 +147,8 @@ define(
                   result: {
                      value: '12 456',
                      position: 2
-                  }
+                  },
+                  inputType: 'deleteBackward'
                },
 
                //Проверим что при вводе вместо точки запятой или буквы "б" или буквы "ю" - они будут заменены
@@ -183,6 +184,24 @@ define(
                      value: '123.456789',
                      position: 7
                   }
+               },
+
+               //Проверка удаления пробела клавишей delete
+               {
+                  testName: 'Remove space using \'delete\' button',
+                  controlConfig: {
+                  },
+                  splitValue: {
+                     before: '123',
+                     insert: '',
+                     after: '456',
+                     delete: ' '
+                  },
+                  result: {
+                     value: '12 356',
+                     position: 4
+                  },
+                  inputType: 'deleteForward'
                }
             ];
 
@@ -190,10 +209,50 @@ define(
             it(item.testName, function () {
                var
                   numberViewModel = new NumberViewModel(item.controlConfig),
-                  result = numberViewModel.prepareData(item.splitValue);
+                  result = numberViewModel.handleInput(item.splitValue, item.inputType);
 
                assert.equal(result.value, item.result.value);
             });
+         });
+
+         it('getDisplayValue: only integers', function () {
+            var
+               numberViewModel = new NumberViewModel({
+                  value: '123456'
+               }),
+               result = numberViewModel.getDisplayValue();
+
+            assert.equal(result, '123 456');
+         });
+
+         it('getDisplayValue: integers and decimals', function () {
+            var
+               numberViewModel = new NumberViewModel({
+                  value: '123456.78'
+               }),
+               result = numberViewModel.getDisplayValue();
+
+            assert.equal(result, '123 456.78');
+         });
+
+         it('getValue: only integers', function () {
+            var
+               numberViewModel = new NumberViewModel({
+                  value: '123 456'
+               }),
+               result = numberViewModel.getValue();
+
+            assert.equal(result, '123456');
+         });
+
+         it('getValue: integers and decimals', function () {
+            var
+               numberViewModel = new NumberViewModel({
+                  value: '123 456.78'
+               }),
+               result = numberViewModel.getValue();
+
+            assert.equal(result, '123456.78');
          });
       });
    }

@@ -1,8 +1,8 @@
 define('SBIS3.CONTROLS/Label/resources/Label.compatibility',
    [
-      'Core/Sanitize'
+      'Core/helpers/String/escapeHtml'
    ],
-   function(Sanitize) {
+   function(escapeHtml) {
        /**
         * @class SBIS3.CONTROLS/Label/resources/Label.compatibility
         * @public
@@ -26,7 +26,7 @@ define('SBIS3.CONTROLS/Label/resources/Label.compatibility',
           */
          setCaption: function(caption) {
             this._options.caption = caption;
-            this._container.html(Sanitize(caption));
+            this._container.html(escapeHtml(caption));
          }
       }
    }

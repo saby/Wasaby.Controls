@@ -51,6 +51,7 @@ define('SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertObserver',
        * Класс, который позволяет отслеживать изменения раскладки введённого текста и автоматически изменять её (с кириллицы на латиницу и наоборот), если в результате запроса не было выбрано ни одной записи.
        * Класс (утилита) предназначен, чтобы связать работу поля ввода и списка, который создан на основе {@link SBIS3.CONTROLS/ListView}.
        * @class SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertObserver
+       * @author Крайнов Д.О.
        * @extends Core/core-extend
        * @public
        */

@@ -13,6 +13,7 @@ define('SBIS3.CONTROLS/Suggest/SuggestShowAll',
        var optionsToSet = ['columns', 'itemTpl', 'idProperty', 'filter', 'dataSource'];
        /**
         * @class SBIS3.CONTROLS/Suggest/SuggestShowAll
+        * @author Крайнов Д.О.
         * @extends Lib/Control/CompoundControl/CompoundControl
         * @public
         */

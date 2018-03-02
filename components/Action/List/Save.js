@@ -8,7 +8,7 @@ define('SBIS3.CONTROLS/Action/List/Save', [
     'Core/core-instance',
     'Core/core-clone',
     'WS.Data/Collection/RecordSet',
-    'Deprecated/Controls/DialogSelector/DialogSelector',
+    'Lib/Control/Dialog/Dialog',
     'WS.Data/Query/Query',
     'WS.Data/Entity/Record'
 ], function (Save, ListMixin, fcHelpers, Deferred, Chain, cMerge, cInstance, coreClone, RecordSet, Dialog, Query, Record) {
@@ -209,7 +209,7 @@ define('SBIS3.CONTROLS/Action/List/Save', [
                     onBeforeShow: function() {
                         this.getLinkedContext().setValue('NumOfRecords', defaultCount);
                     },
-                    onChange: function(event, count) {
+                    onAfterClose: function(event, count) {
                         result.callback(count);
                     }
                 }

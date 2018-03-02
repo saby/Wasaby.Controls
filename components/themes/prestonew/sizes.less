@@ -311,9 +311,9 @@
 @date-range-choose-year-margin-bottom:    round(8px * @multiplier);
 @date-range-choose-year-prev-next-btns-font-size:round(42px * @multiplier);
 @date-range-choose-year-line-height:      @default-height;
-@date-range-choose-year-prev-next-btns-width:round(84px * @multiplier);
+@date-range-choose-year-prev-next-btns-width:@date-range-choose-year-height;
 @date-range-choose-year-prev-next-btns-font-size:round(42px * @multiplier);
-@date-range-choose-home-icon-width:       @default-height;
+@date-range-choose-home-icon-width:       round(32px * @multiplier);
 @controls-date-range-year-marginleft:     round(11px * @multiplier);
 // Date Range Big Choose
 @padding-left_DateRangeBigChoose-header:                                 0;
@@ -367,7 +367,7 @@
 @height_TreeDataGridView-expand:          auto;
 @font-size_TreeDataGridView-expand:       round(50px * @multiplier);
 @width-TreeDataGridView-levelPadding:     round(58px * @multiplier);
-@margin_TreeDataGridView-expand:          0 round(8px * @multiplier) 0 0;
+@padding_TreeDataGridView-expand:         0 round(8px * @multiplier) 0 0;
 @top_TreeDataGridView-editArrow:          round(5px * @multiplier);
 @tree-view-expand-open-border-width:      round(8px * @multiplier) round(8px * @multiplier) 0 round(8px * @multiplier);
 @tree-view-item-content-margin:           0 0 0 round(20px * @multiplier);
@@ -390,7 +390,7 @@
 @data-grid-cell-padding-right:            round(8px * @multiplier);
 @data-grid-check-box-top:                 -@default-border-width;
 @data-grid-money-header-cell-padding:     round(40px * @multiplier);
-@data-grid-money-header-cell-padding-last:round(48px * @multiplier);
+@data-grid-money-header-cell-padding-last:round(56px * @multiplier);
 @data-grid-money-header-cell-padding-last_XL: round(56px * @multiplier);
 @data-grid-partScroll-arrowLeft-top-shift: round(-24px * @multiplier);
 @data-grid-partScroll-arrowRight-top-shift:round(-24px * @multiplier);
@@ -398,9 +398,6 @@
 @data-grid-results-cell-padding:          @data-grid-cell-padding;
 // PrintDialog
 //По какой-то причине Firefox берёт font-size не из html, а свой, причем только при расчёте этой ширины
-@controls-printdialog-min-width:          round(756px * @multiplier);
-@controls-printdialog-activate-right:     round(86px * @multiplier);
-@controls-printdialog-activate-margin-top:8px;
 //MergeDialog
 @controls-MergeDialogTemplate-height:                                       round(588px * @multiplier);
 @controls-MergeDialogTemplate-hint-font-size:                               @small-text-size;
@@ -692,3 +689,20 @@
 
 //money
 @money-decorator-integer-basic-registry-font-size: round(28px * @multiplier);
+
+//link
+@height_Button_m:                   round(58px * @multiplier);
+@min-width_Button-Vdom:                  round(86px * @multiplier);
+@font-size_Link-s:                  round(21px * @multiplier);
+@font-size_Link-m:                  round(24px * @multiplier);
+@font-size_Link-l:                  round(28px * @multiplier);
+@font-size_Link-xl:                 round(32px * @multiplier);
+@font-size_Button-Vdom_m:           round(32px * @multiplier);
+@border-width_Button-Vdom:          0;
+@border-radius_Button_default:      1px;
+@font-size_Button-Vdom_l:           round(40px * @multiplier);
+@height_Button-Vdom_l:              round(78px * @multiplier);
+/*@border-radius_Button_l:            1px;*/
+@padding_Button-wrapper_default:    round(16px * @multiplier);
+@padding_Button-Vdom-wrapper_l:     round(16px * @multiplier);
+@spacing_Button-Vdom-between-icon-text:  round(8px * @multiplier);

@@ -85,9 +85,9 @@
  * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
  *
  * @class SBIS3.CONTROLS/Browser/ColumnsEditor/Editor
- * @public
  * @extends SBIS3.CONTROLS/CompoundControl
  * @author Спирин В.А.
+ * @public
  */
 define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
    [

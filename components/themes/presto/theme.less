@@ -91,10 +91,13 @@ body {
 }
 
 .controls-operationsPanel__actions {
-  .controls-ButtonBase:hover, .controls-DropdownList__value:hover, .controls-ComboBox:hover {
+  .controls-ButtonBase:hover:not(.ws-disabled), .controls-DropdownList__value:hover:not(.ws-disabled), .controls-ComboBox:hover:not(.ws-disabled) {
     color: #B9E9FF !important;
     .icon-error {
       color: @error-color !important;
+    }
+    .controls-Button__icon.icon-primary {
+      color: #B9E9FF !important;
     }
   }
   .controls-Link.controls-Link_main:hover:not(.ws-disabled) .controls-Button__icon.icon-primary {
@@ -199,10 +202,10 @@ body {
       cursor: default;
       &.ws-paging-prev, &.ws-paging-first, &.ws-paging-next, &.ws-paging-end {
         background: @background_Button !important;
-        .box-shadow(0 1px 4px rgba(0, 0, 0, 1));
+        .box-shadow(0 1px 4px rgba(0, 0, 0, .5));
       }
       &.ws-paging-active {
-        .box-shadow(0 1px 4px rgba(0, 0, 0, 1));
+        .box-shadow(0 1px 4px rgba(0, 0, 0, .5));
         color: #FFFFFF !important;
         background: #567395 !important;
         cursor: pointer;
@@ -234,7 +237,7 @@ body {
       border-style: solid;
       border-width: @border-width_Button;
       border-color: @background_Button;
-      .box-shadow(0 1px 4px rgba(0, 0, 0, 1));
+      .box-shadow(0 1px 4px rgba(0, 0, 0, .5));
       .controls-Button__icon {
         height: @default-icon-size-large!important;
         width: @default-icon-size-large!important;
@@ -257,6 +260,11 @@ body {
     width: calc(~"100% - @{width_CloseButton} - @{padding-right_floatArea-title}") !important; //86 - close button width + 8 - padding
     padding-left: round(24px * @multiplier) !important;
     box-sizing: border-box !important;
+  }
+}
+.controls-ListView__touchMode {
+  .controls-ListView__ItemsToolbar-container {
+    padding: 0;
   }
 }
 
@@ -362,18 +370,6 @@ body {
   }
 }
 
-//TODO: в престо отключим замыливание при показе шеврона редактирования папки т.к.
-//в тёмной теме прозрачный цвет ховера и невозможно сделать замыливание.
-//После перехода на flex нужно реализовать троеточие.
-.controls-TreeView__editArrow-background:after {
-  display: none;
-}
-.controls-TreeView__ellipsis-copyArrow {
-  background-color: transparent !important;
-  &:after {
-    display: none !important;
-  }
-}
 //todo: Из-за заданного отступа происходит скачек при переключении вкладок
 //Будет исправлено при переписывании tabButtons на flex
 .controls-TabButton.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__wrapper {
@@ -471,4 +467,25 @@ body {
 // В presto крестик закрытия в информационных окнах имеют другие размеры.
 .controls-InformationPopup .controls-PopupMixin__closeButton_light {
   .icon-size(@icon-size_default_large);
+}
+// Размер не согласуется с размерами кнопок-иконок. необходимо только в тулбаре
+.controls-ToolBar .controls-IconButton {
+  width: @default-height;
+  height: @default-height;
+}
+
+.ws-is-desktop-platform {
+  .controls-Switch:hover,
+  .controls-DoubleSwitch:hover {
+    border-width: 2px;
+  }
+}
+.ws-window-overlay {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background-color: rgba(0,0,0,.5);
+  cursor: pointer;
 }

@@ -13,12 +13,12 @@ define('Controls/Popup/Opener/Dialog/Strategy',
        * @extends Controls/Control
        */
       var Strategy = BaseStrategy.extend({
-         elementCreated: function (cfg, width, height) {
-            cfg.position = this.getPosition(window.innerWidth, window.innerHeight, width, height);
+         elementCreated: function (cfg, sizes) {
+            cfg.position = this.getPosition(window.innerWidth, window.innerHeight, sizes);
          },
 
-         elementUpdated: function (cfg, width, height) {
-            this.elementCreated(cfg, width, height);
+         elementUpdated: function (cfg, sizes) {
+            this.elementCreated(cfg, sizes);
          },
 
          /**
@@ -26,13 +26,12 @@ define('Controls/Popup/Opener/Dialog/Strategy',
           * @function Controls/Popup/Opener/Dialog/Strategy#getPosition
           * @param wWidth ширина окна браузера
           * @param wHeight высота окна браузера
-          * @param cWidth ширина диалогового окна
-          * @param cHeight высота диалогового окна
+          * @param sizes размеры диалогового окна
           */
-         getPosition: function (wWidth, wHeight, cWidth, cHeight) {
+         getPosition: function (wWidth, wHeight, sizes) {
             return {
-               left: Math.round((wWidth - cWidth) / 2),
-               top: Math.round((wHeight - cHeight) / 2)
+               left: Math.round((wWidth - sizes.width) / 2),
+               top: Math.round((wHeight - sizes.height) / 2)
             };
          }
       });

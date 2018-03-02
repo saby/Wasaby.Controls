@@ -41,7 +41,7 @@ define('Controls/List/SimpleList/ItemsViewModel',
          },
 
          isEnd: function() {
-            return this._curIndex < this._display.getCount()
+            return this._curIndex < (this._display ? this._display.getCount() : 0);
          },
 
          goToNext: function() {
