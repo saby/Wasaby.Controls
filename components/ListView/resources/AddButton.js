@@ -20,9 +20,9 @@ define('SBIS3.CONTROLS/ListView/resources/AddButton', [
 
       _toggleState: function() {
          var  container = this._container;
-         container[0].className = container[0].className.replace(/(^|\s)controls-Link_state-\S+/g, '');
+         container[0].className = container[0].className.replace(/(^|\s)controls-AddButton_state-\S+/g, '');
 
-         container.addClass('controls-Link_state-' + (this._options.enabled ? this._options.style : 'disabled'));
+         container.addClass('controls-AddButton_state-' + (this._options.enabled ? this._options.style : 'disabled'));
          Link.superclass._toggleState.apply(this, arguments);
       }
    });
