@@ -8,7 +8,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate', [
    "WS.Data/Source/SbisService",
    "WS.Data/Query/Query",
    "WS.Data/Collection/RecordSet",
-   "Core/helpers/fast-control-helpers",
+   "Core/helpers/Hcontrol/openErrorsReportDialog",
    "tmpl!SBIS3.CONTROLS/OperationsPanel/Merge/resources/cellRadioButtonTpl",
    "tmpl!SBIS3.CONTROLS/OperationsPanel/Merge/resources/cellCommentTpl",
    "tmpl!SBIS3.CONTROLS/OperationsPanel/Merge/resources/cellTitleTpl",
@@ -20,7 +20,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate', [
    "i18n!!SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate",
    'css!SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate',
    'css!SBIS3.CONTROLS/Radio/Button/RadioButton'
-], function( CommandDispatcher, Control, dotTplFn, SbisServiceSource, Query, RecordSet, fcHelpers, cellRadioButtonTpl, cellCommentTpl, cellTitleTpl, rowTpl) {
+], function( CommandDispatcher, Control, dotTplFn, SbisServiceSource, Query, RecordSet, openErrorsReportDialog, cellRadioButtonTpl, cellCommentTpl, cellTitleTpl, rowTpl) {
 
 
     var COMMENT_FIELD_NAME = 'Comment',
@@ -148,7 +148,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Merge/DialogTemplate', [
             } else {
                 errorsTexts = [error.message];
             }
-            fcHelpers.openErrorsReportDialog({
+            openErrorsReportDialog({
                 'numSelected': count,
                 'numSuccess': count - errorsTexts.length,
                 'errors': errorsTexts,

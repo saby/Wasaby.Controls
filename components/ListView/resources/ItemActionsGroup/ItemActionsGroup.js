@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup',
    "tmpl!SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemTpl",
    'Core/Deferred',
    "Core/helpers/Object/find",
-   "Core/helpers/markup-helpers",
+   "Core/Serializer",
    "Core/helpers/Function/forAliveOnly",
    "Core/moduleStubs",
    "SBIS3.CONTROLS/Button/IconButton",
@@ -18,7 +18,7 @@ define('SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup',
    "css!SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup",
    "i18n!SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup"
 ],
-   function( CommandDispatcher, ButtonGroupBaseDS, dotTplFn, dotTplFnForItem, Deferred, objectFind, mkpHelpers, forAliveOnly, moduleStubs) {
+   function( CommandDispatcher, ButtonGroupBaseDS, dotTplFn, dotTplFnForItem, Deferred, objectFind, Serializer, forAliveOnly, moduleStubs) {
 
       'use strict';
 
@@ -416,7 +416,7 @@ define('SBIS3.CONTROLS/ListView/resources/ItemActionsGroup/ItemActionsGroup',
             // поэтому требуется вернуть её в исходное состояние
             if(typeof onActivated === "string") {
                if( onActivated.beginsWith('wsFuncDecl::')) {
-                  action.handler = mkpHelpers.getFuncFromDeclaration(onActivated.replace('wsFuncDecl::', ''));
+                  action.handler = Serializer.getFuncFromDeclaration(onActivated.replace('wsFuncDecl::', ''));
                }
             }else{
                action.handler = onActivated;

@@ -1,6 +1,6 @@
 /* На основе SBIS3.CORE.SwitchableAreaItem */
-define(['Lib/Control/CompoundControl/CompoundControl', 'Core/helpers/generate-helpers', 'Core/Deferred', 'Core/ParallelDeferred'],
-   function(CompoundControl, genHelpers, Deferred, ParallelDeferred) {
+define(['Lib/Control/CompoundControl/CompoundControl', 'Core/helpers/random-helpers', 'Core/Deferred', 'Core/ParallelDeferred'],
+   function(CompoundControl, randHelpers, Deferred, ParallelDeferred) {
       'use strict';
 
       /**
@@ -91,7 +91,7 @@ define(['Lib/Control/CompoundControl/CompoundControl', 'Core/helpers/generate-he
          setId: function(id) {
             var oldId = this.getId();
             if (!id){ // не может быть пустым
-               id = genHelpers.randomId('ws-area-');
+               id = randHelpers.randomId('ws-area-');
             }
             this._options.id = id;
             this._notify('onIdChanged', oldId, id);
