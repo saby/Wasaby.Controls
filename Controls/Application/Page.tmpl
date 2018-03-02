@@ -31,6 +31,9 @@
               on:resize="_resizePage()"
               on:mousemove="_mousemovePage()"
               on:touchstart="_touchstartPage()">
+         <ws:if data="{{compat}}">
+            <div class="ws-focus-in"></div>
+         </ws:if>
          <ws:if data="{{ content.content }}">
             <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}" />
          </ws:if>
