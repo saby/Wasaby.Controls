@@ -40,6 +40,12 @@ define('Controls/Input/Search',
             Search.superclass.constructor.apply(this, arguments);
             this._baseViewModel = new BaseViewModel();
          },
+   
+         _beforeUpdate: function(newOptions) {
+            this._baseViewModel.updateOptions({
+               value: newOptions.value
+            });
+         },
 
          _notifyOnValueChanged: function(value) {
             this._notify('valueChanged', [value]);
