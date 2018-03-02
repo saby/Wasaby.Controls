@@ -4,6 +4,11 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(['SBIS3.CONTROLS/Utils/SourceUtil', 'WS.Data/Source/Memory', 'Core/core-instance'], function (SourceUtil, Memory, cInstance) {
 
+   /**
+    * @class SBIS3.CONTROLS/Utils/TemplateUtil
+    * @author Крайнов Дмитрий Олегович
+    * @public
+    */
    'use strict';
 
    describe('SBIS3.CONTROLS/Utils/SourceUtil', function () {

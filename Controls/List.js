@@ -35,6 +35,7 @@ define('Controls/List', [
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IListControl
     * @control
+    * @author Крайнов Д.О.
     * @public
     * @category List
     */
