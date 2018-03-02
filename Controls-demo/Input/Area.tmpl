@@ -10,8 +10,7 @@
                        maxLength="{{_maxLength}}"
                        minLines="{{_minLines}}"
                        maxLines="{{_maxLines}}"
-                       enabled="{{_enabled}}"
-                       multiline="{{_multiline}}"/>
+                       enabled="{{_enabled}}"/>
     </div>
     <div style="padding: 3em; background-color: rgba(81,81,81,0.11) ">
         <h3>Задайте опции:</h3>
@@ -30,7 +29,6 @@
             <ws:Controls.Toggle.Checkbox on:valueChanged="valueChangedHandler()" enabled="{{true}}" bind:value="_validationErrorsValue" caption="validationErrors"/>
             <br/>
             <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_enabled" caption="enabled"/>
-            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_multiline" caption="multiline"/>
         </div>
     </div>
 </div>

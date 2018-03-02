@@ -15,6 +15,7 @@ define('Controls-demo/Input/Text', [
       _validationErrorsValue: false,
       _trim: false,
       _maxLength: '',
+      _selectOnClick: false,
 
       valueChangedHandler: function () {
          if (this._validationErrorsValue){
