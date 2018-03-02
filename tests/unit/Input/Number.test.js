@@ -218,7 +218,7 @@ define(
          it('getDisplayValue: only integers', function () {
             var
                numberViewModel = new NumberViewModel({
-                  value: '123456'
+                  value: 123456
                }),
                result = numberViewModel.getDisplayValue();
 
@@ -228,7 +228,7 @@ define(
          it('getDisplayValue: integers and decimals', function () {
             var
                numberViewModel = new NumberViewModel({
-                  value: '123456.78'
+                  value: 123456.78
                }),
                result = numberViewModel.getDisplayValue();
 
@@ -238,7 +238,7 @@ define(
          it('getValue: only integers', function () {
             var
                numberViewModel = new NumberViewModel({
-                  value: '123 456'
+                  value: 123456
                }),
                result = numberViewModel.getValue();
 
@@ -248,7 +248,7 @@ define(
          it('getValue: integers and decimals', function () {
             var
                numberViewModel = new NumberViewModel({
-                  value: '123 456.78'
+                  value: 123456.78
                }),
                result = numberViewModel.getValue();
 
