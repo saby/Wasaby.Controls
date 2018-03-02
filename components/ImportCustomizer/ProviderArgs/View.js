@@ -111,16 +111,16 @@ define('SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
           */
          _onMenu: function (columnIndex, evtName, selecteds, changes) {
             var id = selecteds[0];
+            var cols = this._options.columns;
+            // Если текущая колонка уже была представлена в списке разделов
+            var prevLevel = cols.indexOf(columnIndex);
+            if (prevLevel !== -1) {
+               // то убрать её из списка
+               cols[prevLevel] = undefined;
+            }
             if (id) {
-               var cols = this._options.columns;
                // Выбраный уровень раздела
                var level = id - 1;
-               // Если текущая колонка уже была представлена в списке разделов
-               var prevLevel = cols.indexOf(columnIndex);
-               if (prevLevel !== -1) {
-                  // то убрать её из списка
-                  cols[prevLevel] = undefined;
-               }
                // Если этот уровень разделов уже занят другой колонкой
                var prevColumnIndex = cols[level];
                if (prevColumnIndex !== undefined) {
@@ -140,8 +140,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
                      }
                   }
                }
-               this._notify('change', this.getValues());
             }
+            this._notify('change', this.getValues());
          },
 
          /**
