@@ -95,7 +95,9 @@ define('Controls/Input/Number', [
       },
 
       _valueChangedHandler: function(e, value) {
-         this._notify('valueChanged', [value]);
+         if (this._options.value !== value) {
+            this._notify('valueChanged', [value]);
+         }
       },
 
       paste: function(text) {
