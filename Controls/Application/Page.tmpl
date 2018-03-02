@@ -24,6 +24,9 @@
 <Controls:Event:Listener name="scrollDetect" register="scroll">
    <Controls:Event:Listener name="resizeDetect" register="resize">
       <body class="{{BodyClasses()}} {{bodyClass}}" id="body" key="1_2_" on:scroll="_scrollPage()" on:resize="_resizePage()">
+         <ws:if data="{{compat}}">
+            <div class="ws-focus-in"></div>
+         </ws:if>
          <ws:if data="{{ content.content }}">
             <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}" />
          </ws:if>
