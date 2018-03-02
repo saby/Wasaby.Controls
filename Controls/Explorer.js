@@ -27,7 +27,6 @@ define('Controls/Explorer', [
     */
 
    var Explorer = Control.extend({
-      _controlName: 'Controls/List/Explorer'
 
    });
    return Explorer;

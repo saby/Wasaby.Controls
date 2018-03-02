@@ -79,7 +79,6 @@ define('Controls/Tabs/Buttons', [
      */
 
     var TabsButtons = Control.extend({
-        _controlName: 'Controls/Tabs/Buttons',
         _template: TabButtonsTpl,
         items: [],
         constructor: function (cfg) {

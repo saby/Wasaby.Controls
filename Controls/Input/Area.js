@@ -73,7 +73,6 @@ define('Controls/Input/Area', [
 
    var Area = Text.extend({
 
-      _controlName: 'Controls/Input/Area',
       _template: template,
 
       _hasScroll: false,

@@ -41,7 +41,6 @@ define('Controls/List', [
     */
 
    var ListControl = Control.extend({
-      _controlName: 'Controls/List/ListControl',
       _template: ListControlTpl,
 
       _items: null,
