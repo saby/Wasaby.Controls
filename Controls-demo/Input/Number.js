@@ -10,9 +10,9 @@ define('Controls-demo/Input/Number', [
       _template: template,
       _text1: '',
       _tagStyle: '',
-      _integersLength: '',
-      _precision: '',
-      _onlyPositive: '',
+      _integersLength: 0,
+      _precision: 0,
+      _onlyPositive: true,
       _enabled: true
    });
 
