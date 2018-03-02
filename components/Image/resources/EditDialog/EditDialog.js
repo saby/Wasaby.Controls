@@ -7,11 +7,11 @@ define('SBIS3.CONTROLS/Image/resources/EditDialog/EditDialog', [
    "tmpl!SBIS3.CONTROLS/Image/resources/EditDialog/EditDialog",
    "SBIS3.CONTROLS/Image/CropPlugin/CropPlugin",
    "SBIS3.CONTROLS/Utils/ImageUtil",
-   "Core/helpers/transport-helpers",
+   "Transport/prepareGetRPCInvocationURL",
    "SBIS3.CONTROLS/Button",
    "i18n!SBIS3.CONTROLS/Image/resources/EditDialog/EditDialog",
    'css!SBIS3.CONTROLS/Image/resources/EditDialog/EditDialog'
-], function( BLObject,CompoundControl, dotTplFn, CropPlugin, ImageUtil, transHelpers) {
+], function( BLObject,CompoundControl, dotTplFn, CropPlugin, ImageUtil, prepareGetRPCInvocationURL) {
    /**
     * SBIS3.CONTROLS/Image/resources/EditDialog/EditDialog
     * @class SBIS3.CONTROLS/Image/resources/EditDialog/EditDialog
@@ -103,7 +103,7 @@ define('SBIS3.CONTROLS/Image/resources/EditDialog/EditDialog', [
             self._notify('onOpenError', event);
             self.sendCommand('close');
          });
-         this._imageUrl = transHelpers.prepareGetRPCInvocationURL(this._options.dataSource.getEndpoint().contract,
+         this._imageUrl = prepareGetRPCInvocationURL(this._options.dataSource.getEndpoint().contract,
             this._options.dataSource.getBinding().read, this._options.filter, BLObject.RETURN_TYPE_ASIS);
          ImageUtil.reloadImage(this._image, this._imageUrl);
       },

@@ -1,11 +1,11 @@
 /* global define  */
 define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Base', [
     'Core/Abstract',
-    'Core/helpers/fast-control-helpers',
+    'Core/Indicator',
     'SBIS3.CONTROLS/Utils/PrintDialogHTMLView',
     'SBIS3.CONTROLS/Action/Save/SaveStrategy/ISaveStrategy',
     'SBIS3.CONTROLS/Utils/DataSetToXmlSerializer'
-], function (Abstract, fcHelpers, PrintDialogHTMLView, ISaveStrategy, Serializer) {
+], function (Abstract, Indicator, PrintDialogHTMLView, ISaveStrategy, Serializer) {
 
     'use strict';
 
@@ -47,14 +47,14 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Base', [
         * @param {WS.Data/Collection/RecordSet} [meta.recordSet] Набор данных, который будет сохранён.
         */
         print: function (meta) {
-            fcHelpers.toggleIndicator(true);
+            Indicator.setMessage(rk('Пожалуйста, подождите…'));
             this._serializeData(meta.recordSet, meta.columns, meta.xsl).addCallback(function(reportText){
                PrintDialogHTMLView({
                     htmlText: reportText,
                     minWidth : meta.minWidth,
                     handlers: {
                         onAfterClose: function() {
-                            fcHelpers.toggleIndicator(false);
+                            Indicator.hide();
                         }
                     }
                 })
