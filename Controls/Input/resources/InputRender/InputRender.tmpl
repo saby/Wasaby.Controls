@@ -27,7 +27,7 @@
 
          <ws:if data="{{ !_options.viewModel.getDisplayValue() }}">
             <ws:partial
-               attr:class="{{ _options.isMultiline ? 'controls-InputArea__placeholder_multiline' }}"
+               attr:class="{{ _options.multiline ? 'controls-InputArea__placeholder_multiline' }}"
                template="tmpl!Controls/Input/resources/CustomPlaceholder"
                placeholder="{{ _options.placeholder }}"
                attr:tabindex="{{-1}}"

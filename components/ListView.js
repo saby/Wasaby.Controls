@@ -2182,7 +2182,7 @@ define('SBIS3.CONTROLS/ListView',
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             // При перезагрузке нужно также почистить hoveredItem, иначе следующее отображение тулбара будет для элемента, которого уже нет (ведь именно из-за этого ниже скрывается тулбар).
-            this._hoveredItem = {};
+            this._clearHoveredItem();
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
             this._destroyEditInPlace();
@@ -3179,8 +3179,8 @@ define('SBIS3.CONTROLS/ListView',
             /* при изменении размера таблицы необходимо вызвать перерасчет позиции тулбара
              позиция тулбара может сбиться например при появление пэйджинга */
             if(this._itemsToolbar && this._itemsToolbar.isVisible()){
-               if(this._touchSupport && this._editInPlace && !this._editInPlace.isVisible()) {
-                   this._itemsToolbar.setHeightInTouchMode();
+               if(this._touchSupport && (!this._editInPlace || !this._editInPlace.isVisible())) {
+                  this._itemsToolbar.setHeightInTouchMode();
                }
                this._itemsToolbar.recalculatePosition();
             }
