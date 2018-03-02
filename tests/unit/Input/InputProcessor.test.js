@@ -41,7 +41,7 @@ define(
                      after: '.3 ',
                      delete: ' ',
                      insert: '2'
-                  }, 'insert', replacer, format);
+                  }, 'insert', replacer, format, format);
                   assert.deepEqual(result, {
                      value: '12. 3',
                      position: 2
@@ -53,21 +53,22 @@ define(
                      after: '4',
                      delete: '',
                      insert: 'g2'
-                  }, 'insert', replacer, format);
+                  }, 'insert', replacer, format, format);
                   assert.deepEqual(result, {
                      value: '1 . 2',
                      position: 5
                   });
                });
                it('Test_03', function() {
+                  var format = FormatBuilder.getFormat('dd.dd', {
+                     d: '[0-9]'
+                  }, '');
                   result = InputProcessor.input({
                      before: '1',
                      after: '3',
                      delete: '',
                      insert: '2'
-                  }, 'insert', '', FormatBuilder.getFormat('dd.dd', {
-                     d: '[0-9]'
-                  }, ''));
+                  }, 'insert', '', format, format);
                   assert.deepEqual(result, {
                      value: '12.3',
                      position: 2
@@ -81,7 +82,7 @@ define(
                      after: '',
                      delete: '1 . 4',
                      insert: ''
-                  }, 'delete', replacer, format);
+                  }, 'delete', replacer, format, format);
                   assert.deepEqual(result, {
                      value: '  .  ',
                      position: 0
@@ -95,7 +96,7 @@ define(
                      after: '. 4',
                      delete: '2',
                      insert: ''
-                  }, 'deleteForward', replacer, format);
+                  }, 'deleteForward', replacer, format, format);
                   assert.deepEqual(result, {
                      value: '1 . 4',
                      position: 2
@@ -107,7 +108,7 @@ define(
                      after: '34',
                      delete: '.',
                      insert: ''
-                  }, 'deleteForward', replacer, format);
+                  }, 'deleteForward', replacer, format, format);
                   assert.deepEqual(result, {
                      value: '12. 4',
                      position: 4
@@ -121,7 +122,7 @@ define(
                      after: '.34',
                      delete: '2',
                      insert: ''
-                  }, 'deleteBackward', replacer, format);
+                  }, 'deleteBackward', replacer, format, format);
                   assert.deepEqual(result, {
                      value: '1 .34',
                      position: 1
@@ -133,7 +134,7 @@ define(
                      after: '34',
                      delete: '.',
                      insert: ''
-                  }, 'deleteBackward', replacer, format);
+                  }, 'deleteBackward', replacer, format, format);
                   assert.deepEqual(result, {
                      value: '1 .34',
                      position: 1

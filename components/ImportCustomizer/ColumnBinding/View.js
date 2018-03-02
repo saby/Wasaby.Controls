@@ -37,6 +37,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
        * @private
        */
       var _CLASS_LIGHT_ROW = 'controls-ImportCustomizer-ColumnBinding-View__grid__item-light';
+      /**
+       * Константа (как бы) имя css-класса для маркирования выделенных пунктов дропдаунов колонок
+       * @type {string}
+       * @private
+       */
+      var _CLASS_MENU_SELECTED = 'controls-ImportCustomizer-ColumnBinding-View__grid__column__menu__picker__selected';
 
 
 
@@ -169,15 +175,26 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                   options[name] = value;
                }
             }
+            var grid = this._grid;
             if (has.rows || has.fields) {
                var inf = this._makeUpdateInfo(options);
-               this._grid.setColumns(inf.columns);
-               this._grid.setItems(inf.items);
-               this._accordances = {};//^^^
+               grid.setColumns(inf.columns);
+               grid.setItems(inf.items);
+               this._accordances = has.accordances ? options.accordances : {};
             }
             else
             if (has.skippedRows) {
                this._updateSkippedRows();
+            }
+            if (has.accordances) {
+               var rows = options.rows;
+               var len = rows && rows.length ? rows[0].length : 0;
+               if (len) {
+                  var accordances = options.accordances;
+                  for (var field in accordances) {
+                     this._markMenuSelection(grid.getChildControlByName(_PREFIX_COLUMN_NAME + _PREFIX_COLUMN_FIELD + (accordances[field] + 1)), field);
+                  }
+               }
             }
          },
 
@@ -210,6 +227,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                var idProperty = fields.idProperty || (isRecordSet ? fields.items.getIdProperty() : undefined);
                var displayProperty = fields.displayProperty;
                var parentProperty = fields.parentProperty;
+               //var accordances = options.accordances;
+               //var menuIds = accordances ? Object.keys(accordances).reduce(function (r, v) { r[accordances[v]] = v; return r; }, []) : [];
                var menuItems;
                if (parentProperty) {
                   // Если поля организованы иерархически, то нужно создать новые данные для пунктов меню и пометить наличие подпунктов
@@ -260,7 +279,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                }
                var title = options.columnTitle;
                var skippedRows = 0 < options.skippedRows ? options.skippedRows : 0;
-               var columns = rows[0].map(function (v, i) { return {field:_PREFIX_COLUMN_FIELD + (i + 1), title:title + ' ' + (i + 1), headTemplate:headTmpl, cellTemplate:cellTmpl, menuConf:menuConf}; });
+               var columns = rows[0].map(function (v, i) { return {field:_PREFIX_COLUMN_FIELD + (i + 1), title:title + ' ' + (i + 1), /*selectedMenuId:menuIds[i],*/ headTemplate:headTmpl, cellTemplate:cellTmpl, menuConf:menuConf}; });
                columns.unshift({field:'id', title:''});
                for (var j = 0; j < rows.length; j++) {
                   rowItems.push(rows[j].reduce(function (r, v, i) { r[_PREFIX_COLUMN_FIELD + (i + 1)] = v; return r; }, {id:j + 1, className:j < skippedRows ? _CLASS_LIGHT_ROW : undefined}));
@@ -281,7 +300,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
             var hasSub = menu.getItems().getRecordById(selectedField).get('hasSub');
             // Только если это не пункт, имеющий вложенные подпункты
             if (!hasSub) {
-               var cssClass = 'controls-ImportCustomizer-ColumnBinding-View__grid__column__menu__picker__selected';
                var picker = menu.getPicker();
                var columnIndex = +menu.getName().substring(_PREFIX_COLUMN_NAME.length + _PREFIX_COLUMN_FIELD.length) - 1;
                var accordances = this._accordances;
@@ -291,25 +309,42 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                   // Получить предыдущее меню
                   var prevMenu = this.getChildControlByName(_PREFIX_COLUMN_NAME + _PREFIX_COLUMN_FIELD + (prevIndex + 1));
                   // Убрать класс выделения и сбросить заголовок
-                  prevMenu.getPicker().getItemInstance(selectedField).getContainer().removeClass(cssClass);
+                  prevMenu.getPicker().getItemInstance(selectedField).getContainer().removeClass(_CLASS_MENU_SELECTED);
                   prevMenu.setCaption(this._options.columnCaption);
                }
                var prevField; Object.keys(accordances).some(function (v) { if (accordances[v] === columnIndex) { prevField = v; return true; } }.bind(this));
                // Если в этом столбце уже было выбрано поле
                if (prevField) {
                   // Убрать класс выделения
-                  picker.getItemInstance(prevField).getContainer().removeClass(cssClass);
+                  picker.getItemInstance(prevField).getContainer().removeClass(_CLASS_MENU_SELECTED);
                   // Сбросить соответсвие поля колонке
                   delete accordances[prevField];
                }
                // Добавить класс выделения, установить заголовок
-               var menuItemInstance = picker.getItemInstance(selectedField);
-               menuItemInstance.getContainer().addClass(cssClass);
-               menu.setCaption(menuItemInstance.getCaption());
+               this._markMenuSelection(menu, selectedField);
                // Зафиксировать соответсвие поля колонке
                accordances[selectedField] = columnIndex;
                this._notify('change', this.getValues());
             }
+         },
+
+         /**
+          * Выделеить пункт  меню (маркировать выделенный пункт классом, установить заголовок меню)
+          *
+          * @protected
+          * @param {WSControls/Buttons/MenuButton} menu Компонент
+          * @param {string|number} selectedField Идентификатор выбранного пункта
+          */
+         _markMenuSelection: function (menu, selectedField) {
+            var picker = menu.getPicker();
+            var menuItemInstance = picker.getItemInstance(selectedField);
+            if (menuItemInstance.isVisible()) {
+               menuItemInstance.getContainer().addClass(_CLASS_MENU_SELECTED);
+            }
+            else {
+               menuItemInstance.setProperty('className', _CLASS_MENU_SELECTED);
+            }
+            menu.setCaption(menuItemInstance.getCaption());
          },
 
          /**
