@@ -1,9 +1,8 @@
-<span>
-   <span  class="controls-SwitcherDouble__empty">&nbsp;</span>
-   <span class="controls-SwitcherDouble__toggle {{' controls-SwitcherDouble-' + (_value ? 'on' : 'off') + '-toggled'}}"
-   on:click="_clickToggleHandler()">
-      &nbsp;
-      <span class="controls-SwitcherDouble__line"></span>
-      <span class="controls-SwitcherDouble__btn"></span>
-   </span>
+<span class="controls-DoubleSwitch__toggle
+            {{_enabled ? 'controls-DoubleSwitch_enabled'}}
+            {{_orientation === 'vertical' ? 'controls-DoubleSwitch__toggle_vertical'}}
+            {{_value ? ' controls-DoubleSwitch__toggle_checked'}}"
+      on:click="_clickToggleHandler()">
+   <span class="controls-DoubleSwitch__line{{_enabled ? ' controls-DoubleSwitch__line_enabled' : ' controls-DoubleSwitch__line_disabled'}}"></span>
+   <span class="controls-DoubleSwitch__marker"></span>
 </span>

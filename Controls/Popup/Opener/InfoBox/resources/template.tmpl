@@ -8,11 +8,17 @@
          <ws:if data="{{float}}">
             <div class="controls-InfoBox_floatElement"></div>
          </ws:if>
-         <ws:partial
-                 template="{{template}}"
-                 message="{{message}}"
-                 class="{{!float ? 'controls-InfoBox__message_margin'}}">
-         </ws:partial>
+
+         <ws:if data="{{template}}">
+            <ws:partial
+               template="{{template}}"
+               message="{{message}}"
+               class="{{!float ? 'controls-InfoBox__message_margin'}}">
+            </ws:partial>
+         </ws:if>
+         <ws:else>
+            <div class="{{!float ? 'controls-InfoBox__message_margin'}}">{{message}}</div>
+         </ws:else>
       </div>
    </ws:content>
 </Controls:Container:Scroll>

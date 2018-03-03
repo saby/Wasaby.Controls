@@ -6,6 +6,7 @@ define('SBIS3.CONTROLS/Utils/TemplateUtil', ['Core/js-template-doT'], function()
 
     /**
      * @class SBIS3.CONTROLS/Utils/TemplateUtil
+     * @author Крайнов Дмитрий Олегович
      * @public
      */
    return /** @lends SBIS3.CONTROLS/Utils/TemplateUtil.prototype */{

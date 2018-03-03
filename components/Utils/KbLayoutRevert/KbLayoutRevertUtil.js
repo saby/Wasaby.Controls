@@ -16,6 +16,7 @@ define('SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertUtil',
          * Модуль для преобразования текста, введенного в неверной раскладке. Если передатьь текст в кириллице, то он преобразуется в латиницу.
          * Модуль поставляет единственный метод статический метод {@link #process}.
          * @class SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertUtil
+         * @author Крайнов Д.О.
          * @public
          * @example
          * <pre>

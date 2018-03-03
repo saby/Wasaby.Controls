@@ -98,7 +98,7 @@ module.exports = function less1by1Task(grunt) {
             complete: '♥',
             incomplete: '_',
             width: 30,
-            total: 143
+            total: 153
         });
         helpers.recurse(rootPath, function(filepath, cb) {
           let relpath = path.relative(rootPath, filepath);
@@ -106,6 +106,7 @@ module.exports = function less1by1Task(grunt) {
               || helpers.validateFile(relpath, [grunt.config.get('changed') || `components/themes/**/${lessName}.less`])
                || helpers.validateFile(relpath, [grunt.config.get('changed') || `demo/**/${lessName}.less`])
                || helpers.validateFile(relpath, [grunt.config.get('changed') || `pages/**/${lessName}.less`])
+               || helpers.validateFile(relpath, [grunt.config.get('changed') || `Controls-demo/**/${lessName}.less`])
                || helpers.validateFile(relpath, [grunt.config.get('changed') || `Controls/**/${lessName}.less`])) {
                 foundFile = true;
                 fs.readFile(filepath, function readFileCb(readFileError, data) {

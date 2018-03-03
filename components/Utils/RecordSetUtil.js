@@ -2,6 +2,7 @@ define('SBIS3.CONTROLS/Utils/RecordSetUtil',[], function () {
    'use strict';
     /**
      * @class SBIS3.CONTROLS/Utils/RecordSetUtil
+     * @author Крайнов Дмитрий Олегович
      * @public
      */
    var RecordSetUtil = /** @lends SBIS3.CONTROLS/Utils/RecordSetUtil.prototype */{

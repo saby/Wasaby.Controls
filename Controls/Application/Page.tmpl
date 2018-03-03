@@ -24,11 +24,13 @@
 <Controls:Event:Listener name="scrollDetect" register="scroll">
    <Controls:Event:Listener name="resizeDetect" register="resize">
       <body
-              class="{{BodyClasses()}} {{_options.bodyClass}}"
+              class="{{BodyClasses()}} {{_options.bodyClass}} {{_touchclass()}}"
               id="body"
               key="1_2_"
               on:scroll="_scrollPage()"
-              on:resize="_resizePage()">
+              on:resize="_resizePage()"
+              on:mousemove="_mousemovePage()"
+              on:touchstart="_touchstartPage()">
          <ws:if data="{{needArea}}">
             <div class="ws-focus-in"></div>
          </ws:if>

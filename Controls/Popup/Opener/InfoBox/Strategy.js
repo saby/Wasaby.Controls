@@ -98,7 +98,7 @@ define('Controls/Popup/Opener/InfoBox/Strategy',
 
          _openedPopupId: null,
 
-         elementCreated: function (cfg, width, height, id) {
+         elementCreated: function (cfg, sizes, id) {
 
             // Открыто может быть только одно окно. Логика контроллера!
             if (this._openedPopupId) {
@@ -117,9 +117,8 @@ define('Controls/Popup/Opener/InfoBox/Strategy',
             return Strategy.superclass.elementDestroyed.apply(this, arguments);
          },
 
-         modifyCfg: function(cfg, width, height){
+         modifyCfg: function(cfg, sizes){
             cMerge(cfg.popupOptions, _private.getStickyParams(cfg.popupOptions.position, cfg.popupOptions.target));
-
             return Strategy.superclass.modifyCfg.apply(this, arguments);
          }
 

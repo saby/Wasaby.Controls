@@ -1,176 +1,102 @@
-@import (reference) "../Switch/Switch";
-//оставлен import для стилей которые наследуются от этого файла
-.controls-SwitcherDouble_horizontal{
-   & .controls-SwitcherDouble__textOff {
-      float: left;
-   }
+.controls-DoubleSwitch__toggle {
+   .inline-flexbox();
+   .align-items(center);
+   .justify-content(center);
+   .baseline-fix();
+   width: @width_Switch;
+   height: @height_Switch;
+   border-width: @border-width_Switch;
+   border-color: @border-color_Switch;
+   border-radius: @border-radius_Switch;
+   border-style: solid;
+   box-sizing: border-box;
+   cursor: pointer;
 }
 
-.controls-SwitcherDouble__toggle {
-   &:extend(.controls-Switcher);
-   &:not(:hover) {
-      &:extend(.controls-Switcher:not(:hover));
-   }
+.controls-DoubleSwitch__toggle_checked {
+   .flex-direction(row-reverse);
 }
-.ws-enabled.controls-SwitcherDouble .controls-SwitcherDouble__toggle {
-   &:hover {
-      &:extend(.ws-enabled.controls-Switcher:hover);
-   }
-   &.controls-SwitcherDouble-on-toggled, &.controls-SwitcherDouble-off-toggled {
-      .controls-SwitcherDouble__btn {
-         &:extend(.ws-enabled.controls-Switcher.controls-Checked__checked .controls-Switcher__btn);
+
+.controls-DoubleSwitch__toggle {
+   margin: 0 @margin_Switch-text;
+}
+
+.controls-DoubleSwitch__toggle_vertical {
+   .rotate(-90deg);
+   @offset: (@width_Switch - @height_Switch) / 2;
+   vertical-align: top;
+   margin: @offset -@offset @offset -@offset - 1px;
+}
+
+.controls-DoubleSwitch__textBlock {
+   .inline-flexbox();
+   .flex-direction(column);
+   margin-left: @margin_Switch-text;
+}
+
+.controls-DoubleSwitch__line {
+   height: @height_Switch-line;
+   width: @width_Switch-line - @size_Switch-marker;
+}
+
+.controls-DoubleSwitch__line_enabled {
+   background-color: @background-color_Switch-line_enabled;
+}
+
+.controls-DoubleSwitch__line_disabled {
+   background-color: @background-color_Switch-line_disabled;
+}
+
+.controls-DoubleSwitch__marker {
+   width: @size_Switch-marker;
+   height: @size_Switch-marker;
+   border-style: solid;
+   border-width: @border-width_Switch-marker;
+   border-radius: 100%;
+   box-sizing: border-box;
+   border-color: @border-color_Switch-marker_checked;
+   position: relative;
+}
+
+.controls-DoubleSwitch__marker:before {
+   content: '';
+   width: @size_Switch-dot;
+   height: @size_Switch-dot;
+   border-radius: 100%;
+   background: @background_Switch-dot;
+   display: inline-block; //Для псевдоэлементов в IE нужно высталять хоть какой-нибудь display, иначе они не отображаются
+   //Не получится выровнять с помощью флексов, т.к. IE ставит не по центру, а вообще случайным образом: https://jsfiddle.net/n1gyq4to/
+   position: absolute;
+   margin: (@size_Switch-marker - @size_Switch-dot) / 2 - @border-width_Switch-marker;
+}
+
+.controls-DoubleSwitch__text_vertical {
+   display: block;
+   height: @width_Switch / 2;
+   line-height: @width_Switch / 2;
+}
+
+.controls-DoubleSwitch__text_enabled_unselected {
+   color: @color_Switch-text_enabled_unselected;
+   cursor: pointer;
+}
+
+.controls-DoubleSwitch__text_disabled_unselected {
+   color: @color_Switch-text_disabled_unselected;
+}
+
+.ws-is-desktop-platform {
+   .controls-DoubleSwitch_enabled:hover {
+      .controls-DoubleSwitch__marker { //Здесь вложенность не избежать, т.к. по ховеру на контейнере должен меняться размер кнопки
+         border-width: @border-width_Switch-marker_hover;
          &:before {
-            &:extend(.ws-enabled.controls-Switcher.controls-Checked__checked .controls-Switcher__btn:before);
+            top: @border-width_Switch-marker - @border-width_Switch-marker_hover;
+            left: @border-width_Switch-marker - @border-width_Switch-marker_hover;
          }
       }
    }
-   &.controls-SwitcherDouble-on-toggled .controls-SwitcherDouble__line {
-      &:extend(.ws-enabled.controls-Switcher.controls-Checked__checked .controls-Switcher__line);
-   }
-   &.controls-SwitcherDouble-off-toggled .controls-SwitcherDouble__line {
-      &:extend(.ws-enabled.controls-Switcher:not(.controls-Checked__checked) .controls-Switcher__line);
-   }
-}
-.ws-disabled.controls-SwitcherDouble .controls-SwitcherDouble__toggle {
-   &:hover {
-      &:extend(.ws-disabled.controls-Switcher:hover);
-   }
-   .controls-SwitcherDouble__btn {
-      &:extend(.ws-disabled.controls-Switcher .controls-Switcher__btn);
-      &:before {
-         &:extend(.ws-disabled.controls-Switcher.controls-Checked__checked .controls-Switcher__btn:before);
-      }
-   }
-   &.controls-SwitcherDouble-on-toggled .controls-SwitcherDouble__line {
-      &:extend(.ws-disabled.controls-Switcher.controls-Checked__checked .controls-Switcher__line);
-   }
-   &.controls-SwitcherDouble-off-toggled .controls-SwitcherDouble__line {
-      &:extend(.ws-disabled.controls-Switcher:not(.controls-Checked__checked) .controls-Switcher__line);
-   }
-}
-body:not(.ws-is-mobile-platform) .ws-enabled.controls-SwitcherDouble .controls-SwitcherDouble__toggle:hover {
-   &:extend(body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover);
-   .controls-SwitcherDouble__btn {
-      &:extend(body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover .controls-Switcher__btn);
-   }
-   &.controls-SwitcherDouble-on-toggled, &.controls-SwitcherDouble-off-toggled {
-      .controls-SwitcherDouble__btn:before {
-         &:extend(body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover.controls-Checked__checked .controls-Switcher__btn:before);
-      }
-   }
-}
-.controls-SwitcherDouble__btn {
-   &:extend(.controls-Switcher__btn);
-}
-.controls-SwitcherDouble__line {
-   &:extend(.controls-Switcher__line);
-}
-.controls-SwitcherDouble-on-toggled, .controls-SwitcherDouble-off-toggled {
-   .controls-SwitcherDouble__btn:before {
-      &:extend(.controls-Switcher.controls-Checked__checked .controls-Switcher__btn:before);
-   }
-}
 
-.controls-SwitcherDouble_vertical {
-   position: relative;
-   height: @switcher-width;
-   & .controls-SwitcherDouble__toggle {
-      @offset: (@switcher-width - @switcher-height) / 2;
-      vertical-align: top;
-      .rotate(-90deg);
-      margin: @offset -@offset @offset calc(~"-@{offset} - 1px");
+   .controls-DoubleSwitch__text_enabled_unselected:hover {
+      text-decoration: underline;
    }
-   & .controls-SwitcherDouble__textBlock {
-      display: inline-block;
-      margin-left: @switcher-do-text-margin;
-      & .controls-SwitcherDouble__textOn, & > .controls-SwitcherDouble__textOff {
-         display: block;
-         margin: 0;
-      }
-      & .controls-SwitcherDouble__textOff {
-         float: left;
-      }
-      & .controls-SwitcherDouble__text {
-         height: @switcher-width / 2;
-         line-height: @switcher-width / 2;
-      }
-   }
-}
-
-.controls-SwitcherDouble__empty {
-   font-size: 1px;
-}
-
-.switcherDoubleBorder(@border) {
-   &.controls-SwitcherDouble-on-toggled .controls-SwitcherDouble__btn {
-      .get-size(right, @switcher-width, -@switcherline-width, @border);
-   }
-   &.controls-SwitcherDouble-off-toggled .controls-SwitcherDouble__btn {
-      .get-size(left, @switcher-width, -@switcherline-width, @border);
-   }
-   & .controls-SwitcherDouble__line {
-      .get-size(top, @switcher-height, -@switcherline-height, @border);
-      .get-size(left, @switcher-width, -@switcherline-width, @border);
-   }
-   & .controls-SwitcherDouble__btn {
-      .get-size(top, @switcher-height, -@switcher-btn-size, @border);
-   }
-}
-
-& when (@switcher-hover-border-width = @default-border-width) {
-   .controls-SwitcherDouble .controls-SwitcherDouble__toggle {
-      border-width: @default-border-width;
-      .switcherDoubleBorder(@default-border-width);
-   }
-}
-& when not (@switcher-hover-border-width = @default-border-width) {
-   .controls-SwitcherDouble .controls-SwitcherDouble__toggle {
-      &:not(:hover), .ws-disabled&:hover {
-         border-width: @default-border-width;
-         .switcherDoubleBorder(@default-border-width);
-      }
-      .ws-enabled&:hover {
-         border-width: @switcher-hover-border-width;
-         .switcherDoubleBorder(@switcher-hover-border-width);
-      }
-   }
-}
-.controls-SwitcherDouble {
-   display: inline-block;
-}
-
-.controls-SwitcherDouble__text {
-   display: inline-block;
-   height: @switcher-height;
-   line-height: @switcher-height;
-   font-size: @font-size_Switcher_text;
-   .ws-enabled.controls-SwitcherDouble & {
-      &.controls-SwitcherDouble__unselected {
-         cursor: pointer;
-      }
-      &:not(controls-SwitcherDouble__unselected) {
-         cursor: text;
-      }
-   }
-}
-
-.controls-SwitcherDouble__textOn {
-   margin-left: @switcher-do-text-margin;
-   color: @default-text-color;
-}
-.controls-SwitcherDouble__textOff {
-   margin-right: @switcher-do-text-margin;
-   color: @default-text-color;
-}
-.ws-enabled.controls-SwitcherDouble .controls-SwitcherDouble__unselected {
-   color: @switcher-do-unselected-text-color;
-   &:hover {
-      text-decoration: @text-decoration_switcher_text_unselected_hover;
-      color: @color_switcher_text_unselected_hover;
-   }
-}
-
-.ws-disabled.controls-SwitcherDouble .controls-SwitcherDouble__text {
-   color: @color_SwitherDouble_text_disabled;
-   cursor: text;
 }
