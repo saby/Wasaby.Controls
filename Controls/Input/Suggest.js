@@ -94,7 +94,6 @@ define('Controls/Input/Suggest',
       var Suggest = Control.extend({
          
          _template: template,
-         _controlName: 'Controls/Input/Suggest',
          _popupFocused: false,
          
          // <editor-fold desc="LifeCycle">

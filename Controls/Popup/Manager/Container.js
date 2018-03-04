@@ -19,7 +19,6 @@ define('Controls/Popup/Manager/Container',
           * @author Лощинин Дмитрий
           */
 
-         _controlName: 'Controls/Popup/Manager/Container',
          _template: template,
 
          constructor: function (cfg) {
