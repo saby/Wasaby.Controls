@@ -1,12 +1,12 @@
 define('Controls/Input/Phone/ViewModel',
    [
-      'Controls/Input/Phone/getMask',
+      'Controls/Input/Phone/MaskBuilder',
       'Controls/Input/Mask/Formatter',
       'Controls/Input/Mask/FormatBuilder',
       'Controls/Input/Mask/InputProcessor',
       'Controls/Input/resources/InputRender/BaseViewModel'
    ],
-   function(getMask, Formatter, FormatBuilder, InputProcessor, BaseViewModel) {
+   function(MaskBuilder, Formatter, FormatBuilder, InputProcessor, BaseViewModel) {
 
       'use strict';
 
@@ -26,18 +26,18 @@ define('Controls/Input/Phone/ViewModel',
          constructor: function(options) {
             ViewModel.superclass.constructor.call(this, options);
 
-            this._format = FormatBuilder.getFormat(getMask(options.value), formatMaskChars, replacer);
+            this._format = FormatBuilder.getFormat(MaskBuilder.getMask(options.value), formatMaskChars, replacer);
          },
 
          updateOptions: function(newOptions) {
             ViewModel.superclass.updateOptions.call(this, newOptions);
 
-            this._format = FormatBuilder.getFormat(getMask(newOptions.value), formatMaskChars, replacer);
+            this._format = FormatBuilder.getFormat(MaskBuilder.getMask(newOptions.value), formatMaskChars, replacer);
          },
 
          handleInput: function(splitValue, inputType) {
             var
-               newMask = getMask(splitValue.before + splitValue.insert + splitValue.after),
+               newMask = MaskBuilder.getMask(splitValue.before + splitValue.insert + splitValue.after),
                newFormat = FormatBuilder.getFormat(newMask, formatMaskChars, replacer),
                result = InputProcessor.input(splitValue, inputType, replacer, this._format, newFormat);
 
