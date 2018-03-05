@@ -463,7 +463,7 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
       _getEditArrowPosition: function(td, folderTitle, arrowContainer) {
          var  containerCords = this._container[0].getBoundingClientRect(),
               toolbarContainer = this._getItemsToolbar().getContainer(),
-              tdPadding, arrowCords, leftOffset, toolbarLeft, needCorrect;
+              tdPadding, arrowCords, leftOffset, toolbarLeft, needCorrect, editArrowWidth;
          
          tdPadding = parseInt(td.css('padding-right'), 10);
          /* Т.к. у нас в вёрстке две иконки, то позиционируем в зависимости от той, которая показывается,
@@ -482,19 +482,20 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
 
          arrowCords = arrowContainer.getBoundingClientRect();
          leftOffset = arrowCords.left - containerCords.left;
+         editArrowWidth = this.getEditArrow().getContainer().outerWidth(true);
          
          if(this._isSupportedItemsToolbar() && this._getItemsToolbar().isVisible()) {
             toolbarLeft = toolbarContainer[0].offsetLeft;
             // когда тулбар находится в строке считать пересечение через offsetLeft не получится
             // т.к. offsetLeft будет считаться от края td в которой лежит тулбар
-            if(this._options.itemsActionsInItemContainer){
-                needCorrect = (this.getContainer().width() - (leftOffset + arrowCords.width) - toolbarContainer.width()) < 0;
-            }else {
-                needCorrect = toolbarLeft && (toolbarLeft < (leftOffset + arrowCords.width)); // Учитываем ширину иконки стрелки при корректировке
+            if (this._options.itemsActionsInItemContainer){
+               needCorrect = (this.getContainer().width() - (leftOffset + editArrowWidth) - toolbarContainer.width()) < 0;
+            } else {
+               needCorrect = toolbarLeft && (toolbarLeft < (leftOffset + editArrowWidth)); // Учитываем ширину иконки стрелки при корректировке
             }
             /* Если стрелка заползает на операции над записью -> увеличиваем отступ */
-            if(needCorrect) {
-               leftOffset -= leftOffset - toolbarLeft + this.getEditArrow().getContainer().outerWidth(true); //Левая граница тулбара + ширина стрелки c учётом margin
+            if (needCorrect) {
+               leftOffset -= leftOffset - toolbarLeft + editArrowWidth; //Левая граница тулбара + ширина стрелки c учётом margin
             }
             /* backgorund'a у стрелки быть не должно, т.к. она может отображаться на фоне разного цвета,
                но если мы корректрируем положение, то надо навесить background, чтобы она затемняла текст */
