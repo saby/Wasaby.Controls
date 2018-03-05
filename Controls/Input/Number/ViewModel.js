@@ -76,7 +76,7 @@ define('Controls/Input/Number/ViewModel',
          validate: function (clearValue, onlyPositive, integersLength, precision) {
             if (
                !_private.validators.isNumber(clearValue) ||
-               typeof onlyPositive !== 'undefined' && !_private.validators.onlyPositive(clearValue) ||
+               onlyPositive && !_private.validators.onlyPositive(clearValue) ||
                typeof integersLength !== 'undefined' && !_private.validators.maxIntegersLength(clearValue, integersLength) ||
                typeof precision !== 'undefined' && !_private.validators.maxDecimalsLength(clearValue, precision)
             ) {
