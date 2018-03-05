@@ -43,6 +43,18 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
        * @private
        */
       var _CLASS_MENU_SELECTED = 'controls-ImportCustomizer-ColumnBinding-View__grid__column__menu__picker__selected';
+      /**
+       * Константа (как бы) имя css-класса для маркирования пустых пунктов дропдаунов колонок
+       * @type {string}
+       * @private
+       */
+      var _CLASS_MENU_EMPTY = 'controls-ImportCustomizer-ColumnBinding-View__grid__column__menu__picker__empty';
+      /**
+       * Константа (как бы) идентификатор для пустых пунктов дропдаунов колонок
+       * @type {string}
+       * @private
+       */
+      var _ID_MENU_EMPTY = ':';
 
 
 
@@ -218,6 +230,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                }
             }
             //TODO: А хорошо бы проверить options.fields на соответсвие ImportTargetFields...
+            //TODO: Можно попробовать размножить items ради включениия туда классов
             var rowItems = [];
             if (rows.length) {
                var headTmpl = 'tmpl!SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/tmpl/head';
@@ -260,8 +273,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                }
                else {
                   // А если поля организованы плоско, то возьмём их как есть
-                  menuItems = fields.items
+                  menuItems = fields.items.slice();
                }
+               var firstItem = {className:_CLASS_MENU_EMPTY};
+               firstItem[idProperty] = _ID_MENU_EMPTY;
+               firstItem[displayProperty] = options.columnCaption;
+               firstItem[parentProperty] = null;
+               menuItems.unshift(firstItem);
                var menuConf = {
                   items: menuItems,
                   idProperty: idProperty,
@@ -297,13 +315,14 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
           */
          _onColumnMenu: function (evtName, selectedField) {
             var menu = evtName.getTarget();
-            var hasSub = menu.getItems().getRecordById(selectedField).get('hasSub');
+            var notEmpty = selectedField !== _ID_MENU_EMPTY;
+            var hasSub = notEmpty && menu.getItems().getRecordById(selectedField).get('hasSub');
             // Только если это не пункт, имеющий вложенные подпункты
             if (!hasSub) {
                var picker = menu.getPicker();
                var columnIndex = +menu.getName().substring(_PREFIX_COLUMN_NAME.length + _PREFIX_COLUMN_FIELD.length) - 1;
                var accordances = this._accordances;
-               var prevIndex = accordances[selectedField];
+               var prevIndex = notEmpty ? accordances[selectedField] : undefined;
                // Если это поле уже было выбрано в другом столбце
                if (0 <= prevIndex) {
                   // Получить предыдущее меню
@@ -313,17 +332,19 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                   prevMenu.setCaption(this._options.columnCaption);
                }
                var prevField; Object.keys(accordances).some(function (v) { if (accordances[v] === columnIndex) { prevField = v; return true; } }.bind(this));
+               // Убрать класс выделения
+               picker.getItemInstance(prevField || _ID_MENU_EMPTY).getContainer().removeClass(_CLASS_MENU_SELECTED);
                // Если в этом столбце уже было выбрано поле
                if (prevField) {
-                  // Убрать класс выделения
-                  picker.getItemInstance(prevField).getContainer().removeClass(_CLASS_MENU_SELECTED);
                   // Сбросить соответсвие поля колонке
                   delete accordances[prevField];
                }
                // Добавить класс выделения, установить заголовок
                this._markMenuSelection(menu, selectedField);
                // Зафиксировать соответсвие поля колонке
-               accordances[selectedField] = columnIndex;
+               if (notEmpty) {
+                  accordances[selectedField] = columnIndex;
+               }
                this._notify('change', this.getValues());
             }
          },
