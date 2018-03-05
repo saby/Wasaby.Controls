@@ -13,35 +13,30 @@ define('Controls-demo/Input/Mask/Mask',
       var Mask = Control.extend({
          _template: template,
 
-         _values: {
-            example1: '  .  ',
+         _mask: '',
 
-            example2: '  .  .  ',
+         _replacer: '',
 
-            example3: '+7',
+         _value: '',
 
-            example4: '',
+         _setValue: function() {
+            var replacer = this._replacer;
 
-            example5: ''
+            this._value = replacer ? this._mask.replace(/./g, function(s) {
+               if (/[Lldx]/.test(s)) {
+                  return replacer;
+               } else {
+                  return s;
+               }
+            }) : '';
          },
 
-         _exampleDebug: 'example5',
+         _setConfig: function(e, mask, replacer) {
+            this._mask = mask;
+            this._replacer = replacer;
 
-         _debug: false,
-
-         _stringify: JSON.stringify,
-
-         _getClearData: function() {
-
-         },
-
-         _afterMount: function() {
-            this._getClearData = Formatter.getClearData;
-            this._forceUpdate();
-         },
-
-         _toggleDebug: function() {
-            this._debug = !this._debug;
+            this._setValue();
+            this._children.example.focus();
          }
       });
 
