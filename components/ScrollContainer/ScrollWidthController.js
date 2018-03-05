@@ -1,11 +1,14 @@
 define('SBIS3.CONTROLS/ScrollContainer/ScrollWidthController', [
-], function() {
+   'Core/detection'
+], function(
+   cDetection
+) {
    'use strict';
 
    /**
     * Синглтон для вычисления и обновления ширины нативного скролбара
     * @class SBIS3.CONTROLS/ScrollContainer/ScrollWidthController
-    * @author Журавлев М.С.
+    * @author Крайнов Д.О.
     * @private
     * @singleton
     */
