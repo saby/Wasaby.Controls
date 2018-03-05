@@ -3,9 +3,9 @@ define('Controls/Dropdown/Opener',
       'Core/Control',
       'tmpl!Controls/Dropdown/resources/Opener',
       'WS.Data/Type/descriptor',
-      'Controls/Dropdown/resources/template/OpenerTemplate'
+      'Core/Deferred'
    ],
-   function (Control, Template, types) {
+   function (Control, Template, types, Deferred) {
       /**
        * Действие открытия прилипающего окна
        * @class Controls/Dropdown/Opener
@@ -18,17 +18,34 @@ define('Controls/Dropdown/Opener',
          _controlName: 'Controls/Dropdown/Opener',
          _itemTemplateDeferred: undefined,
          _beforeMount: function (newOptions) {
-            this._className = newOptions.className || 'controls-DropdownOpener__margin';
+            this._className = newOptions.className || 'controls-DropdownList__margin';
          },
 
          open: function (config, opener) {
-            this._prepareConfig(config);
-            this._children.StickyOpener.open(config, opener);
+            var self = this;
+            return this._getOpenerList().addCallback(function() {
+               self._prepareConfig(config);
+               self._children.StickyOpener.open(config, opener);
+            });
          },
          _prepareConfig: function(config) {
             config.componentOptions.itemTemplate = this._options.itemTemplate;
             config.componentOptions.headTemplate = this._options.headTemplate;
             config.componentOptions.footerTemplate = this._options.footerTemplate;
+         },
+         //Ленивая загрузка шаблона
+         _getOpenerList: function () {
+            var openerListName = 'Controls/Dropdown/resources/template/DropdownList';
+            if (requirejs.defined(openerListName)) {
+               return (new Deferred()).callback(requirejs(openerListName));
+            }
+            else if (!this._openerListDeferred) {
+               this._openerListDeferred = new Deferred();
+               requirejs([openerListName], function (itemTemplate) {
+                  this._openerListDeferred.callback(itemTemplate);
+               }.bind(this));
+            }
+            return this._openerListDeferred;
          },
          close: function() {
             this._children.StickyOpener.close.apply(this._children.StickyOpener, arguments);

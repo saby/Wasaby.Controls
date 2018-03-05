@@ -51,29 +51,94 @@ define(
          };
 
          let dropdownList = new Dropdown(config);
-         dropdownList._beforeMount(config);
-         dropdownList.saveOptions(config);
+         it('check received state', () => {
+            dropdownList._beforeMount(config, null, items);
+            assert.equal(dropdownList._items, items);
+         });
 
          it('check selected text', () => {
-            assert.equal(dropdownList._text, 'Запись 2');
+            //Запоминаю нормальные опции
+            dropdownList._beforeMount(config).addCallback(() => {
+               dropdownList.saveOptions({
+                  selectedKeys: '2',
+                  keyProperty: 'id'
+               });
+               assert.equal(dropdownList._text, 'Запись 2');
+            });
+         });
+
+         it('update text', () => {
+            dropdownList._beforeMount(config).addCallback(() => {
+               let items = dropdownList._items;
+               let text = dropdownList._updateText(items.at(0), 'title');
+               assert.equal(text, 'Запись 1');
+            });
          });
 
          it('check selectedItemsChanged event', () => {
-            let selectedKeys;
-            //subscribe на vdom компонентах не работает, поэтому мы тут переопределяем _notify
-            //(дефолтный метод для vdom компонент который стреляет событием).
-            //он будет вызван вместо того что стрельнет событием, тем самым мы проверяем что отправили
-            //событие и оно полетит с корректными параметрами.
-            dropdownList._notify = (e, args) => {
-               selectedKeys = args[0];
-            };
-            dropdownList._selectItem(dropdownList._items.at(5));
-            assert.deepEqual(selectedKeys, '6');
+            dropdownList._beforeMount(config).addCallback(() => {
+               let selectedKeys;
+               //subscribe на vdom компонентах не работает, поэтому мы тут переопределяем _notify
+               //(дефолтный метод для vdom компонент который стреляет событием).
+               //он будет вызван вместо того что стрельнет событием, тем самым мы проверяем что отправили
+               //событие и оно полетит с корректными параметрами.
+               dropdownList._notify = (e, args) => {
+                  selectedKeys = args[0];
+               };
+               dropdownList._selectItem(dropdownList._items.at(5));
+               assert.deepEqual(selectedKeys, '6');
+            });
+
          });
 
          it('check selected icon', () => {
-            dropdownList._beforeUpdate({selectedKeys: '3'});
-            assert.equal(dropdownList._icon, 'icon-16 icon-Admin icon-primary');
+            dropdownList._beforeMount(config).addCallback(() => {
+               dropdownList._beforeUpdate({selectedKeys: '3'});
+               assert.equal(dropdownList._icon, 'icon-16 icon-Admin icon-primary');
+            });
          });
+
+         it('before update source', () => {
+            items.push({
+               id: '9',
+               title: 'Запись 9'
+            });
+            dropdownList._beforeUpdate({
+               source: new Memory({
+                  idProperty: 'id',
+                  data: items
+               })
+            }).addCallback(() => {
+               assert.equal(dropdownList._items.getCount(), items.length);
+            })
+         });
+
+         it('open dropdown', () => {
+            dropdownList._children.DropdownOpener = {
+               close: setTrue.bind(this, assert),
+               open: setTrue.bind(this, assert)
+            };
+            dropdownList._open();
+         });
+
+         it('notify footer click', () => {
+            dropdownList._notify = (e) => {
+               assert.equal(e, 'footerClick');
+            };
+            dropdownList._onResult(['footerClick', 'event'])
+         });
+
+         it('check item click', () => {
+            dropdownList._notify = (e) => {
+               assert.equal(e, 'selectedKeysChanged');
+            };
+            dropdownList._beforeMount(config).addCallback(() => {
+               dropdownList._onResult(['itemClick', 'event', [dropdownList._items.at(4)]])
+            });
+         });
+
+         function setTrue(assert) {
+            assert.equal(true, true)
+         }
       })
    });

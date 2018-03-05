@@ -1,12 +1,12 @@
-define('Controls/Dropdown/resources/template/OpenerTemplate',
+define('Controls/Dropdown/resources/template/DropdownList',
    [
       'Core/Control',
-      'tmpl!Controls/Dropdown/resources/template/OpenerTemplate',
+      'tmpl!Controls/Dropdown/resources/template/DropdownList',
       'Controls/Dropdown/resources/MenuViewModel',
-      'Core/Deferred',
-      'css!Controls/Dropdown/resources/template/OpenerTemplate'
+      'tmpl!Controls/Dropdown/resources/template/itemTemplate',
+      'css!Controls/Dropdown/resources/template/DropdownList'
    ],
-   function (Control, MenuItemsTpl, MenuViewModel, Deferred) {
+   function (Control, MenuItemsTpl, MenuViewModel, itemTemplate) {
 
       /**
        * Действие открытия прилипающего окна
@@ -17,7 +17,8 @@ define('Controls/Dropdown/resources/template/OpenerTemplate',
        */
       var Menu = Control.extend([], {
          _template: MenuItemsTpl,
-         _controlName: 'Controls/Dropdown/resources/template/OpenerTemplate',
+         _defaultItemTemplate: itemTemplate,
+         _controlName: 'Controls/Dropdown/resources/template/DropdownList',
          constructor: function () {
             Menu.superclass.constructor.apply(this, arguments);
             this.resultHandler = this.resultHandler.bind(this);
@@ -28,7 +29,6 @@ define('Controls/Dropdown/resources/template/OpenerTemplate',
             document.addEventListener('touchstart', this._documentClickHandler);
          },
          _beforeMount: function (newOptions) {
-            var self = this;
             if (newOptions.items) {
                this._listModel = new MenuViewModel({
                   items: newOptions.items,
@@ -40,23 +40,6 @@ define('Controls/Dropdown/resources/template/OpenerTemplate',
                   parentProperty: newOptions.parentProperty
                });
             }
-            return this._getItemTemplate().addCallback(function (itemTemplate) {
-               self._defaultItemTemplate = itemTemplate;
-            });
-         },
-
-         _getItemTemplate: function () {
-            var itemTemplateTemplateName = 'tmpl!Controls/Dropdown/resources/template/itemTemplate';
-            if (requirejs.defined(itemTemplateTemplateName)) {
-               return (new Deferred()).callback(requirejs(itemTemplateTemplateName));
-            }
-            else if (!this._itemTemplateDeferred) {
-               this._itemTemplateDeferred = new Deferred();
-               requirejs([itemTemplateTemplateName], function (itemTemplate) {
-                  this._itemTemplateDeferred.callback(itemTemplate);
-               }.bind(this));
-            }
-            return this._itemTemplateDeferred;
          },
 
          //TODO Логика открытия подменю переедет в попап
@@ -83,7 +66,7 @@ define('Controls/Dropdown/resources/template/OpenerTemplate',
          },
          //TODO Логика закрытия подменю переедет в попап
          _itemMouseOut: function (event, item) {
-            var targetMenu = event.nativeEvent.relatedTarget && event.nativeEvent.relatedTarget.closest('.controls-DropdownOpener'),
+            var targetMenu = event.nativeEvent.relatedTarget && event.nativeEvent.relatedTarget.closest('.controls-DropdownList__popup'),
                targetDepth = targetMenu && parseInt(targetMenu.getAttribute('depth'), 10),
                childSubMenu = this._children['MenuOpener' + item.get(this._options.keyProperty)];
 
@@ -119,7 +102,7 @@ define('Controls/Dropdown/resources/template/OpenerTemplate',
          },
          _documentClickHandler: function (event) {
             //Если кликнули мимо меню - закрываемся
-            if (!event.target.closest('.controls-DropdownOpener')) {
+            if (!event.target.closest('.controls-DropdownList__popup')) {
                this._notify('close');
             }
          },

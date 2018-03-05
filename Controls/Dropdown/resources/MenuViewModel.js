@@ -61,20 +61,18 @@ define('Controls/Dropdown/resources/MenuViewModel',
             itemsModelCurrent.isSelected = this._isItemSelected(itemsModelCurrent.item);
             itemsModelCurrent.icon = itemsModelCurrent.item.get('icon');
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
+            itemsModelCurrent.template = itemsModelCurrent.item.get(itemsModelCurrent.itemTemplateProperty);
             return itemsModelCurrent;
          },
          _isItemSelected: function(item) {
             var keys = this._options.selectedKeys;
-            if (keys instanceof Array) {
-               return keys.indexOf(item.get(this._options.keyProperty)) > -1;
-            }
+            // if (keys instanceof Array) {
+            //    return keys.indexOf(item.get(this._options.keyProperty)) > -1;
+            // }
             return keys == item.get(this._options.keyProperty);
          },
          _hasChildren: function (item) {
             return this._hierarchy.isNode(item) && !!this._hierarchy.getChildren(item, this._options.items).length;
-         },
-         getParent: function (item) {
-            return this._hierarchy.getParent(item, this._options.items);
          },
          getCount: function () {
             return this._itemsModel.getCount();

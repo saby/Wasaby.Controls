@@ -61,9 +61,21 @@ define(
          };
 
          let viewModel = new MenuViewModel(config);
+         let viewModel2 = new MenuViewModel(config);
 
          it('check hier items collection', () => {
             assert.equal(viewModel._itemsModel._options.items.length, 3);
+         });
+
+         it('check empty hierarchy', () => {
+            let items = viewModel._getCurrentRootItems({
+               items: rs
+            });
+            assert.equal(items.getCount(), 8);
+         });
+
+         it('items count', () => {
+            assert.equal(viewModel.getCount(), 3);
          });
 
          it('check current item data', () => {
@@ -71,8 +83,13 @@ define(
             viewModel.goToNext();
             viewModel.goToNext();
             let current = viewModel.getCurrent();
-            let checkData = current.isSelected && current.hasChildren && current.item.get(config.keyProperty) === '3';
+            let checkData = current.isSelected && current.hasChildren && current.item.get(config.keyProperty) === '3' && viewModel.isEnd();
             assert.isTrue(checkData);
+         });
+
+         it('destroy', () => {
+            viewModel.destroy();
+            assert.equal(viewModel._itemsModel.isDestroyed(), true);
          });
       })
    });

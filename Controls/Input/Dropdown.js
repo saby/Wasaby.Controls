@@ -2,11 +2,12 @@ define('Controls/Input/Dropdown',
    [
       'Core/Control',
       'tmpl!Controls/Input/Dropdown/Dropdown',
+      'tmpl!Controls/Input/Dropdown/resources/defaultContentTemplate',
       'WS.Data/Collection/RecordSet',
       'Controls/Controllers/SourceController',
       'css!Controls/Input/Dropdown/Dropdown'
    ],
-   function (Control, template, RecordSet, SourceController) {
+   function (Control, template, defaultContentTemplate, RecordSet, SourceController) {
 
       /**
        * Поле выбора из значения списка.
@@ -26,27 +27,29 @@ define('Controls/Input/Dropdown',
       var _private = {
          getText: function (selectedItems) {
             var text = selectedItems[0].get('title');
-            if (selectedItems.length > 1) {
-               text += ' и еще' + (selectedItems.length - 1)
-            }
+            // if (selectedItems.length > 1) {
+            //    text += ' и еще' + (selectedItems.length - 1)
+            // }
             return text;
          },
-         initItems: function(source, instance) {
+         loadItems: function(instance, source, selectedKeys) {
             instance._sourceController = new SourceController({
                source: source
             });
-            return instance._sourceController.load();
+            return instance._sourceController.load().addCallback(function(items){
+               instance._items = items;
+               _private.updateSelectedItem(instance, selectedKeys);
+            });
          },
-         updateSelectedTextAndIcon: function (instance, selectedKeys) {
-            var selectedItem = instance._items.getRecordById(selectedKeys);
-            instance._icon = selectedItem.get('icon');
-            instance._text = instance._icon ? '' : this.getText([selectedItem], 'title'); //По стандарту если есть иконка - текст не отображается
+         updateSelectedItem: function (instance, selectedKeys) {
+            instance._selectedItem = instance._items.getRecordById(selectedKeys);
+            instance._icon = instance._selectedItem.get('icon');
          }
       };
 
       var DropdownList = Control.extend({
          _template: template,
-         _controlName: 'Controls/Dropdown/Dropdown',
+         _defaultContentTemplate: defaultContentTemplate,
          constructor: function (config) {
             DropdownList.superclass.constructor.apply(this, arguments);
             this._onResult = this._onResult.bind(this);
@@ -55,24 +58,22 @@ define('Controls/Input/Dropdown',
             if (receivedState) {
                this._items = receivedState;
             }
-            if (options.source) {
-               return _private.initItems(options.source, this).addCallback(function(items){
-                  this._items = items;
-                  _private.updateSelectedTextAndIcon(this, this._options.selectedKeys);
-               }.bind(this))
+            else {
+               if (options.source) {
+                  return _private.loadItems(this, options.source, options.selectedKeys);
+               }
             }
          },
          _beforeUpdate: function(newOptions) {
             if (newOptions.selectedKeys && newOptions.selectedKeys !== this._options.selectedKeys) {
-               _private.updateSelectedTextAndIcon(this, newOptions.selectedKeys);
+               _private.updateSelectedItem(this, newOptions.selectedKeys);
             }
             if (newOptions.source && newOptions.source !== this._options.source) {
-               return _private.initItems(newOptions.source, this).addCallback(function(items){
-                  this._items = items;
-                  _private.updateSelectedTextAndIcon(this, newOptions.selectedKeys);
-                  this._forceUpdate();
-               }.bind(this))
+               return _private.loadItems(this, newOptions.source, newOptions.selectedKeys);
             }
+         },
+         _updateText: function(item, displayProperty) {
+            return _private.getText([item], displayProperty); //По стандарту если есть иконка - текст не отображается
          },
          _open: function () {
             var config = {
@@ -81,7 +82,7 @@ define('Controls/Input/Dropdown',
                },
                target: this._children.popupTarget
             };
-            this._children.MenuOpener.open(config, this);
+            this._children.DropdownOpener.open(config, this);
          },
          _onResult: function (args) {
             var actionName = args[0];
@@ -90,7 +91,7 @@ define('Controls/Input/Dropdown',
             switch (actionName) {
                case 'itemClick':
                   this._selectItem.apply(this, data);
-                  this._children.MenuOpener.close();
+                  this._children.DropdownOpener.close();
                   break;
                case 'footerClick':
                   this._notify('footerClick', [event]);
