@@ -18,7 +18,8 @@ define('Controls/Controllers/_SearchController',
                   self._search = new requireRes[0]({
                      source: self._options.source,
                      filter: self._options.filter,
-                     navigation: self._options.navigation
+                     navigation: self._options.navigation,
+                     searchDelay: self._options.searchDelay
                   });
                }
                return self._search;

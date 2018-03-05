@@ -3,7 +3,7 @@
    "title"      : "Диаграмма HighChartsLight",
    "initial"    : "<component data-component=\"SBIS3.CONTROLS.HighChartsLight\"></component>",
    "category"   : "CORE",
-   "fullname": "SBIS3.CONTROLS.HighChartsLight",
+   "fullname": "SBIS3.CONTROLS/HighChartsLight",
    "properties" : {
       "ws-config" : {
          "title"    : "Базовая конфигурация",

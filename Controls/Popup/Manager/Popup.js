@@ -53,7 +53,6 @@ define('Controls/Popup/Manager/Popup',
           * @cfg {Object} Опции компонента
           */
 
-         _controlName: 'Controls/Popup/Manager/Popup',
          _template: template,
 
          _afterMount: function () {

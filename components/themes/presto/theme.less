@@ -474,6 +474,18 @@ body {
   height: @default-height;
 }
 
-.controls-Switch:hover {
-  border-width: 2px;
+.ws-is-desktop-platform {
+  .controls-Switch:hover,
+  .controls-DoubleSwitch:hover {
+    border-width: 2px;
+  }
+}
+.ws-window-overlay {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background-color: rgba(0,0,0,.5);
+  cursor: pointer;
 }

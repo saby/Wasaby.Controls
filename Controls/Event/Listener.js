@@ -28,7 +28,7 @@ define('Controls/Event/Listener',
          },
          _unRegisterIt: function(event, registerType, component){
             if (registerType === this._options.register) {
-               this._registrar.unregister(event, component, callback);
+               this._registrar.unregister(event, component);
             }
          },
          start: function(){

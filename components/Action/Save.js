@@ -16,7 +16,7 @@ define('SBIS3.CONTROLS/Action/Save', [
         $protected: {
             _options: {
                /**
-                * @cfg {SBIS3.CONTROLS.ISaveStrategy) Стратегия сохранения. Класс, который реализует сохранение записей.
+                * @cfg {SBIS3.CONTROLS/Action/Save/SaveStrategy/ISaveStrategy) Стратегия сохранения. Класс, который реализует сохранение записей.
                 * @see SBIS3.CONTROLS/Action/Save/SaveStrategy/ISaveStrategy
                 * @see SBIS3.CONTROLS/Action/Save/SaveStrategy/Base
                 * @see SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis

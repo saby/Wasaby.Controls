@@ -36,7 +36,7 @@ define('Controls/Application',
          initState: function(self, cfg) {
             self.title = cfg.title;
             self.templateConfig = cfg.templateConfig;
-            self.compat = cfg.compat||false;
+            self.compat = cfg.compat || false;
          }
       };
       var Page = Base.extend({
@@ -47,11 +47,15 @@ define('Controls/Application',
          },
 
          _scrollPage: function(ev){
-            this._children.scrollDetect.start(ev);
+            if (this._children.scrollDetect){
+               this._children.scrollDetect.start(ev);
+            }
          },
 
          _resizePage: function(ev){
-            this._children.resizeDetect.start(ev);
+            if (this._children.resizeDetect) {
+               this._children.resizeDetect.start(ev);
+            }
          },
 
          _touchstartPage: function() {
@@ -70,6 +74,7 @@ define('Controls/Application',
 
             _private.initState(self, receivedState||cfg);
             self.content = cfg.content;
+            self.needArea = cfg.compat || self.compat;
             if (!receivedState) {
                receivedState = {};
             }

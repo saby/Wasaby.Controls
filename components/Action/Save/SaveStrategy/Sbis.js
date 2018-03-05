@@ -3,12 +3,12 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
     'SBIS3.CONTROLS/Action/Save/SaveStrategy/Base',
     'Core/EventBus',
     'Core/core-merge',
-    'Core/helpers/transport-helpers',
+    'Transport/prepareGetRPCInvocationURL',
     'SBIS3.CONTROLS/WaitIndicator',
     'WS.Data/Source/SbisService',
     'WS.Data/Entity/Record',
     'Core/moduleStubs'
-], function (SaveStrategyBase, EventBus, coreMerge, transHelpers, WaitIndicator, SbisService, Record, moduleStubs) {
+], function (SaveStrategyBase, EventBus, coreMerge, prepareGetRPCInvocationURL, WaitIndicator, SbisService, Record, moduleStubs) {
 
     'use strict';
 
@@ -268,7 +268,7 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
             if (isExcel) {
                 params['storage'] = 'excel';
             }
-            window.open(transHelpers.prepareGetRPCInvocationURL(isExcel ? 'FileTransfer' : 'File', 'Download', params, undefined, '/file-transfer/service/'), '_self');
+            window.open(prepareGetRPCInvocationURL(isExcel ? 'FileTransfer' : 'File', 'Download', params, undefined, '/file-transfer/service/'), '_self');
         },
 
         _parseColumns: function(columns) {

@@ -11,6 +11,7 @@ define('SBIS3.CONTROLS/Mixins/ViewSourceMixin', [
     /**
      *
      * @mixin SBIS3.CONTROLS/Mixins/ViewSourceMixin
+     * @author Крайнов Д.О.
      * @public
      */
    var ViewSourceMixin = /**@lends SBIS3.CONTROLS/Mixins/ViewSourceMixin.prototype  */{

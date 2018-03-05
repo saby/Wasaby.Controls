@@ -9,12 +9,12 @@ define('SBIS3.CONTROLS/Pager', [
    'Lib/Control/CompoundControl/CompoundControl',
    'tmpl!SBIS3.CONTROLS/Pager/Pager',
    'Core/core-instance',
-   'Core/helpers/string-helpers',
+   'Core/helpers/i18n/wordCaseByNumber',
    'SBIS3.CONTROLS/DropdownList',
    'Lib/Control/Paging/Paging',
    'i18n!SBIS3.CONTROLS/Pager',
    'css!SBIS3.CONTROLS/Pager/Pager'
-], function(CompoundControl, dotTplFn, cInstance, strHelpers) {
+], function(CompoundControl, dotTplFn, cInstance, wordCaseByNumber) {
 
    'use strict';
 
@@ -113,36 +113,41 @@ define('SBIS3.CONTROLS/Pager', [
         * @param {Number} hasNextPage
         * @param {Number} selectedCount
         */
-      updateAmount : function(numRecords, hasNextPage, selectedCount){
+      updateAmount : function(numRecords, more, selectedCount){
          if(!this._options.noPagerAmount) {
             var pagerStr = '';
             this._lastNumRecords = numRecords;
-            this._lastNextPage = hasNextPage;
+            this._lastNextPage = more;
             selectedCount = selectedCount || 0;
-            if (typeof hasNextPage === 'boolean') {
-               var strEnd = '',//typeof hasNextPage !== 'boolean' && hasNextPage ? (' из ' + hasNextPage) : '',
-                  page = this.getPaging().getPage() - 1,
-                  startRecord = page * this._dropd.getSelectedKeys()[0] + 1;
-               if (numRecords === 0) {
-                  pagerStr = '';
-               }
-               else if (numRecords === 1 && page === 0) {
-                  pagerStr = '1 ' + rk('запись');
+
+            var strEnd = '',//typeof hasNextPage !== 'boolean' && hasNextPage ? (' из ' + hasNextPage) : '',
+               page = this.getPaging().getPage() - 1,
+               startRecord = page * this._dropd.getSelectedKeys()[0] + 1;
+            if (numRecords === 0) {
+               pagerStr = '';
+            }
+            else if (numRecords === 1 && page === 0) {
+               pagerStr = '1 ' + rk('запись');
+            }
+            else {
+               pagerStr = startRecord + ' - ' + (startRecord + numRecords - 1) + strEnd;
+            }
+
+            if (typeof more === 'number') {
+               if (pagerStr) {
+                  pagerStr += ' ' + rk('из') + ' ' + more;
                }
                else {
-                  pagerStr = startRecord + ' - ' + (startRecord + numRecords - 1) + strEnd;
+                  pagerStr = rk('Всего') + ': ' + more;
                }
-            } else {
-               pagerStr += pagerStr === '' ? rk('Всего') + ' : ' : '. ' + rk('Всего') + ' : ';
-               pagerStr += numRecords;
             }
 
             if (selectedCount > 0) {
                if (numRecords == 1) {
                   pagerStr = rk('Выбрана') + ' 1 ' + rk('запись');
                } else {
-                  pagerStr = strHelpers.wordCaseByNumber(selectedCount, rk('Выбрано'), rk('Выбрана'), rk('Выбраны')) +
-                     ' ' + selectedCount + strHelpers.wordCaseByNumber(selectedCount, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + '. ' + pagerStr;
+                  pagerStr = wordCaseByNumber(selectedCount, rk('Выбрано'), rk('Выбрана'), rk('Выбраны')) +
+                     ' ' + selectedCount + wordCaseByNumber(selectedCount, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + '. ' + pagerStr;
                }
             }
             this.getContainer().find('.controls-Amount-text_js').text(pagerStr + ',');

@@ -108,7 +108,7 @@ define('SBIS3.CONTROLS/OperationsPanel/PanelButton/OperationsPanelButton', [
       },
       /**
        * Метод возвращает текущую связанную панель массовых операций {@link linkedPanel}.
-       * @returns (SBIS3.CONTROLS.OperationPanel|SBIS3.CORE.OperationsPanel) linkedPanel
+       * @returns (SBIS3.CONTROLS.OperationPanel|Deprecated/Controls/OperationsPanel/OperationsPanel) linkedPanel
        * @see linkedPanel
        */
       getLinkedPanel: function() {

@@ -26,6 +26,7 @@ define('Controls/Layout/List',
                   minSearchLength: options.minSearchLength,
                   source: options.source,
                   navigation: options.navigation,
+                  searchDelay: options.searchDelay,
                   searchCallback: _private.searchCallback.bind(self, self),
                   abortCallback: _private.abortCallback.bind(self, self)
                });

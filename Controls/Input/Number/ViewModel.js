@@ -76,7 +76,7 @@ define('Controls/Input/Number/ViewModel',
          validate: function (clearValue, onlyPositive, integersLength, precision) {
             if (
                !_private.validators.isNumber(clearValue) ||
-               typeof onlyPositive !== 'undefined' && !_private.validators.onlyPositive(clearValue) ||
+               onlyPositive && !_private.validators.onlyPositive(clearValue) ||
                typeof integersLength !== 'undefined' && !_private.validators.maxIntegersLength(clearValue, integersLength) ||
                typeof precision !== 'undefined' && !_private.validators.maxDecimalsLength(clearValue, precision)
             ) {
@@ -151,7 +151,7 @@ define('Controls/Input/Number/ViewModel',
                   splitValue.insert = '';
                }
 
-               this._options.value = _private.getValueWithDelimiters(splitValue);
+               this._options.value = _private.getClearValue(splitValue);
 
                //Запишет значение в input и поставит курсор в указанное место
                return {
@@ -163,20 +163,22 @@ define('Controls/Input/Number/ViewModel',
             getDisplayValue: function () {
                return _private.getValueWithDelimiters({
                   before: '',
-                  insert: this._options.value || '',
+                  insert: this._options.value,
                   after: ''
                });
             },
 
             getValue: function () {
-               return this._options.value ? parseFloat(this._options.value.replace(/ /g, '')) : undefined;
+               return parseFloat(this._options.value) || undefined;
             },
 
             updateOptions: function(options) {
                this._options.onlyPositive = options.onlyPositive;
                this._options.integersLength = options.integersLength;
                this._options.precision = options.precision;
-               this._options.value = options.value;
+               if (parseFloat(this._options.value) !== options.value) {
+                  this._options.value = options.value !== undefined ? String(options.value) : '';
+               }
             }
          });
 

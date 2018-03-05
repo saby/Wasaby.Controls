@@ -10,8 +10,8 @@ define('Controls-demo/Layouts/LayoutFilterComponent', [
       {
          _template: template,
          _switchValue: false,
-         
-         _beforeUpdate: function() {
+   
+         _switchValueHandler: function(event, value) {
             var filter = {};
             if (this._switchValue) {
                filter.title = 'Sasha';

@@ -1,6 +1,7 @@
 define('Controls-demo/Search/SearchVDom', [
    'Core/Control',
    'tmpl!Controls-demo/Search/SearchVDom',
+   'css!Controls-demo/Search/SearchVDom',
    'Controls/Input/Search'
 ], function (Control, template) {
    'use strict';

@@ -1,6 +1,16 @@
 /**
  * Created by ad.chistyakova on 22.04.2015.
  */
+/**
+ * Преобразует строку к валидному формату для XSLT трансформации.
+ * Функция из Deprecated/helpers/string-helpers, чтобы не тянуть в зависимостях
+ */
+var removeInvalidXMLChars = function(valueStr) {
+   if (typeof valueStr == "string") {
+      valueStr = valueStr.replace(/[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u10000-\u10FFFF]*/g, "");
+   }
+   return valueStr;
+};
 define('SBIS3.CONTROLS/Utils/DataSetToXmlSerializer', [
    "Transport/ReportPrinter",
    'Core/helpers/unrelated-helpers',
@@ -8,9 +18,8 @@ define('SBIS3.CONTROLS/Utils/DataSetToXmlSerializer', [
    "Core/constants",
    "Core/IoC",
    "Core/core-instance",
-   "Core/helpers/string-helpers",
    "i18n!SBIS3.CONTROLS/Utils/DataSetToXmlSerializer"
-], function(cReportPrinter, uHelpers, cExtend, constants, IoC, cInstance, strHelpers) {
+], function(cReportPrinter, uHelpers, cExtend, constants, IoC, cInstance) {
    return cExtend({}, {
 
       _complexFields: {
@@ -196,7 +205,7 @@ define('SBIS3.CONTROLS/Utils/DataSetToXmlSerializer', [
                }
             }
 
-            fieldValue = strHelpers.removeInvalidXMLChars(''.concat(fieldValue));
+            fieldValue = removeInvalidXMLChars(''.concat(fieldValue));
             element.appendChild(document.createTextNode(fieldValue));
             fieldElement.appendChild(element);
          } else if(typeName == 'связь'){
@@ -258,7 +267,7 @@ define('SBIS3.CONTROLS/Utils/DataSetToXmlSerializer', [
             for(var i = 0, l = fieldValue.length; i < l; i++){
                element.appendChild(elem = document.createElement('Value'));
                //для элементов массива всегда добавляем их значение как текст, ведь там может быть null
-               elem.appendChild(document.createTextNode(strHelpers.removeInvalidXMLChars(fieldValue[i] + '')));
+               elem.appendChild(document.createTextNode(removeInvalidXMLChars(fieldValue[i] + '')));
             }
          } else if (typeName == 'recordset' || typeName == 'record') {
             this._serializeObject(fieldValue, fieldElement, document, this._getColumns(fieldValue));

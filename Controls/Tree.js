@@ -27,7 +27,6 @@ define('Controls/Tree', [
     */
 
    var TreeControl = Control.extend({
-      _controlName: 'Controls/List/TreeControl'
 
    });
    return TreeControl;
