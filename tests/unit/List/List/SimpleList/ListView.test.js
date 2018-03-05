@@ -6,7 +6,7 @@ define([
    'Controls/List/SimpleList/ListViewModel'
 ], function(ListView, ListViewModel){
    describe('Controls.List.ListView', function () {
-      var data, display;
+      var data, data2, display;
       beforeEach(function() {
          data = [
             {
@@ -22,6 +22,23 @@ define([
             {
                id : 3,
                title : 'Третий',
+               type: 2
+            }
+         ];
+         data2 = [
+            {
+               id : 4,
+               title : 'Четвертый',
+               type: 1
+            },
+            {
+               id : 5,
+               title : 'Пятый',
+               type: 2
+            },
+            {
+               id : 6,
+               title : 'Шестой',
                type: 2
             }
          ];
@@ -45,6 +62,36 @@ define([
          var dispItem = lv._listModel._itemsModel._display.at(2);
          lv._onItemClick({}, dispItem);
          assert.equal(dispItem, lv._listModel._markedItem, 'Incorrect selected item before updating');
+      });
+
+      it('_beforeUpdate', function () {
+         var model = new ListViewModel({
+            items: data,
+            idProperty: 'id'
+         });
+         var cfg = {
+            listModel: model,
+            idProperty: 'id',
+            markedKey: 2
+         };
+         var lv = new ListView(cfg);
+         lv.saveOptions(cfg);
+         lv._beforeMount(cfg);
+
+
+         model = new ListViewModel({
+            items: data2,
+            idProperty: 'id'
+         });
+
+         cfg = {
+            listModel: model,
+            idProperty: 'id',
+            markedKey: 2
+         };
+
+         lv._beforeUpdate(cfg);
+         assert.equal(model, lv._listModel, 'Incorrect listModel before update');
       })
    })
 });
