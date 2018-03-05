@@ -258,6 +258,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                sheets = [this._combineResultSheet(results[''])];
             }
             var data = {
+               dataType: options.dataType,
                //TODO: хорошо бы выводить file объектом
                fileName: file.name,
                fileUrl: file.url,

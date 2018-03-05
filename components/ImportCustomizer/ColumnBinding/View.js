@@ -7,6 +7,7 @@
  */
 define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
    [
+      'Core/core-merge',
       'Core/helpers/Object/isEqual',
       'SBIS3.CONTROLS/CompoundControl',
       'WS.Data/Collection/RecordSet',
@@ -16,7 +17,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
       'css!SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View'
    ],
 
-   function (cObjectIsEqual, CompoundControl, RecordSet, dotTplFn) {
+   function (cMerge, cObjectIsEqual, CompoundControl, RecordSet, dotTplFn) {
       'use strict';
 
       /**
@@ -188,23 +189,33 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                }
             }
             var grid = this._grid;
+            var prevAccordances = this._accordances;
+            this._accordances = has.accordances ? options.accordances : {};
             if (has.rows || has.fields) {
                var inf = this._makeUpdateInfo(options);
                grid.setColumns(inf.columns);
                grid.setItems(inf.items);
-               this._accordances = has.accordances ? options.accordances : {};
             }
-            else
-            if (has.skippedRows) {
-               this._updateSkippedRows();
-            }
-            if (has.accordances) {
-               var rows = options.rows;
-               var len = rows && rows.length ? rows[0].length : 0;
-               if (len) {
-                  var accordances = options.accordances;
-                  for (var field in accordances) {
-                     this._markMenuSelection(grid.getChildControlByName(_PREFIX_COLUMN_NAME + _PREFIX_COLUMN_FIELD + (accordances[field] + 1)), field);
+            else {
+               if (has.skippedRows) {
+                  this._updateSkippedRows();
+               }
+               if (has.accordances) {
+                  var rows = options.rows;
+                  var len = rows && rows.length ? rows[0].length : 0;
+                  if (len) {
+                     var accordances = options.accordances;
+                     var prevMenuIds = Object.keys(prevAccordances).reduce(function (r, v) { r[prevAccordances[v]] = v; return r; }, []);
+                     var menuIds = Object.keys(accordances).reduce(function (r, v) { r[accordances[v]] = v; return r; }, []);
+                     for (var i = 0; i < len; i++) {
+                        var nextId = menuIds[i];
+                        var prevId = prevMenuIds[i];
+                        if (nextId ? prevId !== nextId : prevId) {
+                           var menu = grid.getChildControlByName(_PREFIX_COLUMN_NAME + _PREFIX_COLUMN_FIELD + (i + 1));
+                           this._markMenuSelection(menu, prevId || _ID_MENU_EMPTY, false);
+                           this._markMenuSelection(menu, nextId || _ID_MENU_EMPTY, true);
+                        }
+                     }
                   }
                }
             }
@@ -230,7 +241,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                }
             }
             //TODO: А хорошо бы проверить options.fields на соответсвие ImportTargetFields...
-            //TODO: Можно попробовать размножить items ради включениия туда классов
             var rowItems = [];
             if (rows.length) {
                var headTmpl = 'tmpl!SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/tmpl/head';
@@ -240,32 +250,32 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                var idProperty = fields.idProperty || (isRecordSet ? fields.items.getIdProperty() : undefined);
                var displayProperty = fields.displayProperty;
                var parentProperty = fields.parentProperty;
-               //var accordances = options.accordances;
-               //var menuIds = accordances ? Object.keys(accordances).reduce(function (r, v) { r[accordances[v]] = v; return r; }, []) : [];
-               var menuItems;
+               var accordances = options.accordances;
+               var menuIds = accordances ? Object.keys(accordances).reduce(function (r, v) { r[accordances[v]] = v; return r; }, []) : [];
+               var commonMenuItems;
                if (parentProperty) {
                   // Если поля организованы иерархически, то нужно создать новые данные для пунктов меню и пометить наличие подпунктов
                   var props = [idProperty, displayProperty, parentProperty];
                   if (isRecordSet) {
-                     menuItems = [];
+                     commonMenuItems = [];
                      fields.items.each(function (record) {
-                        menuItems.push(props.reduce(function (r, p) { r[p] = record.get(p); return r; }, {}));
+                        commonMenuItems.push(props.reduce(function (r, p) { r[p] = record.get(p); return r; }, {}));
                      });
                   }
                   else {
-                     menuItems = fields.items.map(function (field) {
+                     commonMenuItems = fields.items.map(function (field) {
                         return props.reduce(function (r, p) { r[p] = field[p]; return r; }, {});
                      });
                   }
                   var parents = [];
-                  for (var i = 0; i < menuItems.length; i++) {
-                     var p = menuItems[i][parentProperty];
+                  for (var i = 0; i < commonMenuItems.length; i++) {
+                     var p = commonMenuItems[i][parentProperty];
                      if (p && parents.indexOf(p) === -1) {
                         parents.push(p);
                      }
                   }
-                  for (var i = 0; i < menuItems.length; i++) {
-                     var item = menuItems[i];
+                  for (var i = 0; i < commonMenuItems.length; i++) {
+                     var item = commonMenuItems[i];
                      if (parents.indexOf(item[idProperty]) !== -1) {
                         item.hasSub = true;
                      }
@@ -273,15 +283,22 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                }
                else {
                   // А если поля организованы плоско, то возьмём их как есть
-                  menuItems = fields.items.slice();
+                  commonMenuItems = fields.items.slice();
                }
                var firstItem = {className:_CLASS_MENU_EMPTY};
                firstItem[idProperty] = _ID_MENU_EMPTY;
                firstItem[displayProperty] = options.columnCaption;
                firstItem[parentProperty] = null;
-               menuItems.unshift(firstItem);
+               commonMenuItems.unshift(firstItem);
+               // Размножим commonMenuItems для каждого меню отдельно (чтобы можно было задачть индивидуальные свойства)
+               var menuItems = [];
+               var indexes = commonMenuItems.reduce(function (r, v, i) { r[v[idProperty]] = i; return r; }, {});
+               for (var i = 0, len = rows[0].length; i < len; i++) {
+                  var items = commonMenuItems.slice().map(function (v) { return cMerge({}, v); });
+                  items[indexes[menuIds[i]] || 0].className = _CLASS_MENU_SELECTED;
+                  menuItems[i] = items;
+               }
                var menuConf = {
-                  items: menuItems,
                   idProperty: idProperty,
                   displayProperty: displayProperty,
                   parentProperty: parentProperty,
@@ -297,7 +314,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                }
                var title = options.columnTitle;
                var skippedRows = 0 < options.skippedRows ? options.skippedRows : 0;
-               var columns = rows[0].map(function (v, i) { return {field:_PREFIX_COLUMN_FIELD + (i + 1), title:title + ' ' + (i + 1), /*selectedMenuId:menuIds[i],*/ headTemplate:headTmpl, cellTemplate:cellTmpl, menuConf:menuConf}; });
+               var columns = rows[0].map(function (v, i) { return {field:_PREFIX_COLUMN_FIELD + (i + 1), title:title + ' ' + (i + 1), headTemplate:headTmpl, cellTemplate:cellTmpl, menuConf:menuConf, menuItems:menuItems[i]}; });
                columns.unshift({field:'id', title:''});
                for (var j = 0; j < rows.length; j++) {
                   rowItems.push(rows[j].reduce(function (r, v, i) { r[_PREFIX_COLUMN_FIELD + (i + 1)] = v; return r; }, {id:j + 1, className:j < skippedRows ? _CLASS_LIGHT_ROW : undefined}));
@@ -340,7 +357,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                   delete accordances[prevField];
                }
                // Добавить класс выделения, установить заголовок
-               this._markMenuSelection(menu, selectedField);
+               this._markMenuSelection(menu, selectedField, true);
                // Зафиксировать соответсвие поля колонке
                if (notEmpty) {
                   accordances[selectedField] = columnIndex;
@@ -355,17 +372,18 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
           * @protected
           * @param {WSControls/Buttons/MenuButton} menu Компонент
           * @param {string|number} selectedField Идентификатор выбранного пункта
+          * @param {boolean} isSelected Пункт выделен
           */
-         _markMenuSelection: function (menu, selectedField) {
+         _markMenuSelection: function (menu, selectedField, isSelected) {
             var picker = menu.getPicker();
             var menuItemInstance = picker.getItemInstance(selectedField);
             if (menuItemInstance.isVisible()) {
-               menuItemInstance.getContainer().addClass(_CLASS_MENU_SELECTED);
+               menuItemInstance.getContainer()[isSelected ? 'addClass' : 'removeClass'](_CLASS_MENU_SELECTED);
             }
             else {
-               menuItemInstance.setProperty('className', _CLASS_MENU_SELECTED);
+               menuItemInstance.setProperty('className', isSelected ? _CLASS_MENU_SELECTED : undefined);
             }
-            menu.setCaption(menuItemInstance.getCaption());
+            menu.setCaption(isSelected ? menuItemInstance.getCaption() : this._options.columnCaption);
          },
 
          /**
@@ -376,13 +394,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
           */
          getValues: function () {
             return {
-               accordances: ObjectAssign({}, this._accordances),
+               accordances: cMerge({}, this._accordances),
                skippedRows: this._options.skippedRows
             };
          }
       });
-
-      var ObjectAssign = Object.assign || function(d){return[].slice.call(arguments,1).reduce(function(r,s){return Object.keys(s).reduce(function(o,n){o[n]=s[n];return o},r)},d)};
 
       return View;
    }
