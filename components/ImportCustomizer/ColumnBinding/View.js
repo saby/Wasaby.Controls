@@ -208,13 +208,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                      var prevMenuIds = Object.keys(prevAccordances).reduce(function (r, v) { r[prevAccordances[v]] = v; return r; }, []);
                      var menuIds = Object.keys(accordances).reduce(function (r, v) { r[accordances[v]] = v; return r; }, []);
                      for (var i = 0; i < len; i++) {
-                        var nextId = menuIds[i];
-                        var prevId = prevMenuIds[i];
-                        if (nextId ? prevId !== nextId : prevId) {
-                           var menu = grid.getChildControlByName(_PREFIX_COLUMN_NAME + _PREFIX_COLUMN_FIELD + (i + 1));
-                           this._markMenuSelection(menu, prevId || _ID_MENU_EMPTY, false);
-                           this._markMenuSelection(menu, nextId || _ID_MENU_EMPTY, true);
-                        }
+                        this._markMenuSelection(grid.getChildControlByName(_PREFIX_COLUMN_NAME + _PREFIX_COLUMN_FIELD + (i + 1)), menuIds[i] || _ID_MENU_EMPTY, prevMenuIds[i] || _ID_MENU_EMPTY);
                      }
                   }
                }
@@ -292,18 +286,20 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                commonMenuItems.unshift(firstItem);
                // Размножим commonMenuItems для каждого меню отдельно (чтобы можно было задачть индивидуальные свойства)
                var menuItems = [];
+               var menuCaptions = [];
                var indexes = commonMenuItems.reduce(function (r, v, i) { r[v[idProperty]] = i; return r; }, {});
                for (var i = 0, len = rows[0].length; i < len; i++) {
                   var items = commonMenuItems.slice().map(function (v) { return cMerge({}, v); });
-                  items[indexes[menuIds[i]] || 0].className = _CLASS_MENU_SELECTED;
+                  var selectedItem = items[indexes[menuIds[i]] || 0];
+                  selectedItem.className = _CLASS_MENU_SELECTED;
                   menuItems[i] = items;
+                  menuCaptions[i] = selectedItem[displayProperty];
                }
                var menuConf = {
                   idProperty: idProperty,
                   displayProperty: displayProperty,
                   parentProperty: parentProperty,
-                  namePrefix: _PREFIX_COLUMN_NAME,
-                  caption: options.columnCaption
+                  namePrefix: _PREFIX_COLUMN_NAME
                };
                // Если компонентр уже инициализирован, то можно задать обработчики событий прямо здесь
                if (this.isInitialized()) {
@@ -314,7 +310,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                }
                var title = options.columnTitle;
                var skippedRows = 0 < options.skippedRows ? options.skippedRows : 0;
-               var columns = rows[0].map(function (v, i) { return {field:_PREFIX_COLUMN_FIELD + (i + 1), title:title + ' ' + (i + 1), headTemplate:headTmpl, cellTemplate:cellTmpl, menuConf:menuConf, menuItems:menuItems[i]}; });
+               var columns = rows[0].map(function (v, i) { return {field:_PREFIX_COLUMN_FIELD + (i + 1), title:title + ' ' + (i + 1), headTemplate:headTmpl, cellTemplate:cellTmpl, menuConf:menuConf, menuItems:menuItems[i], menuCaption:menuCaptions[i]}; });
                columns.unshift({field:'id', title:''});
                for (var j = 0; j < rows.length; j++) {
                   rowItems.push(rows[j].reduce(function (r, v, i) { r[_PREFIX_COLUMN_FIELD + (i + 1)] = v; return r; }, {id:j + 1, className:j < skippedRows ? _CLASS_LIGHT_ROW : undefined}));
@@ -357,7 +353,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                   delete accordances[prevField];
                }
                // Добавить класс выделения, установить заголовок
-               this._markMenuSelection(menu, selectedField, true);
+               this._markMenuSelection(menu, selectedField, null/*^^^*/);
                // Зафиксировать соответсвие поля колонке
                if (notEmpty) {
                   accordances[selectedField] = columnIndex;
@@ -372,18 +368,29 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
           * @protected
           * @param {WSControls/Buttons/MenuButton} menu Компонент
           * @param {string|number} selectedField Идентификатор выбранного пункта
-          * @param {boolean} isSelected Пункт выделен
+          * @param {string|number} prevSelectedField Идентификатор предыдущего выбранного пункта
           */
-         _markMenuSelection: function (menu, selectedField, isSelected) {
+         _markMenuSelection: function (menu, selectedField, prevSelectedField) {
             var picker = menu.getPicker();
-            var menuItemInstance = picker.getItemInstance(selectedField);
-            if (menuItemInstance.isVisible()) {
-               menuItemInstance.getContainer()[isSelected ? 'addClass' : 'removeClass'](_CLASS_MENU_SELECTED);
+            var nextItem = picker.getItemInstance(selectedField);
+            if (selectedField !== prevSelectedField) {
+               if (prevSelectedField) {
+                  var prevItem = picker.getItemInstance(prevSelectedField);
+                  if (prevItem.isVisible()) {
+                     prevItem.getContainer().removeClass(_CLASS_MENU_SELECTED);
+                  }
+                  else {
+                     prevItem.setProperty('className', undefined);
+                  }
+               }
+               if (nextItem.isVisible()) {
+                  nextItem.getContainer().addClass(_CLASS_MENU_SELECTED);
+               }
+               else {
+                  nextItem.setProperty('className', _CLASS_MENU_SELECTED);
+               }
             }
-            else {
-               menuItemInstance.setProperty('className', isSelected ? _CLASS_MENU_SELECTED : undefined);
-            }
-            menu.setCaption(isSelected ? menuItemInstance.getCaption() : this._options.columnCaption);
+            menu.setCaption(nextItem.getCaption());
          },
 
          /**
