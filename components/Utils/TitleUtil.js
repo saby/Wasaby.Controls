@@ -10,10 +10,15 @@ define('SBIS3.CONTROLS/Utils/TitleUtil', ['SBIS3.CONTROLS/Utils/GetTextWidth', '
        */
       setTitle: function(container) {
          var innerText;
+         var style;
+         var width;
          container = container && container.get ? container.get(0) : container;
          if (container) {
+            style = window.getComputedStyle(container);
+            width = parseInt(style.width, 10);
             innerText = container.innerText;
-            if (!container.getAttribute('title') && getTextWidth(escapeHtml(innerText)) > container.clientWidth) {
+
+            if (!container.getAttribute('title') && getTextWidth(escapeHtml(innerText), style.fontSize) > width) {
                container.setAttribute('title', innerText);
             }
          }
