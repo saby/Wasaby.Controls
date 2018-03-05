@@ -22,7 +22,7 @@ define('SBIS3.CONTROLS/RichEditor',
        * @control
        *
        * @demo SBIS3.CONTROLS.Demo.RichEditorDemo В следующем примере первый контрол - SBIS3.CONTROLS.RichEditor.
-       * Ниже добавлен контрол SBIS3.CONTROLS.RichEditorToolbar, который связан с контролом SBIS3.CONTROLS/RichEditor/Components/RichTextArea с помощью метода {@link SBIS3.CONTROLS/RichEditor/Components/ToolbarBase#setLinkedEditor}.
+       * Ниже добавлен контрол SBIS3.CONTROLS/RichEditor/Components/Toolbar, который связан с контролом SBIS3.CONTROLS/RichEditor/Components/RichTextArea с помощью метода {@link SBIS3.CONTROLS/RichEditor/Components/ToolbarBase#setLinkedEditor}.
        *
        * @category Input
        */
@@ -112,7 +112,7 @@ define('SBIS3.CONTROLS/RichEditor',
          /**
           * Возращает элемент тулбара с указанным именем или false (если он отсутствует)
           * @param {String} name Имя элемента
-          * @returns {SBIS3.CORE.Button|SBIS3.CORE.MenuButton|Boolean}
+          * @returns {Deprecated/Controls/Button/Button|Boolean}
           * @deprecated
           */
          getToolbarItem: function(buttonName){

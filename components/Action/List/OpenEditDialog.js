@@ -72,7 +72,7 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
       $protected: {
          _options: {
             /**
-             * @cfg {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} Устанавливает список, связанный с диалогом редактирования.
+             * @cfg {*|SBIS3.CONTROLS/Mixins/DSMixin|WS.Data/Collection/IList} Устанавливает список, связанный с диалогом редактирования.
              * @remark
              * Для связанного списка автоматическиприменяется <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/">синхронизация изменений</a>.
              * @see setLinkedObject
@@ -114,7 +114,7 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
        * Устанавливает список, связанный с диалогом редактирования.
        * @remark
        * Для связанного списка автоматическиприменяется <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/">синхронизация изменений</a>.
-       * @param {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/">списка</a>.
+       * @param {*|SBIS3.CONTROLS/Mixins/DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/">списка</a>.
        * @see linkedObject
        * @see getLinkedObject
        */
@@ -125,7 +125,7 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
         * Возвращает экземпляр класса списка, который связан с диалогом редактирования.
         * @remark
         * Для связанного списка автоматическиприменяется <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/">синхронизация изменений</a>.
-        * @returns {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/">списка</a>.
+        * @returns {*|SBIS3.CONTROLS/Mixins/DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="/doc/platform/developmentapl/interface-development/components/list/list-settings/">списка</a>.
         * @see linkedObject
         * @see setLinkedObject
         */

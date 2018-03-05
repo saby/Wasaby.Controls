@@ -854,13 +854,13 @@ define('SBIS3.CONTROLS/FormController', [
       /**
        * Оповещает экземпляр класса действия (см. {@link SBIS3.CONTROLS/Action/List/OpenEditDialog}) о произошедшем событии.
        * @remark
-       * Логика обработки такого события, которая по умолчанию предопределена классом SBIS3.CONTROLS.FormController, не будет выполнена.
+       * Логика обработки такого события, которая по умолчанию предопределена классом SBIS3.CONTROLS/FormController, не будет выполнена.
        * Например,
        * <pre>
        *     // отменяется логика сохранения записи, предустановленная в FormController
        *     this.sendCommand('notify', 'onUpdateModel', someParams);
        * </pre>
-       * Логика обработки события должна быть определена разработчиком в SBIS3.CONTROLS.Action.OpenEditDialog, о чем подробнее вы можете прочитать в <a href='/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/'>этом разделе</a>.
+       * Логика обработки события должна быть определена разработчиком в SBIS3.CONTROLS/Action/List/OpenEditDialog, о чем подробнее вы можете прочитать в <a href='/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/'>этом разделе</a>.
        * @param {String} eventName Имя события: onUpdateModel, onReadModel,onCreateModel или onDestroyModel.
        * @param {*} additionalData Данные, которые должны быть переданы в качестве аргументов события.
        * @command notify
