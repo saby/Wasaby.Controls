@@ -5,9 +5,10 @@
 define(
    [
       'Controls/Controllers/_Search',
-      'WS.Data/Source/Memory'
+      'WS.Data/Source/Memory',
+      'Core/Deferred'
    ],
-   function (Search, Memory) {
+   function (Search, Memory, Deferred) {
       
       'use strict';
       
@@ -101,6 +102,26 @@ define(
                return result;
             });
          });
+   
+         it('error Search', function(done) {
+            var sourceErr = new Memory();
+            sourceErr.query = function() {
+               return Deferred.fail();
+            };
+            var search  = new Search(
+               {
+                  source: sourceErr,
+                  searchDelay: 50,
+                  navigation: navigation
+               }
+            );
+            var searchDef = search.search({name: 'Sasha'});
+            searchDef.addErrback(function(err) {
+               done();
+               return err;
+            });
+      
+         });
          
          it('check search navigation', function(done) {
             var search  = new Search(
@@ -120,7 +141,7 @@ define(
          
          it('check wrong params', function(done) {
             try {
-               new Search();
+               new Search({});
             } catch (e) {
                done();
             }
