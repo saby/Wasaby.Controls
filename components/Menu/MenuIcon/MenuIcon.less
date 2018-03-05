@@ -21,7 +21,12 @@
    .justify-content(center);
 }
 
-.controls-MenuIcon-icon_standard_offset_default {
+.controls-MenuIcon-icon_standard_offset_16, .controls-MenuIcon-icon_standard_offset_small {
+   left: @left_MenuIcon_standard_offset_s;
+   top: @top_MenuIcon_standard_offset_s;
+}
+
+.controls-MenuIcon-icon_standard_offset_24, .controls-MenuIcon-icon_standard_offset_medium {
    left: @left_MenuIcon_standard_offset_default;
    top: @top_MenuIcon_standard_offset_default;
 }
@@ -75,12 +80,25 @@
       margin: @margin_MenuIcon_border-24;
    }
    &.controls-Menu__hide-menu-header{
-      margin: -7px 0 0 -13px;
+      margin: @margin_MenuIcon-hideHeader;
+      &.controls-Menu__offset-16, .controls-Menu__offset-small {
+         margin: @margin_MenuIcon-hideHeader_offset-s;
+      }
       &.controls-IconButton__round-border-24 {
          margin: @margin_MenuIcon-hideHeader-round24;
          .controls-MenuItem__text {
             margin: @margin_MenuIcon-hideHeader-round24_text;
          }
+      }
+   }
+   &.controls-Menu_offset_icon-24_hideHeader {
+      .controls-MenuItem__text {
+         margin: @margin_MenuIcon-hideHeader-icon24_text;
+      }
+   }
+   &.controls-Menu_offset_icon-16_hideHeader {
+      .controls-MenuItem__text {
+         margin: @margin_MenuIcon-hideHeader-icon16_text;
       }
    }
 }

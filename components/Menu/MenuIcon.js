@@ -69,9 +69,11 @@ define('SBIS3.CONTROLS/Menu/MenuIcon', [
 
 
       _modifyOptions : function(options, parsedOptions, attrToMerge) {
-         var opts = MenuIcon.superclass._modifyOptions.apply(this, arguments),
+         var self = this,
+             opts = MenuIcon.superclass._modifyOptions.apply(this, arguments),
              className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || opts.className || '',
-             sizes = ['16', '24', '32', 'small', 'medium', 'large'];
+             sizes = ['16', '24', '32', 'small', 'medium', 'large'],
+             iconSize;
 
          opts._type = 'IconButton';
          opts.pickerClassName += ' controls-MenuIcon__Menu';
@@ -97,14 +99,21 @@ define('SBIS3.CONTROLS/Menu/MenuIcon', [
          }
 
          if (opts.icon) {
-             sizes.forEach(function(size) {
-                if(opts.icon.indexOf('icon-' + size) !== -1) {
-                    opts.pickerClassName += ' controls-Menu_offset_icon-' + size;
-                }
-             });
+            sizes.forEach(function(size) {
+               if (opts.icon.indexOf('icon-' + size) !== -1) {
+                  iconSize = size;
+               }
+            });
+            if (iconSize) {
+               opts.pickerClassName += ' controls-Menu_offset_icon-' + iconSize + (self._hideHeader ? '_hideHeader' : '') + (opts.style === 'bordered' ? '_bordered' : '');
+            }
+            if (iconSize && (opts.style !== 'bordered')) {
+               opts.size = iconSize;
+            }
          }
-         if(!!opts.size) {
-             opts.pickerClassName += ' controls-Menu__offset-' + opts.size;
+
+         if (!!opts.size) {
+            opts.pickerClassName += ' controls-Menu__offset-' + opts.size;
          }
 
          if (opts.icon && (opts.icon.indexOf('icon-24') !== -1 || opts.icon.indexOf('icon-large') !== -1) && !this._hideHeader){
