@@ -1,4 +1,4 @@
-
+<ws:if data="{{ enabled }}">
    <input
       name="input"
       type="{{ type }}"
@@ -8,3 +8,7 @@
       autocomplete="off"
       required="true"
    />
+</ws:if>
+<ws:else>
+   <div class="controls-InputRender__field">{{value}}</div>
+</ws:else>
