@@ -38,7 +38,8 @@
                        controls-InputArea__realField
                        controls-InputRender__field
                        {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}
-                       controls-InputArea__field_size_{{_options.size || 'default'}}"
+                       controls-InputArea__field_size_{{_options.size || 'default'}}
+                       controls-InputArea__field_paddingY"
                      value="{{ _options.value }}"
                      on:keydown="_keyDownHandler()"
                      on:focus="_focusHandler()"
@@ -48,12 +49,17 @@
                <ws:else>
                   <ws:partial
                      template="disabledArea"
-                     attr:class="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
+                     attr:class="controls-InputArea__field
+                     controls-InputArea__realField
+                     controls-InputRender__field
+                     {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}
+                     controls-InputArea__field_size_{{_options.size || 'default'}}
+                     controls-InputArea__field_paddingY"
                      value="{{ _options.value }}"
                   />
                </ws:else>
 
-               <div class="controls-fakeTextArea__firstWrapper">
+               <div class="controls-fakeTextArea__firstWrapper controls-InputArea__field_paddingY">
                   <div class="controls-fakeTextArea__secondWrapper controls-fakeTextArea__secondWrapper_size_{{_options.size || 'default'}}">
                      <div
                         name="fakeArea"
