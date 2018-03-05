@@ -85,6 +85,11 @@ define('Controls/Input/Area', [
 
       _multiline: undefined,
 
+      constructor: function(options) {
+         Area.superclass.constructor.call(this, options);
+         this._multiline = options.minLines > 1;
+      },
+
       _afterMount: function() {
          Area.superclass._afterMount.apply(this, arguments);
          _private.updateScroll.call(this);
