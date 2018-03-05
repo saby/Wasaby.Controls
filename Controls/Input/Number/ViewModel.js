@@ -176,7 +176,7 @@ define('Controls/Input/Number/ViewModel',
                this._options.onlyPositive = options.onlyPositive;
                this._options.integersLength = options.integersLength;
                this._options.precision = options.precision;
-               if (parseFloat(this._options.value) !== options.value) {
+               if (!isNaN(parseFloat(this._options.value)) && parseFloat(this._options.value) !== options.value) {
                   this._options.value = options.value !== undefined ? String(options.value) : '';
                }
             }
