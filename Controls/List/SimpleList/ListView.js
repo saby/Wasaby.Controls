@@ -23,7 +23,6 @@ define('Controls/List/SimpleList/ListView', [
 
    var ListView = BaseControl.extend(
       {
-         _controlName: 'Controls/List/ListControl/ListView',
 
 
          _listModel: null,

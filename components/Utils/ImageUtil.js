@@ -5,6 +5,7 @@ define('SBIS3.CONTROLS/Utils/ImageUtil',['Core/Deferred', 'Core/constants'], fun
    'use strict';
    /**
     * @class SBIS3.CONTROLS/Utils/ImageUtil
+    * @author Крайнов Д.О.
     * @public
     */
    var ImageUtil = /** @lends SBIS3.CONTROLS/Utils/ImageUtil.prototype */ {

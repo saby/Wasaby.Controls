@@ -31,7 +31,7 @@ define('SBIS3.CONTROLS/ListView',
    'SBIS3.CONTROLS/ListView/resources/CommonHandlers',
    'SBIS3.CONTROLS/Utils/ImitateEvents',
    'Lib/LayoutManager/LayoutManager',
-   'Core/helpers/markup-helpers',
+   'Core/helpers/Hcontrol/configStorage',
    'SBIS3.CONTROLS/Utils/ScrollWatcher',
    'WS.Data/Collection/IBind',
    'tmpl!SBIS3.CONTROLS/ListView/resources/ListViewGroupBy',
@@ -70,7 +70,7 @@ define('SBIS3.CONTROLS/ListView',
 ],
    function (ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, format, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
-    TemplateUtil, CommonHandlers, ImitateEvents, LayoutManager, mHelpers,
+    TemplateUtil, CommonHandlers, ImitateEvents, LayoutManager, configStorage,
     ScrollWatcher, IBindCollection, groupByTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
     Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, LocalStorageNative, forAliveOnly, memoize, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove, once) {
      'use strict';
@@ -1349,7 +1349,7 @@ define('SBIS3.CONTROLS/ListView',
          },
          _setScrollPagerPosition: function(){
             var right;
-            // Если таблица находится в SBIS3.CONTROLS.ScrollContainer, то пейджер находится в его скролируемом
+            // Если таблица находится в SBIS3.CONTROLS/ScrollContainer, то пейджер находится в его скролируемом
             // контенере и спозиционирован абсолютно и пересчет позиции не требуется.
             if (!this._inScrollContainerControl) {
                // На ios на маленьком зуме все нормально. На большом - элементы немного смещаются,
@@ -2647,7 +2647,7 @@ define('SBIS3.CONTROLS/ListView',
                      obj = {};
                   if (!temp._thisIsInstance) {
                      obj[conf] = shallowClone(temp);
-                     mHelpers.mergeConfigStorage(obj);
+                     configStorage.merge(obj);
                   }
                }
             }
@@ -4216,7 +4216,7 @@ define('SBIS3.CONTROLS/ListView',
                if (this._options.multiselect) {
                   numSelected = this.getSelectedKeys().length;
                }
-               this._pager.updateAmount(this.getItems().getCount(), nextPage, numSelected);
+               this._pager.updateAmount(this.getItems().getCount(), more, numSelected);
             }
          },
          /**

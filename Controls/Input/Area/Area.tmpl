@@ -12,7 +12,7 @@
 </ws:template>
 
 <Controls:Input:resources:InputRender:InputRender
-           size="auto"
+           size="{{ _options.size }}"
            sidePadding="Left"
            multiline="{{ _options.minLines > 1 }}"
            name="inputRender"
@@ -33,7 +33,11 @@
                <ws:if data="{{ isEnabled() }}">
                   <ws:partial
                      template="enabledArea"
-                     attr:class="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
+                     attr:class="controls-InputArea__field
+                       controls-InputArea__realField
+                       controls-InputRender__field
+                       {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}
+                       controls-InputArea__field_size_{{_options.size || 'default'}}"
                      value="{{ _options.value }}"
                      on:keydown="_keyDownHandler()"
                      on:focus="_focusHandler()"
@@ -49,10 +53,10 @@
                </ws:else>
 
                <div class="controls-fakeTextArea__firstWrapper">
-                  <div class="controls-fakeTextArea__secondWrapper">
+                  <div class="controls-fakeTextArea__secondWrapper controls-fakeTextArea__secondWrapper_size_{{_options.size || 'default'}}">
                      <div
                         name="fakeArea"
-                        class="controls-InputArea__field controls-InputArea__fakeField controls-InputRender__field"
+                        class="controls-InputArea__field controls-InputArea__fakeField controls-InputRender__field controls-InputArea__field_size_{{_options.size || 'default'}}"
                         style="{{_options.minLines ? ('min-height: ' + _options.minLines * 100 + '%;')}} {{_options.maxLines ? 'max-height: ' + _options.maxLines * 100 + '%'}}">
                         <span name="fakeAreaValue">{{ _options.value }}</span><br/>
                      </div>

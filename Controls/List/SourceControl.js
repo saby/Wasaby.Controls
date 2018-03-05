@@ -262,7 +262,6 @@ define('Controls/List/SourceControl', [
     */
 
    var SourceControl = Control.extend({
-      _controlName: 'Controls/List/SourceControl',
       _template: SourceControlTpl,
       iWantVDOM: true,
       _isActiveByClick: false,

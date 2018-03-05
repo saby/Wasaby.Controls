@@ -47,7 +47,6 @@ define('Controls/Container/Scroll',
        */
 
       var ScrollContainer = Control.extend({
-         _controlName: 'Controls/Container/Scroll/Scroll',
          _template: template,
          contentHeight: 1,
          scrollBarPosition: 0,

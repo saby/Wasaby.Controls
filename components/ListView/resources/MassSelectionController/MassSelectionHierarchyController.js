@@ -31,14 +31,18 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionH
           _onProjectionChangeAdd: function (newItems) {
              var
                 itemId,
+                contents,
                 addSelection = [],
                 selection = this._selection.getSelection(true),
                 parentProperty = this._options.linkedObject.getParentProperty();
              newItems.forEach(function (item) {
-                itemId = item.getContents().get(this._options.idProperty);
-                if (ArraySimpleValuesUtil.hasInArray(selection.marked, item.getContents().get(parentProperty)) &&
-                   !ArraySimpleValuesUtil.hasInArray(selection.excluded, itemId)) {
-                   addSelection.push(itemId);
+                contents = item.getContents();
+                if (contents.get) {
+                   itemId = contents.get(this._options.idProperty);
+                   if (ArraySimpleValuesUtil.hasInArray(selection.marked, contents.get(parentProperty)) &&
+                      !ArraySimpleValuesUtil.hasInArray(selection.excluded, itemId)) {
+                      addSelection.push(itemId);
+                   }
                 }
              }, this);
              if (addSelection.length) {

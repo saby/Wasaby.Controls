@@ -28,16 +28,16 @@ define(
       /**
        * Календарь отображающий 1 месяц.
        * Предназначен для задания даты или диапазона дат в рамках одного месяца путём выбора.
-       * @class SBIS3.CONTROLS.MonthView
-       * @extends SBIS3.CORE.CompoundControl
+       * @class SBIS3.CONTROLS/Date/MonthView
+       * @extends Lib/Control/CompoundControl/CompoundControl
        * @control
        * @public
        * @author Миронов А.Ю.
        * @demo SBIS3.CONTROLS.Demo.MyMonthView
        *
-       * @mixes SBIS3.CONTROLS.RangeSelectableViewMixin
-       * @mixes SBIS3.CONTROLS.RangeMixin
-       * @mixes SBIS3.CONTROLS.DateRangeMixin
+       * @mixes SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin
+       * @mixes SBIS3.CONTROLS/Mixins/RangeMixin
+       * @mixes SBIS3.CONTROLS/Mixins/DateRangeMixin
        *
        */
       // var selectionTypes = {WEEK: 'week', DAY: 'day'};
@@ -47,7 +47,7 @@ define(
       };
 
       // TODO: нужно ли наследование от FormWidgetMixin ??
-      var MonthView = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin, DateRangeMixin], /** @lends SBIS3.CONTROLS.MonthView.prototype */{
+      var MonthView = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin, DateRangeMixin], /** @lends SBIS3.CONTROLS/Date/MonthView.prototype */{
          _dotTplFn: dotTplFn,
          $protected: {
             _monthViewTableBodyTpl: monthViewTableBodyTpl,

@@ -10,11 +10,11 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
    "SBIS3.CONTROLS/Utils/DataSetToXmlSerializer",
    "SBIS3.CONTROLS/WaitIndicator",
    "WS.Data/Source/SbisService",
-   "Core/helpers/transport-helpers",
+   "Transport/prepareGetRPCInvocationURL",
    "SBIS3.CONTROLS/Utils/PrintDialogHTMLView",
    "SBIS3.CONTROLS/Utils/InformationPopupManager",
    "i18n!SBIS3.CONTROLS/Utils/DataProcessor"
-], function( cExtend, coreClone, EventBus, Deferred, Record, Serializer, WaitIndicator, SbisService, transHelpers, PrintDialogHTMLView, InformationPopupManager) {
+], function( cExtend, coreClone, EventBus, Deferred, Record, Serializer, WaitIndicator, SbisService, prepareGetRPCInvocationURL, PrintDialogHTMLView, InformationPopupManager) {
    /**
     * Обработчик данных для печати и выгрузки(экспорта) в Excel, PDF. Печать осуществляется по готову XSL-шаблону через XSLT-преобразование.
     * Экспорт в Excel и PDF можно выполнить несколькими способами:
@@ -256,7 +256,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
          if (isExcel) {
             params['storage'] = 'excel';
          }
-         window.open(transHelpers.prepareGetRPCInvocationURL( isExcel ? 'FileTransfer' : 'File', 'Download', params, undefined, '/file-transfer/service/'), '_self');
+         window.open(prepareGetRPCInvocationURL( isExcel ? 'FileTransfer' : 'File', 'Download', params, undefined, '/file-transfer/service/'), '_self');
       },
       /**
        * Метод для формирования параметров фильтрации выгружаемого на сервере файла.

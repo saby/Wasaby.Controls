@@ -68,7 +68,6 @@ define('Controls/Input/Text', [
           */
 
       var TextBox = Control.extend({
-         _controlName: 'Controls/Input/Text',
          _template: template,
          _caretPosition: null,
 

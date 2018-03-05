@@ -1,11 +1,10 @@
 define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
    [
-   "Deprecated/Controls/ModalOverlay/ModalOverlay",
    "Core/Deferred",
    "SBIS3.CONTROLS/Button/IconButton",
    "Deprecated/Controls/ModalOverlay/ModalOverlay",
    "Lib/Control/Dialog/Dialog"
-], function( cModalOverlay, Deferred, IconButton, ModalOverlay) {
+], function(Deferred, IconButton, ModalOverlay) {
       /**
        * @mixin SBIS3.CONTROLS/Mixins/EditAtPlaceMixin
        * @public
@@ -114,7 +113,7 @@ define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
             _initializePicker: function(){
                var self = this;
                this.subscribeTo(ModalOverlay, 'onClick', function(event) {
-                  if (this.isVisible() && this._picker._zIndex - cModalOverlay.getZIndex() === 1) {
+                  if (this.isVisible() && this._picker._zIndex - ModalOverlay.getZIndex() === 1) {
                      if (self._requireDialog) {
                         self._openConfirmDialog().addCallback(function (result) {
                            switch (result) {

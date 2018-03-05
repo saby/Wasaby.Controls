@@ -9,7 +9,7 @@ define('SBIS3.CONTROLS/Utils/ScrollWatcher', [
 
    /**
     * @class SBIS3.CONTROLS/Utils/ScrollWatcher
-    * @extends SBIS3.CORE.Abstract
+    * @extends Core/Abstract
     * @author Крайнов Д.О.
     * @public
     */

@@ -8,11 +8,12 @@ define('Controls-demo/Input/Number', [
 
    var VdomDemoNumber = Control.extend({
       _template: template,
+      _placeholder: '',
       _text1: '',
       _tagStyle: '',
-      _integersLength: '',
-      _precision: '',
-      _onlyPositive: '',
+      _integersLength: 5,
+      _precision: 2,
+      _onlyPositive: true,
       _enabled: true
    });
 

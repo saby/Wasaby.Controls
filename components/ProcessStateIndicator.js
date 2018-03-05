@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/ProcessStateIndicator', [
     * Компонент "Идникатор процесса"
     * @class SBIS3.CONTROLS/ProcessStateIndicator
     * @extends Lib/Control/Control
-    * @author Елифантьев Олег Николаевич
+    * @author Журавлев Максим Сергеевич
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment

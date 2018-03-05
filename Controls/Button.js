@@ -102,7 +102,6 @@ define('Controls/Button', [
    };
 
    var Button = Control.extend({
-       _controlName: 'Controls/Button',
        _template: template,
 
        constructor: function (options) {

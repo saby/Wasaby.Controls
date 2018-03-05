@@ -57,7 +57,6 @@ define('Controls/Input/resources/InputRender/InputRender',
 
       var InputRender = Control.extend({
          
-         _controlName: 'Controls/Input/resources/InputRender/InputRender',
          _template: template,
 
          constructor: function (options) {
