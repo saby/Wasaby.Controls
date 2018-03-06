@@ -208,11 +208,12 @@ define('SBIS3.CONTROLS/Action/List/Save', [
                 handlers: {
                     onBeforeShow: function() {
                         this.getLinkedContext().setValue('NumOfRecords', defaultCount);
-                    },
-                    onAfterClose: function(event, count) {
-                        //TODO: временное решение в 110 версию чтобы закрыть критичную ошибку
-                        if (this._printButtonClose) {
-                            result.callback(count);
+                    }
+                },
+                componentOptions: {
+                    handlers: {
+                        onApply: function(event, pageSize){
+                            self.processSelectedPageSize(pageSize);
                         }
                     }
                 }

@@ -29,6 +29,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector', [
       _dotTplFn: dotTplFn,
 
       $constructor: function() {
+          this._publish('onApply');
       },
       init: function(){
          var self = this;
@@ -42,8 +43,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector', [
             var
                numericValue = self._numberTextBox.getNumericValue();
             if (numericValue || self._radioButtons.getSelectedKey() === 'all') {
-               //TODO: временное решение в 110 версию чтобы закрыть критичную ошибку
-               this._printButtonClose = true;
+               self._notify('onApply');
                this.sendCommand('close', numericValue);
             } else {
                InformationPopupManager.showMessageDialog({
