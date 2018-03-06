@@ -21,8 +21,8 @@
    <title key="title">{{ title }}</title>
    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 </head>
-<Controls:Event:Listener name="scrollDetect" register="scroll">
-   <Controls:Event:Listener name="resizeDetect" register="resize">
+<Controls:Event:Listener name="scrollDetect" register="scroll" attr:fixCompatible="1">
+   <Controls:Event:Listener name="resizeDetect" register="resize" attr:fixCompatible="1">
       <body
               class="{{BodyClasses()}} {{_options.bodyClass}} {{_touchclass()}}"
               id="body"
