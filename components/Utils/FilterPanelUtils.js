@@ -126,6 +126,7 @@ define('SBIS3.CONTROLS/Utils/FilterPanelUtils',
          };
          Object.assign(config, addConfig);
 
+         config.handlers = config.handlers || {};
          config.handlers.onKeyPressed = function(event, e) {
             if(e.which === constants.key.esc) {
                this.hide();
