@@ -196,6 +196,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                  */
                validateClass: undefined
             },
+            _scrollContainer: undefined,
+            _dataReview: undefined,
+            _inputControl: undefined,
             _fakeArea: undefined, //textarea для перехода фкуса по табу
             _tinyEditor: undefined, //экземпляр tinyMCE
             _lastHeight: undefined, //последняявысота для UpdateHeight
@@ -245,12 +248,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                return e;
             });
             this._dChildReady.push(this._readyContolDeffered);
-            this._dataReview = this._container.find('.controls-RichEditor__dataReview');
             this._tinyReady = new Deferred();
+            this._scrollContainer = this._container.find('.controls-RichEditor__scrollContainer');
+            this._dataReview = this._container.find('.controls-RichEditor__dataReview');
             this._inputControl = this._container.find('.controls-RichEditor__editorFrame');
             this._fakeArea = this._container.find('.controls-RichEditor__fakeArea');
             this._initInputHeight();
-            this._options.editorConfig.selector = '#' + this.getId() + ' > .controls-RichEditor__editorFrame';
+            this._options.editorConfig.selector = '#' + this.getId() + ' .controls-RichEditor__editorFrame';
             this._options.editorConfig.fixed_toolbar_container = '#' + this.getId() + ' > .controls-RichEditor__fakeArea';
             this._options.editorConfig.setup = function(editor) {
                self._tinyEditor = editor;
@@ -366,19 +370,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           * @param {Number} value Минимальная высота поля редактора
           */
          setMinimalHeight: function(value) {
-            var changeBlock =  this._options.editorConfig.inline ? this._inputControl : $(this._tinyEditor.iframeElement);
-            if (this._options.autoHeight && typeof value === 'number') {
-               this._options.minimalHeight = value;
-               if (this._options.minimalHeight) {
-                  if (this._options.maximalHeight && this._options.maximalHeight < value) {
-                     this._options.maximalHeight = value;
+            var options = this._options;
+            if (options.autoHeight && typeof value === 'number') {
+               options.minimalHeight = value || '';
+               if (value) {
+                  if (options.maximalHeight && options.maximalHeight < value) {
+                     options.maximalHeight = value;
                   }
-               } else {
-                  this._options.minimalHeight = '';
                }
+               var changeBlock = options.editorConfig.inline ? (this._scrollContainer || this._inputControl) : $(this._tinyEditor.iframeElement);
                changeBlock.css({
-                  'max-height': this._options.maximalHeight,
-                  'min-height': this._options.minimalHeight
+                  'max-height': options.maximalHeight,/*@@@*/
+                  'min-height': options.minimalHeight
                });
             }
          },
@@ -388,19 +391,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           * @param {Number} value Максимальная высота поля редактора
           */
          setMaximalHeight: function(value) {
-            var changeBlock =  this._options.editorConfig.inline ? this._inputControl : $(this._tinyEditor.iframeElement);
-            if (this._options.autoHeight && typeof value === 'number') {
-               this._options.maximalHeight = value;
-               if (this._options.maximalHeight) {
-                  if (this._options.minimalHeight && this._options.maximalHeight < this._options.minimalHeight) {
-                     this._options.minimalHeight = value;
+            var options = this._options;
+            if (options.autoHeight && typeof value === 'number') {
+               options.maximalHeight = value || '';
+               if (value) {
+                  if (options.minimalHeight && options.maximalHeight < options.minimalHeight) {
+                     options.minimalHeight = value;
                   }
-               } else {
-                  this._options.maximalHeight = '';
                }
+               var changeBlock =  options.editorConfig.inline ? (this._scrollContainer || this._inputControl) : $(this._tinyEditor.iframeElement);
                changeBlock.css({
-                  'max-height': this._options.maximalHeight,
-                  'min-height': this._options.minimalHeight
+                  'max-height': options.maximalHeight,/*@@@*/
+                  'min-height': options.minimalHeight
                });
             }
          },
@@ -2256,7 +2258,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                         css['min-height'] = opts.minimalHeight;
                      }
                      if (hasMax) {
-                        css['max-height'] = opts.maximalHeight;
+                        css['max-height'] = opts.maximalHeight;/*@@@*/
                      }
                   }
                }
@@ -2266,7 +2268,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   };
                }
                if (css) {
-                  this._dataReview.css(css);
+                  (this._scrollContainer || this._dataReview).css(css);
                }
                this._updateDataReview(this.getText() || '');
                this._dataReview.toggleClass('ws-hidden', enabled);

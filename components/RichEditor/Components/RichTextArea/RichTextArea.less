@@ -94,7 +94,6 @@
       z-index: 1;
       width: 100%;
       height: 100%;
-      overflow-y: auto;
       padding: 2px 0 2px 4px; /* отступы у параграфов через padding родительского блока без first-child */
       border: 1px solid transparent;
       box-sizing: border-box;
@@ -108,7 +107,6 @@
       }
    }
    .controls-RichEditor__editorFrame.ws-basic-style {
-      overflow: auto;
       padding: 2px 0 2px 4px;
       box-sizing: border-box;
       word-wrap: break-word;
@@ -123,6 +121,14 @@
          }
       }
    }
+
+   .controls-RichEditor__scrollContainer {
+      .controls-RichEditor__dataReview,
+      .controls-RichEditor__editorFrame {
+         height: 100%;
+      }
+   }
+
    img {
       //TODO: увелисчить вес селектора
       outline: none !important;
