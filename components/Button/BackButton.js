@@ -151,7 +151,7 @@ define('SBIS3.CONTROLS/Button/BackButton',
          this._link.setCaption(caption);
          // Чтобы не тянуть в зависимости htmlToText из Deprecated/helpers/string-helpers,
          // выполним replace из него прямо тут
-         this.setTooltip(escapeTagsFromStr((caption || '').replace(/<br>/g, '\n'), '\\w+'));
+         this.setTooltip(caption || '');
          this._options.caption = caption;
          this._container.toggleClass('controls-BackButton__empty', isEmptyCaption);
       },
