@@ -22,8 +22,8 @@ define('SBIS3.CONTROLS/Utils/GetTextWidth', function () {
      * @public
      * @author Мальцев Алексей Александрович
      */
-    return function (text) {
-        var hiddenStyle = "left:-10000px;top:-10000px;height:auto;width:auto;position:absolute;";
+    return function (text, fontSize) {
+        var hiddenStyle = "left:-10000px;top:-10000px;height:auto;width:auto;position:absolute;" + (fontSize ? ('font-size: ' + fontSize + ';') : '');
         var clone = document.createElement('div');
 
         // устанавливаем стили у клона, дабы он не мозолил глаз.
