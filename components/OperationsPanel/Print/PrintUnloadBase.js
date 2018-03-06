@@ -182,10 +182,14 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
                   //this.getLinkedContext().setValue('NumOfRecords', self._getView()._dataSet.getCount()); Хочется, чтобы было так
                   //TODO Но пришлось сделать так:
                   this.getChildControlByName('controls-MassAmountSelector').getContext().setValue('NumOfRecords', numOfRecords);
-               },
-               onAfterClose: function(event, pageSize){
-                  self.processSelectedPageSize(pageSize);
                }
+            },
+            componentOptions: {
+                handlers: {
+                    onApply: function(event, pageSize){
+                        self.processSelectedPageSize(pageSize);
+                    }
+                }
             }
          });
       },
