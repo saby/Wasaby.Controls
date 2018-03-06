@@ -502,3 +502,12 @@ body {
   background-color: rgba(0,0,0,.5);
   cursor: pointer;
 }
+
+.ws-is-webkit:not(.ws-is-mobile-android), .ws-is-mobile-chrome-ios {
+  .controls-BreadCrumbs{
+    // необходимо переверстать хлебные крошки на флекс
+    &.controls-BreadCrumbs__smallItems .controls-BreadCrumbs__arrow {
+      top: @bread-crumb-crumb-home-top;
+    }
+  }
+}
