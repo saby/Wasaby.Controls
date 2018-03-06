@@ -210,7 +210,10 @@ define('SBIS3.CONTROLS/Action/List/Save', [
                         this.getLinkedContext().setValue('NumOfRecords', defaultCount);
                     },
                     onAfterClose: function(event, count) {
-                        result.callback(count);
+                        //TODO: временное решение в 110 версию чтобы закрыть критичную ошибку
+                        if (this._printButtonClose) {
+                            result.callback(count);
+                        }
                     }
                 }
             });

@@ -184,7 +184,10 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
                   this.getChildControlByName('controls-MassAmountSelector').getContext().setValue('NumOfRecords', numOfRecords);
                },
                onAfterClose: function(event, pageSize){
-                  self.processSelectedPageSize(pageSize);
+                   //TODO: временное решение в 110 версию чтобы закрыть критичную ошибку
+                   if (this._printButtonClose) {
+                       self.processSelectedPageSize(pageSize);
+                   }
                }
             }
          });
