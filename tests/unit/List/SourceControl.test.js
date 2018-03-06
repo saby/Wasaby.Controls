@@ -410,5 +410,132 @@ define([
             done();
          }, 100)
       });
+
+      it('__onPagingArrowClick', function (done) {
+         var rs = new RecordSet({
+            idProperty: 'id',
+            rawData: data
+         });
+
+         var listViewModel = new ListViewModel ({
+            items : rs,
+            idProperty: 'id'
+         });
+
+         var source = new MemorySource({
+            idProperty: 'id',
+            data: data
+         });
+
+         var cfg = {
+            viewName : 'Controls/List/SimpleList/ListView',
+            source: source,
+            listViewModel: listViewModel,
+            navigation: {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 6,
+                  page: 0,
+                  mode: 'totalCount'
+               },
+               view : 'infinity',
+               viewConfig: {
+                  pagingMode: 'direct'
+               }
+            }
+         };
+         var ctrl = new SourceControl(cfg);
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+
+         //эмулируем появление скролла
+         SourceControl._private.onScrollShow(ctrl);
+
+         //скроллпэйджиг контроллер создается асинхронном
+         setTimeout(function(){
+            ctrl._notify = function(eventName, type) {
+               result = type;
+            };
+
+            //прокручиваем к низу, проверяем состояние пэйджинга
+            result = false;
+            ctrl.__onPagingArrowClick({}, 'End');
+            assert.equal('bottom', result[0], 'Wrong state of scroll after clicking to End');
+
+            //прокручиваем к верху, проверяем состояние пэйджинга
+            ctrl.__onPagingArrowClick({}, 'Begin');
+            assert.equal('top', result[0], 'Wrong state of scroll after clicking to Begin');
+
+            //прокручиваем страницу вверх и вниз, проверяем состояние пэйджинга
+            ctrl.__onPagingArrowClick({}, 'Next');
+            assert.equal('pageDown', result[0], 'Wrong state of scroll after clicking to Next');
+
+            ctrl.__onPagingArrowClick({}, 'Prev');
+            assert.equal('pageUp', result[0], 'Wrong state of scroll after clicking to Prev');
+
+            done();
+         }, 100)
+      });
+
+      it('__onEmitScroll', function (done) {
+         var rs = new RecordSet({
+            idProperty: 'id',
+            rawData: data
+         });
+
+         var listViewModel = new ListViewModel ({
+            items : rs,
+            idProperty: 'id'
+         });
+
+         var source = new MemorySource({
+            idProperty: 'id',
+            data: data
+         });
+
+         var cfg = {
+            viewName : 'Controls/List/SimpleList/ListView',
+            source: source,
+            listViewModel: listViewModel,
+            navigation: {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 6,
+                  page: 0,
+                  mode: 'totalCount'
+               },
+               view : 'infinity',
+               viewConfig: {
+                  pagingMode: 'direct'
+               }
+            }
+         };
+         var ctrl = new SourceControl(cfg);
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+
+         //эмулируем появление скролла
+         SourceControl._private.onScrollShow(ctrl);
+
+         //скроллпэйджиг контроллер создается асинхронном
+         setTimeout(function(){
+            ctrl._notify = function(eventName, type) {
+               result = type;
+            };
+
+            //прогоняем все варианты, без проверки, т.к. все ветки уже тестируются выше
+            ctrl.__onEmitScroll({}, 'loadTop');
+            ctrl.__onEmitScroll({}, 'loadBottom');
+            ctrl.__onEmitScroll({}, 'listTop');
+            ctrl.__onEmitScroll({}, 'listBottom');
+            ctrl.__onEmitScroll({}, 'scrollMove', {scrollTop: 200});
+            ctrl.__onEmitScroll({}, 'canScroll');
+            ctrl.__onEmitScroll({}, 'cantScroll');
+
+            ctrl.reload();
+
+            done();
+         }, 100)
+      });
    })
 });
