@@ -13,7 +13,7 @@
 
 <Controls:Input:resources:InputRender:InputRender
            size="{{ _options.size }}"
-           sidePadding="Left"
+           sidePadding="AreaLeft"
            multiline="{{ _options.minLines > 1 }}"
            name="inputRender"
            value="{{ _options.value }}"
@@ -38,8 +38,7 @@
                        controls-InputArea__realField
                        controls-InputRender__field
                        {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}
-                       controls-InputArea__field_size_{{_options.size || 'default'}}
-                       controls-InputArea__field_verticalPadding"
+                       controls-InputArea__field_size_{{_options.size || 'default'}}"
                      value="{{ _options.value }}"
                      on:keydown="_keyDownHandler()"
                      on:focus="_focusHandler()"
@@ -53,8 +52,7 @@
                         controls-InputArea__realField
                         controls-InputRender__field
                         {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}
-                        controls-InputArea__field_size_{{_options.size || 'default'}}
-                        controls-InputArea__field_verticalPadding"
+                        controls-InputArea__field_size_{{_options.size || 'default'}}"
                      value="{{ _options.value }}"
                   />
                </ws:else>

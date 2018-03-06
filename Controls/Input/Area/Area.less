@@ -43,10 +43,14 @@
 
 .controls-InputArea__realField {
    resize: none;
-   height: 100%;
    position: absolute;
-   top: 0;
    box-sizing: border-box;
+
+   //Костыли, необходимые чтобы сделать вертикальные отступы при этом не сдвинув скроллбар и не сбив базовую линию
+   top: -@vertical-padding_InputArea-field;
+   padding-top: @vertical-padding_InputArea-field;
+   height: calc(100% ~"+" 2 * @vertical-padding_InputArea-field);
+   padding-bottom: @vertical-padding_InputArea-field;
 }
 
 .controls-InputArea__realField_scroll-hidden {
@@ -93,11 +97,6 @@
 .controls-InputArea__placeholder_multiline {
    .align-items(baseline);
    box-sizing: border-box;
-}
-
-.controls-InputArea__field_verticalPadding {
-   padding-top: @vertical-padding_InputArea-field;
-   padding-bottom: @vertical-padding_InputArea-field;
 }
 
 //В IE будем показывать текст из fakeArea, так как иначе при быстром вводе textArea не успевает обновлять размеры и дергается
