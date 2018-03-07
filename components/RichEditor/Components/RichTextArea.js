@@ -1089,17 +1089,21 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                     href = 'http://' + href;
                                  }
                                  var dom = editor.dom;
+                                 var done;
                                  if (element && element.nodeName === 'A' && element.className.indexOf('ws-focus-out') < 0) {
                                     if (href) {
                                        dom.setAttribs(element, {
                                           target: '_blank',
                                           href: escapeHtml(href)
                                        });
-                                    } else {
+                                    }
+                                    else {
                                        editor.execCommand('unlink');
                                     }
-                                    editor.undoManager.add();
-                                 } else if (href) {
+                                    done = true;
+                                 }
+                                 else
+                                 if (href) {
                                     linkAttrs.href = href;
                                     selection.setRng(range);
                                     if (selection.getContent() === '' || (fre._isOnlyTextSelected() && cConstants.browser.firefox)) {
@@ -1108,7 +1112,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                        // Для MSIE принудительно смещаем курсор ввода после вставленной ссылки
                                        // 1174853380 https://online.sbis.ru/opendoc.html?guid=77405679-2b2b-42d3-8bc0-d2eee745ea23
                                        editor.insertContent(cConstants.browser.isIE ? linkHtml + '&#65279;&#8203;' : linkHtml);
-                                    } else {
+                                    }
+                                    else {
                                        editor.execCommand('mceInsertLink', false, linkAttrs);
                                        if (cConstants.browser.firefox) {
                                           // В firefox каретка(курсор ввода) остаётся (и просачивается) внутрь элемента A, нужно принудительно вывести её наружу, поэтому:
@@ -1123,6 +1128,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                           }
                                        }
                                     }
+                                    done = true;
+                                 }
+                                 if (done) {
                                     editor.undoManager.add();
                                  }
                                  self.close();
