@@ -23,6 +23,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel',
    'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/CodeSampleDialog/CodeSampleDialog',
    'Core/EventBus',
+
+   'tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextAreaInner',
    "css!SBIS3.CORE.RichContentStyles",
    "i18n!SBIS3.CONTROLS/RichEditor",
    'css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextArea'
