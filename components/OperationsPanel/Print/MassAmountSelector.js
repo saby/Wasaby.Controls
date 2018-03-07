@@ -57,7 +57,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector', [
             var
                numericValue = self._numberTextBox.getNumericValue();
             if (numericValue || self._radioButtons.getSelectedKey() === 'all') {
-               self._notify('onApply');
+               self._notify('onApply', numericValue);
                this.sendCommand('close', numericValue);
             } else {
                InformationPopupManager.showMessageDialog({
