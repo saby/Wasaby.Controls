@@ -2066,7 +2066,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                       var selection = window.getSelection ? window.getSelection() : null;
                       if (selection) {
-                          selection.removeAllRanges();
+                          selection.collapse($img[0]);
                       }
                   });
                });
