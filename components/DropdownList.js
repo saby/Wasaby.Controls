@@ -1019,6 +1019,7 @@ define('SBIS3.CONTROLS/DropdownList',
             var type = this._options.type,
                 isFastDataFilterType = type == 'fastDataFilter';
             return {
+               _checkClickByTap: true,
                corner: 'tl',
                verticalAlign: {
                   side: 'top'

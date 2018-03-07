@@ -2050,6 +2050,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                });
                this._imageOptionsPanel.subscribe('onImageChange', function(event, fileobj){
                   var $img = this.getTarget();
+                  //Сбросим ширину и высоту, т.к. они могут остаться от предыдущей картинки
+                  $img[0].style.width = '';
+                  $img[0].style.height = '';
                   var width = $img[0].style.width || ($img.width() + 'px');
                   var isPixels = width.charAt(width.length - 1) !== '%';
                   self._makeImgPreviewerUrl(fileobj, +width.substring(0, width.length - (isPixels ? 2 : 1)), null, isPixels).addCallback(function (url) {
@@ -2064,6 +2067,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      if (uuid) {
                         self._images[uuid] = false;
                      }
+                      var selection = window.getSelection ? window.getSelection() : null;
+                      if (selection) {
+                          selection.collapse($img[0]);
+                      }
                   });
                });
                this._imageOptionsPanel.subscribe('onImageDelete', function () {

@@ -990,6 +990,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             this._setRangeSelectionType(selectionTypes.years);
             this._updateYearsBar();
             this._onSelectionEnded();
+            this._monthRangePicker._clearMonthSelection();
          } else {
             this._onRangeItemElementClick(range[0], range[1]);
          }
