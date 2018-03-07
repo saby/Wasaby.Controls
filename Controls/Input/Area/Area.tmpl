@@ -14,7 +14,7 @@
 <Controls:Input:resources:InputRender:InputRender
            size="{{ _options.size }}"
            sidePadding="Left"
-           multiline="{{ _options.minLines > 1 }}"
+           multiline="{{ _multiline }}"
            name="inputRender"
            value="{{ _options.value }}"
            selectOnClick="{{_options.selectOnClick}}"
@@ -54,7 +54,7 @@
                </ws:else>
 
                <div class="controls-fakeTextArea__firstWrapper">
-                  <div class="controls-fakeTextArea__secondWrapper controls-fakeTextArea__secondWrapper_size_{{_options.size || 'default'}}">
+                  <div class="controls-fakeTextArea__secondWrapper controls-fakeTextArea__secondWrapper_size_{{_options.size || 'default'}}" name="fakeAreaWrapper">
                      <div
                         name="fakeArea"
                         class="controls-InputArea__field controls-InputArea__fakeField controls-InputRender__field controls-InputArea__field_size_{{_options.size || 'default'}}"
