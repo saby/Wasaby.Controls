@@ -60,17 +60,18 @@
    </div>
    <SBIS3.CONTROLS:ScrollContainer class="controls-Browser-ColumnsEditor-Editing-Area__body controls-ScrollContainer__flex">
       <ws:content>
-         <SBIS3.CONTROLS:CheckBox:Group
-            if="{{ _optsFixed.items && _optsFixed.items.length }}"
-            class="controls-ButtonGroup__vertical controls-Browser-ColumnsEditor-Editing-Area__FixedList"
-            name="controls-Browser-ColumnsEditor-Editing-Area__FixedList"
-            items="{{ _optsFixed.items }}"
-            idProperty="id"
-            displayProperty="title"
-            enabled="{{ false }}"
-            selectedKeys="{{ _optsFixed.markedKeys }}"
-            multiselect="{{ true }}"
-         />
+         <ws:if data="{{ _optsFixed.items && _optsFixed.items.length }}">
+            <SBIS3.CONTROLS:CheckBox:Group
+               class="controls-ButtonGroup__vertical controls-Browser-ColumnsEditor-Editing-Area__FixedList"
+               name="controls-Browser-ColumnsEditor-Editing-Area__FixedList"
+               items="{{ _optsFixed.items }}"
+               idProperty="id"
+               displayProperty="title"
+               enabled="{{ false }}"
+               selectedKeys="{{ _optsFixed.markedKeys }}"
+               multiselect="{{ true }}"
+            />
+         </ws:if>
          <SBIS3.CONTROLS:ListView
             class="controls-Browser-ColumnsEditor-Editing-Area__SelectableList{{moveColumns ? ' controls-Browser-ColumnsEditor-Editing-Area__SelectableList_movable' : ''}}"
             name="controls-Browser-ColumnsEditor-Editing-Area__SelectableList"
@@ -86,7 +87,10 @@
             itemContentTpl="tmpl!SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/templates/selectableItemContent"
             multiselect="{{ true }}"
             >
-            <ws:handlers onItemClick="{{_optsSelectable.onItemClick}}" onSelectedItemsChange="{{_optsSelectable.onSelectedItemsChange}}"/>
+            <ws:handlers
+               onItemClick="{{_optsSelectable.onItemClick}}"
+               onSelectedItemsChange="{{_optsSelectable.onSelectedItemsChange}}"
+            />
             <ws:groupBy
                field="{{hasGroups ? 'group' : undefined}}"
                >

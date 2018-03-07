@@ -145,8 +145,8 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             if (!cfg.moveColumns) {
                // Добавляем автосортировку отмеченных элементов - они должны отображаться перед неотмеченными
                //cfg._optsSelectable.itemsSortMethod = _getItemsSortMethod();
-               cfg._optsSelectable.onSelectedItemsChange = _onSelectedItemsChange;
             }
+            cfg._optsSelectable.onSelectedItemsChange = _onSelectedItemsChange;
             return cfg;
          },
 
@@ -598,17 +598,23 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
 
       var _onItemClick = function (e, id, model, itemContent) {
          this.toggleItemsSelection([id]);
-         itemContent.title = (this.getSelectedKeys().indexOf(id) !== -1 ? rk('Скрыть колонку', 'РедакторКолонок') : rk('Показать колонку', 'РедакторКолонок')) + ' "' + model.get('title') + '"';
       };
 
-      var _onSelectedItemsChange = function (e, ids, changes) {
-         var items = this.getItems();
-         changes.added.forEach(function (id) {
-            items.getRecordById(id).set('selected', true);
-         });
-         changes.removed.forEach(function (id) {
-            items.getRecordById(id).set('selected', false);
-         });
+      var _onSelectedItemsChange = function (e, selectedIds, changes) {
+         var handler = function (id) {
+            this.redrawItem(this.getItems().getRecordById(id));
+         }.bind(this);
+         changes.added.forEach(handler);
+         changes.removed.forEach(handler);
+         /*if (!moveColumns) {
+            var items = this.getItems();
+            changes.added.forEach(function (id) {
+               items.getRecordById(id).set('selected', true);
+            });
+            changes.removed.forEach(function (id) {
+               items.getRecordById(id).set('selected', false);
+            });
+         }*/
       };
 
 
