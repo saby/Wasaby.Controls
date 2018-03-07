@@ -1376,11 +1376,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                     node = node.parentNode;
                                  }
                                  var next = node.nextSibling;
-                                 var index = next && next.nodeType === 3 && next.nodeValue.length && next.nodeValue.charCodeAt(0) === 65279 ? 1 : 0;
-                                 var newRng = editor.dom.createRng();
-                                 newRng.setStart(next, index);
-                                 newRng.setEnd(next, index);
-                                 editor.selection.setRng(newRng);
+                                 self._selectNewRng(next, next && next.nodeType === 3 && next.nodeValue.length && next.nodeValue.charCodeAt(0) === 65279 ? 1 : 0);
                                  if (scrollTop) {
                                     self._inputControl.scrollTop(scrollTop);
                                  }
@@ -1420,6 +1416,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
          _smileHtml: function(smile) {
             return '&#' + smile.code + ';';
+         },
+
+         _selectNewRng: function (startNode, startOffset, endNode, endOffset) {
+            var hasEndNode = endNode !=/*Не !==*/ null;
+            var hasEndOffset = endOffset !=/*Не !==*/ null;
+            var editor = this._tinyEditor;
+            var newRng = editor.dom.createRng();
+            newRng.setStart(startNode, startOffset);
+            newRng.setEnd(hasEndNode ? endNode : startNode, hasEndOffset ? endOffset : (hasEndNode ? 0 : startOffset));
+            var selection = editor.selection;
+            selection.setRng(newRng);
+            if (!hasEndNode && !hasEndOffset) {
+               selection.collapse(false);
+            }
          },
 
          _bindEvents: function() {
@@ -1844,10 +1854,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            var text = node.nodeValue;
                            if (text.charCodeAt(index - 1) === 65279/*&#xFEFF;*/) {
                               node.nodeValue = 1 < text.length ? text.substring(0, index - 1) + text.substring(index) : '';
-                              var newRng = editor.dom.createRng();
-                              newRng.setStart(node, index - 1);
-                              newRng.setEnd(node, index - 1);
-                              selection.setRng(newRng);
+                              this._selectNewRng(node, index - 1);
                            }
                         }
                      }
