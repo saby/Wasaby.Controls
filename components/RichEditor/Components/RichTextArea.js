@@ -500,7 +500,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      this._tinyEditor.focus();
                      // Если сейчас есть контент и не было установлено осмысленного рэнжа - поставить курсор ввода в его конец
                      // 24823 https://online.sbis.ru/opendoc.html?guid=cd2659d7-0066-4207-bade-b77edb462684
-                     if (noRng && this.getText()) {
+                     // Но только, если редактор не был и до этого активным (повтроный вызов)
+                     // 1174883097 https://online.sbis.ru/opendoc.html?guid=56ad4bd1-a74a-4694-98bf-8401938c144a
+                     if (noRng && !this.isActive() && this.getText()) {
                         this.setCursorToTheEnd();
                      }
                      if (cConstants.browser.isMobileAndroid) {
