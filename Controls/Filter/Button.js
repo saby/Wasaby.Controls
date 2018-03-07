@@ -23,13 +23,13 @@ define('Controls/Filter/Button',
       var _private = {
          getFilterButtonCompatible: function(self) {
             return moduleStubs.require('Controls/Filter/Button/_FilterCompatible').addCallback(function(_FilterCompatible) {
-               if (!self._oldPanelOpener) {
-                  self._oldPanelOpener = new _FilterCompatible[0]({
+               if (!self._filterCompatible) {
+                  self._filterCompatible = new _FilterCompatible[0]({
                      filterButton: self,
                      filterButtonOptions: self._options
                   });
                }
-               return self._oldPanelOpener;
+               return self._filterCompatible;
             });
          }
       };
