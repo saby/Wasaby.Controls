@@ -83,7 +83,7 @@
    "Не указан": "Not specified",
    "Неверная контрольная сумма СНИЛС": "Invalid SNILS checksum",
    "Нет": "No",
-   "Некорректно заполнены обязательные поля!": "Incorrect values in required fields!",
+   "Некорректно заполнены обязательные поля": "Incorrect values in required fields",
    "Объединение наименований": "Combining titles",
    "Объединить": "Merge",
    "ОК": "OK",
