@@ -503,6 +503,11 @@ body {
   background-color: rgba(0,0,0,.1);
   cursor: pointer;
 }
+// Размер не согласуется с размерами кнопок-иконок. необходимо только в тулбаре
+.controls-ToolBar .controls-IconButton {
+  width: @default-height;
+  height: @default-height;
+}
 
 .ws-is-webkit:not(.ws-is-mobile-android), .ws-is-mobile-chrome-ios {
   .controls-BreadCrumbs{
