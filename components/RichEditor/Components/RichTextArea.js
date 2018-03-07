@@ -2064,6 +2064,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      if (uuid) {
                         self._images[uuid] = false;
                      }
+                      var selection = window.getSelection ? window.getSelection() : null;
+                      if (selection) {
+                          selection.removeAllRanges();
+                      }
                   });
                });
                this._imageOptionsPanel.subscribe('onImageDelete', function () {
