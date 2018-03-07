@@ -327,7 +327,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             }
          }
          // Отсортировать записи согласно порядку в списке выбранных колонок и с учётом порядка групп
-         selectable.items.sort(_selectableItemsSorter.bind(null, selectedColumns, groups));
+         selectable.items.sort(_selectableItemsSorter.bind(null, selectedColumns, groups, selectable.items.map(function (v) { return v.id; })));
          selectable.items = new RecordSet({rawData:selectable.items, idProperty:'id'});
          /*if (!moveColumns) {
             // При отключенном перемещении будем использовать рекордсет с собственной моделью для осуществления автосортировки отмеченных записей
@@ -343,12 +343,14 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          cfg._groups = groups;
       };
 
-      var _selectableItemsSorter = function (selectedIds, groups, c1, c2) {
+      var _selectableItemsSorter = function (selectedIds, groups, columnIds, c1, c2) {
+         // Сначала смотрим на прядок в selectedIds
          var i1 = selectedIds.indexOf(c1.id);
          var i2 = selectedIds.indexOf(c2.id);
          if (i1 !== -1 && i2 !== -1) {
             return i1 - i2;
          }
+         // Далее - на порядок групп
          if (groups) {
             var gi1 = groups.indexOf(c1.group);
             var gi2 = groups.indexOf(c2.group);
@@ -356,7 +358,12 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                return gi1 - gi2;
             }
          }
-         return i1 === -1 ? +1 : -1;//(i2 === -1 ? columns.indexOf(c1) - columns.indexOf(c2) : -1)
+         // Если хотя бы один - выбран
+         if (i1 !== i2) {
+            return i1 === -1 ? +1 : -1;
+         }
+         // Иначе - сохранить исходный порядок
+         return columnIds.indexOf(c1.id) - columnIds.indexOf(c2.id);
       };
 
       /*var _applySelectedToItems = function (selectedArray, items) {
@@ -477,7 +484,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                }
             }
             var newColumns = columns.reduce(function (r, v) { if (!v.fixed) { r.push(v); } return r; }, []);
-            newColumns.sort(_selectableItemsSorter.bind(null, selectedIds, options._groups));
+            newColumns.sort(_selectableItemsSorter.bind(null, selectedIds, options._groups, columns.map(function (v) { return v.id; })));
             self._selectableView.setItems(new RecordSet({rawData:newColumns, idProperty:'id'}));
          }
          self._selectableView.setSelectedKeys(selectedColumns);
