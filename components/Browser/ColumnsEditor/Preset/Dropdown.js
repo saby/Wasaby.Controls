@@ -69,8 +69,9 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
          init: function () {
             PresetDropdown.superclass.init.apply(this, arguments);
             this._dropdown = this.getChildControlByName('controls-Browser-ColumnsEditor-Preset-Dropdown__dropdown');
-            var namespace = this._options.presetNamespace || '';
-            this._selectedPresetId = this._options.selectedPresetId || _lastSelecteds[namespace];
+            var options = this._options;
+            var namespace = options.presetNamespace || '';
+            this._selectedPresetId = options.selectedPresetId || _lastSelecteds[namespace];
             if (namespace) {
                this._cacheHandler = this._onCache.bind(this);
                PresetCache.subscribe(namespace, 'onCacheChanged', this._cacheHandler);
@@ -168,8 +169,6 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
                presets = presets.concat(units);
                // TODO: Нужна ли общая сортировка ? Если да, то как пользователь будет различить статические и пользовательские пресеты ?
             }
-            var dropdown = this._dropdown;
-            dropdown.setItems(presets);
             var selectedId = this._selectedPresetId;
             if (selectedId && (!presets.length || presets.map(function (v) { return v.id; }).indexOf(selectedId) === -1)) {
                selectedId = null;
@@ -177,6 +176,8 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
             if (!selectedId && presets.length) {
                selectedId = presets[0].id;
             }
+            var dropdown = this._dropdown;
+            dropdown.setItems(presets);
             this._setSelectedPresetId(selectedId);
             dropdown.setEnabled(this.isEnabled() && 1 < presets.length);
             this._isDropdownReady = 0 < presets.length;

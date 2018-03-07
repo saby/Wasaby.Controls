@@ -272,22 +272,19 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
          },
 
          _onAreaComplete: function (evtName, columns, selectedColumns) {
-            var
-               column,
-               resultColumns = [],
-               result = this._result;
+            var result = this._result;
             this._result = null;
             this._areaContainer.close();
-
-            selectedColumns.forEach(function(columnId) {
-               column = columns.getRecordById(columnId).get('columnConfig');
-               if (column instanceof Array) {
-                  resultColumns = resultColumns.concat(column);
-               } else if (column) {
+            var resultColumns = selectedColumns.reduce(function (resultColumns, columnId) {
+               var column = columns.getRecordById(columnId).get('columnConfig');
+               if (Array.isArray(column)) {
+                  resultColumns.push.apply(resultColumns, column);
+               }
+               else {
                   resultColumns.push(column);
                }
-            });
-
+               return resultColumns;
+            }, []);
             result.callback({
                columns: columns,
                selectedColumns: selectedColumns,
