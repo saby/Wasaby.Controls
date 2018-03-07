@@ -1,0 +1,69 @@
+
+@width_ImportCustomizer-Area: 900px;
+@border-bottom_ImportCustomizer-Area-head: 1px solid #CCCCCC;
+@padding_ImportCustomizer-Area-head: 8px 0 7px 12px;
+@background-color_ImportCustomizer-Area-head: #f7f4f0;
+@height_ImportCustomizer-Area-head-title: 24px;
+@color_ImportCustomizer-Area-head-title-left: #313E78;
+@font-size_ImportCustomizer-Area-head-title-left: 18px;
+@font-weight_ImportCustomizer-Area-head-title-left: bold;
+@margin-right_ImportCustomizer-Area-head-title-right: 52px;
+@padding_ImportCustomizer-Area-body: 10px 0;
+@margin_ImportCustomizer-Area-body-box: 0 0 10px 0;
+@border-bottom_ImportCustomizer-Area-body-box: 1px solid #f7f4f0;
+@padding_ImportCustomizer-Area-body-box: 0 12px 10px 12px;
+@padding_ImportCustomizer-Area-body-box-not-pad: 0 0 10px 0;
+
+.controls-ImportCustomizer-Area {
+   .flexbox();
+   .flex-direction(column);
+   width: @width_ImportCustomizer-Area;
+   height: 100%;
+}
+
+.controls-ImportCustomizer-Area__head {
+   box-sizing: border-box;
+   .flex-shrink(0);
+   border-bottom: @border-bottom_ImportCustomizer-Area-head;
+   padding: @padding_ImportCustomizer-Area-head;
+   background-color: @background-color_ImportCustomizer-Area-head;
+}
+
+.controls-ImportCustomizer-Area__head-title {
+   height: @height_ImportCustomizer-Area-head-title;
+}
+
+.controls-ImportCustomizer-Area__head-title-left {
+   float: left;
+   color: @color_ImportCustomizer-Area-head-title-left;
+   font-size: @font-size_ImportCustomizer-Area-head-title-left;
+   font-weight: @font-weight_ImportCustomizer-Area-head-title-left;
+}
+
+.controls-ImportCustomizer-Area__head-title-right {
+   float: right;
+   margin-right: @margin-right_ImportCustomizer-Area-head-title-right;
+}
+
+.controls-ImportCustomizer-Area__body {
+    box-sizing: border-box;
+    .flex-grow(1);
+    height: 100%;
+    padding: @padding_ImportCustomizer-Area-body;
+}
+
+.controls-ImportCustomizer-Area__body__box {
+    margin: @margin_ImportCustomizer-Area-body-box;
+    border-bottom: @border-bottom_ImportCustomizer-Area-body-box;
+    padding: @padding_ImportCustomizer-Area-body-box;
+}
+
+.controls-ImportCustomizer-Area__body__box-not-pad {
+    padding: @padding_ImportCustomizer-Area-body-box-not-pad;
+}
+
+.controls-ImportCustomizer-Area__body__box:last-child {
+    margin: 0;
+    border-bottom: 0 none;
+    padding: 0;
+}

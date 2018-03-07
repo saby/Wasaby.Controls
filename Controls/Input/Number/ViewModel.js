@@ -76,7 +76,7 @@ define('Controls/Input/Number/ViewModel',
          validate: function (clearValue, onlyPositive, integersLength, precision) {
             if (
                !_private.validators.isNumber(clearValue) ||
-               typeof onlyPositive !== 'undefined' && !_private.validators.onlyPositive(clearValue) ||
+               onlyPositive && !_private.validators.onlyPositive(clearValue) ||
                typeof integersLength !== 'undefined' && !_private.validators.maxIntegersLength(clearValue, integersLength) ||
                typeof precision !== 'undefined' && !_private.validators.maxDecimalsLength(clearValue, precision)
             ) {
@@ -176,7 +176,7 @@ define('Controls/Input/Number/ViewModel',
                this._options.onlyPositive = options.onlyPositive;
                this._options.integersLength = options.integersLength;
                this._options.precision = options.precision;
-               if (parseFloat(this._options.value) !== options.value) {
+               if (!isNaN(parseFloat(this._options.value)) && parseFloat(this._options.value) !== options.value) {
                   this._options.value = options.value !== undefined ? String(options.value) : '';
                }
             }

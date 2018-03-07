@@ -72,8 +72,10 @@ define('Controls/Popup/Opener/Sticky/Strategy',
          * Получить горизонтальную или вертикальную координату позиционирования окна
          * */
          getCoordinate: function(targetPoint, cfg, direction){
-            return targetPoint[direction === 'horizontal' ? 'left' : 'top'] + cfg.align[direction].offset + 
-               cfg.sizes[direction === 'horizontal' ? 'width' : 'height'] * COORDINATE_MULTIPLIERS[cfg.align[direction].side];
+            var isHorizontalDirection = direction === 'horizontal';
+            return targetPoint[isHorizontalDirection ? 'left' : 'top'] + cfg.align[direction].offset +
+               cfg.sizes[isHorizontalDirection ? 'width' : 'height'] * COORDINATE_MULTIPLIERS[cfg.align[direction].side] +
+               cfg.sizes.margins[isHorizontalDirection ? 'left' : 'top'];
          },
 
          /*
@@ -160,12 +162,12 @@ define('Controls/Popup/Opener/Sticky/Strategy',
        * @category Popup
        */
       var Strategy = BaseStrategy.extend({
-         elementCreated: function (cfg, width, height) {
-            this.modifyCfg(cfg, width, height);
+         elementCreated: function (cfg, sizes) {
+            this.modifyCfg(cfg, sizes);
          },
 
-         elementUpdated: function (cfg, width, height) {
-            this.modifyCfg(cfg, width, height);
+         elementUpdated: function (cfg, sizes) {
+            this.modifyCfg(cfg, sizes);
          },
 
          /**
@@ -188,17 +190,14 @@ define('Controls/Popup/Opener/Sticky/Strategy',
             };
          },
 
-         modifyCfg: function(cfg, width, height){
+         modifyCfg: function(cfg, sizes){
             var popupCfg = {
                corner: cMerge(cClone(DEFAULT_OPTIONS['corner']), cfg.popupOptions.corner || {}),
                align: {
                   horizontal: cMerge(cClone(DEFAULT_OPTIONS['horizontalAlign']), cfg.popupOptions.horizontalAlign || {}),
                   vertical: cMerge(cClone(DEFAULT_OPTIONS['verticalAlign']), cfg.popupOptions.verticalAlign || {})
                },
-               sizes: {
-                  width: width,
-                  height: height
-               }
+               sizes: sizes
             };
 
             cfg.position = this.getPosition(popupCfg, TargetCoords.get(cfg.popupOptions.target ? cfg.popupOptions.target : document.body));

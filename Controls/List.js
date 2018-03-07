@@ -35,12 +35,12 @@ define('Controls/List', [
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IListControl
     * @control
+    * @author Крайнов Д.О.
     * @public
     * @category List
     */
 
    var ListControl = Control.extend({
-      _controlName: 'Controls/List/ListControl',
       _template: ListControlTpl,
 
       _items: null,

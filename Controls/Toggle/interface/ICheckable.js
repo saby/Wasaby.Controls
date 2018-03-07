@@ -12,7 +12,8 @@ define('Controls/Toggle/interface/ICheckable', [], function () {
     */
 
    /**
-    * @event Controls/Toggle/interface/ICheckable#valueChanged Происходит при изменении состояния переключателя.    * @param {Boolean} value Новое состояние
+    * @event Controls/Toggle/interface/ICheckable#valueChanged Происходит при изменении состояния переключателя.
+    * @param {Boolean} value Новое состояние
     */
 
 });

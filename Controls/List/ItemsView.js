@@ -27,7 +27,6 @@ define('Controls/List/ItemsView', [
 
    var ItemsRender = BaseControl.extend(
       {
-         _controlName: 'Controls/List/ItemsView',
          _template: ItemsRenderTpl,
 
          constructor: function (cfg) {

@@ -367,7 +367,7 @@
 @height_TreeDataGridView-expand:          auto;
 @font-size_TreeDataGridView-expand:       round(50px * @multiplier);
 @width-TreeDataGridView-levelPadding:     round(58px * @multiplier);
-@margin_TreeDataGridView-expand:          0 round(8px * @multiplier) 0 0;
+@padding_TreeDataGridView-expand:         0 round(8px * @multiplier) 0 0;
 @top_TreeDataGridView-editArrow:          round(5px * @multiplier);
 @tree-view-expand-open-border-width:      round(8px * @multiplier) round(8px * @multiplier) 0 round(8px * @multiplier);
 @tree-view-item-content-margin:           0 0 0 round(20px * @multiplier);
@@ -398,9 +398,6 @@
 @data-grid-results-cell-padding:          @data-grid-cell-padding;
 // PrintDialog
 //По какой-то причине Firefox берёт font-size не из html, а свой, причем только при расчёте этой ширины
-@controls-printdialog-min-width:          round(756px * @multiplier);
-@controls-printdialog-activate-right:     round(94px * @multiplier);
-@controls-printdialog-activate-margin-top:8px;
 //MergeDialog
 @controls-MergeDialogTemplate-height:                                       round(588px * @multiplier);
 @controls-MergeDialogTemplate-hint-font-size:                               @small-text-size;
@@ -692,3 +689,24 @@
 
 //money
 @money-decorator-integer-basic-registry-font-size: round(28px * @multiplier);
+
+//link
+@height_Button_m:                   round(58px * @multiplier);
+@min-width_Button-Vdom:                  round(86px * @multiplier);
+@font-size_Link-s:                  round(21px * @multiplier);
+@font-size_Link-m:                  round(24px * @multiplier);
+@font-size_Link-l:                  round(28px * @multiplier);
+@font-size_Link-xl:                 round(32px * @multiplier);
+@font-size_Button-Vdom_m:           round(32px * @multiplier);
+@border-width_Button-Vdom:          0;
+@border-radius_Button_default:      1px;
+@font-size_Button-Vdom_l:           round(40px * @multiplier);
+@height_Button-Vdom_l:              round(78px * @multiplier);
+/*@border-radius_Button_l:            1px;*/
+@padding_Button-wrapper_default:    0 round(16px * @multiplier);
+@padding_Button-Vdom-wrapper_l:     round(16px * @multiplier);
+@spacing_Button-Vdom-between-icon-text:  round(8px * @multiplier);
+
+//Input/Area
+@width_InputArea: round(340px * @multiplier);
+@padding-right_InputArea-field: round(15px * @multiplier);

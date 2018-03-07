@@ -17,7 +17,6 @@ define('Controls/Container', [
     */
 
    var Container = Control.extend({
-      _controlName: 'Controls/Container'
 
    });
    return Container;

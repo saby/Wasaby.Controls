@@ -91,6 +91,10 @@
 @height_Link:                             24px;
 @link-line-height:                        @height_Link;
 @font-size_Link:                          @default-text-size;
+@font-size_Link-s:                        12px;
+@font-size_Link-m:                        14px;
+@font-size_Link-l:                        15px;
+@font-size_Link-xl:                       18px;
 @link-cursor:                             pointer;
 @color_Link-icon_disabled:                @icon-color-disabled;
 
@@ -119,6 +123,7 @@
 @color_Button:                       @default-text-color;
 @button-text-alignment:                   center;
 @min-width_Button:                        48px;
+@min-width_Button-Vdom:                   48px;
 @button-height:                           24px;
 @padding_Button-wrapper_m:                0 11px;
 @padding_Button-wrapper_default:          @padding_Button-wrapper_m;
@@ -129,6 +134,7 @@
 @button-icon-medium-left-offset:          @button-icon-left-offset;
 @button-icon-large-left-offset:           0;
 @spacing_Button-between-icon-text:                         6px;                      // gap between icon and text
+@spacing_Button-Vdom-between-icon-text:   6px;
 @button-icon-text-margin:                 0 12px 0 32px;            // margin of text following 16x16 icon
 @button-icon-big-top-offset:              0;                         // top offset of 24x24 icon
 @button-icon-big-left-offset:             @button-icon-left-offset;
@@ -141,6 +147,7 @@
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
 @button-without-caption-min-width:        48px;
 @text-shadow_Button:                      none;
+@font-size_Button:                        @default-text-size;
 
 //FilterPanelButton
 @filter-panel-button-bg:                         url('img/FilterPanelButton.svg');
@@ -197,6 +204,7 @@
 @button-hover-shadow:                     @box-shadow_Button;
 @background_Button_hovered:                         #F0F5FB;
 @border-color_Button_hovered:               @border-color_Button;
+@background_Button_default:               @background_Button;
 
 
 @button-active-text-color:                @default-text-color;
@@ -222,6 +230,7 @@
 @button-primary-active-border:            @button-primary-border;
 @button-primary-active-shadow:            @button-primary-shadow;
 @background_Button_primary_active:                #fdd2c0;
+@background_Button_default_active:                #E1ECF6;
 
 @color_Button-icon_primary:               @color_hover;
 
@@ -230,6 +239,8 @@
 @border_Button_disabled:                  1px solid @default-disabled-color;
 @button-disabled-shadow:                  @box-shadow_Button;
 @background_Button_disabled:                      @background_Button;
+@background_Button-primary_disabled:      @background_Button;
+@background_Button-default_disabled:      @background_Button;
 @color_Button-icon_disabled:              @default-disabled-color;
 
 
@@ -243,6 +254,7 @@
 @button-big-min-width:                    @min-width_Button;
 @button-big-height:                       48px;
 @padding_Button-wrapper_l:                0 23px;
+@padding_Button-Vdom-wrapper_l:           0 23px;
 @button-big-border-radius:                24px;
 @button-big-icon-top-offset:              15px;                              // top offset of 16x16 icon
 @button-big-icon-left-offset:             24px;
@@ -1275,10 +1287,6 @@
 @controls-movedialog-width:                        400px;
 @controls-movedialog-padding:                      0 0 5px 0;
 @controls-movedialog-min-height:                   50px;
-// PrintDialog
-@controls-printdialog-activate-right:              49px;
-@controls-printdialog-activate-margin-top:         @controls-movedialog-activate-top;
-@controls-printdialog-min-width:                   @controls-movedialog-min-width;
 //InformationPopup
 @controls-InformationPopup-bg:                                white;
 @controls-InformationPopup-default-status-border-color:       #0055BB;
@@ -1723,8 +1731,6 @@
 @infobox-arrow-horizontal-offset:    12px;
 @infobox-arrow-vertical-offset:      9px;
 
-@infobox-message-font-size:          14px;
-@infobox-message-color:              #000;
 @infobox-message-margin-right:       18px;
 
 @infobox-close-button-top:           4px;

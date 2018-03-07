@@ -47,7 +47,6 @@ define('Controls/Container/Scroll',
        */
 
       var ScrollContainer = Control.extend({
-         _controlName: 'Controls/Container/Scroll/Scroll',
          _template: template,
          contentHeight: 1,
          scrollBarPosition: 0,
@@ -69,19 +68,10 @@ define('Controls/Container/Scroll',
             return this._children.content.scrollTop;
          },
          _initScrollbar: function initScrollbar() {
-            var self = this;
-            _private.doInitScrollbar(self);
-            if (!self.goodIntervalForSilentSizeChanged) {
-               self.goodIntervalForSilentSizeChanged = setInterval(function () {
-                  _private.doInitScrollbar(self);
-                  self._forceUpdate();
-               }, 100);
-            }
+            _private.doInitScrollbar(this);
          },
          _hideScrollbar: function hideScrollbar() {
             this.showScrollbar = false;
-            clearInterval(this.goodIntervalForSilentSizeChanged);
-            this.goodIntervalForSilentSizeChanged = null;
          },
          _onScroll: function onScroll() {
             var scrollTop = this._getScrollTop();

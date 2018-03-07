@@ -4,6 +4,8 @@ var path = require('path'),
     componentsPath = path.join(__dirname, 'components'),
     controlsPath = path.join(__dirname, 'Controls'),
     coveragePath = path.join(__dirname, 'artifacts', 'coverage.json'),
+    coverageControlsPath = path.join(__dirname, 'artifacts', 'coverageControls.json'),
+    coverageComponentsPath = path.join(__dirname, 'artifacts', 'coverageComponents.json'),
     allFiles = [];
 
 dirWalker = function (dir) {
@@ -43,3 +45,19 @@ allFiles.forEach(function (name) {
 });
 
 fs.writeFileSync(coveragePath, JSON.stringify(cover), 'utf8');
+
+function getCoverByPath(path) {
+    var coverageByPath = {};
+    Object.keys(cover).forEach(function (name) {
+        if (name.includes(path)) {
+            coverageByPath[name] = cover[name]
+        }
+    });
+    return coverageByPath
+}
+
+var componentsCoverage = getCoverByPath(componentsPath),
+    controlsCoverage = getCoverByPath(controlsPath);
+
+fs.writeFileSync(coverageControlsPath, JSON.stringify(controlsCoverage), 'utf8');
+fs.writeFileSync(coverageComponentsPath, JSON.stringify(componentsCoverage), 'utf8');

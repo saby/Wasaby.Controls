@@ -53,13 +53,12 @@ define('Controls/Popup/Manager/Popup',
           * @cfg {Object} Опции компонента
           */
 
-         _controlName: 'Controls/Popup/Manager/Popup',
          _template: template,
 
          _afterMount: function () {
             var contentSizes = _private.getContentSizes(this);
             _private.setNeededSizes(this, contentSizes);
-            this._notify('popupCreated', [this._options.id, this._neededWidth, this._neededHeight]);
+            this._notify('popupCreated', [this._options.id, this._getPopupSizes()]);
          },
 
          _afterUpdate: function () {
@@ -67,7 +66,7 @@ define('Controls/Popup/Manager/Popup',
             //Если размеры контента изменились, пересчитаем размеры окна
             if (contentSizes.width !== this._neededWidth || contentSizes.height !== this._neededHeight) {
                _private.setNeededSizes(this, contentSizes);
-               this._notify('popupUpdated', [this._options.id, this._neededWidth, this._neededHeight]);
+               this._notify('popupUpdated', [this._options.id, this._getPopupSizes()]);
             }
          },
 
@@ -119,12 +118,28 @@ define('Controls/Popup/Manager/Popup',
          },
 
          _onResize: function(){
-            this._notify('popupUpdated', [this._options.id, this._neededWidth, this._neededHeight]);
+            this._notify('popupUpdated', [this._options.id, this._getPopupSizes()]);
          },
 
          _onScroll: function(){
-            this._notify('popupUpdated', [this._options.id, this._neededWidth, this._neededHeight]);
-         }
+            this._notify('popupUpdated', [this._options.id, this._getPopupSizes()]);
+         },
+         _getPopupSizes: function() {
+            return {
+               width: this._neededWidth,
+               height: this._neededHeight,
+               margins: this._getMargins()
+            }
+         },
+
+         _getMargins: function() {
+            var style = this._container.currentStyle || window.getComputedStyle(this._container);
+            var margins = {
+               top: parseInt(style.marginTop, 10),
+               left: parseInt(style.marginLeft, 10)
+            };
+            return margins;
+         },
       });
 
       return Popup;
