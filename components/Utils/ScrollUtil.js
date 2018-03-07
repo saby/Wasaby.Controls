@@ -5,6 +5,7 @@ define('SBIS3.CONTROLS/Utils/ScrollUtil', ['Core/Abstract'], function(cAbstract)
    'use strict';
     /**
      * @class SBIS3.CONTROLS/Utils/ScrollUtil
+     * @author Крайнов Дмитрий Олегович
      * @public
      */
    var ScrollUtil = cAbstract.extend(/** @lends SSBIS3.CONTROLS.ScrollUtil.prototype */{

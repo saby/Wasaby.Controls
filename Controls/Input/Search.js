@@ -1,8 +1,14 @@
 define('Controls/Input/Search',
    [
-      'Controls/Input/Text',
-      'tmpl!Controls/Input/Search/searchTextBoxButtons'
-   ], function(TextBox, searchTextBoxButtons) {
+      'Core/Control',
+      'WS.Data/Type/descriptor',
+      'tmpl!Controls/Input/Search/Search',
+      'Controls/Input/resources/InputRender/BaseViewModel',
+      'css!Controls/Input/Search/Search'
+   ],
+
+   function (Control, types, template, BaseViewModel) {
+      'use strict';
 
       /**
        * Строка поиска с кнопкой
@@ -12,31 +18,76 @@ define('Controls/Input/Search',
        * @control
        * @public
        * @category Input
+       * @author Золотова Э.Е.
        */
 
       /**
        * @event Controls/Input/Search#search Происходит при нажатии на кнопку поиска
        */
 
-      var SearchTextBox = TextBox.extend({
-         _afterFieldWrapper: searchTextBoxButtons,
-         _searchText: '',
-         //Чтобы событие onReset не отправлялось непрерывно
-         _onResetIsFired: false,
-         //TODO: Зуев обещал в сентябре сделать нормально
-         _classes: 'controls-SearchForm',
+      /**
+       * @name Controls/Input/Search#style
+       * @cfg {String} Цвет поля поиска
+       * @variant default Серое поле поиска
+       * @variant header Белое поле поиска
+       */
 
-         _onResetClick: function(e) {
-            if(!this._onResetIsFired) {
-               this._notify('onReset');
-               this._onResetIsFired = true;
-            }
+      var Search = Control.extend({
+         _template: template,
+         _isFocused: false,
+
+         constructor: function (options) {
+            Search.superclass.constructor.apply(this, arguments);
+            this._baseViewModel = new BaseViewModel();
+         },
+   
+         _beforeUpdate: function(newOptions) {
+            this._baseViewModel.updateOptions({
+               value: newOptions.value
+            });
          },
 
-         _onSearchClick: function(e) {
+         _notifyOnValueChanged: function(value) {
+            this._notify('valueChanged', [value]);
+            this._applySearch(value);
+         },
 
+         _valueChangedHandler: function (event, value) {
+            this._notifyOnValueChanged(value);
+         },
+
+         //Собственно поиск
+         _applySearch: function (value) {
+            this._notify('search', [value], {bubbling: true});
+         },
+
+         _onResetClick: function () {
+            this._notifyOnValueChanged('');
+         },
+
+         _onSearchClick: function () {
+            this._applySearch(this._options.value);
+         },
+
+         _keyDownHandler: function (event) {
+            if (event.nativeEvent.keyCode == 13) {
+               this._applySearch(this._options.value);
+            }
          }
       });
 
-      return SearchTextBox;
+      Search.getOptionTypes = function getOptionsTypes() {
+         return {
+            placeholder: types(String)
+         };
+      };
+
+      Search.getDefaultOptions = function getDefaultOptions() {
+         return {
+            placeholder: rk('Найти')+'...',
+            style: 'default'
+         };
+      };
+
+      return Search;
    });

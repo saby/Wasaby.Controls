@@ -1,4 +1,12 @@
-define(['SBIS3.CONTROLS/Filter/FilterPanel', 'WS.Data/Collection/RecordSet', 'Core/core-functions'], function (FilterPanel, RecordSet, cFunctions) {
+define('[SBIS3.CONTROLS/Filter/FilterPanel', [
+   'Core/core-clone',
+   'SBIS3.CONTROLS/Filter/FilterPanel',
+   'WS.Data/Collection/RecordSet'
+], function(
+   cClone,
+   FilterPanel,
+   RecordSet
+) {
 
    'use strict';
 
@@ -126,7 +134,7 @@ define(['SBIS3.CONTROLS/Filter/FilterPanel', 'WS.Data/Collection/RecordSet', 'Co
             testComponent = new FilterPanel({
                element: $('<div class="TestFilterPanel"></div>').appendTo($('body')),
                items: new RecordSet({
-                  rawData: cFunctions.clone(rawData),
+                  rawData: cClone(rawData),
                   idProperty: 'id'
                })
             });

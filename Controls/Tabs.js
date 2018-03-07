@@ -17,7 +17,6 @@ define('Controls/Tabs', [
     */
 
    var Tabs = Control.extend({
-      _controlName: 'Controls/Tabs'
 
    });
    return Tabs;

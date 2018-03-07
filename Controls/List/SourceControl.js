@@ -3,7 +3,6 @@ define('Controls/List/SourceControl', [
    'Core/IoC',
    'tmpl!Controls/List/SourceControl/SourceControl',
    'require',
-   'Controls/List/Controllers/ScrollController',
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
    'Core/Deferred',
@@ -12,7 +11,6 @@ define('Controls/List/SourceControl', [
              IoC,
              SourceControlTpl,
              require,
-             ScrollController,
              VirtualScroll,
              SourceController,
              Deferred
@@ -264,7 +262,6 @@ define('Controls/List/SourceControl', [
     */
 
    var SourceControl = Control.extend({
-      _controlName: 'Controls/List/SourceControl',
       _template: SourceControlTpl,
       iWantVDOM: true,
       _isActiveByClick: false,
@@ -323,21 +320,8 @@ define('Controls/List/SourceControl', [
       },
 
       _afterMount: function() {
-         var self = this;
-         SourceControl.superclass._afterMount.apply(this, arguments);
-
          _private.startScrollEmitter(this);
 
-         if (false && this._options.navigation
-            && this._options.navigation.view === 'infinity'
-            && this._options.navigation.viewConfig
-            && this._options.navigation.viewConfig.pagingMode
-         ) {
-            _private.createScrollPagingController(this).addCallback(function(scrollPagingCtr){
-               self._scrollPagingCtr = scrollPagingCtr
-            });
-         }
-         
          if (_private.getItemsCount(this)) {
             //Посчитаем среднюю высоту строки и отдадим ее в VirtualScroll
             _private.initializeAverageItemsHeight(this);
@@ -345,10 +329,12 @@ define('Controls/List/SourceControl', [
       },
 
       _beforeUpdate: function(newOptions) {
+         var filterChanged = newOptions.filter !== this._options.filter;
+         var sourceChanged = newOptions.source !== this._options.source;
 
          //TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
 
-         if (newOptions.filter !== this._options.filter) {
+         if (filterChanged) {
             this._filter = newOptions.filter;
          }
 
@@ -361,7 +347,7 @@ define('Controls/List/SourceControl', [
             }
 
 
-         if (newOptions.source !== this._options.source) {
+         if (sourceChanged) {
             if (this._sourceController) {
                this._sourceController.destroy();
             }
@@ -371,7 +357,9 @@ define('Controls/List/SourceControl', [
                source : newOptions.source,
                navigation: newOptions.navigation
             });
-
+         }
+         
+         if (filterChanged || sourceChanged) {
             _private.reload(this);
          }
 
@@ -384,7 +372,7 @@ define('Controls/List/SourceControl', [
          }
 
          if (this._scrollPagingCtr) {
-            this._scrollPagingCtr.destroy()
+            this._scrollPagingCtr.destroy();
          }
 
          SourceControl.superclass._beforeUnmount.apply(this, arguments);

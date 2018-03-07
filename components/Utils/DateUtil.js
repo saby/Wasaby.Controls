@@ -5,6 +5,7 @@ define('SBIS3.CONTROLS/Utils/DateUtil',[], function() {
    'use strict';
    /**
     * @class SBIS3.CONTROLS/Utils/DateUtil
+    * @author Крайнов Д.О.
     * @public
     */
    var DateUtil = /** @lends SBIS3.CONTROLS/Utils/DateUtil.prototype */{

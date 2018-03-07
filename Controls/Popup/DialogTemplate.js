@@ -34,7 +34,6 @@ define('Controls/Popup/DialogTemplate',
           * @cfg {Content} Шаблон контента диалога
           */
 
-         _controlName: 'Controls/Popup/DialogTemplate',
          _template: template,
 
          /**

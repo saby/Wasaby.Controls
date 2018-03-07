@@ -1,0 +1,89 @@
+/**
+ * Контрол "Выбор области данных для импортирования настройщика импорта"
+ *
+ * @public
+ * @class SBIS3.CONTROLS/ImportCustomizer/Sheet/View
+ * @extends SBIS3.CONTROLS/CompoundControl
+ */
+define('SBIS3.CONTROLS/ImportCustomizer/Sheet/View',
+   [
+      'SBIS3.CONTROLS/CompoundControl',
+      'tmpl!SBIS3.CONTROLS/ImportCustomizer/Sheet/View'/*,
+      'css!SBIS3.CONTROLS/ImportCustomizer/Sheet/View'*/
+   ],
+
+   function (CompoundControl, dotTplFn) {
+      'use strict';
+
+      var View = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/Sheet/View.prototype*/ {
+
+         /**
+          * @event change Происходит при измении настраиваемые значения компонента
+          * @param {Core/EventObject} evtName Дескриптор события
+          * @param {object} values Настраиваемые значения компонента:
+          * @param {number} values.sheetIndex Индекс выбранной области данных для импортирования
+          */
+
+         _dotTplFn: dotTplFn,
+         $protected: {
+            _options: {
+               /**
+                * @cfg {string} Название опции для выбора одинаковых настроек для всех листов файла
+                */
+               allSheetsTitle: rk('Все листы настраиваются одинаково', 'НастройщикИмпорта'),
+               /**
+                * @cfg {string[]} Список областей данных для импортирования
+                */
+               sheetTitles: [],
+               /**
+                * @cfg {number} Индекс выбранной области данных для импортирования
+                */
+               sheetIndex: -1
+            },
+            // Контрол выбора области данных для импортирования
+            _view: null,
+         },
+
+         _modifyOptions: function () {
+            var options = View.superclass._modifyOptions.apply(this, arguments);
+            var sheetTitles = options.sheetTitles;
+            options._items = [{id:'', title:options.allSheetsTitle}].concat(sheetTitles.map(function (v, i) { return {id:i + 1, title:v}; }));
+            var sheetIndex = options.sheetIndex;
+            options._selectedKey = sheetIndex !=/*Не !==*/ null && 0 <= sheetIndex && sheetIndex < sheetTitles.length ? sheetIndex + 1 : null;
+            return options;
+         },
+
+         $constructor: function () {
+            this._publish('change');
+         },
+
+         init: function () {
+            View.superclass.init.apply(this, arguments);
+            this._view = this.getChildControlByName('controls-ImportCustomizer-Sheet-View__sheetTitle');
+            this._bindEvents();
+         },
+
+         _bindEvents: function () {
+            this.subscribeTo(this._view, 'onSelectedItemsChange', function (evtName, selecteds, changes) {
+               var id = selecteds[0];
+               this._options.sheetIndex = id ? id - 1 : -1;
+               this._notify('change', this.getValues());
+            }.bind(this));
+         },
+
+         /**
+          * Получить все настраиваемые значения компонента
+          *
+          * @public
+          * @return {object}
+          */
+         getValues: function () {
+            return {
+               sheetIndex: this._options.sheetIndex
+            };
+         }
+      });
+
+      return View;
+   }
+);

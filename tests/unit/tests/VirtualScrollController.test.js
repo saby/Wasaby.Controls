@@ -1,5 +1,11 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['SBIS3.CONTROLS/ListView/resources/VirtualScrollController', 'Core/core-functions'], function(VirtualScrollController, cFunctions) {
+define('[SBIS3.CONTROLS/ListView/resources/VirtualScrollController', [
+   'Core/core-clone',
+   'SBIS3.CONTROLS/ListView/resources/VirtualScrollController'
+], function(
+   cClone,
+   VirtualScrollController
+) {
 
    'use strict';
    var newState = null,
@@ -10,7 +16,7 @@ define(['SBIS3.CONTROLS/ListView/resources/VirtualScrollController', 'Core/core-
       var controller = new VirtualScrollController();
 
       describe('._getWrappersHeight', function() {
-         controller._heights = cFunctions.clone(heights);
+         controller._heights = cClone(heights);
          it('First Page', function() {
             newState = controller._getWrappersHeight([0, 100]);
             assert.deepEqual(newState, { begin: 0, end: 3180 });
@@ -67,7 +73,7 @@ define(['SBIS3.CONTROLS/ListView/resources/VirtualScrollController', 'Core/core-
 
       describe('._getPage', function() {
          //scrollTop, viewportHeight, additionalHeight, pages
-         controller._heights = cFunctions.clone(heights);
+         controller._heights = cClone(heights);
          it('1st page', function() {
             newState = controller._getPage(0);
             assert.equal(newState, 0);
