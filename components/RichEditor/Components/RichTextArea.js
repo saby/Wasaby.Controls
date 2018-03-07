@@ -201,7 +201,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             _inputControl: undefined,
             _fakeArea: undefined, //textarea для перехода фкуса по табу
             _tinyEditor: undefined, //экземпляр tinyMCE
-            _lastHeight: undefined, //последняявысота для UpdateHeight
+            _lastTotalHeight: undefined, //последняявысота для UpdateHeight
+            _lastContentHeight: undefined, //последняявысота для UpdateHeight
             _tinyReady: null, //deferred готовности tinyMCE
             _readyContolDeffered: null, //deferred Готовности контрола
             _saveBeforeWindowClose: null,
@@ -369,41 +370,41 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           * Устанавливает минимальную высоту текстового поля редактора
           * @param {Number} value Минимальная высота поля редактора
           */
-         setMinimalHeight: function(value) {
-            var options = this._options;
-            if (options.autoHeight && typeof value === 'number') {
-               options.minimalHeight = value || '';
-               if (value) {
-                  if (options.maximalHeight && options.maximalHeight < value) {
-                     options.maximalHeight = value;
-                  }
-               }
-               var changeBlock = options.editorConfig.inline ? (this._scrollContainer || this._inputControl) : $(this._tinyEditor.iframeElement);
-               changeBlock.css({
-                  'max-height': options.maximalHeight,/*@@@*/
-                  'min-height': options.minimalHeight
-               });
-            }
+         setMinimalHeight: function (value) {
+            this._setLimitingHeight('min', value);
          },
 
          /**
           * Устанавливает максимальную высоту текстового поля редактора
           * @param {Number} value Максимальная высота поля редактора
           */
-         setMaximalHeight: function(value) {
-            var options = this._options;
-            if (options.autoHeight && typeof value === 'number') {
-               options.maximalHeight = value || '';
-               if (value) {
-                  if (options.minimalHeight && options.maximalHeight < options.minimalHeight) {
-                     options.minimalHeight = value;
+         setMaximalHeight: function (value) {
+            this._setLimitingHeight('max', value);
+         },
+
+         /**
+          * Устанавливает максимальную или минимальную высоту текстового поля редактора
+          * @param {string} type Тип значения: 'min' или 'max'
+          * @param {number} value Значение максимальная или минимальная высота поля редактора
+          */
+         _setLimitingHeight: function (type, value) {
+            var props = {'min':'minimalHeight', 'max':'maximalHeight'};
+            if (props[type]) {
+               var options = this._options;
+               if (options.autoHeight && typeof value === 'number') {
+                  options[props[type]] = value || '';
+                  if (value) {
+                     var pairProp = props[type === 'min' ? 'max' : 'min'];
+                     if (options[pairProp] && options.maximalHeight < options.minimalHeight) {
+                        options[pairProp] = value;
+                     }
+
                   }
+                  var isInline = options.editorConfig.inline;
+                  var iFrame = isInline ? null : $(this._tinyEditor.iframeElement);
+                  (isInline ? (this._scrollContainer || this._inputControl) : iFrame).css('max-height', options.maximalHeight);
+                  (isInline ? this._inputControl : iFrame).css('min-height', options.minimalHeight);
                }
-               var changeBlock =  options.editorConfig.inline ? (this._scrollContainer || this._inputControl) : $(this._tinyEditor.iframeElement);
-               changeBlock.css({
-                  'max-height': options.maximalHeight,/*@@@*/
-                  'min-height': options.minimalHeight
-               });
             }
          },
 
@@ -2247,28 +2248,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          _applyEnabledState: function(enabled) {
             var container = this._tinyEditor ? this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl : this._inputControl;
             if (this._dataReview) {
-               var css;
                var opts = this._options;
                if (opts.autoHeight) {
-                  var hasMin = 0 < parseFloat(opts.minimalHeight);
-                  var hasMax = 0 < parseFloat(opts.maximalHeight);
-                  if (hasMin || hasMax) {
-                     css = {};
-                     if (hasMin) {
-                        css['min-height'] = opts.minimalHeight;
-                     }
-                     if (hasMax) {
-                        css['max-height'] = opts.maximalHeight;/*@@@*/
-                     }
+                  if (0 < parseFloat(opts.minimalHeight)) {
+                     (this._scrollContainer || this._dataReview).css('max-height', opts.maximalHeight);
+                  }
+                  if (0 < parseFloat(opts.maximalHeight)) {
+                     this._dataReview.css('min-height', opts.minimalHeight);
                   }
                }
                else {
-                  css = {
-                     height: this._container.height() - constants.dataReviewPaddings//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
-                  };
-               }
-               if (css) {
-                  (this._scrollContainer || this._dataReview).css(css);
+                  this._dataReview.css('height', this._container.height() - constants.dataReviewPaddings);//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
                }
                this._updateDataReview(this.getText() || '');
                this._dataReview.toggleClass('ws-hidden', enabled);
@@ -2522,13 +2512,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return !this._sourceContainer.hasClass('ws-hidden');
          },
 
-         _updateHeight: function() {
-            var
-               curHeight;
+         _updateHeight: function () {
             if (this.isVisible()) {
-               curHeight = this._container.height();
-               if (curHeight !== this._lastHeight) {
-                  this._lastHeight = curHeight;
+               var totalHeight = this._container.height();
+               var contentHeight = (this._options.editorConfig.inline ? this._inputControl : $(this._tinyEditor.iframeElement)).height();
+               if (totalHeight !== this._lastTotalHeight || contentHeight !== this._lastContentHeight) {
+                  this._lastTotalHeight = totalHeight;
+                  this._lastContentHeight = contentHeight;
                   this._notifyOnSizeChanged();
                }
             }
