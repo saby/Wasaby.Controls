@@ -18,14 +18,27 @@
  */
 
 .controls-InputArea {
-   width: 200px;
+   width: @width_InputArea;
 }
 
 .controls-InputArea__field {
    width: 100%;
    white-space: pre-wrap;
    word-wrap: break-word;
-   line-height: @line-height_InputArea;
+   box-sizing: border-box;
+   padding-right: @padding-right_InputArea-field;
+}
+
+.controls-InputArea__field_size_l {
+   line-height: @line-height_InputRender_l;
+}
+
+.controls-InputArea__field_size_m {
+   line-height: @line-height_InputRender_m;
+}
+
+.controls-InputArea__field_size_default {
+   line-height: @line-height_InputRender_default;
 }
 
 .controls-InputArea__realField {
@@ -33,9 +46,6 @@
    height: 100%;
    position: absolute;
    top: 0;
-   //Задаем padding у realField, а не контейнера, чтобы не сдвинуть им скроллбар
-   padding-top: @padding_InputArea;
-   padding-bottom: @padding_InputArea;
    box-sizing: border-box;
 }
 
@@ -58,13 +68,22 @@
    vertical-align: bottom;
    display: inline-block;
    width: 100%;
-   padding-top: @padding_InputArea;
-   padding-bottom: @padding_InputArea;
 }
 
 .controls-fakeTextArea__secondWrapper {
-   height: @line-height_InputArea;
    width: 100%;
+}
+
+.controls-fakeTextArea__secondWrapper_size_default {
+   height: @line-height_InputRender_default;
+}
+
+.controls-fakeTextArea__secondWrapper_size_m {
+   height: @line-height_InputRender_m;
+}
+
+.controls-fakeTextArea__secondWrapper_size_l {
+   height: @line-height_InputRender_l;
 }
 
 .controls-InputArea__clear {
@@ -74,7 +93,6 @@
 .controls-InputArea__placeholder_multiline {
    .align-items(baseline);
    box-sizing: border-box;
-   padding-top: @padding_InputArea;
 }
 
 //В IE будем показывать текст из fakeArea, так как иначе при быстром вводе textArea не успевает обновлять размеры и дергается

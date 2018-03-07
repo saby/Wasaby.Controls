@@ -20,7 +20,21 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector', [
             verticalAlignment: 'Top',
             width: '350px',
             height: 'auto',
-            resizable: false
+            resizable: false,
+            itemsRadioGroup: [
+               {
+                  id: 'current',
+                  title: rk('Текущую страницу')
+               },
+               {
+                  id: 'all',
+                  title: rk('Все записи')
+               },
+               {
+                  id: 'pickNum',
+                  title: rk('Количество записей')
+               }
+            ]
          },
          _radioButtons : undefined,
          _numberTextBox: undefined,

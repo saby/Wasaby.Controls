@@ -1,16 +1,26 @@
-<div style="display: flex;margin: 50px;">
+<div style="margin: 16px 50px;">
 
    <style>
+      .controls-ConfirmationDemo__caption {
+         font-size: 20px;
+         margin-left: 8px;
+         margin-top: 16px;
+      }
       .controls-ConfirmationDemo__button {
          padding: 8px;
-         background: #00c000;
          margin: 4px;
          cursor:pointer;
       }
    </style>
 
-   <Controls:Popup:Opener:Confirmation name="popupOpener"/>
+   <ws:for data="block in _blocks">
+      <div class="controls-ConfirmationDemo__caption">{{block.caption}}</div>
+      <div style="display: flex;">
+         <ws:for data="item in block.items">
+            <div on:click="_open(item.cfg)" class="controls-ConfirmationDemo__button" style="background: {{item.background}}">{{item.caption}}</div>
+         </ws:for>
+      </div>
+   </ws:for>
 
-   <div on:click="_open('ok')" class="controls-ConfirmationDemo__button">Message</div>
-   <div on:click="_open('yesnocancel')" class="controls-ConfirmationDemo__button">Confirm</div>
+   <Controls:Popup:Opener:Confirmation name="popupOpener"/>
 </div>

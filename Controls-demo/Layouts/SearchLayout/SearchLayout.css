@@ -1,0 +1,18 @@
+.controls-demo__FilterLayout {
+    margin: 20px;
+    width: 700px;
+}
+
+.controls-demo__FilterLayout .controls-Search-InputRender {
+    width: 300px;
+}
+
+.controls-demo__FilterLayout .ws-ListView__item {
+    padding: 6px 4px;
+}
+
+.controls-demo__Layouts_filterComponents {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+}

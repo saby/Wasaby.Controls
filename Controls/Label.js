@@ -9,8 +9,6 @@ define('Controls/Label',
       'use strict';
 
       var Label = Control.extend({
-         _controlName: 'Controls/Label',
-
          _template: template
       });
 

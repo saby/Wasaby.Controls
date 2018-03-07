@@ -91,5 +91,9 @@ define('Controls/List/Paging', [
          this._notify('onArrowClick', btnName);
       }
    });
+
+   //для тестов
+   ModuleClass._private = _private;
+
    return ModuleClass;
 });

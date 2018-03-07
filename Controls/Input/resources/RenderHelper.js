@@ -20,6 +20,15 @@ define('Controls/Input/resources/RenderHelper',
                selectionLength = selection.selectionEnd - selection.selectionStart,
                deleteValue, insertValue, beforeInsertValue, afterInsertValue;
 
+            if (inputType === 'insertFromDrop') {
+               return {
+                  before: newValue.substring(0, caretPosition),
+                  insert: '',
+                  delete: '',
+                  after: newValue.substring(caretPosition)
+               }
+            }
+
             afterInsertValue = newValue.substring(caretPosition);
             beforeInsertValue = inputType === 'insert' ?
                oldValue.substring(0, oldValue.length - afterInsertValue.length - selectionLength) :
@@ -79,8 +88,15 @@ define('Controls/Input/resources/RenderHelper',
           */
          getAdaptiveInputType: function(nativeInputType, selection) {
             var
-               selectionLength = selection.selectionEnd - selection.selectionStart,
-               execType = /^(insert|delete|).*?(Backward|Forward|)$/.exec(nativeInputType);
+               selectionLength,
+               execType;
+
+            if (nativeInputType === 'insertFromDrop') {
+               return nativeInputType;
+            }
+
+            selectionLength = selection.selectionEnd - selection.selectionStart;
+            execType = /^(insert|delete|).*?(Backward|Forward|)$/.exec(nativeInputType);
 
             return selectionLength ? execType[1] : execType[1] + execType[2];
          }

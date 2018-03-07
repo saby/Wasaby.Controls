@@ -1,6 +1,7 @@
 define('Controls-demo/Buttons/ButtonsVdom', [
    'Core/Control',
    'tmpl!Controls-demo/Buttons/ButtonsVdom',
+   'css!Controls-demo/Buttons/ButtonsVdom',
    'Controls/Button'
 ], function (Control,
              template) {

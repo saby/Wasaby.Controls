@@ -1,0 +1,78 @@
+
+@padding_ImportCustomizer-ColumnBinding-View-title: 6px 0 18px 12px;
+@font-size_ImportCustomizer-ColumnBinding-View-title: 15px;
+@color_ImportCustomizer-ColumnBinding-View-title: #313E78;
+@border-left_ImportCustomizer-ColumnBinding-View-grid-th: 1px solid #F5F5F5;
+@padding_ImportCustomizer-ColumnBinding-View-grid-th: 0;
+@background-color_ImportCustomizer-ColumnBinding-View-grid-th: #E5ECF5 !important;
+@font-size_ImportCustomizer-ColumnBinding-View-grid-th: 14px;
+@color_ImportCustomizer-ColumnBinding-View-grid-th: #0055BB;
+@width_ImportCustomizer-ColumnBinding-View-grid-firstCell: 40px;
+@border-bottom_ImportCustomizer-ColumnBinding-View-grid-firstCell: 1px solid #F5F5F5 !important;
+@background-color_ImportCustomizer-ColumnBinding-View-grid-firstCell: #E5ECF5;
+@color_ImportCustomizer-ColumnBinding-View-grid-item-light: #999999;
+@min-width_ImportCustomizer-ColumnBinding-View-grid-column: 150px;
+@padding_ImportCustomizer-ColumnBinding-View-grid-column-menu: 5px 6px;
+@margin_ImportCustomizer-ColumnBinding-View-grid-column-menu-picker: -3px 0 0 0;
+@top_ImportCustomizer-ColumnBinding-View-grid-column-menu-picker-selected: 12px;
+@width_ImportCustomizer-ColumnBinding-View-grid-column-menu-picker-selected: 6px;
+@height_ImportCustomizer-ColumnBinding-View-grid-column-menu-picker-selected: 8px;
+@color_ImportCustomizer-ColumnBinding-View-grid-column-menu-picker-empty: #CCCCCC;
+@background-color_ImportCustomizer-ColumnBinding-View-grid-column-menu-picker-selected: #d94700;
+
+.controls-ImportCustomizer-ColumnBinding-View__title {
+    padding: @padding_ImportCustomizer-ColumnBinding-View-title;
+    font-size: @font-size_ImportCustomizer-ColumnBinding-View-title;
+    font-weight: bold;
+    color: @color_ImportCustomizer-ColumnBinding-View-title;
+}
+
+.controls-ImportCustomizer-ColumnBinding-View__grid .controls-DataGridView__th {
+    border-left: @border-left_ImportCustomizer-ColumnBinding-View-grid-th;
+    padding: @padding_ImportCustomizer-ColumnBinding-View-grid-th;
+    background-color: @background-color_ImportCustomizer-ColumnBinding-View-grid-th;
+    font-size: @font-size_ImportCustomizer-ColumnBinding-View-grid-th;
+    color: @color_ImportCustomizer-ColumnBinding-View-grid-th;
+}
+
+.controls-ImportCustomizer-ColumnBinding-View__grid .controls-DataGridView__firstContentCell {
+    width: @width_ImportCustomizer-ColumnBinding-View-grid-firstCell;
+    border-bottom: @border-bottom_ImportCustomizer-ColumnBinding-View-grid-firstCell;
+    background-color: @background-color_ImportCustomizer-ColumnBinding-View-grid-firstCell;
+    text-align: right;
+}
+
+.controls-ImportCustomizer-ColumnBinding-View__grid__item-light {
+    color: @color_ImportCustomizer-ColumnBinding-View-grid-item-light;
+}
+
+.controls-ImportCustomizer-ColumnBinding-View__grid__column {
+    min-width: @min-width_ImportCustomizer-ColumnBinding-View-grid-column;
+}
+
+.controls-ImportCustomizer-ColumnBinding-View__grid__column__menu {
+    display: block;
+    padding: @padding_ImportCustomizer-ColumnBinding-View-grid-column-menu;
+}
+
+.controls-ImportCustomizer-ColumnBinding-View__grid__column__menu__picker {
+    margin: @margin_ImportCustomizer-ColumnBinding-View-grid-column-menu-picker;
+}
+
+.controls-ImportCustomizer-ColumnBinding-View__grid__column__menu__picker .controls-Menu__header {
+    display: none;
+}
+
+.controls-ImportCustomizer-ColumnBinding-View__grid__column__menu__picker__empty {
+    color: @color_ImportCustomizer-ColumnBinding-View-grid-column-menu-picker-empty;
+}
+
+.controls-ImportCustomizer-ColumnBinding-View__grid__column__menu__picker__selected:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: @top_ImportCustomizer-ColumnBinding-View-grid-column-menu-picker-selected;
+    width: @width_ImportCustomizer-ColumnBinding-View-grid-column-menu-picker-selected;
+    height: @height_ImportCustomizer-ColumnBinding-View-grid-column-menu-picker-selected;
+    background-color: @background-color_ImportCustomizer-ColumnBinding-View-grid-column-menu-picker-selected;
+}

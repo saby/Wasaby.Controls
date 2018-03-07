@@ -30,12 +30,12 @@ define('SBIS3.CONTROLS/Tree/CompositeView', [
     *
     * @mixes SBIS3.CONTROLS/Mixins/CompositeViewMixin
     *
-    * @author Сухоручкин А.С.
     *
     * @demo SBIS3.DOCS.TreeCompositeView
     *
     * @public
     * @control
+    * @author Герасимов А.М.
     * @category Lists
     * @initial
     * <component data-component='SBIS3.CONTROLS/Tree/CompositeView'>

@@ -35,7 +35,7 @@ define('SBIS3.CONTROLS/TextArea', [
     * Класс контрола "Многострочное поле ввода". Контрол может автоматически менять высоту в зависимости от количества введённой информации.
     * @class SBIS3.CONTROLS/TextArea
     * @extends SBIS3.CONTROLS/TextBox/TextBoxBase
-    * @author Романов В.С.
+    * @author Зайцев А.С.
     * @css controls-TextArea Класс для изменения отображения текста в многострочном поле ввода.
     *
     * @ignoreOptions independentContext contextRestriction className
