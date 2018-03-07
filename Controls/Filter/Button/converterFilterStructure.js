@@ -2,9 +2,10 @@ define('Controls/Filter/Button/converterFilterStructure',
    [
       'WS.Data/Chain',
       'WS.Data/Entity/Record',
-      'WS.Data/Collection/RecordSet'
+      'WS.Data/Collection/RecordSet',
+      'WS.Data/Utils'
    ],
-   function (Chain, Record, RecordSet) {
+   function (Chain, Record, RecordSet, Util) {
       
       'use strict';
       
@@ -29,8 +30,8 @@ define('Controls/Filter/Button/converterFilterStructure',
          return Chain(items).map(function (item) {
             var itemStructureItem = {};
             for (var i in structureMap) {
-               if (item.hasOwnProperty(structureMap[i]) && structureMap.hasOwnProperty(i)) {
-                  itemStructureItem[i] = item[structureMap[i]];
+               if (Util.getItemPropertyValue(item, structureMap[i]) && structureMap.hasOwnProperty(i)) {
+                  itemStructureItem[i] = Util.getItemPropertyValue(item, structureMap[i]);
                }
             }
             return itemStructureItem;
@@ -38,19 +39,22 @@ define('Controls/Filter/Button/converterFilterStructure',
       }
       
       function convertToSourceData (filterStructure) {
-         return Chain(filterStructure)
-            .map(function (item) {
+         var dataArray = [];
+
+         Chain(filterStructure)
+            .each(function (item) {
                var rsItem = {};
                for (var i in recordToSructureElemMap) {
-                  if (item.hasOwnProperty(recordToSructureElemMap[i]) && recordToSructureElemMap.hasOwnProperty(i)) {
-                     rsItem[i] = item[recordToSructureElemMap[i]];
+                  if (Util.getItemPropertyValue(item, recordToSructureElemMap[i]) && recordToSructureElemMap.hasOwnProperty(i)) {
+                     rsItem[i] = Util.getItemPropertyValue(item, recordToSructureElemMap[i]);
                   }
                }
-               return new Record({
-                  rawData: rsItem
-               });
-            })
-            .value(RecordSet);
+               dataArray.push(rsItem);
+            });
+         return new RecordSet({
+            rawData: dataArray
+         });
+
       }
       
       return {
