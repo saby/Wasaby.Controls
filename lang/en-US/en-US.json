@@ -59,7 +59,7 @@
    "Зеленый": "Green",
    "Значение поля должно быть меньше или равно значения поля \"$name$s$\"": "The field value must be less than or equal to the \"$name$s$\" field value",
    "Значение поля должно быть больше или равно значения поля \"$name$s$\"": "The field value must be greater than or equal to the \"$name$s$\" field value",
-   "из": "From",
+   "из": "from",
    "Из файла": "From file",
    "Избранные": "Favorites",
    "Инвертировать": "Invert",
