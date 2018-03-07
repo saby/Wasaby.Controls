@@ -575,12 +575,12 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             if (this._content) {
                this._toggleGradient();
                /**
-                * В firefox при высоте = 0 на дочерних элементах, нативный скролл не пропадает.
-                * В такой ситуации content имеет высоту скролла, а должен быть равен 0.
+                * В firefox при высоте дочерних элементав < высоты скролла(34px) и резиновой высоте контейнера через max-height, нативный скролл не пропадает.
+                * В такой ситуации content имеет высоту скролла, а должен быть равен высоте дочерних элементав.
                 * Поэтому мы вешаем класс, который убирает нативный скролл, если произойдет такая ситуация.
                 */
                if (cDetection.firefox) {
-                  this._toggleOverflowHidden(!this._getChildContentHeight());
+                  this._toggleOverflowHidden(this._getChildContentHeight() < 35);
                }
                if (cDetection.isIE) {
                   // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
