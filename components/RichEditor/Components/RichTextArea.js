@@ -1131,6 +1131,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                     done = true;
                                  }
                                  if (done) {
+                                    self._tinyLastRng = selection.getRng();
                                     editor.undoManager.add();
                                  }
                                  self.close();
@@ -1963,7 +1964,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             // Для правильной работы метода insertHtml в отсутствии фокуса будем фиксировать последний актуальный рэнж
             editor.on('focus focusin', function (evt) {
-               self._tinyLastRng = null;
+               // Сбрасывать последний актуальный рэнж не сразу, а только после того, как все синхронные обработчики события отработают
+               setTimeout(function () {
+                  self._tinyLastRng = null;
+               }, 1);
             });
             editor.on('blur focusout', function (evt) {
                var rng = editor.selection.getRng();
