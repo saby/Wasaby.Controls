@@ -257,7 +257,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
          if (isExcel) {
             params['storage'] = 'excel';
          }
-        UrlLoader(prepareGetRPCInvocationURL( isExcel ? 'FileTransfer' : 'File', 'Download', params, undefined, '/file-transfer/service/'), '_self');
+        UrlLoader(prepareGetRPCInvocationURL( isExcel ? 'FileTransfer' : 'File', 'Download', params, undefined, '/file-transfer/service/'));
       },
       /**
        * Метод для формирования параметров фильтрации выгружаемого на сервере файла.
