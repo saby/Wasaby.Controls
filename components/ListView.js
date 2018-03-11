@@ -1542,6 +1542,11 @@ define('SBIS3.CONTROLS/ListView',
             }
             if (!isEmpty(this._options.groupBy) && this._options.easyGroup && $(e.target).hasClass('controls-GroupBy__separatorCollapse')) {
                var idGroup = $(e.target).closest('.controls-GroupBy').attr('data-group');
+               // Если не найдены дочерние элементы для группы с string-идентификатором - используем числовой groupId
+               // https://online.sbis.ru/opendoc.html?guid=9fbc33ab-11bf-4192-a57e-b9b75770d2b2
+               if (this._options._itemsProjection.getGroupItems(idGroup).length === 0) {
+                  idGroup = parseFloat(idGroup, 2);
+               }
                this.toggleGroup(idGroup);
                if ($target.closest('.controls-ListView').parent().hasClass('ws-sticky-header__header-container')) {
                   $group = this._getItemsContainer().find('.controls-GroupBy[data-group="' + idGroup + '"]');
