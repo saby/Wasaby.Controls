@@ -23,33 +23,24 @@ define('SBIS3.CONTROLS/Mixins/DragNDropMixin', [
            isLeftButtonDown = false,
            eventBusChannel = EventBus.channel('DragAndDropChannel'),
            onMouseUp = function(e) {
+              isLeftButtonDown = false;
               eventBusChannel.notify('onMouseup', e);
               //Сбрасывать драгндроп надо после того как выполнились все обработчики, нам неизвестен порядок выполнения
               // обработчиков может быть что первым mouseup поймает владелец и сбросит драгндроп
               DragObject.reset();
+              $(document).off('mousemove touchmove', onMouseMove).off('mouseup touchend', onMouseUp);
+           },
+           onMouseMove = function (e) {
+              //Probably 'mouseup' event doesn't trigger over scrollbars.
+              //Detecting that left button is not hold yet on the window right edge.
+              if (isLeftButtonDown && !(e.buttons & LEFT_BUTTON) && innerWidth - e.pageX < SCROLL_BAR_WIDTH) {
+                 onMouseUp(e);
+              } else {
+                 eventBusChannel.notify('onMousemove', e);
+              }
            };
 
-        // Добавлены события для мультитач-девайсов
-        // Для обработки используются уже существующие обработчики,
-        // незначительно дополненные
-        $(document).on('mousedown touchstart', function(e) {
-           if (e.buttons & LEFT_BUTTON) {
-              isLeftButtonDown = true;
-              innerWidth = window.innerWidth;
-           }
-        }).on('mousemove touchmove', function (e) {
-           //Probably 'mouseup' event doesn't trigger over scrollbars.
-           //Detecting that left button is not hold yet on the window right edge.
-           if (isLeftButtonDown && !(e.buttons & LEFT_BUTTON) && innerWidth - e.pageX < SCROLL_BAR_WIDTH) {
-              isLeftButtonDown = false;
-              onMouseUp(e);
-           } else {
-              eventBusChannel.notify('onMousemove', e);
-           }
-        }).on('mouseup touchend', function(e) {
-           isLeftButtonDown = false;
-           onMouseUp(e);
-        });
+
     }
 
     var DragAndDropMixin = /**@lends SBIS3.CONTROLS/Mixins/DragNDropMixin.prototype*/{
@@ -319,6 +310,11 @@ define('SBIS3.CONTROLS/Mixins/DragNDropMixin', [
                         EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
                     }
                 };
+            if (clickEvent.buttons & LEFT_BUTTON) {
+               isLeftButtonDown = true;
+               innerWidth = window.innerWidth;
+            }
+            $(document).on('mousemove touchmove', onMouseMove).on('mouseup touchend', onMouseUp);
             var clickEventOrigin = clickEvent.originalEvent || clickEvent;//в clickEvent.which может быть не определен, а в originalEvent он есть
             if ($(clickEventOrigin.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer()[0]).length === 0
                && ((clickEventOrigin.type == 'mousedown' && clickEventOrigin.which == LEFT_BUTTON) || clickEventOrigin.type != 'mousedown') //Для мышки проверям что нажата левая кнопка
@@ -339,14 +335,14 @@ define('SBIS3.CONTROLS/Mixins/DragNDropMixin', [
                 DragObject.setDragging(true);
                 DragObject.onDragHandler(e);
                 if (this._beginDragHandler(DragObject, e) !== false) {
-                    if (this._notify('onBeginDrag', DragObject, e) !== false) {
-                        this._initDragOverlay();
-                        this._showAvatar(e);
-                        DragObject.setOwner(this);
-                        DragObject.setDragging(true);
-                    } else {
+                   if (this._notify('onBeginDrag', DragObject, e) !== false) {
+                      this._initDragOverlay();
+                      this._showAvatar(e);
+                      DragObject.setOwner(this);
+                      DragObject.setDragging(true);
+                   } else {
                         DragObject.reset();
-                    }
+                   }
                 } else {
                     DragObject.reset();
                 }
@@ -399,6 +395,7 @@ define('SBIS3.CONTROLS/Mixins/DragNDropMixin', [
                 //touchend всегда срабатывает не над droppable контейнером, так что для него запускаем всегда
                 this._updateDragTarget(DragObject, e);
             }
+
             this._breakClickBySelf(e.target);
             var res = this._notify('onEndDrag', DragObject, e);
             if (res !== false) {
