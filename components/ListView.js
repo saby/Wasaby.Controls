@@ -1056,6 +1056,7 @@ define('SBIS3.CONTROLS/ListView',
             if (items && this._isCursorNavigation() && this._listNavigation) {
                this._listNavigation.analyzeResponseParams(items);
             }
+            this._observeResultsRecord(false);
             ListView.superclass.setItems.apply(this, arguments);
          },
 
@@ -4884,7 +4885,8 @@ define('SBIS3.CONTROLS/ListView',
                   this._onMetaDataResultsChange();
                }.bind(this);
             }
-            if (!needObserve || !this._isResultObserved()) {
+
+            if (needObserve !== this._isResultObserved()) { //Если нужно подписаться и подписки еще нет, либо если нужно отписаться и подписка есть
                if (this.getItems()) {
                   this[methodName](this.getItems(), 'onPropertyChange', this._onRecordSetPropertyChange);
                   metaData = this.getItems().getMetaData();
