@@ -33,7 +33,6 @@ define('SBIS3.CONTROLS/ScrollContainer', [
        * @extends SBIS3.CONTROLS/CompoundControl
        * @author Журавлев М.С.
        *
-       *
        * @remark
        * Пример 1:
        * Для работы SBIS3.CONTROLS/ScrollContainer требуется установить CSS-свойства height или max-height:
@@ -62,6 +61,10 @@ define('SBIS3.CONTROLS/ScrollContainer', [
        * control._notify('onResize')
        * </pre>
        * control - экземпляр класса любого родительского контрола, в котором есть ScrollContainer
+       *
+       * Чтобы зафиксировать блок внутри ScrollContainer, на блок нужно навесить класс "ws-sticky-header__block";
+       * чтобы при скролле блок прилипал к верхней части контейнера, нужно на контейнер навесить класс "ws-sticky-header__parent".
+       * Подробно фиксация блоков описана в разделе <a href="/doc/platform/developmentapl/interface-development/ready-solutions/fixed-header/">Фиксация шапки страниц и всплывающих панелей</a>.
        *
        * @cssModifier controls-ScrollContainer__light Устанавливает светлый тонкий скролл.
        * @cssModifier controls-ScrollContainer__hiddenScrollbar Скрывает отображение ползунка.
