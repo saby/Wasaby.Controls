@@ -65,6 +65,7 @@ define('SBIS3.CONTROLS/Filter/FastData',
                 * либо через источник данных методом {@link setDataSource}.
                 * !Важно: name(имя фильтра) должен совпадать с internalValueField в FilterStructure, чтобы правильно заработала синхронизация
                 * !Важно: На данный момент лучше описывать опции в Module (как это сделано в примере), а не в верстке xhtml, при описании в верстве нужно самостоятельно вызвать reload
+                * !Важно: При установке historyId необходимо в завимости своего компонента прописать SBIS3.CONTROLS/SbisDropdownList для обеспечения работы механизма истории
                 * @example
                 * <pre>
                 *    items: [{
@@ -73,6 +74,7 @@ define('SBIS3.CONTROLS/Filter/FastData',
                 *       name: 'first',        //Имя фильтра
                 *       multiselect : false,  //Режим выпадающего списка
                 *       className: 'controls-DropdownList__withoutCross', //Строка с классами css-модификаторов для выпадающего списка
+                *       historyId: 'myOwnHistroyID',
                 *       values:[                //Набор элементов выпадающего списка
                 *       {
                 *          key : 0,

@@ -1,12 +1,12 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
-    'SBIS3.CONTROLS/Menu/SbisMenu',
+    'SBIS3.CONTROLS/Menu/SBISHistoryController',
     'WS.Data/Collection/RecordSet',
     'WS.Data/Adapter/Sbis',
     'WS.Data/Entity/Model'
     ],
 
-    function (SbisMenu, RecordSet, SbisAdapter, Model) {
+    function (SBISHistoryController, RecordSet, SbisAdapter, Model) {
 
     'use strict';
     var
@@ -116,6 +116,7 @@ define([
                 this.rawData = data;
             },
             getRow: function() {
+
                 return {
                     rawData: this.rawData,
                     get: function(type) {
@@ -131,7 +132,8 @@ define([
                 parentProperty: 'Parent',
                 displayProperty: 'title',
                 pinned: true,
-                frequent: true
+                frequent: true,
+                oldItems: myRecord
             },
             _filteredFrequent: null,
             _subContainers: ['2'],
@@ -141,13 +143,13 @@ define([
                     _type: 'recordset',
                     d: [
                         [
-                            '1', 'Задача в разработку', null, true
+                            'pinned-1', 'Задача в разработку', null, true
                         ],
                         [
-                            '5', 'Согласование', 2, true
+                            'pinned-5', 'Согласование', 2, true
                         ],
                         [
-                            '12', 'Прогул', null, true
+                            'pinned-12', 'Прогул', null, true
                         ]
                     ],
                     s: [
@@ -200,16 +202,16 @@ define([
                     _type: 'recordset',
                     d: [
                         [
-                            '1', 'Задача в разработку', null, true
+                            'frequent-1', 'Задача в разработку', null, true
                         ],
                         [
-                            '4', 'Выполнить на боевом', null, true
+                            'frequent-4', 'Выполнить на боевом', null, true
                         ],
                         [
-                            '5', 'Согласование', 2, true
+                            'frequent-5', 'Согласование', 2, true
                         ],
                         [
-                            '7', 'Продажи', null, true
+                            'frequent-7', 'Продажи', null, true
                         ]
                     ],
                     s: [
@@ -224,45 +226,54 @@ define([
                 format: myFormat
             })
         },
-        item;
+        item,
+        historyController;
 
-    describe('SBIS3.CONTROLS/Menu/SbisMenu', function () {
+
+
+    describe('SBIS3.CONTROLS/Menu/SBISHistoryController', function () {
+        before(function() {
+            historyController = new SBISHistoryController({
+                oldItems: myRecord,
+                historyId: 'myHistoryID',
+                pinned: true,
+                frequent: true,
+                displayProperty: 'title',
+                subContainers: ['2'],
+                parentProperty: 'Parent'
+            });
+        });
+
         describe('getOriginId', function () {
             it('pinned', function () {
-                newId = SbisMenu._private.getOriginId('pinned-27313bd6-bc02-11e4-a1dd-00505691577e');
+                newId = historyController.getOriginId('pinned-27313bd6-bc02-11e4-a1dd-00505691577e');
                 assert.equal(newId, '27313bd6-bc02-11e4-a1dd-00505691577e');
             });
             it('frequent', function () {
-                newId = SbisMenu._private.getOriginId('frequent-51350476-f4a0-4980-8f9d-159b683dfc0d');
+                newId = historyController.getOriginId('frequent-51350476-f4a0-4980-8f9d-159b683dfc0d');
                 assert.equal(newId, '51350476-f4a0-4980-8f9d-159b683dfc0d');
             });
             it('recent', function () {
-                newId = SbisMenu._private.getOriginId('recent-d9ec5157-d563-4243-b8e7-0d3f8c95c0cf');
+                newId = historyController.getOriginId('recent-d9ec5157-d563-4243-b8e7-0d3f8c95c0cf');
                 assert.equal(newId, 'd9ec5157-d563-4243-b8e7-0d3f8c95c0cf');
             });
             it('origin', function () {
-                newId = SbisMenu._private.getOriginId('8da8666c-8106-43ef-9d62-a58433832558');
+                newId = historyController.getOriginId('8da8666c-8106-43ef-9d62-a58433832558');
                 assert.equal(newId, '8da8666c-8106-43ef-9d62-a58433832558');
             });
         });
 
         describe('prepareRecordSet', function () {
-            it('check with empty pinned items', function () {
-                SbisMenu._private.initRecordSet(self, self._oldItems.getFormat());
-                data.setRawData(rawHistoryDataWidthEmptyPinned);
-                SbisMenu._private.parseHistoryData(self, data);
-                assert.equal(self._pinned.getFormat().getCount(), self._oldItems.getFormat().getCount());
-            });
             it('parseHistoryData', function () {
-                SbisMenu._private.initRecordSet(self, self._oldItems.getFormat());
+                historyController.initRecordSet();
                 data.setRawData(rawHistoryData);
-                SbisMenu._private.parseHistoryData(self, data);
-                SbisMenu._private.prepareHistoryData(self);
-                assert.equal(self._pinned.getFormat().getCount(), self._oldItems.getFormat().getCount());
+                historyController.parseHistoryData(data);
+                historyController.prepareHistoryData();
+                assert.equal(historyController._pinned.getFormat().getCount(), historyController._options.oldItems.getFormat().getCount());
             });
 
             it('init recordSet', function () {
-                item = self._pinned.getRecordById('pinned-1');
+                item = historyController._pinned.getRecordById('pinned-1');
                 assert.equal(item.get('title'), 'Задача в разработку');
                 assert.equal(item.get('visible'), true);
                 assert.equal(item.get('pinned'), false);
@@ -281,67 +292,73 @@ define([
                 ],
                 newEmptyRecord;
 
-                newEmptyRecord = SbisMenu._private.getEmptyHistoryRecord(self, myFormat);
+                newEmptyRecord = SBISHistoryController._private.getEmptyHistoryRecord(historyController, myFormat);
                 assert.equal(newEmptyRecord.getFormat().getCount(), 3);
                 assert.equal(newEmptyRecord.getCount(), 0);
             });
         });
         describe('fill History', function () {
-            it('check getFrequent without frequent items', function () {
-                self._options.frequent = false;
-                frequent = SbisMenu._private.getFrequent(self);
-                assert.equal(frequent.getCount(), 0);
-            });
             it('filterFrequent', function () {
-                self._options.frequent = true;
-                self._filteredFrequent = SbisMenu._private.filterFrequent(self);
-                assert.equal(self._filteredFrequent.getCount(), 2);
+                historyController._options.frequent = true;
+                historyController._filteredFrequent = SBISHistoryController._private.filterFrequent(historyController);
+                assert.equal(historyController._filteredFrequent.getCount(), 2);
             });
             it('filterRecent', function () {
                 var filterRecent;
-
-                filterRecent = SbisMenu._private.filterRecent(self);
+                filterRecent = SBISHistoryController._private.filterRecent(historyController);
                 assert.equal(filterRecent.getCount(), 2);
             });
             it('processHistory, check additional', function () {
                 var hiddenByPinItem,
                     processedItems;
 
-                processedItems = SbisMenu._private.processHistory(self);
+                processedItems = SBISHistoryController._private.processHistory(historyController);
                 hiddenByPinItem = processedItems.getRecordById('12');
                 assert.equal(processedItems.getCount(), 19);
                 // проверяем что элемент, который скрыли в истории не скрыли ещё раз дополнительный >10 видимых элементов
-                assert.equal(hiddenByPinItem.get(self._options.additionalProperty), false);
+                assert.equal(hiddenByPinItem.get(historyController._options.additionalProperty), false);
 
             });
             it('addToRecent', function () {
                 var recentItem;
 
-                SbisMenu._private.addToRecent(self, myItem.getId(), myItem);
-                recentItem = self._recent.at(0);
+                historyController.addToRecent(myItem.getId(), myItem);
+                recentItem = historyController._recent.at(0);
                 assert.equal(recentItem.get('title'), 'Обучение');
             });
             it('processPinnedItem pin: false', function () {
                 var idPickItem = 'pinned-1',
-                    pickItem = self._pinned.getRecordById(idPickItem),
+                    pickItem = historyController._pinned.getRecordById(idPickItem),
                     pinned, oldItem;
 
-                pinned = SbisMenu._private.processPinnedItem(self, idPickItem, SbisMenu._private.getOriginId(idPickItem), pickItem);
-                oldItem = self._oldItems.getRecordById(SbisMenu._private.getOriginId(idPickItem));
+                pinned = SBISHistoryController._private.processPinnedItem(historyController, SBISHistoryController._private.getOriginId(idPickItem), pickItem);
+                oldItem = historyController._options.oldItems.getRecordById(SBISHistoryController._private.getOriginId(idPickItem));
                 assert.equal(pinned, false);
                 assert.equal(oldItem.get('title'), pickItem.get('title'));
                 assert.equal(oldItem.get('visible'), true);
                 assert.equal(oldItem.get('pinned'), false);
             });
             it('processPinnedItem pin: true', function () {
-                var pickItem = self._oldItems.getRecordById('8'),
+                var pickItem = historyController._options.oldItems.getRecordById('8'),
                     pinnedItem, pinned;
 
-                pinned = SbisMenu._private.processPinnedItem(self, pickItem.getId(), SbisMenu._private.getOriginId(pickItem.getId()), pickItem);
-                pinnedItem = self._pinned.at(self._pinned.getCount() - 1);
+                pinned = SBISHistoryController._private.processPinnedItem(historyController, SBISHistoryController._private.getOriginId(pickItem.getId()), pickItem);
+                pinnedItem = historyController._pinned.at(historyController._pinned.getCount() - 1);
                 assert.equal(pinnedItem.get('title'), 'Обучение');
                 assert.equal(pinned, true);
                 assert.equal(pickItem.get('visible'), false);
+            });
+            it('setPinned', function () {
+                var pinnedItems = [11, 12];
+
+                historyController.setPinned(pinnedItems);
+                assert.equal(historyController._pinned.getCount(), 2);
+            });
+            it('setFrequent', function () {
+                var frequentItems = [1, 12];
+
+                historyController.setFrequnet(frequentItems);
+                assert.equal(historyController._frequent.getCount(), 2);
             });
         });
     });
