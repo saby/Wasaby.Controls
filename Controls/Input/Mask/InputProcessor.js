@@ -176,27 +176,28 @@ define('Controls/Input/Mask/InputProcessor',
              * @param splitValue значение разбитое на части before, insert, after, delete.
              * @param inputType тип ввода.
              * @param replacer заменитель.
-             * @param format данные маски, на которую будет проецироваться разбитое значение.
+             * @param oldFormat данные маски, на которую проецировалось разбитое значение.
+             * @param newFormat данные маски, на которую будет проецироваться разбитое значение.
              * @return {{value: (String) новая строка, position: (Integer) позиция курсора}}
              */
-            input: function(splitValue, inputType, replacer, format) {
+            input: function(splitValue, inputType, replacer, oldFormat, newFormat) {
                var
                   value = splitValue.before + splitValue.delete + splitValue.after,
-                  clearData = Formatter.getClearData(format, value),
+                  clearData = Formatter.getClearData(oldFormat, value),
                   clearSplitValue = InputProcessor.getClearSplitValue(splitValue, clearData), result;
 
                switch(inputType) {
                   case 'insert':
-                     result = InputProcessor.insert(format, clearSplitValue, replacer);
+                     result = InputProcessor.insert(newFormat, clearSplitValue, replacer);
                      break;
                   case 'delete':
-                     result = InputProcessor.delete(format, clearSplitValue, replacer);
+                     result = InputProcessor.delete(newFormat, clearSplitValue, replacer);
                      break;
                   case 'deleteForward':
-                     result = InputProcessor.deleteForward(format, clearSplitValue, replacer);
+                     result = InputProcessor.deleteForward(newFormat, clearSplitValue, replacer);
                      break;
                   case 'deleteBackward':
-                     result = InputProcessor.deleteBackward(format, clearSplitValue, replacer);
+                     result = InputProcessor.deleteBackward(newFormat, clearSplitValue, replacer);
                      break;
                }
 
