@@ -89,6 +89,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
             quantum: {},
 
+            minQuantum: 'day',
+
             headerType: headerTypes.link,
 
             emptyCaption:  rk('Период не указан'),
@@ -223,7 +225,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
          this.getChildControlByName('PrevYearButton').subscribe('onActivated', this._onPrevOrNextYearBtnClick.bind(this, -1));
          this.getChildControlByName('NextYearButton').subscribe('onActivated', this._onPrevOrNextYearBtnClick.bind(this, 1));
-         if (rangeBigChooseUtils.isStateButtonDisplayed(this._options.quantum)) {
+         if (rangeBigChooseUtils.isStateButtonDisplayed(this._options)) {
             this.getChildControlByName('StateButton').subscribe('onActivated', this._onStateBtnClick.bind(this));
          }
 
@@ -315,9 +317,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          options.monthStateEnabled = true;
          if (!isEmpty(options.quantum)) {
             options.yearSelectionEnabled = 'years' in options.quantum;
-            options.yearStateEnabled = rangeBigChooseUtils.isYearStateEnabled(options.quantum);
-            options.monthStateEnabled = rangeBigChooseUtils.isMonthStateEnabled(options.quantum);
          }
+         options.yearStateEnabled = rangeBigChooseUtils.isYearStateEnabled(options);
+         options.monthStateEnabled = rangeBigChooseUtils.isMonthStateEnabled(options);
          return options;
       },
 
@@ -678,7 +680,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this._dateRangePicker._updateScrollPosition();
          this._setCurrentYear(month.getFullYear(), true);
          this._updateYearsBar(month.getFullYear());
-         if (rangeBigChooseUtils.isStateButtonDisplayed(this._options.quantum)) {
+         if (rangeBigChooseUtils.isStateButtonDisplayed(this._options)) {
             this.getChildControlByName('StateButton').setChecked(true);
          }
       },
@@ -692,7 +694,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          container.find('.controls-DateRangeBigChoose__months').removeClass('ws-hidden');
          this._monthRangePicker.setRange(this.getStartValue(), this.getEndValue());
          this.getChildControlByName('MonthRangePicker').setYear(this._getCurrentYear());
-         if (rangeBigChooseUtils.isStateButtonDisplayed(this._options.quantum)) {
+         if (rangeBigChooseUtils.isStateButtonDisplayed(this._options)) {
             this.getChildControlByName('StateButton').setChecked(false);
          }
       },
