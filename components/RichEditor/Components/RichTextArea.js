@@ -1023,17 +1023,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                range = coreClone(selection.getRng()),
                element = selection.getNode(),
                anchor = editor.dom.getParent(element, 'a[href]'),
-               href = anchor ? editor.dom.getAttrib(anchor, 'href') : '',
+               origHref = anchor ? editor.dom.getAttrib(anchor, 'href') : '',
+               origCaption = selection.getContent({format:'text'}),//anchor ? anchor.innerText : ''
                fre = this,
                context = cContext.createContext(this),
                dialogWidth = 440;
             require(['Lib/Control/Dialog/Dialog', 'Deprecated/Controls/FieldString/FieldString', 'SBIS3.CONTROLS/Button'], function(Dialog, FieldString, Button) {
                new Dialog({
-                  title: rk('Вставить/редактировать ссылку'),
+                  title: rk('Web-ссылка'),
                   disableActions: true,
                   resizable: false,
                   width: dialogWidth,
-                  height: 48,
+                  height: 72,
                   autoHeight: false,
                   keepSize: false,
                   opener: fre,
@@ -1044,33 +1045,46 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      onReady: function () {
                         var
                            self = this,
-                           hrefLabel = $('<div class="controls-RichEditor__insertLinkHrefLabel">' + rk('Адрес') + '</div>'),
-                           okButton = $('<div class="controls-RichEditor__insertLinkButton"></div>'),
+                           okButton = $('<div class="controls-RichEditor__InsertLink__okButton"></div>'),
+                           hrefLabel = $('<div class="controls-RichEditor__InsertLink__label controls-RichEditor__InsertLink__hrefLabel">' + rk('Адрес') + '</div>'),
+                           hrefInput = $('<div class="controls-RichEditor__InsertLink__input controls-RichEditor__InsertLink__hrefInput"></div>'),
+                           captionLabel = $('<div class="controls-RichEditor__InsertLink__label controls-RichEditor__InsertLink__captionLabel">' + rk('Название') + '</div>'),
+                           captionInput = $('<div class="controls-RichEditor__InsertLink__input controls-RichEditor__InsertLink__captionInput"></div>'),
                            linkAttrs = {
                               target: '_blank',
                               rel: null,
                               'class': null,
                               title: null
                            };
-                        this._fieldHref = $('<div class="controls-RichEditor__insertLinkHref"></div>');
                         this.getContainer()
                            .append(hrefLabel)
-                           .append(this._fieldHref);
+                           .append(hrefInput)
+                           .append(captionLabel)
+                           .append(captionInput);
                         //TODO: перевечсти поле ввода на SBIS3.CONTROLS.TextBoxтк в нём нет доскрола при активации
-                        this._fieldHref = new FieldString({
-                           value: href,
+                        this._hrefInput = new FieldString({
+                           value: origHref,
                            parent: this,
-                           element: this._fieldHref,
+                           element: hrefInput,
                            linkedContext: context,
-                           name: 'fre_link_href'
+                           name: 'RichEditor__InsertLink__href'
                         });
-                        this._fieldHref.getContainer().on('keydown', function(e) {
+                        this._captionInput = new FieldString({
+                           value: origCaption,
+                           parent: this,
+                           element: captionInput,
+                           linkedContext: context,
+                           name: 'RichEditor__InsertLink__caption'
+                        });
+                        var handler = function(e) {
                            if (e.which == cConstants.key.enter) {
                               e.preventDefault();
                               e.stopPropagation();
                               return false;
                            }
-                        });
+                        };
+                        this._hrefInput.getContainer().on('keydown', handler);
+                        this._captionInput.getContainer().on('keydown', handler);
                         this._titleBar
                            .prepend($('<a href="javascript:void(0)"></a>')
                               .addClass('ws-float-close ws-float-close-right')
@@ -1080,15 +1094,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                               }))
                            .append(okButton);
                         new Button({
-                           caption: rk('ОК'),
+                           caption: rk('Сохранить'),
                            primary: true,
                            parent: this,
                            handlers: {
                               onActivated: function () {
-                                 var href = this.getParent()._fieldHref.getValue();
+                                 var parent = this.getParent();
+                                 var href = parent._hrefInput.getValue();
+                                 var caption = parent._captionInput.getValue();
                                  var protocol = /(?:https?|ftp|file):\/\//gi;
                                  if (href && href.search(protocol) === -1) {
                                     href = 'http://' + href;
+                                 }
+                                 if (!caption) {
+                                    caption = origCaption || href;
                                  }
                                  var dom = editor.dom;
                                  var done;
@@ -1098,8 +1117,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                           target: '_blank',
                                           href: escapeHtml(href)
                                        });
+                                       element.innerHtml = caption;
                                     }
-                                    else {
+                                 else {
                                        editor.execCommand('unlink');
                                     }
                                     done = true;
@@ -1109,14 +1129,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                     linkAttrs.href = href;
                                     selection.setRng(range);
                                     if (selection.getContent() === '' || (fre._isOnlyTextSelected() && cConstants.browser.firefox)) {
-                                       var linkText = selection.getContent({format:'text'}) || href;
+                                       var linkText = caption;
                                        var linkHtml = dom.createHTML('a', linkAttrs, dom.encode(linkText));
                                        // Для MSIE принудительно смещаем курсор ввода после вставленной ссылки
                                        // 1174853380 https://online.sbis.ru/opendoc.html?guid=77405679-2b2b-42d3-8bc0-d2eee745ea23
                                        editor.insertContent(cConstants.browser.isIE ? linkHtml + '&#65279;&#8203;' : linkHtml);
                                     }
                                     else {
+                                       if (origCaption !== caption) {
+                                          selection.setContent(caption);
+                                          var rng = selection.getRng();
+                                          fre._selectNewRng(range.startContainer, range.startOffset, rng.endContainer, rng.endOffset);
+                                       }
                                        editor.execCommand('mceInsertLink', false, linkAttrs);
+                                       selection.collapse(false);
                                        if (cConstants.browser.firefox) {
                                           // В firefox каретка(курсор ввода) остаётся (и просачивается) внутрь элемента A, нужно принудительно вывести её наружу, поэтому:
                                           var r = editor.selection.getRng();
@@ -1148,8 +1174,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            //финт ушами, тк фокус с редактора убрать никак нельзя
                            //тк кнопки на которую нажали у нас в обработчике тоже нет
                            //ставим фокус на любой блок внутри нового диалогового окна, например на контейнер кнопки
-                           this._fieldHref.getContainer().focus(); //убираем фокус с редактора
-                           $('.controls-RichEditor__insertLinkButton').focus();//убираем клавиатуру
+                           this._hrefInput.getContainer().focus(); //убираем фокус с редактора
+                           $('.controls-RichEditor__InsertLink__okButton').focus();//убираем клавиатуру
                         }
                      },
                      onAfterClose: function() {
