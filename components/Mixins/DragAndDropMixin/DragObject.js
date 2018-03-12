@@ -212,6 +212,9 @@ define('SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragObject', [
             } else if (typeof document.elementFromPoint == 'function' && isTouchEvent) {
                //на ipad'e нет метода elementsFromPoint
                return $(document.elementFromPoint(this._jsEvent.pageX, this._jsEvent.pageY));
+            } else if ($(this._jsEvent.target).closest('.controls-editInPlace').length > 0) {
+               //у редактирования по месту нет родителя поэтому его надо игнорить, что бы драгндроп не затухал
+               return $(this._jsEvent.target).closest('.controls-editInPlace').parent();
             }
             return $(this._jsEvent.target);
          }
