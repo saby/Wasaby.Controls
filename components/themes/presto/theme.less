@@ -269,6 +269,13 @@ body {
       }
     }
   }
+  .ws-window-titlebar {
+    color: @default-text-color !important;
+    line-height: round(100px * @multiplier)!important;
+    height: round(100px * @multiplier)!important;
+    font-weight: normal !important;
+    border-bottom: none;
+  }
   .ws-window-title { // аналогично шапке панели, контентная область начинается слева от крестика
     margin: 0 !important;
     width: calc(~"100% - @{width_CloseButton} - @{padding-right_floatArea-title}") !important; //86 - close button width + 8 - padding
