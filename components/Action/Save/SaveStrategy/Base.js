@@ -4,7 +4,7 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Base', [
     'Core/Indicator',
     'SBIS3.CONTROLS/Utils/PrintDialogHTMLView',
     'SBIS3.CONTROLS/Action/Save/SaveStrategy/ISaveStrategy',
-    'SBIS3.CONTROLS/Utils/DataSetToXmlSerializer'
+    'browser!SBIS3.CONTROLS/Utils/DataSetToXmlSerializer'
 ], function (Abstract, Indicator, PrintDialogHTMLView, ISaveStrategy, Serializer) {
 
     'use strict';
