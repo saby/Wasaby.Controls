@@ -274,6 +274,9 @@
    }
 }
 
-.controls-DateRangeBigChoose-MonthRangePicker:not(.controls-RangeSelectable__selecting) .controls-DateRangeBigChoose-MonthRangePickerItem__month:hover {
-   border-color: @border-color_DateRangeBigChoose-MonthRangePickerItem-month;
+.controls-DateRangeBigChoose-MonthRangePickerItem__month_clickable {
+   &:hover,
+   &:active {
+      border-color: @border-color_DateRangeBigChoose-MonthRangePickerItem-month;
+   }
 }
