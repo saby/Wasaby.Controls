@@ -314,11 +314,11 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          if (groups) {
             var groupTitles = cfg.groupTitles;
             if (groupTitles && typeof groupTitles === 'object') {
-               var list = groups.map(function (v) { return {id:v, title:groupTitles[v] || v}; });
-               list.sort(function (v1, v2) {
-                  return v1.title < v2.title ? -1 : (v1.title === v2.title ? 0 : +1);
+               // Если задан список заголовков групп - сохранить порядок следования групп точно таким, как в этом списке
+               var gIds = Object.keys(groupTitles);
+               groups.sort(function (v1, v2) {
+                  return gIds.indexOf(v1) - gIds.indexOf(v2);
                });
-               groups = list.map(function (v) { return v.id; });
             }
             else {
                groups.sort();
