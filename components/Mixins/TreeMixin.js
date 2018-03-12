@@ -1239,7 +1239,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                   for (idx = 0; idx < items.length; idx++) {
                      if (!cInstance.instanceOfModule(items[idx], 'WS.Data/Display/GroupItem')) {
                         parent = items[idx].getParent();
-                        if (!parent.isRoot()) {
+                        if (parent && !parent.isRoot()) {
                            if (!branches[parent.getContents().getId()]) {
                               branches[parent.getContents().getId()] = parent;
                            }
@@ -1649,7 +1649,9 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                parentKey = record ? record.get(this._options.parentProperty) : null;
                if (record) {
                   hierarchy.push({
-                     'id': key || null,
+                     // key может быть 0, но по другому проверять крайне страшно
+                     // https://online.sbis.ru/opendoc.html?guid=d98cc32e-540e-4ba6-8f90-6deb992cbd0e
+                     'id': (key || key === 0) ? key : null,
                      'parent' : parentKey,
                      'title' : record.get(this._options.displayProperty),
                      'color' : this._options.colorField ? record.get(this._options.colorField) : '',

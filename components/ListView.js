@@ -1056,6 +1056,7 @@ define('SBIS3.CONTROLS/ListView',
             if (items && this._isCursorNavigation() && this._listNavigation) {
                this._listNavigation.analyzeResponseParams(items);
             }
+            this._observeResultsRecord(false);
             ListView.superclass.setItems.apply(this, arguments);
          },
 
@@ -1541,6 +1542,11 @@ define('SBIS3.CONTROLS/ListView',
             }
             if (!isEmpty(this._options.groupBy) && this._options.easyGroup && $(e.target).hasClass('controls-GroupBy__separatorCollapse')) {
                var idGroup = $(e.target).closest('.controls-GroupBy').attr('data-group');
+               // Если не найдены дочерние элементы для группы с string-идентификатором - используем числовой groupId
+               // https://online.sbis.ru/opendoc.html?guid=9fbc33ab-11bf-4192-a57e-b9b75770d2b2
+               if (this._options._itemsProjection.getGroupItems(idGroup).length === 0) {
+                  idGroup = parseFloat(idGroup, 2);
+               }
                this.toggleGroup(idGroup);
                if ($target.closest('.controls-ListView').parent().hasClass('ws-sticky-header__header-container')) {
                   $group = this._getItemsContainer().find('.controls-GroupBy[data-group="' + idGroup + '"]');
@@ -4894,7 +4900,8 @@ define('SBIS3.CONTROLS/ListView',
                   this._onMetaDataResultsChange();
                }.bind(this);
             }
-            if (!needObserve || !this._isResultObserved()) {
+
+            if (needObserve !== this._isResultObserved()) { //Если нужно подписаться и подписки еще нет, либо если нужно отписаться и подписка есть
                if (this.getItems()) {
                   this[methodName](this.getItems(), 'onPropertyChange', this._onRecordSetPropertyChange);
                   metaData = this.getItems().getMetaData();

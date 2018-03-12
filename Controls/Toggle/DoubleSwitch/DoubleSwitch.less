@@ -3,8 +3,6 @@
    .align-items(center);
    .justify-content(center);
    .baseline-fix();
-   width: @width_Switch;
-   height: @height_Switch;
    border-width: @border-width_Switch;
    border-color: @border-color_Switch;
    border-radius: @border-radius_Switch;
@@ -13,19 +11,25 @@
    cursor: pointer;
 }
 
-.controls-DoubleSwitch__toggle_checked {
-   .flex-direction(row-reverse);
-}
-
-.controls-DoubleSwitch__toggle {
+.controls-DoubleSwitch__toggle_horizontal {
    margin: 0 @margin_Switch-text;
+   width: @width_Switch;
+   height: @height_Switch;
 }
 
 .controls-DoubleSwitch__toggle_vertical {
-   .rotate(-90deg);
-   @offset: (@width_Switch - @height_Switch) / 2;
-   vertical-align: top;
-   margin: @offset -@offset @offset -@offset - 1px;
+   width: @height_Switch;
+   height: @width_Switch;
+   .flex-direction(column);
+   margin: 0;
+   &:before {
+      height: 0;
+      line-height: @default-text-size;
+   }
+}
+
+.controls-DoubleSwitch__toggle_horizontal_checked {
+   .flex-direction(row-reverse);
 }
 
 .controls-DoubleSwitch__textBlock {
@@ -34,9 +38,19 @@
    margin-left: @margin_Switch-text;
 }
 
-.controls-DoubleSwitch__line {
+.controls-DoubleSwitch__line_horizontal {
    height: @height_Switch-line;
    width: @width_Switch-line - @size_Switch-marker;
+}
+
+.controls-DoubleSwitch__line_vertical {
+   height: @width_Switch-line - @size_Switch-marker;
+   width: @height_Switch-line;
+}
+
+.controls-DoubleSwitch__line_vertical_checked {
+   //Нельзя делать через column-reverse, т.к. иначе базовая линия начинает браться не с того элемента и всё едет
+   order: 2;
 }
 
 .controls-DoubleSwitch__line_enabled {

@@ -39,7 +39,7 @@ define('Controls/Input/Mask/ViewModel',
           * @returns {{value: (String), position: (Integer)}}
           */
          handleInput: function(splitValue, inputType) {
-            var result = InputProcessor.input(splitValue, inputType, this._replacer, this._format);
+            var result = InputProcessor.input(splitValue, inputType, this._replacer, this._format, this._format);
 
             this._options.value = result.value;
 

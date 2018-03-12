@@ -9,6 +9,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
       'Core/constants',
       'Core/EventBus',
       'Core/CommandDispatcher',
+      'SBIS3.CONTROLS/ScrollContainer/ScrollWidthController',
       'css!SBIS3.CONTROLS/ScrollContainer/ScrollContainer'
    ],
    function (CompoundControl,
@@ -20,11 +21,10 @@ define('SBIS3.CONTROLS/ScrollContainer', [
              StickyHeaderManager,
              constants,
              EventBus,
-             CommandDispatcher
+             CommandDispatcher,
+             ScrollWidthController
    ) {
       'use strict';
-
-      var widthBrowserScrollbar = null;
 
       /**
        * Класс контрола "Контейнер для контента с тонким скроллом". В качестве тонкого скролла применяется класс контрола {@link SBIS3.CONTROLS/ScrollContainer/Scrollbar}.
@@ -32,7 +32,6 @@ define('SBIS3.CONTROLS/ScrollContainer', [
        * @class SBIS3.CONTROLS/ScrollContainer
        * @extends SBIS3.CONTROLS/CompoundControl
        * @author Журавлев М.С.
-       *
        *
        * @remark
        * Пример 1:
@@ -62,6 +61,10 @@ define('SBIS3.CONTROLS/ScrollContainer', [
        * control._notify('onResize')
        * </pre>
        * control - экземпляр класса любого родительского контрола, в котором есть ScrollContainer
+       *
+       * Чтобы зафиксировать блок внутри ScrollContainer, на блок нужно навесить класс "ws-sticky-header__block";
+       * чтобы при скролле блок прилипал к верхней части контейнера, нужно на контейнер навесить класс "ws-sticky-header__parent".
+       * Подробно фиксация блоков описана в разделе <a href="/doc/platform/developmentapl/interface-development/ready-solutions/fixed-header/">Фиксация шапки страниц и всплывающих панелей</a>.
        *
        * @cssModifier controls-ScrollContainer__light Устанавливает светлый тонкий скролл.
        * @cssModifier controls-ScrollContainer__hiddenScrollbar Скрывает отображение ползунка.
@@ -243,8 +246,11 @@ define('SBIS3.CONTROLS/ScrollContainer', [
 
                // Что бы до инициализации не было видно никаких скроллов
                this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
+
                // Скрываем нативный скролл.
                this._hideBrowserScrollbar();
+               this._hideBrowserScrollbar = this._hideBrowserScrollbar.bind(this);
+               ScrollWidthController.add(this._hideBrowserScrollbar);
 
                // task: 1173330288
                // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
@@ -255,59 +261,17 @@ define('SBIS3.CONTROLS/ScrollContainer', [
          },
 
          _hideBrowserScrollbar: function(){
-            var style;
-
-            if (widthBrowserScrollbar === null) {
-               widthBrowserScrollbar = this._getBrowserScrollbarWidth();
-            }
-
-            style = {
-               marginRight: -widthBrowserScrollbar
-            };
+            var width = ScrollWidthController.width(),
+               style = {
+                  marginRight: -width
+               };
 
             // На планшете c OS Windown 10 для скрытия нативного скролла, кроме margin требуется padding.
             if (compatibility.touch && cDetection.isIE) {
-               style.paddingRight = widthBrowserScrollbar;
+               style.paddingRight = width;
             }
 
             this._content.css(style);
-         },
-
-         _getBrowserScrollbarWidth: function() {
-            var scrollbarWidth = null, outer, outerStyle;
-
-            /**
-             * В браузерах с поддержкой ::-webkit-scrollbar установлена ширини 0.
-             * Определяем не с помощью Core/detection, потому что в нем считается, что chrome не на WebKit.
-             */
-            if (/AppleWebKit/.test(navigator.userAgent)) {
-               scrollbarWidth = 0;
-            } else {
-               // На Mac ширина всегда 15, за исключением браузеров с поддержкой ::-webkit-scrollbar.
-               if (cDetection.isMac) {
-                  scrollbarWidth = 15;
-               }
-            }
-            if (cDetection.isIE12) {
-               scrollbarWidth = 16;
-            }
-            if (cDetection.isIE10 || cDetection.isIE11) {
-               scrollbarWidth = 17;
-            }
-            if (scrollbarWidth === null) {
-               outer = document.createElement('div');
-               outerStyle = outer.style;
-               outerStyle.position = 'absolute';
-               outerStyle.width = '100px';
-               outerStyle.height = '100px';
-               outerStyle.overflow = 'scroll';
-               outerStyle.top = '-9999px';
-               document.body.appendChild(outer);
-               scrollbarWidth = outer.offsetWidth - outer.clientWidth;
-               document.body.removeChild(outer);
-            }
-
-            return scrollbarWidth;
          },
 
          _stickyHeadersChangedHandler: function() {
@@ -575,12 +539,12 @@ define('SBIS3.CONTROLS/ScrollContainer', [
             if (this._content) {
                this._toggleGradient();
                /**
-                * В firefox при высоте = 0 на дочерних элементах, нативный скролл не пропадает.
-                * В такой ситуации content имеет высоту скролла, а должен быть равен 0.
+                * В firefox при высоте дочерних элементав < высоты скролла(34px) и резиновой высоте контейнера через max-height, нативный скролл не пропадает.
+                * В такой ситуации content имеет высоту скролла, а должен быть равен высоте дочерних элементав.
                 * Поэтому мы вешаем класс, который убирает нативный скролл, если произойдет такая ситуация.
                 */
                if (cDetection.firefox) {
-                  this._toggleOverflowHidden(!this._getChildContentHeight());
+                  this._toggleOverflowHidden(this._getChildContentHeight() < 35);
                }
                if (cDetection.isIE) {
                   // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
@@ -657,6 +621,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                this._content.off('scroll', this._onScroll);
             }
             this._container.off('mousemove', this._initScrollbar);
+            ScrollWidthController.remove(this._hideBrowserScrollbar);
             this._unsubscribeMouseEnterLeave();
             this._getScrollContainerChannel()
                .unsubscribe('onReturnTakeScrollbar', this._returnTakeScrollbarHandler)

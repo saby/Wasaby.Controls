@@ -159,18 +159,18 @@ define('SBIS3.CONTROLS/ImportCustomizer/Dialog',
           * @protected
           * @param {ImportIOCall} call Информация для вызова метода удалённого сервиса для отправки выходных данных
           * @param {object} result Выходные данные настройщика импорта
+          * @return {Core/Deferred}
           */
          _afterOpen: function (call, result) {
             var shaper = call.dataShaper;
             var args = cMerge({}, shaper ? shaper(result) : result);
-            (new SbisService({endpoint:call.endpoint}))
+            return (new SbisService({endpoint:call.endpoint}))
                .call(call.method, call.methodArgs)
-               .addCallbacks(
+               .addCallback(
                   function (data) {
                      //^^^ Преобразовать ???
                      return data;
-                  }.bind(this),
-                  this._result.errback.bind(this._result)
+                  }.bind(this)
                );
          },
 

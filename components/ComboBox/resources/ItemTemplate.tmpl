@@ -4,9 +4,10 @@
             js-controls-ListView__item
             {{ prepareItemClassesByConfig(item, className) }}
             {{ className }}
+            {{ !item.get('visible') ? ' ws-hidden'}}
             {{ item.get && item.get('className') }}
             {{(item.get && item.get('isEmptyValue')) ? ' controls-ComboBox__item_empty'}}"
             data-hash="{{projItem.getHash()}}"
-            data-id="{{(item.getId && item.getId())}}">
+            data-id="{{item.getId && (item.getId() === null ? 'null' : item.getId())}}">
     <ws:partial template="{{itemContent}}" scope="{{...}}"></ws:partial>
 </div>

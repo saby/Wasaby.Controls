@@ -11,8 +11,7 @@
                 top: {{item.position.top === undefined ? 'auto': item.position.top + 'px'}};
                 bottom: {{item.position.bottom === undefined ? 'auto': item.position.bottom + 'px'}};
                 width: {{item.position.width === undefined ? 'auto': item.position.width + 'px'}};
-                height: {{item.position.height === undefined ? 'auto': item.position.height + 'px'}};
-                margin: 0;"
+                height: {{item.position.height === undefined ? 'auto': item.position.height + 'px'}};"
             scope="{{item.popupOptions}}"
             on:closePopup="_closePopup()"
             on:popupCreated="_popupCreated()"

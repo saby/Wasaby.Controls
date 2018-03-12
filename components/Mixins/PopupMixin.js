@@ -431,13 +431,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                offset.top = this._calculateOverflow(offset, 'vertical');
                offset.left = this._calculateOverflow(offset, 'horizontal');
 
-               var containerScrollWidth = this._container[0].offsetWidth - this._container[0].clientWidth - this._containerSizes.border * 2;
-               var hasStyleWidth = !!this._container[0].style.width; //Если мы уже задали width, то ширинка контейнера известна и позиционирование произведено с учетом скролла
-               //Если позиционирование слева от таргета, то смещаемся на ширину скролла
-               if (containerScrollWidth && !hasStyleWidth && this._options.horizontalAlign.side === 'right') {
-                  offset.left -= containerScrollWidth;
-               }
-
+               this._calcScrollOffset(offset);
                this._notifyOnAlignmentChange();
 
                this._container.css({
@@ -456,6 +450,19 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
                this._resizeChilds();
             }
          }
+      },
+      _calcScrollOffset: function(offset) {
+         var hasStyleWidth = !!this._container[0].style.width; //Если мы уже задали width, то ширинка контейнера известна и позиционирование произведено с учетом скролла
+         var isMaxWidth = window.getComputedStyle(this._container[0]).maxWidth === this._container[0].offsetWidth + 'px'; //Если достигнута макс.ширина, то скролл в нее входит
+         if (!hasStyleWidth && !isMaxWidth && this._options.horizontalAlign.side === 'right') {
+            var containerScrollWidth = this._container[0].offsetWidth - this._container[0].clientWidth - this._containerSizes.border * 2;
+            //Если позиционирование слева от таргета, то смещаемся на ширину скролла
+            if (containerScrollWidth) {
+               offset.left -= containerScrollWidth;
+            }
+         }
+
+
       },
       /**
        * Сброс параметров к исходным значениям
