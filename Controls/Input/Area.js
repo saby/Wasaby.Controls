@@ -57,11 +57,7 @@ define('Controls/Input/Area', [
       */
       updateScroll: function(){
          var fakeArea = this._children.fakeArea;
-         var fakeAreaWrapper = this._children.fakeAreaWrapper;
          var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
-
-         //Определим количество строк в Area сравнив высоты fakeArea и ее обертки
-         this._multiline = fakeArea.clientHeight > fakeAreaWrapper.clientHeight;
 
          //Для IE, текст мы показываем из fakeArea, поэтому сдвинем скролл.
          if(needScroll && detection.isIE){
@@ -70,8 +66,17 @@ define('Controls/Input/Area', [
 
          if(needScroll !== this._hasScroll){
             this._hasScroll = needScroll;
-            this._forceUpdate();
          }
+      },
+
+      /*
+       * Обновляет multiline у area
+       */
+      updateMultiline: function(){
+         var fakeArea = this._children.fakeArea;
+         var fakeAreaWrapper = this._children.fakeAreaWrapper;
+         //Определим количество строк в Area сравнив высоты fakeArea и ее обертки
+         this._multiline = fakeArea.clientHeight > fakeAreaWrapper.clientHeight;
       }
    };
 
@@ -87,18 +92,21 @@ define('Controls/Input/Area', [
 
       constructor: function(options) {
          Area.superclass.constructor.call(this, options);
+         //Устанавливаем _multiline до отрисовки компонента, чтобы не было скачков
          this._multiline = options.minLines > 1;
       },
 
       _afterMount: function() {
          Area.superclass._afterMount.apply(this, arguments);
          _private.updateScroll.call(this);
+         _private.updateMultiline.call(this);
       },
 
       _beforeUpdate: function(newOptions) {
          Area.superclass._beforeUpdate.apply(this, arguments);
          _private.setFakeAreaValue.call(this, newOptions.value);
          _private.updateScroll.call(this);
+         _private.updateMultiline.call(this);
       },
 
       _afterUpdate: function(oldOptions) {
@@ -112,6 +120,7 @@ define('Controls/Input/Area', [
       _valueChangedHandler: function(e, value){
          _private.setFakeAreaValue.call(this, value);
          _private.updateScroll.call(this);
+         _private.updateMultiline.call(this);
          this._notify('valueChanged', [value]);
       },
 
@@ -119,6 +128,7 @@ define('Controls/Input/Area', [
          Area.superclass._setValue.apply(this, arguments);
          _private.setFakeAreaValue.call(this, value);
          _private.updateScroll.call(this);
+         _private.updateMultiline.call(this);
       },
 
       _keyDownHandler: function(e){
