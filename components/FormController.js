@@ -666,7 +666,7 @@ define('SBIS3.CONTROLS/FormController', [
        * @param {Boolean} [config.hideIndicator=false] Не показывать индикатор сохранения.
        * @remark
        * При сохранении записи происходит проверка всех <a href='/doc/platform/developmentapl/interface-development/forms-and-validation/validation/'>валидаторов</a> диалога.
-       * Если на одном из полей ввода валидация будет не пройдена, то сохранение записи отменяется, и пользователь увидит сообщение "Некорректно заполнены обязательные поля!".
+       * Если на одном из полей ввода валидация будет не пройдена, то сохранение записи отменяется, и пользователь увидит сообщение "Некорректно заполнены обязательные поля".
        * Если процесс сохранения записи происходит длительное время, то в пользовательском интерфейсе будет выведено сообщение "Подождите, идёт сохранение". Текст сообщения можно конфигурировать с помощью опции {@link indicatorSavingMessage}.
        * При успешном сохранении записи происходит событие {@link onUpdateModel}, а в случае ошибки - {@link onFail}.
        * Источник данных для диалога редактирования устанавливают с помощью опции {@link dataSource}.
@@ -705,7 +705,7 @@ define('SBIS3.CONTROLS/FormController', [
       },
 
       _prepareUpdatingRecord: function(config){
-         var error = new Error(rk('Некорректно заполнены обязательные поля!')),
+         var error = new Error(rk('Некорректно заполнены обязательные поля')),
              self = this,
              updateDeferred = new Deferred(),
              onBeforeUpdateData;
@@ -854,13 +854,13 @@ define('SBIS3.CONTROLS/FormController', [
       /**
        * Оповещает экземпляр класса действия (см. {@link SBIS3.CONTROLS/Action/List/OpenEditDialog}) о произошедшем событии.
        * @remark
-       * Логика обработки такого события, которая по умолчанию предопределена классом SBIS3.CONTROLS.FormController, не будет выполнена.
+       * Логика обработки такого события, которая по умолчанию предопределена классом SBIS3.CONTROLS/FormController, не будет выполнена.
        * Например,
        * <pre>
        *     // отменяется логика сохранения записи, предустановленная в FormController
        *     this.sendCommand('notify', 'onUpdateModel', someParams);
        * </pre>
-       * Логика обработки события должна быть определена разработчиком в SBIS3.CONTROLS.Action.OpenEditDialog, о чем подробнее вы можете прочитать в <a href='/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/'>этом разделе</a>.
+       * Логика обработки события должна быть определена разработчиком в SBIS3.CONTROLS/Action/List/OpenEditDialog, о чем подробнее вы можете прочитать в <a href='/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/'>этом разделе</a>.
        * @param {String} eventName Имя события: onUpdateModel, onReadModel,onCreateModel или onDestroyModel.
        * @param {*} additionalData Данные, которые должны быть переданы в качестве аргументов события.
        * @command notify

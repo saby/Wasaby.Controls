@@ -21,16 +21,19 @@
    <title key="title">{{ title }}</title>
    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 </head>
-<Controls:Event:Listener name="scrollDetect" register="scroll">
-   <Controls:Event:Listener name="resizeDetect" register="resize">
+<Controls:Event:Listener name="scrollDetect" register="scroll" attr:fixCompatible="1">
+   <Controls:Event:Listener name="resizeDetect" register="resize" attr:fixCompatible="1">
       <body
-              class="{{BodyClasses()}} {{bodyClass}} {{_touchclass()}}"
+              class="{{BodyClasses()}} {{_options.bodyClass}} {{_touchclass()}}"
               id="body"
               key="1_2_"
               on:scroll="_scrollPage()"
               on:resize="_resizePage()"
               on:mousemove="_mousemovePage()"
               on:touchstart="_touchstartPage()">
+         <ws:if data="{{needArea}}">
+            <div class="ws-focus-in"></div>
+         </ws:if>
          <ws:if data="{{ content.content }}">
             <ws:partial template="{{ content.content }}" scope="{{ templateConfig }}" />
          </ws:if>

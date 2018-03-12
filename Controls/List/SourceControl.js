@@ -3,7 +3,6 @@ define('Controls/List/SourceControl', [
    'Core/IoC',
    'tmpl!Controls/List/SourceControl/SourceControl',
    'require',
-   'Controls/List/Controllers/ScrollController',
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
    'Core/Deferred',
@@ -12,7 +11,6 @@ define('Controls/List/SourceControl', [
              IoC,
              SourceControlTpl,
              require,
-             ScrollController,
              VirtualScroll,
              SourceController,
              Deferred
@@ -264,7 +262,6 @@ define('Controls/List/SourceControl', [
     */
 
    var SourceControl = Control.extend({
-      _controlName: 'Controls/List/SourceControl',
       _template: SourceControlTpl,
       iWantVDOM: true,
       _isActiveByClick: false,
@@ -323,21 +320,8 @@ define('Controls/List/SourceControl', [
       },
 
       _afterMount: function() {
-         var self = this;
-         SourceControl.superclass._afterMount.apply(this, arguments);
-
          _private.startScrollEmitter(this);
 
-         if (false && this._options.navigation
-            && this._options.navigation.view === 'infinity'
-            && this._options.navigation.viewConfig
-            && this._options.navigation.viewConfig.pagingMode
-         ) {
-            _private.createScrollPagingController(this).addCallback(function(scrollPagingCtr){
-               self._scrollPagingCtr = scrollPagingCtr
-            });
-         }
-         
          if (_private.getItemsCount(this)) {
             //Посчитаем среднюю высоту строки и отдадим ее в VirtualScroll
             _private.initializeAverageItemsHeight(this);

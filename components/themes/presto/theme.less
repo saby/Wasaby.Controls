@@ -1,3 +1,13 @@
+.separator (){
+  content: '';
+  position: absolute;
+  display: inline-block;
+  background-color: @color_ComboBox_item_separator;
+  height: @default-border-width;
+  left: @padding_ComboBox_item_separator;
+  right: @padding_ComboBox_item_separator;
+  bottom:0;
+}
 body {
   .ws-info-box {
     background: @background-color_infobox !important;
@@ -143,19 +153,23 @@ body {
 }
 body .ws-window.ws-LoadingIndicator__window {
   background-color: #1D2834;
+  box-shadow: none;
 }
-.controls-ComboBox__item, .controls-DropdownList__item {
+
+.controls-ComboBox__item, .controls-DropdownList__item, .controls-MenuItem {
   position: relative;
+  &:before {
+    .separator();
+  }
+}
+.controls-MenuItem:last-child {
+  &:before {
+    display: none;
+  }
+}
+.controls-DropdownList__item:first-child {
   &:after {
-    content: ' ';
-    position:absolute;
-    left: @padding_ComboBox_item_separator;
-    bottom:0;
-    display: inline-block;
-    height: @default-border-width;
-    background-color: @color_ComboBox_item_separator;
-    //todo;
-    width: calc(100%~' - '2*@padding_ComboBox_item_separator);
+    .separator();
   }
 }
 .controls-DropdownList__multiselect {
@@ -359,6 +373,13 @@ body {
 
   }
 }
+.controls-FilterButton {
+  .controls-FilterButton__icon {
+    .close-button-mixin(~'', round(58px * @multiplier), round(58px * @multiplier), "\ea2d");
+    font-size: round(38px * @multiplier);
+    color: #FFF !important;
+  }
+}
 //todo: удалить временный коствль
 //это можно будет удалить при переписывании расурывающегося списка
 body {
@@ -486,6 +507,20 @@ body {
   top: 0;
   right: 0;
   height: 100%;
-  background-color: rgba(0,0,0,.5);
+  background-color: rgba(0,0,0,.1);
   cursor: pointer;
+}
+// Размер не согласуется с размерами кнопок-иконок. необходимо только в тулбаре
+.controls-ToolBar .controls-IconButton {
+  width: @default-height;
+  height: @default-height;
+}
+
+.ws-is-webkit:not(.ws-is-mobile-android), .ws-is-mobile-chrome-ios {
+  .controls-BreadCrumbs{
+    // необходимо переверстать хлебные крошки на флекс
+    &.controls-BreadCrumbs__smallItems .controls-BreadCrumbs__arrow {
+      top: @bread-crumb-crumb-home-top;
+    }
+  }
 }

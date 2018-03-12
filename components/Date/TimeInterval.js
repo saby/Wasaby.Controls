@@ -502,6 +502,7 @@ define(
             }
 
             if (oldText !== this.getText()){
+               this.clearMark();
                this._notifyOnTextChange();
             }
 

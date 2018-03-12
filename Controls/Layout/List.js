@@ -21,7 +21,7 @@ define('Controls/Layout/List',
    
             if(!self._searchController) {
                self._searchController = new SearchController({
-                  filter: options.filter,
+                  filter: merge({}, options.filter),
                   searchParam: options.searchParam,
                   minSearchLength: options.minSearchLength,
                   source: options.source,

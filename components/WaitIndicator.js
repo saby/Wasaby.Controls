@@ -58,7 +58,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
     * <br/>
     * Полный список параметров:
     * <ul>
-    *    <li>{HTMLElement|jQuery|SBIS3.CORE.Control} target - Объект привязки индикатора</li>
+    *    <li>{HTMLElement|jQuery|Lib/Control/Control} target - Объект привязки индикатора</li>
     *    <li>{string} message - Текст сообщения индикатора</li>
     *    <li>{number} delay - Задержка перед началом показа индикатора. Если указана неотрицательная закаржка - она будет использована, если нет - будет использована задержка по умолчанию в 2 секунды</li>
     *    <li>{string} scroll - Отображать для прокручивания объекта привязки, допустимые значения - left, right, top, bottom</li>
@@ -90,7 +90,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
        * Конструктор
        * @public
        * @constructor
-       * @param {HTMLElement|jQuery|SBIS3.CORE.Control} target Объект привязки индикатора
+       * @param {HTMLElement|jQuery|Lib/Control/Control} target Объект привязки индикатора
        * @param {string} message Текст сообщения индикатора
        * @param {object} look Параметры внешнего вида индикатора:
        * @param {string} look.scroll Отображать для прокручивания объекта привязки, допустимые значения - left, right, top, bottom
@@ -277,7 +277,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
           * @public
           * @static
           * @param {object} options Опции конфигурации
-          * @param {HTMLElement|jQuery|SBIS3.CORE.Control} options.target Объект привязки индикатора
+          * @param {HTMLElement|jQuery|Lib/Control/Control} options.target Объект привязки индикатора
           * @param {string} options.message Текст сообщения индикатора
           * @param {number} options.delay Задержка перед началом показа/скрытия индикатора
           * @param {string} options.scroll Отображать для прокручивания объекта привязки, допустимые значения - left, right, top, bottom
@@ -321,7 +321,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
        * Определить элемент DOM, соответствующий указанному объекту привязки
        * @protected
        * @static
-       * @param {HTMLElement|jQuery|SBIS3.CORE.Control} target Объект привязки индикатора
+       * @param {HTMLElement|jQuery|Lib/Control/Control} target Объект привязки индикатора
        * @return {HTMLElement}
        */
       var _getContainer = function (target) {

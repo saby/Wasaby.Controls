@@ -4,12 +4,14 @@
 define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    [
    "Core/UserConfig",
+   "Core/core-clone",
    "Core/Context",
    "Core/Indicator",
    "Core/core-clone",
    "Core/CommandDispatcher",
    "Core/constants",
    "Core/Deferred",
+   "Core/helpers/Function/runDelayed",
    "SBIS3.CONTROLS/TextBox/TextBoxBase",
    "tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextArea",
    "SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil",
@@ -28,12 +30,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    'css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextArea'
 ], function (
       UserConfig,
+      cClone,
       cContext,
       cIndicator,
       coreClone,
       CommandDispatcher,
       cConstants,
       Deferred,
+      runDelayed,
       TextBoxBase,
       dotTplFn,
       RichUtil,
@@ -167,7 +171,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   browser_spellcheck: true,
                   smart_paste: true,
                   noneditable_noneditable_class: "controls-RichEditor__noneditable",
-                  object_resizing: false
+                  object_resizing: false,
+                  inline_boundaries: false
                },
                /**
                 * @cfg {String} Значение Placeholder`а
@@ -500,7 +505,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      this._tinyEditor.focus();
                      // Если сейчас есть контент и не было установлено осмысленного рэнжа - поставить курсор ввода в его конец
                      // 24823 https://online.sbis.ru/opendoc.html?guid=cd2659d7-0066-4207-bade-b77edb462684
-                     if (noRng && this.getText()) {
+                     // Но только, если редактор не был и до этого активным (повтроный вызов)
+                     // 1174883097 https://online.sbis.ru/opendoc.html?guid=56ad4bd1-a74a-4694-98bf-8401938c144a
+                     if (noRng && !this.isActive() && this.getText()) {
                         this.setCursorToTheEnd();
                      }
                      if (cConstants.browser.isMobileAndroid) {
@@ -559,7 +566,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._tinyEditor.theme.panel = null;
                }
                for (var key in this._tinyEditor) {
-                  if (this._tinyEditor.hasOwnProperty(key)) {
+                  if (this._tinyEditor.hasOwnProperty(key) && key !== 'removed') {
                      this._tinyEditor[key] = null;
                   }
                }
@@ -1089,17 +1096,21 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                     href = 'http://' + href;
                                  }
                                  var dom = editor.dom;
+                                 var done;
                                  if (element && element.nodeName === 'A' && element.className.indexOf('ws-focus-out') < 0) {
                                     if (href) {
                                        dom.setAttribs(element, {
                                           target: '_blank',
                                           href: escapeHtml(href)
                                        });
-                                    } else {
+                                    }
+                                    else {
                                        editor.execCommand('unlink');
                                     }
-                                    editor.undoManager.add();
-                                 } else if (href) {
+                                    done = true;
+                                 }
+                                 else
+                                 if (href) {
                                     linkAttrs.href = href;
                                     selection.setRng(range);
                                     if (selection.getContent() === '' || (fre._isOnlyTextSelected() && cConstants.browser.firefox)) {
@@ -1108,7 +1119,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                        // Для MSIE принудительно смещаем курсор ввода после вставленной ссылки
                                        // 1174853380 https://online.sbis.ru/opendoc.html?guid=77405679-2b2b-42d3-8bc0-d2eee745ea23
                                        editor.insertContent(cConstants.browser.isIE ? linkHtml + '&#65279;&#8203;' : linkHtml);
-                                    } else {
+                                    }
+                                    else {
                                        editor.execCommand('mceInsertLink', false, linkAttrs);
                                        if (cConstants.browser.firefox) {
                                           // В firefox каретка(курсор ввода) остаётся (и просачивается) внутрь элемента A, нужно принудительно вывести её наружу, поэтому:
@@ -1123,6 +1135,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                           }
                                        }
                                     }
+                                    done = true;
+                                 }
+                                 if (done) {
+                                    self._tinyLastRng = selection.getRng();
                                     editor.undoManager.add();
                                  }
                                  self.close();
@@ -1221,7 +1237,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             var
                sourceVisible = visible !== undefined ? !!visible : this._sourceContainer.hasClass('ws-hidden'),
                container = this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl,
-               focusContainer = sourceVisible ? this._sourceArea : container;
+               focusContainer = sourceVisible ? this._sourceArea : container,
+               focusElement = focusContainer[0],
+               range;
             if (sourceVisible) {
                this._sourceContainer.css({
                   'height' : container.outerHeight(),
@@ -1234,6 +1252,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             this._notify('onToggleContentSource', sourceVisible);
             //установка фокуса в поле ввода на которое происходит переключение
             focusContainer.focus();
+            if (typeof focusElement.selectionStart == "number") {
+                 focusElement.selectionStart = focusElement.selectionEnd = focusElement.value.length;
+             } else if (typeof focusElement.createTextRange != "undefined") {
+                 range = focusElement.createTextRange();
+                 range.collapse(false);
+                 range.select();
+             }
          },
 
          insertImageTemplate: function(key, fileobj) {
@@ -1368,11 +1393,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                     node = node.parentNode;
                                  }
                                  var next = node.nextSibling;
-                                 var index = next && next.nodeType === 3 && next.nodeValue.length && next.nodeValue.charCodeAt(0) === 65279 ? 1 : 0;
-                                 var newRng = editor.dom.createRng();
-                                 newRng.setStart(next, index);
-                                 newRng.setEnd(next, index);
-                                 editor.selection.setRng(newRng);
+                                 self._selectNewRng(next, next && next.nodeType === 3 && next.nodeValue.length && next.nodeValue.charCodeAt(0) === 65279 ? 1 : 0);
                                  if (scrollTop) {
                                     self._inputControl.scrollTop(scrollTop);
                                  }
@@ -1412,6 +1433,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
          _smileHtml: function(smile) {
             return '&#' + smile.code + ';';
+         },
+
+         _selectNewRng: function (startNode, startOffset, endNode, endOffset) {
+            var hasEndNode = endNode !=/*Не !==*/ null;
+            var hasEndOffset = endOffset !=/*Не !==*/ null;
+            var editor = this._tinyEditor;
+            var newRng = editor.dom.createRng();
+            newRng.setStart(startNode, startOffset);
+            newRng.setEnd(hasEndNode ? endNode : startNode, hasEndOffset ? endOffset : (hasEndNode ? 0 : startOffset));
+            var selection = editor.selection;
+            selection.setRng(newRng);
+            if (!hasEndNode && !hasEndOffset) {
+               selection.collapse(false);
+            }
          },
 
          _bindEvents: function() {
@@ -1454,11 +1489,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
                //При клике на изображение снять с него выделение
                bindImageEvent('click', function() {
-                  var
-                     selection = window.getSelection ? window.getSelection() : null;
-                  if (selection) {
-                     selection.removeAllRanges();
-                  }
+                  // Откладываем снятие выделения т.к. tinymce подписан на такое же событие и может установить
+                  // выделение после этого обработчика.
+                  // Возможно тут и для всех событий устанавливаемых через bindImageEvent правильнее
+                  // было бы подписываться на соответсвующие события editor и обойтись без runDelayed
+                  runDelayed(function() {
+                     var
+                        selection = window.getSelection ? window.getSelection() : null;
+                     if (selection) {
+                        selection.removeAllRanges();
+                     }
+                  });
                });
                this._inputControl.bind('scroll', function(e) {
                   if (this._imageOptionsPanel) {
@@ -1534,11 +1575,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                self._clipboardText = e.clipboardData ?
                   e.clipboardData.getData(cConstants.browser.isMobileIOS ? 'text/plain' : 'text') :
                   window.clipboardData.getData('text');
-               editor.plugins.paste.clipboard.pasteFormat = 'html';
+               // editor.plugins.paste.clipboard.pasteFormat = 'html';
             });
 
             //Обработка вставки контента
-            editor.on('BeforePastePreProcess', function(e) {
+            editor.on('PastePreProcess', function(e) {
                // Отключаю форматированную вставку в Win10 -> Edge, т.к. вместе с основным контентом вставляются инородные
                // элементы, которые портят верстку. Баг пофиксен в свежей версии TinyMCE, нужно обновление.
                // https://online.sbis.ru/opendoc.html?guid=0d74d2ac-a25c-4d03-b75f-98debcc303a2
@@ -1568,7 +1609,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      //если данные не из БТР и не из word`a, то вставляем как текст
                      //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
                      if (self._clipboardText !== false) {
-                        e.content = self._getTextBeforePaste();
+                        e.content = self._getTextBeforePaste(editor);
                      }
                   }
                }
@@ -1836,10 +1877,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            var text = node.nodeValue;
                            if (text.charCodeAt(index - 1) === 65279/*&#xFEFF;*/) {
                               node.nodeValue = 1 < text.length ? text.substring(0, index - 1) + text.substring(index) : '';
-                              var newRng = editor.dom.createRng();
-                              newRng.setStart(node, index - 1);
-                              newRng.setEnd(node, index - 1);
-                              selection.setRng(newRng);
+                              this._selectNewRng(node, index - 1);
                            }
                         }
                      }
@@ -1948,7 +1986,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             // Для правильной работы метода insertHtml в отсутствии фокуса будем фиксировать последний актуальный рэнж
             editor.on('focus focusin', function (evt) {
-               self._tinyLastRng = null;
+               // Сбрасывать последний актуальный рэнж не сразу, а только после того, как все синхронные обработчики события отработают
+               setTimeout(function () {
+                  self._tinyLastRng = null;
+               }, 1);
             });
             editor.on('blur focusout', function (evt) {
                var rng = editor.selection.getRng();
@@ -2050,6 +2091,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                });
                this._imageOptionsPanel.subscribe('onImageChange', function(event, fileobj){
                   var $img = this.getTarget();
+                  //Сбросим ширину и высоту, т.к. они могут остаться от предыдущей картинки
+                  $img[0].style.width = '';
+                  $img[0].style.height = '';
                   var width = $img[0].style.width || ($img.width() + 'px');
                   var isPixels = width.charAt(width.length - 1) !== '%';
                   self._makeImgPreviewerUrl(fileobj, +width.substring(0, width.length - (isPixels ? 2 : 1)), null, isPixels).addCallback(function (url) {
@@ -2064,6 +2108,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      if (uuid) {
                         self._images[uuid] = false;
                      }
+                      var selection = window.getSelection ? window.getSelection() : null;
+                      if (selection) {
+                          selection.collapse($img[0]);
+                      }
                   });
                });
                this._imageOptionsPanel.subscribe('onImageDelete', function () {
@@ -2313,8 +2361,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (!this._tinyEditor && !this._tinyIsInit) {
                this._tinyIsInit = true;
                this._requireTinyMCE().addCallback(function() {
+                  var cfg = cClone(self._options.editorConfig);
+                  cfg.paste_as_text = false;
                   tinyMCE.baseURL = 'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/tinymce';
-                  tinyMCE.init(self._options.editorConfig);
+                  tinyMCE.init(cfg);
                });
             }
             this._tinyReady.addCallback(function () {
@@ -2728,7 +2778,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   escapeInvalidTags: false
                });
          },
-         _getTextBeforePaste: function(){
+         _getTextBeforePaste: function(editor){
             //Проблема:
             //          после вставки текста могут возникать пробелы после <br> в начале строки
             //Решение:
@@ -2736,7 +2786,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             //             a)Подготовка текста
             //             b)Вставка текста
             //          использовать метод подготовки текста - _tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste
-            return this._tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste(this._clipboardText);
+            return this._tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste(editor, this._clipboardText);
          },
          _fillImages: function(state) {
             var

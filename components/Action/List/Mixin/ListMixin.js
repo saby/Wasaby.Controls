@@ -29,7 +29,7 @@ define('SBIS3.CONTROLS/Action/List/Mixin/ListMixin', ['Core/core-instance'], fun
       },
       /**
        * Возвращает связанный объект с данными.
-       * @returns {WS.Data/Collection/IList|SBIS3.CONTROLS.ListView}
+       * @returns {WS.Data/Collection/IList|SBIS3.CONTROLS/ListView}
        * @see linkedObject
        */
       getLinkedObject: function () {
@@ -37,7 +37,7 @@ define('SBIS3.CONTROLS/Action/List/Mixin/ListMixin', ['Core/core-instance'], fun
       },
       /**
        * Устанавливает связанный объект с данными.
-       * @param {WS.Data/Collection/IList|SBIS3.CONTROLS.ListView} list
+       * @param {WS.Data/Collection/IList|SBIS3.CONTROLS/ListView} list
        * @see linkedObject
        */
       setLinkedObject: function (list) {
@@ -102,7 +102,7 @@ define('SBIS3.CONTROLS/Action/List/Mixin/ListMixin', ['Core/core-instance'], fun
       },
       /**
        * Если связанный объект списочный контрол вернет его, иначе undefined
-       * @returns {SBIS3.CONTROLS.ListView|undefined}
+       * @returns {SBIS3.CONTROLS/ListView|undefined}
        * @protected
        */
       _getListView: function() {

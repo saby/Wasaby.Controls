@@ -38,8 +38,8 @@ define('SBIS3.CONTROLS/Filter/Button/Area',
 
          init: function() {
             FilterButtonArea.superclass.init.apply(this, arguments);
-            if (this._options.historyId && this._options.viewMode === 'twoColumns') {
-               this.subscribeTo(this.getChildControlByName('filterHistory'), 'onItemActivate', this._applyFromHistory.bind(this))
+            if (this._options.historyId && this._options.viewMode === 'twoColumns' && this._options._hasHistory) {
+               this.subscribeTo(this.getChildControlByName('filterHistory'), 'onItemActivate', this._applyFromHistory.bind(this));
             }
          },
 

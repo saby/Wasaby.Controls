@@ -145,8 +145,8 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             if (!cfg.moveColumns) {
                // Добавляем автосортировку отмеченных элементов - они должны отображаться перед неотмеченными
                //cfg._optsSelectable.itemsSortMethod = _getItemsSortMethod();
-               cfg._optsSelectable.onSelectedItemsChange = _onSelectedItemsChange;
             }
+            cfg._optsSelectable.onSelectedItemsChange = _onSelectedItemsChange;
             return cfg;
          },
 
@@ -207,9 +207,10 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
 
          _commandApplyColumns: function () {
             var selectedColumns = [];
+            var options = this._options;
             if (this._fixedView || this._selectableView) {
                if (this._fixedView) {
-                  selectedColumns.push.apply(selectedColumns, this._options._optsFixed.markedKeys);
+                  selectedColumns.push.apply(selectedColumns, options._optsFixed.markedKeys);
                }
                if (this._selectableView) {
                   var view = this._selectableView;
@@ -217,33 +218,34 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                   if (list.length) {
                      list = list.slice();
                      var items = view.getItems();
+                     var groups = options._groups;
                      // Сортируем выделенные записи согласно их положению в рекордсете и c учётом их групп
                      list.sort(function (e1, e2) {
                         var v1 = items.getRecordById(e1);
                         var v2 = items.getRecordById(e2);
-                        var g1 = v1.get('group');
-                        var g2 = v2.get('group');
-                        if (g1 !== g2) {
-                           return g1 < g2 ? -1 : +1;
+                        if (groups) {
+                           var gi1 = groups.indexOf(v1.get('group'));
+                           var gi2 = groups.indexOf(v2.get('group'));
+                           if (gi1 !== gi2) {
+                              return gi1 - gi2;
+                           }
                         }
-                        else {
-                           return items.getIndex(v1) - items.getIndex(v2);
-                        }
+                        return items.getIndex(v1) - items.getIndex(v2);
                      });
                      selectedColumns.push.apply(selectedColumns, list);
                   }
                }
             }
             if (selectedColumns.length) {
-               if (this._options.usePresets) {
-                  var namespace = this._options.presetNamespace;
+               if (options.usePresets) {
+                  var namespace = options.presetNamespace;
                   var preset = this._currentPreset;
                   if (namespace && preset && preset.isStorable && !_isEqualLists(selectedColumns, preset.selectedColumns)) {
                      preset.selectedColumns = selectedColumns;
                      PresetCache.update(namespace, preset);
                   }
                }
-               this._notify('onComplete', this._options.columns, selectedColumns);
+               this._notify('onComplete', options.columns, selectedColumns);
             }
             else {
                this._notify('onClose');
@@ -306,17 +308,26 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                }
             }
          });
-         // Сортируем записи, согласно переданному состоянию массива отмеченных записей
-         selectable.items.sort(function (c1, c2) {
-            var i1 = selectedColumns.indexOf(c1.id);
-            var i2 = selectedColumns.indexOf(c2.id);
-            if (i1 !== -1) {
-               return i2 !== -1 ? i1 - i2 : -1;
+         // Если группы не содержательны - сбросить их
+         if (!groups.length || (groups.length === 1 && groups[0] == null)) {
+            groups = null;
+         }
+         // Если группы есть - отсортировать их
+         if (groups) {
+            var groupTitles = cfg.groupTitles;
+            if (groupTitles && typeof groupTitles === 'object') {
+               var list = groups.map(function (v) { return {id:v, title:groupTitles[v] || v}; });
+               list.sort(function (v1, v2) {
+                  return v1.title < v2.title ? -1 : (v1.title === v2.title ? 0 : +1);
+               });
+               groups = list.map(function (v) { return v.id; });
             }
             else {
-               return i2 !== -1 ? 1 : -1;
+               groups.sort();
             }
-         });
+         }
+         // Отсортировать записи согласно порядку в списке выбранных колонок и с учётом порядка групп
+         selectable.items.sort(_selectableItemsSorter.bind(null, selectedColumns, groups, selectable.items.map(function (v) { return v.id; })));
          selectable.items = new RecordSet({rawData:selectable.items, idProperty:'id'});
          /*if (!moveColumns) {
             // При отключенном перемещении будем использовать рекордсет с собственной моделью для осуществления автосортировки отмеченных записей
@@ -327,10 +338,32 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             });
             _applySelectedToItems(selectable.markedKeys, selectable.items);
          }*/
-         groups.sort();
          cfg._optsFixed = fixed;
          cfg._optsSelectable = selectable;
-         cfg._groups = 1 < groups.length || (groups.length && groups[0] != null) ? groups : null;
+         cfg._groups = groups;
+      };
+
+      var _selectableItemsSorter = function (selectedIds, groups, columnIds, c1, c2) {
+         // Сначала смотрим на прядок в selectedIds
+         var i1 = selectedIds.indexOf(c1.id);
+         var i2 = selectedIds.indexOf(c2.id);
+         if (i1 !== -1 && i2 !== -1) {
+            return i1 - i2;
+         }
+         // Далее - на порядок групп
+         if (groups) {
+            var gi1 = groups.indexOf(c1.group);
+            var gi2 = groups.indexOf(c2.group);
+            if (gi1 !== gi2) {
+               return gi1 - gi2;
+            }
+         }
+         // Если хотя бы один - выбран
+         if (i1 !== i2) {
+            return i1 === -1 ? +1 : -1;
+         }
+         // Иначе - сохранить исходный порядок
+         return columnIds.indexOf(c1.id) - columnIds.indexOf(c2.id);
       };
 
       /*var _applySelectedToItems = function (selectedArray, items) {
@@ -442,7 +475,8 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          var selectedIds = self._currentPreset ? self._currentPreset.selectedColumns : [];
          var selectedColumns = [];
          if (selectedIds.length) {
-            var columns = self._options.columns.getRawData();
+            var options = self._options;
+            var columns = options.columns.getRawData();
             for (var i = 0; i < columns.length; i++) {
                var column = columns[i];
                if (!column.fixed && selectedIds.indexOf(column.id) !== -1) {
@@ -450,16 +484,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                }
             }
             var newColumns = columns.reduce(function (r, v) { if (!v.fixed) { r.push(v); } return r; }, []);
-            newColumns.sort(function (c1, c2) {
-               var i1 = selectedIds.indexOf(c1.id);
-               var i2 = selectedIds.indexOf(c2.id);
-               if (i1 !== -1) {
-                  return i2 !== -1 ? i1 - i2 : -1;
-               }
-               else {
-                  return i2 !== -1 ? +1 : columns.indexOf(c1) - columns.indexOf(c2);
-               }
-            });
+            newColumns.sort(_selectableItemsSorter.bind(null, selectedIds, options._groups, columns.map(function (v) { return v.id; })));
             self._selectableView.setItems(new RecordSet({rawData:newColumns, idProperty:'id'}));
          }
          self._selectableView.setSelectedKeys(selectedColumns);
@@ -580,17 +605,23 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
 
       var _onItemClick = function (e, id, model, itemContent) {
          this.toggleItemsSelection([id]);
-         itemContent.title = (this.getSelectedKeys().indexOf(id) !== -1 ? rk('Скрыть колонку', 'РедакторКолонок') : rk('Показать колонку', 'РедакторКолонок')) + ' "' + model.get('title') + '"';
       };
 
-      var _onSelectedItemsChange = function (e, ids, changes) {
-         var items = this.getItems();
-         changes.added.forEach(function (id) {
-            items.getRecordById(id).set('selected', true);
-         });
-         changes.removed.forEach(function (id) {
-            items.getRecordById(id).set('selected', false);
-         });
+      var _onSelectedItemsChange = function (e, selectedIds, changes) {
+         var handler = function (id) {
+            this.redrawItem(this.getItems().getRecordById(id));
+         }.bind(this);
+         changes.added.forEach(handler);
+         changes.removed.forEach(handler);
+         /*if (!moveColumns) {
+            var items = this.getItems();
+            changes.added.forEach(function (id) {
+               items.getRecordById(id).set('selected', true);
+            });
+            changes.removed.forEach(function (id) {
+               items.getRecordById(id).set('selected', false);
+            });
+         }*/
       };
 
 

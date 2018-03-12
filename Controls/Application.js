@@ -36,7 +36,7 @@ define('Controls/Application',
          initState: function(self, cfg) {
             self.title = cfg.title;
             self.templateConfig = cfg.templateConfig;
-            self.compat = cfg.compat||false;
+            self.compat = cfg.compat || false;
          }
       };
       var Page = Base.extend({
@@ -70,6 +70,7 @@ define('Controls/Application',
 
             _private.initState(self, receivedState||cfg);
             self.content = cfg.content;
+            self.needArea = cfg.compat || self.compat;
             if (!receivedState) {
                receivedState = {};
             }

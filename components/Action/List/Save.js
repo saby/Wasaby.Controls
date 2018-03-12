@@ -26,7 +26,7 @@ define('SBIS3.CONTROLS/Action/List/Save', [
         $protected: {
             _options: {
                /**
-                * @cfg {SBIS3.CONTROLS.ISaveStrategy) Стратегия сохранения данных.
+                * @cfg {SBIS3.CONTROLS/Action/Save/SaveStrategy/ISaveStrategy) Стратегия сохранения данных.
                 * @see SBIS3.CONTROLS/Action/Save/SaveStrategy/ISaveStrategy
                 * @see SBIS3.CONTROLS/Action/Save/SaveStrategy/Base
                 * @see SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis
@@ -208,9 +208,13 @@ define('SBIS3.CONTROLS/Action/List/Save', [
                 handlers: {
                     onBeforeShow: function() {
                         this.getLinkedContext().setValue('NumOfRecords', defaultCount);
-                    },
-                    onAfterClose: function(event, count) {
-                        result.callback(count);
+                    }
+                },
+                componentOptions: {
+                    handlers: {
+                        onApply: function(event, pageSize){
+                            self.processSelectedPageSize(pageSize);
+                        }
                     }
                 }
             });

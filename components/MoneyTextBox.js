@@ -44,7 +44,7 @@ define('SBIS3.CONTROLS/MoneyTextBox', [
      * @mixes SBIS3.CONTROLS/MoneyTextBoxDocs
      * @public
      * @control
-     * @author Романов В.С.
+     * @author Зайцев А.С.
      *
      */
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS/MoneyTextBox.prototype */ {

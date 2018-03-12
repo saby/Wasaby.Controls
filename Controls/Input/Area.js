@@ -57,7 +57,11 @@ define('Controls/Input/Area', [
       */
       updateScroll: function(){
          var fakeArea = this._children.fakeArea;
+         var fakeAreaWrapper = this._children.fakeAreaWrapper;
          var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
+
+         //Определим количество строк в Area сравнив высоты fakeArea и ее обертки
+         this._multiline = fakeArea.clientHeight > fakeAreaWrapper.clientHeight;
 
          //Для IE, текст мы показываем из fakeArea, поэтому сдвинем скролл.
          if(needScroll && detection.isIE){
@@ -73,12 +77,18 @@ define('Controls/Input/Area', [
 
    var Area = Text.extend({
 
-      _controlName: 'Controls/Input/Area',
       _template: template,
 
       _hasScroll: false,
 
       _caretPosition: null,
+
+      _multiline: undefined,
+
+      constructor: function(options) {
+         Area.superclass.constructor.call(this, options);
+         this._multiline = options.minLines > 1;
+      },
 
       _afterMount: function() {
          Area.superclass._afterMount.apply(this, arguments);

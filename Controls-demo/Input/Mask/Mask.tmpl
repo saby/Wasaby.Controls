@@ -1,79 +1,27 @@
-<div class="ControlsDemo-Mask ws-flexbox ws-flex-column">
-   <ws:template name="descriptionTpl">
-      <div class="ws-header_size_h3 ws-header_color_accent1">{{exampleName}}</div>
-   </ws:template>
-   <header>
-
-   </header>
-   <article class="ws-flexbox">
-      <div class="ws-flexbox ws-flex-column">
-         <ws:partial template="descriptionTpl" exampleName="dd.dd"/>
-         <ws:Controls.Input.Mask
-            name="example1"
-            replacer=" "
-            mask="dd.dd"
-            bind:value="_values.example1"
-         />
-         <ws:partial template="descriptionTpl" exampleName="dd.dd.dd"
-                     class="ControlsDemo-Mask__item_topOffset"/>
-         <ws:Controls.Input.Mask
-            name="example2"
-            replacer=" "
-            mask="dd.dd.dd"
-            bind:value="_values.example2"
-         />
-         <ws:partial template="descriptionTpl" exampleName="+7(ddd)ddd-dd-dd"
-                     class="ControlsDemo-Mask__item_topOffset"/>
-         <ws:Controls.Input.Mask
-            name="example3"
-            replacer=""
-            mask="+7(ddd)ddd-dd-dd"
-            bind:value="_values.example3"
-         />
-         <ws:partial template="descriptionTpl" exampleName="(ddd(ddd)ddd)"
-                     class="ControlsDemo-Mask__item_topOffset"/>
-         <ws:Controls.Input.Mask
-            name="example4"
-            replacer=""
-            mask="(ddd(ddd)ddd)"
-            bind:value="_values.example4"
-         />
-         <ws:partial template="descriptionTpl" exampleName="(d\*l\{0,3})(d\{0,3}l\*)"
-                     class="ControlsDemo-Mask__item_topOffset"/>
-         <ws:Controls.Input.Mask
-            name="example5"
-            replacer=""
-            mask="(d\*l\{0,3})(d\{0,3}l\*)"
-            bind:value="_values.example5"
-         />
-      </div>
-      <div class="ws-flexbox ws-flex-column ws-flex-grow-1 ws-align-items-center" if="{{_debug}}">
-         <div
-            class="ws-header_size_h3 ws-header_color_accent2 ws-header_color-hover_accent1 ws-header_size_weight"
-         >DEBUG
-         </div>
-         <ws:Controls.Input.Mask
-            if="{{_debug}}"
-            name="exampleName"
-            mask="exampled"
-            formatMaskChars="{{
-                  {
-                     'd': '[1-9]'
-                  }
-               }}"
-            bind:value="_exampleDebug"
-         />
-         <div>
-            <div>mask={{_stringify(_children[_exampleDebug]._options.mask)}}</div>
-            <div>value={{_stringify(_values[_exampleDebug])}}</div>
-            <div>clearValue={{_stringify(_getClearData(_children[_exampleDebug]._viewModel._maskData, _values[_exampleDebug]).value)}}</div>
-            <div>regExpMask={{_stringify(_children[_exampleDebug]._viewModel._maskData.searchingGroups)}}</div>
-            <div>delimiterGroups:</div>
-            <ws:for data="position, group in _children[_exampleDebug]._viewModel._maskData.delimiterGroups">
-               <div class="ControlsDemo-Mask__itemDelimiterGroups">{{position}}={{_stringify(group)}}</div>
-            </ws:for>
-            <div>{{test}}</div>
-         </div>
-      </div>
-   </article>
+<div style="margin: 32px; display: flex; flex-direction: column; width: 18em;">
+   <div style="padding: 3em; background-color: rgba(38,59,74,0.22)">
+      <h2>Mask</h2>
+      <Controls:Label caption="Пример"/>
+      <Controls:Input:Mask name="example"
+                           placeholder="{{_mask}}"
+                           mask="{{_mask}}"
+                           replacer="{{_replacer}}"
+                           tagStyle="{{_tagStyle}}"
+                           bind:value="_value"
+      />
+   </div>
+   <div style="padding: 3em; background-color: rgba(81,81,81,0.11)">
+      <h3>Задайте опции:</h3>
+      <Controls:Label caption="replacer"/>
+      <Controls:Input:Text name="replacer" on:inputCompleted="_setValue()" bind:value="_replacer"/>
+      <Controls:Label caption="mask"/>
+      <Controls:Input:Text name="mask" on:inputCompleted="_setValue()" bind:value="_mask"/>
+      <Controls:Label caption="tagStyle(варианты: attention, done, error, primary, disabled)"
+                      attr:style="height: auto;"/>
+      <Controls:Input:Text bind:value="_tagStyle"/>
+      <Controls:Label caption="dd.dd.dd" on:click="_setConfig('dd.dd.dd', ' ')"/>
+      <Controls:Label caption="(ddd(ddd)ddd)" on:click="_setConfig('(ddd(ddd)ddd)', '')"/>
+      <Controls:Label caption="d{1,3}l{1,3}" on:click="_setConfig('d\{1,3}l\{1,3}', '')"/>
+      <Controls:Label caption="d\*" on:click="_setConfig('d\*', '')"/>
+   </div>
 </div>

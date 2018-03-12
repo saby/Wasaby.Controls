@@ -5,6 +5,7 @@
 @margin_ImportCustomizer-ProviderArgs-View-columns: 0 0 -12px 0;
 @padding_ImportCustomizer-ProviderArgs-View-columns: 0 0 0 40px;
 @background-color_ImportCustomizer-ProviderArgs-View-columns: #E5ECF5;
+@min-width_ImportCustomizer-ProviderArgs-View-column: 150px;
 @border-left_ImportCustomizer-ProviderArgs-View-column: 1px solid #F5F5F5;
 @padding_ImportCustomizer-ProviderArgs-View-column: 2px 0 2px 6px;
 
@@ -25,6 +26,7 @@
 .controls-ImportCustomizer-ProviderArgs-View__column {
     .flex-shrink(0);
     .flex-grow(1);
+    min-width: @min-width_ImportCustomizer-ProviderArgs-View-column;
     border-left: @border-left_ImportCustomizer-ProviderArgs-View-column;
     padding: @padding_ImportCustomizer-ProviderArgs-View-column;
 }

@@ -81,7 +81,7 @@ define('SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragObject', [
       /**
        * Возвращает элемент, над которым находится курсор.
        * @remark Элемент должен быть наследником класса {@link SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity}. Его устанавливает контрол, находящийся сейчас под курсором.
-       * @returns {SBIS3.CONTROLS.DragEntity.Entity|undefined}
+       * @returns {SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity|undefined}
        */
       getTarget: function () {
          return this._target;
@@ -89,7 +89,7 @@ define('SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragObject', [
       /**
        * Устанавливает элемент над которым находится курсор.
        * @remark Элемент должен быть наследником класса {@link SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity}. Вызывается из контрола над которым сейчас находится курсор мыши.
-       * @param {SBIS3.CONTROLS.DragEntity.Entity|undefined} target
+       * @param {SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Entity|undefined} target
        */
       setTarget: function (target) {
          this._target = target;

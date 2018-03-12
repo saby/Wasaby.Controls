@@ -13,8 +13,9 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
    "Transport/prepareGetRPCInvocationURL",
    "SBIS3.CONTROLS/Utils/PrintDialogHTMLView",
    "SBIS3.CONTROLS/Utils/InformationPopupManager",
+   "Lib/File/UrlLoader",
    "i18n!SBIS3.CONTROLS/Utils/DataProcessor"
-], function( cExtend, coreClone, EventBus, Deferred, Record, Serializer, WaitIndicator, SbisService, prepareGetRPCInvocationURL, PrintDialogHTMLView, InformationPopupManager) {
+], function( cExtend, coreClone, EventBus, Deferred, Record, Serializer, WaitIndicator, SbisService, prepareGetRPCInvocationURL, PrintDialogHTMLView, InformationPopupManager, UrlLoader) {
    /**
     * Обработчик данных для печати и выгрузки(экспорта) в Excel, PDF. Печать осуществляется по готову XSL-шаблону через XSLT-преобразование.
     * Экспорт в Excel и PDF можно выполнить несколькими способами:
@@ -256,7 +257,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
          if (isExcel) {
             params['storage'] = 'excel';
          }
-         window.open(prepareGetRPCInvocationURL( isExcel ? 'FileTransfer' : 'File', 'Download', params, undefined, '/file-transfer/service/'), '_self');
+        UrlLoader(prepareGetRPCInvocationURL( isExcel ? 'FileTransfer' : 'File', 'Download', params, undefined, '/file-transfer/service/'));
       },
       /**
        * Метод для формирования параметров фильтрации выгружаемого на сервере файла.

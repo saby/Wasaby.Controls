@@ -17,6 +17,7 @@
 @top_ImportCustomizer-ColumnBinding-View-grid-column-menu-picker-selected: 12px;
 @width_ImportCustomizer-ColumnBinding-View-grid-column-menu-picker-selected: 6px;
 @height_ImportCustomizer-ColumnBinding-View-grid-column-menu-picker-selected: 8px;
+@color_ImportCustomizer-ColumnBinding-View-grid-column-menu-picker-empty: #CCCCCC;
 @background-color_ImportCustomizer-ColumnBinding-View-grid-column-menu-picker-selected: #d94700;
 
 .controls-ImportCustomizer-ColumnBinding-View__title {
@@ -24,6 +25,11 @@
     font-size: @font-size_ImportCustomizer-ColumnBinding-View-title;
     font-weight: bold;
     color: @color_ImportCustomizer-ColumnBinding-View-title;
+}
+
+.controls-ImportCustomizer-ColumnBinding-View__grid .controls-DataGridView__table {
+    width: auto;
+    min-width: 100%;
 }
 
 .controls-ImportCustomizer-ColumnBinding-View__grid .controls-DataGridView__th {
@@ -59,7 +65,11 @@
 }
 
 .controls-ImportCustomizer-ColumnBinding-View__grid__column__menu__picker .controls-Menu__header {
-    font-weight: normal;
+    display: none;
+}
+
+.controls-ImportCustomizer-ColumnBinding-View__grid__column__menu__picker__empty {
+    color: @color_ImportCustomizer-ColumnBinding-View-grid-column-menu-picker-empty;
 }
 
 .controls-ImportCustomizer-ColumnBinding-View__grid__column__menu__picker__selected:before {

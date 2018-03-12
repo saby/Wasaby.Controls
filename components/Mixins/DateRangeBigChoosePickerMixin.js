@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
 ], function (DateRangeBigChoose, cInstance, deprecated, RangeSelectableViewMixin) {
    /**
     * Миксин, умеющий отображать выпадающий вниз блок содержащий контрол SBIS3.CONTROLS.DateRangeBigChoose.
-    * Используется только совместно с SBIS3.CONTROLS.DateRangeMixin(SBIS3.CONTROLS.RangeMixin) и SBIS3.CONTROLS.PickerMixin.
+    * Используется только совместно с SBIS3.CONTROLS.DateRangeMixin(SBIS3.CONTROLS/Mixins/RangeMixin) и SBIS3.CONTROLS.PickerMixin.
     * Связывает данные текущего контрола и открываемого в выпадающем блоке.
     * @mixin SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin
     * @public

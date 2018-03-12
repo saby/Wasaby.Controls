@@ -15,7 +15,7 @@ define('SBIS3.CONTROLS/Image/CropPlugin/CropPlugin',
       /**
        * Контрол, позволяющий обрезать произвольное изображение.
        * @class SBIS3.CONTROLS/Image/CropPlugin/CropPlugin
-       * @extends SBIS3.CORE.Abstract
+       * @extends Core/Abstract
        * @author Крайнов Д.О.
        * @public
        */
