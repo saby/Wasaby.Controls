@@ -70,7 +70,7 @@ define('Controls/Input/Mask/Formatter',
           * @return {
           *    {
           *       value: String значение с разделителями,
-          *       positions: Array позиция курсора
+          *       position: Number позиция курсора
           *    }|undefined
           * }
           */

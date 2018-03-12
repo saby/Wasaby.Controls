@@ -3,9 +3,11 @@
  */
 define('Controls/Application/Compatible', [
    'Core/Control',
+   'Core/EventBus',
    'tmpl!Controls/Application/Compatible',
    'tmpl!Controls/Application/CompatibleScripts'
-], function(Base, 
+], function(Base,
+            EventBus,
             template) {
    'use strict';
 
@@ -18,6 +20,7 @@ define('Controls/Application/Compatible', [
                return false;
             }
          }
+         EventBus.globalChannel().notify('bootupReady', {error:''});
       },
       _shouldUpdate: function(){
          return false;

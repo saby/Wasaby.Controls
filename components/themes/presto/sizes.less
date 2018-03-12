@@ -61,7 +61,7 @@
 @padding_ComboBox-item:                 round(17px * @multiplier) round(16px * @multiplier) round(18px * @multiplier) round(16px * @multiplier);
 @border_ComboBox-picker:                none;
 @padding_ComboBox_item_separator:       round(16px * @multiplier);
-@border-width_ComboBox-picker:          0px;
+@border-width_ComboBox-picker:          @default-border-width;
 //suggest-text-box
 @suggest-text-box-icon-size:           @default-icon-size-medium;
 @suggest-text-box-icon-cross-padding:  0 0 0 @default-padding;
@@ -342,6 +342,8 @@
 @margin_MenuIcon-hideHeader-round24_text:             round(6px * @multiplier) 0 round(6px * @multiplier) round(60px * @multiplier);
 @margin_MenuIcon_size-l:                              round(-1px * @multiplier) 0 0 round(-4px * @multiplier);
 @top_MenuIcon_bordered_offset_s:                      round(16px * @multiplier);
+@left_MenuIcon_bordered_offset_m:                     round(12px * @multiplier);
+@top_MenuIcon_bordered_offset_m:                      round(6px * @multiplier);
 //MenuButton
 @menu-button-menu-margin:                             round(-1px * @multiplier) 0 0 round(0 * @multiplier);
 @menu-button-header-font-size:                        @font-size_Button_default;
@@ -522,6 +524,8 @@
 @font-size_listAddButton:                       @small-text-size;
 //ReportBrowser
 @height_ReportBrowser-top-content:              @default-height-big;
+//Label
+@height_Label:                                  round(46px * @multiplier);
 //Tabs/Buttons
 @height_Tabs-separator:                  round(54px * @multiplier);
 @line-height_Tabs-baselineFix:           round(96px * @multiplier);
@@ -531,3 +535,6 @@
 @font-size_Tabs-item_selected:           @huge-text-size;
 @max-width_Tabs_item:                    round(1500px * @multiplier);
 @border-width_Tabs-item_hover_selected:  round(8px * @multiplier);
+//FilterButton
+@font-size_FilterButton-icon:            round(38px * @multiplier);
+@font-size_FilterButton-text:            @large-text-size;

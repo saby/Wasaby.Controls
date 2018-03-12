@@ -84,8 +84,7 @@ define(['Controls/Layout/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/Rec
       });
       
       it('.searchValueChanged', function(done) {
-         /* To reset source */
-         List._private.abortCallback(listLayout, {});
+         var listLayout = new List(listOptions);
          List._private.searchValueChanged(listLayout, 'Sasha');
          
          setTimeout(function() {
@@ -94,7 +93,12 @@ define(['Controls/Layout/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/Rec
                { id: 1, title: 'Sasha' },
                { id: 5, title: 'Sasha' }
                ]);
-            done();
+            List._private.searchValueChanged(listLayout, '');
+            setTimeout(function() {
+               assert.deepEqual(listLayout._filter, {});
+               assert.deepEqual(listLayout._source._$data, listSourceData);
+               done();
+            }, 50);
          }, 50);
       });
    
@@ -110,6 +114,77 @@ define(['Controls/Layout/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/Rec
          assert.equal(searchController._moduleName, 'Controls/Controllers/_SearchController');
          assert.equal(searchController._options.searchParam, listSearchParam);
          assert.equal(searchController._options.source, listSource);
+      });
+   
+      it('._beforeUnmount', function(done) {
+         /* To reset source */
+         var listLayout = new List(listOptions);
+         List._private.abortCallback(listLayout, {});
+         List._private.searchValueChanged(listLayout, 'Sasha');
+
+         setTimeout(function() {
+            assert.deepEqual(listLayout._filter, {title: 'Sasha'});
+            assert.deepEqual(listLayout._source._$data, [
+               { id: 1, title: 'Sasha' },
+               { id: 5, title: 'Sasha' }
+            ]);
+            listLayout._beforeUnmount();
+            setTimeout(function() {
+               assert.deepEqual(listLayout._filter, {});
+               assert.deepEqual(listLayout._source._$data, listSourceData);
+               done();
+            }, 50);
+         }, 50);
+      });
+   
+      it('._beforeUpdate', function(done) {
+         /* Изолированный тест beforeUpdate */
+         var context = {
+            filterLayoutField: {
+               filter: {}
+            },
+            searchLayoutField: {
+               searchValue: ''
+            }
+         };
+         var listLayout = new List(listOptions);
+         listLayout._contextObj = {};
+         listLayout._contextObj['filterLayoutField'] = { filter: {} };
+         listLayout._contextObj['searchLayoutField'] = {searchValue: ''};
+         
+         listLayout._beforeUpdate({}, context);
+         
+         /* Nothing changes */
+         assert.deepEqual(listLayout._filter, {});
+         assert.deepEqual(listLayout._source._$data, listSourceData);
+   
+         /* SearchValue changed */
+         context.searchLayoutField.searchValue = 'Sasha';
+         listLayout._beforeUpdate({}, context);
+         setTimeout(function() {
+            assert.deepEqual(listLayout._filter, {title: 'Sasha'});
+            assert.deepEqual(listLayout._source._$data, [
+               { id: 1, title: 'Sasha' },
+               { id: 5, title: 'Sasha' }
+            ]);
+   
+            /* To reset source and context*/
+            List._private.abortCallback(listLayout, {});
+            listLayout._contextObj['searchLayoutField'] = {searchValue: ''};
+            context.searchLayoutField.searchValue = '';
+            /* check reset */
+            assert.deepEqual(listLayout._filter, {});
+            assert.deepEqual(listLayout._source._$data, listSourceData);
+   
+            /* Change context filter */
+            context.filterLayoutField.filter = { title: 'Sasha' };
+            listLayout._beforeUpdate({}, context);
+            setTimeout(function() {
+               assert.deepEqual(listLayout._filter, {title: 'Sasha'});
+               done();
+            }, 50);
+         }, 50);
+         
       });
       
    });
