@@ -1,12 +1,11 @@
 define('SBIS3.CONTROLS/Button/BackButton',
    [
     'Lib/Control/CompoundControl/CompoundControl',
-    'Core/helpers/String/escapeTagsFromStr',
     'tmpl!SBIS3.CONTROLS/Button/BackButton/BackButton',
     'SBIS3.CONTROLS/Link',
     'css!SBIS3.CONTROLS/Button/BackButton/BackButton'
    ],
-    function(CompoundControl, escapeTagsFromStr, dotTpl) {
+    function(CompoundControl, dotTpl) {
    'use strict';
    /**
     * Класс контрола "Кнопка "Назад".
