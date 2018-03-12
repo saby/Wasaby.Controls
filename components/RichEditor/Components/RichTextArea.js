@@ -500,7 +500,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      this._tinyEditor.focus();
                      // Если сейчас есть контент и не было установлено осмысленного рэнжа - поставить курсор ввода в его конец
                      // 24823 https://online.sbis.ru/opendoc.html?guid=cd2659d7-0066-4207-bade-b77edb462684
-                     if (noRng && this.getText()) {
+                     // Но только, если редактор не был и до этого активным (повтроный вызов)
+                     // 1174883097 https://online.sbis.ru/opendoc.html?guid=56ad4bd1-a74a-4694-98bf-8401938c144a
+                     if (noRng && !this.isActive() && this.getText()) {
                         this.setCursorToTheEnd();
                      }
                      if (cConstants.browser.isMobileAndroid) {
@@ -1105,6 +1107,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                     href = 'http://' + href;
                                  }
                                  var dom = editor.dom;
+                                 var done;
                                  if (element && element.nodeName === 'A' && element.className.indexOf('ws-focus-out') < 0) {
                                     if (href) {
                                        dom.setAttribs(element, {
@@ -1112,11 +1115,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                           href: escapeHtml(href)
                                        });
                                        $(element).text(caption || origCaption || href);
-                                    } else {
+                                    }
+                                 else {
                                        editor.execCommand('unlink');
                                     }
-                                    editor.undoManager.add();
-                                 } else if (href) {
+                                    done = true;
+                                 }
+                                 else
+                                 if (href) {
                                     linkAttrs.href = href;
                                     selection.setRng(range);
                                     if (selection.getContent() === '' || (fre._isOnlyTextSelected() && cConstants.browser.firefox)) {
@@ -1125,7 +1131,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                        // Для MSIE принудительно смещаем курсор ввода после вставленной ссылки
                                        // 1174853380 https://online.sbis.ru/opendoc.html?guid=77405679-2b2b-42d3-8bc0-d2eee745ea23
                                        editor.insertContent(cConstants.browser.isIE ? linkHtml + '&#65279;&#8203;' : linkHtml);
-                                    } else {
+                                    }
+                                    else {
                                        editor.execCommand('mceInsertLink', false, linkAttrs);
                                        if (cConstants.browser.firefox) {
                                           // В firefox каретка(курсор ввода) остаётся (и просачивается) внутрь элемента A, нужно принудительно вывести её наружу, поэтому:
@@ -1140,6 +1147,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                           }
                                        }
                                     }
+                                    done = true;
+                                 }
+                                 if (done) {
+                                    self._tinyLastRng = selection.getRng();
                                     editor.undoManager.add();
                                  }
                                  self.close();
@@ -1385,11 +1396,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                     node = node.parentNode;
                                  }
                                  var next = node.nextSibling;
-                                 var index = next && next.nodeType === 3 && next.nodeValue.length && next.nodeValue.charCodeAt(0) === 65279 ? 1 : 0;
-                                 var newRng = editor.dom.createRng();
-                                 newRng.setStart(next, index);
-                                 newRng.setEnd(next, index);
-                                 editor.selection.setRng(newRng);
+                                 self._selectNewRng(next, next && next.nodeType === 3 && next.nodeValue.length && next.nodeValue.charCodeAt(0) === 65279 ? 1 : 0);
                                  if (scrollTop) {
                                     self._inputControl.scrollTop(scrollTop);
                                  }
@@ -1429,6 +1436,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
          _smileHtml: function(smile) {
             return '&#' + smile.code + ';';
+         },
+
+         _selectNewRng: function (startNode, startOffset, endNode, endOffset) {
+            var hasEndNode = endNode !=/*Не !==*/ null;
+            var hasEndOffset = endOffset !=/*Не !==*/ null;
+            var editor = this._tinyEditor;
+            var newRng = editor.dom.createRng();
+            newRng.setStart(startNode, startOffset);
+            newRng.setEnd(hasEndNode ? endNode : startNode, hasEndOffset ? endOffset : (hasEndNode ? 0 : startOffset));
+            var selection = editor.selection;
+            selection.setRng(newRng);
+            if (!hasEndNode && !hasEndOffset) {
+               selection.collapse(false);
+            }
          },
 
          _bindEvents: function() {
@@ -1853,10 +1874,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            var text = node.nodeValue;
                            if (text.charCodeAt(index - 1) === 65279/*&#xFEFF;*/) {
                               node.nodeValue = 1 < text.length ? text.substring(0, index - 1) + text.substring(index) : '';
-                              var newRng = editor.dom.createRng();
-                              newRng.setStart(node, index - 1);
-                              newRng.setEnd(node, index - 1);
-                              selection.setRng(newRng);
+                              this._selectNewRng(node, index - 1);
                            }
                         }
                      }
@@ -1965,7 +1983,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
             // Для правильной работы метода insertHtml в отсутствии фокуса будем фиксировать последний актуальный рэнж
             editor.on('focus focusin', function (evt) {
-               self._tinyLastRng = null;
+               // Сбрасывать последний актуальный рэнж не сразу, а только после того, как все синхронные обработчики события отработают
+               setTimeout(function () {
+                  self._tinyLastRng = null;
+               }, 1);
             });
             editor.on('blur focusout', function (evt) {
                var rng = editor.selection.getRng();
