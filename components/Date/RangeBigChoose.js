@@ -245,7 +245,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this._monthRangePicker.subscribe('onSelectionEnded', this._onSelectionEnded.bind(this));
          this._monthRangePicker.subscribe('onYearChanged', this._onMonthRangePickerYearChanged.bind(this));
          this._monthRangePicker.subscribe('onPeriodMouseEnter', this._onMonthRangePickerOnItemMouseEnter.bind(this));
-         this._monthRangePicker.subscribe('onPeriodMouseLeave', this._datePickersResetActive.bind(this));
+         this._monthRangePicker.subscribe('onPeriodMouseLeave', this._onMonthRangePickerOnItemMouseLeave.bind(this));
          this._dateRangePicker.subscribe('onSelectionEnded', this._onDateRangeSelectionEnded.bind(this));
          this._dateRangePicker.subscribe('onMonthChanged', this._onDateRangePickerYearChanged.bind(this));
          this._dateRangePicker.subscribe('onMonthTitleMouseEnter', this._onDateRangePickerMonthTitleMouseEnter.bind(this));
@@ -356,6 +356,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             }
          } else {
             this._datePickerSetActive(this._startDatePicker);
+         }
+      },
+       _onMonthRangePickerOnItemMouseLeave: function (event, date) {
+         if (this._monthRangePicker.isSelectionProcessing()) {
+            this._datePickersResetActive();
          }
       },
 
@@ -607,10 +612,12 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          if ((start != startValue) ||
             (start && startValue && (start.toSQL() !==  startValue.toSQL()))) {
             this._startDatePicker.setDate(startValue, true);
+            this._startDatePicker.validate();
          }
          if ((end != endValue) ||
             (end && endValue && (end.toSQL() !==  endValue.toSQL()))) {
             this._endDatePicker.setDate(endValue, true);
+            this._endDatePicker.validate();
          }
 
          if (this._options._state === states.year) {
@@ -949,8 +956,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          if (this.getRangeSelectionType() === selectionType) {
             DateRangeBigChoose.superclass._onRangeControlMouseLeave.call(this);
          }
-         this._startDatePickerResetActive();
-         this._endDatePickerResetActive();
+         if (this.isSelectionProcessing()) {
+            this._startDatePickerResetActive();
+            this._endDatePickerResetActive();
+         }
       },
 
       _getSelectedRangeItemByItemId: function (itemId, selectionType) {
