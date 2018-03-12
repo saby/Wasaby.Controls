@@ -101,7 +101,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/resources/config',
                onMenuItemActivate: handlers.smile
             },
             idProperty: 'key',
-            order: 50
+            order: 50,
+            pickerConfig: {
+               closeOnTargetMove: false
+            }
          },
          {
             name: 'history',
@@ -115,7 +118,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/resources/config',
                onMenuItemActivate: handlers.history
             },
             idProperty: 'key',
-            order: 60
+            order: 60,
+            pickerConfig: {
+               closeOnTargetMove: false
+            }
          }
       ];
       };
