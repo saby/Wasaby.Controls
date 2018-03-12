@@ -133,12 +133,17 @@ define('Controls/Popup/Manager/Popup',
          },
 
          _getMargins: function() {
+            if (this._margins) {
+               return this._margins;
+            }
             var style = this._container.currentStyle || window.getComputedStyle(this._container);
-            var margins = {
+            this._margins = {
                top: parseInt(style.marginTop, 10),
                left: parseInt(style.marginLeft, 10)
             };
-            return margins;
+            this._resetMargin = true; //todo пока не работает мерж конфига attr: на дефолтный
+            this._container.style.margin = 0;
+            return this._margins;
          },
       });
 
