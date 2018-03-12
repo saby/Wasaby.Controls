@@ -22,10 +22,9 @@
                on:change="_inputCompletedHandler()"
                on:focus="_focusHandler()"
                value="{{ _options.viewModel.getDisplayValue() }}"
-               placeholder="{{ _options.placeholder }}"
          />
 
-         <ws:if data="{{ !_options.viewModel.getDisplayValue() }}">
+         <ws:if data="{{ !_options.viewModel.getDisplayValue() && isEnabled()}}">
             <ws:partial
                attr:class="{{ _options.multiline ? 'controls-InputArea__placeholder_multiline' }}"
                template="tmpl!Controls/Input/resources/CustomPlaceholder"
