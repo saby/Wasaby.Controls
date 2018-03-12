@@ -236,6 +236,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             options._prepareReviewContent = this._prepareReviewContent.bind({_options: options});
             options._prepareContent = this._prepareContent.bind(this);
             options._sanitizeClasses = this._sanitizeClasses.bind(this);
+            if (options.autoHeight) {
+               options.minimalHeight = this._cleanHeight(options.minimalHeight);
+               options.maximalHeight = this._cleanHeight(options.maximalHeight);
+            }
             return options;
          },
 
@@ -252,8 +256,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             });
             this._dChildReady.push(this._readyContolDeffered);
             this._tinyReady = new Deferred();
-            var scrollContainer = this._container.find('.controls-RichEditor__scrollContainer');
-            this._scrollContainer = scrollContainer.length ? scrollContainer : null;
+            this._scrollContainer = this._container.find('.controls-RichEditor__scrollContainer');
             this._dataReview = this._container.find('.controls-RichEditor__dataReview');
             this._inputControl = this._container.find('.controls-RichEditor__editorFrame');
             this._fakeArea = this._container.find('.controls-RichEditor__fakeArea');
@@ -405,8 +408,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                   var isInline = options.editorConfig.inline;
                   var iFrame = isInline ? null : $(this._tinyEditor.iframeElement);
-                  (isInline ? (this._scrollContainer || this._inputControl) : iFrame).css('max-height', options.maximalHeight);
-                  (isInline ? this._inputControl : iFrame).css('min-height', options.minimalHeight);
+                  (isInline ? this._scrollContainer : iFrame).css('max-height', options.maximalHeight || '');
+                  (isInline ? this._inputControl : iFrame).css('min-height', options.minimalHeight || '');
                }
             }
          },
@@ -1441,6 +1444,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             }
          },
 
+         _cleanHeight: function (value) {
+            return value && 0 < (typeof value === 'string' ? parseFloat(value) : value) ? value : 0;
+         },
+
          _bindEvents: function() {
             var
                self = this,
@@ -2276,21 +2283,21 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             }
          },
 
-         _applyEnabledState: function(enabled) {
+         _applyEnabledState: function (enabled) {
             var container = this._tinyEditor ? this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl : this._inputControl;
-            if (this._dataReview) {
-               var opts = this._options;
-               if (opts.autoHeight) {
-                  if (0 < parseFloat(opts.minimalHeight)) {
-                     (this._scrollContainer || this._dataReview).css('max-height', opts.maximalHeight);
-                  }
-                  if (0 < parseFloat(opts.maximalHeight)) {
-                     this._dataReview.css('min-height', opts.minimalHeight);
-                  }
+            var options = this._options;
+            if (options.autoHeight) {
+               this._scrollContainer.css('max-height', this._cleanHeight(options.maximalHeight) || '');
+               if (this._dataReview) {
+                  this._dataReview.css('min-height', this._cleanHeight(options.minimalHeight) || '');
                }
-               else {
+            }
+            else {
+               if (this._dataReview) {
                   this._dataReview.css('height', this._container.height() - constants.dataReviewPaddings);//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
                }
+            }
+            if (this._dataReview) {
                this._updateDataReview(this.getText() || '');
                this._dataReview.toggleClass('ws-hidden', enabled);
             }
@@ -2547,9 +2554,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (this.isVisible()) {
                var totalHeight = this._container.height();
                var contentHeight = (this._options.editorConfig.inline ? this._inputControl : $(this._tinyEditor.iframeElement)).height();
-               if (this._scrollContainer) {
-                  this._scrollContainer[0].scrollTop = 0;
-               }
+               this._container[0].scrollTop = 0;
+               this._scrollContainer[0].scrollTop = 0;
                if (totalHeight !== this._lastTotalHeight || contentHeight !== this._lastContentHeight) {
                   this._lastTotalHeight = totalHeight;
                   this._lastContentHeight = contentHeight;
