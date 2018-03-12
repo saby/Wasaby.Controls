@@ -252,7 +252,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             });
             this._dChildReady.push(this._readyContolDeffered);
             this._tinyReady = new Deferred();
-            this._scrollContainer = this._container.find('.controls-RichEditor__scrollContainer');
+            var scrollContainer = this._container.find('.controls-RichEditor__scrollContainer');
+            this._scrollContainer = scrollContainer.length ? scrollContainer : null;
             this._dataReview = this._container.find('.controls-RichEditor__dataReview');
             this._inputControl = this._container.find('.controls-RichEditor__editorFrame');
             this._fakeArea = this._container.find('.controls-RichEditor__fakeArea');
