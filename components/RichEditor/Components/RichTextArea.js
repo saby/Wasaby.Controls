@@ -1106,6 +1106,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                  if (href && href.search(protocol) === -1) {
                                     href = 'http://' + href;
                                  }
+                                 if (!caption) {
+                                    caption = origCaption || href;
+                                 }
                                  var dom = editor.dom;
                                  var done;
                                  if (element && element.nodeName === 'A' && element.className.indexOf('ws-focus-out') < 0) {
@@ -1114,7 +1117,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                           target: '_blank',
                                           href: escapeHtml(href)
                                        });
-                                       $(element).text(caption || origCaption || href);
+                                       element.innerHtml = caption;
                                     }
                                  else {
                                        editor.execCommand('unlink');
@@ -1126,14 +1129,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                     linkAttrs.href = href;
                                     selection.setRng(range);
                                     if (selection.getContent() === '' || (fre._isOnlyTextSelected() && cConstants.browser.firefox)) {
-                                       var linkText = caption || origCaption || href;
+                                       var linkText = caption;
                                        var linkHtml = dom.createHTML('a', linkAttrs, dom.encode(linkText));
                                        // Для MSIE принудительно смещаем курсор ввода после вставленной ссылки
                                        // 1174853380 https://online.sbis.ru/opendoc.html?guid=77405679-2b2b-42d3-8bc0-d2eee745ea23
                                        editor.insertContent(cConstants.browser.isIE ? linkHtml + '&#65279;&#8203;' : linkHtml);
                                     }
                                     else {
+                                       if (origCaption !== caption) {
+                                          selection.setContent(caption);
+                                          var rng = selection.getRng();
+                                          fre._selectNewRng(range.startContainer, range.startOffset, rng.endContainer, rng.endOffset);
+                                       }
                                        editor.execCommand('mceInsertLink', false, linkAttrs);
+                                       selection.collapse(false);
                                        if (cConstants.browser.firefox) {
                                           // В firefox каретка(курсор ввода) остаётся (и просачивается) внутрь элемента A, нужно принудительно вывести её наружу, поэтому:
                                           var r = editor.selection.getRng();
