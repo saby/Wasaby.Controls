@@ -1481,7 +1481,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      selection.removeAllRanges();
                   }
                });
-               this._inputControl.bind('scroll', function(e) {
+               this._inputControl.bind('scroll mousewheel', function(e) {
                   if (this._imageOptionsPanel) {
                      this._imageOptionsPanel.hide();
                   }
