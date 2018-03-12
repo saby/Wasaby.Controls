@@ -11,8 +11,6 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       'Core/CommandDispatcher',
       'Core/Deferred',
       'WS.Data/Collection/RecordSet',
-      'WS.Data/Functor/Compute',
-      'SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/AreaSelectableModel',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Cache',
       'SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Dropdown',
       'SBIS3.CONTROLS/CompoundControl',
@@ -34,7 +32,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       'SBIS3.CONTROLS/OperationsPanel/Mark'
    ],
 
-   function (CommandDispatcher, Deferred, RecordSet, ComputeFunctor, AreaSelectableModel, PresetCache, PresetDropdown, CompoundControl, ItemsMoveController, EditInPlaceBaseController, dotTplFn) {
+   function (CommandDispatcher, Deferred, RecordSet, PresetCache, PresetDropdown, CompoundControl, ItemsMoveController, EditInPlaceBaseController, dotTplFn) {
       'use strict';
 
 
