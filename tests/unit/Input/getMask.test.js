@@ -62,7 +62,7 @@ define(
                assert.equal(result, 'd ddddddddddd');
 
                result = MaskBuilder.getMask('8 485274328567');
-               assert.equal(result, '+d\\*');
+               assert.equal(result, 'd\\*');
             });
          });
       });
