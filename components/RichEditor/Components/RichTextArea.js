@@ -2546,6 +2546,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (this.isVisible()) {
                var totalHeight = this._container.height();
                var contentHeight = (this._options.editorConfig.inline ? this._inputControl : $(this._tinyEditor.iframeElement)).height();
+               if (this._scrollContainer) {
+                  this._scrollContainer[0].scrollTop = 0;
+               }
                if (totalHeight !== this._lastTotalHeight || contentHeight !== this._lastContentHeight) {
                   this._lastTotalHeight = totalHeight;
                   this._lastContentHeight = contentHeight;
