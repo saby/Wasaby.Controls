@@ -3,7 +3,6 @@ define('Controls/List/SourceControl', [
    'Core/IoC',
    'tmpl!Controls/List/SourceControl/SourceControl',
    'require',
-   'Controls/List/Controllers/ScrollController',
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
    'Core/Deferred',
@@ -12,7 +11,6 @@ define('Controls/List/SourceControl', [
              IoC,
              SourceControlTpl,
              require,
-             ScrollController,
              VirtualScroll,
              SourceController,
              Deferred
@@ -328,7 +326,9 @@ define('Controls/List/SourceControl', [
 
          _private.startScrollEmitter(this);
 
-         if (false && this._options.navigation
+         /* Чтобы не ругался стан https://online.sbis.ru/opendoc.html?guid=c2b74664-1827-4486-96ef-d19b6b987d8e */
+         var useScrollPaging = false;
+         if (useScrollPaging && this._options.navigation
             && this._options.navigation.view === 'infinity'
             && this._options.navigation.viewConfig
             && this._options.navigation.viewConfig.pagingMode
