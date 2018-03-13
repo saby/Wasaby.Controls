@@ -48,35 +48,35 @@ define('Controls/Input/Area', [
 
    var _private = {
 
-      setFakeAreaValue: function(value){
-         this._children.fakeAreaValue.innerHTML = value;
+      setFakeAreaValue: function(self, value){
+         self._children.fakeAreaValue.innerHTML = value;
       },
 
       /*
       * Обновляет наличие скролла, в зависимости от того, есть ли скролл на фейковой текст арии
       */
-      updateScroll: function(){
-         var fakeArea = this._children.fakeArea;
+      updateScroll: function(self){
+         var fakeArea = self._children.fakeArea;
          var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
 
          //Для IE, текст мы показываем из fakeArea, поэтому сдвинем скролл.
          if(needScroll && detection.isIE){
-            fakeArea.scrollTop = this._children.realArea.scrollTop;
+            fakeArea.scrollTop = self._children.realArea.scrollTop;
          }
 
-         if(needScroll !== this._hasScroll){
-            this._hasScroll = needScroll;
+         if(needScroll !== self._hasScroll){
+            self._hasScroll = needScroll;
          }
       },
 
       /*
        * Обновляет multiline у area
        */
-      updateMultiline: function(){
-         var fakeArea = this._children.fakeArea;
-         var fakeAreaWrapper = this._children.fakeAreaWrapper;
+      updateMultiline: function(self){
+         var fakeArea = self._children.fakeArea;
+         var fakeAreaWrapper = self._children.fakeAreaWrapper;
          //Определим количество строк в Area сравнив высоты fakeArea и ее обертки
-         this._multiline = fakeArea.clientHeight > fakeAreaWrapper.clientHeight;
+         self._multiline = fakeArea.clientHeight > fakeAreaWrapper.clientHeight;
       }
    };
 
@@ -92,21 +92,16 @@ define('Controls/Input/Area', [
 
       constructor: function(options) {
          Area.superclass.constructor.call(this, options);
-         //Устанавливаем _multiline до отрисовки компонента, чтобы не было скачков
+         //_multiline отвечает за навешивание классов многострочного поля в InputRender
+         //Устанавливаем до отрисовки компонента, чтобы не было скачков
          this._multiline = options.minLines > 1;
-      },
-
-      _afterMount: function() {
-         Area.superclass._afterMount.apply(this, arguments);
-         _private.updateScroll.call(this);
-         _private.updateMultiline.call(this);
       },
 
       _beforeUpdate: function(newOptions) {
          Area.superclass._beforeUpdate.apply(this, arguments);
-         _private.setFakeAreaValue.call(this, newOptions.value);
-         _private.updateScroll.call(this);
-         _private.updateMultiline.call(this);
+         _private.setFakeAreaValue(this, newOptions.value);
+         _private.updateScroll(this);
+         _private.updateMultiline(this);
       },
 
       _afterUpdate: function(oldOptions) {
@@ -118,17 +113,17 @@ define('Controls/Input/Area', [
       },
 
       _valueChangedHandler: function(e, value){
-         _private.setFakeAreaValue.call(this, value);
-         _private.updateScroll.call(this);
-         _private.updateMultiline.call(this);
+         _private.setFakeAreaValue(this, value);
+         _private.updateScroll(this);
+         _private.updateMultiline(this);
          this._notify('valueChanged', [value]);
       },
 
       _setValue: function(value){
          Area.superclass._setValue.apply(this, arguments);
-         _private.setFakeAreaValue.call(this, value);
-         _private.updateScroll.call(this);
-         _private.updateMultiline.call(this);
+         _private.setFakeAreaValue(this, value);
+         _private.updateScroll(this);
+         _private.updateMultiline(this);
       },
 
       _keyDownHandler: function(e){
@@ -151,7 +146,7 @@ define('Controls/Input/Area', [
       },
 
       _scrollHandler: function(){
-         _private.updateScroll.call(this);
+         _private.updateScroll(this);
       },
 
       //TODO убрать (и подписку из Area.tmpl) после выполнения ошибки https://online.sbis.ru/opendoc.html?guid=04b9c78b-7237-4c5a-9045-887a170d8427
