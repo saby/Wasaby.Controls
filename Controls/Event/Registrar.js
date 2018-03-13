@@ -3,7 +3,9 @@ define('Controls/Event/Registrar',
       'Core/core-simpleExtend'
    ],
    function(cExtend) {
+      var _private = {
 
+      };
       var Registrar = cExtend.extend({
 
          _registry: null,
