@@ -1,0 +1,29 @@
+<div class="controls-FastData" name="fastData"
+         on:click="_open()">
+      <span class="controls-FastData__icon icon-DayForward action-hover"></span>
+      <ws:if data="{{contentTemplate}}">
+         <ws:partial template="{{contentTemplate}}" scope="{{...}}" />
+      </ws:if>
+      <ws:else>
+         <div if={{_icon}} class="controls-Dropdown__icon"><div class="{{_icon}}"></div></div>
+         <div if={{!_icon}} class="controls-Dropdown__text">{{_updateText(_selectedItem, displayProperty || 'title')}}</div>
+      </ws:else>
+
+      <span class="controls-FastData__icon icon-Close icon-disabled"
+            on:click="_reset()"></span>
+
+
+   <Controls.Dropdown.Opener name="DropdownOpener"
+                  keyProperty="{{_options.keyProperty}}"
+                  parentProperty="{{_options.parentProperty}}"
+                  nodeProperty="{{_options.nodeProperty}}"
+                  itemTemplateProperty="{{_options.itemTemplateProperty}}"
+                  itemTemplate="{{_options.itemTemplate}}"
+                  headTemplate="{{_options.headTemplate}}"
+                  footerTemplate="{{_options.footerTemplate}}"
+                  selectedKeys="{{_options.selectedKeys}}">
+      <ws:popupOptions>
+         <ws:eventHandlers onResult="{{_onResult}}"/>
+      </ws:popupOptions>
+   </Controls.Dropdown.Opener>
+</div>
