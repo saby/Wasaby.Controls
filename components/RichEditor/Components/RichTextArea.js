@@ -244,8 +244,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          },
 
          $constructor: function() {
-            var
-               self = this;
+            var self = this;
             this._publish('onInitEditor', 'onUndoRedoChange','onNodeChange', 'onFormatChange', 'onToggleContentSource');
             this._sourceContainer = this._container.find('.controls-RichEditor__sourceContainer');
             this._sourceArea = this._sourceContainer.find('.controls-RichEditor__sourceArea').bind('input', this._onChangeAreaValue.bind(this));
@@ -260,7 +259,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             this._dataReview = this._container.find('.controls-RichEditor__dataReview');
             this._inputControl = this._container.find('.controls-RichEditor__editorFrame');
             this._fakeArea = this._container.find('.controls-RichEditor__fakeArea');
-            this._initInputHeight();
+            this._initMainHeight();
             this._options.editorConfig.selector = '#' + this.getId() + ' .controls-RichEditor__editorFrame';
             this._options.editorConfig.fixed_toolbar_container = '#' + this.getId() + ' > .controls-RichEditor__fakeArea';
             this._options.editorConfig.setup = function(editor) {
@@ -2680,9 +2679,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             RichTextArea.superclass._focusOutHandler.apply(this, arguments);
          },
 
-         _initInputHeight: function() {
+         /**
+          * Инициализировать высоту основных элементов. Применяется только при отсутствии автоподстройки высоты (при фиксированой высоте)
+          * @protected
+          */
+         _initMainHeight: function () {
             if (!this._options.autoHeight) {
-               this._inputControl.css('height', this._container.height());
+               this._scrollContainer.css('height', this._container.height());
             }
          },
 

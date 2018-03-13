@@ -119,11 +119,15 @@ define('SBIS3.CONTROLS/RichEditor',
             return this._toolbar && this._toolbar.getItemInstance(buttonName);
          },
 
-         _initInputHeight: function(){
-            var
-               toolbarHeight = this._options.toolbar && this._options.toolbarVisible ? constants.toolbarHeight : 0;
-            if (!this._options.autoHeight) {
-               this._inputControl.css('height',  this._container.height() - toolbarHeight);
+         /**
+          * Инициализировать высоту основных элементов. Применяется только при отсутствии автоподстройки высоты (при фиксированой высоте)
+          * @protected
+          */
+         _initMainHeight: function () {
+            var options = this._options;
+            if (!options.autoHeight) {
+               var toolbarHeight = options.toolbar && options.toolbarVisible ? constants.toolbarHeight : 0;
+               this._scrollContainer.css('height',  this._container.height() - toolbarHeight);
             }
          }
       });
