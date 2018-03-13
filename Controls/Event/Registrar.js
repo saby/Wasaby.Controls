@@ -1,9 +1,8 @@
 define('Controls/Event/Registrar',
    [
-      'Core/core-simpleExtend',
-      'Core/IoC'
+      'Core/core-simpleExtend'
    ],
-   function(cExtend, IoC) {
+   function(cExtend) {
       var _private = {
 
       };
