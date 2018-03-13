@@ -1,14 +1,3 @@
-<div class="controls-RichEditor">
-   <div
-      class="controls-RichEditor__dataReview ws-basic-style {{editorConfig.className}}{{ enabled ? ' ws-hidden' }}"
-      tabindex="1"
-      style="{{ autoHeight && minimalHeight && minimalHeight != 0 ? 'min-height:' + minimalHeight + 'px;'}} {{ autoHeight && maximalHeight && maximalHeight != 0 ? 'max-height:' + maximalHeight + 'px;'}}"
-   >{{ !enabled && text ? (_prepareReviewContent(text)|sanitize) }}</div>
-   <div class="controls-RichEditor__placeholder" >{{ placeholder }}</div>
-   <div
-      class="controls-RichEditor__editorFrame ws-basic-style {{editorConfig.className}}{{ !enabled ? ' ws-hidden' }}"
-      style="{{ autoHeight && minimalHeight && minimalHeight != 0 ? 'min-height:' + minimalHeight + 'px;'}} {{ autoHeight && maximalHeight && maximalHeight != 0 ? 'max-height:' + maximalHeight + 'px;'}}"
-   >{{ enabled && text ? (_prepareContent(_prepareReviewContent(text))|sanitize) }}</div>
-   <textarea class="controls-RichEditor__fakeArea" tabindex="0"></textarea>
-   <div class="controls-RichEditor__sourceContainer ws-hidden"><textarea class="controls-RichEditor__sourceArea"></textarea></div>
+<div class="controls-RichEditor {{autoHeight ? 'controls-RichEditor_autoHeight' : 'controls-RichEditor_fixedHeight'}}">
+   <ws:partial template="tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextAreaInner" scope="{{...}}" />
 </div>
