@@ -104,8 +104,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptions
                this.updateTemplate();
                var
                   parent = this.getParent(),
-                  srcollParent = parent.getContainer().parent('.controls-ScrollContainer__content'),
-                  linkedContainer = srcollParent.length ? srcollParent : parent.getInputContainer(), // всегда считаем  показ панели от поля ввода редактора
+                  parentContainer = parent.getContainer(),
+                  srcollSelector = '.controls-ScrollContainer__content',
+                  srcollContainer = parentContainer.find(srcollSelector),
+                  linkedContainer;
+               if (srcollContainer.length) {
+                  linkedContainer = srcollContainer;
+               }
+               else {
+                  var srcollParent = parentContainer.parent(srcollSelector);
+                  linkedContainer = srcollParent.length ? srcollParent : parent.getInputContainer(); // всегда считаем  показ панели от поля ввода редактора
+               }
+               var
                   inputOffset = linkedContainer.offset().top,
                   panelOffset = this._container.offset().top,
                   inputHeight = linkedContainer.height(),
