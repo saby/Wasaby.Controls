@@ -589,6 +589,9 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
              })
              .subscribeTo(this._list, 'onDrawItems', this._onListDrawItems.bind(this))
              .subscribeTo(this._list, 'onItemActivate', (function (eventObject, itemObj) {
+                // хак. бывает что активируется уже активный компонент (потому что его потомок активный).
+                // чтобы активность ушла с потомка на предка, нужно сбросить _isControlActive, тогда выполнится полноценный алгоритм активации.
+                self._isControlActive = false;
                 self.setActive(true);
                /* По задаче:
                 https://inside.tensor.ru/opendoc.html?guid=7ce2bd66-bb6b-4628-b589-0e10e2bb8677&description=
