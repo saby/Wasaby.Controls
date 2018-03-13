@@ -103,6 +103,11 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Preset/Unit',
       };
 
       var _setTitle = function (value) {
+         //В 150 переделать на instance of String, когда rk научится возрашать наслденика String.
+         if (value instanceof Object) {
+            value = value.valueOf();
+         }
+
          if (!value || typeof value !== 'string') {
             throw new Error('None empty string required');
          }
