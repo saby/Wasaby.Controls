@@ -869,6 +869,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          } else if (selectionType === selectionTypes.years) {
             this._setCurrentYear(itemId);
          }
+         this._monthRangePicker._clearMonthSelection();
       },
 
       // Выбор периода по годам, полугодиям, кварталам и месяцам
