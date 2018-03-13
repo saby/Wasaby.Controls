@@ -1268,10 +1268,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                container = this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl,
                focusContainer = sourceVisible ? this._sourceArea : container;
             if (sourceVisible) {
-               this._sourceContainer.css({
-                  'height' : container.outerHeight(),
-                  'width' : container.outerWidth()
-               });
+               this._sourceArea.css('min-height', this._scrollContainer.height());
                this._sourceArea.val(this.getText());
             }
             this._sourceContainer.toggleClass('ws-hidden', !sourceVisible);

@@ -12,6 +12,8 @@
       class="controls-RichEditor__editorFrame ws-basic-style {{editorConfig.className}}{{!enabled ? ' ws-hidden'}}"
       style="{{autoHeight && minimalHeight && minimalHeight != 0 ? 'min-height:' + minimalHeight + 'px;'}}"
       >{{enabled && text ? (_prepareContent(_prepareReviewContent(text))|sanitize)}}</div>
+   <div class="controls-RichEditor__sourceContainer ws-hidden">
+      <textarea class="controls-RichEditor__sourceArea"></textarea>
+   </div>
 </SBIS3.CONTROLS:ScrollContainer>
 <textarea class="controls-RichEditor__fakeArea" tabindex="0"></textarea>
-<div class="controls-RichEditor__sourceContainer ws-hidden"><textarea class="controls-RichEditor__sourceArea"></textarea></div>
