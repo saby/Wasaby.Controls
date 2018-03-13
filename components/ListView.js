@@ -2720,6 +2720,9 @@ define('SBIS3.CONTROLS/ListView',
                targetElement = this._getDomElementByItem(item);
 
             if (toolbarTarget && targetElement && toolbarTarget.container.get(0) === targetElement.get(0)) {
+               if (toolbar.isToolbarLocking() && this._options.itemsActionsInItemContainer) {
+                  toolbar.unlockToolbar();
+               }
                toolbar.hide();
             }
             var redrawResult = ListView.superclass._redrawItemInner.apply(this, arguments);
