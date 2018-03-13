@@ -2316,7 +2316,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             }
             else {
                if (this._dataReview) {
-                  this._dataReview.css('height', this._container.height() - constants.dataReviewPaddings);//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
+                  this._dataReview.css('min-height', this._scrollContainer.height() - constants.dataReviewPaddings);//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
                }
             }
             if (this._dataReview) {
