@@ -68,7 +68,6 @@ define('Controls/Input/Text', [
           */
 
       var TextBox = Control.extend({
-         _controlName: 'Controls/Input/Text',
          _template: template,
          _caretPosition: null,
 
@@ -129,7 +128,7 @@ define('Controls/Input/Text', [
          };
       };
 
-      //TODO расскоментировать этот блок + зависимость types когда полечат https://online.sbis.ru/opendoc.html?guid=e53e46a0-9478-4026-b7d1-75cc5ac0398b
+      //TODO расскоментировать этот блок + зависимость types когда полечат https://online.sbis.ru/opendoc.html?guid=1416c4da-b0e0-402b-9e02-a3885dc6cdb8
       /*TextBox.getOptionTypes = function() {
        return {
        trim: types(Boolean),

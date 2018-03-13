@@ -16,11 +16,6 @@ define('Controls/Event/Registrar',
             this._options = cfg;
          },
 
-
-         _beforeMount: function(){
-
-         },
-
          register: function(event, component, callback){
             this._registry[component.getInstanceId()] = {
                component: component,
@@ -29,7 +24,7 @@ define('Controls/Event/Registrar',
             event.stopPropagation();
          },
          unregister: function(event, component){
-            this._registry[component.getInstanceId()] = null;
+            delete this._registry[component.getInstanceId()];
             event.stopPropagation();
          },
          start: function(){
@@ -49,8 +44,6 @@ define('Controls/Event/Registrar',
          }
 
       });
-      //для тестов
-      Registrar._private = _private;
 
       return Registrar;
    });

@@ -61,6 +61,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
      *
      * @class SBIS3.CONTROLS/Date/RangeBigChoose
      * @extends Lib/Control/CompoundControl/CompoundControl
+     * @author Миронов А.Ю.
      *
      * @mixes SBIS3.CONTROLS/Mixins/RangeMixin
      * @mixes SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin

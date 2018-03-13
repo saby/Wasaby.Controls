@@ -1,0 +1,114 @@
+.controls-FilterButton {
+	height: @default-height;
+	display: inline-block;
+}
+
+.controls-FilterButton__icon_state_default {
+	color: @color_FilterButton-icon;
+	cursor: pointer;
+}
+
+.controls-FilterButton__icon_state_default:hover {
+	color: @color_FilterButton-icon_hover;
+}
+
+.controls-FilterButton__icon_state_disabled {
+	color: @icon-color-disabled;
+}
+
+.controls-FilterButton__icon_left {
+	order: -1;
+	margin-right: @default-padding;
+}
+
+.controls-FilterButton__icon_right {
+	margin-left: @default-padding;
+}
+
+.controls-FilterButton__wrapper {
+	.inline-flexbox();
+	.align-items(center);
+	width: 100%;
+	height: 100%;
+}
+
+.controls-FilterButton__wrapper:before {
+	content: "\200b";
+	order: -1;
+}
+
+.controls-FilterButton__text-wrapper {
+	.inline-flexbox();
+	.align-items(center);
+	min-width: 0;
+}
+
+.controls-FilterButton__text-wrapper_state_default:hover {
+	cursor: pointer;
+	
+	.controls-FilterButton__text {
+		color: @color_FilterButton-text_hover;
+		text-decoration: underline;
+	}
+	.controls-FilterButton__arrow {
+		color: @color_FilterButton-text_hover;
+	}
+}
+
+.controls-FilterButton__text {
+	.text-overflow();
+	font-size: @font-size_FilterButton-text;
+}
+
+.controls-FilterButton__text_state_default {
+	color: @color_FilterButton-text;
+}
+
+.controls-FilterButton__text_state_disabled {
+	color: @default-color-disabled;
+}
+
+.controls-FilterButton__arrow_state_default {
+	color: @color_FilterButton-arrow;
+}
+
+.controls-FilterButton__arrow_state_disabled {
+	color: @icon-color-disabled;
+}
+
+.controls-FilterButton__clear {
+	color: @color_FilterButton-clear;
+	cursor: pointer;
+}
+
+.controls-FilterButton__icon {
+	.icon-size-without-important(@font-size_FilterButton-icon);
+}
+
+.controls-FilterButton__clear, .controls-FilterButton__arrow {
+	.icon-size-without-important(@icon-size_default);
+}
+.controls-FilterButton__clear, .controls-FilterButton__arrow, .controls-FilterButton__icon {
+	.flex-shrink(0);
+}
+
+/* ****************Для совместимости со старой панелью ****************/
+.controls-FilterButton {
+	position: relative;
+}
+.controls-FilterButton__oldTemplate {
+	position: absolute;
+	top: 0;
+	width: 1px;
+	height: 1px;
+	visibility: hidden;
+}
+
+.controls-FilterButton__oldTemplate_right {
+	right: 0;
+}
+
+.controls-FilterButton__oldTemplate_left {
+	left: 0;
+}
+/********************************************************************/

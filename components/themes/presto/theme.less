@@ -269,6 +269,13 @@ body {
       }
     }
   }
+  .ws-window-titlebar {
+    color: @default-text-color !important;
+    line-height: round(100px * @multiplier)!important;
+    height: round(100px * @multiplier)!important;
+    font-weight: normal !important;
+    border-bottom: none;
+  }
   .ws-window-title { // аналогично шапке панели, контентная область начинается слева от крестика
     margin: 0 !important;
     width: calc(~"100% - @{width_CloseButton} - @{padding-right_floatArea-title}") !important; //86 - close button width + 8 - padding
@@ -371,6 +378,13 @@ body {
       }
     }
 
+  }
+}
+.controls-FilterButton {
+  .controls-FilterButton__icon {
+    .close-button-mixin(~'', round(58px * @multiplier), round(58px * @multiplier), "\ea2d");
+    font-size: round(38px * @multiplier);
+    color: #FFF !important;
   }
 }
 //todo: удалить временный коствль
@@ -481,6 +495,18 @@ body {
 // В presto крестик закрытия в информационных окнах имеют другие размеры.
 .controls-InformationPopup .controls-PopupMixin__closeButton_light {
   .icon-size(@icon-size_default_large);
+}
+// Размер не согласуется с размерами кнопок-иконок. необходимо только в тулбаре
+.controls-ToolBar .controls-IconButton {
+  width: @default-height;
+  height: @default-height;
+}
+
+.ws-is-desktop-platform {
+  .controls-Switch:hover,
+  .controls-DoubleSwitch:hover {
+    border-width: 2px;
+  }
 }
 .ws-window-overlay {
   position: fixed;

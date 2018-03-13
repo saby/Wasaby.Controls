@@ -1,44 +1,69 @@
+<ws:template name="enabledArea">
+   <textarea
+      name="realArea"
+      spellcheck="false"
+      value="{{ value }}"
+      required="true"
+   ></textarea>
+</ws:template>
+
+<ws:template name="disabledArea">
+   <div>{{ value }}</div>
+</ws:template>
+
 <Controls:Input:resources:InputRender:InputRender
-           size="auto"
+           size="{{ _options.size }}"
            sidePadding="Left"
-           multiline="{{ _options.minLines > 1 }}"
+           multiline="{{ _multiline }}"
            name="inputRender"
            value="{{ _options.value }}"
            selectOnClick="{{_options.selectOnClick}}"
            viewModel="{{_textViewModel}}"
            tagStyle="{{_options.tagStyle}}"
            validationErrors="{{_options.validationErrors}}"
-           placeholder="{{ _options.placeholder }}"attr:class="controls-InputArea"
+           placeholder="{{ _options.placeholder }}"
+           attr:class="controls-InputArea"
            on:valueChanged="_valueChangedHandler()"
            on:inputCompleted="_inputCompletedHandler()"
            on:tagHover="_notifyHandler('onTagHover')"
            on:tagClick="_notifyHandler('onTagClick')">
       <ws:content>
-         <!--TODO контейнер убрать https://online.sbis.ru/opendoc.html?guid=25000158-64ff-4db9-9605-a986cbc37b0f-->
-         <div class="controls-InputRender__wrapper">
-            <textarea
-                    name="realArea"
-                    spellcheck="false"
-                    class="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
-                    readonly="{{!isEnabled() ? 'readonly'}}"
-                    on:keydown="_keyDownHandler()"
-                    on:focus="_focusHandler()"
-                    on:scroll="_scrollHandler()"
-                    value="{{ _options.value }}"
-                    required="true"
-            ></textarea>
+            <!--TODO контейнер убрать https://online.sbis.ru/opendoc.html?guid=25000158-64ff-4db9-9605-a986cbc37b0f-->
+            <div class="controls-InputRender__wrapper">
+               <!--TODO нужно использовать тернарный оператор внутри template у partial, жду правки https://online.sbis.ru/opendoc.html?guid=5f420fae-2ae0-48e1-b1f3-0145ad70a1f1-->
+               <ws:if data="{{ isEnabled() }}">
+                  <ws:partial
+                     template="enabledArea"
+                     attr:class="controls-InputArea__field
+                       controls-InputArea__realField
+                       controls-InputRender__field
+                       {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}
+                       controls-InputArea__field_size_{{_options.size || 'default'}}"
+                     value="{{ _options.value }}"
+                     on:keydown="_keyDownHandler()"
+                     on:focus="_focusHandler()"
+                     on:scroll="_scrollHandler()"
+                  />
+               </ws:if>
+               <ws:else>
+                  <ws:partial
+                     template="disabledArea"
+                     attr:class="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
+                     value="{{ _options.value }}"
+                  />
+               </ws:else>
 
-            <div class="controls-fakeTextArea__firstWrapper">
-               <div class="controls-fakeTextArea__secondWrapper">
-                  <div
-                     name="fakeArea"
-                     class="controls-InputArea__field controls-InputArea__fakeField controls-InputRender__field"
-                     style="{{_options.minLines ? ('min-height: ' + _options.minLines * 100 + '%;')}} {{_options.maxLines ? 'max-height: ' + _options.maxLines * 100 + '%'}}">
-                     <span name="fakeAreaValue">{{ _options.value }}</span><br/>
+               <div class="controls-fakeTextArea__firstWrapper">
+                  <div class="controls-fakeTextArea__secondWrapper controls-fakeTextArea__secondWrapper_size_{{_options.size || 'default'}}" name="fakeAreaWrapper">
+                     <div
+                        name="fakeArea"
+                        class="controls-InputArea__field controls-InputArea__fakeField controls-InputRender__field controls-InputArea__field_size_{{_options.size || 'default'}}"
+                        style="{{_options.minLines ? ('min-height: ' + _options.minLines * 100 + '%;')}} {{_options.maxLines ? 'max-height: ' + _options.maxLines * 100 + '%'}}">
+                        <span name="fakeAreaValue">{{ _options.value }}</span><br/>
+                     </div>
                   </div>
+                  <div class="controls-InputArea__clear"></div>
                </div>
-               <div class="controls-InputArea__clear"></div>
             </div>
-         </div>
       </ws:content>
    </Controls:Input:resources:InputRender:InputRender>

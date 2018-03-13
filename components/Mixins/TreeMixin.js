@@ -1239,7 +1239,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                   for (idx = 0; idx < items.length; idx++) {
                      if (!cInstance.instanceOfModule(items[idx], 'WS.Data/Display/GroupItem')) {
                         parent = items[idx].getParent();
-                        if (!parent.isRoot()) {
+                        if (parent && !parent.isRoot()) {
                            if (!branches[parent.getContents().getId()]) {
                               branches[parent.getContents().getId()] = parent;
                            }

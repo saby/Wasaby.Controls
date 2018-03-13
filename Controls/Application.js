@@ -7,6 +7,7 @@ define('Controls/Application',
       'tmpl!Controls/Application/Page',
       'Core/Deferred',
       'Core/BodyClasses',
+      'Controls/Application/TouchDetector',
       'Controls/Application/AppData'
    ],
 
@@ -18,6 +19,7 @@ define('Controls/Application',
              template,
              Deferred,
              BodyClasses,
+             TouchDetector,
              AppData) {
       'use strict';
 
@@ -52,6 +54,16 @@ define('Controls/Application',
             this._children.resizeDetect.start(ev);
          },
 
+         _touchstartPage: function() {
+             TouchDetector.touchHandler()
+         },
+         _mousemovePage: function(){
+             TouchDetector.moveHandler();
+         },
+         _touchclass: function() {
+            return TouchDetector.getClass();
+         },
+
          _beforeMount: function(cfg, context, receivedState) {
             var self = this,
                def = new Deferred();
@@ -62,7 +74,6 @@ define('Controls/Application',
             if (!receivedState) {
                receivedState = {};
             }
-
             self.cssLinks = receivedState.cssLinks || (context.AppData ? context.AppData.cssLinks : cfg.cssLinks);
             self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
             self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);

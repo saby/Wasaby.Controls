@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ws="ws-component">
 <head>
-   <title>Demo: Views</title>
+   <title>Demo: </title>
    <script type="text/javascript">
       window.wsConfig = {
          WSRootPath: '/sbis3-ws/ws/',
@@ -11,7 +11,7 @@
          resourceRoot: '/components',
          nostyle: true,
          globalConfigSupport: false,
-         compat: false
+         compat: ~document.location.search.indexOf('compat=true') // если в демках используются не vdom контролы
       };
       window.WSTheme = 'wi_scheme';
    </script>
@@ -21,12 +21,11 @@
       })();
    </script>
    <script type="text/javascript" data-pack-name="contents" src="/components/contents.js"></script>
-
    <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/require.js"></script>
    <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/config.js"></script>
    <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-min.js"></script>
    <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-cookie-min.js"></script>
-   <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-notouch.js"></script>
+   <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-notouch-min.js"></script>
    <script type="text/javascript" src="/sbis3-ws/ws/lib/core.js"></script>
    <link rel="stylesheet" type="text/css" href="/sbis3-ws/ws/css/core.css"/>
    <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/res/js/bootup.js"></script>
@@ -36,24 +35,45 @@
          font-size: 14px!important;
       }
    </style>
-
    <link rel="stylesheet" type="text/css" href="/sbis3-ws/ws/css/themes/webfonts/fonts.css"/>
    <link rel="stylesheet" type="text/css" href="../components/themes/online/online.css"/>
 </head>
 <body class="view-main">
 <div id="Back"></div>
 <div id="popup"></div>
-
 <div id="newListView"></div>
-
-
-
-
 <script type="text/javascript">
 require(['Core/core-init'],function () {
    $(document).ready(function () {
-      var cname = document.location.search.substring(document.location.search.indexOf('cname=') + 6);
+      var parseUrlQuery = function() {
+         var data = {};
+         if (document.location.search) {
+            var pair = (document.location.search.substr(1)).split('&');
+            for (var i = 0; i < pair.length; i ++) {
+               var param = pair[i].split('=');
+               data[param[0]] = param[1];
+            }
+         }
+         return data;
+      };
+      var addThemeSwitcher = function(themeName) {
+          var  jsLink = document.createElement('script');
+          var loadHandler = function(){
+              jsLink.removeEventListener('load',loadHandler);
+              window.setBodyModifiers(themeName, '');
+          };
+          jsLink.id = 'themeSwitcher';
+          jsLink.src = '../pages/presto/themeSwitcher.js';
+          jsLink.type='text/javascript';
+          jsLink.addEventListener('load',loadHandler);
+          document.getElementsByTagName('head')[0].appendChild(jsLink);
+      };
+      var UrlParams = parseUrlQuery();
+      var cname = UrlParams.cname;
       var reqname;
+      if (UrlParams['theme']) {
+          addThemeSwitcher(UrlParams['theme']);
+      }
       if (cname) {
          reqname = 'Controls-demo/' + cname;
       }
@@ -74,14 +94,13 @@ require(['Core/core-init'],function () {
                      message: msg,
                      status: 'error'
                   }
-            );
-         }, function(){
-            alert(msg)
-         })
-
+               );
+            }, function(){
+               alert(msg)
+            })
+         });
       });
-   });
-})
+   })
 </script>
 </body>
 </html>

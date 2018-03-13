@@ -1,0 +1,187 @@
+<div class="container"  on:click="clickHandler()">
+    <div class="wrapper">
+        <div class="header">Кнопки-ссылки</div>
+        <div class="type_block">
+            <div class="demo_element">
+                <span class="span_label">linkMain, size="s"</span>
+                <Controls:Button enabled="{{true}}" caption="Основная ссылка" style="linkMain" size="s" />
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">linkMain2, size="default"</span>
+                <Controls:Button enabled="{{true}}" caption="Неакцентная ссылка 1" style="linkMain2" size="default"/>
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">linkMain3, size="l" </span>
+                <Controls:Button enabled="{{true}}" caption="Неакцентная ссылка 2" style="linkMain3" size="l"/>
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">linkMain3,  size="xl"</span>
+                <Controls:Button enabled="{{true}}" caption="Неакцентная ссылка 2" style="linkMain3" size="xl"/>
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">linkAdditional, size="s"</span>
+                <Controls:Button enabled="{{true}}" caption="Неакцентная ссылка 3" style="linkAdditional" size="s"/>
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">linkAdditional2, size="default"</span>
+                <Controls:Button enabled="{{true}}" caption="Акцентная ссылка 1" style="linkAdditional2" size="default"/>
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">linkAdditional3, size="l"</span>
+                <Controls:Button enabled="{{true}}" caption="Акцентная ссылка 2" style="linkAdditional3" size="l" />
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">linkAdditional4, size="xl"</span>
+                <Controls:Button enabled="{{true}}" caption="Акцентная ссылка 3" style="linkAdditional4" size="xl"/>
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">linkAdditional5, size="default"</span>
+                <Controls:Button enabled="{{true}}" caption="Акцентная ссылка 4" style="linkAdditional5" size="default" />
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">linkAdditional5, enabled="false" </span>
+                <Controls:Button enabled="{{false}}" caption="Акцентная ссылка 5" style="linkAdditional5" size="default"/>
+            </div>
+
+        </div>
+        <div class="header">Кнопки контурные</div>
+        <div class="type_block">
+            <div class="demo_element">
+                <span class="span_label">size="default"</span>
+                <Controls:Button enabled="{{true}}" icon="icon-16 icon-Add" caption="Малая кнопка"/>
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">size="big"</span>
+                <Controls:Button enabled="{{true}}" icon="icon-16 icon-Add" caption="Большая кнопка" size="big" />
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">size="big", enabled="false"</span>
+                <Controls:Button enabled="{{false}}" icon="icon-16 icon-Add" caption="Большая недоступная" size="big"/>
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">size="default", enabled="false"</span>
+                <Controls:Button enabled="{{false}}" icon="icon-16 icon-Add" caption="Малая  недоступная"/>
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">buttonPrimary, size="default"</span>
+                <Controls:Button enabled="{{true}}" icon="icon-24 icon-Send" style="buttonPrimary" />
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">buttonPrimary, size="big"</span>
+                <Controls:Button enabled="{{true}}" icon="icon-24 icon-Send" style="buttonPrimary" size="big" />
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">size="default", enabled="false"</span>
+                <Controls:Button enabled="{{false}}" icon="icon-24 icon-Send" style="buttonPrimary" />
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">size="big", enabled="false"</span>
+                <Controls:Button enabled="{{false}}" icon="icon-24 icon-Send" style="buttonPrimary" size="big" />
+            </div>
+
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="header">Кнопки-значки</div>
+        <div class="type_block">
+            <div class="demo_element">
+                <span class="span_label">linkMain</span>
+                <Controls:Button enabled="{{true}}" icon="icon-24 icon-Save" style="linkMain" size="default" />
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">linkMain, enabled="false"</span>
+                <Controls:Button enabled="{{false}}" icon="icon-24 icon-Save" style="linkMain"/>
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">linkMain</span>
+                <Controls:Button enabled="{{true}}" icon="icon-24 icon-Save" caption="Кнопка-ссылка со значком и текстом" style="linkMain" />
+            </div>
+            <div class="demo_element">
+                <span class="span_label">linkMain, enabled="false"</span>
+                <Controls:Button enabled="{{false}}" icon="icon-24 icon-Send" caption="Кнопка-ссылка со значком и текстом" style="linkMain"/>
+            </div>
+        </div>
+
+        <div class="header">Различные сочетания опций</div>
+        <div class="type_block">
+            <div class="demo_element">
+                <span class="span_label">buttonPrimary, enabled="false", size="big"</span>
+                <Controls:Button enabled="{{false}}" icon="icon-24 icon-Send" style="buttonPrimary" size="big"/>
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">buttonPrimary, enabled="false", size="default"</span>
+                <Controls:Button enabled="{{false}}" icon="icon-24 icon-Send" style="buttonPrimary"/>
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">buttonPrimary, size="big"</span>
+                <Controls:Button enabled="{{true}}" caption="Кнопка со значком и текстом" icon="icon-24 icon-Send" style="buttonPrimary" size="big"/>
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">buttonPrimary, size="default"</span>
+                <Controls:Button enabled="{{true}}"  caption="Кнопка со значком и текстом" icon="icon-24 icon-Send" style="buttonPrimary"/>
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">size="default", enabled="false"</span>
+                <Controls:Button enabled="{{false}}" icon="icon-24 icon-Send" caption="Кнопка со значком и текстом"/>
+            </div>
+
+            <div class="demo_element"  on:click="clickHandler('button59')">
+                <span class="span_label">size="default", enabled="false"</span>
+                <Controls:Button enabled="{{false}}" icon="icon-24 icon-Send" caption="Кнопка со значком и текстом" size="big"/>
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">size="default"</span>
+                <Controls:Button enabled="{{true}}" icon="icon-24 icon-Send" caption="Кнопка со значком и текстом"/>
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">size="big"</span>
+                <Controls:Button enabled="{{true}}" icon="icon-24 icon-Send" caption="Кнопка со значком и текстом" size="big"/>
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">buttonAdd, size="big"</span>
+                <Controls:Button enabled="{{true}}" icon="icon-24 icon-Send" caption="Кнопка со значком и текстом" style="buttonAdd" size="big"/>
+            </div>
+
+            <div class="demo_element">
+                <span class="span_label">buttonAdd, size="big", enabled="false"</span>
+                <Controls:Button enabled="{{false}}" icon="icon-24 icon-Send" caption="Кнопка со значком и текстом" style="buttonAdd" size="big"/>
+            </div>
+        </div>
+        <div class="header">Кнопка добавления в таблицу</div>
+        <div class="type_block">
+            <span class="span_label">AddButton, включена</span>
+            <Controls.List.AddButton enabled="{{true}}" caption="AddButton"/>
+        </div>
+        <div class="type_block">
+            <span class="span_label">AddButton, выключена</span>
+            <Controls.List.AddButton enabled="{{false}}" caption="AddButton"/>
+        </div>
+
+    </div>
+    <div class="resultViewer">Click count:  {{count}}</div>
+</div>

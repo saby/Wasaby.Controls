@@ -57,7 +57,11 @@ define('Controls/Input/Area', [
       */
       updateScroll: function(){
          var fakeArea = this._children.fakeArea;
+         var fakeAreaWrapper = this._children.fakeAreaWrapper;
          var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
+
+         //Определим количество строк в Area сравнив высоты fakeArea и ее обертки
+         this._multiline = fakeArea.clientHeight > fakeAreaWrapper.clientHeight;
 
          //Для IE, текст мы показываем из fakeArea, поэтому сдвинем скролл.
          if(needScroll && detection.isIE){
@@ -73,12 +77,18 @@ define('Controls/Input/Area', [
 
    var Area = Text.extend({
 
-      _controlName: 'Controls/Input/Area',
       _template: template,
 
       _hasScroll: false,
 
       _caretPosition: null,
+
+      _multiline: undefined,
+
+      constructor: function(options) {
+         Area.superclass.constructor.call(this, options);
+         this._multiline = options.minLines > 1;
+      },
 
       _afterMount: function() {
          Area.superclass._afterMount.apply(this, arguments);
@@ -150,7 +160,7 @@ define('Controls/Input/Area', [
       };
    };
 
-   //TODO раскомментировать этот блок + зависимость types когда полечат https://online.sbis.ru/opendoc.html?guid=e53e46a0-9478-4026-b7d1-75cc5ac0398b
+   //TODO раскомментировать этот блок + зависимость types когда полечат https://online.sbis.ru/opendoc.html?guid=1416c4da-b0e0-402b-9e02-a3885dc6cdb8
    /*Area.getOptionTypes = function() {
       return {
          minLines: types(Number),

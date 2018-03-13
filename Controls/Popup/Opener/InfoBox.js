@@ -2,13 +2,12 @@ define('Controls/Popup/Opener/InfoBox',
    [
       'Core/core-merge',
       'Core/core-clone',
-      'tmpl!Controls/Popup/Opener/InfoBox/resources/content',
       'tmpl!Controls/Popup/Opener/InfoBox/resources/template',
       'Controls/Popup/Opener/Base',
       'Controls/Popup/Opener/InfoBox/Strategy',
       'css!Controls/Popup/Opener/InfoBox/InfoBox'
    ],
-   function (cMerge, cClone, contentTpl, template, Base, Strategy) {
+   function (cMerge, cClone, template, Base, Strategy) {
       'use strict';
 
       /**
@@ -59,7 +58,6 @@ define('Controls/Popup/Opener/InfoBox',
       var DEFAULT_CONFIG = {
          position: 'tl',
          style: 'default',
-         template: contentTpl,
          float: false
       };
 
