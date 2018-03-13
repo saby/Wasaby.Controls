@@ -54906,7 +54906,9 @@ tinymce.PluginManager.add('noneditable', function(editor) {
             Delay.setEditorTimeout(editor, function() {
                var match;
 
-               match = findFrontMostMatch(editor.selection.getNode());
+               // Иногда попадаем сюда при неготовности editor.selection
+               // 1174986716 https://online.sbis.ru/opendoc.html?guid=456e3c31-5511-43c5-ad71-77e344a1356e
+               match = editor.selection ? findFrontMostMatch(editor.selection.getNode()) : null;
                if (match) {
                   hideAllContextToolbars();
                   showContextToolbar(match);
