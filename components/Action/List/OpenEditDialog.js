@@ -115,9 +115,9 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
          var isClickOnLinkedObject = $(target).closest(linkedObjectContainer).length;
 
          if (!isClickOnLinkedObject) {
-            return true;
+            return OpenEditDialog.superclass._needCloseDialog.apply(this, arguments);
          }
-         return OpenEditDialog.superclass._needCloseDialog.apply(this, arguments);
+         return false;
       },
       /**
        * Устанавливает список, связанный с диалогом редактирования.
