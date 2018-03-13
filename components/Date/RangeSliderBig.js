@@ -39,7 +39,7 @@ define('SBIS3.CONTROLS/Date/RangeSliderBig', [
             cssClass = 'controls-DateRangeSliderBig__picker';
 
          cssClass += this._options.showPrevArrow ? '-withPrevButton' : '-withoutPrevButton';
-         cssClass += rangeBigChooseUtils.isStateButtonDisplayed(this._options.quantum) ? '-withStateButton' : '-withoutStateButton';
+         cssClass += rangeBigChooseUtils.isStateButtonDisplayed(this._options) ? '-withStateButton' : '-withoutStateButton';
 
          config.className = cssClass;
          return config;
