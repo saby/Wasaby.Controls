@@ -1,0 +1,42 @@
+.controls-HeaderCounter {
+   padding-left: @padding_HeaderCounter-between-counter-caption;
+   cursor: pointer;
+}
+
+.controls-HeaderCounter_size-h6 {
+   font-size: @font-size_HeaderCounter_size-h6;
+}
+
+.controls-HeaderCounter_size-h7 {
+   font-size: @font-size_HeaderCounter_size-h7;
+}
+
+.controls-HeaderCounter_style-default {
+   color: @color_HeaderCounter_style-deafult;
+}
+
+.controls-HeaderCounter_style-primary {
+   color: @color_HeaderCounter_style-primary;
+}
+
+.controls-HeaderCounter_style-disabled {
+   color: @color_HeaderCounter_style-disabled;
+}
+
+.controls-HeaderCounter_style-default:active {
+   color: @color_HeaderCounter_style-deafult_hovered;
+}
+
+.controls-HeaderCounter_style-primary:active {
+   color: @color_HeaderCounter_style-primary_hovered;
+}
+
+.ws-is-desktop-platform {
+   .controls-HeaderCounter_style-default:hover {
+      color: @color_HeaderCounter_style-deafult_hovered;
+   }
+
+   .controls-HeaderCounter_style-primary:hover {
+      color: @color_HeaderCounter_style-primary_hovered;
+   }
+}

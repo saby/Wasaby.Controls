@@ -1,0 +1,78 @@
+.controls-Header__caption_size-s{
+   font-weight: bold;
+   font-size: @font-size_Header__caption_size-s;
+}
+
+.controls-Header__caption_size-default{
+   font-weight: bold;
+   font-size: @font-size_Header__caption_size-default;
+}
+
+.controls-Header__caption_size-l{
+   font-weight: bold;
+   font-size: @font-size_Header__caption_size-l;
+}
+
+.controls-Header__caption_size-xl{
+   font-weight: bold;
+   font-size: @font-size_Header__caption_size-xl;
+}
+
+.controls-Header__caption_style-primary, .controls-Header__caption_style-primary_hovered {
+   color: @color_Header__caption_style-primary;
+}
+
+.controls-Header__caption_style-default, .controls-Header__caption_style-default_hovered {
+   color: @color_Header__caption_style-deafult;
+}
+
+.controls-Header_content_hovered:active {
+   .controls-Header__caption_style-default_hovered {
+      color: @color_Header__caption_style-deafult_hovered;
+      cursor: pointer;
+   }
+
+   .controls-Header__caption_style-primary_hovered {
+      color: @color_Header__caption_style-primary_hovered;
+      cursor: pointer;
+   }
+
+   .controls-HeaderCounter_style-default {
+      color: @color_HeaderCounter_style-deafult_hovered;
+   }
+
+   .controls-HeaderCounter_style-primary {
+      color: @color_HeaderCounter_style-primary_hovered;
+   }
+}
+
+.ws-is-desktop-platform {
+   .controls-Header_content_hovered:hover {
+      .controls-Header__caption_style-default_hovered {
+         color: @color_Header__caption_style-deafult_hovered;
+         cursor: pointer;
+      }
+
+      .controls-Header__caption_style-primary_hovered {
+         color: @color_Header__caption_style-primary_hovered;
+         cursor: pointer;
+      }
+
+      .controls-HeaderCounter_style-default {
+         color: @color_HeaderCounter_style-deafult_hovered;
+      }
+
+      .controls-HeaderCounter_style-primary {
+         color: @color_HeaderCounter_style-primary_hovered;
+      }
+   }
+   .controls-Header__caption_style-default_hovered:hover {
+      color: @color_Header__caption_style-deafult_hovered;
+      cursor: pointer;
+   }
+
+   .controls-Header__caption_style-primary_hovered:hover {
+      color: @color_Header__caption_style-primary_hovered;
+      cursor: pointer;
+   }
+}

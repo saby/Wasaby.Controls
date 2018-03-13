@@ -1,0 +1,14 @@
+<span on:click="_clickHandler()" attr:class="controls-Header_style-{{_options.style}}">
+    <span attr:class="{{ _options.commonClick ? 'controls-Header_content_hovered'}}">
+        <ws:if data="{{!!_options.iconBeforeCaption}}">
+            <i attr:class="controls-Header__icon {{_options.iconBeforeCaption}} controls-Header__icon-{{_options.style}}{{isEnabled() ? '':'_disabled'}}"></i>
+        </ws:if>
+        <span attr:class="controls-Header__caption_size-{{_options.size}} controls-Header__caption_style-{{_options.style}}">{{_options.caption}}</span>
+        <ws:if data="{{!!_options.counter}}">
+           <Controls:Header:Counter:Counter template="tmpl!Controls/Header/Counter/Counter" value="{{_options.counter[0]}}" size="{{_options.counter[1]}}" style="{{_options.counter[2]}}"/>
+        </ws:if>
+        <ws:if data="{{!!_options.iconAfterCaption}}">
+            <i attr:class="controls-Header__icon {{_options.iconAfterCaption}} controls-Header__icon-{{_options.style}}{{isEnabled() ? '':'_disabled'}}"></i>
+        </ws:if>
+    </span>
+</span>
