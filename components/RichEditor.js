@@ -61,10 +61,10 @@ define('SBIS3.CONTROLS/RichEditor',
          _initToolbar: function() {
             if (this._container.find('.controls-RichEditorToolbar').length) { //если есть конетейнер с тулбаром значит надо лишь установить на него ссылку
                this._toolbar = this.getChildControlByName('RichEditorToolbar');
-            } else {//если мы неактивны значит редактор еще не строили на сервере, создадим его через new
-               var
-                  div = $('<div></div>');
-               this._dataReview.before(div);
+            }
+            else {//если мы неактивны значит редактор еще не строили на сервере, создадим его через new
+               var div = $('<div></div>');
+               this._container.prepend(div);
                this._toolbar = new Toolbar({
                   element: div,
                   name: 'RichEditorToolbar',
