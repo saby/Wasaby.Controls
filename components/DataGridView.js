@@ -1453,7 +1453,7 @@ define('SBIS3.CONTROLS/DataGridView',
              correctMargin = 0,
              lastRightStop = this._stopMovingCords.right,
              arrowsWidth = this._arrowRight[0].offsetWidth * 2,
-            notScrolledCells, thumbPos;
+             notScrolledCells, thumbPos;
    
          /* Найдём ширину нескроллируемых колонок */
          if(this._options.startScrollColumn > 0) {
@@ -1464,6 +1464,7 @@ define('SBIS3.CONTROLS/DataGridView',
             var tHead = this._options.stickyHeader ?
                this._getTableContainer().find('>.controls-DataGridView__thead') :
                this._thead;
+            
             notScrolledCells = tHead.find('tr').eq(0).find('.controls-DataGridView__notScrolledCell');
             for(var i = 0, len = notScrolledCells.length; i < len; i++) {
                correctMargin += notScrolledCells[i].offsetWidth;
