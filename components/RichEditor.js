@@ -62,26 +62,24 @@ define('SBIS3.CONTROLS/RichEditor',
             if (this._container.find('.controls-RichEditorToolbar').length) { //если есть конетейнер с тулбаром значит надо лишь установить на него ссылку
                this._toolbar = this.getChildControlByName('RichEditorToolbar');
             }
-            else {//если мы неактивны значит редактор еще не строили на сервере, создадим его через new
+            else
+            {//если мы неактивны значит редактор еще не строили на сервере, создадим его через new
+               var options = this._options;
                var div = $('<div></div>');
                this._container.prepend(div);
                this._toolbar = new Toolbar({
                   element: div,
                   name: 'RichEditorToolbar',
-                  expanded: this._options.toolbarVisible,
-                  items: this._options.items
+                  expanded: options.toolbarVisible,
+                  items: options.items
                });
             }
             this._toolbar.setLinkedEditor(this);
-            this._toolbar.subscribe('onExpandedChange', function(event, expanded) {
-               var
-                  newHeight = this._inputControl.outerHeight();
-               newHeight += expanded ? -constants.toolbarHeight : constants.toolbarHeight;
-               if (!this._options.autoHeight) {
-                  this._inputControl.animate(
-                     {
-                        height: newHeight
-                     },
+            this._toolbar.subscribe('onExpandedChange', function (evtName, expanded) {
+               if (!options.autoHeight) {
+                  var container = this._scrollContainer;
+                  container.animate(
+                     {height: container.outerHeight() + (expanded ? -constants.toolbarHeight : constants.toolbarHeight)},
                      'fast'
                   );
                }
