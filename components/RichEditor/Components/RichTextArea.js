@@ -1414,6 +1414,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                  if (scrollTop) {
                                     self._inputControl.scrollTop(scrollTop);
                                  }
+                                 else {
+                                    // В прцессе изменения размера открываются и закрываются два окна, в результате активность уходит на floatArea,
+                                    // что приведёт к прокрутке в редакторе. Поэтому, нужно как-то возвращать изображение в область видвимости, Однако
+                                    // просто использовать scrollIntoView нежелательно, так как это гарантированно приводит к дёрганью. Поэтому
+                                    // попытаемся обойтись замедлением закрытия окон в ImageOptionsPanel и ImagePropertiesDialog
+                                    // 1174814497 https://online.sbis.ru/opendoc.html?guid=8089187f-3917-4ae4-97ab-9dcd6a30b5ef
+                                    //node.scrollIntoView(true);
+                                 }
                               }, 1);
                            });
                            editor.undoManager.add();
