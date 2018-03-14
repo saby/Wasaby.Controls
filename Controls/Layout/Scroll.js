@@ -11,10 +11,9 @@ define('Controls/Layout/Scroll',
       'Core/Control',
       'tmpl!Controls/Layout/Scroll/Scroll',
       'Controls/Event/Registrar',
-      'Core/helpers/Function/throttle',
-      'WS.Data/Type/descriptor'
+      'Core/helpers/Function/throttle'
    ],
-   function(Control, template, Registrar, throttle, types) {
+   function(Control, template, Registrar, throttle) {
 
       'use strict';
 
@@ -105,13 +104,12 @@ define('Controls/Layout/Scroll',
                self._container.scrollTop = 0;
             }
             else {
-               var clientHeight, scrollHeight;
+               var clientHeight = container.clientHeight, scrollHeight;
                if (scrollParam === 'bottom') {
                   scrollHeight = container.scrollHeight;
-                  self._container.scrollTop = scrollHeight;
+                  self._container.scrollTop = scrollHeight - clientHeight;
                }
                else {
-                  clientHeight = container.clientHeight;
                   if (scrollParam === 'pageUp') {
                      self._container.scrollTop -= clientHeight;
                   }
@@ -199,6 +197,9 @@ define('Controls/Layout/Scroll',
 
          };
       };
+
+      //для тестов
+      Scroll._private = _private;
 
       return Scroll;
    }

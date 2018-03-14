@@ -1,0 +1,17 @@
+<div class="controls-Dropdown" on:click="_open()">
+   <ws:partial template="{{_options.contentTemplate || _defaultContentTemplate}}" scope="{{...}}"/>
+
+   <Controls:Dropdown:Opener name="DropdownOpener"
+                                  keyProperty="{{_options.keyProperty}}"
+                                  parentProperty="{{_options.parentProperty}}"
+                                  nodeProperty="{{_options.nodeProperty}}"
+                                  itemTemplateProperty="{{_options.itemTemplateProperty}}"
+                                  itemTemplate="{{_options.itemTemplate}}"
+                                  headTemplate="{{_options.headTemplate}}"
+                                  footerTemplate="{{_options.footerTemplate}}"
+                                  selectedKeys="{{_options.selectedKeys}}">
+      <ws:popupOptions>
+         <ws:eventHandlers onResult="{{_onResult}}"/>
+      </ws:popupOptions>
+   </Controls:Dropdown:Opener>
+</div>

@@ -12,3 +12,9 @@
     }
   }
 }
+
+.ws-is-ie {
+  .controls-FastDataFilter .controls-DropdownList__selectedItem{
+    height: @DropdownList-height; //Если задан min-height, то в ie не работает выравнивание по вертикали на flex
+  }
+}

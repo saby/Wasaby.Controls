@@ -1,37 +1,30 @@
 /**
  * Created by am.gerasimov on 23.01.2017.
  */
-define('SBIS3.CONTROLS/Filter/HistoryBase',
-   [
-      'SBIS3.CONTROLS/CompoundControl',
-      'SBIS3.CONTROLS/History/HistoryListUtils',
-      'SBIS3.CONTROLS/History/HistoryList',
-      'Core/CommandDispatcher',
-      'SBIS3.CONTROLS/Utils/InformationPopupManager',
-      'Core/helpers/collection-helpers',
-      'SBIS3.CONTROLS/Filter/HistoryView'
-   ],
-
-   function(CompoundControl, HistoryListUtils, HistoryList, CommandDispatcher, InformationPopupManager, colHelpers) {
+define('SBIS3.CONTROLS/Filter/HistoryBase', [
+   'Core/helpers/Object/isEqual',
+   'Core/helpers/Object/find',
+   'SBIS3.CONTROLS/CompoundControl',
+   'SBIS3.CONTROLS/History/HistoryListUtils',
+   'SBIS3.CONTROLS/History/HistoryList',
+   'Core/CommandDispatcher',
+   'SBIS3.CONTROLS/Utils/InformationPopupManager',
+   'Core/helpers/collection-helpers',
+   'SBIS3.CONTROLS/Filter/HistoryView'
+], function(
+   isEqualObject,
+   find,
+   CompoundControl,
+   HistoryListUtils,
+   HistoryList,
+   CommandDispatcher,
+   InformationPopupManager,
+   colHelpers
+) {
 
       'use strict';
 
       var _private =  {
-         itemActionHandler: function(item, isAdd) {
-            var self = this;
-
-            if(isAdd) {
-               this.sendCommand('addReportHistory', item);
-            } else {
-               InformationPopupManager.showConfirmDialog({
-                  message: rk('Удалить шаблон из избранного?'),
-                  opener: self
-               }, function positiveCallback() {
-                  self.sendCommand('deleteReportHistory', item.get('id'), true, item.get('data').get('globalParams'));
-               });
-            }
-         },
-
          favoriteSortMethod: function(item1, item2) {
             var isGlobal1 = item1.item.getContents().get('globalParams'),
                isGlobal2 = item2.item.getContents().get('globalParams');
@@ -105,10 +98,11 @@ define('SBIS3.CONTROLS/Filter/HistoryBase',
                return true;
             }
 
-            function addReportHistory(item) {
+            function addReportHistory(item, isFavorite) {
                var action = this.getChildControlByName('editFavorite'),
                   self = this,
-                  toEditItem = item.get('data').clone();
+                  toEditItem = item.get('data').clone(),
+                  isGlobal = !!toEditItem.get('globalParams');
 
                /* Подготавливаем запись к редктированию */
                toEditItem.set('toSaveFields', {});
@@ -117,8 +111,13 @@ define('SBIS3.CONTROLS/Filter/HistoryBase',
                action.execute({
                   item: toEditItem,
                   componentOptions: {
+                     allowDelete: isFavorite,
                      textValue: toEditItem.get(self._options.displayProperty),
                      handlers: {
+                        onDestroyModel: function() {
+                           deleteReportHistory(item.get('id'), isFavorite, isGlobal);
+                           action.closeDialog();
+                        },
                         onBeforeUpdateModel: function (event, record) {
                            var toSaveFields = record.get('toSaveFields'),
                               filter = record.get(self._options._filterProperty),
@@ -126,7 +125,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase',
                               editedTextValue = record.get('editedTextValue'),//Текст, который хочет сохранить пользователь
                               textValue = record.get(self._options.displayProperty),//Оригинальный текст
                               editableFieldsCount = record.get(self._options._structureProperty).reduce(function(result, elem) {
-                                 return colHelpers.isEqualObject(elem.value, elem.resetValue) ? result : ++result;
+                                 return isEqualObject(elem.value, elem.resetValue) ? result : ++result;
                               }, 0),
                               reportItem, filterItems;
 
@@ -141,7 +140,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase',
                               filterItems = record.get(self._options._structureProperty);
                               colHelpers.forEach(toSaveFields, function(value, key) {
                                  if(!value) {
-                                    reportItem = colHelpers.find(filterItems, function(obj) {
+                                    reportItem = find(filterItems, function(obj) {
                                        return obj[self._options.idProperty] === key;
                                     });
 
@@ -168,7 +167,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase',
                               record.set('fullTextValue', textValue);
                            }
                            record.acceptChanges();
-                           self.sendCommand('deleteReportHistory', item.get('id'));
+                           deleteReportHistory(item.get('id'), isFavorite, isGlobal);
                            (globalParams ? favoriteAllList : favoriteList).prepend(record);
                         }
                      }
@@ -180,13 +179,11 @@ define('SBIS3.CONTROLS/Filter/HistoryBase',
             }
 
             /* Комманды на добавление в историю / список избранных */
-            CommandDispatcher.declareCommand(this, 'deleteReportHistory', deleteReportHistory);
-            CommandDispatcher.declareCommand(this, 'addReportHistory', addReportHistory);
             CommandDispatcher.declareCommand(this, 'favorite', function(item) {
-               _private.itemActionHandler.call(self._historyView, item.record, true);
+               addReportHistory.call(self, item.record, false);
             });
             CommandDispatcher.declareCommand(this, 'unfavorite', function(item) {
-               _private.itemActionHandler.call(self._favoriteView, item.record, false);
+               addReportHistory.call(self, item.record, true);
             });
 
             this.once('onInit', function() {

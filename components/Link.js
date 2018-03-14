@@ -1,10 +1,9 @@
 define('SBIS3.CONTROLS/Link', [
-   'Core/helpers/String/escapeTagsFromStr',
    'js!WSControls/Buttons/Button',
    'SBIS3.CONTROLS/Utils/LinkUtil',
    'tmpl!SBIS3.CONTROLS/Link/resources/hrefTemplate',
    'css!SBIS3.CONTROLS/Link/Link'
-], function(escapeTagsFromStr, WSButton, LinkUtil, hrefTemplate) {
+], function(WSButton, LinkUtil, hrefTemplate) {
 
    'use strict';
 
@@ -125,13 +124,11 @@ define('SBIS3.CONTROLS/Link', [
 
       $constructor: function() {},
 
-      setCaption: function(caption){
+      setCaption: function(caption) {
          Link.superclass.setCaption.call(this, caption);
-         if(this._options.href) {
+         if (this._options.href) {
             this._contentContainer[0].innerHTML = hrefTemplate(this._options);
          }
-         var res = (caption === undefined || caption === null ? '' : caption + '').replace(/<br>/g, '\n');
-         this.setTooltip(escapeTagsFromStr(res, '\\w+'));
       },
 
       _setEnabled: function(enabled){

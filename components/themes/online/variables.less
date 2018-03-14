@@ -570,10 +570,14 @@
 @menu-link-header-font-size:              @font-size_Popup;
 @menu-icon-menu-margin:                   -9px 0 0 -13px;
 @margin_MenuIcon-hideHeader-round24:      -5px 0 0 -13px;
+@margin_MenuIcon-hideHeader:              -7px 0 0 -13px;
+@margin_MenuIcon-hideHeader_offset-s:     -11px 0 0 -13px;
 @line-height_MenuIcon-hideHeader-round24_icon: 22px;
 @top_MenuIcon-hideHeader-round24_icon:    2px;
 @left_MenuIcon-hideHeader-round24_icon:   0;
 @margin_MenuIcon-hideHeader-round24_text: 6px 0 6px 28px;
+@margin_MenuIcon-hideHeader-icon24_text:  6px 0 6px 28px;
+@margin_MenuIcon-hideHeader-icon16_text:  6px 0 6px 22px;
 @menu-icon-big-menu-margin:               -5px 0 0 -13px;
 @menu-icon-menu-large-margin:             -5px 0 0 -13px;
 @margin_MenuIcon_size-l:                  -10px 0 0 7px;
@@ -581,6 +585,8 @@
 @menu-icon-menu-bg:                       @background-color_Menu;
 @left_MenuIcon_standard_offset_default:   12px;
 @top_MenuIcon_standard_offset_default:    6px;
+@left_MenuIcon_standard_offset_s:         @left_MenuIcon_standard_offset_default;
+@top_MenuIcon_standard_offset_s:          10px;
 @left_MenuIcon_bordered_offset_s:         12px;
 @top_MenuIcon_bordered_offset_s:          4px;
 @left_MenuIcon_bordered_offset_m:         6px;
@@ -627,7 +633,7 @@
 @date-picker-button-margin-left:                7px;
 @date-picker-button-vertical-align:             center;
 @date-picker-button-size_default:               16px;
-@date-picker-button-line-height_default:        14px;
+@date-picker-button-line-height_default:        12px;
 @date-picker-button-size_m:                     @date-picker-button-size_default;
 @date-picker-button-line-height_m:              @date-picker-button-line-height_default;
 @date-picker-button-size_l:                     @date-picker-button-size_default;
@@ -861,7 +867,7 @@
 @list-view-scroll-height:                       32px;
 @list-view-loading-indicator-gradient-bg:       @list-view-scroll-spritesheet no-repeat center, linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
 @list-view-loading-indicator-gradient-bg-up:    @list-view-scroll-spritesheet no-repeat center, linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
-@listView-empty-data-color:                     @black-color;
+@listView-empty-data-color:                     #999999;
 @listView-empty-data-font-size:                 15px;
 @listView-empty-data-padding-top:               46px;
 @listView-servicefooter-height:                 32px;
@@ -1196,7 +1202,7 @@
 @controls-filterButton-history-pin-top:           5px;
 @padding_filterBotton_line:                       0;
 @font-size_filterButton_line:                     @default-text-size;
-@margin_filterrButton_picker:                     -3px 0 0 0;
+@margin_filterrButton_picker-top:                 -3px;
 @backround-color_filterButton_picker_content:     transparent;
 @background-color_filterButton_picker_header:     transparent;
 @border-color_filterButton_picker_content:        transparent;

@@ -30,6 +30,7 @@
                                 if="{{ additionalFilterParamsTemplate }}"
                                 template="{{ additionalFilterParamsTemplate }}"
                                 visible="{{ 'additionalFilterVisible'|bind:true }}"
+                                scope="{{ componentOptions }}"
                                 tabindex="0"
                         />
                         <SBIS3.CONTROLS:Filter:Button:History if="{{ viewMode === 'oneColumn' && historyController }}" name="filterHistory" tabindex="0" />

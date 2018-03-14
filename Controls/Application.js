@@ -47,15 +47,11 @@ define('Controls/Application',
          },
 
          _scrollPage: function(ev){
-            if (this._children.scrollDetect){
-               this._children.scrollDetect.start(ev);
-            }
+            this._children.scrollDetect.start(ev);
          },
 
          _resizePage: function(ev){
-            if (this._children.resizeDetect) {
-               this._children.resizeDetect.start(ev);
-            }
+            this._children.resizeDetect.start(ev);
          },
 
          _touchstartPage: function() {

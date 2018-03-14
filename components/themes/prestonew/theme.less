@@ -1,4 +1,4 @@
-.close-button-mixin(@important: ~'', @width: @width_CloseButton, @height: @height_CloseButton) {
+.close-button-mixin(@important: ~'', @width: @width_CloseButton, @height: @height_CloseButton, @icon: "\e66c") {
   .inline-flexbox();
   .align-items(center);
   .justify-content(center);
@@ -14,7 +14,7 @@
   .border-radius(@border-radius_Button_default);
 
   &:before {
-    content: "\e66c" @important;
+    content: @icon @important;
     text-shadow: @text-shadow_Button @important;
   }
 
@@ -194,9 +194,6 @@ body {
 }
 
 .controls-ComboBox__picker {
-   &:not(.controls-popup-revert-vertical){
-      margin-top: -1px !important;
-   }
    &.controls-popup-revert-vertical{
       border-bottom: none;
    }
@@ -468,12 +465,7 @@ body {
 .ws-window-titlebar-action.close {
   .close-button-mixin(~'!important');
 }
-.ws-window-titlebar {
-  color: @default-text-color !important;
-  line-height: round(100px * @multiplier)!important;
-  height: round(100px * @multiplier)!important;
-  font-weight: normal !important;
-}
+
 .ws-window-title {
   font-size: round(40px * @multiplier) !important;
   height: round(100px * @multiplier) !important;
