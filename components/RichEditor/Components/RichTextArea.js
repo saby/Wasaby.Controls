@@ -25,6 +25,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel',
    'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/CodeSampleDialog/CodeSampleDialog',
    'Core/EventBus',
+
+   'tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextAreaInner',
    "css!SBIS3.CORE.RichContentStyles",
    "i18n!SBIS3.CONTROLS/RichEditor",
    'css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextArea'
@@ -201,9 +203,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                  */
                validateClass: undefined
             },
+            _scrollContainer: undefined,
+            _dataReview: undefined,
+            _inputControl: undefined,
             _fakeArea: undefined, //textarea для перехода фкуса по табу
             _tinyEditor: undefined, //экземпляр tinyMCE
-            _lastHeight: undefined, //последняявысота для UpdateHeight
+            _lastTotalHeight: undefined, //последняявысота для UpdateHeight
+            _lastContentHeight: undefined, //последняявысота для UpdateHeight
             _tinyReady: null, //deferred готовности tinyMCE
             _readyContolDeffered: null, //deferred Готовности контрола
             _saveBeforeWindowClose: null,
@@ -235,12 +241,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             options._prepareReviewContent = this._prepareReviewContent.bind({_options: options});
             options._prepareContent = this._prepareContent.bind(this);
             options._sanitizeClasses = this._sanitizeClasses.bind(this);
+            if (options.autoHeight) {
+               options.minimalHeight = this._cleanHeight(options.minimalHeight);
+               options.maximalHeight = this._cleanHeight(options.maximalHeight);
+            }
             return options;
          },
 
          $constructor: function() {
-            var
-               self = this;
+            var self = this;
             this._publish('onInitEditor', 'onUndoRedoChange','onNodeChange', 'onFormatChange', 'onToggleContentSource');
             this._sourceContainer = this._container.find('.controls-RichEditor__sourceContainer');
             this._sourceArea = this._sourceContainer.find('.controls-RichEditor__sourceArea').bind('input', this._onChangeAreaValue.bind(this));
@@ -250,12 +259,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                return e;
             });
             this._dChildReady.push(this._readyContolDeffered);
-            this._dataReview = this._container.find('.controls-RichEditor__dataReview');
             this._tinyReady = new Deferred();
+            this._scrollContainer = this._container.find('.controls-RichEditor__scrollContainer');
+            this._dataReview = this._container.find('.controls-RichEditor__dataReview');
             this._inputControl = this._container.find('.controls-RichEditor__editorFrame');
             this._fakeArea = this._container.find('.controls-RichEditor__fakeArea');
-            this._initInputHeight();
-            this._options.editorConfig.selector = '#' + this.getId() + ' > .controls-RichEditor__editorFrame';
+            this._initMainHeight();
+            this._options.editorConfig.selector = '#' + this.getId() + ' .controls-RichEditor__editorFrame';
             this._options.editorConfig.fixed_toolbar_container = '#' + this.getId() + ' > .controls-RichEditor__fakeArea';
             this._options.editorConfig.setup = function(editor) {
                self._tinyEditor = editor;
@@ -370,43 +380,41 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           * Устанавливает минимальную высоту текстового поля редактора
           * @param {Number} value Минимальная высота поля редактора
           */
-         setMinimalHeight: function(value) {
-            var changeBlock =  this._options.editorConfig.inline ? this._inputControl : $(this._tinyEditor.iframeElement);
-            if (this._options.autoHeight && typeof value === 'number') {
-               this._options.minimalHeight = value;
-               if (this._options.minimalHeight) {
-                  if (this._options.maximalHeight && this._options.maximalHeight < value) {
-                     this._options.maximalHeight = value;
-                  }
-               } else {
-                  this._options.minimalHeight = '';
-               }
-               changeBlock.css({
-                  'max-height': this._options.maximalHeight,
-                  'min-height': this._options.minimalHeight
-               });
-            }
+         setMinimalHeight: function (value) {
+            this._setLimitingHeight('min', value);
          },
 
          /**
           * Устанавливает максимальную высоту текстового поля редактора
           * @param {Number} value Максимальная высота поля редактора
           */
-         setMaximalHeight: function(value) {
-            var changeBlock =  this._options.editorConfig.inline ? this._inputControl : $(this._tinyEditor.iframeElement);
-            if (this._options.autoHeight && typeof value === 'number') {
-               this._options.maximalHeight = value;
-               if (this._options.maximalHeight) {
-                  if (this._options.minimalHeight && this._options.maximalHeight < this._options.minimalHeight) {
-                     this._options.minimalHeight = value;
+         setMaximalHeight: function (value) {
+            this._setLimitingHeight('max', value);
+         },
+
+         /**
+          * Устанавливает максимальную или минимальную высоту текстового поля редактора
+          * @param {string} type Тип значения: 'min' или 'max'
+          * @param {number} value Значение максимальная или минимальная высота поля редактора
+          */
+         _setLimitingHeight: function (type, value) {
+            var props = {'min':'minimalHeight', 'max':'maximalHeight'};
+            if (props[type]) {
+               var options = this._options;
+               if (options.autoHeight && typeof value === 'number') {
+                  options[props[type]] = value || '';
+                  if (value) {
+                     var pairProp = props[type === 'min' ? 'max' : 'min'];
+                     if (options[pairProp] && options.maximalHeight < options.minimalHeight) {
+                        options[pairProp] = value;
+                     }
+
                   }
-               } else {
-                  this._options.maximalHeight = '';
+                  var isInline = options.editorConfig.inline;
+                  var iFrame = isInline ? null : $(this._tinyEditor.iframeElement);
+                  (isInline ? this._scrollContainer : iFrame).css('max-height', options.maximalHeight || '');
+                  (isInline ? this._inputControl : iFrame).css('min-height', options.minimalHeight || '');
                }
-               changeBlock.css({
-                  'max-height': this._options.maximalHeight,
-                  'min-height': this._options.minimalHeight
-               });
             }
          },
 
@@ -1267,10 +1275,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                focusElement = focusContainer[0],
                range;
             if (sourceVisible) {
-               this._sourceContainer.css({
-                  'height' : container.outerHeight(),
-                  'width' : container.outerWidth()
-               });
+               this._sourceArea.css('min-height', this._scrollContainer.height());
                this._sourceArea.val(this.getText());
             }
             this._sourceContainer.toggleClass('ws-hidden', !sourceVisible);
@@ -1473,6 +1478,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (!hasEndNode && !hasEndOffset) {
                selection.collapse(false);
             }
+         },
+
+         _cleanHeight: function (value) {
+            return value && 0 < (typeof value === 'string' ? parseFloat(value) : value) ? value : 0;
          },
 
          _bindEvents: function() {
@@ -2316,32 +2325,21 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             }
          },
 
-         _applyEnabledState: function(enabled) {
+         _applyEnabledState: function (enabled) {
             var container = this._tinyEditor ? this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl : this._inputControl;
+            var options = this._options;
+            if (options.autoHeight) {
+               this._scrollContainer.css('max-height', this._cleanHeight(options.maximalHeight) || '');
+               if (this._dataReview) {
+                  this._dataReview.css('min-height', this._cleanHeight(options.minimalHeight) || '');
+               }
+            }
+            else {
+               if (this._dataReview) {
+                  this._dataReview.css('min-height', this._scrollContainer.height() - constants.dataReviewPaddings);//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
+               }
+            }
             if (this._dataReview) {
-               var css;
-               var opts = this._options;
-               if (opts.autoHeight) {
-                  var hasMin = 0 < parseFloat(opts.minimalHeight);
-                  var hasMax = 0 < parseFloat(opts.maximalHeight);
-                  if (hasMin || hasMax) {
-                     css = {};
-                     if (hasMin) {
-                        css['min-height'] = opts.minimalHeight;
-                     }
-                     if (hasMax) {
-                        css['max-height'] = opts.maximalHeight;
-                     }
-                  }
-               }
-               else {
-                  css = {
-                     height: this._container.height() - constants.dataReviewPaddings//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
-                  };
-               }
-               if (css) {
-                  this._dataReview.css(css);
-               }
                this._updateDataReview(this.getText() || '');
                this._dataReview.toggleClass('ws-hidden', enabled);
             }
@@ -2596,13 +2594,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return !this._sourceContainer.hasClass('ws-hidden');
          },
 
-         _updateHeight: function() {
-            var
-               curHeight;
+         _updateHeight: function () {
             if (this.isVisible()) {
-               curHeight = this._container.height();
-               if (curHeight !== this._lastHeight) {
-                  this._lastHeight = curHeight;
+               var totalHeight = this._container.height();
+               var contentHeight = (this._options.editorConfig.inline ? this._inputControl : $(this._tinyEditor.iframeElement)).height();
+               this._container[0].scrollTop = 0;
+               this._scrollContainer[0].scrollTop = 0;
+               if (totalHeight !== this._lastTotalHeight || contentHeight !== this._lastContentHeight) {
+                  this._lastTotalHeight = totalHeight;
+                  this._lastContentHeight = contentHeight;
                   this._notifyOnSizeChanged();
                }
             }
@@ -2698,9 +2698,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             RichTextArea.superclass._focusOutHandler.apply(this, arguments);
          },
 
-         _initInputHeight: function() {
+         /**
+          * Инициализировать высоту основных элементов. Применяется только при отсутствии автоподстройки высоты (при фиксированой высоте)
+          * @protected
+          */
+         _initMainHeight: function () {
             if (!this._options.autoHeight) {
-               this._inputControl.css('height', this._container.height());
+               this._scrollContainer.css('height', this._container.height());
             }
          },
 

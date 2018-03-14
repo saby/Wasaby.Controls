@@ -411,48 +411,52 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
          },
 
          _addItemToHistory: function(item) {
-            if (this._historyController && !this._options.useInputHistoryService) {
-               //Определяем наличие записи в истории по ключу: стандартная логика контроллера не подходит,
-               //т.к. проверка наличия добавляемой записи в истории производится по полному сравнению всех полей записи.
-               //В записи поля могут задаваться динамически, либо просто измениться, к примеру значение полей может быть привязано к текущему времени
-               //Это приводит к тому, что historyController не найдет текущую запись в истории и добавит ее заново. Получится дублирование записей в истории
-               var items = this.getList().getItems(),
-                  idProp = items ? items.getIdProperty() : this.getList().getProperty('idProperty'),
-                  itemId = item.get(idProp),
-                  index = -1;
+            if (!this._options.useInputHistoryService) {
+                if (this._historyController) {
+                    //Определяем наличие записи в истории по ключу: стандартная логика контроллера не подходит,
+                    //т.к. проверка наличия добавляемой записи в истории производится по полному сравнению всех полей записи.
+                    //В записи поля могут задаваться динамически, либо просто измениться, к примеру значение полей может быть привязано к текущему времени
+                    //Это приводит к тому, что historyController не найдет текущую запись в истории и добавит ее заново. Получится дублирование записей в истории
+                    var items = this.getList().getItems(),
+                        idProp = items ? items.getIdProperty() : this.getList().getProperty('idProperty'),
+                        itemId = item.get(idProp),
+                        index = -1;
 
-               this._historyController.each(function(model, i) {
-                  var historyModelObject = model.get('data').getRawData();
-                  var historyModelId;
-                  //Проблема в адаптерах historyRecordSet и сохраняемой записи, они могут быть разными
-                  //в таком случае, когда дергается var dataRecord = model.get('data'), то dataRecord приводится к типу Record (по формату), но
-                  //свойства модели не инициализируются, соответственно dataRecord.get('anyField') не вернет ничего.
-                  //Пока не доработали механизм истории на запоминание только id, приходится искать добавляемую запись в рекордсете истории вручную по сырым данным.
-                  if (historyModelObject.d instanceof Array && historyModelObject.s instanceof Array) {
-                     var fieldIndex = -1;
-                     for (var j = 0; j < historyModelObject.s.length; j++) {
-                        if (historyModelObject.s[j].n === idProp) {
-                           fieldIndex = j;
-                           break;
+                    this._historyController.each(function (model, i) {
+                        var historyModelObject = model.get('data').getRawData();
+                        var historyModelId;
+                        //Проблема в адаптерах historyRecordSet и сохраняемой записи, они могут быть разными
+                        //в таком случае, когда дергается var dataRecord = model.get('data'), то dataRecord приводится к типу Record (по формату), но
+                        //свойства модели не инициализируются, соответственно dataRecord.get('anyField') не вернет ничего.
+                        //Пока не доработали механизм истории на запоминание только id, приходится искать добавляемую запись в рекордсете истории вручную по сырым данным.
+                        if (historyModelObject.d instanceof Array && historyModelObject.s instanceof Array) {
+                            var fieldIndex = -1;
+                            for (var j = 0; j < historyModelObject.s.length; j++) {
+                                if (historyModelObject.s[j].n === idProp) {
+                                    fieldIndex = j;
+                                    break;
+                                }
+                            }
+                            if (fieldIndex > -1) {
+                                historyModelId = historyModelObject.d[fieldIndex];
+                            }
                         }
-                     }
-                     if (fieldIndex > -1) {
-                        historyModelId = historyModelObject.d[fieldIndex];
-                     }
-                  }
-                  else {
-                     historyModelId = historyModelObject[idProp];
-                  }
-                  if (itemId === historyModelId) {
-                     index = i;
-                  }
-               });
-               if(index !== -1) {
-                  this._historyController.removeAt(index);
+                        else {
+                            historyModelId = historyModelObject[idProp];
+                        }
+                        if (itemId === historyModelId) {
+                            index = i;
+                        }
+                    });
+                    if (index !== -1) {
+                        this._historyController.removeAt(index);
+                    }
+                    this._historyController.prepend(item.getRawData());
+                }
+            } else {
+               if (this._inputHistoryController) {
+                  this._inputHistoryController.addToHistory(item.getId());
                }
-               this._historyController.prepend(item.getRawData());
-            }else {
-                this._inputHistoryController.addToHistory(item.getId());
             }
          }
       },
