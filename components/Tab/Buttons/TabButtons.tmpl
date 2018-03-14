@@ -1,4 +1,4 @@
-<div class="controls-TabButtons{{(items && items.length) ? ' hasItems'}}{{idProperty ? ' hasKeyField'}}">
+<div class="controls-TabButtons{{(items && items.length) ? ' hasItems'}}{{idProperty ? ' hasKeyField'}} ">
    <ws:if data="{{ _serverRender }}">
       <ws:partial template="{{_itemsTemplate}}" records="{{_records}}" tplData="{{_itemData}}"/>
       <ws:partial template="{{_spaceTemplate}}" scope="{{...}}"/>

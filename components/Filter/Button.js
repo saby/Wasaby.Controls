@@ -361,8 +361,8 @@ define('SBIS3.CONTROLS/Filter/Button',
              var context = this._getCurrentContext(),
                  pickerVisible = this._picker && this._picker.isVisible(),
                  internalName = this._options.internalContextFilterName,
-                 filterPath = internalName + '/caption',
-                 descriptionPath = internalName + '/visibility',
+                 filterPath = internalName + '/filter',
+                 descriptionPath = internalName + '/caption',
                  toSet;
 
              if(!this._picker){
