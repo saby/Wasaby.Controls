@@ -55,7 +55,7 @@ define('Controls/Input/Area', [
       /*
       * Обновляет наличие скролла, в зависимости от того, есть ли скролл на фейковой текст арии
       */
-      updateScroll: function(self){
+      needScrollCheck: function(self){
          var fakeArea = self._children.fakeArea;
          var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
 
@@ -100,7 +100,7 @@ define('Controls/Input/Area', [
       _beforeUpdate: function(newOptions) {
          Area.superclass._beforeUpdate.apply(this, arguments);
          _private.setFakeAreaValue(this, newOptions.value);
-         _private.updateScroll(this);
+         _private.needScrollCheck(this);
          _private.updateMultiline(this);
       },
 
@@ -113,16 +113,9 @@ define('Controls/Input/Area', [
 
       _valueChangedHandler: function(e, value){
          _private.setFakeAreaValue(this, value);
-         _private.updateScroll(this);
+         _private.needScrollCheck(this);
          _private.updateMultiline(this);
          this._notify('valueChanged', [value]);
-      },
-
-      _setValue: function(value){
-         Area.superclass._setValue.apply(this, arguments);
-         _private.setFakeAreaValue(this, value);
-         _private.updateScroll(this);
-         _private.updateMultiline(this);
       },
 
       _keyDownHandler: function(e){
@@ -145,7 +138,7 @@ define('Controls/Input/Area', [
       },
 
       _scrollHandler: function(){
-         _private.updateScroll(this);
+         _private.needScrollCheck(this);
       },
 
       //TODO убрать (и подписку из Area.tmpl) после выполнения ошибки https://online.sbis.ru/opendoc.html?guid=04b9c78b-7237-4c5a-9045-887a170d8427
