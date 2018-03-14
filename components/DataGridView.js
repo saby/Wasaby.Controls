@@ -1453,21 +1453,21 @@ define('SBIS3.CONTROLS/DataGridView',
              correctMargin = 0,
              lastRightStop = this._stopMovingCords.right,
              arrowsWidth = this._arrowRight[0].offsetWidth * 2,
-             notScrolledCells, thumbPos, row;
-
+             notScrolledCells, thumbPos;
+   
          /* Найдём ширину нескроллируемых колонок */
          if(this._options.startScrollColumn > 0) {
-            /* Ширину нескролируемых столбцов берём из строк таблицы,
-               т.к. в шапке могут быть двухуровневые заголовки или строка результатов с прикладным шаблоном */
-            row = this._tbody.find('tr').eq(0);
+            /* При включённой опции stickyHeader необходимо брать размеры не из thead,
+               т.к. в thead хранится ссылка на шапку, которая лежит вне таблицы.
+               И она может иметь в момент расчётов некорректные размеры.
+               thead, который лежит в таблице, всегда имеет корректные размеры. */
+            var tHead = this._options.stickyHeader ?
+               this._getTableContainer().find('>.controls-DataGridView__thead') :
+               this._thead;
             
-            /* Строк может не быть - тогда пробуем искать строку в шапке */
-            if (!row.length) {
-               row = this._thead.find('tr').eq(0);
-            }
-            notScrolledCells = row.find('.controls-DataGridView__notScrolledCell');
+            notScrolledCells = tHead.find('tr').eq(0).find('.controls-DataGridView__notScrolledCell');
             for(var i = 0, len = notScrolledCells.length; i < len; i++) {
-               correctMargin += notScrolledCells[i].offsetWidth
+               correctMargin += notScrolledCells[i].offsetWidth;
             }
             /* Сдвинем контейнер скролла на ширину нескроллируемых колонок */
             scrollContainer[0].style.marginLeft = correctMargin + 'px';
