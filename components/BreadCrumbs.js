@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/BreadCrumbs', [
    'css!SBIS3.CONTROLS/Menu/MenuItem/MenuItem'
 ], function(CompoundControl, ItemsControlMixin, PickerMixin, DecorableMixin, dotTplFn, itemContentTpl, dotsTpl, itemTpl, menuItem, escapeHtml, escapeUnicode, IoC, memoize) {
    /**
-    * Класс контрола "Хлебные крошки". Основное применение - <a href='/doc/platform/patterns-and-practices/typical-list/'>иерархические реестры</a>.
+    * Класс контрола "Хлебные крошки".
     * @class SBIS3.CONTROLS/BreadCrumbs
     * @extends Lib/Control/CompoundControl/CompoundControl
     *
