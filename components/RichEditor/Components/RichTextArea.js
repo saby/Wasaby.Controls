@@ -1536,11 +1536,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   });
                });
-               this._inputControl.bind('scroll mousewheel', function(e) {
+               var _hideImageOptionsPanel = function () {
                   if (this._imageOptionsPanel) {
                      this._imageOptionsPanel.hide();
                   }
-               }.bind(this));
+               }.bind(this);
+               this._inputControl.on('scroll mousewheel', _hideImageOptionsPanel);
+               this._inputControl.on('keydown', function (e) {
+                  if (e.ctrlKey && (e.key === 'End' || e.keyCode === 35 || e.key === 'Home' || e.keyCode === 36)) {
+                     _hideImageOptionsPanel();
+                  }
+               });
 
                // При нажатии клавиши Del - удалить изображение, если оно выделено
                // 1174801418 https://online.sbis.ru/opendoc.html?guid=1473813c-1617-4a21-9890-cedd1c692bfd
