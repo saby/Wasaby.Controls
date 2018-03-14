@@ -1453,11 +1453,19 @@ define('SBIS3.CONTROLS/DataGridView',
              correctMargin = 0,
              lastRightStop = this._stopMovingCords.right,
              arrowsWidth = this._arrowRight[0].offsetWidth * 2,
-             notScrolledCells, thumbPos;
+             notScrolledCells, thumbPos, row;
 
          /* Найдём ширину нескроллируемых колонок */
          if(this._options.startScrollColumn > 0) {
-            notScrolledCells = this._thead.find('tr').eq(0).find('.controls-DataGridView__notScrolledCell');
+            /* Ширину нескролируемых столбцов берём из строк таблицы,
+               т.к. в шапке могут быть двухуровневые заголовки или строка результатов с прикладным шаблоном */
+            row = this._tbody.find('tr:not(.controls-editInPlace)').eq(0);
+            
+            /* Строк может не быть - тогда пробуем искать строку в шапке */
+            if (!row.length) {
+               row = this._thead.find('tr').eq(0);
+            }
+            notScrolledCells = row.find('.controls-DataGridView__notScrolledCell');
             for(var i = 0, len = notScrolledCells.length; i < len; i++) {
                correctMargin += notScrolledCells[i].offsetWidth
             }

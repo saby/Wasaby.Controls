@@ -43,6 +43,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector', [
       _dotTplFn: dotTplFn,
 
       $constructor: function() {
+          this._publish('onApply');
       },
       init: function(){
          var self = this;
@@ -56,6 +57,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/MassAmountSelector', [
             var
                numericValue = self._numberTextBox.getNumericValue();
             if (numericValue || self._radioButtons.getSelectedKey() === 'all') {
+               self._notify('onApply', numericValue);
                this.sendCommand('close', numericValue);
             } else {
                InformationPopupManager.showMessageDialog({

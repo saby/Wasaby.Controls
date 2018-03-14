@@ -33,6 +33,15 @@
 @line-height_InputRender_l:           round(52px * @multiplier);
 @line-height_InputRender_default:     @line-height_InputRender_l;
 @font-size_InputRender_style_header:  round(40px * @multiplier);
+//DropdownList
+@height_DropdownList-item:      round(77px * @multiplier);
+@max-height_DropdownList:       100%;
+@padding_DropdownList-item:     5px round(16px * @multiplier);
+@width_DropdownList-marker:     round(11px * @multiplier);
+@height_DropdownList-marker:    round(16px * @multiplier);
+@margin-top_DropdownList:       round(-2px * @multiplier);
+@margin-left_DropdownList:      round(-17px * @multiplier);
+@right_DropdownList-icon:       round(16px * @multiplier);
 //MoneyTextBox
 @font-size_MoneyTextBox-decimals: @small-text-size;
 //NumberTextBox
@@ -363,7 +372,7 @@
 @font-size_filterButton_line:                         round(32px * @multiplier);
 @controls-filterButton-area-header-padding:           round(11px * @multiplier) @width_CloseButton + round(8px * @multiplier)  round(11px * @multiplier) round(24px * @multiplier);
 @controls-filterButton-picker-border-width:           0;
-@margin_filterrButton_picker:                         0;
+@margin_filterrButton_picker-top:                     0;
 @controls-filterButton-area-content-margin:           round(11px * @multiplier) round(8px * @multiplier);
 @controls-filterButton-button-height:                 round(78px * @multiplier);
 @border-width_filterButton_picker_content:            @default-border-width;
@@ -524,6 +533,8 @@
 @font-size_listAddButton:                       @small-text-size;
 //ReportBrowser
 @height_ReportBrowser-top-content:              @default-height-big;
+//Label
+@height_Label:                                  round(46px * @multiplier);
 //Tabs/Buttons
 @height_Tabs-separator:                  round(54px * @multiplier);
 @line-height_Tabs-baselineFix:           round(96px * @multiplier);
@@ -533,3 +544,6 @@
 @font-size_Tabs-item_selected:           @huge-text-size;
 @max-width_Tabs_item:                    round(1500px * @multiplier);
 @border-width_Tabs-item_hover_selected:  round(8px * @multiplier);
+//FilterButton
+@font-size_FilterButton-icon:            round(38px * @multiplier);
+@font-size_FilterButton-text:            @large-text-size;

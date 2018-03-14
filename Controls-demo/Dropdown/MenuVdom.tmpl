@@ -1,0 +1,53 @@
+<div class="controls-VDomMenu" style="padding: 50px;">
+   <Controls:Input:Text name='fakeText' bind:value="_stateText"/>
+   <br />
+
+   Простой
+   <Controls:Input:Dropdown on:selectedKeysChanged="_selectedItemsChangedHandler(0)"
+                          bind:selectedKeys="_selectedKeys0"
+                          name="myDropdownList0"
+                          keyProperty="id"
+                          source="{{_getDefaultMemory()}}" />
+   <br />
+
+   С кастомными шаблонами записи
+   <Controls:Input:Dropdown name="myDropdownList1"
+                          bind:selectedKeys="_selectedKeys1"
+                          keyProperty="id"
+                          itemTemplateProperty="myTemplate"
+                          source="{{_getItemTemplateData()}}"/>
+   <br />
+
+   С кастомными шаблонами
+   <Controls:Input:Dropdown name="myDropdownList2"
+                          bind:selectedKeys="_selectedKeys2"
+                          keyProperty="id"
+                          itemTemplate="tmpl!Controls-demo/Dropdown/resources/ItemsTemplate2"
+                          source="{{_getItemTemplateData()}}"/>
+   <br />
+
+   С иконками
+   <Controls:Input:Dropdown name="myDropdownList3"
+                          bind:selectedKeys="_selectedKeys3"
+                          keyProperty="id"
+                          source="{{_getIconItems()}}"/>
+   <br />
+
+    С иерархией
+   <Controls:Input:Dropdown name="myDropdownList4"
+                          bind:selectedKeys="_selectedKeys4"
+                          keyProperty="id"
+                          parentProperty="parent"
+                          nodeProperty="@parent"
+                          source="{{_getHierarchyItems()}}"/>
+   <br />
+
+   Со скроллом, шапкой и футером
+   <Controls:Input:Dropdown name="myDropdownList5"
+                          on:footerClick="footerClickHandler()"
+                          bind:selectedKeys="_selectedKeys5"
+                          keyProperty="id"
+                          headTemplate="tmpl!Controls-demo/Dropdown/resources/headerTemplate"
+                          footerTemplate="tmpl!Controls-demo/Dropdown/resources/footerTemplate"
+                          source="{{_getMultiData()}}"/>
+</div>

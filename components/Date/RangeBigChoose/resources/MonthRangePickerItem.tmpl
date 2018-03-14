@@ -20,7 +20,7 @@
                                  {{ month | strftime: "%B" }}
                               </div>
                               <SBIS3.CONTROLS:Date:RangeBigChoose:resources:MonthView
-                                 className="controls-DateRangeBigChoose-MonthRangePickerItem__month"
+                                 className="controls-DateRangeBigChoose-MonthRangePickerItem__month {{monthClickable ? 'controls-DateRangeBigChoose-MonthRangePickerItem__month_clickable'}}"
                                  captionFormat="%B"
                                  selectionType="disable"
                                  showWeekdays="{{false}}"

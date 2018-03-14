@@ -57,7 +57,11 @@ define('Controls/Input/Area', [
       */
       updateScroll: function(){
          var fakeArea = this._children.fakeArea;
+         var fakeAreaWrapper = this._children.fakeAreaWrapper;
          var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
+
+         //Определим количество строк в Area сравнив высоты fakeArea и ее обертки
+         this._multiline = fakeArea.clientHeight > fakeAreaWrapper.clientHeight;
 
          //Для IE, текст мы показываем из fakeArea, поэтому сдвинем скролл.
          if(needScroll && detection.isIE){
@@ -79,6 +83,13 @@ define('Controls/Input/Area', [
 
       _caretPosition: null,
 
+      _multiline: undefined,
+
+      constructor: function(options) {
+         Area.superclass.constructor.call(this, options);
+         this._multiline = options.minLines > 1;
+      },
+
       _afterMount: function() {
          Area.superclass._afterMount.apply(this, arguments);
          _private.updateScroll.call(this);
@@ -91,7 +102,6 @@ define('Controls/Input/Area', [
       },
 
       _afterUpdate: function(oldOptions) {
-         Area.superclass._afterUpdate.apply(this, arguments);
          if ((oldOptions.value !== this._options.value) && this._caretPosition) {
             this._children['realArea'].setSelectionRange(this._caretPosition, this._caretPosition);
             this._caretPosition = null;

@@ -110,6 +110,15 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
          this._setOpeningModeHandler = this._setOpeningMode.bind(this);
          $(document).bind('keydown keyup', this._setOpeningModeHandler);
       },
+      _needCloseDialog: function(target) {
+         var linkedObjectContainer = this.getLinkedObject() && this.getLinkedObject().getContainer && this.getLinkedObject().getContainer();
+         var isClickOnLinkedObject = $(target).closest(linkedObjectContainer).length;
+
+         if (!isClickOnLinkedObject) {
+            return OpenEditDialog.superclass._needCloseDialog.apply(this, arguments);
+         }
+         return false;
+      },
       /**
        * Устанавливает список, связанный с диалогом редактирования.
        * @remark

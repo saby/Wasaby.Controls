@@ -9,6 +9,11 @@
 }
 
 .controls-DataGridView {
+   //todo: каскад
+   //background-image не работает на теге tr в safari https://jsfiddle.net/d1pxxtfg/
+   .controls-ListView__item__selected__withMarker {
+      background-image: none;
+   }
    .controls-ListView__item {
       &:extend(.controls-ListView .controls-ListView__item all);
    }

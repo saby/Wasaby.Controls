@@ -153,6 +153,7 @@ body {
 }
 body .ws-window.ws-LoadingIndicator__window {
   background-color: #1D2834;
+  box-shadow: none;
 }
 
 .controls-ComboBox__item, .controls-DropdownList__item, .controls-MenuItem {
@@ -268,6 +269,13 @@ body {
       }
     }
   }
+  .ws-window-titlebar {
+    color: @default-text-color !important;
+    line-height: round(100px * @multiplier)!important;
+    height: round(100px * @multiplier)!important;
+    font-weight: normal !important;
+    border-bottom: none;
+  }
   .ws-window-title { // аналогично шапке панели, контентная область начинается слева от крестика
     margin: 0 !important;
     width: calc(~"100% - @{width_CloseButton} - @{padding-right_floatArea-title}") !important; //86 - close button width + 8 - padding
@@ -370,6 +378,13 @@ body {
       }
     }
 
+  }
+}
+.controls-FilterButton {
+  .controls-FilterButton__icon {
+    .close-button-mixin(~'', round(58px * @multiplier), round(58px * @multiplier), "\ea2d");
+    font-size: round(38px * @multiplier);
+    color: #FFF !important;
   }
 }
 //todo: удалить временный коствль
@@ -499,6 +514,20 @@ body {
   top: 0;
   right: 0;
   height: 100%;
-  background-color: rgba(0,0,0,.5);
+  background-color: rgba(0,0,0,.1);
   cursor: pointer;
+}
+// Размер не согласуется с размерами кнопок-иконок. необходимо только в тулбаре
+.controls-ToolBar .controls-IconButton {
+  width: @default-height;
+  height: @default-height;
+}
+
+.ws-is-webkit:not(.ws-is-mobile-android), .ws-is-mobile-chrome-ios {
+  .controls-BreadCrumbs{
+    // необходимо переверстать хлебные крошки на флекс
+    &.controls-BreadCrumbs__smallItems .controls-BreadCrumbs__arrow {
+      top: @bread-crumb-crumb-home-top;
+    }
+  }
 }
