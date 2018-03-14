@@ -1459,7 +1459,7 @@ define('SBIS3.CONTROLS/DataGridView',
          if(this._options.startScrollColumn > 0) {
             /* Ширину нескролируемых столбцов берём из строк таблицы,
                т.к. в шапке могут быть двухуровневые заголовки или строка результатов с прикладным шаблоном */
-            row = this._tbody.find('tr').eq(0);
+            row = this._tbody.find('tr:not(.controls-editInPlace)').eq(0);
             
             /* Строк может не быть - тогда пробуем искать строку в шапке */
             if (!row.length) {
