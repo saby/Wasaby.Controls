@@ -76,7 +76,7 @@ define('SBIS3.CONTROLS/RichEditor',
             }
             this._toolbar.setLinkedEditor(this);
             this._toolbar.subscribe('onExpandedChange', function (evtName, expanded) {
-               if (!options.autoHeight) {
+               if (!this._options.autoHeight) {
                   var container = this._scrollContainer;
                   container.animate(
                      {height: container.outerHeight() + (expanded ? -constants.toolbarHeight : constants.toolbarHeight)},
