@@ -1389,7 +1389,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             var
                $image = $(target),
                editor = this._tinyEditor,
-               scrollTop = this._inputControl.scrollTop(),
+               $scrollParent = this._inputControl.parent(),
+               scrollTop = $scrollParent.scrollTop(),
                self = this;
             require(['Lib/Control/Dialog/Dialog'], function(Dialog) {
                new Dialog({
@@ -1412,7 +1413,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                  var next = node.nextSibling;
                                  self._selectNewRng(next, next && next.nodeType === 3 && next.nodeValue.length && next.nodeValue.charCodeAt(0) === 65279 ? 1 : 0);
                                  if (scrollTop) {
-                                    self._inputControl.scrollTop(scrollTop);
+                                    $scrollParent.scrollTop(scrollTop);
+                                 }
+                                 else {
+                                    // В прцессе изменения размера открываются и закрываются два окна, в результате активность уходит на floatArea,
+                                    // что приведёт к прокрутке в редакторе. Поэтому, нужно как-то возвращать изображение в область видвимости
+                                    // 1174814497 https://online.sbis.ru/opendoc.html?guid=8089187f-3917-4ae4-97ab-9dcd6a30b5ef
+                                    node.scrollIntoView(true);
                                  }
                               }, 1);
                            });
