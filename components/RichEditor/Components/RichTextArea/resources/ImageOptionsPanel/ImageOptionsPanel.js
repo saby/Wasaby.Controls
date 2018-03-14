@@ -188,9 +188,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptions
                      break;
                   case "size":
                      this._notify('onImageSizeChange');
-                     // Для того, чтобы активность не уходила на floatArea, что приведёт к прокрутке в редакторе, закрывать асинхронно чуть позже
-                     // 1174814497 https://online.sbis.ru/opendoc.html?guid=8089187f-3917-4ae4-97ab-9dcd6a30b5ef
-                     setTimeout(this.hide.bind(this), 500);
+                     this.hide();
                      break;
                   case "change":
                      this.getFileLoader().startFileLoad(this._replaceButton._container, false, this._options.imageFolder).addCallback(function(fileobj){
