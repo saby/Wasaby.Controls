@@ -83,6 +83,7 @@ define('SBIS3.CONTROLS/RichEditor',
                      'fast'
                   );
                }
+               this._container[expanded ? 'addClass' : 'removeClass']('controls-RichEditor_toolbarExpanded');
                this.execCommand('');
             }.bind(this));
          },
