@@ -91,7 +91,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                 */
                columnTitle: rk('Колонка', 'НастройщикИмпорта'),
                /**
-                * @cfg {Array<Array<any>>} Данные таблицы, массив массивов равной длины (по количеству колонок)
+                * @cfg {Array<Array<string>>} Данные таблицы, массив массивов равной длины (по количеству колонок)
                 */
                rows: [],
                /**
@@ -162,7 +162,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
           *
           * @public
           * @param {object} values Набор из нескольких значений, которые необходимо изменить
-          * @param {Array<Array<any>>} [values.rows] Данные таблицы, массив массивов равной длины (по количеству колонок) (опционально)
+          * @param {Array<Array<string>>} [values.rows] Данные таблицы, массив массивов равной длины (по количеству колонок) (опционально)
           * @param {ImportTargetFields} [values.fields] Полный список полей, к которым должны быть привязаны импортируемые данные (опционально)
           * @param {number} [values.skippedRows] Количество пропускаемых строк в начале (опционально)
           * @param {object} [values.accordances] Перечень соответствий идентификатор поля - индекс колонки (опционально)

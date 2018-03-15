@@ -41,7 +41,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          /**
           * @typedef {object} ImportSheet Тип, содержащий информацию об области импортируемых данных (например, лист excel)
           * @property {string} name Отображаемое наименование области данных
-          * @property {Array<Array<any>>} sampleRows Образец данных в области, массив массивов равной длины
+          * @property {Array<Array<string>>} sampleRows Образец данных в области, массив массивов равной длины
           * @property {string} [parser] Провайдер парсинга импортируемых данных
           * @property {number} [skippedRows] Количество пропускаемых строк в начале
           * @property {string} [separator] Символы-разделители

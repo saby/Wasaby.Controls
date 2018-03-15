@@ -23,7 +23,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Dialog',
           * @typedef {object} ImportIOCall Тип, содержащий информацию для вызова удалённого сервиса для получения данных ввода или отправки данных вывода
           * @property {string} endpoint Сервис, метод которого будет вызван
           * @property {string} method Имя вызываемого метода
-          * @property {any} methodArgs Аргументы вызываемого метода (в требуемой форме)
+          * @property {*} methodArgs Аргументы вызываемого метода (в требуемой форме)
           * @property {function} [dataShaper] Формирователь применимой формы аргументов (опционально)
           */
 
@@ -45,7 +45,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Dialog',
          /**
           * @typedef {object} ImportSheet Тип, содержащий информацию об области импортируемых данных (например, лист excel)
           * @property {string} name Отображаемое наименование области данных
-          * @property {Array<Array<any>>} sampleRows Образец данных в области, массив массивов равной длины
+          * @property {Array<Array<string>>} sampleRows Образец данных в области, массив массивов равной длины
           * @property {string} [parser] Провайдер парсинга импортируемых данных
           * @property {number} [skippedRows] Количество пропускаемых строк в начале
           * @property {string} [separator] Символы-разделители
