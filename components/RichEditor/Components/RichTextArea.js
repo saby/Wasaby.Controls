@@ -67,7 +67,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             minYoutubeHeight: 214,
             defaultYoutubeWidth: 430,
             minYoutubeWidth: 350,
-            dataReviewPaddings: 8,
+            //dataReviewPaddings: 6,
             styles: {
                title: {inline: 'span', classes: 'titleText'},
                subTitle: {inline: 'span', classes: 'subTitleText'},
@@ -2329,7 +2329,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             }
             else {
                if (this._dataReview) {
-                  this._dataReview.css('min-height', this._scrollContainer.height() - constants.dataReviewPaddings);//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
+                  this._dataReview.css('min-height', this._scrollContainer.height() /*- constants.dataReviewPaddings*/);//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
                }
             }
             if (this._dataReview) {
