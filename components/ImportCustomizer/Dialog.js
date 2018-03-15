@@ -45,7 +45,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Dialog',
          /**
           * @typedef {object} ImportSheet Тип, содержащий информацию об области импортируемых данных (например, лист excel)
           * @property {string} name Отображаемое наименование области данных
-          * @property {any[][]} sampleRows Образец данных в области, массив массивов равной длины
+          * @property {Array<Array<any>>} sampleRows Образец данных в области, массив массивов равной длины
           * @property {string} [parser] Провайдер парсинга импортируемых данных
           * @property {number} [skippedRows] Количество пропускаемых строк в начале
           * @property {string} [separator] Символы-разделители
@@ -84,7 +84,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Dialog',
           * @param {object} [options.baseParams] Опции компонента для настройки параметров импортирования (опционально)
           * @param {object<ImportParser>} options.parsers Список доступных провайдеров парсинга импортируемых данных
           * @param {object} options.fields ^^^
-          * @param {ImportSheet[]} options.sheets Список объектов, представляющих имеющиеся области данных
+          * @param {Array<ImportSheet>} options.sheets Список объектов, представляющих имеющиеся области данных
           * @param {number} [options.sheetIndex] Индекс выбранной области данных (опционально)
           * @param {boolean} [options.sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
           * @param {ImportIOCall} [options.inputCall] Информация для вызова метода удалённого сервиса для получения данных ввода (опционально)
