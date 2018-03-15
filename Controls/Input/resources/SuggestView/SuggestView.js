@@ -9,7 +9,7 @@ define('Controls/Input/resources/SuggestView/SuggestView',
       'use strict';
       
       var _private = {
-         getSelectedKey: function(items, idProperty, index) {
+         getMarkedKey: function(items, idProperty, index) {
             var item = items && items.at(index || 0);
             return item ? item.get(idProperty) : null;
          },
@@ -28,7 +28,7 @@ define('Controls/Input/resources/SuggestView/SuggestView',
          
          constructor: function(opt) {
             SuggestView.superclass.constructor.call(this, opt);
-            this._selectedKey =  _private.getSelectedKey(opt.items, opt.idProperty, opt.selectedIndex);
+            this._markedKey =  _private.getMarkedKey(opt.items, opt.idProperty, opt.selectedIndex);
          },
          
          _onItemClickHandler: function(event, item) {
@@ -49,7 +49,7 @@ define('Controls/Input/resources/SuggestView/SuggestView',
          
          _beforeUpdate: function(newOptions) {
             SuggestView.superclass._beforeUpdate.call(this, newOptions);
-            this._selectedKey =  _private.getSelectedKey(newOptions.items, newOptions.idProperty, newOptions.selectedIndex);
+            this._markedKey =  _private.getMarkedKey(newOptions.items, newOptions.idProperty, newOptions.selectedIndex);
          }
       });
       
