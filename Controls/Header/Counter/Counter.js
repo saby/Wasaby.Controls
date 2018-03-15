@@ -7,7 +7,11 @@ define('Controls/Header/Counter/Counter', [
    'use strict';
 
    var Counter = Control.extend({
-      _template: template
+      _template: template,
+      
+      clickHandler: function (e) {
+         this._notify('countClick');
+      }
 
    });
 

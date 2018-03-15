@@ -12,7 +12,15 @@ define('Controls-demo/Headers/demoHeader', [
          _template: template,
 
          clickHandler: function (e) {
-            console.log('click');
+            console.log('UnionClick')
+         },
+
+         clickTitle: function(e){
+            console.log('clickTitle');
+         },
+
+         clickCount: function (e) {
+            console.log('clickCount');
          }
       });
    return ModuleClass;
