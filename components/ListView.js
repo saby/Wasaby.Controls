@@ -4659,7 +4659,7 @@ define('SBIS3.CONTROLS/ListView',
             //Как временное решение добавлена проверка на SBIS3.CONTROLS.TextBoxBase.
             //Необходимо разобраться можно ли на уровне TextBoxBase или Control для события mousedown
             //сделать stopPropagation, тогда от данной проверки можно будет избавиться.
-            return this._options.enabled && this._needProcessMouseEvent(e);
+            return this.isEnabled() && this._needProcessMouseEvent(e);
          },
          _needProcessMouseEvent: function(e) {
             return !cInstance.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS/TextBox/TextBoxBase');
