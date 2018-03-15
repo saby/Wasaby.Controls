@@ -165,7 +165,6 @@ define('SBIS3.CONTROLS/DropdownList',
           */
          $protected: {
             _options: {
-               _addItemToListAfterLoad: false, //в 150 опции нет
                _getRecordsForRedraw: getRecordsForRedrawDDL,
                _defaultItemContentTemplate: ItemContentTemplate,
                _defaultItemTemplate: dotTplFnForItem,
@@ -444,7 +443,7 @@ define('SBIS3.CONTROLS/DropdownList',
          },
 
          _removeOldKeys: function(){
-            if (this._options._addItemToListAfterLoad && this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
+            if (this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
                this._loadItemsDeferred.addCallback(function() {
                   var item = this._options.selectedItems.at(0);
                   var text = item && item.get(this._options.displayProperty);
@@ -681,14 +680,10 @@ define('SBIS3.CONTROLS/DropdownList',
             this._setSelectedItems(); //Обновим selectedItems, если пришел другой набор данных
             this._needToRedraw = true;
          },
-         _selectedItemLoadCallback: function(item) {
-            //В 110 опционально, в 150 по умолчанию загруженная запись добавляется в список
-            if (this._options._addItemToListAfterLoad) {
-               if (!this._isEnumTypeData()) {
-                  this.getItems().add(item);
-               }
+         _selectedItemLoadCallback: function (item) {
+            if (!this._isEnumTypeData()) {
+               this.getItems().add(item);
             }
-
          },
          _isEmptyValueSelected: function(){
             return this._options.emptyValue && this.getSelectedKeys()[0] == null;
