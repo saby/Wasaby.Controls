@@ -63,7 +63,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
 
          /**
           * @typedef {object} ImportTargetFields Тип, описывающий целевые поля для привязки импортируемых данных
-          * @property {object[]|WS.Data/Collection/RecordSet} items Список объектов, представляющих данные об одном поле. Каждый из них должен
+          * @property {Array<object>|WS.Data/Collection/RecordSet} items Список объектов, представляющих данные об одном поле. Каждый из них должен
           *                            содержать идентификатор поля, отображаемое наименование поля и идентификатор родителя, если необходимо. Имена
           *                            свойств задаются явно в этом же определинии типе
           * @property {string} [idProperty] Имя свойства, содержащего идентификатор (опционально, если items представлен рекордсетом)

@@ -47,6 +47,16 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @property {string} [separator] Символы-разделители
           */
 
+         /**
+          * @typedef {object} ImportTargetFields Тип, описывающий целевые поля для привязки импортируемых данных
+          * @property {Array<object>|WS.Data/Collection/RecordSet} items Список объектов, представляющих данные об одном поле. Каждый из них должен
+          *                            содержать идентификатор поля, отображаемое наименование поля и идентификатор родителя, если необходимо. Имена
+          *                            свойств задаются явно в этом же определинии типе
+          * @property {string} [idProperty] Имя свойства, содержащего идентификатор (опционально, если items представлен рекордсетом)
+          * @property {string} displayProperty Имя свойства, содержащего отображаемое наименование
+          * @property {string} [parentProperty] Имя свойства, содержащего идентификатор родителя (опционально)
+          */
+
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
@@ -84,7 +94,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                 */
                parsers: {},
                /**
-                * @cfg {object} ^^^
+                * @cfg {ImportTargetFields} Полный список полей, к которым должны быть привязаны импортируемые данные
                 */
                fields: null,
                /**
@@ -142,7 +152,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             options._providerArgsComponent = parsers[parserName].component || undefined;
             options._providerArgsOptions = this._getProviderArgsOptions(options, parserName, true);
             options._columnsBindingRows = hasSheets ? sheet.sampleRows : [];
-            options._columnsBindingFields = options.fields;//^^^
             return options;
          },
 

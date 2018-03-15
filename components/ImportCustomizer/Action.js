@@ -51,6 +51,16 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @property {string} [separator] Символы-разделители
           */
 
+         /**
+          * @typedef {object} ImportTargetFields Тип, описывающий целевые поля для привязки импортируемых данных
+          * @property {Array<object>|WS.Data/Collection/RecordSet} items Список объектов, представляющих данные об одном поле. Каждый из них должен
+          *                            содержать идентификатор поля, отображаемое наименование поля и идентификатор родителя, если необходимо. Имена
+          *                            свойств задаются явно в этом же определинии типе
+          * @property {string} [idProperty] Имя свойства, содержащего идентификатор (опционально, если items представлен рекордсетом)
+          * @property {string} displayProperty Имя свойства, содержащего отображаемое наименование
+          * @property {string} [parentProperty] Имя свойства, содержащего идентификатор родителя (опционально)
+          */
+
          //_dotTplFn: null,
          $protected: {
             _options: {
@@ -79,7 +89,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {string} [options.baseParamsComponent] Класс компонента для настройки параметров импортирования (опционально)
           * @param {object} [options.baseParams] Опции компонента для настройки параметров импортирования (опционально)
           * @param {object<ImportParser>} options.parsers Список доступных провайдеров парсинга импортируемых данных
-          * @param {object} options.fields ^^^
+          * @param {ImportTargetFields} options.fields Полный список полей, к которым должны быть привязаны импортируемые данные
           * @param {Array<ImportSheet>} options.sheets Список объектов, представляющих имеющиеся области данных
           * @param {number} [options.sheetIndex] Индекс выбранной области данных (опционально)
           * @param {boolean} [options.sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
@@ -87,7 +97,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {ImportIOCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
           * @return {Deferred<object>}
           */
-
          execute: function (options) {
             return ImportCustomizerAction.superclass.execute.apply(this, arguments);
          },
