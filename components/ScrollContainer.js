@@ -582,9 +582,11 @@ define('SBIS3.CONTROLS/ScrollContainer', [
          },
 
          _getChildContentHeight: function() {
-            var height = 0;
+            var height = 0, $item;
             Array.prototype.forEach.call(this._content.children(), function(item) {
-               height += $(item).outerHeight(true);
+               $item = $(item);
+               // Метод outerHeight не учитывает видимость элемента, нужно учесть.
+               height += $item.is(':visible') ? $(item).outerHeight(true) : 0;
             });
 
             return height;

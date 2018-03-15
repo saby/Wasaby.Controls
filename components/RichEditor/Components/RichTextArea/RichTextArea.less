@@ -52,6 +52,9 @@
          margin-bottom: 0;
       }
    }
+   &.controls-RichEditor_fixedHeight .controls-RichEditor__editorFrame {
+      min-height: 100%;
+   }
    .controls-RichEditor__sourceArea{
       display: block;
       height: 100%;
@@ -94,7 +97,6 @@
       z-index: 1;
       width: 100%;
       height: 100%;
-      overflow-y: auto;
       padding: 2px 0 2px 4px; /* отступы у параграфов через padding родительского блока без first-child */
       border: 1px solid transparent;
       box-sizing: border-box;
@@ -108,7 +110,6 @@
       }
    }
    .controls-RichEditor__editorFrame.ws-basic-style {
-      overflow: auto;
       padding: 2px 0 2px 4px;
       box-sizing: border-box;
       word-wrap: break-word;
@@ -123,10 +124,13 @@
          }
       }
    }
+
    img {
       //TODO: увелисчить вес селектора
       outline: none !important;
       cursor: pointer;
+   }
+   .controls-RichEditor__editorFrame img {
       .user-select();
    }
    .controls-RichEditor__noneditable {
@@ -233,7 +237,6 @@
 .controls-RichEditor__InsertLink__okButton {
    right: 48px;
    top: 8px;
-   width: 90px;
 }
 
 /*вставка со стилями*/
