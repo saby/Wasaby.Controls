@@ -20,6 +20,15 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
       var ImportCustomizerAction = Action.extend([], /**@lends SBIS3.CONTROLS/ImportCustomizer/Action.prototype*/ {
 
          /**
+          * @typedef {object} ImportResults Тип, содержащий информацию о результате редактирования
+          * @property {string} dataType Тип импортируемых данных (excel и т.д.)
+          * @property {ImportFile} file Информация о файле с импортируемыми данными
+          * @property {Array<ImportSheet>} sheets Список объектов, представляющих имеющиеся области данных
+          * @property {boolean} [sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
+          * @property {*} [*] Базовые параметры импортирования (опционально)
+          */
+
+         /**
           * @typedef {object} ImportIOCall Тип, содержащий информацию для вызова удалённого сервиса для получения данных ввода или отправки данных вывода
           * @property {string} endpoint Сервис, метод которого будет вызван
           * @property {string} method Имя вызываемого метода
@@ -46,9 +55,18 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @typedef {object} ImportSheet Тип, содержащий информацию об области импортируемых данных (например, лист excel)
           * @property {string} name Отображаемое наименование области данных
           * @property {Array<Array<string>>} sampleRows Образец данных в области, массив массивов равной длины
-          * @property {string} [parser] Провайдер парсинга импортируемых данных
-          * @property {number} [skippedRows] Количество пропускаемых строк в начале
-          * @property {string} [separator] Символы-разделители
+          * @property {string} [parser] Провайдер парсинга импортируемых данных (опционально)
+          * @property {object} [parserConfig] Параметры провайдера парсинга импортируемых данных. Определяется видом парсера (опционально)
+          * @property {number} [skippedRows] Количество пропускаемых строк в начале (опционально)
+          * @property {string} [separator] Символы-разделители (опционально)
+          * @property {Array<ImportColumnBinding>} [columns] Список привязки колонок импортируемых данных к полям базы данных (опционально)
+          * @property {number} [index] Индекс в массиве (опционально)
+          */
+
+         /**
+          * @typedef {object} ImportColumnBinding Тип, содержащий информацию о привязке колонки импортируемых данных к полю базы данных
+          * @property {number} index Индекс колонки
+          * @property {string} field Имя поля
           */
 
          /**
@@ -95,7 +113,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {boolean} [options.sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
           * @param {ImportIOCall} [options.inputCall] Информация для вызова метода удалённого сервиса для получения данных ввода (опционально)
           * @param {ImportIOCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
-          * @return {Deferred<object>}
+          * @return {Deferred<ImportResults>}
           */
          execute: function (options) {
             return ImportCustomizerAction.superclass.execute.apply(this, arguments);
@@ -364,8 +382,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * Отдать подписчикам событие и вернуть результат обработки, если есть. Если нет - вернуть результат редактирования
           * @protected
           * @param {object} options Входные аргументы("мета-данные") настройщика импорта (согласно описанию в методе {@link execute})
-          * @param {object} results Результат редактирования
-          * @return {object|any}
+          * @param {ImportResults} results Результат редактирования
+          * @return {object|*}
           */
          _notifyOnExecuted: function (options, results) {
             return this._notify(this, 'onExecuted', options, results) || results;
