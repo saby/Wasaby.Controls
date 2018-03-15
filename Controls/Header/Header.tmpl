@@ -3,6 +3,9 @@
         <ws:if data="{{!!_options.iconBeforeCaption}}">
             <i attr:class="controls-Header__icon {{_options.iconBeforeCaption}} controls-Header__icon-{{_options.style}}{{isEnabled() ? '':'_disabled'}}"></i>
         </ws:if>
+        <ws:if data="{{!!_options.counterBefore}}">
+           <Controls:Header:Counter:Counter on:countClick="countClickHandler()" template="tmpl!Controls/Header/Counter/Counter" value="{{_options.counterBefore[0]}}" size="{{_options.counterBefore[1]}}" style="{{_options.counterBefore[2]}}"/>
+        </ws:if>
         <span on:click="clickHandler()" attr:class="controls-Header__caption_size-{{_options.size}} controls-Header__caption_style-{{_options.style}}{{_options.clickable ? '_hovered'}}">{{_options.caption}}</span>
         <ws:if data="{{!!_options.counter}}">
            <Controls:Header:Counter:Counter on:countClick="countClickHandler()" template="tmpl!Controls/Header/Counter/Counter" value="{{_options.counter[0]}}" size="{{_options.counter[1]}}" style="{{_options.counter[2]}}"/>
