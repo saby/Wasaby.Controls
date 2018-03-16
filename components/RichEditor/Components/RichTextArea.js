@@ -206,7 +206,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             _lastTotalHeight: undefined, //последняявысота для UpdateHeight
             _lastContentHeight: undefined, //последняявысота для UpdateHeight
             _tinyReady: null, //deferred готовности tinyMCE
-            _readyContolDeffered: null, //deferred Готовности контрола
+            _readyControlDeffered: null, //deferred Готовности контрола
             _saveBeforeWindowClose: null,
             _sourceArea: undefined,
             _sourceContainer: undefined, //TODO: избавиться от _sourceContainer
@@ -248,12 +248,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             this._publish('onInitEditor', 'onUndoRedoChange','onNodeChange', 'onFormatChange', 'onToggleContentSource');
             this._sourceContainer = this._container.find('.controls-RichEditor__sourceContainer');
             this._sourceArea = this._sourceContainer.find('.controls-RichEditor__sourceArea').bind('input', this._onChangeAreaValue.bind(this));
-            this._readyContolDeffered = new Deferred().addCallbacks(function(){
+            this._readyControlDeffered = new Deferred().addCallbacks(function(){
                this._notify('onReady');
             }.bind(this), function (e) {
                return e;
             });
-            this._dChildReady.push(this._readyContolDeffered);
+            this._dChildReady.push(this._readyControlDeffered);
             this._tinyReady = new Deferred();
             this._scrollContainer = this._container.find('.controls-RichEditor__scrollContainer');
             this._dataReview = this._container.find('.controls-RichEditor__dataReview');
@@ -273,7 +273,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //вешать обработчик copy/paste надо в любом случае, тк редактор может менять состояние Enabled
                RichUtil.markRichContentOnCopy(this._dataReview);
                if (!this.isEnabled()) {
-                  this._readyContolDeffered.callback();
+                  if (!this._readyControlDeffered.isReady()) {
+                     this._readyControlDeffered.callback();
+                  }
                }
                this._updateDataReview(this.getText());
             }.bind(this));
@@ -583,8 +585,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             this._sourceArea = null;
             this._dataReview = null;
             this._options.editorConfig.setup = null;
-            if (!this._readyContolDeffered.isReady()) {
-               this._readyContolDeffered.errback();
+            if (!this._readyControlDeffered.isReady()) {
+               this._readyControlDeffered.errback();
             }
             this._inputControl.unbind('mouseup dblclick click mousedown touchstart scroll');
             if (this._imageOptionsPanel) {
@@ -1570,9 +1572,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   });
                }
                this._notifyOnSizeChanged();
-               if (!self._readyContolDeffered.isReady()) {
+               if (!self._readyControlDeffered.isReady()) {
                   self._tinyReady.addCallback(function() {
-                     self._readyContolDeffered.callback();
+                     if (!self._readyControlDeffered.isReady()) {
+                        self._readyControlDeffered.callback();
+                     }
                   });
                }
                // в tinyMCE предустановлены сочетания клавиш на alt+shift+number
