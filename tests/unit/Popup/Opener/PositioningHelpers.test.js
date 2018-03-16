@@ -165,12 +165,12 @@ define(
                      height: 200,
                      margins: {
                         top: 0,
-                        left: 0
+                        left: 10
                      }
                   }
                }, targetCoords);
                assert.isTrue(position.top === 400);
-               assert.isTrue(position.left === 400);
+               assert.isTrue(position.left === 390);
             });
 
          });
