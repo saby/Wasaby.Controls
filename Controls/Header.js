@@ -11,7 +11,7 @@ define('Controls/Header', [
       _template: template,
 
       countClickHandler: function (e) {
-         if(!this._options.countClickable){
+         if(this._options.countClickable){
             e.stopPropagation();
             this._notify('countClick');
          }
