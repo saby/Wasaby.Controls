@@ -1114,13 +1114,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                               onActivated: function () {
                                  var parent = this.getParent();
                                  var href = parent._hrefInput.getValue();
-                                 var caption = parent._captionInput.getValue();
+                                 var caption = parent._captionInput.getValue() || href;
                                  var protocol = /(?:https?|ftp|file):\/\//gi;
                                  if (href && href.search(protocol) === -1) {
                                     href = 'http://' + href;
-                                 }
-                                 if (!caption) {
-                                    caption = origCaption || href;
                                  }
                                  var dom = editor.dom;
                                  var done;
@@ -1130,9 +1127,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                           target: '_blank',
                                           href: escapeHtml(href)
                                        });
-                                       element.innerHtml = caption;
+                                       element.innerHTML = escapeHtml(caption);
+                                       selection.select(element);
                                     }
-                                 else {
+                                    else {
                                        editor.execCommand('unlink');
                                     }
                                     done = true;
