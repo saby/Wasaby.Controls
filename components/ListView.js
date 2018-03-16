@@ -4200,7 +4200,7 @@ define('SBIS3.CONTROLS/ListView',
             if (this._pager) {
                this._pager.setPageSize(pageSize);
             }
-            if (!noLoad) {
+            if (!noLoad && this._pager) {
                this._pager.getPaging().clearMaxPage();
                this._lastPageLoaded = false;
             }
