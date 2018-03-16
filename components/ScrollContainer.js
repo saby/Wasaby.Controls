@@ -257,7 +257,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
 
                this._initPaging();
-
+               this._resizeInner();
          },
 
          _hideBrowserScrollbar: function(){
