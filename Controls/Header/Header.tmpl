@@ -1,17 +1,14 @@
 <span attr:class="controls-Header_style-{{_options.style}}">
-    <span attr:class="{{ _options.commonClick ? 'controls-Header_content_hovered'}}">
-        <ws:if data="{{!!_options.iconBeforeCaption}}">
-            <i attr:class="controls-Header__icon {{_options.iconBeforeCaption}} controls-Header__icon-{{_options.style}}{{isEnabled() ? '':'_disabled'}}"></i>
-        </ws:if>
-        <ws:if data="{{!!_options.counterBefore}}">
-           <Controls:Header:Counter:Counter on:countClick="countClickHandler()" counterBefore="{{true}}" template="tmpl!Controls/Header/Counter/Counter" value="{{_options.counterBefore[0]}}" size="{{_options.counterBefore[1]}}" style="{{_options.counterBefore[2]}}"/>
+    <span attr:class="controls-Header__wrapper {{ _options.commonClick ? 'controls-Header_content_hovered'}}">
+        <ws:if data="{{!!_options.counterValue}}">
+           <Controls:Header:Counter:Counter class="controls-HeaderCount_location-{{_options.counterLocation}}"
+                                            on:click="countClickHandler()"
+                                            template="tmpl!Controls/Header/Counter/Counter"
+                                            value="{{_options.counterValue}}"
+                                            size="{{_options.counterSize}}"
+                                            style="{{_options.counterStyle}}"
+           />
         </ws:if>
         <span on:click="clickHandler()" attr:class="controls-Header__caption_size-{{_options.size}} controls-Header__caption_style-{{_options.style}}{{_options.clickable ? '_hovered'}}">{{_options.caption}}</span>
-        <ws:if data="{{!!_options.counter}}">
-           <Controls:Header:Counter:Counter on:countClick="countClickHandler()" template="tmpl!Controls/Header/Counter/Counter" value="{{_options.counter[0]}}" size="{{_options.counter[1]}}" style="{{_options.counter[2]}}"/>
-        </ws:if>
-        <ws:if data="{{!!_options.iconAfterCaption}}">
-            <i attr:class="controls-Header__icon {{_options.iconAfterCaption}} controls-Header__icon-{{_options.style}}{{isEnabled() ? '':'_disabled'}}"></i>
-        </ws:if>
     </span>
 </span>

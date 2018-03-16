@@ -1,21 +1,59 @@
 <div on:click="clickHandler()">
-    <Controls:Header enabled="{{true}}" caption="test header h2" style="default_big" clickable="{{false}}" counter="{{[12, 'h6', 'primary']}}" commonClick="{{false}}"/>
+    <Controls:Header on:countClick="clickCount()"
+                     enabled="{{true}}"
+                     caption="test header h2"
+                     style="default_big"
+                     clickable="{{false}}"
+                     counterValue="12"
+                     counterLocation="after"
+                     counterStyle="primary"
+                     counterSize="h6"
+                     commonClick="{{false}}"/>
     <br/>
-    <Controls:Header enabled="{{true}}" caption="test header h2" style="primary_big" clickable="{{false}}" counter="{{[12, 'h6', 'disabled']}}" commonClick="{{false}}"/>
+    <Controls:Header on:countClick="clickCount()"
+                     enabled="{{true}}"
+                     caption="test header h2"
+                     style="primary_big"
+                     clickable="{{false}}"
+                     counterValue="12"
+                     counterLocation="before"
+                     counterStyle="default"
+                     counterSize="h6"
+                     commonClick="{{false}}"/>
     <br/>
-    <Controls:Header enabled="{{true}}" size="default" caption="test header h3" style="default" clickable="{{false}}" counter="{{[12, 'h7', 'primary']}}" commonClick="{{false}}"/>
+    <Controls:Header on:countClick="clickCount()"
+                     enabled="{{true}}"
+                     size="default"
+                     caption="test header h3"
+                     style="default"
+                     clickable="{{false}}"
+                     counterValue="12"
+                     counterLocation="before"
+                     counterStyle="disabled"
+                     counterSize="h7"
+                     commonClick="{{false}}"/>
     <br/>
-    <Controls:Header on:tittleClick="clickTitle()"
-                     on:countClick="clickCount()"
-                     on:headerClick="clickHandler()"
+    <Controls:Header on:countClick="clickCount()"
                      enabled="{{true}}"
                      size="l"
                      caption="test header h3"
                      style="primary"
                      clickable="{{true}}"
-                     counter="{{[12, 'h7', 'default']}}"
-                     counterBefore="{{[13, 'h6', 'primary']}}"
-                     commonClick="{{true}}"/>
+                     counterValue="12"
+                     counterLocation="before"
+                     counterStyle="default"
+                     counterSize="h6"
+                     commonClick="{{false}}"/>
     <br/>
-    <Controls:Header enabled="{{true}}" size="s" caption="test header h3" style="default" clickable="{{true}}" counter="{{[13, 'h7', 'default']}}" commonClick="{{true}}"/>
+    <Controls:Header on:countClick="clickCount()"
+                     enabled="{{true}}"
+                     size="s"
+                     caption="test header h3"
+                     style="default"
+                     clickable="{{true}}"
+                     counterValue="12"
+                     counterLocation="after"
+                     counterStyle="primary"
+                     counterSize="h7"
+                     commonClick="{{true}}"/>
 </div>
