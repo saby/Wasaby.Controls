@@ -187,8 +187,12 @@ define('Controls/Input/Suggest',
             поэтому при ресайзе тоже закрываем.
             + у опенера сейчас отсутствует возможность обновить popup,
             кроме как вызвать его показ ещё раз */
-         _resize: function() {
-            _private.closePopup(this);
+         _resize: function(syntheticEvent, event) {
+            /* событие resize могут вызывать компоненты при изменении своего размера,
+               но нам интересен только resize у window, поэтому проверяем */
+            if (event.target === window) {
+               _private.closePopup(this);
+            }
          }
          
          // </editor-fold>
