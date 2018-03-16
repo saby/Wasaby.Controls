@@ -2588,10 +2588,31 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          _updateHeight: function () {
             if (this.isVisible()) {
                var totalHeight = this._container.height();
-               var contentHeight = (this._options.editorConfig.inline ? this._inputControl : $(this._tinyEditor.iframeElement)).height();
-               this._container[0].scrollTop = 0;
-               this._scrollContainer[0].scrollTop = 0;
-               if (totalHeight !== this._lastTotalHeight || contentHeight !== this._lastContentHeight) {
+               var content, $content;
+               if (this._options.editorConfig.inline) {
+                  $content = this._inputControl;
+                  content = $content[0];
+               }
+               else {
+                  content = this._tinyEditor.iframeElement;
+               }
+               if (cConstants.browser.isIE) {
+                  $content = $content || $(content);
+                  $content.css('height', '');
+               }
+               var contentHeight = content.scrollHeight;
+               var isChanged = totalHeight !== this._lastTotalHeight || contentHeight !== this._lastContentHeight;
+               if (isChanged) {
+                  this._container[0].scrollTop = 0;
+                  this._scrollContainer[0].scrollTop = 0;
+               }
+               if (cConstants.browser.isIE) {
+                  // В MSIE при добавлении новой строки clientHeight и scrollHeight начинают расходиться - нужно их уравнять
+                  // 1175015989 https://online.sbis.ru/opendoc.html?guid=d013f54f-683c-465c-b437-6adc64dc294a
+                  var diff = contentHeight - content.clientHeight;
+                  $content.css('height', 0 < diff ? content.offsetHeight + diff : content.offsetHeight);
+               }
+               if (isChanged) {
                   this._lastTotalHeight = totalHeight;
                   this._lastContentHeight = contentHeight;
                   this._notifyOnSizeChanged();
