@@ -165,6 +165,7 @@ define('SBIS3.CONTROLS/DropdownList',
           */
          $protected: {
             _options: {
+               _addItemToListAfterLoad: false, //в 150 опции нет
                _getRecordsForRedraw: getRecordsForRedrawDDL,
                _defaultItemContentTemplate: ItemContentTemplate,
                _defaultItemTemplate: dotTplFnForItem,
@@ -443,6 +444,19 @@ define('SBIS3.CONTROLS/DropdownList',
          },
 
          _removeOldKeys: function(){
+            if (this._options._addItemToListAfterLoad && this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
+               this._loadItemsDeferred.addCallback(function() {
+                  var item = this._options.selectedItems.at(0);
+                  var text = item && item.get(this._options.displayProperty);
+                  this._removeOldKeysCallback();
+                  this._drawSelectedValue(this._options.selectedKeys[0], [text]);
+               }.bind(this));
+            } else {
+               this._removeOldKeysCallback();
+            }
+         },
+
+         _removeOldKeysCallback: function() {
             var keys = this.getSelectedKeys(),
                 items = this.getItems(),
                 i = 0;
@@ -667,6 +681,15 @@ define('SBIS3.CONTROLS/DropdownList',
             this._setSelectedItems(); //Обновим selectedItems, если пришел другой набор данных
             this._needToRedraw = true;
          },
+         _selectedItemLoadCallback: function(item) {
+            //В 110 опционально, в 150 по умолчанию загруженная запись добавляется в список
+            if (this._options._addItemToListAfterLoad) {
+               if (!this._isEnumTypeData()) {
+                  this.getItems().add(item);
+               }
+            }
+
+         },
          _isEmptyValueSelected: function(){
             return this._options.emptyValue && this.getSelectedKeys()[0] == null;
          },
@@ -840,7 +863,7 @@ define('SBIS3.CONTROLS/DropdownList',
             if (this._isEnumTypeData()){
                this._drawSelectedValue(this.getItems().get(), [this.getItems().getAsValue(true)]);
             }
-            else if(len) {
+            else if(len && (!this._loadItemsDeferred || this._loadItemsDeferred.isReady())) {
                this.getSelectedItems(true).addCallback(function(list) {
                   if(list) {
                      list.each(function (rec) {
