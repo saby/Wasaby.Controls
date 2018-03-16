@@ -11,10 +11,9 @@ define('Controls/Layout/Scroll',
       'Core/Control',
       'tmpl!Controls/Layout/Scroll/Scroll',
       'Controls/Event/Registrar',
-      'Core/helpers/Function/throttle',
-      'WS.Data/Type/descriptor'
+      'Core/helpers/Function/throttle'
    ],
-   function(Control, template, Registrar, throttle, types) {
+   function(Control, template, Registrar, throttle) {
 
       'use strict';
 

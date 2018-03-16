@@ -383,6 +383,7 @@ node('controls') {
             sh """
                 cd ./jinnee/distrib/builder
                 node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls1 --application=/
+                node ./node_modules/grunt-cli/bin/grunt less1by1 --root=/home/sbis/Controls1/ --aplication=/ > /dev/null
             """
         }
         writeFile file: "./controls/tests/int/config.ini", text:
@@ -449,17 +450,19 @@ node('controls') {
         stage("Запуск тестов интеграционных и верстки"){
             def site = "http://${NODE_NAME}:30001"
             site.trim()
-            dir("./controls/tests/int"){
-                tmp_smoke = sh returnStatus:true, script: """
-                    source /home/sbis/venv_for_test/bin/activate
-                    ${python_ver} smoke_test.py --SERVER_ADDRESS ${smoke_server_address}
-                    deactivate
-                """
-                if ( "${tmp_smoke}" != "0" ) {
-                    currentBuild.result = 'ABORTED'
-                    error('Стенд неработоспособен (не прошел smoke test).')
-                }
-            }
+			if ("${params.browser_type}" != "ff"){
+				dir("./controls/tests/int"){
+					tmp_smoke = sh returnStatus:true, script: """
+						source /home/sbis/venv_for_test/bin/activate
+						${python_ver} smoke_test.py --SERVER_ADDRESS ${smoke_server_address}
+						deactivate
+					"""
+					if ( "${tmp_smoke}" != "0" ) {
+						currentBuild.result = 'ABORTED'
+						error('Стенд неработоспособен (не прошел smoke test).')
+					}
+				}
+			}
             parallel (
                 int_test: {
                     echo "Запускаем интеграционные тесты"

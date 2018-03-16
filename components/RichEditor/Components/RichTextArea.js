@@ -25,6 +25,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
    'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel',
    'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/CodeSampleDialog/CodeSampleDialog',
    'Core/EventBus',
+
+   'tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextAreaInner',
    "css!SBIS3.CORE.RichContentStyles",
    "i18n!SBIS3.CONTROLS/RichEditor",
    'css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextArea'
@@ -69,7 +71,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             minYoutubeHeight: 214,
             defaultYoutubeWidth: 430,
             minYoutubeWidth: 350,
-            dataReviewPaddings: 8,
+            //dataReviewPaddings: 6,
             styles: {
                title: {inline: 'span', classes: 'titleText'},
                subTitle: {inline: 'span', classes: 'subTitleText'},
@@ -201,9 +203,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                  */
                validateClass: undefined
             },
+            _scrollContainer: undefined,
+            _dataReview: undefined,
+            _inputControl: undefined,
             _fakeArea: undefined, //textarea для перехода фкуса по табу
             _tinyEditor: undefined, //экземпляр tinyMCE
-            _lastHeight: undefined, //последняявысота для UpdateHeight
+            _lastTotalHeight: undefined, //последняявысота для UpdateHeight
+            _lastContentHeight: undefined, //последняявысота для UpdateHeight
             _tinyReady: null, //deferred готовности tinyMCE
             _readyContolDeffered: null, //deferred Готовности контрола
             _saveBeforeWindowClose: null,
@@ -235,12 +241,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             options._prepareReviewContent = this._prepareReviewContent.bind({_options: options});
             options._prepareContent = this._prepareContent.bind(this);
             options._sanitizeClasses = this._sanitizeClasses.bind(this);
+            if (options.autoHeight) {
+               options.minimalHeight = this._cleanHeight(options.minimalHeight);
+               options.maximalHeight = this._cleanHeight(options.maximalHeight);
+            }
             return options;
          },
 
          $constructor: function() {
-            var
-               self = this;
+            var self = this;
             this._publish('onInitEditor', 'onUndoRedoChange','onNodeChange', 'onFormatChange', 'onToggleContentSource');
             this._sourceContainer = this._container.find('.controls-RichEditor__sourceContainer');
             this._sourceArea = this._sourceContainer.find('.controls-RichEditor__sourceArea').bind('input', this._onChangeAreaValue.bind(this));
@@ -250,12 +259,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                return e;
             });
             this._dChildReady.push(this._readyContolDeffered);
-            this._dataReview = this._container.find('.controls-RichEditor__dataReview');
             this._tinyReady = new Deferred();
+            this._scrollContainer = this._container.find('.controls-RichEditor__scrollContainer');
+            this._dataReview = this._container.find('.controls-RichEditor__dataReview');
             this._inputControl = this._container.find('.controls-RichEditor__editorFrame');
             this._fakeArea = this._container.find('.controls-RichEditor__fakeArea');
-            this._initInputHeight();
-            this._options.editorConfig.selector = '#' + this.getId() + ' > .controls-RichEditor__editorFrame';
+            this._initMainHeight();
+            this._options.editorConfig.selector = '#' + this.getId() + ' .controls-RichEditor__editorFrame';
             this._options.editorConfig.fixed_toolbar_container = '#' + this.getId() + ' > .controls-RichEditor__fakeArea';
             this._options.editorConfig.setup = function(editor) {
                self._tinyEditor = editor;
@@ -370,43 +380,41 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           * Устанавливает минимальную высоту текстового поля редактора
           * @param {Number} value Минимальная высота поля редактора
           */
-         setMinimalHeight: function(value) {
-            var changeBlock =  this._options.editorConfig.inline ? this._inputControl : $(this._tinyEditor.iframeElement);
-            if (this._options.autoHeight && typeof value === 'number') {
-               this._options.minimalHeight = value;
-               if (this._options.minimalHeight) {
-                  if (this._options.maximalHeight && this._options.maximalHeight < value) {
-                     this._options.maximalHeight = value;
-                  }
-               } else {
-                  this._options.minimalHeight = '';
-               }
-               changeBlock.css({
-                  'max-height': this._options.maximalHeight,
-                  'min-height': this._options.minimalHeight
-               });
-            }
+         setMinimalHeight: function (value) {
+            this._setLimitingHeight('min', value);
          },
 
          /**
           * Устанавливает максимальную высоту текстового поля редактора
           * @param {Number} value Максимальная высота поля редактора
           */
-         setMaximalHeight: function(value) {
-            var changeBlock =  this._options.editorConfig.inline ? this._inputControl : $(this._tinyEditor.iframeElement);
-            if (this._options.autoHeight && typeof value === 'number') {
-               this._options.maximalHeight = value;
-               if (this._options.maximalHeight) {
-                  if (this._options.minimalHeight && this._options.maximalHeight < this._options.minimalHeight) {
-                     this._options.minimalHeight = value;
+         setMaximalHeight: function (value) {
+            this._setLimitingHeight('max', value);
+         },
+
+         /**
+          * Устанавливает максимальную или минимальную высоту текстового поля редактора
+          * @param {string} type Тип значения: 'min' или 'max'
+          * @param {number} value Значение максимальная или минимальная высота поля редактора
+          */
+         _setLimitingHeight: function (type, value) {
+            var props = {'min':'minimalHeight', 'max':'maximalHeight'};
+            if (props[type]) {
+               var options = this._options;
+               if (options.autoHeight && typeof value === 'number') {
+                  options[props[type]] = value || '';
+                  if (value) {
+                     var pairProp = props[type === 'min' ? 'max' : 'min'];
+                     if (options[pairProp] && options.maximalHeight < options.minimalHeight) {
+                        options[pairProp] = value;
+                     }
+
                   }
-               } else {
-                  this._options.maximalHeight = '';
+                  var isInline = options.editorConfig.inline;
+                  var iFrame = isInline ? null : $(this._tinyEditor.iframeElement);
+                  (isInline ? this._scrollContainer : iFrame).css('max-height', options.maximalHeight || '');
+                  (isInline ? this._inputControl : iFrame).css('min-height', options.minimalHeight || '');
                }
-               changeBlock.css({
-                  'max-height': this._options.maximalHeight,
-                  'min-height': this._options.minimalHeight
-               });
             }
          },
 
@@ -1028,17 +1036,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                range = coreClone(selection.getRng()),
                element = selection.getNode(),
                anchor = editor.dom.getParent(element, 'a[href]'),
-               href = anchor ? editor.dom.getAttrib(anchor, 'href') : '',
+               origHref = anchor ? editor.dom.getAttrib(anchor, 'href') : '',
+               origCaption = selection.getContent({format:'text'}),//anchor ? anchor.innerText : ''
                fre = this,
                context = cContext.createContext(this),
                dialogWidth = 440;
             require(['Lib/Control/Dialog/Dialog', 'Deprecated/Controls/FieldString/FieldString', 'SBIS3.CONTROLS/Button'], function(Dialog, FieldString, Button) {
                new Dialog({
-                  title: rk('Вставить/редактировать ссылку'),
+                  title: rk('Web-ссылка'),
                   disableActions: true,
                   resizable: false,
                   width: dialogWidth,
-                  height: 48,
+                  height: 72,
                   autoHeight: false,
                   keepSize: false,
                   opener: fre,
@@ -1049,33 +1058,46 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      onReady: function () {
                         var
                            self = this,
-                           hrefLabel = $('<div class="controls-RichEditor__insertLinkHrefLabel">' + rk('Адрес') + '</div>'),
-                           okButton = $('<div class="controls-RichEditor__insertLinkButton"></div>'),
+                           okButton = $('<div class="controls-RichEditor__InsertLink__okButton"></div>'),
+                           hrefLabel = $('<div class="controls-RichEditor__InsertLink__label controls-RichEditor__InsertLink__hrefLabel">' + rk('Адрес') + '</div>'),
+                           hrefInput = $('<div class="controls-RichEditor__InsertLink__input controls-RichEditor__InsertLink__hrefInput"></div>'),
+                           captionLabel = $('<div class="controls-RichEditor__InsertLink__label controls-RichEditor__InsertLink__captionLabel">' + rk('Название') + '</div>'),
+                           captionInput = $('<div class="controls-RichEditor__InsertLink__input controls-RichEditor__InsertLink__captionInput"></div>'),
                            linkAttrs = {
                               target: '_blank',
                               rel: null,
                               'class': null,
                               title: null
                            };
-                        this._fieldHref = $('<div class="controls-RichEditor__insertLinkHref"></div>');
                         this.getContainer()
                            .append(hrefLabel)
-                           .append(this._fieldHref);
+                           .append(hrefInput)
+                           .append(captionLabel)
+                           .append(captionInput);
                         //TODO: перевечсти поле ввода на SBIS3.CONTROLS.TextBoxтк в нём нет доскрола при активации
-                        this._fieldHref = new FieldString({
-                           value: href,
+                        this._hrefInput = new FieldString({
+                           value: origHref,
                            parent: this,
-                           element: this._fieldHref,
+                           element: hrefInput,
                            linkedContext: context,
-                           name: 'fre_link_href'
+                           name: 'RichEditor__InsertLink__href'
                         });
-                        this._fieldHref.getContainer().on('keydown', function(e) {
+                        this._captionInput = new FieldString({
+                           value: origCaption,
+                           parent: this,
+                           element: captionInput,
+                           linkedContext: context,
+                           name: 'RichEditor__InsertLink__caption'
+                        });
+                        var handler = function(e) {
                            if (e.which == cConstants.key.enter) {
                               e.preventDefault();
                               e.stopPropagation();
                               return false;
                            }
-                        });
+                        };
+                        this._hrefInput.getContainer().on('keydown', handler);
+                        this._captionInput.getContainer().on('keydown', handler);
                         this._titleBar
                            .prepend($('<a href="javascript:void(0)"></a>')
                               .addClass('ws-float-close ws-float-close-right')
@@ -1085,15 +1107,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                               }))
                            .append(okButton);
                         new Button({
-                           caption: rk('ОК'),
+                           caption: rk('Сохранить'),
                            primary: true,
                            parent: this,
                            handlers: {
                               onActivated: function () {
-                                 var href = this.getParent()._fieldHref.getValue();
+                                 var parent = this.getParent();
+                                 var href = parent._hrefInput.getValue();
+                                 var caption = parent._captionInput.getValue();
                                  var protocol = /(?:https?|ftp|file):\/\//gi;
                                  if (href && href.search(protocol) === -1) {
                                     href = 'http://' + href;
+                                 }
+                                 if (!caption) {
+                                    caption = origCaption || href;
                                  }
                                  var dom = editor.dom;
                                  var done;
@@ -1103,8 +1130,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                           target: '_blank',
                                           href: escapeHtml(href)
                                        });
+                                       element.innerHtml = caption;
                                     }
-                                    else {
+                                 else {
                                        editor.execCommand('unlink');
                                     }
                                     done = true;
@@ -1114,14 +1142,20 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                     linkAttrs.href = href;
                                     selection.setRng(range);
                                     if (selection.getContent() === '' || (fre._isOnlyTextSelected() && cConstants.browser.firefox)) {
-                                       var linkText = selection.getContent({format:'text'}) || href;
+                                       var linkText = caption;
                                        var linkHtml = dom.createHTML('a', linkAttrs, dom.encode(linkText));
                                        // Для MSIE принудительно смещаем курсор ввода после вставленной ссылки
                                        // 1174853380 https://online.sbis.ru/opendoc.html?guid=77405679-2b2b-42d3-8bc0-d2eee745ea23
                                        editor.insertContent(cConstants.browser.isIE ? linkHtml + '&#65279;&#8203;' : linkHtml);
                                     }
                                     else {
+                                       if (origCaption !== caption) {
+                                          selection.setContent(caption);
+                                          var rng = selection.getRng();
+                                          fre._selectNewRng(range.startContainer, range.startOffset, rng.endContainer, rng.endOffset);
+                                       }
                                        editor.execCommand('mceInsertLink', false, linkAttrs);
+                                       selection.collapse(false);
                                        if (cConstants.browser.firefox) {
                                           // В firefox каретка(курсор ввода) остаётся (и просачивается) внутрь элемента A, нужно принудительно вывести её наружу, поэтому:
                                           var r = editor.selection.getRng();
@@ -1153,8 +1187,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            //финт ушами, тк фокус с редактора убрать никак нельзя
                            //тк кнопки на которую нажали у нас в обработчике тоже нет
                            //ставим фокус на любой блок внутри нового диалогового окна, например на контейнер кнопки
-                           this._fieldHref.getContainer().focus(); //убираем фокус с редактора
-                           $('.controls-RichEditor__insertLinkButton').focus();//убираем клавиатуру
+                           this._hrefInput.getContainer().focus(); //убираем фокус с редактора
+                           $('.controls-RichEditor__InsertLink__okButton').focus();//убираем клавиатуру
                         }
                      },
                      onAfterClose: function() {
@@ -1241,10 +1275,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                focusElement = focusContainer[0],
                range;
             if (sourceVisible) {
-               this._sourceContainer.css({
-                  'height' : container.outerHeight(),
-                  'width' : container.outerWidth()
-               });
+               this._sourceArea.css('min-height', this._scrollContainer.height());
                this._sourceArea.val(this.getText());
             }
             this._sourceContainer.toggleClass('ws-hidden', !sourceVisible);
@@ -1372,7 +1403,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             var
                $image = $(target),
                editor = this._tinyEditor,
-               scrollTop = this._inputControl.scrollTop(),
+               $scrollParent = this._inputControl.parent(),
+               scrollTop = $scrollParent.scrollTop(),
                self = this;
             require(['Lib/Control/Dialog/Dialog'], function(Dialog) {
                new Dialog({
@@ -1395,7 +1427,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                  var next = node.nextSibling;
                                  self._selectNewRng(next, next && next.nodeType === 3 && next.nodeValue.length && next.nodeValue.charCodeAt(0) === 65279 ? 1 : 0);
                                  if (scrollTop) {
-                                    self._inputControl.scrollTop(scrollTop);
+                                    $scrollParent.scrollTop(scrollTop);
+                                 }
+                                 else {
+                                    // В прцессе изменения размера открываются и закрываются два окна, в результате активность уходит на floatArea,
+                                    // что приведёт к прокрутке в редакторе. Поэтому, нужно как-то возвращать изображение в область видвимости
+                                    // 1174814497 https://online.sbis.ru/opendoc.html?guid=8089187f-3917-4ae4-97ab-9dcd6a30b5ef
+                                    node.scrollIntoView(true);
                                  }
                               }, 1);
                            });
@@ -1447,6 +1485,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (!hasEndNode && !hasEndOffset) {
                selection.collapse(false);
             }
+         },
+
+         _cleanHeight: function (value) {
+            return value && 0 < (typeof value === 'string' ? parseFloat(value) : value) ? value : 0;
          },
 
          _bindEvents: function() {
@@ -1501,11 +1543,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      }
                   });
                });
-               this._inputControl.bind('scroll', function(e) {
+               var _hideImageOptionsPanel = function () {
                   if (this._imageOptionsPanel) {
                      this._imageOptionsPanel.hide();
                   }
-               }.bind(this));
+               }.bind(this);
+               this._inputControl.on('scroll mousewheel', _hideImageOptionsPanel);
+               this._inputControl.on('keydown', function (e) {
+                  if (e.ctrlKey && (e.key === 'End' || e.keyCode === 35 || e.key === 'Home' || e.keyCode === 36)) {
+                     _hideImageOptionsPanel();
+                  }
+               });
 
                // При нажатии клавиши Del - удалить изображение, если оно выделено
                // 1174801418 https://online.sbis.ru/opendoc.html?guid=1473813c-1617-4a21-9890-cedd1c692bfd
@@ -2290,32 +2338,21 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             }
          },
 
-         _applyEnabledState: function(enabled) {
+         _applyEnabledState: function (enabled) {
             var container = this._tinyEditor ? this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl : this._inputControl;
+            var options = this._options;
+            if (options.autoHeight) {
+               this._scrollContainer.css('max-height', this._cleanHeight(options.maximalHeight) || '');
+               if (this._dataReview) {
+                  this._dataReview.css('min-height', this._cleanHeight(options.minimalHeight) || '');
+               }
+            }
+            else {
+               if (this._dataReview) {
+                  this._dataReview.css('min-height', this._scrollContainer.height() /*- constants.dataReviewPaddings*/);//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
+               }
+            }
             if (this._dataReview) {
-               var css;
-               var opts = this._options;
-               if (opts.autoHeight) {
-                  var hasMin = 0 < parseFloat(opts.minimalHeight);
-                  var hasMax = 0 < parseFloat(opts.maximalHeight);
-                  if (hasMin || hasMax) {
-                     css = {};
-                     if (hasMin) {
-                        css['min-height'] = opts.minimalHeight;
-                     }
-                     if (hasMax) {
-                        css['max-height'] = opts.maximalHeight;
-                     }
-                  }
-               }
-               else {
-                  css = {
-                     height: this._container.height() - constants.dataReviewPaddings//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
-                  };
-               }
-               if (css) {
-                  this._dataReview.css(css);
-               }
                this._updateDataReview(this.getText() || '');
                this._dataReview.toggleClass('ws-hidden', enabled);
             }
@@ -2570,13 +2607,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return !this._sourceContainer.hasClass('ws-hidden');
          },
 
-         _updateHeight: function() {
-            var
-               curHeight;
+         _updateHeight: function () {
             if (this.isVisible()) {
-               curHeight = this._container.height();
-               if (curHeight !== this._lastHeight) {
-                  this._lastHeight = curHeight;
+               var totalHeight = this._container.height();
+               var contentHeight = (this._options.editorConfig.inline ? this._inputControl : $(this._tinyEditor.iframeElement)).height();
+               this._container[0].scrollTop = 0;
+               this._scrollContainer[0].scrollTop = 0;
+               if (totalHeight !== this._lastTotalHeight || contentHeight !== this._lastContentHeight) {
+                  this._lastTotalHeight = totalHeight;
+                  this._lastContentHeight = contentHeight;
                   this._notifyOnSizeChanged();
                }
             }
@@ -2672,9 +2711,13 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             RichTextArea.superclass._focusOutHandler.apply(this, arguments);
          },
 
-         _initInputHeight: function() {
+         /**
+          * Инициализировать высоту основных элементов. Применяется только при отсутствии автоподстройки высоты (при фиксированой высоте)
+          * @protected
+          */
+         _initMainHeight: function () {
             if (!this._options.autoHeight) {
-               this._inputControl.css('height', this._container.height());
+               this._scrollContainer.css('height', this._container.height());
             }
          },
 

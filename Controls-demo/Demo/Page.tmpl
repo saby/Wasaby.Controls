@@ -1,0 +1,7 @@
+<ws:partial template="Controls/Application" scope="{{_options}}">
+   <div>
+      <script if={{_themeSwitcher}} id="themeSwitcher" src="../pages/presto/themeSwitcher.js" type="text/javascript" on:load="loadThemeSwitcher()"></script>
+      <Controls.Button if="{{componentName !== 'Controls-demo/Index'}}" attr:id="Back" caption="Назад" style="linkMain" icon="icon-16 icon-DayBackward icon-primary" on:click="backClickHdl()" />
+      <ws:partial attr:id="newListView" template="{{componentName}}" />
+   </div>
+</ws:partial>

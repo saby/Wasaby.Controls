@@ -90,6 +90,8 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
             quantum: {},
 
+            minQuantum: 'day',
+
             headerType: headerTypes.link,
 
             emptyCaption:  rk('Период не указан'),
@@ -224,7 +226,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
 
          this.getChildControlByName('PrevYearButton').subscribe('onActivated', this._onPrevOrNextYearBtnClick.bind(this, -1));
          this.getChildControlByName('NextYearButton').subscribe('onActivated', this._onPrevOrNextYearBtnClick.bind(this, 1));
-         if (rangeBigChooseUtils.isStateButtonDisplayed(this._options.quantum)) {
+         if (rangeBigChooseUtils.isStateButtonDisplayed(this._options)) {
             this.getChildControlByName('StateButton').subscribe('onActivated', this._onStateBtnClick.bind(this));
          }
 
@@ -246,7 +248,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this._monthRangePicker.subscribe('onSelectionEnded', this._onSelectionEnded.bind(this));
          this._monthRangePicker.subscribe('onYearChanged', this._onMonthRangePickerYearChanged.bind(this));
          this._monthRangePicker.subscribe('onPeriodMouseEnter', this._onMonthRangePickerOnItemMouseEnter.bind(this));
-         this._monthRangePicker.subscribe('onPeriodMouseLeave', this._datePickersResetActive.bind(this));
+         this._monthRangePicker.subscribe('onPeriodMouseLeave', this._onMonthRangePickerOnItemMouseLeave.bind(this));
          this._dateRangePicker.subscribe('onSelectionEnded', this._onDateRangeSelectionEnded.bind(this));
          this._dateRangePicker.subscribe('onMonthChanged', this._onDateRangePickerYearChanged.bind(this));
          this._dateRangePicker.subscribe('onMonthTitleMouseEnter', this._onDateRangePickerMonthTitleMouseEnter.bind(this));
@@ -316,9 +318,9 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          options.monthStateEnabled = true;
          if (!isEmpty(options.quantum)) {
             options.yearSelectionEnabled = 'years' in options.quantum;
-            options.yearStateEnabled = rangeBigChooseUtils.isYearStateEnabled(options.quantum);
-            options.monthStateEnabled = rangeBigChooseUtils.isMonthStateEnabled(options.quantum);
          }
+         options.yearStateEnabled = rangeBigChooseUtils.isYearStateEnabled(options);
+         options.monthStateEnabled = rangeBigChooseUtils.isMonthStateEnabled(options);
          return options;
       },
 
@@ -357,6 +359,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
             }
          } else {
             this._datePickerSetActive(this._startDatePicker);
+         }
+      },
+       _onMonthRangePickerOnItemMouseLeave: function (event, date) {
+         if (this._monthRangePicker.isSelectionProcessing()) {
+            this._datePickersResetActive();
          }
       },
 
@@ -608,10 +615,12 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          if ((start != startValue) ||
             (start && startValue && (start.toSQL() !==  startValue.toSQL()))) {
             this._startDatePicker.setDate(startValue, true);
+            this._startDatePicker.validate();
          }
          if ((end != endValue) ||
             (end && endValue && (end.toSQL() !==  endValue.toSQL()))) {
             this._endDatePicker.setDate(endValue, true);
+            this._endDatePicker.validate();
          }
 
          if (this._options._state === states.year) {
@@ -679,7 +688,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          this._dateRangePicker._updateScrollPosition();
          this._setCurrentYear(month.getFullYear(), true);
          this._updateYearsBar(month.getFullYear());
-         if (rangeBigChooseUtils.isStateButtonDisplayed(this._options.quantum)) {
+         if (rangeBigChooseUtils.isStateButtonDisplayed(this._options)) {
             this.getChildControlByName('StateButton').setChecked(true);
          }
       },
@@ -693,7 +702,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          container.find('.controls-DateRangeBigChoose__months').removeClass('ws-hidden');
          this._monthRangePicker.setRange(this.getStartValue(), this.getEndValue());
          this.getChildControlByName('MonthRangePicker').setYear(this._getCurrentYear());
-         if (rangeBigChooseUtils.isStateButtonDisplayed(this._options.quantum)) {
+         if (rangeBigChooseUtils.isStateButtonDisplayed(this._options)) {
             this.getChildControlByName('StateButton').setChecked(false);
          }
       },
@@ -861,6 +870,7 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          } else if (selectionType === selectionTypes.years) {
             this._setCurrentYear(itemId);
          }
+         this._monthRangePicker._clearMonthSelection();
       },
 
       // Выбор периода по годам, полугодиям, кварталам и месяцам
@@ -950,8 +960,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose',[
          if (this.getRangeSelectionType() === selectionType) {
             DateRangeBigChoose.superclass._onRangeControlMouseLeave.call(this);
          }
-         this._startDatePickerResetActive();
-         this._endDatePickerResetActive();
+         if (this.isSelectionProcessing()) {
+            this._startDatePickerResetActive();
+            this._endDatePickerResetActive();
+         }
       },
 
       _getSelectedRangeItemByItemId: function (itemId, selectionType) {

@@ -2720,6 +2720,9 @@ define('SBIS3.CONTROLS/ListView',
                targetElement = this._getDomElementByItem(item);
 
             if (toolbarTarget && targetElement && toolbarTarget.container.get(0) === targetElement.get(0)) {
+               if (toolbar.isToolbarLocking() && this._options.itemsActionsInItemContainer) {
+                  toolbar.unlockToolbar();
+               }
                toolbar.hide();
             }
             var redrawResult = ListView.superclass._redrawItemInner.apply(this, arguments);
@@ -4192,9 +4195,13 @@ define('SBIS3.CONTROLS/ListView',
                .meta({ hasMore: offset === -1 ? false : this._options.partialPaging});
             return query;
          },
-         setPageSize: function(pageSize) {
+         setPageSize: function(pageSize, noLoad) {
             if (this._pager) {
                this._pager.setPageSize(pageSize);
+            }
+            if (!noLoad) {
+               this._pager.getPaging().clearMaxPage();
+               this._lastPageLoaded = false;
             }
             ListView.superclass.setPageSize.apply(this, arguments);
          },
@@ -4656,7 +4663,7 @@ define('SBIS3.CONTROLS/ListView',
             //Как временное решение добавлена проверка на SBIS3.CONTROLS.TextBoxBase.
             //Необходимо разобраться можно ли на уровне TextBoxBase или Control для события mousedown
             //сделать stopPropagation, тогда от данной проверки можно будет избавиться.
-            return this._options.enabled && this._needProcessMouseEvent(e);
+            return this.isEnabled() && this._needProcessMouseEvent(e);
          },
          _needProcessMouseEvent: function(e) {
             return !cInstance.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS/TextBox/TextBoxBase');
