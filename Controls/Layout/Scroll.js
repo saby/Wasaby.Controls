@@ -182,7 +182,7 @@ define('Controls/Layout/Scroll',
 
          _beforeUnmount: function() {
             if (this._observer) {
-               this._observer.unobserve();
+               this._observer.disconnect();
                this._observer = null;
             }
             this._registrar.destroy();
