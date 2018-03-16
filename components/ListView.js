@@ -4195,9 +4195,13 @@ define('SBIS3.CONTROLS/ListView',
                .meta({ hasMore: offset === -1 ? false : this._options.partialPaging});
             return query;
          },
-         setPageSize: function(pageSize) {
+         setPageSize: function(pageSize, noLoad) {
             if (this._pager) {
                this._pager.setPageSize(pageSize);
+            }
+            if (!noLoad) {
+               this._pager.getPaging().clearMaxPage();
+               this._lastPageLoaded = false;
             }
             ListView.superclass.setPageSize.apply(this, arguments);
          },
