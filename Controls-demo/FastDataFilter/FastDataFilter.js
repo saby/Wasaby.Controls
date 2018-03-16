@@ -3,11 +3,11 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
       'Core/Control',
       'tmpl!Controls-demo/FastDataFilter/FastDataFilter',
       'WS.Data/Source/Memory',
-      'WS.Data/Chain',
-      'Controls/Filter/FastData'
+      'Controls/Filter/FastData',
+      'css!Controls-demo/FastDataFilter/FastDataFilter'
    ],
 
-   function(Control, template, Memory, Chain) {
+   function (Control, template, Memory) {
 
       /**
        * @class Controls/Layout/Search
@@ -21,124 +21,62 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
       var FastData = Control.extend({
 
          _template: template,
-         _selectedKeys2: '3',
-         _defaultItems: [
+         dataSourceDemo3: [
             {
-               id: '1',
-               title: 'Запись 1'
+               name: 'first', // имя фильтра - должно совпадать с internalValueField в FilterStructure
+               idProperty: 'title', // имя поля с ключом из списка значений в dataSource
+               displayProperty: 'title', // имя поля, в котором хранится текстовое отображение ключа из списка значений в dataSource
+               multiselect: true,
+               selectedIndex: '1',
+               dataSource: {
+                  module: 'WS.Data/Source/Memory',
+                  options: {
+                     data: [
+                        {key: 0, title: 'все страны'},
+                        {key: 1, title: 'Россия'},
+                        {key: 2, title: 'США'},
+                        {key: 3, title: 'Великобритания'}
+                     ]
+                  }
+               }
             },
             {
-               id: '2',
-               title: 'Запись 2'
+               name: 'second',
+               idProperty: 'key',
+               displayProperty: 'title',
+               multiselect: false,
+               dataSource: {
+                  module: 'WS.Data/Source/Memory',
+                  options: {
+                     data: [
+                        {key: 0, title: 'все жанры'},
+                        {key: 1, title: 'фантастика'},
+                        {key: 2, title: 'фэнтези'},
+                        {key: 3, title: 'мистика'}
+                     ]
+                  }
+               }
             },
             {
-               id: '3',
-               title: 'Запись 3'
-            },
-            {
-               id: '4',
-               title: 'Запись 4'
-            },
-            {
-               id: '5',
-               title: 'Запись 5'
-            },
-            {
-               id: '6',
-               title: 'Запись 6'
-            },
-            {
-               id: '7',
-               title: 'Запись 7'
-            },
-            {
-               id: '8',
-               title: 'Запись 8'
-            }
-         ],
-         items: [{_defaultItems1: [
-            {
-               id: '1',
-               title: 'Запись 1'
-            },
-            {
-               id: '2',
-               title: 'Запись 2'
-            },
-            {
-               id: '3',
-               title: 'Запись 3'
-            },
-            {
-               id: '4',
-               title: 'Запись 4'
-            },
-            {
-               id: '5',
-               title: 'Запись 5'
-            },
-            {
-               id: '6',
-               title: 'Запись 6'
-            },
-            {
-               id: '7',
-               title: 'Запись 7'
-            },
-            {
-               id: '8',
-               title: 'Запись 8'
-            }
-         ]}, {_defaultItems2: [
-            {
-               id: '1',
-               title: 'Запись 1'
-            },
-            {
-               id: '2',
-               title: 'Запись 2'
-            },
-            {
-               id: '3',
-               title: 'Запись 3'
-            },
-            {
-               id: '4',
-               title: 'Запись 4'
-            },
-            {
-               id: '5',
-               title: 'Запись 5'
-            },
-            {
-               id: '6',
-               title: 'Запись 6'
-            },
-            {
-               id: '7',
-               title: 'Запись 7'
-            },
-            {
-               id: '8',
-               title: 'Запись 8'
-            }
-         ]}],
-         _createMemory: function (items) {
-            return new Memory({
+               name: 'third',
                idProperty: 'id',
-               data: items
-            });
-         },
-         _getDefaultMemory: function () {
-            var self = this;
-            return Chain(this.items).map(function (item) {
-                  return (self._createMemory(item));
-            }).value();
-         },
-
-         _getOneList: function () {
-            return this._createMemory(this._defaultItems);
-         }
+               displayProperty: 'title',
+               multiselect: false,
+               dataSource:
+                  [
+                     {id: 1, title: 'Sun', kind: 'Star'},
+                     {id: 2, title: 'Mercury', kind: 'Planet'},
+                     {id: 3, title: 'Venus', kind: 'Planet'},
+                     {id: 4, title: 'Earth', kind: 'Planet'},
+                     {id: 5, title: 'Mars', kind: 'Planet'},
+                     {id: 6, title: 'Jupiter', kind: 'Planet'},
+                     {id: 7, title: 'Saturn', kind: 'Planet'},
+                     {id: 8, title: 'Uranus', kind: 'Planet'},
+                     {id: 9, title: 'Neptune', kind: 'Planet'},
+                     {id: 10, title: 'Pluto', kind: 'Dwarf planet'}
+                  ]
+            }
+         ]
       });
 
       return FastData;

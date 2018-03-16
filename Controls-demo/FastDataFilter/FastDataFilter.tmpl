@@ -1,9 +1,8 @@
-<div>
+<div class="row-filter-inline">
    <Controls.Filter.Button/>
-   <Controls.Filter.FastData name="myDropdownList2"
-                   bind:selectedKeys="_selectedKeys2"
-                   keyProperty="id"
-                   source="{{_getOneList()}}"
-                  >
+   <Controls.Filter.FastData name="FastData"
+                             bind:selectedKeys="_selectedKeys3"
+                             items="{{dataSourceDemo3}}">
+
    </Controls.Filter.FastData>
 </div>

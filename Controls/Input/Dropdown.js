@@ -5,9 +5,10 @@ define('Controls/Input/Dropdown',
       'tmpl!Controls/Input/Dropdown/resources/defaultContentTemplate',
       'WS.Data/Collection/RecordSet',
       'Controls/Controllers/SourceController',
+      'Controls/Dropdown/DropdownUtils',
       'css!Controls/Input/Dropdown/Dropdown'
    ],
-   function (Control, template, defaultContentTemplate, RecordSet, SourceController) {
+   function (Control, template, defaultContentTemplate, RecordSet, SourceController, DropdownUtils) {
 
       /**
        * Поле выбора из значения списка.
@@ -24,29 +25,6 @@ define('Controls/Input/Dropdown',
 
       'use strict';
 
-      var _private = {
-         getText: function (selectedItems) {
-            var text = selectedItems[0].get('title');
-            // if (selectedItems.length > 1) {
-            //    text += ' и еще' + (selectedItems.length - 1)
-            // }
-            return text;
-         },
-         loadItems: function(instance, source, selectedKeys) {
-            instance._sourceController = new SourceController({
-               source: source
-            });
-            return instance._sourceController.load().addCallback(function(items){
-               instance._items = items;
-               _private.updateSelectedItem(instance, selectedKeys);
-            });
-         },
-         updateSelectedItem: function (instance, selectedKeys) {
-            instance._selectedItem = instance._items.getRecordById(selectedKeys);
-            instance._icon = instance._selectedItem.get('icon');
-         }
-      };
-
       var DropdownList = Control.extend({
          _template: template,
          _defaultContentTemplate: defaultContentTemplate,
@@ -54,31 +32,19 @@ define('Controls/Input/Dropdown',
             DropdownList.superclass.constructor.apply(this, arguments);
             this._onResult = this._onResult.bind(this);
          },
-         _beforeMount: function(options, context, receivedState) {
-            if (receivedState) {
-               this._items = receivedState;
-            }
-            else {
-               if (options.source) {
-                  return _private.loadItems(this, options.source, options.selectedKeys);
-               }
-            }
+         _beforeMount: function (options, context, receivedState) {
+            return DropdownUtils._beforeMount(this, options.source, options.selectedKeys, receivedState);
          },
-         _beforeUpdate: function(newOptions) {
-            if (newOptions.selectedKeys && newOptions.selectedKeys !== this._options.selectedKeys) {
-               _private.updateSelectedItem(this, newOptions.selectedKeys);
-            }
-            if (newOptions.source && newOptions.source !== this._options.source) {
-               return _private.loadItems(this, newOptions.source, newOptions.selectedKeys);
-            }
+         _beforeUpdate: function (newOptions) {
+            return DropdownUtils._beforeUpdate(this, newOptions);
          },
-         _updateText: function(item, displayProperty) {
-            return _private.getText([item], displayProperty); //По стандарту если есть иконка - текст не отображается
+         _updateText: function (item, displayProperty) {
+            return DropdownUtils._updateText(item, displayProperty); //По стандарту если есть иконка - текст не отображается
          },
          _open: function () {
             var config = {
                componentOptions: {
-                  items: this._items,
+                  items: this._items
                },
                target: this._children.popupTarget
             };
