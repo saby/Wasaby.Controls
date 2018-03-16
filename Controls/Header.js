@@ -2,8 +2,9 @@ define('Controls/Header', [
    'Core/Control',
    'Core/IoC',
    'tmpl!Controls/Header/Header',
+   'WS.Data/Type/descriptor',
    'css!Controls/Header/Header'
-], function(Control, IoC, template) {
+], function(Control, IoC, template, types) {
    'use strict';
 
    var Header = Control.extend({
