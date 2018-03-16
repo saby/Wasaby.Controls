@@ -17,5 +17,38 @@ define('Controls/Header', [
       }
    });
 
+   Header.getOptionTypes =  function getOptionTypes() {
+      return {
+         caption: types(String),
+         style: types(String).oneOf([
+            'default_big',
+            'primary_big',
+            'default',
+            'primary'
+         ]),
+         clickable: types(Boolean),
+         counterValue: types(Number),
+         counterLocation: types(String).oneOf([
+            'after',
+            'before'
+         ]),
+         counterStyle: types(String).oneOf([
+            'primary',
+            'default',
+            'disabled'
+         ]),
+         counterSize: types(String).oneOf([
+            'h6',
+            'h7'
+         ]),
+         countClickable: types(Boolean),
+         size: types(String).oneOf([
+            'l',
+            'default',
+            's'
+         ])
+      }
+   };
+
    return Header;
 });
