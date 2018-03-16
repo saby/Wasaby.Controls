@@ -63,7 +63,7 @@ define([
          lv._onItemClick({}, dispItem);
          assert.equal(dispItem, lv._listModel._markedItem, 'Incorrect selected item before updating');
       });
-
+   
       it('_beforeUpdate', function () {
          var model = new ListViewModel({
             items: data,
@@ -77,21 +77,43 @@ define([
          var lv = new ListView(cfg);
          lv.saveOptions(cfg);
          lv._beforeMount(cfg);
-
-
+      
+      
          model = new ListViewModel({
             items: data2,
             idProperty: 'id'
          });
-
+      
          cfg = {
             listModel: model,
             idProperty: 'id',
             markedKey: 2
          };
-
+      
          lv._beforeUpdate(cfg);
          assert.equal(model, lv._listModel, 'Incorrect listModel before update');
-      })
-   })
+      });
+   
+      it('_private.resizeNotifyOnListChanged', function () {
+         var listView = new ListView(),
+             eventNotifyed = false;
+   
+         listView._notify = function(event) {
+            if (event === 'resize') {
+               eventNotifyed = true;
+            }
+         };
+         
+         listView._listChanged = false;
+         ListView._private.resizeNotifyOnListChanged(listView);
+         
+         assert.isFalse(eventNotifyed);
+   
+         listView._listChanged = true;
+         ListView._private.resizeNotifyOnListChanged(listView);
+   
+         assert.isTrue(eventNotifyed);
+      });
+      
+   });
 });
