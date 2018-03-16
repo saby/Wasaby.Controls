@@ -32,7 +32,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
                 */
                columnCount: 0,
                /**
-                * @cfg {number[]} Список индексов колонок, задающих иерархию разделов импортируемых данных
+                * @cfg {Array<number>} Список индексов колонок, задающих иерархию разделов импортируемых данных
                 */
                columns: [],
                /**
@@ -106,7 +106,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
           * @protected
           * @param {number} columnIndex Индекс колонки
           * @param {Core/EventObject} evtName Денскриптор события
-          * @param {string[]} selecteds Список идентификаторов выбранных значений
+          * @param {Array<string>} selecteds Список идентификаторов выбранных значений
           * @param {object} changes Информация об изменениях
           */
          _onMenu: function (columnIndex, evtName, selecteds, changes) {
@@ -150,7 +150,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View',
           * @public
           * @param {object} values Набор из нескольких значений, которые необходимо изменить
           * @param {number} [values.columnCount] Количество имеющихся колонок (опционально)
-          * @param {number[]} [values.columns] Список индексов колонок, задающих иерархию импортируемых данных (опционально)
+          * @param {Array<number>} [values.columns] Список индексов колонок, задающих иерархию импортируемых данных (опционально)
           * @param {string} [values.hierarchyField] Имя поля, хранящего иерархию (опционально)
           */
          setValues: function (values) {
