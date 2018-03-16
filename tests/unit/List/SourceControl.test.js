@@ -128,7 +128,17 @@ define([
                }
             }
          };
+         var dataLoadFired = false;
          var ctrl = new SourceControl(cfg);
+         
+         var originNotify = ctrl._notify;
+         ctrl._notify = function(event) {
+            if (event === 'onDataLoad') {
+               dataLoadFired = true;
+            }
+            originNotify.apply(ctrl, arguments);
+         };
+         
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
@@ -136,6 +146,7 @@ define([
             SourceControl._private.loadToDirection(ctrl, 'down');
             setTimeout(function(){
                assert.equal(6, SourceControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
+               assert.isTrue(dataLoadFired, 'onDataLoad event is not fired');
                done();
             }, 100)
          },100);
@@ -234,7 +245,7 @@ define([
 
          result = false;
          ctrl._notify = function(eventName, error) {
-            result = error
+            result = error[0];
          };
          SourceControl._private.processLoadError(ctrl, error);
 
