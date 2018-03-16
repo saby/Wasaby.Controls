@@ -263,7 +263,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           */
          _cmdComplete: function () {
             var options = this._options;
-            var file = options.file;
             var views = this._views;
             var results = this._results;
             var sheetIndex = options.sheetIndex;
@@ -277,10 +276,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             }
             var data = {
                dataType: options.dataType,
-               //TODO: хорошо бы выводить file объектом
-               fileName: file.name,
-               fileUrl: file.url,
-               fileUuid: file.uuid,
+               file: options.file,
                //sheetIndex: sheetIndex,
                sameSheetConfigs: !useAllSheets,
                sheets: sheets
