@@ -69,8 +69,6 @@ define('Controls/List/Controllers/ScrollPaging',
 
 
          destroy: function() {
-            this.stopObserve();
-            Paging.superclass.destroy.apply(this, arguments);
             this._options = {};
          }
 

@@ -69,10 +69,10 @@ define('Controls/List', [
 
 
       _beforeUpdate: function(newOptions) {
-         if (newOptions.items && (newOptions.items != this._options.items)) {
+         if (newOptions.items && (newOptions.items !== this._options.items)) {
             this._viewModel.setItems(newOptions.items);
-         } else if (newOptions.selectedKey !== this._options.selectedKey) {
-            this._viewModel.setSelectedKey(newOptions.selectedKey);
+         } else if (newOptions.markedKey !== this._options.markedKey) {
+            this._viewModel.setMarkedKey(newOptions.markedKey);
          }
       }
    });

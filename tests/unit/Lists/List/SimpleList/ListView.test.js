@@ -45,6 +45,28 @@ define([
          var dispItem = lv._listModel._itemsModel._display.at(2);
          lv._onItemClick({}, dispItem);
          assert.equal(dispItem, lv._listModel._markedItem, 'Incorrect selected item before updating');
-      })
-   })
+      });
+   
+      it('_private.resizeNotifyOnListChanged', function () {
+         var listView = new ListView(),
+             eventNotifyed = false;
+   
+         listView._notify = function(event) {
+            if (event === 'resize') {
+               eventNotifyed = true;
+            }
+         };
+         
+         listView._listChanged = false;
+         ListView._private.resizeNotifyOnListChanged(listView);
+         
+         assert.isFalse(eventNotifyed);
+   
+         listView._listChanged = true;
+         ListView._private.resizeNotifyOnListChanged(listView);
+   
+         assert.isTrue(eventNotifyed);
+      });
+      
+   });
 });
