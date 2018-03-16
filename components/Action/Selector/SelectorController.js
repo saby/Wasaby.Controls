@@ -132,12 +132,21 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorController', [
            * @see selectComplete
            */
           _selectorWrapperInitialized: function(chooserWrapper) {
-             chooserWrapper.setProperties({
-                multiselect: this._options.multiselect,
-                selectedItems: this._options.selectedItems,
-                selectionType: this._options.selectionType
-             });
-             this._linkedObject = chooserWrapper._getLinkedObject();
+             var
+                linkedObject = chooserWrapper._getLinkedObject(),
+                props = {
+                   multiselect: this._options.multiselect,
+                   selectionType: this._options.selectionType
+                };
+
+             //Восстанавливаем выделение, если не используется режим массового выделения
+             if (!linkedObject._options.useSelectAll) {
+                props.selectedItems = this._options.selectedItems;
+             }
+
+             chooserWrapper.setProperties(props);
+
+             this._linkedObject = linkedObject;
           },
 
           /**
