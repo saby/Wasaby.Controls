@@ -147,7 +147,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
              *    chooserMode="dialog"
              *    pickerClassName="docs-ShowAllButton__myPicker">
              *    <ws:dictionaries>
-             *        <ws:options template="js!SBIS3.DOCS.ShowAllDictionary">
+             *        <ws:options template="Examples/DOCS/ShowAllDictionary">
              *           <ws:componentOptions showSelectButton="{{false}}"/>
              *        </ws:options>
              *    </ws:dictionaries>
@@ -215,7 +215,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
              *    chooserMode="dialog"
              *    pickerClassName="docs-ShowAllButton__myPicker">
              *    <ws:dictionaries>
-             *        <ws:options template="js!SBIS3.DOCS.ShowAllDictionary">
+             *        <ws:options template="Examples/DOCS/ShowAllDictionary">
              *           <ws:componentOptions showSelectButton="{{false}}"/>
              *        </ws:options>
              *    </ws:dictionaries>
@@ -225,7 +225,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
              *           idProperty="@ТелефонныйСправочник3"
              *           pageSize="5"
              *           showHead="{{true}}"
-             *           footerTpl="tmpl!SBIS3.DOCS.ShowAllButton/resources/myFooterTpl">
+             *           footerTpl="tmpl!Examples/DOCS/ShowAllButton/resources/myFooterTpl">
              *              <ws:columns>
              *                 <ws:Array>
              *                    <ws:Object field="@ТелефонныйСправочник3" title="№" width="50" />

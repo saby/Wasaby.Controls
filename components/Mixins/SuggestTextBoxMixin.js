@@ -84,7 +84,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
              * @example
              * Рассмотрим использование опции searchParam на примере контрола "Строка поиска" (см. {@link SBIS3.CONTROLS/SearchForm}).
              * <pre class="brush: xml">
-             *    <ws:SBIS3.CONTROLS/SearchForm searchParam="searchString" … />
+             *    <SBIS3.CONTROLS:SearchForm searchParam="searchString" … />
              * </pre>
              * Пользователь вводит поисковый запрос "Ноутбук".
              * В результате для поиска данных вызывается метод бизнес-логики "Goods.List".
