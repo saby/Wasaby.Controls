@@ -27,7 +27,6 @@ define('Controls/Dropdown/DropdownUtils',
          return instance._sourceController.load().addCallback(function (items) {
             instance._items = items;
             updateSelectedItem(instance, selectedKeys);
-            return items;
          });
       }
 
