@@ -72,12 +72,12 @@ define(['Controls/Input/resources/SuggestPopupController', 'Core/core-instance',
                 emptyList = new List(),
                 self = {};
    
-            assert.isTrue(!!SuggestPopupController._private.needShowPopup(self, list));
-            assert.isFalse(!!SuggestPopupController._private.needShowPopup(self, emptyList));
+            assert.isTrue(!!SuggestPopupController._private.needShowPopup(self, {result: list}));
+            assert.isFalse(!!SuggestPopupController._private.needShowPopup(self, {result: emptyList}));
    
             self._emptyTemplate = {};
-            assert.isTrue(!!SuggestPopupController._private.needShowPopup(self, list));
-            assert.isTrue(!!SuggestPopupController._private.needShowPopup(self, emptyList));
+            assert.isTrue(!!SuggestPopupController._private.needShowPopup(self, {result: list}));
+            assert.isTrue(!!SuggestPopupController._private.needShowPopup(self, {result: emptyList}));
          });
          
       });
