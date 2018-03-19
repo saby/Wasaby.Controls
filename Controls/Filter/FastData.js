@@ -6,13 +6,13 @@ define('Controls/Filter/FastData',
       'Controls/Controllers/SourceController',
       'WS.Data/Chain',
       'WS.Data/Collection/RecordSet',
-      'Core/helpers/Object/isEmpty',
       'SBIS3.CONTROLS/Utils/SourceUtil',
       'Core/core-instance',
       'WS.Data/Utils',
       'css!Controls/Filter/FastData/FastData'
    ],
-   function (Control, DropdownUtils, template, SourceController, Chain, RecordSet, isEmpty, SourceUtil, cInstance, Utils) {
+   function (Control, DropdownUtils, template, SourceController, Chain, RecordSet, SourceUtil, cInstance, Utils) {
+
       'use strict';
 
       /**
@@ -26,16 +26,16 @@ define('Controls/Filter/FastData',
       var _private = {
 
          _getElement: function (self, index, property) {
-            return self._configs[index].at(self._selectedIndexes[index]).get(property);
+            return self._configs[index]._items.at(self._selectedIndexes[index]).get(property);
          },
 
          _selectItem: function (item) {
             //Устанавливаем индекс выбранного элемента списка
-            this._selectedIndexes[this.lastOpenIndex] = this._configs[this.lastOpenIndex].getIndex(item);
+            this._selectedIndexes[this.lastOpenIndex] = this._configs[this.lastOpenIndex]._items.getIndex(item);
 
             //Получаем ключ выбранного элемента
             var key = item.get(item.getIdProperty());
-            this._listConfig.at(this.lastOpenIndex).selectedKeys = key;
+            this._configs[this.lastOpenIndex].selectedKeys = key;
 
             this._notify('selectedKeysChanged', [key]);
          }
@@ -75,19 +75,15 @@ define('Controls/Filter/FastData',
 
                   if (cInstance.instanceOfModule(SourceUtil.prepareSource(dSource, 'WS.Data/Source/Memory'))) {
 
-                     DropdownUtils._loadItems(self._configs[index], dSource, sKey).addCallback(function (result) {
-                        self._configs[index] = result;
-                        self._configs[index].setIdProperty(idProperty);
-                        //В данном случае selectedKeys м.б. задан
-                        //Убрать, если не нужен
-                        self._listConfig.at(index).selectedKeys = sKey || _private._getElement(self, index, idProperty);
+                     DropdownUtils._loadItems(self._configs[index], dSource, sKey).addCallback(function () {
+                        self._configs[index]._items.setIdProperty(idProperty);
+                        self._configs[index].selectedKeys = sKey || _private._getElement(self, index, idProperty);
                         self._forceUpdate();
                      });
-                  }
-                  else {
-                     self._configs[index] = new RecordSet({rawData: dSource});
-                     self._configs[index].setIdProperty(idProperty);
-                     self._listConfig.at(index).selectedKeys = sKey || _private._getElement(self, index, idProperty);
+
+                  } else {
+                     self._configs[index]._items = new RecordSet({rawData: dSource, idProperty: idProperty});
+                     self._configs[index].selectedKeys = sKey || _private._getElement(self, index, idProperty);
                      self._forceUpdate();
                   }
                });
@@ -97,15 +93,15 @@ define('Controls/Filter/FastData',
          _open: function (event, item, index) {
             var config = {
                componentOptions: {
-                  items: this._configs[index],
-                  keyProperty: this._listConfig.at(index).get('idProperty'), // Utils.getItemPropertyValue(item, 'idProperty'),
+                  items: this._configs[index]._items,
+                  keyProperty: this._configs[index]._items.getIdProperty(),
                   parentProperty: Utils.getItemPropertyValue(item, 'parentProperty'),
                   nodeProperty: Utils.getItemPropertyValue(item, 'nodeProperty'),
-                  itemTemplateProperty: item.itemTemplateProperty,
-                  itemTemplate: item.itemTemplate,
-                  headTemplate: item.headTemplate,
-                  footerTemplate: item.footerTemplate,
-                  selectedKeys: item.selectedKeys
+                  itemTemplateProperty: Utils.getItemPropertyValue(item, 'itemTemplateProperty'),
+                  itemTemplate: Utils.getItemPropertyValue(item, 'itemTemplate'),
+                  headTemplate: Utils.getItemPropertyValue(item, 'headTemplate'),
+                  footerTemplate: Utils.getItemPropertyValue(item, 'footerTemplate'),
+                  selectedKeys: this._configs[index].selectedKeys
                },
                target: event.target.parentElement
             };
@@ -115,7 +111,7 @@ define('Controls/Filter/FastData',
          },
 
          _updateText: function (item, index) {
-            if (this._configs[index]) {
+            if (this._configs[index]._items) {
                return _private._getElement(this, index, Utils.getItemPropertyValue(item, 'displayProperty'));
             }
          },
@@ -131,8 +127,8 @@ define('Controls/Filter/FastData',
 
          _reset: function (event, item, index) {
             this._selectedIndexes[index] = 0;
-            this._listConfig.at(index).selectedKeys = _private._getElement(this, index, Utils.getItemPropertyValue(item, 'idProperty'));
-            this._notify('selectedKeysChanged', [this._listConfig.at(index).selectedKeys]);
+            this._configs[index].selectedKeys = _private._getElement(this, index, this._configs[index]._items.getIdProperty());
+            this._notify('selectedKeysChanged', [this._configs[index].selectedKeys]);
          }
       });
 
