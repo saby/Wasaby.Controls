@@ -39,6 +39,7 @@ define('SBIS3.CONTROLS/ComponentBinder',
       }
       if (cInstance.instanceOfModule(gridView, 'SBIS3.CONTROLS/Tree/DataGridView')) {
          gridView._updateEditArrow();
+         gridView._checkBreadCrumbsWidth();
       }
    }
    function drawItemsCallback(operationPanel, view) {
