@@ -38,6 +38,15 @@ define('Controls/Filter/FastData',
             this._configs[this.lastOpenIndex].selectedKeys = key;
 
             this._notify('selectedKeysChanged', [key]);
+         },
+
+         _onResult: function (args) {
+            var actionName = args[0];
+            var data = args[2];
+            if (actionName === 'itemClick') {
+               _private._selectItem.apply(this, data);
+               this._children.DropdownOpener.close();
+            }
          }
       };
 
@@ -50,7 +59,7 @@ define('Controls/Filter/FastData',
 
          constructor: function () {
             FastData.superclass.constructor.apply(this, arguments);
-            this._onResult = this._onResult.bind(this);
+            this._onResult = _private._onResult.bind(this);
          },
 
          _beforeMount: function (options) {
@@ -113,15 +122,6 @@ define('Controls/Filter/FastData',
          _updateText: function (item, index) {
             if (this._configs[index]._items) {
                return _private._getElement(this, index, Utils.getItemPropertyValue(item, 'displayProperty'));
-            }
-         },
-
-         _onResult: function (args) {
-            var actionName = args[0];
-            var data = args[2];
-            if (actionName === 'itemClick') {
-               _private._selectItem.apply(this, data);
-               this._children.DropdownOpener.close();
             }
          },
 
