@@ -9,9 +9,10 @@ define('Controls/Filter/FastData',
       'Core/helpers/Object/isEmpty',
       'SBIS3.CONTROLS/Utils/SourceUtil',
       'Core/core-instance',
+      'WS.Data/Utils',
       'css!Controls/Filter/FastData/FastData'
    ],
-   function (Control, DropdownUtils, template, SourceController, Chain, RecordSet, isEmpty, SourceUtil, cInstance) {
+   function (Control, DropdownUtils, template, SourceController, Chain, RecordSet, isEmpty, SourceUtil, cInstance, Utils) {
       'use strict';
 
       /**
@@ -22,9 +23,30 @@ define('Controls/Filter/FastData',
        * @public
        * @author Золотова Э.Е.
        */
+      var _private = {
+
+         _getElement: function (self, index, property) {
+            return self._configs[index].at(self._selectedIndexes[index]).get(property);
+         },
+
+         _selectItem: function (item) {
+            //Устанавливаем индекс выбранного элемента списка
+            this._selectedIndexes[this.lastOpenIndex] = this._configs[this.lastOpenIndex].getIndex(item);
+
+            //Получаем ключ выбранного элемента
+            var key = item.get(item.getIdProperty());
+            this._listConfig.at(this.lastOpenIndex).selectedKeys = key;
+
+            this._notify('selectedKeysChanged', [key]);
+         }
+      };
 
       var FastData = Control.extend({
          _template: template,
+         _configs: {},
+         _selectedIndexes: {},
+
+         _listConfig: [],
 
          constructor: function () {
             FastData.superclass.constructor.apply(this, arguments);
@@ -32,55 +54,58 @@ define('Controls/Filter/FastData',
          },
 
          _beforeMount: function (options) {
-            this.loadedItems = {};
-            this.selectedIndex = {};
             var self = this;
 
             //Что представляет собой items?
             //Сейчас только загружаемые данные, без остальных опций
-
-            Chain(options.items).each(function (item, index) {
-               self.selectedIndex[index] = item.selectedIndex || 0;
-               if (cInstance.instanceOfModule(SourceUtil.prepareSource(item.dataSource), 'WS.Data/Source/Memory')) {
-                  DropdownUtils._loadItems(self, item.dataSource, item.selectedKeys).addCallback(function (result) {
-                     self.loadedItems[index] = result;
-                     //В данном случае selectedKeys м.б. задан
-                     //Убрать, если не нужен
-                     item.selectedKeys = item.selectedKeys || self._getElement(item, index, item.idProperty);
-                     self._forceUpdate();
-                  });
-               }
-               else {
-                  self.loadedItems[index] = new RecordSet({rawData: item.dataSource});
-                  item.selectedKeys = item.selectedKeys || self._getElement(item, index, item.idProperty);
-               }
+            var sourceController = new SourceController({
+               source: options.source
             });
-         },
+            sourceController.load().addCallback(function (configs) {
+               self._listConfig = configs;
 
-         _updateText: function (item, index) {
-            //По умолчанию первый элемент списка
+               Chain(configs).each(function (item, index) {
+                  var sKey = Utils.getItemPropertyValue(item, 'selectedKeys'),
+                     dSource = Utils.getItemPropertyValue(item, 'dataSource'),
+                     idProperty = Utils.getItemPropertyValue(item, 'idProperty');
 
-            if (this.loadedItems[index]) {
-               return this._getElement(item, index, item.displayProperty);
-            }
-         },
+                  self._selectedIndexes[index] = Utils.getItemPropertyValue(item, 'selectedIndex') || 0;
 
-         _getElement: function (item, index, property) {
-            return this.loadedItems[index].at(this.selectedIndex[index]).get(property);
+                  self._configs[index] = {};
+
+                  if (cInstance.instanceOfModule(SourceUtil.prepareSource(dSource, 'WS.Data/Source/Memory'))) {
+
+                     DropdownUtils._loadItems(self._configs[index], dSource, sKey).addCallback(function (result) {
+                        self._configs[index] = result;
+                        self._configs[index].setIdProperty(idProperty);
+                        //В данном случае selectedKeys м.б. задан
+                        //Убрать, если не нужен
+                        self._listConfig.at(index).selectedKeys = sKey || _private._getElement(self, index, idProperty);
+                        self._forceUpdate();
+                     });
+                  }
+                  else {
+                     self._configs[index] = new RecordSet({rawData: dSource});
+                     self._configs[index].setIdProperty(idProperty);
+                     self._listConfig.at(index).selectedKeys = sKey || _private._getElement(self, index, idProperty);
+                     self._forceUpdate();
+                  }
+               });
+            });
          },
 
          _open: function (event, item, index) {
             var config = {
                componentOptions: {
-                  items: this.loadedItems[index],
-                  keyProperty: item.idProperty,
-                  parentProperty: item.parentProperty,
-                  nodeProperty: item.nodeProperty,
+                  items: this._configs[index],
+                  keyProperty: this._listConfig.at(index).get('idProperty'), // Utils.getItemPropertyValue(item, 'idProperty'),
+                  parentProperty: Utils.getItemPropertyValue(item, 'parentProperty'),
+                  nodeProperty: Utils.getItemPropertyValue(item, 'nodeProperty'),
                   itemTemplateProperty: item.itemTemplateProperty,
                   itemTemplate: item.itemTemplate,
                   headTemplate: item.headTemplate,
                   footerTemplate: item.footerTemplate,
-                  selectedKeys: item.selectedKeys || 0
+                  selectedKeys: item.selectedKeys
                },
                target: event.target.parentElement
             };
@@ -89,33 +114,29 @@ define('Controls/Filter/FastData',
             this._children.DropdownOpener.open(config, this);
          },
 
+         _updateText: function (item, index) {
+            if (this._configs[index]) {
+               return _private._getElement(this, index, Utils.getItemPropertyValue(item, 'displayProperty'));
+            }
+         },
+
          _onResult: function (args) {
             var actionName = args[0];
             var data = args[2];
             if (actionName === 'itemClick') {
-               this._selectItem.apply(this, data);
+               _private._selectItem.apply(this, data);
                this._children.DropdownOpener.close();
             }
          },
 
-         _selectItem: function (item) {
-            //Устанавливаем индекс выбранного элемента списка
-            this.selectedIndex[this.lastOpenIndex] = this.loadedItems[this.lastOpenIndex].getIndex(item);
-
-            //Получаем ключ выбранного элемента
-            var key = item.get(this._options.items[this.lastOpenIndex].idProperty);
-            this._options.items[this.lastOpenIndex].selectedKeys = key;
-
-            this._notify('selectedKeysChanged', [key]);
-         },
-
          _reset: function (event, item, index) {
-            this.selectedIndex[index] = 0;
-            item.selectedKeys = this._getElement(item, index, item.idProperty);
-            this._notify('selectedKeysChanged', [item.selectedKeys]);
+            this._selectedIndexes[index] = 0;
+            this._listConfig.at(index).selectedKeys = _private._getElement(this, index, Utils.getItemPropertyValue(item, 'idProperty'));
+            this._notify('selectedKeysChanged', [this._listConfig.at(index).selectedKeys]);
          }
       });
 
+      FastData._private = _private;
       return FastData;
    }
 );

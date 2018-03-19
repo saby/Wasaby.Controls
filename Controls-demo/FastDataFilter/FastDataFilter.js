@@ -23,9 +23,9 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
          _template: template,
          dataSourceDemo3: [
             {
-               name: 'first', // имя фильтра - должно совпадать с internalValueField в FilterStructure
-               idProperty: 'title', // имя поля с ключом из списка значений в dataSource
-               displayProperty: 'title', // имя поля, в котором хранится текстовое отображение ключа из списка значений в dataSource
+               name: 'first',
+               idProperty: 'title',
+               displayProperty: 'title',
                multiselect: true,
                selectedIndex: '1',
                dataSource: {
@@ -76,7 +76,17 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
                      {id: 10, title: 'Pluto', kind: 'Dwarf planet'}
                   ]
             }
-         ]
+         ],
+
+         _createMemory: function (items) {
+            return new Memory({
+               idProperty: 'id',
+               data: items
+            });
+         },
+         _getDefaultMemory: function () {
+            return this._createMemory(this.dataSourceDemo3);
+         }
       });
 
       return FastData;
