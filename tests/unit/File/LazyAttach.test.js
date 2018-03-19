@@ -6,7 +6,7 @@ define([
 ], function (LazyAttach, Deferred, LocalFile, LocalFileLink) {
    'use strict';
 
-   describe('WS.Data/File/LazyAttach', function () {
+   describe('Controls/File/LazyAttach', function () {
       var attach = new LazyAttach();
 
       describe('.registerLazyGetter()\n   Ленивая регистрация экземпляра', function () {

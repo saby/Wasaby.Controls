@@ -14,7 +14,7 @@ define([
    });
    var localFile = new LocalFile(file, meta, 'filename');
 
-   describe('WS.Data/File/LocalFile', function () {
+   describe('Controls/File/LocalFile', function () {
 
       describe('.getData()', function () {
          it('Возвращает файл', function () {

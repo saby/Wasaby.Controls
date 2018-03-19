@@ -7,7 +7,7 @@ define([
    var link = 'file:///C:/file1.md';
    var fileLink = new LocalFileLink(link, meta);
 
-   describe('WS.Data/File/LocalFileLink', function () {
+   describe('Controls/File/LocalFileLink', function () {
 
       describe('.getLink()', function () {
          it('Возвращает ссылку на файл, находящийся на локальном устройстве', function () {

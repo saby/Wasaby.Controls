@@ -7,7 +7,7 @@ define([
    var link = 'http://google.com';
    var httpLink = new HttpFileLink(link, meta);
 
-   describe('WS.Data/File/HttpFileLink', function () {
+   describe('Controls/File/HttpFileLink', function () {
 
       describe('.getLink()', function () {
          it('Возвращает ссылку на удалённый ресурс', function () {

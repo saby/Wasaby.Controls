@@ -23,7 +23,7 @@ define([
       'oprion2': []
    };
 
-   describe('WS.Data/File/ResourceGetter', function () {
+   describe('Controls/File/ResourceGetter', function () {
 
       describe('.getGetter()', function () {
 

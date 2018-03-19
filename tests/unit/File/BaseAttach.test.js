@@ -12,7 +12,7 @@ define([
       return;
    }
 
-   describe('WS.Data/File/BaseAttach', function () {
+   describe('Controls/File/BaseAttach', function () {
       var attach = new BaseAttach();
       var IFileDataConstructors = [LocalFile, LocalFileLink, HttpFileLink];
 
