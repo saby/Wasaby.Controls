@@ -16,6 +16,11 @@ define('SBIS3.CONTROLS/Filter/HistoryBase',
 
       'use strict';
 
+      var FILTER_STATUS = {
+         'FOR_ME': 0,
+         'FOR_ALL': 1
+      };
+
       var _private =  {
          favoriteSortMethod: function(item1, item2) {
             var isGlobal1 = item1.item.getContents().get('globalParams'),
@@ -95,6 +100,12 @@ define('SBIS3.CONTROLS/Filter/HistoryBase',
                   self = this,
                   toEditItem = item.get('data').clone(),
                   isGlobal = !!toEditItem.get('globalParams');
+
+               //В старом формате в параметре globalParams хранился Boolean, в новом формате хранится значение 1 или 0.
+               //Для обратной совместимости, перегоняем значения из старого формата в новыый.
+               if (typeof toEditItem.get('globalParams') === 'boolean') {
+                  toEditItem.set('globalParams', isGlobal ? FILTER_STATUS.FOR_ALL : FILTER_STATUS.FOR_ME);
+               }
 
                /* Подготавливаем запись к редктированию */
                toEditItem.set('toSaveFields', {});
