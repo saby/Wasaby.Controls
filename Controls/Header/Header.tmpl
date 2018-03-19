@@ -1,5 +1,8 @@
 <span attr:class="controls-Header controls-Header_style-{{_options.style}}">
     <span attr:class="controls-Header__wrapper {{ _options.countClickable ? 'controls-Header_content_hovered'}}">
+        <ws:if data="{{_options.iconStyle}}">
+            <i attr:class="controls-Separator__icon_style-{{_style}} icon-{{_icon}} icon-{{_size}}"></i>
+        </ws:if>
         <ws:if data="{{_options.counterValue}}">
            <Controls:Header:Counter:Counter class="controls-HeaderCount_location-{{_options.counterLocation}}"
                                             on:click="countClickHandler()"
