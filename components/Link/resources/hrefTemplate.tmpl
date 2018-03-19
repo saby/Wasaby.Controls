@@ -1,9 +1,10 @@
 <ws:if data="{{href}}">
-   <a class="controls-Link-link" href="{{enabled ? href : ''}}" target="{{inNewTab ? '_blank' : ''}}" rel="noreferrer">
-    <ws:if data="{{icon}}">
-         <i class="controls-Link__icon controls-Button__icon {{_iconClass}}"></i>
-    </ws:if>
-    <span class="controls-Link__text controls-Button__text js-controls-Button__text {{!!icon ? ' spacing-between-icon-text '}}">{{caption|sanitize}}</span>
+    <a class="controls-Link-link" href="{{enabled ? href : ''}}" target="{{inNewTab ? '_blank' : ''}}" rel="noreferrer">
+        <ws:if data="{{icon}}">
+             <i class="controls-Link__icon controls-Button__icon {{_iconClass}}"></i>
+        </ws:if>
+        <span class="controls-Link__text controls-Button__text js-controls-Button__text {{!!icon ? ' spacing-between-icon-text '}}">{{caption|sanitize}}</span>
+    </a>
 </ws:if>
 <ws:else>
    <span class="controls-Link-link "><ws:if data="{{icon}}">

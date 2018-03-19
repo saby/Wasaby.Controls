@@ -24,7 +24,7 @@ define('Controls/List/SourceControl', [
             _private.showIndicator(self);
             return self._sourceController.load(self._filter, self._sorting).addCallback(function (list) {
 
-               self._notify('onDataLoad', list);
+               self._notify('onDataLoad', [list]);
 
                _private.hideIndicator(self);
 
@@ -48,7 +48,7 @@ define('Controls/List/SourceControl', [
          if (self._sourceController) {
             return self._sourceController.load(self._filter, self._sorting, direction).addCallback(function(addedItems){
 
-               self._notify('onDataLoad', addedItems);
+               self._notify('onDataLoad', [addedItems]);
 
                _private.hideIndicator(self);
 
@@ -75,7 +75,7 @@ define('Controls/List/SourceControl', [
       processLoadError: function(self, error) {
          if (!error.canceled) {
             _private.hideIndicator(self);
-            if (self._notify('onDataLoadError', error) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
+            if (self._notify('onDataLoadError', [error]) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
                //TODO новые попапы
                /*InformationPopupManager.showMessageDialog(
 
