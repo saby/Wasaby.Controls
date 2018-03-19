@@ -2607,18 +2607,22 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._scrollContainer[0].scrollTop = 0;
                }
                if (cConstants.browser.isIE) {
-                  // В MSIE при добавлении новой строки clientHeight и scrollHeight начинают расходиться - нужно их уравнять и подскролить область до конца
+                  // В MSIE при добавлении новой строки clientHeight и scrollHeight начинают расходиться - нужно их уравнять
                   // 1175015989 https://online.sbis.ru/opendoc.html?guid=d013f54f-683c-465c-b437-6adc64dc294a
                   var diff = contentHeight - content.clientHeight;
                   $content.css('height', 0 < diff ? content.offsetHeight + diff : content.offsetHeight);
                   if (isChanged) {
                      var parent = content.parentNode;
                      if (parent.clientHeight < contentHeight) {
+                        // Также, если прокрутка уже задействована и текущий рэнж находится в самом низу области редактирования (определяем это по
+                        // расстоянию от нижнего края рэнжа до нижнего края области - оно должно быть "небольшим", то есть меньше некоторой
+                        // характерной величины, которая меньше чем шаг строки, но достаточно большая, чтобы не ловить "шумы")
                         var rect0 = content.getBoundingClientRect();
                         var rect1 = this._tinyEditor.selection.getBoundingClientRect();
                         if (rect0.bottom - rect1.bottom < 15) {
                            var scrollTop = parent.scrollHeight - parent.offsetHeight;
                            if (parent.scrollTop < scrollTop) {
+                              // И если при всём этом область редактирования недопрокручена до самого конца - подскролить её до конца
                               parent.scrollTop = scrollTop;
                            }
                         }
