@@ -45,8 +45,7 @@ define('Controls/Input/resources/SuggestPopupController',
          },
          
          needShowPopup: function(self, searchResult) {
-            var searchResultCount = searchResult.result.getCount();
-            return searchResultCount || !searchResultCount && self._emptyTemplate;
+            return searchResult.result.getCount() || self._emptyTemplate;
          },
          
          setSuggestSearchResult: function(self, searchResult) {
