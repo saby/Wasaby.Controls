@@ -551,6 +551,14 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
          }
       },
 
+      /**
+       * Показать только отмеченные записи.
+       */
+      showSelectedItems: function() {
+         this.setCurrentRoot(this._options.root);
+         this._toggleSelectedItems(true);
+      },
+
       reload: function() {
          this._hideEditArrow();
          return TreeDataGridView.superclass.reload.apply(this, arguments);
