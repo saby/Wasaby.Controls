@@ -64,7 +64,7 @@ define('SBIS3.CONTROLS/OperationsPanel/Mark', [
             /**
              * @cfg {Boolean} Показывать кнопку выбора отмеченных записей
              */
-            useShowSelected: false,
+            useShowSelected: true,
             /**
              * @cfg {Boolean} При отметке всех записей, выделять записи из открытых папок
              * @deprecated
