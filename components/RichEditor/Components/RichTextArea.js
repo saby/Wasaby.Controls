@@ -2637,6 +2637,23 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   // 1175015989 https://online.sbis.ru/opendoc.html?guid=d013f54f-683c-465c-b437-6adc64dc294a
                   var diff = contentHeight - content.clientHeight;
                   $content.css('height', 0 < diff ? content.offsetHeight + diff : content.offsetHeight);
+                  if (isChanged) {
+                     var parent = content.parentNode;
+                     if (parent.clientHeight < contentHeight) {
+                        // Также, если прокрутка уже задействована и текущий рэнж находится в самом низу области редактирования. Определяем это по
+                        // расстоянию от нижнего края рэнжа до нижнего края области минус увеличение высоты (diff) и минус нижний отступ области
+                        // редактирования - оно должно быть "небольшим", то есть меньше некоторого порогового значения (2)
+                        var rect0 = content.getBoundingClientRect();
+                        var rect1 = this._tinyEditor.selection.getBoundingClientRect();
+                        if (rect0.bottom - rect1.bottom - diff - parseInt($content.css('padding-bottom')) < 2) {
+                           var scrollTop = parent.scrollHeight - parent.offsetHeight;
+                           if (parent.scrollTop < scrollTop) {
+                              // И если при всём этом область редактирования недопрокручена до самого конца - подскролить её до конца
+                              parent.scrollTop = scrollTop;
+                           }
+                        }
+                     }
+                  }
                }
                if (isChanged) {
                   this._lastTotalHeight = totalHeight;
