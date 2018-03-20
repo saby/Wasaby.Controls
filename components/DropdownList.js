@@ -632,6 +632,11 @@ define('SBIS3.CONTROLS/DropdownList',
                }
             }
          },
+         _createPicker: function() {
+            var popup = DropdownList.superclass._createPicker.apply(this, arguments);
+            popup._checkClickByTap = true;
+            return popup;
+         },
          redraw: function() {
             //Если нет пикера - не отрисовываем записи, просто обновим текст в основном контейнере
             if (!this._picker) {
@@ -1042,7 +1047,6 @@ define('SBIS3.CONTROLS/DropdownList',
             var type = this._options.type,
                 isFastDataFilterType = type == 'fastDataFilter';
             return {
-               _checkClickByTap: true,
                corner: 'tl',
                verticalAlign: {
                   side: 'top'
