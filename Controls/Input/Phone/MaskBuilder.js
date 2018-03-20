@@ -40,7 +40,7 @@ define('Controls/Input/Phone/MaskBuilder',
                } else if (digitValue.length === 7) {
                   mask = 'ddd-dd-dd';
                } else if (digitValue.length > 7 && digitValue.length < 11) {
-                  mask = '(ddd)-ddd-dd-dd';
+                  mask = '(ddd) ddd-dd-dd';
                }
             }
 
