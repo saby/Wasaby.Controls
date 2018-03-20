@@ -5088,28 +5088,6 @@ define('SBIS3.CONTROLS/ListView',
                this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
             }
          },
-         /**
-          * Показать только отмеченные записи.
-          */
-         showSelectedItems: function() {
-            this._toggleSelectedItems(true);
-         },
-         /**
-          * Показать все записи.
-          */
-         showAllItems: function() {
-            this._toggleSelectedItems(false);
-         },
-
-         _toggleSelectedItems: function(selected) {
-            var filter = this.getFilter();
-            if (selected) {
-               filter[this._options.idProperty] = this.getSelectedKeys();
-            } else {
-               delete filter[this._options.idProperty];
-            }
-            this.setFilter(filter);
-         },
 
          getTextValue: function() {
             var

@@ -237,13 +237,23 @@ define('SBIS3.CONTROLS/OperationsPanel/Mark', [
          }
       },
       showSelection: function() {
-         var
-            view = this._options.linkedView,
-            item = this._menuButton.getItemInstance('showSelection');
+         var item = this._menuButton.getItemInstance('showSelection');
 
          this._showSelected = !this._showSelected;
          item.setCaption(this._showSelected ? rk('Показать все') : rk('Выбрать отмеченные'));
-         view[this._showSelected ? 'showSelectedItems' : 'showAllItems']();
+         this._toggleSelectedItems(this._showSelected);
+      },
+      _toggleSelectedItems: function(selected) {
+         var
+            view = this._options.linkedView,
+            filter = view.getFilter();
+         if (selected) {
+            filter[view._options.idProperty] = view.getSelectedKeys();
+         } else {
+            delete filter[view._options.idProperty];
+         }
+
+         view.setFilter(filter);
       },
       /**
        * Выбрать все видимые элементы.
