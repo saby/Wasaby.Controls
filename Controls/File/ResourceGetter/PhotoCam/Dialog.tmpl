@@ -1,0 +1,39 @@
+<div class="PhotoCamDialog">
+    <div class="ws-window-titlebar-custom">
+        <SBIS3.CONTROLS:Button
+            name="photoButton"
+            class="PhotoCamDialog__photoButton rtl_header_contourButton controls-Button_size-m"
+            primary="{{ true }}"
+            enabled="{{ false }}"
+            icon="sprite:icon-24 icon-Photo icon-primary"
+        />
+        <SBIS3.CONTROLS:Button
+            name="loadButton"
+            caption="Загрузить"
+            class="PhotoCamDialog__loadButton"
+            primary="{{ true }}"
+            enabled="{{ false }}"
+        />
+    </div>
+    <div class="PhotoCamDialog__container ws-hidden">
+        <ws:if data="{{ isVideoSupported }}">
+            <video autoplay="true" muted="muted" class="PhotoCamDialog_video"/>
+        </ws:if>
+        <ws:else>
+            <object id="cameraConnection"
+                codebase="{{ codebase }}"
+                classid="{{ classId.connection }}"
+                class="ws-hidden"
+            >
+                {{errorText}}
+            </object>
+            <object class="PhotoCamDialog_video"
+                codebase="{{ codebase }}"
+                classid="{{ classId.video }}"
+            >
+                {{errorText}}
+            </object>
+        </ws:else>
+    </div>
+    <canvas class="ws-hidden"/>
+</div>
