@@ -28,7 +28,7 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
                displayProperty: 'title',
                multiselect: true,
                selectedIndex: '1',
-               dataSource: {
+               source: {
                   module: 'WS.Data/Source/Memory',
                   options: {
                      data: [
@@ -45,7 +45,7 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
                idProperty: 'key',
                displayProperty: 'title',
                multiselect: false,
-               dataSource: {
+               source: {
                   module: 'WS.Data/Source/Memory',
                   options: {
                      data: [
@@ -56,25 +56,6 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
                      ]
                   }
                }
-            },
-            {
-               name: 'third',
-               idProperty: 'id',
-               displayProperty: 'title',
-               multiselect: false,
-               dataSource:
-                  [
-                     {id: 1, title: 'Sun', kind: 'Star'},
-                     {id: 2, title: 'Mercury', kind: 'Planet'},
-                     {id: 3, title: 'Venus', kind: 'Planet'},
-                     {id: 4, title: 'Earth', kind: 'Planet'},
-                     {id: 5, title: 'Mars', kind: 'Planet'},
-                     {id: 6, title: 'Jupiter', kind: 'Planet'},
-                     {id: 7, title: 'Saturn', kind: 'Planet'},
-                     {id: 8, title: 'Uranus', kind: 'Planet'},
-                     {id: 9, title: 'Neptune', kind: 'Planet'},
-                     {id: 10, title: 'Pluto', kind: 'Dwarf planet'}
-                  ]
             }
          ],
 
