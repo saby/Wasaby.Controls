@@ -19,7 +19,7 @@ define('Controls-demo/Layouts/SearchLayout', [
              MemorySource
 ) {
    'use strict';
-   
+
    var sourceData = [
       { id: 1, title: 'Sasha' },
       { id: 2, title: 'Dmitry' },
@@ -44,7 +44,27 @@ define('Controls-demo/Layouts/SearchLayout', [
       { id: 22, title: 'Ivan' },
       { id: 23, title: 'Petr' }
    ];
-   
+
+   var filterData = [
+      {
+         id: 'title',
+         idProperty: 'title',
+         displayProperty: 'title',
+         source: {
+            module: 'WS.Data/Source/Memory',
+            options: {
+               data: [
+                  {id: 0, title: 'All'},
+                  {id: 1, title: 'Sasha'},
+                  {id: 2, title: 'Petr'},
+                  {id: 3, title: 'Ivan'},
+                  {id: 3, title: 'Andrey'}
+               ]
+            }
+         }
+      }
+   ];
+
    var ModuleClass = BaseControl.extend(
       {
          _template: template,
@@ -52,8 +72,12 @@ define('Controls-demo/Layouts/SearchLayout', [
             idProperty: 'id',
             data: sourceData
          }),
-         _switchValue: false
-         
+         _switchValue: false,
+         _filterSource: new MemorySource({
+            idProperty: 'id',
+            data: filterData
+         })
+
       });
    return ModuleClass;
 });

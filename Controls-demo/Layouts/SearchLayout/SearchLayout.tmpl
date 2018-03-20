@@ -9,7 +9,8 @@
                         <div class="controls-demo__Layouts_content">
                             <div class="controls-demo__Layouts_filterComponents">
                                 <ws:Controls.Input.Search bind:value="_searchValue"/>
-                                <Controls-demo:Layouts:LayoutFilterComponent/>
+                                <Controls.Filter.FastData source="{{_filterSource}}"
+                                                          bind:selectedKeys="_selectedKeys"/>
                             </div>
                             <div class="controls-demo__LayoutInner">
                                 <ws:Controls.Layout.List source="{{_dataSource}}" searchParam="title">

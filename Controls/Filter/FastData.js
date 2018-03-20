@@ -10,7 +10,9 @@ define('Controls/Filter/FastData',
       'Core/core-instance',
       'Core/IoC',
       'WS.Data/Utils',
-      'css!Controls/Filter/FastData/FastData'
+      'css!Controls/Filter/FastData/FastData',
+      'css!Controls/Input/Dropdown/Dropdown'
+
    ],
    function (Control, DropdownUtils, template, SourceController, Chain, RecordSet, SourceUtil, cInstance, IoC, Utils) {
 
@@ -62,10 +64,10 @@ define('Controls/Filter/FastData',
             return self._configs[index]._items.at(self._selectedIndexes[index]).get(property);
          },
 
-         getFilter: function(self) {
+         getFilter: function (self) {
             var filter = {};
             Chain(self._configs).each(function (config, index) {
-               if(config._items) {
+               if (config._items && self._selectedIndexes[index]) {
                   filter[Utils.getItemPropertyValue(self._listConfig.at(index), 'id')] = config.selectedKeys;
                }
             });
@@ -88,8 +90,7 @@ define('Controls/Filter/FastData',
             var data = args[2];
             if (actionName === 'itemClick') {
                _private.selectItem.apply(this, data);
-
-              this._notify('onFilterChange', _private.getFilter(this));
+               this._notify('filterChanged', [_private.getFilter(this)], {bubbling: true});
                this._children.DropdownOpener.close();
             }
          }
@@ -148,6 +149,7 @@ define('Controls/Filter/FastData',
             this._selectedIndexes[index] = 0;
             this._configs[index].selectedKeys = _private.getElement(this, index, this._configs[index]._items.getIdProperty());
             this._notify('selectedKeysChanged', [this._configs[index].selectedKeys]);
+            this._notify('filterChanged', [_private.getFilter(this)], {bubbling: true});
          }
       });
 

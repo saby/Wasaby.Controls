@@ -2,11 +2,9 @@
 
    <ws:for data="index, i in _listConfig">
       <div class="controls-FastData">
-         <!--Добавить проверку "Быстрый фильтр стоит сразу после иконки фильтра?"-->
-         <ws:if data="{{index}}">
+         <!--Стрелка отображается всегда - это не по стандарту!-->
          <span class="controls-FastData__icon icon-DayForward controls-FastData__icon-DayForward"
                   on:click="_open(i)"></span>
-         </ws:if>
          <div class="controls-Dropdown__text"
               on:click="_open(i, index)">{{_updateText(i, index, _selectedItems[key], displayProperty || 'title')}}
          </div>
