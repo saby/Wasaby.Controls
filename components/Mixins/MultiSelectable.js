@@ -5,7 +5,7 @@ define('SBIS3.CONTROLS/Mixins/MultiSelectable', [
    "Core/moduleStubs",
    "Core/IoC",
    "WS.Data/Collection/List",
-   "SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil",
+   "Controls/Utils/ArraySimpleValuesUtil",
    "Core/helpers/Object/isEqual",
    "Core/core-instance",
    "Core/helpers/Function/forAliveOnly",

@@ -7,7 +7,7 @@
  * - Получение индекса элемента с проверкой по типу (String/Integer)
  * - Проверка наличия элемента в массиве
  */
-define('SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil', [], function() {
+define('Controls/Utils/ArraySimpleValuesUtil', [], function() {
 
    'use strict';
 

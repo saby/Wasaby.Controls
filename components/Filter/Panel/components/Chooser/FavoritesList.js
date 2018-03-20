@@ -2,7 +2,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/FavoritesList', [
     'SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList',
     'Core/core-clone',
     'WS.Data/Collection/RecordSet',
-    'SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil',
+    'Controls/Utils/ArraySimpleValuesUtil',
     'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/FavoritesList/FilterPanelChooser.FavoritesList',
     'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/FavoritesList/resources/FilterPanelChooserFavoritesHeader',
     'SBIS3.CONTROLS/Filter/Panel/components/Boolean',

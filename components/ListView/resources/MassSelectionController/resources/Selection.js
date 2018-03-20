@@ -2,7 +2,7 @@
 define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Selection', [
    'Core/Abstract',
    'Core/core-clone',
-   'SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil'
+   'Controls/Utils/ArraySimpleValuesUtil'
 ], function (
    Abstract,
    cClone,
