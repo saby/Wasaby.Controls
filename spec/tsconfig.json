@@ -16,7 +16,7 @@
     "importHelpers": true
   },
   "include": [
-    "../Controls",
+    "../File",
     "core.d.ts",
     "tslib.js"
   ],
