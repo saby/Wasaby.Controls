@@ -48,11 +48,11 @@ type Options = {
  *              multiSelect: true,
  *              extensions: ["image"]
  *           }), // модуль опций: Controls/File/Attach/Option/Getters/FS
- *          // Для выбора чрезе FL.FileChooser
- *          new Rich({
+ *          // Для выбора чрезе FileLoader/Chooser
+ *          new FileChooser({
  *              multiSelect: true,
  *              extensions: ["image"]
- *          }), // модуль опций: SBIS3.File/Attach/Option/Getters/Rich
+ *          }), // модуль опций: SBIS3.File/Attach/Option/Getters/FileChooser
  *          // Для получения файлов, путём Drag&drop
  *          new DropArea({
  *              extensions: ["image"],
@@ -160,11 +160,11 @@ let Attach  = CoreExtend.extend(Abstract,{
          *              multiSelect: true,
          *              extensions: ["image"]
          *           }), // модуль опций: Controls/File/Attach/Option/Getters/FS
-         *          // Для выбора чрезе FL.FileChooser
-         *          new Rich({
+         *          // Для выбора чрезе FileLoader/Chooser
+         *          new FileChooser({
          *              multiSelect: true,
          *              extensions: ["image"]
-         *          }), // модуль опций: SBIS3.File/Attach/Option/Getters/Rich
+         *          }), // модуль опций: SBIS3.File/Attach/Option/Getters/FileChooser
          *          // Для получения файлов, путём Drag&drop
          *          new DropArea({
          *              extensions: ["image"],
