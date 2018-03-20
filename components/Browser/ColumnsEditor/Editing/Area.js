@@ -140,10 +140,6 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             _prepareChildItemsAndGroups(cfg, preset);
             cfg.hasGroups = !!cfg._groups && 0 < cfg._groups.length;
             cfg._optsSelectable.onItemClick = _onItemClick;
-            if (!cfg.moveColumns) {
-               // Добавляем автосортировку отмеченных элементов - они должны отображаться перед неотмеченными
-               //cfg._optsSelectable.itemsSortMethod = _getItemsSortMethod();
-            }
             cfg._optsSelectable.onSelectedItemsChange = _onSelectedItemsChange;
             return cfg;
          },
@@ -327,15 +323,6 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          // Отсортировать записи согласно порядку в списке выбранных колонок и с учётом порядка групп
          selectable.items.sort(_selectableItemsSorter.bind(null, selectedColumns, groups, selectable.items.map(function (v) { return v.id; })));
          selectable.items = new RecordSet({rawData:selectable.items, idProperty:'id'});
-         /*if (!moveColumns) {
-            // При отключенном перемещении будем использовать рекордсет с собственной моделью для осуществления автосортировки отмеченных записей
-            selectable.items = new RecordSet({
-               rawData: selectable.items,
-               idProperty: 'id',
-               model: AreaSelectableModel
-            });
-            _applySelectedToItems(selectable.markedKeys, selectable.items);
-         }*/
          cfg._optsFixed = fixed;
          cfg._optsSelectable = selectable;
          cfg._groups = groups;
@@ -363,28 +350,6 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          // Иначе - сохранить исходный порядок
          return columnIds.indexOf(c1.id) - columnIds.indexOf(c2.id);
       };
-
-      /*var _applySelectedToItems = function (selectedArray, items) {
-         selectedArray.forEach(function (id) {
-            items.getRecordById(id).set('selected', true);
-         });
-      };*/
-
-      /*var _getItemsSortMethod = function () {
-         return new ComputeFunctor(function (el1, el2) {
-            // Смещаем отмеченные элементы в начало списка (учитывая их начальный index)
-            if (el1.collectionItem.get('selected')) {
-               if (el2.collectionItem.get('selected')) {
-                  return el1.index - el2.index;
-               }
-               return -1;
-            }
-            if (el2.collectionItem.get('selected')) {
-               return 1;
-            }
-            return el1.index - el2.index;
-         }, ['selected']);
-      };*/
 
       var _makePresetViewItems = function (preset) {
          return new RecordSet({idProperty:'id', rawData:preset ? [{id:preset.id, title:preset.title}] : []});
@@ -611,15 +576,6 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
          }.bind(this);
          changes.added.forEach(handler);
          changes.removed.forEach(handler);
-         /*if (!moveColumns) {
-            var items = this.getItems();
-            changes.added.forEach(function (id) {
-               items.getRecordById(id).set('selected', true);
-            });
-            changes.removed.forEach(function (id) {
-               items.getRecordById(id).set('selected', false);
-            });
-         }*/
       };
 
 
