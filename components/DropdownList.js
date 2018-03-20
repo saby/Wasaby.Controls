@@ -207,8 +207,8 @@ define('SBIS3.CONTROLS/DropdownList',
                 * В примере показано использование шаблонизатора doT.js.
                 * Подключение, импорт в переменную и передача шаблона в переменную:
                 * <pre>
-                * define('js!SBIS3.MyArea.MyComponent',
-                *    [ ... , 'html!SBIS3.MyArea.MyComponent/resources/myHeadTpl' ],
+                * define('Examples/MyArea/MyComponent',
+                *    [ ... , 'tmpl!Examples/MyArea/MyComponent/resources/myHeadTpl' ],
                 *    function(..., myHeadTpl){
                 *       ...
                 *       $protected: {
@@ -287,8 +287,8 @@ define('SBIS3.CONTROLS/DropdownList',
                 * @example
                 * Подключение, импорт в переменную и передача шаблона в переменную:
                 * <pre>
-                * define('js!SBIS3.MyArea.MyComponent',
-                *    [ ..., 'html!SBIS3.MyArea.MyComponent/resources/myItemTpl' ],
+                * define('Examples/MyArea/MyComponent',
+                *    [ ..., 'tmpl!Examples/MyArea/MyComponent/resources/myItemTpl' ],
                 *    function(..., myItemTpl){
                 *       ...
                 *       $protected: {
