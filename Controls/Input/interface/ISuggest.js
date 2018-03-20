@@ -22,4 +22,9 @@ define('Controls/Input/interface/ISuggest', [
     * @name Controls/Input/interface/ISuggest#historyId
     * @cfg {String} Уникальный идентификатор для хранения истории ввода
     */
+
+   /**
+    * @event Controls/Input/interface/ISuggest#choose Происходит при выборе из автодополнения.
+    * @param {String} value Новое значение поля.
+    */
 });
