@@ -8,10 +8,11 @@ define('Controls/Filter/FastData',
       'WS.Data/Collection/RecordSet',
       'SBIS3.CONTROLS/Utils/SourceUtil',
       'Core/core-instance',
+      'Core/IoC',
       'WS.Data/Utils',
       'css!Controls/Filter/FastData/FastData'
    ],
-   function (Control, DropdownUtils, template, SourceController, Chain, RecordSet, SourceUtil, cInstance, Utils) {
+   function (Control, DropdownUtils, template, SourceController, Chain, RecordSet, SourceUtil, cInstance, IoC, Utils) {
 
       'use strict';
 
@@ -25,6 +26,29 @@ define('Controls/Filter/FastData',
        */
       var _private = {
 
+         _loadConfig: function (self, item, index) {
+            var sKey = Utils.getItemPropertyValue(item, 'selectedKeys'),
+               dSource = Utils.getItemPropertyValue(item, 'source'),
+               idProperty = Utils.getItemPropertyValue(item, 'idProperty');
+
+            self._selectedIndexes[index] = Utils.getItemPropertyValue(item, 'selectedIndex') || 0;
+            self._configs[index] = {};
+
+            //Проверяем на источник
+            var source = SourceUtil.prepareSource(dSource);
+            if (!cInstance.instanceOfMixin(source, 'WS.Data/Source/ISource')) {
+               IoC.resolve('ILogger').error('FastData', 'Source option is undefined. Can\'t load data');
+               return;
+            }
+
+            return DropdownUtils._loadItems(self._configs[index], dSource, sKey).addCallback(function (items) {
+               self._configs[index]._items = items;
+               self._configs[index]._items.setIdProperty(idProperty);
+               self._configs[index].selectedKeys = sKey || _private._getElement(self, index, idProperty);
+               self._forceUpdate();
+            });
+         },
+
          _getElement: function (self, index, property) {
             return self._configs[index]._items.at(self._selectedIndexes[index]).get(property);
          },
@@ -34,7 +58,7 @@ define('Controls/Filter/FastData',
             this._selectedIndexes[this.lastOpenIndex] = this._configs[this.lastOpenIndex]._items.getIndex(item);
 
             //Получаем ключ выбранного элемента
-            var key = item.get(item.getIdProperty());
+            var key = item.getId();
             this._configs[this.lastOpenIndex].selectedKeys = key;
 
             this._notify('selectedKeysChanged', [key]);
@@ -52,13 +76,17 @@ define('Controls/Filter/FastData',
 
       var FastData = Control.extend({
          _template: template,
-         _configs: {},
-         _selectedIndexes: {},
-
-         _listConfig: [],
+         _configs: null,
+         _selectedIndexes: null,
+         _listConfig: null,
 
          constructor: function () {
             FastData.superclass.constructor.apply(this, arguments);
+
+            this._configs = {};
+            this._selectedIndexes = {};
+            this._listConfig = [];
+
             this._onResult = _private._onResult.bind(this);
          },
 
@@ -70,32 +98,11 @@ define('Controls/Filter/FastData',
             var sourceController = new SourceController({
                source: options.source
             });
-            sourceController.load().addCallback(function (configs) {
+            return sourceController.load().addCallback(function (configs) {
                self._listConfig = configs;
-
-               Chain(configs).each(function (item, index) {
-                  var sKey = Utils.getItemPropertyValue(item, 'selectedKeys'),
-                     dSource = Utils.getItemPropertyValue(item, 'dataSource'),
-                     idProperty = Utils.getItemPropertyValue(item, 'idProperty');
-
-                  self._selectedIndexes[index] = Utils.getItemPropertyValue(item, 'selectedIndex') || 0;
-
-                  self._configs[index] = {};
-
-                  if (cInstance.instanceOfModule(SourceUtil.prepareSource(dSource, 'WS.Data/Source/Memory'))) {
-
-                     DropdownUtils._loadItems(self._configs[index], dSource, sKey).addCallback(function () {
-                        self._configs[index]._items.setIdProperty(idProperty);
-                        self._configs[index].selectedKeys = sKey || _private._getElement(self, index, idProperty);
-                        self._forceUpdate();
-                     });
-
-                  } else {
-                     self._configs[index]._items = new RecordSet({rawData: dSource, idProperty: idProperty});
-                     self._configs[index].selectedKeys = sKey || _private._getElement(self, index, idProperty);
-                     self._forceUpdate();
-                  }
-               });
+               Chain(configs).map(function (item, index) {
+                  _private._loadConfig(self, item, index);
+               }).value();
             });
          },
 
