@@ -143,8 +143,12 @@
 }
 
 .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
-   &.controls-DataGridView__th__topRow{
+   &.controls-DataGridView__th__topRow {
       text-align: center;
+      padding: @data-grid-header-cell-padding;
+      &.controls-DataGridView__lastContentCell {
+         padding-right: @controls-view-padding-DEFAULT;
+      }
       &.controls-DataGridView__th__topRow-has_text{
          border-bottom: 1px solid transparent;
          padding-bottom: 3px;
