@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/Date/TimePicker/TimeHeader',
        * @extend SBIS3.CONTROLS/CompoundControl
        *
        * @initial
-       * <ws:SBIS3.CONTROLS/Date/TimePicker/TimeHeader>
+       * <SBIS3.CONTROLS.Date.TimePicker.TimeHeader>
        *    <ws:time>
        *       <ws:Object>
        *          <ws:hours>
@@ -31,7 +31,7 @@ define('SBIS3.CONTROLS/Date/TimePicker/TimeHeader',
        *    <ws:mode>
        *       <ws:String>minutes</ws:String>
        *    </ws:mode>
-       * </ws:SBIS3.CONTROLS/Date/TimePicker/TimeHeader>
+       * </SBIS3.CONTROLS.Date.TimePicker.TimeHeader>
        *
        * @control
        * @private
