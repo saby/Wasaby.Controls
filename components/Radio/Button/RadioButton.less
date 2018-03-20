@@ -90,7 +90,7 @@
          }
          &:hover {
             .controls-RadioButton__caption {
-               color: @radio-button-disabled-hover-text-color;
+               color: @radio-button-disabled-text-color_checked;
             }
          }
          .controls-RadioButton__caption {
@@ -99,13 +99,14 @@
       }
 
       &:hover {
-         &:not(.controls-Checked__checked)  .controls-RadioButton__caption {
-            color: @radio-button-disabled-hover-text-color;
-            text-decoration: none;
-         }
-
-         .controls-RadioButton__icon {
-            border-color: @radio-button-icon-border-color-disabled;
+         &:not(.controls-Checked__checked)  {
+            .controls-RadioButton__caption {
+               color: @radio-button-disabled-hover-text-color;
+               text-decoration: none;
+            }
+            .controls-RadioButton__icon {
+               border-color: @radio-button-icon-border-color-disabled;
+            }
          }
       }
    }
