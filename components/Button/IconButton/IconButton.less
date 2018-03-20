@@ -49,8 +49,12 @@
 }
 
 .ws-is-desktop-platform {
-  .controls-IconButton_bordered {
+  .controls-IconButton_bordered:hover {
     box-shadow: @box-shadow_Button_bordered_hovered;
+  }
+  .controls-IconButton_bordered:active {
+    box-shadow: @box-shadow_Button_bordered_active;
+    background-color: @background-color_IconButton_bordered_standard_hovered;
   }
   .controls-IconButton__standardBorder:hover {
     background-color: @background-color_IconButton_bordered_standard_hovered;
