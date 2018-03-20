@@ -35,5 +35,5 @@ root_1 = os.getcwd()
 exclude = ['smoke_test.py', 'test_todomvc.py', 'test_treedatagrid_2.py', 'test_treedatagrid_2_db.py', 'test_vdom.py']
 tmp_list_files = [f for f in os.listdir(root_1) if os.path.isfile(os.path.join(root_1, f)) and f not in exclude]
 for file_name in tmp_list_files:
-    os.remove(f)
+    os.remove(file_name)
 shutil.copy('smoke_test.py', 'test_smoke.py')
