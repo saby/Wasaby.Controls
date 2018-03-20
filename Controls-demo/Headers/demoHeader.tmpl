@@ -1,6 +1,7 @@
 <div on:click="clickHandler()">
     <span>base line</span>
     <Controls:Header on:countClick="clickCount()"
+                     on:iconClick="iconCount()"
                      caption="test header h2"
                      style="default_big"
                      clickable="{{false}}"
@@ -13,6 +14,7 @@
     <br/>
     <span>base line</span>
     <Controls:Header on:countClick="clickCount()"
+                     on:iconClick="iconCount()"
                      caption="test header h2"
                      style="primary_big"
                      clickable="{{false}}"
@@ -25,6 +27,7 @@
     <br/>
     <span>base line</span>
     <Controls:Header on:countClick="clickCount()"
+                     on:iconClick="iconCount()"
                      size="default"
                      caption="test header h3"
                      style="default"
@@ -38,6 +41,7 @@
     <br/>
     <span>base line</span>
     <Controls:Header on:countClick="clickCount()"
+                     on:iconClick="iconCount()"
                      size="l"
                      caption="test header h3"
                      style="primary"
@@ -46,11 +50,15 @@
                      counterLocation="before"
                      counterStyle="default"
                      counterSize="h6"
-                     countClickable="{{true}}"/>
+                     countClickable="{{false}}"
+                     iconClickable="{{false}}"
+                     iconStyle="Main"
+                     icon="icon-16 icon-MarkExpandBold "/>
     <span>base line</span>
     <br/>
     <span>base line</span>
     <Controls:Header on:countClick="clickCount()"
+                     on:iconClick="iconCount()"
                      size="s"
                      caption="test header h3"
                      style="default"
@@ -59,7 +67,9 @@
                      counterLocation="after"
                      counterStyle="primary"
                      counterSize="h7"
-                     countClickable="{{false}}"
-                     iconStyle="AccordionArrowDown"/>
+                     countClickable="{{true}}"
+                     iconClickable="{{true}}"
+                     iconStyle="Accent"
+                     icon="icon-16 icon-ExpandLight "/>
     <span>base line</span>
 </div>

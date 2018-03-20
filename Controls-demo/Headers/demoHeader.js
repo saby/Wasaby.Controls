@@ -17,6 +17,10 @@ define('Controls-demo/Headers/demoHeader', [
 
          clickCount: function (e) {
             console.log('clickCount');
+         },
+
+         iconCount: function (e) {
+            console.log('iconCount');
          }
       });
    return ModuleClass;

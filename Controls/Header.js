@@ -7,106 +7,6 @@ define('Controls/Header', [
 ], function(Control, IoC, template, types) {
    'use strict';
 
-   var classesOfIcons = {
-      ExpandLightAccent: {
-         size: 16,
-         icon: 'ExpandLight',
-         style: 'Accent'
-      },
-
-      ExpandLightAdditional: {
-         size: 16,
-         icon: 'ExpandLight',
-         style: 'Additional'
-      },
-
-      ExpandLightMain: {
-         size: 16,
-         icon: 'ExpandLight',
-         style: 'Main'
-      },
-
-      CollapseLightAccent: {
-         size: 16,
-         icon: 'CollapseLight',
-         style: 'Accent'
-      },
-
-      CollapseLightMain: {
-         size: 16,
-         icon: 'CollapseLight',
-         style: 'Main'
-      },
-
-      CollapseLightAdditional: {
-         size: 16,
-         icon: 'CollapseLight',
-         style: 'Additional'
-      },
-
-      MarkExpandBoldAccent: {
-         size: 16,
-         icon: 'MarkExpandBold',
-         style: 'Accent'
-      },
-
-      MarkExpandBoldAdditional: {
-         size: 16,
-         icon: 'MarkExpandBold',
-         style: 'Additional'
-      },
-
-      MarkExpandBoldtMain: {
-         size: 16,
-         icon: 'MarkExpandBold',
-         style: 'Main'
-      },
-
-      MarkCollapseBoldAccent: {
-         size: 16,
-         icon: 'MarkCollapseBold',
-         style: 'Accent'
-      },
-
-      MarkCollapseBoldMain: {
-         size: 16,
-         icon: 'MarkCollapseBold',
-         style: 'Main'
-      },
-
-      MarkCollapseBoldAdditional: {
-         size: 16,
-         icon: 'MarkCollapseBold',
-         style: 'Additional'
-      },
-
-      AccordionArrowDown: {
-         size: 24,
-         icon: 'AccordionArrowDown',
-         style: 'Additional'
-      },
-
-      AccordionArrowUp : {
-         size: 24,
-         icon: 'AccordionArrowUp',
-         style: 'Additional'
-      }
-   };
-
-   var _private = {
-      cssStyleGeneration: function (self, options) {
-         if (classesOfIcons.hasOwnProperty(options.iconStyle)) {
-            var currentIconClass = classesOfIcons[options.iconStyle];
-         }else {
-            IoC.resolve('ILogger').error("SeparatorIcon", "У кнопки-разделителя задан некорректный стиль иконки");
-            currentIconClass = classesOfIcons.AccordionArrowUp;
-         }
-         self._style = currentIconClass.style;
-         self._size = currentIconClass.size;
-         self._icon = currentIconClass.icon;
-      }
-   };
-
    var Header = Control.extend({
       _template: template,
 
@@ -116,13 +16,12 @@ define('Controls/Header', [
             this._notify('countClick');
          }
       },
-      constructor: function (options) {
-         Header.superclass.constructor.apply(this, arguments);
-         _private.cssStyleGeneration(this, options);
-      },
 
-      _beforeUpdate: function (newOptions) {
-         _private.cssStyleGeneration(this, newOptions);
+      iconClickHandler: function (e) {
+         if(this._options.iconClickable){
+            e.stopPropagation();
+            this._notify('iconClick');
+         }
       }
    });
 
