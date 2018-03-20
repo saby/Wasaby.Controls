@@ -23,6 +23,7 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
          _template: template,
          dataSourceDemo3: [
             {
+               id: 'filter1',
                idProperty: 'title',
                displayProperty: 'title',
                selectedIndex: '1',
@@ -39,6 +40,8 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
                }
             },
             {
+
+               id: 'filter2',
                idProperty: 'key',
                displayProperty: 'title',
                source: {
