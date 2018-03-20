@@ -580,6 +580,7 @@ define('SBIS3.CONTROLS/FieldLink',
           showSelector: function(template, componentOptions, selectionType) {
              var actionCfg = {
                    selectionType: selectionType,
+                   selectedItems: this.getSelectedItems(),
                    multiselect: this.getMultiselect(),
                    opener: this
                 },

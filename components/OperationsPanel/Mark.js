@@ -62,6 +62,10 @@ define('SBIS3.CONTROLS/OperationsPanel/Mark', [
              */
             useSelectAll: true,
             /**
+             * @cfg {Boolean} Показывать кнопку выбора отмеченных записей
+             */
+            useShowSelected: false,
+            /**
              * @cfg {Boolean} При отметке всех записей, выделять записи из открытых папок
              * @deprecated
              */
@@ -69,9 +73,22 @@ define('SBIS3.CONTROLS/OperationsPanel/Mark', [
             idProperty: 'name',
             allowChangeEnable: false
          },
+         _showSelected: false,
          _markCheckBox: undefined,
          _isInternalCheckedChange: false
       },
+
+      _modifyOptions: function() {
+         var opts = OperationsMark.superclass._modifyOptions.apply(this, arguments);
+         if (opts.useShowSelected) {
+            opts.items.push({
+               name: 'showSelection',
+               title: rk('Выбрать отмеченные')
+            });
+         }
+         return opts;
+      },
+
       init: function() {
          OperationsMark.superclass.init.call(this);
          this._markCheckBox = this.getChildControlByName('controls-OperationsMark__checkBox');
@@ -218,6 +235,25 @@ define('SBIS3.CONTROLS/OperationsPanel/Mark', [
          } else {
             this._options.linkedView.setSelectedItemsAll();
          }
+      },
+      showSelection: function() {
+         var item = this._menuButton.getItemInstance('showSelection');
+
+         this._showSelected = !this._showSelected;
+         item.setCaption(this._showSelected ? rk('Показать все') : rk('Выбрать отмеченные'));
+         this._toggleSelectedItems(this._showSelected);
+      },
+      _toggleSelectedItems: function(selected) {
+         var
+            view = this._options.linkedView,
+            filter = view.getFilter();
+         if (selected) {
+            filter[view._options.idProperty] = view.getSelectedKeys();
+         } else {
+            delete filter[view._options.idProperty];
+         }
+
+         view.setFilter(filter);
       },
       /**
        * Выбрать все видимые элементы.
