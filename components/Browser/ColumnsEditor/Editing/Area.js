@@ -112,7 +112,11 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                /**
                 * @cfg {boolean} Указывает на необходимость включить перемещнение пользователем пунктов списка колонок (опционально)
                 */
-               moveColumns: true
+               moveColumns: true,
+               /**
+                * @cfg {boolean} Указывает на необходимость сохранять порядок следования колонок таким, каким он был передан в опциях columns и selectedColumns. В отстутствии этой опции выбранные колонки будут подняты вверх, не выбранные - уйдут вниз. Опция действует только при выключенном перемещнении пользователем пунктов списка колонок (moveolumns==false) (опционально)
+                */
+               preserveOrder: false
             },
             _childNames: {
                presetView: 'controls-Browser-ColumnsEditor-Editing-Area__Preset',
@@ -191,7 +195,6 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                }.bind(this));
             }
 
-            // В опциях могут быть указаны группы, которые нужно распахнуть при открытии
             if (options.moveColumns) {
                this._itemsMoveController = new ItemsMoveController({
                   linkedView: this._selectableView
@@ -272,8 +275,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       var _prepareChildItemsAndGroups = function (cfg, preset) {
          var
             columns = cfg.columns,
-            selectedColumns = _uniqueConcat(preset ? preset.selectedColumns : null, cfg.selectedColumns),
-            moveColumns = cfg.moveColumns;
+            selectedColumns = _uniqueConcat(preset ? preset.selectedColumns : null, cfg.selectedColumns);
          var
             fixed = {
                items: [],
@@ -321,7 +323,11 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
             }
          }
          // Отсортировать записи согласно порядку в списке выбранных колонок и с учётом порядка групп
-         selectable.items.sort(_selectableItemsSorter.bind(null, selectedColumns, groups, selectable.items.map(function (v) { return v.id; })));
+         selectable.items.sort(_selectableItemsSorter.bind(null,
+            cfg.moveColumns || !cfg.preserveOrder ? selectedColumns : null,
+            groups,
+            selectable.items.map(function (v) { return v.id; })
+         ));
          selectable.items = new RecordSet({rawData:selectable.items, idProperty:'id'});
          cfg._optsFixed = fixed;
          cfg._optsSelectable = selectable;
@@ -329,11 +335,13 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
       };
 
       var _selectableItemsSorter = function (selectedIds, groups, columnIds, c1, c2) {
-         // Сначала смотрим на прядок в selectedIds
-         var i1 = selectedIds.indexOf(c1.id);
-         var i2 = selectedIds.indexOf(c2.id);
-         if (i1 !== -1 && i2 !== -1) {
-            return i1 - i2;
+         if (selectedIds) {
+            // Сначала смотрим на прядок в selectedIds
+            var i1 = selectedIds.indexOf(c1.id);
+            var i2 = selectedIds.indexOf(c2.id);
+            if (i1 !== -1 && i2 !== -1) {
+               return i1 - i2;
+            }
          }
          // Далее - на порядок групп
          if (groups) {
@@ -343,9 +351,11 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                return gi1 - gi2;
             }
          }
-         // Если хотя бы один - выбран
-         if (i1 !== i2) {
-            return i1 === -1 ? +1 : -1;
+         if (selectedIds) {
+            // Если хотя бы один - выбран
+            if (i1 !== i2) {
+               return i1 === -1 ? +1 : -1;
+            }
          }
          // Иначе - сохранить исходный порядок
          return columnIds.indexOf(c1.id) - columnIds.indexOf(c2.id);
@@ -447,7 +457,11 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editing/Area',
                }
             }
             var newColumns = columns.reduce(function (r, v) { if (!v.fixed) { r.push(v); } return r; }, []);
-            newColumns.sort(_selectableItemsSorter.bind(null, selectedIds, options._groups, columns.map(function (v) { return v.id; })));
+            newColumns.sort(_selectableItemsSorter.bind(null,
+               options.moveColumns || !options.preserveOrder ? selectedIds : null,
+               options._groups,
+               columns.map(function (v) { return v.id; })
+            ));
             self._selectableView.setItems(new RecordSet({rawData:newColumns, idProperty:'id'}));
          }
          self._selectableView.setSelectedKeys(selectedColumns);
