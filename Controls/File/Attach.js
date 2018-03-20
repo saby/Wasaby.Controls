@@ -59,7 +59,7 @@ define("Controls/File/Attach", ["require", "exports", "Controls/File/Attach/Lazy
      *   });
      *
      *   self.getChildControlByName("fsBtn").subscribe("onActivated", function(){
-     *      attach.choose("FSGetter");
+     *      attach.choose("FS");
      *   });
      *   self.getChildControlByName("clipboardBtn").subscribe("onActivated", function(){
      *      attach.choose("ClipboardGetter");
@@ -260,7 +260,7 @@ define("Controls/File/Attach", ["require", "exports", "Controls/File/Attach/Lazy
          *   var attach = new Attach({...});
          *
          *   self.getChildControlByName("fsBtn").subscribe("onActivated", function(){});
-         *      attach.choose("FSGetter").addCallback(function(files) {
+         *      attach.choose("FS").addCallback(function(files) {
          *          attach.upload({
          *              // Дополнительные мета-данные для отправки
          *              // Сигнатура зависит от конечного сервиса загрузки
@@ -298,7 +298,7 @@ define("Controls/File/Attach", ["require", "exports", "Controls/File/Attach/Lazy
          *   var attach = new Attach({...});
          *
          *   self.getChildControlByName("fsBtn").subscribe("onActivated", function(){});
-         *      attach.choose("FSGetter").addCallback(function(files) {
+         *      attach.choose("FS").addCallback(function(files) {
          *          attach.upload({
          *              // Дополнительные мета-данные для отправки
          *          }).addCallback(function(results){

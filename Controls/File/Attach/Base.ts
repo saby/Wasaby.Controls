@@ -26,7 +26,7 @@ const EMPTY_SELECTED_ERROR = rk("Нет выбранных ресурсов дл
  *   });
  *
  *   var scanner = new ScannerGetter();
- *   var fs = new FSGetter();
+ *   var fs = new FS();
  *   attach.registerGetter(scanner);
  *   attach.registerGetter(fs);
  *
@@ -302,7 +302,7 @@ let Base = CoreExtend.extend(Abstract,{
      *   var attach = new Base();
      *
      *   var scanner = new ScannerGetter();
-     *   var fs = new FSGetter();
+     *   var fs = new FS();
      *   attach.registerGetter(scanner);
      *   attach.registerGetter(fs);
      *

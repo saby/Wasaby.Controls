@@ -46,7 +46,7 @@ import {IResourceGetter} from "Controls/File/IResourceGetter";
  * </pre>
  * Выбор из файловой системы:
  * <pre>
- *    require(['Controls/File/ResourceGetter/FSGetter'], function (FSGetter) {
+ *    require(['Controls/File/ResourceGetter/FS'], function (FSGetter) {
  *       var getter = new FSGetter({
  *          extensions: ["png", "jpg"]
  *       });

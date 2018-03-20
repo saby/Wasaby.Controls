@@ -1,7 +1,7 @@
 /// <amd-module name="Controls/File/Attach/Option/Getters/FS" />
 
 import ResourceGetter = require("Controls/File/Attach/Option/ResourceGetter");
-import FSGetter = require("Controls/File/ResourceGetter/FSGetter");
+import Getter = require("Controls/File/ResourceGetter/FS");
 
 /**
  * Класс конфигурации IResourceGetter для выбора из файловой системы, передаваемый в Attach
@@ -47,7 +47,7 @@ class FS extends ResourceGetter {
      * @see Controls/File/IResourceGetter
      */
     constructor (options?: any) {
-        super (new FSGetter(options || {}));
+        super (new Getter(options || {}));
     }
 }
 export = FS;

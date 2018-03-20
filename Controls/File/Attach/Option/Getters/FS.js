@@ -1,5 +1,5 @@
 /// <amd-module name="Controls/File/Attach/Option/Getters/FS" />
-define("Controls/File/Attach/Option/Getters/FS", ["require", "exports", "tslib", "Controls/File/Attach/Option/ResourceGetter", "Controls/File/ResourceGetter/FSGetter"], function (require, exports, tslib_1, ResourceGetter, FSGetter) {
+define("Controls/File/Attach/Option/Getters/FS", ["require", "exports", "tslib", "Controls/File/Attach/Option/ResourceGetter", "Controls/File/ResourceGetter/FS"], function (require, exports, tslib_1, ResourceGetter, Getter) {
     "use strict";
     /**
      * Класс конфигурации IResourceGetter для выбора из файловой системы, передаваемый в Attach
@@ -46,7 +46,7 @@ define("Controls/File/Attach/Option/Getters/FS", ["require", "exports", "tslib",
          * @see Controls/File/IResourceGetter
          */
         function FS(options) {
-            return _super.call(this, new FSGetter(options || {})) || this;
+            return _super.call(this, new Getter(options || {})) || this;
         }
         return FS;
     }(ResourceGetter));

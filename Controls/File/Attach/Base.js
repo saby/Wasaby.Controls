@@ -13,7 +13,7 @@ define("Controls/File/Attach/Base", ["require", "exports", "Core/Abstract", "Cor
      *   });
      *
      *   var scanner = new ScannerGetter();
-     *   var fs = new FSGetter();
+     *   var fs = new FS();
      *   attach.registerGetter(scanner);
      *   attach.registerGetter(fs);
      *
@@ -288,7 +288,7 @@ define("Controls/File/Attach/Base", ["require", "exports", "Core/Abstract", "Cor
          *   var attach = new Base();
          *
          *   var scanner = new ScannerGetter();
-         *   var fs = new FSGetter();
+         *   var fs = new FS();
          *   attach.registerGetter(scanner);
          *   attach.registerGetter(fs);
          *

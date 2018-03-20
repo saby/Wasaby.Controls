@@ -1,8 +1,8 @@
-/// <amd-module name="Controls/File/ResourceGetter/FSGetter" />
+/// <amd-module name="Controls/File/ResourceGetter/FS" />
 
 import IResourceGetterBase = require("Controls/File/ResourceGetter/Base");
 import Deferred = require("Core/Deferred");
-import dotTpl = require("tmpl!Controls/File/ResourceGetter/FSGetter");
+import dotTpl = require("tmpl!Controls/File/ResourceGetter/FS");
 import LocalFile = require("Controls/File/LocalFile");
 import ExtensionsHelper = require("Controls/File/utils/ExtensionsHelper");
 import detection = require("Core/detection");
@@ -59,7 +59,7 @@ const OPTION = {
      * @cfg {Boolean} Выбрать несколько файлов
      * <wiTag group="Управление">
      * Позволяет выбрать несколько файлов
-     * @name Controls/File/ResourceGetter/FSGetter#multiSelect
+     * @name Controls/File/ResourceGetter/FS#multiSelect
      */
     multiSelect: false,
     /**
@@ -76,7 +76,7 @@ const OPTION = {
      *    extensions: ["image"]
      *    // extensions: ["jpe","jpg","jpeg","gif","png","bmp","ico","svg","svgz","tif","tiff","pct","psd"]
      * </pre>
-     * @name Controls/File/ResourceGetter/FSGetter#extensions
+     * @name Controls/File/ResourceGetter/FS#extensions
      */
     extensions: null,
     /**
@@ -84,7 +84,7 @@ const OPTION = {
      * посредством которого открывается окошко выбора файлов
      * <wiTag group="Управление">
      * По умолчанию: document.body
-     * @name Controls/File/ResourceGetter/FSGetter#element
+     * @name Controls/File/ResourceGetter/FS#element
      */
     element: null
 };
@@ -107,13 +107,13 @@ const OPTION = {
  * </ul>
  *
  * @class
- * @name Controls/File/ResourceGetter/FSGetter
+ * @name Controls/File/ResourceGetter/FS
  * @extends Controls/File/ResourceGetter/Base
  * @public
  * @author Заляев А.В.
  */
-class FSGetter extends IResourceGetterBase {
-    protected name = "FSGetter";
+class FS extends IResourceGetterBase {
+    protected name = "FS";
     private _extensions: ExtensionsHelper;
     private _form: HTMLFormElement;
     private _inputBtn: HTMLInputElement;
@@ -154,7 +154,7 @@ class FSGetter extends IResourceGetterBase {
      * Необходимо это учитывать при обработке errback у результата метода
      * @return {Core/Deferred<Array<Controls/File/LocalFile | Error>>}
      * @method
-     * @name Controls/File/ResourceGetter/FSGetter#getFiles
+     * @name Controls/File/ResourceGetter/FS#getFiles
      * @see Controls/File/LocalFile
      */
     getFiles(): Deferred<Array<LocalFile | Error>> {
@@ -189,7 +189,7 @@ class FSGetter extends IResourceGetterBase {
      * Возможен ли выбор файлов
      * @return {Core/Deferred<Boolean>}
      * @method
-     * @name Controls/File/ResourceGetter/FSGetter#canExec
+     * @name Controls/File/ResourceGetter/FS#canExec
      */
     canExec(): Deferred<boolean> {
         return Deferred.success(!this.isDestroy());
@@ -200,7 +200,7 @@ class FSGetter extends IResourceGetterBase {
      * @param {FileList} selectedFiles
      * @private
      * @method
-     * @name Controls/File/ResourceGetter/FSGetter#_onChangeInput
+     * @name Controls/File/ResourceGetter/FS#_onChangeInput
      * @void
      */
     private _onChangeInput(selectedFiles: FileList) {
@@ -225,4 +225,4 @@ class FSGetter extends IResourceGetterBase {
     }
 }
 
-export = FSGetter;
+export = FS;

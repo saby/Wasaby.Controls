@@ -1,5 +1,5 @@
-/// <amd-module name="Controls/File/ResourceGetter/FSGetter" />
-define("Controls/File/ResourceGetter/FSGetter", ["require", "exports", "tslib", "Controls/File/ResourceGetter/Base", "Core/Deferred", "tmpl!Controls/File/ResourceGetter/FSGetter", "Controls/File/utils/ExtensionsHelper", "Core/detection"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, dotTpl, ExtensionsHelper, detection) {
+/// <amd-module name="Controls/File/ResourceGetter/FS" />
+define("Controls/File/ResourceGetter/FS", ["require", "exports", "tslib", "Controls/File/ResourceGetter/Base", "Core/Deferred", "tmpl!Controls/File/ResourceGetter/FS", "Controls/File/utils/ExtensionsHelper", "Core/detection"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, dotTpl, ExtensionsHelper, detection) {
     "use strict";
     var AFTER_CLOSE_DELAY = 2000;
     /**
@@ -51,7 +51,7 @@ define("Controls/File/ResourceGetter/FSGetter", ["require", "exports", "tslib", 
          * @cfg {Boolean} Выбрать несколько файлов
          * <wiTag group="Управление">
          * Позволяет выбрать несколько файлов
-         * @name Controls/File/ResourceGetter/FSGetter#multiSelect
+         * @name Controls/File/ResourceGetter/FS#multiSelect
          */
         multiSelect: false,
         /**
@@ -68,7 +68,7 @@ define("Controls/File/ResourceGetter/FSGetter", ["require", "exports", "tslib", 
          *    extensions: ["image"]
          *    // extensions: ["jpe","jpg","jpeg","gif","png","bmp","ico","svg","svgz","tif","tiff","pct","psd"]
          * </pre>
-         * @name Controls/File/ResourceGetter/FSGetter#extensions
+         * @name Controls/File/ResourceGetter/FS#extensions
          */
         extensions: null,
         /**
@@ -76,7 +76,7 @@ define("Controls/File/ResourceGetter/FSGetter", ["require", "exports", "tslib", 
          * посредством которого открывается окошко выбора файлов
          * <wiTag group="Управление">
          * По умолчанию: document.body
-         * @name Controls/File/ResourceGetter/FSGetter#element
+         * @name Controls/File/ResourceGetter/FS#element
          */
         element: null
     };
@@ -98,16 +98,16 @@ define("Controls/File/ResourceGetter/FSGetter", ["require", "exports", "tslib", 
      * </ul>
      *
      * @class
-     * @name Controls/File/ResourceGetter/FSGetter
+     * @name Controls/File/ResourceGetter/FS
      * @extends Controls/File/ResourceGetter/Base
      * @public
      * @author Заляев А.В.
      */
-    var FSGetter = /** @class */ (function (_super) {
-        tslib_1.__extends(FSGetter, _super);
-        function FSGetter(cfg) {
+    var FS = /** @class */ (function (_super) {
+        tslib_1.__extends(FS, _super);
+        function FS(cfg) {
             var _this = _super.call(this) || this;
-            _this.name = "FSGetter";
+            _this.name = "FS";
             _this._options = Object.assign({}, OPTION, cfg);
             var container;
             container = _this._options.element;
@@ -139,10 +139,10 @@ define("Controls/File/ResourceGetter/FSGetter", ["require", "exports", "tslib", 
          * Необходимо это учитывать при обработке errback у результата метода
          * @return {Core/Deferred<Array<Controls/File/LocalFile | Error>>}
          * @method
-         * @name Controls/File/ResourceGetter/FSGetter#getFiles
+         * @name Controls/File/ResourceGetter/FS#getFiles
          * @see Controls/File/LocalFile
          */
-        FSGetter.prototype.getFiles = function () {
+        FS.prototype.getFiles = function () {
             var _this = this;
             if (this.isDestroy()) {
                 return Deferred.fail("Resource getter is destroyed");
@@ -172,9 +172,9 @@ define("Controls/File/ResourceGetter/FSGetter", ["require", "exports", "tslib", 
          * Возможен ли выбор файлов
          * @return {Core/Deferred<Boolean>}
          * @method
-         * @name Controls/File/ResourceGetter/FSGetter#canExec
+         * @name Controls/File/ResourceGetter/FS#canExec
          */
-        FSGetter.prototype.canExec = function () {
+        FS.prototype.canExec = function () {
             return Deferred.success(!this.isDestroy());
         };
         /**
@@ -182,17 +182,17 @@ define("Controls/File/ResourceGetter/FSGetter", ["require", "exports", "tslib", 
          * @param {FileList} selectedFiles
          * @private
          * @method
-         * @name Controls/File/ResourceGetter/FSGetter#_onChangeInput
+         * @name Controls/File/ResourceGetter/FS#_onChangeInput
          * @void
          */
-        FSGetter.prototype._onChangeInput = function (selectedFiles) {
+        FS.prototype._onChangeInput = function (selectedFiles) {
             if (this.isDestroy()) {
                 return;
             }
             this._selectDef.callback(this._extensions.verifyAndReplace(selectedFiles));
             this._selectDef = null;
         };
-        FSGetter.prototype.destroy = function () {
+        FS.prototype.destroy = function () {
             if (this.isDestroy()) {
                 return;
             }
@@ -204,7 +204,7 @@ define("Controls/File/ResourceGetter/FSGetter", ["require", "exports", "tslib", 
             }
             _super.prototype.destroy.call(this);
         };
-        return FSGetter;
+        return FS;
     }(IResourceGetterBase));
-    return FSGetter;
+    return FS;
 });
