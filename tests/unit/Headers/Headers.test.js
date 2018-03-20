@@ -1,13 +1,12 @@
 define(['Controls/Header'], function (Header) {
    'use strict';
-   var header, successClick, successCountClick;
+   var header, successCountClick;
    describe('Controls.Header', function () {
       beforeEach(function(){
          header = new Header({
             captions: 'capt1',
             style: 'default'
          });
-         successClick = false;
          successCountClick = false;
          //subscribe на vdom компонентах не работает, поэтому мы тут переопределяем _notify
          //(дефолтный метод для vdom компонент который стреляет событием).
@@ -16,9 +15,6 @@ define(['Controls/Header'], function (Header) {
          header._notify = function(event){
             if(event==='countClick'){
                successCountClick = true;
-            }
-            if(event==='click'){
-               successClick = true;
             }
          };
       });
