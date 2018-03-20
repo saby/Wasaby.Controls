@@ -19,6 +19,9 @@
                                         </Controls.Filter.Button>
                                     </ws:content>
                                 </Controls.Container.Filter.Button>
+                                <ws:Controls.Input.Search bind:value="_searchValue"/>
+                                <Controls.Filter.FastData source="{{_filterSource}}"
+                                                          bind:selectedKeys="_selectedKeys"/>
                             </div>
                             <div class="controls-demo__LayoutInner">
                                 <Controls.Container.List source="{{_dataSource}}" searchParam="title">
