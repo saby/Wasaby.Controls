@@ -67,19 +67,23 @@
 
 .controls-Header__wrapper {
    display: flex;
-   align-items: baseline;
+   align-items: center;
 }
 
 .controls-Separator__icon_style-Accent {
-   color: #587AB0;
+   color: @color-Header__icon_style-Accent;
 }
 
 .controls-Separator__icon_style-Main {
-   color: #D94700;
+   color: @color-Header__icon_style-Main;
 }
 
 .controls-Separator__icon_style-Additional {
-   color: #8991A9;
+   color: @color-Header__icon_style-Additional;
+}
+
+.controls-Header__icon_location-after{
+   order: 2;
 }
 
 .ws-is-desktop-platform {
@@ -103,15 +107,15 @@
       }
 
       .controls-Separator__icon_style-Accent {
-         color: #313E78;
+         color: @color-Header__icon_style-Accent_hovered;
       }
 
       .controls-Separator__icon_style-Main {
-         color: #FF7033;
+         color: @color-Header__icon_style-Main_hovered;
       }
 
       .controls-Separator__icon_style-Additional {
-         color: #313E78;
+         color: @color-Header__icon_style-Additional_hovered;
       }
    }
    .controls-Header__caption_style-default_hovered:hover {
@@ -125,14 +129,14 @@
    }
 
    .controls-Separator__icon_style-Accent:hover {
-      color: #313E78;
+      color: @color-Header__icon_style-Accent_hovered;
    }
 
    .controls-Separator__icon_style-Main:hover {
-      color: #FF7033;
+      color: @color-Header__icon_style-Main_hovered;
    }
 
    .controls-Separator__icon_style-Additional:hover {
-      color: #313E78;
+      color: @color-Header__icon_style-Additional_hovered;
    }
 }
