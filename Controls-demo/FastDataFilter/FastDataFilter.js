@@ -23,10 +23,8 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
          _template: template,
          dataSourceDemo3: [
             {
-               name: 'first',
                idProperty: 'title',
                displayProperty: 'title',
-               multiselect: true,
                selectedIndex: '1',
                source: {
                   module: 'WS.Data/Source/Memory',
@@ -41,10 +39,8 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
                }
             },
             {
-               name: 'second',
                idProperty: 'key',
                displayProperty: 'title',
-               multiselect: false,
                source: {
                   module: 'WS.Data/Source/Memory',
                   options: {

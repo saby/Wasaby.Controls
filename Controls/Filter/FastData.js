@@ -26,7 +26,7 @@ define('Controls/Filter/FastData',
        */
       var _private = {
 
-         _loadConfig: function (self, item, index) {
+         loadListConfig: function (self, item, index) {
             var sKey = Utils.getItemPropertyValue(item, 'selectedKeys'),
                dSource = Utils.getItemPropertyValue(item, 'source'),
                idProperty = Utils.getItemPropertyValue(item, 'idProperty');
@@ -44,25 +44,25 @@ define('Controls/Filter/FastData',
             return DropdownUtils._loadItems(self._configs[index], dSource, sKey).addCallback(function (items) {
                self._configs[index]._items = items;
                self._configs[index]._items.setIdProperty(idProperty);
-               self._configs[index].selectedKeys = sKey || _private._getElement(self, index, idProperty);
+               self._configs[index].selectedKeys = sKey || _private.getElement(self, index, idProperty);
                self._forceUpdate();
             });
          },
 
-         _loadListConfig: function (self, sourceController) {
+         reload: function (self, sourceController) {
             return sourceController.load().addCallback(function (configs) {
                self._listConfig = configs;
                return Chain(configs).map(function (item, index) {
-                  _private._loadConfig(self, item, index);
+                  _private.loadListConfig(self, item, index);
                }).value();
             });
          },
 
-         _getElement: function (self, index, property) {
+         getElement: function (self, index, property) {
             return self._configs[index]._items.at(self._selectedIndexes[index]).get(property);
          },
 
-         _selectItem: function (item) {
+         selectItem: function (item) {
             //Устанавливаем индекс выбранного элемента списка
             this._selectedIndexes[this.lastOpenIndex] = this._configs[this.lastOpenIndex]._items.getIndex(item);
 
@@ -73,11 +73,11 @@ define('Controls/Filter/FastData',
             this._notify('selectedKeysChanged', [key]);
          },
 
-         _onResult: function (args) {
+         onResult: function (args) {
             var actionName = args[0];
             var data = args[2];
             if (actionName === 'itemClick') {
-               _private._selectItem.apply(this, data);
+               _private.selectItem.apply(this, data);
                this._children.DropdownOpener.close();
             }
          }
@@ -96,14 +96,14 @@ define('Controls/Filter/FastData',
             this._selectedIndexes = {};
             this._listConfig = [];
 
-            this._onResult = _private._onResult.bind(this);
+            this._onResult = _private.onResult.bind(this);
          },
 
          _beforeMount: function (options) {
             this.sourceController = new SourceController({
                source: options.source
             });
-            return _private._loadListConfig(this, this.sourceController);
+            return _private.reload(this, this.sourceController);
          },
 
          _open: function (event, item, index) {
@@ -128,13 +128,13 @@ define('Controls/Filter/FastData',
 
          _updateText: function (item, index) {
             if (this._configs[index]._items) {
-               return _private._getElement(this, index, Utils.getItemPropertyValue(item, 'displayProperty'));
+               return _private.getElement(this, index, Utils.getItemPropertyValue(item, 'displayProperty'));
             }
          },
 
          _reset: function (event, item, index) {
             this._selectedIndexes[index] = 0;
-            this._configs[index].selectedKeys = _private._getElement(this, index, this._configs[index]._items.getIdProperty());
+            this._configs[index].selectedKeys = _private.getElement(this, index, this._configs[index]._items.getIdProperty());
             this._notify('selectedKeysChanged', [this._configs[index].selectedKeys]);
          }
       });
