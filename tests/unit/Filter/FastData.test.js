@@ -2,11 +2,12 @@ define(
    [
       'Controls/Filter/FastData',
       'WS.Data/Source/Memory',
+      'Core/vdom/Synchronizer/resources/SyntheticEvent',
       'WS.Data/Entity/Record',
       'WS.Data/Collection/RecordSet',
       'Core/Deferred'
    ],
-   function (FastData, Memory, Record, RecordSet, Deferred) {
+   function (FastData, Memory, SyntheticEvent, RecordSet, Deferred) {
       describe('FastDataVDom', function () {
          var items = [
             [{key: 0, title: 'все страны'},
@@ -36,11 +37,10 @@ define(
             },
             {
                name: 'second',
-               idProperty: 'key',
+               idProperty: 'title',
                displayProperty: 'title',
-               source: items[1]
+               source: items[0]
             }
-
          ];
 
          var config = {};
@@ -53,54 +53,85 @@ define(
          var isSelected = false;
          var selectedKey;
 
-         fastData.once('selectedKeysChanged', function (event, key) {
+         fastData.subscribe('selectedKeysChanged', function (event, key) {
             isSelected = true;
             selectedKey = key;
          });
+         fastData._beforeMount(config);
+         fastData._children.DropdownOpener = {
+            close: setTrue.bind(this, assert),
+            open: setTrue.bind(this, assert)
+         };
 
-         var instance = {_configs: {}, _selectedIndexes: {0: 0, 1: 1}};
-         for (var i = 0; i < items.length; i++) {
-            instance._configs[i] = {};
-            instance._configs[i]._items = new RecordSet({rawData: items[i]});
-         }
-
-         it('load config', function () {
-            fastData._beforeMount(config).addCallback(function () {
+         it('load config', function (done) {
+            FastData._private._loadListConfig(fastData, fastData.sourceController).addCallback(function () {
                FastData._private._loadConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
                   assert.deepEqual(fastData._configs[0]._items.getRawData(), items[0]);
+                  done();
                });
             });
          });
 
-         it('update text', function () {
-            fastData._beforeMount(config).addCallback(function () {
-                  FastData._private._loadConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
-                     var text = fastData._updateText(fastData._listConfig.at(0), 0);
-                     assert.equal(text, items[0][1].title);
-                  });
+         it('getElement', function (done) {
+            FastData._private._loadListConfig(fastData, fastData.sourceController).addCallback(function () {
+               FastData._private._loadConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
+                  assert.equal(FastData._private._getElement(fastData, 0, 'title'), items[0][1].title);
+                  done();
+               });
             });
          });
 
-         it('getElement', function () {
-            assert.equal(FastData._private._getElement(instance, 0, 'title'), items[0][0].title);
+
+         it('update text', function (done) {
+            FastData._private._loadListConfig(fastData, fastData.sourceController).addCallback(function () {
+               FastData._private._loadConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
+                  var text = fastData._updateText(fastData._listConfig.at(0), 0);
+                  assert.equal(text, items[0][1].title);
+                  done();
+               });
+            });
          });
 
-         // it('on result', function () {
-         //    fastData._beforeMount(config).addCallback(function (res) {
-         //          item.addCallback(function () {
-         //             fastData.lastOpenIndex = 0;
-         //             isSelected = false;
-         //             selectedKey = null;
-         //             fastData._onResult(['itemClick', 'event', [fastData._configs[0]._items.at(0)]]);
-         //             assert.isTrue(isSelected);
-         //             assert.equal(items[0][0].title, selectedKey);
-         //          });
-         //       });
-         // });
-
-         it('reset', function () {
-
+         it('on result', function (done) {
+            FastData._private._loadListConfig(fastData, fastData.sourceController).addCallback(function () {
+               FastData._private._loadConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
+                  fastData.lastOpenIndex = 0;
+                  isSelected = false;
+                  selectedKey = null;
+                  fastData._onResult(['itemClick', 'event', [fastData._configs[0]._items.at(2)]]);
+                  assert.isTrue(isSelected);
+                  assert.equal(items[0][2].title, selectedKey);
+                  done();
+               });
+            });
          });
+
+         it('reset', function (done) {
+            FastData._private._loadListConfig(fastData, fastData.sourceController).addCallback(function () {
+               FastData._private._loadConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
+                  fastData.lastOpenIndex = 0;
+                  isSelected = false;
+                  selectedKey = null;
+                  fastData._reset(null, fastData._listConfig.at(0), 0);
+                  assert.isTrue(isSelected);
+                  assert.equal(items[0][0].title, selectedKey);
+                  done();
+               });
+            });
+         });
+
+         it('open dropdown', function () {
+
+            var event = {target: {}};
+            FastData._private._loadListConfig(fastData, fastData.sourceController).addCallback(function () {
+               FastData._private._loadConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
+                  fastData._open(new SyntheticEvent(null, event), fastData._listConfig.at(0), 0);
+               });
+            });
+         });
+         function setTrue(assert) {
+            assert.equal(true, true);
+         }
 
       });
    });

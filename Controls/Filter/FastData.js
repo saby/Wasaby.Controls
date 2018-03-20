@@ -49,6 +49,15 @@ define('Controls/Filter/FastData',
             });
          },
 
+         _loadListConfig: function (self, sourceController) {
+            return sourceController.load().addCallback(function (configs) {
+               self._listConfig = configs;
+               return Chain(configs).map(function (item, index) {
+                  _private._loadConfig(self, item, index);
+               }).value();
+            });
+         },
+
          _getElement: function (self, index, property) {
             return self._configs[index]._items.at(self._selectedIndexes[index]).get(property);
          },
@@ -91,19 +100,10 @@ define('Controls/Filter/FastData',
          },
 
          _beforeMount: function (options) {
-            var self = this;
-
-            //Что представляет собой items?
-            //Сейчас только загружаемые данные, без остальных опций
-            var sourceController = new SourceController({
+            this.sourceController = new SourceController({
                source: options.source
             });
-            return sourceController.load().addCallback(function (configs) {
-               self._listConfig = configs;
-               Chain(configs).map(function (item, index) {
-                  _private._loadConfig(self, item, index);
-               }).value();
-            });
+            return _private._loadListConfig(this, this.sourceController);
          },
 
          _open: function (event, item, index) {
