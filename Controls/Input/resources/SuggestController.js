@@ -93,7 +93,8 @@ define('Controls/Input/resources/SuggestController',
                   popupOpener: self._options.suggestOpener,
                   navigation: self._options.navigation,
                   selectCallback: self._options.selectCallback,
-                  searchParam: self._options.searchParam
+                  searchParam: self._options.searchParam,
+                  emptyTemplate: self._options.emptyTemplate
                });
             }
             return self._suggestPopupController;

@@ -77,6 +77,7 @@ define('Controls/Input/Suggest',
                textComponent:       self._children.suggestText,
                
                suggestTemplate:     options.suggestTemplate,
+               emptyTemplate:       options.emptyTemplate,
                dataSource:          options.dataSource,
                filter:              options.filter,
                minSearchLength:     options.minSearchLength,

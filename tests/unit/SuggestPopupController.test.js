@@ -66,6 +66,19 @@ define(['Controls/Input/resources/SuggestPopupController', 'Core/core-instance',
             assert.equal(selfTest._selectedIndex, 2);
             assert.equal(selfTest._popupOptions.componentOptions.selectedIndex, 2);
          });
+   
+         it('._private.needShowPopup', function() {
+            var list = new List({items: [1, 2]}),
+                emptyList = new List(),
+                self = {};
+   
+            assert.isTrue(!!SuggestPopupController._private.needShowPopup(self, {result: list}));
+            assert.isFalse(!!SuggestPopupController._private.needShowPopup(self, {result: emptyList}));
+   
+            self._emptyTemplate = {};
+            assert.isTrue(!!SuggestPopupController._private.needShowPopup(self, {result: list}));
+            assert.isTrue(!!SuggestPopupController._private.needShowPopup(self, {result: emptyList}));
+         });
          
       });
       
