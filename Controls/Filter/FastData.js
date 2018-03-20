@@ -62,6 +62,16 @@ define('Controls/Filter/FastData',
             return self._configs[index]._items.at(self._selectedIndexes[index]).get(property);
          },
 
+         getFilter: function(self) {
+            var filter = {};
+            Chain(self._configs).each(function (config, index) {
+               if(config._items) {
+                  filter[Utils.getItemPropertyValue(self._listConfig.at(index), 'id')] = config.selectedKeys;
+               }
+            });
+            return filter;
+         },
+
          selectItem: function (item) {
             //Устанавливаем индекс выбранного элемента списка
             this._selectedIndexes[this.lastOpenIndex] = this._configs[this.lastOpenIndex]._items.getIndex(item);
@@ -78,6 +88,8 @@ define('Controls/Filter/FastData',
             var data = args[2];
             if (actionName === 'itemClick') {
                _private.selectItem.apply(this, data);
+
+              this._notify('onFilterChange', _private.getFilter(this));
                this._children.DropdownOpener.close();
             }
          }
