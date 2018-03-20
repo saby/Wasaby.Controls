@@ -634,6 +634,8 @@ define('SBIS3.CONTROLS/DropdownList',
          },
          _createPicker: function() {
             var popup = DropdownList.superclass._createPicker.apply(this, arguments);
+            // В оффлайн клиенте престо не проходят клики с первого раза по списку
+            // Включаю волшебную опцию Ярика, которая решает подобные проблемы
             popup._checkClickByTap = true;
             return popup;
          },
