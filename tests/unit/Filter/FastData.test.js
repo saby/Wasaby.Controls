@@ -24,7 +24,7 @@ define(
          ];
          var source = [
             {
-               name: 'first',
+               id: 'first',
                idProperty: 'title',
                displayProperty: 'title',
                selectedIndex: '1',
@@ -36,7 +36,7 @@ define(
                }
             },
             {
-               name: 'second',
+               id: 'second',
                idProperty: 'title',
                displayProperty: 'title',
                source: items[0]
@@ -50,12 +50,16 @@ define(
          });
 
          var fastData = new FastData(config);
-         var isSelected = false;
-         var selectedKey;
+         var isSelected = false,
+             selectedKey,
+             isFilterChanged;
 
          fastData.subscribe('selectedKeysChanged', function (event, key) {
             isSelected = true;
             selectedKey = key;
+         });
+         fastData.subscribe('onFilterChange', function () {
+            isFilterChanged = true;
          });
          fastData._beforeMount(config);
          fastData._children.DropdownOpener = {
@@ -65,7 +69,7 @@ define(
 
          it('load config', function (done) {
             FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
-               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
+               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0), 0).addCallback(function () {
                   assert.deepEqual(fastData._configs[0]._items.getRawData(), items[0]);
                   done();
                });
@@ -74,7 +78,7 @@ define(
 
          it('getElement', function (done) {
             FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
-               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
+               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0), 0).addCallback(function () {
                   assert.equal(FastData._private.getElement(fastData, 0, 'title'), items[0][1].title);
                   done();
                });
@@ -84,7 +88,7 @@ define(
 
          it('update text', function (done) {
             FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
-               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
+               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0), 0).addCallback(function () {
                   var text = fastData._updateText(fastData._listConfig.at(0), 0);
                   assert.equal(text, items[0][1].title);
                   done();
@@ -92,14 +96,26 @@ define(
             });
          });
 
+         it('get filter', function (done) {
+           FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
+              FastData._private.loadListConfig(fastData, fastData._listConfig.at(0), 0).addCallback(function () {
+                 var result = FastData._private.getFilter(fastData);
+                 assert.deepEqual(result, {'first': fastData._configs[0].selectedKeys});
+                 done();
+              });
+           });
+         });
+
          it('on result', function (done) {
             FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
-               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
+               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0), 0).addCallback(function () {
                   fastData.lastOpenIndex = 0;
                   isSelected = false;
+                  isFilterChanged = false;
                   selectedKey = null;
                   fastData._onResult(['itemClick', 'event', [fastData._configs[0]._items.at(2)]]);
                   assert.isTrue(isSelected);
+                  assert.isTrue(isFilterChanged);
                   assert.equal(items[0][2].title, selectedKey);
                   done();
                });
@@ -108,7 +124,7 @@ define(
 
          it('reset', function (done) {
             FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
-               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
+               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0), 0).addCallback(function () {
                   fastData.lastOpenIndex = 0;
                   isSelected = false;
                   selectedKey = null;
@@ -124,7 +140,7 @@ define(
 
             var event = {target: {}};
             FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
-               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
+               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0), 0).addCallback(function () {
                   fastData._open(new SyntheticEvent(null, event), fastData._listConfig.at(0), 0);
                });
             });
