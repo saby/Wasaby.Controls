@@ -194,7 +194,6 @@ define('SBIS3.CONTROLS/OperationsPanel', [
       //который возвращается requireButtons, чтобы requireButtons при следующей отрисовке ещё раз подгрузил кнопки.
       setItems: function() {
          this._itemsLoadDeferred = null;
-         this._itemsWidth = null;
          OperationsPanel.superclass.setItems.apply(this, arguments);
       },
 
@@ -323,19 +322,16 @@ define('SBIS3.CONTROLS/OperationsPanel', [
                Если Не влезают операции, и нельзя заюзать механизм с меню,
                то будем скрывать caption на операциях с классом controls-operationsPanel__action-withoutCaption
              */
-            if(!this._itemsWidth){
-               this._itemsWidth = this._getItemsContainer().width();
-            }
-
+            var itemsWidth = this._getItemsContainer().width();
             var containerWidth = this.getContainer().width();
 
             if(this._withoutCaptionsMode){
-               if(containerWidth > this._itemsWidth){
+               if(containerWidth > itemsWidth){
                   this._toggleWithoutCaptionsMode(false);
                }
             }
             else {
-               if(containerWidth <= this._itemsWidth){
+               if(containerWidth <= itemsWidth){
                   this._toggleWithoutCaptionsMode(true);
                }
             }
