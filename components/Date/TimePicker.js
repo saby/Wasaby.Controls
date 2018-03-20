@@ -24,7 +24,7 @@ define('SBIS3.CONTROLS/Date/TimePicker',
        * и подсвеченным временем 17. При смене представления на hours(см. {@link setMode})
        * будет TimePicker с выбором часов, стрелкой показывающей на 20, и шапкой с подсвеченным временем 20.
        *
-       * <ws:SBIS3.CONTROLS/Date/TimePicker
+       * <SBIS3.CONTROLS.Date.TimePicker
        *    time="2017-10-20 20:17"
        *    mode="minutes"
        * />
