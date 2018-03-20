@@ -64,8 +64,8 @@ define(
          };
 
          it('load config', function (done) {
-            FastData._private._loadListConfig(fastData, fastData.sourceController).addCallback(function () {
-               FastData._private._loadConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
+            FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
+               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
                   assert.deepEqual(fastData._configs[0]._items.getRawData(), items[0]);
                   done();
                });
@@ -73,9 +73,9 @@ define(
          });
 
          it('getElement', function (done) {
-            FastData._private._loadListConfig(fastData, fastData.sourceController).addCallback(function () {
-               FastData._private._loadConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
-                  assert.equal(FastData._private._getElement(fastData, 0, 'title'), items[0][1].title);
+            FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
+               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
+                  assert.equal(FastData._private.getElement(fastData, 0, 'title'), items[0][1].title);
                   done();
                });
             });
@@ -83,8 +83,8 @@ define(
 
 
          it('update text', function (done) {
-            FastData._private._loadListConfig(fastData, fastData.sourceController).addCallback(function () {
-               FastData._private._loadConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
+            FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
+               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
                   var text = fastData._updateText(fastData._listConfig.at(0), 0);
                   assert.equal(text, items[0][1].title);
                   done();
@@ -93,8 +93,8 @@ define(
          });
 
          it('on result', function (done) {
-            FastData._private._loadListConfig(fastData, fastData.sourceController).addCallback(function () {
-               FastData._private._loadConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
+            FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
+               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
                   fastData.lastOpenIndex = 0;
                   isSelected = false;
                   selectedKey = null;
@@ -107,8 +107,8 @@ define(
          });
 
          it('reset', function (done) {
-            FastData._private._loadListConfig(fastData, fastData.sourceController).addCallback(function () {
-               FastData._private._loadConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
+            FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
+               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
                   fastData.lastOpenIndex = 0;
                   isSelected = false;
                   selectedKey = null;
@@ -123,8 +123,8 @@ define(
          it('open dropdown', function () {
 
             var event = {target: {}};
-            FastData._private._loadListConfig(fastData, fastData.sourceController).addCallback(function () {
-               FastData._private._loadConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
+            FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
+               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0)).addCallback(function () {
                   fastData._open(new SyntheticEvent(null, event), fastData._listConfig.at(0), 0);
                });
             });
