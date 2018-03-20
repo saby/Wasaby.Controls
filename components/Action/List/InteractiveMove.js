@@ -23,7 +23,7 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
        * @example
        * Пример использования InteractiveMove:
        * <pre>
-       *    define('js!SBIS3.Demo.InteractiveMove', ['Lib/Control/CompoundControl/CompoundControl', 'SBIS3.CONTROLS/Action/List/InteractiveMove'],
+       *    define('Examples/MyArea/InteractiveMove', ['Lib/Control/CompoundControl/CompoundControl', 'SBIS3.CONTROLS/Action/List/InteractiveMove'],
        *    function(CompoundControl, InteractiveMove){
        *       var move;
        *       return CompoundControl.extend({
@@ -54,7 +54,7 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
        *    <component data-component="SBIS3.CONTROLS/Button" name="ButtonHierMove" class="Button">
        *       <option name="caption">Переместить</option>
        *       <options name="handlers">
-       *          <option name="onActivated" type="function">js!SBIS3.Demo.InteractiveMove:prototype.buttonInteractiveMove
+       *          <option name="onActivated" type="function">Examples/MyArea/InteractiveMove:prototype.buttonInteractiveMove
        *       </option>
        *       </options>
        *    </component>
@@ -65,7 +65,7 @@ define('SBIS3.CONTROLS/Action/List/InteractiveMove',[
        *             <option name="icon" value="sprite:icon-16 icon-folder icon-primary"></option>
        *             <option name="title" value="Interactive move"></option>
        *             <option name="isMainAction" value="true" type="boolean"></option>
-       *             <option name="onActivated" type="function">js!SBIS3.Demo.InteractiveMove:prototype.interactiveMove</option>
+       *             <option name="onActivated" type="function">Examples/MyArea/InteractiveMove:prototype.interactiveMove</option>
        *          </options>
        *       </options>
        *    </component>
