@@ -20,7 +20,7 @@ define('js!WSControls/ProgressBars/ProgressBar',
        *
        * @initial
        * <pre>
-       *    <ws:SBIS3.CONTROLS/ProgressBar
+       *    <SBIS3.CONTROLS.ProgressBar
        *       progress="{{50}}"
        *       minimum="{{-100}}"
        *       maximum="{{100}}"
