@@ -7,8 +7,49 @@ define('Controls/Header', [
 ], function(Control, IoC, template, types) {
    'use strict';
 
+   var classesOfIcon = {
+      MarkExpandBold: {
+         true: "icon-MarkExpandBold",
+         false: "icon-MarkCollapseBold",
+         size: "icon-16"
+      },
+
+      ExpandLight: {
+         true: "icon-ExpandLight",
+         false: "icon-CollapseLight",
+         size: "icon-16"
+      },
+
+      AccordionArrowDown: {
+         true: "icon-AccordionArrowDown",
+         false: "icon-AccordionArrowUp ",
+         size: "icon-24"
+      }
+   };
+
+   var _private = {
+      cssStyleGeneration: function (self, options) {
+         if (classesOfIcon.hasOwnProperty(options.iconType)) {
+            var currentIconClass = classesOfIcon[options.iconStyle];
+         }else {
+            IoC.resolve('ILogger').error("Header-Separator", "Для иконки задан несуществующий стиль");
+            currentIconClass = classesOfIcon.ExpandLight;
+         }
+         self._icon = currentIconClass[options.iconValue]+ ' ' + currentIconClass.size;
+      }
+   };
+
    var Header = Control.extend({
       _template: template,
+
+      constructor: function (options) {
+         Header.superclass.constructor.apply(this, arguments);
+         _private.cssStyleGeneration(this, options);
+      },
+
+      _beforeUpdate: function (newOptions) {
+         _private.cssStyleGeneration(this, newOptions);
+      },
 
       countClickHandler: function (e) {
          if(this._options.countClickable){
