@@ -131,6 +131,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
          $protected: {
             _options: {
                moveColumns: true,
+               preserveOrder: false,
                usePresets: false,
                newPresetTitle: rk('Новый шаблон', 'РедакторКолонок'),
                useOriginPresetTitle: true
@@ -202,6 +203,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
           * @param {string} [editorOptions.newPresetTitle] Начальное название нового пользовательского пресета (опционально)
           * @param {boolean} [editorOptions.useOriginPresetTitle] При клонировании новых пользовательских пресетов строить название из исходного с добавлением следующего порядкового номера (опционально)
           * @param {boolean} [editorOptions.moveColumns] Указывает на необходимость включить перемещнение пользователем пунктов списка колонок (опционально)
+          * @param {boolean} [editorOptions.preserveOrder] Указывает на необходимость сохранять порядок следования колонок таким, каким он был передан в опции columnsConfig. В отстутствии этой опции выбранные колонки будут подняты вверх, не выбранные - уйдут вниз. Опция действует только при выключенном перемещнении пользователем пунктов списка колонок (moveolumns==false) (опционально)
           * @return {Deferred<object>}
           *
           * @see SBIS3.CONTROLS/Browser#showColumnsEditor
@@ -257,6 +259,7 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
                   newPresetTitle: _selectValue('newPresetTitle', allSources),
                   useOriginPresetTitle: _selectValue('useOriginPresetTitle', allSources, 'boolean'),
                   moveColumns: _selectValue('moveColumns', edDefSources, 'boolean'),
+                  preserveOrder: _selectValue('preserveOrder', edDefSources, 'boolean'),
                   handlers: {
                      onComplete: this._onAreaComplete.bind(this)
                   }
