@@ -1396,8 +1396,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                new Dialog({
                   name: 'imagePropertiesDialog',
                   template: 'SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog',
-                  selectedImage: $image,
-                  editorWidth: self._inputControl.width(),
+                  parent: self,
+                  componentOptions: {
+                     selectedImage: $image,
+                     editorWidth: self._inputControl.width(),
+                  },
                   handlers: {
                      onBeforeShow: function () {
                         CommandDispatcher.declareCommand(this, 'saveImage', function () {
