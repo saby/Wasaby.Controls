@@ -36,11 +36,16 @@ define('Controls/Input/resources/SuggestPopupController',
                _private.setSuggestSelectedIndex(self, 0);
                _private.setSuggestSearchResult(self, searchResult);
                _private.prepareSuggestFilter(self, searchResult);
+               return searchResult;
             });
          },
          
          showPopup: function(self) {
             self._popupOpener.open(self._popupOptions);
+         },
+         
+         needShowPopup: function(self, searchResult) {
+            return searchResult.result.getCount() || self._emptyTemplate;
          },
          
          setSuggestSearchResult: function(self, searchResult) {
@@ -83,10 +88,17 @@ define('Controls/Input/resources/SuggestPopupController',
             this._navigation = options.navigation;
             this._selectCallback = options.selectCallback;
             this._searchParam = options.searchParam;
+            this._emptyTemplate = options.emptyTemplate;
          },
          
          showPopup: function() {
-            return  _private.search(this).addCallback(_private.showPopup.bind(this, this));
+            var self = this;
+            
+            return  _private.search(self).addCallback(function(searchResult) {
+               if (_private.needShowPopup(self, searchResult)) {
+                  _private.showPopup(self);
+               }
+            });
          },
          
          hidePopup: function() {
