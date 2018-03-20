@@ -1094,11 +1094,14 @@ define('SBIS3.CONTROLS/DataGridView',
          }
       },
       _onResizeHandler: function() {
-         DataGridView.superclass._onResizeHandler.apply(this, arguments);
+         /* Выполняем до родительского resize, иначе фиксированная шапка будет считать ширину колонок
+            до установки ширины частичным скролом, и может случиться рассинхрон ширин в шапке и таблице */
          this._containerOffsetWidth = this.getContainer().outerWidth();
          if(this.hasPartScroll()) {
+            this._setColumnWidthForPartScroll();
             this._updatePartScroll();
          }
+         DataGridView.superclass._onResizeHandler.apply(this, arguments);
       },
       //********************************//
       //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
