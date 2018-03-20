@@ -211,7 +211,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             _lastTotalHeight: undefined, //последняявысота для UpdateHeight
             _lastContentHeight: undefined, //последняявысота для UpdateHeight
             _tinyReady: null, //deferred готовности tinyMCE
-            _readyContolDeffered: null, //deferred Готовности контрола
+            _readyControlDeffered: null, //deferred Готовности контрола
             _saveBeforeWindowClose: null,
             _sourceArea: undefined,
             _sourceContainer: undefined, //TODO: избавиться от _sourceContainer
@@ -253,12 +253,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             this._publish('onInitEditor', 'onUndoRedoChange','onNodeChange', 'onFormatChange', 'onToggleContentSource');
             this._sourceContainer = this._container.find('.controls-RichEditor__sourceContainer');
             this._sourceArea = this._sourceContainer.find('.controls-RichEditor__sourceArea').bind('input', this._onChangeAreaValue.bind(this));
-            this._readyContolDeffered = new Deferred().addCallbacks(function(){
+            this._readyControlDeffered = new Deferred().addCallbacks(function(){
                this._notify('onReady');
             }.bind(this), function (e) {
                return e;
             });
-            this._dChildReady.push(this._readyContolDeffered);
+            this._dChildReady.push(this._readyControlDeffered);
             this._tinyReady = new Deferred();
             this._scrollContainer = this._container.find('.controls-RichEditor__scrollContainer');
             this._dataReview = this._container.find('.controls-RichEditor__dataReview');
@@ -278,7 +278,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //вешать обработчик copy/paste надо в любом случае, тк редактор может менять состояние Enabled
                RichUtil.markRichContentOnCopy(this._dataReview);
                if (!this.isEnabled()) {
-                  this._readyContolDeffered.callback();
+                  if (!this._readyControlDeffered.isReady()) {
+                     this._readyControlDeffered.callback();
+                  }
                }
                this._updateDataReview(this.getText());
             }.bind(this));
@@ -588,8 +590,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             this._sourceArea = null;
             this._dataReview = null;
             this._options.editorConfig.setup = null;
-            if (!this._readyContolDeffered.isReady()) {
-               this._readyContolDeffered.errback();
+            if (!this._readyControlDeffered.isReady()) {
+               this._readyControlDeffered.errback();
             }
             this._inputControl.unbind('mouseup dblclick click mousedown touchstart scroll');
             if (this._imageOptionsPanel) {
@@ -1114,13 +1116,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                               onActivated: function () {
                                  var parent = this.getParent();
                                  var href = parent._hrefInput.getValue();
-                                 var caption = parent._captionInput.getValue();
+                                 var caption = parent._captionInput.getValue() || href;
                                  var protocol = /(?:https?|ftp|file):\/\//gi;
                                  if (href && href.search(protocol) === -1) {
                                     href = 'http://' + href;
-                                 }
-                                 if (!caption) {
-                                    caption = origCaption || href;
                                  }
                                  var dom = editor.dom;
                                  var done;
@@ -1130,9 +1129,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                           target: '_blank',
                                           href: escapeHtml(href)
                                        });
-                                       element.innerHtml = caption;
+                                       element.innerHTML = escapeHtml(caption);
+                                       selection.select(element);
                                     }
-                                 else {
+                                    else {
                                        editor.execCommand('unlink');
                                     }
                                     done = true;
@@ -1590,9 +1590,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   });
                }
                this._notifyOnSizeChanged();
-               if (!self._readyContolDeffered.isReady()) {
+               if (!self._readyControlDeffered.isReady()) {
                   self._tinyReady.addCallback(function() {
-                     self._readyContolDeffered.callback();
+                     if (!self._readyControlDeffered.isReady()) {
+                        self._readyControlDeffered.callback();
+                     }
                   });
                }
                // в tinyMCE предустановлены сочетания клавиш на alt+shift+number
@@ -2610,10 +2612,48 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          _updateHeight: function () {
             if (this.isVisible()) {
                var totalHeight = this._container.height();
-               var contentHeight = (this._options.editorConfig.inline ? this._inputControl : $(this._tinyEditor.iframeElement)).height();
-               this._container[0].scrollTop = 0;
-               this._scrollContainer[0].scrollTop = 0;
-               if (totalHeight !== this._lastTotalHeight || contentHeight !== this._lastContentHeight) {
+               var content, $content;
+               if (this._options.editorConfig.inline) {
+                  $content = this._inputControl;
+                  content = $content[0];
+               }
+               else {
+                  content = this._tinyEditor.iframeElement;
+               }
+               if (cConstants.browser.isIE) {
+                  $content = $content || $(content);
+                  $content.css('height', '');
+               }
+               var contentHeight = content.scrollHeight;
+               var isChanged = totalHeight !== this._lastTotalHeight || contentHeight !== this._lastContentHeight;
+               if (isChanged) {
+                  this._container[0].scrollTop = 0;
+                  this._scrollContainer[0].scrollTop = 0;
+               }
+               if (cConstants.browser.isIE) {
+                  // В MSIE при добавлении новой строки clientHeight и scrollHeight начинают расходиться - нужно их уравнять
+                  // 1175015989 https://online.sbis.ru/opendoc.html?guid=d013f54f-683c-465c-b437-6adc64dc294a
+                  var diff = contentHeight - content.clientHeight;
+                  $content.css('height', 0 < diff ? content.offsetHeight + diff : content.offsetHeight);
+                  if (isChanged) {
+                     var parent = content.parentNode;
+                     if (parent.clientHeight < contentHeight) {
+                        // Также, если прокрутка уже задействована и текущий рэнж находится в самом низу области редактирования. Определяем это по
+                        // расстоянию от нижнего края рэнжа до нижнего края области минус увеличение высоты (diff) и минус нижний отступ области
+                        // редактирования - оно должно быть "небольшим", то есть меньше некоторого порогового значения (2)
+                        var rect0 = content.getBoundingClientRect();
+                        var rect1 = this._tinyEditor.selection.getBoundingClientRect();
+                        if (rect0.bottom - rect1.bottom - diff - parseInt($content.css('padding-bottom')) < 2) {
+                           var scrollTop = parent.scrollHeight - parent.offsetHeight;
+                           if (parent.scrollTop < scrollTop) {
+                              // И если при всём этом область редактирования недопрокручена до самого конца - подскролить её до конца
+                              parent.scrollTop = scrollTop;
+                           }
+                        }
+                     }
+                  }
+               }
+               if (isChanged) {
                   this._lastTotalHeight = totalHeight;
                   this._lastContentHeight = contentHeight;
                   this._notifyOnSizeChanged();

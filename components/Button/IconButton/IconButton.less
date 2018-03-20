@@ -11,12 +11,12 @@
   border-style: solid;
   border-color: @border-color_IconButton_bordered;
   background-color: @background-color_IconButton_bordered;
-  .box-shadow(@box-shadow_Button);
-  text-shadow: @text-shadow_IconButton_bordered;;
+  .box-shadow(@box-shadow_IconButton);
+  text-shadow: @text-shadow_IconButton_bordered;
 }
 
 .controls-IconButton_bordered:active {
-  box-shadow: none;
+  box-shadow: @box-shadow_Button_bordered_active;
   background-color: @background-color_IconButton_bordered_standard_hovered;
 }
 
@@ -49,6 +49,9 @@
 }
 
 .ws-is-desktop-platform {
+  .controls-IconButton_bordered {
+    box-shadow: @box-shadow_Button_bordered_hovered;
+  }
   .controls-IconButton__standardBorder:hover {
     background-color: @background-color_IconButton_bordered_standard_hovered;
     border-color: @border-color_IconButton_bordered_standard_hovered;
@@ -75,13 +78,13 @@
 //      color: @icon-active-color;
 //    }
 // }
-.controls-IconButton_standard:active {
+.controls-IconButton_standard:active, .controls-IconButton__standardBorder:active {
   .controls-Button__icon.icon-primary {
     color: @icon-active-color;
   }
 }
 .ws-is-desktop-platform {
-  .controls-IconButton_standard:hover {
+  .controls-IconButton_standard:hover, .controls-IconButton__standardBorder:hover {
     .controls-Button__icon.icon-primary {
       color: @icon-active-color;
     }
@@ -103,16 +106,4 @@
 
 .icon-IconButton-disabled {
   color: @color_Link-icon_disabled;
-}
-// баг iPad, видимо связанный с неправильным расчетом размеров флексового контейнера
-// хаки "спасающие" от этого бага не помогли
-// https://stackoverflow.com/questions/17202128/rounded-cornes-border-radius-safari-issue
-.controls-IconButton_bordered_size_m {
-  .controls-IconButton__content {
-    display: inline-block;
-    text-align: center;
-    .controls-Button__icon {
-      line-height: @line-height_IconButton_bordered_size-m !important;
-    }
-  }
 }
