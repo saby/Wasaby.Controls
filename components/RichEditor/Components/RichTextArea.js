@@ -75,7 +75,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             styles: {
                title: {inline: 'span', classes: 'titleText'},
                subTitle: {inline: 'span', classes: 'subTitleText'},
-               additionalText: {inline: 'span', classes: 'additionalText'}
+               additionalText: {inline: 'span', classes: 'additionalText'},
+               customBlockquote: {block: 'p', classes: 'customBlockquote'}
             },
             colorsMap: {
                'rgb(0, 0, 0)': 'black',
@@ -1239,6 +1240,26 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return this._inputControl;
          },
 
+
+         // Установка кастомизируемой цитаты
+         setCustomBlockquote: function() {
+            var
+               selectionContent = (this._tinyEditor.selection.getNode()),
+               span = selectionContent.closest('p');
+            this._tinyEditor.formatter.apply('customBlockquote', selectionContent);
+               selectionContent = (this._tinyEditor.selection.getNode());
+            if(!selectionContent.closest('span'))
+               this._tinyEditor.formatter.apply('customBlockquote', selectionContent);
+
+         },
+         // Удаление кастомизируемой цитаты
+         removeCustomBlockquote: function() {
+            var
+               selectionContent = (this._tinyEditor.selection.getNode()),
+               span = selectionContent.closest('span');
+            this._tinyEditor.formatter.remove('customBlockquote', span);
+         },
+
          /**
           * Установить выравнивание текста для активной строки
           * @param {String} align Устанавливаемое выравнивание
@@ -1606,7 +1627,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                self._tinyReady.callback();
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
                //formatter есть только после инита поэтому подписка осуществляется здесь
-               editor.formatter.formatChanged('bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote', function(state, obj) {
+               editor.formatter.formatChanged('bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote,customBlockquote', function(state, obj) {
                   self._notify('onFormatChange', obj, state)
                });
                self._notify('onInitEditor');
@@ -2524,7 +2545,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._inputControl.html().indexOf('</li>') < 0 &&
                this._inputControl.html().indexOf('<p>&nbsp;') < 0 &&
                this._inputControl.html().indexOf('<p><br>&nbsp;') < 0 &&
-               this._inputControl.html().indexOf('<blockquote>') < 0
+               this._inputControl.html().indexOf('<blockquote>') < 0 &&
+               this._inputControl.html().indexOf('<customBlockquote>') < 0
             );
          },
 

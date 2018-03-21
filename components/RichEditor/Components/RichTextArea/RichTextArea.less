@@ -312,3 +312,23 @@
       }
    }
 }
+// Стили для кастомизируемой цитаты
+.customBlockquote {
+   border-left: 1px #587ab0 solid;
+   padding-left: 8px;
+   padding-right: 0;
+   margin: 0 16px 0 40px !important;
+   clear: both;
+   position: relative;
+   color: #9122BF;
+   font-size: 24px;
+   text-decoration: underline;
+   line-height: normal;
+}
+.customBlockquote::before {
+   position: absolute;
+   margin-left: -32px;
+   height: 16px;
+   width: 24px;
+   content: url("http://1.bp.blogspot.com/-OP1M_9Oot8w/UCNY8RCZmKI/AAAAAAAAAQU/Nclf9KnEBA0/s1600/pixelicons14.gif");
+}
