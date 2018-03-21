@@ -531,10 +531,10 @@ define('SBIS3.CONTROLS/DataGridView',
              * @example
              * 1. Подключаем шаблон в массив зависимостей:
              * <pre>
-             *     define('js!SBIS3.Demo.nDataGridView',
+             *     define('Examples/MyArea/nDataGridView',
              *        [
              *           ...,
-             *           'html!SBIS3.Demo.nDataGridView/resources/headTpl'
+             *           'tmpl!Examples/MyArea/nDataGridView/resources/headTpl'
              *        ],
              *        ...
              *     );
@@ -1094,11 +1094,14 @@ define('SBIS3.CONTROLS/DataGridView',
          }
       },
       _onResizeHandler: function() {
-         DataGridView.superclass._onResizeHandler.apply(this, arguments);
+         /* Выполняем до родительского resize, иначе фиксированная шапка будет считать ширину колонок
+            до установки ширины частичным скролом, и может случиться рассинхрон ширин в шапке и таблице */
          this._containerOffsetWidth = this.getContainer().outerWidth();
          if(this.hasPartScroll()) {
+            this._setColumnWidthForPartScroll();
             this._updatePartScroll();
          }
+         DataGridView.superclass._onResizeHandler.apply(this, arguments);
       },
       //********************************//
       //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //

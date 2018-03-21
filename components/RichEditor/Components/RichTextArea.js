@@ -2324,24 +2324,25 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          },
 
          _applyEnabledState: function (enabled) {
-            var container = this._tinyEditor ? this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl : this._inputControl;
+            var container = this._tinyEditor && this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl;
             var options = this._options;
             if (options.autoHeight) {
                this._scrollContainer.css('max-height', this._cleanHeight(options.maximalHeight) || '');
-               if (this._dataReview) {
-                  this._dataReview.css('min-height', this._cleanHeight(options.minimalHeight) || '');
-               }
+               // Не нужно фиксировать минимальную высоту области просмотра
+               // 1175020199 https://online.sbis.ru/opendoc.html?guid=ff26541b-4dce-4df3-8b04-1764ee9b1e7a
+               /*if (this._dataReview) {
+                  this._dataReview.css('min-height', enabled ? '' : this._cleanHeight(options.minimalHeight) || '');
+               }*/
             }
             else {
                if (this._dataReview) {
-                  this._dataReview.css('min-height', this._scrollContainer.height() /*- constants.dataReviewPaddings*/);//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
+                  this._dataReview.css('min-height', enabled ? '' : this._scrollContainer.height());
                }
             }
             if (this._dataReview) {
-               this._updateDataReview(this.getText() || '');
+               this._updateDataReview(this.getText() || '', true);
                this._dataReview.toggleClass('ws-hidden', enabled);
             }
-
             container.toggleClass('ws-hidden', !enabled);
             this._inputControl.toggleClass('ws-hidden', !enabled);
             //Требуем в будущем пересчитать размеры контрола
@@ -2652,8 +2653,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
          //Метод обновляющий значение редактора в задизабленом состоянии
          //В данном методе происходит оборачивание ссылок в <a> или их декорирование, если указана декоратор
-         _updateDataReview: function(text) {
-            if (this._dataReview && !this.isEnabled() && (this._lastReview ==/*Не ===*/ null || this._lastReview !== text)) {
+         _updateDataReview: function(text, isForced) {
+            if (this._dataReview && (!this.isEnabled() || isForced) && (this._lastReview ==/*Не ===*/ null || this._lastReview !== text)) {
                // _lastReview Можно устанавливать только здесь, когда он реально помещается в DOM, (а не в конструкторе, не в init и не в onInit)
                // иначе проверку строкой выше не пройти. (И устанавливаем всегда строкой, даже если пришли null или undefined)
                this._lastReview = text || '';
