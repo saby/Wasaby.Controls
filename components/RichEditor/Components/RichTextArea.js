@@ -2627,10 +2627,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                var contentHeight = content.scrollHeight;
                var isChanged = totalHeight !== this._lastTotalHeight || contentHeight !== this._lastContentHeight;
-               if (isChanged) {
-                  this._container[0].scrollTop = 0;
-                  this._scrollContainer[0].scrollTop = 0;
-               }
+               // При вводе (при переводе на вторую строку) скрол-контейнер немного прокручивается внутри родительского контейнера - вернуть его на место
+               // 1175034880 https://online.sbis.ru/opendoc.html?guid=ea5afa7c-f81d-4e53-9709-e10e3acc51e9
+               this._scrollContainer[0].scrollTop = 0;
                if (cConstants.browser.isIE) {
                   // В MSIE при добавлении новой строки clientHeight и scrollHeight начинают расходиться - нужно их уравнять
                   // 1175015989 https://online.sbis.ru/opendoc.html?guid=d013f54f-683c-465c-b437-6adc64dc294a
