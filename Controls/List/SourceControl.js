@@ -34,9 +34,12 @@ define('Controls/List/SourceControl', [
 
                //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
                _private.handleListScroll(self, 0);
+               //forceUpdate is required here, because if there are no handlers for onDataLoad,
+               //vdom will not rebuilt
+               self._forceUpdate();
             }).addErrback(function(error){
-               _private.processLoadError(self, error)
-            })
+               _private.processLoadError(self, error);
+            });
          }
          else {
             IoC.resolve('ILogger').error('SourceControl', 'Source option is undefined. Can\'t load data');
