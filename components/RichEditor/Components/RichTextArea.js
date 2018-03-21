@@ -1410,8 +1410,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                new Dialog({
                   name: 'imagePropertiesDialog',
                   template: 'SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog',
-                  selectedImage: $image,
-                  editorWidth: self._inputControl.width(),
+                  parent: self,
+                  componentOptions: {
+                     selectedImage: $image,
+                     editorWidth: self._inputControl.width(),
+                  },
                   handlers: {
                      onBeforeShow: function () {
                         CommandDispatcher.declareCommand(this, 'saveImage', function () {
@@ -1439,6 +1442,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            });
                            editor.undoManager.add();
                         }.bind(this));
+                     },
+                     onAfterShow: function () {
+                        self._notify('onImagePropertiesDialogOpen');
                      }
                   }
                });
@@ -2190,8 +2196,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._imageOptionsPanel.subscribe('onTemplateChange', function(event, template){
                   self._changeImageTemplate(this.getTarget(), template);
                });
-               this._imageOptionsPanel.subscribe('onImageSizeChange', function(){
+               this._imageOptionsPanel.subscribe('onImageSizeChange', function (evt) {
+                  var promise = new Deferred();
+                  self.subscribeOnceTo(self, 'onImagePropertiesDialogOpen', promise.callback.bind(promise));
                   self._showImagePropertiesDialog(this.getTarget());
+                  evt.setResult(promise);
                });
             } else {
                this._imageOptionsPanel.setTarget(target);
@@ -2357,7 +2366,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
             }
             if (this._dataReview) {
-               this._updateDataReview(this.getText() || '', true);
+               this._updateDataReview(this.getText() || '', !enabled);
                this._dataReview.toggleClass('ws-hidden', enabled);
             }
             container.toggleClass('ws-hidden', !enabled);
@@ -2627,10 +2636,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                var contentHeight = content.scrollHeight;
                var isChanged = totalHeight !== this._lastTotalHeight || contentHeight !== this._lastContentHeight;
-               if (isChanged) {
-                  this._container[0].scrollTop = 0;
-                  this._scrollContainer[0].scrollTop = 0;
-               }
+               // При вводе (при переводе на вторую строку) скрол-контейнер немного прокручивается внутри родительского контейнера - вернуть его на место
+               // 1175034880 https://online.sbis.ru/opendoc.html?guid=ea5afa7c-f81d-4e53-9709-e10e3acc51e9
+               this._scrollContainer[0].scrollTop = 0;
                if (cConstants.browser.isIE) {
                   // В MSIE при добавлении новой строки clientHeight и scrollHeight начинают расходиться - нужно их уравнять
                   // 1175015989 https://online.sbis.ru/opendoc.html?guid=d013f54f-683c-465c-b437-6adc64dc294a

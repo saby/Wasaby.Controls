@@ -1083,6 +1083,11 @@ define('SBIS3.CONTROLS/DataGridView',
             $('<div></div>').appendTo(this._getTableContainer()).remove();
          }
       },
+   
+      _drawItemsCallbackSync: function() {
+         this._updateHoveredColumnCells();
+         DataGridView.superclass._drawItemsCallbackSync.call(this);
+      },
 
       _editFieldFocusHandler: function(focusedCtrl) {
          if(this._itemsToolbar) {
