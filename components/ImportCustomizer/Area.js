@@ -188,7 +188,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   results[i + 1] = {
                      provider: {parser:parserName, skippedRows:skippedRows, separator:sheet.separator || ''},
                      providerArgs: this._getProviderArgsOptions(options, parserName, false),
-                     columnBinding: {accordances:{}, skippedRows:skippedRows},
+                     columnBinding: {accordances:{}, skippedRows:skippedRows}
                   };
                }
                results[''] = cMerge({}, results[1]);
@@ -310,7 +310,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             var item = {
                parser: provider.parser,
                skippedRows: provider.skippedRows,
-               columns: Object.keys(columnBindingAccordances).map(function (v) { return {index:columnBindingAccordances[v], field:v}; }),
+               columns: Object.keys(columnBindingAccordances).map(function (v) { return {index:columnBindingAccordances[v], field:v}; })
             };
             if (provider.separator) {
                item.separator = provider.separator;

@@ -53,7 +53,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Provider/View',
                /**
                 * @cfg {string} Символы-разделители
                 */
-               separator: '',
+               separator: ''
             },
             // Компонент выбора провайдера парсинга импортируемых данных
             _parserView: null
