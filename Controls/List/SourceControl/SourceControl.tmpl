@@ -11,7 +11,10 @@
               itemTemplate="{{_options.itemTemplate}}"
               idProperty="{{_options.idProperty}}"
               displayProperty="{{_options.displayProperty}}"
-              markedKey="{{_options.markedKey}}">
+              markedKey="{{_options.markedKey}}"
+              on:itemClick="_onItemClick()"
+              on:rowDeactivated="_onRowDeactivated()"
+              on:keyDown="_onKeyDown()">
         </ws:partial>
     </ws:if>
 
@@ -33,4 +36,12 @@
             <div class="controls-SourceControl__loadingIndicatorImg"></div>
         </div>
     </ws:if>
+
+    <ws:partial template="{{_options.editInPlaceControllerName}}"
+                name="editInPlace"
+                initialConfig="{{initialEditInPlaceConfig}}"
+                items="{{_listViewModel.getItems()}}"
+                source="{{_options.source}}"
+                on:afterBeginEdit="_onAfterBeginEdit()"
+                on:afterEndEdit="_onAfterEndEdit()" />
 </div>

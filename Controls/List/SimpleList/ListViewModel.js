@@ -107,6 +107,21 @@ define('Controls/List/SimpleList/ListViewModel',
             return this._itemsModel.getCount();
          },
 
+         getItems: function() {
+            return this._itemsModel.getItems();
+         },
+
+         setEditingItem: function(item) {
+            this._itemsModel.setEditingItem(item);
+         },
+
+         getEditingItem: function() {
+            return this._itemsModel.getEditingItem();
+         },
+         getEditingItemIndex: function () {
+            return this._itemsModel.getEditingItemIndex();
+         },
+
          __calcSelectedItem: function(display, selKey, idProperty) {
 
             //TODO надо вычислить индекс

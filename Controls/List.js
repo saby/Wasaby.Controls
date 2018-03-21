@@ -5,7 +5,8 @@ define('Controls/List', [
    'Core/Control',
    'tmpl!Controls/List/SimpleList',
    'Controls/List/SimpleList/ListViewModel',
-   'Controls/List/SimpleList/ListView'
+   'Controls/List/SimpleList/ListView',
+   'Controls/List/EditInPlace'
 ], function (Control,
              ListControlTpl,
              ListViewModel
@@ -74,6 +75,10 @@ define('Controls/List', [
          } else if (newOptions.markedKey !== this._options.markedKey) {
             this._viewModel.setMarkedKey(newOptions.markedKey);
          }
+      },
+
+      beginAdd: function(options) {
+         this._children.sourceControl.beginAdd(options);
       }
    });
 

@@ -30,6 +30,7 @@ define('Controls/List/SourceControl', [
 
                if (self._listViewModel) {
                   self._listViewModel.setItems(list);
+                  self._forceUpdate();
                }
 
                //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
@@ -242,6 +243,50 @@ define('Controls/List/SourceControl', [
 
       getItemsCount: function(self) {
          return self._listViewModel ? self._listViewModel.getCount() : 0;
+      },
+
+      beginEdit: function(self, record) {
+         var
+            editingItemIndex = self._listViewModel.getEditingItemIndex(),
+            currentItemIndex = self._listViewModel.getItems().getIndex(record);
+         //Если currentItemIndex = -1, то происходит добавление
+         if (editingItemIndex !== currentItemIndex && ~currentItemIndex) {
+            //TODO: показали индикатор
+            return self._children.editInPlace.beginEdit(record).addBoth(function(record) {
+               //TODO: скрыли индикатор
+            });
+         }
+      },
+
+      beginAdd: function(self, options) {
+         //TODO: показали индикатор
+         return self._children.editInPlace.beginAdd(options || {}).addBoth(function(record) {
+            //TODO: скрыли индикатор
+         });
+      },
+
+      cancelEdit: function(self) {
+         return self._children.editInPlace.cancelEdit();
+      },
+
+      editNextTarget: function(self, editNextRow) {
+         var
+            items = self._listViewModel.getItems(),
+            index = self._listViewModel.getEditingItemIndex();
+
+         if (editNextRow) {
+            if (index < items.getCount() - 1) {
+               _private.beginEdit(self, items.at(index + 1));
+            } else {
+               _private.beginAdd(self);
+            }
+         } else {
+            if (index > 0) {
+               _private.beginEdit(self, items.at(index - 1));
+            } else {
+               self._children.editInPlace.commitEdit();
+            }
+         }
       }
    };
 
@@ -316,6 +361,16 @@ define('Controls/List/SourceControl', [
             if (!this._items) {
                _private.reload(this);
             }
+         }
+
+         if (newOptions.editingConfig && newOptions.editingConfig.record) {
+            //TODO: непонятно как ставить маркер при добавлении
+            var recordClone = newOptions.editingConfig.record.clone();
+            this._listViewModel.setEditingItem(recordClone);
+            this.initialEditInPlaceConfig = {
+               record: recordClone,
+               isAdd: this._listViewModel._itemsModel._isAdd
+            };
          }
       },
 
@@ -410,8 +465,55 @@ define('Controls/List/SourceControl', [
 
       reload: function() {
          _private.reload(this);
-      }
+      },
 
+      beginEdit: function(record) {
+         _private.beginAdd(this, record);
+      },
+
+      beginAdd: function(options) {
+        _private.beginAdd(this, options);
+      },
+
+      _onItemClick: function(e, record) {
+         _private.beginEdit(this, record);
+      },
+
+      _onAfterBeginEdit: function(e, record) {
+         this._listViewModel.setEditingItem(record);
+         this._listViewModel.setMarkedKey(record.get(this._options.idProperty));
+      },
+
+      _onAfterEndEdit: function() {
+         this._options.listViewModel.setEditingItem(null);
+      },
+
+      _onKeyDown: function(e) {
+         if (this._options.listViewModel.getEditingItem()) {
+            switch(e.nativeEvent.keyCode) {
+               case 13: //Enter
+                  _private.editNextTarget(this, true);
+                  break;
+               case 27: //Esc
+                  _private.cancelEdit(this);
+                  break;
+               case 9: //Tab //TODO: для грида это не подойдет, так что надо перейти на _onRowDeactivated после решения проблем с ним
+                  _private.editNextTarget(this, !e.nativeEvent.shiftKey);
+                  break;
+            }
+         }
+      },
+
+      _onRowDeactivated: function(e, isTabPressed) {
+         //TODO: по табу стреляет дважды на одной и той же строке, надо Шипину показать
+         //TODO: про таб знаем, а про шифт нет, нужно доработать немножко
+         //TODO: по Esc не стреляет, нужно спросить Шипина
+         if (isTabPressed) {
+            // _private.editNextTarget(this, true);
+            // console.log('ушёл фокус со строки по табу');
+         }
+         e.stopPropagation();
+      }
    });
 
    //TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757

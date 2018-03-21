@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/SimpleList/ItemsViewModel',
-   ['Core/Abstract', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance'],
-   function(Abstract, ItemsUtil, cInstance) {
+   ['Core/Abstract', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'WS.Data/Display/CollectionItem'],
+   function(Abstract, ItemsUtil, cInstance, CollectionItem) {
 
       /**
        *
@@ -17,6 +17,18 @@ define('Controls/List/SimpleList/ItemsViewModel',
                && (newList.getModel() === oldList.getModel())
                && (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor)
                && (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor)
+         },
+         isAdd: function(self) {
+            var editingItem = self.getEditingItem();
+
+            if (editingItem) {
+               return !self.getItemById(ItemsUtil.getPropertyValue(editingItem, self._options.idProperty), self._options.idProperty);
+            }
+
+            return false;
+         },
+         isEditingItem: function(self, item) {
+            return self.getEditingItem() && ItemsUtil.getPropertyValue(item, self._options.idProperty) === ItemsUtil.getPropertyValue(self.getEditingItem(), self._options.idProperty);
          }
       };
       var ItemsViewModel = Abstract.extend({
@@ -41,7 +53,7 @@ define('Controls/List/SimpleList/ItemsViewModel',
          },
 
          isEnd: function() {
-            return this._curIndex < (this._display ? this._display.getCount() : 0);
+            return this._curIndex < (this._display ? this._isAdd ? this._display.getCount() + 1 : this._display.getCount() : 0);
          },
 
          goToNext: function() {
@@ -50,13 +62,21 @@ define('Controls/List/SimpleList/ItemsViewModel',
 
          getCurrent: function() {
             var dispItem = this._display.at(this._curIndex);
+
+            //TODO: непонятно как проставлять markedItem при добавлении, т.к. записи с таким ключом нет, а сейчас запись проставляется по ключу
+            if (!dispItem) {
+               //TODO: я сюда попаду в нужный момент только если добавление происходит в конец
+               dispItem = new CollectionItem({ contents: this.getEditingItem() });
+            }
+
             return {
                getPropValue: ItemsUtil.getPropertyValue,
                idProperty: this._options.idProperty,
                displayProperty: this._options.displayProperty,
                index : this._curIndex,
-               item: dispItem.getContents(),
-               dispItem: dispItem
+               item: _private.isEditingItem(this, dispItem.getContents()) ? this.getEditingItem() : dispItem.getContents(),
+               dispItem: dispItem,
+               isEditing: _private.isEditingItem(this, dispItem.getContents())
             }
          },
 
@@ -93,6 +113,33 @@ define('Controls/List/SimpleList/ItemsViewModel',
 
          prependItems: function(items) {
             this._items.prepend(items);
+         },
+         getItems: function() {
+            return this._display ? this._display.getCollection() : undefined;
+         },
+         setEditingItem: function(item) {
+            this._editingItem = item;
+            this._isAdd = _private.isAdd(this);
+         },
+         getEditingItem: function() {
+            return this._editingItem;
+         },
+         getEditingItemIndex: function() {
+            //TODO: надо бы тоже высчитывать не каждый раз, а один
+            var
+               index = -1,
+               editingItem = this.getEditingItem();
+
+            if (editingItem) {
+               if (this._isAdd) {
+                  //TODO: на самом деле добавлять могут куда угодно и нужно будет высчитывать иначе
+                  return this.getItems().getCount();
+               } else {
+                  return this.getItems().getIndex(this.getItemById(ItemsUtil.getPropertyValue(editingItem, this._options.idProperty), this._options.idProperty).getContents());
+               }
+            }
+
+            return index;
          }
       });
 
