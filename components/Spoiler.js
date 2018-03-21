@@ -28,7 +28,7 @@ define('SBIS3.CONTROLS/Spoiler', [
     * @extends WSControls/Buttons/ButtonBase
     * @mixes SBIS3.CONTROLS/Mixins/Expandable
     *
-	* @demo SBIS3.CONTROLS.Demo.MySpoiler
+	* @demo Examples/Spoiler/MySpoiler/MySpoiler
     *
     * @control
     * @initial

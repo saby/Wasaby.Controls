@@ -45,7 +45,7 @@ define(
     *
     * @author Крайнов Д.О.
     *
-    * @demo SBIS3.CONTROLS.Demo.MyDatePicker
+    * @demo Examples/DatePicker/MyDatePicker/MyDatePicker
     *
     * @control
     * @public

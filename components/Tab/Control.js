@@ -23,7 +23,7 @@ define('SBIS3.CONTROLS/Tab/Control', [
     * @control
     * @author Красильников А.С.
     * @public
-    * @demo SBIS3.CONTROLS.Demo.MyTabControl
+    * @demo Examples/TabControl/MyTabControl/MyTabControl
     */
 
    var TabControl = CompoundControl.extend([HasItemsMixin], /** @lends SBIS3.CONTROLS/Tab/Control.prototype */ {

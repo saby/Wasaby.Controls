@@ -52,7 +52,7 @@ define('SBIS3.CONTROLS/TextBox', [
     * @class SBIS3.CONTROLS/TextBox
     * @extends SBIS3.CONTROLS/TextBox/TextBoxBase
     * @author Зайцев А.С.
-    * @demo SBIS3.CONTROLS.Demo.MyTextBox
+    * @demo Examples/TextBox/MyTextBox/MyTextBox
     *
     * @ignoreOptions independentContext contextRestriction className horizontalAlignment
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth
