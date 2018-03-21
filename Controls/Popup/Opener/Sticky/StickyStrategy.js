@@ -19,7 +19,7 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function () {
       center: -1 / 2
    };
 
-   return {
+   var _private = {
       /*
        * Возвращает точку таргета, относительно которой нужно спозиционироваться окну
        * */
@@ -118,10 +118,19 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function () {
          }
       },
 
+      getWindowSizes: function () {
+         return {
+            width: window.innerWidth,
+            height: window.innerHeight
+         }
+      }
+   };
+
+   return {
       getPosition: function (popupCfg, targetCoords) {
-         var targetPoint = this.getTargetPoint(popupCfg, targetCoords);
-         var horizontalPosition = this.getPositionCoordinates(popupCfg, targetCoords, targetPoint, 'horizontal');
-         var verticalPosition = this.getPositionCoordinates(popupCfg, targetCoords, targetPoint, 'vertical');
+         var targetPoint = _private.getTargetPoint(popupCfg, targetCoords);
+         var horizontalPosition = _private.getPositionCoordinates(popupCfg, targetCoords, targetPoint, 'horizontal');
+         var verticalPosition = _private.getPositionCoordinates(popupCfg, targetCoords, targetPoint, 'vertical');
 
          return {
             left: horizontalPosition.coordinate,
@@ -129,13 +138,6 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function () {
             width: horizontalPosition.size,
             height: verticalPosition.size
          };
-      },
-
-      getWindowSizes: function () {
-         return {
-            width: window.innerWidth,
-            height: window.innerHeight
-         }
       }
    }
 });

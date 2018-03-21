@@ -16,7 +16,7 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
       var InfoBoxController = StickyController.constructor.extend({
          _openedPopupId: null,
 
-         elementCreated: function (cfg, sizes, id) {
+         elementCreated: function (cfg, container, id) {
             // Открыто может быть только одно окно
             if (this._openedPopupId) {
                Manager.remove(this._openedPopupId);

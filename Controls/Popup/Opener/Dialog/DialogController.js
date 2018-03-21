@@ -18,11 +18,15 @@ define('Controls/Popup/Opener/Dialog/DialogController',
        * @extends Controls/Control
        */
       var DialogController = BaseController.extend({
-         elementCreated: function (cfg, sizes) {
-            _private.prepareConfig(cfg, sizes);
+         elementCreated: function (cfg, container) {
+            this.prepareConfig(cfg, container);
          },
 
-         elementUpdated: function (cfg, sizes) {
+         elementUpdated: function (cfg, container) {
+            this.prepareConfig(cfg, container);
+         },
+         prepareConfig: function (cfg, container) {
+            var sizes = this._getPopupSizes(cfg, container);
             _private.prepareConfig(cfg, sizes);
          }
       });

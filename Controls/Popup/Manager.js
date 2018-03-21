@@ -42,11 +42,11 @@ define('Controls/Popup/Manager',
                      onClosePopup: function (event, id, container) {
                         _private.popupClose(id, container);
                      },
-                     onPopupCreated: function (event, id, sizes) {
-                        _private.popupCreated(id, sizes);
+                     onPopupCreated: function (event, id, container) {
+                        _private.popupCreated(id, container);
                      },
-                     onPopupUpdated: function (event, id, sizes) {
-                        _private.popupUpdated(id, sizes);
+                     onPopupUpdated: function (event, id, container) {
+                        _private.popupUpdated(id, container);
                      },
                      onPopupFocusIn: function (event, id, focusedControl) {
                         _private.popupFocusIn(id, focusedControl);
@@ -63,25 +63,25 @@ define('Controls/Popup/Manager',
             return _popupContainer;
          },
 
-         popupCreated: function (id, sizes) {
+         popupCreated: function (id, container) {
             var element = Manager.find(id);
             if (element) {
                var strategy = element.strategy;
                if (strategy) {
                   // при создании попапа, зарегистрируем его
-                  strategy.elementCreated(element, sizes, id);
+                  strategy.elementCreated(element, container, id);
                   Manager._redrawItems();
                }
             }
          },
 
-         popupUpdated: function (id, sizes) {
+         popupUpdated: function (id, container) {
             var element = Manager.find(id);
             if (element) {
                var strategy = element.strategy;
                if (strategy) {
                   // при создании попапа, зарегистрируем его
-                  strategy.elementUpdated(element, sizes);
+                  strategy.elementUpdated(element, container);
                   Manager._redrawItems();
                }
             }

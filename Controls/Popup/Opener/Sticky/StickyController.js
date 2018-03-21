@@ -37,11 +37,17 @@ define('Controls/Popup/Opener/Sticky/StickyController',
 
             // Удаляем предыдущие классы характеризующие направление и добавляем новые
             if (cfg.popupOptions.className) {
-               cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup-align\S*/g, '').trim();
+               cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup__empty-margins|controls-Popup-align\S*/g, '').trim();
                cfg.popupOptions.className += ' ' + _private.getOrientationClasses(popupCfg);
             }
             else {
                cfg.popupOptions.className = _private.getOrientationClasses(popupCfg);
+            }
+         },
+
+         resetClasses: function(cfg) {
+            if (cfg.popupOptions.className) {
+               // cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup__empty-margins|controls-Popup-align\S*/g, '').trim();
             }
          },
 
@@ -62,14 +68,16 @@ define('Controls/Popup/Opener/Sticky/StickyController',
        * @category Popup
        */
       var StickyController = BaseController.extend({
-         elementCreated: function (cfg, sizes) {
-            this.prepareConfig(cfg, sizes);
+         elementCreated: function (cfg, container) {
+            this.prepareConfig(cfg, container);
          },
 
-         elementUpdated: function (cfg, sizes) {
-            this.prepareConfig(cfg, sizes);
+         elementUpdated: function (cfg, container) {
+            _private.resetClasses(cfg);
+            this.prepareConfig(cfg, container);
          },
-         prepareConfig: function (cfg, sizes) {
+         prepareConfig: function (cfg, container) {
+            var sizes = this._getPopupSizes(cfg, container);
             _private.prepareConfig(cfg, sizes);
          }
       });
