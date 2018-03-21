@@ -1,5 +1,5 @@
 .controls-FastData {
-   .inline-flexbox();
+   display: inline-block;
 }
 
 .controls-FastData__icon {
@@ -13,3 +13,15 @@
    color: @color_FastData-icon_hover;
 }
 
+.controls-FastData__wrapper {
+   .inline-flexbox();
+   align-items: center;
+}
+
+.controls-FastData__block {
+   .inline-flexbox();
+}
+
+.controls-FastData__block:hover .controls-FastData__icon-DayForward {
+      color: @color_FastData-icon_hover;
+}
