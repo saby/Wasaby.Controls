@@ -93,6 +93,14 @@ define('Controls/List/SimpleList/ItemsViewModel',
 
          prependItems: function(items) {
             this._items.prepend(items);
+         },
+
+         removeItem: function(item) {
+            this._items.removeItem(item);
+         },
+
+         removeItemAt: function(index) {
+            this._items.removeItemAt(index);
          }
       });
 
