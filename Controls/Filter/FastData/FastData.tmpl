@@ -1,12 +1,13 @@
-<div name="fastData">
+<div class="controls-FastData">
 
    <ws:for data="index, i in _listConfig">
-      <div class="controls-FastData">
+      <div class="controls-FastData__wrapper">
          <!--Стрелка отображается всегда - это не по стандарту!-->
-         <span class="controls-FastData__icon icon-DayForward controls-FastData__icon-DayForward"
-                  on:click="_open(i)"></span>
-         <div class="controls-Dropdown__text"
-              on:click="_open(i, index)">{{_updateText(i, index, _selectedItems[key], displayProperty || 'title')}}
+         <div class="controls-FastData__block"
+              on:click="_open(i, index)">
+            <span class="controls-FastData__icon icon-DayForward controls-FastData__icon-DayForward"></span>
+            <div class="controls-Dropdown__text">{{_updateText(i, index, _selectedItems[key], displayProperty || 'title')}}
+            </div>
          </div>
          <ws:if data="{{_selectedIndexes[index]}}">
          <span class="controls-FastData__icon icon-Close icon-disabled"

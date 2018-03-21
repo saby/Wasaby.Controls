@@ -62,6 +62,23 @@ define('Controls-demo/Layouts/SearchLayout', [
                ]
             }
          }
+      },
+      {
+         id: 'id',
+         idProperty: 'id',
+         displayProperty: 'title',
+         source: {
+            module: 'WS.Data/Source/Memory',
+            options: {
+               data: [
+                  {id: 0, title: 'All'},
+                  {id: 1, title: '0'},
+                  {id: 2, title: '1'},
+                  {id: 3, title: '2'},
+                  {id: 3, title: '3'}
+               ]
+            }
+         }
       }
    ];
 
@@ -77,7 +94,6 @@ define('Controls-demo/Layouts/SearchLayout', [
             idProperty: 'id',
             data: filterData
          })
-
       });
    return ModuleClass;
 });
