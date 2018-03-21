@@ -2346,7 +2346,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
             }
             if (this._dataReview) {
-               this._updateDataReview(this.getText() || '', true);
+               this._updateDataReview(this.getText() || '', !enabled);
                this._dataReview.toggleClass('ws-hidden', enabled);
             }
             container.toggleClass('ws-hidden', !enabled);
