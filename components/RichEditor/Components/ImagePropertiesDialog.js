@@ -20,14 +20,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
 
       init: function() {
          moduleClass.superclass.init.call(this);
-         
+
          var
-            ctrlDialog = this.getTopParent(),
+            ctrlDialog = this.getParent(),
             ctrlApplyButton = this.getChildControlByName("applyButton"),
             ctrlImageHeight = this.getChildControlByName("imageHeight"),
             ctrlImageWidth = this.getChildControlByName("imageWidth"),
             ctrlValueType = this.getChildControlByName('valueType'),
-            $image = ctrlDialog._options.selectedImage,
+            options = this._options,
+            $image = options.selectedImage,
             image = $image[0],
             naturalHeight = image.naturalHeight,
             naturalWidth = image.naturalWidth,
@@ -53,8 +54,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog', [
             }],
             valueTypeChange = function() {
                if (ctrlValueType.getValue() === 'per') {
-                  ctrlImageWidth.setValue(parseInt(100*$image.width()/ctrlDialog._options.editorWidth,10));
-                  ctrlImageHeight.setValue(parseInt(100*$image.width()/ctrlDialog._options.editorWidth,10));
+                  ctrlImageWidth.setValue(parseInt(100*$image.width()/options.editorWidth,10));
+                  ctrlImageHeight.setValue(parseInt(100*$image.width()/options.editorWidth,10));
                } else {
                   ctrlImageWidth.setValue($image.width());
                   ctrlImageHeight.setValue( $image.height());
