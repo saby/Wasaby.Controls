@@ -4,7 +4,7 @@ define('Controls/Popup/Opener/InfoBox',
       'Core/core-clone',
       'tmpl!Controls/Popup/Opener/InfoBox/resources/template',
       'Controls/Popup/Opener/Base',
-      'Controls/Popup/Opener/InfoBox/Strategy',
+      'Controls/Popup/Opener/InfoBox/InfoBoxController',
       'css!Controls/Popup/Opener/InfoBox/InfoBox'
    ],
    function (cMerge, cClone, template, Base, Strategy) {
@@ -71,6 +71,7 @@ define('Controls/Popup/Opener/InfoBox',
          open: function(cfg){
 
             // Если есть открытый инфобокс, закрываем
+            //TODO убрать, сейчас нужно, т.к. после update'a затираются классы
             if (this.isOpened()) {
                this.close();
             }

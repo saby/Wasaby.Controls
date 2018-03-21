@@ -1,4 +1,4 @@
-define('Controls/Popup/Opener/BaseStrategy',
+define('Controls/Popup/Opener/BaseController',
    [
       'Core/core-extend',
       'Core/Deferred'
@@ -7,13 +7,13 @@ define('Controls/Popup/Opener/BaseStrategy',
       /**
        * Базовая стратегия
        * @category Popup
-       * @class Controls/Popup/Opener/BaseStrategy
+       * @class Controls/Popup/Opener/BaseController
        * @author Лощинин Дмитрий
        */
-      var BaseStrategy = CoreExtend.extend({
+      var BaseController = CoreExtend.extend({
          /**
           * Добавление нового элемента
-          * @function Controls/Popup/Opener/BaseStrategy#elementCreated
+          * @function Controls/Popup/Opener/BaseController#elementCreated
           * @param element
           * @param width
           * @param height
@@ -24,7 +24,7 @@ define('Controls/Popup/Opener/BaseStrategy',
 
          /**
           * Обновление размеров элемента
-          * @function Controls/Popup/Opener/BaseStrategy#elementUpdated
+          * @function Controls/Popup/Opener/BaseController#elementUpdated
           * @param element
           * @param width
           * @param height
@@ -35,24 +35,13 @@ define('Controls/Popup/Opener/BaseStrategy',
 
          /**
           * Удаление элемента
-          * @function Controls/Popup/Opener/BaseStrategy#elementDestroyed
+          * @function Controls/Popup/Opener/BaseController#elementDestroyed
           * @param element
           */
          elementDestroyed: function (element) {
             return new cDeferred().callback();
-         },
-
-         /**
-          * Возвращает позицию элемента по умолчанию
-          * @function Controls/Popup/Opener/BaseStrategy#getDefaultPosition
-          */
-         getDefaultPosition: function () {
-            return {
-               top: -10000,
-               left: -10000
-            };
          }
       });
-      return BaseStrategy;
+      return BaseController;
    }
 );

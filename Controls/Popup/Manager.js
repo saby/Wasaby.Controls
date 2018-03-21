@@ -133,8 +133,10 @@ define('Controls/Popup/Manager',
                id: Random.randomId('popup-'),
                isModal: options.isModal,
                strategy: strategy,
-               position: strategy.getDefaultPosition(),
-
+               position: {
+                  top: -10000,
+                  left: -10000
+               },
                popupOptions: options
             };
             _private.addElement.call(this, element);
