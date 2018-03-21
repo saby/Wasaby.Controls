@@ -10,9 +10,10 @@ define('Controls-demo/Headers/demoHeader', [
    var ModuleClass = Control.extend(
       {
          _template: template,
+         _iconValue: false,
 
          clickHandler: function (e) {
-            console.log('Click')
+            console.log('Click');
          },
 
          clickCount: function (e) {
@@ -21,6 +22,7 @@ define('Controls-demo/Headers/demoHeader', [
 
          iconCount: function (e) {
             console.log('iconCount');
+            this._iconValue = !this._iconValue;
          }
       });
    return ModuleClass;
