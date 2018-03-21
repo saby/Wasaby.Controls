@@ -1396,8 +1396,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                new Dialog({
                   name: 'imagePropertiesDialog',
                   template: 'SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog',
-                  selectedImage: $image,
-                  editorWidth: self._inputControl.width(),
+                  parent: self,
+                  componentOptions: {
+                     selectedImage: $image,
+                     editorWidth: self._inputControl.width(),
+                  },
                   handlers: {
                      onBeforeShow: function () {
                         CommandDispatcher.declareCommand(this, 'saveImage', function () {
@@ -1425,6 +1428,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            });
                            editor.undoManager.add();
                         }.bind(this));
+                     },
+                     onAfterShow: function () {
+                        self._notify('onImagePropertiesDialogOpen');
                      }
                   }
                });
@@ -2170,8 +2176,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._imageOptionsPanel.subscribe('onTemplateChange', function(event, template){
                   self._changeImageTemplate(this.getTarget(), template);
                });
-               this._imageOptionsPanel.subscribe('onImageSizeChange', function(){
+               this._imageOptionsPanel.subscribe('onImageSizeChange', function (evt) {
+                  var promise = new Deferred();
+                  self.subscribeOnceTo(self, 'onImagePropertiesDialogOpen', promise.callback.bind(promise));
                   self._showImagePropertiesDialog(this.getTarget());
+                  evt.setResult(promise);
                });
             } else {
                this._imageOptionsPanel.setTarget(target);
