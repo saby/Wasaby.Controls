@@ -149,10 +149,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                 * Режим автовысоты области просмотра текстового редактора.
                 * @example
                 * <pre>
-                *     <option name="autoReviewHeight">true</option>
+                *     <option name="previewAutoHeight">true</option>
                 * </pre>
                 */
-               autoReviewHeight: false,
+               previewAutoHeight: false,
                /**
                 * @cfg {Object} Объект с настройками для tinyMCE
                 * <wiTag group="Управление">
@@ -2344,10 +2344,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             var options = this._options;
             if (options.autoHeight) {
                this._scrollContainer.css('max-height', this._cleanHeight(options.maximalHeight) || '');
-               // Минимальную высоту области просмотра нужно фиксировать только в отсутствии опции autoReviewHeight
+               // Минимальную высоту области просмотра нужно фиксировать только в отсутствии опции previewAutoHeight
                // 1175020199 https://online.sbis.ru/opendoc.html?guid=ff26541b-4dce-4df3-8b04-1764ee9b1e7a
                // 1175043073 https://online.sbis.ru/opendoc.html?guid=69a945c9-b517-4056-855a-6dec71d81823
-               if (this._dataReview && !options.autoReviewHeight) {
+               if (this._dataReview && !options.previewAutoHeight) {
                   this._dataReview.css('min-height', enabled ? '' : this._cleanHeight(options.minimalHeight) || '');
                }
             }
