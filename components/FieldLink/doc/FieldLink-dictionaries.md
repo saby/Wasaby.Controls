@@ -43,7 +43,7 @@
    <pre class="brush: xml">
        <options name="dictionaries" type="array">
           <options>
-             <option name="template">js!SBIS3.MyArea.MyDict01</option>
+             <option name="template">SBIS3.MyArea.MyDict01</option>
              . . .
           </options>
        </options>
@@ -56,12 +56,12 @@
     <options name="dictionaries" type="array">
        <options>
           <option name="caption">������ 1</option>
-          <option name="template">js!SBIS3.MyArea.MyDict01</option>
+          <option name="template">SBIS3/MyArea/MyDict01</option>
           . . .
        </options>
        <options>
           <option name="caption">������ 2</option>
-          <option name="template">js!SBIS3.MyArea.MyDict02</option>
+          <option name="template">SBIS3/MyArea/MyDict02</option>
           . . .
        </options>
     </options>

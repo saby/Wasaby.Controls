@@ -201,7 +201,7 @@ define('SBIS3.CONTROLS/Browser', [
              * Вызов панели производят кликом по иконке с шестерёнкой, которая расположена справа от строки поиска.
              * Иконка отображается, когда в опции установлено значение.
              * @example
-             * 1. В файле MyColumnsConfig.module.js описан RecordSet для конфигурации Панели редактирования колонок:
+             * 1. В файле MyColumnsConfig.js описан RecordSet для конфигурации Панели редактирования колонок:
              * <pre>
              * define('Examples/MyArea/MyColumnsConfig', ['WS.Data/Collection/RecordSet'], function(RecordSet) {
              *    var data = [

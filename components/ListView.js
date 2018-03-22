@@ -661,7 +661,7 @@ define('SBIS3.CONTROLS/ListView',
                 * // Модификация опций компонента, нужна для передачи обработчиков
                 * _modifyOptions: function() {
                 *    var options = moduleClass.superclass._modifyOptions.apply(this, arguments);
-                *    Serializer.setToJsonForFunction(this._deleteRecord, 'js!SBIS3.Site.MainTable', 'prototype._deleteRecord');
+                *    Serializer.setToJsonForFunction(this._deleteRecord, 'SBIS3/Site/MainTable', 'prototype._deleteRecord');
                 *    options.deleteRecord = this._deleteRecord;
                 *    return options;
                 * }
