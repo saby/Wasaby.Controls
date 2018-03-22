@@ -2,126 +2,54 @@ define([
    'Lib/File/Attach/BaseAttach',
    'Core/Deferred',
    'Core/constants',
+   'Tests/Unit/File/GetResources',
+   'Tests/Unit/File/GetterMock',
+   'Tests/Unit/File/SourceMock',
    'Lib/File/LocalFile',
    'Lib/File/LocalFileLink',
    'Lib/File/HttpFileLink'
-], function (BaseAttach, Deferred, constants, LocalFile, LocalFileLink, HttpFileLink) {
+], function (BaseAttach, Deferred, constants, GetResources, GetterMock, SourceMock, LocalFile, LocalFileLink, HttpFileLink) {
    'use strict';
 
    if (!constants.isBrowserPlatform) {
       return;
    }
+   mocha.setup({
+      ignoreLeaks: true
+   });
 
    describe('Controls/File/BaseAttach', function () {
-      var attach = new BaseAttach();
       var IFileDataConstructors = [LocalFile, LocalFileLink, HttpFileLink];
 
-      var meta = 'meta file info';
-
-      var file1 = new LocalFile(new Blob(['File 1!']), meta, 'file1name').getData();
-      var file2 = new LocalFile(new Blob(['File 2!']), meta, 'file2name').getData();
-
-      var fileLink1 = new LocalFileLink('file:///C:/file1.md');
-      var fileLink2 = new LocalFileLink('file:///C:/file2.md');
-
-      var httpLink1 = new HttpFileLink('http://example.com/file1.md');
-      var httpLink2 = new HttpFileLink('http://example.com/file2.md');
-
-      var getter = {
-         // mock object IResourceGetterBase
-         canExec: function () {
-            return new Deferred().callback(true);
-         },
-         getFiles: function () {
-            return new Deferred().callback([file1, file2]);
-         },
-         getType: function () {
-            return 'ScannerGetter';
-         }
-      };
-      var source = {
-         // mock object ISource
-         call: function () {
-            return new Deferred().callback(true);
-         },
-         copy: function () {
-            var self = this;
-            return new Deferred().callback(self);
-         },
-         create: function () {
-            return new Deferred().callback(true);
-         },
-         destroy: function () {
-            return new Deferred().callback(true);
-         },
-         getBinding: function () {
-            return {
-               create: 'Add',
-               read: 'Load',
-               update: 'Save',
-               destroy: 'Delete'
-            };
-         },
-         getEndpoint: function () {
-            return {
-               address: '/api/',
-               contract: 'User'
-            };
-         },
-         getIdProperty: function () {
-            return 'id';
-         },
-         getListModule: function () {
-            return 'collection.recordset';
-         },
-         getModel: function () {
-            return 'entity.model';
-         },
-         getOrderProperty: function () {
-            return 'sort';
-         },
-         merge: function () {
-            return new Deferred().callback(true);
-         },
-         move: function () {
-            return new Deferred().callback(true);
-         },
-         read: function () {
-            return new Deferred().callback(true);
-         },
-         update: function () {
-            return new Deferred().callback(true);
-         }
-      };
-
-      beforeEach(function () {
-         attach = new BaseAttach();
-      });
-
-      afterEach(function () {
-         attach = undefined;
-      });
-
       describe('.getSelectedResource()', function () {
-         it('Возвращает пустой набор выбраных ресурсов', function () {
+         var attach = new BaseAttach();
+         var files = [GetResources('LocalFile'), GetResources('LocalFile')];
+
+         it('Возвращает пустой набор ресурсов', function () {
             assert.lengthOf(attach.getSelectedResource(), 0);
          });
 
          it('Возвращает набор выбраных ресурсов', function () {
-            attach.addSelectedResource([file1, file2]);
-            var resources = attach.getSelectedResource();
-            assert.sameMembers(resources, [file1, file2]);
+            attach.addSelectedResource(files);
+            assert.sameMembers(attach.getSelectedResource(), files);
          });
       });
 
       describe('.addSelectedResource()', function () {
+         var attach;
+         var file1 = GetResources('LocalFile');
+         var file2 = GetResources('LocalFile');
+         var fileLink1 = GetResources('LocalFileLink');
+         var fileLink2 = GetResources('LocalFileLink');
+         var httpLink1 = GetResources('HttpFileLink');
+         var httpLink2 = GetResources('HttpFileLink');
 
          beforeEach(function () {
             attach = new BaseAttach();
          });
 
          afterEach(function () {
-            attach = undefined;
+            attach.destroy();
          });
 
          it('Добавляет 1 ресурс к списку выбранных', function () {
@@ -131,7 +59,7 @@ define([
 
          it('Добавляет несколько LocalFile к списку выбранных', function () {
             attach.addSelectedResource([file1, file2]);
-            assert.sameMembers(attach.getSelectedResource(), [file1, file1, file2]);
+            assert.sameMembers(attach.getSelectedResource(), [file1, file2]);
          });
 
          it('Добавляет несколько LocalFileLink к списку выбранных', function () {
@@ -151,6 +79,11 @@ define([
       });
 
       describe('.clearSelectedResource()', function () {
+         var attach = new BaseAttach();
+         var file1 = GetResources('LocalFile');
+         var fileLink1 = GetResources('LocalFileLink');
+         var httpLink1 = GetResources('HttpFileLink');
+
          attach.addSelectedResource([file1, fileLink1, httpLink1]);
 
          it('Очищает набор выбраных ресурсов', function () {
@@ -160,13 +93,16 @@ define([
       });
 
       describe('.getRegisteredResource()', function () {
-         attach.registerSource(LocalFile, source);
-         attach.registerSource(LocalFileLink, source);
-         attach.registerSource(HttpFileLink, source);
+         var attach = new BaseAttach();
+
+         for (var i = 0; i < IFileDataConstructors.length; i++) {
+            attach.registerSource(IFileDataConstructors[i], new SourceMock(IFileDataConstructors[i]));
+         };
+
          var resources = attach.getRegisteredResource();
 
-         it('Возвращает список конструкторов над ресурсами, для которых зарегистрирован ISource', function () {
-            assert.isTrue(Array.isArray(resources));
+         it('Возвращает Array конструкторов над ресурсами, для которых зарегистрирован ISource', function () {
+            assert.isArray(resources);
          });
 
          it('Возвращает IFileDataConstructor', function () {
@@ -175,53 +111,157 @@ define([
             }).reduce(function (a, b) {
                return a && b;
             });
-
             assert.isTrue(isFileDataConstructor);
          });
       });
 
       describe('.setSelectedResource()', function () {
-         attach.setSelectedResource([file1, file2]);
-         var selectedResources = attach.getSelectedResource();
+         var attach = new BaseAttach();
+         var files = [GetResources('LocalFile'), GetResources('LocalFile')];
+
+         attach.setSelectedResource(files);
+
          it('Устанавливает ресурсы в список выбранных', function () {
-            assert.sameDeepMembers(selectedResources, [file1, file2]);
+            assert.sameDeepMembers(attach.getSelectedResource(), files);
          });
       });
 
       describe('.choose()', function () {
-         it('Вызов метода выбора ресурсов возвращает Deferred', function () {
-            assert.instanceOf(attach.choose(getter.getType()), Deferred);
+         var attach = new BaseAttach();
+         var files = [GetResources('LocalFile')];
+         var getter = new GetterMock({
+            chosenFiles: files
+         });
+
+         attach.registerGetter(getter);
+         var def = attach.choose(getter.getType());
+
+         it('attach.choose() returns Core/Deferred', function () {
+            assert.instanceOf(def, Deferred);
+         });
+
+         def.addCallback(function (chosenFiles) {
+            it('return Deferred<Array>', function () {
+               assert.isArray(chosenFiles);
+            });
+            return chosenFiles;
+         }).addCallback(function (chosenFiles) {
+            it('Метод choose() корректно выбирает файлы', function () {
+               assert.sameDeepMembers(chosenFiles, files);
+            });
          });
       });
 
       describe('.registerGetter()', function () {
-         attach.registerGetter(getter);
-         var def = attach.choose(getter.getType());
+         var attach = new BaseAttach();
+         var getterType, resource;
+         var resources = [
+            [GetResources('LocalFile'), GetResources('LocalFile')],
+            [GetResources('LocalFileLink'), GetResources('LocalFileLink')],
+            [GetResources('HttpFileLink'), GetResources('HttpFileLink')]
+         ];
 
-         it('Регистрация IResourceGetter', function () {
-            assert.isTrue(def.isSuccessful());
-         });
+         var getters = [
+            new GetterMock({
+               chosenFiles: resources[0],
+               type: 'LocalFileGetter'
+            }),
+            new GetterMock({
+               chosenFiles: resources[1],
+               type: 'LocalFileLinkGetter'
+            }),
+            new GetterMock({
+               chosenFiles: resources[2],
+               type: 'HttpFileLinkGetter'
+            })
+         ];
+
+         for (var i = 0; i < getters.length; i++) {
+            attach.registerGetter(getters[i]);
+         }
+
+         for (i = 0; i < getters.length; i++) {
+            getterType = getters[i].getType();
+            resource = resources[i];
+
+            it(getterType + ' выбрал ожидаемые ресурсы', function (done) {
+               attach.choose(getterType).addCallback(function (chosenFiles) {
+                  assert.sameDeepMembers(chosenFiles, resource);
+               }).addBoth(done);
+            });
+         }
       });
 
       describe('.upload()', function () {
-         var def = attach.choose(getter.getType()).addCallback(function () {
-            attach.upload();
+         var attach = new BaseAttach();
+         var resource = [GetResources('LocalFile')];
+         var uploadResults, def;
+         var params = {
+            'param1': true,
+            'param2': 5
+         };
+
+         attach.setSelectedResource(resource);
+         attach.registerSource(LocalFile, new SourceMock(LocalFile));
+
+         def = attach.upload(params);
+
+         it('Метод upload() возвращает Deferred', function () {
+            assert.instanceOf(def, Deferred);
          });
 
-         it('Загрузка выбранных ресурсов возвращает Deferred', function () {
-            assert.instanceOf(def, Deferred);
+         it('Результат загрузки Array', function (done) {
+            def.addCallback(function (results) {
+               assert.isArray(results);
+               uploadResults = results;
+            }).addBoth(done);
+         });
+
+         it('Загрузка параметров', function (done) {
+            def.addCallback(function () {
+               uploadResults.forEach(function (res) {
+                  assert.deepEqual(params, res.params);
+               });
+            }).addBoth(done);
+         });
+
+         it('Загрузка выбранных файлов', function (done) {
+            def.addCallback(function () {
+               uploadResults.forEach(function (res) {
+                  assert.include(resource, res.file);
+               });
+            }).addBoth(done);
          });
       });
 
       describe('.registerSource()', function () {
-         attach.registerGetter(getter);
-         attach.registerSource(LocalFileLink, source);
-         var def = attach.choose(getter.getType()).addCallback(function () {
-            attach.upload();
-         });
+         var attach = new BaseAttach();
+         var resources = [
+            GetResources('LocalFile'),
+            GetResources('LocalFileLink'),
+            GetResources('HttpFileLink')
+         ];
 
-         it('Регистрация ISource', function () {
-            assert.isTrue(def.isSuccessful());
+         for (var i = 0; i < IFileDataConstructors.length; i++) {
+            attach.registerSource(IFileDataConstructors[i], new SourceMock(IFileDataConstructors[i]));
+         }
+
+         attach.setSelectedResource(resources);
+         it('Все Source для IFileData выбраны правильно', function (done) {
+            /**
+             * Экземпляр SourceMock при загрузке на него файла возвращает объект со следующими свойствами:
+             * @param suitable {Boolean} true, если загруженный файл является экземпляром IFileDataContructor, с которым инициализировался экземпляр SourceMock 
+             * (для тестирования registerLazySource/registerSource)
+             * @param file {<IFileDataConstructor>} загруженный файл 
+             * (для тестирования upload)
+             * @param params {Object} Полученные параметры при загрузке файла
+             * (для тестирования upload)
+             */
+            attach.upload().addCallback(function (results) {
+               results.forEach(function (res) {
+                  assert.isTrue(res.suitable);
+               });
+            }).addBoth(done);
          });
       });
    });

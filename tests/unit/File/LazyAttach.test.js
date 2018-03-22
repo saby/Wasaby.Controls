@@ -2,78 +2,101 @@ define([
    'Lib/File/Attach/LazyAttach',
    'Core/Deferred',
    'Lib/File/LocalFile',
-   'Lib/File/LocalFileLink'
-], function (LazyAttach, Deferred, LocalFile, LocalFileLink) {
+   'Lib/File/LocalFileLink',
+   'Lib/File/HttpFileLink',
+   'Tests/Unit/File/GetResources'
+], function (LazyAttach, Deferred, LocalFile, LocalFileLink, HttpFileLink, GetResources) {
    'use strict';
 
    describe('Controls/File/LazyAttach', function () {
-      var attach = new LazyAttach();
+      var getters = ['FileGetter', 'LinkGetter', 'HttpGetter'];
 
-      describe('.registerLazyGetter()\n   Ленивая регистрация экземпляра', function () {
-         it('ScannerGetter', function () {
-            attach.registerLazyGetter('ScannerGetter', 'SBIS3.Plugin/components/Extensions/Integration/FileGetter/ScannerGetter');
-            var def = attach.choose('ScannerGetter');
-            assert.isTrue(def.isSuccessful());
-         });
+      describe('.registerLazyGetter()', function () {
+         var attach = new LazyAttach();
+         var resource, type, getter;
+         var resources = [
+            [GetResources('LocalFile')],
+            [GetResources('LocalFileLink')],
+            [GetResources('HttpFileLink')]
+         ];
 
-         it('DialogsGetter', function () {
-            attach.registerLazyGetter('DialogsGetter', 'SBIS3.Plugin/components/Extensions/Integration/FileGetter/DialogsGetter');
-            var def = attach.choose('DialogsGetter');
-            assert.isTrue(def.isSuccessful());
-         });
+         for (var i = 0; i < getters.length; i++) {
+            type = getters[i];
+            attach.registerLazyGetter(type, 'Tests/Unit/File/GetterMock', {
+               chosenFiles: resources[i],
+               type: type
+            });
+         }
 
-         it('FileGetter', function () {
-            attach.registerLazyGetter('FileGetter', 'SBIS3.Plugin/components/Extensions/Integration/FileGetter/FileGetter');
-            var def = attach.choose('FileGetter');
-            assert.isTrue(def.isSuccessful());
-         });
+         for (i = 0; i < getters.length; i++) {
+            getter = getters[i];
+            resource = resources[i];
 
-         it('ClipboardGetter', function () {
-            attach.registerLazyGetter('ClipboardGetter', 'SBIS3.Plugin/components/Extensions/Integration/FileGetter/ClipboardGetter');
-            var def = attach.choose('ClipboardGetter');
-            assert.isTrue(def.isSuccessful());
-         });
+            it('Ленивая регистрация  ' + getter + ' для получения файлов', function (done) {
+               attach.choose(getter)
+                  .addCallbacks(
+                     function (files) {
+                        files.forEach(function (file) {
+                           assert.include(resource, file);
+                        });
+                     },
+                     function () {
+                        assert(false, getter + ' зарегистрировался как GetterMock!');
+                     })
+                  .addBoth(done);
+            });
+         }
       });
 
-      describe('.registerLazySource()\n   Ленивая регистрация ISource для загрузки на ', function () {
-         it('Бизнес-Логику через XHR запросы (BLXHR)', function () {
-            attach.registerLazySource(LocalFile, 'WS.Data/Source/SbisFile');
-            var def = attach.choose('FileGetter').addCallback(function () {
-               attach.upload();
-            });
-            assert.isTrue(def.isSuccessful());
-         });
+      describe('.registerLazyGetter() некорректный вызов', function () {
+         var attach = new LazyAttach();
+         var getter;
 
-         it('Бизнес-Логику через СБИС Плагин (BLPlugin)', function () {
-            attach.registerLazySource(LocalFileLink, 'SBIS3.Plugin/components/Extensions/Integration/Source/BL_SbisPluginSource');
-            var def = attach.choose('FileGetter').addCallback(function () {
-               attach.upload();
-            });
-            assert.isTrue(def.isSuccessful());
-         });
+         for (var i = 0; i < getters.length; i++) {
+            attach.registerLazyGetter(getters[i], 'Tests/Unit/File/GetterMock');
+         }
 
-         it('FileTransfer через СБИС Плагин (FileTransferPlugin)', function () {
-            attach.registerLazySource(LocalFileLink, 'SBIS3.Plugin/components/Extensions/Integration/Source/FileTransfer_SbisPluginSource');
-            var def = attach.choose('FileGetter').addCallback(function () {
-               attach.upload();
+         for (i = 0; i < getters.length; i++) {
+            getter = getters[i];
+            it('Обработка некорректной ленивой регистрации <' + getter + '>', function (done) {
+               attach.choose(getter)
+                  .addCallbacks(
+                     function (files) {
+                        assert(false, getter + ' зарегистрировался как GetterMock!');
+                     },
+                     function (err) {
+                        assert.instanceOf(err, Error);
+                     })
+                  .addBoth(done);
             });
-            assert.isTrue(def.isSuccessful());
-         });
+         };
+      });
 
-         it('СБИС Диск через СБИС Плагин (SbisDiskPlugin)', function () {
-            attach.registerLazySource(LocalFileLink, 'SBIS3.Plugin/components/Extensions/Integration/Source/SBISDisk_SbisPluginSource');
-            var def = attach.choose('FileGetter').addCallback(function () {
-               attach.upload();
-            });
-            assert.isTrue(def.isSuccessful());
-         });
+      describe('.registerLazySource()', function () {
+         var attach = new LazyAttach();
+         var resources = [GetResources('LocalFile'), GetResources('LocalFileLink'), GetResources('HttpFileLink')];
+         var IFileDataConstructor = [LocalFile, LocalFileLink, HttpFileLink];
 
-         it('СБИС Диск через Xhr - запрос (SbisDiskXHR)', function () {
-            attach.registerLazySource(LocalFile, 'SbisDiskBase/Data/Source');
-            var def = attach.choose('FileGetter').addCallback(function () {
-               attach.upload();
+         it('Ленивая регистрация ISource для загрузки файлов', function (done) {
+            attach.setSelectedResource(resources);
+            IFileDataConstructor.forEach(function (Contructor) {
+               attach.registerLazySource(Contructor, 'Tests/Unit/File/SourceMock', Contructor);
             });
-            assert.isTrue(def.isSuccessful());
+
+            /**
+             * Экземпляр SourceMock при загрузке на него файла возвращает объект со следующими свойствами:
+             * @param suitable {Boolean} true, если загруженный файл является экземпляром IFileDataContructor, с которым инициализировался экземпляр SourceMock 
+             * (для тестирования registerLazySource/registerSource)
+             * @param file {<IFileDataConstructor>} загруженный файл 
+             * (для тестирования upload)
+             * @param params {Object} Полученные параметры при загрузке файла
+             * (для тестирования upload)
+             */
+            attach.upload().addCallback(function (response) {
+               response.forEach(function (res) {
+                  assert.isTrue(res.suitable);
+               });
+            }).addBoth(done);
          });
       });
    });
