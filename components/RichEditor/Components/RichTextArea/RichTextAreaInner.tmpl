@@ -7,6 +7,7 @@
    <div
       class="controls-RichEditor__dataReview ws-basic-style {{editorConfig.className}}{{enabled ? ' ws-hidden'}}"
       tabindex="1"
+      style="{{!autoReviewHeight && autoHeight && minimalHeight && minimalHeight != 0 ? 'min-height:' + minimalHeight + 'px;'}}"
       >{{!enabled && text ? (_prepareReviewContent(text)|sanitize)}}</div>
    <div
       class="controls-RichEditor__editorFrame ws-basic-style {{editorConfig.className}}{{!enabled ? ' ws-hidden'}} clearfix"
