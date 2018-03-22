@@ -1241,23 +1241,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          },
 
 
-         // Установка кастомизируемой цитаты
+         // Добавление и удаление кастомизируемой цитаты
          setCustomBlockquote: function() {
             var
-               selectionContent = (this._tinyEditor.selection.getNode()),
-               span = selectionContent.closest('p');
-            this._tinyEditor.formatter.apply('customBlockquote', selectionContent);
                selectionContent = (this._tinyEditor.selection.getNode());
-            if(!selectionContent.closest('span'))
-               this._tinyEditor.formatter.apply('customBlockquote', selectionContent);
-
-         },
-         // Удаление кастомизируемой цитаты
-         removeCustomBlockquote: function() {
-            var
-               selectionContent = (this._tinyEditor.selection.getNode()),
-               span = selectionContent.closest('span');
-            this._tinyEditor.formatter.remove('customBlockquote', span);
+            this._tinyEditor.formatter.toggle('customBlockquote', selectionContent);
          },
 
          /**

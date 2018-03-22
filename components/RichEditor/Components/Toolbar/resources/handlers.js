@@ -23,12 +23,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/handlers',
          strikethrough: onButtonClick,
          blockquote: onButtonClick,
          customBlockquote: function(event, key) {
-            if(key.currentTarget.getAttribute("class").match('controls-Checked__checked')) {
-               this.getParent()._setCustomBlockquote(key);
-            }
-            else {
-               this.getParent()._removeCustomBlockquote(key);
-            }
+            this.getParent()._setCustomBlockquote(key);
          },
          align: function (event, key) {
             this.getParent()._setTextAlign(key);

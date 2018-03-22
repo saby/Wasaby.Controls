@@ -352,12 +352,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
            }
          },
 
-         _removeCustomBlockquote: function(){
-            if(this._options.linkedEditor) {
-               this._options.linkedEditor.removeCustomBlockquote();
-            }
-         },
-
          _insertLink: function(onAfterCloseHandler, target) {
             if (this._options.linkedEditor) {
                this._options.linkedEditor.insertLink(onAfterCloseHandler, target);
