@@ -25,7 +25,7 @@ define('SBIS3.CONTROLS/Controllers/ItemsMoveController', [
          itemsActions.unshift(
             {
                name: 'moveDown',
-               tooltip: 'Переместить вниз',
+               tooltip: rk('Переместить вниз'),
                icon: 'icon-16 icon-ArrowDown icon-primary',
                isMainAction: true,
                onActivated: function(element, id, item) {
@@ -34,7 +34,7 @@ define('SBIS3.CONTROLS/Controllers/ItemsMoveController', [
             },
             {
                name: 'moveUp',
-               tooltip: 'Переместить вверх',
+               tooltip: rk('Переместить вверх'),
                icon: 'icon-16 icon-ArrowUp icon-primary',
                isMainAction: true,
                onActivated: function(element, id, item) {
