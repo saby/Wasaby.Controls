@@ -12,10 +12,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
       'Lib/Control/FloatArea/FloatArea',
       'SBIS3.CONTROLS/Action',
       'SBIS3.CONTROLS/ImportCustomizer/Area',
-      'WS.Data/Source/SbisService'
+      'SBIS3.CONTROLS/ImportCustomizer/RemoteCall'
    ],
 
-   function (cMerge, Deferred, FloatArea, Action, Area, SbisService) {
+   function (cMerge, Deferred, FloatArea, Action, Area, RemoteCall) {
       'use strict';
 
       var ImportCustomizerAction = Action.extend([], /**@lends SBIS3.CONTROLS/ImportCustomizer/Action.prototype*/ {
@@ -30,11 +30,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           */
 
          /**
-          * @typedef {object} ImportIOCall Тип, содержащий информацию для вызова удалённого сервиса для получения данных ввода или отправки данных вывода
+          * @typedef {object} ImportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для получения данных ввода или отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/ImportCustomizer/RemoteCall}
           * @property {string} endpoint Сервис, метод которого будет вызван
           * @property {string} method Имя вызываемого метода
-          * @property {*} methodArgs Аргументы вызываемого метода (в требуемой форме)
-          * @property {function(object):object} [dataShaper] Формирователь применимой формы аргументов (опционально)
+          * @property {object} args Аргументы вызываемого метода (опционально)
+          * @property {function(object):object} [argsFilter] Фильтр аргументов (опционально)
+          * @property {function(object):object} [resultFilter] Фильтр результатов (опционально)
           */
 
          /**
@@ -112,8 +113,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {Array<ImportSheet>} options.sheets Список объектов, представляющих имеющиеся области данных
           * @param {number} [options.sheetIndex] Индекс выбранной области данных (опционально)
           * @param {boolean} [options.sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
-          * @param {ImportIOCall} [options.inputCall] Информация для вызова метода удалённого сервиса для получения данных ввода (опционально)
-          * @param {ImportIOCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
+          * @param {ImportRemoteCall} [options.inputCall] Информация для вызова метода удалённого сервиса для получения данных ввода (опционально)
+          * @param {ImportRemoteCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
           * @return {Deferred<ImportResults>}
           */
          execute: function (options) {
@@ -137,12 +138,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                return Deferred.fail('Not supported data type');
             }
             var inputCall = options.inputCall;
-            if (inputCall && !this._isImportIOCall(inputCall)) {
-               throw new Error('Wrong inputCall');
+            if (inputCall) {
+               inputCall = new RemoteCall(inputCall);
             }
             var outputCall = options.outputCall;
-            if (outputCall && !this._isImportIOCall(outputCall)) {
-               throw new Error('Wrong outputCall');
+            if (outputCall) {
+               outputCall = new RemoteCall(outputCall);
             }
             var opts = inputCall || outputCall ? Object.keys(options).reduce(function (r, v) { if (v !== 'inputCall' && v !== 'outputCall') { r[v] = options[v]; }; return r; }, {}) : options;
             this._result = new Deferred();
@@ -159,33 +160,16 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
          },
 
          /**
-          * Проверить, является ли аргумент {@link ImportIOCall}
-          *
-          * @protected
-          * @param {ImportIOCall} call Информация для вызова метода удалённого сервиса
-          * @return {boolean}
-          */
-         _isImportIOCall: function (call) {
-            return !!call && (typeof call === 'object') &&
-               (call.endpoint && typeof call.endpoint === 'string') &&
-               (call.method && typeof call.method === 'string') &&
-               (!call.dataShaper || typeof call.dataShaper === 'function');
-         },
-
-         /**
           * Вызвать метод удалённого сервиса для получения недостающих данных ввода, и затем вызвать метод {@link _open}
           *
           * @protected
-          * @param {ImportIOCall} call Информация для вызова метода удалённого сервиса для получения данных ввода
+          * @param {RemoteCall} call Вызов метода удалённого сервиса для получения данных ввода
           * @param {object} options Входные аргументы("мета-данные") настройщика импорта (согласно описанию в методе {@link execute})
           */
          _beforeOpen: function (call, options) {
-            (new SbisService({endpoint:call.endpoint}))
-               .call(call.method, call.methodArgs)
-               .addCallbacks(
+            call.call(options).addCallbacks(
                   function (data) {
-                     var shaper = call.dataShaper;
-                     this._open(cMerge(options, shaper ? shaper(data) : data));
+                     this._open(cMerge(options, data));
                   }.bind(this),
                   this._result.errback.bind(this._result)
                );
@@ -195,21 +179,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * Вызвать метод удалённого сервиса для отправки полученных выходных данных
           *
           * @protected
-          * @param {ImportIOCall} call Информация для вызова метода удалённого сервиса для отправки выходных данных
+          * @param {RemoteCall} call Вызов метода удалённого сервиса для отправки выходных данных
           * @param {object} result Выходные данные настройщика импорта
           * @return {Core/Deferred}
           */
          _afterOpen: function (call, result) {
-            var shaper = call.dataShaper;
-            var args = cMerge({}, shaper ? shaper(result) : result);
-            return (new SbisService({endpoint:call.endpoint}))
-               .call(call.method, call.methodArgs)
-               .addCallback(
-                  function (data) {
-                     //^^^ Преобразовать ???
-                     return data;
-                  }.bind(this)
-               );
+            return call.call(result)
          },
 
          /**
@@ -249,6 +224,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             var parsers = options.parsers;
             // Если есть свойство "parsers"
             if (parsers) {
+               // TODO: Уже здесь нужно смержить с defaults для возможности частичного задания
                // То оно должно быть объектом
                if (typeof parsers !== 'object') {
                   throw new Error('Wrong parsers');

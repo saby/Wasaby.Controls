@@ -40,6 +40,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/RemoteCall',
          if (options.args && typeof options.args !== 'object') {
             throw new Error('Wrong args');
          }
+         // TODO: Сделать фильты по ключевым словам
          if (options.argsFilter && typeof options.argsFilter !== 'function') {
             throw new Error('Wrong argsFilter');
          }
@@ -70,7 +71,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/RemoteCall',
                args = this._argsFilter.call(null, args);
             }
             if (this._args) {
-               args = cMerge({}, this._args, args);
+               args = cMerge(cMerge({}, this._args), args);
             }
             var promise = (new SbisService({endpoint:this._endpoint})).call(this._method, args);
             if (this._resultFilter) {
