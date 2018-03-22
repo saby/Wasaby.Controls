@@ -12,6 +12,11 @@
                                             style="{{_options.counterStyle}}"
            />
         </ws:if>
-        <span attr:class="controls-Header__caption_size-{{_options.size}} controls-Header__caption_style-{{_options.style}}{{_options.clickable ? '_hovered'}}">{{_options.caption}}</span>
+        <span attr:class="controls-Header__caption_size-{{_options.size}}
+                          controls-Header__caption_style-{{_options.style}}{{_options.clickable ? '_hovered'}}"
+        >{{_options.caption}}</span>
+        <ws:if data="{{_options.separatorIcon}}">
+            <span class="controls-HeaderSeparator__icon_style-{{_options.separatorIconStyle}}"></span>
+        </ws:if>
     </span>
 </span>
