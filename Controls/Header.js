@@ -72,6 +72,52 @@ define('Controls/Header', [
     * @cfg {Boolean} возможность посылать отдельное событие на клик по счетчику. Название события countClick
     */
 
+   /**
+    * @name Controls/Header#iconClickable
+    * @cfg {Boolean} возможность посылать отдельное событие на клик по иконке. Название события iconClick
+    */
+
+   /**
+    * @name Controls/Header#iconLocation
+    * @cfg {String} расположение счетчика относительно заголовка
+    * @variant after после загловка
+    * @variant before перед заголовком
+    */
+
+   /**
+    * @name Controls/Header#iconStyle
+    * @cfg {String} стиль отображения иконки
+    * @variant Accent синяя (все описания стилей в теме онлайна)
+    * @variant Additional серая, без ховера
+    * @variant Main красная
+    */
+
+   /**
+    * @name Controls/Header#iconType
+    * @cfg {String} тип иконки, названия совпадают с наименованием иконки(можно посмотреть на wi классы иконок icon-<имя>)
+    * @variant MarkExpandBold обычная галка но двойной ширины
+    * @variant ExpandLight обычная галка
+    * @variant AccordionArrowDown двойная галка
+    */
+
+   /**
+    * @name Controls/Header#iconValue
+    * @cfg {Boolean} состоянее кнопки, включена ли она
+    */
+
+   /**
+    * @name Controls/Header#separatorIcon
+    * @cfg {Boolean} нужна ли иконка разделитель, используется только с заголовком. не путать  с кнопкой-разделителем. клик всегда общий с заголовком
+    */
+
+   /**
+    * @name Controls/Header#separatorIconStyle
+    * @cfg {String} стиль отображения иконки, в теме онлайна есть только одна возможная тема, она будет при установке любого допустимого значения в эту опцию
+    * @variant primary красная в теме carry
+    * @variant default синяя в теме carry
+    */
+
+
    var classesOfIcon = {
       MarkExpandBold: {
          true: "icon-MarkExpandBold",
@@ -95,12 +141,9 @@ define('Controls/Header', [
    var _private = {
       cssStyleGeneration: function (self, options) {
          if (classesOfIcon.hasOwnProperty(options.iconType)) {
-            var currentIconClass = classesOfIcon[options.iconStyle];
-         }else {
-            IoC.resolve('ILogger').error("Header-Separator", "Для иконки задан несуществующий стиль");
-            currentIconClass = classesOfIcon.ExpandLight;
+            var currentIconClass = classesOfIcon[options.iconType];
+            self._icon = currentIconClass[options.iconValue]+ ' ' + currentIconClass.size;
          }
-         self._icon = currentIconClass[options.iconValue]+ ' ' + currentIconClass.size;
       }
    };
 
@@ -160,6 +203,27 @@ define('Controls/Header', [
             'l',
             'default',
             's'
+         ]),
+         iconClickable: types(Boolean),
+         iconLocation: types(String).oneOf([
+            'after',
+            'before'
+         ]),
+         iconStyle: types(String).oneOf([
+            'Accent',
+            'Additional',
+            'Main'
+         ]),
+         iconType: types(String).oneOf([
+            'MarkExpandBold',
+            'ExpandLight',
+            'AccordionArrowDown'
+         ]),
+         iconValue: types(Boolean),
+         separatorIcon: types(Boolean),
+         separatorIconStyle: types(String).oneOf([
+            'primary',
+            'default'
          ])
       }
    };
