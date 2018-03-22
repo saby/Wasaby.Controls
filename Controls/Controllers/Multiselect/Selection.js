@@ -56,59 +56,33 @@ define('Controls/Controllers/Multiselect/Selection', [
       },
 
       selectAll: function() {
-         this._options.selectedKeys = ALLSELECTION_VALUE;
-         this._options.excludedKeys = [];
+         this._selectedKeys = ALLSELECTION_VALUE;
+         this._excludedKeys = [];
       },
 
       unselectAll: function() {
-         this._options.selectedKeys = [];
-         this._options.excludedKeys = [];
+         this._selectedKeys = [];
+         this._excludedKeys = [];
       },
 
       toggleAll: function() {
-         var marked, excluded;
-         if (this._options.markedAll) {
-            excluded = cClone(this._options.excludedKeys);
+         var swap;
+         if (_private.isAllSelection(this._selectedKeys)) {
+            swap = cClone(this._excludedKeys);
             this.unselectAll();
-            this.select(excluded);
+            this.select(swap);
          } else {
-            marked = cClone(this._options.selectedKeys);
+            swap = cClone(this._selectedKeys);
             this.selectAll();
-            this.unselect(marked);
+            this.unselect(swap);
          }
-      },
-
-      setProjection: function(projection) {
-         this._options.projection = projection;
-         this._idProperty = projection.getIdProperty();
       },
 
       getSelection: function() {
          return {
-            marked: this._options.markedAll ? [] : this._options.selectedKeys,
-            excluded: this._options.markedAll ? this._options.excludedKeys : [],
-            markedAll: this._options.markedAll
+            selected: this._selectedKeys,
+            excluded: this._excludedKeys
          }
-      },
-
-      _getAllKeys: function() {
-         var
-            id,
-            contents,
-            keys = [];
-
-         this._options.projection.each(function(item) {
-            contents = item.getContents();
-            //instanceOfModule тяжолая проверка, проверяем на наличие .get
-            if (contents.get) {
-               id = contents.get(this._idProperty);
-               if (!ArraySimpleValuesUtil.hasInArray(keys, id)) {
-                  keys.push(item.getContents().get(this._idProperty));
-               }
-            }
-         }, this);
-
-         return keys;
       },
 
       destroy: function() {
