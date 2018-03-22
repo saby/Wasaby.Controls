@@ -360,6 +360,7 @@ define('SBIS3.CONTROLS/ComboBox', [
                newSelectedItem = selectedKey || this._options.emptyValue ? selectedItem.next('.controls-ListView__item') : items.eq(0);
             }
             if (newSelectedItem && newSelectedItem.length) {
+               //Устанавливаем новую запись. через проекцию, т.к. может быть enum
                newSelectedItemHash = newSelectedItem.data('hash');
                var projItem = this._getItemsProjection().getByHash(newSelectedItemHash);
                if (!projItem && this._options.emptyValue){
