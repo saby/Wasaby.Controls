@@ -38,7 +38,6 @@ define('Controls/Popup/Opener/Sticky/Strategy',
          center: -1/2
       };
 
-
       var _private = {
          /*
          * Возвращает точку таргета, относительно которой нужно спозиционироваться окну
@@ -65,7 +64,8 @@ define('Controls/Popup/Opener/Sticky/Strategy',
          invert: function(cfg, direction){
             cfg.corner[direction] = INVERTING_CONST[cfg.corner[direction]];
             cfg.align[direction].side = INVERTING_CONST[cfg.align[direction].side];
-            cfg.align[direction].offset = cfg.align[direction].offset * (-1);
+            cfg.align[direction].offset *= -1;
+            cfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] *= -1;
          },
 
          /*

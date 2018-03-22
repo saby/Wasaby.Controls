@@ -207,8 +207,8 @@ define('SBIS3.CONTROLS/DropdownList',
                 * В примере показано использование шаблонизатора doT.js.
                 * Подключение, импорт в переменную и передача шаблона в переменную:
                 * <pre>
-                * define('js!SBIS3.MyArea.MyComponent',
-                *    [ ... , 'html!SBIS3.MyArea.MyComponent/resources/myHeadTpl' ],
+                * define('Examples/MyArea/MyComponent',
+                *    [ ... , 'tmpl!Examples/MyArea/MyComponent/resources/myHeadTpl' ],
                 *    function(..., myHeadTpl){
                 *       ...
                 *       $protected: {
@@ -287,8 +287,8 @@ define('SBIS3.CONTROLS/DropdownList',
                 * @example
                 * Подключение, импорт в переменную и передача шаблона в переменную:
                 * <pre>
-                * define('js!SBIS3.MyArea.MyComponent',
-                *    [ ..., 'html!SBIS3.MyArea.MyComponent/resources/myItemTpl' ],
+                * define('Examples/MyArea/MyComponent',
+                *    [ ..., 'tmpl!Examples/MyArea/MyComponent/resources/myItemTpl' ],
                 *    function(..., myItemTpl){
                 *       ...
                 *       $protected: {
@@ -630,6 +630,13 @@ define('SBIS3.CONTROLS/DropdownList',
                   this._buttonChoose.getContainer().addClass('ws-hidden');
                }
             }
+         },
+         _createPicker: function() {
+            var popup = DropdownList.superclass._createPicker.apply(this, arguments);
+            // В оффлайн клиенте престо не проходят клики с первого раза по списку
+            // Включаю волшебную опцию Ярика, которая решает подобные проблемы
+            popup._checkClickByTap = true;
+            return popup;
          },
          redraw: function() {
             //Если нет пикера - не отрисовываем записи, просто обновим текст в основном контейнере
@@ -1037,7 +1044,6 @@ define('SBIS3.CONTROLS/DropdownList',
             var type = this._options.type,
                 isFastDataFilterType = type == 'fastDataFilter';
             return {
-               _checkClickByTap: true,
                corner: 'tl',
                verticalAlign: {
                   side: 'top'

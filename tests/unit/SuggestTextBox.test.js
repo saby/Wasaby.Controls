@@ -64,9 +64,13 @@ define(['SBIS3.CONTROLS/Suggest/SuggestTextBox', 'WS.Data/Entity/Record', 'WS.Da
             assert.isTrue(SuggestTB._historyController.getCount() === 3);
          });
 
-         it('Check history query', () => {
-            var query = SuggestTB._getQueryForHistory();
-            assert.isTrue(query._where.id.length === 3);
+         it('Check history query', (done) => {
+            var queryDef = SuggestTB._getQueryForHistory();
+            
+            queryDef.addCallback(function(query) {
+               assert.isTrue(query._where.id.length === 3);
+               done();
+            });
          });
       });
 

@@ -65,9 +65,9 @@
 @closeButtonWidth:                        35px;
 @closeButtonHeight:                       26px;
 
-@background_EditActions-closeButton:        @closeButtonImage;
-@background_EditActions-closeButton_active: @closeButtonImageHover;
-@background_EditActions-closeButton_hovered:@closeButtonImageHover;
+@background_EditActions-closeButton:        transparent;
+@background_EditActions-closeButton_active: transparent;
+@background_EditActions-closeButton_hovered:transparent;
 
 @default-itemHover-color:                 #F0F5FB;//Переменную нужно удалить, она дублирует @default-bg-color-hovered-item
 @default-itemSelected-color:              #F3F3F3;
@@ -290,7 +290,7 @@
 @border-color_IconButton_bordered_error_hovered: #EF463A;
 @icon-button-round-border-position:     absolute;
 @icon-button-round-icon-color-hover:    @default-color;
-@border-radius:                         14px;
+@border-radius:                         2px;
 @border-width_IconButton_bordered:              1px;
 @list-view-items-toolbar-icon-button-border-width:      @border-width_IconButton_bordered;
 @list-view-items-toolbar-icon-button-border-radius:     @border-radius;
@@ -298,7 +298,7 @@
 
 @icon-button-edit-round-border-line-height:        @icon-medium-size - 2 * @default-border-width;
 @list-view-items-toolbar-animate-duration:         0.35s;
-@border-color_IconButton_bordered:                  @gray-ccc-color;
+@border-color_IconButton_bordered:                  rgba(0, 0, 0, 0.11);
 
 @height_IconButton_bordered_size-s:                 @icon-medium-size;
 @width_IconButton_bordered_size-s:                  @icon-medium-size;
@@ -306,7 +306,7 @@
 
 @height_IconButton_bordered_size-m:                 28px;
 @width_IconButton_bordered_size-m:                  28px;
-@border-radius_IconButton_bordered_size-m:          @border-radius;
+@border-radius_IconButton_bordered_size-m:          1px;
 @line-height_IconButton_bordered_size-m:            26px;
 
 @height_IconButton_bordered_size-default:           @height_IconButton_bordered_size-m;
@@ -318,7 +318,7 @@
 @border-radius_IconButton_bordered_size-l:          20px;
 @line-height_IconButton_bordered_size-l:            @height_IconButton_bordered_size-l;
 
-@border-color_IconButton_bordered_standard_hovered:      @default-color;
+@border-color_IconButton_bordered_standard_hovered:      #CCCCCC;
 // Normal default button
 @button-checked-border-width:             2px;
 @button-checked-border:                   @button-checked-border-width solid @default-color;
@@ -443,7 +443,7 @@
 @check-box-caption-padding:                     3px 0;
 @check-box-icon-box-size:                       12px;
 @check-box-icon-box-color:                      @innacent-color2;
-@check-box-disabled-color:                      @disabled-color;
+@check-box-disabled-color:                      @gray-light-color;
 @check-box-icon-successful-top-ie:              0;
 @check-box-caption-line-height:                 18px;
 @spacing_CheckBox-between-icon-caption:         3px 0;
@@ -838,7 +838,7 @@
 @list-view-items-toolbar-right-tile:                 8px;
 @list-view-items-toolbar-bottom-tile:                2px;
 @list-view-items-toolbar-icon-size:                  24px;
-@margin-right_ListView-itemsToolbar-closeButton:     0;
+@margin-right_ListView-itemsToolbar-closeButton:     6px;
 @list-view-items-toolbar-menu-icon-size:             @list-view-items-toolbar-icon-size;
 @list-view-items-toolbar-font-family:                @default-icon-medium-font;
 @font-family_closeButton-icon:                       @list-view-items-toolbar-font-family;
@@ -875,18 +875,21 @@
 @listView-loadmorebutton-font-size:             @font-size_Link;
 @scrollPaging-padding:                          32px;
 //EditActions
-@border-radius_EditButton:                      @border-radius;
+@border-radius_EditButton:                      1px;
 @border-width_EditButton:                       @border-width_IconButton_bordered;
 @width_EditButton:                              @width_IconButton_bordered_size-s;
 @height_EditButton:                             @height_IconButton_bordered_size-s;
 @line-height_EditButton:                        @line-height_IconButton_bordered_size-m;
 @background-color_IconButton_bordered:                   transparent;
+@box-shadow_IconButton:                         0 1px 2px rgba(0,0,0, .08);
 @background-color_IconButton_bordered_standard_hovered:           transparent;
 @border-color_IconButton_bordered_done_hovered:               @color_IconButton-icon_done;
-@text-shadow_IconButton_bordered:                        transparent;
+@text-shadow_IconButton_bordered:               none;
+@box-shadow_Button_bordered_active:            @box-shadow_Button;
+@box-shadow_Button_bordered_hovered:            0 1px 2px rgba(0,0,0, .15);
 //ItemsToolbar
-@width_EditActions-cancelButton:        36px;
-@height_EditActions-cancelButton:       24px;
+@width_EditActions-cancelButton:        @width_EditButton;
+@height_EditActions-cancelButton:       @height_EditButton;
 // ItemsToolbar small
 @list-view-small-items-toolbar-line-height:         16px;
 @list-view-small-actions-item-height:               16px;

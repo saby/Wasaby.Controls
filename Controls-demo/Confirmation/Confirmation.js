@@ -93,10 +93,13 @@ define('Controls-demo/Confirmation/Confirmation',
       var InfoBox = Control.extend({
          _template: template,
          _blocks: blocks,
+         _result: '',
 
          _open: function(e, cfg){
+            var self = this;
             this._children.popupOpener.open(cfg).addCallback(function(res){
-               alert(res);
+               self._result = res;
+               self._forceUpdate();
             });
          }
 

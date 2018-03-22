@@ -73,6 +73,13 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-SwitcherDouble .controls-S
       vertical-align: top;
       .rotate(-90deg);
       margin: @offset -@offset @offset calc(~"-@{offset} - 1px");
+      //rotate не позволяет хрому корректно рендерить бордер радиус
+      //у элементов с нечетными параметрами width/height
+      //https://jsfiddle.net/qh3ggjvz/
+      //возвращаем точке исходное положение для красоты
+      .controls-SwitcherDouble__btn {
+         .rotate(90deg);
+      }
    }
    & > .controls-SwitcherDouble__textBlock {
       display: inline-block;
