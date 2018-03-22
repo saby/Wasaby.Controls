@@ -249,7 +249,7 @@ define('Controls/List/SourceControl', [
          var
             editingItemIndex = self._listViewModel.getEditingItemIndex(),
             currentItemIndex = self._listViewModel.getItems().getIndex(record);
-         //Если currentItemIndex = -1, то происходит добавление
+         //Если currentItemIndex = -1, то происходит добавление, либо нет item'а... и это очень грустно
          if (editingItemIndex !== currentItemIndex && ~currentItemIndex) {
             //TODO: показали индикатор
             return self._children.editInPlace.beginEdit(record).addBoth(function(record) {
@@ -260,7 +260,7 @@ define('Controls/List/SourceControl', [
 
       beginAdd: function(self, options) {
          //TODO: показали индикатор
-         return self._children.editInPlace.beginAdd(options || {}).addBoth(function(record) {
+         return self._children.editInPlace.beginAdd(options).addBoth(function(record) {
             //TODO: скрыли индикатор
          });
       },

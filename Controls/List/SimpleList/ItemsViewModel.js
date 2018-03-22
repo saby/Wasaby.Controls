@@ -18,17 +18,16 @@ define('Controls/List/SimpleList/ItemsViewModel',
                && (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor)
                && (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor)
          },
-         isAdd: function(self) {
-            var editingItem = self.getEditingItem();
+         getEditingItemIndex: function(self, editingItem) {
+            var
+               index = -1,
+               originalItem = self.getItemById(ItemsUtil.getPropertyValue(editingItem, self._options.idProperty), self._options.idProperty);
 
-            if (editingItem) {
-               return !self.getItemById(ItemsUtil.getPropertyValue(editingItem, self._options.idProperty), self._options.idProperty);
+            if (originalItem) {
+               index = self.getItems().getIndex(originalItem.getContents());
             }
 
-            return false;
-         },
-         isEditingItem: function(self, item) {
-            return self.getEditingItem() && ItemsUtil.getPropertyValue(item, self._options.idProperty) === ItemsUtil.getPropertyValue(self.getEditingItem(), self._options.idProperty);
+            return index;
          }
       };
       var ItemsViewModel = Abstract.extend({
@@ -53,7 +52,7 @@ define('Controls/List/SimpleList/ItemsViewModel',
          },
 
          isEnd: function() {
-            return this._curIndex < (this._display ? this._isAdd ? this._display.getCount() + 1 : this._display.getCount() : 0);
+            return this._curIndex < (this._display ? this._display.getCount() : 0);
          },
 
          goToNext: function() {
@@ -61,22 +60,18 @@ define('Controls/List/SimpleList/ItemsViewModel',
          },
 
          getCurrent: function() {
-            var dispItem = this._display.at(this._curIndex);
-
-            //TODO: непонятно как проставлять markedItem при добавлении, т.к. записи с таким ключом нет, а сейчас запись проставляется по ключу
-            if (!dispItem) {
-               //TODO: я сюда попаду в нужный момент только если добавление происходит в конец
-               dispItem = new CollectionItem({ contents: this.getEditingItem() });
-            }
+            var
+               dispItem = this._display.at(this._curIndex),
+               isEditingItem = this._curIndex === this.getEditingItemIndex(this, dispItem.getContents());
 
             return {
                getPropValue: ItemsUtil.getPropertyValue,
                idProperty: this._options.idProperty,
                displayProperty: this._options.displayProperty,
                index : this._curIndex,
-               item: _private.isEditingItem(this, dispItem.getContents()) ? this.getEditingItem() : dispItem.getContents(),
+               item: isEditingItem ? this.getEditingItem() : dispItem.getContents(),
                dispItem: dispItem,
-               isEditing: _private.isEditingItem(this, dispItem.getContents())
+               isEditing: isEditingItem
             }
          },
 
@@ -118,28 +113,36 @@ define('Controls/List/SimpleList/ItemsViewModel',
             return this._display ? this._display.getCollection() : undefined;
          },
          setEditingItem: function(item) {
-            this._editingItem = item;
-            this._isAdd = _private.isAdd(this);
+            var index;
+
+            if (item) {
+               this._editingItem = item;
+               index = _private.getEditingItemIndex(this, item);
+               this._isAdd = index === -1;
+               if (this._isAdd) {
+                  this._editingItemProjection = new CollectionItem({ contents: this._editingItem });
+               }
+               this._editingItemData = {
+                  getPropValue: ItemsUtil.getPropertyValue,
+                  idProperty: this._options.idProperty,
+                  displayProperty: this._options.displayProperty,
+                  index : this._isAdd ? this.getItems().getCount() : index,
+                  item: this._editingItem,
+                  dispItem: this._editingItemProjection,
+                  isEditing: true
+               };
+            } else {
+               this._editingItem = null;
+               this._isAdd = null;
+               this._editingItemProjection = null;
+               this._editingItemData = null;
+            }
          },
          getEditingItem: function() {
             return this._editingItem;
          },
          getEditingItemIndex: function() {
-            //TODO: надо бы тоже высчитывать не каждый раз, а один
-            var
-               index = -1,
-               editingItem = this.getEditingItem();
-
-            if (editingItem) {
-               if (this._isAdd) {
-                  //TODO: на самом деле добавлять могут куда угодно и нужно будет высчитывать иначе
-                  return this.getItems().getCount();
-               } else {
-                  return this.getItems().getIndex(this.getItemById(ItemsUtil.getPropertyValue(editingItem, this._options.idProperty), this._options.idProperty).getContents());
-               }
-            }
-
-            return index;
+            return this._editingItemData ? this._editingItemData.index : null;
          }
       });
 

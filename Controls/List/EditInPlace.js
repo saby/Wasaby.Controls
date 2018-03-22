@@ -209,7 +209,7 @@ define('Controls/List/EditInPlace', [
       beginAdd: function(options) {
          var self = this;
          return this.commitEdit().addCallback(function() {
-            return _private.beginAdd(self, options).addCallback(function(newOptions) {
+            return _private.beginAdd(self, options || {}).addCallback(function(newOptions) {
                return _private.afterBeginAdd(self, newOptions);
             });
          });
