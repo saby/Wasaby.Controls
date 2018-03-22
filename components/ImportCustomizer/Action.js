@@ -11,10 +11,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
       'Core/Deferred',
       'Lib/Control/FloatArea/FloatArea',
       'SBIS3.CONTROLS/Action',
+      'SBIS3.CONTROLS/ImportCustomizer/Area',
       'WS.Data/Source/SbisService'
    ],
 
-   function (cMerge, Deferred, FloatArea, Action, SbisService) {
+   function (cMerge, Deferred, FloatArea, Action, Area, SbisService) {
       'use strict';
 
       var ImportCustomizerAction = Action.extend([], /**@lends SBIS3.CONTROLS/ImportCustomizer/Action.prototype*/ {
@@ -130,6 +131,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             }
             if (this._result) {
                return Deferred.fail('Allready open');
+            }
+            if (Area.DATA_TYPES.indexOf(options.dataType) === -1) {
+               Area.showMessage('error', rk('Ошибка', 'НастройщикИмпорта'), rk('Тип данных в этом файле не поддерживается', 'НастройщикИмпорта'));
+               return Deferred.fail('Not supported data type');
             }
             var inputCall = options.inputCall;
             if (inputCall && !this._isImportIOCall(inputCall)) {

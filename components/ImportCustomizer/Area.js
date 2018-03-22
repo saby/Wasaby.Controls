@@ -9,7 +9,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
    [
       'Core/CommandDispatcher',
       'Core/core-merge',
+      'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
+      'SBIS3.CONTROLS/Utils/InformationPopupManager',
       'tmpl!SBIS3.CONTROLS/ImportCustomizer/Area',
       'css!SBIS3.CONTROLS/ImportCustomizer/Area',
       'SBIS3.CONTROLS/Button',
@@ -18,7 +20,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, CompoundControl, dotTplFn) {
+   function (CommandDispatcher, cMerge, Deferred, CompoundControl, InformationPopupManager, dotTplFn) {
       'use strict';
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/Area.prototype*/ {
@@ -257,11 +259,28 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          },
 
          /*
+          * Проверить результаты
+          *
+          * @protected
+          * @param {object} data Результирующие данные
+          * @return {Core/Deferred}
+          */
+         _checkResults: function (data) {
+            var promise = new Deferred();
+
+            // TODO: Реализовать проверку, пока два пункта: fileds:required и предупреждение на baseParams:replaceAllData
+            promise.dependOn(Area.showMessage('confirm', rk('Проверка связи', 'НастройщикИмпорта'), rk('Всё нормально?', 'НастройщикИмпорта')));//^^^
+
+            return promise;
+         },
+
+         /*
           * Реализация команды "complete"
           *
           * @protected
           */
          _cmdComplete: function () {
+            // Сформировать результирующие данные из всего имеющегося
             var options = this._options;
             var views = this._views;
             var results = this._results;
@@ -285,13 +304,16 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             for (var name in baseParams) {
                data[name] = baseParams[name];
             }
-            // Собрать данные и затем...
-            if (data) {
-               this._notify('onComplete', data);
-            }
-            else {
-               this._notify('onClose');
-            }
+            // Прроверить их
+            this._checkResults(data).addCallback(function (isSuccess) {
+               // И если всё нормально - завершить диалог
+               if (isSuccess) {
+                  this._notify('onComplete', data);
+               }
+               /*else {
+                  this._notify('onClose');
+               }*/
+            }.bind(this));
          },
 
          /*
@@ -393,6 +415,51 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             Area.superclass.destroy.apply(this, arguments);
          }*/
       });
+
+
+
+      // Public constants:
+
+      /**
+       * Константа - Поддерживаемые типы данных
+       *
+       * @public
+       * @static
+       * @constant
+       * @type {Array<string>}
+       */
+      Object.defineProperty(Area, 'DATA_TYPES', {value:['excel', 'dbf', 'cml'], enumerable:true});
+
+
+      // Public static methods:
+
+      /**
+       * Показать сообщение пользователю
+       *
+       * @public
+       * @static
+       * @param {SBIS3.CONTROLS/SubmitPopup#SubmitPopupStatus} type Тип диалога (confirm, default, success, error)
+       * @param {string} title Заголовок сообщения
+       * @param {string} text Текст сообщения
+       * @return {Core/Deferred}
+       */
+      Area.showMessage = function (type, title, text) {
+         var isConfirm = type === 'confirm';
+         var promise = new Deferred();
+         var args = [{
+            status: type,
+            message: title,
+            details: text
+         }];
+         if (isConfirm) {
+            args.push(promise.callback.bind(promise, true), promise.callback.bind(promise, false));
+         }
+         else {
+            args.push(promise.callback.bind(promise, null));
+         }
+         InformationPopupManager[isConfirm ? 'showConfirmDialog' : 'showMessageDialog'].apply(InformationPopupManager, args);
+         return promise;
+      };
 
 
 
