@@ -111,8 +111,8 @@ define('Controls/Popup/Manager',
          },
          getItemContainer: function (id) {
             var popupContainer = this.getPopupContainer();
-            var item = popupContainer._children[id];
-            return item._container;
+            var item = popupContainer && popupContainer._children[id];
+            return item && item._container;
          }
       };
 

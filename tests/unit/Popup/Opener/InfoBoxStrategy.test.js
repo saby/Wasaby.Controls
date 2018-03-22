@@ -1,11 +1,11 @@
 define(
    [
-      'Controls/Popup/Opener/InfoBox/InfoBoxStrategy'
+      'Controls/Popup/Opener/InfoBox/InfoBoxController'
    ],
 
-   function (InfoBoxStrategy) {
+   function (InfoBoxController) {
       'use strict';
-      describe('Controls/Popup/Opener/InfoBox/InfoBoxStrategy', function () {
+      describe('Controls/Popup/Opener/InfoBox/InfoBoxController', function () {
 
          var arrowOffset = 12;
          var arrowWidth = 16;
@@ -38,7 +38,7 @@ define(
 
          tests.forEach(function(test){
             it('align: ' + JSON.stringify(test.cfg), function(){
-               assert.isTrue(InfoBoxStrategy.getOffset(test.cfg.targetWidth, test.cfg.alignSide, arrowOffset, arrowWidth) === test.value);
+               assert.isTrue(InfoBoxController._private.getOffset(test.cfg.targetWidth, test.cfg.alignSide, arrowOffset, arrowWidth) === test.value);
             });
          });
 

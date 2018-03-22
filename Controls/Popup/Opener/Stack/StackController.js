@@ -11,7 +11,7 @@ define('Controls/Popup/Opener/Stack/StackController',
       'use strict';
 
       var POPUP_CLASS = 'ws-Container__stack-panel';
-      var MINIMAL_PANEL_WIDTH = 50; // минимальная ширина стековой панели
+      var MINIMAL_PANEL_WIDTH = 50; // минимальная ширина стековой панели, todo уйдет в css после доработки по заданию размеров для панели
       var MINIMAL_PANEL_DISTANCE = 50; // минимальный отступ стековой панели от правого края
 
       var _private = {
