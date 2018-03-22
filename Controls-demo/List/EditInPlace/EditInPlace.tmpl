@@ -1,14 +1,14 @@
-<div class="123">
+<div class="editInPlaceDemo">
     <style>
-        .VDomEditInPlace__list-control {
-            width: 600px;
-        }
         .ws-ListView__item {
             height: 30px;
             box-sizing: border-box;
             padding: 3px 4px;
             display: flex;
             align-items: center;
+        }
+        .editInPlaceDemo {
+            padding-top: 30px;
         }
     </style>
     <Controls:List
@@ -25,7 +25,7 @@
                         itemData="{{itemTemplate.itemData}}"
             >
                 <ws:contentTemplate>
-                    <ws:partial template="tmpl!Controls/List/EditInPlace/defaultEditingTemplate"
+                    <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate"
                                 itemData="{{itemTemplate.itemData}}"
                     />
                 </ws:contentTemplate>

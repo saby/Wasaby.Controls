@@ -1,13 +1,15 @@
 <div class="ws-ListView">
    <ws:if data="{{_listModel}}">
-      <div class="ws-ListView__items">
-         <ws:partial template="tmpl!Controls/List/resources/For" listModel="{{_listModel}}" itemTemplate="{{_itemTemplate}}"></ws:partial>
-         <ws:if data="{{_listModel._itemsModel._editingItem && _listModel._itemsModel._isAdd}}">
-            <ws:partial
-                    on:click="_onItemClick(_listModel._itemsModel._editingItemProjection)"
-                    template="{{_itemTemplate}}"
-                    itemData="{{_listModel._itemsModel._editingItemData}}"/>
-         </ws:if>
-      </div>
+      <Controls.Validate.FormController name="formController">
+         <div class="ws-ListView__items">
+            <ws:partial template="tmpl!Controls/List/resources/For" listModel="{{_listModel}}" itemTemplate="{{_itemTemplate}}"></ws:partial>
+            <ws:if data="{{_listModel._itemsModel._editingItem && _listModel._itemsModel._isAdd}}">
+               <ws:partial
+                       on:click="_onItemClick(_listModel._itemsModel._editingItemProjection)"
+                       template="{{_itemTemplate}}"
+                       itemData="{{_listModel._itemsModel._editingItemData}}"/>
+            </ws:if>
+         </div>
+      </Controls.Validate.FormController>
    </ws:if>
 </div>

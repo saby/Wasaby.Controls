@@ -42,6 +42,7 @@
                 initialConfig="{{initialEditInPlaceConfig}}"
                 items="{{_listViewModel.getItems()}}"
                 source="{{_options.source}}"
+                on:beforeEndEdit="_onBeforeEndEdit()"
                 on:afterBeginEdit="_onAfterBeginEdit()"
                 on:afterEndEdit="_onAfterEndEdit()" />
 </div>

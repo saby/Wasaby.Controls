@@ -2,17 +2,10 @@ define('Controls/List/EditInPlace', [
    'Core/Control',
    'Core/Deferred',
    'WS.Data/Entity/Record',
-   'WS.Data/Type/descriptor',
-   'css!Controls/List/EditInPlace/EditInPlace'
+   'WS.Data/Type/descriptor'
 ], function (Control, Deferred, Record, types) {
 
    var _private = {
-      /**
-       *
-       * @param self
-       * @param {WS.Data/Entity/Record} record
-       * @returns {Core/Deferred}
-       */
       beginEdit: function(self, record) {
          var result = self._notify('beginEdit', [record], {bubbling: true});
 
@@ -35,12 +28,7 @@ define('Controls/List/EditInPlace', [
          return Deferred.success(record);
       },
 
-      /**
-       *
-       * @param self
-       * @param {WS.Data/Entity/Record} record
-       * @returns {WS.Data/Entity/Record}
-       */
+
       afterBeginEdit: function(self, record) {
          self._editingItem = record.clone();
          self._notify('afterBeginEdit', [self._editingItem], {bubbling: true});
@@ -48,14 +36,7 @@ define('Controls/List/EditInPlace', [
          return self._editingItem;
       },
 
-      /**
-       *
-       * @param self
-       * @param {Object} options
-       * @returns {Core/Deferred}
-       */
       beginAdd: function(self, options) {
-         //TODO: надо где-нибудь запоминать опции
          var result = self._notify('beginAdd', [options], {bubbling: true});
 
          if (result === BeginEditResult.CANCEL) {
@@ -64,19 +45,18 @@ define('Controls/List/EditInPlace', [
 
          if (result) {
             if (result instanceof Deferred) {
-               return result.addCallback(function(newRecord) {
-                  options.record = newRecord;
-                  return options;
+               return result.addCallback(function(newOptions) {
+                  return newOptions;
                });
             }
-            if (result.record instanceof Record) {
+            if (result.item instanceof Record) {
                return Deferred.success(result);
             }
          }
 
-         if (!options.record) {
+         if (!options.item) {
             return self._options.source.create(options).addCallback(function(newRecord) {
-               options.record = newRecord;
+               options.item = newRecord;
                return options;
             });
          } else {
@@ -84,28 +64,22 @@ define('Controls/List/EditInPlace', [
          }
       },
 
-      afterBeginAdd: function(self, options, items, source) {
-         //TODO: копипаста
+      afterBeginAdd: function(self, options) {
          self._isAdd = true;
-         self._editingItem = options.record.clone();
+         self._editingItem = options.item.clone();
+         self._addOptions = options;
          self._notify('afterBeginEdit', [self._editingItem, true], {bubbling: true});
 
          return self._editingItem;
       },
 
-      /**
-       *
-       * @param self
-       * @param {Boolean} commit - true - сохранять запись, false - не сохранять запись
-       * @returns {Core/Deferred}
-       */
       endEdit: function(self, commit) {
          //Чтобы при первом старте редактирования не летели лишние события
          if (!self._editingItem) {
             return Deferred.success();
          }
 
-         var result = self._notify('endEdit', [self._editingItem, commit, self._isAdd], {bubbling: true});
+         var result = self._notify('endEdit', [self._editingItem, self._isAdd, commit], {bubbling: true});
 
          if (result === EndEditResult.CANCEL) {
             return Deferred.fail();
@@ -114,33 +88,52 @@ define('Controls/List/EditInPlace', [
          if (result instanceof Deferred) {
             //Если мы попали сюда, то прикладники сами сохраняют запись
             return result.addCallback(function() {
-               self._notify('afterEndEdit', [], {bubbling: true});
+               _private.acceptChanges(self);
+               self._notify('afterEndEdit', [self._oldItem, self._isAdd], {bubbling: true});
+               _private.resetVariables(self);
             });
          }
 
          return _private.updateModel(self, commit).addCallback(function() {
-            self._notify('afterEndEdit', [], {bubbling: true});
+            self._notify('afterEndEdit', [self._oldItem, self._isAdd], {bubbling: true});
+            _private.resetVariables(self);
          });
       },
 
       updateModel: function(self, commit) {
          if (commit) {
-            //TODO: если есть source, то тут нужно сбегать на БЛ
-            if (self._isAdd) {
-               self._editingItem.acceptChanges();
-               //TODO: поддержать вставку в произвольное место
-               self._options.items.add(self._editingItem);
+            if (self._options.source) {
+               return self._options.source.update(self._editingItem).addCallback(function() {
+                  _private.acceptChanges(self);
+               }).addErrback(function(error) {
+                  return error;
+               })
             } else {
-               self._editingItem.acceptChanges();
-               self._oldItem.merge(self._editingItem);
+               _private.acceptChanges(self);
             }
          }
 
-         self._oldItem = undefined;
-         self._editingItem = undefined;
-         self._isAdd = undefined;
-
          return Deferred.success();
+      },
+
+      acceptChanges: function(self) {
+         if (self._isAdd) {
+            //TODO: надо смотреть на опции при добавлении
+            self._options.items.add(self._editingItem);
+         } else {
+            self._oldItem.merge(self._editingItem);
+         }
+      },
+
+      resetVariables: function(self) {
+         self._oldItem = null;
+         self._editingItem = null;
+         self._isAdd = null;
+         self._addOptions = null;
+      },
+
+      validate: function(self) {
+         return self._notify('beforeEndEdit');
       }
    },
    BeginEditResult = { // Возможные результаты события "BeginEditResult"
@@ -160,28 +153,73 @@ define('Controls/List/EditInPlace', [
        */
 
       /**
-       * @event Controls/List/EditInPlace#beginEdit Происходит перед началом редактирования
-       * @param item Редактируемый элемент
+       * @typedef {String|WS.Data/Entity/Record|Core/Deferred} BeginEditResult
+       * @variant {String} Cancel Отменить завершение редактирования.
+       * @variant {String} PendingAll В результате редактирования ожидается вся запись, как есть (с текущим набором полей).
+       * @variant {String} PendingModifiedOnly В результате редактирования ожидаются только измененные поля. Это поведение используется по умолчанию.
+       * @variant {WS.Data/Entity/Record} item -  Редактируемая запись.
+       * @variant {Core/Deferred} Deferred - используется для асинхронной подготовки редактируемой записи. Из Deferred необходимо обязательно возвращать запись, открываемую на редактирование.
        */
 
       /**
-       * @event Controls/List/EditInPlace#afterBeginEdit Происходит после начала редактирования
+       * @typedef {String|Core/Deferred} EndEditResult
+       * @variant {String} Cancel Отменить завершение редактирования/добавления.
+       * @variant {Core/Deferred} Deferred - используется для завершения редактирования\добавления, согласно логике, определённой прикладным разработчиком.
        */
 
       /**
-       * @event Controls/List/EditInPlace#endEdit Происходит перед окончанием редактирования
-       * @param {WS.Data/Entity/Record} item Редактируемый элемент
-       * @param {Boolean} commit commit - true - изменения сохраняются, false - изменения не сохраняются
+       * @typedef {Object} BeginAddOptions
+       * @param {WS.Data/Entity/Record} [options.item] - запись с начальным набором данных
+       * @param {String} [options.addPosition=bottom] - тут пока непонятно как назвать
        */
 
       /**
-       * @event Controls/List/EditInPlace#afterEndEdit Происходит после окончания редактирования
+       * @typedef {Core/Deferred|BeginAddOptions} BeginAddResult
+       * @variant {BeginAddOptions} Настройки добавления по месту.
+       * @variant {Core/Deferred} Deferred - используется асинхронной подготовки добавляемой записи. Из Deferred обязательно возвращать настройки добавления по месту.
+       */
+
+      /**
+       * @event Controls/List/EditInPlace#beginEdit Происходит перед началом редактирования.
+       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+       * @param {WS.Data/Entity/Record} item Редактируемая запись.
+       * @returns {BeginEditResult}
+       */
+
+      /**
+       * @event Controls/List/EditInPlace#beginAdd Происходит перед началом редактирования.
+       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+       * @param {BeginAddOptions} Настройки добавления по месту.
+       * @returns {BeginAddResult}
+       */
+
+      /**
+       * @event Controls/List/EditInPlace#afterBeginEdit Происходит после начала редактирования\добавления.
+       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+       * @param {WS.Data/Entity/Record} item Редактируемая запись.
+       * @param {Boolean} isAdd Флаг, позволяющий различать редактирование и добавление.
+       */
+
+      /**
+       * @event Controls/List/EditInPlace#endEdit Происходит перед окончанием редактирования\добавления.
+       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+       * @param {WS.Data/Entity/Record} item Редактируемая запись.
+       * @param {Boolean} isAdd Флаг, позволяющий различать редактирование и добавление.
+       * @param {Boolean} commit - true - изменения сохраняются, false - изменения не сохраняются.
+       * @returns {EndEditResult}
+       */
+
+      /**
+       * @event Controls/List/EditInPlace#afterEndEdit Происходит после окончания редактирования\добавления.
+       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
+       * @param {WS.Data/Entity/Record} item Редактируемая запись.
+       * @param {Boolean} isAdd Флаг, позволяющий различать редактирование и добавление.
        */
 
       _beforeMount: function(newOptions) {
          if (newOptions.initialConfig) {
             this._isAdd = newOptions.initialConfig.isAdd;
-            this._editingItem = newOptions.initialConfig.record;
+            this._editingItem = newOptions.initialConfig.item;
          }
       },
 
@@ -201,9 +239,7 @@ define('Controls/List/EditInPlace', [
 
       /**
        * Начинает добавление по месту
-       * @param {Object} options
-       * @param {WS.Data/Entity/Record} options.record
-       * @param {String} options.addPosition
+       * @param {BeginAddOptions} options Настройки добавления по месту
        * @returns {Core/Deferred}
        */
       beginAdd: function(options) {
@@ -220,7 +256,16 @@ define('Controls/List/EditInPlace', [
        * @returns {Core/Deferred}
        */
       commitEdit: function() {
-         return _private.endEdit(this, true);
+         var self = this;
+
+         return _private.validate(this).addCallback(function(result) {
+            for(var key in result) {
+               if (result.hasOwnProperty(key) && result[key]) {
+                  return Deferred.fail();
+               }
+            }
+            return _private.endEdit(self, true);
+         });
       },
 
       /**
@@ -229,6 +274,10 @@ define('Controls/List/EditInPlace', [
        */
       cancelEdit: function() {
          return _private.endEdit(this, false);
+      },
+
+      _beforeUnmount: function() {
+         _private.resetVariables(this);
       }
    });
 

@@ -75,6 +75,10 @@ define('Controls/List/SimpleList/ListView', [
             newKey = ItemsUtil.getPropertyValue(item, this._options.idProperty);
             this._listModel.setMarkedKey(newKey);
             this._notify('itemClick', [item], {bubbling: true});
+         },
+
+         validate: function() {
+            return this._children.formController.submit();
          }
       });
    

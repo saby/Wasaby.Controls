@@ -249,19 +249,19 @@ define('Controls/List/SourceControl', [
          var
             editingItemIndex = self._listViewModel.getEditingItemIndex(),
             currentItemIndex = self._listViewModel.getItems().getIndex(record);
-         //Если currentItemIndex = -1, то происходит добавление, либо нет item'а... и это очень грустно
+         //Если currentItemIndex = -1, то происходит добавление
          if (editingItemIndex !== currentItemIndex && ~currentItemIndex) {
-            //TODO: показали индикатор
-            return self._children.editInPlace.beginEdit(record).addBoth(function(record) {
-               //TODO: скрыли индикатор
+            _private.showIndicator(self);
+            return self._children.editInPlace.beginEdit(record).addBoth(function() {
+               _private.hideIndicator(self);
             });
          }
       },
 
       beginAdd: function(self, options) {
-         //TODO: показали индикатор
-         return self._children.editInPlace.beginAdd(options).addBoth(function(record) {
-            //TODO: скрыли индикатор
+         _private.showIndicator(self);
+         return self._children.editInPlace.beginAdd(options).addBoth(function() {
+            _private.hideIndicator(self);
          });
       },
 
@@ -363,12 +363,15 @@ define('Controls/List/SourceControl', [
             }
          }
 
+         //TODO: если нет item'ов, то нужно дождаться их прогрузки. Чтобы дождаться их прогрузки нужно вернуть Deferred из _beforeMount.
+         //Но т.к. reload стреляет событиями, то начинают валиться ошибки, потому что в _beforeMount нельзя стрелять событиями
+         //Из-за этого не получается сделать старт редактирования при отрисовке
          if (newOptions.editingConfig && newOptions.editingConfig.record) {
             //TODO: непонятно как ставить маркер при добавлении
-            var recordClone = newOptions.editingConfig.record.clone();
+            var recordClone = newOptions.editingConfig.item.clone();
             this._listViewModel.setEditingItem(recordClone);
             this.initialEditInPlaceConfig = {
-               record: recordClone,
+               item: recordClone,
                isAdd: this._listViewModel._itemsModel._isAdd
             };
          }
@@ -513,6 +516,10 @@ define('Controls/List/SourceControl', [
             // console.log('ушёл фокус со строки по табу');
          }
          e.stopPropagation();
+      },
+
+      _onBeforeEndEdit: function() {
+         return this._children.listView.validate();
       }
    });
 
