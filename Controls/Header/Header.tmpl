@@ -1,9 +1,9 @@
 <span attr:class="controls-Header controls-Header_style-{{_options.style}}">
-    <span attr:class="controls-Header__wrapper {{ _options.countClickable ? 'controls-Header_count-and-caption_hovered'}} {{ _options.iconClickable ? 'controls-Header_icon-and-caption_hovered'}}">
-        <ws:if data="{{_options.iconStyle}}">
+    <span class="controls-Header__wrapper">
+        <ws:if data="{{_options.iconStyle && _options.iconClickable && _options.iconLocation === 'before'}}">
             <i on:click="iconClickHandler()" attr:class="controls-Header__icon controls-Separator__icon_style-{{_options.iconStyle}} {{_icon}} controls-Header__icon_location-{{_options.iconLocation}}"></i>
         </ws:if>
-        <ws:if data="{{_options.counterValue}}">
+        <ws:if data="{{_options.counterValue && _options.countClickable && _options.counterLocation === 'before'}}">
            <Controls:Header:Counter:Counter class="controls-HeaderCount_location-{{_options.counterLocation}}"
                                             on:click="countClickHandler()"
                                             template="tmpl!Controls/Header/Counter/Counter"
@@ -12,11 +12,27 @@
                                             style="{{_options.counterStyle}}"
            />
         </ws:if>
-        <span attr:class="controls-Header__caption_size-{{_options.size}}
-                          controls-Header__caption_style-{{_options.style}}{{_options.clickable ? '_hovered'}}"
-        >{{_options.caption}}</span>
-        <ws:if data="{{_options.separatorIcon}}">
-            <span class="controls-HeaderSeparator__icon_style-{{_options.separatorIconStyle}}"></span>
-        </ws:if>
+        <span attr:class="controls-Header__content_hovered">
+            <ws:if data="{{_options.iconStyle && !_options.iconClickable}}">
+                <i on:click="iconClickHandler()" attr:class="controls-Header__icon controls-Separator__icon_style-{{_options.iconStyle}} {{_icon}} controls-Header__icon_location-{{_options.iconLocation}}"></i>
+            </ws:if>
+            <ws:if data="{{_options.counterValue && !_options.countClickable}}">
+               <Controls:Header:Counter:Counter class="controls-HeaderCount_location-{{_options.counterLocation}}"
+                               on:click="countClickHandler()"
+                               template="tmpl!Controls/Header/Counter/Counter"
+                               value="{{_options.counterValue}}"
+                               size="{{_options.counterSize}}"
+                               style="{{_options.counterStyle}}"
+               />
+            </ws:if>
+            <ws:if data="{{_options.caption}}">
+                <span attr:class="controls-Header__caption_size-{{_options.size}}
+                                  controls-Header__caption_style-{{_options.style}}{{_options.clickable ? '_hovered'}}"
+                >{{_options.caption}}</span>
+            </ws:if>
+            <ws:if data="{{_options.separatorIcon}}">
+                <svg class="controls-HeaderSeparator__icon_style-{{_options.separatorIconStyle}}"></svg>
+            </ws:if>
+        </span>
     </span>
 </span>

@@ -36,7 +36,7 @@
    color: @color_Header__caption_style-deafult;
 }
 
-.controls-Header_count-and-caption_hovered:active {
+.controls-Header__content_hovered:active {
    .controls-Header__caption_style-default_hovered {
       color: @color_Header__caption_style-deafult_hovered;
       cursor: pointer;
@@ -54,9 +54,7 @@
    .controls-HeaderCounter_style-primary {
       color: @color_HeaderCounter_style-primary_hovered;
    }
-}
 
-.controls-Header_icon-and-caption_hovered:active {
    .controls-Separator__icon_style-Accent {
       color: @color-Header__icon_style-Accent_hovered;
    }
@@ -67,16 +65,6 @@
 
    .controls-Separator__icon_style-Additional {
       color: @color-Header__icon_style-Additional_hovered;
-   }
-
-   .controls-Header__caption_style-default_hovered {
-      color: @color_Header__caption_style-deafult_hovered;
-      cursor: pointer;
-   }
-
-   .controls-Header__caption_style-primary_hovered {
-      color: @color_Header__caption_style-primary_hovered;
-      cursor: pointer;
    }
 }
 
@@ -139,14 +127,16 @@
 
 .controls-HeaderSeparator__icon_style-primary{
    fill: @fill-HeaderSeparator__icon_style-primary;
+   fill-opacity: 1;
 }
 
 .controls-HeaderSeparator__icon_style-default{
    fill: @fill-HeaderSeparator__icon_style-default;
+   fill-opacity: 1;
 }
 
 .ws-is-no-touch {
-   .controls-Header_count-and-caption_hovered:hover {
+   .controls-Header__content_hovered:hover {
       .controls-Header__caption_style-default_hovered {
          color: @color_Header__caption_style-deafult_hovered;
          cursor: pointer;
@@ -164,9 +154,7 @@
       .controls-HeaderCounter_style-primary {
          color: @color_HeaderCounter_style-primary_hovered;
       }
-   }
 
-   .controls-Header_icon-and-caption_hovered:hover {
       .controls-Separator__icon_style-Accent {
          color: @color-Header__icon_style-Accent_hovered;
       }
@@ -177,16 +165,6 @@
 
       .controls-Separator__icon_style-Additional {
          color: @color-Header__icon_style-Additional_hovered;
-      }
-
-      .controls-Header__caption_style-default_hovered {
-         color: @color_Header__caption_style-deafult_hovered;
-         cursor: pointer;
-      }
-
-      .controls-Header__caption_style-primary_hovered {
-         color: @color_Header__caption_style-primary_hovered;
-         cursor: pointer;
       }
    }
    .controls-Header__caption_style-default_hovered:hover {
