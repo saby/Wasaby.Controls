@@ -76,5 +76,5 @@ subscribe(event, listener) и unsubscribe(event, listener) для того, чт
 //destroy
 
 
-@demo SBIS3.CONTROLS.Demo.MyLongOperations
-@demo SBIS3.CONTROLS.Demo.MyLongOperationsSvc
+@demo Examples/LongOperations/MyLongOperations/MyLongOperations
+@demo Examples/LongOperations/MyLongOperationsSvc/MyLongOperationsSvc

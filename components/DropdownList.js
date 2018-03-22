@@ -67,7 +67,7 @@ define('SBIS3.CONTROLS/DropdownList',
        * @mixes SBIS3.CONTROLS/Mixins/DataBindMixin
        * @mixes SBIS3.CONTROLS/Mixins/FormWidgetMixin
        *
-       * @demo SBIS3.CONTROLS.Demo.MyDropdownList Пример работы контрола
+       * @demo Examples/DropdownList/MyDropdownList/MyDropdownList Пример работы контрола
        *
        * @ignoreOptions emptyHTML
        * @ignoreMethods setEmptyHTML

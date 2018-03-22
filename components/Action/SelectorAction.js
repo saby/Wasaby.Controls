@@ -18,7 +18,7 @@ define('SBIS3.CONTROLS/Action/SelectorAction',
         *
         * @mixes SBIS3.CONTROLS/Action/Mixin/DialogMixin
         *
-        * @demo SBIS3.CONTROLS.Demo.DemoSelectorAction
+        * @demo Examples/Action/SelectorAction/SelectorAction
         *
         * @public
         * @author Герасимов А.М.

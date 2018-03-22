@@ -30,7 +30,7 @@ define('SBIS3.CONTROLS/CheckBox', [
     * @mixes SBIS3.CONTROLS/Mixins/ITextValue
     *
     *
-    * @demo SBIS3.CONTROLS.Demo.MyCheckbox
+    * @demo Examples/CheckBox/MyCheckBox/MyCheckBox
     * @author Журавлев М.С.
     *
     * @ignoreOptions icon extendedTooltip independentContext contextRestriction isContainerInsideParent stateKey subcontrol

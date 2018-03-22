@@ -17,7 +17,7 @@ define(
        * Можно вводить только значения особого формата даты ISO_8601 с точностью от дней до минут.
        * @class SBIS3.CONTROLS/Date/TimeInterval
        * @extends SBIS3.CONTROLS/FormattedTextBox/FormattedTextBoxBase
-       * @demo SBIS3.CONTROLS.Demo.MyTimeInterval
+       * @demo Examples/TimeInterval/MyTimeInterval/MyTimeInterval
        * @author Крайнов Д.О.
        *
        * @control
