@@ -1,6 +1,6 @@
 #!groovy
 echo "Задаем параметры сборки"
-def version = "3.18.150"
+def version = "3.18.200"
 if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
         currentBuild.result = 'ABORTED'
         error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
@@ -395,6 +395,7 @@ node('controls') {
             BASE_VERSION = css_${NODE_NAME}${ver}1
             DO_NOT_RESTART = True
             SOFT_RESTART = True
+			TAGS_TO_START = ws.data
             NO_RESOURCES = True
             DELAY_RUN_TESTS = 2
             TAGS_NOT_TO_START = iOSOnly, todomvc, tabmessage
@@ -450,17 +451,19 @@ node('controls') {
         stage("Запуск тестов интеграционных и верстки"){
             def site = "http://${NODE_NAME}:30001"
             site.trim()
-            dir("./controls/tests/int"){
-                tmp_smoke = sh returnStatus:true, script: """
-                    source /home/sbis/venv_for_test/bin/activate
-                    ${python_ver} smoke_test.py --SERVER_ADDRESS ${smoke_server_address}
-                    deactivate
-                """
-                if ( "${tmp_smoke}" != "0" ) {
-                    currentBuild.result = 'ABORTED'
-                    error('Стенд неработоспособен (не прошел smoke test).')
-                }
-            }
+			if ("${params.browser_type}" != "ff"){
+				dir("./controls/tests/int"){
+					tmp_smoke = sh returnStatus:true, script: """
+						source /home/sbis/venv_for_test/bin/activate
+						${python_ver} smoke_test.py --SERVER_ADDRESS ${smoke_server_address}
+						deactivate
+					"""
+					if ( "${tmp_smoke}" != "0" ) {
+						currentBuild.result = 'ABORTED'
+						error('Стенд неработоспособен (не прошел smoke test).')
+					}
+				}
+			}
             parallel (
                 int_test: {
                     echo "Запускаем интеграционные тесты"

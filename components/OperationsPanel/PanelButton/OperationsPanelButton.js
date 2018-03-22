@@ -36,7 +36,7 @@ define('SBIS3.CONTROLS/OperationsPanel/PanelButton/OperationsPanelButton', [
       $protected: {
          _options: {
             /**
-             * @cfg {js!SBIS3.CONTROLS.OperationPanel} Связанная панель массовых операций
+             * @cfg {SBIS3.CONTROLS/OperationsPanel} Связанная панель массовых операций
              * @example
              * <pre>
              *     <option name="linkedPanel">MyOperationPanel</option>

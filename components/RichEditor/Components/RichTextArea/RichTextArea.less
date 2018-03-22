@@ -10,10 +10,26 @@
    &.controls-RichEditor__overflowVisible {
       overflow: visible;
    }
+
+   .controls-RichEditor__scrollContainer {
+      box-sizing: border-box;
+   }
+
+   &.ws-enabled .controls-RichEditor__scrollContainer {
+      border: 1px solid #EAEAEA;
+   }
+
+   &.ws-disabled .controls-RichEditor__scrollContainer {
+      border: 1px solid transparent;
+   }
+
+   &.controls-RichEditor_toolbarExpanded .controls-RichEditor__scrollContainer {
+      border-top: 0 none;
+   }
+
    .controls-RichEditor__editorFrame {
       z-index: 1;
       width: 100%;
-      border: 1px solid #EAEAEA;
       position: relative;
       /* Проблема:
                   tinyMCE при клике на contenteditable="false" элемент внутри поля ввода
@@ -55,15 +71,14 @@
    &.controls-RichEditor_fixedHeight .controls-RichEditor__editorFrame {
       min-height: 100%;
    }
-   .controls-RichEditor__sourceArea{
+   .controls-RichEditor__sourceArea {
       display: block;
       height: 100%;
       width:100%;
       -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
       -moz-box-sizing: border-box;    /* Firefox, other Gecko */
       box-sizing: border-box;         /* Opera/IE 8+ */
-      border: 1px solid #EAEAEA;
-      border-top-color: #ffffff;
+      border: 0 none;
       resize: none;
       line-height: 20px;
       margin: 0;
@@ -71,7 +86,7 @@
       overflow-x: hidden;
       overflow-y: auto;
    }
-   .controls-RichEditor__fakeArea{
+   .controls-RichEditor__fakeArea {
       height: 0;
       width: 0;
       border: none;
@@ -80,10 +95,8 @@
       padding: 0;
       display:none;
    }
-   &.ws-validation-error {
-      .controls-RichEditor__editorFrame {
-         border: 1px solid #FF302B;
-      }
+   &.ws-enabled.ws-validation-error .controls-RichEditor__scrollContainer {
+      border-color: #FF302B;
    }
 
    &.ws-disabled {
@@ -98,7 +111,6 @@
       width: 100%;
       height: 100%;
       padding: 2px 0 2px 4px; /* отступы у параграфов через padding родительского блока без first-child */
-      border: 1px solid transparent;
       box-sizing: border-box;
       word-wrap: break-word;
       .engine-DecoratedLink {
@@ -129,6 +141,8 @@
       //TODO: увелисчить вес селектора
       outline: none !important;
       cursor: pointer;
+   }
+   .controls-RichEditor__editorFrame img {
       .user-select();
    }
    .controls-RichEditor__noneditable {
@@ -190,18 +204,19 @@
       cursor: text;
    }
 }
+
+// При выделении может появится элемент с классом "mce-offscreen-selection", отступ же нужно сбрасывать именно у последнего параграфа
+// https://online.sbis.ru/opendoc.html?guid=0f043ceb-354f-4c38-9cf6-8bc6cdbfb402
+.controls-RichEditor .controls-RichEditor__editorFrame.ws-basic-style > p:last-of-type {
+   margin-bottom: 0;
+}
+
 //Стили для окна добавления/редактирования ссылки
 .controls-RichEditor__InsertLink__label,
 .controls-RichEditor__InsertLink__input.ws-field-string,
 .controls-RichEditor__InsertLink__okButton.controls-Button {
    font-weight: normal;
    position: absolute;
-}
-
-// При выделении может появится элемент с классом "mce-offscreen-selection", отступ же нужно сбрасывать именно у последнего параграфа
-// https://online.sbis.ru/opendoc.html?guid=0f043ceb-354f-4c38-9cf6-8bc6cdbfb402
-.controls-RichEditor .controls-RichEditor__editorFrame.ws-basic-style > p:last-of-type {
-   margin-bottom: 0;
 }
 
 .controls-RichEditor__InsertLink__label {
@@ -223,18 +238,17 @@
 
 .controls-RichEditor__InsertLink__hrefLabel,
 .controls-RichEditor__InsertLink__hrefInput {
-   top: 0;
+   top: 8px;
 }
 
 .controls-RichEditor__InsertLink__captionLabel,
 .controls-RichEditor__InsertLink__captionInput {
-   top: 32px;
+   top: 40px;
 }
 
 .controls-RichEditor__InsertLink__okButton {
    right: 48px;
    top: 8px;
-   width: 90px;
 }
 
 /*вставка со стилями*/

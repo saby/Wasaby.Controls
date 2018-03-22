@@ -56,7 +56,7 @@ define('SBIS3.CONTROLS/Filter/Button/LinkSelector',
                 *    <options name="dictionaries" type="array">
                 *       <options>
                 *          <option name="caption">Сотрудники</option>
-                *          <option name="template">js!SBIS3.MyArea.DictEmployees</option>
+                *          <option name="template">Examples/MyArea/DictEmployees</option>
                 *       </options>
                 *    <options>
                 * </pre>

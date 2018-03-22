@@ -1,5 +1,5 @@
 <div class="controls-DropdownList__popup" depth="{{_options.depth}}">
-   <div if={{_options.headTemplate}} class="controls-DropdownList__header">
+   <div if="{{_options.headTemplate}}" class="controls-DropdownList__header">
       <ws:partial template="{{_options.headTemplate}}" />
    </div>
    <Controls:Container:Scroll attr:class="controls-ScrollContainer__flex controls-DropdownList__scroll">
@@ -8,7 +8,7 @@
                      itemTemplate="{{_options.itemTemplate}}" defaultItemTemplate="{{_defaultItemTemplate}}" resultHandler="{{resultHandler}}"></ws:partial>
       </ws:content>
    </Controls:Container:Scroll>
-   <div if={{_options.footerTemplate}} class="controls-DropdownList__footer" on:click="_footerClick()">
+   <div if="{{_options.footerTemplate}}" class="controls-DropdownList__footer" on:click="_footerClick()">
       <ws:partial template="{{_options.footerTemplate}}" />
    </div>
 </div>

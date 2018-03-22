@@ -35,13 +35,19 @@ define('SBIS3.CONTROLS/Mixins/ChooserMixin', [
    var ChooserMixin = /**@lends SBIS3.CONTROLS/Mixins/ChooserMixin.prototype  */{
           /**
            * @event onChooserClick Происходит при клике на кнопку открытия диалога выбора.
+           * @param {Core/EventObject} eventObject Дескриптор события.
+           * @param {String|Object} Строка или объект
+           * Для {@link /docs/js/SBIS3/CONTROLS/FieldLink/ поля связи} значение второго параметра зависит от значения опции {@link /docs/js/SBIS3/CONTROLS/FieldLink/options/useSelectorAction/ useSelectorAction}:
+           * <ol>
+           *    <li> useSelectorAction = true - в параметр прийдет объект</li>
+           *    <li> useSelectorAction = false - в параметр прийдет строка</li>
+           * </ol>
            * @return {Deferred|Boolean|*} Возможные значения:
            * <ol>
            *    <li>Deferred - {@link Deferred Деферед}, результатом выполнения которого будут выбранные записи.</li>
            *    <li>Если вернуть false - диалог выбора открыт не будет.</li>
            *    <li>Любой другой результат - диалог выбора будет открыт стандартным образом.</li>
            * </ol>
-           * @param {Core/EventObject} eventObject Дескриптор события.
            */
       $protected: {
          _options: {

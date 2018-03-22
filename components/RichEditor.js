@@ -21,7 +21,7 @@ define('SBIS3.CONTROLS/RichEditor',
        * @public
        * @control
        *
-       * @demo SBIS3.CONTROLS.Demo.RichEditorDemo В следующем примере первый контрол - SBIS3.CONTROLS.RichEditor.
+       * @demo Examples/RichEditor/RichEditorDemo/RichEditorDemo В следующем примере первый контрол - SBIS3.CONTROLS.RichEditor.
        * Ниже добавлен контрол SBIS3.CONTROLS/RichEditor/Components/Toolbar, который связан с контролом SBIS3.CONTROLS/RichEditor/Components/RichTextArea с помощью метода {@link SBIS3.CONTROLS/RichEditor/Components/ToolbarBase#setLinkedEditor}.
        *
        * @category Input
@@ -62,29 +62,28 @@ define('SBIS3.CONTROLS/RichEditor',
             if (this._container.find('.controls-RichEditorToolbar').length) { //если есть конетейнер с тулбаром значит надо лишь установить на него ссылку
                this._toolbar = this.getChildControlByName('RichEditorToolbar');
             }
-            else {//если мы неактивны значит редактор еще не строили на сервере, создадим его через new
+            else
+            {//если мы неактивны значит редактор еще не строили на сервере, создадим его через new
+               var options = this._options;
                var div = $('<div></div>');
                this._container.prepend(div);
                this._toolbar = new Toolbar({
                   element: div,
                   name: 'RichEditorToolbar',
-                  expanded: this._options.toolbarVisible,
-                  items: this._options.items
+                  expanded: options.toolbarVisible,
+                  items: options.items
                });
             }
             this._toolbar.setLinkedEditor(this);
-            this._toolbar.subscribe('onExpandedChange', function(event, expanded) {
-               var
-                  newHeight = this._inputControl.outerHeight();
-               newHeight += expanded ? -constants.toolbarHeight : constants.toolbarHeight;
+            this._toolbar.subscribe('onExpandedChange', function (evtName, expanded) {
                if (!this._options.autoHeight) {
-                  this._inputControl.animate(
-                     {
-                        height: newHeight
-                     },
+                  var container = this._scrollContainer;
+                  container.animate(
+                     {height: container.outerHeight() + (expanded ? -constants.toolbarHeight : constants.toolbarHeight)},
                      'fast'
                   );
                }
+               this._container[expanded ? 'addClass' : 'removeClass']('controls-RichEditor_toolbarExpanded');
                this.execCommand('');
             }.bind(this));
          },

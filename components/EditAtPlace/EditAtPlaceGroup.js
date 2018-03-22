@@ -21,7 +21,7 @@ define('SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup',
        * @mixes SBIS3.CONTROLS/Mixins/EditAtPlaceMixin
        *
        * @author Крайнов Д.О.
-       * @demo SBIS3.CONTROLS.Demo.MyEditAtPlace
+       * @demo Examples/EditAtPlaceGroup/MyEditAtPlace/MyEditAtPlace
        */
 
       var EditAtPlaceGroup = CompoundControl.extend([PickerMixin, EditAtPlaceMixin], /** @lends SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup.prototype */{

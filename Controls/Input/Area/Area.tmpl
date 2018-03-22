@@ -48,7 +48,11 @@
                <ws:else>
                   <ws:partial
                      template="disabledArea"
-                     attr:class="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
+                     attr:class="controls-InputArea__field
+                        controls-InputArea__realField
+                        controls-InputRender__field
+                        {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}
+                        controls-InputArea__field_size_{{_options.size || 'default'}}"
                      value="{{ _options.value }}"
                   />
                </ws:else>

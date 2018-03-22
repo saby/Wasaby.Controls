@@ -1,4 +1,4 @@
-<div class="ws-Suggest" on:focusOut="_focusOut()">
+<div class="ws-Suggest">
 
     <Controls:Input:resources:InputRender:InputRender
         name="suggestText"
@@ -14,6 +14,7 @@
         validationErrors="{{_options.validationErrors}}"
         on:valueChanged="_changeValueHandler()"
         on:keydown="_keyDownHandler()"
+        on:focusout="_focusOut()"
         attr:class="ws-Suggest__inputRender">
 
         <ws:content>

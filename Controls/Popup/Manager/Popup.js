@@ -14,7 +14,7 @@ define('Controls/Popup/Manager/Popup',
          /*
          * Вернуть размеры контента
          * */
-         getContentSizes: function(self){
+         _getContentSizes: function(self){
             var content = self._container.querySelector(CONTENT_SELECTOR) || self._container.firstChild;
 
             return {
@@ -26,9 +26,13 @@ define('Controls/Popup/Manager/Popup',
          /*
          * Сохранить размеры, которые требуются чтобы отобразить контент полностью
          * */
-         setNeededSizes: function(self, sizes){
+         _setNeededSizes: function(self, sizes){
             self._neededHeight = sizes.height;
             self._neededWidth = sizes.width;
+         },
+         updateContentSizes: function(self) {
+            var sizes = this._getContentSizes(self);
+            this._setNeededSizes(self, sizes);
          }
       };
 
@@ -56,18 +60,8 @@ define('Controls/Popup/Manager/Popup',
          _template: template,
 
          _afterMount: function () {
-            var contentSizes = _private.getContentSizes(this);
-            _private.setNeededSizes(this, contentSizes);
+            _private.updateContentSizes(this);
             this._notify('popupCreated', [this._options.id, this._getPopupSizes()]);
-         },
-
-         _afterUpdate: function () {
-            var contentSizes = _private.getContentSizes(this);
-            //Если размеры контента изменились, пересчитаем размеры окна
-            if (contentSizes.width !== this._neededWidth || contentSizes.height !== this._neededHeight) {
-               _private.setNeededSizes(this, contentSizes);
-               this._notify('popupUpdated', [this._options.id, this._getPopupSizes()]);
-            }
          },
 
          /**
@@ -118,6 +112,7 @@ define('Controls/Popup/Manager/Popup',
          },
 
          _onResize: function(){
+            _private.updateContentSizes(this);
             this._notify('popupUpdated', [this._options.id, this._getPopupSizes()]);
          },
 

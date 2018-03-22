@@ -14,7 +14,7 @@ define('SBIS3.CONTROLS/Action/List/ReorderMove',[
        * @example
        * Пример использования ReorderMove:
        * <pre>
-       *    define('js!SBIS3.Demo.ReorderMove', ['Lib/Control/CompoundControl/CompoundControl', 'SBIS3.CONTROLS/Action/List/ReorderMove'],
+       *    define('Examples/MyArea/ReorderMove', ['Lib/Control/CompoundControl/CompoundControl', 'SBIS3.CONTROLS/Action/List/ReorderMove'],
        *    function(CompoundControl, ReorderMove){
        *       var move;
        *       return CompoundControl.extend({
@@ -41,7 +41,7 @@ define('SBIS3.CONTROLS/Action/List/ReorderMove',[
        *             <option name="icon" value="sprite:icon-16 icon-ArrowUp icon-primary"></option>
        *             <option name="title" value="move up"></option>
        *             <option name="isMainAction" value="true" type="boolean"></option>
-       *             <option name="onActivated" type="function">js!SBIS3.Demo.ReorderMove:prototype.moveUp</option>
+       *             <option name="onActivated" type="function">Examples/MyArea/ReorderMove:prototype.moveUp</option>
        *          </options>
        *       </options>
        *    </component>

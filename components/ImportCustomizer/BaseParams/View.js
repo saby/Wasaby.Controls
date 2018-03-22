@@ -32,7 +32,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/BaseParams/View',
                 */
                replaceAllData: false,
                /**
-                * @cfg {any} Место назначения для импортирования (таблица в базе данных и т.п.)
+                * @cfg {*} Место назначения для импортирования (таблица в базе данных и т.п.)
                 */
                destination: null
             },

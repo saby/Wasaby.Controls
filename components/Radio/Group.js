@@ -22,7 +22,7 @@ function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
     *
     * @author Журавлев М.С.
     *
-    * @demo SBIS3.CONTROLS.Demo.MyRadioGroup
+    * @demo Examples/RadioGroup/MyRadioGroup/MyRadioGroup
     *
     * @cssModifier controls-ButtonGroup__vertical Для вертикального расположения элементов в группе.
     * @cssModifier controls-Radio__primary акцентные кнопки

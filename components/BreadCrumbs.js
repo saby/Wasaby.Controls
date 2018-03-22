@@ -17,7 +17,7 @@ define('SBIS3.CONTROLS/BreadCrumbs', [
    'css!SBIS3.CONTROLS/Menu/MenuItem/MenuItem'
 ], function(CompoundControl, ItemsControlMixin, PickerMixin, DecorableMixin, dotTplFn, itemContentTpl, dotsTpl, itemTpl, menuItem, escapeHtml, escapeUnicode, IoC, memoize) {
    /**
-    * Класс контрола "Хлебные крошки". Основное применение - <a href='/doc/platform/patterns-and-practices/typical-list/'>иерархические реестры</a>.
+    * Класс контрола "Хлебные крошки".
     * @class SBIS3.CONTROLS/BreadCrumbs
     * @extends Lib/Control/CompoundControl/CompoundControl
     *
@@ -67,10 +67,10 @@ define('SBIS3.CONTROLS/BreadCrumbs', [
              * Чтобы такой шаблон можно было использовать, нужно:
              * 1. Подключить шаблон в массив зависимостей компонента и импортировать его в переменную:
              *       <pre>
-             *          define('js!SBIS3.MyArea.MyComponent',
+             *          define('Examples/MyArea/MyComponent',
              *             [
              *                ...
-             *                'html!SBIS3.MyArea.MyComponent/resources/item_template'
+             *                'tmpl!Examples/MyArea/MyComponent/resources/item_template'
              *             ],
              *             function(..., myItemTpl) {
              *             ...

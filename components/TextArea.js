@@ -49,7 +49,7 @@ define('SBIS3.CONTROLS/TextArea', [
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
     * @ignoreEvents onReady
     *
-    * @demo SBIS3.CONTROLS.Demo.MyTextArea
+    * @demo Examples/TextArea/MyTextArea/MyTextArea
     *
     * @control
     * @public

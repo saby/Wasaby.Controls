@@ -115,6 +115,7 @@ define('SBIS3.CONTROLS/ListView',
        * @mixes SBIS3.CONTROLS/Mixins/DragNDropMixin
        * @mixes SBIS3.CONTROLS/ListView/resources/CommonHandlers
        *
+       * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
        * @cssModifier controls-ListView__orangeMarker Устанавливает отображение маркера активной строки у элементов списка. Модификатор актуален только для класса SBIS3.CONTROLS.ListView.
        * @cssModifier controls-ListView__showCheckBoxes Устанавливает постоянное отображение чекбоксов для записей списка. Модификатор применяется для режима множественного выбора записей (см. {@link multiselect}).
        * @cssModifier controls-ListView__hideCheckBoxes Скрывает отображение чекбоксов для записей списка, для которого установлен режим множественного выбора записей (см. {@link multiselect}).
@@ -496,10 +497,10 @@ define('SBIS3.CONTROLS/ListView',
                 * Чтобы такой шаблон можно было использовать, нужно:
                 * 1. Подключить шаблон в массив зависимостей компонента и импортировать его в переменную:
                 *       <pre>
-                *          define('js!SBIS3.MyArea.MyComponent',
+                *          define('Examples/MyArea/MyComponent',
                 *             [
                 *                ...
-                *                'html!SBIS3.MyArea.MyComponent/resources/item_template'
+                *                'tmpl!Examples/MyArea/MyComponent/resources/item_template'
                 *             ],
                 *             function(..., myItemTpl) {
                 *             ...
@@ -586,14 +587,14 @@ define('SBIS3.CONTROLS/ListView',
                 *           <option name="icon">sprite:icon-16 icon-Delete icon-primary</option>
                 *           <option name="isMainAction">false</option>
                 *           <option name="tooltip">Удалить</option>
-                *           <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyListView:prototype.myOnActivatedHandler</option>
+                *           <option name="onActivated" type="function">Examples/MyArea/MyComponent:prototype.myOnActivatedHandler</option>
                 *        </options>
                 *        <options>
                 *            <option name="name">btn2</option>
                 *            <option name="icon">sprite:icon-16 icon-Trade icon-primary</option>
                 *            <option name="tooltip">Изменить</option>
                 *            <option name="isMainAction">true</option>
-                *            <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyListView:prototype.myOnActivatedHandler</option>
+                *            <option name="onActivated" type="function">Examples/MyArea/MyComponent:prototype.myOnActivatedHandler</option>
                 *         </options>
                 *     </options>
                 * </pre>
@@ -620,18 +621,18 @@ define('SBIS3.CONTROLS/ListView',
                 * <b>Пример 3.</b> Установка обработчика удаления записи
                 * <pre>
                 * <div>
-                *    <ws:SBIS3.Engine.Browser name="goodsBrowser">
+                *    <SBIS3.ENGINE.Controls.Browser name="goodsBrowser">
                 *        <ws:content type="string">
-                *            <ws:SBIS3.CONTROLS/DataGridView>
+                *            <SBIS3.CONTROLS.DataGridView>
                 *                // ...
                 *                <ws:itemsActions>
                 *                    <ws:Array>
                 *                        <ws:Object name="delete" caption="Удалить" tooltip="Удалить" icon="sprite:icon-16 icon-Erase icon-error" isMainAction="true" onActivated="{{ deleteRecord }}"></ws:Object>
                 *                    </ws:Array>
                 *                </ws:itemsActions>
-                *            </ws:SBIS3.CONTROLS/DataGridView>
+                *            </SBIS3.CONTROLS.DataGridView>
                 *        </ws:content>
-                *    </ws:SBIS3.Engine.Browser>
+                *    </SBIS3.ENGINE.Controls.Browser>
                 * </div>
                 * </pre>
                 *
@@ -660,7 +661,7 @@ define('SBIS3.CONTROLS/ListView',
                 * // Модификация опций компонента, нужна для передачи обработчиков
                 * _modifyOptions: function() {
                 *    var options = moduleClass.superclass._modifyOptions.apply(this, arguments);
-                *    Serializer.setToJsonForFunction(this._deleteRecord, 'js!SBIS3.Site.MainTable', 'prototype._deleteRecord');
+                *    Serializer.setToJsonForFunction(this._deleteRecord, 'SBIS3/Site/MainTable', 'prototype._deleteRecord');
                 *    options.deleteRecord = this._deleteRecord;
                 *    return options;
                 * }
@@ -861,10 +862,10 @@ define('SBIS3.CONTROLS/ListView',
                 * @example
                 * 1. Подключаем шаблон в массив зависимостей:
                 * <pre>
-                *     define('js!SBIS3.Demo.nDataGridView',
+                *     define('Examples/MyArea/nDataGridView',
                 *        [
                 *           ...,
-                *           'html!SBIS3.Demo.nDataGridView/resources/resultTemplate'
+                *           'tmpl!Examples/MyArea/nDataGridView/resources/resultTemplate'
                 *        ],
                 *        ...
                 *     );
@@ -4195,9 +4196,13 @@ define('SBIS3.CONTROLS/ListView',
                .meta({ hasMore: offset === -1 ? false : this._options.partialPaging});
             return query;
          },
-         setPageSize: function(pageSize) {
+         setPageSize: function(pageSize, noLoad) {
             if (this._pager) {
                this._pager.setPageSize(pageSize);
+            }
+            if (!noLoad && this._pager) {
+               this._pager.getPaging().clearMaxPage();
+               this._lastPageLoaded = false;
             }
             ListView.superclass.setPageSize.apply(this, arguments);
          },
@@ -4659,7 +4664,7 @@ define('SBIS3.CONTROLS/ListView',
             //Как временное решение добавлена проверка на SBIS3.CONTROLS.TextBoxBase.
             //Необходимо разобраться можно ли на уровне TextBoxBase или Control для события mousedown
             //сделать stopPropagation, тогда от данной проверки можно будет избавиться.
-            return this._options.enabled && this._needProcessMouseEvent(e);
+            return this.isEnabled() && this._needProcessMouseEvent(e);
          },
          _needProcessMouseEvent: function(e) {
             return !cInstance.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS/TextBox/TextBoxBase');

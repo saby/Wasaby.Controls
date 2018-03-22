@@ -200,7 +200,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
       tplOptions.displayProperty = cfg.displayProperty;
       tplOptions.templateBinding = cfg.templateBinding;
       tplOptions.getPropertyValue = cfg._propertyValueGetter;
-      
+
       /* Для логирования */
       if(typeof window === 'undefined') {
          logger = IoC.resolve('ILogger');
@@ -515,7 +515,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
              * <b>Пример 3.</b> Конфигурация источника данных через вёрстку компонента.
              * Второй способ основан на использовании функции, которая возвращает экземпляр класса источника.
              * <pre>
-             *    <option name="dataSource" type="function">js!SBIS3.MyArea.MyComponent:prototype.getMyDataSource</option>
+             *    <option name="dataSource" type="function">Examples/MyArea/MyComponent:prototype.getMyDataSource</option>
              * </pre>
              * Функция должна возвращать объект с конфигурацией источника данных.
              * <pre>
@@ -610,7 +610,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
              * @example
              * 1. Подключение шаблона группировки:
              * <pre>
-             *    define('js!SBIS3.MyArea.MyComponent', [ ..., "html!MyArea.MyComponent/resources/myTpl"], ...);
+             *    define('Examples/MyArea/MyComponent', [ ..., "tmpl!Examples/MyArea/MyComponent/resources/myTpl"], ...);
              * </pre>
              * 2. Настройка группировки:
              * <pre>
@@ -753,6 +753,10 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
              */
             itemsSortMethod: null,
             itemsFilterMethod: undefined,
+            /**
+             * @cfg {boolean} Устанавливает быструю отрисовку списков с группировкой.
+             * Подробнее см. в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/fast-drawing/#_3">разделе</a>.
+             */
             easyGroup: false,
             task1173770359: false
          },
@@ -1183,7 +1187,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
       },
 
       _redrawHierarchyPathItem: function(item) {},
-      
+
       //TODO надо избавиться от этого метода
       //если в списке есть группировка, при переносе в папку записи, следующей за ней
       //не происходит события move, а только меняется запись
@@ -2727,7 +2731,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
             }
          }
       },
-      
+
       _afterCollectionChange: function() {}
    };
 

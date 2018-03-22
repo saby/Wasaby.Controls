@@ -12,7 +12,7 @@ define('js!WSControls/Buttons/ToggleButton', ['js!WSControls/Buttons/Button', 'S
     *
     * @class WSControls/Buttons/ToggleButton
     * @extends WSControls/Buttons/Button
-    * @demo SBIS3.CONTROLS.Demo.MyToggleButton
+    * @demo Examples/ToggleButton/MyToggleButton/MyToggleButton
     *
     * @author Крайнов Д.О.
     *

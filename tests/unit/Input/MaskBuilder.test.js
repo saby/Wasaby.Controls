@@ -39,7 +39,7 @@ define(
                assert.equal(result, 'ddd-dd-dd');
 
                result = MaskBuilder.getMask('5689812345');
-               assert.equal(result, '(ddd)-ddd-dd-dd');
+               assert.equal(result, '(ddd) ddd-dd-dd');
 
                result = MaskBuilder.getMask('56898123456');
                assert.equal(result, '+d\\*');

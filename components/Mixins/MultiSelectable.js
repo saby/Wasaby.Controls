@@ -760,6 +760,7 @@ define('SBIS3.CONTROLS/Mixins/MultiSelectable', [
                             /* Проверка на случай отмены загрузки, т.к. parallelDeferred не отменяет зависимые дефереды */
                             if(!dMultiResult.getResult().isReady()) {
                                self._options.selectedItems.add(record);
+                               self._selectedItemLoadCallback(record);
                             }
                             return record;
                          },
@@ -789,6 +790,10 @@ define('SBIS3.CONTROLS/Mixins/MultiSelectable', [
             self._loadItemsDeferred.callback(this._options.selectedItems);
          }
          return this._loadItemsDeferred;
+      },
+
+      _selectedItemLoadCallback: function() {
+
       },
 
       /**

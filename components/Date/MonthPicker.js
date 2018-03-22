@@ -27,7 +27,7 @@ define(
     * @extends Lib/Control/CompoundControl/CompoundControl
     * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
     * @author Крайнов Д.О.
-    * @demo SBIS3.CONTROLS.Demo.MyMonthPicker
+    * @demo Examples/MonthPicker/MyMonthPicker/MyMonthPicker
     * @deprecated Используйте {@link SBIS3.CONTROLS/Date/RangeSlider}.
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className

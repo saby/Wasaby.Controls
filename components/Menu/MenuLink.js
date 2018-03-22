@@ -19,7 +19,7 @@ define('SBIS3.CONTROLS/Menu/MenuLink', [
     * @class SBIS3.CONTROLS/Menu/MenuLink
     * @extends WSControls/Buttons/MenuButton
 	*
-    * @demo SBIS3.CONTROLS.Demo.MyMenuLink
+    * @demo Examples/MenuButton/MyMenuLink/MyMenuLink
     *
     * @author Романов В.С.
     *

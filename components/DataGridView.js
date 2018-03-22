@@ -531,10 +531,10 @@ define('SBIS3.CONTROLS/DataGridView',
              * @example
              * 1. Подключаем шаблон в массив зависимостей:
              * <pre>
-             *     define('js!SBIS3.Demo.nDataGridView',
+             *     define('Examples/MyArea/nDataGridView',
              *        [
              *           ...,
-             *           'html!SBIS3.Demo.nDataGridView/resources/headTpl'
+             *           'tmpl!Examples/MyArea/nDataGridView/resources/headTpl'
              *        ],
              *        ...
              *     );
@@ -593,10 +593,10 @@ define('SBIS3.CONTROLS/DataGridView',
              * @example
              * 1. Подключаем шаблон в массив зависимостей:
              * <pre>
-             *     define('js!SBIS3.Demo.nDataGridView',
+             *     define('SBIS3/Demo/nDataGridView',
              *        [
              *           ...,
-             *           'html!SBIS3.Demo.nDataGridView/resources/resultTemplate'
+             *           'html!SBIS3/Demo/nDataGridView/resources/resultTemplate'
              *        ],
              *        ...
              *     );
@@ -1083,6 +1083,11 @@ define('SBIS3.CONTROLS/DataGridView',
             $('<div></div>').appendTo(this._getTableContainer()).remove();
          }
       },
+   
+      _drawItemsCallbackSync: function() {
+         this._updateHoveredColumnCells();
+         DataGridView.superclass._drawItemsCallbackSync.call(this);
+      },
 
       _editFieldFocusHandler: function(focusedCtrl) {
          if(this._itemsToolbar) {
@@ -1094,11 +1099,14 @@ define('SBIS3.CONTROLS/DataGridView',
          }
       },
       _onResizeHandler: function() {
-         DataGridView.superclass._onResizeHandler.apply(this, arguments);
+         /* Выполняем до родительского resize, иначе фиксированная шапка будет считать ширину колонок
+            до установки ширины частичным скролом, и может случиться рассинхрон ширин в шапке и таблице */
          this._containerOffsetWidth = this.getContainer().outerWidth();
          if(this.hasPartScroll()) {
+            this._setColumnWidthForPartScroll();
             this._updatePartScroll();
          }
+         DataGridView.superclass._onResizeHandler.apply(this, arguments);
       },
       //********************************//
       //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
@@ -1453,21 +1461,21 @@ define('SBIS3.CONTROLS/DataGridView',
              correctMargin = 0,
              lastRightStop = this._stopMovingCords.right,
              arrowsWidth = this._arrowRight[0].offsetWidth * 2,
-             notScrolledCells, thumbPos, row;
-
+             notScrolledCells, thumbPos;
+   
          /* Найдём ширину нескроллируемых колонок */
          if(this._options.startScrollColumn > 0) {
-            /* Ширину нескролируемых столбцов берём из строк таблицы,
-               т.к. в шапке могут быть двухуровневые заголовки или строка результатов с прикладным шаблоном */
-            row = this._tbody.find('tr:not(.controls-editInPlace)').eq(0);
+            /* При включённой опции stickyHeader необходимо брать размеры не из thead,
+               т.к. в thead хранится ссылка на шапку, которая лежит вне таблицы.
+               И она может иметь в момент расчётов некорректные размеры.
+               thead, который лежит в таблице, всегда имеет корректные размеры. */
+            var tHead = this._options.stickyHeader ?
+               this._getTableContainer().find('>.controls-DataGridView__thead') :
+               this._thead;
             
-            /* Строк может не быть - тогда пробуем искать строку в шапке */
-            if (!row.length) {
-               row = this._thead.find('tr').eq(0);
-            }
-            notScrolledCells = row.find('.controls-DataGridView__notScrolledCell');
+            notScrolledCells = tHead.find('tr').eq(0).find('.controls-DataGridView__notScrolledCell');
             for(var i = 0, len = notScrolledCells.length; i < len; i++) {
-               correctMargin += notScrolledCells[i].offsetWidth
+               correctMargin += notScrolledCells[i].offsetWidth;
             }
             /* Сдвинем контейнер скролла на ширину нескроллируемых колонок */
             scrollContainer[0].style.marginLeft = correctMargin + 'px';
