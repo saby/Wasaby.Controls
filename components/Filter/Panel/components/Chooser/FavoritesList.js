@@ -71,7 +71,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/FavoritesList', [
      * @author Сухоручкин А.С.
      * @public
      *
-     * @demo SBIS3.Demo.FilterPanel.FilterPanelSimple
+     * @demo Examples/FilterPanel/FilterPanelSimple/FilterPanelSimple
      */
 
     var FilterPanelChooserFavorites = FilterPanelChooserDictionary.extend(/** @lends SBIS3.CONTROLS/Filter/Panel/components/Chooser/FavoritesList.prototype */ {

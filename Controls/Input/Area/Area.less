@@ -25,8 +25,9 @@
    width: 100%;
    white-space: pre-wrap;
    word-wrap: break-word;
-   box-sizing: border-box;
-   padding-right: @padding-right_InputArea-field;
+   padding-right: @horizontal-padding_InputRender;
+   padding-top: @vertical-padding_InputArea;
+   padding-bottom: @vertical-padding_InputArea;
 }
 
 .controls-InputArea__field_size_l {
@@ -43,10 +44,10 @@
 
 .controls-InputArea__realField {
    resize: none;
-   height: 100%;
    position: absolute;
-   top: 0;
    box-sizing: border-box;
+   top: 0;
+   height: 100%;
 }
 
 .controls-InputArea__realField_scroll-hidden {
@@ -62,6 +63,7 @@
    float: left; //Необходимо для растягивания блока controls-fakeTextArea__firstWrapper
    visibility: hidden;
    overflow-y: auto;
+   box-sizing: border-box;
 }
 
 .controls-fakeTextArea__firstWrapper {

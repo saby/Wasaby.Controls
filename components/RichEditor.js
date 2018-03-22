@@ -21,7 +21,7 @@ define('SBIS3.CONTROLS/RichEditor',
        * @public
        * @control
        *
-       * @demo SBIS3.CONTROLS.Demo.RichEditorDemo В следующем примере первый контрол - SBIS3.CONTROLS.RichEditor.
+       * @demo Examples/RichEditor/RichEditorDemo/RichEditorDemo В следующем примере первый контрол - SBIS3.CONTROLS.RichEditor.
        * Ниже добавлен контрол SBIS3.CONTROLS/RichEditor/Components/Toolbar, который связан с контролом SBIS3.CONTROLS/RichEditor/Components/RichTextArea с помощью метода {@link SBIS3.CONTROLS/RichEditor/Components/ToolbarBase#setLinkedEditor}.
        *
        * @category Input

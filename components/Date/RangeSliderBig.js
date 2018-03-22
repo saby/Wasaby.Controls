@@ -22,7 +22,7 @@ define('SBIS3.CONTROLS/Date/RangeSliderBig', [
     * @control
     * @public
     * @category Date/Time
-    * @demo SBIS3.CONTROLS.Demo.MyDateRangeSliderBig
+    * @demo Examples/DateRangeSliderBig/MyDateRangeSliderBig/MyDateRangeSliderBig
     */
    var DateRangeSliderBig = DateRangeSliderBase.extend([DateRangeBigChoosePickerMixin], /** @lends SBIS3.CONTROLS/Date/RangeSliderBig.prototype */{
       _modifyOptions: function (opts) {

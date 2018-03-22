@@ -53,7 +53,7 @@ define('SBIS3.CONTROLS/Button',
     * @category Button
     * @public
     * @initial
-    * <ws:SBIS3.CONTROLS/Button caption="Кнопка" />
+    * <SBIS3.CONTROLS.Button caption="Кнопка" />
     */
    var Button = Base.extend( [], /** @lends SBIS3.CONTROLS/Button.prototype */ {
        $protected: {

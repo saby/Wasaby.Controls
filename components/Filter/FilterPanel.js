@@ -80,7 +80,7 @@ define('SBIS3.CONTROLS/Filter/FilterPanel', [
     *
     * @mixes SBIS3.CONTROLS/Mixins/Expandable
     *
-    * @demo SBIS3.Demo.FilterPanel.FilterPanelSimple Чтобы получить доступ к исходного коду компонента, скачайте архив демо-примера.
+    * @demo Examples/FilterPanel/FilterPanelSimple/FilterPanelSimple Чтобы получить доступ к исходного коду компонента, скачайте архив демо-примера.
     */
    var
       ITEM_FILTER_ID          = 'id',

@@ -13,14 +13,14 @@ define('js!WSControls/ProgressBars/ProgressBar',
        * Класс контрола "Индикатор прохождения процесса".
        * @class SBIS3.CONTROLS/ProgressBar
        * @extends Core/Control
-       * @demo SBIS3.CONTROLS.Demo.MyProgressBar
+       * @demo Examples/ProgressBar/MyProgressBar/MyProgressBar
        *
        * @control
        * @author Журавлев М.С.
        *
        * @initial
        * <pre>
-       *    <ws:SBIS3.CONTROLS/ProgressBar
+       *    <SBIS3.CONTROLS.ProgressBar
        *       progress="{{50}}"
        *       minimum="{{-100}}"
        *       maximum="{{100}}"

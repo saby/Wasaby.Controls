@@ -12,6 +12,12 @@ define('Controls/Input/interface/ISuggest', [
     * @name Controls/Input/interface/ISuggest#suggestTemplate
     * @cfg {Function} Основной шаблон отображения саггеста
     */
+   
+   /**
+    * @name Controls/Input/interface/ISuggest#emptyTemplate
+    * @cfg {Function} Шаблон, который отображается при отсутствии данных в саггесте
+    * @remark Если не установить опцию, то пустой саггест отображаться не будет.
+    */
 
    /**
     * @name Controls/Input/interface/ISuggest#suggestFooterTemplate

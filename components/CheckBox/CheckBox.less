@@ -67,12 +67,18 @@
 .ws-disabled {
   &.controls-CheckBox {
     cursor: default;
+    &.controls-Checked__checked,
+    &.controls-ToggleButton__null {
+      .controls-CheckBox__caption {
+        color: @default-text-color;
+      }
+    }
     .controls-CheckBox__caption {
       color: @check-box-disabled-color;
     }
   }
 }
 
-.checkbox-checked-color(@primary-color, @check-box-disabled-color, controls-CheckBox__icon);
-.checkbox-null-color(@primary-color, @check-box-disabled-color, controls-CheckBox__icon);
+.checkbox-checked-color(@primary-color, @blue-dark-color, controls-CheckBox__icon);
+.checkbox-null-color(@primary-color, @blue-dark-color, controls-CheckBox__icon);
 .checkbox-border-color(@check-box-icon-box-color, @check-box-disabled-color, controls-CheckBox__iconBox_color);

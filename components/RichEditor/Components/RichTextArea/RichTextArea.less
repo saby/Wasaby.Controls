@@ -204,18 +204,19 @@
       cursor: text;
    }
 }
+
+// При выделении может появится элемент с классом "mce-offscreen-selection", отступ же нужно сбрасывать именно у последнего параграфа
+// https://online.sbis.ru/opendoc.html?guid=0f043ceb-354f-4c38-9cf6-8bc6cdbfb402
+.controls-RichEditor .controls-RichEditor__editorFrame.ws-basic-style > p:last-of-type {
+   margin-bottom: 0;
+}
+
 //Стили для окна добавления/редактирования ссылки
 .controls-RichEditor__InsertLink__label,
 .controls-RichEditor__InsertLink__input.ws-field-string,
 .controls-RichEditor__InsertLink__okButton.controls-Button {
    font-weight: normal;
    position: absolute;
-}
-
-// При выделении может появится элемент с классом "mce-offscreen-selection", отступ же нужно сбрасывать именно у последнего параграфа
-// https://online.sbis.ru/opendoc.html?guid=0f043ceb-354f-4c38-9cf6-8bc6cdbfb402
-.controls-RichEditor .controls-RichEditor__editorFrame.ws-basic-style > p:last-of-type {
-   margin-bottom: 0;
 }
 
 .controls-RichEditor__InsertLink__label {
@@ -237,12 +238,12 @@
 
 .controls-RichEditor__InsertLink__hrefLabel,
 .controls-RichEditor__InsertLink__hrefInput {
-   top: 0;
+   top: 8px;
 }
 
 .controls-RichEditor__InsertLink__captionLabel,
 .controls-RichEditor__InsertLink__captionInput {
-   top: 32px;
+   top: 40px;
 }
 
 .controls-RichEditor__InsertLink__okButton {
