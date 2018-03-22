@@ -136,7 +136,7 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
                     selectedItems,
                     object = this.getLinkedObject(),
                     selection = object.getSelection();
-                if (selection) {
+                if (selection && selection.marked.length) {
                    result = this._sumBySelection(selection);
                 } else {
                     selectedItems = object.getSelectedItems();
