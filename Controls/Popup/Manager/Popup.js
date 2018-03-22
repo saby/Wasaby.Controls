@@ -139,7 +139,7 @@ define('Controls/Popup/Manager/Popup',
             this._resetMargin = true; //todo пока не работает мерж конфига attr: на дефолтный
             this._container.style.margin = 0;
             return this._margins;
-         },
+         }
       });
 
       return Popup;

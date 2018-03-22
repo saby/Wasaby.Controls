@@ -1,11 +1,10 @@
 define('Controls/Filter/Button/converterFilterStructure',
    [
       'WS.Data/Chain',
-      'WS.Data/Entity/Record',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Utils'
    ],
-   function (Chain, Record, RecordSet, Util) {
+   function (Chain, RecordSet, Util) {
       
       'use strict';
       
