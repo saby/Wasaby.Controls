@@ -28,10 +28,23 @@
                                     <ws:content>
                                         <div>
                                             <Controls.List idProperty="id" name="list">
-                                                <ws:emptyTemplate>
-                                                    Не найдено
-                                                </ws:emptyTemplate>
-                                            </Controls.List>
+                                                <ws:itemTemplate>
+                                                    <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                                                                itemData="{{itemTemplate.itemData}}"
+                                                    >
+                                                        <ws:contentTemplate>
+                                                            <div style="padding: 4px; display: flex; justify-content: space-between">
+                                                                <div style="width: 200px">{{itemTemplate.itemData.item.get('title')}}</div>
+                                                                <div style="font-size: 11px; color: grey">{{itemTemplate.itemData.item.get('lastName')}}</div>
+                                                                <div style="font-size: 11px; color: limegreen">{{itemTemplate.itemData.item.get('id')}}</div>
+                                                            </div>
+                                                        </ws:contentTemplate>
+                                                    </ws:partial>
+                                                    <ws:emptyTemplate>
+                                                        Не найдено
+                                                    </ws:emptyTemplate>
+                                                </ws:itemTemplate>
+                                             </Controls.List>
                                         </div>
                                     </ws:content>
                                     <ws:navigation source="page" view="page">
