@@ -2,7 +2,6 @@
 
 import IResourceGetterBase = require("File/ResourceGetter/Base");
 import Deferred = require("Core/Deferred");
-import dotTpl = require("tmpl!File/ResourceGetter/FS");
 import LocalFile = require("File/LocalFile");
 import ExtensionsHelper = require("File/utils/ExtensionsHelper");
 
