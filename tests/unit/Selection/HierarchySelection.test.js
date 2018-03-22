@@ -183,5 +183,13 @@ define(
             assert.deepEqual(sel.marked, [null]);
             assert.deepEqual(sel.excluded, [11, 12]);
          });
+         it('folder selected after toggle child', function () {
+            selection.select([1]);
+            selection.unselect([11]);
+            selection.select([11]);
+            var sel = selection.getSelection();
+            assert.deepEqual(sel.marked, [1]);
+            assert.deepEqual(sel.excluded, []);
+         });
       });
    });
