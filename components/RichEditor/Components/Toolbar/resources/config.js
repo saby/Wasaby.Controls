@@ -136,19 +136,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config',
       },
 
       {
-         name: 'customBlockquote',
-         componentType: 'WSControls/Buttons/ToggleButton',
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
-         tooltip: rk('Custom Цитата'),
-         icon: 'sprite:icon-24 icon-Quote icon-primary',
-         handlers: {
-            onActivated: handlers.customBlockquote
-         },
-         order: 65,
-         tabindex: 0
-      },
-
-      {
          name: 'align',
          componentType: 'WSControls/Buttons/MenuButton',
          tooltip: rk('Выравнивание текста'),
