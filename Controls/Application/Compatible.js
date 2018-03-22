@@ -14,8 +14,16 @@ define('Controls/Application/Compatible', [
    var ViewTemplate = Base.extend({
       _template: template,
       _wasPatched: false,
+      _beforeMount: function(){
+         this._forceUpdate = function(){
+            return;
+         }
+      },
       _afterMount: function(){
          for (var i in this._children){
+            this._children[i]._forceUpdate = function(){
+               return;
+            };
             this._children[i]._shouldUpdate = function(){
                return false;
             }

@@ -292,8 +292,11 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
       },
 
       _onNextYearClick: function (event) {
-         var date = new Date.fromSQL($(event.target).data('date'));
-         this.setMonth(new Date(date.getFullYear() + 1, 0));
+         var date;
+         if (!this._isAnimationProcessing) {
+            date = new Date.fromSQL($(event.target).data('date'));
+            this.setMonth(new Date(date.getFullYear() + 1, 0));
+         }
       },
 
       _onMonthClick: function (event) {

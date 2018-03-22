@@ -20,14 +20,14 @@ define('SBIS3.CONTROLS/Filter/FavoriteEditDialog',
 
       'use strict';
 
-      var normalizeItems = function(filterItems, idField, captionField, valueField) {
+      var normalizeItems = function(filterItems, idField, captionField, textValueField) {
          var items = [];
          filterItems.forEach(function (item) {
-            if (!isEqual(item.value, item.resetValue) && item[valueField]) {
+            if (!isEqual(item.value, item.resetValue) && item[textValueField] && item.editable !== false) {
                items.push({
                   id: item[idField],
                   checkBoxCaption: item[captionField],
-                  value: item[valueField]
+                  value: item[textValueField]
                });
             }
          });

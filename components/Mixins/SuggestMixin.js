@@ -136,7 +136,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
              * @example
              * В следующем примере показана настройка контрола SBIS3.CONTROLS/FieldLink, для которого задана конфигурация автодополнения.
              * <pre class="brush:xml">
-             * <SBIS3.CONTROLS:FieldLink
+             * <SBIS3.CONTROLS.FieldLink
              *    name="showAllButtonField"
              *    class="docs-ShowAllButton"
              *    text="{{ myTextField|mutable }}"
@@ -147,7 +147,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
              *    chooserMode="dialog"
              *    pickerClassName="docs-ShowAllButton__myPicker">
              *    <ws:dictionaries>
-             *        <ws:options template="js!SBIS3.DOCS.ShowAllDictionary">
+             *        <ws:options template="Examples/DOCS/ShowAllDictionary">
              *           <ws:componentOptions showSelectButton="{{false}}"/>
              *        </ws:options>
              *    </ws:dictionaries>
@@ -168,7 +168,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
              *        </ws:options>
              *    </ws:list>
              *    <ws:listFilter Имя="{{ myTextField|bind }}" />
-             * </SBIS3.CONTROLS:FieldLink>
+             * </SBIS3.CONTROLS.FieldLink>
              * </pre>
              * @group Data
              * @see autoShow
@@ -204,7 +204,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
              * Значение поля изменяется через опцию text - значения, вводимые в поле связи.
              * <pre class="brush:xml">
              * <!-- Значения в опции text связаны с полем контекста myTextField. -->
-             * <SBIS3.CONTROLS:FieldLink
+             * <SBIS3.CONTROLS.FieldLink
              *    name="showAllButtonField"
              *    class="docs-ShowAllButton"
              *    text="{{ myTextField|mutable }}"
@@ -215,7 +215,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
              *    chooserMode="dialog"
              *    pickerClassName="docs-ShowAllButton__myPicker">
              *    <ws:dictionaries>
-             *        <ws:options template="js!SBIS3.DOCS.ShowAllDictionary">
+             *        <ws:options template="Examples/DOCS/ShowAllDictionary">
              *           <ws:componentOptions showSelectButton="{{false}}"/>
              *        </ws:options>
              *    </ws:dictionaries>
@@ -225,7 +225,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
              *           idProperty="@ТелефонныйСправочник3"
              *           pageSize="5"
              *           showHead="{{true}}"
-             *           footerTpl="tmpl!SBIS3.DOCS.ShowAllButton/resources/myFooterTpl">
+             *           footerTpl="tmpl!Examples/DOCS/ShowAllButton/resources/myFooterTpl">
              *              <ws:columns>
              *                 <ws:Array>
              *                    <ws:Object field="@ТелефонныйСправочник3" title="№" width="50" />
@@ -237,7 +237,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
              *    </ws:list>
              *    <!-- Значение параметра фильтрации "Имя" связано с полем контекста myTextField. -->
              *    <ws:listFilter Имя="{{ myTextField|bind }}" />
-             * </SBIS3.CONTROLS:FieldLink>
+             * </SBIS3.CONTROLS.FieldLink>
              * </pre>
              * @see setListFilter
              * @see list
@@ -589,6 +589,9 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
              })
              .subscribeTo(this._list, 'onDrawItems', this._onListDrawItems.bind(this))
              .subscribeTo(this._list, 'onItemActivate', (function (eventObject, itemObj) {
+                // хак. бывает что активируется уже активный компонент (потому что его потомок активный).
+                // чтобы активность ушла с потомка на предка, нужно сбросить _isControlActive, тогда выполнится полноценный алгоритм активации.
+                self._isControlActive = false;
                 self.setActive(true);
                /* По задаче:
                 https://inside.tensor.ru/opendoc.html?guid=7ce2bd66-bb6b-4628-b589-0e10e2bb8677&description=

@@ -197,14 +197,14 @@ define('SBIS3.CONTROLS/FieldLink',
                  * @property {Object} dialogOptions Опции для диалога.
                  * Передаются при включенной опции <a href="/docs/js/SBIS3/CONTROLS/SelectorButton/options/useSelectorAction/">useSelectorAction</a>.
                  * <pre class="brush: xml">
-                 *     <option name="template">js!SBIS3.MyArea.MyDatGridView</option>
+                 *     <option name="template">Examples/MyArea/MyDatGridView</option>
                  *     <options name="dialogOptions">
                  *        <option name="minWidth">500px</option>
                  *     </options>
                  * </pre>
                  * или
                  * <pre class="brush: xml">
-                 *     <ws:Object template="js!SBIS3.MyArea.MyDatGridView">
+                 *     <ws:Object template="Examples/MyArea/MyDatGridView">
                  *        <ws:dialogOptions minWidth = "500px" />
                  *     </ws:Object>
                  * </pre>
@@ -228,7 +228,7 @@ define('SBIS3.CONTROLS/FieldLink',
                  * Значения переданных опций можно использовать в дочерних компонентах справочника через инструкции шаблонизатора.
                  * Например, передаём опции для построения справочника:
                  * <pre class="brush: xml">
-                 *     <option name="template">js!SBIS3.MyArea.MyDatGridView</option>
+                 *     <option name="template">Examples/MyArea/MyDatGridView</option>
                  *     <options name="componentOptions">
                  *        <option name="myShowHeadConfig" type="boolean">true</option>
                  *        <option name="myPageSizeConfig" type="number">5</option>
@@ -257,11 +257,11 @@ define('SBIS3.CONTROLS/FieldLink',
                  *     <options name="dictionaries" type="array">
                  *        <options>
                  *           <option name="caption">Сотрудники</option>
-                 *           <option name="template">js!SBIS3.MyArea.DictEmployees</option>
+                 *           <option name="template">Examples/MyArea/DictEmployees</option>
                  *        </options>
                  *        <options>
                  *           <option name="caption">Партнеры</option>
-                 *           <option name="template">js!SBIS3.MyArea.DictPartners</option>
+                 *           <option name="template">Examples/MyArea/DictPartners</option>
                  *        </options>
                  *     </options>
                  * </pre>
@@ -520,7 +520,7 @@ define('SBIS3.CONTROLS/FieldLink',
            *        [
            *           {
            *              caption: 'Сотрудники',
-           *              template: 'js!SBIS3.MyArea.DictEmployees' // Компонент, на основе которого будет построен справочник поля связи
+           *              template: 'Examples/MyArea/DictEmployees' // Компонент, на основе которого будет построен справочник поля связи
            *              componentOptions: {
            *                 myShowHeadConfig: true,
            *                 myPageSizeConfig: 5
@@ -528,7 +528,7 @@ define('SBIS3.CONTROLS/FieldLink',
            *           },
            *           {
            *              caption: 'Сотрудники',
-           *              template: 'js!SBIS3.MyArea.DictEmployees' // Компонент, на основе которого будет построен справочник поля связи
+           *              template: 'Examples/MyArea/DictEmployees' // Компонент, на основе которого будет построен справочник поля связи
            *           }
            *        ]
            *     );
@@ -568,7 +568,7 @@ define('SBIS3.CONTROLS/FieldLink',
            * @example
            * <pre>
            *     this.showSelector(
-           *        'js!SBIS3.MyArea.MyDictionary',
+           *        'Examples/MyArea/MyDictionary',
            *        {
            *           title: 'Сотрудники предприятия'
            *        }
@@ -580,6 +580,7 @@ define('SBIS3.CONTROLS/FieldLink',
           showSelector: function(template, componentOptions, selectionType) {
              var actionCfg = {
                    selectionType: selectionType,
+                   selectedItems: this.getSelectedItems(),
                    multiselect: this.getMultiselect(),
                    opener: this
                 },

@@ -41,10 +41,29 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          /**
           * @typedef {object} ImportSheet Тип, содержащий информацию об области импортируемых данных (например, лист excel)
           * @property {string} name Отображаемое наименование области данных
-          * @property {any[][]} sampleRows Образец данных в области, массив массивов равной длины
-          * @property {string} [parser] Провайдер парсинга импортируемых данных
-          * @property {number} [skippedRows] Количество пропускаемых строк в начале
-          * @property {string} [separator] Символы-разделители
+          * @property {Array<Array<string>>} sampleRows Образец данных в области, массив массивов равной длины
+          * @property {string} [parser] Провайдер парсинга импортируемых данных (опционально)
+          * @property {object} [parserConfig] Параметры провайдера парсинга импортируемых данных. Определяется видом парсера (опционально)
+          * @property {number} [skippedRows] Количество пропускаемых строк в начале (опционально)
+          * @property {string} [separator] Символы-разделители (опционально)
+          * @property {Array<ImportColumnBinding>} [columns] Список привязки колонок импортируемых данных к полям базы данных (опционально)
+          * @property {number} [index] Индекс в массиве (опционально)
+          */
+
+         /**
+          * @typedef {object} ImportColumnBinding Тип, содержащий информацию о привязке колонки импортируемых данных к полю базы данных
+          * @property {number} index Индекс колонки
+          * @property {string} field Имя поля
+          */
+
+         /**
+          * @typedef {object} ImportTargetFields Тип, описывающий целевые поля для привязки импортируемых данных
+          * @property {Array<object>|WS.Data/Collection/RecordSet} items Список объектов, представляющих данные об одном поле. Каждый из них должен
+          *                            содержать идентификатор поля, отображаемое наименование поля и идентификатор родителя, если необходимо. Имена
+          *                            свойств задаются явно в этом же определинии типе
+          * @property {string} [idProperty] Имя свойства, содержащего идентификатор (опционально, если items представлен рекордсетом)
+          * @property {string} displayProperty Имя свойства, содержащего отображаемое наименование
+          * @property {string} [parentProperty] Имя свойства, содержащего идентификатор родителя (опционально)
           */
 
          _dotTplFn: dotTplFn,
@@ -84,11 +103,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                 */
                parsers: {},
                /**
-                * @cfg {object} ^^^
+                * @cfg {ImportTargetFields} Полный список полей, к которым должны быть привязаны импортируемые данные
                 */
                fields: null,
                /**
-                * @cfg {ImportSheet[]} Список объектов, представляющих имеющиеся области данных
+                * @cfg {Array<ImportSheet>} Список объектов, представляющих имеющиеся области данных
                 */
                sheets: [],
                /**
@@ -142,7 +161,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             options._providerArgsComponent = parsers[parserName].component || undefined;
             options._providerArgsOptions = this._getProviderArgsOptions(options, parserName, true);
             options._columnsBindingRows = hasSheets ? sheet.sampleRows : [];
-            options._columnsBindingFields = options.fields;//^^^
             return options;
          },
 
@@ -287,7 +305,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @param {object} result Резудльтирующие значения, относящиеся к этому элементу (опционально)
           * @param {object} [sheet] Опции, относящиеся к этому элементу (опционально)
           * @param {number} [index] Индекс этого элемента
-          * @return {object}
+          * @return {ImportSheet}
           */
          _combineResultSheet: function (result, sheet, index) {
             var provider = result.provider;

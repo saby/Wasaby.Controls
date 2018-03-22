@@ -39,7 +39,7 @@ define(
                assert.equal(result, 'ddd-dd-dd');
 
                result = MaskBuilder.getMask('5689812345');
-               assert.equal(result, '(ddd)-ddd-dd-dd');
+               assert.equal(result, '(ddd) ddd-dd-dd');
 
                result = MaskBuilder.getMask('56898123456');
                assert.equal(result, '+d\\*');
@@ -62,7 +62,7 @@ define(
                assert.equal(result, 'd ddddddddddd');
 
                result = MaskBuilder.getMask('8 485274328567');
-               assert.equal(result, '+d\\*');
+               assert.equal(result, 'd\\*');
             });
          });
       });

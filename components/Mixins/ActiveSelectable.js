@@ -7,8 +7,9 @@ define('SBIS3.CONTROLS/Mixins/ActiveSelectable', [
    "Core/core-instance",
    "SBIS3.CONTROLS/Utils/ToSourceModel",
    "SBIS3.CONTROLS/Utils/SourceUtil",
-   "SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil"
-], function(Deferred, Model, cInstance, ToSourceModel, SourceUtil, ArraySimpleValuesUtil) {
+   "SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil",
+   'Core/helpers/Object/isEmpty'
+], function(Deferred, Model, cInstance, ToSourceModel, SourceUtil, ArraySimpleValuesUtil, isEmptyObject) {
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента
     * @mixin SBIS3.CONTROLS/Mixins/ActiveSelectable
@@ -47,7 +48,7 @@ define('SBIS3.CONTROLS/Mixins/ActiveSelectable', [
             
             /* Пре-инициализация selectedItem, если selectedItem пришёл как объект
                требуется проинициализировать, чтобы была возможность построить вёрстку на уровне шаблонизатора */
-            if(opts.selectedItem && !Object.isEmpty(opts.selectedItem) && opts.selectedItem[opts.idProperty] && opts.selectedItem[opts.displayProperty]) {
+            if(opts.selectedItem && !isEmptyObject(opts.selectedItem) && opts.selectedItem[opts.idProperty] && opts.selectedItem[opts.displayProperty]) {
                opts.selectedItem = ToSourceModel(
                   [new Model({
                      idProperty: opts.idProperty,

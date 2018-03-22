@@ -12,8 +12,9 @@ define('SBIS3.CONTROLS/Utils/FilterPanelUtils',
       "Core/constants",
       "Core/core-clone",
       "Core/helpers/Object/find",
-      'Core/moduleStubs'
-   ], function (Deferred, ParallelDeferred, cContext, cInstance, FilterToStringUtil, detection, constants, coreClone, objectFind, mStubs) {
+      'Core/moduleStubs',
+      'Core/helpers/Object/isEmpty'
+   ], function (Deferred, ParallelDeferred, cContext, cInstance, FilterToStringUtil, detection, constants, coreClone, objectFind, mStubs, isEmptyObject) {
 
       "use strict";
 
@@ -41,7 +42,7 @@ define('SBIS3.CONTROLS/Utils/FilterPanelUtils',
          function updatePickerVisibility() {
             var visibility = context.getValue(rootName + '/visibility');
 
-            if (!Object.isEmpty(visibility)) {
+            if (!isEmptyObject(visibility)) {
                var showAdditionalBlock = Object.keys(visibility).reduce(function (result, element) {
                   return result || visibility[element] === false;
                }, false);

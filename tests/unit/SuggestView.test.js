@@ -9,7 +9,7 @@ define([
    
    describe('Controls/Input/resources/SuggestView/SuggestView', function () {
       
-      it('_private.getSelectedKey', function() {
+      it('_private.getMarkedKey', function() {
          var items = new List({
             items: [
                new Model({
@@ -27,9 +27,9 @@ define([
             ]
          });
          
-         assert.equal(SuggestView._private.getSelectedKey(items, 'idProperty', 0), 1);
-         assert.equal(SuggestView._private.getSelectedKey(items, 'idProperty', 1), 2);
-         assert.equal(SuggestView._private.getSelectedKey(items, 'idProperty', 2), null);
+         assert.equal(SuggestView._private.getMarkedKey(items, 'idProperty', 0), 1);
+         assert.equal(SuggestView._private.getMarkedKey(items, 'idProperty', 1), 2);
+         assert.equal(SuggestView._private.getMarkedKey(items, 'idProperty', 2), null);
       });
    
       it('_private.getOptionsForShowAll', function() {

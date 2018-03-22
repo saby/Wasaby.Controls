@@ -104,8 +104,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptions
                this.updateTemplate();
                var
                   parent = this.getParent(),
-                  srcollParent = parent.getContainer().parent('.controls-ScrollContainer__content'),
-                  linkedContainer = srcollParent.length ? srcollParent : parent.getInputContainer(), // всегда считаем  показ панели от поля ввода редактора
+                  parentContainer = parent.getContainer(),
+                  srcollSelector = '.controls-ScrollContainer__content',
+                  srcollContainer = parentContainer.find(srcollSelector),
+                  linkedContainer;
+               if (srcollContainer.length) {
+                  linkedContainer = srcollContainer;
+               }
+               else {
+                  var srcollParent = parentContainer.parent(srcollSelector);
+                  linkedContainer = srcollParent.length ? srcollParent : parent.getInputContainer(); // всегда считаем  показ панели от поля ввода редактора
+               }
+               var
                   inputOffset = linkedContainer.offset().top,
                   panelOffset = this._container.offset().top,
                   inputHeight = linkedContainer.height(),
@@ -177,8 +187,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptions
                      this.hide();
                      break;
                   case "size":
-                     this._notify('onImageSizeChange');
-                     this.hide();
+                     // Для того, чтобы активность не уходила на floatArea, что приведёт к прокрутке в редакторе, закрывать только после открытия диалога
+                     // 1174814497 https://online.sbis.ru/opendoc.html?guid=8089187f-3917-4ae4-97ab-9dcd6a30b5ef
+                     this._notify('onImageSizeChange')
+                        .addCallback(this.hide.bind(this));
                      break;
                   case "change":
                      this.getFileLoader().startFileLoad(this._replaceButton._container, false, this._options.imageFolder).addCallback(function(fileobj){

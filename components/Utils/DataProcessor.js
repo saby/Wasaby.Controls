@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
    "Core/EventBus",
    "Core/Deferred",
    "WS.Data/Entity/Record",
-   "SBIS3.CONTROLS/Utils/DataSetToXmlSerializer",
+   "browser!SBIS3.CONTROLS/Utils/DataSetToXmlSerializer",
    "SBIS3.CONTROLS/WaitIndicator",
    "WS.Data/Source/SbisService",
    "Transport/prepareGetRPCInvocationURL",
@@ -354,6 +354,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
       _createLoadIndicator: function (message, deferred) {
          WaitIndicator.make({
             'message': message,
+            overlay: 'dark',
             delay: 100
          }, deferred);
       },

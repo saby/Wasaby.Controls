@@ -8,7 +8,7 @@
 </ws:template>
 
 <ws:template name="disabledArea">
-   <div>{{ value }}</div>
+   <div attr:tabindex="-1">{{ value }}</div>
 </ws:template>
 
 <Controls:Input:resources:InputRender:InputRender
@@ -48,7 +48,11 @@
                <ws:else>
                   <ws:partial
                      template="disabledArea"
-                     attr:class="controls-InputArea__field controls-InputArea__realField controls-InputRender__field {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}"
+                     attr:class="controls-InputArea__field
+                        controls-InputArea__realField
+                        controls-InputRender__field
+                        {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}
+                        controls-InputArea__field_size_{{_options.size || 'default'}}"
                      value="{{ _options.value }}"
                   />
                </ws:else>

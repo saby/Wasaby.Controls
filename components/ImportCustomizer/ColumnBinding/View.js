@@ -63,7 +63,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
 
          /**
           * @typedef {object} ImportTargetFields Тип, описывающий целевые поля для привязки импортируемых данных
-          * @property {object[]|WS.Data/Collection/RecordSet} items Список объектов, представляющих данные об одном поле. Каждый из них должен
+          * @property {Array<object>|WS.Data/Collection/RecordSet} items Список объектов, представляющих данные об одном поле. Каждый из них должен
           *                            содержать идентификатор поля, отображаемое наименование поля и идентификатор родителя, если необходимо. Имена
           *                            свойств задаются явно в этом же определинии типе
           * @property {string} [idProperty] Имя свойства, содержащего идентификатор (опционально, если items представлен рекордсетом)
@@ -91,7 +91,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                 */
                columnTitle: rk('Колонка', 'НастройщикИмпорта'),
                /**
-                * @cfg {any[][]} Данные таблицы, массив массивов равной длины (по количеству колонок)
+                * @cfg {Array<Array<string>>} Данные таблицы, массив массивов равной длины (по количеству колонок)
                 */
                rows: [],
                /**
@@ -162,7 +162,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
           *
           * @public
           * @param {object} values Набор из нескольких значений, которые необходимо изменить
-          * @param {any[][]} [values.rows] Данные таблицы, массив массивов равной длины (по количеству колонок) (опционально)
+          * @param {Array<Array<string>>} [values.rows] Данные таблицы, массив массивов равной длины (по количеству колонок) (опционально)
           * @param {ImportTargetFields} [values.fields] Полный список полей, к которым должны быть привязаны импортируемые данные (опционально)
           * @param {number} [values.skippedRows] Количество пропускаемых строк в начале (опционально)
           * @param {object} [values.accordances] Перечень соответствий идентификатор поля - индекс колонки (опционально)

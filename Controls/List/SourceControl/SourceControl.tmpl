@@ -15,7 +15,7 @@
         </ws:partial>
     </ws:if>
 
-    <ws:if data="{{_options.emptyTemplate && _model && !_model.getCount()}}">
+    <ws:if data="{{_options.emptyTemplate && _listViewModel && !_listViewModel.getCount()}}">
         <ws:partial template="{{_options.emptyTemplate}}"/>
     </ws:if>
 

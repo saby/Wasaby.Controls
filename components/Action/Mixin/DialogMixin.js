@@ -3,8 +3,9 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
    "Core/core-merge",
    'Core/Deferred',
    "WS.Data/Utils",
+   'SBIS3.CONTROLS/ControlHierarchyManager',
    'Core/IoC'
-], function( cMerge, Deferred, Utils, IoC){
+], function( cMerge, Deferred, Utils, ControlHierarchyManager, IoC){
    'use strict';
 
    /**
@@ -38,7 +39,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             /**
              * @cfg {String} Устанавливает шаблон диалога редактирования.
              * @remark
-             * В качестве значения устанавливают имя компонента в виде "js!SBIS3.MyArea.MyName".
+             * В качестве значения устанавливают имя компонента в виде "Examples/MyArea/MyName".
              * Подробнее о создании шаблона читайте в разделе <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/create/">Создание диалога редактирования</a>.
              * @see mode
              */
@@ -61,9 +62,10 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             /**
              * @cfg {Object} Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link Lib/Control/Control#linkedContext}.
              */
-            dialogOptions: null
+            dialogOptions: null,
          },
          _dialog: undefined,
+          _openedPanelConfig: {},
          /**
           * Ключ модели из связного списка
           * Отдельно храним ключ для модели из связного списка, т.к. он может не совпадать с ключом редактируемой модели
@@ -78,6 +80,9 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.8.0', 1);
             this._options.template = this._options.dialogComponent;
          }
+         this._documentClickHandler = this._documentClickHandler.bind(this);
+         document.addEventListener('mousedown', this._documentClickHandler);
+         document.addEventListener('touchstart', this._documentClickHandler);
          this._publish('onAfterShow', 'onBeforeShow');
       },
       _doExecute: function(meta) {
@@ -142,6 +147,31 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
          }
       },
+      _documentClickHandler: function (event) {
+         //Клик по связному списку приводит к перерисовке записи в панели, а не открытию новой при autoHide = true
+         if (this._dialog && this._openedPanelConfig.mode === 'floatArea' && this._openedPanelConfig.autoHide) {
+            if (this._needCloseDialog(event.target)) {
+               this._dialog.close();
+            }
+         }
+      },
+      _needCloseDialog: function(target) {
+         if (!ControlHierarchyManager.checkInclusion(this._dialog, target) && !this._isLinkedPanel(target)) {
+            return true;
+         }
+         return false;
+      },
+
+      //Если клик был по другой панели, проверяю, связана ли она с текущей
+      _isLinkedPanel: function (target) {
+         var floatArea = $(target).closest('.ws-float-area');
+         if (floatArea.length){
+            return ControlHierarchyManager.checkInclusion(this._dialog, floatArea.wsControl().getContainer());
+         }
+         //Если кликнули по инфобоксу или информационному окну - popup закрывать не нужно
+         var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup');
+         return !!infoBox.length;
+      },
       _resetComponentOptions: function() {
          //FloatArea предоставляет возможность перерисовать текущий установленный шаблон. При перерисовке сохраняются все опции, которые были установлены как на FloatArea, так и на редактируемом компоненте.
          //Производим открытие новой записи по новой конфигурации, все что лежало в опциях до этого не актуально и при текущем конфиге может поломать требуемое поведение.
@@ -203,6 +233,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
              self = this;
 
          cMerge(config, meta.dialogOptions);
+         this._saveAutoHideState(meta, config);
          config.componentOptions = this._buildComponentConfig(meta);
          config.handlers = config.handlers || {};
          var handlers = {
@@ -233,6 +264,14 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
          }
 
          return config;
+      },
+
+      _saveAutoHideState: function(meta, config) {
+         this._openedPanelConfig = {
+            autoHide: config.autoHide !== undefined ? config.autoHide : true,
+            mode: meta.mode
+         };
+         config.autoHide = false;
       },
 
       _finishExecuteDeferred: function(error) {
@@ -280,7 +319,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       },
 
       _isNeedToRedrawDialog: function(){
-         return this._dialog && !this._dialog.isDestroyed() && (this._dialog.isAutoHide && !this._dialog.isAutoHide());
+         return this._dialog && !this._dialog.isDestroyed();
       },
 
       /**
@@ -298,6 +337,8 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
                this._dialog.destroy();
                this._dialog = undefined;
             }
+            document.removeEventListener('mousedown', this._documentClickHandler);
+            document.removeEventListener('touchstart', this._documentClickHandler);
          }
       }
    };

@@ -4,6 +4,7 @@
             js-controls-ListView__item
             {{ prepareItemClassesByConfig(item, className) }}
             {{ className }}
+            {{ item.get && (item.get('visible') === false) ? ' ws-hidden'}}
             {{ item.get && item.get('className') }}
             {{(item.get && item.get('isEmptyValue')) ? ' controls-ComboBox__item_empty'}}"
             data-hash="{{projItem.getHash()}}"

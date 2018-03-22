@@ -6,9 +6,8 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
       'Core/Deferred',
       'WS.Data/Entity/Record',
       'WS.Data/Di',
-      'SBIS3.CONTROLS/ControlHierarchyManager',
       'SBIS3.CONTROLS/Action/Utils/OpenDialogUtil'
-   ], function (OpenDialog, cInstance, cMerge, cIndicator, Deferred, Record, Di, ControlHierarchyManager, OpenDialogUtil) {
+   ], function (OpenDialog, cInstance, cMerge, cIndicator, Deferred, Record, Di, OpenDialogUtil) {
    'use strict';
 
    /**
@@ -53,7 +52,10 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
        * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога.
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
-       * @param {String} key Первичный ключ сохраняемой записи.
+       * @param {Object} additionalData Метаданные. Служебная информация, необходимая для синхронизации Действия.
+       * @param {String} additionalData.key Идентификатор сохранённой записи.
+       * @param {String} additionalData.idProperty Имя поля записи, в котором хранится первичный ключ. Значение параметра извлекается из опции {@link idProperty}.
+       * @param {Boolean} additionalData.isNewRecord Признак "Новая запись", который означает, что запись инициализирована в источнике данных, но не сохранена.
        */
       /**
        * @event onDestroyModel Происходит при удалении записи из источника данных диалога.
@@ -99,7 +101,6 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
           */
          _linkedModelKey: undefined,
          _overlay: undefined,
-         _openedPanelConfig: {},
          _setOpeningModeHandler: undefined,
          _showedLoading: false,
          _openInNewTab: false
@@ -110,38 +111,16 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
       init: function () {
          OpenEditDialog.superclass.init.apply(this, arguments);
          this._setOpeningModeHandler = this._setOpeningMode.bind(this);
-         this._documentClickHandler = this._documentClickHandler.bind(this);
          $(document).bind('keydown keyup', this._setOpeningModeHandler);
-         document.addEventListener('mousedown', this._documentClickHandler);
-         document.addEventListener('touchstart', this._documentClickHandler);
-      },
-      _documentClickHandler: function (event) {
-         //Клик по связному списку приводит к перерисовке записи в панели, а не открытию новой при autoHide = true
-         if (this.getLinkedObject() && this._dialog && this._openedPanelConfig.mode === 'floatArea' && this._openedPanelConfig.autoHide) {
-            if (this._needCloseDialog(event.target)) {
-               this._dialog.close();
-            }
-         }
       },
       _needCloseDialog: function(target) {
-         var linkedObjectContainer = this.getLinkedObject().getContainer && this.getLinkedObject().getContainer();
+         var linkedObjectContainer = this.getLinkedObject() && this.getLinkedObject().getContainer && this.getLinkedObject().getContainer();
          var isClickOnLinkedObject = $(target).closest(linkedObjectContainer).length;
 
-         if (!isClickOnLinkedObject && !ControlHierarchyManager.checkInclusion(this._dialog, target) && !this._isLinkedPanel(target)) {
-            return true;
+         if (!isClickOnLinkedObject) {
+            return OpenEditDialog.superclass._needCloseDialog.apply(this, arguments);
          }
          return false;
-      },
-
-      //Если клик был по другой панели, проверяю, связана ли она с текущей
-      _isLinkedPanel: function (target) {
-         var floatArea = $(target).closest('.ws-float-area');
-         if (floatArea.length){
-            return ControlHierarchyManager.checkInclusion(this._dialog, floatArea.wsControl().getContainer());
-         }
-         //Если кликнули по инфобоксу - popup закрывать не нужно
-         var infoBox = $(target).closest('.ws-info-box');
-         return !!infoBox.length;
       },
       /**
        * Устанавливает список, связанный с диалогом редактирования.
@@ -191,10 +170,6 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
          else {
             OpenEditDialog.superclass._openComponent.call(this, meta, mode);
          }
-      },
-
-      _isNeedToRedrawDialog: function(){
-         return this._dialog && !this._dialog.isDestroyed();
       },
 
       _saveRecord: function(){
@@ -693,10 +668,9 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
          return collection;
       },
 
-      _getDialogConfig: function (meta) {
+      _getDialogConfig: function () {
          var config = OpenEditDialog.superclass._getDialogConfig.apply(this, arguments),
              self = this;
-         this._saveAutoHideState(meta, config);
          return cMerge(config, {
             isFormController: true,
             handlers: {
@@ -711,14 +685,6 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
          });
       },
 
-      _saveAutoHideState: function(meta, config) {
-         this._openedPanelConfig = {
-            autoHide: config.autoHide !== undefined ? config.autoHide : true,
-            mode: meta.mode
-         };
-         config.autoHide = false;
-      },
-
       _clearVariables: function() {
          this._isExecuting = false;
          this._finishExecuteDeferred();
@@ -727,8 +693,6 @@ define('SBIS3.CONTROLS/Action/List/OpenEditDialog', [
 
       destroy: function() {
          $(document).unbind('keydown keyup', this._setOpeningModeHandler);
-         document.removeEventListener('mousedown', this._documentClickHandler);
-         document.removeEventListener('touchstart', this._documentClickHandler);
          OpenEditDialog.superclass.destroy.apply(this, arguments);
       }
    });

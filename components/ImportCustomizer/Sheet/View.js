@@ -32,7 +32,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Sheet/View',
                 */
                allSheetsTitle: rk('Все листы настраиваются одинаково', 'НастройщикИмпорта'),
                /**
-                * @cfg {string[]} Список областей данных для импортирования
+                * @cfg {Array<string>} Список областей данных для импортирования
                 */
                sheetTitles: [],
                /**

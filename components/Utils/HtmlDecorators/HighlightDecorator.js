@@ -1,10 +1,8 @@
 define('SBIS3.CONTROLS/Utils/HtmlDecorators/HighlightDecorator', [
    'SBIS3.CONTROLS/Utils/HtmlDecorators/AbstractDecorator',
-   'Core/markup/ParserUtilities',
    'Core/core-instance',
    'View/decorators'
 ], function (AbstractDecorator,
-            Parser,
             cInst,
             decorators) {
    'use strict';

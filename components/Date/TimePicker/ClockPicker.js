@@ -28,7 +28,7 @@ define('SBIS3.CONTROLS/Date/TimePicker/ClockPicker',
        *            режима на hours(см. {@link setMode}) будет ClockPicker с выбором часов,
        *            и стрелкой показывающей на 20.
        *
-       * <ws:SBIS3.CONTROLS/Date/TimePicker/ClockPicker>
+       * <SBIS3.CONTROLS.Date.TimePicker.ClockPicker>
        *    <ws:time>
        *       <ws:Object>
        *          <ws:hours>20</ws:hours>
@@ -36,7 +36,7 @@ define('SBIS3.CONTROLS/Date/TimePicker/ClockPicker',
        *       </ws:Object>
        *    </ws:time>
        *    <ws:mode>minutes</ws:mode>
-       * </ws:SBIS3.CONTROLS/Date/TimePicker/ClockPicker>
+       * </SBIS3.CONTROLS.Date.TimePicker.ClockPicker>
        *
        * @control
        * @private

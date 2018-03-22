@@ -65,6 +65,7 @@ define('SBIS3.CONTROLS/Filter/FastData',
                 * либо через источник данных методом {@link setDataSource}.
                 * !Важно: name(имя фильтра) должен совпадать с internalValueField в FilterStructure, чтобы правильно заработала синхронизация
                 * !Важно: На данный момент лучше описывать опции в Module (как это сделано в примере), а не в верстке xhtml, при описании в верстве нужно самостоятельно вызвать reload
+                * !Важно: При установке historyId необходимо в завимости своего компонента прописать SBIS3.CONTROLS/SbisDropdownList для обеспечения работы механизма истории
                 * @example
                 * <pre>
                 *    items: [{
@@ -73,6 +74,7 @@ define('SBIS3.CONTROLS/Filter/FastData',
                 *       name: 'first',        //Имя фильтра
                 *       multiselect : false,  //Режим выпадающего списка
                 *       className: 'controls-DropdownList__withoutCross', //Строка с классами css-модификаторов для выпадающего списка
+                *       historyId: 'myOwnHistroyID',
                 *       values:[                //Набор элементов выпадающего списка
                 *       {
                 *          key : 0,
@@ -225,18 +227,23 @@ define('SBIS3.CONTROLS/Filter/FastData',
             var instances = this.getItemsInstances();
             for (var i in instances) {
                if (instances.hasOwnProperty(i)) {
-                  var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(instances[i].getContainer().attr('data-id'))],
-                     value = (fsObject.hasOwnProperty('value') && fsObject.value !== undefined) ? instances[i]._options.multiselect ? fsObject.value : [fsObject.value] : [instances[i].getDefaultId()];
+                  var value = this._getValueFromStructure(instances[i]);
                   if (instances[i].getItems()) {
                      this._setSelectedKeyByFilterStructure(instances[i], value);
                   }
                   else {
-                     instances[i].once('onItemsReady', function (instance, val) {
-                        this._setSelectedKeyByFilterStructure(instance, val);
-                     }.bind(this, instances[i], value));
+                     instances[i].once('onItemsReady', function (instance) {
+                        this._setSelectedKeyByFilterStructure(instance, this._getValueFromStructure(instance));
+                     }.bind(this, instances[i]));
                   }
                }
             }
+         },
+
+         _getValueFromStructure: function (instance) {
+            var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(instance.getContainer().attr('data-id'))],
+               hasValue = fsObject.hasOwnProperty('value') && fsObject.value !== undefined;
+            return hasValue ? (instance._options.multiselect ? fsObject.value : [fsObject.value]) : [instance.getDefaultId()]
          },
 
          _setSelectedKeyByFilterStructure: function (instance, value) {

@@ -24,6 +24,13 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
              */
             selectionType: selectionTypes.range,
 
+            /**
+             * @cfg {String} Минимальный квант
+             * @variant day День
+             * @variant month Месяц
+             */
+            minQuantum: 'day',
+
             pickerConfig: {
                corner: 'tl',
                horizontalAlign: {
@@ -134,7 +141,8 @@ define('SBIS3.CONTROLS/Mixins/DateRangeBigChoosePickerMixin', [
             emptyCaption: this._options.emptyCaption,
             selectionType: this._options.selectionType,
             quantum: this._options.quantum,
-            serializationMode: this._options.serializationMode
+            serializationMode: this._options.serializationMode,
+            minQuantum: this._options.minQuantum
          }
       },
 

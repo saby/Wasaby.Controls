@@ -18,7 +18,7 @@ define('SBIS3.CONTROLS/PrintDialogTemplate',
          $protected: {
             _options: {
                autoWidth: true,
-               caption: rk('Предварительный просмотр'),
+               caption: needShowReportDialog ? rk('Предварительный просмотр') : '',
                minHeight : 384,
                maxHTMLLength: 3*1000*1000
             }

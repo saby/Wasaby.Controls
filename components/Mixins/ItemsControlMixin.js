@@ -515,7 +515,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
              * <b>Пример 3.</b> Конфигурация источника данных через вёрстку компонента.
              * Второй способ основан на использовании функции, которая возвращает экземпляр класса источника.
              * <pre>
-             *    <option name="dataSource" type="function">js!SBIS3.MyArea.MyComponent:prototype.getMyDataSource</option>
+             *    <option name="dataSource" type="function">Examples/MyArea/MyComponent:prototype.getMyDataSource</option>
              * </pre>
              * Функция должна возвращать объект с конфигурацией источника данных.
              * <pre>
@@ -610,7 +610,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
              * @example
              * 1. Подключение шаблона группировки:
              * <pre>
-             *    define('js!SBIS3.MyArea.MyComponent', [ ..., "html!MyArea.MyComponent/resources/myTpl"], ...);
+             *    define('Examples/MyArea/MyComponent', [ ..., "tmpl!Examples/MyArea/MyComponent/resources/myTpl"], ...);
              * </pre>
              * 2. Настройка группировки:
              * <pre>

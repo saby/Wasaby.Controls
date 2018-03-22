@@ -3,7 +3,6 @@ define('SBIS3.CONTROLS/Action/List/Save', [
     'SBIS3.CONTROLS/Action/List/Mixin/ListMixin',
     'Core/Indicator',
     'Core/Deferred',
-    'WS.Data/Chain',
     'Core/core-merge',
     'Core/core-instance',
     'Core/core-clone',
@@ -11,7 +10,7 @@ define('SBIS3.CONTROLS/Action/List/Save', [
     'Lib/Control/Dialog/Dialog',
     'WS.Data/Query/Query',
     'WS.Data/Entity/Record'
-], function (Save, ListMixin, Indicator, Deferred, Chain, cMerge, cInstance, coreClone, RecordSet, Dialog, Query, Record) {
+], function (Save, ListMixin, Indicator, Deferred, cMerge, cInstance, coreClone, RecordSet, Dialog, Query, Record) {
     var MAX_RECORDS_COUNT = 20000;
 
     /**

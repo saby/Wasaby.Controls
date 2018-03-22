@@ -11,12 +11,14 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
    "WS.Data/Query/Query",
    'Core/core-merge',
    "Core/ParallelDeferred",
+   'Core/Deferred',
    "Core/core-instance",
    "Core/core-clone",
    "Core/IoC",
    "Core/helpers/Function/once",
    "Core/detection",
-   "Core/CommandDispatcher"
+   "Core/CommandDispatcher",
+   'SBIS3.CONTROLS/Menu/SBISHistoryController'
 ], function (
    constants,
    SearchController,
@@ -27,12 +29,14 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
    Query,
    cMerge,
    ParallelDeferred,
+   Deferred,
    cInstance,
    coreClone,
    IoC,
    once,
    detection,
-   CommandDispatcher) {
+   CommandDispatcher,
+   SBISHistoryController) {
 
    'use strict';
 
@@ -43,12 +47,12 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
       e.preventDefault();
    }
 
-   /**
-    * Миксин, задающий любому полю ввода работу с автодополнением.
-    * @mixin SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin
-    * @public
-    * @author Крайнов Д.О.
-    */
+    /**
+     * Миксин, задающий любому полю ввода работу с автодополнением.
+     * @mixin SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin
+     * @public
+     * @author Герасимов А.М.
+     */
    var SuggestTextBoxMixin = /**@lends SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin.prototype  */{
       /**
        * @event onBeforeLoadHistory Происходит перед вызовом списочного метода для получения истории.
@@ -75,33 +79,15 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
             поэтому запоминаем, что выбор был произвёден, когда фокус был на списке, чтобы потом заблокировать всплытие события. */
          _selectedFromList: false,
          _historyController: null,
+         _inputHistoryController: null,
+         _inputHistoryDeferred: null,
          _historyDeferred: undefined, //Защита от множественных запросов
          _options: {
-            /**
-             * @cfg {String} Устанавливает имя параметра, который будет передан при вызове метода БЛ.
-             * @remark
-             * Опция searchParam доступна в тех классах, которые расширены миксином SBIS3.CONTROLS.SuggestTextBoxMixin. Она, как можно понять из названия, нужна, чтобы организовать поиск данных.
-             * @example
-             * Рассмотрим использование опции searchParam на примере контрола "Строка поиска" (см. {@link SBIS3.CONTROLS/SearchForm}).
-             * <pre class="brush: xml">
-             *    <ws:SBIS3.CONTROLS/SearchForm searchParam="searchString" … />
-             * </pre>
-             * Пользователь вводит поисковый запрос "Ноутбук".
-             * В результате для поиска данных вызывается метод бизнес-логики "Goods.List".
-             * Чтобы на бизнес-логике обработать поисковую фразу, введённую пользователем, в параметрах вызова метода (в числе прочих параметров) передаётся :
-             * <pre class="brush: js">
-             *    searchString: “Ноутбук”
-             * </pre>
-             * ![](/search-param-1.png)
-             * На стороне бизнес-логики в методе Goods.List по значению параметра searchString может быть организовано соответствующее условие фильтрации записей.
-             * <br/>
-             * Если Goods.List - это декларативный списочный метод, то сначала параметр нужно объявить среди обрабатываемых в опции <b>Filter Parameters</b>:
-             * ![](/search-param-2.png)
-             * Затем создать условие фильтрации в опции <b>Filter Condition</b>:
-             * ![](/search-param-3.png)
-             * В итоге записи будут отобраны согласно поисковой фразе и другим параметрам метода БЛ:
-             * ![](/search-param-4.png)
-             */
+             /**
+              * @cfg {String} Поисковый параметр, передаваемый в аргумент "Фильтр" при вызове <a href="/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/">списочного метода</a> БЛ.
+              * @remark
+              * Ознакомьтесь с описанием к {@link SBIS3.CONTROLS/Mixins/SearchMixin миксину}, чтобы понять алгоритм вызова списочного метода и обработки поискового параметра.
+              */
             searchParam : '',
             /**
              * @cfg {Boolean} Использовать механизм смены неверной раскладки
@@ -118,6 +104,10 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
              * В базе хранится массив идентификаторов. Записи по этому массиву мы получаем через списочный метод, куда одним из полей фильтра отправляем этот массив, в качестве поля используем idProperty, установленный для источника.
              */
             historyId: null,
+            /**
+             * @cfg {Boolean} Использовать сервис истории ввода
+             */
+            useInputHistoryService: false,
             /**
              * @cfg {Boolean} Хранить данные истории в пользовательских параметрах
              * @deprecated
@@ -165,7 +155,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
          //Если запрос уже идет, то не нужно делать повторный.
          //Сейчас метод показа истории может вызываться несколько раз из-за проблем с фокусами.
          //Проблема плавающая, поэтому постави доп защиту здесь от множественного вызова БЛ
-         if (this._historyDeferred) {
+         if (this._historyDeferred || this._inputHistoryDeferred) {
             return;
          }
          this._getHistoryRecordSet().addCallback(function (rs) {
@@ -191,57 +181,98 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
          }.bind(this));
       },
       _getHistoryRecordSet: function () {
-         var listSource = this.getList().getDataSource(),
-             query = this._getQueryForHistory(),
-             queryFilter = query.getWhere()[this._getListIdProperty()],
-             pd = new ParallelDeferred(),
-             self = this,
-             beforeLoadHistoryResult,
-             historyRS;
+         var queryDef = this._getQueryForHistory(),
+             self = this;
 
-         beforeLoadHistoryResult = this._notify('onBeforeLoadHistory', queryFilter);
-   
-         /* Необходимо сделать запрос, аже если истории для выбора нет, т.к. на бл могут дополнять выборку */
-         this._historyDeferred = this.getList().getDataSource().query(query);
-         pd.push(this._historyDeferred);
-
-         if (cInstance.instanceOfModule(beforeLoadHistoryResult, 'Core/Deferred')) {
-            pd.push(beforeLoadHistoryResult);
-         }
-
-         return pd.done().getResult().addCallback(function (result) {
-            historyRS = new RecordSet({
-               adapter: listSource.getAdapter(),
-               rawData: result[0] ? result[0].getRawData() : [],
-               idProperty: self.getList().getProperty('idProperty'),
-               model: listSource.getModel()
-            });
-            if (result[1]) {
-               historyRS.assign(result[1].getAll());
-            }
-            return historyRS;
-         }).addBoth(function(result) {
-            self._historyDeferred = null;
-            return result;
+         return queryDef.addCallback(function(query){
+            return self._makeHistoryQuery(query);
          });
       },
-      _getQueryForHistory: function() {
-         var query = new Query(),
-            filter = {},
-            recordsId = [];
 
-         for (var i = 0, l = this._historyController.getCount(); i < l; i++) {
-            recordsId.push(this._getHistoryRecordId(this._historyController.at(i).get('data')));
-         }
-         filter[this._getListIdProperty()] = recordsId;
-         filter = cMerge(filter, this.getList().getFilter() || {}); //Отдаем в запрос на историю фильтр с листа
-         
-         if (this._options.searchParam) {
-            delete filter[this._options.searchParam];
-         }
-         query.where(filter).limit(12);
-         return query;
+      _makeHistoryQuery: function(query) {
+          var listSource = this.getList().getDataSource(),
+              queryFilter = query.getWhere()[this._getListIdProperty()],
+              pd = new ParallelDeferred(),
+              self = this,
+              beforeLoadHistoryResult,
+              historyRS;
+
+         beforeLoadHistoryResult = this._notify('onBeforeLoadHistory', queryFilter);
+
+         /* Необходимо сделать запрос, аже если истории для выбора нет, т.к. на бл могут дополнять выборку */
+          // вычитка с БЛ
+          this._historyDeferred = this.getList().getDataSource().query(query);
+          pd.push(this._historyDeferred);
+
+          if (cInstance.instanceOfModule(beforeLoadHistoryResult, 'Core/Deferred')) {
+              pd.push(beforeLoadHistoryResult);
+          }
+
+          return pd.done().getResult().addCallback(function (result) {
+              historyRS = new RecordSet({
+                  adapter: listSource.getAdapter(),
+                  rawData: result[0] ? result[0].getRawData() : [],
+                  idProperty: self.getList().getProperty('idProperty'),
+                  model: listSource.getModel()
+              });
+              if (result[1]) {
+                  historyRS.assign(result[1].getAll());
+              }
+              return historyRS;
+          }).addBoth(function(result) {
+              self._historyDeferred = null;
+              self._inputHistoryDeferred = null;
+              return result;
+          });
       },
+
+      _getQueryForHistory: function() {
+         var self = this,
+             recordsId = [],
+             recent;
+
+         if(this._options.useInputHistoryService){
+             this._inputHistoryController = new SBISHistoryController({
+                 historyId: this._options.historyId,
+                 maxCountRecent: 12
+             });
+             this._inputHistoryDeferred = this._inputHistoryController.getUnionIndexesList(this).addCallback(function(data) {
+                  recent = data && data.getRow().get('recent');
+                  if(recent) {
+                      recent.forEach(function (id) {
+                          recordsId.push(id);
+                      });
+                  }
+                  return self._makeQueryFilterForHistory(recordsId);
+             });
+         }else {
+             for (var i = 0, l = this._historyController.getCount(); i < l; i++) {
+                 recordsId.push(this._getHistoryRecordId(this._historyController.at(i).get('data')));
+             }
+
+             this._inputHistoryDeferred = new Deferred();
+             this._inputHistoryDeferred.addCallback(function(data) {
+                 return self._makeQueryFilterForHistory(data);
+             });
+             this._inputHistoryDeferred.callback(recordsId);
+         }
+         return this._inputHistoryDeferred;
+      },
+
+      _makeQueryFilterForHistory: function(recordsId) {
+          var query = new Query(),
+              filter = {};
+
+          filter[this._getListIdProperty()] = recordsId;
+          filter = cMerge(filter, this.getList().getFilter() || {}); //Отдаем в запрос на историю фильтр с листа
+
+          if (this._options.searchParam) {
+              delete filter[this._options.searchParam];
+          }
+          query.where(filter).limit(12);
+          return query;
+      },
+
       _getHistoryRecord: function(item){
          var list = this.getList();
          return Di.resolve(list.getDataSource().getModel(), {
@@ -360,46 +391,52 @@ define('SBIS3.CONTROLS/Mixins/SuggestTextBoxMixin', [
          },
 
          _addItemToHistory: function(item) {
-            if (this._historyController) {
-               //Определяем наличие записи в истории по ключу: стандартная логика контроллера не подходит,
-               //т.к. проверка наличия добавляемой записи в истории производится по полному сравнению всех полей записи.
-               //В записи поля могут задаваться динамически, либо просто измениться, к примеру значение полей может быть привязано к текущему времени
-               //Это приводит к тому, что historyController не найдет текущую запись в истории и добавит ее заново. Получится дублирование записей в истории
-               var items = this.getList().getItems(),
-                  idProp = items ? items.getIdProperty() : this.getList().getProperty('idProperty'),
-                  itemId = item.get(idProp),
-                  index = -1;
+            if (!this._options.useInputHistoryService) {
+                if (this._historyController) {
+                    //Определяем наличие записи в истории по ключу: стандартная логика контроллера не подходит,
+                    //т.к. проверка наличия добавляемой записи в истории производится по полному сравнению всех полей записи.
+                    //В записи поля могут задаваться динамически, либо просто измениться, к примеру значение полей может быть привязано к текущему времени
+                    //Это приводит к тому, что historyController не найдет текущую запись в истории и добавит ее заново. Получится дублирование записей в истории
+                    var items = this.getList().getItems(),
+                        idProp = items ? items.getIdProperty() : this.getList().getProperty('idProperty'),
+                        itemId = item.get(idProp),
+                        index = -1;
 
-               this._historyController.each(function(model, i) {
-                  var historyModelObject = model.get('data').getRawData();
-                  var historyModelId;
-                  //Проблема в адаптерах historyRecordSet и сохраняемой записи, они могут быть разными
-                  //в таком случае, когда дергается var dataRecord = model.get('data'), то dataRecord приводится к типу Record (по формату), но
-                  //свойства модели не инициализируются, соответственно dataRecord.get('anyField') не вернет ничего.
-                  //Пока не доработали механизм истории на запоминание только id, приходится искать добавляемую запись в рекордсете истории вручную по сырым данным.
-                  if (historyModelObject.d instanceof Array && historyModelObject.s instanceof Array) {
-                     var fieldIndex = -1;
-                     for (var j = 0; j < historyModelObject.s.length; j++) {
-                        if (historyModelObject.s[j].n === idProp) {
-                           fieldIndex = j;
-                           break;
+                    this._historyController.each(function (model, i) {
+                        var historyModelObject = model.get('data').getRawData();
+                        var historyModelId;
+                        //Проблема в адаптерах historyRecordSet и сохраняемой записи, они могут быть разными
+                        //в таком случае, когда дергается var dataRecord = model.get('data'), то dataRecord приводится к типу Record (по формату), но
+                        //свойства модели не инициализируются, соответственно dataRecord.get('anyField') не вернет ничего.
+                        //Пока не доработали механизм истории на запоминание только id, приходится искать добавляемую запись в рекордсете истории вручную по сырым данным.
+                        if (historyModelObject.d instanceof Array && historyModelObject.s instanceof Array) {
+                            var fieldIndex = -1;
+                            for (var j = 0; j < historyModelObject.s.length; j++) {
+                                if (historyModelObject.s[j].n === idProp) {
+                                    fieldIndex = j;
+                                    break;
+                                }
+                            }
+                            if (fieldIndex > -1) {
+                                historyModelId = historyModelObject.d[fieldIndex];
+                            }
                         }
-                     }
-                     if (fieldIndex > -1) {
-                        historyModelId = historyModelObject.d[fieldIndex];
-                     }
-                  }
-                  else {
-                     historyModelId = historyModelObject[idProp];
-                  }
-                  if (itemId === historyModelId) {
-                     index = i;
-                  }
-               });
-               if(index !== -1) {
-                  this._historyController.removeAt(index);
+                        else {
+                            historyModelId = historyModelObject[idProp];
+                        }
+                        if (itemId === historyModelId) {
+                            index = i;
+                        }
+                    });
+                    if (index !== -1) {
+                        this._historyController.removeAt(index);
+                    }
+                    this._historyController.prepend(item.getRawData());
+                }
+            } else {
+               if (this._inputHistoryController) {
+                  this._inputHistoryController.addToHistory(item.getId());
                }
-               this._historyController.prepend(item.getRawData());
             }
          }
       },

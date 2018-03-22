@@ -21,6 +21,12 @@
                     </ws:Array>
                 </ws:selectedKeys>
             </SBIS3.CONTROLS:DropdownList>
+            <SBIS3.CONTROLS:Button:IconButton if="{{ allowDelete }}" className="controls-FavoriteEditDialog__deleteButton"
+                    command="notify"
+                    commandArgs="{{ ['onDestroyModel'] }}"
+                    icon="sprite:icon-24 icon-Erase icon-error"
+                    tooltip="{[Удалить]}">
+            </SBIS3.CONTROLS:Button:IconButton>
             <SBIS3.CONTROLS:Button className="controls-FavoriteEditDialog__addButton" caption="Сохранить" primary="{{ true }}" command="update">
                 <ws:commandArgs>
                     <ws:Array>

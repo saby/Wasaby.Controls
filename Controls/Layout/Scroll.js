@@ -11,10 +11,9 @@ define('Controls/Layout/Scroll',
       'Core/Control',
       'tmpl!Controls/Layout/Scroll/Scroll',
       'Controls/Event/Registrar',
-      'Core/helpers/Function/throttle',
-      'WS.Data/Type/descriptor'
+      'Core/helpers/Function/throttle'
    ],
-   function(Control, template, Registrar, throttle, types) {
+   function(Control, template, Registrar, throttle) {
 
       'use strict';
 
@@ -183,7 +182,7 @@ define('Controls/Layout/Scroll',
 
          _beforeUnmount: function() {
             if (this._observer) {
-               this._observer.unobserve();
+               this._observer.disconnect();
                this._observer = null;
             }
             this._registrar.destroy();

@@ -2,8 +2,8 @@ define('Controls/Validate/Validators/IsEmail', [], function() {
    'use strict';
 
    var
-      emailEnRegExp = /^([a-z0-9+_-]+\.)*[a-z0-9+_-]+@[a-z0-9+_-]+(\.[a-z0-9+_-]+)*\.[a-z]{2,6}$/,
-      emailRuRegExp = /^([а-я0-9+_-]+\.)*[а-я0-9+_-]+@[а-я0-9+_-]+(\.[а-я0-9+_-]+)*\.[а-я]{2,6}$/;
+      emailEnRegExp = /^([a-z0-9+_-]+\.)*[a-z0-9+_-]+@[a-z0-9+_-]+(\.[a-z0-9+_-]+)*\.[a-z]{2,7}$/,
+      emailRuRegExp = /^([а-я0-9+_-]+\.)*[а-я0-9+_-]+@[а-я0-9+_-]+(\.[а-я0-9+_-]+)*\.[а-я]{2,7}$/;
    return function(args) {
       //Пустое значение должно быть валидным
       if (!args.value) {

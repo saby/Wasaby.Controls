@@ -207,8 +207,8 @@ define('SBIS3.CONTROLS/DropdownList',
                 * В примере показано использование шаблонизатора doT.js.
                 * Подключение, импорт в переменную и передача шаблона в переменную:
                 * <pre>
-                * define('js!SBIS3.MyArea.MyComponent',
-                *    [ ... , 'html!SBIS3.MyArea.MyComponent/resources/myHeadTpl' ],
+                * define('Examples/MyArea/MyComponent',
+                *    [ ... , 'tmpl!Examples/MyArea/MyComponent/resources/myHeadTpl' ],
                 *    function(..., myHeadTpl){
                 *       ...
                 *       $protected: {
@@ -287,8 +287,8 @@ define('SBIS3.CONTROLS/DropdownList',
                 * @example
                 * Подключение, импорт в переменную и передача шаблона в переменную:
                 * <pre>
-                * define('js!SBIS3.MyArea.MyComponent',
-                *    [ ..., 'html!SBIS3.MyArea.MyComponent/resources/myItemTpl' ],
+                * define('Examples/MyArea/MyComponent',
+                *    [ ..., 'tmpl!Examples/MyArea/MyComponent/resources/myItemTpl' ],
                 *    function(..., myItemTpl){
                 *       ...
                 *       $protected: {
@@ -443,6 +443,19 @@ define('SBIS3.CONTROLS/DropdownList',
          },
 
          _removeOldKeys: function(){
+            if (this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
+               this._loadItemsDeferred.addCallback(function() {
+                  var item = this._options.selectedItems.at(0);
+                  var text = item && item.get(this._options.displayProperty);
+                  this._removeOldKeysCallback();
+                  this._drawSelectedValue(this._options.selectedKeys[0], [text]);
+               }.bind(this));
+            } else {
+               this._removeOldKeysCallback();
+            }
+         },
+
+         _removeOldKeysCallback: function() {
             var keys = this.getSelectedKeys(),
                 items = this.getItems(),
                 i = 0;
@@ -618,6 +631,13 @@ define('SBIS3.CONTROLS/DropdownList',
                }
             }
          },
+         _createPicker: function() {
+            var popup = DropdownList.superclass._createPicker.apply(this, arguments);
+            // В оффлайн клиенте престо не проходят клики с первого раза по списку
+            // Включаю волшебную опцию Ярика, которая решает подобные проблемы
+            popup._checkClickByTap = true;
+            return popup;
+         },
          redraw: function() {
             //Если нет пикера - не отрисовываем записи, просто обновим текст в основном контейнере
             if (!this._picker) {
@@ -666,6 +686,11 @@ define('SBIS3.CONTROLS/DropdownList',
             this._redrawSelectedItems();
             this._setSelectedItems(); //Обновим selectedItems, если пришел другой набор данных
             this._needToRedraw = true;
+         },
+         _selectedItemLoadCallback: function (item) {
+            if (!this._isEnumTypeData()) {
+               this.getItems().add(item);
+            }
          },
          _isEmptyValueSelected: function(){
             return this._options.emptyValue && this.getSelectedKeys()[0] == null;
@@ -840,7 +865,7 @@ define('SBIS3.CONTROLS/DropdownList',
             if (this._isEnumTypeData()){
                this._drawSelectedValue(this.getItems().get(), [this.getItems().getAsValue(true)]);
             }
-            else if(len) {
+            else if(len && (!this._loadItemsDeferred || this._loadItemsDeferred.isReady())) {
                this.getSelectedItems(true).addCallback(function(list) {
                   if(list) {
                      list.each(function (rec) {
@@ -1019,7 +1044,6 @@ define('SBIS3.CONTROLS/DropdownList',
             var type = this._options.type,
                 isFastDataFilterType = type == 'fastDataFilter';
             return {
-               _checkClickByTap: true,
                corner: 'tl',
                verticalAlign: {
                   side: 'top'

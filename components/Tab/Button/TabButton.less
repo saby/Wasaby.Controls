@@ -19,41 +19,53 @@
 
    &:not(.controls-Checked__checked):hover {
       padding: 0;
-      background: @tab-button-hover-background;
-      border-top: @tab-button-hover-border;
-      border-bottom: @tab-buttons-border-bottom;
       .controls-TabButton__inner {
          border-right: @tab-button-hover-border;
          border-left: @tab-button-hover-border;
          &:before {
-            display: none;
+            display: block;
          }
       }
    }
-
+   &:hover {
+      background: transparent;
+      &:after {
+         background: @tab-button-simple-hover-bottomline-color;
+         display: block;
+      }
+   }
+   &:after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 1px;
+      right: 1px;
+      height: @tab-button-simple-inner-bottom-height;
+      display: none;
+   }
    &.controls-Checked__checked {
-      border-top: @tab-button-checked-border-top;
-      z-index: 50;
+      z-index: 10;
       cursor: default;
       font-size: @tab-button-checked-font-size;
-      border-bottom: none;
       padding: 0;
       overflow: visible;
-
+      &:after {
+         display: block;
+         background: @tab-button-checked-inner-color;
+      }
 
       .controls-TabButton__inner {
          font-weight: bold;
          font-size: @tab-button-checked-inner-font-size;
          color: @tab-button-checked-inner-color;
          border-width: 0 @tab-button-checked-inner-border 0 @tab-button-checked-inner-border;
-         border-color: @tab-button-checked-border-color;
+         border-color: transparent;
          border-style: solid;
-         background: @tab-button-checked-inner-bg;
          .controls-TabButton__wrapper {
             margin-bottom: 1px;
          }
          &:before {
-            display: none;
+            display: block;
          }
       }
       .controls-tabButton__overlay {
@@ -254,51 +266,16 @@
    }
    //todo - Каскады вызваны тем, что вкладки второго уровня перебивают стили основных вкладок. Удалить все каскады по новому стандарту, в котором останутся только вкладки второго уровня
    .controls-TabButton {
-      border-color: transparent;
-      border-bottom: @tab-buttons-border-bottom;
-      .controls-TabButton__inner {
-         border-color: transparent;
-         color: @tab-button-simple-inner-color;
-         &:before {
-            display: block;
-         }
-      }
-      &:not(.controls-Checked__checked):hover {
-         border-color: transparent;
-         .controls-TabButton__inner {
-            border-color: transparent;
-            background: transparent;
-            &:before {
-               display: block;
-            }
-         }
-      }
-      &:hover {
-         background: transparent;
-         &:after {
-            background: @tab-button-simple-hover-bottomline-color;
-            display: block;
-         }
-      }
       &.controls-Checked__checked {
-         z-index: 10; //чтобы не пропадал разделитель
          .controls-TabButton__inner {
             color: @tab-button-simple-inner-checked-color;
-            background: transparent;
+            .controls-TabButton__wrapper {
+               margin-bottom: 0;
+            }
          }
          &:after {
-            display: block;
             background: @tab-button-simple-checked-bottomline-color;
          }
-      }
-      &:after {
-         content: '';
-         position: absolute;
-         bottom: -1px;
-         left: 1px;
-         right: 1px;
-         height: @tab-button-simple-inner-bottom-height;
-         display: none;
       }
    }
 }
@@ -321,10 +298,6 @@
    //Для главной вкладки, внутри которой 1 текстбокс c font-size: 18px. ошибка из-за overflow:hidden на редактировании
    .controls-EditAtPlace {
       &.controls-InputRender_size_l {
-         .controls-EditAtPlace__fieldWrapper {
-            position: relative;
-            top: -1px;
-         }
          .controls-InputRender_size_l.controls-InputRender {
             .flexbox();
          }

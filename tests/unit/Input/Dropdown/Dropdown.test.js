@@ -51,51 +51,43 @@ define(
          };
 
          let dropdownList = new Dropdown(config);
+         beforeEach(() => {
+            return new Promise((resolve) => {
+               dropdownList.saveOptions({
+                  selectedKeys: '2',
+                  keyProperty: 'id'
+               });
+               dropdownList._beforeMount(config).addCallback(resolve);
+            })
+         });
          it('check received state', () => {
             dropdownList._beforeMount(config, null, items);
             assert.equal(dropdownList._items, items);
          });
 
-         it('check selected text', () => {
-            //Запоминаю нормальные опции
-            dropdownList._beforeMount(config).addCallback(() => {
-               dropdownList.saveOptions({
-                  selectedKeys: '2',
-                  keyProperty: 'id'
-               });
-               assert.equal(dropdownList._text, 'Запись 2');
-            });
-         });
-
          it('update text', () => {
-            dropdownList._beforeMount(config).addCallback(() => {
-               let items = dropdownList._items;
-               let text = dropdownList._updateText(items.at(0), 'title');
-               assert.equal(text, 'Запись 1');
-            });
+            let items = dropdownList._items;
+            let text = dropdownList._updateText(items.at(0), 'title');
+            assert.equal(text, 'Запись 1');
          });
 
          it('check selectedItemsChanged event', () => {
-            dropdownList._beforeMount(config).addCallback(() => {
-               let selectedKeys;
-               //subscribe на vdom компонентах не работает, поэтому мы тут переопределяем _notify
-               //(дефолтный метод для vdom компонент который стреляет событием).
-               //он будет вызван вместо того что стрельнет событием, тем самым мы проверяем что отправили
-               //событие и оно полетит с корректными параметрами.
-               dropdownList._notify = (e, args) => {
-                  selectedKeys = args[0];
-               };
-               dropdownList._selectItem(dropdownList._items.at(5));
-               assert.deepEqual(selectedKeys, '6');
-            });
+            let selectedKeys;
+            //subscribe на vdom компонентах не работает, поэтому мы тут переопределяем _notify
+            //(дефолтный метод для vdom компонент который стреляет событием).
+            //он будет вызван вместо того что стрельнет событием, тем самым мы проверяем что отправили
+            //событие и оно полетит с корректными параметрами.
+            dropdownList._notify = (e, args) => {
+               selectedKeys = args[0];
+            };
+            dropdownList._selectItem(dropdownList._items.at(5));
+            assert.deepEqual(selectedKeys, '6');
 
          });
 
          it('check selected icon', () => {
-            dropdownList._beforeMount(config).addCallback(() => {
-               dropdownList._beforeUpdate({selectedKeys: '3'});
-               assert.equal(dropdownList._icon, 'icon-16 icon-Admin icon-primary');
-            });
+            dropdownList._beforeUpdate({selectedKeys: '3'});
+            assert.equal(dropdownList._icon, 'icon-16 icon-Admin icon-primary');
          });
 
          it('before update source', () => {
@@ -103,14 +95,19 @@ define(
                id: '9',
                title: 'Запись 9'
             });
-            dropdownList._beforeUpdate({
-               source: new Memory({
-                  idProperty: 'id',
-                  data: items
-               })
-            }).addCallback(() => {
-               assert.equal(dropdownList._items.getCount(), items.length);
-            })
+            return new Promise((resolve) => {
+               dropdownList._beforeUpdate({
+                  selectedKeys: '2',
+                  keyProperty: 'id',
+                  source: new Memory({
+                     idProperty: 'id',
+                     data: items
+                  })
+               }).addCallback(() => {
+                  assert.equal(dropdownList._items.getCount(), items.length);
+                  resolve();
+               });
+            });
          });
 
          it('open dropdown', () => {
@@ -132,9 +129,7 @@ define(
             dropdownList._notify = (e) => {
                assert.equal(e, 'selectedKeysChanged');
             };
-            dropdownList._beforeMount(config).addCallback(() => {
-               dropdownList._onResult(['itemClick', 'event', [dropdownList._items.at(4)]])
-            });
+            dropdownList._onResult(['itemClick', 'event', [dropdownList._items.at(4)]])
          });
 
          function setTrue(assert) {

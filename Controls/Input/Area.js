@@ -102,7 +102,6 @@ define('Controls/Input/Area', [
       },
 
       _afterUpdate: function(oldOptions) {
-         Area.superclass._afterUpdate.apply(this, arguments);
          if ((oldOptions.value !== this._options.value) && this._caretPosition) {
             this._children['realArea'].setSelectionRange(this._caretPosition, this._caretPosition);
             this._caretPosition = null;

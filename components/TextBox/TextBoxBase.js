@@ -284,10 +284,15 @@ define('SBIS3.CONTROLS/TextBox/TextBoxBase',
          // т.к. поле ввода находится внутри контейнера, то клик по внешнему контейнеру не ставит курсор в поле
          // поэтому принудительно проставляем фокус в активное поле
          // если фокус уже на поле ввода, то повторно проставлять не нужно
-         if (this.isEnabled() && elementToFocus[0] !== document.activeElement) {
+         if (this.isEnabled() && elementToFocus[0] !== document.activeElement && this._shouldFocus(event.target)) {
             elementToFocus.focus();
          }
          TextBoxBase.superclass._onClickHandler.call(this, event);
+      },
+
+      _shouldFocus: function(target) {
+         var container = this.getContainer()[0];
+         return target === container || target === $('.controls-InputRender__wrapper', container)[0] || target === $('.controls-InputRender__fieldWrapper', container)[0];
       },
 
       _getElementToFocus: function() {

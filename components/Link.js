@@ -1,10 +1,9 @@
 define('SBIS3.CONTROLS/Link', [
-   'Core/helpers/String/escapeTagsFromStr',
    'js!WSControls/Buttons/Button',
    'SBIS3.CONTROLS/Utils/LinkUtil',
    'tmpl!SBIS3.CONTROLS/Link/resources/hrefTemplate',
    'css!SBIS3.CONTROLS/Link/Link'
-], function(escapeTagsFromStr, WSButton, LinkUtil, hrefTemplate) {
+], function(WSButton, LinkUtil, hrefTemplate) {
 
    'use strict';
 
