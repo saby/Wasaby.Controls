@@ -42,11 +42,11 @@ define('Controls/Popup/Manager',
                      onClosePopup: function (event, id, container) {
                         _private.popupClose(id, container);
                      },
-                     onPopupCreated: function (event, id, container) {
-                        _private.popupCreated(id, container);
+                     onPopupCreated: function (event, id) {
+                        _private.popupCreated(id);
                      },
-                     onPopupUpdated: function (event, id, container) {
-                        _private.popupUpdated(id, container);
+                     onPopupUpdated: function (event, id) {
+                        _private.popupUpdated(id);
                      },
                      onPopupFocusIn: function (event, id, focusedControl) {
                         _private.popupFocusIn(id, focusedControl);
@@ -63,25 +63,24 @@ define('Controls/Popup/Manager',
             return _popupContainer;
          },
 
-         popupCreated: function (id, container) {
+         popupCreated: function (id) {
             var element = Manager.find(id);
             if (element) {
                var strategy = element.strategy;
                if (strategy) {
                   // при создании попапа, зарегистрируем его
-                  strategy.elementCreated(element, container, id);
+                  strategy.elementCreated(element, this.getItemContainer(id), id);
                   Manager._redrawItems();
                }
             }
          },
 
-         popupUpdated: function (id, container) {
+         popupUpdated: function (id) {
             var element = Manager.find(id);
             if (element) {
                var strategy = element.strategy;
                if (strategy) {
-                  // при создании попапа, зарегистрируем его
-                  strategy.elementUpdated(element, container);
+                  strategy.elementUpdated(element, this.getItemContainer(id)); // при создании попапа, зарегистрируем его
                   Manager._redrawItems();
                }
             }
@@ -106,9 +105,14 @@ define('Controls/Popup/Manager',
             _private.fireEventHandler(id, 'onResult', result);
          },
          
-         popupClose: function(id, container) {
+         popupClose: function(id) {
             _private.fireEventHandler(id, 'onClose');
-            Manager.remove(id, container);
+            Manager.remove(id, this.getItemContainer(id));
+         },
+         getItemContainer: function (id) {
+            var popupContainer = this.getPopupContainer();
+            var item = popupContainer._children[id];
+            return item._container;
          }
       };
 
@@ -151,10 +155,10 @@ define('Controls/Popup/Manager',
           * @param options новые опции
           */
          update: function (id, options) {
-            var
-               element = this.find(id);
+            var element = this.find(id);
             if (element) {
                element.popupOptions = options;
+               element.strategy.elementUpdated(element, _private.getItemContainer(id));
                this._redrawItems();
                return id;
             }

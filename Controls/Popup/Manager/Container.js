@@ -20,12 +20,7 @@ define('Controls/Popup/Manager/Container',
           */
 
          _template: template,
-
-         constructor: function (cfg) {
-            Container.superclass.constructor.call(this, cfg);
-            this._overlayId = null;
-            this._popupItems = new List();
-         },
+         _overlayId: null,
 
          /**
           * Установить индекс попапа, под которым будет отрисован оверлей

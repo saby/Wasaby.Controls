@@ -37,17 +37,11 @@ define('Controls/Popup/Opener/Sticky/StickyController',
 
             // Удаляем предыдущие классы характеризующие направление и добавляем новые
             if (cfg.popupOptions.className) {
-               cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup__empty-margins|controls-Popup-align\S*/g, '').trim();
+               cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup-align\S*/g, '').trim();
                cfg.popupOptions.className += ' ' + _private.getOrientationClasses(popupCfg);
             }
             else {
                cfg.popupOptions.className = _private.getOrientationClasses(popupCfg);
-            }
-         },
-
-         resetClasses: function(cfg) {
-            if (cfg.popupOptions.className) {
-               // cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup__empty-margins|controls-Popup-align\S*/g, '').trim();
             }
          },
 
@@ -73,7 +67,6 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          },
 
          elementUpdated: function (cfg, container) {
-            _private.resetClasses(cfg);
             this.prepareConfig(cfg, container);
          },
          prepareConfig: function (cfg, container) {

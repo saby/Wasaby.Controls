@@ -69,13 +69,6 @@ define('Controls/Popup/Opener/InfoBox',
           * @param {InfoBoxCfg} cfg Объект с настройками инфобокса
           */
          open: function(cfg){
-
-            // Если есть открытый инфобокс, закрываем
-            //TODO убрать, сейчас нужно, т.к. после update'a затираются классы
-            if (this.isOpened()) {
-               this.close();
-            }
-
             cfg = cMerge(cClone(DEFAULT_CONFIG), cfg);
 
             return Base.prototype.open.call(this, {

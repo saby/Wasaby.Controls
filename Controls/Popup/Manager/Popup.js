@@ -32,7 +32,7 @@ define('Controls/Popup/Manager/Popup',
          _template: template,
 
          _afterMount: function () {
-            this._notify('popupCreated', [this._options.id, this._container]);
+            this._notify('popupCreated', [this._options.id]);
          },
 
          /**
@@ -40,7 +40,7 @@ define('Controls/Popup/Manager/Popup',
           * @function Controls/Popup/Manager/Popup#_close
           */
          _close: function () {
-            this._notify('closePopup', [this._options.id, this._container]);
+            this._notify('closePopup', [this._options.id]);
          },
 
          /**
@@ -83,9 +83,8 @@ define('Controls/Popup/Manager/Popup',
          },
 
          _update: function() {
-            // this._container.classList.remove('controls-Popup__empty-margins');
-            this._notify('popupUpdated', [this._options.id, this._container]);
-         },
+            this._notify('popupUpdated', [this._options.id]);
+         }
       });
 
       return Popup;
