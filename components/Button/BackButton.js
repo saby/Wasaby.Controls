@@ -1,11 +1,12 @@
 define('SBIS3.CONTROLS/Button/BackButton',
    [
     'Lib/Control/CompoundControl/CompoundControl',
+    'Core/helpers/String/escapeTagsFromStr',
     'tmpl!SBIS3.CONTROLS/Button/BackButton/BackButton',
     'SBIS3.CONTROLS/Link',
     'css!SBIS3.CONTROLS/Button/BackButton/BackButton'
    ],
-    function(CompoundControl, dotTpl) {
+    function(CompoundControl, escapeTagsFromStr, dotTpl) {
    'use strict';
    /**
     * Класс контрола "Кнопка "Назад".
@@ -150,7 +151,14 @@ define('SBIS3.CONTROLS/Button/BackButton',
          this._link.setCaption(caption);
          // Чтобы не тянуть в зависимости htmlToText из Deprecated/helpers/string-helpers,
          // выполним replace из него прямо тут
-         this.setTooltip(caption || '');
+
+         var tooltip = caption || '';
+         if (this._options.escapeCaptionHtml === false) {
+            //если подразумевается что в кнопке может быть верстка (как в сотрудниках, то вырезаем теги)
+            tooltip = escapeTagsFromStr((caption || '').replace(/<br>/g, '\n'), '\\w+');
+         }
+
+         this.setTooltip(tooltip);
          this._options.caption = caption;
          this._container.toggleClass('controls-BackButton__empty', isEmptyCaption);
       },
