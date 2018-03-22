@@ -310,12 +310,12 @@ define('SBIS3.CONTROLS/ScrollContainer', [
 
          // Показать скролл
          _showScrollbar: function() {
-            this._container.toggleClass('controls-ScrollContainer__scrollbar_show', true);
+            this._scrollbar._container.toggleClass('controls-ScrollContainer__scrollbar_show', true);
          },
 
          //Скрыть скролл
          _hideScrollbar: function() {
-            this._container.toggleClass('controls-ScrollContainer__scrollbar_show', false);
+            this._scrollbar._container.toggleClass('controls-ScrollContainer__scrollbar_show', false);
          },
 
          _subscribeOnScroll: function(){
