@@ -99,7 +99,7 @@ define('Controls/Dropdown/Opener',
          _controlName: 'Controls/Dropdown/Opener',
          _itemTemplateDeferred: undefined,
 
-         open: function (config, opener) {            
+         open: function (config, opener) {
             _private.setComponentOptions(this, config);
             _private.setPopupOptions(this, config);
             DropdownOpener.superclass.open.apply(this, arguments);
