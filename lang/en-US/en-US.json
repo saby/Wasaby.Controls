@@ -79,6 +79,8 @@
    "Наименование": "Name",
    "и еще $count$s$": "and $count$s$ more",
    "Не выбрано": "Not selected",
+   "Переместить вверх": "Move up",
+   "Переместить вниз": "Move down",
    "Не выбрано ни одной записи для перемещения": "Have not been selected rows for move",
    "Не указан": "Not specified",
    "Неверная контрольная сумма СНИЛС": "Invalid SNILS checksum",
