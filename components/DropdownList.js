@@ -245,8 +245,8 @@ define('SBIS3.CONTROLS/DropdownList',
                 * @example
                 * Подключение, импорт в переменную и передача шаблона в переменную:
                 * <pre>
-                * define('js!SBIS3.MyArea.MyComponent',
-                *    [ ... , 'html!SBIS3.MyArea.MyComponent/resources/myHeadPickerTpl' ],
+                * define('SBIS3/MyArea/MyComponent',
+                *    [ ... , 'html!SBIS3/MyArea/MyComponent/resources/myHeadPickerTpl' ],
                 *    function(..., myHeadPickerTpl){
                 *       ...
                 *       $protected: {
