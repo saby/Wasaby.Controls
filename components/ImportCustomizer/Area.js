@@ -176,7 +176,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
 
          $constructor: function () {
             CommandDispatcher.declareCommand(this, 'complete', this._cmdComplete);
-            this._publish('onComplete');
+            this._publish('onComplete', 'onFatalError');
          },
 
          init: function () {
@@ -206,17 +206,22 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             }
             var fields = this._fieldsPromise;
             if (fields) {
+               var success = function (data) {
+                  this._fieldsPromise = null;
+                  this._setFields(data);
+                  return data;
+               }.bind(this);
+               var fail = function (err) {
+                  this._fieldsPromise = null;
+                  this._notify('onFatalError', true, err);
+                  return err;
+               }.bind(this);
                if (!fields.isReady()) {
-                  fields.addCallbacks(this._setFields.bind(this), this._onFatalError.bind(this));
+                  fields.addCallbacks(success, fail);
                }
                else {
                   var value = fields.getResult();
-                  if (fields.isSuccessful()) {
-                     this._setFields(value);
-                  }
-                  else {
-                     this._onFatalError(value);
-                  }
+                  (fields.isSuccessful() ? success : fail)(value);
                }
             }
             this._bindEvents();
@@ -286,23 +291,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
          },
 
          /*
-          * При получении фатальной ошибки
-          *
-          * @protected
-          * @param {Error|string} err Ошибка
-          */
-         _onFatalError: function (err) {
-            var floatArea = this.getParent();
-            Area.showMessage(
-               'error',
-               rk('Ошибка', 'НастройщикИмпорта'),
-               ((err && err.message ? err.message : err) || rk('При получении данных поизошла неизвестная ошибка', 'НастройщикИмпорта')) +
-                  '<br/>' + rk('Настройка импорта будет прервана', 'НастройщикИмпорта')
-            )
-               .addCallback(floatArea.close.bind(floatArea));
-         },
-
-         /*
           * Установить полный набор полей, к которым должны быть привязаны импортируемые данные
           *
           * @protected
@@ -347,7 +335,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             var promise = new Deferred();
 
             // TODO: Реализовать проверку, пока два пункта: fileds:required и предупреждение на baseParams:replaceAllData
-            promise.dependOn(Area.showMessage('confirm', rk('Проверка связи', 'НастройщикИмпорта'), rk('Всё нормально?', 'НастройщикИмпорта')));//^^^
+            //promise.dependOn(Area.showMessage('confirm', rk('Проверка связи', 'НастройщикИмпорта'), rk('Всё нормально?', 'НастройщикИмпорта')));//^^^
+            promise.callback(true);//^^^
 
             return promise;
          },
@@ -389,7 +378,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   this._notify('onComplete', data);
                }
                /*else {
-                  this._notify('onClose');
+                  // Иначе пользователь продолжает редактирование
                }*/
             }.bind(this));
          },
@@ -487,11 +476,15 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                }
             }
             return values;
-         }//,
+         },
 
-         /*destroy: function () {
+         destroy: function () {
             Area.superclass.destroy.apply(this, arguments);
-         }*/
+            var fieldsPromise = this._fieldsPromise;
+            if (fieldsPromise && !fieldsPromise.isReady()) {
+               fieldsPromise.cancel();
+            }
+         }
       });
 
 

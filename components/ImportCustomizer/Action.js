@@ -152,7 +152,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                   function (data) {
                      this._open(cMerge(opts, data));
                   }.bind(this),
-                  this._result.errback.bind(this._result)
+                  this._completeWithError.bind(this, true)
                );
             }
             else {
@@ -276,7 +276,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                sheets: sheets,
                sheetIndex: sheetIndex,
                handlers: {
-                  onComplete: this._onAreaComplete.bind(this)
+                  onComplete: this._onAreaComplete.bind(this),
+                  onFatalError: this._onAreaError.bind(this)
                }
             };
             if (baseParamsComponent) {
@@ -320,18 +321,19 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {object} data Данные события
           */
          _onAreaComplete: function (evtName, data) {
-            var result = this._result;
-            var resultHandler = this._resultHandler;
-            this._result = null;
-            this._resultHandler = null;
-            this._areaContainer.close();
-            if (resultHandler) {
-               result.dependOn(resultHandler(data));
-            }
-            else {
-               result.callback(data);
-            }
-            //this._notify('onComplete');
+            this._complete(true, data);
+         },
+
+         /*
+          * Обработчик события "onFatalError"
+          *
+          * @protected
+          * @param {Core/EventObject} evtName Дескриптор события
+          * @param {boolean} withAlert Показать пользователю предупреждение об ошибке
+          * @param {Error|string} err Ошибка
+          */
+         _onAreaError: function (evtName, withAlert, err) {
+            this._completeWithError(withAlert, err);
          },
 
          /*
@@ -345,10 +347,59 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                this._areaContainer.destroy();
                this._areaContainer = null;
             }
-            if (this._result) {
-               this._result.callback(null);
-               this._result = null;
-               this._resultHandler = null;
+            var result = this._result;
+            this._result = null;
+            this._resultHandler = null;
+            if (result) {
+               result.callback(null);
+            }
+         },
+
+         /*
+          * Завершить работу и вернуть результат
+          *
+          * @protected
+          * @param {object} isSuccess Завершение является успешным, не ошибочным
+          * @param {object} outcome Результат
+          */
+         _complete: function (isSuccess, outcome) {
+            var result = this._result;
+            var resultHandler = isSuccess ? this._resultHandler : undefined;
+            this._result = null;
+            this._resultHandler = null;
+            this._areaContainer.close();
+            if (isSuccess) {
+               if (resultHandler) {
+                  result.dependOn(resultHandler(outcome));
+               }
+               else {
+                  result.callback(outcome);
+               }
+            }
+            else {
+               result.errback(outcome);
+            }
+         },
+
+         /*
+          * Завершить работу при возникновении ошибки
+          *
+          * @protected
+          * @param {boolean} withAlert Показать пользователю предупреждение об ошибке
+          * @param {Error|string} err Ошибка
+          */
+         _completeWithError: function (withAlert, err) {
+            if (withAlert) {
+               Area.showMessage(
+                  'error',
+                  rk('Ошибка', 'НастройщикИмпорта'),
+                  ((err && err.message ? err.message : err) || rk('При получении данных поизошла неизвестная ошибка', 'НастройщикИмпорта')) +
+                  '<br/>' + rk('Настройка импорта будет прервана', 'НастройщикИмпорта')
+               )
+                  .addCallback(this._complete.bind(this, false, err));
+            }
+            else {
+               this._complete(false, err);
             }
          },
 
