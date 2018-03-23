@@ -115,6 +115,7 @@ define('SBIS3.CONTROLS/ListView',
        * @mixes SBIS3.CONTROLS/Mixins/DragNDropMixin
        * @mixes SBIS3.CONTROLS/ListView/resources/CommonHandlers
        *
+       * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
        * @cssModifier controls-ListView__orangeMarker Устанавливает отображение маркера активной строки у элементов списка. Модификатор актуален только для класса SBIS3.CONTROLS.ListView.
        * @cssModifier controls-ListView__showCheckBoxes Устанавливает постоянное отображение чекбоксов для записей списка. Модификатор применяется для режима множественного выбора записей (см. {@link multiselect}).
        * @cssModifier controls-ListView__hideCheckBoxes Скрывает отображение чекбоксов для записей списка, для которого установлен режим множественного выбора записей (см. {@link multiselect}).
@@ -660,7 +661,7 @@ define('SBIS3.CONTROLS/ListView',
                 * // Модификация опций компонента, нужна для передачи обработчиков
                 * _modifyOptions: function() {
                 *    var options = moduleClass.superclass._modifyOptions.apply(this, arguments);
-                *    Serializer.setToJsonForFunction(this._deleteRecord, 'js!SBIS3.Site.MainTable', 'prototype._deleteRecord');
+                *    Serializer.setToJsonForFunction(this._deleteRecord, 'SBIS3/Site/MainTable', 'prototype._deleteRecord');
                 *    options.deleteRecord = this._deleteRecord;
                 *    return options;
                 * }

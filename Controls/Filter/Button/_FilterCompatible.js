@@ -4,12 +4,11 @@
 define('Controls/Filter/Button/_FilterCompatible',
    [
       'Core/core-extend',
-      'Core/moduleStubs',
       'SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil',
       'Controls/Filter/Button/OldPanelOpener'
    ],
    
-   function(extend, moduleStubs, stringTransformer, OldPanelOpener) {
+   function(extend, stringTransformer, OldPanelOpener) {
       
       /**
        * @class Controls/Layout/Search

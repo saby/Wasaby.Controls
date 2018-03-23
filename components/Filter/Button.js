@@ -44,7 +44,7 @@ define('SBIS3.CONTROLS/Filter/Button',
         * @mixes SBIS3.CONTROLS/Mixins/FilterMixin
         * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
         *
-        * @demo SBIS3.DOCS.FilterButton
+        * @demo Examples/FilterButton/FilterButton/FilterButton
         *
         * @control
         * @public

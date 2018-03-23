@@ -70,7 +70,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
        * @cssModifier controls-ScrollContainer__hiddenScrollbar Скрывает отображение ползунка.
        * @cssModifier controls-ScrollContainer__flex Модификатор применяется в тех случаях, когда контрол встроен внутрь flex-контейнера.
        *
-       * @demo SBIS3.CONTROLS.Demo.MyScrollContainer Использование SBIS3.CONTROLS/ScrollContainer с автоподгрузкой вниз и с вложенным в него списком, который создан на основе класса {@link SBIS3.CONTROLS/ListView}.
+       * @demo Examples/ScrollContainer/MyScrollContainer/MyScrollContainer Использование SBIS3.CONTROLS/ScrollContainer с автоподгрузкой вниз и с вложенным в него списком, который создан на основе класса {@link SBIS3.CONTROLS/ListView}.
        *
        * @control
        * @public

@@ -1,7 +1,7 @@
 define('Controls/Popup/Opener/Dialog',
    [
       'Controls/Popup/Opener/Base',
-      'Controls/Popup/Opener/Dialog/Strategy'
+      'Controls/Popup/Opener/Dialog/DialogController'
 
    ],
    function (Base, Strategy) {

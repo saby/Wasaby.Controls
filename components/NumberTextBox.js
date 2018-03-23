@@ -28,7 +28,7 @@ define('SBIS3.CONTROLS/NumberTextBox', [
     * @class SBIS3.CONTROLS/NumberTextBox
     * @extends SBIS3.CONTROLS/TextBox
     * @author Зайцев А.С.
-    * @demo SBIS3.CONTROLS.Demo.MyNumberTextBox
+    * @demo Examples/NumberTextBox/MyNumberTextBox/MyNumberTextBox
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol textTransform
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment

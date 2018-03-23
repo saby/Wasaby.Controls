@@ -5,7 +5,6 @@ define('Controls/Filter/Button/OldPanelOpener',
       "tmpl!SBIS3.CONTROLS/Filter/Button/FilterComponentTemplate",
       "SBIS3.CONTROLS/Mixins/FilterMixin",
       "SBIS3.CONTROLS/Mixins/PickerMixin",
-      "SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil",
       'SBIS3.CONTROLS/Utils/TemplateUtil',
       "SBIS3.CONTROLS/Utils/FilterPanelUtils",
       "Controls/Filter/Button/converterFilterStructure",
@@ -19,7 +18,6 @@ define('Controls/Filter/Button/OldPanelOpener',
       dotTplForComp,
       FilterMixin,
       PickerMixin,
-      FilterToStringUtil,
       TemplateUtil,
       FilterPanelUtils,
       converterFilterStructure
@@ -37,7 +35,7 @@ define('Controls/Filter/Button/OldPanelOpener',
        * @mixes SBIS3.CONTROLS/Mixins/FilterMixin
        * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
        *
-       * @demo SBIS3.DOCS.FilterButton
+       * @demo Examples/FilterButton/FilterButton/FilterButton
        *
        * @control
        * @public

@@ -29,7 +29,7 @@ define('SBIS3.CONTROLS/Filter/FastData',
        * @mixes SBIS3.CONTROLS/Mixins/ItemsControlMixin
        * @mixes SBIS3.CONTROLS/Mixins/FilterMixin
        *
-       * @demo SBIS3.Demo.Filter.FastDataFilterMultiselect
+       * @demo Examples/Filter/FastDataFilterMultiselect/FastDataFilterMultiselect
        *
        * @cssModifier controls-FastDataFilter__resize Позволяет управлять шириной выпадающих списков, вписывая их по размеру в контейнер.
        *

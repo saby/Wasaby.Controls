@@ -24,7 +24,7 @@ define('SBIS3.CONTROLS/Action/List/Sum', [
          * @mixes SBIS3.CONTROLS/Action/List/Mixin/ListMixin
          * @mixes SBIS3.CONTROLS/Action/Mixin/DialogMixin
          *
-         * @demo SBIS3.CONTROLS.Demo.SumAction
+         * @demo Examples/OperationsPanel/OperationSum/SumAction
          *
          * @ignoreOptions validators independentContext contextRestriction extendedTooltip
          *

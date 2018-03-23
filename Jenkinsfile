@@ -1,6 +1,6 @@
 #!groovy
 echo "Задаем параметры сборки"
-def version = "3.18.150"
+def version = "3.18.200"
 if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
         currentBuild.result = 'ABORTED'
         error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
@@ -395,7 +395,6 @@ node('controls') {
             BASE_VERSION = css_${NODE_NAME}${ver}1
             DO_NOT_RESTART = True
             SOFT_RESTART = True
-			TAGS_TO_START = ws.data
             NO_RESOURCES = True
             DELAY_RUN_TESTS = 2
             TAGS_NOT_TO_START = iOSOnly, todomvc, tabmessage

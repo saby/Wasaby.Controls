@@ -593,10 +593,10 @@ define('SBIS3.CONTROLS/DataGridView',
              * @example
              * 1. Подключаем шаблон в массив зависимостей:
              * <pre>
-             *     define('js!SBIS3.Demo.nDataGridView',
+             *     define('SBIS3/Demo/nDataGridView',
              *        [
              *           ...,
-             *           'html!SBIS3.Demo.nDataGridView/resources/resultTemplate'
+             *           'html!SBIS3/Demo/nDataGridView/resources/resultTemplate'
              *        ],
              *        ...
              *     );

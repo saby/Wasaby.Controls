@@ -12,10 +12,6 @@ define(
             id,
             items = new List(),
             popupContainer = new Container();
-         it('initialize', function(){
-            assert.equal(popupContainer._popupItems.getCount(), 0);
-            assert.equal(popupContainer._overlayId, null);
-         });
 
          it('add popupItem', function(){
             id = Random.randomId('popup-');

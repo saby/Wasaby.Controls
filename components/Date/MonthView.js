@@ -33,7 +33,7 @@ define(
        * @control
        * @public
        * @author Миронов А.Ю.
-       * @demo SBIS3.CONTROLS.Demo.MyMonthView
+       * @demo Examples/MonthView/MyMonthView/MyMonthView
        *
        * @mixes SBIS3.CONTROLS/Mixins/RangeSelectableViewMixin
        * @mixes SBIS3.CONTROLS/Mixins/RangeMixin
