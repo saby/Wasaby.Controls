@@ -5,12 +5,12 @@
          <!--Стрелка отображается всегда - это не по стандарту!-->
          <div class="controls-FastData__block"
               on:click="_open(i, index)">
-            <span class="controls-FastData__icon icon-DayForward controls-FastData__icon-DayForward"></span>
+            <span class="controls-FastData__iconArrow icon-DayForward"></span>
             <div class="controls-Dropdown__text">{{_updateText(i, index, _selectedItems[key], displayProperty || 'title')}}
             </div>
          </div>
-         <ws:if data="{{_selectedIndexes[index]}}">
-         <span class="controls-FastData__icon icon-Close icon-disabled"
+         <ws:if data="{{_configs[index].value}}">
+         <span class="controls-FastData__iconReset icon-Close icon-disabled"
                on:click="_reset(i, index)"></span>
          </ws:if>
       </div>
