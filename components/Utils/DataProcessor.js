@@ -173,7 +173,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
             rawData  = {s : [], d : []},
             parsedColumns;
          if (!cfg) {
-            parsedColumns = this._preapreColumns(columns);
+            parsedColumns = this._prepareColumns(columns);
 
             //TODO после метода filter сейчас dataSet возвращает getRawData = null, ошибка выписана, после исправления просто передать рекордсет
             //и перевести на SbisService.call
@@ -285,7 +285,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
             openedPath,
             hierField;
 
-         parsedColumns = this._preapreColumns(columns);
+         parsedColumns = this._prepareColumns(columns);
          //openedPath[key] = true;
          filter = coreClone(this._options.filter || {});
          if (this._options.hierField !== undefined){
@@ -321,7 +321,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
          return cfg;
       },
 
-      _preapreColumns: function(columns) {
+      _prepareColumns: function(columns) {
          var result = {
             fields: [],
             titles: []
