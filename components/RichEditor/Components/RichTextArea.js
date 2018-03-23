@@ -1244,8 +1244,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          // Добавление и удаление кастомизируемой цитаты
          setCustomBlockquote: function() {
             var
-               selectionContent = (this._tinyEditor.selection.getNode());
-            this._tinyEditor.formatter.toggle('customBlockquote', selectionContent);
+               $selectionContent = $(this._tinyEditor.selection.getNode());
+            this._tinyEditor.formatter.toggle('customBlockquote', $selectionContent);
          },
 
          /**
