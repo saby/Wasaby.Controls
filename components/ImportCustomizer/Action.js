@@ -148,43 +148,20 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             var opts = inputCall || outputCall ? Object.keys(options).reduce(function (r, v) { if (v !== 'inputCall' && v !== 'outputCall') { r[v] = options[v]; }; return r; }, {}) : options;
             this._result = new Deferred();
             if (inputCall) {
-               this._beforeOpen(inputCall, opts);
+               inputCall.call(opts).addCallbacks(
+                  function (data) {
+                     this._open(cMerge(opts, data));
+                  }.bind(this),
+                  this._result.errback.bind(this._result)
+               );
             }
             else {
                this._open(opts);
             }
             if (outputCall) {
-               this._resultHandler = this._afterOpen.bind(this, outputCall);
+               this._resultHandler = outputCall.call.bind(outputCall);
             }
             return this._result;
-         },
-
-         /**
-          * Вызвать метод удалённого сервиса для получения недостающих данных ввода, и затем вызвать метод {@link _open}
-          *
-          * @protected
-          * @param {RemoteCall} call Вызов метода удалённого сервиса для получения данных ввода
-          * @param {object} options Входные аргументы("мета-данные") настройщика импорта (согласно описанию в методе {@link execute})
-          */
-         _beforeOpen: function (call, options) {
-            call.call(options).addCallbacks(
-                  function (data) {
-                     this._open(cMerge(options, data));
-                  }.bind(this),
-                  this._result.errback.bind(this._result)
-               );
-         },
-
-         /**
-          * Вызвать метод удалённого сервиса для отправки полученных выходных данных
-          *
-          * @protected
-          * @param {RemoteCall} call Вызов метода удалённого сервиса для отправки выходных данных
-          * @param {object} result Выходные данные настройщика импорта
-          * @return {Core/Deferred}
-          */
-         _afterOpen: function (call, result) {
-            return call.call(result)
          },
 
          /**
