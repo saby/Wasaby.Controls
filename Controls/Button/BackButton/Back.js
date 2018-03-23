@@ -1,5 +1,9 @@
-define('Controls/Button/Back', [
-], function() {
+define('Controls/Button/BackButton/Back', [
+   'Core/Control',
+   'Core/IoC',
+   'tmpl!Controls/Button/BackButton/Back',
+   'css!Controls/Button/BackButton/Back'
+], function(Control, IoC, template) {
 
    /**
     * Кнопка "Назад"
@@ -12,5 +16,11 @@ define('Controls/Button/Back', [
     * @public
     * @category Button
     */
+
+   var BackButton = Control.extend({
+      _template: template
+   });
+
+   return BackButton;
 
 });
