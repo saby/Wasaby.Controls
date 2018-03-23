@@ -63,8 +63,8 @@ define('Controls/Header', [
    /**
     * @name Controls/Header#counterSize
     * @cfg {String} размер счетчика
-    * @variant h7 14px
-    * @variant h6 15px
+    * @variant s 14px
+    * @variant default 15px
     */
 
    /**
@@ -200,8 +200,8 @@ define('Controls/Header', [
             'disabled'
          ]),
          counterSize: types(String).oneOf([
-            'h6',
-            'h7'
+            'default',
+            's'
          ]),
          countClickable: types(Boolean),
          size: types(String).oneOf([
