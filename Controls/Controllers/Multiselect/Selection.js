@@ -10,7 +10,11 @@ define('Controls/Controllers/Multiselect/Selection', [
 ) {
    'use strict';
 
-   var ALLSELECTION_VALUE = [null];
+   var ALLSELECTION_VALUE = [null],
+   SELECTION_STATUS = {
+      NOT_SELECTED: 0,
+      SELECTED: 1
+   };
 
    var _private = {
       isAllSelection: function(selectedKeys) {
@@ -83,6 +87,21 @@ define('Controls/Controllers/Multiselect/Selection', [
             selected: this._selectedKeys,
             excluded: this._excludedKeys
          }
+      },
+
+      getSelectionStatus: function(id) {
+         var status = SELECTION_STATUS.NOT_SELECTED;
+         if (_private.isAllSelection(this._selectedKeys)) {
+            if (ArraySimpleValuesUtil.invertTypeIndexOf(this._excludedKeys, id) === -1) {
+               status = SELECTION_STATUS.SELECTED
+            }
+         }
+         else {
+            if (ArraySimpleValuesUtil.invertTypeIndexOf(this._selectedKeys, id) > -1) {
+               status = SELECTION_STATUS.SELECTED
+            }
+         }
+         return status;
       },
 
       destroy: function() {
