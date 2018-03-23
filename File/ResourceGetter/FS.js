@@ -1,50 +1,37 @@
 /// <amd-module name="File/ResourceGetter/FS" />
-define("File/ResourceGetter/FS", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "tmpl!File/ResourceGetter/FS", "File/utils/ExtensionsHelper", "Core/detection"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, dotTpl, ExtensionsHelper, detection) {
+define("File/ResourceGetter/FS", ["require", "exports", "tslib", "File/ResourceGetter/Base", "Core/Deferred", "File/utils/ExtensionsHelper"], function (require, exports, tslib_1, IResourceGetterBase, Deferred, ExtensionsHelper) {
     "use strict";
-    var AFTER_CLOSE_DELAY = 2000;
+    var SEC = 1000;
+    var MIN = 60 * SEC;
+    var AFTER_FOCUS_DELAY = 2 * MIN;
     /**
      * Детектим отмену выбора файлов пользователем
      * @param {Function} handler
      */
-    var onClose = function (handler) {
-        /*
-         * Различные модели телефонов могут стрелять onChange с большой задержкой при выборе нескольких файлов
-         * и для них опасно стрелять Deferred.cancel по какому-то таймауту
-         * поэтому, если пользователь отменил выбор файлов на мобилке, оставим подвисший Deferred
-         * то тех пор, пока не будет позван метод получения файлов ещё раз, либо не вызовется destroy метод
-         * как доставерные показатели, что предыдущее окно было закрыто
-         */
-        if (detection.isMobilePlatform) {
-            return;
-        }
+    var setTimeoutAfterFocus = function (handler) {
+        var timeout;
         /*
          * Ловим получение фокуса страницой, как признак того, что окно выбора закрылось
-         * Для этого ожидаем событие focusin - если браузер стреляет событие при закрытии окна (Chromium, Edge, IE)
-         *
-         * Firefox и Safari не стреляют focusin при закрытии окна, поэтому у них Deferred.cancel вызовится после нажатии
-         * в область DOM, которая не была в фокусе до открытия окна выбора.
-         * Это можно было покрыть событием mouseover, но неокоторые браузеры (включая Safari)
-         * стреляют им при открытом окне выбора файлов
          */
-        var focus = function () {
-            // Фокус поймаем раньше, чем файлы появятся в input и тот стрельнёт onChange
-            // поэтому с небольшой задержкой стреляем отмену Deferred'а, если нету файлов и он ещё не стрельнувший
-            setTimeout(handler, AFTER_CLOSE_DELAY);
+        var focus = function (event) {
+            timeout = setTimeout(handler, AFTER_FOCUS_DELAY);
             document.removeEventListener("focusin", focus);
         };
         /*
-         * навешивание обработчиков фокуса вынесем в асинхронную функцию:
+         * Навешивание обработчиков фокуса вынесем в асинхронную функцию:
          * Lib/Control/Control при клике на кнопку может отдать фокус другому контролу
          * в зависимости от опции activableByClick
          * но сделает это синхронно
          *
          * Если же не выносить через setTimeout то можем получить ситуацию, когда окошко выбора файлов открывается,
-         * а фокус в этот момет придёт другому контролу и обработчик сработает,
-         * а мы соответственно будем бумать, что окно закрылось
+         * а фокус в этот момет придёт другому контролу и обработчик сработает, а мы соответственно будем бумать, что окно закрылось
          */
         setTimeout(function () {
             document.addEventListener("focusin", focus);
         }, 0);
+        return function () {
+            clearTimeout(timeout);
+        };
     };
     var OPTION = {
         /**
@@ -80,21 +67,34 @@ define("File/ResourceGetter/FS", ["require", "exports", "tslib", "File/ResourceG
          */
         element: null
     };
+    var createInput = function (_a) {
+        var parent = _a.parent, mime = _a.mime, multiSelect = _a.multiSelect;
+        var input = document.createElement("input");
+        input.setAttribute("type", "file");
+        input.setAttribute("name", "file1");
+        input.classList.add("ws-hidden");
+        if (mime) {
+            input.setAttribute("accept", mime);
+        }
+        if (multiSelect) {
+            input.setAttribute("multiple", "true");
+        }
+        if (!(parent instanceof HTMLElement)) {
+            parent = document.body;
+        }
+        parent.appendChild(input);
+        return input;
+    };
     /**
-     * Класс, реализующий интерфейс получения файлов IResourceGetter через нативное окошко
+     * Класс, реализующий интерфейс получения файлов {@link File/IResourceGetter} через нативное окошко
      *
      * В связи с политиками безопасности браузеров для выбора файла необходимо:
      * <ul>
-     * <li>
-     *     Экземпляр класса должен быть подготовлен заранее, т.к. input-элемент должен находиться в DOM до начала операции.
-     * </li>
-     * <li>
-     *     Наличие пользовательского события
-     * </li>
-     * <li>
-     *     Между пользовательским событием и вызовом метода .getFiles() не должно быть ленивых подгрузок модулей,
-     *     а также вызовов БЛ
-     * </li>
+     *      <li> Наличие пользовательского события</li>
+     *      <li>
+     *          Между пользовательским событием и вызовом метода .getFiles() не должно быть ленивых подгрузок модулей,
+     *          вызовов БЛ, либо других асинхронных операций
+     *      </li>
      * </ul>
      *
      * @class
@@ -109,27 +109,8 @@ define("File/ResourceGetter/FS", ["require", "exports", "tslib", "File/ResourceG
             var _this = _super.call(this) || this;
             _this.name = "FS";
             _this._options = Object.assign({}, OPTION, cfg);
-            var container;
-            container = _this._options.element;
-            if (!(container instanceof HTMLElement)) {
-                container = document.body;
-            }
-            var element = document.createElement("div");
-            element.innerHTML = dotTpl(_this._options);
-            container.appendChild(element);
-            _this._form = element.querySelector("form");
-            _this._inputBtn = _this._form.querySelector("input[type=file]");
-            _this._inputBtn.onchange = function () {
-                _this._onChangeInput(_this._inputBtn.files);
-            };
-            if (_this._options.multiSelect) {
-                _this._inputBtn.setAttribute("multiple", "true");
-            }
             _this._extensions = new ExtensionsHelper(_this._options.extensions);
-            var mime = _this._extensions.getMimeString();
-            if (mime) {
-                _this._inputBtn.setAttribute("accept", mime);
-            }
+            _this._mime = _this._extensions.getMimeString();
             return _this;
         }
         /**
@@ -147,25 +128,47 @@ define("File/ResourceGetter/FS", ["require", "exports", "tslib", "File/ResourceG
             if (this.isDestroy()) {
                 return Deferred.fail("Resource getter is destroyed");
             }
-            if (this._selectDef) {
-                /*
-                 * сюда попадём, если не успели поймать фокус и обработать закрытие окна
-                 * например: клик по кнопке выбора -> esc -> клик по кнопке выбора
-                 */
-                this._selectDef.cancel();
-            }
-            var def;
-            def = this._selectDef = new Deferred();
-            // Перестает стрелять change'ом если выбрать тот же файл, поэтому зануляем форму перед кликом
-            this._form.reset();
-            // Детектим отмену выбора файлов пользователем
-            onClose(function () {
-                if (!def.isReady() && !_this._inputBtn.files.length) {
+            /**
+             * Между выбором пользователем файлов и срабатыванием события о выборе (фактическом попадании сущности FileList
+             * внутрь input) есть некий промежуток времени, который
+             * а) может зависить от количества и размера выбранных файлов
+             * б) зависит от типа и вычеслительных возможностей устройств
+             *
+             * Цифра может колебляться от 2мс до 2с, однако если браузер поймает фриз, она переваливает
+             * Этот плавающий показатель не даёт нам вовремя понимать, где пользователь просто загрыл окно выбора,
+             * а где именно этот промежуток до события onchange.
+             *
+             * Поэтому убиваем deferred из памяти только через пару минут
+             *
+             * А чтобы не было проблем, когда пользователь открыл откно - отменил - снова открыл, пока мы не убедились,
+             * что предыдущее окно было реально отменено, создаём каждый раз новый input под каждый deferred
+             * и зачищаем его после работы
+             */
+            var input = createInput({
+                mime: this._mime,
+                multiSelect: this._options.multiSelect,
+                parent: this._options.element
+            });
+            var def = new Deferred();
+            // убираем отработанные input'ы
+            def.addBoth(function (result) {
+                input.remove && input.remove();
+                return result;
+            });
+            // Убиваем из памяти отменённый deferred
+            var clearTimeout = setTimeoutAfterFocus(function () {
+                if (!def.isReady()) {
                     def.cancel();
-                    _this._selectDef = null;
                 }
             });
-            this._inputBtn.click();
+            // Заускаем deferred по событию
+            input.onchange = function () {
+                // timeout для уже не нужен
+                clearTimeout();
+                var selectedFiles = input.files;
+                def.callback(_this._extensions.verifyAndReplace(selectedFiles));
+            };
+            input.click();
             return def;
         };
         /**
@@ -176,33 +179,6 @@ define("File/ResourceGetter/FS", ["require", "exports", "tslib", "File/ResourceG
          */
         FS.prototype.canExec = function () {
             return Deferred.success(!this.isDestroy());
-        };
-        /**
-         * Обработчик события выбора файла в input
-         * @param {FileList} selectedFiles
-         * @private
-         * @method
-         * @name File/ResourceGetter/FS#_onChangeInput
-         * @void
-         */
-        FS.prototype._onChangeInput = function (selectedFiles) {
-            if (this.isDestroy()) {
-                return;
-            }
-            this._selectDef.callback(this._extensions.verifyAndReplace(selectedFiles));
-            this._selectDef = null;
-        };
-        FS.prototype.destroy = function () {
-            if (this.isDestroy()) {
-                return;
-            }
-            this._form.remove && this._form.remove();
-            this._form = null;
-            this._inputBtn = null;
-            if (this._selectDef && !this._selectDef.isReady()) {
-                this._selectDef.cancel();
-            }
-            _super.prototype.destroy.call(this);
         };
         return FS;
     }(IResourceGetterBase));
