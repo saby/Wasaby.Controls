@@ -241,9 +241,14 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                var sheets = options.sheets;
                views.columnBinding.setValues(cMerge({rows:sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows}, nextResult.columnBinding));
             }.bind(this));
-            /*this.subscribeTo(this._views.baseParams, 'change', function (evtName, values) {
-               // Изменились параметры импортирования
-            }.bind(this));*/
+            this.subscribeTo(this._views.baseParams, 'change', function (evtName, values) {
+               // Изменились основные параметры импортирования
+               var fields = values.fields;
+               if (fields) {
+                  this._options.fields = fields;
+                  this._views.columnBinding.setValues({fields:fields});
+               }
+            }.bind(this));
             this.subscribeTo(this._views.provider, 'change', function (evtName, values) {
                // Изменился выбор провайдера парсинга
                var sheetIndex = this._options.sheetIndex;
@@ -287,13 +292,14 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @param {Error|string} err Ошибка
           */
          _onFatalError: function (err) {
+            var floatArea = this.getParent();
             Area.showMessage(
                'error',
                rk('Ошибка', 'НастройщикИмпорта'),
                ((err && err.message ? err.message : err) || rk('При получении данных поизошла неизвестная ошибка', 'НастройщикИмпорта')) +
-                  '<br/>' + rk('Настройка импорта будет закрыты', 'НастройщикИмпорта')
-            );
-            this.getParent().close();
+                  '<br/>' + rk('Настройка импорта будет прервана', 'НастройщикИмпорта')
+            )
+               .addCallback(floatArea.close.bind(floatArea));
          },
 
          /*
@@ -326,7 +332,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                throw new Error('Wrong fields parentProperty');
             }
             this._options.fields = fields;
-            this._views.baseParams.setValues({fields:fields});
+            //this._views.baseParams.setValues({fields:fields});
             this._views.columnBinding.setValues({fields:fields});
          },
 
