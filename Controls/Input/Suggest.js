@@ -77,6 +77,7 @@ define('Controls/Input/Suggest',
                textComponent:       self._children.suggestText,
                
                suggestTemplate:     options.suggestTemplate,
+               emptyTemplate:       options.emptyTemplate,
                dataSource:          options.dataSource,
                filter:              options.filter,
                minSearchLength:     options.minSearchLength,
@@ -137,7 +138,7 @@ define('Controls/Input/Suggest',
          _selectHandler: function(item) {
             /* move focus to input after select, because focus will be lost after closing popup  */
             this.focus();
-            this._notify('select', [item]);
+            this._notify('choose', [item]);
             this._notify('valueChanged', [item.get(this._options.displayProperty)]);
          },
          

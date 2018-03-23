@@ -143,8 +143,12 @@
 }
 
 .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
-   &.controls-DataGridView__th__topRow{
+   &.controls-DataGridView__th__topRow {
       text-align: center;
+      padding: @data-grid-header-cell-padding;
+      &.controls-DataGridView__lastContentCell {
+         padding-right: @controls-view-padding-DEFAULT;
+      }
       &.controls-DataGridView__th__topRow-has_text{
          border-bottom: 1px solid transparent;
          padding-bottom: 3px;
@@ -400,12 +404,16 @@
    font-size: @data-grid-header-cell-font-size;
    //выписал еще поручение https://online.sbis.ru/opendoc.html?guid=2a2781e5-bc7b-464f-b183-32317e0b85cc
    line-height: @data-grid-header-cell-sorting-icon-size;
+   width: 100%;
    .controls-Button__icon {
       .icon-size(@font-size_DataGridView-headerIcon);
    }
 
    color: @color_DataGridView-sorting;
    cursor: pointer;
+   .controls-ButtonBase__content {
+      .justify-content(flex-end);
+   }
 
    &:hover {
       color: @color_DataGridView-sorting_hovered;

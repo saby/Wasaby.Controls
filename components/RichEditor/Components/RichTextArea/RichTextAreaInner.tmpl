@@ -2,11 +2,12 @@
 <SBIS3.CONTROLS:ScrollContainer
    class="controls-RichEditor__scrollContainer"
    attributes="{{autoHeight && maximalHeight && maximalHeight != 0 ? {'style':'max-height:' + maximalHeight + 'px;'} }}"
+   takeScrollbarHidden="{{!(autoHeight && maximalHeight == 0)}}"
    >
    <div
       class="controls-RichEditor__dataReview ws-basic-style {{editorConfig.className}}{{enabled ? ' ws-hidden'}}"
       tabindex="1"
-      style="{{autoHeight && minimalHeight && minimalHeight != 0 ? 'min-height:' + minimalHeight + 'px;'}}"
+      style="{{!previewAutoHeight && autoHeight && minimalHeight && minimalHeight != 0 ? 'min-height:' + minimalHeight + 'px;'}}"
       >{{!enabled && text ? (_prepareReviewContent(text)|sanitize)}}</div>
    <div
       class="controls-RichEditor__editorFrame ws-basic-style {{editorConfig.className}}{{!enabled ? ' ws-hidden'}} clearfix"

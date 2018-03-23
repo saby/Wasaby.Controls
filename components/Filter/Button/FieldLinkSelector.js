@@ -66,9 +66,9 @@ define('SBIS3.CONTROLS/Filter/Button/FieldLinkSelector',
                 * @remark
                 * @example
                 * <pre>
-                *   <SBIS3.CONTROLS:Filter:Button:FieldLinkSelector
+                *   <SBIS3.CONTROLS.Filter.Button.FieldLinkSelector
                 *       linkCaption="Выберите профессию"
-                *       fieldLinkSpaceTemplate="js!MyModule/Profession"
+                *       fieldLinkSpaceTemplate="MyModule/Profession"
                 *       selectedKeys="{{'profession'|mutable}}"
                 *       textValue="{{'professionText'|bind}}"
                 *    />

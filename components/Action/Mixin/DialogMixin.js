@@ -38,7 +38,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             /**
              * @cfg {String} Устанавливает шаблон диалога редактирования.
              * @remark
-             * В качестве значения устанавливают имя компонента в виде "js!SBIS3.MyArea.MyName".
+             * В качестве значения устанавливают имя компонента в виде "Examples/MyArea/MyName".
              * Подробнее о создании шаблона читайте в разделе <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/create/">Создание диалога редактирования</a>.
              * @see mode
              */

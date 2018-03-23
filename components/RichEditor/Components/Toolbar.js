@@ -75,7 +75,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                 *          <option name="componentType">SBIS3.CONTROLS/Button</option>
                 *          <option name="icon" >sprite:icon-16 icon-Add icon-primary</option>
                 *          <options name="handlers">
-                *             <option name="onActivated" type="function">js!MyComponentName:prototype.myButtonClick</option>
+                *             <option name="onActivated" type="function">MyComponentName:prototype.myButtonClick</option>
                 *          </options>
                 *       </options>
                 *    </options>

@@ -13,7 +13,7 @@ define('SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row', [
     * @example
     * Рассмотрим пример, как создать свою Drag'n'drop-сущность:
     * <pre>
-    *    defined('js!SBIS3.Demo.DragEntity.Task', ['SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row', 'WS.Data/Di'], function (Row, Di) {
+    *    defined('Examples/Demo/DragEntity/Task', ['SBIS3.CONTROLS/Mixins/DragAndDropMixin/DragEntity/Row', 'WS.Data/Di'], function (Row, Di) {
     *       var Task = Row.extend({
     *          $protected: {
     *             _options: {

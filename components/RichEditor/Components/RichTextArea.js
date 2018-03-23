@@ -144,6 +144,16 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                 */
                maximalHeight: 300,
                /**
+                * @cfg {Boolean} При включенном режиме автовысоты (autoHeight==true) позволяет оставлять сбодной высоту области просмотра в задизейбленном состоянии редактора
+                * <wiTag group="Управление">
+                * Режим автовысоты области просмотра текстового редактора.
+                * @example
+                * <pre>
+                *     <option name="previewAutoHeight">true</option>
+                * </pre>
+                */
+               previewAutoHeight: false,
+               /**
                 * @cfg {Object} Объект с настройками для tinyMCE
                 * <wiTag group="Управление">
                 *
@@ -1111,13 +1121,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                               onActivated: function () {
                                  var parent = this.getParent();
                                  var href = parent._hrefInput.getValue();
-                                 var caption = parent._captionInput.getValue();
+                                 var caption = parent._captionInput.getValue() || href;
                                  var protocol = /(?:https?|ftp|file):\/\//gi;
                                  if (href && href.search(protocol) === -1) {
                                     href = 'http://' + href;
-                                 }
-                                 if (!caption) {
-                                    caption = origCaption || href;
                                  }
                                  var dom = editor.dom;
                                  var done;
@@ -1127,9 +1134,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                           target: '_blank',
                                           href: escapeHtml(href)
                                        });
-                                       element.innerHtml = caption;
+                                       element.innerHTML = escapeHtml(caption);
+                                       selection.select(element);
                                     }
-                                 else {
+                                    else {
                                        editor.execCommand('unlink');
                                     }
                                     done = true;
@@ -1398,8 +1406,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                new Dialog({
                   name: 'imagePropertiesDialog',
                   template: 'SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog',
-                  selectedImage: $image,
-                  editorWidth: self._inputControl.width(),
+                  parent: self,
+                  componentOptions: {
+                     selectedImage: $image,
+                     editorWidth: self._inputControl.width(),
+                  },
                   handlers: {
                      onBeforeShow: function () {
                         CommandDispatcher.declareCommand(this, 'saveImage', function () {
@@ -1427,6 +1438,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                            });
                            editor.undoManager.add();
                         }.bind(this));
+                     },
+                     onAfterShow: function () {
+                        self._notify('onImagePropertiesDialogOpen');
                      }
                   }
                });
@@ -2172,8 +2186,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._imageOptionsPanel.subscribe('onTemplateChange', function(event, template){
                   self._changeImageTemplate(this.getTarget(), template);
                });
-               this._imageOptionsPanel.subscribe('onImageSizeChange', function(){
+               this._imageOptionsPanel.subscribe('onImageSizeChange', function (evt) {
+                  var promise = new Deferred();
+                  self.subscribeOnceTo(self, 'onImagePropertiesDialogOpen', promise.callback.bind(promise));
                   self._showImagePropertiesDialog(this.getTarget());
+                  evt.setResult(promise);
                });
             } else {
                this._imageOptionsPanel.setTarget(target);
@@ -2323,24 +2340,26 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          },
 
          _applyEnabledState: function (enabled) {
-            var container = this._tinyEditor ? this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl : this._inputControl;
+            var container = this._tinyEditor && this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl;
             var options = this._options;
             if (options.autoHeight) {
                this._scrollContainer.css('max-height', this._cleanHeight(options.maximalHeight) || '');
-               if (this._dataReview) {
-                  this._dataReview.css('min-height', this._cleanHeight(options.minimalHeight) || '');
+               // Минимальную высоту области просмотра нужно фиксировать только в отсутствии опции previewAutoHeight
+               // 1175020199 https://online.sbis.ru/opendoc.html?guid=ff26541b-4dce-4df3-8b04-1764ee9b1e7a
+               // 1175043073 https://online.sbis.ru/opendoc.html?guid=69a945c9-b517-4056-855a-6dec71d81823
+               if (this._dataReview && !options.previewAutoHeight) {
+                  this._dataReview.css('min-height', enabled ? '' : this._cleanHeight(options.minimalHeight) || '');
                }
             }
             else {
                if (this._dataReview) {
-                  this._dataReview.css('min-height', this._scrollContainer.height() /*- constants.dataReviewPaddings*/);//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
+                  this._dataReview.css('min-height', enabled ? '' : this._scrollContainer.height());
                }
             }
             if (this._dataReview) {
-               this._updateDataReview(this.getText() || '');
+               this._updateDataReview(this.getText() || '', !enabled);
                this._dataReview.toggleClass('ws-hidden', enabled);
             }
-
             container.toggleClass('ws-hidden', !enabled);
             this._inputControl.toggleClass('ws-hidden', !enabled);
             //Требуем в будущем пересчитать размеры контрола
@@ -2606,15 +2625,31 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                }
                var contentHeight = content.scrollHeight;
                var isChanged = totalHeight !== this._lastTotalHeight || contentHeight !== this._lastContentHeight;
-               if (isChanged) {
-                  this._container[0].scrollTop = 0;
-                  this._scrollContainer[0].scrollTop = 0;
-               }
+               // При вводе (при переводе на вторую строку) скрол-контейнер немного прокручивается внутри родительского контейнера - вернуть его на место
+               // 1175034880 https://online.sbis.ru/opendoc.html?guid=ea5afa7c-f81d-4e53-9709-e10e3acc51e9
+               this._scrollContainer[0].scrollTop = 0;
                if (cConstants.browser.isIE) {
                   // В MSIE при добавлении новой строки clientHeight и scrollHeight начинают расходиться - нужно их уравнять
                   // 1175015989 https://online.sbis.ru/opendoc.html?guid=d013f54f-683c-465c-b437-6adc64dc294a
                   var diff = contentHeight - content.clientHeight;
                   $content.css('height', 0 < diff ? content.offsetHeight + diff : content.offsetHeight);
+                  if (isChanged) {
+                     var parent = content.parentNode;
+                     if (parent.clientHeight < contentHeight) {
+                        // Также, если прокрутка уже задействована и текущий рэнж находится в самом низу области редактирования. Определяем это по
+                        // расстоянию от нижнего края рэнжа до нижнего края области минус увеличение высоты (diff) и минус нижний отступ области
+                        // редактирования - оно должно быть "небольшим", то есть меньше некоторого порогового значения (2)
+                        var rect0 = content.getBoundingClientRect();
+                        var rect1 = this._tinyEditor.selection.getBoundingClientRect();
+                        if (rect0.bottom - rect1.bottom - diff - parseInt($content.css('padding-bottom')) < 2) {
+                           var scrollTop = parent.scrollHeight - parent.offsetHeight;
+                           if (parent.scrollTop < scrollTop) {
+                              // И если при всём этом область редактирования недопрокручена до самого конца - подскролить её до конца
+                              parent.scrollTop = scrollTop;
+                           }
+                        }
+                     }
+                  }
                }
                if (isChanged) {
                   this._lastTotalHeight = totalHeight;
@@ -2634,8 +2669,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
          //Метод обновляющий значение редактора в задизабленом состоянии
          //В данном методе происходит оборачивание ссылок в <a> или их декорирование, если указана декоратор
-         _updateDataReview: function(text) {
-            if (this._dataReview && !this.isEnabled() && (this._lastReview ==/*Не ===*/ null || this._lastReview !== text)) {
+         _updateDataReview: function(text, isForced) {
+            if (this._dataReview && (!this.isEnabled() || isForced) && (this._lastReview ==/*Не ===*/ null || this._lastReview !== text)) {
                // _lastReview Можно устанавливать только здесь, когда он реально помещается в DOM, (а не в конструкторе, не в init и не в onInit)
                // иначе проверку строкой выше не пройти. (И устанавливаем всегда строкой, даже если пришли null или undefined)
                this._lastReview = text || '';
