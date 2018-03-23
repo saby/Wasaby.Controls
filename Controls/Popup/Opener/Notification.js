@@ -1,7 +1,7 @@
 define('Controls/Popup/Opener/Notification',
    [
       'Controls/Popup/Opener/Base',
-      'Controls/Popup/Opener/Notification/Strategy'
+      'Controls/Popup/Opener/Notification/NotificationController'
 
    ],
    function (Base, Strategy) {
