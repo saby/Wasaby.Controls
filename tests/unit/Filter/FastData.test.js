@@ -27,7 +27,8 @@ define(
                id: 'first',
                idProperty: 'title',
                displayProperty: 'title',
-               selectedIndex: '1',
+               value: 'Россия',
+               resetValue: 'все страны',
                source: {
                   module: 'WS.Data/Source/Memory',
                   options: {
@@ -39,6 +40,7 @@ define(
                id: 'second',
                idProperty: 'title',
                displayProperty: 'title',
+               resetValue: '',
                source: items[0]
             }
          ];
@@ -76,16 +78,6 @@ define(
             });
          });
 
-         it('getElement', function (done) {
-            FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
-               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0), 0).addCallback(function () {
-                  assert.equal(FastData._private.getElement(fastData, 0, 'title'), items[0][1].title);
-                  done();
-               });
-            });
-         });
-
-
          it('update text', function (done) {
             FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
                FastData._private.loadListConfig(fastData, fastData._listConfig.at(0), 0).addCallback(function () {
@@ -100,7 +92,7 @@ define(
            FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
               FastData._private.loadListConfig(fastData, fastData._listConfig.at(0), 0).addCallback(function () {
                  var result = FastData._private.getFilter(fastData);
-                 assert.deepEqual(result, {'first': fastData._configs[0].selectedKeys});
+                 assert.deepEqual(result, {'first': fastData._configs[0].value});
                  done();
               });
            });
