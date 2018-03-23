@@ -117,6 +117,11 @@ define('Controls/Header', [
     * @variant default синяя в теме carry
     */
 
+   /**
+    * @name Controls/Header#commonClick
+    * @cfg {Boolean} если истина, то будет общий ховер у всех элементов
+    */
+
 
    var classesOfIcon = {
       MarkExpandBold: {
@@ -224,7 +229,8 @@ define('Controls/Header', [
          separatorIconStyle: types(String).oneOf([
             'primary',
             'default'
-         ])
+         ]),
+         commonClick: types(Boolean)
       }
    };
 
