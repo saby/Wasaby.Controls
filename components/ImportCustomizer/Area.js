@@ -12,6 +12,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'Core/Deferred',
       'SBIS3.CONTROLS/CompoundControl',
       'SBIS3.CONTROLS/Utils/InformationPopupManager',
+      'WS.Data/Collection/RecordSet',
       'tmpl!SBIS3.CONTROLS/ImportCustomizer/Area',
       'css!SBIS3.CONTROLS/ImportCustomizer/Area',
       'SBIS3.CONTROLS/Button',
@@ -20,7 +21,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       'SBIS3.CONTROLS/ScrollContainer'
    ],
 
-   function (CommandDispatcher, cMerge, Deferred, CompoundControl, InformationPopupManager, dotTplFn) {
+   function (CommandDispatcher, cMerge, Deferred, CompoundControl, InformationPopupManager, RecordSet, dotTplFn) {
       'use strict';
 
       var Area = CompoundControl.extend(/**@lends SBIS3.CONTROLS/ImportCustomizer/Area.prototype*/ {
@@ -105,7 +106,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                 */
                parsers: {},
                /**
-                * @cfg {ImportTargetFields} Полный список полей, к которым должны быть привязаны импортируемые данные
+                * @cfg {ImportTargetFields|Core/Deferred<ImportTargetFields>} Полный набор полей, к которым должны быть привязаны импортируемые данные
                 */
                fields: null,
                /**
@@ -133,6 +134,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                providerArgs: null,
                columnBinding: null
             },
+            // Обещание, разрешаемое полным набором полей (если в опциях они не заданы явно)
+            _fieldsPromise: null,
             // Набор результирующих значений (по обастям данных)
             _results: null
          },
@@ -163,6 +166,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             options._providerArgsComponent = parsers[parserName].component || undefined;
             options._providerArgsOptions = this._getProviderArgsOptions(options, parserName, true);
             options._columnsBindingRows = hasSheets ? sheet.sampleRows : [];
+            var fields = options.fields;
+            if (fields instanceof Deferred) {
+               this._fieldsPromise = fields;
+               options.fields = null;
+            }
             return options;
          },
 
@@ -195,6 +203,21 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                }
                results[''] = cMerge({}, results[1]);
                this._results = results;
+            }
+            var fields = this._fieldsPromise;
+            if (fields) {
+               if (!fields.isReady()) {
+                  fields.addCallbacks(this._setFields.bind(this), this._onFatalError.bind(this));
+               }
+               else {
+                  var value = fields.getResult();
+                  if (fields.isSuccessful()) {
+                     this._setFields(value);
+                  }
+                  else {
+                     this._onFatalError(value);
+                  }
+               }
             }
             this._bindEvents();
          },
@@ -242,7 +265,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                var skippedRows = values.skippedRows;
                result.provider.skippedRows = skippedRows;
                result.columnBinding = cMerge({}, values);
-               result.columnBinding123 = cMerge({}, values);
                this._views.provider.setValues({skippedRows:skippedRows});
             }.bind(this));
          },
@@ -256,6 +278,56 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             // Изменились параметры провайдера парсинга
             var sheetIndex = this._options.sheetIndex;
             this._results[0 <= sheetIndex ? sheetIndex + 1 : ''].providerArgs = cMerge({}, values);
+         },
+
+         /*
+          * При получении фатальной ошибки
+          *
+          * @protected
+          * @param {Error|string} err Ошибка
+          */
+         _onFatalError: function (err) {
+            Area.showMessage(
+               'error',
+               rk('Ошибка', 'НастройщикИмпорта'),
+               ((err && err.message ? err.message : err) || rk('При получении данных поизошла неизвестная ошибка', 'НастройщикИмпорта')) +
+                  '<br/>' + rk('Настройка импорта будет закрыты', 'НастройщикИмпорта')
+            );
+            this.getParent().close();
+         },
+
+         /*
+          * Установить полный набор полей, к которым должны быть привязаны импортируемые данные
+          *
+          * @protected
+          * @param {ImportTargetFields} fields Полный набор полей
+          */
+         _setFields: function (fields) {
+            if (!fields || typeof fields !== 'object') {
+               throw new Error('Wrong fields');
+            }
+            var items = fields.items;
+            if (!items || !(
+                  (Array.isArray(items) && items.every(function (v) { return typeof v === 'object'; })) ||
+                  (items instanceof RecordSet)
+               )) {
+               throw new Error('Wrong fields items');
+            }
+            var idProperty = fields.idProperty;
+            if (Array.isArray(items) ? (!idProperty || typeof idProperty !== 'string') : (idProperty && typeof idProperty !== 'string')) {
+               throw new Error('Wrong fields idProperty');
+            }
+            var displayProperty = fields.displayProperty;
+            if (!displayProperty || typeof displayProperty !== 'string') {
+               throw new Error('Wrong fields displayProperty');
+            }
+            var parentProperty = fields.parentProperty;
+            if (parentProperty && typeof parentProperty !== 'string') {
+               throw new Error('Wrong fields parentProperty');
+            }
+            this._options.fields = fields;
+            this._views.baseParams.setValues({fields:fields});
+            this._views.columnBinding.setValues({fields:fields});
          },
 
          /*

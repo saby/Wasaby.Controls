@@ -109,7 +109,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {string} [options.baseParamsComponent] Класс компонента для настройки параметров импортирования (опционально)
           * @param {object} [options.baseParams] Опции компонента для настройки параметров импортирования (опционально)
           * @param {object<ImportParser>} options.parsers Список доступных провайдеров парсинга импортируемых данных
-          * @param {ImportTargetFields} options.fields Полный список полей, к которым должны быть привязаны импортируемые данные
+          * @param {ImportTargetFields|Core/Deferred<ImportTargetFields>|ImportRemoteCall} options.fields Полный список полей, к которым должны быть привязаны импортируемые данные. Можкт быть как задано явно, так и указано в виде обещания(Deferred) или вызова метода удалённого сервиса
           * @param {Array<ImportSheet>} options.sheets Список объектов, представляющих имеющиеся области данных
           * @param {number} [options.sheetIndex] Индекс выбранной области данных (опционально)
           * @param {boolean} [options.sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
@@ -246,6 +246,21 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                      throw new Error('Wrong parsers items');
                   }
                }
+            }
+            if (!(fields instanceof Deferred)) {
+               // Проверим, имеет ли fields тип ImportRemoteCall
+               var fieldsCall;
+               try {
+                  fieldsCall = new RemoteCall(fields);
+               }
+               catch (ex) {}
+               if (fieldsCall) {
+                  // Если да, то вызвать метод удалённого сервиса для получения списка полей
+                  fields = fieldsCall.call(options);
+               }
+               /*else {
+                  // иначе это должен быть тип ImportTargetFields, он будет проверен позже, в Area
+               }*/
             }
             var componentOptions = {
                title: options.title,
