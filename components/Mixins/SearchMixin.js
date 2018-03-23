@@ -115,6 +115,10 @@ define('SBIS3.CONTROLS/Mixins/SearchMixin',
             if(text !== this._searchText) {
                this._startSearch(text);
             }
+         },
+         
+         setText: function(text) {
+            SearchMixinUtil.textChangedHandler(this, text);
          }
       },
 
@@ -132,11 +136,7 @@ define('SBIS3.CONTROLS/Mixins/SearchMixin',
          },
          init: function () {
             /* Чтобы была возможность сбросить поиск, если контрол создаётся с уже проставленной опцией text */
-            var text = this.getText();
-            if(text && text.length >= this._options.startCharacter) {
-               this._onResetIsFired = false;
-               this._searchText = text;
-            }
+            SearchMixinUtil.textChangedHandler(this, this.getText());
          }
       },
 
