@@ -3,11 +3,12 @@ define('Controls/Input/Mask',
       'Core/Control',
       'Core/helpers/Object/isEqual',
       'Controls/Input/Mask/ViewModel',
+      'Core/helpers/Function/runDelayed',
       'tmpl!Controls/Input/Mask/Mask',
       'Controls/Input/resources/InputRender/InputRender',
       'tmpl!Controls/Input/resources/input'
    ],
-   function(Control, isEqual, ViewModel, MaskTpl) {
+   function(Control, isEqual, ViewModel, runDelayed, MaskTpl) {
 
       'use strict';
 
@@ -57,38 +58,75 @@ define('Controls/Input/Mask',
        * </pre>
        */
 
-      var Mask = Control.extend({
-         _template: MaskTpl,
+      var
+         _private = {
+            findLastUserEnteredCharPosition: function(value, replacer) {
+               var position = value.indexOf(replacer);
 
-         _viewModel: null,
+               return position === -1 ? value.length - 1 : position;
+            },
+            /**
+             * If there's no symbol at selected position,
+             * set caret to the position following the last user-entered character.
+             * @param input
+             * @param selectedPosition
+             * @param value
+             * @param replacer
+             */
+            setCaretPosition: function(input, selectedPosition, value, replacer) {
+               var position = _private.findLastUserEnteredCharPosition(value, replacer);
 
-         constructor: function(options) {
-            Mask.superclass.constructor.call(this, options);
-
-            this._viewModel = new ViewModel({
-               value: options.value,
-               mask: options.mask,
-               replacer: options.replacer,
-               formatMaskChars: options.formatMaskChars
-            });
+               if (position < selectedPosition) {
+                  input.setSelectionRange(position, position);
+               }
+            }
          },
+         Mask = Control.extend({
+            _template: MaskTpl,
 
-         _beforeUpdate: function(newOptions) {
-            if (!(
-               newOptions.value === this._options.value &&
-               newOptions.mask === this._options.mask &&
-               newOptions.replacer === this._options.replacer &&
-               isEqual(newOptions.formatMaskChars, this._options.formatMaskChars))
-            ) {
-               this._viewModel.updateOptions({
-                  value: newOptions.value,
-                  mask: newOptions.mask,
-                  replacer: newOptions.replacer,
-                  formatMaskChars: newOptions.formatMaskChars
+            _viewModel: null,
+
+            constructor: function(options) {
+               Mask.superclass.constructor.call(this, options);
+
+               this._viewModel = new ViewModel({
+                  value: options.value,
+                  mask: options.mask,
+                  replacer: options.replacer,
+                  formatMaskChars: options.formatMaskChars
+               });
+            },
+
+            _beforeUpdate: function(newOptions) {
+               if (!(
+                  newOptions.value === this._options.value &&
+                  newOptions.mask === this._options.mask &&
+                  newOptions.replacer === this._options.replacer &&
+                  isEqual(newOptions.formatMaskChars, this._options.formatMaskChars))
+               ) {
+                  this._viewModel.updateOptions({
+                     value: newOptions.value,
+                     mask: newOptions.mask,
+                     replacer: newOptions.replacer,
+                     formatMaskChars: newOptions.formatMaskChars
+                  });
+               }
+            },
+
+            _focusinHandler: function() {
+               var
+                  input = this._children.input,
+                  value = this._options.value,
+                  replacer = this._options.replacer;
+
+               /**
+                * At the moment of focus, the selectionEnd property is not set.
+                */
+               runDelayed(function() {
+                  _private.setCaretPosition(input, input.selectionEnd, value, replacer);
                });
             }
-         }
-      });
+         });
 
       Mask.getDefaultOptions = function() {
          return {
@@ -102,6 +140,8 @@ define('Controls/Input/Mask',
             }
          }
       };
+
+      Mask._private = _private;
 
       return Mask;
    });
