@@ -55,7 +55,7 @@ define('Controls/Input/Area', [
       /*
       * Обновляет наличие скролла, в зависимости от того, есть ли скролл на фейковой текст арии
       */
-      needScrollCheck: function(self){
+      updateHasScroll: function(self){
          var fakeArea = self._children.fakeArea;
          var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
 
@@ -72,7 +72,7 @@ define('Controls/Input/Area', [
       /*
        * Обновляет multiline у area
        */
-      updateMultiline: function(self){
+      updateIsMultiline: function(self){
          var fakeArea = self._children.fakeArea;
          var fakeAreaWrapper = self._children.fakeAreaWrapper;
          //Определим количество строк в Area сравнив высоты fakeArea и ее обертки
@@ -103,8 +103,8 @@ define('Controls/Input/Area', [
       _beforeUpdate: function(newOptions) {
          Area.superclass._beforeUpdate.apply(this, arguments);
          _private.setFakeAreaValue(this, newOptions.value);
-         _private.needScrollCheck(this);
-         _private.updateMultiline(this);
+         _private.updateHasScroll(this);
+         _private.updateIsMultiline(this);
       },
 
       _afterUpdate: function(oldOptions) {
@@ -116,8 +116,8 @@ define('Controls/Input/Area', [
 
       _valueChangedHandler: function(e, value){
          _private.setFakeAreaValue(this, value);
-         _private.needScrollCheck(this);
-         _private.updateMultiline(this);
+         _private.updateHasScroll(this);
+         _private.updateIsMultiline(this);
          this._notify('valueChanged', [value]);
       },
 
@@ -141,7 +141,7 @@ define('Controls/Input/Area', [
       },
 
       _scrollHandler: function(){
-         _private.needScrollCheck(this);
+         _private.updateHasScroll(this);
       },
 
       //TODO убрать (и подписку из Area.tmpl) после выполнения ошибки https://online.sbis.ru/opendoc.html?guid=04b9c78b-7237-4c5a-9045-887a170d8427
