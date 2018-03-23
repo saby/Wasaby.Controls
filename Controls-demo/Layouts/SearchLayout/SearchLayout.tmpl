@@ -1,19 +1,31 @@
-<ws:Controls.Layout.Filter attr:class="controls-demo__FilterLayout">
+<Controls.Layout.Filter attr:class="controls-demo__FilterLayout">
     <ws:content>
         <div>
-            <ws:Controls.Layout.Search
+            <Controls.Layout.Search
                     attr:class="controls-demo__SearchLayout"
                     searchParam="title">
                 <ws:content>
                     <div class="controls-demo__SearchLayout_content">
                         <div class="controls-demo__Layouts_content">
                             <div class="controls-demo__Layouts_filterComponents">
-                                <ws:Controls.Input.Search bind:value="_searchValue"/>
+                                <Controls.Input.Search bind:value="_searchValue"/>
+                                <div style="display: flex">
                                 <Controls.Filter.FastData source="{{_filterSource}}"
-                                                          bind:selectedKeys="_selectedKeys"/>
+                                                          bind:value="_value"
+                                items="{{_filterData}}"/>
+                                    <Controls.Filter.Button attr:style="max-width: 200px;" filterTemplate="js!Controls-demo/Layouts/SearchLayout/resources/FBPanelLayout">
+                                        <ws:items>
+                                            <ws:Array>
+                                                <ws:Object id="id" caption="genreTxt"/>
+                                                <ws:Object id="lastName"/>
+                                                <ws:Object id="firstName"/>
+                                            </ws:Array>
+                                        </ws:items>
+                                    </Controls.Filter.Button>
+                                </div>
                             </div>
                             <div class="controls-demo__LayoutInner">
-                                <ws:Controls.Layout.List source="{{_dataSource}}" searchParam="title">
+                                <Controls.Layout.List source="{{_dataSource}}" searchParam="title">
                                     <ws:content>
                                         <div>
                                             <ws:Controls.List idProperty="id" name="list">
@@ -23,9 +35,9 @@
                                                     >
                                                         <ws:contentTemplate>
                                                             <div style="padding: 4px; display: flex; justify-content: space-between">
-                                                                <div style="width: 200px">{{itemTemplate.itemData.item.get('title')}}</div>
-                                                                <div style="font-size: 11px; color: grey">{{itemTemplate.itemData.item.get('lastName')}}</div>
-                                                                <div style="font-size: 11px; color: limegreen">{{itemTemplate.itemData.item.get('id')}}</div>
+                                                                <div style="width: 200px">{{itemTemplate.itemData.item.get('firstName')}}</div>
+                                                                <div style="font-size: 13px; color: darkblue">{{itemTemplate.itemData.item.get('lastName')}}</div>
+                                                                <div style="font-size: 13px; color: limegreen">{{itemTemplate.itemData.item.get('id')}}</div>
                                                             </div>
                                                         </ws:contentTemplate>
                                                     </ws:partial>
@@ -40,12 +52,12 @@
                                     <ws:navigation source="page" view="page">
                                         <ws:sourceConfig pageSize="{{20}}" page="{{0}}" mode="totalCount"/>
                                     </ws:navigation>
-                                </ws:Controls.Layout.List>
+                                </Controls.Layout.List>
                             </div>
                         </div>
                     </div>
                 </ws:content>
-            </ws:Controls.Layout.Search>
+            </Controls.Layout.Search>
         </div>
     </ws:content>
-</ws:Controls.Layout.Filter>
+</Controls.Layout.Filter>
