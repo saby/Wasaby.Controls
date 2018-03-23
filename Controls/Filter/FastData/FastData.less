@@ -1,27 +1,33 @@
 .controls-FastData {
-   display: inline-block;
+   display: flex;
 }
 
-.controls-FastData__icon {
+.controls-FastData__iconArrow,
+.controls-FastData__iconReset {
    .icon-size(@icon-size_FastData);
    .flexbox();
    color: @color_FastData-icon;
-   cursor: pointer;
 }
 
-.controls-FastData__icon-DayForward:hover {
+.controls-FastData__iconReset {
+   color: @color_FastData-iconReset;
+}
+
+.controls-FastData__iconArrow:hover {
    color: @color_FastData-icon_hover;
 }
 
 .controls-FastData__wrapper {
+   margin: @margin-FastData__wrapper;
    .inline-flexbox();
    align-items: center;
+   cursor: pointer;
 }
 
 .controls-FastData__block {
    .inline-flexbox();
 }
 
-.controls-FastData__block:hover .controls-FastData__icon-DayForward {
+.controls-FastData__block:hover .controls-FastData__iconArrow {
       color: @color_FastData-icon_hover;
 }
