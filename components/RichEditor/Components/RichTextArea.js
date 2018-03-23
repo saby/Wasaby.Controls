@@ -2533,8 +2533,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._inputControl.html().indexOf('</li>') < 0 &&
                this._inputControl.html().indexOf('<p>&nbsp;') < 0 &&
                this._inputControl.html().indexOf('<p><br>&nbsp;') < 0 &&
-               this._inputControl.html().indexOf('<blockquote>') < 0 &&
-               this._inputControl.html().indexOf('<customBlockquote>') < 0
+               this._inputControl.html().indexOf('<blockquote>') < 0
             );
          },
 
