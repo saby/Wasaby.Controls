@@ -333,7 +333,7 @@ define('SBIS3.CONTROLS/ComboBox', [
       _keyboardHover: function (e) {
          var
             selectedKey = this.getSelectedKey(),
-            selectedItem, newSelectedItem, newSelectedItemId, newSelectedItemHash;
+            selectedItem, newSelectedItem, newSelectedItemHash;
 
          if (e.which !== constants.key.up && e.which !== constants.key.down && e.which !== constants.key.enter && e.which !== constants.key.esc) {
             return ComboBox.superclass._keyboardHover.apply(this, arguments);
@@ -360,9 +360,15 @@ define('SBIS3.CONTROLS/ComboBox', [
                newSelectedItem = selectedKey || this._options.emptyValue ? selectedItem.next('.controls-ListView__item') : items.eq(0);
             }
             if (newSelectedItem && newSelectedItem.length) {
-               newSelectedItemId = newSelectedItem.data('id');
+               //Устанавливаем новую запись. через проекцию, т.к. может быть enum
                newSelectedItemHash = newSelectedItem.data('hash');
-               this.setSelectedKey(newSelectedItemId);
+               var projItem = this._getItemsProjection().getByHash(newSelectedItemHash);
+               if (!projItem && this._options.emptyValue){
+                  this._drawSelectedEmptyRecord();
+               }
+               else {
+                  this.setSelectedIndex(this._getItemsProjection().getIndex(projItem));
+               }
                this._scrollToItem(newSelectedItemHash);
                this.setActive(true); // После подскролливания возвращаем фокус в контейнер компонента
             }
