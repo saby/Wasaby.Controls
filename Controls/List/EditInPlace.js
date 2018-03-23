@@ -79,7 +79,7 @@ define('Controls/List/EditInPlace', [
             return Deferred.success();
          }
 
-         var result = self._notify('endEdit', [self._editingItem, self._isAdd, commit], {bubbling: true});
+         var result = self._notify('endEdit', [self._editingItem, commit, self._isAdd], {bubbling: true});
 
          if (result === EndEditResult.CANCEL) {
             return Deferred.fail();
@@ -204,8 +204,8 @@ define('Controls/List/EditInPlace', [
        * @event Controls/List/EditInPlace#endEdit Происходит перед окончанием редактирования\добавления.
        * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} item Редактируемая запись.
-       * @param {Boolean} isAdd Флаг, позволяющий различать редактирование и добавление.
        * @param {Boolean} commit - true - изменения сохраняются, false - изменения не сохраняются.
+       * @param {Boolean} isAdd Флаг, позволяющий различать редактирование и добавление.
        * @returns {EndEditResult}
        */
 
