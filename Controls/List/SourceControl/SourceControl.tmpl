@@ -3,32 +3,21 @@
     <div class="controls-SourceControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
     <div class="controls-SourceControl__trigger controls-SourceControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
 
-    <ws:template name="listTemplate">
+    <ws:if data="{{_listViewModel}}">
         <ws:partial
                 template="{{_options.viewName}}"
                 name="listView"
-                listModel="{{listModel}}"
                 itemTemplate="{{_options.itemTemplate}}"
                 idProperty="{{_options.idProperty}}"
                 displayProperty="{{_options.displayProperty}}"
-                markedKey="{{_options.markedKey}}"
-                itemActionsTemplate="{{itemActionsTemplate}}">
+                markedKey="{{_options.markedKey}}">
         </ws:partial>
-    </ws:template>
-
-    <ws:if data="{{_listViewModel}}">
-        <ws:if data="{{_options.itemActions}}">
-            <Controls.List.ItemActions.ItemActionsController
-                    listModel="{{_listViewModel}}"
-                    itemActions="{{_options.itemActions}}"
-                    showAction="{{_options.showAction}}"
-                    itemActionsType="{{_options.itemActionsType}}">
-                <ws:partial template="listTemplate" scope="{{content}}" _options="{{_options}}" />
-            </Controls.List.ItemActions.ItemActionsController>
-        </ws:if>
-        <ws:else>
-            <ws:partial template="listTemplate" _options="{{_options}}"  listModel="{{_listViewModel}}" />
-        </ws:else>
+        <Controls.List.ItemActions.ItemActionsController
+                ws:content="listView"
+                listModel="{{_listViewModel}}"
+                itemActions="{{_options.itemActions}}"
+                showAction="{{_options.showAction}}"
+                itemActionsType="{{_options.itemActionsType}}"/>
     </ws:if>
 
     <ws:if data="{{_options.emptyTemplate && _listViewModel && !_listViewModel.getCount()}}">
