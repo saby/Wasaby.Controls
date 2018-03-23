@@ -199,25 +199,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                throw new Error('Wrong baseParams');
             }
             var parsers = options.parsers;
-            // Если есть свойство "parsers"
-            if (parsers) {
-               // TODO: Уже здесь нужно смержить с defaults для возможности частичного задания
-               // То оно должно быть объектом
-               if (typeof parsers !== 'object') {
-                  throw new Error('Wrong parsers');
-               }
-               // И каждое свойство объекта должно быть {@link ImportParser}
-               for (var name in parsers) {
-                  var v = parsers[name];
-                  if (!(name &&
-                        (typeof v === 'object') &&
-                        (v.title && typeof v.title === 'string') &&
-                        (!v.component || typeof v.component === 'string') &&
-                        (!v.args || typeof v.args === 'object')
-                        )) {
-                     throw new Error('Wrong parsers items');
-                  }
-               }
+            // Если есть свойство "parsers" - то оно должно быть объектом
+            if (parsers && typeof parsers !== 'object') {
+               throw new Error('Wrong parsers');
             }
             var fields = options.fields;
             // Должно быть свойство "fields" и быть объектом
@@ -246,6 +230,23 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                sheetIndex = -1;
             }
             var defaults = this._options;
+            if (parsers) {
+               // Поскольку уже есть набор парсеров по-умолчанию, то в объекте parsers могут содержаться только поправки, значит нужно слить их,
+               // прежде чем проверять
+               parsers = cMerge(cMerge({}, defaults.parsers), parsers);
+               for (var name in parsers) {
+                  // Каждый элемент набора parsers должно быть {@link ImportParser}
+                  var v = parsers[name];
+                  if (!(name &&
+                        (typeof v === 'object') &&
+                        (v.title && typeof v.title === 'string') &&
+                        (!v.component || typeof v.component === 'string') &&
+                        (!v.args || typeof v.args === 'object')
+                     )) {
+                     throw new Error('Wrong parsers items');
+                  }
+               }
+            }
             var componentOptions = {
                title: options.title,
                applyButtonTitle: options.applyButtonTitle,
@@ -255,7 +256,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                dataType: dataType,
                file: file,
                baseParams: baseParamsOptions,
-               parsers: parsers ? cMerge(cMerge({}, defaults.parsers), parsers) : defaults.parsers,
+               parsers: parsers || defaults.parsers,
                fields: fields,
                sheets: sheets,
                sheetIndex: sheetIndex,
