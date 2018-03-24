@@ -1,12 +1,31 @@
 .controls-BackButton_style-primary {
-   content: @back-arrow-blue;
+   content: @content-BackButton_style-default;
    padding-right: 3px;
 }
 
 .controls-BackButton_style-default {
-   content: @back-arrow-orange;
+   content: @content-BackButton_style-primary;
    padding-right: 3px;
 }
+
+.controls-BackButton_style-primary:active {
+   content: @content-BackButton_style-default_hovered;
+}
+
+.controls-BackButton_style-default:active {
+   content: @content-BackButton_style-primary_hovered;
+}
+
+.ws-is-no-touch {
+   .controls-BackButton_style-primary:hover {
+      content: @content-BackButton_style-default_hovered;
+   }
+
+   .controls-BackButton_style-default:hover {
+      content: @content-BackButton_style-primary_hovered;
+   }
+}
+
 
 .controls-BackButton_size-l {
     width:10px;
