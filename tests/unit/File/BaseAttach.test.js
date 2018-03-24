@@ -14,9 +14,6 @@ define([
    if (!constants.isBrowserPlatform) {
       return;
    }
-   mocha.setup({
-      ignoreLeaks: true
-   });
 
    describe('Controls/File/BaseAttach', function () {
       var IFileDataConstructors = [LocalFile, LocalFileLink, HttpFileLink];
