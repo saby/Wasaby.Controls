@@ -1,13 +1,18 @@
 <div class="controls-ImportCustomizer-ColumnBinding-View__grid__column">
-   <ws:WSControls.Buttons.MenuButton
-      class="controls-ImportCustomizer-ColumnBinding-View__grid__column__menu"
-      name="{{column.menuConf.namePrefix + column.field}}"
-      caption="{{column.menuCaption}}"
-      pickerClassName="controls-ImportCustomizer-ColumnBinding-View__grid__column__menu__picker"
-      items="{{column.menuItems}}"
-      idProperty="{{column.menuConf.idProperty}}"
-      displayProperty="{{column.menuConf.displayProperty}}"
-      parentProperty="{{column.menuConf.parentProperty}}"
-      handlers="{{column.menuConf.handlers}}"
-   />
+   <ws:if data="{{column.menuConf && column.menuItems}}">
+      <ws:WSControls.Buttons.MenuButton
+         class="controls-ImportCustomizer-ColumnBinding-View__grid__column__menu"
+         name="{{column.menuConf.namePrefix + column.field}}"
+         caption="{{column.menuCaption}}"
+         pickerClassName="controls-ImportCustomizer-ColumnBinding-View__grid__column__menu__picker"
+         items="{{column.menuItems}}"
+         idProperty="{{column.menuConf.idProperty}}"
+         displayProperty="{{column.menuConf.displayProperty}}"
+         parentProperty="{{column.menuConf.parentProperty}}"
+         handlers="{{column.menuConf.handlers}}"
+      />
+   </ws:if>
+   <ws:else>
+      {{column.title}}
+   </ws:else>
 </div>
