@@ -274,8 +274,10 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
         _parseColumns: function(columns) {
             var result = { Fields: [], Titles: [] };
             for (var i = 0; i < columns.length; i++) {
-                result.Fields.push(columns[i].field);
-                result.Titles.push(columns[i].title || columns[i].field);
+               if (columns[i].field) {
+                  result.Fields.push(columns[i].field);
+                  result.Titles.push(columns[i].title || columns[i].field);
+               }
             }
             return result;
         },
