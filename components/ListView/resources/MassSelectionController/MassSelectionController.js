@@ -115,6 +115,7 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionC
 
           destroy: function() {
              this._selection.destroy();
+             this._selection = null;
              MassSelectionController.superclass.destroy.apply(this, arguments);
           }
        });
