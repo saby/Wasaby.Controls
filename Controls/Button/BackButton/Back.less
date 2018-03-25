@@ -16,34 +16,85 @@
    content: @content-BackButton_style-primary_hovered;
 }
 
-.ws-is-no-touch {
-   .controls-BackButton_style-primary:hover {
+.controls-BackButton__wrapper:active {
+   .controls-BackButton_style-primary {
       content: @content-BackButton_style-default_hovered;
    }
 
-   .controls-BackButton_style-default:hover {
+   .controls-BackButton_style-default {
       content: @content-BackButton_style-primary_hovered;
+   }
+
+   .controls-BackButton__caption_style-default {
+      color: @color_Header__caption_style-deafult_hovered;
+   }
+
+   .controls-BackButton__caption_style-primary {
+      color: @color_Header__caption_style-primary_hovered;
    }
 }
 
+.ws-is-no-touch {
+   .controls-BackButton__wrapper:hover {
+      .controls-BackButton_style-primary {
+         content: @content-BackButton_style-default_hovered;
+      }
+
+      .controls-BackButton_style-default {
+         content: @content-BackButton_style-primary_hovered;
+      }
+
+      .controls-BackButton__caption_style-default {
+         color: @color_Header__caption_style-deafult_hovered;
+      }
+
+      .controls-BackButton__caption_style-primary {
+         color: @color_Header__caption_style-primary_hovered;
+      }
+   }
+}
+
+.controls-BackButton__caption_size-s{
+   font-weight: bold;
+   font-size: @font-size_Header__caption_size-default;
+}
+
+.controls-BackButton__caption_size-default{
+   font-weight: bold;
+   font-size: @font-size_Header__caption_size-l;
+}
+
+.controls-BackButton__caption_size-l{
+   font-weight: bold;
+   font-size: @font-size_Header__caption_size-xl;
+}
+
+.controls-BackButton__caption_style-primary {
+   color: @color_Header__caption_style-primary;
+}
+
+.controls-BackButton__caption_style-default {
+   color: @color_Header__caption_style-deafult;
+}
 
 .controls-BackButton_size-l {
-    width:10px;
-    height:14px;
+    width: @width-BackButton_size-l;
+    height: @height-BackButton_size-l;
 }
 
 .controls-BackButton_size-default {
-   width:9px;
-   height:12px;
+   width: @width-BackButton_size-default;
+   height: @height-BackButton_size-default;
 }
 
 .controls-BackButton_size-s {
-   width:9px;
-   height:11px;
+   width: @width-BackButton_size-s;
+   height: @height-BackButton_size-s;
 }
 
-.controls-BackButton {
+.controls-BackButton__wrapper {
    display: inline-flex;
    align-items: center;
+   cursor: pointer;
 }
 
