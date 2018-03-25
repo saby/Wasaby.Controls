@@ -1,8 +1,8 @@
-<div attr:class="controls-DropdownList__item {{itemData.isSelected ? 'controls-DropdownList__selected'}}"
+<div attr:class="controls-DropdownList__row {{itemData.isSelected ? 'controls-DropdownList__selected'}}"
      on:click="_itemClickHandler(itemData.item)" on:mouseenter="_itemMouseEnter(itemData.item, itemData.hasChildren)"
      on:mouseleave="_itemMouseOut(itemData.item)">
    <div if="{{itemData.icon}}" class="controls-DropdownList__icon {{itemData.icon}}"></div>
-   <div class="controls-DropdownList__text">
+   <div class="controls-DropdownList__content">
       <ws:if data="{{contentTemplate}}">
          <ws:partial
             template="{{contentTemplate}}"
