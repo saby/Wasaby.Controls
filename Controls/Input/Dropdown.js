@@ -3,11 +3,12 @@ define('Controls/Input/Dropdown',
       'Core/Control',
       'tmpl!Controls/Input/Dropdown/Dropdown',
       'tmpl!Controls/Input/Dropdown/resources/defaultContentTemplate',
+      'WS.Data/Collection/RecordSet',
       'Controls/Controllers/SourceController',
       'Controls/Dropdown/DropdownUtils',
       'css!Controls/Input/Dropdown/Dropdown'
    ],
-   function (Control, template, defaultContentTemplate, SourceController, DropdownUtils) {
+   function (Control, template, defaultContentTemplate, RecordSet, SourceController, DropdownUtils) {
 
       /**
        * Поле выбора из значения списка.
