@@ -32,14 +32,23 @@ define('Controls/Layout/Filter',
             });
          },
          
-         getFilterItemsFromSource: function(self, source) {
-            return _private.getFilterSourceController(self, source).load();
+         getItemsFromSource: function(self, source, itemsField) {
+            if (source) {
+               return _private.getFilterSourceController(self, source).load().addCallback(function (result) {
+                  self[itemsField] = result;
+                  return result;
+               });
+            }
          },
          
-         getFilterItemsFromHistory: function() {
-            return Deferred.success([{
-              id: 'title', value: 'Sasha'
-            }]);
+         getHistoryItems: function(self, historyId) {
+            //TODO сделать, как будет готов сервис истории
+            if (historyId) {
+               self._historyItems = [{
+                  id: 'title', value: 'Sasha'
+               }];
+               return Deferred.success(self._historyItems);
+            }
          },
          
          resolveItemsDeferred: function(self, historyDeferred, filterButtonDeferred, fastDataDeferred) {
@@ -47,39 +56,27 @@ define('Controls/Layout/Filter',
                 historyItems, filterButtonItems, fastFilterItems;
             
             if (historyDeferred) {
-               waitItemsDef.push(historyDeferred.addCallback(function(history) {
-                  historyItems = history;
-               }));
+               waitItemsDef.push(historyDeferred);
             }
             
             if (filterButtonDeferred) {
-               waitItemsDef.push(filterButtonDeferred.addCallback(function(filterButton) {
-                  filterButtonItems = filterButton;
-               }));
+               waitItemsDef.push(filterButtonDeferred);
             }
             
             if (fastDataDeferred) {
-               waitItemsDef.push(fastDataDeferred.addCallback(function(fastFilter) {
-                  fastFilterItems = fastFilter;
-               }));
+               waitItemsDef.push(fastDataDeferred);
             }
    
             return waitItemsDef.done().getResult().addCallback(function() {
                if (historyItems) {
                   if (filterButtonItems) {
                      _private.mergeFilterItems(filterButtonItems, historyItems);
-                     self._filterButtonItems = filterButtonItems;
                   }
                   
                   if (fastFilterItems) {
                      _private.mergeFilterItems(fastFilterItems, historyItems);
-                     self._fastFilterItems = filterButtonItems;
                   }
-               } else {
-                  self._filterButtonItems = filterButtonItems;
-                  self._fastFilterItems = filterButtonItems;
                }
-               return self;
             });
          },
          
@@ -112,21 +109,12 @@ define('Controls/Layout/Filter',
          _fastFilterItems: null,
          
          _beforeMount: function(options) {
-            var filterButtonItems, fastFilterItems, historyDeferred;
-            
-            if (options.filterButtonSource) {
-               filterButtonItems = _private.getFilterItemsFromSource(this, options.filterButtonSource);
-            }
-            
-            if (options.fastFilterSource) {
-               fastFilterItems = _private.getFilterItemsFromSource(this, options.fastFilterSource);
-            }
-            
-            if (options.historyId) {
-               historyDeferred = _private.getFilterItemsFromHistory(this, options.historyId);
-            }
-            
-            return _private.resolveItemsDeferred(this, historyDeferred, filterButtonItems, fastFilterItems);
+            return _private.resolveItemsDeferred(
+               this,
+               _private.getHistoryItems(this, options.historyId),
+               _private.getItemsFromSource(this, options.filterButtonSource, '_filterButtonItems'),
+               _private.getItemsFromSource(this, options.fastFilterSource, '_fastFilterItems')
+            );
          },
          
          _changeFilterHandler: function(event, filter) {
