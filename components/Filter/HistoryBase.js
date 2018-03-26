@@ -50,6 +50,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                _favoriteSortMethod: _private.favoriteSortMethod,
                _filterProperty: 'viewFilter',
                _structureProperty: 'filter',
+               _filterItemTextProperty: 'caption',
                _favoriteAction: {
                   command: 'favorite',
                   name: 'favorite',
@@ -157,9 +158,9 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
 
                                     if(reportItem) {
                                        reportItem.value = reportItem.resetValue;
-                                       textValue = textValue.replace(new RegExp('\s?' + reportItem[self._options.displayProperty] + ',?\s?'), '');
+                                       textValue = textValue.replace(new RegExp('\s?' + reportItem[self._options._filterItemTextProperty] + ',?\s?'), '');
                                        textValue = textValue.replace(/ {1,}/g, ' ');
-                                       reportItem[self._options.displayProperty] = '';
+                                       reportItem[self._options._filterItemTextProperty] = '';
                                        delete filter[key];
                                     }
                                  }
