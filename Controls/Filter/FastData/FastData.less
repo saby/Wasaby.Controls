@@ -5,7 +5,6 @@
 .controls-FastData__iconArrow,
 .controls-FastData__iconReset {
    font-family: 'cbuc-icons';
-   .flexbox();
 }
 
 .controls-FastData__iconReset {
@@ -22,16 +21,21 @@
 
 .controls-FastData__wrapper {
    margin: @margin-FastData__wrapper;
-   .inline-flexbox();
+   display: flex;
    align-items: center;
    cursor: pointer;
 }
 
 .controls-FastData__block {
-   .inline-flexbox();
-   align-items: center;
+   display: flex;
+   align-items: baseline;
+}
+
+.controls-FastData__beforeText {
+   height: @height_FastData-beforeText;
+   width: @width_FastData-beforeText;
 }
 
 .controls-FastData__block:hover .controls-FastData__iconArrow {
-      fill: @color_FastData-iconArrow_hover;
+   fill: @color_FastData-iconArrow_hover;
 }
