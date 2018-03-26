@@ -5,7 +5,7 @@ define('Controls/List/SourceControl', [
    'require',
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
-   'Core/ParallelDeferred',
+   'Core/Deferred',
    'css!Controls/List/SourceControl/SourceControl',
    'Controls/List/ItemActions/ItemActionsControl'
 ], function (Control,
