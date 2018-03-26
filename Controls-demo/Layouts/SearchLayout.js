@@ -52,56 +52,62 @@ define('Controls-demo/Layouts/SearchLayout', [
    var filterData = [
       {
          id: 'firstName',
-         idProperty: 'title',
-         displayProperty: 'title',
          resetValue: 'По имени',
-         source: {
-            module: 'WS.Data/Source/Memory',
-            options: {
-               data: [
-                  {id: 0, title: 'По имени'},
-                  {id: 1, title: 'Sasha'},
-                  {id: 2, title: 'Petr'},
-                  {id: 3, title: 'Ivan'},
-                  {id: 3, title: 'Andrey'}
-               ]
+         properties: {
+            idProperty: 'title',
+            displayProperty: 'title',
+            source: {
+               module: 'WS.Data/Source/Memory',
+               options: {
+                  data: [
+                     {id: 0, title: 'По имени'},
+                     {id: 1, title: 'Sasha'},
+                     {id: 2, title: 'Petr'},
+                     {id: 3, title: 'Ivan'},
+                     {id: 3, title: 'Andrey'}
+                  ]
+               }
             }
          }
       },
       {
          id: 'id',
-         idProperty: 'id',
-         displayProperty: 'title',
          resetValue: '0',
-         source: {
-            module: 'WS.Data/Source/Memory',
-            options: {
-               data: [
-                  {id: 0, title: 'По id'},
-                  {id: 1, title: '1'},
-                  {id: 2, title: '2'},
-                  {id: 3, title: '3'},
-                  {id: 4, title: '4'}
-               ]
+         properties: {
+            idProperty: 'id',
+            displayProperty: 'title',
+            source: {
+               module: 'WS.Data/Source/Memory',
+               options: {
+                  data: [
+                     {id: 0, title: 'По id'},
+                     {id: 1, title: '1'},
+                     {id: 2, title: '2'},
+                     {id: 3, title: '3'},
+                     {id: 4, title: '4'}
+                  ]
+               }
             }
          }
       },
       {
          id: 'lastName',
-         idProperty: 'lastName',
-         displayProperty: 'title',
-         value: 'aaaa',
          resetValue: '0',
-         source: {
-            module: 'WS.Data/Source/Memory',
-            options: {
-               data: [
-                  {id: 1, title: 'aaaa', lastName: 'aaaa'},
-                  {id: 2, title: 'dfsf', lastName: 'dfsf'},
-                  {id: 3, title: 'Такой нет', lastName: 'aaaaa'},
-                  {id: 4, title: 'Lalala', lastName: 'Lalala'},
-                  {id: 0, title: 'По фамилии', lastName: '0'}
-               ]
+         value: 'aaaa',
+         properties: {
+            idProperty: 'lastName',
+            displayProperty: 'title',
+            source: {
+               module: 'WS.Data/Source/Memory',
+               options: {
+                  data: [
+                     {id: 1, title: 'aaaa', lastName: 'aaaa'},
+                     {id: 2, title: 'dfsf', lastName: 'dfsf'},
+                     {id: 3, title: 'Такой нет', lastName: 'aaaaa'},
+                     {id: 4, title: 'Lalala', lastName: 'Lalala'},
+                     {id: 0, title: 'По фамилии', lastName: '0'}
+                  ]
+               }
             }
          }
       }

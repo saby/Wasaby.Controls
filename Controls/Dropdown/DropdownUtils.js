@@ -20,10 +20,8 @@ define('Controls/Dropdown/DropdownUtils',
          }
       }
 
-      function loadItems(instance, source, selectedKeys) {
-         instance._sourceController = new SourceController({
-            source: source
-         });
+      function loadItems(instance, sourceControllerConfig, selectedKeys) {
+         instance._sourceController = new SourceController(sourceControllerConfig);
          return instance._sourceController.load().addCallback(function (items) {
             instance._items = items;
             updateSelectedItem(instance, selectedKeys);

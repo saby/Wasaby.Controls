@@ -30,39 +30,35 @@ define('Controls/Filter/FastData',
       var _private = {
 
          loadListConfig: function (self, item, index) {
-            var value = Utils.getItemPropertyValue(item, 'value'),
-               dSource = Utils.getItemPropertyValue(item, 'source'),
-               idProperty = Utils.getItemPropertyValue(item, 'idProperty'),
-               resetValue = Utils.getItemPropertyValue(item, 'resetValue');
+            var properties = Utils.getItemPropertyValue(item, 'properties'),
+               resetValue = Utils.getItemPropertyValue(item, 'resetValue'),
+               value = Utils.getItemPropertyValue(item, 'value'),
+               dSource = {
+                  source: properties.source,
+                  idProperty: properties.idProperty
+               };
 
             self._configs[index] = {};
 
             //Проверяем на источник
-            var source = SourceUtil.prepareSource(dSource);
-            if (!cInstance.instanceOfMixin(source, 'WS.Data/Source/ISource')) {
+            var prepareSource = SourceUtil.prepareSource(properties.source);
+            if (!cInstance.instanceOfMixin(prepareSource, 'WS.Data/Source/ISource')) {
                IoC.resolve('ILogger').error('FastData', 'Source option is undefined. Can\'t load data');
                return;
             }
 
-            return DropdownUtils._loadItems(self._configs[index], dSource, value).addCallback(function (items) {
-               self._configs[index]._items = items;
-               self._configs[index]._items.setIdProperty(idProperty);
+            return DropdownUtils._loadItems(self._configs[index], dSource, value || resetValue).addCallback(function () {
                self._configs[index].value = value;
                self._configs[index].resetValue = resetValue;
-               self._configs[index].idProperty = idProperty;
-
-               self._selectedIndexes[index] = items.getIndexByValue(idProperty, self._configs[index].value);
-
-
+               self._configs[index].idProperty = properties.idProperty;
+               self._configs[index].displayProperty = properties.displayProperty || 'title';
             });
          },
 
          reload: function (self) {
             var pDef = new pDeferred();
-            Chain(self._listConfig).map(function (item, index) {
+            Chain(self._items).map(function (item, index) {
                pDef.push(_private.loadListConfig(self, item, index));
-
-
             }).value();
             return pDef.done().getResult().addCallback(function () {
                self._forceUpdate();
@@ -73,16 +69,13 @@ define('Controls/Filter/FastData',
             var filter = {};
             Chain(self._configs).each(function (config, index) {
                if (config._items && config.value) {
-                  filter[Utils.getItemPropertyValue(self._listConfig.at(index), 'id')] = config.value;
+                  filter[Utils.getItemPropertyValue(self._items.at(index), 'id')] = config.value;
                }
             });
             return filter;
          },
 
          selectItem: function (item) {
-            //Устанавливаем индекс выбранного элемента списка
-            this._selectedIndexes[this.lastOpenIndex] = this._configs[this.lastOpenIndex]._items.getIndex(item);
-
             //Получаем ключ выбранного элемента
             var key = item.getId();
             if (key !== this._configs[this.lastOpenIndex].resetValue) {
@@ -108,21 +101,25 @@ define('Controls/Filter/FastData',
          _template: template,
          _configs: null,
          _selectedIndexes: null,
-         _listConfig: null,
+         _items: null,
 
          constructor: function () {
             FastData.superclass.constructor.apply(this, arguments);
 
             this._configs = {};
             this._selectedIndexes = {};
-            this._listConfig = [];
+            this._items = [];
 
             this._onResult = _private.onResult.bind(this);
          },
 
          _beforeMount: function (options) {
             if (options.items) {
-               this._listConfig = new RecordSet({rawData: options.items});
+               if (!cInstance.instanceOfModule(options.items, 'WS.Data/Collection/RecordSet')) {
+                  this._items = new RecordSet({rawData: options.items});
+               } else {
+                  this._items = options.items;
+               }
                return _private.reload(this);
             }
 
@@ -131,7 +128,7 @@ define('Controls/Filter/FastData',
                source: options.source
             });
             return this.sourceController.load().addCallback(function (configs) {
-               self._listConfig = configs;
+               self._items = configs;
                return _private.reload(self);
             });
          },
@@ -159,13 +156,11 @@ define('Controls/Filter/FastData',
          _updateText: function (item, index) {
             if (this._configs[index]._items) {
                var sKey = this._configs[index].value || this._configs[index].resetValue;
-               return this._configs[index]._items.getRecordById(sKey).get(Utils.getItemPropertyValue(item, 'displayProperty'));
+               return this._configs[index]._items.getRecordById(sKey).get(this._configs[index].displayProperty);
             }
          },
 
          _reset: function (event, item, index) {
-            var id = Utils.getItemPropertyValue(item, 'idProperty');
-            this._selectedIndexes[index] = this._configs[index]._items.getIndexByValue(id, this._configs[index].resetValue);
             this._configs[index].value = null;
             this._notify('selectedKeysChanged', [this._configs[index].value]);
             this._notify('filterChanged', [_private.getFilter(this)], {bubbling: true});

@@ -24,56 +24,61 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
          dataSourceDemoSource: [
             {
                id: 'filter1',
-               idProperty: 'title',
-               displayProperty: 'title',
-               value: 'США',
                resetValue: 'все страны',
-               source: {
-                  module: 'WS.Data/Source/Memory',
-                  options: {
-                     data: [
-                        {key: 0, title: 'все страны'},
-                        {key: 1, title: 'Россия'},
-                        {key: 2, title: 'США'},
-                        {key: 3, title: 'Великобритания'}
-                     ]
+               properties: {
+                  idProperty: 'title',
+                  displayProperty: 'title',
+                  value: 'США',
+                  source: {
+                     module: 'WS.Data/Source/Memory',
+                     options: {
+                        data: [
+                           {key: 0, title: 'все страны'},
+                           {key: 1, title: 'Россия'},
+                           {key: 2, title: 'США'},
+                           {key: 3, title: 'Великобритания'}
+                        ]
+                     }
                   }
                }
             },
             {
-
                id: 'filter2',
-               idProperty: 'key',
-               displayProperty: 'title',
                resetValue: '0',
-               source: {
-                  module: 'WS.Data/Source/Memory',
-                  options: {
-                     data: [
-                        {key: 0, title: 'все жанры'},
-                        {key: 1, title: 'фантастика'},
-                        {key: 2, title: 'фэнтези'},
-                        {key: 3, title: 'мистика'}
-                     ]
+               properties: {
+                  idProperty: 'key',
+                  displayProperty: 'title',
+                  source: {
+                     module: 'WS.Data/Source/Memory',
+                     options: {
+                        data: [
+                           {key: 0, title: 'все жанры'},
+                           {key: 1, title: 'фантастика'},
+                           {key: 2, title: 'фэнтези'},
+                           {key: 3, title: 'мистика'}
+                        ]
+                     }
                   }
                }
             },
             {
                id: 'fafaf',
-               idProperty: 'lastName',
-               displayProperty: 'title',
-               value: '0',
                resetValue: '3',
-               source: {
-                  module: 'WS.Data/Source/Memory',
-                  options: {
-                     data: [
-                        {id: 0, lastName: '0', title: 'aaaa'},
-                        {id: 1, lastName: '1', title: '333'},
-                        {id: 2, lastName: '2', title: 'iwfyls'},
-                        {id: 3, lastName: '3', title: 'reset to me'},
-                        {id: 3, lastName: '4', title: 'Oomph!'}
-                     ]
+               properties: {
+                  idProperty: 'lastName',
+                  displayProperty: 'title',
+                  value: '0',
+                  source: {
+                     module: 'WS.Data/Source/Memory',
+                     options: {
+                        data: [
+                           {id: 0, lastName: '0', title: 'aaaa'},
+                           {id: 1, lastName: '1', title: '333'},
+                           {id: 2, lastName: '2', title: 'iwfyls'},
+                           {id: 3, lastName: '3', title: 'reset to me'},
+                           {id: 3, lastName: '4', title: 'Oomph!'}
+                        ]
+                     }
                   }
                }
             }
@@ -83,56 +88,62 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
          dataSourceDemoItems: [
             {
                id: 'filter1',
-               idProperty: 'title',
-               displayProperty: 'title',
-               value: 'Франция',
                resetValue: 'все страны',
-               source: {
-                  module: 'WS.Data/Source/Memory',
-                  options: {
-                     data: [
-                        {key: 0, title: 'все страны'},
-                        {key: 1, title: 'Франция'},
-                        {key: 2, title: 'Германия'},
-                        {key: 3, title: 'Канада'}
-                     ]
+               properties: {
+                  idProperty: 'title',
+                  displayProperty: 'title',
+                  value: 'Франция',
+                  source: {
+                     module: 'WS.Data/Source/Memory',
+                     options: {
+                        data: [
+                           {key: 0, title: 'все страны'},
+                           {key: 1, title: 'Франция'},
+                           {key: 2, title: 'Германия'},
+                           {key: 3, title: 'Канада'}
+                        ]
+                     }
                   }
                }
             },
             {
 
                id: 'filter2',
-               idProperty: 'key',
-               displayProperty: 'title',
                resetValue: '0',
-               source: {
-                  module: 'WS.Data/Source/Memory',
-                  options: {
-                     data: [
-                        {key: 0, title: 'все жанры'},
-                        {key: 1, title: 'фантастика'},
-                        {key: 2, title: 'фэнтези'},
-                        {key: 3, title: 'мистика'}
-                     ]
+               properties: {
+                  idProperty: 'key',
+                  displayProperty: 'title',
+                  source: {
+                     module: 'WS.Data/Source/Memory',
+                     options: {
+                        data: [
+                           {key: 0, title: 'все жанры'},
+                           {key: 1, title: 'фантастика'},
+                           {key: 2, title: 'фэнтези'},
+                           {key: 3, title: 'мистика'}
+                        ]
+                     }
                   }
                }
             },
             {
                id: 'fafaf',
-               idProperty: 'lastName',
-               displayProperty: 'title',
-               value: '0',
                resetValue: '3',
-               source: {
-                  module: 'WS.Data/Source/Memory',
-                  options: {
-                     data: [
-                        {id: 0, lastName: '0', title: 'aaaa'},
-                        {id: 1, lastName: '1', title: '333'},
-                        {id: 2, lastName: '2', title: 'iwfyls'},
-                        {id: 3, lastName: '3', title: 'reset to me'},
-                        {id: 3, lastName: '4', title: 'Oomph!'}
-                     ]
+               properties: {
+                  idProperty: 'lastName',
+                  displayProperty: 'title',
+                  value: '0',
+                  source: {
+                     module: 'WS.Data/Source/Memory',
+                     options: {
+                        data: [
+                           {id: 0, lastName: '0', title: 'aaaa'},
+                           {id: 1, lastName: '1', title: '333'},
+                           {id: 2, lastName: '2', title: 'iwfyls'},
+                           {id: 3, lastName: '3', title: 'reset to me'},
+                           {id: 3, lastName: '4', title: 'Oomph!'}
+                        ]
+                     }
                   }
                }
             }
