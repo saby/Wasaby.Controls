@@ -155,8 +155,10 @@ define('Controls/List/EditInPlace', [
          if (editNextRow) {
             if (index < items.getCount() - 1) {
                self.beginEdit(items.at(index + 1));
-            } else {
+            } else if (self._options.editingConfig && self._options.editingConfig.autoAdd) {
                self.beginAdd();
+            } else {
+               self.commitEdit();
             }
          } else {
             if (index > 0) {
@@ -249,9 +251,10 @@ define('Controls/List/EditInPlace', [
        */
 
       _beforeMount: function(newOptions) {
-         if (newOptions.initialConfig) {
-            this._isAdd = newOptions.initialConfig.isAdd;
-            this._editingItem = newOptions.initialConfig.item;
+         if (newOptions.editingConfig) {
+            //TODO: нужно смотреть на наличие item'а и дёргать setEditingItem
+            this._isAdd = newOptions.editingConfig.isAdd;
+            this._editingItem = newOptions.editingConfig.item;
          }
       },
 
@@ -263,8 +266,8 @@ define('Controls/List/EditInPlace', [
       //TODO: управлять индикатором загрузки
       beginEdit: function(record) {
          var self = this,
-            editingItemIndex = self._options.listModel.getEditingItemIndex(),
-            currentItemIndex = self._options.listModel.getItems().getIndex(record);
+            editingItemIndex = this._options.listModel.getEditingItemIndex(),
+            currentItemIndex = this._options.listModel.getItems().getIndex(record);
          //Если currentItemIndex = -1, то происходит добавление
          if (editingItemIndex !== currentItemIndex && ~currentItemIndex) {
             return this.commitEdit().addCallback(function() {
@@ -319,7 +322,11 @@ define('Controls/List/EditInPlace', [
          if (this._options.listModel.getEditingItem()) {
             switch(e.nativeEvent.keyCode) {
                case 13: //Enter
-                  _private.editNextTarget(this, true);
+                  if (this._options.editingConfig && this._options.editingConfig.singleEdit) {
+                     this.commitEdit();
+                  } else {
+                     _private.editNextTarget(this, true);
+                  }
                   break;
                case 27: //Esc
                   this.cancelEdit();
@@ -332,7 +339,9 @@ define('Controls/List/EditInPlace', [
       },
 
       _onItemClick: function(e, record) {
-         this.beginEdit(record);
+         if (this._options.editingConfig && this._options.editingConfig.editOnClick) {
+            this.beginEdit(record);
+         }
       },
 
       _onRowDeactivated: function(e, isTabPressed) {

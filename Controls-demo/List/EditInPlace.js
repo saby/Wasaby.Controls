@@ -43,9 +43,12 @@ define('Controls-demo/List/EditInPlace', [
             idProperty: 'id',
             data: srcData
          });
-         // this.editingConfig = {
-         //    item: Record.fromObject({ id: 4, title: 'добавление стартует по опции', description: 'а может и не стартует', randomField: 'поле, которого нет'})
-         // };
+         this.editingConfig = {
+            // item: Record.fromObject({ id: 4, title: 'добавление стартует по опции', description: 'а может и не стартует', randomField: 'поле, которого нет'}),
+            editOnClick: true,
+            singleEdit: false,
+            autoAdd: true
+         };
       },
 
       _onBeginEdit: function(e, item) {
