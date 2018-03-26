@@ -134,6 +134,10 @@ define('SBIS3.CONTROLS/FormController', [
              */
             idProperty: undefined,
             /**
+             * @cfg {String} Поле записи, в котором хранится ссылка на текущую страницу.
+             */
+            urlProperty: undefined,
+            /**
              * @cfg {WS.Data/Entity/Model} Устанавливает запись, по которой произведена инициализация данных диалога.
              * @see setRecord
              * @see getRecord
@@ -196,7 +200,7 @@ define('SBIS3.CONTROLS/FormController', [
          this._initHandlers();
          this._subscribeToEvents();
 
-         this._updateDocumentTitle();
+         this._updateDocumentData();
          this._setDefaultContextRecord();
          this._setPanelRecord(this.getRecord());
 
@@ -377,11 +381,29 @@ define('SBIS3.CONTROLS/FormController', [
          this._context = ctx;
       },
 
-      _updateDocumentTitle: function () {
+      _updateDocumentData: function () {
          var record = this._options.record,
+             newUrl = record && record.get(this._options.urlProperty),
              newTitle = record && record.get('title');
          if (newTitle) {
             TitleManager.set(newTitle, this);
+         }
+         if (newUrl) {
+            try {
+               if (!this._defaultUrl) {
+                  this._defaultUrl = window.location.pathname + window.location.search + window.location.hash;
+               }
+               history.pushState(null, null, newUrl);
+            }
+            catch(e) {
+               this._defaultUrl = undefined;
+            }
+         }
+      },
+
+      _resetUrl: function () {
+         if (this._defaultUrl) {
+            history.pushState(null, null, this._defaultUrl);
          }
       },
 
@@ -403,7 +425,7 @@ define('SBIS3.CONTROLS/FormController', [
          //Если изменился title - обновим заголовок вкладки браузера
          //Если fields пустой, значит установили новые сырые данные (вызывали setRawData)
          if (fields.title || isEmpty(fields)) {
-            this._updateDocumentTitle();
+            this._updateDocumentData();
          }
       },
 
@@ -504,7 +526,7 @@ define('SBIS3.CONTROLS/FormController', [
             this._newRecord = true;
          }
          this._subscribeToRecordChange();
-         this._updateDocumentTitle();
+         this._updateDocumentData();
          this._setContextRecord(record);
          var self = this;
          this._panelReadyDeferred.addCallback(function(){
@@ -909,6 +931,7 @@ define('SBIS3.CONTROLS/FormController', [
          this._panel.unsubscribe('onBeforeClose', this._onBeforeCloseHandler);
          this.unsubscribeFrom(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
          window.removeEventListener('beforeunload', this._onBeforeUnloadHandler);
+         this._resetUrl();
          this._unsubscribeFromRecordChange();
          FormController.superclass.destroy.apply(this, arguments);
       }

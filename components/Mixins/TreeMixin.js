@@ -1667,7 +1667,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
        * Устанавливает режим отображения содержимого записей типа "Узел" (папка) при первой загрузке контрола.
        * @remark
        * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
-       * @param {Boolena} expand true - содержимое узлов раскрыто, false - содержимое узлов скрыто.
+       * @param {Boolean} expand true - содержимое узлов раскрыто, false - содержимое узлов скрыто.
        * @see expand
        * @see getExpand
        */

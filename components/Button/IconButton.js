@@ -21,7 +21,7 @@ function(WSButton, IconButtonUtil) {
     * @class SBIS3.CONTROLS/Button/IconButton
     * @extends WSControls/Buttons/Button
     * @mixes SBIS3.CONTROLS/Button/IconButton/IconButtonDocs
-    * @demo SBIS3.CONTROLS.Demo.MyIconButton
+    * @demo Examples/IconButton/MyIconButton/MyIconButton
     * @author Борисов П.С.
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators

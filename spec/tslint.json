@@ -1,0 +1,39 @@
+{
+  "rules": {
+    "no-reference": true,
+    "no-var-requires": true,
+    "cyclomatic-complexity": [true, 10],
+    "eofline": true,
+    "indent": [true, "spaces", 4],
+    "linebreak-style": [true, "CRLF"], 
+    "max-classes-per-file": [true, 2], 
+    "max-line-length": [true, 120],
+    "no-default-export": true,
+    "no-mergeable-namespace": true,
+    "no-trailing-whitespace": true,
+    "curly": true,
+    "no-arg": true,
+    "no-conditional-assignment": true,
+    "no-debugger": true,
+    "no-duplicate-variable": true,
+    "no-eval": true,
+    "use-isnan": true,
+    "no-use-before-declare": true,
+    "whitespace": [
+      "check-separator",
+      "check-decl",
+      "check-typecast",
+      "check-type",
+      "check-module",
+      "check-operator",
+      "check-branch"
+    ],
+    "one-variable-per-declaration": [true, "ignore-for-loop"],
+    "object-literal-shorthand": true,
+    "no-consecutive-blank-lines": true,
+    "array-type": [true, "generic"],
+    "jsdoc-format": true,
+    "comment-format": [true, "check-space"],
+    "align": [true, "parameters", "statements"]
+  }
+}

@@ -67,7 +67,7 @@ define('SBIS3.CONTROLS/DropdownList',
        * @mixes SBIS3.CONTROLS/Mixins/DataBindMixin
        * @mixes SBIS3.CONTROLS/Mixins/FormWidgetMixin
        *
-       * @demo SBIS3.CONTROLS.Demo.MyDropdownList Пример работы контрола
+       * @demo Examples/DropdownList/MyDropdownList/MyDropdownList Пример работы контрола
        *
        * @ignoreOptions emptyHTML
        * @ignoreMethods setEmptyHTML
@@ -245,8 +245,8 @@ define('SBIS3.CONTROLS/DropdownList',
                 * @example
                 * Подключение, импорт в переменную и передача шаблона в переменную:
                 * <pre>
-                * define('js!SBIS3.MyArea.MyComponent',
-                *    [ ... , 'html!SBIS3.MyArea.MyComponent/resources/myHeadPickerTpl' ],
+                * define('SBIS3/MyArea/MyComponent',
+                *    [ ... , 'html!SBIS3/MyArea/MyComponent/resources/myHeadPickerTpl' ],
                 *    function(..., myHeadPickerTpl){
                 *       ...
                 *       $protected: {

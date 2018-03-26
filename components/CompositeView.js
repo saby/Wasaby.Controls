@@ -12,7 +12,7 @@ define('SBIS3.CONTROLS/CompositeView', [
        * @extends SBIS3.CONTROLS/DataGridView
        * @mixes SBIS3.CONTROLS/Mixins/CompositeViewMixin
        *
-       * @demo SBIS3.CONTROLS.Demo.MyCompositeView
+       * @demo Examples/CompositeView/MyCompositeView/MyCompositeView
        * @cssModifier controls-TreeView-big Устанавливает для режима отображения "Список" следующий размер шрифта: для папок (узлов) - 16px, для записей (листьев) - 15px.
        *
        * @control

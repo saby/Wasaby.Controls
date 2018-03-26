@@ -23,7 +23,7 @@ define('SBIS3.CONTROLS/Commands/CommandsButton', [
      *
      * @author Крайнов Д.О.
      *
-     * @demo SBIS3.CONTROLS.Demo.CommandsButton
+     * @demo Examples/CommandsButton/CommandsButton
      *
      * @public
      * @control

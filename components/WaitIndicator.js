@@ -79,8 +79,8 @@ define('SBIS3.CONTROLS/WaitIndicator',
     *
     * @public
     *
-    * @demo SBIS3.CONTROLS.Demo.MyWaitIndicator
-    * @demo SBIS3.CONTROLS.Demo.MyWaitIndicatorTable
+    * @demo Examples/WaitIndicator/MyWaitIndicator/MyWaitIndicator
+    * @demo Examples/WaitIndicator/MyWaitIndicatorTable/MyWaitIndicatorTable
     */
 
    function (CoreExtend, Deferred, WindowManager, CoreControl, doT) {

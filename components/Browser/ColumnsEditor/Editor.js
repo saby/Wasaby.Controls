@@ -79,10 +79,10 @@
  * @see SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase#_gatherColumnsInfo
  * @see SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase#useColumnsEditor
  *
- * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
- * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
- * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndCustomButton Пример браузера с собственной кнопкой, открывающией редактор колонок
- * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
+ * @demo Examples/ColumnsEditor/BrowserAndEditorButton/BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
+ * @demo Examples/ColumnsEditor/BrowserAndEditorButtonWithPresets/BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
+ * @demo Examples/ColumnsEditor/BrowserAndCustomButton/BrowserAndCustomButton Пример браузера с собственной кнопкой, открывающией редактор колонок
+ * @demo Examples/ColumnsEditor/AllCustom/AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
  *
  * @class SBIS3.CONTROLS/Browser/ColumnsEditor/Editor
  * @extends SBIS3.CONTROLS/CompoundControl
@@ -215,10 +215,10 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
           * @see SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase#_gatherColumnsInfo
           * @see SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase#useColumnsEditor
           *
-          * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
-          * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
-          * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.BrowserAndCustomButton Пример браузера с собственной кнопкой, открывающией редактор колонок
-          * @demo SBIS3.CONTROLS.Demo.ColumnsEditor.AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
+          * @demo Examples/ColumnsEditor/BrowserAndEditorButton/BrowserAndEditorButton Пример браузера с кнопкой редактора колонок
+          * @demo Examples/ColumnsEditor/BrowserAndEditorButtonWithPresets/BrowserAndEditorButtonWithPresets Пример браузера с кнопкой редактора колонок, с пресетами и группами колонок
+          * @demo Examples/ColumnsEditor/BrowserAndCustomButton/BrowserAndCustomButton Пример браузера с собственной кнопкой, открывающией редактор колонок
+          * @demo Examples/ColumnsEditor/AllCustom/AllCustom Пример с одиночной кнопкой, открывающией редактор колонок (без браузера)
           */
          open: function (columnsConfig, editorOptions) {
             if (this._result) {

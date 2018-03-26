@@ -35,7 +35,7 @@ define('Controls/Filter/Button/OldPanelOpener',
        * @mixes SBIS3.CONTROLS/Mixins/FilterMixin
        * @mixes SBIS3.CONTROLS/Mixins/PickerMixin
        *
-       * @demo SBIS3.DOCS.FilterButton
+       * @demo Examples/FilterButton/FilterButton/FilterButton
        *
        * @control
        * @public

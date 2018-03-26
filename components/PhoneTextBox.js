@@ -21,7 +21,7 @@ define('SBIS3.CONTROLS/PhoneTextBox', [
     *
     * @class SBIS3.CONTROLS/PhoneTextBox
     * @extends SBIS3.CONTROLS/FormattedTextBox
-    * @demo SBIS3.CONTROLS.Demo.PagePhoneTextBox
+    * @demo Examples/PhoneTextBox/PagePhoneTextBox/PagePhoneTextBox
     *
     * @author Крайнов Д.О.
     *
