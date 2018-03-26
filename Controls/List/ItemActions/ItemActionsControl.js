@@ -21,7 +21,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          var actions = [];
          var options = newOptions ? newOptions : self._options;
          options.itemActions.forEach(function(action){
-            if (options.showAction(action, item)) {
+            if (options.itemActionVisibility(action, item)) {
                actions.push(action);
             }
          });
@@ -130,7 +130,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
    ItemActionsControl.getDefaultOptions = function() {
       return {
          itemActionsType: 'inline',
-         showAction: function(){ return true;}
+         itemActionVisibility: function(){ return true;}
       }
    };
 
