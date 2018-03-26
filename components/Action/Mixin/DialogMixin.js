@@ -149,7 +149,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       },
       _documentClickHandler: function (event) {
          //Клик по связному списку приводит к перерисовке записи в панели, а не открытию новой при autoHide = true
-         if (this._dialog && this._openedPanelConfig.mode === 'floatArea' && this._openedPanelConfig.autoHide) {
+         if (this._dialog && this._openedPanelConfig.mode === 'floatArea' && this._dialog.isVisible() && this._openedPanelConfig.autoHide) {
             if (this._needCloseDialog(event.target)) {
                this._dialog.close();
             }
