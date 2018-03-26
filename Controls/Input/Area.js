@@ -72,7 +72,7 @@ define('Controls/Input/Area', [
       /*
        * Обновляет multiline у area
        */
-      updateIsMultiline: function(self){
+      updateMultiline: function(self){
          var fakeArea = self._children.fakeArea;
          var fakeAreaWrapper = self._children.fakeAreaWrapper;
          //Определим количество строк в Area сравнив высоты fakeArea и ее обертки
@@ -104,7 +104,7 @@ define('Controls/Input/Area', [
          Area.superclass._beforeUpdate.apply(this, arguments);
          _private.setFakeAreaValue(this, newOptions.value);
          _private.updateHasScroll(this);
-         _private.updateIsMultiline(this);
+         _private.updateMultiline(this);
       },
 
       _afterUpdate: function(oldOptions) {
@@ -117,7 +117,7 @@ define('Controls/Input/Area', [
       _valueChangedHandler: function(e, value){
          _private.setFakeAreaValue(this, value);
          _private.updateHasScroll(this);
-         _private.updateIsMultiline(this);
+         _private.updateMultiline(this);
          this._notify('valueChanged', [value]);
       },
 
