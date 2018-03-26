@@ -99,6 +99,26 @@ define(['SBIS3.CONTROLS/Mixins/SearchMixin/SearchMixinUtil'], function (SearchMi
          });
       
       });
+   
+      describe('.textChangedHandler', function () {
+         var self = {};
+   
+         self._onResetIsFired = true;
+         self._options = {
+            startCharacter: 3
+         };
+   
+         it('.textChangedHandler empty text', function() {
+            SearchMixinUtil.textChangedHandler(self, '');
+            assert.isTrue(self._onResetIsFired);
+         });
+   
+         it('.textChangedHandler text length is more then startCharacter', function() {
+            SearchMixinUtil.textChangedHandler(self, 'test');
+            assert.isFalse(self._onResetIsFired);
+         });
+         
+      });
       
    });
 });
