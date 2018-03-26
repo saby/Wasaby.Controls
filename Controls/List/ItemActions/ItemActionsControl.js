@@ -29,10 +29,11 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       },
 
       updateActions: function(self, newOptions){
-         if (self._options.itemActions || newOptions.itemActions) {
-            for (self._listModel.reset();  self._listModel.isEnd();  self._listModel.goToNext()) {
-               var itemData = self._listModel.getCurrent();
-               self._listModel.setItemActions(itemData, _private.fillItemActions(self, itemData.item, newOptions));
+         var options = newOptions ? newOptions : self._options;
+         if (options.itemActions) {
+            for (options.listModel.reset();  options.listModel.isEnd();  options.listModel.goToNext()) {
+               var itemData = options.listModel.getCurrent();
+               options.listModel.setItemActions(itemData, _private.fillItemActions(self, itemData.item, newOptions));
             }
          }
       },
@@ -57,7 +58,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          if (showActions) {
             var  rs = new RecordSet({rawData: showActions});
             childEvent ? childEvent.nativeEvent.preventDefault() : event.nativeEvent.preventDefault();
-            self._listModel._actionHoverItem = itemData.item;
+            self._options.listModel._actionHoverItem = itemData.item;
             self._children['itemActionsOpener'].open({
                target: !context ? event.target: false,
                componentOptions: {items: rs}
@@ -70,17 +71,16 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             event = args && args[1];
          if (actionName === 'itemClick') {
             var action = args[2][0].getRawData();
-            self._onActionClick(event, action, self._listModel._actionHoverItem);
+            self._onActionClick(event, action, self._options.listModel._actionHoverItem);
          }
          self._children['itemActionsOpener'].close();
-         self._listModel._actionHoverItem = false;
+         self._options.listModel._actionHoverItem = false;
          self._forceUpdate();
       }
    };
 
    var ItemActionsControl = Control.extend( {
       _template: template,
-      _listModel: null,
       constructor: function (cfg) {
          ItemActionsControl.superclass.constructor.apply(this, arguments);
          _private.bindHandlers(this);
@@ -89,9 +89,8 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       _beforeMount: function(newOptions){
          var self = this;
          if (newOptions.listModel) {
-            this._listModel = newOptions.listModel;
             _private.updateActions(self, newOptions);
-            this._listModel.subscribe('onListChange', function() {
+            newOptions.listModel.subscribe('onListChange', function() {
                _private.updateActions(self);
             });
          }
@@ -99,10 +98,9 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
       _beforeUpdate: function(newOptions){
          var self = this;
-         if (newOptions.listModel && (this._listModel !== newOptions.listModel)) {
-            this._listModel = newOptions.listModel;
-            _private.updateActions(self);
-            this._listModel.subscribe('onListChange', function() {
+         if (newOptions.listModel && (this._options.listModel !== newOptions.listModel)) {
+            _private.updateActions(self, newOptions);
+            newOptions.listModel.subscribe('onListChange', function() {
                _private.updateActions(self);
             });
          }

@@ -127,6 +127,21 @@ define('Controls-demo/List/ItemActions', [
                     idProperty: 'id',
                     data: srcMore
                 })
+            },
+            changeSource: function() {
+               var
+                  srcMore = [];
+               for ( var i = 0; i < 4 ; i++) {
+                  srcMore.push({
+                     id: i,
+                     title: 'Новые ресурсы №' + i,
+                     description: 'в цикле задаю я ' + i
+                  })
+               }
+               this._viewSource = new MemorySource({
+                  idProperty: 'id',
+                  data: srcMore
+               });
             }
         });
     return ModuleClass;
