@@ -77,7 +77,7 @@ define('Controls/Input/Dropdown',
          _open: function () {
             var config = {
                componentOptions: {
-                  items: this._items,
+                  items: this._items
                },
                target: this._children.popupTarget
             };

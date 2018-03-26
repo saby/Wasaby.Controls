@@ -144,7 +144,8 @@ define('Controls/Input/Mask/FormatBuilder',
 
                mask += ';';
 
-               while (execSearchingGroupChar = searchingGroupChar.exec(mask)) {
+               execSearchingGroupChar = searchingGroupChar.exec(mask);
+               while (execSearchingGroupChar) {
                   maskCharData = _private.getMaskCharData(execSearchingGroupChar);
 
                   // Конец группы ключей.
@@ -203,6 +204,9 @@ define('Controls/Input/Mask/FormatBuilder',
                      searchingGroups += _private.escapeRegSpecialChars(maskCharData.value);
                      singlingDelimitersGroup += maskCharData.value;
                   }
+
+                  //while loop
+                  execSearchingGroupChar = searchingGroupChar.exec(mask);
                }
 
                return {
