@@ -90,9 +90,6 @@ define('Controls/Input/Area', [
 
       _multiline: undefined,
 
-      //Приходится записывать _private в свойство, для доступа из unit-тестов
-      _private: _private,
-
       constructor: function(options) {
          Area.superclass.constructor.call(this, options);
          //_multiline отвечает за навешивание классов многострочного поля в InputRender
@@ -172,6 +169,9 @@ define('Controls/Input/Area', [
          ])
       };
    };*/
+
+   //For unit-tests
+   Area._private = _private;
 
    return Area;
 
