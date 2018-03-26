@@ -1,8 +1,7 @@
-<div class="controls-RichEditor__richTextArea">
+<div class="controls-RichEditor__richTextArea" style="{{autoHeight && maximalHeight && maximalHeight != 0 ? 'max-height:' + maximalHeight + 'px;' }}">
    <div class="controls-RichEditor__placeholder" >{{ placeholder }}</div>
    <SBIS3.CONTROLS:ScrollContainer
-      class="controls-RichEditor__scrollContainer"
-      attributes="{{autoHeight && maximalHeight && maximalHeight != 0 ? {'style':'max-height:' + maximalHeight + 'px;'} }}"
+      class="controls-ScrollContainer_flex controls-RichEditor__scrollContainer"
       takeScrollbarHidden="{{!(autoHeight && maximalHeight == 0)}}"
       >
       <div
