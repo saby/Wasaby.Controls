@@ -25,13 +25,14 @@ define('Controls/List/SourceControl', [
             _private.showIndicator(self);
             return self._sourceController.load(self._filter, self._sorting).addCallback(function (list) {
 
-               self._notify('onDataLoad', [list]);
+               //todo события не работают до маунта в дом, решить что с этим делать
+               //https://online.sbis.ru/opendoc.html?guid=1e98cfd2-f855-448e-adff-43ab8339e961
+               //self._notify('onDataLoad', [list]);
 
                _private.hideIndicator(self);
 
                if (self._listViewModel) {
                   self._listViewModel.setItems(list);
-                  self._forceUpdate();
                }
 
                //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
@@ -290,7 +291,7 @@ define('Controls/List/SourceControl', [
          this._publish('onDataLoad');
       },
 
-      _beforeMount: function(newOptions) {
+      _beforeMount: function(newOptions, context, receivedState) {
          var self = this;
          this._virtualScroll = new VirtualScroll({
             maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
@@ -315,22 +316,12 @@ define('Controls/List/SourceControl', [
 
 
 
-            if (!this._items) {
-               _private.reload(this);
+            if (receivedState) {
+               this._listViewModel.setItems(receivedState);
             }
-         }
-
-         //TODO: если нет item'ов, то нужно дождаться их прогрузки. Чтобы дождаться их прогрузки нужно вернуть Deferred из _beforeMount.
-         //Но т.к. reload стреляет событиями, то начинают валиться ошибки, потому что в _beforeMount нельзя стрелять событиями
-         //Из-за этого не получается сделать старт редактирования при отрисовке
-         if (newOptions.editingConfig && newOptions.editingConfig.record) {
-            //TODO: непонятно как ставить маркер при добавлении
-            var recordClone = newOptions.editingConfig.item.clone();
-            this._listViewModel.setEditingItem(recordClone);
-            this.initialEditInPlaceConfig = {
-               item: recordClone,
-               isAdd: this._listViewModel._itemsModel._isAdd
-            };
+            else {
+               return _private.reload(this);
+            }
          }
       },
 
@@ -424,7 +415,7 @@ define('Controls/List/SourceControl', [
       },
 
       reload: function() {
-         _private.reload(this);
+         return _private.reload(this);
       },
 
       beginEdit: function(record) {

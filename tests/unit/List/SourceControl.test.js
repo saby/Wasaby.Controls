@@ -68,7 +68,16 @@ define([
          };
          var ctrl = new SourceControl(cfg);
          ctrl.saveOptions(cfg);
-         ctrl._beforeMount(cfg);
+         var mountResult = ctrl._beforeMount(cfg);
+         assert.isTrue(!!mountResult.addCallback, '_beforeMount doesn\'t return deferred');
+
+         assert.isTrue(!!ctrl._sourceController, '_dataSourceController wasn\'t created before mounting');
+         assert.deepEqual(filter, ctrl._filter, 'incorrect filter before mounting');
+
+         //received state 3'rd argument
+         mountResult = ctrl._beforeMount(cfg, {}, rs);
+         assert.isFalse(!!(mountResult && mountResult.addCallback), '_beforeMount return deferred with received state');
+
          assert.isTrue(!!ctrl._sourceController, '_dataSourceController wasn\'t created before mounting');
          assert.deepEqual(filter, ctrl._filter, 'incorrect filter before mounting');
 
