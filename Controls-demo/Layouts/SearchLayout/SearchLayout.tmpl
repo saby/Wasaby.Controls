@@ -1,4 +1,4 @@
-<Controls.Layout.Filter attr:class="controls-demo__FilterLayout">
+<Controls.Layout.Filter attr:class="controls-demo__FilterLayout" filterButtonSource="{{_filterSource}}" historyId="123" fastFilterSource="{{_filterSource}}">
     <ws:content>
         <div>
             <Controls.Layout.Search
@@ -10,9 +10,10 @@
                             <div class="controls-demo__Layouts_filterComponents">
                                 <Controls.Input.Search bind:value="_searchValue"/>
                                 <div style="display: flex">
-                                <Controls.Filter.FastData bind:value="_value"
-                                                          source="{{_filterSource}}"
-                                                          items="{{_filterData}}"/>
+                                    <Controls.Layout.FastFilter>
+                                <ws:content><Controls.Filter.FastData bind:value="_value"/>
+                                </ws:content>
+                                    </Controls.Layout.FastFilter>
                                     <Controls.Filter.Button attr:style="max-width: 200px;" filterTemplate="js!Controls-demo/Layouts/SearchLayout/resources/FBPanelLayout">
                                         <ws:items>
                                             <ws:Array>

@@ -1,6 +1,6 @@
 <div class="controls-FastData">
 
-   <ws:for data="index, i in _listConfig">
+   <ws:for data="index, i in _items">
       <div class="controls-FastData__wrapper">
          <!--Стрелка отображается всегда - это не по стандарту!-->
          <div class="controls-FastData__block"
@@ -8,7 +8,6 @@
             <svg class="controls-FastData__iconArrow" xmlns="http://www.w3.org/2000/svg" width="5" height="9" viewBox="0 0 5 9">
                <path xmlns="http://www.w3.org/2000/svg" d="M0,.47A.48.48,0,0,1,.13.14.4.4,0,0,1,.44,0,1,1,0,0,1,.75.16L4.91,4.22,5,4.34a.41.41,0,0,1,0,.31l-.06.13L.75,8.84A1,1,0,0,1,.44,9a.4.4,0,0,1-.31-.14A.48.48,0,0,1,0,8.53Z"></path>
             </svg>
-            {{debug()}}
             <div class="controls-Dropdown__text">{{_updateText(i, index, _selectedItems[key], displayProperty || 'title')}}
             </div>
          </div>
