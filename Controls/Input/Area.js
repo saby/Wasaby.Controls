@@ -70,12 +70,12 @@ define('Controls/Input/Area', [
       },
 
       /*
-       * Обновляет multiline у area
+       * Updates area multiline
        */
       updateMultiline: function(self){
          var fakeArea = self._children.fakeArea;
          var fakeAreaWrapper = self._children.fakeAreaWrapper;
-         //Определим количество строк в Area сравнив высоты fakeArea и ее обертки
+         //Will define the number of rows in Area by comparing fakeArea and her wrap heights
          self._multiline = fakeArea.clientHeight > fakeAreaWrapper.clientHeight;
       }
    };
@@ -92,8 +92,8 @@ define('Controls/Input/Area', [
 
       constructor: function(options) {
          Area.superclass.constructor.call(this, options);
-         //_multiline отвечает за навешивание классов многострочного поля в InputRender
-         //Устанавливаем до отрисовки компонента, чтобы не было скачков
+         //'_multiline' is responsible for adding multi-line field classes to InputRender
+         //Should be set before the component is mounted into DOM to avoid content jumps
          this._multiline = options.minLines > 1;
       },
 
