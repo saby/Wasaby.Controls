@@ -1,7 +1,7 @@
 define('Controls/Popup/Opener/Sticky',
    [
       'Controls/Popup/Opener/Base',
-      'Controls/Popup/Opener/Sticky/Strategy'
+      'Controls/Popup/Opener/Sticky/StickyController'
 
    ],
    function (Base, Strategy) {

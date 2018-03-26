@@ -6,7 +6,7 @@ define('Controls/Dropdown/resources/MenuViewModel',
       'Core/Abstract',
       'WS.Data/Chain',
       'Controls/List/SimpleList/ItemsViewModel',
-      'WS.Data/Relation/Hierarchy',
+      'WS.Data/Relation/Hierarchy'
    ],
    function (Abstract, Chain, ItemsViewModel, Hierarchy) {
       var MenuViewModel = Abstract.extend({

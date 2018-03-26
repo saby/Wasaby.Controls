@@ -1,7 +1,7 @@
 define('Controls/Popup/Opener/Stack',
    [
       'Controls/Popup/Opener/Base',
-      'Controls/Popup/Opener/Stack/Strategy'
+      'Controls/Popup/Opener/Stack/StackController'
    ],
    function (Base, Strategy) {
       /**
