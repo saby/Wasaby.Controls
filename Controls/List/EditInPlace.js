@@ -71,7 +71,6 @@ define('Controls/List/EditInPlace', [
       afterBeginAdd: function(self, options) {
          self._isAdd = true;
          self._editingItem = options.item.clone();
-         self._addOptions = options;
          self._notify('afterBeginEdit', [self._editingItem, true], {bubbling: true});
          //TODO: копипаста
          self._options.listModel.setEditingItem(self._editingItem);
@@ -129,7 +128,6 @@ define('Controls/List/EditInPlace', [
 
       acceptChanges: function(self) {
          if (self._isAdd) {
-            //TODO: надо смотреть на опции при добавлении
             self._options.listModel.getItems().add(self._editingItem);
          } else {
             self._oldItem.merge(self._editingItem);
@@ -140,7 +138,6 @@ define('Controls/List/EditInPlace', [
          self._oldItem = null;
          self._editingItem = null;
          self._isAdd = null;
-         self._addOptions = null;
       },
 
       validate: function(self) {
@@ -252,9 +249,16 @@ define('Controls/List/EditInPlace', [
 
       _beforeMount: function(newOptions) {
          if (newOptions.editingConfig) {
-            //TODO: нужно смотреть на наличие item'а и дёргать setEditingItem
-            this._isAdd = newOptions.editingConfig.isAdd;
-            this._editingItem = newOptions.editingConfig.item;
+            if (newOptions.editingConfig.item) {
+               this._editingItem = newOptions.editingConfig.item;
+               newOptions.listModel.setEditingItem(this._editingItem);
+               //TODO: нормально проверять isAdd
+               if (newOptions.listModel._itemsModel._isAdd) {
+                  this._isAdd = true;
+               } else {
+                  this._oldItem = newOptions.listModel.getItems().at(newOptions.listModel.getEditingItemIndex());
+               }
+            }
          }
       },
 
