@@ -122,7 +122,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                action.execute({
                   item: toEditItem,
                   componentOptions: {
-                     allowDelete: isFavorite,
+                     editMode: isFavorite,
                      textValue: toEditItem.get(self._options.displayProperty),
                      handlers: {
                         onDestroyModel: function() {
