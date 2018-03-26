@@ -1,1 +1,8 @@
-<div class="controls-CheckBox__caption controls-CheckBox__caption-color__{{enabled ? 'enabled':'disabled'}}">{{caption ? caption : '&nbsp;'}}</div>
+<div class="controls-CheckBox__caption controls-CheckBox__caption-color__{{enabled ? 'enabled':'disabled'}}">
+    <ws:if data="{{caption}}">
+        {{caption}}
+    </ws:if>
+    <ws:else>
+        &nbsp;
+    </ws:else>
+</div>
