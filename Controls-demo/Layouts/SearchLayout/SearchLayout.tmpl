@@ -1,4 +1,4 @@
-<Controls.Layout.Filter attr:class="controls-demo__FilterLayout">
+<Controls.Layout.Filter attr:class="controls-demo__FilterLayout" filterButtonSource="{{_filterSource}}" historyId="123">
     <ws:content>
         <div>
             <Controls.Layout.Search
@@ -9,7 +9,11 @@
                         <div class="controls-demo__Layouts_content">
                             <div class="controls-demo__Layouts_filterComponents">
                                 <Controls.Input.Search bind:value="_searchValue"/>
-                                <Controls-demo:Layouts:LayoutFilterComponent/>
+                                <ws:Controls.Layout.FilterButton>
+                                    <ws:content>
+                                        <Controls-demo:Layouts:LayoutFilterComponent/>
+                                    </ws:content>
+                                </ws:Controls.Layout.FilterButton>
                             </div>
                             <div class="controls-demo__LayoutInner">
                                 <Controls.Layout.List source="{{_dataSource}}" searchParam="title">

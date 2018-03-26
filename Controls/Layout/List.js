@@ -103,12 +103,15 @@ define('Controls/Layout/List',
          },
          
          _beforeUpdate: function (options, context) {
-            if (!isEqual(this.context.get('searchLayoutField').searchValue, context.searchLayoutField.searchValue)) {
-               _private.searchValueChanged(this, context.searchLayoutField.searchValue);
+            var searchContextValue = context.searchLayoutField.searchValue;
+            var filterContextValue = context.filterLayoutField.filter;
+            
+            if (!isEqual(this.context.get('searchLayoutField').searchValue, searchContextValue)) {
+               _private.searchValueChanged(this, searchContextValue);
             }
             
-            if (!isEqual(this.context.get('filterLayoutField').filter, context.filterLayoutField.filter)) {
-               _private.filterChanged(this, context.filterLayoutField.filter);
+            if (!isEqual(this.context.get('filterLayoutField').filter, filterContextValue)) {
+               _private.filterChanged(this, filterContextValue);
             }
          },
          
