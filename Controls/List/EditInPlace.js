@@ -2,9 +2,8 @@ define('Controls/List/EditInPlace', [
    'Core/Control',
    'tmpl!Controls/List/EditInPlace/EditInPlace',
    'Core/Deferred',
-   'WS.Data/Entity/Record',
-   'WS.Data/Type/descriptor'
-], function (Control, template, Deferred, Record, types) {
+   'WS.Data/Entity/Record'
+], function (Control, template, Deferred, Record) {
 
    var _private = {
       beginEdit: function(self, record) {
@@ -33,9 +32,7 @@ define('Controls/List/EditInPlace', [
       afterBeginEdit: function(self, record) {
          self._editingItem = record.clone();
          self._notify('afterBeginEdit', [self._editingItem], {bubbling: true});
-         //TODO: копипаста
          self._options.listModel.setEditingItem(self._editingItem);
-         self._options.listModel.setMarkedKey(self._editingItem.get(self._options.listModel._options.idProperty));
 
          return self._editingItem;
       },
@@ -72,9 +69,7 @@ define('Controls/List/EditInPlace', [
          self._isAdd = true;
          self._editingItem = options.item.clone();
          self._notify('afterBeginEdit', [self._editingItem, true], {bubbling: true});
-         //TODO: копипаста
          self._options.listModel.setEditingItem(self._editingItem);
-         self._options.listModel.setMarkedKey(self._editingItem.get(self._options.listModel._options.idProperty));
 
          return self._editingItem;
       },
@@ -252,11 +247,10 @@ define('Controls/List/EditInPlace', [
             if (newOptions.editingConfig.item) {
                this._editingItem = newOptions.editingConfig.item;
                newOptions.listModel.setEditingItem(this._editingItem);
-               //TODO: нормально проверять isAdd
                if (newOptions.listModel._itemsModel._isAdd) {
                   this._isAdd = true;
                } else {
-                  this._oldItem = newOptions.listModel.getItems().at(newOptions.listModel.getEditingItemIndex());
+                  this._oldItem = newOptions.listModel.getItemById(this._editingItem.get(newOptions.listModel._options.idProperty)).getContents();
                }
             }
          }
@@ -323,7 +317,7 @@ define('Controls/List/EditInPlace', [
       },
 
       _onKeyDown: function(e) {
-         if (this._options.listModel.getEditingItem()) {
+         if (this._editingItem) {
             switch(e.nativeEvent.keyCode) {
                case 13: //Enter
                   if (this._options.editingConfig && this._options.editingConfig.singleEdit) {

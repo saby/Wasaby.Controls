@@ -126,7 +126,7 @@ define('Controls/List/SimpleList/ItemsViewModel',
                   getPropValue: ItemsUtil.getPropertyValue,
                   idProperty: this._options.idProperty,
                   displayProperty: this._options.displayProperty,
-                  index : this._isAdd ? this.getItems().getCount() : index,
+                  index: this._isAdd ? this.getItems().getCount() : index,
                   item: this._editingItem,
                   dispItem: this._editingItemProjection,
                   isEditing: true
@@ -141,8 +141,14 @@ define('Controls/List/SimpleList/ItemsViewModel',
          getEditingItem: function() {
             return this._editingItem;
          },
+         getEditingItemData: function() {
+            return this._editingItemData;
+         },
          getEditingItemIndex: function() {
             return this._editingItemData ? this._editingItemData.index : null;
+         },
+         getEditingItemProjection: function() {
+            return this._editingItemProjection;
          }
       });
 

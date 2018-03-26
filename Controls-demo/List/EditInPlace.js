@@ -44,7 +44,7 @@ define('Controls-demo/List/EditInPlace', [
             data: srcData
          });
          this.editingConfig = {
-            // item: Record.fromObject({ id: 4, title: 'добавление стартует по опции', description: 'а может и не стартует', randomField: 'поле, которого нет'}),
+            // item: Record.fromObject({ id: 3, title: 'добавление стартует по опции', description: 'а может и не стартует', randomField: 'поле, которого нет'}),
             editOnClick: true,
             singleEdit: false,
             autoAdd: true
@@ -60,7 +60,7 @@ define('Controls-demo/List/EditInPlace', [
             options = {
                item: Record.fromObject({
                   id: counter++,
-                  title: 'подготовленный item',
+                  title: '',
                   description: 'описание',
                   extraField: 'поле, которого нет у остальных itemов'
                })
