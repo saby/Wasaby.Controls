@@ -10,7 +10,7 @@ define('Controls-demo/Layouts/SearchLayout/resources/FBPanelLayout', // Уста
       'SBIS3.CONTROLS/TextBox',
       'Controls/Filter/FastData',
       'SBIS3.CONTROLS/Filter/Button/Text',
-      'css!SBIS3.DOCS.FBPanel', // Подключаем CSS-файл со стилями, которые будут использованы в вёрстке диалога
+      'css!Controls-demo/Layouts/SearchLayout/resources/FBPanelLayout'// Подключаем CSS-файл со стилями, которые будут использованы в вёрстке диалога
    ],
    function( // Подключенные в массиве зависимостей файлы будут доступны в следующих переменных
       CompoundControl, // В эту переменную импортируется класс CompoundControl из файла CompoundControl.module.js

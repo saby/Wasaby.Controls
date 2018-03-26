@@ -4,17 +4,20 @@
 
 .controls-FastData__iconArrow,
 .controls-FastData__iconReset {
-   .icon-size(@icon-size_FastData);
+   font-family: 'cbuc-icons';
    .flexbox();
-   color: @color_FastData-icon;
 }
 
 .controls-FastData__iconReset {
+   font-size: @icon-size_FastData;
    color: @color_FastData-iconReset;
 }
 
-.controls-FastData__iconArrow:hover {
-   color: @color_FastData-icon_hover;
+.controls-FastData__iconArrow {
+   fill: @color_FastData-icon;
+   height: @height_FastData-iconArrow;
+   width: @width_FastData-iconArrow;
+   padding: @padding_FastData-iconArrow;
 }
 
 .controls-FastData__wrapper {
@@ -26,8 +29,9 @@
 
 .controls-FastData__block {
    .inline-flexbox();
+   align-items: center;
 }
 
 .controls-FastData__block:hover .controls-FastData__iconArrow {
-      color: @color_FastData-icon_hover;
+      fill: @color_FastData-iconArrow_hover;
 }

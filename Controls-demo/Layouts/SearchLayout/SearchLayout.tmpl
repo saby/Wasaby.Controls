@@ -10,9 +10,9 @@
                             <div class="controls-demo__Layouts_filterComponents">
                                 <Controls.Input.Search bind:value="_searchValue"/>
                                 <div style="display: flex">
-                                <Controls.Filter.FastData source="{{_filterSource}}"
-                                                          bind:value="_value"
-                                items="{{_filterData}}"/>
+                                <Controls.Filter.FastData bind:value="_value"
+                                                          source="{{_filterSource}}"
+                                                          items="{{_filterData}}"/>
                                     <Controls.Filter.Button attr:style="max-width: 200px;" filterTemplate="js!Controls-demo/Layouts/SearchLayout/resources/FBPanelLayout">
                                         <ws:items>
                                             <ws:Array>
@@ -41,14 +41,13 @@
                                                             </div>
                                                         </ws:contentTemplate>
                                                     </ws:partial>
-                                                    <ws:emptyTemplate>
-                                                        Не найдено
-                                                    </ws:emptyTemplate>
                                                 </ws:itemTemplate>
-
                                             </ws:Controls.List>
                                         </div>
                                     </ws:content>
+                                    <ws:emptyTemplate>
+                                        Не найдено
+                                    </ws:emptyTemplate>
                                     <ws:navigation source="page" view="page">
                                         <ws:sourceConfig pageSize="{{20}}" page="{{0}}" mode="totalCount"/>
                                     </ws:navigation>

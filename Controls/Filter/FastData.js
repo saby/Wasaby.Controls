@@ -10,11 +10,12 @@ define('Controls/Filter/FastData',
       'Core/core-instance',
       'Core/IoC',
       'WS.Data/Utils',
+      'Core/ParallelDeferred',
       'css!Controls/Filter/FastData/FastData',
       'css!Controls/Input/Dropdown/Dropdown'
 
    ],
-   function (Control, DropdownUtils, template, SourceController, Chain, RecordSet, SourceUtil, cInstance, IoC, Utils) {
+   function (Control, DropdownUtils, template, SourceController, Chain, RecordSet, SourceUtil, cInstance, IoC, Utils, pDeferred) {
 
       'use strict';
 
@@ -52,15 +53,20 @@ define('Controls/Filter/FastData',
 
                self._selectedIndexes[index] = items.getIndexByValue(idProperty, self._configs[index].value);
 
-               self._forceUpdate();
+
             });
          },
 
-         reload: function (self, configs) {
-            self._listConfig = new RecordSet({rawData: configs});
-            return Chain(configs).map(function (item, index) {
-               _private.loadListConfig(self, item, index);
+         reload: function (self) {
+            var pDef = new pDeferred();
+            Chain(self._listConfig).map(function (item, index) {
+               pDef.push(_private.loadListConfig(self, item, index));
+
+
             }).value();
+            return pDef.done().getResult().addCallback(function () {
+               self._forceUpdate();
+            });
          },
 
          getFilter: function (self) {
@@ -116,14 +122,17 @@ define('Controls/Filter/FastData',
 
          _beforeMount: function (options) {
             if (options.items) {
-               return _private.reload(this, options.items);
+               this._listConfig = new RecordSet({rawData: options.items});
+               return _private.reload(this);
             }
 
+            var self = this;
             this.sourceController = new SourceController({
                source: options.source
             });
             return this.sourceController.load().addCallback(function (configs) {
-               return _private.reload(this, configs);
+               self._listConfig = configs;
+               return _private.reload(self);
             });
          },
 
