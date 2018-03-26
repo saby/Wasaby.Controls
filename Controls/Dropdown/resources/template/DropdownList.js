@@ -87,12 +87,12 @@ define('Controls/Dropdown/resources/template/DropdownList',
                case 'itemMouseOut':
                   if (this._options.depth > 1) {
                      this._notify('sendResult', [['itemMouseOut', args[1]]]);
+                     this._notify('close');
                   }
                   break;
                case 'itemClick':
                   this._notify('sendResult', [['itemClick', args[1], args[2]]]);
             }
-            this._notify('close');
          },
          _itemClickHandler: function (event, item) {
             this._notify('sendResult', [['itemClick', event, [item]]]); //TODO Баг/Фича с передачей аргументов в попап.
