@@ -1,9 +1,10 @@
 define('Controls/List/EditInPlace', [
    'Core/Control',
+   'tmpl!Controls/List/EditInPlace/EditInPlace',
    'Core/Deferred',
    'WS.Data/Entity/Record',
    'WS.Data/Type/descriptor'
-], function (Control, Deferred, Record, types) {
+], function (Control, template, Deferred, Record, types) {
 
    var _private = {
       beginEdit: function(self, record) {
@@ -32,6 +33,9 @@ define('Controls/List/EditInPlace', [
       afterBeginEdit: function(self, record) {
          self._editingItem = record.clone();
          self._notify('afterBeginEdit', [self._editingItem], {bubbling: true});
+         //TODO: копипаста
+         self._options.listModel.setEditingItem(self._editingItem);
+         self._options.listModel.setMarkedKey(self._editingItem.get(self._options.listModel._options.idProperty));
 
          return self._editingItem;
       },
@@ -69,6 +73,9 @@ define('Controls/List/EditInPlace', [
          self._editingItem = options.item.clone();
          self._addOptions = options;
          self._notify('afterBeginEdit', [self._editingItem, true], {bubbling: true});
+         //TODO: копипаста
+         self._options.listModel.setEditingItem(self._editingItem);
+         self._options.listModel.setMarkedKey(self._editingItem.get(self._options.listModel._options.idProperty));
 
          return self._editingItem;
       },
@@ -89,15 +96,19 @@ define('Controls/List/EditInPlace', [
             //Если мы попали сюда, то прикладники сами сохраняют запись
             return result.addCallback(function() {
                _private.acceptChanges(self);
-               self._notify('afterEndEdit', [self._oldItem, self._isAdd], {bubbling: true});
-               _private.resetVariables(self);
+               _private.afterEndEdit(self);
             });
          }
 
          return _private.updateModel(self, commit).addCallback(function() {
-            self._notify('afterEndEdit', [self._oldItem, self._isAdd], {bubbling: true});
-            _private.resetVariables(self);
+            _private.afterEndEdit(self);
          });
+      },
+
+      afterEndEdit: function(self) {
+         self._notify('afterEndEdit', [self._oldItem, self._isAdd], {bubbling: true});
+         _private.resetVariables(self);
+         self._options.listModel.setEditingItem(null);
       },
 
       updateModel: function(self, commit) {
@@ -107,7 +118,7 @@ define('Controls/List/EditInPlace', [
                   _private.acceptChanges(self);
                }).addErrback(function(error) {
                   return error;
-               })
+               });
             } else {
                _private.acceptChanges(self);
             }
@@ -119,7 +130,7 @@ define('Controls/List/EditInPlace', [
       acceptChanges: function(self) {
          if (self._isAdd) {
             //TODO: надо смотреть на опции при добавлении
-            self._options.items.add(self._editingItem);
+            self._options.listModel.getItems().add(self._editingItem);
          } else {
             self._oldItem.merge(self._editingItem);
          }
@@ -133,7 +144,27 @@ define('Controls/List/EditInPlace', [
       },
 
       validate: function(self) {
-         return self._notify('beforeEndEdit');
+         return self._children.formController.submit();
+      },
+
+      editNextTarget: function(self, editNextRow) {
+         var
+            items = self._options.listModel.getItems(),
+            index = self._options.listModel.getEditingItemIndex();
+
+         if (editNextRow) {
+            if (index < items.getCount() - 1) {
+               self.beginEdit(items.at(index + 1));
+            } else {
+               self.beginAdd();
+            }
+         } else {
+            if (index > 0) {
+               self.beginEdit(items.at(index - 1));
+            } else {
+               self.commitEdit();
+            }
+         }
       }
    },
    BeginEditResult = { // Возможные результаты события "BeginEditResult"
@@ -146,6 +177,7 @@ define('Controls/List/EditInPlace', [
    };
 
    var EditInPlace = Control.extend({
+      _template: template,
       /**
        * @class Controls/List/EditInPlace
        * @author Зайцев А.С.
@@ -228,13 +260,19 @@ define('Controls/List/EditInPlace', [
        * @param {WS.Data/Entity/Record} record
        * @returns {Core/Deferred}
        */
+      //TODO: управлять индикатором загрузки
       beginEdit: function(record) {
-         var self = this;
-         return this.commitEdit().addCallback(function() {
-            return _private.beginEdit(self, record).addCallback(function(newRecord) {
-               return _private.afterBeginEdit(self, newRecord);
+         var self = this,
+            editingItemIndex = self._options.listModel.getEditingItemIndex(),
+            currentItemIndex = self._options.listModel.getItems().getIndex(record);
+         //Если currentItemIndex = -1, то происходит добавление
+         if (editingItemIndex !== currentItemIndex && ~currentItemIndex) {
+            return this.commitEdit().addCallback(function() {
+               return _private.beginEdit(self, record).addCallback(function(newRecord) {
+                  return _private.afterBeginEdit(self, newRecord);
+               });
             });
-         });
+         }
       },
 
       /**
@@ -242,6 +280,7 @@ define('Controls/List/EditInPlace', [
        * @param {BeginAddOptions} options Настройки добавления по месту
        * @returns {Core/Deferred}
        */
+      //TODO: управлять индикатором загрузки
       beginAdd: function(options) {
          var self = this;
          return this.commitEdit().addCallback(function() {
@@ -274,6 +313,37 @@ define('Controls/List/EditInPlace', [
        */
       cancelEdit: function() {
          return _private.endEdit(this, false);
+      },
+
+      _onKeyDown: function(e) {
+         if (this._options.listModel.getEditingItem()) {
+            switch(e.nativeEvent.keyCode) {
+               case 13: //Enter
+                  _private.editNextTarget(this, true);
+                  break;
+               case 27: //Esc
+                  this.cancelEdit();
+                  break;
+               case 9: //Tab //TODO: для грида это не подойдет, так что надо перейти на _onRowDeactivated после решения проблем с ним
+                  _private.editNextTarget(this, !e.nativeEvent.shiftKey);
+                  break;
+            }
+         }
+      },
+
+      _onItemClick: function(e, record) {
+         this.beginEdit(record);
+      },
+
+      _onRowDeactivated: function(e, isTabPressed) {
+         //TODO: по табу стреляет дважды на одной и той же строке, надо Шипину показать
+         //TODO: про таб знаем, а про шифт нет, нужно доработать немножко
+         //TODO: по Esc не стреляет, нужно спросить Шипина
+         if (isTabPressed) {
+            // _private.editNextTarget(this, true);
+            // console.log('ушёл фокус со строки по табу');
+         }
+         e.stopPropagation();
       },
 
       _beforeUnmount: function() {

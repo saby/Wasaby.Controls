@@ -77,6 +77,10 @@ define('Controls/List', [
          }
       },
 
+      beginEdit: function(record) {
+         this._children.sourceControl.beginEdit(record);
+      },
+
       beginAdd: function(options) {
          this._children.sourceControl.beginAdd(options);
       }

@@ -64,10 +64,12 @@ define('Controls-demo/List/EditInPlace', [
             },
             def = new Deferred();
          //имитирую БЛ
-         setTimeout(function() {
-            def.callback(options);
-         }, 3000);
-         return def;
+         // setTimeout(function() {
+         //    def.callback(options);
+         // }, 3000);
+         // return def;
+
+         return options;
       },
 
       _onEndEdit: function(e, item, commit) {

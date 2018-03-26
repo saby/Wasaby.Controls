@@ -6,6 +6,7 @@ define('Controls/List/SourceControl', [
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
    'Core/Deferred',
+   'Controls/List/EditInPlace',
    'css!Controls/List/SourceControl/SourceControl'
 ], function (Control,
              IoC,
@@ -243,50 +244,6 @@ define('Controls/List/SourceControl', [
 
       getItemsCount: function(self) {
          return self._listViewModel ? self._listViewModel.getCount() : 0;
-      },
-
-      beginEdit: function(self, record) {
-         var
-            editingItemIndex = self._listViewModel.getEditingItemIndex(),
-            currentItemIndex = self._listViewModel.getItems().getIndex(record);
-         //Если currentItemIndex = -1, то происходит добавление
-         if (editingItemIndex !== currentItemIndex && ~currentItemIndex) {
-            _private.showIndicator(self);
-            return self._children.editInPlace.beginEdit(record).addBoth(function() {
-               _private.hideIndicator(self);
-            });
-         }
-      },
-
-      beginAdd: function(self, options) {
-         _private.showIndicator(self);
-         return self._children.editInPlace.beginAdd(options).addBoth(function() {
-            _private.hideIndicator(self);
-         });
-      },
-
-      cancelEdit: function(self) {
-         return self._children.editInPlace.cancelEdit();
-      },
-
-      editNextTarget: function(self, editNextRow) {
-         var
-            items = self._listViewModel.getItems(),
-            index = self._listViewModel.getEditingItemIndex();
-
-         if (editNextRow) {
-            if (index < items.getCount() - 1) {
-               _private.beginEdit(self, items.at(index + 1));
-            } else {
-               _private.beginAdd(self);
-            }
-         } else {
-            if (index > 0) {
-               _private.beginEdit(self, items.at(index - 1));
-            } else {
-               self._children.editInPlace.commitEdit();
-            }
-         }
       }
    };
 
@@ -471,55 +428,11 @@ define('Controls/List/SourceControl', [
       },
 
       beginEdit: function(record) {
-         _private.beginAdd(this, record);
+         this._children.editInPlace.beginEdit(record);
       },
 
       beginAdd: function(options) {
-        _private.beginAdd(this, options);
-      },
-
-      _onItemClick: function(e, record) {
-         _private.beginEdit(this, record);
-      },
-
-      _onAfterBeginEdit: function(e, record) {
-         this._listViewModel.setEditingItem(record);
-         this._listViewModel.setMarkedKey(record.get(this._options.idProperty));
-      },
-
-      _onAfterEndEdit: function() {
-         this._options.listViewModel.setEditingItem(null);
-      },
-
-      _onKeyDown: function(e) {
-         if (this._options.listViewModel.getEditingItem()) {
-            switch(e.nativeEvent.keyCode) {
-               case 13: //Enter
-                  _private.editNextTarget(this, true);
-                  break;
-               case 27: //Esc
-                  _private.cancelEdit(this);
-                  break;
-               case 9: //Tab //TODO: для грида это не подойдет, так что надо перейти на _onRowDeactivated после решения проблем с ним
-                  _private.editNextTarget(this, !e.nativeEvent.shiftKey);
-                  break;
-            }
-         }
-      },
-
-      _onRowDeactivated: function(e, isTabPressed) {
-         //TODO: по табу стреляет дважды на одной и той же строке, надо Шипину показать
-         //TODO: про таб знаем, а про шифт нет, нужно доработать немножко
-         //TODO: по Esc не стреляет, нужно спросить Шипина
-         if (isTabPressed) {
-            // _private.editNextTarget(this, true);
-            // console.log('ушёл фокус со строки по табу');
-         }
-         e.stopPropagation();
-      },
-
-      _onBeforeEndEdit: function() {
-         return this._children.listView.validate();
+        this._children.editInPlace.beginAdd(options);
       }
    });
 
