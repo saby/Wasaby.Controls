@@ -96,11 +96,14 @@ define('Controls/List/SimpleList/ItemsViewModel',
          },
 
          removeItem: function(item) {
-            this._items.removeItem(item);
+            this._items.remove(item);
          },
 
-         removeItemAt: function(index) {
-            this._items.removeItemAt(index);
+         removeItemByKey: function(key) {
+            var item = this._items.getRecordById(key);
+            if (item) {
+               this._items.remove(item);
+            }
          }
       });
 

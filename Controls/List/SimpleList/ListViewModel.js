@@ -104,11 +104,11 @@ define('Controls/List/SimpleList/ListViewModel',
          },
 
          removeItem: function(item) {
-            this._itemsModel.remove(item);
+            this._itemsModel.removeItem(item);
          },
 
-         removeItemAt: function(index) {
-            this._itemsModel.removeAt(index);
+         removeItemByKey: function(key) {
+            this._itemsModel.removeItemByKey(key);
          },
 
          getCount: function() {
