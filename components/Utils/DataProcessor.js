@@ -170,14 +170,10 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
       exportDataSet: function(fileName, fileType, cfg, pageOrientation, methodName, isExcel){
          var
             columns  = coreClone(this._options.columns),
-            records,
             rawData  = {s : [], d : []},
-            fields = [], titles = [];
+            parsedColumns;
          if (!cfg) {
-            for (var i = 0; i < columns.length; i++) {
-               fields.push(columns[i].field);
-               titles.push(columns[i].title || columns[i].field);
-            }
+            parsedColumns = this._prepareColumns(columns);
 
             //TODO после метода filter сейчас dataSet возвращает getRawData = null, ошибка выписана, после исправления просто передать рекордсет
             //и перевести на SbisService.call
@@ -191,8 +187,8 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
 
             cfg = {
                FileName : fileName,
-               Fields : fields,
-               Titles : titles,
+               Fields : parsedColumns.fields,
+               Titles : parsedColumns.titles,
                Data : rawData
             };
             if (pageOrientation) {
@@ -281,8 +277,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
       getFullFilter : function(selectedNumRecords, eng){
          var dataSource = this._options.dataSource,
             columns = coreClone(this._options.columns),
-            fields = [],
-            titles = [],
+            parsedColumns,
             filter,
             navigation,
             queryParams,
@@ -290,10 +285,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
             openedPath,
             hierField;
 
-         for (var i = 0; i < columns.length; i++) {
-            fields.push(columns[i].field);
-            titles.push(columns[i].title || columns[i].field);
-         }
+         parsedColumns = this._prepareColumns(columns);
          //openedPath[key] = true;
          filter = coreClone(this._options.filter || {});
          if (this._options.hierField !== undefined){
@@ -321,12 +313,27 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
          cfg[eng ? 'Filter' : 'Фильтр'] = filter ? Record.fromObject(filter, dataSource.getAdapter()) : null;
          cfg[eng ? 'Sorting' : 'Сортировка'] =  null;
          cfg[eng ? 'Pagination' : 'Навигация'] = navigation ? Record.fromObject(navigation, dataSource.getAdapter()) : null;
-         cfg[eng ? 'Fields' : 'Поля'] = fields;
-         cfg[eng ? 'Titles' : 'Заголовки'] = titles;
+         cfg[eng ? 'Fields' : 'Поля'] = parsedColumns.fields;
+         cfg[eng ? 'Titles' : 'Заголовки'] = parsedColumns.titles;
          if (!eng) {
             cfg['fileDownloadToken'] = ('' + Math.random()).substr(2)* 1;
          }
          return cfg;
+      },
+
+      _prepareColumns: function(columns) {
+         var result = {
+            fields: [],
+            titles: []
+         };
+         for (var i = 0; i < columns.length; i++) {
+            if (columns[i].field) {
+               result.fields.push(columns[i].field);
+               result.titles.push(columns[i].title || columns[i].field);
+            }
+         }
+
+         return result;
       },
 
       _prepareNavigation: function(offset, limit, hasMore) {

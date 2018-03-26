@@ -1,12 +1,17 @@
 define([
    'Lib/File/Attach/LazyAttach',
    'Core/Deferred',
+   'Core/constants',
    'Lib/File/LocalFile',
    'Lib/File/LocalFileLink',
    'Lib/File/HttpFileLink',
    'Tests/Unit/File/GetResources'
-], function (LazyAttach, Deferred, LocalFile, LocalFileLink, HttpFileLink, GetResources) {
+], function (LazyAttach, Deferred, constants, LocalFile, LocalFileLink, HttpFileLink, GetResources) {
    'use strict';
+
+   if (!constants.isBrowserPlatform) {
+      return;
+   }
 
    describe('Controls/File/LazyAttach', function () {
       var getters = ['FileGetter', 'LinkGetter', 'HttpGetter'];
