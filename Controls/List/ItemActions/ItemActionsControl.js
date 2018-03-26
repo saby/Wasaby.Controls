@@ -1,6 +1,6 @@
-define('Controls/List/ItemActions/ItemActionsController', [
+define('Controls/List/ItemActions/ItemActionsControl', [
    'Core/Control',
-   'tmpl!Controls/List/ItemActions/ItemActionsController',
+   'tmpl!Controls/List/ItemActions/ItemActionsControl',
    'WS.Data/Collection/RecordSet',
    'tmpl!Controls/List/ItemActions/ItemActionsMenuFooter',
    'css!Controls/List/ItemActions/ItemActions'
@@ -17,21 +17,22 @@ define('Controls/List/ItemActions/ItemActionsController', [
          self._closeActionsMenu = self._closeActionsMenu.bind(self);
       },
 
-      fillItemActions: function(self, item){
+      fillItemActions: function(self, item, newOptions){
          var actions = [];
-         self._options.itemActions.forEach(function(action){
-            if (self._options.showAction(action, item)) {
+         var options = newOptions ? newOptions : self._options;
+         options.itemActions.forEach(function(action){
+            if (options.showAction(action, item)) {
                actions.push(action);
             }
          });
          return actions;
       },
 
-      updateActions: function(self){
-         if (self._options.itemActions) {
+      updateActions: function(self, newOptions){
+         if (self._options.itemActions || newOptions.itemActions) {
             for (self._listModel.reset();  self._listModel.isEnd();  self._listModel.goToNext()) {
                var itemData = self._listModel.getCurrent();
-               self._listModel.setItemActions(itemData, _private.fillItemActions(self, itemData.item));
+               self._listModel.setItemActions(itemData, _private.fillItemActions(self, itemData.item, newOptions));
             }
          }
       },
@@ -77,12 +78,11 @@ define('Controls/List/ItemActions/ItemActionsController', [
       }
    };
 
-   var ItemActionsController = Control.extend( {
+   var ItemActionsControl = Control.extend( {
       _template: template,
       _listModel: null,
       constructor: function (cfg) {
-         ItemActionsController.superclass.constructor.apply(this, arguments);
-         this._publish('onDataLoad');
+         ItemActionsControl.superclass.constructor.apply(this, arguments);
          _private.bindHandlers(this);
       },
 
@@ -90,6 +90,7 @@ define('Controls/List/ItemActions/ItemActionsController', [
          var self = this;
          if (newOptions.listModel) {
             this._listModel = newOptions.listModel;
+            _private.updateActions(self, newOptions);
             this._listModel.subscribe('onListChange', function() {
                _private.updateActions(self);
             });
@@ -100,6 +101,7 @@ define('Controls/List/ItemActions/ItemActionsController', [
          var self = this;
          if (newOptions.listModel && (this._listModel !== newOptions.listModel)) {
             this._listModel = newOptions.listModel;
+            _private.updateActions(self);
             this._listModel.subscribe('onListChange', function() {
                _private.updateActions(self);
             });
@@ -125,12 +127,12 @@ define('Controls/List/ItemActions/ItemActionsController', [
 
    });
 
-   ItemActionsController.getDefaultOptions = function() {
+   ItemActionsControl.getDefaultOptions = function() {
       return {
          itemActionsType: 'inline',
          showAction: function(){ return true;}
       }
    };
 
-   return ItemActionsController;
+   return ItemActionsControl;
 });

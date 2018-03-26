@@ -7,7 +7,7 @@ define('Controls/List/SourceControl', [
    'Controls/Controllers/SourceController',
    'Core/ParallelDeferred',
    'css!Controls/List/SourceControl/SourceControl',
-   'Controls/List/ItemActions/ItemActionsController'
+   'Controls/List/ItemActions/ItemActionsControl'
 ], function (Control,
              IoC,
              SourceControlTpl,

@@ -63,7 +63,7 @@
   .controls-DropdownList__icon {
     .icon-size-without-important(@default-icon-size-medium, @default-icon-medium-font);
   }
-  .controls-DropdownList__item {
+  .controls-DropdownList__row {
     padding-right: 38px;
   }
 }
@@ -74,5 +74,9 @@
   right: 6px;
   z-index: 1;
   cursor: pointer;
-  color: @color_primary;
+  color:#ccc;
+  &:hover {
+    color: @icon-color-primary-hover;
+  }
+
 }
