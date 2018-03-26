@@ -43,13 +43,15 @@ class GetterContainerLazy extends GetterContainer {
              */
             return moduleStubs.require(
                 "optional!" + this._links[name]
-            ).addCallback((modules: [IResourceGetterConstructor]) => {
-                let ResourceGetter = modules[0];
+            ).addCallback(([ResourceGetter]: [IResourceGetterConstructor]) => {
                 delete this._links[name];
                 if (!ResourceGetter) {
                     return Deferred.fail(`ResourceGetter \"${name}\" is not supported in this project`);
                 }
                 let getter =  new ResourceGetter(this._options[name]);
+                if (getter.getType() !== name) {
+                    return Deferred.fail(`The name \"${name}\" is incorrectly specified when registering a dynamic dependency \"${getter.getType()}\"`);
+                }
                 this.push(getter);
                 return getter;
             });
