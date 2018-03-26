@@ -332,7 +332,6 @@ define('Controls/List/SourceControl', [
       },
 
       _beforeUpdate: function(newOptions) {
-         var self = this;
          var filterChanged = newOptions.filter !== this._options.filter;
          var sourceChanged = newOptions.source !== this._options.source;
 
