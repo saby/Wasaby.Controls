@@ -1662,6 +1662,7 @@ define('SBIS3.CONTROLS/Mixins/ItemsControlMixin', [
          }
       },
       /**
+       * @name SBIS3.CONTROLS/Mixins/ItemsControlMixin#reload
        * Перезагружает набор записей компонента с последующим обновлением отображения.
        * @remark
        * При вызове метода происходят события {@link onBeforeDataLoad} &#8594; {@link onDataLoad} &#8594; {@link onItemsReady}, а в случае ошибки &#8594; {@link onDataLoadError}
