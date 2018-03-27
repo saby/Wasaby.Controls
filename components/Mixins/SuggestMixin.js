@@ -24,27 +24,27 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
    };
 
    /**
-    * Миксин автодополнения. Позволяет добавить функционал автодополнения любому контролу или набору контролов.
-    * Управляет {@link list} контролом, который будет использоваться для отображения элементов коллекции.
+    * Миксин, задающий контролу работу с автодополнением - функционал отображения возможных результатов поиска по введенным символам.
     *
-    * @remark
-    * Автодополнение - это функционал отображения возможных результатов поиска по введенным символам.
-    * Получает готовый экземпляр {@link list контрола}, который будет использоваться для отображения элементов коллекции, либо название компонента и опции.
-    * Данный экземпляр контрола вставляется в контейнер, предоставляемый {@link SBIS3.CONTROLS/Mixins/PickerMixin}.
-    * Также предусмотрена возможность {@link usePicker не менять контейнер}, в этом случае поведение PickerMixin блокируется.
+    * Настройка автодополнения для "Поля связи" описана <a href="/doc/platform/developmentapl/interface-development/components/textbox/field-link/suggest/">здесь</a>.
     *
-    * Работает исключительно через контекст (т.е. все контролы, которые взаимодействовуют в автодополнением, должны быть заbindены на контекст):
-    * - отслеживает изменения полей контекста, указанных в {@link listFilter}, формирует фильтр, и отправляет его в {@link list контрол списка сущностей}, вызывая SBIS3.CONTROLS/Mixins/DSMixin::reload();
-    * - отслеживает выбор элемента в {@link list контроле списка сущностей}, разбрасывает значения полей выбранного элемента, указанных в {@link resultBindings}, по полям контектста.
+    * <h3>Алгоритм создания автодополнения и отображения результатов поиска</h3>
     *
-    * Кнопку отображения всех элементов коллекции нужно самостоятельно положить в {@link list} и указать ей имя "showAllButton'
+    * 1. Возвращается экземпляр класса контрола, который задан в опции {@link list}.
+    * 2. Полученный экземпляр вставляется в контейнер, предоставляемый {@link SBIS3.CONTROLS/Mixins/PickerMixin}.
     *
-    * Для показа автодополнения при получения контролом фокуса, используется {@link autoShow}.
+    * <h3>Расширенные возможности автодополнения</h3>
     *
-    * В контроле, к которому подмешивается, обязательно требует миксины:
-    * {@link SBIS3.CONTROLS/Mixins/PickerMixin}
-    * {@link SBIS3.CONTROLS/Mixins/DataBindMixin}
-    * {@link SBIS3.CONTROLS/Mixins/ChooserMixin}
+    * * Кнопка "Показать все" в результатах автодополнения (см. <a href="/doc/platform/developmentapl/interface-development/components/textbox/field-link/suggest/#_5">настройка</a>)
+    * * Отображение автодополнения при получении контролом фокуса (см. {@link autoShow})
+    *
+    * <h4>Требования к окружению</h4>
+    *
+    * Миксин будет работать при условии, что в контрол так же подмешаны следующие миксины:
+    *
+    * * {@link SBIS3.CONTROLS/Mixins/PickerMixin}
+    * * {@link SBIS3.CONTROLS/Mixins/DataBindMixin}
+    * * {@link SBIS3.CONTROLS/Mixins/ChooserMixin}
     *
     * @mixin SBIS3.CONTROLS/Mixins/SuggestMixin
     * @public
@@ -80,14 +80,14 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
       $protected: {
          _options: {
             /**
-             * @cfg {Number} Временная задержка между запросами к бизнес-логике. Используется функционалом автодополнения.
-             * @deprecated Используйте опцию {@link BIS3.CONTROLS/Mixins/SearchMixin#searchDelay}.
+             * @cfg {Number} Задержка между запросами к источнику данных.
+             * @deprecated Используйте опцию {@link SBIS3.CONTROLS/Mixins/SearchMixin#searchDelay}.
              */
             delay: 500,
 
             /**
-             * @cfg {Number|null} Минимальное количество символов, с ввода которых отображается автодополнение.
-             * @deprecated Используйте опцию {@link BIS3.CONTROLS/Mixins/SearchMixin#startCharacter}.
+             * @cfg {Number|null} Минимальное количество символов, после ввода которых контрол выполняет поиск данных.
+             * @deprecated Используйте опцию {@link SBIS3.CONTROLS/Mixins/SearchMixin#startCharacter}.
              */
             startChar: 3,
             /**

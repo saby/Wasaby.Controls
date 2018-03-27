@@ -16,12 +16,24 @@ define('SBIS3.CONTROLS/ComponentBinder/ScrollPagingController',
    
    var _private = {
       updatePaging: function() {
-         var view = this._options.view, pagingVisibility;
+         var view = this._options.view, pagingVisibility, viewHeight;
    
          if (isElementVisible(view.getContainer())) {
             this._updateCachedSizes();
-      
-            var pagesCount = this._viewportHeight ? Math.ceil(this._viewHeight / this._viewportHeight) : 0,
+
+            /**
+             * viewHeight === viewportHeight при 100% маштабе.
+             * В chrome при маштабировании значение viewHeight округляется в большую сторону, а viewportHeight в
+             * меньшую, если их дробные части >= 5, поэтому viewHeight > viewportHeight.
+             * Из этого следует, что всегда нужно отображать paging, но
+             * когда он добавляется, и его размеры маштабируются и добавляются к viewHeight и viewportHeight, то
+             * дробные части могут стать < 5 и округление будем в меньшую сторону и viewHeight === viewportHeight.
+             * После этого paging удаляется. Происходит зацикливание при котором paging, то появляется, то исчезает.
+             * Чтобы избежать этого вычтем 1, чтобы не учитывать округление, при определении видимости paging.
+             */
+            viewHeight = detection.chrome ? this._viewHeight - 1 : this._viewHeight;
+
+            var pagesCount = this._viewportHeight ? Math.ceil(viewHeight / this._viewportHeight) : 0,
                infiniteScroll = view._getOption('infiniteScroll');
             /* Пэйджинг не показываем при загрузке вверх и в обе стороны, он работает некорректно.
              Сейчас пэйджинг заточен на загрузку вниз. Код необходимо переписать. */

@@ -658,7 +658,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      document.addEventListener('paste', onPaste, true);
                      dialog = InformationPopupManager.showMessageDialog({
                            className: 'controls-RichEditor__pasteWithStyles-alert',
-                           message: rk('Нажмите CTRL + V для вставки текста из буфера обмена с сохранением стилей'),
+                           message: save ? rk('Не закрывая это окно нажмите CTRL + V для вставки текста из буфера обмена с сохранением стилей') : rk('Не закрывая это окно нажмите CTRL + V для вставки текста из буфера обмена без сохранения стилей'),
                            details: null,
                            submitButton: {caption:rk('Отменить')},
                            isModal: true,
