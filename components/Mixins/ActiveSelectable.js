@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/Mixins/ActiveSelectable', [
    "Core/core-instance",
    "SBIS3.CONTROLS/Utils/ToSourceModel",
    "SBIS3.CONTROLS/Utils/SourceUtil",
-   "SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil",
+   "Controls/Utils/ArraySimpleValuesUtil",
    'Core/helpers/Object/isEmpty'
 ], function(Deferred, Model, cInstance, ToSourceModel, SourceUtil, ArraySimpleValuesUtil, isEmptyObject) {
    /**

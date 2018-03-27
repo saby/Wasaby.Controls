@@ -2,7 +2,7 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionH
     [
         "SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionController",
         "SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/HierarchySelection",
-        "SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil"
+        "Controls/Utils/ArraySimpleValuesUtil"
     ],
     function(MassSelectionController, HierarchySelection, ArraySimpleValuesUtil) {
 
