@@ -133,7 +133,7 @@ define('SBIS3.CONTROLS/Tab/Control', [
             observeVisibleProperty: false, //опция tabButtons
             /**
              * Опция SwitchableArea - устанавливает произвольный шаблон переключаемой области
-             * Если не задана, используется стандартный Deprecated/Controls/SwitchableArea/SwitchableArea_area
+             * Если не задана, используется стандартный Lib/Control/SwitchableArea/SwitchableArea_area
              */
             switchableAreaTemplate: undefined
          }
