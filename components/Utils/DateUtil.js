@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/Utils/DateUtil',[], function() {
     */
    var DateUtil = /** @lends SBIS3.CONTROLS/Utils/DateUtil.prototype */{
        /**
-        * Возвращает экземпляр объекта [Date](https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Date), созданный из строки формата ISO 8601
+        * Возвращает экземпляр объекта {@link https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Date/ Date}, созданный из строки формата ISO 8601
         * @param {Core/Date} isoDate дата в формате ISO 8601
         * @returns {Core/Date}
         */
