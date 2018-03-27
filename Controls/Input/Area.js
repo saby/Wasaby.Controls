@@ -97,6 +97,15 @@ define('Controls/Input/Area', [
          this._multiline = options.minLines > 1;
       },
 
+      _afterMount: function(){
+         Area.superclass._afterMount.apply(this, arguments);
+
+         //Should calculate area height after mount
+         _private.updateHasScroll(this);
+         _private.updateMultiline(this);
+         this._forceUpdate();
+      },
+
       _beforeUpdate: function(newOptions) {
          Area.superclass._beforeUpdate.apply(this, arguments);
          _private.setFakeAreaValue(this, newOptions.value);
