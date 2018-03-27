@@ -63,6 +63,12 @@ define('SBIS3.CONTROLS/Mixins/Clickable', [
             }
             //return false;
          });
+
+         this.subscribe('onKeyPressed', function (eventObject, e) {
+            if (e.ctrlKey && e.which === constants.key.enter) {
+               eventObject.setResult(false);
+            }
+         });
       },
 
       setCommandArgs: function(commandArgs) {
