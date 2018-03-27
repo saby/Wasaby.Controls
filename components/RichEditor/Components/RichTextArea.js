@@ -1012,10 +1012,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var startOffset = rng.startOffset;
                      var endOffset = rng.endOffset;
                      editor.dom.split(node.parentNode, node);
-                     var newRng = editor.getDoc().createRange();
-                     newRng.setStart(node, startOffset);
-                     newRng.setEnd(node, endOffset);
-                     selection.setRng(newRng);
+                     this._selectNewRng(node, startOffset, node, endOffset);
                   }
                   else
                   // FF иногда "поднимает" рэнж выше по дереву
