@@ -26,6 +26,7 @@ define('Controls/Layout/FastFilter',
          _template: template,
          
          _beforeUpdate: function (options, context) {
+            //context from Filter layout
             var filterItems = context.filterLayoutField.fastFilterItems;
             if (!isEqual(this.context.get('filterLayoutField').fastFilterItems, filterItems)) {
                this._items = filterItems;

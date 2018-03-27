@@ -26,6 +26,7 @@ define('Controls/Layout/FilterButton',
          _template: template,
    
          _beforeUpdate: function (options, context) {
+            //context from Filter layout
             var filterItems = context.filterLayoutField.filterButtonItems;
             if (!isEqual(this.context.get('filterLayoutField').filterButtonItems, filterItems)) {
                this._items = filterItems;
