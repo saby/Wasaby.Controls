@@ -6,6 +6,7 @@ define('Controls/List/SourceControl', [
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
    'Core/Deferred',
+   'Controls/List/EditInPlace',
    'css!Controls/List/SourceControl/SourceControl'
 ], function (Control,
              IoC,
@@ -423,8 +424,15 @@ define('Controls/List/SourceControl', [
 
       reload: function() {
          return _private.reload(this);
-      }
+      },
 
+      beginEdit: function(record) {
+         this._children.editInPlace.beginEdit(record);
+      },
+
+      beginAdd: function(options) {
+        this._children.editInPlace.beginAdd(options);
+      }
    });
 
    //TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757

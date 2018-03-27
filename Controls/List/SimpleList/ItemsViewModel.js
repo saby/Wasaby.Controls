@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/SimpleList/ItemsViewModel',
-   ['Core/Abstract', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance'],
-   function(Abstract, ItemsUtil, cInstance) {
+   ['Core/Abstract', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'WS.Data/Display/CollectionItem'],
+   function(Abstract, ItemsUtil, cInstance, CollectionItem) {
 
       /**
        *
@@ -17,6 +17,17 @@ define('Controls/List/SimpleList/ItemsViewModel',
                && (newList.getModel() === oldList.getModel())
                && (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor)
                && (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor)
+         },
+         getEditingItemIndex: function(self, editingItem) {
+            var
+               index = -1,
+               originalItem = self.getItemById(ItemsUtil.getPropertyValue(editingItem, self._options.idProperty), self._options.idProperty);
+
+            if (originalItem) {
+               index = self.getItems().getIndex(originalItem.getContents());
+            }
+
+            return index;
          }
       };
       var ItemsViewModel = Abstract.extend({
@@ -49,14 +60,18 @@ define('Controls/List/SimpleList/ItemsViewModel',
          },
 
          getCurrent: function() {
-            var dispItem = this._display.at(this._curIndex);
+            var
+               dispItem = this._display.at(this._curIndex),
+               isEditingItem = this._curIndex === this.getEditingItemIndex(this, dispItem.getContents());
+
             return {
                getPropValue: ItemsUtil.getPropertyValue,
                idProperty: this._options.idProperty,
                displayProperty: this._options.displayProperty,
                index : this._curIndex,
-               item: dispItem.getContents(),
-               dispItem: dispItem
+               item: isEditingItem ? this.getEditingItem() : dispItem.getContents(),
+               dispItem: dispItem,
+               isEditing: isEditingItem
             }
          },
 
@@ -93,6 +108,47 @@ define('Controls/List/SimpleList/ItemsViewModel',
 
          prependItems: function(items) {
             this._items.prepend(items);
+         },
+         getItems: function() {
+            return this._display ? this._display.getCollection() : undefined;
+         },
+         setEditingItem: function(item) {
+            var index;
+
+            if (item) {
+               this._editingItem = item;
+               index = _private.getEditingItemIndex(this, item);
+               this._isAdd = index === -1;
+               if (this._isAdd) {
+                  this._editingItemProjection = new CollectionItem({ contents: this._editingItem });
+               }
+               this._editingItemData = {
+                  getPropValue: ItemsUtil.getPropertyValue,
+                  idProperty: this._options.idProperty,
+                  displayProperty: this._options.displayProperty,
+                  index: this._isAdd ? this.getItems().getCount() : index,
+                  item: this._editingItem,
+                  dispItem: this._editingItemProjection,
+                  isEditing: true
+               };
+            } else {
+               this._editingItem = null;
+               this._isAdd = null;
+               this._editingItemProjection = null;
+               this._editingItemData = null;
+            }
+         },
+         getEditingItem: function() {
+            return this._editingItem;
+         },
+         getEditingItemData: function() {
+            return this._editingItemData;
+         },
+         getEditingItemIndex: function() {
+            return this._editingItemData ? this._editingItemData.index : null;
+         },
+         getEditingItemProjection: function() {
+            return this._editingItemProjection;
          }
       });
 

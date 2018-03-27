@@ -13,6 +13,11 @@
               displayProperty="{{_options.displayProperty}}"
               markedKey="{{_options.markedKey}}">
         </ws:partial>
+        <Controls.List.EditInPlace ws:content="listView"
+                                   name="editInPlace"
+                                   editingConfig="{{_options.editingConfig}}"
+                                   listModel="{{_listViewModel}}"
+                                   source="{{_options.source}}" />
     </ws:if>
 
     <ws:if data="{{_options.emptyTemplate && _listViewModel && !_listViewModel.getCount()}}">

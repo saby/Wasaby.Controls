@@ -107,6 +107,33 @@ define('Controls/List/SimpleList/ListViewModel',
             return this._itemsModel.getCount();
          },
 
+         getItems: function() {
+            return this._itemsModel.getItems();
+         },
+
+         setEditingItem: function(item) {
+            this._itemsModel.setEditingItem(item);
+            if (item) {
+               this.setMarkedKey(item.get(this._options.idProperty));
+            }
+         },
+         getEditingItem: function() {
+            return this._itemsModel.getEditingItem();
+         },
+         getEditingItemData: function() {
+            var itemData = this._itemsModel.getEditingItemData();
+            if (itemData) {
+               itemData.isSelected = !this._markedItem;
+            }
+            return itemData;
+         },
+         getEditingItemIndex: function () {
+            return this._itemsModel.getEditingItemIndex();
+         },
+         getEditingItemProjection: function() {
+            return this._itemsModel.getEditingItemProjection();
+         },
+
          __calcSelectedItem: function(display, selKey, idProperty) {
 
             //TODO надо вычислить индекс
