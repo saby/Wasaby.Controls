@@ -28,7 +28,8 @@ define('Controls/List/SimpleList/ListViewModel',
             this._itemsModel = new ItemsViewModel({
                items : cfg.items,
                idProperty: cfg.idProperty,
-               displayProperty: cfg.displayProperty
+               displayProperty: cfg.displayProperty,
+               itemsReadyCallback: cfg.itemsReadyCallback
             });
             var self = this;
             this._itemsModel.subscribe('onListChange', function() {
