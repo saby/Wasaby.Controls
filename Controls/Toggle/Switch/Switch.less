@@ -10,6 +10,9 @@
    border-radius: @border-radius_Switch;
    border-style: solid;
    box-sizing: border-box;
+}
+
+.controls-Switch_enabled {
    cursor: pointer;
 }
 
@@ -42,9 +45,7 @@
 
 .controls-Switch__marker_enabled_checked,
 .controls-Switch__marker_disabled_checked {
-   border-color: @border-color_Switch-marker_checked;
    &:before {
-      background: @background_Switch-dot;
       content: '';
       width: @size_Switch-dot;
       height: @size_Switch-dot;
@@ -56,12 +57,22 @@
    }
 }
 
-.controls-Switch__marker_enabled_unchecked {
-   border-color: @border-color_Switch-marker_unchecked_enabled;
+.controls-Switch__marker_enabled_checked:before {
+   background: @background_Switch-dot_enabled;
 }
 
+.controls-Switch__marker_disabled_checked:before {
+   background: @background_Switch-dot_disabled;
+}
+
+.controls-Switch__marker_enabled_checked,
+.controls-Switch__marker_enabled_unchecked {
+   border-color: @border-color_Switch-marker_enabled;
+}
+
+.controls-Switch__marker_disabled_checked,
 .controls-Switch__marker_disabled_unchecked {
-   border-color: @border-color_Switch-marker_unchecked_disabled;
+   border-color: @border-color_Switch-marker_disabled;
 }
 
 .controls-Switch__text {
@@ -78,14 +89,9 @@
 }
 
 .ws-is-desktop-platform {
-   .controls-Switch_enabled:hover {
-      .controls-Switch__marker { //Здесь вложенность не избежать, т.к. по ховеру на контейнере должен меняться размер кнопки
-         border-width: @border-width_Switch-marker_hover;
-         &:before {
-            top: @border-width_Switch-marker - @border-width_Switch-marker_hover;
-            left: @border-width_Switch-marker - @border-width_Switch-marker_hover;
-         }
-      }
+   .controls-Switch__marker_enabled_checked:hover,
+   .controls-Switch__marker_enabled_unchecked:hover {
+      border-color: @border-color_Switch_marker_enabled_hover;
    }
 
    .controls-Switch__text_enabled_unselected:hover {
