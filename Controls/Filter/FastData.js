@@ -29,10 +29,14 @@ define('Controls/Filter/FastData',
        */
       var _private = {
 
+         getSourceController: function (source) {
+            return new SourceController({
+               source: source
+            }).load();
+         },
+
          loadListConfig: function (self, item, index) {
-            var properties = Utils.getItemPropertyValue(item, 'properties'),
-               resetValue = Utils.getItemPropertyValue(item, 'resetValue'),
-               value = Utils.getItemPropertyValue(item, 'value'),
+            var properties = item.get('properties'),
                dSource = {
                   source: properties.source,
                   idProperty: properties.idProperty
@@ -47,19 +51,16 @@ define('Controls/Filter/FastData',
                return;
             }
 
-            return DropdownUtils._loadItems(self._configs[index], dSource, value || resetValue).addCallback(function () {
-               self._configs[index].value = value;
-               self._configs[index].resetValue = resetValue;
-               self._configs[index].idProperty = properties.idProperty;
+            return DropdownUtils.loadItems(self._configs[index], dSource, item.get('value') || item.get('resetValue')).addCallback(function () {
                self._configs[index].displayProperty = properties.displayProperty || 'title';
             });
          },
 
          reload: function (self) {
             var pDef = new pDeferred();
-            Chain(self._items).map(function (item, index) {
+            Chain(self._items).each(function (item, index) {
                pDef.push(_private.loadListConfig(self, item, index));
-            }).value();
+            });
             return pDef.done().getResult().addCallback(function () {
                self._forceUpdate();
             });
@@ -68,8 +69,8 @@ define('Controls/Filter/FastData',
          getFilter: function (self) {
             var filter = {};
             Chain(self._configs).each(function (config, index) {
-               if (config._items && config.value) {
-                  filter[Utils.getItemPropertyValue(self._items.at(index), 'id')] = config.value;
+               if (config._items && self._items[index].get('value') !== self._items[index].get('resetValue')) {
+                  filter[self._items.at(index).get('id')] = self._items[index].get('value');
                }
             });
             return filter;
@@ -79,9 +80,9 @@ define('Controls/Filter/FastData',
             //Получаем ключ выбранного элемента
             var key = item.getId();
             if (key !== this._configs[this.lastOpenIndex].resetValue) {
-               this._configs[this.lastOpenIndex].value = key;
+               this._items.at(this.lastOpenIndex).set({value: key});
             } else {
-               this._configs[this.lastOpenIndex].value = null;
+               this._items.at(this.lastOpenIndex).set({value: this._items.at(this.lastOpenIndex).get('resetValue')});
             }
             this._notify('selectedKeysChanged', [key]);
          },
@@ -100,37 +101,35 @@ define('Controls/Filter/FastData',
       var FastData = Control.extend({
          _template: template,
          _configs: null,
-         _selectedIndexes: null,
          _items: null,
 
          constructor: function () {
             FastData.superclass.constructor.apply(this, arguments);
 
             this._configs = {};
-            this._selectedIndexes = {};
             this._items = [];
 
             this._onResult = _private.onResult.bind(this);
          },
 
          _beforeMount: function (options) {
+            var self = this,
+               resultDef;
             if (options.items) {
                if (!cInstance.instanceOfModule(options.items, 'WS.Data/Collection/RecordSet')) {
                   this._items = new RecordSet({rawData: options.items});
                } else {
                   this._items = options.items;
                }
-               return _private.reload(this);
-            }
+               resultDef = _private.reload(this);
+            } else if (options.source) {
 
-            var self = this;
-            this.sourceController = new SourceController({
-               source: options.source
-            });
-            return this.sourceController.load().addCallback(function (configs) {
-               self._items = configs;
-               return _private.reload(self);
-            });
+               resultDef = _private.getSourceController(options.source).addCallback(function (items) {
+                  self._items = items;
+                  return _private.reload(self);
+               });
+            }
+            return resultDef;
          },
 
          _open: function (event, item, index) {
@@ -138,13 +137,13 @@ define('Controls/Filter/FastData',
                componentOptions: {
                   items: this._configs[index]._items,
                   keyProperty: this._configs[index]._items.getIdProperty(),
-                  parentProperty: Utils.getItemPropertyValue(item, 'parentProperty'),
+                  parentProperty: item.get('parentProperty'),
                   nodeProperty: Utils.getItemPropertyValue(item, 'nodeProperty'),
                   itemTemplateProperty: Utils.getItemPropertyValue(item, 'itemTemplateProperty'),
                   itemTemplate: Utils.getItemPropertyValue(item, 'itemTemplate'),
                   headTemplate: Utils.getItemPropertyValue(item, 'headTemplate'),
                   footerTemplate: Utils.getItemPropertyValue(item, 'footerTemplate'),
-                  selectedKeys: this._configs[index].value || this._configs[index].resetValue
+                  selectedKeys: this._items.at(index).get('value') || this._items.at(index).get('resetValue')
                },
                target: event.target.parentElement
             };
@@ -153,16 +152,17 @@ define('Controls/Filter/FastData',
             this._children.DropdownOpener.open(config, this);
          },
 
-         _updateText: function (item, index) {
+         _getText: function (item, index) {
             if (this._configs[index]._items) {
-               var sKey = this._configs[index].value || this._configs[index].resetValue;
+               var sKey = this._items.at(index).get('value') || this._items.at(index).get('resetValue');
                return this._configs[index]._items.getRecordById(sKey).get(this._configs[index].displayProperty);
             }
          },
 
          _reset: function (event, item, index) {
-            this._configs[index].value = null;
-            this._notify('selectedKeysChanged', [this._configs[index].value]);
+            var newValue = this._items.at(0).get('resetValue');
+            this._items.at(index).set({value: newValue});
+            this._notify('selectedKeysChanged', [newValue]);
             this._notify('filterChanged', [_private.getFilter(this)], {bubbling: true});
          }
       });

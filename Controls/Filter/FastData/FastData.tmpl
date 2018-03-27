@@ -5,17 +5,17 @@
          <!--Стрелка отображается всегда - это не по стандарту!-->
          <div class="controls-FastData__block"
               on:click="_open(i, index)">
-            <div class="controls-FastData__beforeText">
+            <div class="controls-FastData__iconWrapper">
                <svg class="controls-FastData__iconArrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 9">
                   <path xmlns="http://www.w3.org/2000/svg"
                         d="M0,.47A.48.48,0,0,1,.13.14.4.4,0,0,1,.44,0,1,1,0,0,1,.75.16L4.91,4.22,5,4.34a.41.41,0,0,1,0,.31l-.06.13L.75,8.84A1,1,0,0,1,.44,9a.4.4,0,0,1-.31-.14A.48.48,0,0,1,0,8.53Z"></path>
                </svg>
             </div>
-            <div class="controls-Dropdown__text">{{_updateText(i, index, _selectedItems[key], displayProperty ||
+            <div class="controls-Dropdown__text">{{_getText(i, index, _selectedItems[key], displayProperty ||
                'title')}}
             </div>
          </div>
-         <ws:if data="{{_configs[index].value}}">
+         <ws:if data="{{_items.at(index).get('value')}}">
          <span class="controls-FastData__iconReset icon-Close"
                on:click="_reset(i, index)"></span>
          </ws:if>
