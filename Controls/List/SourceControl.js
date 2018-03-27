@@ -408,6 +408,10 @@ define('Controls/List/SourceControl', [
 
       },
 
+      removeItems: function(items) {
+         this._children.remove.removeItems(items);
+      },
+
       reload: function() {
          _private.reload(this);
       }

@@ -95,15 +95,14 @@ define('Controls/List/SimpleList/ItemsViewModel',
             this._items.prepend(items);
          },
 
-         removeItem: function(item) {
-            this._items.remove(item);
-         },
-
-         removeItemByKey: function(key) {
-            var item = this._items.getRecordById(key);
-            if (item) {
-               this._items.remove(item);
+         removeItems: function(items) {
+            var item;
+            this._items.setEventRaising(false, true);
+            for (var i = 0; i < items.length; i++) {
+               item = this._items.getRecordById(items[i]);
+               item && this._items.remove(item);
             }
+            this._items.setEventRaising(true, true);
          }
       });
 

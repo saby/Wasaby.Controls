@@ -74,6 +74,10 @@ define('Controls/List', [
          } else if (newOptions.markedKey !== this._options.markedKey) {
             this._viewModel.setMarkedKey(newOptions.markedKey);
          }
+      },
+
+      removeItems: function(items) {
+         this._children.SourceControl.removeItems(items);
       }
    });
 

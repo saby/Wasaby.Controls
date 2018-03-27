@@ -8,6 +8,7 @@ define('Controls-demo/Operations/Remove', [
 
    var ModuleClass = BaseControl.extend({
       _template: template,
+      _idForRemove: 0,
 
       constructor: function() {
          ModuleClass.superclass.constructor.apply(this, arguments);
@@ -25,8 +26,9 @@ define('Controls-demo/Operations/Remove', [
                }]
          });
       },
+
       _removeItem: function() {
-         var key = this._children.list;
+         this._children.list.removeItems(this._idForRemove);
       }
    });
    return ModuleClass;
