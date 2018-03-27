@@ -14,7 +14,7 @@ define('Controls/Dropdown/DropdownUtils',
       }
 
       function updateSelectedItem(instance, selectedKeys) {
-         if (instance._items.getIdProperty()) {
+         if (instance._items.getIdProperty() && selectedKeys) {
             instance._selectedItem = instance._items.getRecordById(selectedKeys);
             instance._icon = instance._selectedItem.get('icon');
          }

@@ -35,6 +35,14 @@ define('Controls/Filter/FastData',
             }).load();
          },
 
+         getItems: function (self, items) {
+            if (!cInstance.instanceOfModule(items, 'WS.Data/Collection/RecordSet')) {
+               self._items = new RecordSet({rawData: items});
+            } else {
+               self._items = items;
+            }
+         },
+
          loadListConfig: function (self, item, index) {
             var properties = item.get('properties'),
                dSource = {
@@ -42,18 +50,18 @@ define('Controls/Filter/FastData',
                   idProperty: properties.idProperty
                };
 
+            if (!item.get('value')) {
+               self._items.at(index).set({value: item.get('resetValue')});
+            }
             self._configs[index] = {};
 
-            //Проверяем на источник
-            var prepareSource = SourceUtil.prepareSource(properties.source);
-            if (!cInstance.instanceOfMixin(prepareSource, 'WS.Data/Source/ISource')) {
-               IoC.resolve('ILogger').error('FastData', 'Source option is undefined. Can\'t load data');
-               return;
+            if (properties.items) {
+               _private.getItems(self._configs[index], properties.items);
+            } else if (properties.source) {
+               return DropdownUtils.loadItems(self._configs[index], dSource).addCallback(function () {
+                  self._configs[index].displayProperty = properties.displayProperty || 'title';
+               });
             }
-
-            return DropdownUtils.loadItems(self._configs[index], dSource, item.get('value') || item.get('resetValue')).addCallback(function () {
-               self._configs[index].displayProperty = properties.displayProperty || 'title';
-            });
          },
 
          reload: function (self) {
@@ -69,8 +77,8 @@ define('Controls/Filter/FastData',
          getFilter: function (self) {
             var filter = {};
             Chain(self._configs).each(function (config, index) {
-               if (config._items && self._items[index].get('value') !== self._items[index].get('resetValue')) {
-                  filter[self._items.at(index).get('id')] = self._items[index].get('value');
+               if (config._items && self._items.at(index).get('value') !== self._items.at(index).get('resetValue')) {
+                  filter[self._items.at(index).get('id')] = self._items.at(index).get('value');
                }
             });
             return filter;
@@ -79,11 +87,7 @@ define('Controls/Filter/FastData',
          selectItem: function (item) {
             //Получаем ключ выбранного элемента
             var key = item.getId();
-            if (key !== this._configs[this.lastOpenIndex].resetValue) {
-               this._items.at(this.lastOpenIndex).set({value: key});
-            } else {
-               this._items.at(this.lastOpenIndex).set({value: this._items.at(this.lastOpenIndex).get('resetValue')});
-            }
+            this._items.at(this.lastOpenIndex).set({value: key});
             this._notify('selectedKeysChanged', [key]);
          },
 
@@ -116,14 +120,9 @@ define('Controls/Filter/FastData',
             var self = this,
                resultDef;
             if (options.items) {
-               if (!cInstance.instanceOfModule(options.items, 'WS.Data/Collection/RecordSet')) {
-                  this._items = new RecordSet({rawData: options.items});
-               } else {
-                  this._items = options.items;
-               }
+               _private.getItems(this, options.items);
                resultDef = _private.reload(this);
             } else if (options.source) {
-
                resultDef = _private.getSourceController(options.source).addCallback(function (items) {
                   self._items = items;
                   return _private.reload(self);
@@ -160,7 +159,7 @@ define('Controls/Filter/FastData',
          },
 
          _reset: function (event, item, index) {
-            var newValue = this._items.at(0).get('resetValue');
+            var newValue = this._items.at(index).get('resetValue');
             this._items.at(index).set({value: newValue});
             this._notify('selectedKeysChanged', [newValue]);
             this._notify('filterChanged', [_private.getFilter(this)], {bubbling: true});

@@ -15,7 +15,7 @@
                'title')}}
             </div>
          </div>
-         <ws:if data="{{_items.at(index).get('value')}}">
+         <ws:if data="{{_items.at(index).get('value') !== _items.at(index).get('resetValue')}}">
          <span class="controls-FastData__iconReset icon-Close"
                on:click="_reset(i, index)"></span>
          </ws:if>
