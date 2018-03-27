@@ -111,7 +111,7 @@ define(
 
 
 
-         it('needScrollCheck', function () {
+         it('updateHasScroll', function () {
             var
                mockSelfObj = {
                   _children: {
@@ -121,14 +121,14 @@ define(
                      }
                   }
                };
-            Area._private.needScrollCheck(mockSelfObj);
+            Area._private.updateHasScroll(mockSelfObj);
 
             assert.equal(mockSelfObj._hasScroll, false);
 
             mockSelfObj._children.fakeArea.scrollHeight = 20;
             mockSelfObj._children.fakeArea.clientHeight = 10;
 
-            Area._private.needScrollCheck(mockSelfObj);
+            Area._private.updateHasScroll(mockSelfObj);
 
             assert.equal(mockSelfObj._hasScroll, true);
          });
