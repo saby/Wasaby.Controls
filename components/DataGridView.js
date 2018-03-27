@@ -1309,7 +1309,9 @@ define('SBIS3.CONTROLS/DataGridView',
             for (var j = 0; j < columns.length; j++) {
                colIndex = this._options.multiselect ? j + 1 : j;
                minWidth = columns[j].minWidth && parseInt(columns[j].minWidth, 10);
-               if (minWidth) {
+               /* col в colgroup может не быть, если поменяли колонки (setColumns),
+                  но список ещё не перерисовался. Перерасчёт ширин может быть вызван любым resize'ом. */
+               if (minWidth && cols[colIndex]) {
                   cols[colIndex].width = minWidth + 'px';
                }
             }
