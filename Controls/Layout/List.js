@@ -102,6 +102,12 @@ define('Controls/Layout/List',
             _private.resolveOptions(this, options);
          },
          
+         _beforeMount: function(options, context) {
+            if (context.filterLayoutField.filter) {
+               _private.filterChanged(this, context.filterLayoutField.filter);
+            }
+         },
+         
          _beforeUpdate: function (options, context) {
             var searchContextValue = context.searchLayoutField.searchValue;
             var filterContextValue = context.filterLayoutField.filter;

@@ -58,10 +58,7 @@ define('Controls-demo/Layouts/SearchLayout', [
             idProperty: 'id',
             data: sourceData
          }),
-         _filterSource: new MemorySource({
-            idProperty: 'id',
-            data: filterSourceData
-         }),
+         _filterSource: filterSourceData,
          _switchValue: false
          
       });

@@ -37,7 +37,6 @@ define('Controls/Layout/FastFilter',
                this._items = context.filterLayoutField.fastFilterItems;
             }
          }
-         
       });
       
       FilterComponents.contextTypes = function() {
