@@ -856,14 +856,18 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           */
          getDefaultFormats: function () {
             if (!this._defaultFormats) {
-               var $root = $(this._inputControl);
-               var color = $root.css('color');
-               this._defaultFormats = {
-                  fontsize : +$root.css('font-size').replace('px', ''),
-                  color: constants.colorsMap[color] || color
-               };
+               this._defaultFormats = this._getNodeFormats(this._inputControl);
             }
             return this._defaultFormats;
+         },
+
+         _getNodeFormats: function (node) {
+            var $node = $(node);
+            var color = $node.css('color');
+            return {
+               fontsize : +$node.css('font-size').replace('px', ''),
+               color: constants.colorsMap[color] || color
+            };
          },
 
          /**
@@ -872,7 +876,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           */
          applyFormats: function (formats) {
             // Отбросить все свойства форматирования, тождественные форматированию по-умолчанию
-            var defaults = this.getDefaultFormats();
+            var defaults = this._getNodeFormats(this._tinyEditor.selection.getNode());
             for (var prop in defaults) {
                if (prop in formats && formats[prop] ==/* Не "==="! */ defaults[prop]) {
                   delete formats[prop];
