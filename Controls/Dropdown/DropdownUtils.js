@@ -49,44 +49,15 @@ define('Controls/Dropdown/DropdownUtils',
          }
       }
 
-      function _updateText(item, displayProperty) {
+      function updateText(item, displayProperty) {
          return getText([item], displayProperty); //По стандарту если есть иконка - текст не отображается
       }
 
-      // function _open() {
-      //    var config = {
-      //       componentOptions: {
-      //          items: this._items
-      //       },
-      //       target: this._children.popupTarget
-      //    };
-      //    this._children.DropdownOpener.open(config, this);
-      // }
-      //
-      // function _onResult(args) {
-      //    var actionName = args[0];
-      //    var event = args[1];
-      //    var data = args[2];
-      //    switch (actionName) {
-      //       case 'itemClick':
-      //          this._selectItem.apply(this, data);
-      //          this._children.DropdownOpener.close();
-      //          break;
-      //       case 'footerClick':
-      //          this._notify('footerClick', [event]);
-      //    }
-      // }
-      //
-      // function _selectItem(item) {
-      //    var key = item.get(this._options.keyProperty);
-      //    this._notify('selectedKeysChanged', [key]);
-      // }
-
       return {
-         _beforeMount: _beforeMount,
-         _beforeUpdate: _beforeUpdate,
-         _updateText: _updateText,
-         _loadItems: loadItems
+         beforeMount: _beforeMount,
+         beforeUpdate: _beforeUpdate,
+         updateText: updateText,
+         loadItems: loadItems
       };
    }
 );

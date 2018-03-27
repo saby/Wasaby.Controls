@@ -25,6 +25,7 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
             {
                id: 'filter1',
                resetValue: 'все страны',
+               value: null,
                properties: {
                   idProperty: 'title',
                   displayProperty: 'title',
@@ -45,6 +46,7 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
             {
                id: 'filter2',
                resetValue: '0',
+               value: null,
                properties: {
                   idProperty: 'key',
                   displayProperty: 'title',
@@ -89,10 +91,10 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
             {
                id: 'filter1',
                resetValue: 'все страны',
+               value: 'Франция',
                properties: {
                   idProperty: 'title',
                   displayProperty: 'title',
-                  value: 'Франция',
                   source: {
                      module: 'WS.Data/Source/Memory',
                      options: {
@@ -110,6 +112,7 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
 
                id: 'filter2',
                resetValue: '0',
+               value: null,
                properties: {
                   idProperty: 'key',
                   displayProperty: 'title',
@@ -129,10 +132,10 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
             {
                id: 'fafaf',
                resetValue: '3',
+               value: '0',
                properties: {
                   idProperty: 'lastName',
                   displayProperty: 'title',
-                  value: '0',
                   source: {
                      module: 'WS.Data/Source/Memory',
                      options: {
