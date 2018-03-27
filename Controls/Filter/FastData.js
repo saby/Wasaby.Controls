@@ -67,7 +67,10 @@ define('Controls/Filter/FastData',
          reload: function (self) {
             var pDef = new pDeferred();
             Chain(self._items).each(function (item, index) {
-               pDef.push(_private.loadListConfig(self, item, index));
+               var result = _private.loadListConfig(self, item, index);
+               if (cInstance.instanceOfModule(result, 'Core/Deferred')) {
+                  pDef.push(result);
+               }
             });
             return pDef.done().getResult().addCallback(function () {
                self._forceUpdate();
