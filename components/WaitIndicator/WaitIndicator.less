@@ -8,6 +8,7 @@ x{}
 //@wait-indicator-small-size: 16px;
 //@wait-indicator-gap: 8px;
 //@wait-indicator-small-gap: 2px;
+//@wait-indicator-outer-gap: 8px;
 //@wait-indicator-labeled-width: 214px;
 //@wait-indicator-small-margin: 6px;
 //@wait-indicator-font-size: 14px;
@@ -33,8 +34,8 @@ x{}
 
 .ws-wait-indicator {
     .flexbox();
-    .align-items(center);
     .justify-content(center);
+    .align-items(center);
     background-color: @wait-indicator-overlay-default;
     cursor: default !important;
     -webkit-user-select: none;
@@ -74,43 +75,63 @@ x{}
     background-color: @wait-indicator-overlay-dark;
 }
 
-.ws-wait-indicator_scroll(@direction, @color) {
+.ws-wait-indicator_sided {
+    .justify-content(flex-start);
+}
+
+.ws-wait-indicator_sided-left {
+    .flex-direction(row);
+}
+
+.ws-wait-indicator_sided-right {
+    .flex-direction(row-reverse);
+}
+
+.ws-wait-indicator_sided-top {
+    .flex-direction(column);
+}
+
+.ws-wait-indicator_sided-bottom {
+    .flex-direction(column-reverse);
+}
+
+.ws-wait-indicator_scroll_grad(@direction, @color) {
     @r: red(@color);
     @g: green(@color);
     @b: blue(@color);
     .linear-gradient-only(@direction, @color, rgba(@r, @g, @b, 0) (@wait-indicator-size + 2*@wait-indicator-gap));
 }
 
-.ws-wait-indicator_scroll-left {
-    .ws-wait-indicator_scroll(90deg, @wait-indicator-gradient-white);
+.ws-wait-indicator_scroll.ws-wait-indicator_sided-left {
+    .ws-wait-indicator_scroll_grad(90deg, @wait-indicator-gradient-white);
 }
 
-.ws-wait-indicator_scroll-right {
-    .ws-wait-indicator_scroll(270deg, @wait-indicator-gradient-white);
+.ws-wait-indicator_scroll.ws-wait-indicator_sided-right {
+    .ws-wait-indicator_scroll_grad(270deg, @wait-indicator-gradient-white);
 }
 
-.ws-wait-indicator_scroll-top {
-    .ws-wait-indicator_scroll(180deg, @wait-indicator-gradient-white);
+.ws-wait-indicator_scroll.ws-wait-indicator_sided-top {
+    .ws-wait-indicator_scroll_grad(180deg, @wait-indicator-gradient-white);
 }
 
-.ws-wait-indicator_scroll-bottom {
-    .ws-wait-indicator_scroll(0deg, @wait-indicator-gradient-white);
+.ws-wait-indicator_scroll.ws-wait-indicator_sided-bottom {
+    .ws-wait-indicator_scroll_grad(0deg, @wait-indicator-gradient-white);
 }
 
-.ws-wait-indicator_scroll-left.ws-wait-indicator_mod-gray {
-    .ws-wait-indicator_scroll(90deg, @wait-indicator-gradient-gray);
+.ws-wait-indicator_scroll.ws-wait-indicator_sided-left.ws-wait-indicator_mod-gray {
+    .ws-wait-indicator_scroll_grad(90deg, @wait-indicator-gradient-gray);
 }
 
-.ws-wait-indicator_scroll-right.ws-wait-indicator_mod-gray {
-    .ws-wait-indicator_scroll(270deg, @wait-indicator-gradient-gray);
+.ws-wait-indicator_scroll.ws-wait-indicator_sided-right.ws-wait-indicator_mod-gray {
+    .ws-wait-indicator_scroll_grad(270deg, @wait-indicator-gradient-gray);
 }
 
-.ws-wait-indicator_scroll-top.ws-wait-indicator_mod-gray {
-    .ws-wait-indicator_scroll(180deg, @wait-indicator-gradient-gray);
+.ws-wait-indicator_scroll.ws-wait-indicator_sided-top.ws-wait-indicator_mod-gray {
+    .ws-wait-indicator_scroll_grad(180deg, @wait-indicator-gradient-gray);
 }
 
-.ws-wait-indicator_scroll-bottom.ws-wait-indicator_mod-gray {
-    .ws-wait-indicator_scroll(0deg, @wait-indicator-gradient-gray);
+.ws-wait-indicator_scroll.ws-wait-indicator_sided-bottom.ws-wait-indicator_mod-gray {
+    .ws-wait-indicator_scroll_grad(0deg, @wait-indicator-gradient-gray);
 }
 
 .ws-wait-indicator_small {
@@ -136,7 +157,7 @@ x{}
 }
 
 .ws-wait-indicator_text .ws-wait-indicator-in {
-    max-width: @wait-indicator-labeled-width;
+    max-width: ~"calc(100% - "(2*@wait-indicator-outer-gap)~")";
     width: auto;
     padding: (@wait-indicator-size + 2*@wait-indicator-gap - @wait-indicator-line-height)/2 @wait-indicator-gap 0 (@wait-indicator-size + 2*@wait-indicator-gap);
     background-position: @wait-indicator-gap 50%;
@@ -144,27 +165,7 @@ x{}
     text-overflow: ellipsis;
 }
 
-.ws-wait-indicator_scroll-left .ws-wait-indicator-in {
-    margin-left: 0;
-}
-
-.ws-wait-indicator_scroll-right .ws-wait-indicator-in {
-    margin-right: 0;
-}
-
-.ws-wait-indicator_scroll-top .ws-wait-indicator-in {
-    margin-top: 0;
-}
-
-.ws-wait-indicator_scroll-bottom .ws-wait-indicator-in {
-    margin-bottom: 0;
-}
-
-.ws-wait-indicator_small .ws-wait-indicator-in,
-.ws-wait-indicator_small-left .ws-wait-indicator-in,
-.ws-wait-indicator_small-right .ws-wait-indicator-in,
-.ws-wait-indicator_small-top .ws-wait-indicator-in,
-.ws-wait-indicator_small-bottom .ws-wait-indicator-in {
+.ws-wait-indicator_small .ws-wait-indicator-in {
     width: @wait-indicator-small-size + 2*@wait-indicator-small-gap;
     height: @wait-indicator-small-size + 2*@wait-indicator-small-gap;
     border-radius: (@wait-indicator-small-size + 2*@wait-indicator-small-gap)/4;
@@ -173,18 +174,18 @@ x{}
     background-size: @wait-indicator-small-size;
 }
 
-.ws-wait-indicator_small-left .ws-wait-indicator-in {
+.ws-wait-indicator_small.ws-wait-indicator_sided-left .ws-wait-indicator-in {
     margin-left: @wait-indicator-small-margin;
 }
 
-.ws-wait-indicator_small-right .ws-wait-indicator-in {
+.ws-wait-indicator_small.ws-wait-indicator_sided-right .ws-wait-indicator-in {
     margin-right: @wait-indicator-small-margin;
 }
 
-.ws-wait-indicator_small-top .ws-wait-indicator-in {
+.ws-wait-indicator_small.ws-wait-indicator_sided-top .ws-wait-indicator-in {
     margin-top: @wait-indicator-small-margin;
 }
 
-.ws-wait-indicator_small-bottom .ws-wait-indicator-in {
+.ws-wait-indicator_small.ws-wait-indicator_sided-bottom .ws-wait-indicator-in {
     margin-bottom: @wait-indicator-small-margin;
 }
