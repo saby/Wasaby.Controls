@@ -995,18 +995,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           */
          execCommand: function (command) {
             var editor = this._tinyEditor;
-            var needPreprocess;
+            var selection = editor.selection;
+            var isBlockquote = command === 'blockquote';
+            var isListNode = !isBlockquote && (command === 'InsertOrderedList' || command === 'InsertUnorderedList');
+            var afterProcess;
             var execCmd;
-            if (command === 'blockquote') {
-               needPreprocess = true;
+            if (isBlockquote) {
                execCmd = 'mceBlockQuote';
             }
-            else
-            if (command === 'InsertOrderedList' || command === 'InsertUnorderedList') {
-               needPreprocess = true;
-            }
-            if (needPreprocess && !editor.formatter.match(command)) {
-               var rng = editor.selection.getRng();
+            var isAlreadyApplied = editor.formatter.match(command);
+            var rng = selection.getRng();
+            if (isListNode && !isAlreadyApplied) {
                var node = rng.startContainer;
                if (rng.endContainer === node) {
                   if (node.nodeType === 3 && node.previousSibling && node.previousSibling.nodeType === 1) {
@@ -1016,7 +1015,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var newRng = editor.getDoc().createRange();
                      newRng.setStart(node, startOffset);
                      newRng.setEnd(node, endOffset);
-                     editor.selection.setRng(newRng);
+                     selection.setRng(newRng);
                   }
                   else
                   // FF иногда "поднимает" рэнж выше по дереву
@@ -1026,14 +1025,33 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var newNode = editor.dom.create(node.nodeName);
                      newNode.innerHTML = '<br data-mce-bogus="1" />';
                      node.parentNode.insertBefore(newNode, node.nextSibling);
-                     editor.selection.select(newNode, true);
+                     selection.select(newNode, true);
                   }
                }
             }
+            if (isBlockquote) {
+               // При обёртывании списков в блок цитат каждый элемент списка оборачивается отдельно. Во избежание этого сделать список временно нередактируемым
+               // 1174914305 https://online.sbis.ru/opendoc.html?guid=305e5cb1-8b37-49ea-917d-403f746d1dfe
+               var listNode = rng.commonAncestorContainer;
+               if (['OL', 'UL'].indexOf(listNode.nodeName) !== -1) {
+                  var $listNode = $(listNode);
+                  $listNode.wrap('<div>');
+                  selection.select(listNode.parentNode, false);
+                  $listNode.attr('contenteditable', 'false');
+                  afterProcess = function () {
+                     $listNode.unwrap();
+                     $listNode.removeAttr('contenteditable');
+                     selection.select(listNode, true);
+                  };
+               }
+            }
             editor.execCommand(execCmd || command);
+            if (afterProcess) {
+               afterProcess();
+            }
             //TODO:https://github.com/tinymce/tinymce/issues/3104, восстанавливаю выделение тк оно теряется если после нжатия кнопки назад редактор стал пустым
             if ((cConstants.browser.firefox || cConstants.browser.isIE) && command == 'undo' && this._getTinyEditorValue() == '') {
-               editor.selection.select(editor.getBody(), true);
+               selection.select(editor.getBody(), true);
             }
          },
 
