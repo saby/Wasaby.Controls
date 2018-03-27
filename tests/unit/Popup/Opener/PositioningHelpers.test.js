@@ -21,7 +21,7 @@ define(
                topScroll: 0
             };
 
-            Sticky.getWindowSizes = function(){
+            Sticky._private.getWindowSizes = function(){
               return {
                  width: 1920,
                  height: 1040
