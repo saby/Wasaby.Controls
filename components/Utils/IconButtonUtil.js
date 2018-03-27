@@ -31,7 +31,7 @@ define('SBIS3.CONTROLS/Utils/IconButtonUtil', [],
             },
 
             getBorderColorState: function(style, opts) {
-                var  iconClass = opts._iconClass,
+                var  iconClass = opts.icon,
                      borderHoverClass = '';
 
                 if (iconClass && style !== 'standard') {
