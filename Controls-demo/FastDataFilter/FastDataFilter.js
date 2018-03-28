@@ -27,7 +27,7 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
                resetValue: 'все страны',
                value: null,
                properties: {
-                  idProperty: 'title',
+                  keyProperty: 'title',
                   displayProperty: 'title',
                   value: 'США',
                   source: {
@@ -48,7 +48,7 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
                resetValue: '0',
                value: null,
                properties: {
-                  idProperty: 'key',
+                  keyProperty: 'key',
                   displayProperty: 'title',
                   source: {
                      module: 'WS.Data/Source/Memory',
@@ -67,7 +67,7 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
                id: 'fafaf',
                resetValue: '3',
                properties: {
-                  idProperty: 'lastName',
+                  keyProperty: 'lastName',
                   displayProperty: 'title',
                   value: '0',
                   source: {
@@ -93,7 +93,7 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
                resetValue: 'все страны',
                value: 'Франция',
                properties: {
-                  idProperty: 'title',
+                  keyProperty: 'title',
                   displayProperty: 'title',
                   source: {
                      module: 'WS.Data/Source/Memory',
@@ -114,7 +114,7 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
                resetValue: '0',
                value: null,
                properties: {
-                  idProperty: 'key',
+                  keyProperty: 'key',
                   displayProperty: 'title',
                   source: {
                      module: 'WS.Data/Source/Memory',
@@ -134,7 +134,7 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
                resetValue: '3',
                value: '0',
                properties: {
-                  idProperty: 'lastName',
+                  keyProperty: 'lastName',
                   displayProperty: 'title',
                   source: {
                      module: 'WS.Data/Source/Memory',
@@ -154,7 +154,7 @@ define('Controls-demo/FastDataFilter/FastDataFilter',
 
          _createMemory: function (items) {
             return new Memory({
-               idProperty: 'id',
+               keyProperty: 'id',
                data: items
             });
          },

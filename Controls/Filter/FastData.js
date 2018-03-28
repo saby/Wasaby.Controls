@@ -6,16 +6,13 @@ define('Controls/Filter/FastData',
       'Controls/Controllers/SourceController',
       'WS.Data/Chain',
       'WS.Data/Collection/RecordSet',
-      'SBIS3.CONTROLS/Utils/SourceUtil',
       'Core/core-instance',
-      'Core/IoC',
-      'WS.Data/Utils',
       'Core/ParallelDeferred',
       'css!Controls/Filter/FastData/FastData',
       'css!Controls/Input/Dropdown/Dropdown'
 
    ],
-   function (Control, DropdownUtils, template, SourceController, Chain, RecordSet, SourceUtil, cInstance, IoC, Utils, pDeferred) {
+   function (Control, DropdownUtils, template, SourceController, Chain, RecordSet, cInstance, pDeferred) {
 
       'use strict';
 
@@ -47,7 +44,7 @@ define('Controls/Filter/FastData',
             var properties = item.get('properties'),
                dSource = {
                   source: properties.source,
-                  idProperty: properties.idProperty
+                  idProperty: properties.keyProperty
                };
 
             if (!item.get('value')) {
@@ -59,6 +56,7 @@ define('Controls/Filter/FastData',
                _private.getItems(self._configs[index], properties.items);
             } else if (properties.source) {
                return DropdownUtils.loadItems(self._configs[index], dSource).addCallback(function () {
+                  self._configs[index].keyProperty = properties.keyProperty;
                   self._configs[index].displayProperty = properties.displayProperty || 'title';
                });
             }
@@ -89,7 +87,7 @@ define('Controls/Filter/FastData',
 
          selectItem: function (item) {
             //Получаем ключ выбранного элемента
-            var key = item.getId();
+            var key = item.get(this._configs[this.lastOpenIndex].keyProperty);
             this._items.at(this.lastOpenIndex).set({value: key});
             this._notify('selectedKeysChanged', [key]);
          },
@@ -140,11 +138,11 @@ define('Controls/Filter/FastData',
                   items: this._configs[index]._items,
                   keyProperty: this._configs[index]._items.getIdProperty(),
                   parentProperty: item.get('parentProperty'),
-                  nodeProperty: Utils.getItemPropertyValue(item, 'nodeProperty'),
-                  itemTemplateProperty: Utils.getItemPropertyValue(item, 'itemTemplateProperty'),
-                  itemTemplate: Utils.getItemPropertyValue(item, 'itemTemplate'),
-                  headTemplate: Utils.getItemPropertyValue(item, 'headTemplate'),
-                  footerTemplate: Utils.getItemPropertyValue(item, 'footerTemplate'),
+                  nodeProperty: item.get('nodeProperty'),
+                  itemTemplateProperty: item.get('itemTemplateProperty'),
+                  itemTemplate: item.get('itemTemplate'),
+                  headTemplate: item.get('headTemplate'),
+                  footerTemplate: item.get('footerTemplate'),
                   selectedKeys: this._items.at(index).get('value') || this._items.at(index).get('resetValue')
                },
                target: event.target.parentElement
