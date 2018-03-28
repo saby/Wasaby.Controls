@@ -169,7 +169,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             return ControlHierarchyManager.checkInclusion(this._dialog, floatArea.wsControl().getContainer());
          }
          //Если кликнули по инфобоксу или информационному окну - popup закрывать не нужно
-         var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay');
+         var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay, .js-controls-NotificationStackPopup');
          return !!infoBox.length;
       },
       _resetComponentOptions: function() {
