@@ -82,8 +82,7 @@ define('Controls/List/SimpleList/ItemsViewModel',
          setItems: function(items) {
             if (_private.isEqualItems(this._items, items)) {
                this._items.assign(items);
-            }
-            else {
+            } else {
                if (this._options.itemsReadyCallback) {
                   this._options.itemsReadyCallback(items);
                }
