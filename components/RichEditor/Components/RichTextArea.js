@@ -2849,7 +2849,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return Sanitize(text,
                {
                   validNodes: {
-                     img: images
+                     img: images,
+                     table: {
+                        border: true,
+                        cellspacing: true,
+                        cellpadding: true
+                     }
                   },
                   validAttributes: {
                      'class' : function(content, attributeName) {
