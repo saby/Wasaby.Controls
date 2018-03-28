@@ -4,10 +4,12 @@
 define('Controls/Application/Compatible', [
    'Core/Control',
    'Core/EventBus',
+   'Core/RightsManager',
    'tmpl!Controls/Application/Compatible',
    'tmpl!Controls/Application/CompatibleScripts'
 ], function(Base,
             EventBus,
+            rights,
             template) {
    'use strict';
 
@@ -17,6 +19,9 @@ define('Controls/Application/Compatible', [
       _beforeMount: function(){
          this._forceUpdate = function(){
             return;
+         }
+         if(typeof window !== 'undefined') {
+            window.rights = rights;
          }
       },
       _afterMount: function(){
@@ -28,7 +33,9 @@ define('Controls/Application/Compatible', [
                return false;
             }
          }
-         EventBus.globalChannel().notify('bootupReady', {error:''});
+         require(['Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator'], function() {
+            EventBus.globalChannel().notify('bootupReady', {error:''});
+         })
       },
       _shouldUpdate: function(){
          return false;
