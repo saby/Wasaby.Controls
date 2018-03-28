@@ -8,7 +8,7 @@ define('Controls/Header', [
    'use strict';
 
    /**
-    * Контрол отображающий заголовки
+    * Control showing the headers
     * @class Controls/Header
     * @extends Controls/Control
     * @control
@@ -17,109 +17,109 @@ define('Controls/Header', [
 
    /**
     * @name Controls/Header#size
-    * @cfg {String} Размер заголовка
-    * @variant s размер шрифта будет 14px(в теме онлайна)
-    * @variant m размер шрифта будет 15px(в теме онлайна)
-    * @variant l размер шрифта будет 18px(в теме онлайна)
+    * @cfg {String} caption size
+    * @variant caption has small size
+    * @variant caption has middle size
+    * @variant caption has large size
     */
 
    /**
     * @name Controls/Header#caption
-    * @cfg {String} текст заголовка
+    * @cfg {String} caption text
     */
 
    /**
     * @name Controls/Header#style
-    * @cfg {String} стиль заголовка
-    * @variant default синий
-    * @variant primary красный
+    * @cfg {String} caption display style
+    * @variant default caption will be default
+    * @variant primary caption will be accented
     */
 
    /**
     * @name Controls/Header#clickable
-    * @cfg {Boolean} возможность клика по заголовку
+    * @cfg {Boolean} caption can be clicked
     */
 
    /**
     * @name Controls/Header#counterValue
-    * @cfg {Number} значение счетчика. Если он задан, то счетчик отображается
+    * @cfg {Number} value of counter. If this option is specified, the title will be displayed
     */
 
    /**
     * @name Controls/Header#counterLocation
-    * @cfg {String} расположение счетчика относительно заголовка
-    * @variant after после загловка
-    * @variant before перед заголовком
+    * @cfg {String} counter location relative to header
+    * @variant after counter will be displayed after the caption
+    * @variant before counter will be displayed before the caption
     */
 
    /**
     * @name Controls/Header#counterStyle
-    * @cfg {String} стиль отображения счетчика
-    * @variant primary синий
-    * @variant default красный
-    * @variant disabled серый без ховера
+    * @cfg {String} counter display style
+    * @variant primary counter will be accented
+    * @variant default counter will be default
+    * @variant disabled counter will be non accented
     */
 
    /**
     * @name Controls/Header#counterSize
-    * @cfg {String} размер счетчика
-    * @variant small 14px
-    * @variant default 15px
+    * @cfg {String} size of counter
+    * @variant small counter has small size
+    * @variant default counter has middle size
     */
 
    /**
     * @name Controls/Header#countClickable
-    * @cfg {Boolean} возможность посылать отдельное событие на клик по счетчику. Название события countClick
+    * @cfg {Boolean} the ability to send a single event when counter was clicked. Event name is countClick
     */
 
    /**
     * @name Controls/Header#iconClickable
-    * @cfg {Boolean} возможность посылать отдельное событие на клик по иконке. Название события iconClick
+    * @cfg {Boolean} the ability to send a single event when icon was clicked. Event name is iconClick
     */
 
    /**
     * @name Controls/Header#iconLocation
-    * @cfg {String} расположение счетчика относительно заголовка
-    * @variant after после загловка
-    * @variant before перед заголовком
+    * @cfg {String} icon location relative to header
+    * @variant after icon will be displayed after the caption
+    * @variant before icon will be displayed before the caption
     */
 
    /**
     * @name Controls/Header#iconStyle
-    * @cfg {String} стиль отображения иконки
-    * @variant Accent синяя (все описания стилей в теме онлайна)
-    * @variant Additional серая, без ховера
-    * @variant Main красная
+    * @cfg {String} icon display style
+    * @variant Accent icon will be default
+    * @variant Additional icon will be non accented
+    * @variant Main icon will be accented
     */
 
    /**
     * @name Controls/Header#iconType
-    * @cfg {String} тип иконки, названия совпадают с наименованием иконки(можно посмотреть на wi классы иконок icon-<имя>)
-    * @variant MarkExpandBold обычная галка но двойной ширины
-    * @variant ExpandLight обычная галка
-    * @variant AccordionArrowDown двойная галка
+    * @cfg {String} icon type
+    * @variant MarkExpandBold down arrow with double width
+    * @variant ExpandLight default dawn arrow
+    * @variant AccordionArrowDown double down arrow
     */
 
    /**
     * @name Controls/Header#iconValue
-    * @cfg {Boolean} состоянее кнопки, включена ли она
+    * @cfg {Boolean} icon value. if iconValue == true, that icon will be displaying, else icon will not be displaying
     */
 
    /**
     * @name Controls/Header#separatorIcon
-    * @cfg {Boolean} нужна ли иконка разделитель, используется только с заголовком. не путать  с кнопкой-разделителем. клик всегда общий с заголовком
+    * @cfg {Boolean} icon separator will be displayed or not
     */
 
    /**
     * @name Controls/Header#separatorIconStyle
-    * @cfg {String} стиль отображения иконки, в теме онлайна есть только одна возможная тема, она будет при установке любого допустимого значения в эту опцию
-    * @variant primary красная в теме carry
-    * @variant default синяя в теме carry
+    * @cfg {String} icon display style. In the online theme has only one display style
+    * @variant primary icon-separator will be accented
+    * @variant default icon-separator will be default
     */
 
    /**
     * @name Controls/Header#commonClick
-    * @cfg {Boolean} если истина, то будет общий ховер у всех элементов
+    * @cfg {Boolean} a common hover for all header elements
     */
 
 
