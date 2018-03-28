@@ -906,7 +906,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           */
          applyFormats: function (formats) {
             // Отбросить все свойства форматирования, тождественные форматированию по-умолчанию
-            var defaults = this._getNodeFormats(this._tinyEditor.selection.getNode(), ['fontsize', 'color']);
+            var rng = this._tinyEditor.selection.getRng();
+            var node = rng.startContainer;
+            var defaults = this._getNodeFormats((node.nodeType === 3 ? node.parentNode : node).parentNode, ['fontsize', 'color']);
             for (var prop in defaults) {
                if (prop in formats && formats[prop] ==/* Не "==="! */ defaults[prop]) {
                   delete formats[prop];
