@@ -65,7 +65,7 @@ define('Controls/Button/Back', [
    BackButton.getDefaultOptions = function() {
       return {
          style: 'default',
-         size: 'default'
+         size: 'm'
       };
    };
 
