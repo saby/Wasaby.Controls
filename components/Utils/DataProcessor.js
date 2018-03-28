@@ -366,7 +366,7 @@ define('SBIS3.CONTROLS/Utils/DataProcessor', [
          }, deferred);
       },
       _isLongOperationsEnabled: function() {
-         return requirejs.defined('js!SBIS3.Engine.LongOperationsInformer');
+         return requirejs.defined('SBIS3.ENGINE/Controls/LongOperation/Informer');
       }
    });
 });
