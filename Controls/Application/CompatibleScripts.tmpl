@@ -2,18 +2,22 @@
    <script key="jquery-s" type="text/javascript" src="/cdn/jquery/3.3.1/jquery-min.js"  data-pack-name="skip"></script>
    <script key="cookie-s" type="text/javascript" src="/cdn/jquery-cookie/04-04-2014/jquery-cookie-min.js"  data-pack-name="skip"></script>
    <script key="init_script">
-      require(['Core/app-init', 'Core/constants'], function(appinit, constants){
+      require(['Core/app-init', 'Core/constants', 'Core/RightsManager'], function(appinit, constants, rights){
+         window.rights = rights;
          constants.$body = body;
          constants.$window = window;
          appinit();
          require(['bootup-min',
+            'Core/EventBus',
           'Core/nativeExtensions',
-          'Lib/Control/BaseCompatible/BaseCompatible'], function(bootup){
+          'Lib/Control/BaseCompatible/BaseCompatible'
+         ], function(bootup, EventBus){
             var cont = document.getElementsByTagName('html')[0];
             cont.removeAttribute('hasMarkup');
             cont.removeAttribute('config');
             cont.removeAttribute('data-component');
             bootup();
+            EventBus.globalChannel().notify('bootupReady', {error:''});
          });
       });
    </script>

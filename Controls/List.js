@@ -19,7 +19,8 @@ define('Controls/List', [
             items : cfg.items,
             idProperty: cfg.idProperty,
             displayProperty: cfg.displayProperty,
-            markedKey: cfg.markedKey
+            markedKey: cfg.markedKey,
+            itemsReadyCallback: cfg.itemsReadyCallback
          });
       }
    };

@@ -1,6 +1,8 @@
 <ws:for data="listModel.reset(); listModel.isEnd(); listModel.goToNext();">
       <ws:partial
               on:click="_onItemClick(listModel.getCurrent().dispItem)"
+              on:contextmenu="_onItemContextMenu(listModel.getCurrent())"
+              itemActionsTemplate="{{itemActionsTemplate}}"
               template="{{itemTemplate}}"
               itemData="{{listModel.getCurrent()}}"/>
 </ws:for>

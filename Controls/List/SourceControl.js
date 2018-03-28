@@ -7,6 +7,7 @@ define('Controls/List/SourceControl', [
    'Controls/Controllers/SourceController',
    'Core/Deferred',
    'Controls/List/EditInPlace',
+   'Controls/List/ItemActions/ItemActionsControl',
    'css!Controls/List/SourceControl/SourceControl'
 ], function (Control,
              IoC,
@@ -19,7 +20,6 @@ define('Controls/List/SourceControl', [
    'use strict';
 
    var _private = {
-
       reload: function(self) {
          if (self._sourceController) {
             _private.showIndicator(self);
@@ -320,8 +320,6 @@ define('Controls/List/SourceControl', [
                source : newOptions.source,
                navigation : newOptions.navigation  //TODO возможно не всю навигацию надо передавать а только то, что касается source
             });
-
-
 
             if (receivedState) {
                this._listViewModel.setItems(receivedState);

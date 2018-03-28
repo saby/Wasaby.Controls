@@ -234,6 +234,24 @@ define(['Core/constants', 'SBIS3.CONTROLS/Date/Box', 'SBIS3.CONTROLS/Utils/Contr
          });
       });
 
+      describe('.getDate', function () {
+         let date = new Date();
+         beforeEach(function () {
+            this.controlConfig.mask = 'HH:II';
+            this.controlConfig.date = date;
+         });
+
+         afterEach(function () {
+            delete this.controlConfig.mask;
+         });
+         controlTestCase();
+         it('should return new Date object if serialisation mode set incorrectly', function () {
+
+            assert.notStrictEqual(date, this.testControl.getDate());
+            assert.equal(date.getTime(), this.testControl.getDate().getTime());
+         });
+      });
+
       describe('.setDate + .getDate', function () {
          beforeEach(function () {
             this.controlConfig.mask = 'DD.MM.YY HH:II';

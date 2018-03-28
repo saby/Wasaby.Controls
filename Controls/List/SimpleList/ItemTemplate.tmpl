@@ -1,20 +1,23 @@
-<div attr:class="ws-ListView__item {{marker != false && itemData.isSelected ? 'ws-ListView__item__selected'}}"
+<div attr:class="ws-ListView__item {{marker != false && itemData.isSelected ? 'ws-ListView__item__selected'}} {{!!itemData.isActionHoverItem ? 'ws-ListView__item_actionHover'}}"
      attr:key="{{itemData.dispItem.getHash()}}">
-   <ws:if data="{{contentTemplate}}">
-      <ws:if data="{{itemData.isEditing}}">
-         <Controls.List.EditInPlace.EditingRow>
+    <ws:if data="{{contentTemplate}}">
+        <ws:if data="{{itemData.isEditing}}">
+            <Controls.List.EditInPlace.EditingRow>
+                <ws:partial
+                        template="{{contentTemplate}}"
+                        itemData="{{itemData}}"/>
+            </Controls.List.EditInPlace.EditingRow>
+        </ws:if>
+        <ws:else>
             <ws:partial
                     template="{{contentTemplate}}"
                     itemData="{{itemData}}"/>
-         </Controls.List.EditInPlace.EditingRow>
-      </ws:if>
-      <ws:else>
-         <ws:partial
-              template="{{contentTemplate}}"
-              itemData="{{itemData}}"/>
-      </ws:else>
-   </ws:if>
-   <ws:else>
-      <div>{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
-   </ws:else>
+        </ws:else>
+    </ws:if>
+    <ws:else>
+        <div>{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
+    </ws:else>
+    <ws:if data="{{itemData.itemActions && itemData.itemActions.length}}">
+        <ws:partial template="{{itemActionsTemplate}}"  itemData="{{itemData}}"/>
+    </ws:if>
 </div>

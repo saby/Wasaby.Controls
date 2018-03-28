@@ -41,6 +41,9 @@ define('Controls/List/SimpleList/ItemsViewModel',
             ItemsViewModel.superclass.constructor.apply(this, arguments);
             this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
             if (cfg.items) {
+               if (cfg.itemsReadyCallback) {
+                  cfg.itemsReadyCallback(cfg.items);
+               }
                this._items = cfg.items;
                this._display = ItemsUtil.getDefaultDisplayFlat(cfg.items, cfg);
                this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
@@ -75,6 +78,10 @@ define('Controls/List/SimpleList/ItemsViewModel',
             }
          },
 
+         getCurrentIndex: function() {
+            return this._curIndex;
+         },
+
          getItemById: function(id, idProperty) {
             return this._display ? ItemsUtil.getDisplayItemById(this._display, id, idProperty) : undefined;
          },
@@ -90,8 +97,10 @@ define('Controls/List/SimpleList/ItemsViewModel',
          setItems: function(items) {
             if (_private.isEqualItems(this._items, items)) {
                this._items.assign(items);
-            }
-            else {
+            } else {
+               if (this._options.itemsReadyCallback) {
+                  this._options.itemsReadyCallback(items);
+               }
                this._items = items;
                if (this._display) {
                   this._display.destroy();

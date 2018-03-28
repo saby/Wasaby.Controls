@@ -42,7 +42,7 @@ define('SBIS3.CONTROLS/ListView',
    'SBIS3.CONTROLS/Paging',
    'SBIS3.CONTROLS/ComponentBinder',
    'WS.Data/Di',
-   'SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil',
+   'Controls/Utils/ArraySimpleValuesUtil',
    'Core/core-instance',
    'Core/LocalStorageNative',
    'Core/helpers/Function/forAliveDeferred',
@@ -2141,24 +2141,7 @@ define('SBIS3.CONTROLS/ListView',
          },
 
          /**
-          * Перезагружает набор записей представления данных с последующим обновлением отображения.
-          * @remark
-          * Производится запрос на выборку записей из источника данных по установленным параметрам:
-          * <ol>
-          *    <li>Параметры фильтрации, которые устанавливают с помощью опции {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#filter}.</li>
-          *    <li>Параметры сортировки, которые устанавливают с помощью опции {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#sorting}.</li>
-          *    <li>Порядковый номер записи в источнике, с которого будет производиться отбор записей для выборки. Устанавливают с помощью метода {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#setOffset}.</li>
-          *    <li>Масимальное число записей, которые будут присутствовать в выборке. Устанавливают с помощью метода {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#pageSize}.</li>
-          * </ol>
-          * Вызов метода инициирует событие {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#onBeforeDataLoad}. В случае успешной перезагрузки набора записей происходит событие {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#onDataLoad}, а в случае ошибки - {@link SBIS3.CONTROLS/Mixins/ItemsControlMixin#onDataLoadError}.
-          * Если источник данных не установлен, производит перерисовку установленного набора данных.
-          * @return {Deferred}
-          * @example
-          * <pre>
-          *    btn.subscribe('onActivated', function() {
-          *       DataGridViewBL.reload();
-          *    });
-          * </pre>
+          *
           */
          reload: function (filter, sorting, offset, limit, deepReload, resetPosition) {
             if (this._scrollBinder && this._options.saveReloadPosition){
@@ -2852,13 +2835,23 @@ define('SBIS3.CONTROLS/ListView',
          },
 
          _swipeHandler: function(e){
-            var target = this._findItemByElement($(e.target));
+            var target = this._findItemByElement($(e.target)),
+                switchedToTouch = this._options.itemsActionsInItemContainer && this._itemsToolbar.isVisible() && !this._itemsToolbar.getTouchMode();
 
             if(!target.length) {
                return;
             }
-
+            // zinFrame. Операции над записью отрисовываются внутри <TR>
+            // Припереходе в тач режим необходимо вынести операции из строки и положить в table
+            if(switchedToTouch) {
+                this._moveToolbarToTable();
+            }
             this._setTouchSupport(true);
+            // После переключения в тач режим пересчитываем координаты тулбара,
+             // т.к. до этого они лежали в строке и позиция не была рассчитана
+            if(switchedToTouch) {
+                this._itemsToolbar.recalculatePosition();
+            }
             if (e.direction == 'left') {
                this._changeHoveredItem(target);
                this._onLeftSwipeHandler();
@@ -3030,7 +3023,7 @@ define('SBIS3.CONTROLS/ListView',
                            self._clearHoveredItem();
                         }
                         if (self._options.itemsActionsInItemContainer) {
-                           self._itemsToolbar.getContainer().appendTo(self._container);
+                           self._moveToolbarToTable();
                         }
                      }
 
@@ -3045,6 +3038,10 @@ define('SBIS3.CONTROLS/ListView',
                }
             }
             return this._itemsToolbar;
+         },
+
+         _moveToolbarToTable: function() {
+             this._itemsToolbar.getContainer().appendTo(this._container);
          },
          /**
           * Возвращает массив, описывающий установленный набор операций над записью, доступных по наведению курсора.

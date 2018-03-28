@@ -18,6 +18,12 @@
                                    editingConfig="{{_options.editingConfig}}"
                                    listModel="{{_listViewModel}}"
                                    source="{{_options.source}}" />
+        <Controls.List.ItemActions.ItemActionsControl
+                ws:content="listView"
+                listModel="{{_listViewModel}}"
+                itemActions="{{_options.itemActions}}"
+                itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
+                itemActionsType="{{_options.itemActionsType}}"/>
     </ws:if>
 
     <ws:if data="{{_options.emptyTemplate && _listViewModel && !_listViewModel.getCount()}}">

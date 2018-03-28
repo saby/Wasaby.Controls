@@ -1,6 +1,6 @@
 define('Controls/Popup/Opener/Stack',
    [
-      'Controls/Popup/Opener/Base',
+      'Controls/Popup/Opener/BaseOpener',
       'Controls/Popup/Opener/Stack/StackController'
    ],
    function (Base, Strategy) {
@@ -19,7 +19,7 @@ define('Controls/Popup/Opener/Stack',
           * @param config конфигурация попапа
           */
          open: function (config) {
-            return Base.prototype.open.call(this, config, Strategy);
+            Base.prototype.open.call(this, config, Strategy);
          }
       });
 

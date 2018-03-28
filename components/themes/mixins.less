@@ -634,3 +634,41 @@
     height: @height;
   }
 }
+
+.closeButton {
+  width: @width_EditActions-cancelButton;
+  height: @height_EditActions-cancelButton;
+  margin-right:  @margin-right_ListView-itemsToolbar-closeButton;
+  background: @background_EditActions-closeButton;
+  border-width: @border-width_IconButton_bordered;
+  border-style: solid;
+  border-color: @border-color_IconButton_bordered;
+  .box-shadow(@box-shadow_IconButton);
+  text-shadow: @text-shadow_IconButton_bordered;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-block;
+  &:hover {
+    border-color: @border-color_IconButton_bordered_standard_hovered;
+    background: @background_EditActions-closeButton_hovered;
+    box-shadow: @box-shadow_Button_bordered_hovered;
+    // нужно по нажатию перекрашивать primary иконку, поэтому используем каскад
+    // иконки других значений icon-done, icon-error etc. перекрашивать не нужно
+    .controls-Button__icon.icon-primary {
+      color: @color_Link-text_active;
+    }
+  }
+  &:active {
+    border-color: @border-color_IconButton_bordered_standard_hovered;
+    background: @background_EditActions-closeButton_active;
+    // нужно по нажатию перекрашивать primary иконку, поэтому используем каскад
+    // иконки других значений icon-done, icon-error etc. перекрашивать не нужно
+    .controls-Button__icon.icon-primary {
+      color: @color_Link-text_active;
+    }
+  }
+
+  .controls-ButtonBase__content {
+    .justify-content(center);
+  }
+}

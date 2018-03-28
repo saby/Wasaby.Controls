@@ -182,5 +182,40 @@ define([
          assert.equal(1, iv._items.at(3).get('id'), 'Incorrect items after prependItems');
 
       });
+
+      it('itemsReadyCallback', function () {
+         var rs1 = new RecordSet({
+            rawData: data,
+            idProperty : 'id'
+         });
+         var rs2 = new RecordSet({
+            rawData: data2,
+            idProperty : 'id'
+         });
+
+
+
+
+         var result, callback, cfg;
+
+         callback = function() {
+            result = 1;
+         };
+
+         cfg = {
+            items: data,
+            idProperty: 'id',
+            displayProperty: 'title',
+            itemsReadyCallback: callback
+         };
+
+         result = 0;
+         var iv = new ItemsViewModel(cfg);
+         assert.equal(1, result, 'itemsReadycallback wasn\'t call');
+
+         result = 0;
+         iv.setItems(rs2);
+         assert.equal(1, result, 'itemsReadycallback wasn\'t call');
+      });
    })
 });
