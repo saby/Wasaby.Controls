@@ -2851,13 +2851,23 @@ define('SBIS3.CONTROLS/ListView',
          },
 
          _swipeHandler: function(e){
-            var target = this._findItemByElement($(e.target));
+            var target = this._findItemByElement($(e.target)),
+                switchedToTouch = this._options.itemsActionsInItemContainer && this._itemsToolbar.isVisible() && !this._itemsToolbar.getTouchMode();
 
             if(!target.length) {
                return;
             }
-
+            // zinFrame. Операции над записью отрисовываются внутри <TR>
+            // Припереходе в тач режим необходимо вынести операции из строки и положить в table
+            if(switchedToTouch) {
+                this._moveToolbarToTable();
+            }
             this._setTouchSupport(true);
+            // После переключения в тач режим пересчитываем координаты тулбара,
+             // т.к. до этого они лежали в строке и позиция не была рассчитана
+            if(switchedToTouch) {
+                this._itemsToolbar.recalculatePosition();
+            }
             if (e.direction == 'left') {
                this._changeHoveredItem(target);
                this._onLeftSwipeHandler();
@@ -3029,7 +3039,7 @@ define('SBIS3.CONTROLS/ListView',
                            self._clearHoveredItem();
                         }
                         if (self._options.itemsActionsInItemContainer) {
-                           self._itemsToolbar.getContainer().appendTo(self._container);
+                           self._moveToolbarToTable();
                         }
                      }
 
@@ -3044,6 +3054,10 @@ define('SBIS3.CONTROLS/ListView',
                }
             }
             return this._itemsToolbar;
+         },
+
+         _moveToolbarToTable: function() {
+             this._itemsToolbar.getContainer().appendTo(this._container);
          },
          /**
           * Возвращает массив, описывающий установленный набор операций над записью, доступных по наведению курсора.

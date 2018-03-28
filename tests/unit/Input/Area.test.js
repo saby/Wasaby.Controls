@@ -111,7 +111,7 @@ define(
 
 
 
-         it('needScrollCheck', function () {
+         it('updateHasScroll', function () {
             var
                mockSelfObj = {
                   _children: {
@@ -121,14 +121,14 @@ define(
                      }
                   }
                };
-            areaControl._private.needScrollCheck(mockSelfObj);
+            Area._private.updateHasScroll(mockSelfObj);
 
             assert.equal(mockSelfObj._hasScroll, false);
 
             mockSelfObj._children.fakeArea.scrollHeight = 20;
             mockSelfObj._children.fakeArea.clientHeight = 10;
 
-            areaControl._private.needScrollCheck(mockSelfObj);
+            Area._private.updateHasScroll(mockSelfObj);
 
             assert.equal(mockSelfObj._hasScroll, true);
          });
@@ -145,14 +145,14 @@ define(
                      }
                   }
                };
-            areaControl._private.updateMultiline(mockSelfObj);
+            Area._private.updateMultiline(mockSelfObj);
 
             assert.equal(mockSelfObj._multiline, false);
 
             mockSelfObj._children.fakeArea.clientHeight = 20;
             mockSelfObj._children.fakeAreaWrapper.clientHeight = 10;
 
-            areaControl._private.updateMultiline(mockSelfObj);
+            Area._private.updateMultiline(mockSelfObj);
 
             assert.equal(mockSelfObj._multiline, true);
          });
@@ -164,7 +164,7 @@ define(
                      fakeAreaValue: {}
                   }
                };
-            areaControl._private.setFakeAreaValue(mockSelfObj, '123');
+            Area._private.setFakeAreaValue(mockSelfObj, '123');
 
             assert.equal(mockSelfObj._children.fakeAreaValue.innerHTML, '123');
          });
