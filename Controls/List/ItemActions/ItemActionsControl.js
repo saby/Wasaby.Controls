@@ -27,8 +27,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          return actions;
       },
 
-      updateActions: function(self, newOptions){
-         var options = newOptions ? newOptions : self._options;
+      updateActions: function(options){
          if (options.itemActions) {
             for (options.listModel.reset();  options.listModel.isEnd();  options.listModel.goToNext()) {
                var itemData = options.listModel.getCurrent();
@@ -80,9 +79,9 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          self._forceUpdate();
       },
       updateModel: function(self, newOptions) {
-         _private.updateActions(self, newOptions);
+         _private.updateActions(newOptions);
          newOptions.listModel.subscribe('onListChange', function() {
-            _private.updateActions(self);
+            _private.updateActions(self._options);
          });
       }
    };
