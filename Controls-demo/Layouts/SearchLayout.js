@@ -50,7 +50,7 @@ define('Controls-demo/Layouts/SearchLayout', [
          id: 'firstName',
          resetValue: 'По имени',
          properties: {
-            idProperty: 'title',
+            keyProperty: 'title',
             displayProperty: 'title',
             source: {
                module: 'WS.Data/Source/Memory',
@@ -70,7 +70,7 @@ define('Controls-demo/Layouts/SearchLayout', [
          id: 'id',
          resetValue: '0',
          properties: {
-            idProperty: 'id',
+            keyProperty: 'id',
             displayProperty: 'title',
             source: {
                module: 'WS.Data/Source/Memory',
@@ -91,7 +91,7 @@ define('Controls-demo/Layouts/SearchLayout', [
          resetValue: '0',
          value: 'aaaa',
          properties: {
-            idProperty: 'lastName',
+            keyProperty: 'lastName',
             displayProperty: 'title',
             source: {
                module: 'WS.Data/Source/Memory',
