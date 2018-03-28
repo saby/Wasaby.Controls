@@ -54,11 +54,12 @@ define('Controls/Button/Back', [
             'primary',
             'default'
          ]),
-         counterLocation: types(String).oneOf([
+         size: types(String).oneOf([
             's',
-            'default',
+            'm',
             'l'
-         ])
+         ]),
+         inHeader: types(Boolean)
       }
    };
 
