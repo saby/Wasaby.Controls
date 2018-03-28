@@ -1,0 +1,80 @@
+<div class="demoWrapper">
+    <div class="testBlock">
+        <div class="exampleBlock">
+            <h2>Кнопка назад</h2>
+            <Controls:Button:Back style="{{_backStyle}}" size="{{_backSize}}" caption="{{_backCaption}}" inHeader="{{_inHeader}}"/>
+        </div>
+        <div class="optionsBlock">
+            <Controls:Label name="myLabel1" caption="style(primary, default)"/>
+            <Controls:Input:Text bind:value="_backStyle"/>
+            <Controls:Label name="myLabel1" caption="size(s, m, l)"/>
+            <Controls:Input:Text bind:value="_backSize"/>
+            <Controls:Label name="myLabel1" caption="caption"/>
+            <Controls:Input:Text bind:value="_backCaption"/>
+            <br/>
+            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_inHeader" caption="inHeader"/>
+        </div>
+    </div>
+    <div class="testBlock">
+        <div class="exampleBlock">
+            <h2>Заголовок</h2>
+            <Controls:Header on:countClick="clickCount()"
+                             on:iconClick="iconCount()"
+                             size="{{_size}}"
+                             caption="{{_caption}}"
+                             style="{{_style}}"
+                             clickable="{{_clickable}}"
+                             counterValue="{{_counterValue}}"
+                             counterLocation="{{_counterLocation}}"
+                             counterStyle="{{_counterStyle}}"
+                             counterSize="{{_counterSize}}"
+                             countClickable="{{_countClickable}}"
+                             iconClickable="{{_iconClickable}}"
+                             iconLocation="{{_iconLocation}}"
+                             iconStyle="{{_iconStyle}}"
+                             iconType="{{_iconType}}"
+                             iconValue="{{_iconValue}}"
+                             separatorIcon="{{_separatorIcon}}"
+                             separatorIconStyle="{{_separatorIconStyle}}"
+                             commonClick="{{_commonClick}}"/>
+        </div>
+        <div class="optionsBlock">
+            <h3>Опции заголовка</h3>
+            <Controls:Label name="myLabel1" caption="size(s, m, l)"/>
+            <Controls:Input:Text bind:value="_size"/>
+            <Controls:Label name="myLabel1" caption="caption"/>
+            <Controls:Input:Text bind:value="_caption"/>
+            <Controls:Label name="myLabel1" caption="style(default, primary)"/>
+            <Controls:Input:Text bind:value="_style"/>
+            <br/>
+            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_clickable" caption="clickable"/>
+            <h3>Опции счетчика</h3>
+            <Controls:Label name="myLabel1" caption="counterValue"/>
+            <Controls:Input:Number bind:value="_counterValue"/>
+            <Controls:Label name="myLabel1" caption="counterLocation(after, before)"/>
+            <Controls:Input:Text bind:value="_counterLocation"/>
+            <Controls:Label name="myLabel1" caption="counterStyle(disabled, default, primary)"/>
+            <Controls:Input:Text bind:value="_counterStyle"/>
+            <Controls:Label name="myLabel1" caption="counterSize(small, default)"/>
+            <Controls:Input:Text bind:value="_counterSize"/>
+            <br/>
+            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_countClickable" caption="countClickable"/>
+            <h3>Опции кнопки-разделителя</h3>
+            <Controls:Label name="myLabel1" caption="iconLocation(before, after)"/>
+            <Controls:Input:Text bind:value="_iconLocation"/>
+            <Controls:Label name="myLabel1" caption="iconStyle(Accent, Additional, Main)"/>
+            <Controls:Input:Text bind:value="_iconStyle"/>
+            <Controls:Label name="myLabel1" caption="iconType(MarkExpandBold, ExpandLight, AccordionArrowDown)"/>
+            <Controls:Input:Text bind:value="_iconType"/>
+            <br/>
+            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_iconClickable" caption="iconClickable"/>
+            <h3>Опции иконки</h3>
+            <Controls:Label name="myLabel1" caption="separatorIconStyle(primary, default)"/>
+            <Controls:Input:Text bind:value="_separatorIconStyle"/>
+            <br/>
+            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_separatorIcon" caption="separatorIcon"/>
+            <h3>Общая опция</h3>
+            <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_commonClick" caption="commonClick"/>
+        </div>
+    </div>
+</div>
