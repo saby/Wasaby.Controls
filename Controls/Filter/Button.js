@@ -6,10 +6,12 @@ define('Controls/Filter/Button',
       'Core/Control',
       'tmpl!Controls/Filter/Button/Button',
       'Core/moduleStubs',
+      'WS.Data/Chain',
+      'WS.Data/Utils',
       'css!Controls/Filter/Button/Button'
    ],
    
-   function(Control, template, moduleStubs) {
+   function(Control, template, moduleStubs, Chain, Utils) {
       
       /**
        * @class Controls/Layout/Search
@@ -40,6 +42,11 @@ define('Controls/Filter/Button',
          _oldPanelOpener: null,
          _text: '',
          
+         constructor: function(options) {
+            FilterButton.superclass.constructor.call(this, options);
+            this._items = options.items;
+         },
+         
          _getFilterState: function() {
             return this.isEnabled() ? 'default' : 'disabled';
          },
@@ -61,6 +68,20 @@ define('Controls/Filter/Button',
                   //...soon
                }
             }
+         },
+         
+         _getText: function(items) {
+            var textArr = [];
+   
+            Chain(items).each(function(item) {
+               var textValue = Utils.getItemPropertyValue(item, 'textValue');
+               
+               if (textValue) {
+                  textArr.push(textValue);
+               }
+            });
+            
+            return textArr.join(', ');
          }
          
       });

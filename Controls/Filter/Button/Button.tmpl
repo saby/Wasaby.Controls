@@ -1,13 +1,13 @@
 <div class="controls-FilterButton">
     <div class="controls-FilterButton__wrapper">
-        <ws:if data="{{_text}}">
+        <ws:if data="{{_getText(_items)}}">
             <div class="controls-FilterButton__text-wrapper controls-FilterButton__text-wrapper_state_{{_getFilterState()}}"
                  on:click="_openFilterPanel()">
                 <ws:if data="{{_options.filterAlign === 'right'}}">
                     <div class="controls-FilterButton__arrow controls-FilterButton__arrow_state_{{_getFilterState()}} icon-DayForward"></div>
                 </ws:if>
                 <div class="controls-FilterButton__text controls-FilterButton__text_state_{{_getFilterState()}}" title="{{_text}}">
-                    {{_text}}
+                    {{_getText(_items)}}
                 </div>
             </div>
             <ws:if data="{{isEnabled()}}">

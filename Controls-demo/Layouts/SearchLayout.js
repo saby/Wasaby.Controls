@@ -14,7 +14,9 @@ define('Controls-demo/Layouts/SearchLayout', [
    'Controls/Input/Text',
    'Controls-demo/Layouts/LayoutFilterComponent',
    'Controls/Layout/Filter',
-   'Controls/Layout/Search'
+   'Controls/Layout/Search',
+   'Controls/Filter/Button',
+   'Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate'
 ], function (BaseControl,
              template,
              MemorySource
@@ -47,8 +49,8 @@ define('Controls-demo/Layouts/SearchLayout', [
    ];
    
    var filterSourceData = [
-      {id: 'title', resetValue: '', value: ''},
-      {id: 'id', resetValue: null, value: null}
+      {id: 'title', resetValue: '', value: '', textValue: ''},
+      {id: 'id', resetValue: null, value: null, textValue: ''}
    ];
    
    var ModuleClass = BaseControl.extend(

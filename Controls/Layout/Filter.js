@@ -46,7 +46,7 @@ define('Controls/Layout/Filter',
             var items;
             
             if (id) {
-               items = [{id: 'title', value: 'Sasha'}];
+               items = [{id: 'title', value: 'Sasha', textValue: 'Sasha'}];
             }
             return Deferred.success(items);
          },
