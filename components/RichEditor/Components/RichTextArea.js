@@ -1006,7 +1006,25 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             }
             var isAlreadyApplied = editor.formatter.match(command);
             var rng = selection.getRng();
-            if (isListNode && !isAlreadyApplied) {
+            var isBlockquoteOfList;
+            if (isBlockquote) {
+               // При обёртывании списков в блок цитат каждый элемент списка оборачивается отдельно. Во избежание этого сделать список временно нередактируемым
+               // 1174914305 https://online.sbis.ru/opendoc.html?guid=305e5cb1-8b37-49ea-917d-403f746d1dfe
+               var listNode = rng.commonAncestorContainer;
+               isBlockquoteOfList = ['OL', 'UL'].indexOf(listNode.nodeName) !== -1;
+               if (isBlockquoteOfList) {
+                  var $listNode = $(listNode);
+                  $listNode.wrap('<div>');
+                  selection.select(listNode.parentNode, false);
+                  $listNode.attr('contenteditable', 'false');
+                  afterProcess = function () {
+                     $listNode.unwrap();
+                     $listNode.removeAttr('contenteditable');
+                     selection.select(listNode, true);
+                  };
+               }
+            }
+            if ((isListNode || (isBlockquote && !isBlockquoteOfList)) && !isAlreadyApplied) {
                var node = rng.startContainer;
                if (rng.endContainer === node) {
                   if (node.nodeType === 3 && node.previousSibling && node.previousSibling.nodeType === 1) {
@@ -1025,22 +1043,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      node.parentNode.insertBefore(newNode, node.nextSibling);
                      selection.select(newNode, true);
                   }
-               }
-            }
-            if (isBlockquote) {
-               // При обёртывании списков в блок цитат каждый элемент списка оборачивается отдельно. Во избежание этого сделать список временно нередактируемым
-               // 1174914305 https://online.sbis.ru/opendoc.html?guid=305e5cb1-8b37-49ea-917d-403f746d1dfe
-               var listNode = rng.commonAncestorContainer;
-               if (['OL', 'UL'].indexOf(listNode.nodeName) !== -1) {
-                  var $listNode = $(listNode);
-                  $listNode.wrap('<div>');
-                  selection.select(listNode.parentNode, false);
-                  $listNode.attr('contenteditable', 'false');
-                  afterProcess = function () {
-                     $listNode.unwrap();
-                     $listNode.removeAttr('contenteditable');
-                     selection.select(listNode, true);
-                  };
                }
             }
             editor.execCommand(execCmd || command);
