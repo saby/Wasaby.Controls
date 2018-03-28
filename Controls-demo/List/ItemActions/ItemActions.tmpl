@@ -1,0 +1,48 @@
+<div class="itemActionsDemo">
+     <h2>itemActionsType="inline"</h2>
+    <Controls:List
+            source = "{{_viewSource}}"
+            markedKey="{{2}}"
+            allowEmptySelection="{{false}}"
+            idProperty="id"
+            itemActions="{{_itemActions}}"
+            on:actionClick="_onActionClick()"
+            itemActionVisibilityCallback="{{_showAction}}"
+            class="itemActionsDemo__list">
+
+        <ws:itemTemplate>
+            <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate">
+                <ws:contentTemplate>
+                    <div style="padding: 4px;" on:click="_contentClick( itemTemplate.itemData)">
+                        <div>{{itemTemplate.itemData.item.get('title')}}</div>
+                        <div style="font-size: 11px; color: grey">{{itemTemplate.itemData.item.get('description')}}</div>
+                    </div>
+                </ws:contentTemplate>
+            </ws:partial>
+        </ws:itemTemplate>
+    </Controls:List>
+    <div on:click="changeSource()"> Сменить источник для первого списка</div>
+    <h2>itemActionsType="underline"</h2>
+    <Controls:List
+            source = "{{_viewSource2}}"
+            markedKey="{{2}}"
+            allowEmptySelection="{{false}}"
+            itemActionsType="underline"
+            idProperty="id"
+            itemActions="{{_itemActions}}"
+            itemActionVisibilityCallback="{{_showAction}}"
+            class="itemActionsDemo__list">
+
+        <ws:itemTemplate>
+            <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate">
+                <ws:contentTemplate>
+                    <div style="padding: 4px;">
+                        <div>{{itemTemplate.itemData.item.get('title')}}</div>
+                        <div style="font-size: 11px; color: grey">{{itemTemplate.itemData.item.get('description')}}</div>
+                    </div>
+                </ws:contentTemplate>
+            </ws:partial>
+        </ws:itemTemplate>
+    </Controls:List>
+
+</div>

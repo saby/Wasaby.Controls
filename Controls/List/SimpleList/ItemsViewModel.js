@@ -63,6 +63,10 @@ define('Controls/List/SimpleList/ItemsViewModel',
             }
          },
 
+         getCurrentIndex: function() {
+            return this._curIndex;
+         },
+
          getItemById: function(id, idProperty) {
             return this._display ? ItemsUtil.getDisplayItemById(this._display, id, idProperty) : undefined;
          },
