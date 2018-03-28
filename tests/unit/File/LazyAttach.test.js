@@ -8,6 +8,9 @@ define([
    if (!constants.isBrowserPlatform) {
       return;
    }
+   // TODO moduleStubs мусорит в глобальный объект, пока заигнорим эти ошибки тут, в 3.18.200 правим moduleStubs
+   mocha.setup({ignoreLeaks: true});
+
    require([
        'Lib/File/Attach/LazyAttach',
        'Core/Deferred',
