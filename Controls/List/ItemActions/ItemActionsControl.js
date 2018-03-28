@@ -78,10 +78,10 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          self._options.listModel._actionHoverItem = false;
          self._forceUpdate();
       },
-      updateModel: function(self, newOptions) {
+      updateModel: function(options, newOptions) {
          _private.updateActions(newOptions);
          newOptions.listModel.subscribe('onListChange', function() {
-            _private.updateActions(self._options);
+            _private.updateActions(options);
          });
       }
    };
@@ -97,13 +97,13 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
       _beforeMount: function(newOptions){
          if (newOptions.listModel) {
-            _private.updateModel(this, newOptions)
+            _private.updateModel(this._options, newOptions)
          }
       },
 
       _beforeUpdate: function(newOptions){
          if (newOptions.listModel && (this._options.listModel !== newOptions.listModel)) {
-            _private.updateModel(this, newOptions);
+            _private.updateModel(this._options, newOptions);
          }
       },
 
