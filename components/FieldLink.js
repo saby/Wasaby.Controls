@@ -114,6 +114,13 @@ define('SBIS3.CONTROLS/FieldLink',
           },
           selectedMultipleItems: function(cfg) {
              return cfg.multiselect && cfg.selectedKeys.length > 1;
+          },
+          itemSelectHandler: function(self) {
+             if(self.getText() && !self._options.alwaysShowTextBox) {
+                /* Т.к. текст сбрасывается програмно, а searchMixin реагирует лишь на ввод текста с клавиатуры,
+                 то надо позвать метод searchMixin'a, который сбросит текст и поднимет событие */
+                self.resetSearch();
+             }
           }
        };
 
@@ -353,6 +360,7 @@ define('SBIS3.CONTROLS/FieldLink',
                    запись передаётся по ссылке и любые действия с ней будут отображаться и в списке.
                    Особенно актуально это когда зибниден selectedItem в добавлении по месту. */
                 this.addSelectedItems([item.clone()]);
+                _private.itemSelectHandler(this);
                 this.setText('');
              });
 
@@ -362,11 +370,7 @@ define('SBIS3.CONTROLS/FieldLink',
                Это всё актуально для поля связи без включенной опции alwaysShowTextBox,
                если она включена, то логика стирания текста обрабатывается по-другому. */
             this.subscribe('onSelectedItemsChange', function(event, result, changed) {
-               if(self.getText() && !self._options.alwaysShowTextBox) {
-                  /* Т.к. текст сбрасывается програмно, а searchMixin реагирует лишь на ввод текста с клавиатуры,
-                   то надо позвать метод searchMixin'a, который сбросит текст и поднимет событие */
-                  self.resetSearch();
-               }
+               _private.itemSelectHandler(self);
 
                /* При добавлении элементов надо запустить валидацию,
                   если же элементы были удалены,
@@ -383,8 +387,8 @@ define('SBIS3.CONTROLS/FieldLink',
                      или же по значениям в контексте */
                   self.getSelectedItems(true).addCallback(function(list) {
                      self.validate();
-                     return list
-                  })
+                     return list;
+                  });
                }
             });
 
