@@ -1,8 +1,8 @@
-define('Controls-demo/Operations/Remove', [
+define('Controls-demo/List/Remove', [
    'Core/Control',
    'WS.Data/Source/Memory',
-   'tmpl!Controls-demo/Operations/Remove/Remove',
-   'css!Controls-demo/Operations/Remove/Remove'
+   'tmpl!Controls-demo/List/Remove/Remove',
+   'css!Controls-demo/List/Remove/Remove'
 ], function (BaseControl, MemorySource, template) {
    'use strict';
 
