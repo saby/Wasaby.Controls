@@ -20,6 +20,7 @@ define('SBIS3.CONTROLS/Filter/ReportHistory',
                _favoriteItemTpl: favoriteItemTpl,
                _filterProperty: 'filter',
                _structureProperty: 'filterPanelItems',
+               _filterItemTextProperty: 'textValue',
                _favoriteAction: {
                   command: 'favorite',
                   name: 'favorite',

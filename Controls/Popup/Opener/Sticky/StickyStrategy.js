@@ -138,6 +138,7 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', [], function () {
             width: horizontalPosition.size,
             height: verticalPosition.size
          };
-      }
+      },
+      _private: _private //для тестов
    }
 });

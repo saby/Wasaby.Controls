@@ -276,7 +276,7 @@ define(
             this.setDate(date);
          } else if (key == constants.key.plus || key == constants.key.minus) {
             if (curDate) {
-               curDate = new Date(curDate);
+               curDate = new Date(curDate.getTime());
                if (this.getType() === 'time') {
                   return;
                } else {
@@ -485,7 +485,7 @@ define(
          }
          if (this._options.date && this._options.date.getSQLSerializationMode() !== mode) {
             // Дата могла прийти в компонент извне, не изменяем ее.
-            this._options.date = new Date(this._options.date);
+            this._options.date = new Date(this._options.date.getTime());
             this._options.date.setSQLSerializationMode(mode);
          }
          return this._options.date;

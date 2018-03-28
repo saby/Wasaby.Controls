@@ -82,6 +82,11 @@ define('Controls/List/interface/IListControl', [
     */
 
    /**
+    * @name Controls/List/interface/IListControl#itemsReadyCallback
+    * @cfg {Function} Коллбэк функция вызывающаяся в момент готовности инстанса списочных данных
+    */
+
+   /**
     * @function Controls/List/interface/IListControl#reload
     * Перезагружает набор записей представления данных с последующим обновлением отображения
     */

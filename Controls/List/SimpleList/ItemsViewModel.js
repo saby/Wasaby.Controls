@@ -30,6 +30,9 @@ define('Controls/List/SimpleList/ItemsViewModel',
             ItemsViewModel.superclass.constructor.apply(this, arguments);
             this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
             if (cfg.items) {
+               if (cfg.itemsReadyCallback) {
+                  cfg.itemsReadyCallback(cfg.items);
+               }
                this._items = cfg.items;
                this._display = ItemsUtil.getDefaultDisplayFlat(cfg.items, cfg);
                this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
@@ -81,6 +84,9 @@ define('Controls/List/SimpleList/ItemsViewModel',
                this._items.assign(items);
             }
             else {
+               if (this._options.itemsReadyCallback) {
+                  this._options.itemsReadyCallback(items);
+               }
                this._items = items;
                if (this._display) {
                   this._display.destroy();

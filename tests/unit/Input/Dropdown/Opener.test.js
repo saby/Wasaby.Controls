@@ -8,7 +8,13 @@ define(
             itemTemplate: 'itemTemplate',
             headTemplate: 'headTemplate',
             footerTemplate: 'footerTemplate',
-            className: 'myClass'
+            keyProperty: 'keyProperty',
+            selectedKeys: 'selectedKeys',
+            parentProperty: 'parentProperty',
+            itemTemplateProperty: 'itemTemplateProperty',
+            nodeProperty: 'nodeProperty',
+            className: 'myClass',
+            template: 'Controls/Dropdown/resources/template/DropdownList'
          };
 
          let opener = new Opener(config);
@@ -20,13 +26,12 @@ define(
             assert.equal(opener._options.className, config.className);
          });
 
-         it('get opener list', () => {
+         it('get template', () => {
             //первый раз загрузка
-            opener._getOpenerList().addCallback(() => {
+            opener._getTemplate(config).addCallback(() => {
                //второй раз из кэша рекваера
-               opener._getOpenerList().addCallback(() => {
+               opener._getTemplate(config).addCallback(() => {
                   assert.isTrue(true);
-
                });
             });
          });
@@ -47,11 +52,17 @@ define(
             let cfg = {
                componentOptions: {}
             };
-            opener._prepareConfig(cfg);
-            let compOptions = cfg.componentOptions;
-            assert.isTrue(compOptions.itemTemplate === 'itemTemplate' &&
-                          compOptions.headTemplate === 'headTemplate' &&
-                          compOptions.footerTemplate === 'footerTemplate');
+            opener._setPopupOptions(cfg);
+            assert.isTrue(cfg.className === config.className);
+
+            opener._setComponentOptions(cfg);
+            let isEqual = true;
+            for (let key of Object.keys(config)) {
+               if (config[key] !== cfg.componentOptions[key] && cfg.componentOptions[key] !== undefined) {
+                  isEqual = false;
+               }
+            }
+            assert.isTrue(isEqual);
          });
       })
    });

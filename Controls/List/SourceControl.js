@@ -37,8 +37,8 @@ define('Controls/List/SourceControl', [
                //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
                _private.handleListScroll(self, 0);
             }).addErrback(function(error){
-               _private.processLoadError(self, error)
-            })
+               _private.processLoadError(self, error);
+            });
          }
          else {
             IoC.resolve('ILogger').error('SourceControl', 'Source option is undefined. Can\'t load data');
@@ -244,6 +244,12 @@ define('Controls/List/SourceControl', [
 
       getItemsCount: function(self) {
          return self._listViewModel ? self._listViewModel.getCount() : 0;
+      },
+      
+      initListViewModelHandler: function(self, model) {
+         model.subscribe('onListChange', function () {
+            self._forceUpdate();
+         });
       }
    };
 
@@ -305,6 +311,7 @@ define('Controls/List/SourceControl', [
          if (newOptions.listViewModel) {
             this._listViewModel = newOptions.listViewModel;
             this._virtualScroll.setItemsCount(this._listViewModel.getCount());
+            _private.initListViewModelHandler(this, this._listViewModel);
          }
 
          if (newOptions.source) {
@@ -343,6 +350,7 @@ define('Controls/List/SourceControl', [
 
          if (newOptions.listViewModel && (newOptions.listViewModel !== this._options.listViewModel)) {
             this._listViewModel = newOptions.listViewModel;
+            _private.initListViewModelHandler(this, this._listViewModel);
             //this._virtualScroll.setItemsCount(this._listViewModel.getCount());
          } else
             if (newOptions.selectedKey !== this._options.selectedKey) {

@@ -48,30 +48,35 @@ define('Controls/Input/Area', [
 
    var _private = {
 
-      setFakeAreaValue: function(value){
-         this._children.fakeAreaValue.innerHTML = value;
+      setFakeAreaValue: function(self, value){
+         self._children.fakeAreaValue.innerHTML = value;
       },
 
       /*
       * Обновляет наличие скролла, в зависимости от того, есть ли скролл на фейковой текст арии
       */
-      updateScroll: function(){
-         var fakeArea = this._children.fakeArea;
-         var fakeAreaWrapper = this._children.fakeAreaWrapper;
+      updateHasScroll: function(self){
+         var fakeArea = self._children.fakeArea;
          var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
-
-         //Определим количество строк в Area сравнив высоты fakeArea и ее обертки
-         this._multiline = fakeArea.clientHeight > fakeAreaWrapper.clientHeight;
 
          //Для IE, текст мы показываем из fakeArea, поэтому сдвинем скролл.
          if(needScroll && detection.isIE){
-            fakeArea.scrollTop = this._children.realArea.scrollTop;
+            fakeArea.scrollTop = self._children.realArea.scrollTop;
          }
 
-         if(needScroll !== this._hasScroll){
-            this._hasScroll = needScroll;
-            this._forceUpdate();
+         if(needScroll !== self._hasScroll){
+            self._hasScroll = needScroll;
          }
+      },
+
+      /*
+       * Updates area multiline
+       */
+      updateMultiline: function(self){
+         var fakeArea = self._children.fakeArea;
+         var fakeAreaWrapper = self._children.fakeAreaWrapper;
+         //Will define the number of rows in Area by comparing fakeArea and her wrap heights
+         self._multiline = fakeArea.clientHeight > fakeAreaWrapper.clientHeight;
       }
    };
 
@@ -87,18 +92,25 @@ define('Controls/Input/Area', [
 
       constructor: function(options) {
          Area.superclass.constructor.call(this, options);
+         //'_multiline' is responsible for adding multi-line field classes to InputRender
+         //Should be set before the component is mounted into DOM to avoid content jumps
          this._multiline = options.minLines > 1;
       },
 
-      _afterMount: function() {
+      _afterMount: function(){
          Area.superclass._afterMount.apply(this, arguments);
-         _private.updateScroll.call(this);
+
+         //Should calculate area height after mount
+         _private.updateHasScroll(this);
+         _private.updateMultiline(this);
+         this._forceUpdate();
       },
 
       _beforeUpdate: function(newOptions) {
          Area.superclass._beforeUpdate.apply(this, arguments);
-         _private.setFakeAreaValue.call(this, newOptions.value);
-         _private.updateScroll.call(this);
+         _private.setFakeAreaValue(this, newOptions.value);
+         _private.updateHasScroll(this);
+         _private.updateMultiline(this);
       },
 
       _afterUpdate: function(oldOptions) {
@@ -109,15 +121,10 @@ define('Controls/Input/Area', [
       },
 
       _valueChangedHandler: function(e, value){
-         _private.setFakeAreaValue.call(this, value);
-         _private.updateScroll.call(this);
+         _private.setFakeAreaValue(this, value);
+         _private.updateHasScroll(this);
+         _private.updateMultiline(this);
          this._notify('valueChanged', [value]);
-      },
-
-      _setValue: function(value){
-         Area.superclass._setValue.apply(this, arguments);
-         _private.setFakeAreaValue.call(this, value);
-         _private.updateScroll.call(this);
       },
 
       _keyDownHandler: function(e){
@@ -140,7 +147,7 @@ define('Controls/Input/Area', [
       },
 
       _scrollHandler: function(){
-         _private.updateScroll.call(this);
+         _private.updateHasScroll(this);
       },
 
       //TODO убрать (и подписку из Area.tmpl) после выполнения ошибки https://online.sbis.ru/opendoc.html?guid=04b9c78b-7237-4c5a-9045-887a170d8427
@@ -171,6 +178,9 @@ define('Controls/Input/Area', [
          ])
       };
    };*/
+
+   //For unit-tests
+   Area._private = _private;
 
    return Area;
 

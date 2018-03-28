@@ -120,6 +120,8 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
              */
             /**
              * @cfg {VerticalAlign} Устанавливает вертикальное выравнивание всплывающего окна относительно точки его построения.
+             * @default {}
+             * @remark опция обязательна для конфигурации
              */
             verticalAlign: {},
             /**
@@ -134,6 +136,8 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
              */
             /**
              * @cfg {HorizontalAlign} Устанавливает горизонтальное выравнивание всплывающего окна относительно точки его построения.
+             * @default {}
+             * @remark опция обязательна для конфигурации
              */
             horizontalAlign: {},
             /**
