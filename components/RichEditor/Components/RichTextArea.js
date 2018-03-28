@@ -843,16 +843,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (selNode.nodeType === 3) {
                   selNode = selNode.parentNode;
                }
-               var $selNode = $(selNode);
-               var color = editor.dom.getStyle(selNode, 'color', true);
-               return {
-                  fontsize: +editor.dom.getStyle(selNode, 'font-size', true).replace('px', ''),
-                  color: constants.colorsMap[color] || color,
-                  bold: !!$selNode.closest('strong').length,
-                  italic: !!$selNode.closest('em').length,
-                  underline: !!$selNode.closest('span[style*="decoration: underline"]').length,
-                  strikethrough: !!$selNode.closest('span[style*="decoration: line-through"]').length
-               };
+               return this._getNodeFormats(selNode);
             }
          },
 
@@ -862,18 +853,51 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           */
          getDefaultFormats: function () {
             if (!this._defaultFormats) {
-               this._defaultFormats = this._getNodeFormats(this._inputControl);
+               this._defaultFormats = this._getNodeFormats(this._inputControl, ['fontsize', 'color']);
             }
             return this._defaultFormats;
          },
 
-         _getNodeFormats: function (node) {
-            var $node = $(node);
-            var color = $node.css('color');
-            return {
-               fontsize : +$node.css('font-size').replace('px', ''),
-               color: constants.colorsMap[color] || color
-            };
+         _getNodeFormats: function (node, properties) {
+            var editor = this._tinyEditor;
+            if (editor) {
+               if (!properties || !properties.length) {
+                  properties = ['fontsize', 'color', 'bold', 'italic', 'underline', 'strikethrough'];
+               }
+               var formats = {};
+               var $node;
+               var selectors;
+               for (var i = 0; i < properties.length; i++) {
+                  var prop = properties[i];
+                  if (prop === 'fontsize') {
+                     formats[prop] = +editor.dom.getStyle(node, 'font-size', true).replace('px', '');//^^^+$node.css('font-size').replace('px', '')
+                  }
+                  else
+                  if (prop === 'color') {
+                     var color = editor.dom.getStyle(node, 'color', true);//^^^$node.css('color')
+                     formats[prop] = constants.colorsMap[color] || color;
+                  }
+                  else {
+                     if (!selectors) {
+                        selectors = {
+                           'bold': 'strong',
+                           'italic': 'em',
+                           'underline': 'span[style*="decoration: underline"]',
+                           'strikethrough': 'span[style*="decoration: line-through"]'
+                        };
+                     }
+                     var selector = selectors[prop];
+                     if (selector) {
+                        if (!$node) {
+                           $node = $(node);
+                        }
+                        formats[prop] = !!$node.closest(selector).length;
+                     }
+                  }
+               }
+            }
+            return formats;
+
          },
 
          /**
@@ -882,7 +906,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           */
          applyFormats: function (formats) {
             // Отбросить все свойства форматирования, тождественные форматированию по-умолчанию
-            var defaults = this._getNodeFormats(this._tinyEditor.selection.getNode());
+            var defaults = this._getNodeFormats(this._tinyEditor.selection.getNode(), ['fontsize', 'color']);
             for (var prop in defaults) {
                if (prop in formats && formats[prop] ==/* Не "==="! */ defaults[prop]) {
                   delete formats[prop];
