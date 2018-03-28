@@ -164,7 +164,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
       //Если клик был по другой панели, проверяю, связана ли она с текущей
       _isLinkedPanel: function (target) {
-         var floatArea = $(target).closest('.ws-float-area');
+         var floatArea = $(target).closest('.ws-float-area-stack-cut-wrapper').find('.ws-float-area'); //Клик может быть в стики шапку, она лежит выше .ws-float-area
          if (floatArea.length){
             return ControlHierarchyManager.checkInclusion(this._dialog, floatArea.wsControl().getContainer());
          }
