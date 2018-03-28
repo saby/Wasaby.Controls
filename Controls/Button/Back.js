@@ -38,6 +38,11 @@ define('Controls/Button/Back', [
     * @cfg {String} Заголовок
     */
 
+   /**
+    * @name Controls/Button#inHeader
+    * @cfg {Boolean} Специальный стиль для заголовка в шапке
+    */
+
    var BackButton = Control.extend({
       _template: template
    });
