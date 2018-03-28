@@ -1,36 +1,36 @@
-<ws:Controls.Layout.Filter attr:class="controls-demo__FilterLayout">
+<Controls.Layout.Filter attr:class="controls-demo__FilterLayout">
     <ws:content>
         <div>
-            <ws:Controls.Layout.Search
+            <Controls.Layout.Search
                     attr:class="controls-demo__SearchLayout"
                     searchParam="title">
                 <ws:content>
                     <div class="controls-demo__SearchLayout_content">
                         <div class="controls-demo__Layouts_content">
                             <div class="controls-demo__Layouts_filterComponents">
-                                <ws:Controls.Input.Search bind:value="_searchValue"/>
+                                <Controls.Input.Search bind:value="_searchValue"/>
                                 <Controls-demo:Layouts:LayoutFilterComponent/>
                             </div>
                             <div class="controls-demo__LayoutInner">
-                                <ws:Controls.Layout.List source="{{_dataSource}}" searchParam="title">
+                                <Controls.Layout.List source="{{_dataSource}}" searchParam="title">
                                     <ws:content>
                                         <div>
-                                            <ws:Controls.List idProperty="id" name="list">
+                                            <Controls.List idProperty="id" name="list">
                                                 <ws:emptyTemplate>
                                                     Не найдено
                                                 </ws:emptyTemplate>
-                                            </ws:Controls.List>
+                                            </Controls.List>
                                         </div>
                                     </ws:content>
                                     <ws:navigation source="page" view="page">
                                         <ws:sourceConfig pageSize="{{20}}" page="{{0}}" mode="totalCount"/>
                                     </ws:navigation>
-                                </ws:Controls.Layout.List>
+                                </Controls.Layout.List>
                             </div>
                         </div>
                     </div>
                 </ws:content>
-            </ws:Controls.Layout.Search>
+            </Controls.Layout.Search>
         </div>
     </ws:content>
-</ws:Controls.Layout.Filter>
+</Controls.Layout.Filter>
