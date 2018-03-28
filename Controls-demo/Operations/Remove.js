@@ -28,7 +28,7 @@ define('Controls-demo/Operations/Remove', [
       },
 
       _removeItem: function() {
-         this._children.list.removeItems(this._idForRemove);
+         this._children.list.remove([this._idForRemove]);
       }
    });
    return ModuleClass;

@@ -76,8 +76,8 @@ define('Controls/List', [
          }
       },
 
-      removeItems: function(items) {
-         this._children.SourceControl.removeItems(items);
+      remove: function(items) {
+         this._children.SourceControl.remove(items);
       }
    });
 
