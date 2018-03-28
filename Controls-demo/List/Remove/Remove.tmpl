@@ -1,11 +1,10 @@
-<div>
+<div class="removeDemo">
     <Controls.List
+            class="removeDemo__list"
             name="list"
             markedKey="{{2}}"
+            itemActions="{{_itemActions}}"
             source = "{{_viewSource}}"
             idProperty="id">
     </Controls.List>
-    <Controls.Button name="remove" caption="Удалить" on:click="_removeItem()"/>
-    <span>Ключ: </span>
-    <Controls.Input.Number name="text" bind:value="_idForRemove"/>
 </div>

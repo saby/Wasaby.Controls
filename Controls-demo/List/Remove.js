@@ -8,27 +8,32 @@ define('Controls-demo/List/Remove', [
 
    var ModuleClass = BaseControl.extend({
       _template: template,
-      _idForRemove: 0,
+      _itemActions: undefined,
+      _items: [{
+         id: 1,
+         title: 'Запись 1'
+      }, {
+         id: 2,
+         title: 'Запись 2'
+      }, {
+         id: 3,
+         title: 'Запись 3'
+      }],
 
-      constructor: function() {
-         ModuleClass.superclass.constructor.apply(this, arguments);
+      _beforeMount: function() {
+         var self = this;
          this._viewSource = new MemorySource({
             idProperty: 'id',
-            data: [{
-                  id: 1,
-                  title: 'Запись 1'
-               }, {
-                  id: 2,
-                  title: 'Запись 2'
-               }, {
-                  id: 3,
-                  title: 'Запись 3'
-               }]
+            data: this._items
          });
-      },
-
-      _removeItem: function() {
-         this._children.list.remove([this._idForRemove]);
+         this._itemActions = [{
+            id: 1,
+            icon: 'icon-Erase icon-error',
+            main: true,
+            handler: function(item){
+               self._children.list.remove([item.getId()]);
+            }
+         }];
       }
    });
    return ModuleClass;

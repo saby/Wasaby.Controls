@@ -13,13 +13,14 @@
                 displayProperty="{{_options.displayProperty}}"
                 markedKey="{{_options.markedKey}}">
         </ws:partial>
+        <Controls.List.Remove ws:content="listView" name="removeControl"/>
         <Controls.List.ItemActions.ItemActionsControl
                 ws:content="listView"
                 listModel="{{_listViewModel}}"
                 itemActions="{{_options.itemActions}}"
                 itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
                 itemActionsType="{{_options.itemActionsType}}"/>
-        <Controls.List.Remove ws:content="listView" name="removeControl"/>
+
     </ws:if>
 
     <ws:if data="{{_options.emptyTemplate && _listViewModel && !_listViewModel.getCount()}}">
