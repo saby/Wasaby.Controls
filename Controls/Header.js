@@ -19,7 +19,7 @@ define('Controls/Header', [
     * @name Controls/Header#size
     * @cfg {String} Размер заголовка
     * @variant s размер шрифта будет 14px(в теме онлайна)
-    * @variant default размер шрифта будет 15px(в теме онлайна)
+    * @variant m размер шрифта будет 15px(в теме онлайна)
     * @variant l размер шрифта будет 18px(в теме онлайна)
     */
 
@@ -63,7 +63,7 @@ define('Controls/Header', [
    /**
     * @name Controls/Header#counterSize
     * @cfg {String} размер счетчика
-    * @variant s 14px
+    * @variant small 14px
     * @variant default 15px
     */
 
@@ -201,12 +201,12 @@ define('Controls/Header', [
          ]),
          counterSize: types(String).oneOf([
             'default',
-            's'
+            'small'
          ]),
          countClickable: types(Boolean),
          size: types(String).oneOf([
             'l',
-            'default',
+            'm',
             's'
          ]),
          iconClickable: types(Boolean),
