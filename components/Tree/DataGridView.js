@@ -260,9 +260,9 @@ define('SBIS3.CONTROLS/Tree/DataGridView', [
             this._checkBreadCrumbsWidth();
          });
       },
-   
-      _afterAddItems: function() {
-         TreeDataGridView.superclass._afterAddItems.apply(this, arguments);
+      
+      _onResizeHandler: function() {
+         TreeDataGridView.superclass._onResizeHandler.call(this);
          this._checkBreadCrumbsWidth();
       },
       

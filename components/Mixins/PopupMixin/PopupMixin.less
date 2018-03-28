@@ -28,6 +28,9 @@
       color: @color_CloseButton-icon;
       text-shadow: @text-shadow_Button;
    }
+   &:active {
+      box-shadow: none;
+   }
 }
 
 .controls-PopupMixin__closeButton_light {
@@ -45,12 +48,14 @@ body:not(.ws-is-mobile-platform) {
    .controls-PopupMixin__closeButton_standart {
       &:hover, &:active {
          background-color: @background-color_CloseButton_hover;
+         box-shadow: @box-shadow_CloseButton_active;
+         border-color: @border-color_CloseButton_hover;
          &:before {
             color: @color_CloseButton-icon_hover;
          }
       }
       &:active {
-         box-shadow: @box-shadow_CloseButton_active;
+         box-shadow: none;
       }
    }
    .controls-PopupMixin__closeButton_light {

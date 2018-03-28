@@ -11,20 +11,25 @@
       overflow: visible;
    }
 
-   .controls-RichEditor__scrollContainer {
+   .controls-RichEditor__richTextArea {
+      .flexbox();
       box-sizing: border-box;
    }
 
-   &.ws-enabled .controls-RichEditor__scrollContainer {
+   &.ws-enabled .controls-RichEditor__richTextArea {
       border: 1px solid #EAEAEA;
    }
 
-   &.ws-disabled .controls-RichEditor__scrollContainer {
+   &.ws-disabled .controls-RichEditor__richTextArea {
       border: 1px solid transparent;
    }
 
-   &.controls-RichEditor_toolbarExpanded .controls-RichEditor__scrollContainer {
+   &.ws-enabled.controls-RichEditor_toolbarExpanded .controls-RichEditor__richTextArea {
       border-top: 0 none;
+   }
+
+   .controls-RichEditor__scrollContainer {
+      width: 100%;
    }
 
    .controls-RichEditor__editorFrame {
@@ -95,7 +100,7 @@
       padding: 0;
       display:none;
    }
-   &.ws-enabled.ws-validation-error .controls-RichEditor__scrollContainer {
+   &.ws-enabled.ws-validation-error .controls-RichEditor__richTextArea {
       border-color: #FF302B;
    }
 
@@ -312,4 +317,23 @@
          padding-top: 2px;
       }
    }
+}
+// Стили для кастомизируемой цитаты
+// Сам блок с цитатой
+.customBlockquote {
+   border-left: 1px #587AB0 solid;
+   padding-left: 8px;
+   padding-right: 0;
+   margin: 0 16px 0 40px !important;
+   clear: both;
+   position: relative;
+   font-size: 24px;
+   line-height: normal;
+}
+// Блок под картинку слева от цитаты
+.customBlockquote::before {
+   position: absolute;
+   margin-left: -32px;
+   height: 16px;
+   width: 24px;
 }

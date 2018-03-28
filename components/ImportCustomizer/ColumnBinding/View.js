@@ -203,7 +203,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                if (has.skippedRows) {
                   this._updateSkippedRows();
                }
-               if (has.accordances) {
+               if (has.accordances && options.fields) {
                   var rows = options.rows;
                   var len = rows && rows.length ? rows[0].length : 0;
                   if (len) {
@@ -237,83 +237,95 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                   throw new Error('Not equals row lengths');
                }
             }
-            //TODO: А хорошо бы проверить options.fields на соответсвие ImportTargetFields...
             var rowItems = [];
             if (rows.length) {
                var headTmpl = 'tmpl!SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/tmpl/head';
                var cellTmpl = 'tmpl!SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/tmpl/cell';
+               var menuConf;
+               var menuCaptions;
+               var menuItems;
                var fields = options.fields;
-               var isRecordSet = fields.items instanceof RecordSet;
-               var idProperty = fields.idProperty || (isRecordSet ? fields.items.getIdProperty() : undefined);
-               var displayProperty = fields.displayProperty;
-               var parentProperty = fields.parentProperty;
-               var accordances = options.accordances;
-               var menuIds = Object.keys(accordances).reduce(function (r, v) { r[accordances[v]] = v; return r; }, []);
-               var commonMenuItems;
-               if (parentProperty) {
-                  // Если поля организованы иерархически, то нужно создать новые данные для пунктов меню и пометить наличие подпунктов
-                  var props = [idProperty, displayProperty, parentProperty];
-                  if (isRecordSet) {
-                     commonMenuItems = [];
-                     fields.items.each(function (record) {
-                        commonMenuItems.push(props.reduce(function (r, p) { r[p] = record.get(p); return r; }, {}));
-                     });
+               if (fields) {
+                  var isRecordSet = fields.items instanceof RecordSet;
+                  var idProperty = fields.idProperty || (isRecordSet ? fields.items.getIdProperty() : undefined);
+                  var displayProperty = fields.displayProperty;
+                  var parentProperty = fields.parentProperty;
+                  var accordances = options.accordances;
+                  var menuIds = Object.keys(accordances).reduce(function (r, v) { r[accordances[v]] = v; return r; }, []);
+                  var commonMenuItems;
+                  if (parentProperty) {
+                     // Если поля организованы иерархически, то нужно создать новые данные для пунктов меню и пометить наличие подпунктов
+                     var props = [idProperty, displayProperty, parentProperty];
+                     if (isRecordSet) {
+                        commonMenuItems = [];
+                        fields.items.each(function (record) {
+                           commonMenuItems.push(props.reduce(function (r, p) { r[p] = record.get(p); return r; }, {}));
+                        });
+                     }
+                     else {
+                        commonMenuItems = fields.items.map(function (field) {
+                           return props.reduce(function (r, p) { r[p] = field[p]; return r; }, {});
+                        });
+                     }
+                     var parents = [];
+                     for (var i = 0; i < commonMenuItems.length; i++) {
+                        var p = commonMenuItems[i][parentProperty];
+                        if (p && parents.indexOf(p) === -1) {
+                           parents.push(p);
+                        }
+                     }
+                     for (var i = 0; i < commonMenuItems.length; i++) {
+                        var item = commonMenuItems[i];
+                        if (parents.indexOf(item[idProperty]) !== -1) {
+                           item.hasSub = true;
+                        }
+                     }
                   }
                   else {
-                     commonMenuItems = fields.items.map(function (field) {
-                        return props.reduce(function (r, p) { r[p] = field[p]; return r; }, {});
-                     });
+                     // А если поля организованы плоско, то возьмём их как есть
+                     commonMenuItems = fields.items.slice();
                   }
-                  var parents = [];
-                  for (var i = 0; i < commonMenuItems.length; i++) {
-                     var p = commonMenuItems[i][parentProperty];
-                     if (p && parents.indexOf(p) === -1) {
-                        parents.push(p);
+                  var firstItem = {className:_CLASS_MENU_EMPTY};
+                  firstItem[idProperty] = _ID_MENU_EMPTY;
+                  firstItem[displayProperty] = options.columnCaption;
+                  firstItem[parentProperty] = null;
+                  commonMenuItems.unshift(firstItem);
+                  // Размножим commonMenuItems для каждого меню отдельно (чтобы можно было задачть индивидуальные свойства)
+                  menuItems = [];
+                  menuCaptions = [];
+                  var indexes = commonMenuItems.reduce(function (r, v, i) { r[v[idProperty]] = i; return r; }, {});
+                  for (var i = 0, len = rows[0].length; i < len; i++) {
+                     var items = commonMenuItems.slice().map(function (v) { return cMerge({}, v); });
+                     var selectedItem = items[indexes[menuIds[i]] || 0];
+                     selectedItem.className = _CLASS_MENU_SELECTED;
+                     menuItems[i] = items;
+                     menuCaptions[i] = selectedItem[displayProperty];
+                  }
+                  menuConf = {
+                     idProperty: idProperty,
+                     displayProperty: displayProperty,
+                     parentProperty: parentProperty,
+                     namePrefix: _PREFIX_COLUMN_NAME
+                  };
+                  // Если компонент уже инициализирован, то можно задать обработчики событий прямо здесь
+                  if (this.isInitialized()) {
+                     menuConf.handlers = {
+                        //onActivated: this._onColumnMenu.bind(this),
+                        onMenuItemActivate: this._onColumnMenu.bind(this)
                      }
-                  }
-                  for (var i = 0; i < commonMenuItems.length; i++) {
-                     var item = commonMenuItems[i];
-                     if (parents.indexOf(item[idProperty]) !== -1) {
-                        item.hasSub = true;
-                     }
-                  }
-               }
-               else {
-                  // А если поля организованы плоско, то возьмём их как есть
-                  commonMenuItems = fields.items.slice();
-               }
-               var firstItem = {className:_CLASS_MENU_EMPTY};
-               firstItem[idProperty] = _ID_MENU_EMPTY;
-               firstItem[displayProperty] = options.columnCaption;
-               firstItem[parentProperty] = null;
-               commonMenuItems.unshift(firstItem);
-               // Размножим commonMenuItems для каждого меню отдельно (чтобы можно было задачть индивидуальные свойства)
-               var menuItems = [];
-               var menuCaptions = [];
-               var indexes = commonMenuItems.reduce(function (r, v, i) { r[v[idProperty]] = i; return r; }, {});
-               for (var i = 0, len = rows[0].length; i < len; i++) {
-                  var items = commonMenuItems.slice().map(function (v) { return cMerge({}, v); });
-                  var selectedItem = items[indexes[menuIds[i]] || 0];
-                  selectedItem.className = _CLASS_MENU_SELECTED;
-                  menuItems[i] = items;
-                  menuCaptions[i] = selectedItem[displayProperty];
-               }
-               var menuConf = {
-                  idProperty: idProperty,
-                  displayProperty: displayProperty,
-                  parentProperty: parentProperty,
-                  namePrefix: _PREFIX_COLUMN_NAME
-               };
-               // Если компонентр уже инициализирован, то можно задать обработчики событий прямо здесь
-               if (this.isInitialized()) {
-                  menuConf.handlers = {
-                     //onActivated: this._onColumnMenu.bind(this),
-                     onMenuItemActivate: this._onColumnMenu.bind(this)
                   }
                }
                var title = options.columnTitle;
                var skippedRows = 0 < options.skippedRows ? options.skippedRows : 0;
-               var columns = rows[0].map(function (v, i) { return {field:_PREFIX_COLUMN_FIELD + (i + 1), title:title + ' ' + (i + 1), headTemplate:headTmpl, cellTemplate:cellTmpl, menuConf:menuConf, menuItems:menuItems[i], menuCaption:menuCaptions[i]}; });
+               var columns = rows[0].map(function (v, i) { return {
+                  field: _PREFIX_COLUMN_FIELD + (i + 1),
+                  title: title + ' ' + (i + 1),
+                  headTemplate: headTmpl,
+                  cellTemplate: cellTmpl,
+                  menuConf: menuConf,
+                  menuItems: menuConf ? menuItems[i] : undefined,
+                  menuCaption: menuConf ? menuCaptions[i] : undefined};
+               });
                columns.unshift({field:'id', title:''});
                for (var j = 0; j < rows.length; j++) {
                   rowItems.push(rows[j].reduce(function (r, v, i) { r[_PREFIX_COLUMN_FIELD + (i + 1)] = v; return r; }, {id:j + 1, className:j < skippedRows ? _CLASS_LIGHT_ROW : undefined}));

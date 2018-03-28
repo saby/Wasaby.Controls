@@ -212,7 +212,7 @@ define('SBIS3.CONTROLS/Action/List/Save', [
                 componentOptions: {
                     handlers: {
                         onApply: function(event, pageSize){
-                            self.processSelectedPageSize(pageSize);
+                           result.callback(pageSize);
                         }
                     }
                 }

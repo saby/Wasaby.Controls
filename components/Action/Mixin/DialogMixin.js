@@ -149,7 +149,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       },
       _documentClickHandler: function (event) {
          //Клик по связному списку приводит к перерисовке записи в панели, а не открытию новой при autoHide = true
-         if (this._dialog && this._openedPanelConfig.mode === 'floatArea' && this._openedPanelConfig.autoHide) {
+         if (this._dialog && this._openedPanelConfig.mode === 'floatArea' && this._dialog.isVisible() && this._openedPanelConfig.autoHide) {
             if (this._needCloseDialog(event.target)) {
                this._dialog.close();
             }
@@ -169,7 +169,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             return ControlHierarchyManager.checkInclusion(this._dialog, floatArea.wsControl().getContainer());
          }
          //Если кликнули по инфобоксу или информационному окну - popup закрывать не нужно
-         var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup');
+         var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay');
          return !!infoBox.length;
       },
       _resetComponentOptions: function() {

@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Hier
    'WS.Data/Collection/RecordSet',
    'Core/core-clone',
    'Core/IoC',
-   'SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil'
+   'Controls/Utils/ArraySimpleValuesUtil'
 ], function (Selection, Record, HierarchyRelation, RecordSet, cClone, IoC, ArraySimpleValuesUtil) {
    'use strict';
 

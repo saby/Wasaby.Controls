@@ -75,7 +75,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             styles: {
                title: {inline: 'span', classes: 'titleText'},
                subTitle: {inline: 'span', classes: 'subTitleText'},
-               additionalText: {inline: 'span', classes: 'additionalText'}
+               additionalText: {inline: 'span', classes: 'additionalText'},
+               customBlockquote: {block: 'p', classes: 'customBlockquote'}
             },
             colorsMap: {
                'rgb(0, 0, 0)': 'black',
@@ -213,6 +214,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                  */
                validateClass: undefined
             },
+            _richTextAreaContainer: undefined,
             _scrollContainer: undefined,
             _dataReview: undefined,
             _inputControl: undefined,
@@ -270,13 +272,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             });
             this._dChildReady.push(this._readyControlDeffered);
             this._tinyReady = new Deferred();
+            this._richTextAreaContainer = this._container.find('.controls-RichEditor__richTextArea');
             this._scrollContainer = this._container.find('.controls-RichEditor__scrollContainer');
             this._dataReview = this._container.find('.controls-RichEditor__dataReview');
             this._inputControl = this._container.find('.controls-RichEditor__editorFrame');
             this._fakeArea = this._container.find('.controls-RichEditor__fakeArea');
             this._initMainHeight();
             this._options.editorConfig.selector = '#' + this.getId() + ' .controls-RichEditor__editorFrame';
-            this._options.editorConfig.fixed_toolbar_container = '#' + this.getId() + ' > .controls-RichEditor__fakeArea';
+            this._options.editorConfig.fixed_toolbar_container = '#' + this.getId() + ' .controls-RichEditor__fakeArea';
             this._options.editorConfig.setup = function(editor) {
                self._tinyEditor = editor;
                self._bindEvents();
@@ -424,7 +427,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                   var isInline = options.editorConfig.inline;
                   var iFrame = isInline ? null : $(this._tinyEditor.iframeElement);
-                  (isInline ? this._scrollContainer : iFrame).css('max-height', options.maximalHeight || '');
+                  (isInline ? this._richTextAreaContainer : iFrame).css('max-height', options.maximalHeight || '');
                   (isInline ? this._inputControl : iFrame).css('min-height', options.minimalHeight || '');
                }
             }
@@ -658,7 +661,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      document.addEventListener('paste', onPaste, true);
                      dialog = InformationPopupManager.showMessageDialog({
                            className: 'controls-RichEditor__pasteWithStyles-alert',
-                           message: rk('Нажмите CTRL + V для вставки текста из буфера обмена с сохранением стилей'),
+                           message: save ? rk('Не закрывая это окно нажмите CTRL + V для вставки текста из буфера обмена с сохранением стилей') : rk('Не закрывая это окно нажмите CTRL + V для вставки текста из буфера обмена без сохранения стилей'),
                            details: null,
                            submitButton: {caption:rk('Отменить')},
                            isModal: true,
@@ -993,28 +996,24 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           */
          execCommand: function (command) {
             var editor = this._tinyEditor;
-            var needPreprocess;
+            var selection = editor.selection;
+            var isBlockquote = command === 'blockquote';
+            var isListNode = !isBlockquote && (command === 'InsertOrderedList' || command === 'InsertUnorderedList');
+            var afterProcess;
             var execCmd;
-            if (command === 'blockquote') {
-               needPreprocess = true;
+            if (isBlockquote) {
                execCmd = 'mceBlockQuote';
             }
-            else
-            if (command === 'InsertOrderedList' || command === 'InsertUnorderedList') {
-               needPreprocess = true;
-            }
-            if (needPreprocess && !editor.formatter.match(command)) {
-               var rng = editor.selection.getRng();
+            var isAlreadyApplied = editor.formatter.match(command);
+            var rng = selection.getRng();
+            if (isListNode && !isAlreadyApplied) {
                var node = rng.startContainer;
                if (rng.endContainer === node) {
                   if (node.nodeType === 3 && node.previousSibling && node.previousSibling.nodeType === 1) {
                      var startOffset = rng.startOffset;
                      var endOffset = rng.endOffset;
                      editor.dom.split(node.parentNode, node);
-                     var newRng = editor.getDoc().createRange();
-                     newRng.setStart(node, startOffset);
-                     newRng.setEnd(node, endOffset);
-                     editor.selection.setRng(newRng);
+                     this._selectNewRng(node, startOffset, node, endOffset);
                   }
                   else
                   // FF иногда "поднимает" рэнж выше по дереву
@@ -1024,14 +1023,33 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var newNode = editor.dom.create(node.nodeName);
                      newNode.innerHTML = '<br data-mce-bogus="1" />';
                      node.parentNode.insertBefore(newNode, node.nextSibling);
-                     editor.selection.select(newNode, true);
+                     selection.select(newNode, true);
                   }
                }
             }
+            if (isBlockquote) {
+               // При обёртывании списков в блок цитат каждый элемент списка оборачивается отдельно. Во избежание этого сделать список временно нередактируемым
+               // 1174914305 https://online.sbis.ru/opendoc.html?guid=305e5cb1-8b37-49ea-917d-403f746d1dfe
+               var listNode = rng.commonAncestorContainer;
+               if (['OL', 'UL'].indexOf(listNode.nodeName) !== -1) {
+                  var $listNode = $(listNode);
+                  $listNode.wrap('<div>');
+                  selection.select(listNode.parentNode, false);
+                  $listNode.attr('contenteditable', 'false');
+                  afterProcess = function () {
+                     $listNode.unwrap();
+                     $listNode.removeAttr('contenteditable');
+                     selection.select(listNode, true);
+                  };
+               }
+            }
             editor.execCommand(execCmd || command);
+            if (afterProcess) {
+               afterProcess();
+            }
             //TODO:https://github.com/tinymce/tinymce/issues/3104, восстанавливаю выделение тк оно теряется если после нжатия кнопки назад редактор стал пустым
             if ((cConstants.browser.firefox || cConstants.browser.isIE) && command == 'undo' && this._getTinyEditorValue() == '') {
-               editor.selection.select(editor.getBody(), true);
+               selection.select(editor.getBody(), true);
             }
          },
 
@@ -1247,6 +1265,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          //TODO:придумать дургое решение: https://inside.tensor.ru/opendoc.html?guid=c7676fdd-b4de-4ac6-95f5-ab28d4816c27&description=
          getInputContainer: function() {
             return this._inputControl;
+         },
+
+
+         // Добавление и удаление кастомизируемой цитаты
+         setCustomBlockquote: function() {
+            var
+               $selectionContent = $(this._tinyEditor.selection.getNode());
+            this._tinyEditor.formatter.toggle('customBlockquote', $selectionContent);
          },
 
          /**
@@ -1624,7 +1650,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                self._tinyReady.callback();
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
                //formatter есть только после инита поэтому подписка осуществляется здесь
-               editor.formatter.formatChanged('bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote', function(state, obj) {
+               editor.formatter.formatChanged('bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote,customBlockquote', function(state, obj) {
                   self._notify('onFormatChange', obj, state)
                });
                self._notify('onInitEditor');
@@ -2363,7 +2389,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             var container = this._tinyEditor && this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl;
             var options = this._options;
             if (options.autoHeight) {
-               this._scrollContainer.css('max-height', this._cleanHeight(options.maximalHeight) || '');
+               this._richTextAreaContainer.css('max-height', this._cleanHeight(options.maximalHeight) || '');
                // Минимальную высоту области просмотра нужно фиксировать только в отсутствии опции previewAutoHeight
                // 1175020199 https://online.sbis.ru/opendoc.html?guid=ff26541b-4dce-4df3-8b04-1764ee9b1e7a
                // 1175043073 https://online.sbis.ru/opendoc.html?guid=69a945c9-b517-4056-855a-6dec71d81823
@@ -2777,7 +2803,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           */
          _initMainHeight: function () {
             if (!this._options.autoHeight) {
-               this._scrollContainer.css('height', this._container.height());
+               this._richTextAreaContainer.css('height', this._container.height());
             }
          },
 

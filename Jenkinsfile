@@ -354,7 +354,7 @@ node('controls') {
                 Адрес=http://${env.NODE_NAME}:10001"""
             // Копируем шаблоны
             sh """cp -f ./controls/tests/stand/intest/pageTemplates/branch/* ./controls/tests/stand/intest/pageTemplates"""
-            sh """cp -fr ./controls/demo/ ./controls/tests/stand/intest/demo/"""
+            sh """cp -fr ./controls/Examples/ ./controls/tests/stand/intest/Examples/"""
             sh """
                 cd "${workspace}/controls/tests/stand/intest/"
                 sudo python3 "change_theme.py" ${params.theme}
@@ -397,7 +397,7 @@ node('controls') {
             SOFT_RESTART = True
             NO_RESOURCES = True
             DELAY_RUN_TESTS = 2
-            TAGS_NOT_TO_START = iOSOnly, todomvc, tabmessage
+			TAGS_NOT_TO_START = iOSOnly, todomvc, tabmessage
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
             HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""

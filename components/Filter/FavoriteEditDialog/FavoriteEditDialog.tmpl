@@ -21,7 +21,7 @@
                     </ws:Array>
                 </ws:selectedKeys>
             </SBIS3.CONTROLS:DropdownList>
-            <SBIS3.CONTROLS:Button:IconButton if="{{ allowDelete }}" className="controls-FavoriteEditDialog__deleteButton"
+            <SBIS3.CONTROLS:Button:IconButton if="{{ editMode }}" className="controls-FavoriteEditDialog__deleteButton"
                     command="notify"
                     commandArgs="{{ ['onDestroyModel'] }}"
                     icon="sprite:icon-24 icon-Erase icon-error"
@@ -36,7 +36,7 @@
             </SBIS3.CONTROLS:Button>
         </div>
     </div>
-    <SBIS3.CONTROLS:TextBox selectOnClick="{{ true }}" placeholder="{{ textValue }}" text="{{ 'record/editedTextValue'|mutable:'' }}" className="controls-FavoriteEditDialog__textValue-editor"/>
+    <SBIS3.CONTROLS:TextBox selectOnClick="{{ true }}" placeholder="{{ textValue }}" text="{{ 'record/editedTextValue'|bind:(editMode ? textValue : ''), 'fromProperty' }}" className="controls-FavoriteEditDialog__textValue-editor"/>
     <ws:if data="{{_items.length}}">
         <ws:for data="key, value in _items">
             <SBIS3.CONTROLS:CheckBox

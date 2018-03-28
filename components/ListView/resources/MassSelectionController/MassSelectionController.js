@@ -4,7 +4,7 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionC
         "Core/core-clone",
         "WS.Data/Collection/IBind",
         "SBIS3.CONTROLS/ListView/resources/MassSelectionController/resources/Selection",
-        "SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil"
+        "Controls/Utils/ArraySimpleValuesUtil"
     ],
     function(Control, cClone, IBindCollection, Selection, ArraySimpleValuesUtil) {
 
@@ -115,6 +115,7 @@ define('SBIS3.CONTROLS/ListView/resources/MassSelectionController/MassSelectionC
 
           destroy: function() {
              this._selection.destroy();
+             this._selection = null;
              MassSelectionController.superclass.destroy.apply(this, arguments);
           }
        });

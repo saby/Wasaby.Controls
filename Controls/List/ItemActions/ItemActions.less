@@ -1,0 +1,82 @@
+//todo правильно назвать классы
+.controls-itemActions {
+  display: none;
+  position:absolute;
+}
+.controls-itemActions__type__inline {
+  right: 8px;
+  bottom: 3px;
+  height: 24px;
+  background-color: @default-bg-color-hovered-item;
+}
+
+.controls-itemActions__type__underline {
+  right: 0;
+  bottom: -29px;
+  height: 29px;
+  background-color: @default-bg-color-hovered-item;
+  z-index: 1;
+  &:before {
+    content:'';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 29px solid #F0F5FB;
+    border-left: 24px solid transparent;
+    left: -24px;
+  }
+}
+//todo: каскады
+.ws-ListView__items__hasActionHoverItem {
+  .ws-ListView__item {
+    .controls-itemActions {
+      display: none;
+    }
+  }
+}
+.ws-ListView__item_actionHover.ws-ListView__item {
+  background-color: @default-bg-color-hovered-item;
+  .controls-itemActions {
+    display: inline-block;
+  }
+}
+.controls-itemActions__action,.controls-itemActions__menuOpen {
+  .inline-flexbox();
+  .align-items(center);
+  height: 100%;
+  margin: 0 6px;
+}
+.controls-itemActions__action_icon {
+  .icon-size-without-important(@default-icon-size-medium, @default-icon-medium-font);
+  margin-right: 6px;
+}
+.controls-itemActions__menuOpen_icon {
+  .icon-size-without-important(@default-icon-size-medium, @default-icon-medium-font);
+}
+.controls-itemActions__action_caption {
+  color: #05b;
+}
+//todo: cascade
+.controls-itemActions__menu {
+  margin-top: -6px;
+  margin-left: 6px - 2px;//border or ya hz chto eto takoe
+  .controls-DropdownList__icon {
+    .icon-size-without-important(@default-icon-size-medium, @default-icon-medium-font);
+  }
+  .controls-DropdownList__row {
+    padding-right: 38px;
+  }
+}
+.controls-itemActions__menu__closeButton {
+  .icon-size-without-important(@default-icon-size-medium, @default-icon-medium-font);
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 1;
+  cursor: pointer;
+  color:#ccc;
+  &:hover {
+    color: @icon-color-primary-hover;
+  }
+
+}

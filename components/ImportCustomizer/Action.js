@@ -11,10 +11,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
       'Core/Deferred',
       'Lib/Control/FloatArea/FloatArea',
       'SBIS3.CONTROLS/Action',
-      'WS.Data/Source/SbisService'
+      'SBIS3.CONTROLS/ImportCustomizer/Area',
+      'SBIS3.CONTROLS/ImportCustomizer/RemoteCall'
    ],
 
-   function (cMerge, Deferred, FloatArea, Action, SbisService) {
+   function (cMerge, Deferred, FloatArea, Action, Area, RemoteCall) {
       'use strict';
 
       var ImportCustomizerAction = Action.extend([], /**@lends SBIS3.CONTROLS/ImportCustomizer/Action.prototype*/ {
@@ -29,11 +30,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           */
 
          /**
-          * @typedef {object} ImportIOCall Тип, содержащий информацию для вызова удалённого сервиса для получения данных ввода или отправки данных вывода
+          * @typedef {object} ImportRemoteCall Тип, содержащий информацию для вызова удалённого сервиса для получения данных ввода или отправки данных вывода. Соответствует вспомогательному классу {@link SBIS3.CONTROLS/ImportCustomizer/RemoteCall}
           * @property {string} endpoint Сервис, метод которого будет вызван
           * @property {string} method Имя вызываемого метода
-          * @property {*} methodArgs Аргументы вызываемого метода (в требуемой форме)
-          * @property {function(object):object} [dataShaper] Формирователь применимой формы аргументов (опционально)
+          * @property {object} args Аргументы вызываемого метода (опционально)
+          * @property {function(object):object} [argsFilter] Фильтр аргументов (опционально)
+          * @property {function(object):object} [resultFilter] Фильтр результатов (опционально)
           */
 
          /**
@@ -107,12 +109,12 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {string} [options.baseParamsComponent] Класс компонента для настройки параметров импортирования (опционально)
           * @param {object} [options.baseParams] Опции компонента для настройки параметров импортирования (опционально)
           * @param {object<ImportParser>} options.parsers Список доступных провайдеров парсинга импортируемых данных
-          * @param {ImportTargetFields} options.fields Полный список полей, к которым должны быть привязаны импортируемые данные
+          * @param {ImportTargetFields|Core/Deferred<ImportTargetFields>|ImportRemoteCall} options.fields Полный список полей, к которым должны быть привязаны импортируемые данные. Можкт быть как задано явно, так и указано в виде обещания(Deferred) или вызова метода удалённого сервиса
           * @param {Array<ImportSheet>} options.sheets Список объектов, представляющих имеющиеся области данных
           * @param {number} [options.sheetIndex] Индекс выбранной области данных (опционально)
           * @param {boolean} [options.sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
-          * @param {ImportIOCall} [options.inputCall] Информация для вызова метода удалённого сервиса для получения данных ввода (опционально)
-          * @param {ImportIOCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
+          * @param {ImportRemoteCall} [options.inputCall] Информация для вызова метода удалённого сервиса для получения данных ввода (опционально)
+          * @param {ImportRemoteCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
           * @return {Deferred<ImportResults>}
           */
          execute: function (options) {
@@ -131,80 +133,35 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             if (this._result) {
                return Deferred.fail('Allready open');
             }
+            if (Area.DATA_TYPES.indexOf(options.dataType) === -1) {
+               Area.showMessage('error', rk('Ошибка', 'НастройщикИмпорта'), rk('Тип данных в этом файле не поддерживается', 'НастройщикИмпорта'));
+               return Deferred.fail('Not supported data type');
+            }
             var inputCall = options.inputCall;
-            if (inputCall && !this._isImportIOCall(inputCall)) {
-               throw new Error('Wrong inputCall');
+            if (inputCall) {
+               inputCall = new RemoteCall(inputCall);
             }
             var outputCall = options.outputCall;
-            if (outputCall && !this._isImportIOCall(outputCall)) {
-               throw new Error('Wrong outputCall');
+            if (outputCall) {
+               outputCall = new RemoteCall(outputCall);
             }
             var opts = inputCall || outputCall ? Object.keys(options).reduce(function (r, v) { if (v !== 'inputCall' && v !== 'outputCall') { r[v] = options[v]; }; return r; }, {}) : options;
             this._result = new Deferred();
             if (inputCall) {
-               this._beforeOpen(inputCall, opts);
+               inputCall.call(opts).addCallbacks(
+                  function (data) {
+                     this._open(cMerge(opts, data));
+                  }.bind(this),
+                  this._completeWithError.bind(this, true)
+               );
             }
             else {
                this._open(opts);
             }
             if (outputCall) {
-               this._resultHandler = this._afterOpen.bind(this, outputCall);
+               this._resultHandler = outputCall.call.bind(outputCall);
             }
             return this._result;
-         },
-
-         /**
-          * Проверить, является ли аргумент {@link ImportIOCall}
-          *
-          * @protected
-          * @param {ImportIOCall} call Информация для вызова метода удалённого сервиса
-          * @return {boolean}
-          */
-         _isImportIOCall: function (call) {
-            return !!call && (typeof call === 'object') &&
-               (call.endpoint && typeof call.endpoint === 'string') &&
-               (call.method && typeof call.method === 'string') &&
-               (!call.dataShaper || typeof call.dataShaper === 'function');
-         },
-
-         /**
-          * Вызвать метод удалённого сервиса для получения недостающих данных ввода, и затем вызвать метод {@link _open}
-          *
-          * @protected
-          * @param {ImportIOCall} call Информация для вызова метода удалённого сервиса для получения данных ввода
-          * @param {object} options Входные аргументы("мета-данные") настройщика импорта (согласно описанию в методе {@link execute})
-          */
-         _beforeOpen: function (call, options) {
-            (new SbisService({endpoint:call.endpoint}))
-               .call(call.method, call.methodArgs)
-               .addCallbacks(
-                  function (data) {
-                     var shaper = call.dataShaper;
-                     this._open(cMerge(options, shaper ? shaper(data) : data));
-                  }.bind(this),
-                  this._result.errback.bind(this._result)
-               );
-         },
-
-         /**
-          * Вызвать метод удалённого сервиса для отправки полученных выходных данных
-          *
-          * @protected
-          * @param {ImportIOCall} call Информация для вызова метода удалённого сервиса для отправки выходных данных
-          * @param {object} result Выходные данные настройщика импорта
-          * @return {Core/Deferred}
-          */
-         _afterOpen: function (call, result) {
-            var shaper = call.dataShaper;
-            var args = cMerge({}, shaper ? shaper(result) : result);
-            return (new SbisService({endpoint:call.endpoint}))
-               .call(call.method, call.methodArgs)
-               .addCallback(
-                  function (data) {
-                     //^^^ Преобразовать ???
-                     return data;
-                  }.bind(this)
-               );
          },
 
          /**
@@ -242,24 +199,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                throw new Error('Wrong baseParams');
             }
             var parsers = options.parsers;
-            // Если есть свойство "parsers"
-            if (parsers) {
-               // То оно должно быть объектом
-               if (typeof parsers !== 'object') {
-                  throw new Error('Wrong parsers');
-               }
-               // И каждое свойство объекта должно быть {@link ImportParser}
-               for (var name in parsers) {
-                  var v = parsers[name];
-                  if (!(name &&
-                        (typeof v === 'object') &&
-                        (v.title && typeof v.title === 'string') &&
-                        (!v.component || typeof v.component === 'string') &&
-                        (!v.args || typeof v.args === 'object')
-                        )) {
-                     throw new Error('Wrong parsers items');
-                  }
-               }
+            // Если есть свойство "parsers" - то оно должно быть объектом
+            if (parsers && typeof parsers !== 'object') {
+               throw new Error('Wrong parsers');
             }
             var fields = options.fields;
             // Должно быть свойство "fields" и быть объектом
@@ -288,6 +230,38 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                sheetIndex = -1;
             }
             var defaults = this._options;
+            if (parsers) {
+               // Поскольку уже есть набор парсеров по-умолчанию, то в объекте parsers могут содержаться только поправки, значит нужно слить их,
+               // прежде чем проверять
+               parsers = cMerge(cMerge({}, defaults.parsers), parsers);
+               for (var name in parsers) {
+                  // Каждый элемент набора parsers должно быть {@link ImportParser}
+                  var v = parsers[name];
+                  if (!(name &&
+                        (typeof v === 'object') &&
+                        (v.title && typeof v.title === 'string') &&
+                        (!v.component || typeof v.component === 'string') &&
+                        (!v.args || typeof v.args === 'object')
+                     )) {
+                     throw new Error('Wrong parsers items');
+                  }
+               }
+            }
+            if (!(fields instanceof Deferred)) {
+               // Проверим, имеет ли fields тип ImportRemoteCall
+               var fieldsCall;
+               try {
+                  fieldsCall = new RemoteCall(fields);
+               }
+               catch (ex) {}
+               if (fieldsCall) {
+                  // Если да, то вызвать метод удалённого сервиса для получения списка полей
+                  fields = fieldsCall.call(options);
+               }
+               /*else {
+                  // иначе это должен быть тип ImportTargetFields, он будет проверен позже, в Area
+               }*/
+            }
             var componentOptions = {
                title: options.title,
                applyButtonTitle: options.applyButtonTitle,
@@ -297,12 +271,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                dataType: dataType,
                file: file,
                baseParams: baseParamsOptions,
-               parsers: parsers ? cMerge(cMerge({}, defaults.parsers), parsers) : defaults.parsers,
+               parsers: parsers || defaults.parsers,
                fields: fields,
                sheets: sheets,
                sheetIndex: sheetIndex,
                handlers: {
-                  onComplete: this._onAreaComplete.bind(this)
+                  onComplete: this._onAreaComplete.bind(this),
+                  onFatalError: this._onAreaError.bind(this)
                }
             };
             if (baseParamsComponent) {
@@ -346,18 +321,19 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {object} data Данные события
           */
          _onAreaComplete: function (evtName, data) {
-            var result = this._result;
-            var resultHandler = this._resultHandler;
-            this._result = null;
-            this._resultHandler = null;
-            this._areaContainer.close();
-            if (resultHandler) {
-               result.dependOn(resultHandler(data));
-            }
-            else {
-               result.callback(data);
-            }
-            //this._notify('onComplete');
+            this._complete(true, data);
+         },
+
+         /*
+          * Обработчик события "onFatalError"
+          *
+          * @protected
+          * @param {Core/EventObject} evtName Дескриптор события
+          * @param {boolean} withAlert Показать пользователю предупреждение об ошибке
+          * @param {Error|string} err Ошибка
+          */
+         _onAreaError: function (evtName, withAlert, err) {
+            this._completeWithError(withAlert, err);
          },
 
          /*
@@ -371,10 +347,59 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                this._areaContainer.destroy();
                this._areaContainer = null;
             }
-            if (this._result) {
-               this._result.callback(null);
-               this._result = null;
-               this._resultHandler = null;
+            var result = this._result;
+            this._result = null;
+            this._resultHandler = null;
+            if (result) {
+               result.callback(null);
+            }
+         },
+
+         /*
+          * Завершить работу и вернуть результат
+          *
+          * @protected
+          * @param {object} isSuccess Завершение является успешным, не ошибочным
+          * @param {object} outcome Результат
+          */
+         _complete: function (isSuccess, outcome) {
+            var result = this._result;
+            var resultHandler = isSuccess ? this._resultHandler : undefined;
+            this._result = null;
+            this._resultHandler = null;
+            this._areaContainer.close();
+            if (isSuccess) {
+               if (resultHandler) {
+                  result.dependOn(resultHandler(outcome));
+               }
+               else {
+                  result.callback(outcome);
+               }
+            }
+            else {
+               result.errback(outcome);
+            }
+         },
+
+         /*
+          * Завершить работу при возникновении ошибки
+          *
+          * @protected
+          * @param {boolean} withAlert Показать пользователю предупреждение об ошибке
+          * @param {Error|string} err Ошибка
+          */
+         _completeWithError: function (withAlert, err) {
+            if (withAlert) {
+               Area.showMessage(
+                  'error',
+                  rk('Ошибка', 'НастройщикИмпорта'),
+                  ((err && err.message ? err.message : err) || rk('При получении данных поизошла неизвестная ошибка', 'НастройщикИмпорта')) +
+                  '<br/>' + rk('Настройка импорта будет прервана', 'НастройщикИмпорта')
+               )
+                  .addCallback(this._complete.bind(this, false, err));
+            }
+            else {
+               this._complete(false, err);
             }
          },
 
