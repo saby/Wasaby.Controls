@@ -19,6 +19,7 @@
                 itemActions="{{_options.itemActions}}"
                 itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
                 itemActionsType="{{_options.itemActionsType}}"/>
+        <Controls.List.Remove ws:content="listView" name="removeControl"/>
     </ws:if>
 
     <ws:if data="{{_options.emptyTemplate && _listViewModel && !_listViewModel.getCount()}}">

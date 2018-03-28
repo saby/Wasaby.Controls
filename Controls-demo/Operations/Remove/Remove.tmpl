@@ -1,0 +1,11 @@
+<div>
+    <Controls.List
+            name="list"
+            markedKey="{{2}}"
+            source = "{{_viewSource}}"
+            idProperty="id">
+    </Controls.List>
+    <Controls.Button name="remove" caption="Удалить" on:click="_removeItem()"/>
+    <span>Ключ: </span>
+    <Controls.Input.Number name="text" bind:value="_idForRemove"/>
+</div>

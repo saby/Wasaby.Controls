@@ -245,11 +245,15 @@ define('Controls/List/SourceControl', [
       getItemsCount: function(self) {
          return self._listViewModel ? self._listViewModel.getCount() : 0;
       },
-      
+
       initListViewModelHandler: function(self, model) {
          model.subscribe('onListChange', function () {
             self._forceUpdate();
          });
+      },
+
+      removeFromSource: function(self, items) {
+         return self._sourceController.remove(items);
       }
    };
 
@@ -417,6 +421,24 @@ define('Controls/List/SourceControl', [
             case 'cantScroll': _private.onScrollHide(self); break;
          }
 
+      },
+
+      remove: function(items) {
+         var
+            self = this,
+            removeControl = this._children.removeControl;
+         removeControl.beginRemove(items).addCallback(function(result) {
+            if (result !== false) {
+               _private.showIndicator(self);
+               _private.removeFromSource(self, items).addCallback(function(result) {
+                  self._listViewModel.removeItems(items);
+                  return result;
+               }).addBoth(function(result) {
+                  _private.hideIndicator(self);
+                  removeControl.endRemove(result);
+               });
+            }
+         });
       },
 
       reload: function() {
