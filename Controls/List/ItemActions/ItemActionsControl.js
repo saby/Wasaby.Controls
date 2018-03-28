@@ -17,11 +17,10 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          self._closeActionsMenu = self._closeActionsMenu.bind(self);
       },
 
-      fillItemActions: function(self, item, newOptions){
+      fillItemActions: function(item, itemActions, itemActionVisibilityCallback){
          var actions = [];
-         var options = newOptions ? newOptions : self._options;
-         options.itemActions.forEach(function(action){
-            if (options.itemActionVisibility(action, item)) {
+        itemActions.forEach(function(action){
+            if (itemActionVisibilityCallback(action, item)) {
                actions.push(action);
             }
          });
@@ -33,7 +32,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          if (options.itemActions) {
             for (options.listModel.reset();  options.listModel.isEnd();  options.listModel.goToNext()) {
                var itemData = options.listModel.getCurrent();
-               options.listModel.setItemActions(itemData, _private.fillItemActions(self, itemData.item, newOptions));
+               options.listModel.setItemActions(itemData, _private.fillItemActions(itemData.item, options.itemActions, options.itemActionVisibilityCallback));
             }
          }
       },
@@ -56,8 +55,10 @@ define('Controls/List/ItemActions/ItemActionsControl', [
                   return !action.additional;
                });
          if (showActions) {
-            var  rs = new RecordSet({rawData: showActions});
-            childEvent ? childEvent.nativeEvent.preventDefault() : event.nativeEvent.preventDefault();
+            var
+               rs = new RecordSet({rawData: showActions}),
+               realEvent =  childEvent ? childEvent: event;
+            realEvent.nativeEvent.preventDefault();
             self._options.listModel._actionHoverItem = itemData.item;
             self._children['itemActionsOpener'].open({
                target: !context ? event.target: false,
@@ -69,6 +70,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          var
             actionName = args && args[0],
             event = args && args[1];
+         //todo: Особая логика событий попапа, исправить как будут нормально приходить аргументы
          if (actionName === 'itemClick') {
             var action = args[2][0].getRawData();
             self._onActionClick(event, action, self._options.listModel._actionHoverItem);
@@ -76,33 +78,33 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          self._children['itemActionsOpener'].close();
          self._options.listModel._actionHoverItem = false;
          self._forceUpdate();
+      },
+      updateModel: function(self, newOptions) {
+         _private.updateActions(self, newOptions);
+         newOptions.listModel.subscribe('onListChange', function() {
+            _private.updateActions(self);
+         });
       }
    };
 
    var ItemActionsControl = Control.extend( {
+
       _template: template,
+
       constructor: function (cfg) {
          ItemActionsControl.superclass.constructor.apply(this, arguments);
          _private.bindHandlers(this);
       },
 
       _beforeMount: function(newOptions){
-         var self = this;
          if (newOptions.listModel) {
-            _private.updateActions(self, newOptions);
-            newOptions.listModel.subscribe('onListChange', function() {
-               _private.updateActions(self);
-            });
+            _private.updateModel(this, newOptions)
          }
       },
 
       _beforeUpdate: function(newOptions){
-         var self = this;
          if (newOptions.listModel && (this._options.listModel !== newOptions.listModel)) {
-            _private.updateActions(self, newOptions);
-            newOptions.listModel.subscribe('onListChange', function() {
-               _private.updateActions(self);
-            });
+            _private.updateModel(this, newOptions);
          }
       },
 
@@ -128,7 +130,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
    ItemActionsControl.getDefaultOptions = function() {
       return {
          itemActionsType: 'inline',
-         itemActionVisibility: function(){ return true;}
+         itemActionVisibilityCallback: function(){ return true;}
       }
    };
 
