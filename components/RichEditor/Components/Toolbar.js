@@ -179,6 +179,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
                case 'additionalText':
                   this._updateTextFormat(state, obj);
                   break;
+               case 'customBlockquote':
+                  this._toggleState(state,obj);
+                  break;
             }
          },
 
@@ -341,6 +344,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/Toolbar', [
             if (this._options.linkedEditor) {
                this._options.linkedEditor.setFontColor(color);
             }
+         },
+
+         _setCustomBlockquote: function(){
+           if(this._options.linkedEditor) {
+              this._options.linkedEditor.setCustomBlockquote();
+           }
          },
 
          _insertLink: function(onAfterCloseHandler, target) {
