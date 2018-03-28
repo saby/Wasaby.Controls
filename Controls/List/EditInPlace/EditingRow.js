@@ -10,9 +10,9 @@ define('Controls/List/EditInPlace/EditingRow', [
          this.activate();
       },
 
-      _onDeactivated: function(e, isTabPressed) {
+      _onDeactivated: function(e, options) {
          //TODO: шифт-таб
-         this._notify('rowDeactivated', [isTabPressed], { bubbling: true });
+         this._notify('rowDeactivated', [options.isTabPressed], { bubbling: true });
       }
    });
 

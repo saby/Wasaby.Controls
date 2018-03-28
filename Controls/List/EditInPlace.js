@@ -343,9 +343,8 @@ define('Controls/List/EditInPlace', [
       },
 
       _onRowDeactivated: function(e, isTabPressed) {
-         //TODO: по табу стреляет дважды на одной и той же строке, надо Шипину показать
+         //TODO: по табу стреляет несколько раз на одной и той же строке, надо Шипину показать
          //TODO: про таб знаем, а про шифт нет, нужно доработать немножко
-         //TODO: по Esc не стреляет, нужно спросить Шипина
          if (isTabPressed) {
             // _private.editNextTarget(this, true);
             // console.log('ушёл фокус со строки по табу');
