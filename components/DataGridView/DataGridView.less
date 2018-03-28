@@ -73,6 +73,21 @@
             }
          }
       }
+      // т.к. через css не можем воздействовать на предыдущий элемент,
+      // то приходится скрывать разделитель через псевдоэлемент
+      // если переводить на border-top, вернется ошибка
+      // https://online.sbis.ru/opendoc.html?guid=4bb41de8-453a-4d8c-ab3b-23deb7700709
+      // если выносить border на table, вернется ошибка
+      // https://online.sbis.ru/opendoc.html?guid=7c928c2d-bd61-4c76-9369-243be4a11e0f
+      .controls-GroupBy:before {
+         content: '';
+         position: absolute;
+         display: inline-block;
+         height: @default-border-width;
+         width: 100%;
+         background-color: @default-bg-color;
+         margin-top: -@default-border-width;
+      }
    }
 
    &.controls-DataGridView__markerRight{
@@ -409,6 +424,7 @@
    line-height: @data-grid-header-cell-sorting-icon-size;
    width: 100%;
    .controls-Button__icon {
+      color: @color_DataGridView-sortingIcon;
       .icon-size(@font-size_DataGridView-headerIcon);
    }
 

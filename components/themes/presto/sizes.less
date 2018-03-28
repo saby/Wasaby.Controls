@@ -78,7 +78,7 @@
 @suggest-picker-standard-width:        round(700px * @multiplier);
 //itemsToolbar
 @list-view-actions-menu-margin:             round(-9px * @multiplier) 0 0 round(16px * @multiplier);
-@list-view-items-toolbar-icon-size:         round(42px * @multiplier);
+@list-view-items-toolbar-icon-size:         ceil(42px * @multiplier);
 @list-view-items-toolbar-menu-icon-size:    @icon-size_default_medium;
 @list-view-actions-menu-text-margin:        @margin_MenuItem-icon_medium;
 @list-view-actions-icon-top:                round(19px * @multiplier);
@@ -351,6 +351,7 @@
 @left_MenuIcon-hideHeader-round24_icon:               round(4px * @multiplier);
 @line-height_MenuIcon-hideHeader-round24_icon:        @icon-size_default_medium;
 @margin_MenuIcon-hideHeader-round24_text:             round(6px * @multiplier) 0 round(6px * @multiplier) round(60px * @multiplier);
+@margin_MenuIcon-hideHeader-round24-border_text:      0 0 0 round(70px * @multiplier);
 @margin_MenuIcon_size-l:                              round(-1px * @multiplier) 0 0 round(-4px * @multiplier);
 @top_MenuIcon_bordered_offset_s:                      round(16px * @multiplier);
 @left_MenuIcon_bordered_offset_m:                     round(12px * @multiplier);
@@ -387,7 +388,7 @@
 @date-range-choose-year-margin-bottom:                0;
 //ItemsToolbar
 @list-view-items-toolbar-right:                        0;
-@list-view-items-toolbar-padding:                      round(4px * @multiplier) round(16px * @multiplier) round(4px * @multiplier) round(16px * @multiplier);
+@list-view-items-toolbar-padding:                      round(3px * @multiplier) round(16px * @multiplier) round(3px * @multiplier) round(16px * @multiplier);
 @height_IconButton_bordered_size-s:                         round(58px * @multiplier);
 @width_IconButton_bordered_size-s:                          round(58px * @multiplier);
 @height_IconButton_bordered_size-l:                    round(78px * @multiplier);
@@ -399,9 +400,9 @@
 @icon-button-edit-round-border-line-height:            round(58px * @multiplier);
 @list-view-items-toolbar-line-height:                  round(52px * @multiplier);
 @list-view-items-toolbar-icon-button-border-font-size: round(42px * @multiplier);
-@list-view-items-toolbar-bottom:                       0;
-@list-view-items-toolbar-vertical-line-height:         round(42px * @multiplier);
-@list-view-actions-item-height:                        round(42px * @multiplier);
+@list-view-items-toolbar-bottom:                       1px;
+@list-view-items-toolbar-vertical-line-height:         ceil(42px * @multiplier);
+@list-view-actions-item-height:                        ceil(42px * @multiplier);
 @list-view-actions-margin:                             0 round(8px * @multiplier);
 @list-view-items-toolbar-locked-right:                 0;
 @bottomStyle-items-toolbar-itemsContainer-margin-left: 0;
@@ -536,6 +537,15 @@
 @font-size_listAddButton:                       @small-text-size;
 //ReportBrowser
 @height_ReportBrowser-top-content:              @default-height-big;
+//Switcher
+@width_Switcher:                                round(100px * @multiplier);
+@height_Switcher:                               round(50px * @multiplier);
+@border-radius_Switcher:                        round(24px * @multiplier);
+@width_Switcher-line:                           round(76px * @multiplier);
+@height_Switcher-line:                          round(4px * @multiplier);
+@border-width_Switcher-btn:                     round(3px * @multiplier);
+@size_Switcher-btn:                             round(26px * @multiplier);
+@size_Switcher-btn-before:                      ceil(14px * @multiplier);
 //Label
 @height_Label:                                  round(46px * @multiplier);
 //Tabs/Buttons
@@ -550,3 +560,8 @@
 //FilterButton
 @font-size_FilterButton-icon:            round(38px * @multiplier);
 @font-size_FilterButton-text:            @large-text-size;
+//partScroll
+@data-grid-partScroll-thumb-height-hover:       round(16px * @multiplier);
+@data-grid-partScroll-thumb-height:             round(10px * @multiplier);
+@data-grid-partScroll-thumb-top-shift:          round(-6px * @multiplier);
+@data-grid-partScroll-thumb-clicked-top-shift:  round(-9px * @multiplier);
