@@ -838,7 +838,11 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          getCurrentFormats: function () {
             var editor = this._tinyEditor;
             if (editor) {
-               var selNode = editor.selection.getNode();
+               var rng = editor.selection.getRng();
+               var selNode = rng.startContainer;
+               if (selNode.nodeType === 3) {
+                  selNode = selNode.parentNode;
+               }
                var $selNode = $(selNode);
                var color = editor.dom.getStyle(selNode, 'color', true);
                return {
