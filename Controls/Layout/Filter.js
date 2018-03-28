@@ -24,18 +24,31 @@ define('Controls/Layout/Filter',
       var setPropValue = Utils.setItemPropertyValue.bind(Utils);
       
       var _private = {
-         resolveOptions: function(self, options) {
-            self._filterButtonItems = Utils.clone(options.filterButtonItems);
-            self._fastFilterItems = Utils.clone(options.fastFilterItems);
-            self._historyId = options.historyId;
+         getItemsByOption: function(option, history) {
+            var result;
+            
+            if (option) {
+               if (typeof option === 'function') {
+                  result = option(history);
+               } else if (history) {
+                  _private.mergeFilterItems(option, history);
+                  result = option;
+               } else {
+                  result = option;
+               }
+            }
+            
+            return result;
          },
          
-         getHistoryItems: function(self) {
+         getHistoryItems: function(self, id) {
             //TODO сделать, как будет готов сервис истории
-            if (self._historyId && !self._historyItems) {
-               self._historyItems = [{id: 'title', value: 'Sasha'}];
+            var items;
+            
+            if (id) {
+               items = [{id: 'title', value: 'Sasha'}];
             }
-            return Deferred.success(self._historyItems);
+            return Deferred.success(items);
          },
          
          getFilterByItems: function(filterButtonItems, fastFilterItems) {
@@ -62,17 +75,10 @@ define('Controls/Layout/Filter',
             return filter;
          },
          
-         resolveItems: function(self, filterButtonItems, fastFilterItems) {
-            return _private.getHistoryItems(self).addCallback(function(historyItems) {
-               if (historyItems) {
-                  if (filterButtonItems) {
-                     _private.mergeFilterItems(filterButtonItems, historyItems);
-                  }
-                  
-                  if (fastFilterItems) {
-                     _private.mergeFilterItems(fastFilterItems, historyItems);
-                  }
-               }
+         resolveItems: function(self, historyId, filterButtonItems, fastFilterItems) {
+            return _private.getHistoryItems(self, historyId).addCallback(function(historyItems) {
+               self._filterButtonItems = _private.getItemsByOption(filterButtonItems, historyItems);
+               self._fastFilterItems = _private.getItemsByOption(fastFilterItems, historyItems);
                return historyItems;
             });
          },
@@ -105,13 +111,8 @@ define('Controls/Layout/Filter',
          _filterButtonItems: null,
          _fastFilterItems: null,
          
-         constructor: function(options) {
-            Filter.superclass.constructor.call(this, options);
-            _private.resolveOptions(this, options);
-         },
-         
          _beforeMount: function(options) {
-            var itemsDef = _private.resolveItems(this, this._filterButtonItems, this._fastFilterItems),
+            var itemsDef = _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource),
                 self = this;
             
             itemsDef.addCallback(function() {
