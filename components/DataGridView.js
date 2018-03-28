@@ -179,13 +179,13 @@ define('SBIS3.CONTROLS/DataGridView',
                 * пока что это единственный способ ее идентифицировать
                 */
                curColSplitTitle = (curCol.title || '');
-               if (curColSplitTitle.saveProtoM) {
+               if (curColSplitTitle instanceof String) {
                   curColSplitTitle = '' + curColSplitTitle;
                }
                curColSplitTitle = curColSplitTitle.split('.');
 
                nextColSplitTitle = ((nextCol && nextCol.title) || '');
-               if (nextColSplitTitle.saveProtoM) {
+               if (nextColSplitTitle instanceof String) {
                   nextColSplitTitle = '' + nextColSplitTitle;
                }
                nextColSplitTitle = nextColSplitTitle.split('.');
