@@ -37,7 +37,8 @@ define('Controls-demo/Demo/Page',
                headDOMElement = document.getElementsByTagName('head')[0],
                element = document.getElementById(id),
                onLoadHandler = function(){
-                  element.remove();
+                  element.setAttribute("disabled", true);
+                  element.setAttribute("id", '');
                   cssLink.removeEventListener('load',onLoadHandler);
                };
             cssLink.id = id;
