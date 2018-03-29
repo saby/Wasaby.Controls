@@ -18,19 +18,30 @@
             on:beginAdd="_onBeginAdd()"
             on:endEdit="_onEndEdit()"
             allowEmptySelection="{{false}}"
-            editingConfig="{{editingConfig}}"
             idProperty="id">
+        <ws:editingConfig>
+            <ws:Object editOnClick="{{_editOnClick}}"
+                       singleEdit="{{_singleEdit}}"
+                       autoAdd="{{_autoAdd}}"
+                       item="{{_editingItem}}"/>
+        </ws:editingConfig>
         <ws:itemTemplate>
             <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
-                        itemData="{{itemTemplate.itemData}}"
-            >
+                        itemData="{{itemTemplate.itemData}}">
                 <ws:contentTemplate>
                     <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate"
-                                itemData="{{itemTemplate.itemData}}"
-                    />
+                                itemData="{{itemTemplate.itemData}}"/>
                 </ws:contentTemplate>
             </ws:partial>
         </ws:itemTemplate>
     </Controls:List>
     <Controls:List:AddButton caption="Добавить запись" on:click="beginAdd()"/>
+    <div attr:style="padding: 15px; background-color: rgba(81,81,81,0.11); width: 150px;">
+        <h3>Задайте опции:</h3>
+        <div>
+            <ws:Controls.Toggle.Checkbox bind:value="_editOnClick" caption="editOnClick"/>
+            <ws:Controls.Toggle.Checkbox bind:value="_singleEdit" caption="singleEdit"/>
+            <ws:Controls.Toggle.Checkbox bind:value="_autoAdd" caption="autoAdd"/>
+        </div>
+    </div>
 </div>

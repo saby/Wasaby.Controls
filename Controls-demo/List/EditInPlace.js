@@ -13,46 +13,77 @@ define('Controls-demo/List/EditInPlace', [
 ) {
    'use strict';
 
-   var counter = 5;
+   var counter = 10;
 
    var srcData = [
       {
          id: 1,
-         title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
+         title: 'Не открывается на редактирование',
          description: 'Другое название 1'
       },
       {
          id: 2,
-         title: 'Notebooks 22222',
+         title: 'Открывается другая запись',
          description: 'Описание вот такое'
       },
       {
          id: 3,
-         title: 'Smartphones 3',
+         title: 'Возвращается Deferred и через 3 секунды открывается другая запись',
          description: 'Хватит страдать'
-
+      },
+      {
+         id: 4,
+         title: 'Обычная запись1',
+         description: 'йцукен'
+      },
+      {
+         id: 5,
+         title: 'Обычная запись2',
+         description: 'йцукен'
+      },
+      {
+         id: 6,
+         title: 'Обычная запись3',
+         description: 'йцукен'
       }
    ];
 
    var EditInPlace = Control.extend({
       _template: template,
       editingConfig: null,
+      _editOnClick: true,
+      _singleEdit: false,
+      _autoAdd: false,
+      // _editingItem: Record.fromObject({ id: 11, title: 'добавление стартует по опции', description: 'а может и не стартует', randomField: 'поле, которого нет'}),
 
       _beforeMount: function() {
          this._viewSource = new MemorySource({
             idProperty: 'id',
             data: srcData
          });
-         this.editingConfig = {
-            // item: Record.fromObject({ id: 3, title: 'добавление стартует по опции', description: 'а может и не стартует', randomField: 'поле, которого нет'}),
-            editOnClick: true,
-            singleEdit: false,
-            autoAdd: true
-         };
       },
 
       _onBeginEdit: function(e, item) {
-
+         switch (item.get('id')) {
+            case 1:
+               return 'Cancel';
+            case 2:
+               return Record.fromObject({
+                  id: 2,
+                  title: 'Другая запись',
+                  description: 'Описание вот такое'
+               });
+            case 3:
+               var def = new Deferred();
+               setTimeout(function() {
+                  def.callback(Record.fromObject({
+                     id: 3,
+                     title: 'Запись из Deferred',
+                     description: 'Хватит страдать'
+                  }));
+               }, 3000);
+               return def;
+         }
       },
 
       _onBeginAdd: function(e, item) {
