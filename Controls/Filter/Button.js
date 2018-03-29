@@ -33,6 +33,25 @@ define('Controls/Filter/Button',
                }
                return self._filterCompatible;
             });
+         },
+   
+         getText: function(items) {
+            var textArr = [];
+      
+            Chain(items).each(function(item) {
+               var textValue = Utils.getItemPropertyValue(item, 'textValue');
+         
+               if (textValue) {
+                  textArr.push(textValue);
+               }
+            });
+      
+            return textArr.join(', ');
+         },
+         
+         resolveItems: function(self, items) {
+            self._items = items;
+            self._text = _private.getText(items);
          }
       };
       
@@ -44,7 +63,13 @@ define('Controls/Filter/Button',
          
          constructor: function(options) {
             FilterButton.superclass.constructor.call(this, options);
-            this._items = options.items;
+            _private.resolveItems(this, options.items);
+         },
+         
+         _beforeUpdate: function(options) {
+            if (this._options.items !== options.items) {
+               _private.resolveItems(this, options.items);
+            }
          },
          
          _getFilterState: function() {
@@ -68,22 +93,7 @@ define('Controls/Filter/Button',
                   //...soon
                }
             }
-         },
-         
-         _getText: function(items) {
-            var textArr = [];
-   
-            Chain(items).each(function(item) {
-               var textValue = Utils.getItemPropertyValue(item, 'textValue');
-               
-               if (textValue) {
-                  textArr.push(textValue);
-               }
-            });
-            
-            return textArr.join(', ');
          }
-         
       });
       
       FilterButton.getDefaultOptions = function() {
