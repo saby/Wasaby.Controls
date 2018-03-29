@@ -11,13 +11,13 @@ define('Controls-demo/List/Remove', [
       _itemActions: undefined,
       _items: [{
          id: 1,
-         title: 'Запись 1'
+         title: 'Стандартное удаление записи'
       }, {
          id: 2,
-         title: 'Запись 2'
+         title: 'Удаление записи с вопросом'
       }, {
          id: 3,
-         title: 'Запись 3'
+         title: 'Удаление записи с ошибкой'
       }],
 
       _beforeMount: function() {
@@ -30,10 +30,27 @@ define('Controls-demo/List/Remove', [
             id: 1,
             icon: 'icon-Erase icon-error',
             main: true,
-            handler: function(item){
-               self._children.list.remove([item.getId()]);
+            handler: function(item) {
+               var id = item.getId();
+               if (id === 3) {
+                  id = 'BadId';
+               }
+               self._children.list.remove(id);
             }
          }];
+      },
+
+      _onBeginRemove: function(event, items) {
+         if (items.indexOf(2) !== -1) {
+            return this._children.popupOpener.open({
+               message: 'Remove items?',
+               type: 'yesno'
+            });
+         }
+      },
+
+      _onEndRemove: function() {
+         debugger;
       }
    });
    return ModuleClass;

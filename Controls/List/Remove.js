@@ -7,22 +7,17 @@ define('Controls/List/Remove', [
    var Remove = Control.extend( {
       _template: template,
 
-      constructor: function (cfg) {
-         Remove.superclass.constructor.apply(this, arguments);
-         this._publish(['onBeginRemove', 'onEndRemove']);
-      },
-
       beginRemove: function(items) {
          var
             self = this,
             beginRemoveResult;
 
-         beginRemoveResult = self._notify('onBeginRemove', [items], { bubbling: true });
+         beginRemoveResult = self._notify('beginRemove', [items], { bubbling: true });
          return beginRemoveResult instanceof Deferred ? beginRemoveResult : Deferred.success(beginRemoveResult);
       },
 
       endRemove: function(items, result) {
-         this._notify('onEndRemove', [items, result], { bubbling: true });
+         this._notify('endRemove', [items, result], { bubbling: true });
       }
    });
 
