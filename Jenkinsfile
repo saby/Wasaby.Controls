@@ -1,6 +1,16 @@
 #!groovy
 echo "Задаем параметры сборки"
 def version = "3.18.200"
+
+def gitlabStatusUpdate() {
+    if ( currentBuild.currentResult == "ABORTED" ) {
+        updateGitlabCommitStatus state: 'canceled'
+    } else if ( currentBuild.currentResult in ["UNSTABLE", "FAILURE"] ) {
+        updateGitlabCommitStatus state: 'failed'
+    } else if ( currentBuild.currentResult == "SUCCESS" ) {
+        updateGitlabCommitStatus state: 'success'
+    }
+
 if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
         currentBuild.result = 'ABORTED'
         error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
@@ -11,6 +21,7 @@ node('controls') {
     echo "Генерируем параметры"
     properties([
     disableConcurrentBuilds(),
+    gitLabConnection('git'),
     buildDiscarder(
         logRotator(
             artifactDaysToKeepStr: '3',
@@ -110,6 +121,7 @@ node('controls') {
                         git merge origin/rc-${version}
                         """
                     }
+                    updateGitlabCommitStatus state: 'running'
                     parallel (
                         checkout_atf:{
                             echo " Выкачиваем atf"
@@ -459,6 +471,7 @@ node('controls') {
 					"""
 					if ( "${tmp_smoke}" != "0" ) {
 						currentBuild.result = 'ABORTED'
+                        gitlabStatusUpdate()
 						error('Стенд неработоспособен (не прошел smoke test).')
 					}
 				}
@@ -515,5 +528,6 @@ node('controls') {
                 junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
         }
+        gitlabStatusUpdate()
     }
 }
