@@ -31,16 +31,20 @@ define('Controls-demo/Headers/headerDemo', [
          _backCaption: 'Back',
          _backStyle: undefined,
          _inHeader: false,
+         _counterIconClick: 0,
+         _counterCountClick: 0,
 
          clickHandler: function (e) {
             console.log('Click');
          },
 
          clickCount: function (e) {
+            this._counterCountClick++;
             console.log('clickCount');
          },
 
          iconCount: function (e) {
+            this._counterIconClick++;
             console.log('iconCount');
             this._iconValue = !this._iconValue;
          }
