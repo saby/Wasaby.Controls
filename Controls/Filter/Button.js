@@ -61,13 +61,14 @@ define('Controls/Filter/Button',
          _oldPanelOpener: null,
          _text: '',
          
-         constructor: function(options) {
-            FilterButton.superclass.constructor.call(this, options);
-            _private.resolveItems(this, options.items);
-         },
-         
          _beforeUpdate: function(options) {
             if (this._options.items !== options.items) {
+               _private.resolveItems(this, options.items);
+            }
+         },
+         
+         _beforeMount: function(options) {
+            if (options.items) {
                _private.resolveItems(this, options.items);
             }
          },
