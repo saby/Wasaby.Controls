@@ -60,7 +60,7 @@ define('Controls-demo/Demo/Page',
          createCSSLink('controlsThemeStyle', theme);
          $('link').each(function(index, elem) {
             if (~elem.href.indexOf('components') && !~elem.href.indexOf('components/themes')&& !~elem.href.indexOf('pages/presto/')) {
-               elem.remove();
+               elem.setAttribute("disabled", true);
             }
          });
       },
