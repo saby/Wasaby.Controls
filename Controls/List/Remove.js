@@ -8,11 +8,9 @@ define('Controls/List/Remove', [
       _template: template,
 
       beginRemove: function(items) {
-         var
-            self = this,
-            beginRemoveResult;
+         var beginRemoveResult;
 
-         beginRemoveResult = self._notify('beginRemove', [items], { bubbling: true });
+         beginRemoveResult = this._notify('beginRemove', [items], { bubbling: true });
          return beginRemoveResult instanceof Deferred ? beginRemoveResult : Deferred.success(beginRemoveResult);
       },
 
