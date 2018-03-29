@@ -4,16 +4,16 @@
 }
 
 .ws-itemActions_inline {
-  right: 6px;
-  bottom: 3px;
-  height: 24px;
+  right: @right_itemActions_inline;
+  bottom: @bottom_itemActions_inline;
+  height: @height_itemActions_inline;
   background-color: @default-bg-color-hovered-item;
 }
 
 .ws-itemActions_underline {
   right: 0;
-  bottom: -29px;
-  height: 29px;
+  bottom: -@height_itemAction_underline;
+  height: @height_itemAction_underline;
   background-color: @default-bg-color-hovered-item;
   z-index: 1;
   &:before {
@@ -21,9 +21,9 @@
     position: absolute;
     width: 0;
     height: 0;
-    border-top: 29px solid @default-bg-color-hovered-item;
-    border-left: 24px solid transparent;
-    left: -24px;
+    border-top: @height_itemAction_underline solid @default-bg-color-hovered-item;
+    border-left: @width_itemActions_underine_after solid transparent;
+    left: -@width_itemActions_underine_after;
   }
 }
 
@@ -31,18 +31,27 @@
   .inline-flexbox();
   .align-items(center);
   height: 100%;
-  margin: 0 6px;
+  margin: @margin_itemActions_action;
 }
 
 .ws-itemActions__action_icon, .ws-itemActions__menuOpen_icon {
   .icon-size-without-important(@default-icon-size-medium, @default-icon-medium-font);
 }
 
-.ws-itemActions__action_caption {
-  color: #05b;
+.ws-itemActions__action_title {
+  color: @color_Link-text;
 }
 
 .ws-itemActions__menu {
+  //todo: жду крестик для темизации
   margin-top: -6px;
   margin-left: 6px - 2px;//border or ya hz chto eto takoe
+}
+.ws-is-no-touch {
+  .ws-itemActions__action_title {
+    &:hover {
+      color: @color_Link-text_active;
+      text-decoration: underline;
+    }
+  }
 }
