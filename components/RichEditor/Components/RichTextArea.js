@@ -2663,7 +2663,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                promise.callback();
             }.bind(this);
             img.onerror = function () {
-               if (hasBoth) {
+               if (hasBoth && urls.original !== urls.preview) {
                   promise.dependOn(this._insertImg(urls.original, width, height, className, alt, before, after, uuid));
                }
                else {
