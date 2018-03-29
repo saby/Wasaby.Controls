@@ -23,7 +23,7 @@ define([
       'oprion2': []
    };
 
-   describe('Controls/File/ResourceGetter', function () {
+   describe('Controls/File/Attach/Option/ResourceGetter', function () {
 
       describe('.getGetter()', function () {
 
