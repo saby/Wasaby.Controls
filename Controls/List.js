@@ -78,10 +78,21 @@ define('Controls/List', [
          }
       },
 
+
+     /**
+      * Starts editing in place.
+      * @param {WS.Data/Entity/Record} record Editing record.
+      * @returns {Core/Deferred}
+      */
       beginEdit: function(record) {
          this._children.sourceControl.beginEdit(record);
       },
 
+     /**
+      * Starts adding.
+      * @param {BeginAddOptions} options Options of adding.
+      * @returns {Core/Deferred}
+      */
       beginAdd: function(options) {
          this._children.sourceControl.beginAdd(options);
       }

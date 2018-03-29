@@ -158,9 +158,7 @@ define('Controls/List/EditInPlace', [
       }
    },
    BeginEditResult = { // Возможные результаты события "BeginEditResult"
-      CANCEL: 'Cancel',
-      PENDING_ALL: 'PendingAll', // В результате редактирования ожидается вся запись, как есть (с текущим набором полей)
-      PENDING_MODIFIED_ONLY: 'PendingModifiedOnly' // В результате редактирования ожидаются только измененные поля
+      CANCEL: 'Cancel'
    },
    EndEditResult = { // Возможные результаты события "onEndEdit"
       CANCEL: 'Cancel' // Отменить завершение редактирования/добавления
@@ -176,65 +174,63 @@ define('Controls/List/EditInPlace', [
 
       /**
        * @typedef {String|WS.Data/Entity/Record|Core/Deferred} BeginEditResult
-       * @variant {String} Cancel Отменить начало редактирования.
-       * @variant {WS.Data/Entity/Record} item -  Редактируемая запись.
-       * @variant {Core/Deferred} Deferred - используется для асинхронной подготовки редактируемой записи. Из Deferred необходимо обязательно возвращать запись, открываемую на редактирование.
+       * @variant {String} Cancel Cancel start of editing.
+       * @variant {WS.Data/Entity/Record} item Editing record.
+       * @variant {Core/Deferred} Deferred Deferred is used for asynchronous preparation of edited record. It is necessary to fullfill deferred with a record which will be opened for editing.
        */
 
       /**
        * @typedef {String|Core/Deferred} EndEditResult
-       * @variant {String} Cancel Отменить завершение редактирования/добавления.
-       * @variant {Core/Deferred} Deferred - используется для завершения редактирования\добавления, согласно логике, определённой прикладным разработчиком.
+       * @variant {String} Cancel Cancel ending of editing\adding.
+       * @variant {Core/Deferred} Deferred Deferred is used for saving with custom logic.
        */
 
       /**
        * @typedef {Object} BeginAddOptions
-       * @param {WS.Data/Entity/Record} [options.item] - запись с начальным набором данных
-       * @param {String} [options.addPosition=bottom] - тут пока непонятно как назвать
+       * @param {WS.Data/Entity/Record} [options.item] Record with initial data.
        */
 
       /**
        * @typedef {String|Core/Deferred|BeginAddOptions} BeginAddResult
-       * @variant {String} Cancel Отменить начало редактирования.
-       * @variant {BeginAddOptions} Настройки добавления по месту.
-       * @variant {Core/Deferred} Deferred - используется асинхронной подготовки добавляемой записи. Из Deferred обязательно возвращать настройки добавления по месту.
+       * @variant {String} Cancel Cancel start of adding.
+       * @variant {BeginAddOptions} Options of adding.
+       * @variant {Core/Deferred} Deferred Deferred is used for asynchronous preparation of adding record. It is necessary to fullfill deferred with options of adding.
        */
 
       /**
-       * @event Controls/List/EditInPlace#beginEdit Происходит перед началом редактирования.
-       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} item Редактируемая запись.
+       * @event Controls/List/EditInPlace#beginEdit Happens before start of editing.
+       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+       * @param {WS.Data/Entity/Record} item Editing record.
        * @returns {BeginEditResult}
        */
 
       /**
-       * @event Controls/List/EditInPlace#beginAdd Происходит перед началом редактирования.
-       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
-       * @param {BeginAddOptions} Настройки добавления по месту.
+       * @event Controls/List/EditInPlace#beginAdd Happens before start of adding.
+       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+       * @param {BeginAddOptions} Options of adding.
        * @returns {BeginAddResult}
        */
 
       /**
-       * @event Controls/List/EditInPlace#afterBeginEdit Происходит после начала редактирования\добавления.
-       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} item Редактируемая запись.
-       * @param {Boolean} isAdd Флаг, позволяющий различать редактирование и добавление.
+       * @event Controls/List/EditInPlace#afterBeginEdit Happens after start of editing\adding.
+       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+       * @param {WS.Data/Entity/Record} item Editing record.
+       * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
        */
 
       /**
-       * @event Controls/List/EditInPlace#endEdit Происходит перед окончанием редактирования\добавления.
-       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} item Редактируемая запись.
-       * @param {Boolean} commit - true - изменения сохраняются, false - изменения не сохраняются.
-       * @param {Boolean} isAdd Флаг, позволяющий различать редактирование и добавление.
+       * @event Controls/List/EditInPlace#endEdit Happens before the end of editing\adding.
+       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+       * @param {Boolean} commit If it is true editing ends with saving.
+       * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
        * @returns {EndEditResult}
        */
 
       /**
-       * @event Controls/List/EditInPlace#afterEndEdit Происходит после окончания редактирования\добавления.
-       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} item Редактируемая запись.
-       * @param {Boolean} isAdd Флаг, позволяющий различать редактирование и добавление.
+       * @event Controls/List/EditInPlace#afterEndEdit Happens after the end of editing\adding.
+       * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+       * @param {WS.Data/Entity/Record} item Editing record.
+       * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
        */
 
       _beforeMount: function(newOptions) {
@@ -252,8 +248,8 @@ define('Controls/List/EditInPlace', [
       },
 
       /**
-       * Начинает редактирование по месту.
-       * @param {WS.Data/Entity/Record} record
+       * Starts editing in place.
+       * @param {WS.Data/Entity/Record} record Editing record.
        * @returns {Core/Deferred}
        */
       //TODO: управлять индикатором загрузки
@@ -272,8 +268,8 @@ define('Controls/List/EditInPlace', [
       },
 
       /**
-       * Начинает добавление по месту
-       * @param {BeginAddOptions} options Настройки добавления по месту
+       * Starts adding.
+       * @param {BeginAddOptions} options Options of adding.
        * @returns {Core/Deferred}
        */
       //TODO: управлять индикатором загрузки
@@ -287,7 +283,7 @@ define('Controls/List/EditInPlace', [
       },
 
       /**
-       * Завершает редактирование по месту
+       * Ends editing in place with saving.
        * @returns {Core/Deferred}
        */
       commitEdit: function() {
@@ -304,7 +300,7 @@ define('Controls/List/EditInPlace', [
       },
 
       /**
-       * Отменяет редактирование по месту
+       * Ends editing in place without saving.
        * @returns {Core/Deferred}
        */
       cancelEdit: function() {

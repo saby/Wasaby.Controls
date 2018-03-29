@@ -424,10 +424,20 @@ define('Controls/List/SourceControl', [
          return _private.reload(this);
       },
 
+     /**
+      * Starts editing in place.
+      * @param {WS.Data/Entity/Record} record Editing record.
+      * @returns {Core/Deferred}
+      */
       beginEdit: function(record) {
          this._children.editInPlace.beginEdit(record);
       },
 
+     /**
+      * Starts adding.
+      * @param {BeginAddOptions} options Options of adding.
+      * @returns {Core/Deferred}
+      */
       beginAdd: function(options) {
         this._children.editInPlace.beginAdd(options);
       }
