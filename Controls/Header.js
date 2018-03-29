@@ -127,19 +127,19 @@ define('Controls/Header', [
       MarkExpandBold: {
          true: "icon-MarkExpandBold",
          false: "icon-MarkCollapseBold",
-         size: "icon-16"
+         size: "icon-small"
       },
 
       ExpandLight: {
          true: "icon-ExpandLight",
          false: "icon-CollapseLight",
-         size: "icon-16"
+         size: "icon-small"
       },
 
       AccordionArrowDown: {
          true: "icon-AccordionArrowDown",
          false: "icon-AccordionArrowUp ",
-         size: "icon-24"
+         size: "icon-medium"
       }
    };
 
