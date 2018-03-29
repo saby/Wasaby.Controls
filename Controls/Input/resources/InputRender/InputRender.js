@@ -133,7 +133,7 @@ define('Controls/Input/resources/InputRender/InputRender',
          },
 
          _focusHandler: function(e) {
-            if (this._options.selectOnClick) {
+            if (this.isEnabled() && this._options.selectOnClick) {
                e.target.select();
             }
          },
