@@ -1210,6 +1210,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                        // Для MSIE принудительно смещаем курсор ввода после вставленной ссылки
                                        // 1174853380 https://online.sbis.ru/opendoc.html?guid=77405679-2b2b-42d3-8bc0-d2eee745ea23
                                        editor.insertContent(cConstants.browser.isIE ? linkHtml + '&#65279;&#8203;' : linkHtml);
+                                       selection.select(selection.getNode().querySelector('a'), true);
+                                       selection.collapse(false);
                                     }
                                     else {
                                        if (origCaption !== caption) {
