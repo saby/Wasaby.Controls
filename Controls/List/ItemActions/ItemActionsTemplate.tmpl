@@ -1,21 +1,21 @@
-<div class="controls-itemActions controls-itemActions__type__{{itemActionsType}}">
+<div class="ws-itemActions ws-itemActions_{{itemActionsType}}">
     <ws:for data="action in itemData.itemActions">
         <ws:if data="{{!!action.main ||!!action.additional || itemActionsType === 'underline'}}">
-            <div  class="controls-itemActions__action"
+            <div  class="ws-itemActions__action"
                   title="{{!!action.title ? action.title}}"
                   on:click="_onActionClick(action, itemData.item)">
                 <ws:if data="{{!!action.icon}}">
-                    <i class="controls-itemActions__action_icon icon-size {{action.icon}}"/>
+                    <i class="{{action.icon}}"/>
                 </ws:if>
                 <ws:else data="{{!!action.title}}">
-                    <span class="controls-itemActions__action_title">{{action.title}}</span>
+                    <span class="ws-itemActions__action_title">{{action.title}}</span>
                 </ws:else>
             </div>
         </ws:if>
     </ws:for>
     <ws:if data="{{needActionsMenu(itemData.itemActions) && itemActionsType !== 'underline'}}">
-        <div class="controls-itemActions__menuOpen"  on:click="_showActionsMenu(itemData)">
-            <i class="controls-itemActions__menuOpen_icon  icon-size icon-ExpandDown icon-primary"/>
+        <div class="ws-itemActions__menuOpen"  on:click="_showActionsMenu(itemData)">
+            <i class="ws-itemActions__menuOpen_icon  icon-size icon-ExpandDown icon-primary"/>
         </div>
     </ws:if>
 </div>

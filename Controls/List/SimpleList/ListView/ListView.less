@@ -6,6 +6,21 @@
     background-color: @default-bg-color-hovered-item;
   }
 }
+
 .ws-ListView__item__selected {
    border-left: 3px solid @color_ListView-marker;
+}
+
+.ws-ListView__item_active {
+  background-color: @default-bg-color-hovered-item;
+}
+
+.ws-is-no-touch {
+  .ws-ListView__item_showActions {
+    &:hover {
+      .ws-itemActions {
+        display: inline-block;
+      }
+    }
+  }
 }
