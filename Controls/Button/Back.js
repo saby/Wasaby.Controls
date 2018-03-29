@@ -7,7 +7,7 @@ define('Controls/Button/Back', [
 ], function(Control, IoC, template, types) {
 
    /**
-    * Button "Back"
+    * Button "Back".
     * @class Controls/Button/Back
     * @extends Controls/Control
     * @mixes Controls/Button/interface/ICaption
@@ -20,27 +20,27 @@ define('Controls/Button/Back', [
 
    /**
     * @name Controls/Button#style
-    * @cfg {String} button display style
-    * @variant primary button will be accented
-    * @variant default button will be default
+    * @cfg {String} Button display style.
+    * @variant primary Button will be accented.
+    * @variant default Button will be default.
     */
 
    /**
     * @name Controls/Button#size
     * @cfg {String} button size
-    * @variant s button has small size
-    * @variant m button has middle size
-    * @variant l button has large size
+    * @variant s Button has small size.
+    * @variant m Button has middle size.
+    * @variant l Button has large size.
     */
 
    /**
     * @name Controls/Button#caption
-    * @cfg {String} text of caption
+    * @cfg {String} Text of caption.
     */
 
    /**
     * @name Controls/Button#inHeader
-    * @cfg {Boolean} a special style for the component when it is in the header
+    * @cfg {Boolean} Applies a special style for the component when it is in the header.
     */
 
    var BackButton = Control.extend({

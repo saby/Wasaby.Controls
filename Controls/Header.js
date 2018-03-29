@@ -8,7 +8,7 @@ define('Controls/Header', [
    'use strict';
 
    /**
-    * Control showing the headers
+    * Control showing the headers.
     * @class Controls/Header
     * @extends Controls/Control
     * @control
@@ -18,108 +18,108 @@ define('Controls/Header', [
    /**
     * @name Controls/Header#size
     * @cfg {String} caption size
-    * @variant caption has small size
-    * @variant caption has middle size
-    * @variant caption has large size
+    * @variant s Caption has small size.
+    * @variant m Caption has middle size.
+    * @variant l Caption has large size.
     */
 
    /**
     * @name Controls/Header#caption
-    * @cfg {String} caption text
+    * @cfg {String} caption Caption text.
     */
 
    /**
     * @name Controls/Header#style
-    * @cfg {String} caption display style
-    * @variant default caption will be default
-    * @variant primary caption will be accented
+    * @cfg {String} Caption display style.
+    * @variant default Caption will be default.
+    * @variant primary Caption will be accented.
     */
 
    /**
     * @name Controls/Header#clickable
-    * @cfg {Boolean} caption can be clicked
+    * @cfg {Boolean} Whether caption can be clicked.
     */
 
    /**
     * @name Controls/Header#counterValue
-    * @cfg {Number} value of counter. If this option is specified, the title will be displayed
+    * @cfg {Number} Value of counter. If this option is specified, the title will be displayed.
     */
 
    /**
     * @name Controls/Header#counterLocation
-    * @cfg {String} counter location relative to header
-    * @variant after counter will be displayed after the caption
-    * @variant before counter will be displayed before the caption
+    * @cfg {String} Counter location relative to header.
+    * @variant after Counter will be displayed after the caption.
+    * @variant before Counter will be displayed before the caption.
     */
 
    /**
     * @name Controls/Header#counterStyle
-    * @cfg {String} counter display style
-    * @variant primary counter will be accented
-    * @variant default counter will be default
-    * @variant disabled counter will be non accented
+    * @cfg {String} Counter display style.
+    * @variant primary Counter will be accented.
+    * @variant default Counter will be default.
+    * @variant disabled Counter will be non accented.
     */
 
    /**
     * @name Controls/Header#counterSize
-    * @cfg {String} size of counter
-    * @variant small counter has small size
-    * @variant default counter has middle size
+    * @cfg {String} Size of counter.
+    * @variant small Counter has small size.
+    * @variant default Counter has middle size.
     */
 
    /**
     * @name Controls/Header#countClickable
-    * @cfg {Boolean} the ability to send a single event when counter was clicked. Event name is countClick
+    * @cfg {Boolean} The ability to send a single event when counter was clicked. Event name is countClick.
     */
 
    /**
     * @name Controls/Header#iconClickable
-    * @cfg {Boolean} the ability to send a single event when icon was clicked. Event name is iconClick
+    * @cfg {Boolean} The ability to send a single event when icon was clicked. Event name is iconClick.
     */
 
    /**
     * @name Controls/Header#iconLocation
-    * @cfg {String} icon location relative to header
-    * @variant after icon will be displayed after the caption
-    * @variant before icon will be displayed before the caption
+    * @cfg {String} Icon location relative to header.
+    * @variant after Icon will be displayed after the caption.
+    * @variant before Icon will be displayed before the caption.
     */
 
    /**
     * @name Controls/Header#iconStyle
-    * @cfg {String} icon display style
-    * @variant Accent icon will be default
-    * @variant Additional icon will be non accented
-    * @variant Main icon will be accented
+    * @cfg {String} Icon display style.
+    * @variant Accent Icon will be default.
+    * @variant Additional Icon will be non accented.
+    * @variant Main Icon will be accented.
     */
 
    /**
     * @name Controls/Header#iconType
-    * @cfg {String} icon type
-    * @variant MarkExpandBold down arrow with double width
-    * @variant ExpandLight default dawn arrow
-    * @variant AccordionArrowDown double down arrow
+    * @cfg {String} Icon type.
+    * @variant MarkExpandBold Down arrow with double width.
+    * @variant ExpandLight Default dawn arrow.
+    * @variant AccordionArrowDown Double down arrow.
     */
 
    /**
     * @name Controls/Header#iconValue
-    * @cfg {Boolean} icon value. if iconValue == true, that icon will be displaying, else icon will not be displaying
+    * @cfg {Boolean} Icon value. If iconValue == true, that icon will be displaying, else icon will not be displaying.
     */
 
    /**
     * @name Controls/Header#separatorIcon
-    * @cfg {Boolean} icon separator will be displayed or not
+    * @cfg {Boolean} Icon separator will be displayed or not.
     */
 
    /**
     * @name Controls/Header#separatorIconStyle
-    * @cfg {String} icon display style. In the online theme has only one display style
-    * @variant primary icon-separator will be accented
-    * @variant default icon-separator will be default
+    * @cfg {String} Icon display style. In the online theme has only one display style.
+    * @variant primary Icon-separator will be accented.
+    * @variant default Icon-separator will be default.
     */
 
    /**
     * @name Controls/Header#commonClick
-    * @cfg {Boolean} a common hover for all header elements
+    * @cfg {Boolean} A common hover for all header elements.
     */
 
 
