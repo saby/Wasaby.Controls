@@ -1,0 +1,13 @@
+<div class="removeDemo">
+    <Controls.List
+            class="removeDemo__list"
+            name="list"
+            markedKey="{{1}}"
+            itemActions="{{_itemActions}}"
+            source = "{{_viewSource}}"
+            on:beginremove="_onBeginRemove()"
+            on:endremove="_onEndRemove()"
+            idProperty="id">
+    </Controls.List>
+    <Controls:Popup:Opener:Confirmation name="popupOpener"/>
+</div>
