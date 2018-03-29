@@ -66,13 +66,15 @@ define('Controls-demo/Demo/Page',
       old_load = cssPlugin.load;
 
       //хитрю с css плагином для демок
-      cssPlugin.load = function(name, require, load){
-         if (name.indexOf('SBIS3.CONTROLS.Demo') === -1 &&  (name.indexOf('SBIS3.CONTROLS') !== -1 || name.indexOf('Controls/') !== -1))     {
-            load(null); return;
-         } else {
-            old_load.apply(this, arguments)
-         }
-      };
+      if (UrlParams.theme) {
+         cssPlugin.load = function(name, require, load){
+            if (name.indexOf('SBIS3.CONTROLS.Demo') === -1 &&  (name.indexOf('SBIS3.CONTROLS') !== -1 || name.indexOf('Controls/') !== -1))     {
+               load(null); return;
+            } else {
+               old_load.apply(this, arguments)
+            }
+         };
+      }
 
       var DemoPage = Control.extend({
          _template: template,
