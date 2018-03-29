@@ -380,6 +380,11 @@ body {
 
   }
 }
+//по стандарту цвет крестика везде должен браться с icon-disabled, кроме светлой темы (цвет в светлой и в темной одинаковый)
+//задаю только для тем оформления, на vdom компонентах этот код не понадобится, т.к. там цвет задается через переменную.
+.controls__filterButton__filterLine__cross__icon.icon-disabled {
+  color: #8991A9!important;
+}
 .controls-FilterButton {
   .controls-FilterButton__icon {
     .close-button-mixin(~'', round(58px * @multiplier), round(58px * @multiplier), "\ea2d");
