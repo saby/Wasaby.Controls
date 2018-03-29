@@ -19,7 +19,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       fillItemActions: function(item, itemActions, itemActionVisibilityCallback){
          var actions = [];
         itemActions.forEach(function(action){
-            if (itemActionVisibilityCallback(action, item)) {
+            if (!itemActionVisibilityCallback || itemActionVisibilityCallback(action, item)) {
                if (action.icon && !~action.icon.indexOf('ws-itemActions__action_icon')) {
                   action.icon += ' ws-itemActions__action_icon icon-size';
                }
