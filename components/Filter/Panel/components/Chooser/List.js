@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/List', [
     'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/List/resources/FilterPanelChooserListFooter',
     'SBIS3.CONTROLS/Link',
     'SBIS3.CONTROLS/ListView',
-    'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/List/FilterPanelChooser.List'
+    'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/List/FilterPanelChooser-List'
 ], function(FilterPanelChooserBaseList, coreMerge, CommandDispatcher, ComputeFunctor, dotTplFn, itemContentTpl, itemTemplate, chooserTpl, footerTpl) {
     var
         itemsFilterMethod = function(model, index, proj, projIndex) {
