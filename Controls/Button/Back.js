@@ -38,11 +38,6 @@ define('Controls/Button/Back', [
     * @cfg {String} Text of caption.
     */
 
-   /**
-    * @name Controls/Button#inHeader
-    * @cfg {Boolean} Applies a special style for the component when it is in the header.
-    */
-
    var BackButton = Control.extend({
       _template: template
    });
