@@ -1,6 +1,15 @@
 .controls-Header{
    display: inline-block;
 }
+
+.controls-Header__MarkExpandBold, .controls-Header__ExpandLight {
+   .icon-size-without-important-different-size-width-height(@size-Header__icon_size-default, @width-Header__icon_size-default, @height-Header__icon_size-default, cbuc-icons);
+}
+
+.controls-Header__AccordionArrowDown {
+   .icon-size-without-important-different-size-width-height(@size-Header__icon_size-big, @width-Header__icon_size-big, @height-Header__icon_size-big, cbuc-icons);
+}
+
 .controls-Header__caption_size-s{
    font-weight: bold;
    font-size: @font-size_Header__caption_size-s;
@@ -16,13 +25,13 @@
    font-size: @font-size_Header__caption_size-l;
 }
 
-.controls-Header__caption_style-primary_big {
+.controls-Header__caption_style-default_big {
    color: @color_Header__caption_style-default_big;
    font-weight: bold;
    font-size: @font-size_Header__caption_size-xl;
 }
 
-.controls-Header__caption_style-default_big {
+.controls-Header__caption_style-primary_big {
    color: @color_Header__caption_style-primary_big;
    font-weight: bold;
    font-size: @font-size_Header__caption_size-xl;
@@ -47,7 +56,7 @@
 
 .controls-Header__wrapper {
    display: flex;
-   align-items: baseline;
+   align-items: center;
 }
 
 .controls-Separator__icon_style-Accent {
@@ -86,14 +95,6 @@
 
 .controls-Separator__icon_style-Additional:active {
    color: @color-Header__icon_style-Additional_hovered;
-}
-
-.controls-HeaderCounter_style-default:active {
-   color: @color_HeaderCounter_style-deafult_hovered;
-}
-
-.controls-HeaderCounter_style-primary:active {
-   color: @color_HeaderCounter_style-primary_hovered;
 }
 
 .controls-Header__caption_style-default_hovered:active {
@@ -218,13 +219,5 @@
 
    .controls-Separator__icon_style-Additional:hover {
       color: @color-Header__icon_style-Additional_hovered;
-   }
-
-   .controls-HeaderCounter_style-default:hover {
-      color: @color_HeaderCounter_style-deafult_hovered;
-   }
-
-   .controls-HeaderCounter_style-primary:hover {
-      color: @color_HeaderCounter_style-primary_hovered;
    }
 }

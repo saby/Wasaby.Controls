@@ -1,7 +1,11 @@
 <span attr:class="controls-Header controls-Header_style-{{_options.style}}">
     <span class="controls-Header__wrapper {{_options.commonClick ? 'controls-Header_content_hovered'}}">
-        <ws:if data="{{_options.iconStyle}}">
-            <i on:click="iconClickHandler()" attr:class="controls-Header__icon controls-Separator__icon_style-{{_options.iconStyle}} {{_icon}} controls-Header__icon_location-{{_options.iconLocation}}"></i>
+        <ws:if data="{{_options.iconType}}">
+            <i on:click="iconClickHandler()" attr:class="controls-Header__icon controls-Separator__icon_style-{{_options.iconStyle}}
+                                                        controls-Header__{{_options.iconType}}
+                                                        {{_icon}}
+                                                        controls-Header__icon_location-{{_options.iconLocation}}"
+            ></i>
         </ws:if>
         <ws:if data="{{_options.counterValue}}">
            <Controls:Header:Counter:Counter class="controls-HeaderCount_location-{{_options.counterLocation}}"
@@ -10,6 +14,7 @@
                            value="{{_options.counterValue}}"
                            size="{{_options.counterSize}}"
                            style="{{_options.counterStyle}}"
+                           clickable="{{_options.clickable}}"
            />
         </ws:if>
         <ws:if data="{{_options.caption}}">

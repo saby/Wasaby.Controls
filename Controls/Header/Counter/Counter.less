@@ -1,7 +1,3 @@
-.controls-HeaderCounter {
-   cursor: pointer;
-}
-
 .controls-HeaderCounter_size-default {
    font-size: @font-size_HeaderCounter_size-h6;
 }
@@ -10,32 +6,38 @@
    font-size: @font-size_HeaderCounter_size-h7;
 }
 
-.controls-HeaderCounter_style-default {
+.controls-HeaderCounter_style-default_hovered,
+.controls-HeaderCounter_style-primary_hovered,
+.controls-HeaderCounter_style-disabled_hovered {
+   cursor: pointer;
+}
+
+.controls-HeaderCounter_style-default, .controls-HeaderCounter_style-default_hovered {
    color: @color_HeaderCounter_style-deafult;
 }
 
-.controls-HeaderCounter_style-primary {
+.controls-HeaderCounter_style-primary, .controls-HeaderCounter_style-primary_hovered {
    color: @color_HeaderCounter_style-primary;
 }
 
-.controls-HeaderCounter_style-disabled {
+.controls-HeaderCounter_style-disabled, .controls-HeaderCounter_style-disabled_hovered {
    color: @color_HeaderCounter_style-disabled;
 }
 
-.controls-HeaderCounter_style-default:active {
+.controls-HeaderCounter_style-default_hovered:active {
    color: @color_HeaderCounter_style-deafult_hovered;
 }
 
-.controls-HeaderCounter_style-primary:active {
+.controls-HeaderCounter_style-primary_hovered:active {
    color: @color_HeaderCounter_style-primary_hovered;
 }
 
 .ws-is-no-touch {
-   .controls-HeaderCounter_style-default:hover {
+   .controls-HeaderCounter_style-default_hovered:hover {
       color: @color_HeaderCounter_style-deafult_hovered;
    }
 
-   .controls-HeaderCounter_style-primary:hover {
+   .controls-HeaderCounter_style-primary_hovered:hover {
       color: @color_HeaderCounter_style-primary_hovered;
    }
 }

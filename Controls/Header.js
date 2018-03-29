@@ -147,7 +147,7 @@ define('Controls/Header', [
       cssStyleGeneration: function (self, options) {
          if (classesOfIcon.hasOwnProperty(options.iconType)) {
             var currentIconClass = classesOfIcon[options.iconType];
-            self._icon = currentIconClass[options.iconValue]+ ' ' + currentIconClass.size;
+            self._icon = currentIconClass[options.iconValue];
          }
       }
    };
@@ -165,7 +165,7 @@ define('Controls/Header', [
       },
 
       countClickHandler: function (e) {
-         if(this._options.countClickable){
+         if(this._options.countClickable && this._options.clickable){
             e.stopPropagation();
             this._notify('countClick');
          }
