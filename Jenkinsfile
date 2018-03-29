@@ -12,11 +12,7 @@ def gitlabStatusUpdate() {
     }
 }    
 
-if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
-        currentBuild.result = 'ABORTED'
-        error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
-    }
-    
+
 node('controls') {
     echo "Читаем settings_${version}.props"
     def props = readProperties file: "/home/jenkins/shared_autotest87/settings_${version}.props"
@@ -59,6 +55,15 @@ node('controls') {
             ]),
         pipelineTriggers([])
     ])
+
+
+    if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
+            currentBuild.result = 'ABORTED'
+            gitlabStatusUpdate()
+            error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
+        }
+
+
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
