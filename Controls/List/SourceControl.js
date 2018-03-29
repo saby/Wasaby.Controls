@@ -435,7 +435,7 @@ define('Controls/List/SourceControl', [
                   return result;
                }).addBoth(function(result) {
                   _private.hideIndicator(self);
-                  removeControl.endRemove(result);
+                  removeControl.endRemove(items, result);
                });
             }
          });
