@@ -1,27 +1,30 @@
-<div
-    name="container"
-    on:mouseenter="_initScrollbar()"
-    on:mouseleave="_hideScrollbar()"
-    class="controls-ScrollContainer ws-scrolling-content
-    {{ topGradient ? ' controls-ScrollContainer__top-gradient' }}
-    {{ bottomGradient ? ' controls-ScrollContainer__bottom-gradient' }}
-    {{ showScrollbar ? ' controls-ScrollContainer__scrollbar_show' }}">
-    <Controls:Layout:Scroll>
-        <ws:content>
-            <div
-                name="content"
-                class="controls-ScrollContainer__content ws-scrolling-content"
-                on:scroll="_onScroll()"
-                on:resize="_initScrollbar()"
-                style="margin-right: {{ -browserScrollSize + 'px' }}">
-                <ws:partial template="{{_options.content}}"/>
-            </div>
-        </ws:content>
-    </Controls:Layout:Scroll>
-    <Controls:Container:Scrollbar:Scrollbar
-                       if="{{ showScrollbar }}"
-                       position="{{ scrollBarPosition }}"
-                       contentHeight="{{ contentHeight }}"
-                       attr:class="controls-ScrollContainer__scrollbar"
-    />
+<div class="controls-Scroll ws-flexbox ws-flex-column" on:mouseenter="_mouseenterHandler()"
+     on:mouseleave="_mouseleaveHandler()">
+   <Controls.Layout.Scroll>
+      <div name="content"
+           style="{{_overflow === 'scroll' ? _styleHideScrollbar}}"
+           class="ws-flex-grow-1 controls-Scroll__content controls-Scroll__content_{{_overflow}}
+               {{_useNativeScrollbar ? 'controls-Scroll__content_nativeScrollbar'}}
+               {{_hasHover ? 'controls-Scroll__content_possibleScroll'}}"
+           on:scroll="_scrollHandler()"
+           on:resize="_resizeHandler()"
+           on:takeScrollbar="_takeScrollbarHandler()" on:returnScrollbar="_returnScrollbarHandler()">
+         <ws:partial template="{{_options.content}}"/>
+      </div>
+   </Controls.Layout.Scroll>
+
+   <Controls.Container.resources.Scrollbar
+      if="{{!_useNativeScrollbar && _options.scrollbarVisible && (_hasHover || _currentlyDragging)}}"
+      position="{{_scrollTop}}"
+      style="{{_options.style}}"
+      contentHeight="{{_getScrollHeight()}}"
+      attr:class="controls-Scroll__scrollbar"
+      on:scrollbarEndDrag="_scrollbarDragHandler(false)"
+      on:scrollbarBeginDrag="_scrollbarDragHandler(true)"
+      on:positionChanged="_positionChangedHandler()"/>
+
+   <div if="{{_options.shadowVisible && _hasScroll}}"
+        class="controls-Scroll__shadow controls-Scroll__shadow{{_calcShadowPosition()}}"></div>
+
+   <Controls.Event.Emitter event="resize" on:resize="_resizeHandler()"/>
 </div>

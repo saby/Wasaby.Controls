@@ -1,0 +1,44 @@
+.controls-VScrollbar {
+   cursor: pointer;
+   border-style: solid;
+   display: inline-block;
+   border-color: transparent;
+   padding: 0 @spacing_Scrollbar;
+   border-width: @spacing_Scrollbar 0;
+   transition: width @animation-duration_Scrollbar ease-in-out;
+   width: @width_Scrollbar + 2 * @spacing_Scrollbar;
+   .box-sizing();
+}
+
+.controls-VScrollbar__thumb {
+   min-height: @min-height_Scrollbar-thumb;
+   border-radius: @border-radius_Scrollbar-thumb;
+}
+
+.controls-VScrollbar__thumb_normal {
+   background-color: @bg_Scrollbar-thumb_normal;
+}
+
+.controls-VScrollbar__thumb_opposite {
+   background-color: @bg_Scrollbar-thumb_opposite;
+}
+
+.controls-VScrollbar:hover,
+.controls-VScrollbar_drag {
+   width: @width_Scrollbar_animation + 2 * @spacing_Scrollbar;
+}
+
+.controls-VScrollbar__thumb:hover,
+.controls-VScrollbar__thumb_drag {
+   border-radius: @border-radius_Scrollbar-thumb_animation;
+}
+
+.controls-VScrollbar__thumb_normal:hover,
+.controls-VScrollbar__thumb_drag_normal {
+   background-color: @bg_Scrollbar-thumb_active_normal;
+}
+
+.controls-VScrollbar__thumb_opposite:hover,
+.controls-VScrollbar__thumb_drag_opposite {
+   background-color: @bg_Scrollbar-thumb_active_opposite;
+}
