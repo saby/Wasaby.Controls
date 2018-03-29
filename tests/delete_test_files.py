@@ -27,7 +27,7 @@ os.chdir(r'IntCompositeViewList')
 delete_folders()
 
 os.chdir(os.path.join(root_grid, r'IntDataGrid'))
-delete_folders('DG7', 'DG13', 'DG11', 'DGPlace')
+delete_folders('DG7', 'DG13', 'DG3', 'DG11', 'DGPlace')
 
 os.chdir(r'DGPlace')
 delete_folders('DGPlace2', 'DGPlace38', 'DGPlace16', 'DGPlace44')
