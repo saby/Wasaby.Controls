@@ -41,16 +41,12 @@ define('Controls/List/EditInPlace', [
                });
             }
 
+            if (result instanceof Record || result.item instanceof Record) {
+               return Deferred.success(result);
+            }
+
             if (isAdd) {
-               if (result.item instanceof Record) {
-                  return Deferred.success(result.item);
-               } else {
-                  return _private.createModel(self);
-               }
-            } else {
-               if (result instanceof Record) {
-                  return Deferred.success(result);
-               }
+               return _private.createModel(self);
             }
          }
 
