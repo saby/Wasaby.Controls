@@ -24,6 +24,10 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/EditorButton',
          $protected: {
             _options: {
                /**
+                * @cfg {string} Текст всплывающей подсказки у иконки шестерёнки
+                */
+               tooltip: null,
+               /**
                 * @cfg {boolean} Показывать дропдаун с выбором пресета рядом с кнопкой
                 */
                usePresets: false,
