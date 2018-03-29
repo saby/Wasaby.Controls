@@ -49,6 +49,7 @@ define('Controls-demo/Layouts/SearchLayout', [
       {
          id: 'firstName',
          resetValue: 'По имени',
+         value: 'По имени',
          properties: {
             keyProperty: 'title',
             displayProperty: 'title',
@@ -68,7 +69,8 @@ define('Controls-demo/Layouts/SearchLayout', [
       },
       {
          id: 'id',
-         resetValue: '0',
+         resetValue: 0,
+         value: 0,
          properties: {
             keyProperty: 'id',
             displayProperty: 'title',

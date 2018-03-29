@@ -10,10 +10,8 @@
                             <div class="controls-demo__Layouts_filterComponents">
                                 <Controls.Input.Search bind:value="_searchValue"/>
                                 <div style="display: flex">
-                                    <Controls.Layout.FastFilter>
-                                <ws:content><Controls.Filter.FastData bind:value="_value"/>
-                                </ws:content>
-                                    </Controls.Layout.FastFilter>
+                                    <Controls.Filter.FastFilter bind:value="_value" source="{{_filterSource}}"/>
+
                                     <Controls.Filter.Button attr:style="max-width: 200px;" filterTemplate="js!Controls-demo/Layouts/SearchLayout/resources/FBPanelLayout">
                                         <ws:items>
                                             <ws:Array>

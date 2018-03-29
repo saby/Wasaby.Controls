@@ -1,13 +1,10 @@
 define(
    [
-      'Controls/Filter/FastData',
+      'Controls/Filter/FastFilter',
       'WS.Data/Source/Memory',
-      'Core/vdom/Synchronizer/resources/SyntheticEvent',
-      'WS.Data/Entity/Record',
-      'WS.Data/Collection/RecordSet',
-      'Core/Deferred'
+      'Core/vdom/Synchronizer/resources/SyntheticEvent'
    ],
-   function (FastData, Memory, SyntheticEvent, RecordSet, Deferred) {
+   function (FastData, Memory, SyntheticEvent) {
       describe('FastDataVDom', function () {
          var items = [
             [{key: 0, title: 'все страны'},
@@ -28,7 +25,7 @@ define(
                value: 'Россия',
                resetValue: 'все страны',
                properties: {
-                  idProperty: 'title',
+                  keyProperty: 'title',
                   source: {
                      module: 'WS.Data/Source/Memory',
                      options: {
@@ -39,11 +36,11 @@ define(
             },
             {
                id: 'second',
-               resetValue: '',
-               value: null,
+               resetValue: 'фэнтези',
+               value: 'фэнтези',
                properties: {
-                  items: items[0],
-                  idProperty: 'title',
+                  items: items[1],
+                  keyProperty: 'title',
                   displayProperty: 'title'
                }
             }
@@ -80,7 +77,7 @@ define(
 
          it('load config', function (done) {
             FastData._private.reload(fastData).addCallback(function () {
-               FastData._private.loadListConfig(fastData, fastData._items.at(0), 0).addCallback(function () {
+               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
                   assert.deepEqual(fastData._configs[0]._items.getRawData(), items[0]);
                   done();
                });
@@ -89,7 +86,7 @@ define(
 
          it('load config from items', function (done) {
             FastData._private.reload(fastDataItems).addCallback(function () {
-               FastData._private.loadListConfig(fastData, fastData._items.at(0), 0).addCallback(function () {
+               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
                   assert.deepEqual(fastData._configs[0]._items.getRawData(), items[0]);
                   done();
                });
@@ -98,7 +95,7 @@ define(
 
          it('update text', function (done) {
             FastData._private.reload(fastData).addCallback(function () {
-               FastData._private.loadListConfig(fastData, fastData._items.at(0), 0).addCallback(function () {
+               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
                   var text = fastData._getText(fastData._items.at(0), 0);
                   assert.equal(text, items[0][1].title);
                   done();
@@ -108,8 +105,8 @@ define(
 
          it('get filter', function (done) {
             FastData._private.reload(fastData).addCallback(function () {
-               FastData._private.loadListConfig(fastData, fastData._items.at(0), 0).addCallback(function () {
-                  var result = FastData._private.getFilter(fastData);
+               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
+                  var result = FastData._private.getFilter(fastData._items);
                   assert.deepEqual(result, {'first': fastData._items.at(0).get('value')});
                   done();
                });
@@ -118,7 +115,7 @@ define(
 
          it('on result', function (done) {
             FastData._private.reload(fastData).addCallback(function () {
-               FastData._private.loadListConfig(fastData, fastData._items.at(0), 0).addCallback(function () {
+               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
                   fastData.lastOpenIndex = 0;
                   isSelected = false;
                   isFilterChanged = false;
@@ -134,7 +131,7 @@ define(
 
          it('reset', function (done) {
             FastData._private.reload(fastData).addCallback(function () {
-               FastData._private.loadListConfig(fastData, fastData._items.at(0), 0).addCallback(function () {
+               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
                   fastData.lastOpenIndex = 0;
                   isSelected = false;
                   selectedKey = null;
@@ -150,7 +147,7 @@ define(
 
             var event = {target: {}};
             FastData._private.reload(fastData, fastData.sourceController).addCallback(function () {
-               FastData._private.loadListConfig(fastData, fastData._items.at(0), 0).addCallback(function () {
+               FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
                   fastData._open(new SyntheticEvent(null, event), fastData._items.at(0), 0);
                });
             });
