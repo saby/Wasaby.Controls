@@ -65,6 +65,7 @@ define('Controls/Header', [
     * @cfg {String} Size of counter.
     * @variant small Counter has small size.
     * @variant default Counter has middle size.
+    * @variant large Counter has large size.
     */
 
    /**
@@ -201,7 +202,8 @@ define('Controls/Header', [
          ]),
          counterSize: types(String).oneOf([
             'default',
-            'small'
+            'small',
+            'large'
          ]),
          countClickable: types(Boolean),
          size: types(String).oneOf([
