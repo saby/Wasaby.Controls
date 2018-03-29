@@ -17,11 +17,20 @@ for tmp_dir in tmp_list_dirs:
     shutil.rmtree(tmp_dir)
 
 os.chdir(r'_Grids')
-root_1 = os.getcwd()
-exclude = ['IntTreeDataGrid']
-tmp_list_dirs = [d for d in os.listdir(root_1) if os.path.isdir(os.path.join(root_1, d)) and d not in exclude]
-for tmp_dir in tmp_list_dirs:
-    shutil.rmtree(tmp_dir)
+root_grid = os.getcwd()
+delete_folders('IntCompositeViewList', 'IntDataGrid', 'IntTreeDataGrid', 'IntTreeView')
+
+os.chdir(r'IntCompositeViewList')
+delete_folders()
+
+os.chdir(os.path.join(root_grid, r'IntDataGrid'))
+delete_folders('DG7', 'DG13', 'DG3', 'DG11', 'DGPlace')
+
+os.chdir(r'DGPlace')
+delete_folders('DGPlace2', 'DGPlace38', 'DGPlace16', 'DGPlace44')
+
+os.chdir(os.path.join(root_grid, r'IntTreeDataGrid'))
+delete_folders('TDG12', 'TDG5', 'TDG6', 'TDGMove', 'TDG4', 'TDG_model')
 
 os.chdir(r'IntTreeDataGrid')
 root_1 = os.getcwd()
