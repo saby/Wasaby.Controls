@@ -176,9 +176,7 @@ define('Controls/List/EditInPlace', [
 
       /**
        * @typedef {String|WS.Data/Entity/Record|Core/Deferred} BeginEditResult
-       * @variant {String} Cancel Отменить завершение редактирования.
-       * @variant {String} PendingAll В результате редактирования ожидается вся запись, как есть (с текущим набором полей).
-       * @variant {String} PendingModifiedOnly В результате редактирования ожидаются только измененные поля. Это поведение используется по умолчанию.
+       * @variant {String} Cancel Отменить начало редактирования.
        * @variant {WS.Data/Entity/Record} item -  Редактируемая запись.
        * @variant {Core/Deferred} Deferred - используется для асинхронной подготовки редактируемой записи. Из Deferred необходимо обязательно возвращать запись, открываемую на редактирование.
        */
@@ -196,7 +194,8 @@ define('Controls/List/EditInPlace', [
        */
 
       /**
-       * @typedef {Core/Deferred|BeginAddOptions} BeginAddResult
+       * @typedef {String|Core/Deferred|BeginAddOptions} BeginAddResult
+       * @variant {String} Cancel Отменить начало редактирования.
        * @variant {BeginAddOptions} Настройки добавления по месту.
        * @variant {Core/Deferred} Deferred - используется асинхронной подготовки добавляемой записи. Из Deferred обязательно возвращать настройки добавления по месту.
        */
