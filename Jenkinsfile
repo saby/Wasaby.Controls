@@ -1,16 +1,25 @@
 #!groovy
 echo "Задаем параметры сборки"
 def version = "3.18.200"
-if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
-        currentBuild.result = 'ABORTED'
-        error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
+
+def gitlabStatusUpdate() {
+    if ( currentBuild.currentResult == "ABORTED" ) {
+        updateGitlabCommitStatus state: 'canceled'
+    } else if ( currentBuild.currentResult in ["UNSTABLE", "FAILURE"] ) {
+        updateGitlabCommitStatus state: 'failed'
+    } else if ( currentBuild.currentResult == "SUCCESS" ) {
+        updateGitlabCommitStatus state: 'success'
     }
+}    
+
+
 node('controls') {
     echo "Читаем settings_${version}.props"
     def props = readProperties file: "/home/jenkins/shared_autotest87/settings_${version}.props"
     echo "Генерируем параметры"
     properties([
     disableConcurrentBuilds(),
+    gitLabConnection('git'),
     buildDiscarder(
         logRotator(
             artifactDaysToKeepStr: '3',
@@ -46,6 +55,15 @@ node('controls') {
             ]),
         pipelineTriggers([])
     ])
+
+
+    if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
+            currentBuild.result = 'ABORTED'
+            gitlabStatusUpdate()
+            error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
+        }
+
+
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
@@ -110,6 +128,7 @@ node('controls') {
                         git merge origin/rc-${version}
                         """
                     }
+                    updateGitlabCommitStatus state: 'running'
                     parallel (
                         checkout_atf:{
                             echo " Выкачиваем atf"
@@ -459,6 +478,7 @@ node('controls') {
 					"""
 					if ( "${tmp_smoke}" != "0" ) {
 						currentBuild.result = 'ABORTED'
+                        gitlabStatusUpdate()
 						error('Стенд неработоспособен (не прошел smoke test).')
 					}
 				}
@@ -515,5 +535,6 @@ node('controls') {
                 junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
         }
+        gitlabStatusUpdate()
     }
 }
