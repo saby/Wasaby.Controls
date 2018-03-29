@@ -9,23 +9,9 @@ define('Controls/List/EditInPlace', [
       beginEdit: function(self, record) {
          var result = self._notify('beginEdit', [record], {bubbling: true});
 
-         if (result === BeginEditResult.CANCEL) {
-            return Deferred.fail(record);
-         }
-
          self._oldItem = record;
 
-         if (result instanceof Deferred) {
-            return result.addCallback(function(newRecord) {
-               return newRecord;
-            });
-         }
-
-         if (result instanceof Record) {
-            return Deferred.success(result);
-         }
-
-         return Deferred.success(record);
+         return _private.processBeginEditResult(self, record, result);
       },
 
 
@@ -40,29 +26,35 @@ define('Controls/List/EditInPlace', [
       beginAdd: function(self, options) {
          var result = self._notify('beginAdd', [options], {bubbling: true});
 
-         if (result === BeginEditResult.CANCEL) {
-            return Deferred.fail(options);
-         }
+         return _private.processBeginEditResult(self, options, result, true);
+      },
 
+      processBeginEditResult: function(self, originalResult, result, isAdd) {
          if (result) {
+            if (result === BeginEditResult.CANCEL) {
+               return Deferred.fail(originalResult);
+            }
+
             if (result instanceof Deferred) {
                return result.addCallback(function(newOptions) {
                   return newOptions;
                });
             }
-            if (result.item instanceof Record) {
-               return Deferred.success(result);
+
+            if (isAdd) {
+               if (result.item instanceof Record) {
+                  return Deferred.success(result.item);
+               } else {
+                  return _private.createModel(self);
+               }
+            } else {
+               if (result instanceof Record) {
+                  return Deferred.success(result);
+               }
             }
          }
 
-         if (!options.item) {
-            return self._options.source.create(options).addCallback(function(newRecord) {
-               options.item = newRecord;
-               return options;
-            });
-         } else {
-            return Deferred.success(options);
-         }
+         return Deferred.success(originalResult);
       },
 
       afterBeginAdd: function(self, options) {
@@ -100,9 +92,17 @@ define('Controls/List/EditInPlace', [
       },
 
       afterEndEdit: function(self) {
+         //Это событие всплывает, т.к. прикладники после завершения сохранения могут захотеть показать кнопку "+Запись" (по стандарту при старте добавления она скрывается)
          self._notify('afterEndEdit', [self._oldItem, self._isAdd], {bubbling: true});
          _private.resetVariables(self);
          self._options.listModel.setEditingItem(null);
+      },
+
+      createModel: function(self) {
+         return self._options.source.create(options).addCallback(function(newRecord) {
+            options.item = newRecord;
+            return options;
+         });
       },
 
       updateModel: function(self, commit) {
@@ -139,7 +139,7 @@ define('Controls/List/EditInPlace', [
          return self._children.formController.submit();
       },
 
-      editNextTarget: function(self, editNextRow) {
+      editNextRow: function(self, editNextRow) {
          var
             items = self._options.listModel.getItems(),
             index = self._options.listModel.getEditingItemIndex();
@@ -323,14 +323,14 @@ define('Controls/List/EditInPlace', [
                   if (this._options.editingConfig && this._options.editingConfig.singleEdit) {
                      this.commitEdit();
                   } else {
-                     _private.editNextTarget(this, true);
+                     _private.editNextRow(this, true);
                   }
                   break;
                case 27: //Esc
                   this.cancelEdit();
                   break;
                case 9: //Tab //TODO: для грида это не подойдет, так что надо перейти на _onRowDeactivated после решения проблем с ним
-                  _private.editNextTarget(this, !e.nativeEvent.shiftKey);
+                  _private.editNextRow(this, !e.nativeEvent.shiftKey);
                   break;
             }
          }
@@ -346,7 +346,7 @@ define('Controls/List/EditInPlace', [
          //TODO: по табу стреляет несколько раз на одной и той же строке, надо Шипину показать
          //TODO: про таб знаем, а про шифт нет, нужно доработать немножко
          if (isTabPressed) {
-            // _private.editNextTarget(this, true);
+            // _private.editNextRow(this, true);
             // console.log('ушёл фокус со строки по табу');
          }
          e.stopPropagation();
