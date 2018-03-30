@@ -367,7 +367,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             var resultHandler = isSuccess ? this._resultHandler : undefined;
             this._result = null;
             this._resultHandler = null;
-            this._areaContainer.close();
+            if (this._areaContainer) {
+               this._areaContainer.close();
+            }
             if (isSuccess) {
                if (resultHandler) {
                   result.dependOn(resultHandler(outcome));
