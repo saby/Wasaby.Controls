@@ -68,7 +68,7 @@ define('Controls-demo/List/EditInPlace', [
       },
       {
          id: 2,
-         title: 'редактирование стартует по опции'
+         title: 'Editing starts before mounting to DOM'
       }
    ],
    srcData5 = [
@@ -155,7 +155,7 @@ define('Controls-demo/List/EditInPlace', [
                item: Record.fromObject({
                   id: 3,
                   title: '',
-                  extraField: 'поле, которого нет у остальных itemов'
+                  extraField: 'text'
                })
             },
             def = new Deferred();
