@@ -1,9 +1,9 @@
 define('SBIS3.CONTROLS/SbisComboBox', [
     'SBIS3.CONTROLS/ComboBox',
     'WS.Data/Entity/Model',
-    'Core/core-clone',
-    'SBIS3.CONTROLS/Utils/DropdownUtil'
-], function (ComboBox, Model, coreClone, DropdownUtil) {
+    'SBIS3.CONTROLS/Utils/DropdownUtil',
+    'Core/core-clone'
+], function (ComboBox, Model, DropdownUtil) {
    'use strict';
    /**
     *
