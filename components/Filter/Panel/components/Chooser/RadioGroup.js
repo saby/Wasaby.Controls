@@ -6,7 +6,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/RadioGroup', [
    'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/RadioGroup/resources/FilterPanelChooserRadioGroupTpl',
    'Core/core-clone',
    'SBIS3.CONTROLS/Radio/Group',
-   'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/RadioGroup/FilterPanelChooser.RadioGroup'
+   'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/RadioGroup/FilterPanelChooser-RadioGroup'
 ], function(FilterPanelChooserBase, chooserTpl, coreClone) {
    'use strict';
    /**
