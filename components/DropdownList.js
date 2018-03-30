@@ -447,8 +447,15 @@ define('SBIS3.CONTROLS/DropdownList',
                this._loadItemsDeferred.addCallback(function() {
                   var item = this._options.selectedItems.at(0);
                   var text = item && item.get(this._options.displayProperty);
-                  this._removeOldKeysCallback();
-                  this._drawSelectedValue(this._options.selectedKeys[0], [text]);
+                  if (!item) {
+                     this._setFirstItemAsSelected();
+                     //Скрываю крестик сброса
+                     this._getPickerContainer().toggleClass('controls-DropdownList__hideCross', true);
+                     this.getContainer().toggleClass('controls-DropdownList__hideCross', true);
+                  } else {
+                     this._removeOldKeysCallback();
+                     this._drawSelectedValue(this._options.selectedKeys[0], [text]);
+                  }
                }.bind(this));
             } else {
                this._removeOldKeysCallback();
