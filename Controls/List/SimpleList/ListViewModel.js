@@ -72,8 +72,10 @@ define('Controls/List/SimpleList/ListViewModel',
          getCurrent: function() {
             var itemsModelCurrent = this._itemsModel.getCurrent();
             itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
-            itemsModelCurrent.isActionHoverItem = itemsModelCurrent.dispItem.getContents() === this._actionHoverItem;
             itemsModelCurrent.itemActions =  this._actions[this.getCurrentIndex()];
+            itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
+            itemsModelCurrent.showActions = !this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive);
+
             return itemsModelCurrent;
          },
 
