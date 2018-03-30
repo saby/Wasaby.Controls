@@ -346,16 +346,24 @@ define('SBIS3.CONTROLS/OperationsPanel/Print/PrintUnloadBase', [
               return err;
             });
          } else {
-            if (pageSize < numOfRecords) {
-               //Выберем pageSize записей из dataSet
-               recordSet = Chain(recordSet).first(pageSize).value(RecordSetFactory, {
-                  adapter: recordSet.getAdapter(),
-                  model: recordSet.getModel()
-               });
-            }
-            self._applyOperation(recordSet);
+            self._applyOperation(this._getSortedViewItems(pageSize < numOfRecords ? pageSize : numOfRecords));
          }
       },
+
+      _getSortedViewItems: function(count) {
+         var
+            view = this._getView(),
+            items = view.getItems(),
+            proj = view._getItemsProjection();
+
+         return Chain(proj).map(function(item) {
+            return item.getContents();
+         }).first(count).value(RecordSetFactory, {
+            adapter: items.getAdapter(),
+            model: items.getModel()
+         });
+      },
+
       _loadFullData: function(pageSize){
          var deferred = new Deferred(),
             self = this;
