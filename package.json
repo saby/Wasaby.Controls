@@ -18,13 +18,13 @@
     "viewFrom": "sbis3-ws/View",
     "viewTo": "View",
     "resources": "components",
-    "tests": "tests/unit/File",
-    "test_server_port": 1029,
+    "tests": "tests/unit",
+    "test_server_port": 1025,
     "test_report": "artifacts/xunit-report.xml",
     "test_url": {
       "scheme": "http",
       "host": "localhost",
-      "port": 1029,
+      "port": 1025,
       "path": "",
       "query": "reporter=XUnit"
     }
