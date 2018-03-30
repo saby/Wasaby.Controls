@@ -1385,12 +1385,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   return;
             }
             var size = constants.defaultImagePercentSize;
-            this._makeImgPreviewerUrl(fileobj, size, null, false).addCallback(function (url) {
+            this._makeImgPreviewerUrl(fileobj, size, null, false).addCallback(function (urls) {
                var uuid = fileobj.id;
                if (uuid) {
                   this._images[uuid] = false;
                }
-               this._insertImg(url, size + '%', null, className, null, before, after, uuid);
+               this._insertImg(urls, size + '%', null, className, null, before, after, uuid);
             }.bind(this));
          },
          codeSample: function(text, language) {
@@ -1532,7 +1532,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             $img.attr('data-mce-style', css.join('; '));
             var prevSrc = $img.attr('src');
             var promise = this._makeImgPreviewerUrl($img, 0 < width ? width : null, 0 < height ? height : null, isPixels);
-            return promise.addCallback(function (url) {
+            return promise.addCallback(function (urls) {
+               var url = urls.preview;
                if (prevSrc !== url) {
                   $img.attr('src', url);
                   $img.attr('data-mce-src', url);
@@ -2217,7 +2218,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   $img[0].style.height = '';
                   var width = $img[0].style.width || ($img.width() + 'px');
                   var isPixels = width.charAt(width.length - 1) !== '%';
-                  self._makeImgPreviewerUrl(fileobj, +width.substring(0, width.length - (isPixels ? 2 : 1)), null, isPixels).addCallback(function (url) {
+                  self._makeImgPreviewerUrl(fileobj, +width.substring(0, width.length - (isPixels ? 2 : 1)), null, isPixels).addCallback(function (urls) {
+                     var url = urls.preview;
                      $img.attr('src', url);
                      $img.attr('data-mce-src', url);
                      var uuid = fileobj.id;
@@ -2303,7 +2305,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           * @param {number} width Визуальная ширина изображения
           * @param {number} height Визуальная высота изображения
           * @param {boolean} isPixels Размеры указаны в пикселах (иначе в процентах)
-          * @return {Core/Deferred}
+          * @return {Core/Deferred<object>}
           */
          _makeImgPreviewerUrl: function (imgInfo, width, height, isPixels) {
             if (!(0 < width)) {
@@ -2316,7 +2318,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                url = imgInfo.attr('src');
                if (!/\/disk\/api\/v[0-9\.]+\//i.test(url)) {
                   // Это не файл, хранящийся на СбисДиск, вернуть как есть
-                  promise.callback(url);
+                  promise.callback({preview:url, original:url});
                   return promise;
                }
                url = url.replace(/^\/previewer(?:\/r\/[0-9]+\/[0-9]+)?/i, '');
@@ -2326,7 +2328,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                url = (imgInfo.filePath || imgInfo.url);
             }
             promise = promise.addCallback(function (size) {
-               return '/previewer' + (size ?  '/r/' + size + '/' + size : '') + url;
+               return {preview:'/previewer' + (size ?  '/r/' + size + '/' + size : '') + url, original:url};
             });
             if (0 < width) {
                var w = isPixels ? width : width*constants.baseAreaWidth/100;//this.getContainer().width()
@@ -2343,7 +2345,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      promise.callback(Math.round(img.width < img.height ? w*img.height/img.width : w));
                   };
                   img.onerror = function () {
-                     promise.callback(constants.defaultPreviewerSize);
+                     promise.callback(null);
                   };
                   img.src = url;
                }
@@ -2641,23 +2643,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return this.getName().replace('/', '#') + 'ИсторияИзменений';
          },
 
-         _insertImg: function (src, width, height, className, alt, before, after, uuid) {
-            var
-               def = new Deferred(),
-               self = this,
-               //^^^ Почему так сложно???
-               $img = $('<img src="' + src + '"></img>').css({
-                  visibility: 'hidden',
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0
-               });
-            $img.on('load', function () {
+         _insertImg: function (urls, width, height, className, alt, before, after, uuid) {
+            var promise = new Deferred();
+            var hasBoth = urls && typeof urls === 'object';
+            var src = hasBoth ? urls.preview : urls;
+            var img = new Image();
+            img.onload = function () {
                // TODO: 20170913 Здесь в атрибуты, сохранность которых не гарантируется ввиду свободного редактирования пользователями, помещается значение uuid - Для обратной совместимости
                // После задач https://online.sbis.ru/opendoc.html?guid=6bb150eb-4973-4770-b7da-865789355916 и https://online.sbis.ru/opendoc.html?guid=a56c487d-6e1d-47bc-bdf6-06a0cd7aa57a
                // Убрать по мере переделки стороннего кода, используещего эти атрибуты.
                // Для пролучения uuid правильно использовать метод getImageUuid
-               self.insertHtml(
+               this.insertHtml(
                   (before || '') + '<img' +
                   (className ? ' class="' + className + '"' : '') +
                   ' src="' + src + '"' +
@@ -2666,9 +2662,30 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   ' data-img-uuid="' + uuid + '" alt="' + uuid + '"' +
                   '></img>' + (after || '')
                );
-               def.callback();
-            });
-            return def;
+               promise.callback();
+            }.bind(this);
+            img.onerror = function () {
+               if (hasBoth && urls.original !== urls.preview) {
+                  promise.dependOn(this._insertImg(urls.original, width, height, className, alt, before, after, uuid));
+               }
+               else {
+                  require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function (InformationPopupManager) {
+                     InformationPopupManager.showMessageDialog({
+                           status: 'error',
+                           className: 'controls-RichEditor__insertImg-alert',
+                           message: rk('Ошибка'),
+                           details: rk('Невозможно открыть изображение'),
+                           isModal: true,
+                           closeByExternalClick: true,
+                           opener: this
+                        },
+                        promise.errback.bind(promise)
+                     );
+                  });
+               }
+            }.bind(this);
+            img.src = src;
+            return promise;
          },
 
          _onChangeAreaValue: function() {
