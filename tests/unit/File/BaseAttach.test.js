@@ -379,7 +379,7 @@ define([
             attach.registerSource(LocalFileLink, brokenSource);
             attach.registerSource(LocalFile, trueSource);
 
-            it('Вызвано событие onLoadResourceError при неправильной загрузке отдельного ресурса', function (done) {
+            it('Вызвано событие onLoadResourceError при неправильной загрузке ресурса', function (done) {
                attach.subscribe('onLoadResourceError', function (event, resource, error) {
                   assert.deepEqual(resource, file);
                   assert.instanceOf(error, Error);
