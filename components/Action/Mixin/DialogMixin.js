@@ -62,7 +62,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             /**
              * @cfg {Object} Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link Lib/Control/Control#linkedContext}.
              */
-            dialogOptions: null,
+            dialogOptions: null
          },
          _dialog: undefined,
           _openedPanelConfig: {},
