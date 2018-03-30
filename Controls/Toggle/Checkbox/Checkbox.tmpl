@@ -6,5 +6,5 @@
     <div class="{{_options.value === null && _options.triState ? 'controls-CheckBox__icon-tristate controls-CheckBox__icon-tristate-color__' + (isEnabled() ? 'enabled':'disabled')}}
                 {{_options.value ? 'controls-CheckBox__icon-checked controls-CheckBox__icon-checked-color__'+ (isEnabled() ? 'enabled':'disabled')}}
                  controls-CheckBox__icon-border-color__{{isEnabled() ? 'enabled': 'disabled'}} controls-CheckBox__icon"></div>
-    <ws:partial template="tmpl!Controls/Toggle/Checkbox/resources/CheckboxCaption" enabled="{{isEnabled()}}" caption="{{_options.caption}}"/>
+    <ws:partial template="tmpl!Controls/Toggle/Checkbox/resources/CheckboxCaption" enabled="{{_options.value !== null && !_options.value ? isEnabled() : true}}" caption="{{_options.caption}}"/>
 </div>
