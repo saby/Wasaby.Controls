@@ -7,7 +7,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
    "Core/EventBus",
    "Core/Deferred",
    "SBIS3.CONTROLS/ControlHierarchyManager",
-   "Deprecated/Controls/ModalOverlay/ModalOverlay",
+   "Lib/Control/ModalOverlay/ModalOverlay",
    "SBIS3.CONTROLS/Utils/TouchKeyboardHelper",
    'Core/core-instance',
    'Core/helpers/Hcontrol/doAutofocus',

@@ -31,6 +31,13 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
       var _CUSTOM_CONDITION_EXTENSION = 4;
 
       /**
+       * Интервалы времени между попытками перезапроса данных при ошибке, мсек
+       * @private
+       * @type {Array<number>}
+       */
+      var _RETRY_DELAYS = [100, 500, 2500, 12500, 62500];
+
+      /**
        * Простая оболочка над SBIS3.CONTROLS/LongOperations/Manager для имплементации интерфейса WS.Data/Source/ISource
        * @public
        * @type {WS.Data/Source/ISource}
@@ -42,7 +49,8 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
             _options: {
                customConditions: [],
                navigationType: 'Page'
-            }
+            },
+            _retryCounter: 0
          },
 
          $constructor: function $LongOperationsListDataSource () {
@@ -133,7 +141,13 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
             }
             this._notify('onBeforeProviderCall');
             var promise = new Deferred();
+            this._queryCall(promise, options, hasCustomConditions, limit);
+            return promise;
+         },
+
+         _queryCall: function (promise, options, hasCustomConditions, origLimit) {
             longOperationsManager.fetch(Object.keys(options).length ? options : null).addCallbacks(function (recordSet) {
+               this._retryCounter = 0;
                var meta = recordSet.getMetaData();
                var items = recordSet.getRawData();
                if (hasCustomConditions && items.length) {
@@ -141,8 +155,8 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
                      var custom = operation.custom;
                      return !custom || !customConditions.some(function (cond) { return Object.keys(cond).every(function (name) { return cond[name] === custom[name]; }); });
                   });
-                  if (0 < limit && !options.offset) {
-                     items = items.slice(0, limit);
+                  if (0 < origLimit && !options.offset) {
+                     items = items.slice(0, origLimit);
                   }
                }
                promise.callback(new DataSet({
@@ -155,11 +169,18 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/DataSource',
                   totalProperty: 'more',
                   model: recordSet.getModel()
                }));
-            },
+            }.bind(this),
             function (err) {
-               // Не нужно пропускать ошибку в ListView - вылетет алерт в ФФ, не нужно посылать пустой результат - закроется попап
-            });
-            return promise;
+               if (this._retryCounter < _RETRY_DELAYS.length) {
+                  setTimeout(this._queryCall.bind(this, promise, options, hasCustomConditions, origLimit), _RETRY_DELAYS[this._retryCounter]);
+                  this._retryCounter++;
+               }
+               else {
+                  this._retryCounter = 0;
+                  //Не нужно пропускать ошибку в ListView - вылетет алерт, не нужно посылать пустой результат - закроется попап
+                  //promise.errback(err);
+               }
+            }.bind(this));
          }
       });
 
