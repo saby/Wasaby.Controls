@@ -307,14 +307,19 @@ define('SBIS3.CONTROLS/Action/Selector/SelectorWrapper', [
       },
 
       setSelectedItems: function(items) {
-         var self = this,
-             keys = [],
-             linkedObject = this._getLinkedObject(),
+         var
+            id,
+            self = this,
+            keys = [],
+            linkedObject = this._getLinkedObject(),
             idProperty = linkedObject.getProperty('idProperty');
 
          items.each(function(rec) {
             if((self._options.selectedFilter || DEFAULT_SELECTED_FILTER)(rec)) {
-               keys.push(rec.get(idProperty));
+               id = rec.get(idProperty);
+               if (id !== undefined) {
+                  keys.push(id);
+               }
             }
          });
 
