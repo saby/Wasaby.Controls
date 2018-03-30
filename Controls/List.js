@@ -95,6 +95,10 @@ define('Controls/List', [
       */
       beginAdd: function(options) {
          this._children.sourceControl.beginAdd(options);
+      },
+
+      remove: function(items) {
+         this._children.sourceControl.remove(items);
       }
    });
 

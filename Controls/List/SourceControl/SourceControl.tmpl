@@ -5,19 +5,20 @@
 
     <ws:if data="{{_listViewModel}}">
         <ws:partial
-              template="{{_options.viewName}}"
-              name="listView"
-              listModel="{{_listViewModel}}"
-              itemTemplate="{{_options.itemTemplate}}"
-              idProperty="{{_options.idProperty}}"
-              displayProperty="{{_options.displayProperty}}"
-              markedKey="{{_options.markedKey}}">
+                template="{{_options.viewName}}"
+                name="listView"
+                listModel="{{_listViewModel}}"
+                itemTemplate="{{_options.itemTemplate}}"
+                idProperty="{{_options.idProperty}}"
+                displayProperty="{{_options.displayProperty}}"
+                markedKey="{{_options.markedKey}}">
         </ws:partial>
         <Controls.List.EditInPlace ws:content="listView"
                                    name="editInPlace"
                                    editingConfig="{{_options.editingConfig}}"
                                    listModel="{{_listViewModel}}"
                                    source="{{_options.source}}" />
+        <Controls.List.Remove ws:content="listView" name="removeControl"/>
         <Controls.List.ItemActions.ItemActionsControl
                 ws:content="listView"
                 listModel="{{_listViewModel}}"

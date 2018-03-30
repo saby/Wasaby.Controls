@@ -158,6 +158,16 @@ define('Controls/List/SimpleList/ItemsViewModel',
          },
          getEditingItemProjection: function() {
             return this._editingItemProjection;
+         },
+
+         removeItems: function(items) {
+            var item;
+            this._items.setEventRaising(false, true);
+            for (var i = 0; i < items.length; i++) {
+               item = this._items.getRecordById(items[i]);
+               item && this._items.remove(item);
+            }
+            this._items.setEventRaising(true, true);
          }
       });
 

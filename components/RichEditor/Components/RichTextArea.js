@@ -839,17 +839,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          getCurrentFormats: function () {
             var editor = this._tinyEditor;
             if (editor) {
-               var selNode = editor.selection.getNode();
-               var $selNode = $(selNode);
-               var color = editor.dom.getStyle(selNode, 'color', true);
-               return {
-                  fontsize: +editor.dom.getStyle(selNode, 'font-size', true).replace('px', ''),
-                  color: constants.colorsMap[color] || color,
-                  bold: !!$selNode.closest('strong').length,
-                  italic: !!$selNode.closest('em').length,
-                  underline: !!$selNode.closest('span[style*="decoration: underline"]').length,
-                  strikethrough: !!$selNode.closest('span[style*="decoration: line-through"]').length
-               };
+               var rng = editor.selection.getRng();
+               var selNode = rng.startContainer;
+               if (selNode.nodeType === 3) {
+                  selNode = selNode.parentNode;
+               }
+               return this._getNodeFormats(selNode);
             }
          },
 
@@ -859,14 +854,51 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           */
          getDefaultFormats: function () {
             if (!this._defaultFormats) {
-               var $root = $(this._inputControl);
-               var color = $root.css('color');
-               this._defaultFormats = {
-                  fontsize : +$root.css('font-size').replace('px', ''),
-                  color: constants.colorsMap[color] || color
-               };
+               this._defaultFormats = this._getNodeFormats(this._inputControl, ['fontsize', 'color']);
             }
             return this._defaultFormats;
+         },
+
+         _getNodeFormats: function (node, properties) {
+            var editor = this._tinyEditor;
+            if (editor) {
+               if (!properties || !properties.length) {
+                  properties = ['fontsize', 'color', 'bold', 'italic', 'underline', 'strikethrough'];
+               }
+               var formats = {};
+               var $node;
+               var selectors;
+               for (var i = 0; i < properties.length; i++) {
+                  var prop = properties[i];
+                  if (prop === 'fontsize') {
+                     formats[prop] = +editor.dom.getStyle(node, 'font-size', true).replace('px', '');//^^^+$node.css('font-size').replace('px', '')
+                  }
+                  else
+                  if (prop === 'color') {
+                     var color = editor.dom.getStyle(node, 'color', true);//^^^$node.css('color')
+                     formats[prop] = constants.colorsMap[color] || color;
+                  }
+                  else {
+                     if (!selectors) {
+                        selectors = {
+                           'bold': 'strong',
+                           'italic': 'em',
+                           'underline': 'span[style*="decoration: underline"]',
+                           'strikethrough': 'span[style*="decoration: line-through"]'
+                        };
+                     }
+                     var selector = selectors[prop];
+                     if (selector) {
+                        if (!$node) {
+                           $node = $(node);
+                        }
+                        formats[prop] = !!$node.closest(selector).length;
+                     }
+                  }
+               }
+            }
+            return formats;
+
          },
 
          /**
@@ -875,7 +907,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           */
          applyFormats: function (formats) {
             // Отбросить все свойства форматирования, тождественные форматированию по-умолчанию
-            var defaults = this.getDefaultFormats();
+            var rng = this._tinyEditor.selection.getRng();
+            var node = rng.startContainer;
+            var defaults = this._getNodeFormats((node.nodeType === 3 ? node.parentNode : node).parentNode, ['fontsize', 'color']);
             for (var prop in defaults) {
                if (prop in formats && formats[prop] ==/* Не "==="! */ defaults[prop]) {
                   delete formats[prop];
@@ -1006,7 +1040,25 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             }
             var isAlreadyApplied = editor.formatter.match(command);
             var rng = selection.getRng();
-            if (isListNode && !isAlreadyApplied) {
+            var isBlockquoteOfList;
+            if (isBlockquote) {
+               // При обёртывании списков в блок цитат каждый элемент списка оборачивается отдельно. Во избежание этого сделать список временно нередактируемым
+               // 1174914305 https://online.sbis.ru/opendoc.html?guid=305e5cb1-8b37-49ea-917d-403f746d1dfe
+               var listNode = rng.commonAncestorContainer;
+               isBlockquoteOfList = ['OL', 'UL'].indexOf(listNode.nodeName) !== -1;
+               if (isBlockquoteOfList) {
+                  var $listNode = $(listNode);
+                  $listNode.wrap('<div>');
+                  selection.select(listNode.parentNode, false);
+                  $listNode.attr('contenteditable', 'false');
+                  afterProcess = function () {
+                     $listNode.unwrap();
+                     $listNode.removeAttr('contenteditable');
+                     selection.select(listNode, true);
+                  };
+               }
+            }
+            if ((isListNode || (isBlockquote && !isBlockquoteOfList)) && !isAlreadyApplied) {
                var node = rng.startContainer;
                if (rng.endContainer === node) {
                   if (node.nodeType === 3 && node.previousSibling && node.previousSibling.nodeType === 1) {
@@ -1025,22 +1077,6 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      node.parentNode.insertBefore(newNode, node.nextSibling);
                      selection.select(newNode, true);
                   }
-               }
-            }
-            if (isBlockquote) {
-               // При обёртывании списков в блок цитат каждый элемент списка оборачивается отдельно. Во избежание этого сделать список временно нередактируемым
-               // 1174914305 https://online.sbis.ru/opendoc.html?guid=305e5cb1-8b37-49ea-917d-403f746d1dfe
-               var listNode = rng.commonAncestorContainer;
-               if (['OL', 'UL'].indexOf(listNode.nodeName) !== -1) {
-                  var $listNode = $(listNode);
-                  $listNode.wrap('<div>');
-                  selection.select(listNode.parentNode, false);
-                  $listNode.attr('contenteditable', 'false');
-                  afterProcess = function () {
-                     $listNode.unwrap();
-                     $listNode.removeAttr('contenteditable');
-                     selection.select(listNode, true);
-                  };
                }
             }
             editor.execCommand(execCmd || command);
@@ -1175,6 +1211,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                        // Для MSIE принудительно смещаем курсор ввода после вставленной ссылки
                                        // 1174853380 https://online.sbis.ru/opendoc.html?guid=77405679-2b2b-42d3-8bc0-d2eee745ea23
                                        editor.insertContent(cConstants.browser.isIE ? linkHtml + '&#65279;&#8203;' : linkHtml);
+                                       selection.select(selection.getNode().querySelector('a'), true);
+                                       selection.collapse(false);
                                     }
                                     else {
                                        if (origCaption !== caption) {
@@ -2822,7 +2860,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return Sanitize(text,
                {
                   validNodes: {
-                     img: images
+                     img: images,
+                     table: {
+                        border: true,
+                        cellspacing: true,
+                        cellpadding: true
+                     }
                   },
                   validAttributes: {
                      'class' : function(content, attributeName) {
