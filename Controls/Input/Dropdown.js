@@ -78,17 +78,14 @@ define('Controls/Input/Dropdown',
          _open: function() {
             dropdownUtil.open(this, this._children.popupTarget);
          },
-         _onResult: function(args) {
-            var actionName = args[0];
-            var event = args[1];
-            var data = args[2];
-            switch (actionName) {
+         _onResult: function(result) {
+            switch (result.action) {
                case 'itemClick':
-                  this._selectItem.apply(this, data);
+                  this._selectItem.apply(this, result.data);
                   this._children.DropdownOpener.close();
                   break;
                case 'footerClick':
-                  this._notify('footerClick', [event]);
+                  this._notify('footerClick', [result.event]);
             }
          },
          _selectItem: function(item) {
