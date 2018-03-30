@@ -12,7 +12,7 @@
         }
     </style>
     <div>
-        <h3>Обычный список</h3>
+        <h3>Simple list</h3>
         <Controls:List
                 name="list"
                 source="{{_viewSource}}"
@@ -35,9 +35,9 @@
                 </ws:partial>
             </ws:itemTemplate>
         </Controls:List>
-        <Controls:List:AddButton caption="Добавить запись" on:click="beginAdd()"/>
+        <Controls:List:AddButton caption="Add record" on:click="beginAdd()"/>
         <div attr:style="padding: 15px; background-color: rgba(81,81,81,0.11); width: 150px;">
-            <h3>Задайте опции:</h3>
+            <h3>Select options:</h3>
             <div>
                 <ws:Controls.Toggle.Checkbox bind:value="_editOnClick" caption="editOnClick"/>
                 <ws:Controls.Toggle.Checkbox bind:value="_singleEdit" caption="singleEdit"/>
@@ -46,7 +46,7 @@
         </div>
     </div>
     <div>
-        <h3>В этом списке не работает добавление</h3>
+        <h3>Adding doesn't work in this list</h3>
         <Controls:List
                 name="list2"
                 source="{{_viewSource2}}"
@@ -66,10 +66,10 @@
                 </ws:partial>
             </ws:itemTemplate>
         </Controls:List>
-        <Controls:List:AddButton caption="Добавить запись" on:click="list2.beginAdd()"/>
+        <Controls:List:AddButton caption="Add record" on:click="list2.beginAdd()"/>
     </div>
     <div>
-        <h3>В beginAdd вернётся Deferred</h3>
+        <h3>onBeginAdd handler returns Deferred</h3>
         <Controls:List
                 name="list3"
                 source="{{_viewSource3}}"
@@ -89,10 +89,9 @@
                 </ws:partial>
             </ws:itemTemplate>
         </Controls:List>
-        <Controls:List:AddButton caption="Добавить запись" on:click="list3.beginAdd()"/>
     </div>
     <div>
-        <h3>Редактирование стартует при отрисовке</h3>
+        <h3>Editing starts before mounting to DOM</h3>
         <Controls:List
                 name="list4"
                 source="{{_viewSource4}}"
@@ -113,7 +112,7 @@
         </Controls:List>
     </div>
     <div>
-        <h3>Добавление стартует при отрисовке</h3>
+        <h3>Adding starts before mounting to DOM</h3>
         <Controls:List
                 name="list5"
                 source="{{_viewSource5}}"

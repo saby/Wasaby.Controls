@@ -18,33 +18,27 @@ define('Controls-demo/List/EditInPlace', [
    var srcData = [
       {
          id: 1,
-         title: 'Не открывается на редактирование',
-         description: 'Другое название 1'
+         title: 'Not editable'
       },
       {
          id: 2,
-         title: 'Открывается другая запись',
-         description: 'Описание вот такое'
+         title: 'Another record will open on editing'
       },
       {
          id: 3,
-         title: 'Возвращается Deferred и через 3 секунды открывается другая запись',
-         description: 'Хватит страдать'
+         title: 'Returns Deferred and after 3 seconds editing will start'
       },
       {
          id: 4,
-         title: 'Обычная запись1',
-         description: 'йцукен'
+         title: 'Record1'
       },
       {
          id: 5,
-         title: 'Обычная запись2',
-         description: 'йцукен'
+         title: 'Record2'
       },
       {
          id: 6,
-         title: 'Обычная запись3',
-         description: 'йцукен'
+         title: 'Record3'
       }
    ],
    srcData2 = [
@@ -94,8 +88,8 @@ define('Controls-demo/List/EditInPlace', [
       _editOnClick: true,
       _singleEdit: false,
       _autoAdd: false,
-      _editingItem: Record.fromObject({ id: 2, title: 'редактирование стартует по опции', description: 'а может и не стартует', randomField: 'поле, которого нет'}),
-      _addItem: Record.fromObject({ id: 3, title: 'добавление стартует по опции', description: 'а может и не стартует', randomField: 'поле, которого нет'}),
+      _editingItem: Record.fromObject({ id: 2, title: 'Editing starts before mounting to DOM', randomField: 'text'}),
+      _addItem: Record.fromObject({ id: 3, title: 'Adding starts before mounting to DOM', randomField: 'text'}),
 
       _beforeMount: function() {
          this._viewSource = new MemorySource({
@@ -127,16 +121,14 @@ define('Controls-demo/List/EditInPlace', [
             case 2:
                return Record.fromObject({
                   id: 2,
-                  title: 'Другая запись',
-                  description: 'Описание вот такое'
+                  title: 'Another record'
                });
             case 3:
                var def = new Deferred();
                setTimeout(function() {
                   def.callback(Record.fromObject({
                      id: 3,
-                     title: 'Запись из Deferred',
-                     description: 'Хватит страдать'
+                     title: 'Record from Deferred'
                   }));
                }, 3000);
                return def;
@@ -148,8 +140,7 @@ define('Controls-demo/List/EditInPlace', [
                item: Record.fromObject({
                   id: counter++,
                   title: '',
-                  description: 'описание',
-                  extraField: 'поле, которого нет у остальных itemов'
+                  extraField: 'text'
                })
             };
       },
@@ -164,7 +155,6 @@ define('Controls-demo/List/EditInPlace', [
                item: Record.fromObject({
                   id: 3,
                   title: '',
-                  description: 'описание',
                   extraField: 'поле, которого нет у остальных itemов'
                })
             },
