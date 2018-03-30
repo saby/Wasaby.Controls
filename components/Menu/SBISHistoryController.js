@@ -316,7 +316,7 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
 
         processPinnedItem: function(self, origId, pinItem){
             var myself = this,
-                pinned = true,
+                pinned = null,
                 newItem, oldItem;
 
             if (!pinItem.get('pinned')) {
@@ -622,7 +622,9 @@ define('SBIS3.CONTROLS/Menu/SBISHistoryController', [
             var pinned;
 
             pinned = _private.processPinnedItem(this, origId, item);
-            this.setPin(origId, pinned);
+            if(pinned !== null) {
+                this.setPin(origId, pinned);
+            }
         },
 
         // Получить оригинальный id
