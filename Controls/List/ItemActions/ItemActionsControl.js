@@ -18,7 +18,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
       fillItemActions: function(item, itemActions, itemActionVisibilityCallback){
          var actions = [];
-        itemActions.forEach(function(action){
+         itemActions.forEach(function(action){
             if (!itemActionVisibilityCallback || itemActionVisibilityCallback(action, item)) {
                if (action.icon && !~action.icon.indexOf('controls-itemActionsV__action_icon')) {
                   action.icon += ' controls-itemActionsV__action_icon icon-size';
@@ -111,6 +111,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       },
 
       _onActionClick: function(event, action, item){
+         event.stopPropagation();
          this._notify('actionClick', [action, item], {bubbling: true});
          action.handler && action.handler(item);
       },
@@ -125,8 +126,20 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
       _closeActionsMenu: function(args) {
          _private.closeActionsMenu(this, args);
-      }
+      },
 
+      _applyEdit: function(event, item) {
+         event.stopPropagation();
+         this._notify('commitActionClick', [item])
+      },
+
+      _cancelEdit: function(event, item) {
+         event.stopPropagation();
+         this._notify('cancelActionClick', [item])
+      },
+      updateActions: function() {
+         _private.updateActions(this._options);
+      }
    });
 
    ItemActionsControl.getDefaultOptions = function() {

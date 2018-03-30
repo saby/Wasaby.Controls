@@ -21,6 +21,7 @@ define('Controls/List/SimpleList/ListViewModel',
 
          _itemsModel: null,
          _markedItem: null,
+         _actions: null,
 
          constructor: function(cfg) {
             this._options = cfg;
@@ -141,6 +142,8 @@ define('Controls/List/SimpleList/ListViewModel',
 
          _setEditingItemData: function(itemData) {
             this._itemsModel._setEditingItemData(itemData);
+            //todo: как получить дополнительные операции при добавлении записи
+            //itemData.itemActions =  this._actions[this.getCurrentIndex()];
             if (itemData && itemData.item) {
                this.setMarkedKey(itemData.item.get(this._options.idProperty));
             }

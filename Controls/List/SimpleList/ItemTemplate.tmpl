@@ -1,4 +1,4 @@
-<div attr:class="ws-ListView__item{{marker != false && itemData.isSelected ? ' ws-ListView__item__selected'}}{{!!itemData.showActions ? ' ws-ListView__item_showActions'}}{{!!itemData.isActive ? ' ws-ListView__item_active'}}"
+<div attr:class="ws-ListView__item{{marker != false && itemData.isSelected ? ' ws-ListView__item__selected'}}{{!!itemData.showActions ? ' ws-ListView__item_showActions'}}{{!!itemData.isActive ? ' ws-ListView__item_active'}}{{!!itemData.isEditing? ' ws-ListView__item_editing ws-ListView__item_active'}}"
      attr:key="{{itemData.dispItem.getHash()}}">
 
     <ws:partial template="{{multiSelectTpl}}" multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}"/>
@@ -20,7 +20,7 @@
     <ws:else>
         <div>{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
     </ws:else>
-    <ws:if data="{{itemData.itemActions && itemData.itemActions.length}}">
+    <ws:if data="{{ (itemData.itemActions && itemData.itemActions.length) || itemData.isEditing }}">
         <ws:partial template="{{itemActionsTemplate}}"  itemData="{{itemData}}"/>
     </ws:if>
 </div>

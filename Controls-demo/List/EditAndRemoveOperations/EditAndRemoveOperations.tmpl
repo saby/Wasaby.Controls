@@ -1,0 +1,42 @@
+<div class="editInPlaceDemo">
+    <style>
+        .ws-ListView__item {
+            height: 30px;
+            box-sizing: border-box;
+            padding: 3px 4px;
+            display: flex;
+            align-items: center;
+        }
+        .editInPlaceDemo {
+            padding-top: 30px;
+        }
+    </style>
+    <div>
+        <h3>Обычный список</h3>
+        <Controls:List
+                name="list"
+                source="{{_viewSource}}"
+                on:beforeItemEdit="_onBeginEdit()"
+                on:beforeItemAdd="_onBeginAdd()"
+                on:beforeItemEndEdit="_onEndEdit()"
+                allowEmptySelection="{{false}}"
+                itemActionsType="outside"
+                itemActions="{{_itemActions}}"
+                itemActionVisibilityCallback="{{_showAction}}"
+                idProperty="id">
+            <ws:editingConfig>
+                <ws:Object editOnClick="{{true}}"/>
+            </ws:editingConfig>
+            <ws:itemTemplate>
+                <ws:partial template="tmpl!Controls/List/SimpleList/ItemTemplate"
+                            itemData="{{itemTemplate.itemData}}">
+                    <ws:contentTemplate>
+                        <ws:partial template="tmpl!Controls-demo/List/EditInPlace/editingTemplate"
+                                    itemData="{{itemTemplate.itemData}}"/>
+                    </ws:contentTemplate>
+                </ws:partial>
+            </ws:itemTemplate>
+        </Controls:List>
+        <Controls:List:AddButton caption="Добавить запись" on:click="list.addItem()"/>
+    </div>
+</div>
