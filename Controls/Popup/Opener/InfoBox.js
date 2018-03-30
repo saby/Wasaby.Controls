@@ -28,6 +28,7 @@ define('Controls/Popup/Opener/InfoBox',
        * @property {Object} target Таргет, относительно которого неообходимо показать инфобокс
        * @property {Position} position Точка позиционировая инфобокса относительно таргета
        * @property {Function} template Шаблон отображения внутреннего содержимого
+       * @property {Object} templateOptions Шаблон отображения внутреннего содержимого
        */
 
       /**
@@ -76,6 +77,7 @@ define('Controls/Popup/Opener/InfoBox',
                position: cfg.position,
                componentOptions: {
                   template: cfg.template,
+                  templateOptions: cfg.templateOptions,
                   message: cfg.message,
                   float: cfg.float
                },
