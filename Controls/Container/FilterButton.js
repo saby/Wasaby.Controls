@@ -1,18 +1,22 @@
 /**
  * Created by am.gerasimov on 22.03.2018.
  */
-define('Controls/Layout/FilterButton',
+define('Controls/Container/FilterButton',
    [
       'Core/Control',
-      'tmpl!Controls/Layout/FilterButton/FilterButton',
-      'Controls/Layout/Filter/FilterContextField',
-      'Core/helpers/Object/isEqual'
+      'tmpl!Controls/Container/FilterButton/FilterButton',
+      'Controls/Container/Filter/FilterContextField',
+      'Core/helpers/Object/isEqual',
+      'WS.Data/Type/descriptor'
    ],
    
-   function(Control, template, FilterContextField, isEqual) {
+   function(Control, template, FilterContextField, isEqual, descriptor) {
       
       /**
-       * @class Controls/Layout/Search
+       * Container component for FilterButton
+       * Receives props from context and pass to FilterButton.
+       * Should be located inside Controls/Container/Filter.
+       * @class Controls/Container/FilterButton
        * @extends Controls/Control
        * @author Герасимов Александр
        * @control
@@ -21,7 +25,7 @@ define('Controls/Layout/FilterButton',
       
       'use strict';
       
-      var FilterComponents = Control.extend({
+      var FilterButton = Control.extend({
          
          _template: template,
    
@@ -40,11 +44,11 @@ define('Controls/Layout/FilterButton',
          }
       });
    
-      FilterComponents.contextTypes = function() {
+      FilterButton.contextTypes = function() {
          return {
             filterLayoutField: FilterContextField
          };
       };
       
-      return FilterComponents;
+      return FilterButton;
    });

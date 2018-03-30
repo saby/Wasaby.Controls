@@ -14,7 +14,7 @@ define('Controls/Filter/Button',
    function(Control, template, moduleStubs, Chain, Utils) {
       
       /**
-       * @class Controls/Layout/Search
+       * @class Controls/Container/Search
        * @extends Controls/Control
        * @control
        * @public

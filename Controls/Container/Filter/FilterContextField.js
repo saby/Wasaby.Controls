@@ -2,9 +2,9 @@
  * Поле контекста в котором лежит фильтр раскладки.
  * А так же item'ы для быстрого фильтра и кнопки фильтров.
  * @author Герасимов Александр
- * @class Controls/Layout/Filter/FilterContextField
+ * @class Controls/Container/Filter/FilterContextField
  */
-define('Controls/Layout/Filter/FilterContextField', ['Core/DataContext'], function(DataContext) {
+define('Controls/Container/Filter/FilterContextField', ['Core/DataContext'], function(DataContext) {
       'use strict';
       
       return DataContext.extend({

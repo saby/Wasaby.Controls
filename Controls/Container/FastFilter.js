@@ -1,18 +1,21 @@
 /**
  * Created by am.gerasimov on 22.03.2018.
  */
-define('Controls/Layout/FastFilter',
+define('Controls/Container/FastFilter',
    [
       'Core/Control',
-      'tmpl!Controls/Layout/FastFilter/FastFilter',
-      'Controls/Layout/Filter/FilterContextField',
+      'tmpl!Controls/Container/FastFilter/FastFilter',
+      'Controls/Container/Filter/FilterContextField',
       'Core/helpers/Object/isEqual'
    ],
    
    function(Control, template, FilterContextField, isEqual) {
       
       /**
-       * @class Controls/Layout/Search
+       * Container component for FastFilter
+       * Receives props from context and pass to FastFilter.
+       * Should be located inside Controls/Container/Filter.
+       * @class Controls/Container/FastFilter
        * @extends Controls/Control
        * @author Герасимов Александр
        * @control

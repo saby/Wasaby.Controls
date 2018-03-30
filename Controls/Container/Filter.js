@@ -1,8 +1,8 @@
-define('Controls/Layout/Filter',
+define('Controls/Container/Filter',
    [
       'Core/Control',
-      'tmpl!Controls/Layout/Filter/Filter',
-      'Controls/Layout/Filter/FilterContextField',
+      'tmpl!Controls/Container/Filter/Filter',
+      'Controls/Container/Filter/FilterContextField',
       'Core/Deferred',
       'WS.Data/Chain',
       'WS.Data/Utils',
@@ -10,13 +10,6 @@ define('Controls/Layout/Filter',
    ],
    
    function(Control, template, FilterContextField, Deferred, Chain, Utils, isEqual) {
-      
-      /**
-       * @class Controls/Filter/FilterLayout
-       * @extends Controls/Control
-       * @control
-       * @public
-       */
       
       'use strict';
       
@@ -46,11 +39,11 @@ define('Controls/Layout/Filter',
             var items;
             
             if (id) {
-               items = [{id: 'title', value: 'Sasha', textValue: 'Sasha'}];
+               items = [];
             }
             return Deferred.success(items);
          },
-         
+   
          getFilterByItems: function(filterButtonItems, fastFilterItems) {
             var filter = {};
             
@@ -82,7 +75,7 @@ define('Controls/Layout/Filter',
                return historyItems;
             });
          },
-         
+   
          mergeFilterItems: function(items, historyItems) {
             Chain(items).each(function(item) {
                Chain(historyItems).each(function(historyItem) {
@@ -102,6 +95,31 @@ define('Controls/Layout/Filter',
             });
          }
       };
+   
+      /**
+       * Container component for content that can be filtered by Controls/Filter/Button or Controls/Filter/FastFilter.
+       * @class Controls/Container/Filter
+       * @extends Controls/Control
+       * @control
+       * @public
+       */
+   
+      /**
+       * @name Controls/Container/Filter#filterButtonSource
+       * @cfg {Array|Function} FilterButton structure
+       * @see Controls/Filter/Button#items
+       */
+   
+      /**
+       * @name Controls/Container/Filter#fastFilterSource
+       * @cfg {Array|Function} FastFilter structure
+       * @see Controls/Filter/FastFilter#items
+       */
+   
+      /**
+       * @name Controls/Container/Filter#historyId
+       * @cfg {String} The identifier under which the filter history will be saved.
+       */
       
       var Filter = Control.extend({
          
@@ -136,6 +154,7 @@ define('Controls/Layout/Filter',
             };
          }
       });
-      
+   
+      Filter._private = _private;
       return Filter;
    });
