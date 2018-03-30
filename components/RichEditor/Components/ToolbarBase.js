@@ -7,10 +7,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
    'SBIS3.CONTROLS/StylesPanelNew',
    'css!SBIS3.CONTROLS/RichEditor/Components/ToolbarBase/RichEditorToolbarBase'
 ], function(coreClone, cMerge, EventBus, ButtonGroupBase, escapeHtml, StylesPanel) {
+      'use strict';
 
-   'use strict';
-
-   var
       /**
        * @class SBIS3.CONTROLS/RichEditor/Components/ToolbarBase
        * @extends SBIS3.CONTROLS/Button/ButtonGroup/ButtonGroupBase
@@ -18,10 +16,46 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
        * @public
        * @control
        */
-      constants = {
-         INLINE_TEMPLATE: '6'
-      },
-      RichEditorToolbarBase = ButtonGroupBase.extend(/** @lends SBIS3.CONTROLS/RichEditor/Components/ToolbarBase.prototype */{
+      var constants = {
+         FONT_SIZES: [12, 14, 15, 18],
+         COLORS: [
+            {color:'black'},
+            {color:'red'},
+            {color:'green'},
+            {color:'blue'},
+            {color:'purple'},
+            {color:'grey'}
+         ],
+         STYLE_PRESETS:[
+            {
+               id: 'mainText',
+               name: rk('Основной')
+            },
+            {
+               id: 'title',
+               color: '#313E78',
+               'font-size' : '18px',
+               'font-weight': 'bold',
+               name: rk('Заголовок')
+            },
+            {
+               id: 'subTitle',
+               color: '#313E78',
+               'font-size' : '15px',
+               'font-weight': 'bold',
+               name: rk('Подзаголовок')
+            },
+            {
+               id: 'additionalText',
+               color: '#999999',
+               'font-size' : '12px',
+               name: rk('Дополнительный')
+            }
+         ]//,
+         //INLINE_TEMPLATE: '6'
+      };
+
+      var RichEditorToolbarBase = ButtonGroupBase.extend(/** @lends SBIS3.CONTROLS/RichEditor/Components/ToolbarBase.prototype */{
          $protected : {
             _options : {
                items: undefined,
@@ -247,9 +281,10 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
          },
 
          _openStylesPanel: function(button){
-            var stylesPanel = this.getStylesPanel(button);
             var editor = this.getLinkedEditor();
-            stylesPanel.setStylesFromObject(editor ? editor.getCurrentFormats() : {});
+            var formats = editor ? editor.getCurrentFormats() : {};
+            var stylesPanel = this.getStylesPanel(button, formats);
+            stylesPanel.setStylesFromObject(formats);
             stylesPanel.show();
          },
 
@@ -260,7 +295,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
                   'italic':  'em',
                   'underline':  'span[style*="decoration: underline"]',
                   'strikethrough':  'span[style*="decoration: line-through"]'
-               }
+               };
             if (!state && $(obj.node).closest(selectors[obj.format]).length) {
                state = true;
             }
@@ -270,9 +305,21 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
             return {state: state, name:obj.format};
          },
 
-         getStylesPanel: function(button){
-            var self = this;
-            if (!this._stylesPanel) {
+         getStylesPanel: function (button, formats) {
+            var stylesPanel = this._stylesPanel;
+            var fontSizes;
+            var fontSize = formats ? formats.fontsize : null;
+            if (fontSize && (stylesPanel ? stylesPanel.getProperty('fontSizes') : constants.FONT_SIZES).indexOf(fontSize) === -1) {
+               fontSizes = constants.FONT_SIZES.slice();
+               fontSizes.push(fontSize);
+               fontSizes.sort();
+               if (stylesPanel) {
+                  this._stylesPanel = null;
+                  stylesPanel.destroy();
+                  stylesPanel = null;
+               }
+            }
+            if (!stylesPanel) {
                var editor = this.getLinkedEditor();
                this._stylesPanel = new StylesPanel({
                   parent: editor, // при закрытии панели необходимо чтобы фокус оставался в редакторе
@@ -286,47 +333,15 @@ define('SBIS3.CONTROLS/RichEditor/Components/ToolbarBase', [
                      side: 'left'
                   },
                   element: $('<div></div>'),
-                  fontSizes: [12, 14, 15, 18],
-                  colors: [
-                     {color:'black'},
-                     {color:'red'},
-                     {color:'green'},
-                     {color:'blue'},
-                     {color:'purple'},
-                     {color:'grey'}
-                  ],
-                  presets:[
-                     {
-                        id: 'mainText',
-                        name: rk('Основной')
-                     },
-                     {
-                        id: 'title',
-                        color: '#313E78',
-                        'font-size' : '18px',
-                        'font-weight': 'bold',
-                        name: rk('Заголовок')
-                     },
-                     {
-                        id: 'subTitle',
-                        color: '#313E78',
-                        'font-size' : '15px',
-                        'font-weight': 'bold',
-                        name: rk('Подзаголовок')
-                     },
-                     {
-                        id: 'additionalText',
-                        color: '#999999',
-                        'font-size' : '12px',
-                        name: rk('Дополнительный')
-                     }
-                  ],
+                  fontSizes: fontSizes || constants.FONT_SIZES.slice(),
+                  colors: constants.COLORS,
+                  presets:constants.STYLE_PRESETS,
                   activableByClick: false
                });
 
-               this._stylesPanel.subscribe('changeFormat', function () {
-                  self.getLinkedEditor().applyFormats(self._stylesPanel.getStylesObject());
-               });
+               this.subscribeTo(this._stylesPanel, 'changeFormat', function () {
+                  this.getLinkedEditor().applyFormats(this._stylesPanel.getStylesObject());
+               }.bind(this));
             }
             return this._stylesPanel;
          },
