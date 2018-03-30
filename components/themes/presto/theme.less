@@ -316,6 +316,9 @@ body {
   padding-left: round(24px * @multiplier) !important;
   width: calc(~"100% - @{width_CloseButton} - @{padding-right_floatArea-title}") !important; //86 - close button width + 8 - padding
 }
+.ws-float-area-stack-panel-overflow .ws-window-titlebar{
+  border-bottom: none!important; //в темах нет бордера у шапок в панелях
+}
 .ws-window {
   .box-shadow(@controls-panel-shadow);
   border: none !important;
