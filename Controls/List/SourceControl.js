@@ -6,6 +6,7 @@ define('Controls/List/SourceControl', [
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
    'Core/Deferred',
+   'Controls/Controllers/Multiselect/Selection',
    'css!Controls/List/SourceControl/SourceControl',
    'Controls/List/ItemActions/ItemActionsControl'
 ], function (Control,
@@ -14,7 +15,8 @@ define('Controls/List/SourceControl', [
              require,
              VirtualScroll,
              SourceController,
-             Deferred
+             Deferred,
+             MultiSelection
 ) {
    'use strict';
 
@@ -291,6 +293,8 @@ define('Controls/List/SourceControl', [
       _topPlaceholderHeight: 0,
       _bottomPlaceholderHeight: 0,
 
+      _multiselection: null,
+
       constructor: function (cfg) {
          SourceControl.superclass.constructor.apply(this, arguments);
          this._publish('onDataLoad');
@@ -326,6 +330,13 @@ define('Controls/List/SourceControl', [
             else {
                return _private.reload(this);
             }
+         }
+
+         if (newOptions.selectedKeys) {
+            this._multiselection = new MultiSelection({
+               selectedKeys : newOptions.selectedKeys,
+               excludedKeys : newOptions.excludedKeys
+            });
          }
       },
 
@@ -384,6 +395,10 @@ define('Controls/List/SourceControl', [
 
          if (this._scrollPagingCtr) {
             this._scrollPagingCtr.destroy();
+         }
+
+         if (this._multiselection) {
+            this._multiselection.destroy();
          }
 
          SourceControl.superclass._beforeUnmount.apply(this, arguments);
