@@ -17,7 +17,7 @@ define('Controls/List/EditInPlace', [
 
       afterBeginEdit: function(self, record) {
          self._editingItem = record.clone();
-         self._notify('afterBeginEdit', [self._editingItem], {bubbling: true});
+         self._notify('afterBeginEdit', [record], {bubbling: true});
          self._options.listModel.setEditingItem(self._editingItem);
 
          return self._editingItem;
@@ -46,7 +46,7 @@ define('Controls/List/EditInPlace', [
             }
 
             if (isAdd) {
-               return _private.createModel(self);
+               return _private.createModel(self, result);
             }
          }
 
@@ -56,7 +56,7 @@ define('Controls/List/EditInPlace', [
       afterBeginAdd: function(self, options) {
          self._isAdd = true;
          self._editingItem = options.item.clone();
-         self._notify('afterBeginEdit', [self._editingItem, true], {bubbling: true});
+         self._notify('afterBeginEdit', [options.item, true], {bubbling: true});
          self._options.listModel.setEditingItem(self._editingItem);
 
          return self._editingItem;
@@ -93,8 +93,8 @@ define('Controls/List/EditInPlace', [
          self._options.listModel.setEditingItem(null);
       },
 
-      createModel: function(self) {
-         return self._options.source.create(options).addCallback(function(newRecord) {
+      createModel: function(self, options) {
+         return self._options.source.create().addCallback(function(newRecord) {
             options.item = newRecord;
             return options;
          });
@@ -105,8 +105,6 @@ define('Controls/List/EditInPlace', [
             if (self._options.source) {
                return self._options.source.update(self._editingItem).addCallback(function() {
                   _private.acceptChanges(self);
-               }).addErrback(function(error) {
-                  return error;
                });
             } else {
                _private.acceptChanges(self);
@@ -347,5 +345,6 @@ define('Controls/List/EditInPlace', [
       }
    });
 
+   EditInPlace._private = _private;
    return EditInPlace;
 });
