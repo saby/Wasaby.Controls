@@ -77,7 +77,6 @@ define('Controls/List/EditInPlace', [
          if (result instanceof Deferred) {
             //Если мы попали сюда, то прикладники сами сохраняют запись
             return result.addCallback(function() {
-               _private.acceptChanges(self);
                _private.afterEndEdit(self);
             });
          }

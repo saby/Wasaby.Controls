@@ -46,6 +46,46 @@ define('Controls-demo/List/EditInPlace', [
          title: 'Обычная запись3',
          description: 'йцукен'
       }
+   ],
+   srcData2 = [
+      {
+         id: 1,
+         title: 'Notebook ASUS X550LC-XO228H 6'
+      },
+      {
+         id: 2,
+         title: 'Notebook Lenovo IdeaPad G5030 (80G0001FRK) 7'
+      }
+   ],
+   srcData3 = [
+      {
+         id: 1,
+         title: 'Notebook Lenovo G505 59426068 8'
+      },
+      {
+         id: 2,
+         title: 'Lenovo 9'
+      }
+   ],
+   srcData4 = [
+      {
+         id: 1,
+         title: 'Notebook Lenovo G505 59426068 14'
+      },
+      {
+         id: 2,
+         title: 'редактирование стартует по опции'
+      }
+   ],
+   srcData5 = [
+      {
+         id: 1,
+         title: 'Notebook ASUS X550LC-XO228H 16'
+      },
+      {
+         id: 2,
+         title: 'Notebook Lenovo IdeaPad G5030 (80G0001FRK) 17'
+      }
    ];
 
    var EditInPlace = Control.extend({
@@ -54,12 +94,29 @@ define('Controls-demo/List/EditInPlace', [
       _editOnClick: true,
       _singleEdit: false,
       _autoAdd: false,
-      // _editingItem: Record.fromObject({ id: 11, title: 'добавление стартует по опции', description: 'а может и не стартует', randomField: 'поле, которого нет'}),
+      _editingItem: Record.fromObject({ id: 2, title: 'редактирование стартует по опции', description: 'а может и не стартует', randomField: 'поле, которого нет'}),
+      _addItem: Record.fromObject({ id: 3, title: 'добавление стартует по опции', description: 'а может и не стартует', randomField: 'поле, которого нет'}),
 
       _beforeMount: function() {
          this._viewSource = new MemorySource({
             idProperty: 'id',
             data: srcData
+         });
+         this._viewSource2 = new MemorySource({
+            idProperty: 'id',
+            data: srcData2
+         });
+         this._viewSource3 = new MemorySource({
+            idProperty: 'id',
+            data: srcData3
+         });
+         this._viewSource4 = new MemorySource({
+            idProperty: 'id',
+            data: srcData4
+         });
+         this._viewSource5 = new MemorySource({
+            idProperty: 'id',
+            data: srcData5
          });
       },
 
@@ -87,27 +144,35 @@ define('Controls-demo/List/EditInPlace', [
       },
 
       _onBeginAdd: function(e, item) {
-         var
-            options = {
+         return {
                item: Record.fromObject({
                   id: counter++,
                   title: '',
                   description: 'описание',
                   extraField: 'поле, которого нет у остальных itemов'
                })
-            },
-            def = new Deferred();
-         //имитирую БЛ
-         // setTimeout(function() {
-         //    def.callback(options);
-         // }, 3000);
-         // return def;
-
-         return options;
+            };
       },
 
-      _onEndEdit: function(e, item, commit) {
+      _cancelBeginAdd: function() {
+         return 'Cancel';
+      },
 
+      _deferredBeginAdd: function() {
+         var
+            options = {
+               item: Record.fromObject({
+                  id: 3,
+                  title: '',
+                  description: 'описание',
+                  extraField: 'поле, которого нет у остальных itemов'
+               })
+            },
+            def = new Deferred();
+         setTimeout(function() {
+            def.callback(options);
+         }, 2000);
+         return def;
       },
 
       beginAdd: function() {
