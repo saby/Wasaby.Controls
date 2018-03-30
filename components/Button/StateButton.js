@@ -34,8 +34,7 @@ define('SBIS3.CONTROLS/Button/StateButton', [
        $protected: {
            _options: {
                checkedCaption: null,
-               checkedIcon: null,
-               checked: true
+               checkedIcon: null
            },
            _caption: null,
            _checkedCaption: null,
@@ -60,8 +59,8 @@ define('SBIS3.CONTROLS/Button/StateButton', [
            this._parseIconClass(this._icon);
        },
       _toggleValue: function(options){
-          options.icon = options.checked ? this._icon : this._checkedIcon;
-          options.caption = options.checked ? this._caption : this._checkedCaption;
+          options.icon = options.checked ? this._checkedIcon : this._icon;
+          options.caption = options.checked ? this._checkedCaption : this._caption;
       },
 
       setChecked: function(flag) {
