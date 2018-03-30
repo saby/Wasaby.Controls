@@ -491,6 +491,9 @@ define('SBIS3.CONTROLS/DropdownList',
                var oldKeys = this.getSelectedKeys();
                this._options.selectedItems && this._options.selectedItems.clear();
                this._options.selectedKeys = idArray;
+               if (this._isEnumTypeData()) {
+                  this.getItems().set(idArray[0]);
+               }
                this._drawSelectedValue(null, [getEmptyText(this._options)]);
                this._notifySelectedItems(this._options.selectedKeys,{
                   added : idArray,
@@ -870,7 +873,9 @@ define('SBIS3.CONTROLS/DropdownList',
                return;
             }
             if (this._isEnumTypeData()){
-               this._drawSelectedValue(this.getItems().get(), [this.getItems().getAsValue(true)]);
+               var value = this.getItems().getAsValue(true);
+               value = value === null ? getEmptyText(this._options) : value;
+               this._drawSelectedValue(this.getItems().get(), [value]);
             }
             else if(len && (!this._loadItemsDeferred || this._loadItemsDeferred.isReady())) {
                this.getSelectedItems(true).addCallback(function(list) {
