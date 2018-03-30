@@ -6,7 +6,6 @@ define('Controls/List/SourceControl', [
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
    'Core/Deferred',
-   'Controls/Controllers/Multiselect/Selection',
    'css!Controls/List/SourceControl/SourceControl',
    'Controls/List/ItemActions/ItemActionsControl'
 ], function (Control,
@@ -15,8 +14,7 @@ define('Controls/List/SourceControl', [
              require,
              VirtualScroll,
              SourceController,
-             Deferred,
-             MultiSelection
+             Deferred
 ) {
    'use strict';
 
@@ -332,12 +330,10 @@ define('Controls/List/SourceControl', [
             }
          }
 
-         if (newOptions.selectedKeys) {
-            this._multiselection = new MultiSelection({
-               selectedKeys : newOptions.selectedKeys,
-               excludedKeys : newOptions.excludedKeys
-            });
-         }
+
+
+
+         this._listViewModel.setMultiSelection(this._multiselection);
       },
 
       _afterMount: function() {
@@ -380,7 +376,13 @@ define('Controls/List/SourceControl', [
                navigation: newOptions.navigation
             });
          }
-         
+
+         this._multiselection = new MultiSelection({
+            selectedKeys : newOptions.selectedKeys,
+            excludedKeys : newOptions.excludedKeys
+         });
+         this._listViewModel.setMultiSelection(this._multiselection);
+
          if (filterChanged || sourceChanged) {
             _private.reload(this);
          }

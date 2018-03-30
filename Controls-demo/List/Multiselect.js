@@ -1,11 +1,10 @@
 /**
  * Created by kraynovdo on 31.01.2018.
  */
-define('Controls-demo/List/MultiSelect', [
+define('Controls-demo/List/Multiselect', [
    'Core/Control',
-   'tmpl!Controls-demo/List/MultiSelect/MultiSelect',
-   'WS.Data/Source/Memory',
-   'css!Controls-demo/List/ScrollPaging/ScrollPaging'
+   'tmpl!Controls-demo/List/Multiselect/Multiselect',
+   'WS.Data/Source/Memory'
 ], function (BaseControl,
              template,
              MemorySource
