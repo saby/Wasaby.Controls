@@ -1,16 +1,16 @@
-.ws-itemActions {
+.controls-itemActionsV {
   display: none;
   position:absolute;
 }
 
-.ws-itemActions_inline {
+.controls-itemActionsV_inline {
   right: @right_itemActions_inline;
   bottom: @bottom_itemActions_inline;
   height: @height_itemActions_inline;
   background-color: @default-bg-color-hovered-item;
 }
 
-.ws-itemActions_underline {
+.controls-itemActionsV_underline {
   right: 0;
   bottom: -@height_itemAction_underline;
   height: @height_itemAction_underline;
@@ -27,28 +27,28 @@
   }
 }
 
-.ws-itemActions__action, .ws-itemActions__menuOpen {
+.controls-itemActionsV__action, .controls-itemActionsV__menuOpen {
   .inline-flexbox();
   .align-items(center);
   height: 100%;
   margin: @margin_itemActions_action;
 }
 
-.ws-itemActions__action_icon, .ws-itemActions__menuOpen_icon {
+.controls-itemActionsV__action_icon, .controls-itemActionsV__menuOpen_icon {
   .icon-size-without-important(@default-icon-size-medium, @default-icon-medium-font);
 }
 
-.ws-itemActions__action_title {
+.controls-itemActionsV__action_title {
   color: @color_Link-text;
 }
 
-.ws-itemActions__menu {
+.controls-itemActionsV__menu {
   //todo: жду крестик для темизации
   margin-top: -6px;
   margin-left: 6px - 2px;//border or ya hz chto eto takoe
 }
 .ws-is-no-touch {
-  .ws-itemActions__action_title {
+  .controls-itemActionsV__action_title {
     &:hover {
       color: @color_Link-text_active;
       text-decoration: underline;
