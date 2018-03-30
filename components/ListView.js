@@ -3547,22 +3547,27 @@ define('SBIS3.CONTROLS/ListView',
           */
          _hasNextPage: function(more, offset, direction) {
             if (this._infiniteScrollState.mode === 'up') {
+               var hasNextPage;
+      
                if (!direction) {
                   direction = 'before';
                }
-
+      
                //перезагрузка с сохранением страницы может произойти на нулевой странице
                //TODO: Должен быть один сценарий, для этого нужно, что бы оффсеты всегда считались и обновлялись до запроса
                if (this._options.saveReloadPosition) {
-                  return this._scrollOffset.top >= 0;
+                  hasNextPage = this._scrollOffset.top >= 0;
                } else {
                   if (direction === 'before') {
                      // А подгрузка вверх должна остановиться на нулевой странице и не запрашивать больше
-                     return this._scrollOffset.top > 0;
+                     hasNextPage = this._scrollOffset.top > 0;
+                  } else if (this._lastPageLoaded && direction === 'after') {
+                     hasNextPage = offset < this._scrollOffset.bottom;
                   } else {
-                     return ListView.superclass._hasNextPage.apply(this, arguments);
+                     hasNextPage = ListView.superclass._hasNextPage.apply(this, arguments);
                   }
                }
+               return hasNextPage;
             } else {
                // Если загружена последняя страница, то вниз грузить больше не нужно
                // при этом смотреть на .getMetaData().more - бесполезно, так как при загруке страниц вверх more == true
@@ -4208,7 +4213,7 @@ define('SBIS3.CONTROLS/ListView',
           */
          _updatePaging: function () {
             var more = this.getItems().getMetaData().more,
-               nextPage = this._hasNextPage(more, this._scrollOffset.bottom),
+               nextPage = this._hasNextPage(more, this._scrollOffset.bottom, 'after'),
                numSelected = 0;
             if (this._pager) {
                //TODO Сейчас берется не всегда актуальный pageNum, бывают случаи, что значение(при переключении по стрелкам)
