@@ -21,13 +21,14 @@
   color: @color_checkBox_disabled;
 }
 
-.controls-Checkbox__caption {
-  word-wrap: break-word;
-  padding: @spacing_CheckBox-between-icon-caption;
+.controls-CheckBox__caption {
+   margin-left: @margin-left-CheckBox__icon_size;
+   word-wrap: break-word;
+   padding: @spacing_CheckBox-between-icon-caption;
 }
 
 .controls-CheckBox__icon {
-  position: relative;
+  position: absolute;
   .checkbox-border-size();
   .checkbox();
 }

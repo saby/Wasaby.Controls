@@ -179,13 +179,13 @@ define('SBIS3.CONTROLS/DataGridView',
                 * пока что это единственный способ ее идентифицировать
                 */
                curColSplitTitle = (curCol.title || '');
-               if (curColSplitTitle.saveProtoM) {
+               if (curColSplitTitle instanceof String) {
                   curColSplitTitle = '' + curColSplitTitle;
                }
                curColSplitTitle = curColSplitTitle.split('.');
 
                nextColSplitTitle = ((nextCol && nextCol.title) || '');
-               if (nextColSplitTitle.saveProtoM) {
+               if (nextColSplitTitle instanceof String) {
                   nextColSplitTitle = '' + nextColSplitTitle;
                }
                nextColSplitTitle = nextColSplitTitle.split('.');
@@ -492,13 +492,15 @@ define('SBIS3.CONTROLS/DataGridView',
              * </ol>
              * Следует указать настройки декораторов разметки, если требуется. Используем декоратор подсветки текста:
              * <pre>
-             *    {{=it.decorators.applyOnly(it.value, {
-             *       highlight: it.highlight
-             *    })}}
+             *    {{ someText|highlight: someString, cssClass }}
              * </pre>
              * Также можно использовать лесенку:
              * <pre>
-             *    {{=it.ladder.get(it.item, it.field)}}
+             *    <ws:if data="{{ ladder.isPrimary(item, 'responsibleId') }}">
+             *     <div class='edo-Browser-Responsible__photo'>
+             *      <ws:partial template="tmpl!SBIS3.Person.PersonsCollage" scope="{{ item.responsible.collageData }}"/>
+             *      </div>
+             *     </ws:if>
              * </pre>
              * @remark
              * Если в настройке колонки имя поля соответствует шаблону ['Name1.Name2'], то при подготовке полей для рендеринга строки считаем, что в .get('Name1') находится рекорд, и значение получаем уже у этого рекорда через .get('Name2')
