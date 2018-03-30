@@ -1,5 +1,4 @@
 function definition (Deferred) {
-    // IResourceGetterBase mock object construnctor
     function GetterMock(data) {
         data = data || {};
         this.chosenFiles = data.chosenFiles || [];
