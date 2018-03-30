@@ -7,21 +7,24 @@
                                                         controls-Header__icon_location-{{_options.iconLocation}}"
             ></i>
         </ws:if>
-        <ws:if data="{{_options.counterValue}}">
-           <Controls:Header:Counter:Counter class="controls-HeaderCount_location-{{_options.counterLocation}}"
-                           on:click="countClickHandler()"
-                           template="tmpl!Controls/Header/Counter/Counter"
-                           value="{{_options.counterValue}}"
-                           size="{{_options.counterSize}}"
-                           style="{{_options.counterStyle}}"
-                           clickable="{{_options.clickable}}"
-           />
-        </ws:if>
-        <ws:if data="{{_options.caption}}">
-            <span attr:class="controls-Header__caption_size-{{_options.size}}
-                              controls-Header__caption_style-{{_options.style}}{{_options.clickable ? '_hovered'}}"
-            >{{_options.caption}}</span>
-        </ws:if>
+        <span class="controls-Header__wrapperCounterCaption">
+            <ws:if data="{{_options.counterValue}}">
+               <Controls:Header:Counter:Counter class="controls-HeaderCount controls-HeaderCount_location-{{_options.counterLocation}}"
+                               on:click="countClickHandler()"
+                               template="tmpl!Controls/Header/Counter/Counter"
+                               value="{{_options.counterValue}}"
+                               size="{{_options.counterSize}}"
+                               style="{{_options.counterStyle}}"
+                               clickable="{{_options.clickable}}"
+               />
+            </ws:if>
+            <ws:if data="{{_options.caption}}">
+                <span attr:class="controls-Header__caption
+                                  controls-Header__caption_size-{{_options.size}}
+                                  controls-Header__caption_style-{{_options.style}}{{_options.clickable ? '_hovered'}}"
+                >{{_options.caption}}</span>
+            </ws:if>
+        </span>
         <ws:if data="{{_options.separatorIcon}}">
             <img class="controls-HeaderSeparator__icon_style-{{_options.separatorIconStyle}} controls-HeaderSeparator_size"/>
         </ws:if>
