@@ -104,6 +104,13 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
             this._bindEvents();
             this._longOpList.reload();
+
+            var cls = 'controls-LongOperationsPopup__hidden';
+            if (container.hasClass(cls)) {
+               container.css('opacity', 0);
+               container.removeClass(cls);
+               container.animate({opacity:1}, 800);
+            }
          },
 
          _bindEvents: function () {
@@ -129,6 +136,8 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
 
             var view = this._longOpList.getView();//this._longOpList.getChildControlByName('operationListDataGrid')
 
+            var container = this.getContainer();
+            var actionsContainer = container.find('.controls-LongOperationsPopup__footer__actionsContainer');
             this.subscribeTo(view, 'onDrawItems'/*'onItemsReady'*/, function () {
                var items = self._longOpList.getItems();
                var count = items ? items.getCount() : 0;
@@ -150,15 +159,8 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                         self._activeOperation = items.getRecordById(items.at(0).getId());
                      }
                   }
+                  actionsContainer.removeClass('ws-hidden');
                   self._updateState();
-
-                  var cls = 'controls-LongOperationsPopup__hidden';
-                  var $ctr = self.getContainer();
-                  if ($ctr.hasClass(cls)) {
-                     $ctr.css('opacity', 0);
-                     $ctr.removeClass(cls);
-                     $ctr.animate({opacity:1}, 800);//1500
-                  }
 
                   //При перерисовке размеры могут меняться
                   self._notify('onSizeChange');
@@ -185,7 +187,6 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
                self._showRegistry();
             });
 
-            var container = this.getContainer();
             container.find('.controls-LongOperationsPopup__hideContentIcon').on('click', function () {
                //Показать / Скрыть контент
                self._toggleContent();
