@@ -58,9 +58,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
       var
-         EDITOR_MODULES = ['css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/tinymce/skins/lightgray/skin.min',
-            'css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/tinymce/skins/lightgray/content.inline.min',
-            'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/tinymce/tinymce'],
+         TINYMCE_URL_BASE = 'SBIS3.CONTROLS/RichEditor/third-party/tinymce',
+         EDITOR_MODULES = [
+            'css!' + TINYMCE_URL_BASE + '/skins/lightgray/skin.min.css',
+            'css!' + TINYMCE_URL_BASE + '/skins/lightgray/content.inline.min.css',
+            TINYMCE_URL_BASE + '/tinymce'
+         ],
          constants = {
             baseAreaWidth: 768,//726
             defaultImagePercentSize: 25,// Начальный размер картинки (в процентах)
@@ -2478,7 +2481,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._requireTinyMCE().addCallback(function() {
                   var cfg = cClone(self._options.editorConfig);
                   cfg.paste_as_text = false;
-                  tinyMCE.baseURL = 'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/tinymce';
+                  tinyMCE.baseURL = TINYMCE_URL_BASE;
                   tinyMCE.init(cfg);
                });
             }
