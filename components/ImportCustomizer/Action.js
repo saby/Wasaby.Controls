@@ -152,7 +152,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                   function (data) {
                      this._open(cMerge(opts, data));
                   }.bind(this),
-                  this._completeWithError.bind(this, true)
+                  this._completeWithError.bind(this, true, rk('При анализе файла поизошла ошибка', 'НастройщикИмпорта'))
                );
             }
             else {
@@ -372,7 +372,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             }
             if (isSuccess) {
                if (resultHandler) {
-                  result.dependOn(resultHandler(outcome));
+                  result.dependOn(
+                     resultHandler(outcome)
+                        .addErrback(function (err) { return rk('При отправке данных поизошла ошибка', 'НастройщикИмпорта'); })
+                  );
                }
                else {
                   result.callback(outcome);

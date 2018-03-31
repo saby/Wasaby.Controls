@@ -176,6 +176,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
 
          $constructor: function () {
             CommandDispatcher.declareCommand(this, 'complete', this._cmdComplete);
+            //CommandDispatcher.declareCommand(this, 'showMessage', Area.showMessage);
             this._publish('onComplete', 'onFatalError');
          },
 
@@ -213,7 +214,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                }.bind(this);
                var fail = function (err) {
                   this._fieldsPromise = null;
-                  this._notify('onFatalError', true, err);
+                  this._notify('onFatalError', true, /*err*/rk('При получении данных поизошла ошибка', 'НастройщикИмпорта'));
                   return err;
                }.bind(this);
                if (!fields.isReady()) {
