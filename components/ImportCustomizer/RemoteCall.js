@@ -21,11 +21,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/RemoteCall',
        * @public
        * @constructor
        * @param {object} options Входные аргументы:
-       * @property {string} options.endpoint Сервис, метод которого будет вызван
-       * @property {string} options.method Имя вызываемого метода
-       * @property {object} [options.args] Аргументы вызываемого метода (опционально)
-       * @property {function(object):object} [options.argsFilter] Фильтр аргументов (опционально)
-       * @property {function(object):object} [options.resultFilter] Фильтр результатов (опционально)
+       * @param {string} options.endpoint Сервис, метод которого будет вызван
+       * @param {string} options.method Имя вызываемого метода
+       * @param {object} [options.args] Аргументы вызываемого метода (опционально)
+       * @param {function(object):object} [options.argsFilter] Фильтр аргументов (опционально)
+       * @param {function(object):object} [options.resultFilter] Фильтр результатов (опционально)
        */
       var RemoteCall = function (options) {
          if (!options || typeof options !== 'object') {
@@ -40,7 +40,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/RemoteCall',
          if (options.args && typeof options.args !== 'object') {
             throw new Error('Wrong args');
          }
-         // TODO: Сделать фильты по ключевым словам
          if (options.argsFilter && typeof options.argsFilter !== 'function') {
             throw new Error('Wrong argsFilter');
          }
