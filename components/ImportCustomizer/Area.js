@@ -69,6 +69,14 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @property {string} [parentProperty] Имя свойства, содержащего идентификатор родителя (опционально)
           */
 
+         /**
+          * @typedef {object} ImportValidator Тип, описывающий валидаторы результаттов редактирования
+          * @property {function} validator Функция проверки. Должна возвратить либо логическое значение, показывающее пройдена ли проверка, либо строку с сообщением об ошибке
+          * @property {Array<*>} [params] Дополнительные аргументы функции проверки (опционально)
+          * @property {string} [errorMessage] Сообщение об ошибке по умолчанию (опционально)
+          * @property {boolean} [noFailOnError] Указывает на то, что если проверка не пройдена, это не является фатальным. В таком случае пользователю будет показан диалог с просьбой о подтверждении (опционально)
+          */
+
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
@@ -116,7 +124,18 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                /**
                 * @cfg {number} Индекс выбранной области данных
                 */
-               sheetIndex: null
+               sheetIndex: null,
+               /**
+                * @cfg {boolean} Обрабатываются ли все области данных одинаково
+                */
+               sameSheetConfigs: null,
+               /**
+                * @cfg {Array<ImportValidator>} Список валидаторов результатов редактирования
+                */
+               validators: /*^^^null*/[
+                  {validator:function () { return fasle; }, errorMessage:'@@@ 111', noFailOnError:true},
+                  {validator:function () { return fasle; }, errorMessage:'@@@ 222'}
+               ]
             },
             // Список имён вложенных компонентов
             _childViewNames: {
@@ -152,7 +171,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             options._parserItems = parserItems;
             options._defaultParserName = parserItems[0].id;
             var sheetIndex = options.sheetIndex;
-            if (sheetIndex ==/*Не ===*/ null) {
+            if (options.sameSheetConfigs || sheetIndex ==/*Не ===*/ null) {
                options.sheetIndex = sheetIndex = -1;
             }
             var sheet = sheets[0 < sheetIndex ? sheetIndex : 0];
@@ -333,13 +352,29 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * @return {Core/Deferred}
           */
          _checkResults: function (data) {
-            var promise = new Deferred();
-
-            // TODO: Реализовать проверку, пока два пункта: fileds:required и предупреждение на baseParams:replaceAllData
-            //promise.dependOn(Area.showMessage('confirm', rk('Проверка связи', 'НастройщикИмпорта'), rk('Всё нормально?', 'НастройщикИмпорта')));//^^^
-            promise.callback(true);//^^^
-
-            return promise;
+            var validators = this._options.validators;
+            var promise;
+            if (validators && validators.length) {
+               var errors = [];
+               var warnings = [];
+               for (var i = 0; i < validators.length; i++) {
+                  var check = validators[i];
+                  var result = check.validator.apply(null, check.params || []);
+                  if (result !== true) {
+                     (check.noFailOnError ? warnings : errors).push(
+                        result || check.errorMessage || rk('Неизвестная ошибка', 'НастройщикИмпорта')
+                     );
+                  }
+               }
+               if (errors.length) {
+                  promise = Area.showMessage('error', rk('Исправьте пожалуйста', 'НастройщикИмпорта'), errors.joun('\r\n'));
+               }
+               else
+               if (warnings.length) {
+                  promise = Area.showMessage('confirm', rk('Проверьте пожалуйста', 'НастройщикИмпорта'), warnings.joun('\r\n') + '\r\n' + rk('Действительно импортировать так?', 'НастройщикИмпорта'));
+               }
+            }
+            return promise || Deferred.success(true);
          },
 
          /*

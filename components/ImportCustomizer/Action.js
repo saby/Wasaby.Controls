@@ -81,6 +81,14 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @property {string} [parentProperty] Имя свойства, содержащего идентификатор родителя (опционально)
           */
 
+         /**
+          * @typedef {object} ImportValidator Тип, описывающий валидаторы результаттов редактирования
+          * @property {function} validator Функция проверки. Должна возвратить либо логическое значение, показывающее пройдена ли проверка, либо строку с сообщением об ошибке
+          * @property {Array<*>} [params] Дополнительные аргументы функции проверки (опционально)
+          * @property {string} [errorMessage] Сообщение об ошибке по умолчанию (опционально)
+          * @property {boolean} [noFailOnError] Указывает на то, что если проверка не пройдена, это не является фатальным. В таком случае пользователю будет показан диалог с просьбой о подтверждении (опционально)
+          */
+
          //_dotTplFn: null,
          $protected: {
             _options: {
@@ -113,6 +121,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {Array<ImportSheet>} options.sheets Список объектов, представляющих имеющиеся области данных
           * @param {number} [options.sheetIndex] Индекс выбранной области данных (опционально)
           * @param {boolean} [options.sameSheetConfigs] Обрабатываются ли все области данных одинаково (опционально)
+          * @param {Array<ImportValidator>} options.validators Список валидаторов результатов редактирования
           * @param {ImportRemoteCall} [options.inputCall] Информация для вызова метода удалённого сервиса для получения данных ввода (опционально)
           * @param {ImportRemoteCall} [options.outputCall] Информация для вызова метода удалённого сервиса для отправки данных вывода (опционально)
           * @return {Deferred<ImportResults>}
@@ -171,6 +180,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
           * @param {object} options Входные аргументы("мета-данные") настройщика импорта (согласно описанию в методе {@link execute})
           */
          _open: function (options) {
+            // TODO: Учесть возможность задания части аргумента options декларативно через this._options
             var dataType = options.dataType;
             // Если есть свойство "dataType" - оно должно быть строкой
             if (dataType && typeof dataType !== 'string') {
@@ -216,7 +226,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             // И каждый элемент массива должен быть {@link ImportSheet}
             if (!sheets.every(function (v) { return (
                   typeof v === 'object' &&
-                  (v.name && typeof v.name == 'string') &&
+                  (v.name && typeof v.name === 'string') &&
                   (v.sampleRows && Array.isArray(v.sampleRows) && v.sampleRows.length && v.sampleRows.every(function (v2) { return v2 && Array.isArray(v2) && v2.length && v2.length === v.sampleRows[0].length; }))
                   ); })) {
                throw new Error('Wrong sheets');
@@ -228,6 +238,21 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             }
             if (options.sameSheetConfigs) {
                sheetIndex = -1;
+            }
+            var validators = options.validators;
+            // Если есть свойство "validators", то оно должно быть массивом
+            if (validators && !Array.isArray(validators)) {
+               throw new Error('Wrong validators');
+            }
+            // И каждый элемент массива должен быть {@link ImportValidator}
+            if (!validators.every(function (v) { return (
+                  typeof v === 'object' &&
+                  (v.validator && typeof v.validator === 'function') &&
+                  (!v.params || Array.isArray(params)) &&
+                  (!v.errorMessage || typeof v.errorMessage === 'string') &&
+                  (!v.noFailOnError || typeof v.noFailOnError === 'boolean')
+                  ); })) {
+               throw new Error('Wrong validators');
             }
             var defaults = this._options;
             if (parsers) {
@@ -282,6 +307,9 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             };
             if (baseParamsComponent) {
                componentOptions.baseParamsComponent = baseParamsComponent;
+            }
+            if (validators && validators.length) {
+               componentOptions.validators = validators;
             }
             this._areaContainer = new FloatArea({
                opener: this,
