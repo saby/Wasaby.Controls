@@ -295,7 +295,7 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
          },
 
          _useLongOperations: function(meta, methodName) {
-            return requirejs.defined('js!SBIS3.Engine.LongOperationsInformer') && (meta.endpoint === 'Excel' || meta.endpoint === 'PDF' && methodName === 'SaveMarked');
+            return requirejs.defined('SBIS3.ENGINE/Controls/LongOperation/Informer') && (meta.endpoint === 'Excel' || meta.endpoint === 'PDF' && methodName === 'SaveMarked');
          },
 
          _getFilterForList: function(meta) {

@@ -2,6 +2,7 @@
               listViewModel="{{_viewModel}}"
               source="{{_options.source}}"
               filter="{{_options.filter}}"
+              name="sourceControl"
               navigation="{{_options.navigation}}"
               viewName="Controls/List/SimpleList/ListView"
               itemTemplate="{{_options.itemTemplate}}"
@@ -9,6 +10,8 @@
               idProperty="{{_options.idProperty}}"
               displayProperty="{{_options.displayProperty}}"
               markedKey="{{_options.markedKey}}"
-              filter="{{_options.filter}}"
-            >
+              itemsReadyCallback="{{_options.itemsReadyCallback}}"
+              itemActionsType="{{_options.itemActionsType}}"
+              itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
+              itemActions="{{_options.itemActions}}">
 </Controls:List:SourceControl>

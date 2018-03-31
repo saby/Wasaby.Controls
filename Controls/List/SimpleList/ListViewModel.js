@@ -24,11 +24,13 @@ define('Controls/List/SimpleList/ListViewModel',
 
          constructor: function(cfg) {
             this._options = cfg;
+            this._actions = [];
             ListViewModel.superclass.constructor.apply(this, arguments);
             this._itemsModel = new ItemsViewModel({
                items : cfg.items,
                idProperty: cfg.idProperty,
-               displayProperty: cfg.displayProperty
+               displayProperty: cfg.displayProperty,
+               itemsReadyCallback: cfg.itemsReadyCallback
             });
             var self = this;
             this._itemsModel.subscribe('onListChange', function() {
@@ -69,8 +71,16 @@ define('Controls/List/SimpleList/ListViewModel',
 
          getCurrent: function() {
             var itemsModelCurrent = this._itemsModel.getCurrent();
-            itemsModelCurrent.isSelected = itemsModelCurrent.dispItem == this._markedItem;
+            itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
+            itemsModelCurrent.itemActions =  this._actions[this.getCurrentIndex()];
+            itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
+            itemsModelCurrent.showActions = !this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive);
+
             return itemsModelCurrent;
+         },
+
+         getCurrentIndex: function() {
+            return this._itemsModel.getCurrentIndex();
          },
 
          getItemById: function(id, idProperty) {
@@ -103,10 +113,13 @@ define('Controls/List/SimpleList/ListViewModel',
             this._itemsModel.prependItems(items);
          },
 
+         removeItems: function(items) {
+            this._itemsModel.removeItems(items);
+         },
+
          getCount: function() {
             return this._itemsModel.getCount();
          },
-
          __calcSelectedItem: function(display, selKey, idProperty) {
 
             //TODO надо вычислить индекс
@@ -119,7 +132,11 @@ define('Controls/List/SimpleList/ListViewModel',
              }
              this._markedItem = this._display.at(this._selectedIndex);
              }*/
+         },
+         setItemActions: function(itemData, actions){
+            this._actions[itemData.index] = actions;
          }
+
       });
 
       return ListViewModel;

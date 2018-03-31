@@ -15,6 +15,7 @@ define('Controls-demo/Confirmation/Confirmation',
          caption: 'Type',
          items: [{
             caption: 'OK',
+            test_name: 'ok',
             background: BG,
             cfg: {
                message: MESSAGE,
@@ -23,6 +24,7 @@ define('Controls-demo/Confirmation/Confirmation',
             }
          }, {
             caption: 'YESNO',
+            test_name: 'yesno',
             background: BG,
             cfg: {
                message: MESSAGE,
@@ -31,6 +33,7 @@ define('Controls-demo/Confirmation/Confirmation',
             }
          }, {
             caption: 'YESNOCANCEL',
+            test_name: 'yesnocancel',
             background: BG,
             cfg: {
                message: MESSAGE,
@@ -42,6 +45,7 @@ define('Controls-demo/Confirmation/Confirmation',
          caption: 'Style',
          items: [{
             caption: 'DEFAULT',
+            test_name: 'default',
             background: BG,
             cfg: {
                message: MESSAGE,
@@ -50,6 +54,7 @@ define('Controls-demo/Confirmation/Confirmation',
             }
          }, {
             caption: 'SUCCESS',
+            test_name: 'success',
             background: '#00d407',
             cfg: {
                message: MESSAGE,
@@ -58,6 +63,7 @@ define('Controls-demo/Confirmation/Confirmation',
             }
          }, {
             caption: 'ERROR',
+            test_name: 'error',
             background: '#dc0000',
             cfg: {
                message: MESSAGE,
@@ -69,6 +75,7 @@ define('Controls-demo/Confirmation/Confirmation',
          caption: 'Button caption',
          items: [{
             caption: 'ONE BUTTON',
+            test_name: 'one_button',
             background: BG,
             cfg: {
                message: MESSAGE,
@@ -78,6 +85,7 @@ define('Controls-demo/Confirmation/Confirmation',
             }
          }, {
             caption: 'THREE BUTTON',
+            test_name: 'three_button',
             background: BG,
             cfg: {
                message: MESSAGE,

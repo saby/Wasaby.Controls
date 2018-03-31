@@ -32,7 +32,8 @@ define('Controls/Input/resources/SuggestPopupController',
          },
    
          search: function(self) {
-            return _private.getSearchController(self).search(self._filter).addCallback(function(searchResult) {
+            //TODO этот модуль будет отрефакторен в апреле
+            return _private.getSearchController(self).search({filter: self._filter}).addCallback(function(searchResult) {
                _private.setSuggestSelectedIndex(self, 0);
                _private.setSuggestSearchResult(self, searchResult);
                _private.prepareSuggestFilter(self, searchResult);

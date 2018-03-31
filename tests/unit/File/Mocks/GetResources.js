@@ -1,4 +1,4 @@
-define('Tests/Unit/File/GetResources', [
+define('tests/unit/File/Mocks/GetResources', [
    'Core/constants',
    'Lib/File/LocalFile',
    'Lib/File/LocalFileLink',
@@ -10,19 +10,19 @@ define('Tests/Unit/File/GetResources', [
       return function () {};
    }
 
-   return function (ResourceConstructorName, meta, name) {
+   return function (ResourceConstructor, meta, name) {
       meta = meta || 'meta file info';
       name = name || Math.random().toString().substr(2) + ".png";
 
-      if (ResourceConstructorName === 'LocalFile') {
+      if (ResourceConstructor === LocalFile) {
          return new LocalFile(new Blob(['File' + name]), meta, name);
       }
-      if (ResourceConstructorName === 'LocalFileLink') {
+      if (ResourceConstructor === LocalFileLink) {
          return new LocalFileLink('file:///C:/' + name, meta);
       }
-      if (ResourceConstructorName === 'HttpFileLink') {
+      if (ResourceConstructor === HttpFileLink) {
          return new HttpFileLink('http://example.com/' + name, meta);
       }
-      throw Error('Unknow ResourceConstructor`s name!');
+      throw Error('Unknown ResourceConstructor!');
    }
 });

@@ -5,7 +5,7 @@ define('SBIS3.CONTROLS/Mixins/SyncSelectionMixin', [
    'WS.Data/Entity/Model',
    'WS.Data/Collection/List',
    'Core/core-instance',
-   'SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil',
+   'Controls/Utils/ArraySimpleValuesUtil',
    'SBIS3.CONTROLS/Utils/ItemsSelectionUtil'
 ], function(Model, List, cInstace, ArraySimpleValuesUtil, ItemsSelectionUtil) {
 

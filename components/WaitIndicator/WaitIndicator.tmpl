@@ -1,0 +1,12 @@
+<div class="ws-wait-indicator
+        {{isGlob ? 'ws-wait-indicator_global' : 'ws-wait-indicator_local'}}
+        {{message ? 'ws-wait-indicator_text'}}
+        {{scroll ? 'ws-wait-indicator_scroll ws-wait-indicator_sided ws-wait-indicator_sided-' + scroll}}
+        {{small ? 'ws-wait-indicator_small' + (small !== 'yes' ? ' ws-wait-indicator_sided ws-wait-indicator_sided-' + small : '')}}
+        {{overlay ? 'ws-wait-indicator_overlay-' + overlay}}
+        {{mods && mods.length ? 'ws-wait-indicator_mod-' + mods.join(' ws-wait-indicator_mod-') }}
+        "
+        {{rect || z ? ' style="' + (rect ? 'left:' + rect.x + 'px; right:' + rect.y + 'px; width:' + rect.w + 'px; height:' + rect.h + 'px;' : '') + (z ? 'z-index:' + z : '') + '"'}}
+    >
+    <div class="ws-wait-indicator-in">{{message}}</div>
+</div>

@@ -6,7 +6,8 @@ define('Controls/List/SourceControl', [
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
    'Core/Deferred',
-   'css!Controls/List/SourceControl/SourceControl'
+   'css!Controls/List/SourceControl/SourceControl',
+   'Controls/List/ItemActions/ItemActionsControl'
 ], function (Control,
              IoC,
              SourceControlTpl,
@@ -18,7 +19,6 @@ define('Controls/List/SourceControl', [
    'use strict';
 
    var _private = {
-
       reload: function(self) {
          if (self._sourceController) {
             _private.showIndicator(self);
@@ -37,8 +37,8 @@ define('Controls/List/SourceControl', [
                //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
                _private.handleListScroll(self, 0);
             }).addErrback(function(error){
-               _private.processLoadError(self, error)
-            })
+               _private.processLoadError(self, error);
+            });
          }
          else {
             IoC.resolve('ILogger').error('SourceControl', 'Source option is undefined. Can\'t load data');
@@ -244,6 +244,16 @@ define('Controls/List/SourceControl', [
 
       getItemsCount: function(self) {
          return self._listViewModel ? self._listViewModel.getCount() : 0;
+      },
+
+      initListViewModelHandler: function(self, model) {
+         model.subscribe('onListChange', function () {
+            self._forceUpdate();
+         });
+      },
+
+      removeFromSource: function(self, items) {
+         return self._sourceController.remove(items);
       }
    };
 
@@ -305,6 +315,7 @@ define('Controls/List/SourceControl', [
          if (newOptions.listViewModel) {
             this._listViewModel = newOptions.listViewModel;
             this._virtualScroll.setItemsCount(this._listViewModel.getCount());
+            _private.initListViewModelHandler(this, this._listViewModel);
          }
 
          if (newOptions.source) {
@@ -312,8 +323,6 @@ define('Controls/List/SourceControl', [
                source : newOptions.source,
                navigation : newOptions.navigation  //TODO возможно не всю навигацию надо передавать а только то, что касается source
             });
-
-
 
             if (receivedState) {
                this._listViewModel.setItems(receivedState);
@@ -345,6 +354,7 @@ define('Controls/List/SourceControl', [
 
          if (newOptions.listViewModel && (newOptions.listViewModel !== this._options.listViewModel)) {
             this._listViewModel = newOptions.listViewModel;
+            _private.initListViewModelHandler(this, this._listViewModel);
             //this._virtualScroll.setItemsCount(this._listViewModel.getCount());
          } else
             if (newOptions.selectedKey !== this._options.selectedKey) {
@@ -413,11 +423,29 @@ define('Controls/List/SourceControl', [
 
       },
 
+      remove: function(items) {
+         var
+            self = this,
+            removeControl = this._children.removeControl;
+         removeControl.beginRemove(items).addCallback(function(result) {
+            if (result !== false) {
+               _private.showIndicator(self);
+               _private.removeFromSource(self, items).addCallback(function(result) {
+                  self._listViewModel.removeItems(items);
+                  return result;
+               }).addBoth(function(result) {
+                  _private.hideIndicator(self);
+                  removeControl.endRemove(items, result);
+               });
+            }
+         });
+      },
+
       reload: function() {
          return _private.reload(this);
       }
-
    });
+
 
    //TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757
    /*ListView.getOptionTypes = function getOptionTypes(){
