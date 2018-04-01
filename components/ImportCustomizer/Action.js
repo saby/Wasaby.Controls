@@ -151,11 +151,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             if (this._result) {
                return Deferred.fail('Allready open');
             }
-            // TODO: Проработать более позднее получение dataTYpe
-            if (Area.DATA_TYPES.indexOf(options.dataType) === -1) {
-               Area.showMessage('error', rk('Ошибка', 'НастройщикИмпорта'), rk('Тип данных в этом файле не поддерживается', 'НастройщикИмпорта'));
-               return Deferred.fail('Not supported data type');
-            }
             var inputCall = options.inputCall;
             if (inputCall) {
                inputCall = new RemoteCall(inputCall);
@@ -192,9 +187,19 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
          _open: function (options) {
             // TODO: Учесть возможность задания части аргумента options декларативно через this._options
             var dataType = options.dataType;
-            // Если есть свойство "dataType" - оно должно быть строкой
-            if (dataType && typeof dataType !== 'string') {
-               throw new Error('Wrong dataType');
+            // Если есть свойство "dataType"
+            if (dataType) {
+               // оно должно быть строкой
+               if (typeof dataType !== 'string') {
+                  throw new Error('Wrong dataType');
+               }
+               // и входить в число поддерживаемых
+               if (Area.DATA_TYPES.indexOf(dataType) === -1) {
+                  var err = new Error(rk('Тип данных в этом файле не поддерживается', 'НастройщикИмпорта'));
+                  err.name = 'NotSupportedDataType';
+                  this._completeWithError(true, err);
+                  return;
+               }
             }
             var file = options.file;
             // Должно быть свойство "file"
@@ -439,8 +444,8 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                Area.showMessage(
                   'error',
                   rk('Ошибка', 'НастройщикИмпорта'),
-                  ((err && err.message ? err.message : err) || rk('При получении данных поизошла неизвестная ошибка', 'НастройщикИмпорта')) +
-                  '<br/>' + rk('Настройка импорта будет прервана', 'НастройщикИмпорта')
+                  ((err && err.message ? err.message : err) || rk('При получении данных поизошла неизвестная ошибка', 'НастройщикИмпорта')) + '\n' +
+                     rk('Настройка импорта будет прервана', 'НастройщикИмпорта')
                )
                   .addCallback(this._complete.bind(this, false, err));
             }
