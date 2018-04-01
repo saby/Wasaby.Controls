@@ -6,19 +6,17 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
    'Core/helpers/Object/find',
    'SBIS3.CONTROLS/CompoundControl',
    'SBIS3.CONTROLS/History/HistoryListUtils',
-   'SBIS3.CONTROLS/History/HistoryList',
    'Core/CommandDispatcher',
-   'SBIS3.CONTROLS/Utils/InformationPopupManager',
    'Core/helpers/collection-helpers',
+   'SBIS3.CONTROLS/History/HistoryList',
+   'SBIS3.CONTROLS/Utils/InformationPopupManager',
    'SBIS3.CONTROLS/Filter/HistoryView'
 ], function(
    isEqualObject,
    find,
    CompoundControl,
    HistoryListUtils,
-   HistoryList,
    CommandDispatcher,
-   InformationPopupManager,
    colHelpers
 ) {
 
@@ -50,6 +48,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                _favoriteSortMethod: _private.favoriteSortMethod,
                _filterProperty: 'viewFilter',
                _structureProperty: 'filter',
+               _filterItemTextProperty: 'caption',
                _favoriteAction: {
                   command: 'favorite',
                   name: 'favorite',
@@ -122,7 +121,7 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
                action.execute({
                   item: toEditItem,
                   componentOptions: {
-                     allowDelete: isFavorite,
+                     editMode: isFavorite,
                      textValue: toEditItem.get(self._options.displayProperty),
                      handlers: {
                         onDestroyModel: function() {
@@ -157,9 +156,9 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
 
                                     if(reportItem) {
                                        reportItem.value = reportItem.resetValue;
-                                       textValue = textValue.replace(new RegExp('\s?' + reportItem[self._options.displayProperty] + ',?\s?'), '');
+                                       textValue = textValue.replace(new RegExp('\s?' + reportItem[self._options._filterItemTextProperty] + ',?\s?'), '');
                                        textValue = textValue.replace(/ {1,}/g, ' ');
-                                       reportItem[self._options.displayProperty] = '';
+                                       reportItem[self._options._filterItemTextProperty] = '';
                                        delete filter[key];
                                     }
                                  }

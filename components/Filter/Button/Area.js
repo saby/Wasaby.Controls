@@ -5,15 +5,15 @@ define('SBIS3.CONTROLS/Filter/Button/Area',
    [
       'SBIS3.CONTROLS/CompoundControl',
       'tmpl!SBIS3.CONTROLS/Filter/Button/Area/FilterButtonArea',
-      'SBIS3.CONTROLS/Filter/History',
       'SBIS3.CONTROLS/History/HistoryListUtils',
+      'SBIS3.CONTROLS/Filter/History',
       'SBIS3.CONTROLS/Link',
       'SBIS3.CONTROLS/Button',
       'SBIS3.CONTROLS/ScrollContainer',
       'SBIS3.CONTROLS/Filter/Button/AdditionalParams',
       'SBIS3.CONTROLS/Filter/Button/History',
       'css!SBIS3.CONTROLS/Filter/Button/Area/FilterButtonArea'
-   ], function(CompoundControl, dotTplFn, History, HistoryListUtils) {
+   ], function(CompoundControl, dotTplFn, HistoryListUtils) {
       'use strict';
       
       /**

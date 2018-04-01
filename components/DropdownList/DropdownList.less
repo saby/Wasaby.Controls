@@ -3,6 +3,7 @@
    min-height: @DropdownList-height;
    box-sizing: border-box;
    position: relative;
+   line-height: normal;
    .controls-DropdownList__selectedItem {
       .flexbox();
       width: 100%;
@@ -81,7 +82,7 @@
       fill: @color-DropDownList_arrowIcon;
       height: @height_DropDownList_arrow-icon;
       width: @width_DropDownList_arrow-icon;
-      padding: @padding_DropDownList_arrow-icon;
+      margin: @padding_DropDownList_arrow-icon; //в оффлайн престе padding на svg не работает, работает margin
    }
    &.controls-DropdownList__type-filter {
       .controls-DropdownList__afterCaptionWrapper {

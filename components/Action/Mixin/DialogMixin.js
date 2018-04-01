@@ -62,7 +62,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
             /**
              * @cfg {Object} Объект с конфигурацией контрола, на основе которого создаётся диалог (см. {@link mode}). В числе опций также передают и {@link Lib/Control/Control#linkedContext}.
              */
-            dialogOptions: null,
+            dialogOptions: null
          },
          _dialog: undefined,
           _openedPanelConfig: {},
@@ -149,7 +149,7 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
       },
       _documentClickHandler: function (event) {
          //Клик по связному списку приводит к перерисовке записи в панели, а не открытию новой при autoHide = true
-         if (this._dialog && this._openedPanelConfig.mode === 'floatArea' && this._openedPanelConfig.autoHide) {
+         if (this._dialog && this._openedPanelConfig.mode === 'floatArea' && this._dialog.isVisible() && this._openedPanelConfig.autoHide) {
             if (this._needCloseDialog(event.target)) {
                this._dialog.close();
             }
@@ -164,12 +164,12 @@ define('SBIS3.CONTROLS/Action/Mixin/DialogMixin', [
 
       //Если клик был по другой панели, проверяю, связана ли она с текущей
       _isLinkedPanel: function (target) {
-         var floatArea = $(target).closest('.ws-float-area');
+         var floatArea = $(target).closest('.ws-float-area-stack-cut-wrapper').find('.ws-float-area'); //Клик может быть в стики шапку, она лежит выше .ws-float-area
          if (floatArea.length){
             return ControlHierarchyManager.checkInclusion(this._dialog, floatArea.wsControl().getContainer());
          }
          //Если кликнули по инфобоксу или информационному окну - popup закрывать не нужно
-         var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup');
+         var infoBox = $(target).closest('.ws-info-box, .controls-InformationPopup, .ws-window-overlay, .js-controls-NotificationStackPopup');
          return !!infoBox.length;
       },
       _resetComponentOptions: function() {

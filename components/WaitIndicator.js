@@ -4,7 +4,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
       'Core/Deferred',
       'Core/WindowManager',
       'Lib/Control/Control',
-      'Core/js-template-doT',
+      'tmpl!SBIS3.CONTROLS/WaitIndicator/WaitIndicator',
       'css!SBIS3.CONTROLS/WaitIndicator/WaitIndicator'
    ],
 
@@ -83,7 +83,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
     * @demo SBIS3.CONTROLS.Demo.MyWaitIndicatorTable
     */
 
-   function (CoreExtend, Deferred, WindowManager, CoreControl, doT) {
+   function (CoreExtend, Deferred, WindowManager, CoreControl, dotTplFn) {
       'use strict';
 
       /**
@@ -498,7 +498,7 @@ define('SBIS3.CONTROLS/WaitIndicator',
           * @protected
           * @type {function}
           */
-         _dotTplFn: doT.template('<div class="ws-wait-indicator{{?it.isGlob}} ws-wait-indicator_global{{??}} ws-wait-indicator_local{{?}}{{?it.message}} ws-wait-indicator_text{{?}}{{?it.scroll}} ws-wait-indicator_scroll-{{=it.scroll}}{{?}}{{?it.small}} ws-wait-indicator_small{{=it.small !== \'yes\' ? \'-\' + it.small : \'\'}}{{?}}{{?it.overlay}} ws-wait-indicator_overlay-{{=it.overlay}}{{?}}{{~it.mods :mod:i}} ws-wait-indicator_mod-{{=mod}}{{~}}"{{?it.rect || it.z}} style="{{?it.rect }}left: {{=it.rect.x}}px; top: {{=it.rect.y}}px; width: {{=it.rect.w}}px; height: {{=it.rect.h}}px;{{?}} {{?it.z}}z-index:{{=it.z}};{{?}}"{{?}}><div class="ws-wait-indicator-in">{{=it.message}}</div></div>'),
+         _dotTplFn: dotTplFn,
 
          /**
           * Создать и добавить в DOM элемент индикатора

@@ -274,8 +274,10 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
         _parseColumns: function(columns) {
             var result = { Fields: [], Titles: [] };
             for (var i = 0; i < columns.length; i++) {
-                result.Fields.push(columns[i].field);
-                result.Titles.push(columns[i].title || columns[i].field);
+               if (columns[i].field) {
+                  result.Fields.push(columns[i].field);
+                  result.Titles.push(columns[i].title || columns[i].field);
+               }
             }
             return result;
         },
@@ -293,7 +295,7 @@ define('SBIS3.CONTROLS/Action/Save/SaveStrategy/Sbis', [
          },
 
          _useLongOperations: function(meta, methodName) {
-            return requirejs.defined('js!SBIS3.Engine.LongOperationsInformer') && (meta.endpoint === 'Excel' || meta.endpoint === 'PDF' && methodName === 'SaveMarked');
+            return requirejs.defined('SBIS3.ENGINE/Controls/LongOperation/Informer') && (meta.endpoint === 'Excel' || meta.endpoint === 'PDF' && methodName === 'SaveMarked');
          },
 
          _getFilterForList: function(meta) {

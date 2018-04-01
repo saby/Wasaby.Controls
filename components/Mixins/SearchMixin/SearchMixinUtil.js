@@ -31,7 +31,14 @@ define('SBIS3.CONTROLS/Mixins/SearchMixin/SearchMixinUtil', [], function() {
             var startCharacter = hasStartCharacter(startCharacter),
                 textTrimLength = prepText(text).trim().length;
             
-            return startCharacter || (!startCharacter && !textTrimLength) || force
+            return startCharacter || (!startCharacter && !textTrimLength) || force;
+         },
+         
+         textChangedHandler: function(self, text) {
+            if(text && self._searchText !== text && text.length >= self._options.startCharacter) {
+               self._onResetIsFired = false;
+               self._searchText = text;
+            }
          }
       };
       

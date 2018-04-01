@@ -3,9 +3,11 @@
    viewModel="{{_viewModel}}"
    tagStyle="{{_options.tagStyle}}"
    placeholder="{{_options.placeholder}}"
+   on:focusin="_focusinHandler()"
 >
    <ws:content>
       <ws:partial
+         name="input"
          template="tmpl!Controls/Input/resources/input"
          enabled="{{isEnabled()}}"
       />

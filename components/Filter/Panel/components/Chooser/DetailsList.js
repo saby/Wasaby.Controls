@@ -4,7 +4,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList', [
    'WS.Data/Source/Memory',
    'Core/CommandDispatcher',
    'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList/resources/ItemTpl',
-   'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList/FilterPanelChooser.DetailsList'
+   'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/DetailsList/FilterPanelChooser-DetailsList'
 ], function(FilterPanelChooserBaseList, ItemsMoveController, Memory, CommandDispatcher, ItemTpl) {
 
    'use strict';

@@ -42,11 +42,25 @@ define('SBIS3.CONTROLS/Button/StateButton', [
            _checkedIcon: null
        },
 
-      $constructor: function() {
-          this._caption = this.getCaption();
-          this._checkedCaption = this._options.checkedCaption;
-          this._icon = this.getIcon();
-          this._checkedIcon = this._options.checkedIcon;
+       _modifyOptions : function(options) {
+           this._caption = options.caption || '';
+           this._checkedCaption = options.checkedCaption;
+           this._icon = options._iconClass || options.icon;
+           this._checkedIcon = options.checkedIcon;
+
+           this._toggleValue(options);
+
+           return StateButton.superclass._modifyOptions.apply(this, arguments);
+       },
+
+       _setEnabled: function(enabled) {
+           StateButton.superclass._setEnabled.apply(this, arguments);
+           this._toggleValue(this._options);
+           this._parseIconClass(this._icon);
+       },
+      _toggleValue: function(options){
+          options.icon = options.checked ? this._checkedIcon : this._icon;
+          options.caption = options.checked ? this._checkedCaption : this._caption;
       },
 
       setChecked: function(flag) {

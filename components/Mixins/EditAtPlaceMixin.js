@@ -2,7 +2,7 @@ define('SBIS3.CONTROLS/Mixins/EditAtPlaceMixin',
    [
    "Core/Deferred",
    "SBIS3.CONTROLS/Button/IconButton",
-   "Deprecated/Controls/ModalOverlay/ModalOverlay",
+   "Lib/Control/ModalOverlay/ModalOverlay",
    "Lib/Control/Dialog/Dialog"
 ], function(Deferred, IconButton, ModalOverlay) {
       /**

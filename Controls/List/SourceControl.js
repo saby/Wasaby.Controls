@@ -24,7 +24,9 @@ define('Controls/List/SourceControl', [
             _private.showIndicator(self);
             return self._sourceController.load(self._filter, self._sorting).addCallback(function (list) {
 
-               self._notify('onDataLoad', [list]);
+               //todo события не работают до маунта в дом, решить что с этим делать
+               //https://online.sbis.ru/opendoc.html?guid=1e98cfd2-f855-448e-adff-43ab8339e961
+               //self._notify('onDataLoad', [list]);
 
                _private.hideIndicator(self);
 
@@ -35,8 +37,8 @@ define('Controls/List/SourceControl', [
                //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
                _private.handleListScroll(self, 0);
             }).addErrback(function(error){
-               _private.processLoadError(self, error)
-            })
+               _private.processLoadError(self, error);
+            });
          }
          else {
             IoC.resolve('ILogger').error('SourceControl', 'Source option is undefined. Can\'t load data');
@@ -242,6 +244,12 @@ define('Controls/List/SourceControl', [
 
       getItemsCount: function(self) {
          return self._listViewModel ? self._listViewModel.getCount() : 0;
+      },
+      
+      initListViewModelHandler: function(self, model) {
+         model.subscribe('onListChange', function () {
+            self._forceUpdate();
+         });
       }
    };
 
@@ -288,7 +296,7 @@ define('Controls/List/SourceControl', [
          this._publish('onDataLoad');
       },
 
-      _beforeMount: function(newOptions) {
+      _beforeMount: function(newOptions, context, receivedState) {
          var self = this;
          this._virtualScroll = new VirtualScroll({
             maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
@@ -303,6 +311,7 @@ define('Controls/List/SourceControl', [
          if (newOptions.listViewModel) {
             this._listViewModel = newOptions.listViewModel;
             this._virtualScroll.setItemsCount(this._listViewModel.getCount());
+            _private.initListViewModelHandler(this, this._listViewModel);
          }
 
          if (newOptions.source) {
@@ -313,8 +322,11 @@ define('Controls/List/SourceControl', [
 
 
 
-            if (!this._items) {
-               _private.reload(this);
+            if (receivedState) {
+               this._listViewModel.setItems(receivedState);
+            }
+            else {
+               return _private.reload(this);
             }
          }
       },
@@ -340,6 +352,7 @@ define('Controls/List/SourceControl', [
 
          if (newOptions.listViewModel && (newOptions.listViewModel !== this._options.listViewModel)) {
             this._listViewModel = newOptions.listViewModel;
+            _private.initListViewModelHandler(this, this._listViewModel);
             //this._virtualScroll.setItemsCount(this._listViewModel.getCount());
          } else
             if (newOptions.selectedKey !== this._options.selectedKey) {
@@ -409,7 +422,7 @@ define('Controls/List/SourceControl', [
       },
 
       reload: function() {
-         _private.reload(this);
+         return _private.reload(this);
       }
 
    });

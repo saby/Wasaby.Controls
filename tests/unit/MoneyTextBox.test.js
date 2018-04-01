@@ -39,6 +39,13 @@ define(['SBIS3.CONTROLS/MoneyTextBox'], function (NumberTextBox) {
              formattedValue = MTB._formatText('9999999999999999.99');
              assert.equal(formattedValue, '99 999 999 999 999.99');
           });
+
+          it('should set only positive', function() {
+             MTB.setProperty('onlyPositive', true);
+             MTB.setText('-123.12');
+             MTB.setProperty('onlyPositive', false);
+             assert.equal(MTB._getInputValue(), '123.12');
+          })
        });
 
         describe('Caret Position', function (){

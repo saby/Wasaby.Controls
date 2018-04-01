@@ -37,11 +37,11 @@
                      attr:class="controls-InputArea__field
                        controls-InputArea__realField
                        controls-InputRender__field
+                       controls-InputArea__fieldPadding
                        {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}
                        controls-InputArea__field_size_{{_options.size || 'default'}}"
                      value="{{ _options.value }}"
                      on:keydown="_keyDownHandler()"
-                     on:focus="_focusHandler()"
                      on:scroll="_scrollHandler()"
                   />
                </ws:if>
@@ -51,13 +51,14 @@
                      attr:class="controls-InputArea__field
                         controls-InputArea__realField
                         controls-InputRender__field
+                        controls-InputArea__fieldPadding
                         {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}
                         controls-InputArea__field_size_{{_options.size || 'default'}}"
                      value="{{ _options.value }}"
                   />
                </ws:else>
 
-               <div class="controls-fakeTextArea__firstWrapper">
+               <div class="controls-fakeTextArea__firstWrapper controls-InputArea__fieldPadding">
                   <div class="controls-fakeTextArea__secondWrapper controls-fakeTextArea__secondWrapper_size_{{_options.size || 'default'}}" name="fakeAreaWrapper">
                      <div
                         name="fakeArea"

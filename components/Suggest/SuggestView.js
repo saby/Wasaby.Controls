@@ -409,6 +409,14 @@ define('SBIS3.CONTROLS/Suggest/SuggestView',
              this.getActiveView().setDisplayProperty(displayProperty);
           },
    
+          setItemsSortMethod: function(itemsSortMethod) {
+             this.getActiveView().setItemsSortMethod(itemsSortMethod);
+          },
+          
+          getItemsSortMethod: function() {
+             return this.getActiveView().getProperty('itemsSortMethod');
+          },
+   
           isLoading: function() {
              var isLoaded = true;
              this._viewsIterator(function(view) {
