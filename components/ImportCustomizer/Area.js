@@ -132,10 +132,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                /**
                 * @cfg {Array<ImportValidator>} Список валидаторов результатов редактирования
                 */
-               validators: /*^^^null*/[
-                  {validator:function () { return fasle; }, errorMessage:'@@@ 111', noFailOnError:true},
-                  {validator:function () { return fasle; }, errorMessage:'@@@ 222'}
-               ]
+               validators: null
             },
             // Список имён вложенных компонентов
             _childViewNames: {
@@ -357,9 +354,13 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             if (validators && validators.length) {
                var errors = [];
                var warnings = [];
+               var optionGetter = this._getOption.bind(this);
                for (var i = 0; i < validators.length; i++) {
                   var check = validators[i];
-                  var result = check.validator.apply(null, check.params || []);
+                  var args = check.params;
+                  args = args && args.length ? args.slice() : [];
+                  args.push(data, optionGetter);
+                  var result = check.validator.apply(null, args);
                   if (result !== true) {
                      (check.noFailOnError ? warnings : errors).push(
                         result || check.errorMessage || rk('Неизвестная ошибка', 'НастройщикИмпорта')
@@ -367,11 +368,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   }
                }
                if (errors.length) {
-                  promise = Area.showMessage('error', rk('Исправьте пожалуйста', 'НастройщикИмпорта'), errors.joun('\r\n'));
+                  promise = Area.showMessage('error', rk('Исправьте пожалуйста', 'НастройщикИмпорта'), errors.join('\n'));
                }
                else
                if (warnings.length) {
-                  promise = Area.showMessage('confirm', rk('Проверьте пожалуйста', 'НастройщикИмпорта'), warnings.joun('\r\n') + '\r\n' + rk('Действительно импортировать так?', 'НастройщикИмпорта'));
+                  promise = Area.showMessage('confirm', rk('Проверьте пожалуйста', 'НастройщикИмпорта'), warnings.join('\n') + '\n\n' + rk('Действительно импортировать так?', 'НастройщикИмпорта'));
                }
             }
             return promise || Deferred.success(true);
@@ -423,7 +424,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
           * Скомбинировать из аргументов элемент выходного массива sheets
           *
           * @protected
-          * @param {object} result Резудльтирующие значения, относящиеся к этому элементу (опционально)
+          * @param {object} result Резудльтирующие значения, относящиеся к этому элементу
           * @param {object} [sheet] Опции, относящиеся к этому элементу (опционально)
           * @param {number} [index] Индекс этого элемента
           * @return {ImportSheet}

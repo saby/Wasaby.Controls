@@ -47,7 +47,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
 
          /**
           * @typedef {object} ImportParser Тип, содержащий информацию о провайдере парсинга импортируемых данных
-          * @property {string} name Имя(идентификатор) парсера
+          * @property {string} [name] Имя(идентификатор) парсера (опционально, если парсер является частью набора парсеров, представленного в виде объекта, где ключами являются таките имена(идентификаторы) парсеров)
           * @property {string} title Отображаемое имя парсера
           * @property {string} [component] Класс компонента для настройки парсера (опционально)
           * @property {object} [args] Набор специфичных для данного парсера параметров (опционально)
@@ -99,7 +99,16 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                   'InColumsHierarchyParser': {title:rk('в отдельной колонке', 'НастройщикИмпорта'), component:'SBIS3.CONTROLS/ImportCustomizer/ProviderArgs/View', order:10},
                   'InLineGroupsHierarchyParser': {title:rk('в группировке строк', 'НастройщикИмпорта'), order:20},
                   'InSeparateLineHierarchyParser': {title:rk('в отдельной строке', 'НастройщикИмпорта'), order:30}
-               }
+               },
+               /**
+                * @cfg {Array<ImportValidator>} Список валидаторов результатов редактирования
+                */
+               validators: [
+                  {
+                     validator: function (data, optionGetter) { return data.sheets.every(function (sheet) { return !!sheet.columns.length; }); },
+                     errorMessage: rk('Не установлено соответсвие между колонками и полями', 'НастройщикИмпорта')
+                  }
+               ]
             },
             _result: null,
             _resultHandler: null
@@ -142,6 +151,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             if (this._result) {
                return Deferred.fail('Allready open');
             }
+            // TODO: Проработать более позднее получение dataTYpe
             if (Area.DATA_TYPES.indexOf(options.dataType) === -1) {
                Area.showMessage('error', rk('Ошибка', 'НастройщикИмпорта'), rk('Тип данных в этом файле не поддерживается', 'НастройщикИмпорта'));
                return Deferred.fail('Not supported data type');
@@ -218,6 +228,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             if (!fields || typeof fields !== 'object') {
                throw new Error('Wrong fields');
             }
+            // TODO: Обдумать возможность выделения из fields массива hierarchy (с флагом joinHierarchy и последующим слиянием для нужного парсера)
             var sheets = options.sheets;
             // Должно быть свойство "sheets" и быть не пустым массивом
             if (!sheets || !Array.isArray(sheets) || !sheets.length) {
@@ -244,16 +255,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             if (validators && !Array.isArray(validators)) {
                throw new Error('Wrong validators');
             }
-            // И каждый элемент массива должен быть {@link ImportValidator}
-            if (!validators.every(function (v) { return (
-                  typeof v === 'object' &&
-                  (v.validator && typeof v.validator === 'function') &&
-                  (!v.params || Array.isArray(params)) &&
-                  (!v.errorMessage || typeof v.errorMessage === 'string') &&
-                  (!v.noFailOnError || typeof v.noFailOnError === 'boolean')
-                  ); })) {
-               throw new Error('Wrong validators');
-            }
             var defaults = this._options;
             if (parsers) {
                // Поскольку уже есть набор парсеров по-умолчанию, то в объекте parsers могут содержаться только поправки, значит нужно слить их,
@@ -270,6 +271,20 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                      )) {
                      throw new Error('Wrong parsers items');
                   }
+               }
+            }
+            if (validators) {
+               // Поскольку уже есть набор валидаторов по-умолчанию, то нужно слить их, прежде чем проверять
+               validators = defaults.validators.concat(validators);
+               // И каждый элемент массива должен быть {@link ImportValidator}
+               if (!validators.every(function (v) { return (
+                     typeof v === 'object' &&
+                     (v.validator && typeof v.validator === 'function') &&
+                     (!v.params || Array.isArray(params)) &&
+                     (!v.errorMessage || typeof v.errorMessage === 'string') &&
+                     (!v.noFailOnError || typeof v.noFailOnError === 'boolean')
+                  ); })) {
+                  throw new Error('Wrong validators items');
                }
             }
             if (!(fields instanceof Deferred)) {
@@ -298,6 +313,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
                baseParams: baseParamsOptions,
                parsers: parsers || defaults.parsers,
                fields: fields,
+               validators: validators || defaults.validators,
                sheets: sheets,
                sheetIndex: sheetIndex,
                handlers: {
@@ -307,9 +323,6 @@ define('SBIS3.CONTROLS/ImportCustomizer/Action',
             };
             if (baseParamsComponent) {
                componentOptions.baseParamsComponent = baseParamsComponent;
-            }
-            if (validators && validators.length) {
-               componentOptions.validators = validators;
             }
             this._areaContainer = new FloatArea({
                opener: this,
