@@ -1,7 +1,7 @@
 define(['Controls/Layout/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/RecordSet'], function(List, Memory, RecordSet) {
    
    if (typeof mocha !== 'undefined') {
-      //Из-за того, что загрузка через Core/moduleStubs добавляет в global Deprecated/Controls/LoadingIndicator/LoadingIndicator,
+      //Из-за того, что загрузка через Core/moduleStubs добавляет в global Lib/Control/LoadingIndicator/LoadingIndicator,
       //чтобы потом брать его из кэша
       mocha.setup({globals: ['Controls/Controllers/_Search']});
    }
