@@ -29,10 +29,10 @@ define('Controls/Application/Compatible', [
                   window.rights = rights;
                   rightsInitialized.callback();
                });
+               return rightsInitialized;
             }
          }
-         return rightsInitialized;
-      }
+      },
       _afterMount: function(){
          for (var i in this._children){
             this._children[i]._forceUpdate = function(){
