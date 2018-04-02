@@ -9,12 +9,12 @@
                         <div class="controls-demo__Layouts_content">
                             <div class="controls-demo__Layouts_filterComponents">
                                 <Controls.Input.Search bind:value="_searchValue"/>
-                                <ws:Controls.Container.FilterButton>
+                                <Controls.Container.FilterButton>
                                     <ws:content>
                                         <Controls.Filter.Button filterTemplate="Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate">
                                         </Controls.Filter.Button>
                                     </ws:content>
-                                </ws:Controls.Container.FilterButton>
+                                </Controls.Container.FilterButton>
                             </div>
                             <div class="controls-demo__LayoutInner">
                                 <Controls.Container.List source="{{_dataSource}}" searchParam="title">

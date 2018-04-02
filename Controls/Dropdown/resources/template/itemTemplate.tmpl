@@ -14,7 +14,7 @@
    </div>
    <div if="{{itemData.hasChildren}}" class="controls-DropdownList__arrow icon-MarkCRightLight"></div>
 
-   <Controls:Dropdown:Opener if="{{itemData.hasChildren}}"
+   <Controls.Dropdown.Opener if="{{itemData.hasChildren}}"
                                   name="MenuOpener{{itemData.getPropValue(itemData.item, itemData.idProperty)}}"
                                   on:onSelectedItemChange="resultHandler()"
                                   className="controls-DropdownList__subMenu_margin">
@@ -22,5 +22,5 @@
          <ws:corner horizontal="right"/>
          <ws:eventHandlers onResult="{{resultHandler}}"/>
       </ws:popupOptions>
-   </Controls:Dropdown:Opener>
+   </Controls.Dropdown.Opener>
 </div>
