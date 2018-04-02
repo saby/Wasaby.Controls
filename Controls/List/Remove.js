@@ -7,15 +7,13 @@ define('Controls/List/Remove', [
    var Remove = Control.extend( {
       _template: template,
 
-      beginRemove: function(items) {
-         var beginRemoveResult;
-
-         beginRemoveResult = this._notify('beginRemove', [items], { bubbling: true });
-         return beginRemoveResult instanceof Deferred ? beginRemoveResult : Deferred.success(beginRemoveResult);
+      itemsRemove: function(items) {
+         var itemsRemoveResult = this._notify('itemsRemove', [items]);
+         return itemsRemoveResult instanceof Deferred ? itemsRemoveResult : Deferred.success(itemsRemoveResult);
       },
 
-      endRemove: function(items, result) {
-         this._notify('endRemove', [items, result], { bubbling: true });
+      afterItemsRemove: function(items, result) {
+         this._notify('afterItemsRemove', [items, result]);
       }
    });
 

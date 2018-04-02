@@ -13,7 +13,11 @@
                 displayProperty="{{_options.displayProperty}}"
                 markedKey="{{_options.markedKey}}">
         </ws:partial>
-        <Controls.List.Remove ws:content="listView" name="removeControl"/>
+        <Controls.List.Remove ws:content="listView"
+                name="removeControl"
+                on:itemsRemove="_itemsRemove()"
+                on:afterItemsRemove="_afterItemsRemove()"
+                />
         <Controls.List.ItemActions.ItemActionsControl
                 ws:content="listView"
                 listModel="{{_listViewModel}}"

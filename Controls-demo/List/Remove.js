@@ -1,9 +1,10 @@
 define('Controls-demo/List/Remove', [
    'Core/Control',
+   'Core/core-clone',
    'Controls-demo/List/Remove/RemoveDemoSource',
    'tmpl!Controls-demo/List/Remove/Remove',
    'css!Controls-demo/List/Remove/Remove'
-], function (BaseControl, DemoSource, template) {
+], function (BaseControl, cClone, DemoSource, template) {
    'use strict';
 
    var ModuleClass = BaseControl.extend({
@@ -24,23 +25,34 @@ define('Controls-demo/List/Remove', [
       }],
 
       _beforeMount: function() {
-         var self = this;
-         this._viewSource = new DemoSource({
-            idProperty: 'id',
-            data: this._items
-         });
+         this._viewSource = this._createSource(this._items);
+         this._viewSourceClone = this._createSource(this._items);
+         this._viewSourceSecond = this._createSource([{ id: 0 }]);
 
-         this._itemActions = [{
+         this._itemActions = this._createItemsActions('list');
+         this._itemActionsSecond = this._createItemsActions('listSecond');
+      },
+
+      _createSource: function(items) {
+         return new DemoSource({
+            idProperty: 'id',
+            data: cClone(items)
+         });
+      },
+
+      _createItemsActions: function(listName) {
+         var self = this;
+         return [{
             id: 0,
             icon: 'icon-Erase icon-error',
             main: true,
             handler: function(item) {
-               self._children.list.remove([item.getId()]);
+               self._children[listName].removeItems([item.getId()]);
             }
          }];
       },
 
-      _onBeginRemove: function(event, items) {
+      _itemsRemove: function(event, items) {
          if (items.indexOf(1) !== -1) {
             return this._children.popupOpener.open({
                message: 'Remove items?',
@@ -49,14 +61,22 @@ define('Controls-demo/List/Remove', [
          }
       },
 
-      _onEndRemove: function(event, items, result) {
+      _afterItemsRemove: function(event, items, result) {
          if (result instanceof Error) {
-            this._children.popupOpener.open({
-               message: result.message,
-               style: 'error',
-               type: 'ok'
-            });
+            this._showError(result.message);
          }
+      },
+
+      _secondListRemoveHandler: function() {
+         this._showError('Events should not bubbling');
+      },
+
+      _showError: function(message) {
+         this._children.popupOpener.open({
+            message: message,
+            style: 'error',
+            type: 'ok'
+         });
       }
    });
    return ModuleClass;

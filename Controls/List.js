@@ -77,8 +77,16 @@ define('Controls/List', [
          }
       },
 
-      remove: function(items) {
-         this._children.sourceControl.remove(items);
+      _itemsRemove: function(event, items) {
+         return this._notify('itemsRemove', [items]);
+      },
+
+      _afterItemsRemove: function (event, items, result) {
+         this._notify('afterItemsRemove', [items, result]);
+      },
+
+      removeItems: function(items) {
+         this._children.sourceControl.removeItems(items);
       }
    });
 

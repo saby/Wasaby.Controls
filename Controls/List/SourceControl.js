@@ -423,11 +423,11 @@ define('Controls/List/SourceControl', [
 
       },
 
-      remove: function(items) {
+      removeItems: function(items) {
          var
             self = this,
             removeControl = this._children.removeControl;
-         removeControl.beginRemove(items).addCallback(function(result) {
+         removeControl.itemsRemove(items).addCallback(function(result) {
             if (result !== false) {
                _private.showIndicator(self);
                _private.removeFromSource(self, items).addCallback(function(result) {
@@ -435,10 +435,18 @@ define('Controls/List/SourceControl', [
                   return result;
                }).addBoth(function(result) {
                   _private.hideIndicator(self);
-                  removeControl.endRemove(items, result);
+                  removeControl.afterItemsRemove(items, result);
                });
             }
          });
+      },
+
+      _itemsRemove: function(event, items) {
+         return this._notify('itemsRemove', [items]);
+      },
+
+      _afterItemsRemove: function (event, items, result) {
+         this._notify('afterItemsRemove', [items, result]);
       },
 
       reload: function() {

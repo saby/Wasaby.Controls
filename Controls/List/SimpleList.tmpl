@@ -11,6 +11,8 @@
               displayProperty="{{_options.displayProperty}}"
               markedKey="{{_options.markedKey}}"
               itemsReadyCallback="{{_options.itemsReadyCallback}}"
+              on:itemsRemove="_itemsRemove()"
+              on:afterItemsRemove="_afterItemsRemove()"
               itemActionsType="{{_options.itemActionsType}}"
               itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
               itemActions="{{_options.itemActions}}">
