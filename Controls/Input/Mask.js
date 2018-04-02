@@ -61,9 +61,15 @@ define('Controls/Input/Mask',
       var
          _private = {
             findLastUserEnteredCharPosition: function(value, replacer) {
-               var position = value.indexOf(replacer);
+               var position;
 
-               return position === -1 ? value.length - 1 : position;
+               if (replacer) {
+                  position = value.indexOf(replacer);
+
+                  return position === -1 ? value.length : position;
+               } else {
+                  return value.length;
+               }
             },
             /**
              * If there's no symbol at selected position,
