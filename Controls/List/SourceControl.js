@@ -276,7 +276,6 @@ define('Controls/List/SourceControl', [
 
       _listViewModel: null,
 
-      _dataSource: null,
       _loader: null,
       _loadingState: null,
       _loadingIndicatorState: null,
