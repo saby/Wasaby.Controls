@@ -1,10 +1,10 @@
 <div class="ws-suggestShowAll">
-    <Controls:Popup:DialogTemplate attr:class="ws-suggestShowAll__dialog">
+    <Controls.Popup.DialogTemplate attr:class="ws-suggestShowAll__dialog">
         <ws:topArea>
             <span class="ws-suggestShowAll__title">Все записи</span>
         </ws:topArea>
         <ws:contentArea>
-            <Controls:Container:Scroll attr:class="controls-ScrollContainer__flex">
+            <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex">
                 <ws:content>
                     <ws:partial
                             template="{{_options.template}}"
@@ -13,7 +13,7 @@
                             filter="{{_options.filter}}"
                             on:itemClick="_onItemClickHandler()"/>
                 </ws:content>
-            </Controls:Container:Scroll>
+            </Controls.Container.Scroll>
         </ws:contentArea>
-    </Controls:Popup:DialogTemplate>
+    </Controls.Popup.DialogTemplate>
 </div>

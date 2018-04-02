@@ -1,15 +1,15 @@
 <div class="popup-page">
-    <Controls:Popup:Opener:Dialog name="dialog">
+    <Controls.Popup.Opener.Dialog name="dialog">
         <ws:popupOptions template="Controls-demo/Popup/TestDialog">
             <ws:componentOptions type="dialog"/>
         </ws:popupOptions>
-    </Controls:Popup:Opener:Dialog>
-    <Controls:Popup:Opener:Dialog name="modalDialog">
+    </Controls.Popup.Opener.Dialog>
+    <Controls.Popup.Opener.Dialog name="modalDialog">
         <ws:popupOptions isModal="{{true}}" template="Controls-demo/Popup/TestDialog">
             <ws:componentOptions type="dialog"/>
         </ws:popupOptions>
-    </Controls:Popup:Opener:Dialog>
-    <Controls:Popup:Opener:Sticky name="sticky"
+    </Controls.Popup.Opener.Dialog>
+    <Controls.Popup.Opener.Sticky name="sticky"
                                      onResult="{{_onResult}}"
     >
         <ws:popupOptions template="Controls-demo/Popup/TestDialog"
@@ -19,30 +19,30 @@
             <ws:horizontalAlign side="left"/>
             <ws:corner vertical="bottom" horizontal="left"/>
         </ws:popupOptions>
-    </Controls:Popup:Opener:Sticky>
-    <Controls:Popup:Opener:Notification name="notification">
+    </Controls.Popup.Opener.Sticky>
+    <Controls.Popup.Opener.Notification name="notification">
         <ws:popupOptions template="Controls-demo/Popup/TestDialog">
             <ws:componentOptions type="notification"/>
         </ws:popupOptions>
-    </Controls:Popup:Opener:Notification>
-    <Controls:Popup:Opener:Stack name="stack">
+    </Controls.Popup.Opener.Notification>
+    <Controls.Popup.Opener.Stack name="stack">
         <ws:popupOptions template="Controls-demo/Popup/TestDialog">
             <ws:componentOptions type="stack"/>
         </ws:popupOptions>
-    </Controls:Popup:Opener:Stack>
+    </Controls.Popup.Opener.Stack>
     <div>
-        <Controls:Button name="dialogButton" caption="dialog" on:click="openDialog()"/>
+        <Controls.Button name="dialogButton" caption="dialog" on:click="openDialog()"/>
     </div>
     <div>
-        <Controls:Button name="modalDialogButton" caption="modal dialog" on:click="openModalDialog()"/>
+        <Controls.Button name="modalDialogButton" caption="modal dialog" on:click="openModalDialog()"/>
     </div>
     <div>
-        <Controls:Button name="stickyButton" caption="sticky" on:click="openSticky()"/>
+        <Controls.Button name="stickyButton" caption="sticky" on:click="openSticky()"/>
     </div>
     <div>
-        <Controls:Button name="notificationButton" caption="notification" on:click="openNotification()"/>
+        <Controls.Button name="notificationButton" caption="notification" on:click="openNotification()"/>
     </div>
     <div>
-        <Controls:Button name="stackButton" caption="stack" on:click="openStack()"/>
+        <Controls.Button name="stackButton" caption="stack" on:click="openStack()"/>
     </div>
 </div>
