@@ -78,7 +78,7 @@ define('Controls/Input/Suggest',
                
                suggestTemplate:     options.suggestTemplate,
                emptyTemplate:       options.emptyTemplate,
-               dataSource:          options.dataSource,
+               source:              options.source,
                filter:              options.filter,
                minSearchLength:     options.minSearchLength,
                searchDelay:         options.searchDelay,
