@@ -542,7 +542,7 @@ define('SBIS3.CONTROLS/LongOperations/Popup',
             var text = waitIndicatorText || this._options.waitIndicatorText || DEFAULT_WAITINDICATOR_TEXT;
             var promise = new Deferred();
             if (!this._loadingIndicator) {
-               require(['Deprecated/Controls/LoadingIndicator/LoadingIndicator'], function (LoadingIndicator) {
+               require(['Lib/Control/LoadingIndicator/LoadingIndicator'], function (LoadingIndicator) {
                   self._loadingIndicator = new LoadingIndicator({message:text});
                   self._loadingIndicator.show();
                   promise.callback();
