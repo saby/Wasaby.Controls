@@ -41,13 +41,6 @@ define('Controls/Filter/FastFilter',
 
       var _private = {
 
-         getSourceController: function (source, idProperty) {
-            return new SourceController({
-               source: source,
-               idProperty: idProperty
-            });
-         },
-
          prepareItems: function (self, items, idProperty) {
             if (!cInstance.instanceOfModule(items, 'WS.Data/Collection/RecordSet')) {
                self._items = new RecordSet({
@@ -59,8 +52,11 @@ define('Controls/Filter/FastFilter',
             }
          },
 
-         loadItem: function (instance, sourceController) {
-            //var sourceController = new SourceController(sourceControllerConfig);
+         loadSource: function (instance, source, idProperty) {
+            var sourceController = new SourceController({
+               source: source,
+               idProperty: idProperty
+            });
             return sourceController.load().addCallback(function (items) {
                instance._items = items;
             });
@@ -77,8 +73,7 @@ define('Controls/Filter/FastFilter',
                _private.prepareItems(self._configs[index], properties.items, properties.keyProperty);
                return Deferred.success(self._configs[index]._items);
             } else if (properties.source) {
-               var dSource = _private.getSourceController(properties.source, properties.keyProperty);
-               return _private.loadItem(self._configs[index], dSource);
+               return _private.loadSource(self._configs[index], properties.source, properties.keyProperty);
             }
          },
 
@@ -116,7 +111,7 @@ define('Controls/Filter/FastFilter',
             var data = args[2];
             if (actionName === 'itemClick') {
                _private.selectItem.apply(this, data);
-               this._notify('filterChanged', [_private.getFilter(this._items)]);
+               this._notify('filterChanged', [_private.getFilter(this._items)], {bubbling: true});
                this._children.DropdownOpener.close();
             }
          }
@@ -143,13 +138,9 @@ define('Controls/Filter/FastFilter',
                _private.prepareItems(this, options.items);
                resultDef = _private.reload(this);
             } else if (options.source) {
-               resultDef = _private.loadItem(self, _private.getSourceController(options.source)).addCallback(function () {
+               resultDef = _private.loadSource(self, options.source).addCallback(function () {
                   return _private.reload(self);
                });
-               // resultDef = _private.getSourceController(options.source).load().addCallback(function (items) {
-               //    self._items = items;
-               //    return _private.reload(self);
-               // });
             }
             return resultDef;
          },
@@ -185,7 +176,7 @@ define('Controls/Filter/FastFilter',
             var newValue = this._items.at(index).get('resetValue');
             this._items.at(index).set({value: newValue});
             this._notify('selectedKeysChanged', [newValue]);
-            this._notify('filterChanged', [_private.getFilter(this._items)]);
+            this._notify('filterChanged', [_private.getFilter(this._items)], {bubbling: true});
          }
       });
 
