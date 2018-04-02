@@ -36,14 +36,16 @@ define('Controls/Dropdown/Opener',
            * @param config
            */
           checkIcons: function(self, config) {
-              var parentProperty = config.componentOptions.parentProperty || self._options.popupOptions.componentOptions.parentProperty,
-                  nodeProperty = config.componentOptions.nodeProperty || self._options.popupOptions.componentOptions.nodeProperty,
+              var options = config.componentOptions || self._options.popupOptions.componentOptions;
+              var parentProperty = options.parentProperty,
+                  nodeProperty = options.nodeProperty,
                   items = config.componentOptions.items,
                   hierarchy = new Hierarchy({
                       idProperty: items.getIdProperty(),
                       parentProperty: parentProperty,
                       nodeProperty: nodeProperty
                   }),
+
                   headerIcon = self._options.popupOptions.componentOptions &&
                                self._options.popupOptions.componentOptions.headConfig &&
                                self._options.popupOptions.componentOptions.headConfig.icon,
@@ -89,7 +91,9 @@ define('Controls/Dropdown/Opener',
               if(pOptions.componentOptions && pOptions.componentOptions.headConfig) {
                   pOptions.componentOptions.headConfig.menuStyle = pOptions.componentOptions.headConfig.menuStyle || 'defaultHead';
               }
-              this.checkIcons(self, config);
+
+                 this.checkIcons(self, config);
+
           },
           setPopupOptions: function(self, config) {
               config.className = self._options.className || 'controls-DropdownList__margin';
