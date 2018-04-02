@@ -1,9 +1,9 @@
 <span attr:class="controls-Header controls-Header_style-{{_options.style}}">
     <span class="controls-Header__wrapper {{_options.commonClick ? 'controls-Header_content_hovered'}}">
-        <ws:if data="{{_options.iconType}}">
+        <ws:if data="{{_options.icon}}">
             <i on:click="iconClickHandler()" attr:class="controls-Header__icon controls-Separator__icon_style-{{_options.iconStyle}}
-                                                        controls-Header__{{_options.iconType}}
-                                                        {{_icon}}
+                                                        controls-Header__icon_size-{{_options.iconSize}}
+                                                        {{_options.icon}}
                                                         controls-Header__icon_location-{{_options.iconLocation}}"
             ></i>
         </ws:if>

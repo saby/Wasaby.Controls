@@ -68,8 +68,10 @@
             <Controls:Input:Text bind:value="_iconLocation"/>
             <Controls:Label name="myLabel1" caption="iconStyle(Accent, Additional, Main)"/>
             <Controls:Input:Text bind:value="_iconStyle"/>
-            <Controls:Label name="myLabel1" caption="iconType(MarkExpandBold, ExpandLight, AccordionArrowDown)"/>
-            <Controls:Input:Text bind:value="_iconType"/>
+            <Controls:Label name="myLabel1" caption="icon(icon-MarkExpandBold, icon-ExpandLight, icon-AccordionArrowDown ...(любые иконки))"/>
+            <Controls:Input:Text bind:value="_icon"/>
+            <Controls:Label name="myLabel1" caption="icon(m(значение для обычных иконок),l(значение для двойной стрелки в аккордеоне))"/>
+            <Controls:Input:Text bind:value="_iconSize"/>
             <br/>
             <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_iconClickable" caption="iconClickable"/>
             <h3>Опции иконки</h3>

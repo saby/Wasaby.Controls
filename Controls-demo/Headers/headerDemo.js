@@ -20,7 +20,7 @@ define('Controls-demo/Headers/headerDemo', [
          _counterSize: undefined,
          _iconLocation: undefined,
          _iconStyle: undefined,
-         _iconType: undefined,
+         _icon: undefined,
          _separatorIconStyle: undefined,
          _commonClick: false,
          _separatorIcon: false,
@@ -33,6 +33,7 @@ define('Controls-demo/Headers/headerDemo', [
          _inHeader: false,
          _counterIconClick: 0,
          _counterCountClick: 0,
+         _iconSize: undefined,
 
          clickHandler: function (e) {
             console.log('Click');

@@ -90,8 +90,8 @@ define('Controls/Header', [
    /**
     * @name Controls/Header#iconSize
     * @cfg {String} Icon location relative to header.
-    * @variant s Icon has small size.
     * @variant m Icon has middle size.
+    * @variant l Icon has large size.
     */
 
    /**
@@ -146,15 +146,6 @@ define('Controls/Header', [
    };
    var Header = Control.extend({
       _template: template,
-
-      constructor: function (options) {
-         Header.superclass.constructor.apply(this, arguments);
-         _private.cssStyleGeneration(this, options);
-      },
-
-      _beforeUpdate: function (newOptions) {
-         _private.cssStyleGeneration(this, newOptions);
-      },
 
       countClickHandler: function (e) {
          if(this._options.countClickable && this._options.clickable){
@@ -213,8 +204,8 @@ define('Controls/Header', [
             'Main'
          ]),
          iconSize: types(String).oneOf([
-            's',
-            'm'
+            'm',
+            'l'
          ]),
          iconValue: types(Boolean),
          separatorIcon: types(Boolean),
