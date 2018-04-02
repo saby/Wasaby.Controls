@@ -6,6 +6,7 @@ define('Controls/List/SourceControl', [
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
    'Core/Deferred',
+   'tmpl!Controls/List/SourceControl/multiSelect',
    'css!Controls/List/SourceControl/SourceControl',
    'Controls/List/ItemActions/ItemActionsControl'
 ], function (Control,
@@ -14,7 +15,8 @@ define('Controls/List/SourceControl', [
              require,
              VirtualScroll,
              SourceController,
-             Deferred
+             Deferred,
+             multiSelectTpl
 ) {
    'use strict';
 
@@ -286,6 +288,7 @@ define('Controls/List/SourceControl', [
       _sorting: undefined,
 
       _itemTemplate: null,
+      _multiSelectTpl: multiSelectTpl,
 
       _loadOffset: 100,
       _topPlaceholderHeight: 0,
@@ -434,6 +437,10 @@ define('Controls/List/SourceControl', [
             case 'cantScroll': _private.onScrollHide(self); break;
          }
 
+      },
+
+      _onCheckBoxClick: function(e, dispItem) {
+         debugger;
       },
 
       reload: function() {
