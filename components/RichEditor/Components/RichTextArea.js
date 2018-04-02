@@ -169,6 +169,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                editorConfig: {
                   className: null,
                   plugins: 'media,paste,lists,noneditable,codesample',
+                  codesample_content_css: false,
                   inline: true,
                   relative_urls: false,
                   convert_urls: false,
