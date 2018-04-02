@@ -39,7 +39,7 @@ define('Controls/Header', [
 
    /**
     * @name Controls/Header#clickable
-    * @cfg {Boolean} Whether caption can be clicked.
+    * @cfg {Boolean} Whether caption and counter can be clicked.
     */
 
    /**
