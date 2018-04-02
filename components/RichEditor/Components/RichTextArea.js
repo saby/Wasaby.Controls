@@ -2483,7 +2483,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._requireTinyMCE().addCallback(function() {
                   var cfg = cClone(self._options.editorConfig);
                   cfg.paste_as_text = false;
-                  tinyMCE.baseURL = TINYMCE_URL_BASE;
+                  tinyMCE.baseURL = 'resources/' + TINYMCE_URL_BASE;
                   tinyMCE.init(cfg);
                });
             }
