@@ -2,13 +2,13 @@ define('Controls-demo/List/EditInPlace', [
    'Core/Control',
    'tmpl!Controls-demo/List/EditInPlace/EditInPlace',
    'WS.Data/Source/Memory',
-   'WS.Data/Entity/Record',
+   'WS.Data/Entity/Model',
    'Core/Deferred',
    'Controls/Validate/Validators/IsRequired'
 ], function (Control,
              template,
              MemorySource,
-             Record,
+             Model,
              Deferred
 ) {
    'use strict';
@@ -88,8 +88,20 @@ define('Controls-demo/List/EditInPlace', [
       _editOnClick: true,
       _singleEdit: false,
       _autoAdd: false,
-      _editingItem: Record.fromObject({ id: 2, title: 'Editing starts before mounting to DOM', randomField: 'text'}),
-      _addItem: Record.fromObject({ id: 3, title: 'Adding starts before mounting to DOM', randomField: 'text'}),
+      _editingItem: new Model({
+         rawData: {
+            id: 2,
+            title: 'Editing starts before mounting to DOM',
+            randomField: 'text'
+         }
+      }),
+      _addItem: new Model({
+         rawData: {
+            id: 3,
+            title: 'Adding starts before mounting to DOM',
+            randomField: 'text'
+         }
+      }),
 
       _beforeMount: function() {
          this._viewSource = new MemorySource({
@@ -114,48 +126,60 @@ define('Controls-demo/List/EditInPlace', [
          });
       },
 
-      _onBeginEdit: function(e, item) {
-         switch (item.get('id')) {
+      _onItemEdit: function(e, options) {
+         switch (options.item.get('id')) {
             case 1:
                return 'Cancel';
             case 2:
-               return Record.fromObject({
-                  id: 2,
-                  title: 'Another record'
-               });
+               return {
+                  item: new Model({
+                     rawData: {
+                        id: 2,
+                        title: 'Another record'
+                     }
+                  })
+               };
             case 3:
                var def = new Deferred();
                setTimeout(function() {
-                  def.callback(Record.fromObject({
-                     id: 3,
-                     title: 'Record from Deferred'
-                  }));
+                  def.callback({
+                     item: new Model({
+                        rawData: {
+                           id: 3,
+                           title: 'Record from Deferred'
+                        }
+                     })
+                  });
                }, 3000);
                return def;
          }
       },
 
-      _onBeginAdd: function(e, item) {
+      _onItemAdd: function(e, item) {
          return {
-               item: Record.fromObject({
-                  id: counter++,
-                  title: '',
-                  extraField: 'text'
+               item: new Model({
+                  rawData: {
+                     id: counter++,
+                     title: '',
+                     extraField: 'text'
+                  }
                })
             };
       },
 
-      _cancelBeginAdd: function() {
+      _cancelItemAdd: function() {
          return 'Cancel';
       },
 
-      _deferredBeginAdd: function() {
+      _deferredItemAdd: function() {
          var
             options = {
-               item: Record.fromObject({
-                  id: 3,
-                  title: '',
-                  extraField: 'text'
+               item: new Model({
+                  rawData: {
+                     id: 3,
+                     title: '',
+                     extraField: 'text'
+                  }
                })
             },
             def = new Deferred();
@@ -165,13 +189,13 @@ define('Controls-demo/List/EditInPlace', [
          return def;
       },
 
-      beginAdd: function() {
+      addItem: function() {
          var options = {};
-         this._children.list.beginAdd();
+         this._children.list.addItem();
       },
 
-      beginEdit: function(item) {
-         this._children.list.beginEdit(item);
+      itemEdit: function(options) {
+         this._children.list.itemEdit(options);
       }
    });
    return EditInPlace;

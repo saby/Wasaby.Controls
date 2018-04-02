@@ -15,5 +15,9 @@
               itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
               itemActions="{{_options.itemActions}}"
               editingConfig="{{_options.editingConfig}}"
-              name="sourceControl">
+              on:beforeItemAdd="_onBeforeItemAdd()"
+              on:beforeItemEdit="_onBeforeItemEdit()"
+              on:afterItemEdit="_onAfterItemEdit()"
+              on:beforeItemEndEdit="_onBeforeItemEndEdit()"
+              on:afterItemEndEdit="_onAfterItemEndEdit()">
 </Controls:List:SourceControl>

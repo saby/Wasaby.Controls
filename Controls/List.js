@@ -79,22 +79,42 @@ define('Controls/List', [
       },
 
 
-     /**
-      * Starts editing in place.
-      * @param {WS.Data/Entity/Record} record Editing record.
-      * @returns {Core/Deferred}
-      */
-      beginEdit: function(record) {
-         this._children.sourceControl.beginEdit(record);
+      /**
+       * Starts editing in place.
+       * @param {ItemEditOptions} options Options of editing.
+       * @returns {Core/Deferred}
+       */
+      editItem: function(options) {
+         this._children.sourceControl.editItem(options);
       },
 
-     /**
-      * Starts adding.
-      * @param {BeginAddOptions} options Options of adding.
-      * @returns {Core/Deferred}
-      */
-      beginAdd: function(options) {
-         this._children.sourceControl.beginAdd(options);
+      /**
+       * Starts adding.
+       * @param {AddItemOptions} options Options of adding.
+       * @returns {Core/Deferred}
+       */
+      addItem: function(options) {
+         this._children.sourceControl.addItem(options);
+      },
+
+      _onBeforeItemAdd: function(e, options) {
+         return this._notify('beforeItemAdd', [options]);
+      },
+
+      _onBeforeItemEdit: function(e, options) {
+         return this._notify('beforeItemEdit', [options]);
+      },
+
+      _onAfterItemEdit: function(e, options) {
+         this._notify('afterItemEdit', [options]);
+      },
+
+      _onBeforeItemEndEdit: function(e, options) {
+         return this._notify('beforeItemEndEdit', [options]);
+      },
+
+      _onAfterItemEndEdit: function(e, options) {
+         this._notify('beforeItemEndEdit', [options]);
       },
 
       remove: function(items) {

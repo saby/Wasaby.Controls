@@ -16,8 +16,8 @@
         <Controls:List
                 name="list"
                 source="{{_viewSource}}"
-                on:beginEdit="_onBeginEdit()"
-                on:beginAdd="_onBeginAdd()"
+                on:beforeItemEdit="_onItemEdit()"
+                on:beforeItemAdd="_onItemAdd()"
                 allowEmptySelection="{{false}}"
                 idProperty="id">
             <ws:editingConfig>
@@ -35,7 +35,7 @@
                 </ws:partial>
             </ws:itemTemplate>
         </Controls:List>
-        <Controls:List:AddButton caption="Add record" on:click="beginAdd()"/>
+        <Controls:List:AddButton caption="Add record" on:click="addItem()"/>
         <div attr:style="padding: 15px; background-color: rgba(81,81,81,0.11); width: 150px;">
             <h3>Select options:</h3>
             <div>
@@ -50,7 +50,7 @@
         <Controls:List
                 name="list2"
                 source="{{_viewSource2}}"
-                on:beginAdd="_cancelBeginAdd()"
+                on:beforeItemAdd="_cancelItemAdd()"
                 allowEmptySelection="{{false}}"
                 idProperty="id">
             <ws:editingConfig>
@@ -66,14 +66,14 @@
                 </ws:partial>
             </ws:itemTemplate>
         </Controls:List>
-        <Controls:List:AddButton caption="Add record" on:click="list2.beginAdd()"/>
+        <Controls:List:AddButton caption="Add record" on:click="list2.addItem()"/>
     </div>
     <div>
-        <h3>onBeginAdd handler returns Deferred</h3>
+        <h3>onBeforeItemAdd handler returns Deferred</h3>
         <Controls:List
                 name="list3"
                 source="{{_viewSource3}}"
-                on:beginAdd="_deferredBeginAdd()"
+                on:beforeItemAdd="_deferredItemAdd()"
                 allowEmptySelection="{{false}}"
                 idProperty="id">
             <ws:editingConfig>

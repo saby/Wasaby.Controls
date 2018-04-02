@@ -6,32 +6,28 @@ define('Controls/List/EditInPlace', [
 ], function (Control, template, Deferred, Record) {
 
    var _private = {
-      beginEdit: function(self, record) {
-         var result = self._notify('beginEdit', [record], {bubbling: true});
-
-         self._oldItem = record;
-
-         return _private.processBeginEditResult(self, record, result);
+      editItem: function(self, options, isAdd) {
+         var result = self._notify(isAdd ? 'beforeItemAdd' : 'beforeItemEdit', [options]);
+         if (!isAdd) {
+            self._oldItem = options.item;
+         }
+         return _private.processBeforeItemEditResult(self, options, result, isAdd);
       },
 
-
-      afterBeginEdit: function(self, record) {
-         self._editingItem = record.clone();
-         self._notify('afterBeginEdit', [record], {bubbling: true});
+      afterItemEdit: function(self, options, isAdd) {
+         if (isAdd) {
+            self._isAdd = true;
+         }
+         self._editingItem = options.item.clone();
+         self._notify('afterItemEdit', [options.item, isAdd]);
          self._options.listModel.setEditingItem(self._editingItem);
 
          return self._editingItem;
       },
 
-      beginAdd: function(self, options) {
-         var result = self._notify('beginAdd', [options], {bubbling: true});
-
-         return _private.processBeginEditResult(self, options, result, true);
-      },
-
-      processBeginEditResult: function(self, originalResult, result, isAdd) {
+      processBeforeItemEditResult: function(self, originalResult, result, isAdd) {
          if (result) {
-            if (result === BeginEditResult.CANCEL) {
+            if (result === ItemEditResult.CANCEL) {
                return Deferred.fail(originalResult);
             }
 
@@ -41,7 +37,7 @@ define('Controls/List/EditInPlace', [
                });
             }
 
-            if (result instanceof Record || result.item instanceof Record) {
+            if (result.item instanceof Record) {
                return Deferred.success(result);
             }
 
@@ -53,42 +49,33 @@ define('Controls/List/EditInPlace', [
          return Deferred.success(originalResult);
       },
 
-      afterBeginAdd: function(self, options) {
-         self._isAdd = true;
-         self._editingItem = options.item.clone();
-         self._notify('afterBeginEdit', [options.item, true], {bubbling: true});
-         self._options.listModel.setEditingItem(self._editingItem);
-
-         return self._editingItem;
-      },
-
-      endEdit: function(self, commit) {
+      endItemEdit: function(self, commit) {
          //Чтобы при первом старте редактирования не летели лишние события
          if (!self._editingItem) {
             return Deferred.success();
          }
 
-         var result = self._notify('endEdit', [self._editingItem, commit, self._isAdd], {bubbling: true});
+         var result = self._notify('beforeItemEndEdit', [self._editingItem, commit, self._isAdd]);
 
-         if (result === EndEditResult.CANCEL) {
+         if (result === ItemEndEditResult.CANCEL) {
             return Deferred.fail();
          }
 
          if (result instanceof Deferred) {
             //Если мы попали сюда, то прикладники сами сохраняют запись
             return result.addCallback(function() {
-               _private.afterEndEdit(self);
+               _private.afterItemEndEdit(self);
             });
          }
 
          return _private.updateModel(self, commit).addCallback(function() {
-            _private.afterEndEdit(self);
+            _private.afterItemEndEdit(self);
          });
       },
 
-      afterEndEdit: function(self) {
+      afterItemEndEdit: function(self) {
          //Это событие всплывает, т.к. прикладники после завершения сохранения могут захотеть показать кнопку "+Запись" (по стандарту при старте добавления она скрывается)
-         self._notify('afterEndEdit', [self._oldItem, self._isAdd], {bubbling: true});
+         self._notify('afterItemEndEdit', [self._oldItem, self._isAdd]);
          _private.resetVariables(self);
          self._options.listModel.setEditingItem(null);
       },
@@ -139,25 +126,29 @@ define('Controls/List/EditInPlace', [
 
          if (editNextRow) {
             if (index < items.getCount() - 1) {
-               self.beginEdit(items.at(index + 1));
+               self.editItem({
+                  item: items.at(index + 1)
+               });
             } else if (self._options.editingConfig && self._options.editingConfig.autoAdd) {
-               self.beginAdd();
+               self.addItem();
             } else {
                self.commitEdit();
             }
          } else {
             if (index > 0) {
-               self.beginEdit(items.at(index - 1));
+               self.editItem({
+                  item: items.at(index - 1)
+               });
             } else {
                self.commitEdit();
             }
          }
       }
    },
-   BeginEditResult = { // Возможные результаты события "BeginEditResult"
+   ItemEditResult = { // Возможные результаты события "ItemEditResult"
       CANCEL: 'Cancel'
    },
-   EndEditResult = { // Возможные результаты события "onEndEdit"
+   ItemEndEditResult = { // Возможные результаты события "onItemEndEdit"
       CANCEL: 'Cancel' // Отменить завершение редактирования/добавления
    };
 
@@ -170,61 +161,66 @@ define('Controls/List/EditInPlace', [
        */
 
       /**
-       * @typedef {String|WS.Data/Entity/Record|Core/Deferred} BeginEditResult
+       * @typedef {Object} ItemEditOptions
+       * @param {WS.Data/Entity/Record} [options.item] Record with initial data.
+       */
+
+      /**
+       * @typedef {String|WS.Data/Entity/Record|Core/Deferred} ItemEditResult
        * @variant {String} Cancel Cancel start of editing.
-       * @variant {WS.Data/Entity/Record} item Editing record.
+       * @variant {ItemEditOptions} options Options of editing.
        * @variant {Core/Deferred} Deferred Deferred is used for asynchronous preparation of edited record. It is necessary to fullfill deferred with a record which will be opened for editing.
        */
 
       /**
-       * @typedef {String|Core/Deferred} EndEditResult
+       * @typedef {String|Core/Deferred} ItemEndEditResult
        * @variant {String} Cancel Cancel ending of editing\adding.
        * @variant {Core/Deferred} Deferred Deferred is used for saving with custom logic.
        */
 
       /**
-       * @typedef {Object} BeginAddOptions
+       * @typedef {Object} AddItemOptions
        * @param {WS.Data/Entity/Record} [options.item] Record with initial data.
        */
 
       /**
-       * @typedef {String|Core/Deferred|BeginAddOptions} BeginAddResult
+       * @typedef {String|Core/Deferred|AddItemOptions} AddItemResult
        * @variant {String} Cancel Cancel start of adding.
-       * @variant {BeginAddOptions} Options of adding.
+       * @variant {AddItemOptions} Options of adding.
        * @variant {Core/Deferred} Deferred Deferred is used for asynchronous preparation of adding record. It is necessary to fullfill deferred with options of adding.
        */
 
       /**
-       * @event Controls/List/EditInPlace#beginEdit Happens before start of editing.
+       * @event Controls/List/EditInPlace#beforeItemEdit Happens before start of editing.
        * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-       * @param {WS.Data/Entity/Record} item Editing record.
-       * @returns {BeginEditResult}
+       * @param {ItemEditOptions} item Options of editing.
+       * @returns {BeforeItemEditResult}
        */
 
       /**
-       * @event Controls/List/EditInPlace#beginAdd Happens before start of adding.
+       * @event Controls/List/EditInPlace#beforeItemAdd Happens before start of adding.
        * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-       * @param {BeginAddOptions} Options of adding.
-       * @returns {BeginAddResult}
+       * @param {AddItemOptions} Options of adding.
+       * @returns {AddItemResult}
        */
 
       /**
-       * @event Controls/List/EditInPlace#afterBeginEdit Happens after start of editing\adding.
+       * @event Controls/List/EditInPlace#afterItemEdit Happens after start of editing\adding.
        * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
        * @param {WS.Data/Entity/Record} item Editing record.
        * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
        */
 
       /**
-       * @event Controls/List/EditInPlace#endEdit Happens before the end of editing\adding.
+       * @event Controls/List/EditInPlace#beforeItemEndEdit Happens before the end of editing\adding.
        * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
        * @param {Boolean} commit If it is true editing ends with saving.
        * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
-       * @returns {EndEditResult}
+       * @returns {ItemEndEditResult}
        */
 
       /**
-       * @event Controls/List/EditInPlace#afterEndEdit Happens after the end of editing\adding.
+       * @event Controls/List/EditInPlace#afterItemEndEdit Happens after the end of editing\adding.
        * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
        * @param {WS.Data/Entity/Record} item Editing record.
        * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
@@ -246,19 +242,19 @@ define('Controls/List/EditInPlace', [
 
       /**
        * Starts editing in place.
-       * @param {WS.Data/Entity/Record} record Editing record.
+       * @variant {ItemEditOptions} options Options of editing.
        * @returns {Core/Deferred}
        */
       //TODO: управлять индикатором загрузки
-      beginEdit: function(record) {
+      editItem: function(options) {
          var self = this,
             editingItemIndex = this._options.listModel.getEditingItemIndex(),
-            currentItemIndex = this._options.listModel.getItems().getIndex(record);
+            currentItemIndex = this._options.listModel.getItems().getIndex(options.item);
          //Если currentItemIndex = -1, то происходит добавление
          if (editingItemIndex !== currentItemIndex && ~currentItemIndex) {
             return this.commitEdit().addCallback(function() {
-               return _private.beginEdit(self, record).addCallback(function(newRecord) {
-                  return _private.afterBeginEdit(self, newRecord);
+               return _private.editItem(self, options).addCallback(function(newOptions) {
+                  return _private.afterItemEdit(self, newOptions);
                });
             });
          }
@@ -266,15 +262,15 @@ define('Controls/List/EditInPlace', [
 
       /**
        * Starts adding.
-       * @param {BeginAddOptions} options Options of adding.
+       * @param {AddItemOptions} options Options of adding.
        * @returns {Core/Deferred}
        */
       //TODO: управлять индикатором загрузки
-      beginAdd: function(options) {
+      addItem: function(options) {
          var self = this;
          return this.commitEdit().addCallback(function() {
-            return _private.beginAdd(self, options || {}).addCallback(function(newOptions) {
-               return _private.afterBeginAdd(self, newOptions);
+            return _private.editItem(self, options || {}, true).addCallback(function(newOptions) {
+               return _private.afterItemEdit(self, newOptions, true);
             });
          });
       },
@@ -292,7 +288,7 @@ define('Controls/List/EditInPlace', [
                   return Deferred.fail();
                }
             }
-            return _private.endEdit(self, true);
+            return _private.endItemEdit(self, true);
          });
       },
 
@@ -301,7 +297,7 @@ define('Controls/List/EditInPlace', [
        * @returns {Core/Deferred}
        */
       cancelEdit: function() {
-         return _private.endEdit(this, false);
+         return _private.endItemEdit(this, false);
       },
 
       _onKeyDown: function(e) {
@@ -326,7 +322,9 @@ define('Controls/List/EditInPlace', [
 
       _onItemClick: function(e, record) {
          if (this._options.editingConfig && this._options.editingConfig.editOnClick) {
-            this.beginEdit(record);
+            this.editItem({
+               item: record
+            });
          }
       },
 

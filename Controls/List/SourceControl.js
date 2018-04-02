@@ -448,20 +448,40 @@ define('Controls/List/SourceControl', [
 
      /**
       * Starts editing in place.
-      * @param {WS.Data/Entity/Record} record Editing record.
+      * @param {ItemEditOptions} options Options of editing.
       * @returns {Core/Deferred}
       */
-      beginEdit: function(record) {
-         this._children.editInPlace.beginEdit(record);
+     editItem: function(options) {
+         this._children.editInPlace.editItem(options);
       },
 
      /**
       * Starts adding.
-      * @param {BeginAddOptions} options Options of adding.
+      * @param {AddItemOptions} options Options of adding.
       * @returns {Core/Deferred}
       */
-      beginAdd: function(options) {
-        this._children.editInPlace.beginAdd(options);
+      addItem: function(options) {
+        this._children.editInPlace.addItem(options);
+      },
+
+      _onBeforeItemAdd: function(e, options) {
+         return this._notify('beforeItemAdd', [options]);
+      },
+
+      _onBeforeItemEdit: function(e, options) {
+         return this._notify('beforeItemEdit', [options]);
+      },
+
+      _onAfterItemEdit: function(e, options) {
+         this._notify('afterItemEdit', [options]);
+      },
+
+      _onBeforeItemEndEdit: function(e, options) {
+         return this._notify('beforeItemEndEdit', [options]);
+      },
+
+      _onAfterItemEndEdit: function(e, options) {
+         this._notify('beforeItemEndEdit', [options]);
       }
    });
 

@@ -16,6 +16,11 @@
         <Controls.List.EditInPlace ws:content="listView"
                                    name="editInPlace"
                                    editingConfig="{{_options.editingConfig}}"
+                                   on:beforeItemAdd="_onBeforeItemAdd()"
+                                   on:beforeItemEdit="_onBeforeItemEdit()"
+                                   on:afterItemEdit="_onAfterItemEdit()"
+                                   on:beforeItemEndEdit="_onBeforeItemEndEdit()"
+                                   on:afterItemEndEdit="_onAfterItemEndEdit()"
                                    listModel="{{_listViewModel}}"
                                    source="{{_options.source}}" />
         <Controls.List.Remove ws:content="listView" name="removeControl"/>
