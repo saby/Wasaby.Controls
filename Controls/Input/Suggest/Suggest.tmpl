@@ -41,7 +41,7 @@
 
     <Controls:Popup:Opener:Stack name="showAllOpener">
         <ws:popupOptions template="Controls/Input/resources/SuggestShowAll/SuggestShowAll" className="ws-Suggest__showAllPopup">
-            <ws:componentOptions dataSource="{{_options.dataSource}}" template="{{_options.suggestTemplate}}" navigation="{{_options.navigation}}"></ws:componentOptions>
+            <ws:componentOptions source="{{_options.source}}" template="{{_options.suggestTemplate}}" navigation="{{_options.navigation}}"></ws:componentOptions>
             <ws:eventHandlers onResult="{{_selectHandler}}"/>
         </ws:popupOptions>
     </Controls:Popup:Opener:Stack>
