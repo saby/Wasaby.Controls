@@ -7,9 +7,9 @@ define('Controls/List/Remove', [
    var Remove = Control.extend( {
       _template: template,
 
-      itemsRemove: function(items) {
-         var itemsRemoveResult = this._notify('itemsRemove', [items]);
-         return itemsRemoveResult instanceof Deferred ? itemsRemoveResult : Deferred.success(itemsRemoveResult);
+      beforeItemsRemove: function(items) {
+         var beforeItemsRemoveResult = this._notify('beforeItemsRemove', [items]);
+         return beforeItemsRemoveResult instanceof Deferred ? beforeItemsRemoveResult : Deferred.success(beforeItemsRemoveResult);
       },
 
       afterItemsRemove: function(items, result) {

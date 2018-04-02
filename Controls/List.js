@@ -77,8 +77,8 @@ define('Controls/List', [
          }
       },
 
-      _itemsRemove: function(event, items) {
-         return this._notify('itemsRemove', [items]);
+      _beforeItemsRemove: function(event, items) {
+         return this._notify('beforeItemsRemove', [items]);
       },
 
       _afterItemsRemove: function (event, items, result) {

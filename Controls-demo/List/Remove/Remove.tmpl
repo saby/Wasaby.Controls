@@ -5,13 +5,13 @@
             markedKey="{{1}}"
             itemActions="{{_itemActions}}"
             source = "{{_viewSource}}"
-            on:itemsRemove="_itemsRemove()"
+            on:beforeItemsRemove="_beforeItemsRemove()"
             on:afterItemsRemove="_afterItemsRemove()"
             idProperty="id">
     </Controls.List>
     <Controls.List
             class="removeDemo__list"
-            on:itemsRemove="_secondListRemoveHandler()"
+            on:beforeItemsRemove="_secondListRemoveHandler()"
             on:afterItemsRemove="_secondListRemoveHandler()"
             source = "{{_viewSourceSecond}}"
             idProperty="id">

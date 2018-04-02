@@ -427,7 +427,7 @@ define('Controls/List/SourceControl', [
          var
             self = this,
             removeControl = this._children.removeControl;
-         removeControl.itemsRemove(items).addCallback(function(result) {
+         removeControl.beforeItemsRemove(items).addCallback(function(result) {
             if (result !== false) {
                _private.showIndicator(self);
                _private.removeFromSource(self, items).addCallback(function(result) {
@@ -441,8 +441,8 @@ define('Controls/List/SourceControl', [
          });
       },
 
-      _itemsRemove: function(event, items) {
-         return this._notify('itemsRemove', [items]);
+      _beforeItemsRemove: function(event, items) {
+         return this._notify('beforeItemsRemove', [items]);
       },
 
       _afterItemsRemove: function (event, items, result) {

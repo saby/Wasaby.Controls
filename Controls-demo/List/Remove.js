@@ -52,7 +52,7 @@ define('Controls-demo/List/Remove', [
          }];
       },
 
-      _itemsRemove: function(event, items) {
+      _beforeItemsRemove: function(event, items) {
          if (items.indexOf(1) !== -1) {
             return this._children.popupOpener.open({
                message: 'Remove items?',

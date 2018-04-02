@@ -15,7 +15,7 @@
         </ws:partial>
         <Controls.List.Remove ws:content="listView"
                 name="removeControl"
-                on:itemsRemove="_itemsRemove()"
+                on:beforeItemsRemove="_beforeItemsRemove()"
                 on:afterItemsRemove="_afterItemsRemove()"
                 />
         <Controls.List.ItemActions.ItemActionsControl
