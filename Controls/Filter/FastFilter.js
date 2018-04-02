@@ -18,13 +18,28 @@ define('Controls/Filter/FastFilter',
       'use strict';
 
       /**
-       *
-       * @class Controls/Filter/FastData
+       * Control "Fast Filter"
+       * @class Controls/Filter/FastFilter
        * @extends Controls/Control
        * @control
        * @public
        * @author Золотова Э.Е.
        */
+
+      /**
+       * @event Controls/Filter/FastFilter#filterChanged Happen when the filter changes
+       */
+
+      /**
+       * @name Controls/Filter/FastFilter#source
+       * @cfg {WS.Data/Source/ISource} Sets the source of data set, on which to build the mapping. If 'items' are specified, 'source' will be ignored
+       */
+
+      /**
+       * @name Controls/Filter/FastFilter#items
+       * @cfg {WS.Data/Collection/IList} Sets a set of initial data, on which to build the mapping
+       */
+
       var _private = {
 
          getSourceController: function (source) {
@@ -89,7 +104,7 @@ define('Controls/Filter/FastFilter',
          selectItem: function (item) {
             //Получаем ключ выбранного элемента
             var key = item.get(this._configs[this.lastOpenIndex].keyProperty);
-            this._items.at(this.lastOpenIndex).set({value: key});
+            this._items.at(this.lastOpenIndex).set({value: String(key)});
             this._notify('selectedKeysChanged', [key]);
          },
 
@@ -98,7 +113,7 @@ define('Controls/Filter/FastFilter',
             var data = args[2];
             if (actionName === 'itemClick') {
                _private.selectItem.apply(this, data);
-               this._notify('filterChanged', [_private.getFilter(this._items)], {bubbling: true});
+               this._notify('filterChanged', [_private.getFilter(this._items)]);
                this._children.DropdownOpener.close();
             }
          }
@@ -144,7 +159,7 @@ define('Controls/Filter/FastFilter',
                   itemTemplate: item.get('itemTemplate'),
                   headTemplate: item.get('headTemplate'),
                   footerTemplate: item.get('footerTemplate'),
-                  selectedKeys: this._items.at(index).get('value') || this._items.at(index).get('resetValue')
+                  selectedKeys: this._items.at(index).get('value')
                },
                target: event.target.parentElement
             };
@@ -155,16 +170,16 @@ define('Controls/Filter/FastFilter',
 
          _getText: function (item, index) {
             if (this._configs[index]._items) {
-               var sKey = this._items.at(index).get('value') || this._items.at(index).get('resetValue');
+               var sKey = this._items.at(index).get('value');
                return this._configs[index]._items.getRecordById(sKey).get(this._configs[index].displayProperty);
             }
          },
 
          _reset: function (event, item, index) {
             var newValue = this._items.at(index).get('resetValue');
-            this._items.at(index).set({value: newValue});
+            this._items.at(index).set({value: String(newValue)});
             this._notify('selectedKeysChanged', [newValue]);
-            this._notify('filterChanged', [_private.getFilter(this._items)], {bubbling: true});
+            this._notify('filterChanged', [_private.getFilter(this._items)]);
          }
       });
 

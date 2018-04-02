@@ -1,10 +1,10 @@
-define('Controls-demo/FastDataFilter/FastDataFilter',
+define('Controls-demo/FastFilter/FastFilter',
    [
       'Core/Control',
-      'tmpl!Controls-demo/FastDataFilter/FastDataFilter',
+      'tmpl!Controls-demo/FastFilter/FastFilter',
       'WS.Data/Source/Memory',
       'Controls/Filter/FastFilter',
-      'css!Controls-demo/FastDataFilter/FastDataFilter'
+      'css!Controls-demo/FastFilter/FastFilter'
    ],
 
    function (Control, template, Memory) {

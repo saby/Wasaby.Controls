@@ -5,7 +5,7 @@ define(
       'Core/vdom/Synchronizer/resources/SyntheticEvent'
    ],
    function (FastData, Memory, SyntheticEvent) {
-      describe('FastDataVDom', function () {
+      describe('FastFilterVDom', function () {
          var items = [
             [{key: 0, title: 'все страны'},
                {key: 1, title: 'Россия'},
