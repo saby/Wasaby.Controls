@@ -264,7 +264,7 @@ define('SBIS3.CONTROLS/ImportCustomizer/ColumnBinding/View',
                      }
                      else {
                         commonMenuItems = fields.items.map(function (field) {
-                           return props.reduce(function (r, p) { r[p] = field[p]; return r; }, {});
+                           return props.reduce(function (r, p) { var v = field[p]; r[p] = v !== undefined ? v : null; return r; }, {});
                         });
                      }
                      var parents = [];
