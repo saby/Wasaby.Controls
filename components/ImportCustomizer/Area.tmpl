@@ -25,7 +25,7 @@
    </div>
    <SBIS3.CONTROLS:ScrollContainer class="controls-ImportCustomizer-Area__body controls-ScrollContainer__flex">
       <ws:content>
-         <ws:if data="{{sheets && sheets.length}}">
+         <ws:if data="{{dataType === 'excel' && sheets && sheets.length}}">
             <SBIS3.CONTROLS:ImportCustomizer:Sheet:View
                class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-sheet"
                name="controls-ImportCustomizer-Area__sheet"
@@ -41,30 +41,32 @@
             class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-baseParams"
             name="controls-ImportCustomizer-Area__baseParams"
          />
-         <SBIS3.CONTROLS:ImportCustomizer:Provider:View
-            class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-provider"
-            name="controls-ImportCustomizer-Area__provider"
-            parsers="{{_parserItems}}"
-            parser="{{_parserName}}"
-            skippedRows="{{_skippedRows}}"
-            separator="{{_parserSeparator }}"
-         />
-         <Lib:Control:TemplatedArea:TemplatedArea
-            template="{{_providerArgsComponent}}"
-            class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-providerArgs"
-            name="controls-ImportCustomizer-Area__providerArgs"
-            visible="{{!!_providerArgsComponent}}"
-            componentOptions="{{_providerArgsOptions}}"
-         />
-         <SBIS3.CONTROLS:ImportCustomizer:ColumnBinding:View
-            class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-columnBinding"
-            name="controls-ImportCustomizer-Area__columnBinding"
-            columnCaption="{{bindingColumnCaption}}"
-            columnTitle="{{bindingColumnTitle}}"
-            rows="{{_columnsBindingRows}}"
-            fields="{{fields}}"
-            skippedRows="{{_skippedRows}}"
-         />
+         <ws:if data="{{dataType === 'excel' || dataType === 'dbf'}}">
+            <SBIS3.CONTROLS:ImportCustomizer:Provider:View
+               class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-provider"
+               name="controls-ImportCustomizer-Area__provider"
+               parsers="{{_parserItems}}"
+               parser="{{_parserName}}"
+               skippedRows="{{_skippedRows}}"
+               separator="{{_parserSeparator}}"
+            />
+            <Lib:Control:TemplatedArea:TemplatedArea
+               template="{{_providerArgsComponent}}"
+               class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-providerArgs"
+               name="controls-ImportCustomizer-Area__providerArgs"
+               visible="{{!!_providerArgsComponent}}"
+               componentOptions="{{_providerArgsOptions}}"
+            />
+            <SBIS3.CONTROLS:ImportCustomizer:ColumnBinding:View
+               class="controls-ImportCustomizer-Area__body__box controls-ImportCustomizer-Area__body__box-not-pad controls-ImportCustomizer-Area__body__box-columnBinding"
+               name="controls-ImportCustomizer-Area__columnBinding"
+               columnCaption="{{bindingColumnCaption}}"
+               columnTitle="{{bindingColumnTitle}}"
+               rows="{{_columnsBindingRows}}"
+               fields="{{fields}}"
+               skippedRows="{{_skippedRows}}"
+            />
+         </ws:if>
       </ws:content>
    </SBIS3.CONTROLS:ScrollContainer>
 </div>

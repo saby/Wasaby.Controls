@@ -168,17 +168,20 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
             options._parserItems = parserItems;
             options._defaultParserName = parserItems[0].id;
             var sheetIndex = options.sheetIndex;
-            if (options.sameSheetConfigs || sheetIndex ==/*Не ===*/ null) {
+            if (hasSheets && (options.sameSheetConfigs || sheetIndex ==/*Не ===*/ null)) {
                options.sheetIndex = sheetIndex = -1;
             }
-            var sheet = sheets[0 < sheetIndex ? sheetIndex : 0];
-            var parserName = sheet.parser;
+            var sheet = hasSheets ? sheets[0 < sheetIndex ? sheetIndex : 0] : null;
+            var parserName = hasSheets ? sheet.parser : null;
             if (!parserName) {
-               sheet.parser = parserName = options._defaultParserName;
+               parserName = options._defaultParserName;
+               if (hasSheets) {
+                  sheet.parser = parserName;
+               }
             }
             options._parserName = parserName;
-            options._skippedRows = 0 < sheet.skippedRows ? sheet.skippedRows : 0;
-            options._parserSeparator = sheet.separator || '';
+            options._skippedRows = hasSheets && 0 < sheet.skippedRows ? sheet.skippedRows : 0;
+            options._parserSeparator = hasSheets && sheet.separator ? sheet.separator : '';
             options._providerArgsComponent = parsers[parserName].component || undefined;
             options._providerArgsOptions = this._getProviderArgsOptions(options, parserName, true);
             options._columnsBindingRows = hasSheets ? sheet.sampleRows : [];
@@ -198,9 +201,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
 
          init: function () {
             Area.superclass.init.apply(this, arguments);
+            // Получить ссылки на имеющиеся подкомпоненты
             for (var name in this._childViewNames) {
                this._views[name] = _getChildComponent(this, this._childViewNames[name]);
             }
+            // Инициализировать результирующие данные
             var options = this._options;
             var sheets = options.sheets;
             if (sheets && sheets.length) {
@@ -221,8 +226,10 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                results[''] = cMerge({}, results[1]);
                this._results = results;
             }
+            // Если поля представлены обещанием
             var fields = this._fieldsPromise;
             if (fields) {
+               // Получить из этого обещания актуальные значения полей по мере разрешения обещания
                var success = function (data) {
                   this._fieldsPromise = null;
                   this._setFields(data);
@@ -241,59 +248,69 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                   (fields.isSuccessful() ? success : fail)(value);
                }
             }
+            // Подписаться на необходимые события
             this._bindEvents();
          },
 
          _bindEvents: function () {
-            this.subscribeTo(this._views.sheet, 'change', function (evtName, values) {
-               // Изменилась область данных для импортирования
-               var options = this._options;
-               var views = this._views;
-               var results = this._results;
-               var sheetIndex = options.sheetIndex;
-               var prevResult = results[0 <= sheetIndex ? sheetIndex + 1 : ''];
-               prevResult.provider =  cMerge({}, views.provider.getValues());
-               prevResult.providerArgs = cMerge({}, this._getProviderArgsValues());
-               prevResult.columnBinding = cMerge({}, views.columnBinding.getValues());
-               sheetIndex = values.sheetIndex;
-               options.sheetIndex = sheetIndex;
-               var nextResult = results[0 <= sheetIndex ? sheetIndex + 1 : ''];
-               views.provider.setValues(nextResult.provider);
-               this._updateProviderArgsView(nextResult.provider.parser);
-               var sheets = options.sheets;
-               views.columnBinding.setValues(cMerge({rows:sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows}, nextResult.columnBinding));
-            }.bind(this));
-            this.subscribeTo(this._views.baseParams, 'change', function (evtName, values) {
-               // Изменились основные параметры импортирования
-               var fields = values.fields;
-               if (fields) {
-                  this._options.fields = fields;
-                  this._views.columnBinding.setValues({fields:fields});
-               }
-            }.bind(this));
-            this.subscribeTo(this._views.provider, 'change', function (evtName, values) {
-               // Изменился выбор провайдера парсинга
-               var sheetIndex = this._options.sheetIndex;
-               var result = this._results[0 <= sheetIndex ? sheetIndex + 1 : ''];
-               var parserName = values.parser;
-               var skippedRows = values.skippedRows;
-               if (parserName !== result.provider.parser) {
-                  this._updateProviderArgsView(parserName);
-               }
-               result.provider = cMerge({}, values);
-               result.columnBinding.skippedRows = skippedRows;
-               this._views.columnBinding.setValues({skippedRows:skippedRows});
-            }.bind(this));
+            var views = this._views;
+            if (views.sheet) {
+               this.subscribeTo(this._views.sheet, 'change', function (evtName, values) {
+                  // Изменилась область данных для импортирования
+                  var options = this._options;
+                  var views = this._views;
+                  var results = this._results;
+                  var sheetIndex = options.sheetIndex;
+                  var prevResult = results[0 <= sheetIndex ? sheetIndex + 1 : ''];
+                  prevResult.provider =  cMerge({}, views.provider.getValues());
+                  prevResult.providerArgs = cMerge({}, this._getProviderArgsValues());
+                  prevResult.columnBinding = cMerge({}, views.columnBinding.getValues());
+                  sheetIndex = values.sheetIndex;
+                  options.sheetIndex = sheetIndex;
+                  var nextResult = results[0 <= sheetIndex ? sheetIndex + 1 : ''];
+                  views.provider.setValues(nextResult.provider);
+                  this._updateProviderArgsView(nextResult.provider.parser);
+                  var sheets = options.sheets;
+                  views.columnBinding.setValues(cMerge({rows:sheets[0 < sheetIndex ? sheetIndex : 0].sampleRows}, nextResult.columnBinding));
+               }.bind(this));
+            }
+            if (views.baseParams) {
+               this.subscribeTo(views.baseParams, 'change', function (evtName, values) {
+                  // Изменились основные параметры импортирования
+                  var fields = values.fields;
+                  if (fields) {
+                     this._options.fields = fields;
+                     this._views.columnBinding.setValues({fields:fields});
+                  }
+               }.bind(this));
+            }
+            if (views.provider) {
+               this.subscribeTo(views.provider, 'change', function (evtName, values) {
+                  // Изменился выбор провайдера парсинга
+                  var sheetIndex = this._options.sheetIndex;
+                  var result = this._results[0 <= sheetIndex ? sheetIndex + 1 : ''];
+                  var parserName = values.parser;
+                  var skippedRows = values.skippedRows;
+                  if (parserName !== result.provider.parser) {
+                     this._updateProviderArgsView(parserName);
+                  }
+                  result.provider = cMerge({}, values);
+                  result.columnBinding.skippedRows = skippedRows;
+                  this._views.columnBinding.setValues({skippedRows:skippedRows});
+               }.bind(this));
+            }
             // Для компонента this._views.providerArgs подисываеися отдельно через обработчик в опциях
-            this.subscribeTo(this._views.columnBinding, 'change', function (evtName, values) {
-               // Изменилась привязка данных к полям базы
-               var sheetIndex = this._options.sheetIndex;
-               var result = this._results[0 <= sheetIndex ? sheetIndex + 1 : ''];
-               var skippedRows = values.skippedRows;
-               result.provider.skippedRows = skippedRows;
-               result.columnBinding = cMerge({}, values);
-               this._views.provider.setValues({skippedRows:skippedRows});
-            }.bind(this));
+            if (views.columnBinding) {
+               this.subscribeTo(views.columnBinding, 'change', function (evtName, values) {
+                  // Изменилась привязка данных к полям базы
+                  var sheetIndex = this._options.sheetIndex;
+                  var result = this._results[0 <= sheetIndex ? sheetIndex + 1 : ''];
+                  var skippedRows = values.skippedRows;
+                  result.provider.skippedRows = skippedRows;
+                  result.columnBinding = cMerge({}, values);
+                  this._views.provider.setValues({skippedRows:skippedRows});
+               }.bind(this));
+            }
          },
 
          /*
@@ -337,8 +354,11 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
                throw new Error('Wrong fields parentProperty');
             }
             this._options.fields = fields;
-            //this._views.baseParams.setValues({fields:fields});
-            this._views.columnBinding.setValues({fields:fields});
+            var views = this._views;
+            //views.baseParams.setValues({fields:fields});
+            if (views.columnBinding) {
+               views.columnBinding.setValues({fields:fields});
+            }
          },
 
          /*
@@ -529,14 +549,17 @@ define('SBIS3.CONTROLS/ImportCustomizer/Area',
       // Public constants:
 
       /**
-       * Константа - Поддерживаемые типы данных
+       * Константы - Поддерживаемые типы данных
        *
        * @public
        * @static
        * @constant
        * @type {Array<string>}
        */
-      Object.defineProperty(Area, 'DATA_TYPES', {value:['excel', 'dbf', 'cml'], enumerable:true});
+      Object.defineProperty(Area, 'DATA_TYPE_EXCEL', {value:'excel', enumerable:true});
+      Object.defineProperty(Area, 'DATA_TYPE_DBF', {value:'dbf', enumerable:true});
+      Object.defineProperty(Area, 'DATA_TYPE_CML', {value:'cml', enumerable:true});
+      Object.defineProperty(Area, 'DATA_TYPES', {value:[Area.DATA_TYPE_EXCEL, Area.DATA_TYPE_DBF, Area.DATA_TYPE_CML], enumerable:true});
 
 
       // Public static methods:
