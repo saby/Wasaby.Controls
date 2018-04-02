@@ -11,6 +11,11 @@ define('Controls-demo/Layouts/LayoutFilterComponent', [
          _template: template,
          _switchValue: false,
    
+         constructor: function(cfg) {
+            ModuleClass.superclass.constructor.call(this, cfg);
+            console.log(cfg);
+         },
+         
          _switchValueHandler: function(event, value) {
             var filter = {};
             if (this._switchValue) {

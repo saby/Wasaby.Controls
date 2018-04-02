@@ -6,19 +6,17 @@ define('SBIS3.CONTROLS/Filter/HistoryBase', [
    'Core/helpers/Object/find',
    'SBIS3.CONTROLS/CompoundControl',
    'SBIS3.CONTROLS/History/HistoryListUtils',
-   'SBIS3.CONTROLS/History/HistoryList',
    'Core/CommandDispatcher',
-   'SBIS3.CONTROLS/Utils/InformationPopupManager',
    'Core/helpers/collection-helpers',
+   'SBIS3.CONTROLS/History/HistoryList',
+   'SBIS3.CONTROLS/Utils/InformationPopupManager',
    'SBIS3.CONTROLS/Filter/HistoryView'
 ], function(
    isEqualObject,
    find,
    CompoundControl,
    HistoryListUtils,
-   HistoryList,
    CommandDispatcher,
-   InformationPopupManager,
    colHelpers
 ) {
 

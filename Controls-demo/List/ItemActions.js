@@ -81,11 +81,10 @@ define('Controls-demo/List/ItemActions', [
     var ModuleClass = BaseControl.extend(
         {
             _showAction: function(action, item) {
-                if(item.get('id') === 2) {
-                    if(action.id === 2 || action.id === 3) {
+                if (item.get('id') === 2) {
+                    if (action.id === 2 || action.id === 3) {
                         return false;
-                    }
-                    else {
+                    } else {
                         return true;
                     }
 
@@ -93,7 +92,7 @@ define('Controls-demo/List/ItemActions', [
                 if (action.id === 5) {
                     return false;
                 }
-                if(item.get('id') === 4) {
+                if (item.get('id') === 4) {
                     return false;
                 }
 

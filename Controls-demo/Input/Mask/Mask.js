@@ -36,7 +36,6 @@ define('Controls-demo/Input/Mask/Mask',
             this._replacer = replacer;
 
             this._setValue();
-            this._children.example.focus();
          }
       });
 

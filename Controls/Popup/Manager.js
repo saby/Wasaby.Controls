@@ -137,10 +137,7 @@ define('Controls/Popup/Manager',
                id: Random.randomId('popup-'),
                isModal: options.isModal,
                strategy: strategy,
-               position: {
-                  top: -10000,
-                  left: -10000
-               },
+               position: strategy.getDefaultPosition(),
                popupOptions: options
             };
             _private.addElement.call(this, element);
@@ -171,11 +168,11 @@ define('Controls/Popup/Manager',
           * @param id идентификатор попапа
           * @param container контейнер
           */
-         remove: function (id, container) {
+         remove: function (id) {
             var
                element = this.find(id);
             if (element) {
-               _private.removeElement.call(this, element, container, id).addCallback( function(){
+               _private.removeElement.call(this, element, _private.getItemContainer(id), id).addCallback( function(){
                   Manager._redrawItems();
                   return element;
                });

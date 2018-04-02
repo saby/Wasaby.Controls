@@ -23,6 +23,6 @@ define('tests/unit/File/Mocks/GetResources', [
       if (ResourceConstructor === HttpFileLink) {
          return new HttpFileLink('http://example.com/' + name, meta);
       }
-      throw Error('Unknow ResourceConstructor`s name!');
+      throw Error('Unknown ResourceConstructor!');
    }
 });
