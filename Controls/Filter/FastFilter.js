@@ -104,7 +104,7 @@ define('Controls/Filter/FastFilter',
          selectItem: function (item) {
             //Получаем ключ выбранного элемента
             var key = item.get(this._configs[this.lastOpenIndex].keyProperty);
-            this._items.at(this.lastOpenIndex).set({value: String(key)});
+            this._items.at(this.lastOpenIndex).set({value: key});
             this._notify('selectedKeysChanged', [key]);
          },
 
@@ -177,7 +177,7 @@ define('Controls/Filter/FastFilter',
 
          _reset: function (event, item, index) {
             var newValue = this._items.at(index).get('resetValue');
-            this._items.at(index).set({value: String(newValue)});
+            this._items.at(index).set({value: newValue});
             this._notify('selectedKeysChanged', [newValue]);
             this._notify('filterChanged', [_private.getFilter(this._items)]);
          }
