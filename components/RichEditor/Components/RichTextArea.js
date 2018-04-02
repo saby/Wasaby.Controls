@@ -449,6 +449,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (typeof html === 'string' && this._tinyEditor) {
                this._performByReady(function() {
                   html = this._prepareContent(html);
+                  // Если по любым причинам редактор пуст абсолютно - восстановить минимальный контент
+                  // 1175088566 https://online.sbis.ru/opendoc.html?guid=5f7765c4-55e5-4e73-b7bd-3cd05c61d4e2
+                  this._ensureHasMinContent();
                   var editor = this._tinyEditor;
                   var lastRng = this._tinyLastRng;
                   if (lastRng) {
@@ -479,6 +482,19 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      this._notifyMobileInputFocus();
                   }
                }.bind(this));
+            }
+         },
+
+         /**
+          * Убедиться в том, что в редакторе наличествует хотя бы минимальный контент, если нет - восстановить минимальный контент
+          * (Не все функции вставки и команд tiny работают нормально с абсолютно пустым редактором)
+          */
+         _ensureHasMinContent: function () {
+            var editor = this._tinyEditor;
+            var editorBody = editor.getBody();
+            if (!editorBody.innerHTML) {
+               editorBody.innerHTML = '<p></p>';
+               this._selectNewRng(editorBody.firstChild, 0);
             }
          },
 
@@ -1040,6 +1056,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             if (isBlockquote) {
                execCmd = 'mceBlockQuote';
             }
+            // Если по любым причинам редактор пуст абсолютно - восстановить минимальный контент
+            // 1175088566 https://online.sbis.ru/opendoc.html?guid=5f7765c4-55e5-4e73-b7bd-3cd05c61d4e2
+            this._ensureHasMinContent();
             var isAlreadyApplied = editor.formatter.match(command);
             var rng = selection.getRng();
             var isBlockquoteOfList;
