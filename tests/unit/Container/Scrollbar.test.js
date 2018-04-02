@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/Container/resources/Scrollbar'
+      'Controls/Container/Scroll/Scrollbar'
    ],
    function(Scrollbar) {
 
@@ -38,11 +38,11 @@ define(
             result = Scrollbar._private.calcScrollRatio(200, 100, 50, 400);
             assert.equal(result, 0.25);
          });
-         it('calcDelta', function() {
-            result = Scrollbar._private.calcDelta(false, 80);
+         it('calcWheelDelta', function() {
+            result = Scrollbar._private.calcWheelDelta(false, 80);
             assert.equal(result, 80);
 
-            result = Scrollbar._private.calcDelta(true, 80);
+            result = Scrollbar._private.calcWheelDelta(true, 80);
             assert.equal(result, 100);
          });
       });

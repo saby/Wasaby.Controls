@@ -24,21 +24,21 @@
 }
 
 .controls-VScrollbar:hover,
-.controls-VScrollbar_drag {
+.controls-VScrollbar_dragging {
    width: @width_Scrollbar_animation + 2 * @spacing_Scrollbar;
 }
 
-.controls-VScrollbar__thumb:hover,
-.controls-VScrollbar__thumb_drag {
+.controls-VScrollbar:hover .controls-VScrollbar__thumb,
+.controls-VScrollbar__thumb_dragging {
    border-radius: @border-radius_Scrollbar-thumb_animation;
 }
 
 .controls-VScrollbar__thumb_normal:hover,
-.controls-VScrollbar__thumb_drag_normal {
+.controls-VScrollbar__thumb_dragging_normal {
    background-color: @bg_Scrollbar-thumb_active_normal;
 }
 
 .controls-VScrollbar__thumb_opposite:hover,
-.controls-VScrollbar__thumb_drag_opposite {
+.controls-VScrollbar__thumb_dragging_opposite {
    background-color: @bg_Scrollbar-thumb_active_opposite;
 }

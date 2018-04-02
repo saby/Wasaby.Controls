@@ -2,16 +2,16 @@ define('Controls/Container/Scroll',
    [
       'Core/Control',
       'Core/detection',
-      'Core/compatibility',
-      'Controls/Container/Scroll/StateCalculationFunctions',
+      'Controls/Container/Scroll/ScrollWidthController',
+      'Controls/Container/Scroll/ScrollOverflowController',
       'tmpl!Controls/Container/Scroll/Scroll',
 
       'Controls/Layout/Scroll',
       'Controls/Event/Emitter',
-      'Controls/Container/resources/Scrollbar',
+      'Controls/Container/Scroll/Scrollbar',
       'css!Controls/Container/Scroll/Scroll'
    ],
-   function(Control, detection, compatibility, StateCalculationFunctions, template) {
+   function(Control, detection, ScrollWidthController, ScrollOverflowController, template) {
 
       'use strict';
 
@@ -64,7 +64,7 @@ define('Controls/Container/Scroll',
                return container.scrollTop;
             },
 
-            setScroll: function(self) {
+            setHasScroll: function(self) {
                var
                   scrollHeight = _private.getScrollHeight(self._children.content),
                   containerHeight = _private.getContainerHeight(self._children.content),
@@ -84,52 +84,63 @@ define('Controls/Container/Scroll',
             /**
              * Видимость полосы прокрутки.
              * @type {boolean}
-             * @protected
              */
             _scrollbarVisible: false,
             /**
              * Смещение контента сверху относительно контейнера.
              * @type {number}
-             * @protected
              */
             _scrollTop: 0,
             /**
              * Возможна ли прокрутка контента.
              * @type {boolean}
-             * @protected
              */
             _hasScroll: null,
             /**
              * Наведен ли курсор на контейнер.
              * @type {boolean}
-             * @protected
              */
             _hasHover: false,
             /**
              * Происходит ли в данный момент смещение контента через scrollbar.
              * @type {boolean}
-             * @protected
              */
-            _currentlyDragging: false,
+            _dragging: false,
             /**
              * Используется ли нативный скролл.
              * На мобильных устройствах используется нативный скролл, на других платформенный.
              * @type {boolean}
-             * @protected
              */
-            _useNativeScrollbar: detection.isMobileIOS || detection.isMobileAndroid,
+            _useNativeScrollbar: detection.isMobileIOS || detection.isMobileAndroid || detection.isMac,
             /**
              * Нужно ли показывать скролл при наведении.
              * @type {boolean}
-             * @protected
              */
-            _showScrollbarAtHover: true,
+            _showScrollbarOnHover: true,
+
+            _afterMount: function() {
+               this._styleHideScrollbar = ScrollWidthController.calcStyleHideScrollbar();
+               this._overflow = ScrollOverflowController.calcOverflow(this._children.content);
+               _private.setHasScroll(this);
+
+               this._forceUpdate();
+            },
+
+            _afterUpdate: function() {
+               if (_private.setHasScroll(this)) {
+                  this._forceUpdate();
+               }
+            },
 
             _getScrollHeight: function() {
                return _private.getScrollHeight(this._children.content);
             },
 
-            _calcShadowPosition: function() {
+            /**
+             * Получить расположение тени внутри контейнера в зависимости от прокрутки контента.
+             * @return {String}
+             */
+            _getShadowPosition: function() {
                var
                   scrollTop = _private.getScrollTop(this._children.content),
                   scrollHeight = _private.getScrollHeight(this._children.content),
@@ -138,57 +149,43 @@ define('Controls/Container/Scroll',
                return _private.calcShadowPosition(scrollTop, containerHeight, scrollHeight);
             },
 
-            _afterMount: function() {
-               this._styleHideScrollbar = StateCalculationFunctions.calcStyleHideScrollbar();
-               this._overflow = StateCalculationFunctions.calcOverflow(this._children.content);
-               _private.setScroll(this);
-
-               this._forceUpdate();
-            },
-
-            _afterUpdate: function() {
-               if (_private.setScroll(this)) {
-                  this._forceUpdate();
-               }
-            },
-
-            _takeScrollbar: function(notify) {
-               if (this._showScrollbarAtHover && this._hasScroll) {
+            _scrollbarTaken: function(notify) {
+               if (this._showScrollbarOnHover && this._hasScroll) {
                   this._hasHover = true;
 
                   if (notify) {
-                     this._notify('takeScrollbar', [], {bubbling: true});
+                     this._notify('scrollbarTaken', [], {bubbling: true});
                   }
                }
             },
 
             _mouseenterHandler: function() {
-               this._takeScrollbar(true);
+               this._scrollbarTaken(true);
             },
 
             _mouseleaveHandler: function() {
                if (this._hasHover) {
                   this._hasHover = false;
-                  this._notify('returnScrollbar', [], {bubbling: true});
+                  this._notify('scrollbarReleased', [], {bubbling: true});
                }
             },
 
-            _takeScrollbarHandler: function() {
+            _scrollbarTakenHandler: function() {
                this._hasHover = false;
-               this._showScrollbarAtHover = false;
+               this._showScrollbarOnHover = false;
             },
 
-            _returnScrollbarHandler: function(event) {
-               if (!this._showScrollbarAtHover) {
-                  this._showScrollbarAtHover = true;
+            _scrollbarReleasedHandler: function(event) {
+               if (!this._showScrollbarOnHover) {
+                  this._showScrollbarOnHover = true;
                   event.preventDefault();
 
-                  this._takeScrollbar(false);
+                  this._scrollbarTaken(false)
                }
             },
 
             _scrollbarDragHandler: function(event, drag) {
-               this._currentlyDragging = drag;
+               this._dragging = drag;
 
                if (!drag) {
                   this._scrollTop = _private.getScrollTop(this._children.content);
@@ -196,13 +193,13 @@ define('Controls/Container/Scroll',
             },
 
             _scrollHandler: function() {
-               if (!this._currentlyDragging) {
+               if (!this._dragging) {
                   this._scrollTop = _private.getScrollTop(this._children.content);
                }
             },
 
             _resizeHandler: function(event, parentResize) {
-               _private.setScroll(this);
+               _private.setHasScroll(this);
             },
 
             _positionChangedHandler: function(event, position) {

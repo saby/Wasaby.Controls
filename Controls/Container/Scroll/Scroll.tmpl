@@ -8,13 +8,13 @@
                {{_hasHover ? 'controls-Scroll__content_possibleScroll'}}"
            on:scroll="_scrollHandler()"
            on:resize="_resizeHandler()"
-           on:takeScrollbar="_takeScrollbarHandler()" on:returnScrollbar="_returnScrollbarHandler()">
+           on:scrollbarTaken="_scrollbarTakenHandler()" on:scrollbarReleased="_scrollbarReleasedHandler()">
          <ws:partial template="{{_options.content}}"/>
       </div>
    </Controls.Layout.Scroll>
 
-   <Controls.Container.resources.Scrollbar
-      if="{{!_useNativeScrollbar && _options.scrollbarVisible && (_hasHover || _currentlyDragging)}}"
+   <Controls.Container.Scroll.Scrollbar
+      if="{{!_useNativeScrollbar && _options.scrollbarVisible && (_hasHover || _dragging)}}"
       position="{{_scrollTop}}"
       style="{{_options.style}}"
       contentHeight="{{_getScrollHeight()}}"
@@ -24,7 +24,7 @@
       on:positionChanged="_positionChangedHandler()"/>
 
    <div if="{{_options.shadowVisible && _hasScroll}}"
-        class="controls-Scroll__shadow controls-Scroll__shadow{{_calcShadowPosition()}}"></div>
+        class="controls-Scroll__shadow controls-Scroll__shadow{{_getShadowPosition()}}"></div>
 
    <Controls.Event.Emitter event="resize" on:resize="_resizeHandler()"/>
 </div>

@@ -1,10 +1,10 @@
-define('Controls/Container/resources/Scrollbar',
+define('Controls/Container/Scroll/Scrollbar',
    [
       'Core/Control',
       'Core/detection',
-      'tmpl!Controls/Container/resources/Scrollbar/Scrollbar',
+      'tmpl!Controls/Container/Scroll/Scrollbar/Scrollbar',
       'Controls/Event/Emitter',
-      'css!Controls/Container/resources/Scrollbar/Scrollbar'
+      'css!Controls/Container/Scroll/Scrollbar/Scrollbar'
    ],
    function(Control, detection, template) {
 
@@ -42,7 +42,7 @@ define('Controls/Container/resources/Scrollbar',
             /**
              * Позиция курсора относительно страницы, в начале перемещения.
              */
-            beginPageY: null,
+            currentPageY: null,
             /**
              * Посчитать позицию ползунка учитывая граници за которые он не может выйти.
              * @param {number} position позиция ползунка.
@@ -83,9 +83,13 @@ define('Controls/Container/resources/Scrollbar',
             calcThumbHeight: function(thumb, scrollbarAvailableHeight, viewportRatio) {
                thumb.style.height = scrollbarAvailableHeight * viewportRatio + 'px';
 
+               /**
+                * У ползунка может быть минимальная высота установленная через css свойства, для каждой темы своя, поэтому
+                * возвращаем высоту ползунка вычисленную браузером после установленной нами высоты.
+                */
                return thumb.offsetHeight;
             },
-            calcDelta: function(firefox, delta) {
+            calcWheelDelta: function(firefox, delta) {
                /**
                 * Определяем смещение ползунка.
                 * В firefox в дескрипторе события в свойстве deltaY лежит маленькое значение,
@@ -95,10 +99,13 @@ define('Controls/Container/resources/Scrollbar',
                 * https://online.sbis.ru/opendoc.html?guid=3e532f22-65a9-421b-ab0c-001e69d382c8
                 */
                if (firefox) {
-                  delta = 100;
+                  return 100;
                }
 
                return delta;
+            },
+            calcScrollbarDelta: function(start, end, thumbHeight) {
+               return end - start - thumbHeight / 2;
             }
          },
          Scrollbar = Control.extend({
@@ -108,7 +115,7 @@ define('Controls/Container/resources/Scrollbar',
              * Перемещается ли ползунок.
              * @type {boolean}
              */
-            _drag: false,
+            _dragging: false,
 
             /**
              * Позиция ползунка спроецированная на контент в границах трека.
@@ -116,11 +123,27 @@ define('Controls/Container/resources/Scrollbar',
              */
             _position: 0,
 
-            constructor: function(options) {
-               Scrollbar.superclass.constructor.call(this, options);
+            _afterMount: function() {
+               this._resizeHandler();
 
-               this._scrollbarOnDragHandler = this._scrollbarOnDragHandler.bind(this);
-               this._scrollbarEndDragHandler = this._scrollbarEndDragHandler.bind(this);
+               this._forceUpdate();
+            },
+
+            _afterUpdate: function(oldOptions) {
+               var
+                  shouldForceUpdate = false,
+                  shouldUpdatePosition = oldOptions.position !== this._options.position;
+
+               if (oldOptions.contentHeight !== this._options.contentHeight) {
+                  shouldForceUpdate |= this._setSizes(this._options.contentHeight);
+                  shouldUpdatePosition = true;
+               }
+               if (shouldUpdatePosition) {
+                  shouldForceUpdate |= this._setPosition(this._options.position);
+               }
+               if (shouldForceUpdate) {
+                  this._forceUpdate();
+               }
             },
 
             /**
@@ -128,7 +151,6 @@ define('Controls/Container/resources/Scrollbar',
              * @param {number} position новая позиция.
              * @param {boolean} notify стрелять ли событием при изменении позиции.
              * @return {boolean} изменилась ли позиция.
-             * @protected
              */
             _setPosition: function(position, notify) {
                var top = (this._children.scrollbar.clientHeight - this._thumbHeight) / this._scrollRatio;
@@ -152,7 +174,6 @@ define('Controls/Container/resources/Scrollbar',
              * Изменить свойства контрола отвечающего за размеры.
              * @param contentHeight высота контента.
              * @return {boolean} изменились ли размеры.
-             * @protected
              */
             _setSizes: function(contentHeight) {
                var
@@ -178,76 +199,38 @@ define('Controls/Container/resources/Scrollbar',
                }
             },
 
-            _afterMount: function() {
-               this._resizeHandler();
-
-               this._forceUpdate();
-            },
-
-            _afterUpdate: function(oldOptions) {
-               var
-                  forceUpdate = false,
-                  setPosition = oldOptions.position !== this._options.position;
-
-               if (oldOptions.contentHeight !== this._options.contentHeight) {
-                  forceUpdate |= this._setSizes(this._options.contentHeight);
-                  setPosition = true;
-               }
-               if (setPosition) {
-                  forceUpdate |= this._setPosition(this._options.position);
-               }
-               if (forceUpdate) {
-                  this._forceUpdate();
-               }
-            },
-
-            /**
-             * Добавляем обработчики перемещения ползунка мышью.
-             * @protected
-             */
-            _addMoveUpHandlers: function() {
-               document.addEventListener('mousemove', this._scrollbarOnDragHandler);
-               document.addEventListener('mouseup', this._scrollbarEndDragHandler);
-            },
-
-            /**
-             * Удаляем обработчики перемещения ползунка мышью.
-             * @protected
-             */
-            _removeMoveUpHandlers: function() {
-               document.removeEventListener('mousemove', this._scrollbarOnDragHandler);
-               document.removeEventListener('mouseend', this._scrollbarEndDragHandler);
-            },
-
             /**
              * Обработчик начала перемещения ползунка мышью.
              * @param {SyntheticEvent} event дескриптор события.
-             * @protected
              */
             _scrollbarBeginDragHandler: function(event) {
-               var delta;
+               var
+                  pageY = event.nativeEvent.pageY,
+                  thumbTop = this._children.thumb.getBoundingClientRect().top,
+                  delta;
 
-               _private.beginPageY = event.nativeEvent.pageY;
+               _private.currentPageY = pageY;
 
                if (event.target.getAttribute('name') === 'scrollbar') {
-                  delta = _private.beginPageY - this._children.thumb.getBoundingClientRect().top - this._thumbHeight / 2;
-                  delta /= this._scrollRatio;
-                  this._setPosition(this._position + delta, true);
+                  delta = _private.calcScrollbarDelta(thumbTop, pageY, this._thumbHeight);
+                  this._setPosition(this._position + delta / this._scrollRatio, true);
                }
 
-               this._drag = true;
-               this._addMoveUpHandlers();
+               this._dragging = true;
                this._notify('scrollbarBeginDrag');
             },
 
             /**
              * Обработчик перемещения ползунка мышью.
              * @param {Event} event дескриптор события.
-             * @protected
              */
-            _scrollbarOnDragHandler: function(event) {
-               if (this._setPosition(this._position + (event.pageY - _private.beginPageY) / this._scrollRatio, true)) {
-                  _private.beginPageY = event.pageY;
+            _scrollbarOnDragHandler: function(e, event) {
+               var
+                  pageY = event.nativeEvent.pageY,
+                  delta = pageY - _private.currentPageY;
+
+               if (this._setPosition(this._position + delta / this._scrollRatio, true)) {
+                  _private.currentPageY = pageY;
 
                   this._forceUpdate();
                }
@@ -255,11 +238,9 @@ define('Controls/Container/resources/Scrollbar',
 
             /**
              * Обработчик конца перемещения ползунка мышью.
-             * @protected
              */
             _scrollbarEndDragHandler: function() {
-               this._drag = false;
-               this._removeMoveUpHandlers();
+               this._dragging = false;
                this._notify('scrollbarEndDrag');
 
                this._forceUpdate();
@@ -268,17 +249,15 @@ define('Controls/Container/resources/Scrollbar',
             /**
              * Обработчик прокрутки колесиком мыши.
              * @param {SyntheticEvent} event дескриптор события.
-             * @protected
              */
             _wheelHandler: function(event) {
-               this._setPosition(this._position + _private.calcDelta(detection.firefox, event.nativeEvent.deltaY), true);
+               this._setPosition(this._position + _private.calcWheelDelta(detection.firefox, event.nativeEvent.deltaY), true);
 
                event.preventDefault();
             },
 
             /**
              * Обработчик изменения размеров скролла.
-             * @protected
              */
             _resizeHandler: function() {
                this._setSizes(this._options.contentHeight);

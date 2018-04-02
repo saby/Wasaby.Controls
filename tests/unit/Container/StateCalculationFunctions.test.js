@@ -1,17 +1,18 @@
 define(
    [
-      'Controls/Container/Scroll/StateCalculationFunctions'
+      'Controls/Container/Scroll/ScrollWidthController',
+      'Controls/Container/Scroll/ScrollOverflowController'
    ],
-   function(StateCalculationFunctions) {
+   function(ScrollWidthController, ScrollOverflowController) {
 
       'use strict';
 
-      describe('Controls.Container.Scroll.StateCalculationFunctions', function() {
+      describe('Controls.Container.Scroll.Controllers', function() {
          var
             constWidthScrollbar = 20,
             detection, result;
 
-         StateCalculationFunctions._private.calcScrollbarWidthByMeasuredBlock = function() {
+         ScrollWidthController._private.calcScrollbarWidthByMeasuredBlock = function() {
             return constWidthScrollbar;
          };
 
@@ -35,7 +36,7 @@ define(
                   }
                ]
             };
-            result = StateCalculationFunctions._private.calcChildHeight(container);
+            result = ScrollOverflowController._private.calcChildHeight(container);
             assert.equal(result, 150);
          });
          describe('calcOverflow', function() {
@@ -44,7 +45,7 @@ define(
                detection = {
                   chrome: true
                };
-               calcOverflow = StateCalculationFunctions._private.calcOverflowFn(detection);
+               calcOverflow = ScrollOverflowController._private.calcOverflowFn(detection);
 
                result = calcOverflow();
                assert.equal(result, 'scroll');
@@ -53,7 +54,7 @@ define(
                detection = {
                   isIE: true
                };
-               calcOverflow = StateCalculationFunctions._private.calcOverflowFn(detection);
+               calcOverflow = ScrollOverflowController._private.calcOverflowFn(detection);
 
                container = {
                   scrollHeight: 101,
@@ -73,7 +74,7 @@ define(
                detection = {
                   firefox: true
                };
-               calcOverflow = StateCalculationFunctions._private.calcOverflowFn(detection);
+               calcOverflow = ScrollOverflowController._private.calcOverflowFn(detection);
 
                container = {
                   children: [
@@ -101,23 +102,15 @@ define(
             it('webKit', function() {
                var userAgent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36';
 
-               result = StateCalculationFunctions._private.calcScrollbarWidth(userAgent);
+               result = ScrollWidthController._private.calcScrollbarWidth(userAgent);
                assert.equal(result, 0);
-            });
-            it('mac', function() {
-               detection = {
-                  isMac: true
-               };
-
-               result = StateCalculationFunctions._private.calcScrollbarWidth('', detection);
-               assert.equal(result, 15);
             });
             it('ie12', function() {
                detection = {
                   isIE12: true
                };
 
-               result = StateCalculationFunctions._private.calcScrollbarWidth('', detection);
+               result = ScrollWidthController._private.calcScrollbarWidth('', detection);
                assert.equal(result, 16);
             });
             it('ie11', function() {
@@ -125,7 +118,7 @@ define(
                   isIE11: true
                };
 
-               result = StateCalculationFunctions._private.calcScrollbarWidth('', detection);
+               result = ScrollWidthController._private.calcScrollbarWidth('', detection);
                assert.equal(result, 17);
             });
             it('ie10', function() {
@@ -133,7 +126,7 @@ define(
                   isIE10: true
                };
 
-               result = StateCalculationFunctions._private.calcScrollbarWidth('', detection);
+               result = ScrollWidthController._private.calcScrollbarWidth('', detection);
                assert.equal(result, 17);
             });
             it('firefox', function() {
@@ -141,16 +134,16 @@ define(
                   firefox: true
                };
 
-               result = StateCalculationFunctions._private.calcScrollbarWidth('', detection);
+               result = ScrollWidthController._private.calcScrollbarWidth('', detection);
                assert.equal(result, 20);
             });
          });
 
          describe('calcStyleHideScrollbar', function() {
-            result = StateCalculationFunctions._private.calcStyleHideScrollbar(17, {}, {});
+            result = ScrollWidthController._private.calcStyleHideScrollbar(17, {}, {});
             assert.equal(result, 'margin-right: -17px;');
 
-            result = StateCalculationFunctions._private.calcStyleHideScrollbar(17, {
+            result = ScrollWidthController._private.calcStyleHideScrollbar(17, {
                isIE: true
             }, {
                touch: true

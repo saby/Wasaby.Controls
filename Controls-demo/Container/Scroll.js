@@ -14,7 +14,7 @@ define('Controls-demo/Container/Scroll',
             for (var id = 1; id < 100; id++) {
                srcData.push({
                   id: id,
-                  title: 'Запись ' + id
+                  title: 'Record ' + id
                });
             }
             this._viewSource = new MemorySource({
