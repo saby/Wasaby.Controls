@@ -19,32 +19,98 @@ define('Controls-demo/Layouts/SearchLayout', [
              MemorySource
 ) {
    'use strict';
-   
+
    var sourceData = [
-      { id: 1, title: 'Sasha' },
-      { id: 2, title: 'Dmitry' },
-      { id: 3, title: 'Andrey' },
-      { id: 4, title: 'Aleksey' },
-      { id: 5, title: 'Sasha' },
-      { id: 6, title: 'Ivan' },
-      { id: 7, title: 'Petr' },
-      { id: 8, title: 'Roman' },
-      { id: 9, title: 'Maxim' },
-      { id: 10, title: 'Andrey' },
-      { id: 12, title: 'Sasha' },
-      { id: 13, title: 'Sasha' },
-      { id: 14, title: 'Sasha' },
-      { id: 15, title: 'Sasha' },
-      { id: 16, title: 'Sasha' },
-      { id: 17, title: 'Sasha' },
-      { id: 18, title: 'Dmitry' },
-      { id: 19, title: 'Andrey' },
-      { id: 20, title: 'Aleksey' },
-      { id: 21, title: 'Sasha' },
-      { id: 22, title: 'Ivan' },
-      { id: 23, title: 'Petr' }
+      { id: 1, firstName: 'Sasha', lastName: 'aaaa' },
+      { id: 2, firstName: 'Dmitry', lastName: 'aaaa' },
+      { id: 3, firstName: 'Andrey', lastName: 'aaaa' },
+      { id: 4, firstName: 'Aleksey', lastName: 'aaaa' },
+      { id: 5, firstName: 'Sasha', lastName: 'aaaa' },
+      { id: 6, firstName: 'Ivan', lastName: 'Lalala'},
+      { id: 7, firstName: 'Petr', lastName: 'dfsf'},
+      { id: 8, firstName: 'Roman', lastName: 'dfsf'},
+      { id: 9, firstName: 'Maxim', lastName: 'dfsf'},
+      { id: 10, firstName: 'Andrey', lastName: 'Lalala'},
+      { id: 12, firstName: 'Sasha', lastName: 'dfsf'},
+      { id: 13, firstName: 'Sasha', lastName: 'dfsf'},
+      { id: 14, firstName: 'Sasha', lastName: 'dfsf'},
+      { id: 15, firstName: 'Sasha', lastName: 'dfsf'},
+      { id: 16, firstName: 'Sasha', lastName: 'Lalala'},
+      { id: 17, firstName: 'Sasha', lastName: 'dfsf'},
+      { id: 18, firstName: 'Dmitry', lastName: 'Lalala'},
+      { id: 19, firstName: 'Andrey', lastName: 'dfsf'},
+      { id: 20, firstName: 'Aleksey', lastName: 'dfsf'},
+      { id: 21, firstName: 'Sasha', lastName: 'dfsf'},
+      { id: 22, firstName: 'Ivan', lastName: 'dfsf'},
+      { id: 23, firstName: 'Petr', lastName: 'dfgdfg' }
    ];
-   
+
+   var filterData = [
+      {
+         id: 'firstName',
+         resetValue: 'По имени',
+         value: 'По имени',
+         properties: {
+            keyProperty: 'title',
+            displayProperty: 'title',
+            source: {
+               module: 'WS.Data/Source/Memory',
+               options: {
+                  data: [
+                     {id: 0, title: 'По имени'},
+                     {id: 1, title: 'Sasha'},
+                     {id: 2, title: 'Petr'},
+                     {id: 3, title: 'Ivan'},
+                     {id: 3, title: 'Andrey'}
+                  ]
+               }
+            }
+         }
+      },
+      {
+         id: 'id',
+         resetValue: 0,
+         value: 0,
+         properties: {
+            keyProperty: 'id',
+            displayProperty: 'title',
+            source: {
+               module: 'WS.Data/Source/Memory',
+               options: {
+                  data: [
+                     {id: 0, title: 'По id'},
+                     {id: 1, title: '1'},
+                     {id: 2, title: '2'},
+                     {id: 3, title: '3'},
+                     {id: 4, title: '4'}
+                  ]
+               }
+            }
+         }
+      },
+      {
+         id: 'lastName',
+         resetValue: '0',
+         value: 'aaaa',
+         properties: {
+            keyProperty: 'lastName',
+            displayProperty: 'title',
+            source: {
+               module: 'WS.Data/Source/Memory',
+               options: {
+                  data: [
+                     {id: 1, title: 'aaaa', lastName: 'aaaa'},
+                     {id: 2, title: 'dfsf', lastName: 'dfsf'},
+                     {id: 3, title: 'Такой нет', lastName: 'aaaaa'},
+                     {id: 4, title: 'Lalala', lastName: 'Lalala'},
+                     {id: 0, title: 'По фамилии', lastName: '0'}
+                  ]
+               }
+            }
+         }
+      }
+   ];
+
    var ModuleClass = BaseControl.extend(
       {
          _template: template,
@@ -52,8 +118,12 @@ define('Controls-demo/Layouts/SearchLayout', [
             idProperty: 'id',
             data: sourceData
          }),
-         _switchValue: false
-         
+         _switchValue: false,
+         _filterSource: new MemorySource({
+            idProperty: 'id',
+            data: filterData
+         }),
+         _filterData: filterData
       });
    return ModuleClass;
 });

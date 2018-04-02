@@ -1,0 +1,21 @@
+<div class='docs-FBPanel'>
+   <span class="docs-FBPanel__span">Id</span>
+   <SBIS3.CONTROLS:ComboBox
+           class="docs-FBPanel__text-box"
+           editable="{{false}}"
+           idProperty="key"
+           displayProperty="title"
+           selectedKey="{{'title'|mutable}}"
+           text="{{'id'|mutable}}">
+      <ws:items>
+         <ws:Array>
+            <ws:Object key="1" title="1"/>
+            <ws:Object key="2" title="2"/>
+            <ws:Object key="3" title="3"/>
+         </ws:Array>
+      </ws:items>
+   </SBIS3.CONTROLS:ComboBox>
+   <span class="docs-FBPanel__span">Автор</span>
+   <SBIS3.CONTROLS:TextBox class="docs-FBPanel__author" placeholder="Введите фамилию" text="{{'lastName'|mutable}}"/>
+   <SBIS3.CONTROLS:TextBox class="docs-FBPanel__author" placeholder="Введите имя" text="{{'firstName'|mutable}}"/>
+</div>

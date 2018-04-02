@@ -1,0 +1,41 @@
+.controls-FastData {
+   display: flex;
+}
+
+.controls-FastData__iconArrow,
+.controls-FastData__iconReset {
+   font-family: 'cbuc-icons';
+}
+
+.controls-FastData__iconReset {
+   font-size: @icon-size_FastData;
+   color: @color_FastData-iconReset;
+}
+
+.controls-FastData__iconArrow {
+   fill: @color_FastData-icon;
+   height: @height_FastData-iconArrow;
+   width: @width_FastData-iconArrow;
+   padding: @padding_FastData-iconArrow;
+}
+
+.controls-FastData__wrapper {
+   margin: @margin-FastData__wrapper;
+   display: flex;
+   align-items: center;
+   cursor: pointer;
+}
+
+.controls-FastData__block {
+   display: flex;
+   align-items: baseline;
+}
+
+.controls-FastData__iconWrapper {
+   height: @height_FastData-beforeText;
+   width: @width_FastData-beforeText;
+}
+
+.controls-FastData__block:hover .controls-FastData__iconArrow {
+   fill: @color_FastData-iconArrow_hover;
+}
