@@ -1,7 +1,7 @@
-<Controls.Layout.Filter attr:class="controls-demo__FilterLayout" filterButtonSource="{{_filterSource}}" historyId="123" fastFilterSource="{{_filterSource}}">
+<Controls.Container.Filter attr:class="controls-demo__FilterLayout" filterButtonSource="{{_filterSource}}" historyId="123" fastFilterSource="{{_filterSource}}">
     <ws:content>
         <div>
-            <Controls.Layout.Search
+            <Controls.Container.Search
                     attr:class="controls-demo__SearchLayout"
                     searchParam="title">
                 <ws:content>
@@ -9,22 +9,16 @@
                         <div class="controls-demo__Layouts_content">
                             <div class="controls-demo__Layouts_filterComponents">
                                 <Controls.Input.Search bind:value="_searchValue"/>
-                                <div style="display: flex">
-                                    <Controls.Filter.FastFilter bind:value="_value" source="{{_filterSource}}"/>
-
-                                    <Controls.Filter.Button attr:style="max-width: 200px;" filterTemplate="js!Controls-demo/Layouts/SearchLayout/resources/FBPanelLayout">
-                                        <ws:items>
-                                            <ws:Array>
-                                                <ws:Object id="id" caption="genreTxt"/>
-                                                <ws:Object id="lastName"/>
-                                                <ws:Object id="firstName"/>
-                                            </ws:Array>
-                                        </ws:items>
-                                    </Controls.Filter.Button>
-                                </div>
+                                <Controls.Filter.FastFilter bind:value="_value" source="{{_filterSource}}"/>
+                                <Controls.Container.FilterButton>
+                                    <ws:content>
+                                        <Controls.Filter.Button filterTemplate="Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate">
+                                        </Controls.Filter.Button>
+                                    </ws:content>
+                                </Controls.Container.FilterButton>
                             </div>
                             <div class="controls-demo__LayoutInner">
-                                <Controls.Layout.List source="{{_dataSource}}" searchParam="title">
+                                <Controls.Container.List source="{{_dataSource}}" searchParam="title">
                                     <ws:content>
                                         <div>
                                             <Controls.List idProperty="id" name="list">
@@ -50,12 +44,12 @@
                                     <ws:navigation source="page" view="page">
                                         <ws:sourceConfig pageSize="{{20}}" page="{{0}}" mode="totalCount"/>
                                     </ws:navigation>
-                                </Controls.Layout.List>
+                                </Controls.Container.List>
                             </div>
                         </div>
                     </div>
                 </ws:content>
-            </Controls.Layout.Search>
+            </Controls.Container.Search>
         </div>
     </ws:content>
-</Controls.Layout.Filter>
+</Controls.Container.Filter>

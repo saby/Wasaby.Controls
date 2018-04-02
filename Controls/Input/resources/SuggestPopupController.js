@@ -16,7 +16,7 @@ define('Controls/Input/resources/SuggestPopupController',
          getSearchController: function(self) {
             if (!self._search) {
                self._search = new Search({
-                  dataSource:  self._dataSource,
+                  source:  self._source,
                   searchDelay: self._searchDelay,
                   navigation: self._navigation
                });
@@ -84,7 +84,7 @@ define('Controls/Input/resources/SuggestPopupController',
             SuggestPopupController.superclass.constructor.call(this, options);
             
             this._popupOpener = options.popupOpener;
-            this._dataSource = options.dataSource;
+            this._source = options.source;
             this._searchDelay = options.searchDelay;
             this._navigation = options.navigation;
             this._selectCallback = options.selectCallback;

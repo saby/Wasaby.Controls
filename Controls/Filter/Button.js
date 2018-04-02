@@ -6,13 +6,15 @@ define('Controls/Filter/Button',
       'Core/Control',
       'tmpl!Controls/Filter/Button/Button',
       'Core/moduleStubs',
+      'WS.Data/Chain',
+      'WS.Data/Utils',
       'css!Controls/Filter/Button/Button'
    ],
    
-   function(Control, template, moduleStubs) {
+   function(Control, template, moduleStubs, Chain, Utils) {
       
       /**
-       * @class Controls/Layout/Search
+       * @class Controls/Container/Search
        * @extends Controls/Control
        * @control
        * @public
@@ -31,6 +33,25 @@ define('Controls/Filter/Button',
                }
                return self._filterCompatible;
             });
+         },
+   
+         getText: function(items) {
+            var textArr = [];
+      
+            Chain(items).each(function(item) {
+               var textValue = Utils.getItemPropertyValue(item, 'textValue');
+         
+               if (textValue) {
+                  textArr.push(textValue);
+               }
+            });
+      
+            return textArr.join(', ');
+         },
+         
+         resolveItems: function(self, items) {
+            self._items = items;
+            self._text = _private.getText(items);
          }
       };
       
@@ -39,6 +60,18 @@ define('Controls/Filter/Button',
          _template: template,
          _oldPanelOpener: null,
          _text: '',
+         
+         _beforeUpdate: function(options) {
+            if (this._options.items !== options.items) {
+               _private.resolveItems(this, options.items);
+            }
+         },
+         
+         _beforeMount: function(options) {
+            if (options.items) {
+               _private.resolveItems(this, options.items);
+            }
+         },
          
          _getFilterState: function() {
             return this.isEnabled() ? 'default' : 'disabled';
@@ -62,7 +95,6 @@ define('Controls/Filter/Button',
                }
             }
          }
-         
       });
       
       FilterButton.getDefaultOptions = function() {

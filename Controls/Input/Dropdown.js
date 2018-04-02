@@ -3,12 +3,12 @@ define('Controls/Input/Dropdown',
       'Core/Control',
       'tmpl!Controls/Input/Dropdown/Dropdown',
       'tmpl!Controls/Input/Dropdown/resources/defaultContentTemplate',
-      'WS.Data/Collection/RecordSet',
       'Controls/Controllers/SourceController',
+      'Controls/Input/Dropdown/Util',
       'Controls/Dropdown/DropdownUtils',
       'css!Controls/Input/Dropdown/Dropdown'
    ],
-   function (Control, template, defaultContentTemplate, RecordSet, SourceController, DropdownUtils) {
+   function (Control, template, defaultContentTemplate, SourceController, dropdownUtil, DropdownUtils) {
 
       /**
        * Поле выбора из значения списка.
@@ -42,13 +42,7 @@ define('Controls/Input/Dropdown',
             return DropdownUtils._updateText(item, displayProperty); //По стандарту если есть иконка - текст не отображается
          },
          _open: function () {
-            var config = {
-               componentOptions: {
-                  items: this._items
-               },
-               target: this._children.popupTarget
-            };
-            this._children.DropdownOpener.open(config, this);
+             dropdownUtil.open(this, this._children.popupTarget);
          },
          _onResult: function (args) {
             var actionName = args[0];

@@ -6,7 +6,7 @@
     {{ topGradient ? ' controls-ScrollContainer__top-gradient' }}
     {{ bottomGradient ? ' controls-ScrollContainer__bottom-gradient' }}
     {{ showScrollbar ? ' controls-ScrollContainer__scrollbar_show' }}">
-    <Controls:Layout:Scroll>
+    <Controls.Layout.Scroll>
         <ws:content>
             <div
                 name="content"
@@ -17,8 +17,8 @@
                 <ws:partial template="{{_options.content}}"/>
             </div>
         </ws:content>
-    </Controls:Layout:Scroll>
-    <Controls:Container:Scrollbar:Scrollbar
+    </Controls.Layout.Scroll>
+    <Controls.Container.Scrollbar.Scrollbar
                        if="{{ showScrollbar }}"
                        position="{{ scrollBarPosition }}"
                        contentHeight="{{ contentHeight }}"

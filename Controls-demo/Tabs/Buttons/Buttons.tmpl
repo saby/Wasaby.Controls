@@ -1,7 +1,7 @@
 <div class="root">
     <div class="separator">Style="default"</div>
     <div class="">
-        <Controls:Tabs:Buttons
+        <Controls.Tabs.Buttons
                       bind:selectedKey='SelectedKey1'
                       keyProperty="id"
                       source="{{_source1}}"
@@ -9,7 +9,7 @@
     </div>
     <div class="separator">Style="default", with main tab</div>
     <div class="">
-        <Controls:Tabs:Buttons
+        <Controls.Tabs.Buttons
                       bind:selectedKey='SelectedKey2'
                       keyProperty="id"
                       itemTemplateProperty="itemTemplate"
@@ -18,7 +18,7 @@
      </div>
     <div class="separator">Style="additional", displayProperty = 'carambola'</div>
     <div class="">
-        <Controls:Tabs:Buttons
+        <Controls.Tabs.Buttons
                       bind:selectedKey='SelectedKey3'
                       keyProperty="id"
                       style="additional"
@@ -30,11 +30,11 @@
                             displayProperty="carambola"
                 ></ws:partial>
             </ws:itemTemplate>
-        </Controls:Tabs:Buttons>
+        </Controls.Tabs.Buttons>
     </div>
     <div class="separator">Style="additional", with space template</div>
     <div class="">
-        <Controls:Tabs:Buttons
+        <Controls.Tabs.Buttons
                       bind:selectedKey='SelectedKey4'
                       keyProperty="id"
                       style="additional"
@@ -44,7 +44,7 @@
     </div>
     <div class="separator">Style="default", with main item template</div>
     <div class="">
-        <Controls:Tabs:Buttons
+        <Controls.Tabs.Buttons
                       bind:selectedKey='SelectedKey5'
                       keyProperty="id"
                       itemTemplateProperty="itemTemplate"
@@ -56,7 +56,7 @@
         <div class="clickmebtn" on:click="_setSource()">click me</div>
     </div>
     <div class="">
-        <Controls:Tabs:Buttons
+        <Controls.Tabs.Buttons
                       bind:selectedKey='SelectedKey6'
                       keyProperty="id"
                       name="lazy"
@@ -67,7 +67,7 @@
     <div class="separator">Style="default", with Photo item template</div>
     <div class="photo_before_bg"></div>
     <div class="">
-        <Controls:Tabs:Buttons
+        <Controls.Tabs.Buttons
                       bind:selectedKey='SelectedKey7'
                       keyProperty="id"
                       style="additional"
