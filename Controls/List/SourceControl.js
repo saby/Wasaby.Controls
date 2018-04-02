@@ -6,6 +6,7 @@ define('Controls/List/SourceControl', [
    'Controls/List/Controllers/VirtualScroll',
    'Controls/Controllers/SourceController',
    'Core/Deferred',
+   'tmpl!Controls/List/SourceControl/multiSelect',
    'css!Controls/List/SourceControl/SourceControl',
    'Controls/List/ItemActions/ItemActionsControl'
 ], function (Control,
@@ -14,7 +15,8 @@ define('Controls/List/SourceControl', [
              require,
              VirtualScroll,
              SourceController,
-             Deferred
+             Deferred,
+             multiSelectTpl
 ) {
    'use strict';
 
@@ -289,6 +291,7 @@ define('Controls/List/SourceControl', [
       _sorting: undefined,
 
       _itemTemplate: null,
+      _multiSelectTpl: multiSelectTpl,
 
       _loadOffset: 100,
       _topPlaceholderHeight: 0,
@@ -372,7 +375,7 @@ define('Controls/List/SourceControl', [
                navigation: newOptions.navigation
             });
          }
-         
+
          if (filterChanged || sourceChanged) {
             _private.reload(this);
          }
@@ -422,6 +425,15 @@ define('Controls/List/SourceControl', [
 
       },
 
+      _onCheckBoxClick: function(e, key, status) {
+         if (status === 1) {
+            this._listViewModel.unselect([key])
+         }
+         else {
+            this._listViewModel.select([key])
+         }
+      },
+      
       remove: function(items) {
          var
             self = this,
