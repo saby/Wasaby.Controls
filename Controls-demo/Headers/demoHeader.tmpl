@@ -3,7 +3,8 @@
     <Controls:Header on:countClick="clickCount()"
                      on:iconClick="iconCount()"
                      caption="test header h2"
-                     style="default_big"
+                     type="simpleHeader"
+                     style="default"
                      clickable="{{false}}"
                      counterValue="{{12}}"
                      counterLocation="right"
@@ -16,7 +17,8 @@
     <Controls:Header on:countClick="clickCount()"
                      on:iconClick="iconCount()"
                      caption="test header h2"
-                     style="primary_big"
+                     type="simpleHeader"
+                     style="primary"
                      clickable="{{false}}"
                      counterValue="{{12}}"
                      counterLocation="left"
@@ -30,6 +32,7 @@
                      on:iconClick="iconCount()"
                      size="m"
                      caption="test header h3"
+                     type="commonHeader"
                      style="default"
                      clickable="{{false}}"
                      counterValue="{{12}}"
@@ -40,9 +43,10 @@
                      iconLocation="left"
                      iconClickable="{{false}}"
                      iconStyle="Main"
-                     icon="icon-MarkExpandBold"
+                     openIcon="icon-MarkExpandBold"
+                     closeIcon="icon-MarkCollapseBold"
                      iconSize="m"
-                     iconValue="{{_iconValue}}"/>
+                     isIconOpen="{{_iconValue}}"/>
     <span>base line</span>
     <br/>
     <span>base line</span>
@@ -50,6 +54,7 @@
                      on:iconClick="iconCount()"
                      size="l"
                      caption="test header h3"
+                     type="commonHeader"
                      style="primary"
                      clickable="{{true}}"
                      counterValue="{{12}}"
@@ -60,9 +65,10 @@
                      iconLocation="right"
                      iconClickable="{{false}}"
                      iconStyle="Main"
-                     icon="icon-MarkExpandBold"
+                     openIcon="icon-MarkExpandBold"
+                     closeIcon="icon-MarkCollapseBold"
                      iconSize="m"
-                     iconValue="{{_iconValue}}"
+                     isIconOpen="{{_iconValue}}"
                      commonClick="{{true}}"/>
     <span>base line</span>
     <br/>
@@ -71,6 +77,7 @@
                      on:iconClick="iconCount()"
                      size="s"
                      caption="test header h3"
+                     type="commonHeader"
                      style="default"
                      clickable="{{true}}"
                      counterValue="{{12}}"
@@ -81,9 +88,10 @@
                      iconClickable="{{true}}"
                      iconLocation="left"
                      iconStyle="Accent"
-                     icon="icon-ExpandLight"
+                     openIcon="icon-ExpandLight"
+                     closeIcon="icon-CollapseLight"
                      iconSize="m"
-                     iconValue="{{_iconValue}}"
+                     isIconOpen="{{_iconValue}}"
                      separatorIcon="{{true}}"
                      separatorIconStyle="primary"/>
     <span>base line</span>

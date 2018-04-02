@@ -1,9 +1,9 @@
 <span attr:class="controls-Header controls-Header_style-{{_options.style}}">
     <span class="controls-Header__wrapper {{_options.commonClick ? 'controls-Header_content_hovered'}}">
-        <ws:if data="{{_options.icon}}">
+        <ws:if data="{{_options.closeIcon || _options.openIcon}}">
             <i on:click="iconClickHandler()" attr:class="controls-Header__icon controls-Separator__icon_style-{{_options.iconStyle}}
                                                         controls-Header__icon_size-{{_options.iconSize}}
-                                                        {{_options.icon}}
+                                                        {{_icon}}
                                                         controls-Header__icon_location-{{_options.iconLocation}}"
             ></i>
         </ws:if>
@@ -22,7 +22,7 @@
                 <ws:if data="{{_options.caption}}">
                     <span attr:class="controls-Header__caption
                                       controls-Header__caption_size-{{_options.size}}
-                                      controls-Header__caption_style-{{_options.style}}{{_options.clickable ? '_hovered'}}"
+                                      {{_style}}"
                     >{{_options.caption}}</span>
                 </ws:if>
             </span>

@@ -33,8 +33,13 @@ define('Controls/Header', [
     * @cfg {String} Caption display style.
     * @variant default Caption will be default.
     * @variant primary Caption will be accented.
-    * @variant default_big Caption with default style that are used on pages open from the accordion.
-    * @variant default_big Caption with primary style that are used on pages open from the accordion.
+    */
+
+   /**
+    * @name Controls/Header#type
+    * @cfg {String} Caption display style.
+    * @variant simpleHeader Caption isn't clickable and has only one size.
+    * @variant commonHeader Caption is clickable and has three size.
     */
 
    /**
@@ -103,8 +108,18 @@ define('Controls/Header', [
     */
 
    /**
-    * @name Controls/Header#iconValue
-    * @cfg {Boolean} Icon value. If iconValue == true, that icon will be displaying, else icon will not be displaying.
+    * @name Controls/Header#openIcon
+    * @cfg {String} This icon display when isIconOpen is true.
+    */
+
+   /**
+    * @name Controls/Header#closeIcon
+    * @cfg {String} This icon display when isIconOpen is false. This is the default value.
+    */
+
+   /**
+    * @name Controls/Header#isIconOpen
+    * @cfg {Boolean} If isIconOpen is true, that opening icon will be displaying, else closing icon will be displaying.
     */
 
    /**
@@ -124,28 +139,38 @@ define('Controls/Header', [
     * @cfg {Boolean} A common hover for all header elements.
     */
 
-
-   var classesOfIcon = {
-      MarkExpandBold: {
-         true: "icon-MarkExpandBold",
-         false: "icon-MarkCollapseBold",
-         size: "icon-small"
+   var _private = {
+      updateHeaderStyle: function (self, options) {
+         this.captionStyleGeneration(self, options);
+         this.iconStyleGeneration(self, options);
       },
 
-      ExpandLight: {
-         true: "icon-ExpandLight",
-         false: "icon-CollapseLight",
-         size: "icon-small"
+      captionStyleGeneration: function (self, options) {
+         self._style = 'controls-Header__caption_type-' + options.type + '_style-' + options.style;
+         if(options.type === 'commonHeader') {
+            self._style += (options.clickable ? '_hovered' : '');
+         }
       },
-
-      AccordionArrowDown: {
-         true: "icon-AccordionArrowDown",
-         false: "icon-AccordionArrowUp ",
-         size: "icon-medium"
+      iconStyleGeneration: function (self, options) {
+         if (options.isIconOpen) {
+            self._icon = options.openIcon;
+         }else {
+            self._icon = options.closeIcon;
+         }
       }
    };
+
    var Header = Control.extend({
       _template: template,
+
+      constructor: function (options) {
+         Header.superclass.constructor.apply(this, arguments);
+         _private.updateHeaderStyle(this, options);
+      },
+
+      _beforeUpdate: function (newOptions) {
+         _private.updateHeaderStyle(this, newOptions);
+      },
 
       countClickHandler: function (e) {
          if(this._options.countClickable && this._options.clickable){
@@ -165,11 +190,15 @@ define('Controls/Header', [
    Header.getOptionTypes =  function getOptionTypes() {
       return {
          caption: types(String),
+         openIcon: types(String),
+         closeIcon: types(String),
          style: types(String).oneOf([
-            'default_big',
-            'primary_big',
             'default',
             'primary'
+         ]),
+         type: types(String).oneOf([
+            'commonHeader',
+            'simpleHeader'
          ]),
          clickable: types(Boolean),
          counterValue: types(Number),
@@ -207,7 +236,7 @@ define('Controls/Header', [
             'm',
             'l'
          ]),
-         iconValue: types(Boolean),
+         isIconOpen: types(Boolean),
          separatorIcon: types(Boolean),
          separatorIconStyle: types(String).oneOf([
             'primary',
@@ -216,6 +245,16 @@ define('Controls/Header', [
          commonClick: types(Boolean)
       }
    };
+
+   Header.getDefaultOptions = function() {
+      return {
+         style: 'default',
+         type: 'simpleHeader',
+         isIconOpen: false
+      };
+   };
+
+   Header._private = _private;
 
    return Header;
 });
