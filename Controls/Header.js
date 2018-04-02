@@ -65,9 +65,9 @@ define('Controls/Header', [
    /**
     * @name Controls/Header#counterSize
     * @cfg {String} Size of counter.
-    * @variant small Counter has small size.
-    * @variant default Counter has middle size.
-    * @variant large Counter has large size.
+    * @variant s Counter has small size.
+    * @variant m Counter has middle size.
+    * @variant l Counter has large size.
     */
 
    /**
@@ -88,19 +88,18 @@ define('Controls/Header', [
     */
 
    /**
+    * @name Controls/Header#iconSize
+    * @cfg {String} Icon location relative to header.
+    * @variant s Icon has small size.
+    * @variant m Icon has middle size.
+    */
+
+   /**
     * @name Controls/Header#iconStyle
     * @cfg {String} Icon display style.
     * @variant Accent Icon will be default.
     * @variant Additional Icon will be non accented.
     * @variant Main Icon will be accented.
-    */
-
-   /**
-    * @name Controls/Header#iconType
-    * @cfg {String} Icon type.
-    * @variant MarkExpandBold Down arrow with double width.
-    * @variant ExpandLight Default dawn arrow.
-    * @variant AccordionArrowDown Double down arrow.
     */
 
    /**
@@ -145,16 +144,6 @@ define('Controls/Header', [
          size: "icon-medium"
       }
    };
-
-   var _private = {
-      cssStyleGeneration: function (self, options) {
-         if (classesOfIcon.hasOwnProperty(options.iconType)) {
-            var currentIconClass = classesOfIcon[options.iconType];
-            self._icon = currentIconClass[options.iconValue];
-         }
-      }
-   };
-
    var Header = Control.extend({
       _template: template,
 
@@ -203,9 +192,9 @@ define('Controls/Header', [
             'disabled'
          ]),
          counterSize: types(String).oneOf([
-            'default',
-            'small',
-            'large'
+            'm',
+            's',
+            'l'
          ]),
          countClickable: types(Boolean),
          size: types(String).oneOf([
@@ -223,10 +212,9 @@ define('Controls/Header', [
             'Additional',
             'Main'
          ]),
-         iconType: types(String).oneOf([
-            'MarkExpandBold',
-            'ExpandLight',
-            'AccordionArrowDown'
+         iconSize: types(String).oneOf([
+            's',
+            'm'
          ]),
          iconValue: types(Boolean),
          separatorIcon: types(Boolean),
