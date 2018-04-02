@@ -59,7 +59,8 @@ define('Controls/List/SimpleList/ItemsViewModel',
                displayProperty: this._options.displayProperty,
                index : this._curIndex,
                item: dispItem.getContents(),
-               dispItem: dispItem
+               dispItem: dispItem,
+               key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.idProperty)
             }
          },
 

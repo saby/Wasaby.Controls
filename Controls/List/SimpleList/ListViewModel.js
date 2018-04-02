@@ -79,7 +79,7 @@ define('Controls/List/SimpleList/ListViewModel',
             itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
             itemsModelCurrent.isActionHoverItem = itemsModelCurrent.dispItem.getContents() === this._actionHoverItem;
             itemsModelCurrent.itemActions =  this._actions[this.getCurrentIndex()];
-            itemsModelCurrent.multiSelectStatus = this._multiselection.getSelectionStatus(itemsModelCurrent.getPropValue(itemsModelCurrent.item, itemsModelCurrent.idProperty));
+            itemsModelCurrent.multiSelectStatus = this._multiselection.getSelectionStatus(itemsModelCurrent.key);
             return itemsModelCurrent;
          },
 
@@ -96,11 +96,13 @@ define('Controls/List/SimpleList/ListViewModel',
             this._notify('onListChange');
          },
 
-         setMultiSelection: function(obj) {
-            this._multiselection = new MultiSelection({
-               selectedKeys : obj.selectedKeys,
-               excludedKeys : obj.excludedKeys
-            });
+
+         select: function(keys) {
+            this._multiselection.select(keys);
+         },
+
+         unselect: function(keys) {
+            this._multiselection.unselect(keys);
          },
 
          updateIndexes: function(startIndex, stopIndex) {

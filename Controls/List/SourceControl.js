@@ -294,8 +294,6 @@ define('Controls/List/SourceControl', [
       _topPlaceholderHeight: 0,
       _bottomPlaceholderHeight: 0,
 
-      _multiselection: null,
-
       constructor: function (cfg) {
          SourceControl.superclass.constructor.apply(this, arguments);
          this._publish('onDataLoad');
@@ -332,11 +330,6 @@ define('Controls/List/SourceControl', [
                return _private.reload(this);
             }
          }
-
-
-
-
-         this._listViewModel.setMultiSelection(this._multiselection);
       },
 
       _afterMount: function() {
@@ -380,12 +373,6 @@ define('Controls/List/SourceControl', [
             });
          }
 
-         this._multiselection = new MultiSelection({
-            selectedKeys : newOptions.selectedKeys,
-            excludedKeys : newOptions.excludedKeys
-         });
-         this._listViewModel.setMultiSelection(this._multiselection);
-
          if (filterChanged || sourceChanged) {
             _private.reload(this);
          }
@@ -400,10 +387,6 @@ define('Controls/List/SourceControl', [
 
          if (this._scrollPagingCtr) {
             this._scrollPagingCtr.destroy();
-         }
-
-         if (this._multiselection) {
-            this._multiselection.destroy();
          }
 
          SourceControl.superclass._beforeUnmount.apply(this, arguments);
@@ -439,8 +422,13 @@ define('Controls/List/SourceControl', [
 
       },
 
-      _onCheckBoxClick: function(e, dispItem) {
-         debugger;
+      _onCheckBoxClick: function(e, key, status) {
+         if (status === 1) {
+            this._listViewModel.unselect([key])
+         }
+         else {
+            this._listViewModel.select([key])
+         }
       },
 
       reload: function() {
