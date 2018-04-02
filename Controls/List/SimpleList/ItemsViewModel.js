@@ -30,6 +30,9 @@ define('Controls/List/SimpleList/ItemsViewModel',
             ItemsViewModel.superclass.constructor.apply(this, arguments);
             this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
             if (cfg.items) {
+               if (cfg.itemsReadyCallback) {
+                  cfg.itemsReadyCallback(cfg.items);
+               }
                this._items = cfg.items;
                this._display = ItemsUtil.getDefaultDisplayFlat(cfg.items, cfg);
                this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
@@ -56,8 +59,13 @@ define('Controls/List/SimpleList/ItemsViewModel',
                displayProperty: this._options.displayProperty,
                index : this._curIndex,
                item: dispItem.getContents(),
-               dispItem: dispItem
+               dispItem: dispItem,
+               key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.idProperty)
             }
+         },
+
+         getCurrentIndex: function() {
+            return this._curIndex;
          },
 
          getItemById: function(id, idProperty) {
@@ -75,8 +83,10 @@ define('Controls/List/SimpleList/ItemsViewModel',
          setItems: function(items) {
             if (_private.isEqualItems(this._items, items)) {
                this._items.assign(items);
-            }
-            else {
+            } else {
+               if (this._options.itemsReadyCallback) {
+                  this._options.itemsReadyCallback(items);
+               }
                this._items = items;
                if (this._display) {
                   this._display.destroy();
@@ -93,6 +103,16 @@ define('Controls/List/SimpleList/ItemsViewModel',
 
          prependItems: function(items) {
             this._items.prepend(items);
+         },
+
+         removeItems: function(items) {
+            var item;
+            this._items.setEventRaising(false, true);
+            for (var i = 0; i < items.length; i++) {
+               item = this._items.getRecordById(items[i]);
+               item && this._items.remove(item);
+            }
+            this._items.setEventRaising(true, true);
          }
       });
 

@@ -1,14 +1,16 @@
-<div class="ws-DialogTemplate">
-    <div class="ws-DialogTemplate__top-area">
-        <ws:if data="{{_options.caption}}">
-            <span class="ws-DialogTemplate__caption" title="{{_options.caption}}">{{_options.caption}}</span>
-        </ws:if>
-        <ws:if data="{{_options.topArea}}">
-            <ws:partial template="{{_options.topArea}}"></ws:partial>
-        </ws:if>
-        <span class="ws-DialogTemplate__close_button controls-PopupMixin__closeButton controls-PopupMixin__closeButton_standart" on:click="close()"></span>
+<div class="controls-DialogTemplate">
+    <div class="controls-DialogTemplate__top-area">
+        <div class="controls-DialogTemplate__top-area-content">
+            <ws:if data="{{_options.caption}}">
+                <span class="controls-DialogTemplate__caption" title="{{_options.caption}}">{{_options.caption}}</span>
+            </ws:if>
+            <ws:if data="{{_options.topArea}}">
+                <ws:partial template="{{_options.topArea}}"></ws:partial>
+            </ws:if>
+        </div>
+        <div class="controls-DialogTemplate__close_button controls-DialogTemplate__close_button_standart" on:click="close()"></div>
     </div>
-    <div class="ws-DialogTemplate__content-area">
+    <div class="controls-DialogTemplate__content-area">
         <ws:partial template="{{_options.contentArea}}"></ws:partial>
     </div>
 </div>

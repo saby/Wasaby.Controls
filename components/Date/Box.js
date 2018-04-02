@@ -276,7 +276,7 @@ define(
             this.setDate(date);
          } else if (key == constants.key.plus || key == constants.key.minus) {
             if (curDate) {
-               curDate = new Date(curDate);
+               curDate = new Date(curDate.getTime());
                if (this.getType() === 'time') {
                   return;
                } else {
@@ -485,7 +485,7 @@ define(
          }
          if (this._options.date && this._options.date.getSQLSerializationMode() !== mode) {
             // Дата могла прийти в компонент извне, не изменяем ее.
-            this._options.date = new Date(this._options.date);
+            this._options.date = new Date(this._options.date.getTime());
             this._options.date.setSQLSerializationMode(mode);
          }
          return this._options.date;
@@ -588,6 +588,7 @@ define(
             //используем старую дату как основу, чтобы сохранять части даты, отсутствующие в маске
             //new Date от старой даты делаем, чтобы контекст увидел новый объект
             date = (DateUtil.isValidDate(oldDate)) ? new Date(oldDate.getTime()) : null,
+            mask = this._options.mask,
             item,
             value,
             filled = [],
@@ -598,12 +599,15 @@ define(
             curCentury = (curYear - shortCurYear),
             yyyy = date ? date.getFullYear() : 0,
             mm   = date ? date.getMonth() : 0,
-            dd   = date ? date.getDate() : 1,
+            // Для контрола с маской MM/YYYY не имеет смысла сохранять дату между вводом дат т.к. это приводит
+            // к неожиданным результатам. Например, была программно установлена дата 31.12.2018.
+            // меняем месяц на 11. 31.11 несуществует. Можно скорректировать на 30.11.2018. Теперь пользователь
+            // вводит 12 в качесте месяца и мы получаем 30.12.2018...
+            dd   = date && mask !== 'MM/YYYY' ? date.getDate() : 1,
             hh   = date ? date.getHours() : 0,
             ii   = date ? date.getMinutes() : 0,
             ss   = date ? date.getSeconds() : 0,
-            uuu  = date ? date.getMilliseconds() : 0,
-            mask = this._options.mask;
+            uuu  = date ? date.getMilliseconds() : 0;
          for (var i = 0; i < this._getFormatModel().model.length; i++) {
             item = this._getFormatModel().model[i];
             if ( !item.isGroup) {

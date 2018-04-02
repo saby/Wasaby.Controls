@@ -1,108 +1,98 @@
 define([
-   'Lib/File/Attach/LazyAttach',
-   'Core/Deferred',
    'Core/constants',
-   'Lib/File/LocalFile',
-   'Lib/File/LocalFileLink',
-   'Lib/File/HttpFileLink',
-   'Tests/Unit/File/GetResources'
-], function (LazyAttach, Deferred, constants, LocalFile, LocalFileLink, HttpFileLink, GetResources) {
+   './Mocks/GetResources',
+   './Mocks/ResourceGetter',
+   './Mocks/ISource'
+], function (constants) {
    'use strict';
-
    if (!constants.isBrowserPlatform) {
       return;
    }
 
-   describe('Controls/File/LazyAttach', function () {
-      var getters = ['FileGetter', 'LinkGetter', 'HttpGetter'];
+   require([
+       'Lib/File/Attach/LazyAttach',
+       'Core/Deferred',
+       'Lib/File/LocalFile',
+       'Lib/File/LocalFileLink',
+       'Lib/File/HttpFileLink',
+       'tests/unit/File/Mocks/GetResources'
+   ], function(LazyAttach, Deferred, LocalFile, LocalFileLink, HttpFileLink, GetResources) {
+       describe('Controls/File/LazyAttach', function () {
+           var getters = ['FileGetter', 'LinkGetter', 'HttpGetter'];
 
-      describe('.registerLazyGetter()', function () {
-         var attach = new LazyAttach();
-         var resource, type, getter;
-         var resources = [
-            [GetResources('LocalFile')],
-            [GetResources('LocalFileLink')],
-            [GetResources('HttpFileLink')]
-         ];
-
-         for (var i = 0; i < getters.length; i++) {
-            type = getters[i];
-            attach.registerLazyGetter(type, 'Tests/Unit/File/GetterMock', {
-               chosenFiles: resources[i],
-               type: type
-            });
-         }
-
-         for (i = 0; i < getters.length; i++) {
-            getter = getters[i];
-            resource = resources[i];
-
-            it('Ленивая регистрация  ' + getter + ' для получения файлов', function (done) {
-               attach.choose(getter)
-                  .addCallbacks(
-                     function (files) {
-                        files.forEach(function (file) {
-                           assert.include(resource, file);
-                        });
-                     },
-                     function () {
-                        assert(false, getter + ' зарегистрировался как GetterMock!');
-                     })
-                  .addBoth(done);
-            });
-         }
-      });
-
-      describe('.registerLazyGetter() некорректный вызов', function () {
-         var attach = new LazyAttach();
-         var getter;
-
-         for (var i = 0; i < getters.length; i++) {
-            attach.registerLazyGetter(getters[i], 'Tests/Unit/File/GetterMock');
-         }
-
-         for (i = 0; i < getters.length; i++) {
-            getter = getters[i];
-            it('Обработка некорректной ленивой регистрации <' + getter + '>', function (done) {
-               attach.choose(getter)
-                  .addCallbacks(
-                     function (files) {
-                        assert(false, getter + ' зарегистрировался как GetterMock!');
-                     },
-                     function (err) {
-                        assert.instanceOf(err, Error);
-                     })
-                  .addBoth(done);
-            });
-         };
-      });
-
-      describe('.registerLazySource()', function () {
-         var attach = new LazyAttach();
-         var resources = [GetResources('LocalFile'), GetResources('LocalFileLink'), GetResources('HttpFileLink')];
-         var IFileDataConstructor = [LocalFile, LocalFileLink, HttpFileLink];
-
-         it('Ленивая регистрация ISource для загрузки файлов', function (done) {
-            attach.setSelectedResource(resources);
-            IFileDataConstructor.forEach(function (Contructor) {
-               attach.registerLazySource(Contructor, 'Tests/Unit/File/SourceMock', Contructor);
-            });
-
-            /**
-             * Экземпляр SourceMock при загрузке на него файла возвращает объект со следующими свойствами:
-             * @param suitable {Boolean} true, если загруженный файл является экземпляром IFileDataContructor, с которым инициализировался экземпляр SourceMock 
-             * (для тестирования registerLazySource/registerSource)
-             * @param file {<IFileDataConstructor>} загруженный файл 
-             * (для тестирования upload)
-             * @param params {Object} Полученные параметры при загрузке файла
-             * (для тестирования upload)
-             */
-            attach.upload().addCallback(function (response) {
-               response.forEach(function (res) {
-                  assert.isTrue(res.suitable);
+           describe('.registerLazyGetter()', function () {
+               var attach = new LazyAttach();
+               var resources = [
+                   [GetResources(LocalFile)],
+                   [GetResources(LocalFileLink)],
+                   [GetResources(HttpFileLink)]
+               ];
+               getters.forEach(function (getter, index) {
+                   attach.registerLazyGetter(getter, 'tests/unit/File/Mocks/ResourceGetter', {
+                       chosenFiles: resources[index],
+                       type: getter
+                   });
                });
-            }).addBoth(done);
-         });
-      });
+
+               getters.forEach(function (getter, index) {
+                   var resource = resources[index];
+                   it('Ленивая регистрация  ' + getter + ' для получения файлов', function (done) {
+                       attach.choose(getter).addCallback(function (files) {
+                           files.forEach(function (file) {
+                               assert.include(resource, file);
+                           });
+                       }).addBoth(done);
+                   });
+               });
+           });
+
+           describe('.registerLazyGetter() некорректный вызов', function () {
+               var attach = new LazyAttach();
+               var RIGHT_GETTER_NAME = "RightGetter";
+               var WRONG_GETTER_NAME = "WrongGetter";
+               attach.registerLazyGetter(WRONG_GETTER_NAME, 'tests/unit/File/Mocks/ResourceGetter', {
+                   type: RIGHT_GETTER_NAME
+               });
+               it('Обработка регистрации с некоректно переданным type', function (done) {
+                   attach.choose(WRONG_GETTER_NAME).addCallbacks(function (files) {
+                       assert(false, RIGHT_GETTER_NAME + ' зарегистрировался как ' + WRONG_GETTER_NAME);
+                   }, function(error) {
+                       // тут всё ок, но ошибка не должна уйти в done
+                   }).addBoth(function() {
+                       attach.destroy();
+                   }).addBoth(done);
+               });
+           });
+
+           describe('.registerLazySource()', function () {
+               var attach = new LazyAttach();
+               var resources = [GetResources(LocalFile), GetResources(LocalFileLink), GetResources(HttpFileLink)];
+               var IFileDataConstructor = [LocalFile, LocalFileLink, HttpFileLink];
+
+               it('Ленивая регистрация ISource для загрузки файлов', function (done) {
+                   attach.setSelectedResource(resources);
+                   IFileDataConstructor.forEach(function (Contructor) {
+                       attach.registerLazySource(Contructor, 'tests/unit/File/SourceMock', Contructor);
+                   });
+
+                   /**
+                    * Экземпляр SourceMock при загрузке на него файла возвращает объект со следующими свойствами:
+                    * @param suitable {Boolean} true, если загруженный файл является экземпляром IFileDataContructor, с которым инициализировался экземпляр SourceMock
+                    * (для тестирования registerLazySource/registerSource)
+                    * @param file {IFileDataConstructor} загруженный файл
+                    * (для тестирования upload)
+                    * @param params {Object} Полученные параметры при загрузке файла
+                    * (для тестирования upload)
+                    */
+                   attach.upload().addCallback(function (response) {
+                       response.forEach(function (res) {
+                           assert.isTrue(res.suitable);
+                       });
+                   }).addBoth(function() {
+                       attach.destroy();
+                   }).addBoth(done);
+               });
+           });
+       });
    });
 });

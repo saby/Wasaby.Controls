@@ -640,7 +640,7 @@ define('SBIS3.CONTROLS/Image',
                               cIndicator.hide();
                               InformationPopupManager.showMessageDialog({
                                  status: 'error',
-                                 message: 'При открытии изображения возникла ошибка'
+                                 message: rk('При открытии изображения возникла ошибка')
                               });
                               self._onErrorLoad(event, true);
                            }
@@ -651,7 +651,7 @@ define('SBIS3.CONTROLS/Image',
                            toggleLocalIndicator(self._container, false);
                         },
                         onBeforeControlsLoad: function() {
-                           cIndicator.setMessage('Открытие диалога редактирования...');
+                           cIndicator.setMessage(rk('Открытие диалога редактирования') + '...');
                         },
                         onAfterShow: function() {
                            cIndicator.hide();
@@ -667,7 +667,7 @@ define('SBIS3.CONTROLS/Image',
                this._saveIndicatorState = state;
                if (state) {
                   if (!this._saveIndicator) {
-                     require(['Deprecated/Controls/LoadingIndicator/LoadingIndicator'], function(LoadingIndicator) {
+                     require(['Lib/Control/LoadingIndicator/LoadingIndicator'], function(LoadingIndicator) {
                         this._saveIndicator = new LoadingIndicator({
                            'message': rk('Сохранение'),
                            'name': 'ws-load-indicator'

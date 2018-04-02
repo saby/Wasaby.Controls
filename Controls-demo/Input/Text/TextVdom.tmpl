@@ -1,9 +1,9 @@
 <div class="test_root_div">
-	<h2 class="test_margin_10">Controls:Input:Text</h2>
+	<h2 class="test_margin_10">Controls.Input.Text</h2>
 	
 	<div class="test_margin_10">
 		<div class="test_color_blue">По умолчанию</div>
-		<Controls:Input:Text 
+		<Controls.Input.Text
 			attr:name="Info"
 			bind:placeholder="_infoPlaceholder"
 			bind:value="_info_txt"
@@ -14,7 +14,7 @@
 	
 	<div class="test_margin_10">
 		<div class="test_color_blue">Без value, с обработчиками valueChanged и inputCompleted</div>
-		<Controls:Input:Text
+		<Controls.Input.Text
 			attr:name="TextBox_1"
 			attr:class="test_input_text"
 			on:valueChanged="_valueChanged()"
@@ -25,7 +25,7 @@
 	
 	<div class="test_margin_10">
 		<div class="test_color_blue">С value и обработчиками valueChanged и inputCompleted</div>
-		<Controls:Input:Text
+		<Controls.Input.Text
 			attr:name="TextBox_2"
 			attr:class="test_input_text"
 			on:valueChanged="_valueChanged()"
@@ -36,7 +36,7 @@
 	
 	<div class="test_margin_10">
 		<div class="test_color_blue">С value, selectOnClick=true, maxLength=5 и constraint=[0-9]</div>
-		<Controls:Input:Text
+		<Controls.Input.Text
 			attr:name="TextBox_3"
 			attr:class="test_input_text"
 			bind:value="_text3"
@@ -48,7 +48,7 @@
 	
 	<div class="test_margin_10">
 		<div class="test_color_blue">С trim=true</div>
-		<Controls:Input:Text
+		<Controls.Input.Text
 			attr:name="TextBox_4"
 			attr:class="test_input_text"
 			bind:value="_text4"
@@ -58,7 +58,7 @@
 	
 	<div class="test_margin_10">
 		<div class="test_color_blue">С readOnly=true</div>
-		<Controls:Input:Text
+		<Controls.Input.Text
 			attr:name="TextBox_5"
 			bind:value="_text5"
 			attr:class="test_input_text"
@@ -69,7 +69,7 @@
 	
 	<div class="test_margin_10">
 		<div class="test_color_blue">С предустановленным в js .paste('ABC')</div>
-		<Controls:Input:Text
+		<Controls.Input.Text
 			attr:name="TextBox_6"
 			name="TextBox_6"
 			bind:value="_text6"

@@ -4,7 +4,7 @@
         {{scroll ? 'ws-wait-indicator_scroll ws-wait-indicator_sided ws-wait-indicator_sided-' + scroll}}
         {{small ? 'ws-wait-indicator_small' + (small !== 'yes' ? ' ws-wait-indicator_sided ws-wait-indicator_sided-' + small : '')}}
         {{overlay ? 'ws-wait-indicator_overlay-' + overlay}}
-        {{mods && mod.length ? 'ws-wait-indicator_mod-' + mods.join(' ws-wait-indicator_mod-') }}
+        {{mods && mods.length ? 'ws-wait-indicator_mod-' + mods.join(' ws-wait-indicator_mod-') }}
         "
         {{rect || z ? ' style="' + (rect ? 'left:' + rect.x + 'px; right:' + rect.y + 'px; width:' + rect.w + 'px; height:' + rect.h + 'px;' : '') + (z ? 'z-index:' + z : '') + '"'}}
     >

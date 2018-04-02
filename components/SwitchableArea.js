@@ -1,6 +1,6 @@
-/* На основе Deprecated/Controls/SwitchableArea/SwitchableArea */
+/* На основе Lib/Control/SwitchableArea/SwitchableArea */
 define('SBIS3.CONTROLS/SwitchableArea', [
-   'Deprecated/Controls/SwitchableArea/SwitchableArea',
+   'Lib/Control/SwitchableArea/SwitchableArea',
    'Core/core-instance'], function (CoreSwitchableArea, cInstance) {
 
    'use strict';
@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/SwitchableArea', [
     * В каждый момент времени отображается только одна область.
     * Отображаемая область может переключаться при помощи команд.
     * @class SBIS3.CONTROLS/SwitchableArea
-    * @extends Deprecated/Controls/SwitchableArea/SwitchableArea
+    * @extends Lib/Control/SwitchableArea/SwitchableArea
     * @author Красильников А.С.
     * @public
     */

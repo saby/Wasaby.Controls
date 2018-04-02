@@ -1,6 +1,6 @@
 define('Controls/Popup/Opener/Dialog',
    [
-      'Controls/Popup/Opener/Base',
+      'Controls/Popup/Opener/BaseOpener',
       'Controls/Popup/Opener/Dialog/DialogController'
 
    ],
@@ -20,7 +20,7 @@ define('Controls/Popup/Opener/Dialog',
           * @param config конфигурация попапа
           */
          open: function(config){
-            return Base.prototype.open.call(this, config, Strategy);
+            Base.prototype.open.call(this, config, Strategy);
          }
       });
 

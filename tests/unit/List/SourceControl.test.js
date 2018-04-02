@@ -557,5 +557,51 @@ define([
             done();
          }, 100)
       });
+
+      it('_onCheckBoxClick', function () {
+         var rs = new RecordSet({
+            idProperty: 'id',
+            rawData: data
+         });
+
+         var listViewModel = new ListViewModel ({
+            items : rs,
+            idProperty: 'id',
+            selectedKeys : [1, 3]
+         });
+
+         var source = new MemorySource({
+            idProperty: 'id',
+            data: data
+         });
+
+         var cfg = {
+            selectedKeys : [1, 3],
+            viewName : 'Controls/List/SimpleList/ListView',
+            source: source,
+            listViewModel: listViewModel,
+            navigation: {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 6,
+                  page: 0,
+                  mode: 'totalCount'
+               },
+               view : 'infinity',
+               viewConfig: {
+                  pagingMode: 'direct'
+               }
+            }
+         };
+         var ctrl = new SourceControl(cfg);
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+
+         ctrl._onCheckBoxClick({}, 2, 0);
+         assert.deepEqual([1, 3, 2], ctrl._listViewModel._multiselection._selectedKeys, 'SourceControl: MultiSelection has wrong selected keys');
+
+         ctrl._onCheckBoxClick({}, 1, 1);
+         assert.deepEqual([3, 2], ctrl._listViewModel._multiselection._selectedKeys, 'SourceControl: MultiSelection has wrong selected keys');
+      });
    })
 });
