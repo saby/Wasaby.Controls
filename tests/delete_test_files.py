@@ -47,7 +47,7 @@ exclude_files = ['common.py', 'start_tests.py', 'config.ini', 'smoke_test.py', '
            'test_edit_at_place_07_db.py', 'test_edit_at_place_01_db.py', 'test_edit_at_place_1.py',
            'test_treedatagrid_1.py', 'test_treedatagrid_3_db.py', 'test_treedatagrid_3.py',
            'test_treedatagrid_4_db.py', 'test_treedatagrid_4.py', 'test_treedatagrid_move.py', 'test_treeview.py',
-           'test_todomvc.py', 'test_vdom.py']
+           'test_todomvc.py', 'test_todomvc_1.py', 'test_todomvc_2.py', 'test_vdom.py']
 
 tmp_list_files = [f for f in os.listdir(root_1) if os.path.isfile(os.path.join(root_1, f)) and f not in exclude_files]
 for file_name in tmp_list_files:
