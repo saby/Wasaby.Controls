@@ -11,7 +11,7 @@
    <div attr:tabindex="-1">{{ value }}</div>
 </ws:template>
 
-<Controls:Input:resources:InputRender:InputRender
+<Controls.Input.resources.InputRender.InputRender
            size="{{ _options.size }}"
            sidePadding="Left"
            multiline="{{ _multiline }}"
@@ -42,7 +42,6 @@
                        controls-InputArea__field_size_{{_options.size || 'default'}}"
                      value="{{ _options.value }}"
                      on:keydown="_keyDownHandler()"
-                     on:focus="_focusHandler()"
                      on:scroll="_scrollHandler()"
                   />
                </ws:if>
@@ -72,4 +71,4 @@
                </div>
             </div>
       </ws:content>
-   </Controls:Input:resources:InputRender:InputRender>
+   </Controls.Input.resources.InputRender.InputRender>

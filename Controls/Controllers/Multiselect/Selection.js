@@ -29,6 +29,7 @@ define('Controls/Controllers/Multiselect/Selection', [
       constructor: function(options) {
          this._options = options;
          this._selectedKeys = options.selectedKeys || [];
+         this._excludedKeys = options.excludedKeys || [];
 
          //excluded keys имеют смысл только когда выделено все, поэтому ситуацию, когда переданы оба массива считаем ошибочной //TODO возможно надо кинуть здесь исключение
          if (_private.isAllSelection(this._selectedKeys)) {

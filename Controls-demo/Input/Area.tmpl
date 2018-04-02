@@ -1,8 +1,8 @@
 <div style="margin: 32px; display: flex; flex-direction: column; width: 18em;">
    <div style="padding: 3em; background-color: rgba(38,59,74,0.22)">
       <h2>Area</h2>
-      <Controls:Label name="myLabel1" caption="Пример"/>
-      <Controls:Input:Area bind:value="_text1"
+      <Controls.Label name="myLabel1" caption="Пример"/>
+      <Controls.Input.Area bind:value="_text1"
                            placeholder="{{_placeholder}}"
                            constraint="{{_constraint}}"
                            validationErrors="{{_validationErrors}}"
@@ -15,25 +15,25 @@
    </div>
    <div style="padding: 3em; background-color: rgba(81,81,81,0.11) ">
       <h3>Задайте опции:</h3>
-      <Controls:Label name="myLabel1" caption="placeholder"/>
-      <Controls:Input:Text bind:value="_placeholder"/>
-      <Controls:Label name="myLabel1" caption="tagStyle(варианты: attention, done, error, primary, disabled)"
+      <Controls.Label name="myLabel1" caption="placeholder"/>
+      <Controls.Input.Text bind:value="_placeholder"/>
+      <Controls.Label name="myLabel1" caption="tagStyle(варианты: attention, done, error, primary, disabled)"
                       attr:style="height: auto;"/>
-      <Controls:Input:Text bind:value="_tagStyle"/>
-      <Controls:Label name="myLabel1" caption="constraint"/>
-      <Controls:Input:Text bind:value="_constraint"/>
-      <Controls:Label name="myLabel1" caption="maxLength"/>
-      <Controls:Input:Text bind:value="_maxLength"/>
-      <Controls:Label name="myLabel1" caption="minLines"/>
-      <Controls:Input:Text bind:value="_minLines"/>
-      <Controls:Label name="myLabel1" caption="maxLines"/>
-      <Controls:Input:Text bind:value="_maxLines"/>
+      <Controls.Input.Text bind:value="_tagStyle"/>
+      <Controls.Label name="myLabel1" caption="constraint"/>
+      <Controls.Input.Text bind:value="_constraint"/>
+      <Controls.Label name="myLabel1" caption="maxLength"/>
+      <Controls.Input.Text bind:value="_maxLength"/>
+      <Controls.Label name="myLabel1" caption="minLines"/>
+      <Controls.Input.Text bind:value="_minLines"/>
+      <Controls.Label name="myLabel1" caption="maxLines"/>
+      <Controls.Input.Text bind:value="_maxLines"/>
       <div>
-         <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_trim" caption="trim"/>
-         <ws:Controls.Toggle.Checkbox on:valueChanged="valueChangedHandler()" enabled="{{true}}"
+         <Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_trim" caption="trim"/>
+         <Controls.Toggle.Checkbox on:valueChanged="valueChangedHandler()" enabled="{{true}}"
                                       bind:value="_validationErrorsValue" caption="validationErrors"/>
          <br/>
-         <ws:Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_enabled" caption="enabled"/>
+         <Controls.Toggle.Checkbox enabled="{{true}}" bind:value="_enabled" caption="enabled"/>
       </div>
    </div>
 </div>

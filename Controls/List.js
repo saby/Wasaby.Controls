@@ -20,6 +20,8 @@ define('Controls/List', [
             idProperty: cfg.idProperty,
             displayProperty: cfg.displayProperty,
             markedKey: cfg.markedKey,
+            selectedKeys: cfg.selectedKeys,
+            excludedKeys: cfg.excludedKeys,
             itemsReadyCallback: cfg.itemsReadyCallback
          });
       }

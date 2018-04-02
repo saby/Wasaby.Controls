@@ -39,7 +39,9 @@ define('Controls/Input/Phone',
                   value: newOptions.value
                });
             }
-         }
+         },
+
+         _focusinHandler: function() {}
       });
 
       return Phone;

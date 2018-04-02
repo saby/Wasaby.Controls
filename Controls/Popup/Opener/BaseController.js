@@ -64,6 +64,12 @@ define('Controls/Popup/Opener/BaseController',
          elementDestroyed: function (element) {
             return new cDeferred().callback();
          },
+         getDefaultPosition: function () {
+            return {
+               top: -10000,
+               left: -10000
+            }
+         },
          _getPopupSizes: function (config, container) {
             var sizes = _private.getContentSizes(container);
             return {

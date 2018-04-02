@@ -1,4 +1,4 @@
-<Controls:List:SourceControl
+<Controls.List.SourceControl
               listViewModel="{{_viewModel}}"
               source="{{_options.source}}"
               filter="{{_options.filter}}"
@@ -10,6 +10,8 @@
               idProperty="{{_options.idProperty}}"
               displayProperty="{{_options.displayProperty}}"
               markedKey="{{_options.markedKey}}"
+              selectedKeys="{{_options.selectedKeys}}"
+              excludedKeys="{{_options.excludedKeys}}"
               itemsReadyCallback="{{_options.itemsReadyCallback}}"
               itemActionsType="{{_options.itemActionsType}}"
               itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
@@ -20,4 +22,4 @@
               on:afterItemEdit="_onAfterItemEdit()"
               on:beforeItemEndEdit="_onBeforeItemEndEdit()"
               on:afterItemEndEdit="_onAfterItemEndEdit()">
-</Controls:List:SourceControl>
+</Controls.List.SourceControl>

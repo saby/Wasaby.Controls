@@ -74,7 +74,8 @@ define('Controls/List/SimpleList/ItemsViewModel',
                index : this._curIndex,
                item: isEditingItem ? this.getEditingItem() : dispItem.getContents(),
                dispItem: dispItem,
-               isEditing: isEditingItem
+               isEditing: isEditingItem,
+               key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.idProperty)
             }
          },
 

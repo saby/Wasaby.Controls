@@ -98,7 +98,9 @@ define('SBIS3.CONTROLS/RichEditor',
          _setEnabled: function(enabled){
             if (this._options.toolbar && (this._hasToolbar() || enabled)) {
                this._performByReady(function () {
-                  this._getToolbar().setEnabled(enabled);
+                  if (enabled === this.isEnabled()) {
+                     this._getToolbar().setEnabled(enabled);
+                  }
                }.bind(this));
             }
             RichEditor.superclass._setEnabled.apply(this, arguments);
