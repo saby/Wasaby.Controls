@@ -1,9 +1,10 @@
 define('Controls/Dropdown/Opener',
    [
       'Controls/Popup/Opener/Sticky',
+      'WS.Data/Relation/Hierarchy',
       'WS.Data/Type/descriptor'
    ],
-   function (Sticky, types) {
+   function (Sticky, Hierarchy, types) {
       /**
        * Действие открытия прилипающего окна
        * @class Controls/Dropdown/Opener
@@ -11,30 +12,99 @@ define('Controls/Dropdown/Opener',
        * @public
        * @category Popup
        */
-      var DropdownOpener = Sticky.extend({
+      var _private = {
+          /**
+           * Возвращает размер иконки
+           * @param icon
+           * @returns {*}
+           */
+          getIconSize: function(icon) {
+              var iconSizes = ['icon-small', 'icon-medium', 'icon-large', 'icon-size'],
+                  iconSize;
+
+              iconSizes.forEach(function(size) {
+                  if (icon.indexOf(size) !== -1) {
+                      iconSize = size;
+                  }
+              });
+              return iconSize;
+          },
+          /**
+           * Обходим все дерево для пунктов и проверяем наличие иконки у хотя бы одного в каждом меню
+           * При наличии таковой делаем всем пунктам в этом меню фэйковую иконку для их сдвига.
+           * @param self
+           * @param config
+           */
+          checkIcons: function(self, config) {
+              var parentProperty = config.componentOptions.parentProperty || self._options.popupOptions.componentOptions.parentProperty,
+                  nodeProperty = config.componentOptions.nodeProperty || self._options.popupOptions.componentOptions.nodeProperty,
+                  items = config.componentOptions.items,
+                  hierarchy = new Hierarchy({
+                      idProperty: items.getIdProperty(),
+                      parentProperty: parentProperty,
+                      nodeProperty: nodeProperty
+                  }),
+                  headerIcon = self._options.popupOptions.componentOptions &&
+                               self._options.popupOptions.componentOptions.headConfig &&
+                               self._options.popupOptions.componentOptions.headConfig.icon,
+                  menuStyle = self._options.popupOptions.componentOptions &&
+                              self._options.popupOptions.componentOptions.headConfig &&
+                              self._options.popupOptions.componentOptions.headConfig.menuStyle,
+                  parents = {},
+                  iconSize, children, child, pid, i, icon;
+
+              // необходимо учесть иконку в шапке
+              if (headerIcon && menuStyle !== 'cross') {
+                  parents['null'] = [null, this.getIconSize(headerIcon)];
+              }
+
+              items.each(function(item) {
+                  icon = item.get('icon');
+                  if (icon) {
+                      pid = item.get(parentProperty);
+                      if (!parents.hasOwnProperty(pid)) {
+                          iconSize = _private.getIconSize(icon);
+                          parents[pid] = [pid, iconSize];
+                      }
+                  }
+              });
+
+              for (var key in parents) {
+                  if (parents.hasOwnProperty(key)) {
+                      children = hierarchy.getChildren(parents[key][0], items);
+                      for (i = 0; i < children.length; i++) {
+                          child = children[i];
+                          if (!child.get('icon')) {
+                              child.set('icon', parents[key][1]);
+                          }
+                      }
+                  }
+              }
+          },
+
+          setComponentOptions: function(self, config) {
+              var cOptions = config.componentOptions;
+              var pOptions = self._options.popupOptions;
+              cOptions.depth = cOptions.depth || self._options.depth;
+              if(pOptions.componentOptions && pOptions.componentOptions.headConfig) {
+                  pOptions.componentOptions.headConfig.menuStyle = pOptions.componentOptions.headConfig.menuStyle || 'defaultHead';
+              }
+              this.checkIcons(self, config);
+          },
+          setPopupOptions: function(self, config) {
+              config.className = self._options.className || 'controls-DropdownList__margin';
+              config.template = 'Controls/Dropdown/resources/template/DropdownList';
+          }
+      };
+
+       var DropdownOpener = Sticky.extend({
          _controlName: 'Controls/Dropdown/Opener',
          _itemTemplateDeferred: undefined,
 
-         open: function (config, opener) {
-            this._setPopupOptions(config);
-            this._setComponentOptions(config);
+         open: function (config, opener) {            
+            _private.setComponentOptions(this, config);
+            _private.setPopupOptions(this, config);
             DropdownOpener.superclass.open.apply(this, arguments);
-         },
-         _setPopupOptions: function(config) {
-            config.className = this._options.className || 'controls-DropdownList__margin';
-            config.template = 'Controls/Dropdown/resources/template/DropdownList';
-         },
-         _setComponentOptions: function(config) {
-            var cOptions = config.componentOptions;
-            cOptions.itemTemplate = cOptions.itemTemplate || this._options.itemTemplate;
-            cOptions.headTemplate = cOptions.headTemplate || this._options.headTemplate;
-            cOptions.footerTemplate = cOptions.footerTemplate || this._options.footerTemplate;
-            cOptions.keyProperty = cOptions.keyProperty || this._options.keyProperty;
-            cOptions.depth = cOptions.depth || this._options.depth;
-            cOptions.selectedKeys = cOptions.selectedKeys || this._options.selectedKeys;
-            cOptions.parentProperty = cOptions.parentProperty || this._options.parentProperty;
-            cOptions.itemTemplateProperty = cOptions.itemTemplateProperty || this._options.itemTemplateProperty;
-            cOptions.nodeProperty = cOptions.nodeProperty || this._options.nodeProperty;
          }
       });
 
@@ -61,6 +131,7 @@ define('Controls/Dropdown/Opener',
          };
       };
 
+      DropdownOpener._private = _private;
       return DropdownOpener;
    }
 );

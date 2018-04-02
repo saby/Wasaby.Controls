@@ -632,7 +632,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   content = content.replace(new RegExp('<!--StartFragment-->|<!--EndFragment-->|<html>|<body>|</html>|</body>', 'img'), '').trim();
                   //получение результата из события  BeforePastePreProcess тини потому что оно возвращает контент чистым от тегов Ворда,
                   //withStyles: true нужно чтобы в нашем обработчике BeforePastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
-                  eventResult = self.getTinyEditor().fire('BeforePastePreProcess', {content: content, withStyles: true});
+                  eventResult = self.getTinyEditor().fire('PastePreProcess', {content: content, withStyles: true});
                   self.insertHtml(eventResult.content);
                   self._updateTextByTiny();
                },
@@ -2492,7 +2492,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._requireTinyMCE().addCallback(function() {
                   var cfg = cClone(self._options.editorConfig);
                   cfg.paste_as_text = false;
-                  tinyMCE.baseURL = TINYMCE_URL_BASE;
+                  tinyMCE.baseURL = 'resources/' + TINYMCE_URL_BASE;
                   tinyMCE.init(cfg);
                });
             }
