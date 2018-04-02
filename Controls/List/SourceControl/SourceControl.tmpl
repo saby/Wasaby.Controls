@@ -10,8 +10,10 @@
                 listModel="{{_listViewModel}}"
                 itemTemplate="{{_options.itemTemplate}}"
                 idProperty="{{_options.idProperty}}"
-                displayProperty="{{_options.displayProperty}}"
-                markedKey="{{_options.markedKey}}">
+                displayProperty="{{_options.displayProperty}}">
+            <ws:multiSelectTpl>
+                <ws:partial template ="{{_multiSelectTpl}}"/>
+            </ws:multiSelectTpl>
         </ws:partial>
         <Controls.List.Remove ws:content="listView" name="removeControl"/>
         <Controls.List.ItemActions.ItemActionsControl

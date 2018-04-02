@@ -63,7 +63,7 @@ define('SBIS3.CONTROLS/Mixins/PickerMixin', [
          }
 
          // чтобы не нарушать выравнивание по базовой линии
-         constants.$body.append(pickerContainer);
+         $('body').append(pickerContainer);
          this._picker = this._createPicker(pickerContainer);
          this.subscribeTo(this._picker, 'onAlignmentChange', function(event, alignment){
                 self._onAlignmentChangeHandler(alignment);

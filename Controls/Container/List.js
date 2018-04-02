@@ -1,13 +1,13 @@
-define('Controls/Layout/List',
+define('Controls/Container/List',
    [
       'Core/Control',
-      'tmpl!Controls/Layout/List/List',
+      'tmpl!Controls/Container/List/List',
       'WS.Data/Source/Memory',
       'Controls/Controllers/_SearchController',
       'Core/core-merge',
       'Core/helpers/Object/isEqual',
-      'Controls/Layout/Search/SearchContextField',
-      'Controls/Layout/Filter/FilterContextField'
+      'Controls/Container/Search/SearchContextField',
+      'Controls/Container/Filter/FilterContextField'
    ],
    
    function(Control, template, Memory, SearchController, merge, isEqual, SearchContextField, FilterContextField) {
@@ -77,22 +77,20 @@ define('Controls/Layout/List',
       };
    
       /**
-       * Компонент-обёртка для списка.
-       * Принимает значения из контекста и фильтрует данные для списка.
+       * Container for lists components.
+       * Pass props (like filter, source, navigation) to list inside.
        * @author Герасимов Александр
-       * @class Controls/Layout/List
+       * @class Controls/Container/List
        * @mixes Controls/Input/interface/ISearch
+       * @mixes Controls/interface/INavigation
+       * @mixes Controls/interface/IFilter
        */
       
       /**
-       * @name Controls/Layout/List#source
+       * @name Controls/Container/List#source
        * @cfg {WS.Data/Source/ISource} source
        */
-   
-      /**
-       * @name Controls/Layout/List#navigation
-       * @cfg 'Controls/interface/INavigation} source
-       */
+      
       var List = Control.extend({
          
          _template: template,
@@ -102,13 +100,22 @@ define('Controls/Layout/List',
             _private.resolveOptions(this, options);
          },
          
+         _beforeMount: function(options, context) {
+            if (context.filterLayoutField.filter) {
+               _private.filterChanged(this, context.filterLayoutField.filter);
+            }
+         },
+         
          _beforeUpdate: function (options, context) {
-            if (!isEqual(this.context.get('searchLayoutField').searchValue, context.searchLayoutField.searchValue)) {
-               _private.searchValueChanged(this, context.searchLayoutField.searchValue);
+            var searchContextValue = context.searchLayoutField.searchValue;
+            var filterContextValue = context.filterLayoutField.filter;
+            
+            if (!isEqual(this.context.get('searchLayoutField').searchValue, searchContextValue)) {
+               _private.searchValueChanged(this, searchContextValue);
             }
             
-            if (!isEqual(this.context.get('filterLayoutField').filter, context.filterLayoutField.filter)) {
-               _private.filterChanged(this, context.filterLayoutField.filter);
+            if (!isEqual(this.context.get('filterLayoutField').filter, filterContextValue)) {
+               _private.filterChanged(this, filterContextValue);
             }
          },
          

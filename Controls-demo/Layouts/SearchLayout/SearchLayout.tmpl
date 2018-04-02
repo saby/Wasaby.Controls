@@ -1,7 +1,7 @@
-<Controls.Layout.Filter attr:class="controls-demo__FilterLayout">
+<Controls.Container.Filter attr:class="controls-demo__FilterLayout" filterButtonSource="{{_filterSource}}" historyId="123">
     <ws:content>
         <div>
-            <Controls.Layout.Search
+            <Controls.Container.Search
                     attr:class="controls-demo__SearchLayout"
                     searchParam="title">
                 <ws:content>
@@ -9,10 +9,15 @@
                         <div class="controls-demo__Layouts_content">
                             <div class="controls-demo__Layouts_filterComponents">
                                 <Controls.Input.Search bind:value="_searchValue"/>
-                                <Controls-demo.Layouts.LayoutFilterComponent/>
+                                <Controls.Container.FilterButton>
+                                    <ws:content>
+                                        <Controls.Filter.Button filterTemplate="Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate">
+                                        </Controls.Filter.Button>
+                                    </ws:content>
+                                </Controls.Container.FilterButton>
                             </div>
                             <div class="controls-demo__LayoutInner">
-                                <Controls.Layout.List source="{{_dataSource}}" searchParam="title">
+                                <Controls.Container.List source="{{_dataSource}}" searchParam="title">
                                     <ws:content>
                                         <div>
                                             <Controls.List idProperty="id" name="list">
@@ -25,12 +30,12 @@
                                     <ws:navigation source="page" view="page">
                                         <ws:sourceConfig pageSize="{{20}}" page="{{0}}" mode="totalCount"/>
                                     </ws:navigation>
-                                </Controls.Layout.List>
+                                </Controls.Container.List>
                             </div>
                         </div>
                     </div>
                 </ws:content>
-            </Controls.Layout.Search>
+            </Controls.Container.Search>
         </div>
     </ws:content>
-</Controls.Layout.Filter>
+</Controls.Container.Filter>

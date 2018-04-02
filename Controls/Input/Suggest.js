@@ -78,7 +78,7 @@ define('Controls/Input/Suggest',
                
                suggestTemplate:     options.suggestTemplate,
                emptyTemplate:       options.emptyTemplate,
-               dataSource:          options.dataSource,
+               source:              options.source,
                filter:              options.filter,
                minSearchLength:     options.minSearchLength,
                searchDelay:         options.searchDelay,
@@ -143,7 +143,7 @@ define('Controls/Input/Suggest',
          
          _clearClick: function() {
             /* move focus to input after clear text, because focus will be lost after hiding cross  */
-            this.focus();
+            this.activate();
             this._suggestController.search('');
             this._notify('valueChanged', ['']);
          },

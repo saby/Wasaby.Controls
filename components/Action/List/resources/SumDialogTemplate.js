@@ -26,19 +26,15 @@ define('SBIS3.CONTROLS/Action/List/resources/SumDialogTemplate', [
       },
 
       _modifyOptions: function(options) {
-         var title, value, index, model, format, enumerator, field;
+         var title, model, format, type;
          SumDialogTemplate.superclass._modifyOptions.call(this, options);
          options._rows = [];
          model = options.item;
          format = model.getFormat();
-         enumerator = model.getEnumerator();
-         field = enumerator.getNext();
-         while (field) {
+         model.each(function(field, value) {
             title = options.fields[field] || field;
-            index = format.getFieldIndex(field);
-            type = format.at(index).getType();
+            type = format.at(format.getFieldIndex(field)).getType();
             type = type ? type.toLowerCase() : '';
-            value = model.get(field);
             switch (type) {
                case "money":
                   value = options._defaultRenders.money(value);
@@ -51,8 +47,7 @@ define('SBIS3.CONTROLS/Action/List/resources/SumDialogTemplate', [
                title: title,
                value: value
             });
-            field = enumerator.getNext();
-         }
+         });
 
          return options;
       }
