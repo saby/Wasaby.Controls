@@ -33,6 +33,8 @@ define('Controls/Header', [
     * @cfg {String} Caption display style.
     * @variant default Caption will be default.
     * @variant primary Caption will be accented.
+    * @variant default_big Caption with default style that are used on pages open from the accordion.
+    * @variant default_big Caption with primary style that are used on pages open from the accordion.
     */
 
    /**
@@ -48,8 +50,8 @@ define('Controls/Header', [
    /**
     * @name Controls/Header#counterLocation
     * @cfg {String} Counter location relative to header.
-    * @variant after Counter will be displayed after the caption.
-    * @variant before Counter will be displayed before the caption.
+    * @variant right Counter will be displayed after the caption.
+    * @variant left Counter will be displayed before the caption.
     */
 
    /**
@@ -81,8 +83,8 @@ define('Controls/Header', [
    /**
     * @name Controls/Header#iconLocation
     * @cfg {String} Icon location relative to header.
-    * @variant after Icon will be displayed after the caption.
-    * @variant before Icon will be displayed before the caption.
+    * @variant right Icon will be displayed after the caption.
+    * @variant left Icon will be displayed before the caption.
     */
 
    /**
@@ -192,8 +194,8 @@ define('Controls/Header', [
          clickable: types(Boolean),
          counterValue: types(Number),
          counterLocation: types(String).oneOf([
-            'after',
-            'before'
+            'right',
+            'left'
          ]),
          counterStyle: types(String).oneOf([
             'primary',
@@ -213,8 +215,8 @@ define('Controls/Header', [
          ]),
          iconClickable: types(Boolean),
          iconLocation: types(String).oneOf([
-            'after',
-            'before'
+            'right',
+            'left'
          ]),
          iconStyle: types(String).oneOf([
             'Accent',
