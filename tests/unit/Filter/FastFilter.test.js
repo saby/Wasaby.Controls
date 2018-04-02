@@ -62,13 +62,14 @@ define(
          var fastDataItems = new FastData(configWithItems);
          fastDataItems._beforeMount(configWithItems);
 
-         fastData.subscribe('selectedKeysChanged', function (event, key) {
-            isSelected = true;
-            selectedKey = key;
-         });
-         fastData.subscribe('filterChanged', function () {
-            isFilterChanged = true;
-         });
+         fastData._notify = (e, args) => {
+            if(e == 'selectedKeysChanged') {
+               isSelected = true;
+               selectedKey = args[0];
+            } else {
+               isFilterChanged = true;
+            }
+         };
          fastData._beforeMount(config);
          fastData._children.DropdownOpener = {
             close: setTrue.bind(this, assert),
@@ -118,7 +119,7 @@ define(
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function () {
                   fastData.lastOpenIndex = 0;
                   isSelected = false;
-                  isFilterChanged = false;
+                  isFilterChanged =false;
                   selectedKey = null;
                   fastData._onResult(['itemClick', 'event', [fastData._configs[0]._items.at(2)]]);
                   assert.isTrue(isSelected);
