@@ -2,8 +2,8 @@ define('Controls/Container/Scroll',
    [
       'Core/Control',
       'Core/detection',
-      'Controls/Container/Scroll/ScrollWidthController',
-      'Controls/Container/Scroll/ScrollOverflowController',
+      'Controls/Container/Scroll/ScrollWidthUtil',
+      'Controls/Container/Scroll/ScrollOverflowUtil',
       'tmpl!Controls/Container/Scroll/Scroll',
 
       'Controls/Layout/Scroll',
@@ -11,7 +11,7 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/Scrollbar',
       'css!Controls/Container/Scroll/Scroll'
    ],
-   function(Control, detection, ScrollWidthController, ScrollOverflowController, template) {
+   function(Control, detection, ScrollWidthUtil, ScrollOverflowUtil, template) {
 
       'use strict';
 
@@ -82,11 +82,6 @@ define('Controls/Container/Scroll',
          Scroll = Control.extend({
             _template: template,
             /**
-             * Видимость полосы прокрутки.
-             * @type {boolean}
-             */
-            _scrollbarVisible: false,
-            /**
              * Смещение контента сверху относительно контейнера.
              * @type {number}
              */
@@ -119,8 +114,8 @@ define('Controls/Container/Scroll',
             _showScrollbarOnHover: true,
 
             _afterMount: function() {
-               this._styleHideScrollbar = ScrollWidthController.calcStyleHideScrollbar();
-               this._overflow = ScrollOverflowController.calcOverflow(this._children.content);
+               this._styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar();
+               this._overflow = ScrollOverflowUtil.calcOverflow(this._children.content);
                _private.setHasScroll(this);
 
                this._forceUpdate();
@@ -198,7 +193,7 @@ define('Controls/Container/Scroll',
                }
             },
 
-            _resizeHandler: function(event, parentResize) {
+            _resizeHandler: function() {
                _private.setHasScroll(this);
             },
 

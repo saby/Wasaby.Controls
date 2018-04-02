@@ -1,4 +1,4 @@
-define('Controls/Container/Scroll/ScrollWidthController',
+define('Controls/Container/Scroll/ScrollWidthUtil',
    [
       'Core/detection',
       'Core/compatibility'
@@ -36,7 +36,7 @@ define('Controls/Container/Scroll/ScrollWidthController',
              * В браузерах с поддержкой ::-webkit-scrollbar установлена ширина 0.
              * Определяем не с помощью Core/detection, потому что в нем считается, что chrome не на WebKit.
              */
-            if (~userAgent.indexOf('AppleWebKit')) {
+            if (userAgent.indexOf('AppleWebKit') > -1) {
                scrollbarWidth = 0;
             } else if (detection.isIE12) {
                scrollbarWidth = 16;

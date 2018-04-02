@@ -5,6 +5,9 @@
         style="height: {{_thumbHeight}}px; transform: translateY({{_position * _scrollRatio}}px);"
    ></div>
    <Controls.Event.Emitter event="resize" on:resize="_resizeHandler()"/>
-   <Controls.Event.Emitter if="{{_dragging}}" event="mouseup" on:mouseup="_scrollbarEndDragHandler()"/>
-   <Controls.Event.Emitter if="{{_dragging}}" event="mousemove" on:mousemove="_scrollbarOnDragHandler()"/>
+
+   <ws:if data="{{_dragging}}">
+      <Controls.Event.Emitter event="mouseup" on:mouseup="_scrollbarEndDragHandler()"/>
+      <Controls.Event.Emitter event="mousemove" on:mousemove="_scrollbarOnDragHandler()"/>
+   </ws:if>
 </div>

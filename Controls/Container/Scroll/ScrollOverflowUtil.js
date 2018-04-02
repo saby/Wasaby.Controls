@@ -1,4 +1,4 @@
-define('Controls/Container/Scroll/ScrollOverflowController',
+define('Controls/Container/Scroll/ScrollOverflowUtil',
    [
       'Core/detection'
    ],

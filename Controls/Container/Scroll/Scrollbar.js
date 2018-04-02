@@ -135,11 +135,11 @@ define('Controls/Container/Scroll/Scrollbar',
                   shouldUpdatePosition = oldOptions.position !== this._options.position;
 
                if (oldOptions.contentHeight !== this._options.contentHeight) {
-                  shouldForceUpdate |= this._setSizes(this._options.contentHeight);
+                  shouldForceUpdate = shouldForceUpdate || this._setSizes(this._options.contentHeight);
                   shouldUpdatePosition = true;
                }
                if (shouldUpdatePosition) {
-                  shouldForceUpdate |= this._setPosition(this._options.position);
+                  shouldForceUpdate = shouldForceUpdate || this._setPosition(this._options.position);
                }
                if (shouldForceUpdate) {
                   this._forceUpdate();
