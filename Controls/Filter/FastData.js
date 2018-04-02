@@ -111,7 +111,7 @@ define('Controls/Filter/FastFilter',
             var data = args[2];
             if (actionName === 'itemClick') {
                _private.selectItem.apply(this, data);
-               this._notify('filterChanged', [_private.getFilter(this._items)], {bubbling: true});
+               this._notify('filterChanged', [_private.getFilter(this._items)]);
                this._children.DropdownOpener.close();
             }
          }
@@ -176,7 +176,7 @@ define('Controls/Filter/FastFilter',
             var newValue = this._items.at(index).get('resetValue');
             this._items.at(index).set({value: newValue});
             this._notify('selectedKeysChanged', [newValue]);
-            this._notify('filterChanged', [_private.getFilter(this._items)], {bubbling: true});
+            this._notify('filterChanged', [_private.getFilter(this._items)]);
          }
       });
 
