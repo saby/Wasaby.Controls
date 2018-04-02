@@ -1,4 +1,4 @@
-define(['Controls/Layout/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/RecordSet'], function(List, Memory, RecordSet) {
+define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/RecordSet'], function(List, Memory, RecordSet) {
    
    if (typeof mocha !== 'undefined') {
       //Из-за того, что загрузка через Core/moduleStubs добавляет в global Lib/Control/LoadingIndicator/LoadingIndicator,
@@ -7,7 +7,7 @@ define(['Controls/Layout/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/Rec
    }
    
    
-   describe('Controls.Layout.List', function () {
+   describe('Controls.Container.List', function () {
       var listLayout, listOptions, listSource, listSourceData, listSearchParam;
    
       before(function() {

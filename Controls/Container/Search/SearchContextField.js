@@ -1,9 +1,9 @@
 /**
- * Поле контекста в котором лежит значения поиска в раскладке.
+ * Context field for search value
  * @author Герасимов Александр
- * @class Controls/Layout/Search/SearchContextField
+ * @class Controls/Container/Search/SearchContextField
  */
-define('Controls/Layout/Search/SearchContextField', ['Core/DataContext'], function(DataContext) {
+define('Controls/Container/Search/SearchContextField', ['Core/DataContext'], function(DataContext) {
       'use strict';
       
       return DataContext.extend({
