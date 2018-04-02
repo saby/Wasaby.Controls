@@ -67,10 +67,10 @@ define('SBIS3.CONTROLS/Tree/View', [
             itemsActions: []
          }
       },
-
-      init: function () {
-         TreeView.superclass.init.apply(this, arguments);
-         this._container.addClass('controls-TreeView');
+      _modifyOptions: function() {
+         var cfg = TreeView.superclass._modifyOptions.apply(this, arguments);
+         cfg.preparedClasses += ' controls-TreeView';
+         return cfg;
       },
 
       _onDragHandler: function (dragObject, e) {

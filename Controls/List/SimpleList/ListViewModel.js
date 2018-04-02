@@ -77,8 +77,9 @@ define('Controls/List/SimpleList/ListViewModel',
          getCurrent: function() {
             var itemsModelCurrent = this._itemsModel.getCurrent();
             itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
-            itemsModelCurrent.isActionHoverItem = itemsModelCurrent.dispItem.getContents() === this._actionHoverItem;
             itemsModelCurrent.itemActions =  this._actions[this.getCurrentIndex()];
+            itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
+            itemsModelCurrent.showActions = !this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive);
             itemsModelCurrent.multiSelectStatus = this._multiselection.getSelectionStatus(itemsModelCurrent.key);
             return itemsModelCurrent;
          },
@@ -124,6 +125,10 @@ define('Controls/List/SimpleList/ListViewModel',
 
          prependItems: function(items) {
             this._itemsModel.prependItems(items);
+         },
+
+         removeItems: function(items) {
+            this._itemsModel.removeItems(items);
          },
 
          getCount: function() {

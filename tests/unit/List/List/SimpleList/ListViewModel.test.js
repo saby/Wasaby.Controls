@@ -191,6 +191,23 @@ define([
 
       });
 
+      it('Remove', function () {
+         var iv = new ListViewModel({
+            items: new RecordSet({
+               rawData: data,
+               idProperty : 'id'
+            }),
+            idProperty: 'id',
+            displayProperty: 'title'
+         });
+
+         iv.removeItems([1]);
+         assert.equal(2, iv._itemsModel.getCount(), 'Incorrect items count after removeItems');
+         iv.removeItems([2, 3]);
+         assert.equal(0, iv._itemsModel.getCount(), 'Incorrect items count after remove all items');
+
+      });
+
       it('itemsReadyCallback', function () {
          var rs1 = new RecordSet({
             rawData: data,

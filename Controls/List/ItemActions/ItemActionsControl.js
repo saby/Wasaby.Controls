@@ -2,7 +2,6 @@ define('Controls/List/ItemActions/ItemActionsControl', [
    'Core/Control',
    'tmpl!Controls/List/ItemActions/ItemActionsControl',
    'WS.Data/Collection/RecordSet',
-   'tmpl!Controls/List/ItemActions/ItemActionsMenuFooter',
    'css!Controls/List/ItemActions/ItemActions'
 ], function (
    Control,
@@ -20,7 +19,10 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       fillItemActions: function(item, itemActions, itemActionVisibilityCallback){
          var actions = [];
         itemActions.forEach(function(action){
-            if (itemActionVisibilityCallback(action, item)) {
+            if (!itemActionVisibilityCallback || itemActionVisibilityCallback(action, item)) {
+               if (action.icon && !~action.icon.indexOf('controls-itemActionsV__action_icon')) {
+                  action.icon += ' controls-itemActionsV__action_icon icon-size';
+               }
                actions.push(action);
             }
          });
@@ -58,7 +60,8 @@ define('Controls/List/ItemActions/ItemActionsControl', [
                rs = new RecordSet({rawData: showActions}),
                realEvent =  childEvent ? childEvent: event;
             realEvent.nativeEvent.preventDefault();
-            self._options.listModel._actionHoverItem = itemData.item;
+            itemData.contextEvent = context;
+            self._options.listModel._activeItem = itemData;
             self._children['itemActionsOpener'].open({
                target: !context ? event.target: false,
                componentOptions: {items: rs}
@@ -72,10 +75,10 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          //todo: Особая логика событий попапа, исправить как будут нормально приходить аргументы
          if (actionName === 'itemClick') {
             var action = args[2][0].getRawData();
-            self._onActionClick(event, action, self._options.listModel._actionHoverItem);
+            self._onActionClick(event, action, self._options.listModel._activeItem.item);
          }
          self._children['itemActionsOpener'].close();
-         self._options.listModel._actionHoverItem = false;
+         self._options.listModel._activeItem = false;
          self._forceUpdate();
       },
       updateModel: function(options, newOptions) {

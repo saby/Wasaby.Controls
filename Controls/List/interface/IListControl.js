@@ -66,7 +66,22 @@ define('Controls/List/interface/IListControl', [
 
    /**
     * @name Controls/List/interface/IListControl#itemActions
-    * @cfg {Array} Операции над записью
+    * @cfg {Array} item operations
+    */
+
+    /**
+    * @name Controls/List/interface/IListControl#itemActionsType
+    * @cfg {String} item operations display type
+    * @variant inline
+    * @variant underline
+    */
+
+   /**
+    * @name Controls/List/interface/IListControl#itemActionVisibilityCallback
+    * @cfg {function} item operation visibility filter function
+    * @param {Object} action
+    * @param {Record} item
+    * @return {Boolean} action visibility
     */
 
    /**

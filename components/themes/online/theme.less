@@ -1,6 +1,6 @@
 @themeName: 'online';
 
-.addButtonMixin(@svgIcon) {
+.addButtonMixin(@svgIcon, @size: 12px) {
    .inline-flexbox();
    .justify-content(center);
    .align-items(center);
@@ -8,8 +8,8 @@
    &:before {
       content: '';
       display: inline-block;
-      width: 12px;
-      height: 12px;
+      width: @size;
+      height: @size;
       background-image: @svgIcon;
       background-size: contain;
    }
@@ -74,9 +74,29 @@
 .controls-Button .icon-AddButtonNew.normaltext-color{
    .addButtonMixin(@content_addButton_black);
 }
-.controls-Button .icon-AddButtonNew.icon-primary{
-   .addButtonMixin(@content_addButton_blue);
+.controls-Button, .controls-IconButton {
+   .icon-AddButtonNew.icon-primary {
+      &.icon-24, &.icon-medium {
+         .addButtonMixin(@content_addButton_blue);
+      }
+      &.icon-16, &.icon-small {
+         .addButtonMixin(@content_addButton_blue, 10px);
+      }
+   }
 }
 .controls-Menu__Popup:not(.controls-MenuPicker__resetIconColor) .controls-Menu__header-icon.icon-AddButtonNew{
-   .addButtonMixin(@content_addButton_blueDark);
+   &.icon-24, &.icon-medium {
+      .addButtonMixin(@content_addButton_blueDark);
+   }
+   &.icon-16, &.icon-small {
+      .addButtonMixin(@content_addButton_blueDark, 10px);
+   }
+}
+
+.ws-is-desktop-platform {
+   .controls-IconButton__standardBorder:hover .controls-Button__icon.icon-AddButtonNew.icon-primary {
+      &.icon-16, &.icon-small {
+         .addButtonMixin(@content_addButton_blueDark, 10px);
+      }
+   }
 }
