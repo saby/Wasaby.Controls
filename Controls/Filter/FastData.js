@@ -1,63 +1,80 @@
-define('Controls/Filter/FastData',
+define('Controls/Filter/FastFilter',
    [
       'Core/Control',
       'Controls/Dropdown/DropdownUtils',
-      'tmpl!Controls/Filter/FastData/FastData',
+      'tmpl!Controls/Filter/FastFilter/FastFilter',
       'Controls/Controllers/SourceController',
       'WS.Data/Chain',
       'WS.Data/Collection/RecordSet',
       'Core/core-instance',
       'Core/ParallelDeferred',
-      'css!Controls/Filter/FastData/FastData',
+      'Core/Deferred',
+      'css!Controls/Filter/FastFilter/FastFilter',
       'css!Controls/Input/Dropdown/Dropdown'
 
    ],
-   function (Control, DropdownUtils, template, SourceController, Chain, RecordSet, cInstance, pDeferred) {
+   function (Control, DropdownUtils, template, SourceController, Chain, RecordSet, cInstance, pDeferred, Deferred) {
 
       'use strict';
 
       /**
-       *
-       * @class Controls/Filter/FastData
+       * Control "Fast Filter"
+       * @class Controls/Filter/FastFilter
        * @extends Controls/Control
        * @control
        * @public
        * @author Золотова Э.Е.
        */
+
+      /**
+       * @event Controls/Filter/FastFilter#filterChanged Happen when the filter changes
+       */
+
+      /**
+       * @name Controls/Filter/FastFilter#source
+       * @cfg {WS.Data/Source/ISource} Sets the source of data set, on which to build the mapping. If 'items' are specified, 'source' will be ignored
+       */
+
+      /**
+       * @name Controls/Filter/FastFilter#items
+       * @cfg {WS.Data/Collection/IList} Sets a set of initial data, on which to build the mapping
+       */
+
       var _private = {
 
          getSourceController: function (source) {
             return new SourceController({
                source: source
-            }).load();
+            });
          },
 
-         getItems: function (self, items) {
+         prepareItems: function (self, items, idProperty) {
             if (!cInstance.instanceOfModule(items, 'WS.Data/Collection/RecordSet')) {
-               self._items = new RecordSet({rawData: items});
+               self._items = new RecordSet({
+                  rawData: items,
+                  idProperty: idProperty
+               });
             } else {
                self._items = items;
             }
          },
 
-         loadListConfig: function (self, item, index) {
-            var properties = item.get('properties'),
-               dSource = {
+         loadItems: function (self, item, index) {
+            var properties = item.get('properties');
+
+            self._configs[index] = {};
+            self._configs[index].keyProperty = properties.keyProperty;
+            self._configs[index].displayProperty = properties.displayProperty || 'title';
+
+            if (properties.items) {
+               _private.prepareItems(self._configs[index], properties.items, properties.keyProperty);
+               return Deferred.success(self._configs[index]._items);
+            } else if (properties.source) {
+               var dSource = {
                   source: properties.source,
                   idProperty: properties.keyProperty
                };
-
-            if (!item.get('value')) {
-               self._items.at(index).set({value: item.get('resetValue')});
-            }
-            self._configs[index] = {};
-
-            if (properties.items) {
-               _private.getItems(self._configs[index], properties.items);
-            } else if (properties.source) {
                return DropdownUtils.loadItems(self._configs[index], dSource).addCallback(function () {
-                  self._configs[index].keyProperty = properties.keyProperty;
-                  self._configs[index].displayProperty = properties.displayProperty || 'title';
                });
             }
          },
@@ -65,21 +82,20 @@ define('Controls/Filter/FastData',
          reload: function (self) {
             var pDef = new pDeferred();
             Chain(self._items).each(function (item, index) {
-               var result = _private.loadListConfig(self, item, index);
-               if (cInstance.instanceOfModule(result, 'Core/Deferred')) {
-                  pDef.push(result);
-               }
+               var result = _private.loadItems(self, item, index);
+               pDef.push(result);
             });
+            //Сначала загрузим все списки, чтобы не вызывать морганий интерфейса и множества перерисовок
             return pDef.done().getResult().addCallback(function () {
                self._forceUpdate();
             });
          },
 
-         getFilter: function (self) {
+         getFilter: function (items) {
             var filter = {};
-            Chain(self._configs).each(function (config, index) {
-               if (config._items && self._items.at(index).get('value') !== self._items.at(index).get('resetValue')) {
-                  filter[self._items.at(index).get('id')] = self._items.at(index).get('value');
+            Chain(items).each(function (item) {
+               if (item.get('value') !== item.get('resetValue')) {
+                  filter[item.get('id')] = item.get('value');
                }
             });
             return filter;
@@ -97,7 +113,7 @@ define('Controls/Filter/FastData',
             var data = args[2];
             if (actionName === 'itemClick') {
                _private.selectItem.apply(this, data);
-               this._notify('filterChanged', [_private.getFilter(this)], {bubbling: true});
+               this._notify('filterChanged', [_private.getFilter(this._items)]);
                this._children.DropdownOpener.close();
             }
          }
@@ -121,10 +137,10 @@ define('Controls/Filter/FastData',
             var self = this,
                resultDef;
             if (options.items) {
-               _private.getItems(this, options.items);
+               _private.prepareItems(this, options.items);
                resultDef = _private.reload(this);
             } else if (options.source) {
-               resultDef = _private.getSourceController(options.source).addCallback(function (items) {
+               resultDef = _private.getSourceController(options.source).load().addCallback(function (items) {
                   self._items = items;
                   return _private.reload(self);
                });
@@ -136,14 +152,14 @@ define('Controls/Filter/FastData',
             var config = {
                componentOptions: {
                   items: this._configs[index]._items,
-                  keyProperty: this._configs[index]._items.getIdProperty(),
+                  keyProperty: this._configs[index].keyProperty,
                   parentProperty: item.get('parentProperty'),
                   nodeProperty: item.get('nodeProperty'),
                   itemTemplateProperty: item.get('itemTemplateProperty'),
                   itemTemplate: item.get('itemTemplate'),
                   headTemplate: item.get('headTemplate'),
                   footerTemplate: item.get('footerTemplate'),
-                  selectedKeys: this._items.at(index).get('value') || this._items.at(index).get('resetValue')
+                  selectedKeys: this._items.at(index).get('value')
                },
                target: event.target.parentElement
             };
@@ -154,7 +170,7 @@ define('Controls/Filter/FastData',
 
          _getText: function (item, index) {
             if (this._configs[index]._items) {
-               var sKey = this._items.at(index).get('value') || this._items.at(index).get('resetValue');
+               var sKey = this._items.at(index).get('value');
                return this._configs[index]._items.getRecordById(sKey).get(this._configs[index].displayProperty);
             }
          },
@@ -163,7 +179,7 @@ define('Controls/Filter/FastData',
             var newValue = this._items.at(index).get('resetValue');
             this._items.at(index).set({value: newValue});
             this._notify('selectedKeysChanged', [newValue]);
-            this._notify('filterChanged', [_private.getFilter(this)], {bubbling: true});
+            this._notify('filterChanged', [_private.getFilter(this._items)]);
          }
       });
 
