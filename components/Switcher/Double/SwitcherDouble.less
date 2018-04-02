@@ -55,7 +55,7 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-SwitcherDouble .controls-S
 .controls-SwitcherDouble__line {
    &:extend(.controls-Switcher__line);
 }
-.controls-SwitcherDouble-on-toggled {
+.controls-SwitcherDouble-on-toggled, .controls-SwitcherDouble-off-toggled {
    .controls-SwitcherDouble__btn:before {
       &:extend(.controls-Switcher.controls-Checked__checked .controls-Switcher__btn:before);
    }
@@ -114,13 +114,13 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-SwitcherDouble .controls-S
    }
 }
 
-& when (@switcher-hover-border-width = @default-border-width) {
+& when (@border-width_Switcher_hover = @border-width_Switcher) {
    .controls-SwitcherDouble .controls-SwitcherDouble__toggle {
       border-width: @default-border-width;
       .switcherDoubleBorder(@default-border-width);
    }
 }
-& when not (@switcher-hover-border-width = @default-border-width) {
+& when not (@border-width_Switcher_hover = @border-width_Switcher) {
    .controls-SwitcherDouble .controls-SwitcherDouble__toggle {
       &:not(:hover), .ws-disabled&:hover {
          border-width: @default-border-width;

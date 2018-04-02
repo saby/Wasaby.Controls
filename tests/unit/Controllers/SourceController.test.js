@@ -61,7 +61,7 @@ define([
          def.addCallback(function(rs){
             assert.isFalse(controller.isLoading(), 'Wrong _isloading value');
             assert.isTrue(cInstance.instanceOfModule(rs, 'WS.Data/Collection/RecordSet'), 'load doesn\'t returns recordset instance');
-            assert(3, rs.getCount(), 'load doesn\'t returns recordset instance');
+            assert.equal(3, rs.getCount(), 'load doesn\'t returns recordset instance');
             done();
          });
 
@@ -82,7 +82,7 @@ define([
          });
          controller.load().addCallback(function(rs){
             assert.isTrue(cInstance.instanceOfModule(rs, 'WS.Data/Collection/RecordSet'), 'load doesn\'t returns recordset instance');
-            assert(1, rs.getCount(), 'Load doesn\'t returns correct records count');
+            assert.equal(1, rs.getCount(), 'Load doesn\'t returns correct records count');
 
             assert.isTrue(controller.hasMoreData('down'), 'Wrong has more value after load');
             assert.isFalse(controller.hasMoreData('up'), 'Wrong has more value after load');
@@ -97,7 +97,7 @@ define([
             source: source
          });
          controller.load({id: 2}).addCallback(function(rs){
-            assert(2, rs.getCount(), 'Load with filter doesn\'t returns correct records count');
+            assert.equal(1, rs.getCount(), 'Load with filter doesn\'t returns correct records count');
             done();
          });
 
@@ -109,8 +109,8 @@ define([
          });
          controller.load({}, [{id: 'DESC'}]).addCallback(function(rs){
 
-            assert(3, rs.getCount(), 'Load with sorting doesn\'t returns correct records count');
-            assert(3, rs.at(0), 'Load with sorting doesn\'t returns correct records order');
+            assert.equal(3, rs.getCount(), 'Load with sorting doesn\'t returns correct records count');
+            assert.equal(3, rs.at(0).get('id'), 'Load with sorting doesn\'t returns correct records order');
 
             done();
          });

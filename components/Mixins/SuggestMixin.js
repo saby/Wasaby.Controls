@@ -433,7 +433,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
             /* Если фокус уходит на список - вернём его обратно в контрол, с которого фокус ушёл */
             this.subscribeTo(control, 'onFocusOut', function(e, destroyed, focusedControl) {
                /* Если фокус ушёл на список, или на дочерний контрол списка - возвращаем обратно в поле ввода */
-               if (self._list && (self._list === focusedControl || ~Array.indexOf(self._list.getChildControls(), focusedControl))) {
+               if (self._list && (self._list === focusedControl || ~self._list.getChildControls().indexOf(focusedControl))) {
                   focusedControl.setActive(false, false, false, this);
                   this.setActive(true);
                }
@@ -702,7 +702,7 @@ define('SBIS3.CONTROLS/Mixins/SuggestMixin', [
       
             if(showButton) {
                /* Чтобы не подписываться лишний раз */
-               if(Array.indexOf(button.getEventHandlers('onActivated'), this._showAllButtonHandler) === -1) {
+               if(button.getEventHandlers('onActivated').indexOf(this._showAllButtonHandler) === -1) {
                   this.subscribeTo(button, 'onActivated', this._showAllButtonHandler);
                }
                /* Чтобы кнопка не принимала фокус по табу, иначе клик enter'a, когда автодополнение открыто,

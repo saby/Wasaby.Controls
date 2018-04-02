@@ -12,7 +12,7 @@ define('SBIS3.CONTROLS/DropdownList',
    'Core/helpers/Function/shallowClone',
    'Core/helpers/Object/isEqual',
    "Lib/Control/CompoundControl/CompoundControl",
-   'SBIS3.CONTROLS/Utils/ArraySimpleValuesUtil',
+   'Controls/Utils/ArraySimpleValuesUtil',
    "SBIS3.CONTROLS/Mixins/PickerMixin",
    "SBIS3.CONTROLS/Mixins/ItemsControlMixin",
    "SBIS3.CONTROLS/Utils/RecordSetUtil",
@@ -447,8 +447,15 @@ define('SBIS3.CONTROLS/DropdownList',
                this._loadItemsDeferred.addCallback(function() {
                   var item = this._options.selectedItems.at(0);
                   var text = item && item.get(this._options.displayProperty);
-                  this._removeOldKeysCallback();
-                  this._drawSelectedValue(this._options.selectedKeys[0], [text]);
+                  if (!item) {
+                     this._setFirstItemAsSelected();
+                     //Скрываю крестик сброса
+                     this._getPickerContainer().toggleClass('controls-DropdownList__hideCross', true);
+                     this.getContainer().toggleClass('controls-DropdownList__hideCross', true);
+                  } else {
+                     this._removeOldKeysCallback();
+                     this._drawSelectedValue(this._options.selectedKeys[0], [text]);
+                  }
                }.bind(this));
             } else {
                this._removeOldKeysCallback();
@@ -484,6 +491,9 @@ define('SBIS3.CONTROLS/DropdownList',
                var oldKeys = this.getSelectedKeys();
                this._options.selectedItems && this._options.selectedItems.clear();
                this._options.selectedKeys = idArray;
+               if (this._isEnumTypeData()) {
+                  this.getItems().set(idArray[0]);
+               }
                this._drawSelectedValue(null, [getEmptyText(this._options)]);
                this._notifySelectedItems(this._options.selectedKeys,{
                   added : idArray,
@@ -863,7 +873,9 @@ define('SBIS3.CONTROLS/DropdownList',
                return;
             }
             if (this._isEnumTypeData()){
-               this._drawSelectedValue(this.getItems().get(), [this.getItems().getAsValue(true)]);
+               var value = this.getItems().getAsValue(true);
+               value = value === null ? getEmptyText(this._options) : value;
+               this._drawSelectedValue(this.getItems().get(), [value]);
             }
             else if(len && (!this._loadItemsDeferred || this._loadItemsDeferred.isReady())) {
                this.getSelectedItems(true).addCallback(function(list) {

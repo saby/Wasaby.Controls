@@ -233,6 +233,8 @@ define('SBIS3.CONTROLS/Utils/KbLayoutRevert/KbLayoutRevertObserver',
                      self._getTimer().stop();
                      view.setFilter(viewFilter);
                   }
+               } else {
+                  self._itemsBeforeTranslate = null;
                }
             }
 

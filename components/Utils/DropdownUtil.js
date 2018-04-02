@@ -1,9 +1,9 @@
 define('SBIS3.CONTROLS/Utils/DropdownUtil', [
     'Core/core-clone',
     'SBIS3.CONTROLS/Menu/SBISHistoryController',
-    'WS.Data/Collection/RecordSet',
-    'WS.Data/Query/Query'
-], function (coreClone, HistoryController, RecordSet, Query) {
+    'WS.Data/Query/Query',
+    'WS.Data/Collection/RecordSet'
+], function (coreClone, HistoryController, Query) {
     return {
         showPicker: function(self, prototype){
             var myself = this;

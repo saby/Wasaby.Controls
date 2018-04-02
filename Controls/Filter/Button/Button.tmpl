@@ -20,8 +20,8 @@
         <div class="controls-FilterButton__icon controls-FilterButton__icon_{{_options.filterAlign}} controls-FilterButton__icon_state_{{_getFilterState()}} icon-FilterBig"
              on:click="_openFilterPanel()">
         </div>
-        <ws:if data="{{_options.filterTemplate}}">
-            <div class="controls-FilterButton__oldTemplate controls-FilterButton__oldTemplate_{{_options.filterAlign}}"></div>
-        </ws:if>
     </div>
+    <ws:if data="{{_options.filterTemplate}}">
+        <div class="controls-FilterButton__oldTemplate controls-FilterButton__oldTemplate_{{_options.filterAlign}}"></div>
+    </ws:if>
 </div>

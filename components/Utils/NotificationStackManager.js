@@ -87,6 +87,8 @@ define('SBIS3.CONTROLS/Utils/NotificationStackManager',
             });
             //TODO Конец костыля
 
+            inst.getContainer().addClass('js-controls-NotificationStackPopup');
+
             this._items.unshift(inst);
 
             this.subscribeTo(inst, 'onClose', function(){

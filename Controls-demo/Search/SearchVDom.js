@@ -9,7 +9,17 @@ define('Controls-demo/Search/SearchVDom', [
    var ModuleClass = Control.extend(
       {
          _template: template,
-         _value: ''
+         _value: '',
+         textValue: '',
+         textSearchValue: '',
+
+         _changeValueSearchHandler: function () {
+            this.textSearchValue += 'search\n';
+         },
+         _changeValuesHandler: function () {
+            this.textValue += 'valueChanged\n';
+         }
+
       });
    return ModuleClass;
 });

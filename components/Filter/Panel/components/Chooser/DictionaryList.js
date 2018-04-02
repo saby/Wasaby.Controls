@@ -10,7 +10,7 @@ define('SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList', [
     'WS.Data/Collection/RecordSet',
     'tmpl!SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList/resources/FilterPanelChooserDictionaryFooter',
     'SBIS3.CONTROLS/Action/SelectorAction',
-    'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList/FilterPanelChooser.DictionaryList'
+    'css!SBIS3.CONTROLS/Filter/Panel/components/Chooser/DictionaryList/FilterPanelChooser-DictionaryList'
 ], function(FilterPanelChooserList, CommandDispatcher, coreClone, coreMerge, Format, FormatField, cInstance, Model, RecordSet, footerTpl, SelectorAction) {
 
     'use strict';

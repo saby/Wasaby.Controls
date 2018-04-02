@@ -16,7 +16,7 @@ define('Controls/Input/resources/SuggestPopupController',
          getSearchController: function(self) {
             if (!self._search) {
                self._search = new Search({
-                  dataSource:  self._dataSource,
+                  source:  self._source,
                   searchDelay: self._searchDelay,
                   navigation: self._navigation
                });
@@ -32,7 +32,8 @@ define('Controls/Input/resources/SuggestPopupController',
          },
    
          search: function(self) {
-            return _private.getSearchController(self).search(self._filter).addCallback(function(searchResult) {
+            //TODO этот модуль будет отрефакторен в апреле
+            return _private.getSearchController(self).search({filter: self._filter}).addCallback(function(searchResult) {
                _private.setSuggestSelectedIndex(self, 0);
                _private.setSuggestSearchResult(self, searchResult);
                _private.prepareSuggestFilter(self, searchResult);
@@ -83,7 +84,7 @@ define('Controls/Input/resources/SuggestPopupController',
             SuggestPopupController.superclass.constructor.call(this, options);
             
             this._popupOpener = options.popupOpener;
-            this._dataSource = options.dataSource;
+            this._source = options.source;
             this._searchDelay = options.searchDelay;
             this._navigation = options.navigation;
             this._selectCallback = options.selectCallback;

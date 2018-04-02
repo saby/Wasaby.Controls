@@ -1,9 +1,11 @@
 define('Controls/Popup/Opener/Stack',
    [
-      'Controls/Popup/Opener/Base',
-      'Controls/Popup/Opener/Stack/StackController'
+      'Controls/Popup/Opener/BaseOpener',
+      'Controls/Popup/Opener/Stack/StackController',
+      'css!Controls/Popup/Opener/Stack/Stack'
    ],
    function (Base, Strategy) {
+      var POPUP_CLASS = 'controls-Stack';
       /**
        * Действие открытия стековой панели
        * @class Controls/Popup/Opener/Stack
@@ -19,6 +21,7 @@ define('Controls/Popup/Opener/Stack',
           * @param config конфигурация попапа
           */
          open: function (config) {
+            config.className += ' ' + POPUP_CLASS;
             return Base.prototype.open.call(this, config, Strategy);
          }
       });

@@ -8,12 +8,15 @@ define('Controls-demo/Layouts/SearchLayout', [
    'Core/Control',
    'tmpl!Controls-demo/Layouts/SearchLayout/SearchLayout',
    'WS.Data/Source/Memory',
+   'Controls/Container/FilterButton',
    'Controls/List',
    'css!Controls-demo/Layouts/SearchLayout/SearchLayout',
    'Controls/Input/Text',
    'Controls-demo/Layouts/LayoutFilterComponent',
-   'Controls/Layout/Filter',
-   'Controls/Layout/Search'
+   'Controls/Container/Filter',
+   'Controls/Container/Search',
+   'Controls/Filter/Button',
+   'Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/FilterButtonTemplate'
 ], function (BaseControl,
              template,
              MemorySource
@@ -45,6 +48,11 @@ define('Controls-demo/Layouts/SearchLayout', [
       { id: 23, title: 'Petr' }
    ];
    
+   var filterSourceData = [
+      {id: 'title', resetValue: '', value: '', textValue: ''},
+      {id: 'id', resetValue: null, value: null, textValue: ''}
+   ];
+   
    var ModuleClass = BaseControl.extend(
       {
          _template: template,
@@ -52,6 +60,7 @@ define('Controls-demo/Layouts/SearchLayout', [
             idProperty: 'id',
             data: sourceData
          }),
+         _filterSource: filterSourceData,
          _switchValue: false
          
       });

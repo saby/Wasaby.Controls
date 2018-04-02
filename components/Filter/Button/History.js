@@ -5,17 +5,17 @@ define('SBIS3.CONTROLS/Filter/Button/History',
     [
    "Core/CommandDispatcher",
    "Lib/Control/CompoundControl/CompoundControl",
-   "SBIS3.CONTROLS/Filter/FavoriteEditDialog",
    "tmpl!SBIS3.CONTROLS/Filter/Button/History/FilterHistory",
    "tmpl!SBIS3.CONTROLS/Filter/Button/History/ItemContentTpl",
    "tmpl!SBIS3.CONTROLS/Filter/Button/History/ItemContentTplFM",
+   "SBIS3.CONTROLS/Filter/FavoriteEditDialog",
    "SBIS3.CONTROLS/Commands/CommandsSeparator",
    "SBIS3.CONTROLS/ListView",
    'css!SBIS3.CONTROLS/Commands/CommandsSeparator',
    'css!SBIS3.CONTROLS/Filter/Button/History/FilterButtonHistory',
    "i18n!SBIS3.CONTROLS/Filter/Button"
 ],
-    function( CommandDispatcher, CompoundControl, FavoriteEditDialog, dotTpl, ItemContentTpl, ItemContentTplFM) {
+    function( CommandDispatcher, CompoundControl, dotTpl, ItemContentTpl, ItemContentTplFM) {
 
    'use strict';
 

@@ -58,9 +58,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
 
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
       var
-         EDITOR_MODULES = ['css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/tinymce/skins/lightgray/skin.min',
-            'css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/tinymce/skins/lightgray/content.inline.min',
-            'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/tinymce/tinymce'],
+         TINYMCE_URL_BASE = 'SBIS3.CONTROLS/RichEditor/third-party/tinymce',
+         EDITOR_MODULES = [
+            'css!' + TINYMCE_URL_BASE + '/skins/lightgray/skin.min.css',
+            'css!' + TINYMCE_URL_BASE + '/skins/lightgray/content.inline.min.css',
+            TINYMCE_URL_BASE + '/tinymce'
+         ],
          constants = {
             baseAreaWidth: 768,//726
             defaultImagePercentSize: 25,// Начальный размер картинки (в процентах)
@@ -75,7 +78,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             styles: {
                title: {inline: 'span', classes: 'titleText'},
                subTitle: {inline: 'span', classes: 'subTitleText'},
-               additionalText: {inline: 'span', classes: 'additionalText'}
+               additionalText: {inline: 'span', classes: 'additionalText'},
+               customBlockquote: {block: 'p', classes: 'customBlockquote'}
             },
             colorsMap: {
                'rgb(0, 0, 0)': 'black',
@@ -213,6 +217,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                  */
                validateClass: undefined
             },
+            _richTextAreaContainer: undefined,
             _scrollContainer: undefined,
             _dataReview: undefined,
             _inputControl: undefined,
@@ -270,13 +275,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             });
             this._dChildReady.push(this._readyControlDeffered);
             this._tinyReady = new Deferred();
+            this._richTextAreaContainer = this._container.find('.controls-RichEditor__richTextArea');
             this._scrollContainer = this._container.find('.controls-RichEditor__scrollContainer');
             this._dataReview = this._container.find('.controls-RichEditor__dataReview');
             this._inputControl = this._container.find('.controls-RichEditor__editorFrame');
             this._fakeArea = this._container.find('.controls-RichEditor__fakeArea');
             this._initMainHeight();
             this._options.editorConfig.selector = '#' + this.getId() + ' .controls-RichEditor__editorFrame';
-            this._options.editorConfig.fixed_toolbar_container = '#' + this.getId() + ' > .controls-RichEditor__fakeArea';
+            this._options.editorConfig.fixed_toolbar_container = '#' + this.getId() + ' .controls-RichEditor__fakeArea';
             this._options.editorConfig.setup = function(editor) {
                self._tinyEditor = editor;
                self._bindEvents();
@@ -424,7 +430,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                   var isInline = options.editorConfig.inline;
                   var iFrame = isInline ? null : $(this._tinyEditor.iframeElement);
-                  (isInline ? this._scrollContainer : iFrame).css('max-height', options.maximalHeight || '');
+                  (isInline ? this._richTextAreaContainer : iFrame).css('max-height', options.maximalHeight || '');
                   (isInline ? this._inputControl : iFrame).css('min-height', options.minimalHeight || '');
                }
             }
@@ -836,17 +842,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
          getCurrentFormats: function () {
             var editor = this._tinyEditor;
             if (editor) {
-               var selNode = editor.selection.getNode();
-               var $selNode = $(selNode);
-               var color = editor.dom.getStyle(selNode, 'color', true);
-               return {
-                  fontsize: +editor.dom.getStyle(selNode, 'font-size', true).replace('px', ''),
-                  color: constants.colorsMap[color] || color,
-                  bold: !!$selNode.closest('strong').length,
-                  italic: !!$selNode.closest('em').length,
-                  underline: !!$selNode.closest('span[style*="decoration: underline"]').length,
-                  strikethrough: !!$selNode.closest('span[style*="decoration: line-through"]').length
-               };
+               var rng = editor.selection.getRng();
+               var selNode = rng.startContainer;
+               if (selNode.nodeType === 3) {
+                  selNode = selNode.parentNode;
+               }
+               return this._getNodeFormats(selNode);
             }
          },
 
@@ -856,14 +857,51 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           */
          getDefaultFormats: function () {
             if (!this._defaultFormats) {
-               var $root = $(this._inputControl);
-               var color = $root.css('color');
-               this._defaultFormats = {
-                  fontsize : +$root.css('font-size').replace('px', ''),
-                  color: constants.colorsMap[color] || color
-               };
+               this._defaultFormats = this._getNodeFormats(this._inputControl, ['fontsize', 'color']);
             }
             return this._defaultFormats;
+         },
+
+         _getNodeFormats: function (node, properties) {
+            var editor = this._tinyEditor;
+            if (editor) {
+               if (!properties || !properties.length) {
+                  properties = ['fontsize', 'color', 'bold', 'italic', 'underline', 'strikethrough'];
+               }
+               var formats = {};
+               var $node;
+               var selectors;
+               for (var i = 0; i < properties.length; i++) {
+                  var prop = properties[i];
+                  if (prop === 'fontsize') {
+                     formats[prop] = +editor.dom.getStyle(node, 'font-size', true).replace('px', '');//^^^+$node.css('font-size').replace('px', '')
+                  }
+                  else
+                  if (prop === 'color') {
+                     var color = editor.dom.getStyle(node, 'color', true);//^^^$node.css('color')
+                     formats[prop] = constants.colorsMap[color] || color;
+                  }
+                  else {
+                     if (!selectors) {
+                        selectors = {
+                           'bold': 'strong',
+                           'italic': 'em',
+                           'underline': 'span[style*="decoration: underline"]',
+                           'strikethrough': 'span[style*="decoration: line-through"]'
+                        };
+                     }
+                     var selector = selectors[prop];
+                     if (selector) {
+                        if (!$node) {
+                           $node = $(node);
+                        }
+                        formats[prop] = !!$node.closest(selector).length;
+                     }
+                  }
+               }
+            }
+            return formats;
+
          },
 
          /**
@@ -872,7 +910,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           */
          applyFormats: function (formats) {
             // Отбросить все свойства форматирования, тождественные форматированию по-умолчанию
-            var defaults = this.getDefaultFormats();
+            var rng = this._tinyEditor.selection.getRng();
+            var node = rng.startContainer;
+            var defaults = this._getNodeFormats((node.nodeType === 3 ? node.parentNode : node).parentNode, ['fontsize', 'color']);
             for (var prop in defaults) {
                if (prop in formats && formats[prop] ==/* Не "==="! */ defaults[prop]) {
                   delete formats[prop];
@@ -993,28 +1033,42 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           */
          execCommand: function (command) {
             var editor = this._tinyEditor;
-            var needPreprocess;
+            var selection = editor.selection;
+            var isBlockquote = command === 'blockquote';
+            var isListNode = !isBlockquote && (command === 'InsertOrderedList' || command === 'InsertUnorderedList');
+            var afterProcess;
             var execCmd;
-            if (command === 'blockquote') {
-               needPreprocess = true;
+            if (isBlockquote) {
                execCmd = 'mceBlockQuote';
             }
-            else
-            if (command === 'InsertOrderedList' || command === 'InsertUnorderedList') {
-               needPreprocess = true;
+            var isAlreadyApplied = editor.formatter.match(command);
+            var rng = selection.getRng();
+            var isBlockquoteOfList;
+            if (isBlockquote) {
+               // При обёртывании списков в блок цитат каждый элемент списка оборачивается отдельно. Во избежание этого сделать список временно нередактируемым
+               // 1174914305 https://online.sbis.ru/opendoc.html?guid=305e5cb1-8b37-49ea-917d-403f746d1dfe
+               var listNode = rng.commonAncestorContainer;
+               isBlockquoteOfList = ['OL', 'UL'].indexOf(listNode.nodeName) !== -1;
+               if (isBlockquoteOfList) {
+                  var $listNode = $(listNode);
+                  $listNode.wrap('<div>');
+                  selection.select(listNode.parentNode, false);
+                  $listNode.attr('contenteditable', 'false');
+                  afterProcess = function () {
+                     $listNode.unwrap();
+                     $listNode.removeAttr('contenteditable');
+                     selection.select(listNode, true);
+                  };
+               }
             }
-            if (needPreprocess && !editor.formatter.match(command)) {
-               var rng = editor.selection.getRng();
+            if ((isListNode || (isBlockquote && !isBlockquoteOfList)) && !isAlreadyApplied) {
                var node = rng.startContainer;
                if (rng.endContainer === node) {
                   if (node.nodeType === 3 && node.previousSibling && node.previousSibling.nodeType === 1) {
                      var startOffset = rng.startOffset;
                      var endOffset = rng.endOffset;
                      editor.dom.split(node.parentNode, node);
-                     var newRng = editor.getDoc().createRange();
-                     newRng.setStart(node, startOffset);
-                     newRng.setEnd(node, endOffset);
-                     editor.selection.setRng(newRng);
+                     this._selectNewRng(node, startOffset, node, endOffset);
                   }
                   else
                   // FF иногда "поднимает" рэнж выше по дереву
@@ -1024,14 +1078,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      var newNode = editor.dom.create(node.nodeName);
                      newNode.innerHTML = '<br data-mce-bogus="1" />';
                      node.parentNode.insertBefore(newNode, node.nextSibling);
-                     editor.selection.select(newNode, true);
+                     selection.select(newNode, true);
                   }
                }
             }
             editor.execCommand(execCmd || command);
+            if (afterProcess) {
+               afterProcess();
+            }
             //TODO:https://github.com/tinymce/tinymce/issues/3104, восстанавливаю выделение тк оно теряется если после нжатия кнопки назад редактор стал пустым
             if ((cConstants.browser.firefox || cConstants.browser.isIE) && command == 'undo' && this._getTinyEditorValue() == '') {
-               editor.selection.select(editor.getBody(), true);
+               selection.select(editor.getBody(), true);
             }
          },
 
@@ -1157,6 +1214,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                        // Для MSIE принудительно смещаем курсор ввода после вставленной ссылки
                                        // 1174853380 https://online.sbis.ru/opendoc.html?guid=77405679-2b2b-42d3-8bc0-d2eee745ea23
                                        editor.insertContent(cConstants.browser.isIE ? linkHtml + '&#65279;&#8203;' : linkHtml);
+                                       selection.select(selection.getNode().querySelector('a'), true);
+                                       selection.collapse(false);
                                     }
                                     else {
                                        if (origCaption !== caption) {
@@ -1249,6 +1308,14 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return this._inputControl;
          },
 
+
+         // Добавление и удаление кастомизируемой цитаты
+         setCustomBlockquote: function() {
+            var
+               $selectionContent = $(this._tinyEditor.selection.getNode());
+            this._tinyEditor.formatter.toggle('customBlockquote', $selectionContent);
+         },
+
          /**
           * Установить выравнивание текста для активной строки
           * @param {String} align Устанавливаемое выравнивание
@@ -1330,12 +1397,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   return;
             }
             var size = constants.defaultImagePercentSize;
-            this._makeImgPreviewerUrl(fileobj, size, null, false).addCallback(function (url) {
+            this._makeImgPreviewerUrl(fileobj, size, null, false).addCallback(function (urls) {
                var uuid = fileobj.id;
                if (uuid) {
                   this._images[uuid] = false;
                }
-               this._insertImg(url, size + '%', null, className, null, before, after, uuid);
+               this._insertImg(urls, size + '%', null, className, null, before, after, uuid);
             }.bind(this));
          },
          codeSample: function(text, language) {
@@ -1477,7 +1544,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             $img.attr('data-mce-style', css.join('; '));
             var prevSrc = $img.attr('src');
             var promise = this._makeImgPreviewerUrl($img, 0 < width ? width : null, 0 < height ? height : null, isPixels);
-            return promise.addCallback(function (url) {
+            return promise.addCallback(function (urls) {
+               var url = urls.preview;
                if (prevSrc !== url) {
                   $img.attr('src', url);
                   $img.attr('data-mce-src', url);
@@ -1624,7 +1692,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                self._tinyReady.callback();
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
                //formatter есть только после инита поэтому подписка осуществляется здесь
-               editor.formatter.formatChanged('bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote', function(state, obj) {
+               editor.formatter.formatChanged('bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote,customBlockquote', function(state, obj) {
                   self._notify('onFormatChange', obj, state)
                });
                self._notify('onInitEditor');
@@ -2162,7 +2230,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   $img[0].style.height = '';
                   var width = $img[0].style.width || ($img.width() + 'px');
                   var isPixels = width.charAt(width.length - 1) !== '%';
-                  self._makeImgPreviewerUrl(fileobj, +width.substring(0, width.length - (isPixels ? 2 : 1)), null, isPixels).addCallback(function (url) {
+                  self._makeImgPreviewerUrl(fileobj, +width.substring(0, width.length - (isPixels ? 2 : 1)), null, isPixels).addCallback(function (urls) {
+                     var url = urls.preview;
                      $img.attr('src', url);
                      $img.attr('data-mce-src', url);
                      var uuid = fileobj.id;
@@ -2248,7 +2317,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           * @param {number} width Визуальная ширина изображения
           * @param {number} height Визуальная высота изображения
           * @param {boolean} isPixels Размеры указаны в пикселах (иначе в процентах)
-          * @return {Core/Deferred}
+          * @return {Core/Deferred<object>}
           */
          _makeImgPreviewerUrl: function (imgInfo, width, height, isPixels) {
             if (!(0 < width)) {
@@ -2261,7 +2330,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                url = imgInfo.attr('src');
                if (!/\/disk\/api\/v[0-9\.]+\//i.test(url)) {
                   // Это не файл, хранящийся на СбисДиск, вернуть как есть
-                  promise.callback(url);
+                  promise.callback({preview:url, original:url});
                   return promise;
                }
                url = url.replace(/^\/previewer(?:\/r\/[0-9]+\/[0-9]+)?/i, '');
@@ -2271,7 +2340,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                url = (imgInfo.filePath || imgInfo.url);
             }
             promise = promise.addCallback(function (size) {
-               return '/previewer' + (size ?  '/r/' + size + '/' + size : '') + url;
+               return {preview:'/previewer' + (size ?  '/r/' + size + '/' + size : '') + url, original:url};
             });
             if (0 < width) {
                var w = isPixels ? width : width*constants.baseAreaWidth/100;//this.getContainer().width()
@@ -2288,7 +2357,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                      promise.callback(Math.round(img.width < img.height ? w*img.height/img.width : w));
                   };
                   img.onerror = function () {
-                     promise.callback(constants.defaultPreviewerSize);
+                     promise.callback(null);
                   };
                   img.src = url;
                }
@@ -2363,7 +2432,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             var container = this._tinyEditor && this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl;
             var options = this._options;
             if (options.autoHeight) {
-               this._scrollContainer.css('max-height', this._cleanHeight(options.maximalHeight) || '');
+               this._richTextAreaContainer.css('max-height', this._cleanHeight(options.maximalHeight) || '');
                // Минимальную высоту области просмотра нужно фиксировать только в отсутствии опции previewAutoHeight
                // 1175020199 https://online.sbis.ru/opendoc.html?guid=ff26541b-4dce-4df3-8b04-1764ee9b1e7a
                // 1175043073 https://online.sbis.ru/opendoc.html?guid=69a945c9-b517-4056-855a-6dec71d81823
@@ -2423,7 +2492,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                this._requireTinyMCE().addCallback(function() {
                   var cfg = cClone(self._options.editorConfig);
                   cfg.paste_as_text = false;
-                  tinyMCE.baseURL = 'SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/tinymce';
+                  tinyMCE.baseURL = 'resources/' + TINYMCE_URL_BASE;
                   tinyMCE.init(cfg);
                });
             }
@@ -2586,23 +2655,17 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return this.getName().replace('/', '#') + 'ИсторияИзменений';
          },
 
-         _insertImg: function (src, width, height, className, alt, before, after, uuid) {
-            var
-               def = new Deferred(),
-               self = this,
-               //^^^ Почему так сложно???
-               $img = $('<img src="' + src + '"></img>').css({
-                  visibility: 'hidden',
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0
-               });
-            $img.on('load', function () {
+         _insertImg: function (urls, width, height, className, alt, before, after, uuid) {
+            var promise = new Deferred();
+            var hasBoth = urls && typeof urls === 'object';
+            var src = hasBoth ? urls.preview : urls;
+            var img = new Image();
+            img.onload = function () {
                // TODO: 20170913 Здесь в атрибуты, сохранность которых не гарантируется ввиду свободного редактирования пользователями, помещается значение uuid - Для обратной совместимости
                // После задач https://online.sbis.ru/opendoc.html?guid=6bb150eb-4973-4770-b7da-865789355916 и https://online.sbis.ru/opendoc.html?guid=a56c487d-6e1d-47bc-bdf6-06a0cd7aa57a
                // Убрать по мере переделки стороннего кода, используещего эти атрибуты.
                // Для пролучения uuid правильно использовать метод getImageUuid
-               self.insertHtml(
+               this.insertHtml(
                   (before || '') + '<img' +
                   (className ? ' class="' + className + '"' : '') +
                   ' src="' + src + '"' +
@@ -2611,9 +2674,30 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   ' data-img-uuid="' + uuid + '" alt="' + uuid + '"' +
                   '></img>' + (after || '')
                );
-               def.callback();
-            });
-            return def;
+               promise.callback();
+            }.bind(this);
+            img.onerror = function () {
+               if (hasBoth && urls.original !== urls.preview) {
+                  promise.dependOn(this._insertImg(urls.original, width, height, className, alt, before, after, uuid));
+               }
+               else {
+                  require(['SBIS3.CONTROLS/Utils/InformationPopupManager'], function (InformationPopupManager) {
+                     InformationPopupManager.showMessageDialog({
+                           status: 'error',
+                           className: 'controls-RichEditor__insertImg-alert',
+                           message: rk('Ошибка'),
+                           details: rk('Невозможно открыть изображение'),
+                           isModal: true,
+                           closeByExternalClick: true,
+                           opener: this
+                        },
+                        promise.errback.bind(promise)
+                     );
+                  });
+               }
+            }.bind(this);
+            img.src = src;
+            return promise;
          },
 
          _onChangeAreaValue: function() {
@@ -2777,7 +2861,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
           */
          _initMainHeight: function () {
             if (!this._options.autoHeight) {
-               this._scrollContainer.css('height', this._container.height());
+               this._richTextAreaContainer.css('height', this._container.height());
             }
          },
 
@@ -2796,7 +2880,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
             return Sanitize(text,
                {
                   validNodes: {
-                     img: images
+                     img: images,
+                     table: {
+                        border: true,
+                        cellspacing: true,
+                        cellpadding: true
+                     }
                   },
                   validAttributes: {
                      'class' : function(content, attributeName) {
